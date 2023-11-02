@@ -79,6 +79,8 @@ PacingManager.on_gameplay_post_init = function (self, level_name)
 
 	Managers.event:register(self, "intro_cinematic_started", "_event_intro_cinematic_started")
 	Managers.event:register(self, "intro_cinematic_played", "_event_intro_cinematic_played")
+
+	self._first_aggro = true
 end
 
 PacingManager.on_spawn_points_generated = function (self)
@@ -212,8 +214,20 @@ PacingManager._change_state = function (self, t, state_name)
 
 	self._allowed_spawn_types = allowed_spawn_types
 
-	if t > 0 and self._state ~= state_name and not self._in_safe_zone then
-		self._state_entered_t = t
+	if not self._in_safe_zone and t > 0 then
+		if self._state ~= state_name then
+			self._state_entered_t = t
+		end
+
+		local is_already_in_low = self._state == "build_up_tension" or self._state == "build_up_tension_low"
+
+		if not is_already_in_low then
+			if not self._low_state_entered_t and (state_name == "build_up_tension" or state_name == "build_up_tension_low") then
+				self._low_state_entered_t = t
+			else
+				self._low_state_entered_t = nil
+			end
+		end
 	end
 
 	self._state = state_name
@@ -474,7 +488,7 @@ PacingManager._update_ramp_up_frequency = function (self, dt, target_side_id)
 	end
 end
 
-PacingManager._get_ramp_up_frequency_modifier = function (self, spawn_type)
+PacingManager.get_ramp_up_frequency_modifier = function (self, spawn_type)
 	return self._ramp_up_frequency_modifiers[spawn_type] or 1
 end
 
@@ -536,9 +550,13 @@ PacingManager.add_aggroed_minion = function (self, unit)
 			self:pause_spawn_type("hordes", false)
 			self:pause_spawn_type("trickle_hordes", false)
 			self:set_in_safe_zone(false)
+		end
 
+		if self._first_aggro then
 			local t = Managers.time:time("gameplay")
 			self._state_entered_t = t
+			self._low_state_entered_t = t
+			self._first_aggro = nil
 		end
 	end
 end
@@ -882,6 +900,17 @@ PacingManager.state_duration = function (self)
 
 	local t = Managers.time:time("gameplay")
 	local state_duration = t - self._state_entered_t
+
+	return state_duration
+end
+
+PacingManager.low_state_duration = function (self)
+	if not self._low_state_entered_t then
+		return 0
+	end
+
+	local t = Managers.time:time("gameplay")
+	local state_duration = t - self._low_state_entered_t
 
 	return state_duration
 end

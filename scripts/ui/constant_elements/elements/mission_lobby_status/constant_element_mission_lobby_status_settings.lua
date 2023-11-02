@@ -12,6 +12,10 @@ local constant_element_mission_lobby_status_settings = {
 		talents_view = {
 			nil,
 			0
+		},
+		talent_builder_view = {
+			nil,
+			0
 		}
 	},
 	hide_in_view = {

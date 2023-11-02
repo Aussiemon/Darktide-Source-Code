@@ -533,7 +533,9 @@ ViewElementPlayerSocialPopup._create_menu_widget = function (self, menu_item_set
 	local widget = self:_create_widget(menu_item_settings.label, widget_definition)
 
 	if widget_blueprint.init then
-		widget_blueprint.init(self, widget, menu_item_settings)
+		local ui_renderer = self._ui_renderer
+
+		widget_blueprint.init(self, widget, menu_item_settings, nil, ui_renderer)
 	end
 
 	widget.content.template_type = blueprint_name

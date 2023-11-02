@@ -772,6 +772,16 @@ EquipmentComponent.update_item_visibility = function (equipment, wielded_slot, u
 					end
 				end
 			end
+
+			if item and item.mask_face ~= nil then
+				local mask_face = item.mask_face
+
+				if mask_face == "" or mask_face == nil then
+					mask_face = "mask_face_none"
+				end
+
+				VisualLoadoutCustomization.apply_material_override(slot_body_face_unit, unit_3p, false, mask_face, false)
+			end
 		end
 
 		if item and item.stabilize_neck ~= nil and Unit.has_animation_event(unit_3p, "lock_head") and Unit.has_animation_event(unit_3p, "unlock_head") then

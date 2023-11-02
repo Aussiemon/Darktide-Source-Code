@@ -19,8 +19,8 @@ attack_settings.melee_attack_strength = table.enum("heavy", "light")
 local damage_efficiencies = table.enum("full", "reduced", "negated", "push")
 attack_settings.damage_efficiencies = damage_efficiencies
 
-attack_settings.armor_damage_modifier_to_damage_efficiency = function (armor_damage_modifier, armor_type)
-	if (armor_type == "super_armor" or armor_type == "armored") and armor_damage_modifier <= 0.1 then
+attack_settings.armor_damage_modifier_to_damage_efficiency = function (armor_damage_modifier, armor_type, rending_damage)
+	if (armor_type == "super_armor" or armor_type == "armored") and armor_damage_modifier <= 0.1 and rending_damage == 0 then
 		return damage_efficiencies.negated
 	elseif armor_damage_modifier > 0.6 then
 		return damage_efficiencies.full

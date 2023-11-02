@@ -674,6 +674,10 @@ PackageSynchronizerHost._handle_profile_changes_after_sync = function (self, pee
 	local wield_slot_after_sync = sync_data.wield_slot_after_sync
 
 	if wield_slot_after_sync then
+		if wield_slot_after_sync == "slot_combat_ability" then
+			wield_slot_after_sync = "slot_primary"
+		end
+
 		PlayerUnitVisualLoadout.wield_slot(wield_slot_after_sync, player_unit, fixed_t)
 	end
 end

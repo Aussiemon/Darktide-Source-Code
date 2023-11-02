@@ -1,3 +1,5 @@
+-- WARNING: Error occurred during decompilation.
+--   Code may be incomplete or incorrect.
 require("scripts/extension_systems/behavior/nodes/bt_node")
 
 local Animation = require("scripts/utilities/animation")
@@ -272,6 +274,7 @@ BtMutantChargerChargeAction._update_charging = function (self, unit, breed, scra
 	local close_distance = action_data.close_distance
 	local is_close = distance_to_extrapolated_position < close_distance
 	local slowdown_percentage = self:_get_turn_slowdown_percentage(unit, direction_to_target, action_data)
+	scratchpad.is_close = is_close
 
 	navigation_extension:set_max_speed(wanted_charge_speed)
 
@@ -434,10 +437,11 @@ BtMutantChargerChargeAction._update_charging = function (self, unit, breed, scra
 
 		locomotion_extension:set_rotation_speed(new_rotation_speed)
 
-		if action_data.min_time_spent_charging <= time_spent_charging or scratchpad.charge_aborted and not scratchpad.target_dodged_during_attack and Vector3.distance(self_position, target_position) < 5 then
+		if action_data.min_time_spent_charging <= time_spent_charging or scratchpad.charge_aborted then
 			local dot = Vector3.dot(wanted_direction, true_direction_to_target)
+			local close_dodge = dot < 0.95 and scratchpad.target_dodged_during_attack and Vector3.distance(self_position, target_position) < 5
 
-			if dot < action_data.charged_past_dot_threshold and not scratchpad.current_lag_compensation_target_timing then
+			if close_dodge or dot < action_data.charged_past_dot_threshold and not scratchpad.current_lag_compensation_target_timing then
 				local miss_animation = Animation.random_event(action_data.miss_animations)
 
 				scratchpad.animation_extension:anim_event(miss_animation)
@@ -863,24 +867,32 @@ BtMutantChargerChargeAction._update_ray_can_go = function (self, unit, scratchpa
 end
 
 local MAX_STEPS = 20
-local MAX_TIME = 1.25
+local MAX_TIME = 0.8
 
 BtMutantChargerChargeAction._test_throw_trajectory = function (self, unit, scratchpad, action_data, test_direction, to)
 	local hit_unit_breed_name = scratchpad.hit_unit_breed_name
 	local force = action_data.catapult_force[hit_unit_breed_name]
 	local z_force = action_data.catapult_z_force[hit_unit_breed_name]
-	local hit, segment_list, hit_position = Trajectory.test_throw_trajectory(unit, hit_unit_breed_name, scratchpad.physics_world, force, z_force, test_direction, to, PlayerCharacterConstants.gravity, THROW_TELEPORT_UP_OFFSET_HUMAN, THROW_TELEPORT_UP_OFFSET_OGRYN, MAX_STEPS, MAX_TIME)
+	local physics_world = scratchpad.physics_world
+	local hit, segment_list, hit_position = Trajectory.test_throw_trajectory(unit, hit_unit_breed_name, physics_world, force, z_force, test_direction, to, PlayerCharacterConstants.gravity, THROW_TELEPORT_UP_OFFSET_HUMAN, THROW_TELEPORT_UP_OFFSET_OGRYN, MAX_STEPS, MAX_TIME)
 
 	if hit then
 		local navigation_extension = scratchpad.navigation_extension
 		local nav_world = scratchpad.nav_world
 		local traverse_logic = navigation_extension:traverse_logic()
-		local navmesh_position = NavQueries.position_on_mesh_with_outside_position(nav_world, traverse_logic, hit_position, ABOVE, BELOW, LATERAL)
+		local navmesh_position = NavQueries.position_on_mesh_with_outside_position(nav_world, traverse_logic, hit_position, 0.5, 0.5, 0.5)
 
 		if navmesh_position then
-			local new_direction = Vector3.normalize(Vector3.flat(navmesh_position - POSITION_LOOKUP[unit]))
+			local ledge_find_radius = 2
+			local _, num_actors = PhysicsWorld.immediate_overlap(physics_world, "position", navmesh_position, "size", ledge_find_radius, "shape", "sphere", "types", "both", "collision_filter", "filter_hang_ledge_collision")
 
-			return true, new_direction
+			if num_actors and num_actors > 0 then
+				return false
+			else
+				local new_direction = Vector3.normalize(Vector3.flat(navmesh_position - POSITION_LOOKUP[unit]))
+
+				return true, new_direction
+			end
 		else
 			return false
 		end
@@ -916,6 +928,13 @@ BtMutantChargerChargeAction._check_wall_collision = function (self, unit, scratc
 	local direction = Vector3.flat(Quaternion.forward(rotation))
 	local collision_filter = "filter_minion_shooting_geometry"
 	local hit = PhysicsWorld.raycast(physics_world, from, direction, wall_raycast_distance, "closest", "collision_filter", collision_filter)
+
+	if hit then
+		return true
+	end
+
+	from = from - Vector3.up() * 0.25
+	hit = PhysicsWorld.raycast(physics_world, from, direction, wall_raycast_distance, "closest", "collision_filter", collision_filter)
 
 	if hit then
 		return true

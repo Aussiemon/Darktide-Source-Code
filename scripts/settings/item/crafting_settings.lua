@@ -131,6 +131,7 @@ CraftingSettings.recipes = {
 			item.rarity = new_rarity
 			local rarity_settings = RaritySettings[new_rarity]
 			local item_rarity_settings = is_gadget and rarity_settings.gadget or rarity_settings.weapon
+			local rank_item_type_name = is_gadget and "gadget" or "weapon"
 			item.traits = item.traits or {}
 			local new_num_traits = item_rarity_settings.num_traits
 			local num_traits = #item.traits
@@ -146,11 +147,11 @@ CraftingSettings.recipes = {
 
 				local min_new_item_level = ItemUtils.item_trait_rating(item)
 
-				if (not item.traits[#item.traits].rarity or item.traits[#item.traits].rarity == 0) and RankSettings[0].trait_rating == 0 then
-					min_new_item_level = min_new_item_level + RankSettings[1].trait_rating
+				if (not item.traits[#item.traits].rarity or item.traits[#item.traits].rarity == 0) and RankSettings[0].trait_rating[rank_item_type_name] == 0 then
+					min_new_item_level = min_new_item_level + RankSettings[1].trait_rating[rank_item_type_name]
 				end
 
-				local max_new_item_level = min_new_item_level + RankSettings[4].trait_rating - RankSettings[1].trait_rating
+				local max_new_item_level = min_new_item_level + RankSettings[4].trait_rating[rank_item_type_name] - RankSettings[1].trait_rating[rank_item_type_name]
 				item.override_trait_rating_string = string.format("%d - %d", min_new_item_level, max_new_item_level)
 			end
 
@@ -169,16 +170,16 @@ CraftingSettings.recipes = {
 
 				local min_new_item_level = ItemUtils.item_perk_rating(item)
 
-				if (not item.perks[#item.perks].rarity or item.perks[#item.perks].rarity == 0) and RankSettings[0].perk_rating == 0 then
-					min_new_item_level = min_new_item_level + RankSettings[1].perk_rating
+				if (not item.perks[#item.perks].rarity or item.perks[#item.perks].rarity == 0) and RankSettings[0].perk_rating[rank_item_type_name] == 0 then
+					min_new_item_level = min_new_item_level + RankSettings[1].perk_rating[rank_item_type_name]
 				end
 
-				local max_new_item_level = min_new_item_level + RankSettings[4].perk_rating - RankSettings[1].perk_rating
+				local max_new_item_level = min_new_item_level + RankSettings[4].perk_rating[rank_item_type_name] - RankSettings[1].perk_rating[rank_item_type_name]
 				item.override_perk_rating_string = string.format("%d - %d", min_new_item_level, max_new_item_level)
 			end
 
-			local min_new_item_level = item.itemLevel + (new_num_traits - num_traits) * RankSettings[1].trait_rating + (new_num_perks - num_perks) * RankSettings[1].perk_rating
-			item.override_item_rating_string = string.format("%d+", min_new_item_level)
+			local min_new_item_level = item.itemLevel + (new_num_traits - num_traits) * RankSettings[1].trait_rating[rank_item_type_name] + (new_num_perks - num_perks) * RankSettings[1].perk_rating[rank_item_type_name]
+			item.override_item_rating_string = string.format(" %d+", min_new_item_level)
 			item.itemLevel = min_new_item_level
 
 			return item

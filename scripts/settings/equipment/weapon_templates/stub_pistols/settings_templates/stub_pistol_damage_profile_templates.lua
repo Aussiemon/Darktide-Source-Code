@@ -38,7 +38,7 @@ damage_templates.default_stub_pistol_bfg = {
 				[armor_types.resistant] = damage_lerp_values.lerp_1,
 				[armor_types.player] = damage_lerp_values.lerp_1,
 				[armor_types.berserker] = damage_lerp_values.lerp_1,
-				[armor_types.super_armor] = damage_lerp_values.lerp_0_5,
+				[armor_types.super_armor] = damage_lerp_values.lerp_0_6,
 				[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
 				[armor_types.void_shield] = damage_lerp_values.lerp_0_5,
 				[armor_types.prop_armor] = damage_lerp_values.lerp_0_75
@@ -62,7 +62,7 @@ damage_templates.default_stub_pistol_bfg = {
 				[armor_types.resistant] = damage_lerp_values.lerp_0_8,
 				[armor_types.player] = damage_lerp_values.lerp_1,
 				[armor_types.berserker] = damage_lerp_values.lerp_0_8,
-				[armor_types.super_armor] = damage_lerp_values.lerp_0_3,
+				[armor_types.super_armor] = damage_lerp_values.lerp_0_5,
 				[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_8,
 				[armor_types.void_shield] = damage_lerp_values.lerp_0_4,
 				[armor_types.prop_armor] = damage_lerp_values.lerp_0_6
@@ -127,8 +127,8 @@ damage_templates.default_stub_pistol_bfg = {
 	},
 	power_distribution = {
 		attack = {
-			250,
-			500
+			300,
+			600
 		},
 		impact = {
 			10,
@@ -141,8 +141,8 @@ damage_templates.default_stub_pistol_bfg = {
 	gibbing_power = GibbingPower.light,
 	gibbing_type = GibbingTypes.ballistic,
 	on_kill_area_suppression = {
-		distance = 3,
-		suppression_value = 10
+		distance = 4,
+		suppression_value = 12
 	},
 	targets = {
 		default_target = {
@@ -153,7 +153,7 @@ damage_templates.default_stub_pistol_bfg = {
 				[armor_types.super_armor] = 0.25,
 				[armor_types.resistant] = 0.25
 			},
-			boost_curve_multiplier_finesse = damage_lerp_values.lerp_1
+			boost_curve_multiplier_finesse = damage_lerp_values.lerp_1_5
 		}
 	},
 	gib_push_force = GibbingSettings.gib_push_force.ranged_medium

@@ -69,6 +69,9 @@ ProjectileDamageExtension.init = function (self, extension_init_context, unit, e
 	local hit_mass_budget_attack, hit_mass_budget_impact = self:_calculate_hit_mass()
 	self._hit_mass_budget_attack = hit_mass_budget_attack
 	self._hit_mass_budget_impact = hit_mass_budget_impact
+	self._weapon_system = Managers.state.extension:system("weapon_system")
+	self._wait_for_explosion_queue_index = {}
+	self._marked_for_deletion_done = false
 end
 
 ProjectileDamageExtension._calculate_hit_mass = function (self)
@@ -105,7 +108,30 @@ local _explosion_hit_units_table = {}
 local BROADPHASE_RESULTS = {}
 
 ProjectileDamageExtension.fixed_update = function (self, unit, dt, t)
-	if self._marked_for_deletion then
+	if self._marked_for_deletion_done then
+		return
+	end
+
+	if self._marked_for_deletion and not self._marked_for_deletion_done then
+		local is_done = true
+		local weapon_system = self._weapon_system
+		local queue = self._wait_for_explosion_queue_index
+
+		for i = 1, #queue do
+			local queue_index = queue[i]
+			local is_explosion_done = weapon_system:explosion_result(queue_index)
+
+			if not is_explosion_done then
+				is_done = false
+			end
+		end
+
+		if is_done then
+			self._locomotion_extension:mark_for_deletion()
+
+			self._marked_for_deletion_done = true
+		end
+
 		return
 	end
 
@@ -131,6 +157,7 @@ ProjectileDamageExtension.fixed_update = function (self, unit, dt, t)
 
 	local mark_for_deletion = false
 	local new_life_time = life_time + dt
+	local explosion_queue_index = nil
 	local impact_triggered = fuse_damage_settings and fuse_damage_settings.impact_triggered
 	local proximity_triggered = fuse_damage_settings and fuse_damage_settings.proximity_triggered
 	local min_lifetime = fuse_damage_settings.min_lifetime
@@ -225,7 +252,8 @@ ProjectileDamageExtension.fixed_update = function (self, unit, dt, t)
 				end
 
 				table.clear(_explosion_hit_units_table)
-				Explosion.create_explosion(world, physics_world, position, explosion_normal, projectile_unit, fuse_explosion_template, DEFAULT_POWER_LEVEL, charge_level, AttackSettings.attack_types.explosion, is_critical_strike, false, weapon_item_or_nil, origin_slot_or_nil, _explosion_hit_units_table)
+
+				explosion_queue_index = Explosion.create_explosion(world, physics_world, position, explosion_normal, projectile_unit, fuse_explosion_template, DEFAULT_POWER_LEVEL, charge_level, AttackSettings.attack_types.explosion, is_critical_strike, false, weapon_item_or_nil, origin_slot_or_nil, _explosion_hit_units_table)
 			end
 
 			local critical_strike_fuse_settings = is_critical_strike and damage_settings.critical_strike and damage_settings.critical_strike.fuse
@@ -257,9 +285,14 @@ ProjectileDamageExtension.fixed_update = function (self, unit, dt, t)
 		end
 	end
 
+	if explosion_queue_index then
+		local queue = self._wait_for_explosion_queue_index
+		queue[#queue + 1] = explosion_queue_index
+	end
+
 	if mark_for_deletion and not self._marked_for_deletion then
 		self:_record_impact_concluded_stats()
-		self._locomotion_extension:mark_for_deletion()
+		self._locomotion_extension:switch_to_sleep()
 
 		self._marked_for_deletion = true
 	end
@@ -283,7 +316,7 @@ ProjectileDamageExtension.on_impact = function (self, hit_position, hit_unit, hi
 	local rotation, direction = locomotion_extension:current_rotation_and_direction()
 	local is_critical_strike = self._is_critical_strike
 	local mark_for_deletion = false
-	local impact_result = nil
+	local impact_result, explosion_queue_index = nil
 
 	if impact_damage_settings then
 		local non_target_overrides = impact_damage_settings.non_target_overrides
@@ -439,8 +472,8 @@ ProjectileDamageExtension.on_impact = function (self, hit_position, hit_unit, hi
 
 			if do_impact_explosion then
 				table.clear(_explosion_hit_units_table)
-				Explosion.create_explosion(self._world, physics_world, hit_position, nil, projectile_unit, impact_explosion_template, DEFAULT_POWER_LEVEL, charge_level, AttackSettings.attack_types.explosion, is_critical_strike, false, weapon_item_or_nil, origin_slot_or_nil, _explosion_hit_units_table)
 
+				explosion_queue_index = Explosion.create_explosion(self._world, physics_world, hit_position, nil, projectile_unit, impact_explosion_template, DEFAULT_POWER_LEVEL, charge_level, AttackSettings.attack_types.explosion, is_critical_strike, false, weapon_item_or_nil, origin_slot_or_nil, _explosion_hit_units_table)
 				mark_for_deletion = true
 				local player = Managers.state.player_unit_spawn:owner(owner_unit)
 
@@ -491,9 +524,14 @@ ProjectileDamageExtension.on_impact = function (self, hit_position, hit_unit, hi
 		end
 	end
 
+	if explosion_queue_index then
+		local queue = self._wait_for_explosion_queue_index
+		queue[#queue + 1] = explosion_queue_index
+	end
+
 	if (mark_for_deletion or force_delete) and not self._marked_for_deletion then
 		self:_record_impact_concluded_stats()
-		self._locomotion_extension:mark_for_deletion()
+		self._locomotion_extension:switch_to_sleep()
 
 		self._marked_for_deletion = true
 		impact_result = projectile_impact_results.removed

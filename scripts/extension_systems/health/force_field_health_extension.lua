@@ -1,14 +1,21 @@
+local SpecialRulesSetting = require("scripts/settings/ability/special_rules_settings")
 local HealthExtensionInterface = require("scripts/extension_systems/health/health_extension_interface")
 local TalentSettings = require("scripts/settings/talent/talent_settings_new")
 local ForceFieldHealthExtension = class("ForceFieldHealthExtension")
+local special_rules = SpecialRulesSetting.special_rules
 local talent_settings = TalentSettings.psyker_3.combat_ability
-local better_talent_settings = TalentSettings.psyker_3.combat_ability_2
 
 ForceFieldHealthExtension.init = function (self, extension_init_context, unit, extension_init_data)
+	local owner_unit = extension_init_data.owner_unit
 	self._unit = unit
-	self._owner_unit = extension_init_data.owner_unit
+	self._owner_unit = owner_unit
+	self._specialization_extension = ScriptUnit.extension(owner_unit, "specialization_system")
+	local sphere_shield = self._specialization_extension:has_special_rule(special_rules.psyker_sphere_shield)
+	self._sphere_shield = sphere_shield
+	local max_health = talent_settings.health
+	local max_sphere_health = talent_settings.sphere_health
 	self._next_allowed_t = 0
-	self._max_health = 30
+	self._max_health = sphere_shield and max_sphere_health or max_health
 	self._health = self._max_health
 	self._is_dead = false
 end
@@ -17,10 +24,14 @@ ForceFieldHealthExtension.game_object_initialized = function (self, session, obj
 	self._game_session = session
 	self._game_object_id = object_id
 	local owner_unit = self._owner_unit
-	self.specialization_extension = ScriptUnit.extension(owner_unit, "specialization_system")
-	self._health = talent_settings.health
+	self._specialization_extension = ScriptUnit.extension(owner_unit, "specialization_system")
+	local sphere_shield = self._specialization_extension:has_special_rule(special_rules.psyker_sphere_shield)
+	self._sphere_shield = sphere_shield
+	local max_health = talent_settings.health
+	local max_sphere_health = talent_settings.sphere_health
 	self._damage_cooldown = talent_settings.damage_cooldown
-	self._max_health = self._health
+	self._max_health = sphere_shield and max_sphere_health or max_health
+	self._health = self._max_health
 
 	GameSession.set_game_object_field(self._game_session, self._game_object_id, "health", self._max_health)
 	GameSession.set_game_object_field(self._game_session, self._game_object_id, "damage", 0)

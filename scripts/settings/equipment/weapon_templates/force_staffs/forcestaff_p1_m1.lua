@@ -220,14 +220,12 @@ weapon_template.actions = {
 		projectile_item = "content/items/weapons/player/ranged/bullets/force_staff_projectile_01",
 		start_input = "shoot_pressed",
 		sprint_requires_press_to_interrupt = true,
-		kind = "spawn_projectile",
-		anim_event = "orb_shoot",
-		vfx_effect_name = "content/fx/particles/weapons/force_staff/force_staff_projectile_cast_01",
-		anim_time_scale = 2,
-		fire_time = 0.025,
 		charge_template = "forcestaff_p1_m1_projectile",
+		fire_time = 0.1,
+		weapon_handling_template = "time_scale_1_5",
+		kind = "spawn_projectile",
 		uninterruptible = true,
-		vfx_effect_source_name = "fx_left_forearm",
+		anim_event = "orb_shoot",
 		total_time = 1,
 		action_movement_curve = {
 			{
@@ -492,11 +490,11 @@ weapon_template.actions = {
 			},
 			special_action_light = {
 				action_name = "action_stab",
-				chain_time = 0.3
+				chain_time = 0.2
 			},
 			special_action_heavy = {
 				action_name = "action_stab_heavy",
-				chain_time = 0.6
+				chain_time = 0.4
 			}
 		},
 		conditional_state_to_action_input = {
@@ -565,44 +563,45 @@ weapon_template.actions = {
 	action_stab = {
 		damage_window_start = 0.11666666666666667,
 		hit_armor_anim = "attack_hit_shield",
+		allow_conditional_chain = true,
+		kind = "sweep",
+		weapon_handling_template = "time_scale_1_3",
+		first_person_hit_anim = "hit_right_shake",
+		first_person_hit_stop_anim = "attack_hit",
 		crosshair_type = "dot",
 		range_mod = 1.15,
-		kind = "sweep",
-		first_person_hit_anim = "hit_right_shake",
-		anim_event = "attack_special",
-		first_person_hit_stop_anim = "attack_hit",
 		allowed_during_sprint = true,
 		damage_window_end = 0.26666666666666666,
 		uninterruptible = true,
-		allow_conditional_chain = true,
-		total_time = 1.1,
+		anim_event = "attack_special",
+		total_time = 0.6,
 		action_movement_curve = {
 			{
-				modifier = 0.3,
+				modifier = 0.8,
 				t = 0.1
 			},
 			{
-				modifier = 0.5,
+				modifier = 1.75,
 				t = 0.25
 			},
 			{
-				modifier = 0.5,
+				modifier = 1.35,
 				t = 0.3
 			},
 			{
-				modifier = 1.5,
+				modifier = 1.2,
 				t = 0.35
 			},
 			{
-				modifier = 1.5,
+				modifier = 1.1,
 				t = 0.4
 			},
 			{
-				modifier = 1.05,
+				modifier = 1,
 				t = 0.6
 			},
 			{
-				modifier = 0.75,
+				modifier = 0.95,
 				t = 1
 			},
 			start_modifier = 0.8
@@ -624,27 +623,27 @@ weapon_template.actions = {
 				chain_time = 0.15
 			},
 			shoot_pressed = {
-				chain_time = 0.5,
+				chain_time = 0.1,
 				reset_combo = true,
 				action_name = "rapid_left"
 			},
 			charge = {
-				chain_time = 0.5,
+				chain_time = 0.45,
 				reset_combo = true,
 				action_name = "action_charge"
 			},
 			vent = {
 				action_name = "action_vent",
-				chain_time = 0.5
+				chain_time = 0.45
 			},
 			special_action_hold = {
 				action_name = "action_swipe_start",
-				chain_time = 0.5
+				chain_time = 0.4
 			}
 		},
 		weapon_box = {
 			0.08,
-			1.2,
+			2.4,
 			0.08
 		},
 		spline_settings = {
@@ -655,51 +654,52 @@ weapon_template.actions = {
 				0
 			}
 		},
-		damage_type = damage_types.combat_blade,
+		damage_type = damage_types.blunt_light,
 		damage_profile = DamageProfileTemplates.force_staff_bash
 	},
 	action_stab_heavy = {
-		damage_window_start = 0.16666666666666666,
+		damage_window_start = 0.13333333333333333,
 		hit_armor_anim = "attack_hit_shield",
+		allow_conditional_chain = true,
+		kind = "sweep",
+		weapon_handling_template = "time_scale_1_2",
+		first_person_hit_anim = "hit_right_shake",
+		first_person_hit_stop_anim = "attack_hit",
 		crosshair_type = "dot",
 		range_mod = 1.15,
-		kind = "sweep",
-		first_person_hit_anim = "hit_right_shake",
-		anim_event = "attack_special",
-		first_person_hit_stop_anim = "attack_hit",
 		allowed_during_sprint = true,
-		damage_window_end = 0.18333333333333332,
+		damage_window_end = 0.21666666666666667,
 		uninterruptible = true,
-		allow_conditional_chain = true,
+		anim_event = "attack_special",
 		power_level = 800,
-		total_time = 1.1,
+		total_time = 0.75,
 		action_movement_curve = {
 			{
-				modifier = 0.3,
+				modifier = 0.8,
 				t = 0.1
 			},
 			{
-				modifier = 0.5,
+				modifier = 1.85,
 				t = 0.25
 			},
 			{
-				modifier = 0.5,
+				modifier = 1.45,
 				t = 0.3
 			},
 			{
-				modifier = 1.5,
+				modifier = 1.2,
 				t = 0.35
 			},
 			{
-				modifier = 1.5,
+				modifier = 1.1,
 				t = 0.4
 			},
 			{
-				modifier = 1.05,
+				modifier = 1,
 				t = 0.6
 			},
 			{
-				modifier = 0.75,
+				modifier = 0.95,
 				t = 1
 			},
 			start_modifier = 0.8
@@ -721,27 +721,27 @@ weapon_template.actions = {
 				chain_time = 0.15
 			},
 			shoot_pressed = {
-				chain_time = 0.5,
+				chain_time = 0.1,
 				reset_combo = true,
 				action_name = "rapid_left"
 			},
 			charge = {
-				chain_time = 0.5,
+				chain_time = 0.4,
 				reset_combo = true,
 				action_name = "action_charge"
 			},
 			vent = {
 				action_name = "action_vent",
-				chain_time = 0.5
+				chain_time = 0.4
 			},
 			special_action_hold = {
 				action_name = "action_swipe_start",
-				chain_time = 0.5
+				chain_time = 0.4
 			}
 		},
 		weapon_box = {
 			0.08,
-			1.2,
+			2.75,
 			0.08
 		},
 		spline_settings = {
@@ -752,25 +752,26 @@ weapon_template.actions = {
 				0
 			}
 		},
-		damage_type = damage_types.combat_blade,
-		damage_profile = DamageProfileTemplates.force_staff_bash
+		damage_type = damage_types.blunt_heavy,
+		damage_profile = DamageProfileTemplates.force_staff_bash_stab_heavy
 	},
 	action_swipe = {
 		damage_window_start = 0.6333333333333333,
 		hit_armor_anim = "attack_hit_shield",
-		crosshair_type = "dot",
-		range_mod = 1.15,
+		allow_conditional_chain = true,
+		weapon_handling_template = "time_scale_1_2",
 		kind = "sweep",
 		first_person_hit_anim = "hit_right_shake",
-		anim_event = "attack_special_swipe",
+		crosshair_type = "dot",
 		first_person_hit_stop_anim = "attack_hit",
+		range_mod = 1.15,
 		allowed_during_sprint = true,
 		attack_direction_override = "left",
 		damage_window_end = 0.7,
 		uninterruptible = true,
-		allow_conditional_chain = true,
+		anim_event = "attack_special_swipe",
 		power_level = 650,
-		total_time = 1.1,
+		total_time = 0.75,
 		action_movement_curve = {
 			{
 				modifier = 0.3,
@@ -820,7 +821,7 @@ weapon_template.actions = {
 			},
 			special_action_hold = {
 				action_name = "action_stab_start",
-				chain_time = 0.9
+				chain_time = 0.7
 			},
 			shoot_pressed = {
 				chain_time = 1,
@@ -834,7 +835,7 @@ weapon_template.actions = {
 			},
 			vent = {
 				action_name = "action_vent",
-				chain_time = 0.9
+				chain_time = 0.6
 			}
 		},
 		weapon_box = {
@@ -850,7 +851,7 @@ weapon_template.actions = {
 				0
 			}
 		},
-		damage_type = damage_types.combat_blade,
+		damage_type = damage_types.blunt_light,
 		damage_profile = DamageProfileTemplates.force_staff_bash
 	},
 	action_swipe_heavy = {
@@ -918,7 +919,7 @@ weapon_template.actions = {
 			},
 			special_action_hold = {
 				action_name = "action_stab_start",
-				chain_time = 0.9
+				chain_time = 0.6
 			},
 			shoot_pressed = {
 				chain_time = 0.7,
@@ -932,7 +933,7 @@ weapon_template.actions = {
 			},
 			vent = {
 				action_name = "action_vent",
-				chain_time = 0.7
+				chain_time = 0.6
 			}
 		},
 		weapon_box = {
@@ -948,8 +949,8 @@ weapon_template.actions = {
 				0
 			}
 		},
-		damage_type = damage_types.combat_blade,
-		damage_profile = DamageProfileTemplates.force_staff_bash
+		damage_type = damage_types.blunt_heavy,
+		damage_profile = DamageProfileTemplates.heavy_force_staff_bash
 	},
 	action_vent = {
 		crosshair_type = "dot",

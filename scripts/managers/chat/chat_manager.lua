@@ -180,8 +180,6 @@ ChatManager.join_chat_channel = function (self, channel, host_peer_id, voice, te
 			Log.error("ChatManager", "Error joining channel %s: %s", channel, error)
 		end
 	end):catch(function (error)
-		self._channel_tags[channel] = nil
-
 		Log.error("ChatManager", "Error joining channel %s: %s", channel, error)
 	end)
 end
@@ -542,7 +540,6 @@ ChatManager._handle_event = function (self, message)
 		Managers.event:trigger("chat_manager_removed_channel", message.session_handle)
 
 		self._sessions[message.session_handle] = nil
-		self._channel_tags[message.session_handle] = nil
 		self._channel_host_peer_id[message.session_handle] = nil
 	elseif message.event == Vivox.EventType_TEXT_STREAM_UPDATED then
 		local state = session_text_state_enum(message.session_text_state)

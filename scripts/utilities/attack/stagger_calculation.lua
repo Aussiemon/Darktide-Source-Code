@@ -71,15 +71,6 @@ function _calculate_stagger_strength(damage_profile, target_settings, power_leve
 		stagger_strength = stagger_strength * math.clamp((1 + stagger_count) / 1.5, 1, 2.5)
 	end
 
-	local attacker_rending_multiplier = attacker_stat_buffs.rending_multiplier or 1
-	local target_rending_multiplier = target_stat_buffs.rending_multiplier or 1
-	local rending_multiplier = attacker_rending_multiplier + target_rending_multiplier - 2
-	local is_rending = rending_multiplier > 0
-
-	if is_rending then
-		stagger_strength = stagger_strength * (rending_stagger_strength_modifier * rending_multiplier + 1)
-	end
-
 	if optional_stagger_strength_multiplier then
 		local additional_stagger_strength = stagger_strength * optional_stagger_strength_multiplier
 		stagger_strength = stagger_strength + additional_stagger_strength

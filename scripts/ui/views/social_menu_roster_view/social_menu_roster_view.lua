@@ -1379,7 +1379,9 @@ SocialMenuRosterView._get_roster_widget = function (self, context, blueprint_nam
 	local widget = self:_create_widget(widget_name, widget_definition)
 
 	if widget_blueprint.init then
-		widget_blueprint.init(self, widget, context, callback(self, "cb_show_popup_menu_for_player", context))
+		local ui_renderer = self._offscreen_renderer or self._ui_renderer
+
+		widget_blueprint.init(self, widget, context, callback(self, "cb_show_popup_menu_for_player", context), ui_renderer)
 	end
 
 	return widget

@@ -2612,7 +2612,8 @@ local function generate_blueprints_function(grid_size, optional_item)
 				content.display_name = display_name
 				content.type_name = type_name
 				local type_name_style = style.type_name
-				content.rating_value = ItemUtils.item_level(item)
+				local item_level = item.override_item_rating_string or ItemUtils.item_level(item)
+				content.rating_value = item_level
 				local display_name_text_height = get_style_text_height(display_name, weapon_display_name_style, ui_renderer)
 				type_name_style.offset[2] = type_name_style.offset[2] + display_name_text_height
 				local item_rarity = item.rarity

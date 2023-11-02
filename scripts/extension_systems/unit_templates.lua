@@ -2439,6 +2439,7 @@ unit_templates.item_projectile = {
 		config:add("ProjectileFxExtension", {
 			projectile_template_name = projectile_template_name,
 			charge_level = charge_level,
+			is_critical_strike = is_critical_strike,
 			owner_unit = owner_unit
 		})
 		config:add("ProjectileUnitLocomotionExtension", {
@@ -2457,6 +2458,7 @@ unit_templates.item_projectile = {
 		game_object_data.item_id = item_id
 		game_object_data.projectile_template_id = projectile_template_name_id
 		game_object_data.charge_level = charge_level
+		game_object_data.is_critical_strike = is_critical_strike
 		local spawn_flow_event = projectile_template.spawn_flow_event
 
 		if spawn_flow_event then
@@ -2485,10 +2487,12 @@ unit_templates.item_projectile = {
 		local item_name = NetworkLookup.player_item_names[item_id]
 		local item = item_definitions[item_name]
 		local charge_level = go_field(game_session, game_object_id, "charge_level")
+		local is_critical_strike = go_field(game_session, game_object_id, "is_critical_strike")
 
 		config:add("ProjectileFxExtension", {
 			projectile_template_name = projectile_template_name,
 			charge_level = charge_level,
+			is_critical_strike = is_critical_strike,
 			owner_unit = owner_unit
 		})
 		config:add("ProjectileHuskLocomotionExtension", {

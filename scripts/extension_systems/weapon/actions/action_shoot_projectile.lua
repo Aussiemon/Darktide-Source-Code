@@ -43,15 +43,16 @@ ActionShootProjectile._shoot = function (self)
 	local material = nil
 	local weapon_item = self._weapon.item
 	local skip_aiming = fire_config and fire_config.skip_aiming
-	local position, rotation, direction, speed, momentum = nil
+	local shoot_position = action_component.shooting_position
+	local shoot_rotation = action_component.shooting_rotation
+	local position, rotation, direction, speed, momentum = AimProjectile.get_spawn_parameters_from_current_aim(action_settings, shoot_position, shoot_rotation, locomotion_template)
 
-	if skip_aiming then
-		local shoot_position = action_component.shooting_position
-		local shoot_rotation = action_component.shooting_rotation
-		position, rotation, direction, speed, momentum = AimProjectile.get_spawn_parameters_from_current_aim(action_settings, shoot_position, shoot_rotation, locomotion_template)
-	else
-		local action_aim_projectile = self._action_aim_projectile_component
-		position, rotation, direction, speed, momentum = AimProjectile.get_spawn_parameters_from_aim_component(action_aim_projectile)
+	if not skip_aiming then
+		local aim_position = position
+		local aim_direction = direction
+		position, rotation, direction, speed, momentum = AimProjectile.get_spawn_parameters_from_aim_component(self._action_aim_projectile_component)
+		position = aim_position
+		direction = aim_direction
 	end
 
 	local throw_parameters = locomotion_template and locomotion_template.throw_parameters and locomotion_template.throw_parameters.throw

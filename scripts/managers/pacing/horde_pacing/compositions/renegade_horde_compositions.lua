@@ -1896,6 +1896,176 @@ local horde_compositions = {
 				}
 			}
 		}
+	},
+	renegade_coordinated_melee_mix_2 = {
+		{
+			breeds = {
+				{
+					name = "chaos_poxwalker",
+					amount = {
+						8,
+						10
+					}
+				},
+				{
+					name = "renegade_melee",
+					amount = {
+						4,
+						5
+					}
+				}
+			}
+		},
+		{
+			breeds = {
+				{
+					name = "chaos_poxwalker",
+					amount = {
+						10,
+						12
+					}
+				},
+				{
+					name = "renegade_melee",
+					amount = {
+						5,
+						6
+					}
+				}
+			}
+		},
+		{
+			breeds = {
+				{
+					name = "chaos_poxwalker",
+					amount = {
+						12,
+						14
+					}
+				},
+				{
+					name = "renegade_melee",
+					amount = {
+						6,
+						7
+					}
+				},
+				{
+					name = "renegade_executor",
+					amount = {
+						1,
+						1
+					}
+				}
+			}
+		},
+		{
+			breeds = {
+				{
+					name = "chaos_poxwalker",
+					amount = {
+						14,
+						16
+					}
+				},
+				{
+					name = "renegade_melee",
+					amount = {
+						8,
+						9
+					}
+				},
+				{
+					name = "renegade_executor",
+					amount = {
+						1,
+						2
+					}
+				}
+			}
+		},
+		{
+			breeds = {
+				{
+					name = "chaos_poxwalker",
+					amount = {
+						16,
+						18
+					}
+				},
+				{
+					name = "renegade_melee",
+					amount = {
+						9,
+						10
+					}
+				},
+				{
+					name = "chaos_ogryn_executor",
+					amount = {
+						1,
+						1
+					}
+				}
+			}
+		}
+	},
+	renegade_small_coordinated_ranged_horde = {
+		{
+			breeds = {
+				{
+					name = "renegade_rifleman",
+					amount = {
+						4,
+						5
+					}
+				}
+			}
+		},
+		{
+			breeds = {
+				{
+					name = "renegade_rifleman",
+					amount = {
+						5,
+						6
+					}
+				}
+			}
+		},
+		{
+			breeds = {
+				{
+					name = "renegade_rifleman",
+					amount = {
+						6,
+						7
+					}
+				}
+			}
+		},
+		{
+			breeds = {
+				{
+					name = "renegade_rifleman",
+					amount = {
+						7,
+						8
+					}
+				}
+			}
+		},
+		{
+			breeds = {
+				{
+					name = "renegade_rifleman",
+					amount = {
+						8,
+						9
+					}
+				}
+			}
+		}
 	}
 }
 

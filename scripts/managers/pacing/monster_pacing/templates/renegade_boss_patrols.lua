@@ -194,6 +194,20 @@ local BOSS_PATROLS = {
 				"chaos_ogryn_gunner",
 				"renegade_gunner",
 				"renegade_gunner"
+			},
+			{
+				"renegade_berzerker",
+				"renegade_berzerker",
+				"renegade_berzerker",
+				"renegade_berzerker",
+				"renegade_berzerker",
+				"renegade_berzerker",
+				"renegade_berzerker",
+				"renegade_berzerker",
+				"renegade_berzerker",
+				"renegade_berzerker",
+				"renegade_berzerker",
+				"renegade_berzerker"
 			}
 		},
 		{
@@ -305,6 +319,37 @@ local BOSS_PATROLS = {
 				"renegade_gunner",
 				"renegade_gunner",
 				"renegade_gunner"
+			},
+			{
+				"renegade_shocktrooper",
+				"renegade_shocktrooper",
+				"renegade_shocktrooper",
+				"renegade_shocktrooper",
+				"renegade_shocktrooper",
+				"renegade_shocktrooper",
+				"renegade_shocktrooper",
+				"renegade_shocktrooper",
+				"renegade_shocktrooper",
+				"renegade_shocktrooper",
+				"renegade_shocktrooper",
+				"renegade_shocktrooper"
+			},
+			{
+				"renegade_berzerker",
+				"renegade_berzerker",
+				"renegade_berzerker",
+				"renegade_berzerker",
+				"renegade_berzerker",
+				"renegade_berzerker",
+				"renegade_berzerker",
+				"renegade_berzerker",
+				"renegade_berzerker",
+				"renegade_berzerker",
+				"renegade_berzerker",
+				"renegade_berzerker",
+				"renegade_berzerker",
+				"renegade_berzerker",
+				"renegade_berzerker"
 			}
 		},
 		{

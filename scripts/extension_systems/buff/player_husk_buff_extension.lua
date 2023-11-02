@@ -3,7 +3,8 @@ local PlayerHuskBuffExtension = class("PlayerHuskBuffExtension")
 local RPCS = {
 	"rpc_add_buff",
 	"rpc_remove_buff",
-	"rpc_buff_proc_set_active_time"
+	"rpc_buff_proc_set_active_time",
+	"rpc_buff_set_start_time"
 }
 local EMPTY_TABLE = {}
 
@@ -65,6 +66,10 @@ PlayerHuskBuffExtension.rpc_remove_buff = function (self, channel_id, game_objec
 end
 
 PlayerHuskBuffExtension.rpc_buff_proc_set_active_time = function (self, channel_id, game_object_id, server_index, activation_time)
+	return
+end
+
+PlayerHuskBuffExtension.rpc_buff_set_start_time = function (self, channel_id, game_object_id, server_index, activation_time)
 	return
 end
 

@@ -37,6 +37,7 @@ ActionZealotChannel.start = function (self, action_settings, t, time_scale, acti
 	self._num_ticks = 0
 	self._add_buff_time = action_settings.add_buff_time
 	self._end_anim_t = nil
+	self._num_ticks_done = 0
 	self._specialization_extension = ScriptUnit.extension(player_unit, "specialization_system")
 	self._offensive_buff = self._specialization_extension:has_special_rule(special_rules.zealot_channel_grants_offensive_buff) and action_settings.offensive_buff
 	self._defensive_buff = self._specialization_extension:has_special_rule(special_rules.zealot_channel_grants_defensive_buff) and action_settings.defensive_buff
@@ -91,6 +92,7 @@ ActionZealotChannel.start = function (self, action_settings, t, time_scale, acti
 
 	local duration = action_settings.duration
 	self._duration = t + duration
+	self._total_num_ticks = math.ceil(duration / talent_settings_3.bolstering_prayer.tick_rate)
 	local buff_extension = ScriptUnit.extension(player_unit, "buff_system")
 	local param_table = buff_extension:request_proc_event_param_table()
 
@@ -273,6 +275,7 @@ ActionZealotChannel._zealot_stagger = function (self, radius, power_level)
 		until true
 	end
 
+	self._num_ticks_done = self._num_ticks_done + 1
 	local force_stagger_radius = action_settings.force_stagger_radius
 	local force_stagger_duration = action_settings.force_stagger_duration
 
@@ -288,9 +291,17 @@ ActionZealotChannel._zealot_stagger = function (self, radius, power_level)
 				end
 
 				local minion_position = POSITION_LOOKUP[enemy_unit]
+				local enemy_breed = ScriptUnit.extension(enemy_unit, "unit_data_system"):breed()
+				local is_boss = enemy_breed.is_boss
 				local attack_direction = Vector3.normalize(Vector3.flat(minion_position - player_position))
 
-				Stagger.force_stagger(enemy_unit, "light", attack_direction, force_stagger_duration, 1, force_stagger_duration)
+				if is_boss then
+					if self._num_ticks_done == 1 or self._num_ticks_done == self._total_num_ticks then
+						Stagger.force_stagger(enemy_unit, "light", attack_direction, force_stagger_duration, 1, force_stagger_duration)
+					end
+				else
+					Stagger.force_stagger(enemy_unit, "light", attack_direction, force_stagger_duration, 1, force_stagger_duration)
+				end
 			until true
 		end
 	end

@@ -1433,7 +1433,7 @@ return {
 			y_normalized = 0,
 			talent = "zealot_restore_stealth_cd_on_damage",
 			gradient_color = "content/ui/textures/color_ramps/class_node_colors/zealot_02",
-			icon = "content/ui/textures/icons/talents/zealot/zealot_attack_speed",
+			icon = "content/ui/textures/icons/talents/zealot/zealot_restore_stealth_cd_on_damage",
 			x = 1175,
 			x_normalized = 0,
 			children = {

@@ -962,7 +962,7 @@ weapon_template.actions = {
 		damage_profile = DamageProfileTemplates.light_sword_smiter,
 		damage_type = damage_types.metal_slashing_medium,
 		damage_type_special_active = damage_types.power_sword,
-		damage_profile_special_active = DamageProfileTemplates.light_powersword_smiter,
+		damage_profile_special_active = DamageProfileTemplates.light_powersword_active_smiter,
 		time_scale_stat_buffs = {
 			buff_stat_buffs.attack_speed,
 			buff_stat_buffs.melee_attack_speed
@@ -1178,7 +1178,7 @@ weapon_template.actions = {
 		outer_damage_type = damage_types.physical
 	},
 	action_activate_special = {
-		activation_time = 0.35,
+		activation_time = 0.3,
 		kind = "activate_special",
 		start_input = "special_action",
 		weapon_handling_template = "time_scale_1",
@@ -1238,11 +1238,11 @@ weapon_template.actions = {
 			},
 			start_attack = {
 				action_name = "action_melee_start_left",
-				chain_time = 0.85
+				chain_time = 0.7
 			},
 			block = {
 				action_name = "action_block",
-				chain_time = 0.8
+				chain_time = 0.5
 			}
 		}
 	},
@@ -1298,7 +1298,7 @@ weapon_template.keywords = {
 }
 weapon_template.dodge_template = "smiter"
 weapon_template.sprint_template = "default"
-weapon_template.stamina_template = "smiter"
+weapon_template.stamina_template = "powersword_p1_m2"
 weapon_template.toughness_template = "default"
 weapon_template.movement_curve_modifier_template = "chainsword_p1_m1"
 weapon_template.footstep_intervals = FootstepIntervalsTemplates.default

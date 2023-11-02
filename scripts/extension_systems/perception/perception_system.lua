@@ -20,6 +20,10 @@ PerceptionSystem.init = function (self, ...)
 	self:_preparse_bot_gestalt_target_selection_weights(BotGestaltTargetSelectionWeights)
 end
 
+PerceptionSystem.destroy = function (self)
+	table.clear(self._line_of_sight_raycast_data)
+end
+
 PerceptionSystem._init_line_of_sight_raycasts = function (self, physics_world)
 	local line_of_sight_raycast_data = {}
 
@@ -30,7 +34,7 @@ PerceptionSystem._init_line_of_sight_raycasts = function (self, physics_world)
 			local los_data = {
 				current_casting_units = {}
 			}
-			local cb = callback(self, "physics_cb_line_of_sight_hit", los_data)
+			local cb = callback(self, "physics_cb_line_of_sight_hit", line_of_sight_collision_filter)
 			los_data.raycast = PhysicsWorld.make_raycast(physics_world, cb, "closest", "types", "both", "collision_filter", line_of_sight_collision_filter)
 			line_of_sight_raycast_data[line_of_sight_collision_filter] = los_data
 		end
@@ -39,20 +43,21 @@ PerceptionSystem._init_line_of_sight_raycasts = function (self, physics_world)
 	self._line_of_sight_raycast_data = line_of_sight_raycast_data
 end
 
-PerceptionSystem.physics_cb_line_of_sight_hit = function (self, los_data, id, hit, hit_position)
+PerceptionSystem.physics_cb_line_of_sight_hit = function (self, line_of_sight_collision_filter, id, hit, hit_position)
+	local los_data = self._line_of_sight_raycast_data[line_of_sight_collision_filter]
 	local current_casting_units = los_data.current_casting_units
 	local casting_unit = current_casting_units[1]
 	local extension = self._unit_to_extension_map[casting_unit]
 
 	if extension then
-		extension:cb_line_of_sight_hit(los_data, hit, hit_position)
+		extension:cb_line_of_sight_hit(hit, hit_position)
 	end
 
 	table.remove(current_casting_units, 1)
 end
 
-PerceptionSystem.add_line_of_sight_raycast_query = function (self, unit, los_from_position, los_direction, los_distance, collision_filter)
-	local los_data = self._line_of_sight_raycast_data[collision_filter]
+PerceptionSystem.add_line_of_sight_raycast_query = function (self, unit, los_from_position, los_direction, los_distance, line_of_sight_collision_filter)
+	local los_data = self._line_of_sight_raycast_data[line_of_sight_collision_filter]
 	local raycast = los_data.raycast
 
 	raycast:cast(los_from_position, los_direction, los_distance)

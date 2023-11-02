@@ -108,24 +108,26 @@ local abilities = {
 		}
 	},
 	psyker_smite = {
-		ability_type = "grenade_ability",
+		show_in_firendly_hud = false,
+		inventory_item_name = "content/items/weapons/player/psyker_smite",
+		can_be_previously_wielded_to = true,
 		hud_icon = "content/ui/materials/icons/abilities/throwables/default",
 		exclude_from_persistant_player_data = true,
-		inventory_item_name = "content/items/weapons/player/psyker_smite",
+		ability_type = "grenade_ability",
 		icon = "content/ui/materials/icons/abilities/combat/default",
-		can_be_previously_wielded_to = true,
 		max_charges = 0,
 		archetypes = {
 			"psyker"
 		}
 	},
 	psyker_chain_lightning = {
-		ability_type = "grenade_ability",
+		show_in_firendly_hud = false,
+		inventory_item_name = "content/items/weapons/player/psyker_chain_lightning",
+		can_be_previously_wielded_to = false,
 		hud_icon = "content/ui/materials/icons/abilities/throwables/default",
 		exclude_from_persistant_player_data = true,
-		inventory_item_name = "content/items/weapons/player/psyker_chain_lightning",
+		ability_type = "grenade_ability",
 		icon = "content/ui/materials/icons/abilities/combat/default",
-		can_be_previously_wielded_to = false,
 		max_charges = 0,
 		archetypes = {
 			"psyker"
@@ -133,6 +135,7 @@ local abilities = {
 	},
 	psyker_throwing_knives = {
 		cooldown = 2,
+		show_in_firendly_hud = false,
 		inventory_item_name = "content/items/weapons/player/psyker_throwing_knives",
 		can_be_previously_wielded_to = false,
 		can_be_wielded_when_depleted = true,

@@ -192,7 +192,7 @@ weapon_template.actions = {
 		damage_window_start = 0.23,
 		hit_armor_anim = "attack_hit_shield",
 		kind = "sweep",
-		weapon_handling_template = "time_scale_1_hatchet",
+		weapon_handling_template = "time_scale_1_1_hatchet",
 		first_person_hit_anim = "hit_down_shake",
 		anim_event_3p = "attack_swing_down_ninja",
 		first_person_hit_stop_anim = "hit_stop",
@@ -274,7 +274,7 @@ weapon_template.actions = {
 				0
 			}
 		},
-		damage_profile = DamageProfileTemplates.default_light_hatchet,
+		damage_profile = DamageProfileTemplates.default_light_hatchet_smiter,
 		damage_type = damage_types.axe_light,
 		time_scale_stat_buffs = {
 			buff_stat_buffs.attack_speed,
@@ -749,7 +749,7 @@ weapon_template.actions = {
 			},
 			start_attack = {
 				action_name = "action_melee_start_left",
-				chain_time = 0.63
+				chain_time = 0.45
 			},
 			special_action = {
 				action_name = "action_special_down_right",
@@ -772,7 +772,7 @@ weapon_template.actions = {
 				0
 			}
 		},
-		damage_profile = DamageProfileTemplates.default_light_hatchet,
+		damage_profile = DamageProfileTemplates.default_light_hatchet_smiter,
 		damage_type = damage_types.axe_light,
 		time_scale_stat_buffs = {
 			buff_stat_buffs.attack_speed,

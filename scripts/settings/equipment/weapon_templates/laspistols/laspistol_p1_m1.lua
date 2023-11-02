@@ -30,7 +30,7 @@ local sway_trait_templates = WeaponTraitTemplates[template_types.sway]
 local weapon_template = {
 	action_inputs = {
 		shoot_pressed = {
-			buffer_time = 0.1,
+			buffer_time = 0.225,
 			max_queue = 2,
 			input_sequence = {
 				{
@@ -40,7 +40,7 @@ local weapon_template = {
 			}
 		},
 		zoom_shoot = {
-			buffer_time = 0.1,
+			buffer_time = 0.225,
 			max_queue = 2,
 			input_sequence = {
 				{
@@ -194,13 +194,13 @@ weapon_template.actions = {
 	action_shoot_hip = {
 		start_input = "shoot_pressed",
 		kind = "shoot_hit_scan",
-		sprint_ready_up_time = 0.2,
+		sprint_ready_up_time = 0.05,
 		weapon_handling_template = "immediate_single_shot_pistol",
 		allow_shots_with_less_than_required_ammo = true,
 		ammunition_usage = 2,
 		allowed_during_sprint = false,
 		sprint_requires_press_to_interrupt = true,
-		total_time = 0.5,
+		total_time = 0.3,
 		action_movement_curve = {
 			{
 				modifier = 1.2,
@@ -260,7 +260,7 @@ weapon_template.actions = {
 			},
 			shoot_pressed = {
 				action_name = "action_shoot_hip",
-				chain_time = 0.225
+				chain_time = 0.2
 			},
 			zoom = {
 				action_name = "action_zoom",
@@ -353,11 +353,11 @@ weapon_template.actions = {
 			},
 			zoom_shoot = {
 				action_name = "action_shoot_zoomed",
-				chain_time = 0.225
+				chain_time = 0.2
 			},
 			zoom_release = {
 				action_name = "action_unzoom",
-				chain_time = 0.225
+				chain_time = 0.2
 			},
 			special_action_push = {
 				{
@@ -823,7 +823,7 @@ weapon_template.conditional_state_to_action_input = {
 weapon_template.no_ammo_delay = 0.25
 weapon_template.uses_ammunition = true
 weapon_template.uses_overheat = false
-weapon_template.sprint_ready_up_time = 0.1
+weapon_template.sprint_ready_up_time = 0.02
 weapon_template.max_first_person_anim_movement_speed = 5.8
 weapon_template.fx_sources = {
 	_muzzle = "fx_muzzle_01",
@@ -837,7 +837,7 @@ weapon_template.alternate_fire_settings = {
 	recoil_template = "default_laspistol_killshot",
 	stop_anim_event = "to_unaim_reflex",
 	toughness_template = "killshot_zoomed",
-	spread_template = "default_lasgun_killshot",
+	spread_template = "default_laspistol_killshot",
 	suppression_template = "default_laspistol_killshot",
 	crosshair_type = "ironsight",
 	start_anim_event = "to_reflex",

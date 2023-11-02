@@ -110,6 +110,10 @@ PlayerCharacterStateSliding.on_exit = function (self, unit, t, next_state)
 
 	self._fx_extension:stop_looping_wwise_event(self._sliding_loop_alias)
 
+	if next_state == "falling" and movement_state_component.is_crouching and not Crouch.crouch_input(self._input_extension, true, false, true) and Crouch.can_exit(unit) then
+		Crouch.exit(unit, self._first_person_extension, self._animation_extension, self._weapon_extension, self._movement_state_component, self._sway_control_component, self._sway_component, self._spread_control_component, t)
+	end
+
 	if next_state == "walking" then
 		if movement_state_component.is_crouching then
 			self._first_person_extension:set_wanted_player_height("crouch", 0.3)
@@ -154,7 +158,7 @@ PlayerCharacterStateSliding.fixed_update = function (self, unit, dt, t, next_sta
 	local flat_move_speed_sq = Vector3.length_squared(Vector3.flat(self._locomotion_component.velocity_current))
 
 	if commit_period_over or flat_move_speed_sq < 4 then
-		is_crouching = Crouch.check(unit, first_person_extension, anim_extension, weapon_extension, move_state_component, self._sway_control_component, self._sway_component, self._spread_control_component, input_source, t)
+		is_crouching = Crouch.check(unit, first_person_extension, anim_extension, weapon_extension, move_state_component, self._sway_control_component, self._sway_component, self._spread_control_component, input_source, t, true)
 	end
 
 	PlayerUnitPeeking.fixed_update(self._peeking_component, self._ledge_finder_extension, anim_extension, first_person_extension, self._specialization_extension, is_crouching, self._breed)

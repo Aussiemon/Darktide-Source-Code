@@ -115,13 +115,10 @@ ActionPsykerShout.start = function (self, action_settings, t, time_scale, action
 		buff_extension:add_proc_event(proc_events.on_combat_ability, param_table)
 	end
 
-	local shout_drains_warp_charge = specialization_extension:has_special_rule(special_rules.shout_drains_warp_charge)
+	local shout_warp_charge_vent_improved = specialization_extension:has_special_rule(special_rules.shout_warp_charge_vent_improved)
+	local drain_amount = shout_warp_charge_vent_improved and talent_settings.combat_ability.warpcharge_vent_improved or talent_settings.combat_ability.warpcharge_vent_base
 
-	if shout_drains_warp_charge then
-		local drain_amount = talent_settings.combat_ability.warpcharge_vent
-
-		WarpCharge.decrease_immediate(drain_amount, warp_charge_component, player_unit)
-	end
+	WarpCharge.decrease_immediate(drain_amount, warp_charge_component, player_unit)
 end
 
 ActionPsykerShout.fixed_update = function (self, dt, t, time_in_action)

@@ -11,6 +11,22 @@ local player = {
 				event = "wwise/events/minions/play_enemy_mutant_charger_smash_ogryn",
 				only_3p = true
 			}
+		},
+		damage_reduced = {
+			{
+				event = "wwise/events/minions/play_enemy_mutant_charger_smash_ogryn",
+				only_3p = true
+			}
+		},
+		toughness_absorbed_melee = {
+			{
+				event = "wwise/events/player/play_toughness_hits_melee",
+				hit_direction_interface = true
+			},
+			{
+				event = "wwise/events/minions/play_enemy_mutant_charger_smash_ogryn",
+				only_3p = true
+			}
 		}
 	},
 	vfx = {

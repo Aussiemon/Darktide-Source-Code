@@ -330,17 +330,17 @@ weapon_template.actions = {
 			reload = {
 				action_name = "action_reload"
 			},
+			start_attack = {
+				action_name = "action_melee_start_left",
+				chain_time = 0.6
+			},
 			zoom_shoot = {
 				action_name = "action_shoot_zoomed",
 				chain_time = 1.25
 			},
 			zoom_release = {
 				action_name = "action_unzoom",
-				chain_time = 0.75
-			},
-			start_attack = {
-				action_name = "action_melee_start_right",
-				chain_time = 1.25
+				chain_time = 0.6
 			}
 		},
 		fire_configuration = {
@@ -541,7 +541,7 @@ weapon_template.actions = {
 			},
 			heavy_attack = {
 				action_name = "action_right_heavy",
-				chain_time = 0.6
+				chain_time = 0.5
 			},
 			special_action_start = {
 				action_name = "action_start_special",
@@ -694,7 +694,7 @@ weapon_template.actions = {
 			},
 			start_attack = {
 				action_name = "action_melee_start_right",
-				chain_time = 0.85
+				chain_time = 0.65
 			},
 			special_action_start = {
 				action_name = "action_start_special",
@@ -793,7 +793,7 @@ weapon_template.actions = {
 			},
 			start_attack = {
 				action_name = "action_melee_start_left_2",
-				chain_time = 0.7
+				chain_time = 0.5
 			},
 			special_action_start = {
 				action_name = "action_start_special",
@@ -840,7 +840,7 @@ weapon_template.actions = {
 		hit_armor_anim = "attack_hit",
 		weapon_handling_template = "time_scale_1_1",
 		kind = "sweep",
-		attack_direction_override = "push",
+		attack_direction_override = "up",
 		range_mod = 1.15,
 		allowed_during_sprint = true,
 		damage_window_end = 0.4,
@@ -920,7 +920,7 @@ weapon_template.actions = {
 		end,
 		weapon_box = {
 			0.3,
-			0.9,
+			1.3,
 			0.3
 		},
 		spline_settings = {
@@ -931,7 +931,7 @@ weapon_template.actions = {
 				0
 			}
 		},
-		damage_profile = DamageProfileTemplates.light_grenadier_gauntlet_tank,
+		damage_profile = DamageProfileTemplates.light_grenadier_gauntlet_smiter,
 		herding_template = HerdingTemplates.uppercut,
 		damage_type = damage_types.blunt,
 		wounds_shape = wounds_shapes.vertical_slash_coarse
@@ -941,7 +941,7 @@ weapon_template.actions = {
 		hit_armor_anim = "attack_hit",
 		kind = "sweep",
 		weapon_handling_template = "time_scale_1_5",
-		attack_direction_override = "push",
+		attack_direction_override = "down",
 		first_person_hit_stop_anim = "attack_hit",
 		range_mod = 1.25,
 		allowed_during_sprint = true,
@@ -1016,8 +1016,8 @@ weapon_template.actions = {
 				0
 			}
 		},
-		herding_template = HerdingTemplates.linesman_left_heavy,
-		damage_profile = DamageProfileTemplates.heavy_grenadier_gauntlet_tank,
+		herding_template = HerdingTemplates.smiter_down,
+		damage_profile = DamageProfileTemplates.heavy_grenadier_gauntlet_smiter,
 		damage_type = damage_types.blunt,
 		wounds_shape = wounds_shapes.vertical_slash_coarse
 	},
@@ -1187,7 +1187,7 @@ weapon_template.actions = {
 			}
 		},
 		herding_template = HerdingTemplates.ogryn_punch,
-		damage_profile = DamageProfileTemplates.heavy_grenadier_gauntlet_tank,
+		damage_profile = DamageProfileTemplates.heavy_grenadier_gauntlet_smiter,
 		damage_type = damage_types.blunt,
 		wounds_shape = wounds_shapes.default
 	},

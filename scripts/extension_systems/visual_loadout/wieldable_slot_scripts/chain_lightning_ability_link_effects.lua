@@ -387,7 +387,7 @@ ChainLightningAbilityLinkEffects._find_no_target = function (self, t)
 	local chain_root_node = self._chain_root_node
 	local context = self._func_context
 
-	if chain_root_node:num_children() == 0 then
+	if chain_root_node:num_children() <= 0 then
 		local target_pos, target_normal = self:_find_no_target_pos(t)
 
 		if not chain_root_node:value("fx_data") then

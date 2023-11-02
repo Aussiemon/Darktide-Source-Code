@@ -368,7 +368,7 @@ recoil_templates.hip_lasgun_killshot = {
 			},
 			{
 				pitch = {
-					lerp_perfect = 0.05,
+					lerp_perfect = 0.005,
 					lerp_basic = 0.0375
 				},
 				yaw = {
@@ -378,7 +378,7 @@ recoil_templates.hip_lasgun_killshot = {
 			},
 			{
 				pitch = {
-					lerp_perfect = 0.05,
+					lerp_perfect = 0.005,
 					lerp_basic = 0.0325
 				},
 				yaw = {
@@ -388,7 +388,7 @@ recoil_templates.hip_lasgun_killshot = {
 			},
 			{
 				pitch = {
-					lerp_perfect = 0.05,
+					lerp_perfect = 0.005,
 					lerp_basic = 0.025
 				},
 				yaw = {
@@ -401,71 +401,71 @@ recoil_templates.hip_lasgun_killshot = {
 			{
 				pitch = {
 					lerp_perfect = 0,
+					lerp_basic = 0.0005
+				},
+				yaw = {
+					lerp_perfect = 0,
+					lerp_basic = 0.001
+				}
+			},
+			{
+				pitch = {
+					lerp_perfect = 0,
+					lerp_basic = 0.001
+				},
+				yaw = {
+					lerp_perfect = 0,
+					lerp_basic = 0.001
+				}
+			},
+			{
+				pitch = {
+					lerp_perfect = 0,
+					lerp_basic = 0.00125
+				},
+				yaw = {
+					lerp_perfect = 0,
+					lerp_basic = 0.001
+				}
+			},
+			{
+				pitch = {
+					lerp_perfect = 0,
+					lerp_basic = 0.0015
+				},
+				yaw = {
+					lerp_perfect = 0,
+					lerp_basic = 0.0025
+				}
+			},
+			{
+				pitch = {
+					lerp_perfect = 0,
+					lerp_basic = 0.0015
+				},
+				yaw = {
+					lerp_perfect = 0,
 					lerp_basic = 0.005
-				},
-				yaw = {
-					lerp_perfect = 0,
-					lerp_basic = 0.01
 				}
 			},
 			{
 				pitch = {
 					lerp_perfect = 0,
-					lerp_basic = 0.006
+					lerp_basic = 0.0015
 				},
 				yaw = {
 					lerp_perfect = 0,
-					lerp_basic = 0.02
+					lerp_basic = 0.015
 				}
 			},
 			{
 				pitch = {
 					lerp_perfect = 0,
-					lerp_basic = 0.00625
+					lerp_basic = 0.0015
 				},
 				yaw = {
 					lerp_perfect = 0,
-					lerp_basic = 0.03
-				}
-			},
-			{
-				pitch = {
-					lerp_perfect = 0,
-					lerp_basic = 0.0065
-				},
-				yaw = {
-					lerp_perfect = 0,
-					lerp_basic = 0.045
-				}
-			},
-			{
-				pitch = {
-					lerp_perfect = 0,
-					lerp_basic = 0.0065
-				},
-				yaw = {
-					lerp_perfect = 0,
-					lerp_basic = 0.055
-				}
-			},
-			{
-				pitch = {
-					lerp_perfect = 0,
-					lerp_basic = 0.0065
-				},
-				yaw = {
-					lerp_perfect = 0,
-					lerp_basic = 0.065
-				}
-			},
-			{
-				pitch = {
-					lerp_perfect = 0,
-					lerp_basic = 0.0065
-				},
-				yaw = {
-					lerp_perfect = 0,
-					lerp_basic = 0.075
+					lerp_basic = 0.025
 				}
 			}
 		},
@@ -478,8 +478,8 @@ recoil_templates.hip_lasgun_killshot = {
 			lerp_scalar = 0.2
 		},
 		new_influence_percent = {
-			lerp_perfect = 0.05,
-			lerp_basic = 0.2
+			lerp_perfect = 0.025,
+			lerp_basic = 0.1
 		}
 	},
 	moving = {
@@ -498,8 +498,8 @@ recoil_templates.hip_lasgun_killshot = {
 			"still"
 		},
 		new_influence_percent = {
-			lerp_perfect = 0.05,
-			lerp_basic = 0.1
+			lerp_perfect = 0.01,
+			lerp_basic = 0.05
 		}
 	},
 	crouch_moving = {
@@ -508,8 +508,8 @@ recoil_templates.hip_lasgun_killshot = {
 			"still"
 		},
 		new_influence_percent = {
-			lerp_perfect = 0.075,
-			lerp_basic = 0.125
+			lerp_perfect = 0.06,
+			lerp_basic = 0.12
 		}
 	}
 }
@@ -1269,7 +1269,7 @@ recoil_templates.lasgun_p1_m1_ads_killshot = {
 			lerp_basic = 0.6
 		},
 		visual_recoil_settings = {
-			intensity = 3.5,
+			intensity = 4.5,
 			lerp_scalar = 0.8,
 			yaw_intensity = 3.25
 		}

@@ -365,19 +365,19 @@ weapon_template.actions = {
 		total_time = math.huge,
 		action_movement_curve = {
 			{
-				modifier = 0.4,
+				modifier = 0.6,
 				t = 0.1
 			},
 			{
-				modifier = 0.4,
+				modifier = 0.6,
 				t = 0.15
 			},
 			{
-				modifier = 0.6,
+				modifier = 0.8,
 				t = 0.2
 			},
 			{
-				modifier = 0.4,
+				modifier = 0.6,
 				t = 1
 			},
 			start_modifier = 1
@@ -442,19 +442,19 @@ weapon_template.actions = {
 		total_time = math.huge,
 		action_movement_curve = {
 			{
-				modifier = 0.4,
+				modifier = 0.6,
 				t = 0.1
 			},
 			{
-				modifier = 0.4,
+				modifier = 0.6,
 				t = 0.15
 			},
 			{
-				modifier = 0.6,
+				modifier = 0.8,
 				t = 0.2
 			},
 			{
-				modifier = 0.4,
+				modifier = 0.6,
 				t = 1
 			},
 			start_modifier = 1

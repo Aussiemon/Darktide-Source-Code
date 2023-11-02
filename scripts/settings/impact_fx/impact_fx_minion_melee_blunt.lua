@@ -15,6 +15,30 @@ local player = {
 				event = "wwise/events/player/play_player_get_hit_blunt_husk",
 				only_3p = true
 			}
+		},
+		damage_reduced = {
+			{
+				event = "wwise/events/player/play_player_get_hit_blunt",
+				hit_direction_interface = true
+			},
+			{
+				event = "wwise/events/player/play_player_get_hit_blunt_husk",
+				only_3p = true
+			}
+		},
+		toughness_absorbed_melee = {
+			{
+				event = "wwise/events/player/play_toughness_hits_melee",
+				hit_direction_interface = true
+			},
+			{
+				event = "wwise/events/player/play_player_get_hit_blunt",
+				hit_direction_interface = true
+			},
+			{
+				event = "wwise/events/player/play_player_get_hit_blunt_husk",
+				only_3p = true
+			}
 		}
 	},
 	vfx = {

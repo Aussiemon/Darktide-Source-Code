@@ -1,3 +1,5 @@
+-- WARNING: Error occurred during decompilation.
+--   Code may be incomplete or incorrect.
 local HudHealthBarLogic = require("scripts/ui/hud/elements/hud_health_bar_logic")
 local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
 local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
@@ -294,8 +296,8 @@ HudElementPlayerPanelBase._update_player_features = function (self, dt, t, playe
 	end
 
 	if supported_features.throwables then
-		local throwables_visible = not dead and not hogtied and ability_extension ~= nil
-		local throwables_status = self:_get_weapon_throwables_status(ability_extension)
+		local throwables_status, throwables_visible = self:_get_weapon_throwables_status(ability_extension)
+		throwables_visible = throwables_visible and not dead and not hogtied
 
 		if throwables_status ~= self._throwables_status or throwables_visible ~= self._throwables_visible then
 			self:_set_throwables_status(throwables_status, throwables_visible, ui_renderer)
@@ -306,8 +308,8 @@ HudElementPlayerPanelBase._update_player_features = function (self, dt, t, playe
 	end
 
 	if supported_features.ammo then
-		local ammo_visible = not dead and not hogtied and unit_data_extension ~= nil
-		local ammo_status = unit_data_extension and self:_get_weapon_ammo_status(unit_data_extension)
+		local ammo_status, ammo_visible = self:_get_weapon_ammo_status(unit_data_extension, visual_loadout_extension)
+		ammo_visible = ammo_visible and not dead and not hogtied
 
 		if ammo_status ~= self._ammo_status or ammo_visible ~= self._ammo_visible then
 			self:_set_ammo_level(ammo_status, ammo_visible, ui_renderer)
@@ -733,14 +735,19 @@ HudElementPlayerPanelBase._get_weapon_throwables_status = function (self, abilit
 	local max_status = 3
 
 	if not ability_extension then
-		return max_status
+		return max_status, false
 	end
 
 	local equipped_abilities = ability_extension:equipped_abilities()
 	local ability_id = "grenade_ability"
+	local ability = equipped_abilities[ability_id]
 
-	if not equipped_abilities[ability_id] then
-		return max_status
+	if not ability then
+		return max_status, false
+	end
+
+	if not ability.show_in_firendly_hud then
+		return max_status, true
 	end
 
 	local max_ability_charges = ability_extension:max_ability_charges(ability_id)
@@ -751,26 +758,38 @@ HudElementPlayerPanelBase._get_weapon_throwables_status = function (self, abilit
 		local ability_charges_fraction = remaining_ability_charges / max_ability_charges
 		ability_charges_status = math.ceil(ability_charges_fraction / (1 / max_status))
 
-		if remaining_ability_charges == 1 then
+		if max_ability_charges == 1 and remaining_ability_charges == 1 then
 			ability_charges_status = max_status
+		elseif max_ability_charges == 2 and remaining_ability_charges == 1 then
+			ability_charges_status = 2
 		end
 
-		return ability_charges_status
+		return ability_charges_status, true
 	end
 
-	return ability_charges_status
+	return ability_charges_status, true
 end
 
-HudElementPlayerPanelBase._get_weapon_ammo_status = function (self, unit_data_extension)
+HudElementPlayerPanelBase._get_weapon_ammo_status = function (self, unit_data_extension, visual_loadout_extension)
+	local max_status = 3
+
+	if not unit_data_extension then
+		return max_status, false
+	end
+
 	local weapon_slots = self._weapon_slots
 	local total_current_ammo = 0
 	local total_max_ammo = 0
+	local has_ammo = false
 
 	for i = 1, #weapon_slots do
 		local slot_id = weapon_slots[i]
 		local inventory_component = unit_data_extension:read_component(slot_id)
+		local weapon_template = visual_loadout_extension:weapon_template_from_slot(slot_id)
+		local uses_ammunition = weapon_template and weapon_template.uses_ammunition
 
-		if inventory_component then
+		if inventory_component and uses_ammunition then
+			has_ammo = true
 			local max_clip = inventory_component.max_ammunition_clip or 0
 			local max_reserve = inventory_component.max_ammunition_reserve or 0
 			local current_clip = inventory_component.current_ammunition_clip or 0
@@ -780,7 +799,6 @@ HudElementPlayerPanelBase._get_weapon_ammo_status = function (self, unit_data_ex
 		end
 	end
 
-	local max_status = 3
 	local ammo_status = max_status
 
 	if total_max_ammo > 0 then
@@ -788,7 +806,7 @@ HudElementPlayerPanelBase._get_weapon_ammo_status = function (self, unit_data_ex
 		ammo_status = math.ceil(weapon_ammo_fraction / (1 / max_status))
 	end
 
-	return ammo_status
+	return has_ammo and ammo_status or max_status, true
 end
 
 HudElementPlayerPanelBase._set_throwables_status = function (self, throwables_status, visible, ui_renderer)
@@ -1351,7 +1369,7 @@ HudElementPlayerPanelBase._update_player_name_prefix = function (self, player)
 end
 
 HudElementPlayerPanelBase._chat_manager_participant_update = function (self, channel_handle, participant)
-	if self._player and not self._player.__deleted and self._player._peer_id == participant.peer_id then
+	if self._player and not self._player.__deleted and self._player:account_id() == participant.account_id then
 		self._is_player_speaking = participant.is_speaking
 	end
 end

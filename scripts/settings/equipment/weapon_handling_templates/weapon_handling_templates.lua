@@ -302,6 +302,7 @@ local weapon_handling_templates = {
 		}
 	},
 	forcestaff_p3_m1_single_shot = {
+		time_scale = lerpable_timescale(1.5),
 		critical_strike = {
 			chance_modifier = {
 				lerp_perfect = 0.25,
@@ -423,7 +424,7 @@ local weapon_handling_templates = {
 		},
 		critical_strike = {
 			chance_modifier = 0.02,
-			max_critical_shots = 4
+			max_critical_shots = 2
 		}
 	},
 	lasgun_p3_m3_full_auto = {
@@ -436,7 +437,7 @@ local weapon_handling_templates = {
 		},
 		critical_strike = {
 			chance_modifier = 0.02,
-			max_critical_shots = 3
+			max_critical_shots = 2
 		}
 	},
 	lasgun_p3_m2_full_auto = {
@@ -449,7 +450,7 @@ local weapon_handling_templates = {
 		},
 		critical_strike = {
 			chance_modifier = 0.02,
-			max_critical_shots = 5
+			max_critical_shots = 2
 		}
 	},
 	lasgun_triple_burst_slow = {
@@ -500,7 +501,7 @@ local weapon_handling_templates = {
 	autogun_quad_burst = {
 		fire_rate = {
 			max_shots = 2,
-			auto_fire_time = 0.175,
+			auto_fire_time = 0.085,
 			fire_time = 0
 		}
 	},

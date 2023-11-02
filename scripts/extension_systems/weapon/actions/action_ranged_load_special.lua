@@ -21,7 +21,7 @@ ActionReloadShotgunSpecial.start = function (self, action_settings, t, time_scal
 	ActionReloadShotgunSpecial.super.start(self, action_settings, t, time_scale, ...)
 
 	if action_settings.stop_alternate_fire and self._alternate_fire_component.is_active then
-		AlternateFire.stop(self._alternate_fire_component, self._peeking_component, self._first_person_extension, self._weapon_tweak_templates_component, self._animation_extension, self._weapon_template, false, self._player_unit)
+		AlternateFire.stop(self._alternate_fire_component, self._peeking_component, self._first_person_extension, self._weapon_tweak_templates_component, self._animation_extension, self._weapon_template, false, self._player_unit, true)
 	end
 
 	local action_reload_component = self._action_reload_component
@@ -55,8 +55,9 @@ ActionReloadShotgunSpecial._reload = function (self, t, time_in_action)
 	local refill_at_time = reload_settings.refill_at_time
 	local has_refilled_ammunition = action_reload_component.has_refilled_ammunition
 	local time_scale = weapon_action_component.time_scale
+	local scaled_refill_at_time = refill_at_time / time_scale
 
-	if time_in_action > refill_at_time * time_scale and not has_refilled_ammunition then
+	if time_in_action > scaled_refill_at_time and not has_refilled_ammunition then
 		local cost = reload_settings.cost
 
 		if cost and cost > 0 then
@@ -72,6 +73,25 @@ ActionReloadShotgunSpecial._reload = function (self, t, time_in_action)
 		action_reload_component.has_refilled_ammunition = true
 
 		self:_set_weapon_special(true, t)
+
+		local weapon_template = self._weapon_template
+		local param_table_on_reload_start = self._buff_extension:request_proc_event_param_table()
+
+		if param_table_on_reload_start then
+			param_table_on_reload_start.weapon_template = weapon_template
+			param_table_on_reload_start.shotgun = false
+
+			self._buff_extension:add_proc_event(buff_proc_events.on_reload_start, param_table_on_reload_start)
+		end
+
+		local param_table_on_reload = self._buff_extension:request_proc_event_param_table()
+
+		if param_table_on_reload then
+			param_table_on_reload.weapon_template = weapon_template
+			param_table_on_reload.shotgun = false
+
+			self._buff_extension:add_proc_event(buff_proc_events.on_reload, param_table_on_reload)
+		end
 	end
 end
 

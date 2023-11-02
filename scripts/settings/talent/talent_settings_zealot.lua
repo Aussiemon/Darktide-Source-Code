@@ -223,7 +223,7 @@ local talent_settings = {
 			outer_push_rad = math.pi * 0.25
 		},
 		defensive_2 = {
-			health_segment_damage_taken_multiplier = 0.5
+			health_segment_damage_taken_multiplier = 0.6
 		},
 		defensive_3 = {
 			toughness_damage_taken_modifier = -0.15
@@ -241,7 +241,7 @@ local talent_settings = {
 		coop_3 = {
 			duration = 4,
 			cooldown_duration = 10,
-			damage_taken_multiplier = 0.25
+			damage_taken_multiplier = 0.4
 		},
 		spec_passive_1 = {
 			cooldown_time = 0.5

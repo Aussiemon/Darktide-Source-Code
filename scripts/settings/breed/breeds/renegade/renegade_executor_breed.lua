@@ -92,8 +92,8 @@ local breed_data = {
 	stagger_thresholds = {
 		[stagger_types.light] = 5,
 		[stagger_types.medium] = 40,
-		[stagger_types.heavy] = 60,
-		[stagger_types.explosion] = 80,
+		[stagger_types.heavy] = 80,
+		[stagger_types.explosion] = 100,
 		[stagger_types.light_ranged] = 10,
 		[stagger_types.killshot] = 3
 	},

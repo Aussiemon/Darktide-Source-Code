@@ -26,6 +26,7 @@ ProjectileFxExtension.init = function (self, extension_init_context, unit, exten
 	self._wwise_world = wwise_world
 	self._is_server = is_server
 	self._charge_level = extension_init_data.charge_level
+	self._is_critical_strike = extension_init_data.is_critical_strike
 	local owner_unit = extension_init_data.owner_unit
 	self._owner_unit = owner_unit
 	local projectile_template_name = extension_init_data.projectile_template_name
@@ -262,7 +263,8 @@ ProjectileFxExtension.start_fx = function (self, effect_type)
 	if vfx then
 		local world = self._world
 		local unit = self._unit
-		local particle_name = vfx.particle_name
+		local is_critical_strike = self._is_critical_strike
+		local particle_name = is_critical_strike and vfx.particle_name_critical_strike or vfx.particle_name
 
 		if particle_name then
 			local node_name = vfx.node_name

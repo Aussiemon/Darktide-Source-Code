@@ -103,7 +103,8 @@ SpecialsPacing._setup_specials_slot = function (self, specials_slots, specials_s
 		local num_used_breeds = USED_BREEDS[breed_name]
 
 		if num_used_breeds and max_of_same and max_of_same <= num_used_breeds then
-			local tags = Breeds[breed_name].tags
+			local check_breed_name = self:_get_breed_name(breed_name)
+			local tags = Breeds[check_breed_name].tags
 			local new_breeds = nil
 
 			if tags.disabler then
@@ -211,8 +212,14 @@ SpecialsPacing.update = function (self, dt, t, side_id, target_side_id)
 	local travel_distance_allowed_forward = time_since_forward_travel_changed < TRAVEL_DISTANCE_CHANGE_ALLOWANCE_FORWARD_MIN or TRAVEL_DISTANCE_CHANGE_ALLOWANCE_FORWARD_MAX < time_since_forward_travel_changed
 	local travel_distance_allowed_behind = time_since_forward_behind_changed < TRAVEL_DISTANCE_CHANGE_ALLOWANCE_BEHIND_MIN or TRAVEL_DISTANCE_CHANGE_ALLOWANCE_BEHIND_MAX < time_since_forward_behind_changed
 	local travel_distance_allowed = travel_distance_allowed_forward or travel_distance_allowed_behind
-	local specials_allowed = travel_distance_allowed and Managers.state.pacing:spawn_type_enabled("specials") and not self._frozen
-	local ramp_up_timer_modifier = Managers.state.pacing:_get_ramp_up_frequency_modifier("specials")
+	local pacing_specials_enabled, reason = Managers.state.pacing:spawn_type_enabled("specials")
+	local specials_allowed = travel_distance_allowed and pacing_specials_enabled and not self._frozen
+
+	if reason and reason == "disabled_by_challenge_rating" and self._ahead_unit_has_no_units_in_coherency then
+		specials_allowed = true
+	end
+
+	local ramp_up_timer_modifier = Managers.state.pacing:get_ramp_up_frequency_modifier("specials")
 	local specials_slots = self._specials_slots
 	local max_alive_specials = self._max_alive_specials
 	local template = self._template
@@ -518,6 +525,12 @@ end
 
 SpecialsPacing._get_special_slot_breed_name = function (self, specials_slot)
 	local breed_name = specials_slot.breed_name
+	local new_breed_name = self:_get_breed_name(breed_name)
+
+	return new_breed_name
+end
+
+SpecialsPacing._get_breed_name = function (self, breed_name)
 	local faction_bound_breeds = self._template.faction_bound_breeds
 
 	if faction_bound_breeds and faction_bound_breeds[breed_name] then
@@ -1117,6 +1130,7 @@ SpecialsPacing._update_speed_running_prevention = function (self, target_side_id
 		return
 	end
 
+	self._ahead_unit_has_no_units_in_coherency = false
 	self._next_speed_running_check_t = t + template.speed_running_check_frequency
 	local previous_speed_running_distance = self._previous_speed_running_distance
 
@@ -1142,8 +1156,11 @@ SpecialsPacing._update_speed_running_prevention = function (self, target_side_id
 	Log.info("SpecialsPacing", "Identitying speed running.. %d %.02f", self._num_speed_running_checks, distance_diff)
 
 	local num_required_speed_running_checks = template.num_required_speed_running_checks
+	local coherency_extension = ScriptUnit.has_extension(ahead_unit, "coherency_system")
+	local num_units_in_coherency = coherency_extension and coherency_extension:num_units_in_coherency() or math.huge
+	self._ahead_unit_has_no_units_in_coherency = num_units_in_coherency == 1
 
-	if self._num_speed_running_checks < num_required_speed_running_checks then
+	if self._num_speed_running_checks < num_required_speed_running_checks and (num_units_in_coherency > 1 or self._num_speed_running_checks == 1) then
 		return
 	end
 

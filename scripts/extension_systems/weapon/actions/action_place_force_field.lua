@@ -31,34 +31,49 @@ ActionPlaceForceField._calculate_placement_data = function (self)
 end
 
 ActionPlaceForceField._place_unit = function (self, action_settings, position, rotation, placed_on_unit)
-	local owner_unit = self._player_unit
-	local unit_name = action_settings.functional_unit
-	local husk_unit_name = action_settings.functional_unit
-	local unit_template = "force_field"
-	local material = nil
 	local vo_tag = action_settings.vo_tag
 
 	if vo_tag then
 		Vo.play_combat_ability_event(self._player_unit, vo_tag)
 	end
 
-	local unit = Managers.state.unit_spawner:spawn_network_unit(unit_name, unit_template, position, rotation, material, husk_unit_name, placed_on_unit, owner_unit)
-	local buff_extension = ScriptUnit.extension(owner_unit, "buff_system")
-	local param_table = buff_extension:request_proc_event_param_table()
-
-	if param_table then
-		param_table.unit = owner_unit
-		param_table.position = Vector3Box(position)
-		param_table.rotation = QuaternionBox(rotation)
-		param_table.force_field_unit = unit
-
-		buff_extension:add_proc_event(proc_events.on_combat_ability, param_table)
-	end
-
 	local use_ability_charge = action_settings.use_ability_charge
 
 	if use_ability_charge then
 		self:_use_ability_charge()
+	end
+
+	local owner_unit = self._player_unit
+	local unit_name = action_settings.functional_unit
+	local husk_unit_name = action_settings.functional_unit
+	local unit_template = "force_field"
+	local material = nil
+	local unit = Managers.state.unit_spawner:spawn_network_unit(unit_name, unit_template, position, rotation, material, husk_unit_name, placed_on_unit, owner_unit)
+	self._force_field_unit = unit
+	self._placed_unit = true
+	self._placed_position = Vector3Box(position)
+	self._placed_rotation = QuaternionBox(rotation)
+end
+
+ActionPlaceForceField.finish = function (self, reason, data, t, time_in_action)
+	ActionPlaceForceField.super.finish(self, reason, data, t, time_in_action)
+
+	if self._placed_unit then
+		local position = self._placed_position:unbox()
+		local rotation = self._placed_rotation:unbox()
+		local buff_extension = ScriptUnit.extension(self._player_unit, "buff_system")
+		local param_table = buff_extension:request_proc_event_param_table()
+
+		if param_table then
+			param_table.unit = self._player_unit
+			param_table.position = Vector3Box(position)
+			param_table.rotation = QuaternionBox(rotation)
+			param_table.force_field_unit = self._force_field_unit
+
+			buff_extension:add_proc_event(proc_events.on_combat_ability, param_table)
+		end
+
+		self._placed_unit = false
 	end
 end
 

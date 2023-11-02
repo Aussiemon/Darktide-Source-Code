@@ -290,9 +290,11 @@ HudElementEmoteWheel._handle_input = function (self, t, dt, ui_renderer, render_
 	end
 
 	local service_type = "Ingame"
-	local input_service = Managers.input:get_input_service(service_type)
+	local input_service = Managers.ui:input_service(service_type)
+	local ignore_hud_input = true
+	local is_input_blocked = Managers.ui:using_input(ignore_hud_input)
 
-	self:_handle_com_wheel(t, ui_renderer, render_settings, input_service)
+	self:_handle_com_wheel(t, ui_renderer, render_settings, is_input_blocked and input_service:null_service() or input_service)
 end
 
 HudElementEmoteWheel.using_input = function (self)

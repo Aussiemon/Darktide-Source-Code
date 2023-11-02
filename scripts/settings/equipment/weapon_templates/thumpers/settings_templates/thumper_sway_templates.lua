@@ -29,8 +29,8 @@ sway_templates.default_thumper_killshot = {
 		rotation_speed = 0.125,
 		visual_yaw_impact_mod = 10,
 		max_sway = {
-			yaw = 2.5,
-			pitch = 2.5
+			yaw = 0.1,
+			pitch = 0.1
 		},
 		decay = {
 			crouch_transition_grace_time = 0.5,
@@ -50,12 +50,12 @@ sway_templates.default_thumper_killshot = {
 		},
 		continuous_sway = {
 			pitch = {
-				lerp_perfect = 0.4,
-				lerp_basic = 1.5
+				lerp_perfect = 0.1,
+				lerp_basic = 0.5
 			},
 			yaw = {
-				lerp_perfect = 0.3,
-				lerp_basic = 1.2
+				lerp_perfect = 0.1,
+				lerp_basic = 0.2
 			}
 		},
 		immediate_sway = {

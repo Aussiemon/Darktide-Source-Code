@@ -826,6 +826,7 @@ base_templates.infinite_melee_cleave_on_kill = {
 base_templates.infinite_melee_cleave_on_weakspot_kill = {
 	class_name = "buff",
 	predicted = false,
+	hide_icon_in_hud = true,
 	keywords = {
 		keywords.melee_infinite_cleave_on_headshot
 	},
@@ -1108,7 +1109,7 @@ base_templates.toughness_recovery_on_chained_attacks = {
 	end
 }
 base_templates.toughness_recovery_on_multiple_hits = {
-	cooldown_duration = 0,
+	cooldown_duration = 0.12,
 	predicted = false,
 	class_name = "proc_buff",
 	proc_events = {
@@ -1153,6 +1154,9 @@ base_templates.power_bonus_scaled_on_stamina = {
 		return steps
 	end
 }
+local untauntable_breeds = {
+	chaos_daemonhost = true
+}
 base_templates.taunt_target_on_staggered_hit = {
 	child_buff_template = "taunt_target_child",
 	predicted = false,
@@ -1188,6 +1192,12 @@ base_templates.taunt_target_on_staggered_hit = {
 		local attacked_unit = params.attacked_unit
 
 		if not attacked_unit then
+			return
+		end
+
+		local breed_name = params.breed_name
+
+		if not breed_name or untauntable_breeds[breed_name] then
 			return
 		end
 
@@ -1772,7 +1782,7 @@ base_templates.increase_close_damage_on_close_kill_child = {
 	predicted = false,
 	class_name = "buff",
 	conditional_stat_buffs = {
-		[stat_buffs.ranged_attack_speed] = 0.01
+		[stat_buffs.damage_near] = 0.01
 	},
 	conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded
 }
@@ -1836,40 +1846,10 @@ base_templates.reload_speed_on_slide = {
 	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
 	conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded
 }
-base_templates.reload_speed_on_close_kill = {
+base_templates.reload_speed_on_close_kill_parent = {
+	child_duration = 1,
 	predicted = false,
-	allow_proc_while_active = true,
-	class_name = "proc_buff",
-	active_duration = 2,
-	proc_events = {
-		[proc_events.on_kill] = 1
-	},
-	proc_stat_buffs = {
-		[stat_buffs.reload_speed] = 0.5
-	},
-	check_proc_func = CheckProcFunctions.on_ranged_close_kill,
-	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
-	conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded
-}
-base_templates.reload_speed_on_close_kill = {
-	predicted = false,
-	allow_proc_while_active = true,
-	max_stacks = 5,
-	class_name = "proc_buff",
-	active_duration = 5,
-	proc_events = {
-		[proc_events.on_kill] = 1
-	},
-	proc_stat_buffs = {
-		[stat_buffs.reload_speed] = 0.5
-	},
-	check_proc_func = CheckProcFunctions.on_melee_kill,
-	conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded
-}
-base_templates.reload_speed_on_melee_kill_parent = {
-	child_buff_template = "reload_speed_on_melee_kill_child",
-	child_duration = 6,
-	predicted = false,
+	child_buff_template = "reload_speed_on_close_kill_child",
 	allow_proc_while_active = true,
 	stacks_to_remove = 5,
 	class_name = "weapon_trait_parent_proc_buff",
@@ -1879,9 +1859,11 @@ base_templates.reload_speed_on_melee_kill_parent = {
 	proc_events = {
 		[proc_events.on_kill] = 1
 	},
-	check_proc_func = CheckProcFunctions.on_melee_kill
+	check_proc_func = CheckProcFunctions.on_ranged_close_kill,
+	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
+	conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded
 }
-base_templates.reload_speed_on_melee_kill_child = {
+base_templates.reload_speed_on_close_kill_child = {
 	hide_icon_in_hud = true,
 	predicted = false,
 	stack_offset = -1,
@@ -1930,9 +1912,6 @@ base_templates.increased_sprint_speed = {
 base_templates.count_as_dodge_vs_ranged_while_sprinting = {
 	class_name = "buff",
 	predicted = false,
-	conditional_stat_buffs = {
-		[stat_buffs.sprint_movement_speed] = 0.05
-	},
 	conditional_keywords = {
 		keywords.count_as_dodge_vs_ranged
 	},

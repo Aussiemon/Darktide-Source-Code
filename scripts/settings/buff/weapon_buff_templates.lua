@@ -268,6 +268,16 @@ templates.rending_debuff = {
 		[buff_stat_buffs.rending_multiplier] = 0.025
 	}
 }
+templates.rending_debuff_medium = {
+	predicted = false,
+	refresh_duration_on_stack = true,
+	max_stacks = 2,
+	duration = 5,
+	class_name = "buff",
+	stat_buffs = {
+		[buff_stat_buffs.rending_multiplier] = 0.1
+	}
+}
 templates.rending_burn_debuff = {
 	predicted = false,
 	refresh_duration_on_stack = true,
@@ -387,7 +397,9 @@ local function _chain_lightning_interval_func(template_data, template_context, t
 		local hit_zone_actors = HitZone.get_actor_names(unit, hit_zone_name)
 		local hit_actor_name = hit_zone_actors[1]
 		local hit_actor = Unit.actor(unit, hit_actor_name)
-		local damage_dealt, attack_result, damage_efficiency, stagger_result, hit_weakspot = Attack.execute(unit, damage_template, "power_level", CHAIN_LIGHTNING_POWER_LEVEL, "charge_level", charge_level, "damage_type", damage_types.electrocution, "attacking_unit", HEALTH_ALIVE[owner_unit] and owner_unit, "attack_direction", attack_direction, "hit_actor", hit_actor, "hit_zone_name", hit_zone_name)
+		local node_index = hit_actor and Actor.node(hit_actor)
+		local hit_world_position = node_index and Unit.world_position(unit, node_index)
+		local damage_dealt, attack_result, damage_efficiency, stagger_result, hit_weakspot = Attack.execute(unit, damage_template, "power_level", CHAIN_LIGHTNING_POWER_LEVEL, "charge_level", charge_level, "damage_type", damage_types.electrocution, "attacking_unit", HEALTH_ALIVE[owner_unit] and owner_unit, "attack_direction", attack_direction, "hit_actor", hit_actor, "hit_zone_name", hit_zone_name, "hit_world_position", hit_world_position)
 
 		if template_data.is_poxwalker_bomber and template.trigger_poxwalker_bomber and stagger_result == "stagger" then
 			local target_blackboard = BLACKBOARDS[unit]

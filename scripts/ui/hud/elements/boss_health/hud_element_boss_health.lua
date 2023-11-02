@@ -76,9 +76,9 @@ HudElementBossHealth.event_boss_encounter_start = function (self, unit, boss_ext
 	local display_name = boss_extension:display_name()
 	local localized_display_name = display_name and Localize(display_name)
 	local health_extension = ScriptUnit.extension(unit, "health_system")
-	local max_health = health_extension:max_health()
+	local max_health = math.floor(health_extension:max_health())
 	local breed_name = ScriptUnit.extension(unit, "unit_data_system"):breed().name
-	local initial_max_health = Managers.state.difficulty:get_minion_max_health(breed_name)
+	local initial_max_health = math.floor(Managers.state.difficulty:get_minion_max_health(breed_name))
 
 	if max_health < initial_max_health then
 		localized_display_name = Localize("loc_weakened_monster_prefix", true, {

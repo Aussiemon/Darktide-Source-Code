@@ -695,6 +695,19 @@ local Credits = {
 				type = "person"
 			},
 			{
+				text = "loc_credits_view_additional_character_art_title",
+				localized = true,
+				type = "title"
+			},
+			{
+				text = "Edvard Svensson",
+				type = "person"
+			},
+			{
+				text = " ",
+				type = "person"
+			},
+			{
 				text = "loc_credits_view_thanks_title",
 				localized = true,
 				type = "title"

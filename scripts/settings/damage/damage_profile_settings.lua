@@ -267,52 +267,52 @@ damage_profile_settings.no_cleave = {
 }
 damage_profile_settings.single_cleave = {
 	attack = {
-		0.5,
-		1.5
+		1,
+		2
 	},
 	impact = {
-		0.5,
-		1.5
+		1,
+		2
 	}
 }
 damage_profile_settings.double_cleave = {
 	attack = {
-		1,
-		3
+		2,
+		4
 	},
 	impact = {
-		1,
-		3
+		2,
+		4
 	}
 }
 damage_profile_settings.light_cleave = {
 	attack = {
-		2,
-		4
+		3,
+		6
 	},
 	impact = {
-		2,
-		4
+		3,
+		6
 	}
 }
 damage_profile_settings.medium_cleave = {
 	attack = {
-		3.5,
-		8.5
+		4,
+		9
 	},
 	impact = {
-		3.5,
-		8.5
+		4,
+		9
 	}
 }
 damage_profile_settings.large_cleave = {
 	attack = {
-		5,
-		10
+		5.5,
+		10.5
 	},
 	impact = {
-		5,
-		10
+		5.5,
+		10.5
 	}
 }
 damage_profile_settings.big_cleave = {

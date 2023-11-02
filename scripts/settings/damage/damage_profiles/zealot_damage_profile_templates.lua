@@ -25,7 +25,7 @@ damage_templates.zealot_throwing_knives = {
 	armor_damage_modifier = {
 		attack = {
 			[armor_types.unarmored] = damage_lerp_values.lerp_1,
-			[armor_types.armored] = damage_lerp_values.lerp_0_75,
+			[armor_types.armored] = damage_lerp_values.lerp_0_8,
 			[armor_types.resistant] = damage_lerp_values.lerp_0_5,
 			[armor_types.player] = damage_lerp_values.lerp_1,
 			[armor_types.berserker] = damage_lerp_values.lerp_1_5,
@@ -47,11 +47,11 @@ damage_templates.zealot_throwing_knives = {
 		}
 	},
 	cleave_distribution = {
-		attack = 1.25,
+		attack = 2,
 		impact = 1.25
 	},
 	power_distribution = {
-		attack = 500,
+		attack = 585,
 		impact = 5
 	},
 	gibbing_power = GIBBING_POWER.always,

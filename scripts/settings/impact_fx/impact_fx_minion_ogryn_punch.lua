@@ -15,6 +15,30 @@ local player = {
 				event = "wwise/events/player/play_player_get_hit_unarmed_husk",
 				only_3p = true
 			}
+		},
+		damage_reduced = {
+			{
+				event = "wwise/events/player/play_player_get_hit_unarmed",
+				hit_direction_interface = true
+			},
+			{
+				event = "wwise/events/player/play_player_get_hit_unarmed_husk",
+				only_3p = true
+			}
+		},
+		toughness_absorbed_melee = {
+			{
+				event = "wwise/events/player/play_toughness_hits_melee",
+				hit_direction_interface = true
+			},
+			{
+				event = "wwise/events/player/play_player_get_hit_unarmed",
+				hit_direction_interface = true
+			},
+			{
+				event = "wwise/events/player/play_player_get_hit_unarmed_husk",
+				only_3p = true
+			}
 		}
 	},
 	vfx = {

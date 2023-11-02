@@ -19,9 +19,14 @@ local function _apply_package_item_icon_cb_func(widget, item)
 	material_values.texture_map = icon
 end
 
-local function _remove_package_item_icon_cb_func(widget)
+local function _remove_package_item_icon_cb_func(widget, ui_renderer)
 	local material_values = widget.style.icon.material_values
 	material_values.texture_map = nil
+
+	if ui_renderer then
+		UIWidget.set_visible(widget, ui_renderer, false)
+		UIWidget.set_visible(widget, ui_renderer, true)
+	end
 end
 
 local function _apply_live_item_icon_cb_func(widget, grid_index, rows, columns, render_target)
@@ -34,10 +39,15 @@ local function _apply_live_item_icon_cb_func(widget, grid_index, rows, columns, 
 	material_values.render_target = render_target
 end
 
-local function _remove_live_item_icon_cb_func(widget)
+local function _remove_live_item_icon_cb_func(widget, ui_renderer)
 	local material_values = widget.style.icon.material_values
 	material_values.use_placeholder_texture = 1
 	material_values.texture_icon = nil
+
+	if ui_renderer then
+		UIWidget.set_visible(widget, ui_renderer, false)
+		UIWidget.set_visible(widget, ui_renderer, true)
+	end
 end
 
 local ConstantElementNotificationFeed = class("ConstantElementNotificationFeed", "ConstantElementBase")
@@ -616,23 +626,32 @@ ConstantElementNotificationFeed._remove_notification = function (self, notificat
 
 	for i = 1, #notifications do
 		local notification = notifications[i]
+		local data = notification and notification.data
 		local widget = notification_to_remove.widget
 
 		if notification == notification_to_remove then
-			if notification_to_remove.item then
-				local item = notification_to_remove.item
+			if data.item then
+				local item = data.item
 				local item_type = item.item_type
 
 				if item_type == "PORTRAIT_FRAME" or item_type == "CHARACTER_INSIGNIA" then
-					_remove_package_item_icon_cb_func(widget)
+					_remove_package_item_icon_cb_func(widget, ui_renderer)
 				else
-					_remove_live_item_icon_cb_func(widget)
+					_remove_live_item_icon_cb_func(widget, ui_renderer)
 				end
+			end
 
-				Managers.ui:unload_item_icon(widget.content.icon_load_id)
+			if notification.item_loaded_info then
+				local item_loaded_info = notification.item_loaded_info
+				local icon_load_id = item_loaded_info.icon_load_id
+
+				Managers.ui:unload_item_icon(icon_load_id)
+
+				notification.item_loaded_info = nil
 			end
 
 			self:_unregister_widget_name(widget.name)
+			UIWidget.destroy(ui_renderer, widget)
 			table.remove(notifications, i)
 
 			local done_callback = notification.done_callback
@@ -672,6 +691,7 @@ ConstantElementNotificationFeed._create_notification_entry = function (self, not
 		widget = widget,
 		id = id,
 		time = 0,
+		data = notification_data,
 		animation_enter = notification_template.animation_enter,
 		animation_exit = notification_template.animation_exit,
 		enter_sound_event = notification_data.enter_sound_event,
@@ -700,8 +720,10 @@ ConstantElementNotificationFeed._create_notification_entry = function (self, not
 				animation_event = item_animation_event
 			}
 			local on_load_callback = callback(self, "_on_item_icon_loaded", notification, item)
-
-			Managers.ui:load_item_icon(item, on_load_callback, context)
+			local icon_load_id = Managers.ui:load_item_icon(item, on_load_callback, context)
+			notification.item_loaded_info = {
+				icon_load_id = icon_load_id
+			}
 		end
 	end
 

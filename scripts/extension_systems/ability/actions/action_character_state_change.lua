@@ -49,7 +49,7 @@ ActionCharacterStateChange.finish = function (self, reason, data, t, time_in_act
 	local unit = self._player_unit
 	local input_extension = ScriptUnit.extension(unit, "input_system")
 	local movement_state_component = self._unit_data_extension:write_component("movement_state")
-	local is_crouching = Crouch.check(unit, self._first_person_extension, self._animation_extension, self._weapon_extension, movement_state_component, self._sway_control_component, self._sway_component, self._spread_control_component, input_extension, t)
+	local is_crouching = Crouch.check(unit, self._first_person_extension, self._animation_extension, self._weapon_extension, movement_state_component, self._sway_control_component, self._sway_component, self._spread_control_component, input_extension, t, false)
 	local valid = true
 
 	if is_crouching then

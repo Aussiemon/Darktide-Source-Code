@@ -238,12 +238,12 @@ local archetype_talents = {
 					value = 1 - talent_settings_2.offensive_2_2.sway_modifier
 				},
 				stamina = {
-					format_type = "percentage",
-					value = talent_settings_2.offensive_2_2.stamina
+					format_type = "number",
+					value = talent_settings_2.offensive_2_2.stamina_per_second
 				},
 				stamina_per_shot = {
-					format_type = "percentage",
-					value = talent_settings_2.offensive_2_2.shot_stamina_percent
+					format_type = "number",
+					value = talent_settings_2.offensive_2_2.shot_stamina
 				}
 			},
 			passive = {
@@ -331,6 +331,28 @@ local archetype_talents = {
 				special_rule_name = {
 					special_rules.veteran_combat_ability_outlines,
 					special_rules.veteran_combat_ability_ranged_roamer_outlines
+				}
+			}
+		},
+		veteran_combat_ability_ogryn_outlines = {
+			description = "loc_talent_veteran_combat_ability_ogryn_outlines_description",
+			name = "Ogryn Outlines",
+			display_name = "loc_talent_ranger_volley_fire_big_game_hunter",
+			icon = "content/ui/textures/icons/talents/ogryn_2/ogryn_2_base_4",
+			format_values = {
+				talent_name = {
+					value = "loc_talent_veteran_combat_ability_elite_and_special_outlines",
+					format_type = "loc_string"
+				}
+			},
+			special_rule = {
+				identifier = {
+					"veteran_combat_ability_outlines",
+					"veteran_combat_ability_ogryn_outlines"
+				},
+				special_rule_name = {
+					special_rules.veteran_combat_ability_outlines,
+					special_rules.veteran_combat_ability_ogryn_outlines
 				}
 			}
 		},
@@ -1012,7 +1034,7 @@ local archetype_talents = {
 				rending_multiplier = {
 					format_type = "percentage",
 					find_value = {
-						buff_template_name = "rending_debuff",
+						buff_template_name = "rending_debuff_medium",
 						find_value_type = "buff_template",
 						path = {
 							"stat_buffs",
@@ -1023,7 +1045,7 @@ local archetype_talents = {
 				duration = {
 					format_type = "number",
 					find_value = {
-						buff_template_name = "rending_debuff",
+						buff_template_name = "rending_debuff_medium",
 						find_value_type = "buff_template",
 						path = {
 							"duration"
@@ -1033,7 +1055,7 @@ local archetype_talents = {
 				max_stacks = {
 					format_type = "number",
 					find_value = {
-						buff_template_name = "rending_debuff",
+						buff_template_name = "rending_debuff_medium",
 						find_value_type = "buff_template",
 						path = {
 							"max_stacks"

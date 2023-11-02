@@ -225,8 +225,8 @@ spread_templates.thumper_hip_assault = {
 			min_ratio = 0.2
 		},
 		max_spread = {
-			yaw = 20,
-			pitch = 20
+			yaw = 1,
+			pitch = 1
 		},
 		decay = {
 			from_shooting_grace_time = 0.15,

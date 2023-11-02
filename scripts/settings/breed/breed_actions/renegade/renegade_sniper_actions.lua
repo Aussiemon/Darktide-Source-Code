@@ -297,7 +297,7 @@ local action_data = {
 		utility_weight = 5,
 		leave_locked_distance = 3,
 		lock_to_target_lerp_speed = 35,
-		scope_reflection_timing_before_shooting = 0.4,
+		scope_reflection_timing_before_shooting = 0.45,
 		inventory_slot = "slot_ranged_weapon",
 		scope_reflection_timing_sfx = "wwise/events/weapon/play_special_sniper_flash",
 		after_shoot_reevaluate_distance = 15,
@@ -338,8 +338,8 @@ local action_data = {
 			1,
 			0.65,
 			0.35,
-			0.25,
-			0.25
+			0.35,
+			0.35
 		},
 		shoot_cooldown = {
 			1,

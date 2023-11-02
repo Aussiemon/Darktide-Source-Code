@@ -57,6 +57,8 @@ ActionSpawnProjectile.start = function (self, action_settings, t, ...)
 
 	self:_check_for_critical_strike(false, true, false, should_crit)
 
+	local is_critical_strike = self._critical_strike_component.is_active or self._buff_extension:has_keyword(keywords.guaranteed_smite_critical_strike)
+
 	if self._targeting_module then
 		local prefer_previous_action_targeting_result = action_settings.prefer_previous_action_targeting_result
 
@@ -97,7 +99,6 @@ ActionSpawnProjectile.start = function (self, action_settings, t, ...)
 
 		self._projectiles_paid_for = false
 		local num_projectiles = action_settings.num_projectiles or 1
-		local is_critical_strike = self._critical_strike_component.is_active or self._buff_extension:has_keyword(keywords.guaranteed_smite_critical_strike)
 		local spawn_second_projectile = is_critical_strike and self._buff_extension:has_keyword("critical_strike_second_projectile")
 
 		if spawn_second_projectile then
@@ -380,13 +381,12 @@ ActionSpawnProjectile._pay_for_projectile = function (self, t)
 		self:_pay_warp_charge_cost_immediate(t, charge_level)
 	end
 
+	local source_name = self._muzzle_fx_source_name
 	local fx_settings = action_settings.fx
 	local shoot_sfx_alias = fx_settings and fx_settings.shoot_sfx_alias
 
 	if shoot_sfx_alias then
-		local source_name = self._muzzle_fx_source_name
-
-		self._fx_extension:trigger_gear_wwise_event_with_source(shoot_sfx_alias, EXTERNAL_PROPERTIES, self._muzzle_fx_source_name, SYNC_TO_CLIENTS)
+		self._fx_extension:trigger_gear_wwise_event_with_source(shoot_sfx_alias, EXTERNAL_PROPERTIES, source_name, SYNC_TO_CLIENTS)
 
 		local use_charge_level = fx_settings.sfx_use_charge_level
 
@@ -396,6 +396,13 @@ ActionSpawnProjectile._pay_for_projectile = function (self, t)
 
 			self._fx_extension:set_source_parameter(parameter_name, parameter_value, source_name)
 		end
+	end
+
+	local is_critical_strike = self._critical_strike_component.is_active or self._buff_extension:has_keyword(keywords.guaranteed_smite_critical_strike)
+	local critical_strike_sfx_alias = fx_settings and fx_settings.crit_shoot_sfx_alias
+
+	if critical_strike_sfx_alias and is_critical_strike then
+		self._fx_extension:trigger_exclusive_gear_wwise_event(critical_strike_sfx_alias, EXTERNAL_PROPERTIES)
 	end
 
 	if action_settings.use_charge then
@@ -499,8 +506,10 @@ ActionSpawnProjectile._fire_projectile = function (self, t, projectile_unit, tim
 			shoot_rotation = Quaternion.multiply(shoot_rotation, yaw_rotation)
 		end
 
-		local skip_update_component_data = true
-		shoot_rotation = self._weapon_spread_extension:randomized_spread(shoot_rotation, skip_update_component_data)
+		if not shoot_parameters.skip_spread then
+			local skip_update_component_data = true
+			shoot_rotation = self._weapon_spread_extension:randomized_spread(shoot_rotation, skip_update_component_data)
+		end
 	end
 
 	local direction = Quaternion.forward(shoot_rotation)

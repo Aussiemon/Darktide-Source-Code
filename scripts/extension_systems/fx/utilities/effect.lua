@@ -23,6 +23,12 @@ Effect.update_targeted_by_ranged_minion_wwise_parameters = function (target_unit
 	return is_camera_follow_target
 end
 
+Effect.update_targeted_by_ranged_minion_always_target_wwise_parameters = function (wwise_world, source_id)
+	local parameter_value = 1
+
+	WwiseWorld.set_source_parameter(wwise_world, source_id, TARGETED_BY_RANGED_MINION_WWISE_PARAMETER, parameter_value)
+end
+
 Effect.update_targeted_by_special_wwise_parameters = function (target_unit_or_nil, wwise_world, source_id, optional_was_camera_follow_target, optional_special_unit)
 	local is_camera_follow_target = _is_follow_target_unit(target_unit_or_nil)
 

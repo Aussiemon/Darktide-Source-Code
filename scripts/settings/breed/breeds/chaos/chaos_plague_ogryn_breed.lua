@@ -80,7 +80,7 @@ local breed_data = {
 		[stagger_types.medium] = 1.5,
 		[stagger_types.heavy] = 2.25,
 		[stagger_types.light_ranged] = 0.5,
-		[stagger_types.explosion] = 4
+		[stagger_types.explosion] = 3
 	},
 	stagger_thresholds = {
 		[stagger_types.light] = -1,

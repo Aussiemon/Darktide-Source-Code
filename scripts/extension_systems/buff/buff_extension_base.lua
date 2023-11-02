@@ -18,6 +18,7 @@ local RPCS = {
 	"rpc_add_buff",
 	"rpc_remove_buff",
 	"rpc_buff_proc_set_active_time",
+	"rpc_buff_set_start_time",
 	"rpc_add_buff_with_stacks"
 }
 local _stat_buff_base_values = BuffSettings.stat_buff_type_base_values
@@ -367,6 +368,7 @@ BuffExtensionBase._add_buff = function (self, template, t, ...)
 			if template.refresh_duration_on_stack or template.refresh_start_time_on_stack then
 				existing_buff_instance:set_start_time(t)
 				existing_buff_instance:refresh_func(t, previous_stack_count)
+				existing_buff_instance:set_need_to_sync_start_time(false)
 			end
 
 			buff_instance = existing_buff_instance
@@ -1140,6 +1142,17 @@ end
 
 BuffExtensionBase._set_proc_active_start_time = function (self, index, activation_time)
 	ferror("Buff extension is using base implementation of _set_proc_active_start_time, it shouldn't")
+end
+
+BuffExtensionBase.rpc_buff_set_start_time = function (self, channel_id, game_object_id, server_index, activation_frame)
+	local index = self._buff_index_map[server_index]
+	local start_time = activation_frame * self._fixed_time_step
+
+	self:_set_start_time_from_rpc(index, start_time)
+end
+
+BuffExtensionBase._set_start_time_from_rpc = function (self, index, start_time)
+	ferror("Buff extension is using base implementation of _set_start_time_from_rpc, it shouldn't")
 end
 
 implements(BuffExtensionBase, BuffExtensionInterface)

@@ -470,12 +470,13 @@ local grenade_projectile_locomotion_templates = {
 			}
 		},
 		shoot_parameters = {
+			skip_spread = true,
 			initial_speed = 75,
-			spawn_offset = Vector3Box(0, 0.7, 0),
+			spawn_offset = Vector3Box(0, 0.2, 0),
 			rotation = Vector3Box(-90, 0, 0),
 			yaw_offset = {
-				max = 1,
-				min = 0.5
+				max = 0.25,
+				min = 0.1
 			},
 			pitch_offset = {
 				max = 0.8,
@@ -484,7 +485,7 @@ local grenade_projectile_locomotion_templates = {
 		},
 		integrator_parameters = {
 			coefficient_of_restitution = 0,
-			radius = 0.37,
+			radius = 0.2,
 			gravity = 17.5,
 			drag_coefficient = 0.2,
 			collision_filter = "filter_player_character_shooting_projectile",

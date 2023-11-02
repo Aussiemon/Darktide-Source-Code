@@ -87,6 +87,7 @@ ForceFieldExtension.init = function (self, extension_init_context, unit, extensi
 	local start_particle_effect = sphere_shield and PARTICLES_SPHERE.start or PARTICLES_WALL.start
 	self._effect_id = World.create_particles(world, start_particle_effect, position, rotation)
 	self._players_inside = {}
+	self.is_expired = false
 	self.buff_affected_units = {}
 	self._in_sheild_buff_template_name = nil
 	self._leaving_shield_buff_template_name = nil
@@ -139,6 +140,8 @@ end
 ForceFieldExtension.game_object_initialized = function (self, session, object_id)
 	self._game_session = session
 	self._game_object_id = object_id
+
+	GameSession.set_game_object_field(self._game_session, self._game_object_id, "expired", false)
 end
 
 ForceFieldExtension.extensions_ready = function (self, world, unit)
@@ -156,6 +159,13 @@ ForceFieldExtension.fixed_update = function (self, unit, dt, t)
 		GameSession.set_game_object_field(game_session, game_object_id, "remaining_duration", duration)
 	else
 		self._duration = GameSession.game_object_field(game_session, game_object_id, "remaining_duration")
+		local is_expired = GameSession.game_object_field(game_session, game_object_id, "expired")
+
+		if not self.is_expired and is_expired then
+			self.is_expired = is_expired
+
+			self:on_death(t)
+		end
 	end
 end
 
@@ -373,17 +383,21 @@ ForceFieldExtension.on_death = function (self, t)
 	Unit.set_unit_visibility(unit, false, true)
 	Unit.destroy_actor(unit, Unit.actor(unit, self._sphere_shield and "g_shield" or "g_wall"))
 
-	local end_buff_name = self._end_shield_buff_template_name
+	if self._is_server then
+		GameSession.set_game_object_field(self._game_session, self._game_object_id, "expired", true)
 
-	if not end_buff_name then
-		return
-	end
+		local end_buff_name = self._end_shield_buff_template_name
 
-	for player_unit, _ in pairs(self._players_inside) do
-		local unit_buff_extension = ScriptUnit.has_extension(player_unit, "buff_system")
+		if not end_buff_name then
+			return
+		end
 
-		if unit_buff_extension then
-			unit_buff_extension:add_internally_controlled_buff(end_buff_name, t, "owner_unit", self.owner_unit)
+		for player_unit, _ in pairs(self._players_inside) do
+			local unit_buff_extension = ScriptUnit.has_extension(player_unit, "buff_system")
+
+			if unit_buff_extension then
+				unit_buff_extension:add_internally_controlled_buff(end_buff_name, t, "owner_unit", self.owner_unit)
+			end
 		end
 	end
 end

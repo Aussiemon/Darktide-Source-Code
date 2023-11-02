@@ -432,11 +432,11 @@ local archetype_talents = {
 						find_value_type = "buff_template",
 						path = {
 							"conditional_stat_buffs",
-							stat_buffs.finesse_ability_multiplier
+							stat_buffs.finesse_modifier_bonus
 						}
 					},
 					value_manipulation = function (value)
-						return (value - 1) * 100
+						return value * 100
 					end
 				},
 				damage_2 = {
@@ -1918,7 +1918,7 @@ local archetype_talents = {
 			format_values = {
 				damage_reduction = {
 					format_type = "percentage",
-					value = talent_settings_3.defensive_2.health_segment_damage_taken_multiplier
+					value = 1 - talent_settings_3.defensive_2.health_segment_damage_taken_multiplier
 				}
 			},
 			passive = {

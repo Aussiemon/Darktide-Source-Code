@@ -312,7 +312,7 @@ PlayerCharacterStateBase._poll_ability_state_transitions = function (self, unit,
 	if wanted_ability_transition == "lunging" then
 		local movement_state_component = self._movement_state_component
 		local input_extension = self._input_extension
-		local is_crouching = Crouch.check(unit, self._first_person_extension, self._animation_extension, self._weapon_extension, movement_state_component, self._sway_control_component, self._sway_component, self._spread_control_component, input_extension, t)
+		local is_crouching = Crouch.check(unit, self._first_person_extension, self._animation_extension, self._weapon_extension, movement_state_component, self._sway_control_component, self._sway_component, self._spread_control_component, input_extension, t, false)
 
 		if is_crouching then
 			local can_exit = Crouch.can_exit(unit)

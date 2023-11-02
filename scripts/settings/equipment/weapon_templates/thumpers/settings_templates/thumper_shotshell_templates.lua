@@ -17,13 +17,37 @@ shotshell_templates.default_thumper_assault = {
 	bullseye = true,
 	num_spread_circles = 3,
 	min_num_hits = {
-		[armor_types.unarmored] = 10,
+		[armor_types.unarmored] = 16,
 		[armor_types.armored] = 10,
 		[armor_types.resistant] = 10,
 		[armor_types.player] = 1,
-		[armor_types.berserker] = 10,
-		[armor_types.super_armor] = 10,
-		[armor_types.disgustingly_resilient] = 10
+		[armor_types.berserker] = 16,
+		[armor_types.super_armor] = 16,
+		[armor_types.disgustingly_resilient] = 16
+	},
+	damage = {
+		impact = {
+			damage_profile = DamageProfileTemplates.default_ogryn_shotgun_assault
+		}
+	}
+}
+shotshell_templates.default_thumper_assault_ads = {
+	spread_yaw = 5,
+	range = 100,
+	pellets_per_frame = 10,
+	scatter_range = 0.15,
+	spread_pitch = 2.5,
+	num_pellets = 32,
+	bullseye = true,
+	num_spread_circles = 3,
+	min_num_hits = {
+		[armor_types.unarmored] = 16,
+		[armor_types.armored] = 10,
+		[armor_types.resistant] = 10,
+		[armor_types.player] = 1,
+		[armor_types.berserker] = 16,
+		[armor_types.super_armor] = 16,
+		[armor_types.disgustingly_resilient] = 16
 	},
 	damage = {
 		impact = {

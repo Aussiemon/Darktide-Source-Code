@@ -127,7 +127,7 @@ AmmunitionInteraction._add_ammo = function (self, interactor_unit, pickup_data)
 	if ammo_refills_grenades then
 		local ability_extension = ScriptUnit.has_extension(interactor_unit, "ability_system")
 
-		if ability_extension then
+		if ability_extension and ability_extension:ability_is_equipped("grenade_ability") then
 			local max_grenade_charges = ability_extension:max_ability_charges("grenade_ability")
 			local num_charges = pickup_data.ammo_amount_func(max_grenade_charges, 0, pickup_data)
 			num_charges = math.clamp(num_charges, 0, max_grenade_charges)
@@ -151,11 +151,15 @@ function _ammo_refills_grenades(interactor_unit)
 		return false, false
 	end
 
-	local max_grenade_charges = ability_extension:max_ability_charges("grenade_ability")
-	local remaining_grenade_charges = ability_extension:remaining_ability_charges("grenade_ability")
-	local has_missing_charges = remaining_grenade_charges < max_grenade_charges
+	if ability_extension:ability_is_equipped("grenade_ability") then
+		local max_grenade_charges = ability_extension:max_ability_charges("grenade_ability")
+		local remaining_grenade_charges = ability_extension:remaining_ability_charges("grenade_ability")
+		local has_missing_charges = remaining_grenade_charges < max_grenade_charges
 
-	return true, has_missing_charges
+		return true, has_missing_charges
+	end
+
+	return false, false
 end
 
 return AmmunitionInteraction

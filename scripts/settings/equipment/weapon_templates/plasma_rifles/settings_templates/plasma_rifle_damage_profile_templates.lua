@@ -117,17 +117,18 @@ damage_templates.default_plasma_killshot = {
 	gib_push_force = GibbingSettings.gib_push_force.ranged_heavy
 }
 damage_templates.default_plasma_bfg = {
+	ignore_roamer_hitzone_multipliers = true,
+	ignore_stagger_reduction = true,
 	ignore_shield = true,
 	ragdoll_only = true,
 	suppression_value = 8,
-	ignore_roamer_hitzone_multipliers = true,
+	weakspot_stagger_resistance_modifier = 0.0001,
 	stagger_category = "ranged",
 	ragdoll_push_force = 500,
-	ignore_stagger_reduction = true,
 	herding_template = HerdingTemplates.shot,
 	cleave_distribution = {
-		attack = 4.15,
-		impact = 4.15
+		attack = 100,
+		impact = 105
 	},
 	ranges = {
 		max = 20,
@@ -138,9 +139,9 @@ damage_templates.default_plasma_bfg = {
 			attack = {
 				[armor_types.unarmored] = damage_lerp_values.lerp_1,
 				[armor_types.armored] = damage_lerp_values.lerp_1,
-				[armor_types.resistant] = damage_lerp_values.lerp_1_25,
+				[armor_types.resistant] = damage_lerp_values.lerp_1_5,
 				[armor_types.player] = damage_lerp_values.lerp_1,
-				[armor_types.berserker] = damage_lerp_values.lerp_1,
+				[armor_types.berserker] = damage_lerp_values.lerp_1_25,
 				[armor_types.super_armor] = damage_lerp_values.lerp_0_75,
 				[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
 				[armor_types.void_shield] = damage_lerp_values.lerp_1,
@@ -162,9 +163,9 @@ damage_templates.default_plasma_bfg = {
 			attack = {
 				[armor_types.unarmored] = damage_lerp_values.lerp_1,
 				[armor_types.armored] = damage_lerp_values.lerp_1,
-				[armor_types.resistant] = damage_lerp_values.lerp_1,
+				[armor_types.resistant] = damage_lerp_values.lerp_1_5,
 				[armor_types.player] = damage_lerp_values.lerp_1,
-				[armor_types.berserker] = damage_lerp_values.lerp_1,
+				[armor_types.berserker] = damage_lerp_values.lerp_1_25,
 				[armor_types.super_armor] = damage_lerp_values.lerp_0_5,
 				[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
 				[armor_types.void_shield] = damage_lerp_values.lerp_1,
@@ -185,12 +186,12 @@ damage_templates.default_plasma_bfg = {
 	},
 	power_distribution = {
 		attack = {
-			600,
-			1200
+			700,
+			1400
 		},
 		impact = {
-			20,
-			40
+			30,
+			60
 		}
 	},
 	wounds_template = WoundsTemplates.plasma_rifle,
@@ -199,11 +200,15 @@ damage_templates.default_plasma_bfg = {
 	gibbing_type = GibbingTypes.plasma,
 	on_kill_area_suppression = {
 		distance = 8,
-		suppression_value = 10
+		suppression_value = 10,
+		decay_delay = {
+			0.2,
+			0.6
+		}
 	},
 	targets = {
 		default_target = {
-			boost_curve_multiplier_finesse = 0.2,
+			boost_curve_multiplier_finesse = 0.5,
 			boost_curve = PowerLevelSettings.boost_curves.default,
 			finesse_boost = {
 				[armor_types.unarmored] = 0.75

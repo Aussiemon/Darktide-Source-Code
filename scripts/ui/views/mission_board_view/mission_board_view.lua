@@ -936,11 +936,13 @@ MissionBoardView._reset_selection = function (self)
 	self._selected_mission = nil
 	local mission_widgets = self._mission_widgets
 
-	for i = 0, #mission_widgets do
-		local widget = mission_widgets[i]
+	if mission_widgets then
+		for i = 0, #mission_widgets do
+			local widget = mission_widgets[i]
 
-		if widget then
-			widget.content.hotspot.is_selected_mission_board = false
+			if widget then
+				widget.content.hotspot.is_selected_mission_board = false
+			end
 		end
 	end
 
@@ -958,16 +960,18 @@ MissionBoardView._reset_selection = function (self)
 		self._quickplay_widget.content.hotspot.is_selected_mission_board = false
 	end
 
-	self._widgets_by_name.detail.content.visible = false
-	self._widgets_by_name.objective_1.content.visible = false
-	self._widgets_by_name.objective_2.content.visible = false
-	self._widgets_by_name.difficulty_stepper.content.visible = false
-	self._widgets_by_name.difficulty_stepper_window.content.visible = false
-	self._widgets_by_name.play_team_button.content.visible = false
-	self._widgets_by_name.play_team_button_legend.content.visible = false
+	self._widgets_by_name.detail.visible = false
+	self._widgets_by_name.objective_1.visible = false
+	self._widgets_by_name.objective_2.visible = false
+	self._widgets_by_name.difficulty_stepper.visible = false
+	self._widgets_by_name.difficulty_stepper_window.visible = false
+	self._widgets_by_name.play_team_button.visible = false
+	self._widgets_by_name.play_team_button_legend.visible = false
 end
 
 MissionBoardView._set_selected_quickplay = function (self, move_gamepad_cursor)
+	self:_reset_selection()
+
 	self._selected_mission = nil
 	local mission_widgets = self._mission_widgets
 
@@ -987,6 +991,7 @@ MissionBoardView._set_selected_quickplay = function (self, move_gamepad_cursor)
 
 	local widget = self._widgets_by_name.detail
 	widget.dirty = true
+	widget.visible = true
 	local content = widget.content
 	local style = widget.style
 	content.header_subtitle = self._widgets_by_name.planet.content.title
@@ -996,7 +1001,6 @@ MissionBoardView._set_selected_quickplay = function (self, move_gamepad_cursor)
 	content.start_game_time = nil
 	content.circumstance_icon = nil
 	content.is_flash = false
-	content.visible = true
 	local location_image_material_values = widget.style.location_image.material_values
 	location_image_material_values.texture_map = "content/ui/textures/missions/quickplay"
 	location_image_material_values.show_static = 0
@@ -1050,6 +1054,7 @@ MissionBoardView._set_selected_quickplay = function (self, move_gamepad_cursor)
 	local speaker_settings = DialogueSpeakerVoiceSettings[vo_profile]
 	local widget = self._widgets_by_name.objective_1
 	widget.dirty = true
+	widget.visible = true
 	local content = widget.content
 	local style = widget.style
 	content.header_icon = "content/ui/materials/icons/mission_types/mission_type_09"
@@ -1059,7 +1064,6 @@ MissionBoardView._set_selected_quickplay = function (self, move_gamepad_cursor)
 	content.speaker_text = Localize(speaker_settings.full_name)
 	content.xp = nil
 	content.credits = nil
-	content.visible = true
 	local description_style_options = UIFonts.get_font_options_by_style(style.body_text)
 	local margin = 20
 	local bottom_spacing = content.speaker_icon and 15 or 0
@@ -1083,14 +1087,16 @@ MissionBoardView._set_selected_quickplay = function (self, move_gamepad_cursor)
 	widget.offset[2] = self._ui_scenegraph.detail.size[2] + margin
 	self._widgets_by_name.difficulty_stepper_window.offset[2] = widget.offset[2] + widget.content.size[2] + margin
 	self._widgets_by_name.difficulty_stepper.offset[2] = widget.offset[2] + widget.content.size[2] + margin
-	self._widgets_by_name.objective_2.content.visible = false
-	self._widgets_by_name.difficulty_stepper.content.visible = true
-	self._widgets_by_name.difficulty_stepper_window.content.visible = true
-	self._widgets_by_name.play_team_button.content.visible = true
-	self._widgets_by_name.play_team_button_legend.content.visible = true
+	self._widgets_by_name.objective_2.visible = false
+	self._widgets_by_name.difficulty_stepper.visible = true
+	self._widgets_by_name.difficulty_stepper_window.visible = true
+	self._widgets_by_name.play_team_button.visible = true
+	self._widgets_by_name.play_team_button_legend.visible = true
 end
 
 MissionBoardView._set_selected_mission = function (self, mission, move_gamepad_cursor, is_flash)
+	self:_reset_selection()
+
 	self._selected_mission = mission
 	local selected_mission_id = mission.id
 	local mission_widgets = self._mission_widgets
@@ -1118,6 +1124,7 @@ MissionBoardView._set_selected_mission = function (self, mission, move_gamepad_c
 	local danger = DangerSettings.calculate_danger(mission.challenge, mission.resistance)
 	local widget = self._widgets_by_name.detail
 	widget.dirty = true
+	widget.visible = true
 	local content = widget.content
 	local style = widget.style
 	local mission_type = MissionTypes[mission_template.mission_type]
@@ -1129,7 +1136,6 @@ MissionBoardView._set_selected_mission = function (self, mission, move_gamepad_c
 	content.start_game_time = mission.start_game_time
 	content.expiry_game_time = mission.expiry_game_time
 	content.is_flash = mission.flags.flash
-	content.visible = true
 	local circumstance = mission.circumstance
 
 	if circumstance ~= "default" then
@@ -1210,6 +1216,7 @@ MissionBoardView._set_selected_mission = function (self, mission, move_gamepad_c
 	local mission_type = MissionTypes[mission_template.mission_type]
 	local widget = self._widgets_by_name.objective_1
 	widget.dirty = true
+	widget.visible = true
 	local content = widget.content
 	local style = widget.style
 	content.header_icon = mission_type.icon
@@ -1219,7 +1226,6 @@ MissionBoardView._set_selected_mission = function (self, mission, move_gamepad_c
 	content.speaker_text = Localize(speaker_settings.full_name)
 	content.xp = TextUtils.format_currency(xp)
 	content.credits = TextUtils.format_currency(credits)
-	content.visible = true
 	local description_style_options = UIFonts.get_font_options_by_style(style.body_text)
 	local margin = 20
 	local bottom_spacing = (content.speaker_icon or extraRewards) and 15 or 0
@@ -1244,9 +1250,9 @@ MissionBoardView._set_selected_mission = function (self, mission, move_gamepad_c
 	local side_mission_template = MissionObjectiveTemplates.side_mission.objectives[mission.sideMission]
 	local widget = self._widgets_by_name.objective_2
 	widget.dirty = true
-	widget.content.visible = mission.flags.side and side_mission_template
+	widget.visible = mission.flags.side and side_mission_template
 
-	if widget.content.visible then
+	if widget.visible then
 		local extraRewards = mission.extraRewards.sideMission
 		local content = widget.content
 		local style = widget.style
@@ -1282,10 +1288,10 @@ MissionBoardView._set_selected_mission = function (self, mission, move_gamepad_c
 		widget.offset[2] = self._widgets_by_name.objective_1.offset[2] + self._widgets_by_name.objective_1.content.size[2] + margin
 	end
 
-	self._widgets_by_name.difficulty_stepper.content.visible = false
-	self._widgets_by_name.difficulty_stepper_window.content.visible = false
-	self._widgets_by_name.play_team_button.content.visible = true
-	self._widgets_by_name.play_team_button_legend.content.visible = true
+	self._widgets_by_name.difficulty_stepper.visible = false
+	self._widgets_by_name.difficulty_stepper_window.visible = false
+	self._widgets_by_name.play_team_button.visible = true
+	self._widgets_by_name.play_team_button_legend.visible = true
 end
 
 MissionBoardView.draw = function (self, dt, t, input_service, layer)
@@ -1681,7 +1687,7 @@ MissionBoardView._update_fetch_missions = function (self, t)
 			self._achievements_data = achievements_data
 
 			return self:_update_bonus_rewards():next(function ()
-				self._widgets_by_name.search_text.content.visible = false
+				self._widgets_by_name.search_text.visible = false
 
 				return Promise.resolved(mission_data)
 			end)

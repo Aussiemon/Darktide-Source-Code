@@ -291,6 +291,7 @@ local function generate_base_template()
 						action_name = "action_unwield"
 					}
 				},
+				arc_start_offset = Vector3Box(0.5, 1, 0.1),
 				anim_end_event_condition_func = function (unit, data, end_reason)
 					local ability_extension = ScriptUnit.has_extension(unit, "ability_system")
 					local ability_type = "grenade_ability"
@@ -373,6 +374,7 @@ local function generate_base_template()
 						action_name = "action_unwield"
 					}
 				},
+				arc_start_offset = Vector3Box(0.5, 0.1, -0.3),
 				anim_end_event_condition_func = function (unit, data, end_reason)
 					local ability_extension = ScriptUnit.has_extension(unit, "ability_system")
 					local ability_type = "grenade_ability"

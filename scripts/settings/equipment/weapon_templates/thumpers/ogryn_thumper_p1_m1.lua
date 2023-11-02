@@ -180,7 +180,7 @@ weapon_template.actions = {
 		ammunition_usage = 1,
 		kind = "shoot_pellets",
 		uninterruptible = true,
-		total_time = 0.5,
+		total_time = 0.2,
 		action_movement_curve = {
 			{
 				modifier = 0.5,
@@ -330,7 +330,7 @@ weapon_template.actions = {
 		crosshair_type = "shotgun",
 		allowed_during_sprint = false,
 		uninterruptible = true,
-		total_time = 0.75,
+		total_time = 0.2,
 		allowed_chain_actions = {
 			combat_ability = {
 				action_name = "combat_ability"
@@ -356,7 +356,7 @@ weapon_template.actions = {
 			},
 			zoom_release = {
 				action_name = "action_unzoom",
-				chain_time = 0.2
+				chain_time = 0.1
 			},
 			bash = {
 				chain_time = 0.1,
@@ -374,7 +374,7 @@ weapon_template.actions = {
 		fire_configuration = {
 			anim_event = "attack_shoot",
 			same_side_suppression_enabled = false,
-			shotshell = ShotshellTemplates.default_thumper_assault,
+			shotshell = ShotshellTemplates.default_thumper_assault_ads,
 			damage_type = damage_types.rippergun_pellet
 		},
 		conditional_state_to_action_input = {
@@ -392,29 +392,30 @@ weapon_template.actions = {
 		}
 	},
 	action_reload = {
-		kind = "reload_state",
+		uninterruptible = true,
 		hold_combo = true,
+		kind = "reload_state",
 		weapon_handling_template = "time_scale_1_1",
 		stop_alternate_fire = true,
 		start_input = "reload",
-		crosshair_type = "none",
-		uninterruptible = true,
+		crosshair_type = "shotgun",
+		allowed_during_sprint = true,
 		total_time = 2.333,
 		action_movement_curve = {
 			{
-				modifier = 0.775,
+				modifier = 0.85,
 				t = 0.05
 			},
 			{
-				modifier = 0.75,
+				modifier = 0.9,
 				t = 0.075
 			},
 			{
-				modifier = 0.59,
+				modifier = 0.85,
 				t = 0.25
 			},
 			{
-				modifier = 0.6,
+				modifier = 0.75,
 				t = 0.3
 			},
 			{

@@ -965,7 +965,7 @@ weapon_template.actions = {
 		crosshair_type = "dot",
 		allow_conditional_chain = true,
 		allowed_during_sprint = true,
-		damage_window_end = 0.23333333333333334,
+		damage_window_end = 0.26666666666666666,
 		abort_sprint = true,
 		unaim = true,
 		uninterruptible = true,
@@ -1036,12 +1036,12 @@ weapon_template.actions = {
 			}
 		},
 		weapon_box = {
-			0.08,
-			1.2,
-			0.08
+			0.2,
+			1.8,
+			0.2
 		},
 		spline_settings = {
-			matrices_data_location = "content/characters/player/human/first_person/animations/lasgun_rifle_krieg/animations/attack_heavy_stab_01",
+			matrices_data_location = "content/characters/player/human/first_person/animations/lasgun_rifle_krieg/animations/attack_slash_01",
 			anchor_point_offset = {
 				0.1,
 				0.8,

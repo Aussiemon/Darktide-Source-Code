@@ -502,12 +502,12 @@ spread_templates.hip_lasgun_killshot = {
 	still = {
 		max_spread = {
 			pitch = {
-				lerp_perfect = 6,
-				lerp_basic = 6.25
+				lerp_perfect = 3,
+				lerp_basic = 3.25
 			},
 			yaw = {
-				lerp_perfect = 6,
-				lerp_basic = 6.25
+				lerp_perfect = 3,
+				lerp_basic = 3.25
 			}
 		},
 		decay = {
@@ -535,12 +535,12 @@ spread_templates.hip_lasgun_killshot = {
 		},
 		continuous_spread = {
 			min_pitch = {
-				lerp_perfect = 2.5,
-				lerp_basic = 3.5
+				lerp_perfect = 1,
+				lerp_basic = 1.5
 			},
 			min_yaw = {
-				lerp_perfect = 2.5,
-				lerp_basic = 3.5
+				lerp_perfect = 1,
+				lerp_basic = 1.5
 			}
 		},
 		randomized_spread = {
@@ -658,12 +658,12 @@ spread_templates.hip_lasgun_killshot = {
 		},
 		continuous_spread = {
 			min_pitch = {
-				lerp_perfect = 3.5,
-				lerp_basic = 4.25
+				lerp_perfect = 1.8,
+				lerp_basic = 2.5
 			},
 			min_yaw = {
-				lerp_perfect = 3.5,
-				lerp_basic = 4.25
+				lerp_perfect = 2,
+				lerp_basic = 2.25
 			}
 		},
 		decay = {
@@ -756,12 +756,12 @@ spread_templates.hip_lasgun_killshot = {
 		},
 		continuous_spread = {
 			min_pitch = {
-				lerp_perfect = 2.3,
-				lerp_basic = 3.3
+				lerp_perfect = 0.7,
+				lerp_basic = 1.4
 			},
 			min_yaw = {
-				lerp_perfect = 2.3,
-				lerp_basic = 3.3
+				lerp_perfect = 0.8,
+				lerp_basic = 1.3
 			}
 		}
 	},
@@ -772,12 +772,12 @@ spread_templates.hip_lasgun_killshot = {
 		},
 		continuous_spread = {
 			min_pitch = {
-				lerp_perfect = 3.3,
-				lerp_basic = 4.15
+				lerp_perfect = 2.3,
+				lerp_basic = 2.15
 			},
 			min_yaw = {
-				lerp_perfect = 3.3,
-				lerp_basic = 4.15
+				lerp_perfect = 2.3,
+				lerp_basic = 2.15
 			}
 		}
 	}
@@ -786,12 +786,12 @@ spread_templates.hip_lasgun_killshot_p1_m2 = {
 	still = {
 		max_spread = {
 			pitch = {
-				lerp_perfect = 6,
-				lerp_basic = 6.25
+				lerp_perfect = 3,
+				lerp_basic = 3.25
 			},
 			yaw = {
-				lerp_perfect = 6,
-				lerp_basic = 6.25
+				lerp_perfect = 3,
+				lerp_basic = 3.25
 			}
 		},
 		decay = {
@@ -819,12 +819,12 @@ spread_templates.hip_lasgun_killshot_p1_m2 = {
 		},
 		continuous_spread = {
 			min_pitch = {
-				lerp_perfect = 2.25,
-				lerp_basic = 3.25
+				lerp_perfect = 1,
+				lerp_basic = 1.25
 			},
 			min_yaw = {
-				lerp_perfect = 2.25,
-				lerp_basic = 3.25
+				lerp_perfect = 1,
+				lerp_basic = 1.25
 			}
 		},
 		randomized_spread = {
@@ -942,12 +942,12 @@ spread_templates.hip_lasgun_killshot_p1_m2 = {
 		},
 		continuous_spread = {
 			min_pitch = {
-				lerp_perfect = 3.25,
-				lerp_basic = 4
+				lerp_perfect = 1.25,
+				lerp_basic = 1.5
 			},
 			min_yaw = {
-				lerp_perfect = 3.25,
-				lerp_basic = 4
+				lerp_perfect = 1.25,
+				lerp_basic = 1.5
 			}
 		},
 		decay = {
@@ -1040,12 +1040,12 @@ spread_templates.hip_lasgun_killshot_p1_m2 = {
 		},
 		continuous_spread = {
 			min_pitch = {
-				lerp_perfect = 2,
-				lerp_basic = 3
+				lerp_perfect = 0.5,
+				lerp_basic = 0.8
 			},
 			min_yaw = {
-				lerp_perfect = 2,
-				lerp_basic = 3
+				lerp_perfect = 0.5,
+				lerp_basic = 0.8
 			}
 		}
 	},
@@ -1056,12 +1056,12 @@ spread_templates.hip_lasgun_killshot_p1_m2 = {
 		},
 		continuous_spread = {
 			min_pitch = {
-				lerp_perfect = 3,
-				lerp_basic = 3.75
+				lerp_perfect = 0.7,
+				lerp_basic = 1
 			},
 			min_yaw = {
-				lerp_perfect = 3,
-				lerp_basic = 3.75
+				lerp_perfect = 0.7,
+				lerp_basic = 1
 			}
 		}
 	}

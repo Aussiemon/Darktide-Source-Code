@@ -94,12 +94,13 @@ local breed_data = {
 		[stagger_types.sticky] = 0.25
 	},
 	stagger_thresholds = {
-		[stagger_types.light] = 3,
-		[stagger_types.medium] = 15,
-		[stagger_types.heavy] = 40,
-		[stagger_types.light_ranged] = 10,
-		[stagger_types.sticky] = 5,
-		[stagger_types.killshot] = 3
+		[stagger_types.light] = 20,
+		[stagger_types.medium] = 50,
+		[stagger_types.heavy] = 90,
+		[stagger_types.explosion] = 120,
+		[stagger_types.light_ranged] = 20,
+		[stagger_types.killshot] = 20,
+		[stagger_types.sticky] = 10
 	},
 	inventory = MinionVisualLoadoutTemplates.chaos_ogryn_gunner,
 	sounds = require("scripts/settings/breed/breeds/chaos/chaos_ogryn_gunner_sounds"),

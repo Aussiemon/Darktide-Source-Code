@@ -47,7 +47,7 @@ local material_overrides = {
 			}
 		}
 	},
-	coated_wear_045 = {
+	coated_wear_05 = {
 		property_overrides = {
 			chip_dirt = {
 				0.83,
@@ -55,11 +55,65 @@ local material_overrides = {
 			}
 		}
 	},
-	coated_wear_05 = {
+	coated_wear_06 = {
 		property_overrides = {
 			chip_dirt = {
 				1,
 				0.9
+			}
+		}
+	},
+	oxidized_wear_00 = {
+		property_overrides = {
+			edge_chipping = {
+				0.3
+			},
+			oxid_level = {
+				0,
+				0
+			}
+		}
+	},
+	oxidized_wear_01 = {
+		property_overrides = {
+			edge_chipping = {
+				0.3
+			},
+			oxid_level = {
+				0.1,
+				0.3
+			}
+		}
+	},
+	oxidized_wear_02 = {
+		property_overrides = {
+			edge_chipping = {
+				0.5
+			},
+			oxid_level = {
+				0.2,
+				0.5
+			}
+		}
+	},
+	outfit_dirt_01 = {
+		property_overrides = {
+			dirt = {
+				0.1
+			}
+		}
+	},
+	outfit_dirt_02 = {
+		property_overrides = {
+			dirt = {
+				0.3
+			}
+		}
+	},
+	outfit_dirt_03 = {
+		property_overrides = {
+			dirt = {
+				0.6
 			}
 		}
 	},

@@ -117,11 +117,13 @@ ActionVeteranCombatAbility.start = function (self, action_settings, t, time_scal
 	local enter_stealth = specialization_extension:has_special_rule(special_rules.veteran_combat_ability_stealth)
 	local has_stance = not stagger_nearby_enemies and not enter_stealth
 
-	if stagger_nearby_enemies and is_server then
-		local rotation = self._first_person_component.rotation
-		local forward = Vector3.normalize(Vector3.flat(Quaternion.forward(rotation)))
+	if stagger_nearby_enemies then
+		if is_server then
+			local rotation = self._first_person_component.rotation
+			local forward = Vector3.normalize(Vector3.flat(Quaternion.forward(rotation)))
 
-		ShoutAbilityImplementation.execute(action_settings.shout_settings, player_unit, t, self._locomotion_component, forward)
+			ShoutAbilityImplementation.execute(action_settings.shout_settings, player_unit, t, self._locomotion_component, forward)
+		end
 
 		local source_name = action_settings.sound_source or "head"
 		local sync_to_clients = action_settings.has_husk_sound

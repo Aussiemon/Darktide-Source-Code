@@ -205,6 +205,9 @@ weapon_template.actions = {
 			block = {
 				action_name = "action_block"
 			},
+			vent = {
+				action_name = "action_vent"
+			},
 			special_action = {
 				action_name = "action_activate_special"
 			}
@@ -282,6 +285,10 @@ weapon_template.actions = {
 			},
 			block = {
 				action_name = "action_block",
+				chain_time = 0.3
+			},
+			vent = {
+				action_name = "action_vent",
 				chain_time = 0.3
 			},
 			special_action = {
@@ -369,6 +376,9 @@ weapon_template.actions = {
 			},
 			block = {
 				action_name = "action_block"
+			},
+			vent = {
+				action_name = "action_vent"
 			},
 			special_action = {
 				action_name = "action_activate_special"
@@ -463,6 +473,9 @@ weapon_template.actions = {
 			block = {
 				action_name = "action_block"
 			},
+			vent = {
+				action_name = "action_vent"
+			},
 			special_action = {
 				action_name = "action_activate_special"
 			}
@@ -540,6 +553,10 @@ weapon_template.actions = {
 			},
 			block = {
 				action_name = "action_block",
+				chain_time = 0.3
+			},
+			vent = {
+				action_name = "action_vent",
 				chain_time = 0.3
 			},
 			special_action = {
@@ -629,6 +646,10 @@ weapon_template.actions = {
 			},
 			block = {
 				action_name = "action_block",
+				chain_time = 0.3
+			},
+			vent = {
+				action_name = "action_vent",
 				chain_time = 0.3
 			},
 			special_action = {
@@ -727,6 +748,9 @@ weapon_template.actions = {
 			block = {
 				action_name = "action_block"
 			},
+			vent = {
+				action_name = "action_vent"
+			},
 			special_action = {
 				action_name = "action_activate_special"
 			}
@@ -804,6 +828,10 @@ weapon_template.actions = {
 			},
 			block = {
 				action_name = "action_block",
+				chain_time = 0.3
+			},
+			vent = {
+				action_name = "action_vent",
 				chain_time = 0.3
 			},
 			special_action = {
@@ -901,6 +929,9 @@ weapon_template.actions = {
 			block = {
 				action_name = "action_block"
 			},
+			vent = {
+				action_name = "action_vent"
+			},
 			special_action = {
 				action_name = "action_activate_special"
 			}
@@ -978,6 +1009,10 @@ weapon_template.actions = {
 			},
 			block = {
 				action_name = "action_block",
+				chain_time = 0.3
+			},
+			vent = {
+				action_name = "action_vent",
 				chain_time = 0.3
 			},
 			special_action = {
@@ -1122,6 +1157,10 @@ weapon_template.actions = {
 			},
 			block = {
 				action_name = "action_block",
+				chain_time = 0.4
+			},
+			vent = {
+				action_name = "action_vent",
 				chain_time = 0.4
 			},
 			special_action = {
@@ -1381,7 +1420,7 @@ weapon_template.keywords = {
 	"p1",
 	"activated"
 }
-weapon_template.smart_targeting_template = SmartTargetingTemplates.force_sword_single_target
+weapon_template.smart_targeting_template = SmartTargetingTemplates.default_melee
 weapon_template.dodge_template = "psyker"
 weapon_template.sprint_template = "default"
 weapon_template.stamina_template = "forcesword_p1_m1"

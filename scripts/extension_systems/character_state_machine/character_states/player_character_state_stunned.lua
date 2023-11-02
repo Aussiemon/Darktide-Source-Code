@@ -91,7 +91,7 @@ local NO_KEYWORDS = {}
 local interrupt_reason_data = {}
 
 PlayerCharacterStateStunned.fixed_update = function (self, unit, dt, t, next_state_params, fixed_frame)
-	local is_crouching = Crouch.check(unit, self._first_person_extension, self._animation_extension, self._weapon_extension, self._movement_state_component, self._sway_control_component, self._sway_component, self._spread_control_component, self._input_extension, t)
+	local is_crouching = Crouch.check(unit, self._first_person_extension, self._animation_extension, self._weapon_extension, self._movement_state_component, self._sway_control_component, self._sway_component, self._spread_control_component, self._input_extension, t, false)
 	local input_extension = self._input_extension
 	local character_state_component = self._character_state_component
 	local character_state_random_component = self._character_state_random_component

@@ -409,7 +409,7 @@ weapon_template.actions = {
 		fx = {
 			fx_hand = "left",
 			jump_sfx_alias = "ranged_single_shot_special_extra",
-			looping_shoot_sfx_alias = "ranged_braced_shooting"
+			looping_shoot_sfx_alias = "ranged_shooting"
 		},
 		charge_effects = {
 			sfx_source_name = "_left",

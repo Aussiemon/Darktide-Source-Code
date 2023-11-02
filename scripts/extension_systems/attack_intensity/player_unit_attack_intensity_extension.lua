@@ -57,6 +57,8 @@ end
 
 local DISALLOWED_CHARACTER_STATES = {
 	grabbed = true,
+	mutant_charged = true,
+	pounced = true,
 	consumed = true
 }
 

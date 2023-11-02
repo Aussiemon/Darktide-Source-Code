@@ -56,23 +56,6 @@ ConstantElementPopupHandler.event_update_popup_message = function (self, popup_i
 	self:_set_text(popup_id, text)
 end
 
-ConstantElementPopupHandler._destroy_default_gui = function (self)
-	if self._ui_default_renderer then
-		self._ui_default_renderer = nil
-
-		Managers.ui:destroy_renderer(self.__class_name .. "_ui_default_renderer")
-
-		local world = self._world
-		local viewport_name = self._viewport_name
-
-		ScriptWorld.destroy_viewport(world, viewport_name)
-		Managers.ui:destroy_world(world)
-
-		self._viewport_name = nil
-		self._world = nil
-	end
-end
-
 ConstantElementPopupHandler._destroy_background = function (self)
 	if self._ui_popup_background_renderer then
 		self._ui_popup_background_renderer = nil
@@ -91,7 +74,6 @@ ConstantElementPopupHandler._destroy_background = function (self)
 end
 
 ConstantElementPopupHandler.destroy = function (self)
-	self:_destroy_default_gui()
 	self:_destroy_background()
 
 	if self._cursor_pushed then
@@ -151,6 +133,7 @@ ConstantElementPopupHandler._setup_popup_type = function (self, data, ui_rendere
 				local widget = self._offer_price_widgets[i]
 
 				self:_unregister_widget_name(widget.name)
+				UIWidget.destroy(ui_renderer, widget)
 			end
 
 			self._offer_price_widgets = nil
@@ -307,9 +290,10 @@ ConstantElementPopupHandler._create_popup_content = function (self, options, ui_
 		local widget = content_widgets[i]
 
 		self:_unregister_widget_name(widget.name)
-
-		content_widgets[i] = nil
+		UIWidget.destroy(ui_renderer, widget)
 	end
+
+	table.clear(content_widgets)
 
 	local total_buttons_height = 0
 	local max_row_length = ConstantElementPopupHandlerSettings.max_button_row_length
@@ -801,15 +785,17 @@ ConstantElementPopupHandler.update = function (self, dt, t, ui_renderer, render_
 			local widget = content_widgets[i]
 
 			self:_unregister_widget_name(widget.name)
-
-			content_widgets[i] = nil
+			UIWidget.destroy(ui_renderer, widget)
 		end
+
+		table.clear(content_widgets)
 
 		if self._offer_price_widgets then
 			for i = 1, #self._offer_price_widgets do
 				local widget = self._offer_price_widgets[i]
 
 				self:_unregister_widget_name(widget.name)
+				UIWidget.destroy(ui_renderer, widget)
 			end
 
 			self._offer_price_widgets = nil
@@ -841,13 +827,11 @@ ConstantElementPopupHandler.update = function (self, dt, t, ui_renderer, render_
 
 		if handling_popups then
 			self:_setup_background_gui()
-			self:_setup_default_gui()
 
 			if not self._cursor_pushed then
 				self:_push_cursor()
 			end
 		else
-			self:_destroy_default_gui()
 			self:_destroy_background()
 
 			if self._cursor_pushed then
@@ -859,14 +843,6 @@ ConstantElementPopupHandler.update = function (self, dt, t, ui_renderer, render_
 	if self._handling_popups then
 		local ui_manager = Managers.ui
 		local top_draw_layer = ui_manager:view_draw_top_layer()
-		local world_draw_layer = top_draw_layer + self._world_default_layer
-
-		if self._world and self._world_draw_layer ~= world_draw_layer then
-			Managers.world:set_world_layer(self._world_name, world_draw_layer)
-
-			self._world_draw_layer = world_draw_layer
-		end
-
 		local background_world_draw_layer = top_draw_layer + self._background_world_default_layer
 
 		if self._background_world and background_world_draw_layer ~= self._background_world_draw_layer then
@@ -984,24 +960,6 @@ ConstantElementPopupHandler._draw_widgets = function (self, dt, t, input_service
 	end
 
 	render_settings.alpha_multiplier = previous_alpha_multiplier
-end
-
-ConstantElementPopupHandler._setup_default_gui = function (self)
-	local ui_manager = Managers.ui
-	local class_name = self.__class_name
-	local timer_name = "ui"
-	local world_layer = 200
-	local world_name = class_name .. "_ui_default_world"
-	self._world = ui_manager:create_world(world_name, world_layer, timer_name)
-	self._world_name = world_name
-	self._world_draw_layer = world_layer
-	self._world_default_layer = world_layer
-	local viewport_name = class_name .. "_ui_default_world_viewport"
-	local viewport_type = "overlay"
-	local viewport_layer = 1
-	self._viewport = ui_manager:create_viewport(self._world, viewport_name, viewport_type, viewport_layer)
-	self._viewport_name = viewport_name
-	self._ui_default_renderer = ui_manager:create_renderer(class_name .. "_ui_default_renderer", self._world)
 end
 
 ConstantElementPopupHandler._setup_background_gui = function (self)

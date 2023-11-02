@@ -877,16 +877,14 @@ weapon_template.actions = {
 	},
 	action_stab_start = {
 		kind = "windup",
-		uninterruptible = true,
+		crosshair_type = "dot",
 		start_input = "special_action_hold",
 		sprint_requires_press_to_interrupt = true,
-		unaim = true,
-		anim_end_event = "attack_finished",
-		abort_sprint = true,
-		crosshair_type = "dot",
 		allowed_during_sprint = true,
+		anim_end_event = "attack_finished",
+		unaim = true,
+		uninterruptible = true,
 		anim_event = "attack_charge_stab",
-		prevent_sprint = true,
 		total_time = math.huge,
 		action_movement_curve = {
 			{
@@ -894,12 +892,12 @@ weapon_template.actions = {
 				t = 0.1
 			},
 			{
-				modifier = 1.2,
+				modifier = 1.3,
 				t = 0.25
 			},
 			{
 				modifier = 1,
-				t = 1
+				t = 3
 			},
 			start_modifier = 1
 		},
@@ -946,20 +944,18 @@ weapon_template.actions = {
 	action_stab = {
 		damage_window_start = 0.3,
 		hit_armor_anim = "attack_hit_shield",
-		kind = "sweep",
+		range_mod = 1.15,
 		sprint_requires_press_to_interrupt = true,
+		kind = "sweep",
 		first_person_hit_anim = "attack_hit",
 		first_person_hit_stop_anim = "attack_hit",
-		range_mod = 1.15,
 		crosshair_type = "dot",
 		allow_conditional_chain = true,
 		allowed_during_sprint = true,
 		damage_window_end = 0.36666666666666664,
-		abort_sprint = true,
 		unaim = true,
 		uninterruptible = true,
 		anim_event = "attack_stab",
-		prevent_sprint = true,
 		total_time = 1.1,
 		action_movement_curve = {
 			{

@@ -135,7 +135,7 @@ weapon_template.actions = {
 			},
 			heavy_attack = {
 				action_name = "action_right_heavy",
-				chain_time = 0.5
+				chain_time = 0.35
 			},
 			block = {
 				action_name = "action_block"
@@ -246,12 +246,12 @@ weapon_template.actions = {
 	action_left_heavy = {
 		damage_window_start = 0.4666666666666667,
 		hit_armor_anim = "attack_hit",
-		weapon_handling_template = "time_scale_1",
+		weapon_handling_template = "time_scale_1_2",
 		kind = "sweep",
 		attack_direction_override = "left",
 		first_person_hit_stop_anim = "attack_hit",
 		range_mod = 1.25,
-		damage_window_end = 0.6,
+		damage_window_end = 0.6666666666666666,
 		anim_end_event = "attack_finished",
 		uninterruptible = true,
 		anim_event = "heavy_attack_shieldslam",
@@ -316,9 +316,9 @@ weapon_template.actions = {
 		end,
 		hit_zone_priority = hit_zone_priority,
 		weapon_box = {
-			0.9,
-			0.3,
-			1.25
+			1,
+			0.8,
+			1.35
 		},
 		spline_settings = {
 			matrices_data_location = "content/characters/player/ogryn/first_person/animations/slab_shield/slab_shield_maul/heavy_swing_shieldslam",
@@ -496,7 +496,7 @@ weapon_template.actions = {
 		hit_armor_anim = "attack_hit",
 		range_mod = 1.25,
 		kind = "sweep",
-		weapon_handling_template = "time_scale_1",
+		weapon_handling_template = "time_scale_1_2",
 		attack_direction_override = "push",
 		first_person_hit_stop_anim = "attack_hit",
 		allowed_during_sprint = true,
@@ -632,7 +632,7 @@ weapon_template.actions = {
 			},
 			heavy_attack = {
 				action_name = "action_right_heavy",
-				chain_time = 0.5
+				chain_time = 0.4
 			},
 			block = {
 				action_name = "action_block"
@@ -872,7 +872,7 @@ weapon_template.actions = {
 			},
 			start_attack = {
 				action_name = "action_melee_start_left",
-				chain_time = 0.85
+				chain_time = 0.7
 			},
 			block = {
 				action_name = "action_block",
@@ -1022,7 +1022,7 @@ weapon_template.actions = {
 			},
 			heavy_attack = {
 				action_name = "action_right_heavy",
-				chain_time = 0.5
+				chain_time = 0.4
 			},
 			block = {
 				action_name = "action_block"
@@ -1215,7 +1215,7 @@ weapon_template.actions = {
 		damage_type = damage_types.ogryn_pipe_club
 	},
 	action_push = {
-		push_radius = 3.25,
+		push_radius = 4,
 		block_duration = 0.5,
 		kind = "push",
 		anim_event = "attack_push",

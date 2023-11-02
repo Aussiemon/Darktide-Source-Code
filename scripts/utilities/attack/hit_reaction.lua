@@ -9,6 +9,7 @@ local DisorientationSettings = require("scripts/settings/damage/disorientation_s
 local FixedFrame = require("scripts/utilities/fixed_frame")
 local ForceLookRotation = require("scripts/extension_systems/first_person/utilities/force_look_rotation")
 local FriendlyFire = require("scripts/utilities/attack/friendly_fire")
+local Interrupt = require("scripts/utilities/attack/interrupt")
 local Luggable = require("scripts/utilities/luggable")
 local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
 local Push = require("scripts/extension_systems/character_state_machine/character_states/utilities/push")
@@ -252,10 +253,30 @@ function _interrupt_alternate_fire(unit_data_extension, target_weapon_template, 
 		local animation_extension = ScriptUnit.has_extension(attacked_unit, "animation_system")
 
 		if not alternate_fire_settings or not alternate_fire_settings.uninterruptible then
-			local peeking_component = unit_data_extension:write_component("peeking")
-			local first_person_extension = ScriptUnit.extension(attacked_unit, "first_person_system")
+			local weapon_extension = ScriptUnit.extension(attacked_unit, "weapon_system")
+			local action_settings = weapon_extension:running_action_settings()
+			local hard_stop_alternate_fire = true
 
-			AlternateFire.stop(alternate_fire, peeking_component, first_person_extension, weapon_tweak_templates_component, animation_extension, target_weapon_template, false, attacked_unit)
+			if action_settings then
+				local t = FixedFrame.get_latest_fixed_time()
+
+				Interrupt.action(t, attacked_unit, "alternate_fire_interrupt")
+
+				local action_settings_after_interrupt = weapon_extension:running_action_settings()
+
+				if action_settings_after_interrupt then
+					hard_stop_alternate_fire = false
+				elseif not alternate_fire.is_active then
+					hard_stop_alternate_fire = false
+				end
+			end
+
+			if hard_stop_alternate_fire then
+				local peeking_component = unit_data_extension:write_component("peeking")
+				local first_person_extension = ScriptUnit.extension(attacked_unit, "first_person_system")
+
+				AlternateFire.stop(alternate_fire, peeking_component, first_person_extension, weapon_tweak_templates_component, animation_extension, target_weapon_template, false, attacked_unit, false)
+			end
 		end
 	end
 end

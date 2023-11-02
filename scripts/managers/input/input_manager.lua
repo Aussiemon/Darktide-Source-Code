@@ -448,6 +448,24 @@ InputManager.restore_default_aliases = function (self, service_type)
 end
 
 InputManager.update = function (self, dt, t)
+	if self._show_cursor and not InputDevice.gamepad_active then
+		if not self._drawing_cursor then
+			self._drawing_cursor = true
+
+			Window.set_show_cursor(true)
+		end
+
+		if self._new_cursor_position_array then
+			Window.set_cursor_position(Vector2(self._new_cursor_position_array[1], self._new_cursor_position_array[2]))
+
+			self._new_cursor_position_array = nil
+		end
+	elseif self._drawing_cursor then
+		self._drawing_cursor = false
+
+		Window.set_show_cursor(false)
+	end
+
 	self:_update_selection()
 	self:_update_devices(dt, t)
 	self:_update_services(dt, t)
@@ -578,7 +596,7 @@ InputManager._set_allow_cursor_rendering = function (self, allow_cursor_renderin
 
 	if cursor_stack_data.stack_depth > 0 then
 		if IS_WINDOWS then
-			Window.set_show_cursor(allow_cursor_rendering)
+			self._show_cursor = allow_cursor_rendering
 		elseif IS_XBS then
 			self._software_cursor_active = allow_cursor_rendering
 		end
@@ -589,8 +607,10 @@ InputManager.set_cursor_position = function (self, reference, position)
 	if PLATFORM == "win32" then
 		local cursor_stack_data = self._cursor_stack_data
 		local stack_references = cursor_stack_data.stack_references
-
-		Window.set_cursor_position(position)
+		self._new_cursor_position_array = {
+			position[1],
+			position[2]
+		}
 	end
 end
 
@@ -603,7 +623,8 @@ InputManager.push_cursor = function (self, reference)
 			local is_fullscreen = RESOLUTION_LOOKUP.fullscreen
 
 			if IS_WINDOWS then
-				Window.set_show_cursor(true)
+				self._show_cursor = true
+
 				Window.set_clip_cursor(is_fullscreen or false)
 			else
 				self._software_cursor_active = true
@@ -624,7 +645,8 @@ InputManager.pop_cursor = function (self, reference)
 
 		if cursor_stack_data.stack_depth == 0 then
 			if IS_WINDOWS then
-				Window.set_show_cursor(false)
+				self._show_cursor = false
+
 				Window.set_clip_cursor(true)
 			else
 				self._software_cursor_active = false

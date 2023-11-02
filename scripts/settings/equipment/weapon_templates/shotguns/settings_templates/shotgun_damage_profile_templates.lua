@@ -21,6 +21,7 @@ local damage_lerp_values = DamageProfileSettings.damage_lerp_values
 local single_cleave = DamageProfileSettings.single_cleave
 local double_cleave = DamageProfileSettings.double_cleave
 local light_cleave = DamageProfileSettings.light_cleave
+local medium_cleave = DamageProfileSettings.medium_cleave
 damage_templates.default_shotgun_killshot = {
 	ragdoll_only = false,
 	stagger_category = "melee",
@@ -44,10 +45,10 @@ damage_templates.default_shotgun_killshot = {
 		near = {
 			attack = {
 				[armor_types.unarmored] = damage_lerp_values.lerp_1,
-				[armor_types.armored] = damage_lerp_values.lerp_0_75,
-				[armor_types.resistant] = damage_lerp_values.lerp_0_8,
+				[armor_types.armored] = damage_lerp_values.lerp_0_9,
+				[armor_types.resistant] = damage_lerp_values.lerp_1,
 				[armor_types.player] = damage_lerp_values.lerp_1,
-				[armor_types.berserker] = damage_lerp_values.lerp_0_9,
+				[armor_types.berserker] = damage_lerp_values.lerp_1_1,
 				[armor_types.super_armor] = damage_lerp_values.lerp_0_05,
 				[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
 				[armor_types.void_shield] = damage_lerp_values.lerp_1,
@@ -97,7 +98,7 @@ damage_templates.default_shotgun_killshot = {
 	power_distribution = {
 		attack = {
 			250,
-			400
+			500
 		},
 		impact = {
 			20,
@@ -162,11 +163,11 @@ damage_templates.default_shotgun_assault = {
 	armor_damage_modifier_ranged = {
 		near = {
 			attack = {
-				[armor_types.unarmored] = damage_lerp_values.lerp_1,
-				[armor_types.armored] = damage_lerp_values.lerp_0_75,
-				[armor_types.resistant] = damage_lerp_values.lerp_0_8,
+				[armor_types.unarmored] = damage_lerp_values.lerp_1_25,
+				[armor_types.armored] = damage_lerp_values.lerp_0_9,
+				[armor_types.resistant] = damage_lerp_values.lerp_1,
 				[armor_types.player] = damage_lerp_values.lerp_1,
-				[armor_types.berserker] = damage_lerp_values.lerp_0_9,
+				[armor_types.berserker] = damage_lerp_values.lerp_1_1,
 				[armor_types.super_armor] = damage_lerp_values.lerp_0_05,
 				[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
 				[armor_types.void_shield] = damage_lerp_values.lerp_1,
@@ -216,7 +217,7 @@ damage_templates.default_shotgun_assault = {
 	power_distribution = {
 		attack = {
 			250,
-			400
+			500
 		},
 		impact = {
 			20,
@@ -263,7 +264,7 @@ damage_templates.shotgun_cleaving_special = {
 	ragdoll_only = false,
 	stagger_category = "melee",
 	ignore_stagger_reduction = true,
-	cleave_distribution = double_cleave,
+	cleave_distribution = medium_cleave,
 	ranges = {
 		min = {
 			6,
@@ -335,7 +336,7 @@ damage_templates.shotgun_cleaving_special = {
 			400
 		},
 		impact = {
-			40,
+			60,
 			80
 		}
 	},
@@ -357,28 +358,67 @@ damage_templates.shotgun_cleaving_special = {
 			4
 		}
 	},
+	finesse_boost = {
+		[armor_types.unarmored] = 0.75
+	},
 	targets = {
 		{
 			power_distribution = {
 				attack = {
-					250,
-					400
+					300,
+					480
 				},
 				impact = {
-					20,
-					40
+					60,
+					80
 				}
+			},
+			boost_curve_multiplier_finesse = {
+				1,
+				2
+			}
+		},
+		{
+			power_distribution = {
+				attack = {
+					150,
+					300
+				},
+				impact = {
+					50,
+					70
+				}
+			},
+			boost_curve_multiplier_finesse = {
+				1,
+				2
+			}
+		},
+		{
+			power_distribution = {
+				attack = {
+					100,
+					200
+				},
+				impact = {
+					40,
+					60
+				}
+			},
+			boost_curve_multiplier_finesse = {
+				1,
+				2
 			}
 		},
 		default_target = {
 			power_distribution = {
 				attack = {
-					50,
-					100
+					80,
+					160
 				},
 				impact = {
-					5,
-					10
+					40,
+					50
 				}
 			},
 			boost_curve = PowerLevelSettings.boost_curves.default,
@@ -386,8 +426,8 @@ damage_templates.shotgun_cleaving_special = {
 				[armor_types.unarmored] = 0.75
 			},
 			boost_curve_multiplier_finesse = {
-				0.8,
-				1.6
+				1,
+				2
 			}
 		}
 	},
@@ -613,8 +653,8 @@ damage_templates.shotgun_slug_special = {
 				[armor_types.unarmored] = 0.75
 			},
 			boost_curve_multiplier_finesse = {
-				1,
-				2
+				1.125,
+				2.25
 			}
 		}
 	},
@@ -647,10 +687,10 @@ damage_templates.shotgun_p1_m2_assault = {
 		near = {
 			attack = {
 				[armor_types.unarmored] = damage_lerp_values.lerp_1,
-				[armor_types.armored] = damage_lerp_values.lerp_0_75,
-				[armor_types.resistant] = damage_lerp_values.lerp_0_8,
+				[armor_types.armored] = damage_lerp_values.lerp_0_9,
+				[armor_types.resistant] = damage_lerp_values.lerp_1,
 				[armor_types.player] = damage_lerp_values.lerp_1,
-				[armor_types.berserker] = damage_lerp_values.lerp_0_9,
+				[armor_types.berserker] = damage_lerp_values.lerp_1,
 				[armor_types.super_armor] = damage_lerp_values.lerp_0_05,
 				[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
 				[armor_types.void_shield] = damage_lerp_values.lerp_1,
@@ -699,8 +739,8 @@ damage_templates.shotgun_p1_m2_assault = {
 	},
 	power_distribution = {
 		attack = {
-			160,
-			300
+			200,
+			400
 		},
 		impact = {
 			15,
@@ -732,8 +772,8 @@ damage_templates.shotgun_p1_m2_assault = {
 				[armor_types.unarmored] = 0.75
 			},
 			boost_curve_multiplier_finesse = {
-				0.5,
-				1
+				0.6,
+				1.2
 			}
 		}
 	},
@@ -766,10 +806,10 @@ damage_templates.shotgun_p1_m2_killshot = {
 		near = {
 			attack = {
 				[armor_types.unarmored] = damage_lerp_values.lerp_1,
-				[armor_types.armored] = damage_lerp_values.lerp_0_75,
-				[armor_types.resistant] = damage_lerp_values.lerp_0_8,
+				[armor_types.armored] = damage_lerp_values.lerp_0_9,
+				[armor_types.resistant] = damage_lerp_values.lerp_1,
 				[armor_types.player] = damage_lerp_values.lerp_1,
-				[armor_types.berserker] = damage_lerp_values.lerp_0_9,
+				[armor_types.berserker] = damage_lerp_values.lerp_1,
 				[armor_types.super_armor] = damage_lerp_values.lerp_0_05,
 				[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
 				[armor_types.void_shield] = damage_lerp_values.lerp_1,
@@ -818,8 +858,8 @@ damage_templates.shotgun_p1_m2_killshot = {
 	},
 	power_distribution = {
 		attack = {
-			160,
-			300
+			200,
+			400
 		},
 		impact = {
 			15,
@@ -851,8 +891,8 @@ damage_templates.shotgun_p1_m2_killshot = {
 				[armor_types.unarmored] = 0.75
 			},
 			boost_curve_multiplier_finesse = {
-				1,
-				2
+				1.25,
+				2.5
 			}
 		}
 	},
@@ -885,10 +925,10 @@ damage_templates.shotgun_p1_m3_assault = {
 		near = {
 			attack = {
 				[armor_types.unarmored] = damage_lerp_values.lerp_1,
-				[armor_types.armored] = damage_lerp_values.lerp_0_75,
-				[armor_types.resistant] = damage_lerp_values.lerp_0_8,
+				[armor_types.armored] = damage_lerp_values.lerp_0_9,
+				[armor_types.resistant] = damage_lerp_values.lerp_1,
 				[armor_types.player] = damage_lerp_values.lerp_1,
-				[armor_types.berserker] = damage_lerp_values.lerp_0_9,
+				[armor_types.berserker] = damage_lerp_values.lerp_1,
 				[armor_types.super_armor] = damage_lerp_values.lerp_0_05,
 				[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
 				[armor_types.void_shield] = damage_lerp_values.lerp_1,
@@ -937,8 +977,8 @@ damage_templates.shotgun_p1_m3_assault = {
 	},
 	power_distribution = {
 		attack = {
-			400,
-			600
+			450,
+			700
 		},
 		impact = {
 			30,
@@ -1001,10 +1041,10 @@ damage_templates.shotgun_p1_m3_killshot = {
 		near = {
 			attack = {
 				[armor_types.unarmored] = damage_lerp_values.lerp_1,
-				[armor_types.armored] = damage_lerp_values.lerp_0_75,
-				[armor_types.resistant] = damage_lerp_values.lerp_0_8,
+				[armor_types.armored] = damage_lerp_values.lerp_0_9,
+				[armor_types.resistant] = damage_lerp_values.lerp_1,
 				[armor_types.player] = damage_lerp_values.lerp_1,
-				[armor_types.berserker] = damage_lerp_values.lerp_0_9,
+				[armor_types.berserker] = damage_lerp_values.lerp_1,
 				[armor_types.super_armor] = damage_lerp_values.lerp_0_05,
 				[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
 				[armor_types.void_shield] = damage_lerp_values.lerp_1,
@@ -1053,8 +1093,8 @@ damage_templates.shotgun_p1_m3_killshot = {
 	},
 	power_distribution = {
 		attack = {
-			400,
-			600
+			450,
+			700
 		},
 		impact = {
 			30,

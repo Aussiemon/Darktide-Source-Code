@@ -91,9 +91,10 @@ templates.weapon_trait_bespoke_shotgun_p1_cleave_on_crit = {
 	max_stacks = 1,
 	predicted = false,
 	hide_icon_in_hud = true,
-	keywords = {
+	conditional_keywords = {
 		keywords.critical_hit_infinite_cleave
-	}
+	},
+	conditional_keywords_func = ConditionalFunctions.is_item_slot_wielded
 }
 
 return templates

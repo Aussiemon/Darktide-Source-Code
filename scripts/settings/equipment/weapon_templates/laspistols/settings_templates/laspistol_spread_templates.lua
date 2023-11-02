@@ -255,12 +255,12 @@ spread_templates.default_laspistol_assault = {
 		},
 		continuous_spread = {
 			min_pitch = {
-				lerp_perfect = 1,
-				lerp_basic = 1.5
+				lerp_perfect = 0.7,
+				lerp_basic = 1.2
 			},
 			min_yaw = {
-				lerp_perfect = 1,
-				lerp_basic = 1.5
+				lerp_perfect = 0.7,
+				lerp_basic = 1.2
 			}
 		},
 		decay = {
@@ -294,12 +294,12 @@ spread_templates.default_laspistol_assault = {
 		},
 		continuous_spread = {
 			min_pitch = {
-				lerp_perfect = 0.6,
-				lerp_basic = 1.1
+				lerp_perfect = 0.4,
+				lerp_basic = 0.8
 			},
 			min_yaw = {
-				lerp_perfect = 0.6,
-				lerp_basic = 1.1
+				lerp_perfect = 0.4,
+				lerp_basic = 0.8
 			}
 		}
 	},
@@ -310,12 +310,12 @@ spread_templates.default_laspistol_assault = {
 		},
 		continuous_spread = {
 			min_pitch = {
-				lerp_perfect = 1.05,
-				lerp_basic = 1.55
+				lerp_perfect = 0.4,
+				lerp_basic = 0.8
 			},
 			min_yaw = {
-				lerp_perfect = 1.05,
-				lerp_basic = 1.55
+				lerp_perfect = 0.4,
+				lerp_basic = 0.8
 			}
 		}
 	}

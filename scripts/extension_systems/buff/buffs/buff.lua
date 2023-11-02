@@ -452,6 +452,18 @@ Buff.set_start_time = function (self, start_time)
 	if template.duration then
 		self._finished = false
 	end
+
+	if self._player and self._player.remote then
+		self._need_to_sync_start_time = true
+	end
+end
+
+Buff.need_to_sync_start_time = function (self)
+	return self._need_to_sync_start_time
+end
+
+Buff.set_need_to_sync_start_time = function (self, sync)
+	self._need_to_sync_start_time = sync
 end
 
 Buff.buff_lerp_value = function (self)

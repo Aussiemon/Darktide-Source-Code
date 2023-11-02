@@ -172,7 +172,7 @@ function _execute(attacked_unit, damage_profile, target_index, target_number, po
 	local attacker_breed_or_nil = attacking_unit_data_extension and attacking_unit_data_extension:breed()
 	local attacker_buff_extension = ScriptUnit.has_extension(apply_owner_buffs and attacking_unit_owner_unit or attacking_unit, "buff_system")
 	local target_buff_extension = ScriptUnit.has_extension(attacked_unit, "buff_system")
-	local is_backstab = AttackPositioning.is_backstabbing(attacked_unit, attacking_unit, attack_type)
+	local is_backstab = AttackPositioning.is_backstabbing(attacked_unit, attacking_unit, attack_type, damage_profile)
 
 	if is_backstab then
 		_trigger_backstab_interfacing(attacking_unit_owner_unit, attack_type)

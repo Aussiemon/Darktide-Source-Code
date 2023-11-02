@@ -197,9 +197,14 @@ if not IS_XBS and Wwise.get_device_list and Wwise.get_device_list() then
 				Wwise.set_active_device(0)
 			else
 				local option = sound_device.options[value + 1]
-				local device_id = option.device_id
 
-				Wwise.set_active_device(device_id)
+				if option then
+					local device_id = option.device_id
+
+					Wwise.set_active_device(device_id)
+				else
+					Wwise.set_active_device(0)
+				end
 			end
 		end
 	}
@@ -591,6 +596,18 @@ end
 
 settings[#settings + 1] = construct_audio_settings_dropdown(voice_chat_settings)
 SettingsUtilities = SettingsUtilitiesFunction(settings)
+
+if SettingsUtilities.settings_by_id.sound_device then
+	local setting = SettingsUtilities.settings_by_id.sound_device
+
+	if setting.get_function then
+		local value = setting.get_function()
+
+		if not setting.options[value + 1] then
+			setting.on_activated(0)
+		end
+	end
+end
 
 return {
 	icon = "content/ui/materials/icons/system/settings/category_audio",

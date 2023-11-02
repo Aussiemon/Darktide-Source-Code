@@ -34,11 +34,11 @@ damage_templates.default_bolter_killshot = {
 		near = {
 			attack = {
 				[armor_types.unarmored] = damage_lerp_values.lerp_0_9,
-				[armor_types.armored] = damage_lerp_values.lerp_0_8,
-				[armor_types.resistant] = damage_lerp_values.lerp_0_75,
+				[armor_types.armored] = damage_lerp_values.lerp_1,
+				[armor_types.resistant] = damage_lerp_values.lerp_1,
 				[armor_types.player] = damage_lerp_values.lerp_1,
 				[armor_types.berserker] = damage_lerp_values.lerp_1,
-				[armor_types.super_armor] = damage_lerp_values.lerp_0_25,
+				[armor_types.super_armor] = damage_lerp_values.lerp_0_4,
 				[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_5,
 				[armor_types.void_shield] = damage_lerp_values.lerp_0_25,
 				[armor_types.prop_armor] = damage_lerp_values.lerp_0_8
@@ -58,11 +58,11 @@ damage_templates.default_bolter_killshot = {
 		far = {
 			attack = {
 				[armor_types.unarmored] = damage_lerp_values.lerp_1,
-				[armor_types.armored] = damage_lerp_values.lerp_0_9,
-				[armor_types.resistant] = damage_lerp_values.lerp_0_75,
+				[armor_types.armored] = damage_lerp_values.lerp_1_1,
+				[armor_types.resistant] = damage_lerp_values.lerp_1,
 				[armor_types.player] = damage_lerp_values.lerp_1,
 				[armor_types.berserker] = damage_lerp_values.lerp_1,
-				[armor_types.super_armor] = damage_lerp_values.lerp_0_25,
+				[armor_types.super_armor] = damage_lerp_values.lerp_0_4,
 				[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_5,
 				[armor_types.void_shield] = damage_lerp_values.lerp_0_25,
 				[armor_types.prop_armor] = damage_lerp_values.lerp_0_9
@@ -82,8 +82,8 @@ damage_templates.default_bolter_killshot = {
 	},
 	power_distribution = {
 		attack = {
-			300,
-			600
+			330,
+			660
 		},
 		impact = {
 			10,
@@ -101,12 +101,8 @@ damage_templates.default_bolter_killshot = {
 	gib_push_force = GibbingSettings.gib_push_force.ranged_heavy,
 	targets = {
 		default_target = {
-			boost_curve_multiplier_finesse = 0.5,
-			boost_curve = PowerLevelSettings.boost_curves.default,
-			finesse_boost = {
-				[armor_types.unarmored] = 1,
-				[armor_types.armored] = 1
-			}
+			boost_curve_multiplier_finesse = 1,
+			boost_curve = PowerLevelSettings.boost_curves.default
 		}
 	}
 }

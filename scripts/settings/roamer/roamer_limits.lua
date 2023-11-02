@@ -445,17 +445,27 @@ roamer_limits = {
 			renegade_assault = {
 				extra_replacement = "renegade_shocktrooper",
 				num_limitations_to_add_extra = 3,
-				max = 2
+				max = 3
 			},
 			renegade_rifleman = {
 				extra_replacement = "renegade_gunner",
 				num_limitations_to_add_extra = 4,
-				max = 5
+				max = 6
 			},
 			cultist_assault = {
 				extra_replacement = "cultist_gunner",
 				num_limitations_to_add_extra = 4,
-				max = 4
+				max = 8
+			},
+			renegade_berzerker = {
+				extra_replacement = "renegade_melee",
+				num_limitations_to_add_extra = 3,
+				max = 3
+			},
+			cultist_berzerker = {
+				extra_replacement = "cultist_melee",
+				num_limitations_to_add_extra = 3,
+				max = 3
 			},
 			tag_limits = {
 				ogryn = {
@@ -490,12 +500,12 @@ roamer_limits = {
 			renegade_rifleman = {
 				extra_replacement = "renegade_gunner",
 				num_limitations_to_add_extra = 3,
-				max = 5
+				max = 6
 			},
 			cultist_assault = {
 				extra_replacement = "cultist_gunner",
 				num_limitations_to_add_extra = 3,
-				max = 4
+				max = 8
 			},
 			tag_limits = {
 				ogryn = {
@@ -612,27 +622,27 @@ roamer_limits = {
 		{
 			cultist_melee = {
 				extra_replacement = "cultist_berzerker",
-				num_limitations_to_add_extra = 4,
+				num_limitations_to_add_extra = 3,
 				max = 4
 			},
 			renegade_melee = {
 				extra_replacement = "renegade_executor",
-				num_limitations_to_add_extra = 4,
+				num_limitations_to_add_extra = 3,
 				max = 4
 			},
 			renegade_assault = {
 				extra_replacement = "renegade_shocktrooper",
-				num_limitations_to_add_extra = 4,
+				num_limitations_to_add_extra = 3,
 				max = 3
 			},
 			renegade_rifleman = {
 				extra_replacement = "renegade_gunner",
-				num_limitations_to_add_extra = 4,
+				num_limitations_to_add_extra = 3,
 				max = 4
 			},
 			cultist_assault = {
 				extra_replacement = "cultist_gunner",
-				num_limitations_to_add_extra = 4,
+				num_limitations_to_add_extra = 3,
 				max = 3
 			},
 			tag_limits = {
@@ -652,28 +662,28 @@ roamer_limits = {
 			chaos_poxwalker = 0,
 			cultist_melee = {
 				extra_replacement = "cultist_berzerker",
-				num_limitations_to_add_extra = 3,
-				max = 4
+				num_limitations_to_add_extra = 2,
+				max = 5
 			},
 			renegade_melee = {
 				extra_replacement = "renegade_executor",
-				num_limitations_to_add_extra = 3,
-				max = 4
+				num_limitations_to_add_extra = 2,
+				max = 5
 			},
 			renegade_assault = {
 				extra_replacement = "renegade_shocktrooper",
-				num_limitations_to_add_extra = 3,
-				max = 3
+				num_limitations_to_add_extra = 2,
+				max = 5
 			},
 			renegade_rifleman = {
 				extra_replacement = "renegade_gunner",
-				num_limitations_to_add_extra = 3,
-				max = 5
+				num_limitations_to_add_extra = 2,
+				max = 8
 			},
 			cultist_assault = {
 				extra_replacement = "cultist_gunner",
-				num_limitations_to_add_extra = 3,
-				max = 4
+				num_limitations_to_add_extra = 2,
+				max = 10
 			},
 			tag_limits = {
 				ogryn = {
@@ -693,12 +703,12 @@ roamer_limits = {
 			cultist_melee = {
 				extra_replacement = "cultist_berzerker",
 				num_limitations_to_add_extra = 2,
-				max = 4
+				max = 5
 			},
 			renegade_melee = {
 				extra_replacement = "renegade_executor",
 				num_limitations_to_add_extra = 2,
-				max = 4
+				max = 5
 			},
 			renegade_assault = {
 				extra_replacement = "renegade_shocktrooper",
@@ -708,12 +718,12 @@ roamer_limits = {
 			renegade_rifleman = {
 				extra_replacement = "renegade_gunner",
 				num_limitations_to_add_extra = 2,
-				max = 7
+				max = 9
 			},
 			cultist_assault = {
 				extra_replacement = "cultist_gunner",
 				num_limitations_to_add_extra = 2,
-				max = 4
+				max = 11
 			},
 			tag_limits = {
 				ogryn = {
@@ -748,12 +758,12 @@ roamer_limits = {
 			renegade_rifleman = {
 				extra_replacement = "renegade_gunner",
 				num_limitations_to_add_extra = 3,
-				max = 7
+				max = 8
 			},
 			cultist_assault = {
 				extra_replacement = "cultist_gunner",
 				num_limitations_to_add_extra = 3,
-				max = 5
+				max = 7
 			},
 			tag_limits = {
 				elite = 20,

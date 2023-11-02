@@ -675,7 +675,7 @@ weapon_template.actions = {
 				-0.2
 			}
 		},
-		damage_profile = DamageProfileTemplates.light_combat_knife_ninja_fencer,
+		damage_profile = DamageProfileTemplates.light_combat_knife_ninja_fencer_stab,
 		damage_type = damage_types.knife,
 		time_scale_stat_buffs = {
 			buff_stat_buffs.attack_speed,
@@ -1090,7 +1090,7 @@ weapon_template.actions = {
 			},
 			start_attack = {
 				action_name = "action_melee_start_left_jab_combo",
-				chain_time = 0.32
+				chain_time = 0.2
 			},
 			special_action = {
 				action_name = "action_special_jab",
@@ -1098,7 +1098,7 @@ weapon_template.actions = {
 			},
 			block = {
 				action_name = "action_block",
-				chain_time = 0.32
+				chain_time = 0.2
 			}
 		},
 		anim_end_event_condition_func = function (unit, data, end_reason)
@@ -1196,7 +1196,6 @@ weapon_template.actions = {
 		first_person_hit_stop_anim = "attack_hit",
 		damage_window_end = 0.4666666666666667,
 		anim_event = "attack_swing_heavy_down_left",
-		power_level = 400,
 		total_time = 1,
 		action_movement_curve = {
 			{
@@ -1238,7 +1237,7 @@ weapon_template.actions = {
 			},
 			special_action = {
 				action_name = "action_special_jab",
-				chain_time = 0.85
+				chain_time = 0.4
 			},
 			block = {
 				action_name = "action_block"

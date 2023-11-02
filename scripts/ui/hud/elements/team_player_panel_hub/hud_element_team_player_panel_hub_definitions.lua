@@ -150,18 +150,18 @@ local widget_definitions = {
 	}, "bar"),
 	voice_indicator = UIWidget.create_definition({
 		{
-			value = "content/ui/materials/icons/player_states/voice_chat_top",
+			value = "content/ui/materials/hud/icons/speaker",
 			style_id = "texture",
 			pass_type = "texture",
 			style = {
 				vertical_alignment = "center",
-				horizontal_alignment = "right",
+				horizontal_alignment = "left",
 				size = {
-					28,
-					28
+					32,
+					32
 				},
 				offset = {
-					25,
+					-8,
 					0,
 					6
 				},

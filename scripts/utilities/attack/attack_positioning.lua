@@ -7,7 +7,7 @@ local _is_outmanoeuvring = nil
 local BACKSTAB_DOT_THRESHOLD = 0.5
 local FLANK_DOT_THRESHOLD = 0
 local AttackPositioning = {
-	is_backstabbing = function (attacked_unit, attacking_unit, attack_type)
+	is_backstabbing = function (attacked_unit, attacking_unit, attack_type, damage_profile)
 		if attack_type ~= attack_types.melee then
 			return
 		end
@@ -15,8 +15,9 @@ local AttackPositioning = {
 		local attacking_unit_position = POSITION_LOOKUP[attacking_unit]
 		local attacker_unit_position = POSITION_LOOKUP[attacked_unit]
 		local attack_direction = Vector3.normalize(Vector3.flat(attacker_unit_position - attacking_unit_position))
+		local has_utmanoeuvring_damage_profile = damage_profile.backstab_bonus ~= nil
 
-		return _is_outmanoeuvring(attacked_unit, attacking_unit, keywords.allow_backstabbing, attack_direction, BACKSTAB_DOT_THRESHOLD)
+		return _is_outmanoeuvring(attacked_unit, attacking_unit, keywords.allow_backstabbing, attack_direction, BACKSTAB_DOT_THRESHOLD, has_utmanoeuvring_damage_profile)
 	end,
 	is_flanking = function (attacked_unit, attacking_unit, attack_type, attack_direction)
 		if attack_type ~= attack_types.ranged then
@@ -27,9 +28,9 @@ local AttackPositioning = {
 	end
 }
 
-function _is_outmanoeuvring(attacked_unit, attacking_unit, allowed_buff_keyword, attack_direction, dot_threshold)
+function _is_outmanoeuvring(attacked_unit, attacking_unit, allowed_buff_keyword, attack_direction, dot_threshold, can_outmanoeuvre_override)
 	local attacking_unit_buff_extension = ScriptUnit.has_extension(attacking_unit, "buff_system")
-	local can_outmanoeuvre = attacking_unit_buff_extension and attacking_unit_buff_extension:has_keyword(allowed_buff_keyword)
+	local can_outmanoeuvre = can_outmanoeuvre_override or attacking_unit_buff_extension and attacking_unit_buff_extension:has_keyword(allowed_buff_keyword)
 
 	if not can_outmanoeuvre then
 		return false

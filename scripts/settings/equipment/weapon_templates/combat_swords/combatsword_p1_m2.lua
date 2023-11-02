@@ -778,7 +778,7 @@ weapon_template.actions = {
 				-0
 			}
 		},
-		damage_profile = DamageProfileTemplates.light_combatsword_smiter,
+		damage_profile = DamageProfileTemplates.light_combatsword_linesman,
 		damage_type = damage_types.metal_slashing_light,
 		time_scale_stat_buffs = {
 			buff_stat_buffs.attack_speed,
@@ -1076,7 +1076,7 @@ weapon_template.actions = {
 				-0.2
 			}
 		},
-		damage_profile = DamageProfileTemplates.light_combatsword_linesman,
+		damage_profile = DamageProfileTemplates.light_combatsword_smiter,
 		damage_type = damage_types.metal_slashing_light,
 		wounds_shape = wounds_shapes.vertical_slash,
 		time_scale_stat_buffs = {

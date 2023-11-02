@@ -17,6 +17,10 @@ GRPCManager.init = function (self)
 	self._async_promises = {}
 	self._grpc_streams = {}
 	self._channel_state = gRPC.channel_state()
+
+	if gRPC.set_client_platform then
+		gRPC.set_client_platform(PLATFORM)
+	end
 end
 
 GRPCManager.connect_to_immaterium = function (self, immaterium_details)

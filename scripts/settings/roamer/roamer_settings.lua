@@ -1294,8 +1294,8 @@ roamer_settings.density_settings = {
 		},
 		high = {
 			zone_range = {
-				4,
-				5
+				5,
+				6
 			},
 			num_roamers_range = {
 				renegade = {
@@ -1328,8 +1328,8 @@ roamer_settings.density_settings = {
 		},
 		none = {
 			zone_range = {
-				2,
-				5
+				1,
+				3
 			},
 			num_roamers_range = {
 				renegade = {
@@ -1472,7 +1472,7 @@ roamer_settings.density_settings = {
 		none = {
 			zone_range = {
 				1,
-				3
+				2
 			},
 			num_roamers_range = {
 				renegade = {

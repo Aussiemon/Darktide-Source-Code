@@ -19,7 +19,8 @@ local MissionVotingViewTestify = GameParameters.testify and require("scripts/ui/
 
 local function get_input_text(action_name, input_service_name)
 	local alias_key = Managers.ui:get_input_alias_key(action_name, input_service_name)
-	local input_text = InputUtils.input_text_for_current_input_device(input_service_name, alias_key)
+	local color_tint_text = true
+	local input_text = InputUtils.input_text_for_current_input_device(input_service_name, alias_key, color_tint_text)
 
 	return input_text
 end
@@ -40,7 +41,7 @@ MissionVotingView.init = function (self, settings, context)
 	end
 
 	self._mission_icons_widgets = {}
-	self._selcted_button_index = 1
+	self._selected_button_index = 1
 	self._gamepad_active = InputDevice.gamepad_active
 
 	MissionVotingView.super.init(self, Definitions, settings)
@@ -66,7 +67,7 @@ MissionVotingView.on_enter = function (self)
 	self:toggle_details(false)
 
 	if self._gamepad_active then
-		self:_set_button_selected(self._selcted_button_index)
+		self:_set_button_selected_by_name("accept_button")
 	end
 
 	self:_play_sound(UISoundEvents.mission_vote_popup_enter)
@@ -104,7 +105,7 @@ MissionVotingView.update = function (self, dt, t, input_service)
 		self._gamepad_active = InputDevice.gamepad_active
 
 		if InputDevice.gamepad_active then
-			self:_set_button_selected(self._selcted_button_index)
+			self:_set_button_selected(self._selected_button_index)
 		else
 			self:_set_button_selected(nil)
 		end
@@ -343,6 +344,23 @@ MissionVotingView._get_gamepad_details_button_text = function (self, button_text
 	return new_text
 end
 
+MissionVotingView._set_button_selected_by_name = function (self, button_name)
+	local button_widgets = self._button_widgets
+
+	for i = 1, #button_widgets do
+		local button = button_widgets[i]
+		local is_selected = button.name == button_name
+
+		if is_selected then
+			self._selected_button_index = i
+
+			self:_set_button_selected(i)
+
+			break
+		end
+	end
+end
+
 MissionVotingView._set_button_selected = function (self, index)
 	local button_widgets = self._button_widgets
 
@@ -361,7 +379,7 @@ MissionVotingView._set_button_selected = function (self, index)
 		local button_text = Localize(text)
 		local input_text = get_input_text("confirm_pressed", "View")
 		local new_text = is_selected and string.format("%s %s", input_text, button_text) or button_text
-		button.content.text = new_text
+		button.content.original_text = new_text
 	end
 end
 
@@ -389,17 +407,17 @@ MissionVotingView._handle_gamepad_input = function (self, input_service)
 	end
 
 	if input_service:get("navigate_up_continuous") then
-		local current_index = self._selcted_button_index + 1 <= #self._button_widgets and self._selcted_button_index + 1 or 1
+		local current_index = self._selected_button_index + 1 <= #self._button_widgets and self._selected_button_index + 1 or 1
 
 		self:_set_button_selected(current_index)
 
-		self._selcted_button_index = current_index
+		self._selected_button_index = current_index
 	elseif input_service:get("navigate_down_continuous") then
-		local current_index = self._selcted_button_index - 1 >= 1 and self._selcted_button_index - 1 or #self._button_widgets
+		local current_index = self._selected_button_index - 1 >= 1 and self._selected_button_index - 1 or #self._button_widgets
 
 		self:_set_button_selected(current_index)
 
-		self._selcted_button_index = current_index
+		self._selected_button_index = current_index
 	end
 end
 

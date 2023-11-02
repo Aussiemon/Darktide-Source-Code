@@ -157,7 +157,10 @@ MonsterPacing._generate_spawns = function (self, template)
 	if boss_patrol_settings then
 		local monster_num_sections = allow_witches_spawned_with_monsters and NUM_SECTIONS.monsters or num_sections
 		local num_boss_patrols_range = boss_patrol_settings.num_boss_patrols_range
-		local num_boss_patrols = math.min(math.random(num_boss_patrols_range[1], num_boss_patrols_range[2]), monster_num_sections)
+		local num_sections_left = #TEMP_SECTIONS_MONSTERS
+		local max_boss_patrols = num_boss_patrols_range[2]
+		local min_boss_patrols = math.min(math.max(num_boss_patrols_range[1], num_sections_left), max_boss_patrols)
+		local num_boss_patrols = math.min(math.random(min_boss_patrols, max_boss_patrols), monster_num_sections)
 
 		if self._num_boss_patrol_override then
 			num_boss_patrols = self._num_boss_patrol_override

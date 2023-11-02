@@ -30,13 +30,16 @@ HudElementTacticalOverlay.init = function (self, parent, draw_layer, start_scale
 end
 
 HudElementTacticalOverlay.update = function (self, dt, t, ui_renderer, render_settings, input_service)
-	HudElementTacticalOverlay.super.update(self, dt, t, ui_renderer, render_settings, input_service)
+	local ignore_hud_input = true
+	local is_input_blocked = Managers.ui:using_input(ignore_hud_input)
+
+	HudElementTacticalOverlay.super.update(self, dt, t, ui_renderer, render_settings, is_input_blocked and input_service:null_service() or input_service)
 
 	local service_type = "Ingame"
-	input_service = Managers.input:get_input_service(service_type)
+	input_service = is_input_blocked and input_service:null_service() or Managers.input:get_input_service(service_type)
 	local active = false
 
-	if input_service:get("tactical_overlay_hold") then
+	if not input_service:is_null_service() and input_service:get("tactical_overlay_hold") then
 		active = true
 	end
 

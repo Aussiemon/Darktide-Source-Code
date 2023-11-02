@@ -1082,11 +1082,11 @@ end
 function _step_dmg_roamer_melee(damage)
 	local damage_steps = {
 		damage * 1,
+		damage * 1,
 		damage * 1.5,
 		damage * 2,
 		damage * 3,
-		damage * 4,
-		damage * 4.5
+		damage * 3.5
 	}
 
 	return damage_steps
@@ -1217,24 +1217,24 @@ minion_difficulty_settings.health = {
 	chaos_beast_of_nurgle = _monster_health_steps(17500),
 	chaos_spawn = _monster_health_steps(15750),
 	renegade_netgunner = _special_health_steps(450),
-	cultist_mutant = _special_health_steps(1900),
+	cultist_mutant = _special_health_steps(2000),
 	cultist_flamer = _special_health_steps(700),
 	renegade_flamer = _special_health_steps(700),
 	renegade_grenadier = _special_health_steps(375),
 	renegade_sniper = _special_health_steps(250),
 	chaos_ogryn_gunner = _elite_health_steps(2000),
-	chaos_ogryn_bulwark = _elite_health_steps(1500),
-	chaos_ogryn_executor = _elite_health_steps(1500),
+	chaos_ogryn_bulwark = _elite_health_steps(1800),
+	chaos_ogryn_executor = _elite_health_steps(1800),
 	chaos_daemonhost = _roamer_health_steps(16000),
 	renegade_captain = _roamer_health_steps(16000),
 	renegade_melee = _roamer_health_steps(250),
 	renegade_rifleman = _roamer_health_steps(150),
 	renegade_assault = _roamer_health_steps(180),
-	renegade_executor = _elite_health_steps(1200),
+	renegade_executor = _elite_health_steps(1500),
 	renegade_shocktrooper = _elite_health_steps(500),
 	renegade_gunner = _elite_health_steps(600),
-	renegade_berzerker = _elite_health_steps(800),
-	cultist_berzerker = _elite_health_steps(800),
+	renegade_berzerker = _elite_health_steps(1200),
+	cultist_berzerker = _elite_health_steps(1200),
 	cultist_melee = _roamer_health_steps(275),
 	cultist_assault = _roamer_health_steps(200),
 	cultist_shocktrooper = _elite_health_steps(500),

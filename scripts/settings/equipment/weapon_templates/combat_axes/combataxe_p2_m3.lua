@@ -505,7 +505,7 @@ weapon_template.actions = {
 				-0.375
 			}
 		},
-		damage_profile = DamageProfileTemplates.default_light_hatchet_smiter,
+		damage_profile = DamageProfileTemplates.default_light_hatchet,
 		damage_type = damage_types.axe_light,
 		time_scale_stat_buffs = {
 			buff_stat_buffs.attack_speed,

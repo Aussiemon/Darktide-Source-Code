@@ -1,8 +1,10 @@
+local Action = require("scripts/utilities/weapon/action")
 local Ammo = require("scripts/utilities/ammo")
 local Attack = require("scripts/utilities/attack/attack")
 local Breeds = require("scripts/settings/breed/breeds")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local CheckProcFunctions = require("scripts/settings/buff/validation_functions/check_proc_functions")
+local ConditionalFunctions = require("scripts/settings/buff/validation_functions/conditional_functions")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
 local FixedFrame = require("scripts/utilities/fixed_frame")
@@ -18,6 +20,7 @@ local Sway = require("scripts/utilities/sway")
 local TalentSettings = require("scripts/settings/talent/talent_settings_new")
 local Toughness = require("scripts/utilities/toughness/toughness")
 local damage_types = DamageSettings.damage_types
+local buff_category = BuffSettings.buff_categories
 local keywords = BuffSettings.keywords
 local proc_events = BuffSettings.proc_events
 local slot_configuration = PlayerCharacterConstants.slot_configuration
@@ -109,6 +112,7 @@ local templates = {
 				template_data.outlined_kills_extends_duration = specialization_extension:has_special_rule(special_rules.veteran_combat_ability_outlined_kills_extends_duration)
 				template_data.show_elite_and_special_outlines = specialization_extension:has_special_rule(special_rules.veteran_combat_ability_elite_and_special_outlines)
 				template_data.show_ranged_roamer_outlines = specialization_extension:has_special_rule(special_rules.veteran_combat_ability_ranged_roamer_outlines)
+				template_data.show_ogryn_outlines = specialization_extension:has_special_rule(special_rules.veteran_combat_ability_ogryn_outlines)
 			end
 
 			_volley_fire_penance_start(template_data, template_context)
@@ -301,23 +305,24 @@ function _can_show_outline(breed, template_data)
 		return false
 	end
 
-	local is_ogryn_or_monster = breed_tags.ogryn or breed_tags.monster
-
-	if is_ogryn_or_monster then
-		return false
-	end
-
 	local show_elite_and_special_outlines = template_data.show_elite_and_special_outlines
 	local show_ranged_roamer_outlines = template_data.show_ranged_roamer_outlines
-	local show_outlines = show_elite_and_special_outlines or show_ranged_roamer_outlines
+	local show_ogryn_outlines = template_data.show_ogryn_outlines
+	local show_outlines = show_elite_and_special_outlines or show_ranged_roamer_outlines or show_ogryn_outlines
 
 	if not show_outlines then
 		return false
 	end
 
+	local is_ogryn = breed_tags.ogryn
+
+	if is_ogryn and not show_ogryn_outlines then
+		return false
+	end
+
 	local is_elite_or_special = breed_tags.elite or breed_tags.special
 	local is_volley_fire_target = breed.volley_fire_target
-	local valid_target = is_elite_or_special and show_elite_and_special_outlines or is_volley_fire_target and show_ranged_roamer_outlines
+	local valid_target = is_elite_or_special and show_elite_and_special_outlines or is_volley_fire_target and show_ranged_roamer_outlines or is_ogryn and show_ogryn_outlines
 
 	if not valid_target then
 		return false
@@ -341,6 +346,7 @@ function _start_outlines(template_data, template_context)
 	if specialization_extension then
 		template_data.show_elite_and_special_outlines = specialization_extension:has_special_rule(special_rules.veteran_combat_ability_elite_and_special_outlines)
 		template_data.show_ranged_roamer_outlines = specialization_extension:has_special_rule(special_rules.veteran_combat_ability_ranged_roamer_outlines)
+		template_data.show_ogryn_outlines = specialization_extension:has_special_rule(special_rules.veteran_combat_ability_ogryn_outlines)
 	end
 
 	local alive_specials = {}
@@ -626,7 +632,7 @@ templates.veteran_increase_suppression = {
 	max_stacks = 1,
 	class_name = "buff",
 	stat_buffs = {
-		[stat_buffs.suppression_dealt] = 0.25
+		[stat_buffs.suppression_dealt] = 0.5
 	}
 }
 templates.veteran_increase_crit_chance = {
@@ -642,7 +648,7 @@ templates.veteran_increase_elite_damage = {
 	max_stacks = 1,
 	class_name = "buff",
 	stat_buffs = {
-		[stat_buffs.damage_vs_elites] = 0.1
+		[stat_buffs.damage_vs_elites] = 0.15
 	}
 }
 templates.veteran_damage_after_sprinting = {
@@ -704,12 +710,10 @@ templates.veteran_coherency_aura_size_increase = {
 	}
 }
 templates.veteran_damage_coherency = {
-	max_stacks = 1,
-	coherency_priority = 2,
-	hud_icon = "content/ui/textures/icons/buffs/hud/veteran/veteran_aura_commanding_presence",
-	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_aura",
 	predicted = false,
+	coherency_priority = 2,
 	coherency_id = "veteran_damage_coherency",
+	max_stacks = 1,
 	class_name = "buff",
 	stat_buffs = {
 		[stat_buffs.damage] = 0.03
@@ -720,7 +724,6 @@ templates.veteran_movement_speed_coherency = {
 	coherency_priority = 2,
 	coherency_id = "veteran_movement_speed_coherency",
 	max_stacks = 1,
-	hud_priority = 2,
 	class_name = "buff",
 	stat_buffs = {
 		[stat_buffs.movement_speed] = 0.05
@@ -809,7 +812,7 @@ templates.veteran_rending_bonus = {
 	predicted = false,
 	class_name = "buff",
 	stat_buffs = {
-		[stat_buffs.rending_multiplier] = 0.15
+		[stat_buffs.rending_multiplier] = 0.1
 	}
 }
 templates.veteran_bolter_proficiency = {
@@ -893,7 +896,7 @@ templates.veteran_invisibility = {
 	allow_proc_while_active = true,
 	hud_icon = "content/ui/textures/icons/buffs/hud/veteran/veteran_ability_undercover",
 	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_ability",
-	duration = 6,
+	duration = 8,
 	class_name = "proc_buff",
 	stagger_range = in_melee_range + 1,
 	keywords = {
@@ -1057,63 +1060,60 @@ templates.veteran_improved_grenades = {
 		[stat_buffs.frag_damage] = 0.25,
 		[stat_buffs.explosion_radius_modifier_frag] = 0.25,
 		[stat_buffs.krak_damage] = 0.5,
-		[stat_buffs.smoke_fog_duration_modifier] = 0.5
+		[stat_buffs.smoke_fog_duration_modifier] = 1
 	}
 }
 templates.veteran_reload_speed_on_elite_kill = {
-	class_name = "proc_buff",
 	predicted = false,
+	max_stacks = 1,
+	class_name = "proc_buff",
 	proc_events = {
 		[proc_events.on_kill] = 1
 	},
 	check_proc_func = CheckProcFunctions.on_elite_or_special_kill,
-	proc_stat_buffs = {
-		[stat_buffs.reload_speed] = talent_settings_2.offensive_2_3.reload_speed
-	},
+	start_func = function (template_data, template_context)
+		local unit = template_context.unit
+		template_data.buff_extension = ScriptUnit.extension(unit, "buff_system")
+	end,
 	proc_func = function (params, template_data, template_context, t)
-		local buff_extension = ScriptUnit.has_extension(template_context.unit, "buff_system")
-
-		if buff_extension then
-			buff_extension:add_internally_controlled_buff("veteran_reload_speed_on_elite_kill_primer", t)
-		end
+		template_data.buff_extension:add_internally_controlled_buff("veteran_reload_speed_on_elite_kill_effect", t)
 	end
 }
-templates.veteran_reload_speed_on_elite_kill_primer = {
+templates.veteran_reload_speed_on_elite_kill_effect = {
 	predicted = false,
+	hud_priority = 1,
+	hud_icon = "content/ui/textures/icons/buffs/hud/veteran/veteran_reload_speed_on_elite_kill",
+	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_default",
 	max_stacks = 1,
 	class_name = "proc_buff",
 	always_show_in_hud = true,
 	proc_events = {
-		[proc_events.on_reload_start] = 1
+		[proc_events.on_reload] = 1
 	},
 	stat_buffs = {
 		[stat_buffs.reload_speed] = talent_settings_2.offensive_2_3.reload_speed
 	},
-	proc_func = function (params, template_data, template_context, t)
-		local buff_extension = ScriptUnit.has_extension(template_context.unit, "buff_system")
-
-		if buff_extension then
-			buff_extension:add_internally_controlled_buff("veteran_reload_speed_on_elite_kill_effect", t)
-		end
-
-		template_data.finish = true
+	start_func = function (template_data, template_context)
+		local unit = template_context.unit
+		template_data.visual_loadout_extension = ScriptUnit.extension(unit, "visual_loadout_system")
+		local unit_data_extension = ScriptUnit.extension(template_context.unit, "unit_data_system")
+		template_data.weapon_action_component = unit_data_extension:read_component("weapon_action")
+		template_data.inventory_component = unit_data_extension:read_component("inventory")
 	end,
-	conditional_exit_func = function (template_data)
-		return template_data.finish
+	proc_func = function (params, template_data, template_context, t)
+		template_data.done = true
+	end,
+	conditional_exit_func = function (template_data, template_context)
+		local inventory_component = template_data.inventory_component
+		local visual_loadout_extension = template_data.visual_loadout_extension
+		local wielded_slot_id = inventory_component.wielded_slot
+		local weapon_template = visual_loadout_extension:weapon_template_from_slot(wielded_slot_id)
+		local _, current_action = Action.current_action(template_data.weapon_action_component, weapon_template)
+		local action_kind = current_action and current_action.kind
+		local is_reloading = action_kind and (action_kind == "reload_shotgun" or action_kind == "reload_state" or action_kind == "ranged_load_special")
+
+		return template_data.done and not is_reloading
 	end
-}
-templates.veteran_reload_speed_on_elite_kill_effect = {
-	class_name = "buff",
-	refresh_duration_on_stack = true,
-	predicted = false,
-	hud_priority = 4,
-	hud_icon = "content/ui/textures/icons/buffs/hud/veteran/veteran_reload_speed_on_elite_kill",
-	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_default",
-	max_stacks = 1,
-	duration = 3,
-	stat_buffs = {
-		[stat_buffs.reload_speed] = talent_settings_2.offensive_2_3.reload_speed
-	}
 }
 templates.veteran_increase_ranged_far_damage = {
 	predicted = false,
@@ -1175,8 +1175,8 @@ templates.veteran_ads_stamina_boost = {
 		template_data.stamina_component = unit_data_extension:read_component("stamina")
 		template_data.sway_component = unit_data_extension:write_component("sway_control")
 		template_data.inventory_component = unit_data_extension:read_component("inventory")
-		template_data.percentage_to_remove = talent_settings_2.offensive_2_2.stamina
-		template_data.percentage_shoot_to_remove = talent_settings_2.offensive_2_2.shot_stamina_percent
+		template_data.stamina_per_second = talent_settings_2.offensive_2_2.stamina_per_second
+		template_data.shot_stamina = talent_settings_2.offensive_2_2.shot_stamina
 	end,
 	conditional_stat_buffs_func = function (template_data, template_context)
 		return template_data.is_active
@@ -1191,8 +1191,8 @@ templates.veteran_ads_stamina_boost = {
 			return
 		end
 
-		local percentage_cost_per_second = template_data.percentage_to_remove
-		local remaining_stamina = Stamina.drain_pecentage(template_context.unit, percentage_cost_per_second * dt, t)
+		local cost_per_second = template_data.stamina_per_second
+		local remaining_stamina = Stamina.drain(template_context.unit, cost_per_second * dt, t)
 
 		if remaining_stamina == 0 and not template_data.applied_end_sway then
 			template_data.applied_end_sway = true
@@ -1207,9 +1207,9 @@ templates.veteran_ads_stamina_boost = {
 			return
 		end
 
-		local shoot_cost = template_data.percentage_shoot_to_remove
+		local shoot_cost = template_data.shot_stamina
 
-		Stamina.drain_pecentage(template_context.unit, shoot_cost, t)
+		Stamina.drain(template_context.unit, shoot_cost, t)
 	end,
 	check_active_func = function (template_data, template_context)
 		local is_alternate_fire_active = template_data.alternate_fire_component.is_active
@@ -1360,13 +1360,14 @@ templates.veteran_replenish_toughness_of_ally_close_to_victim = {
 	end
 }
 templates.veteran_replenish_toughness_of_ally_close_to_victim_damage_buff = {
-	hud_priority = 4,
-	predicted = false,
 	refresh_duration_on_stack = true,
+	predicted = false,
+	hud_priority = 4,
 	hud_icon = "content/ui/textures/icons/buffs/hud/veteran/veteran_replenish_toughness_and_boost_allies",
 	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_default",
 	max_stacks = 1,
 	class_name = "buff",
+	buff_category = buff_category.generic,
 	duration = talent_settings_2.coop_3.duration,
 	stat_buffs = {
 		[stat_buffs.damage] = talent_settings_2.coop_3.damage
@@ -1461,19 +1462,34 @@ templates.veteran_ranged_weakspot_toughenss_buff = {
 templates.veteran_reload_speed_on_non_empty_clip = {
 	predicted = false,
 	hud_priority = 4,
+	hud_icon = "content/ui/textures/icons/buffs/hud/veteran/veteran_faster_reload_on_non_empty_clips",
+	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_default",
 	class_name = "buff",
 	conditional_stat_buffs = {
 		[stat_buffs.reload_speed] = talent_settings_2.offensive_1_2.reload_speed
 	},
 	conditional_stat_buffs_func = function (template_data, template_context)
+		return template_data.is_active
+	end,
+	start_func = function (template_data, template_context)
 		local unit = template_context.unit
 		local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
 		local inventory_component = unit_data_extension:read_component("inventory")
+		template_data.inventory_component = inventory_component
+	end,
+	update_func = function (template_data, template_context)
+		local unit = template_context.unit
+		local inventory_component = template_data.inventory_component
 		local wielded_slot = inventory_component.wielded_slot
 		local ammo_percentage = Ammo.current_slot_clip_percentage(unit, wielded_slot)
+		local is_reloading = ConditionalFunctions.is_reloading(template_data, template_context)
+		local active = ammo_percentage > 0
 
-		return ammo_percentage > 0
-	end
+		if not is_reloading then
+			template_data.is_active = active
+		end
+	end,
+	check_active_func = ConditionalFunctions.is_reloading
 }
 templates.veteran_frag_grenade_bleed = {
 	class_name = "proc_buff",
@@ -1896,10 +1912,10 @@ templates.veteran_combat_ability_increase_toughness_to_coherency = {
 	hud_icon = "content/ui/textures/icons/buffs/hud/veteran/veteran_combat_ability_increase_and_restore_toughness_to_coherency",
 	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_ability",
 	predicted = false,
-	duration = 10,
+	duration = 15,
 	class_name = "buff",
 	stat_buffs = {
-		[stat_buffs.toughness_bonus_flat] = 50
+		[stat_buffs.toughness_bonus_flat] = 100
 	}
 }
 templates.veteran_share_toughness_gained = {
@@ -1941,11 +1957,18 @@ templates.veteran_better_deployables = {
 	}
 }
 local dot_threshold = 0.5
+local assist_interaction_types = {
+	rescue = true,
+	pull_up = true,
+	revive = true,
+	remove_net = true
+}
 templates.veteran_increased_move_speed_when_moving_towards_disabled_allies = {
+	class_name = "proc_buff",
+	always_active = true,
 	hud_priority = 4,
 	hud_icon = "content/ui/textures/icons/buffs/hud/veteran/veteran_movement_speed_towards_downed",
 	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_default",
-	class_name = "proc_buff",
 	proc_events = {
 		[proc_events.on_revive] = 1
 	},
@@ -1961,6 +1984,8 @@ templates.veteran_increased_move_speed_when_moving_towards_disabled_allies = {
 	start_func = function (template_data, template_context)
 		local unit_data_extension = ScriptUnit.extension(template_context.unit, "unit_data_system")
 		template_data.first_person_component = unit_data_extension:read_component("first_person")
+		local interactor_extension = ScriptUnit.extension(template_context.unit, "interactor_system")
+		template_data.interactor_extension = interactor_extension
 	end,
 	conditional_stat_buffs_func = function (template_data, template_context)
 		local local_player_unit = template_context.unit
@@ -1992,6 +2017,8 @@ templates.veteran_increased_move_speed_when_moving_towards_disabled_allies = {
 			end
 		end
 
+		template_data.is_active = knocked_allies
+
 		return knocked_allies
 	end,
 	proc_func = function (params, template_data, template_context, t)
@@ -2007,13 +2034,32 @@ templates.veteran_increased_move_speed_when_moving_towards_disabled_allies = {
 		if target_unit_buff_extension then
 			target_unit_buff_extension:add_internally_controlled_buff("veteran_reduced_damage_taken", t)
 		end
+	end,
+	check_active_func = function (template_data, template_context)
+		local interactor_extension = template_data.interactor_extension
+		local is_interacting = interactor_extension:is_interacting()
+
+		if is_interacting then
+			local interaction = interactor_extension:interaction()
+			local interaction_type = interaction:type()
+			local is_assisting = assist_interaction_types[interaction_type]
+
+			if is_assisting then
+				return true
+			end
+		end
+
+		return template_data.is_active
 	end
 }
 templates.veteran_reduced_damage_taken = {
-	predicted = false,
-	max_stacks = 1,
-	refresh_duration_on_stack = true,
 	class_name = "buff",
+	predicted = false,
+	refresh_duration_on_stack = true,
+	hud_icon = "content/ui/textures/icons/buffs/hud/veteran/veteran_movement_speed_towards_downed",
+	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_default",
+	max_stacks = 1,
+	buff_category = buff_category.generic,
 	stat_buffs = {
 		[stat_buffs.damage_taken_multiplier] = talent_settings_3.defensive_1.damage_taken_multiplier
 	},
@@ -2024,7 +2070,7 @@ templates.veteran_combat_ability_revive_nearby_allies = {
 	max_stacks = 1,
 	class_name = "buff",
 	stat_buffs = {
-		[stat_buffs.combat_ability_cooldown_modifier] = 0.33,
+		[stat_buffs.combat_ability_cooldown_modifier] = 0.5,
 		[stat_buffs.shout_radius_modifier] = -0.33
 	}
 }
@@ -2060,7 +2106,7 @@ templates.veteran_crits_apply_rending = {
 	proc_events = {
 		[proc_events.on_hit] = 1
 	},
-	check_proc_func = CheckProcFunctions.on_crit,
+	check_proc_func = CheckProcFunctions.on_melee_crit_hit,
 	proc_func = function (params, template_data, template_context)
 		local attacked_unit = params.attacked_unit
 
@@ -2068,16 +2114,12 @@ templates.veteran_crits_apply_rending = {
 			return
 		end
 
-		if attacked_unit == template_data.current_unit then
-			local buff_extension = ScriptUnit.has_extension(attacked_unit, "buff_system")
+		local buff_extension = ScriptUnit.has_extension(attacked_unit, "buff_system")
 
-			if buff_extension then
-				local t = FixedFrame.get_latest_fixed_time()
+		if buff_extension then
+			local t = FixedFrame.get_latest_fixed_time()
 
-				buff_extension:add_internally_controlled_buff("rending_debuff", t)
-			end
-		else
-			template_data.current_unit = attacked_unit
+			buff_extension:add_internally_controlled_buff("rending_debuff_medium", t)
 		end
 	end
 }

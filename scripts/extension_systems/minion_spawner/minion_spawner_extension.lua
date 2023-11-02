@@ -255,18 +255,11 @@ MinionSpawnerExtension._spawn = function (self, breed_name, spawn_data)
 		end
 	end
 
+	local max_health_modifier = spawn_data.max_health_modifier
 	local unit = self._unit
 	local group_id = spawn_data.group_id
 	local attack_selection_template_name = spawn_data.attack_selection_template_name
-	local spawned_unit = Managers.state.minion_spawn:spawn_minion(breed_name, spawn_position, spawn_rotation, spawn_side_id, aggro_state, target_unit, unit, group_id, mission_objective_id, attack_selection_template_name)
-	local max_health_modifier = spawn_data.max_health_modifier
-
-	if max_health_modifier then
-		local spawned_unit_health_extension = ScriptUnit.extension(spawned_unit, "health_system")
-		local max_health = spawned_unit_health_extension:max_health()
-
-		spawned_unit_health_extension:add_damage(max_health * max_health_modifier)
-	end
+	local spawned_unit = Managers.state.minion_spawn:spawn_minion(breed_name, spawn_position, spawn_rotation, spawn_side_id, aggro_state, target_unit, unit, group_id, mission_objective_id, attack_selection_template_name, max_health_modifier)
 
 	return spawned_unit
 end
