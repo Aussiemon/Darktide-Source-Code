@@ -1,5 +1,3 @@
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
 local AttackIntensitySettings = require("scripts/settings/attack_intensity/attack_intensity_settings")
 local Breed = require("scripts/utilities/breed")
 local MinionAttackIntensityExtension = class("MinionAttackIntensityExtension")

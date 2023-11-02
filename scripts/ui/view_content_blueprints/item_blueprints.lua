@@ -1,5 +1,3 @@
--- WARNING: Error occurred during decompilation.
---   Code may be incomplete or incorrect.
 local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templates")
 local ItemPassTemplates = require("scripts/ui/pass_templates/item_pass_templates")
 local ItemSlotSettings = require("scripts/settings/item/item_slot_settings")
