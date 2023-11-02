@@ -115,18 +115,15 @@ PlayerHuskSpecializationExtension._update_specialization_and_talents = function 
 		buff_template_tiers = {}
 		special_rules = {}
 	else
+		local game_mode_settings = Managers.state.game_mode:settings()
+		local force_base_talents = game_mode_settings and game_mode_settings.force_base_talents
 		local player = self._player
 		local peer_id = player:peer_id()
 		local local_player_id = player:local_player_id()
-		local profile = self._package_synchronizer_client:chached_profile(peer_id, local_player_id)
-		local skip_selected_nodes = false
-		local game_mode_settings = Managers.state.game_mode:settings()
+		local profile = self._package_synchronizer_client:cached_profile(peer_id, local_player_id)
+		local selected_nodes = CharacterSheet.convert_talents_to_node_layout(profile, talents)
 
-		if game_mode_settings and game_mode_settings.force_base_talents then
-			skip_selected_nodes = true
-		end
-
-		CharacterSheet.class_loadout(profile, class_loadout, skip_selected_nodes)
+		CharacterSheet.class_loadout(profile, class_loadout, force_base_talents, selected_nodes)
 
 		special_rules = class_loadout.special_rules
 		buff_template_tiers = class_loadout.buff_template_tiers

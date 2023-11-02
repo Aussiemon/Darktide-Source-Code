@@ -41,7 +41,7 @@ local lobby_view_settings = {
 	},
 	loadout_size = {
 		270,
-		700
+		200
 	},
 	ignored_slots = {
 		"slot_pocketable",

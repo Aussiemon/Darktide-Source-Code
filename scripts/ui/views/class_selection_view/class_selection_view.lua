@@ -769,9 +769,9 @@ ClassSelectionView._create_class_abilities_info = function (self)
 			iconics = {}
 		}
 		local profile = self._character_create:profile()
-		local skip_selected_nodes = true
+		local force_base_talents = true
 
-		CharacterSheet.class_loadout(profile, base_class_loadout, skip_selected_nodes)
+		CharacterSheet.class_loadout(profile, base_class_loadout, force_base_talents)
 
 		local ability_talent = base_class_loadout.ability.talent
 		nodes_to_present[#nodes_to_present + 1] = {

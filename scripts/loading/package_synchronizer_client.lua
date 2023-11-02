@@ -160,10 +160,10 @@ PackageSynchronizerClient.remove_bot = function (self, peer_id, local_player_id)
 		player_alias_versions[local_player_id] = nil
 	end
 
-	local chached_player_profiles = self._player_profile_cache[peer_id]
+	local cached_player_profiles = self._player_profile_cache[peer_id]
 
-	if chached_player_profiles then
-		chached_player_profiles[local_player_id] = nil
+	if cached_player_profiles then
+		cached_player_profiles[local_player_id] = nil
 	end
 end
 
@@ -270,24 +270,17 @@ end
 
 local temp_abilities = {}
 local temp_abilities_items = {}
-local class_loadout_dest = {
-	ability = {},
-	blitz = {},
-	aura = {}
-}
+local class_loadout = {}
 
 PackageSynchronizerClient._resolve_ability_packages = function (self, archetype, specialization_name, talents, profile_packages, mission, game_mode_settings, profile)
 	local combat_ability, grenade_ability = nil
-	local skip_selected_nodes = false
+	local force_base_talents = game_mode_settings and game_mode_settings.force_base_talents
+	local selected_nodes = CharacterSheet.convert_talents_to_node_layout(profile, talents)
 
-	if game_mode_settings and game_mode_settings.force_base_talents then
-		skip_selected_nodes = true
-	end
+	CharacterSheet.class_loadout(profile, class_loadout, force_base_talents, selected_nodes)
 
-	CharacterSheet.class_loadout(profile, class_loadout_dest, skip_selected_nodes)
-
-	combat_ability = class_loadout_dest.combat_ability
-	grenade_ability = class_loadout_dest.grenade_ability
+	combat_ability = class_loadout.combat_ability
+	grenade_ability = class_loadout.grenade_ability
 
 	table.clear(temp_abilities)
 	table.clear(temp_abilities_items)
@@ -542,7 +535,7 @@ PackageSynchronizerClient.reevaluate_all_profiles_packages = function (self)
 	end
 end
 
-PackageSynchronizerClient.chached_profile = function (self, peer_id, local_player_id)
+PackageSynchronizerClient.cached_profile = function (self, peer_id, local_player_id)
 	local player_profile_cache = self._player_profile_cache
 
 	return player_profile_cache[peer_id][local_player_id]

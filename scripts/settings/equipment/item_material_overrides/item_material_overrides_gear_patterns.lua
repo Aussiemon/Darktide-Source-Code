@@ -727,6 +727,176 @@ local material_overrides = {
 			}
 		}
 	},
+	pattern_camo_42 = {
+		texture_overrides = {
+			coat_pattern = {
+				resource = "content/textures/camo_patterns/camo_42"
+			}
+		}
+	},
+	pattern_camo_42_inv = {
+		texture_overrides = {
+			mat1_pattern = {
+				resource = "content/textures/camo_patterns/camo_42"
+			},
+			mat2_pattern = {
+				resource = "content/textures/camo_patterns/camo_42"
+			}
+		}
+	},
+	pattern_camo_43 = {
+		texture_overrides = {
+			coat_pattern = {
+				resource = "content/textures/camo_patterns/camo_43"
+			}
+		}
+	},
+	pattern_camo_43_inv = {
+		texture_overrides = {
+			mat1_pattern = {
+				resource = "content/textures/camo_patterns/camo_43"
+			},
+			mat2_pattern = {
+				resource = "content/textures/camo_patterns/camo_43"
+			}
+		}
+	},
+	pattern_camo_44 = {
+		texture_overrides = {
+			coat_pattern = {
+				resource = "content/textures/camo_patterns/camo_44"
+			}
+		}
+	},
+	pattern_camo_44_inv = {
+		texture_overrides = {
+			mat1_pattern = {
+				resource = "content/textures/camo_patterns/camo_44"
+			},
+			mat2_pattern = {
+				resource = "content/textures/camo_patterns/camo_44"
+			}
+		}
+	},
+	pattern_camo_45 = {
+		texture_overrides = {
+			coat_pattern = {
+				resource = "content/textures/camo_patterns/camo_45"
+			}
+		}
+	},
+	pattern_camo_45_inv = {
+		texture_overrides = {
+			mat1_pattern = {
+				resource = "content/textures/camo_patterns/camo_45"
+			},
+			mat2_pattern = {
+				resource = "content/textures/camo_patterns/camo_45"
+			}
+		}
+	},
+	pattern_camo_46 = {
+		texture_overrides = {
+			coat_pattern = {
+				resource = "content/textures/camo_patterns/camo_46"
+			}
+		}
+	},
+	pattern_camo_46_inv = {
+		texture_overrides = {
+			mat1_pattern = {
+				resource = "content/textures/camo_patterns/camo_46"
+			},
+			mat2_pattern = {
+				resource = "content/textures/camo_patterns/camo_46"
+			}
+		}
+	},
+	pattern_camo_47 = {
+		texture_overrides = {
+			coat_pattern = {
+				resource = "content/textures/camo_patterns/camo_47"
+			}
+		}
+	},
+	pattern_camo_47_inv = {
+		texture_overrides = {
+			mat1_pattern = {
+				resource = "content/textures/camo_patterns/camo_47"
+			},
+			mat2_pattern = {
+				resource = "content/textures/camo_patterns/camo_47"
+			}
+		}
+	},
+	pattern_camo_48 = {
+		texture_overrides = {
+			coat_pattern = {
+				resource = "content/textures/camo_patterns/camo_48"
+			}
+		}
+	},
+	pattern_camo_48_inv = {
+		texture_overrides = {
+			mat1_pattern = {
+				resource = "content/textures/camo_patterns/camo_48"
+			},
+			mat2_pattern = {
+				resource = "content/textures/camo_patterns/camo_48"
+			}
+		}
+	},
+	pattern_camo_49 = {
+		texture_overrides = {
+			coat_pattern = {
+				resource = "content/textures/camo_patterns/camo_49"
+			}
+		}
+	},
+	pattern_camo_49_inv = {
+		texture_overrides = {
+			mat1_pattern = {
+				resource = "content/textures/camo_patterns/camo_49"
+			},
+			mat2_pattern = {
+				resource = "content/textures/camo_patterns/camo_49"
+			}
+		}
+	},
+	pattern_camo_50 = {
+		texture_overrides = {
+			coat_pattern = {
+				resource = "content/textures/camo_patterns/camo_50"
+			}
+		}
+	},
+	pattern_camo_50_inv = {
+		texture_overrides = {
+			mat1_pattern = {
+				resource = "content/textures/camo_patterns/camo_50"
+			},
+			mat2_pattern = {
+				resource = "content/textures/camo_patterns/camo_50"
+			}
+		}
+	},
+	pattern_camo_51 = {
+		texture_overrides = {
+			coat_pattern = {
+				resource = "content/textures/camo_patterns/camo_51"
+			}
+		}
+	},
+	pattern_camo_51_inv = {
+		texture_overrides = {
+			mat1_pattern = {
+				resource = "content/textures/camo_patterns/camo_51"
+			},
+			mat2_pattern = {
+				resource = "content/textures/camo_patterns/camo_51"
+			}
+		}
+	},
 	pattern_camo_default_inv = {
 		texture_overrides = {
 			mat1_pattern = {

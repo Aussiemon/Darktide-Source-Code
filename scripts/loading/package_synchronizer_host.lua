@@ -414,7 +414,7 @@ PackageSynchronizerHost._item_instance_altered = function (self, slot_name, item
 		return true
 	end
 
-	return true
+	return false
 end
 
 PackageSynchronizerHost._calculate_changed_talents = function (self, old_profile, new_profile)

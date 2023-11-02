@@ -6,7 +6,7 @@ local PASSIVES_BEST_IDENTIFIER = {}
 local COHERENCY_BEST_IDENTIFIER = {}
 local SPECIAL_RULE_BEST_IDENTIFIER = {}
 
-CharacterSheet.class_loadout = function (profile, destination, skip_selected_nodes, optional_selected_nodes)
+CharacterSheet.class_loadout = function (profile, destination, force_base_talents, optional_selected_nodes)
 	local ability = destination.ability or TRASH_TABLE
 	local blitz = destination.blitz or TRASH_TABLE
 	local aura = destination.aura or TRASH_TABLE
@@ -53,8 +53,6 @@ CharacterSheet.class_loadout = function (profile, destination, skip_selected_nod
 	local talent_layout = require(talent_layout_file_path)
 	local nodes = talent_layout.nodes
 	local selected_nodes = optional_selected_nodes or profile.selected_nodes
-	local combat_ability_step_count = -1
-	local grenade_ability_step_count = -1
 	local combat_ability, grenade_ability = nil
 	local found_base_ability = false
 	local found_base_blitz = false
@@ -106,14 +104,14 @@ CharacterSheet.class_loadout = function (profile, destination, skip_selected_nod
 				if type(identifier) == "table" then
 					local buff_template_names = passive.buff_template_name
 
-					for j = 1, #identifier do
-						local sub_identifier = identifier[j]
+					for jj = 1, #identifier do
+						local sub_identifier = identifier[jj]
 
 						if PASSIVES_BEST_IDENTIFIER[sub_identifier] then
 							Log.error("CharacterSheet", "Multiple passives with the same identifier(%q) in base_talents for archetype(%q). Will choose one at random.", identifier, archetype.name)
 						else
 							PASSIVES_BEST_IDENTIFIER[sub_identifier] = -1
-							local buff_template_name = buff_template_names[j]
+							local buff_template_name = buff_template_names[jj]
 							passives[sub_identifier] = buff_template_name
 							buff_template_tiers[buff_template_name] = selected_points
 						end
@@ -154,9 +152,9 @@ CharacterSheet.class_loadout = function (profile, destination, skip_selected_nod
 				local special_rule_name = special_rule.special_rule_name
 
 				if type(identifier) == "table" then
-					for j = 1, #identifier do
-						local sub_identifier = identifier[j]
-						local sub_special_rule_name = special_rule_name[j]
+					for jj = 1, #identifier do
+						local sub_identifier = identifier[jj]
+						local sub_special_rule_name = special_rule_name[jj]
 
 						if SPECIAL_RULE_BEST_IDENTIFIER[sub_identifier] then
 							Log.error("CharacterSheet", "Multiple special_rule with the same identifier(%q) in base_talents for archetype(%q). Will choose one at random.", sub_identifier, archetype.name)
@@ -175,17 +173,19 @@ CharacterSheet.class_loadout = function (profile, destination, skip_selected_nod
 		end
 	end
 
-	if not skip_selected_nodes then
+	if not force_base_talents then
+		local combat_ability_step_count = -1
+		local grenade_ability_step_count = -1
 		local found_ability = false
 		local found_blitz = false
 		local found_aura = false
 		local num_nodes = #nodes
 
-		for i = 1, num_nodes do
-			local points_in_node = selected_nodes[tostring(i)]
+		for ii = 1, num_nodes do
+			local points_in_node = selected_nodes[tostring(ii)]
 
 			if points_in_node then
-				local node = nodes[i]
+				local node = nodes[ii]
 				local node_type = node.type
 
 				if node_type ~= "start" then
@@ -228,9 +228,9 @@ CharacterSheet.class_loadout = function (profile, destination, skip_selected_nod
 							if type(identifier) == "table" then
 								local buff_template_names = passive.buff_template_name
 
-								for j = 1, #identifier do
-									local buff_template_name = buff_template_names[j]
-									local sub_identifier = identifier[j]
+								for jj = 1, #identifier do
+									local buff_template_name = buff_template_names[jj]
+									local sub_identifier = identifier[jj]
 									local prev_best_identifier = PASSIVES_BEST_IDENTIFIER[identifier]
 
 									if not prev_best_identifier or prev_best_identifier < step_count then
@@ -285,13 +285,13 @@ CharacterSheet.class_loadout = function (profile, destination, skip_selected_nod
 							local special_rule_name = special_rule.special_rule_name
 
 							if type(identifier) == "table" then
-								for j = 1, #identifier do
-									local sub_identifier = identifier[j]
+								for jj = 1, #identifier do
+									local sub_identifier = identifier[jj]
 									local prev_best_identifier = SPECIAL_RULE_BEST_IDENTIFIER[sub_identifier]
 
 									if not prev_best_identifier or prev_best_identifier < step_count then
 										SPECIAL_RULE_BEST_IDENTIFIER[sub_identifier] = step_count
-										special_rules[sub_identifier] = special_rule_name[j]
+										special_rules[sub_identifier] = special_rule_name[jj]
 									else
 										Log.error("CharacterSheet", "skipping %q prev(%i) node(%i)", sub_identifier, prev_best_identifier, step_count)
 									end
@@ -337,6 +337,33 @@ CharacterSheet.class_loadout = function (profile, destination, skip_selected_nod
 
 	destination.combat_ability = combat_ability
 	destination.grenade_ability = grenade_ability
+end
+
+CharacterSheet.convert_talents_to_node_layout = function (profile, selected_talents)
+	if not profile or not selected_talents then
+		return nil
+	end
+
+	local archetype = profile.archetype
+	local talent_layout_file_path = archetype.talent_layout_file_path
+	local talent_layout = require(talent_layout_file_path)
+	local nodes = talent_layout.nodes
+	local found_overrides = false
+	local selected_nodes = {}
+	local num_nodes = #nodes
+
+	for ii = 1, num_nodes do
+		local node = nodes[ii]
+		local talent_name = node.talent
+		local points_in_talent = selected_talents[talent_name]
+
+		if points_in_talent then
+			selected_nodes[tostring(ii)] = points_in_talent
+			found_overrides = true
+		end
+	end
+
+	return found_overrides and selected_nodes
 end
 
 function _fill_ability_blitz_or_aura(dest, talent, icon)

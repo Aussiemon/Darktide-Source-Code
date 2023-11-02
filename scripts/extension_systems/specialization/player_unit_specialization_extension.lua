@@ -121,14 +121,11 @@ PlayerUnitSpecializationExtension._apply_specialization_and_talents = function (
 		coherency_buffs = {}
 		passives = {}
 	else
+		local force_base_talents = game_mode_settings and game_mode_settings.force_base_talents
 		local profile = self._player:profile()
-		local skip_selected_nodes = false
+		local selected_nodes = CharacterSheet.convert_talents_to_node_layout(profile, talents)
 
-		if game_mode_settings and game_mode_settings.force_base_talents then
-			skip_selected_nodes = true
-		end
-
-		CharacterSheet.class_loadout(profile, class_loadout, skip_selected_nodes)
+		CharacterSheet.class_loadout(profile, class_loadout, force_base_talents, selected_nodes)
 
 		combat_ability = class_loadout.combat_ability
 		grenade_ability = class_loadout.grenade_ability

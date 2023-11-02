@@ -53,9 +53,17 @@ local default_view_input_settings = {
 		},
 		hotkey_loadout = {
 			"keyboard_l",
-			"xbox_controller_y",
-			"ps4_controller_triangle",
+			"xbox_controller_x",
+			"ps4_controller_square",
 			description = "loc_alias_view_hotkey_loadout",
+			bindable = false,
+			group = "input_group_hotkeys"
+		},
+		hotkey_lobby_switch_loadout = {
+			"keyboard_tab",
+			"xbox_controller_x",
+			"ps4_controller_square",
+			description = "loc_alias_view_hotkey_lobby_switch_loadout",
 			bindable = false,
 			group = "input_group_hotkeys"
 		},
@@ -453,6 +461,10 @@ local default_view_input_settings = {
 		},
 		hotkey_loadout = {
 			key_alias = "hotkey_loadout",
+			type = "pressed"
+		},
+		hotkey_lobby_switch_loadout = {
+			key_alias = "hotkey_lobby_switch_loadout",
 			type = "pressed"
 		},
 		hotkey_item_discard = {

@@ -3,6 +3,28 @@ local UIWorkspaceSettings = require("scripts/settings/ui/ui_workspace_settings")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local LobbyViewFontStyle = require("scripts/ui/views/lobby_view/lobby_view_font_style")
 local ColorUtilities = require("scripts/utilities/ui/colors")
+local item_stats_grid_settings = nil
+local padding = 12
+local width = 530
+local height = 920
+item_stats_grid_settings = {
+	scrollbar_width = 7,
+	ignore_blur = true,
+	title_height = 70,
+	grid_spacing = {
+		0,
+		0
+	},
+	grid_size = {
+		width - padding,
+		height
+	},
+	mask_size = {
+		width + 40,
+		height
+	},
+	edge_padding = padding
+}
 local scenegraph_definition = {
 	screen = UIWorkspaceSettings.screen,
 	canvas = {
@@ -156,7 +178,7 @@ local scenegraph_definition = {
 		size = LobbyViewSettings.loadout_size,
 		position = {
 			0,
-			0,
+			180,
 			1
 		}
 	},
@@ -197,6 +219,20 @@ local scenegraph_definition = {
 			0,
 			0,
 			63
+		}
+	},
+	item_stats_pivot = {
+		vertical_alignment = "bottom",
+		parent = "screen",
+		horizontal_alignment = "center",
+		size = {
+			0,
+			0
+		},
+		position = {
+			0,
+			0,
+			3
 		}
 	}
 }
@@ -382,7 +418,9 @@ local widget_definitions = {
 				}
 			}
 		}
-	}, "talent_tooltip"),
+	}, "talent_tooltip", {
+		visible = false
+	}),
 	mission_title = UIWidget.create_definition({
 		{
 			value_id = "title",
@@ -510,10 +548,6 @@ local widget_definitions = {
 		}
 	}, "screen")
 }
-local panel_talent_size = {
-	64,
-	64
-}
 local panel_definition = UIWidget.create_definition({
 	{
 		pass_type = "hotspot",
@@ -531,8 +565,8 @@ local panel_definition = UIWidget.create_definition({
 		style = {
 			horizontal_alignment = "center",
 			material_values = {
-				texture_frame = "content/ui/textures/icons/items/frames/default",
-				use_placeholder_texture = 1
+				use_placeholder_texture = 1,
+				texture_icon = "content/ui/textures/icons/items/frames/default"
 			},
 			size = {
 				90,
@@ -576,7 +610,7 @@ local panel_definition = UIWidget.create_definition({
 			offset = {
 				-65,
 				0,
-				62
+				2
 			},
 			material_values = {}
 		},
@@ -726,192 +760,6 @@ local panel_definition = UIWidget.create_definition({
 		visibility_function = function (content, style)
 			return content.hotspot.is_focused or content.hotspot.is_hover
 		end
-	},
-	{
-		value_id = "talent_1",
-		style_id = "talent_1",
-		pass_type = "texture",
-		value = "content/ui/materials/frames/talents/talent_icon_container",
-		style = {
-			vertical_alignment = "bottom",
-			horizontal_alignment = "center",
-			size = panel_talent_size,
-			offset = {
-				-66,
-				40,
-				2
-			},
-			color = Color.white(255, true),
-			material_values = {}
-		},
-		visibility_function = function (content, style)
-			return true
-		end
-	},
-	{
-		value_id = "frame_selected_talent_1",
-		style_id = "frame_selected_talent_1",
-		pass_type = "texture",
-		value = "content/ui/materials/frames/talents/circular_frame_selected",
-		style = {
-			vertical_alignment = "bottom",
-			horizontal_alignment = "center",
-			color = Color.ui_terminal(255, true),
-			size = panel_talent_size,
-			size_addition = {
-				0,
-				0
-			},
-			offset = {
-				-66,
-				40,
-				3
-			}
-		},
-		visibility_function = function (content)
-			return content.hotspot_talent_1.is_hover
-		end
-	},
-	{
-		pass_type = "hotspot",
-		content_id = "hotspot_talent_1",
-		content = {
-			disabled = false
-		},
-		style = {
-			vertical_alignment = "bottom",
-			horizontal_alignment = "center",
-			size = panel_talent_size,
-			offset = {
-				-66,
-				25,
-				2
-			}
-		}
-	},
-	{
-		value_id = "talent_2",
-		style_id = "talent_2",
-		pass_type = "texture",
-		value = "content/ui/materials/frames/talents/talent_icon_container",
-		style = {
-			vertical_alignment = "bottom",
-			horizontal_alignment = "center",
-			size = panel_talent_size,
-			offset = {
-				0,
-				40,
-				2
-			},
-			color = Color.white(255, true),
-			material_values = {}
-		},
-		visibility_function = function (content, style)
-			return true
-		end
-	},
-	{
-		value_id = "frame_selected_talent_2",
-		style_id = "frame_selected_talent_2",
-		pass_type = "texture",
-		value = "content/ui/materials/frames/talents/circular_frame_selected",
-		style = {
-			vertical_alignment = "bottom",
-			horizontal_alignment = "center",
-			color = Color.ui_terminal(255, true),
-			size = panel_talent_size,
-			size_addition = {
-				0,
-				0
-			},
-			offset = {
-				0,
-				40,
-				3
-			}
-		},
-		visibility_function = function (content)
-			return content.hotspot_talent_2.is_hover
-		end
-	},
-	{
-		pass_type = "hotspot",
-		content_id = "hotspot_talent_2",
-		content = {
-			disabled = false
-		},
-		style = {
-			vertical_alignment = "bottom",
-			horizontal_alignment = "center",
-			size = panel_talent_size,
-			offset = {
-				0,
-				25,
-				2
-			}
-		}
-	},
-	{
-		value_id = "talent_3",
-		style_id = "talent_3",
-		pass_type = "texture",
-		value = "content/ui/materials/frames/talents/talent_icon_container",
-		style = {
-			vertical_alignment = "bottom",
-			horizontal_alignment = "center",
-			size = panel_talent_size,
-			offset = {
-				64,
-				40,
-				2
-			},
-			color = Color.white(255, true),
-			material_values = {}
-		},
-		visibility_function = function (content, style)
-			return true
-		end
-	},
-	{
-		value_id = "frame_selected_talent_3",
-		style_id = "frame_selected_talent_3",
-		pass_type = "texture",
-		value = "content/ui/materials/frames/talents/circular_frame_selected",
-		style = {
-			vertical_alignment = "bottom",
-			horizontal_alignment = "center",
-			color = Color.ui_terminal(255, true),
-			size = panel_talent_size,
-			size_addition = {
-				0,
-				0
-			},
-			offset = {
-				64,
-				40,
-				3
-			}
-		},
-		visibility_function = function (content)
-			return content.hotspot_talent_3.is_hover
-		end
-	},
-	{
-		pass_type = "hotspot",
-		content_id = "hotspot_talent_3",
-		content = {
-			disabled = false
-		},
-		style = {
-			vertical_alignment = "bottom",
-			horizontal_alignment = "center",
-			size = panel_talent_size,
-			offset = {
-				64,
-				25,
-				2
-			}
-		}
 	}
 }, "panel")
 local loading_definition = UIWidget.create_definition({
@@ -954,31 +802,10 @@ local loading_definition = UIWidget.create_definition({
 		style = LobbyViewFontStyle.loading_text_style
 	}
 }, "loading")
-local weapon_text_definition = UIWidget.create_definition({
-	{
-		pass_type = "hotspot",
-		content_id = "hotspot"
-	},
-	{
-		value_id = "weapon_text",
-		style_id = "weapon_text",
-		pass_type = "text",
-		value = "",
-		style = LobbyViewFontStyle.weapon_text_style
-	},
-	{
-		style_id = "weapon_hover_text",
-		pass_type = "text",
-		value = "",
-		value_id = "weapon_text",
-		style = LobbyViewFontStyle.weapon_hover_text_style,
-		change_function = function (content, style)
-			local hotspot = content.hotspot
-			local focused_progress = hotspot.anim_focus_progress
-			style.text_color[1] = focused_progress * 255
-		end
-	}
-}, "loadout")
+local tooltip_visibility_on = "loc_lobby_legend_tooltip_visibility_on"
+local tooltip_visibility_off = "loc_lobby_legend_tooltip_visibility_off"
+local show_weapon = "loc_lobby_legend_weapons_show"
+local hide_weapon = "loc_lobby_legend_talents_show"
 local legend_inputs = {
 	{
 		input_action = "close_view",
@@ -996,21 +823,16 @@ local legend_inputs = {
 		alignment = "right_alignment"
 	},
 	{
-		input_action = "hotkey_loadout",
-		display_name = "loc_input_legend_loadout_show",
+		input_action = "talents_summery_overview_pressed",
 		alignment = "right_alignment",
-		on_pressed_callback = "cb_on_loadout_pressed",
-		visibility_function = function (parent)
-			return false
-		end
-	},
-	{
-		input_action = "hotkey_loadout",
-		display_name = "loc_input_legend_loadout_hide",
-		alignment = "right_alignment",
-		on_pressed_callback = "cb_on_loadout_pressed",
-		visibility_function = function (parent)
-			return false
+		on_pressed_callback = "cb_on_trigger_gamepad_tooltip_navigation_pressed",
+		display_name = tooltip_visibility_on,
+		visibility_function = function (parent, id)
+			local display_name = parent._use_gamepad_tooltip_navigation and tooltip_visibility_off or tooltip_visibility_on
+
+			parent._input_legend_element:set_display_name(id, display_name)
+
+			return not parent._using_cursor_navigation
 		end
 	}
 }
@@ -1021,5 +843,5 @@ return {
 	panel_definition = panel_definition,
 	widget_definitions = widget_definitions,
 	scenegraph_definition = scenegraph_definition,
-	weapon_text_definition = weapon_text_definition
+	item_stats_grid_settings = item_stats_grid_settings
 }
