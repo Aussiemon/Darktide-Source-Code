@@ -2,6 +2,7 @@ local Definitions = require("scripts/ui/hud/elements/boss_health/hud_element_bos
 local HudElementBossHealthSettings = require("scripts/ui/hud/elements/boss_health/hud_element_boss_health_settings")
 local HudElementBossToughnessSettings = require("scripts/ui/hud/elements/boss_health/hud_element_boss_toughness_settings")
 local HudHealthBarLogic = require("scripts/ui/hud/elements/hud_health_bar_logic")
+local UIHudSettings = require("scripts/settings/ui/ui_hud_settings")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local HudElementBossHealth = class("HudElementBossHealth", "HudElementBase")
 
@@ -46,8 +47,8 @@ HudElementBossHealth._setup_widget_groups = function (self)
 	}
 end
 
-HudElementBossHealth.destroy = function (self)
-	HudElementBossHealth.super.destroy(self)
+HudElementBossHealth.destroy = function (self, ui_renderer)
+	HudElementBossHealth.super.destroy(self, ui_renderer)
 
 	local event_manager = Managers.event
 
@@ -77,13 +78,17 @@ HudElementBossHealth.event_boss_encounter_start = function (self, unit, boss_ext
 	local localized_display_name = display_name and Localize(display_name)
 	local health_extension = ScriptUnit.extension(unit, "health_system")
 	local max_health = math.floor(health_extension:max_health())
-	local breed_name = ScriptUnit.extension(unit, "unit_data_system"):breed().name
-	local initial_max_health = math.floor(Managers.state.difficulty:get_minion_max_health(breed_name))
+	local breed = ScriptUnit.extension(unit, "unit_data_system"):breed()
+	local breed_name = breed.name
 
-	if max_health < initial_max_health then
-		localized_display_name = Localize("loc_weakened_monster_prefix", true, {
-			breed = localized_display_name
-		})
+	if not breed.ignore_weakened_boss_name then
+		local initial_max_health = math.floor(Managers.state.difficulty:get_minion_max_health(breed_name))
+
+		if max_health < initial_max_health then
+			localized_display_name = Localize("loc_weakened_monster_prefix", true, {
+				breed = localized_display_name
+			})
+		end
 	end
 
 	self:_set_active(true)
@@ -97,7 +102,8 @@ HudElementBossHealth.event_boss_encounter_start = function (self, unit, boss_ext
 		unit = unit,
 		localized_display_name = " " .. localized_display_name,
 		health_bar_logic = health_bar_logic,
-		toughness_bar_logic = toughness_bar_logic
+		toughness_bar_logic = toughness_bar_logic,
+		breed = breed
 	}
 	active_targets_by_unit[unit] = target
 	active_targets_array[#active_targets_array + 1] = target
@@ -127,6 +133,9 @@ HudElementBossHealth.event_boss_encounter_end = function (self, unit, boss_exten
 		end
 	end
 end
+
+local INVULNERABLE_TOUGHNESS_COLOR = UIHudSettings.color_tint_6
+local DEFAULT_TOUGHNESS_COLOR = UIHudSettings.color_tint_secondary_1
 
 HudElementBossHealth.update = function (self, dt, t, ui_renderer, render_settings, input_service)
 	local is_active = self._is_active
@@ -181,6 +190,18 @@ HudElementBossHealth.update = function (self, dt, t, ui_renderer, render_setting
 				toughness_bar_logic:update(dt, t, current_toughness_percentage, max_toughness_percentage)
 
 				local toughness_fraction, toughness_ghost_fraction, toughness_max_fraction = toughness_bar_logic:animated_health_fractions()
+				local can_have_invulnerable_toughness = target.breed.can_have_invulnerable_toughness
+
+				if can_have_invulnerable_toughness then
+					local game_session = Managers.state.game_session:game_session()
+					local game_object_id = Managers.state.unit_spawner:game_object_id(unit)
+					local is_toughness_invulnerable = GameSession.game_object_field(game_session, game_object_id, "is_toughness_invulnerable")
+					local widget = widget_group.toughness
+					local texture_style = widget.style.bar
+					local color = is_toughness_invulnerable and INVULNERABLE_TOUGHNESS_COLOR or DEFAULT_TOUGHNESS_COLOR
+					texture_style.color = color
+					widget.style.max.color = color
+				end
 
 				if self._force_update then
 					toughness_fraction = toughness_fraction or current_toughness_percentage

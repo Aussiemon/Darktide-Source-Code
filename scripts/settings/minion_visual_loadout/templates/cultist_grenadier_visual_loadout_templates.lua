@@ -6,11 +6,13 @@ local templates = {
 local basic_cultist_grenadier_template = {
 	slots = {
 		slot_lowerbody = {
+			use_outline = true,
 			items = {
 				"content/items/characters/minions/chaos_cultists/attachments_base/lowerbody_b"
 			}
 		},
 		slot_variation_gear = {
+			use_outline = true,
 			items = {
 				"content/items/characters/minions/chaos_cultists/attachments_gear/special_grenadier"
 			}

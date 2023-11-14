@@ -34,6 +34,7 @@ PacingManager.init = function (self, world, nav_world, level_name, level_seed, p
 	self._backend_pacing_control = pacing_control
 	self._minions_listening_for_player_deaths = {}
 	self._saved_challenge_ratings = {}
+	self._ramp_duration_modifier = 1
 	self._frozen_spawn_types = {}
 end
 
@@ -81,6 +82,8 @@ PacingManager.on_gameplay_post_init = function (self, level_name)
 	Managers.event:register(self, "intro_cinematic_played", "_event_intro_cinematic_played")
 
 	self._first_aggro = true
+	local min_wound_tension_requirement = Managers.state.difficulty:get_table_entry_by_challenge(template.min_wound_tension_requirement)
+	self._min_wound_tension_requirement = min_wound_tension_requirement
 end
 
 PacingManager.on_spawn_points_generated = function (self)
@@ -139,7 +142,7 @@ PacingManager.update = function (self, dt, t)
 		self._monster_pacing:update(dt, t, side_id, target_side_id)
 
 		if self._ramp_up_enabled then
-			self:_update_ramp_up_frequency(dt, target_side_id)
+			self:_update_ramp_up_frequency(dt, t, target_side_id)
 		end
 	end
 
@@ -362,10 +365,29 @@ PacingManager.add_damage_tension = function (self, tension_type, damage, attacke
 end
 
 PacingManager.add_tension_type = function (self, tension_type, attacked_unit)
+	local target_health_extension = ScriptUnit.has_extension(attacked_unit, "health_system")
+	local num_wounds = 0
+
+	if target_health_extension then
+		num_wounds = target_health_extension:num_wounds()
+	end
+
 	local diff_table = MinionDifficultySettings.tension_to_add[tension_type]
 	local value = Managers.state.difficulty:get_table_entry_by_challenge(diff_table)
 
 	self:add_tension(value, attacked_unit, tension_type)
+
+	if self._waiting_for_ramp_clear and (tension_type == "died" or num_wounds == 2 and tension_type == "knocked_down") then
+		self._waiting_for_ramp_clear = nil
+		self._clear_ramp = true
+	end
+end
+
+PacingManager.player_died = function (self, player_unit)
+	if self._waiting_for_ramp_clear then
+		self._waiting_for_ramp_clear = nil
+		self._clear_ramp = true
+	end
 end
 
 PacingManager.player_tension = function (self, unit)
@@ -375,6 +397,10 @@ PacingManager.player_tension = function (self, unit)
 	local value = tension / max_value
 
 	return value
+end
+
+PacingManager.waiting_for_ramp_clear = function (self)
+	return self._waiting_for_ramp_clear
 end
 
 PacingManager._update_player_combat_state = function (self, dt, side_id)
@@ -435,11 +461,12 @@ PacingManager._update_player_combat_state = function (self, dt, side_id)
 	end
 end
 
-PacingManager._update_ramp_up_frequency = function (self, dt, target_side_id)
+PacingManager._update_ramp_up_frequency = function (self, dt, t, target_side_id)
 	local state = self._state
 	local ramp_up_frequency_settings = self._ramp_up_frequency_settings
 	local ramp_up_frequency_modifiers = self._ramp_up_frequency_modifiers
 	local ramp_modifiers = ramp_up_frequency_settings.ramp_modifiers
+	local traveled_this_frame = self._horde_pacing:traveled_this_frame()
 	local ramp_up_states = ramp_up_frequency_settings.ramp_up_states
 
 	if not ramp_up_states[state] or self._in_safe_zone then
@@ -455,7 +482,7 @@ PacingManager._update_ramp_up_frequency = function (self, dt, target_side_id)
 		return
 	end
 
-	local ramp_duration = ramp_up_frequency_settings.ramp_duration
+	local ramp_duration = ramp_up_frequency_settings.ramp_duration * self._ramp_duration_modifier
 
 	if not self._current_ramp_up_duration then
 		self._current_ramp_up_duration = ramp_duration
@@ -464,7 +491,7 @@ PacingManager._update_ramp_up_frequency = function (self, dt, target_side_id)
 		local time_since_forward_travel_changed = Managers.state.main_path:time_since_forward_travel_changed(target_side_id)
 
 		if time_since_forward_travel_changed < travel_change_pause_time then
-			self._current_ramp_up_duration = math.max(self._current_ramp_up_duration - dt, 0)
+			self._current_ramp_up_duration = math.max(self._current_ramp_up_duration - (dt + traveled_this_frame), 0)
 		end
 	end
 
@@ -474,11 +501,19 @@ PacingManager._update_ramp_up_frequency = function (self, dt, target_side_id)
 		local max_duration = ramp_up_frequency_settings.max_duration
 		self._max_ramp_up_duration = max_duration
 	elseif self._max_ramp_up_duration then
-		self._max_ramp_up_duration = self._max_ramp_up_duration - dt
+		self._max_ramp_up_duration = math.max(self._max_ramp_up_duration - (dt + traveled_this_frame), 0)
 
 		if self._max_ramp_up_duration <= 0 then
-			self._current_ramp_up_duration = ramp_duration
-			self._max_ramp_up_duration = nil
+			if not self._waiting_for_ramp_clear then
+				self._waiting_for_ramp_clear = true
+				self._waiting_for_ramp_clear_t = t
+			elseif self._clear_ramp then
+				self._current_ramp_up_duration = ramp_duration
+				self._max_ramp_up_duration = nil
+				self._waiting_for_ramp_clear = nil
+				self._clear_ramp = nil
+				self._waiting_for_ramp_clear_t = nil
+			end
 		end
 	end
 
@@ -808,6 +843,12 @@ PacingManager.add_pacing_modifiers = function (self, modify_settings)
 
 	if tension_modifier then
 		self._tension_modifier = tension_modifier
+	end
+
+	local ramp_duration_modifier = modify_settings.ramp_duration_modifier
+
+	if ramp_duration_modifier then
+		self._ramp_duration_modifier = ramp_duration_modifier
 	end
 end
 

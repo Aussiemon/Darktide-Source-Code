@@ -331,6 +331,18 @@ PlayerUnitMoodExtension.moods_data = function (self)
 	return self._moods_data
 end
 
+PlayerUnitMoodExtension.remove_all_moods = function (self)
+	local moods_data = self._moods_data
+
+	for mood_type, mood_data in pairs(moods_data) do
+		if mood_data.status ~= mood_status.inactive then
+			mood_data.entered_t = math.huge
+			mood_data.removed_t = math.huge
+			mood_data.status = mood_status.inactive
+		end
+	end
+end
+
 PlayerUnitMoodExtension._add_mood = function (self, t, mood_type, reset_time)
 	local moods_data = self._moods_data
 	local mood_data = moods_data[mood_type]

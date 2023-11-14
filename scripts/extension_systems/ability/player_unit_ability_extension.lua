@@ -146,6 +146,7 @@ PlayerUnitAbilityExtension.extensions_ready = function (self, world, unit)
 	self._pause_cooldown_context = {
 		unit = unit,
 		unit_data_extension = unit_data_extension,
+		inventory_component = unit_data_extension:read_component("inventory"),
 		specialization_extension = specialization_extension,
 		buff_extension = ScriptUnit.extension(unit, "buff_system")
 	}
@@ -487,7 +488,9 @@ PlayerUnitAbilityExtension._update_ability_cooldowns = function (self, t)
 					cooldown = t + ability_cooldown
 				end
 
-				if in_cooldown and cooldown < t then
+				local force_cooldown = false
+
+				if in_cooldown and (cooldown <= t or force_cooldown) then
 					component.num_charges = math.max(0, math.min(max_charges, component.num_charges + 1))
 					cooldown = 0
 					self._charge_replenished[ability_type] = true
@@ -730,8 +733,20 @@ PlayerUnitAbilityExtension.reduce_ability_cooldown_percentage = function (self, 
 end
 
 PlayerUnitAbilityExtension.reduce_ability_cooldown_time = function (self, ability_type, reduce_time)
+	local missing_charges = self:missing_ability_charges(ability_type)
+
+	if missing_charges == 0 then
+		return
+	end
+
 	local ability_component = self._ability_components[ability_type]
 	local current_cooldown = ability_component.cooldown
+	local in_cooldown = current_cooldown ~= 0
+
+	if not in_cooldown then
+		return
+	end
+
 	local new_cooldown = current_cooldown - reduce_time
 	local fixed_frame_t = FixedFrame.get_latest_fixed_time()
 	new_cooldown = math.max(new_cooldown, fixed_frame_t)

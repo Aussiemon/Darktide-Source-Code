@@ -47,6 +47,14 @@ local default_ingame_input_settings = {
 			description = "loc_ingame_interact",
 			sort_order = 4
 		},
+		interact_inspect = {
+			"keyboard_f",
+			"ps4_controller_triangle",
+			"xbox_controller_y",
+			group = "input_group_combat",
+			description = "loc_lobby_entry_inspect",
+			sort_order = 4
+		},
 		wield_1 = {
 			"keyboard_1",
 			group = "input_group_combat",
@@ -223,8 +231,9 @@ local default_ingame_input_settings = {
 		slide = {
 			"xbox_controller_b",
 			group = "input_group_movement",
-			description = "loc_ingame_slide",
-			sort_order = 8
+			bindable = false,
+			sort_order = 8,
+			description = "loc_ingame_slide"
 		},
 		sprint = {
 			"keyboard_left shift",
@@ -313,6 +322,14 @@ local default_ingame_input_settings = {
 		},
 		interact_hold = {
 			key_alias = "interact",
+			type = "held"
+		},
+		interact_inspect_pressed = {
+			key_alias = "interact_inspect",
+			type = "pressed"
+		},
+		interact_inspect_hold = {
+			key_alias = "interact_inspect",
 			type = "held"
 		},
 		tactical_overlay_pressed = {

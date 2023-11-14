@@ -29,13 +29,6 @@ local AttackPositioning = {
 }
 
 function _is_outmanoeuvring(attacked_unit, attacking_unit, allowed_buff_keyword, attack_direction, dot_threshold, can_outmanoeuvre_override)
-	local attacking_unit_buff_extension = ScriptUnit.has_extension(attacking_unit, "buff_system")
-	local can_outmanoeuvre = can_outmanoeuvre_override or attacking_unit_buff_extension and attacking_unit_buff_extension:has_keyword(allowed_buff_keyword)
-
-	if not can_outmanoeuvre then
-		return false
-	end
-
 	local attacked_unit_data_extension = ScriptUnit.has_extension(attacked_unit, "unit_data_system")
 
 	if not attacked_unit_data_extension then
@@ -61,8 +54,10 @@ function _is_outmanoeuvring(attacked_unit, attacking_unit, allowed_buff_keyword,
 
 	local dot = Vector3.dot(attack_direction, attacked_unit_forward)
 	local is_flanking = dot_threshold < dot
+	local attacking_unit_buff_extension = ScriptUnit.has_extension(attacking_unit, "buff_system")
+	local can_outmanoeuvre = is_flanking and (can_outmanoeuvre_override or attacking_unit_buff_extension and attacking_unit_buff_extension:has_keyword(allowed_buff_keyword))
 
-	return is_flanking
+	return is_flanking, can_outmanoeuvre
 end
 
 return AttackPositioning

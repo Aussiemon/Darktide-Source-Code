@@ -36,8 +36,7 @@ local cutting_am = {
 		[armor_types.berserker] = damage_lerp_values.lerp_1_25,
 		[armor_types.super_armor] = damage_lerp_values.lerp_0_075,
 		[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
-		[armor_types.void_shield] = damage_lerp_values.lerp_0_75,
-		[armor_types.prop_armor] = damage_lerp_values.lerp_0_5
+		[armor_types.void_shield] = damage_lerp_values.lerp_0_75
 	},
 	impact = {
 		[armor_types.unarmored] = damage_lerp_values.lerp_1,
@@ -47,8 +46,7 @@ local cutting_am = {
 		[armor_types.berserker] = damage_lerp_values.lerp_1,
 		[armor_types.super_armor] = damage_lerp_values.lerp_1,
 		[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
-		[armor_types.void_shield] = damage_lerp_values.lerp_1,
-		[armor_types.prop_armor] = damage_lerp_values.lerp_1
+		[armor_types.void_shield] = damage_lerp_values.lerp_1
 	}
 }
 local p2_am = {
@@ -60,8 +58,7 @@ local p2_am = {
 		[armor_types.berserker] = damage_lerp_values.lerp_1,
 		[armor_types.super_armor] = damage_lerp_values.lerp_0_05,
 		[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
-		[armor_types.void_shield] = damage_lerp_values.lerp_0_75,
-		[armor_types.prop_armor] = damage_lerp_values.lerp_0_5
+		[armor_types.void_shield] = damage_lerp_values.lerp_0_75
 	},
 	impact = {
 		[armor_types.unarmored] = damage_lerp_values.lerp_1,
@@ -71,8 +68,7 @@ local p2_am = {
 		[armor_types.berserker] = damage_lerp_values.lerp_0_75,
 		[armor_types.super_armor] = damage_lerp_values.lerp_0_75,
 		[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
-		[armor_types.void_shield] = damage_lerp_values.lerp_1,
-		[armor_types.prop_armor] = damage_lerp_values.lerp_1
+		[armor_types.void_shield] = damage_lerp_values.lerp_1
 	}
 }
 local smiter_am = {
@@ -84,8 +80,7 @@ local smiter_am = {
 		[armor_types.berserker] = damage_lerp_values.lerp_1_5,
 		[armor_types.super_armor] = damage_lerp_values.lerp_0_25,
 		[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
-		[armor_types.void_shield] = damage_lerp_values.lerp_0_75,
-		[armor_types.prop_armor] = damage_lerp_values.lerp_0_5
+		[armor_types.void_shield] = damage_lerp_values.lerp_0_75
 	},
 	impact = {
 		[armor_types.unarmored] = damage_lerp_values.lerp_1,
@@ -95,8 +90,7 @@ local smiter_am = {
 		[armor_types.berserker] = damage_lerp_values.lerp_1,
 		[armor_types.super_armor] = damage_lerp_values.lerp_1,
 		[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
-		[armor_types.void_shield] = damage_lerp_values.lerp_1,
-		[armor_types.prop_armor] = damage_lerp_values.lerp_1
+		[armor_types.void_shield] = damage_lerp_values.lerp_1
 	}
 }
 damage_templates.light_combatsword_linesman = {
@@ -556,8 +550,7 @@ local p3_fencer_crit_mod = {
 		[armor_types.berserker] = 0.5,
 		[armor_types.super_armor] = 0.25,
 		[armor_types.disgustingly_resilient] = 0.25,
-		[armor_types.void_shield] = 0,
-		[armor_types.prop_armor] = 0
+		[armor_types.void_shield] = 0
 	},
 	impact = {
 		[armor_types.unarmored] = 0.75,
@@ -567,8 +560,7 @@ local p3_fencer_crit_mod = {
 		[armor_types.berserker] = 0.75,
 		[armor_types.super_armor] = 0.75,
 		[armor_types.disgustingly_resilient] = 0.75,
-		[armor_types.void_shield] = 0.75,
-		[armor_types.prop_armor] = 0.75
+		[armor_types.void_shield] = 0.75
 	}
 }
 damage_templates.light_combatsword_linesman_p3 = {
@@ -727,8 +719,7 @@ damage_templates.light_combatsword_p3_stab = {
 			[armor_types.berserker] = damage_lerp_values.lerp_1,
 			[armor_types.super_armor] = damage_lerp_values.lerp_0_075,
 			[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_75,
-			[armor_types.void_shield] = damage_lerp_values.lerp_0_75,
-			[armor_types.prop_armor] = damage_lerp_values.lerp_0_5
+			[armor_types.void_shield] = damage_lerp_values.lerp_0_75
 		},
 		impact = {
 			[armor_types.unarmored] = damage_lerp_values.lerp_1,
@@ -738,8 +729,7 @@ damage_templates.light_combatsword_p3_stab = {
 			[armor_types.berserker] = damage_lerp_values.lerp_1,
 			[armor_types.super_armor] = damage_lerp_values.lerp_1,
 			[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
-			[armor_types.void_shield] = damage_lerp_values.lerp_1,
-			[armor_types.prop_armor] = damage_lerp_values.lerp_1
+			[armor_types.void_shield] = damage_lerp_values.lerp_1
 		}
 	},
 	targets = {
@@ -753,8 +743,7 @@ damage_templates.light_combatsword_p3_stab = {
 					[armor_types.berserker] = damage_lerp_values.lerp_1,
 					[armor_types.super_armor] = damage_lerp_values.lerp_0_075,
 					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_75,
-					[armor_types.void_shield] = damage_lerp_values.lerp_0_75,
-					[armor_types.prop_armor] = damage_lerp_values.lerp_0_5
+					[armor_types.void_shield] = damage_lerp_values.lerp_0_75
 				},
 				impact = {
 					[armor_types.unarmored] = damage_lerp_values.lerp_1,
@@ -764,8 +753,7 @@ damage_templates.light_combatsword_p3_stab = {
 					[armor_types.berserker] = damage_lerp_values.lerp_1,
 					[armor_types.super_armor] = damage_lerp_values.lerp_1,
 					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
-					[armor_types.void_shield] = damage_lerp_values.lerp_1,
-					[armor_types.prop_armor] = damage_lerp_values.lerp_1
+					[armor_types.void_shield] = damage_lerp_values.lerp_1
 				}
 			},
 			boost_curve_multiplier_finesse = {
@@ -852,8 +840,7 @@ damage_templates.light_combatsword_p2_special = {
 					[armor_types.berserker] = damage_lerp_values.lerp_1,
 					[armor_types.super_armor] = damage_lerp_values.lerp_0_65,
 					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
-					[armor_types.void_shield] = damage_lerp_values.lerp_0_75,
-					[armor_types.prop_armor] = damage_lerp_values.lerp_0_5
+					[armor_types.void_shield] = damage_lerp_values.lerp_0_75
 				},
 				impact = {
 					[armor_types.unarmored] = damage_lerp_values.lerp_1,
@@ -863,8 +850,7 @@ damage_templates.light_combatsword_p2_special = {
 					[armor_types.berserker] = damage_lerp_values.lerp_1,
 					[armor_types.super_armor] = damage_lerp_values.lerp_1,
 					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
-					[armor_types.void_shield] = damage_lerp_values.lerp_1,
-					[armor_types.prop_armor] = damage_lerp_values.lerp_1
+					[armor_types.void_shield] = damage_lerp_values.lerp_1
 				}
 			},
 			power_level_multiplier = {
@@ -945,8 +931,7 @@ damage_templates.light_combatsword_smiter = {
 					[armor_types.berserker] = damage_lerp_values.lerp_1,
 					[armor_types.super_armor] = damage_lerp_values.lerp_0_5,
 					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
-					[armor_types.void_shield] = damage_lerp_values.lerp_0_75,
-					[armor_types.prop_armor] = damage_lerp_values.lerp_0_5
+					[armor_types.void_shield] = damage_lerp_values.lerp_0_75
 				},
 				impact = {
 					[armor_types.unarmored] = damage_lerp_values.lerp_1,
@@ -956,8 +941,7 @@ damage_templates.light_combatsword_smiter = {
 					[armor_types.berserker] = damage_lerp_values.lerp_1,
 					[armor_types.super_armor] = damage_lerp_values.lerp_1,
 					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
-					[armor_types.void_shield] = damage_lerp_values.lerp_1,
-					[armor_types.prop_armor] = damage_lerp_values.lerp_1
+					[armor_types.void_shield] = damage_lerp_values.lerp_1
 				}
 			},
 			boost_curve_multiplier_finesse = {
@@ -1073,8 +1057,7 @@ damage_templates.combatsword_parry_special = {
 			[armor_types.berserker] = damage_lerp_values.lerp_1,
 			[armor_types.super_armor] = damage_lerp_values.lerp_0_25,
 			[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
-			[armor_types.void_shield] = damage_lerp_values.lerp_0_75,
-			[armor_types.prop_armor] = damage_lerp_values.lerp_0_5
+			[armor_types.void_shield] = damage_lerp_values.lerp_0_75
 		},
 		impact = {
 			[armor_types.unarmored] = damage_lerp_values.lerp_1,
@@ -1084,8 +1067,7 @@ damage_templates.combatsword_parry_special = {
 			[armor_types.berserker] = damage_lerp_values.lerp_1_5,
 			[armor_types.super_armor] = damage_lerp_values.lerp_1,
 			[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
-			[armor_types.void_shield] = damage_lerp_values.lerp_1,
-			[armor_types.prop_armor] = damage_lerp_values.lerp_1
+			[armor_types.void_shield] = damage_lerp_values.lerp_1
 		}
 	},
 	targets = {
@@ -1171,8 +1153,7 @@ damage_templates.heavy_combatsword = {
 					[armor_types.berserker] = damage_lerp_values.lerp_1_25,
 					[armor_types.super_armor] = damage_lerp_values.lerp_0_25,
 					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
-					[armor_types.void_shield] = damage_lerp_values.lerp_0_75,
-					[armor_types.prop_armor] = damage_lerp_values.lerp_0_75
+					[armor_types.void_shield] = damage_lerp_values.lerp_0_75
 				},
 				impact = {
 					[armor_types.unarmored] = damage_lerp_values.lerp_1,
@@ -1182,8 +1163,7 @@ damage_templates.heavy_combatsword = {
 					[armor_types.berserker] = damage_lerp_values.lerp_1,
 					[armor_types.super_armor] = damage_lerp_values.lerp_0_75,
 					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
-					[armor_types.void_shield] = damage_lerp_values.lerp_1,
-					[armor_types.prop_armor] = damage_lerp_values.lerp_1
+					[armor_types.void_shield] = damage_lerp_values.lerp_1
 				}
 			},
 			boost_curve_multiplier_finesse = {
@@ -1304,8 +1284,7 @@ damage_templates.heavy_combatsword_smiter = {
 					[armor_types.berserker] = damage_lerp_values.lerp_1,
 					[armor_types.super_armor] = damage_lerp_values.lerp_0_4,
 					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
-					[armor_types.void_shield] = damage_lerp_values.lerp_0_75,
-					[armor_types.prop_armor] = damage_lerp_values.lerp_0_75
+					[armor_types.void_shield] = damage_lerp_values.lerp_0_75
 				},
 				impact = {
 					[armor_types.unarmored] = damage_lerp_values.lerp_1,
@@ -1315,8 +1294,7 @@ damage_templates.heavy_combatsword_smiter = {
 					[armor_types.berserker] = damage_lerp_values.lerp_1,
 					[armor_types.super_armor] = damage_lerp_values.lerp_1,
 					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
-					[armor_types.void_shield] = damage_lerp_values.lerp_1,
-					[armor_types.prop_armor] = damage_lerp_values.lerp_1
+					[armor_types.void_shield] = damage_lerp_values.lerp_1
 				}
 			},
 			boost_curve_multiplier_finesse = {

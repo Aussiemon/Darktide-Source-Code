@@ -34,7 +34,7 @@ StateBoot.on_enter = function (self, parent, params)
 end
 
 StateBoot._create_startup_world = function (self)
-	local world = Application.new_world("boot_world", Application.DISABLE_PHYSICS, Application.DISABLE_SOUND, Application.DISABLE_APEX_CLOTH)
+	local world = Application.new_world("boot_world", Application.DISABLE_PHYSICS)
 	self._world = world
 	local shading_environment_name = GameParameters.default_ui_shading_environment
 	self._shading_environment = World.create_shading_environment(world, shading_environment_name)

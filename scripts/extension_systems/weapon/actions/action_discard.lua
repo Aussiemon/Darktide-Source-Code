@@ -38,12 +38,11 @@ ActionDiscard._discard = function (self, action_settings)
 	local pickup_name = action_settings.pickup_name
 	local player_or_nil = Managers.state.player_unit_spawn:owner(self._player_unit)
 	local item_name = pickup_name or action_settings.deployable_settings.unit_template
-	local is_human = player_or_nil and player_or_nil:is_human_controlled()
 
 	Managers.telemetry_reporters:reporter("placed_items"):register_event(player_or_nil, item_name)
 
-	if Managers.stats.can_record_stats() and is_human then
-		Managers.stats:record_place_item(player_or_nil, item_name)
+	if player_or_nil then
+		Managers.stats:record_private("hook_discard_item", player_or_nil, item_name)
 	end
 
 	if pickup_name then

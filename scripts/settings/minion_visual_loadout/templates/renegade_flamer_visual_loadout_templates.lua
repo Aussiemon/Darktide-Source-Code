@@ -6,6 +6,7 @@ local templates = {
 local basic_renegade_flamer_template = {
 	slots = {
 		slot_upperbody = {
+			use_outline = true,
 			items = {
 				"content/items/characters/minions/chaos_traitor_guard/attachments_base/upperbody_a",
 				"content/items/characters/minions/chaos_traitor_guard/attachments_base/upperbody_a_color_var_01",
@@ -18,6 +19,7 @@ local basic_renegade_flamer_template = {
 			}
 		},
 		slot_lowerbody = {
+			use_outline = true,
 			items = {
 				"content/items/characters/minions/chaos_traitor_guard/attachments_base/lowerbody_a",
 				"content/items/characters/minions/chaos_traitor_guard/attachments_base/lowerbody_a_color_var_01",
@@ -30,16 +32,19 @@ local basic_renegade_flamer_template = {
 			}
 		},
 		slot_face = {
+			use_outline = true,
 			items = {
 				"content/items/characters/minions/chaos_traitor_guard/attachments_base/face_01_b"
 			}
 		},
 		slot_head = {
+			use_outline = true,
 			items = {
 				"content/items/characters/minions/chaos_traitor_guard/attachments_gear/helmet_01_b_flamer"
 			}
 		},
 		slot_ranged_weapon = {
+			use_outline = true,
 			drop_on_death = true,
 			is_weapon = true,
 			is_ranged_weapon = true,
@@ -48,6 +53,7 @@ local basic_renegade_flamer_template = {
 			}
 		},
 		slot_decal = {
+			use_outline = true,
 			items = {
 				"content/items/characters/minions/chaos_traitor_guard/attachments_gear/chaos_traitor_guard_longrange_a_decal_a",
 				"content/items/characters/minions/chaos_traitor_guard/attachments_gear/chaos_traitor_guard_longrange_a_decal_b",
@@ -55,6 +61,7 @@ local basic_renegade_flamer_template = {
 			}
 		},
 		slot_helmet_decal = {
+			use_outline = true,
 			items = {
 				"content/items/characters/minions/chaos_traitor_guard/attachments_gear/chaos_traitor_guard_helmet_01_decal_a",
 				"content/items/characters/minions/chaos_traitor_guard/attachments_gear/chaos_traitor_guard_helmet_01_decal_b",
@@ -64,6 +71,7 @@ local basic_renegade_flamer_template = {
 			}
 		},
 		slot_variation_gear = {
+			use_outline = true,
 			items = {
 				"content/items/characters/minions/chaos_traitor_guard/attachments_gear/special_flamethrower"
 			}

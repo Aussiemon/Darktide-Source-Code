@@ -3,10 +3,10 @@ require("scripts/extension_systems/health/force_field_health_extension")
 require("scripts/extension_systems/health/force_field_husk_health_extension")
 require("scripts/extension_systems/health/health_extension")
 require("scripts/extension_systems/health/husk_health_extension")
-require("scripts/extension_systems/health/prop_health_extension")
 require("scripts/extension_systems/health/player_hub_health_extension")
-require("scripts/extension_systems/health/player_unit_health_extension")
 require("scripts/extension_systems/health/player_husk_health_extension")
+require("scripts/extension_systems/health/player_unit_health_extension")
+require("scripts/extension_systems/health/prop_health_extension")
 
 local HealthSystem = class("HealthSystem", "ExtensionSystemBase")
 

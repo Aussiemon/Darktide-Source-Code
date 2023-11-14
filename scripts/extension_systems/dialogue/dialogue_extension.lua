@@ -836,6 +836,10 @@ DialogueExtension.is_dialogue_disabled = function (self)
 	end
 end
 
+DialogueExtension.set_dialogue_disabled = function (self, is_disabled)
+	self._context.is_disabled = is_disabled
+end
+
 DialogueExtension.set_is_disabled_override = function (self, is_disabled_override)
 	self._context.is_disabled_override = is_disabled_override
 end

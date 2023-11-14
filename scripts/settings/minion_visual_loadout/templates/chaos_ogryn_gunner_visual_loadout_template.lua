@@ -6,6 +6,7 @@ local templates = {
 local basic_chaos_ogryn_gunner_template = {
 	slots = {
 		slot_base_upperbody = {
+			use_outline = true,
 			items = {
 				"content/items/characters/minions/chaos_ogryn/attachments_base/torso_a",
 				"content/items/characters/minions/chaos_ogryn/attachments_base/torso_a_tattoo_01",
@@ -14,6 +15,7 @@ local basic_chaos_ogryn_gunner_template = {
 			}
 		},
 		slot_base_lowerbody = {
+			use_outline = true,
 			items = {
 				"content/items/characters/minions/chaos_ogryn/attachments_base/lowerbody_a",
 				"content/items/characters/minions/chaos_ogryn/attachments_base/lowerbody_a_color_var_01",
@@ -22,6 +24,7 @@ local basic_chaos_ogryn_gunner_template = {
 			}
 		},
 		slot_base_arms = {
+			use_outline = true,
 			items = {
 				"content/items/characters/minions/chaos_ogryn/attachments_base/arms_a",
 				"content/items/characters/minions/chaos_ogryn/attachments_base/arms_a_tattoo_01",
@@ -30,6 +33,7 @@ local basic_chaos_ogryn_gunner_template = {
 			}
 		},
 		slot_ranged_weapon = {
+			use_outline = true,
 			drop_on_death = true,
 			is_weapon = true,
 			is_ranged_weapon = true,
@@ -38,6 +42,7 @@ local basic_chaos_ogryn_gunner_template = {
 			}
 		},
 		slot_head = {
+			use_outline = true,
 			items = {
 				"content/items/characters/minions/chaos_ogryn/attachments_base/head_b",
 				"content/items/characters/minions/chaos_ogryn/attachments_base/head_b_tattoo_01",
@@ -47,6 +52,7 @@ local basic_chaos_ogryn_gunner_template = {
 			}
 		},
 		slot_base_attachment = {
+			use_outline = true,
 			items = {
 				"content/items/characters/minions/chaos_ogryn/attachments_base/skin_attachment_02_b",
 				"content/items/characters/minions/chaos_ogryn/attachments_base/skin_attachment_02_b",
@@ -59,6 +65,7 @@ local basic_chaos_ogryn_gunner_template = {
 			}
 		},
 		slot_gear_attachment = {
+			use_outline = true,
 			items = {
 				"content/items/characters/minions/chaos_ogryn/attachments_gear/ranged_a"
 			}
@@ -94,6 +101,7 @@ default_4.gib_variations = {
 	"head_01"
 }
 default_4.slots.slot_head = {
+	use_outline = true,
 	items = {
 		"content/items/characters/minions/chaos_ogryn/attachments_base/head_a"
 	}
@@ -103,6 +111,7 @@ default_5.gib_variations = {
 	"head_01"
 }
 default_5.slots.slot_head = {
+	use_outline = true,
 	items = {
 		"content/items/characters/minions/chaos_ogryn/attachments_base/head_a_tattoo_01",
 		"content/items/characters/minions/chaos_ogryn/attachments_base/head_a_tattoo_03"
@@ -113,6 +122,7 @@ default_6.gib_variations = {
 	"head_01"
 }
 default_6.slots.slot_head = {
+	use_outline = true,
 	items = {
 		"content/items/characters/minions/chaos_ogryn/attachments_base/head_a_tattoo_02",
 		"content/items/characters/minions/chaos_ogryn/attachments_base/head_a_tattoo_03"

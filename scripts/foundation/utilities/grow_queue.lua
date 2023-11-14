@@ -49,6 +49,10 @@ GrowQueue.size = function (self)
 	return self.last - self.first + 1
 end
 
+GrowQueue.empty = function (self)
+	return self.last < self.first
+end
+
 GrowQueue.get_first = function (self)
 	return self.queue[self.first]
 end

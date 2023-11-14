@@ -319,6 +319,68 @@ damage_templates.renegade_captain_charge = {
 		}
 	}
 }
+damage_templates.twin_dash = {
+	disorientation_type = "medium",
+	stagger_category = "melee",
+	toughness_multiplier = 2,
+	interrupt_alternate_fire = true,
+	ogryn_disorientation_type = "ogryn_medium",
+	armor_damage_modifier = {
+		attack = default_armor_mod,
+		impact = default_armor_mod
+	},
+	crit_mods = {
+		attack = crit_armor_mod,
+		impact = crit_impact_armor_mod
+	},
+	power_distribution = {
+		attack = 15,
+		impact = 0.5
+	},
+	cleave_distribution = {
+		attack = 0.25,
+		impact = 0.25
+	},
+	force_look_function = ForcedLookSettings.look_functions.medium,
+	push_template = push_templates.twin_dash,
+	ogryn_push_template = push_templates.twin_dash_light,
+	targets = {
+		default_target = {
+			boost_curve = PowerLevelSettings.boost_curves.default
+		}
+	}
+}
+damage_templates.twin_dash_light = {
+	disorientation_type = "medium",
+	stagger_category = "melee",
+	toughness_multiplier = 2,
+	interrupt_alternate_fire = true,
+	ogryn_disorientation_type = "ogryn_medium",
+	armor_damage_modifier = {
+		attack = default_armor_mod,
+		impact = default_armor_mod
+	},
+	crit_mods = {
+		attack = crit_armor_mod,
+		impact = crit_impact_armor_mod
+	},
+	power_distribution = {
+		attack = 15,
+		impact = 0.5
+	},
+	cleave_distribution = {
+		attack = 0.25,
+		impact = 0.25
+	},
+	force_look_function = ForcedLookSettings.look_functions.medium,
+	push_template = push_templates.twin_dash_light,
+	ogryn_push_template = push_templates.twin_dash_light,
+	targets = {
+		default_target = {
+			boost_curve = PowerLevelSettings.boost_curves.default
+		}
+	}
+}
 damage_templates.renegade_captain_minion_charge_push = {
 	stagger_override = "explosion",
 	disorientation_type = "heavy",
@@ -795,8 +857,7 @@ damage_templates.renegade_captain_bolt_pistol = {
 				[armor_types.berserker] = 0,
 				[armor_types.super_armor] = 0,
 				[armor_types.disgustingly_resilient] = 0,
-				[armor_types.void_shield] = 0,
-				[armor_types.prop_armor] = 0
+				[armor_types.void_shield] = 0
 			},
 			impact = {
 				[armor_types.unarmored] = 1,
@@ -806,8 +867,7 @@ damage_templates.renegade_captain_bolt_pistol = {
 				[armor_types.berserker] = 0.5,
 				[armor_types.super_armor] = 0,
 				[armor_types.disgustingly_resilient] = 1,
-				[armor_types.void_shield] = 1,
-				[armor_types.prop_armor] = 1
+				[armor_types.void_shield] = 1
 			}
 		},
 		far = {
@@ -819,8 +879,7 @@ damage_templates.renegade_captain_bolt_pistol = {
 				[armor_types.berserker] = 0,
 				[armor_types.super_armor] = 0,
 				[armor_types.disgustingly_resilient] = 0,
-				[armor_types.void_shield] = 0,
-				[armor_types.prop_armor] = 0
+				[armor_types.void_shield] = 0
 			},
 			impact = {
 				[armor_types.unarmored] = 1,
@@ -830,8 +889,7 @@ damage_templates.renegade_captain_bolt_pistol = {
 				[armor_types.berserker] = 0.5,
 				[armor_types.super_armor] = 0.5,
 				[armor_types.disgustingly_resilient] = 1,
-				[armor_types.void_shield] = 1,
-				[armor_types.prop_armor] = 0.5
+				[armor_types.void_shield] = 1
 			}
 		}
 	},
@@ -875,8 +933,7 @@ damage_templates.renegade_captain_bolt_pistol_kill_explosion = {
 				[armor_types.berserker] = 0,
 				[armor_types.super_armor] = 0,
 				[armor_types.disgustingly_resilient] = 0,
-				[armor_types.void_shield] = 0,
-				[armor_types.prop_armor] = 0
+				[armor_types.void_shield] = 0
 			},
 			impact = {
 				[armor_types.unarmored] = 1,
@@ -886,8 +943,7 @@ damage_templates.renegade_captain_bolt_pistol_kill_explosion = {
 				[armor_types.berserker] = 1,
 				[armor_types.super_armor] = 1,
 				[armor_types.disgustingly_resilient] = 1,
-				[armor_types.void_shield] = 1,
-				[armor_types.prop_armor] = 1
+				[armor_types.void_shield] = 1
 			}
 		},
 		far = {
@@ -899,8 +955,7 @@ damage_templates.renegade_captain_bolt_pistol_kill_explosion = {
 				[armor_types.berserker] = 0,
 				[armor_types.super_armor] = 0,
 				[armor_types.disgustingly_resilient] = 0,
-				[armor_types.void_shield] = 0,
-				[armor_types.prop_armor] = 0
+				[armor_types.void_shield] = 0
 			},
 			impact = {
 				[armor_types.unarmored] = 1,
@@ -910,8 +965,7 @@ damage_templates.renegade_captain_bolt_pistol_kill_explosion = {
 				[armor_types.berserker] = 1,
 				[armor_types.super_armor] = 1,
 				[armor_types.disgustingly_resilient] = 1,
-				[armor_types.void_shield] = 1,
-				[armor_types.prop_armor] = 1
+				[armor_types.void_shield] = 1
 			}
 		}
 	},
@@ -954,8 +1008,7 @@ damage_templates.renegade_captain_bolt_pistol_stop_explosion = {
 				[armor_types.berserker] = 0,
 				[armor_types.super_armor] = 0,
 				[armor_types.disgustingly_resilient] = 0,
-				[armor_types.void_shield] = 0,
-				[armor_types.prop_armor] = 0
+				[armor_types.void_shield] = 0
 			},
 			impact = {
 				[armor_types.unarmored] = 1,
@@ -965,8 +1018,7 @@ damage_templates.renegade_captain_bolt_pistol_stop_explosion = {
 				[armor_types.berserker] = 1,
 				[armor_types.super_armor] = 0,
 				[armor_types.disgustingly_resilient] = 1,
-				[armor_types.void_shield] = 1,
-				[armor_types.prop_armor] = 1
+				[armor_types.void_shield] = 1
 			}
 		},
 		far = {
@@ -978,8 +1030,7 @@ damage_templates.renegade_captain_bolt_pistol_stop_explosion = {
 				[armor_types.berserker] = 0,
 				[armor_types.super_armor] = 0,
 				[armor_types.disgustingly_resilient] = 0,
-				[armor_types.void_shield] = 0,
-				[armor_types.prop_armor] = 0
+				[armor_types.void_shield] = 0
 			},
 			impact = {
 				[armor_types.unarmored] = 1,
@@ -989,8 +1040,7 @@ damage_templates.renegade_captain_bolt_pistol_stop_explosion = {
 				[armor_types.berserker] = 1,
 				[armor_types.super_armor] = 1,
 				[armor_types.disgustingly_resilient] = 1,
-				[armor_types.void_shield] = 1,
-				[armor_types.prop_armor] = 1
+				[armor_types.void_shield] = 1
 			}
 		}
 	},
@@ -1029,8 +1079,7 @@ damage_templates.renegade_captain_plasma_pistol = {
 				[armor_types.berserker] = 0,
 				[armor_types.super_armor] = 0,
 				[armor_types.disgustingly_resilient] = 0,
-				[armor_types.void_shield] = 0,
-				[armor_types.prop_armor] = 0
+				[armor_types.void_shield] = 0
 			},
 			impact = {
 				[armor_types.unarmored] = 1,
@@ -1040,8 +1089,7 @@ damage_templates.renegade_captain_plasma_pistol = {
 				[armor_types.berserker] = 0.5,
 				[armor_types.super_armor] = 0,
 				[armor_types.disgustingly_resilient] = 1,
-				[armor_types.void_shield] = 1,
-				[armor_types.prop_armor] = 1
+				[armor_types.void_shield] = 1
 			}
 		},
 		far = {
@@ -1053,8 +1101,7 @@ damage_templates.renegade_captain_plasma_pistol = {
 				[armor_types.berserker] = 0,
 				[armor_types.super_armor] = 0,
 				[armor_types.disgustingly_resilient] = 0,
-				[armor_types.void_shield] = 0,
-				[armor_types.prop_armor] = 0
+				[armor_types.void_shield] = 0
 			},
 			impact = {
 				[armor_types.unarmored] = 1,
@@ -1064,8 +1111,7 @@ damage_templates.renegade_captain_plasma_pistol = {
 				[armor_types.berserker] = 0.5,
 				[armor_types.super_armor] = 0.5,
 				[armor_types.disgustingly_resilient] = 1,
-				[armor_types.void_shield] = 1,
-				[armor_types.prop_armor] = 0.5
+				[armor_types.void_shield] = 1
 			}
 		}
 	},
@@ -1163,8 +1209,7 @@ damage_templates.renegade_grenadier_fire_grenade_impact_close = {
 				[armor_types.berserker] = 0,
 				[armor_types.super_armor] = 0,
 				[armor_types.disgustingly_resilient] = 0,
-				[armor_types.void_shield] = 0,
-				[armor_types.prop_armor] = 0
+				[armor_types.void_shield] = 0
 			},
 			impact = {
 				[armor_types.unarmored] = 2,
@@ -1174,8 +1219,7 @@ damage_templates.renegade_grenadier_fire_grenade_impact_close = {
 				[armor_types.berserker] = 2,
 				[armor_types.super_armor] = 0,
 				[armor_types.disgustingly_resilient] = 2,
-				[armor_types.void_shield] = 2,
-				[armor_types.prop_armor] = 5
+				[armor_types.void_shield] = 2
 			}
 		},
 		far = {
@@ -1187,8 +1231,7 @@ damage_templates.renegade_grenadier_fire_grenade_impact_close = {
 				[armor_types.berserker] = 0,
 				[armor_types.super_armor] = 0,
 				[armor_types.disgustingly_resilient] = 0,
-				[armor_types.void_shield] = 0,
-				[armor_types.prop_armor] = 0
+				[armor_types.void_shield] = 0
 			},
 			impact = {
 				[armor_types.unarmored] = 2,
@@ -1198,8 +1241,7 @@ damage_templates.renegade_grenadier_fire_grenade_impact_close = {
 				[armor_types.berserker] = 2,
 				[armor_types.super_armor] = 2,
 				[armor_types.disgustingly_resilient] = 2,
-				[armor_types.void_shield] = 2,
-				[armor_types.prop_armor] = 5
+				[armor_types.void_shield] = 2
 			}
 		}
 	},
@@ -1215,8 +1257,7 @@ damage_templates.renegade_grenadier_fire_grenade_impact_close = {
 						[armor_types.berserker] = 0,
 						[armor_types.super_armor] = 0,
 						[armor_types.disgustingly_resilient] = 0,
-						[armor_types.void_shield] = 0,
-						[armor_types.prop_armor] = 0
+						[armor_types.void_shield] = 0
 					},
 					impact = {
 						[armor_types.unarmored] = 2,
@@ -1226,8 +1267,7 @@ damage_templates.renegade_grenadier_fire_grenade_impact_close = {
 						[armor_types.berserker] = 2,
 						[armor_types.super_armor] = 0,
 						[armor_types.disgustingly_resilient] = 2,
-						[armor_types.void_shield] = 2,
-						[armor_types.prop_armor] = 5
+						[armor_types.void_shield] = 2
 					}
 				},
 				far = {
@@ -1239,8 +1279,7 @@ damage_templates.renegade_grenadier_fire_grenade_impact_close = {
 						[armor_types.berserker] = 0,
 						[armor_types.super_armor] = 0,
 						[armor_types.disgustingly_resilient] = 0,
-						[armor_types.void_shield] = 0,
-						[armor_types.prop_armor] = 0
+						[armor_types.void_shield] = 0
 					},
 					impact = {
 						[armor_types.unarmored] = 2,
@@ -1250,8 +1289,7 @@ damage_templates.renegade_grenadier_fire_grenade_impact_close = {
 						[armor_types.berserker] = 2,
 						[armor_types.super_armor] = 2,
 						[armor_types.disgustingly_resilient] = 2,
-						[armor_types.void_shield] = 2,
-						[armor_types.prop_armor] = 5
+						[armor_types.void_shield] = 2
 					}
 				}
 			},
@@ -1301,8 +1339,7 @@ damage_templates.poxwalker_explosion = {
 				[armor_types.berserker] = 1,
 				[armor_types.super_armor] = 0,
 				[armor_types.disgustingly_resilient] = 20,
-				[armor_types.void_shield] = 0,
-				[armor_types.prop_armor] = 1
+				[armor_types.void_shield] = 0
 			},
 			impact = {
 				[armor_types.unarmored] = 6,
@@ -1312,8 +1349,7 @@ damage_templates.poxwalker_explosion = {
 				[armor_types.berserker] = 2,
 				[armor_types.super_armor] = 0,
 				[armor_types.disgustingly_resilient] = 5,
-				[armor_types.void_shield] = 2,
-				[armor_types.prop_armor] = 5
+				[armor_types.void_shield] = 2
 			}
 		},
 		far = {
@@ -1325,8 +1361,7 @@ damage_templates.poxwalker_explosion = {
 				[armor_types.berserker] = 0,
 				[armor_types.super_armor] = 0,
 				[armor_types.disgustingly_resilient] = 20,
-				[armor_types.void_shield] = 0,
-				[armor_types.prop_armor] = 1
+				[armor_types.void_shield] = 0
 			},
 			impact = {
 				[armor_types.unarmored] = 2,
@@ -1336,8 +1371,7 @@ damage_templates.poxwalker_explosion = {
 				[armor_types.berserker] = 2,
 				[armor_types.super_armor] = 2,
 				[armor_types.disgustingly_resilient] = 6,
-				[armor_types.void_shield] = 2,
-				[armor_types.prop_armor] = 5
+				[armor_types.void_shield] = 2
 			}
 		}
 	},
@@ -1353,8 +1387,7 @@ damage_templates.poxwalker_explosion = {
 						[armor_types.berserker] = 0,
 						[armor_types.super_armor] = 0,
 						[armor_types.disgustingly_resilient] = 20,
-						[armor_types.void_shield] = 0,
-						[armor_types.prop_armor] = 1
+						[armor_types.void_shield] = 0
 					},
 					impact = {
 						[armor_types.unarmored] = 2,
@@ -1364,8 +1397,7 @@ damage_templates.poxwalker_explosion = {
 						[armor_types.berserker] = 2,
 						[armor_types.super_armor] = 0,
 						[armor_types.disgustingly_resilient] = 2,
-						[armor_types.void_shield] = 2,
-						[armor_types.prop_armor] = 5
+						[armor_types.void_shield] = 2
 					}
 				},
 				far = {
@@ -1377,8 +1409,7 @@ damage_templates.poxwalker_explosion = {
 						[armor_types.berserker] = 0,
 						[armor_types.super_armor] = 0,
 						[armor_types.disgustingly_resilient] = 20,
-						[armor_types.void_shield] = 0,
-						[armor_types.prop_armor] = 1
+						[armor_types.void_shield] = 0
 					},
 					impact = {
 						[armor_types.unarmored] = 2,
@@ -1388,8 +1419,7 @@ damage_templates.poxwalker_explosion = {
 						[armor_types.berserker] = 2,
 						[armor_types.super_armor] = 2,
 						[armor_types.disgustingly_resilient] = 2,
-						[armor_types.void_shield] = 2,
-						[armor_types.prop_armor] = 5
+						[armor_types.void_shield] = 2
 					}
 				}
 			},
@@ -1432,8 +1462,7 @@ damage_templates.poxwalker_explosion_close = {
 				[armor_types.berserker] = 1,
 				[armor_types.super_armor] = 0,
 				[armor_types.disgustingly_resilient] = 99,
-				[armor_types.void_shield] = 0,
-				[armor_types.prop_armor] = 1
+				[armor_types.void_shield] = 0
 			},
 			impact = {
 				[armor_types.unarmored] = 6,
@@ -1443,8 +1472,7 @@ damage_templates.poxwalker_explosion_close = {
 				[armor_types.berserker] = 2,
 				[armor_types.super_armor] = 0,
 				[armor_types.disgustingly_resilient] = 5,
-				[armor_types.void_shield] = 2,
-				[armor_types.prop_armor] = 5
+				[armor_types.void_shield] = 2
 			}
 		},
 		far = {
@@ -1456,8 +1484,7 @@ damage_templates.poxwalker_explosion_close = {
 				[armor_types.berserker] = 0,
 				[armor_types.super_armor] = 0,
 				[armor_types.disgustingly_resilient] = 99,
-				[armor_types.void_shield] = 0,
-				[armor_types.prop_armor] = 1
+				[armor_types.void_shield] = 0
 			},
 			impact = {
 				[armor_types.unarmored] = 2,
@@ -1467,8 +1494,7 @@ damage_templates.poxwalker_explosion_close = {
 				[armor_types.berserker] = 2,
 				[armor_types.super_armor] = 2,
 				[armor_types.disgustingly_resilient] = 6,
-				[armor_types.void_shield] = 2,
-				[armor_types.prop_armor] = 5
+				[armor_types.void_shield] = 2
 			}
 		}
 	},
@@ -1484,8 +1510,7 @@ damage_templates.poxwalker_explosion_close = {
 						[armor_types.berserker] = 1,
 						[armor_types.super_armor] = 1,
 						[armor_types.disgustingly_resilient] = 50,
-						[armor_types.void_shield] = 0,
-						[armor_types.prop_armor] = 1
+						[armor_types.void_shield] = 0
 					},
 					impact = {
 						[armor_types.unarmored] = 2,
@@ -1495,8 +1520,7 @@ damage_templates.poxwalker_explosion_close = {
 						[armor_types.berserker] = 2,
 						[armor_types.super_armor] = 0,
 						[armor_types.disgustingly_resilient] = 2,
-						[armor_types.void_shield] = 2,
-						[armor_types.prop_armor] = 5
+						[armor_types.void_shield] = 2
 					}
 				},
 				far = {
@@ -1508,8 +1532,7 @@ damage_templates.poxwalker_explosion_close = {
 						[armor_types.berserker] = 1,
 						[armor_types.super_armor] = 1,
 						[armor_types.disgustingly_resilient] = 50,
-						[armor_types.void_shield] = 0,
-						[armor_types.prop_armor] = 1
+						[armor_types.void_shield] = 0
 					},
 					impact = {
 						[armor_types.unarmored] = 2,
@@ -1519,8 +1542,7 @@ damage_templates.poxwalker_explosion_close = {
 						[armor_types.berserker] = 2,
 						[armor_types.super_armor] = 2,
 						[armor_types.disgustingly_resilient] = 2,
-						[armor_types.void_shield] = 2,
-						[armor_types.prop_armor] = 5
+						[armor_types.void_shield] = 2
 					}
 				}
 			},
@@ -1560,8 +1582,7 @@ damage_templates.default_rifleman = {
 			[armor_types.berserker] = 0,
 			[armor_types.super_armor] = 0,
 			[armor_types.disgustingly_resilient] = 0,
-			[armor_types.void_shield] = 0,
-			[armor_types.prop_armor] = 0
+			[armor_types.void_shield] = 0
 		},
 		impact = {
 			[armor_types.unarmored] = 0.12,
@@ -1571,8 +1592,7 @@ damage_templates.default_rifleman = {
 			[armor_types.berserker] = 0.5,
 			[armor_types.super_armor] = 0,
 			[armor_types.disgustingly_resilient] = 0.12,
-			[armor_types.void_shield] = 0.5,
-			[armor_types.prop_armor] = 0.5
+			[armor_types.void_shield] = 0.5
 		}
 	},
 	crit_mods = {
@@ -1584,8 +1604,7 @@ damage_templates.default_rifleman = {
 			[armor_types.berserker] = 0,
 			[armor_types.super_armor] = 0,
 			[armor_types.disgustingly_resilient] = 0,
-			[armor_types.void_shield] = 0,
-			[armor_types.prop_armor] = 0
+			[armor_types.void_shield] = 0
 		},
 		impact = {
 			[armor_types.unarmored] = 0.5,
@@ -1595,8 +1614,7 @@ damage_templates.default_rifleman = {
 			[armor_types.berserker] = 1,
 			[armor_types.super_armor] = 1,
 			[armor_types.disgustingly_resilient] = 1,
-			[armor_types.void_shield] = 1,
-			[armor_types.prop_armor] = 0
+			[armor_types.void_shield] = 1
 		}
 	},
 	power_distribution = {
@@ -1638,8 +1656,7 @@ damage_templates.assaulter_auto_burst = {
 			[armor_types.berserker] = 0,
 			[armor_types.super_armor] = 0,
 			[armor_types.disgustingly_resilient] = 0,
-			[armor_types.void_shield] = 0,
-			[armor_types.prop_armor] = 0
+			[armor_types.void_shield] = 0
 		},
 		impact = {
 			[armor_types.unarmored] = 0.12,
@@ -1649,8 +1666,7 @@ damage_templates.assaulter_auto_burst = {
 			[armor_types.berserker] = 0.5,
 			[armor_types.super_armor] = 0,
 			[armor_types.disgustingly_resilient] = 0.12,
-			[armor_types.void_shield] = 0.5,
-			[armor_types.prop_armor] = 0.5
+			[armor_types.void_shield] = 0.5
 		}
 	},
 	crit_mods = {
@@ -1662,8 +1678,7 @@ damage_templates.assaulter_auto_burst = {
 			[armor_types.berserker] = 0,
 			[armor_types.super_armor] = 0,
 			[armor_types.disgustingly_resilient] = 0,
-			[armor_types.void_shield] = 0,
-			[armor_types.prop_armor] = 0
+			[armor_types.void_shield] = 0
 		},
 		impact = {
 			[armor_types.unarmored] = 0.5,
@@ -1673,8 +1688,7 @@ damage_templates.assaulter_auto_burst = {
 			[armor_types.berserker] = 1,
 			[armor_types.super_armor] = 0,
 			[armor_types.disgustingly_resilient] = 0,
-			[armor_types.void_shield] = 0,
-			[armor_types.prop_armor] = 0
+			[armor_types.void_shield] = 0
 		}
 	},
 	power_distribution = {
@@ -1715,8 +1729,7 @@ damage_templates.shocktrooper_shotgun = {
 			[armor_types.berserker] = 0,
 			[armor_types.super_armor] = 0,
 			[armor_types.disgustingly_resilient] = 0,
-			[armor_types.void_shield] = 0,
-			[armor_types.prop_armor] = 0
+			[armor_types.void_shield] = 0
 		},
 		impact = {
 			[armor_types.unarmored] = 1,
@@ -1726,8 +1739,7 @@ damage_templates.shocktrooper_shotgun = {
 			[armor_types.berserker] = 0.5,
 			[armor_types.super_armor] = 0,
 			[armor_types.disgustingly_resilient] = 0.5,
-			[armor_types.void_shield] = 0.5,
-			[armor_types.prop_armor] = 0.5
+			[armor_types.void_shield] = 0.5
 		}
 	},
 	crit_mods = {
@@ -1739,8 +1751,7 @@ damage_templates.shocktrooper_shotgun = {
 			[armor_types.berserker] = 0,
 			[armor_types.super_armor] = 0,
 			[armor_types.disgustingly_resilient] = 0,
-			[armor_types.void_shield] = 0,
-			[armor_types.prop_armor] = 0
+			[armor_types.void_shield] = 0
 		},
 		impact = {
 			[armor_types.unarmored] = 0.5,
@@ -1750,8 +1761,7 @@ damage_templates.shocktrooper_shotgun = {
 			[armor_types.berserker] = 1,
 			[armor_types.super_armor] = 0,
 			[armor_types.disgustingly_resilient] = 0,
-			[armor_types.void_shield] = 0,
-			[armor_types.prop_armor] = 0
+			[armor_types.void_shield] = 0
 		}
 	},
 	power_distribution = {
@@ -1790,8 +1800,7 @@ damage_templates.sniper_bullet = {
 			[armor_types.berserker] = 10,
 			[armor_types.super_armor] = 0,
 			[armor_types.disgustingly_resilient] = 10,
-			[armor_types.void_shield] = 0,
-			[armor_types.prop_armor] = 1
+			[armor_types.void_shield] = 0
 		},
 		impact = {
 			[armor_types.unarmored] = 1,
@@ -1801,8 +1810,7 @@ damage_templates.sniper_bullet = {
 			[armor_types.berserker] = 0.5,
 			[armor_types.super_armor] = 0,
 			[armor_types.disgustingly_resilient] = 0.5,
-			[armor_types.void_shield] = 0.5,
-			[armor_types.prop_armor] = 0.5
+			[armor_types.void_shield] = 0.5
 		}
 	},
 	crit_mods = {
@@ -1814,8 +1822,7 @@ damage_templates.sniper_bullet = {
 			[armor_types.berserker] = 0,
 			[armor_types.super_armor] = 0,
 			[armor_types.disgustingly_resilient] = 0,
-			[armor_types.void_shield] = 0,
-			[armor_types.prop_armor] = 0
+			[armor_types.void_shield] = 0
 		},
 		impact = {
 			[armor_types.unarmored] = 0.5,
@@ -1825,8 +1832,7 @@ damage_templates.sniper_bullet = {
 			[armor_types.berserker] = 1,
 			[armor_types.super_armor] = 0,
 			[armor_types.disgustingly_resilient] = 0,
-			[armor_types.void_shield] = 0,
-			[armor_types.prop_armor] = 0
+			[armor_types.void_shield] = 0
 		}
 	},
 	power_distribution = {
@@ -1865,8 +1871,7 @@ damage_templates.gunner_aimed = {
 			[armor_types.berserker] = 0,
 			[armor_types.super_armor] = 0,
 			[armor_types.disgustingly_resilient] = 0,
-			[armor_types.void_shield] = 0,
-			[armor_types.prop_armor] = 0
+			[armor_types.void_shield] = 0
 		},
 		impact = {
 			[armor_types.unarmored] = 0.12,
@@ -1876,8 +1881,7 @@ damage_templates.gunner_aimed = {
 			[armor_types.berserker] = 0.5,
 			[armor_types.super_armor] = 0,
 			[armor_types.disgustingly_resilient] = 0.12,
-			[armor_types.void_shield] = 0.5,
-			[armor_types.prop_armor] = 0.5
+			[armor_types.void_shield] = 0.5
 		}
 	},
 	crit_mods = {
@@ -1889,8 +1893,7 @@ damage_templates.gunner_aimed = {
 			[armor_types.berserker] = 0,
 			[armor_types.super_armor] = 0,
 			[armor_types.disgustingly_resilient] = 0,
-			[armor_types.void_shield] = 0,
-			[armor_types.prop_armor] = 0
+			[armor_types.void_shield] = 0
 		},
 		impact = {
 			[armor_types.unarmored] = 1,
@@ -1900,8 +1903,7 @@ damage_templates.gunner_aimed = {
 			[armor_types.berserker] = 1,
 			[armor_types.super_armor] = 1,
 			[armor_types.disgustingly_resilient] = 1,
-			[armor_types.void_shield] = 1,
-			[armor_types.prop_armor] = 1
+			[armor_types.void_shield] = 1
 		}
 	},
 	power_distribution = {
@@ -1937,8 +1939,7 @@ damage_templates.gunner_spray_n_pray = {
 			[armor_types.berserker] = 0,
 			[armor_types.super_armor] = 0,
 			[armor_types.disgustingly_resilient] = 0,
-			[armor_types.void_shield] = 0,
-			[armor_types.prop_armor] = 0
+			[armor_types.void_shield] = 0
 		},
 		impact = {
 			[armor_types.unarmored] = 0.12,
@@ -1948,8 +1949,7 @@ damage_templates.gunner_spray_n_pray = {
 			[armor_types.berserker] = 0.5,
 			[armor_types.super_armor] = 0,
 			[armor_types.disgustingly_resilient] = 0.12,
-			[armor_types.void_shield] = 0.5,
-			[armor_types.prop_armor] = 0.5
+			[armor_types.void_shield] = 0.5
 		}
 	},
 	crit_mods = {
@@ -1961,8 +1961,7 @@ damage_templates.gunner_spray_n_pray = {
 			[armor_types.berserker] = 0,
 			[armor_types.super_armor] = 0,
 			[armor_types.disgustingly_resilient] = 0,
-			[armor_types.void_shield] = 0,
-			[armor_types.prop_armor] = 0
+			[armor_types.void_shield] = 0
 		},
 		impact = {
 			[armor_types.unarmored] = 1,
@@ -1972,8 +1971,7 @@ damage_templates.gunner_spray_n_pray = {
 			[armor_types.berserker] = 1,
 			[armor_types.super_armor] = 1,
 			[armor_types.disgustingly_resilient] = 1,
-			[armor_types.void_shield] = 1,
-			[armor_types.prop_armor] = 1
+			[armor_types.void_shield] = 1
 		}
 	},
 	power_distribution = {
@@ -2010,8 +2008,7 @@ damage_templates.gunner_sweep = {
 			[armor_types.berserker] = 0,
 			[armor_types.super_armor] = 0,
 			[armor_types.disgustingly_resilient] = 0,
-			[armor_types.void_shield] = 0,
-			[armor_types.prop_armor] = 0
+			[armor_types.void_shield] = 0
 		},
 		impact = {
 			[armor_types.unarmored] = 0.12,
@@ -2021,8 +2018,7 @@ damage_templates.gunner_sweep = {
 			[armor_types.berserker] = 0.5,
 			[armor_types.super_armor] = 0,
 			[armor_types.disgustingly_resilient] = 0.12,
-			[armor_types.void_shield] = 0.5,
-			[armor_types.prop_armor] = 0.5
+			[armor_types.void_shield] = 0.5
 		}
 	},
 	crit_mods = {
@@ -2034,8 +2030,7 @@ damage_templates.gunner_sweep = {
 			[armor_types.berserker] = 0,
 			[armor_types.super_armor] = 0,
 			[armor_types.disgustingly_resilient] = 0,
-			[armor_types.void_shield] = 0,
-			[armor_types.prop_armor] = 0
+			[armor_types.void_shield] = 0
 		},
 		impact = {
 			[armor_types.unarmored] = 1,
@@ -2045,8 +2040,7 @@ damage_templates.gunner_sweep = {
 			[armor_types.berserker] = 1,
 			[armor_types.super_armor] = 1,
 			[armor_types.disgustingly_resilient] = 1,
-			[armor_types.void_shield] = 1,
-			[armor_types.prop_armor] = 1
+			[armor_types.void_shield] = 1
 		}
 	},
 	power_distribution = {
@@ -2082,8 +2076,7 @@ damage_templates.renegade_captain_spray = {
 			[armor_types.berserker] = 0,
 			[armor_types.super_armor] = 0,
 			[armor_types.disgustingly_resilient] = 0,
-			[armor_types.void_shield] = 0,
-			[armor_types.prop_armor] = 0
+			[armor_types.void_shield] = 0
 		},
 		impact = {
 			[armor_types.unarmored] = 1,
@@ -2093,8 +2086,7 @@ damage_templates.renegade_captain_spray = {
 			[armor_types.berserker] = 0.5,
 			[armor_types.super_armor] = 0,
 			[armor_types.disgustingly_resilient] = 0.5,
-			[armor_types.void_shield] = 0.5,
-			[armor_types.prop_armor] = 0.5
+			[armor_types.void_shield] = 0.5
 		}
 	},
 	power_distribution = {
@@ -2128,8 +2120,7 @@ damage_templates.renegade_captain_shotgun = {
 			[armor_types.berserker] = 0,
 			[armor_types.super_armor] = 0,
 			[armor_types.disgustingly_resilient] = 0,
-			[armor_types.void_shield] = 0,
-			[armor_types.prop_armor] = 0
+			[armor_types.void_shield] = 0
 		},
 		impact = {
 			[armor_types.unarmored] = 1,
@@ -2139,8 +2130,7 @@ damage_templates.renegade_captain_shotgun = {
 			[armor_types.berserker] = 0.5,
 			[armor_types.super_armor] = 0,
 			[armor_types.disgustingly_resilient] = 0.5,
-			[armor_types.void_shield] = 0.5,
-			[armor_types.prop_armor] = 0.5
+			[armor_types.void_shield] = 0.5
 		}
 	},
 	crit_mods = {
@@ -2152,8 +2142,7 @@ damage_templates.renegade_captain_shotgun = {
 			[armor_types.berserker] = 0,
 			[armor_types.super_armor] = 0,
 			[armor_types.disgustingly_resilient] = 0,
-			[armor_types.void_shield] = 0,
-			[armor_types.prop_armor] = 0
+			[armor_types.void_shield] = 0
 		},
 		impact = {
 			[armor_types.unarmored] = 0.5,
@@ -2163,8 +2152,7 @@ damage_templates.renegade_captain_shotgun = {
 			[armor_types.berserker] = 1,
 			[armor_types.super_armor] = 0,
 			[armor_types.disgustingly_resilient] = 0,
-			[armor_types.void_shield] = 0,
-			[armor_types.prop_armor] = 0
+			[armor_types.void_shield] = 0
 		}
 	},
 	power_distribution = {
@@ -2203,8 +2191,7 @@ damage_templates.renegade_captain_frag_grenade_close = {
 				[armor_types.berserker] = 1,
 				[armor_types.super_armor] = 0,
 				[armor_types.disgustingly_resilient] = 0.75,
-				[armor_types.void_shield] = 0.75,
-				[armor_types.prop_armor] = 1
+				[armor_types.void_shield] = 0.75
 			},
 			impact = {
 				[armor_types.unarmored] = 2,
@@ -2214,8 +2201,7 @@ damage_templates.renegade_captain_frag_grenade_close = {
 				[armor_types.berserker] = 2,
 				[armor_types.super_armor] = 5,
 				[armor_types.disgustingly_resilient] = 2,
-				[armor_types.void_shield] = 2,
-				[armor_types.prop_armor] = 2
+				[armor_types.void_shield] = 2
 			}
 		},
 		far = {
@@ -2227,8 +2213,7 @@ damage_templates.renegade_captain_frag_grenade_close = {
 				[armor_types.berserker] = 0,
 				[armor_types.super_armor] = 0,
 				[armor_types.disgustingly_resilient] = 0,
-				[armor_types.void_shield] = 0,
-				[armor_types.prop_armor] = 0
+				[armor_types.void_shield] = 0
 			},
 			impact = {
 				[armor_types.unarmored] = 0.2,
@@ -2238,8 +2223,7 @@ damage_templates.renegade_captain_frag_grenade_close = {
 				[armor_types.berserker] = 0.2,
 				[armor_types.super_armor] = 0.2,
 				[armor_types.disgustingly_resilient] = 0.2,
-				[armor_types.void_shield] = 0.2,
-				[armor_types.prop_armor] = 0.2
+				[armor_types.void_shield] = 0.2
 			}
 		}
 	},
@@ -2273,8 +2257,7 @@ damage_templates.renegade_captain_frag_grenade = {
 				[armor_types.berserker] = 1,
 				[armor_types.super_armor] = 0,
 				[armor_types.disgustingly_resilient] = 0.75,
-				[armor_types.void_shield] = 0.75,
-				[armor_types.prop_armor] = 1
+				[armor_types.void_shield] = 0.75
 			},
 			impact = {
 				[armor_types.unarmored] = 2,
@@ -2284,8 +2267,7 @@ damage_templates.renegade_captain_frag_grenade = {
 				[armor_types.berserker] = 2,
 				[armor_types.super_armor] = 5,
 				[armor_types.disgustingly_resilient] = 2,
-				[armor_types.void_shield] = 2,
-				[armor_types.prop_armor] = 2
+				[armor_types.void_shield] = 2
 			}
 		},
 		far = {
@@ -2297,8 +2279,7 @@ damage_templates.renegade_captain_frag_grenade = {
 				[armor_types.berserker] = 0,
 				[armor_types.super_armor] = 0,
 				[armor_types.disgustingly_resilient] = 0,
-				[armor_types.void_shield] = 0,
-				[armor_types.prop_armor] = 0
+				[armor_types.void_shield] = 0
 			},
 			impact = {
 				[armor_types.unarmored] = 0.2,
@@ -2308,8 +2289,7 @@ damage_templates.renegade_captain_frag_grenade = {
 				[armor_types.berserker] = 0.2,
 				[armor_types.super_armor] = 0.2,
 				[armor_types.disgustingly_resilient] = 0.2,
-				[armor_types.void_shield] = 0.2,
-				[armor_types.prop_armor] = 0.2
+				[armor_types.void_shield] = 0.2
 			}
 		}
 	},
@@ -2351,8 +2331,7 @@ damage_templates.renegade_shocktrooper_frag_grenade_close = {
 				[armor_types.berserker] = 1,
 				[armor_types.super_armor] = 0,
 				[armor_types.disgustingly_resilient] = 0.75,
-				[armor_types.void_shield] = 0.75,
-				[armor_types.prop_armor] = 1
+				[armor_types.void_shield] = 0.75
 			},
 			impact = {
 				[armor_types.unarmored] = 2,
@@ -2362,8 +2341,7 @@ damage_templates.renegade_shocktrooper_frag_grenade_close = {
 				[armor_types.berserker] = 2,
 				[armor_types.super_armor] = 5,
 				[armor_types.disgustingly_resilient] = 2,
-				[armor_types.void_shield] = 2,
-				[armor_types.prop_armor] = 2
+				[armor_types.void_shield] = 2
 			}
 		},
 		far = {
@@ -2375,8 +2353,7 @@ damage_templates.renegade_shocktrooper_frag_grenade_close = {
 				[armor_types.berserker] = 0,
 				[armor_types.super_armor] = 0,
 				[armor_types.disgustingly_resilient] = 0,
-				[armor_types.void_shield] = 0,
-				[armor_types.prop_armor] = 0
+				[armor_types.void_shield] = 0
 			},
 			impact = {
 				[armor_types.unarmored] = 0.2,
@@ -2386,8 +2363,7 @@ damage_templates.renegade_shocktrooper_frag_grenade_close = {
 				[armor_types.berserker] = 0.2,
 				[armor_types.super_armor] = 0.2,
 				[armor_types.disgustingly_resilient] = 0.2,
-				[armor_types.void_shield] = 0.2,
-				[armor_types.prop_armor] = 0.2
+				[armor_types.void_shield] = 0.2
 			}
 		}
 	},
@@ -2425,8 +2401,7 @@ damage_templates.renegade_shocktrooper_frag_grenade = {
 				[armor_types.berserker] = 1,
 				[armor_types.super_armor] = 0,
 				[armor_types.disgustingly_resilient] = 0.75,
-				[armor_types.void_shield] = 0.75,
-				[armor_types.prop_armor] = 1
+				[armor_types.void_shield] = 0.75
 			},
 			impact = {
 				[armor_types.unarmored] = 2,
@@ -2436,8 +2411,7 @@ damage_templates.renegade_shocktrooper_frag_grenade = {
 				[armor_types.berserker] = 2,
 				[armor_types.super_armor] = 5,
 				[armor_types.disgustingly_resilient] = 2,
-				[armor_types.void_shield] = 2,
-				[armor_types.prop_armor] = 2
+				[armor_types.void_shield] = 2
 			}
 		},
 		far = {
@@ -2449,8 +2423,7 @@ damage_templates.renegade_shocktrooper_frag_grenade = {
 				[armor_types.berserker] = 0,
 				[armor_types.super_armor] = 0,
 				[armor_types.disgustingly_resilient] = 0,
-				[armor_types.void_shield] = 0,
-				[armor_types.prop_armor] = 0
+				[armor_types.void_shield] = 0
 			},
 			impact = {
 				[armor_types.unarmored] = 0.2,
@@ -2460,8 +2433,7 @@ damage_templates.renegade_shocktrooper_frag_grenade = {
 				[armor_types.berserker] = 0.2,
 				[armor_types.super_armor] = 0.2,
 				[armor_types.disgustingly_resilient] = 0.2,
-				[armor_types.void_shield] = 0.2,
-				[armor_types.prop_armor] = 0.2
+				[armor_types.void_shield] = 0.2
 			}
 		}
 	},
@@ -2498,8 +2470,7 @@ damage_templates.default_rusher = {
 			[armor_types.berserker] = 0,
 			[armor_types.super_armor] = 0,
 			[armor_types.disgustingly_resilient] = 0,
-			[armor_types.void_shield] = 0,
-			[armor_types.prop_armor] = 0
+			[armor_types.void_shield] = 0
 		},
 		impact = {
 			[armor_types.unarmored] = 1,
@@ -2509,8 +2480,7 @@ damage_templates.default_rusher = {
 			[armor_types.berserker] = 0.5,
 			[armor_types.super_armor] = 0,
 			[armor_types.disgustingly_resilient] = 0.5,
-			[armor_types.void_shield] = 0.5,
-			[armor_types.prop_armor] = 0.5
+			[armor_types.void_shield] = 0.5
 		}
 	},
 	crit_mods = {
@@ -2522,8 +2492,7 @@ damage_templates.default_rusher = {
 			[armor_types.berserker] = 0,
 			[armor_types.super_armor] = 0,
 			[armor_types.disgustingly_resilient] = 0,
-			[armor_types.void_shield] = 0,
-			[armor_types.prop_armor] = 0
+			[armor_types.void_shield] = 0
 		},
 		impact = {
 			[armor_types.unarmored] = 1,
@@ -2533,8 +2502,7 @@ damage_templates.default_rusher = {
 			[armor_types.berserker] = 1,
 			[armor_types.super_armor] = 1,
 			[armor_types.disgustingly_resilient] = 1,
-			[armor_types.void_shield] = 1,
-			[armor_types.prop_armor] = 1
+			[armor_types.void_shield] = 1
 		}
 	},
 	power_distribution = {
@@ -2975,8 +2943,7 @@ damage_templates.chaos_ogryn_gunner_bullet = {
 			[armor_types.berserker] = 0.5,
 			[armor_types.super_armor] = 0,
 			[armor_types.disgustingly_resilient] = 0.25,
-			[armor_types.void_shield] = 0.5,
-			[armor_types.prop_armor] = 0.5
+			[armor_types.void_shield] = 0.5
 		}
 	},
 	crit_mods = {
@@ -3231,8 +3198,7 @@ damage_templates.renegade_captain_toughness_depleted = {
 				[armor_types.berserker] = 1,
 				[armor_types.super_armor] = 0,
 				[armor_types.disgustingly_resilient] = 99,
-				[armor_types.void_shield] = 0,
-				[armor_types.prop_armor] = 1
+				[armor_types.void_shield] = 0
 			},
 			impact = {
 				[armor_types.unarmored] = 6,
@@ -3242,8 +3208,7 @@ damage_templates.renegade_captain_toughness_depleted = {
 				[armor_types.berserker] = 2,
 				[armor_types.super_armor] = 0,
 				[armor_types.disgustingly_resilient] = 5,
-				[armor_types.void_shield] = 2,
-				[armor_types.prop_armor] = 5
+				[armor_types.void_shield] = 2
 			}
 		},
 		far = {
@@ -3255,8 +3220,7 @@ damage_templates.renegade_captain_toughness_depleted = {
 				[armor_types.berserker] = 0,
 				[armor_types.super_armor] = 0,
 				[armor_types.disgustingly_resilient] = 9,
-				[armor_types.void_shield] = 0,
-				[armor_types.prop_armor] = 1
+				[armor_types.void_shield] = 0
 			},
 			impact = {
 				[armor_types.unarmored] = 2,
@@ -3266,8 +3230,7 @@ damage_templates.renegade_captain_toughness_depleted = {
 				[armor_types.berserker] = 2,
 				[armor_types.super_armor] = 2,
 				[armor_types.disgustingly_resilient] = 6,
-				[armor_types.void_shield] = 2,
-				[armor_types.prop_armor] = 5
+				[armor_types.void_shield] = 2
 			}
 		}
 	},
@@ -3283,8 +3246,7 @@ damage_templates.renegade_captain_toughness_depleted = {
 						[armor_types.berserker] = 0,
 						[armor_types.super_armor] = 0,
 						[armor_types.disgustingly_resilient] = 0,
-						[armor_types.void_shield] = 0,
-						[armor_types.prop_armor] = 0
+						[armor_types.void_shield] = 0
 					},
 					impact = {
 						[armor_types.unarmored] = 2,
@@ -3294,8 +3256,7 @@ damage_templates.renegade_captain_toughness_depleted = {
 						[armor_types.berserker] = 2,
 						[armor_types.super_armor] = 0,
 						[armor_types.disgustingly_resilient] = 2,
-						[armor_types.void_shield] = 2,
-						[armor_types.prop_armor] = 5
+						[armor_types.void_shield] = 2
 					}
 				},
 				far = {
@@ -3307,8 +3268,7 @@ damage_templates.renegade_captain_toughness_depleted = {
 						[armor_types.berserker] = 0,
 						[armor_types.super_armor] = 0,
 						[armor_types.disgustingly_resilient] = 0,
-						[armor_types.void_shield] = 0,
-						[armor_types.prop_armor] = 0
+						[armor_types.void_shield] = 0
 					},
 					impact = {
 						[armor_types.unarmored] = 2,
@@ -3318,8 +3278,7 @@ damage_templates.renegade_captain_toughness_depleted = {
 						[armor_types.berserker] = 2,
 						[armor_types.super_armor] = 2,
 						[armor_types.disgustingly_resilient] = 2,
-						[armor_types.void_shield] = 2,
-						[armor_types.prop_armor] = 5
+						[armor_types.void_shield] = 2
 					}
 				}
 			},
@@ -3356,8 +3315,7 @@ damage_templates.renegade_captain_offtarget_melee = {
 			[armor_types.berserker] = 10,
 			[armor_types.super_armor] = 5,
 			[armor_types.disgustingly_resilient] = 10,
-			[armor_types.void_shield] = 0.1,
-			[armor_types.prop_armor] = 0
+			[armor_types.void_shield] = 0.1
 		},
 		impact = default_armor_mod
 	},
@@ -3459,8 +3417,7 @@ damage_templates.beast_of_nurgle_slime_liquid = {
 			[armor_types.berserker] = 0,
 			[armor_types.super_armor] = 0,
 			[armor_types.disgustingly_resilient] = 0,
-			[armor_types.void_shield] = 0,
-			[armor_types.prop_armor] = 0
+			[armor_types.void_shield] = 0
 		},
 		impact = {
 			[armor_types.unarmored] = 0,
@@ -3470,8 +3427,7 @@ damage_templates.beast_of_nurgle_slime_liquid = {
 			[armor_types.berserker] = 0,
 			[armor_types.super_armor] = 0,
 			[armor_types.disgustingly_resilient] = 0,
-			[armor_types.void_shield] = 0,
-			[armor_types.prop_armor] = 0
+			[armor_types.void_shield] = 0
 		}
 	},
 	power_distribution = {
@@ -3491,8 +3447,6 @@ damage_templates.beast_of_nurgle_slime_liquid = {
 damage_templates.beast_of_nurgle_hit_by_vomit = {
 	toughness_multiplier = 2,
 	permanent_damage_ratio = 1,
-	ogryn_disorientation_type = "corruption",
-	disorientation_type = "corruption",
 	ignore_toughness = true,
 	stagger_category = "melee",
 	armor_damage_modifier = {
@@ -3504,8 +3458,7 @@ damage_templates.beast_of_nurgle_hit_by_vomit = {
 			[armor_types.berserker] = 0,
 			[armor_types.super_armor] = 0,
 			[armor_types.disgustingly_resilient] = 0,
-			[armor_types.void_shield] = 0,
-			[armor_types.prop_armor] = 0
+			[armor_types.void_shield] = 0
 		},
 		impact = {
 			[armor_types.unarmored] = 0,
@@ -3515,8 +3468,7 @@ damage_templates.beast_of_nurgle_hit_by_vomit = {
 			[armor_types.berserker] = 0,
 			[armor_types.super_armor] = 0,
 			[armor_types.disgustingly_resilient] = 0,
-			[armor_types.void_shield] = 0,
-			[armor_types.prop_armor] = 0
+			[armor_types.void_shield] = 0
 		}
 	},
 	power_distribution = {
@@ -3635,11 +3587,12 @@ damage_templates.beast_of_nurgle_self_gib = {
 }
 damage_templates.toxic_gas_mutator = {
 	ogryn_disorientation_type = "corruption_tick",
-	disorientation_type = "corruption_tick",
 	toughness_multiplier = 3,
 	permanent_damage_ratio = 1,
-	ignore_mood_effects = true,
 	stagger_category = "melee",
+	ignore_mood_effects = true,
+	ignore_toughness_broken_disorient = true,
+	disorientation_type = "corruption_tick",
 	ignore_depleting_toughness = true,
 	armor_damage_modifier = {
 		attack = {
@@ -3650,8 +3603,7 @@ damage_templates.toxic_gas_mutator = {
 			[armor_types.berserker] = 0,
 			[armor_types.super_armor] = 0,
 			[armor_types.disgustingly_resilient] = 0,
-			[armor_types.void_shield] = 0,
-			[armor_types.prop_armor] = 0
+			[armor_types.void_shield] = 0
 		},
 		impact = {
 			[armor_types.unarmored] = 0,
@@ -3661,8 +3613,7 @@ damage_templates.toxic_gas_mutator = {
 			[armor_types.berserker] = 0,
 			[armor_types.super_armor] = 0,
 			[armor_types.disgustingly_resilient] = 0,
-			[armor_types.void_shield] = 0,
-			[armor_types.prop_armor] = 0
+			[armor_types.void_shield] = 0
 		}
 	},
 	power_distribution = {

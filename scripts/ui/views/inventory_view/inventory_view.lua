@@ -83,6 +83,18 @@ InventoryView.on_enter = function (self)
 
 	self._item_stats = self:_setup_item_stats("item_stats", "item_stats_pivot")
 
+	if self._using_cursor_navigation then
+		self:on_item_stats_toggled(true)
+	else
+		local character_data = self:_character_save_data()
+
+		if character_data and character_data.view_settings and character_data.view_settings.inventory_view_item_stats_toggled then
+			self:on_item_stats_toggled(true)
+		else
+			self:on_item_stats_toggled(false)
+		end
+	end
+
 	self:_register_event("event_inventory_view_set_camera_focus")
 	self:_register_event("event_force_wallet_update")
 end
@@ -139,13 +151,14 @@ InventoryView._on_item_hover_start = function (self, item)
 
 	self._currently_hovered_item = item
 
-	if self._item_stats then
-		local item_type = item and item.item_type
-		local is_gear = item_type == "GEAR_UPPERBODY" or item_type == "GEAR_LOWERBODY" or item_type == "GEAR_HEAD" or item_type == "GEAR_EXTRA_COSMETIC" or item_type == "END_OF_ROUND" or item_type == "PORTRAIT_FRAME" or item_type == "CHARACTER_INSIGNIA" or item_type == "EMOTE" or item_type == "END_OF_ROUND"
+	if self._item_stats and item then
+		local profile = self._preview_player:profile()
+		local context = {
+			inventory_items = self._inventory_items,
+			profile = profile
+		}
 
-		if not is_gear and not item.is_fallback_item then
-			self._item_stats:present_item(item)
-		end
+		self._item_stats:present_item(item, context)
 	end
 end
 
@@ -359,7 +372,7 @@ InventoryView._get_items_layout_by_slot = function (self, slot)
 	local layout = {}
 	local inventory_items = self._inventory_items
 
-	for item_name, item in pairs(inventory_items) do
+	for _, item in pairs(inventory_items) do
 		if self:_item_valid_by_current_profile(item) then
 			local slots = item.slots
 			local widget_type = "item"
@@ -374,6 +387,7 @@ InventoryView._get_items_layout_by_slot = function (self, slot)
 						layout[#layout + 1] = {
 							item = item,
 							slot = slot,
+							player = self._preview_player,
 							widget_type = widget_type
 						}
 					end
@@ -428,6 +442,10 @@ InventoryView.cb_on_grid_entry_right_pressed = function (self, widget, element)
 			-- Nothing
 		end
 	end
+end
+
+InventoryView.player = function (self)
+	return self._preview_player
 end
 
 InventoryView.equipped_item_in_slot = function (self, slot_name)
@@ -794,13 +812,14 @@ InventoryView._draw_loadout_widgets = function (self, dt, t, input_service, ui_r
 
 	local invalid_slots = self._parent and self._parent._invalid_slots
 	local modified_slots = self._parent and self._parent._modified_slots
+	local duplicated_slots = self._parent and self._parent._duplicated_slots
 
-	if exclamation_widgets and (invalid_slots or modified_slots) and self._entry_animation_id and not self:_is_animation_active(self._entry_animation_id) then
+	if exclamation_widgets and (invalid_slots or modified_slots or duplicated_slots) and self._entry_animation_id and not self:_is_animation_active(self._entry_animation_id) then
 		for i = 1, #exclamation_widgets do
 			local widget = exclamation_widgets[i]
 			local slot_name = widget.content.slot.name
 
-			if invalid_slots[slot_name] then
+			if invalid_slots[slot_name] or duplicated_slots[slot_name] then
 				widget.content.modified_content = false
 
 				UIWidget.draw(widget, ui_renderer)
@@ -867,6 +886,16 @@ InventoryView._draw_grid = function (self, dt, t, input_service, ui_renderer)
 	end
 
 	UIRenderer.end_pass(ui_renderer)
+end
+
+InventoryView._draw_elements = function (self, dt, t, ui_renderer, render_settings, input_service)
+	local previous_alpha_multiplier = render_settings.alpha_multiplier
+	local loadout_alpha_multiplier = self.loadout_alpha_multiplier
+	render_settings.alpha_multiplier = loadout_alpha_multiplier or 0
+
+	InventoryView.super._draw_elements(self, dt, t, ui_renderer, render_settings, input_service)
+
+	render_settings.alpha_multiplier = previous_alpha_multiplier
 end
 
 InventoryView._destroy_loadout_widgets = function (self, ui_renderer)
@@ -939,8 +968,9 @@ InventoryView._update_blueprint_widgets = function (self, widgets, dt, t, input_
 				local content = widget.content
 				local hotspot = content.hotspot
 				local is_hover = hotspot and hotspot.is_hover
+				local is_selected = hotspot and hotspot.is_selected
 
-				if is_hover then
+				if is_hover or is_selected then
 					local item = content.item
 					hovered_item = item
 				end
@@ -1169,9 +1199,19 @@ InventoryView._on_navigation_input_changed = function (self)
 
 				self:_select_individual_widget_index(first_widget.content.index)
 			end
-		elseif self._current_selected_loadout_index then
+		else
 			self:_select_individual_widget_index(nil)
 		end
+	end
+
+	if self._using_cursor_navigation then
+		local reference_name = "item_stats"
+		local element = self:_element(reference_name)
+
+		element:set_visibility(true)
+		self:_on_item_hover_stop()
+	else
+		self:on_item_stats_toggled(self._item_stats_presentation_enabled)
 	end
 end
 
@@ -1363,6 +1403,33 @@ InventoryView.profile_level = function (self)
 	local current_level = profile.current_level
 
 	return current_level
+end
+
+InventoryView.on_item_stats_toggled = function (self, force_value, do_save)
+	if force_value == nil then
+		self._item_stats_presentation_enabled = not self._item_stats_presentation_enabled
+	else
+		self._item_stats_presentation_enabled = force_value
+	end
+
+	local reference_name = "item_stats"
+	local element = self:_element(reference_name)
+
+	element:set_visibility(self._item_stats_presentation_enabled)
+
+	if do_save then
+		local character_data = self:_character_save_data()
+
+		if character_data then
+			character_data.view_settings.inventory_view_item_stats_toggled = self._item_stats_presentation_enabled
+
+			Managers.save:queue_save()
+		end
+	end
+end
+
+InventoryView.is_item_stats_toggled = function (self)
+	return self._item_stats_presentation_enabled
 end
 
 return InventoryView

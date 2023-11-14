@@ -662,14 +662,16 @@ weapon_template.actions = {
 		}
 	},
 	action_reload = {
-		kind = "reload_state",
-		start_input = "reload",
-		sprint_requires_press_to_interrupt = true,
 		stop_alternate_fire = true,
+		start_input = "reload",
+		kind = "reload_state",
+		sprint_requires_press_to_interrupt = true,
 		abort_sprint = true,
-		crosshair_type = "none",
 		allowed_during_sprint = true,
 		total_time = 9.4,
+		crosshair = {
+			crosshair_type = "none"
+		},
 		allowed_chain_actions = {
 			combat_ability = {
 				action_name = "combat_ability"
@@ -691,11 +693,12 @@ weapon_template.actions = {
 		}
 	},
 	action_overheat_explode = {
-		anim_event = "charge_explode",
+		death_on_explosion = true,
+		overload_type = "plasma",
 		anim_end_event = "charge_explode_finished",
 		kind = "overload_explosion",
 		first_person_shake_anim = "shake_medium",
-		death_on_explosion = true,
+		anim_event = "charge_explode",
 		total_time = 3,
 		timeline_anims = {
 			[0.933] = {
@@ -722,10 +725,12 @@ weapon_template.actions = {
 		start_input = "inspect_start",
 		anim_end_event = "inspect_end",
 		kind = "inspect",
-		crosshair_type = "inspect",
 		anim_event = "inspect_start",
 		stop_input = "inspect_stop",
-		total_time = math.huge
+		total_time = math.huge,
+		crosshair = {
+			crosshair_type = "inspect"
+		}
 	}
 }
 weapon_template.base_stats = {
@@ -909,7 +914,9 @@ weapon_template.fx_sources = {
 	_muzzle = "fx_muzzle",
 	_mag_well = "fx_reload"
 }
-weapon_template.crosshair_type = "bfg"
+weapon_template.crosshair = {
+	crosshair_type = "bfg"
+}
 weapon_template.hit_marker_type = "center"
 weapon_template.overheat_configuration = {
 	auto_vent_delay = 1,

@@ -254,10 +254,12 @@ weapon_template.actions = {
 		}
 	},
 	action_zoom = {
-		crosshair_type = "ironsight",
 		start_input = "zoom",
 		kind = "aim",
 		total_time = 0.3,
+		crosshair = {
+			crosshair_type = "ironsight"
+		},
 		allowed_chain_actions = {
 			combat_ability = {
 				action_name = "combat_ability"
@@ -287,10 +289,12 @@ weapon_template.actions = {
 		}
 	},
 	action_unzoom = {
-		crosshair_type = "projectile_drop",
 		start_input = "zoom_release",
 		kind = "unaim",
 		total_time = 0.2,
+		crosshair = {
+			crosshair_type = "projectile_drop"
+		},
 		allowed_chain_actions = {
 			combat_ability = {
 				action_name = "combat_ability"
@@ -325,10 +329,12 @@ weapon_template.actions = {
 		kind = "shoot_projectile",
 		weapon_handling_template = "immediate_single_shot",
 		throw_type = "shoot",
-		crosshair_type = "ironsight",
 		spawn_at_time = 0,
 		uninterruptible = true,
 		total_time = 0.75,
+		crosshair = {
+			crosshair_type = "ironsight"
+		},
 		allowed_chain_actions = {
 			combat_ability = {
 				action_name = "combat_ability"
@@ -387,14 +393,16 @@ weapon_template.actions = {
 		}
 	},
 	action_reload = {
-		kind = "reload_state",
-		hold_combo = true,
-		weapon_handling_template = "time_scale_1",
-		stop_alternate_fire = true,
 		start_input = "reload",
-		crosshair_type = "projectile_drop",
+		hold_combo = true,
+		kind = "reload_state",
+		stop_alternate_fire = true,
+		weapon_handling_template = "time_scale_1",
 		uninterruptible = true,
 		total_time = 2.333,
+		crosshair = {
+			crosshair_type = "projectile_drop"
+		},
 		reload_settings = {
 			refill_amount = 1
 		},
@@ -465,12 +473,11 @@ weapon_template.actions = {
 		damage_window_start = 0.5333333333333333,
 		hit_armor_anim = "attack_hit_shield",
 		start_input = "bash",
-		kind = "sweep",
+		range_mod = 1.15,
 		sprint_requires_press_to_interrupt = true,
 		first_person_hit_anim = "hit_left_shake",
 		first_person_hit_stop_anim = "attack_hit",
-		crosshair_type = "dot",
-		range_mod = 1.15,
+		kind = "sweep",
 		allowed_during_sprint = true,
 		allow_conditional_chain = true,
 		damage_window_end = 0.7333333333333333,
@@ -481,6 +488,9 @@ weapon_template.actions = {
 		anim_event = "attack_bash",
 		prevent_sprint = true,
 		total_time = 1.2,
+		crosshair = {
+			crosshair_type = "dot"
+		},
 		action_movement_curve = {
 			{
 				modifier = 0.3,
@@ -568,21 +578,23 @@ weapon_template.actions = {
 	action_bash_right = {
 		damage_window_start = 0.6,
 		hit_armor_anim = "attack_hit_shield",
-		weapon_handling_template = "time_scale_1_1",
+		range_mod = 1.15,
 		kind = "sweep",
 		first_person_hit_anim = "hit_right_shake",
-		first_person_hit_stop_anim = "attack_hit",
-		crosshair_type = "dot",
-		allowed_during_sprint = true,
-		range_mod = 1.15,
-		damage_window_end = 0.8,
 		sprint_requires_press_to_interrupt = true,
+		allowed_during_sprint = true,
+		first_person_hit_stop_anim = "attack_hit",
+		damage_window_end = 0.8,
+		weapon_handling_template = "time_scale_1_1",
 		attack_direction_override = "right",
 		abort_sprint = true,
 		uninterruptible = true,
 		anim_event = "attack_bash_right",
 		prevent_sprint = true,
 		total_time = 1.2,
+		crosshair = {
+			crosshair_type = "dot"
+		},
 		action_movement_curve = {
 			{
 				modifier = 0.3,
@@ -673,10 +685,12 @@ weapon_template.actions = {
 		start_input = "inspect_start",
 		anim_end_event = "inspect_end",
 		kind = "inspect",
-		crosshair_type = "inspect",
 		anim_event = "inspect_start",
 		stop_input = "inspect_stop",
-		total_time = math.huge
+		total_time = math.huge,
+		crosshair = {
+			crosshair_type = "inspect"
+		}
 	}
 }
 
@@ -687,10 +701,12 @@ weapon_template.anim_state_machine_1p = "content/characters/player/ogryn/first_p
 weapon_template.alternate_fire_settings = {
 	sway_template = "default_thumper_killshot",
 	stop_anim_event = "to_unaim_braced",
-	crosshair_type = "ironsight",
 	spread_template = "thumper_aim_demolition",
 	toughness_template = "killshot_zoomed",
 	start_anim_event = "to_braced",
+	crosshair = {
+		crosshair_type = "ironsight"
+	},
 	camera = {
 		custom_vertical_fov = 55,
 		vertical_fov = 50,
@@ -760,7 +776,9 @@ weapon_template.fx_sources = {
 	_muzzle = "fx_muzzle",
 	_mag_well = "fx_reload"
 }
-weapon_template.crosshair_type = "projectile_drop"
+weapon_template.crosshair = {
+	crosshair_type = "projectile_drop"
+}
 weapon_template.hit_marker_type = "center"
 weapon_template.keywords = {
 	"ranged",

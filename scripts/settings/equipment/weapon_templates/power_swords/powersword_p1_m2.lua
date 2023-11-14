@@ -1253,10 +1253,12 @@ weapon_template.actions = {
 		anim_end_event = "inspect_end",
 		kind = "inspect",
 		lock_view = true,
-		crosshair_type = "inspect",
 		anim_event = "inspect_start",
 		stop_input = "inspect_stop",
-		total_time = math.huge
+		total_time = math.huge,
+		crosshair = {
+			crosshair_type = "inspect"
+		}
 	}
 }
 
@@ -1288,7 +1290,9 @@ weapon_template.fx_sources = {
 	_sweep = "fx_sweep",
 	_special_active = "fx_blade"
 }
-weapon_template.crosshair_type = "dot"
+weapon_template.crosshair = {
+	crosshair_type = "dot"
+}
 weapon_template.hit_marker_type = "center"
 weapon_template.keywords = {
 	"melee",

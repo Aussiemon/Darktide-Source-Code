@@ -373,14 +373,26 @@ NodeBuilderViewBase._activate_layout_by_name = function (self, name)
 
 	local nodes = active_layout.nodes
 	local nodes_render_order_list = {}
+	local lowest_node_height = math.huge
+	local highest_node_height = 0
 
 	for i = 1, #nodes do
 		local node = nodes[i]
 		self._node_widgets[#self._node_widgets + 1] = self:_create_node_widget(node)
 		nodes_render_order_list[i] = node
+
+		if node.y < lowest_node_height then
+			lowest_node_height = node.y
+		end
+
+		if highest_node_height < node.y then
+			highest_node_height = node.y
+		end
 	end
 
 	self._nodes_render_order_list = nodes_render_order_list
+	self._lowest_node_height = lowest_node_height
+	self._highest_node_height = highest_node_height
 
 	self:_refresh_all_nodes()
 	self:apply_active_background_size()
@@ -1009,7 +1021,6 @@ NodeBuilderViewBase._remove_node_point_on_widget = function (self, widget)
 end
 
 NodeBuilderViewBase._set_zoom = function (self, zoom)
-	local previous_zoom = self._current_zoom
 	self._current_zoom = math.clamp(zoom, 0.25, 1)
 
 	self:_force_update_scenegraph()
@@ -1061,6 +1072,10 @@ NodeBuilderViewBase._allowed_node_input = function (self)
 	return hovering_input_surface or not self._using_cursor_navigation
 end
 
+NodeBuilderViewBase._can_drag_background = function (self)
+	return not self._hovered_node_widget
+end
+
 local _temp_cursor_drag_start_position = {}
 
 NodeBuilderViewBase._handle_input = function (self, input_service, dt, t)
@@ -1081,7 +1096,7 @@ NodeBuilderViewBase._handle_input = function (self, input_service, dt, t)
 	local allowed_node_input = self:_allowed_node_input()
 	local input_handled = false
 	local dragging_background = false
-	local is_background_drag_allowed = not self._hovered_node_widget
+	local is_background_drag_allowed = self:_can_drag_background()
 
 	if is_background_drag_allowed and allowed_node_input then
 		local layout_background_widget = widgets_by_name.layout_background

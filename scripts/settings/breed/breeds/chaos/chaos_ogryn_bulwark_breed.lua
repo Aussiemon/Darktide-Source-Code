@@ -36,8 +36,8 @@ local breed_data = {
 	broadphase_radius = 1,
 	activate_slot_system_on_spawn = true,
 	stagger_resistance = 1,
-	half_extent_forward = 0.5,
 	smite_stagger_immunity = true,
+	half_extent_forward = 0.5,
 	half_extent_right = 0.5,
 	use_avoidance = true,
 	spawn_inventory_slot = "slot_shield",
@@ -82,18 +82,6 @@ local breed_data = {
 		[stagger_types.shield_block] = 0.4166666666666667,
 		[stagger_types.shield_heavy_block] = 3.076923076923077,
 		[stagger_types.shield_broken] = 3.8461538461538463
-	},
-	stagger_immune_times = {
-		[stagger_types.light] = 1.75,
-		[stagger_types.medium] = 2,
-		[stagger_types.heavy] = 3,
-		[stagger_types.explosion] = 3,
-		[stagger_types.light_ranged] = 1.5,
-		[stagger_types.killshot] = 1.5,
-		[stagger_types.shield_block] = 1.5,
-		[stagger_types.shield_heavy_block] = 1,
-		[stagger_types.shield_broken] = 1.5,
-		[stagger_types.sticky] = 0.25
 	},
 	stagger_thresholds = {
 		[stagger_types.light] = 20,
@@ -452,6 +440,7 @@ local breed_data = {
 			[hit_zone_names.lower_right_leg] = 0.5
 		}
 	},
+	outline_config = {},
 	blackboard_component_config = BreedBlackboardComponentTemplates.melee_shield_patroller
 }
 

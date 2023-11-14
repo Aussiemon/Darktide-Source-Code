@@ -47,10 +47,6 @@ local power_level_settings = {
 		[armor_types.void_shield] = {
 			max = 20,
 			min = 0
-		},
-		[armor_types.prop_armor] = {
-			max = 20,
-			min = 0
 		}
 	},
 	stagger_strength_output = {
@@ -85,10 +81,6 @@ local power_level_settings = {
 		[armor_types.void_shield] = {
 			max = 20,
 			min = 0
-		},
-		[armor_types.prop_armor] = {
-			max = 20,
-			min = 0
 		}
 	},
 	cleave_output = {
@@ -104,8 +96,7 @@ local power_level_settings = {
 			[armor_types.berserker] = 0.75,
 			[armor_types.super_armor] = 0,
 			[armor_types.disgustingly_resilient] = 0.8,
-			[armor_types.void_shield] = 0.8,
-			[armor_types.prop_armor] = 0.5
+			[armor_types.void_shield] = 0.8
 		},
 		impact = {
 			[armor_types.unarmored] = 1,
@@ -115,8 +106,7 @@ local power_level_settings = {
 			[armor_types.berserker] = 0.75,
 			[armor_types.super_armor] = 0.5,
 			[armor_types.disgustingly_resilient] = 0.8,
-			[armor_types.void_shield] = 0.8,
-			[armor_types.prop_armor] = 0.5
+			[armor_types.void_shield] = 0.8
 		}
 	},
 	default_power_distribution = {
@@ -144,8 +134,7 @@ local power_level_settings = {
 		[armor_types.berserker] = 0.5,
 		[armor_types.super_armor] = 0.3,
 		[armor_types.disgustingly_resilient] = 0.6,
-		[armor_types.void_shield] = 0.6,
-		[armor_types.prop_armor] = 0.6
+		[armor_types.void_shield] = 0.6
 	},
 	default_finesse_boost_amount = {
 		[armor_types.unarmored] = 0.5,
@@ -155,8 +144,7 @@ local power_level_settings = {
 		[armor_types.berserker] = 0.5,
 		[armor_types.super_armor] = 0.5,
 		[armor_types.disgustingly_resilient] = 0.5,
-		[armor_types.void_shield] = 0.5,
-		[armor_types.prop_armor] = 0.5
+		[armor_types.void_shield] = 0.5
 	},
 	ninjafencer_finesse_boost_amount = {
 		[armor_types.unarmored] = 0.75,
@@ -166,8 +154,7 @@ local power_level_settings = {
 		[armor_types.berserker] = 0.75,
 		[armor_types.super_armor] = 0.75,
 		[armor_types.disgustingly_resilient] = 0.75,
-		[armor_types.void_shield] = 0.75,
-		[armor_types.prop_armor] = 0.75
+		[armor_types.void_shield] = 0.75
 	},
 	smiter_finesse_boost_amount = {
 		[armor_types.unarmored] = 0.1,
@@ -177,8 +164,7 @@ local power_level_settings = {
 		[armor_types.berserker] = 0.1,
 		[armor_types.super_armor] = 0.1,
 		[armor_types.disgustingly_resilient] = 0.5,
-		[armor_types.void_shield] = 0.5,
-		[armor_types.prop_armor] = 0.5
+		[armor_types.void_shield] = 0.5
 	},
 	default_finesse_boost_no_base_damage_amount = {
 		[armor_types.unarmored] = 0,
@@ -188,8 +174,7 @@ local power_level_settings = {
 		[armor_types.berserker] = 0,
 		[armor_types.super_armor] = 0.25,
 		[armor_types.disgustingly_resilient] = 0,
-		[armor_types.void_shield] = 0.5,
-		[armor_types.prop_armor] = 0.5
+		[armor_types.void_shield] = 0.5
 	},
 	default_crit_boost_amount = 0.5,
 	default_boost_curve_multiplier = 0.5,
@@ -201,8 +186,7 @@ local power_level_settings = {
 		[armor_types.berserker] = armor_types.unarmored,
 		[armor_types.super_armor] = armor_types.armored,
 		[armor_types.disgustingly_resilient] = armor_types.unarmored,
-		[armor_types.void_shield] = armor_types.unarmored,
-		[armor_types.prop_armor] = armor_types.unarmored
+		[armor_types.void_shield] = armor_types.unarmored
 	},
 	finesse_min_damage_multiplier = 0.2
 }

@@ -6,6 +6,7 @@ local templates = {
 local basic_chaos_daemonhost_template = {
 	slots = {
 		slot_body = {
+			use_outline = true,
 			items = {
 				"content/items/characters/minions/chaos_daemonhost_witch/attachments_base/body"
 			}

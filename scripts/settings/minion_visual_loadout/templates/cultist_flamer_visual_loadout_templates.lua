@@ -6,22 +6,26 @@ local templates = {
 local basic_cultist_flamer_template = {
 	slots = {
 		slot_lowerbody = {
+			use_outline = true,
 			items = {
 				"content/items/characters/minions/chaos_cultists/attachments_base/lowerbody_a"
 			}
 		},
 		slot_head = {
+			use_outline = true,
 			items = {
 				"content/items/characters/minions/chaos_cultists/attachments_gear/special_flamethrower_mask",
 				"content/items/characters/minions/generic_items/empty_minion_item"
 			}
 		},
 		slot_variation_gear = {
+			use_outline = true,
 			items = {
 				"content/items/characters/minions/chaos_cultists/attachments_gear/special_flamethrower"
 			}
 		},
 		slot_ranged_weapon = {
+			use_outline = true,
 			drop_on_death = true,
 			is_weapon = true,
 			is_ranged_weapon = true,

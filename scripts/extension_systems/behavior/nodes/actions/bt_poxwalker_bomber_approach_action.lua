@@ -86,16 +86,20 @@ BtPoxwalkerBomberApproachAction.run = function (self, unit, breed, blackboard, s
 		local unit_data_extension = ScriptUnit.has_extension(target_unit, "unit_data_system")
 
 		if unit_data_extension then
-			local action_push_component = unit_data_extension:read_component("action_push")
-			local target_is_pushing = action_push_component and action_push_component.has_pushed
+			local player = Managers.state.player_unit_spawn:owner(target_unit)
 
-			if not scratchpad.extra_push_applied and target_is_pushing and Vector3.distance(POSITION_LOOKUP[unit], POSITION_LOOKUP[target_unit]) < 5 then
-				local damage_profile = action_data.push_enemies_damage_profile
-				local power_level = action_data.push_enemies_power_level
+			if player then
+				local action_push_component = unit_data_extension:read_component("action_push")
+				local target_is_pushing = action_push_component and action_push_component.has_pushed
 
-				Attack.execute(unit, damage_profile, "power_level", power_level, "attacking_unit", target_unit, "attack_direction", Vector3.normalize(POSITION_LOOKUP[unit] - POSITION_LOOKUP[target_unit]), "hit_zone_name", "torso")
+				if not scratchpad.extra_push_applied and target_is_pushing and Vector3.distance(POSITION_LOOKUP[unit], POSITION_LOOKUP[target_unit]) < 5 then
+					local damage_profile = action_data.push_enemies_damage_profile
+					local power_level = action_data.push_enemies_power_level
 
-				scratchpad.extra_push_applied = true
+					Attack.execute(unit, damage_profile, "power_level", power_level, "attacking_unit", target_unit, "attack_direction", Vector3.normalize(POSITION_LOOKUP[unit] - POSITION_LOOKUP[target_unit]), "hit_zone_name", "torso")
+
+					scratchpad.extra_push_applied = true
+				end
 			end
 		end
 

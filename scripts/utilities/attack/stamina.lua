@@ -13,13 +13,16 @@ Stamina.drain = function (unit, amount, t)
 	local stamina_write_component = unit_data_ext:write_component("stamina")
 	local archetype = unit_data_ext:archetype()
 	local base_stamina_template = archetype.stamina
+	local buff_extension = ScriptUnit.has_extension(unit, "buff_system")
+	local stat_buffs = buff_extension and buff_extension:stat_buffs()
+	local stamina_cost_multiplier = stat_buffs and stat_buffs.stamina_cost_multiplier or 1
+	amount = amount * stamina_cost_multiplier
 	local current_value, max_value = Stamina.current_and_max_value(unit, stamina_write_component, base_stamina_template)
 	local stamina_depleted = current_value <= amount
 	local new_value = math.clamp(math.max(0, current_value - amount), 0, max_value)
 	local new_fraction = new_value / max_value
 	stamina_write_component.last_drain_time = t
 	stamina_write_component.current_fraction = new_fraction
-	local buff_extension = ScriptUnit.has_extension(unit, "buff_system")
 
 	if buff_extension and stamina_depleted then
 		local param_table = buff_extension:request_proc_event_param_table()
@@ -32,15 +35,18 @@ Stamina.drain = function (unit, amount, t)
 	return max_value * new_fraction, stamina_depleted
 end
 
-Stamina.drain_pecentage = function (unit, ammoun_percentage, t)
+Stamina.drain_pecentage = function (unit, amount_percentage, t)
 	local unit_data_ext = ScriptUnit.extension(unit, "unit_data_system")
 	local stamina_write_component = unit_data_ext:write_component("stamina")
+	local buff_extension = ScriptUnit.has_extension(unit, "buff_system")
+	local stat_buffs = buff_extension and buff_extension:stat_buffs()
+	local stamina_cost_multiplier = stat_buffs and stat_buffs.stamina_cost_multiplier or 1
+	amount_percentage = amount_percentage * stamina_cost_multiplier
 	local current_fraction = stamina_write_component.current_fraction
-	local stamina_depleted = current_fraction <= ammoun_percentage
-	local new_fraction = math.clamp01(math.max(0, current_fraction - ammoun_percentage))
+	local stamina_depleted = current_fraction <= amount_percentage
+	local new_fraction = math.clamp01(math.max(0, current_fraction - amount_percentage))
 	stamina_write_component.last_drain_time = t
 	stamina_write_component.current_fraction = new_fraction
-	local buff_extension = ScriptUnit.has_extension(unit, "buff_system")
 
 	if buff_extension and stamina_depleted then
 		local param_table = buff_extension:request_proc_event_param_table()
@@ -70,7 +76,7 @@ Stamina.add_stamina_percent = function (unit, percent_amount)
 	local archetype = unit_data_ext:archetype()
 	local base_stamina_template = archetype.stamina
 	local current_value, max_value = Stamina.current_and_max_value(unit, stamina_write_component, base_stamina_template)
-	local amount = math.ceil(percent_amount * max_value)
+	local amount = percent_amount * max_value
 	local new_value = math.clamp(math.max(0, current_value + amount), 0, max_value)
 	local new_fraction = new_value / max_value
 	stamina_write_component.current_fraction = new_fraction

@@ -57,10 +57,6 @@ weapon_template.action_none_screen_ui_validation = function (wielded_slot_id, it
 	return not current_action_name or current_action_name == "none"
 end
 
-weapon_template.action_none_gift_screen_ui_validation = function (wielded_slot_id, item, current_action, current_action_name, player)
-	return not current_action_name or current_action_name == "none"
-end
-
 weapon_template.action_place_screen_ui_validation = function (wielded_slot_id, item, current_action, current_action_name, player)
 	return current_action_name == "action_place"
 end

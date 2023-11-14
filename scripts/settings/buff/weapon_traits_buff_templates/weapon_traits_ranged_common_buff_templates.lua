@@ -367,8 +367,7 @@ local templates = {
 			local is_below_threshold = health_percentage <= health_threshold
 
 			return is_below_threshold
-		end,
-		conditional_lerped_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded
+		end
 	},
 	weapon_trait_ranged_common_equip_last_wound_grant_damage_reduction_buff = {
 		predicted = false,

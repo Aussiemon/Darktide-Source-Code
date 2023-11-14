@@ -13,8 +13,8 @@ HudElementBlocking.init = function (self, parent, draw_layer, start_scale)
 	self._shield_widget = self:_create_widget("shield", Definitions.shield_definition)
 end
 
-HudElementBlocking.destroy = function (self)
-	HudElementBlocking.super.destroy(self)
+HudElementBlocking.destroy = function (self, ui_renderer)
+	HudElementBlocking.super.destroy(self, ui_renderer)
 end
 
 HudElementBlocking._add_shield = function (self)

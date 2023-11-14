@@ -348,9 +348,12 @@ local function _remove_live_item_icon_cb_func(widget, ui_renderer)
 	local material_values = icon_style.material_values
 	material_values.texture_icon = nil
 	material_values.use_placeholder_texture = 1
+	material_values.use_render_target = 0
 
-	UIWidget.set_visible(widget, ui_renderer, false)
-	UIWidget.set_visible(widget, ui_renderer, true)
+	if widget.content.visible then
+		UIWidget.set_visible(widget, ui_renderer, false)
+		UIWidget.set_visible(widget, ui_renderer, true)
+	end
 end
 
 local function _reward_load_icon_func(parent, widget, config, optional_icon_size)

@@ -535,17 +535,40 @@ Buff.update_stat_buffs = function (self, current_stat_buffs, t)
 	if lerped_stat_buffs then
 		local start_time = self._start_time
 		local duration = template.duration
+		local template_override_data = self._template_override_data
+		local lerped_stat_buffs_overrides = template_override_data and template_override_data.lerped_stat_buffs
+		lerped_stat_buffs = lerped_stat_buffs_overrides or lerped_stat_buffs
+		local lerp_t = template.lerp_t_func and template.lerp_t_func(t, start_time, duration, self._template_data, self._template_context) or self._template_context.buff_lerp_value
+
+		table.clear(self._lerped_stat_buffs)
+
+		for key, data in pairs(lerped_stat_buffs) do
+			local min = data.min
+			local max = data.max
+			local lerp_func = data.lerp_value_func or math.lerp
+			local lerped_value = lerp_func(min, max, lerp_t)
+			self._lerped_stat_buffs[key] = lerped_value
+		end
+
+		self:_calculate_stat_buffs(current_stat_buffs, self._lerped_stat_buffs)
+	end
+
+	local conditional_lerped_stat_buffs = template.conditional_lerped_stat_buffs
+
+	if conditional_lerped_stat_buffs then
+		local start_time = self._start_time
+		local duration = template.duration
 		local conditional_lerped_stat_buffs_func = template.conditional_lerped_stat_buffs_func
 
 		if not conditional_lerped_stat_buffs_func or conditional_lerped_stat_buffs_func(self._template_data, self._template_context) then
 			local template_override_data = self._template_override_data
-			local lerped_stat_buffs_overrides = template_override_data and template_override_data.lerped_stat_buffs
-			lerped_stat_buffs = lerped_stat_buffs_overrides or lerped_stat_buffs
+			local lerped_stat_buffs_overrides = template_override_data and template_override_data.conditional_lerped_stat_buffs
+			conditional_lerped_stat_buffs = lerped_stat_buffs_overrides or conditional_lerped_stat_buffs
 			local lerp_t = template.lerp_t_func and template.lerp_t_func(t, start_time, duration, self._template_data, self._template_context) or self._template_context.buff_lerp_value
 
 			table.clear(self._lerped_stat_buffs)
 
-			for key, data in pairs(lerped_stat_buffs) do
+			for key, data in pairs(conditional_lerped_stat_buffs) do
 				local min = data.min
 				local max = data.max
 				local lerp_func = data.lerp_value_func or math.lerp
@@ -588,7 +611,7 @@ Buff.destroy = function (self)
 	local stop_function = template.stop_func
 
 	if stop_function then
-		stop_function(self._template_data, self._template_context)
+		stop_function(self._template_data, self._template_context, true)
 	end
 
 	table.clear(self._template_data)
@@ -625,7 +648,7 @@ Buff.get_hud_data = function (self)
 	return_table.hud_priority = self:hud_priority()
 	local stack_count = self:visual_stack_count()
 	return_table.stack_count = stack_count
-	return_table.show_stack_count = self:_hud_show_stack_count() or stack_count > 2
+	return_table.show_stack_count = self:_hud_show_stack_count() or stack_count > 1
 	return_table.is_negative = self:is_negative()
 	return_table.force_negative_frame = self:_force_negative_frame()
 	return_table.duration_progress = self:duration_progress()

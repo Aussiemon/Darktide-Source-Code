@@ -659,44 +659,7 @@ end
 InboxView._setup_item_stats = function (self, item)
 	table.clear(self._stats_animation_progress)
 
-	local context = {
-		{
-			title = "loc_weapon_stats_title_damage",
-			progress = math.random_range(0, 1)
-		},
-		{
-			title = "loc_weapon_stats_title_rate_of_fire",
-			progress = math.random_range(0, 1)
-		},
-		{
-			title = "loc_weapon_stats_title_handling",
-			progress = math.random_range(0, 1)
-		},
-		{
-			title = "loc_weapon_stats_title_range",
-			progress = math.random_range(0, 1)
-		},
-		{
-			title = "loc_weapon_stats_title_reload_speed",
-			progress = math.random_range(0, 1)
-		},
-		{
-			title = "loc_weapon_stats_title_area_damage",
-			progress = math.random_range(0, 1)
-		},
-		{
-			title = "loc_weapon_stats_title_mobility",
-			progress = math.random_range(0, 1)
-		},
-		{
-			title = "loc_weapon_stats_title_suppress",
-			progress = math.random_range(0, 1)
-		},
-		{
-			title = "loc_weapon_stats_title_ammo",
-			progress = math.random_range(0, 1)
-		}
-	}
+	local context = {}
 	local widgets_by_name = self._widgets_by_name
 	local anim_duration = 1
 

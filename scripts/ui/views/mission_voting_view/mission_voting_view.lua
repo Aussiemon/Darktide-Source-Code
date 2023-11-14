@@ -608,10 +608,13 @@ MissionVotingView._setup_mission_info_icons = function (self, mission_data)
 
 			if circumstance_template then
 				local circumstance_ui_settings = circumstance_template.ui
-				mission_icon_settings[#mission_icon_settings + 1] = {
-					icon = circumstance_ui_settings.icon,
-					color = Color.golden_rod(255, true)
-				}
+
+				if circumstance_ui_settings then
+					mission_icon_settings[#mission_icon_settings + 1] = {
+						icon = circumstance_ui_settings.icon,
+						color = Color.golden_rod(255, true)
+					}
+				end
 			end
 		end
 	end
@@ -681,6 +684,7 @@ end
 MissionVotingView._set_difficulty_icons = function (self, style, difficulty_value)
 	local difficulty_icon_style = style.difficulty_icon
 	difficulty_icon_style.amount = difficulty_value
+	difficulty_icon_style.color = DangerSettings.by_index[difficulty_value] and DangerSettings.by_index[difficulty_value].color or DangerSettings.by_index[1].color
 end
 
 MissionVotingView._set_circumstance = function (self, mission_data)
@@ -694,25 +698,34 @@ MissionVotingView._set_circumstance = function (self, mission_data)
 		self:_set_scenegraph_size("mission_info_panel", nil, mission_info_height)
 	else
 		local circumstance_template = CircumstanceTemplates[circumstance_id]
-		local content = circumstance_widget.content
-		content.text = self:_localize(circumstance_template.ui.display_name)
-		content.icon = circumstance_template.ui.icon
-		local text_width = self:_calc_text_size(circumstance_widget, "text")
+		local circumstance_template_ui_settings = circumstance_template.ui
 
-		self:_set_scenegraph_size("mission_circumstance", text_width + ViewStyles.mission_info_circumstance.icon.size[1])
+		if circumstance_template_ui_settings then
+			local content = circumstance_widget.content
+			content.text = self:_localize(circumstance_template_ui_settings.display_name)
+			content.icon = circumstance_template_ui_settings.icon
+			local text_width = self:_calc_text_size(circumstance_widget, "text")
 
-		local circumstance_height_addition = ViewStyles.circumstance_height_addition
-		local _, outer_panel_height = self:_scenegraph_size("outer_panel")
+			self:_set_scenegraph_size("mission_circumstance", text_width + ViewStyles.mission_info_circumstance.icon.size[1])
 
-		self:_set_scenegraph_size("outer_panel", nil, outer_panel_height + circumstance_height_addition)
+			local circumstance_height_addition = ViewStyles.circumstance_height_addition
+			local _, outer_panel_height = self:_scenegraph_size("outer_panel")
 
-		local _, inner_panel_height = self:_scenegraph_size("inner_panel")
+			self:_set_scenegraph_size("outer_panel", nil, outer_panel_height + circumstance_height_addition)
 
-		self:_set_scenegraph_size("inner_panel", nil, inner_panel_height + circumstance_height_addition)
+			local _, inner_panel_height = self:_scenegraph_size("inner_panel")
 
-		local _, body_panel_height = self:_scenegraph_size("body_panel")
+			self:_set_scenegraph_size("inner_panel", nil, inner_panel_height + circumstance_height_addition)
 
-		self:_set_scenegraph_size("body_panel", nil, body_panel_height + circumstance_height_addition)
+			local _, body_panel_height = self:_scenegraph_size("body_panel")
+
+			self:_set_scenegraph_size("body_panel", nil, body_panel_height + circumstance_height_addition)
+		else
+			circumstance_widget.visible = false
+			local _, mission_info_height = self:_scenegraph_size("mission_info")
+
+			self:_set_scenegraph_size("mission_info_panel", nil, mission_info_height)
+		end
 	end
 end
 

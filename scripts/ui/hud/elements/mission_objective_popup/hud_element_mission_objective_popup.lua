@@ -15,9 +15,9 @@ HudElementMissionObjectivePopup.init = function (self, parent, draw_layer, start
 	self:_register_events()
 end
 
-HudElementMissionObjectivePopup.destroy = function (self)
+HudElementMissionObjectivePopup.destroy = function (self, ui_renderer)
 	self:_unregister_events()
-	HudElementMissionObjectivePopup.super.destroy(self)
+	HudElementMissionObjectivePopup.super.destroy(self, ui_renderer)
 end
 
 HudElementMissionObjectivePopup.update = function (self, dt, t, ui_renderer, render_settings, input_service)

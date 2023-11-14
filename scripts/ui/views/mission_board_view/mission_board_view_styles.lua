@@ -1,6 +1,23 @@
 local ColorUtilities = require("scripts/utilities/ui/colors")
 local MissionBoardViewSettings = require("scripts/ui/views/mission_board_view/mission_board_view_settings")
+local DangerSettings = require("scripts/settings/difficulty/danger_settings")
 local MissionBoardViewStyles = {
+	difficulty_bar_change_function = function (content, style)
+		if content.is_locked then
+			ColorUtilities.color_copy(MissionBoardViewSettings.color_disabled, style.color, true)
+		else
+			local max_danger = 5
+			local danger_level = 1
+
+			if content.danger then
+				danger_level = math.clamp(content.danger, 1, max_danger)
+			end
+
+			local danger_color = DangerSettings.by_index[danger_level] and DangerSettings.by_index[danger_level].color or DangerSettings.by_index[1].color
+
+			ColorUtilities.color_copy(danger_color, style.color, true)
+		end
+	end,
 	mission_glow_change_function = function (content, style, animations, dt)
 		local color = style.color
 
@@ -22,42 +39,40 @@ local MissionBoardViewStyles = {
 		if content.is_locked then
 			ColorUtilities.color_copy(MissionBoardViewSettings.color_disabled, style.color, true)
 		end
+	end,
+	is_hover_with_locked_change_function = function (content, style)
+		local hotspot = content.hotspot
+		local is_selected = hotspot.is_selected
+		local is_selected_mission_board = hotspot.is_selected_mission_board
+		local is_focused = hotspot.is_focused
+		local is_hover = hotspot.is_hover
+		local disabled = hotspot.disabled
+		local default_color = style.default_color
+		local hover_color = style.hover_color
+		local selected_color = style.selected_color
+		local disabled_color = style.disabled_color
+		local color = nil
+
+		if disabled and disabled_color then
+			color = disabled_color
+		elseif (is_selected or is_focused or is_selected_mission_board) and selected_color then
+			color = selected_color
+		elseif is_hover and hover_color then
+			color = hover_color
+		elseif default_color then
+			color = default_color
+		end
+
+		if color then
+			ColorUtilities.color_copy(color, style.color)
+		end
+	end,
+	is_locked_change_function = function (content, style)
+		if content.is_locked then
+			ColorUtilities.color_copy(MissionBoardViewSettings.color_disabled, style.color, true)
+		end
 	end
 }
-
-MissionBoardViewStyles.is_hover_with_locked_change_function = function (content, style)
-	local hotspot = content.hotspot
-	local is_selected = hotspot.is_selected
-	local is_selected_mission_board = hotspot.is_selected_mission_board
-	local is_focused = hotspot.is_focused
-	local is_hover = hotspot.is_hover
-	local disabled = hotspot.disabled
-	local default_color = style.default_color
-	local hover_color = style.hover_color
-	local selected_color = style.selected_color
-	local disabled_color = style.disabled_color
-	local color = nil
-
-	if disabled and disabled_color then
-		color = disabled_color
-	elseif (is_selected or is_focused or is_selected_mission_board) and selected_color then
-		color = selected_color
-	elseif is_hover and hover_color then
-		color = hover_color
-	elseif default_color then
-		color = default_color
-	end
-
-	if color then
-		ColorUtilities.color_copy(color, style.color)
-	end
-end
-
-MissionBoardViewStyles.is_locked_change_function = function (content, style)
-	if content.is_locked then
-		ColorUtilities.color_copy(MissionBoardViewSettings.color_disabled, style.color, true)
-	end
-end
 
 local function _get_color_by_name(color_name, mission_type)
 	if not mission_type then
@@ -349,8 +364,8 @@ MissionBoardViewStyles.detail_widget_style = {
 	difficulty_bar_1 = {
 		vertical_alignment = "center",
 		horizontal_alignment = "center",
-		default_color = MissionBoardViewSettings.color_main,
-		color = MissionBoardViewSettings.color_main,
+		default_color = DangerSettings.by_index[1].color,
+		color = DangerSettings.by_index[1].color,
 		color_disabled = MissionBoardViewSettings.color_disabled,
 		size = _apply_difficulty_scale({
 			6,
@@ -365,8 +380,8 @@ MissionBoardViewStyles.detail_widget_style = {
 	difficulty_bar_2 = {
 		vertical_alignment = "center",
 		horizontal_alignment = "center",
-		default_color = MissionBoardViewSettings.color_main,
-		color = MissionBoardViewSettings.color_main,
+		default_color = DangerSettings.by_index[1].color,
+		color = DangerSettings.by_index[1].color,
 		color_disabled = MissionBoardViewSettings.color_disabled,
 		size = _apply_difficulty_scale({
 			6,
@@ -381,8 +396,8 @@ MissionBoardViewStyles.detail_widget_style = {
 	difficulty_bar_3 = {
 		vertical_alignment = "center",
 		horizontal_alignment = "center",
-		default_color = MissionBoardViewSettings.color_main,
-		color = MissionBoardViewSettings.color_main,
+		default_color = DangerSettings.by_index[1].color,
+		color = DangerSettings.by_index[1].color,
 		color_disabled = MissionBoardViewSettings.color_disabled,
 		size = _apply_difficulty_scale({
 			6,
@@ -397,8 +412,8 @@ MissionBoardViewStyles.detail_widget_style = {
 	difficulty_bar_4 = {
 		vertical_alignment = "center",
 		horizontal_alignment = "center",
-		default_color = MissionBoardViewSettings.color_main,
-		color = MissionBoardViewSettings.color_main,
+		default_color = DangerSettings.by_index[1].color,
+		color = DangerSettings.by_index[1].color,
 		color_disabled = MissionBoardViewSettings.color_disabled,
 		size = _apply_difficulty_scale({
 			6,
@@ -413,8 +428,8 @@ MissionBoardViewStyles.detail_widget_style = {
 	difficulty_bar_5 = {
 		vertical_alignment = "center",
 		horizontal_alignment = "center",
-		default_color = MissionBoardViewSettings.color_main,
-		color = MissionBoardViewSettings.color_main,
+		default_color = DangerSettings.by_index[1].color,
+		color = DangerSettings.by_index[1].color,
 		color_disabled = MissionBoardViewSettings.color_disabled,
 		size = _apply_difficulty_scale({
 			6,
@@ -1042,7 +1057,7 @@ MissionBoardViewStyles.mission_widget_style = {
 	difficulty_bar_1 = {
 		vertical_alignment = "center",
 		horizontal_alignment = "center",
-		color = MissionBoardViewSettings.color_main,
+		color = DangerSettings.by_index[1].color,
 		size = {
 			6,
 			16
@@ -1056,7 +1071,7 @@ MissionBoardViewStyles.mission_widget_style = {
 	difficulty_bar_2 = {
 		vertical_alignment = "center",
 		horizontal_alignment = "center",
-		color = MissionBoardViewSettings.color_main,
+		color = DangerSettings.by_index[1].color,
 		size = {
 			6,
 			16
@@ -1070,7 +1085,7 @@ MissionBoardViewStyles.mission_widget_style = {
 	difficulty_bar_3 = {
 		vertical_alignment = "center",
 		horizontal_alignment = "center",
-		color = MissionBoardViewSettings.color_main,
+		color = DangerSettings.by_index[1].color,
 		size = {
 			6,
 			16
@@ -1084,7 +1099,7 @@ MissionBoardViewStyles.mission_widget_style = {
 	difficulty_bar_4 = {
 		vertical_alignment = "center",
 		horizontal_alignment = "center",
-		color = MissionBoardViewSettings.color_main,
+		color = DangerSettings.by_index[1].color,
 		size = {
 			6,
 			16
@@ -1098,7 +1113,7 @@ MissionBoardViewStyles.mission_widget_style = {
 	difficulty_bar_5 = {
 		vertical_alignment = "center",
 		horizontal_alignment = "center",
-		color = MissionBoardViewSettings.color_main,
+		color = DangerSettings.by_index[1].color,
 		size = {
 			6,
 			16
@@ -1341,21 +1356,6 @@ MissionBoardViewStyles.mission_widget_style = {
 	}
 }
 MissionBoardViewStyles.difficulty_stepper_style = {
-	difficulty_bar_1 = {
-		color = MissionBoardViewSettings.color_main
-	},
-	difficulty_bar_2 = {
-		color = MissionBoardViewSettings.color_main
-	},
-	difficulty_bar_3 = {
-		color = MissionBoardViewSettings.color_main
-	},
-	difficulty_bar_4 = {
-		color = MissionBoardViewSettings.color_main
-	},
-	difficulty_bar_5 = {
-		color = MissionBoardViewSettings.color_main
-	},
 	danger = {
 		color = MissionBoardViewSettings.color_main
 	}
@@ -1416,7 +1416,7 @@ MissionBoardViewStyles.planet_widget_style_function = function (mission_type)
 	return {
 		title = {
 			font_type = "machine_medium",
-			font_size = 55,
+			font_size = 50,
 			drop_shadow = true,
 			text_color = color,
 			material = material_color
@@ -1521,7 +1521,7 @@ MissionBoardViewStyles.detail_widget_style_function = function (mission_type)
 		timer_bar = {
 			vertical_alignment = "center",
 			horizontal_alignment = "right",
-			color = _get_color_by_name("color_accent", mission_type),
+			color = _get_color_by_name("color_main", mission_type),
 			offset = {
 				-12,
 				0,
@@ -1546,7 +1546,7 @@ MissionBoardViewStyles.detail_widget_style_function = function (mission_type)
 				24
 			},
 			offset = {
-				7,
+				8,
 				8,
 				2
 			}
@@ -1574,7 +1574,7 @@ MissionBoardViewStyles.detail_widget_style_function = function (mission_type)
 		},
 		header_title = {
 			font_type = "proxima_nova_bold",
-			font_size = 28,
+			font_size = 24,
 			drop_shadow = true,
 			text_vertical_alignment = "center",
 			text_color = _get_color_by_name("color_text_title", mission_type),
@@ -1589,10 +1589,10 @@ MissionBoardViewStyles.detail_widget_style_function = function (mission_type)
 			font_size = 18,
 			drop_shadow = true,
 			text_vertical_alignment = "center",
-			text_color = _get_color_by_name("color_text_body", mission_type),
+			text_color = _get_color_by_name("color_text_sub_header", mission_type),
 			offset = {
 				20,
-				16,
+				14,
 				3
 			}
 		},
@@ -1604,7 +1604,7 @@ MissionBoardViewStyles.detail_widget_style_function = function (mission_type)
 			text_color = _get_color_by_name("color_text_body", mission_type),
 			offset = {
 				20,
-				10,
+				40,
 				2
 			}
 		},
@@ -1624,13 +1624,13 @@ MissionBoardViewStyles.detail_widget_style_function = function (mission_type)
 		difficulty_icon = {
 			vertical_alignment = "center",
 			horizontal_alignment = "center",
-			color = _get_color_by_name("color_main", mission_type),
+			color = _get_color_by_name("color_main_light", mission_type),
 			size = _apply_difficulty_scale({
-				23,
-				23
+				18,
+				18
 			}),
 			offset = _apply_difficulty_scale({
-				-20,
+				-16,
 				0,
 				3
 			})
@@ -1638,15 +1638,15 @@ MissionBoardViewStyles.detail_widget_style_function = function (mission_type)
 		difficulty_bar_1 = {
 			vertical_alignment = "center",
 			horizontal_alignment = "center",
-			color = _get_color_by_name("color_main", mission_type),
-			default_color = _get_color_by_name("color_main", mission_type),
+			color = DangerSettings.by_index[1].color,
+			default_color = DangerSettings.by_index[1].color,
 			color_disabled = _get_color_by_name("color_disabled", mission_type),
 			size = _apply_difficulty_scale({
-				6,
-				16
+				5,
+				14
 			}),
 			offset = _apply_difficulty_scale({
-				-1,
+				-2,
 				0,
 				3
 			})
@@ -1654,15 +1654,15 @@ MissionBoardViewStyles.detail_widget_style_function = function (mission_type)
 		difficulty_bar_2 = {
 			vertical_alignment = "center",
 			horizontal_alignment = "center",
-			color = _get_color_by_name("color_main", mission_type),
-			default_color = _get_color_by_name("color_main", mission_type),
+			color = DangerSettings.by_index[1].color,
+			default_color = DangerSettings.by_index[1].color,
 			color_disabled = _get_color_by_name("color_disabled", mission_type),
 			size = _apply_difficulty_scale({
-				6,
-				16
+				5,
+				14
 			}),
 			offset = _apply_difficulty_scale({
-				8,
+				6,
 				0,
 				3
 			})
@@ -1670,15 +1670,15 @@ MissionBoardViewStyles.detail_widget_style_function = function (mission_type)
 		difficulty_bar_3 = {
 			vertical_alignment = "center",
 			horizontal_alignment = "center",
-			color = _get_color_by_name("color_main", mission_type),
-			default_color = _get_color_by_name("color_main", mission_type),
+			color = DangerSettings.by_index[1].color,
+			default_color = DangerSettings.by_index[1].color,
 			color_disabled = _get_color_by_name("color_disabled", mission_type),
 			size = _apply_difficulty_scale({
-				6,
-				16
+				5,
+				14
 			}),
 			offset = _apply_difficulty_scale({
-				17,
+				14,
 				0,
 				3
 			})
@@ -1686,15 +1686,15 @@ MissionBoardViewStyles.detail_widget_style_function = function (mission_type)
 		difficulty_bar_4 = {
 			vertical_alignment = "center",
 			horizontal_alignment = "center",
-			color = _get_color_by_name("color_main", mission_type),
-			default_color = _get_color_by_name("color_main", mission_type),
+			color = DangerSettings.by_index[1].color,
+			default_color = DangerSettings.by_index[1].color,
 			color_disabled = _get_color_by_name("color_disabled", mission_type),
 			size = _apply_difficulty_scale({
-				6,
-				16
+				5,
+				14
 			}),
 			offset = _apply_difficulty_scale({
-				26,
+				22,
 				0,
 				3
 			})
@@ -1702,15 +1702,15 @@ MissionBoardViewStyles.detail_widget_style_function = function (mission_type)
 		difficulty_bar_5 = {
 			vertical_alignment = "center",
 			horizontal_alignment = "center",
-			color = _get_color_by_name("color_main", mission_type),
-			default_color = _get_color_by_name("color_main", mission_type),
+			color = DangerSettings.by_index[1].color,
+			default_color = DangerSettings.by_index[1].color,
 			color_disabled = _get_color_by_name("color_disabled", mission_type),
 			size = _apply_difficulty_scale({
-				6,
-				16
+				5,
+				14
 			}),
 			offset = _apply_difficulty_scale({
-				35,
+				30,
 				0,
 				3
 			})
@@ -1745,7 +1745,7 @@ MissionBoardViewStyles.detail_widget_style_function = function (mission_type)
 		},
 		location_lock = {
 			font_type = "itc_novarese_bold",
-			font_size = 160,
+			font_size = 100,
 			drop_shadow = false,
 			text_vertical_alignment = "center",
 			text_horizontal_alignment = "center",
@@ -1859,7 +1859,7 @@ MissionBoardViewStyles.detail_widget_style_function = function (mission_type)
 				nil,
 				40
 			},
-			text_color = Color.terminal_text_header(255, true)
+			text_color = MissionBoardViewSettings.color_accent
 		}
 	}
 end
@@ -1884,7 +1884,7 @@ MissionBoardViewStyles.objective_widget_style_function = function (mission_type)
 			}
 		},
 		header_icon = {
-			color = _get_color_by_name("color_terminal_text_header", mission_type),
+			color = _get_color_by_name("color_main", mission_type),
 			offset = {
 				20,
 				16,
@@ -1898,10 +1898,10 @@ MissionBoardViewStyles.objective_widget_style_function = function (mission_type)
 		header_title = {
 			font_type = "proxima_nova_bold",
 			font_size = 16,
-			text_color = _get_color_by_name("color_text_body", mission_type),
+			text_color = _get_color_by_name("color_text_sub_header", mission_type),
 			offset = {
 				70,
-				13,
+				14,
 				3
 			},
 			size_addition = {
@@ -1915,7 +1915,7 @@ MissionBoardViewStyles.objective_widget_style_function = function (mission_type)
 			text_color = _get_color_by_name("color_text_title", mission_type),
 			offset = {
 				70,
-				33,
+				32,
 				4
 			},
 			size_addition = {
@@ -1952,7 +1952,7 @@ MissionBoardViewStyles.objective_widget_style_function = function (mission_type)
 		},
 		reward_background = {
 			color = {
-				175,
+				200,
 				0,
 				0,
 				0
@@ -1995,7 +1995,7 @@ MissionBoardViewStyles.objective_widget_style_function = function (mission_type)
 		},
 		reward_text = {
 			font_type = "proxima_nova_bold",
-			font_size = 22,
+			font_size = 20,
 			text_vertical_alignment = "center",
 			text_horizontal_alignment = "right",
 			text_color = _get_color_by_name("color_text_body", mission_type),
@@ -2171,7 +2171,12 @@ end
 MissionBoardViewStyles.info_box_widget_style_function = function (mission_type)
 	return {
 		background = {
-			color = _get_color_by_name("color_dark_opacity", mission_type)
+			color = {
+				150,
+				58,
+				15,
+				15
+			}
 		},
 		frame = {
 			scale_to_material = true,
@@ -2182,7 +2187,7 @@ MissionBoardViewStyles.info_box_widget_style_function = function (mission_type)
 				0
 			},
 			color_info = _get_color_by_name("color_accent", mission_type),
-			color_warning = _get_color_by_name("color_frame", mission_type),
+			color_warning = Color.ui_interaction_critical(255, true),
 			offset = {
 				0,
 				0,
@@ -2194,7 +2199,7 @@ MissionBoardViewStyles.info_box_widget_style_function = function (mission_type)
 			font_size = 18,
 			text_vertical_alignment = "center",
 			text_horizontal_alignment = "center",
-			text_color = _get_color_by_name("color_text_body", mission_type),
+			text_color = Color.ui_interaction_critical(255, true),
 			offset = {
 				0,
 				0,
@@ -2231,8 +2236,14 @@ MissionBoardViewStyles.mission_widget_style_function = function (mission_type)
 			color = _get_color_by_name("color_background", mission_type)
 		},
 		fluff_frame = {
-			vertical_alignment = "center",
 			horizontal_alignment = "center",
+			vertical_alignment = "center",
+			color = {
+				80,
+				113,
+				126,
+				103
+			},
 			size = {
 				160,
 				184
@@ -2274,7 +2285,7 @@ MissionBoardViewStyles.mission_widget_style_function = function (mission_type)
 			}
 		},
 		timer_bar = {
-			color = _get_color_by_name("color_accent", mission_type),
+			color = _get_color_by_name("color_main", mission_type),
 			offset = {
 				0,
 				0,
@@ -2292,7 +2303,7 @@ MissionBoardViewStyles.mission_widget_style_function = function (mission_type)
 			},
 			offset = {
 				-79,
-				-6,
+				-7,
 				2
 			}
 		},
@@ -2305,7 +2316,7 @@ MissionBoardViewStyles.mission_widget_style_function = function (mission_type)
 			text_color = _get_color_by_name("color_main", mission_type),
 			offset = {
 				-60,
-				-5,
+				-9,
 				2
 			}
 		},
@@ -2338,13 +2349,13 @@ MissionBoardViewStyles.mission_widget_style_function = function (mission_type)
 		difficulty_icon = {
 			vertical_alignment = "center",
 			horizontal_alignment = "center",
-			color = _get_color_by_name("color_main", mission_type),
+			color = _get_color_by_name("color_main_light", mission_type),
 			size = {
 				23,
 				23
 			},
 			offset = {
-				-26,
+				-25,
 				0,
 				3
 			}
@@ -2352,13 +2363,13 @@ MissionBoardViewStyles.mission_widget_style_function = function (mission_type)
 		difficulty_bar_1 = {
 			vertical_alignment = "center",
 			horizontal_alignment = "center",
-			color = _get_color_by_name("color_main", mission_type),
+			color = DangerSettings.by_index[1].color,
 			size = {
 				6,
 				16
 			},
 			offset = {
-				-5,
+				-7,
 				0,
 				3
 			}
@@ -2366,13 +2377,13 @@ MissionBoardViewStyles.mission_widget_style_function = function (mission_type)
 		difficulty_bar_2 = {
 			vertical_alignment = "center",
 			horizontal_alignment = "center",
-			color = _get_color_by_name("color_main", mission_type),
+			color = DangerSettings.by_index[1].color,
 			size = {
 				6,
 				16
 			},
 			offset = {
-				4,
+				2,
 				0,
 				3
 			}
@@ -2380,13 +2391,13 @@ MissionBoardViewStyles.mission_widget_style_function = function (mission_type)
 		difficulty_bar_3 = {
 			vertical_alignment = "center",
 			horizontal_alignment = "center",
-			color = _get_color_by_name("color_main", mission_type),
+			color = DangerSettings.by_index[1].color,
 			size = {
 				6,
 				16
 			},
 			offset = {
-				13,
+				11,
 				0,
 				3
 			}
@@ -2394,13 +2405,13 @@ MissionBoardViewStyles.mission_widget_style_function = function (mission_type)
 		difficulty_bar_4 = {
 			vertical_alignment = "center",
 			horizontal_alignment = "center",
-			color = _get_color_by_name("color_main", mission_type),
+			color = DangerSettings.by_index[1].color,
 			size = {
 				6,
 				16
 			},
 			offset = {
-				22,
+				20,
 				0,
 				3
 			}
@@ -2408,13 +2419,13 @@ MissionBoardViewStyles.mission_widget_style_function = function (mission_type)
 		difficulty_bar_5 = {
 			vertical_alignment = "center",
 			horizontal_alignment = "center",
-			color = _get_color_by_name("color_main", mission_type),
+			color = DangerSettings.by_index[1].color,
 			size = {
 				6,
 				16
 			},
 			offset = {
-				31,
+				29,
 				0,
 				3
 			}
@@ -2494,14 +2505,14 @@ MissionBoardViewStyles.mission_widget_style_function = function (mission_type)
 		},
 		location_lock = {
 			font_type = "itc_novarese_bold",
-			font_size = 80,
+			font_size = 50,
 			drop_shadow = false,
 			text_vertical_alignment = "center",
 			text_horizontal_alignment = "center",
 			text_color = _get_color_by_name("color_background", mission_type),
 			offset = {
 				0,
-				0,
+				-4,
 				10
 			}
 		},
@@ -2521,7 +2532,7 @@ MissionBoardViewStyles.mission_widget_style_function = function (mission_type)
 		objective_1_icon = {
 			vertical_alignment = "center",
 			horizontal_alignment = "center",
-			color = _get_color_by_name("color_terminal_text_header", mission_type),
+			color = _get_color_by_name("color_text_body", mission_type),
 			offset = {
 				0,
 				0,
@@ -2590,15 +2601,32 @@ MissionBoardViewStyles.mission_widget_style_function = function (mission_type)
 				-1
 			}
 		},
+		title_background = {
+			color = {
+				180,
+				0,
+				0,
+				0
+			},
+			offset = {
+				0,
+				0,
+				1
+			},
+			size_addition = {
+				-2,
+				-1
+			}
+		},
 		title_text = {
 			font_type = "proxima_nova_bold",
 			font_size = 22,
 			text_vertical_alignment = "center",
-			text_horizontal_alignment = "right",
-			text_color = _get_color_by_name("color_text_body", mission_type),
+			text_horizontal_alignment = "left",
+			text_color = _get_color_by_name("color_text_title", mission_type),
 			offset = {
-				-20,
-				2,
+				20,
+				0,
 				2
 			}
 		},
@@ -2619,13 +2647,13 @@ MissionBoardViewStyles.mission_widget_style_function = function (mission_type)
 		},
 		bonus_text = {
 			font_type = "proxima_nova_bold",
-			font_size = 22,
+			font_size = 18,
 			text_vertical_alignment = "center",
-			text_horizontal_alignment = "right",
+			text_horizontal_alignment = "center",
 			text_color = _get_color_by_name("color_text_body", mission_type),
 			offset = {
 				0,
-				0,
+				-4,
 				2
 			}
 		},
@@ -2671,22 +2699,22 @@ end
 MissionBoardViewStyles.difficulty_stepper_style_function = function (mission_type)
 	return {
 		difficulty_bar_1 = {
-			color = _get_color_by_name("color_main", mission_type)
+			color = DangerSettings.by_index[1].color
 		},
 		difficulty_bar_2 = {
-			color = _get_color_by_name("color_main", mission_type)
+			color = DangerSettings.by_index[1].color
 		},
 		difficulty_bar_3 = {
-			color = _get_color_by_name("color_main", mission_type)
+			color = DangerSettings.by_index[1].color
 		},
 		difficulty_bar_4 = {
-			color = _get_color_by_name("color_main", mission_type)
+			color = DangerSettings.by_index[1].color
 		},
 		difficulty_bar_5 = {
-			color = _get_color_by_name("color_main", mission_type)
+			color = DangerSettings.by_index[1].color
 		},
 		danger = {
-			color = _get_color_by_name("color_main", mission_type)
+			color = _get_color_by_name("color_main_light", mission_type)
 		}
 	}
 end

@@ -520,7 +520,7 @@ weapon_template.actions = {
 				action_name = "action_zoom"
 			},
 			special_action_hold = {
-				chain_time = 0.5,
+				chain_time = 0.15,
 				reset_combo = true,
 				action_name = "action_slash_start"
 			}
@@ -537,7 +537,6 @@ weapon_template.actions = {
 		hold_combo = true,
 		charge_extra_hold_time = 2.5,
 		keep_charge = true,
-		crosshair_type = "charge_up_ads",
 		allowed_during_sprint = true,
 		recoil_template = "lasgun_p2_m1_ads_killshot",
 		anim_end_event = "attack_finished",
@@ -546,6 +545,9 @@ weapon_template.actions = {
 		dont_clear_num_shots = true,
 		anim_event = "attack_charge",
 		total_time = 3.7,
+		crosshair = {
+			crosshair_type = "charge_up_ads"
+		},
 		allowed_chain_actions = {
 			combat_ability = {
 				action_name = "combat_ability"
@@ -598,17 +600,19 @@ weapon_template.actions = {
 	},
 	action_zoom_shoot_charged = {
 		ammunition_usage_max = 9,
-		charge_template = "lasgun_p2_m3_charge_up",
 		weapon_handling_template = "immediate_single_shot",
 		kind = "shoot_hit_scan",
 		sprint_ready_up_time = 0.5,
-		crosshair_type = "charge_up_ads",
 		allow_shots_with_less_than_required_ammo = true,
 		ammunition_usage_min = 4,
 		ammunition_usage = 4,
 		use_charge = true,
+		charge_template = "lasgun_p2_m3_charge_up",
 		dont_clear_num_shots = true,
 		total_time = 0.65,
+		crosshair = {
+			crosshair_type = "charge_up_ads"
+		},
 		action_movement_curve = {
 			{
 				t = 0.05,
@@ -733,7 +737,7 @@ weapon_template.actions = {
 			},
 			special_action_hold = {
 				action_name = "action_slash_start",
-				chain_time = 0.35
+				chain_time = 0.15
 			}
 		},
 		time_scale_stat_buffs = {
@@ -746,9 +750,11 @@ weapon_template.actions = {
 		start_input = "zoom",
 		kind = "aim",
 		increase_combo = false,
-		crosshair_type = "charge_up_ads",
 		total_time = 0.3,
 		smart_targeting_template = SmartTargetingTemplates.alternate_fire_killshot,
+		crosshair = {
+			crosshair_type = "charge_up_ads"
+		},
 		allowed_chain_actions = {
 			combat_ability = {
 				action_name = "combat_ability"
@@ -780,11 +786,13 @@ weapon_template.actions = {
 	},
 	action_unzoom = {
 		hold_combo = false,
-		crosshair_type = "charge_up_ads",
 		start_input = "zoom_release",
 		kind = "unaim",
 		increase_combo = false,
 		total_time = 0.2,
+		crosshair = {
+			crosshair_type = "charge_up_ads"
+		},
 		allowed_chain_actions = {
 			combat_ability = {
 				action_name = "combat_ability"
@@ -809,15 +817,17 @@ weapon_template.actions = {
 		}
 	},
 	action_reload = {
-		kind = "reload_state",
-		start_input = "reload",
-		sprint_requires_press_to_interrupt = true,
-		weapon_handling_template = "time_scale_0_9",
 		stop_alternate_fire = true,
+		start_input = "reload",
+		kind = "reload_state",
+		weapon_handling_template = "time_scale_0_9",
+		sprint_requires_press_to_interrupt = true,
 		abort_sprint = true,
-		crosshair_type = "none",
 		allowed_during_sprint = true,
 		total_time = 3,
+		crosshair = {
+			crosshair_type = "none"
+		},
 		action_movement_curve = {
 			{
 				modifier = 0.775,
@@ -886,18 +896,21 @@ weapon_template.actions = {
 		}
 	},
 	action_slash_start = {
-		kind = "windup",
-		uninterruptible = true,
-		start_input = "special_action_hold",
 		sprint_requires_press_to_interrupt = true,
-		unaim = true,
+		start_input = "special_action_hold",
+		kind = "windup",
+		weapon_handling_template = "time_scale_1_2",
+		allowed_during_sprint = true,
 		anim_end_event = "attack_finished",
 		abort_sprint = true,
-		crosshair_type = "dot",
-		allowed_during_sprint = true,
+		unaim = true,
+		uninterruptible = true,
 		anim_event = "attack_charge_slash",
 		prevent_sprint = true,
 		total_time = 0.75,
+		crosshair = {
+			crosshair_type = "dot"
+		},
 		action_movement_curve = {
 			{
 				modifier = 1.1,
@@ -957,14 +970,14 @@ weapon_template.actions = {
 	action_slash = {
 		damage_window_start = 0.1,
 		hit_armor_anim = "attack_hit_shield",
-		kind = "sweep",
 		sprint_requires_press_to_interrupt = true,
+		weapon_handling_template = "time_scale_1_2",
+		kind = "sweep",
 		first_person_hit_anim = "attack_hit",
 		first_person_hit_stop_anim = "attack_hit",
-		range_mod = 1.15,
-		crosshair_type = "dot",
 		allow_conditional_chain = true,
 		allowed_during_sprint = true,
+		range_mod = 1.15,
 		damage_window_end = 0.26666666666666666,
 		abort_sprint = true,
 		unaim = true,
@@ -972,6 +985,9 @@ weapon_template.actions = {
 		anim_event = "attack_slash",
 		prevent_sprint = true,
 		total_time = 1.1,
+		crosshair = {
+			crosshair_type = "dot"
+		},
 		action_movement_curve = {
 			{
 				t = 0.1,
@@ -1058,10 +1074,12 @@ weapon_template.actions = {
 		start_input = "inspect_start",
 		anim_end_event = "inspect_end",
 		kind = "inspect",
-		crosshair_type = "inspect",
 		anim_event = "inspect_start",
 		stop_input = "inspect_stop",
-		total_time = math.huge
+		total_time = math.huge,
+		crosshair = {
+			crosshair_type = "inspect"
+		}
 	}
 }
 
@@ -1108,19 +1126,23 @@ weapon_template.fx_sources = {
 	_muzzle = "fx_muzzle_01",
 	_mag_well = "fx_reload"
 }
-weapon_template.crosshair_type = "bfg"
+weapon_template.crosshair = {
+	crosshair_type = "bfg"
+}
 weapon_template.hit_marker_type = "center"
 weapon_template.alternate_fire_settings = {
 	peeking_mechanics = true,
 	sway_template = "lasgun_p2_m1_killshot",
 	recoil_template = "lasgun_p2_m1_ads_killshot",
 	stop_anim_event = "to_unaim_ironsight",
-	toughness_template = "killshot_zoomed",
 	spread_template = "default_lasgun_killshot",
 	suppression_template = "krieg_lasgun_killshot",
-	crosshair_type = "charge_up_ads",
+	toughness_template = "killshot_zoomed",
 	start_anim_event = "to_ironsight",
 	look_delta_template = "lasgun_holo_aiming",
+	crosshair = {
+		crosshair_type = "charge_up_ads"
+	},
 	camera = {
 		custom_vertical_fov = 65,
 		vertical_fov = 45,

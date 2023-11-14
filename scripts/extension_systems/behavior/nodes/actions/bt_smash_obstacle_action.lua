@@ -71,9 +71,9 @@ end
 BtSmashObstacleAction._hit_target = function (self, unit, breed, target_unit, action_data)
 	local damage_profile = action_data.damage_profile
 	local damage_type = action_data.damage_type
-	local power_level = Managers.state.difficulty:get_minion_attack_power_level(breed, "melee")
+	local power_level = action_data.power_level or Managers.state.difficulty:get_minion_attack_power_level(breed, "melee")
 
-	Attack.execute(target_unit, damage_profile, "power_level", power_level, "attacking_unit", unit, "damage_type", damage_type)
+	Attack.execute(target_unit, damage_profile, "power_level", power_level, "attacking_unit", unit, "damage_type", damage_type, "attack_type", "door_smash")
 end
 
 BtSmashObstacleAction.leave = function (self, unit, breed, blackboard, scratchpad, action_data, t, reason, destroy)
@@ -129,7 +129,7 @@ BtSmashObstacleAction.run = function (self, unit, breed, blackboard, scratchpad,
 	if attack_done_time and attack_done_time <= t then
 		scratchpad.attack_done_time = nil
 
-		self:_start_attack_anim(unit, blackboard, scratchpad, action_data, t)
+		return "done"
 	end
 
 	return "running"

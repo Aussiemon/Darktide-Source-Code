@@ -1,17 +1,19 @@
+local AchievementUIHelper = require("scripts/managers/achievements/utility/achievement_ui_helper")
+local Archetypes = require("scripts/settings/archetype/archetypes")
+local BuffSettings = require("scripts/settings/buff/buff_settings")
+local BuffTemplates = require("scripts/settings/buff/buff_templates")
 local FixedFrame = require("scripts/utilities/fixed_frame")
 local ItemPackage = require("scripts/foundation/managers/package/utilities/item_package")
 local ItemSlotSettings = require("scripts/settings/item/item_slot_settings")
+local ItemSourceSettings = require("scripts/settings/item/item_source_settings")
 local MasterItems = require("scripts/backend/master_items")
 local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
 local PlayerUnitVisualLoadout = require("scripts/extension_systems/visual_loadout/utilities/player_unit_visual_loadout")
+local RankSettings = require("scripts/settings/item/rank_settings")
+local RaritySettings = require("scripts/settings/item/rarity_settings")
 local UISettings = require("scripts/settings/ui/ui_settings")
 local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
-local BuffTemplates = require("scripts/settings/buff/buff_templates")
-local BuffSettings = require("scripts/settings/buff/buff_settings")
 local WeaponTraitTemplates = require("scripts/settings/equipment/weapon_traits/weapon_trait_templates")
-local RaritySettings = require("scripts/settings/item/rarity_settings")
-local Archetypes = require("scripts/settings/archetype/archetypes")
-local RankSettings = require("scripts/settings/item/rank_settings")
 local unit_alive = Unit.alive
 local ItemUtils = {}
 
@@ -506,6 +508,49 @@ ItemUtils.pattern_display_name = function (item)
 	return pattern_display_name_localized
 end
 
+ItemUtils.obtained_display_name = function (item)
+	local item_source = item.source
+	local source_settings = item_source and ItemSourceSettings[item_source]
+	local display_name_localization_key = source_settings and source_settings.display_name
+	local display_name_localized = display_name_localization_key and Localize(display_name_localization_key)
+	local display_name = display_name_localized
+	local optional_description = nil
+
+	if display_name and source_settings and source_settings.is_achievement then
+		local slots = item.slots
+		local first_slot_name = slots and slots[1]
+
+		if first_slot_name then
+			local achievement = AchievementUIHelper.get_acheivement_by_reward_item(item)
+
+			if achievement then
+				if achievement.type == "meta" then
+					local sub_penances_count = table.size(achievement.achievements)
+					optional_description = Localize("loc_inventory_cosmetic_item_acquisition_penance_description_multiple_requirement", true, {
+						penance_amount = sub_penances_count
+					})
+				else
+					optional_description = AchievementUIHelper.localized_description(achievement)
+				end
+
+				local achievement_label = AchievementUIHelper.localized_title(achievement)
+				local key_value_color = Color.terminal_text_body(255, true)
+				local achievement_label_colored = Localize("loc_color_value_fomat_key", true, {
+					value = achievement_label,
+					r = key_value_color[2],
+					g = key_value_color[3],
+					b = key_value_color[4]
+				})
+				display_name = Localize(display_name_localization_key, true, {
+					achievement_label = achievement_label_colored
+				})
+			end
+		end
+	end
+
+	return display_name, optional_description
+end
+
 ItemUtils.rarity_display_name = function (item)
 	local rarity_settings = RaritySettings[item.rarity]
 	local loc_key = rarity_settings and rarity_settings.display_name
@@ -857,7 +902,7 @@ ItemUtils.equip_slot_items = function (items)
 
 			return true
 		end):catch(function (errors)
-			Log.error("ItemUtils", "Failed equipping items in loadout slots", errors)
+			Log.error("ItemUtils", "Failed equipping items in loadout slots: %s", errors)
 
 			return false
 		end)

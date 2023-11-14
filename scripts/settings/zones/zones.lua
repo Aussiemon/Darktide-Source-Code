@@ -9,6 +9,16 @@ local zones = {
 			mission_board_details = "content/ui/materials/icons/zones/dust"
 		}
 	},
+	entertainment = {
+		name_short = "loc_zone_name_entertainment_short",
+		name = "loc_zone_entertainment",
+		map_node = "entertainment_01",
+		images = {
+			mission_vote = "content/ui/materials/icons/missions/zone_entertainment_standard",
+			default = "content/ui/materials/icons/missions/zone_entertainment_standard",
+			mission_board_details = "content/ui/materials/icons/zones/entertainment"
+		}
+	},
 	hub = {
 		name = "loc_zone_hub"
 	},

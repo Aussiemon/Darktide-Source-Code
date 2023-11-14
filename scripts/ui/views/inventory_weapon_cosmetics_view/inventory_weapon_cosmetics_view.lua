@@ -448,8 +448,8 @@ InventoryWeaponCosmeticsView._setup_menu_tabs = function (self, content)
 	}
 	local tab_menu_element = self:_add_element(ViewElementTabMenu, id, layer, tab_menu_settings)
 	self._tab_menu_element = tab_menu_element
-	local input_action_left = "navigate_secondary_left_pressed"
-	local input_action_right = "navigate_secondary_right_pressed"
+	local input_action_left = "navigate_primary_left_pressed"
+	local input_action_right = "navigate_primary_right_pressed"
 
 	tab_menu_element:set_input_actions(input_action_left, input_action_right)
 	tab_menu_element:set_is_handling_navigation_input(true)
@@ -701,7 +701,7 @@ InventoryWeaponCosmeticsView._equip_weapon_cosmetics = function (self)
 
 				self._equip_promise = nil
 			end):catch(function (errors)
-				Log.error("InventoryWeaponCosmeticsView", "Failed equipping items in loadout slots", errors)
+				Log.error("InventoryWeaponCosmeticsView", "Failed equipping items in loadout slots: %s", errors)
 
 				self._equip_promise = nil
 			end)

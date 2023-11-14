@@ -485,7 +485,12 @@ local constants = {
 			override_context = {}
 		}
 	},
-	player_interactions_hub = {},
+	player_interactions_hub = {
+		{
+			interaction_type = "player_hub_inspect",
+			override_context = {}
+		}
+	},
 	animation_rollback = {
 		num_layers_3p = 6,
 		num_layers_1p = 11

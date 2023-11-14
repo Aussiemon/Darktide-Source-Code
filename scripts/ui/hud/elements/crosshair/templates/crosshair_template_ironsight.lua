@@ -155,7 +155,7 @@ template.create_widget_defintion = function (template, scenegraph_id)
 	}, scenegraph_id)
 end
 
-template.update_function = function (parent, ui_renderer, widget, template, dt, t)
+template.update_function = function (parent, ui_renderer, widget, crosshair_template, crosshair_settings, dt, t)
 	local style = widget.style
 	local hit_progress, hit_color = parent:hit_indicator()
 	local hit_alpha = (hit_progress or 0) * 255

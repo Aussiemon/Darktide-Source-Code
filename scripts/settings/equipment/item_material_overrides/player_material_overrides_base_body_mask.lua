@@ -158,6 +158,14 @@ local material_overrides = {
 				0.3
 			}
 		}
+	},
+	mask_legs_keep_knees_and_thighs = {
+		property_overrides = {
+			mask_top_bottom = {
+				0.2,
+				0.25
+			}
+		}
 	}
 }
 

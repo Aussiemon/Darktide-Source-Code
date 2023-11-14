@@ -1,4 +1,5 @@
 local TagQuery = require("scripts/extension_systems/dialogue/tag_query")
+local DialogueCategoryConfig = require("scripts/settings/dialogue/dialogue_category_config")
 local TagQueryDatabase = class("TagQueryDatabase")
 TagQueryDatabase.NUM_DATABASE_RULES = 4095
 
@@ -157,7 +158,10 @@ TagQueryDatabase.iterate_queries = function (self, t)
 
 		if result then
 			local validated_rule = query.validated_rule
-			local value = validated_rule.n_criterias
+			local category_name = validated_rule.category
+			local category = DialogueCategoryConfig[category_name]
+			local category_score = category.query_score
+			local value = validated_rule.n_criterias + category_score
 
 			if best_query_value < value then
 				best_query_value = value

@@ -88,15 +88,16 @@ PlayerCharacterStateWalking.fixed_update = function (self, unit, dt, t, next_sta
 	self._ability_extension:update_ability_actions(fixed_frame)
 
 	local is_crouching = Crouch.check(unit, first_person_extension, anim_extension, weapon_extension, move_state_component, self._sway_control_component, self._sway_component, self._spread_control_component, input_extension, t, false)
-	local buff_extension = self._buff_extension
 
 	PlayerUnitPeeking.fixed_update(self._peeking_component, self._ledge_finder_extension, anim_extension, first_person_extension, self._specialization_extension, is_crouching, self._breed)
 
-	local move_direction, move_speed, new_x, new_y, wants_move, stopped, moving_backwards, wants_slide = AcceleratedLocalSpaceMovement.wanted_movement(self._constants, input_extension, locomotion_steering, move_settings, self._first_person_component, is_crouching, velocity_current, dt)
+	local buff_extension = self._buff_extension
+	local stat_buffs = buff_extension:stat_buffs()
+	local move_speed_multiplier = stat_buffs.movement_speed
+	local move_direction, move_speed, new_x, new_y, wants_move, stopped, moving_backwards, wants_slide = AcceleratedLocalSpaceMovement.wanted_movement(self._constants, input_extension, locomotion_steering, move_settings, self._first_person_component, is_crouching, velocity_current, dt, move_speed_multiplier)
 	local action_move_speed_modifier = weapon_extension:move_speed_modifier(t)
 	move_speed = move_speed * action_move_speed_modifier
-	local stat_buffs = buff_extension:stat_buffs()
-	move_speed = move_speed * stat_buffs.movement_speed
+	move_speed = move_speed * move_speed_multiplier
 
 	AcceleratedLocalSpaceMovement.set_wanted_movement(locomotion_steering, move_direction, move_speed, new_x, new_y)
 

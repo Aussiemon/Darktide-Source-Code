@@ -93,7 +93,7 @@ local settings = {
 	}
 }
 local default_sound_volume = 100
-local default_sound_chat_volume = 70
+local default_sound_chat_volume = 50
 local master_volume_value_name = "option_master_slider"
 local master_volume_display_name = "loc_settings_master_volume"
 
@@ -393,6 +393,16 @@ dialogue_volume_template.commit = function (value)
 	Wwise.set_state(dialogue_volume_value_name, setting_value)
 end
 
+local mute_in_background_setting = {
+	default_value = false,
+	display_name = "loc_settings_audio_mute_in_background_enabled",
+	id = "mute_in_background_enabled",
+	tooltip_text = "loc_settings_audio_mute_in_background_mouseover",
+	save_location = "sound_settings",
+	commit = function (value)
+		return
+	end
+}
 local game_interface_setting = {
 	display_name = "loc_settings_audio_headshot_sound",
 	id = "interface_setting",
@@ -466,6 +476,11 @@ end
 settings[#settings + 1] = construct_audio_settings_dropdown(speaker_settings)
 settings[#settings + 1] = construct_audio_settings_dropdown(mix_presets_settings)
 settings[#settings + 1] = dialogue_volume_template
+
+if IS_WINDOWS then
+	settings[#settings + 1] = construct_audio_settings_boolean(mute_in_background_setting)
+end
+
 settings[#settings + 1] = construct_audio_settings_boolean(game_interface_setting)
 settings[#settings + 1] = construct_audio_settings_boolean(audio_backstab_sound_setting)
 settings[#settings + 1] = construct_audio_settings_boolean(audio_teammate_ping_setting)
@@ -475,7 +490,7 @@ settings[#settings + 1] = {
 	display_name = "loc_settings_menu_group_voice_chat_settings",
 	widget_type = "group_header"
 }
-local chat_volume_value_name = "options_voip_volume_slider"
+local chat_volume_value_name = "options_voip_volume_slider_v2"
 local chat_volume_display_name = "loc_settings_audio_voice_chat_volume"
 
 local function chat_volume_value_change_function(value)
@@ -489,7 +504,7 @@ local function chat_volume_value_change_function(value)
 end
 
 local function chat_volume_value_get_function()
-	return Application.user_setting("sound_settings", chat_volume_value_name) or default_sound_volume
+	return Application.user_setting("sound_settings", chat_volume_value_name) or default_sound_chat_volume
 end
 
 local chat_volume_slider_params = {

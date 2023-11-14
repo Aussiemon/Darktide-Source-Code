@@ -125,8 +125,10 @@ ComponentSystem.get_components = function (self, unit, component_name)
 	return result
 end
 
+local EMPTY_TABLE = {}
+
 ComponentSystem.get_units_from_component_name = function (self, component_name)
-	return self._component_name_to_units_map[component_name] or {}
+	return self._component_name_to_units_map[component_name] or EMPTY_TABLE
 end
 
 return ComponentSystem

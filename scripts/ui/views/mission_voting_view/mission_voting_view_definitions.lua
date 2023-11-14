@@ -725,12 +725,7 @@ local mission_info_widget_definitions = {
 			style = {
 				vertical_alignment = "center",
 				horizontal_alignment = "left",
-				color = {
-					255,
-					169,
-					191,
-					153
-				},
+				color = Color.terminal_text_header(255, true),
 				offset = {
 					-20,
 					10,
@@ -745,11 +740,6 @@ local mission_info_widget_definitions = {
 		{
 			value = "content/ui/materials/backgrounds/default_square",
 			style_id = "diffulty_icon_background",
-			pass_type = "multi_texture"
-		},
-		{
-			value = "content/ui/materials/frames/frame_tile_2px",
-			style_id = "diffulty_icon_background_frame",
 			pass_type = "multi_texture"
 		},
 		{

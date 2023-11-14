@@ -3,16 +3,19 @@ require("scripts/extension_systems/behavior/nodes/bt_node")
 local Animation = require("scripts/utilities/animation")
 local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
 local BtExitSpawnerAction = class("BtExitSpawnerAction", "BtNode")
-local WANTED_DISTANCE_TO_EXIT_SQ = 0.010000000000000002
+local BASE_LAYER_EMPTY_EVENT = "base_layer_to_empty"
+local WANTED_DISTANCE_TO_EXIT = 0.01
 
 BtExitSpawnerAction.enter = function (self, unit, breed, blackboard, scratchpad, action_data, t)
 	local spawn_component = blackboard.spawn
 	local spawner_unit = spawn_component.spawner_unit
-	local spawner_extension = ScriptUnit.extension(spawner_unit, "minion_spawner_system")
-	scratchpad.exit_position = spawner_extension:exit_position_boxed()
-	local spawn_type = spawner_extension:spawn_type()
 	local locomotion_extension = ScriptUnit.extension(unit, "locomotion_system")
+
+	locomotion_extension:set_movement_type("script_driven")
+
 	scratchpad.locomotion_extension = locomotion_extension
+	local spawner_extension = ScriptUnit.extension(spawner_unit, "minion_spawner_system")
+	local spawn_type = spawner_extension:spawn_type()
 	local spawn_type_anim_events = action_data.spawn_type_anim_events and action_data.spawn_type_anim_events[spawn_type]
 	local anim_event = nil
 
@@ -26,39 +29,64 @@ BtExitSpawnerAction.enter = function (self, unit, breed, blackboard, scratchpad,
 
 	animation_extension:anim_event(anim_event)
 
-	if action_data.anim_driven_anim_event_durations and action_data.anim_driven_anim_event_durations[anim_event] then
+	local anim_driven_anim_event_duration = action_data.anim_driven_anim_event_durations and action_data.anim_driven_anim_event_durations[anim_event]
+
+	if anim_driven_anim_event_duration then
+		animation_extension:anim_event(BASE_LAYER_EMPTY_EVENT)
+
+		local spawn_type_anim_lengths = action_data.spawn_type_anim_lengths[spawn_type]
+		local anim_lengths = spawn_type_anim_lengths[anim_event] or spawn_type_anim_lengths.default
+		local spawn_index = spawn_component.spawner_spawn_index
+		local spawn_height = spawner_extension:spawn_height(spawn_index)
+		local anim_vertical_length = anim_lengths.vertical_length
+		local vertical_scale = spawn_height / anim_vertical_length
+		local spawn_horizontal_length = spawner_extension:spawn_horizontal_length(spawn_index)
+		local anim_horizontal_length = anim_lengths.horizontal_length
+		local horizontal_scale = spawn_horizontal_length / anim_horizontal_length
+		local anim_translation_scale_factor = spawn_component.anim_translation_scale_factor
+		local anim_translation_scale = anim_translation_scale_factor * Vector3(horizontal_scale, horizontal_scale, vertical_scale)
+
 		locomotion_extension:set_anim_driven(true)
 		locomotion_extension:use_lerp_rotation(false)
+		locomotion_extension:set_anim_translation_scale(anim_translation_scale)
 
 		scratchpad.anim_driven = true
-		scratchpad.anim_duration = t + action_data.anim_driven_anim_event_durations[anim_event]
+		scratchpad.anim_duration = t + anim_driven_anim_event_duration
 	else
-		locomotion_extension:set_movement_type("script_driven")
+		scratchpad.exit_position = spawner_extension:exit_position_boxed()
 	end
+
+	scratchpad.spawn_position = Vector3Box(POSITION_LOOKUP[unit])
 end
 
 BtExitSpawnerAction.leave = function (self, unit, breed, blackboard, scratchpad, action_data, t, reason, destroy)
 	local spawn_component = Blackboard.write_component(blackboard, "spawn")
 	spawn_component.is_exiting_spawner = false
 	spawn_component.spawner_unit = nil
+	spawn_component.spawner_spawn_index = -1
+	local locomotion_extension = scratchpad.locomotion_extension
 
-	scratchpad.locomotion_extension:set_movement_type("snap_to_navmesh")
+	locomotion_extension:set_movement_type("snap_to_navmesh")
 
-	if scratchpad.anim_driven then
-		scratchpad.locomotion_extension:set_anim_driven(false)
-		scratchpad.locomotion_extension:use_lerp_rotation(true)
+	local navigation_extension = ScriptUnit.extension(unit, "navigation_system")
+	local destination = navigation_extension:destination()
+	local spawn_position = scratchpad.spawn_position:unbox()
+
+	if Vector3.equal(destination, spawn_position) then
+		navigation_extension:stop()
 	end
 
-	local exit_position = scratchpad.exit_position:unbox()
-	local navigation_extension = ScriptUnit.extension(unit, "navigation_system")
+	if scratchpad.anim_driven then
+		locomotion_extension:set_anim_driven(false)
+		locomotion_extension:use_lerp_rotation(true)
+		locomotion_extension:set_anim_translation_scale(Vector3(1, 1, 1))
+	end
 
-	navigation_extension:set_nav_bot_position(exit_position)
-	scratchpad.locomotion_extension:teleport_to(exit_position)
-
-	local slot_system = Managers.state.extension:system("slot_system")
 	local slot_extension = ScriptUnit.has_extension(unit, "slot_system")
 
 	if slot_extension then
+		local slot_system = Managers.state.extension:system("slot_system")
+
 		slot_system:register_prioritized_user_unit_update(unit)
 	end
 end
@@ -75,15 +103,18 @@ BtExitSpawnerAction.run = function (self, unit, breed, blackboard, scratchpad, a
 	local unit_position = POSITION_LOOKUP[unit]
 	local exit_position = scratchpad.exit_position:unbox()
 	local exit_vector = exit_position - unit_position
-	local distance_to_exit_sq = Vector3.length_squared(exit_vector)
+	local exit_direction, distance_to_exit = Vector3.direction_length(exit_vector)
 
-	if WANTED_DISTANCE_TO_EXIT_SQ < distance_to_exit_sq then
-		local exit_direction = Vector3.normalize(exit_vector)
+	if WANTED_DISTANCE_TO_EXIT < distance_to_exit then
 		local move_speed = breed.run_speed
-		local exit_velocity = exit_direction * move_speed
-		local locomotion_extension = scratchpad.locomotion_extension
 
-		locomotion_extension:set_wanted_velocity(exit_velocity)
+		if distance_to_exit < move_speed * dt then
+			move_speed = distance_to_exit / dt
+		end
+
+		local wanted_velocity = exit_direction * move_speed
+
+		scratchpad.locomotion_extension:set_wanted_velocity(wanted_velocity)
 
 		return "running"
 	else

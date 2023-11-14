@@ -118,8 +118,10 @@ Destructible.editor_validate = function (self, unit)
 end
 
 Destructible.events.add_damage = function (self, damage, hit_actor, attack_direction)
-	if self._destructible_extension and self._enabled then
-		self._destructible_extension:add_damage(damage, hit_actor, attack_direction)
+	local destructible_extension = self._destructible_extension
+
+	if destructible_extension and self._enabled then
+		destructible_extension:add_damage(damage, hit_actor, attack_direction)
 	end
 end
 

@@ -643,6 +643,23 @@ local action_data = {
 				dwn = {
 					"attack_charge_hit_wall"
 				}
+			},
+			blinding = {
+				fwd = {
+					"stagger_fwd_heavy"
+				},
+				bwd = {
+					"stagger_bwd_heavy"
+				},
+				left = {
+					"stagger_left_heavy"
+				},
+				right = {
+					"stagger_right_heavy"
+				},
+				dwn = {
+					"stagger_bwd_heavy"
+				}
 			}
 		}
 	},

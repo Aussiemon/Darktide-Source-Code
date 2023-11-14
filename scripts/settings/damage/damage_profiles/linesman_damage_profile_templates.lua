@@ -33,8 +33,7 @@ damage_templates.heavy_linesman = {
 					[armor_types.berserker] = 0.5,
 					[armor_types.super_armor] = 0,
 					[armor_types.disgustingly_resilient] = 1,
-					[armor_types.void_shield] = 1,
-					[armor_types.prop_armor] = 0.75
+					[armor_types.void_shield] = 1
 				},
 				impact = {
 					[armor_types.unarmored] = 1,
@@ -44,8 +43,7 @@ damage_templates.heavy_linesman = {
 					[armor_types.berserker] = 0.5,
 					[armor_types.super_armor] = 0,
 					[armor_types.disgustingly_resilient] = 1,
-					[armor_types.void_shield] = 1,
-					[armor_types.prop_armor] = 1
+					[armor_types.void_shield] = 1
 				}
 			},
 			power_distribution = {
@@ -85,8 +83,7 @@ damage_templates.heavy_linesman = {
 					[armor_types.berserker] = 0.5,
 					[armor_types.super_armor] = 0,
 					[armor_types.disgustingly_resilient] = 1,
-					[armor_types.void_shield] = 1,
-					[armor_types.prop_armor] = 0.75
+					[armor_types.void_shield] = 1
 				},
 				impact = {
 					[armor_types.unarmored] = 1,
@@ -96,8 +93,7 @@ damage_templates.heavy_linesman = {
 					[armor_types.berserker] = 0.5,
 					[armor_types.super_armor] = 0,
 					[armor_types.disgustingly_resilient] = 1,
-					[armor_types.void_shield] = 1,
-					[armor_types.prop_armor] = 1
+					[armor_types.void_shield] = 1
 				}
 			},
 			power_distribution = {
@@ -126,8 +122,7 @@ damage_templates.light_linesman = {
 					[armor_types.berserker] = 0.5,
 					[armor_types.super_armor] = 0,
 					[armor_types.disgustingly_resilient] = 0.75,
-					[armor_types.void_shield] = 0.75,
-					[armor_types.prop_armor] = 0.5
+					[armor_types.void_shield] = 0.75
 				},
 				impact = {
 					[armor_types.unarmored] = 1,
@@ -137,8 +132,7 @@ damage_templates.light_linesman = {
 					[armor_types.berserker] = 0.5,
 					[armor_types.super_armor] = 0,
 					[armor_types.disgustingly_resilient] = 0.75,
-					[armor_types.void_shield] = 0.75,
-					[armor_types.prop_armor] = 0.5
+					[armor_types.void_shield] = 0.75
 				}
 			},
 			power_distribution = {
@@ -162,8 +156,7 @@ damage_templates.light_linesman = {
 					[armor_types.berserker] = 0.5,
 					[armor_types.super_armor] = 0,
 					[armor_types.disgustingly_resilient] = 0.75,
-					[armor_types.void_shield] = 0.75,
-					[armor_types.prop_armor] = 0.5
+					[armor_types.void_shield] = 0.75
 				},
 				impact = {
 					[armor_types.unarmored] = 1,
@@ -173,8 +166,7 @@ damage_templates.light_linesman = {
 					[armor_types.berserker] = 0.5,
 					[armor_types.super_armor] = 0,
 					[armor_types.disgustingly_resilient] = 0.75,
-					[armor_types.void_shield] = 0.75,
-					[armor_types.prop_armor] = 0.75
+					[armor_types.void_shield] = 0.75
 				}
 			},
 			power_distribution = {
@@ -204,8 +196,7 @@ damage_templates.default_powersword = {
 					[armor_types.berserker] = 0.5,
 					[armor_types.super_armor] = 0,
 					[armor_types.disgustingly_resilient] = 0.75,
-					[armor_types.void_shield] = 0.75,
-					[armor_types.prop_armor] = 0.5
+					[armor_types.void_shield] = 0.75
 				},
 				impact = {
 					[armor_types.unarmored] = 1,
@@ -215,8 +206,7 @@ damage_templates.default_powersword = {
 					[armor_types.berserker] = 0.5,
 					[armor_types.super_armor] = 0,
 					[armor_types.disgustingly_resilient] = 0.75,
-					[armor_types.void_shield] = 0.75,
-					[armor_types.prop_armor] = 0.5
+					[armor_types.void_shield] = 0.75
 				}
 			},
 			power_distribution = {
@@ -240,8 +230,7 @@ damage_templates.default_powersword = {
 					[armor_types.berserker] = 0.5,
 					[armor_types.super_armor] = 0,
 					[armor_types.disgustingly_resilient] = 0.75,
-					[armor_types.void_shield] = 0.75,
-					[armor_types.prop_armor] = 0
+					[armor_types.void_shield] = 0.75
 				},
 				impact = {
 					[armor_types.unarmored] = 1,
@@ -251,8 +240,7 @@ damage_templates.default_powersword = {
 					[armor_types.berserker] = 0.5,
 					[armor_types.super_armor] = 0,
 					[armor_types.disgustingly_resilient] = 0.75,
-					[armor_types.void_shield] = 0.75,
-					[armor_types.prop_armor] = 0
+					[armor_types.void_shield] = 0.75
 				}
 			},
 			power_distribution = {

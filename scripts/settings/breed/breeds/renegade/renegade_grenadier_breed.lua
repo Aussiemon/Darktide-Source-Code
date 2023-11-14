@@ -392,6 +392,7 @@ local breed_data = {
 			[hit_zone_names.center_mass] = 3
 		}
 	},
+	outline_config = {},
 	blackboard_component_config = BreedBlackboardComponentTemplates.grenadier
 }
 

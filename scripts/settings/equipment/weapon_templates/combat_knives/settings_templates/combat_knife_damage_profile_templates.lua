@@ -33,8 +33,7 @@ local ninja_fencer_crit_mod = {
 		[armor_types.berserker] = 0.5,
 		[armor_types.super_armor] = 0.2,
 		[armor_types.disgustingly_resilient] = 0.25,
-		[armor_types.void_shield] = 0,
-		[armor_types.prop_armor] = 0
+		[armor_types.void_shield] = 0
 	},
 	impact = {
 		[armor_types.unarmored] = 0.75,
@@ -44,8 +43,7 @@ local ninja_fencer_crit_mod = {
 		[armor_types.berserker] = 0.75,
 		[armor_types.super_armor] = 0.75,
 		[armor_types.disgustingly_resilient] = 0.75,
-		[armor_types.void_shield] = 0.75,
-		[armor_types.prop_armor] = 0.75
+		[armor_types.void_shield] = 0.75
 	}
 }
 local medium_ninja_fencer_crit_mod = {
@@ -57,8 +55,7 @@ local medium_ninja_fencer_crit_mod = {
 		[armor_types.berserker] = 0.5,
 		[armor_types.super_armor] = 0.2,
 		[armor_types.disgustingly_resilient] = 0.25,
-		[armor_types.void_shield] = 0,
-		[armor_types.prop_armor] = 0
+		[armor_types.void_shield] = 0
 	},
 	impact = {
 		[armor_types.unarmored] = 0.75,
@@ -68,8 +65,7 @@ local medium_ninja_fencer_crit_mod = {
 		[armor_types.berserker] = 0.75,
 		[armor_types.super_armor] = 0.75,
 		[armor_types.disgustingly_resilient] = 0.75,
-		[armor_types.void_shield] = 0.75,
-		[armor_types.prop_armor] = 0.75
+		[armor_types.void_shield] = 0.75
 	}
 }
 damage_templates.light_combat_knife_ninja_fencer = {
@@ -96,8 +92,7 @@ damage_templates.light_combat_knife_ninja_fencer = {
 					[armor_types.berserker] = damage_lerp_values.lerp_0_5,
 					[armor_types.super_armor] = damage_lerp_values.lerp_0_05,
 					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_9,
-					[armor_types.void_shield] = damage_lerp_values.lerp_0_75,
-					[armor_types.prop_armor] = damage_lerp_values.lerp_0_5
+					[armor_types.void_shield] = damage_lerp_values.lerp_0_75
 				},
 				impact = {
 					[armor_types.unarmored] = damage_lerp_values.lerp_1,
@@ -107,8 +102,7 @@ damage_templates.light_combat_knife_ninja_fencer = {
 					[armor_types.berserker] = damage_lerp_values.lerp_0_5,
 					[armor_types.super_armor] = damage_lerp_values.no_damage,
 					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_5,
-					[armor_types.void_shield] = damage_lerp_values.lerp_0_5,
-					[armor_types.prop_armor] = damage_lerp_values.no_damage
+					[armor_types.void_shield] = damage_lerp_values.lerp_0_5
 				}
 			},
 			power_distribution = {
@@ -154,8 +148,7 @@ damage_templates.light_combat_knife_ninja_fencer = {
 					[armor_types.berserker] = damage_lerp_values.lerp_0_5,
 					[armor_types.super_armor] = damage_lerp_values.no_damage,
 					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_75,
-					[armor_types.void_shield] = damage_lerp_values.lerp_0_75,
-					[armor_types.prop_armor] = damage_lerp_values.lerp_0_25
+					[armor_types.void_shield] = damage_lerp_values.lerp_0_75
 				},
 				impact = {
 					[armor_types.unarmored] = damage_lerp_values.lerp_1,
@@ -165,8 +158,7 @@ damage_templates.light_combat_knife_ninja_fencer = {
 					[armor_types.berserker] = damage_lerp_values.lerp_0_5,
 					[armor_types.super_armor] = damage_lerp_values.no_damage,
 					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_5,
-					[armor_types.void_shield] = damage_lerp_values.lerp_0_5,
-					[armor_types.prop_armor] = damage_lerp_values.no_damage
+					[armor_types.void_shield] = damage_lerp_values.lerp_0_5
 				}
 			},
 			power_distribution = {
@@ -261,8 +253,7 @@ damage_templates.medium_combat_knife_ninja_fencer = {
 					[armor_types.berserker] = damage_lerp_values.lerp_1,
 					[armor_types.super_armor] = damage_lerp_values.lerp_0_5,
 					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_9,
-					[armor_types.void_shield] = damage_lerp_values.lerp_0_75,
-					[armor_types.prop_armor] = damage_lerp_values.lerp_0_75
+					[armor_types.void_shield] = damage_lerp_values.lerp_0_75
 				},
 				impact = {
 					[armor_types.unarmored] = damage_lerp_values.lerp_0_5,
@@ -272,8 +263,7 @@ damage_templates.medium_combat_knife_ninja_fencer = {
 					[armor_types.berserker] = damage_lerp_values.lerp_0_5,
 					[armor_types.super_armor] = damage_lerp_values.no_damage,
 					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_5,
-					[armor_types.void_shield] = damage_lerp_values.lerp_0_5,
-					[armor_types.prop_armor] = damage_lerp_values.no_damage
+					[armor_types.void_shield] = damage_lerp_values.lerp_0_5
 				}
 			},
 			power_distribution = {
@@ -311,8 +301,7 @@ damage_templates.medium_combat_knife_ninja_fencer = {
 					[armor_types.berserker] = damage_lerp_values.lerp_0_5,
 					[armor_types.super_armor] = damage_lerp_values.lerp_0_1,
 					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_75,
-					[armor_types.void_shield] = damage_lerp_values.lerp_0_75,
-					[armor_types.prop_armor] = damage_lerp_values.lerp_0_75
+					[armor_types.void_shield] = damage_lerp_values.lerp_0_75
 				},
 				impact = {
 					[armor_types.unarmored] = damage_lerp_values.lerp_0_5,
@@ -322,8 +311,7 @@ damage_templates.medium_combat_knife_ninja_fencer = {
 					[armor_types.berserker] = damage_lerp_values.lerp_0_5,
 					[armor_types.super_armor] = damage_lerp_values.no_damage,
 					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_5,
-					[armor_types.void_shield] = damage_lerp_values.lerp_0_5,
-					[armor_types.prop_armor] = damage_lerp_values.no_damage
+					[armor_types.void_shield] = damage_lerp_values.lerp_0_5
 				}
 			},
 			power_distribution = {
@@ -347,8 +335,7 @@ damage_templates.medium_combat_knife_ninja_fencer = {
 					[armor_types.berserker] = damage_lerp_values.lerp_0_5,
 					[armor_types.super_armor] = damage_lerp_values.lerp_0_1,
 					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_75,
-					[armor_types.void_shield] = damage_lerp_values.lerp_0_75,
-					[armor_types.prop_armor] = damage_lerp_values.lerp_0_75
+					[armor_types.void_shield] = damage_lerp_values.lerp_0_75
 				},
 				impact = {
 					[armor_types.unarmored] = damage_lerp_values.lerp_0_5,
@@ -358,8 +345,7 @@ damage_templates.medium_combat_knife_ninja_fencer = {
 					[armor_types.berserker] = damage_lerp_values.lerp_0_5,
 					[armor_types.super_armor] = damage_lerp_values.no_damage,
 					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_5,
-					[armor_types.void_shield] = damage_lerp_values.lerp_0_5,
-					[armor_types.prop_armor] = damage_lerp_values.no_damage
+					[armor_types.void_shield] = damage_lerp_values.lerp_0_5
 				}
 			},
 			power_distribution = {
@@ -377,7 +363,172 @@ damage_templates.medium_combat_knife_ninja_fencer = {
 	},
 	gib_push_force = GibbingSettings.gib_push_force.sawing_light
 }
-overrides.medium_combat_knife_linesman = {
+damage_templates.medium_combat_knife_linesman = {
+	finesse_ability_damage_multiplier = 1.5,
+	backstab_bonus = 0.15,
+	ragdoll_push_force = 10,
+	stagger_category = "melee",
+	crit_mod = medium_ninja_fencer_crit_mod,
+	cleave_distribution = medium_cleave,
+	damage_type = damage_types.metal_slashing_heavy,
+	gibbing_type = GibbingTypes.sawing,
+	gibbing_power = GibbingPower.always,
+	melee_attack_strength = melee_attack_strengths.heavy,
+	wounds_template = WoundsTemplates.combat_knife,
+	shield_override_stagger_strength = default_shield_override_stagger_strength,
+	targets = {
+		{
+			crit_boost = 0.75,
+			armor_damage_modifier = {
+				attack = {
+					[armor_types.unarmored] = damage_lerp_values.lerp_1,
+					[armor_types.armored] = damage_lerp_values.lerp_0_75,
+					[armor_types.resistant] = damage_lerp_values.lerp_1,
+					[armor_types.player] = damage_lerp_values.lerp_1,
+					[armor_types.berserker] = damage_lerp_values.lerp_1,
+					[armor_types.super_armor] = damage_lerp_values.lerp_0_5,
+					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_9,
+					[armor_types.void_shield] = damage_lerp_values.lerp_0_75
+				},
+				impact = {
+					[armor_types.unarmored] = damage_lerp_values.lerp_0_5,
+					[armor_types.armored] = damage_lerp_values.lerp_0_5,
+					[armor_types.resistant] = damage_lerp_values.lerp_0_5,
+					[armor_types.player] = damage_lerp_values.lerp_1,
+					[armor_types.berserker] = damage_lerp_values.lerp_0_5,
+					[armor_types.super_armor] = damage_lerp_values.no_damage,
+					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_5,
+					[armor_types.void_shield] = damage_lerp_values.lerp_0_5
+				}
+			},
+			power_distribution = {
+				attack = {
+					80,
+					160
+				},
+				impact = {
+					4,
+					8
+				}
+			},
+			finesse_boost = PowerLevelSettings.ninjafencer_finesse_boost_amount,
+			boost_curve = PowerLevelSettings.boost_curves.default,
+			boost_curve_multiplier_finesse = {
+				1.25,
+				3
+			},
+			power_level_multiplier = {
+				0.5,
+				1.5
+			}
+		},
+		{
+			armor_damage_modifier = {
+				attack = {
+					[armor_types.unarmored] = damage_lerp_values.lerp_1,
+					[armor_types.armored] = damage_lerp_values.lerp_0_75,
+					[armor_types.resistant] = damage_lerp_values.lerp_1,
+					[armor_types.player] = damage_lerp_values.lerp_1,
+					[armor_types.berserker] = damage_lerp_values.lerp_0_5,
+					[armor_types.super_armor] = damage_lerp_values.lerp_0_1,
+					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_75,
+					[armor_types.void_shield] = damage_lerp_values.lerp_0_75
+				},
+				impact = {
+					[armor_types.unarmored] = damage_lerp_values.lerp_0_5,
+					[armor_types.armored] = damage_lerp_values.lerp_0_5,
+					[armor_types.resistant] = damage_lerp_values.lerp_0_5,
+					[armor_types.player] = damage_lerp_values.lerp_1,
+					[armor_types.berserker] = damage_lerp_values.lerp_0_5,
+					[armor_types.super_armor] = damage_lerp_values.no_damage,
+					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_5,
+					[armor_types.void_shield] = damage_lerp_values.lerp_0_5
+				}
+			},
+			power_distribution = {
+				attack = {
+					60,
+					130
+				},
+				impact = {
+					2,
+					5
+				}
+			}
+		},
+		{
+			armor_damage_modifier = {
+				attack = {
+					[armor_types.unarmored] = damage_lerp_values.lerp_1,
+					[armor_types.armored] = damage_lerp_values.lerp_0_75,
+					[armor_types.resistant] = damage_lerp_values.lerp_1,
+					[armor_types.player] = damage_lerp_values.lerp_1,
+					[armor_types.berserker] = damage_lerp_values.lerp_0_5,
+					[armor_types.super_armor] = damage_lerp_values.lerp_0_1,
+					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_75,
+					[armor_types.void_shield] = damage_lerp_values.lerp_0_75
+				},
+				impact = {
+					[armor_types.unarmored] = damage_lerp_values.lerp_0_5,
+					[armor_types.armored] = damage_lerp_values.lerp_0_5,
+					[armor_types.resistant] = damage_lerp_values.lerp_0_5,
+					[armor_types.player] = damage_lerp_values.lerp_1,
+					[armor_types.berserker] = damage_lerp_values.lerp_0_5,
+					[armor_types.super_armor] = damage_lerp_values.no_damage,
+					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_5,
+					[armor_types.void_shield] = damage_lerp_values.lerp_0_5
+				}
+			},
+			power_distribution = {
+				attack = {
+					50,
+					100
+				},
+				impact = {
+					2,
+					5
+				}
+			}
+		},
+		default_target = {
+			armor_damage_modifier = {
+				attack = {
+					[armor_types.unarmored] = damage_lerp_values.lerp_1,
+					[armor_types.armored] = damage_lerp_values.lerp_0_75,
+					[armor_types.resistant] = damage_lerp_values.lerp_1,
+					[armor_types.player] = damage_lerp_values.lerp_1,
+					[armor_types.berserker] = damage_lerp_values.lerp_0_5,
+					[armor_types.super_armor] = damage_lerp_values.lerp_0_1,
+					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_75,
+					[armor_types.void_shield] = damage_lerp_values.lerp_0_75
+				},
+				impact = {
+					[armor_types.unarmored] = damage_lerp_values.lerp_0_5,
+					[armor_types.armored] = damage_lerp_values.lerp_0_5,
+					[armor_types.resistant] = damage_lerp_values.lerp_0_5,
+					[armor_types.player] = damage_lerp_values.lerp_1,
+					[armor_types.berserker] = damage_lerp_values.lerp_0_5,
+					[armor_types.super_armor] = damage_lerp_values.no_damage,
+					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_5,
+					[armor_types.void_shield] = damage_lerp_values.lerp_0_5
+				}
+			},
+			power_distribution = {
+				attack = {
+					30,
+					60
+				},
+				impact = {
+					2,
+					5
+				}
+			},
+			boost_curve = PowerLevelSettings.boost_curves.default
+		}
+	},
+	gib_push_force = GibbingSettings.gib_push_force.sawing_light
+}
+overrides.medium_combat_knife_linesman_old = {
 	parent_template_name = "medium_combat_knife_ninja_fencer",
 	overrides = {
 		{
@@ -417,8 +568,7 @@ damage_templates.jab_special = {
 			[armor_types.berserker] = damage_lerp_values.lerp_1,
 			[armor_types.super_armor] = damage_lerp_values.no_damage,
 			[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
-			[armor_types.void_shield] = damage_lerp_values.lerp_1,
-			[armor_types.prop_armor] = damage_lerp_values.lerp_0_75
+			[armor_types.void_shield] = damage_lerp_values.lerp_1
 		},
 		impact = {
 			[armor_types.unarmored] = damage_lerp_values.lerp_1,
@@ -428,8 +578,7 @@ damage_templates.jab_special = {
 			[armor_types.berserker] = damage_lerp_values.lerp_1,
 			[armor_types.super_armor] = damage_lerp_values.lerp_1,
 			[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
-			[armor_types.void_shield] = damage_lerp_values.lerp_1,
-			[armor_types.prop_armor] = damage_lerp_values.lerp_1
+			[armor_types.void_shield] = damage_lerp_values.lerp_1
 		}
 	},
 	targets = {
@@ -444,8 +593,7 @@ damage_templates.jab_special = {
 					[armor_types.berserker] = damage_lerp_values.lerp_1,
 					[armor_types.super_armor] = damage_lerp_values.no_damage,
 					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
-					[armor_types.void_shield] = damage_lerp_values.lerp_1,
-					[armor_types.prop_armor] = damage_lerp_values.lerp_0_75
+					[armor_types.void_shield] = damage_lerp_values.lerp_1
 				},
 				impact = {
 					[armor_types.unarmored] = damage_lerp_values.lerp_1,
@@ -455,8 +603,7 @@ damage_templates.jab_special = {
 					[armor_types.berserker] = damage_lerp_values.lerp_1,
 					[armor_types.super_armor] = damage_lerp_values.lerp_1,
 					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
-					[armor_types.void_shield] = damage_lerp_values.lerp_1,
-					[armor_types.prop_armor] = damage_lerp_values.lerp_1
+					[armor_types.void_shield] = damage_lerp_values.lerp_1
 				}
 			},
 			power_distribution = {
@@ -484,8 +631,7 @@ damage_templates.jab_special = {
 					[armor_types.berserker] = damage_lerp_values.lerp_0_5,
 					[armor_types.super_armor] = damage_lerp_values.no_damage,
 					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_75,
-					[armor_types.void_shield] = damage_lerp_values.lerp_0_75,
-					[armor_types.prop_armor] = damage_lerp_values.lerp_0_5
+					[armor_types.void_shield] = damage_lerp_values.lerp_0_75
 				},
 				impact = {
 					[armor_types.unarmored] = damage_lerp_values.lerp_1,
@@ -495,8 +641,7 @@ damage_templates.jab_special = {
 					[armor_types.berserker] = damage_lerp_values.lerp_1,
 					[armor_types.super_armor] = damage_lerp_values.lerp_1,
 					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
-					[armor_types.void_shield] = damage_lerp_values.lerp_1,
-					[armor_types.prop_armor] = damage_lerp_values.lerp_1
+					[armor_types.void_shield] = damage_lerp_values.lerp_1
 				}
 			},
 			power_distribution = {

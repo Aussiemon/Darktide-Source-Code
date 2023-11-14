@@ -353,6 +353,25 @@ local legend_inputs = {
 		end
 	},
 	{
+		input_action = "hotkey_toggle_item_tooltip",
+		display_name = "loc_menu_toggle_ui_visibility_on",
+		alignment = "right_alignment",
+		on_pressed_callback = "cb_on_item_stats_toggled",
+		visibility_function = function (parent, id)
+			if not InputDevice.gamepad_active then
+				return
+			end
+
+			local display_name = parent:is_item_stats_toggled() and "loc_menu_toggle_ui_visibility_off" or "loc_menu_toggle_ui_visibility_on"
+
+			parent._input_legend_element:set_display_name(id, display_name)
+
+			local active_view = parent._active_view
+
+			return active_view and active_view == "inventory_view"
+		end
+	},
+	{
 		display_name = "loc_talent_menu_action_clear_all_points",
 		input_action = "hotkey_menu_special_1",
 		alignment = "right_alignment",

@@ -105,7 +105,7 @@ local abilities = {
 		stat_buff = "extra_max_amount_of_grenades",
 		inventory_item_name = "content/items/weapons/player/grenade_ogryn_frag",
 		icon = "content/ui/materials/icons/abilities/combat/default",
-		show_in_firendly_hud = true,
+		show_in_friendly_hud = true,
 		max_charges = 1,
 		archetypes = {
 			"ogryn"
@@ -117,7 +117,7 @@ local abilities = {
 		stat_buff = "extra_max_amount_of_grenades",
 		inventory_item_name = "content/items/weapons/player/grenade_box_ogryn",
 		icon = "content/ui/materials/icons/abilities/combat/default",
-		show_in_firendly_hud = true,
+		show_in_friendly_hud = true,
 		max_charges = 2,
 		archetypes = {
 			"ogryn"
@@ -129,7 +129,7 @@ local abilities = {
 		stat_buff = "extra_max_amount_of_grenades",
 		inventory_item_name = "content/items/weapons/player/grenade_box_ogryn_cluster",
 		icon = "content/ui/materials/icons/abilities/combat/default",
-		show_in_firendly_hud = true,
+		show_in_friendly_hud = true,
 		max_charges = 2,
 		archetypes = {
 			"ogryn"
@@ -137,7 +137,7 @@ local abilities = {
 	},
 	ogryn_grenade_friend_rock = {
 		inventory_item_name = "content/items/weapons/player/grenade_ogryn_friend_rock",
-		show_in_firendly_hud = false,
+		show_in_friendly_hud = false,
 		stat_buff = "extra_max_amount_of_grenades",
 		cooldown = 45,
 		hud_icon = "content/ui/materials/icons/abilities/throwables/default",

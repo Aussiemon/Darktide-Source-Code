@@ -244,10 +244,6 @@ MissionObjectiveSystem.end_mission_objective = function (self, objective_name)
 	self._active_objectives[objective_name] = nil
 
 	if self._is_server then
-		local mission_name = Managers.state.mission:mission_name()
-		local current_time = Managers.time:time("main")
-		local start_time = self._objective_start_times[objective] or 0
-		local objective_time = current_time - start_time
 		self._objective_start_times[objective] = nil
 		local players = Managers.player:players()
 
@@ -257,10 +253,6 @@ MissionObjectiveSystem.end_mission_objective = function (self, objective_name)
 			end
 
 			Managers.telemetry_events:player_completed_objective(player, objective_name)
-
-			if player:is_human_controlled() and Managers.stats.can_record_stats() then
-				Managers.stats:record_objective_complete(player, mission_name, objective_name, objective_type, objective_time)
-			end
 		end
 	end
 end

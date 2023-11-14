@@ -56,7 +56,7 @@ ActionVeteranCombatAbility.start = function (self, action_settings, t, time_scal
 				local buff_extension = ScriptUnit.has_extension(coherency_unit, "buff_system")
 
 				if buff_extension then
-					buff_extension:add_internally_controlled_buff("veteran_combat_ability_increase_toughness_to_coherency", t)
+					buff_extension:add_internally_controlled_buff("veteran_combat_ability_increase_toughness_to_coherency", t, "owner_unit", player_unit)
 				end
 			end
 		end

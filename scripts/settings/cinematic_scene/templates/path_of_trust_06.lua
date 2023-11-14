@@ -25,7 +25,7 @@ local cinematic_scene_templates = {
 		},
 		popup_info = {
 			header_text = "loc_popup_path_of_trust_cutscene_waiting_hangar_header",
-			button_text = "loc_popup_button_path_of_trust_accept_cutscene",
+			button_text = "loc_popup_cutscene_strategium_accept_button",
 			description_text = "loc_popup_path_of_trust_cutscene_waiting_hangar_description"
 		}
 	}

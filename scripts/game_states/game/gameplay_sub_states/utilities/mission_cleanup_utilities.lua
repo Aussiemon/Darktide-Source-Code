@@ -41,7 +41,6 @@ MissionCleanupUtilies.cleanup = function (shared_state, gameplay_state)
 	Managers.player:unset_network()
 	Managers.player:on_game_state_exit(gameplay_state)
 	MissionCleanupUtilies._unregister_network_events(is_server, shared_state)
-	MissionCleanupUtilies._destroy_nvidia_ai_agent(is_dedicated_server, shared_state)
 
 	if Managers.state.game_session then
 		Managers.state.game_session:disconnect()
@@ -92,14 +91,6 @@ MissionCleanupUtilies._unregister_network_events = function (is_server, shared_s
 		network_event_delegate:unregister_events(unpack(SERVER_RPCS))
 	else
 		network_event_delegate:unregister_events(unpack(CLIENT_RPCS))
-	end
-end
-
-MissionCleanupUtilies._destroy_nvidia_ai_agent = function (is_dedicated_server, shared_state)
-	if GameParameters.nvidia_ai_agent and not is_dedicated_server and shared_state.nvidia_ai_agent then
-		shared_state.nvidia_ai_agent:destroy()
-
-		shared_state.nvidia_ai_agent = nil
 	end
 end
 

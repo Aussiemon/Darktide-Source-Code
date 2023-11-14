@@ -25,8 +25,7 @@ local killshot_armor_mod = {
 			[armor_types.berserker] = 0.5,
 			[armor_types.super_armor] = 0,
 			[armor_types.disgustingly_resilient] = 0.5,
-			[armor_types.void_shield] = 0.5,
-			[armor_types.prop_armor] = 0.7
+			[armor_types.void_shield] = 0.5
 		},
 		impact = {
 			[armor_types.unarmored] = 1,
@@ -36,8 +35,7 @@ local killshot_armor_mod = {
 			[armor_types.berserker] = 0.5,
 			[armor_types.super_armor] = 0,
 			[armor_types.disgustingly_resilient] = 0.5,
-			[armor_types.void_shield] = 0.5,
-			[armor_types.prop_armor] = 1
+			[armor_types.void_shield] = 0.5
 		}
 	},
 	far = {
@@ -49,8 +47,7 @@ local killshot_armor_mod = {
 			[armor_types.berserker] = 0.5,
 			[armor_types.super_armor] = 0,
 			[armor_types.disgustingly_resilient] = 0.75,
-			[armor_types.void_shield] = 0.75,
-			[armor_types.prop_armor] = 0.8
+			[armor_types.void_shield] = 0.75
 		},
 		impact = {
 			[armor_types.unarmored] = 1,
@@ -60,8 +57,7 @@ local killshot_armor_mod = {
 			[armor_types.berserker] = 0.5,
 			[armor_types.super_armor] = 0,
 			[armor_types.disgustingly_resilient] = 0.75,
-			[armor_types.void_shield] = 0.75,
-			[armor_types.prop_armor] = 0.5
+			[armor_types.void_shield] = 0.75
 		}
 	}
 }
@@ -84,8 +80,7 @@ damage_templates.default_killshot = {
 				[armor_types.berserker] = 0.5,
 				[armor_types.super_armor] = 0,
 				[armor_types.disgustingly_resilient] = 0.5,
-				[armor_types.void_shield] = 0.5,
-				[armor_types.prop_armor] = 0.75
+				[armor_types.void_shield] = 0.5
 			},
 			impact = {
 				[armor_types.unarmored] = 1,
@@ -95,8 +90,7 @@ damage_templates.default_killshot = {
 				[armor_types.berserker] = 1,
 				[armor_types.super_armor] = 0,
 				[armor_types.disgustingly_resilient] = 0.5,
-				[armor_types.void_shield] = 0.5,
-				[armor_types.prop_armor] = 2
+				[armor_types.void_shield] = 0.5
 			}
 		},
 		far = {
@@ -108,8 +102,7 @@ damage_templates.default_killshot = {
 				[armor_types.berserker] = 0.5,
 				[armor_types.super_armor] = 0,
 				[armor_types.disgustingly_resilient] = 0.4,
-				[armor_types.void_shield] = 0.4,
-				[armor_types.prop_armor] = 0.8
+				[armor_types.void_shield] = 0.4
 			},
 			impact = {
 				[armor_types.unarmored] = 1,
@@ -119,8 +112,7 @@ damage_templates.default_killshot = {
 				[armor_types.berserker] = 0.5,
 				[armor_types.super_armor] = 0,
 				[armor_types.disgustingly_resilient] = 0.4,
-				[armor_types.void_shield] = 0.4,
-				[armor_types.prop_armor] = 0.5
+				[armor_types.void_shield] = 0.4
 			}
 		}
 	},
@@ -193,8 +185,7 @@ damage_templates.medium_killshot = {
 				[armor_types.berserker] = 0.5,
 				[armor_types.super_armor] = 0,
 				[armor_types.disgustingly_resilient] = 0.5,
-				[armor_types.void_shield] = 0.5,
-				[armor_types.prop_armor] = 0.75
+				[armor_types.void_shield] = 0.5
 			},
 			impact = {
 				[armor_types.unarmored] = 1,
@@ -204,8 +195,7 @@ damage_templates.medium_killshot = {
 				[armor_types.berserker] = 0.5,
 				[armor_types.super_armor] = 0,
 				[armor_types.disgustingly_resilient] = 0.75,
-				[armor_types.void_shield] = 0.75,
-				[armor_types.prop_armor] = 0.5
+				[armor_types.void_shield] = 0.75
 			}
 		},
 		far = {
@@ -217,8 +207,7 @@ damage_templates.medium_killshot = {
 				[armor_types.berserker] = 0.5,
 				[armor_types.super_armor] = 0,
 				[armor_types.disgustingly_resilient] = 0.75,
-				[armor_types.void_shield] = 0.75,
-				[armor_types.prop_armor] = 0.9
+				[armor_types.void_shield] = 0.75
 			},
 			impact = {
 				[armor_types.unarmored] = 1,
@@ -228,8 +217,7 @@ damage_templates.medium_killshot = {
 				[armor_types.berserker] = 0.5,
 				[armor_types.super_armor] = 0,
 				[armor_types.disgustingly_resilient] = 0.5,
-				[armor_types.void_shield] = 0.5,
-				[armor_types.prop_armor] = 0.5
+				[armor_types.void_shield] = 0.5
 			}
 		}
 	},
@@ -272,8 +260,7 @@ damage_templates.heavy_killshot = {
 				[armor_types.berserker] = 0.5,
 				[armor_types.super_armor] = 0.5,
 				[armor_types.disgustingly_resilient] = 0.5,
-				[armor_types.void_shield] = 0.5,
-				[armor_types.prop_armor] = 0.85
+				[armor_types.void_shield] = 0.5
 			},
 			impact = {
 				[armor_types.unarmored] = 1,
@@ -283,8 +270,7 @@ damage_templates.heavy_killshot = {
 				[armor_types.berserker] = 0.5,
 				[armor_types.super_armor] = 0,
 				[armor_types.disgustingly_resilient] = 1,
-				[armor_types.void_shield] = 1,
-				[armor_types.prop_armor] = 1
+				[armor_types.void_shield] = 1
 			}
 		},
 		far = {
@@ -296,8 +282,7 @@ damage_templates.heavy_killshot = {
 				[armor_types.berserker] = 0.5,
 				[armor_types.super_armor] = 0,
 				[armor_types.disgustingly_resilient] = 1,
-				[armor_types.void_shield] = 1,
-				[armor_types.prop_armor] = 0.9
+				[armor_types.void_shield] = 1
 			},
 			impact = {
 				[armor_types.unarmored] = 1,
@@ -307,8 +292,7 @@ damage_templates.heavy_killshot = {
 				[armor_types.berserker] = 0.5,
 				[armor_types.super_armor] = 0.5,
 				[armor_types.disgustingly_resilient] = 1,
-				[armor_types.void_shield] = 1,
-				[armor_types.prop_armor] = 0.5
+				[armor_types.void_shield] = 1
 			}
 		}
 	},
@@ -357,8 +341,7 @@ damage_templates.shotgun_killshot = {
 				[armor_types.berserker] = 0.9,
 				[armor_types.super_armor] = 0.2,
 				[armor_types.disgustingly_resilient] = 0.5,
-				[armor_types.void_shield] = 0.5,
-				[armor_types.prop_armor] = 0.75
+				[armor_types.void_shield] = 0.5
 			},
 			impact = {
 				[armor_types.unarmored] = 2,
@@ -368,8 +351,7 @@ damage_templates.shotgun_killshot = {
 				[armor_types.berserker] = 2,
 				[armor_types.super_armor] = 0,
 				[armor_types.disgustingly_resilient] = 2,
-				[armor_types.void_shield] = 2,
-				[armor_types.prop_armor] = 3
+				[armor_types.void_shield] = 2
 			}
 		},
 		far = {
@@ -381,8 +363,7 @@ damage_templates.shotgun_killshot = {
 				[armor_types.berserker] = 0.2,
 				[armor_types.super_armor] = 0,
 				[armor_types.disgustingly_resilient] = 0.4,
-				[armor_types.void_shield] = 0.4,
-				[armor_types.prop_armor] = 0.5
+				[armor_types.void_shield] = 0.4
 			},
 			impact = {
 				[armor_types.unarmored] = 1,
@@ -392,8 +373,7 @@ damage_templates.shotgun_killshot = {
 				[armor_types.berserker] = 0.5,
 				[armor_types.super_armor] = 0,
 				[armor_types.disgustingly_resilient] = 0.5,
-				[armor_types.void_shield] = 0.5,
-				[armor_types.prop_armor] = 1.25
+				[armor_types.void_shield] = 0.5
 			}
 		}
 	},

@@ -35,7 +35,7 @@ local weapon_template = {
 			}
 		},
 		shoot_release = {
-			buffer_time = 0.616,
+			buffer_time = 0.25,
 			input_sequence = {
 				{
 					value = false,
@@ -173,9 +173,9 @@ weapon_template.actions = {
 		kind = "ranged_wield",
 		wield_anim_event = "equip",
 		wield_reload_anim_event = "equip_reload",
-		weapon_handling_template = "time_scale_1_3",
+		weapon_handling_template = "time_scale_1_5",
 		allowed_during_sprint = true,
-		total_time = 1.9,
+		total_time = 1,
 		conditional_state_to_action_input = {
 			started_reload = {
 				input_name = "reload"
@@ -206,7 +206,7 @@ weapon_template.actions = {
 			},
 			shoot = {
 				action_name = "action_shoot_hip",
-				chain_time = 1.2
+				chain_time = 1
 			},
 			stab = {
 				action_name = "action_stab",
@@ -215,7 +215,7 @@ weapon_template.actions = {
 		}
 	},
 	action_shoot_hip = {
-		minimum_hold_time = 0.6,
+		minimum_hold_time = 0.025,
 		weapon_handling_template = "ogryn_heavystubber_p1_m3_hip_fire",
 		start_input = "shoot",
 		sprint_requires_press_to_interrupt = true,
@@ -229,26 +229,26 @@ weapon_template.actions = {
 		total_time = math.huge,
 		action_movement_curve = {
 			{
-				modifier = 0.6,
+				modifier = 0.95,
 				t = 0.05
 			},
 			{
-				modifier = 0.8,
+				modifier = 0.96,
 				t = 0.15
 			},
 			{
-				modifier = 0.875,
+				modifier = 0.97,
 				t = 0.175
 			},
 			{
-				modifier = 0.875,
+				modifier = 0.98,
 				t = 0.3
 			},
 			{
-				modifier = 0.95,
+				modifier = 0.99,
 				t = 0.5
 			},
-			start_modifier = 0.7
+			start_modifier = 0.95
 		},
 		fx = {
 			pre_loop_shoot_sfx_alias = "ranged_pre_loop_shot",
@@ -309,7 +309,7 @@ weapon_template.actions = {
 		}
 	},
 	action_shoot_zoomed = {
-		minimum_hold_time = 0.6,
+		minimum_hold_time = 0.1,
 		start_input = "zoom_shoot",
 		anim_end_event = "attack_finished",
 		kind = "shoot_hit_scan",
@@ -320,30 +320,26 @@ weapon_template.actions = {
 		total_time = math.huge,
 		action_movement_curve = {
 			{
-				modifier = 0.4,
+				modifier = 0.92,
+				t = 0.05
+			},
+			{
+				modifier = 0.925,
 				t = 0.15
 			},
 			{
-				modifier = 0.25,
+				modifier = 0.93,
+				t = 0.175
+			},
+			{
+				modifier = 0.935,
 				t = 0.3
 			},
 			{
-				modifier = 0.5,
+				modifier = 0.94,
 				t = 0.5
 			},
-			{
-				modifier = 0.75,
-				t = 1
-			},
-			{
-				modifier = 0.65,
-				t = 2
-			},
-			{
-				modifier = 0.75,
-				t = 5
-			},
-			start_modifier = 0.35
+			start_modifier = 0.91
 		},
 		fire_configuration = {
 			anim_event = "attack_shoot",
@@ -481,7 +477,8 @@ weapon_template.actions = {
 	action_unzoom = {
 		kind = "unaim",
 		start_input = "zoom_release",
-		total_time = 0.5,
+		weapon_handling_template = "time_scale_1_2",
+		total_time = 0.25,
 		allowed_chain_actions = {
 			combat_ability = {
 				action_name = "combat_ability"
@@ -511,15 +508,17 @@ weapon_template.actions = {
 		}
 	},
 	action_brace_reload = {
-		kind = "reload_state",
 		uninterruptible = true,
-		start_input = "brace_reload",
 		sprint_requires_press_to_interrupt = true,
+		start_input = "brace_reload",
+		kind = "reload_state",
 		weapon_handling_template = "time_scale_1_3",
 		abort_sprint = true,
-		crosshair_type = "none",
 		allowed_during_sprint = true,
 		total_time = 7,
+		crosshair = {
+			crosshair_type = "none"
+		},
 		action_movement_curve = {
 			{
 				modifier = 0.475,
@@ -581,15 +580,17 @@ weapon_template.actions = {
 		}
 	},
 	action_reload = {
-		kind = "reload_state",
-		start_input = "reload",
-		sprint_requires_press_to_interrupt = true,
-		weapon_handling_template = "time_scale_1_3",
 		stop_alternate_fire = true,
+		start_input = "reload",
+		kind = "reload_state",
+		weapon_handling_template = "time_scale_1_4",
+		sprint_requires_press_to_interrupt = true,
 		abort_sprint = true,
-		crosshair_type = "none",
 		allowed_during_sprint = true,
-		total_time = 7,
+		total_time = 6,
+		crosshair = {
+			crosshair_type = "none"
+		},
 		action_movement_curve = {
 			{
 				modifier = 0.475,
@@ -657,18 +658,20 @@ weapon_template.actions = {
 		damage_window_start = 0.3,
 		hit_armor_anim = "attack_hit_shield",
 		start_input = "stab",
-		allow_conditional_chain = true,
+		range_mod = 1.15,
 		kind = "sweep",
 		first_person_hit_anim = "hit_right_shake",
-		range_mod = 1.15,
+		anim_event = "attack_bash_right",
 		first_person_hit_stop_anim = "hit_stop",
-		crosshair_type = "dot",
 		allowed_during_sprint = true,
 		damage_window_end = 0.5,
 		attack_direction_override = "right",
 		uninterruptible = true,
-		anim_event = "attack_bash_right",
+		allow_conditional_chain = true,
 		total_time = 1.4,
+		crosshair = {
+			crosshair_type = "dot"
+		},
 		action_movement_curve = {
 			{
 				modifier = 0.4,
@@ -754,10 +757,12 @@ weapon_template.actions = {
 		start_input = "inspect_start",
 		anim_end_event = "inspect_end",
 		kind = "inspect",
-		crosshair_type = "inspect",
 		anim_event = "inspect_start",
 		stop_input = "inspect_stop",
-		total_time = math.huge
+		total_time = math.huge,
+		crosshair = {
+			crosshair_type = "inspect"
+		}
 	}
 }
 
@@ -771,7 +776,7 @@ weapon_template.anim_state_machine_3p = "content/characters/player/ogryn/third_p
 weapon_template.anim_state_machine_1p = "content/characters/player/ogryn/first_person/animations/heavy_stubber_twin_linked"
 weapon_template.reload_template = ReloadTemplates.heavy_stubber_twin_linked
 weapon_template.sway_template = "ogyn_heavy_stubber_sway"
-weapon_template.spread_template = "ogryn_heavystubber_spread_spraynpray_hip"
+weapon_template.spread_template = "ogryn_heavystubber_spread_spraynpray_hip_m3"
 weapon_template.recoil_template = "default_ogryn_heavystubber_recoil_spraynpray_hip_m3"
 weapon_template.look_delta_template = "default"
 weapon_template.ammo_template = "ogryn_heavystubber_p1_m3"
@@ -804,17 +809,21 @@ weapon_template.fx_sources = {
 	_muzzle = "fx_01",
 	_eject_secondary = "fx_eject_02"
 }
-weapon_template.crosshair_type = "spray_n_pray"
+weapon_template.crosshair = {
+	crosshair_type = "spray_n_pray"
+}
 weapon_template.hit_marker_type = "center"
 weapon_template.alternate_fire_settings = {
 	recoil_template = "default_ogryn_heavystubber_recoil_spraynpray_brace_m3",
 	sway_template = "ogyn_heavy_stubber_sway",
 	stop_anim_event = "to_unaim_braced",
-	spread_template = "default_ogryn_heavystubber_braced",
-	crosshair_type = "spray_n_pray",
+	spread_template = "ogryn_heavystubber_spread_spraynpray_braced_m3",
 	uninterruptible = true,
 	start_anim_event = "to_braced",
 	look_delta_template = "lasgun_brace_light",
+	crosshair = {
+		crosshair_type = "spray_n_pray"
+	},
 	camera = {
 		custom_vertical_fov = 55,
 		vertical_fov = 60,
@@ -822,28 +831,20 @@ weapon_template.alternate_fire_settings = {
 	},
 	movement_speed_modifier = {
 		{
-			modifier = 0.275,
+			modifier = 0.65,
 			t = 0.05
 		},
 		{
-			modifier = 0.34,
+			modifier = 0.7,
 			t = 0.075
 		},
 		{
-			modifier = 0.29,
+			modifier = 0.72,
 			t = 0.25
 		},
 		{
-			modifier = 0.3,
+			modifier = 0.74,
 			t = 0.3
-		},
-		{
-			modifier = 0.5,
-			t = 0.4
-		},
-		{
-			modifier = 0.6,
-			t = 0.5
 		},
 		{
 			modifier = 0.75,

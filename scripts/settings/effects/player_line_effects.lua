@@ -52,6 +52,34 @@ local line_effects = {
 			}
 		}
 	},
+	lasbeam_heavy_pistol = {
+		sfx = "wwise/events/weapon/play_weapon_lasgun_crack_beam_nearby",
+		vfx = "content/fx/particles/weapons/rifles/lasgun/lasgun_beam",
+		vfx_width = 0.375,
+		keep_aligned = true,
+		vfx_crit = "content/fx/particles/weapons/rifles/lasgun/lasgun_beam_crit",
+		link = true,
+		emitters = {
+			vfx = {
+				default = "content/fx/particles/weapons/rifles/lasgun/lasgun_beam_standard_linger",
+				start = "content/fx/particles/weapons/rifles/lasgun/lasgun_beam_standard_linger"
+			},
+			interval = {
+				distance = 5,
+				increase = 0
+			}
+		},
+		emitters_crit = {
+			vfx = {
+				default = "content/fx/particles/weapons/rifles/laspistol/lasgun_heavy_beam_crit_trail",
+				start = "content/fx/particles/weapons/rifles/laspistol/lasgun_heavy_beam_crit_trail"
+			},
+			interval = {
+				distance = 5,
+				increase = 0
+			}
+		}
+	},
 	lasbeam_killshot = {
 		sfx = "wwise/events/weapon/play_weapon_lasgun_crack_beam_nearby",
 		vfx = "content/fx/particles/weapons/rifles/lasgun/lasgun_beam",
@@ -156,6 +184,38 @@ local line_effects = {
 			vfx = {
 				default = "content/fx/particles/weapons/rifles/lasgun/lasgun_crit_trail",
 				start = "content/fx/particles/weapons/rifles/lasgun/lasgun_crit_trail"
+			},
+			interval = {
+				distance = 5,
+				increase = 0
+			}
+		}
+	},
+	heavy_stubpistol_bullet = {
+		vfx = "content/fx/particles/weapons/rifles/autogun/autogun_tracer_trail",
+		vfx_width = 0.0022,
+		keep_aligned = true,
+		vfx_crit = "content/fx/particles/weapons/rifles/autogun/autogun_tracer_trail",
+		moving_sfx = {
+			distance_offset = 2,
+			duration = 0.8,
+			early_stop_event_alias = "flyby_stop",
+			event_alias = "flyby"
+		},
+		emitters = {
+			vfx = {
+				default = "content/fx/particles/weapons/rifles/autogun/autogun_smoke_trail",
+				start = "content/fx/particles/weapons/rifles/autogun/autogun_smoke_trail"
+			},
+			interval = {
+				distance = 5,
+				increase = 0
+			}
+		},
+		emitters_crit = {
+			vfx = {
+				default = "content/fx/particles/weapons/pistols/stubrevolver/stubrevolver_heavy_trail",
+				start = "content/fx/particles/weapons/pistols/stubrevolver/stubrevolver_heavy_trail"
 			},
 			interval = {
 				distance = 5,

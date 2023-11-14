@@ -294,7 +294,7 @@ local text_input_base = {
 					content.input_text = ""
 					content.selected_text = input_text
 					local max_length = content.max_length
-					local x_game_ui = XAsyncBlock.new_block()
+					local x_game_ui = XGameUI.new_block()
 					content.x_async_block = x_game_ui
 
 					XGameUI.show_text_entry_async(x_game_ui, title, description, input_text, "default", max_length)

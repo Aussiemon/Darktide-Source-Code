@@ -118,8 +118,8 @@ HudElementCombatFeed._add_combat_feed_message = function (self, text)
 	self:_set_text(notification_id, text)
 end
 
-HudElementCombatFeed.destroy = function (self)
-	HudElementCombatFeed.super.destroy(self)
+HudElementCombatFeed.destroy = function (self, ui_renderer)
+	HudElementCombatFeed.super.destroy(self, ui_renderer)
 
 	local event_manager = Managers.event
 	local events = HudElementCombatFeedSettings.events

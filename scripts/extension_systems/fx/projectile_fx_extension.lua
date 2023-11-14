@@ -193,8 +193,6 @@ ProjectileFxExtension.on_fuse_started = function (self)
 		self:start_fx("fuse")
 
 		self._life_times.fuse = 0
-
-		Unit.flow_event(self._unit, "fuse_started")
 	end
 end
 
@@ -235,6 +233,30 @@ ProjectileFxExtension.on_cluster = function (self)
 
 	if effects and effects.cluster then
 		self:start_fx("cluster")
+	end
+end
+
+ProjectileFxExtension.hot_join_sync = function (self, unit, sender, channel_id)
+	if self._fuse_started then
+		local effect_type = "fuse"
+		local should_sync = SYNC_EFFECT[effect_type]
+
+		if should_sync then
+			local effect_type_id = NetworkLookup.projectile_template_effects[effect_type]
+
+			RPC.rpc_projectile_trigger_fx(channel_id, self._game_object_id, effect_type_id)
+		end
+	end
+
+	if self._has_impacted then
+		local effect_type = "impact"
+		local should_sync = SYNC_EFFECT[effect_type]
+
+		if should_sync then
+			local effect_type_id = NetworkLookup.projectile_template_effects[effect_type]
+
+			RPC.rpc_projectile_trigger_fx(channel_id, self._game_object_id, effect_type_id)
+		end
 	end
 end
 
@@ -294,6 +316,12 @@ ProjectileFxExtension.start_fx = function (self, effect_type)
 				World.set_particles_variable(world, effect_id, variable_index, Vector3(variable_charge_level, variable_charge_level, variable_charge_level))
 			end
 		end
+	end
+
+	local flow_event = effects.flow_event
+
+	if flow_event then
+		Unit.flow_event(self._unit, flow_event)
 	end
 
 	if self._is_server and self._game_object_id then

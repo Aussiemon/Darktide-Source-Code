@@ -25,7 +25,7 @@ PullUpInteraction.stop = function (self, world, interactor_unit, unit_data_compo
 		assisted_state_input_component.success = true
 
 		self:_handle_buffs(interactor_unit, target_unit, proc_events.on_pull_up)
-		self:_record_stats_and_telemetry(interactor_unit, target_unit, "record_assist_ally", "ledge_hanging")
+		self:_record_stats_and_telemetry(interactor_unit, target_unit, "hook_assist_ally", "ledge_hanging")
 	end
 end
 

@@ -21,7 +21,7 @@ RemoveNetInteraction.stop = function (self, world, interactor_unit, unit_data_co
 		assisted_state_input_component.success = true
 
 		self:_handle_buffs(interactor_unit, target_unit, proc_events.on_remove_net)
-		self:_record_stats_and_telemetry(interactor_unit, target_unit, "record_assist_ally", "netted")
+		self:_record_stats_and_telemetry(interactor_unit, target_unit, "hook_assist_ally", "netted")
 	end
 end
 

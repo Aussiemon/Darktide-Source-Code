@@ -25,7 +25,7 @@ RescueInteraction.stop = function (self, world, interactor_unit, unit_data_compo
 		hogtied_state_input.hogtie = false
 
 		self:_handle_buffs(interactor_unit, target_unit, proc_events.on_rescue)
-		self:_record_stats_and_telemetry(interactor_unit, target_unit, "record_rescue_ally", "hogtied")
+		self:_record_stats_and_telemetry(interactor_unit, target_unit, "hook_rescue_ally", "hogtied")
 	end
 end
 

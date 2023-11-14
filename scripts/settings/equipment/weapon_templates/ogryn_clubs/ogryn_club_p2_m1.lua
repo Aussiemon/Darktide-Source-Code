@@ -1166,10 +1166,12 @@ weapon_template.actions = {
 		start_input = "inspect_start",
 		anim_end_event = "inspect_end",
 		kind = "inspect",
-		crosshair_type = "inspect",
 		anim_event = "inspect_start",
 		stop_input = "inspect_stop",
-		total_time = math.huge
+		total_time = math.huge,
+		crosshair = {
+			crosshair_type = "inspect"
+		}
 	}
 }
 local WeaponBarUIDescriptionTemplates = require("scripts/settings/equipment/weapon_bar_ui_description_templates")
@@ -1435,7 +1437,9 @@ weapon_template.fx_sources = {
 	_block = "fx_block",
 	_sweep = "fx_sweep"
 }
-weapon_template.crosshair_type = "dot"
+weapon_template.crosshair = {
+	crosshair_type = "dot"
+}
 weapon_template.hit_marker_type = "center"
 weapon_template.keywords = {
 	"melee",

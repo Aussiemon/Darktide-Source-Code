@@ -426,13 +426,15 @@ InventoryWeaponsView._fetch_inventory_items = function (self, selected_slot)
 					remove_new_marker_callback = self._parent and callback(self._parent, "remove_new_item_mark")
 				end
 
+				local widget_type = "item"
+
 				if valid and slots then
 					for j = 1, #slots do
 						if slots[j] == slot_name then
 							layout[#layout + 1] = {
-								widget_type = "item",
 								item = item,
 								slot = selected_slot,
+								widget_type = widget_type,
 								new_item_marker = is_new,
 								remove_new_marker_callback = remove_new_marker_callback
 							}
@@ -838,6 +840,83 @@ InventoryWeaponsView._mark_item_for_discard = function (self, grid_index)
 	end
 
 	Managers.event:trigger("event_discard_item", item)
+end
+
+InventoryWeaponsView.event_discard_items = function (self, items)
+	local gear_ids = {}
+
+	for i = 1, #items do
+		local item = items[i]
+		gear_ids[item.gear_id] = true
+	end
+
+	local item_grid = self._item_grid
+	local grid = item_grid:grid()
+	local grid_widgets = self:grid_widgets()
+
+	for i = #grid_widgets, 1, -1 do
+		local widget = grid_widgets[i]
+		local content = widget.content
+		local element = content.element
+		local widget_item = element.item
+
+		if widget_item and gear_ids[widget_item.gear_id] then
+			item_grid:remove_widget(widget)
+		end
+	end
+
+	grid:clear_scroll_progress()
+
+	for i = 1, #items do
+		local item = items[i]
+		local gear_id = item.gear_id
+		local inventory_items = self._inventory_items
+
+		for j = 1, #inventory_items do
+			if inventory_items[j].gear_id == gear_id then
+				table.remove(self._inventory_items, j)
+
+				break
+			end
+		end
+
+		local offer_items_layout = self._offer_items_layout
+
+		if offer_items_layout then
+			for j = 1, #offer_items_layout do
+				if offer_items_layout[j].item.gear_id == gear_id then
+					table.remove(self._offer_items_layout, j)
+
+					break
+				end
+			end
+		end
+
+		local filtered_offer_items_layout = self._filtered_offer_items_layout
+
+		if filtered_offer_items_layout then
+			for j = 1, #filtered_offer_items_layout do
+				if filtered_offer_items_layout[j].item.gear_id == gear_id then
+					table.remove(self._filtered_offer_items_layout, j)
+
+					break
+				end
+			end
+		end
+	end
+
+	local new_grid_index = 1
+	local new_element = new_grid_index and self:element_by_index(new_grid_index)
+
+	if new_element then
+		local new_selection_item = new_element.item
+
+		self:focus_on_item(new_selection_item)
+	else
+		self:_stop_previewing()
+	end
+
+	self:update_grid_widgets_visibility()
 end
 
 InventoryWeaponsView._stop_previewing = function (self)

@@ -457,8 +457,7 @@ RoamerPacing._generate_roamers = function (self, zones, roamers)
 				local faction = zone.faction
 				local density_type = zone.density_type
 				local spawn_point_index = zone.spawn_point_index
-				local limit_settings = limit_difficulty_settings and Managers.state.difficulty:get_table_entry_by_challenge(limit_difficulty_settings)
-				limit_settings = limit_difficulty_settings and Managers.state.difficulty:get_table_entry_by_resistance(limit_difficulty_settings)
+				local limit_settings = limit_difficulty_settings and Managers.state.difficulty:get_table_entry_by_resistance(limit_difficulty_settings)
 				local tag_limits = limit_settings and table.clone(limit_settings.tag_limits)
 
 				if tag_limits then

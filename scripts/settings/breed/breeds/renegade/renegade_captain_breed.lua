@@ -457,6 +457,7 @@ local breed_data = {
 		}
 	},
 	phase_template = PhaseTemplates.renegade_captain_default,
+	outline_config = {},
 	blackboard_component_config = BreedBlackboardComponentTemplates.renegade_captain
 }
 

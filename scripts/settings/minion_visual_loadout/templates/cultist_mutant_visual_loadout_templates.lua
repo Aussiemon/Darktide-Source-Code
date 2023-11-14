@@ -6,6 +6,7 @@ local templates = {
 local basic_cultist_mutant_template = {
 	slots = {
 		slot_body = {
+			use_outline = true,
 			items = {
 				"content/items/characters/minions/chaos_mutant_charger/attachments_base/body",
 				"content/items/characters/minions/chaos_mutant_charger/attachments_base/body_tattoo_01",

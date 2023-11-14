@@ -19,6 +19,8 @@ ScanningInteraction.stop = function (self, world, interactor_unit, unit_data_com
 		local target_unit = unit_data_component.target_unit
 		local zone_scannable_extension = ScriptUnit.has_extension(target_unit, "mission_objective_zone_scannable_system")
 
+		Unit.flow_event(target_unit, "lua_event_scanned")
+
 		if zone_scannable_extension then
 			local mission_objective_zone_system = Managers.state.extension:system("mission_objective_zone_system")
 			local zone_scan_extension = mission_objective_zone_system:current_active_zone()

@@ -72,7 +72,7 @@ end
 HudElementPlayerWeapon.destroy = function (self, ui_renderer)
 	self:_unregister_events()
 	self:_destroy_widgets(ui_renderer)
-	HudElementPlayerWeapon.super.destroy(self)
+	HudElementPlayerWeapon.super.destroy(self, ui_renderer)
 end
 
 HudElementPlayerWeapon._destroy_widgets = function (self, ui_renderer, use_retained_mode)

@@ -305,7 +305,9 @@ local function generate_base_template(functional_unit, visual_unit, allow_rotati
 	base_template.uses_overheat = false
 	base_template.sprint_ready_up_time = 0.1
 	base_template.max_first_person_anim_movement_speed = 5.8
-	base_template.crosshair_type = "dot"
+	base_template.crosshair = {
+		crosshair_type = "dot"
+	}
 	base_template.hit_marker_type = "center"
 	base_template.fx_sources = {
 		_muzzle = "fx_right"

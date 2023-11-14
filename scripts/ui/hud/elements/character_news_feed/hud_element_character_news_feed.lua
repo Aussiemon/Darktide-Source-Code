@@ -71,14 +71,14 @@ HudElementCharacterNewsFeed.event_resync_character_news_feed = function (self)
 	self:_fetch_inventory_items()
 end
 
-HudElementCharacterNewsFeed.destroy = function (self)
+HudElementCharacterNewsFeed.destroy = function (self, ui_renderer)
 	if self._gear_promise then
 		self._gear_promise:cancel()
 
 		self._gear_promise = nil
 	end
 
-	HudElementCharacterNewsFeed.super.destroy(self)
+	HudElementCharacterNewsFeed.super.destroy(self, ui_renderer)
 end
 
 HudElementCharacterNewsFeed._fetch_new_items = function (self)

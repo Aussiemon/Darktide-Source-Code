@@ -11,7 +11,6 @@ local push_fx_templates = {
 			[armor_types.resistant] = "wwise/events/weapon/play_specials_push_unarmored",
 			[armor_types.super_armor] = "wwise/events/weapon/play_specials_push_super_armor",
 			[armor_types.unarmored] = "wwise/events/weapon/play_specials_push_unarmored",
-			[armor_types.prop_armor] = "wwise/events/weapon/play_specials_push_unarmored",
 			[armor_types.void_shield] = "wwise/events/weapon/play_specials_push_unarmored"
 		}
 	},
@@ -25,7 +24,6 @@ local push_fx_templates = {
 			[armor_types.resistant] = "wwise/events/weapon/play_specials_push_unarmored",
 			[armor_types.super_armor] = "wwise/events/weapon/play_specials_push_super_armor",
 			[armor_types.unarmored] = "wwise/events/weapon/play_specials_push_unarmored",
-			[armor_types.prop_armor] = "wwise/events/weapon/play_specials_push_unarmored",
 			[armor_types.void_shield] = "wwise/events/weapon/play_specials_push_unarmored"
 		}
 	},
@@ -37,7 +35,6 @@ local push_fx_templates = {
 			[armor_types.resistant] = "wwise/events/weapon/play_specials_push_unarmored",
 			[armor_types.super_armor] = "wwise/events/weapon/play_specials_push_super_armor",
 			[armor_types.unarmored] = "wwise/events/weapon/play_specials_push_unarmored",
-			[armor_types.prop_armor] = "wwise/events/weapon/play_specials_push_unarmored",
 			[armor_types.void_shield] = "wwise/events/weapon/play_specials_push_unarmored"
 		}
 	}

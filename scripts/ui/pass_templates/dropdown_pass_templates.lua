@@ -508,13 +508,17 @@ DropdownPassTemplates.settings_dropdown = function (width, height, settings_area
 		local option_font_style = table.clone(value_font_style)
 		option_font_style.default_color = Color.terminal_text_body(255, true)
 		option_font_style.offset = {
-			DROPDOWN_BUTTON_MARGIN,
+			-scrollbar_area_width,
 			height * i,
 			12
 		}
 		option_font_style.size = {
-			settings_area_width - DROPDOWN_BUTTON_MARGIN * 2,
+			settings_area_width,
 			height
+		}
+		option_font_style.size_addition = {
+			-scrollbar_area_width - DROPDOWN_BUTTON_MARGIN,
+			0
 		}
 		local hotspot_id = "option_hotspot_" .. i
 		local text_id = "option_text_" .. i

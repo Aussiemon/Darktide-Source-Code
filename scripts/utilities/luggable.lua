@@ -52,7 +52,7 @@ Luggable.enable_physics = function (first_person_component, locomotion_component
 
 	local locomotion_extension = ScriptUnit.extension(existing_unit, "locomotion_system")
 	local projectile_locomotion_template = locomotion_extension:locomotion_template()
-	local throw_configuration = projectile_locomotion_template.throw_parameters.drop
+	local throw_configuration = projectile_locomotion_template.trajectory_parameters.drop
 	local inherit_owner_velocity_percentage = throw_configuration.inherit_owner_velocity_percentage
 	local player_velocity = locomotion_component.velocity_current
 	local player_velocity_contribution = player_velocity * inherit_owner_velocity_percentage

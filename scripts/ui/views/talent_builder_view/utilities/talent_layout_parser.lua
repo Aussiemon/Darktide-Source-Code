@@ -42,7 +42,7 @@ local TalentLayoutParser = {
 		local version_length = string.find(backend_data, ";")
 
 		if version_length == nil then
-			Log.error("TalentLayoutParser", "Failed parsing talent string. Could not locate \";\" for version number. (%q)", backend_data)
+			Log.info("TalentLayoutParser", "Failed parsing talent string. Could not locate \";\" for version number. (%q)", backend_data)
 
 			return
 		end
@@ -64,7 +64,7 @@ local TalentLayoutParser = {
 						local node = nodes[node_index]
 
 						if not node then
-							Log.error("TalentLayoutParser", "Failed parsing talent string, found node_index(%i) not present in current layout.", node_index)
+							Log.info("TalentLayoutParser", "Failed parsing talent string, found node_index(%i) not present in current layout.", node_index)
 							table.clear(points_spent_on_nodes)
 
 							break
@@ -73,11 +73,11 @@ local TalentLayoutParser = {
 						points_spent_on_nodes[tostring(node_index)] = tonumber(points_spent_in_node)
 					end
 				else
-					Log.error("TalentLayoutParser", "Failed parsing talent string, first character of selected talents part (after ;) was not a number. %s", backend_data)
+					Log.info("TalentLayoutParser", "Failed parsing talent string, first character of selected talents part (after ;) was not a number. %s", backend_data)
 				end
 			end
 		else
-			Log.error("TalentLayoutParser", "Failed parsing talent string, mismatching version numbers (layout:%i backend:%i)", talent_layout.version, version)
+			Log.info("TalentLayoutParser", "Failed parsing talent string, mismatching version numbers (layout:%i backend:%i)", talent_layout.version, version)
 		end
 	end
 }

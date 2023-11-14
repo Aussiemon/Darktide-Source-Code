@@ -7,7 +7,6 @@ local hit_zone_names = HitZone.hit_zone_names
 local action_data = {
 	name = "chaos_poxwalker",
 	idle = {
-		rotate_towards_target = true,
 		anim_events = "idle"
 	},
 	death = {
@@ -94,10 +93,7 @@ local action_data = {
 			death_arm_right_2 = 4.233333333333333,
 			death_shot_head_bwd = 3.3333333333333335,
 			death_shot_head_left = 2.1,
-			death_burn_3 = 4.666666666666667,
 			death_shot_head_front = 1.4666666666666666,
-			death_burn_4 = 4.4,
-			death_leg_both = 4.5,
 			death_shot_head_fwd = 2.3666666666666667,
 			death_decapitate_2 = 3.1666666666666665
 		}
@@ -105,7 +101,6 @@ local action_data = {
 	combat_idle = {
 		utility_weight = 2,
 		anim_events = "idle",
-		rotate_towards_target = true,
 		considerations = UtilityConsiderations.melee_combat_idle
 	},
 	alerted = {
@@ -453,10 +448,6 @@ local action_data = {
 		damage_profile = DamageProfileTemplates.poxwalker,
 		damage_type = damage_types.minion_melee_sharp,
 		stagger_type_reduction = {
-			ranged = 30,
-			killshot = 20
-		},
-		stagger_type_reduction = {
 			ranged = 60,
 			killshot = 60
 		},
@@ -562,10 +553,6 @@ local action_data = {
 		damage_profile = DamageProfileTemplates.poxwalker,
 		damage_type = damage_types.minion_melee_sharp,
 		stagger_type_reduction = {
-			ranged = 30,
-			killshot = 20
-		},
-		stagger_type_reduction = {
 			ranged = 60,
 			killshot = 60
 		},
@@ -618,30 +605,22 @@ local action_data = {
 	},
 	stagger = {
 		stagger_duration_mods = {
-			run_stagger = 1.25,
-			run_stagger_2 = 1.25,
-			run_stagger_5 = 2.5,
-			stagger_bwd_6 = 1.5,
+			stagger_fwd_5 = 0.6,
+			stagger_fwd_6 = 0.6,
+			stagger_right_heavy_6 = 2.5,
+			stagger_left_heavy_5 = 2,
 			stagger_fwd_heavy_5 = 2,
 			stagger_left_7 = 0.6,
-			stagger_fwd_5 = 0.6,
-			stagger_bwd_heavy_8 = 1.7,
-			stagger_right_heavy_7 = 1.5,
+			stagger_left_heavy_6 = 2,
 			stagger_bwd_heavy_7 = 1.7,
 			stagger_right_7 = 0.6,
-			stagger_right_heavy_6 = 2.5,
-			run_stagger_4 = 2.5,
 			stagger_bwd_5 = 1.7,
-			run_stagger_7 = 2.4,
 			stagger_bwd_heavy_6 = 1.9,
 			stagger_right_6 = 1.5,
 			stagger_left_5 = 1.3,
-			stagger_left_heavy_5 = 2,
-			stagger_fwd_6 = 0.6,
+			stagger_bwd_6 = 1.5,
 			stagger_right_heavy_5 = 2.5,
-			stagger_left_heavy_6 = 2,
-			run_stagger_3 = 1.25,
-			run_stagger_6 = 2.3,
+			stagger_bwd_heavy_8 = 1.7,
 			stagger_fwd_7 = 1.5,
 			stagger_left_6 = 0.6,
 			stagger_fwd_heavy_6 = 1.7,
@@ -895,6 +874,24 @@ local action_data = {
 					"stagger_bwd_sticky_2",
 					"stagger_bwd_sticky_3"
 				}
+			},
+			blinding = {
+				fwd = {
+					"stagger_fwd_relic_1"
+				},
+				bwd = {
+					"stagger_bwd_relic_1",
+					"stagger_bwd_relic_2"
+				},
+				left = {
+					"stagger_left_relic_1"
+				},
+				right = {
+					"stagger_right_relic_1"
+				},
+				dwn = {
+					"stagger_bwd_relic_1"
+				}
 			}
 		}
 	},
@@ -912,10 +909,6 @@ local action_data = {
 			attack_01 = 1.2,
 			attack_02 = 1.35
 		},
-		attack_intensities = {
-			ranged = 1,
-			melee = 0.1
-		},
 		damage_profile = DamageProfileTemplates.poxwalker
 	},
 	open_door = {
@@ -929,6 +922,18 @@ local action_data = {
 				"spawn_jump_up_01",
 				"spawn_jump_up_02",
 				"spawn_jump_up_03"
+			}
+		},
+		spawn_type_anim_lengths = {
+			from_ground = {
+				default = {
+					vertical_length = 3,
+					horizontal_length = 1
+				},
+				spawn_jump_up_01 = {
+					vertical_length = 3,
+					horizontal_length = 0.9
+				}
 			}
 		},
 		anim_driven_anim_event_durations = {

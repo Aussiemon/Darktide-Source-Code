@@ -162,12 +162,7 @@ PlayerCharacterStateLedgeHanging.on_exit = function (self, unit, t, next_state)
 				local time_in_captivity = t - self._entered_state_t
 
 				Managers.telemetry_events:player_exits_captivity(player, rescued_by_player, state_name, time_in_captivity)
-
-				local stat_manager = Managers.stats
-
-				if stat_manager.can_record_stats() then
-					stat_manager:record_exit_disabled_character_state(state_name, self._time_disabled)
-				end
+				Managers.stats:record_private("hook_escaped_captivitiy", player, state_name, self._time_disabled)
 			end
 
 			self._entered_state_t = nil

@@ -213,6 +213,16 @@ local weapon_ammo_templates = {
 			lerp_basic = 280
 		}
 	},
+	laspistol_p1_m3 = {
+		ammunition_clip = {
+			lerp_perfect = 90,
+			lerp_basic = 45
+		},
+		ammunition_reserve = {
+			lerp_perfect = 630,
+			lerp_basic = 315
+		}
+	},
 	plasmagun_p1_m1 = {
 		ammunition_clip = {
 			lerp_perfect = 150,
@@ -294,6 +304,26 @@ local weapon_ammo_templates = {
 		}
 	},
 	stubrevolver_p1_m1 = {
+		ammunition_clip = {
+			lerp_perfect = 5,
+			lerp_basic = 5
+		},
+		ammunition_reserve = {
+			lerp_perfect = 70,
+			lerp_basic = 35
+		}
+	},
+	stubrevolver_p1_m2 = {
+		ammunition_clip = {
+			lerp_perfect = 5,
+			lerp_basic = 5
+		},
+		ammunition_reserve = {
+			lerp_perfect = 100,
+			lerp_basic = 50
+		}
+	},
+	stubrevolver_p1_m3 = {
 		ammunition_clip = {
 			lerp_perfect = 5,
 			lerp_basic = 5

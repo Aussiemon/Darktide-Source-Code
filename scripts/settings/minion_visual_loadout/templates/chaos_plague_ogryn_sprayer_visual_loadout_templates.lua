@@ -6,6 +6,7 @@ local templates = {
 local basic_chaos_plague_ogryn_sprayer_template = {
 	slots = {
 		slot_body = {
+			use_outline = true,
 			items = {
 				"content/items/characters/minions/chaos_plague_ogryn/attachments_base/sprayer"
 			}

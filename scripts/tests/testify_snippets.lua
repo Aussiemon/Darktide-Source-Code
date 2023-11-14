@@ -293,6 +293,52 @@ TestifySnippets.memory_tree = function (depth, ascii_separator, memory_limit)
 	return memory_tree
 end
 
+TestifySnippets.memory_resources_all = function (include_details)
+	Testify:make_request_to_runner("start_memory_resources_all_monitoring")
+	Testify:make_request("console_command_memory_resources_all")
+	TestifySnippets.wait(1)
+
+	local memory_resources_all = Testify:make_request_to_runner("stop_memory_resources_all_monitoring")
+	memory_resources_all = cjson.decode(memory_resources_all)
+
+	if include_details then
+		local max_resources_number = -1
+		local size_threshold = -1
+
+		for key, _ in pairs(memory_resources_all) do
+			local resource_type_size = memory_resources_all[key].size
+
+			if resource_type_size and (size_threshold == -1 or size_threshold < tonumber(resource_type_size)) then
+				local memory_resources_details = TestifySnippets.memory_resources_details(key, max_resources_number)
+				memory_resources_all[key].details = memory_resources_details
+			end
+		end
+	end
+
+	return memory_resources_all
+end
+
+TestifySnippets.memory_resources_details = function (resource_name, max_resources_number)
+	Testify:make_request_to_runner("start_memory_resources_details_monitoring", max_resources_number)
+	Testify:make_request("console_command_memory_resources_list", resource_name)
+	TestifySnippets.wait(0.5)
+
+	local memory_resources_details = Testify:make_request_to_runner("stop_memory_resources_details_monitoring")
+	memory_resources_details = cjson.decode(memory_resources_details)
+
+	return memory_resources_details
+end
+
+TestifySnippets.memory_usage = function ()
+	if DEDICATED_SERVER then
+		local first_peer = TestifySnippets.first_peer()
+
+		return Testify:make_request_on_client(first_peer, "memory_usage", true)
+	else
+		return Testify:make_request("memory_usage")
+	end
+end
+
 TestifySnippets.trigger_vo_query_player_look_at = function (look_at_tag, distance, num_dialogues)
 	local look_at_data = {
 		look_at_tag = look_at_tag,

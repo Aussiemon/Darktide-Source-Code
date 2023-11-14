@@ -27,8 +27,8 @@ HudElementOvercharge.init = function (self, parent, draw_layer, start_scale)
 	self._weapon_slots = weapon_slots
 end
 
-HudElementOvercharge.destroy = function (self)
-	HudElementOvercharge.super.destroy(self)
+HudElementOvercharge.destroy = function (self, ui_renderer)
+	HudElementOvercharge.super.destroy(self, ui_renderer)
 end
 
 HudElementOvercharge.update = function (self, dt, t, ui_renderer, render_settings, input_service)

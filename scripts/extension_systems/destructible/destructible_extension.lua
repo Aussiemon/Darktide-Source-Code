@@ -207,6 +207,14 @@ DestructibleExtension.rpc_sync_destructible = function (self, current_stage_inde
 		self:set_visibility(visible)
 	end
 
+	if settings.current_stage_index ~= current_stage_index then
+		if current_stage_index > 0 then
+			Unit.flow_event(unit, "lua_synced_intact")
+		else
+			Unit.flow_event(unit, "lua_synced_destroyed")
+		end
+	end
+
 	DestructibleUtilities.set_stage(unit, settings, current_stage_index, self._visibility_info, silent_transition)
 end
 

@@ -744,7 +744,7 @@ HudElementPlayerPanelBase._get_weapon_throwables_status = function (self, abilit
 		return max_status, false
 	end
 
-	if not ability.show_in_firendly_hud then
+	if not ability.show_in_friendly_hud then
 		return max_status, true
 	end
 
@@ -1349,19 +1349,22 @@ local temp_player_color = UIHudSettings.color_tint_0
 HudElementPlayerPanelBase._update_player_name_prefix = function (self, player)
 	local player_slot = player and player.slot and player:slot()
 
-	if player_slot ~= self._player_slot then
+	if player_slot ~= self._player_slot or not self._player_name_prefix then
 		local player_slot_colors = UISettings.player_slot_colors
-		local color = player_slot_colors[player_slot] or temp_player_color
+		local color = player_slot and player_slot_colors[player_slot] or temp_player_color
 		self._player_slot = player_slot
 		local profile = player and player:profile()
 		local archetype = profile and profile.archetype
-		local string_symbol = archetype.string_symbol
-		local supported_features = self._supported_features
+		local string_symbol = archetype and archetype.string_symbol
 
-		if supported_features.player_color then
-			self._player_name_prefix = "{#color(" .. color[2] .. "," .. color[3] .. "," .. color[4] .. ")}" .. string_symbol .. "{#reset()} "
-		else
-			self._player_name_prefix = string_symbol .. " "
+		if string_symbol then
+			local supported_features = self._supported_features
+
+			if supported_features.player_color then
+				self._player_name_prefix = "{#color(" .. color[2] .. "," .. color[3] .. "," .. color[4] .. ")}" .. string_symbol .. "{#reset()} "
+			else
+				self._player_name_prefix = string_symbol .. " "
+			end
 		end
 	end
 end
@@ -1374,7 +1377,7 @@ end
 
 HudElementPlayerPanelBase.destroy = function (self, ui_renderer)
 	Managers.event:unregister(self, "chat_manager_participant_update")
-	HudElementPlayerPanelBase.super.destroy(self)
+	HudElementPlayerPanelBase.super.destroy(self, ui_renderer)
 	self:_unload_portrait_icon(ui_renderer)
 	self:_unload_portrait_frame(ui_renderer)
 	self:_unload_portrait_insignia(ui_renderer)

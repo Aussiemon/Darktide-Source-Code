@@ -76,15 +76,18 @@ PlayerUnitHealthExtension.fixed_update = function (self, unit, dt, t)
 	GameSession.set_game_object_field(self._game_session, self._game_object_id, "knocked_down_health", knocked_down_health)
 	GameSession.set_game_object_field(self._game_session, self._game_object_id, "max_wounds", max_wounds)
 
-	if Managers.stats and Managers.stats.can_record_stats() and self._player then
+	local player = self._player
+	local stats_manager = Managers.stats
+
+	if stats_manager and player then
 		local new_time = self._stat_record_timer + dt
 
-		while REPORT_TIME <= new_time do
+		if REPORT_TIME <= new_time then
 			local remaining_health_segments = max_wounds - Health.calculate_num_segments(current_health, max_health, max_wounds)
 
-			Managers.stats:record_health_update(self._player, remaining_health_segments, is_knocked_down)
+			stats_manager:record_private("hook_health_update", player, new_time, remaining_health_segments, is_knocked_down)
 
-			new_time = new_time - REPORT_TIME
+			new_time = 0
 		end
 
 		self._stat_record_timer = new_time

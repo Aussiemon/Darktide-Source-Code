@@ -201,11 +201,11 @@ SmartTagSystem.set_contextual_unit_tag = function (self, tagger_unit, target_uni
 	end
 end
 
-SmartTagSystem.cancel_tag = function (self, tag_id, remover_unit)
+SmartTagSystem.cancel_tag = function (self, tag_id, remover_unit, exernal_removal)
 	local tag = self._all_tags[tag_id]
 
 	if self._is_server then
-		local reason = REMOVE_TAG_REASONS.canceled_by_owner
+		local reason = exernal_removal and REMOVE_TAG_REASONS.external_removal or REMOVE_TAG_REASONS.canceled_by_owner
 
 		self:_remove_tag_locally(tag_id, reason)
 
@@ -219,9 +219,24 @@ SmartTagSystem.cancel_tag = function (self, tag_id, remover_unit)
 	end
 end
 
-SmartTagSystem.trigger_tag_interaction = function (self, tag_id, interactor_unit)
+SmartTagSystem.trigger_tag_interaction = function (self, tag_id, interactor_unit, target_unit)
 	local all_tags = self._all_tags
 	local tag = all_tags[tag_id]
+	local target_extension = self._unit_extension_data[target_unit]
+	local template = target_extension and target_extension:contextual_tag_template(interactor_unit)
+	local can_override = template and template.can_override
+
+	if can_override then
+		local current_tag_player = self:tagger_player_by_tag_id(tag_id)
+		local current_tag_unit = current_tag_player and current_tag_player.player_unit
+
+		if current_tag_unit then
+			self:cancel_tag(tag_id, current_tag_unit, true)
+			self:set_tag(template.name, interactor_unit, target_unit, nil)
+
+			return
+		end
+	end
 
 	if tag:tagger_unit() == interactor_unit then
 		if tag:is_cancelable() then
@@ -366,6 +381,7 @@ SmartTagSystem._create_tag_locally = function (self, tag_id, template_name, tagg
 					if param_table then
 						param_table.unit = target_unit
 						param_table.tagger_unit = tagger_unit
+						param_table.tag_name = template_name
 
 						buff_extension:add_proc_event(buff_proc_events.on_tag_unit, param_table)
 					end
@@ -383,7 +399,7 @@ SmartTagSystem._create_tag_locally = function (self, tag_id, template_name, tagg
 	end
 
 	if template.start then
-		template.start(tag)
+		template.start(tag, tagger_unit)
 	end
 
 	Managers.event:trigger("event_smart_tag_created", tag, is_hotjoin_synced)
@@ -643,12 +659,6 @@ SmartTagSystem.rpc_request_cancel_smart_tag = function (self, channel_id, tag_id
 
 	if tag:tagger_unit() ~= remover_unit then
 		_warning("Rejected request from %s to cancel tag, tag is owned by someone else", Network.peer(channel_id))
-
-		return
-	end
-
-	if not tag:is_cancelable() then
-		_warning("Rejected request from %s to cancel tag, tag is not cancelable", Network.peer(channel_id))
 
 		return
 	end

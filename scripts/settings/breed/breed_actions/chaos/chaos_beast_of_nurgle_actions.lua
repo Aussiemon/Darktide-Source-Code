@@ -1065,6 +1065,23 @@ local action_data = {
 				dwn = {
 					"stagger_fwd_heavy"
 				}
+			},
+			blinding = {
+				fwd = {
+					"stagger_fwd_heavy"
+				},
+				bwd = {
+					"stagger_fwd_heavy"
+				},
+				left = {
+					"stagger_fwd_heavy"
+				},
+				right = {
+					"stagger_fwd_heavy"
+				},
+				dwn = {
+					"stagger_fwd_heavy"
+				}
 			}
 		}
 	},

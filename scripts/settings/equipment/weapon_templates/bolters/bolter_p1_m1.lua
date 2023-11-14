@@ -285,13 +285,15 @@ weapon_template.actions = {
 		}
 	},
 	action_shoot_zoomed = {
-		sprint_ready_up_time = 0,
+		start_input = "zoom_shoot",
 		kind = "shoot_hit_scan",
 		weapon_handling_template = "immediate_single_shot",
 		ammunition_usage = 1,
-		crosshair_type = "ironsight",
-		start_input = "zoom_shoot",
+		sprint_ready_up_time = 0,
 		total_time = 1,
+		crosshair = {
+			crosshair_type = "ironsight"
+		},
 		action_movement_curve = {
 			{
 				modifier = 0.3,
@@ -316,12 +318,12 @@ weapon_template.actions = {
 			start_modifier = 0.3
 		},
 		fx = {
-			muzzle_flash_effect = "content/fx/particles/weapons/rifles/bolter/bolter_muzzle_secondary",
+			muzzle_flash_effect = "content/fx/particles/weapons/rifles/bolter/bolter_muzzle_ignite",
 			shell_casing_effect = "content/fx/particles/weapons/shells/shell_casing_bolter_01",
 			crit_shoot_sfx_alias = "critical_shot_extra",
 			shoot_sfx_alias = "ranged_single_shot",
 			shoot_tail_sfx_alias = "ranged_shot_tail",
-			muzzle_flash_effect_secondary = "content/fx/particles/weapons/rifles/bolter/bolter_muzzle_ignite",
+			muzzle_flash_effect_secondary = "content/fx/particles/weapons/rifles/bolter/bolter_muzzle_secondary",
 			out_of_ammo_sfx_alias = "ranged_out_of_ammo",
 			no_ammo_shoot_sfx_alias = "ranged_no_ammo",
 			line_effect = LineEffects.boltshell
@@ -371,11 +373,13 @@ weapon_template.actions = {
 	},
 	action_zoom = {
 		weapon_handling_template = "time_scale_2_5",
-		crosshair_type = "ironsight",
 		start_input = "zoom",
 		kind = "aim",
 		total_time = 0.5,
 		smart_targeting_template = SmartTargetingTemplates.alternate_fire_killshot,
+		crosshair = {
+			crosshair_type = "ironsight"
+		},
 		allowed_chain_actions = {
 			combat_ability = {
 				action_name = "combat_ability"
@@ -401,10 +405,12 @@ weapon_template.actions = {
 		}
 	},
 	action_unzoom = {
-		crosshair_type = "ironsight",
 		start_input = "zoom_release",
 		kind = "unaim",
 		total_time = 0.2,
+		crosshair = {
+			crosshair_type = "ironsight"
+		},
 		allowed_chain_actions = {
 			combat_ability = {
 				action_name = "combat_ability"
@@ -430,11 +436,13 @@ weapon_template.actions = {
 		start_input = "reload",
 		sprint_requires_press_to_interrupt = true,
 		weapon_handling_template = "time_scale_1",
-		stop_alternate_fire = true,
-		abort_sprint = true,
-		crosshair_type = "none",
 		allowed_during_sprint = true,
+		abort_sprint = true,
+		stop_alternate_fire = true,
 		total_time = 6,
+		crosshair = {
+			crosshair_type = "none"
+		},
 		action_movement_curve = {
 			{
 				modifier = 0.6,
@@ -483,11 +491,10 @@ weapon_template.actions = {
 		damage_window_start = 0.13333333333333333,
 		range_mod = 1.15,
 		start_input = "special_action",
-		weapon_handling_template = "time_scale_1_1",
-		kind = "sweep",
 		sprint_requires_press_to_interrupt = true,
+		kind = "sweep",
+		weapon_handling_template = "time_scale_1_1",
 		allow_conditional_chain = true,
-		crosshair_type = "dot",
 		allowed_during_sprint = true,
 		damage_window_end = 0.3,
 		abort_sprint = true,
@@ -495,6 +502,9 @@ weapon_template.actions = {
 		uninterruptible = true,
 		anim_event = "attack_push",
 		total_time = 1.1,
+		crosshair = {
+			crosshair_type = "dot"
+		},
 		action_movement_curve = {
 			{
 				modifier = 0.3,
@@ -581,10 +591,12 @@ weapon_template.actions = {
 		start_input = "inspect_start",
 		anim_end_event = "inspect_end",
 		kind = "inspect",
-		crosshair_type = "inspect",
 		anim_event = "inspect_start",
 		stop_input = "inspect_stop",
-		total_time = math.huge
+		total_time = math.huge,
+		crosshair = {
+			crosshair_type = "inspect"
+		}
 	}
 }
 local WeaponBarUIDescriptionTemplates = require("scripts/settings/equipment/weapon_bar_ui_description_templates")
@@ -732,19 +744,23 @@ weapon_template.fx_sources = {
 	_muzzle_secondary = "fx_muzzle_02",
 	_muzzle = "fx_muzzle_01"
 }
-weapon_template.crosshair_type = "spray_n_pray"
+weapon_template.crosshair = {
+	crosshair_type = "spray_n_pray"
+}
 weapon_template.hit_marker_type = "center"
 weapon_template.alternate_fire_settings = {
 	peeking_mechanics = true,
 	sway_template = "default_bolter_killshot",
 	recoil_template = "default_bolter_killshot",
 	stop_anim_event = "to_unaim_ironsight",
-	crosshair_type = "ironsight",
 	spread_template = "default_bolter_killshot",
 	suppression_template = "default_lasgun_killshot",
 	toughness_template = "killshot_zoomed",
 	start_anim_event = "to_ironsight",
 	look_delta_template = "bolter",
+	crosshair = {
+		crosshair_type = "ironsight"
+	},
 	camera = {
 		custom_vertical_fov = 45,
 		vertical_fov = 55,

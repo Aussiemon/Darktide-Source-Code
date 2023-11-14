@@ -1402,6 +1402,23 @@ local action_data = {
 				dwn = {
 					"stagger_bwd_exp"
 				}
+			},
+			blinding = {
+				fwd = {
+					"stagger_fwd_exp"
+				},
+				bwd = {
+					"stagger_bwd_exp"
+				},
+				left = {
+					"stagger_left_exp"
+				},
+				right = {
+					"stagger_right_exp"
+				},
+				dwn = {
+					"stagger_bwd_exp"
+				}
 			}
 		}
 	},

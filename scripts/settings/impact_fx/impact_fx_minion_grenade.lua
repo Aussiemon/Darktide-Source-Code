@@ -1,5 +1,6 @@
-local SurfaceMaterialSettings = require("scripts/settings/surface_material_settings")
 local ImpactFxHelper = require("scripts/utilities/impact_fx_helper")
+local SurfaceMaterialSettings = require("scripts/settings/surface_material_settings")
+local NO_SURFACE_DECAL = false
 local hit_types = SurfaceMaterialSettings.hit_types
 local surface_fx = {}
 local default_surface_fx = {

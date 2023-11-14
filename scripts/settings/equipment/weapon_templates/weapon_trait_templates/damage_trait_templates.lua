@@ -659,14 +659,6 @@ local damage_trait_templates = {
 			"attack",
 			armor_types.void_shield,
 			0.05
-		},
-		{
-			"targets",
-			1,
-			"armor_damage_modifier",
-			"attack",
-			armor_types.prop_armor,
-			0.05
 		}
 	},
 	default_armor_pierce_stat = {
@@ -3431,12 +3423,6 @@ local damage_trait_templates = {
 			0.05
 		},
 		{
-			"armor_damage_modifier",
-			"attack",
-			armor_types.prop_armor,
-			0.05
-		},
-		{
 			"armor_damage_modifier_ranged",
 			"near",
 			"attack",
@@ -3532,20 +3518,6 @@ local damage_trait_templates = {
 			"far",
 			"attack",
 			armor_types.void_shield,
-			0.05
-		},
-		{
-			"armor_damage_modifier_ranged",
-			"near",
-			"attack",
-			armor_types.prop_armor,
-			0.05
-		},
-		{
-			"armor_damage_modifier_ranged",
-			"far",
-			"attack",
-			armor_types.prop_armor,
 			0.05
 		}
 	},
@@ -3645,12 +3617,6 @@ local damage_trait_templates = {
 			0.05
 		},
 		{
-			"armor_damage_modifier",
-			"attack",
-			armor_types.prop_armor,
-			0.05
-		},
-		{
 			"armor_damage_modifier_ranged",
 			"near",
 			"attack",
@@ -3746,20 +3712,6 @@ local damage_trait_templates = {
 			"far",
 			"attack",
 			armor_types.void_shield,
-			0.05
-		},
-		{
-			"armor_damage_modifier_ranged",
-			"near",
-			"attack",
-			armor_types.prop_armor,
-			0.05
-		},
-		{
-			"armor_damage_modifier_ranged",
-			"far",
-			"attack",
-			armor_types.prop_armor,
 			0.05
 		}
 	},

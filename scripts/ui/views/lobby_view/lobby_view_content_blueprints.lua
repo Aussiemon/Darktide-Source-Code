@@ -64,6 +64,203 @@ blueprints.button = {
 		content.icon = entry.icon
 	end
 }
+blueprints.item_icon = {
+	size = {
+		128,
+		48
+	},
+	pass_template = {
+		{
+			pass_type = "hotspot",
+			content_id = "hotspot"
+		},
+		{
+			value = "content/ui/materials/frames/dropshadow_medium",
+			style_id = "outer_shadow",
+			pass_type = "texture",
+			style = {
+				vertical_alignment = "center",
+				scale_to_material = true,
+				horizontal_alignment = "center",
+				color = Color.black(200, true),
+				size_addition = {
+					20,
+					20
+				}
+			}
+		},
+		{
+			value_id = "icon",
+			style_id = "icon",
+			pass_type = "texture",
+			value = "content/ui/materials/icons/weapons/hud/combat_blade_01",
+			style = {
+				vertical_alignment = "center",
+				horizontal_alignment = "center",
+				color = Color.terminal_text_body(255, true),
+				default_color = Color.terminal_text_body(nil, true),
+				selected_color = Color.terminal_icon(nil, true),
+				offset = {
+					0,
+					4,
+					5
+				},
+				size = {
+					128,
+					48
+				}
+			}
+		},
+		{
+			value = "content/ui/materials/backgrounds/default_square",
+			style_id = "background",
+			pass_type = "texture",
+			style = {
+				color = Color.terminal_background_dark(nil, true),
+				selected_color = Color.terminal_background_selected(nil, true),
+				offset = {
+					0,
+					0,
+					0
+				}
+			}
+		},
+		{
+			value = "content/ui/materials/gradients/gradient_vertical",
+			style_id = "background_gradient",
+			pass_type = "texture",
+			style = {
+				vertical_alignment = "center",
+				horizontal_alignment = "center",
+				default_color = {
+					100,
+					33,
+					35,
+					37
+				},
+				color = {
+					100,
+					33,
+					35,
+					37
+				},
+				offset = {
+					0,
+					0,
+					1
+				}
+			}
+		},
+		{
+			pass_type = "texture",
+			style_id = "button_gradient",
+			value = "content/ui/materials/gradients/gradient_diagonal_down_right",
+			style = {
+				vertical_alignment = "center",
+				horizontal_alignment = "center",
+				color = Color.terminal_background_gradient(nil, true),
+				offset = {
+					0,
+					0,
+					1
+				}
+			},
+			change_function = ButtonPassTemplates.terminal_button_hover_change_function
+		},
+		{
+			pass_type = "texture",
+			style_id = "frame",
+			value = "content/ui/materials/frames/frame_tile_2px",
+			style = {
+				vertical_alignment = "center",
+				horizontal_alignment = "center",
+				color = Color.terminal_frame(nil, true),
+				default_color = Color.terminal_frame(nil, true),
+				selected_color = Color.terminal_frame_selected(nil, true),
+				hover_color = Color.terminal_frame_hover(nil, true),
+				offset = {
+					0,
+					0,
+					6
+				}
+			},
+			change_function = function (content, style)
+				local hotspot = content.hotspot
+				local is_selected = hotspot.is_selected
+				local is_hover = hotspot.is_hover
+				local default_color = style.default_color
+				local hover_color = style.hover_color
+				local selected_color = style.selected_color
+				local color = nil
+
+				if is_selected and selected_color then
+					color = selected_color
+				elseif is_hover and hover_color then
+					color = selected_color
+				elseif default_color then
+					color = default_color
+				end
+
+				if color then
+					ColorUtilities.color_copy(color, style.color)
+				end
+			end
+		},
+		{
+			pass_type = "texture",
+			style_id = "corner",
+			value = "content/ui/materials/frames/frame_corner_2px",
+			style = {
+				vertical_alignment = "center",
+				horizontal_alignment = "center",
+				color = Color.terminal_corner(nil, true),
+				default_color = Color.terminal_corner(nil, true),
+				selected_color = Color.terminal_corner_selected(nil, true),
+				hover_color = Color.terminal_corner_hover(nil, true),
+				offset = {
+					0,
+					0,
+					7
+				}
+			},
+			change_function = function (content, style)
+				local hotspot = content.hotspot
+				local is_selected = hotspot.is_selected
+				local is_hover = hotspot.is_hover
+				local default_color = style.default_color
+				local hover_color = style.hover_color
+				local selected_color = style.selected_color
+				local color = nil
+
+				if is_selected and selected_color then
+					color = selected_color
+				elseif is_hover and hover_color then
+					color = selected_color
+				elseif default_color then
+					color = default_color
+				end
+
+				if color then
+					ColorUtilities.color_copy(color, style.color)
+				end
+			end
+		}
+	},
+	init = function (parent, widget, entry)
+		local item = entry.item
+		local id = item.name
+		local master_item = MasterItems.get_item(id)
+		local hud_icon = "content/ui/materials/icons/weapons/hud/combat_blade_01"
+
+		if master_item and master_item.hud_icon then
+			hud_icon = master_item.hud_icon
+		end
+
+		widget.content.icon = hud_icon
+		widget.content.item = item
+		widget.content.slot = entry.slot
+	end
+}
 blueprints.talent = {
 	size = {
 		64,

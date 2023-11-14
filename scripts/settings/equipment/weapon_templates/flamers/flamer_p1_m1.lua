@@ -438,14 +438,16 @@ weapon_template.actions = {
 		}
 	},
 	action_reload = {
-		kind = "reload_state",
-		start_input = "reload",
-		sprint_requires_press_to_interrupt = true,
 		stop_alternate_fire = true,
+		start_input = "reload",
+		kind = "reload_state",
+		sprint_requires_press_to_interrupt = true,
 		abort_sprint = true,
-		crosshair_type = "none",
 		allowed_during_sprint = true,
 		total_time = 4,
+		crosshair = {
+			crosshair_type = "none"
+		},
 		action_movement_curve = {
 			{
 				modifier = 0.75,
@@ -478,7 +480,6 @@ weapon_template.actions = {
 		}
 	},
 	push = {
-		crosshair_type = "dot",
 		push_radius = 1.5,
 		start_input = "special_action",
 		block_duration = 0.5,
@@ -486,6 +487,9 @@ weapon_template.actions = {
 		damage_time = 0.2,
 		anim_event = "attack_push",
 		total_time = 1,
+		crosshair = {
+			crosshair_type = "dot"
+		},
 		action_movement_curve = {
 			{
 				modifier = 1.4,
@@ -554,10 +558,12 @@ weapon_template.actions = {
 		start_input = "inspect_start",
 		anim_end_event = "inspect_end",
 		kind = "inspect",
-		crosshair_type = "inspect",
 		anim_event = "inspect_start",
 		stop_input = "inspect_stop",
-		total_time = math.huge
+		total_time = math.huge,
+		crosshair = {
+			crosshair_type = "inspect"
+		}
 	}
 }
 
@@ -587,15 +593,19 @@ weapon_template.fx_sources = {
 	_muzzle = "fx_muzzle_02",
 	_pilot = "fx_pilot"
 }
-weapon_template.crosshair_type = "spray_n_pray"
+weapon_template.crosshair = {
+	crosshair_type = "spray_n_pray"
+}
 weapon_template.hit_marker_type = "center"
 weapon_template.alternate_fire_settings = {
-	crosshair_type = "spray_n_pray",
 	sway_template = "default_lasgun_killshot",
 	stop_anim_event = "to_unaim_braced",
 	uninterruptible = false,
 	start_anim_event = "to_braced",
 	look_delta_template = "lasgun_brace_light",
+	crosshair = {
+		crosshair_type = "spray_n_pray"
+	},
 	movement_speed_modifier = {
 		{
 			modifier = 0.85,

@@ -141,234 +141,6 @@ local horde_compositions = {
 				{
 					name = "chaos_poxwalker",
 					amount = {
-						27,
-						32
-					}
-				}
-			}
-		},
-		{
-			breeds = {
-				{
-					name = "chaos_poxwalker",
-					amount = {
-						34,
-						38
-					}
-				}
-			}
-		},
-		{
-			breeds = {
-				{
-					name = "chaos_poxwalker",
-					amount = {
-						38,
-						40
-					}
-				}
-			}
-		}
-	},
-	infected_medium = {
-		{
-			breeds = {
-				{
-					name = "chaos_newly_infected",
-					amount = {
-						15,
-						20
-					}
-				}
-			}
-		},
-		{
-			breeds = {
-				{
-					name = "chaos_newly_infected",
-					amount = {
-						20,
-						25
-					}
-				}
-			}
-		},
-		{
-			breeds = {
-				{
-					name = "chaos_newly_infected",
-					amount = {
-						27,
-						32
-					}
-				}
-			}
-		},
-		{
-			breeds = {
-				{
-					name = "chaos_newly_infected",
-					amount = {
-						34,
-						38
-					}
-				}
-			}
-		},
-		{
-			breeds = {
-				{
-					name = "chaos_newly_infected",
-					amount = {
-						38,
-						40
-					}
-				}
-			}
-		}
-	},
-	renegade_large = {
-		{
-			breeds = {
-				{
-					name = "chaos_poxwalker",
-					amount = {
-						35,
-						40
-					}
-				}
-			}
-		},
-		{
-			breeds = {
-				{
-					name = "chaos_poxwalker",
-					amount = {
-						43,
-						48
-					}
-				}
-			}
-		},
-		{
-			breeds = {
-				{
-					name = "chaos_poxwalker",
-					amount = {
-						50,
-						58
-					}
-				}
-			}
-		},
-		{
-			breeds = {
-				{
-					name = "chaos_poxwalker",
-					amount = {
-						55,
-						60
-					}
-				}
-			}
-		},
-		{
-			breeds = {
-				{
-					name = "chaos_poxwalker",
-					amount = {
-						60,
-						65
-					}
-				}
-			}
-		}
-	},
-	infected_large = {
-		{
-			breeds = {
-				{
-					name = "chaos_newly_infected",
-					amount = {
-						42,
-						48
-					}
-				}
-			}
-		},
-		{
-			breeds = {
-				{
-					name = "chaos_newly_infected",
-					amount = {
-						50,
-						55
-					}
-				}
-			}
-		},
-		{
-			breeds = {
-				{
-					name = "chaos_newly_infected",
-					amount = {
-						60,
-						65
-					}
-				}
-			}
-		},
-		{
-			breeds = {
-				{
-					name = "chaos_newly_infected",
-					amount = {
-						65,
-						70
-					}
-				}
-			}
-		},
-		{
-			breeds = {
-				{
-					name = "chaos_newly_infected",
-					amount = {
-						70,
-						75
-					}
-				}
-			}
-		}
-	},
-	renegade_medium = {
-		{
-			breeds = {
-				{
-					name = "chaos_poxwalker",
-					amount = {
-						15,
-						20
-					}
-				}
-			}
-		},
-		{
-			breeds = {
-				{
-					name = "chaos_poxwalker",
-					amount = {
-						20,
-						25
-					}
-				}
-			}
-		},
-		{
-			breeds = {
-				{
-					name = "chaos_poxwalker",
-					amount = {
 						22,
 						27
 					}
@@ -2062,6 +1834,558 @@ local horde_compositions = {
 					amount = {
 						8,
 						9
+					}
+				}
+			}
+		}
+	},
+	renegade_trickle_ogryns_high_1 = {
+		{
+			breeds = {
+				{
+					name = "renegade_melee",
+					amount = {
+						1,
+						2
+					}
+				},
+				{
+					name = "renegade_executor",
+					amount = {
+						1,
+						1
+					}
+				}
+			}
+		},
+		{
+			breeds = {
+				{
+					name = "renegade_melee",
+					amount = {
+						2,
+						3
+					}
+				},
+				{
+					name = "chaos_ogryn_executor",
+					amount = {
+						1,
+						1
+					}
+				}
+			}
+		},
+		{
+			breeds = {
+				{
+					name = "renegade_melee",
+					amount = {
+						3,
+						4
+					}
+				},
+				{
+					name = "chaos_ogryn_executor",
+					amount = {
+						2,
+						2
+					}
+				}
+			}
+		},
+		{
+			breeds = {
+				{
+					name = "renegade_melee",
+					amount = {
+						4,
+						5
+					}
+				},
+				{
+					name = "chaos_ogryn_executor",
+					amount = {
+						3,
+						3
+					}
+				}
+			}
+		},
+		{
+			breeds = {
+				{
+					name = "renegade_melee",
+					amount = {
+						5,
+						6
+					}
+				},
+				{
+					name = "chaos_ogryn_executor",
+					amount = {
+						4,
+						4
+					}
+				}
+			}
+		}
+	},
+	renegade_trickle_ogryns_high_2 = {
+		{
+			breeds = {
+				{
+					name = "renegade_melee",
+					amount = {
+						1,
+						2
+					}
+				},
+				{
+					name = "renegade_executor",
+					amount = {
+						1,
+						1
+					}
+				}
+			}
+		},
+		{
+			breeds = {
+				{
+					name = "renegade_melee",
+					amount = {
+						2,
+						3
+					}
+				},
+				{
+					name = "chaos_ogryn_bulwark",
+					amount = {
+						1,
+						1
+					}
+				}
+			}
+		},
+		{
+			breeds = {
+				{
+					name = "renegade_melee",
+					amount = {
+						3,
+						4
+					}
+				},
+				{
+					name = "chaos_ogryn_bulwark",
+					amount = {
+						2,
+						2
+					}
+				}
+			}
+		},
+		{
+			breeds = {
+				{
+					name = "renegade_melee",
+					amount = {
+						4,
+						5
+					}
+				},
+				{
+					name = "chaos_ogryn_bulwark",
+					amount = {
+						3,
+						3
+					}
+				}
+			}
+		},
+		{
+			breeds = {
+				{
+					name = "renegade_melee",
+					amount = {
+						5,
+						6
+					}
+				},
+				{
+					name = "chaos_ogryn_bulwark",
+					amount = {
+						4,
+						4
+					}
+				}
+			}
+		}
+	},
+	renegade_trickle_ogryns_high_3 = {
+		{
+			breeds = {
+				{
+					name = "renegade_assault",
+					amount = {
+						1,
+						2
+					}
+				},
+				{
+					name = "renegade_executor",
+					amount = {
+						1,
+						1
+					}
+				}
+			}
+		},
+		{
+			breeds = {
+				{
+					name = "renegade_assault",
+					amount = {
+						2,
+						3
+					}
+				},
+				{
+					name = "chaos_ogryn_bulwark",
+					amount = {
+						1,
+						1
+					}
+				}
+			}
+		},
+		{
+			breeds = {
+				{
+					name = "renegade_assault",
+					amount = {
+						3,
+						4
+					}
+				},
+				{
+					name = "chaos_ogryn_bulwark",
+					amount = {
+						2,
+						2
+					}
+				}
+			}
+		},
+		{
+			breeds = {
+				{
+					name = "renegade_assault",
+					amount = {
+						4,
+						5
+					}
+				},
+				{
+					name = "chaos_ogryn_bulwark",
+					amount = {
+						3,
+						3
+					}
+				}
+			}
+		},
+		{
+			breeds = {
+				{
+					name = "renegade_assault",
+					amount = {
+						5,
+						6
+					}
+				},
+				{
+					name = "chaos_ogryn_bulwark",
+					amount = {
+						4,
+						4
+					}
+				}
+			}
+		}
+	},
+	renegade_trickle_ogryns_high_4 = {
+		{
+			breeds = {
+				{
+					name = "renegade_assault",
+					amount = {
+						1,
+						2
+					}
+				},
+				{
+					name = "renegade_executor",
+					amount = {
+						1,
+						1
+					}
+				}
+			}
+		},
+		{
+			breeds = {
+				{
+					name = "renegade_assault",
+					amount = {
+						2,
+						3
+					}
+				},
+				{
+					name = "chaos_ogryn_executor",
+					amount = {
+						1,
+						1
+					}
+				}
+			}
+		},
+		{
+			breeds = {
+				{
+					name = "renegade_assault",
+					amount = {
+						3,
+						4
+					}
+				},
+				{
+					name = "chaos_ogryn_executor",
+					amount = {
+						2,
+						2
+					}
+				}
+			}
+		},
+		{
+			breeds = {
+				{
+					name = "renegade_assault",
+					amount = {
+						4,
+						5
+					}
+				},
+				{
+					name = "chaos_ogryn_executor",
+					amount = {
+						3,
+						3
+					}
+				}
+			}
+		},
+		{
+			breeds = {
+				{
+					name = "renegade_assault",
+					amount = {
+						5,
+						6
+					}
+				},
+				{
+					name = "chaos_ogryn_executor",
+					amount = {
+						4,
+						4
+					}
+				}
+			}
+		}
+	},
+	renegade_trickle_high_1 = {
+		{
+			breeds = {
+				{
+					name = "renegade_assault",
+					amount = {
+						4,
+						6
+					}
+				},
+				{
+					name = "renegade_shocktrooper",
+					amount = {
+						2,
+						2
+					}
+				}
+			}
+		},
+		{
+			breeds = {
+				{
+					name = "renegade_assault",
+					amount = {
+						5,
+						7
+					}
+				},
+				{
+					name = "renegade_shocktrooper",
+					amount = {
+						2,
+						3
+					}
+				}
+			}
+		},
+		{
+			breeds = {
+				{
+					name = "renegade_assault",
+					amount = {
+						6,
+						8
+					}
+				},
+				{
+					name = "renegade_shocktrooper",
+					amount = {
+						4,
+						5
+					}
+				}
+			}
+		},
+		{
+			breeds = {
+				{
+					name = "renegade_assault",
+					amount = {
+						8,
+						12
+					}
+				},
+				{
+					name = "renegade_shocktrooper",
+					amount = {
+						4,
+						6
+					}
+				}
+			}
+		},
+		{
+			breeds = {
+				{
+					name = "renegade_assault",
+					amount = {
+						10,
+						14
+					}
+				},
+				{
+					name = "renegade_shocktrooper",
+					amount = {
+						5,
+						7
+					}
+				}
+			}
+		}
+	},
+	renegade_trickle_high_2 = {
+		{
+			breeds = {
+				{
+					name = "renegade_rifleman",
+					amount = {
+						4,
+						6
+					}
+				},
+				{
+					name = "renegade_gunner",
+					amount = {
+						2,
+						2
+					}
+				}
+			}
+		},
+		{
+			breeds = {
+				{
+					name = "renegade_rifleman",
+					amount = {
+						5,
+						7
+					}
+				},
+				{
+					name = "renegade_gunner",
+					amount = {
+						2,
+						3
+					}
+				}
+			}
+		},
+		{
+			breeds = {
+				{
+					name = "renegade_rifleman",
+					amount = {
+						6,
+						8
+					}
+				},
+				{
+					name = "renegade_gunner",
+					amount = {
+						3,
+						6
+					}
+				}
+			}
+		},
+		{
+			breeds = {
+				{
+					name = "renegade_rifleman",
+					amount = {
+						8,
+						12
+					}
+				},
+				{
+					name = "renegade_gunner",
+					amount = {
+						4,
+						6
+					}
+				}
+			}
+		},
+		{
+			breeds = {
+				{
+					name = "renegade_rifleman",
+					amount = {
+						10,
+						14
+					}
+				},
+				{
+					name = "renegade_gunner",
+					amount = {
+						5,
+						7
 					}
 				}
 			}

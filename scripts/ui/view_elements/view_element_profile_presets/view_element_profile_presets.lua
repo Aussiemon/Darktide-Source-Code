@@ -363,7 +363,7 @@ ViewElementProfilePresets.can_add_profile_preset = function (self)
 	local profile_presets = ProfileUtils.get_profile_presets()
 	local active_profile_preset_id = ProfileUtils.get_active_profile_preset_id()
 
-	if ViewElementProfilePresetsSettings.max_profile_presets <= #profile_presets or self._current_profile_loadout_warning then
+	if profile_presets and ViewElementProfilePresetsSettings.max_profile_presets <= #profile_presets or self._current_profile_loadout_warning then
 		return false
 	end
 
@@ -385,7 +385,7 @@ ViewElementProfilePresets.cb_add_new_profile_preset = function (self)
 	end
 
 	local profile_presets = ProfileUtils.get_profile_presets()
-	local num_profile_presets = #profile_presets
+	local num_profile_presets = profile_presets and #profile_presets
 
 	if ViewElementProfilePresetsSettings.max_profile_presets <= num_profile_presets then
 		return
@@ -708,7 +708,6 @@ ViewElementProfilePresets.on_profile_preset_index_change = function (self, index
 
 		ProfileUtils.save_active_profile_preset_id(profile_preset_id)
 
-		local parent = self._parent
 		local profile_preset = ProfileUtils.get_profile_preset(profile_preset_id)
 
 		Managers.event:trigger("event_on_profile_preset_changed", profile_preset, on_preset_deleted)

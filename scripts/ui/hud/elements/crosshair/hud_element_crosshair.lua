@@ -1,6 +1,7 @@
 local definition_path = "scripts/ui/hud/elements/crosshair/hud_element_crosshair_definitions"
 local Action = require("scripts/utilities/weapon/action")
 local AttackSettings = require("scripts/settings/damage/attack_settings")
+local Hud = require("scripts/utilities/ui/hud")
 local HudElementCrosshairSettings = require("scripts/ui/hud/elements/crosshair/hud_element_crosshair_settings")
 local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
 local Recoil = require("scripts/utilities/recoil")
@@ -9,21 +10,23 @@ local Sway = require("scripts/utilities/sway")
 local UIScenegraph = require("scripts/managers/ui/ui_scenegraph")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
-local slot_configuration = PlayerCharacterConstants.slot_configuration
 local attack_results = AttackSettings.attack_results
+local damage_efficiencies = AttackSettings.damage_efficiencies
+local slot_configuration = PlayerCharacterConstants.slot_configuration
 local HudElementCrosshair = class("HudElementCrosshair", "HudElementBase")
-local attack_result_priority = {
+local ATTACK_RESULT_PRIORITY = {
+	is_critical_strike = 3,
 	weakspot = 2,
 	[attack_results.died] = 1,
-	[attack_results.damaged] = 3,
-	[attack_results.blocked] = 4,
-	[attack_results.shield_blocked] = 5,
-	[attack_results.dodged] = 6,
-	[attack_results.toughness_absorbed] = 6,
-	[attack_results.toughness_absorbed_melee] = 6,
-	[attack_results.toughness_broken] = 6,
-	[attack_results.knock_down] = 6,
-	[attack_results.friendly_fire] = 6
+	[attack_results.damaged] = 4,
+	[attack_results.blocked] = 5,
+	[attack_results.shield_blocked] = 6,
+	[attack_results.dodged] = 7,
+	[attack_results.toughness_absorbed] = 7,
+	[attack_results.toughness_absorbed_melee] = 7,
+	[attack_results.toughness_broken] = 7,
+	[attack_results.knock_down] = 7,
+	[attack_results.friendly_fire] = 7
 }
 
 HudElementCrosshair.init = function (self, parent, draw_layer, start_scale, definitions)
@@ -60,20 +63,20 @@ HudElementCrosshair.init = function (self, parent, draw_layer, start_scale, defi
 	end
 end
 
-HudElementCrosshair.destroy = function (self)
+HudElementCrosshair.destroy = function (self, ui_renderer)
 	local event_manager = Managers.event
 
 	event_manager:unregister(self, "event_crosshair_hit_report")
 	event_manager:unregister(self, "event_update_forced_dot_crosshair")
-	HudElementCrosshair.super.destroy(self)
+	HudElementCrosshair.super.destroy(self, ui_renderer)
 end
 
-HudElementCrosshair.event_crosshair_hit_report = function (self, hit_weakspot, attack_result, did_damage, hit_world_position, damage_efficiency)
+HudElementCrosshair.event_crosshair_hit_report = function (self, hit_weakspot, attack_result, did_damage, hit_world_position, damage_efficiency, is_critical_strike)
 	did_damage = did_damage or damage_efficiency == "push"
 	local hit_report_array = self._hit_report_array
-	local new_result = attack_result == attack_results.damaged and hit_weakspot and "weakspot" or attack_result
-	local new_prio = attack_result_priority[new_result] or math.huge
-	local last_prio = hit_report_array[6]
+	local new_result = attack_result == attack_results.damaged and hit_weakspot and "weakspot" or attack_result == attack_results.damaged and is_critical_strike and "is_critical_strike" or attack_result
+	local new_prio = ATTACK_RESULT_PRIORITY[new_result] or math.huge
+	local last_prio = hit_report_array[8]
 	local last_did_damage = hit_report_array[4]
 
 	if last_prio and (last_prio < new_prio or last_prio == new_prio and last_did_damage and not did_damage) then
@@ -86,12 +89,17 @@ HudElementCrosshair.event_crosshair_hit_report = function (self, hit_weakspot, a
 	hit_report_array[2] = hit_weakspot
 	hit_report_array[3] = attack_result
 	hit_report_array[4] = did_damage
-	hit_report_array[5] = hit_world_position
-	hit_report_array[6] = new_prio
+	hit_report_array[5] = damage_efficiency
+	hit_report_array[6] = hit_world_position
+	hit_report_array[7] = is_critical_strike
+	hit_report_array[8] = new_prio
 end
 
 HudElementCrosshair.event_update_forced_dot_crosshair = function (self, value)
 	self._forced_dot_crosshair = value
+	local crosshair_settings = self:_crosshair_settings()
+
+	self:_sync_active_crosshair(crosshair_settings)
 end
 
 local hit_indicator_colors = HudElementCrosshairSettings.hit_indicator_colors
@@ -105,6 +113,8 @@ HudElementCrosshair.hit_indicator = function (self)
 		local hit_weakspot = hit_report_array[2]
 		local attack_result = hit_report_array[3]
 		local did_damage = hit_report_array[4]
+		local damage_efficiency = hit_report_array[5]
+		local is_critical_strike = hit_report_array[7]
 		local color = nil
 
 		if attack_result == attack_results.blocked or not did_damage then
@@ -196,7 +206,9 @@ HudElementCrosshair.update = function (self, dt, t, ui_renderer, render_settings
 		end
 	end
 
-	self:_sync_active_crosshair()
+	local crosshair_settings = self:_crosshair_settings()
+
+	self:_sync_active_crosshair(crosshair_settings)
 
 	local crosshair_type = self._crosshair_type
 
@@ -205,13 +217,12 @@ HudElementCrosshair.update = function (self, dt, t, ui_renderer, render_settings
 		local update_function = template and template.update_function
 
 		if update_function then
-			update_function(self, ui_renderer, self._widget, template, dt, t)
+			update_function(self, ui_renderer, self._widget, template, crosshair_settings, dt, t)
 		end
 	end
 end
 
-HudElementCrosshair._get_current_crosshair_type = function (self)
-	local crosshair_type = nil
+HudElementCrosshair._crosshair_settings = function (self)
 	local parent = self._parent
 	local player_extensions = parent:player_extensions()
 
@@ -224,28 +235,47 @@ HudElementCrosshair._get_current_crosshair_type = function (self)
 
 			if weapon_template then
 				local _, action_settings = Action.current_action(weapon_action_component, weapon_template)
-				local alternate_fire_component = unit_data_extension:read_component("alternate_fire")
-				local alternate_fire_settings = weapon_template.alternate_fire_settings
+				local crosshair_settings = nil
 
 				if action_settings then
-					crosshair_type = action_settings.crosshair_type
-				elseif alternate_fire_component.is_active and alternate_fire_settings and alternate_fire_settings.crosshair_type then
-					crosshair_type = alternate_fire_settings.crosshair_type
+					crosshair_settings = action_settings.crosshair
 				end
 
-				local inventory_comp = unit_data_extension:read_component("inventory")
-				local wielded_slot = inventory_comp.wielded_slot
-				local slot_type = slot_configuration[wielded_slot].slot_type
-				local is_special_ative = false
+				if not crosshair_settings then
+					local alternate_fire_component = unit_data_extension:read_component("alternate_fire")
+					local alternate_fire_settings = weapon_template.alternate_fire_settings
 
-				if slot_type == "weapon" then
-					local inventory_slot_component = unit_data_extension:read_component(wielded_slot)
-					is_special_ative = inventory_slot_component.special_active
+					if alternate_fire_component.is_active and alternate_fire_settings then
+						crosshair_settings = alternate_fire_settings.crosshair
+					end
 				end
 
-				local weapon_cross_hair_type = is_special_ative and weapon_template.crosshair_type_special_active or weapon_template.crosshair_type
-				crosshair_type = crosshair_type or weapon_cross_hair_type
+				return crosshair_settings or weapon_template.crosshair
 			end
+		end
+	end
+end
+
+HudElementCrosshair._get_current_crosshair_type = function (self, crosshair_settings)
+	local crosshair_type = nil
+
+	if crosshair_settings then
+		local parent = self._parent
+		local player_extensions = parent:player_extensions()
+
+		if player_extensions then
+			local unit_data_extension = player_extensions.unit_data
+			local inventory_comp = unit_data_extension:read_component("inventory")
+			local wielded_slot = inventory_comp.wielded_slot
+			local slot_type = slot_configuration[wielded_slot].slot_type
+			local is_special_active = false
+
+			if slot_type == "weapon" then
+				local inventory_slot_component = unit_data_extension:read_component(wielded_slot)
+				is_special_active = inventory_slot_component.special_active
+			end
+
+			crosshair_type = is_special_active and crosshair_settings.crosshair_type_special_active or crosshair_settings.crosshair_type
 		end
 	end
 
@@ -269,8 +299,8 @@ HudElementCrosshair._get_current_charge_level = function (self)
 	end
 end
 
-HudElementCrosshair._sync_active_crosshair = function (self)
-	local crosshair_type = self:_get_current_crosshair_type()
+HudElementCrosshair._sync_active_crosshair = function (self, crosshair_settings)
+	local crosshair_type = self:_get_current_crosshair_type(crosshair_settings)
 
 	if crosshair_type ~= self._crosshair_type then
 		if self._widget and self._crosshair_type then

@@ -385,10 +385,12 @@ MultiplayerSession._remove_remote_players = function (self, peer_id, optional_ou
 				local account_id = player:account_id()
 				local character_id = player:character_id()
 				local is_human = player:is_human_controlled()
+				local stat_id = player.stat_id
 				optional_out_player_data[#optional_out_player_data + 1] = {
 					account_id = account_id,
 					character_id = character_id,
-					is_human = is_human
+					is_human = is_human,
+					stat_id = stat_id
 				}
 			end
 

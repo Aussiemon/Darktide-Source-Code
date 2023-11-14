@@ -138,10 +138,12 @@ weapon_template.keywords = {
 weapon_template.anim_state_machine_3p = "content/characters/player/human/third_person/animations/psyker_smite"
 weapon_template.anim_state_machine_1p = "content/characters/player/human/first_person/animations/throwing_knives"
 weapon_template.alternate_fire_settings = {
-	crosshair_type = "dot",
 	stop_anim_event = "to_unaim_ironsight",
 	start_anim_event = "to_ironsight",
 	spread_template = "no_spread",
+	crosshair = {
+		crosshair_type = "dot"
+	},
 	action_movement_curve = {
 		{
 			modifier = 0.3,
@@ -181,7 +183,9 @@ weapon_template.uses_ammunition = true
 weapon_template.uses_overheat = false
 weapon_template.sprint_ready_up_time = 0.1
 weapon_template.max_first_person_anim_movement_speed = 5.8
-weapon_template.crosshair_type = "dot"
+weapon_template.crosshair = {
+	crosshair_type = "dot"
+}
 weapon_template.hit_marker_type = "center"
 weapon_template.fx_sources = {
 	_muzzle = "fx_right"

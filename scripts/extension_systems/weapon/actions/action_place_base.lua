@@ -103,10 +103,8 @@ end
 ActionPlaceBase._register_stats_and_telemetry = function (self, item_name, player_or_nil)
 	Managers.telemetry_reporters:reporter("placed_items"):register_event(player_or_nil, item_name)
 
-	local is_human = player_or_nil and player_or_nil:is_human_controlled()
-
-	if Managers.stats.can_record_stats() and is_human then
-		Managers.stats:record_place_item(player_or_nil, item_name)
+	if player_or_nil then
+		Managers.stats:record_private("hook_placed_item", player_or_nil, item_name)
 	end
 end
 

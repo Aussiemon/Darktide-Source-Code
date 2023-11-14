@@ -16,7 +16,7 @@ end
 ActionAimProjectile.start = function (self, action_settings, t, time_scale, action_start_params)
 	local locomotion_template = self:_locomotion_template()
 	local throw_type = action_settings.throw_type or "throw"
-	local throw_config = locomotion_template.throw_parameters[throw_type]
+	local throw_config = locomotion_template.trajectory_parameters[throw_type]
 	local momentum = nil
 
 	if throw_config.randomized_angular_velocity then
@@ -41,7 +41,7 @@ ActionAimProjectile.fixed_update = function (self, dt, t, time_in_action)
 	local initial_rotation = look_rotation
 	local throw_type = action_settings.throw_type
 	local aim_parameters = AimProjectile.aim_parameters(initial_position, initial_rotation, look_rotation, projectile_locomotion_template, throw_type, time_in_action)
-	local throw_position = self:check_throw_posisition(aim_parameters.position, look_position, projectile_locomotion_template)
+	local throw_position = self:check_throw_position(aim_parameters.position, look_position, projectile_locomotion_template)
 	local action_aim_projectile_component = self._action_aim_projectile_component
 	action_aim_projectile_component.position = throw_position
 	action_aim_projectile_component.rotation = aim_parameters.rotation
@@ -49,7 +49,7 @@ ActionAimProjectile.fixed_update = function (self, dt, t, time_in_action)
 	action_aim_projectile_component.speed = aim_parameters.speed
 end
 
-ActionAimProjectile.check_throw_posisition = function (self, throw_position, look_position, projectile_locomotion_template)
+ActionAimProjectile.check_throw_position = function (self, throw_position, look_position, projectile_locomotion_template)
 	local delta = throw_position - look_position
 	local direction = Vector3.normalize(delta)
 	local distance = Vector3.length(delta)

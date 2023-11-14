@@ -257,11 +257,12 @@ local mission_templates = {
 	},
 	combat = {
 		mission_name = "loc_mission_name_placeholder",
-		zone_id = "placeholder",
+		mission_type = "01",
 		game_mode_name = "coop_complete_objective",
 		mechanism_name = "adventure",
 		is_dev_mission = true,
 		face_state_machine_key = "state_machine_missions",
+		zone_id = "placeholder",
 		level = "content/levels/debug/combat_zone/missions/mission_combat_zone",
 		pickup_settings = {},
 		health_station = {

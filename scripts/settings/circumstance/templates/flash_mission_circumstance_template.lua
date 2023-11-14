@@ -269,7 +269,8 @@ local circumstance_templates = {
 			"mutator_only_ranged_terror_events",
 			"mutator_only_traitor_guard_faction",
 			"mutator_ability_cooldown_reduction",
-			"mutator_ventilation_purge_los"
+			"mutator_ventilation_purge_los",
+			"mutator_more_ogryns"
 		},
 		ui = {
 			description = "loc_circumstance_flash_mission_09_description",
@@ -378,6 +379,7 @@ local circumstance_templates = {
 			"mutator_waves_of_specials",
 			"mutator_add_resistance",
 			"mutator_increase_terror_event_points",
+			"mutator_reduced_ramp_duration",
 			"mutator_auric_tension_modifier"
 		},
 		ui = {
@@ -393,6 +395,7 @@ local circumstance_templates = {
 			"mutator_waves_of_specials",
 			"mutator_add_resistance",
 			"mutator_increase_terror_event_points",
+			"mutator_reduced_ramp_duration",
 			"mutator_auric_tension_modifier"
 		},
 		ui = {
@@ -408,6 +411,7 @@ local circumstance_templates = {
 			"mutator_chaos_hounds",
 			"mutator_add_resistance",
 			"mutator_increase_terror_event_points",
+			"mutator_reduced_ramp_duration",
 			"mutator_auric_tension_modifier"
 		},
 		ui = {
@@ -424,6 +428,7 @@ local circumstance_templates = {
 			"mutator_add_resistance",
 			"mutator_ability_cooldown_reduction",
 			"mutator_increase_terror_event_points",
+			"mutator_reduced_ramp_duration",
 			"mutator_auric_tension_modifier"
 		},
 		ui = {
@@ -442,6 +447,7 @@ local circumstance_templates = {
 			"mutator_waves_of_specials",
 			"mutator_darkness_los",
 			"mutator_increase_terror_event_points",
+			"mutator_reduced_ramp_duration",
 			"mutator_auric_tension_modifier"
 		},
 		ui = {
@@ -460,6 +466,7 @@ local circumstance_templates = {
 			"mutator_ventilation_purge_los",
 			"mutator_snipers",
 			"mutator_increase_terror_event_points",
+			"mutator_reduced_ramp_duration",
 			"mutator_auric_tension_modifier"
 		},
 		ui = {
@@ -485,6 +492,7 @@ local circumstance_templates = {
 			"mutator_only_traitor_guard_faction",
 			"mutator_more_ogryns",
 			"mutator_increase_terror_event_points",
+			"mutator_reduced_ramp_duration",
 			"mutator_auric_tension_modifier"
 		},
 		mission_overrides = only_melee_mission_overrides
@@ -504,6 +512,7 @@ local circumstance_templates = {
 			"mutator_mutants",
 			"mutator_ability_cooldown_reduction",
 			"mutator_increase_terror_event_points",
+			"mutator_reduced_ramp_duration",
 			"mutator_auric_tension_modifier"
 		}
 	},
@@ -521,7 +530,9 @@ local circumstance_templates = {
 			"mutator_ability_cooldown_reduction",
 			"mutator_ventilation_purge_los",
 			"mutator_increase_terror_event_points",
-			"mutator_auric_tension_modifier"
+			"mutator_reduced_ramp_duration",
+			"mutator_auric_tension_modifier",
+			"mutator_more_ogryns"
 		},
 		ui = {
 			description = "loc_circumstance_flash_mission_09_description",
@@ -540,6 +551,7 @@ local circumstance_templates = {
 			"mutator_monster_specials",
 			"mutator_enchanced_grenade_ability",
 			"mutator_increase_terror_event_points",
+			"mutator_reduced_ramp_duration",
 			"mutator_auric_tension_modifier"
 		},
 		ui = {
@@ -562,6 +574,7 @@ local circumstance_templates = {
 			"mutator_add_resistance",
 			"mutator_enchanced_grenade_ability",
 			"mutator_increase_terror_event_points",
+			"mutator_reduced_ramp_duration",
 			"mutator_auric_tension_modifier"
 		},
 		mission_overrides = {
@@ -586,6 +599,7 @@ local circumstance_templates = {
 			"mutator_add_resistance",
 			"mutator_enchanced_grenade_ability",
 			"mutator_increase_terror_event_points",
+			"mutator_reduced_ramp_duration",
 			"mutator_auric_tension_modifier"
 		},
 		mission_overrides = {
@@ -610,6 +624,7 @@ local circumstance_templates = {
 			"mutator_waves_of_specials",
 			"mutator_ability_cooldown_reduction",
 			"mutator_increase_terror_event_points",
+			"mutator_reduced_ramp_duration",
 			"mutator_auric_tension_modifier"
 		},
 		mission_overrides = {
@@ -634,6 +649,7 @@ local circumstance_templates = {
 			"mutator_more_boss_patrols",
 			"mutator_more_ogryns",
 			"mutator_increase_terror_event_points",
+			"mutator_reduced_ramp_duration",
 			"mutator_auric_tension_modifier"
 		}
 	},

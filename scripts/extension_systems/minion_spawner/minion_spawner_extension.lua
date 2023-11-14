@@ -2,6 +2,7 @@ local Breeds = require("scripts/settings/breed/breeds")
 local Component = require("scripts/utilities/component")
 local MinionSpawnerQueue = require("scripts/extension_systems/minion_spawner/utilities/minion_spawner_queue")
 local MinionSpawnerSpawnPosition = require("scripts/extension_systems/minion_spawner/utilities/minion_spawner_spawn_position")
+local NavQueries = require("scripts/utilities/nav_queries")
 local PerceptionSettings = require("scripts/settings/perception/perception_settings")
 local aggro_states = PerceptionSettings.aggro_states
 local MinionSpawnerExtension = class("MinionSpawnerExtension")
@@ -21,11 +22,17 @@ MinionSpawnerExtension.init = function (self, extension_init_context, unit, exte
 	self._spawned_minions_by_queue_id = {}
 end
 
+local NAV_MESH_ABOVE = 1
+local NAV_MESH_BELOW = 1
+
 MinionSpawnerExtension.setup_from_component = function (self, spawner_groups, spawn_position, exit_position, exclude_from_pacing, exclude_from_specials_pacing, spawn_type, exit_rotation_num_directions, exit_rotation_random_degree_range)
-	local exit_position_on_nav_mesh = MinionSpawnerSpawnPosition.find_exit_position_on_nav_mesh(self._nav_world, spawn_position, exit_position, self._traverse_logic)
+	local unit = self._unit
+	local nav_world = self._nav_world
+	local traverse_logic = self._traverse_logic
+	local exit_position_on_nav_mesh = MinionSpawnerSpawnPosition.find_exit_position_on_nav_mesh(nav_world, spawn_position, exit_position, traverse_logic)
 
 	if not exit_position_on_nav_mesh then
-		Log.warning("[MinionSpawnerExtension]", "Couldn't find any nav mesh at spawner exit position %s, on unit: %s", exit_position, Unit.id_string(self._unit))
+		Log.warning("[MinionSpawnerExtension]", "Couldn't find any nav mesh at spawner exit position %s, on unit: %s", exit_position, Unit.id_string(unit))
 
 		exit_position_on_nav_mesh = exit_position
 	end
@@ -39,11 +46,9 @@ MinionSpawnerExtension.setup_from_component = function (self, spawner_groups, sp
 	self._exit_position = Vector3Box(exit_position_on_nav_mesh)
 
 	if exit_rotation_random_degree_range and exit_rotation_num_directions and exit_rotation_random_degree_range > 0 and exit_rotation_num_directions > 0 then
-		local degree_range = exit_rotation_random_degree_range
-		local degree_per_direction = degree_range / exit_rotation_num_directions
-		local current_degree = -(degree_range / 2)
+		local degree_per_direction = exit_rotation_random_degree_range / exit_rotation_num_directions
+		local current_degree = -exit_rotation_random_degree_range / 2
 		local randomized_spawn_data = {}
-		local unit = self._unit
 		local unit_position = nil
 		local has_spawn_node = Unit.has_node(unit, "spawn_node")
 
@@ -51,26 +56,32 @@ MinionSpawnerExtension.setup_from_component = function (self, spawner_groups, sp
 			local spawn_node = Unit.node(unit, "spawn_node")
 			unit_position = Unit.world_position(unit, spawn_node)
 		else
-			unit_position = Unit.world_position(self._unit, 1)
+			unit_position = POSITION_LOOKUP[unit]
 		end
+
+		local flattened_unit_position = Vector3(unit_position.x, unit_position.y, spawn_position.z)
+		local flattened_unit_to_spawn_position_length = Vector3.length(spawn_position - flattened_unit_position)
+		local to_exit_on_navmesh_flat_length = Vector3.length(Vector3.flat(to_exit_on_navmesh))
+		local spawn_horizontal_length = to_exit_on_navmesh_flat_length - flattened_unit_to_spawn_position_length
 
 		for i = 1, exit_rotation_num_directions + 1 do
 			local radians = math.degrees_to_radians(current_degree)
 			local direction = Vector3(math.sin(radians), math.cos(radians), 0)
 			local rotated_direction = Quaternion.rotate(spawn_rotation, direction)
 			local wanted_direction = Vector3.normalize(0.5 * spawn_direction + rotated_direction)
-			local exit_pos = unit_position + wanted_direction * Vector3.length(Vector3.flat(to_exit_on_navmesh))
+			local exit_pos = unit_position + wanted_direction * to_exit_on_navmesh_flat_length
 			exit_pos.z = exit_position_on_nav_mesh.z
-			local exit_pos_on_nav_mesh = MinionSpawnerSpawnPosition.find_exit_position_on_nav_mesh(self._nav_world, unit_position, exit_pos, self._traverse_logic)
+			local exit_pos_on_nav_mesh = NavQueries.position_on_mesh(nav_world, exit_pos, NAV_MESH_ABOVE, NAV_MESH_BELOW, traverse_logic)
 
 			if exit_pos_on_nav_mesh then
+				local spawn_pos = flattened_unit_position + wanted_direction * flattened_unit_to_spawn_position_length
+				local spawn_height = exit_pos_on_nav_mesh.z - spawn_pos.z
 				local spawn_data = {
-					rotation = QuaternionBox(Quaternion.look(wanted_direction))
+					rotation = QuaternionBox(Quaternion.look(wanted_direction)),
+					position = Vector3Box(spawn_pos),
+					height = spawn_height,
+					horizontal_length = spawn_horizontal_length
 				}
-				local flattened_unit_position = Vector3(unit_position.x, unit_position.y, spawn_position.z)
-				local spawn_pos = flattened_unit_position + wanted_direction * Vector3.length(spawn_position - flattened_unit_position)
-				spawn_pos.z = spawn_position.z
-				spawn_data.position = Vector3Box(spawn_pos)
 				randomized_spawn_data[#randomized_spawn_data + 1] = spawn_data
 			end
 
@@ -97,16 +108,26 @@ MinionSpawnerExtension.exit_position_boxed = function (self)
 	return self._exit_position
 end
 
+MinionSpawnerExtension.spawn_height = function (self, spawn_index)
+	local spawn_data = self._randomized_spawn_data[spawn_index]
+	local height = spawn_data.height
+
+	return height
+end
+
+MinionSpawnerExtension.spawn_horizontal_length = function (self, spawn_index)
+	local spawn_data = self._randomized_spawn_data[spawn_index]
+	local horizontal_length = spawn_data.horizontal_length
+
+	return horizontal_length
+end
+
 MinionSpawnerExtension.is_excluded_from_pacing = function (self)
 	return self._excluded_from_pacing
 end
 
 MinionSpawnerExtension.is_excluded_from_specials_pacing = function (self)
-	return self._excluded_from_pacing
-end
-
-MinionSpawnerExtension.unit = function (self)
-	return self._unit
+	return self._exclude_from_specials_pacing
 end
 
 MinionSpawnerExtension.spawn_type = function (self)
@@ -216,26 +237,24 @@ end
 
 MinionSpawnerExtension._spawn = function (self, breed_name, spawn_data)
 	local breed = Breeds[breed_name]
-	local nav_world = self._nav_world
+	local unit = self._unit
 	local exit_position = self._exit_position:unbox()
-	local exit_position_valid = MinionSpawnerSpawnPosition.validate_exit_position(nav_world, exit_position, self._traverse_logic)
+	local exit_position_valid = MinionSpawnerSpawnPosition.validate_exit_position(self._nav_world, exit_position, self._traverse_logic)
 
 	if not exit_position_valid then
-		Log.warning("[MinionSpawnerExtension]", "Spawning aborted for %q, couldn't find any traversable nav mesh at exit position %s, on unit: %s", breed_name, exit_position, Unit.id_string(self._unit))
+		Log.warning("[MinionSpawnerExtension]", "Spawning aborted for %q, couldn't find any traversable nav mesh at exit position %s, on unit: %s", breed_name, exit_position, Unit.id_string(unit))
 
 		return
 	end
 
 	local spawn_position, spawn_rotation = nil
+	local randomized_spawn_data = self._randomized_spawn_data
 
-	if self._randomized_spawn_data then
-		if self._randomized_index + 1 > #self._randomized_spawn_data then
-			self._randomized_index = 0
-		end
-
-		self._randomized_index = self._randomized_index + 1
-		spawn_rotation = self._randomized_spawn_data[self._randomized_index].rotation:unbox()
-		spawn_position = self._randomized_spawn_data[self._randomized_index].position:unbox()
+	if randomized_spawn_data then
+		self._randomized_index = self._randomized_index % #randomized_spawn_data + 1
+		local current_randomized_spawn_data = randomized_spawn_data[self._randomized_index]
+		spawn_rotation = current_randomized_spawn_data.rotation:unbox()
+		spawn_position = current_randomized_spawn_data.position:unbox()
 	else
 		spawn_rotation = self._spawn_rotation:unbox()
 		spawn_position = self._spawn_position:unbox()
@@ -256,10 +275,9 @@ MinionSpawnerExtension._spawn = function (self, breed_name, spawn_data)
 	end
 
 	local max_health_modifier = spawn_data.max_health_modifier
-	local unit = self._unit
 	local group_id = spawn_data.group_id
 	local attack_selection_template_name = spawn_data.attack_selection_template_name
-	local spawned_unit = Managers.state.minion_spawn:spawn_minion(breed_name, spawn_position, spawn_rotation, spawn_side_id, aggro_state, target_unit, unit, group_id, mission_objective_id, attack_selection_template_name, max_health_modifier)
+	local spawned_unit = Managers.state.minion_spawn:spawn_minion(breed_name, spawn_position, spawn_rotation, spawn_side_id, aggro_state, target_unit, unit, group_id, mission_objective_id, attack_selection_template_name, max_health_modifier, self._randomized_index)
 
 	return spawned_unit
 end

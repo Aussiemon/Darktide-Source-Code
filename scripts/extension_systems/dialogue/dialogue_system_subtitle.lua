@@ -4,18 +4,32 @@ local DialogueSystemSubtitle = class("DialogueSystemSubtitle")
 DialogueSystemSubtitle.init = function (self, world, wwise_world)
 	self._playing_localized_dialogues_array = {}
 	self._playing_audible_localized_dialogues_array = {}
+	self._cached_dialogue = nil
+	self._subtitle_delay = 0
 end
 
-DialogueSystemSubtitle.update = function (self)
+DialogueSystemSubtitle.update = function (self, dt)
 	for i = 1, #self._playing_localized_dialogues_array do
 		local dialogue = self._playing_localized_dialogues_array[i]
+		local duration = dialogue.duration
+
+		if duration then
+			duration = duration - dt
+
+			if duration <= 0 then
+				self:remove_localized_dialogue(dialogue)
+
+				return
+			end
+
+			dialogue.duration = duration
+		end
+
 		local is_audible = dialogue.is_audible
 		local last_audible = dialogue.last_audible
 
 		if last_audible ~= nil then
-			if is_audible == last_audible then
-				return
-			elseif is_audible == false and last_audible == true then
+			if is_audible == false and last_audible == true then
 				self:remove_silent_localized_dialogue(dialogue)
 			elseif is_audible == true and last_audible == false then
 				self:add_audible_playing_localized_dialogue(dialogue)
@@ -25,6 +39,34 @@ DialogueSystemSubtitle.update = function (self)
 		end
 
 		dialogue.last_audible = is_audible
+	end
+
+	if self._cached_dialogue then
+		self._subtitle_delay = self._subtitle_delay - dt
+
+		if self._subtitle_delay <= 0 then
+			local dialogue = self._cached_dialogue
+
+			self:add_playing_localized_dialogue(dialogue.speaker_name, dialogue)
+
+			self._cached_dialogue = nil
+		end
+	end
+end
+
+DialogueSystemSubtitle.create_subtitle = function (self, currently_playing_subtitle, speaker_name, duration, optional_delay)
+	local dialogue = {
+		currently_playing_subtitle = currently_playing_subtitle,
+		speaker_name = speaker_name,
+		duration = duration,
+		is_audible = true
+	}
+
+	if optional_delay then
+		self._subtitle_delay = optional_delay
+		self._cached_dialogue = dialogue
+	else
+		self:add_playing_localized_dialogue(speaker_name, dialogue)
 	end
 end
 

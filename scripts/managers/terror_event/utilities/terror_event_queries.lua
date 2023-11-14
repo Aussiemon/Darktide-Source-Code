@@ -36,19 +36,6 @@ TerrorEventQueries.num_alive_minions = function ()
 		table.clear(current_event.spawned_minion_data)
 	end
 
-	local terror_trickle_data = terror_event_manager:get_terror_trickle_data()
-	local trickle_spawner_queue_id = terror_trickle_data.spawned_minion_data.spawner_queue_id
-
-	if trickle_spawner_queue_id then
-		local num_alive_terror_trickle_minions = _count_num_alive_minions_in_spawners(trickle_spawner_queue_id)
-
-		if num_alive_terror_trickle_minions == 0 then
-			table.clear(terror_trickle_data.spawned_minion_data)
-		end
-
-		num_alive_minions = num_alive_minions + num_alive_terror_trickle_minions
-	end
-
 	return num_alive_minions
 end
 

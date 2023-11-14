@@ -3,6 +3,7 @@ local zone_ids = MissionSettings.mission_zone_ids
 local basic_cultist_gunner_template = {
 	slots = {
 		slot_ranged_weapon = {
+			use_outline = true,
 			drop_on_death = true,
 			is_weapon = true,
 			is_ranged_weapon = true,
@@ -11,18 +12,21 @@ local basic_cultist_gunner_template = {
 			}
 		},
 		slot_face = {
+			use_outline = true,
 			items = {
 				"content/items/characters/minions/chaos_cultists/attachments_base/face_01_tattoo_05",
 				"content/items/characters/minions/chaos_cultists/attachments_base/face_01_tattoo_06"
 			}
 		},
 		slot_head = {
+			use_outline = true,
 			items = {
 				"content/items/characters/minions/chaos_cultists/attachments_gear/longrange_hood_a",
 				"content/items/characters/minions/chaos_cultists/attachments_gear/longrange_hood_a_color_var_01"
 			}
 		},
 		slot_mask = {
+			use_outline = true,
 			items = {
 				"content/items/characters/minions/chaos_cultists/attachments_gear/gas_mask_01",
 				"content/items/characters/minions/chaos_cultists/attachments_gear/mask_02",
@@ -30,12 +34,14 @@ local basic_cultist_gunner_template = {
 			}
 		},
 		slot_upperbody = {
+			use_outline = true,
 			items = {
 				"content/items/characters/minions/chaos_cultists/attachments_base/upperbody_b",
 				"content/items/characters/minions/chaos_cultists/attachments_base/upperbody_b_color_var_01"
 			}
 		},
 		slot_lowerbody = {
+			use_outline = true,
 			items = {
 				"content/items/characters/minions/chaos_cultists/attachments_base/lowerbody_b",
 				"content/items/characters/minions/chaos_cultists/attachments_base/lowerbody_b_color_var_01",
@@ -43,6 +49,7 @@ local basic_cultist_gunner_template = {
 			}
 		},
 		slot_variation_gear = {
+			use_outline = true,
 			items = {
 				"content/items/characters/minions/chaos_cultists/attachments_gear/longrange_elite_a"
 			}

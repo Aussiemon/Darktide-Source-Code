@@ -244,13 +244,15 @@ HuskLiquidAreaExtension._set_liquid_filled = function (self, real_index)
 	liquid.full = true
 	local vfx_name_filled = self._vfx_name_filled
 
-	if vfx_name_filled then
-		local position = liquid.position:unbox()
-		local rotation = liquid.rotation:unbox()
-		local filled_particle_id = World.create_particles(self._world, vfx_name_filled, position, rotation)
-		liquid.filled_particle_id = filled_particle_id
-	else
-		liquid.filled_particle_id = nil
+	if not liquid.filled_particle_id then
+		if vfx_name_filled then
+			local position = liquid.position:unbox()
+			local rotation = liquid.rotation:unbox()
+			local filled_particle_id = World.create_particles(self._world, vfx_name_filled, position, rotation)
+			liquid.filled_particle_id = filled_particle_id
+		else
+			liquid.filled_particle_id = nil
+		end
 	end
 end
 

@@ -33,14 +33,22 @@ local abilities = {
 	},
 	zealot_relic = {
 		inventory_item_name = "content/items/weapons/player/preacher_relic",
-		hud_icon = "content/ui/textures/icons/abilities/hud/zealot/zealot_ability_bolstering_prayer",
-		ability_type = "combat_ability",
 		cooldown = 60,
 		can_be_previously_wielded_to = false,
+		hud_icon = "content/ui/textures/icons/abilities/hud/zealot/zealot_ability_bolstering_prayer",
+		ability_type = "combat_ability",
 		icon = "content/ui/materials/icons/abilities/ultimate/default",
 		max_charges = 1,
 		archetypes = {
 			"zealot"
+		},
+		pause_cooldown_settings = {
+			pause_fulfilled_func = function (context)
+				local inventory_component = context.inventory_component
+				local wielded_slot = inventory_component.wielded_slot
+
+				return wielded_slot ~= "slot_combat_ability"
+			end
 		}
 	},
 	zealot_invisibility = {
@@ -77,7 +85,7 @@ local abilities = {
 		stat_buff = "extra_max_amount_of_grenades",
 		inventory_item_name = "content/items/weapons/player/grenade_shock",
 		icon = "content/ui/materials/icons/abilities/combat/default",
-		show_in_firendly_hud = true,
+		show_in_friendly_hud = true,
 		max_charges = maniac_talent_settings.grenade.max_charges,
 		archetypes = {
 			"zealot"
@@ -89,7 +97,7 @@ local abilities = {
 		stat_buff = "extra_max_amount_of_grenades",
 		inventory_item_name = "content/items/weapons/player/grenade_fire",
 		icon = "content/ui/materials/icons/abilities/combat/default",
-		show_in_firendly_hud = true,
+		show_in_friendly_hud = true,
 		max_charges = preacher_talent_settings.grenade.max_charges,
 		archetypes = {
 			"zealot"
@@ -101,7 +109,7 @@ local abilities = {
 		stat_buff = "extra_max_amount_of_grenades",
 		inventory_item_name = "content/items/weapons/player/zealot_throwing_knives",
 		icon = "content/ui/materials/icons/abilities/combat/default",
-		show_in_firendly_hud = false,
+		show_in_friendly_hud = false,
 		max_charges = 12,
 		archetypes = {
 			"zealot"

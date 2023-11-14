@@ -238,8 +238,6 @@ local function _prepare_circumstance_data(circumstance, num_elements)
 		local circumstance_ui_data = circumstance_template.ui
 
 		if not circumstance_ui_data then
-			Log.warning("ViewElementMissionInfoPanel", "Circumstance %s doesn't have any ui information", circumstance)
-
 			return num_elements
 		end
 

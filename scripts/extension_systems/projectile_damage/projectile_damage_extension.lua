@@ -251,6 +251,12 @@ ProjectileDamageExtension.fixed_update = function (self, unit, dt, t)
 					explosion_normal = default_explosion_normal:unbox()
 				end
 
+				local explosion_z_offset = fuse_damage_settings.explosion_z_offset
+
+				if explosion_z_offset then
+					position = position + Vector3(0, 0, explosion_z_offset)
+				end
+
 				table.clear(_explosion_hit_units_table)
 
 				explosion_queue_index = Explosion.create_explosion(world, physics_world, position, explosion_normal, projectile_unit, fuse_explosion_template, DEFAULT_POWER_LEVEL, charge_level, AttackSettings.attack_types.explosion, is_critical_strike, false, weapon_item_or_nil, origin_slot_or_nil, _explosion_hit_units_table)
@@ -385,7 +391,7 @@ ProjectileDamageExtension.on_impact = function (self, hit_position, hit_unit, hi
 
 				local damage_dealt, attack_result, damage_efficiency, stagger_result, hit_weakspot = Attack.execute(hit_unit, impact_damage_profile, "attack_direction", hit_direction, "power_level", DEFAULT_POWER_LEVEL, "hit_zone_name", hit_zone_name, "target_index", 1, "target_number", 1, "charge_level", impact_charge_level, "is_critical_strike", is_critical_strike, "hit_actor", hit_actor, "hit_world_position", hit_position, "attack_type", attack_types.ranged, "damage_type", impact_damage_type, "attacking_unit", projectile_unit, "item", weapon_item_or_nil)
 				self._impact_hit = true
-				self._impact_hit_weakspot = self._impact_hit_weakspot + 1
+				self._impact_hit_weakspot = self._impact_hit_weakspot + (hit_weakspot and 1 or 0)
 				self._num_impact_hit_kill = self._num_impact_hit_kill + (attack_result == attack_results.died and 1 or 0)
 				self._num_impact_hit_elite = self._num_impact_hit_elite + (target_breed_or_nil and target_breed_or_nil.tags.elite and 1 or 0)
 				self._num_impact_hit_special = self._num_impact_hit_special + (target_breed_or_nil and target_breed_or_nil.tags.special and 1 or 0)
@@ -427,9 +433,7 @@ ProjectileDamageExtension.on_impact = function (self, hit_position, hit_unit, hi
 				end
 
 				if sticks_to_armor or sticks_to_breed or sticks_to_tag then
-					local hit_actor_index = Actor.node(hit_actor)
-
-					locomotion_extension:switch_to_sticky(hit_unit, hit_actor_index, hit_position, rotation, hit_normal, hit_direction)
+					locomotion_extension:switch_to_sticky(hit_unit, hit_actor, hit_position, rotation, hit_normal, hit_direction)
 
 					self._life_time = 0
 
@@ -652,10 +656,9 @@ ProjectileDamageExtension._get_sticking_explosion_normal = function (self, stick
 end
 
 ProjectileDamageExtension._handle_explosion_achivements = function (self, player, explosion_hit_units_table)
-	local profile = player:profile()
-	local specializtion_name = profile.specialization
+	local archetype_name = player:archetype_name()
 
-	if specializtion_name == "veteran_2" and not self._has_impacted then
+	if archetype_name == "veteran" and not self._has_impacted then
 		local count = 0
 
 		for hit_unit, _ in pairs(explosion_hit_units_table) do
@@ -663,7 +666,7 @@ ProjectileDamageExtension._handle_explosion_achivements = function (self, player
 		end
 
 		if count >= 5 then
-			Managers.achievements:trigger_event(player:account_id(), player:character_id(), "veteran_2_unbounced_grenade_hits_event")
+			Managers.achievements:unlock_achievement(player, "veteran_2_unbounced_grenade_kills")
 		end
 	end
 end
@@ -671,7 +674,7 @@ end
 ProjectileDamageExtension._record_impact_concluded_stats = function (self)
 	local player = Managers.state.player_unit_spawn:owner(self._owner_unit)
 
-	if player and Managers.stats.can_record_stats() then
+	if player then
 		local impact_hit = self._impact_hit
 		local num_impact_hit_weakspot = self._impact_hit_weakspot
 		local num_impact_hit_kill = self._num_impact_hit_kill
@@ -681,7 +684,7 @@ ProjectileDamageExtension._record_impact_concluded_stats = function (self)
 		local weapon_template_or_nil = weapon_item_or_nil and WeaponTemplate.weapon_template_from_item(weapon_item_or_nil)
 		local weapon_template_name = weapon_template_or_nil and weapon_template_or_nil.name or "none"
 
-		Managers.stats:record_projectile_impact_concluded_stats(player, impact_hit, num_impact_hit_weakspot, num_impact_hit_kill, num_impact_hit_elite, num_impact_hit_special, weapon_template_name)
+		Managers.stats:record_private("hook_projectile_hit", player, impact_hit, num_impact_hit_weakspot, num_impact_hit_kill, num_impact_hit_elite, num_impact_hit_special, weapon_template_name)
 	end
 end
 

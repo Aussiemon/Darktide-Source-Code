@@ -33,8 +33,7 @@ local smiter_light_default_am = {
 		[armor_types.berserker] = damage_lerp_values.lerp_0_5,
 		[armor_types.super_armor] = damage_lerp_values.lerp_0_25,
 		[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
-		[armor_types.void_shield] = damage_lerp_values.lerp_0_75,
-		[armor_types.prop_armor] = damage_lerp_values.lerp_2
+		[armor_types.void_shield] = damage_lerp_values.lerp_0_75
 	},
 	impact = {
 		[armor_types.unarmored] = damage_lerp_values.lerp_1,
@@ -44,8 +43,7 @@ local smiter_light_default_am = {
 		[armor_types.berserker] = damage_lerp_values.lerp_1,
 		[armor_types.super_armor] = damage_lerp_values.lerp_1,
 		[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_75,
-		[armor_types.void_shield] = damage_lerp_values.lerp_0_75,
-		[armor_types.prop_armor] = damage_lerp_values.lerp_1
+		[armor_types.void_shield] = damage_lerp_values.lerp_0_75
 	}
 }
 local tank_light_default_am = {
@@ -57,8 +55,7 @@ local tank_light_default_am = {
 		[armor_types.berserker] = damage_lerp_values.lerp_0_75,
 		[armor_types.super_armor] = damage_lerp_values.lerp_0_5,
 		[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_8,
-		[armor_types.void_shield] = damage_lerp_values.lerp_0_75,
-		[armor_types.prop_armor] = damage_lerp_values.lerp_2
+		[armor_types.void_shield] = damage_lerp_values.lerp_0_75
 	},
 	impact = {
 		[armor_types.unarmored] = damage_lerp_values.lerp_0_75,
@@ -68,8 +65,7 @@ local tank_light_default_am = {
 		[armor_types.berserker] = damage_lerp_values.lerp_1,
 		[armor_types.super_armor] = damage_lerp_values.lerp_1,
 		[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_75,
-		[armor_types.void_shield] = damage_lerp_values.lerp_0_75,
-		[armor_types.prop_armor] = damage_lerp_values.lerp_1
+		[armor_types.void_shield] = damage_lerp_values.lerp_0_75
 	}
 }
 local linesman_light_default_am = {
@@ -81,8 +77,7 @@ local linesman_light_default_am = {
 		[armor_types.berserker] = damage_lerp_values.lerp_0_5,
 		[armor_types.super_armor] = damage_lerp_values.lerp_0_25,
 		[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
-		[armor_types.void_shield] = damage_lerp_values.lerp_1,
-		[armor_types.prop_armor] = damage_lerp_values.lerp_0_75
+		[armor_types.void_shield] = damage_lerp_values.lerp_1
 	},
 	impact = {
 		[armor_types.unarmored] = damage_lerp_values.lerp_1,
@@ -92,8 +87,7 @@ local linesman_light_default_am = {
 		[armor_types.berserker] = damage_lerp_values.lerp_1,
 		[armor_types.super_armor] = damage_lerp_values.lerp_1,
 		[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
-		[armor_types.void_shield] = damage_lerp_values.lerp_1,
-		[armor_types.prop_armor] = damage_lerp_values.lerp_1
+		[armor_types.void_shield] = damage_lerp_values.lerp_1
 	}
 }
 local tank_heavy_default_am = {
@@ -105,8 +99,7 @@ local tank_heavy_default_am = {
 		[armor_types.berserker] = damage_lerp_values.lerp_0_5,
 		[armor_types.super_armor] = damage_lerp_values.lerp_0_25,
 		[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
-		[armor_types.void_shield] = damage_lerp_values.lerp_1,
-		[armor_types.prop_armor] = damage_lerp_values.lerp_0_75
+		[armor_types.void_shield] = damage_lerp_values.lerp_1
 	},
 	impact = {
 		[armor_types.unarmored] = damage_lerp_values.lerp_1,
@@ -116,8 +109,7 @@ local tank_heavy_default_am = {
 		[armor_types.berserker] = damage_lerp_values.lerp_0_5,
 		[armor_types.super_armor] = damage_lerp_values.lerp_1,
 		[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
-		[armor_types.void_shield] = damage_lerp_values.lerp_1,
-		[armor_types.prop_armor] = damage_lerp_values.lerp_1
+		[armor_types.void_shield] = damage_lerp_values.lerp_1
 	}
 }
 local light_active_am = {
@@ -129,8 +121,7 @@ local light_active_am = {
 		[armor_types.berserker] = damage_lerp_values.lerp_1,
 		[armor_types.super_armor] = damage_lerp_values.lerp_1,
 		[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
-		[armor_types.void_shield] = damage_lerp_values.lerp_1,
-		[armor_types.prop_armor] = damage_lerp_values.lerp_2
+		[armor_types.void_shield] = damage_lerp_values.lerp_1
 	},
 	impact = {
 		[armor_types.unarmored] = damage_lerp_values.lerp_2,
@@ -140,8 +131,7 @@ local light_active_am = {
 		[armor_types.berserker] = damage_lerp_values.lerp_1,
 		[armor_types.super_armor] = damage_lerp_values.lerp_0_5,
 		[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_2,
-		[armor_types.void_shield] = damage_lerp_values.lerp_2,
-		[armor_types.prop_armor] = damage_lerp_values.lerp_2
+		[armor_types.void_shield] = damage_lerp_values.lerp_2
 	}
 }
 local tank_heavy_active_am = {
@@ -153,8 +143,7 @@ local tank_heavy_active_am = {
 		[armor_types.berserker] = damage_lerp_values.lerp_1,
 		[armor_types.super_armor] = damage_lerp_values.lerp_1,
 		[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
-		[armor_types.void_shield] = damage_lerp_values.lerp_1,
-		[armor_types.prop_armor] = damage_lerp_values.lerp_2
+		[armor_types.void_shield] = damage_lerp_values.lerp_1
 	},
 	impact = {
 		[armor_types.unarmored] = damage_lerp_values.lerp_2,
@@ -164,8 +153,7 @@ local tank_heavy_active_am = {
 		[armor_types.berserker] = damage_lerp_values.lerp_1,
 		[armor_types.super_armor] = damage_lerp_values.lerp_0_5,
 		[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_2,
-		[armor_types.void_shield] = damage_lerp_values.lerp_2,
-		[armor_types.prop_armor] = damage_lerp_values.lerp_2
+		[armor_types.void_shield] = damage_lerp_values.lerp_2
 	}
 }
 damage_templates.ogryn_powermaul_light_smiter = {
@@ -205,8 +193,7 @@ damage_templates.ogryn_powermaul_light_smiter = {
 				[armor_types.berserker] = 0.1,
 				[armor_types.super_armor] = 0.1,
 				[armor_types.disgustingly_resilient] = 0.25,
-				[armor_types.void_shield] = 0.25,
-				[armor_types.prop_armor] = 0.25
+				[armor_types.void_shield] = 0.25
 			}
 		},
 		{
@@ -1058,8 +1045,7 @@ local human_tank_light_default_am = {
 		[armor_types.berserker] = damage_lerp_values.lerp_0_75,
 		[armor_types.super_armor] = damage_lerp_values.lerp_0_5,
 		[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1_25,
-		[armor_types.void_shield] = damage_lerp_values.lerp_0_75,
-		[armor_types.prop_armor] = damage_lerp_values.lerp_2
+		[armor_types.void_shield] = damage_lerp_values.lerp_0_75
 	},
 	impact = {
 		[armor_types.unarmored] = damage_lerp_values.lerp_0_75,
@@ -1069,8 +1055,7 @@ local human_tank_light_default_am = {
 		[armor_types.berserker] = damage_lerp_values.lerp_1,
 		[armor_types.super_armor] = damage_lerp_values.lerp_1,
 		[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_75,
-		[armor_types.void_shield] = damage_lerp_values.lerp_0_75,
-		[armor_types.prop_armor] = damage_lerp_values.lerp_1
+		[armor_types.void_shield] = damage_lerp_values.lerp_0_75
 	}
 }
 local human_tank_heavy_default_am = {
@@ -1082,8 +1067,7 @@ local human_tank_heavy_default_am = {
 		[armor_types.berserker] = damage_lerp_values.lerp_0_75,
 		[armor_types.super_armor] = damage_lerp_values.lerp_0_25,
 		[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1_25,
-		[armor_types.void_shield] = damage_lerp_values.lerp_1,
-		[armor_types.prop_armor] = damage_lerp_values.lerp_0_75
+		[armor_types.void_shield] = damage_lerp_values.lerp_1
 	},
 	impact = {
 		[armor_types.unarmored] = damage_lerp_values.lerp_1,
@@ -1093,8 +1077,7 @@ local human_tank_heavy_default_am = {
 		[armor_types.berserker] = damage_lerp_values.lerp_0_5,
 		[armor_types.super_armor] = damage_lerp_values.lerp_1,
 		[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
-		[armor_types.void_shield] = damage_lerp_values.lerp_1,
-		[armor_types.prop_armor] = damage_lerp_values.lerp_1
+		[armor_types.void_shield] = damage_lerp_values.lerp_1
 	}
 }
 local human_smiter_default_am = {
@@ -1106,8 +1089,7 @@ local human_smiter_default_am = {
 		[armor_types.berserker] = damage_lerp_values.lerp_0_75,
 		[armor_types.super_armor] = damage_lerp_values.lerp_0_6,
 		[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1_25,
-		[armor_types.void_shield] = damage_lerp_values.lerp_0_75,
-		[armor_types.prop_armor] = damage_lerp_values.lerp_2
+		[armor_types.void_shield] = damage_lerp_values.lerp_0_75
 	},
 	impact = {
 		[armor_types.unarmored] = damage_lerp_values.lerp_1,
@@ -1117,8 +1099,7 @@ local human_smiter_default_am = {
 		[armor_types.berserker] = damage_lerp_values.lerp_1,
 		[armor_types.super_armor] = damage_lerp_values.lerp_1,
 		[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_75,
-		[armor_types.void_shield] = damage_lerp_values.lerp_0_75,
-		[armor_types.prop_armor] = damage_lerp_values.lerp_1
+		[armor_types.void_shield] = damage_lerp_values.lerp_0_75
 	}
 }
 damage_templates.powermaul_2h_light_tank = {
@@ -1773,8 +1754,7 @@ damage_templates.powermaul_explosion = {
 			[armor_types.berserker] = 1,
 			[armor_types.super_armor] = 1,
 			[armor_types.disgustingly_resilient] = 1,
-			[armor_types.void_shield] = 1,
-			[armor_types.prop_armor] = 1
+			[armor_types.void_shield] = 1
 		},
 		impact = {
 			[armor_types.unarmored] = 1,
@@ -1784,8 +1764,7 @@ damage_templates.powermaul_explosion = {
 			[armor_types.berserker] = 1,
 			[armor_types.super_armor] = 1,
 			[armor_types.disgustingly_resilient] = 1,
-			[armor_types.void_shield] = 1,
-			[armor_types.prop_armor] = 1
+			[armor_types.void_shield] = 1
 		}
 	},
 	stagger_duration_modifier = {
@@ -1817,8 +1796,7 @@ damage_templates.powermaul_explosion_outer = {
 				[armor_types.berserker] = 1,
 				[armor_types.super_armor] = 1,
 				[armor_types.disgustingly_resilient] = 1,
-				[armor_types.void_shield] = 1,
-				[armor_types.prop_armor] = 1
+				[armor_types.void_shield] = 1
 			},
 			impact = {
 				[armor_types.unarmored] = 1,
@@ -1828,8 +1806,7 @@ damage_templates.powermaul_explosion_outer = {
 				[armor_types.berserker] = 1,
 				[armor_types.super_armor] = 1,
 				[armor_types.disgustingly_resilient] = 1,
-				[armor_types.void_shield] = 1,
-				[armor_types.prop_armor] = 1
+				[armor_types.void_shield] = 1
 			}
 		},
 		far = {
@@ -1841,8 +1818,7 @@ damage_templates.powermaul_explosion_outer = {
 				[armor_types.berserker] = 0,
 				[armor_types.super_armor] = 0,
 				[armor_types.disgustingly_resilient] = 0,
-				[armor_types.void_shield] = 0,
-				[armor_types.prop_armor] = 0
+				[armor_types.void_shield] = 0
 			},
 			impact = {
 				[armor_types.unarmored] = 1,
@@ -1852,8 +1828,7 @@ damage_templates.powermaul_explosion_outer = {
 				[armor_types.berserker] = 0.5,
 				[armor_types.super_armor] = 0.2,
 				[armor_types.disgustingly_resilient] = 1,
-				[armor_types.void_shield] = 0.2,
-				[armor_types.prop_armor] = 0.2
+				[armor_types.void_shield] = 0.2
 			}
 		}
 	},

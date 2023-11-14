@@ -25,6 +25,7 @@ WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/
 WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/autopistols/settings_templates/autopistol_damage_profile_templates", templates, loaded_files)
 WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/bolters/settings_templates/bolter_damage_profile_templates", templates, loaded_files)
 WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/chain_swords/settings_templates/chain_sword_damage_profile_templates", templates, loaded_files)
+WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/chain_swords/settings_templates/chain_sword_2h_damage_profile_templates", templates, loaded_files)
 WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/chain_axes/settings_templates/chain_axe_damage_profile_templates", templates, loaded_files)
 WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/combat_axes/settings_templates/combat_axe_damage_profile_templates", templates, loaded_files)
 WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/combat_blades/settings_templates/combat_blade_damage_profile_templates", templates, loaded_files)

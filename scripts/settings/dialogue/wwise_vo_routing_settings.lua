@@ -309,6 +309,12 @@ local wwise_vo_routing_settings = {
 		wwise_event_path = "wwise/events/vo/play_sfx_es_npc_mission_vo",
 		display_name = "NPC Mission VO",
 		wwise_sound_source = "es_npc_mission_vo"
+	},
+	{
+		is_default = false,
+		wwise_event_path = "wwise/events/vo/play_sfx_es_traitor_captain_vo_important_twin",
+		display_name = "Captain Twin VO",
+		wwise_sound_source = "es_traitor_captain_vo_important_twin"
 	}
 }
 

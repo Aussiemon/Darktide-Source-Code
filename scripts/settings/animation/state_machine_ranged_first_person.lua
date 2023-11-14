@@ -1,4 +1,4 @@
-local DEFAULT_BLEND_TIME = 0.07
+local DEFAULT_BLEND_TIME = 0
 local state_machine_settings = {
 	["content/characters/player/human/first_person/animations/autogun_rifle"] = {
 		blend_time = DEFAULT_BLEND_TIME

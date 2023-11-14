@@ -1,6 +1,7 @@
 local CraftingReplacePerkViewDeclarationSettings = {
 	state_bound = true,
 	display_name = "loc_crafting_view_display_name",
+	load_in_hub = true,
 	path = "scripts/ui/views/crafting_replace_perk_view/crafting_replace_perk_view",
 	package = "packages/ui/views/crafting_replace_perk_view/crafting_replace_perk_view",
 	class = "CraftingReplacePerkView",

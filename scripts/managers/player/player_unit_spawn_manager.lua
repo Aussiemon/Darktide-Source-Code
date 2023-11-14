@@ -215,6 +215,7 @@ PlayerUnitSpawnManager._spawn = function (self, player, position, rotation, pare
 
 	Managers.state.out_of_bounds:register_soft_oob_unit(player_unit, self, "_on_player_soft_oob")
 	Managers.event:trigger("player_unit_spawned", player)
+	Managers.stats:record_private("hook_player_spawned", player, player:profile())
 
 	return player_unit
 end

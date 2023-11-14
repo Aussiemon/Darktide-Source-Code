@@ -190,7 +190,8 @@ horde_template.execute = function (physics_world, nav_world, side, target_side, 
 
 	local pacing_manager = Managers.state.pacing
 	local challenge_rating = pacing_manager:total_challenge_rating()
-	local should_spawn_patrol = breeds_can_patrol and challenge_rating < PATROL_CHALLENGE_RAITNG_THRESHOLD
+	local waiting_for_ramp_clear = Managers.state.pacing:waiting_for_ramp_clear()
+	local should_spawn_patrol = not waiting_for_ramp_clear and breeds_can_patrol and challenge_rating < PATROL_CHALLENGE_RAITNG_THRESHOLD
 
 	if should_spawn_patrol then
 		for i = 1, num_positions do

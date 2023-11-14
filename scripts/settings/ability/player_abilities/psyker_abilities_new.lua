@@ -108,7 +108,7 @@ local abilities = {
 		}
 	},
 	psyker_smite = {
-		show_in_firendly_hud = false,
+		show_in_friendly_hud = false,
 		inventory_item_name = "content/items/weapons/player/psyker_smite",
 		can_be_previously_wielded_to = true,
 		hud_icon = "content/ui/materials/icons/abilities/throwables/default",
@@ -121,7 +121,7 @@ local abilities = {
 		}
 	},
 	psyker_chain_lightning = {
-		show_in_firendly_hud = false,
+		show_in_friendly_hud = false,
 		inventory_item_name = "content/items/weapons/player/psyker_chain_lightning",
 		can_be_previously_wielded_to = false,
 		hud_icon = "content/ui/materials/icons/abilities/throwables/default",
@@ -134,8 +134,8 @@ local abilities = {
 		}
 	},
 	psyker_throwing_knives = {
-		cooldown = 2,
-		show_in_firendly_hud = false,
+		cooldown = 3,
+		show_in_friendly_hud = false,
 		inventory_item_name = "content/items/weapons/player/psyker_throwing_knives",
 		can_be_previously_wielded_to = false,
 		can_be_wielded_when_depleted = true,

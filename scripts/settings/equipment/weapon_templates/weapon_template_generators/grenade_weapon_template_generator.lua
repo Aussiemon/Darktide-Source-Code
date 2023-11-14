@@ -217,18 +217,18 @@ local function generate_base_template()
 				}
 			},
 			action_aim = {
-				anim_event = "to_aim_arc",
+				arc_draw_delay = 0.15,
 				start_input = "aim_hold",
-				sprint_ready_up_time = 0.4,
 				kind = "aim_projectile",
 				throw_type = "throw",
+				sprint_ready_up_time = 0.4,
 				use_ability_charge = true,
 				allowed_during_sprint = false,
 				ability_type = "grenade_ability",
 				minimum_hold_time = 0.3,
 				anim_end_event = "to_unaim_arc",
 				uninterruptible = true,
-				arc_draw_delay = 0.15,
+				anim_event = "to_aim_arc",
 				stop_input = "block_cancel",
 				total_time = math.huge,
 				arc_configuration = {
@@ -253,13 +253,6 @@ local function generate_base_template()
 				anim_end_event_condition_func = function (unit, data, end_reason)
 					return end_reason == "hold_input_released"
 				end,
-				height_anim_settings = {
-					variable_name = "grenade_throw_height",
-					min_pitch = -0.5,
-					max_pitch = 0.5,
-					max_value = 2,
-					min_value = 0
-				},
 				arc_start_offset = Vector3Box(0.5, 1, 0.1)
 			},
 			action_throw_grenade = {
@@ -300,18 +293,18 @@ local function generate_base_template()
 				end
 			},
 			action_aim_underhand = {
-				anim_event = "prime_underhand",
+				arc_draw_delay = 0.15,
 				start_input = "short_hand_aim_hold",
-				sprint_ready_up_time = 0.4,
 				kind = "aim_projectile",
 				throw_type = "underhand_throw",
+				sprint_ready_up_time = 0.4,
 				use_ability_charge = true,
 				allowed_during_sprint = false,
 				ability_type = "grenade_ability",
 				minimum_hold_time = 0.3,
 				anim_end_event = "to_unaim_arc",
 				uninterruptible = true,
-				arc_draw_delay = 0.15,
+				anim_event = "prime_underhand",
 				stop_input = "short_hand_aim_released",
 				total_time = math.huge,
 				arc_configuration = {
@@ -336,13 +329,6 @@ local function generate_base_template()
 				anim_end_event_condition_func = function (unit, data, end_reason)
 					return end_reason == "hold_input_released"
 				end,
-				height_anim_settings = {
-					variable_name = "grenade_throw_height",
-					min_pitch = -0.5,
-					max_pitch = 0.5,
-					max_value = 2,
-					min_value = 0
-				},
 				arc_start_offset = Vector3Box(0.5, 0.1, -0.3)
 			},
 			action_underhand_throw_grenade = {
@@ -350,7 +336,7 @@ local function generate_base_template()
 				uninterruptible = true,
 				recoil_template = "default_shotgun_killshot",
 				kind = "throw_grenade",
-				throw_type = "throw",
+				throw_type = "underhand_throw",
 				anim_event = "throw_underhand",
 				anim_end_event = "equip",
 				use_ability_charge = true,
@@ -388,10 +374,12 @@ local function generate_base_template()
 				start_input = "inspect_start",
 				anim_end_event = "inspect_end",
 				kind = "inspect",
-				crosshair_type = "inspect",
 				anim_event = "inspect_start",
 				stop_input = "inspect_stop",
-				total_time = math.huge
+				total_time = math.huge,
+				crosshair = {
+					crosshair_type = "inspect"
+				}
 			},
 			combat_ability = {
 				slot_to_wield = "slot_combat_ability",

@@ -260,6 +260,28 @@ table.array_equals = function (a, b)
 	return true
 end
 
+table.equals = function (a, b)
+	for key, a_value in pairs(a) do
+		local b_value = b[key]
+		local a_type = type(a_value)
+		local b_type = type(b_value)
+
+		if a_value == b_value then
+			-- Nothing
+		elseif a_type ~= "table" or b_type ~= "table" or not table.equals(a_value, b_value) then
+			return false
+		end
+	end
+
+	for key, _ in pairs(b) do
+		if a[key] == nil then
+			return false
+		end
+	end
+
+	return true
+end
+
 table.contains = function (t, element)
 	for _, value in pairs(t) do
 		if value == element then
@@ -604,6 +626,16 @@ table.for_each = function (t, f)
 	for key, value in pairs(t) do
 		t[key] = f(value)
 	end
+end
+
+table.map = function (t, f, r)
+	r = r or {}
+
+	for key, value in pairs(t) do
+		r[key] = f(value)
+	end
+
+	return r
 end
 
 local random_indices = {}
@@ -1162,4 +1194,42 @@ table.variance = function (t)
 	end
 
 	return table.average(diff)
+end
+
+table.nested_get = function (t, key, ...)
+	if key == nil or t == nil then
+		return t
+	end
+
+	return table.nested_get(t[key], ...)
+end
+
+table.conditional_copy = function (t, condition, o)
+	o = o or {}
+
+	for key, value in pairs(t) do
+		if condition(key, value) then
+			o[key] = value
+		end
+	end
+
+	return o
+end
+
+table.is_array = function (t)
+	if type(t) ~= "table" then
+		return false
+	end
+
+	local i = 0
+
+	for _, _ in pairs(t) do
+		i = i + 1
+
+		if t[i] == nil then
+			return false
+		end
+	end
+
+	return true
 end

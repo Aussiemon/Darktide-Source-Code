@@ -9,6 +9,7 @@ local TalentSettings = require("scripts/settings/talent/talent_settings_new")
 local Toughness = require("scripts/utilities/toughness/toughness")
 local Vo = require("scripts/utilities/vo")
 local talent_settings_3 = TalentSettings.zealot_3
+local TICK_RATE = talent_settings_3.bolstering_prayer.tick_rate
 local proc_events = BuffSettings.proc_events
 local special_rules = SpecialRulesSettings.special_rules
 local ActionZealotChannel = class("ActionZealotChannel", "ActionAbilityBase")
@@ -36,7 +37,6 @@ ActionZealotChannel.start = function (self, action_settings, t, time_scale, acti
 	self._next_tick_t = t + 0
 	self._num_ticks = 0
 	self._add_buff_time = action_settings.add_buff_time
-	self._end_anim_t = nil
 	self._num_ticks_done = 0
 	self._specialization_extension = ScriptUnit.extension(player_unit, "specialization_system")
 	self._offensive_buff = self._specialization_extension:has_special_rule(special_rules.zealot_channel_grants_offensive_buff) and action_settings.offensive_buff
@@ -90,9 +90,7 @@ ActionZealotChannel.start = function (self, action_settings, t, time_scale, acti
 		self._fx_extension:spawn_particles(vfx, vfx_pos, rotation)
 	end
 
-	local duration = action_settings.duration
-	self._duration = t + duration
-	self._total_num_ticks = math.ceil(duration / talent_settings_3.bolstering_prayer.tick_rate)
+	self._total_num_ticks = math.ceil(action_settings.total_time - 0.5 / TICK_RATE)
 	local buff_extension = ScriptUnit.extension(player_unit, "buff_system")
 	local param_table = buff_extension:request_proc_event_param_table()
 
@@ -101,14 +99,20 @@ ActionZealotChannel.start = function (self, action_settings, t, time_scale, acti
 
 		buff_extension:add_proc_event(proc_events.on_combat_ability, param_table)
 	end
+
+	self:_use_ability_charge()
+
+	self._combat_ability_component.cooldown_paused = true
 end
 
 ActionZealotChannel.fixed_update = function (self, dt, t, time_in_action)
 	if not self._is_server then
 		if self._next_tick_t <= t then
-			self._next_tick_t = self._next_tick_t + talent_settings_3.bolstering_prayer.tick_rate
+			self._next_tick_t = self._next_tick_t + TICK_RATE
 
 			self:trigger_anim_event("raise", "raise")
+
+			self._num_ticks = self._num_ticks + 1
 		end
 
 		return
@@ -126,25 +130,12 @@ ActionZealotChannel.fixed_update = function (self, dt, t, time_in_action)
 		end
 	end
 
-	if not self._end_anim_t and self._next_tick_t <= t then
-		self._next_tick_t = self._next_tick_t + talent_settings_3.bolstering_prayer.tick_rate
+	if self._next_tick_t <= t then
+		self._next_tick_t = self._next_tick_t + TICK_RATE
 
 		self:_on_channel_tick(in_coherence_units, t, time_in_action)
 
 		self._num_ticks = self._num_ticks + 1
-	end
-
-	if self._end_anim_t and self._end_anim_t <= t then
-		self._combat_ability_component.active = false
-		self._end_anim_t = nil
-	end
-
-	if self._duration and self._duration <= t then
-		self._end_anim_t = t + 0.5
-
-		self:_use_ability_charge()
-
-		self._duration = nil
 	end
 
 	if self._next_vo and self._next_vo <= t then
@@ -235,10 +226,13 @@ ActionZealotChannel._on_channel_tick = function (self, in_coherence_units, t, ti
 	end
 end
 
+local HIT_UNITS = {}
+
 ActionZealotChannel._zealot_stagger = function (self, radius, power_level)
 	local action_settings = self._action_settings
 	local unit = self._player_unit
 
+	table.clear(HIT_UNITS)
 	table.clear(broadphase_results)
 
 	local side_system = Managers.state.extension:system("side_system")
@@ -267,6 +261,18 @@ ActionZealotChannel._zealot_stagger = function (self, radius, power_level)
 			if enemy_breed.suppress_config then
 				Suppression.apply_suppression(enemy_unit, unit, damage_profile, player_position)
 				Suppression.apply_suppression_decay_delay(enemy_unit, math.random_range(SUPPRESSION_DECAY_DELAY[1], SUPPRESSION_DECAY_DELAY[2]))
+
+				HIT_UNITS[enemy_unit] = true
+			elseif enemy_breed.can_be_blinded and not HIT_UNITS[enemy_unit] then
+				local blackboard = BLACKBOARDS[enemy_unit]
+				local stagger_component = blackboard.stagger
+				local is_staggered = stagger_component.num_triggered_staggers > 0
+
+				if not is_staggered then
+					local random_duration_range = math.random_range(2.6666666666666665, 4)
+
+					Stagger.force_stagger(enemy_unit, "blinding", attack_direction, random_duration_range, 1, 0.3333333333333333)
+				end
 			else
 				local hit_zone_name = "torso"
 
@@ -296,11 +302,21 @@ ActionZealotChannel._zealot_stagger = function (self, radius, power_level)
 				local attack_direction = Vector3.normalize(Vector3.flat(minion_position - player_position))
 
 				if is_boss then
-					if self._num_ticks_done == 1 or self._num_ticks_done == self._total_num_ticks then
-						Stagger.force_stagger(enemy_unit, "light", attack_direction, force_stagger_duration, 1, force_stagger_duration)
+					if self._num_ticks_done == 1 or self._num_ticks_done % 2 == 1 then
+						Stagger.force_stagger(enemy_unit, "blinding", attack_direction, force_stagger_duration, 1, force_stagger_duration)
 					end
-				else
-					Stagger.force_stagger(enemy_unit, "light", attack_direction, force_stagger_duration, 1, force_stagger_duration)
+				elseif not HIT_UNITS[enemy_unit] then
+					if enemy_breed.can_be_blinded then
+						local blackboard = BLACKBOARDS[enemy_unit]
+						local stagger_component = blackboard.stagger
+						local is_staggered = stagger_component.num_triggered_staggers > 0
+
+						if not is_staggered then
+							Stagger.force_stagger(enemy_unit, "blinding", attack_direction, force_stagger_duration, 1, force_stagger_duration)
+						end
+					else
+						Stagger.force_stagger(enemy_unit, "blinding", attack_direction, force_stagger_duration, 1, force_stagger_duration)
+					end
 				end
 			until true
 		end
@@ -317,8 +333,7 @@ ActionZealotChannel.finish = function (self, reason, data, t, time_in_action, ac
 	end
 
 	self._combat_ability_component.active = false
-
-	self:_use_ability_charge()
+	self._combat_ability_component.cooldown_paused = false
 end
 
 return ActionZealotChannel

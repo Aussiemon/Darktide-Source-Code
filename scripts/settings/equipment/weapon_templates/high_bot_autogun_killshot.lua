@@ -316,7 +316,6 @@ weapon_template.actions = {
 		sprint_ready_up_time = 0,
 		kind = "shoot_hit_scan",
 		weapon_handling_template = "autogun_triple_burst",
-		crosshair_type = "ironsight",
 		minimum_hold_time = 0.5,
 		ammunition_usage = 1,
 		start_input = "zoom_shoot",
@@ -354,6 +353,9 @@ weapon_template.actions = {
 			hit_scan_template = HitScanTemplates.autogun_p3_m1_bullet,
 			damage_type = damage_types.auto_bullet
 		},
+		crosshair = {
+			crosshair_type = "ironsight"
+		},
 		allowed_chain_actions = {
 			combat_ability = {
 				action_name = "combat_ability"
@@ -388,10 +390,12 @@ weapon_template.actions = {
 		aim_assist_ramp_template = AimAssistTemplates.killshot_fire
 	},
 	action_zoom = {
-		crosshair_type = "ironsight",
 		start_input = "zoom",
 		kind = "aim",
 		total_time = 0.3,
+		crosshair = {
+			crosshair_type = "ironsight"
+		},
 		allowed_chain_actions = {
 			combat_ability = {
 				action_name = "combat_ability"
@@ -418,10 +422,12 @@ weapon_template.actions = {
 		aim_assist_ramp_template = AimAssistTemplates.killshot_aim
 	},
 	action_unzoom = {
-		crosshair_type = "ironsight",
 		start_input = "zoom_release",
 		kind = "unaim",
 		total_time = 0.2,
+		crosshair = {
+			crosshair_type = "ironsight"
+		},
 		allowed_chain_actions = {
 			combat_ability = {
 				action_name = "combat_ability"
@@ -444,11 +450,13 @@ weapon_template.actions = {
 		aim_assist_ramp_template = AimAssistTemplates.killshot_unaim
 	},
 	action_reload = {
-		crosshair_type = "dot",
 		start_input = "reload",
 		stop_alternate_fire = true,
 		kind = "reload_state",
 		total_time = 3.3,
+		crosshair = {
+			crosshair_type = "dot"
+		},
 		action_movement_curve = {
 			{
 				modifier = 0.775,
@@ -748,10 +756,12 @@ weapon_template.actions = {
 		start_input = "inspect_start",
 		anim_end_event = "inspect_end",
 		kind = "inspect",
-		crosshair_type = "inspect",
 		anim_event = "inspect_start",
 		stop_input = "inspect_stop",
-		total_time = math.huge
+		total_time = math.huge,
+		crosshair = {
+			crosshair_type = "inspect"
+		}
 	}
 }
 
@@ -789,7 +799,9 @@ weapon_template.fx_sources = {
 	_muzzle = "fx_muzzle_01",
 	_mag_well = "fx_reload"
 }
-weapon_template.crosshair_type = "assault"
+weapon_template.crosshair = {
+	crosshair_type = "assault"
+}
 weapon_template.hit_marker_type = "center"
 weapon_template.alternate_fire_settings = {
 	stop_anim_event = "to_unaim_ironsight",
@@ -798,10 +810,12 @@ weapon_template.alternate_fire_settings = {
 	start_anim_event_3p = "to_ironsight",
 	spread_template = "default_autogun_alternate_fire_killshot",
 	suppression_template = "fullauto_autogun_killshot",
-	crosshair_type = "ironsight",
 	stop_anim_event_3p = "to_unaim_ironsight",
 	start_anim_event = "to_ironsight",
 	look_delta_template = "default_aiming",
+	crosshair = {
+		crosshair_type = "ironsight"
+	},
 	camera = {
 		custom_vertical_fov = 30,
 		vertical_fov = 35,

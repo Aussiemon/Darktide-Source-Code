@@ -43,14 +43,21 @@ math.clamp = function (value, min, max)
 	end
 end
 
-local math_clamp = math.clamp
-
 math.clamp01 = function (value)
-	return math_clamp(value, 0, 1)
+	if value > 1 then
+		return 1
+	elseif value < 0 then
+		return 0
+	else
+		return value
+	end
 end
 
+local math_clamp = math.clamp
+local math_clamp01 = math.clamp01
+
 math.normalize_01 = function (value, min, max)
-	return math_clamp((value - min) / (max - min), 0, 1)
+	return math_clamp01((value - min) / (max - min))
 end
 
 math.ilerp = function (from, to, value)
@@ -498,13 +505,13 @@ math.ease_out_bounce = function (t)
 	end
 end
 
-local math_ease_cubic = math.ease_out_bounce
+local math_ease_out_bounce = math.ease_out_bounce
 
 math.ease_in_out_bounce = function (t)
 	if t < 0.5 then
-		return (1 - math_ease_cubic(1 - 2 * t)) / 2
+		return (1 - math_ease_out_bounce(1 - 2 * t)) / 2
 	else
-		return (1 + math_ease_cubic(2 * t - 1)) / 2
+		return (1 + math_ease_out_bounce(2 * t - 1)) / 2
 	end
 end
 

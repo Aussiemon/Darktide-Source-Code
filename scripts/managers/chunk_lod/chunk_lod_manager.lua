@@ -1,12 +1,11 @@
-local ScriptWorld = require("scripts/foundation/utilities/script_world")
 local ChunkLodUnits = require("scripts/managers/chunk_lod/chunk_lod_units")
+local ScriptWorld = require("scripts/foundation/utilities/script_world")
 local ChunkLodManager = class("ChunkLodManager")
 
 ChunkLodManager.init = function (self, world, mission, local_player)
 	self._local_player = local_player
 	self._level_unit = nil
 	self._world = world
-	self._physics_world = World.physics_world(world)
 	self._raycast_interval = 2
 	self._raycast_timer = 0
 	self._raycast_lengths = {

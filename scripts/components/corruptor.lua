@@ -53,10 +53,6 @@ Corruptor.events.demolition_stage_start = function (self)
 end
 
 Corruptor.events.died = function (self)
-	if Managers.stats.can_record_stats() then
-		Managers.stats:record_team_corruptor_destroyed()
-	end
-
 	if self._corruptor_extension then
 		self._corruptor_extension:died()
 	end

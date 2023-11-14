@@ -63,7 +63,7 @@ local default_view_input_settings = {
 			"keyboard_tab",
 			"xbox_controller_x",
 			"ps4_controller_square",
-			description = "loc_alias_view_hotkey_lobby_switch_loadout",
+			description = "",
 			bindable = false,
 			group = "input_group_hotkeys"
 		},
@@ -92,7 +92,7 @@ local default_view_input_settings = {
 			"keyboard_g",
 			"xbox_controller_d_right",
 			"ps4_controller_d_right",
-			description = "loc_alias_view_hotkey_item_compare",
+			description = "",
 			bindable = false
 		},
 		hotkey_start_game = {
@@ -135,6 +135,13 @@ local default_view_input_settings = {
 			"xbox_controller_y",
 			"ps4_controller_triangle",
 			description = "loc_alias_view_hotkey_menu_special_2",
+			bindable = false
+		},
+		hotkey_toggle_item_tooltip = {
+			"keyboard_x",
+			"xbox_controller_left_thumb",
+			"ps4_controller_l3",
+			description = "",
 			bindable = false
 		},
 		confirm = {
@@ -408,21 +415,21 @@ local default_view_input_settings = {
 		toggle_filter = {
 			"keyboard_t",
 			"xbox_controller_y",
-			description = "loc_alias_view_toggle_filter",
+			description = "",
 			bindable = false
 		},
 		character_create_randomize = {
 			"keyboard_c",
 			"xbox_controller_right_shoulder",
 			"ps4_controller_triangle",
-			description = "loc_alias_creator_randomize",
+			description = "",
 			bindable = false
 		},
 		continue_end_view = {
 			"keyboard_space",
 			"xbox_controller_a",
 			"ps4_controller_cross",
-			description = "loc_alias_continue_end_view",
+			description = "",
 			bindable = false
 		}
 	},
@@ -514,6 +521,10 @@ local default_view_input_settings = {
 		hotkey_menu_special_2_hold = {
 			key_alias = "hotkey_menu_special_2",
 			type = "held"
+		},
+		hotkey_toggle_item_tooltip = {
+			key_alias = "hotkey_toggle_item_tooltip",
+			type = "pressed"
 		},
 		title_screen_start = {
 			key_alias = "title_screen_start",

@@ -22,35 +22,36 @@ local stagger_types = StaggerSettings.stagger_types
 local weakspot_types = WeakspotSettings.types
 local breed_name = "renegade_executor"
 local breed_data = {
-	display_name = "loc_breed_display_name_renegade_executor",
-	run_speed = 5.25,
-	use_bone_lod = true,
-	volley_fire_target = true,
-	spawn_anim_state = "to_melee_elite",
-	power_level_type = "renegade_executor_melee",
-	unit_template_name = "minion",
-	faction_name = "chaos",
-	spawn_inventory_slot = "slot_melee_weapon",
 	detection_radius = 15,
-	sub_faction_name = "renegade",
-	broadphase_radius = 1,
-	state_machine = "content/characters/enemy/chaos_traitor_guard/third_person/animations/chaos_traitor_guard_elite_executor",
-	stagger_resistance = 1,
-	aggro_inventory_slot = "slot_melee_weapon",
 	walk_speed = 2,
-	base_height = 1.9,
-	player_locomotion_constrain_radius = 0.5,
-	line_of_sight_collision_filter = "filter_minion_line_of_sight_check",
-	stagger_reduction = 10,
-	use_wounds = true,
-	stagger_reduction_ranged = 25,
+	use_bone_lod = true,
+	sub_faction_name = "renegade",
 	can_patrol = true,
-	smart_tag_target_type = "breed",
+	aggro_inventory_slot = "slot_melee_weapon",
+	unit_template_name = "minion",
+	spawn_anim_state = "to_melee_elite",
+	volley_fire_target = true,
+	state_machine = "content/characters/enemy/chaos_traitor_guard/third_person/animations/chaos_traitor_guard_elite_executor",
+	broadphase_radius = 1,
+	spawn_inventory_slot = "slot_melee_weapon",
+	stagger_resistance = 1,
 	game_object_type = "minion_melee",
-	activate_slot_system_on_spawn = true,
-	base_unit = "content/characters/enemy/chaos_traitor_guard/third_person/base",
 	challenge_rating = 4,
 	bone_lod_radius = 1.2,
+	use_wounds = true,
+	power_level_type = "renegade_executor_melee",
+	display_name = "loc_breed_display_name_renegade_executor",
+	run_speed = 5.25,
+	faction_name = "chaos",
+	base_height = 1.9,
+	psyker_mark_target = true,
+	line_of_sight_collision_filter = "filter_minion_line_of_sight_check",
+	stagger_reduction = 10,
+	player_locomotion_constrain_radius = 0.5,
+	stagger_reduction_ranged = 25,
+	activate_slot_system_on_spawn = true,
+	smart_tag_target_type = "breed",
+	base_unit = "content/characters/enemy/chaos_traitor_guard/third_person/base",
 	has_direct_ragdoll_flow_event = true,
 	name = breed_name,
 	breed_type = breed_types.minion,
@@ -64,9 +65,9 @@ local breed_data = {
 	hit_mass = MinionDifficultySettings.hit_mass[breed_name],
 	gib_template = MinionGibbingTemplates.renegade_executor_gibbing,
 	stagger_durations = {
-		[stagger_types.light] = 0.75,
-		[stagger_types.medium] = 1.25,
-		[stagger_types.heavy] = 3.5,
+		[stagger_types.light] = 0.5,
+		[stagger_types.medium] = 1,
+		[stagger_types.heavy] = 3,
 		[stagger_types.light_ranged] = 0.5,
 		[stagger_types.explosion] = 3,
 		[stagger_types.killshot] = 0.5,
@@ -80,14 +81,6 @@ local breed_data = {
 		[stagger_types.killshot] = 2,
 		[stagger_types.sticky] = 0.25,
 		[stagger_types.explosion] = 3
-	},
-	stagger_thresholds = {
-		[stagger_types.light] = 5,
-		[stagger_types.medium] = 20,
-		[stagger_types.heavy] = 40,
-		[stagger_types.light_ranged] = 10,
-		[stagger_types.killshot] = 10,
-		[stagger_types.sticky] = 3
 	},
 	stagger_thresholds = {
 		[stagger_types.light] = 5,
@@ -106,7 +99,6 @@ local breed_data = {
 		"anim_move_speed"
 	},
 	combat_range_data = BreedCombatRanges.renegade_executor,
-	suppress_config = MinionDifficultySettings.suppression.renegade_executor,
 	attack_intensity_cooldowns = {
 		melee = {
 			0,
@@ -394,7 +386,8 @@ local breed_data = {
 		}
 	},
 	slot_template = breed_name,
-	blackboard_component_config = BreedBlackboardComponentTemplates.melee_patroller_can_be_suppressed
+	outline_config = {},
+	blackboard_component_config = BreedBlackboardComponentTemplates.melee_patroller
 }
 
 return breed_data

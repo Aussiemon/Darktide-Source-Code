@@ -6,24 +6,28 @@ local templates = {
 local basic_cultist_shocktrooper_template = {
 	slots = {
 		slot_body = {
+			use_outline = true,
 			items = {
 				"content/items/characters/minions/chaos_cultists/attachments_gear/midrange_elite_a",
 				"content/items/characters/minions/chaos_cultists/attachments_gear/midrange_elite_a_var_01"
 			}
 		},
 		slot_mask = {
+			use_outline = true,
 			items = {
 				"content/items/characters/minions/chaos_cultists/attachments_gear/mask_01",
 				"content/items/characters/minions/generic_items/empty_minion_item"
 			}
 		},
 		slot_face = {
+			use_outline = true,
 			items = {
 				"content/items/characters/minions/chaos_cultists/attachments_base/face_02_tattoo_05",
 				"content/items/characters/minions/chaos_cultists/attachments_base/face_02_tattoo_06"
 			}
 		},
 		slot_ranged_weapon = {
+			use_outline = true,
 			drop_on_death = true,
 			is_weapon = true,
 			is_ranged_weapon = true,

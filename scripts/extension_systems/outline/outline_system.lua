@@ -152,13 +152,6 @@ OutlineSystem.add_outline = function (self, unit, outline_name)
 
 		if outline_config then
 			local color_unit = unit
-			local visual_loadout_slot = outline_config.visual_loadout_slot
-
-			if visual_loadout_slot then
-				local visual_loadout_extension = ScriptUnit.extension(unit, "visual_loadout_system")
-				color_unit = visual_loadout_extension:slot_unit(visual_loadout_slot)
-			end
-
 			local material_layers = outline.material_layers
 
 			for i = 1, #material_layers do
@@ -166,6 +159,35 @@ OutlineSystem.add_outline = function (self, unit, outline_name)
 				local material_variable_name = "outline_color"
 
 				Unit.set_vector3_for_material(color_unit, material_layer_name, material_variable_name, Vector3(wanted_outline_color[1], wanted_outline_color[2], wanted_outline_color[3]))
+			end
+
+			local visual_loadout_extension = ScriptUnit.extension(unit, "visual_loadout_system")
+			local visual_loadout_slots = visual_loadout_extension:inventory_slots()
+
+			for slot_name, slot in pairs(visual_loadout_slots) do
+				local slot_unit, attachments = visual_loadout_extension:slot_unit(slot_name)
+
+				if slot.use_outline then
+					for j = 1, #material_layers do
+						local material_layer_name = material_layers[j]
+						local material_variable_name = "outline_color"
+
+						Unit.set_vector3_for_material(slot_unit, material_layer_name, material_variable_name, Vector3(wanted_outline_color[1], wanted_outline_color[2], wanted_outline_color[3]))
+					end
+
+					if attachments then
+						for j = 1, #attachments do
+							local attachment_unit = attachments[j]
+
+							for k = 1, #material_layers do
+								local material_layer_name = material_layers[k]
+								local material_variable_name = "outline_color"
+
+								Unit.set_vector3_for_material(attachment_unit, material_layer_name, material_variable_name, Vector3(wanted_outline_color[1], wanted_outline_color[2], wanted_outline_color[3]))
+							end
+						end
+					end
+				end
 			end
 		end
 	end

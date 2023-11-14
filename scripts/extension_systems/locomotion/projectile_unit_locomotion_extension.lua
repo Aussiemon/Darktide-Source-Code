@@ -399,7 +399,7 @@ ProjectileUnitLocomotionExtension._update_engine_physics = function (self, unit)
 	end
 end
 
-ProjectileUnitLocomotionExtension.switch_to_sticky = function (self, sticking_to_unit, sticking_to_actor_index, world_position, world_rotation, hit_normal, hit_direction)
+ProjectileUnitLocomotionExtension.switch_to_sticky = function (self, sticking_to_unit, sticking_to_actor, world_position, world_rotation, hit_normal, hit_direction)
 	self:_set_state(locomotion_states.sticky)
 	ProjectileLocomotion.set_kinematic(self._projectile_unit, self._dynamic_actor_id, true)
 
@@ -407,8 +407,10 @@ ProjectileUnitLocomotionExtension.switch_to_sticky = function (self, sticking_to
 
 	self:_apply_changes(locomotion_states.sticky, world_position, world_rotation, zero_vector, zero_vector)
 
+	local sticking_to_actor_index = Actor.node(sticking_to_actor)
 	local local_position, local_rotation = ProjectileLinking.link_position_and_rotation(sticking_to_unit, sticking_to_actor_index, world_position, world_rotation, hit_normal, hit_direction)
 	self._sticking_to_unit = sticking_to_unit
+	self._sticking_to_actor = sticking_to_actor
 	self._sticking_to_actor_index = sticking_to_actor_index
 	local world = self._world
 	local projectile_unit = self._projectile_unit
@@ -450,6 +452,7 @@ ProjectileUnitLocomotionExtension.unstick_from_unit = function (self)
 	end
 
 	self._sticking_to_unit = nil
+	self._sticking_to_actor = nil
 	self._sticking_to_actor_index = nil
 
 	self:switch_to_engine()
@@ -613,8 +616,9 @@ end
 ProjectileUnitLocomotionExtension.sticking_to_unit = function (self)
 	local sticking_to_unit = self._sticking_to_unit
 	local sticking_to_actor_index = self._sticking_to_actor_index or 1
+	local sticking_to_actor = self._sticking_to_actor
 
-	return sticking_to_unit, sticking_to_actor_index
+	return sticking_to_unit, sticking_to_actor_index, sticking_to_actor
 end
 
 ProjectileUnitLocomotionExtension.current_state = function (self)

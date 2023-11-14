@@ -1,10 +1,11 @@
 local view_settings = {
-	package = "packages/ui/views/crafting_extract_trait_view/crafting_extract_trait_view",
 	display_name = "loc_crafting_view_display_name",
-	class = "CraftingExtractTraitView",
-	disable_game_world = true,
 	state_bound = true,
 	path = "scripts/ui/views/crafting_extract_trait_view/crafting_extract_trait_view",
+	package = "packages/ui/views/crafting_extract_trait_view/crafting_extract_trait_view",
+	class = "CraftingExtractTraitView",
+	disable_game_world = true,
+	load_in_hub = true,
 	levels = {
 		"content/levels/ui/crafting_view/crafting_view"
 	},

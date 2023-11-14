@@ -823,6 +823,19 @@ local legend_inputs = {
 		alignment = "right_alignment"
 	},
 	{
+		input_action = "hotkey_lobby_switch_loadout",
+		alignment = "right_alignment",
+		on_pressed_callback = "cb_on_loadout_pressed",
+		display_name = show_weapon,
+		visibility_function = function (parent, id)
+			local display_name = parent._show_weapons and hide_weapon or show_weapon
+
+			parent._input_legend_element:set_display_name(id, display_name)
+
+			return true
+		end
+	},
+	{
 		input_action = "talents_summery_overview_pressed",
 		alignment = "right_alignment",
 		on_pressed_callback = "cb_on_trigger_gamepad_tooltip_navigation_pressed",

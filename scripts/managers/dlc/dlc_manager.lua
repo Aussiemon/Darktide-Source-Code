@@ -225,7 +225,7 @@ DLCManager.cb_query_backend_result = function (self, data)
 	local reward_queue = self._reward_queue
 	local results = data.dlcUpdates
 
-	if #results == 0 then
+	if #results == 0 and (IS_XBS or IS_GDK) then
 		Crashify.print_exception("DLCManager", "Got empty dlcUpdates from backend, can not parse dlc rewards")
 	end
 

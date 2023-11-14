@@ -1,3 +1,4 @@
+local InputDevice = require("scripts/managers/input/input_device")
 local FreeFlightDefaultInput = require("scripts/foundation/managers/free_flight/free_flight_default_input")
 local FreeFlightFollowPath = require("scripts/foundation/managers/free_flight/utilities/free_flight_follow_path")
 local FreeFlightManagerTestify = GameParameters.testify and require("scripts/foundation/managers/free_flight/free_flight_manager_testify")
@@ -270,6 +271,13 @@ FreeFlightManager._update_camera = function (self, input, dt, camera_data)
 	local move_back = input:get("move_backward")
 	local move_up = input:get("move_up")
 	local move_down = input:get("move_down")
+	local move_controller = input:get("move_controller")
+	local last_pressed_device = InputDevice.last_pressed_device
+	local using_gamepad = not last_pressed_device or last_pressed_device:type() == "xbox_controller"
+
+	if not using_gamepad then
+		move_controller = Vector3.zero()
+	end
 
 	if toggle_look_input then
 		self._look_input_enabled = not self._look_input_enabled
@@ -298,8 +306,8 @@ FreeFlightManager._update_camera = function (self, input, dt, camera_data)
 			local q1 = Quaternion(Vector3(0, 0, 1), ortho_data.yaw)
 			local q2 = Quaternion(Vector3.right(), -math.half_pi)
 			local q = Quaternion.multiply(q1, q2)
-			local x_trans = (move_right - move_left) * dt * self.STD_ORTHOGRAPHIC_SPEED
-			local y_trans = (move_forward - move_back) * dt * self.STD_ORTHOGRAPHIC_SPEED
+			local x_trans = (move_right - move_left + move_controller.x) * dt * self.STD_ORTHOGRAPHIC_SPEED
+			local y_trans = (move_forward - move_back + move_controller.y) * dt * self.STD_ORTHOGRAPHIC_SPEED
 			local pos = trans + Quaternion.up(q) * y_trans + Quaternion.right(q) * x_trans
 			cm = Matrix4x4.from_quaternion_position(q, pos)
 			local size = ortho_data.size
@@ -310,12 +318,12 @@ FreeFlightManager._update_camera = function (self, input, dt, camera_data)
 		else
 			Matrix4x4.set_translation(cm, Vector3(0, 0, 0))
 
-			local q1 = Quaternion(Vector3(0, 0, 1), -Vector3.x(look) * camera_data.rotation_speed)
-			local q2 = Quaternion(Matrix4x4.x(cm), -Vector3.y(look) * camera_data.rotation_speed)
+			local q1 = Quaternion(Vector3(0, 0, 1), -Vector3.x(look) * camera_data.rotation_speed * (using_gamepad and 2 or 1))
+			local q2 = Quaternion(Matrix4x4.x(cm), -Vector3.y(look) * camera_data.rotation_speed * (using_gamepad and 2 or 1))
 			local q = Quaternion.multiply(q1, q2)
 			cm = Matrix4x4.multiply(cm, Matrix4x4.from_quaternion(q))
-			local x_trans = move_right - move_left
-			local y_trans = move_forward - move_back
+			local x_trans = move_right - move_left + move_controller.x
+			local y_trans = move_forward - move_back + move_controller.y
 			local z_trans = move_up - move_down
 			local offset = Matrix4x4.transform(cm, Vector3(x_trans, y_trans, z_trans) * camera_data.translation_speed * dt)
 			trans = Vector3.add(trans, offset)

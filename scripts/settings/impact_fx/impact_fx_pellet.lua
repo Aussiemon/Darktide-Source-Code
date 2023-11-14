@@ -1,6 +1,7 @@
 local ArmorSettings = require("scripts/settings/damage/armor_settings")
-local SurfaceMaterialSettings = require("scripts/settings/surface_material_settings")
 local ImpactFxHelper = require("scripts/utilities/impact_fx_helper")
+local SurfaceMaterialSettings = require("scripts/settings/surface_material_settings")
+local NO_SURFACE_DECAL = false
 local armor_types = ArmorSettings.types
 local hit_types = SurfaceMaterialSettings.hit_types
 local default_armor_decal = nil
@@ -623,7 +624,6 @@ local disgustingly_resilient = {
 }
 local resistant = table.clone(unarmored)
 local berserker = table.clone(unarmored)
-local prop_armor = table.clone(armored)
 local player = {
 	sfx = {
 		damage = {
@@ -910,6 +910,7 @@ local surface_decal = {
 			}
 		}
 	},
+	nurgle_flesh = NO_SURFACE_DECAL,
 	wood_solid = {
 		[hit_types.stop] = {
 			uniform_extents = {
@@ -967,7 +968,8 @@ local surface_decal = {
 				"content/fx/units/weapons/small_caliber_concrete_small_01"
 			}
 		}
-	}
+	},
+	nurgle_flesh = NO_SURFACE_DECAL
 }
 
 ImpactFxHelper.create_missing_surface_decals(surface_decal)
@@ -980,8 +982,7 @@ return {
 		[armor_types.player] = player,
 		[armor_types.resistant] = resistant,
 		[armor_types.super_armor] = super_armor,
-		[armor_types.unarmored] = unarmored,
-		[armor_types.prop_armor] = prop_armor
+		[armor_types.unarmored] = unarmored
 	},
 	surface = surface_fx,
 	surface_decal = surface_decal

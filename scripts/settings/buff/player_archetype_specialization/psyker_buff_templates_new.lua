@@ -159,15 +159,15 @@ function _add_soul_function(template_data, template_context, t, previous_stack_c
 
 	if stacks == max_stacks then
 		soul_screenspace_effect = "content/fx/particles/screenspace/screen_biomancer_maxsouls"
-
-		if Managers.stats.can_record_stats() then
-			Managers.stats:record_psyker_2_reached_max_souls(template_context.player)
-		end
 	else
 		soul_screenspace_effect = "content/fx/particles/screenspace/screen_biomancer_souls"
 	end
 
 	template_data.fx_extension:spawn_exclusive_particle(soul_screenspace_effect, Vector3(0, 0, 1))
+
+	if template_context.is_server then
+		Managers.stats:record_private("hook_psyker_reached_max_souls", template_context.player)
+	end
 
 	if template_data.psyker_toughness_on_soul and template_context.is_server then
 		local player_unit = template_context.unit
@@ -213,25 +213,20 @@ end
 local REPORT_INTERVALL = 1
 
 function _update_soul_function(template_data, template_context, dt, t)
-	local can_record_stats = Managers.stats.can_record_stats()
+	local stacks = template_context.stack_count
+	local max_stacks = template_context.template.max_stacks
+	local is_on_max = max_stacks <= stacks
+	local time_at_max = template_data.time_at_max or 0
+	time_at_max = is_on_max and time_at_max + dt or 0
+	template_data.time_at_max = time_at_max
+	local report_time = is_on_max and template_data.report_time or 0
+	report_time = report_time + (is_on_max and dt or 0)
 
-	if can_record_stats then
-		local stacks = template_context.stack_count
-		local max_stacks = template_context.template.max_stacks
-		local is_on_max = max_stacks <= stacks
-		local time_at_max = template_data.time_at_max or 0
-		time_at_max = is_on_max and time_at_max + dt or 0
-		template_data.time_at_max = time_at_max
-		local report_time = is_on_max and template_data.repport_time or 0
-		report_time = report_time + (is_on_max and dt or 0)
-
-		if REPORT_INTERVALL < report_time then
-			Managers.stats:record_psyker_2_time_at_max_stacks(template_context.player, time_at_max)
-		end
-
-		template_data.repport_time = report_time % REPORT_INTERVALL
+	if REPORT_INTERVALL < report_time then
+		Managers.stats:record_private("hook_psyker_time_at_max_souls", template_context.player, time_at_max)
 	end
 
+	template_data.report_time = report_time % REPORT_INTERVALL
 	local stacks = template_context.stack_count
 	local current_stacks = template_data.specialization_resource_component.current_resource
 
@@ -239,8 +234,8 @@ function _update_soul_function(template_data, template_context, dt, t)
 		local max_stacks = template_context.template.max_stacks
 		template_data.specialization_resource_component.current_resource = math.clamp(stacks, 0, max_stacks)
 
-		if can_record_stats and stacks < current_stacks then
-			Managers.stats:record_psyker_2_lost_max_souls(template_context.player)
+		if stacks < current_stacks then
+			Managers.stats:record_private("hook_psyker_lost_max_souls", template_context.player)
 		end
 	end
 end
@@ -605,7 +600,7 @@ function _psyker_marked_enemies_select_unit(template_data, template_context, las
 		if HEALTH_ALIVE[enemy_unit] then
 			local unit_data_extension = ScriptUnit.extension(enemy_unit, "unit_data_system")
 			local breed = unit_data_extension:breed()
-			local valid_breed = breed.tags and not breed.tags.horde and not breed.tags.ogryn and not breed.tags.special and not breed.tags.monster and not breed.tags.captain
+			local valid_breed = breed.psyker_mark_target
 
 			if valid_breed then
 				local unit_pos = POSITION_LOOKUP[enemy_unit]
@@ -942,7 +937,10 @@ templates.psyker_overcharge_stance = {
 		}
 	},
 	conditional_lerped_stat_buffs = {
-		[stat_buffs.finesse_modifier_bonus] = TalentSettings.overcharge_stance.finesse_damage_per_stack
+		[stat_buffs.finesse_modifier_bonus] = {
+			min = 0,
+			max = TalentSettings.overcharge_stance.finesse_damage_per_stack * overcharge_max_stacks
+		}
 	},
 	keywords = {
 		keywords.psyker_overcharge
@@ -1022,7 +1020,7 @@ templates.psyker_overcharge_stance = {
 		return math.min(overcharge_max_stacks, template_data.stacks + template_data.bonus_stacks)
 	end,
 	lerp_t_func = function (t, start_time, duration, template_data, template_context)
-		return math.min(overcharge_max_stacks, template_data.stacks + template_data.bonus_stacks) / 25
+		return math.min(overcharge_max_stacks, template_data.stacks + template_data.bonus_stacks) / overcharge_max_stacks
 	end
 }
 templates.psyker_overcharge_stance_cool_off = {

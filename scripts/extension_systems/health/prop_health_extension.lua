@@ -14,7 +14,20 @@ PropHealthExtension.init = function (self, extension_init_context, unit)
 	self._ignored_colliders = {}
 end
 
-PropHealthExtension.setup_from_component = function (self, max_health, invulnerable, unkillable, breed_white_list, ignored_collider_actor_names, speed_on_hit)
+local HEALTH_DIFFICULTY_SCALING = {
+	0.4,
+	0.6,
+	0.75,
+	1,
+	1
+}
+
+PropHealthExtension.setup_from_component = function (self, max_health, difficulty_scaling, invulnerable, unkillable, breed_white_list, ignored_collider_actor_names, speed_on_hit)
+	if difficulty_scaling then
+		local health_scale = Managers.state.difficulty:get_table_entry_by_challenge(HEALTH_DIFFICULTY_SCALING)
+		max_health = max_health * health_scale
+	end
+
 	self._max_health = max_health
 	self._health = max_health
 	self._invulnerable = invulnerable
@@ -67,7 +80,7 @@ PropHealthExtension.add_damage = function (self, damage_amount, permanent_damage
 		return
 	end
 
-	if self:_can_receive_damage(attacking_unit) then
+	if self:_can_receive_damage(attacking_unit, attack_type) then
 		local max_health = self._max_health
 		local health = self._health - damage_amount
 		health = math.clamp(health, 0, max_health)
@@ -81,6 +94,8 @@ PropHealthExtension.add_damage = function (self, damage_amount, permanent_damage
 
 		if self._health <= 0 then
 			self:set_dead()
+		else
+			Unit.flow_event(self._unit, "lua_prop_damaged")
 		end
 	end
 end
@@ -176,13 +191,17 @@ PropHealthExtension.max_wounds = function (self)
 	return 1
 end
 
-PropHealthExtension._can_receive_damage = function (self, attacking_unit)
+PropHealthExtension._can_receive_damage = function (self, attacking_unit, attack_type)
 	if attacking_unit == self._unit then
 		return true
 	end
 
 	if self._is_dead or self._invulnerable then
 		return false
+	end
+
+	if attack_type and attack_type == "door_smash" then
+		return true
 	end
 
 	if not self._breed_white_list then

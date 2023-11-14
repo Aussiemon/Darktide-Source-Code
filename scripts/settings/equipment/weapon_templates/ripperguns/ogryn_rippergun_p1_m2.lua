@@ -292,15 +292,17 @@ weapon_template.actions = {
 		}
 	},
 	action_shoot_zoomed = {
-		crosshair_type = "spray_n_pray",
+		minimum_hold_time = 0.5,
 		start_input = "zoom_shoot",
 		kind = "shoot_pellets",
 		sprint_ready_up_time = 0,
 		weapon_handling_template = "rippergun_full_auto_slow",
 		ammunition_usage = 1,
-		minimum_hold_time = 0.5,
 		stop_input = "shoot_release",
 		total_time = math.huge,
+		crosshair = {
+			crosshair_type = "spray_n_pray"
+		},
 		action_movement_curve = {
 			{
 				modifier = 0.4,
@@ -367,12 +369,14 @@ weapon_template.actions = {
 		}
 	},
 	action_zoom = {
-		uninterruptible = true,
 		start_input = "zoom",
 		kind = "aim",
 		spread_template = "rippergun_p1_m2_braced",
-		crosshair_type = "spray_n_pray",
+		uninterruptible = true,
 		total_time = 1.25,
+		crosshair = {
+			crosshair_type = "spray_n_pray"
+		},
 		smart_targeting_template = SmartTargetingTemplates.alternate_fire_snp,
 		allowed_chain_actions = {
 			combat_ability = {
@@ -408,10 +412,12 @@ weapon_template.actions = {
 	},
 	action_zoom_fast = {
 		spread_template = "rippergun_p1_m2_braced",
-		crosshair_type = "spray_n_pray",
 		uninterruptible = true,
 		kind = "aim",
 		total_time = 0.55,
+		crosshair = {
+			crosshair_type = "spray_n_pray"
+		},
 		allowed_chain_actions = {
 			combat_ability = {
 				action_name = "combat_ability"
@@ -447,10 +453,12 @@ weapon_template.actions = {
 	},
 	action_unzoom = {
 		spread_template = "rippergun_p1_m2_braced",
-		crosshair_type = "spray_n_pray",
 		start_input = "zoom_release",
 		kind = "unaim",
 		total_time = 0.5,
+		crosshair = {
+			crosshair_type = "spray_n_pray"
+		},
 		allowed_chain_actions = {
 			combat_ability = {
 				action_name = "combat_ability"
@@ -476,15 +484,17 @@ weapon_template.actions = {
 		}
 	},
 	action_brace_reload = {
-		kind = "reload_state",
-		start_input = "brace_reload",
-		sprint_requires_press_to_interrupt = true,
-		weapon_handling_template = "time_scale_1_2",
 		uninterruptible = true,
+		start_input = "brace_reload",
+		kind = "reload_state",
+		weapon_handling_template = "time_scale_1_2",
+		sprint_requires_press_to_interrupt = true,
 		abort_sprint = true,
-		crosshair_type = "none",
 		allowed_during_sprint = true,
 		total_time = 3,
+		crosshair = {
+			crosshair_type = "none"
+		},
 		action_movement_curve = {
 			{
 				modifier = 0.475,
@@ -549,15 +559,17 @@ weapon_template.actions = {
 		}
 	},
 	action_reload = {
-		kind = "reload_state",
-		start_input = "reload",
-		sprint_requires_press_to_interrupt = true,
-		weapon_handling_template = "time_scale_1_2",
 		stop_alternate_fire = true,
+		start_input = "reload",
+		kind = "reload_state",
+		weapon_handling_template = "time_scale_1_2",
+		sprint_requires_press_to_interrupt = true,
 		abort_sprint = true,
-		crosshair_type = "none",
 		allowed_during_sprint = true,
 		total_time = 3,
+		crosshair = {
+			crosshair_type = "none"
+		},
 		action_movement_curve = {
 			{
 				modifier = 0.475,
@@ -626,19 +638,21 @@ weapon_template.actions = {
 		damage_window_start = 0.36666666666666664,
 		hit_armor_anim = "hit_stop",
 		start_input = "stab",
+		hold_combo = false,
 		kind = "sweep",
 		first_person_hit_anim = "hit_stop",
 		increase_combo = false,
-		allow_conditional_chain = true,
 		range_mod = 1.15,
-		crosshair_type = "dot",
 		first_person_hit_stop_anim = "hit_stop",
+		allow_conditional_chain = true,
 		allowed_during_sprint = true,
-		hold_combo = false,
 		damage_window_end = 0.43333333333333335,
 		uninterruptible = true,
 		anim_event = "stab",
 		total_time = 1.25,
+		crosshair = {
+			crosshair_type = "dot"
+		},
 		action_movement_curve = {
 			{
 				modifier = 0.3,
@@ -730,10 +744,12 @@ weapon_template.actions = {
 		start_input = "inspect_start",
 		anim_end_event = "inspect_end",
 		kind = "inspect",
-		crosshair_type = "inspect",
 		anim_event = "inspect_start",
 		stop_input = "inspect_stop",
-		total_time = math.huge
+		total_time = math.huge,
+		crosshair = {
+			crosshair_type = "inspect"
+		}
 	}
 }
 
@@ -778,17 +794,21 @@ weapon_template.fx_sources = {
 	_special_active = "rp_bayonet_01",
 	_muzzle = "fx_01"
 }
-weapon_template.crosshair_type = "shotgun"
+weapon_template.crosshair = {
+	crosshair_type = "shotgun"
+}
 weapon_template.hit_marker_type = "center"
 weapon_template.alternate_fire_settings = {
 	recoil_template = "rippergun_p1_m2_spraynpray",
 	sway_template = "default_rippergun_braced",
 	stop_anim_event = "to_unaim_braced",
 	spread_template = "rippergun_p1_m2_braced",
-	crosshair_type = "spray_n_pray",
 	uninterruptible = true,
 	start_anim_event = "to_braced",
 	look_delta_template = "lasgun_brace_light",
+	crosshair = {
+		crosshair_type = "spray_n_pray"
+	},
 	movement_speed_modifier = {
 		{
 			modifier = 0.475,

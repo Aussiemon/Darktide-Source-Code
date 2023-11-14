@@ -34,7 +34,9 @@ local weapon_template = {
 		}
 	},
 	ammo_template = "no_ammo",
-	crosshair_type = "ironsight",
+	crosshair = {
+		crosshair_type = "ironsight"
+	},
 	keywords = {
 		"devices"
 	},

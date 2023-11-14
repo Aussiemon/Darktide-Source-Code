@@ -24,11 +24,11 @@ local breed_name = "cultist_shocktrooper"
 local breed_data = {
 	detection_radius = 15,
 	walk_speed = 2.3,
+	volley_fire_target = true,
 	use_bone_lod = true,
 	state_machine = "content/characters/enemy/chaos_traitor_guard/third_person/animations/chaos_traitor_guard_elite_shocktrooper",
 	sub_faction_name = "cultist",
 	unit_template_name = "minion",
-	volley_fire_target = true,
 	spawn_anim_state = "to_ranged",
 	aggro_inventory_slot = "slot_ranged_weapon",
 	slot_template = "renegade_melee",
@@ -44,6 +44,7 @@ local breed_data = {
 	faction_name = "chaos",
 	base_height = 1.9,
 	ranged = true,
+	psyker_mark_target = true,
 	line_of_sight_collision_filter = "filter_minion_line_of_sight_check",
 	stagger_reduction = 5,
 	player_locomotion_constrain_radius = 0.7,
@@ -84,15 +85,6 @@ local breed_data = {
 		[stagger_types.light_ranged] = 0.2,
 		[stagger_types.killshot] = 0.2,
 		[stagger_types.sticky] = 0.25
-	},
-	stagger_thresholds = {
-		[stagger_types.light] = 5,
-		[stagger_types.medium] = 10,
-		[stagger_types.heavy] = 20,
-		[stagger_types.explosion] = 50,
-		[stagger_types.killshot] = 10,
-		[stagger_types.light_ranged] = 15,
-		[stagger_types.sticky] = 5
 	},
 	stagger_thresholds = {
 		[stagger_types.light] = 5,
@@ -433,6 +425,7 @@ local breed_data = {
 			[hit_zone_names.lower_right_leg] = 0.5
 		}
 	},
+	outline_config = {},
 	blackboard_component_config = BreedBlackboardComponentTemplates.ranged_patroller_no_suppression
 }
 

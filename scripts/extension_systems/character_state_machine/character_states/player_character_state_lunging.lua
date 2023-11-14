@@ -185,18 +185,15 @@ PlayerCharacterStateLunging.on_enter = function (self, unit, dt, t, previous_sta
 	table.clear(self._hit_enemy_units)
 
 	self._last_hit_unit = nil
+	local target_is_wielding_ranged_weapon = nil
+	local visual_loadout_extension = ScriptUnit.has_extension(lunge_target, "visual_loadout_system")
 
-	if Managers.stats.can_record_stats() then
-		local target_is_wielding_ranged_weapon = nil
-		local visual_loadout_extension = ScriptUnit.has_extension(lunge_target, "visual_loadout_system")
-
-		if visual_loadout_extension then
-			local wielded_slot_name = visual_loadout_extension:wielded_slot_name()
-			target_is_wielding_ranged_weapon = visual_loadout_extension:is_inventory_slot_ranged(wielded_slot_name)
-		end
-
-		Managers.stats:record_lunge_start(self._player, has_target, target_is_wielding_ranged_weapon)
+	if visual_loadout_extension then
+		local wielded_slot_name = visual_loadout_extension:wielded_slot_name()
+		target_is_wielding_ranged_weapon = visual_loadout_extension:is_inventory_slot_ranged(wielded_slot_name)
 	end
+
+	Managers.stats:record_private("hook_lunge_start", self._player, has_target, target_is_wielding_ranged_weapon)
 end
 
 local temp_hit_units = {}
@@ -473,9 +470,7 @@ PlayerCharacterStateLunging._update_lunge = function (self, unit, dt, time_in_lu
 	local move_delta = speed * dt
 	lunge_character_state_component.distance_left = math.max(lunge_character_state_component.distance_left - move_delta, 0)
 
-	if Managers.stats.can_record_stats() then
-		Managers.stats:record_lunge_distance(self._player, move_delta)
-	end
+	Managers.stats:record_private("hook_lunge_distance", self._player, move_delta)
 
 	return true
 end
@@ -547,7 +542,7 @@ PlayerCharacterStateLunging._update_enemy_hit_detection = function (self, unit, 
 
 			hit_enemy_units[hit_unit] = true
 
-			_record_stat_on_lunge_hit(self._player, hit_unit, hit_unit_action, lunge_template)
+			_record_stat_on_lunge_hit(self._player, hit_unit, attack_result, hit_unit_action, lunge_template)
 
 			current_mass_hit = current_mass_hit + HitMass.target_hit_mass(unit, hit_unit, HIT_WEAKSPOT)
 
@@ -661,29 +656,15 @@ local function _was_charging_plague_ogryn_that_is_now_staggered(unit, optional_a
 	return true
 end
 
-function _record_stat_on_lunge_hit(player, enemy_unit, optional_action, lunge_template)
-	if not Managers.stats.can_record_stats() then
-		return
-	end
+function _record_stat_on_lunge_hit(player, enemy_unit, attack_result, optional_action, lunge_template)
+	local archetype_name = player:archetype_name()
 
-	local account_id = player:account_id()
-	local character_id = player:character_id()
-	local specialization = player:profile().specialization
-
-	if specialization == "ogryn_2" and _was_charging_plague_ogryn_that_is_now_staggered(enemy_unit, optional_action) then
-		Managers.achievements:trigger_event(account_id, character_id, "ogryn_2_bull_rushed_charging_ogryn_event")
+	if archetype_name == "ogryn" and _was_charging_plague_ogryn_that_is_now_staggered(enemy_unit, optional_action) then
+		Managers.achievements:unlock_achievement(player, "ogryn_2_bull_rushed_charging_ogryn")
 	end
 end
 
 function _record_stat_on_lunge_complete(player, hit_units, lunge_template)
-	if not Managers.stats.can_record_stats() then
-		return
-	end
-
-	local account_id = player:account_id()
-	local character_id = player:character_id()
-	local specialization = player:profile().specialization
-	local difficulty = Managers.state.difficulty:get_difficulty()
 	local number_of_hit_units = 0
 	local number_of_hit_ogryns = 0
 	local number_of_hit_ranged = 0
@@ -702,15 +683,7 @@ function _record_stat_on_lunge_complete(player, hit_units, lunge_template)
 		end
 	end
 
-	if specialization == "ogryn_2" then
-		local requirement = 4
-
-		if number_of_hit_ogryns >= requirement and difficulty >= 4 then
-			Managers.achievements:trigger_event(account_id, character_id, "ogryn_2_bull_rushed_x_ogryns_event")
-		end
-	end
-
-	Managers.stats:record_lunge_stop(player, number_of_hit_units, number_of_hit_ranged)
+	Managers.stats:record_private("hook_lunge_stop", player, number_of_hit_units, number_of_hit_ranged, number_of_hit_ogryns)
 end
 
 function _apply_buff_to_hit_unit(hit_unit, buff_to_apply, number_of_stacks, t, origin_unit)

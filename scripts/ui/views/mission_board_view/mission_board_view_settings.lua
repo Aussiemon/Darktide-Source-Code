@@ -1,10 +1,10 @@
 local MissionBoardViewSettings = {
+	resource_renderer_enabled = false,
 	resource_renderer_material = "content/ui/materials/mission_board/render_target_scanlines",
 	quickplay_vo_profile = "pilot_a",
 	fetch_retry_cooldown = 5,
 	default_danger = 1,
 	resource_renderer_name = "mission_board_view_scanlines_ui_renderer",
-	resource_renderer_enabled = false,
 	color_background = {
 		200,
 		0,
@@ -19,6 +19,7 @@ local MissionBoardViewSettings = {
 		211,
 		158
 	},
+	color_main_light = Color.terminal_text_header(nil, true),
 	color_accent = Color.golden_rod(nil, true),
 	color_disabled = {
 		30,
@@ -47,6 +48,7 @@ local MissionBoardViewSettings = {
 	},
 	color_text_title = Color.terminal_text_header(nil, true),
 	color_text_body = Color.terminal_text_body(nil, true),
+	color_text_sub_header = Color.terminal_text_body_sub_header(nil, true),
 	colors_by_mission_type = {
 		normal = {
 			color_background = {
@@ -63,7 +65,12 @@ local MissionBoardViewSettings = {
 				211,
 				158
 			},
-			color_accent = Color.golden_rod(nil, true),
+			color_accent = {
+				255,
+				238,
+				186,
+				74
+			},
 			color_disabled = {
 				30,
 				78,

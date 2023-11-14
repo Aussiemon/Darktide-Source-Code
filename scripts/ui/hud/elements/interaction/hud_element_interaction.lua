@@ -92,7 +92,7 @@ HudElementInteraction._on_interaction_marker_spawned = function (self, unit, id)
 	self._interaction_units[unit].marker_id = id
 end
 
-HudElementInteraction.destroy = function (self)
+HudElementInteraction.destroy = function (self, ui_renderer)
 	local event_manager = Managers.event
 	local interaction_units = self._interaction_units
 
@@ -105,6 +105,8 @@ HudElementInteraction.destroy = function (self)
 	end
 
 	self._interaction_units = nil
+
+	HudElementInteraction.super.destroy(self, ui_renderer)
 end
 
 HudElementInteraction._update_can_interact_target = function (self)
@@ -127,86 +129,84 @@ HudElementInteraction._update_can_interact_target = function (self)
 		return
 	end
 
-	local update_target = nil
 	local interactee_unit = interactor_extension:target_unit()
 
-	if interactee_unit then
-		update_target = interactor_extension:can_interact(interactee_unit)
-	else
+	if not interactee_unit then
 		local focus_target = interactor_extension:focus_unit()
 
 		if ALIVE[focus_target] and interactor_extension:hud_block_text() then
 			interactee_unit = focus_target
 		end
-
-		update_target = true
 	end
 
-	if update_target then
-		local previous_interactee_unit = self._previous_interactee_unit
+	local previous_interactee_unit = self._previous_interactee_unit
 
-		if interactee_unit == previous_interactee_unit then
-			if ALIVE[interactee_unit] and not self:is_synchronized_with_interactee(interactee_unit, interactor_extension) then
-				local interactee_extension = ScriptUnit.extension(interactee_unit, "interactee_system")
+	if interactee_unit == previous_interactee_unit then
+		if ALIVE[interactee_unit] and not self:is_synchronized_with_interactee(interactee_unit, interactor_extension) then
+			local interactee_extension = ScriptUnit.extension(interactee_unit, "interactee_system")
 
-				self:_setup_interaction_information(interactee_unit, interactee_extension, interactor_extension)
-			end
-		else
-			if ALIVE[previous_interactee_unit] then
-				local unit_position = Unit.world_position(previous_interactee_unit, 1)
-
-				self:_play_3d_sound(UISoundEvents.interact_popup_exit, unit_position)
-			end
-
-			if ALIVE[interactee_unit] then
-				local unit_position = Unit.world_position(interactee_unit, 1)
-
-				self:_play_3d_sound(UISoundEvents.interact_popup_enter, unit_position)
-
-				local interactee_extension = ScriptUnit.extension(interactee_unit, "interactee_system")
-
-				self:_setup_interaction_information(interactee_unit, interactee_extension, interactor_extension)
-
-				local interaction_units = self._interaction_units
-				local interaction_data = interaction_units[interactee_unit]
-
-				if not interaction_data then
-					self:_update_interactee_data(interactee_unit, interactee_extension)
-
-					interaction_data = interaction_units[interactee_unit]
-				end
-
-				local marker_id = interaction_data and interaction_data.marker_id
-				local _, type_description = interactor_extension:hud_description()
-				self._active_presentation_data = {
-					intro_anim_duration = 0.2,
-					intro_anim_time = 0,
-					intro_anim_progress = 0,
-					interactee_extension = interactee_extension,
-					interactor_extension = interactor_extension,
-					interactee_unit = interactee_unit,
-					player_unit = player_unit,
-					marker_id = marker_id,
-					background_size = type_description ~= nil and HudElementInteractionSettings.background_size or HudElementInteractionSettings.background_size_small
-				}
-				local response_callback = callback(self, "_cb_world_markers_list_request")
-
-				Managers.event:trigger("request_world_markers_list", response_callback)
-			else
-				self._active_presentation_data = nil
-			end
-
-			self._previous_interactee_unit = interactee_unit
+			self:_setup_interaction_information(interactee_unit, interactee_extension, interactor_extension, self._use_minimal_presentation)
 		end
+	else
+		if ALIVE[previous_interactee_unit] then
+			local unit_position = Unit.world_position(previous_interactee_unit, 1)
+
+			self:_play_3d_sound(UISoundEvents.interact_popup_exit, unit_position)
+		end
+
+		if ALIVE[interactee_unit] then
+			local unit_position = Unit.world_position(interactee_unit, 1)
+
+			self:_play_3d_sound(UISoundEvents.interact_popup_enter, unit_position)
+
+			local interactee_extension = ScriptUnit.extension(interactee_unit, "interactee_system")
+			local interaction_units = self._interaction_units
+			local interaction_data = interaction_units[interactee_unit]
+
+			if not interaction_data then
+				self:_update_interactee_data(interactee_unit, interactee_extension)
+
+				interaction_data = interaction_units[interactee_unit]
+			end
+
+			local marker_id = interaction_data and interaction_data.marker_id
+			local ui_interaction_type = interactee_extension.ui_interaction_type and interactee_extension:ui_interaction_type()
+			local use_minimal_presentation = ui_interaction_type and ui_interaction_type == "player_interaction"
+			self._active_presentation_data = {
+				intro_anim_duration = 0.2,
+				intro_anim_time = 0,
+				intro_anim_progress = 0,
+				interactee_extension = interactee_extension,
+				interactor_extension = interactor_extension,
+				interactee_unit = interactee_unit,
+				player_unit = player_unit,
+				marker_id = marker_id,
+				use_minimal_presentation = use_minimal_presentation,
+				background_size = use_minimal_presentation and HudElementInteractionSettings.background_size_small or HudElementInteractionSettings.background_size
+			}
+
+			self:_setup_interaction_information(interactee_unit, interactee_extension, interactor_extension, use_minimal_presentation)
+
+			local response_callback = callback(self, "_cb_world_markers_list_request")
+
+			Managers.event:trigger("request_world_markers_list", response_callback)
+		else
+			self._active_presentation_data = nil
+		end
+
+		self._previous_interactee_unit = interactee_unit
 	end
 
 	local active_presentation_data = self._active_presentation_data
 
 	if active_presentation_data then
 		local marker = active_presentation_data.marker
+		self._use_minimal_presentation = active_presentation_data.use_minimal_presentation
 		local show_interaction_ui = interactor_extension:show_interaction_ui()
 		local show_counter_ui = interactor_extension:show_counter_ui()
 		local show_block_ui = interactor_extension:hud_block_text()
+		self._widgets_by_name.background.content.use_minimal_presentation = self._use_minimal_presentation
+		self._widgets_by_name.frame.content.use_minimal_presentation = self._use_minimal_presentation
 
 		self:_update_tag_input_information(interactee_unit)
 
@@ -218,6 +218,13 @@ HudElementInteraction._update_can_interact_target = function (self)
 	else
 		self._show_interaction_hud = false
 	end
+end
+
+local function _get_alias_key(action_name)
+	local service_type = "Ingame"
+	local input_service = Managers.input:get_input_service(service_type)
+
+	return input_service:get_alias_key(action_name)
 end
 
 local function _get_input_text(alias_name, input_text_key, hold_required)
@@ -271,7 +278,9 @@ end
 HudElementInteraction._update_interaction_input_text = function (self, interactee_extension)
 	local hold_required = interactee_extension:hold_required()
 	local input_action_text = interactee_extension:action_text()
-	local input_text_interact = _get_input_text("interact", input_action_text or "n/a", hold_required)
+	local interaction_input = interactee_extension:interaction_input() or "interact_pressed"
+	local interaction_input_alias_key = _get_alias_key(interaction_input)
+	local input_text_interact = _get_input_text(interaction_input_alias_key, input_action_text or "n/a", hold_required)
 	local widgets_by_name = self._widgets_by_name
 	widgets_by_name.interact_text.content.text = input_text_interact
 end
@@ -335,7 +344,7 @@ HudElementInteraction._update_target_interaction_hold_progress = function (self,
 		hold_progress = interactor_extension and interactor_extension:interaction_progress()
 	end
 
-	local background_size = HudElementInteractionSettings.background_size
+	local background_size = active_presentation_data.background_size
 	local widgets_by_name = self._widgets_by_name
 	local background_widget = widgets_by_name.background
 	local progress_width = hold_progress * background_size[1]
@@ -414,7 +423,7 @@ HudElementInteraction.is_synchronized_with_interactee = function (self, interact
 		return false
 	end
 
-	local hud_description, _ = interactor_extension:hud_description()
+	local hud_description = interactor_extension:hud_description()
 
 	if previous_interactee_data.hud_description ~= hud_description then
 		return false
@@ -423,21 +432,30 @@ HudElementInteraction.is_synchronized_with_interactee = function (self, interact
 	return true
 end
 
-HudElementInteraction._setup_interaction_information = function (self, interactee_unit, interactee_extension, interactor_extension)
+HudElementInteraction._setup_interaction_information = function (self, interactee_unit, interactee_extension, interactor_extension, use_minimal_presentation)
 	local hold_required = interactee_extension:hold_required()
 	local input_action_text = interactee_extension:action_text()
 	local input_block_text, hud_block_text_context = interactor_extension:hud_block_text()
-	local input_text_interact = _get_input_text("interact", input_action_text or "n/a", hold_required)
-	local hud_description = interactor_extension:hud_description()
-	local type_description = nil
-	local description_text = Localize(hud_description)
-	local interactee_player = Managers.player:player_by_unit(interactee_unit)
+	local interaction_input = interactee_extension:interaction_input() or "interact_pressed"
+	local interaction_input_alias_key = _get_alias_key(interaction_input)
+	local input_text_interact = _get_input_text(interaction_input_alias_key, input_action_text or "n/a", hold_required)
+	local description_text, hud_description = nil
 
-	if interactee_player then
-		local player_slot = interactee_player:slot()
-		local player_slot_color = UISettings.player_slot_colors[player_slot] or Color.ui_hud_green_light(255, true)
-		local color_string = "{#color(" .. player_slot_color[2] .. "," .. player_slot_color[3] .. "," .. player_slot_color[4] .. ")}"
-		description_text = color_string .. "{#size(30)} {#reset()}" .. interactee_player:name()
+	if not use_minimal_presentation then
+		hud_description = interactor_extension:hud_description()
+		local interactee_player = Managers.player:player_by_unit(interactee_unit)
+
+		if interactee_player then
+			local player_slot = interactee_player:slot()
+			local player_slot_color = UISettings.player_slot_colors[player_slot] or Color.ui_hud_green_light(255, true)
+			local color_string = "{#color(" .. player_slot_color[2] .. "," .. player_slot_color[3] .. "," .. player_slot_color[4] .. ")}"
+			description_text = color_string .. "{#size(30)} {#reset()}" .. interactee_player:name()
+		else
+			description_text = Localize(hud_description)
+		end
+	else
+		description_text = ""
+		hud_description = ""
 	end
 
 	local widgets_by_name = self._widgets_by_name
@@ -452,16 +470,8 @@ HudElementInteraction._setup_interaction_information = function (self, interacte
 	end
 
 	widgets_by_name.description_text.content.text = description_text
-
-	if type_description then
-		type_description = Localize(type_description)
-		widgets_by_name.type_description_text.content.text = type_description
-		widgets_by_name.description_text.offset[2] = -14
-	else
-		widgets_by_name.type_description_text.content.text = ""
-		widgets_by_name.description_text.offset[2] = 10
-	end
-
+	widgets_by_name.type_description_text.content.text = ""
+	widgets_by_name.description_text.offset[2] = 10
 	local is_event_interaction = interactee_extension.display_start_event and interactee_extension:display_start_event()
 
 	self:_set_event_popup_visibility(is_event_interaction)
@@ -471,7 +481,6 @@ HudElementInteraction._setup_interaction_information = function (self, interacte
 		input_action_text = input_action_text,
 		input_block_text = input_block_text,
 		hud_description = hud_description,
-		type_description = type_description,
 		is_event = is_event_interaction
 	}
 end

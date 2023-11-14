@@ -659,7 +659,6 @@ UIManager.create_world = function (self, world_name, optional_layer, optional_ti
 
 	if not optional_flags then
 		local flags = {
-			Application.DISABLE_APEX_CLOTH,
 			Application.DISABLE_PHYSICS
 		}
 	end
@@ -1402,11 +1401,20 @@ UIManager._debug_draw_feature_info = function (self, dt, t)
 	ui_renderer.inverse_scale = nil
 end
 
-UIManager.load_view = function (self, view_name, reference_name, loaded_callback)
+UIManager.load_view = function (self, view_name, reference_name, loaded_callback, dynamic_package_name)
 	local settings = Views[view_name]
+	local packages_to_load_data = {}
+
+	if dynamic_package_name then
+		local package_reference_name = reference_name .. #packages_to_load_data
+		packages_to_load_data[#packages_to_load_data + 1] = {
+			package_name = dynamic_package_name,
+			reference_name = package_reference_name
+		}
+	end
+
 	local package_name = settings.package
 	local levels = settings.levels
-	local packages_to_load_data = {}
 
 	if package_name then
 		local package_reference_name = reference_name .. #packages_to_load_data
@@ -1785,70 +1793,69 @@ UIManager.load_item_icon = function (self, real_item, cb, render_context, dummy_
 
 		return instance:load_weapon_icon(visual_item, cb, render_context, prioritize, unload_cb)
 	elseif table.find(slots, "slot_gear_head") or table.find(slots, "slot_gear_upperbody") or table.find(slots, "slot_gear_lowerbody") or table.find(slots, "slot_gear_extra_cosmetic") or table.find(slots, "slot_animation_end_of_round") then
-		if not dummy_profile then
-			local player = Managers.player:local_player(1)
-			local profile = player:profile()
-			local item_gender, item_breed, item_archetype = nil
+		local player = Managers.player:local_player(1)
+		dummy_profile = dummy_profile or player:profile()
+		local item_gender, item_breed, item_archetype = nil
 
-			if item.genders and not table.is_empty(item.genders) then
-				for i = 1, #item.genders do
-					local gender = item.genders[i]
+		if item.genders and not table.is_empty(item.genders) then
+			for i = 1, #item.genders do
+				local gender = item.genders[i]
 
-					if gender == profile.gender then
-						item_gender = profile.gender
+				if gender == dummy_profile.gender then
+					item_gender = dummy_profile.gender
 
-						break
-					end
+					break
 				end
-			else
-				item_gender = profile.gender
 			end
-
-			if item.breeds and not table.is_empty(item.breeds) then
-				for i = 1, #item.breeds do
-					local breed = item.breeds[i]
-
-					if breed == profile.breed then
-						item_breed = profile.breed
-
-						break
-					end
-				end
-			else
-				item_breed = profile.breed
-			end
-
-			if item.archetypes and not table.is_empty(item.archetypes) then
-				for i = 1, #item.archetypes do
-					local archetype = item.archetypes[i]
-
-					if archetype == profile.archetype.name then
-						item_archetype = profile.archetype
-
-						break
-					end
-				end
-			else
-				item_archetype = profile.archetype
-			end
-
-			local compatible_profile = item_gender and item_breed and item_archetype
-
-			if compatible_profile then
-				dummy_profile = table.clone_instance(profile)
-			else
-				local breed = item_breed or item.breeds and item.breeds[1] or "human"
-				local archetype = item_archetype or item.archetypes and item.archetypes[1] and Archetypes[item.archetypes[1]] or breed == "ogryn" and Archetypes.ogryn or Archetypes.veteran
-				local gender = breed ~= "ogryn" and (item_gender or item.genders and item.genders[1]) or "male"
-				dummy_profile = {
-					loadout = {},
-					archetype = archetype,
-					breed = breed,
-					gender = gender
-				}
-			end
+		else
+			item_gender = dummy_profile.gender
 		end
 
+		if item.breeds and not table.is_empty(item.breeds) then
+			for i = 1, #item.breeds do
+				local breed = item.breeds[i]
+
+				if breed == dummy_profile.archetype.breed then
+					item_breed = dummy_profile.breed
+
+					break
+				end
+			end
+		else
+			item_breed = dummy_profile.breed
+		end
+
+		if item.archetypes and not table.is_empty(item.archetypes) then
+			for i = 1, #item.archetypes do
+				local archetype = item.archetypes[i]
+
+				if archetype == dummy_profile.archetype.name then
+					item_archetype = dummy_profile.archetype
+
+					break
+				end
+			end
+		else
+			item_archetype = dummy_profile.archetype
+		end
+
+		local compatible_profile = item_gender and item_breed and item_archetype
+
+		if compatible_profile then
+			dummy_profile = table.clone_instance(dummy_profile)
+		else
+			local breed = item_breed or item.breeds and item.breeds[1] or "human"
+			local archetype = item_archetype or item.archetypes and item.archetypes[1] and Archetypes[item.archetypes[1]] or breed == "ogryn" and Archetypes.ogryn or Archetypes.veteran
+			local gender = breed ~= "ogryn" and (item_gender or item.genders and item.genders[1]) or "male"
+			dummy_profile = {
+				loadout = {},
+				archetype = archetype,
+				breed = breed,
+				gender = gender
+			}
+		end
+
+		dummy_profile.character_id = string.format("%s_%s_%s", gear_id, dummy_profile.breed, dummy_profile.gender)
 		local gender_name = dummy_profile.gender
 		local archetype = dummy_profile.archetype
 		local breed_name = archetype.breed
@@ -1898,7 +1905,6 @@ UIManager.load_item_icon = function (self, real_item, cb, render_context, dummy_
 			end
 		end
 
-		dummy_profile.character_id = string.format("%s_%s_%s", gear_id, dummy_profile.breed, dummy_profile.gender)
 		local prop_item_key = item.prop_item
 		local prop_item = prop_item_key and prop_item_key ~= "" and MasterItems.get_item(prop_item_key)
 
@@ -1927,7 +1933,7 @@ UIManager.load_item_icon = function (self, real_item, cb, render_context, dummy_
 			end
 		end
 
-		dummy_profile = dummy_profile or ItemUtils.create_mannequin_profile_by_item(item)
+		dummy_profile = ItemUtils.create_mannequin_profile_by_item(item)
 		local gender_name = dummy_profile.gender
 		local archetype = dummy_profile.archetype
 		local breed_name = archetype.breed

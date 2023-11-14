@@ -129,7 +129,7 @@ local templates = {
 	prop_in_corruptor_liquid_corruption = {
 		interval = 1,
 		predicted = false,
-		hud_icon = "content/ui/textures/icons/buffs/hud/states_knocked_down_buff_hud",
+		hud_icon = "content/ui/textures/icons/buffs/hud/states_nurgle_eaten_buff_hud",
 		max_stacks = 1,
 		class_name = "interval_buff",
 		is_negative = true,
@@ -217,7 +217,7 @@ local templates = {
 		interval = 0.25,
 		predicted = false,
 		hud_priority = 1,
-		hud_icon = "content/ui/textures/icons/buffs/hud/states_fire_buff_hud",
+		hud_icon = "content/ui/textures/icons/buffs/hud/states_green_fire_buff_hud",
 		max_stacks = 1,
 		class_name = "interval_buff",
 		is_negative = true,
@@ -340,7 +340,7 @@ end
 templates.beast_of_nurgle_in_slime = {
 	predicted = false,
 	interval = 0.35,
-	hud_icon = "content/ui/textures/icons/buffs/hud/states_knocked_down_buff_hud",
+	hud_icon = "content/ui/textures/icons/buffs/hud/states_nurgle_slime_buff_hud",
 	max_stacks = 1,
 	class_name = "interval_buff",
 	is_negative = true,
@@ -351,7 +351,7 @@ templates.beast_of_nurgle_in_slime = {
 		buff_keywords.beast_of_nurgle_liquid_immunity
 	},
 	stat_buffs = {
-		[buff_stat_buffs.movement_speed] = -0.5,
+		[buff_stat_buffs.movement_speed] = -0.19999999999999996,
 		[buff_stat_buffs.dodge_speed_multiplier] = 0.9
 	},
 	power_level = {
@@ -430,21 +430,18 @@ local EMPOWERED_BREEDS = {
 	chaos_poxwalker = true
 }
 templates.in_toxic_gas = {
-	predicted = true,
+	predicted = false,
 	hud_priority = 1,
 	interval = 0.25,
-	hud_icon = "content/ui/textures/icons/buffs/hud/states_knocked_down_buff_hud",
+	hud_icon = "content/ui/textures/icons/buffs/hud/states_toxic_cloud_buff_hud",
 	max_stacks = 1,
 	class_name = "interval_buff",
 	is_negative = true,
 	stat_buffs = {
-		[buff_stat_buffs.movement_speed] = -0.09999999999999998,
-		[buff_stat_buffs.dodge_speed_multiplier] = 0.9,
 		[buff_stat_buffs.toughness_regen_rate_multiplier] = 0
 	},
 	keywords = {
 		buff_keywords.concealed,
-		buff_keywords.hud_nameplates_disabled,
 		buff_keywords.in_toxic_gas
 	},
 	power_level = {
@@ -547,29 +544,32 @@ templates.in_toxic_gas = {
 	end,
 	interval_func = _toxic_gas_interval_function,
 	player_effects = {
+		on_screen_effect = "content/fx/particles/environment/circumstances/toxic_gas/toxic_gas_screen",
 		looping_wwise_stop_event = "wwise/events/player/play_player_gas_exit",
 		looping_wwise_start_event = "wwise/events/player/play_player_gas_enter",
-		stop_type = "stop"
+		stop_type = "stop",
+		wwise_state = {
+			group = "swamped",
+			on_state = "on",
+			off_state = "none"
+		}
 	}
 }
 templates.left_toxic_gas = {
-	predicted = true,
+	predicted = false,
 	hud_priority = 1,
 	interval = 0.5,
-	hud_icon = "content/ui/textures/icons/buffs/hud/states_knocked_down_buff_hud",
+	hud_icon = "content/ui/textures/icons/buffs/hud/states_toxic_cloud_buff_hud",
 	max_stacks = 1,
 	duration = 0.5,
 	class_name = "interval_buff",
 	is_negative = true,
 	target = buff_targets.player_only,
 	stat_buffs = {
-		[buff_stat_buffs.movement_speed] = -0.09999999999999998,
-		[buff_stat_buffs.dodge_speed_multiplier] = 0.9,
 		[buff_stat_buffs.toughness_regen_rate_multiplier] = 0
 	},
 	keywords = {
-		buff_keywords.concealed,
-		buff_keywords.hud_nameplates_disabled
+		buff_keywords.concealed
 	},
 	power_level = {
 		default = {
@@ -582,7 +582,17 @@ templates.left_toxic_gas = {
 	},
 	damage_template = DamageProfileTemplates.toxic_gas_mutator,
 	damage_type = damage_types.corruption,
-	interval_func = _toxic_gas_interval_function
+	interval_func = _toxic_gas_interval_function,
+	player_effects = {
+		looping_wwise_stop_event = "wwise/events/player/play_player_gas_exit",
+		looping_wwise_start_event = "wwise/events/player/play_player_gas_enter",
+		stop_type = "destroy",
+		wwise_state = {
+			group = "swamped",
+			on_state = "on",
+			off_state = "none"
+		}
+	}
 }
 local cultist_flamer_leaving_liquid_fire_spread_increase = table.clone(templates.leaving_liquid_fire_spread_increase)
 cultist_flamer_leaving_liquid_fire_spread_increase.forbidden_keywords = {
@@ -590,9 +600,10 @@ cultist_flamer_leaving_liquid_fire_spread_increase.forbidden_keywords = {
 }
 templates.cultist_flamer_leaving_liquid_fire_spread_increase = cultist_flamer_leaving_liquid_fire_spread_increase
 cultist_flamer_leaving_liquid_fire_spread_increase.hud_priority = 1
-cultist_flamer_leaving_liquid_fire_spread_increase.hud_icon = "content/ui/textures/icons/buffs/hud/states_fire_buff_hud"
+cultist_flamer_leaving_liquid_fire_spread_increase.hud_icon = "content/ui/textures/icons/buffs/hud/states_green_fire_buff_hud"
 cultist_flamer_leaving_liquid_fire_spread_increase.is_negative = true
 local renegade_flamer_leaving_liquid_fire_spread_increase = table.clone(templates.cultist_flamer_leaving_liquid_fire_spread_increase)
+renegade_flamer_leaving_liquid_fire_spread_increase.hud_icon = "content/ui/textures/icons/buffs/hud/states_fire_buff_hud"
 renegade_flamer_leaving_liquid_fire_spread_increase.forbidden_keywords = {
 	buff_keywords.renegade_flamer_liquid_immunity
 }

@@ -138,3 +138,19 @@ string.decode_base64 = function (data)
 		return string.char(c)
 	end)
 end
+
+string.is_snake_case = function (str)
+	if string.ends_with(str, "_") then
+		return false
+	end
+
+	local arr = string.split(str, "_")
+
+	for _, substr in pairs(arr) do
+		if string.match(substr, "%w+") ~= substr or substr:lower() ~= substr then
+			return false
+		end
+	end
+
+	return true
+end

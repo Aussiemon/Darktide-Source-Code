@@ -38,12 +38,11 @@ ActionSmiteTargeting.start = function (self, action_settings, t, time_scale, act
 	self._has_attacked_target = nil
 	self._time_on_target = 0
 	self._target_locked = action_settings.target_locked
+	local charge_duration = self:_calculate_charge_duration_of_target_health(action_settings)
+	self._charge_duration = charge_duration
 	self._target_charge = action_settings.target_charge
 
 	if self._target_charge then
-		local charge_duration = self:_calculate_charge_duration_of_target_health(action_settings)
-		self._charge_duration = charge_duration
-
 		self._targeting_module:start(t)
 		self._overload_module:start(t)
 		self._charge_module:reset(t, charge_duration)

@@ -692,8 +692,12 @@ local blueprints = {
 
 				if equipped_item then
 					local cb = callback(_apply_live_item_icon_cb_func, widget)
+					local item_state_machine = equipped_item.state_machine
+					local item_animation_event = equipped_item.animation_event
 					local render_context = {
-						camera_focus_slot_name = slot_name
+						camera_focus_slot_name = slot_name,
+						state_machine = item_state_machine,
+						animation_event = item_animation_event
 					}
 					content.icon_load_id = Managers.ui:load_item_icon(equipped_item, cb, render_context)
 				end
@@ -789,6 +793,8 @@ local blueprints = {
 			local slot_title = element.slot_title
 			content.slot_title = slot_title and Utf8.upper(Localize(slot_title)) or ""
 			local slot = element.slot
+			local player = parent and parent.player and parent:player()
+			local player_profile = player and player:profile()
 
 			if slot then
 				local slot_name = slot.name
@@ -806,7 +812,7 @@ local blueprints = {
 					local render_context = {
 						camera_focus_slot_name = slot_name
 					}
-					content.icon_load_id = Managers.ui:load_item_icon(equipped_item, cb, render_context)
+					content.icon_load_id = Managers.ui:load_item_icon(equipped_item, cb, render_context, player_profile)
 				end
 
 				local rarity = equipped_item and equipped_item.rarity

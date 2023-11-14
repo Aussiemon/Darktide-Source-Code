@@ -1,6 +1,8 @@
 local MinionPerception = require("scripts/utilities/minion_perception")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local VOQueryConstants = require("scripts/settings/dialogue/vo_query_constants")
+local SpecialRulesSetting = require("scripts/settings/ability/special_rules_settings")
+local special_rules = SpecialRulesSetting.special_rules
 local groups = {
 	enemy = {
 		limit = 1
@@ -106,18 +108,6 @@ local templates = {
 		},
 		voice_tag_concept = VOQueryConstants.concepts.on_demand_vo_tag_item,
 		voice_tag_id = VOQueryConstants.trigger_ids.smart_tag_vo_pickup_ammo
-	},
-	health_booster_over_here = {
-		group = "object",
-		lifetime = 10,
-		is_cancelable = true,
-		sound_enter_tagger = UISoundEvents.smart_tag_pickup_default_enter,
-		sound_enter_others = UISoundEvents.smart_tag_pickup_default_enter_others,
-		replies = {
-			replies.dibs
-		},
-		voice_tag_concept = VOQueryConstants.concepts.on_demand_vo_tag_item,
-		voice_tag_id = VOQueryConstants.trigger_ids.smart_tag_vo_pickup_health_booster
 	},
 	small_grenade_over_here = {
 		group = "object",
@@ -327,7 +317,7 @@ local templates = {
 		replies = {
 			replies.ok
 		},
-		start = function (tag)
+		start = function (tag, tagger_unit)
 			local breed = tag:breed()
 
 			if breed.smart_tag_breed_aggroed_context then
@@ -360,6 +350,62 @@ local templates = {
 
 				if target_unit then
 					wanted_target_unit_outline = "smart_tagged_enemy"
+				end
+
+				if wanted_target_unit_outline ~= current_target_unit_outline then
+					Managers.event:trigger("event_smart_tag_removed", tag)
+					tag:set_target_unit_outline(wanted_target_unit_outline)
+					Managers.event:trigger("event_smart_tag_created", tag)
+				end
+			end
+		end
+	},
+	enemy_over_here_veteran = {
+		display_name = "loc_smart_tag_type_threat",
+		target_unit_outline = "veteran_smart_tag",
+		group = "enemy",
+		marker_type = "unit_threat_veteran",
+		lifetime = 25,
+		can_override = true,
+		voice_tag_concept = VOQueryConstants.concepts.on_demand_vo_tag_enemy,
+		sound_enter_tagger = UISoundEvents.smart_tag_location_threat_enter,
+		sound_enter_others = UISoundEvents.smart_tag_location_threat_enter_others,
+		replies = {
+			replies.ok
+		},
+		start = function (tag, tagger_unit)
+			local breed = tag:breed()
+
+			if breed.smart_tag_breed_aggroed_context then
+				local tag_unit = tag:target_unit()
+				local game_session = Managers.state.game_session:game_session()
+				local game_object_id = Managers.state.unit_spawner:game_object_id(tag_unit)
+				local target_unit = MinionPerception.target_unit(game_session, game_object_id)
+				local wanted_target_unit_outline = tag:target_unit_outline()
+				local current_target_unit_outline = wanted_target_unit_outline
+
+				if not target_unit then
+					wanted_target_unit_outline = "smart_tagged_enemy_passive"
+				end
+
+				if wanted_target_unit_outline ~= current_target_unit_outline then
+					tag:set_target_unit_outline(wanted_target_unit_outline)
+				end
+			end
+		end,
+		update = function (tag)
+			local breed = tag:breed()
+
+			if breed.smart_tag_breed_aggroed_context then
+				local tag_unit = tag:target_unit()
+				local game_session = Managers.state.game_session:game_session()
+				local game_object_id = Managers.state.unit_spawner:game_object_id(tag_unit)
+				local target_unit = MinionPerception.target_unit(game_session, game_object_id)
+				local wanted_target_unit_outline = tag:target_unit_outline()
+				local current_target_unit_outline = wanted_target_unit_outline
+
+				if target_unit then
+					wanted_target_unit_outline = "veteran_smart_tag"
 				end
 
 				if wanted_target_unit_outline ~= current_target_unit_outline then

@@ -1290,6 +1290,558 @@ local horde_compositions = {
 				}
 			}
 		}
+	},
+	cultist_trickle_ogryns_high_1 = {
+		{
+			breeds = {
+				{
+					name = "cultist_melee",
+					amount = {
+						1,
+						2
+					}
+				},
+				{
+					name = "cultist_berzerker",
+					amount = {
+						1,
+						1
+					}
+				}
+			}
+		},
+		{
+			breeds = {
+				{
+					name = "cultist_melee",
+					amount = {
+						2,
+						3
+					}
+				},
+				{
+					name = "chaos_ogryn_executor",
+					amount = {
+						1,
+						1
+					}
+				}
+			}
+		},
+		{
+			breeds = {
+				{
+					name = "cultist_melee",
+					amount = {
+						3,
+						4
+					}
+				},
+				{
+					name = "chaos_ogryn_executor",
+					amount = {
+						2,
+						2
+					}
+				}
+			}
+		},
+		{
+			breeds = {
+				{
+					name = "cultist_melee",
+					amount = {
+						4,
+						5
+					}
+				},
+				{
+					name = "chaos_ogryn_executor",
+					amount = {
+						3,
+						3
+					}
+				}
+			}
+		},
+		{
+			breeds = {
+				{
+					name = "cultist_melee",
+					amount = {
+						5,
+						6
+					}
+				},
+				{
+					name = "chaos_ogryn_executor",
+					amount = {
+						4,
+						4
+					}
+				}
+			}
+		}
+	},
+	cultist_trickle_ogryns_high_2 = {
+		{
+			breeds = {
+				{
+					name = "cultist_melee",
+					amount = {
+						1,
+						2
+					}
+				},
+				{
+					name = "cultist_berzerker",
+					amount = {
+						1,
+						1
+					}
+				}
+			}
+		},
+		{
+			breeds = {
+				{
+					name = "cultist_melee",
+					amount = {
+						2,
+						3
+					}
+				},
+				{
+					name = "chaos_ogryn_bulwark",
+					amount = {
+						1,
+						1
+					}
+				}
+			}
+		},
+		{
+			breeds = {
+				{
+					name = "cultist_melee",
+					amount = {
+						3,
+						4
+					}
+				},
+				{
+					name = "chaos_ogryn_bulwark",
+					amount = {
+						2,
+						2
+					}
+				}
+			}
+		},
+		{
+			breeds = {
+				{
+					name = "cultist_melee",
+					amount = {
+						4,
+						5
+					}
+				},
+				{
+					name = "chaos_ogryn_bulwark",
+					amount = {
+						3,
+						3
+					}
+				}
+			}
+		},
+		{
+			breeds = {
+				{
+					name = "cultist_melee",
+					amount = {
+						5,
+						6
+					}
+				},
+				{
+					name = "chaos_ogryn_bulwark",
+					amount = {
+						4,
+						4
+					}
+				}
+			}
+		}
+	},
+	cultist_trickle_ogryns_high_3 = {
+		{
+			breeds = {
+				{
+					name = "cultist_assault",
+					amount = {
+						1,
+						2
+					}
+				},
+				{
+					name = "cultist_berzerker",
+					amount = {
+						1,
+						1
+					}
+				}
+			}
+		},
+		{
+			breeds = {
+				{
+					name = "cultist_assault",
+					amount = {
+						2,
+						3
+					}
+				},
+				{
+					name = "chaos_ogryn_bulwark",
+					amount = {
+						1,
+						1
+					}
+				}
+			}
+		},
+		{
+			breeds = {
+				{
+					name = "cultist_assault",
+					amount = {
+						3,
+						4
+					}
+				},
+				{
+					name = "chaos_ogryn_bulwark",
+					amount = {
+						2,
+						2
+					}
+				}
+			}
+		},
+		{
+			breeds = {
+				{
+					name = "cultist_assault",
+					amount = {
+						4,
+						5
+					}
+				},
+				{
+					name = "chaos_ogryn_bulwark",
+					amount = {
+						3,
+						3
+					}
+				}
+			}
+		},
+		{
+			breeds = {
+				{
+					name = "cultist_assault",
+					amount = {
+						5,
+						6
+					}
+				},
+				{
+					name = "chaos_ogryn_bulwark",
+					amount = {
+						4,
+						4
+					}
+				}
+			}
+		}
+	},
+	cultist_trickle_ogryns_high_4 = {
+		{
+			breeds = {
+				{
+					name = "cultist_assault",
+					amount = {
+						1,
+						2
+					}
+				},
+				{
+					name = "cultist_berzerker",
+					amount = {
+						1,
+						1
+					}
+				}
+			}
+		},
+		{
+			breeds = {
+				{
+					name = "cultist_assault",
+					amount = {
+						2,
+						3
+					}
+				},
+				{
+					name = "chaos_ogryn_executor",
+					amount = {
+						1,
+						1
+					}
+				}
+			}
+		},
+		{
+			breeds = {
+				{
+					name = "cultist_assault",
+					amount = {
+						3,
+						4
+					}
+				},
+				{
+					name = "chaos_ogryn_executor",
+					amount = {
+						2,
+						2
+					}
+				}
+			}
+		},
+		{
+			breeds = {
+				{
+					name = "cultist_assault",
+					amount = {
+						4,
+						5
+					}
+				},
+				{
+					name = "chaos_ogryn_executor",
+					amount = {
+						3,
+						3
+					}
+				}
+			}
+		},
+		{
+			breeds = {
+				{
+					name = "cultist_assault",
+					amount = {
+						5,
+						6
+					}
+				},
+				{
+					name = "chaos_ogryn_executor",
+					amount = {
+						4,
+						4
+					}
+				}
+			}
+		}
+	},
+	cultist_trickle_high_1 = {
+		{
+			breeds = {
+				{
+					name = "cultist_assault",
+					amount = {
+						4,
+						6
+					}
+				},
+				{
+					name = "cultist_shocktrooper",
+					amount = {
+						2,
+						2
+					}
+				}
+			}
+		},
+		{
+			breeds = {
+				{
+					name = "cultist_assault",
+					amount = {
+						5,
+						7
+					}
+				},
+				{
+					name = "cultist_shocktrooper",
+					amount = {
+						2,
+						3
+					}
+				}
+			}
+		},
+		{
+			breeds = {
+				{
+					name = "cultist_assault",
+					amount = {
+						6,
+						8
+					}
+				},
+				{
+					name = "cultist_shocktrooper",
+					amount = {
+						4,
+						5
+					}
+				}
+			}
+		},
+		{
+			breeds = {
+				{
+					name = "cultist_assault",
+					amount = {
+						8,
+						12
+					}
+				},
+				{
+					name = "cultist_shocktrooper",
+					amount = {
+						4,
+						6
+					}
+				}
+			}
+		},
+		{
+			breeds = {
+				{
+					name = "cultist_assault",
+					amount = {
+						10,
+						14
+					}
+				},
+				{
+					name = "cultist_shocktrooper",
+					amount = {
+						5,
+						7
+					}
+				}
+			}
+		}
+	},
+	cultist_trickle_high_2 = {
+		{
+			breeds = {
+				{
+					name = "cultist_assault",
+					amount = {
+						4,
+						6
+					}
+				},
+				{
+					name = "cultist_gunner",
+					amount = {
+						2,
+						2
+					}
+				}
+			}
+		},
+		{
+			breeds = {
+				{
+					name = "cultist_assault",
+					amount = {
+						5,
+						7
+					}
+				},
+				{
+					name = "cultist_gunner",
+					amount = {
+						2,
+						3
+					}
+				}
+			}
+		},
+		{
+			breeds = {
+				{
+					name = "cultist_assault",
+					amount = {
+						6,
+						8
+					}
+				},
+				{
+					name = "cultist_gunner",
+					amount = {
+						4,
+						5
+					}
+				}
+			}
+		},
+		{
+			breeds = {
+				{
+					name = "cultist_assault",
+					amount = {
+						8,
+						12
+					}
+				},
+				{
+					name = "cultist_gunner",
+					amount = {
+						4,
+						6
+					}
+				}
+			}
+		},
+		{
+			breeds = {
+				{
+					name = "cultist_assault",
+					amount = {
+						10,
+						14
+					}
+				},
+				{
+					name = "cultist_gunner",
+					amount = {
+						5,
+						7
+					}
+				}
+			}
+		}
 	}
 }
 

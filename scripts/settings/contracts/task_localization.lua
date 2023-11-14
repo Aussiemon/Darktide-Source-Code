@@ -23,7 +23,7 @@ TaskLocalization.CollectResource = _create_task("collect_resources", {
 	{
 		pattern = "loc_currency_name_%s",
 		key = "kind",
-		input = "resourceType"
+		input = "resourceTypes"
 	}
 })
 TaskLocalization.KillMinions = _create_task("kill_minions", {

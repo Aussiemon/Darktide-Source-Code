@@ -8,10 +8,6 @@ local UIWidget = require("scripts/managers/ui/ui_widget")
 local Vo = require("scripts/utilities/vo")
 local VOQueryConstants = require("scripts/settings/dialogue/vo_query_constants")
 local ChannelTags = ChatManagerConstants.ChannelTag
-local unit_alive = Unit.alive
-local ALLOW_LOCATION_TAG_ON_TAP = false
-local SINGLE_TAP_LOCATION_TAG = "location_ping"
-local DOUBLE_TAP_LOCATION_TAG = "location_threat"
 local DOUBLE_TAP_DELAY = 0.3
 local INSTANT_WHEEL_THRESHOLD = 8
 local HOVER_GRACE_PERIOD = 0.4
@@ -175,10 +171,10 @@ HudElementSmartTagging.update = function (self, dt, t, ui_renderer, render_setti
 	self:_handle_input(t, dt, ui_renderer, render_settings)
 end
 
-HudElementSmartTagging.destroy = function (self)
+HudElementSmartTagging.destroy = function (self, ui_renderer)
 	self:_clear_all_smart_tag_presentations()
 	self:_on_wheel_closed()
-	HudElementSmartTagging.super.destroy(self)
+	HudElementSmartTagging.super.destroy(self, ui_renderer)
 end
 
 HudElementSmartTagging._on_tag_start = function (self, t)
@@ -207,12 +203,12 @@ HudElementSmartTagging._trigger_smart_tag = function (self, template_name, targe
 	smart_tag_system:set_tag(template_name, player_unit, target_unit, target_location)
 end
 
-HudElementSmartTagging._trigger_smart_tag_interaction = function (self, tag_id)
+HudElementSmartTagging._trigger_smart_tag_interaction = function (self, tag_id, target_unit)
 	local parent = self._parent
 	local player_unit = parent:player_unit()
 	local smart_tag_system = Managers.state.extension:system("smart_tag_system")
 
-	smart_tag_system:trigger_tag_interaction(tag_id, player_unit)
+	smart_tag_system:trigger_tag_interaction(tag_id, player_unit, target_unit)
 end
 
 HudElementSmartTagging._trigger_smart_tag_unit_contextual = function (self, target_unit)
@@ -310,25 +306,33 @@ HudElementSmartTagging._on_com_wheel_stop_callback = function (self, t, ui_rende
 			Managers.telemetry_reporters:reporter("com_wheel"):register_event(option.voice_event_data.voice_tag_id)
 		end
 	elseif t - wheel_context.input_start_time <= DOUBLE_TAP_DELAY then
+		local account_data = Managers.save:account_data()
+		local com_wheel_single_tap = account_data.input_settings.com_wheel_single_tap
+		local com_wheel_double_tap = account_data.input_settings.com_wheel_double_tap
+		local allow_single_tap = com_wheel_single_tap ~= "none"
+		local allow_double_tap = com_wheel_double_tap ~= "none"
 		local tag_context = self._tag_context
 
 		if wheel_context.simultaneous_press and tag_context.enemy_tagged then
 			-- Nothing
-		elseif wheel_context.is_double_tap and ALLOW_LOCATION_TAG_ON_TAP then
-			local force_update_targets = true
-			local raycast_data = self:_find_raycast_targets(force_update_targets)
-			local hit_position = raycast_data.static_hit_position
+		elseif wheel_context.is_double_tap then
+			if allow_double_tap then
+				local force_update_targets = true
+				local raycast_data = self:_find_raycast_targets(force_update_targets)
+				local hit_position = raycast_data.static_hit_position
 
-			if hit_position then
-				self:_trigger_smart_tag(DOUBLE_TAP_LOCATION_TAG, nil, Vector3Box.unbox(hit_position))
+				if hit_position then
+					self:_trigger_smart_tag(com_wheel_double_tap, nil, Vector3Box.unbox(hit_position))
+				end
 			end
 		else
 			local force_update_targets = true
 			local _, _, target_position = self:_find_best_smart_tag_interaction(ui_renderer, render_settings, force_update_targets)
 			local marker_handled = wheel_context.simultaneous_press and tag_context.marker_handled
 
-			if target_position and ALLOW_LOCATION_TAG_ON_TAP and not marker_handled then
+			if target_position and allow_single_tap and not marker_handled then
 				wheel_context.single_tap_location_tag = {
+					tag_type = com_wheel_single_tap,
 					spawn_time = t + DOUBLE_TAP_DELAY - (t - wheel_context.input_start_time),
 					position = Vector3Box(target_position)
 				}
@@ -455,7 +459,7 @@ HudElementSmartTagging._handle_com_wheel = function (self, t, ui_renderer, rende
 	if location_tag and location_tag.spawn_time <= t then
 		local position = Vector3Box.unbox(location_tag.position)
 
-		self:_trigger_smart_tag(SINGLE_TAP_LOCATION_TAG, nil, position)
+		self:_trigger_smart_tag(location_tag.tag_type, nil, position)
 
 		wheel_context.single_tap_location_tag = nil
 	end
@@ -528,7 +532,7 @@ HudElementSmartTagging._handle_selected_unit = function (self, unit)
 	local tag_id = smart_tag_system:unit_tag_id(unit)
 
 	if tag_id then
-		self:_trigger_smart_tag_interaction(tag_id)
+		self:_trigger_smart_tag_interaction(tag_id, unit)
 	else
 		self:_trigger_smart_tag_unit_contextual(unit)
 	end
@@ -635,7 +639,6 @@ end
 HudElementSmartTagging._update_wheel_presentation = function (self, dt, t, ui_renderer, render_settings, input_service)
 	local screen_width = RESOLUTION_LOOKUP.width
 	local screen_height = RESOLUTION_LOOKUP.height
-	local inverse_scale = 1
 	local scale = render_settings.scale
 	local cursor = input_service and input_service:get("cursor")
 
@@ -645,9 +648,12 @@ HudElementSmartTagging._update_wheel_presentation = function (self, dt, t, ui_re
 		cursor[2] = screen_height * 0.5 - cursor[2] * screen_height * 0.5
 	end
 
-	local cursor_position = IS_XBS and UIResolution.scale_vector(cursor, scale) or UIResolution.inverse_scale_vector(cursor, inverse_scale)
-	local cursor_distance_from_center = math.distance_2d(screen_width * 0.5, screen_height * 0.5, cursor_position[1], cursor_position[2])
-	local cursor_angle_from_center = math.angle(screen_width * 0.5, screen_height * 0.5, cursor_position[1], cursor_position[2]) - math.pi * 0.5
+	if not cursor then
+		return
+	end
+
+	local cursor_distance_from_center = math.distance_2d(screen_width * 0.5, screen_height * 0.5, cursor[1], cursor[2])
+	local cursor_angle_from_center = math.angle(screen_width * 0.5, screen_height * 0.5, cursor[1], cursor[2]) - math.pi * 0.5
 	local cursor_angle_degrees_from_center = math.radians_to_degrees(cursor_angle_from_center) % 360
 	local entry_hover_degrees = 44
 	local entry_hover_degrees_half = entry_hover_degrees * 0.5

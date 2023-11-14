@@ -465,14 +465,16 @@ weapon_template.actions = {
 		}
 	},
 	action_brace_reload = {
-		kind = "reload_state",
 		uninterruptible = true,
-		start_input = "brace_reload",
 		sprint_requires_press_to_interrupt = true,
+		start_input = "brace_reload",
+		kind = "reload_state",
 		abort_sprint = true,
-		crosshair_type = "none",
 		allowed_during_sprint = true,
 		total_time = 7,
+		crosshair = {
+			crosshair_type = "none"
+		},
 		action_movement_curve = {
 			{
 				modifier = 0.375,
@@ -534,15 +536,17 @@ weapon_template.actions = {
 		}
 	},
 	action_reload = {
-		kind = "reload_state",
-		start_input = "reload",
-		sprint_requires_press_to_interrupt = true,
-		weapon_handling_template = "time_scale_1_3",
 		stop_alternate_fire = true,
+		start_input = "reload",
+		kind = "reload_state",
+		weapon_handling_template = "time_scale_1_3",
+		sprint_requires_press_to_interrupt = true,
 		abort_sprint = true,
-		crosshair_type = "none",
 		allowed_during_sprint = true,
 		total_time = 7,
+		crosshair = {
+			crosshair_type = "none"
+		},
 		action_movement_curve = {
 			{
 				modifier = 0.475,
@@ -610,18 +614,20 @@ weapon_template.actions = {
 		damage_window_start = 0.26666666666666666,
 		hit_armor_anim = "attack_hit_shield",
 		start_input = "stab",
-		allow_conditional_chain = true,
+		range_mod = 1.15,
 		kind = "sweep",
 		first_person_hit_anim = "hit_right_shake",
-		range_mod = 1.15,
+		anim_event = "attack_bash_right",
 		first_person_hit_stop_anim = "hit_stop",
-		crosshair_type = "dot",
 		allowed_during_sprint = true,
 		damage_window_end = 0.5,
 		attack_direction_override = "right",
 		uninterruptible = true,
-		anim_event = "attack_bash_right",
+		allow_conditional_chain = true,
 		total_time = 1.4,
+		crosshair = {
+			crosshair_type = "dot"
+		},
 		action_movement_curve = {
 			{
 				modifier = 0.3,
@@ -707,10 +713,12 @@ weapon_template.actions = {
 		start_input = "inspect_start",
 		anim_end_event = "inspect_end",
 		kind = "inspect",
-		crosshair_type = "inspect",
 		anim_event = "inspect_start",
 		stop_input = "inspect_stop",
-		total_time = math.huge
+		total_time = math.huge,
+		crosshair = {
+			crosshair_type = "inspect"
+		}
 	}
 }
 
@@ -757,17 +765,21 @@ weapon_template.fx_sources = {
 	_muzzle = "fx_01",
 	_eject_secondary = "fx_eject_02"
 }
-weapon_template.crosshair_type = "spray_n_pray"
+weapon_template.crosshair = {
+	crosshair_type = "spray_n_pray"
+}
 weapon_template.hit_marker_type = "center"
 weapon_template.alternate_fire_settings = {
 	recoil_template = "default_ogryn_heavystubber_recoil_spraynpray_brace_m2",
 	sway_template = "ogyn_heavy_stubber_sway",
 	stop_anim_event = "to_unaim_braced",
 	spread_template = "default_ogryn_heavystubber_braced_m2",
-	crosshair_type = "spray_n_pray",
 	uninterruptible = true,
 	start_anim_event = "to_braced",
 	look_delta_template = "lasgun_brace_light",
+	crosshair = {
+		crosshair_type = "spray_n_pray"
+	},
 	camera = {
 		custom_vertical_fov = 55,
 		vertical_fov = 50,

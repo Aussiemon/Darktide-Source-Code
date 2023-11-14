@@ -94,8 +94,8 @@ local DEFAULT_RAMP_UP_FREQUENCY_MODIFIERS = {
 			build_up_tension_low = true
 		},
 		ramp_modifiers = {
-			hordes = 1.25,
-			specials = 1.5
+			hordes = 2,
+			specials = 2
 		}
 	},
 	{
@@ -107,9 +107,9 @@ local DEFAULT_RAMP_UP_FREQUENCY_MODIFIERS = {
 			build_up_tension_low = true
 		},
 		ramp_modifiers = {
-			hordes = 1.25,
+			hordes = 2,
 			terror_events = 1.25,
-			specials = 2
+			specials = 3
 		}
 	},
 	{
@@ -121,9 +121,10 @@ local DEFAULT_RAMP_UP_FREQUENCY_MODIFIERS = {
 			build_up_tension_low = true
 		},
 		ramp_modifiers = {
-			hordes = 1.25,
+			trickle_hordes = 1.5,
+			hordes = 2,
 			terror_events = 1.5,
-			specials = 2
+			specials = 3
 		}
 	},
 	{
@@ -135,13 +136,14 @@ local DEFAULT_RAMP_UP_FREQUENCY_MODIFIERS = {
 			build_up_tension_low = true
 		},
 		ramp_modifiers = {
-			hordes = 1.5,
+			trickle_hordes = 2,
+			hordes = 2,
 			terror_events = 1.75,
-			specials = 2.5
+			specials = 3
 		}
 	},
 	{
-		travel_change_pause_time = 13,
+		travel_change_pause_time = 20,
 		ramp_duration = 200,
 		max_duration = 100,
 		ramp_up_states = {
@@ -149,7 +151,8 @@ local DEFAULT_RAMP_UP_FREQUENCY_MODIFIERS = {
 			build_up_tension_low = true
 		},
 		ramp_modifiers = {
-			hordes = 1.75,
+			trickle_hordes = 2.5,
+			hordes = 2.25,
 			terror_events = 2,
 			specials = 3
 		}
@@ -170,6 +173,13 @@ local pacing_template = {
 		terror_events = _challenge_rating_multiplier_steps(90)
 	},
 	ramp_up_frequency_modifiers = DEFAULT_RAMP_UP_FREQUENCY_MODIFIERS,
+	min_wound_tension_requirement = {
+		false,
+		false,
+		false,
+		true,
+		true
+	},
 	state_settings = {
 		{
 			build_up_tension_low = {

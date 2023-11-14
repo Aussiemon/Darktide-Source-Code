@@ -29,6 +29,10 @@ StateRequireScripts._get_is_modded = function (self)
 	return GameParameters.is_modded_crashify_property
 end
 
+StateRequireScripts._get_launcher_verification_passed = function (self)
+	return GameParameters.launcher_verification_passed_crashify_property
+end
+
 StateRequireScripts._init_crashify = function (self)
 	local settings = require("scripts/settings/crashify/crashify")
 
@@ -42,6 +46,7 @@ StateRequireScripts._init_crashify = function (self)
 	Crashify.print_property("teamcity_build_id", APPLICATION_SETTINGS.teamcity_build_id)
 	Crashify.print_property("server", DEDICATED_SERVER)
 	Crashify.print_property("is_modded", self:_get_is_modded())
+	Crashify.print_property("launcher_verification_passed", self:_get_launcher_verification_passed())
 	Crashify.print_property("game_version", APPLICATION_SETTINGS.game_version)
 
 	if PLATFORM == "win32" then

@@ -1659,10 +1659,12 @@ weapon_template.actions = {
 		start_input = "inspect_start",
 		anim_end_event = "inspect_end",
 		kind = "inspect",
-		crosshair_type = "inspect",
 		anim_event = "inspect_start",
 		stop_input = "inspect_stop",
-		total_time = math.huge
+		total_time = math.huge,
+		crosshair = {
+			crosshair_type = "inspect"
+		}
 	}
 }
 
@@ -1681,11 +1683,10 @@ weapon_template.damage_window_start_sweep_trail_offset = -0.2
 weapon_template.damage_window_end_sweep_trail_offset = 0.2
 weapon_template.ammo_template = "no_ammo"
 weapon_template.allow_sprinting_with_special = true
-weapon_template.weapon_special_class = "WeaponSpecialDeactivateAfterNumHits"
+weapon_template.weapon_special_class = "WeaponSpecialDeactivateAfterNumActivations"
 weapon_template.weapon_special_tweak_data = {
 	active_duration = 4,
-	deactive_on_action_finished = true,
-	num_hits = 1
+	num_activations = 1
 }
 weapon_template.fx_sources = {
 	_sticky = "fx_sawing",
@@ -1694,7 +1695,9 @@ weapon_template.fx_sources = {
 	_block = "fx_block",
 	_sweep = "fx_sweep"
 }
-weapon_template.crosshair_type = "dot"
+weapon_template.crosshair = {
+	crosshair_type = "dot"
+}
 weapon_template.hit_marker_type = "center"
 weapon_template.keywords = {
 	"melee",

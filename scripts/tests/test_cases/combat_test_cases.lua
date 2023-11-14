@@ -150,10 +150,8 @@ CombatTestCases.run_through_mission = function (case_settings)
 			Testify:make_request_to_runner("monitor_lua_trace")
 		end
 
-		local assert_data = {
-			condition = num_peers <= 4,
-			message = "The number of peers has been set to " .. num_peers .. ". You can't have more than 4 peers!"
-		}
+		Testify.expect:is_false("invalid_num_peers", num_peers > 4, "The number of peers has been set to " .. num_peers .. ". You can't have more than 4 peers!")
+
 		local output = TestifySnippets.check_flags_for_mission(flags, mission_key)
 
 		if output then
@@ -210,20 +208,15 @@ CombatTestCases.run_through_mission = function (case_settings)
 			bots_blocked_distance = 2,
 			bots_stuck_data = bots_stuck_data
 		}
-		assert_data = {
-			message = "The player(s) has/have been killed, this shouldn't be possible. Please check the video in the Testify results."
-		}
+		local assert_message = "The player(s) has/have been killed, this shouldn't be possible. Please check the video in the Testify results."
 
 		while not Testify:make_request("end_conditions_met") and main_path_point < total_main_path_distance do
 			local are_players_alive = Testify:make_request("players_are_alive")
 
-			if not Testify:make_request("players_are_alive") then
-				assert_data.condition = are_players_alive
-			end
-
 			if memory_usage and next_memory_measure_point < main_path_point and memory_usage_measurement_count < num_memory_usage_measurements then
-				local memory_usage_data = Testify:make_request("memory_usage")
+				local memory_usage_data = TestifySnippets.memory_usage()
 
+				Log.info("Testify", table.tostring(memory_usage_data))
 				Testify:make_request("create_telemetry_event", telemetry_events.memory_usage, mission_key, memory_usage_measurement_count, memory_usage_data)
 
 				memory_usage_measurement_count = memory_usage_measurement_count + 1
@@ -260,6 +253,107 @@ CombatTestCases.run_through_mission = function (case_settings)
 		end
 
 		return result
+	end)
+end
+
+CombatTestCases.validate_minion_pathing_on_mission = function (case_settings)
+	Testify:run_case(function (dt, t)
+		local settings = cjson.decode(case_settings)
+		local mission_name = settings.mission_name
+		local initial_wait_time = settings.initial_wait_time or 4
+		local nav_mesh_above = settings.nav_mesh_above or 0.5
+		local nav_mesh_below = settings.nav_mesh_below or 0.5
+		local specific_breed_names = settings.specific_breed_names
+		local flags = {
+			"validate_minion_pathing_on_mission"
+		}
+		local output = TestifySnippets.check_flags_for_mission(flags, mission_name)
+
+		if output then
+			return output
+		end
+
+		TestifySnippets.load_mission(mission_name)
+		Testify:make_request("wait_for_state_gameplay_reached")
+		TestifySnippets.wait(initial_wait_time)
+
+		local minion_multi_teleporter_units = Testify:make_request("get_units_from_component_name", "MinionMultiTeleporter")
+		local minion_multi_teleporter_positions = Testify:make_request("unit_positions_on_nav_mesh", minion_multi_teleporter_units, nav_mesh_above, nav_mesh_below)
+		local unified_main_path, _, _, _, _ = Testify:make_request("generate_unified_main_path")
+		local minion_breeds = Testify:make_request("all_breeds")
+
+		if specific_breed_names then
+			for i = #minion_breeds, 1, -1 do
+				local breed_data = minion_breeds[i]
+				local breed_name = breed_data.name
+
+				if not table.array_contains(specific_breed_names, breed_name) then
+					table.swap_delete(minion_breeds, i)
+				end
+			end
+		end
+
+		local num_minion_breeds = #minion_breeds
+		local start_positions = table.values(minion_multi_teleporter_positions)
+		local num_start_positions = #start_positions
+		local spawn_position = start_positions[1]
+		local minion_pathing_data = Script.new_array(num_minion_breeds)
+		local total_path_queries = 0
+		local minion_spawn_data = {
+			breed_side = 1,
+			spawn_position = spawn_position
+		}
+
+		for i = 1, num_minion_breeds do
+			local breed_data = minion_breeds[i]
+			local breed_name = breed_data.name
+			minion_spawn_data.breed_name = breed_name
+			local unit = Testify:make_request("spawn_minion", minion_spawn_data)
+			local traverse_logic = Testify:make_request("traverse_logic", unit)
+			local destinations, num_destinations = Testify:make_request("positions_on_nav_mesh", unified_main_path, nav_mesh_above, nav_mesh_below, traverse_logic)
+			local destination = destinations[1]
+
+			Testify:make_request("unit_navigation_move_to", unit, destination)
+			Testify:make_request("unit_navigation_set_enabled", unit, true, 0)
+
+			minion_pathing_data[i] = {
+				start_position_index = 1,
+				destination_index = 1,
+				unit = unit,
+				breed = breed_data,
+				start_positions = start_positions,
+				destinations = destinations,
+				num_start_positions = num_start_positions,
+				num_destinations = num_destinations
+			}
+			total_path_queries = total_path_queries + num_destinations * num_start_positions
+		end
+
+		Testify:make_request("hide_all_units")
+		Log.info("Testify", "Setup done - num_minion_breeds: %d | total_path_queries: %d (start_positions: %d main_path: %d)", num_minion_breeds, total_path_queries, num_start_positions, #unified_main_path)
+
+		local num_remaining_path_queries = total_path_queries
+		local log_query_interval = total_path_queries * 0.1
+		local next_log_query_value = total_path_queries
+
+		while num_remaining_path_queries > 0 do
+			local new_num_remaining_path_queries, error_message = Testify:make_request("check_and_update_minion_pathing_test", minion_pathing_data, num_remaining_path_queries)
+
+			if new_num_remaining_path_queries <= next_log_query_value then
+				local done_percentage = 1 - new_num_remaining_path_queries / total_path_queries
+				local to_next = new_num_remaining_path_queries % log_query_interval
+
+				if to_next > 0 then
+					next_log_query_value = new_num_remaining_path_queries - to_next
+				else
+					next_log_query_value = new_num_remaining_path_queries - log_query_interval
+				end
+
+				Log.info("Testify", "%.1f%%", done_percentage * 100)
+			end
+
+			num_remaining_path_queries = new_num_remaining_path_queries
+		end
 	end)
 end
 

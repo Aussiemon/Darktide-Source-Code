@@ -1,8 +1,6 @@
 local Dialogue = component("Dialogue")
 
 Dialogue.init = function (self, unit)
-	self:enable(unit)
-
 	local dialogue_class = self:get_data(unit, "dialogue_class")
 	local dialogue_profile = self:get_data(unit, "dialogue_profile")
 	local player_selected_voice = self:get_data(unit, "player_selected_voice")
@@ -18,6 +16,8 @@ Dialogue.init = function (self, unit)
 	if dialogue_extension then
 		dialogue_extension:setup_from_component(dialogue_class, dialogue_profile, player_selected_voice, faction_memory_name, enabled)
 	end
+
+	self:enable(unit)
 end
 
 Dialogue.editor_init = function (self, unit)
@@ -31,11 +31,15 @@ Dialogue.editor_validate = function (self, unit)
 end
 
 Dialogue.enable = function (self, unit)
-	return
+	local dialogue_extension = ScriptUnit.fetch_component_extension(unit, "dialogue_system")
+
+	dialogue_extension:set_dialogue_disabled(false)
 end
 
 Dialogue.disable = function (self, unit)
-	return
+	local dialogue_extension = ScriptUnit.fetch_component_extension(unit, "dialogue_system")
+
+	dialogue_extension:set_dialogue_disabled(true)
 end
 
 Dialogue.destroy = function (self, unit)
@@ -71,6 +75,7 @@ Dialogue.component_data = {
 			"Confessional",
 			"Contract Vendor",
 			"Enemy Nemesis Wolfer",
+			"Enginseer",
 			"Explicator",
 			"Interrogator",
 			"Ogryn",
@@ -103,6 +108,7 @@ Dialogue.component_data = {
 			"confessional",
 			"contract_vendor",
 			"enemy_nemesis_wolfer",
+			"enginseer",
 			"explicator",
 			"interrogator",
 			"ogryn",
@@ -140,6 +146,7 @@ Dialogue.component_data = {
 			"Boon Vendor A",
 			"Contract Vendor",
 			"Enemy Nemesis Wolfer, Male",
+			"Enginseer A",
 			"Emora Brahms, The Shipmistress",
 			"Explicator Zola, Female",
 			"Interrogator Rannick, Male",
@@ -203,6 +210,7 @@ Dialogue.component_data = {
 			"boon_vendor_a",
 			"contract_vendor_a",
 			"enemy_nemesis_wolfer_a",
+			"enginseer_a",
 			"shipmistress_a",
 			"explicator_a",
 			"interrogator_a",

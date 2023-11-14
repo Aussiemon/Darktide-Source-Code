@@ -318,6 +318,8 @@ HudElementTeamPanelHandler.destroy = function (self, ui_renderer)
 
 	self._player_panels_array = nil
 	self._player_panel_by_unique_id = nil
+
+	HudElementTeamPanelHandler.super.destroy(self, ui_renderer)
 end
 
 HudElementTeamPanelHandler.set_visible = function (self, visible, ui_renderer, use_retained_mode)

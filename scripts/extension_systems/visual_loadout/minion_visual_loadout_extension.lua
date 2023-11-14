@@ -583,7 +583,7 @@ MinionVisualLoadoutExtension.slot_unit = function (self, slot_name)
 		return slot_data.unit or self._unit
 	end
 
-	return slot_data.unit
+	return slot_data.unit, slot_data.attachments
 end
 
 MinionVisualLoadoutExtension.is_slot_visible = function (self, slot_name)

@@ -24,9 +24,9 @@ HudElementMissionObjectiveFeed.init = function (self, parent, draw_layer, start_
 	self:_register_events()
 end
 
-HudElementMissionObjectiveFeed.destroy = function (self)
+HudElementMissionObjectiveFeed.destroy = function (self, ui_renderer)
 	self:_unregister_events()
-	HudElementMissionObjectiveFeed.super.destroy(self)
+	HudElementMissionObjectiveFeed.super.destroy(self, ui_renderer)
 end
 
 HudElementMissionObjectiveFeed.update = function (self, dt, t, ui_renderer, render_settings, input_service)

@@ -276,6 +276,11 @@ details_widgets_blueprints.templates = {
 			end
 
 			local circumstance_ui_settings = circumstance_template.ui
+
+			if not circumstance_ui_settings then
+				return
+			end
+
 			local widget_content = widget.content
 			widget_content.circumstance_title = Localize(circumstance_ui_settings.display_name)
 			widget_content.circumstance_icon = circumstance_ui_settings.icon

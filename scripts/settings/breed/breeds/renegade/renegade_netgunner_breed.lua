@@ -393,6 +393,7 @@ local breed_data = {
 			[hit_zone_names.lower_right_leg] = 0.5
 		}
 	},
+	outline_config = {},
 	blackboard_component_config = BreedBlackboardComponentTemplates.netgunner
 }
 

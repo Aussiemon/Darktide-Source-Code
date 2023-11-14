@@ -120,194 +120,6 @@ local roamer_limits = {
 			replacements = DEFAULT_REPLACEMENTS
 		},
 		{
-			chaos_newly_infected = 0,
-			tag_limits = {
-				elite = 0,
-				ogryn = 0
-			},
-			replacements = DEFAULT_REPLACEMENTS
-		},
-		{
-			chaos_newly_infected = 0,
-			tag_limits = {
-				elite = 0,
-				ogryn = 0
-			},
-			replacements = DEFAULT_REPLACEMENTS
-		},
-		{
-			chaos_poxwalker = 0,
-			chaos_newly_infected = 0,
-			tag_limits = {
-				elite = 10,
-				ogryn = 3
-			},
-			replacements = DEFAULT_REPLACEMENTS
-		}
-	},
-	low = {
-		{
-			tag_limits = {
-				elite = 1,
-				ogryn = 0
-			},
-			replacements = DEFAULT_REPLACEMENTS
-		},
-		{
-			tag_limits = {
-				elite = 2,
-				ogryn = 0
-			},
-			replacements = DEFAULT_REPLACEMENTS
-		},
-		{
-			tag_limits = {
-				ogryn = {
-					0,
-					1
-				},
-				elite = {
-					3,
-					5
-				}
-			},
-			replacements = DEFAULT_REPLACEMENTS
-		},
-		{
-			chaos_newly_infected = 0,
-			tag_limits = {
-				ogryn = {
-					0,
-					2
-				},
-				elite = {
-					4,
-					6
-				}
-			},
-			replacements = DEFAULT_REPLACEMENTS
-		},
-		{
-			chaos_newly_infected = 0,
-			tag_limits = {
-				ogryn = {
-					0,
-					3
-				},
-				elite = {
-					5,
-					7
-				}
-			},
-			replacements = DEFAULT_REPLACEMENTS
-		},
-		{
-			chaos_poxwalker = 0,
-			chaos_newly_infected = 0,
-			tag_limits = {
-				elite = 10,
-				ogryn = 3
-			},
-			replacements = DEFAULT_REPLACEMENTS
-		}
-	},
-	high = {
-		{
-			tag_limits = {
-				elite = 2,
-				ogryn = 0
-			},
-			replacements = DEFAULT_REPLACEMENTS
-		},
-		{
-			tag_limits = {
-				ogryn = {
-					0,
-					1
-				},
-				elite = {
-					2,
-					3
-				}
-			},
-			replacements = DEFAULT_REPLACEMENTS
-		},
-		{
-			tag_limits = {
-				ogryn = {
-					0,
-					2
-				},
-				elite = {
-					3,
-					6
-				}
-			},
-			replacements = DEFAULT_REPLACEMENTS
-		},
-		{
-			chaos_newly_infected = 0,
-			tag_limits = {
-				ogryn = {
-					0,
-					3
-				},
-				elite = {
-					4,
-					7
-				}
-			},
-			replacements = DEFAULT_REPLACEMENTS
-		},
-		{
-			chaos_newly_infected = 0,
-			tag_limits = {
-				ogryn = {
-					1,
-					4
-				},
-				elite = {
-					7,
-					10
-				}
-			},
-			replacements = DEFAULT_REPLACEMENTS
-		},
-		{
-			chaos_poxwalker = 0,
-			chaos_newly_infected = 0,
-			tag_limits = {
-				elite = 20,
-				ogryn = 5
-			},
-			replacements = DEFAULT_REPLACEMENTS
-		}
-	}
-}
-roamer_limits = {
-	none = {
-		{
-			tag_limits = {
-				elite = 0,
-				ogryn = 0
-			},
-			replacements = DEFAULT_REPLACEMENTS
-		},
-		{
-			tag_limits = {
-				elite = 0,
-				ogryn = 0
-			},
-			replacements = DEFAULT_REPLACEMENTS
-		},
-		{
-			tag_limits = {
-				elite = 0,
-				ogryn = 0
-			},
-			replacements = DEFAULT_REPLACEMENTS
-		},
-		{
 			tag_limits = {
 				elite = 0,
 				ogryn = 0
@@ -420,6 +232,16 @@ roamer_limits = {
 				num_limitations_to_add_extra = 4,
 				max = 4
 			},
+			cultist_berzerker = {
+				extra_replacement = "cultist_melee",
+				num_limitations_to_add_extra = 2,
+				max = 2
+			},
+			renegade_berzerker = {
+				extra_replacement = "renegade_melee",
+				num_limitations_to_add_extra = 2,
+				max = 2
+			},
 			tag_limits = {
 				ogryn = 0,
 				elite = {
@@ -467,6 +289,16 @@ roamer_limits = {
 				num_limitations_to_add_extra = 3,
 				max = 3
 			},
+			cultist_berzerker = {
+				extra_replacement = "cultist_melee",
+				num_limitations_to_add_extra = 2,
+				max = 3
+			},
+			renegade_berzerker = {
+				extra_replacement = "renegade_melee",
+				num_limitations_to_add_extra = 2,
+				max = 3
+			},
 			tag_limits = {
 				ogryn = {
 					0,
@@ -506,6 +338,16 @@ roamer_limits = {
 				extra_replacement = "cultist_gunner",
 				num_limitations_to_add_extra = 3,
 				max = 8
+			},
+			cultist_berzerker = {
+				extra_replacement = "cultist_melee",
+				num_limitations_to_add_extra = 2,
+				max = 3
+			},
+			renegade_berzerker = {
+				extra_replacement = "renegade_melee",
+				num_limitations_to_add_extra = 2,
+				max = 3
 			},
 			tag_limits = {
 				ogryn = {
@@ -613,6 +455,16 @@ roamer_limits = {
 				num_limitations_to_add_extra = 4,
 				max = 4
 			},
+			cultist_berzerker = {
+				extra_replacement = "cultist_melee",
+				num_limitations_to_add_extra = 2,
+				max = 2
+			},
+			renegade_berzerker = {
+				extra_replacement = "renegade_melee",
+				num_limitations_to_add_extra = 2,
+				max = 2
+			},
 			tag_limits = {
 				elite = 3,
 				ogryn = 0
@@ -644,6 +496,16 @@ roamer_limits = {
 				extra_replacement = "cultist_gunner",
 				num_limitations_to_add_extra = 3,
 				max = 3
+			},
+			cultist_berzerker = {
+				extra_replacement = "cultist_melee",
+				num_limitations_to_add_extra = 2,
+				max = 4
+			},
+			renegade_berzerker = {
+				extra_replacement = "renegade_melee",
+				num_limitations_to_add_extra = 2,
+				max = 4
 			},
 			tag_limits = {
 				ogryn = {
@@ -685,6 +547,16 @@ roamer_limits = {
 				num_limitations_to_add_extra = 2,
 				max = 10
 			},
+			cultist_berzerker = {
+				extra_replacement = "cultist_melee",
+				num_limitations_to_add_extra = 2,
+				max = 4
+			},
+			renegade_berzerker = {
+				extra_replacement = "renegade_melee",
+				num_limitations_to_add_extra = 2,
+				max = 4
+			},
 			tag_limits = {
 				ogryn = {
 					1,
@@ -724,6 +596,16 @@ roamer_limits = {
 				extra_replacement = "cultist_gunner",
 				num_limitations_to_add_extra = 2,
 				max = 11
+			},
+			cultist_berzerker = {
+				extra_replacement = "cultist_melee",
+				num_limitations_to_add_extra = 2,
+				max = 5
+			},
+			renegade_berzerker = {
+				extra_replacement = "renegade_melee",
+				num_limitations_to_add_extra = 2,
+				max = 5
 			},
 			tag_limits = {
 				ogryn = {

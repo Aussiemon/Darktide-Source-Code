@@ -47,9 +47,11 @@ TalentBuilderView.init = function (self, settings, context)
 	TalentBuilderView.super.init(self, Definitions, settings, context)
 
 	self._save_talent_changes = false
-	self._gamepad_cursor_current_pos = Vector3Box(960, 540)
+	local resolution_scale = RESOLUTION_LOOKUP.scale
+	local resolution_width = RESOLUTION_LOOKUP.width
+	self._gamepad_cursor_current_pos = Vector3Box(Vector3(resolution_width * 0.5, 200 * resolution_scale, 0))
 	self._gamepad_cursor_current_vel = Vector3Box()
-	self._gamepad_cursor_target_pos = Vector3Box()
+	self._gamepad_cursor_target_pos = Vector3Box(Vector3(resolution_width * 0.5, 200 * resolution_scale, 0))
 	self._gamepad_cursor_average_vel = Vector3Box()
 	self._gamepad_cursor_snap_delay = 0
 	self._gamepad_cursor_previous_scroll_height = 0
@@ -60,7 +62,6 @@ end
 TalentBuilderView.on_enter = function (self)
 	if self._player_mode then
 		self._definitions.scenegraph_definition.layout_background.horizontal_alignment = "center"
-		self._definitions.overlay_scenegraph_definition.tooltip.parent = "canvas"
 	end
 
 	self._talent_hover_data = {}
@@ -511,14 +512,11 @@ TalentBuilderView._scroll_to_height = function (self, height)
 	local final_y = math.clamp(height, -math.max(background_height - screen_height * render_inverse_scale), 0)
 
 	self:_set_scenegraph_position(scenegraph_id, nil, final_y)
+	self:_set_scenegraph_position("scroll_background", nil, final_y, nil, nil, nil, self._ui_overlay_scenegraph)
 
 	if scenegraph_settings then
 		scenegraph_settings.y = final_y
 	end
-end
-
-TalentBuilderView._scroll_to_node_widget = function (self, widget)
-	return
 end
 
 TalentBuilderView._background_scrolled_amount = function (self)
@@ -803,17 +801,20 @@ TalentBuilderView.update = function (self, dt, t, input_service)
 	local tooltip_node_widget = selected_node_widget or self._can_draw_tooltip and (self._hovered_node_widget or self._hovered_base_talent_widget)
 
 	if tooltip_node_widget then
+		local current_zoom = self._current_zoom
+		local resolution_inverse_scale = RESOLUTION_LOOKUP.inverse_scale
+		local render_scale = self._render_scale
+		local render_inverse_scale = 1 / render_scale
 		local ui_overlay_scenegraph = self._ui_overlay_scenegraph
 		local is_node_in_overlay_scenegraph = tooltip_node_widget == self._hovered_base_talent_widget and ui_overlay_scenegraph
-		local node_scenegraph_position_x, node_scenegraph_position_y, _ = self:_scenegraph_position(tooltip_node_widget.scenegraph_id, is_node_in_overlay_scenegraph and ui_overlay_scenegraph)
+		local node_scenegraph_position = self:_scenegraph_world_position(tooltip_node_widget.scenegraph_id, render_scale, is_node_in_overlay_scenegraph and ui_overlay_scenegraph)
+		local node_scenegraph_position_x = node_scenegraph_position[1]
+		local node_scenegraph_position_y = node_scenegraph_position[2]
 		local node_width, node_height = self:_scenegraph_size(tooltip_node_widget.scenegraph_id, is_node_in_overlay_scenegraph and ui_overlay_scenegraph)
 		local node_offset_x = node_width
 		local node_offset_y = node_height
 		local layout_background_widget = widgets_by_name.layout_background
 		local background_scenegraph_position_x, background_scenegraph_position_y, _ = self:_scenegraph_position(layout_background_widget.scenegraph_id)
-		local current_zoom = self._current_zoom
-		local render_scale = self._render_scale
-		local render_inverse_scale = 1 / render_scale
 		local tooltip_widget = widgets_by_name.tooltip
 		local tooltip_offset = tooltip_widget.offset
 		local tooltip_scenegraph_position_x, tooltip_scenegraph_position_y, _ = self:_scenegraph_position(tooltip_widget.scenegraph_id, ui_overlay_scenegraph)
@@ -828,8 +829,8 @@ TalentBuilderView.update = function (self, dt, t, input_service)
 			tooltip_offset[1] = 440
 			tooltip_offset[2] = 638
 		else
-			tooltip_offset[1] = math.clamp(tooltip_scenegraph_position_x + (node_scenegraph_position_x + node_offset_x + background_scenegraph_position_x) * current_zoom, 0, resolution_width * render_inverse_scale * current_zoom - tooltip_width)
-			tooltip_offset[2] = math.clamp(tooltip_scenegraph_position_y + (node_scenegraph_position_y + node_offset_y + background_scenegraph_position_y) * current_zoom, input_surface_offset[2] + 50, resolution_height * render_inverse_scale * current_zoom + input_surface_offset[2] + input_surface_size_addition[2] - tooltip_height)
+			tooltip_offset[1] = math.clamp(tooltip_scenegraph_position_x + (node_scenegraph_position_x + node_offset_x * render_scale) * resolution_inverse_scale + background_scenegraph_position_x, 0, resolution_width * render_inverse_scale * current_zoom - tooltip_width)
+			tooltip_offset[2] = math.clamp(tooltip_scenegraph_position_y + (node_scenegraph_position_y + node_offset_y * render_scale) * resolution_inverse_scale + background_scenegraph_position_y, input_surface_offset[2] + 50, resolution_height * render_inverse_scale * current_zoom + input_surface_offset[2] + input_surface_size_addition[2] - tooltip_height)
 		end
 
 		math.point_is_inside_2d_box = function (pos, lower_left_corner, size)
@@ -1148,6 +1149,17 @@ TalentBuilderView._update_gamepad_cursor = function (self, dt, t, input_service)
 
 		self._gamepad_cursor_previous_scroll_height = self:_background_scrolled_amount()
 	end
+end
+
+TalentBuilderView.apply_active_background_size = function (self)
+	local widgets_by_name = self._widgets_by_name
+	local layout_background_widget = widgets_by_name.layout_background
+	local scenegraph_id = layout_background_widget.scenegraph_id
+	local background_width, background_height = self:_background_size()
+
+	self:_set_scenegraph_size(scenegraph_id, background_width, background_height)
+	self:_set_scenegraph_size("scroll_background", background_width, background_height, self._ui_overlay_scenegraph)
+	self:_force_update_scenegraph()
 end
 
 TalentBuilderView._on_navigation_input_changed = function (self)
@@ -2059,6 +2071,10 @@ end
 
 TalentBuilderView.on_resolution_modified = function (self, scale)
 	TalentBuilderView.super.on_resolution_modified(self, scale)
+end
+
+TalentBuilderView._can_drag_background = function (self)
+	return not self._hovered_node_widget and not self._hovered_base_talent_widget
 end
 
 return TalentBuilderView

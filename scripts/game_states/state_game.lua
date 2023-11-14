@@ -11,7 +11,6 @@ local BackendManager = require("scripts/foundation/managers/backend/backend_mana
 local BotManager = require("scripts/managers/bot/bot_manager")
 local ChatManager = require("scripts/managers/chat/chat_manager")
 local ConnectionManager = require("scripts/managers/multiplayer/connection_manager")
-local ContractsManager = require("scripts/managers/contracts/contracts_manager")
 local DataServiceManager = require("scripts/managers/data_service/data_service_manager")
 local DLCManager = require("scripts/managers/dlc/dlc_manager")
 local EACClientManager = require("scripts/managers/eac/eac_client_manager")
@@ -61,6 +60,14 @@ local WorldLevelDespawnManager = require("scripts/managers/world_level_despawn/w
 local WorldManager = require("scripts/foundation/managers/world/world_manager")
 local WwiseGameSyncManager = require("scripts/managers/wwise_game_sync/wwise_game_sync_manager")
 local XAsyncManager = require("scripts/managers/xasync/xasync_manager")
+local DefaultInputSettings = {}
+
+table.insert(DefaultInputSettings, require("scripts/settings/input/default_debug_input_settings"))
+table.insert(DefaultInputSettings, require("scripts/settings/input/default_free_flight_input_settings"))
+table.insert(DefaultInputSettings, require("scripts/settings/input/default_ingame_input_settings"))
+table.insert(DefaultInputSettings, require("scripts/settings/input/default_imgui_input_settings"))
+table.insert(DefaultInputSettings, require("scripts/settings/input/default_view_input_settings"))
+
 local StateGame = class("StateGame")
 
 StateGame.on_enter = function (self, parent, params)
@@ -160,6 +167,12 @@ StateGame._init_managers = function (self, package_manager, localization_manager
 	Managers.save = SaveManager:new(GameParameters.save_file_name, GameParameters.cloud_save_enabled)
 	Managers.input = InputManager:new()
 
+	for _, default_setting in ipairs(DefaultInputSettings) do
+		Managers.input:add_setting(default_setting.service_type, default_setting.aliases, default_setting.settings, default_setting.filters, default_setting.default_devices)
+	end
+
+	Managers.input:load_settings()
+
 	if not DEDICATED_SERVER then
 		Managers.chat = ChatManager:new()
 		Managers.url_loader = UrlLoaderManager:new()
@@ -216,9 +229,9 @@ StateGame._init_managers = function (self, package_manager, localization_manager
 		Managers.presence = PresenceManagerDummy:new()
 	end
 
-	Managers.stats = StatsManager:new()
-	Managers.achievements = AchievementsManager:new(DEDICATED_SERVER, event_delegate, is_dedicated_hub_server)
-	Managers.contracts = ContractsManager:new(DEDICATED_SERVER, event_delegate)
+	Managers.stats = StatsManager:new(not DEDICATED_SERVER, event_delegate)
+	local use_batched_saving = is_dedicated_mission_server and GameParameters.save_achievements_in_batch
+	Managers.achievements = AchievementsManager:new(not DEDICATED_SERVER, event_delegate, use_batched_saving)
 	Managers.voting = VotingManager:new(event_delegate)
 	Managers.progression = ProgressionManager:new()
 	Managers.telemetry = TelemetryManager:new()
@@ -342,6 +355,7 @@ StateGame.update = function (self, dt)
 	Managers.progression:update(dt, t)
 	Managers.world_level_despawn:update(dt, t)
 	Managers.stats:update(dt, t)
+	Managers.achievements:update(dt, t)
 
 	if Managers.eac_server then
 		Managers.eac_server:update(dt, t)

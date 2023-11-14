@@ -396,13 +396,10 @@ ActionShoot._spend_ammunition = function (self, dt, t, charge_level)
 
 	inventory_slot_component.current_ammunition_clip = new_ammunition
 	inventory_slot_component.last_ammunition_usage = t
+	local wielded_slot = self._inventory_component.wielded_slot
+	local current_ammunition_reserve = inventory_slot_component.current_ammunition_reserve
 
-	if Managers.stats.can_record_stats() then
-		local wielded_slot = self._inventory_component.wielded_slot
-		local current_ammunition_reserve = inventory_slot_component.current_ammunition_reserve
-
-		Managers.stats:record_ammo_consumed(self._player, wielded_slot, ammo_usage, new_ammunition, current_ammunition_reserve)
-	end
+	Managers.stats:record_private("hook_ammo_consumed", self._player, wielded_slot, ammo_usage, new_ammunition, current_ammunition_reserve)
 end
 
 ActionShoot._add_heat = function (self, dt, t, charge_level)
@@ -950,19 +947,17 @@ ActionShoot._eject_fx_source = function (self)
 end
 
 ActionShoot._handle_shot_concluded_stats = function (self)
-	if Managers.stats.can_record_stats() then
-		local shot_result = self._shot_result
-		local data_valid = shot_result.data_valid
+	local shot_result = self._shot_result
+	local data_valid = shot_result.data_valid
 
-		if data_valid then
-			local hit_minion = shot_result.hit_minion
-			local hit_weakspot = shot_result.hit_weakspot
-			local killing_blow = shot_result.killing_blow
-			local inventory_slot_component = self._inventory_slot_component
-			local last_round_in_mag = inventory_slot_component.current_ammunition_clip == 0
+	if data_valid then
+		local hit_minion = shot_result.hit_minion
+		local hit_weakspot = shot_result.hit_weakspot
+		local killing_blow = shot_result.killing_blow
+		local inventory_slot_component = self._inventory_slot_component
+		local last_round_in_mag = inventory_slot_component.current_ammunition_clip == 0
 
-			Managers.stats:record_ranged_attack_concluded(self._player, hit_minion, hit_weakspot, killing_blow, last_round_in_mag)
-		end
+		Managers.stats:record_private("hook_ranged_attack_concluded", self._player, hit_minion, hit_weakspot, killing_blow, last_round_in_mag)
 	end
 end
 

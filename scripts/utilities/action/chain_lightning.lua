@@ -1,4 +1,8 @@
+local Attack = require("scripts/utilities/attack/attack")
+local AttackSettings = require("scripts/settings/damage/attack_settings")
+local Breed = require("scripts/utilities/breed")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
+local HitZone = require("scripts/utilities/attack/hit_zone")
 local ChainLightning = {}
 local math_abs = math.abs
 local Unit_node = Unit.node
@@ -8,6 +12,7 @@ local Vector3_direction_length = Vector3.direction_length
 local Vector3_flat = Vector3.flat
 local Vector3_length_squared = Vector3.length_squared
 local Vector3_normalize = Vector3.normalize
+local ATTACK_TYPES = AttackSettings.attack_types
 local BUFF_KEYWORDS = BuffSettings.keywords
 local BROADPHASE_RESULTS = {}
 local EPSILON_SQUARED = 0.010000000000000002
@@ -283,11 +288,12 @@ local DEFAULT_RADIUS = 4
 local DEFAULT_JUMP_TIME = 0.15
 
 ChainLightning.targeting_parameters = function (time_in_action, chain_settings, stat_buffs)
-	local stat_buff_max_angle = stat_buffs and stat_buffs.chain_lightning_max_angle or 0
-	local stat_buff_max_z_diff = stat_buffs and stat_buffs.chain_lightning_max_z_diff or 0
-	local stat_buff_max_jumps = stat_buffs and stat_buffs.chain_lightning_max_jumps or 0
-	local stat_buff_max_radius = stat_buffs and stat_buffs.chain_lightning_max_radius or 0
-	local stat_buff_jump_time = stat_buffs and stat_buffs.chain_lightning_jump_time_multiplier or 1
+	local is_staff = chain_settings and chain_settings.staff
+	local stat_buff_max_angle = not is_staff and stat_buffs and stat_buffs.chain_lightning_max_angle or 0
+	local stat_buff_max_z_diff = not is_staff and stat_buffs and stat_buffs.chain_lightning_max_z_diff or 0
+	local stat_buff_max_radius = not is_staff and stat_buffs and stat_buffs.chain_lightning_max_radius or 0
+	local stat_buff_jump_time = not is_staff and stat_buffs and stat_buffs.chain_lightning_jump_time_multiplier or 1
+	local stat_buff_max_jumps = not is_staff and stat_buffs and stat_buffs.chain_lightning_max_jumps or stat_buffs and is_staff and stat_buffs.chain_lightning_staff_max_jumps or 0
 	local max_jumps = nil
 	local max_jumps_at_time = chain_settings and chain_settings.max_jumps_at_time
 
@@ -315,6 +321,51 @@ ChainLightning.targeting_parameters = function (time_in_action, chain_settings, 
 	local max_targets = chain_settings and chain_settings.max_targets
 
 	return max_angle, close_max_angle, vertical_max_angle, max_z_diff, max_jumps, radius, jump_time, max_targets
+end
+
+local VALID_HIT_ZONES = {
+	lower_left_arm = true,
+	upper_right_arm = true,
+	torso = true,
+	lower_right_arm = true,
+	upper_tail = true,
+	upper_left_leg = true,
+	lower_right_leg = true,
+	upper_right_leg = true,
+	head = true,
+	center_mass = true,
+	upper_left_arm = true,
+	lower_left_leg = true,
+	lower_tail = true
+}
+
+ChainLightning.execute_attack = function (target_unit, attacking_unit, power_level, charge_level, target_index, target_number, attack_direction_or_nil, damage_profile, damage_type, is_critical_strike)
+	local breed = Breed.unit_breed_or_nil(target_unit)
+	local breed_hit_zones = breed.hit_zones
+	local num_breed_hit_zones = #breed_hit_zones
+	local hit_zone_name = nil
+	local num_iterations = 0
+
+	repeat
+		local random_hit_zone_name = breed_hit_zones[math.random(1, num_breed_hit_zones)].name
+
+		if VALID_HIT_ZONES[random_hit_zone_name] then
+			hit_zone_name = random_hit_zone_name
+		end
+
+		num_iterations = num_iterations + 1
+	until hit_zone_name ~= nil or num_breed_hit_zones <= num_iterations
+
+	hit_zone_name = hit_zone_name or "center_mass"
+	local hit_zone_actors = HitZone.get_actor_names(target_unit, hit_zone_name)
+	local num_hit_actor_names = #hit_zone_actors
+	local hit_actor_name = hit_zone_actors[math.random(1, num_hit_actor_names)]
+	local hit_actor = Unit.actor(target_unit, hit_actor_name)
+	local node_index = hit_actor and Actor.node(hit_actor)
+	local hit_world_position = node_index and Unit.world_position(target_unit, node_index)
+	local damage_dealt, attack_result, damage_efficiency, stagger_result, hit_weakspot = Attack.execute(target_unit, damage_profile, "power_level", power_level, "charge_level", charge_level, "damage_type", damage_type, "attacking_unit", HEALTH_ALIVE[attacking_unit] and attacking_unit, "attack_direction", attack_direction_or_nil, "hit_actor", hit_actor, "hit_zone_name", hit_zone_name, "hit_world_position", hit_world_position, "target_index", target_index, "target_number", target_number, "attack_type", ATTACK_TYPES.ranged, "is_critical_strike", is_critical_strike)
+
+	return damage_dealt, attack_result, damage_efficiency, stagger_result, hit_weakspot
 end
 
 function _is_in_cover(target_unit)

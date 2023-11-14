@@ -6,6 +6,7 @@ local InteractionSettings = require("scripts/settings/interaction/interaction_se
 local Stamina = require("scripts/utilities/attack/stamina")
 local Stun = require("scripts/utilities/attack/stun")
 local attack_types = AttackSettings.attack_types
+local proc_events = BuffSettings.proc_events
 local stat_buff_types = BuffSettings.stat_buffs
 local buff_keywords = BuffSettings.keywords
 local DEFAULT_BLOCK_BREAK_DISORIENTATION_TYPE = "block_broken"
@@ -173,6 +174,14 @@ Block.attempt_block_break = function (target_unit, attacking_unit, hit_world_pos
 				local t = Managers.state.extension:latest_fixed_t()
 				warp_charge_component.last_charge_at_t = t
 				warp_charge_component.current_percentage = new_warp_charge_percentage
+				local percentage_change = current_warp_charge - new_warp_charge_percentage
+				local param_table = buff_extension:request_proc_event_param_table()
+
+				if param_table then
+					param_table.percentage_change = percentage_change
+
+					buff_extension:add_proc_event(proc_events.on_warp_charge_changed, param_table)
+				end
 			end
 		end
 	end

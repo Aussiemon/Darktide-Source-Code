@@ -212,8 +212,7 @@ ButtonPassTemplates.terminal_list_button_text_change_function = function (conten
 end
 
 local default_button_content = {
-	on_hover_sound = UISoundEvents.default_mouse_hover,
-	on_pressed_sound = UISoundEvents.default_select
+	on_hover_sound = UISoundEvents.default_mouse_hover
 }
 local simple_button_font_setting_name = "button_medium"
 local simple_button_font_settings = UIFontSettings[simple_button_font_setting_name]
@@ -1203,6 +1202,7 @@ ButtonPassTemplates.terminal_button = {
 			default_color = Color.terminal_frame(nil, true),
 			selected_color = Color.terminal_frame_selected(nil, true),
 			disabled_color = Color.ui_grey_medium(255, true),
+			hover_color = Color.terminal_frame_hover(nil, true),
 			offset = {
 				0,
 				0,
@@ -1221,6 +1221,7 @@ ButtonPassTemplates.terminal_button = {
 			default_color = Color.terminal_corner(nil, true),
 			selected_color = Color.terminal_corner_selected(nil, true),
 			disabled_color = Color.ui_grey_light(255, true),
+			hover_color = Color.terminal_corner_hover(nil, true),
 			offset = {
 				0,
 				0,
@@ -1328,6 +1329,7 @@ ButtonPassTemplates.terminal_button_icon = {
 			default_color = Color.terminal_frame(nil, true),
 			selected_color = Color.terminal_frame_selected(nil, true),
 			disabled_color = Color.ui_grey_medium(255, true),
+			hover_color = Color.terminal_frame_hover(nil, true),
 			offset = {
 				0,
 				0,
@@ -1346,6 +1348,7 @@ ButtonPassTemplates.terminal_button_icon = {
 			default_color = Color.terminal_corner(nil, true),
 			selected_color = Color.terminal_corner_selected(nil, true),
 			disabled_color = Color.ui_grey_light(255, true),
+			hover_color = Color.terminal_corner_hover(nil, true),
 			offset = {
 				0,
 				0,
@@ -1520,16 +1523,21 @@ ButtonPassTemplates.terminal_button_hold_small = {
 		style_id = "background_gradient",
 		value = "content/ui/materials/gradients/gradient_vertical",
 		style = {
-			vertical_alignment = "top",
+			vertical_alignment = "center",
 			horizontal_alignment = "center",
-			color = Color.terminal_background_gradient(nil, true),
+			default_color = Color.terminal_background_gradient(nil, true),
+			selected_color = Color.terminal_frame_selected(nil, true),
+			disabled_color = Color.ui_grey_medium(255, true),
 			offset = {
 				0,
 				0,
 				1
 			}
 		},
-		change_function = terminal_button_hover_change_function
+		change_function = function (content, style)
+			terminal_button_change_function(content, style)
+			terminal_button_hover_change_function(content, style)
+		end
 	},
 	{
 		pass_type = "texture",
@@ -1544,7 +1552,7 @@ ButtonPassTemplates.terminal_button_hold_small = {
 			offset = {
 				0,
 				0,
-				2
+				4
 			}
 		},
 		change_function = terminal_button_change_function
@@ -1562,7 +1570,7 @@ ButtonPassTemplates.terminal_button_hold_small = {
 			offset = {
 				0,
 				0,
-				3
+				5
 			}
 		},
 		change_function = terminal_button_change_function
@@ -1589,7 +1597,7 @@ ButtonPassTemplates.terminal_button_hold_small = {
 			}
 		},
 		change_function = function (content, style)
-			local progress = content.hold_progress
+			local progress = content.hold_progress or 0
 			local total_width = content.size[1]
 			style.size[1] = total_width * progress
 		end
@@ -1655,6 +1663,9 @@ ButtonPassTemplates.terminal_button_hold_small = {
 		widget.content.input_action = options.input_action or "confirm_hold"
 		widget.content.original_text = options.text
 		widget.content.ignore_gamepad_on_text = options.ignore_gamepad_on_text
+		widget.content.hotspot.on_complete_sound = options.on_complete_sound
+		widget.content.hotspot.hold_release = options.hold_release
+		widget.content.hotspot.hold_sound = options.hold_sound
 		local width = widget.content.size[1]
 		local height = widget.content.size[2]
 		widget.style.background.size = {
@@ -1685,43 +1696,55 @@ ButtonPassTemplates.terminal_button_hold_small = {
 		widget.style.text.offset[2] = -(widget.content.size[2] - height) * 0.5
 	end,
 	update = function (parent, widget, renderer, dt)
-		local hold_active = widget.content.hotspot.on_pressed
+		local content = widget.content
+		local hotspot = content.hotspot
+		local hold_active = hotspot.on_pressed
 		local input_service = renderer.input_service
-		local input_action = widget.content.input_action and input_service:get(widget.content.input_action)
+		local input_action = content.input_action and input_service:get(content.input_action)
 		local left_hold = input_service and (input_action or input_service:get("left_hold"))
 
-		if not left_hold and widget.content.hold_active then
-			widget.content.hold_active = nil
-		elseif not widget.content.hold_active then
-			widget.content.hold_active = hold_active
+		if not left_hold and content.hold_active then
+			content.hold_active = nil
+		elseif not content.hold_active then
+			content.hold_active = hold_active
 		end
 
-		if widget.content.hold_active then
-			local total_time = widget.content.timer
-			local current_time = widget.content.current_timer + dt
+		if content.hold_active then
+			local total_time = content.timer
+			local current_time = content.current_timer + dt
 			local progress = math.min(current_time / total_time, 1)
 
 			if progress < 1 then
-				widget.content.current_timer = current_time
-				widget.content.hold_progress = progress
+				if hotspot.hold_sound and content.hold_progress == 0 then
+					Managers.ui:play_2d_sound(hotspot.hold_sound)
+				end
+
+				content.current_timer = current_time
+				content.hold_progress = progress
 
 				return
 			else
-				widget.content.current_timer = 0
-				widget.content.hold_progress = 0
-				widget.content.hold_active = false
+				content.current_timer = 0
+				content.hold_progress = 0
+				content.hold_active = false
 
-				Managers.ui:play_2d_sound(widget.content.hotspot.on_complete_sound)
+				if hotspot.on_complete_sound then
+					Managers.ui:play_2d_sound(hotspot.on_complete_sound)
+				end
 
-				if widget.content.complete_function then
-					widget.content.complete_function()
+				if content.complete_function then
+					content.complete_function()
 				end
 
 				return
 			end
-		elseif not widget.content.hold_active and widget.content.current_timer > 0 then
-			widget.content.current_timer = 0
-			widget.content.hold_progress = 0
+		elseif not content.hold_active and content.current_timer > 0 then
+			content.current_timer = 0
+			content.hold_progress = 0
+
+			if hotspot.hold_release then
+				Managers.ui:play_2d_sound(hotspot.hold_release)
+			end
 		end
 	end
 }

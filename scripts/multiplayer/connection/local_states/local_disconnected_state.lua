@@ -12,6 +12,14 @@ LocalDisconnectedState.init = function (self, state_machine, shared_state)
 		Managers.mechanism:disconnect(shared_state.channel_id)
 	end
 
+	if Managers.stats then
+		for _, player in pairs(Managers.player:players_at_peer(Network.peer_id())) do
+			local local_player_id = player:local_player_id()
+
+			Managers.stats:clear_session_data(local_player_id)
+		end
+	end
+
 	shared_state.engine_lobby:close_channel(shared_state.channel_id)
 end
 

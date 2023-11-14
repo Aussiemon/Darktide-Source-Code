@@ -265,6 +265,7 @@ local action_data = {
 	melee_attack = {
 		weapon_reach = 3.5,
 		utility_weight = 1,
+		stagger_reduction = 50,
 		ignore_blocked = true,
 		considerations = UtilityConsiderations.melee_attack,
 		attack_anim_events = {
@@ -444,10 +445,11 @@ local action_data = {
 		utility_weight = 5,
 		ignore_blocked = true,
 		vo_event = "assault",
-		weapon_reach = 3.75,
-		move_speed_variable_lerp_speed = 4,
-		move_speed_variable_name = "moving_attack_fwd_speed",
+		stagger_reduction = 50,
 		moving_attack = true,
+		move_speed_variable_lerp_speed = 4,
+		weapon_reach = 3.75,
+		move_speed_variable_name = "moving_attack_fwd_speed",
 		considerations = UtilityConsiderations.renegade_melee_moving_melee_attack,
 		attack_anim_events = {
 			"attack_move_01"
@@ -703,6 +705,27 @@ local action_data = {
 				},
 				dwn = {
 					"stagger_bwd_sticky"
+				}
+			},
+			blinding = {
+				fwd = {
+					"stagger_fwd_light",
+					"stagger_fwd_light_2"
+				},
+				bwd = {
+					"stagger_bwd_light",
+					"stagger_bwd_light_2"
+				},
+				left = {
+					"stagger_left_light",
+					"stagger_left_light_2"
+				},
+				right = {
+					"stagger_right_light",
+					"stagger_right_light_2"
+				},
+				dwn = {
+					"stun_down"
 				}
 			}
 		}

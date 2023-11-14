@@ -75,6 +75,7 @@ local mission_templates = {
 		},
 		testify_flags = {
 			run_through_mission = false,
+			validate_minion_pathing_on_mission = false,
 			mission_server = false
 		},
 		dialogue_settings = {

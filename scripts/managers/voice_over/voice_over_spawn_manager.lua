@@ -73,6 +73,10 @@ VoiceOverSpawnManager.voice_over_unit = function (self, voice_profile)
 	return self._voice_over_units[voice_profile]
 end
 
+VoiceOverSpawnManager.voice_over_units = function (self)
+	return self._voice_over_units
+end
+
 VoiceOverSpawnManager.current_voice_profile = function (self)
 	if self.mission_giver_vo_override and self.mission_giver_vo_override ~= "none" then
 		return self.mission_giver_vo_override

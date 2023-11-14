@@ -23,6 +23,7 @@ local UIWidgetGrid = require("scripts/ui/widget_logic/ui_widget_grid")
 local UIWorldSpawner = require("scripts/managers/ui/ui_world_spawner")
 local ViewElementInputLegend = require("scripts/ui/view_elements/view_element_input_legend/view_element_input_legend")
 local Zones = require("scripts/settings/zones/zones")
+local ViewElementWeaponStats = require("scripts/ui/view_elements/view_element_weapon_stats/view_element_weapon_stats")
 local generate_blueprints_function = require("scripts/ui/view_content_blueprints/item_blueprints")
 local TalentLayoutParser = require("scripts/ui/views/talent_builder_view/utilities/talent_layout_parser")
 local UIFonts = require("scripts/managers/ui/ui_fonts")
@@ -76,6 +77,7 @@ LobbyView.init = function (self, settings, context)
 	self._voting_id = context.voting_id
 	self._mission_data = context.mission_data
 	self._spawn_slots = {}
+	self._show_weapons = false
 	self._slot_changes = false
 	self._use_gamepad_tooltip_navigation = false
 	local definitions = require(definition_path)
@@ -98,6 +100,8 @@ LobbyView.on_enter = function (self)
 
 	Managers.frame_rate:request_full_frame_rate("lobby_view")
 	TaskbarFlash.flash_window()
+
+	self._item_stats = self:_setup_item_stats("item_stats")
 end
 
 LobbyView._initialize_background_world = function (self)
@@ -186,7 +190,11 @@ LobbyView._setup_mission_descriptions = function (self)
 		local circumstance_name = nil
 
 		if mission_data.circumstance_name ~= "default" then
-			circumstance_name = Circumstances[mission_data.circumstance_name].ui and self:_localize(Circumstances[mission_data.circumstance_name].ui.display_name) or mission_data.circumstance_name
+			local ui_settings = Circumstances[mission_data.circumstance_name].ui
+
+			if ui_settings then
+				circumstance_name = ui_settings and self:_localize(ui_settings.display_name) or mission_data.circumstance_name
+			end
 		end
 
 		local sub_title = mission_type_name and self:_localize(mission_type_name) or ""
@@ -285,6 +293,13 @@ LobbyView._reset_loadout_widgets_navigation = function (self)
 	end
 end
 
+LobbyView.cb_on_loadout_pressed = function (self)
+	self._show_weapons = not self._show_weapons
+
+	self:_reset_loadout_widgets_navigation()
+	self:_update_loadout_widgets_for_navigation()
+end
+
 LobbyView.cb_on_trigger_gamepad_tooltip_navigation_pressed = function (self)
 	self._use_gamepad_tooltip_navigation = not self._use_gamepad_tooltip_navigation
 
@@ -300,13 +315,24 @@ LobbyView._update_loadout_widgets_for_navigation = function (self)
 	for i = 1, #self._spawn_slots do
 		local slot = self._spawn_slots[i]
 
-		for f = 1, talent_count do
-			if slot.occupied then
-				local index = (i - 1) * talent_count + f
+		if self._show_weapons then
+			for f = 1, weapon_count do
+				local index = (i - 1) * weapon_count + f
 				available_widgets[index] = false
 
-				if slot.talent_widgets[f] and slot.talent_widgets[f].content.loadout_id then
-					available_widgets[index] = slot.talent_widgets[f]
+				if slot.occupied and slot.weapon_widgets[f] and slot.weapon_widgets[f].content.slot then
+					available_widgets[index] = slot.weapon_widgets[f]
+				end
+			end
+		else
+			for f = 1, talent_count do
+				if slot.occupied then
+					local index = (i - 1) * talent_count + f
+					available_widgets[index] = false
+
+					if slot.talent_widgets[f] and slot.talent_widgets[f].content.loadout_id then
+						available_widgets[index] = slot.talent_widgets[f]
+					end
 				end
 			end
 		end
@@ -518,6 +544,7 @@ LobbyView._setup_spawn_slots = function (self)
 			boxed_initial_position = Vector3.to_array(initial_position),
 			panel_widget = self:_create_widget(panel_widget_name, panel_definition),
 			loading_widget = self:_create_widget(loading_widget_name, loading_definition),
+			weapon_widgets = {},
 			talent_widgets = {}
 		}
 		spawn_slots[i] = spawn_slot
@@ -600,6 +627,7 @@ LobbyView.update = function (self, dt, t, input_service)
 	end
 
 	self:_check_loadout_changes()
+	self:_set_weapons_visibility()
 
 	self._is_main_menu_open = Managers.ui:view_active("system_view")
 
@@ -609,11 +637,18 @@ LobbyView.update = function (self, dt, t, input_service)
 
 	if self._tooltip_draw_delay and self._tooltip_draw_delay > 0 then
 		self._tooltip_draw_delay = self._tooltip_draw_delay - dt
-		self._tooltip_alpha_multiplier = math.clamp((self._tooltip_alpha_multiplier or 0) + dt * LobbyViewSettings.tooltip_fade_speed, 0, 1)
-		self._widgets_by_name.talent_tooltip.alpha_multiplier = self._tooltip_alpha_multiplier
+
+		if not self._show_weapons then
+			self._tooltip_alpha_multiplier = math.clamp((self._tooltip_alpha_multiplier or 0) + dt * LobbyViewSettings.tooltip_fade_speed, 0, 1)
+			self._widgets_by_name.talent_tooltip.alpha_multiplier = self._tooltip_alpha_multiplier
+		end
 
 		if self._tooltip_draw_delay <= 0 then
 			self._tooltip_draw_delay = 0
+
+			if self._show_weapons then
+				self._item_stats:set_visibility(true)
+			end
 		end
 	end
 
@@ -1010,7 +1045,7 @@ LobbyView._draw_widgets = function (self, dt, t, input_service, ui_renderer)
 		local inverse_scale = ui_renderer.inverse_scale
 		local spawn_slots = self._spawn_slots
 		local num_slots = #spawn_slots
-		local hovered_slot, hovered_talent = nil
+		local hovered_slot, hovered_item, hovered_talent = nil
 
 		for i = 1, num_slots do
 			local is_even = i % 2 == 0
@@ -1023,6 +1058,11 @@ LobbyView._draw_widgets = function (self, dt, t, input_service, ui_renderer)
 			local loading_widget = slot.loading_widget
 			local widget_offset_x = slot.panel_widget.offset[1] - 30
 
+			for f = 1, #slot.weapon_widgets do
+				local weapon_widget = slot.weapon_widgets[f]
+				weapon_widget.offset[1] = weapon_widget.original_offset[1] + widget_offset_x + 35
+			end
+
 			for f = 1, #slot.talent_widgets do
 				local talent_widget = slot.talent_widgets[f]
 				talent_widget.offset[1] = talent_widget.original_offset[1] + widget_offset_x + 35
@@ -1034,27 +1074,44 @@ LobbyView._draw_widgets = function (self, dt, t, input_service, ui_renderer)
 				profile_spawner:set_position(position)
 				UIWidget.draw(panel_widget, ui_renderer)
 
-				for f = 1, #slot.talent_widgets do
-					local talent_widget = slot.talent_widgets[f]
+				if self._show_weapons then
+					for f = 1, #slot.weapon_widgets do
+						local weapon_widget = slot.weapon_widgets[f]
 
-					UIWidget.draw(talent_widget, ui_renderer)
+						UIWidget.draw(weapon_widget, ui_renderer)
 
-					local is_hover = not hovered_slot and talent_widget.content.hotspot and (talent_widget.content.hotspot.is_hover or talent_widget.content.hotspot.is_selected)
+						local is_hover = not hovered_slot and weapon_widget.content.hotspot and (weapon_widget.content.hotspot.is_hover or weapon_widget.content.hotspot.is_selected)
 
-					if is_hover then
-						hovered_slot = slot
-						local profile = slot.player:profile()
+						if is_hover then
+							hovered_slot = slot
+							local item = weapon_widget.content.item
+							hovered_item = item
+							self._hovered_tooltip_panel_widget = panel_widget
+						end
+					end
+				else
+					for f = 1, #slot.talent_widgets do
+						local talent_widget = slot.talent_widgets[f]
 
-						CharacterSheet.class_loadout(profile, class_loadout)
+						UIWidget.draw(talent_widget, ui_renderer)
 
-						local loadout_id = talent_widget.content.loadout_id
-						local loadout = class_loadout[loadout_id]
-						hovered_talent = {
-							talent = loadout.talent,
-							loadout_id = loadout_id,
-							slot = i
-						}
-						self._hovered_tooltip_panel_widget = panel_widget
+						local is_hover = not hovered_slot and talent_widget.content.hotspot and (talent_widget.content.hotspot.is_hover or talent_widget.content.hotspot.is_selected)
+
+						if is_hover then
+							hovered_slot = slot
+							local profile = slot.player:profile()
+
+							CharacterSheet.class_loadout(profile, class_loadout)
+
+							local loadout_id = talent_widget.content.loadout_id
+							local loadout = class_loadout[loadout_id]
+							hovered_talent = {
+								talent = loadout.talent,
+								loadout_id = loadout_id,
+								slot = i
+							}
+							self._hovered_tooltip_panel_widget = panel_widget
+						end
 					end
 				end
 			else
@@ -1062,12 +1119,17 @@ LobbyView._draw_widgets = function (self, dt, t, input_service, ui_renderer)
 			end
 		end
 
-		if hovered_talent then
-			if not self._hovered_slot_talent_data or self._hovered_slot_talent_data and (hovered_talent.slot ~= self._hovered_slot_talent_data.slot or hovered_talent.loadout_id ~= self._hovered_slot_talent_data.loadout_id) then
+		if hovered_item or hovered_talent then
+			if self._show_weapons then
+				if not self._currently_hovered_item or hovered_item.gear_id ~= self._currently_hovered_item.gear_id then
+					self:_on_tooltip_hover_stop()
+					self:_on_tooltip_hover_start(hovered_slot, hovered_item)
+				end
+			elseif not self._hovered_slot_talent_data or self._hovered_slot_talent_data and (hovered_talent.slot ~= self._hovered_slot_talent_data.slot or hovered_talent.loadout_id ~= self._hovered_slot_talent_data.loadout_id) then
 				self:_on_tooltip_hover_stop()
 				self:_on_tooltip_hover_start(hovered_slot, hovered_talent)
 			end
-		elseif self._hovered_slot_talent_data then
+		elseif self._currently_hovered_item or self._hovered_slot_talent_data then
 			self._hovered_tooltip_panel_widget = nil
 
 			self:_on_tooltip_hover_stop()
@@ -1435,21 +1497,77 @@ end
 
 LobbyView._setup_weapon_widgets = function (self, spawn_slot)
 	local profile = spawn_slot.player:profile()
+	local size = {
+		370,
+		0
+	}
+	local margin = 10
+	local margin_large = (UISettings.weapon_icon_size[1] * 2 + margin - 450) * 0.5
+	local gadget_size = UISettings.weapon_icon_size[1] / 3 - margin * 2 / 3
 	local search_slot = {
 		{
-			id = "slot_primary"
+			id = "slot_primary",
+			offset_width = 0,
+			offset_height = 0,
+			size = ContentBlueprints.item_icon.size
 		},
 		{
-			id = "slot_secondary"
+			id = "slot_secondary",
+			offset_height = 0,
+			size = ContentBlueprints.item_icon.size,
+			offset_width = ContentBlueprints.item_icon.size[1] + margin
 		}
 	}
+	local ui_renderer = self._ui_renderer
+	local scenegraph_id = "loadout"
+
+	for i = 1, #spawn_slot.weapon_widgets do
+		local weapon_widget = spawn_slot.weapon_widgets[i]
+
+		self:_unregister_widget_name(weapon_widget.name)
+	end
+
 	spawn_slot.weapon_widgets = {}
 
 	for i = 1, #search_slot do
 		local data = search_slot[i]
 		local slot = data.id
 		local loadout = profile.loadout[slot]
-		spawn_slot[slot] = loadout
+		local template = ContentBlueprints.item_icon
+		local config = {
+			item = loadout,
+			slot = slot
+		}
+		local size = data.size
+		local pass_template_function = template.pass_template_function
+		local pass_template = pass_template_function and pass_template_function(self, config) or template.pass_template
+		local optional_style = template.style or {}
+		local widget_definition = pass_template and UIWidget.create_definition(pass_template, scenegraph_id, nil, size, optional_style)
+
+		if widget_definition then
+			local name_weapon = string.format("loadout_%s_%s", spawn_slot.index, slot)
+			local weapon_widget = self:_create_widget(name_weapon, widget_definition)
+			local init = template.init
+
+			if init then
+				init(self, weapon_widget, config)
+			end
+
+			local offset_height = data.offset_height
+			local offset_width = data.offset_width
+			weapon_widget.original_offset = {
+				offset_width,
+				offset_height,
+				0
+			}
+			weapon_widget.offset = {
+				offset_width,
+				offset_height,
+				0
+			}
+			spawn_slot.weapon_widgets[#spawn_slot.weapon_widgets + 1] = weapon_widget
+			spawn_slot[slot] = loadout
+		end
 	end
 
 	spawn_slot.profile_spawner:destroy()
@@ -1480,6 +1598,28 @@ LobbyView._setup_weapon_widgets = function (self, spawn_slot)
 	profile_spawner:spawn_profile(profile, spawn_position, spawn_rotation, spawn_scale, inventory_state_machine, item_inventory_animation_event)
 	self:_update_presentation_wield_item(spawn_slot)
 	spawn_slot.profile_spawner:wield_slot(slot_name)
+end
+
+LobbyView._set_weapons_visibility = function (self)
+	local is_active = self._show_weapons
+	local loadout_size = LobbyViewSettings.loadout_size
+	local panel_size = LobbyViewSettings.panel_size
+
+	for i = 1, #self._spawn_slots do
+		local slot = self._spawn_slots[i]
+
+		if slot.occupied then
+			for i = 1, #slot.weapon_widgets do
+				local weapon_widgets = slot.weapon_widgets[i]
+				weapon_widgets.content.visible = is_active
+			end
+
+			for i = 1, #slot.talent_widgets do
+				local talent_widget = slot.talent_widgets[i]
+				talent_widget.content.visible = not is_active
+			end
+		end
+	end
 end
 
 LobbyView.trigger_on_exit_animation = function (self)
@@ -1641,22 +1781,66 @@ LobbyView._update_talent_tooltip_position = function (self)
 	end
 end
 
+LobbyView._setup_item_stats = function (self, reference_name)
+	local layer = 10
+	local context = self._definitions.item_stats_grid_settings
+	local item_stats = self:_add_element(ViewElementWeaponStats, reference_name, layer, context)
+
+	return item_stats
+end
+
+LobbyView._update_item_stats_position = function (self, width, height)
+	self:_set_scenegraph_position("item_stats_pivot", width, height)
+
+	local position = self._ui_scenegraph.item_stats_pivot.position
+
+	self._item_stats:set_pivot_offset(position[1], position[2])
+end
+
 LobbyView._on_tooltip_hover_start = function (self, slot, data)
-	local loadout = data
-	self._hovered_slot_talent_data = loadout
+	if self._show_weapons then
+		local item = data
+		self._currently_hovered_item = item
 
-	self:_setup_tooltip_info(loadout)
-	self:_update_talent_tooltip_position()
+		if self._item_stats then
+			self._item_stats:present_item(item)
+		end
 
-	local widgets_by_name = self._widgets_by_name
-	widgets_by_name.talent_tooltip.content.visible = true
-	widgets_by_name.talent_tooltip.alpha_multiplier = 0
-	self._tooltip_alpha_multiplier = 0
-	self._tooltip_draw_delay = LobbyViewSettings.tooltip_fade_delay
+		local context = self._definitions.item_stats_grid_settings
+		local total_width = RESOLUTION_LOOKUP.width * RESOLUTION_LOOKUP.inverse_scale
+		local margin_from_bottom = 160
+		local default_width = 1920
+		local margin_from_left = (total_width - default_width) * 0.5 * RESOLUTION_LOOKUP.scale
+		local width = (margin_from_left + (slot.panel_widget.offset[1] - context.grid_size[1] * 0.5) * RESOLUTION_LOOKUP.scale) * RESOLUTION_LOOKUP.inverse_scale
+		local height = (RESOLUTION_LOOKUP.height - (margin_from_bottom + self._item_stats:grid_height()) * RESOLUTION_LOOKUP.scale) * RESOLUTION_LOOKUP.inverse_scale
+
+		self._item_stats:set_visibility(false)
+		self:_update_item_stats_position(width, height)
+
+		self._tooltip_draw_delay = 0.1
+	else
+		local loadout = data
+		self._hovered_slot_talent_data = loadout
+
+		self:_setup_tooltip_info(loadout)
+		self:_update_talent_tooltip_position()
+
+		local widgets_by_name = self._widgets_by_name
+		widgets_by_name.talent_tooltip.content.visible = true
+		widgets_by_name.talent_tooltip.alpha_multiplier = 0
+		self._tooltip_alpha_multiplier = 0
+		self._tooltip_draw_delay = LobbyViewSettings.tooltip_fade_delay
+	end
 end
 
 LobbyView._on_tooltip_hover_stop = function (self)
+	self._currently_hovered_item = nil
 	self._hovered_slot_talent_data = nil
+
+	if self._item_stats then
+		self._item_stats:stop_presenting()
+	end
+
 	local widgets_by_name = self._widgets_by_name
 	widgets_by_name.talent_tooltip.content.visible = false
 	widgets_by_name.talent_tooltip.alpha_multiplier = 0

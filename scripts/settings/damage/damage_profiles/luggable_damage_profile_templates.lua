@@ -45,8 +45,7 @@ damage_templates.luggable_battery = {
 				[armor_types.berserker] = 0,
 				[armor_types.super_armor] = 0,
 				[armor_types.disgustingly_resilient] = 0,
-				[armor_types.void_shield] = 0,
-				[armor_types.prop_armor] = 0
+				[armor_types.void_shield] = 0
 			},
 			impact = {
 				[armor_types.unarmored] = 2,
@@ -56,8 +55,7 @@ damage_templates.luggable_battery = {
 				[armor_types.berserker] = 2,
 				[armor_types.super_armor] = 0,
 				[armor_types.disgustingly_resilient] = 2,
-				[armor_types.void_shield] = 2,
-				[armor_types.prop_armor] = 5
+				[armor_types.void_shield] = 2
 			}
 		},
 		far = {
@@ -69,8 +67,7 @@ damage_templates.luggable_battery = {
 				[armor_types.berserker] = 0,
 				[armor_types.super_armor] = 0,
 				[armor_types.disgustingly_resilient] = 0,
-				[armor_types.void_shield] = 0,
-				[armor_types.prop_armor] = 0
+				[armor_types.void_shield] = 0
 			},
 			impact = {
 				[armor_types.unarmored] = 2,
@@ -80,8 +77,7 @@ damage_templates.luggable_battery = {
 				[armor_types.berserker] = 2,
 				[armor_types.super_armor] = 2,
 				[armor_types.disgustingly_resilient] = 2,
-				[armor_types.void_shield] = 2,
-				[armor_types.prop_armor] = 5
+				[armor_types.void_shield] = 2
 			}
 		}
 	},
@@ -97,8 +93,7 @@ damage_templates.luggable_battery = {
 						[armor_types.berserker] = 0,
 						[armor_types.super_armor] = 0,
 						[armor_types.disgustingly_resilient] = 0,
-						[armor_types.void_shield] = 0,
-						[armor_types.prop_armor] = 0
+						[armor_types.void_shield] = 0
 					},
 					impact = {
 						[armor_types.unarmored] = 2,
@@ -108,8 +103,7 @@ damage_templates.luggable_battery = {
 						[armor_types.berserker] = 2,
 						[armor_types.super_armor] = 0,
 						[armor_types.disgustingly_resilient] = 2,
-						[armor_types.void_shield] = 2,
-						[armor_types.prop_armor] = 5
+						[armor_types.void_shield] = 2
 					}
 				},
 				far = {
@@ -121,8 +115,7 @@ damage_templates.luggable_battery = {
 						[armor_types.berserker] = 0,
 						[armor_types.super_armor] = 0,
 						[armor_types.disgustingly_resilient] = 0,
-						[armor_types.void_shield] = 0,
-						[armor_types.prop_armor] = 0
+						[armor_types.void_shield] = 0
 					},
 					impact = {
 						[armor_types.unarmored] = 2,
@@ -132,8 +125,7 @@ damage_templates.luggable_battery = {
 						[armor_types.berserker] = 2,
 						[armor_types.super_armor] = 2,
 						[armor_types.disgustingly_resilient] = 2,
-						[armor_types.void_shield] = 2,
-						[armor_types.prop_armor] = 5
+						[armor_types.void_shield] = 2
 					}
 				}
 			},

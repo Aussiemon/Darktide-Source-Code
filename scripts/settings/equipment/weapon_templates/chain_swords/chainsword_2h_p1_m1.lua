@@ -57,47 +57,6 @@ local hit_zone_priority = {
 
 table.add_missing(hit_zone_priority, default_hit_zone_priority)
 
-local hit_stickyness_settings_light = {
-	disable_vertical_force_view = true,
-	start_anim_event = "attack_hit_stick",
-	stop_anim_event = "yank_out",
-	sensitivity_modifier = 0.9,
-	min_sticky_time = 0.25,
-	disallow_chain_actions = true,
-	duration = 0.45,
-	always_sticky = true,
-	damage = {
-		instances = 4,
-		damage_profile = DamageProfileTemplates.light_chainsword_sticky_2h,
-		damage_type = damage_types.sawing_stuck,
-		last_damage_profile = DamageProfileTemplates.light_chainaxe_sticky_quick
-	},
-	disallowed_hit_zones = melee_sticky_disallowed_hit_zones,
-	disallow_dodging = {},
-	movement_curve = {
-		{
-			modifier = 0.3,
-			t = 0.5
-		},
-		{
-			modifier = 0.45,
-			t = 0.55
-		},
-		{
-			modifier = 0.65,
-			t = 0.6
-		},
-		{
-			modifier = 0.7,
-			t = 1
-		},
-		{
-			modifier = 1,
-			t = 1.3
-		},
-		start_modifier = 0.1
-	}
-}
 local hit_stickyness_settings_light_special = {
 	start_anim_event = "attack_hit_stick",
 	stop_anim_event = "yank_out",
@@ -1696,10 +1655,12 @@ weapon_template.actions = {
 		start_input = "inspect_start",
 		anim_end_event = "inspect_end",
 		kind = "inspect",
-		crosshair_type = "inspect",
 		anim_event = "inspect_start",
 		stop_input = "inspect_stop",
-		total_time = math.huge
+		total_time = math.huge,
+		crosshair = {
+			crosshair_type = "inspect"
+		}
 	}
 }
 
@@ -1733,7 +1694,9 @@ weapon_template.fx_sources = {
 	_block = "fx_block",
 	_sweep = "fx_sweep"
 }
-weapon_template.crosshair_type = "dot"
+weapon_template.crosshair = {
+	crosshair_type = "dot"
+}
 weapon_template.hit_marker_type = "center"
 weapon_template.keywords = {
 	"melee",

@@ -3,6 +3,7 @@ local CameraShake = require("scripts/utilities/camera/camera_shake")
 local Effect = require("scripts/extension_systems/fx/utilities/effect")
 local FixedFrame = require("scripts/utilities/fixed_frame")
 local Footstep = require("scripts/utilities/footstep")
+local ForceRotation = require("scripts/extension_systems/locomotion/utilities/force_rotation")
 local GameModeSettings = require("scripts/settings/game_mode/game_mode_settings")
 local MaterialQuery = require("scripts/utilities/material_query")
 local NavQueries = require("scripts/utilities/nav_queries")
@@ -334,12 +335,14 @@ FlowCallbacks.minion_fx = function (params)
 				end
 			end
 
-			wwise_playing_id = WwiseWorld.trigger_resource_event(wwise_world, wwise_event, source_id)
+			if play_vce then
+				wwise_playing_id = WwiseWorld.trigger_resource_event(wwise_world, wwise_event, source_id)
 
-			if breed.uses_wwise_special_targeting_parameter then
-				_minion_update_special_targeting_parameter(unit, wwise_world, source_id)
-			else
-				_minion_update_targeted_in_melee_parameter(unit, wwise_world, source_id)
+				if breed.uses_wwise_special_targeting_parameter then
+					_minion_update_special_targeting_parameter(unit, wwise_world, source_id)
+				else
+					_minion_update_targeted_in_melee_parameter(unit, wwise_world, source_id)
+				end
 			end
 		else
 			wwise_playing_id, source_id = _minion_auto_source_trigger_wwise_event(unit, params.sound_source_object, params.sound_position, wwise_world, wwise_event)
@@ -964,11 +967,19 @@ FlowCallbacks.new_onboarding_cinematic_viewed = function (params)
 	Managers.narrative:complete_current_chapter(Managers.narrative.STORIES.onboarding)
 end
 
+FlowCallbacks.trigger_cinematic_video_with_popup = function (params)
+	local video_config_name = params.video_config_name
+	local popup_config_name = params.popup_config_name
+
+	Managers.state.video:play_video_with_popup(video_config_name, popup_config_name)
+end
+
 FlowCallbacks.trigger_cinematic_video = function (params)
 	local template_name = params.template_name
 
 	if template_name and template_name ~= "" then
 		Managers.ui:open_view("video_view", nil, true, true, nil, {
+			allow_skip_input = true,
 			template = template_name
 		})
 
@@ -1613,6 +1624,12 @@ FlowCallbacks.is_currently_playing_dialogue = function (params)
 	return flow_return_table
 end
 
+FlowCallbacks.trigger_subtitle = function (params)
+	local subtitle_id = params.subtitle_id
+
+	Vo.trigger_subtitle(subtitle_id)
+end
+
 FlowCallbacks.start_terror_event = function (params)
 	local terror_event_manager = Managers.state.terror_event
 
@@ -1737,7 +1754,15 @@ FlowCallbacks.switchcase = function (params)
 end
 
 FlowCallbacks.camera_shake = function (params)
-	CameraShake.camera_shake_by_distance(params.shake_name, params.shake_unit, params.near_distance, params.far_distance, params.near_shake_scale, params.far_shake_scale)
+	local source_unit = params.shake_unit
+
+	if not source_unit or not unit_alive(source_unit) then
+		return
+	end
+
+	local position = Unit.local_position(source_unit, 1)
+
+	CameraShake.camera_shake_by_distance(params.shake_name, position, params.near_distance, params.far_distance, params.near_shake_scale, params.far_shake_scale)
 end
 
 FlowCallbacks.script_data_set_unit = function (params)
@@ -1893,6 +1918,41 @@ FlowCallbacks.teleport_team_to_locations = function (params)
 	end
 end
 
+FlowCallbacks.rotate_team_with_units = function (params)
+	if Managers.state.game_session:is_server() then
+		return
+	end
+
+	local local_player = Managers.player:local_player(1)
+	local local_player_unit = local_player and local_player.player_unit
+
+	if not local_player_unit then
+		return
+	end
+
+	local rotation_units = {}
+
+	for par, val in pairs(params) do
+		if string.find(par, "rotation_unit") then
+			rotation_units[#rotation_units + 1] = val
+		end
+	end
+
+	local unit = rotation_units[1]
+	local rotation = Unit.world_rotation(unit, 1)
+	local t = Managers.time:time("gameplay")
+	local unit_data = ScriptUnit.extension(local_player_unit, "unit_data_system")
+	local locomotion_force_rotation_component = unit_data:write_component("locomotion_force_rotation")
+	local locomotion_steering_component = unit_data:write_component("locomotion_steering")
+
+	ForceRotation.start(locomotion_force_rotation_component, locomotion_steering_component, rotation, rotation, t, 0)
+
+	local pitch = Quaternion.pitch(rotation)
+	local yaw = Quaternion.yaw(rotation)
+
+	local_player:set_orientation(yaw, pitch, 0)
+end
+
 FlowCallbacks.teleport_player_by_local_id = function (params)
 	if not Managers.state.game_session:is_server() then
 		return
@@ -2027,7 +2087,7 @@ FlowCallbacks.get_unit_from_item_slot = function (params)
 		slot_unit = player_customization_components[1]:unit_in_slot(slot_name)
 	end
 
-	if not Unit.alive(slot_unit) then
+	if not unit_alive(slot_unit) then
 		local cutscene_character_extension = ScriptUnit.fetch_component_extension(unit, "cutscene_character_system")
 
 		if cutscene_character_extension then
@@ -2035,7 +2095,7 @@ FlowCallbacks.get_unit_from_item_slot = function (params)
 		end
 	end
 
-	if Unit.alive(slot_unit) then
+	if unit_alive(slot_unit) then
 		flow_return_table.slot_unit = slot_unit
 	else
 		Log.error("FlowCallbacks", "[get_unit_from_item_slot] missing 'slot_unit' for (unit: %s, slot_name: %s). Returning the owner unit.", unit, slot_name)
@@ -2077,6 +2137,14 @@ FlowCallbacks.light_controller_set_light_flicker_config = function (params)
 	local flicker_enabled = extension:is_flicker_enabled()
 
 	extension:set_flicker_state(flicker_enabled, flicker_configuration, false)
+end
+
+FlowCallbacks.is_theme_active = function (params)
+	local theme_tag = params.theme_tag
+	local active_theme_tag = Managers.state.circumstance:active_theme_tag()
+	flow_return_table.active = active_theme_tag == theme_tag
+
+	return flow_return_table
 end
 
 FlowCallbacks.get_render_config = function (params)
@@ -2249,7 +2317,9 @@ FlowCallbacks.new_path_of_trust_viewed = function (params)
 end
 
 FlowCallbacks.unlock_achievement = function (params)
-	Managers.achievements:unlock_achievement(params.achievement_id)
+	local player = Managers.player:local_player(1)
+
+	Managers.achievements:unlock_achievement(player, params.achievement_id)
 end
 
 FlowCallbacks.is_narrative_event_completed = function (params)

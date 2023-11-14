@@ -799,6 +799,11 @@ function _create_projection_decal(t, decal_settings, position, rotation, normal,
 	local decal_extents = Vector3(x, y, z)
 	local decal_units = decal_settings.units
 	local num_decal_units = #decal_units
+
+	if num_decal_units == 0 then
+		return
+	end
+
 	local decal_unit_name = decal_units[math.random(1, num_decal_units)]
 	local random_rad = math.random() * PI
 	local random_rot = Quaternion.axis_angle(Vector3.up(), random_rad)

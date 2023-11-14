@@ -333,13 +333,12 @@ weapon_template.actions = {
 		}
 	},
 	action_charge_flame = {
-		crosshair_type = "charge_up",
 		overload_module_class_name = "warp_charge",
-		hold_combo = true,
 		start_input = "charge",
+		hold_combo = true,
+		sprint_requires_press_to_interrupt = false,
 		kind = "overload_charge",
 		sprint_ready_up_time = 0,
-		sprint_requires_press_to_interrupt = false,
 		anim_end_event = "attack_cancel",
 		allowed_during_sprint = true,
 		minimum_hold_time = 0.4,
@@ -348,6 +347,9 @@ weapon_template.actions = {
 		anim_event = "attack_charge_flame_start",
 		stop_input = "charge_release",
 		total_time = math.huge,
+		crosshair = {
+			crosshair_type = "charge_up"
+		},
 		action_movement_curve = {
 			{
 				modifier = 0.3,
@@ -417,24 +419,26 @@ weapon_template.actions = {
 	action_shoot_charged_flame = {
 		kind = "flamer_gas",
 		ignore_shooting_look_delta_anim_control = true,
-		uninterruptible = true,
+		anim_event_3p = "attack_shoot_flame",
 		sprint_requires_press_to_interrupt = true,
 		sprint_ready_up_time = 0,
 		increase_combo = true,
 		delay_explosion_to_finish = true,
-		crosshair_type = "charge_up",
-		weapon_handling_template = "forcestaff_p2_m1_auto",
-		allowed_during_sprint = true,
 		charge_template = "forcestaff_p2_m1_flamer_gas",
+		allowed_during_sprint = true,
+		weapon_handling_template = "forcestaff_p2_m1_auto",
 		minimum_hold_time = 0.4,
 		uses_warp_charge = true,
 		anim_end_event = "attack_cancel",
 		first_shot_only_sound_reflection = true,
 		abort_sprint = true,
-		anim_event_3p = "attack_shoot_flame",
+		uninterruptible = true,
 		anim_event = "attack_shoot_flame",
 		stop_input = "cancel_flame",
 		total_time = math.huge,
+		crosshair = {
+			crosshair_type = "charge_up"
+		},
 		action_movement_curve = {
 			{
 				modifier = 0.1,
@@ -498,10 +502,12 @@ weapon_template.actions = {
 		anim_end_event = "attack_finished",
 		start_input = "special_action_hold",
 		kind = "windup",
-		crosshair_type = "dot",
 		allowed_during_sprint = true,
 		anim_event = "attack_special_charge",
 		total_time = 1.1,
+		crosshair = {
+			crosshair_type = "dot"
+		},
 		allowed_chain_actions = {
 			combat_ability = {
 				action_name = "combat_ability"
@@ -556,10 +562,12 @@ weapon_template.actions = {
 	action_swipe_start = {
 		anim_end_event = "attack_finished",
 		kind = "windup",
-		crosshair_type = "dot",
 		allowed_during_sprint = true,
 		anim_event = "attack_special_swipe_charge",
 		total_time = 1.1,
+		crosshair = {
+			crosshair_type = "dot"
+		},
 		allowed_chain_actions = {
 			combat_ability = {
 				action_name = "combat_ability"
@@ -606,18 +614,20 @@ weapon_template.actions = {
 	action_stab = {
 		damage_window_start = 0.11666666666666667,
 		hit_armor_anim = "attack_hit_shield",
-		allow_conditional_chain = true,
-		kind = "sweep",
-		weapon_handling_template = "time_scale_1_3",
-		first_person_hit_anim = "hit_right_shake",
-		first_person_hit_stop_anim = "attack_hit",
-		crosshair_type = "dot",
 		range_mod = 1.15,
+		weapon_handling_template = "time_scale_1_3",
+		kind = "sweep",
+		first_person_hit_anim = "hit_right_shake",
+		anim_event = "attack_special",
+		first_person_hit_stop_anim = "attack_hit",
 		allowed_during_sprint = true,
 		damage_window_end = 0.26666666666666666,
 		uninterruptible = true,
-		anim_event = "attack_special",
+		allow_conditional_chain = true,
 		total_time = 0.6,
+		crosshair = {
+			crosshair_type = "dot"
+		},
 		action_movement_curve = {
 			{
 				modifier = 0.8,
@@ -703,19 +713,21 @@ weapon_template.actions = {
 	action_stab_heavy = {
 		damage_window_start = 0.13333333333333333,
 		hit_armor_anim = "attack_hit_shield",
-		allow_conditional_chain = true,
-		kind = "sweep",
-		weapon_handling_template = "time_scale_1_2",
-		first_person_hit_anim = "hit_right_shake",
-		first_person_hit_stop_anim = "attack_hit",
-		crosshair_type = "dot",
 		range_mod = 1.15,
+		weapon_handling_template = "time_scale_1_2",
+		kind = "sweep",
+		first_person_hit_anim = "hit_right_shake",
+		anim_event = "attack_special",
+		first_person_hit_stop_anim = "attack_hit",
 		allowed_during_sprint = true,
 		damage_window_end = 0.21666666666666667,
 		uninterruptible = true,
-		anim_event = "attack_special",
+		allow_conditional_chain = true,
 		power_level = 800,
 		total_time = 0.75,
+		crosshair = {
+			crosshair_type = "dot"
+		},
 		action_movement_curve = {
 			{
 				modifier = 0.8,
@@ -801,20 +813,22 @@ weapon_template.actions = {
 	action_swipe = {
 		damage_window_start = 0.6333333333333333,
 		hit_armor_anim = "attack_hit_shield",
-		allow_conditional_chain = true,
 		weapon_handling_template = "time_scale_1_2",
+		range_mod = 1.15,
 		kind = "sweep",
 		first_person_hit_anim = "hit_right_shake",
-		crosshair_type = "dot",
+		anim_event = "attack_special_swipe",
 		first_person_hit_stop_anim = "attack_hit",
-		range_mod = 1.15,
 		allowed_during_sprint = true,
 		attack_direction_override = "left",
 		damage_window_end = 0.7,
 		uninterruptible = true,
-		anim_event = "attack_special_swipe",
+		allow_conditional_chain = true,
 		power_level = 650,
 		total_time = 0.75,
+		crosshair = {
+			crosshair_type = "dot"
+		},
 		action_movement_curve = {
 			{
 				modifier = 0.3,
@@ -900,19 +914,21 @@ weapon_template.actions = {
 	action_swipe_heavy = {
 		damage_window_start = 0.31666666666666665,
 		hit_armor_anim = "attack_hit_shield",
-		crosshair_type = "dot",
 		range_mod = 1.15,
+		allow_conditional_chain = true,
 		kind = "sweep",
 		first_person_hit_anim = "hit_right_shake",
-		anim_event = "attack_special_swipe_heavy",
 		first_person_hit_stop_anim = "attack_hit",
 		allowed_during_sprint = true,
 		attack_direction_override = "left",
 		damage_window_end = 0.35,
 		uninterruptible = true,
-		allow_conditional_chain = true,
+		anim_event = "attack_special_swipe_heavy",
 		power_level = 800,
 		total_time = 1.1,
+		crosshair = {
+			crosshair_type = "dot"
+		},
 		action_movement_curve = {
 			{
 				modifier = 0.3,
@@ -1061,10 +1077,12 @@ weapon_template.actions = {
 		start_input = "inspect_start",
 		anim_end_event = "inspect_end",
 		kind = "inspect",
-		crosshair_type = "inspect",
 		anim_event = "inspect_start",
 		stop_input = "inspect_stop",
-		total_time = math.huge
+		total_time = math.huge,
+		crosshair = {
+			crosshair_type = "inspect"
+		}
 	}
 }
 
@@ -1086,7 +1104,9 @@ weapon_template.charge_effects = {
 	sfx_parameter = "charge_level",
 	sfx_source_name = "_overheat"
 }
-weapon_template.crosshair_type = "spray_n_pray"
+weapon_template.crosshair = {
+	crosshair_type = "spray_n_pray"
+}
 weapon_template.hit_marker_type = "center"
 weapon_template.keywords = {
 	"ranged",

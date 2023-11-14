@@ -175,6 +175,14 @@ weapon_template.actions = {
 			shoot_pressed = {
 				action_name = "action_shoot_hip",
 				chain_time = 0.2
+			},
+			reload = {
+				action_name = "action_start_reload",
+				chain_time = 0.1
+			},
+			special_action_pistol_whip = {
+				action_name = "action_pistol_whip",
+				chain_time = 0.2
 			}
 		}
 	},
@@ -222,7 +230,7 @@ weapon_template.actions = {
 		fire_configuration = {
 			anim_event = "attack_shoot",
 			same_side_suppression_enabled = false,
-			hit_scan_template = HitScanTemplates.default_stub_pistol_bfg,
+			hit_scan_template = HitScanTemplates.stub_revolver_p1_m1,
 			damage_type = damage_types.auto_bullet
 		},
 		allowed_chain_actions = {
@@ -261,16 +269,18 @@ weapon_template.actions = {
 		}
 	},
 	action_shoot_zoomed = {
-		start_input = "zoom_shoot",
 		recoil_template = "default_stub_pistol_killshot",
+		start_input = "zoom_shoot",
 		kind = "shoot_hit_scan",
 		sprint_ready_up_time = 0,
-		spread_template = "default_stub_pistol_killshot",
 		weapon_handling_template = "stubrevolver_single_shot",
-		crosshair_type = "ironsight",
-		allowed_during_sprint = true,
+		spread_template = "default_stub_pistol_killshot",
 		ammunition_usage = 1,
+		allowed_during_sprint = true,
 		total_time = 0.56,
+		crosshair = {
+			crosshair_type = "ironsight"
+		},
 		action_movement_curve = {
 			{
 				modifier = 0.6,
@@ -302,7 +312,7 @@ weapon_template.actions = {
 		fire_configuration = {
 			anim_event = "attack_shoot",
 			same_side_suppression_enabled = false,
-			hit_scan_template = HitScanTemplates.default_stub_pistol_bfg,
+			hit_scan_template = HitScanTemplates.stub_revolver_p1_m1,
 			damage_type = damage_types.auto_bullet
 		},
 		allowed_chain_actions = {
@@ -338,11 +348,13 @@ weapon_template.actions = {
 		}
 	},
 	action_zoom = {
-		crosshair_type = "ironsight",
 		start_input = "zoom",
 		kind = "aim",
 		total_time = 0.3,
 		smart_targeting_template = SmartTargetingTemplates.alternate_fire_bfg,
+		crosshair = {
+			crosshair_type = "ironsight"
+		},
 		action_movement_curve = {
 			{
 				modifier = 0.75,
@@ -380,10 +392,12 @@ weapon_template.actions = {
 		}
 	},
 	action_unzoom = {
-		crosshair_type = "ironsight",
 		start_input = "zoom_release",
 		kind = "unaim",
 		total_time = 0.2,
+		crosshair = {
+			crosshair_type = "ironsight"
+		},
 		allowed_chain_actions = {
 			combat_ability = {
 				action_name = "combat_ability"
@@ -412,18 +426,20 @@ weapon_template.actions = {
 		}
 	},
 	action_start_reload = {
-		crosshair_type = "none",
-		start_input = "reload",
 		sprint_requires_press_to_interrupt = true,
-		weapon_handling_template = "time_scale_1_1",
-		stop_alternate_fire = true,
-		kind = "reload_shotgun",
+		start_input = "reload",
 		allowed_during_sprint = true,
+		weapon_handling_template = "time_scale_1_1",
+		kind = "reload_shotgun",
+		stop_alternate_fire = true,
 		anim_end_event = "reload_cancel",
 		abort_sprint = true,
 		uninterruptible = false,
 		anim_event = "reload_start",
 		total_time = 1.45,
+		crosshair = {
+			crosshair_type = "none"
+		},
 		anim_end_event_condition_func = function (unit, data, end_reason)
 			return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
 		end,
@@ -476,6 +492,10 @@ weapon_template.actions = {
 			combat_ability = {
 				action_name = "combat_ability"
 			},
+			special_action_pistol_whip = {
+				action_name = "action_pistol_whip",
+				chain_time = 0.5
+			},
 			grenade_ability = {
 				{
 					action_name = "grenade_ability"
@@ -501,12 +521,14 @@ weapon_template.actions = {
 		anim_end_event = "reload_cancel",
 		sprint_requires_press_to_interrupt = true,
 		weapon_handling_template = "time_scale_1",
-		crosshair_type = "none",
 		allowed_during_sprint = true,
 		abort_sprint = true,
 		uninterruptible = false,
 		anim_event = "reload_middle",
 		total_time = 0.52,
+		crosshair = {
+			crosshair_type = "none"
+		},
 		anim_end_event_condition_func = function (unit, data, end_reason)
 			return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
 		end,
@@ -596,12 +618,11 @@ weapon_template.actions = {
 		damage_window_start = 0.25,
 		range_mod = 1,
 		start_input = "special_action_pistol_whip",
-		sprint_requires_press_to_interrupt = true,
-		first_person_hit_anim = "attack_hit",
-		first_person_hit_stop_anim = "attack_hit",
 		allow_conditional_chain = true,
-		crosshair_type = "dot",
 		kind = "sweep",
+		first_person_hit_anim = "attack_hit",
+		sprint_requires_press_to_interrupt = true,
+		first_person_hit_stop_anim = "attack_hit",
 		allowed_during_sprint = true,
 		damage_window_end = 0.31666666666666665,
 		abort_sprint = true,
@@ -609,6 +630,9 @@ weapon_template.actions = {
 		anim_event = "attack_stab_01",
 		power_level = 300,
 		total_time = 1.2,
+		crosshair = {
+			crosshair_type = "dot"
+		},
 		action_movement_curve = {
 			{
 				modifier = 0.3,
@@ -680,20 +704,22 @@ weapon_template.actions = {
 	},
 	action_pistol_whip_followup = {
 		damage_window_start = 0.25,
-		range_mod = 1,
-		allow_conditional_chain = true,
-		crosshair_type = "dot",
-		kind = "sweep",
-		first_person_hit_anim = "attack_hit",
 		first_person_hit_stop_anim = "attack_hit",
 		sprint_requires_press_to_interrupt = true,
+		range_mod = 1,
+		kind = "sweep",
+		first_person_hit_anim = "attack_hit",
+		anim_event = "attack_stab_02",
 		allowed_during_sprint = true,
 		damage_window_end = 0.31666666666666665,
 		abort_sprint = true,
 		unaim = true,
-		anim_event = "attack_stab_02",
+		allow_conditional_chain = true,
 		power_level = 300,
 		total_time = 1.2,
+		crosshair = {
+			crosshair_type = "dot"
+		},
 		action_movement_curve = {
 			{
 				modifier = 0.3,
@@ -777,10 +803,12 @@ weapon_template.actions = {
 		start_input = "inspect_start",
 		anim_end_event = "inspect_end",
 		kind = "inspect",
-		crosshair_type = "inspect",
 		anim_event = "inspect_start",
 		stop_input = "inspect_stop",
-		total_time = math.huge
+		total_time = math.huge,
+		crosshair = {
+			crosshair_type = "inspect"
+		}
 	}
 }
 
@@ -811,7 +839,9 @@ weapon_template.ammo_template = "stubrevolver_p1_m1"
 weapon_template.fx_sources = {
 	_muzzle = "fx_muzzle_01"
 }
-weapon_template.crosshair_type = "bfg"
+weapon_template.crosshair = {
+	crosshair_type = "bfg"
+}
 weapon_template.hit_marker_type = "center"
 weapon_template.alternate_fire_settings = {
 	peeking_mechanics = true,
@@ -820,9 +850,11 @@ weapon_template.alternate_fire_settings = {
 	stop_anim_event = "to_unaim_ironsight",
 	spread_template = "default_stub_pistol_killshot",
 	suppression_template = "default_lasgun_killshot",
-	crosshair_type = "ironsight",
 	start_anim_event = "to_ironsight",
 	look_delta_template = "stub_pistol_aiming",
+	crosshair = {
+		crosshair_type = "ironsight"
+	},
 	camera = {
 		custom_vertical_fov = 40,
 		vertical_fov = 50,
@@ -959,7 +991,16 @@ weapon_template.base_stats = {
 		weapon_handling = {
 			action_shoot_hip = {
 				weapon_handling_trait_templates.stubrevolver_crit_stat,
-				display_data = WeaponBarUIDescriptionTemplates.all_basic_stats
+				display_data = {
+					display_stats = {
+						__all_basic_stats = true,
+						critical_strike = {
+							chance_modifier = {
+								display_name = "loc_weapon_stats_display_crit_chance_ranged"
+							}
+						}
+					}
+				}
 			},
 			action_shoot_zoomed = {
 				weapon_handling_trait_templates.stubrevolver_crit_stat

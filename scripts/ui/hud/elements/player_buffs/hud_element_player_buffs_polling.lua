@@ -5,6 +5,8 @@ local ColorUtilities = require("scripts/utilities/ui/colors")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local UIRenderer = require("scripts/managers/ui/ui_renderer")
 local UIFonts = require("scripts/managers/ui/ui_fonts")
+local buff_categories = BuffSettings.buff_categories
+local buff_categort_order = BuffSettings.buff_categort_order
 local MAX_BUFFS = HudElementPlayerBuffsSettings.max_buffs
 local HALF_MAX_BUFF = math.floor(MAX_BUFFS * 0.5)
 local QUATER_MAX_BUFF = math.floor(MAX_BUFFS * 0.25)
@@ -111,13 +113,17 @@ HudElementPlayerBuffs._add_buff = function (self, buff_instance)
 		self._active_positive_buffs = self._active_positive_buffs + 1
 	end
 
+	local buff_template = buff_instance and buff_instance:template()
+	local buff_category = buff_template and buff_template.buff_category or buff_categories.generic
 	local index = #active_buffs_data + 1
 	self._active_buffs_data[index] = {
 		is_active = false,
 		buff_instance = buff_instance,
 		is_negative = is_negative,
 		activated_time = math.huge,
-		start_index = index
+		start_index = index,
+		buff_category = buff_category,
+		buff_name = buff_template.name
 	}
 end
 
@@ -166,6 +172,7 @@ HudElementPlayerBuffs._get_available_widget = function (self)
 			content.taken = true
 			content.visible = true
 			widget.visible = true
+			widget.initialize_offset = true
 
 			return widget
 		end
@@ -183,12 +190,15 @@ HudElementPlayerBuffs._return_widget = function (self, widget, ui_renderer)
 
 	widget.dirty = true
 	widget.offset[1] = 0
+	widget.offset[2] = 0
 	widget.visible = false
+	widget.initialize_offset = false
 	local content = widget.content
 	content.taken = false
 	content.visible = false
 	content.text = nil
 	content.duration_progress = 1
+	content.opacity = 1
 	local style = widget.style
 	style.icon.material_values.talent_icon = nil
 	style.icon.material_values.gradient_map = nil
@@ -201,7 +211,29 @@ HudElementPlayerBuffs._return_widget = function (self, widget, ui_renderer)
 	return widget
 end
 
-HudElementPlayerBuffs._update_buff_alignments = function (self, force_update)
+local RESERVED_SPOTS = {
+	[buff_categories.generic] = 0,
+	[buff_categories.talents] = 0,
+	[buff_categories.weapon_traits] = 0
+}
+local GAP_OFFSET_SIZE = 0.5
+local _number_of_buffs_per_category = {}
+local _category_offsets = {}
+local _category_numbers = {}
+
+local function _use_categories()
+	local save_manager = Managers.save
+	local group_buff_icon_in_categories = false
+
+	if save_manager then
+		local account_data = save_manager:account_data()
+		group_buff_icon_in_categories = account_data.interface_settings.group_buff_icon_in_categories
+	end
+
+	return group_buff_icon_in_categories
+end
+
+HudElementPlayerBuffs._update_buff_alignments = function (self, force_update, dt)
 	local active_buffs_data = self._active_buffs_data
 	local num_active_buffs = #active_buffs_data
 	local horizontal_spacing = HudElementPlayerBuffsSettings.horizontal_spacing
@@ -209,12 +241,39 @@ HudElementPlayerBuffs._update_buff_alignments = function (self, force_update)
 	local previous_negative_buff_offset = 0
 	local num_aligned_positive_buffs = 0
 	local num_aligned_negative_buffs = 0
+	local use_categories = _use_categories()
+
+	if use_categories then
+		table.clear(_number_of_buffs_per_category)
+
+		for i = 1, num_active_buffs do
+			local buff_data = active_buffs_data[i]
+			local buff_category = buff_data.buff_category or buff_categories.generic
+
+			if buff_data.show and not buff_data.is_negative then
+				_number_of_buffs_per_category[buff_category] = (_number_of_buffs_per_category[buff_category] or 0) + 1
+			end
+		end
+
+		table.clear(_category_offsets)
+		table.clear(_category_numbers)
+
+		local current_number = 0
+
+		for inxed, buff_category in ipairs(buff_categort_order) do
+			local number_in_category = math.max(_number_of_buffs_per_category[buff_category] or 0, RESERVED_SPOTS[buff_category] or 0)
+			_category_offsets[buff_category] = current_number * horizontal_spacing
+			_category_numbers[buff_category] = current_number
+			current_number = current_number + number_in_category + (number_in_category > 0 and GAP_OFFSET_SIZE or 0)
+		end
+	end
 
 	for i = 1, num_active_buffs do
 		local buff_data = active_buffs_data[i]
+		local buff_category = buff_data.buff_category or buff_categories.generic.generic
 		local is_negative = buff_data.is_negative
 		local previous_buff_offset = is_negative and previous_negative_buff_offset or previous_positive_buff_offset
-		local num_aligned_category_buffs = is_negative and num_aligned_negative_buffs or num_aligned_positive_buffs
+		local num_aligned_category_buffs = is_negative and num_aligned_negative_buffs or use_categories and (_category_numbers[buff_category] or 0) or num_aligned_positive_buffs
 		local widget = buff_data.widget
 
 		if widget then
@@ -223,26 +282,29 @@ HudElementPlayerBuffs._update_buff_alignments = function (self, force_update)
 			local old_horizontal_offset = offset[1]
 			local target_x = horizontal_spacing * num_aligned_category_buffs
 
-			if force_update or old_horizontal_offset == 0 and target_x ~= old_horizontal_offset then
+			if force_update then
 				offset[1] = target_x
 				widget.dirty = true
 			else
 				local initialize_offset = widget.initialize_offset
+				local content = widget.content
 
 				if initialize_offset then
 					widget.initialize_offset = nil
-
-					if i > 1 then
-						offset[1] = previous_buff_offset + horizontal_spacing
-					end
+					offset[1] = target_x + horizontal_spacing
+					content.opacity = 0
 				else
-					offset[1] = math.lerp(offset[1], target_x, 0.1)
+					offset[1] = math.lerp(old_horizontal_offset, target_x, dt * 6)
+					content.opacity = math.lerp(content.opacity, 1, dt * 4)
 				end
 			end
 
 			if is_negative then
 				previous_negative_buff_offset = offset[1]
 				num_aligned_negative_buffs = num_aligned_negative_buffs + 1
+			elseif use_categories then
+				_category_offsets[buff_category] = offset[1]
+				_category_numbers[buff_category] = (_category_numbers[buff_category] or 0) + 1
 			else
 				previous_positive_buff_offset = offset[1]
 				num_aligned_positive_buffs = num_aligned_positive_buffs + 1
@@ -395,14 +457,14 @@ HudElementPlayerBuffs._set_widget_state_colors = function (self, widget, is_nega
 	widget.dirty = true
 end
 
-HudElementPlayerBuffs.destroy = function (self)
+HudElementPlayerBuffs.destroy = function (self, ui_renderer)
 	if self._syncronized then
 		self:_unregister_events()
 
 		self._syncronized = nil
 	end
 
-	HudElementPlayerBuffs.super.destroy(self)
+	HudElementPlayerBuffs.super.destroy(self, ui_renderer)
 end
 
 HudElementPlayerBuffs.set_visible = function (self, visible, ui_renderer, use_retained_mode)

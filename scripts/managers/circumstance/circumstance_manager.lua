@@ -10,6 +10,10 @@ CircumstanceManager.destroy = function (self)
 	return
 end
 
+CircumstanceManager.active_theme_tag = function (self)
+	return CircumstanceTemplates[self._circumstance_name].theme_tag
+end
+
 CircumstanceManager.circumstance_name = function (self)
 	return self._circumstance_name
 end

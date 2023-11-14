@@ -437,6 +437,23 @@ local action_data = {
 				dwn = {
 					"stagger_hit_wall"
 				}
+			},
+			blinding = {
+				fwd = {
+					"stagger_medium_fwd_01"
+				},
+				bwd = {
+					"stagger_medium_bwd_01"
+				},
+				left = {
+					"stagger_medium_left_01"
+				},
+				right = {
+					"stagger_medium_right_01"
+				},
+				dwn = {
+					"stagger_medium_bwd_01"
+				}
 			}
 		}
 	},

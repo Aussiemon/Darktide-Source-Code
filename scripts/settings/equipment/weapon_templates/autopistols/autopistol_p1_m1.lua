@@ -422,6 +422,9 @@ weapon_template.actions = {
 		kind = "aim",
 		total_time = 0.5,
 		smart_targeting_template = SmartTargetingTemplates.alternate_fire_assault,
+		crosshair = {
+			crosshair_type = "assault"
+		},
 		allowed_chain_actions = {
 			combat_ability = {
 				action_name = "combat_ability"
@@ -453,9 +456,12 @@ weapon_template.actions = {
 		}
 	},
 	action_unzoom = {
-		kind = "unaim",
 		start_input = "zoom_release",
+		kind = "unaim",
 		total_time = 0.2,
+		crosshair = {
+			crosshair_type = "assault"
+		},
 		allowed_chain_actions = {
 			combat_ability = {
 				action_name = "combat_ability"
@@ -483,14 +489,16 @@ weapon_template.actions = {
 		}
 	},
 	action_reload = {
-		kind = "reload_state",
-		start_input = "reload",
-		sprint_requires_press_to_interrupt = true,
 		stop_alternate_fire = true,
+		start_input = "reload",
+		kind = "reload_state",
+		sprint_requires_press_to_interrupt = true,
 		abort_sprint = true,
-		crosshair_type = "none",
 		allowed_during_sprint = true,
 		total_time = 2.15,
+		crosshair = {
+			crosshair_type = "none"
+		},
 		action_movement_curve = {
 			{
 				modifier = 0.775,
@@ -617,10 +625,12 @@ weapon_template.actions = {
 		start_input = "inspect_start",
 		anim_end_event = "inspect_end",
 		kind = "inspect",
-		crosshair_type = "inspect",
 		anim_event = "inspect_start",
 		stop_input = "inspect_stop",
-		total_time = math.huge
+		total_time = math.huge,
+		crosshair = {
+			crosshair_type = "inspect"
+		}
 	}
 }
 
@@ -660,16 +670,20 @@ weapon_template.fx_sources = {
 	_muzzle = "fx_muzzle_01",
 	_eject = "fx_eject"
 }
-weapon_template.crosshair_type = "assault"
+weapon_template.crosshair = {
+	crosshair_type = "assault"
+}
 weapon_template.hit_marker_type = "center"
 weapon_template.alternate_fire_settings = {
-	recoil_template = "default_autopistol_spraynpray",
 	stop_anim_event = "to_unaim_braced",
+	recoil_template = "default_autopistol_spraynpray",
 	spread_template = "default_autopistol_spraynpray",
 	start_anim_event_3p = "to_braced",
-	crosshair_type = "assault",
 	stop_anim_event_3p = "to_unaim_braced",
 	start_anim_event = "to_braced",
+	crosshair = {
+		crosshair_type = "assault"
+	},
 	camera = {
 		custom_vertical_fov = 45,
 		vertical_fov = 60,

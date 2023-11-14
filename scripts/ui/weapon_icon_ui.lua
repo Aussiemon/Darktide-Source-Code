@@ -40,9 +40,9 @@ end
 
 WeaponIconUI.load_weapon_icon = function (self, item, on_load_callback, optional_render_context, prioritized, on_unload_callback)
 	local gear_id = item.gear_id or item.name
-	local request_id = gear_id or math.uuid()
+	local request_id_prefix = gear_id or math.uuid()
 	local request_data = item
-	local reference_id = self:_generate_icon_request(request_id, request_data, on_load_callback, optional_render_context, prioritized, on_unload_callback)
+	local reference_id = self:_generate_icon_request(request_id_prefix, request_data, on_load_callback, optional_render_context, prioritized, on_unload_callback)
 
 	return reference_id
 end

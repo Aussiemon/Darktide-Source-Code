@@ -457,19 +457,6 @@ local breed_data = {
 			[hit_zone_names.center_mass] = 0.4,
 			[hit_zone_names.upper_tail] = 0.1,
 			[hit_zone_names.lower_tail] = 0.1
-		},
-		explosion = {
-			[hit_zone_names.head] = 1.5,
-			[hit_zone_names.torso] = 1.5,
-			[hit_zone_names.upper_left_arm] = 1.5,
-			[hit_zone_names.upper_right_arm] = 1.5,
-			[hit_zone_names.upper_left_leg] = 1.5,
-			[hit_zone_names.upper_right_leg] = 1.5,
-			[hit_zone_names.lower_left_arm] = 1.5,
-			[hit_zone_names.lower_right_arm] = 1.5,
-			[hit_zone_names.lower_left_leg] = 1.5,
-			[hit_zone_names.lower_right_leg] = 1.5,
-			[hit_zone_names.center_mass] = 1.5
 		}
 	},
 	hit_zone_weakspot_types = {
@@ -480,6 +467,7 @@ local breed_data = {
 			damage_type = damage_types.minion_beast_of_nurgle_weakspot_hit
 		}
 	},
+	outline_config = {},
 	blackboard_component_config = BreedBlackboardComponentTemplates.chaos_beast_of_nurgle
 }
 

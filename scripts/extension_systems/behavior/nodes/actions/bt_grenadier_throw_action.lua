@@ -111,12 +111,12 @@ BtGrenadierThrowAction._throw_grenade = function (self, unit, scratchpad, action
 	local throw_config = action_data.throw_config
 	local projectile_template = throw_config.projectile_template
 	local locomotion_template = projectile_template.locomotion_template
-	local throw_parameters = locomotion_template.throw_parameters[throw_type]
-	local speed = throw_parameters.speed_initial or throw_parameters.speed
+	local trajectory_parameters = locomotion_template.trajectory_parameters[throw_type]
+	local speed = trajectory_parameters.speed_initial or trajectory_parameters.speed
 
 	if optional_owner_velocity then
 		local velocity = speed * throw_direction
-		local inherit_owner_velocity_percentage = throw_parameters.inherit_owner_velocity_percentage
+		local inherit_owner_velocity_percentage = trajectory_parameters.inherit_owner_velocity_percentage
 		local minion_velocity_contribution = optional_owner_velocity * inherit_owner_velocity_percentage
 		local throw_velocity = minion_velocity_contribution + velocity
 		throw_direction = Vector3.normalize(throw_velocity)
@@ -125,11 +125,11 @@ BtGrenadierThrowAction._throw_grenade = function (self, unit, scratchpad, action
 
 	local angular_velocity = nil
 
-	if throw_parameters.randomized_angular_velocity then
-		local max = throw_parameters.randomized_angular_velocity
+	if trajectory_parameters.randomized_angular_velocity then
+		local max = trajectory_parameters.randomized_angular_velocity
 		angular_velocity = Vector3(math.random() * max.x, math.random() * max.y, math.random() * max.z)
-	elseif throw_parameters.initial_angular_velocity then
-		angular_velocity = throw_parameters.initial_angular_velocity:unbox()
+	elseif trajectory_parameters.initial_angular_velocity then
+		angular_velocity = trajectory_parameters.initial_angular_velocity:unbox()
 	else
 		angular_velocity = Vector3.zero()
 	end
@@ -138,7 +138,7 @@ BtGrenadierThrowAction._throw_grenade = function (self, unit, scratchpad, action
 	local item_definitions = MasterItems.get_cached()
 	local item = item_definitions[item_name]
 	local grenade_unit_name = item.base_unit
-	local locomotion_state = throw_parameters.locomotion_state
+	local locomotion_state = trajectory_parameters.locomotion_state
 	local side_system = Managers.state.extension:system("side_system")
 	local side = side_system.side_by_unit[unit]
 	local is_critical_strike, origin_item_slot, charge_level, target_unit, target_position, weapon_item_or_nil, fuse_override_time_or_nil = nil

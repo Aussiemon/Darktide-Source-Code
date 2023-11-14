@@ -70,7 +70,7 @@ HudElementNameplates._nameplate_extension_scan = function (self)
 
 					event_manager:trigger("add_world_marker_unit", marker_type, unit, marker_callback, player)
 				elseif nameplate_units[unit] == marker_type then
-					nameplate_units[unit].synced = marker_type
+					nameplate_units[unit].synced = true
 				end
 			elseif nameplate_units[unit] and has_disable_nameplates_buff then
 				nameplate_units[unit].synced = false

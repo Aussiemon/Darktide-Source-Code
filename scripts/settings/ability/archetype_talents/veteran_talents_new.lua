@@ -1529,16 +1529,6 @@ local archetype_talents = {
 				identifier = "veteran_no_ammo_consumption_on_lasweapon_crit"
 			}
 		},
-		veteran_cover_peaking = {
-			description = "loc_talent_veteran_cover_peaking_desc",
-			name = "Cover peeking",
-			display_name = "loc_talent_veteran_cover_peaking",
-			icon = "content/ui/textures/icons/talents/veteran_3/veteran_3_tier_6_3",
-			special_rule = {
-				identifier = "veteran_cover_peeking",
-				special_rule_name = special_rules.veteran_cover_peeking
-			}
-		},
 		veteran_movement_speed_on_toughness_broken = {
 			description = "loc_talent_veteran_movement_speed_on_toughness_broken_desc",
 			name = "Movement speed on toughness broken",
@@ -2371,12 +2361,475 @@ local archetype_talents = {
 		},
 		veteran_cover_peeking = {
 			description = "loc_talent_veteran_cover_peeking_description",
-			name = "Increased Melee Attack Speed",
+			name = "Cover peeking",
 			display_name = "loc_talent_veteran_cover_peeking",
 			icon = "content/ui/textures/icons/talents/veteran_2/veteran_2_tier_1_2",
 			special_rule = {
 				identifier = "veteran_cover_peeking",
 				special_rule_name = special_rules.veteran_cover_peeking
+			}
+		},
+		veteran_snipers_focus = {
+			description = "loc_talent_veteran_snipers_focus_alt_description",
+			name = "Snipers Focus",
+			display_name = "loc_talent_veteran_snipers_focus",
+			icon = "content/ui/textures/icons/talents/veteran_2/veteran_2_tier_1_2",
+			format_values = {
+				power = {
+					value = 0.075,
+					prefix = "+",
+					format_type = "percentage"
+				},
+				reload_speed = {
+					value = 0.01,
+					prefix = "+",
+					format_type = "percentage"
+				},
+				grace_time = {
+					value = 3,
+					format_type = "number"
+				},
+				grace_time_hit = {
+					value = 1,
+					format_type = "number"
+				},
+				stacks = {
+					value = 3,
+					format_type = "number"
+				},
+				max_stacks = {
+					value = 10,
+					format_type = "number"
+				}
+			},
+			passive = {
+				buff_template_name = "veteran_snipers_focus",
+				identifier = "veteran_snipers_focus"
+			}
+		},
+		veteran_snipers_focus_rending_bonus = {
+			description = "loc_talent_veteran_snipers_focus_rending_bonus_description",
+			name = "-",
+			display_name = "loc_talent_veteran_snipers_focus_rending_bonus",
+			icon = "content/ui/textures/icons/talents/veteran_2/veteran_2_tier_1_2",
+			format_values = {
+				rending = {
+					prefix = "+",
+					format_type = "percentage",
+					find_value = {
+						buff_template_name = "veteran_snipers_focus_rending_buff",
+						format_type = "percentage",
+						find_value_type = "buff_template",
+						path = {
+							"stat_buffs",
+							stat_buffs.rending_multiplier
+						}
+					}
+				},
+				stacks = {
+					value = 10,
+					format_type = "number"
+				}
+			},
+			special_rule = {
+				special_rule_name = "veteran_snipers_focus_rending_bonus",
+				identifier = "veteran_snipers_focus_rending_bonus"
+			}
+		},
+		veteran_snipers_focus_toughness_bonus = {
+			description = "loc_talent_veteran_snipers_focus_toughness_bonus_description",
+			name = "-",
+			display_name = "loc_talent_veteran_snipers_focus_toughness_bonus",
+			icon = "content/ui/textures/icons/talents/veteran_2/veteran_2_tier_1_2",
+			format_values = {
+				toughness_replenish_multiplier = {
+					value = 0.025,
+					prefix = "+",
+					format_type = "percentage"
+				}
+			},
+			special_rule = {
+				special_rule_name = "veteran_snipers_focus_toughness_bonus",
+				identifier = "veteran_snipers_focus_toughness_bonus"
+			}
+		},
+		veteran_snipers_focus_stacks_on_still = {
+			description = "loc_talent_veteran_snipers_focus_stacks_on_still_description",
+			name = "-",
+			display_name = "loc_talent_veteran_snipers_focus_stacks_on_still",
+			icon = "content/ui/textures/icons/talents/veteran_2/veteran_2_tier_1_2",
+			format_values = {
+				stack = {
+					value = 1,
+					format_type = "number"
+				},
+				time = {
+					value = 0.75,
+					format_type = "number"
+				}
+			},
+			special_rule = {
+				special_rule_name = "veteran_snipers_focus_stacks_on_still",
+				identifier = "veteran_snipers_focus_stacks_on_still"
+			}
+		},
+		veteran_snipers_focus_increased_stacks = {
+			description = "loc_talent_veteran_snipers_focus_increased_stacks_description",
+			name = "-",
+			display_name = "loc_talent_veteran_snipers_focus_increased_stacks",
+			icon = "content/ui/textures/icons/talents/veteran_2/veteran_2_tier_1_2",
+			format_values = {
+				stacks = {
+					value = 10,
+					format_type = "number"
+				},
+				new_stacks = {
+					value = 15,
+					format_type = "number"
+				}
+			},
+			special_rule = {
+				special_rule_name = "veteran_snipers_focus_increased_stacks",
+				identifier = "veteran_snipers_focus_increased_stacks"
+			}
+		},
+		veteran_weapon_switch_passive = {
+			description = "loc_talent_veteran_weapon_switch_description",
+			name = "Snipers Focus",
+			display_name = "loc_talent_veteran_weapon_switch",
+			icon = "content/ui/textures/icons/talents/veteran_2/veteran_2_tier_1_2",
+			format_values = {
+				ranged_attack_speed = {
+					prefix = "+",
+					format_type = "percentage",
+					find_value = {
+						buff_template_name = "veteran_weapon_switch_ranged_buff",
+						find_value_type = "buff_template",
+						path = {
+							"stat_buffs",
+							stat_buffs.ranged_attack_speed
+						}
+					}
+				},
+				ranged_stacks = {
+					format_type = "number",
+					find_value = {
+						buff_template_name = "veteran_weapon_switch_ranged_buff",
+						find_value_type = "buff_template",
+						path = {
+							"max_stacks"
+						}
+					}
+				},
+				ranged_crit_chance = {
+					prefix = "+",
+					format_type = "percentage",
+					find_value = {
+						buff_template_name = "veteran_weapon_switch_ranged_buff",
+						find_value_type = "buff_template",
+						path = {
+							"conditional_stat_buffs",
+							stat_buffs.ranged_critical_strike_chance
+						}
+					}
+				},
+				ranged_duration = {
+					format_type = "number",
+					find_value = {
+						buff_template_name = "veteran_weapon_switch_ranged_buff",
+						find_value_type = "buff_template",
+						path = {
+							"duration"
+						}
+					}
+				},
+				melee_attack_speed = {
+					prefix = "+",
+					format_type = "percentage",
+					find_value = {
+						buff_template_name = "veteran_weapon_switch_melee_buff",
+						find_value_type = "buff_template",
+						path = {
+							"stat_buffs",
+							stat_buffs.melee_attack_speed
+						}
+					}
+				},
+				melee_stacks = {
+					format_type = "number",
+					find_value = {
+						buff_template_name = "veteran_weapon_switch_melee_buff",
+						find_value_type = "buff_template",
+						path = {
+							"max_stacks"
+						}
+					}
+				},
+				dodge_modifier = {
+					format_type = "percentage",
+					find_value = {
+						buff_template_name = "veteran_weapon_switch_melee_buff",
+						find_value_type = "buff_template",
+						path = {
+							"stat_buffs",
+							stat_buffs.dodge_distance_modifier
+						}
+					}
+				},
+				melee_duration = {
+					format_type = "number",
+					find_value = {
+						buff_template_name = "veteran_weapon_switch_melee_buff",
+						find_value_type = "buff_template",
+						path = {
+							"duration"
+						}
+					}
+				}
+			},
+			passive = {
+				buff_template_name = "veteran_weapon_switch_passive_buff",
+				identifier = "veteran_weapon_switch_passive_buff"
+			}
+		},
+		veteran_weapon_switch_replenish_stamina = {
+			description = "loc_talent_veteran_weapon_switch_replenish_stamina_description",
+			name = "-",
+			display_name = "loc_talent_veteran_weapon_switch_replenish_stamina",
+			icon = "content/ui/textures/icons/talents/veteran_2/veteran_2_tier_1_2",
+			format_values = {
+				stamina = {
+					value = 0.2,
+					format_type = "percentage"
+				}
+			},
+			special_rule = {
+				special_rule_name = "veteran_weapon_switch_replenish_stamina",
+				identifier = "veteran_weapon_switch_replenish_stamina"
+			}
+		},
+		veteran_weapon_switch_replenish_ammo = {
+			description = "loc_talent_veteran_weapon_switch_replenish_ammo_description",
+			name = "-",
+			display_name = "loc_talent_veteran_weapon_switch_replenish_ammo",
+			icon = "content/ui/textures/icons/talents/veteran_2/veteran_2_tier_1_2",
+			format_values = {
+				ammo = {
+					value = 0.033,
+					format_type = "percentage"
+				}
+			},
+			special_rule = {
+				special_rule_name = "veteran_weapon_switch_replenish_ammo",
+				identifier = "veteran_weapon_switch_replenish_ammo"
+			}
+		},
+		veteran_weapon_switch_reload_speed = {
+			description = "loc_talent_veteran_weapon_switch_reload_speed_description",
+			name = "-",
+			display_name = "loc_talent_veteran_weapon_switch_reload_speed",
+			icon = "content/ui/textures/icons/talents/veteran_2/veteran_2_tier_1_2",
+			format_values = {
+				reload_speed = {
+					format_type = "percentage",
+					find_value = {
+						buff_template_name = "veteran_weapon_switch_reload_speed",
+						find_value_type = "buff_template",
+						path = {
+							"stat_buffs",
+							stat_buffs.reload_speed
+						}
+					}
+				},
+				duration = {
+					format_type = "number",
+					find_value = {
+						buff_template_name = "veteran_weapon_switch_reload_speed",
+						find_value_type = "buff_template",
+						path = {
+							"duration"
+						}
+					}
+				}
+			},
+			special_rule = {
+				special_rule_name = "veteran_weapon_switch_reload_speed",
+				identifier = "veteran_weapon_switch_reload_speed"
+			}
+		},
+		veteran_weapon_switch_stamina_reduction = {
+			description = "loc_talent_veteran_weapon_switch_stamina_reduction_description",
+			name = "-",
+			display_name = "loc_talent_veteran_weapon_switch_stamina_reduction",
+			icon = "content/ui/textures/icons/talents/veteran_2/veteran_2_tier_1_2",
+			format_values = {
+				stamina_reduction = {
+					format_type = "percentage",
+					find_value = {
+						buff_template_name = "veteran_weapon_switch_melee_stamina_reduction",
+						find_value_type = "buff_template",
+						path = {
+							"stat_buffs",
+							stat_buffs.stamina_cost_multiplier
+						}
+					},
+					value_manipulation = function (value)
+						return (1 - value) * 100
+					end
+				},
+				duration = {
+					format_type = "number",
+					find_value = {
+						buff_template_name = "veteran_weapon_switch_melee_stamina_reduction",
+						find_value_type = "buff_template",
+						path = {
+							"duration"
+						}
+					}
+				}
+			},
+			special_rule = {
+				special_rule_name = "veteran_weapon_switch_stamina_reduction",
+				identifier = "veteran_weapon_switch_stamina_reduction"
+			}
+		},
+		veteran_weapon_switch_replenish_toughness = {
+			description = "loc_talent_veteran_weapon_switch_replenish_toughness_description",
+			name = "-",
+			display_name = "loc_talent_veteran_weapon_switch_replenish_toughness",
+			icon = "content/ui/textures/icons/talents/veteran_2/veteran_2_tier_1_2",
+			format_values = {
+				toughness = {
+					value = 0.2,
+					format_type = "percentage"
+				},
+				cooldown = {
+					value = 3,
+					format_type = "number"
+				}
+			},
+			special_rule = {
+				special_rule_name = "veteran_weapon_switch_replenish_toughness",
+				identifier = "veteran_weapon_switch_replenish_toughness"
+			}
+		},
+		veteran_improved_tag = {
+			description = "loc_talent_veteran_improved_tag_description",
+			name = "Focus Target",
+			display_name = "loc_talent_veteran_improved_tag",
+			icon = "content/ui/textures/icons/talents/veteran_2/veteran_2_tier_1_2",
+			format_values = {
+				damage = {
+					prefix = "+",
+					format_type = "percentage",
+					find_value = {
+						buff_template_name = "veteran_improved_tag_debuff",
+						find_value_type = "buff_template",
+						path = {
+							"stat_buffs",
+							stat_buffs.damage_taken_multiplier
+						}
+					},
+					value_manipulation = function (value)
+						return (value - 1) * 100
+					end
+				},
+				time = {
+					value = 2,
+					format_type = "number"
+				},
+				max_stacks = {
+					value = 5,
+					format_type = "number"
+				}
+			},
+			passive = {
+				identifier = {
+					"veteran_improved_tag"
+				},
+				buff_template_name = {
+					"veteran_improved_tag"
+				}
+			},
+			special_rule = {
+				special_rule_name = "veteran_improved_tag",
+				identifier = "veteran_improved_tag"
+			}
+		},
+		veteran_improved_tag_dead_bonus = {
+			description = "loc_talent_veteran_improved_tag_dead_bonus_description",
+			name = "Tagged enemies dying grants bonus",
+			display_name = "loc_talent_veteran_improved_tag_dead_bonus",
+			icon = "content/ui/textures/icons/talents/veteran_2/veteran_2_tier_1_2",
+			format_values = {
+				toughness = {
+					value = 0.05,
+					format_type = "percentage"
+				},
+				stamina = {
+					value = 0.05,
+					format_type = "percentage"
+				}
+			},
+			special_rule = {
+				special_rule_name = "veteran_improved_tag_dead_bonus",
+				identifier = "veteran_improved_tag_dead_bonus"
+			}
+		},
+		veteran_improved_tag_dead_coherency_bonus = {
+			description = "loc_talent_veteran_improved_tag_dead_coherency_bonus_description",
+			name = "Tagged enemies dying grants coherency bonus",
+			display_name = "loc_talent_veteran_improved_tag_dead_coherency_bonus",
+			icon = "content/ui/textures/icons/talents/veteran_2/veteran_2_tier_1_2",
+			format_values = {
+				damage = {
+					prefix = "+",
+					format_type = "percentage",
+					find_value = {
+						buff_template_name = "veteran_improved_tag_allied_buff",
+						find_value_type = "buff_template",
+						path = {
+							"stat_buffs",
+							stat_buffs.damage
+						}
+					}
+				},
+				duration = {
+					format_type = "number",
+					find_value = {
+						buff_template_name = "veteran_improved_tag_allied_buff",
+						find_value_type = "buff_template",
+						path = {
+							"duration"
+						}
+					}
+				}
+			},
+			special_rule = {
+				special_rule_name = "veteran_improved_tag_dead_coherency_bonus",
+				identifier = "veteran_improved_tag_dead_coherency_bonus"
+			}
+		},
+		veteran_improved_tag_more_damage = {
+			description = "loc_talent_veteran_improved_tag_more_damage_description",
+			name = "Tagged enemies dying grants bonus",
+			display_name = "loc_talent_veteran_improved_tag_more_damage",
+			icon = "content/ui/textures/icons/talents/veteran_2/veteran_2_tier_1_2",
+			format_values = {
+				max_stacks = {
+					format_type = "number",
+					find_value = {
+						buff_template_name = "veteran_improved_tag_debuff",
+						find_value_type = "buff_template",
+						path = {
+							"max_stacks"
+						}
+					}
+				}
+			},
+			special_rule = {
+				special_rule_name = "veteran_improved_tag_more_damage",
+				identifier = "veteran_improved_tag_more_damage"
 			}
 		}
 	}

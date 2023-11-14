@@ -48,6 +48,21 @@ local elements = {
 			"dead",
 			"alive"
 		}
+	},
+	{
+		class_name = "HudElementSpectateFading",
+		filename = "scripts/ui/hud/elements/spectate_fading/hud_element_spectate_fading",
+		visibility_groups = {
+			"popup",
+			"prologue_cutscene",
+			"cutscene",
+			"in_view",
+			"tactical_overlay",
+			"communication_wheel",
+			"testify",
+			"dead",
+			"alive"
+		}
 	}
 }
 

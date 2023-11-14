@@ -36,7 +36,7 @@ template.create_widget_defintion = function (template, scenegraph_id)
 	local size = template.size
 	local header_font_setting_name = "hud_body"
 	local header_font_settings = UIFontSettings[header_font_setting_name]
-	local header_font_color = Color.ui_hud_green_light(255, true)
+	local header_font_color = Color.terminal_text_body(255, true)
 
 	return UIWidget.create_definition({
 		{

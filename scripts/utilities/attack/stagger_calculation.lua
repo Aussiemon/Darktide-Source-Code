@@ -34,8 +34,9 @@ StaggerCalculation.calculate = function (damage_profile, target_settings, lerp_v
 
 	if damage_profile.no_stagger_breed_tag then
 		local exclude_this = damage_profile.no_stagger_breed_tag
+		local breed_tags = breed.tags
 
-		if breed.tags[exclude_this] then
+		if breed_tags and breed_tags[exclude_this] then
 			stagger_type = nil
 		end
 	end

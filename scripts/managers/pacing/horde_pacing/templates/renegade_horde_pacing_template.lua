@@ -52,6 +52,12 @@ local DEFAULT_TRICKLE_HORDE_COMPOSITIONS = {
 		},
 		poxwalkers = {
 			HordeCompositions.renegade_trickle_melee
+		},
+		waiting_for_ramp_clear = {
+			HordeCompositions.renegade_trickle_ogryns_high_3,
+			HordeCompositions.renegade_trickle_ogryns_high_4,
+			HordeCompositions.renegade_trickle_high_1,
+			HordeCompositions.renegade_trickle_high_2
 		}
 	},
 	cultist = {
@@ -67,6 +73,12 @@ local DEFAULT_TRICKLE_HORDE_COMPOSITIONS = {
 		},
 		poxwalkers = {
 			HordeCompositions.cultist_trickle_melee
+		},
+		waiting_for_ramp_clear = {
+			HordeCompositions.cultist_trickle_ogryns_high_3,
+			HordeCompositions.cultist_trickle_ogryns_high_4,
+			HordeCompositions.cultist_trickle_high_1,
+			HordeCompositions.cultist_trickle_high_2
 		}
 	}
 }
@@ -83,7 +95,16 @@ local HIGH_TRICKLE_HORDE_COMPOSITIONS = {
 		high = {
 			HordeCompositions.renegade_trickle_riflemen_high,
 			HordeCompositions.renegade_trickle_gunners,
-			HordeCompositions.renegade_trickle_melee_elites
+			HordeCompositions.renegade_trickle_melee_elites,
+			HordeCompositions.renegade_trickle_ogryn_gunners,
+			HordeCompositions.renegade_trickle_ogryn_bulwarks,
+			HordeCompositions.renegade_trickle_ogryn_executors
+		},
+		waiting_for_ramp_clear = {
+			HordeCompositions.renegade_trickle_ogryns_high_3,
+			HordeCompositions.renegade_trickle_ogryns_high_4,
+			HordeCompositions.renegade_trickle_high_1,
+			HordeCompositions.renegade_trickle_high_2
 		},
 		poxwalkers = {
 			HordeCompositions.renegade_trickle_melee
@@ -105,6 +126,12 @@ local HIGH_TRICKLE_HORDE_COMPOSITIONS = {
 			HordeCompositions.cultist_trickle_ogryn_gunners,
 			HordeCompositions.cultist_trickle_ogryn_bulwarks,
 			HordeCompositions.cultist_trickle_ogryn_executors
+		},
+		waiting_for_ramp_clear = {
+			HordeCompositions.cultist_trickle_ogryns_high_3,
+			HordeCompositions.cultist_trickle_ogryns_high_4,
+			HordeCompositions.cultist_trickle_high_1,
+			HordeCompositions.cultist_trickle_high_2
 		},
 		poxwalkers = {
 			HordeCompositions.cultist_trickle_melee
@@ -208,281 +235,6 @@ local function low_coherency(target_side_id)
 end
 
 local horde_pacing_template = {
-	name = "renegade_horde",
-	resistance_templates = {
-		{
-			num_trickle_hordes_active_for_cooldown = 2,
-			max_active_minions = 90,
-			trigger_heard_dialogue = true,
-			time_between_waves = 17,
-			aggro_nearby_roamers_zone_range = 1,
-			max_active_hordes = 3,
-			max_active_minions_for_ambush = 50,
-			horde_timer_range = {
-				300,
-				450
-			},
-			first_spawn_timer_modifer = {
-				0.3,
-				0.6
-			},
-			num_waves = {
-				far_vector_horde = 3,
-				ambush_horde = 1
-			},
-			travel_distance_required_for_horde = {
-				150,
-				190
-			},
-			horde_templates = {
-				HordeTemplates.far_vector_horde,
-				HordeTemplates.ambush_horde
-			},
-			horde_compositions = {
-				far_vector_horde = {
-					HordeCompositions.renegade_medium,
-					HordeCompositions.infected_medium
-				},
-				ambush_horde = {
-					HordeCompositions.infected_large
-				},
-				trickle_horde = DEFAULT_TRICKLE_HORDE_COMPOSITIONS,
-				flood_horde = {
-					HordeCompositions.renegade_flood
-				}
-			},
-			stinger_sound_events = STINGER_SOUND_EVENTS,
-			pre_stinger_sound_events = PRE_STINGER_SOUND_EVENTS,
-			horde_group_sound_events = HORDE_GROUP_SOUND_EVENTS,
-			pre_stinger_delays = PRE_STINGER_DELAYS,
-			trickle_horde_travel_distance_range = {
-				90,
-				180
-			},
-			trickle_horde_cooldown = {
-				40,
-				45
-			}
-		},
-		{
-			num_trickle_hordes_active_for_cooldown = 3,
-			max_active_minions = 90,
-			trigger_heard_dialogue = true,
-			time_between_waves = 15,
-			aggro_nearby_roamers_zone_range = 2,
-			max_active_hordes = 3,
-			max_active_minions_for_ambush = 50,
-			horde_timer_range = {
-				260,
-				420
-			},
-			first_spawn_timer_modifer = {
-				0.3,
-				0.6
-			},
-			num_waves = {
-				far_vector_horde = 3,
-				ambush_horde = 1
-			},
-			travel_distance_required_for_horde = {
-				120,
-				170
-			},
-			horde_templates = {
-				HordeTemplates.far_vector_horde,
-				HordeTemplates.ambush_horde
-			},
-			horde_compositions = {
-				far_vector_horde = {
-					HordeCompositions.renegade_medium,
-					HordeCompositions.infected_medium
-				},
-				ambush_horde = {
-					HordeCompositions.infected_large
-				},
-				trickle_horde = DEFAULT_TRICKLE_HORDE_COMPOSITIONS,
-				flood_horde = {
-					HordeCompositions.renegade_flood
-				}
-			},
-			stinger_sound_events = STINGER_SOUND_EVENTS,
-			pre_stinger_sound_events = PRE_STINGER_SOUND_EVENTS,
-			horde_group_sound_events = HORDE_GROUP_SOUND_EVENTS,
-			pre_stinger_delays = PRE_STINGER_DELAYS,
-			trickle_horde_travel_distance_range = {
-				70,
-				140
-			},
-			trickle_horde_cooldown = {
-				40,
-				45
-			}
-		},
-		{
-			num_trickle_hordes_active_for_cooldown = 3,
-			max_active_minions = 100,
-			trigger_heard_dialogue = true,
-			time_between_waves = 10,
-			aggro_nearby_roamers_zone_range = 2,
-			max_active_hordes = 3,
-			max_active_minions_for_ambush = 60,
-			horde_timer_range = {
-				230,
-				400
-			},
-			first_spawn_timer_modifer = {
-				0.25,
-				0.6
-			},
-			num_waves = {
-				far_vector_horde = 3,
-				ambush_horde = 1
-			},
-			travel_distance_required_for_horde = {
-				80,
-				130
-			},
-			horde_templates = {
-				HordeTemplates.far_vector_horde,
-				HordeTemplates.ambush_horde
-			},
-			horde_compositions = {
-				far_vector_horde = {
-					HordeCompositions.renegade_medium,
-					HordeCompositions.infected_medium
-				},
-				ambush_horde = {
-					HordeCompositions.infected_large
-				},
-				trickle_horde = DEFAULT_TRICKLE_HORDE_COMPOSITIONS,
-				flood_horde = {
-					HordeCompositions.renegade_flood
-				}
-			},
-			stinger_sound_events = STINGER_SOUND_EVENTS,
-			pre_stinger_sound_events = PRE_STINGER_SOUND_EVENTS,
-			horde_group_sound_events = HORDE_GROUP_SOUND_EVENTS,
-			pre_stinger_delays = PRE_STINGER_DELAYS,
-			trickle_horde_travel_distance_range = {
-				40,
-				90
-			},
-			trickle_horde_cooldown = {
-				40,
-				45
-			}
-		},
-		{
-			num_trickle_hordes_active_for_cooldown = 3,
-			max_active_minions = 110,
-			trigger_heard_dialogue = true,
-			time_between_waves = 10,
-			aggro_nearby_roamers_zone_range = 3,
-			max_active_hordes = 3,
-			max_active_minions_for_ambush = 60,
-			horde_timer_range = {
-				210,
-				340
-			},
-			first_spawn_timer_modifer = {
-				0.2,
-				0.6
-			},
-			num_waves = {
-				far_vector_horde = 3,
-				ambush_horde = 1
-			},
-			travel_distance_required_for_horde = {
-				50,
-				80
-			},
-			horde_templates = {
-				HordeTemplates.far_vector_horde,
-				HordeTemplates.ambush_horde
-			},
-			horde_compositions = {
-				far_vector_horde = {
-					HordeCompositions.renegade_medium,
-					HordeCompositions.infected_medium
-				},
-				ambush_horde = {
-					HordeCompositions.infected_large
-				},
-				trickle_horde = HIGH_TRICKLE_HORDE_COMPOSITIONS,
-				flood_horde = {
-					HordeCompositions.renegade_flood
-				}
-			},
-			stinger_sound_events = STINGER_SOUND_EVENTS,
-			pre_stinger_sound_events = PRE_STINGER_SOUND_EVENTS,
-			horde_group_sound_events = HORDE_GROUP_SOUND_EVENTS,
-			pre_stinger_delays = PRE_STINGER_DELAYS,
-			trickle_horde_travel_distance_range = {
-				40,
-				75
-			},
-			trickle_horde_cooldown = {
-				40,
-				45
-			}
-		},
-		{
-			num_trickle_hordes_active_for_cooldown = 3,
-			max_active_minions = 110,
-			trigger_heard_dialogue = true,
-			time_between_waves = 10,
-			aggro_nearby_roamers_zone_range = 3,
-			max_active_hordes = 3,
-			max_active_minions_for_ambush = 60,
-			horde_timer_range = {
-				160,
-				300
-			},
-			first_spawn_timer_modifer = {
-				0.2,
-				0.6
-			},
-			num_waves = {
-				far_vector_horde = 3,
-				ambush_horde = 1
-			},
-			travel_distance_required_for_horde = {
-				40,
-				70
-			},
-			horde_templates = {
-				HordeTemplates.far_vector_horde,
-				HordeTemplates.ambush_horde
-			},
-			horde_compositions = {
-				far_vector_horde = {
-					HordeCompositions.renegade_medium,
-					HordeCompositions.infected_medium
-				},
-				ambush_horde = {
-					HordeCompositions.infected_large
-				},
-				trickle_horde = HIGH_TRICKLE_HORDE_COMPOSITIONS,
-				flood_horde = {
-					HordeCompositions.renegade_flood
-				}
-			},
-			stinger_sound_events = STINGER_SOUND_EVENTS,
-			pre_stinger_sound_events = PRE_STINGER_SOUND_EVENTS,
-			horde_group_sound_events = HORDE_GROUP_SOUND_EVENTS,
-			pre_stinger_delays = PRE_STINGER_DELAYS,
-			trickle_horde_travel_distance_range = {
-				40,
-				75
-			},
-			trickle_horde_cooldown = {
-				40,
-				45
-			}
-		}
-	}
-}
-horde_pacing_template = {
 	name = "renegade_horde",
 	resistance_templates = {
 		{
@@ -856,7 +608,7 @@ horde_pacing_template = {
 					},
 					horde_setup = {
 						{
-							time_between_waves = 10,
+							time_between_waves = 5,
 							stinger = "wwise/events/minions/play_signal_horde_poxwalkers_3d",
 							horde_type = "far_vector_horde",
 							time_to_first_wave = 7,
@@ -1129,7 +881,7 @@ horde_pacing_template = {
 					},
 					horde_setup = {
 						{
-							time_between_waves = 10,
+							time_between_waves = 5,
 							stinger = "wwise/events/minions/play_signal_horde_poxwalkers_3d",
 							horde_type = "far_vector_horde",
 							time_to_first_wave = 7,
@@ -1488,7 +1240,7 @@ horde_pacing_template = {
 					},
 					horde_setup = {
 						{
-							time_between_waves = 10,
+							time_between_waves = 5,
 							stinger = "wwise/events/minions/play_signal_horde_poxwalkers_3d",
 							horde_type = "far_vector_horde",
 							time_to_first_wave = 7,

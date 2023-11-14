@@ -244,29 +244,6 @@ CinematicManager.update = function (self, dt, t)
 			end
 
 			if skip_all then
-				for i = 1, #self._queued_stories do
-					local queued_story = self._queued_stories[i]
-					local story_level = queued_story.level
-					local story_id = self._storyteller:play_level_story(story_level, queued_story.name)
-
-					self._storyteller:stop(story_id)
-
-					if queued_story.played_callback then
-						queued_story.played_callback()
-					end
-
-					if not self._is_server then
-						local cinematics_name = queued_story.name
-						local cinematic_scene_name = queued_story.cinematic_scene_name
-						local percent_viewed = 0
-						local player = Managers.player:local_player(1)
-						local profile = player and player:profile()
-						local character_level = profile and profile.current_level or 0
-
-						Managers.telemetry_events:end_cutscene(cinematics_name, cinematic_scene_name, percent_viewed, character_level)
-					end
-				end
-
 				self:stop_all_stories()
 			else
 				local cinematic_scene_name = self._active_story.cinematic_scene_name
@@ -288,7 +265,7 @@ CinematicManager.update = function (self, dt, t)
 					local popup_info = next_story.popup_info
 					local popup_header = popup_info and popup_info.header_text or "loc_popup_header_path_of_trust_cutscene_waiting"
 					local popup_desc = popup_info and popup_info.description_text or "loc_popup_description_path_of_trust_cutscene_waiting"
-					local popup_button = popup_info and popup_info.button_text or "loc_popup_button_path_of_trust_accept_cutscene"
+					local popup_button = popup_info and popup_info.button_text or "loc_popup_cutscene_strategium_accept_button"
 					local context = {
 						title_text = popup_header,
 						description_text = popup_desc,
@@ -541,16 +518,47 @@ CinematicManager.play_story = function (self, story_definition)
 end
 
 CinematicManager.stop_all_stories = function (self)
-	self:_unload_all_levels()
+	for i = 1, #self._queued_stories do
+		local queued_story = self._queued_stories[i]
+		local story_level = queued_story.level
+		local story_id = self._storyteller:play_level_story(story_level, queued_story.name)
+
+		self._storyteller:stop(story_id)
+
+		if queued_story.played_callback then
+			queued_story.played_callback()
+		end
+
+		if not self._is_server then
+			local cinematics_name = queued_story.name
+			local cinematic_scene_name = queued_story.cinematic_scene_name
+			local percent_viewed = 0
+			local player = Managers.player:local_player(1)
+			local profile = player and player:profile()
+			local character_level = profile and profile.current_level or 0
+
+			Managers.telemetry_events:end_cutscene(cinematics_name, cinematic_scene_name, percent_viewed, character_level)
+		end
+	end
 
 	if self._active_story then
+		local cinematic_scene_name = self._active_story.cinematic_scene_name
 		local story_definition = self._active_story
 		local story_id = story_definition.story_id
 
 		self._storyteller:stop(story_id)
 
 		self._active_story = nil
+
+		if not self._is_server and cinematic_scene_name then
+			local cinematic_scene_system = Managers.state.extension:system("cinematic_scene_system")
+
+			cinematic_scene_system:client_unset_scene(cinematic_scene_name)
+			Managers.world:set_world_update_time_scale(1)
+		end
 	end
+
+	self:_unload_all_levels()
 end
 
 CinematicManager._on_levels_loaded = function (self, request_id, load_only, cinematic_name, levels_loaded)

@@ -37,6 +37,7 @@ InventoryBackgroundView.init = function (self, settings, context)
 	self._new_items_gear_ids_by_type = {}
 	self._invalid_slots = {}
 	self._modified_slots = {}
+	self._duplicated_slots = {}
 	self._inventory_synced = false
 
 	self:_fetch_inventory_items()
@@ -479,9 +480,10 @@ InventoryBackgroundView.event_item_icon_updated = function (self, item)
 			self:_equip_slot_item(slot_name, item, force_update)
 
 			if self._current_profile_equipped_items then
-				local invalid_slots, modified_slots = self:_validate_loadout(self._current_profile_equipped_items, true)
+				local invalid_slots, modified_slots, duplicated_slots = self:_validate_loadout(self._current_profile_equipped_items, true)
 				self._invalid_slots = invalid_slots
 				self._modified_slots = modified_slots
+				self._duplicated_slots = duplicated_slots
 			end
 
 			break
@@ -505,11 +507,19 @@ InventoryBackgroundView._equip_slot_item = function (self, slot_name, item, forc
 			current_loadout[slot_name] = item
 			self._invalid_slots[slot_name] = nil
 			self._modified_slots[slot_name] = nil
+
+			if self._duplicated_slots[slot_name] then
+				self._duplicated_slots = {}
+			end
 		end
 	end
 end
 
 InventoryBackgroundView._equip_local_changes = function (self)
+	if not self._is_own_player or self._is_readonly then
+		return
+	end
+
 	local profile_loadout = self._presentation_profile.loadout
 	local preview_loadout = self._preview_profile_equipped_items
 	local original_equips = self._starting_profile_equipped_items
@@ -588,6 +598,21 @@ InventoryBackgroundView.cb_on_clear_all_talents_pressed = function (self)
 	view_instance:cb_on_clear_all_talents_pressed()
 end
 
+InventoryBackgroundView.cb_on_item_stats_toggled = function (self)
+	local active_view = self._active_view
+	local view_instance = Managers.ui:view_instance(active_view)
+	local do_save = true
+
+	view_instance:on_item_stats_toggled(nil, do_save)
+end
+
+InventoryBackgroundView.is_item_stats_toggled = function (self)
+	local active_view = self._active_view
+	local view_instance = Managers.ui:view_instance(active_view)
+
+	return view_instance and view_instance.is_item_stats_toggled and view_instance:is_item_stats_toggled() or false
+end
+
 InventoryBackgroundView.cb_on_weapon_swap_pressed = function (self)
 	local slot_name = self._preview_wield_slot_id
 	slot_name = slot_name == "slot_primary" and "slot_secondary" or "slot_primary"
@@ -626,7 +651,8 @@ InventoryBackgroundView._setup_top_panel = function (self)
 	local reference_name = "top_panel"
 	local layer = 90
 	self._top_panel = self:_add_element(ViewElementMenuPanel, reference_name, layer)
-	local profile = self._preview_player:profile()
+	local player = self._preview_player
+	local profile = player:profile()
 	local profile_archetype = profile.archetype
 	local archetype_name = profile_archetype.name
 	local is_ogryn = archetype_name == "ogryn"
@@ -956,7 +982,7 @@ InventoryBackgroundView._setup_top_panel = function (self)
 							}
 						},
 						item_hover_information_offset = {
-							657
+							0
 						},
 						layout = {
 							{
@@ -1054,7 +1080,7 @@ InventoryBackgroundView._setup_top_panel = function (self)
 								},
 								item_type = UISettings.ITEM_TYPES.CHARACTER_INSIGNIA
 							},
-							{
+							not self._is_readonly and {
 								scenegraph_id = "button_expressions",
 								slot_title = "loc_inventory_title_slot_animation_end_of_round",
 								display_name = "loc_inventory_title_slot_animation_end_of_round",
@@ -1074,8 +1100,8 @@ InventoryBackgroundView._setup_top_panel = function (self)
 								has_new_items_update_callback = function (item_type)
 									return self:has_new_items_by_type(item_type)
 								end
-							},
-							{
+							} or nil,
+							not self._is_readonly and {
 								scenegraph_id = "button_emote_1",
 								slot_title = "loc_inventory_title_slot_animation_emote_1",
 								display_name = "loc_inventory_title_slot_animation_emote_1",
@@ -1101,8 +1127,8 @@ InventoryBackgroundView._setup_top_panel = function (self)
 								has_new_items_update_callback = function (item_type)
 									return self:has_new_items_by_type(item_type)
 								end
-							},
-							{
+							} or nil,
+							not self._is_readonly and {
 								scenegraph_id = "button_emote_2",
 								slot_title = "loc_inventory_title_slot_animation_emote_2",
 								display_name = "loc_inventory_title_slot_animation_emote_2",
@@ -1128,8 +1154,8 @@ InventoryBackgroundView._setup_top_panel = function (self)
 								has_new_items_update_callback = function (item_type)
 									return self:has_new_items_by_type(item_type)
 								end
-							},
-							{
+							} or nil,
+							not self._is_readonly and {
 								scenegraph_id = "button_emote_3",
 								slot_title = "loc_inventory_title_slot_animation_emote_3",
 								display_name = "loc_inventory_title_slot_animation_emote_3",
@@ -1155,8 +1181,8 @@ InventoryBackgroundView._setup_top_panel = function (self)
 								has_new_items_update_callback = function (item_type)
 									return self:has_new_items_by_type(item_type)
 								end
-							},
-							{
+							} or nil,
+							not self._is_readonly and {
 								scenegraph_id = "button_emote_4",
 								slot_title = "loc_inventory_title_slot_animation_emote_4",
 								display_name = "loc_inventory_title_slot_animation_emote_4",
@@ -1182,8 +1208,8 @@ InventoryBackgroundView._setup_top_panel = function (self)
 								has_new_items_update_callback = function (item_type)
 									return self:has_new_items_by_type(item_type)
 								end
-							},
-							{
+							} or nil,
+							not self._is_readonly and {
 								scenegraph_id = "button_emote_5",
 								slot_title = "loc_inventory_title_slot_animation_emote_5",
 								display_name = "loc_inventory_title_slot_animation_emote_5",
@@ -1209,7 +1235,7 @@ InventoryBackgroundView._setup_top_panel = function (self)
 								has_new_items_update_callback = function (item_type)
 									return self:has_new_items_by_type(item_type)
 								end
-							}
+							} or nil
 						}
 					}
 				}
@@ -1339,7 +1365,9 @@ InventoryBackgroundView._on_panel_option_pressed = function (self, index)
 		self._active_view_context = nil
 	end
 
-	self:_play_sound(UISoundEvents.tab_button_pressed)
+	if not self._using_cursor_navigation then
+		self:_play_sound(UISoundEvents.tab_button_pressed)
+	end
 end
 
 InventoryBackgroundView._force_select_panel_index = function (self, index)
@@ -1488,6 +1516,7 @@ InventoryBackgroundView.event_on_profile_preset_changed = function (self, profil
 
 		self._invalid_slots = {}
 		self._modified_slots = {}
+		self._duplicated_slots = {}
 
 		if profile_preset.loadout then
 			self:_validate_loadout(profile_preset.loadout)
@@ -1495,7 +1524,14 @@ InventoryBackgroundView.event_on_profile_preset_changed = function (self, profil
 	end
 
 	if profile_preset then
-		self._current_profile_equipped_talents = profile_preset.talents
+		local active_talent_loadout = self._active_talent_loadout
+		local active_talent_version = active_talent_loadout.version
+
+		if profile_preset.talents_version == active_talent_version then
+			self._current_profile_equipped_talents = profile_preset.talents or {}
+		else
+			self._current_profile_equipped_talents = {}
+		end
 	else
 		self:_apply_current_talents_to_profile()
 	end
@@ -1510,8 +1546,8 @@ end
 InventoryBackgroundView._update_presets_missing_warning_marker = function (self)
 	local presets = ProfileUtils.get_profile_presets()
 
-	if not presets or presets == 0 then
-		local show_warning = not table.is_empty(self._invalid_slots)
+	if not presets or #presets == 0 then
+		local show_warning = not table.is_empty(self._invalid_slots) or not table.is_empty(self._duplicated_slots)
 		local show_modified = not table.is_empty(self._modified_slots)
 
 		self._profile_presets_element:set_current_profile_loadout_status(show_warning, show_modified)
@@ -1524,14 +1560,15 @@ InventoryBackgroundView._update_presets_missing_warning_marker = function (self)
 			local loadout = presets and preset.loadout
 			local invalid_slots = {}
 			local modified_slots = {}
+			local duplicated_slots = {}
 			local show_warning = false
 			local show_modified = false
 
 			if loadout then
-				invalid_slots, modified_slots = self:_validate_loadout(loadout, true)
+				invalid_slots, modified_slots, duplicated_slots = self:_validate_loadout(loadout, true)
 			end
 
-			show_warning = not table.is_empty(invalid_slots)
+			show_warning = not table.is_empty(invalid_slots) or not table.is_empty(duplicated_slots)
 			show_modified = not table.is_empty(modified_slots)
 			local preset_talents_version = preset.talents_version
 
@@ -1548,16 +1585,17 @@ InventoryBackgroundView._update_presets_missing_warning_marker = function (self)
 		if active_profile_preset then
 			local invalid_slots = {}
 			local modified_slots = {}
+			local duplicated_slots = {}
 
 			if active_profile_preset.loadout then
 				local read_only = true
 
 				if active_profile_preset.loadout then
-					invalid_slots, modified_slots = self:_validate_loadout(active_profile_preset.loadout, read_only)
+					invalid_slots, modified_slots, duplicated_slots = self:_validate_loadout(active_profile_preset.loadout, read_only)
 				end
 			end
 
-			local show_warning = not table.is_empty(invalid_slots)
+			local show_warning = not table.is_empty(invalid_slots) or not table.is_empty(duplicated_slots)
 			local show_modified = not table.is_empty(modified_slots)
 
 			self._profile_presets_element:set_current_profile_loadout_status(show_warning, show_modified)
@@ -1786,7 +1824,7 @@ InventoryBackgroundView.on_exit = function (self)
 
 	InventoryBackgroundView.super.on_exit(self)
 
-	if self._entered and self:is_inventory_synced() then
+	if self._entered and not self._is_readonly and self:is_inventory_synced() then
 		self:_equip_local_changes()
 		self:_save_current_talents_to_profile_preset()
 		self:_apply_current_talents_to_profile()
@@ -1794,6 +1832,10 @@ InventoryBackgroundView.on_exit = function (self)
 end
 
 InventoryBackgroundView._save_current_talents_to_profile_preset = function (self)
+	if not self._is_own_player or self._is_readonly then
+		return
+	end
+
 	local active_profile_preset_id = ProfileUtils.get_active_profile_preset_id()
 
 	if active_profile_preset_id then
@@ -1972,7 +2014,7 @@ InventoryBackgroundView.update = function (self, dt, t, input_service)
 		if not self._check_for_loadout_update_timeout or self._check_for_loadout_update_timeout < InventoryBackgroundViewSettings.loadout_update_timeout and self._is_own_player then
 			self._check_for_loadout_update_timeout = self._check_for_loadout_update_timeout and self._check_for_loadout_update_timeout + dt or 0
 		else
-			Managers.ui:update_client_loadout_waiting_state()
+			Managers.ui:update_client_loadout_waiting_state(false)
 
 			self._check_for_loadout_update_timeout = nil
 		end
@@ -2058,13 +2100,15 @@ InventoryBackgroundView._setup_inventory = function (self)
 	if self._is_own_player and not self._is_readonly then
 		local invalid_slots = {}
 		local modified_slots = {}
+		local duplicated_slots = {}
 
 		if player_loadout then
-			invalid_slots, modified_slots = self:_validate_loadout(player_loadout, true)
+			invalid_slots, modified_slots, duplicated_slots = self:_validate_loadout(player_loadout, true)
 		end
 
 		self._invalid_slots = invalid_slots
 		self._modified_slots = modified_slots
+		self._duplicated_slots = duplicated_slots
 		local items = self._inventory_items
 		local new_items, new_items_by_type = self:_get_valid_new_items(items)
 		self._new_items_gear_ids = new_items
@@ -2223,16 +2267,17 @@ end
 InventoryBackgroundView._validate_loadout = function (self, loadout, read_only)
 
 	-- Decompilation error in this vicinity:
-	--- BLOCK #0 1-6, warpins: 1 ---
+	--- BLOCK #0 1-7, warpins: 1 ---
 	local invalid_slots = {}
 	local modified_slots = {}
+	local duplicated_slots = {}
 	local only_show_slot_as_invalid = {}
 
 	if not self._is_own_player or self._is_readonly then
 
 		-- Decompilation error in this vicinity:
-		--- BLOCK #2 10-12, warpins: 2 ---
-		return invalid_slots, modified_slots
+		--- BLOCK #2 11-14, warpins: 2 ---
+		return invalid_slots, modified_slots, duplicated_slots
 		--- END OF BLOCK #2 ---
 
 
@@ -2246,10 +2291,10 @@ InventoryBackgroundView._validate_loadout = function (self, loadout, read_only)
 
 
 	-- Decompilation error in this vicinity:
-	--- BLOCK #1 7-9, warpins: 1 ---
+	--- BLOCK #1 8-10, warpins: 1 ---
 	--- END OF BLOCK #1 ---
 
-	slot6 = if self._is_readonly then
+	slot7 = if self._is_readonly then
 	JUMP TO BLOCK #2
 	else
 	JUMP TO BLOCK #3
@@ -2258,8 +2303,8 @@ InventoryBackgroundView._validate_loadout = function (self, loadout, read_only)
 
 
 	-- Decompilation error in this vicinity:
-	--- BLOCK #2 10-12, warpins: 2 ---
-	return invalid_slots, modified_slots
+	--- BLOCK #2 11-14, warpins: 2 ---
+	return invalid_slots, modified_slots, duplicated_slots
 
 	--- END OF BLOCK #2 ---
 
@@ -2267,7 +2312,7 @@ InventoryBackgroundView._validate_loadout = function (self, loadout, read_only)
 
 
 	-- Decompilation error in this vicinity:
-	--- BLOCK #3 13-16, warpins: 2 ---
+	--- BLOCK #3 15-18, warpins: 2 ---
 	--- END OF BLOCK #3 ---
 
 	for slot_name, item_data in pairs(loadout)
@@ -2278,7 +2323,7 @@ InventoryBackgroundView._validate_loadout = function (self, loadout, read_only)
 
 
 	-- Decompilation error in this vicinity:
-	--- BLOCK #4 17-21, warpins: 1 ---
+	--- BLOCK #4 19-23, warpins: 1 ---
 	--- END OF BLOCK #4 ---
 
 	if type(item_data)
@@ -2292,8 +2337,8 @@ InventoryBackgroundView._validate_loadout = function (self, loadout, read_only)
 
 
 	-- Decompilation error in this vicinity:
-	--- BLOCK #5 22-23, warpins: 1 ---
-	slot11 = item_data.gear_id
+	--- BLOCK #5 24-25, warpins: 1 ---
+	slot12 = item_data.gear_id
 	--- END OF BLOCK #5 ---
 
 	UNCONDITIONAL JUMP; TARGET BLOCK #8
@@ -2301,8 +2346,8 @@ InventoryBackgroundView._validate_loadout = function (self, loadout, read_only)
 
 
 	-- Decompilation error in this vicinity:
-	--- BLOCK #6 24-25, warpins: 1 ---
-	slot11 = false
+	--- BLOCK #6 26-27, warpins: 1 ---
+	slot12 = false
 	--- END OF BLOCK #6 ---
 
 	UNCONDITIONAL JUMP; TARGET BLOCK #8
@@ -2310,7 +2355,7 @@ InventoryBackgroundView._validate_loadout = function (self, loadout, read_only)
 
 
 	-- Decompilation error in this vicinity:
-	--- BLOCK #7 26-26, warpins: 0 ---
+	--- BLOCK #7 28-28, warpins: 0 ---
 	local gear_id = true
 
 	--- END OF BLOCK #7 ---
@@ -2320,10 +2365,10 @@ InventoryBackgroundView._validate_loadout = function (self, loadout, read_only)
 
 
 	-- Decompilation error in this vicinity:
-	--- BLOCK #8 27-28, warpins: 3 ---
+	--- BLOCK #8 29-30, warpins: 3 ---
 	--- END OF BLOCK #8 ---
 
-	slot11 = if gear_id then
+	slot12 = if gear_id then
 	JUMP TO BLOCK #9
 	else
 	JUMP TO BLOCK #12
@@ -2332,10 +2377,10 @@ InventoryBackgroundView._validate_loadout = function (self, loadout, read_only)
 
 
 	-- Decompilation error in this vicinity:
-	--- BLOCK #9 29-34, warpins: 1 ---
+	--- BLOCK #9 31-36, warpins: 1 ---
 	--- END OF BLOCK #9 ---
 
-	slot12 = if not self:_get_inventory_item_by_id(gear_id)
+	slot13 = if not self:_get_inventory_item_by_id(gear_id)
 
 	 then
 	JUMP TO BLOCK #10
@@ -2346,10 +2391,10 @@ InventoryBackgroundView._validate_loadout = function (self, loadout, read_only)
 
 
 	-- Decompilation error in this vicinity:
-	--- BLOCK #10 35-37, warpins: 1 ---
+	--- BLOCK #10 37-39, warpins: 1 ---
 	--- END OF BLOCK #10 ---
 
-	slot12 = if not item_data.always_owned then
+	slot13 = if not item_data.always_owned then
 	JUMP TO BLOCK #11
 	else
 	JUMP TO BLOCK #12
@@ -2358,7 +2403,7 @@ InventoryBackgroundView._validate_loadout = function (self, loadout, read_only)
 
 
 	-- Decompilation error in this vicinity:
-	--- BLOCK #11 38-40, warpins: 1 ---
+	--- BLOCK #11 40-42, warpins: 1 ---
 	invalid_slots[slot_name] = true
 
 	--- END OF BLOCK #11 ---
@@ -2368,7 +2413,7 @@ InventoryBackgroundView._validate_loadout = function (self, loadout, read_only)
 
 
 	-- Decompilation error in this vicinity:
-	--- BLOCK #12 41-45, warpins: 3 ---
+	--- BLOCK #12 43-47, warpins: 3 ---
 	--- END OF BLOCK #12 ---
 
 	if type(item_data)
@@ -2381,10 +2426,10 @@ InventoryBackgroundView._validate_loadout = function (self, loadout, read_only)
 
 
 	-- Decompilation error in this vicinity:
-	--- BLOCK #13 46-51, warpins: 1 ---
+	--- BLOCK #13 48-53, warpins: 1 ---
 	--- END OF BLOCK #13 ---
 
-	slot12 = if not self:_get_inventory_item_by_id(item_data)
+	slot13 = if not self:_get_inventory_item_by_id(item_data)
 
 	 then
 	JUMP TO BLOCK #14
@@ -2395,7 +2440,7 @@ InventoryBackgroundView._validate_loadout = function (self, loadout, read_only)
 
 
 	-- Decompilation error in this vicinity:
-	--- BLOCK #14 52-54, warpins: 1 ---
+	--- BLOCK #14 54-56, warpins: 1 ---
 	invalid_slots[slot_name] = true
 	--- END OF BLOCK #14 ---
 
@@ -2404,7 +2449,7 @@ InventoryBackgroundView._validate_loadout = function (self, loadout, read_only)
 
 
 	-- Decompilation error in this vicinity:
-	--- BLOCK #15 55-59, warpins: 2 ---
+	--- BLOCK #15 57-61, warpins: 2 ---
 	local allowed_duplicates = {
 		slot_animation_emote_3 = true,
 		slot_animation_emote_5 = true,
@@ -2420,7 +2465,7 @@ InventoryBackgroundView._validate_loadout = function (self, loadout, read_only)
 
 
 	-- Decompilation error in this vicinity:
-	--- BLOCK #16 60-64, warpins: 1 ---
+	--- BLOCK #16 62-66, warpins: 1 ---
 	--- END OF BLOCK #16 ---
 
 	if type(checked_load_data)
@@ -2433,10 +2478,10 @@ InventoryBackgroundView._validate_loadout = function (self, loadout, read_only)
 
 
 	-- Decompilation error in this vicinity:
-	--- BLOCK #17 65-67, warpins: 1 ---
+	--- BLOCK #17 67-69, warpins: 1 ---
 	--- END OF BLOCK #17 ---
 
-	slot18 = if not checked_load_data.gear_id then
+	slot19 = if not checked_load_data.gear_id then
 	JUMP TO BLOCK #18
 	else
 	JUMP TO BLOCK #22
@@ -2445,7 +2490,7 @@ InventoryBackgroundView._validate_loadout = function (self, loadout, read_only)
 
 
 	-- Decompilation error in this vicinity:
-	--- BLOCK #18 68-72, warpins: 2 ---
+	--- BLOCK #18 70-74, warpins: 2 ---
 	--- END OF BLOCK #18 ---
 
 	if type(checked_load_data)
@@ -2459,8 +2504,8 @@ InventoryBackgroundView._validate_loadout = function (self, loadout, read_only)
 
 
 	-- Decompilation error in this vicinity:
-	--- BLOCK #19 73-74, warpins: 1 ---
-	slot18 = checked_load_data
+	--- BLOCK #19 75-76, warpins: 1 ---
+	slot19 = checked_load_data
 	--- END OF BLOCK #19 ---
 
 	UNCONDITIONAL JUMP; TARGET BLOCK #22
@@ -2468,8 +2513,8 @@ InventoryBackgroundView._validate_loadout = function (self, loadout, read_only)
 
 
 	-- Decompilation error in this vicinity:
-	--- BLOCK #20 75-76, warpins: 1 ---
-	slot18 = false
+	--- BLOCK #20 77-78, warpins: 1 ---
+	slot19 = false
 	--- END OF BLOCK #20 ---
 
 	UNCONDITIONAL JUMP; TARGET BLOCK #22
@@ -2477,7 +2522,7 @@ InventoryBackgroundView._validate_loadout = function (self, loadout, read_only)
 
 
 	-- Decompilation error in this vicinity:
-	--- BLOCK #21 77-77, warpins: 0 ---
+	--- BLOCK #21 79-79, warpins: 0 ---
 	local checked_gear_id = true
 
 	--- END OF BLOCK #21 ---
@@ -2487,7 +2532,7 @@ InventoryBackgroundView._validate_loadout = function (self, loadout, read_only)
 
 
 	-- Decompilation error in this vicinity:
-	--- BLOCK #22 78-82, warpins: 4 ---
+	--- BLOCK #22 80-84, warpins: 4 ---
 	--- END OF BLOCK #22 ---
 
 	if type(item_data)
@@ -2500,10 +2545,10 @@ InventoryBackgroundView._validate_loadout = function (self, loadout, read_only)
 
 
 	-- Decompilation error in this vicinity:
-	--- BLOCK #23 83-85, warpins: 1 ---
+	--- BLOCK #23 85-87, warpins: 1 ---
 	--- END OF BLOCK #23 ---
 
-	slot19 = if not item_data.gear_id then
+	slot20 = if not item_data.gear_id then
 	JUMP TO BLOCK #24
 	else
 	JUMP TO BLOCK #28
@@ -2512,7 +2557,7 @@ InventoryBackgroundView._validate_loadout = function (self, loadout, read_only)
 
 
 	-- Decompilation error in this vicinity:
-	--- BLOCK #24 86-90, warpins: 2 ---
+	--- BLOCK #24 88-92, warpins: 2 ---
 	--- END OF BLOCK #24 ---
 
 	if type(item_data)
@@ -2526,8 +2571,8 @@ InventoryBackgroundView._validate_loadout = function (self, loadout, read_only)
 
 
 	-- Decompilation error in this vicinity:
-	--- BLOCK #25 91-92, warpins: 1 ---
-	slot19 = item_data
+	--- BLOCK #25 93-94, warpins: 1 ---
+	slot20 = item_data
 	--- END OF BLOCK #25 ---
 
 	UNCONDITIONAL JUMP; TARGET BLOCK #28
@@ -2535,8 +2580,8 @@ InventoryBackgroundView._validate_loadout = function (self, loadout, read_only)
 
 
 	-- Decompilation error in this vicinity:
-	--- BLOCK #26 93-94, warpins: 1 ---
-	slot19 = false
+	--- BLOCK #26 95-96, warpins: 1 ---
+	slot20 = false
 	--- END OF BLOCK #26 ---
 
 	UNCONDITIONAL JUMP; TARGET BLOCK #28
@@ -2544,7 +2589,7 @@ InventoryBackgroundView._validate_loadout = function (self, loadout, read_only)
 
 
 	-- Decompilation error in this vicinity:
-	--- BLOCK #27 95-95, warpins: 0 ---
+	--- BLOCK #27 97-97, warpins: 0 ---
 	local item_gear_id = true
 	--- END OF BLOCK #27 ---
 
@@ -2553,7 +2598,7 @@ InventoryBackgroundView._validate_loadout = function (self, loadout, read_only)
 
 
 	-- Decompilation error in this vicinity:
-	--- BLOCK #28 96-97, warpins: 4 ---
+	--- BLOCK #28 98-99, warpins: 4 ---
 	--- END OF BLOCK #28 ---
 
 	if checked_gear_id == item_gear_id then
@@ -2565,7 +2610,7 @@ InventoryBackgroundView._validate_loadout = function (self, loadout, read_only)
 
 
 	-- Decompilation error in this vicinity:
-	--- BLOCK #29 98-99, warpins: 1 ---
+	--- BLOCK #29 100-101, warpins: 1 ---
 	--- END OF BLOCK #29 ---
 
 	if checked_slot_name ~= slot_name then
@@ -2577,10 +2622,10 @@ InventoryBackgroundView._validate_loadout = function (self, loadout, read_only)
 
 
 	-- Decompilation error in this vicinity:
-	--- BLOCK #30 100-102, warpins: 1 ---
+	--- BLOCK #30 102-104, warpins: 1 ---
 	--- END OF BLOCK #30 ---
 
-	slot20 = if not invalid_slots[slot_name] then
+	slot21 = if not invalid_slots[slot_name] then
 	JUMP TO BLOCK #31
 	else
 	JUMP TO BLOCK #34
@@ -2589,10 +2634,10 @@ InventoryBackgroundView._validate_loadout = function (self, loadout, read_only)
 
 
 	-- Decompilation error in this vicinity:
-	--- BLOCK #31 103-105, warpins: 1 ---
+	--- BLOCK #31 105-107, warpins: 1 ---
 	--- END OF BLOCK #31 ---
 
-	slot20 = if allowed_duplicates[checked_slot_name] then
+	slot21 = if allowed_duplicates[checked_slot_name] then
 	JUMP TO BLOCK #32
 	else
 	JUMP TO BLOCK #33
@@ -2601,10 +2646,10 @@ InventoryBackgroundView._validate_loadout = function (self, loadout, read_only)
 
 
 	-- Decompilation error in this vicinity:
-	--- BLOCK #32 106-108, warpins: 1 ---
+	--- BLOCK #32 108-110, warpins: 1 ---
 	--- END OF BLOCK #32 ---
 
-	slot20 = if not allowed_duplicates[slot_name] then
+	slot21 = if not allowed_duplicates[slot_name] then
 	JUMP TO BLOCK #33
 	else
 	JUMP TO BLOCK #34
@@ -2613,8 +2658,8 @@ InventoryBackgroundView._validate_loadout = function (self, loadout, read_only)
 
 
 	-- Decompilation error in this vicinity:
-	--- BLOCK #33 109-111, warpins: 2 ---
-	invalid_slots[checked_slot_name] = true
+	--- BLOCK #33 111-113, warpins: 2 ---
+	duplicated_slots[checked_slot_name] = true
 	--- END OF BLOCK #33 ---
 
 	UNCONDITIONAL JUMP; TARGET BLOCK #41
@@ -2622,14 +2667,14 @@ InventoryBackgroundView._validate_loadout = function (self, loadout, read_only)
 
 
 	-- Decompilation error in this vicinity:
-	--- BLOCK #34 112-113, warpins: 5 ---
+	--- BLOCK #34 114-115, warpins: 5 ---
 	--- END OF BLOCK #34 ---
 
 
 
 
 	-- Decompilation error in this vicinity:
-	--- BLOCK #35 114-122, warpins: 1 ---
+	--- BLOCK #35 116-124, warpins: 1 ---
 	local player = self._preview_player
 	local profile = player:profile()
 
@@ -2645,10 +2690,10 @@ InventoryBackgroundView._validate_loadout = function (self, loadout, read_only)
 
 
 	-- Decompilation error in this vicinity:
-	--- BLOCK #36 123-128, warpins: 1 ---
+	--- BLOCK #36 125-130, warpins: 1 ---
 	--- END OF BLOCK #36 ---
 
-	slot15 = if not self:_get_inventory_item_by_id(gear_id)
+	slot16 = if not self:_get_inventory_item_by_id(gear_id)
 
 	 then
 	JUMP TO BLOCK #37
@@ -2659,7 +2704,7 @@ InventoryBackgroundView._validate_loadout = function (self, loadout, read_only)
 
 
 	-- Decompilation error in this vicinity:
-	--- BLOCK #37 129-132, warpins: 2 ---
+	--- BLOCK #37 131-134, warpins: 2 ---
 	local item = self:_get_inventory_item_by_id(item_data)
 	--- END OF BLOCK #37 ---
 
@@ -2668,10 +2713,10 @@ InventoryBackgroundView._validate_loadout = function (self, loadout, read_only)
 
 
 	-- Decompilation error in this vicinity:
-	--- BLOCK #38 133-134, warpins: 2 ---
+	--- BLOCK #38 135-136, warpins: 2 ---
 	--- END OF BLOCK #38 ---
 
-	slot15 = if item then
+	slot16 = if item then
 	JUMP TO BLOCK #39
 	else
 	JUMP TO BLOCK #41
@@ -2680,11 +2725,11 @@ InventoryBackgroundView._validate_loadout = function (self, loadout, read_only)
 
 
 	-- Decompilation error in this vicinity:
-	--- BLOCK #39 135-141, warpins: 1 ---
+	--- BLOCK #39 137-143, warpins: 1 ---
 	local compatible_profile = ItemUtils.is_item_compatible_with_profile(item, profile)
 	--- END OF BLOCK #39 ---
 
-	slot16 = if not compatible_profile then
+	slot17 = if not compatible_profile then
 	JUMP TO BLOCK #40
 	else
 	JUMP TO BLOCK #41
@@ -2693,7 +2738,7 @@ InventoryBackgroundView._validate_loadout = function (self, loadout, read_only)
 
 
 	-- Decompilation error in this vicinity:
-	--- BLOCK #40 142-146, warpins: 1 ---
+	--- BLOCK #40 144-148, warpins: 1 ---
 	only_show_slot_as_invalid[slot_name] = true
 	invalid_slots[slot_name] = true
 	--- END OF BLOCK #40 ---
@@ -2703,7 +2748,7 @@ InventoryBackgroundView._validate_loadout = function (self, loadout, read_only)
 
 
 	-- Decompilation error in this vicinity:
-	--- BLOCK #41 147-148, warpins: 7 ---
+	--- BLOCK #41 149-150, warpins: 7 ---
 	--- END OF BLOCK #41 ---
 
 	UNCONDITIONAL JUMP; TARGET BLOCK #3
@@ -2711,19 +2756,19 @@ InventoryBackgroundView._validate_loadout = function (self, loadout, read_only)
 
 
 	-- Decompilation error in this vicinity:
-	--- BLOCK #42 149-150, warpins: 1 ---
+	--- BLOCK #42 151-152, warpins: 1 ---
 	--- END OF BLOCK #42 ---
 
 	slot2 = if not read_only then
 	JUMP TO BLOCK #43
 	else
-	JUMP TO BLOCK #62
+	JUMP TO BLOCK #64
 	end
 
 
 
 	-- Decompilation error in this vicinity:
-	--- BLOCK #43 151-154, warpins: 1 ---
+	--- BLOCK #43 153-156, warpins: 1 ---
 	--- END OF BLOCK #43 ---
 
 	FLOW; TARGET BLOCK #44
@@ -2731,10 +2776,10 @@ InventoryBackgroundView._validate_loadout = function (self, loadout, read_only)
 
 
 	-- Decompilation error in this vicinity:
-	--- BLOCK #44 155-157, warpins: 1 ---
+	--- BLOCK #44 157-159, warpins: 1 ---
 	--- END OF BLOCK #44 ---
 
-	slot11 = if not only_show_slot_as_invalid[removed_slot_id] then
+	slot12 = if not only_show_slot_as_invalid[removed_slot_id] then
 	JUMP TO BLOCK #45
 	else
 	JUMP TO BLOCK #53
@@ -2743,12 +2788,12 @@ InventoryBackgroundView._validate_loadout = function (self, loadout, read_only)
 
 
 	-- Decompilation error in this vicinity:
-	--- BLOCK #45 158-165, warpins: 1 ---
+	--- BLOCK #45 160-167, warpins: 1 ---
 	local current_item = self._current_profile_equipped_items[removed_slot_id]
 
 	--- END OF BLOCK #45 ---
 
-	slot12 = if not self:_get_inventory_item_by_id(current_item.gear_id)
+	slot13 = if not self:_get_inventory_item_by_id(current_item.gear_id)
 
 	 then
 	JUMP TO BLOCK #46
@@ -2759,7 +2804,7 @@ InventoryBackgroundView._validate_loadout = function (self, loadout, read_only)
 
 
 	-- Decompilation error in this vicinity:
-	--- BLOCK #46 166-166, warpins: 1 ---
+	--- BLOCK #46 168-168, warpins: 1 ---
 	local current_item_valid = current_item.always_owned
 	--- END OF BLOCK #46 ---
 
@@ -2768,12 +2813,12 @@ InventoryBackgroundView._validate_loadout = function (self, loadout, read_only)
 
 
 	-- Decompilation error in this vicinity:
-	--- BLOCK #47 167-172, warpins: 2 ---
+	--- BLOCK #47 169-174, warpins: 2 ---
 	local fallback_item = MasterItems.find_fallback_item(removed_slot_id)
 
 	--- END OF BLOCK #47 ---
 
-	slot12 = if current_item_valid then
+	slot13 = if current_item_valid then
 	JUMP TO BLOCK #48
 	else
 	JUMP TO BLOCK #49
@@ -2782,7 +2827,7 @@ InventoryBackgroundView._validate_loadout = function (self, loadout, read_only)
 
 
 	-- Decompilation error in this vicinity:
-	--- BLOCK #48 173-183, warpins: 1 ---
+	--- BLOCK #48 175-185, warpins: 1 ---
 	self:_equip_slot_item(removed_slot_id, current_item, true)
 
 	invalid_slots[removed_slot_id] = nil
@@ -2795,10 +2840,10 @@ InventoryBackgroundView._validate_loadout = function (self, loadout, read_only)
 
 
 	-- Decompilation error in this vicinity:
-	--- BLOCK #49 184-185, warpins: 1 ---
+	--- BLOCK #49 186-187, warpins: 1 ---
 	--- END OF BLOCK #49 ---
 
-	slot13 = if fallback_item then
+	slot14 = if fallback_item then
 	JUMP TO BLOCK #50
 	else
 	JUMP TO BLOCK #52
@@ -2807,12 +2852,12 @@ InventoryBackgroundView._validate_loadout = function (self, loadout, read_only)
 
 
 	-- Decompilation error in this vicinity:
-	--- BLOCK #50 186-194, warpins: 1 ---
+	--- BLOCK #50 188-196, warpins: 1 ---
 	self:_equip_slot_item(removed_slot_id, fallback_item, true)
 
 	--- END OF BLOCK #50 ---
 
-	slot14 = if fallback_item.always_owned then
+	slot15 = if fallback_item.always_owned then
 	JUMP TO BLOCK #51
 	else
 	JUMP TO BLOCK #53
@@ -2821,7 +2866,7 @@ InventoryBackgroundView._validate_loadout = function (self, loadout, read_only)
 
 
 	-- Decompilation error in this vicinity:
-	--- BLOCK #51 195-199, warpins: 1 ---
+	--- BLOCK #51 197-201, warpins: 1 ---
 	invalid_slots[removed_slot_id] = nil
 	modified_slots[removed_slot_id] = true
 
@@ -2832,7 +2877,7 @@ InventoryBackgroundView._validate_loadout = function (self, loadout, read_only)
 
 
 	-- Decompilation error in this vicinity:
-	--- BLOCK #52 200-205, warpins: 1 ---
+	--- BLOCK #52 202-207, warpins: 1 ---
 	self:_equip_slot_item(removed_slot_id, nil, true)
 
 	--- END OF BLOCK #52 ---
@@ -2842,14 +2887,14 @@ InventoryBackgroundView._validate_loadout = function (self, loadout, read_only)
 
 
 	-- Decompilation error in this vicinity:
-	--- BLOCK #53 206-207, warpins: 6 ---
+	--- BLOCK #53 208-209, warpins: 6 ---
 	--- END OF BLOCK #53 ---
 
 
 
 
 	-- Decompilation error in this vicinity:
-	--- BLOCK #54 208-211, warpins: 1 ---
+	--- BLOCK #54 210-213, warpins: 1 ---
 	--- END OF BLOCK #54 ---
 
 	FLOW; TARGET BLOCK #55
@@ -2857,22 +2902,22 @@ InventoryBackgroundView._validate_loadout = function (self, loadout, read_only)
 
 
 	-- Decompilation error in this vicinity:
-	--- BLOCK #55 212-214, warpins: 1 ---
+	--- BLOCK #55 214-216, warpins: 1 ---
 	--- END OF BLOCK #55 ---
 
-	slot11 = if slot_data.equipped_in_inventory then
+	slot12 = if slot_data.equipped_in_inventory then
 	JUMP TO BLOCK #56
 	else
-	JUMP TO BLOCK #60
+	JUMP TO BLOCK #62
 	end
 
 
 
 	-- Decompilation error in this vicinity:
-	--- BLOCK #56 215-217, warpins: 1 ---
+	--- BLOCK #56 217-219, warpins: 1 ---
 	--- END OF BLOCK #56 ---
 
-	slot11 = if invalid_slots[slot_name] then
+	slot12 = if invalid_slots[slot_name] then
 	JUMP TO BLOCK #57
 	else
 	JUMP TO BLOCK #58
@@ -2881,19 +2926,19 @@ InventoryBackgroundView._validate_loadout = function (self, loadout, read_only)
 
 
 	-- Decompilation error in this vicinity:
-	--- BLOCK #57 218-221, warpins: 1 ---
+	--- BLOCK #57 220-223, warpins: 1 ---
 	self._invalid_slots[slot_name] = true
 	--- END OF BLOCK #57 ---
 
-	UNCONDITIONAL JUMP; TARGET BLOCK #60
+	UNCONDITIONAL JUMP; TARGET BLOCK #62
 
 
 
 	-- Decompilation error in this vicinity:
-	--- BLOCK #58 222-224, warpins: 1 ---
+	--- BLOCK #58 224-226, warpins: 1 ---
 	--- END OF BLOCK #58 ---
 
-	slot11 = if modified_slots[slot_name] then
+	slot12 = if modified_slots[slot_name] then
 	JUMP TO BLOCK #59
 	else
 	JUMP TO BLOCK #60
@@ -2902,104 +2947,103 @@ InventoryBackgroundView._validate_loadout = function (self, loadout, read_only)
 
 
 	-- Decompilation error in this vicinity:
-	--- BLOCK #59 225-227, warpins: 1 ---
+	--- BLOCK #59 227-230, warpins: 1 ---
 	self._modified_slots[slot_name] = true
 	--- END OF BLOCK #59 ---
 
-	FLOW; TARGET BLOCK #60
+	UNCONDITIONAL JUMP; TARGET BLOCK #62
 
 
 
 	-- Decompilation error in this vicinity:
-	--- BLOCK #60 228-229, warpins: 5 ---
+	--- BLOCK #60 231-233, warpins: 1 ---
 	--- END OF BLOCK #60 ---
 
+	slot12 = if duplicated_slots[slot_name] then
+	JUMP TO BLOCK #61
+	else
+	JUMP TO BLOCK #62
+	end
 
 
 
 	-- Decompilation error in this vicinity:
-	--- BLOCK #61 230-230, warpins: 1 ---
+	--- BLOCK #61 234-236, warpins: 1 ---
+	self._duplicated_slots[slot_name] = true
 	--- END OF BLOCK #61 ---
 
-	UNCONDITIONAL JUMP; TARGET BLOCK #74
+	FLOW; TARGET BLOCK #62
 
 
 
 	-- Decompilation error in this vicinity:
-	--- BLOCK #62 231-234, warpins: 1 ---
+	--- BLOCK #62 237-238, warpins: 6 ---
 	--- END OF BLOCK #62 ---
 
-	FLOW; TARGET BLOCK #63
 
 
 
 	-- Decompilation error in this vicinity:
-	--- BLOCK #63 235-237, warpins: 1 ---
+	--- BLOCK #63 239-239, warpins: 1 ---
 	--- END OF BLOCK #63 ---
 
-	slot11 = if not only_show_slot_as_invalid[removed_slot_id] then
-	JUMP TO BLOCK #64
-	else
-	JUMP TO BLOCK #73
-	end
+	UNCONDITIONAL JUMP; TARGET BLOCK #76
 
 
 
 	-- Decompilation error in this vicinity:
-	--- BLOCK #64 238-241, warpins: 1 ---
-	local current_item = self._current_profile_equipped_items[removed_slot_id]
-
+	--- BLOCK #64 240-243, warpins: 1 ---
 	--- END OF BLOCK #64 ---
 
-	slot12 = if current_item then
-	JUMP TO BLOCK #65
-	else
-	JUMP TO BLOCK #68
-	end
+	FLOW; TARGET BLOCK #65
 
 
 
 	-- Decompilation error in this vicinity:
-	--- BLOCK #65 242-244, warpins: 1 ---
+	--- BLOCK #65 244-246, warpins: 1 ---
 	--- END OF BLOCK #65 ---
 
-	slot12 = if current_item.gear_id then
+	slot12 = if not only_show_slot_as_invalid[removed_slot_id] then
 	JUMP TO BLOCK #66
 	else
-	JUMP TO BLOCK #67
+	JUMP TO BLOCK #75
 	end
 
 
 
 	-- Decompilation error in this vicinity:
-	--- BLOCK #66 245-250, warpins: 1 ---
+	--- BLOCK #66 247-250, warpins: 1 ---
+	local current_item = self._current_profile_equipped_items[removed_slot_id]
+
 	--- END OF BLOCK #66 ---
 
-	slot12 = if not self:_get_inventory_item_by_id(current_item.gear_id)
-
-	 then
+	slot13 = if current_item then
 	JUMP TO BLOCK #67
 	else
-	JUMP TO BLOCK #68
+	JUMP TO BLOCK #70
 	end
 
 
 
 	-- Decompilation error in this vicinity:
-	--- BLOCK #67 251-251, warpins: 2 ---
-	local current_item_valid = current_item.always_owned
+	--- BLOCK #67 251-253, warpins: 1 ---
 	--- END OF BLOCK #67 ---
 
-	FLOW; TARGET BLOCK #68
+	slot13 = if current_item.gear_id then
+	JUMP TO BLOCK #68
+	else
+	JUMP TO BLOCK #69
+	end
 
 
 
 	-- Decompilation error in this vicinity:
-	--- BLOCK #68 252-257, warpins: 3 ---
-	local fallback_item = MasterItems.find_fallback_item(removed_slot_id)
+	--- BLOCK #68 254-259, warpins: 1 ---
 	--- END OF BLOCK #68 ---
 
-	slot12 = if current_item_valid then
+	slot13 = if not self:_get_inventory_item_by_id(current_item.gear_id)
+
+	 then
 	JUMP TO BLOCK #69
 	else
 	JUMP TO BLOCK #70
@@ -3008,9 +3052,8 @@ InventoryBackgroundView._validate_loadout = function (self, loadout, read_only)
 
 
 	-- Decompilation error in this vicinity:
-	--- BLOCK #69 258-261, warpins: 1 ---
-	invalid_slots[removed_slot_id] = nil
-	modified_slots[removed_slot_id] = true
+	--- BLOCK #69 260-260, warpins: 2 ---
+	local current_item_valid = current_item.always_owned
 	--- END OF BLOCK #69 ---
 
 	FLOW; TARGET BLOCK #70
@@ -3018,51 +3061,74 @@ InventoryBackgroundView._validate_loadout = function (self, loadout, read_only)
 
 
 	-- Decompilation error in this vicinity:
-	--- BLOCK #70 262-263, warpins: 2 ---
+	--- BLOCK #70 261-266, warpins: 3 ---
+	local fallback_item = MasterItems.find_fallback_item(removed_slot_id)
 	--- END OF BLOCK #70 ---
 
-	slot13 = if fallback_item then
+	slot13 = if current_item_valid then
 	JUMP TO BLOCK #71
 	else
-	JUMP TO BLOCK #73
+	JUMP TO BLOCK #72
 	end
 
 
 
 	-- Decompilation error in this vicinity:
-	--- BLOCK #71 264-266, warpins: 1 ---
+	--- BLOCK #71 267-270, warpins: 1 ---
+	invalid_slots[removed_slot_id] = nil
+	modified_slots[removed_slot_id] = true
 	--- END OF BLOCK #71 ---
 
-	slot14 = if fallback_item.always_owned then
-	JUMP TO BLOCK #72
-	else
+	FLOW; TARGET BLOCK #72
+
+
+
+	-- Decompilation error in this vicinity:
+	--- BLOCK #72 271-272, warpins: 2 ---
+	--- END OF BLOCK #72 ---
+
+	slot14 = if fallback_item then
 	JUMP TO BLOCK #73
+	else
+	JUMP TO BLOCK #75
 	end
 
 
 
 	-- Decompilation error in this vicinity:
-	--- BLOCK #72 267-270, warpins: 1 ---
+	--- BLOCK #73 273-275, warpins: 1 ---
+	--- END OF BLOCK #73 ---
+
+	slot15 = if fallback_item.always_owned then
+	JUMP TO BLOCK #74
+	else
+	JUMP TO BLOCK #75
+	end
+
+
+
+	-- Decompilation error in this vicinity:
+	--- BLOCK #74 276-279, warpins: 1 ---
 	invalid_slots[removed_slot_id] = nil
 	modified_slots[removed_slot_id] = true
 
-	--- END OF BLOCK #72 ---
-
-	FLOW; TARGET BLOCK #73
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #73 271-272, warpins: 5 ---
-	--- END OF BLOCK #73 ---
-
-
-
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #74 273-275, warpins: 2 ---
-	return invalid_slots, modified_slots
 	--- END OF BLOCK #74 ---
+
+	FLOW; TARGET BLOCK #75
+
+
+
+	-- Decompilation error in this vicinity:
+	--- BLOCK #75 280-281, warpins: 5 ---
+	--- END OF BLOCK #75 ---
+
+
+
+
+	-- Decompilation error in this vicinity:
+	--- BLOCK #76 282-285, warpins: 2 ---
+	return invalid_slots, modified_slots, duplicated_slots
+	--- END OF BLOCK #76 ---
 
 
 

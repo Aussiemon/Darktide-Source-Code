@@ -1,10 +1,11 @@
 require("scripts/ui/hud/elements/hud_element_base")
 
-local UIRenderer = require("scripts/managers/ui/ui_renderer")
+local Hud = require("scripts/utilities/ui/hud")
 local ScriptWorld = require("scripts/foundation/utilities/script_world")
-local resolution_modified_key = "modified"
-local WorldRenderUtils = require("scripts/utilities/world_render")
 local UIHudSettings = require("scripts/settings/ui/ui_hud_settings")
+local UIRenderer = require("scripts/managers/ui/ui_renderer")
+local WorldRenderUtils = require("scripts/utilities/world_render")
+local resolution_modified_key = "modified"
 
 local function sort_elements_by_hud_scale(a, b)
 	return b.use_hud_scale and not a.use_hud_scale
@@ -198,7 +199,7 @@ UIHud._add_element = function (self, definition, elements, elements_array)
 		local use_hud_scale = definition.use_hud_scale
 		local class = require(filename)
 		local draw_layer = 0
-		local hud_scale = use_hud_scale and self:_hud_scale() or RESOLUTION_LOOKUP.scale
+		local hud_scale = use_hud_scale and Hud.hud_scale() or RESOLUTION_LOOKUP.scale
 		local element = class:new(self, draw_layer, hud_scale)
 		elements[class_name] = element
 		local id = #elements_array + 1
@@ -252,18 +253,8 @@ UIHud._update_element_visibility = function (self)
 	end
 end
 
-UIHud._hud_scale = function (self)
-	local default_value = 100
-	local save_data = Managers.save:account_data()
-	local interface_settings = save_data.interface_settings
-	local hud_scale = interface_settings.hud_scale or default_value
-	local scale = RESOLUTION_LOOKUP.scale
-
-	return scale * hud_scale / 100
-end
-
 UIHud._apply_hud_scale = function (self)
-	local new_scale = self:_hud_scale()
+	local new_scale = Hud.hud_scale()
 	local render_settings = self._render_settings
 	render_settings.scale = new_scale
 	render_settings.inverse_scale = 1 / new_scale

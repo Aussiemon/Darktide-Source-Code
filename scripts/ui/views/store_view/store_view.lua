@@ -228,6 +228,10 @@ StoreView._set_panels_store = function (self)
 				category_index = i
 			}
 
+			if not self._using_cursor_navigation then
+				self:_play_sound(UISoundEvents.tab_secondary_button_pressed)
+			end
+
 			self:_open_navigation_path(path)
 			category_panel:set_selected_index(i)
 		end
@@ -1466,7 +1470,9 @@ StoreView._handle_input = function (self, input_service)
 	local using_cursor = self._using_cursor_navigation
 
 	if not using_cursor then
-		if input_service:get("hotkey_menu_special_2") and not self._aquila_open then
+		if input_service:get("hotkey_menu_special_1") and not self._aquila_open then
+			self:_play_sound(UISoundEvents.default_click)
+
 			local on_complete_callback = callback(self, "setup_aquila_store")
 
 			self:_fetch_storefront(AQUILA_STORE_LAYOUT.storefront, on_complete_callback)

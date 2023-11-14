@@ -181,7 +181,7 @@ local action_data = {
 	},
 	follow = {
 		idle_anim_events = "idle",
-		run_anim_event = "move_fwd",
+		run_anim_event = "assault_fwd",
 		utility_weight = 1,
 		controlled_stagger = true,
 		controlled_stagger_min_speed = 2,
@@ -205,19 +205,19 @@ local action_data = {
 				right = "move_right_walk"
 			},
 			running = {
-				bwd = "move_start_bwd",
-				fwd = "move_start_fwd",
-				left = "move_start_left",
+				bwd = "move_start_assault_bwd",
+				fwd = "move_start_assault_fwd",
+				left = "move_start_assault_left",
 				right = "move_start_right"
 			}
 		},
 		start_move_anim_data = {
-			move_start_fwd = {},
-			move_start_bwd = {
+			move_start_assault_fwd = {},
+			move_start_assault_bwd = {
 				sign = -1,
 				rad = math.pi
 			},
-			move_start_left = {
+			move_start_assault_left = {
 				sign = 1,
 				rad = math.pi / 2
 			},
@@ -228,18 +228,18 @@ local action_data = {
 		},
 		start_move_rotation_timings = {
 			move_start_right = 0,
-			move_start_fwd = 0,
-			move_start_bwd = 0,
-			move_start_left = 0
+			move_start_assault_left = 0,
+			move_start_assault_fwd = 0,
+			move_start_assault_bwd = 0
 		},
 		start_rotation_durations = {
 			move_start_right = 0.26666666666666666,
-			move_start_fwd = 0.26666666666666666,
-			move_start_bwd = 0.26666666666666666,
-			move_start_left = 0.26666666666666666
+			move_start_assault_left = 0.26666666666666666,
+			move_start_assault_fwd = 0.26666666666666666,
+			move_start_assault_bwd = 0.26666666666666666
 		},
 		start_move_event_anim_speed_durations = {
-			move_start_fwd = 0.5
+			move_start_assault_fwd = 0.5
 		}
 	},
 	assault_follow = {
@@ -266,6 +266,7 @@ local action_data = {
 	melee_attack = {
 		weapon_reach = 3.5,
 		utility_weight = 1,
+		stagger_reduction = 50,
 		ignore_blocked = true,
 		considerations = UtilityConsiderations.melee_attack,
 		attack_anim_events = {
@@ -445,10 +446,11 @@ local action_data = {
 		utility_weight = 5,
 		ignore_blocked = true,
 		vo_event = "assault",
-		weapon_reach = 3.75,
-		move_speed_variable_lerp_speed = 4,
-		move_speed_variable_name = "moving_attack_fwd_speed",
+		stagger_reduction = 50,
 		moving_attack = true,
+		move_speed_variable_lerp_speed = 4,
+		weapon_reach = 3.75,
+		move_speed_variable_name = "moving_attack_fwd_speed",
 		considerations = UtilityConsiderations.renegade_melee_moving_melee_attack,
 		attack_anim_events = {
 			"attack_move_01"
@@ -642,6 +644,27 @@ local action_data = {
 				},
 				dwn = {
 					"stagger_bwd_sticky"
+				}
+			},
+			blinding = {
+				fwd = {
+					"stagger_fwd_light",
+					"stagger_fwd_light_2"
+				},
+				bwd = {
+					"stagger_bwd_light",
+					"stagger_bwd_light_2"
+				},
+				left = {
+					"stagger_left_light",
+					"stagger_left_light_2"
+				},
+				right = {
+					"stagger_right_light",
+					"stagger_right_light_2"
+				},
+				dwn = {
+					"stun_down"
 				}
 			}
 		}

@@ -195,16 +195,18 @@ HudElementPlayerAbilityHandler._align_abilities = function (self)
 	end
 end
 
-HudElementPlayerAbilityHandler.destroy = function (self)
+HudElementPlayerAbilityHandler.destroy = function (self, ui_renderer)
 	local instance_data_tables = self._instance_data_tables
 
 	for _, data in pairs(instance_data_tables) do
 		local instance = data.instance
 
-		instance:destroy()
+		instance:destroy(ui_renderer)
 	end
 
 	self._instance_data_tables = nil
+
+	HudElementPlayerAbilityHandler.super.destroy(self, ui_renderer)
 end
 
 HudElementPlayerAbilityHandler.set_visible = function (self, visible, ui_renderer, use_retained_mode)

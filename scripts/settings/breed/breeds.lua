@@ -18,6 +18,18 @@ local function _create_breed_entry(path)
 		breed_data.stagger_thresholds[stagger_types.electrocuted] = breed_data.stagger_thresholds[stagger_types.sticky]
 	end
 
+	if breed_data.stagger_durations and breed_data.stagger_durations[stagger_types.light] and not breed_data.stagger_durations[stagger_types.blinding] then
+		breed_data.stagger_durations[stagger_types.blinding] = breed_data.stagger_durations[stagger_types.light]
+	end
+
+	if breed_data.stagger_immune_times and breed_data.stagger_immune_times[stagger_types.light] and not breed_data.stagger_durations[stagger_types.blinding] then
+		breed_data.stagger_immune_times[stagger_types.blinding] = breed_data.stagger_immune_times[stagger_types.light]
+	end
+
+	if breed_data.stagger_thresholds and breed_data.stagger_thresholds[stagger_types.light] and not breed_data.stagger_durations[stagger_types.blinding] then
+		breed_data.stagger_thresholds[stagger_types.blinding] = breed_data.stagger_thresholds[stagger_types.light]
+	end
+
 	breeds[breed_name] = breed_data
 end
 

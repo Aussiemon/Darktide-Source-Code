@@ -6,6 +6,7 @@ local templates = {
 local basic_renegade_shocktrooper_template = {
 	slots = {
 		slot_upperbody = {
+			use_outline = true,
 			items = {
 				"content/items/characters/minions/chaos_traitor_guard/attachments_base/upperbody_b_elite",
 				"content/items/characters/minions/chaos_traitor_guard/attachments_base/upperbody_b_elite_color_var_01",
@@ -16,6 +17,7 @@ local basic_renegade_shocktrooper_template = {
 			}
 		},
 		slot_lowerbody = {
+			use_outline = true,
 			items = {
 				"content/items/characters/minions/chaos_traitor_guard/attachments_base/lowerbody_b_elite",
 				"content/items/characters/minions/chaos_traitor_guard/attachments_base/lowerbody_b_elite_color_var_01",
@@ -26,6 +28,7 @@ local basic_renegade_shocktrooper_template = {
 			}
 		},
 		slot_face = {
+			use_outline = true,
 			items = {
 				"content/items/characters/minions/chaos_traitor_guard/attachments_base/face_01_b",
 				"content/items/characters/minions/chaos_traitor_guard/attachments_base/face_01_b_tattoo_01",
@@ -33,6 +36,7 @@ local basic_renegade_shocktrooper_template = {
 			}
 		},
 		slot_head = {
+			use_outline = true,
 			items = {
 				"content/items/characters/minions/chaos_traitor_guard/attachments_gear/helmet_02_a",
 				"content/items/characters/minions/chaos_traitor_guard/attachments_gear/helmet_02_a_var_01",
@@ -41,6 +45,7 @@ local basic_renegade_shocktrooper_template = {
 			}
 		},
 		slot_ranged_weapon = {
+			use_outline = true,
 			drop_on_death = true,
 			is_weapon = true,
 			is_ranged_weapon = true,
@@ -49,14 +54,16 @@ local basic_renegade_shocktrooper_template = {
 			}
 		},
 		slot_melee_weapon = {
-			drop_on_death = true,
+			use_outline = true,
 			is_weapon = true,
+			drop_on_death = true,
 			items = {
 				"content/items/weapons/minions/melee/chaos_traitor_guard_melee_weapon_05",
 				"content/items/weapons/minions/melee/chaos_traitor_guard_melee_weapon_01"
 			}
 		},
 		slot_decal = {
+			use_outline = true,
 			items = {
 				"content/items/characters/minions/chaos_traitor_guard/attachments_gear/chaos_traitor_guard_midrange_elite_a_decal_a",
 				"content/items/characters/minions/chaos_traitor_guard/attachments_gear/chaos_traitor_guard_longrange_elite_a_decal_a",
@@ -64,6 +71,7 @@ local basic_renegade_shocktrooper_template = {
 			}
 		},
 		slot_helmet_decal = {
+			use_outline = true,
 			items = {
 				"content/items/characters/minions/chaos_traitor_guard/attachments_gear/chaos_traitor_guard_helmet_02_decal_a",
 				"content/items/characters/minions/chaos_traitor_guard/attachments_gear/chaos_traitor_guard_helmet_02_decal_b",
@@ -73,6 +81,7 @@ local basic_renegade_shocktrooper_template = {
 			}
 		},
 		slot_variation_gear = {
+			use_outline = true,
 			items = {
 				"content/items/characters/minions/chaos_traitor_guard/attachments_gear/midrange_elite_a",
 				"content/items/characters/minions/chaos_traitor_guard/attachments_gear/midrange_elite_a_var_01",
@@ -108,6 +117,7 @@ default_2.gib_variations = {
 	"face_02_b"
 }
 default_2.slots.slot_face = {
+	use_outline = true,
 	items = {
 		"content/items/characters/minions/chaos_traitor_guard/attachments_base/face_02_b",
 		"content/items/characters/minions/chaos_traitor_guard/attachments_base/face_02_b_tattoo_01",
@@ -119,6 +129,7 @@ default_3.gib_variations = {
 	"face_03_b"
 }
 default_3.slots.slot_face = {
+	use_outline = true,
 	items = {
 		"content/items/characters/minions/chaos_traitor_guard/attachments_base/face_03_b",
 		"content/items/characters/minions/chaos_traitor_guard/attachments_base/face_03_b_tattoo_01",
@@ -130,6 +141,7 @@ default_4.gib_variations = {
 	"face_02"
 }
 default_4.slots.slot_face = {
+	use_outline = true,
 	items = {
 		"content/items/characters/minions/chaos_traitor_guard/attachments_base/face_02",
 		"content/items/characters/minions/chaos_traitor_guard/attachments_base/face_02_tattoo_01",
@@ -141,6 +153,7 @@ default_5.gib_variations = {
 	"face_03"
 }
 default_5.slots.slot_face = {
+	use_outline = true,
 	items = {
 		"content/items/characters/minions/chaos_traitor_guard/attachments_base/face_03",
 		"content/items/characters/minions/chaos_traitor_guard/attachments_base/face_03_tattoo_01",

@@ -215,7 +215,7 @@ MissionBoardView._setup_widgets = function (self)
 	quickplay_content.objective_2_icon = nil
 	quickplay_content.circumstance_icon = nil
 	quickplay_content.is_quickplay = true
-	self._mission_widgets[-1] = self._quickplay_widget
+	self._mission_widgets[0] = self._quickplay_widget
 	local mission_type = self._selected_mission_type or "normal"
 	quickplay_content.mission_type = mission_type
 	self._quickplay_widget.offset[1] = MissionBoardViewSettings.mission_positions[mission_type].quickplay_mission_position[1]
@@ -784,8 +784,9 @@ MissionBoardView._handle_input = function (self, input_service, dt, t)
 		local is_sticky = len_avg_vel < settings.stickiness_speed_threshold
 		local cursor_center = pos
 		local cursor_pos = cursor_center - 0.5 * cursor_size
+		local overlapping_missions = {}
 
-		for i = -1, #mission_widgets do
+		for i = 0, #mission_widgets do
 			local widget = mission_widgets[i]
 			local is_valid = widget and widget.visible and (not widget.content.is_quickplay or self._quickplay_initialized)
 
@@ -805,10 +806,9 @@ MissionBoardView._handle_input = function (self, input_service, dt, t)
 
 				if has_overlap then
 					if widget.content.is_quickplay then
-						self:_set_selected_quickplay()
-					elseif self._selected_mission ~= widget.content.mission then
-						self:_set_selected_mission(widget.content.mission)
-						self:_play_sound(UISoundEvents.mission_board_node_hover)
+						overlapping_missions[#overlapping_missions + 1] = "quickplay"
+					else
+						overlapping_missions[#overlapping_missions + 1] = widget.content.mission
 					end
 
 					drag_coefficient = settings.widget_drag_coefficient
@@ -823,6 +823,30 @@ MissionBoardView._handle_input = function (self, input_service, dt, t)
 					best_score = score
 					best_pos = widget_center
 				end
+			end
+		end
+
+		local new_mission = nil
+
+		for i = 1, #overlapping_missions do
+			local mission = overlapping_missions[i]
+
+			if mission == self._selected_mission or not self._selected_mission and mission == "quickplay" then
+				new_mission = nil
+
+				break
+			else
+				new_mission = mission
+			end
+		end
+
+		if new_mission then
+			if new_mission == "quickplay" then
+				self:_set_selected_quickplay()
+				self:_play_sound(UISoundEvents.mission_board_node_hover)
+			else
+				self:_set_selected_mission(new_mission)
+				self:_play_sound(UISoundEvents.mission_board_node_hover)
 			end
 		end
 
@@ -1019,7 +1043,7 @@ MissionBoardView._set_selected_quickplay = function (self, move_gamepad_cursor)
 		style.bonus_title.visible = true
 		local bonus_widgets = {}
 		local count = 0
-		local start_offset = 40
+		local start_offset = 0
 
 		for type, value in pairs(self._bonus_data.quickplay) do
 			local currency_name, currency_icon = nil
@@ -1038,7 +1062,7 @@ MissionBoardView._set_selected_quickplay = function (self, move_gamepad_cursor)
 			widget.content.icon = currency_icon
 			widget.offset = {
 				20,
-				start_offset + 35 * count,
+				start_offset + 32 * count,
 				2
 			}
 			count = count + 1
@@ -1061,7 +1085,7 @@ MissionBoardView._set_selected_quickplay = function (self, move_gamepad_cursor)
 	content.header_subtitle = Localize("loc_mission_board_quickplay_header")
 	content.body_text = Localize("loc_mission_board_quickplay_description")
 	content.speaker_icon = speaker_settings.material_small
-	content.speaker_text = Localize(speaker_settings.full_name)
+	content.speaker_text = "/ " .. Localize(speaker_settings.full_name)
 	content.xp = nil
 	content.credits = nil
 	local description_style_options = UIFonts.get_font_options_by_style(style.body_text)
@@ -1101,7 +1125,7 @@ MissionBoardView._set_selected_mission = function (self, mission, move_gamepad_c
 	local selected_mission_id = mission.id
 	local mission_widgets = self._mission_widgets
 
-	for i = 0, #mission_widgets do
+	for i = 1, #mission_widgets do
 		local widget = mission_widgets[i]
 
 		if widget then
@@ -1142,46 +1166,47 @@ MissionBoardView._set_selected_mission = function (self, mission, move_gamepad_c
 		local circumstance_template = CircumstanceTemplates[circumstance]
 		local circumstance_ui_data = circumstance_template and circumstance_template.ui
 
-		if not circumstance_ui_data then
-			return false
+		if circumstance_ui_data then
+			content.has_circumstance = true
+			content.circumstance_name = Localize(circumstance_ui_data.display_name)
+			content.circumstance_description = Localize(circumstance_ui_data.description)
+			content.circumstance_icon = circumstance_ui_data.icon
+			local description_margin = 5
+			local default_height = 100
+			local description_text_box_size = {
+				self._ui_scenegraph.detail_circumstance.size[1],
+				default_height
+			}
+			local title_style_options = UIFonts.get_font_options_by_style(style.circumstance_name)
+			local description_style_options = UIFonts.get_font_options_by_style(style.circumstance_description)
+			local title_size = {
+				description_text_box_size[1] + style.circumstance_name.size_addition[1],
+				description_text_box_size[2] + style.circumstance_name.size_addition[2]
+			}
+			local description_size = {
+				description_text_box_size[1] + style.circumstance_description.size_addition[1],
+				description_text_box_size[2] + style.circumstance_description.size_addition[2]
+			}
+			local circumstance_name_width, circumstance_name_height = UIRenderer.text_size(self._ui_renderer, content.circumstance_name, style.circumstance_name.font_type, style.circumstance_name.font_size, title_size, title_style_options)
+			local circumstance_description_width, circumstance_description_height = UIRenderer.text_size(self._ui_renderer, content.circumstance_description, style.circumstance_description.font_type, style.circumstance_description.font_size, description_size, description_style_options)
+			local title_height = circumstance_name_height - style.circumstance_name.size_addition[2]
+			local description_height = circumstance_description_height - style.circumstance_description.size_addition[2]
+			style.circumstance_name.size = {
+				title_size[1] - style.circumstance_name.size_addition[1],
+				title_height
+			}
+			style.circumstance_description.offset[2] = style.circumstance_name.offset[2] + title_height + description_margin
+			style.circumstance_description.size = {
+				description_size[1] - style.circumstance_description.size_addition[1],
+				description_height
+			}
+			local text_height = style.circumstance_description.offset[2] + style.circumstance_description.size[2]
+
+			self:_set_scenegraph_size("detail_circumstance", nil, text_height + 30)
+		else
+			content.has_circumstance = false
+			content.circumstance_icon = nil
 		end
-
-		content.has_circumstance = true
-		content.circumstance_name = Localize(circumstance_ui_data.display_name)
-		content.circumstance_description = Localize(circumstance_ui_data.description)
-		content.circumstance_icon = circumstance_ui_data.icon
-		local description_margin = 5
-		local default_height = 100
-		local description_text_box_size = {
-			self._ui_scenegraph.detail_circumstance.size[1],
-			default_height
-		}
-		local title_style_options = UIFonts.get_font_options_by_style(style.circumstance_name)
-		local description_style_options = UIFonts.get_font_options_by_style(style.circumstance_description)
-		local title_size = {
-			description_text_box_size[1] + style.circumstance_name.size_addition[1],
-			description_text_box_size[2] + style.circumstance_name.size_addition[2]
-		}
-		local description_size = {
-			description_text_box_size[1] + style.circumstance_description.size_addition[1],
-			description_text_box_size[2] + style.circumstance_description.size_addition[2]
-		}
-		local circumstance_name_width, circumstance_name_height = UIRenderer.text_size(self._ui_renderer, content.circumstance_name, style.circumstance_name.font_type, style.circumstance_name.font_size, title_size, title_style_options)
-		local circumstance_description_width, circumstance_description_height = UIRenderer.text_size(self._ui_renderer, content.circumstance_description, style.circumstance_description.font_type, style.circumstance_description.font_size, description_size, description_style_options)
-		local title_height = circumstance_name_height - style.circumstance_name.size_addition[2]
-		local description_height = circumstance_description_height - style.circumstance_description.size_addition[2]
-		style.circumstance_name.size = {
-			title_size[1] - style.circumstance_name.size_addition[1],
-			title_height
-		}
-		style.circumstance_description.offset[2] = style.circumstance_name.offset[2] + title_height + description_margin
-		style.circumstance_description.size = {
-			description_size[1] - style.circumstance_description.size_addition[1],
-			description_height
-		}
-		local text_height = style.circumstance_description.offset[2] + style.circumstance_description.size[2]
-
-		self:_set_scenegraph_size("detail_circumstance", nil, text_height + 30)
 
 		local extraRewards = mission.extraRewards.circumstance
 
@@ -1223,7 +1248,7 @@ MissionBoardView._set_selected_mission = function (self, mission, move_gamepad_c
 	content.header_subtitle = Localize(mission_type.name)
 	content.body_text = Localize(mission_template.mission_description)
 	content.speaker_icon = speaker_settings.material_small
-	content.speaker_text = Localize(speaker_settings.full_name)
+	content.speaker_text = "/ " .. Localize(speaker_settings.full_name)
 	content.xp = TextUtils.format_currency(xp)
 	content.credits = TextUtils.format_currency(credits)
 	local description_style_options = UIFonts.get_font_options_by_style(style.body_text)
@@ -1310,7 +1335,7 @@ MissionBoardView.draw = function (self, dt, t, input_service, layer)
 
 	local mission_widgets = self._mission_widgets
 
-	for i = 0, #mission_widgets do
+	for i = 1, #mission_widgets do
 		local widget = mission_widgets[i]
 
 		if widget then
@@ -1410,43 +1435,31 @@ MissionBoardView._destroy_mission_widget = function (self, widget)
 	local content = widget.content
 	local mission_widgets = self._mission_widgets
 
-	if widget ~= self._flash_mission_widget then
+	if widget == self._flash_mission_widget then
+		local index = table.find(mission_widgets, widget)
+
+		table.remove(mission_widgets, index)
+
+		self._flash_mission_widget = nil
+	else
 		if content.mission_type == (self._selected_mission_type or "normal") then
 			self._free_widget_positions[content.position.index] = content.position
 		end
 
 		UIWidget.destroy(self._ui_resource_renderer, widget)
 		table.swap_delete(mission_widgets, table.find(mission_widgets, widget))
-	elseif widget == self._flash_mission_widget then
-		mission_widgets[0] = nil
-		self._flash_mission_widget = nil
 	end
 
 	self:_unregister_widget_name(widget.name)
 end
 
-MissionBoardView._clean_backend_data = function (self, backend_data)
-	local missions = self._backend_data.missions
-
-	for ii = #missions, 1, -1 do
-		local mission_config = missions[ii]
-
-		if not rawget(MissionTemplates, mission_config.map) then
-			Log.exception("MissionBoardView", "Got mission from backend that doesn't exist locally '%s'", mission_config.map)
-			table.remove(missions, ii)
-		end
-	end
-end
-
 MissionBoardView._join_mission_data = function (self)
-	self:_clean_backend_data(self._backend_data)
-
 	local missions = self._backend_data.filtered_missions
 	local widgets_by_name = self._widgets_by_name
 	local mission_widgets = self._mission_widgets
 	local found_removed_mission = false
 
-	for i = #mission_widgets, 0, -1 do
+	for i = #mission_widgets, 1, -1 do
 		local widget = mission_widgets[i]
 
 		if widget and widget.content.mission and widget.content.mission.id then
@@ -1499,8 +1512,7 @@ MissionBoardView._join_mission_data = function (self)
 
 				if self:_populate_mission_widget(self._flash_mission_widget, mission, self._flash_mission_widget.offset, true) then
 					self:_start_animation("mission_enter", self._flash_mission_widget, self, nil, 1, math.random_range(0, 0.5))
-
-					mission_widgets[0] = self._flash_mission_widget
+					table.insert(mission_widgets, 1, self._flash_mission_widget)
 				end
 			end
 
@@ -1609,14 +1621,12 @@ MissionBoardView._populate_mission_widget = function (self, widget, mission, pos
 		local circumstance_template = CircumstanceTemplates[circumstance]
 		local circumstance_ui_data = circumstance_template and circumstance_template.ui
 
-		if not circumstance_ui_data then
-			return false
+		if circumstance_ui_data then
+			content.has_circumstance = true
+			content.circumstance_name = Localize(circumstance_ui_data.display_name)
+			content.circumstance_description = Localize(circumstance_ui_data.description)
+			content.circumstance_icon = circumstance_ui_data.icon
 		end
-
-		content.has_circumstance = true
-		content.circumstance_name = Localize(circumstance_ui_data.display_name)
-		content.circumstance_description = Localize(circumstance_ui_data.description)
-		content.circumstance_icon = circumstance_ui_data.icon
 	else
 		content.circumstance_icon = nil
 	end
@@ -1636,11 +1646,8 @@ end
 
 MissionBoardView._mission_highest_completed_danger = function (self, mission_name)
 	local key = "__m_" .. mission_name .. "_md"
-	local achievements_data = self._achievements_data
 
-	if achievements_data then
-		return Managers.data_service.account:read_stat(achievements_data, key)
-	end
+	return Managers.stats:read_user_stat(1, key)
 end
 
 MissionBoardView.on_resolution_modified = function (self, scale)
@@ -1681,16 +1688,10 @@ MissionBoardView._update_fetch_missions = function (self, t)
 	local missions_future = self:_cancel_promise_on_exit(Managers.data_service.mission_board:fetch(nil, 1))
 
 	missions_future:next(function (mission_data)
-		local achievement_data_promise = self:_cancel_promise_on_exit(Managers.data_service.account:pull_achievement_data())
+		return self:_update_bonus_rewards():next(function ()
+			self._widgets_by_name.search_text.visible = false
 
-		return achievement_data_promise:next(function (achievements_data)
-			self._achievements_data = achievements_data
-
-			return self:_update_bonus_rewards():next(function ()
-				self._widgets_by_name.search_text.visible = false
-
-				return Promise.resolved(mission_data)
-			end)
+			return Promise.resolved(mission_data)
 		end)
 	end):next(self._cb_fetch_success):catch(self._cb_fetch_failure)
 end
@@ -1960,6 +1961,17 @@ MissionBoardView._callback_switch_mission_board = function (self, mission_type)
 	self:_join_mission_data()
 end
 
+MissionBoardView._clean_backend_data = function (self, missions)
+	for ii = #missions, 1, -1 do
+		local mission_config = missions[ii]
+
+		if not rawget(MissionTemplates, mission_config.map) then
+			Log.exception("MissionBoardView", "Got mission from backend that doesn't exist locally '%s'", mission_config.map)
+			table.remove(missions, ii)
+		end
+	end
+end
+
 MissionBoardView._filter_mission_board = function (self, board_type)
 	if board_type == "normal" then
 		board_type = nil
@@ -1968,6 +1980,8 @@ MissionBoardView._filter_mission_board = function (self, board_type)
 	if not self._backend_data or not self._backend_data.missions then
 		return {}
 	end
+
+	self:_clean_backend_data(self._backend_data.missions)
 
 	local filtered_missions = {}
 
@@ -2087,7 +2101,7 @@ MissionBoardView._callback_mission_widget_exit_done = function (self, widget)
 
 	local mission_widgets = self._mission_widgets
 
-	for i = 0, #mission_widgets do
+	for i = 1, #mission_widgets do
 		local widget = mission_widgets[i]
 
 		if widget and widget.content.exit_anim_id then

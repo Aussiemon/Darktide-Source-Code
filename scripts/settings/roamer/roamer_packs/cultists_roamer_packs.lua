@@ -116,8 +116,8 @@ local roamer_packs = {
 				elite_berzerker,
 				elite_berzerker,
 				elite_berzerker,
-				elite_berzerker,
-				elite_berzerker,
+				roamer_melee,
+				roamer_melee,
 				roamer_melee,
 				roamer_melee
 			}
@@ -167,7 +167,7 @@ local roamer_packs = {
 			breeds = {
 				elite_berzerker,
 				elite_berzerker,
-				elite_berzerker
+				roamer_melee
 			}
 		},
 		{

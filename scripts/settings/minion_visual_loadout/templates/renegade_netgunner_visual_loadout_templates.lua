@@ -6,21 +6,25 @@ local templates = {
 local basic_renegade_netgunner_template = {
 	slots = {
 		slot_upperbody = {
+			use_outline = true,
 			items = {
 				"content/items/characters/minions/chaos_traitor_guard/attachments_base/upperbody_a_netgunner"
 			}
 		},
 		slot_lowerbody = {
+			use_outline = true,
 			items = {
 				"content/items/characters/minions/chaos_traitor_guard/attachments_base/lowerbody_b_netgunner"
 			}
 		},
 		slot_head = {
+			use_outline = true,
 			items = {
 				"content/items/characters/minions/chaos_traitor_guard/attachments_gear/netgunner_helmet_01_a"
 			}
 		},
 		slot_netgun = {
+			use_outline = true,
 			drop_on_death = true,
 			is_weapon = true,
 			is_ranged_weapon = true,
@@ -29,6 +33,7 @@ local basic_renegade_netgunner_template = {
 			}
 		},
 		slot_variation_gear = {
+			use_outline = true,
 			items = {
 				"content/items/characters/minions/chaos_traitor_guard/attachments_gear/special_netgunner"
 			}

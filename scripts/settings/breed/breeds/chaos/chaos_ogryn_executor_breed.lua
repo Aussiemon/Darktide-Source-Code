@@ -36,8 +36,8 @@ local breed_data = {
 	slot_template = "chaos_ogryn",
 	broadphase_radius = 1,
 	stagger_resistance = 1,
-	half_extent_right = 0.5,
 	smite_stagger_immunity = true,
+	half_extent_right = 0.5,
 	half_extent_forward = 0.5,
 	accumulative_stagger_multiplier = 0.25,
 	use_avoidance = true,
@@ -79,22 +79,6 @@ local breed_data = {
 		[stagger_types.killshot] = 1,
 		[stagger_types.light_ranged] = 1,
 		[stagger_types.sticky] = 0.6
-	},
-	stagger_immune_times = {
-		[stagger_types.light] = 1.5,
-		[stagger_types.medium] = 2.25,
-		[stagger_types.heavy] = 5,
-		[stagger_types.explosion] = 3,
-		[stagger_types.light_ranged] = 1.25,
-		[stagger_types.sticky] = 0.25,
-		[stagger_types.killshot] = 6
-	},
-	stagger_thresholds = {
-		[stagger_types.light] = 10,
-		[stagger_types.medium] = 30,
-		[stagger_types.heavy] = 60,
-		[stagger_types.light_ranged] = 10,
-		[stagger_types.sticky] = 10
 	},
 	stagger_thresholds = {
 		[stagger_types.light] = 20,
@@ -424,6 +408,7 @@ local breed_data = {
 			[hit_zone_names.lower_right_leg] = 0.5
 		}
 	},
+	outline_config = {},
 	blackboard_component_config = BreedBlackboardComponentTemplates.melee_patroller
 }
 

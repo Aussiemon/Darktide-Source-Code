@@ -6,11 +6,13 @@ local templates = {
 local basic_chaos_spawn_template = {
 	slots = {
 		slot_body = {
+			use_outline = true,
 			items = {
 				"content/items/characters/minions/chaos_spawn/attachments_base/body"
 			}
 		},
 		slot_attachment = {
+			use_outline = true,
 			items = {
 				"content/items/characters/minions/chaos_spawn/attachments_gear/attachment_01"
 			}

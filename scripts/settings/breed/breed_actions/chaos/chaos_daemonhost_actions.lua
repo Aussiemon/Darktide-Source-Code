@@ -728,6 +728,23 @@ local action_data = {
 				dwn = {
 					"stagger_01"
 				}
+			},
+			blinding = {
+				fwd = {
+					"stagger_01"
+				},
+				bwd = {
+					"stagger_01"
+				},
+				left = {
+					"stagger_01"
+				},
+				right = {
+					"stagger_01"
+				},
+				dwn = {
+					"stagger_01"
+				}
 			}
 		}
 	},

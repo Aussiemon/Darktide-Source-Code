@@ -4,27 +4,57 @@ local DangerSettings = {
 		{
 			index = 1,
 			expected_resistance = 2,
-			display_name = "loc_mission_board_danger_lowest"
+			display_name = "loc_mission_board_danger_lowest",
+			color = {
+				255,
+				169,
+				211,
+				158
+			}
 		},
 		{
 			index = 2,
 			expected_resistance = 2,
-			display_name = "loc_mission_board_danger_low"
+			display_name = "loc_mission_board_danger_low",
+			color = {
+				255,
+				169,
+				211,
+				158
+			}
 		},
 		{
 			index = 3,
 			expected_resistance = 3,
-			display_name = "loc_mission_board_danger_medium"
+			display_name = "loc_mission_board_danger_medium",
+			color = {
+				255,
+				228,
+				189,
+				81
+			}
 		},
 		{
 			index = 4,
 			expected_resistance = 3,
-			display_name = "loc_mission_board_danger_high"
+			display_name = "loc_mission_board_danger_high",
+			color = {
+				255,
+				228,
+				189,
+				81
+			}
 		},
 		{
 			index = 5,
 			expected_resistance = 4,
-			display_name = "loc_mission_board_danger_highest"
+			display_name = "loc_mission_board_danger_highest",
+			color = {
+				255,
+				233,
+				84,
+				84
+			}
 		}
 	},
 	calculate_danger = function (challenge, resistance)

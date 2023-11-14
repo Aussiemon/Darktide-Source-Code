@@ -30,8 +30,7 @@ damage_templates.light_ninjafencer = {
 					[armor_types.berserker] = 0.5,
 					[armor_types.super_armor] = 0,
 					[armor_types.disgustingly_resilient] = 0.75,
-					[armor_types.void_shield] = 0.75,
-					[armor_types.prop_armor] = 0.5
+					[armor_types.void_shield] = 0.75
 				},
 				impact = {
 					[armor_types.unarmored] = 1,
@@ -41,8 +40,7 @@ damage_templates.light_ninjafencer = {
 					[armor_types.berserker] = 0.5,
 					[armor_types.super_armor] = 0,
 					[armor_types.disgustingly_resilient] = 0.5,
-					[armor_types.void_shield] = 0.5,
-					[armor_types.prop_armor] = 0
+					[armor_types.void_shield] = 0.5
 				}
 			},
 			power_distribution = {
@@ -57,8 +55,7 @@ damage_templates.light_ninjafencer = {
 				[armor_types.berserker] = 1,
 				[armor_types.super_armor] = 1,
 				[armor_types.disgustingly_resilient] = 1,
-				[armor_types.void_shield] = 1,
-				[armor_types.prop_armor] = 1
+				[armor_types.void_shield] = 1
 			},
 			boost_curve = PowerLevelSettings.boost_curves.default
 		},
@@ -78,8 +75,7 @@ damage_templates.light_ninjafencer = {
 					[armor_types.berserker] = 0.5,
 					[armor_types.super_armor] = 0,
 					[armor_types.disgustingly_resilient] = 0.75,
-					[armor_types.void_shield] = 0.75,
-					[armor_types.prop_armor] = 0.25
+					[armor_types.void_shield] = 0.75
 				},
 				impact = {
 					[armor_types.unarmored] = 1,
@@ -89,8 +85,7 @@ damage_templates.light_ninjafencer = {
 					[armor_types.berserker] = 0.5,
 					[armor_types.super_armor] = 0,
 					[armor_types.disgustingly_resilient] = 0.5,
-					[armor_types.void_shield] = 0.5,
-					[armor_types.prop_armor] = 0
+					[armor_types.void_shield] = 0.5
 				}
 			},
 			power_distribution = {
@@ -118,8 +113,7 @@ damage_templates.light_ninjafencer_slash = {
 					[armor_types.berserker] = 0.5,
 					[armor_types.super_armor] = 0,
 					[armor_types.disgustingly_resilient] = 0.75,
-					[armor_types.void_shield] = 0.75,
-					[armor_types.prop_armor] = 0.5
+					[armor_types.void_shield] = 0.75
 				},
 				impact = {
 					[armor_types.unarmored] = 1,
@@ -129,8 +123,7 @@ damage_templates.light_ninjafencer_slash = {
 					[armor_types.berserker] = 0.5,
 					[armor_types.super_armor] = 0,
 					[armor_types.disgustingly_resilient] = 0.5,
-					[armor_types.void_shield] = 0.5,
-					[armor_types.prop_armor] = 0
+					[armor_types.void_shield] = 0.5
 				}
 			},
 			power_distribution = {
@@ -145,8 +138,7 @@ damage_templates.light_ninjafencer_slash = {
 				[armor_types.berserker] = 1,
 				[armor_types.super_armor] = 1,
 				[armor_types.disgustingly_resilient] = 1,
-				[armor_types.void_shield] = 1,
-				[armor_types.prop_armor] = 1
+				[armor_types.void_shield] = 1
 			},
 			boost_curve = PowerLevelSettings.boost_curves.default
 		},
@@ -166,8 +158,7 @@ damage_templates.light_ninjafencer_slash = {
 					[armor_types.berserker] = 0.5,
 					[armor_types.super_armor] = 0,
 					[armor_types.disgustingly_resilient] = 0.75,
-					[armor_types.void_shield] = 0.75,
-					[armor_types.prop_armor] = 0.25
+					[armor_types.void_shield] = 0.75
 				},
 				impact = {
 					[armor_types.unarmored] = 1,
@@ -177,8 +168,7 @@ damage_templates.light_ninjafencer_slash = {
 					[armor_types.berserker] = 0.5,
 					[armor_types.super_armor] = 0,
 					[armor_types.disgustingly_resilient] = 0.5,
-					[armor_types.void_shield] = 0.5,
-					[armor_types.prop_armor] = 0
+					[armor_types.void_shield] = 0.5
 				}
 			},
 			power_distribution = {
@@ -207,8 +197,7 @@ damage_templates.medium_ninjafencer = {
 					[armor_types.berserker] = 0.5,
 					[armor_types.super_armor] = 0,
 					[armor_types.disgustingly_resilient] = 0.75,
-					[armor_types.void_shield] = 0.75,
-					[armor_types.prop_armor] = 0.75
+					[armor_types.void_shield] = 0.75
 				},
 				impact = {
 					[armor_types.unarmored] = 1,
@@ -218,8 +207,7 @@ damage_templates.medium_ninjafencer = {
 					[armor_types.berserker] = 0.5,
 					[armor_types.super_armor] = 0,
 					[armor_types.disgustingly_resilient] = 0.5,
-					[armor_types.void_shield] = 0.5,
-					[armor_types.prop_armor] = 0
+					[armor_types.void_shield] = 0.5
 				}
 			},
 			power_distribution = {
@@ -234,8 +222,7 @@ damage_templates.medium_ninjafencer = {
 				[armor_types.berserker] = 1,
 				[armor_types.super_armor] = 1,
 				[armor_types.disgustingly_resilient] = 1,
-				[armor_types.void_shield] = 1,
-				[armor_types.prop_armor] = 1
+				[armor_types.void_shield] = 1
 			},
 			boost_curve = PowerLevelSettings.boost_curves.default
 		},
@@ -255,8 +242,7 @@ damage_templates.medium_ninjafencer = {
 					[armor_types.berserker] = 0.5,
 					[armor_types.super_armor] = 0,
 					[armor_types.disgustingly_resilient] = 0.75,
-					[armor_types.void_shield] = 0.75,
-					[armor_types.prop_armor] = 0
+					[armor_types.void_shield] = 0.75
 				},
 				impact = {
 					[armor_types.unarmored] = 1,
@@ -266,8 +252,7 @@ damage_templates.medium_ninjafencer = {
 					[armor_types.berserker] = 0.5,
 					[armor_types.super_armor] = 0,
 					[armor_types.disgustingly_resilient] = 0.5,
-					[armor_types.void_shield] = 0.5,
-					[armor_types.prop_armor] = 0.5
+					[armor_types.void_shield] = 0.5
 				}
 			},
 			power_distribution = {

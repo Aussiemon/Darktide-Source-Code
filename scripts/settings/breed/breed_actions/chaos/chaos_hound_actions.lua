@@ -12,32 +12,37 @@ local action_data = {
 		instant_ragdoll_chance = 1
 	},
 	leap = {
+		wall_jump_unobstructed_height = 2.5,
+		stop_duration = 0.5,
 		land_impact_timing = 0,
 		controlled_stagger_min_distance = 0,
-		aoe_bot_threat_duration = 1,
-		wall_raycast_distance = 3,
-		wall_raycast_node_name = "j_neck",
-		push_minions_side_relation = "allied",
-		start_duration = 0.6666666666666666,
-		push_minions_power_level = 2000,
-		push_minions_radius = 2,
-		start_leap_anim_event = "attack_leap_start",
-		aoe_bot_threat_timing = 0.5,
+		max_pounce_dot = 0.1,
 		start_leap_anim_event_short = "attack_leap_short",
+		wall_land_length = 3,
+		start_leap_anim_event = "attack_leap_start",
+		start_duration = 0.6666666666666666,
+		push_enemies_radius = 1,
+		wall_jump_anim_event = "leap_hit_wall",
+		wall_jump_rotation_timing = 0.16666666666666666,
+		push_minions_radius = 2,
 		start_duration_short = 0.8,
 		push_enemies_power_level = 2000,
 		wall_land_anim_event = "leap_hit_wall_land",
-		land_anim_event = "leap_land",
-		in_air_stagger_duration = 0.9,
-		push_enemies_radius = 1,
 		wall_land_duration = 0.5333333333333333,
-		stop_duration = 0.5,
-		wall_jump_anim_event = "leap_hit_wall",
-		max_pounce_dot = 0.1,
+		landing_duration = 1.5,
 		controlled_stagger = true,
 		start_move_speed = 12,
+		wall_jump_speed = 10,
+		aoe_bot_threat_duration = 1,
+		wall_jump_nav_mesh_offset = 2,
+		push_minions_side_relation = "allied",
+		wall_jump_align_rotation_speed = 30,
+		aoe_bot_threat_timing = 0.5,
+		push_minions_power_level = 2000,
+		in_air_stagger_duration = 0.9,
+		land_anim_event = "leap_land",
 		stop_anim = "run_to_stop",
-		landing_duration = 1.5,
+		wall_jump_rotation_duration = 0.5333333333333333,
 		stagger_type_reduction = {
 			melee = -200,
 			ranged = 20
@@ -389,6 +394,23 @@ local action_data = {
 				}
 			},
 			electrocuted = {
+				fwd = {
+					"hit_reaction_forward"
+				},
+				bwd = {
+					"hit_reaction_backward"
+				},
+				left = {
+					"hit_reaction_left"
+				},
+				right = {
+					"hit_reaction_right"
+				},
+				dwn = {
+					"hit_reaction_backward"
+				}
+			},
+			blinding = {
 				fwd = {
 					"hit_reaction_forward"
 				},

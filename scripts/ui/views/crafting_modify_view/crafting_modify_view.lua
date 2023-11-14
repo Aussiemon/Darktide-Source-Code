@@ -33,7 +33,11 @@ CraftingModifyView.on_enter = function (self)
 
 	self._crafting_recipe = self:_setup_crafting_recipe("crafting_recipe", "crafting_recipe_pivot")
 
-	self._crafting_recipe:present_recipe_navigation(CraftingSettings.recipes_ui_order, callback(self, "cb_on_recipe_button_pressed"), callback(self, "_update_weapon_stats_position", "crafting_recipe_pivot", self._crafting_recipe))
+	if self._preselected_item then
+		self._crafting_recipe:present_recipe_navigation_with_item(CraftingSettings.recipes_ui_order, callback(self, "cb_on_recipe_button_pressed"), callback(self, "_update_weapon_stats_position", "crafting_recipe_pivot", self._crafting_recipe), self._preselected_item)
+	else
+		self._crafting_recipe:present_recipe_navigation(CraftingSettings.recipes_ui_order, callback(self, "cb_on_recipe_button_pressed"), callback(self, "_update_weapon_stats_position", "crafting_recipe_pivot", self._crafting_recipe))
+	end
 
 	local character_id = self:_player():character_id()
 	local item_type_filter_list = {
@@ -259,7 +263,16 @@ end
 
 CraftingModifyView._preview_item = function (self, item)
 	CraftingModifyView.super._preview_item(self, item)
-	self._crafting_recipe:present_recipe_navigation_with_item(CraftingSettings.recipes_ui_order, callback(self, "cb_on_recipe_button_pressed"), callback(self, "_update_weapon_stats_position", "crafting_recipe_pivot", self._crafting_recipe), item)
+
+	if not self._current_item and not self._preselected_item then
+		self._current_item = item
+
+		self._crafting_recipe:present_recipe_navigation_with_item(CraftingSettings.recipes_ui_order, callback(self, "cb_on_recipe_button_pressed"), callback(self, "_update_weapon_stats_position", "crafting_recipe_pivot", self._crafting_recipe), item)
+	elseif self._current_item ~= item then
+		self._current_item = item
+
+		self._crafting_recipe:set_selected_item(item)
+	end
 
 	local weapon_stats = self:_element("weapon_stats")
 	local grid_height = weapon_stats:grid_height()
@@ -352,8 +365,8 @@ CraftingModifyView._setup_menu_tabs = function (self, content)
 	}
 	local tab_menu_element = self:_add_element(ViewElementTabMenu, id, layer, tab_menu_settings)
 	self._tab_menu_element = tab_menu_element
-	local input_action_left = "navigate_secondary_left_pressed"
-	local input_action_right = "navigate_secondary_right_pressed"
+	local input_action_left = "navigate_primary_left_pressed"
+	local input_action_right = "navigate_primary_right_pressed"
 
 	tab_menu_element:set_input_actions(input_action_left, input_action_right)
 

@@ -400,6 +400,21 @@ local disorientation_settings = {
 				action_delay = 0.2
 			}
 		},
+		ogryn_shovel = {
+			sound_event = "wwise/events/player/play_player_get_hit_heavy_2d",
+			movement_speed_buff = "heavy_stun_movement_slow",
+			screen_space_effect = "content/fx/particles/screenspace/screen_stunned_light",
+			hit_react_anim_1p = "shake_heavy",
+			stun = {
+				end_stun_early_time = 0.9,
+				intoxication_level = 4,
+				stun_immunity_time_buff = "stun_immune_short",
+				stun_duration = 1.3,
+				self_stun = true,
+				interrupt_delay = false,
+				action_delay = 0.5
+			}
+		},
 		shocktrooper_frag = {
 			sound_event = "wwise/events/player/play_player_get_hit_heavy_2d",
 			movement_speed_buff = "heavy_stun_movement_slow",
@@ -418,24 +433,10 @@ local disorientation_settings = {
 			}
 		},
 		corruption = {
-			sound_event = "wwise/events/player/play_player_get_hit_corruption_2d",
-			screen_space_effect = "content/fx/particles/screenspace/screen_stunned_light",
-			stun = {
-				intoxication_level = 0,
-				stun_duration = 0,
-				stun_immunity_time_buff = "stun_immune_very_long",
-				action_delay = 0
-			}
+			sound_event = "wwise/events/player/play_player_get_hit_corruption_2d"
 		},
 		corruption_tick = {
-			sound_event = "wwise/events/player/play_player_get_hit_corruption_2d_tick",
-			screen_space_effect = "content/fx/particles/screenspace/screen_stunned_light",
-			stun = {
-				intoxication_level = 0,
-				stun_duration = 0,
-				stun_immunity_time_buff = "stun_immune_very_long",
-				action_delay = 0
-			}
+			sound_event = "wwise/events/player/play_player_get_hit_corruption_2d_tick"
 		},
 		ogryn_toughness = {
 			screen_space_effect = "content/fx/particles/screenspace/screen_stunned_light",

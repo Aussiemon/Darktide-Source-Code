@@ -113,7 +113,7 @@ AuspexScanningEffects.wield = function (self)
 end
 
 AuspexScanningEffects.unwield = function (self)
-	self:_set_scanner_light(false)
+	self:_set_scanner_lights(false)
 	self:_stop_searching_sfx_loop()
 	self:_stop_confirm_sfx_loop()
 	self:_set_outline_unit(self._outline_unit, false)
@@ -174,7 +174,7 @@ AuspexScanningEffects.update_unit_position = function (self, unit, dt, t)
 	local current_beep_normalized = 1 - math.clamp01(current_beep / -48)
 	local should_light_be_on = is_active and current_beep_normalized > 0.7
 
-	self:_set_scanner_light(should_light_be_on)
+	self:_set_scanner_lights(should_light_be_on)
 
 	local line_of_sight_unit = line_of_sight and scannable_unit
 	local outline_time = self._outline_time or 0
@@ -420,7 +420,7 @@ AuspexScanningEffects._set_highlight_unit = function (self, unit, active)
 	end
 end
 
-AuspexScanningEffects.__set_scanner_light = function (self, enebeled, scanner_light_components)
+AuspexScanningEffects._set_scanner_light = function (self, enabled, scanner_light_components)
 	if not scanner_light_components then
 		return
 	end
@@ -428,13 +428,13 @@ AuspexScanningEffects.__set_scanner_light = function (self, enebeled, scanner_li
 	for i = 1, #scanner_light_components do
 		local scanner_light_component = scanner_light_components[i]
 
-		scanner_light_component:enable_lights(enebeled)
+		scanner_light_component:enable_lights(enabled)
 	end
 end
 
-AuspexScanningEffects._set_scanner_light = function (self, enebeled, color)
-	self:__set_scanner_light(enebeled, self._scanner_light_components_1p)
-	self:__set_scanner_light(enebeled, self._scanner_light_components_3p)
+AuspexScanningEffects._set_scanner_lights = function (self, enabled, color)
+	self:_set_scanner_light(enabled, self._scanner_light_components_1p)
+	self:_set_scanner_light(enabled, self._scanner_light_components_3p)
 end
 
 AuspexScanningEffects._set_screen_active = function (self, enabled)

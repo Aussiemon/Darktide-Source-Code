@@ -486,10 +486,12 @@ weapon_template.actions = {
 		soft_sticky_targeting = true,
 		must_have_ammo_or_charge = true,
 		sticky_targeting = false,
-		crosshair_type = "dot",
 		use_alternate_fire = true,
 		ability_type = "grenade_ability",
 		total_time = math.huge,
+		crosshair = {
+			crosshair_type = "dot"
+		},
 		smart_targeting_template = SmartTargetingTemplates.throwing_knifes_single_target,
 		targeting_fx = {
 			has_husk_events = true,
@@ -639,10 +641,12 @@ weapon_template.actions = {
 		start_input = "inspect_start",
 		anim_end_event = "inspect_end",
 		kind = "inspect",
-		crosshair_type = "inspect",
 		anim_event = "inspect_start",
 		stop_input = "inspect_stop",
-		total_time = math.huge
+		total_time = math.huge,
+		crosshair = {
+			crosshair_type = "inspect"
+		}
 	}
 }
 weapon_template.conditional_state_to_action_input = {
@@ -663,10 +667,12 @@ weapon_template.breed_anim_state_machine_1p = {
 	ogryn = "content/characters/player/ogryn/first_person/animations/unarmed"
 }
 weapon_template.alternate_fire_settings = {
-	crosshair_type = "dot",
 	stop_anim_event = "to_unaim_ironsight",
 	start_anim_event = "to_ironsight",
 	spread_template = "no_spread",
+	crosshair = {
+		crosshair_type = "dot"
+	},
 	action_movement_curve = {
 		{
 			modifier = 0.3,
@@ -707,7 +713,9 @@ weapon_template.uses_ammunition = true
 weapon_template.uses_overheat = false
 weapon_template.sprint_ready_up_time = 0.1
 weapon_template.max_first_person_anim_movement_speed = 5.8
-weapon_template.crosshair_type = "dot"
+weapon_template.crosshair = {
+	crosshair_type = "dot"
+}
 weapon_template.hit_marker_type = "center"
 weapon_template.smart_targeting_template = SmartTargetingTemplates.throwing_knives_default
 weapon_template.fx_sources = {

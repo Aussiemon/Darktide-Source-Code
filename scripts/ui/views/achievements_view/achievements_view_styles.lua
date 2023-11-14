@@ -14,7 +14,6 @@ local achievement_icon_size = {
 }
 local reward_item_size = table.clone(UISettings.item_icon_size)
 local num_completed_to_show = 3
-local num_near_completed_to_show = 3
 local achievements_view_styles = {
 	visible_area_size = {
 		visible_area_width,
@@ -36,6 +35,7 @@ local achievements_view_styles = {
 		8,
 		8
 	},
+	achievement_icon_size = achievement_icon_size,
 	completed = {}
 }
 local completed_styles = achievements_view_styles.completed
@@ -71,7 +71,6 @@ achievements_grid_style.margin = achievements_grid_margin
 achievements_view_styles.achievement_summary = {}
 local achievement_summary_style = achievements_view_styles.achievement_summary
 achievement_summary_style.num_completed_to_show = num_completed_to_show
-achievement_summary_style.num_near_completed_to_show = num_near_completed_to_show
 achievements_view_styles.gamepad_unfold_hint = {}
 local gamepad_unfold_hint_style = achievements_view_styles.gamepad_unfold_hint
 gamepad_unfold_hint_style.text = table.clone(UIFontSettings.body)
@@ -187,6 +186,19 @@ common_achievement_score_styles.size = {
 	30
 }
 common_achievement_score_styles.text_horizontal_alignment = "center"
+common_achievement_pass_styles.bookmark = {}
+local bookmark_style = common_achievement_pass_styles.bookmark
+bookmark_style.horizontal_alignment = "right"
+bookmark_style.size = {
+	32,
+	32
+}
+bookmark_style.offset = {
+	-48,
+	-8,
+	8
+}
+bookmark_style.color = Color.ui_input_color(255, true)
 pass_template_styles.reward_item_margins = {
 	achievement_icon_size[1] + 16,
 	16
@@ -203,20 +215,20 @@ reward_icon_small_style.size = {
 reward_icon_small_style.material_values = {
 	frame = "content/ui/textures/icons/achievements/frames/default_frame",
 	background = "content/ui/textures/icons/achievements/frames/frame_background_blank",
-	icon_color = Color.terminal_frame_hover(255, true)
+	icon_color = Color.terminal_text_body(255, true)
 }
 reward_icon_small_style.offset = {
 	-212,
 	20,
 	5
 }
-reward_icon_small_style.color = Color.terminal_frame(nil, true)
+reward_icon_small_style.color = Color.terminal_text_body_sub_header(nil, true)
 reward_icon_small_style.default_color = reward_icon_small_style.color
-reward_icon_small_style.hover_color = Color.terminal_frame_hover(nil, true)
-reward_icon_small_style.selected_color = Color.terminal_frame_selected(nil, true)
+reward_icon_small_style.hover_color = Color.terminal_text_body(nil, true)
+reward_icon_small_style.selected_color = Color.terminal_text_body(nil, true)
 reward_icon_small_style.icon_default_color = reward_icon_small_style.material_values.icon_color
-reward_icon_small_style.icon_hover_color = Color.terminal_corner_hover(255, true)
-reward_icon_small_style.icon_selected_color = Color.terminal_corner_selected(nil, true)
+reward_icon_small_style.icon_hover_color = Color.terminal_text_header(255, true)
+reward_icon_small_style.icon_selected_color = Color.terminal_text_header(nil, true)
 reward_icon_small_style.scale_to_material = true
 rewards_style.reward_icon_frame = table.clone(common_achievement_frame_style)
 local reward_icon_frame_style = rewards_style.reward_icon_frame
@@ -284,7 +296,7 @@ progress_bar_pass_template_styles.size = {
 	12
 }
 progress_bar_pass_template_styles.progress_bar_frame = {}
-progress_bar_frame_style = progress_bar_pass_template_styles.progress_bar_frame
+local progress_bar_frame_style = progress_bar_pass_template_styles.progress_bar_frame
 progress_bar_frame_style.offset = {
 	common_achievement_label_style.offset[1],
 	8,
@@ -295,7 +307,7 @@ progress_bar_frame_style.default_color = Color.terminal_frame(nil, true)
 progress_bar_frame_style.hover_color = Color.terminal_frame_hover(nil, true)
 progress_bar_frame_style.selected_color = Color.terminal_frame_selected(nil, true)
 progress_bar_pass_template_styles.progress_bar_background = {}
-progress_bar_background_style = progress_bar_pass_template_styles.progress_bar_background
+local progress_bar_background_style = progress_bar_pass_template_styles.progress_bar_background
 progress_bar_background_style.offset = {
 	progress_bar_frame_style.offset[1] + 1,
 	progress_bar_frame_style.offset[2] + 1,
@@ -307,7 +319,7 @@ progress_bar_background_style.size = {
 }
 progress_bar_background_style.color = Color.terminal_background(255, true)
 progress_bar_pass_template_styles.progress_bar_edge = {}
-progress_bar_edge_style = progress_bar_pass_template_styles.progress_bar_edge
+local progress_bar_edge_style = progress_bar_pass_template_styles.progress_bar_edge
 progress_bar_edge_style.size = {
 	12,
 	28
@@ -365,14 +377,14 @@ pass_template_styles.family_sub_achievement_margins = {
 }
 pass_template_styles.achievement_family = {}
 local achievement_family_style = pass_template_styles.achievement_family
-achievement_family_style.group_label = table.clone(UIFontSettings.body_small)
-achievement_family_group_label_style = achievement_family_style.group_label
-achievement_family_group_label_style.offset = {
+achievement_family_style.family_label = table.clone(UIFontSettings.body_small)
+local achievement_family_label_style = achievement_family_style.family_label
+achievement_family_label_style.offset = {
 	achievement_icon_size[1] + 16,
 	0,
 	3
 }
-achievement_family_group_label_style.size = {
+achievement_family_label_style.size = {
 	512,
 	18
 }
@@ -404,10 +416,21 @@ family_sub_achievement_score_style.size = {
 family_sub_achievement_score_style.text_color = Color.terminal_text_body(255, true)
 pass_template_styles.family_sub_reward_margins = {
 	achievement_icon_size[1] - 16,
-	20
+	8
 }
 pass_template_styles.achievement_family_reward = {}
 local achievement_family_reward_style = pass_template_styles.achievement_family_reward
+achievement_family_reward_style.family_label = table.clone(UIFontSettings.body_small)
+local achievement_family_reward_label_style = achievement_family_style.family_label
+achievement_family_reward_label_style.offset = {
+	achievement_icon_size[1] + 16,
+	0,
+	3
+}
+achievement_family_reward_label_style.size = {
+	512,
+	18
+}
 achievement_family_reward_style.icon = {}
 local family_reward_icon_style = achievement_family_reward_style.icon
 family_reward_icon_style.size = {
@@ -493,7 +516,7 @@ local completed_overlay_style = pass_template_styles.completed_overlay
 completed_overlay_style.offset = {
 	0,
 	0,
-	4
+	2
 }
 completed_overlay_style.color = {
 	128,
@@ -525,14 +548,23 @@ simple_category_blueprint_style.size = {
 	category_width,
 	ButtonPassTemplates.list_button_default_height
 }
-blueprint_styles.top_category_button = {}
+simple_category_blueprint_style.percent_done = table.clone(UIFontSettings.button_primary)
+local simple_category_blueprint_style_percent_done_style = simple_category_blueprint_style.percent_done
+simple_category_blueprint_style_percent_done_style.default_color = Color.terminal_text_body_sub_header(255, true)
+simple_category_blueprint_style_percent_done_style.text_color = Color.terminal_text_body_sub_header(255, true)
+simple_category_blueprint_style_percent_done_style.font_size = 20
+simple_category_blueprint_style_percent_done_style.text_horizontal_alignment = "right"
+simple_category_blueprint_style_percent_done_style.size = table.clone(simple_category_blueprint_style.size)
+simple_category_blueprint_style_percent_done_style.offset = {
+	-50,
+	0
+}
+blueprint_styles.top_category_button = table.clone(simple_category_blueprint_style)
 local top_category_blueprint_style = blueprint_styles.top_category_button
-top_category_blueprint_style.size = table.clone(simple_category_blueprint_style.size)
 top_category_blueprint_style.folded_height = top_category_blueprint_style.size[2]
 top_category_blueprint_style.hotspot = {}
 local top_category_blueprint_hotspot_style = top_category_blueprint_style.hotspot
 top_category_blueprint_hotspot_style.anim_select_speed = 32
-top_category_blueprint_hotspot_style.on_pressed_sound = nil
 top_category_blueprint_style.arrow = {}
 local top_category_blueprint_arrow_style = top_category_blueprint_style.arrow
 top_category_blueprint_arrow_style.color = Color.terminal_text_body(255, true)
@@ -577,10 +609,15 @@ sub_category_blueprint_style.size = sub_category_blueprint_style.folded_size
 sub_category_blueprint_style.text = table.clone(UIFontSettings.list_button)
 local sub_category_blueprint_text_style = sub_category_blueprint_style.text
 sub_category_blueprint_text_style.font_size = 20
-sub_category_blueprint_text_style.offset[1] = 52
+sub_category_blueprint_text_style.offset[1] = 68
+sub_category_blueprint_style.percent_done = table.clone(simple_category_blueprint_style_percent_done_style)
+sub_category_blueprint_style.percent_done.offset = {
+	-50,
+	0,
+	4
+}
 sub_category_blueprint_style.bullet.offset[1] = 30
 sub_category_blueprint_style.bullet_active.offset[1] = 30
-sub_category_blueprint_style.text.offset[1] = 68
 local header_height = 54
 local header_height_margin = 12
 blueprint_styles.header = {}
@@ -630,6 +667,23 @@ blueprint_header_divider_left_style.uvs = {
 		1
 	}
 }
+blueprint_styles.description = {}
+local blueprint_description_style = blueprint_styles.description
+blueprint_description_style.size = {
+	achievement_width,
+	header_height
+}
+blueprint_description_style.label = table.clone(UIFontSettings.body)
+blueprint_description_style.label.size = {
+	achievement_width - 2 * achievements_grid_margin,
+	header_height
+}
+blueprint_description_style.label.horizontal_alignment = "center"
+blueprint_description_style.label.vertical_alignment = "center"
+blueprint_description_style.label.text_color = Color.terminal_text_body_sub_header(255, true)
+blueprint_description_style.label.default_color = Color.terminal_text_body_sub_header(255, true)
+blueprint_description_style.label.text_horizontal_alignment = "center"
+blueprint_description_style.label.font_size = 20
 blueprint_styles.achievement_divider = {}
 local achievement_divider_style = blueprint_styles.achievement_divider
 achievement_divider_style.size = {
@@ -669,17 +723,6 @@ normal_achievement_style.size = {
 	achievement_width,
 	90
 }
-normal_achievement_style.hotspot = {}
-local normal_achievement_hotspot_style = normal_achievement_style.hotspot
-normal_achievement_hotspot_style.on_hover_sound = UISoundEvents.default_mouse_hover
-normal_achievement_hotspot_style.on_select_sound = UISoundEvents.default_click
-local normal_achievement_icon_style = normal_achievement_style.icon
-normal_achievement_icon_style.icon_default_color = Color.ui_achievement_icon_completed(nil, true)
-normal_achievement_icon_style.icon_hover_color = Color.ui_achievement_icon_completed_hover(nil, true)
-normal_achievement_icon_style.material_values = {
-	frame = "content/ui/textures/icons/achievements/frames/achieved",
-	icon_color = table.clone(normal_achievement_icon_style.icon_default_color)
-}
 normal_achievement_style.in_progress_overlay = table.clone(pass_template_styles.completed_overlay)
 blueprint_styles.foldout_achievement = table.clone(normal_achievement_style)
 local foldout_achievement_style = blueprint_styles.foldout_achievement
@@ -714,6 +757,13 @@ completed_achievement_style.size = {
 	90
 }
 completed_achievement_style.margin_bottom = 30
+local completed_achievement_icon_style = completed_achievement_style.icon
+completed_achievement_icon_style.icon_default_color = Color.ui_achievement_icon_completed(nil, true)
+completed_achievement_icon_style.icon_hover_color = Color.ui_achievement_icon_completed_hover(nil, true)
+completed_achievement_icon_style.material_values = {
+	frame = "content/ui/textures/icons/achievements/frames/achieved",
+	icon_color = table.clone(completed_achievement_icon_style.icon_default_color)
+}
 completed_achievement_style.reward = table.clone(reward_icon_small_style)
 blueprint_styles.completed_foldout_achievement = table.clone(completed_achievement_style)
 local completed_foldout_achievement_style = blueprint_styles.completed_foldout_achievement

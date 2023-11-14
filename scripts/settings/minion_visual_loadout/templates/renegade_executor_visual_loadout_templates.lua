@@ -6,6 +6,7 @@ local zone_ids = MissionSettings.mission_zone_ids
 local basic_renegade_executor_template = {
 	slots = {
 		slot_upperbody = {
+			use_outline = true,
 			items = {
 				"content/items/characters/minions/chaos_traitor_guard/attachments_base/upperbody_a_elite",
 				"content/items/characters/minions/chaos_traitor_guard/attachments_base/upperbody_a_elite_color_var_01",
@@ -16,6 +17,7 @@ local basic_renegade_executor_template = {
 			}
 		},
 		slot_lowerbody = {
+			use_outline = true,
 			items = {
 				"content/items/characters/minions/chaos_traitor_guard/attachments_base/lowerbody_b_elite",
 				"content/items/characters/minions/chaos_traitor_guard/attachments_base/lowerbody_b_elite_color_var_01",
@@ -26,6 +28,7 @@ local basic_renegade_executor_template = {
 			}
 		},
 		slot_head = {
+			use_outline = true,
 			items = {
 				"content/items/characters/minions/chaos_traitor_guard/attachments_gear/executor_helmet_01_a",
 				"content/items/characters/minions/chaos_traitor_guard/attachments_gear/executor_helmet_01_a",
@@ -33,13 +36,15 @@ local basic_renegade_executor_template = {
 			}
 		},
 		slot_melee_weapon = {
-			drop_on_death = true,
+			use_outline = true,
 			is_weapon = true,
+			drop_on_death = true,
 			items = {
 				"content/items/weapons/minions/melee/renegade_executor_weapon"
 			}
 		},
 		slot_decal = {
+			use_outline = true,
 			items = {
 				"content/items/characters/minions/chaos_traitor_guard/attachments_gear/chaos_traitor_guard_melee_elite_a_decal_a",
 				"content/items/characters/minions/chaos_traitor_guard/attachments_gear/chaos_traitor_guard_melee_elite_a_decal_01_b",
@@ -47,6 +52,7 @@ local basic_renegade_executor_template = {
 			}
 		},
 		slot_variation_gear = {
+			use_outline = true,
 			items = {
 				"content/items/characters/minions/chaos_traitor_guard/attachments_gear/melee_elite_a",
 				"content/items/characters/minions/chaos_traitor_guard/attachments_gear/melee_elite_a_var_01",

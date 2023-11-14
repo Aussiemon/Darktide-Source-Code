@@ -68,13 +68,17 @@ WeaponSpecialExplodeOnImpact.process_hit = function (self, t, weapon, action_set
 	end
 end
 
-WeaponSpecialExplodeOnImpact.on_action_start = function (self, t, num_hit_enemies)
+WeaponSpecialExplodeOnImpact.on_special_activation = function (self, t, num_hit_enemies)
 	self._num_hit_enemies = 0
 	local inventory_slot_component = self._inventory_slot_component
 	inventory_slot_component.num_special_activations = 0
 end
 
-WeaponSpecialExplodeOnImpact.on_action_finish = function (self, t, num_hit_enemies)
+WeaponSpecialExplodeOnImpact.on_sweep_action_start = function (self, t)
+	return
+end
+
+WeaponSpecialExplodeOnImpact.on_sweep_action_finish = function (self, t, num_hit_enemies)
 	if num_hit_enemies and num_hit_enemies > 0 then
 		local inventory_slot_component = self._inventory_slot_component
 		inventory_slot_component.special_active = false

@@ -141,7 +141,12 @@ left_trigger_style.offset = {
 }
 left_trigger_style.text_horizontal_alignment = "left"
 left_trigger_style.text_vertical_alignment = "top"
-left_trigger_style.text_color = Color.terminal_text_body(255, true)
+left_trigger_style.text_color = {
+	255,
+	226,
+	199,
+	126
+}
 local right_trigger_style = table.clone(UIFontSettings.header_3)
 right_trigger_style.font_size = 30
 right_trigger_style.offset = {
@@ -151,7 +156,12 @@ right_trigger_style.offset = {
 }
 right_trigger_style.text_horizontal_alignment = "right"
 right_trigger_style.text_vertical_alignment = "top"
-right_trigger_style.text_color = Color.terminal_text_body(255, true)
+right_trigger_style.text_color = {
+	255,
+	226,
+	199,
+	126
+}
 local widget_definitions = {
 	header = UIWidget.create_definition({
 		{
@@ -227,7 +237,7 @@ local widget_definitions = {
 			value_id = "left_trigger",
 			style_id = "left_trigger",
 			pass_type = "text",
-			value = "",
+			value = "",
 			style = left_trigger_style,
 			visibility_function = function ()
 				return InputDevice.gamepad_active
@@ -239,7 +249,7 @@ local widget_definitions = {
 			value_id = "right_trigger",
 			style_id = "right_trigger",
 			pass_type = "text",
-			value = "",
+			value = "",
 			style = right_trigger_style,
 			visibility_function = function ()
 				return InputDevice.gamepad_active

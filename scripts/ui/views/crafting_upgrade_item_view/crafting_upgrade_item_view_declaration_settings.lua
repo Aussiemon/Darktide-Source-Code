@@ -2,6 +2,7 @@ local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local CraftingUpgradeItemViewDeclarationSettings = {
 	state_bound = true,
 	display_name = "loc_crafting_view_display_name",
+	load_in_hub = true,
 	path = "scripts/ui/views/crafting_upgrade_item_view/crafting_upgrade_item_view",
 	package = "packages/ui/views/crafting_upgrade_item_view/crafting_upgrade_item_view",
 	class = "CraftingUpgradeItemView",

@@ -1757,6 +1757,41 @@ local action_data = {
 				dwn = {
 					"stagger_wall_hit"
 				}
+			},
+			blinding = {
+				fwd = {
+					"stagger_fwd_light",
+					"stagger_fwd_light_2",
+					"stagger_fwd_light_3",
+					"stagger_fwd_light_4",
+					"stagger_fwd_light_5",
+					"stagger_fwd_light_6"
+				},
+				bwd = {
+					"stagger_bwd_light",
+					"stagger_bwd_light_2",
+					"stagger_bwd_light_3",
+					"stagger_bwd_light_4",
+					"stagger_bwd_light_5",
+					"stagger_bwd_light_6",
+					"stagger_bwd_light_7",
+					"stagger_bwd_light_8"
+				},
+				left = {
+					"stagger_left_light",
+					"stagger_left_light_2",
+					"stagger_left_light_3",
+					"stagger_left_light_4"
+				},
+				right = {
+					"stagger_right_light",
+					"stagger_right_light_2",
+					"stagger_right_light_3",
+					"stagger_right_light_4"
+				},
+				dwn = {
+					"stagger_bwd_light"
+				}
 			}
 		}
 	},

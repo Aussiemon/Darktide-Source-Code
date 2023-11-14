@@ -51,9 +51,7 @@ local AlternateFire = {
 			buff_extension:add_proc_event(proc_events.on_alternative_fire_start, param_table)
 		end
 
-		if Managers.stats.can_record_stats() then
-			Managers.stats:record_alternate_fire_start(player)
-		end
+		Managers.stats:record_private("hook_alternate_fire_start", player)
 	end
 }
 
@@ -89,11 +87,9 @@ AlternateFire.stop = function (alternate_fire_component, peeking_component, firs
 		action_input_extension:clear_input_queue_and_sequences("weapon_action")
 	end
 
-	if Managers.stats.can_record_stats() then
-		local player = Managers.state.player_unit_spawn:owner(player_unit)
+	local player = Managers.state.player_unit_spawn:owner(player_unit)
 
-		Managers.stats:record_alternate_fire_stop(player)
-	end
+	Managers.stats:record_private("hook_alternate_fire_stop", player)
 end
 
 AlternateFire.check_exit = function (alternate_fire_component, weapon_template, input_extension, stunned_character_state_component, t)

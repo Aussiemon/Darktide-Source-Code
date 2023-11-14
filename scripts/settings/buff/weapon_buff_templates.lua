@@ -1,16 +1,16 @@
 local AilmentSettings = require("scripts/settings/ailments/ailment_settings")
 local Attack = require("scripts/utilities/attack/attack")
 local AttackSettings = require("scripts/settings/damage/attack_settings")
+local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
 local Breed = require("scripts/utilities/breed")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local BurningSettings = require("scripts/settings/burning/burning_settings")
+local ChainLightning = require("scripts/utilities/action/chain_lightning")
 local ConditionalFunctions = require("scripts/settings/buff/validation_functions/conditional_functions")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
-local EffectTemplates = require("scripts/settings/fx/effect_templates")
 local FixedFrame = require("scripts/utilities/fixed_frame")
 local HitMass = require("scripts/utilities/attack/hit_mass")
-local HitZone = require("scripts/utilities/attack/hit_zone")
 local MinionState = require("scripts/utilities/minion_state")
 local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
 local SpecialRulesSetting = require("scripts/settings/ability/special_rules_settings")
@@ -358,8 +358,6 @@ local function _chain_lightning_start_func(template_data, template_context)
 	template_data.is_poxwalker_bomber = is_poxwalker_bomber
 end
 
-local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
-
 local function _chain_lightning_interval_func(template_data, template_context, template, time_since_start, t, dt)
 	local is_server = template_context.is_server
 
@@ -393,13 +391,7 @@ local function _chain_lightning_interval_func(template_data, template_context, t
 			charge_level = math.clamp01(time_since_start_attack / max_charge_at_time)
 		end
 
-		local hit_zone_name = "center_mass"
-		local hit_zone_actors = HitZone.get_actor_names(unit, hit_zone_name)
-		local hit_actor_name = hit_zone_actors[1]
-		local hit_actor = Unit.actor(unit, hit_actor_name)
-		local node_index = hit_actor and Actor.node(hit_actor)
-		local hit_world_position = node_index and Unit.world_position(unit, node_index)
-		local damage_dealt, attack_result, damage_efficiency, stagger_result, hit_weakspot = Attack.execute(unit, damage_template, "power_level", CHAIN_LIGHTNING_POWER_LEVEL, "charge_level", charge_level, "damage_type", damage_types.electrocution, "attacking_unit", HEALTH_ALIVE[owner_unit] and owner_unit, "attack_direction", attack_direction, "hit_actor", hit_actor, "hit_zone_name", hit_zone_name, "hit_world_position", hit_world_position)
+		local damage_dealt, attack_result, damage_efficiency, stagger_result, hit_weakspot = ChainLightning.execute_attack(unit, owner_unit, CHAIN_LIGHTNING_POWER_LEVEL, charge_level, 1, 1, attack_direction, damage_template, damage_types.electrocution, false)
 
 		if template_data.is_poxwalker_bomber and template.trigger_poxwalker_bomber and stagger_result == "stagger" then
 			local target_blackboard = BLACKBOARDS[unit]

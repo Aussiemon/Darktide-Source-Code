@@ -10,6 +10,7 @@ local view_settings = {
 	use_transition_ui = false,
 	class = "CreditsGoodsVendorView",
 	disable_game_world = true,
+	load_in_hub = true,
 	wwise_states = {
 		options = WwiseGameSyncSettings.state_groups.options.vendor_menu
 	},

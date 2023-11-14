@@ -301,7 +301,7 @@ local template = {
 			{
 				"spawn_by_breed_name",
 				breed_amount = 1,
-				breed_name = "renegade_grenadier",
+				breed_name = "renegade_flamer",
 				limit_spawners = 1,
 				spawner_group = "spawner_obscura_den_top_floor"
 			},
@@ -365,7 +365,7 @@ local template = {
 			{
 				"spawn_by_breed_name",
 				breed_amount = 1,
-				breed_name = "renegade_grenadier",
+				breed_name = "renegade_flamer",
 				limit_spawners = 1,
 				spawner_group = "spawner_obscura_den_top_floor"
 			},
@@ -695,13 +695,13 @@ local template = {
 			},
 			{
 				"delay",
-				duration = 8
+				duration = 12
 			},
 			{
 				"spawn_by_points",
 				spawner_group = "spawner_obscura_den_bottom_floor_right",
 				limit_spawners = 6,
-				points = 8,
+				points = 6,
 				breed_tags = {
 					{
 						"melee",
@@ -767,13 +767,13 @@ local template = {
 			},
 			{
 				"delay",
-				duration = 8
+				duration = 12
 			},
 			{
 				"spawn_by_points",
 				spawner_group = "spawner_obscura_den_bottom_floor_right",
 				limit_spawners = 6,
-				points = 8,
+				points = 6,
 				breed_tags = {
 					{
 						"melee",
@@ -839,13 +839,13 @@ local template = {
 			},
 			{
 				"delay",
-				duration = 8
+				duration = 12
 			},
 			{
 				"spawn_by_points",
 				spawner_group = "spawner_obscura_den_bottom_floor_left",
 				limit_spawners = 6,
-				points = 8,
+				points = 6,
 				breed_tags = {
 					{
 						"melee",
@@ -911,13 +911,13 @@ local template = {
 			},
 			{
 				"delay",
-				duration = 8
+				duration = 12
 			},
 			{
 				"spawn_by_points",
 				spawner_group = "spawner_obscura_den_bottom_floor_left",
 				limit_spawners = 6,
-				points = 8,
+				points = 6,
 				breed_tags = {
 					{
 						"melee",

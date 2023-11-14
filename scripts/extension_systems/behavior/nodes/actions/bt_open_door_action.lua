@@ -1,6 +1,5 @@
 require("scripts/extension_systems/behavior/nodes/bt_node")
 
-local Animation = require("scripts/utilities/animation")
 local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
 local BtOpenDoorAction = class("BtOpenDoorAction", "BtNode")
 local DEFAULT_OPEN_DOOR_ANIM_EVENT = "idle"

@@ -5,7 +5,7 @@ local overrides = {}
 table.make_unique(hitscan_templates)
 table.make_unique(overrides)
 
-hitscan_templates.default_stub_pistol_bfg = {
+hitscan_templates.stub_revolver_p1_m1 = {
 	range = 100,
 	damage = {
 		impact = {
@@ -26,19 +26,45 @@ hitscan_templates.default_stub_pistol_bfg = {
 		}
 	}
 }
-hitscan_templates.default_stub_pistol_killshot = {
-	range = 75,
+hitscan_templates.stub_revolver_p1_m2 = {
+	range = 100,
 	damage = {
 		impact = {
-			damage_profile = DamageProfileTemplates.default_stub_pistol_killshot
+			damage_profile = DamageProfileTemplates.stub_pistol_p1_m2
+		}
+	},
+	collision_tests = {
+		{
+			against = "statics",
+			test = "ray",
+			collision_filter = "filter_player_character_shooting_raycast_statics"
+		},
+		{
+			against = "dynamics",
+			test = "sphere",
+			radius = 0.025,
+			collision_filter = "filter_player_character_shooting_raycast_dynamics"
 		}
 	}
 }
-hitscan_templates.heavy_stub_pistol_bfg = {
-	range = 75,
+hitscan_templates.stub_revolver_p1_m3 = {
+	range = 100,
 	damage = {
 		impact = {
-			damage_profile = DamageProfileTemplates.heavy_stub_pistol_bfg
+			damage_profile = DamageProfileTemplates.stub_pistol_p1_m3
+		}
+	},
+	collision_tests = {
+		{
+			against = "statics",
+			test = "ray",
+			collision_filter = "filter_player_character_shooting_raycast_statics"
+		},
+		{
+			against = "dynamics",
+			test = "sphere",
+			radius = 0.025,
+			collision_filter = "filter_player_character_shooting_raycast_dynamics"
 		}
 	}
 }

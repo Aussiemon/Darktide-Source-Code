@@ -55,8 +55,8 @@ ActionShootProjectile._shoot = function (self)
 		direction = aim_direction
 	end
 
-	local throw_parameters = locomotion_template and locomotion_template.throw_parameters and locomotion_template.throw_parameters.throw
-	local starting_state = throw_parameters and throw_parameters.locomotion_state or locomotion_states.manual_physics
+	local trajectory_parameters = locomotion_template and locomotion_template.trajectory_parameters and locomotion_template.trajectory_parameters.throw
+	local starting_state = trajectory_parameters and trajectory_parameters.locomotion_state or locomotion_states.manual_physics
 	local is_critical_strike = self._critical_strike_component.is_active
 	local origin_item_slot = self._inventory_component.wielded_slot
 

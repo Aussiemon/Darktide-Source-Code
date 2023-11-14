@@ -6,11 +6,13 @@ local templates = {
 local basic_chaos_poxwalker_bomber_template = {
 	slots = {
 		slot_body = {
+			use_outline = true,
 			items = {
 				"content/items/characters/minions/chaos_poxwalker_bomber/attachments_base/body"
 			}
 		},
 		slot_horn = {
+			use_outline = true,
 			items = {
 				"content/items/characters/minions/chaos_poxwalker_bomber/attachments_gear/horn_head_01",
 				"content/items/characters/minions/generic_items/empty_minion_item"

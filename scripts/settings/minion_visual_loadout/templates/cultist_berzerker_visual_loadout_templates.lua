@@ -6,6 +6,7 @@ local templates = {
 local basic_cultist_berzerker_template = {
 	slots = {
 		slot_upperbody = {
+			use_outline = true,
 			items = {
 				"content/items/characters/minions/chaos_cultist_melee_elite/attachments_base/upperbody_a",
 				"content/items/characters/minions/chaos_cultist_melee_elite/attachments_base/upperbody_a_tattoo_01",
@@ -14,6 +15,7 @@ local basic_cultist_berzerker_template = {
 			}
 		},
 		slot_lowerbody = {
+			use_outline = true,
 			items = {
 				"content/items/characters/minions/chaos_cultist_melee_elite/attachments_base/lowerbody_a",
 				"content/items/characters/minions/chaos_cultist_melee_elite/attachments_base/lowerbody_a_color_var_01",
@@ -21,6 +23,7 @@ local basic_cultist_berzerker_template = {
 			}
 		},
 		slot_face = {
+			use_outline = true,
 			items = {
 				"content/items/characters/minions/chaos_cultist_melee_elite/attachments_base/face_01",
 				"content/items/characters/minions/chaos_cultist_melee_elite/attachments_base/face_01_tattoo_01",
@@ -32,13 +35,15 @@ local basic_cultist_berzerker_template = {
 			}
 		},
 		slot_head = {
+			use_outline = true,
 			items = {
 				"content/items/characters/minions/generic_items/empty_minion_item"
 			}
 		},
 		slot_melee_weapon = {
-			drop_on_death = true,
+			use_outline = true,
 			is_weapon = true,
+			drop_on_death = true,
 			items = {
 				"content/items/weapons/minions/melee/cultist_berzerker_mainhand_weapon_01",
 				"content/items/weapons/minions/melee/cultist_berzerker_mainhand_weapon_02",
@@ -46,8 +51,9 @@ local basic_cultist_berzerker_template = {
 			}
 		},
 		slot_melee_weapon_offhand = {
-			drop_on_death = true,
+			use_outline = true,
 			is_weapon = true,
+			drop_on_death = true,
 			items = {
 				"content/items/weapons/minions/melee/cultist_berzerker_offhand_weapon_01",
 				"content/items/weapons/minions/melee/cultist_berzerker_offhand_weapon_02",
@@ -55,11 +61,13 @@ local basic_cultist_berzerker_template = {
 			}
 		},
 		slot_variation_gear = {
+			use_outline = true,
 			items = {
 				"content/items/characters/minions/chaos_cultist_melee_elite/attachments_gear/attachment_01"
 			}
 		},
 		slot_skin_attachment = {
+			use_outline = true,
 			items = {
 				"content/items/characters/minions/chaos_cultist_melee_elite/attachments_base/skin_attachment_01",
 				"content/items/characters/minions/generic_items/empty_minion_item"
@@ -94,6 +102,7 @@ default_2.gib_variations = {
 	"headgear_01"
 }
 default_2.slots.slot_head = {
+	use_outline = true,
 	items = {
 		"content/items/characters/minions/chaos_cultist_melee_elite/attachments_gear/face_01_headgear_01"
 	}

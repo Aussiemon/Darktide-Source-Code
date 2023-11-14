@@ -246,6 +246,132 @@ recoil_templates.default_stub_pistol_bfg_p1_m3 = {
 		}
 	}
 }
+recoil_templates.stub_pistol_p1_m2_hip = {
+	still = {
+		camera_recoil_percentage = 0.2,
+		decay_grace = 0.2,
+		new_influence_percent = 1,
+		rise_duration = 0.06,
+		rise = {
+			0.85,
+			0.3,
+			0.3,
+			0.45,
+			0.2,
+			0.35
+		},
+		decay = {
+			shooting = 1.2,
+			idle = 2
+		},
+		offset_range = {
+			{
+				pitch = {
+					0.0375,
+					0.04375
+				},
+				yaw = {
+					-0.02,
+					0.02
+				}
+			}
+		},
+		offset_limit = {
+			yaw = 2,
+			pitch = 2
+		},
+		visual_recoil_settings = {
+			intensity = 12,
+			lerp_scalar = 1,
+			yaw_intensity = 8
+		}
+	},
+	moving = {
+		new_influence_percent = 0.75,
+		inherits = {
+			"default_stub_pistol_killshot",
+			"still"
+		}
+	},
+	crouch_still = {
+		new_influence_percent = 0.6,
+		inherits = {
+			"default_stub_pistol_killshot",
+			"still"
+		}
+	},
+	crouch_moving = {
+		new_influence_percent = 0.8,
+		inherits = {
+			"default_stub_pistol_killshot",
+			"still"
+		}
+	}
+}
+overrides.stub_pistol_p1_m2_ads = {
+	parent_template_name = "stub_pistol_p1_m2_hip",
+	overrides = {}
+}
+recoil_templates.stub_pistol_p1_m3_hip = {
+	still = {
+		camera_recoil_percentage = 0.65,
+		decay_grace = 0.15,
+		new_influence_percent = 0.8,
+		rise_duration = 0.25,
+		rise = {
+			3
+		},
+		decay = {
+			shooting = 1,
+			idle = 2
+		},
+		offset_range = {
+			{
+				pitch = {
+					0.15,
+					0.175
+				},
+				yaw = {
+					-0,
+					0
+				}
+			}
+		},
+		offset_limit = {
+			yaw = 2,
+			pitch = 2
+		},
+		visual_recoil_settings = {
+			intensity = 5,
+			lerp_scalar = 1
+		}
+	},
+	moving = {
+		new_influence_percent = 0.7,
+		inherits = {
+			"default_stub_pistol_bfg",
+			"still"
+		}
+	},
+	crouch_still = {
+		new_influence_percent = 0.5,
+		inherits = {
+			"default_stub_pistol_bfg",
+			"still"
+		}
+	},
+	crouch_moving = {
+		new_influence_percent = 0.7,
+		inherits = {
+			"default_stub_pistol_bfg",
+			"still"
+		}
+	}
+}
+overrides.stub_pistol_p1_m3_ads = {
+	parent_template_name = "stub_pistol_p1_m3_hip",
+	overrides = {}
+}
 
 return {
 	base_templates = recoil_templates,

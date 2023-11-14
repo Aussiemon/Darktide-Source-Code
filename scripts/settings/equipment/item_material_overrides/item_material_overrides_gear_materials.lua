@@ -4472,6 +4472,76 @@ local material_overrides = {
 				0.6
 			}
 		}
+	},
+	decal_blend_01 = {
+		property_overrides = {
+			bc_blend = {
+				0.1
+			}
+		}
+	},
+	decal_blend_02 = {
+		property_overrides = {
+			bc_blend = {
+				0.2
+			}
+		}
+	},
+	decal_blend_03 = {
+		property_overrides = {
+			bc_blend = {
+				0.3
+			}
+		}
+	},
+	decal_blend_04 = {
+		property_overrides = {
+			bc_blend = {
+				0.4
+			}
+		}
+	},
+	decal_blend_05 = {
+		property_overrides = {
+			bc_blend = {
+				0.5
+			}
+		}
+	},
+	decal_blend_06 = {
+		property_overrides = {
+			bc_blend = {
+				0.6
+			}
+		}
+	},
+	decal_blend_07 = {
+		property_overrides = {
+			bc_blend = {
+				0.7
+			}
+		}
+	},
+	decal_blend_08 = {
+		property_overrides = {
+			bc_blend = {
+				0.8
+			}
+		}
+	},
+	decal_blend_09 = {
+		property_overrides = {
+			bc_blend = {
+				0.9
+			}
+		}
+	},
+	decal_blend_10 = {
+		property_overrides = {
+			bc_blend = {
+				1
+			}
+		}
 	}
 }
 

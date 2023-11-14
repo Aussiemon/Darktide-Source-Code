@@ -162,11 +162,12 @@ RenderTargetIconGeneratorBase.increment_icon_request_by_reference_id = function 
 	end
 end
 
-RenderTargetIconGeneratorBase._generate_icon_request = function (self, request_id, data, on_load_callback, optional_render_context, prioritized, on_unload_callback, current_reference_id)
-	local reference_id = current_reference_id or self._id_counter_prefix .. "_" .. self._id_counter
-	self._id_counter = current_reference_id and self._id_counter or self._id_counter + 1
+RenderTargetIconGeneratorBase._generate_icon_request = function (self, request_id_prefix, data, on_load_callback, optional_render_context, prioritized, on_unload_callback, current_reference_id)
 	local size = optional_render_context and optional_render_context.size or self._default_size
 	local size_key = self:_get_key_by_size(size)
+	local request_id = request_id_prefix .. "_" .. size_key
+	local reference_id = current_reference_id or self._id_counter_prefix .. "_" .. self._id_counter
+	self._id_counter = current_reference_id and self._id_counter or self._id_counter + 1
 	local requests_by_size = self._requests_by_size
 	local existing_requests = requests_by_size[size_key] and requests_by_size[size_key][request_id]
 

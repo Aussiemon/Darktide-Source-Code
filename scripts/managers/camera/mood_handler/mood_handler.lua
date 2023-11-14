@@ -67,6 +67,61 @@ MoodHandler.update_moods = function (self, blend_list, moods_data)
 	self:_blend_list(blend_list, moods_data)
 end
 
+MoodHandler.remove_all_moods = function (self, moods_data)
+	local player = self._player
+	local wwise_world = self._wwise_world
+
+	for mood_type, mood_data in pairs(moods_data) do
+		local removing_mood_settings = moods[mood_type]
+
+		if mood_data.status == mood_status.active then
+			local sound_stop_event = removing_mood_settings.sound_stop_event
+
+			if sound_stop_event then
+				local sound_stop_event_func = removing_mood_settings.sound_stop_event_func
+
+				if not sound_stop_event_func or sound_stop_event_func(player.player_unit) then
+					WwiseWorld.trigger_resource_event(wwise_world, sound_stop_event)
+				end
+			end
+
+			local looping_sound_stop_events = removing_mood_settings.looping_sound_stop_events
+
+			if looping_sound_stop_events then
+				for i = 1, #looping_sound_stop_events do
+					local sound_event = looping_sound_stop_events[i]
+
+					WwiseWorld.trigger_resource_event(wwise_world, sound_event)
+				end
+			end
+
+			local wwise_state = removing_mood_settings.wwise_state
+
+			if wwise_state then
+				Wwise.set_state(wwise_state.group, wwise_state.off_state)
+			end
+		end
+	end
+
+	for mood_type, mood_data in pairs(moods_data) do
+		if mood_data.status == mood_status.active then
+			local mood = moods[mood_type]
+			local source_parameter_funcs = mood.source_parameter_funcs
+
+			if source_parameter_funcs then
+				for i = 1, #source_parameter_funcs do
+					local looping_sound_start_events = mood.looping_sound_start_events
+					local sound_event_id = looping_sound_start_events[i]
+					local source_id = self._sfx_source_ids[mood_type][i][sound_event_id]
+					local func = source_parameter_funcs[i]
+
+					func(wwise_world, source_id, player)
+				end
+			end
+		end
+	end
+end
+
 local _added_moods = {}
 local _removing_moods = {}
 local _removed_moods = {}

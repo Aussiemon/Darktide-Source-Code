@@ -28,8 +28,7 @@ damage_templates.shout_stagger_veteran = {
 			[armor_types.berserker] = 0.5,
 			[armor_types.super_armor] = 0,
 			[armor_types.disgustingly_resilient] = 0,
-			[armor_types.void_shield] = 0,
-			[armor_types.prop_armor] = 1
+			[armor_types.void_shield] = 0
 		},
 		impact = {
 			[armor_types.unarmored] = 5,
@@ -39,8 +38,7 @@ damage_templates.shout_stagger_veteran = {
 			[armor_types.berserker] = 5,
 			[armor_types.super_armor] = 5,
 			[armor_types.disgustingly_resilient] = 5,
-			[armor_types.void_shield] = 5,
-			[armor_types.prop_armor] = 5
+			[armor_types.void_shield] = 5
 		}
 	},
 	targets = {
@@ -65,8 +63,7 @@ damage_templates.shout_stagger_ogryn_taunt = {
 			[armor_types.berserker] = 0.5,
 			[armor_types.super_armor] = 0,
 			[armor_types.disgustingly_resilient] = 0,
-			[armor_types.void_shield] = 0,
-			[armor_types.prop_armor] = 1
+			[armor_types.void_shield] = 0
 		},
 		impact = {
 			[armor_types.unarmored] = 0.1,
@@ -76,8 +73,7 @@ damage_templates.shout_stagger_ogryn_taunt = {
 			[armor_types.berserker] = 0.1,
 			[armor_types.super_armor] = 0.1,
 			[armor_types.disgustingly_resilient] = 0.1,
-			[armor_types.void_shield] = 0.1,
-			[armor_types.prop_armor] = 0.1
+			[armor_types.void_shield] = 0.1
 		}
 	},
 	targets = {
@@ -105,8 +101,7 @@ damage_templates.veteran_invisibility_suppression = {
 			[armor_types.berserker] = 0.5,
 			[armor_types.super_armor] = 0,
 			[armor_types.disgustingly_resilient] = 0,
-			[armor_types.void_shield] = 0,
-			[armor_types.prop_armor] = 1
+			[armor_types.void_shield] = 0
 		},
 		impact = {
 			[armor_types.unarmored] = 1,
@@ -116,8 +111,7 @@ damage_templates.veteran_invisibility_suppression = {
 			[armor_types.berserker] = 1,
 			[armor_types.super_armor] = 1,
 			[armor_types.disgustingly_resilient] = 1,
-			[armor_types.void_shield] = 1,
-			[armor_types.prop_armor] = 1
+			[armor_types.void_shield] = 1
 		}
 	},
 	targets = {
@@ -144,8 +138,7 @@ damage_templates.zealot_channel_stagger = {
 			[armor_types.berserker] = 0.5,
 			[armor_types.super_armor] = 0,
 			[armor_types.disgustingly_resilient] = 0,
-			[armor_types.void_shield] = 0,
-			[armor_types.prop_armor] = 1
+			[armor_types.void_shield] = 0
 		},
 		impact = {
 			[armor_types.unarmored] = 1,
@@ -155,8 +148,7 @@ damage_templates.zealot_channel_stagger = {
 			[armor_types.berserker] = 1,
 			[armor_types.super_armor] = 1,
 			[armor_types.disgustingly_resilient] = 1,
-			[armor_types.void_shield] = 1,
-			[armor_types.prop_armor] = 1
+			[armor_types.void_shield] = 1
 		}
 	},
 	targets = {
@@ -183,8 +175,7 @@ damage_templates.psyker_biomancer_shout = {
 			[armor_types.berserker] = 1,
 			[armor_types.super_armor] = 1,
 			[armor_types.disgustingly_resilient] = 1,
-			[armor_types.void_shield] = 0,
-			[armor_types.prop_armor] = 1
+			[armor_types.void_shield] = 0
 		},
 		impact = {
 			[armor_types.unarmored] = 1,
@@ -194,8 +185,7 @@ damage_templates.psyker_biomancer_shout = {
 			[armor_types.berserker] = 1,
 			[armor_types.super_armor] = 1,
 			[armor_types.disgustingly_resilient] = 1,
-			[armor_types.void_shield] = 1,
-			[armor_types.prop_armor] = 1
+			[armor_types.void_shield] = 1
 		}
 	},
 	damage_type = damage_types.psyker_biomancer_discharge,
@@ -223,8 +213,7 @@ damage_templates.psyker_biomancer_shout_damage = {
 			[armor_types.berserker] = 1,
 			[armor_types.super_armor] = 1,
 			[armor_types.disgustingly_resilient] = 1,
-			[armor_types.void_shield] = 0,
-			[armor_types.prop_armor] = 1
+			[armor_types.void_shield] = 0
 		},
 		impact = {
 			[armor_types.unarmored] = 1,
@@ -234,8 +223,7 @@ damage_templates.psyker_biomancer_shout_damage = {
 			[armor_types.berserker] = 1,
 			[armor_types.super_armor] = 1,
 			[armor_types.disgustingly_resilient] = 1,
-			[armor_types.void_shield] = 1,
-			[armor_types.prop_armor] = 1
+			[armor_types.void_shield] = 1
 		}
 	},
 	damage_type = damage_types.psyker_biomancer_discharge,
@@ -263,8 +251,7 @@ damage_templates.psyker_shield_stagger = {
 			[armor_types.berserker] = 1,
 			[armor_types.super_armor] = 1,
 			[armor_types.disgustingly_resilient] = 1,
-			[armor_types.void_shield] = 0,
-			[armor_types.prop_armor] = 1
+			[armor_types.void_shield] = 0
 		},
 		impact = {
 			[armor_types.unarmored] = 5,
@@ -274,8 +261,7 @@ damage_templates.psyker_shield_stagger = {
 			[armor_types.berserker] = 5,
 			[armor_types.super_armor] = 5,
 			[armor_types.disgustingly_resilient] = 5,
-			[armor_types.void_shield] = 5,
-			[armor_types.prop_armor] = 5
+			[armor_types.void_shield] = 5
 		}
 	},
 	damage_type = damage_types.electrocution,
@@ -305,8 +291,7 @@ damage_templates.zealot_dash_impact = {
 			[armor_types.berserker] = 0.5,
 			[armor_types.super_armor] = 0,
 			[armor_types.disgustingly_resilient] = 0.5,
-			[armor_types.void_shield] = 0.5,
-			[armor_types.prop_armor] = 1
+			[armor_types.void_shield] = 0.5
 		},
 		impact = {
 			[armor_types.unarmored] = 1,
@@ -316,8 +301,7 @@ damage_templates.zealot_dash_impact = {
 			[armor_types.berserker] = 1,
 			[armor_types.super_armor] = 1,
 			[armor_types.disgustingly_resilient] = 1,
-			[armor_types.void_shield] = 1,
-			[armor_types.prop_armor] = 1
+			[armor_types.void_shield] = 1
 		}
 	},
 	targets = {
@@ -344,8 +328,7 @@ damage_templates.zealot_dash_health_to_damage_transfer = {
 			[armor_types.berserker] = 0.5,
 			[armor_types.super_armor] = 0.1,
 			[armor_types.disgustingly_resilient] = 0.5,
-			[armor_types.void_shield] = 0.5,
-			[armor_types.prop_armor] = 1
+			[armor_types.void_shield] = 0.5
 		},
 		impact = {
 			[armor_types.unarmored] = 1,
@@ -355,8 +338,7 @@ damage_templates.zealot_dash_health_to_damage_transfer = {
 			[armor_types.berserker] = 0.5,
 			[armor_types.super_armor] = 0.1,
 			[armor_types.disgustingly_resilient] = 1,
-			[armor_types.void_shield] = 1,
-			[armor_types.prop_armor] = 1
+			[armor_types.void_shield] = 1
 		}
 	},
 	targets = {
@@ -382,8 +364,7 @@ damage_templates.zealot_preacher_ability_close = {
 			[armor_types.berserker] = 1,
 			[armor_types.super_armor] = 0,
 			[armor_types.disgustingly_resilient] = 1,
-			[armor_types.void_shield] = 1,
-			[armor_types.prop_armor] = 1
+			[armor_types.void_shield] = 1
 		},
 		impact = {
 			[armor_types.unarmored] = 1,
@@ -393,8 +374,7 @@ damage_templates.zealot_preacher_ability_close = {
 			[armor_types.berserker] = 1,
 			[armor_types.super_armor] = 1,
 			[armor_types.disgustingly_resilient] = 1,
-			[armor_types.void_shield] = 1,
-			[armor_types.prop_armor] = 1
+			[armor_types.void_shield] = 1
 		}
 	},
 	power_distribution = {
@@ -427,8 +407,7 @@ damage_templates.zealot_preacher_ability_far = {
 				[armor_types.berserker] = 1,
 				[armor_types.super_armor] = 1,
 				[armor_types.disgustingly_resilient] = 1,
-				[armor_types.void_shield] = 1,
-				[armor_types.prop_armor] = 1
+				[armor_types.void_shield] = 1
 			},
 			impact = {
 				[armor_types.unarmored] = 1,
@@ -438,8 +417,7 @@ damage_templates.zealot_preacher_ability_far = {
 				[armor_types.berserker] = 1,
 				[armor_types.super_armor] = 1,
 				[armor_types.disgustingly_resilient] = 1,
-				[armor_types.void_shield] = 1,
-				[armor_types.prop_armor] = 1
+				[armor_types.void_shield] = 1
 			}
 		},
 		far = {
@@ -451,8 +429,7 @@ damage_templates.zealot_preacher_ability_far = {
 				[armor_types.berserker] = 0.5,
 				[armor_types.super_armor] = 0.5,
 				[armor_types.disgustingly_resilient] = 0.5,
-				[armor_types.void_shield] = 0.5,
-				[armor_types.prop_armor] = 0.5
+				[armor_types.void_shield] = 0.5
 			},
 			impact = {
 				[armor_types.unarmored] = 1,
@@ -462,8 +439,7 @@ damage_templates.zealot_preacher_ability_far = {
 				[armor_types.berserker] = 1,
 				[armor_types.super_armor] = 1,
 				[armor_types.disgustingly_resilient] = 1,
-				[armor_types.void_shield] = 1,
-				[armor_types.prop_armor] = 1
+				[armor_types.void_shield] = 1
 			}
 		}
 	},
@@ -504,8 +480,7 @@ damage_templates.ogryn_charge_impact = {
 			[armor_types.berserker] = 0,
 			[armor_types.super_armor] = 0,
 			[armor_types.disgustingly_resilient] = 0,
-			[armor_types.void_shield] = 0,
-			[armor_types.prop_armor] = 0
+			[armor_types.void_shield] = 0
 		},
 		impact = {
 			[armor_types.unarmored] = 6,
@@ -515,8 +490,7 @@ damage_templates.ogryn_charge_impact = {
 			[armor_types.berserker] = 6,
 			[armor_types.super_armor] = 6,
 			[armor_types.disgustingly_resilient] = 6,
-			[armor_types.void_shield] = 6,
-			[armor_types.prop_armor] = 6
+			[armor_types.void_shield] = 6
 		}
 	},
 	targets = {
@@ -548,8 +522,7 @@ damage_templates.ogryn_charge_finish = {
 				[armor_types.berserker] = 0,
 				[armor_types.super_armor] = 0,
 				[armor_types.disgustingly_resilient] = 0,
-				[armor_types.void_shield] = 0,
-				[armor_types.prop_armor] = 0
+				[armor_types.void_shield] = 0
 			},
 			impact = {
 				[armor_types.unarmored] = 5,
@@ -559,8 +532,7 @@ damage_templates.ogryn_charge_finish = {
 				[armor_types.berserker] = 5,
 				[armor_types.super_armor] = 5,
 				[armor_types.disgustingly_resilient] = 5,
-				[armor_types.void_shield] = 5,
-				[armor_types.prop_armor] = 5
+				[armor_types.void_shield] = 5
 			}
 		},
 		far = {
@@ -572,8 +544,7 @@ damage_templates.ogryn_charge_finish = {
 				[armor_types.berserker] = 0,
 				[armor_types.super_armor] = 0,
 				[armor_types.disgustingly_resilient] = 0,
-				[armor_types.void_shield] = 0,
-				[armor_types.prop_armor] = 0
+				[armor_types.void_shield] = 0
 			},
 			impact = {
 				[armor_types.unarmored] = 5,
@@ -583,8 +554,7 @@ damage_templates.ogryn_charge_finish = {
 				[armor_types.berserker] = 5,
 				[armor_types.super_armor] = 5,
 				[armor_types.disgustingly_resilient] = 5,
-				[armor_types.void_shield] = 5,
-				[armor_types.prop_armor] = 5
+				[armor_types.void_shield] = 5
 			}
 		}
 	},
@@ -597,8 +567,7 @@ damage_templates.ogryn_charge_finish = {
 			[armor_types.berserker] = 0,
 			[armor_types.super_armor] = 0,
 			[armor_types.disgustingly_resilient] = 0,
-			[armor_types.void_shield] = 0,
-			[armor_types.prop_armor] = 0
+			[armor_types.void_shield] = 0
 		},
 		impact = {
 			[armor_types.unarmored] = 5,
@@ -608,8 +577,7 @@ damage_templates.ogryn_charge_finish = {
 			[armor_types.berserker] = 5,
 			[armor_types.super_armor] = 5,
 			[armor_types.disgustingly_resilient] = 5,
-			[armor_types.void_shield] = 5,
-			[armor_types.prop_armor] = 5
+			[armor_types.void_shield] = 5
 		}
 	},
 	power_distribution = {
@@ -648,8 +616,7 @@ damage_templates.ogryn_charge_impact_damage = {
 			[armor_types.berserker] = 0.5,
 			[armor_types.super_armor] = 0.1,
 			[armor_types.disgustingly_resilient] = 0.5,
-			[armor_types.void_shield] = 0.5,
-			[armor_types.prop_armor] = 1
+			[armor_types.void_shield] = 0.5
 		},
 		impact = {
 			[armor_types.unarmored] = 6,
@@ -659,8 +626,7 @@ damage_templates.ogryn_charge_impact_damage = {
 			[armor_types.berserker] = 6,
 			[armor_types.super_armor] = 6,
 			[armor_types.disgustingly_resilient] = 6,
-			[armor_types.void_shield] = 6,
-			[armor_types.prop_armor] = 6
+			[armor_types.void_shield] = 6
 		}
 	},
 	targets = {
@@ -697,8 +663,7 @@ damage_templates.ogryn_charge_finish_damage = {
 				[armor_types.berserker] = 0,
 				[armor_types.super_armor] = 0,
 				[armor_types.disgustingly_resilient] = 0,
-				[armor_types.void_shield] = 0,
-				[armor_types.prop_armor] = 0
+				[armor_types.void_shield] = 0
 			},
 			impact = {
 				[armor_types.unarmored] = 5,
@@ -708,8 +673,7 @@ damage_templates.ogryn_charge_finish_damage = {
 				[armor_types.berserker] = 5,
 				[armor_types.super_armor] = 5,
 				[armor_types.disgustingly_resilient] = 5,
-				[armor_types.void_shield] = 5,
-				[armor_types.prop_armor] = 5
+				[armor_types.void_shield] = 5
 			}
 		},
 		far = {
@@ -721,8 +685,7 @@ damage_templates.ogryn_charge_finish_damage = {
 				[armor_types.berserker] = 0,
 				[armor_types.super_armor] = 0,
 				[armor_types.disgustingly_resilient] = 0,
-				[armor_types.void_shield] = 0,
-				[armor_types.prop_armor] = 0
+				[armor_types.void_shield] = 0
 			},
 			impact = {
 				[armor_types.unarmored] = 5,
@@ -732,8 +695,7 @@ damage_templates.ogryn_charge_finish_damage = {
 				[armor_types.berserker] = 5,
 				[armor_types.super_armor] = 5,
 				[armor_types.disgustingly_resilient] = 5,
-				[armor_types.void_shield] = 5,
-				[armor_types.prop_armor] = 5
+				[armor_types.void_shield] = 5
 			}
 		}
 	},
@@ -746,8 +708,7 @@ damage_templates.ogryn_charge_finish_damage = {
 			[armor_types.berserker] = 0,
 			[armor_types.super_armor] = 0,
 			[armor_types.disgustingly_resilient] = 0,
-			[armor_types.void_shield] = 0,
-			[armor_types.prop_armor] = 0
+			[armor_types.void_shield] = 0
 		},
 		impact = {
 			[armor_types.unarmored] = 5,
@@ -757,8 +718,7 @@ damage_templates.ogryn_charge_finish_damage = {
 			[armor_types.berserker] = 5,
 			[armor_types.super_armor] = 5,
 			[armor_types.disgustingly_resilient] = 5,
-			[armor_types.void_shield] = 5,
-			[armor_types.prop_armor] = 5
+			[armor_types.void_shield] = 5
 		}
 	},
 	targets = {
@@ -791,8 +751,7 @@ damage_templates.slide_knockdown = {
 			[armor_types.berserker] = 0.5,
 			[armor_types.super_armor] = 0,
 			[armor_types.disgustingly_resilient] = 0.5,
-			[armor_types.void_shield] = 0.5,
-			[armor_types.prop_armor] = 1
+			[armor_types.void_shield] = 0.5
 		},
 		impact = {
 			[armor_types.unarmored] = 1,
@@ -802,8 +761,7 @@ damage_templates.slide_knockdown = {
 			[armor_types.berserker] = 0.5,
 			[armor_types.super_armor] = 0,
 			[armor_types.disgustingly_resilient] = 1,
-			[armor_types.void_shield] = 1,
-			[armor_types.prop_armor] = 1
+			[armor_types.void_shield] = 1
 		}
 	},
 	targets = {

@@ -20,33 +20,35 @@ local stagger_types = StaggerSettings.stagger_types
 local weakspot_types = WeakspotSettings.types
 local breed_name = "renegade_berzerker"
 local breed_data = {
-	detection_radius = 15,
 	display_name = "loc_breed_display_name_renegade_berzerker",
-	run_speed = 6.5,
+	run_speed = 6.2,
 	use_bone_lod = true,
-	reverse_stagger_count = true,
-	spawn_anim_state = "to_melee",
 	volley_fire_target = true,
+	spawn_anim_state = "to_melee",
 	unit_template_name = "minion",
-	power_level_type = "berzerker_default_melee",
+	animation_move_speed_modifier = 0.9,
 	faction_name = "chaos",
+	power_level_type = "berzerker_default_melee",
+	detection_radius = 15,
 	sub_faction_name = "renegade",
 	broadphase_radius = 1,
-	use_avoidance = true,
-	stagger_resistance = 1,
-	base_height = 1.9,
 	walk_speed = 2.3,
-	player_locomotion_constrain_radius = 0.4,
-	challenge_rating = 4,
+	stagger_resistance = 1,
+	psyker_mark_target = true,
+	use_avoidance = true,
+	base_height = 1.9,
 	line_of_sight_collision_filter = "filter_minion_line_of_sight_check",
+	player_locomotion_constrain_radius = 0.4,
 	stagger_reduction = 1,
+	reverse_stagger_count = true,
 	use_wounds = true,
-	slot_template = "cultist_berzerker",
-	activate_slot_system_on_spawn = true,
 	can_patrol = true,
 	smart_tag_target_type = "breed",
 	game_object_type = "minion_melee",
+	slot_template = "cultist_berzerker",
+	activate_slot_system_on_spawn = true,
 	base_unit = "content/characters/enemy/chaos_cultist_melee_elite/third_person/base",
+	challenge_rating = 4,
 	bone_lod_radius = 1.1,
 	name = breed_name,
 	breed_type = breed_types.minion,
@@ -69,8 +71,8 @@ local breed_data = {
 		[stagger_types.sticky] = 0.75
 	},
 	stagger_immune_times = {
-		[stagger_types.light] = 0.4,
-		[stagger_types.medium] = 0.5,
+		[stagger_types.light] = 0.6,
+		[stagger_types.medium] = 0.8,
 		[stagger_types.heavy] = 1.75,
 		[stagger_types.light_ranged] = 0.5,
 		[stagger_types.killshot] = 0.5,
@@ -91,6 +93,15 @@ local breed_data = {
 	animation_variables = {
 		"moving_attack_fwd_speed",
 		"anim_move_speed"
+	},
+	animation_variable_bounds = {
+		anim_move_speed = {
+			0.85,
+			85
+		}
+	},
+	animation_variable_init = {
+		anim_move_speed = 1
 	},
 	combat_range_data = BreedCombatRanges.cultist_berzerker,
 	attack_intensity_cooldowns = {
@@ -384,6 +395,7 @@ local breed_data = {
 			[hit_zone_names.lower_right_leg] = 0.5
 		}
 	},
+	outline_config = {},
 	blackboard_component_config = BreedBlackboardComponentTemplates.melee_patroller
 }
 

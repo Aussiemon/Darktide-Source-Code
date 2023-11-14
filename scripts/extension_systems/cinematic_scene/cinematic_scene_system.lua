@@ -84,11 +84,6 @@ CinematicSceneSystem.init = function (self, extension_init_context, system_init_
 	self._current_cinematic_name = CINEMATIC_NAMES.none
 	self._intro_played = false
 	self._intro_loading_started = false
-
-	if Managers.ui and Managers.ui:view_active("cutscene_view") then
-		Managers.ui:close_view("cutscene_view", true)
-	end
-
 	local network_event_delegate = self._network_event_delegate
 
 	if network_event_delegate then

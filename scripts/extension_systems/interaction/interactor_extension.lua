@@ -153,11 +153,30 @@ InteractorExtension.fixed_update = function (self, unit, dt, t, fixed_frame, con
 	local interaction_component = self._interaction_component
 	local state = interaction_component.state
 
+	if interaction_component.state == interaction_states.is_interacting and interaction_component.target_unit and interaction_component.duration == 0 then
+		local interactee_extension = ScriptUnit.extension(interaction_component.target_unit, "interactee_system")
+
+		if interactee_extension:hold_required() then
+			interaction_component.duration = self:calculate_duration(interactee_extension)
+		end
+	end
+
 	if state == interaction_states.waiting_to_interact then
+		if self._unit_data_extension.is_resimulating and fixed_frame < context.resimulate_to_frame then
+			return
+		end
+
 		local player = self._player
 
 		if player:is_human_controlled() then
-			chosen_target, chosen_target_actor_node_index, focus_target, focus_target_actor_node_index = self:_find_interaction_object(unit)
+			local camera_extension = ScriptUnit.extension(unit, "camera_system")
+			local using_third_person_hub_camera = camera_extension and camera_extension:using_third_person_hub_camera()
+
+			if using_third_person_hub_camera then
+				chosen_target, chosen_target_actor_node_index, focus_target, focus_target_actor_node_index = self:_find_interaction_object_3p(unit)
+			else
+				chosen_target, chosen_target_actor_node_index, focus_target, focus_target_actor_node_index = self:_find_interaction_object(unit)
+			end
 		else
 			local bot_interaction_unit = self._bot_interaction_unit
 			local bot_interaction_type = self._bot_interaction_type
@@ -243,14 +262,15 @@ InteractorExtension._check_current_state = function (self, unit, dt, t, chosen_t
 	local is_server = self._is_server
 
 	if chosen_target and state == interaction_states.waiting_to_interact then
-		local interaction_button_pressed = input_extension:get("interact_pressed")
+		local interaction = self:interaction()
+		local interaction_input = interaction:interaction_input()
+		local interaction_button_pressed = input_extension:get(interaction_input)
 
 		if interaction_button_pressed then
 			self:_consume_conflicting_gamepad_inputs(t)
 
 			local interaction_component = self._interaction_component
 			local interaction_type = interaction_component.type
-			local interaction = self:interaction()
 
 			interaction:start(world, unit, interaction_component, t, is_server)
 
@@ -402,7 +422,7 @@ InteractorExtension._find_object_in_direct_line_of_sight = function (self, inter
 	return chosen_target, chosen_target_actor_node_index, focus_target, focus_target_actor_node_index
 end
 
-InteractorExtension._find_object_near_line_of_sight = function (self, interactor_unit, fp_position, fp_forward)
+InteractorExtension._find_object_near_line_of_sight = function (self, interactor_unit, fp_position, fp_forward, use_priorities)
 	local max_interact_distance = self:_max_interaction_distance()
 	local height = self._first_person_component.height
 	local height_scale = InteractionSettings.height_scale
@@ -412,6 +432,7 @@ InteractorExtension._find_object_near_line_of_sight = function (self, interactor
 	local base_pos = Vector3(fp_position_x, fp_position_y, fp_position_z - height * height_scale)
 	local sphere_pos = base_pos + fp_forward * sphere_offset
 	local actors, num_actors = self._physics_world:immediate_overlap("shape", "sphere", "position", sphere_pos, "size", radius, "collision_filter", INTERACTABLE_FILTER)
+	local best_priority = math.huge
 	local closest_cos_angle_to_chosen = -math.huge
 	local closest_cos_angle_to_focus = -math.huge
 	local chosen_target = nil
@@ -425,7 +446,7 @@ InteractorExtension._find_object_near_line_of_sight = function (self, interactor
 		local valid_target = target_unit and target_unit ~= interactor_unit and not not ALIVE[target_unit]
 
 		if valid_target then
-			local can_interact, has_interaction_extension = self:_check_valid_interaction_target(target_unit)
+			local can_interact, interactee_extension = self:_check_valid_interaction_target(target_unit)
 			local target_position, target_bounds = Actor.world_bounds(unit_actor)
 			local obj_direction, distance_to_center = Vector3.direction_length(target_position - fp_position)
 			local cos_angle_to_sight = Vector3.dot(fp_forward, obj_direction)
@@ -437,7 +458,23 @@ InteractorExtension._find_object_near_line_of_sight = function (self, interactor
 				closest_angle = closest_cos_angle_to_focus
 			end
 
-			if closest_angle < cos_angle_to_sight and MAX_INTERACTION_COS_ANGLE <= cos_angle_to_sight then
+			local priority_approved = true
+			local current_interaction_priority = nil
+
+			if use_priorities then
+				priority_approved = false
+
+				if interactee_extension then
+					local interaction_priority = interactee_extension:interaction_priority()
+
+					if interaction_priority and interaction_priority <= best_priority then
+						priority_approved = true
+						current_interaction_priority = interaction_priority
+					end
+				end
+			end
+
+			if priority_approved and closest_angle < cos_angle_to_sight and MAX_INTERACTION_COS_ANGLE <= cos_angle_to_sight then
 				local distance_to_hit = distance_to_center
 
 				if max_interact_distance < distance_to_center then
@@ -449,10 +486,12 @@ InteractorExtension._find_object_near_line_of_sight = function (self, interactor
 						chosen_target = target_unit
 						chosen_target_actor_node_index = target_node
 						closest_cos_angle_to_chosen = cos_angle_to_sight
-					elseif has_interaction_extension then
+						best_priority = current_interaction_priority
+					elseif interactee_extension then
 						focus_target = target_unit
 						focus_target_actor_node_index = target_node
 						closest_cos_angle_to_focus = cos_angle_to_sight
+						best_priority = current_interaction_priority
 					end
 				end
 			end
@@ -476,6 +515,19 @@ InteractorExtension._find_interaction_object = function (self, interactor_unit)
 	local near_target_unit, near_target_node_index, near_focus_unit, near_focus_node_index = self:_find_object_near_line_of_sight(interactor_unit, fp_position, fp_forward)
 	local best_focus_unit = direct_focus_unit or near_focus_unit
 	local best_focus_node_index = direct_focus_node_index or near_focus_node_index
+
+	return near_target_unit, near_target_node_index, best_focus_unit, best_focus_node_index
+end
+
+InteractorExtension._find_interaction_object_3p = function (self, interactor_unit)
+	local first_person_component = self._first_person_component
+	local fp_position = first_person_component.position
+	local fp_rotation = first_person_component.rotation
+	local fp_forward = Vector3.normalize(Quaternion.forward(fp_rotation))
+	local use_priorities = true
+	local near_target_unit, near_target_node_index, near_focus_unit, near_focus_node_index = self:_find_object_near_line_of_sight(interactor_unit, fp_position, fp_forward, use_priorities)
+	local best_focus_unit = near_focus_unit
+	local best_focus_node_index = near_focus_node_index
 
 	return near_target_unit, near_target_node_index, best_focus_unit, best_focus_node_index
 end

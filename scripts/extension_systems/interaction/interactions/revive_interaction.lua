@@ -25,7 +25,7 @@ ReviveInteraction.stop = function (self, world, interactor_unit, unit_data_compo
 		knocked_down_state_input.knock_down = false
 
 		self:_handle_buffs(interactor_unit, target_unit, proc_events.on_revive)
-		self:_record_stats_and_telemetry(interactor_unit, target_unit, "record_assist_ally", "knocked_down")
+		self:_record_stats_and_telemetry(interactor_unit, target_unit, "hook_assist_ally", "knocked_down")
 	end
 end
 

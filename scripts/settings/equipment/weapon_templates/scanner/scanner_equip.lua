@@ -196,10 +196,12 @@ weapon_template.actions = {
 		kind = "scan",
 		sensitivity_modifier = 0.8,
 		abort_sprint = true,
-		crosshair_type = "dot",
 		allowed_during_sprint = true,
 		prevent_sprint = true,
 		total_time = math.huge,
+		crosshair = {
+			crosshair_type = "dot"
+		},
 		allowed_chain_actions = {
 			scan_confirm = {
 				action_name = "action_scan_confirm"
@@ -275,10 +277,12 @@ weapon_template.actions = {
 		start_input = "inspect_start",
 		anim_end_event = "inspect_end",
 		kind = "inspect",
-		crosshair_type = "inspect",
 		anim_event = "inspect_start",
 		stop_input = "inspect_stop",
-		total_time = math.huge
+		total_time = math.huge,
+		crosshair = {
+			crosshair_type = "inspect"
+		}
 	}
 }
 
@@ -302,7 +306,9 @@ weapon_template.alternate_fire_settings = {
 		start_modifier = 0.4
 	}
 }
-weapon_template.crosshair_type = "ironsight"
+weapon_template.crosshair = {
+	crosshair_type = "ironsight"
+}
 weapon_template.keywords = {
 	"pocketable"
 }

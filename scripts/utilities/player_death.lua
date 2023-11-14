@@ -16,13 +16,7 @@ local PlayerDeath = {
 			Managers.telemetry_events:player_died(player, data)
 		end
 
-		if Managers.stats.can_record_stats() and player then
-			Managers.stats:record_team_death()
-
-			if player:is_human_controlled() then
-				Managers.stats:record_player_death(player)
-			end
-		end
+		Managers.stats:record_private("hook_death", player)
 
 		if player and Managers.state.pacing then
 			local minions_listening_for_player_deaths = Managers.state.pacing:get_minions_listening_for_player_deaths()
@@ -30,6 +24,8 @@ local PlayerDeath = {
 			for minion_unit, statistics_component in pairs(minions_listening_for_player_deaths) do
 				statistics_component.player_deaths = statistics_component.player_deaths + 1
 			end
+
+			Managers.state.pacing:player_died(player.player_unit)
 		end
 	end
 }
@@ -41,13 +37,7 @@ PlayerDeath.knock_down = function (unit)
 	local player_unit_spawn_manager = Managers.state and Managers.state.player_unit_spawn
 	local player = player_unit_spawn_manager and player_unit_spawn_manager:owner(unit)
 
-	if Managers.stats.can_record_stats() and player then
-		Managers.stats:record_team_knock_down()
-
-		if player:is_human_controlled() then
-			Managers.stats:record_player_knock_down(player)
-		end
-	end
+	Managers.stats:record_private("hook_knocked_down", player)
 end
 
 return PlayerDeath

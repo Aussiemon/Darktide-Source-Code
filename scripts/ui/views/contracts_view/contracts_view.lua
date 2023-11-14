@@ -1,6 +1,5 @@
 local DefaultViewInputSettings = require("scripts/settings/input/default_view_input_settings")
 local MissionObjectiveTemplates = require("scripts/settings/mission_objective/mission_objective_templates")
-local MissionTemplates = require("scripts/settings/mission/mission_templates")
 local ScriptWorld = require("scripts/foundation/utilities/script_world")
 local TextUtils = require("scripts/utilities/ui/text")
 local UIFonts = require("scripts/managers/ui/ui_fonts")
@@ -9,7 +8,7 @@ local ViewDefinitions = require("scripts/ui/views/contracts_view/contracts_view_
 local ViewElementGrid = require("scripts/ui/view_elements/view_element_grid/view_element_grid")
 local ViewSettings = require("scripts/ui/views/contracts_view/contracts_view_settings")
 local ViewStyles = require("scripts/ui/views/contracts_view/contracts_view_styles")
-local WalletSettings = require("scripts/settings/wallet_settings")
+local ContractCriteriaParser = require("scripts/utilities/contract_criteria_parser")
 local ContractsView = class("ContractsView", "BaseView")
 
 ContractsView.init = function (self, settings, context)
@@ -120,7 +119,6 @@ ContractsView._handle_input = function (self, input_service, dt, t)
 	local button_hotspot = reroll_button.content.hotspot
 
 	if not button_hotspot.disabled and input_service:get(ViewSettings.reroll_input_action) then
-		self:_play_sound(button_hotspot.on_pressed_sound)
 		button_hotspot.pressed_callback()
 	end
 end
@@ -352,78 +350,6 @@ ContractsView._set_contract_info = function (self, contract_data)
 	end
 end
 
-local function _get_task_description_and_target(task_criteria)
-	local task_parameter_strings = ViewSettings.task_parameter_strings
-	local task_type = task_criteria.taskType
-	local target_value = task_criteria.count
-	local params = {
-		count = target_value
-	}
-	local title_loc, desc_loc = nil
-
-	if task_type == "KillBosses" then
-		title_loc = ViewSettings.task_label_kill_bosses
-		desc_loc = ViewSettings.task_description_kill_bosses
-	elseif task_type == "CollectPickup" then
-		local param_loc = task_parameter_strings[task_criteria.pickupTypes]
-
-		if not param_loc then
-			local task_criteria_types = task_criteria.pickupType
-
-			if #task_criteria_types > 1 then
-				param_loc = task_parameter_strings.tome_or_grimoire
-			else
-				param_loc = task_parameter_strings[task_criteria_types[1]]
-			end
-		end
-
-		params.kind = Localize(param_loc or "")
-		title_loc = ViewSettings.task_label_collect_pickups
-		desc_loc = ViewSettings.task_description_collect_pickups
-	elseif task_type == "CollectResource" then
-		local wallet_settings = WalletSettings[task_criteria.resourceType]
-
-		if not wallet_settings then
-			local task_criteria_types = task_criteria.resourceTypes
-
-			if task_criteria_types and #task_criteria_types > 0 then
-				wallet_settings = WalletSettings[task_criteria_types[1]]
-			end
-		end
-
-		params.kind = wallet_settings and Localize(wallet_settings.display_name) or ""
-		title_loc = ViewSettings.task_label_collect_resources
-		desc_loc = ViewSettings.task_description_collect_resources
-	elseif task_type == "KillMinions" then
-		params.enemy_type = Localize(task_parameter_strings[task_criteria.enemyType] or "")
-		params.weapon_type = Localize(task_parameter_strings[task_criteria.weaponType] or "")
-		title_loc = ViewSettings.task_label_kill_minions
-		desc_loc = ViewSettings.task_description_kill_minions
-	elseif task_type == "BlockDamage" then
-		title_loc = ViewSettings.task_label_block_damage
-		desc_loc = ViewSettings.task_description_block_damage
-	elseif task_type == "CompleteMissions" then
-		title_loc = ViewSettings.task_label_complete_missions
-		desc_loc = ViewSettings.task_description_complete_missions
-	elseif task_type == "CompleteMissionsNoDeath" then
-		title_loc = ViewSettings.task_label_complete_mission_no_death
-		desc_loc = ViewSettings.task_description_complete_mission_no_death
-	elseif task_type == "CompleteMissionsByName" then
-		local mission_template = MissionTemplates[task_criteria.name]
-		params.map = mission_template and Localize(mission_template.mission_name) or ""
-		title_loc = ViewSettings.task_label_complete_missions_by_name
-		desc_loc = ViewSettings.task_description_complete_missions_by_name
-	else
-		title_loc = "loc_" .. task_type
-		desc_loc = "loc_" .. task_type
-	end
-
-	local title = Localize(title_loc, true, params)
-	local description = Localize(desc_loc, true, params)
-
-	return title, description, target_value
-end
-
 ContractsView._populate_task_list = function (self, tasks)
 	local task_list = {}
 	local task_list_item_style = ViewStyles.task_list_item
@@ -434,7 +360,7 @@ ContractsView._populate_task_list = function (self, tasks)
 	for i = 1, #tasks do
 		local task_info = tasks[i]
 		local criteria = task_info.criteria
-		local label, description, target = _get_task_description_and_target(criteria)
+		local label, description, target = ContractCriteriaParser.localize_criteria(criteria)
 		local _, label_height = self:_text_size_for_style(label, task_name_style)
 		local task_is_fulfilled = task_info.fulfilled
 		local task_progress = criteria.value / (target or 1)
@@ -528,6 +454,10 @@ end
 ContractsView._display_confirmation_popup = function (self, task_id, wallet)
 	if self._destroyed then
 		return
+	end
+
+	if self._using_cursor_navigation then
+		self:_play_sound(UISoundEvents.default_click)
 	end
 
 	local reroll_cost = self._contract_data.rerollCost

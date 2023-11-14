@@ -31,8 +31,7 @@ damage_templates.zealot_throwing_knives = {
 			[armor_types.berserker] = damage_lerp_values.lerp_1_5,
 			[armor_types.super_armor] = damage_lerp_values.no_damage,
 			[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1_5,
-			[armor_types.void_shield] = damage_lerp_values.lerp_0_75,
-			[armor_types.prop_armor] = damage_lerp_values.lerp_0_75
+			[armor_types.void_shield] = damage_lerp_values.lerp_0_75
 		},
 		impact = {
 			[armor_types.unarmored] = damage_lerp_values.lerp_0_75,
@@ -42,8 +41,7 @@ damage_templates.zealot_throwing_knives = {
 			[armor_types.berserker] = damage_lerp_values.lerp_0_75,
 			[armor_types.super_armor] = damage_lerp_values.lerp_0_5,
 			[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_75,
-			[armor_types.void_shield] = damage_lerp_values.lerp_0_75,
-			[armor_types.prop_armor] = damage_lerp_values.lerp_0_75
+			[armor_types.void_shield] = damage_lerp_values.lerp_0_75
 		}
 	},
 	cleave_distribution = {

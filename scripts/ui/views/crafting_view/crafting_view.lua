@@ -41,10 +41,11 @@ CraftingView.on_enter = function (self)
 		narrative_manager:complete_event(narrative_event_name)
 	end
 
+	local player = Managers.player:local_player(1)
 	local achievements_manager = Managers.achievements
 	local achievement_name = "unlock_crafting"
 
-	achievements_manager:unlock_achievement(achievement_name)
+	achievements_manager:unlock_achievement(player, achievement_name)
 	self:play_vo_events({
 		"hub_idle_crafting"
 	}, "tech_priest_a", nil, 0.8)

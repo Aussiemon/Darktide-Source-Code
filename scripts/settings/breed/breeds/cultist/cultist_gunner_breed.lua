@@ -25,17 +25,16 @@ local breed_name = "cultist_gunner"
 local breed_data = {
 	detection_radius = 15,
 	walk_speed = 2.3,
-	volley_fire_target = true,
+	spawn_inventory_slot = "slot_ranged_weapon",
 	use_bone_lod = true,
-	state_machine = "content/characters/enemy/chaos_traitor_guard/third_person/animations/chaos_traitor_guard_elite_gunner",
-	sub_faction_name = "cultist",
 	unit_template_name = "minion",
 	spawn_anim_state = "to_ranged",
+	volley_fire_target = true,
 	slot_template = "renegade_melee",
 	broadphase_radius = 1,
-	game_object_type = "minion_elite_ranged",
 	stagger_resistance = 2,
-	spawn_inventory_slot = "slot_ranged_weapon",
+	sub_faction_name = "cultist",
+	game_object_type = "minion_elite_ranged",
 	challenge_rating = 4,
 	bone_lod_radius = 1.2,
 	use_wounds = true,
@@ -43,7 +42,9 @@ local breed_data = {
 	run_speed = 5.5,
 	faction_name = "chaos",
 	base_height = 2,
+	state_machine = "content/characters/enemy/chaos_traitor_guard/third_person/animations/chaos_traitor_guard_elite_gunner",
 	ranged = true,
+	psyker_mark_target = true,
 	line_of_sight_collision_filter = "filter_minion_line_of_sight_check",
 	stagger_reduction = 0,
 	player_locomotion_constrain_radius = 0.5,
@@ -464,6 +465,7 @@ local breed_data = {
 			[hit_zone_names.lower_right_leg] = 0.5
 		}
 	},
+	outline_config = {},
 	blackboard_component_config = BreedBlackboardComponentTemplates.riflemen
 }
 

@@ -1,3 +1,4 @@
+local BackgroundMute = require("scripts/utilities/background_mute")
 local WwiseGameSyncSettings = require("scripts/settings/wwise_game_sync/wwise_game_sync_settings")
 local WwiseStateGroupCircumstance = require("scripts/managers/wwise_game_sync/wwise_state_groups/wwise_state_group_circumstance")
 local WwiseStateGroupCombat = require("scripts/managers/wwise_game_sync/wwise_state_groups/wwise_state_group_combat")
@@ -37,6 +38,8 @@ WwiseGameSyncManager.init = function (self, world_manager)
 		self._wwise_state_groups[group_name] = group_class:new(wwise_world, group_name)
 		self._wwise_state_group_states[group_name] = WwiseGameSyncSettings.default_group_state
 	end
+
+	self._background_mute = BackgroundMute:new()
 end
 
 WwiseGameSyncManager.set_game_state_machine = function (self, game_state_machine)
@@ -68,6 +71,8 @@ WwiseGameSyncManager.destroy = function (self)
 end
 
 WwiseGameSyncManager.update = function (self, dt, t)
+	self._background_mute:update()
+
 	for group_name, group in pairs(self._wwise_state_groups) do
 		group:update(dt, t)
 
@@ -94,7 +99,6 @@ WwiseGameSyncManager._create_world = function (self, world_manager)
 		timer_name = timer_name
 	}
 	local flags = {
-		Application.DISABLE_APEX_CLOTH,
 		Application.DISABLE_PHYSICS,
 		Application.DISABLE_RENDERING
 	}

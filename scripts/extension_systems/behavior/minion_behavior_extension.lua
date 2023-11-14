@@ -41,6 +41,7 @@ MinionBehaviorExtension._init_blackboard_components = function (self, blackboard
 	spawn_component.game_object_id = -math.huge
 	spawn_component.is_exiting_spawner = false
 	spawn_component.spawner_unit = nil
+	spawn_component.spawner_spawn_index = -1
 	spawn_component.anim_translation_scale_factor = 1
 	local behavior_component = Blackboard.write_component(blackboard, "behavior")
 	behavior_component.move_state = ""

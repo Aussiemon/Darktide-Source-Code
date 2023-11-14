@@ -46,7 +46,6 @@ _system_require("group", "group_system")
 _system_require("hazard_prop", "hazard_prop_system")
 _system_require("health", "health_system")
 _system_require("health_station", "health_station_system")
-_system_require("hud", "player_unit_placeholder_hud_extension")
 _system_require("input", "player_unit_input_extension")
 _system_require("interaction", "interactee_system", "interactor_extension")
 _system_require("ledge_finder", "player_unit_ledge_finder_extension")
@@ -522,18 +521,6 @@ local systems = {
 		false,
 		{
 			"PlayerUnitGadgetExtension"
-		}
-	},
-	{
-		"hud_system",
-		"ExtensionSystemBase",
-		false,
-		true,
-		true,
-		true,
-		false,
-		{
-			"PlayerUnitPlaceholderHudExtension"
 		}
 	},
 	{

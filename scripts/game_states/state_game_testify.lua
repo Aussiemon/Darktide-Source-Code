@@ -176,14 +176,6 @@ local StateGameTestify = {
 
 		return weapons
 	end,
-	["as" .. "sert"] = function (_, assert_data)
-		local context = {
-			assert_data = assert_data
-		}
-
-		setfenv(func, context)
-		func(assert_data)
-	end,
 	change_dev_parameter = function (_, parameter)
 		ParameterResolver.set_dev_parameter(parameter.name, parameter.value)
 	end,
@@ -200,6 +192,12 @@ local StateGameTestify = {
 	end,
 	console_command_memory_tree_formatted = function (_, depth, ascii_separator, memory_limit)
 		_console_command("memory_tree", depth, ascii_separator, memory_limit)
+	end,
+	console_command_memory_resources_all = function (_)
+		_console_command("memory_resources", "all")
+	end,
+	console_command_memory_resources_list = function (_, resource_name)
+		_console_command("memory_resources", "list", resource_name)
 	end,
 	create_particles = function (_, world, particle_name, boxed_spawn_position, particle_life_time)
 		Log.info("StateGameTestify", "Creating particle %s", particle_name)

@@ -1719,10 +1719,10 @@ local archetype_talents = {
 					format_type = "percentage",
 					find_value = {
 						buff_template_name = "zealot_increased_coherency_regen",
-						tier = true,
 						find_value_type = "buff_template",
 						path = {
-							"percent_toughness"
+							"stat_buffs",
+							stat_buffs.toughness_coherency_regen_rate_modifier
 						}
 					}
 				}

@@ -6,6 +6,7 @@ local templates = {
 local basic_renegade_gunner_template = {
 	slots = {
 		slot_ranged_weapon = {
+			use_outline = true,
 			drop_on_death = true,
 			is_weapon = true,
 			is_ranged_weapon = true,
@@ -14,19 +15,22 @@ local basic_renegade_gunner_template = {
 			}
 		},
 		slot_melee_weapon = {
-			drop_on_death = true,
+			use_outline = true,
 			is_weapon = true,
+			drop_on_death = true,
 			items = {
 				"content/items/weapons/minions/melee/renegade_combat_knife"
 			}
 		},
 		slot_head = {
+			use_outline = true,
 			items = {
 				"content/items/characters/minions/chaos_traitor_guard/attachments_gear/helmet_02_b",
 				"content/items/characters/minions/chaos_traitor_guard/attachments_gear/helmet_02_b_var_01"
 			}
 		},
 		slot_upperbody = {
+			use_outline = true,
 			items = {
 				"content/items/characters/minions/chaos_traitor_guard/attachments_base/upperbody_a_elite",
 				"content/items/characters/minions/chaos_traitor_guard/attachments_base/upperbody_a_elite_color_var_01",
@@ -37,6 +41,7 @@ local basic_renegade_gunner_template = {
 			}
 		},
 		slot_lowerbody = {
+			use_outline = true,
 			items = {
 				"content/items/characters/minions/chaos_traitor_guard/attachments_base/lowerbody_b_elite",
 				"content/items/characters/minions/chaos_traitor_guard/attachments_base/lowerbody_b_elite_color_var_01",
@@ -47,6 +52,7 @@ local basic_renegade_gunner_template = {
 			}
 		},
 		slot_decal = {
+			use_outline = true,
 			items = {
 				"content/items/characters/minions/chaos_traitor_guard/attachments_gear/chaos_traitor_guard_longrange_elite_a_decal_a",
 				"content/items/characters/minions/chaos_traitor_guard/attachments_gear/chaos_traitor_guard_longrange_elite_a_decal_b",
@@ -54,6 +60,7 @@ local basic_renegade_gunner_template = {
 			}
 		},
 		slot_helmet_decal = {
+			use_outline = true,
 			items = {
 				"content/items/characters/minions/chaos_traitor_guard/attachments_gear/chaos_traitor_guard_helmet_02_decal_a",
 				"content/items/characters/minions/chaos_traitor_guard/attachments_gear/chaos_traitor_guard_helmet_02_decal_b",
@@ -63,6 +70,7 @@ local basic_renegade_gunner_template = {
 			}
 		},
 		slot_variation_gear = {
+			use_outline = true,
 			items = {
 				"content/items/characters/minions/chaos_traitor_guard/attachments_gear/longrange_elite_a",
 				"content/items/characters/minions/chaos_traitor_guard/attachments_gear/longrange_elite_a_var_01",
@@ -70,6 +78,7 @@ local basic_renegade_gunner_template = {
 			}
 		},
 		slot_gear_attachment = {
+			use_outline = true,
 			items = {
 				"content/items/weapons/minions/ranged/chaos_traitor_guard_hellgun_backpack"
 			}

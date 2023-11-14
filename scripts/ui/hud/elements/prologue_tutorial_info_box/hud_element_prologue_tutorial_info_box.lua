@@ -37,9 +37,9 @@ HudElementPrologueTutorialInfoBox.init = function (self, parent, draw_layer, sta
 	self:_register_events()
 end
 
-HudElementPrologueTutorialInfoBox.destroy = function (self)
+HudElementPrologueTutorialInfoBox.destroy = function (self, ui_renderer)
 	self:_unregister_events()
-	HudElementPrologueTutorialInfoBox.super.destroy(self)
+	HudElementPrologueTutorialInfoBox.super.destroy(self, ui_renderer)
 end
 
 HudElementPrologueTutorialInfoBox.update = function (self, dt, t, ui_renderer, render_settings, input_service)

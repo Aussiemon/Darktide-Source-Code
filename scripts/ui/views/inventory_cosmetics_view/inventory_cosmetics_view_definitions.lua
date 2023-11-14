@@ -2,6 +2,7 @@ local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templ
 local ColorUtilities = require("scripts/utilities/ui/colors")
 local InputUtils = require("scripts/managers/input/input_utils")
 local InventoryCosmeticsViewSettings = require("scripts/ui/views/inventory_cosmetics_view/inventory_cosmetics_view_settings")
+local InventoryViewSettings = require("scripts/ui/views/inventory_view/inventory_view_settings")
 local ItemUtils = require("scripts/utilities/items")
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local UISettings = require("scripts/settings/ui/ui_settings")
@@ -38,6 +39,7 @@ local grid_settings = {
 	use_select_on_focused = true,
 	use_is_focused_for_navigation = false,
 	use_terminal_background = true,
+	using_custom_gamepad_navigation = true,
 	grid_spacing = grid_spacing,
 	grid_size = grid_size,
 	mask_size = mask_size,
@@ -155,31 +157,6 @@ local scenegraph_definition = {
 			3
 		}
 	},
-	equip_button = {
-		vertical_alignment = "bottom",
-		parent = "info_box",
-		horizontal_alignment = "right",
-		size = equip_button_size,
-		position = {
-			0,
-			-8,
-			1
-		}
-	},
-	weapon_stats_pivot = {
-		vertical_alignment = "top",
-		parent = "canvas",
-		horizontal_alignment = "right",
-		size = {
-			0,
-			0
-		},
-		position = {
-			-1340,
-			110,
-			3
-		}
-	},
 	item_name_pivot = {
 		vertical_alignment = "bottom",
 		parent = "canvas",
@@ -208,9 +185,23 @@ local scenegraph_definition = {
 			3
 		}
 	},
-	unlock_title = {
+	unlock_header = {
 		vertical_alignment = "top",
 		parent = "unlock_box",
+		horizontal_alignment = "left",
+		size = {
+			500,
+			50
+		},
+		position = {
+			0,
+			0,
+			3
+		}
+	},
+	unlock_title = {
+		vertical_alignment = "top",
+		parent = "unlock_header",
 		horizontal_alignment = "left",
 		size = {
 			500,
@@ -236,36 +227,23 @@ local scenegraph_definition = {
 			3
 		}
 	},
-	toggle_locked_pivot = {
-		vertical_alignment = "top",
-		parent = "canvas",
-		horizontal_alignment = "left",
-		size = {
-			0,
-			0
-		},
+	equip_button = {
+		vertical_alignment = "bottom",
+		parent = "info_box",
+		horizontal_alignment = "right",
+		size = equip_button_size,
 		position = {
 			0,
-			0,
-			0
-		}
-	},
-	toggle_locked = {
-		vertical_alignment = "top",
-		parent = "toggle_locked_pivot",
-		horizontal_alignment = "left",
-		size = {
-			400,
-			20
-		},
-		position = {
-			0,
-			0,
-			3
+			-8,
+			1
 		}
 	}
 }
-local unlock_title_style = table.clone(UIFontSettings.body)
+local unlock_header_style = table.clone(UIFontSettings.header_3)
+unlock_header_style.text_horizontal_alignment = "left"
+unlock_header_style.text_vertical_alignment = "top"
+unlock_header_style.text_color = Color.terminal_text_body_sub_header(255, true)
+local unlock_title_style = table.clone(UIFontSettings.body_medium)
 unlock_title_style.text_horizontal_alignment = "left"
 unlock_title_style.text_vertical_alignment = "top"
 unlock_title_style.text_color = Color.terminal_icon(255, true)
@@ -275,10 +253,15 @@ unlock_icon_style.offset = {
 	0,
 	0
 }
-local unlock_details_style = table.clone(UIFontSettings.body)
+local unlock_details_style = table.clone(UIFontSettings.body_medium)
 unlock_details_style.text_horizontal_alignment = "left"
 unlock_details_style.text_vertical_alignment = "top"
-unlock_details_style.text_color = Color.terminal_text_body(255, true)
+unlock_details_style.text_color = {
+	255,
+	116,
+	140,
+	115
+}
 local input_legend_button_style = table.clone(UIFontSettings.body_small)
 input_legend_button_style.text_horizontal_alignment = "left"
 input_legend_button_style.text_vertical_alignment = "top"
@@ -334,6 +317,15 @@ local widget_definitions = {
 			}
 		}
 	}, "corner_bottom_right"),
+	unlock_header = UIWidget.create_definition({
+		{
+			value_id = "text",
+			pass_type = "text",
+			style_id = "text",
+			value = "",
+			style = unlock_header_style
+		}
+	}, "unlock_header"),
 	unlock_title = UIWidget.create_definition({
 		{
 			value_id = "text",
@@ -366,45 +358,6 @@ local widget_definitions = {
 		gamepad_action = "confirm_pressed",
 		visible = false,
 		text = Utf8.upper(Localize("loc_weapon_inventory_equip_button")),
-		hotspot = {}
-	}),
-	toggle_locked = UIWidget.create_definition({
-		{
-			pass_type = "hotspot",
-			content_id = "hotspot",
-			content = {
-				on_hover_sound = UISoundEvents.default_mouse_hover,
-				on_pressed_sound = UISoundEvents.default_select
-			}
-		},
-		{
-			style_id = "text",
-			pass_type = "text",
-			value_id = "text",
-			style = input_legend_button_style,
-			change_function = function (content, style)
-				local hotspot = content.hotspot
-				local is_disabled = hotspot.disabled
-				local button_text = content.original_text or ""
-				local trigger_action = content.trigger_action
-				local service_type = "View"
-				local alias_key = Managers.ui:get_input_alias_key(trigger_action, service_type)
-				local input_text = InputUtils.input_text_for_current_input_device(service_type, alias_key)
-				content.text = string.format(Localize("loc_input_legend_text_template"), input_text, button_text)
-				local default_text_color = is_disabled and style.disabled_color or style.default_text_color
-				local hover_color = style.hover_color
-				local text_color = style.text_color
-				local progress = math.max(hotspot.anim_hover_progress or 0, hotspot.anim_input_progress or 0)
-
-				for i = 2, 4 do
-					text_color[i] = (hover_color[i] - default_text_color[i]) * progress + default_text_color[i]
-				end
-			end
-		}
-	}, "toggle_locked", {
-		visible = false,
-		trigger_action = "toggle_filter",
-		original_text = Localize("loc_inventory_cosmetics_item_acquisition_filter"),
 		hotspot = {}
 	})
 }

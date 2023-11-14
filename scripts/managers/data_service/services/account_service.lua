@@ -1,9 +1,7 @@
-local AchievementData = require("scripts/managers/achievements/achievement_data")
-local AchievementStats = require("scripts/managers/stats/groups/achievement_stats")
-local AchievementUITypes = require("scripts/settings/achievements/achievement_ui_types")
 local BackendError = require("scripts/managers/error/errors/backend_error")
 local ErrorCodes = require("scripts/managers/error/error_codes")
 local GameVersionError = require("scripts/managers/error/errors/game_version_error")
+local BanError = require("scripts/managers/error/errors/ban_error")
 local InitializeWanError = require("scripts/managers/error/errors/initialize_wan_error")
 local MasterItems = require("scripts/backend/master_items")
 local PlayerManager = require("scripts/foundation/managers/player/player_manager")
@@ -69,16 +67,15 @@ AccountService.signin = function (self)
 		local items_promise = MasterItems.refresh()
 		local auth_data_promise = Promise.resolved(auth_data)
 		local immaterium_connection_info = Managers.backend.interfaces.immaterium:fetch_connection_info()
-		local sync_achievement_rewards_promise = Managers.achievements:sync_achievement_data(account_id)
 		local crafting_costs_promise = Managers.backend.interfaces.crafting:refresh_crafting_costs()
 
 		return migrations_promise:next(function (data)
 			local migration_data_promise = Promise.resolved(data)
 
-			return Promise.all(status_promise, settings_promise, items_promise, auth_data_promise, immaterium_connection_info, sync_achievement_rewards_promise, crafting_costs_promise, migration_data_promise)
+			return Promise.all(status_promise, settings_promise, items_promise, auth_data_promise, immaterium_connection_info, crafting_costs_promise, migration_data_promise)
 		end)
 	end):next(function (results)
-		local status, _, _, auth_data, immaterium_connection_info, _, _, migration_data = unpack(results, 1, 8)
+		local status, _, _, auth_data, immaterium_connection_info, _, migration_data = unpack(results, 1, 8)
 
 		if status then
 			local profiles_promise = Managers.data_service.profiles:fetch_all_profiles()
@@ -119,10 +116,17 @@ AccountService.signin = function (self)
 			Managers.error:report_error(GameVersionError:new(error_data))
 		elseif error_data.description == "INITIALIZE_WAN_ERROR" then
 			Managers.error:report_error(InitializeWanError:new(error_data))
-		elseif error_data.code == 503 then
-			Managers.error:report_error(ServiceUnavailableError:new(error_data))
 		else
-			Managers.error:report_error(SignInError:new(error_data))
+			local is_valid_json = string.find(error_data.description, "\":\"") ~= nil
+			local decoded_json_data = is_valid_json and cjson.decode(error_data.description)
+
+			if error_data.code == 503 then
+				Managers.error:report_error(ServiceUnavailableError:new(error_data))
+			elseif error_data.code == 403 and decoded_json_data and decoded_json_data.banned and (decoded_json_data.banned.frozen == true or decoded_json_data.banned.reason ~= nil) then
+				Managers.error:report_error(BanError:new(decoded_json_data))
+			else
+				Managers.error:report_error(SignInError:new(error_data))
+			end
 		end
 	end)
 end
@@ -165,112 +169,6 @@ AccountService.set_has_completed_onboarding = function (self)
 
 		return Promise.rejected({})
 	end)
-end
-
-AccountService.pull_achievement_data = function (self, optional_account_id, optional_achievement_definitions)
-	local achievement_definitions = optional_achievement_definitions or Managers.achievements:get_achievement_definitions()
-	local achievement_data_promise = Managers.backend.interfaces.commendations:get_commendations(optional_account_id, false, true):next(function (data)
-		local achievement_data = AchievementData()
-
-		for _, stat in ipairs(data.stats) do
-			achievement_data.stats[stat.stat] = stat.value
-		end
-
-		for i = 1, #data.commendations do
-			local achievement = data.commendations[i]
-			local achievement_id = achievement.id
-			local is_achievement = achievement_definitions._lookup[achievement_id] ~= nil
-			local is_complete = achievement.complete
-
-			if is_achievement and is_complete then
-				achievement_data.completed[achievement_id] = is_complete and (achievement.at or true) or nil
-			else
-				Log.warning("AccountService", "Received unknown achievement %s from the backend.", achievement_id)
-			end
-		end
-
-		return achievement_data
-	end)
-
-	return achievement_data_promise
-end
-
-local function _should_include_achievement(achievement_definition, achievement_data)
-	local is_visible = achievement_definition:is_visible(achievement_data)
-	local is_feat_of_strength = achievement_definition:ui_type() == AchievementUITypes.feat_of_strength
-
-	return not is_feat_of_strength or is_visible
-end
-
-local function _ui_achievement(index, achievement_definition, achievement_data)
-	return {
-		id = achievement_definition:id(),
-		type = achievement_definition:ui_type(),
-		sort_index = index,
-		category = achievement_definition:category(),
-		icon = achievement_definition:icon(),
-		label = achievement_definition:label(),
-		description = achievement_definition:description(),
-		progress_current = achievement_definition:get_progress(achievement_data),
-		progress_goal = achievement_definition:get_target(achievement_data),
-		completed = achievement_definition:is_completed(achievement_data),
-		completed_time = achievement_definition:completed_time(achievement_data),
-		hidden = not achievement_definition:is_visible(achievement_data),
-		related_commendation_ids = achievement_definition:get_related_achievements(),
-		rewards = achievement_definition:get_rewards(),
-		score = achievement_definition:score()
-	}
-end
-
-AccountService.get_achievements = function (self)
-	local get_achievements_promise = self._get_achievements_promise
-
-	if get_achievements_promise:is_pending() then
-		return get_achievements_promise
-	end
-
-	get_achievements_promise = self:pull_achievement_data():next(function (achievement_data)
-		local achievement_definitions = Managers.achievements:get_achievement_definitions()
-		local ui_achievements = {}
-
-		for index = 1, #achievement_definitions do
-			local achievement_definition = achievement_definitions[index]
-
-			if _should_include_achievement(achievement_definition, achievement_data) then
-				local achievement_id = achievement_definition:id()
-				ui_achievements[achievement_id] = _ui_achievement(index, achievement_definition, achievement_data)
-			end
-		end
-
-		return ui_achievements
-	end)
-	self._get_achievements_promise = get_achievements_promise
-
-	return get_achievements_promise
-end
-
-AccountService.unlock_achievement = function (self, achievement_id)
-	local achievement = Managers.achievements:achievement_definition_from_id(achievement_id)
-	local local_player_id = 1
-	local player = Managers.player:local_player(local_player_id)
-	local account_id = player:account_id()
-	local update = Managers.backend.interfaces.commendations:create_update(account_id, {}, {
-		{
-			stat = "none",
-			complete = true,
-			id = achievement_id
-		}
-	})
-
-	return Managers.backend.interfaces.commendations:bulk_update_commendations({
-		update
-	})
-end
-
-AccountService.read_stat = function (self, achievement_data, stat_id, ...)
-	local stat_definition = AchievementStats.definitions[stat_id]
-
-	return stat_definition:get_value(achievement_data.stats, ...)
 end
 
 return AccountService

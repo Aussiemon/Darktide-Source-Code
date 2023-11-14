@@ -403,6 +403,7 @@ local breed_data = {
 	hit_zone_weakspot_types = {
 		[hit_zone_names.head] = weakspot_types.headshot
 	},
+	outline_config = {},
 	blackboard_component_config = BreedBlackboardComponentTemplates.sniper
 }
 

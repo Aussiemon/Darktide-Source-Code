@@ -2,7 +2,7 @@ local ProjectileLocomotionSettings = require("scripts/settings/projectile_locomo
 local locomotion_states = ProjectileLocomotionSettings.states
 local weapon_projectile_locomotion_templates = {
 	force_staff_ball = {
-		throw_parameters = {
+		trajectory_parameters = {
 			spawn = {
 				locomotion_state = locomotion_states.manual_physics
 			}
@@ -31,7 +31,7 @@ local weapon_projectile_locomotion_templates = {
 		vfx = {}
 	},
 	force_staff_ball_heavy = {
-		throw_parameters = {
+		trajectory_parameters = {
 			spawn = {
 				locomotion_state = locomotion_states.manual_physics
 			}
@@ -60,7 +60,7 @@ local weapon_projectile_locomotion_templates = {
 		vfx = {}
 	},
 	ogryn_gauntlet_grenade = {
-		throw_parameters = {
+		trajectory_parameters = {
 			shoot = {
 				offset_right = 0,
 				inherit_owner_velocity_percentage = 1,
@@ -109,7 +109,7 @@ local weapon_projectile_locomotion_templates = {
 		}
 	},
 	ogryn_thumper_grenade = {
-		throw_parameters = {
+		trajectory_parameters = {
 			shoot = {
 				offset_right = 0,
 				inherit_owner_velocity_percentage = 1,
@@ -159,7 +159,7 @@ local weapon_projectile_locomotion_templates = {
 		}
 	},
 	ogryn_thumper_grenade_aimed = {
-		throw_parameters = {
+		trajectory_parameters = {
 			shoot = {
 				offset_right = 0,
 				inherit_owner_velocity_percentage = 1,

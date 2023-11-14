@@ -652,6 +652,10 @@ CameraManager._current_node = function (self, camera_nodes)
 	return camera_nodes[#camera_nodes].node
 end
 
+CameraManager._current_transition = function (self, camera_nodes)
+	return camera_nodes[#camera_nodes].transition
+end
+
 CameraManager.camera_effect_sequence_event = function (self, event, start_time)
 	if not self._camera_shake_enabled then
 		return
@@ -720,7 +724,6 @@ CameraManager._update_camera = function (self, dt, t, viewport_name)
 	local camera = ScriptViewport.camera(viewport)
 	local shadow_cull_camera = ScriptViewport.shadow_cull_camera(viewport)
 	local camera_nodes = self._camera_nodes[viewport_name]
-	local current_node = self:_current_node(camera_nodes)
 	local camera_data = self:_update_transition(viewport_name, camera_nodes, dt)
 
 	if self._sequence_event_settings.event then
@@ -732,7 +735,7 @@ CameraManager._update_camera = function (self, dt, t, viewport_name)
 	end
 
 	self:_apply_offset(camera_data, t)
-	self:_update_camera_properties(camera, shadow_cull_camera, current_node, camera_data, viewport_name)
+	self:_update_camera_properties(camera, shadow_cull_camera, camera_nodes, camera_data, viewport_name)
 	ScriptCamera.force_update(self._world, camera)
 end
 
@@ -877,23 +880,29 @@ CameraManager.apply_level_screen_effects = function (self, effects, viewport_nam
 	end
 end
 
-CameraManager._update_camera_properties = function (self, camera, shadow_cull_camera, current_node, camera_data, viewport_name)
+CameraManager._update_camera_properties = function (self, camera, shadow_cull_camera, camera_nodes, camera_data, viewport_name)
+	local current_node = self:_current_node(camera_nodes)
+	local current_transition = self:_current_transition(camera_nodes)
 	camera_data.root_unit = current_node:root_unit()
 
 	if camera_data.position then
 		local root_unit, root_object = current_node:root_unit()
 		local pos = camera_data.position
+		local use_collision = false
+		local safe_pos_offset = nil
 
 		if current_node:use_collision() then
-			local safe_position_offset = current_node:safe_position_offset()
+			use_collision = true
+			safe_pos_offset = current_node:safe_position_offset():unbox()
+		elseif current_transition and current_transition.position and current_transition.position:use_collision() then
+			use_collision = current_transition.position:use_collision()
+			safe_pos_offset = current_transition.position:safe_position_offset():unbox()
+		end
 
-			if root_unit and ALIVE[root_unit] then
-				local safe_pos = Unit.world_position(root_unit, root_object or 1) + safe_position_offset:unbox()
-				pos = self:_smooth_camera_collision(camera_data.position, safe_pos, 0.35, 0.25)
-			else
-				local safe_pos = camera_data.position + safe_position_offset:unbox()
-				pos = self:_smooth_camera_collision(camera_data.position, safe_pos, 0.35, 0.25)
-			end
+		if use_collision then
+			local safe_pos = nil
+			safe_pos = root_unit and ALIVE[root_unit] and Unit.world_position(root_unit, root_object or 1) + safe_pos_offset or camera_data.position + safe_pos_offset
+			pos = self:_smooth_camera_collision(camera_data.position, safe_pos, 0.35, 0.25)
 		end
 
 		camera_data.boxed_position = Vector3Box(camera_data.position)

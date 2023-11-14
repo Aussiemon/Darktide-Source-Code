@@ -1,7 +1,8 @@
 local MagazineAmmo = component("MagazineAmmo")
-local top_bullet_visibility_group_name = "bullet"
 
 MagazineAmmo.editor_init = function (self, unit)
+	self._top_bullet_visibility_group_name = self:get_data(unit, "top_bullet_visibility_group_name")
+	self._is_animated = self:get_data(unit, "is_animated")
 	self._anim_speed = self:get_data(unit, "anim_speed")
 	self._use_simple_animation_length = self:get_data(unit, "use_simple_animation_length")
 	self._dismantled = self:get_data(unit, "dismantled")
@@ -22,6 +23,7 @@ end
 MagazineAmmo.editor_validate = function (self, unit)
 	local success = true
 	local error_message = ""
+	local top_bullet_visibility_group_name = self:get_data(unit, "top_bullet_visibility_group_name")
 
 	if rawget(_G, "LevelEditor") and not Unit.has_visibility_group(unit, top_bullet_visibility_group_name) then
 		success = false
@@ -32,6 +34,8 @@ MagazineAmmo.editor_validate = function (self, unit)
 end
 
 MagazineAmmo.init = function (self, unit)
+	self._top_bullet_visibility_group_name = self:get_data(unit, "top_bullet_visibility_group_name")
+	self._is_animated = self:get_data(unit, "is_animated")
 	self._anim_speed = self:get_data(unit, "anim_speed")
 	self._use_simple_animation_length = self:get_data(unit, "use_simple_animation_length")
 	self._dismantled = self:get_data(unit, "dismantled")
@@ -61,7 +65,7 @@ MagazineAmmo.destroy = function (self, unit)
 	return
 end
 
-MagazineAmmo._update_ammo_representation = function (self, unit, is_animated)
+MagazineAmmo._update_ammo_representation = function (self, unit, animate)
 	local ammo = self._ammo
 	local ammo_offset = self._ammo_offset
 	local remaining_ammo = ammo - ammo_offset
@@ -76,39 +80,42 @@ MagazineAmmo._update_ammo_representation = function (self, unit, is_animated)
 		remaining_ammo = max_ammo
 	end
 
-	local inv_max_ammo = 1 / max_ammo
-	local fraction = 1 - remaining_ammo / max_ammo
-	local anim_time_step, anim_time = nil
+	if self._is_animated then
+		local inv_max_ammo = 1 / max_ammo
+		local fraction = 1 - remaining_ammo / max_ammo
+		local anim_time_step, anim_time = nil
 
-	if self._use_simple_animation_length then
-		local anim_length = Unit.simple_animation_length(unit)
-		anim_time_step = anim_length * inv_max_ammo
-		anim_time = fraction * anim_length
-	else
-		anim_time_step = inv_max_ammo
-		anim_time = fraction
+		if self._use_simple_animation_length then
+			local anim_length = Unit.simple_animation_length(unit)
+			anim_time_step = anim_length * inv_max_ammo
+			anim_time = fraction * anim_length
+		else
+			anim_time_step = inv_max_ammo
+			anim_time = fraction
+		end
+
+		if self._dismantled then
+			Unit.play_simple_animation(unit, 0, nil, false, 0)
+
+			local ammo_mask = math.max(self._dismantled_ammo_mask, fraction)
+
+			Unit.set_scalar_for_materials(unit, "ammo_mask", ammo_mask)
+
+			return
+		end
+
+		local start_anim_time = math.round_with_precision(anim_time - anim_time_step, 4)
+
+		if animate and start_anim_time >= 0 then
+			Unit.play_simple_animation(unit, start_anim_time, anim_time, false, self._anim_speed)
+		else
+			Unit.play_simple_animation(unit, anim_time, nil, false, 0)
+		end
+
+		Unit.set_scalar_for_materials(unit, "ammo_mask", fraction)
 	end
 
-	if self._dismantled then
-		Unit.play_simple_animation(unit, 0, nil, false, 0)
-
-		local ammo_mask = math.max(self._dismantled_ammo_mask, fraction)
-
-		Unit.set_scalar_for_materials(unit, "ammo_mask", ammo_mask)
-
-		return
-	end
-
-	local start_anim_time = math.round_with_precision(anim_time - anim_time_step, 4)
-
-	if is_animated and start_anim_time >= 0 then
-		Unit.play_simple_animation(unit, start_anim_time, anim_time, false, self._anim_speed)
-	else
-		Unit.play_simple_animation(unit, anim_time, nil, false, 0)
-	end
-
-	Unit.set_scalar_for_materials(unit, "ammo_mask", fraction)
-	Unit.set_visibility(unit, "bullet", remaining_ammo > 0)
+	Unit.set_visibility(unit, self._top_bullet_visibility_group_name, remaining_ammo >= 0)
 end
 
 MagazineAmmo.set_ammo = function (self, unit, ammo, max_ammo)
@@ -127,6 +134,11 @@ MagazineAmmo.set_ammo = function (self, unit, ammo, max_ammo)
 end
 
 MagazineAmmo.component_data = {
+	top_bullet_visibility_group_name = {
+		ui_type = "text_box",
+		value = "bullet",
+		ui_name = "Top Bullet Visibility Group Name"
+	},
 	ammo_in_unit = {
 		ui_type = "slider",
 		min = 1,
@@ -174,6 +186,11 @@ MagazineAmmo.component_data = {
 		ui_type = "check_box",
 		value = false,
 		ui_name = "Use Anim Length"
+	},
+	is_animated = {
+		ui_type = "check_box",
+		value = true,
+		ui_name = "Is Animatable"
 	},
 	dismantled = {
 		ui_type = "check_box",

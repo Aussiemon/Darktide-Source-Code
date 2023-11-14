@@ -359,6 +359,7 @@ local breed_data = {
 			[hit_zone_names.center_mass] = 30
 		}
 	},
+	outline_config = {},
 	blackboard_component_config = BreedBlackboardComponentTemplates.chaos_poxwalker_bomber
 }
 

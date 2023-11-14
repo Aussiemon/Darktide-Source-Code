@@ -177,6 +177,18 @@ BtQuickGrenadeThrowAction._throw_position_and_direction = function (self, unit, 
 			local direction = Vector3(math.sin(radians), math.cos(radians), 0) * random_range
 			local test_position = last_los_position + direction
 			throw_position = NavQueries.position_on_mesh_with_outside_position(nav_world, nil, test_position, ABOVE, BELOW)
+			throw_position = throw_position or test_position + Vector3(0, 0, 0.1)
+		end
+
+		local fan_pattern = config.fan_pattern
+
+		if fan_pattern then
+			local to_target = Vector3.normalize(last_los_position - POSITION_LOOKUP[unit])
+			local right = Vector3.cross(to_target, Vector3.up())
+			local index = scratchpad.next_throw_timing_index
+			last_los_position = last_los_position - right * math.floor(#scratchpad.throw_timings)
+			local test_position = last_los_position + right * index * config.offset
+			throw_position = NavQueries.position_on_mesh_with_outside_position(nav_world, nil, test_position, ABOVE, BELOW)
 
 			if not throw_position then
 				throw_position = test_position + Vector3(0, 0, 0.1)
@@ -192,9 +204,9 @@ BtQuickGrenadeThrowAction._throw_position_and_direction = function (self, unit, 
 	local self_position = Unit.world_position(unit, unit_node)
 	local projectile_template = throw_config.projectile_template
 	local locomotion_template = projectile_template.locomotion_template
-	local throw_parameters = locomotion_template.throw_parameters.throw
+	local trajectory_parameters = locomotion_template.trajectory_parameters.throw
 	local integrator_parameters = locomotion_template.integrator_parameters
-	local speed = throw_parameters.speed_initial
+	local speed = trajectory_parameters.speed_initial
 	local gravity = integrator_parameters.gravity
 	local acceptable_accuracy = throw_config.acceptable_accuracy
 	local target_velocity = Vector3(0, 0, 0)
@@ -213,12 +225,12 @@ BtQuickGrenadeThrowAction._throw_grenade = function (self, unit, action_data, th
 	local throw_config = action_data.throw_config
 	local projectile_template = throw_config.projectile_template
 	local locomotion_template = projectile_template.locomotion_template
-	local throw_parameters = locomotion_template.throw_parameters[throw_type]
-	local speed = throw_parameters.speed_initial or throw_parameters.speed
+	local trajectory_parameters = locomotion_template.trajectory_parameters[throw_type]
+	local speed = trajectory_parameters.speed_initial or trajectory_parameters.speed
 
 	if optional_owner_velocity then
 		local velocity = speed * throw_direction
-		local inherit_owner_velocity_percentage = throw_parameters.inherit_owner_velocity_percentage
+		local inherit_owner_velocity_percentage = trajectory_parameters.inherit_owner_velocity_percentage
 		local minion_velocity_contribution = optional_owner_velocity * inherit_owner_velocity_percentage
 		local throw_velocity = minion_velocity_contribution + velocity
 		throw_direction = Vector3.normalize(throw_velocity)
@@ -227,11 +239,11 @@ BtQuickGrenadeThrowAction._throw_grenade = function (self, unit, action_data, th
 
 	local angular_velocity = nil
 
-	if throw_parameters.randomized_angular_velocity then
-		local max = throw_parameters.randomized_angular_velocity
+	if trajectory_parameters.randomized_angular_velocity then
+		local max = trajectory_parameters.randomized_angular_velocity
 		angular_velocity = Vector3(math.random() * max.x, math.random() * max.y, math.random() * max.z)
-	elseif throw_parameters.initial_angular_velocity then
-		angular_velocity = throw_parameters.randomized_angular_velocity:unbox()
+	elseif trajectory_parameters.initial_angular_velocity then
+		angular_velocity = trajectory_parameters.randomized_angular_velocity:unbox()
 	else
 		angular_velocity = Vector3.zero()
 	end
@@ -240,7 +252,7 @@ BtQuickGrenadeThrowAction._throw_grenade = function (self, unit, action_data, th
 	local item_definitions = MasterItems.get_cached()
 	local item = item_definitions[item_name]
 	local grenade_unit_name = item.base_unit
-	local locomotion_state = throw_parameters.locomotion_state
+	local locomotion_state = trajectory_parameters.locomotion_state
 	local side_system = Managers.state.extension:system("side_system")
 	local side = side_system.side_by_unit[unit]
 	local is_critical_strike, origin_item_slot, charge_level, target_unit, target_position, weapon_item_or_nil, fuse_override_time_or_nil = nil

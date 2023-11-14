@@ -40,8 +40,7 @@ damage_templates.default_bolter_killshot = {
 				[armor_types.berserker] = damage_lerp_values.lerp_1,
 				[armor_types.super_armor] = damage_lerp_values.lerp_0_4,
 				[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_5,
-				[armor_types.void_shield] = damage_lerp_values.lerp_0_25,
-				[armor_types.prop_armor] = damage_lerp_values.lerp_0_8
+				[armor_types.void_shield] = damage_lerp_values.lerp_0_25
 			},
 			impact = {
 				[armor_types.unarmored] = damage_lerp_values.lerp_1,
@@ -51,8 +50,7 @@ damage_templates.default_bolter_killshot = {
 				[armor_types.berserker] = damage_lerp_values.lerp_0_5,
 				[armor_types.super_armor] = damage_lerp_values.lerp_1,
 				[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
-				[armor_types.void_shield] = damage_lerp_values.lerp_1,
-				[armor_types.prop_armor] = damage_lerp_values.lerp_1
+				[armor_types.void_shield] = damage_lerp_values.lerp_1
 			}
 		},
 		far = {
@@ -64,8 +62,7 @@ damage_templates.default_bolter_killshot = {
 				[armor_types.berserker] = damage_lerp_values.lerp_1,
 				[armor_types.super_armor] = damage_lerp_values.lerp_0_4,
 				[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_5,
-				[armor_types.void_shield] = damage_lerp_values.lerp_0_25,
-				[armor_types.prop_armor] = damage_lerp_values.lerp_0_9
+				[armor_types.void_shield] = damage_lerp_values.lerp_0_25
 			},
 			impact = {
 				[armor_types.unarmored] = damage_lerp_values.lerp_1,
@@ -75,8 +72,7 @@ damage_templates.default_bolter_killshot = {
 				[armor_types.berserker] = damage_lerp_values.lerp_0_5,
 				[armor_types.super_armor] = damage_lerp_values.lerp_1,
 				[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
-				[armor_types.void_shield] = damage_lerp_values.lerp_1,
-				[armor_types.prop_armor] = damage_lerp_values.lerp_1
+				[armor_types.void_shield] = damage_lerp_values.lerp_1
 			}
 		}
 	},
@@ -128,8 +124,7 @@ damage_templates.bolter_stop_explosion = {
 				[armor_types.berserker] = damage_lerp_values.no_damage,
 				[armor_types.super_armor] = damage_lerp_values.no_damage,
 				[armor_types.disgustingly_resilient] = damage_lerp_values.no_damage,
-				[armor_types.void_shield] = damage_lerp_values.no_damage,
-				[armor_types.prop_armor] = damage_lerp_values.no_damage
+				[armor_types.void_shield] = damage_lerp_values.no_damage
 			},
 			impact = {
 				[armor_types.unarmored] = damage_lerp_values.lerp_1,
@@ -139,8 +134,7 @@ damage_templates.bolter_stop_explosion = {
 				[armor_types.berserker] = damage_lerp_values.lerp_1,
 				[armor_types.super_armor] = damage_lerp_values.no_damage,
 				[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
-				[armor_types.void_shield] = damage_lerp_values.lerp_1,
-				[armor_types.prop_armor] = damage_lerp_values.lerp_1
+				[armor_types.void_shield] = damage_lerp_values.lerp_1
 			}
 		},
 		far = {
@@ -152,8 +146,7 @@ damage_templates.bolter_stop_explosion = {
 				[armor_types.berserker] = damage_lerp_values.no_damage,
 				[armor_types.super_armor] = damage_lerp_values.no_damage,
 				[armor_types.disgustingly_resilient] = damage_lerp_values.no_damage,
-				[armor_types.void_shield] = damage_lerp_values.no_damage,
-				[armor_types.prop_armor] = damage_lerp_values.no_damage
+				[armor_types.void_shield] = damage_lerp_values.no_damage
 			},
 			impact = {
 				[armor_types.unarmored] = damage_lerp_values.lerp_1,
@@ -163,8 +156,7 @@ damage_templates.bolter_stop_explosion = {
 				[armor_types.berserker] = damage_lerp_values.lerp_1,
 				[armor_types.super_armor] = damage_lerp_values.lerp_1,
 				[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
-				[armor_types.void_shield] = damage_lerp_values.lerp_1,
-				[armor_types.prop_armor] = damage_lerp_values.lerp_1
+				[armor_types.void_shield] = damage_lerp_values.lerp_1
 			}
 		}
 	},
@@ -209,8 +201,7 @@ damage_templates.bolter_kill_explosion = {
 				[armor_types.berserker] = damage_lerp_values.lerp_1,
 				[armor_types.super_armor] = damage_lerp_values.lerp_1,
 				[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
-				[armor_types.void_shield] = damage_lerp_values.lerp_1,
-				[armor_types.prop_armor] = damage_lerp_values.lerp_1
+				[armor_types.void_shield] = damage_lerp_values.lerp_1
 			},
 			impact = {
 				[armor_types.unarmored] = damage_lerp_values.lerp_1,
@@ -220,8 +211,7 @@ damage_templates.bolter_kill_explosion = {
 				[armor_types.berserker] = damage_lerp_values.lerp_1,
 				[armor_types.super_armor] = damage_lerp_values.lerp_1,
 				[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
-				[armor_types.void_shield] = damage_lerp_values.lerp_1,
-				[armor_types.prop_armor] = damage_lerp_values.lerp_1
+				[armor_types.void_shield] = damage_lerp_values.lerp_1
 			}
 		},
 		far = {
@@ -233,8 +223,7 @@ damage_templates.bolter_kill_explosion = {
 				[armor_types.berserker] = damage_lerp_values.no_damage,
 				[armor_types.super_armor] = damage_lerp_values.no_damage,
 				[armor_types.disgustingly_resilient] = damage_lerp_values.no_damage,
-				[armor_types.void_shield] = damage_lerp_values.no_damage,
-				[armor_types.prop_armor] = damage_lerp_values.no_damage
+				[armor_types.void_shield] = damage_lerp_values.no_damage
 			},
 			impact = {
 				[armor_types.unarmored] = damage_lerp_values.lerp_1,
@@ -244,8 +233,7 @@ damage_templates.bolter_kill_explosion = {
 				[armor_types.berserker] = damage_lerp_values.lerp_1,
 				[armor_types.super_armor] = damage_lerp_values.lerp_1,
 				[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
-				[armor_types.void_shield] = damage_lerp_values.lerp_1,
-				[armor_types.prop_armor] = damage_lerp_values.lerp_1
+				[armor_types.void_shield] = damage_lerp_values.lerp_1
 			}
 		}
 	},
@@ -288,8 +276,7 @@ damage_templates.weapon_special_push = {
 			[armor_types.berserker] = 0.6,
 			[armor_types.super_armor] = 0,
 			[armor_types.disgustingly_resilient] = 1,
-			[armor_types.void_shield] = 0.1,
-			[armor_types.prop_armor] = 0
+			[armor_types.void_shield] = 0.1
 		},
 		impact = {
 			[armor_types.unarmored] = 1.25,
@@ -299,8 +286,7 @@ damage_templates.weapon_special_push = {
 			[armor_types.berserker] = 0.5,
 			[armor_types.super_armor] = 0.5,
 			[armor_types.disgustingly_resilient] = 1,
-			[armor_types.void_shield] = 0,
-			[armor_types.prop_armor] = 1
+			[armor_types.void_shield] = 0
 		}
 	},
 	gibbing_power = GibbingPower.always,
@@ -325,8 +311,7 @@ damage_templates.weapon_special_push_outer = {
 			[armor_types.berserker] = 0,
 			[armor_types.super_armor] = 0,
 			[armor_types.disgustingly_resilient] = 1,
-			[armor_types.void_shield] = 0,
-			[armor_types.prop_armor] = 0
+			[armor_types.void_shield] = 0
 		},
 		impact = {
 			[armor_types.unarmored] = 1,
@@ -336,8 +321,7 @@ damage_templates.weapon_special_push_outer = {
 			[armor_types.berserker] = 0.5,
 			[armor_types.super_armor] = 0.5,
 			[armor_types.disgustingly_resilient] = 1,
-			[armor_types.void_shield] = 0,
-			[armor_types.prop_armor] = 1
+			[armor_types.void_shield] = 0
 		}
 	},
 	gibbing_power = GibbingPower.always,

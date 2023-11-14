@@ -166,6 +166,8 @@ DestructibleUtilities.add_damage = function (unit, destructible_parameters, visi
 
 		if health_after_damage <= 0 then
 			_dequeue_stage(unit, destructible_parameters, visibility_info, attack_direction, false)
+		else
+			Unit.flow_event(unit, "lua_damage_taken")
 		end
 	end
 end

@@ -36,6 +36,7 @@ _add_to_lookup(DialogueSettings.default_lookup_path .. "lookup_mission_vo_dm_for
 _add_to_lookup(DialogueSettings.default_lookup_path .. "lookup_mission_vo_dm_rise")
 _add_to_lookup(DialogueSettings.default_lookup_path .. "lookup_mission_vo_dm_propaganda")
 _add_to_lookup(DialogueSettings.default_lookup_path .. "lookup_mission_vo_dm_stockpile")
+_add_to_lookup(DialogueSettings.default_lookup_path .. "lookup_mission_vo_fm_armoury")
 _add_to_lookup(DialogueSettings.default_lookup_path .. "lookup_mission_vo_fm_cargo")
 _add_to_lookup(DialogueSettings.default_lookup_path .. "lookup_mission_vo_fm_resurgence")
 _add_to_lookup(DialogueSettings.default_lookup_path .. "lookup_mission_vo_hm_cartel")

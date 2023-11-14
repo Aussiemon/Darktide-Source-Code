@@ -11,9 +11,9 @@ local CLIENT_RPCS = {
 local DISTRIBUTION_CHARGES_PER_STATION = {
 	2.5,
 	2.5,
-	2.5,
-	2.5,
-	2.5
+	2.25,
+	2,
+	1.75
 }
 
 HealthStationSystem.init = function (self, context, system_init_data, ...)

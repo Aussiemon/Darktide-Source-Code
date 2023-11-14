@@ -501,7 +501,7 @@ weapon_template.actions = {
 		kind = "sweep",
 		first_person_hit_anim = "hit_right_shake",
 		first_person_hit_stop_anim = "attack_hit",
-		weapon_handling_template = "time_scale_1",
+		weapon_handling_template = "time_scale_1_2",
 		allowed_during_sprint = true,
 		range_mod = 1.25,
 		damage_window_end = 0.4,
@@ -987,7 +987,7 @@ weapon_template.actions = {
 			}
 		},
 		damage_profile = DamageProfileTemplates.ogryn_shovel_light_tank_followup,
-		damage_type = damage_types.blunt,
+		damage_type = damage_types.ogryn_shovel_smack,
 		herding_template = HerdingTemplates.linesman_right_heavy_inverted,
 		wounds_shape = wounds_shapes.horizontal_slash_coarse,
 		time_scale_stat_buffs = {
@@ -1057,13 +1057,15 @@ weapon_template.actions = {
 	},
 	action_inspect = {
 		anim_event = "inspect_start",
-		crosshair_type = "inspect",
+		lock_view = true,
 		start_input = "inspect_start",
 		anim_end_event = "inspect_end",
 		kind = "inspect",
-		lock_view = true,
 		stop_input = "inspect_stop",
-		total_time = math.huge
+		total_time = math.huge,
+		crosshair = {
+			crosshair_type = "inspect"
+		}
 	}
 }
 
@@ -1088,7 +1090,9 @@ weapon_template.fx_sources = {
 	_block = "fx_block",
 	_sweep = "fx_sweep"
 }
-weapon_template.crosshair_type = "dot"
+weapon_template.crosshair = {
+	crosshair_type = "dot"
+}
 weapon_template.hit_marker_type = "center"
 weapon_template.keywords = {
 	"melee",

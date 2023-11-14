@@ -1034,11 +1034,10 @@ weapon_template.actions = {
 	},
 	action_weapon_special = {
 		anim_event = "special_parry_pose",
-		can_crouch = false,
 		uninterruptible = true,
-		kind = "block",
+		can_crouch = false,
 		start_input = "special_action_hold",
-		crosshair_type = "none",
+		kind = "block",
 		block_goes_brrr = true,
 		weapon_special = true,
 		anim_end_event = "parry_finished",
@@ -1047,6 +1046,9 @@ weapon_template.actions = {
 		disallow_dodging = true,
 		force_look = true,
 		stop_input = "special_action_release",
+		crosshair = {
+			crosshair_type = "none"
+		},
 		total_time = math.huge,
 		action_movement_curve = {
 			{
@@ -1269,10 +1271,12 @@ weapon_template.actions = {
 		start_input = "inspect_start",
 		anim_end_event = "inspect_end",
 		kind = "inspect",
-		crosshair_type = "inspect",
 		anim_event = "inspect_start",
 		stop_input = "inspect_stop",
-		total_time = math.huge
+		total_time = math.huge,
+		crosshair = {
+			crosshair_type = "inspect"
+		}
 	}
 }
 local WeaponBarUIDescriptionTemplates = require("scripts/settings/equipment/weapon_bar_ui_description_templates")
@@ -1567,7 +1571,9 @@ weapon_template.fx_sources = {
 	_sweep = "fx_sweep"
 }
 weapon_template.shield_block_source_name = "_block"
-weapon_template.crosshair_type = "dot"
+weapon_template.crosshair = {
+	crosshair_type = "dot"
+}
 weapon_template.hit_marker_type = "center"
 weapon_template.keywords = {
 	"melee",
@@ -1613,7 +1619,7 @@ weapon_template.displayed_attacks = {
 		display_name = "loc_gestalt_tank",
 		type = "tank",
 		attack_chain = {
-			"tank",
+			"smiter",
 			"tank"
 		}
 	},

@@ -101,6 +101,12 @@ local blueprints = {
 			content.text = option.text
 			content.value_text = Managers.localization:localize("loc_character_create_value_selected")
 			content.draw_arrow = element.entries ~= nil
+			local active_page_number = parent._active_page_number
+			local active_page = parent._pages[active_page_number]
+
+			if active_page.name == "home_planet" then
+				content.hotspot.on_select_sound = nil
+			end
 		end
 	},
 	divider = {

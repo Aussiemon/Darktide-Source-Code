@@ -45,8 +45,7 @@ damage_templates.default_flamer_killshot = {
 				[armor_types.berserker] = damage_lerp_values.lerp_1,
 				[armor_types.super_armor] = damage_lerp_values.lerp_2,
 				[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
-				[armor_types.void_shield] = damage_lerp_values.lerp_1,
-				[armor_types.prop_armor] = damage_lerp_values.lerp_1
+				[armor_types.void_shield] = damage_lerp_values.lerp_1
 			},
 			impact = {
 				[armor_types.unarmored] = damage_lerp_values.lerp_2,
@@ -56,8 +55,7 @@ damage_templates.default_flamer_killshot = {
 				[armor_types.berserker] = damage_lerp_values.lerp_2,
 				[armor_types.super_armor] = damage_lerp_values.lerp_2,
 				[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_2_5,
-				[armor_types.void_shield] = damage_lerp_values.lerp_2_5,
-				[armor_types.prop_armor] = damage_lerp_values.lerp_3
+				[armor_types.void_shield] = damage_lerp_values.lerp_2_5
 			}
 		},
 		far = {
@@ -69,8 +67,7 @@ damage_templates.default_flamer_killshot = {
 				[armor_types.berserker] = damage_lerp_values.lerp_1,
 				[armor_types.super_armor] = damage_lerp_values.lerp_2,
 				[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
-				[armor_types.void_shield] = damage_lerp_values.lerp_1,
-				[armor_types.prop_armor] = damage_lerp_values.lerp_1
+				[armor_types.void_shield] = damage_lerp_values.lerp_1
 			},
 			impact = {
 				[armor_types.unarmored] = damage_lerp_values.lerp_2,
@@ -80,8 +77,7 @@ damage_templates.default_flamer_killshot = {
 				[armor_types.berserker] = damage_lerp_values.lerp_2,
 				[armor_types.super_armor] = damage_lerp_values.lerp_2,
 				[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_2_5,
-				[armor_types.void_shield] = damage_lerp_values.lerp_2_5,
-				[armor_types.prop_armor] = damage_lerp_values.lerp_3
+				[armor_types.void_shield] = damage_lerp_values.lerp_2_5
 			}
 		}
 	},
@@ -130,8 +126,7 @@ damage_templates.default_flamer_bfg = {
 				[armor_types.berserker] = damage_lerp_values.lerp_1,
 				[armor_types.super_armor] = damage_lerp_values.no_damage,
 				[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
-				[armor_types.void_shield] = damage_lerp_values.lerp_1,
-				[armor_types.prop_armor] = damage_lerp_values.lerp_1
+				[armor_types.void_shield] = damage_lerp_values.lerp_1
 			},
 			impact = {
 				[armor_types.unarmored] = damage_lerp_values.lerp_2,
@@ -141,8 +136,7 @@ damage_templates.default_flamer_bfg = {
 				[armor_types.berserker] = damage_lerp_values.lerp_2,
 				[armor_types.super_armor] = damage_lerp_values.no_damage,
 				[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_3,
-				[armor_types.void_shield] = damage_lerp_values.lerp_3,
-				[armor_types.prop_armor] = damage_lerp_values.lerp_3
+				[armor_types.void_shield] = damage_lerp_values.lerp_3
 			}
 		},
 		far = {
@@ -154,8 +148,7 @@ damage_templates.default_flamer_bfg = {
 				[armor_types.berserker] = damage_lerp_values.lerp_1,
 				[armor_types.super_armor] = damage_lerp_values.no_damage,
 				[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
-				[armor_types.void_shield] = damage_lerp_values.lerp_1,
-				[armor_types.prop_armor] = damage_lerp_values.lerp_1
+				[armor_types.void_shield] = damage_lerp_values.lerp_1
 			},
 			impact = {
 				[armor_types.unarmored] = damage_lerp_values.lerp_2,
@@ -165,8 +158,7 @@ damage_templates.default_flamer_bfg = {
 				[armor_types.berserker] = damage_lerp_values.lerp_2,
 				[armor_types.super_armor] = damage_lerp_values.lerp_2,
 				[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_3,
-				[armor_types.void_shield] = damage_lerp_values.lerp_3,
-				[armor_types.prop_armor] = damage_lerp_values.lerp_3
+				[armor_types.void_shield] = damage_lerp_values.lerp_3
 			}
 		}
 	},
@@ -214,8 +206,7 @@ damage_templates.default_flamer_demolition = {
 				[armor_types.berserker] = damage_lerp_values.lerp_1,
 				[armor_types.super_armor] = damage_lerp_values.no_damage,
 				[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
-				[armor_types.void_shield] = damage_lerp_values.lerp_1,
-				[armor_types.prop_armor] = damage_lerp_values.lerp_1
+				[armor_types.void_shield] = damage_lerp_values.lerp_1
 			},
 			impact = {
 				[armor_types.unarmored] = damage_lerp_values.lerp_1,
@@ -225,8 +216,7 @@ damage_templates.default_flamer_demolition = {
 				[armor_types.berserker] = damage_lerp_values.lerp_1,
 				[armor_types.super_armor] = damage_lerp_values.no_damage,
 				[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_2,
-				[armor_types.void_shield] = damage_lerp_values.lerp_2,
-				[armor_types.prop_armor] = damage_lerp_values.lerp_2
+				[armor_types.void_shield] = damage_lerp_values.lerp_2
 			}
 		},
 		far = {
@@ -238,8 +228,7 @@ damage_templates.default_flamer_demolition = {
 				[armor_types.berserker] = damage_lerp_values.lerp_1,
 				[armor_types.super_armor] = damage_lerp_values.no_damage,
 				[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
-				[armor_types.void_shield] = damage_lerp_values.lerp_1,
-				[armor_types.prop_armor] = damage_lerp_values.lerp_1
+				[armor_types.void_shield] = damage_lerp_values.lerp_1
 			},
 			impact = {
 				[armor_types.unarmored] = damage_lerp_values.lerp_1,
@@ -249,8 +238,7 @@ damage_templates.default_flamer_demolition = {
 				[armor_types.berserker] = damage_lerp_values.lerp_1,
 				[armor_types.super_armor] = damage_lerp_values.no_damage,
 				[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_2,
-				[armor_types.void_shield] = damage_lerp_values.lerp_2,
-				[armor_types.prop_armor] = damage_lerp_values.lerp_2
+				[armor_types.void_shield] = damage_lerp_values.lerp_2
 			}
 		}
 	},
@@ -296,8 +284,7 @@ local assault_flamer_armor_mod = {
 			[armor_types.berserker] = 2.5,
 			[armor_types.super_armor] = 0.1,
 			[armor_types.disgustingly_resilient] = 1.5,
-			[armor_types.void_shield] = 1,
-			[armor_types.prop_armor] = 1
+			[armor_types.void_shield] = 1
 		},
 		impact = {
 			[armor_types.unarmored] = 1,
@@ -307,8 +294,7 @@ local assault_flamer_armor_mod = {
 			[armor_types.berserker] = 1,
 			[armor_types.super_armor] = 0.1,
 			[armor_types.disgustingly_resilient] = 1,
-			[armor_types.void_shield] = 1,
-			[armor_types.prop_armor] = 1
+			[armor_types.void_shield] = 1
 		}
 	},
 	far = {
@@ -320,8 +306,7 @@ local assault_flamer_armor_mod = {
 			[armor_types.berserker] = 1,
 			[armor_types.super_armor] = 0,
 			[armor_types.disgustingly_resilient] = 0.7,
-			[armor_types.void_shield] = 1,
-			[armor_types.prop_armor] = 0.75
+			[armor_types.void_shield] = 1
 		},
 		impact = {
 			[armor_types.unarmored] = 0.75,
@@ -331,8 +316,7 @@ local assault_flamer_armor_mod = {
 			[armor_types.berserker] = 0.5,
 			[armor_types.super_armor] = 0.01,
 			[armor_types.disgustingly_resilient] = 0.75,
-			[armor_types.void_shield] = 0.5,
-			[armor_types.prop_armor] = 0.75
+			[armor_types.void_shield] = 0.5
 		}
 	}
 }
@@ -346,8 +330,7 @@ local assault_flamer_burst_armor_mod = {
 			[armor_types.berserker] = 1.5,
 			[armor_types.super_armor] = 0.25,
 			[armor_types.disgustingly_resilient] = 1.5,
-			[armor_types.void_shield] = 1,
-			[armor_types.prop_armor] = 1
+			[armor_types.void_shield] = 1
 		},
 		impact = {
 			[armor_types.unarmored] = 1,
@@ -357,8 +340,7 @@ local assault_flamer_burst_armor_mod = {
 			[armor_types.berserker] = 1,
 			[armor_types.super_armor] = 0.1,
 			[armor_types.disgustingly_resilient] = 1,
-			[armor_types.void_shield] = 1,
-			[armor_types.prop_armor] = 1
+			[armor_types.void_shield] = 1
 		}
 	},
 	far = {
@@ -370,8 +352,7 @@ local assault_flamer_burst_armor_mod = {
 			[armor_types.berserker] = 1,
 			[armor_types.super_armor] = 0,
 			[armor_types.disgustingly_resilient] = 0.7,
-			[armor_types.void_shield] = 1,
-			[armor_types.prop_armor] = 0.75
+			[armor_types.void_shield] = 1
 		},
 		impact = {
 			[armor_types.unarmored] = 1,
@@ -381,8 +362,7 @@ local assault_flamer_burst_armor_mod = {
 			[armor_types.berserker] = 0.5,
 			[armor_types.super_armor] = 0.01,
 			[armor_types.disgustingly_resilient] = 1,
-			[armor_types.void_shield] = 1,
-			[armor_types.prop_armor] = 1
+			[armor_types.void_shield] = 1
 		}
 	}
 }

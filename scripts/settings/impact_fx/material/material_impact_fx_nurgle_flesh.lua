@@ -5,7 +5,12 @@ local stop = {
 		{
 			normal_rotation = true,
 			effects = {
-				"content/fx/particles/impacts/surfaces/impact_generic"
+				"content/fx/particles/impacts/flesh/poxwalker_maggots_small_01"
+			}
+		},
+		{
+			effects = {
+				"content/fx/particles/impacts/flesh/poxwalker_blood_splatter_weakspot_melee_01"
 			}
 		}
 	}
@@ -15,12 +20,13 @@ local entry = {
 		{
 			normal_rotation = true,
 			effects = {
-				"content/fx/particles/impacts/surfaces/impact_generic"
+				"content/fx/particles/impacts/flesh/poxwalker_maggots_small_01"
 			}
 		},
 		{
+			normal_rotation = true,
 			effects = {
-				"content/fx/particles/impacts/covers/cover_generic_penetration_01"
+				"content/fx/particles/impacts/flesh/poxwalker_blood_splatter_weakspot_melee_01"
 			}
 		}
 	},
@@ -36,12 +42,13 @@ local exit = {
 		{
 			normal_rotation = true,
 			effects = {
-				"content/fx/particles/impacts/surfaces/impact_generic"
+				"content/fx/particles/impacts/flesh/poxwalker_maggots_small_01"
 			}
 		},
 		{
+			normal_rotation = true,
 			effects = {
-				"content/fx/particles/impacts/covers/cover_generic_exit_01"
+				"content/fx/particles/impacts/flesh/poxwalker_blood_splatter_weakspot_melee_01"
 			}
 		}
 	},

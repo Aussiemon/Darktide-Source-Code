@@ -41,8 +41,7 @@ damage_templates.ogryn_grenade_impact = {
 				[armor_types.berserker] = 1,
 				[armor_types.super_armor] = 0.5,
 				[armor_types.disgustingly_resilient] = 0.75,
-				[armor_types.void_shield] = 0.75,
-				[armor_types.prop_armor] = 1
+				[armor_types.void_shield] = 0.75
 			},
 			impact = {
 				[armor_types.unarmored] = 2,
@@ -52,8 +51,7 @@ damage_templates.ogryn_grenade_impact = {
 				[armor_types.berserker] = 2,
 				[armor_types.super_armor] = 0.5,
 				[armor_types.disgustingly_resilient] = 2.5,
-				[armor_types.void_shield] = 2.5,
-				[armor_types.prop_armor] = 5
+				[armor_types.void_shield] = 2.5
 			}
 		},
 		far = {
@@ -65,8 +63,7 @@ damage_templates.ogryn_grenade_impact = {
 				[armor_types.berserker] = 1,
 				[armor_types.super_armor] = 0.5,
 				[armor_types.disgustingly_resilient] = 1,
-				[armor_types.void_shield] = 1,
-				[armor_types.prop_armor] = 1
+				[armor_types.void_shield] = 1
 			},
 			impact = {
 				[armor_types.unarmored] = 2,
@@ -76,8 +73,7 @@ damage_templates.ogryn_grenade_impact = {
 				[armor_types.berserker] = 2,
 				[armor_types.super_armor] = 2,
 				[armor_types.disgustingly_resilient] = 2.5,
-				[armor_types.void_shield] = 2.5,
-				[armor_types.prop_armor] = 5
+				[armor_types.void_shield] = 2.5
 			}
 		}
 	},
@@ -127,8 +123,7 @@ damage_templates.ogryn_grenade_box_impact = {
 				[armor_types.berserker] = 1,
 				[armor_types.super_armor] = 0.15,
 				[armor_types.disgustingly_resilient] = 1,
-				[armor_types.void_shield] = 2,
-				[armor_types.prop_armor] = 1
+				[armor_types.void_shield] = 2
 			},
 			impact = {
 				[armor_types.unarmored] = 2,
@@ -138,8 +133,7 @@ damage_templates.ogryn_grenade_box_impact = {
 				[armor_types.berserker] = 2,
 				[armor_types.super_armor] = 1,
 				[armor_types.disgustingly_resilient] = 2.5,
-				[armor_types.void_shield] = 2.5,
-				[armor_types.prop_armor] = 5
+				[armor_types.void_shield] = 2.5
 			}
 		},
 		far = {
@@ -151,8 +145,7 @@ damage_templates.ogryn_grenade_box_impact = {
 				[armor_types.berserker] = 1,
 				[armor_types.super_armor] = 0.15,
 				[armor_types.disgustingly_resilient] = 1,
-				[armor_types.void_shield] = 2,
-				[armor_types.prop_armor] = 1
+				[armor_types.void_shield] = 2
 			},
 			impact = {
 				[armor_types.unarmored] = 2,
@@ -162,8 +155,7 @@ damage_templates.ogryn_grenade_box_impact = {
 				[armor_types.berserker] = 2,
 				[armor_types.super_armor] = 2,
 				[armor_types.disgustingly_resilient] = 2.5,
-				[armor_types.void_shield] = 2.5,
-				[armor_types.prop_armor] = 5
+				[armor_types.void_shield] = 2.5
 			}
 		}
 	},
@@ -232,8 +224,7 @@ damage_templates.krak_grenade_impact = {
 				[armor_types.berserker] = 1,
 				[armor_types.super_armor] = 0.5,
 				[armor_types.disgustingly_resilient] = 0.75,
-				[armor_types.void_shield] = 0.75,
-				[armor_types.prop_armor] = 1
+				[armor_types.void_shield] = 0.75
 			},
 			impact = {
 				[armor_types.unarmored] = 2,
@@ -243,8 +234,7 @@ damage_templates.krak_grenade_impact = {
 				[armor_types.berserker] = 1,
 				[armor_types.super_armor] = 0.5,
 				[armor_types.disgustingly_resilient] = 2.5,
-				[armor_types.void_shield] = 2.5,
-				[armor_types.prop_armor] = 5
+				[armor_types.void_shield] = 2.5
 			}
 		},
 		far = {
@@ -256,8 +246,7 @@ damage_templates.krak_grenade_impact = {
 				[armor_types.berserker] = 1,
 				[armor_types.super_armor] = 0.5,
 				[armor_types.disgustingly_resilient] = 1,
-				[armor_types.void_shield] = 1,
-				[armor_types.prop_armor] = 1
+				[armor_types.void_shield] = 1
 			},
 			impact = {
 				[armor_types.unarmored] = 2,
@@ -267,8 +256,7 @@ damage_templates.krak_grenade_impact = {
 				[armor_types.berserker] = 2,
 				[armor_types.super_armor] = 1,
 				[armor_types.disgustingly_resilient] = 2.5,
-				[armor_types.void_shield] = 2.5,
-				[armor_types.prop_armor] = 5
+				[armor_types.void_shield] = 2.5
 			}
 		}
 	},
@@ -315,8 +303,7 @@ damage_templates.thumper_grenade_impact = {
 			[armor_types.berserker] = damage_lerp_values.lerp_1,
 			[armor_types.super_armor] = damage_lerp_values.lerp_1,
 			[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
-			[armor_types.void_shield] = damage_lerp_values.lerp_0_75,
-			[armor_types.prop_armor] = damage_lerp_values.lerp_1
+			[armor_types.void_shield] = damage_lerp_values.lerp_0_75
 		},
 		impact = {
 			[armor_types.unarmored] = damage_lerp_values.lerp_1,
@@ -326,8 +313,7 @@ damage_templates.thumper_grenade_impact = {
 			[armor_types.berserker] = damage_lerp_values.lerp_1,
 			[armor_types.super_armor] = damage_lerp_values.lerp_1,
 			[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
-			[armor_types.void_shield] = damage_lerp_values.lerp_1,
-			[armor_types.prop_armor] = damage_lerp_values.lerp_1
+			[armor_types.void_shield] = damage_lerp_values.lerp_1
 		}
 	},
 	power_distribution = {
@@ -468,8 +454,7 @@ damage_templates.ogryn_friendly_rock_impact = {
 				[armor_types.berserker] = damage_lerp_values.lerp_1_25,
 				[armor_types.super_armor] = damage_lerp_values.lerp_0_25,
 				[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
-				[armor_types.void_shield] = damage_lerp_values.lerp_1,
-				[armor_types.prop_armor] = damage_lerp_values.lerp_1
+				[armor_types.void_shield] = damage_lerp_values.lerp_1
 			},
 			impact = {
 				[armor_types.unarmored] = 2,
@@ -479,8 +464,7 @@ damage_templates.ogryn_friendly_rock_impact = {
 				[armor_types.berserker] = 2,
 				[armor_types.super_armor] = 1,
 				[armor_types.disgustingly_resilient] = 2.5,
-				[armor_types.void_shield] = 2.5,
-				[armor_types.prop_armor] = 5
+				[armor_types.void_shield] = 2.5
 			}
 		},
 		far = {
@@ -492,8 +476,7 @@ damage_templates.ogryn_friendly_rock_impact = {
 				[armor_types.berserker] = damage_lerp_values.lerp_1_25,
 				[armor_types.super_armor] = damage_lerp_values.lerp_0_25,
 				[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
-				[armor_types.void_shield] = damage_lerp_values.lerp_1,
-				[armor_types.prop_armor] = damage_lerp_values.lerp_1
+				[armor_types.void_shield] = damage_lerp_values.lerp_1
 			},
 			impact = {
 				[armor_types.unarmored] = 2,
@@ -503,8 +486,7 @@ damage_templates.ogryn_friendly_rock_impact = {
 				[armor_types.berserker] = 2,
 				[armor_types.super_armor] = 2,
 				[armor_types.disgustingly_resilient] = 2.5,
-				[armor_types.void_shield] = 2.5,
-				[armor_types.prop_armor] = 5
+				[armor_types.void_shield] = 2.5
 			}
 		}
 	},

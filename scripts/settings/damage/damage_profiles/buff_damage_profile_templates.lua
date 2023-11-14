@@ -18,8 +18,7 @@ local burninating_adm = {
 	[armor_types.berserker] = 1,
 	[armor_types.super_armor] = 0.1,
 	[armor_types.disgustingly_resilient] = 1.25,
-	[armor_types.void_shield] = 1,
-	[armor_types.prop_armor] = 0.75
+	[armor_types.void_shield] = 1
 }
 local burninating_warp_adm = {
 	[armor_types.unarmored] = 1.5,
@@ -29,8 +28,7 @@ local burninating_warp_adm = {
 	[armor_types.berserker] = 1,
 	[armor_types.super_armor] = 0.1,
 	[armor_types.disgustingly_resilient] = 1.25,
-	[armor_types.void_shield] = 1,
-	[armor_types.prop_armor] = 0.75
+	[armor_types.void_shield] = 1
 }
 local burninating_barrel_adm = {
 	[armor_types.unarmored] = 2,
@@ -40,19 +38,17 @@ local burninating_barrel_adm = {
 	[armor_types.berserker] = 2,
 	[armor_types.super_armor] = 0.1,
 	[armor_types.disgustingly_resilient] = 2.25,
-	[armor_types.void_shield] = 2,
-	[armor_types.prop_armor] = 1.75
+	[armor_types.void_shield] = 2
 }
 local bleeding_adm = {
 	[armor_types.unarmored] = 0.5,
 	[armor_types.armored] = 0.75,
-	[armor_types.resistant] = 1,
+	[armor_types.resistant] = 0.75,
 	[armor_types.player] = 1,
 	[armor_types.berserker] = 1,
 	[armor_types.super_armor] = 0.25,
 	[armor_types.disgustingly_resilient] = 0.5,
-	[armor_types.void_shield] = 1,
-	[armor_types.prop_armor] = 0.75
+	[armor_types.void_shield] = 1
 }
 local corruptor_corruption_adm = {
 	[armor_types.unarmored] = 0,
@@ -62,8 +58,7 @@ local corruptor_corruption_adm = {
 	[armor_types.berserker] = 0,
 	[armor_types.super_armor] = 0,
 	[armor_types.disgustingly_resilient] = 0,
-	[armor_types.void_shield] = 0,
-	[armor_types.prop_armor] = 0
+	[armor_types.void_shield] = 0
 }
 damage_templates.liquid_area_fire_burning = {
 	override_allow_friendly_fire = true,
@@ -155,8 +150,7 @@ damage_templates.flame_grenade_liquid_area_fire_burning = {
 			[armor_types.berserker] = 2,
 			[armor_types.super_armor] = 0.1,
 			[armor_types.disgustingly_resilient] = 2,
-			[armor_types.void_shield] = 1,
-			[armor_types.prop_armor] = 0.75
+			[armor_types.void_shield] = 1
 		},
 		impact = burninating_adm
 	},
@@ -384,8 +378,7 @@ damage_templates.protectorate_force_field = {
 			[armor_types.berserker] = 1,
 			[armor_types.super_armor] = 1,
 			[armor_types.disgustingly_resilient] = 1,
-			[armor_types.void_shield] = 0,
-			[armor_types.prop_armor] = 1
+			[armor_types.void_shield] = 0
 		},
 		impact = {
 			[armor_types.unarmored] = 1,
@@ -395,8 +388,7 @@ damage_templates.protectorate_force_field = {
 			[armor_types.berserker] = 1,
 			[armor_types.super_armor] = 1,
 			[armor_types.disgustingly_resilient] = 1,
-			[armor_types.void_shield] = 1,
-			[armor_types.prop_armor] = 1
+			[armor_types.void_shield] = 1
 		}
 	},
 	targets = {

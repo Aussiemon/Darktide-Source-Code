@@ -15,6 +15,7 @@ WeaponSpecialSelfDisorientation.init = function (self, context, init_data)
 	self._input_extension = context.input_extension
 	self._tweak_data = init_data.tweak_data
 	self._weapon_template = init_data.weapon_template
+	self._animation_extension = context.animation_extension
 	local unit_data_extension = context.unit_data_extension
 	self._unit_data_extension = unit_data_extension
 	self._locomotion_push_component = unit_data_extension:write_component("locomotion_push")
@@ -24,6 +25,28 @@ end
 
 WeaponSpecialSelfDisorientation.update = function (self, dt, t)
 	WeaponSpecial.update_active(t, self._tweak_data, self._inventory_slot_component, self._buff_extension, self._input_extension)
+end
+
+WeaponSpecialSelfDisorientation.on_special_activation = function (self, t)
+	return
+end
+
+WeaponSpecialSelfDisorientation.on_sweep_action_start = function (self, t)
+	return
+end
+
+WeaponSpecialSelfDisorientation.on_sweep_action_finish = function (self, t, num_hit_enemies)
+	local inventory_slot_component = self._inventory_slot_component
+
+	if num_hit_enemies > 0 and inventory_slot_component.special_active then
+		inventory_slot_component.special_active = false
+		inventory_slot_component.num_special_activations = 0
+		local deactivation_animation = self._tweak_data.deactivation_animation
+
+		if deactivation_animation then
+			self:trigger_anim_event(deactivation_animation, deactivation_animation)
+		end
+	end
 end
 
 WeaponSpecialSelfDisorientation.process_hit = function (self, t, weapon, action_settings, num_hit_enemies, target_is_alive, target_unit, hit_position, attack_direction, abort_attack, optional_origin_slot)
@@ -57,22 +80,27 @@ WeaponSpecialSelfDisorientation.process_hit = function (self, t, weapon, action_
 	local inventory_slot_component = self._inventory_slot_component
 	inventory_slot_component.special_active = false
 	inventory_slot_component.num_special_activations = 0
-end
+	local deactivation_animation = self._tweak_data.deactivation_animation
 
-WeaponSpecialSelfDisorientation.on_action_start = function (self, t, num_hit_enemies)
-	return
-end
-
-WeaponSpecialSelfDisorientation.on_action_finish = function (self, t, num_hit_enemies)
-	if num_hit_enemies > 0 then
-		local inventory_slot_component = self._inventory_slot_component
-		inventory_slot_component.special_active = false
-		inventory_slot_component.num_special_activations = 0
+	if deactivation_animation then
+		self:trigger_anim_event(deactivation_animation, deactivation_animation)
 	end
 end
 
 WeaponSpecialSelfDisorientation.on_exit_damage_window = function (self, t, num_hit_enemies)
 	return
+end
+
+WeaponSpecialSelfDisorientation.trigger_anim_event = function (self, anim_event, anim_event_3p, action_time_offset, ...)
+	local anim_ext = self._animation_extension
+	local time_scale = 1
+	action_time_offset = action_time_offset or 0
+
+	anim_ext:anim_event_with_variable_floats_1p(anim_event, "attack_speed", time_scale, "action_time_offset", action_time_offset, ...)
+
+	if anim_event_3p then
+		anim_ext:anim_event_with_variable_floats(anim_event_3p, "attack_speed", time_scale, "action_time_offset", action_time_offset, ...)
+	end
 end
 
 implements(WeaponSpecialSelfDisorientation, WeaponSpecialInterface)

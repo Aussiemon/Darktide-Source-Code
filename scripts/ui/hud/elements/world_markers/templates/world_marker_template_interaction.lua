@@ -271,8 +271,76 @@ local template_visual_definitions = {
 			arrow = "content/ui/materials/hud/interactions/frames/direction",
 			line = "content/ui/materials/hud/interactions/frames/line"
 		}
+	},
+	player_interaction = {
+		template_settings_overrides = {
+			fade_settings = {
+				fade_to = 1,
+				fade_from = 0,
+				default_fade = 1,
+				distance_max = 7,
+				distance_min = 7 - template.evolve_distance * 0.5,
+				easing_function = math.easeCubic
+			},
+			position_offset = {
+				0,
+				0,
+				0.8
+			},
+			background_min_size = {
+				background_size[1] * 0.5,
+				background_size[2] * 0.5
+			},
+			background_max_size = {
+				background_size[1] * 0.75,
+				background_size[2] * 0.75
+			}
+		},
+		template_settings_overrides_by_breed = {
+			human = {
+				position_offset = {
+					0,
+					0,
+					0.8
+				}
+			},
+			ogryn = {
+				position_offset = {
+					0,
+					0,
+					0.3
+				}
+			}
+		},
+		colors = {
+			background = Color.black(0, true),
+			ring = Color.terminal_frame_hover(0, true),
+			line = Color.ui_interaction_default(0, true),
+			ping = Color.ui_terminal(0, true),
+			arrow = Color.ui_interaction_default(0, true),
+			icon = Color.terminal_text_body(0, true)
+		},
+		textures = {
+			ping = "content/ui/materials/hud/interactions/frames/mission_tag",
+			background = "content/ui/materials/hud/interactions/icons/default",
+			ring = "content/ui/materials/hud/interactions/frames/mission_top",
+			icon = "content/ui/materials/hud/interactions/icons/default",
+			line = "content/ui/materials/hud/interactions/frames/line",
+			arrow = StrictNil
+		}
 	}
 }
+
+local function get_interactee_unit_breed(marker)
+	local marker_unit = marker.unit
+	local player = Managers.player:player_by_unit(marker_unit)
+
+	if player then
+		local breed_name = player:breed_name()
+
+		return breed_name
+	end
+end
 
 local function setup_marker_by_interaction_type(widget, marker, ui_interaction_type)
 	local content = widget.content
@@ -285,6 +353,18 @@ local function setup_marker_by_interaction_type(widget, marker, ui_interaction_t
 	if template_settings_overrides then
 		local new_template = table.clone(marker.template)
 		marker.template = table.merge_recursive(new_template, template_settings_overrides)
+	end
+
+	local template_settings_overrides_by_breed = visual_definition.template_settings_overrides_by_breed
+
+	if template_settings_overrides_by_breed then
+		local breed_name = get_interactee_unit_breed(marker)
+		local override_settings = breed_name and template_settings_overrides_by_breed[breed_name]
+
+		if override_settings then
+			local new_template = table.clone(marker.template)
+			marker.template = table.merge_recursive(new_template, override_settings)
+		end
 	end
 
 	for style_id, pass_style in pairs(style) do

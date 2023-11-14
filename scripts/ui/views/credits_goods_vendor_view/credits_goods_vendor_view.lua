@@ -324,6 +324,11 @@ CreditsGoodsVendorView._handle_input = function (self, input_service)
 	CreditsGoodsVendorView.super._handle_input(self, input_service)
 end
 
+CreditsGoodsVendorView._register_button_callbacks = function (self)
+	local widgets_by_name = self._widgets_by_name
+	widgets_by_name.purchase_button.content.hotspot.released_callback = callback(self, "_cb_on_purchase_pressed")
+end
+
 CreditsGoodsVendorView._on_purchase_complete = function (self, items)
 	for i, item_data in ipairs(items) do
 		local uuid = item_data.uuid

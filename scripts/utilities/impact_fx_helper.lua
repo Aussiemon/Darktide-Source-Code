@@ -13,7 +13,7 @@ local default_surface_decal = {
 	}
 }
 
-local function _create_surface_decal(destination, surface_material, hit_type, min_extents, max_extents, decal_units)
+local function _create_surface_decal(destination, ignore_decals, surface_material, hit_type, min_extents, max_extents, decal_units)
 	if not destination[surface_material] then
 		destination[surface_material] = {}
 	end
@@ -33,8 +33,10 @@ local function _create_surface_decal(destination, surface_material, hit_type, mi
 			units = {}
 		}
 
-		for i = 1, #decal_units do
-			destination[surface_material][hit_type].units[i] = decal_units[i]
+		if not ignore_decals then
+			for i = 1, #decal_units do
+				destination[surface_material][hit_type].units[i] = decal_units[i]
+			end
 		end
 	end
 end
@@ -57,9 +59,10 @@ end
 ImpactFxHelper.create_missing_surface_decals = function (surface_decals)
 	for ii = 1, #surface_materials do
 		local surface_material = surface_materials[ii]
+		local ignore_decals = surface_decals[surface_material] == false
 
 		for hit_type, _ in pairs(hit_types) do
-			_create_surface_decal(surface_decals, surface_material, hit_type, unpack(default_surface_decal))
+			_create_surface_decal(surface_decals, ignore_decals, surface_material, hit_type, unpack(default_surface_decal))
 		end
 	end
 end

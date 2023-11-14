@@ -200,23 +200,23 @@ local function construct_interface_settings_dropdown(template)
 	return params
 end
 
-local function _aim_assist_options()
+local function _com_wheel_tap_options()
 	local options = {
 		{
-			display_name = "loc_setting_aim_assist_off",
-			name = "off"
+			display_name = "loc_setting_com_wheel_tap_none",
+			name = "none"
 		},
 		{
-			display_name = "loc_setting_aim_assist_old",
-			name = "old"
+			display_name = "loc_setting_com_wheel_tap_ping",
+			name = "location_ping"
 		},
 		{
-			display_name = "loc_setting_aim_assist_new_slim",
-			name = "new_slim"
+			display_name = "loc_setting_com_wheel_tap_threat",
+			name = "location_threat"
 		},
 		{
-			display_name = "loc_setting_aim_assist_new_full",
-			name = "new_full"
+			display_name = "loc_setting_com_wheel_tap_attention",
+			name = "location_attention"
 		}
 	}
 
@@ -344,19 +344,32 @@ local settings_definitions = {
 	},
 	{
 		group_name = "other_settings",
-		display_name = "loc_settings_menu_group_other_settings",
+		display_name = "loc_settings_menu_group_com_wheel_settings",
 		widget_type = "group_header"
 	},
 	{
+		save_location = "input_settings",
 		step_size_value = 0.1,
-		display_name = "loc_input_com_wheel_delay",
+		display_name = "loc_input_com_wheel_delay_new",
 		num_decimals = 1,
+		id = "com_wheel_delay",
 		max_value = 1,
 		min_value = 0,
-		widget_type = "value_slider",
-		id = "com_wheel_delay",
-		tooltip_text = "loc_input_com_wheel_delay_desc",
-		save_location = "input_settings"
+		widget_type = "value_slider"
+	},
+	{
+		save_location = "input_settings",
+		display_name = "loc_setting_com_wheel_single_tap",
+		id = "com_wheel_single_tap",
+		widget_type = "dropdown",
+		options = _com_wheel_tap_options()
+	},
+	{
+		save_location = "input_settings",
+		display_name = "loc_setting_com_wheel_double_tap",
+		id = "com_wheel_double_tap",
+		widget_type = "dropdown",
+		options = _com_wheel_tap_options()
 	}
 }
 local template_functions = {

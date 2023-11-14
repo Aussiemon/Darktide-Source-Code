@@ -156,6 +156,18 @@ local _roman_number_array = {
 	900,
 	1000
 }
+local _roman_small_cache = {
+	"I",
+	"II",
+	"III",
+	"IV",
+	"V",
+	"VI",
+	"VII",
+	"VIII",
+	"IX",
+	"X"
+}
 local _roman_chars = {
 	"I",
 	"IV",
@@ -174,6 +186,11 @@ local _roman_chars = {
 
 TextUtilities.convert_to_roman_numerals = function (value)
 	value = math.floor(value)
+
+	if value > 0 and value <= 10 then
+		return _roman_small_cache[value]
+	end
+
 	local idx = 13
 	local roman_value = ""
 

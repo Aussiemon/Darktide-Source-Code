@@ -1429,9 +1429,9 @@ weapon_template.actions = {
 				0
 			}
 		},
-		damage_profile = DamageProfileTemplates.default_light_chainsword,
+		damage_profile = DamageProfileTemplates.light_chainsword_smiter,
 		damage_type = damage_types.sawing,
-		damage_profile_on_abort = DamageProfileTemplates.default_light_chainsword,
+		damage_profile_on_abort = DamageProfileTemplates.light_chainsword_smiter,
 		damage_type_on_abort = damage_types.sawing,
 		damage_profile_special_active = DamageProfileTemplates.light_chainsword_active,
 		damage_type_special_active = damage_types.sawing_stuck,
@@ -1885,10 +1885,12 @@ weapon_template.actions = {
 		start_input = "inspect_start",
 		anim_end_event = "inspect_end",
 		kind = "inspect",
-		crosshair_type = "inspect",
 		anim_event = "inspect_start",
 		stop_input = "inspect_stop",
-		total_time = math.huge
+		total_time = math.huge,
+		crosshair = {
+			crosshair_type = "inspect"
+		}
 	}
 }
 
@@ -1920,7 +1922,9 @@ weapon_template.fx_sources = {
 	_block = "fx_block",
 	_sweep = "fx_sweep"
 }
-weapon_template.crosshair_type = "dot"
+weapon_template.crosshair = {
+	crosshair_type = "dot"
+}
 weapon_template.hit_marker_type = "center"
 weapon_template.keywords = {
 	"melee",
@@ -2514,8 +2518,8 @@ weapon_template.displayed_attacks = {
 		type = "smiter",
 		attack_chain = {
 			"smiter",
-			"smiter",
-			"smiter",
+			"linesman",
+			"linesman",
 			"smiter"
 		}
 	},

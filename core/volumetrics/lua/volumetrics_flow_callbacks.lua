@@ -25,3 +25,19 @@ VolumetricsFlowCallbacks.unregister_fog_volume = function (params)
 		stingray.Volumetrics.unregister_volume(unit)
 	end
 end
+
+VolumetricsFlowCallbacks.register_fog_volume_manual = function (params)
+	local unit = params.unit
+
+	if unit then
+		stingray.Volumetrics.register_volume(unit, params.albedo, params.extinction, params.phase, params.falloff)
+	end
+end
+
+VolumetricsFlowCallbacks.update_fog_volume = function (params)
+	local unit = params.unit
+
+	if unit then
+		stingray.Volumetrics.update_volume(unit, params.albedo, params.extinction, params.phase, params.falloff)
+	end
+end

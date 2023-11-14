@@ -1,450 +1,808 @@
-local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
-local HookStats = require("scripts/managers/stats/groups/hook_stats")
-local MatchmakingConstants = require("scripts/settings/network/matchmaking_constants")
+local GrowQueue = require("scripts/foundation/utilities/grow_queue")
 local PriorityQueue = require("scripts/foundation/utilities/priority_queue")
-local HOST_TYPES = MatchmakingConstants.HOST_TYPES
+local Promise = require("scripts/foundation/utilities/promise")
+local StatConfigParser = require("scripts/managers/stats/utility/stat_config_parser")
+local StatDefinitions = require("scripts/managers/stats/stat_definitions")
 local StatsManager = class("StatsManager")
+local CLIENT_RPCS = {
+	"rpc_stat_update"
+}
+local UserStates = table.enum("pulling", "pushing", "idle", "tracking")
+StatsManager.user_states = UserStates
 
-StatsManager.init = function (self)
-	self._counter = 0
-	self._last_time = 0
-	self._player_to_ids = {}
+StatsManager.init = function (self, is_client, event_delegate, rpc_settings)
+	self._definitions = StatDefinitions
+	self._event_delegate = event_delegate
+	self._rpc_settings = rpc_settings or {
+		{
+			required_buffer = 25000,
+			rpc_per_frame = 3
+		},
+		{
+			required_buffer = 15000,
+			rpc_per_frame = 2
+		},
+		{
+			required_buffer = 5000,
+			rpc_per_frame = 1
+		}
+	}
+	self._stat_lookup = {}
+
+	for key, stat in pairs(self._definitions) do
+		self._stat_lookup[stat.index] = key
+	end
+
+	self._last_t = 0
+	self._next_listener_id = 0
 	self._listeners = {}
-	self._functions = {}
-	self._account_id = {}
-	self._stat_group = {}
-	self._stat_data = {}
-	self._queues = {}
-end
+	self._is_client = is_client
 
-StatsManager.reset = function (self)
-	self._counter = 0
-
-	table.clear(self._player_to_ids)
-	table.clear(self._listeners)
-	table.clear(self._functions)
-	table.clear(self._account_id)
-	table.clear(self._stat_group)
-	table.clear(self._stat_data)
-	table.clear(self._queues)
-end
-
-StatsManager._get_id = function (self)
-	self._counter = self._counter + 1
-
-	return self._counter
-end
-
-StatsManager._attach_id_to_player = function (self, player, id)
-	local account_id = player:account_id()
-	self._account_id[id] = account_id
-	self._player_to_ids[account_id] = self._player_to_ids[account_id] or {}
-	self._player_to_ids[account_id][#self._player_to_ids[account_id] + 1] = id
-end
-
-StatsManager._remove_id_from_player = function (self, id)
-	local account_id = self._account_id[id]
-	local player_to_ids = self._player_to_ids[account_id]
-
-	if not player_to_ids then
-		return false, "Player not tracked"
+	if is_client then
+		self._event_delegate:register_connection_events(self, unpack(CLIENT_RPCS))
 	end
 
-	local index = table.index_of(player_to_ids, id)
+	self:clear()
+end
 
-	if index == -1 then
-		return false, "ID not tracked by player"
+StatsManager._valid_account_id = function (self, account_id)
+	return account_id ~= nil and account_id ~= Managers.player.NO_ACCOUNT_ID
+end
+
+StatsManager._default_team = function (self)
+	return {
+		key = "TEAM",
+		data = {},
+		listeners = {},
+		triggers = {},
+		rpc_queue = GrowQueue:new(),
+		rpc_dirty = {},
+		trigger_queue = PriorityQueue:new()
+	}
+end
+
+StatsManager.clear = function (self)
+	self._team = self:_default_team()
+	self._users = {}
+end
+
+StatsManager.destroy = function (self)
+	for key, _ in pairs(self._users) do
+		self:remove_user(key)
 	end
 
-	self._account_id[id] = nil
-	local size = #player_to_ids
+	if self._is_client then
+		self._event_delegate:unregister_events(unpack(CLIENT_RPCS))
+	end
+end
 
-	if size == 1 then
-		self._player_to_ids[account_id] = nil
+StatsManager._update_rpcs = function (self, user)
+	local channel_id = user.rpc_channel
 
-		return true
+	if not channel_id then
+		return
 	end
 
-	player_to_ids[index] = player_to_ids[size]
-	player_to_ids[size] = nil
+	local peer_id = Network.peer_id(channel_id)
+	local remaining_buffer_size = Network.reliable_send_buffer_left(peer_id)
+	local settings_index = 1
+	local rpc_settings = self._rpc_settings
 
-	return true
-end
-
-StatsManager._add_tracker = function (self, listener, stat_group, optional_function_to_call, optional_initial_data)
-	local id = self:_get_id()
-	self._listeners[id] = listener
-	self._functions[id] = optional_function_to_call
-	self._stat_group[id] = stat_group
-	self._stat_data[id] = optional_initial_data or {}
-	self._queues[id] = PriorityQueue:new()
-
-	return id
-end
-
-StatsManager.add_tracker = function (self, listener, player, stat_group, optional_function_to_call, optional_initial_data)
-	local id = self:_add_tracker(listener, stat_group, optional_function_to_call, optional_initial_data)
-
-	self:_attach_id_to_player(player, id)
-
-	return id
-end
-
-StatsManager.add_global_tracker = function (self, listener, stat_group, optional_function_to_call, optional_initial_data)
-	return self:_add_tracker(listener, stat_group, optional_function_to_call, optional_initial_data)
-end
-
-StatsManager.remove_tracker = function (self, id)
-	if self._account_id[id] then
-		local removed, error = self:_remove_id_from_player(id)
+	while settings_index <= #rpc_settings and remaining_buffer_size < rpc_settings[settings_index].required_buffer do
+		settings_index = settings_index + 1
 	end
 
-	local stat_data = self._stat_data[id]
-	self._listeners[id] = nil
-	self._functions[id] = nil
-	self._stat_group[id] = nil
-	self._stat_data[id] = nil
-	self._queues[id] = nil
+	local rpc_setting = rpc_settings[settings_index]
+	local rpc_per_frame = rpc_setting and rpc_setting.rpc_per_frame
 
-	return stat_data
+	if not rpc_per_frame then
+		return
+	end
+
+	local queue = user.rpc_queue
+	local dirty = user.rpc_dirty
+	local definitions = self._definitions
+	local data = user.data
+	local count = math.min(queue:size(), rpc_per_frame)
+
+	for _ = 1, count do
+		local stat_key = queue:pop_first()
+		local stat = definitions[stat_key]
+		dirty[stat_key] = false
+		local value_to_send = self:_parse_backend_value(data[stat_key])
+
+		RPC.rpc_stat_update(channel_id, user.local_player_id, stat.index, value_to_send)
+	end
+end
+
+StatsManager._update_triggers = function (self, user, t)
+	local trigger_queue = user.trigger_queue
+
+	if not trigger_queue then
+		return
+	end
+
+	while not trigger_queue:empty() and trigger_queue:peek() <= t do
+		local _, values = trigger_queue:pop()
+		local trigger = values[1]
+		local stat = values[2]
+
+		self:_trigger(user, trigger(stat, user.data, unpack(values, 3)))
+	end
 end
 
 StatsManager.update = function (self, dt, t)
-	self._last_time = t
+	self._last_t = t
 
-	for id, queue in pairs(self._queues) do
-		while not queue:empty() and queue:peek() < t do
-			local _, delayed_trigger = queue:pop()
-			local trigger_id = delayed_trigger[1]
-			local trigger_value = delayed_trigger[2]
-			local trigger_params = delayed_trigger[3]
+	if self:has_session() then
+		local team = self._team
+		local users = self._users
+		local rpc_dirty = team.rpc_dirty
+		local rpc_queue = team.rpc_queue
 
-			self:_on_triggered(id, trigger_id, trigger_value, unpack(trigger_params))
+		while not rpc_queue:empty() do
+			local stat_name = rpc_queue:pop_first()
+			rpc_dirty[stat_name] = false
+
+			for _, user in pairs(users) do
+				local is_tracking = user.state == UserStates.tracking
+				local is_dirty_remote = user.rpc_dirty and not user.rpc_dirty[stat_name]
+
+				if is_tracking and is_dirty_remote then
+					user.rpc_dirty[stat_name] = true
+
+					user.rpc_queue:push_back(stat_name)
+				end
+			end
+		end
+
+		self:_update_triggers(team, t)
+	end
+
+	for _, user in pairs(self._users) do
+		self:_update_rpcs(user)
+		self:_update_triggers(user, t)
+	end
+end
+
+StatsManager._empty_user = function (self, key, account_id, rpc_channel, local_player_id)
+	local team_data = self._team.data
+	local user = {
+		key = key,
+		account_id = account_id,
+		rpc_channel = rpc_channel,
+		local_player_id = local_player_id,
+		state = UserStates.idle,
+		data = setmetatable({}, {
+			__index = team_data
+		}),
+		listeners = {}
+	}
+
+	if rpc_channel then
+		user.rpc_queue = GrowQueue:new()
+		user.rpc_dirty = {}
+	end
+
+	return user
+end
+
+StatsManager._initiate_stats = function (self, key)
+	local users = self._users
+	local user = users[key]
+	local save_data = user.data
+	local definitions = self._definitions
+
+	for stat_id, definition in pairs(definitions) do
+		local initiate_function = definition.init
+
+		if save_data[stat_id] == nil and initiate_function then
+			save_data[stat_id] = initiate_function(definition, save_data)
+		end
+	end
+
+	for stat_id, _ in pairs(save_data) do
+		if not definitions[stat_id] then
+			save_data[stat_id] = nil
 		end
 	end
 end
 
-StatsManager._handle_trigger = function (self, id, trigger_id, trigger_time, triggered_value, ...)
-	if not trigger_time then
+StatsManager._download_stats = function (self, key)
+	local users = self._users
+	local user = users[key]
+	local account_id = user.account_id
+	local backend_promise = Managers.backend.interfaces.commendations:get_commendations(account_id, false, true):next(function (data)
+		return data.stats
+	end)
+	user.state = UserStates.pulling
+	user.promise = backend_promise
+
+	return backend_promise:next(function (backend_stats)
+		user.state = UserStates.idle
+		user.saved_data = {}
+
+		for i = 1, #backend_stats do
+			local stat_id = backend_stats[i].stat
+			local value = backend_stats[i].value
+			user.data[stat_id] = self:_parse_backend_value(value)
+			user.saved_data[stat_id] = value
+		end
+
+		self:_initiate_stats(key)
+	end)
+end
+
+StatsManager.add_user = function (self, key, account_id, rpc_channel, local_player_id)
+	local users = self._users
+
+	if not self:_valid_account_id(account_id) then
+		account_id = nil
+	end
+
+	users[key] = self:_empty_user(key, account_id, rpc_channel, local_player_id)
+	local listeners = self._listeners
+
+	for listener_id, listener in pairs(listeners) do
+		if listener.key == key then
+			self:_attach_listener(key, listener_id)
+		end
+	end
+
+	local promise = Promise.resolved()
+
+	if account_id then
+		promise = self:_download_stats(key)
+	else
+		self:_initiate_stats(key)
+	end
+
+	return promise
+end
+
+StatsManager.remove_user = function (self, key)
+	local user = self._users[key]
+
+	if user.state == UserStates.tracking then
+		self:stop_tracking_user(key)
+	end
+
+	if user.rpc_queue then
+		user.rpc_queue:delete()
+	end
+
+	local listeners = self._listeners
+
+	for listener_id, listener in pairs(listeners) do
+		if listener.key == key then
+			self:_detach_listener(key, listener_id)
+		end
+	end
+
+	self._users[key] = nil
+
+	if user.promise then
+		user.promise:cancel()
+	end
+end
+
+StatsManager.user_state = function (self, key)
+	local user = self._users[key]
+
+	return user and user.state
+end
+
+StatsManager._data_version = function (self, data)
+	local version = 0
+	local definitions = self._definitions
+	local stat_lookup = self._stat_lookup
+
+	for i = 1, #stat_lookup do
+		local id = stat_lookup[i]
+		local stat = definitions[id]
+		local flags = stat.flags
+
+		if flags.backend then
+			local send_value = self:_parse_backend_value(data[id] or stat.default)
+			version = (11 * version + send_value + 1) % 32768
+		end
+	end
+
+	return version
+end
+
+StatsManager.user_version = function (self, key)
+	local user = self._users[key]
+	local data = user and user.data
+
+	if data then
+		return self:_data_version(data)
+	end
+end
+
+StatsManager.clear_session_data = function (self, key)
+	local user = self._users[key]
+	local data = user.data
+	local definitions = self._definitions
+
+	for id, stat in pairs(definitions) do
+		local is_persistent = stat.flags.backend
+
+		if not is_persistent then
+			data[id] = nil
+		end
+	end
+end
+
+StatsManager.reload = function (self, key)
+	local user = self._users[key]
+	local team_data = self._team.data
+	user.data = setmetatable({}, {
+		__index = team_data
+	})
+
+	if not self:_valid_account_id(user.account_id) then
+		return Promise.resolved(nil)
+	end
+
+	return self:_download_stats(key)
+end
+
+StatsManager.start_session = function (self, session_config)
+	local parsed_session_config, config_error = StatConfigParser.modify("session", session_config)
+	self._session_config = parsed_session_config
+	self._session_stash = {}
+	local team = self._team
+
+	table.clear(team.data)
+
+	local definitions = self._definitions
+	local team_triggers = team.triggers
+
+	for _, to_stat in pairs(definitions) do
+		local include_condition = to_stat.include_condition
+		local is_to_team = to_stat.flags.team
+		local should_include = is_to_team and (not include_condition or include_condition(to_stat, parsed_session_config))
+
+		if should_include then
+			local stat_triggers = to_stat.triggers
+			local stat_trigger_count = stat_triggers and #stat_triggers or 0
+
+			for i = 1, stat_trigger_count do
+				local trigger = stat_triggers[i]
+				local from_stat_name = trigger.id
+				local from_stat = definitions[from_stat_name]
+				local is_from_team = from_stat.flags.team
+
+				if is_from_team then
+					local triggers = team_triggers[from_stat_name] or {}
+					triggers[#triggers + 1] = {
+						stat = to_stat,
+						func = trigger.trigger,
+						delay = trigger.delay,
+						user = team
+					}
+					team_triggers[from_stat_name] = triggers
+				end
+			end
+		end
+	end
+end
+
+StatsManager.stop_session = function (self)
+	local team = self._team
+	team.triggers = {}
+
+	team.trigger_queue:clear()
+
+	local promises = {}
+
+	for _, user in pairs(self._users) do
+		local should_save = user.state == "tracking"
+		local is_saving = user.state == "pushing"
+
+		if should_save or is_saving then
+			promises[#promises + 1] = self:stop_tracking_user(user.key)
+		end
+	end
+
+	self._session_config = nil
+	self._session_stash = nil
+
+	return Promise.all(unpack(promises))
+end
+
+StatsManager.has_session = function (self)
+	return self._session_stash ~= nil
+end
+
+StatsManager._get_stashed_data = function (self, user)
+	local account_id = user.account_id
+
+	if not account_id then
+		return nil
+	end
+
+	local session_stash = self._session_stash
+	local stashed_data = session_stash[account_id]
+	session_stash[account_id] = nil
+
+	return stashed_data
+end
+
+StatsManager.start_tracking_user = function (self, key, user_config)
+	local user = self._users[key]
+	local definitions = self._definitions
+	local stashed_data = self:_get_stashed_data(user)
+	local stashed_config = stashed_data and stashed_data.config
+	local parsed_user_config, config_error = StatConfigParser.modify("user", user_config, stashed_config)
+	local configs_match = stashed_config and table.equals(stashed_config, parsed_user_config)
+	local data_match = stashed_data and self:user_version(key) == self:_data_version(stashed_data.data)
+
+	if configs_match and data_match then
+		Log.info("StatsManager", "Reusing stats for user '%s'.", key)
+
+		local dirty = user.rpc_dirty
+		local queue = user.rpc_queue
+		local is_remote = dirty ~= nil
+		local stash_data = stashed_data.data
+		local user_data = user.data
+
+		for stat_name, value in pairs(stash_data) do
+			local stat = definitions[stat_name]
+			local flags = stat.flags
+			local ignore_recover = flags.no_recover or flags.team or flags.hook
+
+			if value ~= user_data[stat_name] and not ignore_recover then
+				user_data[stat_name] = value
+				local ignore_sync = flags.hook or flags.no_sync
+
+				if is_remote and not ignore_sync then
+					dirty[stat_name] = true
+
+					queue:push_back(stat_name)
+				end
+			end
+		end
+	end
+
+	local team = self._team
+	local user_triggers = {}
+	local config = setmetatable(parsed_user_config, {
+		__index = self._session_config
+	})
+
+	for _, stat in pairs(definitions) do
+		local include_condition = stat.include_condition
+		local should_include = not include_condition or include_condition(stat, config)
+
+		if should_include then
+			local stat_triggers = stat.triggers
+			local stat_trigger_count = stat_triggers and #stat_triggers or 0
+
+			for i = 1, stat_trigger_count do
+				local stat_trigger = stat_triggers[i]
+				local from_stat_id = stat_trigger.id
+				local from_stat = definitions[from_stat_id]
+				local from_team = from_stat.flags.team
+				local to_team = stat.flags.team
+
+				if not from_team or not to_team then
+					local to_user = to_team and team or user
+					local from_triggers = from_team and team.triggers or user_triggers
+					local triggers = from_triggers[from_stat_id] or {}
+					triggers[#triggers + 1] = {
+						stat = stat,
+						func = stat_trigger.trigger,
+						delay = stat_trigger.delay,
+						user = to_user
+					}
+					from_triggers[from_stat_id] = triggers
+				end
+			end
+		end
+	end
+
+	for stat_name, stat in pairs(definitions) do
+		local flags = stat.flags
+		local is_team = not not flags.team
+		local should_sync = not flags.no_sync and not flags.hook
+		local dirty = user.rpc_dirty
+		local queue = user.rpc_queue
+		local default = stat.default
+
+		if is_team and should_sync and team.data[stat_name] and team.data[stat_name] ~= default and dirty and not dirty[stat_name] then
+			dirty[stat_name] = true
+
+			queue:push_back(stat_name)
+		end
+	end
+
+	user.triggers = user_triggers
+	user.state = UserStates.tracking
+	user.config = parsed_user_config
+	user.trigger_queue = PriorityQueue:new()
+end
+
+StatsManager._parse_backend_value = function (self, x)
+	return math.round(math.clamp(x, -9999999, 9999999))
+end
+
+StatsManager.stop_tracking_user = function (self, key)
+	local user = self._users[key]
+
+	if user.state == UserStates.pushing then
+		return user.save_done_promise
+	end
+
+	local team = self._team
+
+	for stat_name, triggers in pairs(team.triggers) do
+		local trigger_count = triggers and #triggers or 0
+
+		for i = trigger_count, 1, -1 do
+			local trigger = triggers[i]
+
+			if trigger.user == user then
+				triggers[i] = triggers[trigger_count]
+				triggers[trigger_count] = nil
+				trigger_count = trigger_count - 1
+			end
+		end
+
+		if trigger_count == 0 then
+			triggers[stat_name] = nil
+		end
+	end
+
+	user.triggers = nil
+
+	user.trigger_queue:delete()
+
+	user.trigger_queue = nil
+	local account_id = user.account_id
+
+	if not self:_valid_account_id(account_id) then
+		user.state = UserStates.idle
+
+		return Promise.resolved(nil)
+	end
+
+	local session_stash = self._session_stash
+
+	if session_stash and account_id then
+		session_stash[account_id] = {
+			data = user.data,
+			config = user.config
+		}
+	end
+
+	local changes = {}
+	local change_count = 0
+	local current_data = user.data
+	local last_saved_data = user.saved_data
+
+	for _, stat in pairs(self._definitions) do
+		local id = stat.id
+		local saved_value = last_saved_data[id] or stat.default
+		local save_to_backend = stat.flags.backend
+		local current_value = save_to_backend and self:_parse_backend_value(current_data[id] or stat.default)
+
+		if save_to_backend and saved_value ~= current_value then
+			change_count = change_count + 1
+			changes[change_count] = {
+				isPlatformStat = false,
+				stat = id,
+				value = current_value
+			}
+		end
+	end
+
+	if change_count == 0 then
+		user.state = UserStates.idle
+
+		return Promise.resolved(nil)
+	end
+
+	local backend_promise = Managers.backend.interfaces.commendations:bulk_update_commendations({
+		{
+			accountId = account_id,
+			stats = changes,
+			completed = {}
+		}
+	})
+	user.state = UserStates.pushing
+	user.promise = backend_promise
+	user.save_done_promise = backend_promise:next(function ()
+		user.state = UserStates.idle
+		user.promise = nil
+		user.save_done_promise = nil
+
+		for i = 1, change_count do
+			local change = changes[i]
+			user.saved_data[change.stat] = change.value
+		end
+	end)
+
+	return user.save_done_promise
+end
+
+StatsManager.read_team_stat = function (self, stat_name, ...)
+	local stat = self._definitions[stat_name]
+
+	return table.nested_get(self._team.data, stat_name, ...) or stat.default
+end
+
+StatsManager.read_user_stat = function (self, key, stat_name, ...)
+	local stat = self._definitions[stat_name]
+	local user = self._users[key]
+
+	return table.nested_get(user.data, stat_name, ...) or stat.default
+end
+
+StatsManager._attach_listener = function (self, key, listener_id)
+	local user = self._users[key]
+	local listener = self._listeners[listener_id]
+	local definitions = self._definitions
+	local stat_names = listener.stat_names
+	local user_listeners = user.listeners
+
+	for i = 1, #stat_names do
+		local stat_name = stat_names[i]
+		local stat_listeners = user_listeners[stat_name] or {}
+		stat_listeners[#stat_listeners + 1] = listener_id
+		user_listeners[stat_name] = stat_listeners
+	end
+end
+
+StatsManager._detach_listener = function (self, key, listener_id)
+	local user = self._users[key]
+	local listener = self._listeners[listener_id]
+	local stat_names = listener.stat_names
+	local user_listeners = user.listeners
+
+	for i = 1, #stat_names do
+		local stat_name = stat_names[i]
+		local stat_listeners = user_listeners[stat_name]
+		local listener_count = stat_listeners and #stat_listeners or 0
+
+		for j = listener_count, 1, -1 do
+			if stat_listeners[j] == listener_id then
+				stat_listeners[i] = stat_listeners[listener_count]
+				stat_listeners[listener_count] = nil
+				listener_count = listener_count - 1
+			end
+		end
+
+		if listener_count == 0 then
+			user_listeners[stat_name] = nil
+		end
+	end
+end
+
+StatsManager.add_listener = function (self, key, stat_names, callback_fn)
+	local listener_id = self._next_listener_id
+	self._next_listener_id = self._next_listener_id + 1
+	self._listeners[listener_id] = {
+		key = key,
+		stat_names = stat_names,
+		callback_fn = callback_fn
+	}
+	local user = self._users[key]
+
+	if user then
+		self:_attach_listener(key, listener_id)
+	end
+
+	return listener_id
+end
+
+StatsManager.remove_listener = function (self, listener_id)
+	local listener = self._listeners[listener_id]
+	local user = self._users[listener.key]
+
+	if user then
+		self:_detach_listener(listener.key, listener_id)
+	end
+
+	self._listeners[listener_id] = nil
+end
+
+StatsManager._trigger = function (self, user, stat_name, ...)
+	if not stat_name then
 		return
 	end
 
-	if trigger_time == 0 then
-		self:_on_triggered(id, trigger_id, triggered_value, ...)
-	else
-		self._queues[id]:push(self._last_time + trigger_time, {
-			trigger_id,
-			triggered_value,
-			{
+	local stat = self._definitions[stat_name]
+	local flags = stat.flags
+	local dirty = user.rpc_dirty
+	local queue = user.rpc_queue
+
+	if not flags.hook and not flags.no_sync and dirty and not dirty[stat_name] then
+		dirty[stat_name] = true
+
+		queue:push_back(stat_name)
+	end
+
+	local listeners = self._listeners
+	local listener_ids = user.listeners[stat_name]
+	local listenter_count = listener_ids and #listener_ids or 0
+
+	for i = 1, listenter_count do
+		local listener_id = listener_ids[i]
+		local listener = listeners[listener_id]
+		local callback_fn = listener.callback_fn
+
+		callback_fn(listener_id, stat_name, ...)
+	end
+
+	local last_t = self._last_t
+	local triggers = user.triggers[stat_name]
+	local trigger_count = triggers and #triggers or 0
+
+	for i = 1, trigger_count do
+		local trigger = triggers[i]
+		local trigger_stat = trigger.stat
+		local trigger_delay = trigger.delay
+		local trigger_func = trigger.func
+		local next_user = trigger.user
+
+		if trigger_delay then
+			next_user.trigger_queue:push(last_t + trigger_delay, {
+				trigger_func,
+				trigger_stat,
 				...
-			}
-		})
+			})
+		else
+			self:_trigger(next_user, trigger_func(trigger_stat, next_user.data, ...))
+		end
 	end
 end
 
-StatsManager._check_triggered = function (self, id, stat_id_to_check, triggering_id, triggering_value, ...)
-	local stat_definition = self._stat_group[id].definitions[stat_id_to_check]
-	local stat_data = self._stat_data[id]
+StatsManager.rpc_stat_update = function (self, _, local_player_id, stat_index, stat_value)
+	local user = self._users[local_player_id]
+	local stat_name = self._stat_lookup[stat_index]
+	local stat = self._definitions[stat_name]
 
-	self:_handle_trigger(id, stat_id_to_check, stat_definition:trigger(stat_data, triggering_id, triggering_value, ...))
-end
+	if user and stat then
+		local flags = stat.flags
+		user.data[stat_name] = stat_value
 
-StatsManager._on_triggered = function (self, id, trigger_id, trigger_value, ...)
-	local listening_function = self._functions[id]
-	local listener = self._listeners[id]
+		if flags.team then
+			return
+		end
 
-	if listening_function and listener then
-		listening_function(listener, id, trigger_id, trigger_value, ...)
-	end
+		local listeners = self._listeners
+		local listener_ids = user.listeners[stat_name]
+		local listenter_count = listener_ids and #listener_ids or 0
 
-	local dependents = self._stat_group[id].triggered_by[trigger_id]
-	local dependent_count = dependents and #dependents or 0
+		for i = 1, listenter_count do
+			local listener_id = listener_ids[i]
+			local listener = listeners[listener_id]
+			local callback_fn = listener.callback_fn
 
-	for i = 1, dependent_count do
-		local stat_id_to_check = dependents[i]
-
-		self:_check_triggered(id, stat_id_to_check, trigger_id, trigger_value, ...)
-	end
-end
-
-StatsManager._trigger_hook = function (self, player, trigger_id, trigger_value, ...)
-	local player_to_ids = self._player_to_ids[player:account_id()]
-	local player_to_ids_count = player_to_ids and #player_to_ids or 0
-
-	for i = 1, player_to_ids_count do
-		local id = player_to_ids[i]
-
-		self:_on_triggered(id, trigger_id, trigger_value, ...)
+			callback_fn(listener_id, stat_name, stat_value)
+		end
 	end
 end
 
-StatsManager._trigger_global_hook = function (self, trigger_id, trigger_value, ...)
-	for id, _ in pairs(self._queues) do
-		self:_on_triggered(id, trigger_id, trigger_value, ...)
+StatsManager.record_private = function (self, stat_name, player, ...)
+	local stat = self._definitions[stat_name]
+	local key = player.remote and player.stat_id or player:local_player_id()
+	local user = self._users[key]
+
+	if user and user.state == UserStates.tracking then
+		return self:_trigger(user, stat_name, ...)
 	end
 end
 
-StatsManager.can_record_stats = function ()
-	if DEDICATED_SERVER then
-		return true
+StatsManager.record_team = function (self, stat_name, ...)
+	local stat = self._definitions[stat_name]
+	local team = self._team
+
+	if self:has_session() then
+		return self:_trigger(team, stat_name, ...)
 	end
-
-	return false
-end
-
-StatsManager.record_mission_end = function (self, player, mission_name, main_objective_type, circumstance_name, difficulty, win, mission_time, team_kills, team_downs, team_deaths, side_objective_progress, side_objective_complete, side_objective_name, is_flash)
-	side_objective_name = side_objective_name or "none"
-
-	self:_trigger_hook(player, "hook_mission", 1, mission_name, main_objective_type, circumstance_name, difficulty, win, mission_time, team_kills, team_downs, team_deaths, side_objective_progress, side_objective_complete, side_objective_name, is_flash, player:profile().specialization)
-end
-
-StatsManager.record_objective_complete = function (self, player, mission_name, objective_name, objective_type, objective_time)
-	self:_trigger_hook(player, "hook_objective", 1, mission_name, objective_name, objective_type, objective_time, player:profile().specialization)
-end
-
-StatsManager.record_damage = function (self, player, breed_or_nil, weapon_template_name, attack_result, weapon_attack_type, hit_zone_name, damage_profile_name, distance, player_health, action_name, id, damage_type, damage, is_critical_hit, is_weapon_special, stagger_result, stagger_type)
-	local breed_name = breed_or_nil and breed_or_nil.name or "unknown"
-	weapon_template_name = weapon_template_name or "unknown"
-	weapon_attack_type = weapon_attack_type or "unknown"
-	attack_result = attack_result or "unknown"
-	hit_zone_name = hit_zone_name or "unknown"
-	action_name = action_name or "unknown"
-	damage_profile_name = damage_profile_name or "unknown"
-	damage_type = damage_type or "unknown"
-	is_critical_hit = is_critical_hit or "unknown"
-	stagger_result = stagger_result or "unknown"
-	stagger_type = stagger_type or "unknown"
-
-	self:_trigger_hook(player, "hook_damage", damage, breed_name, weapon_template_name, weapon_attack_type, attack_result, hit_zone_name, damage_profile_name, distance, player_health, action_name, id, damage_type, is_critical_hit, is_weapon_special, stagger_result, stagger_type, player:profile().specialization)
-end
-
-StatsManager.record_kill = function (self, player, breed_or_nil, weapon_template_name, weapon_attack_type, hit_zone_name, damage_profile_name, distance, player_health, action_name, id, target_buff_keywords, damage_type, is_critical_hit, is_weapon_special, solo_kill, attacked_unit_blackboard_or_nil)
-	local breed_name = breed_or_nil and breed_or_nil.name or "unknown"
-	weapon_template_name = weapon_template_name or "unknown"
-	weapon_attack_type = weapon_attack_type or "unknown"
-	hit_zone_name = hit_zone_name or "unknown"
-	action_name = action_name or "unknown"
-	damage_profile_name = damage_profile_name or "unknown"
-	damage_type = damage_type or "unknown"
-
-	self:_trigger_hook(player, "hook_kill", 1, breed_name, weapon_template_name, weapon_attack_type, hit_zone_name, damage_profile_name, distance, player_health, action_name, id, target_buff_keywords, damage_type, is_critical_hit, is_weapon_special, solo_kill, player:profile().specialization)
-
-	if breed_or_nil and breed_or_nil.tags.disabler and attacked_unit_blackboard_or_nil and Blackboard.has_component(attacked_unit_blackboard_or_nil, "record_state") then
-		local record_state_component = attacked_unit_blackboard_or_nil.record_state
-		local has_disabled_player = record_state_component.has_disabled_player
-
-		self:_trigger_hook(player, "hook_killed_disabler", 1, breed_name, has_disabled_player, weapon_template_name, weapon_attack_type, damage_profile_name, player:profile().specialization)
-	end
-end
-
-StatsManager.record_buff = function (self, player, breed_name, buff_template_name, stack_count, weapon_buff_template_name)
-	breed_name = breed_name or "unknown"
-	buff_template_name = buff_template_name or "unknown"
-	stack_count = stack_count or "unknown"
-	weapon_buff_template_name = weapon_buff_template_name or "unknown"
-
-	self:_trigger_hook(player, "hook_buff", 1, breed_name, buff_template_name, stack_count, weapon_buff_template_name, player:profile().specialization)
-end
-
-StatsManager.record_team_blocked_damage = function (self, amount)
-	self:_trigger_global_hook("hook_team_blocked_damage", amount)
-end
-
-StatsManager.record_blocked_damage = function (self, player, amount, weapon_template_name)
-	self:_trigger_hook(player, "hook_blocked_damage", amount, weapon_template_name or "unknown", player:profile().specialization)
-end
-
-StatsManager.record_team_kill = function (self, breed_name, weapon_attack_type)
-	breed_name = breed_name or "unknown"
-	weapon_attack_type = weapon_attack_type or "unknown"
-
-	self:_trigger_global_hook("hook_team_kill", 1, breed_name, weapon_attack_type)
-end
-
-StatsManager.record_toughness_regen = function (self, player, amount, starting_amount, reason)
-	self:_trigger_hook(player, "hook_toughness_regenerated", amount, starting_amount, reason, player:profile().specialization)
-end
-
-StatsManager.record_toughness_broken = function (self, player)
-	self:_trigger_hook(player, "hook_toughness_broken", 1, player:profile().specialization)
-end
-
-StatsManager.record_dodge = function (self, player, attacker_breed, attack_type, reason)
-	attacker_breed = attacker_breed or "unknown"
-
-	self:_trigger_hook(player, "hook_dodge", 1, attack_type, attacker_breed, reason, player:profile().specialization)
-end
-
-StatsManager.record_rescue_ally = function (self, player, target_player)
-	self:_trigger_hook(player, "hook_rescue_ally", 1, target_player:session_id(), player:profile().specialization)
-end
-
-StatsManager.record_assist_ally = function (self, player, target_player, assist_type)
-	self:_trigger_hook(player, "hook_assist_ally", 1, target_player:session_id(), assist_type, player:profile().specialization)
-end
-
-StatsManager.record_exit_disabled_character_state = function (self, state_name, time_in_state)
-	self:_trigger_global_hook("hook_team_exit_disabled_character_state", 1, state_name, time_in_state)
-end
-
-StatsManager.record_collect_material = function (self, type, amount)
-	type = type or "unknown"
-
-	self:_trigger_global_hook("hook_collect_material", amount, type)
-end
-
-StatsManager.record_pickup_item = function (self, player, pickup_name)
-	self:_trigger_hook(player, "hook_pickup_item", 1, pickup_name, player:profile().specialization)
-end
-
-StatsManager.record_place_item = function (self, player, pickup_name)
-	self:_trigger_hook(player, "hook_place_item", 1, pickup_name, player:profile().specialization)
-end
-
-StatsManager.record_share_item = function (self, player, pickup_name)
-	self:_trigger_hook(player, "hook_share_item", 1, pickup_name, player:profile().specialization)
-end
-
-StatsManager.record_player_death = function (self, player)
-	self:_trigger_hook(player, "hook_death", 1, player:profile().specialization)
-end
-
-StatsManager.record_player_knock_down = function (self, player)
-	self:_trigger_hook(player, "hook_knock_down", 1, player:profile().specialization)
-end
-
-StatsManager.record_player_damage_taken = function (self, player, amount, attack_type, is_attacker_elite)
-	self:_trigger_hook(player, "hook_damage_taken", amount, player:profile().specialization, attack_type, is_attacker_elite)
-end
-
-StatsManager.record_team_damage_taken = function (self, amount)
-	self:_trigger_global_hook("hook_team_damage_taken", amount)
-end
-
-StatsManager.record_team_death = function (self)
-	self:_trigger_global_hook("hook_team_death", 1)
-end
-
-StatsManager.record_team_knock_down = function (self)
-	self:_trigger_global_hook("hook_team_knock_down", 1)
-end
-
-StatsManager.record_player_joined = function (self, player, current_travel_ratio)
-	self:_trigger_hook(player, "hook_player_joined", current_travel_ratio, player:profile().specialization)
-end
-
-StatsManager.record_player_spawned = function (self, player)
-	self:_trigger_hook(player, "hook_spawn_player", player:profile().current_level, player:profile().specialization)
-end
-
-StatsManager.record_hacked_terminal = function (self, player, mistakes)
-	self:_trigger_hook(player, "hook_hacked_terminal", 1, mistakes, player:profile().specialization)
-end
-
-StatsManager.record_scanned_objects = function (self, player, amount)
-	self:_trigger_hook(player, "hook_scanned_objects", amount, player:profile().specialization)
-end
-
-StatsManager.record_team_corruptor_destroyed = function (self)
-	self:_trigger_global_hook("hook_team_corruptor_destroyed", 1)
-end
-
-StatsManager.record_boss_death = function (self, max_health, id, breed_name, time_since_first_damage, action)
-	self:_trigger_global_hook("hook_boss_kill", 1, breed_name, max_health, id, time_since_first_damage, action)
-end
-
-StatsManager.record_coherency_exit = function (self, player, is_exiter_alive, num_units_in_coherency)
-	self:_trigger_hook(player, "hook_coherency_exit", 1, is_exiter_alive, num_units_in_coherency, player:profile().specialization)
-end
-
-StatsManager.record_coherency_update = function (self, player, num_units_in_coherency)
-	self:_trigger_hook(player, "hook_coherency_update", 1, num_units_in_coherency, player:profile().specialization)
-end
-
-StatsManager.record_health_update = function (self, player, current_health_percentage, is_knocked_down)
-	self:_trigger_hook(player, "hook_health_update", current_health_percentage, is_knocked_down, player:profile().specialization)
-end
-
-StatsManager.record_sweep_finished = function (self, player, num_hit_units, num_killed_enemies, combo_count, hit_weakspot, is_heavy)
-	self:_trigger_hook(player, "hook_sweep_finished", 1, num_hit_units, num_killed_enemies, combo_count, hit_weakspot, is_heavy, player:profile().specialization)
-end
-
-StatsManager.record_ranged_attack_concluded = function (self, player, hit_minion, hit_weakspot, kill, last_round_in_mag)
-	self:_trigger_hook(player, "hook_ranged_attack_concluded", 1, hit_minion, hit_weakspot, kill, last_round_in_mag, player:profile().specialization)
-end
-
-StatsManager.record_projectile_impact_concluded_stats = function (self, player, num_hit_on_impact, num_hit_weakspot, num_kill, num_hit_elite, num_hit_special, weapon_template_name)
-	self:_trigger_hook(player, "hook_projectile_impact_concluded", 1, num_hit_on_impact, num_hit_weakspot, num_kill, num_hit_elite, num_hit_special, weapon_template_name, player:profile().specialization)
-end
-
-StatsManager.record_alternate_fire_start = function (self, player)
-	self:_trigger_hook(player, "hook_alternate_fire_start", 1)
-end
-
-StatsManager.record_alternate_fire_stop = function (self, player)
-	self:_trigger_hook(player, "hook_alternate_fire_stop", 1)
-end
-
-StatsManager.record_ammo_consumed = function (self, player, slot_name, amount, remaining_clip, remaining_reserve)
-	self:_trigger_hook(player, "hook_ammo_consumed", 1, slot_name, amount, remaining_clip, remaining_reserve)
-end
-
-StatsManager.record_decoder_ignored = function (self)
-	self:_trigger_global_hook("hook_decoder_ignored")
-end
-
-StatsManager.record_lunge_start = function (self, player, has_target, target_is_wielding_ranged_weapon)
-	self:_trigger_hook(player, "hook_lunge_start", 1, has_target, target_is_wielding_ranged_weapon, player:profile().specialization)
-end
-
-StatsManager.record_lunge_distance = function (self, player, distance_lunged)
-	self:_trigger_hook(player, "hook_lunge_distance", distance_lunged, player:profile().specialization)
-end
-
-StatsManager.record_lunge_stop = function (self, player, number_of_enemies, number_of_hit_ranged)
-	self:_trigger_hook(player, "hook_lunge_stop", number_of_enemies, number_of_hit_ranged, player:profile().specialization)
-end
-
-StatsManager.record_volley_fire_start = function (self, player)
-	self:_trigger_hook(player, "hook_volley_fire_start", 1)
-end
-
-StatsManager.record_volley_fire_stop = function (self, volley_fire_total_time, player)
-	self:_trigger_hook(player, "hook_volley_fire_stop", 1, volley_fire_total_time)
-end
-
-StatsManager.record_zealot_2_martyrdom_stacks = function (self, martyrdom_stacks, player)
-	self:_trigger_hook(player, "hook_zealot_2_martyrdom_stacks", martyrdom_stacks, player:profile().specialization)
-end
-
-StatsManager.record_zealot_2_health_healed_with_leech_during_resist_death = function (self, player, health_amount_percentage)
-	local round_health_percentage_to_int = math.round(health_amount_percentage * 100)
-
-	self:_trigger_hook(player, "hook_zealot_2_health_healed_with_leech_during_resist_death", round_health_percentage_to_int, player:profile().specialization)
-end
-
-StatsManager.record_psyker_2_time_at_max_stacks = function (self, player, time_at_max)
-	self:_trigger_hook(player, "hook_psyker_2_time_at_max_souls_hook", time_at_max, player:profile().specialization)
-end
-
-StatsManager.record_veteran_2_ammo_given_from_coherency = function (self, player, amount)
-	self:_trigger_hook(player, "hook_veteran_2_ammo_given", amount)
-end
-
-StatsManager.record_veteran_2_kill_volley_fire_target = function (self, player)
-	self:_trigger_hook(player, "hook_veteran_2_kill_volley_fire_target", 1)
-end
-
-StatsManager.record_psyker_2_reached_max_souls = function (self, player)
-	self:_trigger_hook(player, "hook_psyker_2_reached_max_souls", 1)
-end
-
-StatsManager.record_psyker_2_lost_max_souls = function (self, player)
-	self:_trigger_hook(player, "hook_psyker_2_lost_max_souls", 1)
-end
-
-StatsManager.record_psyker_2_survived_perils = function (self, player)
-	self:_trigger_hook(player, "hook_psyker_2_survived_perils", 1, player:profile().specialization)
 end
 
 return StatsManager

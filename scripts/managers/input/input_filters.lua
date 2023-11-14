@@ -127,13 +127,13 @@ InputFilters.scale_vector3 = {
 	update = function (filter_data, input_service)
 		local settings = Managers.save:account_data().input_settings
 		local invert_look_y = settings[filter_data.invert_look_y] and 1 or -1
-		local multiplier = settings[filter_data.multiplier]
+		local scale = settings[filter_data.scale]
 		local val = input_service:get(filter_data.input_mappings)
 		val = Vector3.multiply_elements(val, Vector3(1, invert_look_y, 1))
 
 		_input_threshold(val, settings[filter_data.input_threshold] or 0)
 
-		return val * multiplier
+		return val * scale
 	end,
 	edit_types = {
 		{
@@ -155,7 +155,8 @@ InputFilters.scale_vector3_xy_accelerated_x = {
 	update = function (filter_data, input_service)
 		local settings = Managers.save:account_data().input_settings
 		local invert_look_y = settings[filter_data.invert_look_y] and -1 or 1
-		local multiplier = settings[filter_data.multiplier]
+		local scale = settings[filter_data.scale]
+		local scale_y = settings[filter_data.scale_y] or scale
 		local response_curve_strength = settings[filter_data.response_curve_strength]
 		local val = input_service:get(filter_data.input_mappings)
 		val = Vector3.multiply_elements(val, Vector3(1, invert_look_y, 1))
@@ -217,7 +218,7 @@ InputFilters.scale_vector3_xy_accelerated_x = {
 		local multiplier_y = filter_data.multiplier_y
 
 		if val.y ~= 0 and filter_data.multiplier_return_y and filter_data.angle_to_slow_down_inside then
-			local player = Managers.player:local_player()
+			local player = Managers.player:local_player(1)
 			local viewport_name = player.viewport_name
 			local camera_rotation = Managers.state.camera:camera_rotation(viewport_name)
 			local camera_forward = Quaternion.forward(camera_rotation)
@@ -237,8 +238,8 @@ InputFilters.scale_vector3_xy_accelerated_x = {
 		end
 
 		y = val.y
-		x = x * multiplier * mean_dt
-		y = y * multiplier_y * multiplier * mean_dt
+		x = x * scale * mean_dt
+		y = y * multiplier_y * scale_y * mean_dt
 		z = val.z
 
 		return Vector3(x, y, z)
@@ -257,27 +258,27 @@ InputFilters.scale_vector3_xy_accelerated_x = {
 InputFilters.vector_y = {
 	init = function (filter_data)
 		local new_filter_data = table.clone(filter_data)
-		new_filter_data.multiplier = new_filter_data.multiplier or 1
+		new_filter_data.scale = new_filter_data.scale or 1
 
 		return new_filter_data
 	end,
 	update = function (filter_data, input_service)
 		local input = input_service:get(filter_data.input_mappings)
 
-		return input.y * filter_data.multiplier
+		return input.y * filter_data.scale
 	end
 }
 InputFilters.vector_x = {
 	init = function (filter_data)
 		local new_filter_data = table.clone(filter_data)
-		new_filter_data.multiplier = new_filter_data.multiplier or 1
+		new_filter_data.scale = new_filter_data.scale or 1
 
 		return new_filter_data
 	end,
 	update = function (filter_data, input_service)
 		local input = input_service:get(filter_data.input_mappings)
 
-		return input.x * filter_data.multiplier
+		return input.x * filter_data.scale
 	end
 }
 InputFilters["or"] = {

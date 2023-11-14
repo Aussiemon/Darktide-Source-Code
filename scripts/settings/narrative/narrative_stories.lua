@@ -67,7 +67,9 @@ end
 
 local function achievement_unlocked(achievement_name)
 	return function ()
-		Managers.achievements:unlock_achievement(achievement_name)
+		local player = Managers.player:local_player(1)
+
+		Managers.achievements:unlock_achievement(player, achievement_name)
 	end
 end
 
@@ -76,7 +78,9 @@ local function on_path_of_trust_chapter_completion(achievement_name)
 		Managers.event:trigger("event_on_path_of_trust_updated")
 
 		if achievement_name then
-			Managers.achievements:unlock_achievement(achievement_name)
+			local player = Managers.player:local_player(1)
+
+			Managers.achievements:unlock_achievement(player, achievement_name)
 		end
 	end
 end
@@ -364,7 +368,11 @@ local narrative = {
 		hli_barbershop_viewed = {},
 		hli_contracts_viewed = {},
 		hli_crafting_station_underground_viewed = {},
-		hli_gun_shop_viewed = {}
+		hli_gun_shop_viewed = {},
+		s1_intro_viewed = {},
+		s1_intro_popup_viewed = {
+			requirement = event_done("s1_intro_viewed")
+		}
 	}
 }
 

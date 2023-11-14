@@ -356,7 +356,7 @@ end
 
 XboxLiveUtils.show_player_profile_card = function (xuid)
 	XboxLiveUtils.user_id():next(function (user_id)
-		local async_block = XAsyncBlock.new_block()
+		local async_block = XGameUI.new_block()
 
 		XGameUI.show_player_profile_card(user_id, async_block, xuid)
 
@@ -521,6 +521,12 @@ XboxLiveUtils.get_entitlements = function ()
 		end
 
 		return Promise.until_value_is_true(function ()
+			local current_job = async_job_next_page or async_job
+
+			if XAsyncBlock.status(current_job) == HRESULT.E_PENDING then
+				return false
+			end
+
 			if async_job_next_page then
 				result, async_job_next_page, error_code = XStore.products_query_next_page_result(async_job_next_page)
 			else
@@ -528,33 +534,35 @@ XboxLiveUtils.get_entitlements = function ()
 			end
 
 			if error_code then
-				Log.error("XboxLive", string.format("Failed to fetch entitlements, error_code=0x%x", error_code))
+				if result ~= nil then
+					Log.error("XboxLive", string.format("Failed to fetch next page to entitlements, error_code=0x%x", error_code))
+				else
+					Log.error("XboxLive", string.format("Failed to fetch entitlements, error_code=0x%x", error_code))
+				end
 
-				slot0.code = error_code
+				slot1.code = error_code
 
 				return {
 					success = false
 				}
 			end
 
-			if result ~= nil then
-				if error_code == nil then
-					slot0, slot1, slot2 = ipairs(result)
+			if result ~= nil and error_code == nil then
+				slot1, slot2, slot3 = ipairs(result)
 
-					for _, v in slot0, slot1, slot2 do
-						result_by_id[v.storeId] = v
-					end
-
-					if async_job_next_page then
-						return false
-					end
-
-					slot0.data = result_by_id
-
-					return {
-						success = true
-					}
+				for _, v in slot1, slot2, slot3 do
+					result_by_id[v.storeId] = v
 				end
+
+				if async_job_next_page then
+					return false
+				end
+
+				slot1.data = result_by_id
+
+				return {
+					success = true
+				}
 			end
 
 			return false
@@ -589,6 +597,12 @@ XboxLiveUtils.get_associated_products = function ()
 		end
 
 		return Promise.until_value_is_true(function ()
+			local current_job = async_job_next_page or async_job
+
+			if XAsyncBlock.status(current_job) == HRESULT.E_PENDING then
+				return false
+			end
+
 			if async_job_next_page then
 				result, async_job_next_page, error_code = XStore.products_query_next_page_result(async_job_next_page)
 			else
@@ -596,31 +610,37 @@ XboxLiveUtils.get_associated_products = function ()
 			end
 
 			if error_code then
-				Log.error("XboxLive", string.format("Failed to fetch associated products, error_code=0x%x", error_code))
+				if result ~= nil then
+					Log.error("XboxLive", string.format("Failed to fetch next page to associated products, error_code=0x%x", error_code))
+				else
+					Log.error("XboxLive", string.format("Failed to fetch associated products, error_code=0x%x", error_code))
+				end
 
-				slot0.code = error_code
+				slot1.code = error_code
 
 				return {
 					success = false
 				}
 			end
 
-			if result ~= nil and error_code == nil then
-				slot0, slot1, slot2 = ipairs(result)
+			if result ~= nil then
+				if error_code == nil then
+					slot1, slot2, slot3 = ipairs(result)
 
-				for _, v in slot0, slot1, slot2 do
-					result_by_id[v.storeId] = v
+					for _, v in slot1, slot2, slot3 do
+						result_by_id[v.storeId] = v
+					end
+
+					if async_job_next_page then
+						return false
+					end
+
+					slot1.data = result_by_id
+
+					return {
+						success = true
+					}
 				end
-
-				if async_job_next_page then
-					return false
-				end
-
-				slot0.data = result_by_id
-
-				return {
-					success = true
-				}
 			end
 
 			return false
