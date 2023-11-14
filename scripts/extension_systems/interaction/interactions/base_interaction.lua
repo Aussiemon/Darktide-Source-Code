@@ -46,6 +46,14 @@ BaseInteraction.duration = function (self)
 	return self._template.duration
 end
 
+BaseInteraction.interaction_input = function (self)
+	return self._template.interaction_input or "interact_pressed"
+end
+
+BaseInteraction.interaction_priority = function (self)
+	return self._template.interaction_priority or 1
+end
+
 BaseInteraction.ui_interaction_type = function (self)
 	return self._template.ui_interaction_type
 end

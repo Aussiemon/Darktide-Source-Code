@@ -1,3 +1,5 @@
+-- WARNING: Error occurred during decompilation.
+--   Code may be incomplete or incorrect.
 local Component = require("scripts/utilities/component")
 local FixedFrame = require("scripts/utilities/fixed_frame")
 local PerceptionSettings = require("scripts/settings/perception/perception_settings")
@@ -5,6 +7,7 @@ local PlayerMovement = require("scripts/utilities/player_movement")
 local PlayerProgressionUnlocks = require("scripts/settings/player/player_progression_unlocks")
 local ScriptedScenarioUtility = require("scripts/extension_systems/scripted_scenario/scripted_scenario_utility")
 local TrainingGroundsSoundEvents = require("scripts/settings/training_grounds/training_grounds_sound_events")
+local AchievementUIHelper = require("scripts/managers/achievements/utility/achievement_ui_helper")
 local aggro_states = PerceptionSettings.aggro_states
 local ShootingRangeSteps = {
 	dynamic = {},
@@ -185,19 +188,29 @@ local function _spawn_locked_vfx_unit(reference_unit, required_achievement)
 	local rotation = Unit.local_rotation(reference_unit, 1)
 	local locked_unit = Managers.state.unit_spawner:spawn_network_unit(unit_name, template_name, position, rotation)
 	local interactee_extension = ScriptUnit.extension(locked_unit, "interactee_system")
-	local achievement = Managers.achievements:achievement_definition_from_id(required_achievement)
+	local achievement_definition = Managers.achievements:achievement_definition(required_achievement)
 
 	interactee_extension:set_block_text("loc_requires_achievement", {
-		achievement_label = achievement:label()
+		achievement_label = AchievementUIHelper.localized_title(achievement_definition)
 	})
 
 	return locked_unit
 end
 
 local function _breed_is_unlocked(breed_name, required_achievement)
-	local unlocked = not required_achievement or Managers.achievements:is_unlocked(required_achievement)
+	if not required_achievement then
+		return true
+	end
 
-	return unlocked
+	local has_player = Managers.achievements:has_player(1)
+
+	if not has_player then
+		return true
+	end
+
+	local player = Managers.player:local_player(1)
+
+	return Managers.achievements:achievement_completed(player, required_achievement)
 end
 
 ShootingRangeSteps.enemies_loop = {

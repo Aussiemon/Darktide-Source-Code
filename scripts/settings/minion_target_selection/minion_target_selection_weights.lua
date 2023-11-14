@@ -208,15 +208,6 @@ local minion_target_selection_weights = {
 		threat_multiplier = 1.5,
 		distance_to_target = 50
 	},
-	renegade_twin_captain = {
-		occupied_slots = -1,
-		stickiness_duration = 8,
-		max_distance = 20,
-		stickiness_bonus = 10,
-		taunt_weight_multiplier = 2,
-		threat_multiplier = 1.5,
-		distance_to_target = 50
-	},
 	renegade_grenadier = {
 		disabled = -8,
 		distance_to_target = 2,

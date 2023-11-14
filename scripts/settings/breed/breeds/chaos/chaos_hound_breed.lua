@@ -20,7 +20,6 @@ local stagger_types = StaggerSettings.stagger_types
 local weakspot_types = WeakspotSettings.types
 local breed_name = "chaos_hound"
 local breed_data = {
-	base_height = 1.5,
 	walk_speed = 2.3,
 	use_navigation_path_splines = true,
 	navigation_propagation_box_extent = 200,
@@ -30,8 +29,8 @@ local breed_data = {
 	uses_wwise_special_targeting_parameter = true,
 	volley_fire_target = true,
 	unit_template_name = "minion",
-	sub_faction_name = "chaos",
 	target_stickiness_distance = 10,
+	sub_faction_name = "chaos",
 	spawn_aggro_state = "aggroed",
 	broadphase_radius = 1,
 	stagger_resistance = 2,
@@ -46,6 +45,7 @@ local breed_data = {
 	run_speed = 6,
 	can_be_used_for_all_factions = true,
 	faction_name = "chaos",
+	base_height = 1.5,
 	line_of_sight_collision_filter = "filter_minion_line_of_sight_check",
 	player_locomotion_constrain_radius = 0.7,
 	smart_tag_target_type = "breed",
@@ -396,6 +396,7 @@ local breed_data = {
 			[hit_zone_names.center_mass] = 3
 		}
 	},
+	outline_config = {},
 	blackboard_component_config = BreedBlackboardComponentTemplates.chaos_hound
 }
 

@@ -24,7 +24,8 @@ local RPCS = {
 	"rpc_dialogue_system_joined",
 	"rpc_player_select_voice_server",
 	"rpc_player_select_voice",
-	"rpc_set_dynamic_smart_tag"
+	"rpc_set_dynamic_smart_tag",
+	"rpc_trigger_subtitle_event"
 }
 local extensions = {
 	"DialogueActorExtension"
@@ -387,6 +388,7 @@ DialogueSystem._update_currently_playing_dialogues = function (self, t, dt)
 
 					self:_trigger_face_animation_event(unit, animation_event)
 					extension:stop_currently_playing_wwise_event(currently_playing_dialogue.concurrent_wwise_event_id)
+					self._dialogue_system_wwise:stop_if_playing(currently_playing_dialogue.currently_playing_event_id)
 
 					local used_query = currently_playing_dialogue.used_query
 
@@ -505,6 +507,12 @@ DialogueSystem._update_currently_playing_dialogues = function (self, t, dt)
 											self:append_targeted_source_event(mission_giver_unit, "heard_speak", temp_event_data, nil)
 										end
 									end
+								elseif heard_speak_target == "level_event" then
+									local level = Managers.state.mission:mission_level()
+
+									if level then
+										Level.trigger_event(level, success_rule.name)
+									end
 								else
 									Log.warning("DialogueSystem", "heard_speak_routing.target %s is wrong or unrecognized", heard_speak_target)
 								end
@@ -544,10 +552,6 @@ DialogueSystem._update_currently_playing_dialogues = function (self, t, dt)
 
 					currently_playing_dialogue.dialogue_timer = currently_playing_dialogue.dialogue_timer - dt
 				end
-
-				if not DEDICATED_SERVER then
-					self._dialogue_system_subtitle:update()
-				end
 			end
 		until true
 	end
@@ -559,6 +563,10 @@ DialogueSystem.physics_async_update = function (self, context, dt, t)
 	self._t = t
 
 	self:_update_currently_playing_dialogues(t, dt)
+
+	if not DEDICATED_SERVER then
+		self._dialogue_system_subtitle:update(dt)
+	end
 
 	if not self._is_server then
 		return
@@ -1305,8 +1313,14 @@ DialogueSystem.rpc_interrupt_dialogue_event = function (self, channel_id, go_id,
 	end
 end
 
+DialogueSystem.send_dynamic_smart_tag = function (self, go_id, smart_tag)
+	local tag_id = NetworkLookup.dynamic_smart_tags[smart_tag]
+
+	Managers.state.game_session:send_rpc_clients("rpc_set_dynamic_smart_tag", go_id, tag_id)
+end
+
 DialogueSystem.rpc_set_dynamic_smart_tag = function (self, channel_id, go_id, tag_id)
-	local smart_tag = NetworkLookup.dynamic_smart_tag[tag_id]
+	local smart_tag = NetworkLookup.dynamic_smart_tags[tag_id]
 	local enemy_unit = Managers.state.unit_spawner:unit(go_id)
 
 	if not enemy_unit then
@@ -1318,6 +1332,36 @@ DialogueSystem.rpc_set_dynamic_smart_tag = function (self, channel_id, go_id, ta
 	if extension then
 		extension:set_dynamic_smart_tag(smart_tag)
 	end
+end
+
+DialogueSystem.resolve_subtitle = function (self, subtitle_id)
+	local subtitle_data = DialogueSettings.manual_subtitle_data[subtitle_id]
+	local speaker_name = subtitle_data.speaker_name
+	local duration = subtitle_data.duration
+	local optional_delay = nil
+
+	if subtitle_data.optional_delay then
+		optional_delay = subtitle_data.optional_delay
+	end
+
+	return speaker_name, duration, optional_delay
+end
+
+DialogueSystem.send_subtitle_event = function (self, currently_playing_subtitle)
+	local subtitle_id = NetworkLookup.manual_subtitles[currently_playing_subtitle]
+	local speaker_name, duration, optional_delay = self:resolve_subtitle(subtitle_id)
+	local dialogue_system_subtitle = self._dialogue_system_subtitle
+
+	dialogue_system_subtitle:create_subtitle(currently_playing_subtitle, speaker_name, duration, optional_delay)
+	Managers.state.game_session:send_rpc_clients("rpc_trigger_subtitle_event", subtitle_id)
+end
+
+DialogueSystem.rpc_trigger_subtitle_event = function (self, channel_id, subtitle_id)
+	local currently_playing_subtitle = NetworkLookup.manual_subtitles[subtitle_id]
+	local speaker_name, duration, optional_delay = self:resolve_subtitle(subtitle_id)
+	local dialogue_system_subtitle = self._dialogue_system_subtitle
+
+	dialogue_system_subtitle:create_subtitle(currently_playing_subtitle, speaker_name, duration, optional_delay)
 end
 
 local AUDIBLE_CHECK_FREQUENCY = 0.1
@@ -1434,60 +1478,49 @@ DialogueSystem._process_query = function (self, query, dt, t, is_a_delayed_query
 
 	if result then
 		local dialogue = self._dialogues[result]
+		local evaluate_now = not dialogue.on_pre_rule_execution or not dialogue.on_pre_rule_execution.delay_vo or not not is_a_delayed_query
 
-		table.clear(interrupt_dialogue_list)
+		if evaluate_now then
+			table.clear(interrupt_dialogue_list)
 
-		local will_play = self:_can_query_play(query, dialogue_actor_unit, interrupt_dialogue_list)
+			local will_play = self:_can_query_play(query, dialogue_actor_unit, interrupt_dialogue_list)
 
-		if will_play then
-			if not table.is_empty(interrupt_dialogue_list) then
-				if dialogue.category == "vox_prio_0" then
-					local wait_time = 0
+			if will_play then
+				if not table.is_empty(interrupt_dialogue_list) then
+					if dialogue.category == "vox_prio_0" then
+						local wait_time = 0
 
-					for playing_dialogue, _ in pairs(interrupt_dialogue_list) do
-						if playing_dialogue.category == "conversations_prio_1" then
-							local dialogue_length = playing_dialogue.dialogue_timer
+						for playing_dialogue, _ in pairs(interrupt_dialogue_list) do
+							if playing_dialogue.category == "conversations_prio_1" then
+								local dialogue_length = playing_dialogue.dialogue_timer
 
-							if wait_time < dialogue_length then
-								wait_time = dialogue_length + 0.3
+								if wait_time < dialogue_length then
+									wait_time = dialogue_length + 0.3
+								end
 							end
+						end
+
+						if wait_time > 0 then
+							self:_queue_query(t + wait_time, query)
+
+							return
 						end
 					end
 
-					if wait_time > 0 then
-						self:_queue_query(t + wait_time, query)
-
-						return
-					else
-						self:_execute_accepted_query(t, query, dialogue_actor_unit, extension, interrupt_dialogue_list)
-
-						self._reject_queries_until = 0
-
-						return
-					end
-				else
 					self:_execute_accepted_query(t, query, dialogue_actor_unit, extension, interrupt_dialogue_list)
 
 					self._reject_queries_until = 0
 
 					return
 				end
-			end
 
-			if t < self._reject_queries_until then
-				return
-			end
+				if t < self._reject_queries_until then
+					return
+				end
 
-			if is_a_delayed_query then
-				self:_execute_accepted_query(t, query, dialogue_actor_unit, extension, interrupt_dialogue_list)
+				local random_ignore_vo = dialogue.on_pre_rule_execution and dialogue.on_pre_rule_execution.random_ignore_vo
 
-				return
-			end
-
-			if dialogue.on_pre_rule_execution then
-				if dialogue.on_pre_rule_execution.random_ignore_vo then
-					local random_ignore_vo = dialogue.on_pre_rule_execution.random_ignore_vo
-
+				if random_ignore_vo then
 					if random_ignore_vo.ignore_until and t < random_ignore_vo.ignore_until then
 						return
 					end
@@ -1513,20 +1546,10 @@ DialogueSystem._process_query = function (self, query, dt, t, is_a_delayed_query
 					random_ignore_vo.failed_tries = 0
 				end
 
-				if dialogue.on_pre_rule_execution.delay_vo then
-					self:_queue_query(t + dialogue.on_pre_rule_execution.delay_vo.duration, query)
-
-					return
-				end
+				self:_execute_accepted_query(t, query, dialogue_actor_unit, extension, interrupt_dialogue_list)
 			end
-
-			if DialogueSettings.default_pre_vo_waiting_time and DialogueSettings.default_pre_vo_waiting_time > 0 then
-				self:_queue_query(t + DialogueSettings.default_pre_vo_waiting_time, query)
-
-				return
-			end
-
-			self:_execute_accepted_query(t, query, dialogue_actor_unit, extension, interrupt_dialogue_list)
+		else
+			self:_queue_query(t + dialogue.on_pre_rule_execution.delay_vo.duration, query)
 		end
 	end
 end

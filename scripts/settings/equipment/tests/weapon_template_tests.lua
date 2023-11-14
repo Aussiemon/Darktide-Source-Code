@@ -403,6 +403,12 @@ function _validate_reachable_actions(weapon_template, action_settings)
 			for _, chain_action in pairs(allowed_chain_actions) do
 				if chain_action.action_name == action_settings.name then
 					reachable_from_chain_action = true
+				else
+					for _, sub_chain_action in ipairs(chain_action) do
+						if sub_chain_action.action_name == action_settings.name then
+							reachable_from_chain_action = true
+						end
+					end
 				end
 			end
 		end

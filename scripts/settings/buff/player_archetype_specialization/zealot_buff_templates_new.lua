@@ -56,7 +56,7 @@ local templates = {
 		class_name = "buff",
 		buff_category = buff_category.generic,
 		stat_buffs = {
-			[stat_buffs.damage] = 0.15
+			[stat_buffs.damage] = 0.2
 		}
 	},
 	zealot_channel_toughness_damage_reduction = {
@@ -70,7 +70,7 @@ local templates = {
 		class_name = "buff",
 		buff_category = buff_category.generic,
 		stat_buffs = {
-			[stat_buffs.toughness_damage_taken_multiplier] = 0.75
+			[stat_buffs.toughness_damage_taken_multiplier] = 0.7
 		},
 		player_effects = {
 			effect_template = EffectTemplates.zealot_relic_blessed
@@ -422,13 +422,8 @@ templates.zealot_improved_stun_grenade = {
 templates.zealot_increased_coherency_regen = {
 	predicted = false,
 	class_name = "buff",
-	specialization_overrides = {
-		{
-			percent_toughness = 0.25
-		},
-		{
-			percent_toughness = 0.5
-		}
+	stat_buffs = {
+		[stat_buffs.toughness_coherency_regen_rate_modifier] = 0.25
 	}
 }
 templates.zealot_preacher_ally_defensive = {
@@ -541,7 +536,7 @@ end
 local function _martyrdom_missing_health_segments(template_data)
 	local missing_segments = (template_data.max_wounds or 0) - (template_data.current_wounds or 0)
 
-	return missing_segments
+	return math.min(missing_segments, martyrdom_max_stacks)
 end
 
 local toughness_reduction_per_stack = talent_settings_2.passive_1.toughness_reduction_per_stack
@@ -565,7 +560,7 @@ templates.zealot_martyrdom_toughness = {
 	lerp_t_func = function (t, start_time, duration, template_data, template_context)
 		local missing_segments = _martyrdom_missing_health_segments(template_data)
 
-		return missing_segments / martyrdom_max_stacks
+		return math.clamp01(missing_segments / martyrdom_max_stacks)
 	end
 }
 templates.zealot_preacher_segment_breaking_half_damage = {
@@ -844,11 +839,12 @@ templates.zealot_preacher_melee_increase_next_melee_proc = {
 	end
 }
 templates.zealot_preacher_melee_increase_next_melee_buff = {
-	class_name = "proc_buff",
 	predicted = false,
 	hud_priority = 2,
 	hud_icon = "content/ui/textures/icons/buffs/hud/zealot/zealot_multi_hits_increase_damage",
 	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_default",
+	class_name = "proc_buff",
+	always_show_in_hud = true,
 	buff_id = ZEALOT_PREACHER_MELEE_INCREASE_NEXT_MELEE_BUFF_ID,
 	proc_events = {
 		[proc_events.on_sweep_finish] = 1
@@ -867,11 +863,15 @@ templates.zealot_preacher_melee_increase_next_melee_buff = {
 }
 local crit_chance_shared = talent_settings_3.offensive_2.crit_share
 templates.zealot_fanatic_rage_minor = {
-	predicted = true,
+	max_stacks_cap = 1,
 	refresh_duration_on_stack = true,
+	predicted = true,
+	hud_priority = 1,
+	hud_icon = "content/ui/textures/icons/buffs/hud/zealot/zealot_keystone_fanatic_rage",
+	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_keystone",
 	max_stacks = 1,
 	class_name = "buff",
-	max_stacks_cap = 1,
+	buff_category = buff_category.generic,
 	duration = out_of_combat_time,
 	stat_buffs = {
 		[stat_buffs.critical_strike_chance] = talent_settings_3.passive_1.crit_chance * crit_chance_shared
@@ -881,11 +881,15 @@ templates.zealot_fanatic_rage_minor = {
 	}
 }
 templates.zealot_fanatic_rage_major = {
-	predicted = true,
+	max_stacks_cap = 1,
 	refresh_duration_on_stack = true,
+	predicted = true,
+	hud_priority = 1,
+	hud_icon = "content/ui/textures/icons/buffs/hud/zealot/zealot_keystone_fanatic_rage",
+	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_keystone",
 	max_stacks = 1,
 	class_name = "buff",
-	max_stacks_cap = 1,
+	buff_category = buff_category.generic,
 	duration = out_of_combat_time,
 	stat_buffs = {
 		[stat_buffs.critical_strike_chance] = talent_settings_3.spec_passive_2.crit_chance * crit_chance_shared
@@ -976,14 +980,14 @@ templates.zealot_martyrdom_base = {
 	lerp_t_func = function (t, start_time, duration, template_data, template_context)
 		local missing_segments = _martyrdom_missing_health_segments(template_data)
 
-		if missing_segments ~= template_data.current_stacks and Managers.stats.can_record_stats() then
+		if missing_segments ~= template_data.current_stacks then
 			local player = template_context.player
 
-			Managers.stats:record_zealot_2_martyrdom_stacks(missing_segments, player)
+			Managers.stats:record_private("hook_martyrdom_stacks", player, missing_segments)
 		end
 
 		template_data.current_stacks = missing_segments
-		local lerp_t = missing_segments / martyrdom_max_stacks
+		local lerp_t = math.clamp01(missing_segments / martyrdom_max_stacks)
 
 		return lerp_t
 	end
@@ -1243,7 +1247,7 @@ templates.zealot_martyrdom_attack_speed = {
 	lerp_t_func = function (t, start_time, duration, template_data, template_context)
 		local missing_segments = _martyrdom_missing_health_segments(template_data)
 
-		return missing_segments / martyrdom_max_stacks
+		return math.clamp01(missing_segments / martyrdom_max_stacks)
 	end
 }
 templates.zealot_coherency_toughness_damage_resistance = {
@@ -1436,14 +1440,11 @@ templates.zealot_resist_death_leech_effect = {
 
 		Health.add(unit, amount_to_add, "leech")
 
-		if DEDICATED_SERVER then
-			local max_health = health_extension:max_health()
-			local heal_percentage = amount_to_add / max_health
-			local player_unit_spawn_manager = Managers.state.player_unit_spawn
-			local player = player_unit_spawn_manager:owner(unit)
+		local heal_percentage = math.round(100 * amount_to_add / max_health)
+		local player_unit_spawn_manager = Managers.state.player_unit_spawn
+		local player = player_unit_spawn_manager:owner(unit)
 
-			Managers.stats:record_zealot_2_health_healed_with_leech_during_resist_death(player, heal_percentage)
-		end
+		Managers.stats:record_private("hook_zealot_health_leeched_during_resist_death", player, heal_percentage)
 	end
 }
 templates.zealot_movement_enhanced = {
@@ -1482,6 +1483,11 @@ templates.zealot_recuperate_a_portion_of_damage_taken = {
 	proc_events = {
 		[proc_events.on_damage_taken] = talent_settings_2.defensive_3.on_damage_taken_proc_chance
 	},
+	check_proc_func = function (params, template_data, template_context)
+		local victim_unit = params.attacked_unit
+
+		return victim_unit == template_context.unit
+	end,
 	start_func = function (template_data, template_context)
 		local duration = talent_settings_2.defensive_3.duration
 		template_data.update_frequency = 0.041666
@@ -1498,12 +1504,6 @@ templates.zealot_recuperate_a_portion_of_damage_taken = {
 		end
 	end,
 	proc_func = function (params, template_data, template_context)
-		local victim_unit = params.attacked_unit
-
-		if victim_unit ~= template_context.unit then
-			return
-		end
-
 		local damage_amount = params.damage_amount
 		local found_empty = false
 		local damage_pool = template_data.damage_pool
@@ -1820,7 +1820,7 @@ templates.zealot_sprinting_cost_reduction = {
 	predicted = true,
 	class_name = "buff",
 	stat_buffs = {
-		[stat_buffs.sprinting_cost_multiplier] = 0.9
+		[stat_buffs.sprinting_cost_multiplier] = 0.8
 	}
 }
 templates.zealot_backstab_damage = {
@@ -1872,9 +1872,9 @@ templates.zealot_damage_reduction_after_dodge = {
 	predicted = false,
 	hud_priority = 4,
 	class_name = "proc_buff",
-	active_duration = 1.5,
+	active_duration = 2.5,
 	proc_events = {
-		[proc_events.on_dodge_end] = 1
+		[proc_events.on_successful_dodge] = 1
 	},
 	proc_stat_buffs = {
 		[stat_buffs.damage_taken_multiplier] = 0.75

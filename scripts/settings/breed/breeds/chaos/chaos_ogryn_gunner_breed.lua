@@ -27,7 +27,6 @@ local breed_data = {
 	walk_speed = 1.9,
 	use_bone_lod = true,
 	sub_faction_name = "chaos",
-	state_machine = "content/characters/enemy/chaos_ogryn/third_person/animations/chaos_ogryn_gunner",
 	unit_template_name = "minion",
 	spawn_inventory_slot = "slot_ranged_weapon",
 	slot_template = "chaos_ogryn",
@@ -36,6 +35,7 @@ local breed_data = {
 	half_extent_right = 0.5,
 	smite_stagger_immunity = true,
 	half_extent_forward = 0.5,
+	state_machine = "content/characters/enemy/chaos_ogryn/third_person/animations/chaos_ogryn_gunner",
 	accumulative_stagger_multiplier = 0.25,
 	use_avoidance = true,
 	game_object_type = "minion_elite_ranged",
@@ -443,6 +443,7 @@ local breed_data = {
 		[hit_zone_names.lower_left_arm] = armor_types.super_armor,
 		[hit_zone_names.lower_right_arm] = armor_types.super_armor
 	},
+	outline_config = {},
 	blackboard_component_config = BreedBlackboardComponentTemplates.ranged_patroller
 }
 

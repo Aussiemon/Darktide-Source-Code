@@ -1419,8 +1419,8 @@ local animations = {
 animations.on_planet_select = {
 	{
 		name = "move_background",
-		end_time = 2,
-		start_time = 0,
+		end_time = 2.5,
+		start_time = 0.2,
 		init = function (parent, ui_scenegraph, scenegraph_definition, widgets, params)
 			local target_planet_id = params.target_planet.id
 			local planets_widget = widgets.home_planets
@@ -1451,11 +1451,6 @@ animations.on_planet_select = {
 
 			for planet_id, style in pairs(planets_widget_style) do
 				local is_target_planet = planet_id == target_planet_id
-
-				if is_target_planet then
-					style.visible = true
-				end
-
 				local planet_params = params[planet_id]
 
 				if not planet_params then
@@ -1470,6 +1465,9 @@ animations.on_planet_select = {
 				planet_params.start_color = table.clone(style.color)
 				planet_params.end_color = is_target_planet and in_focus_color or out_of_focus_color
 			end
+
+			parent:_stop_sound(UISoundEvents.character_create_planet_select)
+			parent:_play_sound(UISoundEvents.character_create_planet_select)
 		end,
 		update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress, params)
 			local math_lerp = math.lerp
@@ -1514,9 +1512,6 @@ animations.on_planet_select = {
 
 			for planet_id, style in pairs(planets_widget_style) do
 				local is_target_planet = planet_id == current_planet_id
-				style.visible = is_target_planet
-				style.size_addition[1] = is_target_planet and 0 or -style.size[1]
-				style.size_addition[2] = is_target_planet and 0 or -style.size[2]
 
 				ColorUtilities.color_copy(is_target_planet and in_focus_color or out_of_focus_color, style.color)
 			end
@@ -1526,8 +1521,8 @@ animations.on_planet_select = {
 	},
 	{
 		name = "zoom_planets",
-		end_time = 1,
-		start_time = 0,
+		end_time = 1.5,
+		start_time = 0.2,
 		update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress, params)
 			local math_lerp = math.lerp
 			local anim_progress = math.easeCubic(progress)

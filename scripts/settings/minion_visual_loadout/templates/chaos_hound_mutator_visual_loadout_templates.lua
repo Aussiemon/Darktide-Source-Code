@@ -6,6 +6,7 @@ local templates = {
 local basic_chaos_hound_mutator_template = {
 	slots = {
 		slot_body = {
+			use_outline = true,
 			items = {
 				"content/items/characters/minions/chaos_hound/attachments_base/body_mutator"
 			}

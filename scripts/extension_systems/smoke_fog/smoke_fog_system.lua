@@ -207,7 +207,7 @@ local Vector3_dot = Vector3 and Vector3.dot
 local Vector3_distance_squared = Vector3 and Vector3.distance_squared
 local Vector3_length_squared = Vector3 and Vector3.length_squared
 
-SmokeFogSystem.check_fog_los = function (self, source_position, target_position)
+SmokeFogSystem.check_fog_los = function (self, source_position, target_position, source_unit)
 	if not self._has_los_blocker then
 		return false
 	end
@@ -215,14 +215,14 @@ SmokeFogSystem.check_fog_los = function (self, source_position, target_position)
 	local towards_target = target_position - source_position
 	local unit_to_extension_map = self._unit_to_extension_map
 
-	for smoke_fog_unit, extension in pairs(unit_to_extension_map) do
+	for smoke_fog_unit, fog_extension in pairs(unit_to_extension_map) do
 		repeat
-			if extension.is_expired then
+			if fog_extension.is_expired then
 				break
 			end
 
 			local smoke_fog_position = POSITION_LOOKUP[smoke_fog_unit]
-			local fog_radius_squared = extension.inner_radius_squared
+			local fog_radius_squared = fog_extension.inner_radius_squared
 			local closest_point_to_fog = nil
 			local towards_smoke_fog = smoke_fog_position - source_position
 			local distance_to_smoke_fog_squared = Vector3_length_squared(towards_smoke_fog)

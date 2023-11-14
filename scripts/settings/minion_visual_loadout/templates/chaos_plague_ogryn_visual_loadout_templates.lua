@@ -6,11 +6,13 @@ local templates = {
 local basic_chaos_plague_ogryn_template = {
 	slots = {
 		slot_vent = {
+			use_outline = true,
 			items = {
 				"content/items/characters/minions/chaos_plague_ogryn/attachments_base/vent"
 			}
 		},
 		slot_body = {
+			use_outline = true,
 			items = {
 				"content/items/characters/minions/chaos_plague_ogryn/attachments_base/body_skin_02",
 				"content/items/characters/minions/chaos_plague_ogryn/attachments_base/body_skin_03",

@@ -9,6 +9,7 @@ local HitZone = require("scripts/utilities/attack/hit_zone")
 local MinionDifficultySettings = require("scripts/settings/difficulty/minion_difficulty_settings")
 local MinionGibbingTemplates = require("scripts/managers/minion/minion_gibbing_templates")
 local MinionVisualLoadoutTemplates = require("scripts/settings/minion_visual_loadout/minion_visual_loadout_templates")
+local NavigationCostSettings = require("scripts/settings/navigation/navigation_cost_settings")
 local PerceptionSettings = require("scripts/settings/perception/perception_settings")
 local SmartObjectSettings = require("scripts/settings/navigation/smart_object_settings")
 local StaggerSettings = require("scripts/settings/damage/stagger_settings")
@@ -27,11 +28,11 @@ local breed_data = {
 	use_bone_lod = false,
 	sub_faction_name = "chaos",
 	navigation_propagation_box_extent = 200,
-	smart_tag_breed_aggroed_context = true,
 	unit_template_name = "minion",
 	slot_template = "chaos_ogryn",
 	broadphase_radius = 1,
 	ignore_ally_alerts = true,
+	smart_tag_breed_aggroed_context = true,
 	stagger_resistance = 1,
 	boss_health_bar_disabled = true,
 	use_action_controlled_alert = true,
@@ -148,6 +149,9 @@ local breed_data = {
 		radius = 4,
 		relation = "allied",
 		angle = math.degrees_to_radians(100)
+	},
+	nav_cost_map_multipliers = {
+		daemonhost = NavigationCostSettings.IGNORE_NAV_COST_MAP_LAYER
 	},
 	smart_object_template = SmartObjectSettings.templates.chaos_daemonhost,
 	size_variation_range = {
@@ -407,9 +411,7 @@ local breed_data = {
 			[hit_zone_names.center_mass] = 0.6
 		}
 	},
-	outline_config = {
-		visual_loadout_slot = "slot_body"
-	},
+	outline_config = {},
 	blackboard_component_config = BreedBlackboardComponentTemplates.chaos_daemonhost
 }
 

@@ -162,6 +162,7 @@ TelemetryEvents.gameplay_started = function (self, params)
 	Managers.telemetry_reporters:start_reporter("grenade_ability")
 	Managers.telemetry_reporters:start_reporter("pacing")
 	Managers.telemetry_reporters:start_reporter("picked_items")
+	Managers.telemetry_reporters:start_reporter("used_items")
 	Managers.telemetry_reporters:start_reporter("ping", params)
 	Managers.telemetry_reporters:start_reporter("placed_items")
 	Managers.telemetry_reporters:start_reporter("player_dealt_damage")
@@ -178,6 +179,7 @@ TelemetryEvents.gameplay_stopped = function (self)
 	Managers.telemetry_reporters:stop_reporter("placed_items")
 	Managers.telemetry_reporters:stop_reporter("ping")
 	Managers.telemetry_reporters:stop_reporter("picked_items")
+	Managers.telemetry_reporters:stop_reporter("used_items")
 	Managers.telemetry_reporters:stop_reporter("pacing")
 	Managers.telemetry_reporters:stop_reporter("grenade_ability")
 	Managers.telemetry_reporters:stop_reporter("frame_time")
@@ -506,6 +508,20 @@ TelemetryEvents.shared_items_report = function (self, reports)
 		local entries = report.entries
 		local player_data = report.player_data
 		local event = TelemetryEvent:new(SOURCE, player_data.telemetry_subject, "shared_items_report", {
+			game = player_data.telemetry_game_session,
+			gameplay = self._session.gameplay
+		})
+
+		event:set_data(entries)
+		self._manager:register_event(event)
+	end
+end
+
+TelemetryEvents.used_items_report = function (self, reports)
+	for player, report in pairs(reports) do
+		local entries = report.entries
+		local player_data = report.player_data
+		local event = TelemetryEvent:new(SOURCE, player_data.telemetry_subject, "used_items_report", {
 			game = player_data.telemetry_game_session,
 			gameplay = self._session.gameplay
 		})

@@ -583,10 +583,6 @@ local action_data = {
 		damage_profile = DamageProfileTemplates.melee_bruiser_default,
 		damage_type = damage_types.minion_melee_blunt,
 		stagger_type_reduction = {
-			ranged = 20,
-			killshot = 20
-		},
-		stagger_type_reduction = {
 			ranged = 60,
 			killshot = 60
 		},
@@ -719,10 +715,6 @@ local action_data = {
 		},
 		damage_profile = DamageProfileTemplates.melee_bruiser_default,
 		damage_type = damage_types.minion_melee_blunt,
-		stagger_type_reduction = {
-			ranged = 20,
-			killshot = 20
-		},
 		stagger_type_reduction = {
 			ranged = 60,
 			killshot = 60
@@ -1020,6 +1012,41 @@ local action_data = {
 					"stagger_bwd_sticky",
 					"stagger_bwd_sticky_2",
 					"stagger_bwd_sticky_3"
+				}
+			},
+			blinding = {
+				fwd = {
+					"stagger_fwd_light",
+					"stagger_fwd_light_2",
+					"stagger_fwd_light_3",
+					"stagger_fwd_light_4",
+					"stagger_fwd_light_5",
+					"stagger_fwd_light_6"
+				},
+				bwd = {
+					"stagger_bwd_light",
+					"stagger_bwd_light_2",
+					"stagger_bwd_light_3",
+					"stagger_bwd_light_4",
+					"stagger_bwd_light_5",
+					"stagger_bwd_light_6",
+					"stagger_bwd_light_7",
+					"stagger_bwd_light_8"
+				},
+				left = {
+					"stagger_left_light",
+					"stagger_left_light_2",
+					"stagger_left_light_3",
+					"stagger_left_light_4"
+				},
+				right = {
+					"stagger_right_light",
+					"stagger_right_light_2",
+					"stagger_right_light_3",
+					"stagger_right_light_4"
+				},
+				dwn = {
+					"stun_down"
 				}
 			}
 		}

@@ -9,6 +9,7 @@ local TextUtilities = require("scripts/utilities/ui/text")
 local UISettings = require("scripts/settings/ui/ui_settings")
 local DISTRIBUTION_TYPES = PickupSettings.distribution_types
 local PICKUPS_BY_NAME = Pickups.by_name
+local PICKUP_SELECTOR = PickupSettings.pickup_selector
 local PickupSystem = class("PickupSystem", "ExtensionSystemBase")
 local CLIENT_RPCS = {
 	"rpc_player_collected_materials"
@@ -361,7 +362,7 @@ PickupSystem.get_rubberband_pickup = function (self, distribution_type, percenta
 
 	table.clear(weights)
 
-	local remaining_ammo = remaining.ammo
+	local remaining_ammo = remaining.ammo or 0
 
 	if remaining_ammo > 0 then
 		pool_size = remaining_ammo
@@ -370,16 +371,17 @@ PickupSystem.get_rubberband_pickup = function (self, distribution_type, percenta
 		weights[AMMO] = 0
 	end
 
-	local remaining_grenade = remaining.grenade
+	local remaining_grenade = remaining.grenade or 0
+	local grenade_special_spawned = special_spawned.small_grenade
 
-	if remaining_grenade > 0 then
+	if remaining_grenade > 0 and (not grenade_special_spawned or percentage_through_level >= grenade_special_spawned + block_distance) then
 		pool_size = pool_size + remaining_grenade
 		weights[GRENADE] = remaining_grenade / start_count.grenade * (RubberbandSettings.distribution_type_weight.grenade[distribution_type] or 1) * lerp(min, max, total_grenades / player_count)
 	else
 		weights[GRENADE] = 0
 	end
 
-	local remaining_health = remaining.health
+	local remaining_health = remaining.health or 0
 	local health_special_spawned = special_spawned.medical_crate_pocketable
 
 	if remaining_health > 0 and (not health_special_spawned or percentage_through_level >= health_special_spawned + block_distance) then
@@ -400,7 +402,7 @@ PickupSystem.get_rubberband_pickup = function (self, distribution_type, percenta
 		weights[i] = total_weight
 	end
 
-	total_weight = self._rubberband_free_spots / pool_size
+	total_weight = self._rubberband_free_spots / pool_size / RubberbandSettings.base_spawn_rate
 	self._rubberband_free_spots = self._rubberband_free_spots - 1
 	local new_seed, rnd = math.next_random(self._seed)
 	self._seed = new_seed
@@ -414,12 +416,12 @@ PickupSystem.get_rubberband_pickup = function (self, distribution_type, percenta
 
 		table.clear(weights)
 
-		weights[SMALL_CLIP] = pool.small_clip / (total_ammo + 0.01)
-		weights[LARGE_CLIP] = pool.large_clip
+		weights[SMALL_CLIP] = math.sqrt(pool.small_clip) / (total_ammo + 0.01)
+		weights[LARGE_CLIP] = math.sqrt(pool.large_clip)
 		local ammo_special_spawned = special_spawned.ammo_cache_pocketable
 
 		if not ammo_special_spawned or percentage_through_level >= ammo_special_spawned + block_distance then
-			weights[AMMO_CACHE] = pool.ammo_cache_pocketable * total_ammo * pocketable_weight
+			weights[AMMO_CACHE] = math.sqrt(pool.ammo_cache_pocketable) * total_ammo * pocketable_weight
 		end
 
 		total_weight = 0
@@ -454,6 +456,7 @@ PickupSystem.get_rubberband_pickup = function (self, distribution_type, percenta
 	elseif rnd <= weights[GRENADE] then
 		remaining.grenade = remaining.grenade - 1
 		pool.grenade.small_grenade = pool.grenade.small_grenade - 1
+		special_spawned.small_grenade = percentage_through_level
 
 		return "small_grenade"
 	elseif rnd <= weights[HEALTH] then
@@ -579,7 +582,14 @@ PickupSystem._spawn_spread_pickups = function (self, distribution_type, pickup_p
 
 		for pickup_name, amount in pairs(value) do
 			for i = 1, amount do
-				pickups_to_spawn[#pickups_to_spawn + 1] = pickup_name
+				local selected_pickup_name = pickup_name
+				local selector_func = PICKUP_SELECTOR[pickup_name]
+
+				if selector_func then
+					selected_pickup_name, seed = selector_func(seed)
+				end
+
+				pickups_to_spawn[#pickups_to_spawn + 1] = selected_pickup_name
 			end
 		end
 
@@ -844,6 +854,14 @@ PickupSystem.register_material_collected = function (self, pickup_unit, interact
 		type_list[size] = 1
 	else
 		type_list[size] = type_list[size] + 1
+	end
+
+	local player = Managers.player:player_by_unit(interactor_unit)
+
+	if player then
+		local amount = Managers.backend:session_setting("craftingMaterials", type, size, "value")
+
+		Managers.stats:record_private("hook_collect_material", player, type, amount)
 	end
 
 	local player = Managers.state.player_unit_spawn:owner(interactor_unit)

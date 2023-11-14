@@ -152,13 +152,4 @@ Crafting.fuse_traits = function (self, character_id, trait_ids)
 	})
 end
 
-local COLLECTED_MATERIALS_AMOUNT = {
-	small = 10,
-	large = 25
-}
-
-Crafting.get_collected_materials_amount = function (self)
-	return Promise.resolved(COLLECTED_MATERIALS_AMOUNT)
-end
-
 return Crafting

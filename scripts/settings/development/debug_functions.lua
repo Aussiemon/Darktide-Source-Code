@@ -696,7 +696,7 @@ functions.print_location_info = {
 	on_activated = _print_camera_teleport_cmd
 }
 functions.teleport_to_coordinates = {
-	width = 150,
+	width = 270,
 	name = "Teleport to Coordinates",
 	category = "Level & Mission",
 	button_text = "Teleport",
@@ -1674,6 +1674,43 @@ functions.gift_equipped = {
 	on_activated = _gift_equipped
 }
 
+local function _dump_selected_loadout_on_activated(new_value, old_value)
+	local local_player = Managers.player:local_player(1)
+	local local_player_unit = local_player.player_unit
+
+	if not local_player_unit then
+		return
+	end
+
+	local unit_data_extension = ScriptUnit.extension(local_player_unit, "unit_data_system")
+	local inventory_component = unit_data_extension:read_component("inventory")
+	local visual_loadout_extension = ScriptUnit.extension(local_player_unit, "visual_loadout_system")
+	local slot_configuration = visual_loadout_extension:slot_configuration()
+	local s = "loudout = {"
+
+	for slot_name, config in pairs(slot_configuration) do
+		local item_name = inventory_component[slot_name]
+
+		if item_name ~= "not_equipped" then
+			s = string.format("%s\n\t%s = \"%s\",", s, slot_name, item_name)
+		end
+	end
+
+	s = s .. "\n},"
+
+	Log.info("DebugFunctions", "%s", s)
+
+	if not Clipboard.put(s) then
+		Log.warning("DebugFunctions (Dump Selected Loudout)", "Failed to copy string to clipboard.")
+	end
+end
+
+functions.dump_selected_loudout = {
+	name = "Dump Selected Loudout",
+	category = "Player Equipment",
+	on_activated = _dump_selected_loadout_on_activated
+}
+
 local function _modify_ammo(amount)
 	if amount == 0 then
 		return
@@ -2406,138 +2443,6 @@ functions.reset_narrative_event = {
 	category = "Progression",
 	on_activated = _uncomplete_narrative_event,
 	options_function = _list_narrative_event_names
-}
-
-local function _reset_achievements()
-	local local_player = Managers.player:local_player(1)
-	local profile = local_player:profile()
-
-	if profile then
-		local account_id = local_player:account_id()
-
-		if type(account_id) == "string" then
-			Managers.backend.interfaces.commendations:delete_commendations(account_id):next(function ()
-				Log.info("DebugFunctions", "Sucessfully deleted achievements data")
-			end):catch(function (error)
-				Log.info("DebugFunctions", "Deleting achievements failed, %s", error)
-			end)
-		end
-	end
-end
-
-functions.reset_achievements = {
-	name = "Delete all Achievement Data",
-	button_text = "Delete Achievements",
-	category = "Achievements",
-	on_activated = _reset_achievements
-}
-
-local function _list_backend_achievements()
-	local local_player = Managers.player:local_player(1)
-	local profile = local_player:profile()
-
-	if profile then
-		local account_id = local_player:account_id()
-
-		if type(account_id) == "string" then
-			Managers.backend.interfaces.commendations:get_commendations(account_id, true, true):next(function (data)
-				Log.info("DebugFunctions", "Successfully fetched achievements data %s", table.tostring(data, 5))
-			end):catch(function (error)
-				Log.info("DebugFunctions", "Fetching achievements failed, %s", error)
-			end)
-		end
-	end
-end
-
-functions.list_backend_achievements = {
-	name = "List all Backend Achievements",
-	button_text = "List Backend Achievements",
-	category = "Achievements",
-	on_activated = _list_backend_achievements
-}
-
-local function _list_achievement_definitions()
-	local achievement_definitions = Managers.achievements:get_achievement_definitions()
-	local readable = {}
-
-	for _, achievement_definition in ipairs(achievement_definitions) do
-		readable[#readable + 1] = {
-			id = achievement_definition:id(),
-			label = achievement_definition:label(),
-			description = achievement_definition:description()
-		}
-	end
-
-	Log.info("DebugFunction", "Achievements : %s", table.tostring(readable, 99))
-end
-
-functions.list_achievement_definitions = {
-	name = "List all achievements",
-	button_text = "List Achievements",
-	category = "Achievements",
-	on_activated = _list_achievement_definitions
-}
-
-local function _verify_achievements()
-	Managers.achievements:verify_achievements()
-end
-
-functions.verify_achievements = {
-	name = "Verify integrity of Achievements",
-	button_text = "Verify Achievements",
-	category = "Achievements",
-	on_activated = _verify_achievements
-}
-
-local function achievement_options()
-	local achievement_definitions = Managers.achievements:get_achievement_definitions()
-	local achievement_names = {}
-
-	for _, achievement_definition in ipairs(achievement_definitions) do
-		local id = achievement_definition:id()
-
-		if not Managers.achievements:is_unlocked(id) then
-			achievement_names[#achievement_names + 1] = achievement_definition:label()
-		end
-	end
-
-	return achievement_names
-end
-
-local function _unlock_achievement(achievement_name)
-	if not DEDICATED_SERVER then
-		local local_player = Managers.player:local_player(1)
-		local profile = local_player:profile()
-
-		if profile then
-			local account_id = local_player:account_id()
-
-			if type(account_id) == "string" then
-				local channel = Managers.connection:host_channel()
-				local achievement_definitions = Managers.achievements:get_achievement_definitions()
-				local id = nil
-
-				for _, achievement_definition in ipairs(achievement_definitions) do
-					local name = achievement_definition:label()
-
-					if name == achievement_name then
-						local achievement_id = achievement_definition:id()
-						id = NetworkLookup.achievement_names[achievement_id]
-					end
-				end
-
-				RPC.rpc_debug_client_request_unlock_achievement(channel, account_id, id)
-			end
-		end
-	end
-end
-
-functions.unlock_achievement = {
-	name = "Unlock Achievement",
-	category = "Achievements",
-	dynamic_contents = true,
-	options_function = achievement_options,
-	on_activated = _unlock_achievement
 }
 local Views = require("scripts/ui/views/views")
 

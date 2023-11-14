@@ -403,12 +403,14 @@ weapon_template.actions = {
 	action_shoot_zoomed = {
 		start_input = "zoom_shoot",
 		kind = "shoot_pellets",
-		weapon_handling_template = "immediate_single_shot",
 		spread_template = "default_shotgun_killshot",
 		ammunition_usage = 1,
-		crosshair_type = "ironsight",
+		weapon_handling_template = "immediate_single_shot",
 		uninterruptible = true,
 		total_time = 1,
+		crosshair = {
+			crosshair_type = "ironsight"
+		},
 		action_movement_curve = {
 			{
 				modifier = 0.6,
@@ -493,10 +495,12 @@ weapon_template.actions = {
 		}
 	},
 	action_zoom = {
-		crosshair_type = "ironsight",
 		start_input = "zoom",
 		kind = "aim",
 		total_time = 0.3,
+		crosshair = {
+			crosshair_type = "ironsight"
+		},
 		allowed_chain_actions = {
 			combat_ability = {
 				action_name = "combat_ability"
@@ -523,10 +527,12 @@ weapon_template.actions = {
 		smart_targeting_template = SmartTargetingTemplates.alternate_fire_assault
 	},
 	action_unzoom = {
-		crosshair_type = "ironsight",
 		start_input = "zoom_release",
 		kind = "unaim",
 		total_time = 0.2,
+		crosshair = {
+			crosshair_type = "ironsight"
+		},
 		allowed_chain_actions = {
 			combat_ability = {
 				action_name = "combat_ability"
@@ -548,16 +554,18 @@ weapon_template.actions = {
 		}
 	},
 	action_start_reload = {
-		kind = "reload_shotgun",
+		stop_alternate_fire = true,
 		start_input = "reload",
 		anim_end_event = "reload_end",
-		sprint_requires_press_to_interrupt = true,
+		kind = "reload_shotgun",
 		abort_sprint = true,
-		crosshair_type = "none",
-		stop_alternate_fire = true,
+		sprint_requires_press_to_interrupt = true,
 		allowed_during_sprint = true,
 		anim_event = "reload_start",
 		total_time = 0.95,
+		crosshair = {
+			crosshair_type = "none"
+		},
 		anim_end_event_condition_func = function (unit, data, end_reason)
 			return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
 		end,
@@ -638,10 +646,12 @@ weapon_template.actions = {
 		anim_end_event = "reload_end",
 		weapon_handling_template = "time_scale_1",
 		sprint_requires_press_to_interrupt = true,
-		crosshair_type = "none",
 		allowed_during_sprint = true,
 		anim_event = "reload_middle",
 		total_time = 0.5,
+		crosshair = {
+			crosshair_type = "none"
+		},
 		anim_end_event_condition_func = function (unit, data, end_reason)
 			return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
 		end,
@@ -722,17 +732,23 @@ weapon_template.actions = {
 		}
 	},
 	action_weapon_special = {
-		kind = "ranged_load_special",
 		stop_alternate_fire = true,
 		start_input = "special_action",
+		kind = "ranged_load_special",
 		sprint_requires_press_to_interrupt = true,
 		anim_event_3p = "load_special",
 		abort_sprint = true,
-		crosshair_type = "dot",
+		weapon_handling_template = "time_scale_1",
 		allowed_during_sprint = true,
 		anim_event = "load_special_var_01",
 		prevent_sprint = true,
 		total_time = 1.5,
+		crosshair = {
+			crosshair_type = "none"
+		},
+		time_scale_stat_buffs = {
+			buff_stat_buffs.reload_speed
+		},
 		reload_settings = {
 			cost = 1,
 			refill_at_time = 0.62,
@@ -800,10 +816,12 @@ weapon_template.actions = {
 		start_input = "inspect_start",
 		anim_end_event = "inspect_end",
 		kind = "inspect",
-		crosshair_type = "inspect",
 		anim_event = "inspect_start",
 		stop_input = "inspect_stop",
-		total_time = math.huge
+		total_time = math.huge,
+		crosshair = {
+			crosshair_type = "inspect"
+		}
 	}
 }
 
@@ -836,8 +854,10 @@ weapon_template.fx_sources = {
 	_muzzle = "fx_muzzle_01",
 	_eject = "fx_eject"
 }
-weapon_template.crosshair_type = "shotgun"
-weapon_template.crosshair_type_special_active = "shotgun_slug"
+weapon_template.crosshair = {
+	crosshair_type_special_active = "shotgun_slug",
+	crosshair_type = "shotgun"
+}
 weapon_template.alternate_fire_settings = {
 	peeking_mechanics = true,
 	sway_template = "default_shotgun_killshot",
@@ -845,9 +865,11 @@ weapon_template.alternate_fire_settings = {
 	stop_anim_event = "to_unaim_ironsight",
 	special_recoil_template = "shotgun_killshot_m2_special",
 	spread_template = "default_lasgun_killshot",
-	crosshair_type = "ironsight",
 	start_anim_event = "to_ironsight",
 	look_delta_template = "lasgun_holo_aiming",
+	crosshair = {
+		crosshair_type = "ironsight"
+	},
 	camera = {
 		custom_vertical_fov = 30,
 		vertical_fov = 45,

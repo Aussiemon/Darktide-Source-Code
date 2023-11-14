@@ -333,7 +333,7 @@ MissionBoardViewDefinitions.scenegraph_definition = {
 		parent = "canvas",
 		horizontal_alignment = "right",
 		size = {
-			563,
+			483,
 			384
 		},
 		position = {
@@ -347,7 +347,7 @@ MissionBoardViewDefinitions.scenegraph_definition = {
 		parent = "detail",
 		horizontal_alignment = "right",
 		size = {
-			563,
+			483,
 			40
 		},
 		position = {
@@ -359,9 +359,9 @@ MissionBoardViewDefinitions.scenegraph_definition = {
 	detail_header = {
 		vertical_alignment = "bottom",
 		parent = "detail_timer",
-		horizontal_alignment = "left",
+		horizontal_alignment = "right",
 		size = {
-			563,
+			483,
 			75
 		},
 		position = {
@@ -379,17 +379,17 @@ MissionBoardViewDefinitions.scenegraph_definition = {
 			75
 		},
 		position = {
-			-5,
-			-2,
+			0,
+			0,
 			10
 		}
 	},
 	detail_location = {
 		vertical_alignment = "bottom",
 		parent = "detail_header",
-		horizontal_alignment = "left",
+		horizontal_alignment = "right",
 		size = {
-			563,
+			483,
 			269
 		},
 		position = {
@@ -401,9 +401,9 @@ MissionBoardViewDefinitions.scenegraph_definition = {
 	detail_circumstance = {
 		vertical_alignment = "bottom",
 		parent = "detail_location",
-		horizontal_alignment = "left",
+		horizontal_alignment = "right",
 		size = {
-			563,
+			483,
 			100
 		},
 		position = {
@@ -421,7 +421,7 @@ MissionBoardViewDefinitions.scenegraph_definition = {
 			0
 		},
 		position = {
-			40,
+			0,
 			0,
 			0
 		}
@@ -491,7 +491,7 @@ MissionBoardViewDefinitions.scenegraph_definition = {
 			178
 		},
 		position = {
-			40,
+			0,
 			0,
 			0
 		}
@@ -558,10 +558,10 @@ MissionBoardViewDefinitions.scenegraph_definition = {
 		horizontal_alignment = "center",
 		size = {
 			380,
-			78
+			60
 		},
 		position = {
-			50,
+			0,
 			570,
 			0
 		}
@@ -589,7 +589,7 @@ MissionBoardViewDefinitions.scenegraph_definition = {
 			50
 		},
 		position = {
-			50,
+			0,
 			460,
 			100
 		}
@@ -653,19 +653,19 @@ MissionBoardViewDefinitions.scenegraph_definition = {
 	mission_small_objective_1 = {
 		vertical_alignment = "top",
 		parent = "mission_small_location",
-		horizontal_alignment = "left",
+		horizontal_alignment = "right",
 		size = {
 			32,
 			32
 		},
 		position = {
-			-22,
-			13,
+			18,
+			6,
 			20
 		}
 	},
 	mission_small_objective_2 = {
-		vertical_alignment = "bottom",
+		vertical_alignment = "top",
 		parent = "mission_small_objective_1",
 		horizontal_alignment = "left",
 		size = {
@@ -674,21 +674,21 @@ MissionBoardViewDefinitions.scenegraph_definition = {
 		},
 		position = {
 			0,
-			35,
+			31,
 			0
 		}
 	},
 	mission_small_circumstance = {
 		vertical_alignment = "bottom",
-		parent = "mission_small",
+		parent = "mission_small_location",
 		horizontal_alignment = "right",
 		size = {
 			32,
 			32
 		},
 		position = {
-			22,
-			-25,
+			18,
+			16,
 			20
 		}
 	},
@@ -730,7 +730,7 @@ MissionBoardViewDefinitions.scenegraph_definition = {
 		},
 		position = {
 			0,
-			-24,
+			-20,
 			1
 		}
 	},
@@ -751,14 +751,14 @@ MissionBoardViewDefinitions.scenegraph_definition = {
 	mission_medium_objective_1 = {
 		vertical_alignment = "bottom",
 		parent = "mission_medium",
-		horizontal_alignment = "left",
+		horizontal_alignment = "right",
 		size = {
 			32,
 			32
 		},
 		position = {
-			-15,
-			-50,
+			18,
+			-88,
 			20
 		}
 	},
@@ -785,7 +785,7 @@ MissionBoardViewDefinitions.scenegraph_definition = {
 			32
 		},
 		position = {
-			15,
+			18,
 			-50,
 			20
 		}
@@ -799,7 +799,7 @@ MissionBoardViewDefinitions.scenegraph_definition = {
 			40
 		},
 		position = {
-			0,
+			1,
 			0,
 			10
 		}
@@ -807,13 +807,13 @@ MissionBoardViewDefinitions.scenegraph_definition = {
 	mission_medium_bonus = {
 		vertical_alignment = "top",
 		parent = "mission_medium",
-		horizontal_alignment = "center",
+		horizontal_alignment = "left",
 		size = {
 			251,
 			20
 		},
 		position = {
-			0,
+			20,
 			25,
 			10
 		}
@@ -847,7 +847,37 @@ MissionBoardViewDefinitions.scenegraph_definition = {
 		}
 	}
 }
-MissionBoardViewDefinitions.widget_definitions = {}
+MissionBoardViewDefinitions.widget_definitions = {
+	background = UIWidget.create_definition({
+		{
+			value = "content/ui/materials/backgrounds/panel_horizontal_half",
+			pass_type = "texture_uv",
+			style = {
+				offset = {
+					300,
+					0,
+					0
+				},
+				uvs = {
+					{
+						1,
+						0
+					},
+					{
+						0,
+						1
+					}
+				},
+				color = {
+					120,
+					0,
+					0,
+					0
+				}
+			}
+		}
+	}, "screen")
+}
 MissionBoardViewDefinitions.widget_definitions_functions = {}
 MissionBoardViewDefinitions.widget_definitions.gamepad_cursor = UIWidget.create_definition({
 	{
@@ -1119,7 +1149,7 @@ local function _change_function_difficulty(danger)
 			if content_danger < danger then
 				ColorUtilities.color_copy(style.color_disabled, style.color, true)
 			else
-				ColorUtilities.color_copy(style.default_color, style.color, true)
+				MissionBoardViewStyles.difficulty_bar_change_function(content, style)
 			end
 		end
 	end
@@ -1610,13 +1640,6 @@ MissionBoardViewDefinitions.mission_small_widget_template = UIWidget.create_defi
 		pass_type = "hotspot",
 		content_id = "hotspot",
 		content = mission_widget_hotspot_content
-	},
-	{
-		value_id = "fluff_frame",
-		style_id = "fluff_frame",
-		pass_type = "texture",
-		value = "content/ui/materials/fluff/hologram/frames/fluff_frame_01",
-		visibility_function = _is_not_locked
 	},
 	{
 		value = "content/ui/materials/frames/frame_glow_01",
@@ -2180,7 +2203,7 @@ MissionBoardViewDefinitions.bonus_data_widget_definitons = UIWidget.create_defin
 		style = {
 			offset = {
 				0,
-				0,
+				70,
 				0
 			},
 			size = {
@@ -2196,12 +2219,12 @@ MissionBoardViewDefinitions.bonus_data_widget_definitons = UIWidget.create_defin
 		value = "",
 		style = {
 			font_type = "proxima_nova_bold",
-			font_size = 24,
+			font_size = 20,
 			text_vertical_alignment = "top",
 			text_horizontal_alignment = "left",
 			offset = {
 				50,
-				0,
+				70,
 				0
 			},
 			text_color = MissionBoardViewSettings.color_text_title
@@ -2697,7 +2720,7 @@ MissionBoardViewDefinitions.widget_definitions_functions.detail_pass_function = 
 			style_id = "maelstrom_text",
 			scenegraph_id = "detail_circumstance",
 			pass_type = "text",
-			value = Localize("loc_mission_board_maelstrom_header"),
+			value = Utf8.upper(Localize("loc_mission_board_maelstrom_header")),
 			visibility_function = _is_flash
 		}
 	}, "detail", nil, nil, MissionBoardViewStyles.detail_widget_style_function(mission_type))
@@ -2892,35 +2915,35 @@ MissionBoardViewDefinitions.widget_definitions_functions.mission_small_widget_pa
 			scenegraph_id = "mission_small_difficulty",
 			pass_type = "rect",
 			visibility_function = _difficulty_1,
-			change_function = MissionBoardViewStyles.is_locked_change_function
+			change_function = MissionBoardViewStyles.difficulty_bar_change_function
 		},
 		{
 			style_id = "difficulty_bar_2",
 			scenegraph_id = "mission_small_difficulty",
 			pass_type = "rect",
 			visibility_function = _difficulty_2,
-			change_function = MissionBoardViewStyles.is_locked_change_function
+			change_function = MissionBoardViewStyles.difficulty_bar_change_function
 		},
 		{
 			style_id = "difficulty_bar_3",
 			scenegraph_id = "mission_small_difficulty",
 			pass_type = "rect",
 			visibility_function = _difficulty_3,
-			change_function = MissionBoardViewStyles.is_locked_change_function
+			change_function = MissionBoardViewStyles.difficulty_bar_change_function
 		},
 		{
 			style_id = "difficulty_bar_4",
 			scenegraph_id = "mission_small_difficulty",
 			pass_type = "rect",
 			visibility_function = _difficulty_4,
-			change_function = MissionBoardViewStyles.is_locked_change_function
+			change_function = MissionBoardViewStyles.difficulty_bar_change_function
 		},
 		{
 			style_id = "difficulty_bar_5",
 			scenegraph_id = "mission_small_difficulty",
 			pass_type = "rect",
 			visibility_function = _difficulty_5,
-			change_function = MissionBoardViewStyles.is_locked_change_function
+			change_function = MissionBoardViewStyles.difficulty_bar_change_function
 		},
 		{
 			value_id = "location_image",
@@ -3126,35 +3149,35 @@ MissionBoardViewDefinitions.widget_definitions_functions.mission_medium_widget_p
 			scenegraph_id = "mission_medium_difficulty",
 			pass_type = "rect",
 			visibility_function = _difficulty_1,
-			change_function = MissionBoardViewStyles.is_locked_change_function
+			change_function = MissionBoardViewStyles.difficulty_bar_change_function
 		},
 		{
 			style_id = "difficulty_bar_2",
 			scenegraph_id = "mission_medium_difficulty",
 			pass_type = "rect",
 			visibility_function = _difficulty_2,
-			change_function = MissionBoardViewStyles.is_locked_change_function
+			change_function = MissionBoardViewStyles.difficulty_bar_change_function
 		},
 		{
 			style_id = "difficulty_bar_3",
 			scenegraph_id = "mission_medium_difficulty",
 			pass_type = "rect",
 			visibility_function = _difficulty_3,
-			change_function = MissionBoardViewStyles.is_locked_change_function
+			change_function = MissionBoardViewStyles.difficulty_bar_change_function
 		},
 		{
 			style_id = "difficulty_bar_4",
 			scenegraph_id = "mission_medium_difficulty",
 			pass_type = "rect",
 			visibility_function = _difficulty_4,
-			change_function = MissionBoardViewStyles.is_locked_change_function
+			change_function = MissionBoardViewStyles.difficulty_bar_change_function
 		},
 		{
 			style_id = "difficulty_bar_5",
 			scenegraph_id = "mission_medium_difficulty",
 			pass_type = "rect",
 			visibility_function = _difficulty_5,
-			change_function = MissionBoardViewStyles.is_locked_change_function
+			change_function = MissionBoardViewStyles.difficulty_bar_change_function
 		},
 		{
 			value_id = "location_image",
@@ -3265,10 +3288,9 @@ MissionBoardViewDefinitions.widget_definitions_functions.mission_medium_widget_p
 			visibility_function = _has_circumstance
 		},
 		{
-			style_id = "title_gradient",
 			scenegraph_id = "mission_medium_title",
-			pass_type = "texture",
-			value = "content/ui/materials/gradients/gradient_horizontal",
+			style_id = "title_background",
+			pass_type = "rect",
 			visibility_function = function (content)
 				return content.title and content.title ~= ""
 			end

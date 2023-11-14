@@ -3,7 +3,7 @@ local PI = math.pi
 local parameter_table = {}
 
 AimProjectile.aim_parameters = function (initial_position, initial_rotation, look_rotation, locomotion_template, throw_type, time_in_action)
-	local throw_config = locomotion_template.throw_parameters[throw_type]
+	local throw_config = locomotion_template.trajectory_parameters[throw_type]
 	local local_shoot_offset = Vector3(throw_config.offset_right or 0, throw_config.offset_forward or 0, throw_config.offset_up or 0)
 	local offset = Quaternion.rotate(look_rotation, local_shoot_offset)
 	local position = initial_position + offset
@@ -34,8 +34,8 @@ AimProjectile.aim_parameters = function (initial_position, initial_rotation, loo
 	if rotation_charge_duration == 0 then
 		local maximal_ypr = rotation_offset_maximal
 		local maximal_offset = Quaternion.from_yaw_pitch_roll(maximal_ypr.x, maximal_ypr.y, maximal_ypr.z)
-		local look_rotation = Quaternion.multiply(look_rotation, maximal_offset)
-		direction = Quaternion.forward(look_rotation)
+		local new_look_rotation = Quaternion.multiply(look_rotation, maximal_offset)
+		direction = Quaternion.forward(new_look_rotation)
 	else
 		local charge_direction_time = time_in_action
 		local alpha = charge_direction_time / rotation_charge_duration
@@ -44,9 +44,9 @@ AimProjectile.aim_parameters = function (initial_position, initial_rotation, loo
 		local initial_offset = Quaternion.from_yaw_pitch_roll(initial_ypr.x, initial_ypr.y, initial_ypr.z)
 		local maximal_ypr = rotation_offset_maximal
 		local maximal_offset = Quaternion.from_yaw_pitch_roll(maximal_ypr.x, maximal_ypr.y, maximal_ypr.z)
-		local offset = Quaternion.lerp(initial_offset, maximal_offset, alpha)
+		local new_offset = Quaternion.lerp(initial_offset, maximal_offset, alpha)
 		local current_pitch = Quaternion.pitch(look_rotation)
-		local offset_pitch = Quaternion.pitch(offset)
+		local offset_pitch = Quaternion.pitch(new_offset)
 		local offseted_pitch = current_pitch + offset_pitch + current_pitch * 0.5
 		local pitch_limit = PI / 2 * 0.73
 		local actual_pitch = math.min(offseted_pitch, PI / 2 * 0.73)
@@ -88,7 +88,7 @@ AimProjectile.get_spawn_parameters_from_current_aim = function (action_settings,
 	local rotation = aim_parameters.rotation
 	local direction = aim_parameters.direction
 	local speed = aim_parameters.speed
-	local throw_config = projectile_locomotion_template.throw_parameters[throw_type]
+	local throw_config = projectile_locomotion_template.trajectory_parameters[throw_type]
 	local angular_velocity = nil
 
 	if throw_config.randomized_angular_velocity then
@@ -103,12 +103,12 @@ AimProjectile.get_spawn_parameters_from_current_aim = function (action_settings,
 	return position, rotation, direction, speed, angular_velocity
 end
 
-AimProjectile.get_spawn_parameters_from_aim_component = function (action_aim_projectile)
-	local position = action_aim_projectile.position
-	local rotation = action_aim_projectile.rotation
-	local direction = action_aim_projectile.direction
-	local speed = action_aim_projectile.speed
-	local angular_velocity = action_aim_projectile.momentum
+AimProjectile.get_spawn_parameters_from_aim_component = function (action_aim_projectile_component)
+	local position = action_aim_projectile_component.position
+	local rotation = action_aim_projectile_component.rotation
+	local direction = action_aim_projectile_component.direction
+	local speed = action_aim_projectile_component.speed
+	local angular_velocity = action_aim_projectile_component.momentum
 
 	return position, rotation, direction, speed, angular_velocity
 end

@@ -116,6 +116,10 @@ local default_debug_input_settings = {
 			raw = "keyboard_left shift+keyboard_t",
 			type = "pressed"
 		},
+		restart_twin_ambushes = {
+			raw = "keyboard_left shift+keyboard_o",
+			type = "pressed"
+		},
 		toggle_minion_perception = {
 			raw = "keyboard_left shift+keyboard_z",
 			type = "pressed"
@@ -151,6 +155,10 @@ local default_debug_input_settings = {
 		},
 		select_unit = {
 			raw = "keyboard_v",
+			type = "pressed"
+		},
+		replenish_ability_charge = {
+			raw = "keyboard_9",
 			type = "pressed"
 		},
 		toggle_paint_liquid = {

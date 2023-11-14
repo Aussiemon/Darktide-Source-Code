@@ -23,6 +23,12 @@ value_font_style.offset = {
 }
 local header_font_style = table.clone(UIFontSettings.header_2)
 header_font_style.text_vertical_alignment = "bottom"
+header_font_style.font_size = 28
+header_font_style.offset = {
+	30,
+	0,
+	0
+}
 local blueprints = {
 	spacing_vertical = {
 		size_function = function (parent, entry)
@@ -915,7 +921,7 @@ blueprints.controller_image = {
 					0,
 					0
 				},
-				color = Color.ui_terminal(255, true)
+				color = Color.terminal_text_body(255, true)
 			}
 		},
 		{

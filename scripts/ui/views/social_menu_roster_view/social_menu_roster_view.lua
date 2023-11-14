@@ -1126,8 +1126,8 @@ SocialMenuRosterView._setup_tab_bar = function (self, tab_bar, params)
 		self._tab_ids[i] = tab_id
 	end
 
-	local input_action_left = "navigate_secondary_left_pressed"
-	local input_action_right = "navigate_secondary_right_pressed"
+	local input_action_left = "navigate_primary_left_pressed"
+	local input_action_right = "navigate_primary_right_pressed"
 
 	tab_bar:set_input_actions(input_action_left, input_action_right)
 	self:_position_tab_bar()
@@ -1443,13 +1443,13 @@ SocialMenuRosterView._handle_input = function (self, input_service, dt, t)
 		end
 	end
 
-	if input_service:get("navigate_secondary_right_pressed") then
+	if input_service:get("navigate_primary_right_pressed") then
 		self:_play_sound(UISoundEvents.tab_secondary_button_pressed)
 
 		local next_index = math.index_wrapper(self._current_list_index + 1, #self._roster_lists)
 
 		self:set_next_roster_filter(next_index)
-	elseif input_service:get("navigate_secondary_left_pressed") then
+	elseif input_service:get("navigate_primary_left_pressed") then
 		self:_play_sound(UISoundEvents.tab_secondary_button_pressed)
 
 		local previous_index = math.index_wrapper(self._current_list_index - 1, #self._roster_lists)

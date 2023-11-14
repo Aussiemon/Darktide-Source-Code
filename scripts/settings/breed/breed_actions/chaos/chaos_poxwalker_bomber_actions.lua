@@ -254,6 +254,23 @@ local action_data = {
 				dwn = {
 					"stun_down"
 				}
+			},
+			blinding = {
+				fwd = {
+					"stagger_fwd"
+				},
+				bwd = {
+					"stagger_bwd"
+				},
+				left = {
+					"stagger_left"
+				},
+				right = {
+					"stagger_right"
+				},
+				dwn = {
+					"stun_down"
+				}
 			}
 		}
 	},

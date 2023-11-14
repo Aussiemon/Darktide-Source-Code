@@ -55,7 +55,7 @@ local talent_settings = {
 			health_step = 0.15,
 			toughness_reduction_per_stack = -0.05,
 			max_stacks = 3,
-			martyrdom_max_stacks = 9
+			martyrdom_max_stacks = 7
 		},
 		passive_2 = {
 			on_damage_taken_proc_chance = 1,

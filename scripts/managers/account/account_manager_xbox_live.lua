@@ -486,9 +486,9 @@ AccountManagerXboxLive._setup_friends_list = function (self)
 		return
 	end
 
-	local success, error_code = XSocialManager.add_local_user(self._user_id)
+	local error_code = XSocialManager.add_local_user(self._user_id)
 
-	if success then
+	if error_code == nil then
 		self._title_online_friends_id = XSocialManager.create_social_group(self._user_id, XPresenceFilter.TitleOnline, XRelationshipFilter.Friends)
 		self._online_friends_id = XSocialManager.create_social_group(self._user_id, XPresenceFilter.AllOnline, XRelationshipFilter.Friends)
 		self._offline_friends_id = XSocialManager.create_social_group(self._user_id, XPresenceFilter.AllOffline, XRelationshipFilter.Friends)

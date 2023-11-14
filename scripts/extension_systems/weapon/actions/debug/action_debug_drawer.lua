@@ -7,6 +7,7 @@ local DRAWER_POS_X = 0
 local DRAWER_POS_Y = 0
 local DRAWER_LAYER = 10
 local DRAWER_SIZE_X = 540
+local ACTION_NAME_FONT_SIZE = 18
 local TIMELINE_SIZE_X = DRAWER_SIZE_X * 0.95
 local TIMELINEBAR_POS_Y = 40
 local TIMELINEBAR_OFFSET_Y = 20
@@ -14,9 +15,10 @@ local TIMELINEBAR_SIZE_Y = 4
 local TIMELINEBAR_INDICATOR_Y = 4
 local TIMELINEBAR_INDICATOR_SIZE_X = 2
 local TIMELINEBAR_INDICATOR_SIZE_Y = 5
-local CHAIN_ACTION_BAR_POS_Y = 30
+local CHAIN_ACTION_BAR_POS_Y = 30 + ACTION_NAME_FONT_SIZE
 local CHAIN_ACTION_BAR_SIZE_Y = 15
-local CHAIN_ACTION_BAR_OFFSET_Y = CHAIN_ACTION_BAR_SIZE_Y + 2
+local CHAIN_ACTION_BAR_GAP = 2
+local CHAIN_ACTION_BAR_OFFSET_Y = CHAIN_ACTION_BAR_SIZE_Y + CHAIN_ACTION_BAR_GAP
 local VARIABLE_POS_X = 10
 local VARIABLE_POS_Y = 40
 local VARIABLE_OFFSET_Y = 20
@@ -70,7 +72,7 @@ ActionDebugDrawer._added_background_height = function (self)
 end
 
 ActionDebugDrawer._draw_background = function (self, gui, added_height)
-	local bg_size = Vector2(DRAWER_SIZE_X, 40 + added_height)
+	local bg_size = Vector2(DRAWER_SIZE_X, 40 + added_height + ACTION_NAME_FONT_SIZE)
 	local x, y = _screenspace_position(DRAWER_POS_X, DRAWER_POS_Y, bg_size, DRAWER_ALIGNMENT_X, DRAWER_ALIGNMENT_Y)
 	local bg_pos = Vector3(x, y, DRAWER_LAYER)
 
@@ -80,47 +82,61 @@ ActionDebugDrawer._draw_background = function (self, gui, added_height)
 end
 
 ActionDebugDrawer._draw_action_name = function (self, gui, anchor_position)
-	local font_size = 18
 	local text_pos = Vector3(anchor_position.x + 10, anchor_position.y + 5, DRAWER_LAYER + 1)
 	local weapon_action_component = self._weapon_action_component
 	local action_start_t = weapon_action_component.start_t
 	local latest_fixed_t = FixedFrame.get_latest_fixed_time()
 	local time_in_action = latest_fixed_t - action_start_t
-	local text = string.format("%s (running time: %.3f)", self._action_settings.name, time_in_action)
+	local text = string.format("%s\nrunning time: %.3f/%.3f", self._action_settings.name, time_in_action, self._action_settings.total_time)
 
-	Gui.slug_text(gui, text, DevParameters.debug_text_font, font_size, text_pos, nil, Color.cheeseburger())
+	Gui.slug_text(gui, text, DevParameters.debug_text_font, ACTION_NAME_FONT_SIZE, text_pos, Vector3(DRAWER_SIZE_X, ACTION_NAME_FONT_SIZE * 2, 0), Color.cheeseburger())
+end
+
+ActionDebugDrawer._draw_single_chain_action = function (self, action_timeline, time_scale, chain_action_index, chain_action, gui, anchor_position, anchor_size, extra_background_y_size, action_available)
+	local bar_size_x = TIMELINE_SIZE_X
+	local action_settings = self._action_settings
+	local chain_time = chain_action.chain_time or 0
+	local chain_start_t = chain_time / time_scale
+	local chain_end_t = action_settings.total_time / time_scale
+	local chain_time_window = chain_end_t == math.huge and 1 or chain_end_t - chain_start_t
+	chain_time_window = action_timeline > 0 and chain_time_window / action_timeline or 0
+	local offset_y = CHAIN_ACTION_BAR_OFFSET_Y * (chain_action_index - 1)
+	local chain_time_start = bar_size_x * chain_start_t / action_timeline
+	chain_time_start = action_timeline > 0 and chain_time_start / (action_timeline > 1 and action_timeline or 1) or 0
+	local chain_bar_size_x = bar_size_x * chain_time_window
+	local pos = Vector3(anchor_position.x + anchor_size.x / 2 - bar_size_x / 2 + bar_size_x - chain_bar_size_x, anchor_position.y + CHAIN_ACTION_BAR_POS_Y + offset_y, DRAWER_LAYER + 1)
+	local size = Vector2(chain_bar_size_x, CHAIN_ACTION_BAR_SIZE_Y + (extra_background_y_size or 0))
+	local chain_color = chain_action.auto_chain and Color.red() or Color.cheeseburger()
+	local font_size = 12
+	local chain_action_name = chain_action.action_name or "missing"
+
+	Gui.rect(gui, pos, size, chain_color)
+	Gui.slug_text(gui, chain_action_name, DevParameters.debug_text_font, font_size, pos + Vector3(5, CHAIN_ACTION_BAR_SIZE_Y / 2 - font_size / 2 + 1, 1), nil, Color.black())
 end
 
 ActionDebugDrawer._draw_chain_actions = function (self, gui, anchor_position, anchor_size)
-	local bar_size_x = TIMELINE_SIZE_X
-	local weapon_action_component = self._weapon_action_component
-	local allowed_chain_actions = self._action_settings.allowed_chain_actions or EMPTY_TABLE
 	local action_settings = self._action_settings
+	local weapon_action_component = self._weapon_action_component
+	local allowed_chain_actions = action_settings.allowed_chain_actions or EMPTY_TABLE
 	local action_timeline = _action_timeline(self._weapon_action_component, action_settings)
 	local time_scale = weapon_action_component.time_scale
 	local chain_action_index = 0
 
 	for chain_id, chain_action in pairs(allowed_chain_actions) do
-		chain_action_index = chain_action_index + 1
-		local chain_time = chain_action.chain_time or 0
-		local chain_start_t = chain_time / time_scale
-		local chain_end_t = action_settings.total_time / time_scale
-		local chain_time_window = chain_end_t == math.huge and 1 or chain_end_t - chain_start_t
-		chain_time_window = action_timeline > 0 and chain_time_window / action_timeline or 0
-		local offset_y = CHAIN_ACTION_BAR_OFFSET_Y * (chain_action_index - 1)
-		local chain_time_start = bar_size_x * chain_start_t / action_timeline
-		chain_time_start = action_timeline > 0 and chain_time_start / action_timeline or 0
-		local pos = Vector3(anchor_position.x + anchor_size.x / 2 - bar_size_x / 2 + chain_time_start, anchor_position.y + CHAIN_ACTION_BAR_POS_Y + offset_y, DRAWER_LAYER + 1)
-		local chain_bar_size_x = bar_size_x * chain_time_window
-		local size = Vector2(chain_bar_size_x, CHAIN_ACTION_BAR_SIZE_Y)
-		local chain_color = chain_action.auto_chain and Color.red() or Color.cheeseburger()
+		local num_chain_actions = #chain_action
 
-		Gui.rect(gui, pos, size, chain_color)
+		if num_chain_actions == 0 then
+			chain_action_index = chain_action_index + 1
 
-		local chain_action_name = chain_action.action_name or "missing"
-		local font_size = 12
+			self:_draw_single_chain_action(action_timeline, time_scale, chain_action_index, chain_action, gui, anchor_position, anchor_size)
+		else
+			for ii = 1, num_chain_actions do
+				chain_action_index = chain_action_index + 1
+				local extra_background_y_size = ii < num_chain_actions and CHAIN_ACTION_BAR_GAP or 0
 
-		Gui.slug_text(gui, chain_action_name, DevParameters.debug_text_font, font_size, pos + Vector3(5, CHAIN_ACTION_BAR_SIZE_Y / 2 - font_size / 2 + 1, 1), nil, Color.black())
+				self:_draw_single_chain_action(action_timeline, time_scale, chain_action_index, chain_action[ii], gui, anchor_position, anchor_size, extra_background_y_size)
+			end
+		end
 	end
 
 	return CHAIN_ACTION_BAR_OFFSET_Y * chain_action_index
@@ -136,7 +152,7 @@ ActionDebugDrawer._draw_timeline_indicator = function (self, gui, anchor_positio
 	local current_t = latest_fixed_t - action_start_t
 	local p = action_timeline == 0 and 0 or current_t / action_timeline
 	local pos_x = anchor_position.x + anchor_size.x / 2 - bar_size_x / 2 + bar_size_x * p
-	local pos_y = anchor_position.y + 23
+	local pos_y = anchor_position.y + 23 + ACTION_NAME_FONT_SIZE
 	local pos = Vector3(pos_x, pos_y, DRAWER_LAYER + 2)
 	local chain_action_size_y = _chain_actions_size_y(self._action_settings)
 	local timeline_bars_size_y = _timeline_bars_size_y(self._timeline_bars)
@@ -158,7 +174,7 @@ ActionDebugDrawer._draw_timeline_bars = function (self, gui, anchor_position, an
 	for timeline_i = 1, #timeline_bars do
 		local timeline_bar = timeline_bars[timeline_i]
 		local pos_x = anchor_position.x + anchor_size.x / 2 - bar_size_x / 2
-		local pos_y = anchor_position.y + chain_action_size_y + TIMELINEBAR_POS_Y + TIMELINEBAR_OFFSET_Y * (timeline_i - 1)
+		local pos_y = anchor_position.y + chain_action_size_y + TIMELINEBAR_POS_Y + TIMELINEBAR_OFFSET_Y * (timeline_i - 1) + ACTION_NAME_FONT_SIZE
 		local pos = Vector3(pos_x, pos_y, timeline_bar_layer)
 		local size = Vector2(bar_size_x, TIMELINEBAR_SIZE_Y)
 
@@ -194,7 +210,7 @@ ActionDebugDrawer._draw_variables = function (self, gui, anchor_position)
 		local value = tostring(source[id])
 		local text = string.format("%s - %s", name, value)
 		local pos_x = anchor_position.x + VARIABLE_POS_X
-		local pos_y = anchor_position.y + chain_action_size_y + timeline_bars_size_y + VARIABLE_OFFSET_Y * (i - 1) + VARIABLE_POS_Y
+		local pos_y = anchor_position.y + chain_action_size_y + timeline_bars_size_y + VARIABLE_OFFSET_Y * (i - 1) + VARIABLE_POS_Y + ACTION_NAME_FONT_SIZE
 		local pos = Vector3(pos_x, pos_y, DRAWER_LAYER + 1)
 
 		Gui.slug_text(gui, text, DevParameters.debug_text_font, font_size, pos, nil, Color.white())
@@ -226,7 +242,11 @@ end
 
 function _chain_actions_size_y(action_settings)
 	local allowed_chain_actions = action_settings.allowed_chain_actions or EMPTY_TABLE
-	local num_chain_actions = table.size(allowed_chain_actions or EMPTY_TABLE)
+	local num_chain_actions = 0
+
+	for chain_id, chain_action in pairs(allowed_chain_actions) do
+		num_chain_actions = num_chain_actions + math.max(#chain_action, 1)
+	end
 
 	return num_chain_actions * CHAIN_ACTION_BAR_OFFSET_Y
 end

@@ -241,14 +241,16 @@ weapon_template.actions = {
 		}
 	},
 	action_shoot_zoomed = {
-		sprint_ready_up_time = 0.5,
+		start_input = "zoom_shoot",
 		kind = "shoot_hit_scan",
 		weapon_handling_template = "immediate_single_shot",
 		time_scale = 2,
 		ammunition_usage = 1,
-		crosshair_type = "ironsight",
-		start_input = "zoom_shoot",
+		sprint_ready_up_time = 0.5,
 		total_time = 0.2,
+		crosshair = {
+			crosshair_type = "ironsight"
+		},
 		action_movement_curve = {
 			{
 				modifier = 0.4,
@@ -321,11 +323,13 @@ weapon_template.actions = {
 		}
 	},
 	action_zoom = {
-		crosshair_type = "ironsight",
 		start_input = "zoom",
 		kind = "aim",
 		total_time = 0.1,
 		smart_targeting_template = SmartTargetingTemplates.alternate_fire_killshot,
+		crosshair = {
+			crosshair_type = "ironsight"
+		},
 		allowed_chain_actions = {
 			combat_ability = {
 				action_name = "combat_ability"
@@ -351,10 +355,12 @@ weapon_template.actions = {
 		}
 	},
 	action_unzoom = {
-		crosshair_type = "ironsight",
 		start_input = "zoom_release",
 		kind = "unaim",
 		total_time = 0.2,
+		crosshair = {
+			crosshair_type = "ironsight"
+		},
 		allowed_chain_actions = {
 			combat_ability = {
 				action_name = "combat_ability"
@@ -379,12 +385,14 @@ weapon_template.actions = {
 		}
 	},
 	action_reload = {
-		crosshair_type = "dot",
+		weapon_handling_template = "increased_reload_speed",
 		start_input = "reload",
 		kind = "reload_state",
-		weapon_handling_template = "increased_reload_speed",
 		stop_alternate_fire = true,
 		total_time = 3,
+		crosshair = {
+			crosshair_type = "dot"
+		},
 		action_movement_curve = {
 			{
 				modifier = 0.775,
@@ -453,10 +461,12 @@ weapon_template.actions = {
 		start_input = "inspect_start",
 		anim_end_event = "inspect_end",
 		kind = "inspect",
-		crosshair_type = "inspect",
 		anim_event = "inspect_start",
 		stop_input = "inspect_stop",
-		total_time = math.huge
+		total_time = math.huge,
+		crosshair = {
+			crosshair_type = "inspect"
+		}
 	}
 }
 
@@ -492,18 +502,22 @@ weapon_template.fx_sources = {
 	_muzzle = "fx_muzzle_01",
 	_mag_well = "fx_reload"
 }
-weapon_template.crosshair_type = "cross"
+weapon_template.crosshair = {
+	crosshair_type = "cross"
+}
 weapon_template.hit_marker_type = "center"
 weapon_template.alternate_fire_settings = {
-	crosshair_type = "ironsight",
+	stop_anim_event = "to_unaim_reflex",
 	sway_template = "default_lasgun_killshot",
 	recoil_template = "default_lasgun_killshot",
-	stop_anim_event = "to_unaim_reflex",
 	spread_template = "default_lasgun_killshot",
 	suppression_template = "default_lasgun_killshot",
 	toughness_template = "killshot_zoomed",
 	start_anim_event = "to_reflex",
 	look_delta_template = "lasgun_holo_aiming",
+	crosshair = {
+		crosshair_type = "ironsight"
+	},
 	camera = {
 		custom_vertical_fov = 45,
 		vertical_fov = 45,

@@ -3,6 +3,7 @@ local AttackingUnitResolver = require("scripts/utilities/attack/attacking_unit_r
 local AttackSettings = require("scripts/settings/damage/attack_settings")
 local Breed = require("scripts/utilities/breed")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
+local CameraShake = require("scripts/utilities/camera/camera_shake")
 local DamageProfile = require("scripts/utilities/attack/damage_profile")
 local FixedFrame = require("scripts/utilities/fixed_frame")
 local Health = require("scripts/utilities/health")
@@ -54,6 +55,22 @@ Explosion.create_explosion = function (world, physics_world, source_position, op
 	table.clear(attack_units_hit_actors)
 
 	local number_of_attack_units = 0
+	local locomotion_extension = ScriptUnit.has_extension(attacking_unit, "locomotion_system")
+
+	if locomotion_extension and locomotion_extension.sticking_to_unit then
+		local sticking_to_unit, _, sticking_to_actor = locomotion_extension:sticking_to_unit()
+
+		if sticking_to_unit and sticking_to_actor then
+			hit_units[sticking_to_unit] = true
+			number_of_attack_units = number_of_attack_units + 1
+			attack_units_array[number_of_attack_units] = sticking_to_unit
+			local center_mass_actor_names = HitZone.get_actor_names(sticking_to_unit, HitZone.hit_zone_names.center_mass)
+			local center_mass_actor_name = center_mass_actor_names and center_mass_actor_names[1]
+			local center_mass_actor = center_mass_actor_name and Unit.actor(sticking_to_unit, center_mass_actor_name)
+			attack_units_hit_actors[sticking_to_unit] = center_mass_actor or sticking_to_actor
+			attack_units_distance_sq[sticking_to_unit] = 0
+		end
+	end
 
 	for i = 1, num_actors do
 		local hit_actor = hit_actors[i]

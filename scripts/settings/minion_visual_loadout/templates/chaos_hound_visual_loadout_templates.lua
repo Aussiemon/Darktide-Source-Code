@@ -6,12 +6,14 @@ local templates = {
 local basic_chaos_hound_template = {
 	slots = {
 		slot_body = {
+			use_outline = true,
 			items = {
 				"content/items/characters/minions/chaos_hound/attachments_base/body",
 				"content/items/characters/minions/chaos_hound/attachments_base/body_var_01"
 			}
 		},
 		slot_horns = {
+			use_outline = true,
 			items = {
 				"content/items/characters/minions/chaos_hound/attachments_gear/horns_01",
 				"content/items/characters/minions/chaos_hound/attachments_gear/horns_02",
@@ -19,6 +21,7 @@ local basic_chaos_hound_template = {
 			}
 		},
 		slot_body_horns = {
+			use_outline = true,
 			items = {
 				"content/items/characters/minions/chaos_hound/attachments_gear/horns_body_01",
 				"content/items/characters/minions/generic_items/empty_minion_item",

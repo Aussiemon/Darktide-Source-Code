@@ -33,8 +33,7 @@ local chainsword_sawing = {
 		[armor_types.berserker] = damage_lerp_values.lerp_1,
 		[armor_types.super_armor] = damage_lerp_values.lerp_0_75,
 		[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
-		[armor_types.void_shield] = damage_lerp_values.lerp_1,
-		[armor_types.prop_armor] = damage_lerp_values.lerp_1
+		[armor_types.void_shield] = damage_lerp_values.lerp_1
 	},
 	impact = {
 		[armor_types.unarmored] = damage_lerp_values.lerp_1,
@@ -44,8 +43,7 @@ local chainsword_sawing = {
 		[armor_types.berserker] = damage_lerp_values.lerp_1,
 		[armor_types.super_armor] = damage_lerp_values.lerp_1,
 		[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
-		[armor_types.void_shield] = damage_lerp_values.lerp_1,
-		[armor_types.prop_armor] = damage_lerp_values.lerp_1
+		[armor_types.void_shield] = damage_lerp_values.lerp_1
 	}
 }
 local chain_sword_crit_mod = {
@@ -57,8 +55,7 @@ local chain_sword_crit_mod = {
 		[armor_types.berserker] = 0,
 		[armor_types.super_armor] = 0.2,
 		[armor_types.disgustingly_resilient] = 0,
-		[armor_types.void_shield] = 0,
-		[armor_types.prop_armor] = 0
+		[armor_types.void_shield] = 0
 	},
 	impact = {
 		[armor_types.unarmored] = 0,
@@ -68,8 +65,7 @@ local chain_sword_crit_mod = {
 		[armor_types.berserker] = 0,
 		[armor_types.super_armor] = 0.5,
 		[armor_types.disgustingly_resilient] = 0,
-		[armor_types.void_shield] = 0,
-		[armor_types.prop_armor] = 0
+		[armor_types.void_shield] = 0
 	}
 }
 local just_one = {
@@ -85,8 +81,7 @@ local chain_axe_light_mod = {
 		[armor_types.berserker] = damage_lerp_values.lerp_0_75,
 		[armor_types.super_armor] = damage_lerp_values.no_damage,
 		[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
-		[armor_types.void_shield] = damage_lerp_values.lerp_0_75,
-		[armor_types.prop_armor] = damage_lerp_values.lerp_0_75
+		[armor_types.void_shield] = damage_lerp_values.lerp_0_75
 	},
 	impact = {
 		[armor_types.unarmored] = damage_lerp_values.lerp_1,
@@ -96,8 +91,7 @@ local chain_axe_light_mod = {
 		[armor_types.berserker] = damage_lerp_values.lerp_0_25,
 		[armor_types.super_armor] = damage_lerp_values.no_damage,
 		[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
-		[armor_types.void_shield] = damage_lerp_values.lerp_1,
-		[armor_types.prop_armor] = damage_lerp_values.lerp_1
+		[armor_types.void_shield] = damage_lerp_values.lerp_1
 	}
 }
 local chain_axe_heavy_mod = {
@@ -109,8 +103,7 @@ local chain_axe_heavy_mod = {
 		[armor_types.berserker] = damage_lerp_values.lerp_0_8,
 		[armor_types.super_armor] = damage_lerp_values.no_damage,
 		[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
-		[armor_types.void_shield] = damage_lerp_values.lerp_1,
-		[armor_types.prop_armor] = damage_lerp_values.lerp_0_6
+		[armor_types.void_shield] = damage_lerp_values.lerp_1
 	},
 	impact = {
 		[armor_types.unarmored] = damage_lerp_values.lerp_1,
@@ -120,8 +113,7 @@ local chain_axe_heavy_mod = {
 		[armor_types.berserker] = damage_lerp_values.lerp_0_5,
 		[armor_types.super_armor] = damage_lerp_values.no_damage,
 		[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
-		[armor_types.void_shield] = damage_lerp_values.lerp_1,
-		[armor_types.prop_armor] = damage_lerp_values.lerp_1
+		[armor_types.void_shield] = damage_lerp_values.lerp_1
 	}
 }
 damage_templates.default_light_chainaxe = {
@@ -529,6 +521,61 @@ overrides.light_chainaxe_sticky_last_quick = {
 			{
 				50,
 				100
+			}
+		},
+		{
+			"skip_on_hit_proc",
+			true
+		}
+	}
+}
+overrides.light_chainaxe_sticky_last_quick_m2 = {
+	parent_template_name = "default_light_chainaxe",
+	overrides = {
+		{
+			"stagger_category",
+			"sticky"
+		},
+		{
+			"shield_stagger_category",
+			"melee"
+		},
+		{
+			"damage_type",
+			damage_types.sawing_stuck
+		},
+		{
+			"ragdoll_only",
+			true
+		},
+		{
+			"gibbing_power",
+			GibbingPower.medium
+		},
+		{
+			"sticky_attack",
+			true
+		},
+		{
+			"gibbing_type",
+			GibbingTypes.sawing
+		},
+		{
+			"wounds_template",
+			WoundsTemplates.chainaxe_sawing
+		},
+		{
+			"melee_attack_strength",
+			melee_attack_strengths.light
+		},
+		{
+			"targets",
+			1,
+			"power_distribution",
+			"attack",
+			{
+				35,
+				80
 			}
 		},
 		{
@@ -1051,8 +1098,7 @@ damage_templates.chainaxe_tank = {
 					[armor_types.berserker] = damage_lerp_values.lerp_0_5,
 					[armor_types.super_armor] = damage_lerp_values.lerp_0_1,
 					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
-					[armor_types.void_shield] = damage_lerp_values.lerp_1,
-					[armor_types.prop_armor] = damage_lerp_values.lerp_1
+					[armor_types.void_shield] = damage_lerp_values.lerp_1
 				},
 				impact = {
 					[armor_types.unarmored] = damage_lerp_values.lerp_1,
@@ -1062,8 +1108,7 @@ damage_templates.chainaxe_tank = {
 					[armor_types.berserker] = damage_lerp_values.lerp_1,
 					[armor_types.super_armor] = damage_lerp_values.lerp_1,
 					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
-					[armor_types.void_shield] = damage_lerp_values.lerp_1,
-					[armor_types.prop_armor] = damage_lerp_values.lerp_1
+					[armor_types.void_shield] = damage_lerp_values.lerp_1
 				}
 			},
 			power_distribution = {
@@ -1123,6 +1168,30 @@ damage_templates.chainaxe_tank = {
 overrides.chainaxe_light_stab = {
 	parent_template_name = "chainaxe_tank",
 	overrides = {
+		{
+			"targets",
+			1,
+			"power_distribution",
+			"attack",
+			{
+				130,
+				260
+			}
+		},
+		{
+			"targets",
+			1,
+			"power_distribution",
+			"impact",
+			{
+				9,
+				13
+			}
+		},
+		{
+			"cleave_distribution",
+			double_cleave
+		},
 		{
 			"targets",
 			1,

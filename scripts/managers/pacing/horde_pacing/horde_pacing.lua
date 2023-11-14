@@ -4,7 +4,6 @@ local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
 local Vo = require("scripts/utilities/vo")
 local HordePacing = class("HordePacing")
 local HORDE_TYPES = HordeSettings.horde_types
-local COORDINATED_HORDE_STRIKE_TYPES = HordeSettings.coordinated_horde_strike_types
 
 HordePacing.init = function (self, nav_world)
 	self._nav_world = nav_world
@@ -137,6 +136,10 @@ HordePacing._update_horde_pacing = function (self, t, dt, side_id, target_side_i
 
 		self._horde_timer = 0
 	end
+end
+
+HordePacing.traveled_this_frame = function (self)
+	return self._traveled_this_frame
 end
 
 HordePacing._init_coordinated_horde_strikes = function (self, template)
@@ -353,7 +356,7 @@ HordePacing._update_coordinated_horde_strike = function (self, t, dt, side_id, t
 					optional_target_unit = target_units[math.random(1, num_target_units)]
 				end
 
-				local success, horde_position, target_unit, group_id, spawned_direction = self:_spawn_horde_wave(template, side_id, target_side_id, current_wave, horde_type, horde_template, composition, nil, nil, nil, nil, prefered_direction, optional_target_unit)
+				local success, horde_position, target_unit, group_id = self:_spawn_horde_wave(template, side_id, target_side_id, current_wave, horde_type, horde_template, composition, nil, nil, nil, nil, prefered_direction, optional_target_unit)
 
 				if success then
 					strike.current_wave = strike.current_wave + 1
@@ -374,10 +377,6 @@ HordePacing._update_coordinated_horde_strike = function (self, t, dt, side_id, t
 						local two_waves_ahead_and_behind = strike.two_waves_ahead_and_behind
 
 						if two_waves_ahead_and_behind then
-							if current_wave == 2 and spawned_direction and spawned_direction == strike.prefered_direction then
-								self:_trigger_stinger(template, horde_position)
-							end
-
 							if strike.prefered_direction == "ahead" then
 								prefered_direction = "behind"
 							else
@@ -419,8 +418,7 @@ HordePacing._update_coordinated_horde_strike = function (self, t, dt, side_id, t
 end
 
 HordePacing._start_horde = function (self, t, dt, side_id, target_side_id, template)
-	local coordinated_horde_strike_setting = nil
-	coordinated_horde_strike_setting = self:_evaluate_coordinated_horde_strike(target_side_id)
+	local coordinated_horde_strike_setting = self:_evaluate_coordinated_horde_strike(target_side_id)
 
 	if coordinated_horde_strike_setting then
 		self:_start_coordinated_horde_strike(coordinated_horde_strike_setting, target_side_id)
@@ -563,6 +561,8 @@ HordePacing._update_trickle_horde_pacing = function (self, t, dt, side_id, targe
 	local main_path_manager = Managers.state.main_path
 	local furthest_travel_distance = main_path_manager:furthest_travel_distance(target_side_id)
 	local trickle_hordes = self._trickle_hordes
+	local pacing_manager = Managers.state.pacing
+	local ramp_up_timer_modifier = pacing_manager:get_ramp_up_frequency_modifier("trickle_hordes") or 1
 
 	for i = 1, #trickle_hordes do
 		repeat
@@ -619,6 +619,10 @@ HordePacing._update_trickle_horde_pacing = function (self, t, dt, side_id, targe
 					local diff = furthest_travel_distance - trickle_horde.current_travel_distance
 					trickle_horde.current_travel_distance = furthest_travel_distance
 
+					if not template.cant_be_ramped then
+						diff = diff * ramp_up_timer_modifier
+					end
+
 					if trickle_hordes_allowed then
 						trickle_horde.trickle_horde_travel_distance = trickle_horde.trickle_horde_travel_distance + diff
 					else
@@ -656,7 +660,14 @@ HordePacing._update_trickle_horde_pacing = function (self, t, dt, side_id, targe
 						local trickle_horde_compositions = self._override_trickle_horde_compositions or template.horde_compositions.trickle_horde
 						local current_faction = Managers.state.pacing:current_faction()
 						local current_density_type = Managers.state.pacing:current_density_type()
-						local faction_composition = trickle_horde_compositions[current_faction][current_density_type]
+						local waiting_for_ramp_clear = Managers.state.pacing:waiting_for_ramp_clear()
+						local faction_compositions = trickle_horde_compositions[current_faction]
+						local faction_composition = faction_compositions[current_density_type]
+
+						if waiting_for_ramp_clear and faction_compositions.waiting_for_ramp_clear then
+							faction_composition = faction_compositions.waiting_for_ramp_clear
+						end
+
 						local chosen_compositions = faction_composition[math.random(1, #faction_composition)]
 						local resistance_scaled_composition = Managers.state.difficulty:get_table_entry_by_challenge(chosen_compositions)
 						local optional_main_path_offset = template.optional_main_path_offset
@@ -716,7 +727,14 @@ HordePacing._spawn_trickle_horde_wave = function (self, side_id, target_side_id,
 	local trickle_horde_compositions = self._override_trickle_horde_compositions or template.horde_compositions.trickle_horde
 	local current_faction = Managers.state.pacing:current_faction()
 	local current_density_type = Managers.state.pacing:current_density_type()
-	local faction_composition = trickle_horde_compositions[current_faction][current_density_type]
+	local waiting_for_ramp_clear = Managers.state.pacing:waiting_for_ramp_clear()
+	local faction_compositions = trickle_horde_compositions[current_faction]
+	local faction_composition = faction_compositions[current_density_type]
+
+	if waiting_for_ramp_clear and faction_compositions.waiting_for_ramp_clear then
+		faction_composition = faction_compositions.waiting_for_ramp_clear
+	end
+
 	local chosen_compositions = faction_composition[math.random(1, #faction_composition)]
 	local resistance_scaled_composition = Managers.state.difficulty:get_table_entry_by_resistance(chosen_compositions)
 	local optional_disallowed_positions = trickle_horde.disallowed_spawn_positions

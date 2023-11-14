@@ -50,7 +50,8 @@ end
 
 local _speed_function = AcceleratedLocalSpaceMovement.speed_function
 
-AcceleratedLocalSpaceMovement.wanted_movement = function (player_character_constants, input_source, locomotion_steering_component, movement_settings_component, first_person_component, is_crouching, velocity_current, dt)
+AcceleratedLocalSpaceMovement.wanted_movement = function (player_character_constants, input_source, locomotion_steering_component, movement_settings_component, first_person_component, is_crouching, velocity_current, dt, move_speed_multiplier)
+	move_speed_multiplier = move_speed_multiplier or 1
 	local move_input = input_source:get("move")
 	local wants_move = Vector3_length_squared(move_input) > 0
 	local acc = player_character_constants.acceleration
@@ -78,7 +79,7 @@ AcceleratedLocalSpaceMovement.wanted_movement = function (player_character_const
 	local run_speed = player_character_constants.move_speed
 	local look_rotation = first_person_component.rotation
 	local flat_look_direction = Vector3_normalize(Vector3_flat(Quaternion_forward(look_rotation)))
-	local wants_slide = is_crouching and player_character_constants.slide_move_speed_threshold < Vector3_dot(velocity_current, flat_look_direction)
+	local wants_slide = is_crouching and Vector3_dot(velocity_current, flat_look_direction) > player_character_constants.slide_move_speed_threshold * move_speed_multiplier
 
 	if is_crouching and not wants_slide then
 		current_max_move_speed = player_character_constants.crouch_move_speed

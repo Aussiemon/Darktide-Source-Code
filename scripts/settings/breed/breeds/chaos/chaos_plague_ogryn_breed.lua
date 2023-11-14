@@ -26,7 +26,6 @@ local breed_data = {
 	use_bone_lod = true,
 	look_at_distance = 20,
 	navigation_propagation_box_extent = 200,
-	spawn_aggro_state = "aggroed",
 	power_level_type = "chaos_plague_ogryn_melee",
 	sub_faction_name = "chaos",
 	ignore_stagger_accumulation = false,
@@ -34,6 +33,7 @@ local breed_data = {
 	slot_template = "chaos_ogryn",
 	broadphase_radius = 1,
 	stagger_resistance = 1,
+	spawn_aggro_state = "aggroed",
 	half_extent_forward = 0.6,
 	half_extent_right = 0.7,
 	hit_reacts_min_damage = 100,
@@ -53,7 +53,7 @@ local breed_data = {
 	player_locomotion_constrain_radius = 1.5,
 	activate_slot_system_on_spawn = true,
 	smart_tag_target_type = "breed",
-	explosion_power_multiplier = 3,
+	explosion_power_multiplier = 1.5,
 	base_unit = "content/characters/enemy/chaos_plague_ogryn/third_person/base",
 	name = breed_name,
 	breed_type = breed_types.minion,
@@ -400,6 +400,7 @@ local breed_data = {
 			[hit_zone_names.center_mass] = 0.5
 		}
 	},
+	outline_config = {},
 	blackboard_component_config = BreedBlackboardComponentTemplates.monster
 }
 

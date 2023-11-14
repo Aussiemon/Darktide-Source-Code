@@ -209,6 +209,7 @@ local template_groups = {
 	},
 	{
 		"devices",
+		"breach_charge",
 		"auspex_scanner",
 		"skull_decoder",
 		"servo_skull"
@@ -236,6 +237,7 @@ local template_groups = {
 	},
 	{
 		"pocketables",
+		"breach_charge_pocketable",
 		"ammo_cache_pocketable",
 		"grimoire_pocketable",
 		"medical_crate_pocketable",

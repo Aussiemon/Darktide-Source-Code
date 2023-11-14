@@ -42,8 +42,13 @@ ViewInteraction.start = function (self, world, interactor_unit, unit_data_compon
 		if not ui_manager:view_active(ui_interaction) and not ui_manager:is_view_closing(ui_interaction) and not ui_manager:has_active_view() then
 			local hli_settings = HubLocationIntroductionSettings[ui_interaction]
 			local narrative_event = hli_settings and Managers.narrative.EVENTS[hli_settings.narrative_event_name]
+			local hli_unseen = hli_settings and not Managers.narrative:is_event_complete(narrative_event)
 
-			if hli_settings and not Managers.narrative:is_event_complete(narrative_event) then
+			if DevParameters.force_hub_location_intros then
+				hli_unseen = true
+			end
+
+			if hli_settings and hli_unseen then
 				local context = {
 					allow_skip_input = true,
 					template = hli_settings.video_template

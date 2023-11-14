@@ -298,6 +298,32 @@ InteracteeExtension.disable_display_start_event = function (self)
 	override_context.display_start_event = false
 end
 
+InteracteeExtension.interaction_priority = function (self)
+	local active_interaction_type = self._active_interaction_type
+
+	if not active_interaction_type then
+		return
+	end
+
+	local override_context = self._override_contexts[active_interaction_type]
+	local interaction = self._interactions[active_interaction_type]
+
+	return override_context.interaction_priority or interaction:interaction_priority()
+end
+
+InteracteeExtension.interaction_input = function (self)
+	local active_interaction_type = self._active_interaction_type
+
+	if not active_interaction_type then
+		return
+	end
+
+	local override_context = self._override_contexts[active_interaction_type]
+	local interaction = self._interactions[active_interaction_type]
+
+	return override_context.interaction_input or interaction:interaction_input()
+end
+
 InteracteeExtension.ui_interaction_type = function (self)
 	local active_interaction_type = self._active_interaction_type
 

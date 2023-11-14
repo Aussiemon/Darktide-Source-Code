@@ -12,10 +12,13 @@ local hud_element_interaction_settings = {
 		10
 	},
 	input_box_height = input_box_height,
-	background_size = background_size,
-	background_size_small = {
+	background_size = {
 		background_size[1],
 		background_size[2] - 20
+	},
+	background_size_small = {
+		background_size[1],
+		40
 	}
 }
 

@@ -13,9 +13,9 @@ HudElementPrologueStepTracker.init = function (self, parent, draw_layer, start_s
 	self:_register_events()
 end
 
-HudElementPrologueStepTracker.destroy = function (self)
+HudElementPrologueStepTracker.destroy = function (self, ui_renderer)
 	self:_unregister_events()
-	HudElementPrologueStepTracker.super.destroy(self)
+	HudElementPrologueStepTracker.super.destroy(self, ui_renderer)
 end
 
 HudElementPrologueStepTracker.update = function (self, dt, t, ui_renderer, render_settings, input_service)

@@ -169,10 +169,24 @@ local overlay_scenegraph_definition = {
 			0
 		}
 	},
-	tooltip = {
-		vertical_alignment = "left",
+	scroll_background = {
+		vertical_alignment = "top",
 		parent = "screen",
-		horizontal_alignment = "top",
+		horizontal_alignment = "center",
+		size = {
+			256,
+			256
+		},
+		position = {
+			0,
+			0,
+			0
+		}
+	},
+	tooltip = {
+		vertical_alignment = "top",
+		parent = "screen",
+		horizontal_alignment = "left",
 		size = {
 			400,
 			400
@@ -837,6 +851,115 @@ local widget_definitions = {
 			}
 		}
 	}, "tooltip"),
+	scroll_background = UIWidget.create_definition({
+		{
+			value = "content/ui/materials/frames/talents/talents_bg",
+			pass_type = "texture",
+			style = {
+				color = {
+					255,
+					255,
+					255,
+					255
+				},
+				offset = {
+					0,
+					0,
+					1
+				}
+			}
+		}
+	}, "scroll_background", nil, nil),
+	screen_effects = UIWidget.create_definition({
+		{
+			value = "content/ui/materials/masks/gradient_vignette",
+			pass_type = "texture",
+			style = {
+				vertical_alignment = "top",
+				horizontal_alignment = "center",
+				size = {
+					1920
+				},
+				color = {
+					255,
+					0,
+					0,
+					0
+				},
+				offset = {
+					0,
+					0,
+					2
+				}
+			}
+		},
+		{
+			value = "content/ui/materials/base/ui_gradient_base",
+			pass_type = "texture",
+			style = {
+				vertical_alignment = "top",
+				horizontal_alignment = "center",
+				size = {
+					nil,
+					130
+				},
+				color = {
+					255,
+					0,
+					0,
+					0
+				},
+				offset = {
+					0,
+					-20,
+					25
+				},
+				material_values = {
+					uv_rotation = 0.25,
+					offset = 0.8,
+					color_2 = {
+						0,
+						0,
+						0,
+						0
+					}
+				}
+			}
+		},
+		{
+			value = "content/ui/materials/base/ui_gradient_base",
+			pass_type = "texture",
+			style = {
+				vertical_alignment = "bottom",
+				horizontal_alignment = "center",
+				size = {
+					nil,
+					60
+				},
+				color = {
+					255,
+					0,
+					0,
+					0
+				},
+				offset = {
+					0,
+					0,
+					25
+				},
+				material_values = {
+					uv_rotation = 0.75,
+					offset = 0.8,
+					color_2 = {
+						0,
+						0,
+						0,
+						0
+					}
+				}
+			}
+		}
+	}, "screen"),
 	info_banner = UIWidget.create_definition({
 		{
 			pass_type = "texture",
@@ -1132,7 +1255,11 @@ local widget_definitions = {
 				style.color[1] = hover_alpha
 			end
 		}
-	}, "loadout_slot_ability"),
+	}, "loadout_slot_ability", {
+		hotspot = {
+			on_hover_sound = UISoundEvents.default_mouse_hover
+		}
+	}),
 	loadout_slot_aura = UIWidget.create_definition({
 		{
 			style_id = "hotspot",
@@ -1219,7 +1346,11 @@ local widget_definitions = {
 				style.color[1] = hover_alpha
 			end
 		}
-	}, "loadout_slot_aura"),
+	}, "loadout_slot_aura", {
+		hotspot = {
+			on_hover_sound = UISoundEvents.default_mouse_hover
+		}
+	}),
 	loadout_slot_tactical = UIWidget.create_definition({
 		{
 			style_id = "hotspot",
@@ -1306,7 +1437,11 @@ local widget_definitions = {
 				style.color[1] = hover_alpha
 			end
 		}
-	}, "loadout_slot_tactical")
+	}, "loadout_slot_tactical", {
+		hotspot = {
+			on_hover_sound = UISoundEvents.default_mouse_hover
+		}
+	})
 }
 local color_cursor = {
 	255,
@@ -1354,97 +1489,6 @@ local layout_widget_definitions = {
 					138,
 					0,
 					0
-				}
-			}
-		},
-		{
-			value = "content/ui/materials/masks/gradient_vignette",
-			pass_type = "texture",
-			style = {
-				vertical_alignment = "top",
-				scenegraph_id = "screen",
-				horizontal_alignment = "center",
-				size = {
-					1920
-				},
-				color = {
-					255,
-					0,
-					0,
-					0
-				},
-				offset = {
-					0,
-					0,
-					2
-				}
-			}
-		},
-		{
-			value = "content/ui/materials/base/ui_gradient_base",
-			pass_type = "texture",
-			style = {
-				vertical_alignment = "top",
-				scenegraph_id = "screen",
-				horizontal_alignment = "center",
-				size = {
-					nil,
-					130
-				},
-				color = {
-					255,
-					0,
-					0,
-					0
-				},
-				offset = {
-					0,
-					-20,
-					25
-				},
-				material_values = {
-					uv_rotation = 0.25,
-					offset = 0.8,
-					color_2 = {
-						0,
-						0,
-						0,
-						0
-					}
-				}
-			}
-		},
-		{
-			value = "content/ui/materials/base/ui_gradient_base",
-			pass_type = "texture",
-			style = {
-				vertical_alignment = "bottom",
-				scenegraph_id = "screen",
-				horizontal_alignment = "center",
-				size = {
-					nil,
-					60
-				},
-				color = {
-					255,
-					0,
-					0,
-					0
-				},
-				offset = {
-					0,
-					0,
-					25
-				},
-				material_values = {
-					uv_rotation = 0.75,
-					offset = 0.8,
-					color_2 = {
-						0,
-						0,
-						0,
-						0
-					}
 				}
 			}
 		}

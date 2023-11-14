@@ -142,6 +142,11 @@ recoil_templates.default_laspistol_assault = {
 			"hip_lasgun_killshot",
 			"still"
 		},
+		visual_recoil_settings = {
+			intensity = 1,
+			lerp_scalar = 1,
+			yaw_intensity = 2
+		},
 		new_influence_percent = {
 			lerp_perfect = 0.06,
 			lerp_basic = 0.12
@@ -155,6 +160,11 @@ recoil_templates.default_laspistol_assault = {
 		new_influence_percent = {
 			lerp_perfect = 0.05,
 			lerp_basic = 0.1
+		},
+		visual_recoil_settings = {
+			intensity = 1,
+			lerp_scalar = 1,
+			yaw_intensity = 2
 		}
 	},
 	crouch_moving = {
@@ -165,6 +175,11 @@ recoil_templates.default_laspistol_assault = {
 		new_influence_percent = {
 			lerp_perfect = 0.075,
 			lerp_basic = 0.125
+		},
+		visual_recoil_settings = {
+			intensity = 1,
+			lerp_scalar = 1,
+			yaw_intensity = 2
 		}
 	}
 }
@@ -312,17 +327,17 @@ recoil_templates.default_laspistol_killshot = {
 		}
 	}
 }
-local multi_2 = 1.5
+local multi_2 = 1.7
 recoil_templates.default_laspistol_bfg = {
 	still = {
-		camera_recoil_percentage = 0.15,
-		decay_grace = 0.05,
-		new_influence_percent = 0.3,
-		rise_duration = 0.125,
+		camera_recoil_percentage = 0.2,
+		decay_grace = 0.042,
+		new_influence_percent = 0.5,
+		rise_duration = 0.03,
 		rise = {
 			{
 				lerp_perfect = 0.4,
-				lerp_basic = 1.1
+				lerp_basic = 1.5
 			},
 			{
 				lerp_perfect = 0.25,
@@ -339,8 +354,8 @@ recoil_templates.default_laspistol_bfg = {
 		},
 		decay = {
 			shooting = {
-				lerp_perfect = 1,
-				lerp_basic = 0.25
+				lerp_perfect = 3,
+				lerp_basic = 0.5
 			},
 			idle = {
 				lerp_perfect = 3,
@@ -479,9 +494,9 @@ recoil_templates.default_laspistol_bfg = {
 			multiplier_function = AIM_ASSIST_MULTIPLIER_FUNCTIONS.unmodified_inverted_unsteadiness
 		},
 		visual_recoil_settings = {
-			intensity = 3.3,
-			lerp_scalar = 0.8,
-			yaw_intensity = 3.1
+			intensity = 4.3,
+			lerp_scalar = 0.9,
+			yaw_intensity = 4.1
 		}
 	},
 	moving = {
@@ -489,6 +504,11 @@ recoil_templates.default_laspistol_bfg = {
 		inherits = {
 			"default_laspistol_bfg",
 			"still"
+		},
+		visual_recoil_settings = {
+			intensity = 5.3,
+			lerp_scalar = 0.8,
+			yaw_intensity = 3.1
 		}
 	},
 	crouch_still = {
@@ -503,6 +523,11 @@ recoil_templates.default_laspistol_bfg = {
 		inherits = {
 			"default_laspistol_bfg",
 			"still"
+		},
+		visual_recoil_settings = {
+			intensity = 4.3,
+			lerp_scalar = 0.8,
+			yaw_intensity = 4.1
 		}
 	}
 }

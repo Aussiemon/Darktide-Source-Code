@@ -115,15 +115,6 @@ MinionDeathManager.die = function (self, unit, attacking_unit_or_nil, attack_dir
 		end
 
 		Managers.state.pacing:remove_aggroed_minion(unit)
-
-		if Managers.stats.can_record_stats() and breed.is_boss then
-			local boss_max_health = health_extension:max_health()
-			local boss_unit_id = Managers.state.unit_spawner:game_object_id(unit)
-			local boss_extension = ScriptUnit.extension(unit, "boss_system")
-			local time_since_first_damage = boss_extension:time_since_first_damage()
-
-			Managers.stats:record_boss_death(boss_max_health, boss_unit_id, breed.name, time_since_first_damage)
-		end
 	else
 		death_component.hit_during_death = true
 	end
@@ -250,6 +241,19 @@ end
 
 function _trigger_kill_vo(unit, attacking_unit_or_nil, hit_zone_name_or_nil, attack_type_or_nil, damage_profile)
 	if attacking_unit_or_nil == nil then
+		return
+	end
+
+	local attacking_unit_breed_or_nil = Breed.unit_breed_or_nil(attacking_unit_or_nil)
+
+	if not Breed.is_player(attacking_unit_breed_or_nil) then
+		return
+	end
+
+	local side_system = Managers.state.extension:system("side_system")
+	local is_enemy = side_system:is_enemy(attacking_unit_or_nil, unit)
+
+	if not is_enemy then
 		return
 	end
 

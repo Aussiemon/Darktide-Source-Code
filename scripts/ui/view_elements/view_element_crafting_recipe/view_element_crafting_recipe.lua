@@ -157,9 +157,11 @@ ViewElementCraftingRecipe.present_recipe_navigation_with_item = function (self, 
 	}
 	self.content.recipes = active_recipes
 
-	self:set_selected_item(item)
 	self:_pre_present_height_adjust()
-	self:present_grid_layout(layout, ViewElementCraftingRecipeBlueprints, left_click_callback, nil, nil, nil, optional_on_present_callback)
+	self:present_grid_layout(layout, ViewElementCraftingRecipeBlueprints, left_click_callback, nil, nil, nil, function ()
+		optional_on_present_callback()
+		self:set_selected_item(item)
+	end)
 end
 
 local function _push_traitlike_items(layout, widget_type, traits, item_is_locked)
@@ -182,6 +184,7 @@ end
 
 ViewElementCraftingRecipe.present_recipe = function (self, recipe, ingredients, main_action_callback, select_trait_callback, optional_on_present_callback, additional_data)
 	local item = ingredients.item
+	self.content.item = item
 	local item_locked = nil
 
 	if item then

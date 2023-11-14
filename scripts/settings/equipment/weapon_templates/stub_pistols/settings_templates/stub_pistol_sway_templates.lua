@@ -330,6 +330,14 @@ sway_templates.default_stubpistol_killshot = {
 		}
 	}
 }
+overrides.stubpistol_p1_m2 = {
+	parent_template_name = "default_stubpistol_killshot",
+	overrides = {}
+}
+overrides.stubpistol_p1_m3 = {
+	parent_template_name = "default_stubpistol_killshot",
+	overrides = {}
+}
 
 return {
 	base_templates = sway_templates,

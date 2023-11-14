@@ -526,7 +526,7 @@ ConstantElementChat._handle_console_input = function (self, input_service, ui_re
 
 		local virtual_keyboard_title = ""
 		local virtual_keyboard_description = ""
-		local x_game_ui = XAsyncBlock.new_block()
+		local x_game_ui = XGameUI.new_block()
 
 		XGameUI.show_text_entry_async(x_game_ui, virtual_keyboard_title, virtual_keyboard_description, "", "default", ChatSettings.max_message_length)
 

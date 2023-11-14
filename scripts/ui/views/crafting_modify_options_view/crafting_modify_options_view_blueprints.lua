@@ -297,7 +297,7 @@ trait_list.init = function (parent, widget, element, callback_name, secondary_ca
 	end
 
 	_temp_trait_tooltip_localization_values.category_icon = _apply_color_to_text(slot_categories_text, description_text_color)
-	local localized_text = Localize("loc_trait_inventory_format_key", true, _temp_trait_tooltip_localization_values)
+	local localized_text = ""
 	widget.content.text = localized_text
 	local text_style = widget.style.text
 	local text_options = UIFonts.get_font_options_by_style(text_style)
@@ -638,7 +638,7 @@ local tooltip = {
 		end
 
 		_temp_trait_tooltip_localization_values.category_icon = _apply_color_to_text(slot_categories_text, description_text_color)
-		local localized_text = Localize("loc_trait_tooltip_format_key", true, _temp_trait_tooltip_localization_values)
+		local localized_text = ""
 		local text_style = widget.style.text
 		local text_options = UIFonts.get_font_options_by_style(text_style)
 		local size = {

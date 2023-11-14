@@ -1,3 +1,5 @@
+-- WARNING: Error occurred during decompilation.
+--   Code may be incomplete or incorrect.
 local DialogueBreedSettings = require("scripts/settings/dialogue/dialogue_breed_settings")
 local DialogueSettings = require("scripts/settings/dialogue/dialogue_settings")
 local PlayerVoiceGrunts = require("scripts/utilities/player_voice_grunts")
@@ -892,18 +894,32 @@ Vo.mission_giver_mission_info_vo = function (voice_selection, selected_voice, tr
 	end
 
 	local voice_over_spawn_manager = Managers.state.voice_over_spawn
-	local misison_giver_unit = nil
 
 	if voice_selection == "rule_based" then
-		misison_giver_unit = _get_random_vox_unit()
-	elseif voice_selection == "mission_default" then
-		local voice_profile = voice_over_spawn_manager:current_voice_profile()
-		misison_giver_unit = voice_over_spawn_manager:voice_over_unit(voice_profile)
-	elseif voice_selection == "selected_voice" then
-		misison_giver_unit = voice_over_spawn_manager:voice_over_unit(selected_voice)
+		local mission_giver_units = voice_over_spawn_manager:voice_over_units()
+
+		for voice_profile, unit in pairs(mission_giver_units) do
+			local dialogue_extension = ScriptUnit.has_extension(unit, "dialogue_system")
+			local event_name = "mission_info"
+			local event_data = dialogue_extension:get_event_data_payload()
+			event_data.trigger_id = trigger_id
+
+			dialogue_extension:trigger_dialogue_event(event_name, event_data)
+		end
+
+		return
 	end
 
-	local dialogue_extension = ScriptUnit.has_extension(misison_giver_unit, "dialogue_system")
+	local mission_giver_unit = nil
+
+	if voice_selection == "mission_default" then
+		local voice_profile = voice_over_spawn_manager:current_voice_profile()
+		mission_giver_unit = voice_over_spawn_manager:voice_over_unit(voice_profile)
+	elseif voice_selection == "selected_voice" then
+		mission_giver_unit = voice_over_spawn_manager:voice_over_unit(selected_voice)
+	end
+
+	local dialogue_extension = ScriptUnit.has_extension(mission_giver_unit, "dialogue_system")
 
 	if dialogue_extension then
 		local event_name = "mission_info"
@@ -1221,10 +1237,20 @@ Vo.set_dynamic_smart_tag = function (unit, tag)
 
 			local unit_spawner_manager = Managers.state.unit_spawner
 			local go_id = unit_spawner_manager:game_object_id(unit)
-			local tag_id = DialogueSettings.dynamic_smart_tag[tag]
+			local dialogue_system = Managers.state.extension:system_by_extension("DialogueActorExtension")
 
-			Managers.state.game_session:send_rpc_clients("rpc_set_dynamic_smart_tag", go_id, tag_id)
+			dialogue_system:send_dynamic_smart_tag(go_id, tag)
 		end
+	end
+end
+
+Vo.trigger_subtitle = function (currently_playing_subtitle)
+	local is_server = Managers.state.game_session:is_server()
+
+	if is_server then
+		local dialogue_system = Managers.state.extension:system_by_extension("DialogueActorExtension")
+
+		dialogue_system:send_subtitle_event(currently_playing_subtitle)
 	end
 end
 
@@ -1457,17 +1483,12 @@ function _get_random_vox_unit()
 end
 
 function _get_all_vox_voice_profiles()
-	local npc_vo_classes = DialogueBreedSettings.voice_classes_npc
+	local voice_over_spawn_manager = Managers.state.voice_over_spawn
+	local mission_giver_units = voice_over_spawn_manager:voice_over_units()
 	local vox_voice_profiles = {}
 
-	for i = 1, #npc_vo_classes do
-		local vo_class = npc_vo_classes[i]
-		local class_settings = DialogueBreedSettings[vo_class]
-		local voice_profiles = class_settings.wwise_voices
-
-		for _, voice_profile in pairs(voice_profiles) do
-			table.insert(vox_voice_profiles, voice_profile)
-		end
+	for voice_profile, _ in pairs(mission_giver_units) do
+		table.insert(vox_voice_profiles, voice_profile)
 	end
 
 	return vox_voice_profiles
@@ -1531,7 +1552,7 @@ end
 
 function _get_interaction_level_req(npc_context)
 	local class_name = npc_context.class_name
-	local level_req = DialogueBreedSettings[class_name].level_requirement or 0
+	local level_req = DialogueBreedSettings[class_name] and DialogueBreedSettings[class_name].level_requirement or 0
 
 	return level_req
 end

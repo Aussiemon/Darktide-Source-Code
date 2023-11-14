@@ -524,7 +524,7 @@ local widget_definitions = {
 		}
 	}, "screen"),
 	aquila_button = UIWidget.create_definition(ButtonPassTemplates.aquila_button, "aquila_button", {
-		gamepad_action = "hotkey_menu_special_2",
+		gamepad_action = "hotkey_menu_special_1",
 		original_text = Utf8.upper(Localize("loc_premium_store_purchase_credits_storefront_button"))
 	}),
 	navigation_arrow_left = UIWidget.create_definition({

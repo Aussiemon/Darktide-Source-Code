@@ -340,7 +340,7 @@ difficulty.difficulty_icon = {
 }
 difficulty.diffulty_icon_background = table.clone(difficulty.difficulty_icon)
 local stat_diffulty_icon_background_style = difficulty.diffulty_icon_background
-stat_diffulty_icon_background_style.color = Color.terminal_background(255, true)
+stat_diffulty_icon_background_style.color = Color.terminal_background_dark(255, true)
 stat_diffulty_icon_background_style.amount = 5
 difficulty.diffulty_icon_background_frame = table.clone(difficulty.difficulty_icon)
 local diffulty_icon_background_frame_style = difficulty.diffulty_icon_background_frame

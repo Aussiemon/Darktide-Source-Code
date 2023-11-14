@@ -92,12 +92,15 @@ local buff_widget_definition = UIWidget.create_definition({
 		end
 	},
 	{
-		value = "content/ui/materials/icons/buffs/hud/buff_frame",
-		style_id = "frame",
 		pass_type = "texture",
+		style_id = "frame",
+		value = "content/ui/materials/icons/buffs/hud/buff_frame_with_opacity",
 		style = {
 			vertical_alignment = "center",
 			horizontal_alignment = "center",
+			material_values = {
+				opacity = 1
+			},
 			size = {
 				59,
 				59
@@ -113,7 +116,11 @@ local buff_widget_definition = UIWidget.create_definition({
 				0,
 				0
 			}
-		}
+		},
+		change_function = function (content, style)
+			local opacity = content.opacity
+			style.material_values.opacity = opacity or 1
+		end
 	},
 	{
 		pass_type = "texture",
@@ -123,6 +130,7 @@ local buff_widget_definition = UIWidget.create_definition({
 			vertical_alignment = "center",
 			horizontal_alignment = "center",
 			material_values = {
+				opacity = 1,
 				progress = 1
 			},
 			size = {
@@ -144,6 +152,8 @@ local buff_widget_definition = UIWidget.create_definition({
 		change_function = function (content, style)
 			local duration_progress = content.duration_progress
 			style.material_values.progress = duration_progress or 1
+			local opacity = content.opacity
+			style.material_values.opacity = opacity or 1
 		end
 	}
 }, "buff")

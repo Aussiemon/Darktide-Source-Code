@@ -1,4 +1,3 @@
-local AchievementList = require("scripts/managers/achievements/achievement_list")
 local ArchetypeSpecializations = require("scripts/settings/ability/archetype_specializations/archetype_specializations")
 local ArchetypeTalents = require("scripts/settings/ability/archetype_talents/archetype_talents")
 local AttackSettings = require("scripts/settings/damage/attack_settings")
@@ -16,6 +15,7 @@ local DamageSettings = require("scripts/settings/damage/damage_settings")
 local DialogueBreedSettings = require("scripts/settings/dialogue/dialogue_breed_settings")
 local DialogueLookup = require("scripts/settings/dialogue/dialogue_lookup")
 local DialogueLookupConcepts = require("scripts/settings/dialogue/dialogue_lookup_concepts")
+local DialogueSettings = require("scripts/settings/dialogue/dialogue_settings")
 local EffectTemplates = require("scripts/settings/fx/effect_templates")
 local FlowEvents = require("scripts/settings/fx/flow_events")
 local HazardPropSettings = require("scripts/settings/hazard_prop/hazard_prop_settings")
@@ -76,9 +76,7 @@ local function _create_lookup(lookup, hashtable)
 	return lookup
 end
 
-NetworkLookup = {
-	achievement_names = _create_lookup({}, AchievementList._lookup)
-}
+NetworkLookup = {}
 local archetype_specialization_names = {}
 
 for _, archetype_specializations in pairs(ArchetypeSpecializations) do
@@ -126,11 +124,8 @@ NetworkLookup.damage_types = _create_lookup({
 }, DamageSettings.damage_types)
 NetworkLookup.dialogues = DialogueLookup
 NetworkLookup.dialogues_all_concepts = table.clone(DialogueLookupConcepts.all_concepts)
-NetworkLookup.dynamic_smart_tag = {
-	"aggroed",
-	"renegade_netgunner",
-	"seen_netgunner_flee"
-}
+NetworkLookup.dynamic_smart_tags = _create_lookup({}, DialogueSettings.dynamic_smart_tags)
+NetworkLookup.manual_subtitles = _create_lookup({}, DialogueSettings.manual_subtitles)
 NetworkLookup.door_control_panel_states = {
 	"active",
 	"inactive"

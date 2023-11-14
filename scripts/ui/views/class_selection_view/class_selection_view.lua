@@ -271,11 +271,20 @@ end
 
 ClassSelectionView._on_continue_pressed = function (self)
 	self._character_create:set_specialization(self._selected_specialization.name)
+
+	if not self._using_cursor_navigation then
+		self:_play_sound(UISoundEvents.character_create_class_confirm)
+	end
+
 	Managers.event:trigger("event_create_new_character_continue")
 end
 
 ClassSelectionView._on_details_pressed = function (self)
 	self:_handle_details_button_text()
+
+	if not self._using_cursor_navigation then
+		self:_play_sound(UISoundEvents.character_create_toggle_class_description)
+	end
 
 	if self._classes_visible then
 		self:_show_classes_widgets(false)

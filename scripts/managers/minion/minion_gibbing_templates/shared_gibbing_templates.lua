@@ -23,53 +23,61 @@ local SharedGibbingTemplates = {
 				0.5
 			}
 		}
+	}
+}
+local vfx_set = {
+	warp_lightning = {
+		"content/fx/particles/impacts/flesh/protectorate_chainlightning_gib_torso_small_01",
+		"content/fx/particles/impacts/flesh/protectorate_chainlightning_gib_torso_small_02",
+		"content/fx/particles/impacts/flesh/protectorate_chainlightning_gib_torso_small_03"
+	}
+}
+SharedGibbingTemplates.vfx = {
+	poxwalker_gushing = {
+		particle_effect = "content/fx/particles/impacts/flesh/poxwalker_blood_gushing_01"
 	},
-	vfx = {}
-}
-SharedGibbingTemplates.vfx.poxwalker_gushing = {
-	particle_effect = "content/fx/particles/impacts/flesh/poxwalker_blood_gushing_01"
-}
-SharedGibbingTemplates.vfx.poxwalker_fountain = {
-	node_name = "fx_blood",
-	particle_effect = "content/fx/particles/impacts/flesh/poxwalker_blood_fountain_head_01"
-}
-SharedGibbingTemplates.vfx.blood_gushing = {
-	particle_effect = "content/fx/particles/impacts/flesh/blood_gushing_01"
-}
-SharedGibbingTemplates.vfx.blood_fountain = {
-	node_name = "fx_blood",
-	particle_effect = "content/fx/particles/impacts/flesh/blood_fountain_head_01"
-}
-SharedGibbingTemplates.vfx.warp_gib = {
-	node_name = "fx_blood",
-	particle_effect = "content/fx/particles/impacts/flesh/gib_splatter_force_01"
-}
-SharedGibbingTemplates.vfx.warp_stump = {
-	node_name = "fx_blood",
-	particle_effect = "content/fx/particles/impacts/flesh/gib_splatter_force_01"
-}
-SharedGibbingTemplates.vfx.warp_gib_lightning = {
-	particle_effect = "content/fx/particles/impacts/flesh/gib_splatter_protectorate_chainlightning_01"
-}
-SharedGibbingTemplates.vfx.warp_stump_lightning = {
-	particle_effect = "content/fx/particles/impacts/flesh/protectorate_chainlightning_gib_torso_small_01",
-	linked = false
-}
-SharedGibbingTemplates.vfx.warp_gib_shard = {
-	node_name = "fx_blood",
-	particle_effect = "content/fx/particles/impacts/flesh/gib_splatter_force_01"
-}
-SharedGibbingTemplates.vfx.warp_stump_shard = {
-	node_name = "fx_blood",
-	particle_effect = "content/fx/particles/impacts/flesh/gib_splatter_force_01"
-}
-SharedGibbingTemplates.vfx.blood_splatter = {
-	particle_effect = "content/fx/particles/impacts/flesh/blood_splatter_gib_torso_small_01",
-	linked = false
-}
-SharedGibbingTemplates.vfx.poxwalker_splatter = {
-	particle_effect = "content/fx/particles/impacts/flesh/poxwalker_splatter_gib_torso_small_01",
-	linked = false
+	poxwalker_fountain = {
+		node_name = "fx_blood",
+		particle_effect = "content/fx/particles/impacts/flesh/poxwalker_blood_fountain_head_01"
+	},
+	blood_gushing = {
+		particle_effect = "content/fx/particles/impacts/flesh/blood_gushing_01"
+	},
+	blood_fountain = {
+		node_name = "fx_blood",
+		particle_effect = "content/fx/particles/impacts/flesh/blood_fountain_head_01"
+	},
+	warp_gib = {
+		node_name = "fx_blood",
+		particle_effect = "content/fx/particles/impacts/flesh/gib_splatter_force_01"
+	},
+	warp_stump = {
+		node_name = "fx_blood",
+		particle_effect = "content/fx/particles/impacts/flesh/gib_splatter_force_01"
+	},
+	warp_gib_lightning = {
+		particle_effect = "content/fx/particles/impacts/flesh/gib_splatter_protectorate_chainlightning_01"
+	},
+	warp_stump_lightning = {
+		linked = false,
+		particle_effect = vfx_set.warp_lightning
+	},
+	warp_gib_shard = {
+		node_name = "fx_blood",
+		particle_effect = "content/fx/particles/impacts/flesh/gib_splatter_force_01"
+	},
+	warp_stump_shard = {
+		node_name = "fx_blood",
+		particle_effect = "content/fx/particles/impacts/flesh/gib_splatter_force_01"
+	},
+	blood_splatter = {
+		particle_effect = "content/fx/particles/impacts/flesh/blood_splatter_gib_torso_small_01",
+		linked = false
+	},
+	poxwalker_splatter = {
+		particle_effect = "content/fx/particles/impacts/flesh/poxwalker_splatter_gib_torso_small_01",
+		linked = false
+	}
 }
 SharedGibbingTemplates.sfx = {
 	warp_gib_lightning = {

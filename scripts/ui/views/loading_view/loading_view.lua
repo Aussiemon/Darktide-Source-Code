@@ -317,14 +317,35 @@ local temp_loading_hints = {
 	"loc_loading_hint_310"
 }
 local LoadingView = class("LoadingView", "BaseView")
+local Views = require("scripts/ui/views/views")
+local UIWidget = require("scripts/managers/ui/ui_widget")
+
+LoadingView.select_background = function (self)
+	local backgrounds = Views.loading_view.backgrounds
+	local background = backgrounds[1]
+	local background_package = Views.loading_view.dynamic_package_folder .. background
+
+	return background, background_package
+end
 
 LoadingView.init = function (self, settings, context)
 	self._entry_duration = nil
 	self._text_cycle_duration = nil
 	self._update_hint_text = nil
+	local background, background_package = self:select_background()
 	local definitions = require(definition_path)
+	definitions.widget_definitions.background = UIWidget.create_definition({
+		{
+			pass_type = "texture",
+			value = "content/ui/materials/loading/" .. background,
+			style = {
+				horizontal_alignment = "center",
+				vertical_alignment = "center"
+			}
+		}
+	}, "loading_image")
 
-	LoadingView.super.init(self, definitions, settings)
+	LoadingView.super.init(self, definitions, settings, nil, background_package)
 
 	self._can_exit = context and context.can_exit
 	self._pass_draw = false

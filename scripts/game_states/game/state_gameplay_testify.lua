@@ -5,6 +5,7 @@ local Explosion = require("scripts/utilities/attack/explosion")
 local ExplosionTemplates = require("scripts/settings/damage/explosion_templates")
 local GibbingSettings = require("scripts/settings/gibbing/gibbing_settings")
 local HerdingTemplates = require("scripts/settings/damage/herding_templates")
+local NavQueries = require("scripts/utilities/nav_queries")
 local PlayerVisibility = require("scripts/utilities/player_visibility")
 local PowerLevelSettings = require("scripts/settings/damage/power_level_settings")
 local WeaponTraitsMeleeActivated = require("scripts/settings/equipment/weapon_traits/weapon_traits_melee_activated")
@@ -125,7 +126,7 @@ local StateGameplayTestify = {
 
 		return cameras, length
 	end,
-	all_cameras_of_type = function (_, camera_type)
+	all_cameras_of_type = function (_, _, camera_type)
 		local camera_types = {
 			[camera_type] = camera_type
 		}
@@ -133,12 +134,71 @@ local StateGameplayTestify = {
 
 		return cameras, length
 	end,
-	delete_unit = function (_, unit)
+	check_and_update_minion_pathing_test = function (state_gameplay, _, minion_pathing_data, num_remaining_path_queries)
+		local minion_spawn_manager = Managers.state.minion_spawn
+		local num_pathing_data = #minion_pathing_data
+
+		for i = num_pathing_data, 1, -1 do
+			local pathing_data = minion_pathing_data[i]
+			local unit = pathing_data.unit
+			local breed = pathing_data.breed
+			local navigation_extension = ScriptUnit.extension(unit, "navigation_system")
+			local is_computing_path = navigation_extension:is_computing_path()
+			local has_path = navigation_extension:has_path()
+
+			if not is_computing_path then
+				local start_positions = pathing_data.start_positions
+				local num_start_positions = pathing_data.num_start_positions
+				local destinations = pathing_data.destinations
+				local num_destinations = pathing_data.num_destinations
+				local start_position_index = pathing_data.start_position_index
+				local destination_index = pathing_data.destination_index
+
+				if not has_path then
+					local start_position = start_positions[start_position_index]:unbox()
+					local destination = destinations[destination_index]:unbox()
+					local error_message = string.format("%s failed pathing (from: %s to: %s).", breed.name, tostring(start_position), tostring(destination))
+
+					return num_remaining_path_queries, error_message
+				end
+
+				if destination_index < num_destinations then
+					local new_destination_index = destination_index + 1
+					pathing_data.destination_index = new_destination_index
+					local destination = destinations[new_destination_index]:unbox()
+
+					navigation_extension:move_to(destination)
+				elseif start_position_index < num_start_positions then
+					local new_start_position_index = start_position_index + 1
+					pathing_data.start_position_index = new_start_position_index
+					local new_start_position = start_positions[new_start_position_index]:unbox()
+					local locomotion_extension = ScriptUnit.extension(unit, "locomotion_system")
+
+					locomotion_extension:teleport_to(new_start_position)
+					navigation_extension:set_nav_bot_position(new_start_position)
+
+					local new_destination_index = 1
+					pathing_data.destination_index = new_destination_index
+					local destination = destinations[new_destination_index]:unbox()
+
+					navigation_extension:move_to(destination)
+				else
+					minion_spawn_manager:despawn(unit)
+					table.swap_delete(minion_pathing_data, i)
+				end
+
+				num_remaining_path_queries = num_remaining_path_queries - 1
+			end
+		end
+
+		return num_remaining_path_queries, nil
+	end,
+	delete_unit = function (_, _, unit)
 		local spawner_manager = Managers.state.unit_spawner
 
 		spawner_manager:mark_for_deletion(unit)
 	end,
-	fast_forward_end_of_round = function ()
+	fast_forward_end_of_round = function (_, _)
 		local mission = Managers.state.mission:mission_name()
 		local game_mode_name = Managers.state.game_mode:game_mode_name()
 		local is_in_hub = game_mode_name == "hub"
@@ -149,7 +209,7 @@ local StateGameplayTestify = {
 			return Testify.RETRY
 		end
 	end,
-	fetch_weapon_traits = function (_, params)
+	fetch_weapon_traits = function (_, _, params)
 		local traits = {
 			melee_traits = {},
 			activated_traits = {},
@@ -193,7 +253,7 @@ local StateGameplayTestify = {
 
 		return traits
 	end,
-	apply_select_talents = function (_, params)
+	apply_select_talents = function (_, _, params)
 		local player = params.player
 		local specialization_name = params.specialization_name
 		local talents = params.talents
@@ -201,10 +261,10 @@ local StateGameplayTestify = {
 
 		specialization_system:debug_select_talents(player, specialization_name, talents)
 	end,
-	current_mission = function (state_gameplay)
+	current_mission = function (state_gameplay, _)
 		return Managers.state.mission:mission_name()
 	end,
-	fetch_portal_position = function (_, portal_name)
+	fetch_portal_position = function (_, _, portal_name)
 		local level_name = rawget(_G, "SPAWNED_LEVEL_NAME")
 
 		if level_name then
@@ -224,12 +284,17 @@ local StateGameplayTestify = {
 
 		return nil
 	end,
-	fetch_unit_and_extensions_from_system = function (state_gameplay, system_name)
+	fetch_unit_and_extensions_from_system = function (state_gameplay, _, system_name)
 		local system = Managers.state.extension:system(system_name)
 
 		return system:unit_to_extension_map()
 	end,
-	hit_minion_with_random_melee = function (_, params)
+	get_units_from_component_name = function (state_gameplay, _, component_name)
+		local component_system = Managers.state.extension:system("component_system")
+
+		return component_system:get_units_from_component_name(component_name)
+	end,
+	hit_minion_with_random_melee = function (_, _, params)
 		local unit = params.unit
 		local player_unit = params.player_unit
 		local crit = params.crit
@@ -246,7 +311,7 @@ local StateGameplayTestify = {
 			melee_damage_type_index = melee_damage_type_index + 1 > #melee_damage_types and 1 or melee_damage_type_index + 1
 		end
 	end,
-	hit_minion_with_random_ranged = function (_, params)
+	hit_minion_with_random_ranged = function (_, _, params)
 		local unit = params.unit
 		local player_unit = params.player_unit
 		local crit = params.crit
@@ -262,7 +327,7 @@ local StateGameplayTestify = {
 			ranged_damage_type_index = ranged_damage_type_index + 1 > #ranged_damage_types and 1 or ranged_damage_type_index + 1
 		end
 	end,
-	hit_minion_with_ranged_alternative_fire_attack = function (_, params)
+	hit_minion_with_ranged_alternative_fire_attack = function (_, _, params)
 		local unit = params.unit
 		local player_unit = params.player_unit
 
@@ -275,7 +340,7 @@ local StateGameplayTestify = {
 			Attack.execute(unit, damage_profile, "target_index", 1, "target_number", 1, "power_level", 500, "charge_level", 1, "dropoff_scalar", 0, "hit_world_position", hit_position, "attack_direction", Vector3(1, 0, 0), "hit_zone_name", "head", "instakill", false, "attacking_unit", player_unit, "hit_actor", hit_actor, "attack_type", "ranged", "herding_template", HerdingTemplates.thunder_hammer_left_heavy, "damage_type", damage_type, "is_critical_strike", true)
 		end
 	end,
-	hit_minion_with_melee_weapon_special_attack = function (_, params)
+	hit_minion_with_melee_weapon_special_attack = function (_, _, params)
 		local unit = params.unit
 		local player_unit = params.player_unit
 
@@ -288,7 +353,7 @@ local StateGameplayTestify = {
 			Attack.execute(unit, damage_profile, "target_index", 1, "target_number", 1, "power_level", 500, "charge_level", 1, "dropoff_scalar", 0, "hit_world_position", hit_position, "attack_direction", Vector3(1, 0, 0), "hit_zone_name", "head", "instakill", false, "attacking_unit", player_unit, "hit_actor", hit_actor, "attack_type", "ranged", "herding_template", HerdingTemplates.thunder_hammer_left_heavy, "damage_type", damage_type, "is_critical_strike", true)
 		end
 	end,
-	hit_minion_with_plasmagun_attack = function (_, params)
+	hit_minion_with_plasmagun_attack = function (_, _, params)
 		local unit = params.unit
 		local player_unit = params.player_unit
 
@@ -301,7 +366,7 @@ local StateGameplayTestify = {
 			Attack.execute(unit, damage_profile, "target_index", 1, "target_number", 1, "power_level", 500, "charge_level", 1, "dropoff_scalar", 0, "attack_direction", Vector3(1, 0, 0), "instakill", false, "hit_zone_name", "head", "hit_actor", hit_actor, "hit_world_position", hit_position, "attacking_unit", player_unit, "attack_type", "ranged", "herding_template", HerdingTemplates.thunder_hammer_left_heavy, "damage_type", damage_type, "is_critical_strike", true)
 		end
 	end,
-	hit_minion_with_warp_charge_explosion = function (_, params)
+	hit_minion_with_warp_charge_explosion = function (_, _, params)
 		local unit = params.unit
 		local player_unit = params.player_unit
 		local hit_position = POSITION_LOOKUP[unit]
@@ -313,7 +378,7 @@ local StateGameplayTestify = {
 
 		Explosion.create_explosion(world, physics_world, hit_position, Vector3.up(), player_unit, explosion_template, DEFAULT_POWER_LEVEL, charge_level, attack_type)
 	end,
-	apply_select_traits = function (_, params)
+	apply_select_traits = function (_, _, params)
 		local player = params.player
 		local weapon_system = Managers.state.extension:system("weapon_system")
 		local slot_name = params.slot_name
@@ -325,7 +390,7 @@ local StateGameplayTestify = {
 
 		weapon_system:debug_set_weapon_override(player, selected_overrides, slot_name)
 	end,
-	set_alternate_fire = function (_, params)
+	set_alternate_fire = function (_, _, params)
 		local unit = params.unit
 		local active = params.active
 		local unit_data_extension = ScriptUnit.has_extension(unit, "unit_data_system")
@@ -337,17 +402,17 @@ local StateGameplayTestify = {
 			AlternateFire.debug_set_alternate_fire(alternate_fire_component, active)
 		end
 	end,
-	is_unit_alive = function (_, unit)
+	is_unit_alive = function (_, _, unit)
 		return HEALTH_ALIVE[unit]
 	end,
-	kill_minion = function (_, unit)
+	kill_minion = function (_, _, unit)
 		if HEALTH_ALIVE[unit] then
 			local damage_profile = DamageProfileTemplates.minion_instakill
 
 			Attack.execute(unit, damage_profile, "instakill", true)
 		end
 	end,
-	gib_minion = function (_, parameters)
+	gib_minion = function (_, _, parameters)
 		local unit = parameters.unit
 
 		if HEALTH_ALIVE[unit] then
@@ -361,6 +426,16 @@ local StateGameplayTestify = {
 			Attack.execute(unit, damage_profile, "hit_zone_name", hit_zone_name, "instakill", true)
 		end
 	end,
+	hide_all_units = function (state_gameplay, _)
+		local world = Managers.world:world("level_world")
+		local units = World.units(world)
+
+		for i = 1, #units do
+			local unit = units[i]
+
+			Unit.set_unit_visibility(unit, false)
+		end
+	end,
 	hide_players = function ()
 		Log.info("StateGameplayTestify", "Hiding players")
 		PlayerVisibility.hide_players()
@@ -370,33 +445,50 @@ local StateGameplayTestify = {
 
 		return memory_usage
 	end,
-	play_cutscene = function (_, cutscene_name)
+	play_cutscene = function (_, _, cutscene_name)
 		Log.info("StateGameplayTestify", "Playing cutscene %s", cutscene_name)
 
 		local cinematic_scene_system = Managers.state.extension:system("cinematic_scene_system")
 
 		cinematic_scene_system:play_cutscene(cutscene_name)
 	end,
+	positions_on_nav_mesh = function (state_gameplay, nav_world, positions, above, below, optional_traverse_logic)
+		local num_positions = #positions
+		local positions_on_nav_mesh = Script.new_array(num_positions)
+		local num_positions_on_nav_mesh = 0
+
+		for i = 1, num_positions do
+			local position = positions[i]:unbox()
+			local position_on_nav_mesh = NavQueries.position_on_mesh(nav_world, position, above, below, optional_traverse_logic)
+
+			if position_on_nav_mesh then
+				num_positions_on_nav_mesh = num_positions_on_nav_mesh + 1
+				positions_on_nav_mesh[num_positions_on_nav_mesh] = Vector3Box(position_on_nav_mesh)
+			end
+		end
+
+		return positions_on_nav_mesh, num_positions_on_nav_mesh
+	end,
 	show_players = function ()
 		Log.info("StateGameplayTestify", "Showing players")
 		PlayerVisibility.show_players()
 	end,
-	spawn_unit = function (_, unit_name, position)
+	spawn_unit = function (_, _, unit_name, position)
 		local spawner_manager = Managers.state.unit_spawner
 		local unit = spawner_manager:spawn_unit(unit_name, position:unbox())
 
 		return unit
 	end,
-	spawn_and_destroy_unit = function (_, unit_name, position)
+	spawn_and_destroy_unit = function (_, _, unit_name, position)
 		local world = Managers.world:world("level_world")
 		local unit = World.spawn_unit_ex(world, unit_name, nil, position:unbox())
 
 		World.destroy_unit(world, unit)
 	end,
-	start_measuring_performance = function (state_gameplay, values_to_measure)
+	start_measuring_performance = function (state_gameplay, _, values_to_measure)
 		state_gameplay:init_performance_reporter(values_to_measure)
 	end,
-	stop_measuring_performance = function (state_gameplay)
+	stop_measuring_performance = function (state_gameplay, _)
 		local performance_reporter = state_gameplay:performance_reporter()
 		local performance_measurements = performance_reporter:performance_measurements()
 
@@ -404,11 +496,16 @@ local StateGameplayTestify = {
 
 		return performance_measurements
 	end,
-	trigger_external_event = function (_, event_name)
+	trigger_external_event = function (_, _, event_name)
 		Log.info("StateGameplayTestify", "Triggering external event %s", event_name)
 		level_trigger_event(Managers.state.mission:mission_level(), event_name)
 	end,
-	unit_health_values = function (_, unit)
+	traverse_logic = function (state_gameplay, _, unit)
+		local navigation_extension = ScriptUnit.extension(unit, "navigation_system")
+
+		return navigation_extension:traverse_logic()
+	end,
+	unit_health_values = function (_, _, unit)
 		local health_extension = ScriptUnit.has_extension(unit, "health_system")
 
 		if health_extension then
@@ -423,7 +520,33 @@ local StateGameplayTestify = {
 			}
 		end
 	end,
-	wait_for_cutscene_to_finish = function (_, cutscene_name)
+	unit_navigation_move_to = function (state_gameplay, _, unit, destination)
+		local navigation_extension = ScriptUnit.extension(unit, "navigation_system")
+
+		navigation_extension:move_to(destination:unbox())
+	end,
+	unit_navigation_set_enabled = function (state_gameplay, _, unit, enabled, max_speed)
+		local navigation_extension = ScriptUnit.extension(unit, "navigation_system")
+
+		navigation_extension:set_enabled(enabled, max_speed)
+	end,
+	unit_positions_on_nav_mesh = function (state_gameplay, nav_world, units, above, below)
+		local num_units = #units
+		local unit_position_on_nav_mesh = Script.new_map(num_units)
+
+		for i = 1, num_units do
+			local unit = units[i]
+			local position = POSITION_LOOKUP[unit]
+			local position_on_nav_mesh = NavQueries.position_on_mesh(nav_world, position, above, below)
+
+			if position_on_nav_mesh then
+				unit_position_on_nav_mesh[unit] = Vector3Box(position_on_nav_mesh)
+			end
+		end
+
+		return unit_position_on_nav_mesh
+	end,
+	wait_for_cutscene_to_finish = function (_, _, cutscene_name)
 		local cinematic_scene_system = Managers.state.extension:system("cinematic_scene_system")
 		local is_cinematic_active = cinematic_scene_system:is_cinematic_active(cutscene_name)
 
@@ -433,7 +556,7 @@ local StateGameplayTestify = {
 
 		Log.info("StateGameplayTestify", "Cutscene %s has finished playing", cutscene_name)
 	end,
-	wait_for_cutscene_to_start = function (_, cutscene_name)
+	wait_for_cutscene_to_start = function (_, _, cutscene_name)
 		local cinematic_scene_system = Managers.state.extension:system("cinematic_scene_system")
 		local is_cinematic_active = cinematic_scene_system:is_cinematic_active(cutscene_name)
 

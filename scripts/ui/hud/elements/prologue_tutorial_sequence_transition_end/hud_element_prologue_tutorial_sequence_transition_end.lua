@@ -46,8 +46,8 @@ HudElementPrologueTutorialSequenceTransitionEnd._draw_widgets = function (self, 
 	end
 end
 
-HudElementPrologueTutorialSequenceTransitionEnd.destroy = function (self)
-	HudElementPrologueTutorialSequenceTransitionEnd.super.destroy(self)
+HudElementPrologueTutorialSequenceTransitionEnd.destroy = function (self, ui_renderer)
+	HudElementPrologueTutorialSequenceTransitionEnd.super.destroy(self, ui_renderer)
 	self:_unregister_events()
 end
 

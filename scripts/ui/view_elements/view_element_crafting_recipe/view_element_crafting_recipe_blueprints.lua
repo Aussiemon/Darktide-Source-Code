@@ -1467,19 +1467,21 @@ ViewElementCraftingRecipeBlueprints.modifications_counter = {
 		}
 	},
 	init = function (parent, widget, config, callback_name)
-		local item = config.item
+		local item = config.item or parent.content.item
 
 		if item then
 			local num_modifications, max_modifications = ItemUtils.modifications_by_rarity(item)
 			widget.content.counter = string.format(" %d/%d", num_modifications, max_modifications)
+			widget.content.item = item
 		end
 	end,
 	update = function (parent, widget, input_service, dt, t, ui_renderer)
-		local item = widget.content.item
+		local item = parent.content.item
 
-		if item then
+		if item ~= widget.content.item then
 			local num_modifications, max_modifications = ItemUtils.modifications_by_rarity(item)
 			widget.content.counter = string.format(" %d/%d", num_modifications, max_modifications)
+			widget.content.item = item
 		end
 	end
 }

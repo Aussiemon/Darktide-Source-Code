@@ -107,23 +107,24 @@ local weapon_template = {
 		action_zealot_channel = {
 			kind = "zealot_channel",
 			radius = 10,
-			defensive_buff = "zealot_channel_toughness_damage_reduction",
+			start_input = "channel",
 			force_stagger_duration = 2,
 			sprint_requires_press_to_interrupt = true,
 			power_level_time_in_action_multiplier = 0.25,
 			offensive_buff = "zealot_channel_damage",
-			toughness_bonus_buff = "zealot_channel_toughness_bonus",
+			defensive_buff = "zealot_channel_toughness_damage_reduction",
 			force_stagger_radius = 4,
+			toughness_bonus_buff = "zealot_channel_toughness_bonus",
 			radius_time_in_action_multiplier = 0.1,
 			allowed_during_sprint = true,
 			ability_type = "combat_ability",
-			duration = 5,
 			add_buff_time = 4,
 			vo_tag = "ability_litany",
 			abort_sprint = true,
 			uninterruptible = true,
 			power_level = 500,
-			total_time = math.huge,
+			stop_input = "cancel_channeling",
+			total_time = 5.5,
 			damage_profile = DamageProfileTemplates.zealot_channel_stagger,
 			allowed_chain_actions = {
 				wield = {
@@ -147,7 +148,7 @@ local weapon_template = {
 				}
 			},
 			conditional_state_to_action_input = {
-				no_combat_ability_charges_left_and_not_end_anim = {
+				auto_chain = {
 					input_name = "wield_previous"
 				}
 			}
@@ -163,7 +164,7 @@ local weapon_template = {
 		}
 	}
 }
-weapon_template.actions.grenade_ability_quick_throw = table.clone(BaseTemplateSettings.actions.grenade_ability_quick_throw)
+weapon_template.actions.grenade_ability_quick_throw = table.clone_instance(BaseTemplateSettings.actions.grenade_ability_quick_throw)
 weapon_template.actions.grenade_ability_quick_throw.conditional_state_to_action_input = {
 	auto_chain = {
 		input_name = "wield_previous"
@@ -180,7 +181,15 @@ table.add_missing(weapon_template.actions, BaseTemplateSettings.actions)
 weapon_template.keywords = {}
 weapon_template.conditional_state_to_action_input = {
 	{
+		conditional_state = "combat_ability_charges_left",
+		input_name = "channel"
+	},
+	{
 		conditional_state = "no_combat_ability_charges_left",
+		input_name = "wield_previous"
+	},
+	{
+		conditional_state = "no_running_action",
 		input_name = "wield_previous"
 	}
 }
@@ -191,7 +200,9 @@ weapon_template.uses_ammunition = false
 weapon_template.uses_overheat = false
 weapon_template.sprint_ready_up_time = 0.1
 weapon_template.max_first_person_anim_movement_speed = 5.8
-weapon_template.crosshair_type = "dot"
+weapon_template.crosshair = {
+	crosshair_type = "dot"
+}
 weapon_template.hit_marker_type = "center"
 weapon_template.fx_sources = {
 	_emit = "fx_emit"

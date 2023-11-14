@@ -2,6 +2,7 @@ local BackendError = require("scripts/foundation/managers/backend/backend_error"
 local BackendInterface = require("scripts/backend/backend_interface")
 local BackendManagerTestify = GameParameters.testify and require("scripts/foundation/managers/backend/backend_manager_testify")
 local BackendUtilities = require("scripts/foundation/managers/backend/utilities/backend_utilities")
+local DefaultBackendSettings = require("scripts/settings/backend/default_backend_settings")
 local PriorityQueue = require("scripts/foundation/utilities/priority_queue")
 local Promise = require("scripts/foundation/utilities/promise")
 local XboxLiveUtils = require("scripts/foundation/utilities/xbox_live")
@@ -73,7 +74,9 @@ local function _check_response_time(path, value)
 end
 
 BackendManager.update = function (self, dt, t)
-	if self._initialized then
+	local initialized = self._initialized
+
+	if initialized then
 		self:sync_time(t)
 
 		local results = Backend.update(dt, t)
@@ -163,6 +166,13 @@ BackendManager.update = function (self, dt, t)
 		for i = #remove_indices, 1, -1 do
 			table.remove(title_request_retry_queue, remove_indices[i])
 		end
+	end
+
+	local authenticated = initialized and self:authenticated()
+	local settings_need_update = not self._settings_promise and not self._backend_settings
+
+	if authenticated and settings_need_update then
+		self:_download_settings()
 	end
 
 	local was_slow_frame = dt >= 0.5
@@ -549,6 +559,39 @@ BackendManager.failed_request = function (self)
 	return Promise.delay(LIMIT_RESPONSE_TIME_WARNING_MS / 1000):next(function (_)
 		return Promise.rejected(BackendUtilities.create_error(BackendError.NoIdentifier, "Requested failure"))
 	end)
+end
+
+BackendManager._download_settings = function (self)
+	self._settings_promise = self:title_request(BackendUtilities.url_builder("/gameplay/config/sessions"):to_string())
+
+	return self._settings_promise:next(function (message)
+		return message.body
+	end):next(function (settings)
+		self._backend_settings = settings
+		self._settings_promise = nil
+	end):catch(function (error)
+		Log.warning("Failed to fetch backend settings.")
+
+		self._backend_settings = {}
+		self._settings_promise = nil
+
+		return Promise.rejected(error)
+	end)
+end
+
+BackendManager.session_setting = function (self, ...)
+	local res = nil
+	local backend_settings = self._backend_settings
+
+	if backend_settings then
+		res = table.nested_get(backend_settings, ...)
+	end
+
+	if res == nil then
+		res = table.nested_get(DefaultBackendSettings, ...)
+	end
+
+	return res
 end
 
 implements(BackendManager, Interface)

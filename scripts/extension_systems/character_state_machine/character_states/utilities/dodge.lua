@@ -160,17 +160,12 @@ Dodge.sucessful_dodge = function (dodging_unit, attacking_unit, attack_type, dod
 		end
 	end
 
-	if Managers.stats.can_record_stats() then
-		local breed_name = attacking_breed.name
-		local player_unit_spawn_manager = Managers.state.player_unit_spawn
-		local dodging_player = player_unit_spawn_manager:owner(dodging_unit)
-		local is_human = dodging_player and dodging_player:is_human_controlled()
+	local breed_name = attacking_breed.name
+	local player_unit_spawn_manager = Managers.state.player_unit_spawn
+	local dodging_player = player_unit_spawn_manager:owner(dodging_unit)
 
-		if is_human then
-			dodge_type = dodge_type or dodge_types.dodge
-
-			Managers.stats:record_dodge(dodging_player, breed_name, attack_type, dodge_type)
-		end
+	if dodging_player then
+		Managers.stats:record_private("hook_dodged_attack", dodging_player, breed_name, attack_type, dodge_type)
 	end
 end
 

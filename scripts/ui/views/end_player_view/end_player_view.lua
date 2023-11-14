@@ -244,14 +244,6 @@ EndPlayerView._draw_widgets = function (self, dt, t, input_service, ui_renderer)
 
 		if carousel_left_border <= widget_offset_x and widget_offset_x <= carousel_right_border then
 			UIWidget.draw(widget, ui_renderer)
-		elseif widget_offset_x < carousel_left_border and widget.content.icon_load_id then
-			local blueprint_name = widget.content.blueprint_name
-			local blueprints = self._definitions.blueprints
-			local widget_blueprint = blueprints[blueprint_name]
-
-			if widget_blueprint and widget_blueprint.unload_icon then
-				widget_blueprint.unload_icon(self, widget, nil, ui_renderer)
-			end
 		end
 	end
 end

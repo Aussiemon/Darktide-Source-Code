@@ -101,6 +101,7 @@ local categories = {
 	"Social Features",
 	"Specials",
 	"Stagger",
+	"Stats",
 	"Stories",
 	"Sweep Spline",
 	"Talents",
@@ -474,6 +475,10 @@ params.debug_pickup_spawners = {
 	value = false,
 	category = "Pickups"
 }
+params.debug_pickup_rubberband = {
+	value = false,
+	category = "Pickups"
+}
 params.show_spawned_pickups = {
 	value = false,
 	category = "Pickups"
@@ -690,10 +695,11 @@ params.character_profile_selector = {
 						local profile = profiles[ii]
 
 						if profile then
-							local character_name = ProfileUtils.character_name(profile)
 							local archetype_name = profile.archetype.name
 							local archetype_name_pretty = archetype_name and string.gsub(archetype_name, "^%l", string.upper) or "no_archetype"
-							local option_text = string.format("%s - %s", archetype_name_pretty, character_name)
+							local character_name = ProfileUtils.character_name(profile)
+							local level = profile.current_level and tostring(profile.current_level) or "n/a"
+							local option_text = string.format("%s - %s (%s)", archetype_name_pretty, character_name, level)
 
 							table.insert(options_texts, 1, option_text)
 						end
@@ -709,14 +715,12 @@ params.character_profile_selector = {
 		end
 
 		local local_profiles = ProfileUtils.local_profiles(MasterItems.get_cached())
-		local format_string = #local_profiles >= 10 and "%-4s %s %s%s" or "%-3s %s %s%s"
+		local format_string = #local_profiles >= 10 and "%-4s %s%s" or "%-3s %s%s"
 
 		for ii = 1, #local_profiles do
 			local profile = local_profiles[ii]
 			local index = string.format("[%d]", ii)
-			local archetype_name = profile.archetype.name
-			local archetype_name_pretty = archetype_name and string.gsub(archetype_name, "^%l", string.upper) or "no_archetype"
-			local option_text = string.format(format_string, index, archetype_name_pretty, profile.name_short or profile.name or "no_name", profile.description and string.format(" - %s", profile.description) or "")
+			local option_text = string.format(format_string, index, profile.name or "N/A", profile.loadout_description and string.format(": %s", profile.loadout_description) or "")
 			options_texts[#options_texts + 1] = option_text
 		end
 
@@ -1014,6 +1018,10 @@ params.player_character_third_person_scale_override = {
 	value = 1,
 	category = "Player Character",
 	num_decimals = 3
+}
+params.disable_last_man_standing_wwise_state = {
+	value = false,
+	category = "Wwise States"
 }
 params.debug_wwise_states = {
 	value = false,
@@ -1479,6 +1487,10 @@ params.debug_slots = {
 	options_function = _debug_slots_options
 }
 params.debug_doors = {
+	value = false,
+	category = "Navigation"
+}
+params.always_update_doors = {
 	value = false,
 	category = "Navigation"
 }
@@ -2162,7 +2174,11 @@ params.mute_minion_sounds = {
 }
 params.debug_stats = {
 	value = false,
-	category = "Misc"
+	category = "Stats"
+}
+params.local_stats = {
+	value = false,
+	category = "Stats"
 }
 params.distance_to_selected_unit = {
 	value = false,
@@ -2201,6 +2217,10 @@ params.disable_server_metrics_prints = {
 	category = "Misc"
 }
 params.disable_player_unit_weapon_extension_on_reload = {
+	value = false,
+	category = "Misc"
+}
+params.lock_look_input = {
 	value = false,
 	category = "Misc"
 }
@@ -2262,10 +2282,6 @@ params.enable_chunk_lod = {
 	category = "Chunk Lod"
 }
 params.chunk_lod_debug = {
-	value = false,
-	category = "Chunk Lod"
-}
-params.chunk_lod_debug_raycast = {
 	value = false,
 	category = "Chunk Lod"
 }
@@ -2607,6 +2623,26 @@ params.always_max_overheat_hud_opacity = {
 params.hide_hud_world_markers = {
 	value = false,
 	category = "Hud"
+}
+params.always_show_hit_marker = {
+	value = false,
+	category = "Hud"
+}
+params.always_show_weakspot_hit_marker = {
+	value = false,
+	category = "Hud"
+}
+params.hit_marker_color_override = {
+	value = false,
+	category = "Hud",
+	options_function = function ()
+		local HudElementCrosshairSettings = require("scripts/ui/hud/elements/crosshair/hud_element_crosshair_settings")
+		local options = table.keys(HudElementCrosshairSettings.hit_indicator_colors)
+
+		table.insert(options, 1, false)
+
+		return options
+	end
 }
 local SHOW_INFO = BUILD == "dev" or BUILD == "debug"
 params.render_version_info = {
@@ -2969,6 +3005,10 @@ params.ui_always_enable_inventory_access = {
 	value = false,
 	category = "UI"
 }
+params.ui_always_enable_achievements_menu = {
+	value = false,
+	category = "UI"
+}
 params.ui_hide_hud = {
 	value = false,
 	category = "UI"
@@ -3018,16 +3058,6 @@ params.ui_disable_view_loader = {
 	category = "UI"
 }
 params.ui_view_scale = {
-	value = 1,
-	num_decimals = 1,
-	category = "UI",
-	on_value_set = function ()
-		local force_update = true
-
-		UPDATE_RESOLUTION_LOOKUP(force_update)
-	end
-}
-params.ui_hud_scale = {
 	value = 1,
 	num_decimals = 1,
 	category = "UI",
@@ -3118,7 +3148,7 @@ params.sticker_book_seen_all_traits = {
 	category = "UI"
 }
 params.debug_render_target_atlas_generator = {
-	value = true,
+	value = false,
 	category = "UI"
 }
 params.ui_always_show_tutorial_popup = {
@@ -3954,6 +3984,10 @@ params.volume_trigger_debug = {
 	value = false,
 	category = "Volume"
 }
+params.debug_buff_volumes = {
+	value = false,
+	category = "Volume"
+}
 params.dev_params_gui_auto_expand_tree = {
 	value = true,
 	category = "Imgui"
@@ -4179,6 +4213,10 @@ params.debug_psyker_throwing_knives_effects = {
 	category = "Weapon Effects"
 }
 params.debug_sticky_effects = {
+	value = false,
+	category = "Weapon Effects"
+}
+params.debug_sweep_trail_effects = {
 	value = false,
 	category = "Weapon Effects"
 }
@@ -4495,14 +4533,6 @@ params.debug_fov = {
 	value = false,
 	category = "Camera"
 }
-params.camera_external_fov_multiplier = {
-	value = 1,
-	num_decimals = 2,
-	category = "Camera",
-	on_value_set = function (new_value, old_value)
-		Managers.state.camera:set_variable("player1", "external_fov_multiplier", new_value)
-	end
-}
 params.camera_tree_debug = {
 	value = false,
 	category = "Camera"
@@ -4595,6 +4625,11 @@ params.debug_focal_padding = {
 params.debug_focal_scale = {
 	value = 1,
 	num_decimals = 5,
+	category = "Stories"
+}
+params.force_hub_location_intros = {
+	value = false,
+	name = "Always show hub location introductions (hli)",
 	category = "Stories"
 }
 params.skip_prologue = {
@@ -4753,6 +4788,9 @@ params.longer_psyker_force_field_duration = {
 	value = false
 }
 params.show_equipped_items = {
+	value = false
+}
+params.debug_gadget_extension = {
 	value = false
 }
 params.debug_change_time_scale.value = false

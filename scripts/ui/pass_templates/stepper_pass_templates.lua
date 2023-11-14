@@ -1,14 +1,56 @@
+local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local DangerSettings = require("scripts/settings/difficulty/danger_settings")
 local InputDevice = require("scripts/managers/input/input_device")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
-local color_terminal_icon = {
-	255,
-	169,
-	211,
-	158
-}
+local ColorUtilities = require("scripts/utilities/ui/colors")
+local InputUtils = require("scripts/managers/input/input_utils")
+local color_terminal_icon = Color.terminal_text_header(255, true)
 local color_terminal_text_header = Color.terminal_text_header(255, true)
 local StepperPassTemplates = {}
+local color_lerp = ColorUtilities.color_lerp
+local color_copy = ColorUtilities.color_copy
+
+local function terminal_button_change_function(content, style, hotspot_id)
+	local hotspot = hotspot_id and content[hotspot_id] or content.hotspot
+	local is_selected = hotspot.is_selected
+	local is_focused = hotspot.is_focused
+	local is_hover = hotspot.is_hover
+	local disabled = hotspot.disabled
+	local default_color = style.default_color
+	local hover_color = style.hover_color
+	local selected_color = style.selected_color
+	local disabled_color = style.disabled_color
+	local color = nil
+
+	if disabled and disabled_color then
+		color = disabled_color
+	elseif (is_selected or is_focused) and selected_color then
+		color = selected_color
+	elseif is_hover and hover_color then
+		color = hover_color
+	elseif default_color then
+		color = default_color
+	end
+
+	if color then
+		color_copy(color, style.color)
+	end
+end
+
+StepperPassTemplates.terminal_button_change_function = terminal_button_change_function
+
+local function terminal_button_hover_change_function(content, style, hotspot_id)
+	local hotspot = hotspot_id and content[hotspot_id] or content.hotspot
+	local anim_hover_progress = hotspot.anim_hover_progress or 0
+	local anim_select_progress = hotspot.anim_select_progress or 0
+	local anim_focus_progress = hotspot.anim_focus_progres or 0
+	local default_alpha = 155
+	local hover_alpha = anim_hover_progress * 100
+	local select_alpha = math.max(anim_select_progress, anim_focus_progress) * 50
+	style.color[1] = math.clamp(default_alpha + select_alpha + hover_alpha, 0, 255)
+end
+
+StepperPassTemplates.terminal_button_hover_change_function = terminal_button_hover_change_function
 local difficulty_picker_stepper_hotspot_content = {
 	on_hover_sound = UISoundEvents.default_mouse_hover,
 	on_pressed_sound = UISoundEvents.default_select
@@ -27,6 +69,10 @@ local function _make_difficulty_picker_rect_change_function(index)
 	return function (content, style)
 		local min_danger = content.min_danger or MIN_DANGER
 		local max_danger = content.max_danger or MAX_DANGER
+		local current_danger = content.hover_danger or content.danger
+		local danger_color = DangerSettings.by_index[current_danger] and DangerSettings.by_index[current_danger].color or DangerSettings.by_index[1].color
+
+		ColorUtilities.color_copy(danger_color, style.color, true)
 
 		if index < min_danger or max_danger < index then
 			style.color[1] = 127
@@ -96,6 +142,7 @@ StepperPassTemplates.difficulty_stepper = {
 
 				content._hover_index_1 = math.min(hover_index, danger)
 				content._hover_index_2 = math.max(hover_index, danger)
+				content.hover_danger = hover_index
 				local gamepad_active = InputDevice.gamepad_active
 
 				if content.was_gamepad_active ~= gamepad_active then
@@ -462,6 +509,487 @@ StepperPassTemplates.difficulty_stepper = {
 			}
 		}
 	}
+}
+local terminal_button_text_style = table.clone(UIFontSettings.button_primary)
+terminal_button_text_style.offset = {
+	0,
+	0,
+	6
+}
+terminal_button_text_style.size_addition = {
+	-100,
+	0
+}
+terminal_button_text_style.horizontal_alignment = "center"
+terminal_button_text_style.text_horizontal_alignment = "center"
+terminal_button_text_style.text_vertical_alignment = "center"
+terminal_button_text_style.text_color = {
+	255,
+	216,
+	229,
+	207
+}
+terminal_button_text_style.default_color = {
+	255,
+	216,
+	229,
+	207
+}
+StepperPassTemplates.terminal_stepper = {
+	{
+		pass_type = "logic",
+		value = function (pass, ui_renderer, logic_style, content, position, size)
+			if not content.disabled then
+				local gamepad_active = InputDevice.gamepad_active
+
+				if content.was_gamepad_active ~= gamepad_active then
+					content.was_gamepad_active = gamepad_active
+					content.stepper_left = gamepad_active and "" or "<"
+					content.stepper_right = gamepad_active and "" or ">"
+				end
+			end
+		end
+	},
+	{
+		style_id = "stepper_left",
+		pass_type = "texture_uv",
+		value = "content/ui/materials/buttons/arrow_01",
+		style = {
+			vertical_alignment = "center",
+			horizontal_alignment = "left",
+			size = {
+				16,
+				16
+			},
+			color = color_terminal_text_header,
+			offset = {
+				17,
+				0,
+				4
+			},
+			uvs = {
+				{
+					1,
+					0
+				},
+				{
+					0,
+					1
+				}
+			}
+		},
+		visibility_function = function (parent, content)
+			return Managers.ui:using_cursor_navigation()
+		end
+	},
+	{
+		style_id = "stepper_right",
+		pass_type = "texture",
+		value = "content/ui/materials/buttons/arrow_01",
+		style = {
+			vertical_alignment = "center",
+			horizontal_alignment = "right",
+			size = {
+				16,
+				16
+			},
+			color = color_terminal_text_header,
+			offset = {
+				-17,
+				0,
+				4
+			}
+		},
+		visibility_function = function (parent, content)
+			return Managers.ui:using_cursor_navigation()
+		end
+	},
+	{
+		style_id = "stepper_left_background",
+		pass_type = "rect",
+		style = {
+			vertical_alignment = "center",
+			horizontal_alignment = "left",
+			color = {
+				180,
+				28,
+				31,
+				28
+			},
+			size = {
+				50
+			},
+			offset = {
+				0,
+				0,
+				2
+			}
+		}
+	},
+	{
+		value = "content/ui/materials/frames/dropshadow_medium",
+		style_id = "stepper_left_background_shadow",
+		pass_type = "texture",
+		style = {
+			vertical_alignment = "center",
+			horizontal_alignment = "left",
+			scale_to_material = true,
+			color = Color.black(200, true),
+			size = {
+				50
+			},
+			size_addition = {
+				20,
+				20
+			},
+			offset = {
+				-10,
+				0,
+				3
+			}
+		}
+	},
+	{
+		pass_type = "texture",
+		style_id = "stepper_left_gradient",
+		value = "content/ui/materials/gradients/gradient_vertical",
+		style = {
+			vertical_alignment = "center",
+			horizontal_alignment = "left",
+			default_color = Color.terminal_background_gradient(nil, true),
+			selected_color = Color.terminal_frame_selected(nil, true),
+			disabled_color = Color.ui_grey_medium(255, true),
+			size = {
+				50
+			},
+			offset = {
+				0,
+				0,
+				3
+			}
+		},
+		change_function = function (content, style)
+			terminal_button_change_function(content, style, "hotspot_left")
+			terminal_button_hover_change_function(content, style, "hotspot_left")
+		end
+	},
+	{
+		style_id = "stepper_right_background",
+		pass_type = "rect",
+		style = {
+			vertical_alignment = "center",
+			horizontal_alignment = "right",
+			color = {
+				180,
+				28,
+				31,
+				28
+			},
+			size = {
+				50
+			},
+			offset = {
+				0,
+				0,
+				2
+			}
+		}
+	},
+	{
+		value = "content/ui/materials/frames/dropshadow_medium",
+		style_id = "stepper_right_background_shadow",
+		pass_type = "texture",
+		style = {
+			vertical_alignment = "center",
+			horizontal_alignment = "right",
+			scale_to_material = true,
+			color = Color.black(200, true),
+			size = {
+				50
+			},
+			size_addition = {
+				20,
+				20
+			},
+			offset = {
+				10,
+				0,
+				3
+			}
+		}
+	},
+	{
+		pass_type = "texture",
+		style_id = "stepper_right_gradient",
+		value = "content/ui/materials/gradients/gradient_vertical",
+		style = {
+			vertical_alignment = "center",
+			horizontal_alignment = "right",
+			default_color = Color.terminal_background_gradient(nil, true),
+			selected_color = Color.terminal_frame_selected(nil, true),
+			disabled_color = Color.ui_grey_medium(255, true),
+			size = {
+				50
+			},
+			offset = {
+				0,
+				0,
+				3
+			}
+		},
+		change_function = function (content, style)
+			terminal_button_change_function(content, style, "hotspot_right")
+			terminal_button_hover_change_function(content, style, "hotspot_right")
+		end
+	},
+	{
+		value_id = "stepper_left_text",
+		pass_type = "text",
+		value = "",
+		style = {
+			vertical_alignment = "center",
+			horizontal_alignment = "center",
+			text_vertical_alignment = "center",
+			font_size = 32,
+			text_horizontal_alignment = "center",
+			text_color = color_terminal_text_header,
+			size = {
+				75,
+				75
+			},
+			offset = {
+				-120,
+				15,
+				1
+			}
+		},
+		visibility_function = function (parent, content)
+			return not Managers.ui:using_cursor_navigation()
+		end
+	},
+	{
+		value_id = "stepper_right_text",
+		pass_type = "text",
+		value = "",
+		style = {
+			vertical_alignment = "center",
+			horizontal_alignment = "center",
+			text_vertical_alignment = "center",
+			font_size = 32,
+			text_horizontal_alignment = "center",
+			text_color = color_terminal_text_header,
+			size = {
+				75,
+				75
+			},
+			offset = {
+				115,
+				15,
+				1
+			}
+		},
+		visibility_function = function (parent, content)
+			return not Managers.ui:using_cursor_navigation()
+		end
+	},
+	{
+		pass_type = "hotspot",
+		content_id = "hotspot_left",
+		content = difficulty_picker_stepper_hotspot_content,
+		style = {
+			vertical_alignment = "center",
+			horizontal_alignment = "left",
+			size = {
+				50
+			},
+			offset = {
+				0,
+				0,
+				1
+			}
+		}
+	},
+	{
+		pass_type = "hotspot",
+		content_id = "hotspot_right",
+		content = difficulty_picker_stepper_hotspot_content,
+		style = {
+			vertical_alignment = "center",
+			horizontal_alignment = "right",
+			size = {
+				50
+			},
+			offset = {
+				0,
+				0,
+				1
+			}
+		}
+	},
+	{
+		pass_type = "hotspot",
+		content_id = "hotspot",
+		content = {
+			on_hover_sound = UISoundEvents.default_mouse_hover,
+			on_pressed_sound = UISoundEvents.default_select
+		}
+	},
+	{
+		pass_type = "texture",
+		style_id = "background",
+		value = "content/ui/materials/backgrounds/default_square",
+		style = {
+			vertical_alignment = "center",
+			horizontal_alignment = "center",
+			default_color = Color.terminal_background(100, true),
+			hover_color = Color.terminal_background(130, true),
+			selected_color = Color.terminal_frame_selected(nil, true),
+			disabled_color = Color.ui_grey_medium(255, true),
+			offset = {
+				0,
+				0,
+				1
+			}
+		},
+		change_function = function (content, style)
+			terminal_button_change_function(content, style)
+		end
+	},
+	{
+		value = "content/ui/materials/frames/dropshadow_medium",
+		style_id = "outer_shadow",
+		pass_type = "texture",
+		style = {
+			vertical_alignment = "center",
+			horizontal_alignment = "center",
+			scale_to_material = true,
+			color = Color.black(200, true),
+			size_addition = {
+				20,
+				20
+			},
+			offset = {
+				0,
+				0,
+				3
+			}
+		}
+	},
+	{
+		pass_type = "texture",
+		style_id = "frame",
+		value = "content/ui/materials/frames/frame_tile_2px",
+		style = {
+			vertical_alignment = "center",
+			horizontal_alignment = "center",
+			default_color = Color.terminal_frame(nil, true),
+			selected_color = Color.terminal_frame_selected(nil, true),
+			disabled_color = Color.ui_grey_medium(255, true),
+			hover_color = Color.terminal_frame_hover(nil, true),
+			offset = {
+				0,
+				0,
+				5
+			}
+		},
+		change_function = terminal_button_change_function
+	},
+	{
+		pass_type = "texture",
+		style_id = "corner",
+		value = "content/ui/materials/frames/frame_corner_2px",
+		style = {
+			vertical_alignment = "center",
+			horizontal_alignment = "center",
+			default_color = Color.terminal_corner(nil, true),
+			selected_color = Color.terminal_corner_selected(nil, true),
+			disabled_color = Color.ui_grey_light(255, true),
+			hover_color = Color.terminal_corner_hover(nil, true),
+			offset = {
+				0,
+				0,
+				6
+			}
+		},
+		change_function = terminal_button_change_function
+	},
+	{
+		style_id = "text",
+		pass_type = "text",
+		value_id = "text",
+		style = terminal_button_text_style,
+		change_function = function (content, style)
+			local hotspot = content.hotspot
+			local is_disabled = hotspot.disabled
+			local gamepad_active = hotspot.gamepad_active
+			local button_text = content.original_text or ""
+			local gamepad_action = content.gamepad_action
+
+			if gamepad_active and gamepad_action and not is_disabled then
+				local service_type = "View"
+				local alias_key = Managers.ui:get_input_alias_key(gamepad_action, service_type)
+				local input_text = InputUtils.input_text_for_current_input_device(service_type, alias_key)
+				content.text = string.format(Localize("loc_input_legend_text_template"), input_text, button_text)
+			else
+				content.text = button_text
+			end
+
+			local default_color = is_disabled and style.disabled_color or style.default_color
+			local hover_color = style.hover_color
+			local color = style.text_color
+			local progress = math.max(math.max(hotspot.anim_checked_progress or 0, math.max(hotspot.anim_focus_progress, hotspot.anim_select_progress)), math.max(hotspot.anim_hover_progress, hotspot.anim_input_progress))
+
+			if color and default_color and hover_color then
+				color_lerp(default_color, hover_color, progress, color)
+			end
+		end
+	},
+	update = function (widget, renderer, dt)
+		local content = widget.content
+		local pressed_delay = content.pressed_delay or 0.1
+		local pressed_delay_time = content.pressed_delay_time
+
+		if pressed_delay_time then
+			content.pressed_delay_time = pressed_delay_time - dt
+
+			if content.pressed_delay_time <= 0 then
+				content.pressed_delay_time = nil
+			end
+		else
+			local left_pressed_callback = content.left_pressed_callback
+			local right_pressed_callback = content.right_pressed_callback
+
+			if left_pressed_callback and right_pressed_callback then
+				local hotspot_left = content.hotspot_left
+				local hotspot_right = content.hotspot_right
+				local hotspot = content.hotspot
+
+				if InputDevice.gamepad_active then
+					if hotspot.is_selected then
+						local input_service = renderer.input_service
+
+						if input_service:get("navigate_left_continuous") then
+							left_pressed_callback()
+
+							content.pressed_delay_time = pressed_delay
+						elseif input_service:get("navigate_right_continuous") then
+							right_pressed_callback()
+
+							content.pressed_delay_time = pressed_delay
+						end
+					end
+				elseif hotspot_left.is_held then
+					left_pressed_callback()
+
+					content.pressed_delay_time = pressed_delay
+				elseif hotspot_right.is_held then
+					right_pressed_callback()
+
+					content.pressed_delay_time = pressed_delay
+				end
+			end
+		end
+	end
 }
 
 return settings("StepperPassTemplates", StepperPassTemplates)

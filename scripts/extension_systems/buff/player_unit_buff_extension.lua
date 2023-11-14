@@ -5,6 +5,7 @@ local BuffSettings = require("scripts/settings/buff/buff_settings")
 local BuffExtensionInterface = require("scripts/extension_systems/buff/buff_extension_interface")
 local BuffTemplates = require("scripts/settings/buff/buff_templates")
 local FixedFrame = require("scripts/utilities/fixed_frame")
+local Missions = require("scripts/settings/mission/mission_templates")
 local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
 local MAX_COMPONENT_BUFFS = PlayerCharacterConstants.max_component_buffs
 local COMPONENT_KEY_LOOKUP = PlayerCharacterConstants.buff_component_key_lookup
@@ -32,6 +33,10 @@ PlayerUnitBuffExtension.init = function (self, extension_init_context, unit, ext
 		self._game_session = game_object_data_or_game_session
 		self._game_object_id = nil_or_game_object_id
 	end
+
+	local mission_name = Managers.state.mission:mission_name()
+	local mission_settings = mission_name and Missions[mission_name]
+	self._is_hub = mission_settings and mission_settings.is_hub
 end
 
 PlayerUnitBuffExtension._init_components = function (self, buff_component)

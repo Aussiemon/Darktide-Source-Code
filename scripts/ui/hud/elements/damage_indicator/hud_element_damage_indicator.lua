@@ -16,8 +16,8 @@ HudElementDamageIndicator.init = function (self, parent, draw_layer, start_scale
 	Managers.event:register(self, "spawn_hud_damage_indicator", "_spawn_indicator")
 end
 
-HudElementDamageIndicator.destroy = function (self)
-	HudElementDamageIndicator.super.destroy(self)
+HudElementDamageIndicator.destroy = function (self, ui_renderer)
+	HudElementDamageIndicator.super.destroy(self, ui_renderer)
 	Managers.event:unregister(self, "spawn_hud_damage_indicator")
 end
 

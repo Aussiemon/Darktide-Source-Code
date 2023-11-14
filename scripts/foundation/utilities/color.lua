@@ -2254,15 +2254,15 @@ local color_definitions = {
 	},
 	ui_achievement_icon = {
 		255,
-		83,
-		46,
-		46
+		143,
+		106,
+		106
 	},
 	ui_achievement_icon_hover = {
 		255,
-		100,
-		60,
-		60
+		160,
+		120,
+		120
 	},
 	ui_achievement_icon_completed = {
 		255,
@@ -2474,6 +2474,12 @@ local color_definitions = {
 		242,
 		230
 	},
+	terminal_text_key_value = {
+		255,
+		239,
+		193,
+		82
+	},
 	terminal_text_header = {
 		255,
 		216,
@@ -2509,6 +2515,18 @@ local color_definitions = {
 		113,
 		126,
 		103
+	},
+	terminal_text_warning_dark = {
+		255,
+		200,
+		140,
+		20
+	},
+	terminal_text_warning_light = {
+		255,
+		255,
+		170,
+		30
 	},
 	legend_button_text = {
 		255,

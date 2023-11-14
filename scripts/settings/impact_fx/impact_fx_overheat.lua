@@ -1,4 +1,5 @@
 local ArmorSettings = require("scripts/settings/damage/armor_settings")
+local NO_SURFACE_DECAL = false
 local armor_types = ArmorSettings.types
 local player = {
 	sfx = {

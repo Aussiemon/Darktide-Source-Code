@@ -4,13 +4,34 @@ PerformanceTestCases = {
 		Testify:run_case(function (dt, t)
 			local settings = cjson.decode(case_settings or "{}")
 			local send_to_telemetry = settings.send_to_telemetry or false
+			local depth = 10
+			local ascii_separator = "|"
+			local memory_limit = 1
+			local monitor_resources_memory_usage = settings.monitor_resources_memory_usage or false
+
+			TestifySnippets.wait(1)
+
+			local is_application_bundled = Application.bundled()
+
+			Log.info("Testify", "is_application_bundled: ")
+			Log.info("Testify", is_application_bundled)
+
 			local cached_last_mission_loaded = Testify:retrieve_cache("last_mission_loaded") or "boot"
 			local cached_memory_usage_data = Testify:retrieve_cache("memory_usage_data") or {}
 			local memory_usage = Testify:make_request("memory_usage")
+			local memory_tree = TestifySnippets.memory_tree(depth, ascii_separator, memory_limit)
 			local memory_usage_data = {
 				map = cached_last_mission_loaded,
-				memory = memory_usage
+				memory = memory_usage,
+				memory_tree = memory_tree,
+				is_bundled = is_application_bundled
 			}
+
+			if monitor_resources_memory_usage and not is_application_bundled then
+				local memory_resources_all = TestifySnippets.memory_resources_all(true)
+				memory_usage_data.resources_memory_usage = memory_resources_all
+			end
+
 			local length = #cached_memory_usage_data
 			cached_memory_usage_data[length + 1] = memory_usage_data
 
@@ -105,10 +126,9 @@ PerformanceTestCases = {
 			TestifySnippets.wait_for_mission_intro()
 
 			local cameras = Testify:make_request("all_cameras_of_type", "performance")
-			local assert_data = {
-				condition = not table.is_empty(cameras),
-				message = mission_key .. "'s performance flag is set to true, but there are no performance cameras. Please set the flag to false until cameras have been added."
-			}
+
+			Testify.expect:is_false("performance_cameras_assert", table.is_empty(cameras), mission_key .. "'s performance flag is set to true, but there are no performance cameras. Please set the flag to false until cameras have been added.")
+
 			local performance_measurements = {}
 			local telemetry_event_name = "perf_camera"
 			local values_to_measure = {
@@ -143,10 +163,9 @@ PerformanceTestCases = {
 			local measure_time = 2
 			local time_before_measuring = 5
 			local cameras = Testify:make_request("all_cameras_of_type", "performance")
-			local assert_data = {
-				condition = not table.is_empty(cameras),
-				message = mission_key .. "'s performance flag is set to true, but there are no performance cameras. Please set the flag to false until cameras have been added."
-			}
+
+			Testify.expect:is_false("performance_cameras_assert", table.is_empty(cameras), mission_key .. "'s performance flag is set to true, but there are no performance cameras. Please set the flag to false until cameras have been added.")
+
 			local performance_measurements = {}
 			local telemetry_event_name = "perf_camera"
 			local values_to_measure = {
@@ -231,6 +250,42 @@ PerformanceTestCases = {
 				local memory_usage = Testify:make_request("memory_usage")
 
 				Log.info("Testify", string.format("In the hub\nIteration %i - Memory: %s", i, table.tostring(memory_usage, 4)))
+			end
+		end)
+	end,
+	purchase_item = function (case_settings)
+		Testify:run_case(function (dt, t)
+			local settings = cjson.decode(case_settings or "{}")
+			local num_iterations = settings.num_iterations or 10
+
+			TestifySnippets.skip_title_and_main_menu_and_create_character_if_none()
+			Testify:make_request("wait_for_in_hub")
+			Testify:make_request("fail_on_not_authenticated")
+
+			local credits_vendor_background_view_name = "credits_vendor_background_view"
+			local credits_vendor_background_view_data = {
+				view_name = credits_vendor_background_view_name
+			}
+
+			Testify:make_request("open_view", credits_vendor_background_view_data)
+			Testify:make_request("wait_for_view", credits_vendor_background_view_name)
+			TestifySnippets.wait(0.5)
+
+			local credits_vendor_background_view_button_widget_name = "option_button_3"
+
+			Testify:make_request("trigger_widget_callback", credits_vendor_background_view_button_widget_name)
+			Testify:make_request("wait_for_view", "debug_vendor_view")
+			TestifySnippets.wait(0.5)
+
+			for i = 1, num_iterations do
+				TestifySnippets.wait(0.5)
+				Testify:make_request("purchase_first_debug_vendor_item")
+				TestifySnippets.wait(1.5)
+				TestifySnippets.wait(0.5)
+
+				local memory_usage = Testify:make_request("memory_usage")
+
+				Log.info("Testify", string.format("After item purchase\nIteration %i - Memory: %s", i, table.tostring(memory_usage, 4)))
 			end
 		end)
 	end

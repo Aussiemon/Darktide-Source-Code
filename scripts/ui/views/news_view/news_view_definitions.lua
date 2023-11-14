@@ -153,6 +153,7 @@ local widget_definitions = {
 			style = {
 				vertical_alignment = "top",
 				hdr = false,
+				force_view = false,
 				horizontal_alignment = "left",
 				size = {
 					image_size[1],
@@ -176,7 +177,7 @@ local widget_definitions = {
 				material_values = {}
 			},
 			visibility_function = function (content, style)
-				return style.material_values and not not style.material_values.texture
+				return style.material_values and style.material_values.texture or style.force_view
 			end
 		}
 	}, "window_content"),

@@ -1,14 +1,6 @@
 local PlayerUnitVisualLoadout = require("scripts/extension_systems/visual_loadout/utilities/player_unit_visual_loadout")
 local PocketableUtils = {}
 
-PocketableUtils.validate_syringe_corruption_pocketable_target = function (target_unit)
-	local health_extension = target_unit and ScriptUnit.has_extension(target_unit, "health_system")
-	local current_health_percent = health_extension and health_extension:current_health_percent()
-	local can_use = current_health_percent and current_health_percent < 1
-
-	return can_use
-end
-
 PocketableUtils.validate_give_pockatable_target_func = function (target_unit)
 	local player_unit_spawn_manager = Managers.state.player_unit_spawn
 	local target_player = target_unit and player_unit_spawn_manager:owner(target_unit)

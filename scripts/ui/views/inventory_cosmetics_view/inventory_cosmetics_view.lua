@@ -43,6 +43,7 @@ InventoryCosmeticsView.init = function (self, settings, context)
 	self._is_readonly = context and context.is_readonly
 	self._sort_options = {}
 	self._debug = context.debug
+	self._hide_item_source_in_tooltip = true
 	context.preview_player = context.player or Managers.player:local_player(1)
 	context.preview_loadout = self._preview_profile_equipped_items or context.preview_player.loadout
 	context.character_id = "cosmetics_view_preview_character"
@@ -123,8 +124,6 @@ InventoryCosmeticsView.on_enter = function (self)
 				end
 			end
 
-			self._widgets_by_name.toggle_locked.content.visible = has_locked
-
 			if has_locked then
 				self._show_locked_cosmetics = true
 
@@ -133,60 +132,7 @@ InventoryCosmeticsView.on_enter = function (self)
 				end
 			end
 
-			self._sort_options = {
-				{
-					display_name = Localize("loc_inventory_item_grid_sort_title_format_increasing_letters", true, {
-						sort_name = Localize("loc_inventory_item_grid_sort_title_name")
-					}),
-					sort_function = function (a, b)
-						local a_locked = a.locked
-						local b_locked = b.locked
-
-						if not a_locked and b_locked == true then
-							return true
-						elseif not b_locked and a_locked == true then
-							return false
-						end
-
-						if a.widget_type == "divider" and not b_locked or b.widget_type == "divider" and a_locked == true then
-							return false
-						elseif a.widget_type == "divider" and b_locked == true or b.widget_type == "divider" and not a_locked then
-							return true
-						end
-
-						return ItemUtils.sort_comparator({
-							"<",
-							ItemUtils.compare_item_name
-						})(a, b)
-					end
-				},
-				{
-					display_name = Localize("loc_inventory_item_grid_sort_title_format_decreasing_letters", true, {
-						sort_name = Localize("loc_inventory_item_grid_sort_title_name")
-					}),
-					sort_function = function (a, b)
-						local a_locked = a.locked
-						local b_locked = b.locked
-
-						if not a_locked and b_locked == true then
-							return true
-						elseif not b_locked and a_locked == true then
-							return false
-						end
-
-						if a.widget_type == "divider" and not b_locked or b.widget_type == "divider" and a_locked == true then
-							return false
-						elseif a.widget_type == "divider" and b_locked == true or b.widget_type == "divider" and not a_locked then
-							return true
-						end
-
-						return ItemUtils.sort_comparator({
-							">",
-							ItemUtils.compare_item_name
-						})(a, b)
-					end
-				}
-			}
+			self._sort_options = {}
 
 			if has_rarity then
 				self._sort_options[#self._sort_options + 1] = {
@@ -247,6 +193,59 @@ InventoryCosmeticsView.on_enter = function (self)
 				}
 			end
 
+			self._sort_options[#self._sort_options + 1] = {
+				display_name = Localize("loc_inventory_item_grid_sort_title_format_increasing_letters", true, {
+					sort_name = Localize("loc_inventory_item_grid_sort_title_name")
+				}),
+				sort_function = function (a, b)
+					local a_locked = a.locked
+					local b_locked = b.locked
+
+					if not a_locked and b_locked == true then
+						return true
+					elseif not b_locked and a_locked == true then
+						return false
+					end
+
+					if a.widget_type == "divider" and not b_locked or b.widget_type == "divider" and a_locked == true then
+						return false
+					elseif a.widget_type == "divider" and b_locked == true or b.widget_type == "divider" and not a_locked then
+						return true
+					end
+
+					return ItemUtils.sort_comparator({
+						"<",
+						ItemUtils.compare_item_name
+					})(a, b)
+				end
+			}
+			self._sort_options[#self._sort_options + 1] = {
+				display_name = Localize("loc_inventory_item_grid_sort_title_format_decreasing_letters", true, {
+					sort_name = Localize("loc_inventory_item_grid_sort_title_name")
+				}),
+				sort_function = function (a, b)
+					local a_locked = a.locked
+					local b_locked = b.locked
+
+					if not a_locked and b_locked == true then
+						return true
+					elseif not b_locked and a_locked == true then
+						return false
+					end
+
+					if a.widget_type == "divider" and not b_locked or b.widget_type == "divider" and a_locked == true then
+						return false
+					elseif a.widget_type == "divider" and b_locked == true or b.widget_type == "divider" and not a_locked then
+						return true
+					end
+
+					return ItemUtils.sort_comparator({
+						">",
+						ItemUtils.compare_item_name
+					})(a, b)
+				end
+			}
+
 			self:_setup_sort_options()
 			self:_start_show_layout()
 		end):catch(function ()
@@ -264,8 +263,6 @@ InventoryCosmeticsView.on_enter = function (self)
 	local sort_button_world_position = self:get_sort_button_world_position()
 	local margin = 5
 	local sort_height = sort_button_widget.content.size and sort_button_widget.content.size[2] or sort_button_scenegraph.size[2]
-
-	self:_set_scenegraph_position("toggle_locked_pivot", x + sort_button_world_position[1], sort_button_world_position[2] + sort_height + margin)
 end
 
 InventoryCosmeticsView._setup_input_legend = function (self)
@@ -435,28 +432,14 @@ InventoryCosmeticsView._preview_element = function (self, element)
 		local widgets_by_name = self._widgets_by_name
 		local achievement = element.achievement
 		local store = element.store
+		local obtained_display_name, obtained_description = ItemUtils.obtained_display_name(item)
 
-		if achievement then
-			if element.locked then
-				widgets_by_name.unlock_title.content.text = Localize("loc_inventory_cosmetic_item_acquisition_penance_title_lock", true, {
-					penance_title = achievement.label
-				})
-				widgets_by_name.unlock_details.content.text = achievement.description
-			else
-				widgets_by_name.unlock_title.content.text = Localize("loc_inventory_cosmetic_item_acquisition_penance_title_unlock", true, {
-					penance_title = achievement.label
-				})
-				widgets_by_name.unlock_details.content.text = ""
-			end
-		elseif store then
-			if element.locked then
-				widgets_by_name.unlock_title.content.text = Localize("loc_inventory_cosmetic_item_acquisition_store_title_lock")
-			else
-				widgets_by_name.unlock_title.content.text = Localize("loc_inventory_cosmetic_item_acquisition_store_title_unlock")
-			end
-
-			widgets_by_name.unlock_details.content.text = ""
+		if obtained_display_name then
+			widgets_by_name.unlock_header.content.text = Localize("loc_item_source_obtained_title")
+			widgets_by_name.unlock_title.content.text = obtained_display_name or ""
+			widgets_by_name.unlock_details.content.text = obtained_description or ""
 		else
+			widgets_by_name.unlock_header.content.text = ""
 			widgets_by_name.unlock_title.content.text = ""
 			widgets_by_name.unlock_details.content.text = ""
 		end
@@ -497,39 +480,55 @@ InventoryCosmeticsView._preview_element = function (self, element)
 			self._item_name_widget = widget
 		end
 
+		local unlock_header_size = {
+			self._ui_scenegraph.unlock_box.size[1],
+			1080
+		}
 		local unlock_title_size = {
 			self._ui_scenegraph.unlock_box.size[1],
 			1080
 		}
+		local margin = 130
 		local spacing = 20
-		local max_unlock_width = widget.content.size[1] + unlock_title_size[1] - (widget.style.title.size[1] + spacing)
+		local max_unlock_width = widget.content.size[1] + unlock_title_size[1] - (widget.style.title.size[1] + spacing + margin)
+		local unlock_header_style = widgets_by_name.unlock_header.style.text
 		local unlock_title_style = widgets_by_name.unlock_title.style.text
 		local unlock_details_style = widgets_by_name.unlock_details.style.text
+		local use_max_extents = true
+		local unlock_header_options = UIFonts.get_font_options_by_style(unlock_header_style)
 		local unlock_title_options = UIFonts.get_font_options_by_style(unlock_title_style)
 		local unlock_details_options = UIFonts.get_font_options_by_style(unlock_details_style)
+		local unlock_header_width, unlock_header_height = UIRenderer.text_size(self._ui_default_renderer, widgets_by_name.unlock_header.content.text, unlock_header_style.font_type, unlock_header_style.font_size, {
+			max_unlock_width,
+			unlock_header_size[2]
+		}, unlock_header_options, use_max_extents)
 		local unlock_title_width, unlock_title_height = UIRenderer.text_size(self._ui_default_renderer, widgets_by_name.unlock_title.content.text, unlock_title_style.font_type, unlock_title_style.font_size, {
 			max_unlock_width,
 			unlock_title_size[2]
-		}, unlock_title_options)
+		}, unlock_title_options, use_max_extents)
 		local unlock_details_width, unlock_details_height = UIRenderer.text_size(self._ui_default_renderer, widgets_by_name.unlock_details.content.text, unlock_details_style.font_type, unlock_details_style.font_size, {
 			max_unlock_width,
 			unlock_title_size[2]
-		}, unlock_details_options)
+		}, unlock_details_options, use_max_extents)
+		local unlock_title_margin = 5
 		local unlock_details_margin = 5
 
+		self:_set_scenegraph_size("unlock_header", max_unlock_width, nil)
 		self:_set_scenegraph_size("unlock_title", max_unlock_width, nil)
 		self:_set_scenegraph_size("unlock_details", max_unlock_width, nil)
-		self:_set_scenegraph_size("unlock_box", nil, unlock_title_height + unlock_details_margin + unlock_details_height)
+		self:_set_scenegraph_size("unlock_box", nil, unlock_title_height + unlock_title_margin + unlock_title_height + unlock_details_margin + unlock_details_height)
 
 		if element.locked then
 			local added_height = 100
 			widget.offset[2] = widget.original_offset[2] + added_height
-			widgets_by_name.unlock_title.offset[2] = added_height
-			widgets_by_name.unlock_details.offset[2] = unlock_title_height + unlock_details_margin + added_height
+			widgets_by_name.unlock_header.offset[2] = added_height
+			widgets_by_name.unlock_title.offset[2] = unlock_header_height + unlock_title_margin + added_height
+			widgets_by_name.unlock_details.offset[2] = unlock_header_height + unlock_title_margin + unlock_title_height + unlock_details_margin + added_height
 		else
 			widget.offset[2] = widget.original_offset[2]
-			widgets_by_name.unlock_title.offset[2] = 0
-			widgets_by_name.unlock_details.offset[2] = unlock_title_height + unlock_details_margin
+			widgets_by_name.unlock_header.offset[2] = 0
+			widgets_by_name.unlock_title.offset[2] = unlock_header_height + unlock_title_margin
+			widgets_by_name.unlock_details.offset[2] = unlock_header_height + unlock_title_margin + unlock_title_height + unlock_details_margin
 		end
 
 		local can_equip = not self._previewed_element.locked
@@ -551,7 +550,6 @@ end
 InventoryCosmeticsView._register_button_callbacks = function (self)
 	local widgets_by_name = self._widgets_by_name
 	widgets_by_name.equip_button.content.hotspot.pressed_callback = callback(self, "cb_on_equip_pressed")
-	widgets_by_name.toggle_locked.content.hotspot.pressed_callback = callback(self, "cb_on_lock_pressed")
 end
 
 InventoryCosmeticsView.cb_on_camera_zoom_toggled = function (self, id, input_pressed, instant)
@@ -777,40 +775,6 @@ InventoryCosmeticsView._fetch_inventory_items = function (self, selected_slots)
 
 		return valid_items
 	end)
-	promises[#promises + 1] = Managers.data_service.account:get_achievements():next(function (achievements)
-		local achievement_items = {}
-
-		for id, achievement in pairs(achievements) do
-			local reward_item = AchievementUIHelper.get_reward_item(achievement)
-
-			if reward_item and self:_item_valid_by_current_profile(reward_item) and selected_slot_name == reward_item.slots[1] then
-				local description_text = nil
-
-				if achievement.type == "meta" then
-					local sub_penances_count = #achievement.related_commendation_ids or ""
-					description_text = Localize("loc_inventory_cosmetic_item_acquisition_penance_description_multiple_requirement", true, {
-						penance_amount = sub_penances_count
-					})
-				elseif achievement.hidden == true then
-					description_text = achievement.description
-				else
-					description_text = achievement.description
-				end
-
-				local valid = true
-
-				if valid then
-					achievement_items[#achievement_items + 1] = {
-						item = reward_item,
-						label = achievement.label,
-						description = description_text
-					}
-				end
-			end
-		end
-
-		return achievement_items
-	end)
 	promises[#promises + 1] = Managers.data_service.store:get_credits_cosmetics_store():next(function (data)
 		local offers = data.offers
 		local store_items = {}
@@ -842,8 +806,42 @@ InventoryCosmeticsView._fetch_inventory_items = function (self, selected_slots)
 	end)
 end
 
+InventoryCosmeticsView._achievement_items = function (self, selected_slot_name)
+	local achievement_items = {}
+	local achievements = Managers.achievements:achievement_definitions()
+
+	for _, achievement in pairs(achievements) do
+		local reward_item = AchievementUIHelper.get_reward_item(achievement)
+
+		if reward_item and self:_item_valid_by_current_profile(reward_item) and selected_slot_name == reward_item.slots[1] then
+			local description_text = nil
+
+			if achievement.type == "meta" then
+				local sub_penances_count = table.size(achievement.achievements)
+				description_text = Localize("loc_inventory_cosmetic_item_acquisition_penance_description_multiple_requirement", true, {
+					penance_amount = sub_penances_count
+				})
+			else
+				description_text = AchievementUIHelper.localized_description(achievement)
+			end
+
+			local valid = true
+
+			if valid then
+				achievement_items[#achievement_items + 1] = {
+					item = reward_item,
+					label = AchievementUIHelper.localized_title(achievement),
+					description = description_text
+				}
+			end
+		end
+	end
+
+	return achievement_items
+end
+
 InventoryCosmeticsView._prepare_cosmetic_layout_data = function (self, result)
-	local inventory_items, achievement_items, store_items = unpack(result)
+	local inventory_items, store_items = unpack(result)
 	local layout = {}
 	local used_achivements = {}
 	local used_store = {}
@@ -851,6 +849,7 @@ InventoryCosmeticsView._prepare_cosmetic_layout_data = function (self, result)
 	local used_store_count = 0
 	local selected_slot = self._selected_slot
 	local selected_slot_name = selected_slot.name
+	local achievement_items = self:_achievement_items(selected_slot_name)
 
 	for i = 1, #inventory_items do
 		local inventory_item = inventory_items[i]
@@ -1072,8 +1071,6 @@ end
 InventoryCosmeticsView._handle_input = function (self, input_service)
 	if input_service:get("confirm_pressed") then
 		self:cb_on_equip_pressed()
-	elseif self._show_locked_cosmetics ~= nil and input_service:get("toggle_filter") then
-		self:cb_on_lock_pressed()
 	end
 end
 

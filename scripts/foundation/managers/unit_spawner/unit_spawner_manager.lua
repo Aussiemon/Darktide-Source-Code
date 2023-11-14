@@ -123,6 +123,10 @@ UnitSpawnerManager._add_pending_extensions = function (self)
 end
 
 UnitSpawnerManager.mark_for_deletion = function (self, unit)
+	if self._deletion_queue:contains(unit) then
+		Log.exception("UnitSpawnerManager", "Tried to mark %s for deletion twice!", tostring(unit))
+	end
+
 	local deletion_state = self._deletion_state
 
 	if deletion_state == DELETION_STATES.during_extension_update then

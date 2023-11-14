@@ -530,13 +530,17 @@ local dialogue_speaker_voice_settings = {
 		player_voice = false
 	},
 	barber_a = {
+		full_name = "loc_npc_full_name_barber-chirurgeon_a",
 		short_name = "loc_npc_short_name_barber-chirurgeon_a",
 		subtitles_enabled = true,
+		icon = "content/ui/textures/icons/npc_portraits/mission_givers/krall_a",
 		player_voice = false
 	},
-	archive_servitor_a = {
-		short_name = "loc_npc_short_name_servitor_male_a",
+	enginseer_a = {
+		full_name = "loc_npc_full_name_enginseer_a",
+		short_name = "loc_npc_short_name_enginseer_a",
 		subtitles_enabled = true,
+		icon = "content/ui/textures/icons/npc_portraits/mission_givers/default",
 		player_voice = false
 	},
 	archive_servitor_a = {
@@ -565,6 +569,24 @@ local dialogue_speaker_voice_settings = {
 	reject_npc_servitor_a = {
 		full_name = "loc_npc_full_name_reject_npc_servitor_a",
 		short_name = "loc_npc_short_name_reject_npc_servitor_a",
+		subtitles_enabled = true,
+		player_voice = false
+	},
+	imperial_rifleman_male_a = {
+		full_name = "loc_npc_short_name_mourningstar_soldier_male_a",
+		short_name = "loc_npc_short_name_mourningstar_soldier_male_a",
+		subtitles_enabled = true,
+		player_voice = false
+	},
+	imperial_rifleman_male_b = {
+		full_name = "loc_npc_short_name_mourningstar_soldier_male_b",
+		short_name = "loc_npc_short_name_mourningstar_soldier_male_b",
+		subtitles_enabled = true,
+		player_voice = false
+	},
+	imperial_rifleman_male_c = {
+		full_name = "loc_npc_short_name_mourningstar_soldier_male_c",
+		short_name = "loc_npc_short_name_mourningstar_soldier_male_c",
 		subtitles_enabled = true,
 		player_voice = false
 	}

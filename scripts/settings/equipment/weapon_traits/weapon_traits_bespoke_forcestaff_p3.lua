@@ -123,7 +123,7 @@ templates.weapon_trait_bespoke_forcestaff_p3_increased_max_jumps = {
 	weapon_trait_bespoke_forcestaff_p3_increased_max_jumps = {
 		{
 			stat_buffs = {
-				[stat_buffs.chain_lightning_max_jumps] = 1
+				[stat_buffs.chain_lightning_staff_max_jumps] = 1
 			}
 		}
 	}

@@ -26,13 +26,7 @@ MiscTestCases.validate_weapon_skin_preview_items = function ()
 			end
 		end
 
-		if not table.is_empty(missing_preview_items) then
-			local message = "Items contain nil attachments. These are defined in the item files but won't show up in the Item Manager:\n\t" .. table.concat(missing_preview_items, "\n\t")
-			local assert_data = {
-				condition = false,
-				message = message
-			}
-		end
+		Testify.expect:is_true("invalid_skin_attachment_override", table.is_empty(missing_preview_items), "Items contain nil attachments. These are defined in the item files but won't show up in the Item Manager:\n\t" .. table.concat(missing_preview_items, "\n\t"))
 	end)
 end
 
@@ -92,10 +86,7 @@ MiscTestCases.validate_minion_visual_loadout_templates = function ()
 				table.insert(error_tbl, "\n}")
 			end
 
-			local assert_data = {
-				condition = false,
-				message = table.concat(error_tbl)
-			}
+			Testify.expect:fail("invalid_skin_attachment_override", table.concat(error_tbl))
 		end
 	end)
 end
@@ -149,10 +140,7 @@ MiscTestCases.ensure_no_hidden_attachments = function ()
 				end
 			end
 
-			local assert_data = {
-				condition = false,
-				message = table.concat(error_tbl)
-			}
+			Testify.expect:fail("invalid_skin_attachment_override", table.concat(error_tbl))
 		end
 	end)
 end
@@ -223,10 +211,7 @@ MiscTestCases.validate_attachment_parents = function ()
 				end
 			end
 
-			local assert_data = {
-				condition = false,
-				message = table.concat(error_tbl)
-			}
+			Testify.expect:fail("invalid_skin_attachment_override", table.concat(error_tbl))
 		end
 	end)
 end
@@ -295,10 +280,7 @@ MiscTestCases.validate_attachment_stripping = function ()
 				end
 			end
 
-			local assert_data = {
-				condition = false,
-				message = table.concat(error_tbl)
-			}
+			Testify.expect:fail("attachment_version_mismatch", table.concat(error_tbl))
 		end
 	end)
 end
@@ -316,11 +298,7 @@ MiscTestCases.check_logs_size = function (max_messages_per_minute)
 		local messages_per_minute = statistics.messages_per_minute
 
 		Log.info("Testify", "messages_per_minute " .. messages_per_minute)
-
-		local assert_data = {
-			condition = messages_per_minute <= max_messages_per_minute,
-			message = string.format("The number of messages in the logs per minute is %s which is bigger than the threshold %s", messages_per_minute, max_messages_per_minute)
-		}
+		Testify.expect:is_true("log_size_assert", messages_per_minute <= max_messages_per_minute, string.format("The number of messages in the logs per minute is %s which is bigger than the threshold %s", messages_per_minute, max_messages_per_minute))
 	end)
 end
 
@@ -380,10 +358,7 @@ MiscTestCases.check_unwanted_skin_attachments = function ()
 				end
 			end
 
-			local assert_data = {
-				condition = false,
-				message = table.concat(error_tbl)
-			}
+			Testify.expect:fail("invalid_skin_attachment_override", table.concat(error_tbl))
 		end
 	end)
 end

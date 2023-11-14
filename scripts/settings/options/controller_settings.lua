@@ -1,6 +1,7 @@
 local OptionsUtilities = require("scripts/utilities/ui/options")
 local SaveData = require("scripts/managers/save/save_data")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
+local InputUtils = require("scripts/managers/input/input_utils")
 local SettingsUtilitiesFunction = require("scripts/settings/options/settings_utils")
 local SettingsUtilities = {}
 
@@ -265,212 +266,297 @@ local settings_definitions = {
 		group_name = "controller_settings",
 		display_name = "loc_settings_menu_group_controller_settings",
 		widget_type = "group_header"
-	},
-	[#settings_definitions + 1] = {
-		save_location = "input_settings",
-		display_name = "loc_setting_controller_layout",
-		id = "controller_layout",
-		widget_type = "dropdown",
-		options = Managers.input:get_input_layout_names(),
-		validation_function = function ()
-			return IS_XBS
-		end,
-		on_value_changed = function (value)
-			Managers.input:change_input_layout(value)
-		end
-	},
-	[#settings_definitions + 1] = {
-		id = "controller_layout_image",
-		display_name = "loc_setting_controller_image_layout",
-		widget_type = "controller_image"
-	},
-	[#settings_definitions + 1] = {
-		display_name = "loc_xbox_controller_chat_button_description",
-		shrink_to_fit = true,
-		widget_type = "description",
-		display_params = {
-			input = "+"
-		},
-		validation_function = function ()
-			return IS_XBS
-		end
-	},
-	[#settings_definitions + 1] = {
-		group_name = "controller_aim_settings",
-		display_name = "loc_settings_menu_group_controller_rumble_settings",
-		widget_type = "group_header"
-	},
-	[#settings_definitions + 1] = {
-		save_location = "input_settings",
-		display_name = "loc_interface_setting_rumble_enabled",
-		id = "rumble_enabled",
-		default_value = true,
-		widget_type = "boolean",
-		on_value_changed = function (value)
-			Managers.event:trigger("event_update_rumble_enabled", value)
+	}
+}
 
-			if value then
-				Managers.ui:play_2d_sound(UISoundEvents.rumble_enabled)
+function get_gamepad_input_layout_names(layouts)
+	local layout_names = {}
+
+	for name, values in pairs(layouts) do
+		layout_names[#layout_names + 1] = {
+			name = name,
+			display_name = values.display_name,
+			sort_order = values.sort_order
+		}
+
+		table.sort(layout_names, function (a, b)
+			return a.sort_order < b.sort_order
+		end)
+	end
+
+	return layout_names
+end
+
+local gamepad_input_layouts = require("scripts/settings/input/gamepad_input_layouts")
+local gamepad_layout_names = get_gamepad_input_layout_names(gamepad_input_layouts)
+settings_definitions[#settings_definitions + 1] = {
+	save_location = "input_settings",
+	display_name = "loc_setting_controller_layout",
+	id = "controller_layout",
+	widget_type = "dropdown",
+	options = gamepad_layout_names,
+	validation_function = function ()
+		return true
+	end,
+	on_value_changed = function (value)
+		local devices = {
+			"xbox_controller"
+		}
+		local alias_array_index = 1
+		local input_manager = Managers.input
+		local gamepad_input_layout = gamepad_input_layouts[value]
+		local input_settings = gamepad_input_layout.input_settings
+
+		for service_type, aliases in pairs(input_settings) do
+			local alias = input_manager:alias_object(service_type)
+
+			if alias then
+				alias:restore_default_by_devices(nil, devices)
+
+				for alias_name, new_values in pairs(aliases) do
+					if alias:bindable(alias_name) then
+						local key_info = nil
+
+						if new_values ~= StrictNil then
+							key_info = alias:get_keys_for_alias_row(new_values, alias_array_index, devices)
+						end
+
+						alias:set_keys_for_alias(alias_name, alias_array_index, devices, key_info)
+					end
+				end
+
+				input_manager:apply_alias_changes(service_type)
+				input_manager:save_key_mappings(service_type)
 			end
 		end
+	end
+}
+settings_definitions[#settings_definitions + 1] = {
+	id = "controller_layout_image",
+	display_name = "setting_controller_image_layout",
+	widget_type = "controller_image"
+}
+settings_definitions[#settings_definitions + 1] = {
+	display_name = "loc_xbox_controller_chat_button_description",
+	shrink_to_fit = true,
+	widget_type = "description",
+	display_params = {
+		input = "+"
 	},
-	[#settings_definitions + 1] = {
-		save_location = "input_settings",
-		default_value = 50,
-		display_name = "loc_settings_menu_rumble_intensity",
-		min_value = 0,
-		id = "rumble_intensity",
-		tooltip_text = "loc_settings_menu_rumble_intensity_mouseover",
-		widget_type = "percent_slider",
-		on_value_changed = function (value)
-			Managers.event:trigger("event_update_rumble_intensity", value)
+	validation_function = function ()
+		return IS_XBS
+	end
+}
+settings_definitions[#settings_definitions + 1] = {
+	group_name = "controller_aim_settings",
+	display_name = "loc_settings_menu_group_controller_rumble_settings",
+	widget_type = "group_header"
+}
+settings_definitions[#settings_definitions + 1] = {
+	save_location = "input_settings",
+	display_name = "loc_interface_setting_rumble_enabled",
+	id = "rumble_enabled",
+	default_value = true,
+	widget_type = "boolean",
+	on_value_changed = function (value)
+		Managers.event:trigger("event_update_rumble_enabled", value)
+
+		if value then
 			Managers.ui:play_2d_sound(UISoundEvents.rumble_enabled)
 		end
-	},
-	[#settings_definitions + 1] = {
-		save_location = "input_settings",
-		default_value = 100,
-		display_name = "loc_settings_menu_rumble_gameplay",
-		min_value = 0,
-		id = "rumble_intensity_gameplay",
-		tooltip_text = "loc_settings_menu_rumble_gameplay_mouseover",
-		widget_type = "percent_slider",
-		on_value_changed = function (value)
-			Managers.event:trigger("event_update_rumble_intensity", value)
-		end
-	},
-	[#settings_definitions + 1] = {
-		save_location = "input_settings",
-		default_value = 100,
-		display_name = "loc_settings_menu_rumble_immersive",
-		min_value = 0,
-		id = "rumble_intensity_immersive",
-		tooltip_text = "loc_settings_menu_rumble_immersive_mouseover",
-		widget_type = "percent_slider",
-		on_value_changed = function (value)
-			Managers.event:trigger("event_update_rumble_intensity", value)
-		end
-	},
-	[#settings_definitions + 1] = {
-		group_name = "controller_aim_settings",
-		display_name = "loc_settings_menu_group_controller_aim_settings",
-		widget_type = "group_header"
-	},
-	[#settings_definitions + 1] = {
-		save_location = "input_settings",
-		display_name = "loc_setting_aim_assist",
-		id = "controller_aim_assist",
-		widget_type = "dropdown",
-		options = _aim_assist_options(),
-		tooltip_text = function ()
-			local assist_title_1 = Localize("loc_setting_aim_assist_new_full")
-			local assist_desc_1 = Localize("loc_setting_aim_assist_new_full_desc")
-			local assist_title_2 = Localize("loc_setting_aim_assist_new_slim")
-			local assist_desc_2 = Localize("loc_setting_aim_assist_new_slim_desc")
-			local assist_title_3 = Localize("loc_setting_aim_assist_old")
-			local assist_desc_3 = Localize("loc_setting_aim_assist_old_desc")
-			local assist_title_4 = Localize("loc_setting_aim_assist_off")
-			local assist_desc_4 = Localize("loc_setting_aim_assist_off_desc")
+	end
+}
+settings_definitions[#settings_definitions + 1] = {
+	save_location = "input_settings",
+	default_value = 50,
+	display_name = "loc_settings_menu_rumble_intensity",
+	min_value = 0,
+	id = "rumble_intensity",
+	tooltip_text = "loc_settings_menu_rumble_intensity_mouseover",
+	widget_type = "percent_slider",
+	on_value_changed = function (value)
+		Managers.event:trigger("event_update_rumble_intensity", value)
+		Managers.ui:play_2d_sound(UISoundEvents.rumble_enabled)
+	end
+}
+settings_definitions[#settings_definitions + 1] = {
+	save_location = "input_settings",
+	default_value = 100,
+	display_name = "loc_settings_menu_rumble_gameplay",
+	min_value = 0,
+	id = "rumble_intensity_gameplay",
+	tooltip_text = "loc_settings_menu_rumble_gameplay_mouseover",
+	widget_type = "percent_slider",
+	on_value_changed = function (value)
+		Managers.event:trigger("event_update_rumble_intensity", value)
+	end
+}
+settings_definitions[#settings_definitions + 1] = {
+	save_location = "input_settings",
+	default_value = 100,
+	display_name = "loc_settings_menu_rumble_immersive",
+	min_value = 0,
+	id = "rumble_intensity_immersive",
+	tooltip_text = "loc_settings_menu_rumble_immersive_mouseover",
+	widget_type = "percent_slider",
+	on_value_changed = function (value)
+		Managers.event:trigger("event_update_rumble_intensity", value)
+	end
+}
+settings_definitions[#settings_definitions + 1] = {
+	group_name = "controller_aim_settings",
+	display_name = "loc_settings_menu_group_controller_aim_settings_new",
+	widget_type = "group_header"
+}
+settings_definitions[#settings_definitions + 1] = {
+	save_location = "input_settings",
+	display_name = "loc_setting_aim_assist",
+	id = "controller_aim_assist",
+	widget_type = "dropdown",
+	options = _aim_assist_options(),
+	tooltip_text = function ()
+		local assist_title_1 = Localize("loc_setting_aim_assist_new_full")
+		local assist_desc_1 = Localize("loc_setting_aim_assist_new_full_desc")
+		local assist_title_2 = Localize("loc_setting_aim_assist_new_slim")
+		local assist_desc_2 = Localize("loc_setting_aim_assist_new_slim_desc")
+		local assist_title_3 = Localize("loc_setting_aim_assist_old")
+		local assist_desc_3 = Localize("loc_setting_aim_assist_old_desc")
+		local assist_title_4 = Localize("loc_setting_aim_assist_off")
+		local assist_desc_4 = Localize("loc_setting_aim_assist_off_desc")
 
-			return Localize("loc_setting_aim_assist_mouseover_text_format", false, {
-				assist_title_1 = assist_title_1,
-				assist_desc_1 = assist_desc_1,
-				assist_title_2 = assist_title_2,
-				assist_desc_2 = assist_desc_2,
-				assist_title_3 = assist_title_3,
-				assist_desc_3 = assist_desc_3,
-				assist_title_4 = assist_title_4,
-				assist_desc_4 = assist_desc_4
-			})
-		end
-	},
-	[#settings_definitions + 1] = {
-		id = "controller_invert_look_y",
-		save_location = "input_settings",
-		display_name = "loc_setting_controller_invert_look_y",
-		widget_type = "boolean"
-	},
-	[#settings_definitions + 1] = {
-		id = "controller_enable_acceleration",
-		save_location = "input_settings",
-		display_name = "loc_setting_controller_enable_acceleration_new",
-		widget_type = "boolean"
-	},
-	[#settings_definitions + 1] = {
-		save_location = "input_settings",
-		display_name = "loc_setting_controller_rotation_speed_curves",
-		id = "controller_response_curve",
-		widget_type = "dropdown",
-		options = _response_curve_options()
-	},
-	[#settings_definitions + 1] = {
-		save_location = "input_settings",
-		default_value = 0,
-		display_name = "loc_setting_controller_rotation_speed_curves_strength",
-		min_value = -100,
-		id = "controller_response_curve_strength",
-		max_value = 100,
-		tooltip_text = "loc_setting_controller_rotation_speed_curves_strength_mouseover",
-		widget_type = "percent_slider"
-	},
-	[#settings_definitions + 1] = {
-		save_location = "input_settings",
-		display_name = "loc_setting_controller_rotation_speed_curves_ranged",
-		id = "controller_response_curve_ranged",
-		widget_type = "dropdown",
-		options = _response_curve_options()
-	},
-	[#settings_definitions + 1] = {
-		save_location = "input_settings",
-		default_value = 0,
-		display_name = "loc_setting_controller_rotation_speed_curves_strength_ranged",
-		min_value = -100,
-		id = "controller_response_curve_strength_ranged",
-		max_value = 100,
-		tooltip_text = "loc_setting_controller_rotation_speed_curves_strength_mouseover",
-		widget_type = "percent_slider"
-	},
-	[#settings_definitions + 1] = {
-		step_size_value = 0.01,
-		apply_on_drag = true,
-		display_name = "loc_setting_controller_look_dead_zone_new",
-		num_decimals = 2,
-		max_value = 1,
-		min_value = 0,
-		widget_type = "value_slider",
-		id = "controller_look_dead_zone",
-		save_location = "input_settings"
-	},
-	[#settings_definitions + 1] = {
-		save_location = "input_settings",
-		step_size_value = 0.1,
-		display_name = "loc_setting_controller_look_scale_new",
-		num_decimals = 1,
-		id = "controller_look_scale",
-		max_value = 10,
-		min_value = 0.1,
-		widget_type = "value_slider"
-	},
-	[#settings_definitions + 1] = {
-		save_location = "input_settings",
-		step_size_value = 0.1,
-		display_name = "loc_setting_controller_look_scale_ranged",
-		num_decimals = 1,
-		id = "controller_look_scale_ranged",
-		max_value = 10,
-		min_value = 0.1,
-		widget_type = "value_slider"
-	},
-	[#settings_definitions + 1] = {
-		save_location = "input_settings",
-		step_size_value = 0.1,
-		display_name = "loc_setting_controller_look_scale_ranged_alternate_fire",
-		num_decimals = 1,
-		id = "controller_look_scale_ranged_alternate_fire",
-		max_value = 10,
-		min_value = 0.1,
-		widget_type = "value_slider"
-	}
+		return Localize("loc_setting_aim_assist_mouseover_text_format", false, {
+			assist_title_1 = assist_title_1,
+			assist_desc_1 = assist_desc_1,
+			assist_title_2 = assist_title_2,
+			assist_desc_2 = assist_desc_2,
+			assist_title_3 = assist_title_3,
+			assist_desc_3 = assist_desc_3,
+			assist_title_4 = assist_title_4,
+			assist_desc_4 = assist_desc_4
+		})
+	end
+}
+settings_definitions[#settings_definitions + 1] = {
+	id = "controller_invert_look_y",
+	save_location = "input_settings",
+	display_name = "loc_setting_controller_invert_look_y",
+	widget_type = "boolean"
+}
+settings_definitions[#settings_definitions + 1] = {
+	id = "controller_enable_acceleration",
+	save_location = "input_settings",
+	display_name = "loc_setting_controller_enable_acceleration_new",
+	widget_type = "boolean"
+}
+settings_definitions[#settings_definitions + 1] = {
+	save_location = "input_settings",
+	display_name = "loc_setting_controller_rotation_speed_curves",
+	id = "controller_response_curve",
+	widget_type = "dropdown",
+	options = _response_curve_options()
+}
+settings_definitions[#settings_definitions + 1] = {
+	save_location = "input_settings",
+	default_value = 0,
+	display_name = "loc_setting_controller_rotation_speed_curves_strength",
+	min_value = -100,
+	id = "controller_response_curve_strength",
+	max_value = 100,
+	tooltip_text = "loc_setting_controller_rotation_speed_curves_strength_mouseover",
+	widget_type = "percent_slider"
+}
+settings_definitions[#settings_definitions + 1] = {
+	save_location = "input_settings",
+	display_name = "loc_setting_controller_rotation_speed_curves_ranged",
+	id = "controller_response_curve_ranged",
+	widget_type = "dropdown",
+	options = _response_curve_options()
+}
+settings_definitions[#settings_definitions + 1] = {
+	save_location = "input_settings",
+	default_value = 0,
+	display_name = "loc_setting_controller_rotation_speed_curves_strength_ranged",
+	min_value = -100,
+	id = "controller_response_curve_strength_ranged",
+	max_value = 100,
+	tooltip_text = "loc_setting_controller_rotation_speed_curves_strength_mouseover",
+	widget_type = "percent_slider"
+}
+settings_definitions[#settings_definitions + 1] = {
+	step_size_value = 0.01,
+	apply_on_drag = true,
+	display_name = "loc_setting_controller_look_dead_zone_new",
+	num_decimals = 2,
+	max_value = 1,
+	min_value = 0,
+	widget_type = "value_slider",
+	id = "controller_look_dead_zone",
+	save_location = "input_settings"
+}
+settings_definitions[#settings_definitions + 1] = {
+	group_name = "controller_aim_settings",
+	display_name = "loc_settings_menu_group_controller_sensitivity_settings",
+	widget_type = "group_header"
+}
+settings_definitions[#settings_definitions + 1] = {
+	save_location = "input_settings",
+	step_size_value = 0.1,
+	display_name = "loc_setting_controller_look_scale_horizontal",
+	num_decimals = 1,
+	id = "controller_look_scale",
+	max_value = 10,
+	min_value = 0.1,
+	widget_type = "value_slider"
+}
+settings_definitions[#settings_definitions + 1] = {
+	save_location = "input_settings",
+	step_size_value = 0.1,
+	display_name = "loc_setting_controller_look_scale_horizontal_ranged",
+	num_decimals = 1,
+	id = "controller_look_scale_ranged",
+	max_value = 10,
+	min_value = 0.1,
+	widget_type = "value_slider"
+}
+settings_definitions[#settings_definitions + 1] = {
+	save_location = "input_settings",
+	step_size_value = 0.1,
+	display_name = "loc_setting_controller_look_scale_horizontal_ranged_alternate_fire",
+	num_decimals = 1,
+	id = "controller_look_scale_ranged_alternate_fire",
+	max_value = 10,
+	min_value = 0.1,
+	widget_type = "value_slider"
+}
+settings_definitions[#settings_definitions + 1] = {
+	save_location = "input_settings",
+	step_size_value = 0.1,
+	display_name = "loc_setting_controller_look_scale_vertical",
+	num_decimals = 1,
+	id = "controller_look_scale_vertical",
+	max_value = 10,
+	min_value = 0.1,
+	widget_type = "value_slider"
+}
+settings_definitions[#settings_definitions + 1] = {
+	save_location = "input_settings",
+	step_size_value = 0.1,
+	display_name = "loc_setting_controller_look_scale_vertical_ranged",
+	num_decimals = 1,
+	id = "controller_look_scale_vertical_ranged",
+	max_value = 10,
+	min_value = 0.1,
+	widget_type = "value_slider"
+}
+settings_definitions[#settings_definitions + 1] = {
+	save_location = "input_settings",
+	step_size_value = 0.1,
+	display_name = "loc_setting_controller_look_scale_vertical_ranged_alternate_fire",
+	num_decimals = 1,
+	id = "controller_look_scale_vertical_ranged_alternate_fire",
+	max_value = 10,
+	min_value = 0.1,
+	widget_type = "value_slider"
 }
 local template_functions = {
 	boolean = construct_interface_settings_boolean,

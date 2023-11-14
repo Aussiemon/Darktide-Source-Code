@@ -505,12 +505,14 @@ end
 
 HumanGameplay._start_spectating = function (self, spectated_player)
 	Managers.input:start_suppress_wwise_rumble()
+	self._player.camera_handler:remove_all_moods(spectated_player.player_unit)
 
 	self._spectated_player = spectated_player
 end
 
 HumanGameplay._stop_spectating = function (self)
 	Managers.input:stop_suppress_wwise_rumble()
+	self._player.camera_handler:remove_all_moods(self._spectated_player.player_unit)
 
 	if self._has_spectator_hud then
 		self:_destroy_spectator_hud()

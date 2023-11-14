@@ -23,18 +23,18 @@ pickup_settings.distribution_pool = {
 				3
 			},
 			large_clip = {
-				2,
-				2,
-				2,
-				2,
-				2
+				5,
+				5,
+				5,
+				5,
+				5
 			},
 			ammo_cache_pocketable = {
-				2,
-				2,
-				2,
-				2,
-				2
+				1,
+				1,
+				1,
+				1,
+				1
 			}
 		},
 		grenade = {
@@ -48,14 +48,13 @@ pickup_settings.distribution_pool = {
 		},
 		health = {
 			medical_crate_pocketable = {
-				2,
-				2,
-				2,
-				2,
-				2
+				1,
+				1,
+				1,
+				1,
+				1
 			}
-		},
-		wounds = {}
+		}
 	},
 	mid_event = {
 		ammo = {
@@ -108,6 +107,13 @@ pickup_settings.distribution_pool = {
 				2,
 				2,
 				2
+			},
+			ammo_cache_pocketable = {
+				1,
+				1,
+				1,
+				1,
+				1
 			}
 		},
 		grenade = {
@@ -115,6 +121,15 @@ pickup_settings.distribution_pool = {
 				2,
 				2,
 				2,
+				1,
+				1
+			}
+		},
+		health = {
+			medical_crate_pocketable = {
+				1,
+				1,
+				1,
 				1,
 				1
 			}
@@ -146,18 +161,11 @@ pickup_settings.distribution_pool = {
 				13
 			},
 			large_clip = {
-				2,
-				2,
-				2,
-				2,
-				2
-			},
-			ammo_cache_pocketable = {
-				1,
-				1,
-				1,
-				1,
-				1
+				3,
+				3,
+				3,
+				3,
+				3
 			}
 		},
 		grenade = {
@@ -169,16 +177,6 @@ pickup_settings.distribution_pool = {
 				3
 			}
 		},
-		health = {
-			medical_crate_pocketable = {
-				1,
-				1,
-				1,
-				1,
-				1
-			}
-		},
-		wounds = {},
 		forge_material = {
 			small_metal = {
 				7,
@@ -213,7 +211,7 @@ pickup_settings.distribution_pool = {
 }
 pickup_settings.rubberband = {
 	special_block_distance = 0.2,
-	base_spawn_rate = 1,
+	base_spawn_rate = 0.85,
 	pocketable_weight = {
 		max = 1,
 		min = 0.4
@@ -239,10 +237,10 @@ pickup_settings.rubberband = {
 	distribution_type_weight = {
 		ammo = {
 			[pickup_settings.distribution_types.mid_event] = 1.8,
-			[pickup_settings.distribution_types.end_event] = 2
+			[pickup_settings.distribution_types.end_event] = 2.4
 		},
 		grenade = {
-			[pickup_settings.distribution_types.mid_event] = 1.5,
+			[pickup_settings.distribution_types.mid_event] = 1.2,
 			[pickup_settings.distribution_types.end_event] = 2.5
 		},
 		health = {
@@ -255,5 +253,22 @@ pickup_settings.animation_time = 0.15
 pickup_settings.end_scale = 0.2
 pickup_settings.target_height_offset = -0.2
 pickup_settings.placement_arch_height = 0.2
+
+local function _syringe_selector(seed)
+	local new_seed, rnd = math.next_random(seed)
+	local weight = rnd * 5
+
+	if weight < 1 then
+		return "syringe_ability_boost_pocketable", new_seed
+	elseif weight < 3 then
+		return "syringe_power_boost_pocketable", new_seed
+	else
+		return "syringe_speed_boost_pocketable", new_seed
+	end
+end
+
+pickup_settings.pickup_selector = {
+	syringe_generic_pocketable = _syringe_selector
+}
 
 return settings("PickupSettings", pickup_settings)

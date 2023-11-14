@@ -68,9 +68,8 @@ ParticleEffect._create_particle = function (self)
 	local world_scale = Unit.world_scale(unit, 1)
 	local particle_id = World.create_particles(world, particle_name, world_position, world_rotation, world_scale)
 	self._particle_id = particle_id
-	local success = false
 	local scalar_parameters = self:get_data(unit, "scalar_parameters")
-	success = self:_set_non_boxed_parameters(world, particle_id, scalar_parameters, World.set_particles_material_scalar)
+	local success = self:_set_non_boxed_parameters(world, particle_id, scalar_parameters, World.set_particles_material_scalar)
 
 	if not success then
 		self:_destroy_particle()

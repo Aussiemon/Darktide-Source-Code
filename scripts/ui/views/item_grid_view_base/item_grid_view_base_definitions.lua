@@ -26,6 +26,7 @@ local grid_settings = {
 	use_is_focused_for_navigation = false,
 	use_terminal_background = true,
 	scrollbar_horizontal_offset = -7,
+	using_custom_gamepad_navigation = false,
 	grid_spacing = grid_spacing,
 	grid_size = grid_size,
 	mask_size = mask_size,
@@ -41,6 +42,7 @@ weapon_stats_grid_settings = {
 	ignore_blur = true,
 	title_height = 70,
 	use_parent_world = false,
+	using_custom_gamepad_navigation = false,
 	grid_spacing = {
 		0,
 		0

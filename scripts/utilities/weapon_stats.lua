@@ -535,10 +535,10 @@ WeaponStats.calculate_stats = function (self, weapon_template, weapon_tweak_temp
 					end
 				end
 
-				local num_damage_itterations = 1
+				local num_damage_iterations = 1
 
 				if is_ranged_weapon and ammo_clip_size then
-					num_damage_itterations = ammo_clip_size
+					num_damage_iterations = ammo_clip_size
 				end
 
 				local power_level = action.power_level or DEFAULT_POWER_LEVEL
@@ -560,7 +560,7 @@ WeaponStats.calculate_stats = function (self, weapon_template, weapon_tweak_temp
 						local hit_shield = false
 						local dropoff_scalar = DamageProfile.dropoff_scalar(distance, damage_profile, target_damage_values)
 						local damage, damage_efficiency = DamageCalculation.calculate(damage_profile, damage_type, target_settings, target_damage_values, hit_zone_name, power_level, charge_level, breed_or_nil, attacker_breed_or_nil, is_critical_strike, hit_weakspot, hit_shield, is_backstab, is_flanking, dropoff_scalar, attack_type, attacker_stat_buffs, target_stat_buffs, target_buff_extension, armor_penetrating, target_toughness_extension, armor_type, stagger_count, num_triggered_staggers, is_attacked_unit_suppressed, distance, target_unit, auto_completed_action)
-						damage = damage * num_damage_itterations
+						damage = damage * num_damage_iterations
 
 						if damage > 0 then
 							num_targets_total_damage = num_targets_total_damage + damage

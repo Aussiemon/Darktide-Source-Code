@@ -32,7 +32,7 @@ local visibility_groups = {
 				return false
 			end
 
-			return Managers.state.cinematic:active_camera() and Managers.state.game_mode:is_prologue()
+			return Managers.state.cinematic:is_playing() and Managers.state.game_mode:is_prologue()
 		end
 	},
 	{
@@ -42,7 +42,7 @@ local visibility_groups = {
 				return false
 			end
 
-			return Managers.ui:view_active("cutscene_view") and Managers.state.cinematic:active_camera()
+			return Managers.state.cinematic:is_playing()
 		end
 	},
 	{

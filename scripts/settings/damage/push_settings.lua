@@ -51,16 +51,19 @@ local push_settings = {
 		melee_executor_default = {
 			speed = 6,
 			max_speed_override = 6,
-			push_through_block = true
+			push_through_block = true,
+			ignore_stun_immunity = true
 		},
 		ogryn_executor_push = {
 			speed = 8,
 			max_speed_override = 8,
-			push_through_block = true
+			push_through_block = true,
+			ignore_stun_immunity = true
 		},
 		shield_push = {
 			speed = 8,
-			max_speed_override = 8
+			max_speed_override = 8,
+			ignore_stun_immunity = true
 		},
 		chaos_hound_push = {
 			speed = 4,
@@ -77,22 +80,26 @@ local push_settings = {
 		renegade_captain = {
 			speed = 10,
 			max_speed_override = 6,
-			push_through_block = true
+			push_through_block = true,
+			ignore_stun_immunity = true
 		},
 		renegade_captain_light = {
 			speed = 6,
 			max_speed_override = 4,
-			push_through_block = true
+			push_through_block = true,
+			ignore_stun_immunity = true
 		},
 		renegade_captain_heavy = {
 			speed = 12,
 			max_speed_override = 6,
-			push_through_block = true
+			push_through_block = true,
+			ignore_stun_immunity = true
 		},
 		daemonhost = {
 			speed = 8,
 			max_speed_override = 6,
-			push_through_block = true
+			push_through_block = true,
+			ignore_stun_immunity = true
 		},
 		daemonhost_offtarget = {
 			speed = 14,
@@ -124,17 +131,20 @@ local push_settings = {
 		plague_ogryn_charge = {
 			speed = 12,
 			max_speed_override = 9,
-			push_through_block = true
+			push_through_block = true,
+			ignore_stun_immunity = true
 		},
 		plague_ogryn_light = {
 			speed = 5.5,
 			max_speed_override = 5,
-			push_through_block = true
+			push_through_block = true,
+			ignore_stun_immunity = true
 		},
 		plague_ogryn_medium = {
 			speed = 9,
 			max_speed_override = 9,
-			push_through_block = true
+			push_through_block = true,
+			ignore_stun_immunity = true
 		},
 		chaos_spawn_light = {
 			speed = 5.5,
@@ -162,7 +172,8 @@ local push_settings = {
 		beast_of_nurgle_move_push = {
 			speed = 8,
 			max_speed_override = 7,
-			push_through_block = true
+			push_through_block = true,
+			ignore_stun_immunity = true
 		},
 		chaos_spawn_tentacle = {
 			speed = 10,
@@ -175,12 +186,18 @@ local push_settings = {
 		chaos_spawn_combo = {
 			speed = 7,
 			max_speed_override = 7,
-			push_through_block = true
+			push_through_block = true,
+			ignore_stun_immunity = true
 		},
 		chaos_spawn_combo_heavy = {
 			speed = 9,
 			max_speed_override = 9,
-			push_through_block = true
+			push_through_block = true,
+			ignore_stun_immunity = true
+		},
+		ogryn_shovel_special = {
+			speed = 3,
+			max_speed_override = 4
 		}
 	}
 }

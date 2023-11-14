@@ -81,22 +81,6 @@ MinigameSystem.rpc_minigame_sync_completed = function (self, channel_id, unit_id
 	extension:completed()
 end
 
-MinigameSystem.rpc_minigame_sync_decode_search_generate_board = function (self, channel_id, unit_id, is_level_unit, seed)
-	local unit = Managers.state.unit_spawner:unit(unit_id, is_level_unit)
-	local extension = self._unit_to_extension_map[unit]
-	local minigame = extension:minigame(MinigameSettings.types.decode_search)
-
-	minigame:generate_board(seed)
-end
-
-MinigameSystem.rpc_minigame_sync_decode_search_set_cursor = function (self, channel_id, unit_id, is_level_unit, x, y)
-	local unit = Managers.state.unit_spawner:unit(unit_id, is_level_unit)
-	local extension = self._unit_to_extension_map[unit]
-	local minigame = extension:minigame(MinigameSettings.types.decode_search)
-
-	minigame:set_cursor_position(x, y)
-end
-
 MinigameSystem.rpc_minigame_sync_decode_set_stage = function (self, channel_id, unit_id, is_level_unit, stage)
 	local unit = Managers.state.unit_spawner:unit(unit_id, is_level_unit)
 	local extension = self._unit_to_extension_map[unit]
@@ -128,22 +112,6 @@ MinigameSystem.rpc_minigame_sync_decode_symbols_set_target = function (self, cha
 	local minigame = extension:minigame(MinigameSettings.types.decode_symbols)
 
 	minigame:set_target(stage, target)
-end
-
-MinigameSystem.rpc_minigame_sync_frequency_set_frequency = function (self, channel_id, unit_id, is_level_unit, frequency_x, frequency_y)
-	local unit = Managers.state.unit_spawner:unit(unit_id, is_level_unit)
-	local extension = self._unit_to_extension_map[unit]
-	local minigame = extension:minigame(MinigameSettings.types.frequency)
-
-	minigame:set_frequency(frequency_x, frequency_y)
-end
-
-MinigameSystem.rpc_minigame_sync_frequency_set_target_frequency = function (self, channel_id, unit_id, is_level_unit, frequency_x, frequency_y)
-	local unit = Managers.state.unit_spawner:unit(unit_id, is_level_unit)
-	local extension = self._unit_to_extension_map[unit]
-	local minigame = extension:minigame(MinigameSettings.types.frequency)
-
-	minigame:set_target_frequency(frequency_x, frequency_y)
 end
 
 return MinigameSystem

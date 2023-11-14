@@ -78,10 +78,6 @@ DecoderDeviceExtension.update = function (self, unit, dt, t)
 
 				if self._interruption_ignored_timer > 1 then
 					self._interruption_ignored_timer = self._interruption_ignored_timer - 1
-
-					if Managers.stats.can_record_stats() then
-						Managers.stats:record_decoder_ignored()
-					end
 				end
 			elseif current_minigame_state == minigame_states.completed then
 				minigame_extension:stop()

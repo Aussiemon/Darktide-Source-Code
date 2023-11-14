@@ -382,7 +382,10 @@ BuffExtensionBase._add_buff = function (self, template, t, ...)
 		local buff_instance_id = self._buff_instance_id + 1
 		buff_instance = buff_class:new(buff_context, template, t, buff_instance_id, ...)
 
-		self:_start_fx(buff_instance_id, template)
+		if not self._is_hub then
+			self:_start_fx(buff_instance_id, template)
+		end
+
 		self:_on_add_buff(buff_instance)
 
 		if can_stack then
@@ -395,7 +398,7 @@ BuffExtensionBase._add_buff = function (self, template, t, ...)
 
 	self._buffs_by_index[local_index] = buff_instance
 
-	if self._is_server and Managers.stats.can_record_stats() then
+	if self._is_server then
 		local template_context = buff_instance:template_context()
 		local owner_unit = template_context.owner_unit
 		local source_player = owner_unit and Managers.state.player_unit_spawn:owner(owner_unit)
@@ -408,7 +411,7 @@ BuffExtensionBase._add_buff = function (self, template, t, ...)
 			local breed_name = self._buff_context.breed.name
 			local stack_count = template_context.stack_count
 
-			Managers.stats:record_buff(source_player, breed_name, template_name, stack_count, weapon_template_name)
+			Managers.stats:record_private("hook_buff", source_player, breed_name, template_name, stack_count, weapon_template_name)
 		end
 	end
 
@@ -565,7 +568,10 @@ BuffExtensionBase._remove_buff = function (self, index)
 
 		local instance_id = buff_instance:instance_id()
 
-		self:_stop_fx(instance_id, template)
+		if not self._is_hub then
+			self:_stop_fx(instance_id, template)
+		end
+
 		self:_on_remove_buff(buff_instance)
 		table.remove(buffs, instance_index)
 		buff_instance:delete()

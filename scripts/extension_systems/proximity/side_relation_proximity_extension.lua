@@ -1,7 +1,7 @@
 require("scripts/extension_systems/proximity/side_relation_gameplay_logic/proximity_heal")
 
-local Proximity = require("scripts/utilities/proximity")
 local JobInterface = require("scripts/managers/unit_job/job_interface")
+local Proximity = require("scripts/utilities/proximity")
 local Side = require("scripts/extension_systems/side/side")
 local SIDE_RELATION_TYPES = Side.SIDE_RELATION_TYPES
 local SideRelationProximityExtension = class("SideRelationProximityExtension")

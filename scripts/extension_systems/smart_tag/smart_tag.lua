@@ -1,7 +1,7 @@
 local ProjectileLocomotionSettings = require("scripts/settings/projectile_locomotion/projectile_locomotion_settings")
 local projectile_valid_interaction_states = ProjectileLocomotionSettings.valid_interaction_states
 local SmartTag = class("SmartTag")
-local REMOVE_TAG_REASONS = table.enum("canceled_by_owner", "expired", "group_limit_exceeded", "tagged_unit_removed", "tagged_unit_died", "invalid_interaction_state", "health_station_depleted", "smart_tag_system_destroyed")
+local REMOVE_TAG_REASONS = table.enum("canceled_by_owner", "expired", "group_limit_exceeded", "tagged_unit_removed", "tagged_unit_died", "invalid_interaction_state", "health_station_depleted", "smart_tag_system_destroyed", "external_removal")
 SmartTag.REMOVE_TAG_REASONS = REMOVE_TAG_REASONS
 
 SmartTag.init = function (self, tag_id, template, tagger_unit, target_unit, target_location, replies)

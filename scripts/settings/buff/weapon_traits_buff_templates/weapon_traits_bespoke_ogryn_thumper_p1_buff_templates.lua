@@ -19,7 +19,6 @@ local templates = {
 		}
 	}, BaseWeaponTraitBuffTemplates.stacking_buff_on_continuous_fire),
 	weapon_trait_bespoke_ogryn_thumper_p1_crit_chance_based_on_aim_time = table.clone(BaseWeaponTraitBuffTemplates.chance_based_on_aim_time),
-	weapon_trait_bespoke_ogryn_thumper_p1_crit_chance_based_on_aim_time = table.clone(BaseWeaponTraitBuffTemplates.chance_based_on_aim_time),
 	weapon_trait_bespoke_ogryn_thumper_p1_weapon_special_power_bonus_after_one_shots = {
 		allow_proc_while_active = true,
 		predicted = false,

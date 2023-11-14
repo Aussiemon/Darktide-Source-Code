@@ -316,7 +316,7 @@ SlotSystem._improve_slot_position = function (self, user_unit, user_slot_extensi
 	local navigation_extension = ScriptUnit.extension(user_unit, "navigation_system")
 	local previous_destination = navigation_extension:destination()
 
-	if MIN_DISTANCE < distance then
+	if MIN_DISTANCE < distance or Vector3_dot(position - user_unit_position, previous_destination - user_unit_position) < 0 then
 		navigation_extension:move_to(position)
 
 		slot_component.slot_distance = distance

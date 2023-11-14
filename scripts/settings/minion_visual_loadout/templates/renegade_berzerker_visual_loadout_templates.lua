@@ -6,28 +6,33 @@ local zone_ids = MissionSettings.mission_zone_ids
 local basic_renegade_berzerker_template = {
 	slots = {
 		slot_upperbody = {
+			use_outline = true,
 			items = {
 				"content/items/characters/minions/chaos_traitor_guard/attachments_base/upperbody_a_berserker"
 			}
 		},
 		slot_lowerbody = {
+			use_outline = true,
 			items = {
 				"content/items/characters/minions/chaos_traitor_guard/attachments_base/lowerbody_b_berserker"
 			}
 		},
 		slot_head = {
+			use_outline = true,
 			items = {
 				"content/items/characters/minions/chaos_traitor_guard/attachments_gear/traitor_guard_captain_helmet_02"
 			}
 		},
 		slot_face = {
+			use_outline = true,
 			items = {
 				"content/items/characters/minions/chaos_traitor_guard/attachments_base/face_02_b_berserker"
 			}
 		},
 		slot_melee_weapon = {
-			drop_on_death = true,
+			use_outline = true,
 			is_weapon = true,
+			drop_on_death = true,
 			items = {
 				"content/items/weapons/minions/melee/chaos_traitor_guard_berzerker_mainhand_weapon_01",
 				"content/items/weapons/minions/melee/chaos_traitor_guard_berzerker_mainhand_weapon_02",
@@ -36,13 +41,15 @@ local basic_renegade_berzerker_template = {
 			}
 		},
 		slot_variation_gear = {
+			use_outline = true,
 			items = {
 				"content/items/characters/minions/chaos_traitor_guard/attachments_gear/melee_elite_a_berserker"
 			}
 		},
 		slot_melee_weapon_offhand = {
-			drop_on_death = true,
+			use_outline = true,
 			is_weapon = true,
+			drop_on_death = true,
 			items = {
 				"content/items/weapons/minions/melee/cultist_berzerker_offhand_weapon_01",
 				"content/items/weapons/minions/melee/cultist_berzerker_offhand_weapon_02",

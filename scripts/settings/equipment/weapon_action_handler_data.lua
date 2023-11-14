@@ -59,7 +59,6 @@ local weapon_action_data = {
 		sweep = _require_weapon_action("action_sweep"),
 		scan = _require_weapon_action("action_scan"),
 		scan_confirm = _require_weapon_action("action_scan_confirm"),
-		target_ally = _require_weapon_action("action_target_ally"),
 		target_finder = _require_weapon_action("action_target_finder"),
 		throw_grenade = _require_weapon_action("action_throw_grenade"),
 		throw_luggable = _require_weapon_action("action_throw_luggable"),
@@ -453,21 +452,19 @@ weapon_action_data.conditional_state_functions = {
 
 		return charge_replenished and remaining_charges == 1
 	end,
+	combat_ability_charges_left = function (condition_func_params, action_params, remaining_time, t)
+		local ability_extension = condition_func_params.ability_extension
+		local ability_type = "combat_ability"
+		local remaining_charges = ability_extension:remaining_ability_charges(ability_type)
+
+		return remaining_charges > 0
+	end,
 	no_combat_ability_charges_left = function (condition_func_params, action_params, remaining_time, t)
 		local ability_extension = condition_func_params.ability_extension
 		local ability_type = "combat_ability"
 		local remaining_charges = ability_extension:remaining_ability_charges(ability_type)
 
 		return remaining_charges <= 0
-	end,
-	no_combat_ability_charges_left_and_not_end_anim = function (condition_func_params, action_params, remaining_time, t)
-		local ability_extension = condition_func_params.ability_extension
-		local ability_type = "combat_ability"
-		local remaining_charges = ability_extension:remaining_ability_charges(ability_type)
-		local combat_ability_component = condition_func_params.unit_data_extension:write_component("combat_ability")
-		local is_in_end_anim = combat_ability_component.active
-
-		return remaining_charges <= 0 and not is_in_end_anim
 	end,
 	no_ammo = function (condition_func_params, action_params, remaining_time, t)
 		local no_ammo = _no_ammo(condition_func_params, action_params, remaining_time)

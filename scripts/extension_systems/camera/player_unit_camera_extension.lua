@@ -134,6 +134,10 @@ PlayerUnitCameraExtension._evaluate_camera_tree = function (self)
 	self._ignore_offset = ignore_offset
 end
 
+PlayerUnitCameraExtension.using_third_person_hub_camera = function (self)
+	return self._use_third_person_hub_camera
+end
+
 PlayerUnitCameraExtension.camera_tree_node = function (self)
 	return self._tree, self._node, self._object, self._ignore_offset
 end

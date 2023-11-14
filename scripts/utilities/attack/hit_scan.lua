@@ -158,14 +158,13 @@ HitScan.process_hits = function (is_server, world, physics_world, attacker_unit,
 								end
 							end
 
-							if Managers.stats.can_record_stats() then
-								local player_unit_spawn_manager = Managers.state.player_unit_spawn
-								local dodging_player = player_unit_spawn_manager:owner(hit_unit)
-								local is_human = dodging_player and dodging_player:is_human_controlled()
+							local player_unit_spawn_manager = Managers.state.player_unit_spawn
+							local dodging_player = player_unit_spawn_manager:owner(hit_unit)
 
-								if is_human then
-									Managers.stats:record_dodge(dodging_player, optional_attacker_breed_name, attack_types.ranged, is_sprint_dodging and dodge_types.sprint or dodge_type)
-								end
+							if dodging_player then
+								local stat_dodge_type = is_sprint_dodging and dodge_types.sprint or dodge_type
+
+								Managers.stats:record_private("hook_dodged_attack", dodging_player, optional_attacker_breed_name, attack_types.ranged, stat_dodge_type)
 							end
 
 							should_break = true

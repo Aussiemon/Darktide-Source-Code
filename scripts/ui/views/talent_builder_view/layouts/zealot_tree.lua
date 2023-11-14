@@ -415,7 +415,7 @@ return {
 			widget_name = "node_da5a6b52-fed6-46df-9118-37ebe377eed0",
 			y = 934,
 			y_normalized = 0,
-			talent = "base_toughness_node_buff_low_4",
+			talent = "base_toughness_node_buff_low_5",
 			icon = "content/ui/textures/icons/talents/zealot/zealot_default_general_talent",
 			x = 1084,
 			x_normalized = 0,

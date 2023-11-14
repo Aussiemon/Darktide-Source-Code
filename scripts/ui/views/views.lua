@@ -54,6 +54,26 @@ local views = {
 			options = WwiseGameSyncSettings.state_groups.options.ingame_menu
 		}
 	},
+	player_character_options_view = {
+		state_bound = true,
+		display_name = "loc_player_character_options_view_display_name",
+		close_on_hotkey_pressed = true,
+		path = "scripts/ui/views/player_character_options_view/player_character_options_view",
+		package = "packages/ui/views/player_character_options_view/player_character_options_view",
+		class = "PlayerCharacterOptionsView",
+		disable_game_world = false,
+		load_in_hub = true,
+		game_world_blur = 1.1,
+		wwise_states = {
+			options = WwiseGameSyncSettings.state_groups.options.ingame_menu
+		},
+		enter_sound_events = {
+			UISoundEvents.default_menu_enter
+		},
+		exit_sound_events = {
+			UISoundEvents.default_menu_exit
+		}
+	},
 	options_view = {
 		state_bound = true,
 		display_name = "loc_options_view_display_name",
@@ -78,6 +98,7 @@ local views = {
 		display_name = "loc_character_appearance_view_display_name",
 		state_bound = true,
 		use_transition_ui = true,
+		load_in_hub = true,
 		path = "scripts/ui/views/character_appearance_view/character_appearance_view",
 		package = "packages/ui/views/character_appearance_view/character_appearance_view",
 		class = "CharacterAppearanceView",
@@ -438,14 +459,18 @@ local views = {
 		load_in_hub = true
 	},
 	loading_view = {
+		dynamic_package_folder = "packages/ui/views/loading_view/",
+		display_name = "loc_loading_view_display_name",
+		use_transition_ui = true,
+		path = "scripts/ui/views/loading_view/loading_view",
 		package = "packages/ui/views/loading_view/loading_view",
 		load_always = true,
 		class = "LoadingView",
 		disable_game_world = true,
-		use_transition_ui = true,
 		load_in_hub = true,
-		display_name = "loc_loading_view_display_name",
-		path = "scripts/ui/views/loading_view/loading_view"
+		backgrounds = {
+			"loading_screen_background"
+		}
 	},
 	mission_intro_view = {
 		display_name = "loc_mission_intro_view_display_name",
@@ -591,6 +616,7 @@ local views = {
 		}
 	},
 	body_shop_view = {
+		load_in_hub = true,
 		display_name = "loc_body_shop_view_display_name",
 		state_bound = true,
 		use_transition_ui = true,
@@ -652,16 +678,17 @@ local views = {
 		}
 	},
 	marks_vendor_view = {
-		display_name = "loc_marks_vendor_view_display_name",
-		state_bound = true,
 		killswitch = "show_marks_store",
+		state_bound = true,
+		use_transition_ui = false,
 		killswitch_unavailable_header = "loc_popup_unavailable_view_marks_store_header",
 		killswitch_unavailable_description = "loc_popup_unavailable_view_marks_store_description",
 		path = "scripts/ui/views/marks_vendor_view/marks_vendor_view",
 		package = "packages/ui/views/marks_vendor_view/marks_vendor_view",
 		class = "MarksVendorView",
 		disable_game_world = true,
-		use_transition_ui = false,
+		load_in_hub = true,
+		display_name = "loc_marks_vendor_view_display_name",
 		wwise_states = {
 			options = WwiseGameSyncSettings.state_groups.options.vendor_menu
 		},
@@ -676,16 +703,17 @@ local views = {
 		}
 	},
 	marks_goods_vendor_view = {
-		display_name = "loc_marks_vendor_view_display_name",
-		state_bound = true,
 		killswitch = "show_marks_store",
+		state_bound = true,
+		use_transition_ui = false,
 		killswitch_unavailable_header = "loc_popup_unavailable_view_marks_store_header",
 		killswitch_unavailable_description = "loc_popup_unavailable_view_marks_store_description",
 		path = "scripts/ui/views/marks_goods_vendor_view/marks_goods_vendor_view",
 		package = "packages/ui/views/marks_goods_vendor_view/marks_goods_vendor_view",
 		class = "MarksVendorView",
 		disable_game_world = true,
-		use_transition_ui = false,
+		load_in_hub = true,
+		display_name = "loc_marks_vendor_view_display_name",
 		wwise_states = {
 			options = WwiseGameSyncSettings.state_groups.options.vendor_menu
 		},
@@ -700,16 +728,17 @@ local views = {
 		}
 	},
 	credits_vendor_view = {
-		display_name = "loc_credits_vendor_view_display_name",
-		state_bound = true,
 		killswitch = "show_contracts",
+		state_bound = true,
+		use_transition_ui = false,
 		killswitch_unavailable_header = "loc_popup_unavailable_view_credits_store_header",
 		killswitch_unavailable_description = "loc_popup_unavailable_view_credits_store_description",
 		path = "scripts/ui/views/credits_vendor_view/credits_vendor_view",
 		package = "packages/ui/views/credits_vendor_view/credits_vendor_view",
 		class = "CreditsVendorView",
 		disable_game_world = true,
-		use_transition_ui = false,
+		load_in_hub = true,
+		display_name = "loc_credits_vendor_view_display_name",
 		wwise_states = {
 			options = WwiseGameSyncSettings.state_groups.options.vendor_menu
 		},
@@ -754,6 +783,7 @@ local views = {
 		class = "MainMenuBackgroundView",
 		disable_game_world = true,
 		use_transition_ui = true,
+		load_in_hub = true,
 		path = "scripts/ui/views/main_menu_background_view/main_menu_background_view",
 		levels = {
 			"content/levels/ui/main_menu/main_menu"
@@ -804,12 +834,14 @@ local views = {
 		}
 	},
 	social_menu_roster_view = {
-		package = "packages/ui/views/social_menu_roster_view/social_menu_roster_view",
-		display_name = "loc_social_menu_roster_view_display_name",
-		class = "SocialMenuRosterView",
-		state_bound = true,
 		parent_transition_view = "social_menu_view",
+		state_bound = true,
+		display_name = "loc_social_menu_roster_view_display_name",
 		path = "scripts/ui/views/social_menu_roster_view/social_menu_roster_view",
+		package = "packages/ui/views/social_menu_roster_view/social_menu_roster_view",
+		load_always = true,
+		class = "SocialMenuRosterView",
+		load_in_hub = true,
 		testify_flags = {
 			ui_views = false
 		}
@@ -863,18 +895,20 @@ local views = {
 		class = "TrainingGroundsOptionsView",
 		disable_game_world = true,
 		state_bound = true,
+		load_in_hub = true,
 		path = "scripts/ui/views/training_grounds_options_view/training_grounds_options_view",
 		levels = {
 			"content/levels/ui/training_grounds/training_grounds"
 		}
 	},
 	credits_view = {
-		package = "packages/ui/views/credits_view/credits_view",
 		display_name = "loc_credits_view_display_name",
-		class = "CreditsView",
-		disable_game_world = true,
 		state_bound = true,
 		path = "scripts/ui/views/credits_view/credits_view",
+		package = "packages/ui/views/credits_view/credits_view",
+		class = "CreditsView",
+		disable_game_world = true,
+		load_in_hub = true,
 		testify_flags = {
 			ui_views = false
 		},

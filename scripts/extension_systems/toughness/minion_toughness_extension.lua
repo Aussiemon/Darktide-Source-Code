@@ -24,6 +24,7 @@ MinionToughnessExtension.init = function (self, extension_init_context, unit, ex
 	self._fx_system = fx_system
 	local health_extension = ScriptUnit.extension(unit, "health_system")
 	self._health_extension = health_extension
+	self._is_invulnerable = false
 	self._stored_attacks = {}
 end
 
@@ -38,7 +39,16 @@ end
 MinionToughnessExtension._initialize_toughness = function (self, unit, toughness_template)
 	local max_toughness = Managers.state.difficulty:get_table_entry_by_challenge(toughness_template.max)
 	self._max_toughness = max_toughness
-	self._toughness_damage = 0
+	self._toughness_damage = toughness_template.start_depleted and max_toughness or 0
+
+	if toughness_template.start_depleted then
+		local linked_actor_name = toughness_template.linked_actor
+
+		if linked_actor_name then
+			self:_set_linked_actor_active(linked_actor_name, false)
+		end
+	end
+
 	self._toughness_regen_delay = 0
 	local session = self._game_session
 
@@ -94,6 +104,14 @@ MinionToughnessExtension.toughness_damage = function (self)
 	return self._toughness_damage
 end
 
+MinionToughnessExtension.set_toughness_damage = function (self, damage, reactivation_override)
+	self._toughness_damage = damage
+
+	if reactivation_override then
+		self._reactivate_override = true
+	end
+end
+
 MinionToughnessExtension.time_since_toughness_broken = function (self)
 	return math.huge
 end
@@ -112,6 +130,11 @@ MinionToughnessExtension._update_toughness = function (self, dt, t)
 	local toughness_regen_delay = self._toughness_regen_delay
 	local was_depleted = max_toughness <= self._toughness_damage
 
+	if self._override_regen_speed then
+		local regen_rate = self._override_regen_speed
+		self._toughness_damage = math.max(toughness_damage - regen_rate * dt, 0)
+	end
+
 	if toughness_damage > 0 then
 		local regenerate_full_delay = self._regenerate_full_delay
 
@@ -121,7 +144,7 @@ MinionToughnessExtension._update_toughness = function (self, dt, t)
 				self._regenerate_full_delay = nil
 				self._min_health_allowed = nil
 			end
-		elseif toughness_regen_delay < t then
+		elseif toughness_regen_delay < t and not self._override_regen_speed then
 			local regen_rate = toughness_template.regeneration_speed
 			self._toughness_damage = math.max(toughness_damage - regen_rate * dt, 0)
 		end
@@ -143,7 +166,7 @@ MinionToughnessExtension._update_toughness = function (self, dt, t)
 	end
 
 	local is_depleted = max_toughness <= self._toughness_damage
-	local was_reactivated = was_depleted and not is_depleted
+	local was_reactivated = self._reactivate_override or was_depleted and not is_depleted
 
 	if was_reactivated then
 		local depleted_settings = toughness_template.depleted_settings
@@ -180,6 +203,7 @@ MinionToughnessExtension._update_toughness = function (self, dt, t)
 		end
 
 		self._should_explode = false
+		self._reactivate_override = nil
 	elseif self._should_explode then
 		local unit = self._unit
 		local depleted_settings = toughness_template.depleted_settings
@@ -195,6 +219,10 @@ MinionToughnessExtension._update_toughness = function (self, dt, t)
 end
 
 MinionToughnessExtension.add_damage = function (self, damage_amount, attack_result, hit_actor, damage_profile, attack_type, attack_direction, hit_world_position_or_nil)
+	if self._is_invulnerable then
+		return
+	end
+
 	local toughness_template = self._toughness_template
 	local toughness_damage = self._toughness_damage
 	local max_toughness = self._max_toughness
@@ -204,11 +232,19 @@ MinionToughnessExtension.add_damage = function (self, damage_amount, attack_resu
 	if toughness_damage < max_toughness then
 		local new_toughness_damage = toughness_damage + damage_amount
 		local clamped_toughness_damage = math.clamp(new_toughness_damage, 0, max_toughness)
+		local depleted = max_toughness <= clamped_toughness_damage
+		local behavior_component = Blackboard.write_component(self._blackboard, "behavior")
+		local clamp_toughness_until_condition = toughness_template.clamp_toughness_until_condition
+
+		if clamp_toughness_until_condition and not behavior_component[clamp_toughness_until_condition] then
+			clamped_toughness_damage = math.clamp(new_toughness_damage, 0, max_toughness - 0.01)
+		end
+
 		self._toughness_damage = clamped_toughness_damage
 
 		GameSession.set_game_object_field(self._game_session, self._game_object_id, "toughness_damage", clamped_toughness_damage)
 
-		if max_toughness <= clamped_toughness_damage then
+		if depleted then
 			local regenerate_full_delay = Managers.state.difficulty:get_table_entry_by_challenge(toughness_template.regenerate_full_delay)
 
 			if regenerate_full_delay and not self._regenerate_full_delay then
@@ -217,58 +253,12 @@ MinionToughnessExtension.add_damage = function (self, damage_amount, attack_resu
 
 			local depleted_settings = toughness_template.depleted_settings
 
-			if depleted_settings then
-				local unit = self._unit
-				local stagger_duration = Managers.state.difficulty:get_table_entry_by_challenge(depleted_settings.stagger_duration)
+			if depleted_settings.set_toughness_broke_behavior then
+				behavior_component.toughness_broke = true
+			end
 
-				if stagger_duration then
-					local stagger_type = depleted_settings.stagger_type
-
-					Stagger.force_stagger(unit, stagger_type, attack_direction, stagger_duration, 1, stagger_duration)
-				end
-
-				local stagger_strength_multiplier = depleted_settings.stagger_strength_multiplier
-
-				if stagger_strength_multiplier then
-					local stagger_component = Blackboard.write_component(self._blackboard, "stagger")
-					stagger_component.stagger_strength_multiplier = stagger_strength_multiplier
-				end
-
-				local fx_system = self._fx_system
-				local sfx = depleted_settings.sfx
-
-				if sfx then
-					fx_system:trigger_wwise_event(sfx, nil, unit, nil)
-				end
-
-				local vfx = depleted_settings.vfx
-
-				if vfx then
-					local position = POSITION_LOOKUP[unit]
-
-					fx_system:trigger_vfx(vfx, position, nil)
-				end
-
-				local max_health_loss_percent = Managers.state.difficulty:get_table_entry_by_challenge(depleted_settings.max_health_loss_percent)
-
-				if max_health_loss_percent then
-					local health_extension = self._health_extension
-					local current_health = health_extension:current_health()
-					local max_health = health_extension:max_health()
-					local max_health_loss_allowed = max_health * max_health_loss_percent
-					local min_health_allowed = math.clamp(current_health - max_health_loss_allowed, 0, max_health)
-					self._min_health_allowed = min_health_allowed
-				end
-
-				local linked_actor_name = toughness_template.linked_actor
-
-				if linked_actor_name then
-					self:_set_linked_actor_active(linked_actor_name, false)
-				end
-
-				if depleted_settings.explosion_template then
-					self._should_explode = true
-				end
+			if toughness_template.break_shield_when_depleted then
+				self:break_shield(attack_direction)
 			end
 		end
 
@@ -286,6 +276,73 @@ MinionToughnessExtension.add_damage = function (self, damage_amount, attack_resu
 	end
 
 	self._toughness_regen_delay = t + toughness_template.regeneration_delay
+end
+
+MinionToughnessExtension.set_invulnerable = function (self, should_be_invulnerable)
+	self._is_invulnerable = should_be_invulnerable
+end
+
+MinionToughnessExtension.break_shield = function (self, attack_direction, optional_ignore_stagger, optional_regenerate_full_delay_t)
+	local toughness_template = self._toughness_template
+	local depleted_settings = toughness_template.depleted_settings
+
+	if depleted_settings then
+		local unit = self._unit
+		local stagger_duration = not optional_ignore_stagger and Managers.state.difficulty:get_table_entry_by_challenge(depleted_settings.stagger_duration)
+
+		if stagger_duration then
+			local stagger_type = depleted_settings.stagger_type
+
+			Stagger.force_stagger(unit, stagger_type, attack_direction, stagger_duration, 1, stagger_duration)
+		end
+
+		if optional_regenerate_full_delay_t then
+			self._regenerate_full_delay = optional_regenerate_full_delay_t
+		end
+
+		local stagger_strength_multiplier = depleted_settings.stagger_strength_multiplier
+
+		if stagger_strength_multiplier then
+			local stagger_component = Blackboard.write_component(self._blackboard, "stagger")
+			stagger_component.stagger_strength_multiplier = stagger_strength_multiplier
+		end
+
+		local fx_system = self._fx_system
+		local sfx = depleted_settings.sfx
+
+		if sfx then
+			fx_system:trigger_wwise_event(sfx, nil, unit, nil)
+		end
+
+		local vfx = depleted_settings.vfx
+
+		if vfx then
+			local position = POSITION_LOOKUP[unit]
+
+			fx_system:trigger_vfx(vfx, position, nil)
+		end
+
+		local max_health_loss_percent = depleted_settings.max_health_loss_percent and Managers.state.difficulty:get_table_entry_by_challenge(depleted_settings.max_health_loss_percent)
+
+		if max_health_loss_percent then
+			local health_extension = self._health_extension
+			local current_health = health_extension:current_health()
+			local max_health = health_extension:max_health()
+			local max_health_loss_allowed = max_health * max_health_loss_percent
+			local min_health_allowed = math.clamp(current_health - max_health_loss_allowed, 0, max_health)
+			self._min_health_allowed = min_health_allowed
+		end
+
+		local linked_actor_name = toughness_template.linked_actor
+
+		if linked_actor_name then
+			self:_set_linked_actor_active(linked_actor_name, false)
+		end
+
+		if depleted_settings.explosion_template then
+			self._should_explode = true
+		end
+	end
 end
 
 MinionToughnessExtension.stored_attacks = function (self)
@@ -328,6 +385,10 @@ MinionToughnessExtension.is_stagger_immune = function (self)
 	local toughness_template = self._toughness_template
 
 	return toughness_template.stagger_immune_while_active and self._toughness_damage < self._max_toughness
+end
+
+MinionToughnessExtension.set_override_regen_speed = function (self, speed)
+	self._override_regen_speed = speed
 end
 
 return MinionToughnessExtension

@@ -1,5 +1,7 @@
 local SmartTag = require("scripts/extension_systems/smart_tag/smart_tag")
 local SmartTagSettings = require("scripts/settings/smart_tag/smart_tag_settings")
+local BuffSettings = require("scripts/settings/buff/buff_settings")
+local keywords = BuffSettings.keywords
 local SmartTagExtension = class("SmartTagExtension")
 
 SmartTagExtension.init = function (self, extension_init_context, unit, extension_init_data, ...)
@@ -120,8 +122,6 @@ SmartTagExtension._contextual_tag_template_name = function (self, tagger_unit)
 			return "small_clip_over_here"
 		elseif pickup_name == "large_clip" then
 			return "large_clip_over_here"
-		elseif pickup_name == "health_booster" then
-			return "health_booster_over_here"
 		elseif pickup_name == "small_grenade" then
 			return "small_grenade_over_here"
 		elseif pickup_name == "battery_01_luggable" then
@@ -163,7 +163,14 @@ SmartTagExtension._contextual_tag_template_name = function (self, tagger_unit)
 		local side_system = Managers.state.extension:system("side_system")
 
 		if side_system:is_enemy(tagger_unit, unit) then
-			return "enemy_over_here"
+			local buff_extension = ScriptUnit.has_extension(tagger_unit, "buff_system")
+			local veteran_tag = buff_extension and buff_extension:has_keyword(keywords.veteran_tag)
+
+			if veteran_tag then
+				return "enemy_over_here_veteran"
+			else
+				return "enemy_over_here"
+			end
 		end
 	elseif target_type == "health_station" then
 		local health_station_extension = ScriptUnit.extension(unit, "health_station_system")

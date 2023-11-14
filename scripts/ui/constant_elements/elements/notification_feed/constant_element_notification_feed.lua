@@ -1,5 +1,6 @@
+local AchievementUIHelper = require("scripts/managers/achievements/utility/achievement_ui_helper")
 local ConstantElementNotificationFeedSettings = require("scripts/ui/constant_elements/elements/notification_feed/constant_element_notification_feed_settings")
-local CriteriaParser = require("scripts/managers/contracts/utility/criteria_parser")
+local ContractCriteriaParser = require("scripts/utilities/contract_criteria_parser")
 local Definitions = require("scripts/ui/constant_elements/elements/notification_feed/constant_element_notification_feed_definitions")
 local ItemUtils = require("scripts/utilities/items")
 local TextUtilities = require("scripts/utilities/ui/text")
@@ -420,12 +421,13 @@ ConstantElementNotificationFeed._generate_notification_data = function (self, me
 			}
 		end
 	elseif message_type == MESSAGE_TYPES.achievement then
+		local achievement_title = AchievementUIHelper.localized_title(data)
 		notification_data = {
 			icon_size = "medium",
 			icon = "content/ui/materials/icons/achievements/achievement_icon_container",
 			texts = {
 				{
-					display_name = string.format("\"%s\"", data:label()),
+					display_name = string.format("\"%s\"", achievement_title),
 					color = {
 						255,
 						248,
@@ -445,7 +447,7 @@ ConstantElementNotificationFeed._generate_notification_data = function (self, me
 			},
 			icon_material_values = {
 				frame = "content/ui/textures/icons/achievements/frames/achieved",
-				icon = data:icon(),
+				icon = data.icon,
 				icon_color = Color.ui_achievement_icon_completed(255, true)
 			},
 			line_color = {
@@ -464,7 +466,7 @@ ConstantElementNotificationFeed._generate_notification_data = function (self, me
 		}
 	elseif message_type == MESSAGE_TYPES.contract then
 		local criteria = data.criteria
-		local title, _, _ = CriteriaParser.localize_criteria(criteria)
+		local title, _, _ = ContractCriteriaParser.localize_criteria(criteria)
 		local type = criteria.taskType
 		notification_data = {
 			icon = "content/ui/materials/icons/contracts/contract_task",

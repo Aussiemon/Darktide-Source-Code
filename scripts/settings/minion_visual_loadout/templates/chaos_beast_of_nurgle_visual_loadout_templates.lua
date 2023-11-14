@@ -6,6 +6,7 @@ local templates = {
 local basic_chaos_beast_of_nurgle_template = {
 	slots = {
 		slot_body = {
+			use_outline = true,
 			items = {
 				"content/items/characters/minions/chaos_beast_of_nurgle/attachments_base/body"
 			}

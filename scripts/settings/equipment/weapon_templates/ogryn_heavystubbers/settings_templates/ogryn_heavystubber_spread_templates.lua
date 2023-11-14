@@ -729,8 +729,8 @@ spread_templates.default_ogryn_heavystubber_alternate_fire = {
 		}
 	}
 }
-local pitch_spread = 1.54
-local yaw_spread = pitch_spread * 1.3
+local pitch_spread = 0.86
+local yaw_spread = pitch_spread * 1.2
 spread_templates.ogryn_heavystubber_spread_spraynpray_hip = {
 	still = {
 		max_spread = {
@@ -1313,11 +1313,13 @@ spread_templates.default_ogryn_heavystubber_braced_m2 = {
 		}
 	}
 }
+local pitch_spread_m3 = 0.97
+local yaw_spread_m3 = pitch_spread * 1.1
 spread_templates.ogryn_heavystubber_spread_spraynpray_hip_m3 = {
 	still = {
 		max_spread = {
-			yaw = 6,
-			pitch = 6.4
+			yaw = 5,
+			pitch = 5.4
 		},
 		decay = {
 			from_shooting_grace_time = 0.025,
@@ -1331,8 +1333,8 @@ spread_templates.ogryn_heavystubber_spread_spraynpray_hip_m3 = {
 			}
 		},
 		continuous_spread = {
-			min_yaw = 2,
-			min_pitch = 2
+			min_yaw = 1.8,
+			min_pitch = 1.8
 		},
 		immediate_spread = {
 			num_shots_clear_time = 0.25,
@@ -1350,296 +1352,296 @@ spread_templates.ogryn_heavystubber_spread_spraynpray_hip_m3 = {
 			},
 			shooting = {
 				{
-					pitch = pitch_spread * 0.4,
-					yaw = yaw_spread * 0.4
+					pitch = pitch_spread_m3 * 0.1,
+					yaw = yaw_spread_m3 * 0.1
 				},
 				{
-					pitch = pitch_spread * 0.45,
-					yaw = yaw_spread * 0.45
+					pitch = pitch_spread_m3 * 0.1,
+					yaw = yaw_spread_m3 * 0.1
 				},
 				{
-					pitch = pitch_spread * 0.5,
-					yaw = yaw_spread * 0.5
+					pitch = pitch_spread_m3 * 0.2,
+					yaw = yaw_spread_m3 * 0.2
 				},
 				{
-					pitch = pitch_spread * 0.4,
-					yaw = yaw_spread * 0.4
+					pitch = pitch_spread_m3 * 0.4,
+					yaw = yaw_spread_m3 * 0.4
 				},
 				{
-					pitch = pitch_spread * 0.3,
-					yaw = yaw_spread * 0.3
+					pitch = pitch_spread_m3 * 0.3,
+					yaw = yaw_spread_m3 * 0.3
 				},
 				{
-					pitch = pitch_spread * 0.2,
-					yaw = yaw_spread * 0.2
+					pitch = pitch_spread_m3 * 0.2,
+					yaw = yaw_spread_m3 * 0.2
 				},
 				{
-					pitch = pitch_spread * 0,
-					yaw = yaw_spread * 0
+					pitch = pitch_spread_m3 * 0,
+					yaw = yaw_spread_m3 * 0
 				},
 				{
-					pitch = pitch_spread * 0,
-					yaw = yaw_spread * 0
+					pitch = pitch_spread_m3 * 0,
+					yaw = yaw_spread_m3 * 0
 				},
 				{
-					pitch = pitch_spread * 0,
-					yaw = yaw_spread * 0
+					pitch = pitch_spread_m3 * 0,
+					yaw = yaw_spread_m3 * 0
 				},
 				{
-					pitch = pitch_spread * 0,
-					yaw = yaw_spread * 0
+					pitch = pitch_spread_m3 * 0,
+					yaw = yaw_spread_m3 * 0
 				},
 				{
-					pitch = pitch_spread * 0,
-					yaw = yaw_spread * 0
+					pitch = pitch_spread_m3 * 0,
+					yaw = yaw_spread_m3 * 0
 				},
 				{
-					pitch = pitch_spread * 0,
-					yaw = yaw_spread * 0
+					pitch = pitch_spread_m3 * 0,
+					yaw = yaw_spread_m3 * 0
 				},
 				{
-					pitch = pitch_spread * 0.1,
-					yaw = yaw_spread * 0.1
+					pitch = pitch_spread_m3 * 0.1,
+					yaw = yaw_spread_m3 * 0.1
 				},
 				{
-					pitch = pitch_spread * 0.2,
-					yaw = yaw_spread * 0.2
+					pitch = pitch_spread_m3 * 0.2,
+					yaw = yaw_spread_m3 * 0.2
 				},
 				{
-					pitch = pitch_spread * 0.1,
-					yaw = yaw_spread * 0.1
+					pitch = pitch_spread_m3 * 0.1,
+					yaw = yaw_spread_m3 * 0.1
 				},
 				{
-					pitch = pitch_spread * 0,
-					yaw = yaw_spread * 0
+					pitch = pitch_spread_m3 * 0,
+					yaw = yaw_spread_m3 * 0
 				},
 				{
-					pitch = pitch_spread * 0,
-					yaw = yaw_spread * 0
+					pitch = pitch_spread_m3 * 0,
+					yaw = yaw_spread_m3 * 0
 				},
 				{
-					pitch = pitch_spread * 0.1,
-					yaw = yaw_spread * 0.1
+					pitch = pitch_spread_m3 * 0.1,
+					yaw = yaw_spread_m3 * 0.1
 				},
 				{
-					pitch = pitch_spread * 0.2,
-					yaw = yaw_spread * 0.2
+					pitch = pitch_spread_m3 * 0.2,
+					yaw = yaw_spread_m3 * 0.2
 				},
 				{
-					pitch = pitch_spread * 0.1,
-					yaw = yaw_spread * 0.1
+					pitch = pitch_spread_m3 * 0.1,
+					yaw = yaw_spread_m3 * 0.1
 				},
 				{
-					pitch = pitch_spread * 0,
-					yaw = yaw_spread * 0
+					pitch = pitch_spread_m3 * 0,
+					yaw = yaw_spread_m3 * 0
 				},
 				{
-					pitch = pitch_spread * 0,
-					yaw = yaw_spread * 0
+					pitch = pitch_spread_m3 * 0,
+					yaw = yaw_spread_m3 * 0
 				},
 				{
-					pitch = pitch_spread * 0.1,
-					yaw = yaw_spread * 0.1
+					pitch = pitch_spread_m3 * 0.1,
+					yaw = yaw_spread_m3 * 0.1
 				},
 				{
-					pitch = pitch_spread * 0.2,
-					yaw = yaw_spread * 0.2
+					pitch = pitch_spread_m3 * 0.2,
+					yaw = yaw_spread_m3 * 0.2
 				},
 				{
-					pitch = pitch_spread * 0.1,
-					yaw = yaw_spread * 0.1
+					pitch = pitch_spread_m3 * 0.1,
+					yaw = yaw_spread_m3 * 0.1
 				},
 				{
-					pitch = pitch_spread * 0,
-					yaw = yaw_spread * 0
+					pitch = pitch_spread_m3 * 0,
+					yaw = yaw_spread_m3 * 0
 				},
 				{
-					pitch = pitch_spread * 0,
-					yaw = yaw_spread * 0
+					pitch = pitch_spread_m3 * 0,
+					yaw = yaw_spread_m3 * 0
 				},
 				{
-					pitch = pitch_spread * 0.1,
-					yaw = yaw_spread * 0.1
+					pitch = pitch_spread_m3 * 0.1,
+					yaw = yaw_spread_m3 * 0.1
 				},
 				{
-					pitch = pitch_spread * 0.2,
-					yaw = yaw_spread * 0.2
+					pitch = pitch_spread_m3 * 0.2,
+					yaw = yaw_spread_m3 * 0.2
 				},
 				{
-					pitch = pitch_spread * 0.1,
-					yaw = yaw_spread * 0.1
+					pitch = pitch_spread_m3 * 0.1,
+					yaw = yaw_spread_m3 * 0.1
 				},
 				{
-					pitch = pitch_spread * 0,
-					yaw = yaw_spread * 0
+					pitch = pitch_spread_m3 * 0,
+					yaw = yaw_spread_m3 * 0
 				},
 				{
-					pitch = pitch_spread * 0,
-					yaw = yaw_spread * 0
+					pitch = pitch_spread_m3 * 0,
+					yaw = yaw_spread_m3 * 0
 				},
 				{
-					pitch = pitch_spread * 0.1,
-					yaw = yaw_spread * 0.1
+					pitch = pitch_spread_m3 * 0.1,
+					yaw = yaw_spread_m3 * 0.1
 				},
 				{
-					pitch = pitch_spread * 0.2,
-					yaw = yaw_spread * 0.2
+					pitch = pitch_spread_m3 * 0.2,
+					yaw = yaw_spread_m3 * 0.2
 				},
 				{
-					pitch = pitch_spread * 0.1,
-					yaw = yaw_spread * 0.1
+					pitch = pitch_spread_m3 * 0.1,
+					yaw = yaw_spread_m3 * 0.1
 				},
 				{
-					pitch = pitch_spread * 0,
-					yaw = yaw_spread * 0
+					pitch = pitch_spread_m3 * 0,
+					yaw = yaw_spread_m3 * 0
 				},
 				{
-					pitch = pitch_spread * 0,
-					yaw = yaw_spread * 0
+					pitch = pitch_spread_m3 * 0,
+					yaw = yaw_spread_m3 * 0
 				},
 				{
-					pitch = pitch_spread * 0.1,
-					yaw = yaw_spread * 0.1
+					pitch = pitch_spread_m3 * 0.1,
+					yaw = yaw_spread_m3 * 0.1
 				},
 				{
-					pitch = pitch_spread * 0.2,
-					yaw = yaw_spread * 0.2
+					pitch = pitch_spread_m3 * 0.2,
+					yaw = yaw_spread_m3 * 0.2
 				},
 				{
-					pitch = pitch_spread * 0.1,
-					yaw = yaw_spread * 0.1
+					pitch = pitch_spread_m3 * 0.1,
+					yaw = yaw_spread_m3 * 0.1
 				},
 				{
-					pitch = pitch_spread * 0,
-					yaw = yaw_spread * 0
+					pitch = pitch_spread_m3 * 0,
+					yaw = yaw_spread_m3 * 0
 				},
 				{
-					pitch = pitch_spread * 0,
-					yaw = yaw_spread * 0
+					pitch = pitch_spread_m3 * 0,
+					yaw = yaw_spread_m3 * 0
 				},
 				{
-					pitch = pitch_spread * 0.1,
-					yaw = yaw_spread * 0.1
+					pitch = pitch_spread_m3 * 0.1,
+					yaw = yaw_spread_m3 * 0.1
 				},
 				{
-					pitch = pitch_spread * 0.2,
-					yaw = yaw_spread * 0.2
+					pitch = pitch_spread_m3 * 0.2,
+					yaw = yaw_spread_m3 * 0.2
 				},
 				{
-					pitch = pitch_spread * 0.1,
-					yaw = yaw_spread * 0.1
+					pitch = pitch_spread_m3 * 0.1,
+					yaw = yaw_spread_m3 * 0.1
 				},
 				{
-					pitch = pitch_spread * 0,
-					yaw = yaw_spread * 0
+					pitch = pitch_spread_m3 * 0,
+					yaw = yaw_spread_m3 * 0
 				},
 				{
-					pitch = pitch_spread * 0,
-					yaw = yaw_spread * 0
+					pitch = pitch_spread_m3 * 0,
+					yaw = yaw_spread_m3 * 0
 				},
 				{
-					pitch = pitch_spread * 0.1,
-					yaw = yaw_spread * 0.1
+					pitch = pitch_spread_m3 * 0.1,
+					yaw = yaw_spread_m3 * 0.1
 				},
 				{
-					pitch = pitch_spread * 0.2,
-					yaw = yaw_spread * 0.2
+					pitch = pitch_spread_m3 * 0.2,
+					yaw = yaw_spread_m3 * 0.2
 				},
 				{
-					pitch = pitch_spread * 0.1,
-					yaw = yaw_spread * 0.1
+					pitch = pitch_spread_m3 * 0.1,
+					yaw = yaw_spread_m3 * 0.1
 				},
 				{
-					pitch = pitch_spread * 0,
-					yaw = yaw_spread * 0
+					pitch = pitch_spread_m3 * 0,
+					yaw = yaw_spread_m3 * 0
 				},
 				{
-					pitch = pitch_spread * 0,
-					yaw = yaw_spread * 0
+					pitch = pitch_spread_m3 * 0,
+					yaw = yaw_spread_m3 * 0
 				},
 				{
-					pitch = pitch_spread * 0.1,
-					yaw = yaw_spread * 0.1
+					pitch = pitch_spread_m3 * 0.1,
+					yaw = yaw_spread_m3 * 0.1
 				},
 				{
-					pitch = pitch_spread * 0.2,
-					yaw = yaw_spread * 0.2
+					pitch = pitch_spread_m3 * 0.2,
+					yaw = yaw_spread_m3 * 0.2
 				},
 				{
-					pitch = pitch_spread * 0.1,
-					yaw = yaw_spread * 0.1
+					pitch = pitch_spread_m3 * 0.1,
+					yaw = yaw_spread_m3 * 0.1
 				},
 				{
-					pitch = pitch_spread * 0,
-					yaw = yaw_spread * 0
+					pitch = pitch_spread_m3 * 0,
+					yaw = yaw_spread_m3 * 0
 				},
 				{
-					pitch = pitch_spread * 0,
-					yaw = yaw_spread * 0
+					pitch = pitch_spread_m3 * 0,
+					yaw = yaw_spread_m3 * 0
 				},
 				{
-					pitch = pitch_spread * 0.1,
-					yaw = yaw_spread * 0.1
+					pitch = pitch_spread_m3 * 0.1,
+					yaw = yaw_spread_m3 * 0.1
 				},
 				{
-					pitch = pitch_spread * 0.2,
-					yaw = yaw_spread * 0.2
+					pitch = pitch_spread_m3 * 0.2,
+					yaw = yaw_spread_m3 * 0.2
 				},
 				{
-					pitch = pitch_spread * 0.1,
-					yaw = yaw_spread * 0.1
+					pitch = pitch_spread_m3 * 0.1,
+					yaw = yaw_spread_m3 * 0.1
 				},
 				{
-					pitch = pitch_spread * 0,
-					yaw = yaw_spread * 0
+					pitch = pitch_spread_m3 * 0,
+					yaw = yaw_spread_m3 * 0
 				},
 				{
-					pitch = pitch_spread * 0,
-					yaw = yaw_spread * 0
+					pitch = pitch_spread_m3 * 0,
+					yaw = yaw_spread_m3 * 0
 				},
 				{
-					pitch = pitch_spread * 0.1,
-					yaw = yaw_spread * 0.1
+					pitch = pitch_spread_m3 * 0.1,
+					yaw = yaw_spread_m3 * 0.1
 				},
 				{
-					pitch = pitch_spread * 0.2,
-					yaw = yaw_spread * 0.2
+					pitch = pitch_spread_m3 * 0.2,
+					yaw = yaw_spread_m3 * 0.2
 				},
 				{
-					pitch = pitch_spread * 0.1,
-					yaw = yaw_spread * 0.1
+					pitch = pitch_spread_m3 * 0.1,
+					yaw = yaw_spread_m3 * 0.1
 				},
 				{
-					pitch = pitch_spread * 0,
-					yaw = yaw_spread * 0
+					pitch = pitch_spread_m3 * 0,
+					yaw = yaw_spread_m3 * 0
 				},
 				{
-					pitch = pitch_spread * 0,
-					yaw = yaw_spread * 0
+					pitch = pitch_spread_m3 * 0,
+					yaw = yaw_spread_m3 * 0
 				},
 				{
-					pitch = pitch_spread * 0.1,
-					yaw = yaw_spread * 0.1
+					pitch = pitch_spread_m3 * 0.1,
+					yaw = yaw_spread_m3 * 0.1
 				},
 				{
-					pitch = pitch_spread * 0.2,
-					yaw = yaw_spread * 0.2
+					pitch = pitch_spread_m3 * 0.2,
+					yaw = yaw_spread_m3 * 0.2
 				},
 				{
-					pitch = pitch_spread * 0.1,
-					yaw = yaw_spread * 0.1
+					pitch = pitch_spread_m3 * 0.1,
+					yaw = yaw_spread_m3 * 0.1
 				},
 				{
-					pitch = pitch_spread * 0,
-					yaw = yaw_spread * 0
+					pitch = pitch_spread_m3 * 0,
+					yaw = yaw_spread_m3 * 0
 				},
 				{
-					pitch = pitch_spread * 0,
-					yaw = yaw_spread * 0
+					pitch = pitch_spread_m3 * 0,
+					yaw = yaw_spread_m3 * 0
 				},
 				{
-					pitch = pitch_spread * 0.14,
-					yaw = yaw_spread * 0.14
+					pitch = pitch_spread_m3 * 0.14,
+					yaw = yaw_spread_m3 * 0.14
 				}
 			}
 		}
@@ -1650,8 +1652,8 @@ spread_templates.ogryn_heavystubber_spread_spraynpray_hip_m3 = {
 			"still"
 		},
 		continuous_spread = {
-			min_yaw = 2.1,
-			min_pitch = 2.1
+			min_yaw = 1.8,
+			min_pitch = 1.8
 		},
 		immediate_spread = {
 			num_shots_clear_time = 0.25,
@@ -1669,28 +1671,28 @@ spread_templates.ogryn_heavystubber_spread_spraynpray_hip_m3 = {
 			},
 			shooting = {
 				{
-					pitch = pitch_spread * 1,
-					yaw = yaw_spread * 1
+					pitch = pitch_spread_m3 * 0.2,
+					yaw = yaw_spread_m3 * 0.2
 				},
 				{
-					pitch = pitch_spread * 0.75,
-					yaw = yaw_spread * 0.75
+					pitch = pitch_spread_m3 * 0.3,
+					yaw = yaw_spread_m3 * 0.3
 				},
 				{
-					pitch = pitch_spread * 0.5,
-					yaw = yaw_spread * 0.5
+					pitch = pitch_spread_m3 * 0.5,
+					yaw = yaw_spread_m3 * 0.5
 				},
 				{
-					pitch = pitch_spread * 0.4,
-					yaw = yaw_spread * 0.4
+					pitch = pitch_spread_m3 * 0.4,
+					yaw = yaw_spread_m3 * 0.4
 				},
 				{
-					pitch = pitch_spread * 0.3,
-					yaw = yaw_spread * 0.3
+					pitch = pitch_spread_m3 * 0.3,
+					yaw = yaw_spread_m3 * 0.3
 				},
 				{
-					pitch = pitch_spread * 0.2,
-					yaw = yaw_spread * 0.2
+					pitch = pitch_spread_m3 * 0.2,
+					yaw = yaw_spread_m3 * 0.2
 				}
 			}
 		}
@@ -1704,6 +1706,407 @@ spread_templates.ogryn_heavystubber_spread_spraynpray_hip_m3 = {
 	crouch_moving = {
 		inherits = {
 			"ogryn_heavystubber_spread_spraynpray_hip_m3",
+			"still"
+		}
+	}
+}
+pitch_spread_m3 = 0.6
+yaw_spread_m3 = pitch_spread_m3
+spread_templates.ogryn_heavystubber_spread_spraynpray_braced_m3 = {
+	still = {
+		max_spread = {
+			yaw = 3,
+			pitch = 3.4
+		},
+		decay = {
+			from_shooting_grace_time = 0.025,
+			shooting = {
+				yaw = 0.5,
+				pitch = 0.5
+			},
+			idle = {
+				yaw = 1.5,
+				pitch = 1.5
+			}
+		},
+		continuous_spread = {
+			min_yaw = 1.5,
+			min_pitch = 1.5
+		},
+		immediate_spread = {
+			num_shots_clear_time = 0.25,
+			suppression_hit = {
+				{
+					yaw = 0.25,
+					pitch = 0.25
+				}
+			},
+			damage_hit = {
+				{
+					yaw = 0.4,
+					pitch = 0.4
+				}
+			},
+			shooting = {
+				{
+					pitch = pitch_spread_m3 * 0.01,
+					yaw = yaw_spread_m3 * 0.01
+				},
+				{
+					pitch = pitch_spread_m3 * 0.01,
+					yaw = yaw_spread_m3 * 0.01
+				},
+				{
+					pitch = pitch_spread_m3 * 0.02,
+					yaw = yaw_spread_m3 * 0.02
+				},
+				{
+					pitch = pitch_spread_m3 * 0.04,
+					yaw = yaw_spread_m3 * 0.04
+				},
+				{
+					pitch = pitch_spread_m3 * 0.05,
+					yaw = yaw_spread_m3 * 0.05
+				},
+				{
+					pitch = pitch_spread_m3 * 0.08,
+					yaw = yaw_spread_m3 * 0.08
+				},
+				{
+					pitch = pitch_spread_m3 * 0,
+					yaw = yaw_spread_m3 * 0
+				},
+				{
+					pitch = pitch_spread_m3 * 0,
+					yaw = yaw_spread_m3 * 0
+				},
+				{
+					pitch = pitch_spread_m3 * 0,
+					yaw = yaw_spread_m3 * 0
+				},
+				{
+					pitch = pitch_spread_m3 * 0,
+					yaw = yaw_spread_m3 * 0
+				},
+				{
+					pitch = pitch_spread_m3 * 0,
+					yaw = yaw_spread_m3 * 0
+				},
+				{
+					pitch = pitch_spread_m3 * 0,
+					yaw = yaw_spread_m3 * 0
+				},
+				{
+					pitch = pitch_spread_m3 * 0.1,
+					yaw = yaw_spread_m3 * 0.1
+				},
+				{
+					pitch = pitch_spread_m3 * 0.2,
+					yaw = yaw_spread_m3 * 0.2
+				},
+				{
+					pitch = pitch_spread_m3 * 0.1,
+					yaw = yaw_spread_m3 * 0.1
+				},
+				{
+					pitch = pitch_spread_m3 * 0,
+					yaw = yaw_spread_m3 * 0
+				},
+				{
+					pitch = pitch_spread_m3 * 0,
+					yaw = yaw_spread_m3 * 0
+				},
+				{
+					pitch = pitch_spread_m3 * 0.1,
+					yaw = yaw_spread_m3 * 0.1
+				},
+				{
+					pitch = pitch_spread_m3 * 0.2,
+					yaw = yaw_spread_m3 * 0.2
+				},
+				{
+					pitch = pitch_spread_m3 * 0.1,
+					yaw = yaw_spread_m3 * 0.1
+				},
+				{
+					pitch = pitch_spread_m3 * 0,
+					yaw = yaw_spread_m3 * 0
+				},
+				{
+					pitch = pitch_spread_m3 * 0,
+					yaw = yaw_spread_m3 * 0
+				},
+				{
+					pitch = pitch_spread_m3 * 0.1,
+					yaw = yaw_spread_m3 * 0.1
+				},
+				{
+					pitch = pitch_spread_m3 * 0.2,
+					yaw = yaw_spread_m3 * 0.2
+				},
+				{
+					pitch = pitch_spread_m3 * 0.1,
+					yaw = yaw_spread_m3 * 0.1
+				},
+				{
+					pitch = pitch_spread_m3 * 0,
+					yaw = yaw_spread_m3 * 0
+				},
+				{
+					pitch = pitch_spread_m3 * 0,
+					yaw = yaw_spread_m3 * 0
+				},
+				{
+					pitch = pitch_spread_m3 * 0.1,
+					yaw = yaw_spread_m3 * 0.1
+				},
+				{
+					pitch = pitch_spread_m3 * 0.2,
+					yaw = yaw_spread_m3 * 0.2
+				},
+				{
+					pitch = pitch_spread_m3 * 0.1,
+					yaw = yaw_spread_m3 * 0.1
+				},
+				{
+					pitch = pitch_spread_m3 * 0,
+					yaw = yaw_spread_m3 * 0
+				},
+				{
+					pitch = pitch_spread_m3 * 0,
+					yaw = yaw_spread_m3 * 0
+				},
+				{
+					pitch = pitch_spread_m3 * 0.1,
+					yaw = yaw_spread_m3 * 0.1
+				},
+				{
+					pitch = pitch_spread_m3 * 0.2,
+					yaw = yaw_spread_m3 * 0.2
+				},
+				{
+					pitch = pitch_spread_m3 * 0.1,
+					yaw = yaw_spread_m3 * 0.1
+				},
+				{
+					pitch = pitch_spread_m3 * 0,
+					yaw = yaw_spread_m3 * 0
+				},
+				{
+					pitch = pitch_spread_m3 * 0,
+					yaw = yaw_spread_m3 * 0
+				},
+				{
+					pitch = pitch_spread_m3 * 0.1,
+					yaw = yaw_spread_m3 * 0.1
+				},
+				{
+					pitch = pitch_spread_m3 * 0.2,
+					yaw = yaw_spread_m3 * 0.2
+				},
+				{
+					pitch = pitch_spread_m3 * 0.1,
+					yaw = yaw_spread_m3 * 0.1
+				},
+				{
+					pitch = pitch_spread_m3 * 0,
+					yaw = yaw_spread_m3 * 0
+				},
+				{
+					pitch = pitch_spread_m3 * 0,
+					yaw = yaw_spread_m3 * 0
+				},
+				{
+					pitch = pitch_spread_m3 * 0.1,
+					yaw = yaw_spread_m3 * 0.1
+				},
+				{
+					pitch = pitch_spread_m3 * 0.2,
+					yaw = yaw_spread_m3 * 0.2
+				},
+				{
+					pitch = pitch_spread_m3 * 0.1,
+					yaw = yaw_spread_m3 * 0.1
+				},
+				{
+					pitch = pitch_spread_m3 * 0,
+					yaw = yaw_spread_m3 * 0
+				},
+				{
+					pitch = pitch_spread_m3 * 0,
+					yaw = yaw_spread_m3 * 0
+				},
+				{
+					pitch = pitch_spread_m3 * 0.1,
+					yaw = yaw_spread_m3 * 0.1
+				},
+				{
+					pitch = pitch_spread_m3 * 0.2,
+					yaw = yaw_spread_m3 * 0.2
+				},
+				{
+					pitch = pitch_spread_m3 * 0.1,
+					yaw = yaw_spread_m3 * 0.1
+				},
+				{
+					pitch = pitch_spread_m3 * 0,
+					yaw = yaw_spread_m3 * 0
+				},
+				{
+					pitch = pitch_spread_m3 * 0,
+					yaw = yaw_spread_m3 * 0
+				},
+				{
+					pitch = pitch_spread_m3 * 0.1,
+					yaw = yaw_spread_m3 * 0.1
+				},
+				{
+					pitch = pitch_spread_m3 * 0.2,
+					yaw = yaw_spread_m3 * 0.2
+				},
+				{
+					pitch = pitch_spread_m3 * 0.1,
+					yaw = yaw_spread_m3 * 0.1
+				},
+				{
+					pitch = pitch_spread_m3 * 0,
+					yaw = yaw_spread_m3 * 0
+				},
+				{
+					pitch = pitch_spread_m3 * 0,
+					yaw = yaw_spread_m3 * 0
+				},
+				{
+					pitch = pitch_spread_m3 * 0.1,
+					yaw = yaw_spread_m3 * 0.1
+				},
+				{
+					pitch = pitch_spread_m3 * 0.2,
+					yaw = yaw_spread_m3 * 0.2
+				},
+				{
+					pitch = pitch_spread_m3 * 0.1,
+					yaw = yaw_spread_m3 * 0.1
+				},
+				{
+					pitch = pitch_spread_m3 * 0,
+					yaw = yaw_spread_m3 * 0
+				},
+				{
+					pitch = pitch_spread_m3 * 0,
+					yaw = yaw_spread_m3 * 0
+				},
+				{
+					pitch = pitch_spread_m3 * 0.1,
+					yaw = yaw_spread_m3 * 0.1
+				},
+				{
+					pitch = pitch_spread_m3 * 0.2,
+					yaw = yaw_spread_m3 * 0.2
+				},
+				{
+					pitch = pitch_spread_m3 * 0.1,
+					yaw = yaw_spread_m3 * 0.1
+				},
+				{
+					pitch = pitch_spread_m3 * 0,
+					yaw = yaw_spread_m3 * 0
+				},
+				{
+					pitch = pitch_spread_m3 * 0,
+					yaw = yaw_spread_m3 * 0
+				},
+				{
+					pitch = pitch_spread_m3 * 0.1,
+					yaw = yaw_spread_m3 * 0.1
+				},
+				{
+					pitch = pitch_spread_m3 * 0.2,
+					yaw = yaw_spread_m3 * 0.2
+				},
+				{
+					pitch = pitch_spread_m3 * 0.1,
+					yaw = yaw_spread_m3 * 0.1
+				},
+				{
+					pitch = pitch_spread_m3 * 0,
+					yaw = yaw_spread_m3 * 0
+				},
+				{
+					pitch = pitch_spread_m3 * 0,
+					yaw = yaw_spread_m3 * 0
+				},
+				{
+					pitch = pitch_spread_m3 * 0.14,
+					yaw = yaw_spread_m3 * 0.14
+				}
+			}
+		}
+	},
+	moving = {
+		inherits = {
+			"ogryn_heavystubber_spread_spraynpray_braced_m3",
+			"still"
+		},
+		continuous_spread = {
+			min_yaw = 1.8,
+			min_pitch = 1.8
+		},
+		immediate_spread = {
+			num_shots_clear_time = 0.25,
+			suppression_hit = {
+				{
+					yaw = 0.25,
+					pitch = 0.25
+				}
+			},
+			damage_hit = {
+				{
+					yaw = 0.4,
+					pitch = 0.4
+				}
+			},
+			shooting = {
+				{
+					pitch = pitch_spread_m3 * 0.2,
+					yaw = yaw_spread_m3 * 0.2
+				},
+				{
+					pitch = pitch_spread_m3 * 0.3,
+					yaw = yaw_spread_m3 * 0.3
+				},
+				{
+					pitch = pitch_spread_m3 * 0.5,
+					yaw = yaw_spread_m3 * 0.5
+				},
+				{
+					pitch = pitch_spread_m3 * 0.4,
+					yaw = yaw_spread_m3 * 0.4
+				},
+				{
+					pitch = pitch_spread_m3 * 0.3,
+					yaw = yaw_spread_m3 * 0.3
+				},
+				{
+					pitch = pitch_spread_m3 * 0.2,
+					yaw = yaw_spread_m3 * 0.2
+				}
+			}
+		}
+	},
+	crouch_still = {
+		continuous_spread = {
+			min_yaw = 1.2,
+			min_pitch = 1.2
+		},
+		inherits = {
+			"ogryn_heavystubber_spread_spraynpray_braced_m3",
+			"still"
+		}
+	},
+	crouch_moving = {
+		inherits = {
+			"ogryn_heavystubber_spread_spraynpray_braced_m3",
 			"still"
 		}
 	}

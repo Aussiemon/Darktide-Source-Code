@@ -37,7 +37,7 @@ local state_machine_settings = {
 		blend_time = DEFAULT_BLEND_TIME
 	},
 	["content/characters/player/human/third_person/animations/pocketables"] = {
-		blend_time = DEFAULT_BLEND_TIME
+		blend_time = 0
 	},
 	["content/characters/player/ogryn/third_person/animations/pocketables"] = {
 		blend_time = DEFAULT_BLEND_TIME

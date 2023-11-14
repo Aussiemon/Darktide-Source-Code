@@ -18,16 +18,7 @@ WeaponSpecialWarpChargedAttacks.update = function (self, dt, t)
 	WeaponSpecial.update_active(t, self._tweak_data, self._inventory_slot_component, self._buff_extension, self._input_extension)
 end
 
-WeaponSpecialWarpChargedAttacks.process_hit = function (self, t, weapon, action_settings, num_hit_enemies, target_is_alive, target_unit, hit_position, attack_direction, abort_attack, optional_origin_slot)
-	if not target_is_alive then
-		return
-	end
-
-	self._inventory_slot_component.special_active = false
-	self._inventory_slot_component.num_special_activations = 0
-end
-
-WeaponSpecialWarpChargedAttacks.on_action_start = function (self, t)
+WeaponSpecialWarpChargedAttacks.on_special_activation = function (self, t)
 	local charge_template = self._weapon_extension:charge_template()
 
 	if charge_template then
@@ -35,8 +26,21 @@ WeaponSpecialWarpChargedAttacks.on_action_start = function (self, t)
 	end
 end
 
-WeaponSpecialWarpChargedAttacks.on_action_finish = function (self, t, num_hit_enemies)
+WeaponSpecialWarpChargedAttacks.on_sweep_action_start = function (self, t)
 	return
+end
+
+WeaponSpecialWarpChargedAttacks.on_sweep_action_finish = function (self, t, num_hit_enemies)
+	return
+end
+
+WeaponSpecialWarpChargedAttacks.process_hit = function (self, t, weapon, action_settings, num_hit_enemies, target_is_alive, target_unit, hit_position, attack_direction, abort_attack, optional_origin_slot)
+	if not target_is_alive then
+		return
+	end
+
+	self._inventory_slot_component.special_active = false
+	self._inventory_slot_component.num_special_activations = 0
 end
 
 WeaponSpecialWarpChargedAttacks.on_exit_damage_window = function (self, t, num_hit_enemies)

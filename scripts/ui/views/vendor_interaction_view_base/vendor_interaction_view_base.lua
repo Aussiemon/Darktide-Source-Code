@@ -8,6 +8,7 @@ local UIWidget = require("scripts/managers/ui/ui_widget")
 local Vo = require("scripts/utilities/vo")
 local WalletSettings = require("scripts/settings/wallet_settings")
 local TextUtilities = require("scripts/utilities/ui/text")
+local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local VendorInteractionViewBaseTestify = GameParameters.testify and require("scripts/ui/views/vendor_interaction_view_base/vendor_interaction_view_base_testify")
 local VendorInteractionViewBase = class("VendorInteractionViewBase", "TabbedMenuViewBase")
 
@@ -566,6 +567,14 @@ VendorInteractionViewBase.dialogue_system = function (self)
 	local dialogue_system = extension_manager and extension_manager:system_by_extension("DialogueActorExtension")
 
 	return dialogue_system
+end
+
+VendorInteractionViewBase.cb_switch_tab = function (self, index)
+	TabbedMenuViewBase.cb_switch_tab(self, index)
+
+	if not self._using_cursor_navigation then
+		self:_play_sound(UISoundEvents.tab_button_pressed)
+	end
 end
 
 VendorInteractionViewBase._cb_on_play_vo = function (self, id, event_name)

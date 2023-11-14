@@ -1285,7 +1285,7 @@ templates.ogryn_hitting_multiple_with_melee_grants_melee_damage_bonus = {
 	},
 	specific_proc_func = {
 		on_sweep_finish = function (params, template_data, template_context)
-			local hits = params.num_hit_units
+			local hits = params.is_heavy and params.num_hit_units or 0
 			template_data.hits = hits
 		end
 	},
@@ -1678,6 +1678,7 @@ templates.ogryn_ranged_stance_armor_pierce = {
 		return template_data.wielding_ranged
 	end
 }
+local fire_targets_hit = {}
 local burning_buff = "flamer_assault"
 templates.ogryn_ranged_stance_fire_shots = {
 	predicted = false,
@@ -1685,28 +1686,43 @@ templates.ogryn_ranged_stance_fire_shots = {
 	duration = 10,
 	class_name = "proc_buff",
 	proc_events = {
-		[proc_events.on_hit] = 1
+		[proc_events.on_hit] = 1,
+		[proc_events.on_shoot] = 1
 	},
-	check_proc_func = function (params, template_data, template_context, t)
-		return CheckProcFunctions.on_ranged_hit(params, template_data, template_context, t) and CheckProcFunctions.attacked_unit_is_minion(params, template_data, template_context, t)
+	start_func = function (template_data, template_context)
+		template_data.new_shot = true
 	end,
-	proc_func = function (params, template_data, template_context)
-		local attacked_unit = params.attacked_unit
+	specific_proc_func = {
+		on_hit = function (params, template_data, template_context, t)
+			if not CheckProcFunctions.on_ranged_hit(params, template_data, template_context, t) or not CheckProcFunctions.attacked_unit_is_minion(params, template_data, template_context, t) then
+				return
+			end
 
-		if ALIVE[attacked_unit] then
-			local buff_extension = ScriptUnit.has_extension(attacked_unit, "buff_system")
+			local attacked_unit = params.attacked_unit
 
-			if buff_extension then
-				local t = FixedFrame.get_latest_fixed_time()
-				local damage_profile = params.damage_profile
-				local num_stacks = damage_profile.ogryn_ranged_stance_fire_shots_override or talent_settings_1.combat_ability_1.num_stacks
+			if fire_targets_hit[attacked_unit] then
+				return
+			end
 
-				for i = 1, num_stacks do
-					buff_extension:add_internally_controlled_buff(burning_buff, t, "owner_unit", template_context.unit)
+			fire_targets_hit[attacked_unit] = true
+
+			if ALIVE[attacked_unit] then
+				local buff_extension = ScriptUnit.has_extension(attacked_unit, "buff_system")
+
+				if buff_extension then
+					local damage_profile = params.damage_profile
+					local num_stacks = damage_profile.ogryn_ranged_stance_fire_shots_override or talent_settings_1.combat_ability_1.num_stacks
+
+					for i = 1, num_stacks do
+						buff_extension:add_internally_controlled_buff(burning_buff, t, "owner_unit", template_context.unit)
+					end
 				end
 			end
+		end,
+		on_shoot = function (params, template_data, template_context)
+			table.clear(fire_targets_hit)
 		end
-	end
+	}
 }
 
 return templates

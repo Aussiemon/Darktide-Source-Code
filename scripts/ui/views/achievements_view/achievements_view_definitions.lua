@@ -1,5 +1,5 @@
+local InputDevice = require("scripts/managers/input/input_device")
 local ScrollbarPassTemplates = require("scripts/ui/pass_templates/scrollbar_pass_templates")
-local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local UIWorkspaceSettings = require("scripts/settings/ui/ui_workspace_settings")
 local ViewBlueprints = require("scripts/ui/views/achievements_view/achievements_view_blueprints")

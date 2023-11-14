@@ -99,7 +99,8 @@ PlayerUnitWeaponExtension.init = function (self, extension_init_context, unit, e
 	self:_init_action_components(unit_data)
 
 	self._unit_data_extension = unit_data
-	self._animation_extension = ScriptUnit.extension(unit, "animation_system")
+	local animation_extension = ScriptUnit.extension(unit, "animation_system")
+	self._animation_extension = animation_extension
 	local is_server = extension_init_data.is_server
 	self._is_server = is_server
 
@@ -120,6 +121,7 @@ PlayerUnitWeaponExtension.init = function (self, extension_init_context, unit, e
 		warp_charge_component = warp_charge_write_component,
 		unit_data_extension = self._unit_data_extension,
 		weapon_extension = self,
+		animation_extension = animation_extension,
 		weapon_tweak_templates_component = self._weapon_tweak_templates_component,
 		is_server = is_server,
 		world = world,
@@ -814,6 +816,7 @@ local temp_table = {}
 PlayerUnitWeaponExtension.condition_func_params = function (self, wielded_slot)
 	local weapon = self._weapons[wielded_slot]
 	local inventory_slot_component = weapon and weapon.inventory_slot_component
+	temp_table.unit = self._unit
 	temp_table.ability_extension = self._ability_extension
 	temp_table.health_extension = self._health_extension
 	temp_table.input_extension = self._input_extension
@@ -864,13 +867,13 @@ PlayerUnitWeaponExtension.update_weapon_actions = function (self, fixed_frame)
 end
 
 PlayerUnitWeaponExtension._update_weapon_special = function (self, weapon, dt, t)
-	local special_implementation = weapon.special_implementation
+	local weapon_special_implementation = weapon.weapon_special_implementation
 
-	if not special_implementation then
+	if not weapon_special_implementation then
 		return
 	end
 
-	special_implementation:update(dt, t)
+	weapon_special_implementation:update(dt, t)
 end
 
 PlayerUnitWeaponExtension._apply_buffs = function (self, buffs, buff_target, slot_name, inventory_slot_component, t, weapon_item)

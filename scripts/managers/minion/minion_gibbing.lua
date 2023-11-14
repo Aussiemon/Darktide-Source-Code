@@ -696,6 +696,7 @@ function _apply_ailment_material_effect(gib_unit, ailment_effect)
 	local custom_duration = 0
 	local custom_offset_time = 0
 
+	Unit.set_permutation_for_materials(gib_unit, "HAVE_BURN", true, include_children)
 	Ailment.play_ailment_effect_template(gib_unit, ailment_effect, include_children, custom_duration, custom_offset_time)
 end
 

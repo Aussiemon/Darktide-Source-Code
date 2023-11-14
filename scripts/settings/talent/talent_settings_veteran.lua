@@ -71,9 +71,9 @@ local talent_settings = {
 			ammo_reserve_capacity = 0.4
 		},
 		toughness_1 = {
-			toughness = 0.025,
+			toughness = 0.02,
 			duration = 10,
-			instant_toughness = 0.25
+			instant_toughness = 0.1
 		},
 		toughness_2 = {
 			toughness = 0.15,
@@ -176,7 +176,7 @@ local talent_settings = {
 			toughness_bonus = 1
 		},
 		toughness_3 = {
-			toughness = 0.025
+			toughness = 0.035
 		},
 		mixed_1 = {},
 		mixed_2 = {

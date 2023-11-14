@@ -319,8 +319,8 @@ WeaponSystem._update_perils_of_the_warp_elite_kills_achievement = function (self
 			local result = explosion_data.result
 			local stride = explosion_data.result_stride
 
-			for i = 1, num_hit_units do
-				local strided_i = (i - 1) * stride
+			for ii = 1, num_hit_units do
+				local strided_i = (ii - 1) * stride
 				local attack_result = result[strided_i + 1]
 
 				if attack_result == attack_results.died then
@@ -332,8 +332,10 @@ WeaponSystem._update_perils_of_the_warp_elite_kills_achievement = function (self
 				end
 			end
 
+			local player = achievement_data.player
+
 			if num_killed >= 1 then
-				Managers.achievements:trigger_event(account_id, achievement_data.character_id, "psyker_2_perils_of_the_warp_elite_kills_event")
+				Managers.achievements:unlock_achievement(player, "psyker_2_perils_of_the_warp_elite_kills")
 			end
 
 			perils_of_the_warp_elite_kills_achievement[account_id] = nil
@@ -368,10 +370,6 @@ WeaponSystem.give_ammo_carryover_percentages = function (self, unit, weapon_slot
 end
 
 WeaponSystem.queue_perils_of_the_warp_elite_kills_achievement = function (self, player, explosion_queue_index)
-	if not Managers.stats.can_record_stats() then
-		return
-	end
-
 	local difficulty = Managers.state.difficulty:get_difficulty()
 
 	if difficulty < 3 then
@@ -387,6 +385,7 @@ WeaponSystem.queue_perils_of_the_warp_elite_kills_achievement = function (self, 
 	self._perils_of_the_warp_elite_kills_achievement[account_id] = {
 		account_id = account_id,
 		character_id = player:character_id(),
+		player = player,
 		explosion_queue_index = explosion_queue_index
 	}
 end

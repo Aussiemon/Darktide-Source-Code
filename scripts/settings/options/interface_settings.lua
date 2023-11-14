@@ -191,10 +191,60 @@ local function construct_interface_settings_value_slider(template)
 	return OptionsUtilities.create_value_slider_template(params)
 end
 
+local function construct_interface_settings_dropdown(template)
+	local on_value_changed = template.on_value_changed
+	local id = template.id
+	local save_location = template.save_location
+
+	local function value_get_function()
+		return SettingsUtilities.get_account_settings(save_location, id)
+	end
+
+	local options = {}
+
+	for i = 1, #template.options do
+		local value = template.options[i]
+		options[#options + 1] = {
+			id = value.name,
+			value = value.name,
+			display_name = value.display_name
+		}
+	end
+
+	local function on_activated(value, template)
+		SettingsUtilities.verify_and_apply_changes(template, value)
+	end
+
+	local function on_changed(value, template)
+		SettingsUtilities.save_account_settings(save_location, id, value)
+
+		if on_value_changed then
+			on_value_changed(value)
+		end
+	end
+
+	local params = {
+		display_name = template.display_name,
+		get_function = value_get_function,
+		options = options,
+		on_activated = on_activated,
+		on_changed = on_changed,
+		indentation_level = template.indentation_level,
+		validation_function = template.validation_function,
+		id = template.id,
+		tooltip_text = template.tooltip_text,
+		disable_rules = template.disable_rules,
+		default_value = template.default_value
+	}
+
+	return params
+end
+
 local template_functions = {
 	boolean = construct_interface_settings_boolean,
 	percent_slider = construct_interface_settings_percent_slider,
-	value_slider = construct_interface_settings_value_slider
+	value_slider = construct_interface_settings_value_slider,
+	dropdown = construct_interface_settings_dropdown
 }
 local settings_definitions = {
 	{
@@ -382,6 +432,17 @@ local settings_definitions = {
 		widget_type = "boolean",
 		validation_function = function ()
 			return IS_WINDOWS
+		end
+	},
+	{
+		save_location = "interface_settings",
+		default_value = true,
+		display_name = "loc_interface_setting_show_group_buff_icon_in_categories",
+		id = "group_buff_icon_in_categories",
+		tooltip_text = "loc_interface_setting_show_group_buff_icon_in_categories_mouseover",
+		widget_type = "boolean",
+		on_value_changed = function (value)
+			return
 		end
 	}
 }

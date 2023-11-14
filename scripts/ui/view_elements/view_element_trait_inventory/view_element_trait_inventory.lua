@@ -351,9 +351,9 @@ ViewElementTraitInventory._handle_input = function (self, dt, t, input_service)
 		local old_rank = self._rank
 		local new_rank = old_rank
 
-		if input_service:get("navigate_secondary_left_pressed") then
+		if input_service:get("navigate_primary_left_pressed") then
 			new_rank = math.clamp(self._rank - 1, 1, RankSettings.max_trait_rank)
-		elseif input_service:get("navigate_secondary_right_pressed") then
+		elseif input_service:get("navigate_primary_right_pressed") then
 			new_rank = math.clamp(self._rank + 1, 1, RankSettings.max_trait_rank)
 		elseif input_service:get("next") and type(self._parent.remove_next_ingredient) == "function" then
 			self._parent:remove_next_ingredient()

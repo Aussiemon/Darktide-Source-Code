@@ -16,6 +16,22 @@ InputAliases.restore_default = function (self, alias)
 	end
 end
 
+InputAliases.restore_default_by_devices = function (self, specific_alias, device_types)
+	local default_aliases = self._default_aliases
+
+	for alias, alias_row in pairs(default_aliases) do
+		if not specific_alias or alias == specific_alias then
+			for i = 1, #alias_row do
+				local key_info = self:_get_keys_for_row(alias_row, i, device_types)
+
+				if key_info then
+					self:set_keys_for_alias(alias, i, device_types, key_info)
+				end
+			end
+		end
+	end
+end
+
 InputAliases.overrides = function (self)
 	local overrides = {}
 	local default_aliases = self._default_aliases
@@ -81,7 +97,11 @@ InputAliases.get_keys_for_alias = function (self, name, index, device_types)
 end
 
 InputAliases.get_default_keys_for_alias = function (self, name, index, device_types)
-	return self._get_keys_for_row(self._default_aliases[name], index, device_types)
+	return self:_get_keys_for_row(self._default_aliases[name], index, device_types)
+end
+
+InputAliases.get_keys_for_alias_row = function (self, alias_row_array, index, device_types)
+	return self:_get_keys_for_row(alias_row_array, index, device_types)
 end
 
 InputAliases._get_keys_for_row = function (self, alias_row, index, device_types)
@@ -101,6 +121,24 @@ InputAliases._get_keys_for_row = function (self, alias_row, index, device_types)
 			if found == index then
 				return key_info
 			end
+		end
+	end
+end
+
+InputAliases._get_key = function (self, element, index, device_types)
+	if not element then
+		return
+	end
+
+	local key_info = {}
+	local found = 0
+	key_info.main, key_info.enablers, key_info.disablers = InputUtils.split_key(element)
+
+	if table.contains(device_types, InputUtils.key_device_type(key_info.main)) then
+		found = found + 1
+
+		if found == index then
+			return key_info
 		end
 	end
 end
@@ -130,11 +168,15 @@ InputAliases.set_keys_for_alias = function (self, name, index, device_types, new
 		end
 	end
 
-	local value = InputUtils.make_string(new_key_info)
+	local value = new_key_info and InputUtils.make_string(new_key_info)
 
 	if col then
-		alias_row[col] = value
-	else
+		if alias_row[col] then
+			table.remove(alias_row, col)
+		end
+
+		table.insert(alias_row, col, value)
+	elseif value then
 		alias_row[#alias_row + 1] = value
 	end
 end

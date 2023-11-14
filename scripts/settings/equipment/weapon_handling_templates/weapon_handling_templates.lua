@@ -675,7 +675,7 @@ local weapon_handling_templates = {
 	},
 	ogryn_heavystubber_p1_m3_full_auto = {
 		fire_rate = {
-			fire_time = 0.22,
+			fire_time = 0,
 			auto_fire_time = 0.093
 		},
 		critical_strike = {
@@ -685,7 +685,7 @@ local weapon_handling_templates = {
 	},
 	ogryn_heavystubber_p1_m3_hip_fire = {
 		fire_rate = {
-			fire_time = 0.22,
+			fire_time = 0,
 			auto_fire_time = 0.093
 		},
 		critical_strike = {

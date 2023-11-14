@@ -6,6 +6,7 @@ local templates = {
 local basic_chaos_ogryn_bulwark_template = {
 	slots = {
 		slot_base_upperbody = {
+			use_outline = true,
 			items = {
 				"content/items/characters/minions/chaos_ogryn/attachments_base/torso_a",
 				"content/items/characters/minions/chaos_ogryn/attachments_base/torso_a_tattoo_01",
@@ -14,6 +15,7 @@ local basic_chaos_ogryn_bulwark_template = {
 			}
 		},
 		slot_base_lowerbody = {
+			use_outline = true,
 			items = {
 				"content/items/characters/minions/chaos_ogryn/attachments_base/lowerbody_a",
 				"content/items/characters/minions/chaos_ogryn/attachments_base/lowerbody_a_color_var_01",
@@ -22,6 +24,7 @@ local basic_chaos_ogryn_bulwark_template = {
 			}
 		},
 		slot_base_arms = {
+			use_outline = true,
 			items = {
 				"content/items/characters/minions/chaos_ogryn/attachments_base/arms_a",
 				"content/items/characters/minions/chaos_ogryn/attachments_base/arms_a_tattoo_01",
@@ -30,6 +33,7 @@ local basic_chaos_ogryn_bulwark_template = {
 			}
 		},
 		slot_headgear = {
+			use_outline = true,
 			items = {
 				"content/items/characters/minions/chaos_ogryn/attachments_gear/melee_head_attachment_02",
 				"content/items/characters/minions/chaos_ogryn/attachments_gear/melee_head_attachment_03",
@@ -37,26 +41,30 @@ local basic_chaos_ogryn_bulwark_template = {
 			}
 		},
 		slot_base_attachment = {
+			use_outline = true,
 			items = {
 				"content/items/characters/minions/chaos_ogryn/attachments_base/skin_attachment_01_b",
 				"content/items/characters/minions/generic_items/empty_minion_item"
 			}
 		},
 		slot_melee_weapon = {
-			drop_on_death = true,
+			use_outline = true,
 			is_weapon = true,
+			drop_on_death = true,
 			items = {
 				"content/items/weapons/minions/melee/chaos_ogryn_melee_weapon"
 			}
 		},
 		slot_shield = {
-			drop_on_death = true,
+			use_outline = true,
 			is_weapon = true,
+			drop_on_death = true,
 			items = {
 				"content/items/weapons/minions/shields/chaos_ogryn_bulwark_shield_01"
 			}
 		},
 		slot_head = {
+			use_outline = true,
 			items = {
 				"content/items/characters/minions/chaos_ogryn/attachments_base/head_b",
 				"content/items/characters/minions/chaos_ogryn/attachments_base/head_b_tattoo_01",
@@ -65,6 +73,7 @@ local basic_chaos_ogryn_bulwark_template = {
 			}
 		},
 		slot_gear_attachment = {
+			use_outline = true,
 			items = {
 				"content/items/characters/minions/chaos_ogryn/attachments_gear/melee_a"
 			}
@@ -100,6 +109,7 @@ default_4.gib_variations = {
 	"head_01"
 }
 default_4.slots.slot_head = {
+	use_outline = true,
 	items = {
 		"content/items/characters/minions/chaos_ogryn/attachments_base/head_a"
 	}
@@ -109,6 +119,7 @@ default_5.gib_variations = {
 	"head_01"
 }
 default_5.slots.slot_head = {
+	use_outline = true,
 	items = {
 		"content/items/characters/minions/chaos_ogryn/attachments_base/head_a_tattoo_01",
 		"content/items/characters/minions/chaos_ogryn/attachments_base/head_a_tattoo_03"
@@ -119,6 +130,7 @@ default_6.gib_variations = {
 	"head_01"
 }
 default_6.slots.slot_head = {
+	use_outline = true,
 	items = {
 		"content/items/characters/minions/chaos_ogryn/attachments_base/head_a_tattoo_02",
 		"content/items/characters/minions/chaos_ogryn/attachments_base/head_a_tattoo_03"
@@ -129,6 +141,7 @@ default_4.gib_variations = {
 	"var_01"
 }
 default_7.slots.slot_gear_attachment = {
+	use_outline = true,
 	items = {
 		"content/items/characters/minions/chaos_ogryn/attachments_gear/melee_a_var_01"
 	}
@@ -141,6 +154,7 @@ default_10.gib_variations = {
 	"head_01"
 }
 default_10.slots.slot_head = {
+	use_outline = true,
 	items = {
 		"content/items/characters/minions/chaos_ogryn/attachments_base/head_a"
 	}
@@ -151,6 +165,7 @@ default_11.gib_variations = {
 	"head_01"
 }
 default_11.slots.slot_head = {
+	use_outline = true,
 	items = {
 		"content/items/characters/minions/chaos_ogryn/attachments_base/head_a_tattoo_02",
 		"content/items/characters/minions/chaos_ogryn/attachments_base/head_a_tattoo_03"
@@ -162,6 +177,7 @@ default_12.gib_variations = {
 	"head_01"
 }
 default_12.slots.slot_head = {
+	use_outline = true,
 	items = {
 		"content/items/characters/minions/chaos_ogryn/attachments_base/head_a_tattoo_02",
 		"content/items/characters/minions/chaos_ogryn/attachments_base/head_a_tattoo_03"

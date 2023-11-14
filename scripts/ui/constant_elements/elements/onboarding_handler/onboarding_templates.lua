@@ -131,6 +131,12 @@ local templates = {
 			return
 		end,
 		on_event_triggered = function (self, interaction_unit)
+			if self.objective then
+				Log.warning("onboarding_templates", "[on_event_triggered] trying to start objective '%s' when it's already active", self.name)
+
+				return
+			end
+
 			local objective_name = self.name
 			local localization_key = "loc_objective_om_hub_01_goto_command_central_header"
 			local marker_units = {
@@ -171,6 +177,12 @@ local templates = {
 			return
 		end,
 		on_event_triggered = function (self, interaction_unit)
+			if self.objective then
+				Log.warning("onboarding_templates", "[on_event_triggered] trying to start objective '%s' when it's already active", self.name)
+
+				return
+			end
+
 			local objective_name = self.name
 			local localization_key = "loc_onboarding_hub_training_grounds"
 			local marker_units = {
@@ -283,6 +295,12 @@ local templates = {
 			return
 		end,
 		on_event_triggered = function (self, interaction_unit)
+			if self.objective then
+				Log.warning("onboarding_templates", "[on_event_triggered] trying to start objective '%s' when it's already active", self.name)
+
+				return
+			end
+
 			local objective_name = self.name
 			local localization_key = "loc_objective_om_hub_01_goto_cathedral_header"
 			local marker_units = {
@@ -381,6 +399,12 @@ local templates = {
 			return _is_in_hub() and Managers.narrative:can_complete_event("onboarding_step_mission_board_introduction")
 		end,
 		on_activation = function (self)
+			if self.objective then
+				Log.warning("onboarding_templates", "[on_event_triggered] trying to start objective '%s' when it's already active", self.name)
+
+				return
+			end
+
 			local objective_name = self.name
 			local localization_key = "loc_objective_hub_mission_board_header"
 			local interaction_type = "mission_board"
@@ -444,6 +468,12 @@ local templates = {
 			return _is_in_hub() and Managers.narrative:can_complete_event("level_unlock_contract_store_visited")
 		end,
 		on_activation = function (self)
+			if self.objective then
+				Log.warning("onboarding_templates", "[on_event_triggered] trying to start objective '%s' when it's already active", self.name)
+
+				return
+			end
+
 			local objective_name = self.name
 			local localization_key = "loc_objective_hub_contracts"
 			local interaction_type = "contracts"
@@ -510,6 +540,12 @@ local templates = {
 			return _is_in_hub() and Managers.narrative:can_complete_event("level_unlock_credits_store_visited")
 		end,
 		on_activation = function (self)
+			if self.objective then
+				Log.warning("onboarding_templates", "[on_event_triggered] trying to start objective '%s' when it's already active", self.name)
+
+				return
+			end
+
 			local objective_name = self.name
 			local localization_key = "loc_objective_hub_weapon_shop"
 			local interaction_type = "vendor"
@@ -576,6 +612,12 @@ local templates = {
 			return _is_in_hub() and Managers.narrative:can_complete_event("level_unlock_cosmetic_store_visited")
 		end,
 		on_activation = function (self)
+			if self.objective then
+				Log.warning("onboarding_templates", "[on_event_triggered] trying to start objective '%s' when it's already active", self.name)
+
+				return
+			end
+
 			local objective_name = self.name
 			local localization_key = "loc_objective_hub_cosmetics_shop"
 			local interaction_type = "cosmetics_vendor"
@@ -642,6 +684,12 @@ local templates = {
 			return _is_in_hub() and Managers.narrative:can_complete_event("level_unlock_crafting_station_visited")
 		end,
 		on_activation = function (self)
+			if self.objective then
+				Log.warning("onboarding_templates", "[on_event_triggered] trying to start objective '%s' when it's already active", self.name)
+
+				return
+			end
+
 			local objective_name = self.name
 			local localization_key = "loc_objective_hub_crafting"
 			local interaction_type = "crafting"
@@ -879,6 +927,171 @@ local templates = {
 			Managers.event:trigger("event_player_hide_onboarding_message", player)
 		end,
 		sync_on_events = {}
+	},
+	{
+		name = "season_1_intro_popup",
+		valid_states = {
+			"GameplayStateRun"
+		},
+		validation_func = function (self)
+			return _is_in_hub() and Managers.narrative:can_complete_event("s1_intro_popup_viewed")
+		end,
+		on_activation = function (self)
+			Managers.narrative:complete_event("s1_intro_popup_viewed")
+
+			local slide_data = {
+				starting_slide_index = 1,
+				slides = {
+					{
+						id = "id_test",
+						local_slide = true,
+						local_image = "content/ui/textures/event_news/traitor_curse_side_art",
+						content = {
+							{
+								widget_type = "header",
+								text = Localize("loc_news_traitor_curse_header_1")
+							},
+							{
+								widget_type = "sub_header",
+								text = Localize("loc_news_traitor_curse_subheader_1")
+							},
+							{
+								widget_type = "dynamic_spacing",
+								size = {
+									500,
+									20
+								}
+							},
+							{
+								widget_type = "body",
+								text = Localize("loc_news_traitor_curse_text_1")
+							},
+							{
+								widget_type = "dynamic_spacing",
+								size = {
+									500,
+									40
+								}
+							},
+							{
+								image = "content/ui/materials/event_news/traitor_curse_news_image_1",
+								widget_type = "image",
+								size = {
+									700,
+									130
+								},
+								color = {
+									255,
+									255,
+									255,
+									255
+								}
+							},
+							{
+								widget_type = "dynamic_spacing",
+								size = {
+									500,
+									10
+								}
+							},
+							{
+								widget_type = "sub_header",
+								text = Localize("loc_news_traitor_curse_subheader_2")
+							},
+							{
+								widget_type = "body",
+								text = Localize("loc_news_traitor_curse_text_2")
+							},
+							{
+								widget_type = "dynamic_spacing",
+								size = {
+									700,
+									40
+								}
+							},
+							{
+								image = "content/ui/materials/event_news/traitor_curse_news_image_4",
+								widget_type = "image",
+								size = {
+									700,
+									130
+								},
+								color = {
+									255,
+									255,
+									255,
+									255
+								}
+							},
+							{
+								widget_type = "dynamic_spacing",
+								size = {
+									500,
+									10
+								}
+							},
+							{
+								widget_type = "sub_header",
+								text = Localize("loc_news_traitor_curse_subheader_5")
+							},
+							{
+								widget_type = "body",
+								text = Localize("loc_news_traitor_curse_text_5")
+							},
+							{
+								widget_type = "dynamic_spacing",
+								size = {
+									700,
+									40
+								}
+							},
+							{
+								image = "content/ui/materials/event_news/traitor_curse_news_image_3",
+								widget_type = "image",
+								size = {
+									700,
+									130
+								},
+								color = {
+									255,
+									255,
+									255,
+									255
+								}
+							},
+							{
+								widget_type = "dynamic_spacing",
+								size = {
+									500,
+									10
+								}
+							},
+							{
+								widget_type = "sub_header",
+								text = Localize("loc_news_traitor_curse_subheader_4")
+							},
+							{
+								widget_type = "body",
+								text = Localize("loc_news_traitor_curse_text_4")
+							},
+							{
+								widget_type = "dynamic_spacing",
+								size = {
+									700,
+									20
+								}
+							}
+						}
+					}
+				}
+			}
+
+			Managers.ui:open_view("news_view", nil, nil, nil, nil, {
+				on_startup = true,
+				content_package = "packages/ui/event_news/event_news",
+				slide_data = slide_data
+			})
+		end
 	}
 }
 

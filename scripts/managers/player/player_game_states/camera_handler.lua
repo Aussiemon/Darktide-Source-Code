@@ -129,6 +129,17 @@ CameraHandler.update = function (self, dt, t, player_orientation, input)
 	return new_unit
 end
 
+CameraHandler.remove_all_moods = function (self, unit)
+	local mood_extension = ScriptUnit.has_extension(unit, "mood_system")
+
+	if mood_extension then
+		local moods_data = mood_extension:moods_data()
+
+		self._mood_handler:remove_all_moods(moods_data)
+		mood_extension:remove_all_moods()
+	end
+end
+
 CameraHandler._update_camera_manager = function (self, dt, t, player_orientation)
 	local player = self._player
 	local camera_manager = Managers.state.camera

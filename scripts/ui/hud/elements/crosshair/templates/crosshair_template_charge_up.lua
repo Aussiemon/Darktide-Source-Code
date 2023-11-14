@@ -316,7 +316,7 @@ template.on_enter = function (widget, template, data)
 	return
 end
 
-template.update_function = function (parent, ui_renderer, widget, template, dt, t)
+template.update_function = function (parent, ui_renderer, widget, crosshair_template, crosshair_settings, dt, t)
 	local content = widget.content
 	local style = widget.style
 	local hit_progress, hit_color = parent:hit_indicator()

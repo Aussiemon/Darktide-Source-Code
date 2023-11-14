@@ -69,14 +69,6 @@ hit_scan_templates.laspistol_killshot = {
 		}
 	}
 }
-hit_scan_templates.stub_pistol_killshot = {
-	range = 75,
-	damage = {
-		impact = {
-			damage_profile = DamageProfileTemplates.default_stub_pistol_killshot
-		}
-	}
-}
 hit_scan_templates.lasgun_bfg = {
 	range = 75,
 	damage = {

@@ -31,9 +31,9 @@ HudElementPlayerSlotItemAbility.init = function (self, parent, draw_layer, start
 	self:_play_sound(UISoundEvents.ability_off_cooldown)
 end
 
-HudElementPlayerSlotItemAbility.destroy = function (self)
+HudElementPlayerSlotItemAbility.destroy = function (self, ui_renderer)
 	self:_unregister_events()
-	HudElementPlayerSlotItemAbility.super.destroy(self)
+	HudElementPlayerSlotItemAbility.super.destroy(self, ui_renderer)
 end
 
 HudElementPlayerSlotItemAbility._update_input = function (self)

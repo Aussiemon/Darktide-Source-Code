@@ -122,8 +122,6 @@ PlayerUnitGadgetExtension._add_gadget_buff = function (self, master_item_id, ler
 		buff_data = {
 			meta_buff_index = index
 		}
-
-		Log.info("PlayerUnitGadgetExtension", "Added gadget meta trait name:%s lerp_value:%s", trait_name, lerp_value)
 	else
 		local buff_extension = self._buff_extension
 		local client_tried_adding_rpc_buff, local_index, component_index = buff_extension:add_externally_controlled_buff(trait_name, t, "buff_lerp_value", lerp_value, "item_slot_name", slot_name)
@@ -134,8 +132,6 @@ PlayerUnitGadgetExtension._add_gadget_buff = function (self, master_item_id, ler
 				component_index = component_index
 			}
 		end
-
-		Log.info("PlayerUnitGadgetExtension", "Added gadget trait name:%s lerp_value:%s", trait_name, lerp_value)
 	end
 
 	return buff_data

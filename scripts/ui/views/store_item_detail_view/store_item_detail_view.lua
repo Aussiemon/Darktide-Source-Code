@@ -2090,6 +2090,7 @@ StoreItemDetailView._setup_weapon_preview = function (self)
 		local reference_name = "weapon_preview"
 		local layer = 1
 		self._weapon_preview = self:_add_element(ViewElementInventoryWeaponPreview, reference_name, layer, {
+			ignore_blur = true,
 			draw_background = false
 		})
 

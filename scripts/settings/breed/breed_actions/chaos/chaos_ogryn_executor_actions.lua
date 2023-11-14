@@ -727,6 +727,23 @@ local action_data = {
 					"stagger_bwd_sticky_2",
 					"stagger_bwd_sticky_3"
 				}
+			},
+			blinding = {
+				fwd = {
+					"stagger_fwd_light"
+				},
+				bwd = {
+					"stagger_bwd_light"
+				},
+				left = {
+					"stagger_left_light"
+				},
+				right = {
+					"stagger_right_light"
+				},
+				dwn = {
+					"stun_down"
+				}
 			}
 		}
 	},

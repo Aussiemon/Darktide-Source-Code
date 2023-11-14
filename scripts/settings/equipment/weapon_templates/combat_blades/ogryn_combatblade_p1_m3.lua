@@ -142,7 +142,7 @@ weapon_template.actions = {
 				action_name = "action_unwield"
 			},
 			light_attack = {
-				action_name = "action_right_light"
+				action_name = "action_light_1"
 			},
 			heavy_attack = {
 				action_name = "action_right_heavy",
@@ -204,7 +204,7 @@ weapon_template.actions = {
 				action_name = "action_unwield"
 			},
 			light_attack = {
-				action_name = "action_left_light_3"
+				action_name = "action_light_3"
 			},
 			heavy_attack = {
 				action_name = "action_right_heavy",
@@ -218,7 +218,7 @@ weapon_template.actions = {
 			return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
 		end
 	},
-	action_left_light_3 = {
+	action_light_3 = {
 		damage_window_start = 0.3,
 		hit_armor_anim = "attack_hit_shield",
 		kind = "sweep",
@@ -457,7 +457,7 @@ weapon_template.actions = {
 				action_name = "action_unwield"
 			},
 			light_attack = {
-				action_name = "action_right_light"
+				action_name = "action_light_1"
 			},
 			heavy_attack = {
 				action_name = "action_left_heavy",
@@ -523,7 +523,7 @@ weapon_template.actions = {
 				action_name = "action_unwield"
 			},
 			light_attack = {
-				action_name = "action_left_light_3"
+				action_name = "action_light_3"
 			},
 			heavy_attack = {
 				action_name = "action_left_heavy",
@@ -537,7 +537,7 @@ weapon_template.actions = {
 			return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
 		end
 	},
-	action_right_light = {
+	action_light_1 = {
 		damage_window_start = 0.2,
 		weapon_handling_template = "time_scale_1",
 		range_mod = 1.25,
@@ -773,7 +773,7 @@ weapon_template.actions = {
 				action_name = "action_unwield"
 			},
 			light_attack = {
-				action_name = "action_left_light_2"
+				action_name = "action_light_2"
 			},
 			heavy_attack = {
 				action_name = "action_right_heavy",
@@ -787,7 +787,7 @@ weapon_template.actions = {
 			return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
 		end
 	},
-	action_left_light_2 = {
+	action_light_2 = {
 		damage_window_start = 0.2,
 		weapon_handling_template = "time_scale_1_1",
 		range_mod = 1.25,
@@ -1194,10 +1194,12 @@ weapon_template.actions = {
 		start_input = "inspect_start",
 		anim_end_event = "inspect_end",
 		kind = "inspect",
-		crosshair_type = "inspect",
 		anim_event = "inspect_start",
 		stop_input = "inspect_stop",
-		total_time = math.huge
+		total_time = math.huge,
+		crosshair = {
+			crosshair_type = "inspect"
+		}
 	}
 }
 
@@ -1221,7 +1223,9 @@ weapon_template.fx_sources = {
 	_block = "fx_block",
 	_sweep = "fx_sweep"
 }
-weapon_template.crosshair_type = "dot"
+weapon_template.crosshair = {
+	crosshair_type = "dot"
+}
 weapon_template.hit_marker_type = "center"
 weapon_template.keywords = {
 	"melee",
@@ -1262,10 +1266,24 @@ weapon_template.base_stats = {
 					}
 				}
 			},
-			action_right_light = {
-				damage_trait_templates.default_melee_dps_stat
+			action_light_1 = {
+				damage_trait_templates.default_melee_dps_stat,
+				display_data = {
+					prefix = "loc_weapon_action_title_light",
+					display_stats = {
+						targets = {
+							{
+								power_distribution = {
+									attack = {
+										display_name = "loc_weapon_stats_display_base_damage"
+									}
+								}
+							}
+						}
+					}
+				}
 			},
-			action_left_light_2 = {
+			action_light_2 = {
 				damage_trait_templates.default_melee_dps_stat
 			},
 			action_right_light_pushfollow = {
@@ -1274,20 +1292,8 @@ weapon_template.base_stats = {
 			action_special_uppercut = {
 				damage_trait_templates.default_melee_dps_stat
 			},
-			action_left_light_3 = {
-				damage_trait_templates.default_armor_pierce_stat,
-				display_data = {
-					prefix = "loc_weapon_action_title_light",
-					display_stats = {
-						targets = {
-							{
-								armor_damage_modifier = {
-									attack = WeaponBarUIDescriptionTemplates.armor_damage_modifiers
-								}
-							}
-						}
-					}
-				}
+			action_light_3 = {
+				damage_trait_templates.default_melee_dps_stat
 			}
 		}
 	},
@@ -1311,24 +1317,12 @@ weapon_template.base_stats = {
 				}
 			},
 			action_right_heavy = {
-				damage_trait_templates.default_armor_pierce_stat,
-				display_data = {
-					prefix = "loc_weapon_action_title_light",
-					display_stats = {
-						targets = {
-							{
-								armor_damage_modifier = {
-									attack = WeaponBarUIDescriptionTemplates.armor_damage_modifiers
-								}
-							}
-						}
-					}
-				}
-			},
-			action_right_light = {
 				damage_trait_templates.default_armor_pierce_stat
 			},
-			action_left_light_2 = {
+			action_light_1 = {
+				damage_trait_templates.default_armor_pierce_stat
+			},
+			action_light_2 = {
 				damage_trait_templates.default_armor_pierce_stat
 			},
 			action_right_light_pushfollow = {
@@ -1337,7 +1331,7 @@ weapon_template.base_stats = {
 			action_special_uppercut = {
 				damage_trait_templates.default_armor_pierce_stat
 			},
-			action_left_light_3 = {
+			action_light_3 = {
 				damage_trait_templates.default_armor_pierce_stat,
 				display_data = {
 					prefix = "loc_weapon_action_title_light",
@@ -1370,29 +1364,23 @@ weapon_template.base_stats = {
 					}
 				}
 			},
-			action_right_light = {
-				damage_trait_templates.ogryn_combatblade_p1_m1_cleave_stat
+			action_light_1 = {
+				damage_trait_templates.ogryn_combatblade_p1_m1_cleave_stat,
+				display_data = {
+					prefix = "loc_weapon_action_title_light",
+					display_stats = {
+						__all_basic_stats = true
+					}
+				}
 			},
-			action_left_light_2 = {
+			action_light_2 = {
 				damage_trait_templates.ogryn_combatblade_p1_m1_cleave_stat
 			},
 			action_right_light_pushfollow = {
 				damage_trait_templates.ogryn_combatblade_p1_m1_cleave_stat
 			},
-			action_left_light_3 = {
-				damage_trait_templates.default_armor_pierce_stat,
-				display_data = {
-					prefix = "loc_weapon_action_title_light",
-					display_stats = {
-						targets = {
-							{
-								armor_damage_modifier = {
-									attack = WeaponBarUIDescriptionTemplates.armor_damage_modifiers
-								}
-							}
-						}
-					}
-				}
+			action_light_3 = {
+				damage_trait_templates.ogryn_combatblade_p1_m1_cleave_stat
 			}
 		}
 	},
@@ -1412,10 +1400,16 @@ weapon_template.base_stats = {
 					}
 				}
 			},
-			action_right_light = {
-				damage_trait_templates.default_first_target_stat
+			action_light_1 = {
+				damage_trait_templates.default_first_target_stat,
+				display_data = {
+					prefix = "loc_weapon_action_title_light",
+					display_stats = {
+						__all_basic_stats = true
+					}
+				}
 			},
-			action_left_light_2 = {
+			action_light_2 = {
 				damage_trait_templates.default_first_target_stat
 			},
 			action_right_light_pushfollow = {
@@ -1424,20 +1418,8 @@ weapon_template.base_stats = {
 			action_special_uppercut = {
 				damage_trait_templates.default_first_target_stat
 			},
-			action_left_light_3 = {
-				damage_trait_templates.default_armor_pierce_stat,
-				display_data = {
-					prefix = "loc_weapon_action_title_light",
-					display_stats = {
-						targets = {
-							{
-								armor_damage_modifier = {
-									attack = WeaponBarUIDescriptionTemplates.armor_damage_modifiers
-								}
-							}
-						}
-					}
-				}
+			action_light_3 = {
+				damage_trait_templates.default_first_target_stat
 			}
 		}
 	},

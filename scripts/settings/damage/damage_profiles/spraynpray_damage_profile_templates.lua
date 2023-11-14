@@ -31,8 +31,7 @@ damage_templates.default_spraynpray = {
 				[armor_types.berserker] = 0.5,
 				[armor_types.super_armor] = 0,
 				[armor_types.disgustingly_resilient] = 0.75,
-				[armor_types.void_shield] = 0.75,
-				[armor_types.prop_armor] = 0.55
+				[armor_types.void_shield] = 0.75
 			},
 			impact = {
 				[armor_types.unarmored] = 1,
@@ -42,8 +41,7 @@ damage_templates.default_spraynpray = {
 				[armor_types.berserker] = 0.5,
 				[armor_types.super_armor] = 0,
 				[armor_types.disgustingly_resilient] = 0.25,
-				[armor_types.void_shield] = 0.25,
-				[armor_types.prop_armor] = 0.25
+				[armor_types.void_shield] = 0.25
 			}
 		},
 		far = {
@@ -55,8 +53,7 @@ damage_templates.default_spraynpray = {
 				[armor_types.berserker] = 0.5,
 				[armor_types.super_armor] = 0,
 				[armor_types.disgustingly_resilient] = 0.55,
-				[armor_types.void_shield] = 0.55,
-				[armor_types.prop_armor] = 0.55
+				[armor_types.void_shield] = 0.55
 			},
 			impact = {
 				[armor_types.unarmored] = 1,
@@ -66,8 +63,7 @@ damage_templates.default_spraynpray = {
 				[armor_types.berserker] = 0.5,
 				[armor_types.super_armor] = 0,
 				[armor_types.disgustingly_resilient] = 0.25,
-				[armor_types.void_shield] = 0.25,
-				[armor_types.prop_armor] = 2
+				[armor_types.void_shield] = 0.25
 			}
 		}
 	},
@@ -109,8 +105,7 @@ damage_templates.autogun_snp = {
 				[armor_types.berserker] = 0.5,
 				[armor_types.super_armor] = 0,
 				[armor_types.disgustingly_resilient] = 0.5,
-				[armor_types.void_shield] = 0.5,
-				[armor_types.prop_armor] = 0.5
+				[armor_types.void_shield] = 0.5
 			},
 			impact = {
 				[armor_types.unarmored] = 1,
@@ -120,8 +115,7 @@ damage_templates.autogun_snp = {
 				[armor_types.berserker] = 0.5,
 				[armor_types.super_armor] = 0,
 				[armor_types.disgustingly_resilient] = 1,
-				[armor_types.void_shield] = 1,
-				[armor_types.prop_armor] = 1
+				[armor_types.void_shield] = 1
 			}
 		},
 		far = {
@@ -133,8 +127,7 @@ damage_templates.autogun_snp = {
 				[armor_types.berserker] = 0.5,
 				[armor_types.super_armor] = 0,
 				[armor_types.disgustingly_resilient] = 0.5,
-				[armor_types.void_shield] = 0.5,
-				[armor_types.prop_armor] = 0.5
+				[armor_types.void_shield] = 0.5
 			},
 			impact = {
 				[armor_types.unarmored] = 1,
@@ -144,8 +137,7 @@ damage_templates.autogun_snp = {
 				[armor_types.berserker] = 0.5,
 				[armor_types.super_armor] = 0,
 				[armor_types.disgustingly_resilient] = 1,
-				[armor_types.void_shield] = 1,
-				[armor_types.prop_armor] = 1
+				[armor_types.void_shield] = 1
 			}
 		}
 	},
@@ -187,8 +179,7 @@ damage_templates.rippergun_spraynpray = {
 				[armor_types.berserker] = 0.9,
 				[armor_types.super_armor] = 0,
 				[armor_types.disgustingly_resilient] = 1.5,
-				[armor_types.void_shield] = 1.5,
-				[armor_types.prop_armor] = 0.75
+				[armor_types.void_shield] = 1.5
 			},
 			impact = {
 				[armor_types.unarmored] = 2,
@@ -198,8 +189,7 @@ damage_templates.rippergun_spraynpray = {
 				[armor_types.berserker] = 2,
 				[armor_types.super_armor] = 0,
 				[armor_types.disgustingly_resilient] = 2,
-				[armor_types.void_shield] = 2,
-				[armor_types.prop_armor] = 3
+				[armor_types.void_shield] = 2
 			}
 		},
 		far = {
@@ -211,9 +201,7 @@ damage_templates.rippergun_spraynpray = {
 				[armor_types.berserker] = 0.2,
 				[armor_types.super_armor] = 0,
 				[armor_types.disgustingly_resilient] = 0.6,
-				[armor_types.void_shield] = 0.6,
-				[armor_types.prop_armor] = 0.25,
-				[armor_types.prop_armor] = 0.25
+				[armor_types.void_shield] = 0.6
 			},
 			impact = {
 				[armor_types.unarmored] = 1,
@@ -223,9 +211,7 @@ damage_templates.rippergun_spraynpray = {
 				[armor_types.berserker] = 0.5,
 				[armor_types.super_armor] = 0,
 				[armor_types.disgustingly_resilient] = 1.5,
-				[armor_types.void_shield] = 1.5,
-				[armor_types.prop_armor] = 1.5,
-				[armor_types.prop_armor] = 0.5
+				[armor_types.void_shield] = 1.5
 			}
 		}
 	},

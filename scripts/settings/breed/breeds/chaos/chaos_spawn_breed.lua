@@ -52,7 +52,7 @@ local breed_data = {
 	player_locomotion_constrain_radius = 1.5,
 	activate_slot_system_on_spawn = true,
 	smart_tag_target_type = "breed",
-	explosion_power_multiplier = 3,
+	explosion_power_multiplier = 2,
 	base_unit = "content/characters/enemy/chaos_spawn/third_person/base",
 	name = breed_name,
 	breed_type = breed_types.minion,
@@ -431,6 +431,7 @@ local breed_data = {
 			[hit_zone_names.center_mass] = 0.5
 		}
 	},
+	outline_config = {},
 	blackboard_component_config = BreedBlackboardComponentTemplates.chaos_spawn
 }
 

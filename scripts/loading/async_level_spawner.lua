@@ -50,14 +50,6 @@ AsyncLevelSpawner.setup_world = function (world_name, parameters)
 		Application.ENABLE_VOLUMETRICS,
 		Application.ENABLE_RAY_TRACING
 	}
-
-	if APPLICATION_SETTINGS.use_apex_cloth then
-		flags[#flags + 1] = Application.APEX_LOD_RESOURCE_BUDGET
-		flags[#flags + 1] = APPLICATION_SETTINGS.apex_lod_resource_budget
-	else
-		flags[#flags + 1] = Application.DISABLE_APEX_CLOTH
-	end
-
 	local world_manager = Managers.world
 	local world = world_manager:create_world(world_name, parameters, unpack(flags))
 

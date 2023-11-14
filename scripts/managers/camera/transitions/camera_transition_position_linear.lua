@@ -14,6 +14,14 @@ CameraTransitionPositionLinear.init = function (self, node_1, node_2, duration, 
 	self._transition_func = settings.transition_func
 end
 
+CameraTransitionPositionLinear.use_collision = function (self)
+	return self._node_1:use_collision()
+end
+
+CameraTransitionPositionLinear.safe_position_offset = function (self)
+	return self._node_1:safe_position_offset()
+end
+
 CameraTransitionPositionLinear.update = function (self, dt, position, update_time)
 	CameraTransitionBase.update(self, dt, update_time)
 

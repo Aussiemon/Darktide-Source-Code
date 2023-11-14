@@ -36,6 +36,7 @@ local input_handler_settings = {
 		"wield_4",
 		"weapon_reload",
 		"interact_pressed",
+		"interact_inspect_pressed",
 		"combat_ability_pressed",
 		"combat_ability_release",
 		"grenade_ability_pressed",

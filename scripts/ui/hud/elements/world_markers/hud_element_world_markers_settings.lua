@@ -15,6 +15,7 @@ local hud_element_world_markers_settings = {
 		"scripts/ui/hud/elements/world_markers/templates/world_marker_template_location_threat",
 		"scripts/ui/hud/elements/world_markers/templates/world_marker_template_location_attention",
 		"scripts/ui/hud/elements/world_markers/templates/world_marker_template_unit_threat",
+		"scripts/ui/hud/elements/world_markers/templates/world_marker_template_unit_threat_veteran",
 		"scripts/ui/hud/elements/world_markers/templates/world_marker_template_player_assistance",
 		"scripts/ui/hud/elements/world_markers/templates/world_marker_template_training_grounds"
 	}

@@ -3,62 +3,6 @@ local InputDevice = require("scripts/managers/input/input_device")
 local InputManagerTestify = GameParameters.testify and require("scripts/managers/input/input_manager_testify")
 local InputService = require("scripts/managers/input/input_service")
 local InputUtils = require("scripts/managers/input/input_utils")
-local DefaultSettings = {}
-
-table.insert(DefaultSettings, require("scripts/settings/input/default_debug_input_settings"))
-table.insert(DefaultSettings, require("scripts/settings/input/default_free_flight_input_settings"))
-table.insert(DefaultSettings, require("scripts/settings/input/default_ingame_input_settings"))
-table.insert(DefaultSettings, require("scripts/settings/input/default_imgui_input_settings"))
-table.insert(DefaultSettings, require("scripts/settings/input/default_view_input_settings"))
-
-local AdvancedSettings = {}
-
-table.insert(AdvancedSettings, require("scripts/settings/input/default_debug_input_settings"))
-table.insert(AdvancedSettings, require("scripts/settings/input/default_free_flight_input_settings"))
-table.insert(AdvancedSettings, require("scripts/settings/input/advanced_ingame_input_settings"))
-table.insert(AdvancedSettings, require("scripts/settings/input/default_imgui_input_settings"))
-table.insert(AdvancedSettings, require("scripts/settings/input/default_view_input_settings"))
-
-local V2Settings = {}
-
-table.insert(V2Settings, require("scripts/settings/input/default_debug_input_settings"))
-table.insert(V2Settings, require("scripts/settings/input/default_free_flight_input_settings"))
-table.insert(V2Settings, require("scripts/settings/input/v2_ingame_input_settings"))
-table.insert(V2Settings, require("scripts/settings/input/default_imgui_input_settings"))
-table.insert(V2Settings, require("scripts/settings/input/default_view_input_settings"))
-
-local BlitzFocus = {}
-
-table.insert(BlitzFocus, require("scripts/settings/input/default_debug_input_settings"))
-table.insert(BlitzFocus, require("scripts/settings/input/default_free_flight_input_settings"))
-table.insert(BlitzFocus, require("scripts/settings/input/blitz_focus_ingame_input_settings"))
-table.insert(BlitzFocus, require("scripts/settings/input/default_imgui_input_settings"))
-table.insert(BlitzFocus, require("scripts/settings/input/default_view_input_settings"))
-
-local TriggerDodgerBumperAttacker = {}
-
-table.insert(TriggerDodgerBumperAttacker, require("scripts/settings/input/default_debug_input_settings"))
-table.insert(TriggerDodgerBumperAttacker, require("scripts/settings/input/default_free_flight_input_settings"))
-table.insert(TriggerDodgerBumperAttacker, require("scripts/settings/input/trigger_dodger_bumper_attacker_ingame_input_settings"))
-table.insert(TriggerDodgerBumperAttacker, require("scripts/settings/input/default_imgui_input_settings"))
-table.insert(TriggerDodgerBumperAttacker, require("scripts/settings/input/default_view_input_settings"))
-
-local BumperAttackerBlocker = {}
-
-table.insert(BumperAttackerBlocker, require("scripts/settings/input/default_debug_input_settings"))
-table.insert(BumperAttackerBlocker, require("scripts/settings/input/default_free_flight_input_settings"))
-table.insert(BumperAttackerBlocker, require("scripts/settings/input/bumper_attack_and_block_input_settings"))
-table.insert(BumperAttackerBlocker, require("scripts/settings/input/default_imgui_input_settings"))
-table.insert(BumperAttackerBlocker, require("scripts/settings/input/default_view_input_settings"))
-
-local TomsSettings = {}
-
-table.insert(TomsSettings, require("scripts/settings/input/default_debug_input_settings"))
-table.insert(TomsSettings, require("scripts/settings/input/default_free_flight_input_settings"))
-table.insert(TomsSettings, require("scripts/settings/input/toms_ingame_input_settings"))
-table.insert(TomsSettings, require("scripts/settings/input/default_imgui_input_settings"))
-table.insert(TomsSettings, require("scripts/settings/input/default_view_input_settings"))
-
 local InputManager = class("InputManager")
 InputManager.DEBUG_TAG = "Input Manager"
 InputManager.SELECTION_LOGIC = table.enum("fixed", "latest", "combined")
@@ -71,43 +15,6 @@ InputManager.init = function (self)
 	self._all_input_devices = {}
 	self._active_input_devices = {}
 	self._used_input_devices = {}
-	self._available_layouts = {
-		default = {
-			sort_order = 1,
-			display_name = "loc_setting_controller_layout_default",
-			settings = DefaultSettings
-		},
-		advanced = {
-			sort_order = 2,
-			display_name = "loc_setting_controller_layout_advanced_new",
-			settings = AdvancedSettings
-		},
-		BlitzFocus = {
-			sort_order = 4,
-			display_name = "loc_setting_controller_layout_blitz_focus",
-			settings = BlitzFocus
-		},
-		BumperAttackerBlocker = {
-			sort_order = 5,
-			display_name = "loc_setting_controller_layout_bumper_attacker",
-			settings = BumperAttackerBlocker
-		},
-		TriggerDodgerBumperAttacker = {
-			sort_order = 6,
-			display_name = "loc_setting_controller_layout_bumper_attacker_dodger",
-			settings = TriggerDodgerBumperAttacker
-		},
-		v2 = {
-			sort_order = 7,
-			display_name = "loc_setting_controller_layout_v2",
-			settings = V2Settings
-		},
-		toms = {
-			sort_order = 3,
-			display_name = "loc_setting_controller_layout_toms",
-			settings = TomsSettings
-		}
-	}
 	self._input_services = {}
 	self._input_settings = {}
 	self._aliases = {}
@@ -133,10 +40,6 @@ InputManager.init = function (self)
 	event_manager:register(self, "event_player_authenticated", "_event_player_authenticated")
 
 	self._use_last_pressed = true
-
-	for _, default_setting in ipairs(DefaultSettings) do
-		self:add_setting(default_setting.service_type, default_setting.aliases, default_setting.settings, default_setting.filters, default_setting.default_devices)
-	end
 
 	if not DEDICATED_SERVER and (IS_WINDOWS or IS_XBS) then
 		self._cursor_stack_data = {
@@ -703,24 +606,6 @@ InputManager.change_input_layout = function (self, layout_name)
 		self:add_setting(settings.service_type, settings.aliases, settings.settings, settings.filters, settings.default_devices)
 		self:apply_alias_changes(settings.service_type)
 	end
-end
-
-InputManager.get_input_layout_names = function (self)
-	local layout_names = {}
-
-	for name, values in pairs(self._available_layouts) do
-		layout_names[#layout_names + 1] = {
-			name = name,
-			display_name = values.display_name,
-			sort_order = values.sort_order
-		}
-
-		table.sort(layout_names, function (a, b)
-			return a.sort_order < b.sort_order
-		end)
-	end
-
-	return layout_names
 end
 
 InputManager._set_wwise_rumble_state_from_device = function (self, device)

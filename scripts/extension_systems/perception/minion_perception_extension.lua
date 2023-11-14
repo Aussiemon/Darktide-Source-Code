@@ -612,11 +612,17 @@ end
 
 local DEFAULT_THREAT_MULTIPLIER = 1
 
-MinionPerceptionExtension.add_threat = function (self, threat_unit, threat_to_add)
+MinionPerceptionExtension.add_threat = function (self, threat_unit, threat_to_add, optional_attack_type)
 	local threat_config = self._threat_config
 	local max_threat = threat_config.max_threat
 	local threat_units = self._threat_units
 	local threat_multiplier = threat_config.threat_multiplier or DEFAULT_THREAT_MULTIPLIER
+	local threat_attack_type_multiplier = optional_attack_type and threat_config.attack_type_multiplier and threat_config.attack_type_multiplier[optional_attack_type]
+
+	if threat_attack_type_multiplier then
+		threat_multiplier = threat_multiplier + threat_attack_type_multiplier - 1
+	end
+
 	local new_threat = (threat_units[threat_unit] or 0) + threat_to_add * threat_multiplier
 	local threat = math.min(new_threat, max_threat)
 	threat_units[threat_unit] = threat
@@ -713,7 +719,7 @@ MinionPerceptionExtension._within_detection_los_range = function (self, unit, un
 		return false
 	end
 
-	local is_looking_trough_fog = self._smoke_fog_system:check_fog_los(unit_position, target_position)
+	local is_looking_trough_fog = self._smoke_fog_system:check_fog_los(unit_position, target_position, unit)
 
 	if is_looking_trough_fog then
 		return false

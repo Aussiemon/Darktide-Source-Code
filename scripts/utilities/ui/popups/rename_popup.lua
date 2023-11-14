@@ -58,7 +58,7 @@ local function show_popup(on_success, is_forced)
 			end
 		},
 		{
-			text = "loc_rename_account_accept_label",
+			text = "loc_popup_button_confirm",
 			template_type = "terminal_button_hold_small",
 			callback = function (text_input)
 				if not local_check(text_input) then

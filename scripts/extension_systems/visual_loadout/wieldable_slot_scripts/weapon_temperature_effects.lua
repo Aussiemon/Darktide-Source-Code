@@ -45,6 +45,9 @@ WeaponTemperatureEffects.init = function (self, context, slot, weapon_template, 
 	self._wieldable_slot_component = unit_data_extension:read_component(slot.name)
 	self._action_module_charge_component = unit_data_extension:read_component("action_module_charge")
 	self._parameter_value = 0
+	self._t = 0
+	self._unwield_t = 0
+	self._unwielded = true
 end
 
 WeaponTemperatureEffects.destroy = function (self)
@@ -54,11 +57,36 @@ WeaponTemperatureEffects.destroy = function (self)
 	self:_stop_sfx_loop()
 end
 
+WeaponTemperatureEffects.wield = function (self)
+	return
+end
+
+WeaponTemperatureEffects.unwield = function (self)
+	self._equipment_component.send_component_event(self._slot, "set_barrel_overheat", 0)
+	self:_update_wwise_source_parameter(0)
+	self:_stop_sfx_loop()
+
+	self._unwield_t = self._t
+	self._unwielded = true
+end
+
 WeaponTemperatureEffects.fixed_update = function (self, unit, dt, t, frame)
 	return
 end
 
 WeaponTemperatureEffects.update = function (self, unit, dt, t)
+	if self._unwielded then
+		self._unwielded = false
+		local time_since_unwield = t - self._unwield_t
+		dt = time_since_unwield
+	end
+
+	self._t = t
+
+	self:_update_overheat(unit, dt, t)
+end
+
+WeaponTemperatureEffects._update_overheat = function (self, unit, dt, t)
 	local action_settings = Action.current_action_settings_from_component(self._weapon_action_component, self._weapon_actions)
 	local parameter_value = self:_update_temperature_parameter(action_settings, dt, t)
 	local sfx_playing = self._looping_playing_id
@@ -122,24 +150,8 @@ WeaponTemperatureEffects._update_temperature_parameter = function (self, action_
 	return parameter_value
 end
 
-WeaponTemperatureEffects._update_charge_temperature = function (self, parameter_value, action_settings, dt, t)
-	return
-end
-
 WeaponTemperatureEffects.update_first_person_mode = function (self, first_person_mode)
 	return
-end
-
-WeaponTemperatureEffects.wield = function (self)
-	return
-end
-
-WeaponTemperatureEffects.unwield = function (self)
-	self._parameter_value = 0
-
-	self._equipment_component.send_component_event(self._slot, "set_barrel_overheat", 0)
-	self:_update_wwise_source_parameter(0)
-	self:_stop_sfx_loop()
 end
 
 WeaponTemperatureEffects._start_sfx_loop = function (self)

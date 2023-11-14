@@ -76,10 +76,6 @@ local default_imgui_input_settings = {
 			raw = "keyboard_right shift+keyboard_t",
 			type = "pressed"
 		},
-		hotkey_chat = {
-			raw = "keyboard_f5",
-			type = "pressed"
-		},
 		hotkey_denoising = {
 			raw = "keyboard_f11",
 			type = "pressed"

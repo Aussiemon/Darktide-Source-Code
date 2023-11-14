@@ -31,13 +31,13 @@ end
 UnitCoherencyExtension.fixed_update = function (self, unit, dt, t)
 	local player = self._player
 
-	if Managers.stats and Managers.stats.can_record_stats() and player then
+	if Managers.stats and player then
 		local new_time = self._stat_record_timer + dt
 
-		while STAT_REPORT_TIME <= new_time do
-			Managers.stats:record_coherency_update(player, self._num_units_in_coherence)
+		if STAT_REPORT_TIME <= new_time then
+			Managers.stats:record_private("hook_coherency_update", player, new_time, self._num_units_in_coherence)
 
-			new_time = new_time - STAT_REPORT_TIME
+			new_time = 0
 		end
 
 		self._stat_record_timer = new_time
@@ -205,12 +205,6 @@ UnitCoherencyExtension.on_coherency_exit = function (self, coherency_unit, coher
 	end
 
 	self:_send_rpc("rpc_player_unit_exit_coherency", coherency_unit)
-
-	if Managers.stats and Managers.stats.can_record_stats() and self._player then
-		local target_is_alive = HEALTH_ALIVE[coherency_unit]
-
-		Managers.stats:record_coherency_exit(self._player, target_is_alive, self._num_units_in_coherence)
-	end
 end
 
 UnitCoherencyExtension.update_buffs_for_unit = function (self, unit, extension)

@@ -1,12 +1,9 @@
 require("scripts/extension_systems/weapon/actions/action_weapon_base")
 
 local ActionModules = require("scripts/extension_systems/weapon/actions/modules/action_modules")
-local Attack = require("scripts/utilities/attack/attack")
-local AttackSettings = require("scripts/settings/damage/attack_settings")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local ChainLightning = require("scripts/utilities/action/chain_lightning")
 local ChainLightningTarget = require("scripts/utilities/action/chain_lightning_target")
-local HitZone = require("scripts/utilities/attack/hit_zone")
 local PlayerUnitData = require("scripts/extension_systems/unit_data/utilities/player_unit_data")
 local PowerLevelSettings = require("scripts/settings/damage/power_level_settings")
 local SpecialRulesSetting = require("scripts/settings/ability/special_rules_settings")
@@ -14,7 +11,6 @@ local ActionChainLightning = class("ActionChainLightning", "ActionWeaponBase")
 local special_rules = SpecialRulesSetting.special_rules
 local Vector3_flat = Vector3.flat
 local Vector3_normalize = Vector3.normalize
-local ATTACK_TYPES = AttackSettings.attack_types
 local DEFAULT_POWER_LEVEL = PowerLevelSettings.default_power_level
 local DEFAULT_POWER_LEVEL_RANDOM_RANGE = {
 	max = 1.25,
@@ -533,12 +529,6 @@ ActionChainLightning._deal_damage = function (self, t, time_in_action)
 		local target = temp_targets[ii]
 		local unit = target:value("unit")
 		local depth = target:depth()
-		local hit_zone_name = "center_mass"
-		local hit_zone_actors = HitZone.get_actor_names(unit, hit_zone_name)
-		local hit_actor_name = hit_zone_actors[1]
-		local hit_actor = Unit.actor(unit, hit_actor_name)
-		local node_index = Actor.node(hit_actor)
-		local hit_world_position = Unit.world_position(unit, node_index)
 		local is_critical_strike = self._critical_strike_component.is_active
 		local power_level = DEFAULT_POWER_LEVEL
 		local player_rotation = self._first_person_component.rotation
@@ -550,7 +540,7 @@ ActionChainLightning._deal_damage = function (self, t, time_in_action)
 			power_level = power_level * random_mod
 		end
 
-		Attack.execute(unit, damage_profile, "power_level", power_level, "charge_level", attack_charge, "target_index", depth, "target_number", ii, "hit_world_position", hit_world_position, "hit_zone_name", hit_zone_name, "attacking_unit", player_unit, "hit_actor", hit_actor, "attack_type", ATTACK_TYPES.ranged, "damage_type", damage_type, "is_critical_strike", is_critical_strike, "attack_direction", attack_direction)
+		local damage_dealt, attack_result, damage_efficiency, stagger_result, hit_weakspot = ChainLightning.execute_attack(unit, player_unit, power_level, attack_charge, depth, ii, attack_direction, damage_profile, damage_type, is_critical_strike)
 	end
 end
 

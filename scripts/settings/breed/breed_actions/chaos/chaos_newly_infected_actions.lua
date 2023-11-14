@@ -7,7 +7,6 @@ local hit_zone_names = HitZone.hit_zone_names
 local action_data = {
 	name = "chaos_newly_infected",
 	idle = {
-		rotate_towards_target = true,
 		anim_events = {
 			"idle",
 			"idle_2"
@@ -70,39 +69,31 @@ local action_data = {
 		ragdoll_timings = {
 			death_shot_head_right = 4.566666666666666,
 			death_slash_left = 3.2666666666666666,
-			death_decapitate_3 = 1.4,
-			death_strike_chest_right = 1.2666666666666666,
 			death_strike_chest_back = 3.1666666666666665,
+			death_strike_chest_right = 1.2666666666666666,
+			death_decapitate_3 = 1.4,
 			death_strike_chest_left = 3.2,
 			death_leg_right = 4.5,
 			death_slash_right = 2.6666666666666665,
 			death_arm_left = 3.033333333333333,
-			death_strike_chest_front = 1.6666666666666667,
-			death_arm_left_2 = 4,
 			death_arm_left_3 = 3.9,
-			death_arm_right = 5.1,
-			death_decapitate = 3.566666666666667,
+			death_arm_left_2 = 4,
+			death_strike_chest_front = 1.6666666666666667,
 			death_arm_right_3 = 2.566666666666667,
 			death_stab_chest_front = 3.6333333333333333,
 			death_leg_left = 3.066666666666667,
 			death_stab_chest_back = 2.5,
-			death_burn = 2.566666666666667,
-			death_burn_2 = 2.566666666666667,
 			death_arm_right_2 = 4.233333333333333,
 			death_shot_head_bwd = 3.3333333333333335,
 			death_shot_head_left = 2.1,
-			death_burn_3 = 4.666666666666667,
 			death_shot_head_front = 1.4666666666666666,
-			death_burn_4 = 4.4,
-			death_leg_both = 4.5,
 			death_shot_head_fwd = 2.3666666666666667,
-			death_decapitate_2 = 3.1666666666666665
+			death_arm_right = 5.1
 		}
 	},
 	combat_idle = {
-		utility_weight = 2,
-		rotate_towards_target = true,
 		vo_event = "melee_idle",
+		utility_weight = 2,
 		considerations = UtilityConsiderations.melee_combat_idle,
 		anim_events = {
 			"idle",
@@ -111,14 +102,11 @@ local action_data = {
 	},
 	alerted = {
 		hesitate_chance = 0.5,
-		slot_to_wield = "slot_melee_weapon",
 		override_aggro_distance = 6,
-		alert_spread_max_distance_to_target = 30,
-		anim_state = "to_melee",
-		instant_aggro_chance = 0,
 		alert_spread_radius = 8,
-		combat_range = "melee",
+		alert_spread_max_distance_to_target = 30,
 		vo_event = "alerted_idle",
+		instant_aggro_chance = 0,
 		moving_alerted_anim_events = {
 			fwd = {
 				"alerted_fwd",
@@ -424,21 +412,18 @@ local action_data = {
 	},
 	assault_follow = {
 		walk_speed = 4.3,
-		utility_weight = 1,
 		controlled_stagger = true,
+		controlled_stagger_min_speed = 2,
+		vo_event = "assault",
 		leave_walk_distance = 8,
 		controlled_stagger_ignored_combat_range = "melee",
 		force_move_anim_event = "assault_fwd",
-		controlled_stagger_min_speed = 2,
-		vo_event = "assault",
 		walk_anim_event = "move_fwd",
-		is_assaulting = true,
 		move_speed = 5.6,
 		use_animation_running_stagger_speed = true,
 		run_anim_event = "assault_fwd",
 		rotation_speed = 6,
 		enter_walk_distance = 5,
-		considerations = UtilityConsiderations.assault_far,
 		idle_anim_events = {
 			"idle",
 			"idle_2"
@@ -594,10 +579,6 @@ local action_data = {
 		damage_profile = DamageProfileTemplates.horde_melee_default,
 		damage_type = damage_types.minion_melee_sharp,
 		stagger_type_reduction = {
-			ranged = 20,
-			killshot = 20
-		},
-		stagger_type_reduction = {
 			ranged = 60,
 			killshot = 60
 		},
@@ -726,10 +707,6 @@ local action_data = {
 		},
 		damage_profile = DamageProfileTemplates.horde_melee_default,
 		damage_type = damage_types.minion_melee_sharp,
-		stagger_type_reduction = {
-			ranged = 20,
-			killshot = 20
-		},
 		stagger_type_reduction = {
 			ranged = 60,
 			killshot = 60
@@ -1041,6 +1018,41 @@ local action_data = {
 					"stagger_bwd_sticky_2",
 					"stagger_bwd_sticky_3"
 				}
+			},
+			blinding = {
+				fwd = {
+					"stagger_fwd_light",
+					"stagger_fwd_light_2",
+					"stagger_fwd_light_3",
+					"stagger_fwd_light_4",
+					"stagger_fwd_light_5",
+					"stagger_fwd_light_6"
+				},
+				bwd = {
+					"stagger_bwd_light",
+					"stagger_bwd_light_2",
+					"stagger_bwd_light_3",
+					"stagger_bwd_light_4",
+					"stagger_bwd_light_5",
+					"stagger_bwd_light_6",
+					"stagger_bwd_light_7",
+					"stagger_bwd_light_8"
+				},
+				left = {
+					"stagger_left_light",
+					"stagger_left_light_2",
+					"stagger_left_light_3",
+					"stagger_left_light_4"
+				},
+				right = {
+					"stagger_right_light",
+					"stagger_right_light_2",
+					"stagger_right_light_3",
+					"stagger_right_light_4"
+				},
+				dwn = {
+					"stun_down"
+				}
 			}
 		}
 	},
@@ -1053,20 +1065,12 @@ local action_data = {
 		},
 		attack_anim_damage_timings = {
 			attack_01 = 1.264367816091954,
-			attack_05 = 0.6,
-			attack_04 = 0.6,
-			attack_06 = 0.6,
 			attack_03 = 1.1954022988505748,
-			attack_07 = 0.6,
 			attack_02 = 1.264367816091954
 		},
 		attack_anim_durations = {
 			attack_01 = 2.413793103448276,
-			attack_05 = 2.0987654320987654,
-			attack_04 = 1.728395061728395,
-			attack_06 = 1.7241379310344827,
 			attack_03 = 2.9885057471264367,
-			attack_07 = 2.0987654320987654,
 			attack_02 = 2.5977011494252875
 		},
 		damage_profile = DamageProfileTemplates.horde_melee_default
@@ -1081,6 +1085,14 @@ local action_data = {
 			from_ground = {
 				"spawn_jump_up_01",
 				"spawn_jump_up_02"
+			}
+		},
+		spawn_type_anim_lengths = {
+			from_ground = {
+				default = {
+					vertical_length = 3,
+					horizontal_length = 1
+				}
 			}
 		},
 		anim_driven_anim_event_durations = {

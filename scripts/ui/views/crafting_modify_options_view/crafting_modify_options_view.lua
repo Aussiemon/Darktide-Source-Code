@@ -870,8 +870,8 @@ CraftingModifyOptionsView._setup_trait_tabs = function (self)
 	}
 	local tab_menu_element = self:_add_element(ViewElementTabMenu, id, layer, tab_menu_settings)
 	self._tab_menu_element = tab_menu_element
-	local input_action_left = "navigate_secondary_left_pressed"
-	local input_action_right = "navigate_secondary_right_pressed"
+	local input_action_left = "navigate_primary_left_pressed"
+	local input_action_right = "navigate_primary_right_pressed"
 
 	tab_menu_element:set_input_actions(input_action_left, input_action_right)
 

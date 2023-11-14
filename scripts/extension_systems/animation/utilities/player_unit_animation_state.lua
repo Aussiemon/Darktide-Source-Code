@@ -108,7 +108,7 @@ function _set_anim_state_machine(unit, state_machine_name)
 	local state_machine_settings = PlayerUnitAnimationMachineSettings[state_machine_name]
 	local blend_time = state_machine_settings.blend_time
 
-	Unit.set_animation_state_machine_blend_base_layer(unit, state_machine_name, nil, blend_time)
+	Unit.set_animation_state_machine_blend_base_layer(unit, state_machine_name, blend_time)
 end
 
 function _record_times(animation_state_component, player_unit, first_person_unit)

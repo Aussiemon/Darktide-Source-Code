@@ -515,8 +515,8 @@ ActionSpawnProjectile._fire_projectile = function (self, t, projectile_unit, tim
 	local direction = Quaternion.forward(shoot_rotation)
 	local locomotion_states = ProjectileLocomotionSettings.states
 	local locomotion_template = projectile_template.locomotion_template
-	local throw_parameters = locomotion_template and locomotion_template.throw_parameters and locomotion_template.throw_parameters.spawn
-	local starting_state = throw_parameters and throw_parameters.locomotion_state or locomotion_states.true_flight
+	local trajectory_parameters = locomotion_template and locomotion_template.trajectory_parameters and locomotion_template.trajectory_parameters.spawn
+	local starting_state = trajectory_parameters and trajectory_parameters.locomotion_state or locomotion_states.true_flight
 	local speed = shoot_parameters.initial_speed or 1
 	local momentum = Vector3(0, 0, 1)
 

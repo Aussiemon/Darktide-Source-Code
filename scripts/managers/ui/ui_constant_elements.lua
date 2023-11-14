@@ -1,5 +1,6 @@
 require("scripts/ui/constant_elements/constant_element_base")
 
+local Hud = require("scripts/utilities/ui/hud")
 local ScriptWorld = require("scripts/foundation/utilities/script_world")
 local VisibilityGroups = require("scripts/ui/constant_elements/constant_element_visibility_groups")
 local resolution_modified_key = "modified"
@@ -242,7 +243,7 @@ UIConstantElements.draw = function (self, dt, t, input_service)
 end
 
 UIConstantElements._apply_hud_scale = function (self)
-	local new_scale = self:_hud_scale()
+	local new_scale = Hud.hud_scale()
 	local render_settings = self._render_settings
 	render_settings.scale = new_scale
 	render_settings.inverse_scale = 1 / new_scale
@@ -319,18 +320,8 @@ UIConstantElements._update_element_visibility = function (self)
 	end
 end
 
-UIConstantElements._hud_scale = function (self)
-	local default_value = 100
-	local save_data = Managers.save:account_data()
-	local interface_settings = save_data.interface_settings
-	local hud_scale = interface_settings.hud_scale or default_value
-	local scale = RESOLUTION_LOOKUP.scale
-
-	return scale * hud_scale / 100
-end
-
 UIConstantElements._update_hud_scale_modified = function (self)
-	local new_scale = self:_hud_scale()
+	local new_scale = Hud.hud_scale()
 
 	if self._hud_scale_value ~= new_scale then
 		self._hud_scale_value = new_scale

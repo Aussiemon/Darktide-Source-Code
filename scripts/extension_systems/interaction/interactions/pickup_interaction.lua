@@ -53,34 +53,24 @@ PickupInteraction._update_stats = function (self, target_unit, interactor_sessio
 	end
 
 	local player_manager = Managers.player
-	local stats_manager = Managers.stats
 	local telemetry_reporters_manager = Managers.telemetry_reporters
 	local pickup_name = Unit.get_data(target_unit, "pickup_type")
 	local player_or_nil = player_manager:player_from_session_id(interactor_session_id)
 
 	if player_or_nil then
 		telemetry_reporters_manager:reporter("picked_items"):register_event(player_or_nil, pickup_name)
-
-		local is_human_player = player_or_nil:is_human_controlled()
-
-		if stats_manager.can_record_stats() and is_human_player then
-			stats_manager:record_pickup_item(player_or_nil, pickup_name)
-		end
+		Managers.stats:record_private("hook_picked_item", player_or_nil, pickup_name)
 	end
 
 	local pickup_system = Managers.state.extension:system("pickup_system")
 	local owner_session_id_or_nil = pickup_system:get_owner(target_unit)
 	local owning_player_or_nil = owner_session_id_or_nil and player_manager:player_from_session_id(owner_session_id_or_nil)
-	local is_human_owner = owning_player_or_nil and owning_player_or_nil:is_human_controlled()
 	local interacted_before = pickup_system:has_interacted(target_unit, interactor_session_id)
 	local interactor_is_owner = interactor_session_id == owner_session_id_or_nil
 
 	if owning_player_or_nil and not interacted_before and not interactor_is_owner then
 		telemetry_reporters_manager:reporter("shared_items"):register_event(owning_player_or_nil, pickup_name)
-
-		if stats_manager.can_record_stats() and is_human_owner then
-			stats_manager:record_share_item(owning_player_or_nil, pickup_name)
-		end
+		Managers.stats:record_private("hook_shared_item", owning_player_or_nil, pickup_name)
 	end
 end
 

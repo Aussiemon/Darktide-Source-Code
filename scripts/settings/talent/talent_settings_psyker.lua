@@ -95,7 +95,7 @@ local talent_settings = {
 			multiplier = 0.25
 		},
 		offensive_1_1 = {
-			damage_min = 0.1,
+			damage_min = 0,
 			damage = 0.2
 		},
 		offensive_1_2 = {

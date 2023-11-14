@@ -7,6 +7,7 @@ local get_hud_color = UIHudSettings.get_hud_color
 local edge_spacing = HudElementInteractionSettings.edge_spacing
 local input_box_height = HudElementInteractionSettings.input_box_height
 local background_size = HudElementInteractionSettings.background_size
+local background_size_small = HudElementInteractionSettings.background_size_small
 local description_box_size = {
 	background_size[1] - edge_spacing[1] * 2,
 	background_size[2] - input_box_height - edge_spacing[2] * 2
@@ -88,7 +89,7 @@ description_text_style.text_vertical_alignment = "center"
 description_text_style.font_size = 26
 description_text_style.offset = {
 	0,
-	0,
+	-10,
 	6
 }
 local type_description_text_style = table.clone(description_text_style)
@@ -165,9 +166,9 @@ local widget_definitions = {
 	}, "description_box"),
 	background = UIWidget.create_definition({
 		{
-			value = "content/ui/materials/hud/backgrounds/interaction_background",
 			style_id = "background",
 			pass_type = "texture",
+			value = "content/ui/materials/hud/backgrounds/interaction_background",
 			style = {
 				vertical_alignment = "bottom",
 				scale_to_material = true,
@@ -182,7 +183,10 @@ local widget_definitions = {
 					-1
 				},
 				color = get_hud_color("color_tint_main_4", 230)
-			}
+			},
+			visibility_function = function (content)
+				return not content.use_minimal_presentation
+			end
 		},
 		{
 			style_id = "input_background",
@@ -204,7 +208,41 @@ local widget_definitions = {
 					136,
 					109
 				}
-			}
+			},
+			visibility_function = function (content)
+				return not content.use_minimal_presentation
+			end
+		},
+		{
+			style_id = "input_background_slim",
+			pass_type = "texture_uv",
+			value = "content/ui/materials/gradients/gradient_horizontal",
+			style = {
+				vertical_alignment = "top",
+				horizontal_alignment = "left",
+				offset = {
+					0,
+					0,
+					2
+				},
+				size = {
+					[2] = input_box_height
+				},
+				color = Color.terminal_background(200, true),
+				uvs = {
+					{
+						1,
+						0
+					},
+					{
+						0,
+						1
+					}
+				}
+			},
+			visibility_function = function (content)
+				return content.use_minimal_presentation
+			end
 		},
 		{
 			style_id = "input_progress_background",
@@ -292,9 +330,9 @@ local widget_definitions = {
 	}, "background"),
 	frame = UIWidget.create_definition({
 		{
-			value = "content/ui/materials/frames/dropshadow_medium",
 			style_id = "frame",
 			pass_type = "texture",
+			value = "content/ui/materials/frames/dropshadow_medium",
 			style = {
 				vertical_alignment = "center",
 				scale_to_material = true,
@@ -314,7 +352,48 @@ local widget_definitions = {
 					0,
 					3
 				}
-			}
+			},
+			visibility_function = function (content)
+				return not content.use_minimal_presentation
+			end
+		},
+		{
+			style_id = "frame",
+			pass_type = "texture_uv",
+			value = "content/ui/materials/frames/dropshadow_medium_gradient_fade_01",
+			style = {
+				vertical_alignment = "center",
+				scale_to_material = true,
+				horizontal_alignment = "center",
+				color = {
+					255,
+					0,
+					0,
+					0
+				},
+				size_addition = {
+					20,
+					20
+				},
+				uvs = {
+					{
+						1,
+						0
+					},
+					{
+						0,
+						1
+					}
+				},
+				offset = {
+					0,
+					0,
+					3
+				}
+			},
+			visibility_function = function (content)
+				return content.use_minimal_presentation
+			end
 		}
 	}, "background"),
 	progress_highlight = UIWidget.create_definition({

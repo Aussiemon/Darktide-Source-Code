@@ -162,6 +162,44 @@ PlayerInteracteeExtension.display_start_event = function (self)
 	return false
 end
 
+PlayerInteracteeExtension.interaction_input = function (self)
+	local unit_has_context = self._unit_has_context
+
+	if not unit_has_context then
+		return
+	end
+
+	local interaction_type = self:interaction_type()
+
+	if interaction_type == "none" then
+		return
+	end
+
+	local interaction = self._interaction_objects[interaction_type]
+	local override_config = self._override_contexts_by_type[interaction_type]
+
+	return override_config and override_config.interaction_input or interaction:interaction_input()
+end
+
+PlayerInteracteeExtension.interaction_priority = function (self)
+	local unit_has_context = self._unit_has_context
+
+	if not unit_has_context then
+		return
+	end
+
+	local interaction_type = self:interaction_type()
+
+	if interaction_type == "none" then
+		return
+	end
+
+	local interaction = self._interaction_objects[interaction_type]
+	local override_config = self._override_contexts_by_type[interaction_type]
+
+	return override_config and override_config.interaction_priority or interaction:interaction_priority()
+end
+
 PlayerInteracteeExtension.ui_interaction_type = function (self)
 	local unit_has_context = self._unit_has_context
 

@@ -24,21 +24,20 @@ local weakspot_types = WeakspotSettings.types
 local breed_name = "renegade_gunner"
 local breed_data = {
 	detection_radius = 15,
-	walk_speed = 2.3,
 	volley_fire_target = true,
+	walk_speed = 2.3,
+	spawn_inventory_slot = "slot_ranged_weapon",
 	use_bone_lod = true,
-	state_machine = "content/characters/enemy/chaos_traitor_guard/third_person/animations/chaos_traitor_guard_elite_gunner",
-	sub_faction_name = "renegade",
 	unit_template_name = "minion",
 	debug_spawn_category = "Roamer",
 	debug_color_name = "cheeseburger",
 	spawn_anim_state = "to_ranged",
 	slot_template = "renegade_melee",
 	broadphase_radius = 1,
-	game_object_type = "minion_elite_ranged",
 	stagger_resistance = 1,
 	player_locomotion_constrain_radius = 0.5,
-	spawn_inventory_slot = "slot_ranged_weapon",
+	sub_faction_name = "renegade",
+	game_object_type = "minion_elite_ranged",
 	challenge_rating = 4,
 	bone_lod_radius = 1.2,
 	use_wounds = true,
@@ -46,7 +45,9 @@ local breed_data = {
 	run_speed = 5.5,
 	faction_name = "chaos",
 	base_height = 2,
+	state_machine = "content/characters/enemy/chaos_traitor_guard/third_person/animations/chaos_traitor_guard_elite_gunner",
 	ranged = true,
+	psyker_mark_target = true,
 	line_of_sight_collision_filter = "filter_minion_line_of_sight_check",
 	stagger_reduction = 0,
 	stagger_reduction_ranged = 10,
@@ -86,15 +87,6 @@ local breed_data = {
 		[stagger_types.light_ranged] = 0.2,
 		[stagger_types.killshot] = 1,
 		[stagger_types.sticky] = 0.25
-	},
-	stagger_thresholds = {
-		[stagger_types.light] = 4,
-		[stagger_types.medium] = 12,
-		[stagger_types.heavy] = 25,
-		[stagger_types.explosion] = 50,
-		[stagger_types.killshot] = 5,
-		[stagger_types.light_ranged] = 10,
-		[stagger_types.sticky] = 2
 	},
 	stagger_thresholds = {
 		[stagger_types.light] = 10,
@@ -453,6 +445,7 @@ local breed_data = {
 			[hit_zone_names.lower_right_leg] = 0.5
 		}
 	},
+	outline_config = {},
 	blackboard_component_config = BreedBlackboardComponentTemplates.riflemen
 }
 

@@ -550,10 +550,12 @@ weapon_template.actions = {
 		start_input = "inspect_start",
 		anim_end_event = "inspect_end",
 		kind = "inspect",
-		crosshair_type = "inspect",
 		anim_event = "inspect_start",
 		stop_input = "inspect_stop",
-		total_time = math.huge
+		total_time = math.huge,
+		crosshair = {
+			crosshair_type = "inspect"
+		}
 	}
 }
 weapon_template.keywords = {
@@ -607,7 +609,9 @@ weapon_template.uses_overheat = false
 weapon_template.smart_targeting_template = SmartTargetingTemplates.smite
 weapon_template.sprint_ready_up_time = 0.1
 weapon_template.max_first_person_anim_movement_speed = 5.8
-weapon_template.crosshair_type = "charge_up"
+weapon_template.crosshair = {
+	crosshair_type = "charge_up"
+}
 weapon_template.hit_marker_type = "center"
 weapon_template.fx_sources = {
 	_muzzle = "fx_right",

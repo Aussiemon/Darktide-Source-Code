@@ -18,6 +18,8 @@ local InputDevice = require("scripts/managers/input/input_device")
 local WeaponUIStatsTemplates = require("scripts/settings/equipment/weapon_ui_stats_templates")
 local Action = require("scripts/utilities/weapon/action")
 local TextUtilities = require("scripts/utilities/ui/text")
+local TextUtils = require("scripts/utilities/ui/text")
+local DefaultViewInputSettings = require("scripts/settings/input/default_view_input_settings")
 local DEBUG_BACKGROUNDS = false
 local bar_size = 100
 
@@ -62,8 +64,9 @@ local function get_style_text_height(text, style, ui_renderer)
 	local text_font_data = UIFonts.data_by_type(style.font_type)
 	local text_font = text_font_data.path
 	local text_size = style.size
+	local use_max_extents = true
 	local text_options = UIFonts.get_font_options_by_style(style)
-	local _, text_height = UIRenderer.text_size(ui_renderer, text, style.font_type, style.font_size, text_size, text_options)
+	local _, text_height = UIRenderer.text_size(ui_renderer, text, style.font_type, style.font_size, text_size, text_options, use_max_extents)
 
 	return text_height
 end
@@ -72,8 +75,9 @@ local function get_style_text_width(text, style, ui_renderer)
 	local text_font_data = UIFonts.data_by_type(style.font_type)
 	local text_font = text_font_data.path
 	local text_size = style.size
+	local use_max_extents = true
 	local text_options = UIFonts.get_font_options_by_style(style)
-	local text_width, _ = UIRenderer.text_size(ui_renderer, text, style.font_type, style.font_size, text_size, text_options)
+	local text_width, _ = UIRenderer.text_size(ui_renderer, text, style.font_type, style.font_size, text_size, text_options, use_max_extents)
 
 	return text_width
 end
@@ -94,7 +98,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 	weapon_display_name_style.font_size = 24
 	weapon_display_name_style.offset = {
 		20,
-		15,
+		10,
 		4
 	}
 	weapon_display_name_style.size = {
@@ -107,7 +111,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 	local weapon_type_name_style = table.clone(UIFontSettings.header_3)
 	weapon_type_name_style.offset = {
 		20,
-		24,
+		12,
 		4
 	}
 	weapon_type_name_style.font_size = 20
@@ -299,19 +303,62 @@ local function generate_blueprints_function(grid_size, optional_item)
 	weapon_traits_description_style.text_color = Color.terminal_text_body(255, true)
 	local description_style = table.clone(UIFontSettings.body)
 	description_style.offset = {
-		10,
+		20,
 		0,
 		3
 	}
 	description_style.size = {
-		grid_width - 20,
+		grid_width - 40,
 		500
 	}
 	description_style.font_size = 18
 	description_style.line_spacing = 1.4
-	description_style.text_horizontal_alignment = "left"
+	description_style.text_horizontal_alignment = "center"
 	description_style.text_vertical_alignment = "top"
-	description_style.text_color = Color.terminal_text_header(255, true)
+	description_style.text_color = Color.terminal_text_body_sub_header(255, true)
+	local obtained_label_style = table.clone(UIFontSettings.body)
+	obtained_label_style.offset = {
+		20,
+		4,
+		4
+	}
+	obtained_label_style.size = {
+		grid_width - 40,
+		500
+	}
+	obtained_label_style.font_size = 18
+	obtained_label_style.text_horizontal_alignment = "left"
+	obtained_label_style.text_vertical_alignment = "top"
+	obtained_label_style.text_color = Color.terminal_text_header(255, true)
+	local obtained_header_style = table.clone(UIFontSettings.header_3)
+	obtained_header_style.offset = {
+		20,
+		0,
+		4
+	}
+	obtained_header_style.size = {
+		grid_width - 40,
+		500
+	}
+	obtained_header_style.font_size = 20
+	obtained_header_style.text_horizontal_alignment = "left"
+	obtained_header_style.text_vertical_alignment = "top"
+	obtained_header_style.text_color = Color.terminal_text_body_sub_header(255, true)
+	local achievement_description_style = table.clone(UIFontSettings.body)
+	achievement_description_style.offset = {
+		20,
+		0,
+		3
+	}
+	achievement_description_style.size = {
+		grid_width - 40,
+		500
+	}
+	achievement_description_style.font_size = 18
+	achievement_description_style.line_spacing = 1.4
+	achievement_description_style.text_horizontal_alignment = "left"
+	achievement_description_style.text_vertical_alignment = "top"
+	achievement_description_style.text_color = Color.terminal_text_body(255, true)
 	local weapon_attack_info_style = table.clone(UIFontSettings.body)
 	weapon_attack_info_style.offset = {
 		52,
@@ -1839,7 +1886,13 @@ local function generate_blueprints_function(grid_size, optional_item)
 				if not content.icon_load_id then
 					local item = element.item
 					local cb = callback(_apply_live_item_icon_cb_func, widget)
-					content.icon_load_id = parent:load_item_icon(item, cb)
+					local context = {
+						size = {
+							grid_width * 2,
+							380
+						}
+					}
+					content.icon_load_id = Managers.ui:load_item_icon(item, cb, context)
 				end
 			end,
 			unload_icon = function (parent, widget, element, ui_renderer)
@@ -1847,7 +1900,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 
 				if content.icon_load_id then
 					_remove_live_item_icon_cb_func(widget, ui_renderer)
-					parent:unload_item_icon(content.icon_load_id)
+					Managers.ui:unload_item_icon(content.icon_load_id)
 
 					content.icon_load_id = nil
 				end
@@ -1857,13 +1910,13 @@ local function generate_blueprints_function(grid_size, optional_item)
 
 				if content.icon_load_id then
 					_remove_live_item_icon_cb_func(widget, ui_renderer)
-					parent:unload_item_icon(content.icon_load_id)
+					Managers.ui:unload_item_icon(content.icon_load_id)
 
 					content.icon_load_id = nil
 				end
 			end
 		},
-		skin_header = {
+		item_header = {
 			size = {
 				grid_width,
 				100
@@ -1872,7 +1925,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 				local item = element.item
 				local text = ItemUtils.display_name(item) .. "\n" .. ItemUtils.sub_display_name(item)
 				local text_height = get_style_text_height(text, weapon_display_name_style, ui_renderer)
-				local entry_height = math.max(0, text_height + 40)
+				local entry_height = math.max(0, text_height + 25)
 
 				return {
 					grid_width,
@@ -2183,7 +2236,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 				if not content.icon_load_id then
 					local visual_item = element.visual_item
 					local cb = callback(_apply_live_item_icon_cb_func, widget)
-					content.icon_load_id = parent:load_item_icon(visual_item, cb)
+					content.icon_load_id = Managers.ui:load_item_icon(visual_item, cb)
 				end
 			end,
 			unload_icon = function (parent, widget, element, ui_renderer)
@@ -2191,7 +2244,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 
 				if content.icon_load_id then
 					_remove_live_item_icon_cb_func(widget, ui_renderer)
-					parent:unload_item_icon(content.icon_load_id)
+					Managers.ui:unload_item_icon(content.icon_load_id)
 
 					content.icon_load_id = nil
 				end
@@ -2201,7 +2254,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 
 				if content.icon_load_id then
 					_remove_live_item_icon_cb_func(widget, ui_renderer)
-					parent:unload_item_icon(content.icon_load_id)
+					Managers.ui:unload_item_icon(content.icon_load_id)
 
 					content.icon_load_id = nil
 				end
@@ -2330,11 +2383,11 @@ local function generate_blueprints_function(grid_size, optional_item)
 
 				if not content.icon_load_id then
 					local item = element.item
-					local cb = callback(_apply_live_item_icon_cb_func, widget)
 					local slots = item.slots
 					local slot_name = slots[1]
 					local item_state_machine = item.state_machine
 					local item_animation_event = item.animation_event
+					local profile = element.profile
 					local render_context = {
 						camera_focus_slot_name = slot_name,
 						state_machine = item_state_machine,
@@ -2344,7 +2397,8 @@ local function generate_blueprints_function(grid_size, optional_item)
 							350
 						}
 					}
-					content.icon_load_id = parent:load_item_icon(item, cb, render_context)
+					local cb = callback(_apply_live_item_icon_cb_func, widget)
+					content.icon_load_id = Managers.ui:load_item_icon(item, cb, render_context, profile)
 				end
 			end,
 			unload_icon = function (parent, widget, element, ui_renderer)
@@ -2352,7 +2406,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 
 				if content.icon_load_id then
 					_remove_live_item_icon_cb_func(widget, ui_renderer)
-					parent:unload_item_icon(content.icon_load_id)
+					Managers.ui:unload_item_icon(content.icon_load_id)
 
 					content.icon_load_id = nil
 				end
@@ -2362,7 +2416,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 
 				if content.icon_load_id then
 					_remove_live_item_icon_cb_func(widget, ui_renderer)
-					parent:unload_item_icon(content.icon_load_id)
+					Managers.ui:unload_item_icon(content.icon_load_id)
 
 					content.icon_load_id = nil
 				end
@@ -2383,96 +2437,6 @@ local function generate_blueprints_function(grid_size, optional_item)
 							0
 						},
 						color = Color.black(255, true)
-					}
-				},
-				{
-					value_id = "left_divider",
-					style_id = "left_divider",
-					pass_type = "texture_uv",
-					value = "content/ui/materials/dividers/vertical_dynamic_01",
-					style = {
-						vertical_alignment = "bottom",
-						horizontal_alignment = "left",
-						offset = {
-							-12,
-							-10,
-							3
-						},
-						size = {
-							18
-						},
-						size_addition = {
-							0,
-							-25
-						},
-						color = {
-							255,
-							255,
-							255,
-							255
-						},
-						uvs = {
-							{
-								1,
-								0
-							},
-							{
-								0,
-								1
-							}
-						}
-					}
-				},
-				{
-					value_id = "right_divider",
-					style_id = "right_divider",
-					pass_type = "texture",
-					value = "content/ui/materials/dividers/vertical_dynamic_01",
-					style = {
-						vertical_alignment = "bottom",
-						horizontal_alignment = "right",
-						offset = {
-							12,
-							-10,
-							3
-						},
-						size = {
-							18
-						},
-						size_addition = {
-							0,
-							-25
-						},
-						color = {
-							255,
-							255,
-							255,
-							255
-						}
-					}
-				},
-				{
-					value_id = "bottom_divider",
-					style_id = "bottom_divider",
-					pass_type = "texture",
-					value = "content/ui/materials/dividers/horizontal_frame_big_middle",
-					style = {
-						vertical_alignment = "bottom",
-						horizontal_alignment = "center",
-						offset = {
-							0,
-							22,
-							4
-						},
-						size = {
-							nil,
-							44
-						},
-						size_addition = {
-							12,
-							0
-						},
-						color = Color.white(255, true)
 					}
 				},
 				{
@@ -2525,7 +2489,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 						},
 						offset = {
 							0,
-							0,
+							10,
 							3
 						}
 					},
@@ -2550,14 +2514,14 @@ local function generate_blueprints_function(grid_size, optional_item)
 					pass_type = "texture",
 					value = "content/ui/materials/gradients/gradient_vertical",
 					style = {
-						vertical_alignment = "center",
+						vertical_alignment = "bottom",
 						horizontal_alignment = "center",
 						offset = {
 							0,
 							0,
 							1
 						},
-						color = Color.terminal_corner_hover(255, true)
+						color = Color.white(255, true)
 					}
 				},
 				{
@@ -2574,16 +2538,16 @@ local function generate_blueprints_function(grid_size, optional_item)
 					}
 				},
 				{
-					style_id = "display_name",
-					pass_type = "text",
 					value_id = "display_name",
+					pass_type = "text",
+					style_id = "display_name",
 					value = "n/a",
 					style = weapon_display_name_style
 				},
 				{
-					style_id = "type_name",
-					pass_type = "text",
 					value_id = "type_name",
+					pass_type = "text",
+					style_id = "type_name",
 					value = "n/a",
 					style = weapon_type_name_style
 				},
@@ -2635,7 +2599,13 @@ local function generate_blueprints_function(grid_size, optional_item)
 				if not content.icon_load_id then
 					local item = element.item
 					local cb = callback(_apply_live_item_icon_cb_func, widget)
-					content.icon_load_id = parent:load_item_icon(item, cb)
+					local context = {
+						size = {
+							grid_width * 2,
+							400
+						}
+					}
+					content.icon_load_id = Managers.ui:load_item_icon(item, cb, context)
 				end
 			end,
 			unload_icon = function (parent, widget, element, ui_renderer)
@@ -2643,7 +2613,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 
 				if content.icon_load_id then
 					_remove_live_item_icon_cb_func(widget, ui_renderer)
-					parent:unload_item_icon(content.icon_load_id)
+					Managers.ui:unload_item_icon(content.icon_load_id)
 
 					content.icon_load_id = nil
 				end
@@ -2653,16 +2623,41 @@ local function generate_blueprints_function(grid_size, optional_item)
 
 				if content.icon_load_id then
 					_remove_live_item_icon_cb_func(widget, ui_renderer)
-					parent:unload_item_icon(content.icon_load_id)
+					Managers.ui:unload_item_icon(content.icon_load_id)
 
 					content.icon_load_id = nil
 				end
 			end
 		},
-		portrait_frame_header = {
+		divider_line = {
 			size = {
 				grid_width,
-				280
+				1
+			},
+			pass_template = {
+				{
+					pass_type = "rect",
+					style = {
+						vertical_alignment = "top",
+						horizontal_alignment = "center",
+						size = {
+							grid_width,
+							1
+						},
+						offset = {
+							0,
+							0,
+							10
+						},
+						color = Color.terminal_grid_background(255, true)
+					}
+				}
+			}
+		},
+		portrait_frame = {
+			size = {
+				grid_width,
+				220
 			},
 			pass_template = {
 				{
@@ -2679,7 +2674,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 						},
 						offset = {
 							0,
-							35,
+							0,
 							2
 						},
 						color = Color.white(255, true),
@@ -2739,7 +2734,6 @@ local function generate_blueprints_function(grid_size, optional_item)
 			},
 			init = function (parent, widget, element, callback_name, _, ui_renderer)
 				local content = widget.content
-				local style = widget.style
 				content.element = element
 			end,
 			load_icon = function (parent, widget, element)
@@ -2777,10 +2771,10 @@ local function generate_blueprints_function(grid_size, optional_item)
 				end
 			end
 		},
-		insignia_header = {
+		insignia = {
 			size = {
 				grid_width,
-				280
+				220
 			},
 			pass_template = {
 				{
@@ -2797,7 +2791,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 						},
 						offset = {
 							0,
-							30,
+							0,
 							2
 						},
 						color = Color.white(255, true),
@@ -2857,7 +2851,6 @@ local function generate_blueprints_function(grid_size, optional_item)
 			},
 			init = function (parent, widget, element, callback_name, _, ui_renderer)
 				local content = widget.content
-				local style = widget.style
 				content.element = element
 			end,
 			load_icon = function (parent, widget, element)
@@ -2895,10 +2888,10 @@ local function generate_blueprints_function(grid_size, optional_item)
 				end
 			end
 		},
-		emote_header = {
+		emote = {
 			size = {
 				grid_width,
-				280
+				220
 			},
 			pass_template = {
 				{
@@ -2915,7 +2908,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 						},
 						offset = {
 							0,
-							45,
+							0,
 							2
 						},
 						color = Color.white(255, true),
@@ -2971,50 +2964,11 @@ local function generate_blueprints_function(grid_size, optional_item)
 						style.rotation_progress = ((style.rotation_progress or 0) + add) % 1
 						style.angle = style.rotation_progress * math.pi * 2
 					end
-				},
-				{
-					style_id = "display_name",
-					pass_type = "text",
-					value_id = "display_name",
-					value = "n/a",
-					style = weapon_display_name_style
-				},
-				{
-					style_id = "type_name",
-					pass_type = "text",
-					value_id = "type_name",
-					value = "n/a",
-					style = weapon_type_name_style
 				}
 			},
 			init = function (parent, widget, element, callback_name, _, ui_renderer)
 				local content = widget.content
-				local style = widget.style
 				content.element = element
-				local item = element.item
-				local display_name = ItemUtils.display_name(item)
-				local type_name = ItemUtils.sub_display_name(item)
-				content.display_name = display_name
-				content.type_name = type_name
-				local type_name_style = style.type_name
-				local display_name_text_height = get_style_text_height(display_name, weapon_display_name_style, ui_renderer)
-				type_name_style.offset[2] = type_name_style.offset[2] + display_name_text_height
-				local slots = item.slots
-				local slot_name = slots and slots[1]
-				local slot = slot_name and ItemSlotSettings[slot_name]
-
-				if slot then
-					local slot_name = slot.name
-					local icon_color = slot.icon_color
-
-					if icon_color then
-						local color = style.icon.color
-						color[1] = icon_color[1]
-						color[2] = icon_color[2]
-						color[3] = icon_color[3]
-						color[4] = icon_color[4]
-					end
-				end
 			end,
 			load_icon = function (parent, widget, element)
 				local content = widget.content
@@ -3027,7 +2981,8 @@ local function generate_blueprints_function(grid_size, optional_item)
 					local render_context = {
 						camera_focus_slot_name = slot_name
 					}
-					content.icon_load_id = Managers.ui:load_item_icon(item, cb, render_context)
+					local profile = element.profile
+					content.icon_load_id = Managers.ui:load_item_icon(item, cb, render_context, profile)
 				end
 			end,
 			unload_icon = function (parent, widget, element, ui_renderer)
@@ -4786,6 +4741,106 @@ local function generate_blueprints_function(grid_size, optional_item)
 					pass_type = "text",
 					value_id = "description",
 					style = description_style
+				}
+			},
+			init = function (parent, widget, element, callback_name)
+				local content = widget.content
+				content.element = element
+				local item = element.item
+				local description = item.description
+				local description_localized = description and Localize(description) or ""
+				content.description = description_localized
+			end,
+			update = function (parent, widget, input_service, dt, t, ui_renderer)
+				return
+			end
+		},
+		obtained_header = {
+			size = {
+				grid_width,
+				114
+			},
+			size_function = function (parent, element, ui_renderer)
+				local text = Localize("loc_item_source_obtained_title")
+				local text_height = get_style_text_height(text, obtained_header_style, ui_renderer)
+				local entry_height = math.max(0, text_height)
+
+				return {
+					grid_width,
+					entry_height
+				}
+			end,
+			pass_template = {
+				{
+					value = "n/a",
+					pass_type = "text",
+					value_id = "text",
+					style = obtained_header_style
+				}
+			},
+			init = function (parent, widget, element, callback_name)
+				local content = widget.content
+				content.element = element
+				content.text = Localize("loc_item_source_obtained_title")
+			end,
+			update = function (parent, widget, input_service, dt, t, ui_renderer)
+				return
+			end
+		},
+		obtained_label = {
+			size = {
+				grid_width,
+				114
+			},
+			size_function = function (parent, element, ui_renderer)
+				local label = element.label or ""
+				local label_height = get_style_text_height(label, obtained_label_style, ui_renderer)
+				local entry_height = math.max(0, label_height + 8)
+
+				return {
+					grid_width,
+					entry_height
+				}
+			end,
+			pass_template = {
+				{
+					value = "n/a",
+					pass_type = "text",
+					value_id = "label",
+					style = obtained_label_style
+				}
+			},
+			init = function (parent, widget, element, callback_name)
+				local content = widget.content
+				content.element = element
+				local label = element.label or ""
+				content.label = label
+			end,
+			update = function (parent, widget, input_service, dt, t, ui_renderer)
+				return
+			end
+		},
+		achievement_description = {
+			size = {
+				grid_width,
+				114
+			},
+			size_function = function (parent, element, ui_renderer)
+				local description = element.description or ""
+				local description_height = get_style_text_height(description, achievement_description_style, ui_renderer)
+				local entry_height = math.max(0, description_height + 8)
+
+				return {
+					grid_width,
+					entry_height
+				}
+			end,
+			pass_template = {
+				{
+					value = "n/a",
+					pass_type = "text",
+					value_id = "description",
+					style = achievement_description_style
 				},
 				{
 					pass_type = "rect",
@@ -4802,10 +4857,8 @@ local function generate_blueprints_function(grid_size, optional_item)
 			init = function (parent, widget, element, callback_name)
 				local content = widget.content
 				content.element = element
-				local item = element.item
-				local description = item.description
-				local description_localized = description and Localize(description) or ""
-				content.description = description_localized
+				local description = element.description or ""
+				content.description = description
 			end,
 			update = function (parent, widget, input_service, dt, t, ui_renderer)
 				return

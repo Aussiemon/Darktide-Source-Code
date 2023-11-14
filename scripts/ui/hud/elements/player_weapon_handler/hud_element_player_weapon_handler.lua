@@ -169,6 +169,8 @@ HudElementPlayerWeaponHandler.destroy = function (self, ui_renderer)
 
 	self._player_weapons = nil
 	self._player_weapons_array = nil
+
+	HudElementPlayerWeaponHandler.super.destroy(self, ui_renderer)
 end
 
 HudElementPlayerWeaponHandler.set_visible = function (self, visible, ui_renderer, use_retained_mode)

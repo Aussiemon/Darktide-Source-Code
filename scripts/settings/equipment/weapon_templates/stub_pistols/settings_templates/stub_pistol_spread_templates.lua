@@ -194,6 +194,170 @@ spread_templates.default_stub_pistol_killshot = {
 		}
 	}
 }
+local p1_m2_modifier = 0.8
+spread_templates.stub_pistol_p1_m2_hip = {
+	still = {
+		max_spread = {
+			yaw = 5,
+			pitch = 5
+		},
+		decay = {
+			from_shooting_grace_time = 0.075,
+			shooting = {
+				yaw = 0.15,
+				pitch = 0.15
+			},
+			idle = {
+				yaw = 4.5,
+				pitch = 4.5
+			}
+		},
+		continuous_spread = {
+			min_pitch = 1.5 * p1_m2_modifier,
+			min_yaw = 1.5 * p1_m2_modifier
+		},
+		immediate_spread = {
+			num_shots_clear_time = 0.5,
+			suppression_hit = {
+				{
+					pitch = p1_m2_modifier * p1_m2_modifier,
+					yaw = p1_m2_modifier * p1_m2_modifier
+				}
+			},
+			damage_hit = {
+				{
+					pitch = 0.4 * p1_m2_modifier,
+					yaw = 0.4 * p1_m2_modifier
+				}
+			},
+			shooting = {
+				{
+					pitch = 7.5 * p1_m2_modifier,
+					yaw = 7.5 * p1_m2_modifier
+				}
+			}
+		}
+	},
+	moving = {
+		inherits = {
+			"stub_pistol_p1_m2_hip",
+			"still"
+		},
+		continuous_spread = {
+			min_yaw = 2.4000000000000004,
+			min_pitch = 2.4000000000000004
+		}
+	},
+	crouch_still = {
+		inherits = {
+			"stub_pistol_p1_m2_hip",
+			"still"
+		},
+		continuous_spread = {
+			min_yaw = 1.8,
+			min_pitch = 1.8
+		}
+	},
+	crouch_moving = {
+		inherits = {
+			"stub_pistol_p1_m2_hip",
+			"still"
+		},
+		continuous_spread = {
+			min_yaw = 2.2,
+			min_pitch = 2.2
+		}
+	}
+}
+overrides.stub_pistol_p1_m2_ads = {
+	parent_template_name = "default_stub_pistol_killshot",
+	overrides = {}
+}
+local p1_m3_modifier = 1.8
+spread_templates.stub_pistol_p1_m3_hip = {
+	still = {
+		max_spread = {
+			yaw = 5,
+			pitch = 5
+		},
+		decay = {
+			from_shooting_grace_time = 0.075,
+			shooting = {
+				yaw = 0.15,
+				pitch = 0.15
+			},
+			idle = {
+				yaw = 4.5,
+				pitch = 4.5
+			}
+		},
+		randomized_spread = {
+			random_ratio = 0.5,
+			first_shot_min_ratio = 0.3,
+			first_shot_random_ratio = 0.6,
+			min_ratio = 0.15
+		},
+		continuous_spread = {
+			min_pitch = 1.5 * p1_m3_modifier,
+			min_yaw = 1.5 * p1_m3_modifier
+		},
+		immediate_spread = {
+			num_shots_clear_time = 0.5,
+			suppression_hit = {
+				{
+					pitch = 0.25 * p1_m3_modifier,
+					yaw = 0.25 * p1_m3_modifier
+				}
+			},
+			damage_hit = {
+				{
+					pitch = 0.4 * p1_m3_modifier,
+					yaw = 0.4 * p1_m3_modifier
+				}
+			},
+			shooting = {
+				{
+					pitch = 7.5 * p1_m3_modifier,
+					yaw = 7.5 * p1_m3_modifier
+				}
+			}
+		}
+	},
+	moving = {
+		inherits = {
+			"stub_pistol_p1_m3_hip",
+			"still"
+		},
+		continuous_spread = {
+			min_yaw = 4.5,
+			min_pitch = 4.5
+		}
+	},
+	crouch_still = {
+		inherits = {
+			"stub_pistol_p1_m3_hip",
+			"still"
+		},
+		continuous_spread = {
+			min_yaw = 3.375,
+			min_pitch = 3.375
+		}
+	},
+	crouch_moving = {
+		inherits = {
+			"stub_pistol_p1_m3_hip",
+			"still"
+		},
+		continuous_spread = {
+			min_yaw = 4.125,
+			min_pitch = 4.125
+		}
+	}
+}
+overrides.stub_pistol_p1_m3_ads = {
+	parent_template_name = "default_stub_pistol_killshot",
+	overrides = {}
+}
 
 return {
 	base_templates = spread_templates,

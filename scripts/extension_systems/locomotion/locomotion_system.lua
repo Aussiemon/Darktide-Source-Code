@@ -50,9 +50,9 @@ LocomotionSystem.update = function (self, context, dt, t, ...)
 	LocomotionSystem.super.update(self, context, dt, t, ...)
 
 	if self._is_server then
-		local units_to_kill = MinionLocomotion.update(dt, t)
+		local failed_getting_back_to_nav_mesh_units = MinionLocomotion.update(dt, t)
 
-		self:_update_units_to_kill(units_to_kill)
+		self:_update_units_to_kill(failed_getting_back_to_nav_mesh_units)
 	else
 		MinionHuskLocomotion.update(dt)
 	end

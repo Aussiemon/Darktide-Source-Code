@@ -30,7 +30,13 @@ BtMeleeFollowTargetAction.enter = function (self, unit, breed, blackboard, scrat
 		end
 	end
 
-	scratchpad.buff_movement_speed = movement_speed
+	local animation_move_speed_modifier = breed.animation_move_speed_modifier
+
+	if animation_move_speed_modifier then
+		movement_speed = movement_speed + animation_move_speed_modifier - 1
+	end
+
+	scratchpad.modified_movement_speed = movement_speed
 	local speed = (action_data.move_speed or breed.run_speed) * movement_speed
 
 	navigation_extension:set_enabled(true, speed)
@@ -174,6 +180,12 @@ BtMeleeFollowTargetAction.run = function (self, unit, breed, blackboard, scratch
 
 	if should_evaluate then
 		scratchpad.time_to_next_evaluate = t + BtMeleeFollowTargetAction.CONSECUTIVE_EVALUATE_INTERVAL
+	end
+
+	if scratchpad.modified_movement_speed and breed.animation_variable_init then
+		local animation_extension = scratchpad.animation_extension
+
+		animation_extension:set_variable("anim_move_speed", scratchpad.modified_movement_speed)
 	end
 
 	return "running", should_evaluate
@@ -327,7 +339,7 @@ BtMeleeFollowTargetAction._set_state_max_speed = function (self, breed, scratchp
 		local walk_speeds = action_data.walk_speeds
 		new_speed = walk_speeds and walk_speeds[scratchpad.current_walk_anim_event] or action_data.walk_speed or breed.walk_speed
 	elseif state == "running" then
-		new_speed = (action_data.move_speed or breed.run_speed) * scratchpad.buff_movement_speed
+		new_speed = (action_data.move_speed or breed.run_speed) * scratchpad.modified_movement_speed
 	end
 
 	scratchpad.navigation_extension:set_max_speed(new_speed)

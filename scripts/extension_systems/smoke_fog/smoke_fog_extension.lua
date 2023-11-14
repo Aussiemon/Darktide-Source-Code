@@ -1,3 +1,4 @@
+local MinionState = require("scripts/utilities/minion_state")
 local FixedFrame = require("scripts/utilities/fixed_frame")
 local SmokeFogExtension = class("SmokeFogExtension")
 local DEFAULT_INNER_RADIUS = 4.5

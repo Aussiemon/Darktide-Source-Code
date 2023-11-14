@@ -1,5 +1,10 @@
 local MainPathQueries = require("scripts/utilities/main_path_queries")
 local MainPathManagerTestify = {
+	generate_unified_main_path = function (main_path_manager)
+		local main_path_segments = main_path_manager:main_path_segments()
+
+		return MainPathQueries.generate_unified_main_path(main_path_segments)
+	end,
 	main_path_position_from_distance = function (_, distance)
 		local position = MainPathQueries.position_from_distance(distance)
 

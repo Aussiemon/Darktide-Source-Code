@@ -23,8 +23,7 @@ local barrel_explosion_close_admr = {
 		[armor_types.berserker] = 2,
 		[armor_types.super_armor] = 3,
 		[armor_types.disgustingly_resilient] = 3,
-		[armor_types.void_shield] = 0.75,
-		[armor_types.prop_armor] = 0
+		[armor_types.void_shield] = 0.75
 	},
 	impact = {
 		[armor_types.unarmored] = 2,
@@ -34,8 +33,7 @@ local barrel_explosion_close_admr = {
 		[armor_types.berserker] = 2,
 		[armor_types.super_armor] = 5,
 		[armor_types.disgustingly_resilient] = 2,
-		[armor_types.void_shield] = 2,
-		[armor_types.prop_armor] = 2
+		[armor_types.void_shield] = 2
 	}
 }
 local barrel_explosion_far_admr = {
@@ -47,8 +45,7 @@ local barrel_explosion_far_admr = {
 		[armor_types.berserker] = 1.5,
 		[armor_types.super_armor] = 2,
 		[armor_types.disgustingly_resilient] = 2,
-		[armor_types.void_shield] = 0.75,
-		[armor_types.prop_armor] = 0
+		[armor_types.void_shield] = 0.75
 	},
 	impact = {
 		[armor_types.unarmored] = 2,
@@ -58,8 +55,7 @@ local barrel_explosion_far_admr = {
 		[armor_types.berserker] = 2,
 		[armor_types.super_armor] = 5,
 		[armor_types.disgustingly_resilient] = 2,
-		[armor_types.void_shield] = 2,
-		[armor_types.prop_armor] = 2
+		[armor_types.void_shield] = 2
 	}
 }
 local fire_barrel_explosion_close_admr = {
@@ -71,8 +67,7 @@ local fire_barrel_explosion_close_admr = {
 		[armor_types.berserker] = 1,
 		[armor_types.super_armor] = 0.2,
 		[armor_types.disgustingly_resilient] = 0.75,
-		[armor_types.void_shield] = 0.75,
-		[armor_types.prop_armor] = 0
+		[armor_types.void_shield] = 0.75
 	},
 	impact = {
 		[armor_types.unarmored] = 1,
@@ -82,8 +77,7 @@ local fire_barrel_explosion_close_admr = {
 		[armor_types.berserker] = 1,
 		[armor_types.super_armor] = 1,
 		[armor_types.disgustingly_resilient] = 1,
-		[armor_types.void_shield] = 1,
-		[armor_types.prop_armor] = 1
+		[armor_types.void_shield] = 1
 	}
 }
 local fire_barrel_explosion_far_admr = {
@@ -95,8 +89,7 @@ local fire_barrel_explosion_far_admr = {
 		[armor_types.berserker] = 1,
 		[armor_types.super_armor] = 0.2,
 		[armor_types.disgustingly_resilient] = 0.75,
-		[armor_types.void_shield] = 0.75,
-		[armor_types.prop_armor] = 0
+		[armor_types.void_shield] = 0.75
 	},
 	impact = {
 		[armor_types.unarmored] = 1,
@@ -106,8 +99,7 @@ local fire_barrel_explosion_far_admr = {
 		[armor_types.berserker] = 1,
 		[armor_types.super_armor] = 1,
 		[armor_types.disgustingly_resilient] = 1,
-		[armor_types.void_shield] = 1,
-		[armor_types.prop_armor] = 1
+		[armor_types.void_shield] = 1
 	}
 }
 local breach_charge_explosion_close = {
@@ -119,8 +111,7 @@ local breach_charge_explosion_close = {
 		[armor_types.berserker] = 1,
 		[armor_types.super_armor] = 0.2,
 		[armor_types.disgustingly_resilient] = 0.75,
-		[armor_types.void_shield] = 0.75,
-		[armor_types.prop_armor] = 0
+		[armor_types.void_shield] = 0.75
 	},
 	impact = {
 		[armor_types.unarmored] = 1,
@@ -130,8 +121,7 @@ local breach_charge_explosion_close = {
 		[armor_types.berserker] = 1,
 		[armor_types.super_armor] = 1,
 		[armor_types.disgustingly_resilient] = 1,
-		[armor_types.void_shield] = 1,
-		[armor_types.prop_armor] = 1
+		[armor_types.void_shield] = 1
 	}
 }
 damage_templates.barrel_explosion_close = {

@@ -18,12 +18,6 @@ ActionActivateSpecial.start = function (self, action_settings, t, time_scale, pa
 	ActionActivateSpecial.super.start(self, action_settings, t, time_scale, params)
 
 	self._weapon_tweak_templates_component.charge_template_name = action_settings.charge_template or "none"
-	local special_implementation = self._weapon.special_implementation
-
-	if special_implementation then
-		special_implementation:on_action_start(t, self._num_hit_enemies)
-	end
-
 	local particle_name = action_settings.pre_activation_vfx_name
 
 	if particle_name then

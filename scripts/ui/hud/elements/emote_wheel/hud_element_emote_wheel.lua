@@ -196,7 +196,7 @@ HudElementEmoteWheel.destroy = function (self, ui_renderer)
 	end
 
 	self:_on_wheel_closed()
-	HudElementEmoteWheel.super.destroy(self)
+	HudElementEmoteWheel.super.destroy(self, ui_renderer)
 end
 
 HudElementEmoteWheel._on_wheel_start = function (self, t, input_service)
@@ -403,7 +403,6 @@ end
 HudElementEmoteWheel._update_wheel_presentation = function (self, dt, t, ui_renderer, render_settings, input_service)
 	local screen_width = RESOLUTION_LOOKUP.width
 	local screen_height = RESOLUTION_LOOKUP.height
-	local inverse_scale = 1
 	local scale = render_settings.scale
 	local cursor = input_service and input_service:get("cursor")
 
@@ -413,9 +412,12 @@ HudElementEmoteWheel._update_wheel_presentation = function (self, dt, t, ui_rend
 		cursor[2] = screen_height * 0.5 - cursor[2] * screen_height * 0.5
 	end
 
-	local cursor_position = IS_XBS and UIResolution.scale_vector(cursor, scale) or UIResolution.inverse_scale_vector(cursor, inverse_scale)
-	local cursor_distance_from_center = math.distance_2d(screen_width * 0.5, screen_height * 0.5, cursor_position[1], cursor_position[2])
-	local cursor_angle_from_center = math.angle(screen_width * 0.5, screen_height * 0.5, cursor_position[1], cursor_position[2]) - math.pi * 0.5
+	if not cursor then
+		return
+	end
+
+	local cursor_distance_from_center = math.distance_2d(screen_width * 0.5, screen_height * 0.5, cursor[1], cursor[2])
+	local cursor_angle_from_center = math.angle(screen_width * 0.5, screen_height * 0.5, cursor[1], cursor[2]) - math.pi * 0.5
 	local cursor_angle_degrees_from_center = math.radians_to_degrees(cursor_angle_from_center) % 360
 	local entry_hover_degrees = 44
 	local entry_hover_degrees_half = entry_hover_degrees * 0.5

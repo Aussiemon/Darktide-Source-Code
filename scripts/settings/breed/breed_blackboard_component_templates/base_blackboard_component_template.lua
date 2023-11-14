@@ -1,13 +1,14 @@
 local base_template = {
 	spawn = {
-		game_object_id = "number",
-		game_session = "GameSession",
-		world = "World",
-		is_exiting_spawner = "boolean",
-		physics_world = "PhysicsWorld",
 		unit = "Unit",
+		spawner_unit = "Unit",
+		world = "World",
+		game_object_id = "number",
+		physics_world = "PhysicsWorld",
+		is_exiting_spawner = "boolean",
 		anim_translation_scale_factor = "number",
-		spawner_unit = "Unit"
+		game_session = "GameSession",
+		spawner_spawn_index = "number"
 	},
 	death = {
 		hit_during_death = "boolean",

@@ -45,6 +45,13 @@ Damage.deal_damage = function (unit, breed_or_nil, attacking_unit, attacking_uni
 		toughness_extension:add_damage(tougness_damage, attack_result, hit_actor, damage_profile, attack_type, attack_direction, hit_world_position_or_nil)
 	end
 
+	if breed_or_nil and breed_or_nil.clamp_health_percent_damage then
+		local health_percent_clamp = breed_or_nil.clamp_health_percent_damage
+		local max_health = health_extension:max_health()
+		local damage_clamp = max_health * health_percent_clamp
+		damage = math.min(damage, damage_clamp)
+	end
+
 	if attack_result == attack_results.toughness_broken then
 		if is_player and buff_extension then
 			local param_table = buff_extension:request_proc_event_param_table()

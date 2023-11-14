@@ -35,7 +35,6 @@ StateGameplay.on_enter = function (self, parent, params, creation_context)
 	shared_state.nav_data = nil
 	shared_state.hard_cap_out_of_bounds_units = nil
 	shared_state.soft_cap_out_of_bounds_units = nil
-	shared_state.nvidia_ai_agent = nil
 	shared_state.free_flight_teleporter = nil
 	shared_state.clock_handler_client = nil
 	shared_state.breed_unit_tester = nil
@@ -43,6 +42,7 @@ StateGameplay.on_enter = function (self, parent, params, creation_context)
 	shared_state.network_transmit_function = creation_context.network_transmit_function
 
 	Crashify.print_property("mission", tostring(params.mission_name))
+	Crashify.print_property("circumstance", tostring(mechanism_data.circumstance_name))
 
 	local start_params = {
 		shared_state = shared_state

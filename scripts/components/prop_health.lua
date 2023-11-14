@@ -9,13 +9,16 @@ PropHealth.init = function (self, unit, is_server)
 
 	if health_extension then
 		local max_health = self:get_data(unit, "max_health")
+		local difficulty_scaling = self:get_data(unit, "difficulty_scaling")
 		local invulnerable = self:get_data(unit, "invulnerable")
 		local unkillable = self:get_data(unit, "unkillable")
 		local breed_white_list = self:get_data(unit, "breed_white_list")
 		local ignored_collider_actor_names = self:get_data(unit, "ignored_colliders")
 		local speed_on_hit = self:get_data(unit, "speed_on_hit")
 
-		health_extension:setup_from_component(max_health, invulnerable, unkillable, breed_white_list, ignored_collider_actor_names, speed_on_hit)
+		health_extension:setup_from_component(max_health, difficulty_scaling, invulnerable, unkillable, breed_white_list, ignored_collider_actor_names, speed_on_hit)
+
+		self._health_extension = health_extension
 	end
 end
 
@@ -39,13 +42,30 @@ PropHealth.destroy = function (self, unit)
 	return
 end
 
+PropHealth.prop_health_set_invulnerable = function (self)
+	if self._health_extension then
+		self._health_extension:set_invulnerable(true)
+	end
+end
+
+PropHealth.prop_health_set_vulnerable = function (self)
+	if self._health_extension then
+		self._health_extension:set_invulnerable(false)
+	end
+end
+
 PropHealth.component_data = {
 	max_health = {
 		ui_type = "number",
 		decimals = 0,
 		value = 100,
-		ui_name = "Max Health",
+		ui_name = "Base Health",
 		step = 1
+	},
+	difficulty_scaling = {
+		ui_type = "check_box",
+		value = false,
+		ui_name = "Difficulty Scaling"
 	},
 	invulnerable = {
 		ui_type = "check_box",
@@ -81,6 +101,16 @@ PropHealth.component_data = {
 		category = "Debris",
 		value = 5,
 		ui_name = "Impulse Speed on Hit"
+	},
+	inputs = {
+		prop_health_set_invulnerable = {
+			accessibility = "public",
+			type = "event"
+		},
+		prop_health_set_vulnerable = {
+			accessibility = "public",
+			type = "event"
+		}
 	},
 	extensions = {
 		"PropHealthExtension"

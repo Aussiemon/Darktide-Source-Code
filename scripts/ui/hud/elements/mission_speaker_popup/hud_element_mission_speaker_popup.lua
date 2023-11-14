@@ -27,8 +27,8 @@ HudElementMissionSpeakerPopup.init = function (self, parent, draw_layer, start_s
 	self._bar_widgets = bar_widgets
 end
 
-HudElementMissionSpeakerPopup.destroy = function (self)
-	HudElementMissionSpeakerPopup.super.destroy(self)
+HudElementMissionSpeakerPopup.destroy = function (self, ui_renderer)
+	HudElementMissionSpeakerPopup.super.destroy(self, ui_renderer)
 end
 
 HudElementMissionSpeakerPopup.update = function (self, dt, t, ui_renderer, render_settings, input_service)

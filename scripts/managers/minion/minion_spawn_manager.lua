@@ -59,7 +59,7 @@ end
 
 local TEMP_INIT_DATA = {}
 
-MinionSpawnManager.spawn_minion = function (self, breed_name, position, rotation, side_id, optional_aggro_state, optional_target_unit, optional_spawner_unit, optional_group_id, optional_mission_objective_id, optional_attack_selection_template_name, optional_health_modifier)
+MinionSpawnManager.spawn_minion = function (self, breed_name, position, rotation, side_id, optional_aggro_state, optional_target_unit, optional_spawner_unit, optional_group_id, optional_mission_objective_id, optional_attack_selection_template_name, optional_health_modifier, optional_spawner_spawn_index)
 	local breed = Breeds[breed_name]
 	local seed = math.random_seed(self._seed)
 	local spawn_aggro_state = optional_aggro_state or breed.spawn_aggro_state
@@ -90,7 +90,7 @@ MinionSpawnManager.spawn_minion = function (self, breed_name, position, rotation
 	local blackboard = BLACKBOARDS[unit]
 
 	self:_initialize_inventory(unit, breed, blackboard, optional_attack_selection_template_name)
-	self:_initialize_blackboard_components(breed, blackboard, seed, optional_spawner_unit)
+	self:_initialize_blackboard_components(breed, blackboard, seed, optional_spawner_unit, optional_spawner_spawn_index)
 
 	if optional_mission_objective_id then
 		self:_register_minion_to_objective(unit, optional_mission_objective_id)
@@ -160,7 +160,7 @@ MinionSpawnManager._initialize_inventory = function (self, unit, breed, blackboa
 	end
 end
 
-MinionSpawnManager._initialize_blackboard_components = function (self, breed, blackboard, seed, optional_spawner_unit)
+MinionSpawnManager._initialize_blackboard_components = function (self, breed, blackboard, seed, optional_spawner_unit, optional_spawner_spawn_index)
 	local spawn_component = Blackboard.write_component(blackboard, "spawn")
 	local size_variation_range = breed.size_variation_range
 
@@ -173,6 +173,10 @@ MinionSpawnManager._initialize_blackboard_components = function (self, breed, bl
 	if optional_spawner_unit then
 		spawn_component.is_exiting_spawner = true
 		spawn_component.spawner_unit = optional_spawner_unit
+
+		if optional_spawner_spawn_index then
+			spawn_component.spawner_spawn_index = optional_spawner_spawn_index
+		end
 	end
 end
 

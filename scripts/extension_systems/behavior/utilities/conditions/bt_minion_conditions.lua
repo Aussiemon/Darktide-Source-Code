@@ -173,6 +173,10 @@ conditions.at_jump_smart_object = function (unit, blackboard, scratchpad, condit
 end
 
 conditions.at_smashable_obstacle_smart_object = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
+	if is_running then
+		return true
+	end
+
 	local nav_smart_object_component = blackboard.nav_smart_object
 	local smart_object_type = nav_smart_object_component.type
 
@@ -1326,6 +1330,12 @@ conditions.poxwalker_bomber_is_dead = function (unit, blackboard, scratchpad, co
 end
 
 conditions.has_move_to_position = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
+	local is_aggroed = conditions.is_aggroed(unit, blackboard, scratchpad, condition_args, action_data, is_running)
+
+	if not is_aggroed then
+		return false
+	end
+
 	local behavior_component = blackboard.behavior
 	local has_move_to_position = behavior_component.has_move_to_position
 
@@ -1337,6 +1347,57 @@ conditions.renegade_twin_captain_should_disappear = function (unit, blackboard, 
 	local should_disappear = behavior_component.should_disappear
 
 	return should_disappear
+end
+
+conditions.renegade_twin_captain_shield_down_recharge = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
+	if is_running then
+		return true
+	end
+
+	local behavior_component = blackboard.behavior
+	local toughness_broke = behavior_component.toughness_broke
+
+	return toughness_broke
+end
+
+conditions.twin_captain_void_shield_explosion = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
+	local is_aggroed = conditions.is_aggroed(unit, blackboard, scratchpad, condition_args, action_data, is_running)
+
+	if not is_aggroed then
+		return false
+	end
+
+	local toughness_extension = ScriptUnit.has_extension(unit, "toughness_system")
+
+	return toughness_extension:current_toughness_percent() > 0
+end
+
+conditions.twin_captain_disappear_idle = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
+	local is_aggroed = conditions.is_aggroed(unit, blackboard, scratchpad, condition_args, action_data, is_running)
+
+	if not is_aggroed then
+		return false
+	end
+
+	local behavior_component = blackboard.behavior
+
+	return behavior_component.disappear_idle
+end
+
+conditions.is_empowered = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
+	local is_aggroed = conditions.is_aggroed(unit, blackboard, scratchpad, condition_args, action_data, is_running)
+
+	if not is_aggroed then
+		return false
+	end
+
+	local buff_extension = ScriptUnit.has_extension(unit, "buff_system")
+
+	if buff_extension and buff_extension:has_keyword("empowered") then
+		return true
+	end
+
+	return false
 end
 
 return conditions

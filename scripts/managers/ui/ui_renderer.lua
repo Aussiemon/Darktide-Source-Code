@@ -1108,7 +1108,7 @@ UIRenderer.text_height = function (self, text, font_type, font_size, optional_si
 	return height
 end
 
-UIRenderer.text_size = function (self, text, font_type, font_size, optional_size, options)
+UIRenderer.text_size = function (self, text, font_type, font_size, optional_size, options, use_max_extents)
 	local font_data = UIFonts.data_by_type(font_type)
 	local font = font_data.path
 	local flags = font_data.render_flags or 0
@@ -1125,7 +1125,7 @@ UIRenderer.text_size = function (self, text, font_type, font_size, optional_size
 
 	additional_settings.flags = flags
 	additional_settings.optional_size = optional_size
-	local min, max, caret = Gui2_slug_text_extents(self.gui, text, font, font_size, additional_settings)
+	local min, max, caret = use_max_extents and Gui2.slug_text_max_extents or Gui2_slug_text_extents(self.gui, text, font, font_size, additional_settings)
 	local min_x, min_y = Vector3.to_elements(min)
 	local max_x, max_y = Vector3.to_elements(max)
 	local width = max_x - min_x

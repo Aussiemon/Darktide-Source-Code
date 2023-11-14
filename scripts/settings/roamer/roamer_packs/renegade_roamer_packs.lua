@@ -220,7 +220,7 @@ local roamer_packs = {
 				elite_berzerker,
 				elite_berzerker,
 				elite_berzerker,
-				elite_berzerker
+				roamer_melee
 			}
 		},
 		{

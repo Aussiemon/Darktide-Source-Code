@@ -1,4 +1,5 @@
 local ArmorSettings = require("scripts/settings/damage/armor_settings")
+local NO_SURFACE_DECAL = false
 local armor_types = ArmorSettings.types
 local blood_ball = {
 	"content/decals/blood_ball/blood_ball"
@@ -1160,7 +1161,6 @@ local resistant = {
 	}
 }
 local berserker = table.clone(unarmored)
-local prop_armor = table.clone(armored)
 local player = nil
 
 return {
@@ -1171,7 +1171,6 @@ return {
 		[armor_types.player] = player,
 		[armor_types.resistant] = resistant,
 		[armor_types.super_armor] = super_armor,
-		[armor_types.unarmored] = unarmored,
-		[armor_types.prop_armor] = prop_armor
+		[armor_types.unarmored] = unarmored
 	}
 }

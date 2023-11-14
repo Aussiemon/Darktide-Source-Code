@@ -18,7 +18,7 @@ MinigameDecodeSymbols.init = function (self, unit, is_server, seed)
 	self._decode_targets = {}
 	self._current_stage = nil
 	self._decode_start_time = nil
-	self._decode_misses = nil
+	self._misses_per_player = {}
 
 	Unit.set_flow_variable(unit, "lua_auspex_scanner_speed", MinigameSettings.decode_symbols_sweep_duration)
 end
@@ -52,6 +52,11 @@ MinigameDecodeSymbols.hot_join_sync = function (self, sender, channel)
 	game_session_manager:send_rpc_clients("rpc_minigame_sync_decode_symbols_set_symbols", minigame_unit_id, is_level_unit, symbols)
 end
 
+MinigameDecodeSymbols._player_miss_target = function (self, player)
+	local unique_id = player:unique_id()
+	self._misses_per_player[unique_id] = (self._misses_per_player[unique_id] or 0) + 1
+end
+
 MinigameDecodeSymbols.start = function (self, player)
 	MinigameDecodeSymbols.super.start(self, player)
 	Unit.flow_event(self._minigame_unit, "lua_minigame_start")
@@ -77,7 +82,6 @@ MinigameDecodeSymbols.start = function (self, player)
 
 		game_session_manager:send_rpc_clients("rpc_minigame_sync_decode_symbols_set_start_time", minigame_unit_id, is_level_unit, fixed_frame_id)
 
-		self._decode_misses = 0
 		self._decode_start_time = decode_start_time
 	end
 end
@@ -86,25 +90,33 @@ MinigameDecodeSymbols.stop = function (self)
 	local is_server = self._is_server
 
 	if is_server then
-		local player_or_nil = Managers.player:player_from_session_id(self._player_session_id)
-		local is_human_player = player_or_nil and player_or_nil:is_human_controlled()
-		local is_completed = self:is_completed()
+		local player = Managers.player:player_from_session_id(self._player_session_id)
 
-		if is_human_player and is_completed then
-			Managers.telemetry_events:player_hacked_terminal(player_or_nil, self._decode_misses)
+		if self:is_completed() then
+			local unique_id = player:unique_id()
+			local mistakes = self._misses_per_player[unique_id] or 0
 
-			if Managers.stats.can_record_stats() then
-				Managers.stats:record_hacked_terminal(player_or_nil, self._decode_misses)
+			if player then
+				Managers.stats:record_private("hook_hack", player, mistakes)
 			end
+
+			local is_human_player = player and player:is_human_controlled()
+
+			if is_human_player then
+				Managers.telemetry_events:player_hacked_terminal(player, mistakes)
+			end
+
+			table.clear(self._misses_per_player)
+		elseif self._current_stage > 1 then
+			self:_player_miss_target(player)
 		end
 	end
 
 	Unit.flow_event(self._minigame_unit, "lua_minigame_stop")
 
-	if self._is_server then
+	if is_server then
 		self._decode_start_time = nil
 		self._current_stage = nil
-		self._decode_misses = nil
 
 		table.clear(self._symbols)
 	end
@@ -175,7 +187,10 @@ MinigameDecodeSymbols.on_action_pressed = function (self, t)
 			fx_extension:trigger_gear_wwise_event_with_source("sfx_minigame_success", nil, self._fx_source_name, sync_with_clients, include_client)
 		end
 	else
-		self._decode_misses = self._decode_misses + 1
+		local player = Managers.player:player_from_session_id(self._player_session_id)
+
+		self:_player_miss_target(player)
+
 		self._current_stage = math.max(self._current_stage - 1, 1)
 
 		Unit.flow_event(self._minigame_unit, "lua_minigame_fail")

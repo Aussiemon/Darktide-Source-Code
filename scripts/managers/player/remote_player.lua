@@ -9,6 +9,7 @@ RemotePlayer.init = function (self, unique_id, session_id, channel_id, peer_id, 
 	self.is_server = is_server
 	self.remote = true
 	self._telemetry_game_session = telemetry_game_session
+	self.stat_id = string.format("%s:%s", peer_id, local_player_id)
 	self._unique_id = unique_id
 	self._session_id = session_id
 	self._connection_channel_id = channel_id

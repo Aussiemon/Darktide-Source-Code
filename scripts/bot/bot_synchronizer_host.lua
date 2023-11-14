@@ -47,6 +47,13 @@ BotSynchronizerHost.update = function (self)
 			local player = player_manager:add_bot_player(BotPlayer, nil, self._peer_id, local_player_id, profile, slot, viewport_name)
 
 			Managers.telemetry_events:client_connected(player)
+			Managers.stats:add_user(local_player_id)
+
+			local mission_manager = Managers.mission_server or Managers.hub_server
+
+			if mission_manager and mission_manager.bot_joined then
+				mission_manager:bot_joined(local_player_id)
+			end
 
 			spawn_item.state = SPAWN_STATES.syncing_profile
 			local package_synchronization_manager = Managers.package_synchronization
@@ -121,7 +128,14 @@ BotSynchronizerHost.remove_bot = function (self, local_player_id)
 		return
 	end
 
+	local mission_manager = Managers.mission_server or Managers.hub_server
+
+	if mission_manager and mission_manager.bot_removed then
+		mission_manager:bot_removed(local_player_id)
+	end
+
 	Managers.telemetry_events:client_disconnected(player)
+	Managers.stats:remove_user(local_player_id)
 
 	local package_synchronization_manager = Managers.package_synchronization
 	local package_synchronizer_host = package_synchronization_manager:synchronizer_host()

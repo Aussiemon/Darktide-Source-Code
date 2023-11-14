@@ -257,7 +257,7 @@ templates.no_toughness_damage_buff = {
 templates.player_spawn_grace = {
 	class_name = "buff",
 	duration = 5,
-	hud_icon = "content/ui/textures/icons/buffs/hud/states_heal_over_time_buff_hud",
+	hud_icon = "content/ui/textures/icons/buffs/hud/states_grace_time_hud",
 	keywords = {
 		keywords.unperceivable
 	},
@@ -1041,9 +1041,6 @@ templates.player_coherency_regen_node_buff_2.stats_buffs = {
 }
 templates.bot_medium_buff = {
 	class_name = "buff",
-	keywords = {
-		keywords.stun_immune
-	},
 	stat_buffs = {
 		[stat_buffs.max_health_modifier] = 0.5,
 		[stat_buffs.toughness] = 50,
@@ -1053,9 +1050,6 @@ templates.bot_medium_buff = {
 }
 templates.bot_high_buff = {
 	class_name = "buff",
-	keywords = {
-		keywords.stun_immune
-	},
 	stat_buffs = {
 		[stat_buffs.max_health_modifier] = 0.8,
 		[stat_buffs.toughness] = 100,

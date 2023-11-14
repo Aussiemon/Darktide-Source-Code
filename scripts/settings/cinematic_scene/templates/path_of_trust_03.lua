@@ -24,9 +24,9 @@ local cinematic_scene_templates = {
 			"slot_attachment_3"
 		},
 		popup_info = {
-			header_text = "loc_popup_path_of_trust_cutscene_waiting_strategium_header",
-			button_text = "loc_popup_button_path_of_trust_accept_cutscene",
-			description_text = "loc_popup_path_of_trust_cutscene_waiting_strategium_description"
+			header_text = "loc_popup_cutscene_waiting_strategium_header",
+			button_text = "loc_popup_cutscene_strategium_accept_button",
+			description_text = "loc_popup_cutscene_waiting_strategium_description"
 		}
 	}
 }

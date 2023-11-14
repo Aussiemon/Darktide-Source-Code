@@ -192,7 +192,7 @@ item_icon_landscape_style.horizontal_alignment = "center"
 item_icon_landscape_style.offset = {
 	0,
 	32,
-	5
+	2
 }
 item_icon_landscape_style.offset_original = table.clone(item_icon_landscape_style.offset)
 item_icon_landscape_style.offset_compressed = {
@@ -846,13 +846,13 @@ item_reward_item_icon_style.size = {
 item_reward_item_icon_style.offset = {
 	0,
 	100,
-	3
+	2
 }
 item_reward_item_icon_style.offset_original = table.clone(item_reward_item_icon_style.offset)
 item_reward_item_icon_style.offset_compressed = {
 	0,
 	110,
-	3
+	2
 }
 item_reward_item_icon_style.horizontal_alignment = "center"
 item_reward_item_icon_style.color = start_color

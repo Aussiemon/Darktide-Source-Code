@@ -336,6 +336,17 @@ local RENDER_TEMPLATES = {
 			},
 			{
 				id = 2,
+				display_name = "loc_setting_nv_reflex_framerate_cap_40",
+				require_apply = true,
+				require_restart = false,
+				values = {
+					render_settings = {
+						nv_framerate_cap = 40
+					}
+				}
+			},
+			{
+				id = 3,
 				display_name = "loc_setting_nv_reflex_framerate_cap_60",
 				require_apply = true,
 				require_restart = false,
@@ -346,7 +357,29 @@ local RENDER_TEMPLATES = {
 				}
 			},
 			{
-				id = 3,
+				id = 4,
+				display_name = "loc_setting_nv_reflex_framerate_cap_72",
+				require_apply = true,
+				require_restart = false,
+				values = {
+					render_settings = {
+						nv_framerate_cap = 72
+					}
+				}
+			},
+			{
+				id = 5,
+				display_name = "loc_setting_nv_reflex_framerate_cap_90",
+				require_apply = true,
+				require_restart = false,
+				values = {
+					render_settings = {
+						nv_framerate_cap = 90
+					}
+				}
+			},
+			{
+				id = 6,
 				display_name = "loc_setting_nv_reflex_framerate_cap_120",
 				require_apply = true,
 				require_restart = false,
@@ -715,84 +748,6 @@ local RENDER_TEMPLATES = {
 		group_name = "ray_tracing",
 		display_name = "loc_ray_tracing",
 		widget_type = "group_header",
-		validation_function = function ()
-			return Application.render_caps("dxr")
-		end
-	},
-	{
-		id = "ray_tracing_quality",
-		startup_prio = 2,
-		display_name = "loc_setting_ray_tracing_quality",
-		apply_on_startup = true,
-		tooltip_text = "loc_setting_ray_tracing_quality_mouseover",
-		save_location = "master_render_settings",
-		default_value = DefaultGameParameters.default_ray_tracing_quality_quality,
-		options = {
-			{
-				id = "off",
-				display_name = "loc_settings_menu_off",
-				require_apply = true,
-				require_restart = false,
-				values = {
-					render_settings = {
-						dxr = false
-					},
-					master_render_settings = {
-						rt_reflections_quality = "off",
-						rtxgi_quality = "off"
-					}
-				}
-			},
-			{
-				id = "low",
-				display_name = "loc_settings_menu_low",
-				require_apply = true,
-				require_restart = false,
-				values = {
-					render_settings = {
-						dxr = true
-					},
-					master_render_settings = {
-						rt_reflections_quality = "low",
-						rtxgi_quality = "low"
-					}
-				}
-			},
-			{
-				id = "medium",
-				display_name = "loc_settings_menu_medium",
-				require_apply = true,
-				require_restart = false,
-				values = {
-					render_settings = {
-						dxr = true
-					},
-					master_render_settings = {
-						rt_reflections_quality = "low",
-						rtxgi_quality = "medium"
-					}
-				}
-			},
-			{
-				id = "high",
-				display_name = "loc_settings_menu_high",
-				require_apply = true,
-				require_restart = false,
-				values = {
-					render_settings = {
-						dxr = true
-					},
-					master_render_settings = {
-						rt_reflections_quality = "high",
-						rtxgi_quality = "high"
-					}
-				}
-			},
-			{
-				id = "custom",
-				display_name = "loc_setting_graphics_quality_option_custom"
-			}
-		},
 		validation_function = function ()
 			return Application.render_caps("dxr")
 		end

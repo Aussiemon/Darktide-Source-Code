@@ -3,7 +3,7 @@ local TrueFlightTemplates = require("scripts/settings/projectile/true_flight_tem
 local locomotion_states = ProjectileLocomotionSettings.states
 local grenade_projectile_locomotion_templates = {
 	grenade = {
-		throw_parameters = {
+		trajectory_parameters = {
 			throw = {
 				offset_right = 0,
 				aim_max_iterations = 40,
@@ -94,7 +94,7 @@ local grenade_projectile_locomotion_templates = {
 		}
 	},
 	krak_grenade = {
-		throw_parameters = {
+		trajectory_parameters = {
 			throw = {
 				offset_right = 0,
 				inherit_owner_velocity_percentage = 1,
@@ -187,7 +187,7 @@ local grenade_projectile_locomotion_templates = {
 		}
 	},
 	ogryn_grenade_box = {
-		throw_parameters = {
+		trajectory_parameters = {
 			throw = {
 				offset_right = 0,
 				aim_max_iterations = 40,
@@ -280,7 +280,7 @@ local grenade_projectile_locomotion_templates = {
 		}
 	},
 	ogryn_friendly_rock = {
-		throw_parameters = {
+		trajectory_parameters = {
 			throw = {
 				offset_right = 0,
 				aim_max_iterations = 40,
@@ -373,7 +373,7 @@ local grenade_projectile_locomotion_templates = {
 		}
 	},
 	ogryn_frag_grenade = {
-		throw_parameters = {
+		trajectory_parameters = {
 			throw = {
 				offset_right = 0,
 				aim_max_iterations = 40,
@@ -464,7 +464,7 @@ local grenade_projectile_locomotion_templates = {
 		}
 	},
 	zealot_throwing_knife_projectile = {
-		throw_parameters = {
+		trajectory_parameters = {
 			spawn = {
 				locomotion_state = locomotion_states.manual_physics
 			}
@@ -497,7 +497,7 @@ local grenade_projectile_locomotion_templates = {
 		}
 	},
 	psyker_throwing_knife_projectile = {
-		throw_parameters = {
+		trajectory_parameters = {
 			spawn = {
 				locomotion_state = locomotion_states.true_flight
 			}
@@ -535,7 +535,7 @@ local grenade_projectile_locomotion_templates = {
 		}
 	},
 	psyker_throwing_knife_projectile_aimed = {
-		throw_parameters = {
+		trajectory_parameters = {
 			spawn = {
 				locomotion_state = locomotion_states.true_flight
 			}

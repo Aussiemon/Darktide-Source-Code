@@ -228,6 +228,16 @@ function _impact_fx(damage_type, breed, did_damage, hit_weakspot, armor_type, at
 		armor_type = hitzone_armor_override[hit_zone_name]
 	end
 
+	if breed.hit_effect_armor_override then
+		armor_type = breed.hit_effect_armor_override
+	end
+
+	local hitzone_hit_effect_armor_override = breed.hitzone_hit_effect_armor_override
+
+	if hitzone_hit_effect_armor_override and hitzone_hit_effect_armor_override[hit_zone_name] then
+		armor_type = hitzone_hit_effect_armor_override[hit_zone_name]
+	end
+
 	if breed_impact_fx_override then
 		impact_fxs = breed_impact_fx_override
 	else

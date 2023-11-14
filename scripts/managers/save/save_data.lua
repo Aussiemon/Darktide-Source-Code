@@ -5,32 +5,37 @@ SaveData.default_account_data = {
 	crossplay_accepted = false,
 	profile_preset_intro_presented = false,
 	input_settings = {
-		weapon_switch_scroll_wrap = true,
+		rumble_intensity = 50,
+		controller_enable_acceleration = true,
+		controller_response_curve_strength_ranged = 50,
 		mouse_look_scale = 1,
-		controller_look_scale = 1,
-		wield_previous_slot_after_grenade = true,
 		mouse_look_scale_ranged_alternate_fire = 1,
 		mouse_look_scale_ranged = 1,
+		com_wheel_single_tap = "none",
 		controller_look_scale_ranged = 1,
+		controller_look_scale_vertical = 1,
 		controller_response_curve_strength = 50,
-		controller_layout = "default",
-		controller_aim_assist = "new_full",
+		controller_look_scale_vertical_ranged = 1,
 		controller_look_dead_zone = 0.1,
 		controller_response_curve_ranged = "linear",
 		controller_invert_look_y = false,
-		rumble_enabled = true,
-		rumble_intensity = 50,
 		rumble_intensity_gameplay = 100,
-		controller_look_scale_ranged_alternate_fire = 1,
-		controller_response_curve_strength_ranged = 50,
-		controller_response_curve = "linear",
-		controller_enable_acceleration = true,
 		rumble_intensity_immersive = 100,
+		controller_look_scale_ranged_alternate_fire = 1,
+		controller_response_curve = "linear",
+		controller_aim_assist = "new_full",
+		controller_look_scale_vertical_ranged_alternate_fire = 1,
 		mouse_invert_look_y = false,
-		com_wheel_delay = 0.3,
-		always_dodge = false,
 		toggle_ads = false,
 		stationary_dodge = false,
+		weapon_switch_scroll_wrap = true,
+		controller_look_scale = 1,
+		wield_previous_slot_after_grenade = true,
+		rumble_enabled = true,
+		controller_layout = "default",
+		com_wheel_delay = 0.3,
+		always_dodge = false,
+		com_wheel_double_tap = "location_ping",
 		diagonal_forward_dodge = true,
 		hold_to_sprint = default_hold,
 		hold_to_crouch = default_hold
@@ -46,6 +51,7 @@ SaveData.default_account_data = {
 		show_crafting_pickup_notification = true,
 		portrait_rendering_enabled = true,
 		profanity_filter_enabled = true,
+		group_buff_icon_in_categories = true,
 		camera_movement_offset_sway_intensity = 100,
 		subtitle_background_opacity = 60,
 		warp_charge_effects_intensity = 100,
@@ -63,6 +69,7 @@ SaveData.default_character_data = {
 	new_item_notifications = {},
 	new_completed_contracts = {},
 	new_unlocked_talent_groups = {},
+	view_settings = {},
 	profile_presets = {
 		profile_presets_version = 1
 	}
@@ -96,6 +103,10 @@ SaveData.populate = function (self, save_data)
 						local default_character_data = SaveData.default_character_data
 
 						for character_id, character_id_data in pairs(character_data) do
+							if not character_id_data.view_settings then
+								character_id_data.view_settings = table.clone_instance(default_character_data.view_settings)
+							end
+
 							local profile_presets = character_id_data.profile_presets
 							local incorrect_profile_presets_version = not profile_presets or profile_presets.profile_presets_version ~= default_character_data.profile_presets.profile_presets_version
 

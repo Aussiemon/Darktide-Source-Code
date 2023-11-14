@@ -296,29 +296,6 @@ local widget_definitions = {
 			}
 		},
 		{
-			value = "content/ui/vector_textures/symbols/cog_skull_01",
-			pass_type = "slug_icon",
-			style = {
-				vertical_alignment = "center",
-				horizontal_alignment = "center",
-				offset = {
-					0,
-					0,
-					1
-				},
-				color = {
-					40,
-					0,
-					0,
-					0
-				},
-				size = {
-					1250,
-					1250
-				}
-			}
-		},
-		{
 			value = "content/ui/materials/backgrounds/terminal_basic",
 			pass_type = "texture",
 			style = {

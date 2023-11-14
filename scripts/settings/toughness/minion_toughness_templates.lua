@@ -8,6 +8,7 @@ local toughness_templates = {
 		regeneration_delay = 6,
 		regeneration_speed = 100,
 		linked_actor = "c_captain_void_shield",
+		break_shield_when_depleted = true,
 		stagger_immune_while_active = true,
 		template_type = template_types.minion,
 		max = {

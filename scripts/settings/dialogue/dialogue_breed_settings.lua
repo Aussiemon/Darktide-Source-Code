@@ -10,7 +10,9 @@ local dialogue_breed_settings = {
 		"shipmistress",
 		"enemy_nemesis_wolfer",
 		"enemy_wolfer_adjutant",
-		"interrogator"
+		"interrogator",
+		"barber",
+		"enginseer"
 	}
 }
 dialogue_breed_settings.voice_classes_npc = dialogue_breed_settings.voice_classes_2d
@@ -180,7 +182,9 @@ dialogue_breed_settings.mission_giver = {
 		"enemy_wolfer_adjutant_a",
 		"enemy_wolfer_adjutant_b",
 		"interrogator_a",
-		"training_ground_psyker_a"
+		"training_ground_psyker_a",
+		"enginseer_a",
+		"barber_a"
 	}
 }
 dialogue_breed_settings.sergeant = {
@@ -244,6 +248,21 @@ dialogue_breed_settings.tech_priest = {
 	wwise_voice_switch_group = "voice_profile",
 	wwise_voices = {
 		"tech_priest_a"
+	}
+}
+dialogue_breed_settings.enginseer = {
+	trigger_seen_vo = false,
+	is_network_synced = true,
+	trigger_heard_vo = false,
+	vo_class_name = "enginseer",
+	has_dialogue_extension = true,
+	vo_triggers_enemy_kill_query = false,
+	dialogue_memory_faction_name = "npc",
+	prop_name = "voice_over_2d",
+	can_trigger_vo = true,
+	wwise_voice_switch_group = "voice_profile",
+	wwise_voices = {
+		"enginseer_a"
 	}
 }
 dialogue_breed_settings.purser = {
@@ -966,6 +985,7 @@ dialogue_breed_settings.barber = {
 	vo_triggers_enemy_kill_query = false,
 	dialogue_memory_faction_name = "npc",
 	level_requirement = 0,
+	prop_name = "voice_over_2d",
 	can_trigger_vo = true,
 	wwise_voice_switch_group = "voice_profile",
 	wwise_voices = {

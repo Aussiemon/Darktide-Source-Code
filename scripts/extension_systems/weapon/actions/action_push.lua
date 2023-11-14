@@ -80,8 +80,8 @@ ActionPush._push = function (self, t)
 		end
 
 		local push_offset = action_settings.push_offset or 0
-		local push_posisition = player_position + player_direction * push_offset
-		number_of_units_hit = PushAttack.push(self._physics_world, push_posisition, player_direction, rewind_ms, power_level, action_settings, player_unit, is_predicted, weapon_item, weak_push)
+		local push_position = player_position + player_direction * push_offset
+		number_of_units_hit = PushAttack.push(self._physics_world, push_position, player_direction, rewind_ms, power_level, action_settings, player_unit, is_predicted, weapon_item, weak_push)
 
 		self:_play_push_rumble(number_of_units_hit)
 	end

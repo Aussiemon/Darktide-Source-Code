@@ -451,6 +451,15 @@ local left_panel_widgets_definitions = {
 		}
 	}, "diamantine_info_panel")
 }
+
+local function for_all_left_widgets(parent, func)
+	local left_panel_widgets = parent._left_panel_widgets
+
+	for _, widget in ipairs(left_panel_widgets) do
+		func(widget)
+	end
+end
+
 local animations = {
 	enter = {
 		{
@@ -458,13 +467,12 @@ local animations = {
 			end_time = 0,
 			start_time = 0,
 			init = function (parent, ui_scenegraph, scenegraph_definition, widgets, params)
-				local left_panel_widgets = parent._left_panel_widgets
-				local start_pos = -details_panel_size[1]
+				local start_pos = 25 - details_panel_size[1]
 
-				for _, widget in ipairs(left_panel_widgets) do
+				parent:set_scenegraph_position("left_panel", start_pos)
+				for_all_left_widgets(parent, function (widget)
 					widget.alpha_multiplier = 0
-					widget.offset[1] = start_pos
-				end
+				end)
 			end
 		},
 		{
@@ -472,13 +480,12 @@ local animations = {
 			end_time = 0.5,
 			start_time = 0,
 			update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress, params)
-				local new_pos = -details_panel_size[1] + details_panel_size[1] * math.easeOutCubic(progress)
-				local left_panel_widgets = parent._left_panel_widgets
+				local new_pos = 25 - details_panel_size[1] + details_panel_size[1] * math.easeOutCubic(progress)
 
-				for _, widget in ipairs(left_panel_widgets) do
+				parent:set_scenegraph_position("left_panel", new_pos)
+				for_all_left_widgets(parent, function (widget)
 					widget.alpha_multiplier = progress
-					widget.offset[1] = new_pos
-				end
+				end)
 
 				return true
 			end
@@ -490,13 +497,12 @@ local animations = {
 			end_time = 0.5,
 			start_time = 0,
 			update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress, params)
-				local new_pos = -details_panel_size[1] * math.easeOutCubic(progress)
-				local left_panel_widgets = parent._left_panel_widgets
+				local new_pos = 25 - details_panel_size[1] * math.easeOutCubic(progress)
 
-				for _, widget in ipairs(left_panel_widgets) do
+				parent:set_scenegraph_position("left_panel", new_pos)
+				for_all_left_widgets(parent, function (widget)
 					widget.alpha_multiplier = 1 - progress
-					widget.offset[1] = new_pos
-				end
+				end)
 
 				return true
 			end

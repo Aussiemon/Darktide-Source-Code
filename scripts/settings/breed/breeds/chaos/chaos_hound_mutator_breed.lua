@@ -30,7 +30,6 @@ local breed_data = {
 	target_stickiness_distance = 10,
 	volley_fire_target = true,
 	unit_template_name = "minion",
-	base_height = 1.5,
 	broadphase_radius = 1,
 	uses_wwise_special_targeting_parameter = true,
 	stagger_resistance = 2,
@@ -46,6 +45,7 @@ local breed_data = {
 	run_speed = 6,
 	can_be_used_for_all_factions = true,
 	faction_name = "chaos",
+	base_height = 1.5,
 	line_of_sight_collision_filter = "filter_minion_line_of_sight_check",
 	player_locomotion_constrain_radius = 0.7,
 	smart_tag_target_type = "breed",
@@ -53,8 +53,9 @@ local breed_data = {
 	breed_type = breed_types.minion,
 	tags = {
 		disabler = true,
-		minion = true,
-		special = true
+		mutator = true,
+		special = true,
+		minion = true
 	},
 	point_cost = math.huge,
 	armor_type = armor_types.disgustingly_resilient,
@@ -398,6 +399,7 @@ local breed_data = {
 			[hit_zone_names.center_mass] = 3
 		}
 	},
+	outline_config = {},
 	blackboard_component_config = BreedBlackboardComponentTemplates.chaos_hound
 }
 

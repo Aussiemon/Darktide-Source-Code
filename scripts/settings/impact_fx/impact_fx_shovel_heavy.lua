@@ -1,4 +1,5 @@
 local ArmorSettings = require("scripts/settings/damage/armor_settings")
+local NO_SURFACE_DECAL = false
 local armor_types = ArmorSettings.types
 local blood_ball = {
 	"content/decals/blood_ball/blood_ball"
@@ -68,7 +69,7 @@ local unarmored = {
 		},
 		damage_negated = {
 			{
-				event = "wwise/events/weapon/melee_hits_blunt_shield",
+				event = "wwise/events/weapon/play_hit_indicator_melee_super_armor_no_damage",
 				append_husk_to_event_name = true
 			}
 		},
@@ -239,7 +240,7 @@ local armored = {
 		},
 		damage_negated = {
 			{
-				event = "wwise/events/weapon/melee_hits_blunt_no_damage",
+				event = "wwise/events/weapon/play_hit_indicator_melee_super_armor_no_damage",
 				append_husk_to_event_name = true
 			},
 			{
@@ -409,7 +410,7 @@ local disgustingly_resilient = {
 		},
 		damage_negated = {
 			{
-				event = "wwise/events/weapon/melee_hits_blunt_no_damage",
+				event = "wwise/events/weapon/play_hit_indicator_melee_super_armor_no_damage",
 				append_husk_to_event_name = true
 			},
 			{
@@ -567,7 +568,6 @@ local disgustingly_resilient = {
 }
 local resistant = table.clone(unarmored)
 local berserker = table.clone(unarmored)
-local prop_armor = table.clone(armored)
 local player = nil
 
 return {
@@ -578,7 +578,6 @@ return {
 		[armor_types.player] = player,
 		[armor_types.resistant] = resistant,
 		[armor_types.super_armor] = super_armor,
-		[armor_types.unarmored] = unarmored,
-		[armor_types.prop_armor] = prop_armor
+		[armor_types.unarmored] = unarmored
 	}
 }

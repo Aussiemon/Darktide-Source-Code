@@ -7,7 +7,7 @@ local UIWidget = require("scripts/managers/ui/ui_widget")
 local UISequenceAnimator = require("scripts/managers/ui/ui_sequence_animator")
 local BaseView = class("BaseView")
 
-BaseView.init = function (self, definitions, settings, context)
+BaseView.init = function (self, definitions, settings, context, dynamic_package_name)
 	local ui_renderer = context and context.ui_renderer
 
 	if ui_renderer then
@@ -31,7 +31,7 @@ BaseView.init = function (self, definitions, settings, context)
 	local view_name = settings.name
 	self.view_name = view_name
 	local on_load_callback = callback(self, "_on_view_load_complete", true)
-	self._should_unload = Managers.ui:load_view(view_name, self.__class_name, on_load_callback)
+	self._should_unload = Managers.ui:load_view(view_name, self.__class_name, on_load_callback, dynamic_package_name)
 end
 
 BaseView.dialogue_system = function (self)

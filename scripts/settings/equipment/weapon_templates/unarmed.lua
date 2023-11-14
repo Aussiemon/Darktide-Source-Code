@@ -33,10 +33,11 @@ local weapon_template = {
 			}
 		},
 		action_warp_charge_explode = {
-			death_on_explosion = true,
+			anim_event = "explode_warp_start",
+			overload_type = "warp_charge",
 			anim_end_event = "explode_finished",
 			kind = "overload_explosion",
-			anim_event = "explode_warp_start",
+			death_on_explosion = true,
 			total_time = 3,
 			timeline_anims = {
 				[0.933] = {
@@ -81,7 +82,9 @@ local weapon_template = {
 	},
 	uses_ammunition = false,
 	uses_overheat = false,
-	crosshair_type = "ironsight",
+	crosshair = {
+		crosshair_type = "ironsight"
+	},
 	sprint_ready_up_time = 0.1,
 	max_first_person_anim_movement_speed = 5.8,
 	fx_sources = {},

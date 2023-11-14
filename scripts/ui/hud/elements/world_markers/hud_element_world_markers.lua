@@ -51,8 +51,8 @@ HudElementWorldMarkers.init = function (self, parent, draw_layer, start_scale)
 	self._raycast_object = Managers.state.game_mode:create_safe_raycast_object("closest", "types", "both", "collision_filter", "filter_interactable_line_of_sight_marker_check")
 end
 
-HudElementWorldMarkers.destroy = function (self)
-	HudElementWorldMarkers.super.destroy(self)
+HudElementWorldMarkers.destroy = function (self, ui_renderer)
+	HudElementWorldMarkers.super.destroy(self, ui_renderer)
 
 	local event_manager = Managers.event
 
@@ -310,6 +310,13 @@ HudElementWorldMarkers._calculate_markers = function (self, dt, t, input_service
 						local is_behind = forward_dot_dir < 0 and true or false
 						local is_under = marker_position.z < camera_position.z
 						local x, y, _ = self:_convert_world_to_screen_position(camera, marker_position)
+						local pixel_offset = template.pixel_offset
+
+						if pixel_offset then
+							x = x + pixel_offset[1]
+							y = y + pixel_offset[2]
+						end
+
 						local screen_x, screen_y = self:_get_screen_offset(scale)
 						x = x - screen_x
 						y = y - screen_y

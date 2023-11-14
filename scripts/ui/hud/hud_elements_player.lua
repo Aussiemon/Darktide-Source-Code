@@ -208,6 +208,7 @@ local elements = {
 	},
 	{
 		package = "packages/ui/hud/interaction/interaction",
+		use_hud_scale = false,
 		class_name = "HudElementInteraction",
 		filename = "scripts/ui/hud/elements/interaction/hud_element_interaction",
 		visibility_groups = {
@@ -216,6 +217,7 @@ local elements = {
 		}
 	},
 	{
+		use_hud_scale = false,
 		class_name = "HudElementNameplates",
 		filename = "scripts/ui/hud/elements/nameplates/hud_element_nameplates",
 		visibility_groups = {

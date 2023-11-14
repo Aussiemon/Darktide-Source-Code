@@ -12,9 +12,9 @@ HudElementAreaNotificationPopup.init = function (self, parent, draw_layer, start
 	self:_register_events()
 end
 
-HudElementAreaNotificationPopup.destroy = function (self)
+HudElementAreaNotificationPopup.destroy = function (self, ui_renderer)
 	self:_unregister_events()
-	HudElementAreaNotificationPopup.super.destroy(self)
+	HudElementAreaNotificationPopup.super.destroy(self, ui_renderer)
 end
 
 HudElementAreaNotificationPopup.update = function (self, dt, t, ui_renderer, render_settings, input_service)

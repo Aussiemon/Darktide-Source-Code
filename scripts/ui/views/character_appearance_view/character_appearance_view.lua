@@ -428,6 +428,10 @@ CharacterAppearanceView._spawn_profile = function (self, spawn_point_unit)
 end
 
 CharacterAppearanceView._on_continue_pressed = function (self)
+	if not self._using_cursor_navigation then
+		self:_play_sound(UISoundEvents.character_appearence_confirm)
+	end
+
 	if self._is_barber then
 		if not self._popup_finish_open then
 			self._popup_finish_open = true
@@ -688,6 +692,10 @@ CharacterAppearanceView._randomize_character_backstory = function (self)
 end
 
 CharacterAppearanceView._randomize_character_name = function (self)
+	if not self._using_cursor_navigation then
+		self:_play_sound(UISoundEvents.character_appearence_option_pressed)
+	end
+
 	local name = self._character_create:randomize_name()
 	self._character_name_status.custom = false
 	self._await_validation = false
@@ -4017,7 +4025,7 @@ CharacterAppearanceView._get_pages = function (self)
 					local widget = self._page_grids[1].widgets[i]
 
 					if widget.content.hotspot then
-						widget.content.hotspot.on_pressed_sound = UISoundEvents.character_create_planet_select
+						widget.content.hotspot.on_pressed_sound = nil
 					end
 				end
 
@@ -5003,6 +5011,16 @@ CharacterAppearanceView._grid_navigation = function (self, start_direction)
 end
 
 CharacterAppearanceView._move_background_to_position = function (self, planet, skip_animation)
+	local widgets_by_name = self._widgets_by_name
+	local planets_widget = widgets_by_name.home_planets
+	local planets_widget_content = planets_widget.content
+	local start_planet = planets_widget_content.current_planet
+	local end_planet = planets_widget_content.new_planet
+
+	if planet == end_planet then
+		return
+	end
+
 	local animation_params = self._home_planet_animation_params
 
 	if not animation_params then
@@ -5015,11 +5033,7 @@ CharacterAppearanceView._move_background_to_position = function (self, planet, s
 		self._home_planet_animation_params = animation_params
 	end
 
-	local widgets_by_name = self._widgets_by_name
-	local planets_widget = widgets_by_name.home_planets
 	local background_widget = widgets_by_name.background_planet
-	local planets_widget_content = planets_widget.content
-	local start_planet = planets_widget_content.current_planet
 	local planet_offset_on_screen_x, planet_offset_on_screen_y = unpack(CharacterAppearanceViewSettings.planet_offset)
 	local start_position_x, start_position_y, background_start_position_x, background_start_position_y, start_planet_position_x, start_planet_position_y = nil
 	local scale = 1
@@ -5053,6 +5067,7 @@ CharacterAppearanceView._move_background_to_position = function (self, planet, s
 		planets_widget.offset[1] = -(end_planet_position_x * scale) * ratio
 		planets_widget.offset[2] = -(end_planet_position_y * scale) * ratio
 		planets_widget_content.current_planet = planet
+		planets_widget_content.new_planet = planet
 		local planet_style = planets_widget.style[planet.id]
 		planet_style.visible = true
 		planet_style.size_addition[1] = 0
@@ -5067,6 +5082,7 @@ CharacterAppearanceView._move_background_to_position = function (self, planet, s
 		animation_params.end_planet_position[1] = end_planet_position_x * scale * ratio
 		animation_params.end_planet_position[2] = end_planet_position_y * scale * ratio
 		animation_params.target_planet = planet
+		planets_widget_content.new_planet = planet
 
 		if self._planet_background_animation_id and self:_is_animation_active(self._planet_background_animation_id) then
 			self:_stop_animation(self._planet_background_animation_id)
@@ -5087,7 +5103,6 @@ CharacterAppearanceView._setup_planets_widget = function (self)
 		local planet_size = planet_image.size
 		local planet_position = planet_values.position
 		local planet_style = {
-			visible = false,
 			offset = {
 				planet_position[1],
 				planet_position[2],

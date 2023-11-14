@@ -1,4 +1,4 @@
-local DEFAULT_BLEND_TIME = 0.07
+local DEFAULT_BLEND_TIME = 0
 local state_machine_settings = {
 	["content/characters/player/ogryn/first_person/animations/skull_decoder"] = {
 		blend_time = DEFAULT_BLEND_TIME
@@ -10,6 +10,12 @@ local state_machine_settings = {
 		blend_time = DEFAULT_BLEND_TIME
 	},
 	["content/characters/player/human/first_person/animations/scanner"] = {
+		blend_time = DEFAULT_BLEND_TIME
+	},
+	["content/characters/player/human/first_person/animations/breach_charge"] = {
+		blend_time = DEFAULT_BLEND_TIME
+	},
+	["content/characters/player/ogryn/first_person/animations/breach_charge"] = {
 		blend_time = DEFAULT_BLEND_TIME
 	},
 	["content/characters/player/ogryn/first_person/animations/scanner_equip"] = {

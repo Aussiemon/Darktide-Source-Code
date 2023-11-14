@@ -41,7 +41,7 @@ local HitReaction = {
 		local melee_hit_on_ranged = target_wielded_slot == "slot_secondary" and is_hit_by_melee
 		local melee_hit_on_sprinting = is_hit_by_melee and is_sprinting
 		local attack_disorientation_template = disorientation_type and disorientation_templates[disorientation_type]
-		local attack_have_stun = attack_disorientation_template and attack_disorientation_template.stun.interrupt_delay ~= nil
+		local attack_have_stun = attack_disorientation_template and attack_disorientation_template.stun and attack_disorientation_template.stun.interrupt_delay ~= nil
 		local fumbled = breed_hit_reaction_stun_types and breed_hit_reaction_stun_types.fumbled
 		local has_fumbled = (melee_hit_on_ranged or melee_hit_on_sprinting) and attack_have_stun
 		local wanted_disorientation_type = has_fumbled and fumbled or disorientation_type
@@ -154,15 +154,17 @@ function _player_hit_reaction(attack_result, damage_profile, target_weapon_templ
 			end
 		end
 	elseif attack_result == attack_results.toughness_broken then
-		_drop_luggable(attacked_unit, target_unit_data_extension, attack_type)
+		if not damage_profile.ignore_toughness_broken_disorient then
+			_drop_luggable(attacked_unit, target_unit_data_extension, attack_type)
 
-		local _, was_catapulted = _push_or_catapult(target_unit_data_extension, attacked_unit, attacking_unit_owner_unit, push_template, catapulting_template, force_look_function, attack_direction, attack_type, hit_position, ignore_stun_immunity)
+			local _, was_catapulted = _push_or_catapult(target_unit_data_extension, attacked_unit, attacking_unit_owner_unit, push_template, catapulting_template, force_look_function, attack_direction, attack_type, hit_position, ignore_stun_immunity)
 
-		if not was_catapulted then
-			_toughness_broken_disorient(target_unit_data_extension, target_weapon_template, attacked_unit, attack_direction, attack_type, stun_allowed, ignore_stun_immunity)
-			_interrupt_alternate_fire(target_unit_data_extension, target_weapon_template, attacked_unit, interrupt_alternate_fire)
-			_interrupt_interaction(attacked_unit, damage_profile, uninterruptible)
-			_force_look(target_unit_data_extension, force_look_function, attacked_unit, attack_direction)
+			if not was_catapulted then
+				_toughness_broken_disorient(target_unit_data_extension, target_weapon_template, attacked_unit, attack_direction, attack_type, stun_allowed, ignore_stun_immunity)
+				_interrupt_alternate_fire(target_unit_data_extension, target_weapon_template, attacked_unit, interrupt_alternate_fire)
+				_interrupt_interaction(attacked_unit, damage_profile, uninterruptible)
+				_force_look(target_unit_data_extension, force_look_function, attacked_unit, attack_direction)
+			end
 		end
 	elseif attack_result == attack_results.toughness_absorbed then
 		_push_or_catapult(target_unit_data_extension, attacked_unit, attacking_unit_owner_unit, push_template, catapulting_template, force_look_function, attack_direction, attack_type, hit_position, ignore_stun_immunity)
@@ -315,7 +317,7 @@ end
 function _push(unit_data_extension, attacked_unit, push_template, attack_direction, attack_type, ignore_stun_immunity)
 	if push_template then
 		local buff_extension = ScriptUnit.has_extension(attacked_unit, "buff_system")
-		local has_buff = buff_extension:has_keyword(buff_keywords.stun_immune)
+		local has_buff = not push_template.ignore_stun_immunity and buff_extension:has_keyword(buff_keywords.stun_immune)
 
 		if ignore_stun_immunity or not has_buff then
 			local locomotion_push_component = unit_data_extension:write_component("locomotion_push")

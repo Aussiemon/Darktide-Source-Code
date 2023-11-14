@@ -914,9 +914,8 @@ end
 
 ViewElementGrid.set_scrollbar_progress = function (self, scroll_progress, instant_scroll)
 	local grid = self._grid
-	local current_scroll_progress = grid:scrollbar_progress()
 
-	grid:set_scrollbar_progress(scroll_progress, not instant_scroll)
+	return grid:set_scrollbar_progress(scroll_progress, not instant_scroll)
 end
 
 ViewElementGrid._on_navigation_input_changed = function (self)
@@ -999,7 +998,9 @@ ViewElementGrid.update_grid_widgets_visibility = function (self)
 						update_visible_icon_prioritization_load = true
 					end
 
-					template.load_icon(self, widget, element, ui_renderer, nil, prioritize)
+					local profile = self._item_icon_profile
+
+					template.load_icon(self, widget, element, ui_renderer, profile, prioritize)
 
 					local icon_load_id = content.icon_load_id
 
@@ -1025,6 +1026,10 @@ ViewElementGrid.update_grid_widgets_visibility = function (self)
 			end
 		end
 	end
+end
+
+ViewElementGrid.set_default_item_icon_profile = function (self, profile)
+	self._item_icon_profile = profile
 end
 
 ViewElementGrid.remove_widget = function (self, widget)
@@ -1125,6 +1130,14 @@ ViewElementGrid.get_sort_button_world_position = function (self)
 	local scenegraph_id = widget.scenegraph_id
 
 	return self:scenegraph_world_position(scenegraph_id)
+end
+
+ViewElementGrid.force_update_list_size_keeping_scroll = function (self)
+	local grid = self._grid
+	local current_scroll = grid:length_scrolled()
+
+	self:force_update_list_size()
+	self:set_scrollbar_progress(current_scroll / grid:scroll_length(), true)
 end
 
 return ViewElementGrid

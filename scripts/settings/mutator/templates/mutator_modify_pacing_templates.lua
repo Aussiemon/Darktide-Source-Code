@@ -25,24 +25,6 @@ local mutator_templates = {
 	mutator_waves_of_specials = {
 		class = "scripts/managers/mutator/mutators/mutator_modify_pacing",
 		init_modify_pacing = {
-			max_alive_specials_multiplier = 2,
-			chance_of_coordinated_strike = 1,
-			specials_timer_modifier = 0.85,
-			max_of_same_override = {
-				cultist_mutant = 6,
-				chaos_hound = 4,
-				renegade_grenadier = 4,
-				chaos_poxwalker_bomber = 4,
-				renegade_netgunner = 3,
-				renegade_sniper = 5,
-				renegade_flamer = 3,
-				cultist_flamer = 3
-			}
-		}
-	},
-	mutator_waves_of_specials = {
-		class = "scripts/managers/mutator/mutators/mutator_modify_pacing",
-		init_modify_pacing = {
 			specials_move_timer_when_challenge_rating_above = 12,
 			max_alive_specials_multiplier = 1.6,
 			chance_of_coordinated_strike = 1,
@@ -562,6 +544,18 @@ local mutator_templates = {
 		class = "scripts/managers/mutator/mutators/mutator_modify_pacing",
 		init_modify_pacing = {
 			tension_modifier = 0.5
+		}
+	},
+	mutator_reduced_ramp_duration = {
+		class = "scripts/managers/mutator/mutators/mutator_modify_pacing",
+		init_modify_pacing = {
+			ramp_duration_modifier = 0.5
+		}
+	},
+	mutator_reduced_ramp_duration_low = {
+		class = "scripts/managers/mutator/mutators/mutator_modify_pacing",
+		init_modify_pacing = {
+			ramp_duration_modifier = 0.75
 		}
 	}
 }

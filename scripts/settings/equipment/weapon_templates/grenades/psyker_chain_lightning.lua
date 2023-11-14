@@ -10,6 +10,7 @@ local chain_settings_spread = {
 	radius = 5,
 	jump_time = 0.3,
 	max_jumps = 1,
+	staff = false,
 	max_targets_at_time = {
 		{
 			num_targets = 1,
@@ -45,6 +46,7 @@ local chain_settings_spread = {
 	max_angle = math.pi * 0.35
 }
 local chain_settings_spread_targeting = {
+	staff = false,
 	radius = 15,
 	jump_time = 0.3,
 	max_jumps = 0,
@@ -68,6 +70,7 @@ local chain_settings_spread_charge = {
 	radius = 5,
 	jump_time = 0.3,
 	max_jumps = 1,
+	staff = false,
 	max_targets_at_time = {
 		{
 			num_targets = 1,
@@ -103,6 +106,7 @@ local chain_settings_spread_charge = {
 	max_angle = math.pi * 0.35
 }
 local chain_settings_spread_charge_targeting = {
+	staff = false,
 	radius = 15,
 	jump_time = 0.3,
 	max_jumps = 0,
@@ -422,23 +426,25 @@ weapon_template.actions = {
 		chain_settings_targeting = chain_settings_spread_targeting
 	},
 	action_charge = {
-		charge_template = "chain_lightning_charge_heavy",
-		target_finder_module_class_name = "psyker_chainlightning_single_targeting",
 		overload_module_class_name = "warp_charge",
+		target_finder_module_class_name = "psyker_chainlightning_single_targeting",
+		charge_template = "chain_lightning_charge_heavy",
 		kind = "overload_charge_target_finder",
 		sprint_ready_up_time = 0,
 		start_input = "charge_heavy",
-		crosshair_type = "charge_up",
 		sprint_requires_press_to_interrupt = false,
 		allowed_during_sprint = true,
 		ability_type = "grenade_ability",
-		target_anim_event = "attack_charge_fast",
 		target_missing_anim_event = "attack_charge_cancel",
 		minimum_hold_time = 0.2,
 		anim_end_event = "attack_charge_cancel",
+		target_anim_event = "attack_charge_fast",
 		anim_event = "attack_charge_fast",
 		stop_input = "charge_heavy_cancel",
 		total_time = math.huge,
+		crosshair = {
+			crosshair_type = "charge_up"
+		},
 		action_movement_curve = {
 			{
 				modifier = 0.85,
@@ -680,10 +686,12 @@ weapon_template.actions = {
 		start_input = "inspect_start",
 		anim_end_event = "inspect_end",
 		kind = "inspect",
-		crosshair_type = "inspect",
 		anim_event = "inspect_start",
 		stop_input = "inspect_stop",
-		total_time = math.huge
+		total_time = math.huge,
+		crosshair = {
+			crosshair_type = "inspect"
+		}
 	}
 }
 weapon_template.keywords = {
@@ -698,7 +706,9 @@ weapon_template.uses_ammunition = false
 weapon_template.uses_overheat = false
 weapon_template.sprint_ready_up_time = 0.1
 weapon_template.max_first_person_anim_movement_speed = 5.8
-weapon_template.crosshair_type = "dot"
+weapon_template.crosshair = {
+	crosshair_type = "dot"
+}
 weapon_template.hit_marker_type = "center"
 weapon_template.fx_sources = {
 	_left_hand = "fx_left_hand",

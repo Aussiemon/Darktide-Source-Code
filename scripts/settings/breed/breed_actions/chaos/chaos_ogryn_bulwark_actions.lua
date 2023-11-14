@@ -837,6 +837,35 @@ local action_data = {
 					"stagger_shield_damage_03",
 					"stagger_shield_damage_04"
 				}
+			},
+			blinding = {
+				bwd = {
+					"stagger_shield_damage_01",
+					"stagger_shield_damage_02",
+					"stagger_shield_damage_03",
+					"stagger_shield_damage_04"
+				},
+				left = {
+					"stagger_shield_damage_01",
+					"stagger_shield_damage_02",
+					"stagger_shield_damage_03",
+					"stagger_shield_damage_04"
+				},
+				right = {
+					"stagger_shield_damage_01",
+					"stagger_shield_damage_02",
+					"stagger_shield_damage_03",
+					"stagger_shield_damage_04"
+				},
+				dwn = {
+					"stagger_shield_damage_01",
+					"stagger_shield_damage_02",
+					"stagger_shield_damage_03",
+					"stagger_shield_damage_04"
+				},
+				fwd = {
+					"stagger_fwd_light"
+				}
 			}
 		}
 	},

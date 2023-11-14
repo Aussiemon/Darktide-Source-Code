@@ -11,6 +11,7 @@ local HealthStationInteraction = require("scripts/extension_systems/interaction/
 local LuggableInteraction = require("scripts/extension_systems/interaction/interactions/luggable_interaction")
 local LuggableSocketInteraction = require("scripts/extension_systems/interaction/interactions/luggable_socket_interaction")
 local MoveablePlatformInteraction = require("scripts/extension_systems/interaction/interactions/moveable_platform_interaction")
+local PlayerHubInspectInteraction = require("scripts/extension_systems/interaction/interactions/player_hub_inspect_interaction")
 local PocketableInteraction = require("scripts/extension_systems/interaction/interactions/pocketable_interaction")
 local PullUpInteraction = require("scripts/extension_systems/interaction/interactions/pull_up_interaction")
 local RemoveNetInteraction = require("scripts/extension_systems/interaction/interactions/remove_net_interaction")
@@ -20,6 +21,7 @@ local ScanningInteraction = require("scripts/extension_systems/interaction/inter
 local ScriptedScenarioInteraction = require("scripts/extension_systems/interaction/interactions/scripted_scenario_interaction")
 local ServoSkullActivatorInteraction = require("scripts/extension_systems/interaction/interactions/servo_skull_activator_interaction")
 local ServoSkullInteraction = require("scripts/extension_systems/interaction/interactions/servo_skull_interaction")
+local SetupBreachChargeInteraction = require("scripts/extension_systems/interaction/interactions/setup_breach_charge_interaction")
 local SetupDecodingInteraction = require("scripts/extension_systems/interaction/interactions/setup_decoding_interaction")
 local ViewInteraction = require("scripts/extension_systems/interaction/interactions/view_interaction")
 local interactions = {
@@ -52,11 +54,13 @@ local interactions = {
 	scanning = ScanningInteraction,
 	servo_skull = ServoSkullInteraction,
 	servo_skull_activator = ServoSkullActivatorInteraction,
+	setup_breach_charge = SetupBreachChargeInteraction,
 	setup_decoding = SetupDecodingInteraction,
 	training_ground = ViewInteraction,
 	vendor = ViewInteraction,
 	scripted_scenario = ScriptedScenarioInteraction,
-	cosmetics_vendor = ViewInteraction
+	cosmetics_vendor = ViewInteraction,
+	player_hub_inspect = PlayerHubInspectInteraction
 }
 
 return settings("Interactions", interactions)

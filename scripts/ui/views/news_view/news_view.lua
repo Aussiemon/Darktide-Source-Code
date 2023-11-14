@@ -15,6 +15,7 @@ NewsView.init = function (self, settings, context)
 	self._initialized = false
 	self._url_textures = {}
 	local slide_data = context and context.slide_data
+	local content_package = context and context.content_package
 
 	if not slide_data then
 		self:_load_slides()
@@ -30,14 +31,14 @@ NewsView.init = function (self, settings, context)
 	self._content_alpha_multiplier = 0
 	self._using_cursor_navigation = Managers.ui:using_cursor_navigation()
 
-	NewsView.super.init(self, Definitions, settings)
+	NewsView.super.init(self, Definitions, settings, nil, content_package)
 
 	self._allow_close_hotkey = false
 	self._pass_draw = false
 end
 
 local function to_news_view(news_item)
-	local content = {}
+	local content = news_item.content or {}
 	local backend_contents = news_item.contents
 	local image_url = nil
 
@@ -76,7 +77,10 @@ local function to_news_view(news_item)
 		id = news_item.id,
 		content = content,
 		image_url = image_url,
-		backend_news = news_item
+		backend_news = news_item,
+		local_image = news_item.local_image,
+		local_image_material = news_item.local_image_material,
+		local_slide = news_item.local_slide
 	}
 end
 
@@ -123,15 +127,21 @@ NewsView.on_enter = function (self)
 	Promise.until_value_is_true(function ()
 		return self._initialized
 	end):next(function ()
-		self._started = true
-		self._window_open_anim_id = self:_start_animation("on_enter", widgets_by_name)
+		local slides = self._slides
 
-		self:_create_slide_page_circles()
-		self:_setup_buttons_interactions()
+		if slides and #slides > 0 then
+			self._started = true
+			self._window_open_anim_id = self:_start_animation("on_enter", widgets_by_name)
 
-		local ignore_animation = true
+			self:_create_slide_page_circles()
+			self:_setup_buttons_interactions()
 
-		self:_change_slide(self._starting_slide_index, ignore_animation)
+			local ignore_animation = true
+
+			self:_change_slide(self._starting_slide_index, ignore_animation)
+		else
+			Managers.ui:close_view(self.view_name)
+		end
 	end)
 end
 
@@ -193,7 +203,9 @@ NewsView._change_slide = function (self, slide_index, ignore_animation)
 
 	local slide = self._slides[slide_index]
 
-	self:_add_viewed_slide(slide)
+	if not slide.local_slide then
+		self:_add_viewed_slide(slide)
+	end
 
 	local slide_content = slide.content
 	local layout = {
@@ -217,9 +229,24 @@ NewsView._change_slide = function (self, slide_index, ignore_animation)
 			10
 		}
 	}
-	local image_element = widgets_by_name.window_image
 
-	self:load_texture(slide.image_url, image_element)
+	if slide.local_image_material then
+		local image_element = widgets_by_name.window_image
+		image_element.content.texture = slide.local_image_material
+		image_element.style.texture.force_view = true
+	end
+
+	if slide.image_url then
+		local image_element = widgets_by_name.window_image
+
+		self:load_texture(slide.image_url, image_element)
+	elseif slide.local_image then
+		local image_element = widgets_by_name.window_image
+		image_element.style.texture.material_values.texture = slide.local_image
+	else
+		local image_element = widgets_by_name.window_image
+		image_element.style.texture.material_values.texture = nil
+	end
 
 	local grid = self._grid
 
@@ -426,13 +453,6 @@ NewsView._get_animation_widgets = function (self)
 	local widgets = {
 		[window_image_widget.name] = window_image_widget
 	}
-	local slide_page_circles = self._slide_page_circles
-
-	if slide_page_circles then
-		for i = 1, #slide_page_circles do
-			widgets[#widgets + 1] = slide_page_circles[i]
-		end
-	end
 
 	return widgets
 end

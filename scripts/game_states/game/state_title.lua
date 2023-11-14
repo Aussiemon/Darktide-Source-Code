@@ -1,6 +1,5 @@
 local HumanPlayer = require("scripts/managers/player/human_player")
 local MainMenuLoader = require("scripts/loading/loaders/main_menu_loader")
-local PlayerManager = require("scripts/foundation/managers/player/player_manager")
 local Popups = require("scripts/utilities/ui/popups")
 local PrivilegesManager = require("scripts/managers/privileges/privileges_manager")
 local Promise = require("scripts/foundation/utilities/promise")
@@ -389,12 +388,22 @@ StateTitle._reset_state = function (self)
 	next_state_params.selected_profile = nil
 	next_state_params.has_created_first_character = nil
 	next_state_params.migration_data = nil
+	local backend_promise = self._backend_promise
+	self._backend_promise = nil
 
-	if self._narrative_promise and self._narrative_promise:is_pending() then
-		self._narrative_promise:cancel()
-
-		self._narrative_promise = nil
+	if backend_promise and backend_promise:is_pending() then
+		backend_promise:cancel()
 	end
+
+	if Managers.stats:user_state(1) ~= nil then
+		Managers.stats:remove_user(1)
+	end
+
+	if Managers.achievements:has_player(1) then
+		Managers.achievements:remove_player(1)
+	end
+
+	self._backend_data_synced = nil
 
 	self:_set_state(STATES.idle)
 	Managers.event:register(self, "event_state_title_continue", "_continue_cb")
@@ -471,7 +480,7 @@ StateTitle.update = function (self, main_dt, main_t)
 			loading_done = false
 		end
 
-		if self._narrative_promise and not self._narrative_promise:is_fulfilled() then
+		if not self._backend_data_synced then
 			loading_done = false
 		end
 
@@ -486,6 +495,7 @@ StateTitle.update = function (self, main_dt, main_t)
 		end
 	elseif state == states.authenticating_eos then
 		Managers.ui:render_loading_icon()
+		Managers.ui:render_black_background()
 
 		local authenticated = Managers.eac_client:authenticated()
 
@@ -591,17 +601,32 @@ StateTitle._signin = function (self)
 		end
 
 		Managers.event:trigger("event_player_authenticated")
-
-		local input_layout = account_data and account_data.input_settings.controller_layout or "default"
-
-		Managers.input:change_input_layout(input_layout)
 		Managers.input:load_settings()
-		_create_player(account_id, selected_profile)
+
+		local local_player = _create_player(account_id, selected_profile)
+		local narrative_promise = Promise.resolved()
 
 		if selected_profile then
 			local character_id = selected_profile.character_id
-			self._narrative_promise = Managers.narrative:load_character_narrative(character_id)
+			narrative_promise = Managers.narrative:load_character_narrative(character_id)
 		end
+
+		local stats_promise = Managers.stats:add_user(1, account_id)
+		local sync_promises = Promise.all(narrative_promise, stats_promise)
+		self._backend_promise = sync_promises
+		self._backend_data_synced = false
+
+		sync_promises:next(function ()
+			local achievement_promise = Managers.achievements:add_player(local_player)
+			self._backend_promise = achievement_promise
+
+			return achievement_promise
+		end):next(function ()
+			self._backend_promise = nil
+			self._backend_data_synced = true
+		end):catch(function ()
+			self:_on_error()
+		end)
 
 		local main_menu_loader = MainMenuLoader:new()
 

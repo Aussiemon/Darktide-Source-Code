@@ -133,7 +133,7 @@ local function reset_function()
 		local alias = input_manager:alias_object(service_type)
 
 		if alias then
-			alias:restore_default()
+			alias:restore_default_by_devices(nil, devices)
 			input_manager:apply_alias_changes(service_type)
 			input_manager:save_key_mappings(service_type)
 		end

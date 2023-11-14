@@ -22,6 +22,8 @@ local mission_templates = {
 		},
 		testify_flags = {
 			run_through_mission = false,
+			validate_minion_pathing_on_mission = false,
+			fly_through = false,
 			mission_server = false
 		}
 	},
@@ -36,8 +38,10 @@ local mission_templates = {
 		force_third_person_mode = true,
 		level = "content/levels/hub/hub_ship/missions/mission_om_hub_02",
 		testify_flags = {
-			run_through_mission = false,
 			cutscenes = false,
+			validate_minion_pathing_on_mission = false,
+			run_through_mission = false,
+			fly_through = false,
 			mission_server = false
 		}
 	},
@@ -58,10 +62,12 @@ local mission_templates = {
 			"terror_events_training_ground"
 		},
 		testify_flags = {
+			performance = false,
 			screenshot = false,
 			cutscenes = false,
+			validate_minion_pathing_on_mission = false,
 			run_through_mission = false,
-			performance = false,
+			fly_through = false,
 			mission_server = false
 		}
 	},
@@ -77,10 +83,12 @@ local mission_templates = {
 			"terror_events_training_ground"
 		},
 		testify_flags = {
+			performance = false,
 			screenshot = false,
 			cutscenes = false,
+			validate_minion_pathing_on_mission = false,
 			run_through_mission = false,
-			performance = false,
+			fly_through = false,
 			mission_server = false
 		},
 		spawn_settings = {

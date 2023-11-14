@@ -245,9 +245,14 @@ ServoSkullExtension._play_vo = function (self, scanning_vo_line)
 	local current_objective_name = self._mission_objective_zone_system:current_objective_name()
 	local mission_objective = self._mission_objective_system:get_active_objective(current_objective_name)
 	local voice_profile = mission_objective:mission_giver_voice_profile()
-	local concept = MissionObjectiveScanning.vo_settings.concept
 
-	Vo.mission_giver_vo_event(voice_profile, concept, scanning_vo_line)
+	if voice_profile then
+		local concept = MissionObjectiveScanning.vo_settings.concept
+
+		Vo.mission_giver_vo_event(voice_profile, concept, scanning_vo_line)
+	else
+		Vo.mission_giver_mission_info_vo("rule_based", nil, scanning_vo_line)
+	end
 end
 
 ServoSkullExtension.set_scanning_active = function (self, active)

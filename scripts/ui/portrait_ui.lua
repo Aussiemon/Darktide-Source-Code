@@ -57,7 +57,7 @@ end
 
 PortraitUI.load_profile_portrait = function (self, profile, on_load_callback, optional_render_context, prioritized, on_unload_callback)
 	local character_id = profile.character_id
-	local request_id = character_id or math.uuid()
+	local request_id_prefix = character_id or math.uuid()
 	local request_data = profile
 
 	if not self._always_render then
@@ -81,7 +81,7 @@ PortraitUI.load_profile_portrait = function (self, profile, on_load_callback, op
 		end
 	end
 
-	local reference_id = self:_generate_icon_request(request_id, request_data, on_load_callback, optional_render_context, prioritized, on_unload_callback)
+	local reference_id = self:_generate_icon_request(request_id_prefix, request_data, on_load_callback, optional_render_context, prioritized, on_unload_callback)
 
 	return reference_id
 end

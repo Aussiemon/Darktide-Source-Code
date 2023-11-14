@@ -272,16 +272,14 @@ MissionObjectiveZoneScanExtension.release_scanned_object_from_player = function 
 		local scanned_object_points = 0
 
 		if self._is_server then
+			if not player_incapacitated then
+				Managers.telemetry_events:player_scanned_objects(player, scannable_count)
+				Managers.stats:record_private("hook_scan", player, scannable_count)
+			end
+
 			local level_object_id = Managers.state.unit_spawner:level_index(self._unit)
 			local peer_id = player:peer_id()
 			local local_player_id = player:local_player_id()
-			local is_human_controlled = player:is_human_controlled()
-
-			Managers.telemetry_events:player_scanned_objects(player, scannable_count)
-
-			if Managers.stats.can_record_stats() and is_human_controlled and not player_incapacitated then
-				Managers.stats:record_scanned_objects(player, scannable_count)
-			end
 
 			Managers.state.game_session:send_rpc_clients("rpc_mission_objective_zone_scan_add_player_scanned_object", level_object_id, peer_id, local_player_id, scanned_object_points)
 		end
@@ -435,9 +433,14 @@ MissionObjectiveZoneScanExtension._play_vo = function (self, player, scanning_vo
 		local current_objective_name = self._mission_objective_zone_system:current_objective_name()
 		local mission_objective = self._mission_objective_system:get_active_objective(current_objective_name)
 		local voice_profile = mission_objective:mission_giver_voice_profile()
-		local concept = MissionObjectiveScanning.vo_settings.concept
 
-		Vo.mission_giver_vo_event(voice_profile, concept, scanning_vo_line)
+		if voice_profile then
+			local concept = MissionObjectiveScanning.vo_settings.concept
+
+			Vo.mission_giver_vo_event(voice_profile, concept, scanning_vo_line)
+		else
+			Vo.mission_giver_mission_info_vo("rule_based", nil, scanning_vo_line)
+		end
 	else
 		local player_unit = player.player_unit
 

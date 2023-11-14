@@ -874,11 +874,14 @@ CosmeticsVendorView._setup_option_buttons = function (self, options)
 		}
 	}
 	local options_tab_bar = self:_add_element(ViewElementTabMenu, "options_tab_bar", 10, settings)
-	local item_category_sort_button = ButtonPassTemplates.item_category_sort_button
+	local item_category_sort_button = table.clone(ButtonPassTemplates.item_category_sort_button)
 
 	for i = 1, #options do
 		local option = options[i]
 		local pressed_callback = callback(self, "on_option_button_pressed", i, option)
+		item_category_sort_button.style = {
+			on_pressed_sound = UISoundEvents.default_button_pressed
+		}
 		local display_name = option.display_name
 
 		options_tab_bar:add_entry(display_name, pressed_callback, item_category_sort_button, option.icon)
@@ -898,6 +901,10 @@ CosmeticsVendorView._setup_option_buttons = function (self, options)
 
 	self:_set_scenegraph_size("button_pivot_background", nil, total_height + 30)
 	self:_update_options_tab_bar_position()
+
+	if not self._using_cursor_navigation then
+		self:_play_sound(UISoundEvents.tab_secondary_button_pressed)
+	end
 end
 
 CosmeticsVendorView._update_options_tab_bar_position = function (self)
@@ -947,6 +954,10 @@ CosmeticsVendorView.on_option_button_pressed = function (self, index, option, fo
 		self._initial_rotation = initial_rotation
 
 		profile_spawner:set_character_default_rotation(initial_rotation or 0)
+	end
+
+	if not self._using_cursor_navigation then
+		self:_play_sound(UISoundEvents.default_button_pressed)
 	end
 end
 

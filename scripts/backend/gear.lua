@@ -118,6 +118,12 @@ Gear._gear_path = function (self)
 	end)
 end
 
+Gear._gear_batch_path = function (self)
+	return Managers.backend:authenticate():next(function (account)
+		return string.format("/data/%s/account/batch/gear", account.sub)
+	end)
+end
+
 implements(Gear, Interface)
 
 return Gear

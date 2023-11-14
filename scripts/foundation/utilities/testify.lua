@@ -1,3 +1,4 @@
+local TestifyExpect = require("scripts/tests/testify_expect")
 local SIGNALS = {
 	current_request = "current_request",
 	request = "request",
@@ -17,7 +18,8 @@ Testify = {
 	_responses = {},
 	_peers = {},
 	_cache = {},
-	RETRY = newproxy(false)
+	RETRY = newproxy(false),
+	expect = TestifyExpect:new()
 }
 local __raw_print = print
 local cjson_decode = cjson.decode
@@ -67,6 +69,8 @@ Testify.update = function (self, dt, t)
 	end
 
 	if self._test_case then
+		self.expect:update()
+
 		local success, result, end_suite = coroutine_resume(self._test_case, dt, t)
 
 		if not success then

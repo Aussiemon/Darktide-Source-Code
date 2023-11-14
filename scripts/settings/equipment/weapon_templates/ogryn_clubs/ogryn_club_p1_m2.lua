@@ -8,17 +8,19 @@ local MeleeActionInputSetupSlow = require("scripts/settings/equipment/weapon_tem
 local FootstepIntervalsTemplates = require("scripts/settings/equipment/footstep/footstep_intervals_templates")
 local HerdingTemplates = require("scripts/settings/damage/herding_templates")
 local HitZone = require("scripts/utilities/attack/hit_zone")
+local PushSettings = require("scripts/settings/damage/push_settings")
 local SmartTargetingTemplates = require("scripts/settings/equipment/smart_targeting_templates")
 local WeaponTraitsBespokeOgrynClubP1 = require("scripts/settings/equipment/weapon_traits/weapon_traits_bespoke_ogryn_club_p1")
 local WeaponTraitTemplates = require("scripts/settings/equipment/weapon_templates/weapon_trait_templates/weapon_trait_templates")
 local WeaponTweakTemplateSettings = require("scripts/settings/equipment/weapon_templates/weapon_tweak_template_settings")
 local WoundsSettings = require("scripts/settings/wounds/wounds_settings")
+local armor_types = ArmorSettings.types
+local buff_stat_buffs = BuffSettings.stat_buffs
+local buff_targets = WeaponTweakTemplateSettings.buff_targets
 local damage_types = DamageSettings.damage_types
 local default_hit_zone_priority = ActionSweepSettings.default_hit_zone_priority
-local armor_types = ArmorSettings.types
-local buff_targets = WeaponTweakTemplateSettings.buff_targets
-local buff_stat_buffs = BuffSettings.stat_buffs
 local hit_zone_names = HitZone.hit_zone_names
+local push_templates = PushSettings.push_templates
 local template_types = WeaponTweakTemplateSettings.template_types
 local wounds_shapes = WoundsSettings.shapes
 local damage_trait_templates = WeaponTraitTemplates[template_types.damage]
@@ -53,12 +55,18 @@ weapon_template.actions = {
 		allowed_chain_actions = {}
 	},
 	action_wield = {
-		kind = "wield",
 		allowed_during_sprint = true,
 		uninterruptible = true,
-		anim_event = "equip",
+		kind = "wield",
 		sprint_ready_up_time = 0,
 		total_time = 0.1,
+		anim_event_func = function (action_settings, condition_func_params)
+			local inventory_slot_component = condition_func_params.inventory_slot_component
+			local special_active = inventory_slot_component.special_active
+			local anim_event = special_active and "equip_activated" or "equip"
+
+			return anim_event
+		end,
 		allowed_chain_actions = {
 			combat_ability = {
 				action_name = "combat_ability"
@@ -75,7 +83,12 @@ weapon_template.actions = {
 				action_name = "action_unwield"
 			},
 			start_attack = {
-				action_name = "action_melee_start_left"
+				{
+					action_name = "action_melee_start_left_special"
+				},
+				{
+					action_name = "action_melee_start_left"
+				}
 			},
 			block = {
 				action_name = "action_block"
@@ -85,12 +98,295 @@ weapon_template.actions = {
 			}
 		}
 	},
-	action_melee_start_left = {
-		allowed_during_sprint = true,
+	action_melee_start_left_special = {
+		uninterruptible = true,
 		anim_end_event = "attack_finished",
 		start_input = "start_attack",
 		kind = "windup",
+		action_priority = 2,
+		allowed_during_sprint = true,
+		anim_event = "attack_swing_charge_down",
+		stop_input = "attack_cancel",
+		total_time = 3,
+		action_movement_curve = {
+			{
+				modifier = 0.8,
+				t = 0.05
+			},
+			{
+				modifier = 0.45,
+				t = 0.1
+			},
+			{
+				modifier = 0.4,
+				t = 0.25
+			},
+			{
+				modifier = 0.55,
+				t = 0.4
+			},
+			{
+				modifier = 0.8,
+				t = 1
+			},
+			start_modifier = 1
+		},
+		allowed_chain_actions = {
+			combat_ability = {
+				action_name = "combat_ability"
+			},
+			grenade_ability = {
+				{
+					action_name = "grenade_ability"
+				},
+				{
+					action_name = "grenade_ability_quick_throw"
+				}
+			},
+			wield = {
+				action_name = "action_unwield"
+			},
+			light_attack = {
+				action_name = "action_left_light_special"
+			},
+			heavy_attack = {
+				action_name = "action_left_heavy_special",
+				chain_time = 0.5
+			},
+			block = {
+				action_name = "action_block"
+			}
+		},
+		anim_end_event_condition_func = function (unit, data, end_reason)
+			return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
+		end,
+		action_condition_func = function (action_settings, condition_func_params, used_input)
+			return condition_func_params.inventory_slot_component.special_active
+		end
+	},
+	action_left_light_special = {
+		damage_window_start = 0.4666666666666667,
+		range_mod = 1.25,
+		sweep_trail_window_end = 0.5666666666666667,
+		kind = "sweep",
+		first_person_hit_anim = "hit_left_shake",
+		action_priority = 2,
+		first_person_hit_stop_anim = "attack_hit",
+		allowed_during_sprint = true,
+		special_active_hit_stop_armor_anim = "attack_hit_shield",
+		damage_window_end = 0.5666666666666667,
+		anim_end_event = "attack_finished",
+		anim_event_3p = "attack_swing_down_folded",
+		anim_event = "attack_swing_down_folded",
+		hit_armor_anim = "attack_hit_shield",
+		weapon_handling_template = "time_scale_1_2",
+		attack_direction_override = "down",
+		sweep_trail_window_start = 0.4666666666666667,
+		special_active_hit_stop_anim = "attack_hit",
 		uninterruptible = true,
+		hit_stop_anim = "attack_hit",
+		total_time = 2.5,
+		action_movement_curve = {
+			{
+				modifier = 1,
+				t = 0.15
+			},
+			{
+				modifier = 1.25,
+				t = 0.2
+			},
+			{
+				modifier = 1.5,
+				t = 0.25
+			},
+			{
+				modifier = 1.4,
+				t = 0.4
+			},
+			{
+				modifier = 1,
+				t = 0.5
+			},
+			{
+				modifier = 1,
+				t = 0.6
+			},
+			{
+				modifier = 1,
+				t = 1
+			},
+			start_modifier = 0.2
+		},
+		allowed_chain_actions = {
+			combat_ability = {
+				action_name = "combat_ability"
+			},
+			grenade_ability = {
+				{
+					action_name = "grenade_ability"
+				},
+				{
+					action_name = "grenade_ability_quick_throw"
+				}
+			},
+			wield = {
+				action_name = "action_unwield",
+				chain_time = 0.8
+			},
+			start_attack = {
+				{
+					action_name = "action_melee_start_left_special",
+					chain_time = 1.8
+				},
+				{
+					action_name = "action_melee_start_right",
+					chain_time = 1.8
+				}
+			},
+			special_action = {
+				action_name = "action_special_activate",
+				chain_time = 1.1
+			},
+			block = {
+				action_name = "action_block",
+				chain_time = 0.8
+			}
+		},
+		anim_end_event_condition_func = function (unit, data, end_reason)
+			return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
+		end,
+		hit_zone_priority = hit_zone_priority,
+		weapon_box = {
+			0.2,
+			0.2,
+			1.15
+		},
+		spline_settings = {
+			matrices_data_location = "content/characters/player/ogryn/first_person/animations/club_ogryn/swing_down",
+			anchor_point_offset = {
+				0,
+				0,
+				0
+			}
+		},
+		time_scale_stat_buffs = {
+			buff_stat_buffs.attack_speed,
+			buff_stat_buffs.melee_attack_speed
+		},
+		damage_profile = DamageProfileTemplates.ogryn_shovel_light_special,
+		damage_type = damage_types.ogryn_shovel_fold_special,
+		herding_template = HerdingTemplates.smiter_down,
+		wounds_shape = wounds_shapes.horizontal_slash_coarse,
+		action_condition_func = function (action_settings, condition_func_params, used_input)
+			return condition_func_params.inventory_slot_component.special_active
+		end
+	},
+	action_left_heavy_special = {
+		damage_window_start = 0.23333333333333334,
+		hit_armor_anim = "attack_hit_shield",
+		range_mod = 1.25,
+		kind = "sweep",
+		first_person_hit_anim = "hit_down_shake",
+		action_priority = 2,
+		weapon_handling_template = "time_scale_1_1",
+		anim_event_3p = "attack_swing_heavy_down_folded",
+		first_person_hit_stop_anim = "hit_down_shake",
+		allowed_during_sprint = true,
+		special_active_hit_stop_armor_anim = "attack_hit_shield",
+		damage_window_end = 0.3333333333333333,
+		special_active_hit_stop_anim = "attack_hit",
+		anim_end_event = "attack_finished",
+		attack_direction_override = "down",
+		uninterruptible = true,
+		anim_event = "attack_swing_heavy_down_folded",
+		hit_stop_anim = "attack_hit",
+		total_time = 2,
+		action_movement_curve = {
+			{
+				modifier = 1.3,
+				t = 0.15
+			},
+			{
+				modifier = 1.25,
+				t = 0.4
+			},
+			{
+				modifier = 0.5,
+				t = 0.6
+			},
+			{
+				modifier = 1,
+				t = 1
+			},
+			start_modifier = 1.5
+		},
+		allowed_chain_actions = {
+			combat_ability = {
+				action_name = "combat_ability"
+			},
+			grenade_ability = {
+				{
+					action_name = "grenade_ability"
+				},
+				{
+					action_name = "grenade_ability_quick_throw"
+				}
+			},
+			wield = {
+				action_name = "action_unwield",
+				chain_time = 1.3
+			},
+			start_attack = {
+				{
+					action_name = "action_melee_start_left_special",
+					chain_time = 1.95
+				},
+				{
+					action_name = "action_melee_start_right",
+					chain_time = 1.7
+				}
+			},
+			special_action = {
+				action_name = "action_special_activate",
+				chain_time = 1.2
+			},
+			block = {
+				action_name = "action_block",
+				chain_time = 1.1
+			}
+		},
+		anim_end_event_condition_func = function (unit, data, end_reason)
+			return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
+		end,
+		hit_zone_priority = default_hit_zone_priority,
+		weapon_box = {
+			0.2,
+			0.15,
+			1.15
+		},
+		spline_settings = {
+			matrices_data_location = "content/characters/player/ogryn/first_person/animations/club_ogryn/heavy_swing_down",
+			anchor_point_offset = {
+				0,
+				0,
+				0
+			}
+		},
+		damage_profile = DamageProfileTemplates.ogryn_shovel_heavy_special,
+		damage_type = damage_types.ogryn_shovel_fold_special,
+		herding_template = HerdingTemplates.smiter_down,
+		wounds_shape = wounds_shapes.vertical_slash_coarse,
+		action_condition_func = function (action_settings, condition_func_params, used_input)
+			return condition_func_params.inventory_slot_component.special_active
+		end
+	},
+	action_melee_start_left = {
+		uninterruptible = true,
+		anim_end_event = "attack_finished",
+		start_input = "start_attack",
+		kind = "windup",
+		action_priority = 1,
+		allowed_during_sprint = true,
 		anim_event = "attack_swing_charge_left",
 		stop_input = "attack_cancel",
 		total_time = 3,
@@ -148,20 +444,20 @@ weapon_template.actions = {
 		end
 	},
 	action_left_light = {
-		damage_window_start = 0.5,
+		damage_window_start = 0.4666666666666667,
 		hit_armor_anim = "attack_hit_shield",
 		range_mod = 1.25,
 		weapon_handling_template = "time_scale_1_2",
 		first_person_hit_anim = "hit_left_shake",
 		kind = "sweep",
 		first_person_hit_stop_anim = "attack_hit",
-		anim_event_3p = "attack_swing_down_slow",
+		anim_event_3p = "attack_swing_left_diagonal_slow",
 		allowed_during_sprint = true,
 		damage_window_end = 0.6,
 		attack_direction_override = "left",
 		anim_end_event = "attack_finished",
 		uninterruptible = true,
-		anim_event = "attack_swing_down_left",
+		anim_event = "attack_swing_left_diagonal",
 		hit_stop_anim = "attack_hit",
 		total_time = 2,
 		action_movement_curve = {
@@ -212,15 +508,15 @@ weapon_template.actions = {
 			},
 			start_attack = {
 				action_name = "action_melee_start_right",
-				chain_time = 0.75
+				chain_time = 0.68
 			},
 			special_action = {
 				action_name = "action_special_activate",
-				chain_time = 0.75
+				chain_time = 0.7
 			},
 			block = {
 				action_name = "action_block",
-				chain_time = 0.75
+				chain_time = 0.68
 			}
 		},
 		anim_end_event_condition_func = function (unit, data, end_reason)
@@ -233,14 +529,14 @@ weapon_template.actions = {
 			1.15
 		},
 		spline_settings = {
-			matrices_data_location = "content/characters/player/ogryn/first_person/animations/club_ogryn/swing_down_left",
+			matrices_data_location = "content/characters/player/ogryn/first_person/animations/club_ogryn/swing_left_diagonal",
 			anchor_point_offset = {
 				0,
 				0,
 				0
 			}
 		},
-		damage_profile = DamageProfileTemplates.ogryn_shovel_light_smiter,
+		damage_profile = DamageProfileTemplates.ogryn_shovel_light_tank,
 		damage_type = damage_types.shovel_heavy,
 		herding_template = HerdingTemplates.linesman_left_heavy,
 		wounds_shape = wounds_shapes.vertical_slash_coarse
@@ -249,7 +545,7 @@ weapon_template.actions = {
 		damage_window_start = 0.43333333333333335,
 		hit_armor_anim = "attack_hit_shield",
 		range_mod = 1.25,
-		weapon_handling_template = "time_scale_1",
+		weapon_handling_template = "time_scale_1_1",
 		first_person_hit_anim = "hit_left_shake",
 		first_person_hit_stop_anim = "hit_left_shake",
 		kind = "sweep",
@@ -297,11 +593,11 @@ weapon_template.actions = {
 			},
 			start_attack = {
 				action_name = "action_melee_start_right",
-				chain_time = 0.5
+				chain_time = 0.63
 			},
 			special_action = {
 				action_name = "action_special_activate",
-				chain_time = 0.4
+				chain_time = 0.55
 			},
 			block = {
 				action_name = "action_block",
@@ -332,9 +628,12 @@ weapon_template.actions = {
 	},
 	action_melee_start_right = {
 		allowed_during_sprint = true,
-		anim_event_3p = "attack_swing_charge_down_right",
-		anim_end_event = "attack_finished",
+		chain_anim_event = "attack_swing_charge_down_right_pose",
 		kind = "windup",
+		anim_event_3p = "attack_swing_charge_down_right",
+		action_priority = 2,
+		anim_end_event = "attack_finished",
+		chain_anim_event_3p = "attack_swing_charge_down_right",
 		uninterruptible = true,
 		anim_event = "attack_swing_charge_right_diagonal",
 		stop_input = "attack_cancel",
@@ -382,7 +681,7 @@ weapon_template.actions = {
 			},
 			heavy_attack = {
 				action_name = "action_right_heavy",
-				chain_time = 0.75
+				chain_time = 0.71
 			},
 			block = {
 				action_name = "action_block"
@@ -390,6 +689,9 @@ weapon_template.actions = {
 		},
 		anim_end_event_condition_func = function (unit, data, end_reason)
 			return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
+		end,
+		action_condition_func = function (action_settings, condition_func_params, used_input)
+			return not condition_func_params.inventory_slot_component.special_active
 		end
 	},
 	action_right_light = {
@@ -400,7 +702,7 @@ weapon_template.actions = {
 		first_person_hit_stop_anim = "attack_hit",
 		range_mod = 1.25,
 		anim_event_3p = "attack_swing_right_slow",
-		weapon_handling_template = "time_scale_1_1",
+		weapon_handling_template = "time_scale_1_2",
 		damage_window_end = 0.6,
 		attack_direction_override = "right",
 		anim_end_event = "attack_finished",
@@ -456,7 +758,7 @@ weapon_template.actions = {
 			},
 			start_attack = {
 				action_name = "action_melee_start_left_2",
-				chain_time = 0.65
+				chain_time = 0.63
 			},
 			special_action = {
 				action_name = "action_special_activate",
@@ -493,7 +795,7 @@ weapon_template.actions = {
 		damage_window_start = 0.26666666666666666,
 		hit_armor_anim = "attack_hit_shield",
 		range_mod = 1.25,
-		weapon_handling_template = "time_scale_1",
+		weapon_handling_template = "time_scale_1_2",
 		first_person_hit_anim = "hit_right_shake",
 		first_person_hit_stop_anim = "attack_hit",
 		kind = "sweep",
@@ -578,7 +880,7 @@ weapon_template.actions = {
 		anim_end_event = "attack_finished",
 		kind = "windup",
 		uninterruptible = true,
-		anim_event = "attack_swing_charge_down",
+		anim_event = "attack_swing_charge_left",
 		stop_input = "attack_cancel",
 		total_time = 3,
 		action_movement_curve = {
@@ -698,11 +1000,11 @@ weapon_template.actions = {
 			},
 			start_attack = {
 				action_name = "action_melee_start_left",
-				chain_time = 0.83
+				chain_time = 0.82
 			},
 			special_action = {
 				action_name = "action_special_activate",
-				chain_time = 0.5
+				chain_time = 0.54
 			},
 			block = {
 				action_name = "action_block",
@@ -732,20 +1034,33 @@ weapon_template.actions = {
 		wounds_shape = wounds_shapes.horizontal_slash_coarse
 	},
 	action_special_activate = {
-		deactivate_anim_event = "deactivate",
-		total_time_deactivate = 0.25,
-		activate_anim_event = "activate",
+		deactivate_anim_event = "unfold",
+		total_time_deactivate = 1,
+		activate_anim_event = "fold",
 		kind = "toggle_special",
 		start_input = "special_action",
 		activation_time = 0.3,
 		deactivation_time = 0.1,
 		allowed_during_sprint = true,
 		skip_3p_anims = false,
-		total_time = 0.4,
+		total_time = 1,
 		allowed_chain_actions = {
 			block = {
 				action_name = "action_block",
-				chain_time = 0.3
+				chain_time = 0.7
+			},
+			start_attack = {
+				{
+					action_name = "action_melee_start_left_special",
+					chain_time = 0.62
+				},
+				{
+					action_name = "action_melee_start_left",
+					chain_time = 0.62
+				}
+			},
+			wield = {
+				action_name = "action_unwield"
 			}
 		}
 	},
@@ -813,18 +1128,19 @@ weapon_template.actions = {
 		}
 	},
 	action_right_light_pushfollow = {
-		damage_window_start = 0.36666666666666664,
+		damage_window_start = 0.4,
 		hit_armor_anim = "attack_hit_shield",
+		weapon_handling_template = "time_scale_1_2",
 		anim_end_event = "attack_finished",
 		kind = "sweep",
 		first_person_hit_anim = "hit_right_shake",
-		range_mod = 1.25,
+		action_priority = 1,
 		first_person_hit_stop_anim = "attack_hit",
-		weapon_handling_template = "time_scale_1",
-		attack_direction_override = "left",
-		damage_window_end = 0.4666666666666667,
-		anim_event_3p = "attack_swing_right",
-		anim_event = "push_follow_up",
+		range_mod = 1.25,
+		attack_direction_override = "down",
+		damage_window_end = 0.5,
+		anim_event_3p = "attack_swing_down_slow",
+		anim_event = "attack_swing_down_right",
 		total_time = 2,
 		action_movement_curve = {
 			{
@@ -866,11 +1182,11 @@ weapon_template.actions = {
 			},
 			special_action = {
 				action_name = "action_special_activate",
-				chain_time = 0.5
+				chain_time = 0.75
 			},
 			start_attack = {
 				action_name = "action_melee_start_left",
-				chain_time = 0.75
+				chain_time = 0.69
 			},
 			block = {
 				action_name = "action_block",
@@ -887,16 +1203,15 @@ weapon_template.actions = {
 			1.15
 		},
 		spline_settings = {
-			matrices_data_location = "content/characters/player/ogryn/first_person/animations/club_ogryn/push_follow_up",
+			matrices_data_location = "content/characters/player/ogryn/first_person/animations/club_ogryn/swing_down_right",
 			anchor_point_offset = {
 				0,
 				0,
 				0
 			}
 		},
-		damage_profile = DamageProfileTemplates.ogryn_shovel_light_tank_followup,
+		damage_profile = DamageProfileTemplates.ogryn_shovel_light_smiter,
 		damage_type = damage_types.blunt,
-		herding_template = HerdingTemplates.linesman_right_heavy_inverted,
 		wounds_shape = wounds_shapes.horizontal_slash_coarse
 	},
 	action_push = {
@@ -940,8 +1255,14 @@ weapon_template.actions = {
 				action_name = "action_unwield"
 			},
 			push_follow_up = {
-				action_name = "action_right_light_pushfollow",
-				chain_time = 0.45
+				{
+					action_name = "action_left_light_special",
+					chain_time = 0.45
+				},
+				{
+					action_name = "action_right_light_pushfollow",
+					chain_time = 0.45
+				}
 			},
 			block = {
 				action_name = "action_block",
@@ -961,13 +1282,15 @@ weapon_template.actions = {
 	},
 	action_inspect = {
 		anim_event = "inspect_start",
-		crosshair_type = "inspect",
+		lock_view = true,
 		start_input = "inspect_start",
 		anim_end_event = "inspect_end",
 		kind = "inspect",
-		lock_view = true,
 		stop_input = "inspect_stop",
-		total_time = math.huge
+		total_time = math.huge,
+		crosshair = {
+			crosshair_type = "inspect"
+		}
 	}
 }
 
@@ -988,11 +1311,19 @@ weapon_template.has_first_person_dodge_events = true
 weapon_template.damage_window_start_sweep_trail_offset = -0.45
 weapon_template.damage_window_end_sweep_trail_offset = 0.45
 weapon_template.ammo_template = "no_ammo"
+weapon_template.allow_sprinting_with_special = true
+weapon_template.weapon_special_class = "WeaponSpeciaShovels"
+weapon_template.weapon_special_tweak_data = {
+	deactivation_animation = "deactivate_automatic",
+	deactivation_animation_delay = 0.3
+}
 weapon_template.fx_sources = {
 	_block = "fx_block",
 	_sweep = "fx_sweep"
 }
-weapon_template.crosshair_type = "dot"
+weapon_template.crosshair = {
+	crosshair_type = "dot"
+}
 weapon_template.hit_marker_type = "center"
 weapon_template.keywords = {
 	"melee",
@@ -1007,7 +1338,7 @@ weapon_template.movement_curve_modifier_template = "ogryn_club_p1_m1"
 weapon_template.footstep_intervals = FootstepIntervalsTemplates.ogryn_club
 local WeaponBarUIDescriptionTemplates = require("scripts/settings/equipment/weapon_bar_ui_description_templates")
 weapon_template.base_stats = {
-	ogryn_club_p1_m1_dps_stat = {
+	ogryn_club_p1_m2_dps_stat = {
 		display_name = "loc_stats_display_damage_stat",
 		is_stat_trait = true,
 		damage = {
@@ -1056,10 +1387,16 @@ weapon_template.base_stats = {
 			},
 			action_right_light_pushfollow = {
 				damage_trait_templates.default_melee_dps_stat
+			},
+			action_left_light_special = {
+				damage_trait_templates.default_melee_dps_stat
+			},
+			action_left_heavy_special = {
+				damage_trait_templates.default_melee_dps_stat
 			}
 		}
 	},
-	ogryn_club_p1_m1_armor_pierce_stat = {
+	ogryn_club_p1_m2_armor_pierce_stat = {
 		display_name = "loc_stats_display_ap_stat",
 		is_stat_trait = true,
 		damage = {
@@ -1104,10 +1441,16 @@ weapon_template.base_stats = {
 			},
 			action_right_light_pushfollow = {
 				damage_trait_templates.default_armor_pierce_stat
+			},
+			action_left_light_special = {
+				damage_trait_templates.default_melee_dps_stat
+			},
+			action_left_heavy_special = {
+				damage_trait_templates.default_melee_dps_stat
 			}
 		}
 	},
-	ogryn_club_p1_m1_control_stat = {
+	ogryn_club_p1_m2_control_stat = {
 		description = "loc_stats_display_control_stat_melee_mouseover",
 		display_name = "loc_stats_display_control_stat_melee",
 		is_stat_trait = true,
@@ -1170,10 +1513,16 @@ weapon_template.base_stats = {
 			},
 			action_push = {
 				damage_trait_templates.ogryn_club_push_control_stat
+			},
+			action_left_light_special = {
+				damage_trait_templates.default_melee_dps_stat
+			},
+			action_left_heavy_special = {
+				damage_trait_templates.default_melee_dps_stat
 			}
 		}
 	},
-	ogryn_club_p1_m1_first_target_stat = {
+	ogryn_club_p1_m2_first_target_stat = {
 		display_name = "loc_stats_display_first_target_stat",
 		is_stat_trait = true,
 		damage = {
@@ -1214,10 +1563,16 @@ weapon_template.base_stats = {
 			},
 			action_right_light_pushfollow = {
 				damage_trait_templates.default_first_target_stat
+			},
+			action_left_light_special = {
+				damage_trait_templates.default_melee_dps_stat
+			},
+			action_left_heavy_special = {
+				damage_trait_templates.default_melee_dps_stat
 			}
 		}
 	},
-	ogryn_club_p1_m1_defence_stat = {
+	ogryn_club_p1_m2_defence_stat = {
 		display_name = "loc_stats_display_defense_stat",
 		is_stat_trait = true,
 		stamina = {
@@ -1244,7 +1599,7 @@ weapon_template.displayed_keywords = {
 		display_name = "loc_weapon_keyword_crowd_control"
 	},
 	{
-		display_name = "loc_weapon_keyword_versatile"
+		display_name = "loc_weapon_keyword_smiter"
 	}
 }
 weapon_template.displayed_attacks = {
@@ -1252,7 +1607,7 @@ weapon_template.displayed_attacks = {
 		display_name = "loc_gestalt_tank",
 		type = "tank",
 		attack_chain = {
-			"smiter",
+			"tank",
 			"tank",
 			"tank"
 		}
@@ -1266,9 +1621,9 @@ weapon_template.displayed_attacks = {
 		}
 	},
 	special = {
-		desc = "loc_stats_special_action_special_attack_ogryn_club_p1m1_desc",
-		display_name = "loc_weapon_special_fist_attack",
-		type = "melee_hand"
+		desc = "loc_weapon_special_mode_switch_foldable_desc",
+		display_name = "loc_weapon_special_mode_switch",
+		type = "activate"
 	}
 }
 weapon_template.special_action_name = "action_special_activate"

@@ -58,10 +58,11 @@ weapon_template.actions = {
 		allowed_chain_actions = {}
 	},
 	action_warp_charge_explode = {
-		death_on_explosion = true,
+		anim_event = "explode_warp_start",
+		overload_type = "warp_charge",
 		anim_end_event = "explode_finished",
 		kind = "overload_explosion",
-		anim_event = "explode_warp_start",
+		death_on_explosion = true,
 		total_time = 3,
 		timeline_anims = {
 			[0.933] = {

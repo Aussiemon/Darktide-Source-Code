@@ -53,6 +53,9 @@ local DialogueSettings = {
 		lm_cooling = {
 			"mission_vo_lm_cooling"
 		},
+		fm_armoury = {
+			"mission_vo_fm_armoury"
+		},
 		fm_cargo = {
 			"mission_vo_fm_cargo"
 		},
@@ -183,7 +186,6 @@ local DialogueSettings = {
 		tutorial = true,
 		tg_shooting_range = true
 	},
-	default_pre_vo_waiting_time = 0,
 	max_view_distance = 50,
 	default_view_distance = 30,
 	default_hear_distance = 10,
@@ -260,10 +262,13 @@ DialogueSettings.max_hear_distance = math.max(DialogueSettings.heard_speak_defau
 DialogueSettings.default_voice_switch_group = "voice_profile"
 DialogueSettings.player_vce_light_damage_threshold = 55
 DialogueSettings.surrounded_vo_slot_percent = 0.3
-DialogueSettings.dynamic_smart_tag = {
-	renegade_netgunner = 2,
-	seen_netgunner_flee = 3,
-	aggroed = 1
+DialogueSettings.dynamic_smart_tags = table.enum("aggroed", "renegade_netgunner", "seen_netgunner_flee")
+DialogueSettings.manual_subtitles = table.enum("loc_captain_twin_male_a__mission_twins_arrival_04_a_01")
+DialogueSettings.manual_subtitle_data = {
+	{
+		duration = 9.26,
+		speaker_name = "captain_twin_male_a"
+	}
 }
 
 return DialogueSettings

@@ -1637,6 +1637,11 @@ base_templates.toughness_regen_on_wepon_special_elites = {
 		end
 	end
 }
+local windup_increases_power_valid_actions = {
+	character_state_change = true,
+	sweep = true,
+	targeted_dash_aim = true
+}
 base_templates.windup_increases_power_parent = {
 	stacks_to_remove = 3,
 	predicted = false,
@@ -1659,9 +1664,8 @@ base_templates.windup_increases_power_parent = {
 		[proc_events.on_action_start] = function (params, template_data, template_context)
 			local action_settings = params.action_settings
 			local kind = action_settings.kind
-			local is_sweep = kind == "sweep"
 
-			return not is_sweep
+			return not windup_increases_power_valid_actions[kind]
 		end
 	},
 	add_child_proc_events = {
@@ -2766,10 +2770,10 @@ base_templates.toughness_on_elite_kills = {
 	proc_func = _regain_toughness_proc_func
 }
 base_templates.rending_on_crit = {
-	class_name = "buff",
 	hide_icon_in_hud = true,
 	predicted = false,
-	stat_buffs = {
+	class_name = "buff",
+	conditional_stat_buffs = {
 		[stat_buffs.critical_strike_rending_multiplier] = 1
 	},
 	conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded

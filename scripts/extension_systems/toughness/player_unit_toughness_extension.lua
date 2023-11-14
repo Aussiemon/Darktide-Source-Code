@@ -172,7 +172,7 @@ end
 
 PlayerUnitToughnessExtension.recover_toughness = function (self, recovery_type)
 	if self:_toughness_regen_disabled() then
-		return
+		return 0
 	end
 
 	local toughness_template = self._toughness_template
@@ -200,11 +200,13 @@ PlayerUnitToughnessExtension.recover_toughness = function (self, recovery_type)
 		self:_record_stat(recovered_tougness, starting_amount, recovery_type)
 		self:_handle_procs(wanted_amount, recovered_tougness, recovery_type)
 	end
+
+	return recovered_tougness
 end
 
 PlayerUnitToughnessExtension.recover_percentage_toughness = function (self, fixed_percentage, ignore_stat_buffs, reason)
 	if self:_toughness_regen_disabled() then
-		return
+		return 0
 	end
 
 	local max_toughness = self:max_toughness()
@@ -230,11 +232,13 @@ PlayerUnitToughnessExtension.recover_percentage_toughness = function (self, fixe
 		self:_record_stat(recovered_tougness, starting_amount, reason or "unknown")
 		self:_handle_procs(wanted_amount, recovered_tougness, reason)
 	end
+
+	return recovered_tougness
 end
 
 PlayerUnitToughnessExtension.recover_flat_toughness = function (self, amount, ignore_stat_buffs, reason)
 	if self:_toughness_regen_disabled() then
-		return
+		return 0
 	end
 
 	local max_toughness = self:max_toughness()
@@ -259,11 +263,13 @@ PlayerUnitToughnessExtension.recover_flat_toughness = function (self, amount, ig
 		self:_record_stat(recovered_tougness, starting_amount, reason or "unknown")
 		self:_handle_procs(amount, recovered_tougness, reason)
 	end
+
+	return recovered_tougness
 end
 
 PlayerUnitToughnessExtension.recover_max_toughness = function (self, reason, ignore_state_block)
 	if self:_toughness_regen_disabled(ignore_state_block) then
-		return
+		return 0
 	end
 
 	local max_toughness = self:max_toughness()
@@ -279,6 +285,8 @@ PlayerUnitToughnessExtension.recover_max_toughness = function (self, reason, ign
 		self:_record_stat(recovered_tougness, starting_amount, reason or "unknown")
 		self:_handle_procs(max_toughness, recovered_tougness, reason or "unknown")
 	end
+
+	return recovered_tougness
 end
 
 PlayerUnitToughnessExtension.set_toughness_broken_time = function (self)
@@ -357,22 +365,18 @@ PlayerUnitToughnessExtension._handle_procs = function (self, amount, recovered_a
 end
 
 PlayerUnitToughnessExtension._record_stat = function (self, amount, starting_amount, reason)
-	if Managers.stats.can_record_stats() then
-		local player = Managers.state.player_unit_spawn:owner(self._unit)
+	local player = Managers.state.player_unit_spawn:owner(self._unit)
 
-		if player and player:is_human_controlled() then
-			Managers.stats:record_toughness_regen(player, amount, starting_amount, reason)
-		end
+	if player then
+		Managers.stats:record_private("hook_toughness_regenerated", player, reason, starting_amount, amount)
 	end
 end
 
 PlayerUnitToughnessExtension._record_toughness_broken = function (self)
-	if Managers.stats.can_record_stats() then
-		local player = Managers.state.player_unit_spawn:owner(self._unit)
+	local player = Managers.state.player_unit_spawn:owner(self._unit)
 
-		if player and player:is_human_controlled() then
-			Managers.stats:record_toughness_broken(player)
-		end
+	if player then
+		Managers.stats:record_private("hook_toughness_broken", player)
 	end
 end
 

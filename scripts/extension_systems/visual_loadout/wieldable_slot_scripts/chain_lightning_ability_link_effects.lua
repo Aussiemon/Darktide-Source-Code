@@ -431,16 +431,16 @@ end
 
 local COLLISION_FILTER = "filter_player_character_shooting_raycast_statics"
 
-ChainLightningAbilityLinkEffects._no_target_raycast = function (self, position, rotation, max_lenght)
+ChainLightningAbilityLinkEffects._no_target_raycast = function (self, position, rotation, max_length)
 	local spread_angle = 5
 	local bullseye = false
 	local ray_rotation = Spread.target_style_spread(rotation, 1, 1, 2, bullseye, spread_angle, spread_angle, nil, false, nil, math.random_seed())
 	local direction = Quaternion.forward(ray_rotation)
-	local hit, hit_position, distance, hit_normal, _ = PhysicsWorld.raycast(self._physics_world, position, direction, max_lenght, "closest", "collision_filter", COLLISION_FILTER)
+	local hit, hit_position, distance, hit_normal, _ = PhysicsWorld.raycast(self._physics_world, position, direction, max_length, "closest", "collision_filter", COLLISION_FILTER)
 
 	if not hit then
-		hit_position = position + direction * max_lenght
-		distance = max_lenght
+		hit_position = position + direction * max_length
+		distance = max_length
 		hit_normal = direction
 	end
 

@@ -5,28 +5,7 @@ local UIWorkspaceSettings = require("scripts/settings/ui/ui_workspace_settings")
 local ItemPassTemplates = require("scripts/ui/pass_templates/item_pass_templates")
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local UIWidget = require("scripts/managers/ui/ui_widget")
-local item_stats_grid_settings = nil
-local padding = 12
-local width = 530
-local height = 920
-item_stats_grid_settings = {
-	scrollbar_width = 7,
-	ignore_blur = true,
-	title_height = 70,
-	grid_spacing = {
-		0,
-		0
-	},
-	grid_size = {
-		width - padding,
-		height
-	},
-	mask_size = {
-		width + 40,
-		height
-	},
-	edge_padding = padding
-}
+local item_stats_grid_settings = InventoryViewSettings.item_stats_grid_settings
 local scrollbar_width = InventoryViewSettings.scrollbar_width
 local grid_size = InventoryViewSettings.grid_size
 local mask_size = InventoryViewSettings.mask_size
@@ -396,15 +375,12 @@ local scenegraph_definition = {
 	},
 	item_stats_pivot = {
 		vertical_alignment = "top",
-		parent = "loadout_frame",
-		horizontal_alignment = "left",
-		size = {
-			0,
-			0
-		},
+		parent = "canvas",
+		horizontal_alignment = "center",
+		size = item_stats_grid_settings.grid_size,
 		position = {
-			840,
-			0,
+			210,
+			180,
 			3
 		}
 	},
@@ -760,6 +736,7 @@ local animations = {
 					widget.alpha_multiplier = anim_progress
 				end
 
+				parent.loadout_alpha_multiplier = anim_progress
 				local x_anim_distance_max = 50
 				local x_anim_distance = x_anim_distance_max - x_anim_distance_max * anim_progress
 				local extra_amount = math.clamp(15 - 15 * anim_progress * 1.2, 0, 15)
@@ -824,6 +801,7 @@ local animations = {
 					widget.alpha_multiplier = anim_progress
 				end
 
+				parent.loadout_alpha_multiplier = anim_progress
 				local x_anim_distance_max = 50
 				local x_anim_distance = x_anim_distance_max - x_anim_distance_max * anim_progress
 				local extra_amount = math.clamp(15 - 15 * anim_progress * 1.2, 0, 15)

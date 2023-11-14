@@ -183,6 +183,12 @@ ActionWeaponBase._set_weapon_special = function (self, active, t)
 
 	if active then
 		self._inventory_slot_component.special_active_start_t = t
+		local weapon_special_implementation = self._weapon.weapon_special_implementation
+
+		if weapon_special_implementation then
+			weapon_special_implementation:on_special_activation(t)
+		end
+
 		local proc_cooldown_time = 0.5
 
 		if t > last_start_time + proc_cooldown_time then

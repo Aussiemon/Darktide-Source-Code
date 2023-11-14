@@ -13,6 +13,7 @@ local function create_definitions(settings)
 	local mask_size = settings.mask_size
 	local title_height = settings.title_height
 	local edge_padding = settings.edge_padding or 0
+	local using_custom_gamepad_navigation = settings.using_custom_gamepad_navigation
 	local background_size = {
 		grid_size[1] + edge_padding,
 		grid_size[2]
@@ -77,7 +78,7 @@ local function create_definitions(settings)
 			position = {
 				0,
 				0,
-				3
+				5
 			}
 		},
 		grid_title_background = {
@@ -91,7 +92,7 @@ local function create_definitions(settings)
 			position = {
 				0,
 				13,
-				0
+				-2
 			}
 		},
 		grid_divider_title = {
@@ -400,7 +401,8 @@ local function create_definitions(settings)
 			visible = false
 		}),
 		grid_scrollbar = UIWidget.create_definition(scrollbar_pass_templates, "grid_scrollbar", {
-			axis = use_horizontal_scrollbar and 1 or 2
+			axis = use_horizontal_scrollbar and 1 or 2,
+			using_custom_gamepad_navigation = using_custom_gamepad_navigation
 		}),
 		grid_interaction = UIWidget.create_definition({
 			{
@@ -431,7 +433,7 @@ local function create_definitions(settings)
 				content_id = "hotspot",
 				content = {
 					on_hover_sound = UISoundEvents.default_mouse_hover,
-					on_pressed_sound = UISoundEvents.default_select
+					on_pressed_sound = UISoundEvents.default_click
 				}
 			}
 		}, "sort_button"),

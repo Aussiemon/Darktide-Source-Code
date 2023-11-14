@@ -132,6 +132,13 @@ local ui_font_settings = {
 		text_color = Color.text_default(255, true),
 		default_color = Color.text_default(255, true)
 	},
+	body_medium = {
+		line_spacing = 1.2,
+		font_size = 22,
+		font_type = "proxima_nova_bold",
+		text_color = Color.text_default(255, true),
+		default_color = Color.text_default(255, true)
+	},
 	body_small = {
 		font_size = 18,
 		line_spacing = 1.2,

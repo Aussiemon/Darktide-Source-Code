@@ -200,6 +200,11 @@ ActionSweep.start = function (self, action_settings, t, time_scale, action_start
 	end
 
 	self._buff_extension = buff_extension
+	local weapon_special_implementation = self._weapon.weapon_special_implementation
+
+	if weapon_special_implementation then
+		weapon_special_implementation:on_sweep_action_start(t)
+	end
 end
 
 ActionSweep._reset_sweep_component = function (self)
@@ -281,7 +286,7 @@ ActionSweep.finish = function (self, reason, data, t, time_in_action)
 	local action_sweep_component = self._action_sweep_component
 
 	if action_sweep_component.sweep_state == "during_damage_window" then
-		self:_exit_damage_window(t, self._num_hit_enemies)
+		self:_exit_damage_window(t, self._num_hit_enemies, action_sweep_component.sweep_aborted)
 
 		if not is_sticky then
 			self:_handle_exit_procs()
@@ -290,10 +295,10 @@ ActionSweep.finish = function (self, reason, data, t, time_in_action)
 		action_sweep_component.sweep_state = "after_damage_window"
 	end
 
-	local special_implementation = self._weapon.special_implementation
+	local weapon_special_implementation = self._weapon.weapon_special_implementation
 
-	if special_implementation then
-		special_implementation:on_action_finish(t, self._num_hit_enemies)
+	if weapon_special_implementation then
+		weapon_special_implementation:on_sweep_action_finish(t, self._num_hit_enemies, action_sweep_component.sweep_aborted)
 	end
 
 	ActionSweep.super.finish(self, reason, data, t, time_in_action)
@@ -369,7 +374,7 @@ ActionSweep._update_sweep = function (self, dt, t, time_in_action, action_settin
 		self:_do_overlap(t, start_position, start_rotation, end_position, end_rotation, is_final_frame, action_settings, action_sweep_component)
 
 		if is_final_frame or action_sweep_component.sweep_aborted then
-			self:_exit_damage_window(t, self._num_hit_enemies)
+			self:_exit_damage_window(t, self._num_hit_enemies, action_sweep_component.sweep_aborted)
 
 			if not self:_is_currently_sticky() then
 				self:_handle_exit_procs()
@@ -437,7 +442,7 @@ ActionSweep._start_hit_stickyness = function (self, hit_stickyness_settings, t, 
 	end
 
 	self:_add_weapon_blood("full")
-	self:_exit_damage_window(t, self._num_hit_enemies)
+	self:_exit_damage_window(t, self._num_hit_enemies, action_sweep_component.sweep_aborted)
 
 	if not self:_is_currently_sticky() then
 		self:_handle_exit_procs()
@@ -658,11 +663,11 @@ ActionSweep._is_within_damage_window = function (self, time_in_action, action_se
 	return in_damage_window, damage_window_t, before_damage_window, damage_window_total_t
 end
 
-ActionSweep._exit_damage_window = function (self, t, num_hit_enemies)
-	local special_implementation = self._weapon.special_implementation
+ActionSweep._exit_damage_window = function (self, t, num_hit_enemies, aborted)
+	local weapon_special_implementation = self._weapon.weapon_special_implementation
 
-	if special_implementation then
-		special_implementation:on_exit_damage_window(t, num_hit_enemies)
+	if weapon_special_implementation then
+		weapon_special_implementation:on_exit_damage_window(t, num_hit_enemies, aborted)
 	end
 end
 
@@ -685,9 +690,7 @@ ActionSweep._handle_exit_procs = function (self)
 		buff_extension:add_proc_event(proc_events.on_sweep_finish, param_table)
 	end
 
-	if Managers.stats.can_record_stats() then
-		Managers.stats:record_sweep_finished(self._player, num_hit_enemies, num_killed_enemies, combo_count, hit_weakspot, is_heavy)
-	end
+	Managers.stats:record_private("hook_sweep_finished", self._player, num_hit_enemies, num_killed_enemies, combo_count, hit_weakspot, is_heavy)
 end
 
 ActionSweep._do_overlap = function (self, t, start_position, start_rotation, end_position, end_rotation, is_final_frame, action_settings, action_sweep_component)
@@ -1047,7 +1050,7 @@ ActionSweep._process_hit = function (self, t, hit_unit, hit_actor, hit_units, ac
 	local target_index = self._target_index
 	local num_hit_enemies = self._num_hit_enemies
 	local player_unit = self._player_unit
-	local special_implementation = self._weapon.special_implementation
+	local weapon_special_implementation = self._weapon.weapon_special_implementation
 	local wielded_slot = self._inventory_component.wielded_slot
 	local current_amount_of_mass_hit = self._amount_of_mass_hit
 	local buff_extension = self._buff_extension
@@ -1137,8 +1140,8 @@ ActionSweep._process_hit = function (self, t, hit_unit, hit_actor, hit_units, ac
 		AttackIntensity.add_intensity(player_unit, attack_intensities)
 	end
 
-	if special_implementation then
-		special_implementation:process_hit(t, weapon, action_settings, num_hit_enemies, target_is_alive, hit_unit, hit_position, attack_direction, abort_attack, wielded_slot)
+	if weapon_special_implementation then
+		weapon_special_implementation:process_hit(t, weapon, action_settings, num_hit_enemies, target_is_alive, hit_unit, hit_position, attack_direction, abort_attack, wielded_slot, damage_profile)
 	end
 
 	local weapon_template = self._weapon_template
@@ -1343,7 +1346,10 @@ ActionSweep._play_hit_animations = function (self, action_settings, abort_attack
 		return
 	end
 
-	if abort_attack and special_active then
+	if abort_attack and special_active and armor_aborts_attack then
+		first_person_hit_anim = action_settings.special_active_hit_stop_armor_anim or action_settings.hit_stop_armor_anim or action_settings.special_active_hit_stop_anim or action_settings.hit_stop_anim
+		third_person_hit_anim = action_settings.special_active_hit_stop_armor_anim_3p or action_settings.hit_stop_armor_anim or action_settings.special_active_hit_stop_anim_3p or action_settings.hit_stop_anim
+	elseif abort_attack and special_active then
 		first_person_hit_anim = action_settings.special_active_hit_stop_anim or action_settings.hit_stop_anim
 		third_person_hit_anim = action_settings.special_active_hit_stop_anim_3p or action_settings.hit_stop_anim
 	elseif armor_aborts_attack then

@@ -736,6 +736,8 @@ ConnectionManager._remove_client = function (self, channel_id, peer_id, game_rea
 		CommandWindow.print(string.format("Peer %s left (%d/%d)", peer_id, players, slots))
 	end
 
+	self._connection_host:remove(channel_id)
+
 	if GameParameters.testify then
 		Testify:remove_peer(peer_id, channel_id)
 	end

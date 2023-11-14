@@ -146,7 +146,7 @@ VideoView.on_exit = function (self)
 		self._world_spawner = nil
 	end
 
-	if self._post_video_action and self._widgets_by_name.video.content.video_completed then
+	if self._post_video_action and (self._widgets_by_name.video.content.video_completed or self._player_skipped) then
 		local action = self._post_video_action
 
 		if action.action_type == "open_hub_view" then
@@ -155,6 +155,8 @@ VideoView.on_exit = function (self)
 			}
 
 			Managers.ui:open_view(action.view_name, nil, nil, nil, nil, hub_view_context)
+		elseif action.action_type == "set_narrative_stat" then
+			Managers.narrative:complete_event(action.event_name)
 		else
 			ferror("Unsupported action type %q", action.action_type)
 		end

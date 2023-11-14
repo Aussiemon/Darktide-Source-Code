@@ -226,9 +226,9 @@ end
 local function _update_local_render_volume(session_handle)
 	local volume = 50
 
-	if Application.user_setting and Application.user_setting("sound_settings") and Application.user_setting("sound_settings").options_voip_volume_slider ~= nil then
-		local voip_volume = Application.user_setting("sound_settings").options_voip_volume_slider
-		volume = voip_volume <= 0.01 and 0 or math.lerp(30, 60, voip_volume / 100)
+	if Application.user_setting and Application.user_setting("sound_settings") and Application.user_setting("sound_settings").options_voip_volume_slider_v2 ~= nil then
+		local voip_volume = Application.user_setting("sound_settings").options_voip_volume_slider_v2
+		volume = voip_volume <= 0.01 and 0 or math.lerp(25, 75, voip_volume / 100)
 	end
 
 	Vivox.session_set_local_render_volume(session_handle, volume)
@@ -236,7 +236,11 @@ end
 
 ChatManager.mic_volume_changed = function (self)
 	for session_handle, channel in pairs(self._sessions) do
-		_update_local_render_volume(session_handle)
+		local session_media_state = channel.session_media_state
+
+		if session_media_state and session_media_state == ChatManagerConstants.ChannelConnectionState.CONNECTED then
+			_update_local_render_volume(session_handle)
+		end
 	end
 end
 

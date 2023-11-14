@@ -27,12 +27,14 @@ ActionUnwield.start = function (self, action_settings, t, time_scale, action_sta
 	local used_input = action_start_params.used_input
 	local next_slot = self:_next_slot(used_input, action_settings)
 	action_unwield.slot_to_wield = next_slot
+	local current_wielded_slot = self._inventory_component.wielded_slot
 	local buff_extension = self._buff_extension
 	local next_weapon_template = self._visual_loadout_extension:weapon_template_from_slot(next_slot)
 	local param_table = buff_extension:request_proc_event_param_table()
 
 	if param_table then
 		param_table.weapon_template = next_weapon_template
+		param_table.previously_wielded_slot = current_wielded_slot
 
 		buff_extension:add_proc_event(buff_proc_events.on_wield, param_table)
 

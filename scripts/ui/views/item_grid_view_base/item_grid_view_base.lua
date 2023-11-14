@@ -138,8 +138,8 @@ ItemGridViewBase._setup_menu_tabs = function (self, content)
 	local layer = tab_menu_settings.layer or 10
 	local tab_menu_element = self:_add_element(ViewElementTabMenu, id, layer, tab_menu_settings)
 	self._tab_menu_element = tab_menu_element
-	local input_action_left = "navigate_secondary_left_pressed"
-	local input_action_right = "navigate_secondary_right_pressed"
+	local input_action_left = "navigate_primary_left_pressed"
+	local input_action_right = "navigate_primary_right_pressed"
 
 	tab_menu_element:set_input_actions(input_action_left, input_action_right)
 
@@ -299,6 +299,10 @@ end
 ItemGridViewBase._preview_item = function (self, item)
 	self:_stop_previewing()
 
+	local item_stats_context = {
+		hide_source = self._hide_item_source_in_tooltip
+	}
+
 	if item and item.display_name and string.match(item.display_name, "unarmed") then
 		item = nil
 	end
@@ -324,7 +328,7 @@ ItemGridViewBase._preview_item = function (self, item)
 			self._weapon_preview:present_item(item, disable_auto_spin)
 		else
 			if self._weapon_stats then
-				self._weapon_stats:present_item(item)
+				self._weapon_stats:present_item(item, item_stats_context)
 			end
 
 			if self._weapon_compare_stats then
@@ -335,8 +339,9 @@ ItemGridViewBase._preview_item = function (self, item)
 					if not self._previewed_equipped_item or self._previewed_equipped_item.gear_id ~= equipped_item.gear_id then
 						self._previewed_equipped_item = equipped_item
 						local is_equipped = true
+						item_stats_context.present_equip_label_equipped = is_equipped
 
-						self._weapon_compare_stats:present_item(equipped_item, is_equipped)
+						self._weapon_compare_stats:present_item(equipped_item, item_stats_context)
 					end
 				else
 					self._previewed_equipped_item = nil
@@ -356,11 +361,11 @@ ItemGridViewBase._preview_item = function (self, item)
 
 				self._weapon_preview:present_item(visual_item, disable_auto_spin)
 			elseif self._weapon_stats then
-				self._weapon_stats:present_item(item)
+				self._weapon_stats:present_item(item, item_stats_context)
 			end
 		end
 	elseif (item_type == "GEAR_UPPERBODY" or item_type == "GEAR_LOWERBODY" or item_type == "GEAR_HEAD" or item_type == "GEAR_EXTRA_COSMETIC" or item_type == "END_OF_ROUND") and self._weapon_stats then
-		self._weapon_stats:present_item(item)
+		self._weapon_stats:present_item(item, item_stats_context)
 	end
 
 	local display_name = ItemUtils.display_name(item)
@@ -498,6 +503,13 @@ ItemGridViewBase._setup_item_grid = function (self, optional_grid_settings)
 	local reference_name = "item_grid"
 	local layer = 10
 	self._item_grid = self:_add_element(ViewElementGrid, reference_name, layer, context)
+	local preview_player = self._preview_player
+
+	if preview_player then
+		local profile = preview_player.profile and preview_player:profile()
+
+		self._item_grid:set_default_item_icon_profile(profile)
+	end
 
 	self:present_grid_layout({})
 	self:_update_item_grid_position()

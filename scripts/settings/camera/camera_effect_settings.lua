@@ -1151,10 +1151,19 @@ local CameraEffectSettings = {
 		},
 		frag_grenade_explosion = {
 			persistance = 1,
-			amplitude = 0.55,
+			amplitude = 0.8,
 			duration = 0.18,
-			fade_out = 0.1,
+			fade_out = 0.15,
 			octaves = 6
+		},
+		ogryn_frag_01 = {
+			persistance = 0.8,
+			fade_out = 0.5,
+			amplitude = 3.5,
+			seed = 0,
+			duration = 0.2,
+			fade_in = 0.1,
+			octaves = 5.8
 		},
 		bell_thunder_01 = {
 			persistance = 0.9,
@@ -1287,6 +1296,38 @@ local CameraEffectSettings = {
 			amplitude = 0.1,
 			duration = 4,
 			fade_in = 1,
+			octaves = 6
+		},
+		fm_armoury_roof_open_start = {
+			persistance = 0.8,
+			fade_out = 2,
+			amplitude = 0.4,
+			duration = 10,
+			fade_in = 3,
+			octaves = 8
+		},
+		fm_armoury_roof_open_end = {
+			persistance = 0.8,
+			fade_out = 1,
+			amplitude = 0.6,
+			duration = 2.5,
+			fade_in = 2.5,
+			octaves = 8
+		},
+		fm_armoury_roof_open_end_01 = {
+			persistance = 1,
+			fade_out = 0,
+			amplitude = 0.6,
+			duration = 3,
+			fade_in = 0,
+			octaves = 8
+		},
+		breach_charge_explosion = {
+			persistance = 1,
+			fade_out = 0.1,
+			amplitude = 0.7,
+			duration = 0.5,
+			fade_in = 0,
 			octaves = 6
 		}
 	}

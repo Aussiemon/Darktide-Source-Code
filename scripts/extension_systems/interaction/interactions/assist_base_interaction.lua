@@ -26,20 +26,20 @@ AssistBaseInteraction._handle_buffs = function (self, interactor_unit, target_un
 	end
 end
 
-AssistBaseInteraction._record_stats_and_telemetry = function (self, interactor_unit, target_unit, stats_func_name, from_state_name)
+AssistBaseInteraction._record_stats_and_telemetry = function (self, interactor_unit, target_unit, stat_id, from_state_name)
 	local player_unit_spawn_manager = Managers.state.player_unit_spawn
 	local interactor_player = player_unit_spawn_manager:owner(interactor_unit)
 	local target_player = player_unit_spawn_manager:owner(target_unit)
 
 	if interactor_player and target_player then
-		local stats_manager = Managers.stats
+		local target_player_session_id = target_player:session_id()
 
-		if stats_manager.can_record_stats() then
-			local is_human_player = interactor_player:is_human_controlled()
+		if stat_id == "hook_assist_ally" then
+			local template_type = self._template.type
 
-			if is_human_player then
-				stats_manager[stats_func_name](stats_manager, interactor_player, target_player, self._template.type)
-			end
+			Managers.stats:record_private(stat_id, interactor_player, target_player_session_id, template_type)
+		else
+			Managers.stats:record_private(stat_id, interactor_player, target_player_session_id)
 		end
 	end
 

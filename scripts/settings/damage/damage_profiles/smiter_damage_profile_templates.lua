@@ -35,8 +35,7 @@ damage_templates.medium_smiter = {
 					[armor_types.berserker] = 0.5,
 					[armor_types.super_armor] = 1,
 					[armor_types.disgustingly_resilient] = 0.75,
-					[armor_types.void_shield] = 0.75,
-					[armor_types.prop_armor] = 2
+					[armor_types.void_shield] = 0.75
 				},
 				impact = {
 					[armor_types.unarmored] = 1,
@@ -46,8 +45,7 @@ damage_templates.medium_smiter = {
 					[armor_types.berserker] = 0.5,
 					[armor_types.super_armor] = 1,
 					[armor_types.disgustingly_resilient] = 0.75,
-					[armor_types.void_shield] = 0.75,
-					[armor_types.prop_armor] = 1
+					[armor_types.void_shield] = 0.75
 				}
 			},
 			power_distribution = {
@@ -62,8 +60,7 @@ damage_templates.medium_smiter = {
 				[armor_types.berserker] = 0.1,
 				[armor_types.super_armor] = 0.1,
 				[armor_types.disgustingly_resilient] = 0.25,
-				[armor_types.void_shield] = 0.25,
-				[armor_types.prop_armor] = 0.5
+				[armor_types.void_shield] = 0.25
 			}
 		},
 		{
@@ -77,8 +74,7 @@ damage_templates.medium_smiter = {
 					[armor_types.berserker] = 0.5,
 					[armor_types.super_armor] = 0,
 					[armor_types.disgustingly_resilient] = 0.5,
-					[armor_types.void_shield] = 0.5,
-					[armor_types.prop_armor] = 0.5
+					[armor_types.void_shield] = 0.5
 				},
 				impact = {
 					[armor_types.unarmored] = 1,
@@ -88,8 +84,7 @@ damage_templates.medium_smiter = {
 					[armor_types.berserker] = 0.5,
 					[armor_types.super_armor] = 0,
 					[armor_types.disgustingly_resilient] = 0.5,
-					[armor_types.void_shield] = 0.5,
-					[armor_types.prop_armor] = 0.5
+					[armor_types.void_shield] = 0.5
 				}
 			},
 			power_distribution = {
@@ -108,8 +103,7 @@ damage_templates.medium_smiter = {
 					[armor_types.berserker] = 0.5,
 					[armor_types.super_armor] = 0,
 					[armor_types.disgustingly_resilient] = 0,
-					[armor_types.void_shield] = 0,
-					[armor_types.prop_armor] = 0
+					[armor_types.void_shield] = 0
 				},
 				impact = {
 					[armor_types.unarmored] = 1,
@@ -119,8 +113,7 @@ damage_templates.medium_smiter = {
 					[armor_types.berserker] = 0.5,
 					[armor_types.super_armor] = 0,
 					[armor_types.disgustingly_resilient] = 0,
-					[armor_types.void_shield] = 0,
-					[armor_types.prop_armor] = 0
+					[armor_types.void_shield] = 0
 				}
 			},
 			power_distribution = {
@@ -136,8 +129,7 @@ damage_templates.medium_smiter = {
 				[armor_types.berserker] = 0.1,
 				[armor_types.super_armor] = 0.1,
 				[armor_types.disgustingly_resilient] = 0.5,
-				[armor_types.void_shield] = 0.5,
-				[armor_types.prop_armor] = 0.5
+				[armor_types.void_shield] = 0.5
 			}
 		}
 	}
@@ -168,8 +160,7 @@ damage_templates.spell_smiter = {
 					[armor_types.berserker] = 0.5,
 					[armor_types.super_armor] = 1,
 					[armor_types.disgustingly_resilient] = 1,
-					[armor_types.void_shield] = 1,
-					[armor_types.prop_armor] = 1
+					[armor_types.void_shield] = 1
 				},
 				impact = {
 					[armor_types.unarmored] = 1,
@@ -179,8 +170,7 @@ damage_templates.spell_smiter = {
 					[armor_types.berserker] = 0.5,
 					[armor_types.super_armor] = 1,
 					[armor_types.disgustingly_resilient] = 1,
-					[armor_types.void_shield] = 1,
-					[armor_types.prop_armor] = 1
+					[armor_types.void_shield] = 1
 				}
 			},
 			power_distribution = {
@@ -196,8 +186,7 @@ damage_templates.spell_smiter = {
 				[armor_types.berserker] = 0.5,
 				[armor_types.super_armor] = 0.5,
 				[armor_types.disgustingly_resilient] = 0.5,
-				[armor_types.void_shield] = 0.5,
-				[armor_types.prop_armor] = 0.5
+				[armor_types.void_shield] = 0.5
 			}
 		}
 	}

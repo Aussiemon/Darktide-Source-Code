@@ -2,12 +2,12 @@ local PropShield = component("PropShield")
 
 PropShield.init = function (self, unit)
 	self._unit = unit
-	local pickup_spawner_extension = ScriptUnit.fetch_component_extension(unit, "shield_system")
+	local shield_extension = ScriptUnit.fetch_component_extension(unit, "shield_system")
 
-	if pickup_spawner_extension then
+	if shield_extension then
 		local actor_names = self:get_data(unit, "actor_names")
 
-		pickup_spawner_extension:setup_from_component(actor_names)
+		shield_extension:setup_from_component(actor_names)
 	end
 end
 

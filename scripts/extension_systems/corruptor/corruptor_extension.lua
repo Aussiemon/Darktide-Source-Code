@@ -35,26 +35,10 @@ CorruptorExtension.init = function (self, extension_init_context, unit, extensio
 	self._unit_level_index = unit_level_index
 end
 
-local HEALTH_DIFFICULTY_SCALING = {
-	0.4,
-	0.6,
-	0.75,
-	1,
-	1
-}
-
 CorruptorExtension.extensions_ready = function (self, world, unit)
 	self._animation_extension = ScriptUnit.extension(unit, "animation_system")
 	self._health_extension = ScriptUnit.extension(unit, "health_system")
 	self._mission_objective_target_extension = ScriptUnit.has_extension(unit, "mission_objective_target_system")
-
-	if self._is_server then
-		local health_scale = Managers.state.difficulty:get_table_entry_by_challenge(HEALTH_DIFFICULTY_SCALING)
-		local max_health = self._health_extension:max_health()
-		local diff = max_health - max_health * health_scale
-
-		self._health_extension:add_damage(diff, nil, nil, nil, nil, nil, unit)
-	end
 end
 
 CorruptorExtension.hot_join_sync = function (self, unit, sender, channel_id)

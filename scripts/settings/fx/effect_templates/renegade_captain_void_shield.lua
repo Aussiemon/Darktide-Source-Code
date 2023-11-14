@@ -27,11 +27,15 @@ local effect_template = {
 		local game_object_id = Managers.state.unit_spawner:game_object_id(unit)
 		template_data.game_object_id = game_object_id
 		template_data.game_session = game_session
+		local breed = ScriptUnit.extension(unit, "unit_data_system"):breed()
+		template_data.breed = breed
 		local visual_loadout_extension = ScriptUnit.extension(unit, "visual_loadout_system")
 		local shield_unit = visual_loadout_extension:slot_unit(SHIELD_INVENTORY_SLOT_NAME)
 		template_data.shield_unit = shield_unit
 		local toughness_extension = ScriptUnit.extension(unit, "toughness_system")
 		template_data.toughness_extension = toughness_extension
+		local toughness_template = toughness_extension:toughness_templates()
+		template_data.toughness_template = toughness_template
 		local wwise_world = template_context.wwise_world
 		local source_id = WwiseWorld.make_manual_source(wwise_world, unit)
 		template_data.source_id = source_id
@@ -47,24 +51,24 @@ local effect_template = {
 	update = function (template_data, template_context, dt, t)
 		local game_session = template_data.game_session
 		local game_object_id = template_data.game_object_id
-		local toughness_damage, max_toughness = _get_network_values(game_session, game_object_id)
+		local toughness_damage, max_toughness, is_toughness_invulnerable = _get_network_values(game_session, game_object_id, template_data.breed)
 		local percent = 1 - toughness_damage / max_toughness
 		local new_state = percent > 0 and STATES.active or STATES.depleted
 
 		if new_state ~= template_data.state then
-			_switch_state(template_data, template_context, new_state)
+			_switch_state(template_data, template_context, new_state, is_toughness_invulnerable)
 		end
 
 		if template_data.state == STATES.active then
 			local shield_unit = template_data.shield_unit
 
-			_set_shield_power(shield_unit, percent, template_data, t)
+			_set_shield_power(shield_unit, percent, template_data, t, is_toughness_invulnerable)
 
 			if percent < SHIELD_REDNESS_THRESHOLD then
 				local normalized_percent = math.normalize_01(percent, 0, SHIELD_REDNESS_THRESHOLD)
 				local redness = math.lerp(1, 0, normalized_percent)
 
-				_set_shield_redness(shield_unit, redness)
+				_set_shield_redness(shield_unit, redness, is_toughness_invulnerable)
 			end
 
 			local toughness_extension = template_data.toughness_extension
@@ -100,7 +104,7 @@ local effect_template = {
 				template_data.processed_attacks_index = num_stored_attacks
 				template_data.hit_shield_duration = t + HIT_SHIELD_EXTRA_LIGHT_DURATION
 			end
-		elseif template_data.state == STATES.depleted then
+		elseif template_data.state == STATES.depleted and not template_data.toughness_template.ignore_flickering_on_depleted then
 			local shield_unit = template_data.shield_unit
 
 			_flicker_shield(shield_unit, template_data, t)
@@ -120,18 +124,18 @@ local effect_template = {
 	end
 }
 
-function _switch_state(template_data, template_context, new_state)
+function _switch_state(template_data, template_context, new_state, is_toughness_invulnerable)
 	local shield_unit = template_data.shield_unit
 
 	if new_state == STATES.depleted then
-		_set_shield_power(shield_unit, 1, template_data)
+		_set_shield_power(shield_unit, 1, template_data, nil, is_toughness_invulnerable)
 
 		local green = 0.23529411764705882
 		local color_filter = Vector3(1, green, 0.09803921568627451)
 
 		Light.set_color_filter(template_data.light, color_filter)
 	elseif new_state == STATES.active then
-		_set_shield_redness(shield_unit, 0)
+		_set_shield_redness(shield_unit, 0, is_toughness_invulnerable)
 	end
 
 	template_data.state = new_state
@@ -169,7 +173,7 @@ function _flicker_shield(shield_unit, template_data, t)
 	end
 end
 
-function _set_shield_power(shield_unit, power, template_data, t)
+function _set_shield_power(shield_unit, power, template_data, t, is_toughness_invulnerable)
 	local include_children = true
 
 	Unit.set_scalar_for_materials(shield_unit, SHIELD_POWER_MATERIAL_KEY, power, include_children)
@@ -180,23 +184,34 @@ function _set_shield_power(shield_unit, power, template_data, t)
 
 	Light.set_intensity(light, lumen)
 
-	local green = math.max(power, 0.23529411764705882)
-	local color_filter = Vector3(1, green, 0.09803921568627451)
+	if is_toughness_invulnerable then
+		local color_filter = Vector3(0.4235294117647059 * power, 0.7333333333333333 * power, 0.7686274509803922 * power * 2) * 2
 
-	Light.set_color_filter(light, color_filter)
+		Light.set_color_filter(light, color_filter)
+	else
+		local green = math.max(power, 0.23529411764705882)
+		local color_filter = Vector3(1, green, 0.09803921568627451)
+
+		Light.set_color_filter(light, color_filter)
+	end
 end
 
-function _set_shield_redness(shield_unit, redness)
+function _set_shield_redness(shield_unit, redness, is_toughness_invulnerable)
 	local include_children = true
 
-	Unit.set_scalar_for_materials(shield_unit, SHIELD_REDNESS_MATERIAL_KEY, redness, include_children)
+	Unit.set_scalar_for_materials(shield_unit, SHIELD_REDNESS_MATERIAL_KEY, is_toughness_invulnerable and 0 or redness, include_children)
 end
 
-function _get_network_values(game_session, game_object_id)
+function _get_network_values(game_session, game_object_id, breed)
 	local toughness_damage = GameSession.game_object_field(game_session, game_object_id, "toughness_damage")
 	local max_toughness = GameSession.game_object_field(game_session, game_object_id, "toughness")
+	local is_toughness_invulnerable = false
 
-	return toughness_damage, max_toughness
+	if breed.can_have_invulnerable_toughness then
+		is_toughness_invulnerable = GameSession.game_object_field(game_session, game_object_id, "is_toughness_invulnerable")
+	end
+
+	return toughness_damage, max_toughness, is_toughness_invulnerable
 end
 
 return effect_template

@@ -1,4 +1,3 @@
-local SessionStats = require("scripts/managers/stats/groups/session_stats")
 local local_tasks = {}
 
 local function _create_checker(end_at, indices)
