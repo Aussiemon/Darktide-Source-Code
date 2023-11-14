@@ -654,27 +654,18 @@ local on_demand_vo_zealot_female_c = {
 	},
 	smart_tag_vo_enemy_scab_flamer = {
 		randomize_indexes_n = 0,
-		sound_events_n = 5,
+		sound_events_n = 4,
 		sound_events = {
-			"loc_zealot_female_c__seen_enemy_specials_generic_01",
-			"loc_zealot_female_c__seen_enemy_specials_generic_02",
-			"loc_zealot_female_c__seen_enemy_specials_generic_03",
-			"loc_zealot_female_c__seen_enemy_specials_generic_04",
-			"loc_zealot_female_c__seen_enemy_specials_generic_05"
+			"loc_zealot_female_c__smart_tag_vo_enemy_scab_flamer_a_01",
+			"loc_zealot_female_c__smart_tag_vo_enemy_scab_flamer_a_02",
+			"loc_zealot_female_c__smart_tag_vo_enemy_scab_flamer_a_03",
+			"loc_zealot_female_c__smart_tag_vo_enemy_scab_flamer_a_04"
 		},
 		sound_events_duration = {
-			1.86849,
-			2.049677,
-			1.883,
-			1.65075,
-			2.68249
-		},
-		sound_event_weights = {
-			0.2,
-			0.2,
-			0.2,
-			0.2,
-			0.2
+			0.62325,
+			0.64,
+			0.834417,
+			0.80575
 		},
 		randomize_indexes = {}
 	},

@@ -142,10 +142,6 @@ local mission_vo_hm_complex_zealot_female_a = {
 			[1.0] = 2.834896,
 			[2.0] = 3.678896
 		},
-		sound_event_weights = {
-			[1.0] = 0.5,
-			[2.0] = 0.5
-		},
 		randomize_indexes = {}
 	},
 	mission_complex_start_banter_c = {

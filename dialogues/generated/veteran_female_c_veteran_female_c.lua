@@ -21,6 +21,28 @@ local veteran_female_c_veteran_female_c = {
 		},
 		randomize_indexes = {}
 	},
+	bonding_conversation_headshot_extension_vet_c_vet_a_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1.0] = "loc_veteran_female_c__bonding_conversation_headshot_extension_vet_c_vet_a_b_01"
+		},
+		sound_events_duration = {
+			[1.0] = 2.680375
+		},
+		randomize_indexes = {}
+	},
+	bonding_conversation_headshot_extension_vet_c_vet_a_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1.0] = "loc_veteran_female_c__bonding_conversation_headshot_extension_vet_c_vet_a_d_01"
+		},
+		sound_events_duration = {
+			[1.0] = 5.328344
+		},
+		randomize_indexes = {}
+	},
 	bonding_conversation_headshot_extension_vet_c_zea_b_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,

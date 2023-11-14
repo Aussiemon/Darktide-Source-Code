@@ -640,12 +640,6 @@ local on_demand_vo_veteran_male_c = {
 			0.572979,
 			1.057219
 		},
-		sound_event_weights = {
-			0.25,
-			0.25,
-			0.25,
-			0.25
-		},
 		randomize_indexes = {}
 	},
 	smart_tag_vo_enemy_traitor_executor = {

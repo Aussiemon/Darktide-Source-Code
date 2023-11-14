@@ -2084,7 +2084,7 @@ return function ()
 			}
 		},
 		heard_speak_routing = {
-			target = "mission_giver_default"
+			target = "mission_giver_default_class"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {

@@ -679,12 +679,6 @@ local on_demand_vo_zealot_female_b = {
 			0.778,
 			0.63175
 		},
-		sound_event_weights = {
-			0.25,
-			0.25,
-			0.25,
-			0.25
-		},
 		randomize_indexes = {}
 	},
 	smart_tag_vo_enemy_traitor_executor = {

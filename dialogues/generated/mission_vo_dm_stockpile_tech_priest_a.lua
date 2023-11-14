@@ -181,23 +181,6 @@ local mission_vo_dm_stockpile_tech_priest_a = {
 		},
 		randomize_indexes = {}
 	},
-	mission_stockpile_tarp_town = {
-		randomize_indexes_n = 0,
-		sound_events_n = 4,
-		sound_events = {
-			"loc_tech_priest_a__mission_stockpile_tarp_town_01",
-			"loc_tech_priest_a__mission_stockpile_tarp_town_02",
-			"loc_tech_priest_a__mission_stockpile_tarp_town_03",
-			"loc_tech_priest_a__mission_stockpile_tarp_town_04"
-		},
-		sound_events_duration = {
-			5.929375,
-			6.842104,
-			9.801125,
-			7.455083
-		},
-		randomize_indexes = {}
-	},
 	mission_stockpile_through_to_silo = {
 		randomize_indexes_n = 0,
 		sound_events_n = 4,

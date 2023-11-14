@@ -343,6 +343,8 @@ return function ()
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
+					"explicator",
+					"sergeant",
 					"tech_priest"
 				}
 			},
@@ -1071,60 +1073,6 @@ return function ()
 		},
 		heard_speak_routing = {
 			target = "players"
-		}
-	})
-	define_rule({
-		post_wwise_event = "play_radio_static_end",
-		concurrent_wwise_event = "play_vox_static_loop",
-		pre_wwise_event = "play_radio_static_start",
-		name = "info_servo_skull_deployed",
-		response = "info_servo_skull_deployed",
-		database = "mission_giver_vo",
-		wwise_route = 1,
-		category = "vox_prio_0",
-		criterias = {
-			{
-				"query_context",
-				"concept",
-				OP.EQ,
-				"mission_info"
-			},
-			{
-				"query_context",
-				"trigger_id",
-				OP.EQ,
-				"info_servo_skull_deployed"
-			},
-			{
-				"user_context",
-				"class_name",
-				OP.SET_INCLUDES,
-				args = {
-					"tech_priest"
-				}
-			},
-			{
-				"user_memory",
-				"info_servo_skull_deployed",
-				OP.GTEQ,
-				0
-			}
-		},
-		on_done = {
-			{
-				"user_memory",
-				"info_servo_skull_deployed",
-				OP.ADD,
-				1
-			}
-		},
-		heard_speak_routing = {
-			target = "players"
-		},
-		on_pre_rule_execution = {
-			delay_vo = {
-				duration = 1
-			}
 		}
 	})
 	define_rule({
@@ -2601,6 +2549,134 @@ return function ()
 		post_wwise_event = "play_radio_static_end",
 		concurrent_wwise_event = "play_vox_static_loop",
 		pre_wwise_event = "play_radio_static_start",
+		name = "mission_raid_briefing_a",
+		response = "mission_raid_briefing_a",
+		database = "mission_giver_vo",
+		wwise_route = 41,
+		category = "vox_prio_0",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"mission_brief"
+			},
+			{
+				"query_context",
+				"starter_line",
+				OP.EQ,
+				"mission_raid_briefing_a"
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"explicator",
+					"sergeant",
+					"tech_priest"
+				}
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_givers"
+		}
+	})
+	define_rule({
+		post_wwise_event = "play_radio_static_end",
+		concurrent_wwise_event = "play_vox_static_loop",
+		pre_wwise_event = "play_radio_static_start",
+		name = "mission_raid_briefing_b",
+		response = "mission_raid_briefing_b",
+		database = "mission_giver_vo",
+		wwise_route = 41,
+		category = "vox_prio_0",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"mission_raid_briefing_a"
+				}
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"explicator",
+					"sergeant",
+					"tech_priest"
+				}
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_givers"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
+		post_wwise_event = "play_radio_static_end",
+		concurrent_wwise_event = "play_vox_static_loop",
+		pre_wwise_event = "play_radio_static_start",
+		name = "mission_raid_briefing_c",
+		response = "mission_raid_briefing_c",
+		database = "mission_giver_vo",
+		wwise_route = 41,
+		category = "vox_prio_0",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"mission_raid_briefing_b"
+				}
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"explicator",
+					"sergeant",
+					"tech_priest"
+				}
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "disabled"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
+		post_wwise_event = "play_radio_static_end",
+		concurrent_wwise_event = "play_vox_static_loop",
+		pre_wwise_event = "play_radio_static_start",
 		name = "mission_rails_briefing_a",
 		response = "mission_rails_briefing_a",
 		database = "mission_giver_vo",
@@ -3677,6 +3753,47 @@ return function ()
 		}
 	})
 	define_rule({
+		concurrent_wwise_event = "play_vox_static_loop",
+		wwise_route = 41,
+		name = "mission_twins_briefing_b2",
+		response = "mission_twins_briefing_b2",
+		database = "mission_giver_vo",
+		category = "vox_prio_0",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"mission_twins_briefing_b"
+				}
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"explicator"
+				}
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_givers"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
 		post_wwise_event = "play_radio_static_end",
 		concurrent_wwise_event = "play_vox_static_loop",
 		name = "mission_twins_briefing_c",
@@ -3696,7 +3813,7 @@ return function ()
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_twins_briefing_b"
+					"mission_twins_briefing_b2"
 				}
 			},
 			{

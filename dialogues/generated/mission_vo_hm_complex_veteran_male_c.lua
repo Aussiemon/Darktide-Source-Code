@@ -142,10 +142,6 @@ local mission_vo_hm_complex_veteran_male_c = {
 			[1.0] = 1.878135,
 			[2.0] = 2.294438
 		},
-		sound_event_weights = {
-			[1.0] = 0.5,
-			[2.0] = 0.5
-		},
 		randomize_indexes = {}
 	},
 	mission_complex_start_banter_c = {

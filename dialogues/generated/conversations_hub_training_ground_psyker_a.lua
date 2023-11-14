@@ -1,7 +1,7 @@
 local conversations_hub_training_ground_psyker_a = {
 	hub_idle = {
 		randomize_indexes_n = 0,
-		sound_events_n = 18,
+		sound_events_n = 19,
 		sound_events = {
 			"loc_training_ground_psyker_a__hub_idle_01",
 			"loc_training_ground_psyker_a__hub_idle_02",
@@ -9,6 +9,7 @@ local conversations_hub_training_ground_psyker_a = {
 			"loc_training_ground_psyker_a__hub_idle_04",
 			"loc_training_ground_psyker_a__hub_idle_05",
 			"loc_training_ground_psyker_a__hub_idle_07",
+			"loc_training_ground_psyker_a__hub_idle_08",
 			"loc_training_ground_psyker_a__hub_idle_09",
 			"loc_training_ground_psyker_a__hub_idle_10",
 			"loc_training_ground_psyker_a__hub_idle_11",
@@ -29,6 +30,7 @@ local conversations_hub_training_ground_psyker_a = {
 			3.351,
 			3.32,
 			3.352,
+			3.45678,
 			5.77,
 			5.673,
 			5.687,

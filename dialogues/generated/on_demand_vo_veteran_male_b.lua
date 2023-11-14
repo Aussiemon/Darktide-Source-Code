@@ -663,27 +663,18 @@ local on_demand_vo_veteran_male_b = {
 	},
 	smart_tag_vo_enemy_scab_flamer = {
 		randomize_indexes_n = 0,
-		sound_events_n = 5,
+		sound_events_n = 4,
 		sound_events = {
-			"loc_veteran_male_b__seen_enemy_specials_generic_01",
-			"loc_veteran_male_b__seen_enemy_specials_generic_02",
-			"loc_veteran_male_b__seen_enemy_specials_generic_03",
-			"loc_veteran_male_b__seen_enemy_specials_generic_04",
-			"loc_veteran_male_b__seen_enemy_specials_generic_05"
+			"loc_veteran_male_b__smart_tag_vo_enemy_scab_flamer_a_01",
+			"loc_veteran_male_b__smart_tag_vo_enemy_scab_flamer_a_02",
+			"loc_veteran_male_b__smart_tag_vo_enemy_scab_flamer_a_03",
+			"loc_veteran_male_b__smart_tag_vo_enemy_scab_flamer_a_04"
 		},
 		sound_events_duration = {
-			1.478688,
-			1.344333,
-			3.271625,
-			1.394792,
-			1.605042
-		},
-		sound_event_weights = {
-			0.2,
-			0.2,
-			0.2,
-			0.2,
-			0.2
+			0.777917,
+			1.091875,
+			1.029542,
+			0.611979
 		},
 		randomize_indexes = {}
 	},

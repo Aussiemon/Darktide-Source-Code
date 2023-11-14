@@ -3331,10 +3331,10 @@ return function ()
 	})
 	define_rule({
 		name = "bonding_conversation_metropolitan_pray_with_zola_a",
-		category = "conversations_prio_1",
 		wwise_route = 0,
 		response = "bonding_conversation_metropolitan_pray_with_zola_a",
 		database = "psyker_male_a",
+		category = "conversations_prio_1",
 		criterias = {
 			{
 				"query_context",
@@ -3419,6 +3419,13 @@ return function ()
 		},
 		heard_speak_routing = {
 			target = "players"
+		},
+		on_pre_rule_execution = {
+			random_ignore_vo = {
+				chance = 0.3,
+				max_failed_tries = 0,
+				hold_for = 0
+			}
 		}
 	})
 	define_rule({

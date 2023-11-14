@@ -44,6 +44,25 @@ local event_vo_scan_pilot_a = {
 			6.595188
 		},
 		randomize_indexes = {}
+	},
+	info_servo_skull_deployed = {
+		randomize_indexes_n = 0,
+		sound_events_n = 5,
+		sound_events = {
+			"loc_pilot_a__info_servo_skull_deployed_01",
+			"loc_pilot_a__info_servo_skull_deployed_02",
+			"loc_pilot_a__info_servo_skull_deployed_03",
+			"loc_pilot_a__info_servo_skull_deployed_04",
+			"loc_pilot_a__info_servo_skull_deployed_05"
+		},
+		sound_events_duration = {
+			4.532875,
+			5.867958,
+			3.626438,
+			2.781292,
+			4.357938
+		},
+		randomize_indexes = {}
 	}
 }
 

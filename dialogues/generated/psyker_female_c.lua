@@ -2661,10 +2661,10 @@ return function ()
 	})
 	define_rule({
 		name = "bonding_conversation_metropolitan_krall_a",
-		category = "conversations_prio_1",
 		wwise_route = 0,
 		response = "bonding_conversation_metropolitan_krall_a",
 		database = "psyker_female_c",
+		category = "conversations_prio_1",
 		criterias = {
 			{
 				"query_context",
@@ -2749,6 +2749,13 @@ return function ()
 		},
 		heard_speak_routing = {
 			target = "players"
+		},
+		on_pre_rule_execution = {
+			random_ignore_vo = {
+				chance = 0.2,
+				max_failed_tries = 0,
+				hold_for = 0
+			}
 		}
 	})
 	define_rule({
@@ -5407,10 +5414,10 @@ return function ()
 	})
 	define_rule({
 		name = "bonding_conversation_metropolitan_zola_dream_a",
-		category = "conversations_prio_1",
 		wwise_route = 0,
 		response = "bonding_conversation_metropolitan_zola_dream_a",
 		database = "psyker_female_c",
+		category = "conversations_prio_1",
 		criterias = {
 			{
 				"query_context",
@@ -5495,6 +5502,13 @@ return function ()
 		},
 		heard_speak_routing = {
 			target = "players"
+		},
+		on_pre_rule_execution = {
+			random_ignore_vo = {
+				chance = 0.3,
+				max_failed_tries = 0,
+				hold_for = 0
+			}
 		}
 	})
 	define_rule({

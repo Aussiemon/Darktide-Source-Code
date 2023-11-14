@@ -142,10 +142,6 @@ local mission_vo_hm_complex_psyker_male_c = {
 			[1.0] = 3.440125,
 			[2.0] = 4.186771
 		},
-		sound_event_weights = {
-			[1.0] = 0.5,
-			[2.0] = 0.5
-		},
 		randomize_indexes = {}
 	},
 	mission_complex_start_banter_c = {

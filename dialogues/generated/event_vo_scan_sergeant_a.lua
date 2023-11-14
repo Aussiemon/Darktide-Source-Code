@@ -116,15 +116,15 @@ local event_vo_scan_sergeant_a = {
 			"loc_sergeant_a__event_scan_more_data_10"
 		},
 		sound_events_duration = {
-			3.423833,
-			4.050771,
-			3.934667,
-			4.793792,
+			4.988458,
+			3.485417,
+			4.918,
+			4.481083,
 			3.874729,
-			4.542917,
+			4.542896,
 			4.508563,
 			4.424104,
-			3.695021,
+			3.695,
 			4.450188
 		},
 		randomize_indexes = {}
@@ -139,10 +139,29 @@ local event_vo_scan_sergeant_a = {
 			"loc_sergeant_a__event_scan_skull_waiting_04"
 		},
 		sound_events_duration = {
-			2.982646,
-			4.282958,
-			3.748896,
-			4.967958
+			4.417521,
+			4.603,
+			4.968708,
+			4.828625
+		},
+		randomize_indexes = {}
+	},
+	info_servo_skull_deployed = {
+		randomize_indexes_n = 0,
+		sound_events_n = 5,
+		sound_events = {
+			"loc_sergeant_a__info_servo_skull_deployed_01",
+			"loc_sergeant_a__info_servo_skull_deployed_02",
+			"loc_sergeant_a__info_servo_skull_deployed_03",
+			"loc_sergeant_a__info_servo_skull_deployed_04",
+			"loc_sergeant_a__info_servo_skull_deployed_05"
+		},
+		sound_events_duration = {
+			2.829854,
+			1.942271,
+			2.733583,
+			3.482167,
+			3.798104
 		},
 		randomize_indexes = {}
 	}

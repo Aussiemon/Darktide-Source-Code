@@ -292,7 +292,7 @@ local psyker_male_b_psyker_male_b = {
 			[1.0] = "loc_psyker_male_b__bonding_conversation_metropolitan_influence_e_01"
 		},
 		sound_events_duration = {
-			[1.0] = 3.45678
+			[1.0] = 2.865833
 		},
 		randomize_indexes = {}
 	},

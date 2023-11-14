@@ -4878,10 +4878,10 @@ return function ()
 	})
 	define_rule({
 		name = "bonding_conversation_metropolitan_mystery_a",
-		category = "conversations_prio_1",
 		wwise_route = 0,
 		response = "bonding_conversation_metropolitan_mystery_a",
 		database = "ogryn_a",
+		category = "conversations_prio_1",
 		criterias = {
 			{
 				"query_context",
@@ -4966,6 +4966,13 @@ return function ()
 		},
 		heard_speak_routing = {
 			target = "players"
+		},
+		on_pre_rule_execution = {
+			random_ignore_vo = {
+				chance = 0.25,
+				max_failed_tries = 0,
+				hold_for = 0
+			}
 		}
 	})
 	define_rule({
@@ -5860,10 +5867,10 @@ return function ()
 	})
 	define_rule({
 		name = "bonding_conversation_metropolitan_stinky_a",
-		category = "conversations_prio_1",
 		wwise_route = 0,
 		response = "bonding_conversation_metropolitan_stinky_a",
 		database = "ogryn_a",
+		category = "conversations_prio_1",
 		criterias = {
 			{
 				"query_context",
@@ -5948,6 +5955,13 @@ return function ()
 		},
 		heard_speak_routing = {
 			target = "players"
+		},
+		on_pre_rule_execution = {
+			random_ignore_vo = {
+				chance = 0.25,
+				max_failed_tries = 0,
+				hold_for = 0
+			}
 		}
 	})
 	define_rule({
@@ -7731,10 +7745,10 @@ return function ()
 	})
 	define_rule({
 		name = "bonding_conversation_round_three_family_a",
-		category = "conversations_prio_1",
 		wwise_route = 0,
 		response = "bonding_conversation_round_three_family_a",
 		database = "ogryn_a",
+		category = "conversations_prio_1",
 		criterias = {
 			{
 				"query_context",
@@ -7819,6 +7833,13 @@ return function ()
 		},
 		heard_speak_routing = {
 			target = "players"
+		},
+		on_pre_rule_execution = {
+			random_ignore_vo = {
+				chance = 0.2,
+				max_failed_tries = 0,
+				hold_for = 0
+			}
 		}
 	})
 	define_rule({
@@ -13028,9 +13049,7 @@ return function ()
 		}
 	})
 	define_rule({
-		post_wwise_event = "play_radio_static_end",
 		name = "combat_pause_quirk_ogryn_a_elevator_a",
-		pre_wwise_event = "play_radio_static_start",
 		wwise_route = 0,
 		response = "combat_pause_quirk_ogryn_a_elevator_a",
 		database = "ogryn_a",

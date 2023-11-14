@@ -232,23 +232,6 @@ local mission_vo_dm_stockpile_explicator_a = {
 		},
 		randomize_indexes = {}
 	},
-	mission_stockpile_tarp_town = {
-		randomize_indexes_n = 0,
-		sound_events_n = 4,
-		sound_events = {
-			"loc_explicator_a__mission_stockpile_tarp_town_01",
-			"loc_explicator_a__mission_stockpile_tarp_town_02",
-			"loc_explicator_a__mission_stockpile_tarp_town_03",
-			"loc_explicator_a__mission_stockpile_tarp_town_04"
-		},
-		sound_events_duration = {
-			5.138479,
-			3.038958,
-			3.38125,
-			3.904146
-		},
-		randomize_indexes = {}
-	},
 	mission_stockpile_through_to_silo = {
 		randomize_indexes_n = 0,
 		sound_events_n = 4,

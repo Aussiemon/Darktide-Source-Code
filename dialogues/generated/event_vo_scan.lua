@@ -82,24 +82,12 @@ return function ()
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
+					"sergeant",
 					"tech_priest"
 				}
-			},
-			{
-				"faction_memory",
-				"",
-				OP.EQ,
-				0
 			}
 		},
-		on_done = {
-			{
-				"faction_memory",
-				"",
-				OP.ADD,
-				0
-			}
-		},
+		on_done = {},
 		heard_speak_routing = {
 			target = "disabled"
 		},
@@ -136,6 +124,7 @@ return function ()
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
+					"sergeant",
 					"tech_priest"
 				}
 			},
@@ -156,11 +145,6 @@ return function ()
 		},
 		heard_speak_routing = {
 			target = "disabled"
-		},
-		on_pre_rule_execution = {
-			delay_vo = {
-				duration = 1
-			}
 		}
 	})
 	define_rule({
@@ -190,6 +174,7 @@ return function ()
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
+					"sergeant",
 					"tech_priest"
 				}
 			},
@@ -210,11 +195,6 @@ return function ()
 		},
 		heard_speak_routing = {
 			target = "disabled"
-		},
-		on_pre_rule_execution = {
-			delay_vo = {
-				duration = 1
-			}
 		}
 	})
 	define_rule({
@@ -279,6 +259,7 @@ return function ()
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
+					"sergeant",
 					"tech_priest"
 				}
 			},
@@ -329,26 +310,68 @@ return function ()
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
+					"sergeant",
+					"tech_priest"
+				}
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "disabled"
+		}
+	})
+	define_rule({
+		post_wwise_event = "play_radio_static_end",
+		concurrent_wwise_event = "play_vox_static_loop",
+		pre_wwise_event = "play_radio_static_start",
+		name = "info_servo_skull_deployed",
+		response = "info_servo_skull_deployed",
+		database = "event_vo_scan",
+		wwise_route = 1,
+		category = "vox_prio_0",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"mission_info"
+			},
+			{
+				"query_context",
+				"trigger_id",
+				OP.EQ,
+				"info_servo_skull_deployed"
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
 					"tech_priest"
 				}
 			},
 			{
-				"faction_memory",
-				"",
-				OP.EQ,
+				"user_memory",
+				"info_servo_skull_deployed",
+				OP.GTEQ,
 				0
 			}
 		},
 		on_done = {
 			{
-				"faction_memory",
-				"",
+				"user_memory",
+				"info_servo_skull_deployed",
 				OP.ADD,
-				0
+				1
 			}
 		},
 		heard_speak_routing = {
-			target = "disabled"
+			target = "players"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 1
+			}
 		}
 	})
 end

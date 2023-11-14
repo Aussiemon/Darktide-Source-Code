@@ -1,4 +1,26 @@
 local veteran_male_b_psyker_female_c = {
+	bonding_conversation_headshot_extension_vet_b_psy_c_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1.0] = "loc_psyker_female_c__bonding_conversation_headshot_extension_vet_b_psy_c_c_01"
+		},
+		sound_events_duration = {
+			[1.0] = 2.440427
+		},
+		randomize_indexes = {}
+	},
+	bonding_conversation_headshot_extension_vet_b_psy_c_e = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1.0] = "loc_psyker_female_c__bonding_conversation_headshot_extension_vet_b_psy_c_e_01"
+		},
+		sound_events_duration = {
+			[1.0] = 2.231063
+		},
+		randomize_indexes = {}
+	},
 	bonding_conversation_metropolitan_cheer_vet_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,

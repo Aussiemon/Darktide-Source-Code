@@ -3630,6 +3630,19 @@ local conversations_core_veteran_male_a = {
 		},
 		randomize_indexes = {}
 	},
+	lore_zola_one_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 2,
+		sound_events = {
+			[1.0] = "loc_veteran_male_a__lore_zola_one_b_01",
+			[2.0] = "loc_veteran_male_a__lore_zola_one_b_02"
+		},
+		sound_events_duration = {
+			[1.0] = 4.782542,
+			[2.0] = 2.863063
+		},
+		randomize_indexes = {}
+	},
 	lore_zola_one_c = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,

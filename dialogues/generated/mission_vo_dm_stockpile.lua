@@ -1162,50 +1162,6 @@ return function ()
 		}
 	})
 	define_rule({
-		pre_wwise_event = "play_radio_static_start",
-		concurrent_wwise_event = "play_vox_static_loop",
-		name = "mission_stockpile_tarp_town",
-		wwise_route = 1,
-		response = "mission_stockpile_tarp_town",
-		database = "mission_vo_dm_stockpile",
-		category = "vox_prio_0",
-		criterias = {
-			{
-				"query_context",
-				"concept",
-				OP.EQ,
-				"heard_speak"
-			},
-			{
-				"query_context",
-				"dialogue_name",
-				OP.SET_INCLUDES,
-				args = {
-					"mission_stockpile_start_banter_c_disabled"
-				}
-			},
-			{
-				"user_context",
-				"class_name",
-				OP.SET_INCLUDES,
-				args = {
-					"explicator",
-					"sergeant",
-					"tech_priest"
-				}
-			}
-		},
-		on_done = {},
-		heard_speak_routing = {
-			target = "self"
-		},
-		on_pre_rule_execution = {
-			delay_vo = {
-				duration = 0.3
-			}
-		}
-	})
-	define_rule({
 		post_wwise_event = "play_radio_static_end",
 		concurrent_wwise_event = "play_vox_static_loop",
 		pre_wwise_event = "play_radio_static_start",

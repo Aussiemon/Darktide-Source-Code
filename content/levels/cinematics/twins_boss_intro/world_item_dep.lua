@@ -1,14 +1,16 @@
 local item_dependencies = {
 	minion_items = {
-		["content/items/characters/minions/chaos_traitor_guard/attachments_base/face_01_b"] = 2,
-		["content/items/characters/minions/chaos_traitor_guard/attachments_gear/captain_01"] = 2,
-		["content/items/characters/minions/chaos_traitor_guard/attachments_base/lowerbody_b_captain"] = 2,
-		["content/items/characters/minions/chaos_traitor_guard/attachments_gear/captain_01_attachment"] = 2,
-		["content/items/weapons/minions/ranged/chaos_traitor_guard_captain_plasma_gun_01"] = 1,
-		["content/items/characters/minions/chaos_traitor_guard/attachments_gear/traitor_guard_captain_helmet_01_c"] = 1,
-		["content/items/characters/minions/chaos_traitor_guard/attachments_base/upperbody_b_captain"] = 2,
-		["content/items/characters/minions/chaos_traitor_guard/attachments_gear/traitor_guard_captain_helmet_02"] = 1,
-		["content/items/weapons/minions/melee/renegade_captain_power_sword_01"] = 1
+		["content/items/characters/minions/chaos_traitor_guard/attachments_gear/chaos_traitor_guard_lieutenant_b"] = 1,
+		["content/items/characters/minions/chaos_traitor_guard/attachments_base/upperbody_a_twins"] = 1,
+		["content/items/characters/minions/chaos_traitor_guard/attachments_gear/chaos_traitor_guard_traitor_guard_lieutanant_helmet_01"] = 1,
+		["content/items/characters/minions/chaos_traitor_guard/attachments_base/lowerbody_a_color_var_04"] = 2,
+		["content/items/characters/minions/chaos_traitor_guard/attachments_gear/chaos_traitor_guard_lieutenant_d"] = 1,
+		["content/items/characters/minions/chaos_traitor_guard/attachments_base/upperbody_a_var_01_color_var_04"] = 1,
+		["content/items/characters/minions/chaos_traitor_guard/attachments_gear/chaos_traitor_guard_lieutenant_a"] = 1,
+		["content/items/characters/minions/chaos_traitor_guard/attachments_gear/chaos_traitor_guard_traitor_guard_lieutanant_helmet_01_a"] = 1,
+		["content/items/weapons/minions/melee/chaos_traitor_guard_2h_power_sword"] = 1,
+		["content/items/characters/minions/chaos_traitor_guard/attachments_gear/chaos_traitor_guard_lieutenant_c"] = 1,
+		["content/items/weapons/minions/ranged/chaos_traitor_guard_captain_plasma_gun_01"] = 1
 	},
 	player_items = {
 		["content/items/characters/player/human/gear_arms/imperial_guard_jacket_a_arms"] = 4,

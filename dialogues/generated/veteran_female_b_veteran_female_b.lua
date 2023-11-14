@@ -76,6 +76,28 @@ local veteran_female_b_veteran_female_b = {
 		},
 		randomize_indexes = {}
 	},
+	bonding_conversation_headshot_extension_vet_b_vet_a_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1.0] = "loc_veteran_female_b__bonding_conversation_headshot_extension_vet_b_vet_a_b_01"
+		},
+		sound_events_duration = {
+			[1.0] = 3.996417
+		},
+		randomize_indexes = {}
+	},
+	bonding_conversation_headshot_extension_vet_b_vet_a_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1.0] = "loc_veteran_female_b__bonding_conversation_headshot_extension_vet_b_vet_a_d_01"
+		},
+		sound_events_duration = {
+			[1.0] = 2.289188
+		},
+		randomize_indexes = {}
+	},
 	bonding_conversation_headshot_extension_vet_b_zea_a_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,

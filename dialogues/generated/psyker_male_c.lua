@@ -1617,10 +1617,10 @@ return function ()
 	})
 	define_rule({
 		name = "bonding_conversation_metropolitan_count_a",
-		category = "conversations_prio_1",
 		wwise_route = 0,
 		response = "bonding_conversation_metropolitan_count_a",
 		database = "psyker_male_c",
+		category = "conversations_prio_1",
 		criterias = {
 			{
 				"query_context",
@@ -1705,6 +1705,13 @@ return function ()
 		},
 		heard_speak_routing = {
 			target = "players"
+		},
+		on_pre_rule_execution = {
+			random_ignore_vo = {
+				chance = 0.5,
+				max_failed_tries = 0,
+				hold_for = 0
+			}
 		}
 	})
 	define_rule({
@@ -2922,10 +2929,10 @@ return function ()
 	})
 	define_rule({
 		name = "bonding_conversation_metropolitan_implant_a",
-		category = "conversations_prio_1",
 		wwise_route = 0,
 		response = "bonding_conversation_metropolitan_implant_a",
 		database = "psyker_male_c",
+		category = "conversations_prio_1",
 		criterias = {
 			{
 				"query_context",
@@ -3010,6 +3017,13 @@ return function ()
 		},
 		heard_speak_routing = {
 			target = "players"
+		},
+		on_pre_rule_execution = {
+			random_ignore_vo = {
+				chance = 0.5,
+				max_failed_tries = 0,
+				hold_for = 0
+			}
 		}
 	})
 	define_rule({
@@ -3153,10 +3167,10 @@ return function ()
 	})
 	define_rule({
 		name = "bonding_conversation_metropolitan_kindness_a",
-		category = "conversations_prio_1",
 		wwise_route = 0,
 		response = "bonding_conversation_metropolitan_kindness_a",
 		database = "psyker_male_c",
+		category = "conversations_prio_1",
 		criterias = {
 			{
 				"query_context",
@@ -3241,6 +3255,13 @@ return function ()
 		},
 		heard_speak_routing = {
 			target = "players"
+		},
+		on_pre_rule_execution = {
+			random_ignore_vo = {
+				chance = 0.4,
+				max_failed_tries = 0,
+				hold_for = 0
+			}
 		}
 	})
 	define_rule({

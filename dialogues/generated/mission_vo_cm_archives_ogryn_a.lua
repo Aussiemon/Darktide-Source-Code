@@ -64,10 +64,6 @@ local mission_vo_cm_archives_ogryn_a = {
 			[1.0] = 3.52125,
 			[2.0] = 2.679385
 		},
-		sound_event_weights = {
-			[1.0] = 0.5,
-			[2.0] = 0.5
-		},
 		randomize_indexes = {}
 	},
 	mission_archives_keep_coming_b = {
@@ -142,10 +138,6 @@ local mission_vo_cm_archives_ogryn_a = {
 		sound_events_duration = {
 			[1.0] = 3.717573,
 			[2.0] = 2.959417
-		},
-		sound_event_weights = {
-			[1.0] = 0.5,
-			[2.0] = 0.5
 		},
 		randomize_indexes = {}
 	},

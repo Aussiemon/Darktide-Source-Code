@@ -652,12 +652,6 @@ local on_demand_vo_psyker_male_a = {
 			0.638542,
 			0.960146
 		},
-		sound_event_weights = {
-			0.25,
-			0.25,
-			0.25,
-			0.25
-		},
 		randomize_indexes = {}
 	},
 	smart_tag_vo_enemy_traitor_executor = {

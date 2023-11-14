@@ -153,6 +153,25 @@ local event_vo_scan_tech_priest_a = {
 			4.910208
 		},
 		randomize_indexes = {}
+	},
+	info_servo_skull_deployed = {
+		randomize_indexes_n = 0,
+		sound_events_n = 5,
+		sound_events = {
+			"loc_tech_priest_a__info_servo_skull_deployed_01",
+			"loc_tech_priest_a__info_servo_skull_deployed_02",
+			"loc_tech_priest_a__info_servo_skull_deployed_03",
+			"loc_tech_priest_a__info_servo_skull_deployed_04",
+			"loc_tech_priest_a__info_servo_skull_deployed_05"
+		},
+		sound_events_duration = {
+			3.677833,
+			3.739771,
+			5.979063,
+			5.343063,
+			5.117229
+		},
+		randomize_indexes = {}
 	}
 }
 

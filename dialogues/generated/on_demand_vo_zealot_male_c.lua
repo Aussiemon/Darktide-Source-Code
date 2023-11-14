@@ -664,12 +664,6 @@ local on_demand_vo_zealot_male_c = {
 			0.851854,
 			0.456365
 		},
-		sound_event_weights = {
-			0.25,
-			0.25,
-			0.25,
-			0.25
-		},
 		randomize_indexes = {}
 	},
 	smart_tag_vo_enemy_traitor_executor = {

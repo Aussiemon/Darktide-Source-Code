@@ -1157,13 +1157,6 @@ local gameplay_vo_psyker_male_a = {
 			2.977958,
 			1.655208
 		},
-		sound_event_weights = {
-			0.2,
-			0.2,
-			0.2,
-			0.2,
-			0.2
-		},
 		randomize_indexes = {}
 	},
 	enemy_kill_scab_flamer_quick_agnostic = {
@@ -1223,13 +1216,6 @@ local gameplay_vo_psyker_male_a = {
 			2.412521,
 			1.634521,
 			2.479417
-		},
-		sound_event_weights = {
-			0.2,
-			0.2,
-			0.2,
-			0.2,
-			0.2
 		},
 		randomize_indexes = {}
 	},
@@ -2142,6 +2128,40 @@ local gameplay_vo_psyker_male_a = {
 			0.949729,
 			1.184833,
 			1.766229
+		},
+		randomize_indexes = {}
+	},
+	info_event_det_pack_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 4,
+		sound_events = {
+			"loc_psyker_male_a__info_event_det_pack_a_01",
+			"loc_psyker_male_a__info_event_det_pack_a_02",
+			"loc_psyker_male_a__info_event_det_pack_a_03",
+			"loc_psyker_male_a__info_event_det_pack_a_04"
+		},
+		sound_events_duration = {
+			2.825854,
+			2.009146,
+			3.39125,
+			2.633208
+		},
+		randomize_indexes = {}
+	},
+	info_event_det_pack_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 4,
+		sound_events = {
+			"loc_psyker_male_a__info_event_det_pack_b_01",
+			"loc_psyker_male_a__info_event_det_pack_b_02",
+			"loc_psyker_male_a__info_event_det_pack_b_03",
+			"loc_psyker_male_a__info_event_det_pack_b_04"
+		},
+		sound_events_duration = {
+			2.265021,
+			2.671792,
+			1.764875,
+			2.381271
 		},
 		randomize_indexes = {}
 	},
@@ -4673,14 +4693,6 @@ local gameplay_vo_psyker_male_a = {
 			1.678354,
 			1.710625,
 			2.039938
-		},
-		sound_event_weights = {
-			0.1666667,
-			0.1666667,
-			0.1666667,
-			0.1666667,
-			0.1666667,
-			0.1666667
 		},
 		randomize_indexes = {}
 	},

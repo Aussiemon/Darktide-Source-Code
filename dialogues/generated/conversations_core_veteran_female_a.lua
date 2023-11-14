@@ -3754,14 +3754,16 @@ local conversations_core_veteran_female_a = {
 	},
 	region_periferus = {
 		randomize_indexes_n = 0,
-		sound_events_n = 2,
+		sound_events_n = 3,
 		sound_events = {
-			[1.0] = "loc_veteran_female_a__region_periferus_02",
-			[2.0] = "loc_veteran_female_a__region_periferus_03"
+			"loc_veteran_female_a__region_periferus_02",
+			"loc_veteran_female_a__region_periferus_03",
+			"loc_veteran_female_a__region_periferus_disabled_01"
 		},
 		sound_events_duration = {
-			[1.0] = 5.179604,
-			[2.0] = 2.863271
+			5.179604,
+			2.863271,
+			3.035104
 		},
 		randomize_indexes = {}
 	}

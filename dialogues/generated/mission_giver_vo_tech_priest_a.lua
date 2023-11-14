@@ -425,25 +425,6 @@ local mission_giver_vo_tech_priest_a = {
 		},
 		randomize_indexes = {}
 	},
-	info_servo_skull_deployed = {
-		randomize_indexes_n = 0,
-		sound_events_n = 5,
-		sound_events = {
-			"loc_tech_priest_a__info_servo_skull_deployed_01",
-			"loc_tech_priest_a__info_servo_skull_deployed_02",
-			"loc_tech_priest_a__info_servo_skull_deployed_03",
-			"loc_tech_priest_a__info_servo_skull_deployed_04",
-			"loc_tech_priest_a__info_servo_skull_deployed_05"
-		},
-		sound_events_duration = {
-			3.677833,
-			3.739771,
-			5.979063,
-			5.343063,
-			5.117229
-		},
-		randomize_indexes = {}
-	},
 	info_servo_skull_deployed_tech_priest_follow_up = {
 		randomize_indexes_n = 0,
 		sound_events_n = 5,
@@ -910,6 +891,51 @@ local mission_giver_vo_tech_priest_a = {
 			7.895042,
 			8.124958,
 			6.36275
+		},
+		randomize_indexes = {}
+	},
+	mission_raid_briefing_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 3,
+		sound_events = {
+			"loc_tech_priest_a__mission_raid_briefing_a_01",
+			"loc_tech_priest_a__mission_raid_briefing_a_02",
+			"loc_tech_priest_a__mission_raid_briefing_a_03"
+		},
+		sound_events_duration = {
+			9.200001,
+			7.563104,
+			10.47983
+		},
+		randomize_indexes = {}
+	},
+	mission_raid_briefing_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 3,
+		sound_events = {
+			"loc_tech_priest_a__mission_raid_briefing_b_01",
+			"loc_tech_priest_a__mission_raid_briefing_b_02",
+			"loc_tech_priest_a__mission_raid_briefing_b_03"
+		},
+		sound_events_duration = {
+			12.98688,
+			12.64221,
+			8.256479
+		},
+		randomize_indexes = {}
+	},
+	mission_raid_briefing_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 3,
+		sound_events = {
+			"loc_tech_priest_a__mission_raid_briefing_c_01",
+			"loc_tech_priest_a__mission_raid_briefing_c_02",
+			"loc_tech_priest_a__mission_raid_briefing_c_03"
+		},
+		sound_events_duration = {
+			8.992583,
+			9.685146,
+			8.72375
 		},
 		randomize_indexes = {}
 	},

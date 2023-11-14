@@ -1089,7 +1089,7 @@ return function ()
 			},
 			{
 				"faction_memory",
-				"enemy_cultist_berzerker",
+				"enemy_berserker",
 				OP.TIMEDIFF,
 				OP.GT,
 				3
@@ -1141,14 +1141,14 @@ return function ()
 			},
 			{
 				"faction_memory",
-				"enemy_cultist_berzerker",
+				"enemy_berserker",
 				OP.TIMEDIFF,
 				OP.LT,
 				3
 			},
 			{
 				"faction_memory",
-				"enemy_cultist_berzerker",
+				"enemy_berserker",
 				OP.GT,
 				1
 			}
@@ -1906,7 +1906,7 @@ return function ()
 			},
 			{
 				"faction_memory",
-				"enemy_renegade_berzerker",
+				"enemy_berserker",
 				OP.TIMEDIFF,
 				OP.GT,
 				3
@@ -1958,14 +1958,14 @@ return function ()
 			},
 			{
 				"faction_memory",
-				"enemy_renegade_berzerker",
+				"enemy_berserker",
 				OP.TIMEDIFF,
 				OP.LT,
 				3
 			},
 			{
 				"faction_memory",
-				"enemy_renegade_berzerker",
+				"enemy_berserker",
 				OP.GT,
 				1
 			}
@@ -5126,6 +5126,78 @@ return function ()
 				"faction_memory",
 				"info_event_almost_done",
 				OP.TIMESET
+			}
+		}
+	})
+	define_rule({
+		name = "info_event_det_pack_a",
+		category = "player_prio_0",
+		wwise_route = 0,
+		response = "info_event_det_pack_a",
+		database = "gameplay_vo",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"generic_mission_vo"
+			},
+			{
+				"query_context",
+				"trigger_id",
+				OP.EQ,
+				"info_event_det_pack_a"
+			},
+			{
+				"user_memory",
+				"info_event_det_pack_a",
+				OP.TIMEDIFF,
+				OP.GT,
+				10
+			}
+		},
+		on_done = {
+			{
+				"user_memory",
+				"info_event_det_pack_a",
+				OP.TIMESET
+			}
+		}
+	})
+	define_rule({
+		name = "info_event_det_pack_b",
+		wwise_route = 0,
+		response = "info_event_det_pack_b",
+		database = "gameplay_vo",
+		category = "conversations_prio_0",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"info_event_det_pack_a"
+				}
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "disabled"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			},
+			random_ignore_vo = {
+				chance = 0.15,
+				max_failed_tries = 0,
+				hold_for = 0
 			}
 		}
 	})
@@ -13404,7 +13476,7 @@ return function ()
 			},
 			{
 				"faction_memory",
-				"enemy_cultist_berzerker",
+				"enemy_berserker",
 				OP.TIMEDIFF,
 				OP.GT,
 				20
@@ -13413,7 +13485,7 @@ return function ()
 		on_done = {
 			{
 				"faction_memory",
-				"enemy_cultist_berzerker",
+				"enemy_berserker",
 				OP.TIMESET
 			}
 		},
@@ -14094,7 +14166,7 @@ return function ()
 			},
 			{
 				"faction_memory",
-				"enemy_renegade_berzerker",
+				"enemy_berserker",
 				OP.TIMEDIFF,
 				OP.GT,
 				20
@@ -14103,7 +14175,7 @@ return function ()
 		on_done = {
 			{
 				"faction_memory",
-				"enemy_renegade_berzerker",
+				"enemy_berserker",
 				OP.TIMESET
 			}
 		},

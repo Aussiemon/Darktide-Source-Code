@@ -142,10 +142,6 @@ local mission_vo_hm_complex_zealot_male_a = {
 			[1.0] = 3.99875,
 			[2.0] = 4.632813
 		},
-		sound_event_weights = {
-			[1.0] = 0.5,
-			[2.0] = 0.5
-		},
 		randomize_indexes = {}
 	},
 	mission_complex_start_banter_c = {

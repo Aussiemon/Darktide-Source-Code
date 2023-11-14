@@ -154,16 +154,18 @@ local mission_vo_hm_complex_explicator_a = {
 	},
 	mission_complex_transmission_begun = {
 		randomize_indexes_n = 0,
-		sound_events_n = 3,
+		sound_events_n = 4,
 		sound_events = {
 			"loc_explicator_a__mission_complex_transmission_begun_01",
 			"loc_explicator_a__mission_complex_transmission_begun_02",
-			"loc_explicator_a__mission_complex_transmission_begun_03"
+			"loc_explicator_a__mission_complex_transmission_begun_03",
+			"loc_explicator_a__mission_complex_transmission_begun_04"
 		},
 		sound_events_duration = {
 			5.212333,
 			5.458063,
-			5.604333
+			5.604333,
+			5.373
 		},
 		randomize_indexes = {}
 	},

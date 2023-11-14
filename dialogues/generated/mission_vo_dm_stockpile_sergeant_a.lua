@@ -178,23 +178,6 @@ local mission_vo_dm_stockpile_sergeant_a = {
 		},
 		randomize_indexes = {}
 	},
-	mission_stockpile_tarp_town = {
-		randomize_indexes_n = 0,
-		sound_events_n = 4,
-		sound_events = {
-			"loc_sergeant_a__mission_stockpile_tarp_town_01",
-			"loc_sergeant_a__mission_stockpile_tarp_town_02",
-			"loc_sergeant_a__mission_stockpile_tarp_town_03",
-			"loc_sergeant_a__mission_stockpile_tarp_town_04"
-		},
-		sound_events_duration = {
-			4.511563,
-			4.491396,
-			5.086333,
-			3.723083
-		},
-		randomize_indexes = {}
-	},
 	mission_stockpile_through_to_silo = {
 		randomize_indexes_n = 0,
 		sound_events_n = 4,
