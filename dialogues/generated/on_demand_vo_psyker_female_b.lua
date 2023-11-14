@@ -658,12 +658,6 @@ local on_demand_vo_psyker_female_b = {
 			0.915646,
 			1.148083
 		},
-		sound_event_weights = {
-			0.25,
-			0.25,
-			0.25,
-			0.25
-		},
 		randomize_indexes = {}
 	},
 	smart_tag_vo_enemy_traitor_executor = {

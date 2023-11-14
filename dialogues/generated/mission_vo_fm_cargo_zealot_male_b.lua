@@ -176,12 +176,14 @@ local mission_vo_fm_cargo_zealot_male_b = {
 	},
 	mission_cargo_start_banter_a = {
 		randomize_indexes_n = 0,
-		sound_events_n = 1,
+		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_zealot_male_b__mission_cargo_start_banter_a_01"
+			[1.0] = "loc_zealot_male_b__mission_cargo_start_banter_a_01",
+			[2.0] = "loc_zealot_male_b__mission_cargo_start_banter_a_02"
 		},
 		sound_events_duration = {
-			[1.0] = 4.459708
+			[1.0] = 4.459708,
+			[2.0] = 3.45678
 		},
 		randomize_indexes = {}
 	},

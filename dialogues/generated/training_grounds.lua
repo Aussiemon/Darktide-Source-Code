@@ -158,7 +158,7 @@ return function ()
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"disabled_trigger"
+				"combat_ability_psyker_1"
 			},
 			{
 				"user_context",
@@ -362,7 +362,7 @@ return function ()
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"combat_ability_psyker_1"
+				"disabled_trigger"
 			},
 			{
 				"user_context",

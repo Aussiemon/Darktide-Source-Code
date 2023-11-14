@@ -23,7 +23,7 @@ local mission_vo_fm_resurgence_zealot_female_c = {
 			[1.0] = "loc_explicator_a__mission_resurgence_archive_a_01"
 		},
 		sound_events_duration = {
-			[1.0] = 4.690271
+			[1.0] = 4.3667
 		},
 		randomize_indexes = {}
 	},

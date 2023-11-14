@@ -120,28 +120,6 @@ local veteran_male_a_veteran_male_a = {
 		},
 		randomize_indexes = {}
 	},
-	bonding_conversation_headshot_extension_vet_a_psy_c_b = {
-		randomize_indexes_n = 0,
-		sound_events_n = 1,
-		sound_events = {
-			[1.0] = "loc_veteran_male_a__bonding_conversation_headshot_extension_vet_a_psyker_c_b_01"
-		},
-		sound_events_duration = {
-			[1.0] = 1.760104
-		},
-		randomize_indexes = {}
-	},
-	bonding_conversation_headshot_extension_vet_a_psy_c_d = {
-		randomize_indexes_n = 0,
-		sound_events_n = 1,
-		sound_events = {
-			[1.0] = "loc_veteran_male_a__bonding_conversation_headshot_extension_vet_a_psy_c_d_01"
-		},
-		sound_events_duration = {
-			[1.0] = 3.45678
-		},
-		randomize_indexes = {}
-	},
 	bonding_conversation_headshot_extension_vet_a_vet_c_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,

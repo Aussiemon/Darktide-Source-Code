@@ -352,7 +352,7 @@ local conversations_hub_contract_vendor_a = {
 	},
 	hub_interact_contract_vendor_dislikes_character = {
 		randomize_indexes_n = 0,
-		sound_events_n = 14,
+		sound_events_n = 20,
 		sound_events = {
 			"loc_contract_vendor_a__hub_interact_dislikes_character_01",
 			"loc_contract_vendor_a__hub_interact_dislikes_character_02",
@@ -362,12 +362,18 @@ local conversations_hub_contract_vendor_a = {
 			"loc_contract_vendor_a__hub_interact_dislikes_character_06",
 			"loc_contract_vendor_a__hub_interact_dislikes_character_07",
 			"loc_contract_vendor_a__hub_interact_dislikes_character_08",
+			"loc_contract_vendor_a__hub_interact_dislikes_character_09",
+			"loc_contract_vendor_a__hub_interact_dislikes_character_10",
+			"loc_contract_vendor_a__hub_interact_dislikes_character_11",
 			"loc_contract_vendor_a__hub_interact_dislikes_character_12",
 			"loc_contract_vendor_a__hub_interact_dislikes_character_13",
 			"loc_contract_vendor_a__hub_interact_dislikes_character_14",
+			"loc_contract_vendor_a__hub_interact_dislikes_character_15",
 			"loc_contract_vendor_a__hub_interact_dislikes_character_16",
 			"loc_contract_vendor_a__hub_interact_dislikes_character_17",
-			"loc_contract_vendor_a__hub_interact_dislikes_character_18"
+			"loc_contract_vendor_a__hub_interact_dislikes_character_18",
+			"loc_contract_vendor_a__hub_interact_dislikes_character_19",
+			"loc_contract_vendor_a__hub_interact_dislikes_character_20"
 		},
 		sound_events_duration = {
 			2.596625,
@@ -378,12 +384,18 @@ local conversations_hub_contract_vendor_a = {
 			4.299938,
 			7.153958,
 			2.165104,
+			3.071417,
+			2.886396,
+			3.45678,
 			1.998563,
 			3.777583,
 			1.392938,
+			2.701188,
 			2.907,
 			2.074271,
-			1.953146
+			1.953146,
+			5.463708,
+			2.448104
 		},
 		randomize_indexes = {}
 	},

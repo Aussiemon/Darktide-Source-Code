@@ -679,12 +679,6 @@ local on_demand_vo_ogryn_a = {
 			0.993656,
 			1.040031
 		},
-		sound_event_weights = {
-			0.25,
-			0.25,
-			0.25,
-			0.25
-		},
 		randomize_indexes = {}
 	},
 	smart_tag_vo_enemy_traitor_executor = {

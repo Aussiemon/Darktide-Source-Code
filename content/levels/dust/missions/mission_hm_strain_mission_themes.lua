@@ -2,6 +2,9 @@ local mission_themes = {
 	default = {
 		"content/levels/dust/missions/hm_strain_themes/default/theme_default_hm_strain"
 	},
+	darkness = {
+		"content/levels/dust/missions/hm_strain_themes/darkness_01/theme_darkness_01_hm_strain"
+	},
 	ember = {
 		"content/levels/dust/missions/hm_strain_themes/ember_01/theme_ember_01_hm_strain"
 	},

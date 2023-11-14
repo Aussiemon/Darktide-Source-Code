@@ -567,7 +567,7 @@ return function ()
 			},
 			{
 				"faction_memory",
-				"enemy_cultist_berzerker",
+				"enemy_berserker",
 				OP.TIMESET
 			}
 		},
@@ -1346,7 +1346,7 @@ return function ()
 			},
 			{
 				"faction_memory",
-				"enemy_renegade_berserker",
+				"enemy_berserker",
 				OP.TIMESET
 			}
 		},

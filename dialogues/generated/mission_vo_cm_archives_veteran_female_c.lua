@@ -64,10 +64,6 @@ local mission_vo_cm_archives_veteran_female_c = {
 			[1.0] = 1.353854,
 			[2.0] = 1.021729
 		},
-		sound_event_weights = {
-			[1.0] = 0.5,
-			[2.0] = 0.5
-		},
 		randomize_indexes = {}
 	},
 	mission_archives_keep_coming_b = {
@@ -142,10 +138,6 @@ local mission_vo_cm_archives_veteran_female_c = {
 		sound_events_duration = {
 			[1.0] = 2.565719,
 			[2.0] = 1.353854
-		},
-		sound_event_weights = {
-			[1.0] = 0.5,
-			[2.0] = 0.5
 		},
 		randomize_indexes = {}
 	},

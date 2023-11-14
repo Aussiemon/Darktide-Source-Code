@@ -428,7 +428,8 @@ return function ()
 					"mission_resurgence_start_banter_c",
 					"mission_stockpile_start_banter_c",
 					"mission_strain_start_banter_c",
-					"mission_armoury_rooftops_c"
+					"mission_armoury_rooftops_c",
+					"mission_raid_safe_zone_e"
 				}
 			},
 			{

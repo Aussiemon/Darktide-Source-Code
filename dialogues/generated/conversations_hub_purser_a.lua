@@ -437,10 +437,10 @@ local conversations_hub_purser_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_purser_a__hub_idle_2nd_phase_conversation_twentysix_b_01"
+			[1.0] = "loc_purser_a__hub_idle_2nd_phase_conversation_twentysixa_b_01"
 		},
 		sound_events_duration = {
-			[1.0] = 3.683042
+			[1.0] = 3.971125
 		},
 		randomize_indexes = {}
 	},
@@ -448,10 +448,10 @@ local conversations_hub_purser_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_purser_a__hub_idle_2nd_phase_conversation_twentysixa_b_01"
+			[1.0] = "loc_purser_a__hub_idle_2nd_phase_conversation_twentysix_b_01"
 		},
 		sound_events_duration = {
-			[1.0] = 3.971125
+			[1.0] = 3.683042
 		},
 		randomize_indexes = {}
 	},

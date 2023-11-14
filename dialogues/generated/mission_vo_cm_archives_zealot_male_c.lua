@@ -64,10 +64,6 @@ local mission_vo_cm_archives_zealot_male_c = {
 			[1.0] = 2.329229,
 			[2.0] = 2.814792
 		},
-		sound_event_weights = {
-			[1.0] = 0.5,
-			[2.0] = 0.5
-		},
 		randomize_indexes = {}
 	},
 	mission_archives_keep_coming_b = {
@@ -142,10 +138,6 @@ local mission_vo_cm_archives_zealot_male_c = {
 		sound_events_duration = {
 			[1.0] = 4.227042,
 			[2.0] = 3.347802
-		},
-		sound_event_weights = {
-			[1.0] = 0.5,
-			[2.0] = 0.5
 		},
 		randomize_indexes = {}
 	},

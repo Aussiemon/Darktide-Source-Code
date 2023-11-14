@@ -135,10 +135,13 @@ return function ()
 			},
 			{
 				"query_context",
-				"dialogue_name",
+				"sound_event",
 				OP.SET_INCLUDES,
 				args = {
-					"mission_station_tanks"
+					"loc_sergeant_b__mission_station_tanks_a_01",
+					"loc_sergeant_b__mission_station_tanks_a_02",
+					"loc_sergeant_b__mission_station_tanks_a_03",
+					"loc_sergeant_b__mission_station_tanks_a_04"
 				}
 			},
 			{
@@ -150,7 +153,14 @@ return function ()
 				}
 			}
 		},
-		on_done = {},
+		on_done = {
+			{
+				"faction_memory",
+				"wolfer_active",
+				OP.ADD,
+				1
+			}
+		},
 		heard_speak_routing = {
 			target = "mission_givers"
 		},
@@ -347,13 +357,18 @@ return function ()
 				args = {
 					"explicator",
 					"pilot",
-					"sergeant",
-					"enemy_nemesis_wolfer"
+					"sergeant"
 				}
 			},
 			{
 				"faction_memory",
 				"mission_station_contrabrand_lockers",
+				OP.EQ,
+				0
+			},
+			{
+				"faction_memory",
+				"wolfer_active",
 				OP.EQ,
 				0
 			}
@@ -1091,12 +1106,6 @@ return function ()
 				"mission_station_interrogation_bay_a",
 				OP.EQ,
 				0
-			},
-			{
-				"faction_memory",
-				"wolfer_active",
-				OP.EQ,
-				0
 			}
 		},
 		on_done = {
@@ -1142,8 +1151,7 @@ return function ()
 				args = {
 					"explicator",
 					"pilot",
-					"sergeant",
-					"enemy_nemesis_wolfer"
+					"sergeant"
 				}
 			}
 		},
@@ -1156,7 +1164,7 @@ return function ()
 	})
 	define_rule({
 		name = "mission_station_interrogation_bay_wolfer_branch_a",
-		category = "conversations_prio_0",
+		category = "player_prio_0",
 		wwise_route = 0,
 		response = "mission_station_interrogation_bay_wolfer_branch_a",
 		database = "mission_vo_km_station",
@@ -1165,29 +1173,17 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"look_at"
+				"generic_mission_vo"
 			},
 			{
 				"query_context",
-				"look_at_tag",
+				"trigger_id",
 				OP.EQ,
-				"mission_station_interrogation_bay_a"
-			},
-			{
-				"query_context",
-				"distance",
-				OP.GT,
-				1
-			},
-			{
-				"query_context",
-				"distance",
-				OP.LT,
-				17
+				"mission_station_interrogation_bay_wolfer_branch_a"
 			},
 			{
 				"faction_memory",
-				"mission_station_interrogation_bay_a",
+				"mission_station_interrogation_bay_wolfer_branch_a",
 				OP.EQ,
 				0
 			}
@@ -1195,7 +1191,7 @@ return function ()
 		on_done = {
 			{
 				"faction_memory",
-				"mission_station_interrogation_bay_a",
+				"mission_station_interrogation_bay_wolfer_branch_a",
 				OP.ADD,
 				1
 			}
@@ -1566,40 +1562,40 @@ return function ()
 	})
 	define_rule({
 		name = "mission_station_mid_event_conversation_one_a",
+		category = "conversations_prio_0",
 		wwise_route = 0,
 		response = "mission_station_mid_event_conversation_one_a",
 		database = "mission_vo_km_station",
-		category = "conversations_prio_0",
 		criterias = {
 			{
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak"
+				"environmental_story"
 			},
 			{
 				"query_context",
-				"dialogue_name",
-				OP.SET_INCLUDES,
-				args = {
-					"info_mission_station_second_objective"
-				}
+				"story_name",
+				OP.EQ,
+				"mission_station_mid_event_conversation_one_a"
 			},
 			{
 				"faction_memory",
-				"wolfer_active",
+				"mission_station_mid_event_conversation",
 				OP.EQ,
 				0
 			}
 		},
-		on_done = {},
+		on_done = {
+			{
+				"faction_memory",
+				"mission_station_mid_event_conversation",
+				OP.ADD,
+				1
+			}
+		},
 		heard_speak_routing = {
 			target = "mission_givers"
-		},
-		on_pre_rule_execution = {
-			delay_vo = {
-				duration = 4
-			}
 		}
 	})
 	define_rule({
@@ -1679,40 +1675,40 @@ return function ()
 	})
 	define_rule({
 		name = "mission_station_mid_event_conversation_three_a",
+		category = "conversations_prio_0",
 		wwise_route = 0,
 		response = "mission_station_mid_event_conversation_three_a",
 		database = "mission_vo_km_station",
-		category = "conversations_prio_0",
 		criterias = {
 			{
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak"
+				"environmental_story"
 			},
 			{
 				"query_context",
-				"dialogue_name",
-				OP.SET_INCLUDES,
-				args = {
-					"info_mission_station_second_objective"
-				}
+				"story_name",
+				OP.EQ,
+				"mission_station_mid_event_conversation_three_a"
 			},
 			{
 				"faction_memory",
-				"wolfer_active",
+				"mission_station_mid_event_conversation",
 				OP.EQ,
 				0
 			}
 		},
-		on_done = {},
+		on_done = {
+			{
+				"faction_memory",
+				"mission_station_mid_event_conversation",
+				OP.ADD,
+				1
+			}
+		},
 		heard_speak_routing = {
 			target = "mission_givers"
-		},
-		on_pre_rule_execution = {
-			delay_vo = {
-				duration = 4
-			}
 		}
 	})
 	define_rule({
@@ -1789,40 +1785,40 @@ return function ()
 	})
 	define_rule({
 		name = "mission_station_mid_event_conversation_two_a",
+		category = "conversations_prio_0",
 		wwise_route = 0,
 		response = "mission_station_mid_event_conversation_two_a",
 		database = "mission_vo_km_station",
-		category = "conversations_prio_0",
 		criterias = {
 			{
 				"query_context",
 				"concept",
 				OP.EQ,
-				"heard_speak"
+				"environmental_story"
 			},
 			{
 				"query_context",
-				"dialogue_name",
-				OP.SET_INCLUDES,
-				args = {
-					"info_mission_station_second_objective"
-				}
+				"story_name",
+				OP.EQ,
+				"mission_station_mid_event_conversation_two_a"
 			},
 			{
 				"faction_memory",
-				"wolfer_active",
+				"mission_station_mid_event_conversation",
 				OP.EQ,
 				0
 			}
 		},
-		on_done = {},
+		on_done = {
+			{
+				"faction_memory",
+				"mission_station_mid_event_conversation",
+				OP.ADD,
+				1
+			}
+		},
 		heard_speak_routing = {
 			target = "mission_givers"
-		},
-		on_pre_rule_execution = {
-			delay_vo = {
-				duration = 4
-			}
 		}
 	})
 	define_rule({
@@ -2018,7 +2014,7 @@ return function ()
 				"query_context",
 				"distance",
 				OP.LT,
-				25
+				36
 			},
 			{
 				"faction_memory",

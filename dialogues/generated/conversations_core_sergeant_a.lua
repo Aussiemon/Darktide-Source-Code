@@ -107,6 +107,25 @@ local conversations_core_sergeant_a = {
 		},
 		randomize_indexes = {}
 	},
+	info_graffiti_one = {
+		randomize_indexes_n = 0,
+		sound_events_n = 5,
+		sound_events = {
+			"loc_sergeant_a__info_graffiti_one_01",
+			"loc_sergeant_a__info_graffiti_one_02",
+			"loc_sergeant_a__info_graffiti_one_03",
+			"loc_sergeant_a__info_graffiti_one_04",
+			"loc_sergeant_a__info_graffiti_one_05"
+		},
+		sound_events_duration = {
+			2.667333,
+			3.9165,
+			3.9175,
+			6.930667,
+			5.343354
+		},
+		randomize_indexes = {}
+	},
 	info_to_extraction_through_pipes = {
 		randomize_indexes_n = 0,
 		sound_events_n = 4,

@@ -142,10 +142,6 @@ local mission_vo_hm_complex_veteran_female_c = {
 			[1.0] = 2.134719,
 			[2.0] = 2.309656
 		},
-		sound_event_weights = {
-			[1.0] = 0.5,
-			[2.0] = 0.5
-		},
 		randomize_indexes = {}
 	},
 	mission_complex_start_banter_c = {

@@ -190,7 +190,7 @@ return function ()
 				"ability_gunslinger",
 				OP.TIMEDIFF,
 				OP.GT,
-				15
+				45
 			}
 		},
 		on_done = {
@@ -208,7 +208,7 @@ return function ()
 				duration = 0.2
 			},
 			random_ignore_vo = {
-				chance = 0.3,
+				chance = 0.2,
 				max_failed_tries = 0,
 				hold_for = 0
 			}
@@ -371,7 +371,7 @@ return function ()
 	})
 	define_rule({
 		name = "ability_squad_leader",
-		category = "player_prio_1",
+		category = "player_ability_vo",
 		wwise_route = 30,
 		response = "ability_squad_leader",
 		database = "class_rework",
@@ -387,12 +387,6 @@ return function ()
 				"ability_name",
 				OP.EQ,
 				"ability_squad_leader"
-			},
-			{
-				"user_context",
-				"enemies_distant",
-				OP.GT,
-				0
 			}
 		},
 		on_done = {},

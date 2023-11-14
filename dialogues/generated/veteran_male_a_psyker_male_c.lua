@@ -31,28 +31,6 @@ local veteran_male_a_psyker_male_c = {
 			[1.0] = 1.705188
 		},
 		randomize_indexes = {}
-	},
-	bonding_conversation_headshot_extension_vet_a_psy_c_c = {
-		randomize_indexes_n = 0,
-		sound_events_n = 1,
-		sound_events = {
-			[1.0] = "loc_psyker_male_c__bonding_conversation_headshot_extension_vet_a_psy_c_c_01"
-		},
-		sound_events_duration = {
-			[1.0] = 3.45678
-		},
-		randomize_indexes = {}
-	},
-	bonding_conversation_headshot_extension_vet_a_psy_c_e = {
-		randomize_indexes_n = 0,
-		sound_events_n = 1,
-		sound_events = {
-			[1.0] = "loc_psyker_male_c__bonding_conversation_headshot_extension_vet_a_psy_c_e_01"
-		},
-		sound_events_duration = {
-			[1.0] = 3.45678
-		},
-		randomize_indexes = {}
 	}
 }
 

@@ -64,10 +64,6 @@ local mission_vo_cm_archives_psyker_male_a = {
 			[1.0] = 2.933313,
 			[2.0] = 8.502979
 		},
-		sound_event_weights = {
-			[1.0] = 0.5,
-			[2.0] = 0.5
-		},
 		randomize_indexes = {}
 	},
 	mission_archives_keep_coming_b = {
@@ -142,10 +138,6 @@ local mission_vo_cm_archives_psyker_male_a = {
 		sound_events_duration = {
 			[1.0] = 6.421396,
 			[2.0] = 5.912021
-		},
-		sound_event_weights = {
-			[1.0] = 0.5,
-			[2.0] = 0.5
 		},
 		randomize_indexes = {}
 	},
