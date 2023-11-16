@@ -237,9 +237,11 @@ ProjectileFxExtension.on_cluster = function (self)
 end
 
 ProjectileFxExtension.hot_join_sync = function (self, unit, sender, channel_id)
+	local effects = self._effects
+
 	if self._fuse_started then
 		local effect_type = "fuse"
-		local should_sync = SYNC_EFFECT[effect_type]
+		local should_sync = SYNC_EFFECT[effect_type] and effects[effect_type] ~= nil
 
 		if should_sync then
 			local effect_type_id = NetworkLookup.projectile_template_effects[effect_type]
@@ -250,7 +252,7 @@ ProjectileFxExtension.hot_join_sync = function (self, unit, sender, channel_id)
 
 	if self._has_impacted then
 		local effect_type = "impact"
-		local should_sync = SYNC_EFFECT[effect_type]
+		local should_sync = SYNC_EFFECT[effect_type] and effects[effect_type] ~= nil
 
 		if should_sync then
 			local effect_type_id = NetworkLookup.projectile_template_effects[effect_type]
@@ -262,6 +264,15 @@ end
 
 ProjectileFxExtension.start_fx = function (self, effect_type)
 	local effects = self._effects[effect_type]
+
+	if not effects then
+		local exception_message = string.format("Trying to trigger effect of type %s on projectile with projectile template %s", effect_type, self._projectile_template.name)
+
+		Log.exception("ProjectileFxExtension", exception_message)
+
+		return
+	end
+
 	local sfx = effects.sfx
 	local vfx = effects.vfx
 

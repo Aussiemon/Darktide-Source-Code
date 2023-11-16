@@ -1,3 +1,5 @@
+-- WARNING: Error occurred during decompilation.
+--   Code may be incomplete or incorrect.
 local HudHealthBarLogic = require("scripts/ui/hud/elements/hud_health_bar_logic")
 local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
 local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")

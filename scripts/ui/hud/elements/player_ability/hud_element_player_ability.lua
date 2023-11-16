@@ -1,3 +1,5 @@
+-- WARNING: Error occurred during decompilation.
+--   Code may be incomplete or incorrect.
 local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
 local HudElementPlayerAbilitySettings = require("scripts/ui/hud/elements/player_ability/hud_element_player_ability_settings")
 local ColorUtilities = require("scripts/utilities/ui/colors")

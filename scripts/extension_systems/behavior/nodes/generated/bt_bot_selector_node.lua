@@ -1,3 +1,7 @@
+-- WARNING: Error occurred during decompilation.
+--   Code may be incomplete or incorrect.
+-- WARNING: Error occurred during decompilation.
+--   Code may be incomplete or incorrect.
 require("scripts/extension_systems/behavior/nodes/bt_node")
 
 local BtBotSelectorNode = class("BtBotSelectorNode", "BtNode")
