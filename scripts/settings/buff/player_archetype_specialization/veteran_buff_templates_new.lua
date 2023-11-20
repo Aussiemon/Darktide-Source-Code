@@ -2104,7 +2104,8 @@ templates.veteran_consecutive_hits_apply_rending = {
 	class_name = "proc_buff",
 	proc_events = {
 		[proc_events.on_hit] = 1,
-		[proc_events.on_shoot] = 1
+		[proc_events.on_shoot] = 1,
+		[proc_events.on_sweep_start] = 1
 	},
 	start_func = function (template_data, template_context)
 		template_data.new_shot = true
@@ -2136,6 +2137,9 @@ templates.veteran_consecutive_hits_apply_rending = {
 			template_data.new_shot = false
 		end,
 		on_shoot = function (params, template_data, template_context)
+			template_data.new_shot = true
+		end,
+		on_sweep_start = function (params, template_data, template_context)
 			template_data.new_shot = true
 		end
 	}
