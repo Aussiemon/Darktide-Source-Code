@@ -716,8 +716,9 @@ damage_templates.default_warpfire_assault_burst = {
 }
 damage_templates.default_chain_lighting_attack = {
 	attack_direction_override = "push",
-	chain_lightning_staff = true,
+	ignore_hitzone_multiplier = true,
 	ragdoll_push_force = 10,
+	chain_lightning_staff = true,
 	stagger_category = "sticky",
 	armor_damage_modifier = {
 		attack = {
@@ -899,6 +900,7 @@ damage_templates.default_chain_lighting_attack = {
 	gib_push_force = GibbingSettings.gib_push_force.ranged_heavy
 }
 damage_templates.default_chain_lighting_interval = {
+	ignore_hitzone_multiplier = true,
 	stagger_category = "sticky",
 	chain_lightning_staff = true,
 	armor_damage_modifier = {

@@ -937,8 +937,6 @@ local templates = {
 			return _is_in_hub() and Managers.narrative:can_complete_event("s1_intro_popup_viewed")
 		end,
 		on_activation = function (self)
-			Managers.narrative:complete_event("s1_intro_popup_viewed")
-
 			local slide_data = {
 				starting_slide_index = 1,
 				slides = {
@@ -1091,6 +1089,9 @@ local templates = {
 				content_package = "packages/ui/event_news/event_news",
 				slide_data = slide_data
 			})
+		end,
+		on_deactivation = function (self)
+			Managers.narrative:complete_event("s1_intro_popup_viewed")
 		end
 	}
 }

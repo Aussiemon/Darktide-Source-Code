@@ -235,16 +235,30 @@ TelemetryEvents.system_settings = function (self, account_id)
 	local sound_settings = Application.user_setting("sound_settings")
 	local account_data = Managers.save:account_data(account_id)
 	local language = Managers.localization:language()
-	local event = self:_create_event("system_settings")
-
-	event:set_data({
+	local data = {
 		system = Application.sysinfo(),
 		video_settings = video_settings,
 		sound_settings = sound_settings,
 		interface_settings = account_data.interface_settings,
 		input_settings = account_data.input_settings,
 		language = language
-	})
+	}
+
+	if IS_XBS then
+		if Xbox.console_type() == Xbox.CONSOLE_TYPE_XBOX_SCARLETT_ANACONDA then
+			data.xbox = {
+				model = "anaconda"
+			}
+		elseif Xbox.console_type() == Xbox.CONSOLE_TYPE_XBOX_SCARLETT_LOCKHEART then
+			data.xbox = {
+				model = "lockheart"
+			}
+		end
+	end
+
+	local event = self:_create_event("system_settings")
+
+	event:set_data(data)
 	event:set_revision(2)
 	self._manager:register_event(event)
 end

@@ -1475,7 +1475,7 @@ templates.veteran_ranged_weakspot_toughenss_buff = {
 	duration = talent_settings_2.toughness_2.duration,
 	max_stacks = talent_settings_2.toughness_2.max_stacks,
 	stat_buffs = {
-		[stat_buffs.toughness_damage_taken_modifier] = talent_settings_2.toughness_2.toughness_damage_taken_modifier
+		[stat_buffs.toughness_damage_taken_multiplier] = talent_settings_2.toughness_2.toughness_damage_taken_multiplier
 	}
 }
 templates.veteran_reload_speed_on_non_empty_clip = {
@@ -2797,6 +2797,10 @@ templates.veteran_improved_tag = {
 	},
 	specific_proc_func = {
 		on_tag_unit = function (params, template_data, template_context, t)
+			if not template_context.is_server then
+				return
+			end
+
 			if params.tagger_unit ~= template_context.unit then
 				return
 			end
@@ -2806,14 +2810,20 @@ templates.veteran_improved_tag = {
 			end
 
 			template_data.remove_t = t + tag_duration
+			local total_stack = template_data.stacks
+			local stacks_to_apply = total_stack
 			local previous_unit = template_data.outlined_unit
 			local outlined_unit = params.unit
 
-			if previous_unit == outlined_unit and template_data.stacks < template_data.stacks_applied then
-				return
+			if previous_unit == outlined_unit then
+				stacks_to_apply = template_data.stacks - template_data.stacks_applied
+
+				if stacks_to_apply <= 0 then
+					return
+				end
 			end
 
-			if previous_unit then
+			if previous_unit ~= outlined_unit then
 				local buff_extension = ScriptUnit.has_extension(previous_unit, "buff_system")
 
 				if buff_extension and buff_extension:has_buff_using_buff_template("veteran_improved_tag_debuff") then
@@ -2822,13 +2832,12 @@ templates.veteran_improved_tag = {
 			end
 
 			template_data.outlined_unit = outlined_unit
-			template_data.new_target = true
-			local applied_stacks = template_data.stacks
-			template_data.stacks_applied = applied_stacks
+			template_data.stacks_applied = total_stack
+			template_data.stack_to_apply = stacks_to_apply
 			template_data.stacks = 1
 			template_data.specialization_resource_component.current_resource = 1
 
-			if applied_stacks > 1 then
+			if total_stack > 1 then
 				template_data.next_t = t + tag_time
 			end
 		end,
@@ -2867,7 +2876,7 @@ templates.veteran_improved_tag = {
 
 			if template_data.stacks < new_stacks then
 				template_data.stacks = new_stacks
-				template_data.specialization_resource_component.current_resource = template_data.stacks
+				template_data.specialization_resource_component.current_resource = new_stacks
 				template_data.next_t = t + tag_time
 			end
 		end
@@ -2892,6 +2901,7 @@ templates.veteran_improved_tag = {
 		template_data.stacks = 1
 		template_data.specialization_resource_component.current_resource = template_data.stacks
 		template_data.stacks_applied = 0
+		template_data.stack_to_apply = 0
 		template_data.next_t = t + tag_time
 		template_data.enemy_buff_id = nil
 	end,
@@ -2910,36 +2920,35 @@ templates.veteran_improved_tag = {
 			end
 		end
 
+		local outlined_unit = template_data.outlined_unit
 		local remove_t = template_data.remove_t
 
-		if remove_t and remove_t < t then
-			local outlined_unit = template_data.outlined_unit
+		if remove_t and remove_t < t and outlined_unit then
+			local buff_extension = ScriptUnit.has_extension(outlined_unit, "buff_system")
 
-			if outlined_unit then
-				local buff_extension = ScriptUnit.has_extension(outlined_unit, "buff_system")
-
-				if buff_extension then
-					buff_extension:remove_externally_controlled_buff(template_data.enemy_buff_id)
-				end
+			if buff_extension and buff_extension:has_buff_using_buff_template("veteran_improved_tag_debuff") then
+				buff_extension:remove_externally_controlled_buff(template_data.enemy_buff_id)
 			end
 
 			template_data.current_buff_id = nil
 			template_data.remove_t = nil
 			template_data.outlined_unit = nil
+			outlined_unit = nil
 		end
 
-		if template_data.new_target then
-			local outlined_unit = template_data.outlined_unit
+		local stacks_to_apply = template_data.stack_to_apply
+
+		if stacks_to_apply > 0 and outlined_unit then
 			local buff_extension = ScriptUnit.has_extension(outlined_unit, "buff_system")
 
 			if buff_extension then
-				for i = 1, template_data.stacks_applied do
+				for i = 1, stacks_to_apply do
 					local _, buff_id = buff_extension:add_externally_controlled_buff("veteran_improved_tag_debuff", t)
 					template_data.enemy_buff_id = buff_id
 				end
 			end
 
-			template_data.new_target = nil
+			template_data.stack_to_apply = 0
 		end
 	end,
 	stop_func = function (template_data, template_context)

@@ -42,6 +42,8 @@ TalentBuilderView.init = function (self, settings, context)
 	self._is_readonly = context and context.is_readonly
 	local player = context and context.player or self:_player()
 	self._preview_player = player
+	self._peer_id = self._preview_player:peer_id()
+	self._local_player_id = self._preview_player:local_player_id()
 	self._is_own_player = self._preview_player == self:_player()
 
 	TalentBuilderView.super.init(self, Definitions, settings, context)
@@ -770,6 +772,14 @@ end
 local resolution_modified_key = "modified"
 
 TalentBuilderView.update = function (self, dt, t, input_service)
+	if self._player_mode and self._preview_player and not Managers.player:player(self._peer_id, self._local_player_id) then
+		self._preview_player = nil
+	end
+
+	if self._player_mode and not self._preview_player then
+		return
+	end
+
 	self._is_scrolling = nil
 
 	if self._close_tutorial_grid_next_frame then
@@ -848,6 +858,10 @@ TalentBuilderView.update = function (self, dt, t, input_service)
 end
 
 TalentBuilderView.draw = function (self, dt, t, input_service, layer)
+	if self._player_mode and not self._preview_player then
+		return
+	end
+
 	TalentBuilderView.super.draw(self, dt, t, input_service, layer)
 
 	if self._draw_instant_lines then

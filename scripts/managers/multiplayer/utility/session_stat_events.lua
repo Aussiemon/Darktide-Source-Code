@@ -3,9 +3,9 @@ local SessionStats = require("scripts/settings/stats/session_stats")
 local StatDefinitions = require("scripts/managers/stats/stat_definitions")
 local SessionStatEvents = {}
 local collectible_missions = {
-	"side_mission_grimoire",
-	"side_mission_tome",
-	"side_mission_consumable"
+	side_mission_tome = "tome",
+	side_mission_consumable = "relic",
+	side_mission_grimoire = "grimoire"
 }
 
 SessionStatEvents.create_mission_events = function (mission_data, mission_result, account_id, character_id)
@@ -43,8 +43,10 @@ SessionStatEvents.create_mission_events = function (mission_data, mission_result
 		}
 	end
 
-	if win and table.array_contains(collectible_missions, side_mission_name) then
-		local specifier = string.format("type:%s", side_mission_name)
+	local collectible_type = collectible_missions[side_mission_name]
+
+	if win and collectible_type then
+		local specifier = string.format("type:%s", collectible_type)
 		events[#events + 1] = {
 			type = "collect_pickup",
 			accountId = account_id,

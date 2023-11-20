@@ -1346,7 +1346,7 @@ for i = 1, #archetype_names do
 	end
 end
 
-StatDefinitions.flawless_missions_in_a_row = {
+StatDefinitions._flawless_missions_in_a_row = {
 	flags = {
 		StatFlags.backend
 	},
@@ -1379,16 +1379,19 @@ StatDefinitions.flawless_missions_in_a_row = {
 	},
 	include_condition = function (self, config)
 		return config.difficulty >= 3
+	end,
+	init = function (self, stat_data)
+		return math.max(stat_data.flawless_missions_in_a_row or 0, stat_data.flawless_mission_in_a_row or 0)
 	end
 }
 StatDefinitions.max_flawless_mission_in_a_row = {
-	running_stat = "flawless_missions_in_a_row",
+	running_stat = "_flawless_missions_in_a_row",
 	flags = {
 		StatFlags.backend
 	},
 	triggers = {
 		{
-			id = "flawless_missions_in_a_row",
+			id = "_flawless_missions_in_a_row",
 			trigger = StatMacros.set_to_max
 		}
 	}
