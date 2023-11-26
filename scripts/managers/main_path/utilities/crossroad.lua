@@ -1,17 +1,20 @@
+﻿-- chunkname: @scripts/managers/main_path/utilities/crossroad.lua
+
 local MainPathQueries = require("scripts/utilities/main_path_queries")
-local Crossroad = {
-	generate_road_choices = function (crossroads, seed)
-		local chosen_road_id = nil
-		local chosen_crossroads = {}
+local Crossroad = {}
 
-		for crossroads_id, crossroad in pairs(crossroads) do
-			seed, chosen_road_id = math.next_random(seed, 1, #crossroad.roads)
-			chosen_crossroads[crossroads_id] = chosen_road_id
-		end
+Crossroad.generate_road_choices = function (crossroads, seed)
+	local chosen_road_id
+	local chosen_crossroads = {}
 
-		return chosen_crossroads
+	for crossroads_id, crossroad in pairs(crossroads) do
+		seed, chosen_road_id = math.next_random(seed, 1, #crossroad.roads)
+		chosen_crossroads[crossroads_id] = chosen_road_id
 	end
-}
+
+	return chosen_crossroads
+end
+
 local to_remove = {}
 local to_stitch = {}
 local crossroad_main_path_segment_indices = {}
@@ -52,12 +55,12 @@ Crossroad.stitch_and_remove_unused_roads = function (crossroads, chosen_crossroa
 		end
 	end
 
-	local num_crossroad_segment_indices = #crossroad_main_path_segment_indices
-	local num_to_remove = #to_remove
+	local num_crossroad_segment_indices, num_to_remove = #crossroad_main_path_segment_indices, #to_remove
 
 	for i = num_crossroad_segment_indices, 1, -1 do
 		repeat
 			to_stitch[#to_stitch + 1] = {}
+
 			local crossroad_stitch = to_stitch[#to_stitch]
 			local index = crossroad_main_path_segment_indices[i]
 			local previous_main_path_segment_index = index - 1
@@ -126,6 +129,7 @@ Crossroad.stitch_and_remove_unused_roads = function (crossroads, chosen_crossroa
 
 				for k = 1, num_nodes_to_stitch do
 					local stiched_node = stitch_main_path_nodes[k]
+
 					wanted_main_path_nodes[#wanted_main_path_nodes + 1] = stiched_node
 				end
 

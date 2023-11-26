@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/crafting_view/crafting_view.lua
+
 local CraftingViewDefinitions = require("scripts/ui/views/crafting_view/crafting_view_definitions")
 local ItemUtils = require("scripts/utilities/items")
 local UIRenderer = require("scripts/managers/ui/ui_renderer")
@@ -17,6 +19,7 @@ CraftingView.init = function (self, settings, context)
 	CraftingView.super.init(self, CraftingViewDefinitions, settings, context)
 
 	local ui_renderer = self._ui_renderer
+
 	ui_renderer.render_pass_flag = "render_pass"
 	ui_renderer.base_render_pass = "to_screen"
 end
@@ -59,6 +62,7 @@ end
 
 CraftingView.update = function (self, dt, t, input_service)
 	local overlay_style_color = self._widgets_by_name.overlay.style.overlay.color
+
 	overlay_style_color[1] = math.lerp(self._wanted_overlay_alpha or 0, overlay_style_color[1], 1e-05^dt)
 
 	return CraftingView.super.update(self, dt, t, input_service)
@@ -132,7 +136,7 @@ CraftingView._switch_tab_view = function (self, index)
 			local input_legend_params = self._definitions.input_legend_params
 
 			if input_legend_params then
-				local merged_input_legend_params = nil
+				local merged_input_legend_params
 
 				if view_input_legend_buttons then
 					merged_input_legend_params = table.clone(input_legend_params)
@@ -146,6 +150,7 @@ CraftingView._switch_tab_view = function (self, index)
 	end
 
 	local alpha = tab_params.background_alpha or 0
+
 	self._wanted_overlay_alpha = alpha
 	self._active_view_on_enter_callback = self._active_view and view_function and callback(function ()
 		if self._active_view == view then
@@ -160,11 +165,13 @@ CraftingView._switch_tab_view = function (self, index)
 
 		return false
 	end)
+
 	local story_name = tab_params.level_story_event
 
 	if story_name then
 		if story_name or self._previous_story_name or self._previous_story_name ~= story_name then
 			local play_backwards = not story_name and true or false
+
 			story_name = story_name or self._previous_story_name
 
 			self._world_spawner:play_story(story_name, nil, play_backwards)

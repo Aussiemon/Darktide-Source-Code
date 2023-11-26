@@ -1,11 +1,16 @@
+﻿-- chunkname: @scripts/extension_systems/scripted_scenario/scriptable_scenario_directional_unit_extension.lua
+
 local ScriptableScenarioDirectionalUnitExtension = class("ScriptableScenarioDirectionalUnitExtension")
+
 ScriptableScenarioDirectionalUnitExtension.UPDATE_DISABLED_BY_DEFAULT = true
 
 ScriptableScenarioDirectionalUnitExtension.init = function (self, extension_init_context, unit, extension_init_data, ...)
 	self._unit = unit
 	self._spawn_group = Unit.get_data(unit, "attached_unit_settings.spawn_group")
 	self._identifier = Unit.get_data(unit, "directional_unit_identifier")
+
 	local attached_unit = Unit.flow_variable(self._unit, "attached_unit")
+
 	self._attached_unit = Unit.alive(attached_unit) and attached_unit or nil
 end
 

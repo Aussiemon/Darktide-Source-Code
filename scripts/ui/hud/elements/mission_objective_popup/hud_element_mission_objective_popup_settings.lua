@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/hud/elements/mission_objective_popup/hud_element_mission_objective_popup_settings.lua
+
 local hud_element_mission_objective_popup_settings = {
 	events = {
 		{

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/equipment/weapon_templates/stub_pistols/settings_templates/stub_pistol_damage_profile_templates.lua
+
 local ArmorSettings = require("scripts/settings/damage/armor_settings")
 local PowerLevelSettings = require("scripts/settings/damage/power_level_settings")
 local DamageProfileSettings = require("scripts/settings/damage/damage_profile_settings")
@@ -161,6 +163,7 @@ local armor_modifiers = {
 		}
 	}
 }
+
 damage_templates.default_stub_pistol_bfg = {
 	suppression_value = 2.5,
 	stagger_category = "melee",

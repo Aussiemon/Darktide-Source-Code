@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/nav_graph/nav_graph_system.lua
+
 local SmartObject = require("scripts/extension_systems/nav_graph/utilities/smart_object")
 
 require("scripts/extension_systems/nav_graph/nav_graph_extension")
@@ -30,6 +32,7 @@ end
 
 NavGraphSystem.register_smart_object_id_to_extension = function (self, smart_object_id, extension)
 	local smart_object_id_to_extension = self._smart_object_id_to_extension
+
 	smart_object_id_to_extension[smart_object_id] = extension
 end
 
@@ -38,12 +41,14 @@ NavGraphSystem.register_smart_object_ids_to_extension = function (self, smart_ob
 
 	for i = 1, #smart_object_ids do
 		local smart_object_id = smart_object_ids[i]
+
 		smart_object_id_to_extension[smart_object_id] = extension
 	end
 end
 
 NavGraphSystem.unregister_smart_object_id_from_extension = function (self, smart_object_id, extension)
 	local smart_object_id_to_extension = self._smart_object_id_to_extension
+
 	smart_object_id_to_extension[smart_object_id] = nil
 end
 

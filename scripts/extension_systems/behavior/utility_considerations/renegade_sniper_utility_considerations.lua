@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/behavior/utility_considerations/renegade_sniper_utility_considerations.lua
+
 local considerations = {
 	sniper_shoot = {
 		distance_to_target = {

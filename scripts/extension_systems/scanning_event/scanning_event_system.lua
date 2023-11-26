@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/scanning_event/scanning_event_system.lua
+
 require("scripts/extension_systems/scanning_event/scanning_device_extension")
 
 local ScanningEventSystem = class("ScanningEventSystem", "ExtensionSystemBase")

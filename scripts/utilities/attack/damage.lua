@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/utilities/attack/damage.lua
+
 local AttackIntensity = require("scripts/utilities/attack_intensity")
 local AttackIntensitySettings = require("scripts/settings/attack_intensity/attack_intensity_settings")
 local AttackSettings = require("scripts/settings/damage/attack_settings")
@@ -21,7 +23,7 @@ local TOUGHNESS_BROKEN_ATTACK_INTENSITIES = {
 	ranged_close = math.huge
 }
 local Damage = {}
-local _trigger_player_hurt_vo = nil
+local _trigger_player_hurt_vo
 
 Damage.deal_damage = function (unit, breed_or_nil, attacking_unit, attacking_unit_owner_unit, attack_result, attack_type, damage_profile, damage, permanent_damage, tougness_damage, hit_actor, attack_direction, hit_zone_name, herding_template_or_nil, is_critical_strike, damage_type, hit_world_position_or_nil, wounds_shape_or_nil, instakill)
 	local health_extension = ScriptUnit.extension(unit, "health_system")
@@ -34,7 +36,7 @@ Damage.deal_damage = function (unit, breed_or_nil, attacking_unit, attacking_uni
 	local is_prop = Breed.is_prop(breed_or_nil) or Breed.is_living_prop(breed_or_nil)
 	local side_system = Managers.state.extension:system("side_system")
 	local is_ally = side_system:is_ally(attacking_unit, unit)
-	local actual_damage_dealt = nil
+	local actual_damage_dealt
 	local boss_extension_or_nil = ScriptUnit.has_extension(unit, "boss_system")
 
 	if not is_ally and boss_extension_or_nil then
@@ -49,6 +51,7 @@ Damage.deal_damage = function (unit, breed_or_nil, attacking_unit, attacking_uni
 		local health_percent_clamp = breed_or_nil.clamp_health_percent_damage
 		local max_health = health_extension:max_health()
 		local damage_clamp = max_health * health_percent_clamp
+
 		damage = math.min(damage, damage_clamp)
 	end
 
@@ -180,11 +183,11 @@ Damage.deal_damage = function (unit, breed_or_nil, attacking_unit, attacking_uni
 	end
 
 	if health_extension:health_depleted() then
-		local is_dying = true
-		local blackboard = BLACKBOARDS[unit]
+		local is_dying, blackboard = true, BLACKBOARDS[unit]
 
 		if blackboard and is_minion then
 			local death_component = blackboard.death
+
 			is_dying = not death_component.hit_during_death
 		end
 

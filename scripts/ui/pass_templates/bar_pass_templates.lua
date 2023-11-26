@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/pass_templates/bar_pass_templates.lua
+
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local BarPassTemplates = {}
 
@@ -65,6 +67,7 @@ BarPassTemplates.experience_bar = {
 		change_function = function (content, style)
 			local progress = content.progress or 0
 			local bar_length = content.bar_length or 0
+
 			style.material_values.progression = progress
 			style.uvs[2][1] = progress
 			style.size[1] = bar_length * progress
@@ -175,17 +178,24 @@ BarPassTemplates.experience_bar = {
 		change_function = function (content, style)
 			local progress = content.progress or 0
 			local bar_length = content.bar_length or 0
+
 			style.offset[1] = bar_length * progress - 49
+
 			local alpha_multiplier = math.clamp(progress / 0.2, 0, 1)
+
 			style.color[1] = 255 * alpha_multiplier
 		end
 	}
 }
+
 local weapon_bar_text_style = table.clone(UIFontSettings.body_small)
+
 weapon_bar_text_style.text_horizontal_alignment = "left"
 weapon_bar_text_style.text_vertical_alignment = "center"
+
 local weapon_stats_bar_length = 200
 local weapon_stats_bar_background_margin = 4
+
 BarPassTemplates.weapon_stats_bar = {
 	{
 		value = "text",
@@ -235,6 +245,7 @@ BarPassTemplates.weapon_stats_bar = {
 		change_function = function (content, style)
 			local progress = content.progress or 0
 			local new_bar_length = weapon_stats_bar_length * progress
+
 			style.size[1] = new_bar_length
 			style.offset[1] = -weapon_stats_bar_background_margin - (weapon_stats_bar_length - new_bar_length)
 		end
@@ -264,13 +275,18 @@ BarPassTemplates.weapon_stats_bar = {
 		},
 		change_function = function (content, style)
 			local progress = content.progress or 0
+
 			style.offset[1] = -(weapon_stats_bar_length - weapon_stats_bar_length * progress + weapon_stats_bar_background_margin) + 6
+
 			local alpha_multiplier = math.clamp(progress / 0.2, 0, 1)
+
 			style.color[1] = 255 * alpha_multiplier
 		end
 	}
 }
+
 local character_menu_experience_bar_background_margin = 2
+
 BarPassTemplates.character_menu_experience_bar = {
 	{
 		pass_type = "texture",
@@ -297,6 +313,7 @@ BarPassTemplates.character_menu_experience_bar = {
 		change_function = function (content, style)
 			local progress = content.progress or 0
 			local bar_length = (content.bar_length or 0) - character_menu_experience_bar_background_margin * 2
+
 			style.size[1] = bar_length * progress
 		end
 	},
@@ -329,8 +346,11 @@ BarPassTemplates.character_menu_experience_bar = {
 		change_function = function (content, style)
 			local progress = content.progress or 0
 			local bar_length = content.bar_length or 0
+
 			style.offset[1] = bar_length * progress - 8
+
 			local alpha_multiplier = math.clamp(progress / 0.2, 0, 1)
+
 			style.color[1] = 255 * alpha_multiplier
 		end
 	}

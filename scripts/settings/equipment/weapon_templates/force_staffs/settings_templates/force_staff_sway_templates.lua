@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/equipment/weapon_templates/force_staffs/settings_templates/force_staff_sway_templates.lua
+
 local sway_templates = {}
 local overrides = {}
 

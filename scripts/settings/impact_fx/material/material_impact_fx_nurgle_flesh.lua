@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/impact_fx/material/material_impact_fx_nurgle_flesh.lua
+
 local SurfaceMaterialSettings = require("scripts/settings/surface_material_settings")
 local hit_types = SurfaceMaterialSettings.hit_types
 local stop = {

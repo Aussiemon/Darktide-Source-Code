@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/splash_video_view/splash_video_view_settings.lua
+
 local SplashVideoViewSettings = {
 	viewport_layer = 1,
 	level_name = "content/levels/ui/video_view/video_view",

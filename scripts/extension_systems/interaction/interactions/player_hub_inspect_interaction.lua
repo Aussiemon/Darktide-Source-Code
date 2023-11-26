@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/interaction/interactions/player_hub_inspect_interaction.lua
+
 require("scripts/extension_systems/interaction/interactions/base_interaction")
 
 local PlayerHubInspectInteraction = class("PlayerHubInspectInteraction", "BaseInteraction")

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/roamer/roamer_packs/cultists_roamer_packs.lua
+
 local roamer_melee = "cultist_melee"
 local roamer_assault = "cultist_assault"
 local roamer_rifleman = "cultist_assault"

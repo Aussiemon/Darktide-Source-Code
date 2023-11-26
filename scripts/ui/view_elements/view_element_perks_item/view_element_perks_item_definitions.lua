@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/view_elements/view_element_perks_item/view_element_perks_item_definitions.lua
+
 local TextUtilities = require("scripts/utilities/ui/text")
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local UIWidget = require("scripts/managers/ui/ui_widget")
@@ -96,6 +98,7 @@ local scenegraph_definition = {
 	}
 }
 local item_perk_style = table.clone(UIFontSettings.header_3)
+
 item_perk_style.offset = {
 	98,
 	0,
@@ -108,7 +111,9 @@ item_perk_style.font_size = 18
 item_perk_style.text_horizontal_alignment = "left"
 item_perk_style.text_vertical_alignment = "top"
 item_perk_style.text_color = Color.terminal_text_header(255, true)
+
 local item_perk_description_style = table.clone(UIFontSettings.body)
+
 item_perk_description_style.offset = {
 	98,
 	20,
@@ -122,7 +127,9 @@ item_perk_description_style.font_size = 18
 item_perk_description_style.text_horizontal_alignment = "left"
 item_perk_description_style.text_vertical_alignment = "top"
 item_perk_description_style.text_color = Color.terminal_text_body(255, true)
+
 local header_style = table.clone(UIFontSettings.header_3)
+
 header_style.font_size = 24
 header_style.offset = {
 	0,
@@ -132,7 +139,9 @@ header_style.offset = {
 header_style.text_horizontal_alignment = "center"
 header_style.text_vertical_alignment = "top"
 header_style.text_color = Color.terminal_text_body(255, true)
+
 local left_trigger_style = table.clone(UIFontSettings.header_3)
+
 left_trigger_style.font_size = 30
 left_trigger_style.offset = {
 	20,
@@ -147,7 +156,9 @@ left_trigger_style.text_color = {
 	199,
 	126
 }
+
 local right_trigger_style = table.clone(UIFontSettings.header_3)
+
 right_trigger_style.font_size = 30
 right_trigger_style.offset = {
 	-20,
@@ -162,6 +173,7 @@ right_trigger_style.text_color = {
 	199,
 	126
 }
+
 local widget_definitions = {
 	header = UIWidget.create_definition({
 		{
@@ -290,6 +302,7 @@ local function create_tab_widgets(tab_settings)
 				},
 				change_function = function (content, style, animations, dt)
 					local lerp_direction = content.is_hover and 1 or -1
+
 					content.parent.progress = math.clamp((content.parent.progress or 0) + dt * lerp_direction * 4, 0, 1)
 				end
 			},
@@ -367,6 +380,7 @@ local function create_tab_widgets(tab_settings)
 				change_function = function (content, style)
 					local progress = content.selected and 1 or content.progress
 					local t = math.easeOutCubic(progress)
+
 					style.color[1] = t * 128
 				end
 			},
@@ -391,6 +405,7 @@ local function create_tab_widgets(tab_settings)
 				change_function = function (content, style)
 					local progress = content.selected and 1 or content.progress
 					local t = math.easeOutCubic(progress)
+
 					style.color[2] = math.lerp(style.base_color[2], style.selected_color[2], t)
 					style.color[3] = math.lerp(style.base_color[3], style.selected_color[3], t)
 					style.color[4] = math.lerp(style.base_color[4], style.selected_color[4], t)
@@ -417,6 +432,7 @@ local function create_tab_widgets(tab_settings)
 				change_function = function (content, style)
 					local progress = content.selected and 1 or content.progress
 					local t = math.easeOutCubic(progress)
+
 					style.color[2] = math.lerp(style.base_color[2], style.selected_color[2], t)
 					style.color[3] = math.lerp(style.base_color[3], style.selected_color[3], t)
 					style.color[4] = math.lerp(style.base_color[4], style.selected_color[4], t)
@@ -454,6 +470,7 @@ local function create_tab_widgets(tab_settings)
 				end
 			}
 		}, "tab_pivot")
+
 		offset_x = offset_x + tab_size[1] + spacing
 		tab_definitions[#tab_definitions + 1] = widget_definition
 	end

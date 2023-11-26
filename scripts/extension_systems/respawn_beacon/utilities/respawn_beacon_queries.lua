@@ -1,6 +1,8 @@
+﻿-- chunkname: @scripts/extension_systems/respawn_beacon/utilities/respawn_beacon_queries.lua
+
 local NavQueries = require("scripts/utilities/nav_queries")
 local RespawnBeaconQueries = {}
-local _generate_spawn_volume_positions, _find_fitting_positions, _validate_navmesh_positions, _move_positions_outside_exclusion_volume, _sort_positions_on_closeness = nil
+local _generate_spawn_volume_positions, _find_fitting_positions, _validate_navmesh_positions, _move_positions_outside_exclusion_volume, _sort_positions_on_closeness
 
 RespawnBeaconQueries.spawn_locations = function (nav_world, physics_world, beacon_unit, player_radius, player_height)
 	local spawn_volume_positions = _generate_spawn_volume_positions(beacon_unit, player_radius)
@@ -24,8 +26,10 @@ function _generate_spawn_volume_positions(beacon_unit, player_radius)
 	local steps = DIAMETER_AROUND_VOLUME_CENTER / num_players_per_axis
 	local volume_node = Unit.node(beacon_unit, "c_respawn_volume")
 	local start_position = Unit.world_position(beacon_unit, volume_node)
+
 	start_position.x = start_position.x - RADIUS_AROUND_VOLUME_CENTER
 	start_position.y = start_position.y - RADIUS_AROUND_VOLUME_CENTER
+
 	local volume_height = 0.5
 
 	for ii = 1, num_players_per_axis do

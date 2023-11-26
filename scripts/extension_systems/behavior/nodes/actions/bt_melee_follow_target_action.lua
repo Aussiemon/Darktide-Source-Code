@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/behavior/nodes/actions/bt_melee_follow_target_action.lua
+
 require("scripts/extension_systems/behavior/nodes/bt_node")
 
 local Animation = require("scripts/utilities/animation")
@@ -6,18 +8,21 @@ local DialogueBreedSettings = require("scripts/settings/dialogue/dialogue_breed_
 local MinionMovement = require("scripts/utilities/minion_movement")
 local Vo = require("scripts/utilities/vo")
 local BtMeleeFollowTargetAction = class("BtMeleeFollowTargetAction", "BtNode")
+
 BtMeleeFollowTargetAction.TIME_TO_FIRST_EVALUATE = 0.5
 BtMeleeFollowTargetAction.CONSECUTIVE_EVALUATE_INTERVAL = 0.25
 
 BtMeleeFollowTargetAction.enter = function (self, unit, breed, blackboard, scratchpad, action_data, t)
 	local locomotion_extension = ScriptUnit.extension(unit, "locomotion_system")
 	local navigation_extension = ScriptUnit.extension(unit, "navigation_system")
+
 	scratchpad.animation_extension = ScriptUnit.extension(unit, "animation_system")
 	scratchpad.locomotion_extension = locomotion_extension
 	scratchpad.navigation_extension = navigation_extension
 	scratchpad.stagger_component = Blackboard.write_component(blackboard, "stagger")
 	scratchpad.behavior_component = Blackboard.write_component(blackboard, "behavior")
 	scratchpad.perception_component = blackboard.perception
+
 	local buff_extension = ScriptUnit.extension(unit, "buff_system")
 	local stat_buffs = buff_extension:stat_buffs()
 	local movement_speed = stat_buffs.movement_speed or 1
@@ -37,6 +42,7 @@ BtMeleeFollowTargetAction.enter = function (self, unit, breed, blackboard, scrat
 	end
 
 	scratchpad.modified_movement_speed = movement_speed
+
 	local speed = (action_data.move_speed or breed.run_speed) * movement_speed
 
 	navigation_extension:set_enabled(true, speed)
@@ -64,6 +70,7 @@ BtMeleeFollowTargetAction.enter = function (self, unit, breed, blackboard, scrat
 
 	if action_data.effect_template then
 		local fx_system = Managers.state.extension:system("fx_system")
+
 		scratchpad.fx_system = fx_system
 	end
 
@@ -115,7 +122,7 @@ BtMeleeFollowTargetAction.run = function (self, unit, breed, blackboard, scratch
 	local should_start_idle, should_be_idling = MinionMovement.should_start_idle(scratchpad, behavior_component)
 
 	if should_start_idle or should_be_idling then
-		if should_start_idle and scratchpad.time_to_next_evaluate < t then
+		if should_start_idle and t > scratchpad.time_to_next_evaluate then
 			MinionMovement.start_idle(scratchpad, behavior_component, action_data)
 
 			scratchpad.time_to_next_evaluate = t + BtMeleeFollowTargetAction.CONSECUTIVE_EVALUATE_INTERVAL
@@ -123,7 +130,7 @@ BtMeleeFollowTargetAction.run = function (self, unit, breed, blackboard, scratch
 			self:_rotate_towards_target_unit(unit, target_unit, scratchpad)
 		end
 
-		local evaluate = not scratchpad.running_stagger_block_evaluate and scratchpad.time_to_next_evaluate < t
+		local evaluate = not scratchpad.running_stagger_block_evaluate and t > scratchpad.time_to_next_evaluate
 
 		return "running", evaluate
 	end
@@ -136,7 +143,7 @@ BtMeleeFollowTargetAction.run = function (self, unit, breed, blackboard, scratch
 
 	local is_anim_driven = scratchpad.is_anim_driven
 
-	if is_anim_driven and scratchpad.start_rotation_timing and scratchpad.start_rotation_timing <= t then
+	if is_anim_driven and scratchpad.start_rotation_timing and t >= scratchpad.start_rotation_timing then
 		MinionMovement.update_anim_driven_start_rotation(unit, scratchpad, action_data, t)
 	end
 
@@ -176,7 +183,7 @@ BtMeleeFollowTargetAction.run = function (self, unit, breed, blackboard, scratch
 	local destination = navigation_extension:destination()
 	local distance_to_destination_sq = Vector3.distance_squared(destination, target_position)
 	local target_is_near_destination = distance_to_destination_sq < MOVE_CHECK_DISTANCE_SQ
-	local should_evaluate = not scratchpad.running_stagger_block_evaluate and (scratchpad.time_to_next_evaluate < t or target_is_near_destination)
+	local should_evaluate = not scratchpad.running_stagger_block_evaluate and (t > scratchpad.time_to_next_evaluate or target_is_near_destination)
 
 	if should_evaluate then
 		scratchpad.time_to_next_evaluate = t + BtMeleeFollowTargetAction.CONSECUTIVE_EVALUATE_INTERVAL
@@ -203,8 +210,10 @@ BtMeleeFollowTargetAction._start_move_anim = function (self, unit, breed, t, scr
 	end
 
 	local moving_direction_name = MinionMovement.get_moving_direction_name(unit, scratchpad)
+
 	scratchpad.moving_direction_name = moving_direction_name
-	local start_move_event = nil
+
+	local start_move_event
 	local state = scratchpad.state
 
 	if state == "walking" then
@@ -214,6 +223,7 @@ BtMeleeFollowTargetAction._start_move_anim = function (self, unit, breed, t, scr
 
 		if action_data.start_move_anim_events and action_data.start_move_anim_events[state] then
 			local start_move_anim_events = action_data.start_move_anim_events[state]
+
 			start_move_event = Animation.random_event(start_move_anim_events[moving_direction_name])
 			using_anim_driven = true
 		end
@@ -225,6 +235,7 @@ BtMeleeFollowTargetAction._start_move_anim = function (self, unit, breed, t, scr
 
 			local start_move_rotation_timings = action_data.start_move_rotation_timings
 			local start_rotation_timing = start_move_rotation_timings[start_move_event]
+
 			scratchpad.start_rotation_timing = t + start_rotation_timing
 			scratchpad.move_start_anim_event_name = start_move_event
 		else
@@ -242,6 +253,7 @@ BtMeleeFollowTargetAction._start_move_anim = function (self, unit, breed, t, scr
 	end
 
 	local behavior_component = scratchpad.behavior_component
+
 	behavior_component.move_state = "moving"
 end
 
@@ -270,7 +282,7 @@ BtMeleeFollowTargetAction._update_walking = function (self, unit, breed, t, dt, 
 	elseif action_data.start_move_anim_events then
 		local moving_direction_name = MinionMovement.get_moving_direction_name(unit, scratchpad)
 
-		if moving_direction_name ~= scratchpad.moving_direction_name and scratchpad.walk_anim_switch_duration <= t then
+		if moving_direction_name ~= scratchpad.moving_direction_name and t >= scratchpad.walk_anim_switch_duration then
 			self:_start_walk_anim(scratchpad, action_data, moving_direction_name)
 			self:_set_state_max_speed(breed, scratchpad, action_data)
 
@@ -296,11 +308,11 @@ BtMeleeFollowTargetAction._update_running = function (self, unit, breed, dt, scr
 end
 
 BtMeleeFollowTargetAction._start_walk_anim = function (self, scratchpad, action_data, optional_moving_direction_name)
-	local start_move_anim_events = action_data.start_move_anim_events
-	local walking_anim_event = nil
+	local start_move_anim_events, walking_anim_event = action_data.start_move_anim_events
 
 	if start_move_anim_events and start_move_anim_events.walking then
 		local start_walking_anim_events = start_move_anim_events.walking
+
 		walking_anim_event = Animation.random_event(start_walking_anim_events[optional_moving_direction_name])
 	else
 		walking_anim_event = action_data.walk_anim_event
@@ -332,11 +344,11 @@ BtMeleeFollowTargetAction._change_state = function (self, unit, breed, scratchpa
 end
 
 BtMeleeFollowTargetAction._set_state_max_speed = function (self, breed, scratchpad, action_data)
-	local state = scratchpad.state
-	local new_speed = nil
+	local state, new_speed = scratchpad.state
 
 	if state == "walking" then
 		local walk_speeds = action_data.walk_speeds
+
 		new_speed = walk_speeds and walk_speeds[scratchpad.current_walk_anim_event] or action_data.walk_speed or breed.walk_speed
 	elseif state == "running" then
 		new_speed = (action_data.move_speed or breed.run_speed) * scratchpad.modified_movement_speed

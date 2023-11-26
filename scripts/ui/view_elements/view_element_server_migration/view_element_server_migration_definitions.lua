@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/view_elements/view_element_server_migration/view_element_server_migration_definitions.lua
+
 local ConstantElementWarningPopupsSettings = require("scripts/ui/constant_elements/elements/popup_handler/constant_element_popup_handler_settings")
 local UIWorkspaceSettings = require("scripts/settings/ui/ui_workspace_settings")
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
@@ -394,7 +396,9 @@ local popup_type_style = {
 	}
 }
 local title_style = table.clone(UIFontSettings.header_1)
+
 title_style.text_horizontal_alignment = "center"
+
 local widget_definitions = {
 	change_info_grid_scrollbar = UIWidget.create_definition(ScrollbarPassTemplates.terminal_scrollbar, "change_info_grid_scrollbar"),
 	change_info_grid_interaction = UIWidget.create_definition({
@@ -709,7 +713,7 @@ local slide_selector = {
 					local default_color = style.default_color
 					local hover_color = style.hover_color
 					local selected_color = style.selected_color
-					local color = nil
+					local color
 
 					if (is_selected or is_focused) and selected_color then
 						color = selected_color
@@ -743,17 +747,20 @@ local animations = {
 			start_time = 0,
 			init = function (parent, ui_scenegraph, scenegraph_definition, widgets, params)
 				local alpha_multiplier = 0
+
 				parent._animated_alpha_multiplier = alpha_multiplier
 
 				if params.additional_widgets then
 					for i = 1, #params.additional_widgets do
 						local widget = params.additional_widgets[i]
+
 						widget.alpha_multiplier = alpha_multiplier
 					end
 				end
 
 				widgets.edge_top.style.texture.size[1] = widgets.popup_background.style.terminal.size[1]
 				widgets.edge_bottom.style.texture.size[1] = widgets.popup_background.style.terminal.size[1]
+
 				local popup_type = "default"
 
 				if parent._popup_type then
@@ -778,13 +785,16 @@ local animations = {
 			end_time = anim_start_delay + 0.3,
 			update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress, params)
 				local anim_progress = math.easeOutCubic(progress)
+
 				parent._animated_alpha_multiplier = anim_progress
+
 				local popup_height = params.popup_height
 				local window_height = popup_height * anim_progress
 				local background_height = widgets.popup_background.style.texture.size[2]
 				local background_limit = math.min(popup_height, background_height)
 				local normalized_end_height = background_limit / background_height
 				local uv_v_mid_value = normalized_end_height * 0.5
+
 				widgets.popup_background.style.texture.size_addition[2] = -background_height + background_limit * anim_progress
 				widgets.popup_background.style.texture.uvs[1][2] = uv_v_mid_value - uv_v_mid_value * anim_progress
 				widgets.popup_background.style.texture.uvs[2][2] = uv_v_mid_value + uv_v_mid_value * anim_progress
@@ -803,6 +813,7 @@ local animations = {
 				if params.additional_widgets then
 					for i = 1, #params.additional_widgets do
 						local widget = params.additional_widgets[i]
+
 						widget.alpha_multiplier = anim_progress
 					end
 				end
@@ -823,6 +834,7 @@ local animations = {
 				if params.additional_widgets then
 					for i = 1, #params.additional_widgets do
 						local widget = params.additional_widgets[i]
+
 						widget.alpha_multiplier = anim_progress
 					end
 				end
@@ -837,13 +849,16 @@ local animations = {
 			end_time = anim_start_delay + 0.4,
 			update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress, params)
 				local anim_progress = math.easeInCubic(1 - progress)
+
 				parent._animated_alpha_multiplier = anim_progress
+
 				local popup_height = params.popup_height
 				local window_height = popup_height * anim_progress
 				local background_height = widgets.popup_background.style.texture.size[2]
 				local background_limit = math.min(popup_height, background_height)
 				local normalized_end_height = background_limit / background_height
 				local uv_v_mid_value = normalized_end_height * 0.5
+
 				widgets.popup_background.style.texture.size_addition[2] = -background_height + background_limit * anim_progress
 				widgets.popup_background.style.texture.uvs[1][2] = uv_v_mid_value - uv_v_mid_value * anim_progress
 				widgets.popup_background.style.texture.uvs[2][2] = uv_v_mid_value + uv_v_mid_value * anim_progress

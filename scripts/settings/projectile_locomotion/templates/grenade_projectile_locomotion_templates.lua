@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/projectile_locomotion/templates/grenade_projectile_locomotion_templates.lua
+
 local ProjectileLocomotionSettings = require("scripts/settings/projectile_locomotion/projectile_locomotion_settings")
 local TrueFlightTemplates = require("scripts/settings/projectile/true_flight_templates")
 local locomotion_states = ProjectileLocomotionSettings.states

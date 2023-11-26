@@ -1,20 +1,24 @@
+﻿-- chunkname: @scripts/managers/ui/ui_fonts.lua
+
 local font_vertical_base = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890"
 local font_height_base = "A"
 local font_heights = {}
-local UIFonts = {
-	scaled_size = function (font_size, scale)
-		local scaled_size = math.max(font_size * scale, 1)
+local UIFonts = {}
 
-		return scaled_size
-	end,
-	data_by_type = function (font_type)
-		return Managers.font:data_by_type(font_type)
-	end
-}
+UIFonts.scaled_size = function (font_size, scale)
+	local scaled_size = math.max(font_size * scale, 1)
+
+	return scaled_size
+end
+
+UIFonts.data_by_type = function (font_type)
+	return Managers.font:data_by_type(font_type)
+end
 
 UIFonts.font_height = function (gui, font_type, font_size)
 	font_size = math.ceil(font_size)
 	font_heights[font_type] = font_heights[font_type] or {}
+
 	local height_data = font_heights[font_type][font_size]
 
 	if height_data then
@@ -26,6 +30,7 @@ UIFonts.font_height = function (gui, font_type, font_size)
 	local min, max, caret = Gui.slug_text_extents(gui, font_vertical_base, font, font_size)
 	local base_min, base_max, caret = Gui.slug_text_extents(gui, font_height_base, font, font_size)
 	local height = base_max[3] - base_min[3]
+
 	font_heights[font_type][font_size] = {
 		height,
 		min.y,

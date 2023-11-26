@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/ability/archetype_specializations/psyker_biomancer_specialization_new.lua
+
 local archetype_specialization = {
 	description_short = "loc_ability_specialization_biomancy_description_short",
 	name = "psyker_2",

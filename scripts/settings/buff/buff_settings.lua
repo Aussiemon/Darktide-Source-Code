@@ -1,8 +1,10 @@
+﻿-- chunkname: @scripts/settings/buff/buff_settings.lua
+
 local BreedQueries = require("scripts/utilities/breed_queries")
 local minion_breeds = BreedQueries.minion_breeds()
-local buff_settings = {
-	buff_categories = table.enum("generic", "talents", "weapon_traits")
-}
+local buff_settings = {}
+
+buff_settings.buff_categories = table.enum("generic", "talents", "weapon_traits")
 buff_settings.buff_categort_order = {
 	buff_settings.buff_categories.generic,
 	buff_settings.buff_categories.talents,
@@ -12,12 +14,14 @@ buff_settings.keywords = table.enum("allow_backstabbing", "allow_flanking", "all
 buff_settings.network_synced_keywords = {
 	[buff_settings.keywords.invisible] = true
 }
+
 local group_keywords = table.enum("allow_action_during_sprint")
 local group_to_keywords = {
 	[group_keywords.allow_action_during_sprint] = {
 		[buff_settings.keywords.allow_hipfire_during_sprint] = true
 	}
 }
+
 buff_settings.group_keywords = group_keywords
 buff_settings.group_to_keywords = group_to_keywords
 buff_settings.targets = table.enum("player_only", "minion_only", "any")
@@ -376,7 +380,9 @@ buff_settings.proc_event_validation = {
 		amount = "number"
 	}
 }
+
 local proc_event_names = table.keys(buff_settings.proc_event_validation)
+
 buff_settings.proc_events = table.enum(unpack(proc_event_names))
 buff_settings.stat_buff_types = {
 	ranged_weakspot_damage = "additive_multiplier",
@@ -594,6 +600,7 @@ for name, _ in pairs(minion_breeds) do
 end
 
 local stat_buff_names = table.keys(buff_settings.stat_buff_types)
+
 buff_settings.stat_buffs = table.enum(unpack(stat_buff_names))
 buff_settings.stat_buff_base_values = {
 	additive_multiplier = 1,
@@ -617,7 +624,9 @@ buff_settings.meta_stat_buff_types = {
 	side_mission_reward_xp_modifier = "value",
 	side_mission_reward_credit_modifier = "value"
 }
+
 local meta_stat_buff_names = table.keys(buff_settings.meta_stat_buff_types)
+
 buff_settings.meta_stat_buffs = table.enum(unpack(meta_stat_buff_names))
 buff_settings.meta_stat_buff_type_base_values = Script.new_map(32)
 

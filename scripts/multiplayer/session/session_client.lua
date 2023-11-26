@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/multiplayer/session/session_client.lua
+
 local SessionLocalStateMachine = require("scripts/multiplayer/session/session_local_state_machine")
 local EVENTS = {
 	"rpc_peer_joined_session",

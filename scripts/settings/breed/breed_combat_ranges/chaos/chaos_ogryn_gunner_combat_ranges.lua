@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/breed/breed_combat_ranges/chaos/chaos_ogryn_gunner_combat_ranges.lua
+
 local combat_ranges = {
 	name = "chaos_ogryn_gunner",
 	starting_combat_range = "far",

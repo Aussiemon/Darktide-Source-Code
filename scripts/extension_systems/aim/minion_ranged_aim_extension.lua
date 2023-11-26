@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/aim/minion_ranged_aim_extension.lua
+
 local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
 local MinionRangedAimExtension = class("MinionRangedAimExtension")
 
@@ -8,6 +10,7 @@ MinionRangedAimExtension.init = function (self, extension_init_context, unit, ex
 
 	local breed = extension_init_data.breed
 	local aim_config = breed.aim_config
+
 	self._aim_component = blackboard.aim
 	self._perception_component = blackboard.perception
 	self._aim_lerp_speed = aim_config.lerp_speed
@@ -15,9 +18,11 @@ MinionRangedAimExtension.init = function (self, extension_init_context, unit, ex
 	self._aim_node = Unit.node(unit, aim_config.node)
 	self._valid_aim_combat_ranges = aim_config.valid_aim_combat_ranges
 	self._behavior_component = blackboard.behavior
+
 	local unit_position = Unit.world_position(unit, self._aim_node)
 	local unit_forward = Quaternion.forward(Unit.local_rotation(unit, 1))
 	local init_target = unit_position + unit_forward * self._aim_distance
+
 	self._previous_aim_target = Vector3Box(init_target)
 	self._previous_lean_dot = 1
 	self._aim_config = aim_config
@@ -30,6 +35,7 @@ end
 
 MinionRangedAimExtension._init_blackboard_components = function (self, blackboard)
 	local aim_write_component = Blackboard.write_component(blackboard, "aim")
+
 	aim_write_component.controlled_aiming = false
 
 	aim_write_component.controlled_aim_position:store(0, 0, 0)
@@ -45,14 +51,15 @@ end
 MinionRangedAimExtension.extensions_ready = function (self, world, unit)
 	self._animation_extension = ScriptUnit.extension(unit, "animation_system")
 	self._perception_extension = ScriptUnit.extension(unit, "perception_system")
+
 	local aim_config = self._aim_config
+
 	self._constraint_target = Unit.animation_find_constraint_target(unit, aim_config.target)
 end
 
 MinionRangedAimExtension.update = function (self, unit, dt, t)
 	local perception_component = self._perception_component
-	local game_session = self._game_session
-	local game_object_id = self._game_object_id
+	local game_session, game_object_id = self._game_session, self._game_object_id
 	local unit_position = Unit.world_position(unit, self._aim_node)
 	local target_unit = perception_component.target_unit
 	local valid_combat_ranges = self._valid_aim_combat_ranges
@@ -63,17 +70,20 @@ MinionRangedAimExtension.update = function (self, unit, dt, t)
 	if dont_have_target or self._require_line_of_sight and not perception_component.has_line_of_sight or valid_combat_ranges and not valid_combat_ranges[behavior_component.combat_range] then
 		local perception_extension = self._perception_extension
 		local last_los_position = perception_extension:last_los_position(target_unit)
-		local fallback_target, fallback_direction = nil
+		local fallback_target, fallback_direction
 		local used_fallback = false
 
 		if last_los_position then
 			local to_last_los_position = Vector3.normalize(last_los_position - unit_position)
+
 			fallback_target = unit_position + to_last_los_position * self._aim_distance
 			fallback_direction = to_last_los_position
 			self._used_fallback = false
 		else
 			fallback_target = self._previous_aim_target:unbox()
+
 			local to_fallback_target = Vector3.normalize(fallback_target - unit_position)
+
 			fallback_direction = to_fallback_target
 			used_fallback = true
 		end
@@ -92,12 +102,13 @@ MinionRangedAimExtension.update = function (self, unit, dt, t)
 	end
 
 	local aim_component = self._aim_component
-	local target_position = nil
+	local target_position
 
 	if aim_component.controlled_aiming then
 		target_position = aim_component.controlled_aim_position:unbox()
 	elseif ALIVE[target_unit] then
 		local target_node = Unit.node(target_unit, aim_config.target_node)
+
 		target_position = Unit.world_position(target_unit, target_node)
 	end
 
@@ -130,14 +141,18 @@ MinionRangedAimExtension.update = function (self, unit, dt, t)
 
 	local previous_aim_target = self._previous_aim_target:unbox()
 	local lerp_t = math.min(dt * self._aim_lerp_speed, 1)
+
 	aim_target = Vector3.lerp(previous_aim_target, aim_target, lerp_t)
+
 	local lean_variable_name = self._lean_variable_name
 
 	if lean_variable_name then
 		local previous_lean_dot = self._previous_lean_dot
 		local lean_dot = aim_component.lean_dot
+
 		lean_dot = math.abs(lean_dot - 1) + self._lean_variable_modifier
 		lean_dot = math.lerp(previous_lean_dot, lean_dot, lerp_t)
+
 		local lean_variable_value = math.clamp(lean_dot, 0, 1)
 		local animation_extension = self._animation_extension
 

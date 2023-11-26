@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/end_party_view/end_party_view_definitions.lua
+
 local DefaultPassTemplates = require("scripts/ui/pass_templates/default_pass_templates")
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local UIWidget = require("scripts/managers/ui/ui_widget")
@@ -91,9 +93,11 @@ local title_text_font_settings = UIFontSettings[title_text_font_setting_name]
 local title_text_font_color = title_text_font_settings.text_color
 local title_text_font_size = title_text_font_settings.font_size
 local sub_title_text_font_style = table.clone(UIFontSettings.header_3)
+
 sub_title_text_font_style.text_color = Color.ui_brown_light(255, true)
 sub_title_text_font_style.text_vertical_alignment = "center"
 sub_title_text_font_style.text_horizontal_alignment = "center"
+
 local widget_definitions = {
 	timer_text = UIWidget.create_definition({
 		{
@@ -157,6 +161,7 @@ local animations = {
 			end,
 			update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress, parent)
 				local anim_progress = math.easeOutCubic(progress)
+
 				parent._render_settings.alpha_multiplier = anim_progress
 			end
 		}

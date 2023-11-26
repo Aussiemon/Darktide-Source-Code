@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/equipment/item_material_overrides/player_material_overrides_hair_headgear_mask.lua
+
 local material_overrides = {
 	hair_no_mask = {
 		property_overrides = {

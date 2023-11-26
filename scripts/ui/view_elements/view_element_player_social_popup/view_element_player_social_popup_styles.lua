@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/view_elements/view_element_player_social_popup/view_element_player_social_popup_styles.lua
+
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local UIWorkspaceSettings = require("scripts/settings/ui/ui_workspace_settings")
@@ -34,10 +36,13 @@ local view_element_player_popup_style = {
 	menu_padding = {
 		column_width,
 		ButtonPassTemplates.list_button_default_height
-	},
-	background = {}
+	}
 }
+
+view_element_player_popup_style.background = {}
+
 local background_style = view_element_player_popup_style.background
+
 background_style.icon = {
 	horizontal_alignment = "center",
 	offset = {
@@ -141,9 +146,13 @@ background_style.bottom_border_decoration = {
 	}
 }
 view_element_player_popup_style.player_header = {}
+
 local player_header_style = view_element_player_popup_style.player_header
+
 player_header_style.player_display_name = table.clone(UIFontSettings.header_2)
+
 local player_display_name_style = player_header_style.player_display_name
+
 player_display_name_style.material = "content/ui/materials/font_gradients/slug_font_gradient_header"
 player_display_name_style.text_color = Color.white(255, true)
 player_display_name_style.offset = {
@@ -153,7 +162,9 @@ player_display_name_style.offset = {
 }
 player_display_name_style.text_vertical_alignment = "center"
 player_header_style.user_display_name = table.clone(UIFontSettings.header_3)
+
 local user_display_name_style = player_header_style.user_display_name
+
 user_display_name_style.offset = {
 	0,
 	45,
@@ -161,7 +172,9 @@ user_display_name_style.offset = {
 }
 user_display_name_style.text_vertical_alignment = "bottom"
 player_header_style.user_fatshark_id = table.clone(UIFontSettings.header_3)
+
 local user_fatshark_id_style = player_header_style.user_fatshark_id
+
 user_fatshark_id_style.offset = {
 	0,
 	100,
@@ -169,7 +182,9 @@ user_fatshark_id_style.offset = {
 }
 user_fatshark_id_style.text_vertical_alignment = "center"
 player_header_style.user_activity = table.clone(UIFontSettings.body_small)
+
 local user_activity_style = player_header_style.user_activity
+
 user_activity_style.offset = {
 	-150,
 	170,
@@ -203,15 +218,21 @@ player_header_style.portrait = {
 	}
 }
 view_element_player_popup_style.blueprints = {}
+
 local blueprint_styles = view_element_player_popup_style.blueprints
+
 blueprint_styles.button = {}
+
 local button_style = blueprint_styles.button
+
 button_style.hotspot = {
 	on_hover_sound = UISoundEvents.social_menu_popup_button_hovered,
 	on_pressed_sound = UISoundEvents.social_menu_popup_button_pressed
 }
 blueprint_styles.disabled_button_with_explanation = {}
+
 local disabled_button_with_explanation_style = blueprint_styles.disabled_button_with_explanation
+
 disabled_button_with_explanation_style.hotspot = {
 	on_hover_sound = UISoundEvents.social_menu_popup_button_hovered,
 	on_pressed_sound = UISoundEvents.social_menu_popup_button_pressed
@@ -223,7 +244,9 @@ disabled_button_with_explanation_style.text.offset = {
 	2
 }
 disabled_button_with_explanation_style.second_row = table.clone(UIFontSettings.list_button_second_row)
+
 local disabled_button_with_explanation_second_row_style = disabled_button_with_explanation_style.second_row
+
 disabled_button_with_explanation_second_row_style.offset[1] = disabled_button_with_explanation_style.text.offset[1]
 disabled_button_with_explanation_second_row_style.text_color = Color.ui_grey_medium(255, true)
 disabled_button_with_explanation_style.icon = {
@@ -238,28 +261,36 @@ disabled_button_with_explanation_style.icon = {
 	}
 }
 blueprint_styles.search_header = {}
+
 local search_header_style = blueprint_styles.search_header
+
 search_header_style.size = {
 	column_width,
 	64
 }
 search_header_style.search_text = table.clone(UIFontSettings.body)
 search_header_style.search_text.text_vertical_alignment = "center"
+
 local search_header_text_style = search_header_style.search_text
+
 search_header_text_style.offset = {
 	0,
 	0,
 	1
 }
 blueprint_styles.choice_header = {}
+
 local choice_header_style = blueprint_styles.choice_header
+
 choice_header_style.size = {
 	column_width,
 	64
 }
 choice_header_style.text = table.clone(UIFontSettings.body)
 blueprint_styles.choice_button = {}
+
 local choice_button_style = blueprint_styles.choice_button
+
 choice_button_style.text = table.clone(UIFontSettings.list_button)
 choice_button_style.text.offset[1] = 64
 choice_button_style.hotspot = {
@@ -306,7 +337,9 @@ choice_button_style.icon = {
 	}
 }
 blueprint_styles.checkbox_button = {}
+
 local checkbox_button_style = blueprint_styles.checkbox_button
+
 checkbox_button_style.hotspot = {
 	anim_select_speed = 8,
 	anim_hover_speed = 8,
@@ -336,7 +369,9 @@ checkbox_button_style.highlight = {
 	}
 }
 checkbox_button_style.text = table.clone(UIFontSettings.list_button)
+
 local checkbox_button_text_style = checkbox_button_style.text
+
 checkbox_button_text_style.offset[1] = 64
 checkbox_button_style.checkbox_background = {
 	color = {
@@ -409,11 +444,14 @@ checkbox_button_style.check_mark = {
 	}
 }
 blueprint_styles.group_divider = {}
+
 local group_divider_style = blueprint_styles.group_divider
+
 group_divider_style.size = {
 	column_width,
 	18
 }
+
 local color_lerp = ColorUtilities.color_lerp
 
 local function color_copy(source, target)
@@ -476,8 +514,11 @@ local social_menu_roster_view_styles = {
 		80
 	}
 }
+
 blueprint_styles.player_plaque = {}
+
 local player_plaque_style = blueprint_styles.player_plaque
+
 player_plaque_style.size = {
 	480,
 	80
@@ -527,7 +568,9 @@ player_plaque_style.character_insignia = {
 	material_values = {}
 }
 player_plaque_style.name_or_activity = table.clone(UIFontSettings.body)
+
 local player_name_style = player_plaque_style.name_or_activity
+
 player_name_style.default_color = Color.ui_grey_light(255, true)
 player_name_style.not_in_party_color = Color.ui_grey_light(255, true)
 player_name_style.party_member_color = Color.ui_brown_light(255, true)
@@ -542,13 +585,17 @@ player_name_style.offset = {
 	1
 }
 player_plaque_style.search_status_text = table.clone(UIFontSettings.body)
+
 local search_status_style = player_plaque_style.search_status_text
+
 search_status_style.default_color = Color.ui_grey_light(255, true)
 search_status_style.text_horizontal_alignment = "center"
 search_status_style.text_vertical_alignment = "center"
 search_status_style.font_size_default = player_name_style.font_size
 player_plaque_style.account_name = table.clone(UIFontSettings.body_small)
+
 local account_name_style = player_plaque_style.account_name
+
 account_name_style.default_color_default = Color.ui_grey_medium(255, true)
 account_name_style.default_color_large = Color.ui_grey_light(255, true)
 account_name_style.hover_color = Color.ui_brown_super_light(255, true)
@@ -562,7 +609,9 @@ account_name_style.offset = {
 account_name_style.vertical_offset_default = 47
 account_name_style.vertical_offset_large = 40
 player_plaque_style.party_membership = table.clone(UIFontSettings.body)
+
 local party_membership_style = player_plaque_style.party_membership
+
 party_membership_style.default_color = Color.ui_grey_light(255, true)
 party_membership_style.hover_color = Color.ui_brown_super_light(255, true)
 party_membership_style.text_horizontal_alignment = "right"

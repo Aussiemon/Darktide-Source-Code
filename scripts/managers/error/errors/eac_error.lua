@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/error/errors/eac_error.lua
+
 local ErrorInterface = require("scripts/managers/error/errors/error_interface")
 local ErrorManager = require("scripts/managers/error/error_manager")
 local EAC_KICK_REASONS_LOOKUP = {
@@ -60,11 +62,12 @@ local EAC_KICK_REASONS_LOOKUP = {
 local EACError = class("EACError")
 
 EACError.init = function (self, error_reason, optional_error_code)
-	local options = nil
+	local options
 	local error_level = ErrorManager.ERROR_LEVEL.fatal
 
 	if optional_error_code then
 		local kick_reason_data = self:_kick_reason_data(optional_error_code)
+
 		error_reason = kick_reason_data.loc_message
 		error_level = kick_reason_data.error_level
 
@@ -99,12 +102,9 @@ end
 
 EACError.loc_description = function (self)
 	local description = self._error_reason
-
-	if self._optional_error_code then
-		local params = {
-			error = self._optional_error_code
-		}
-	end
+	local params = self._optional_error_code and {
+		error = self._optional_error_code
+	}
 
 	return description, params
 end

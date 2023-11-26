@@ -1,12 +1,14 @@
+﻿-- chunkname: @scripts/components/utilities/shared_nav.lua
+
 local SharedNav = {}
 
 SharedNav.create_nav_info = function ()
-	local component_nav_info = {
-		nav_world = nil,
-		nav_tag_cost_table = nil,
-		traverse_logic = nil,
-		nav_gen_guid = nil
-	}
+	local component_nav_info = {}
+
+	component_nav_info.nav_world = nil
+	component_nav_info.nav_tag_cost_table = nil
+	component_nav_info.traverse_logic = nil
+	component_nav_info.nav_gen_guid = nil
 
 	return component_nav_info
 end

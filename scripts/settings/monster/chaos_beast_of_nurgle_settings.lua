@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/monster/chaos_beast_of_nurgle_settings.lua
+
 local STATES = table.index_lookup_table("passive", "aiming", "shooting")
 local chaos_beast_of_nurgle_settings = {
 	dodge_radius = 0.5,

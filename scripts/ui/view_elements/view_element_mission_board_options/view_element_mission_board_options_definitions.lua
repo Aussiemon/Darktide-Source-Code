@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/view_elements/view_element_mission_board_options/view_element_mission_board_options_definitions.lua
+
 local UIWorkspaceSettings = require("scripts/settings/ui/ui_workspace_settings")
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local UIWidget = require("scripts/managers/ui/ui_widget")
@@ -195,8 +197,11 @@ local popup_type_style = {
 	}
 }
 local title_style = table.clone(UIFontSettings.header_1)
+
 title_style.text_horizontal_alignment = "center"
+
 local tooltip_text_style = table.clone(UIFontSettings.body)
+
 tooltip_text_style.text_horizontal_alignment = "left"
 tooltip_text_style.text_vertical_alignment = "top"
 tooltip_text_style.horizontal_alignment = "left"
@@ -207,6 +212,7 @@ tooltip_text_style.offset = {
 	0,
 	2
 }
+
 local widget_definitions = {
 	background = UIWidget.create_definition({
 		{
@@ -484,121 +490,133 @@ local widget_definitions = {
 	}, "screen")
 }
 local anim_start_delay = 0
-local animations = {}
-animations.on_enter = {
-	{
-		name = "init",
-		end_time = 0,
-		start_time = 0,
-		init = function (parent, ui_scenegraph, scenegraph_definition, widgets, params)
-			local alpha_multiplier = 0
-			parent._animated_alpha_multiplier = alpha_multiplier
+local animations = {
+	on_enter = {
+		{
+			name = "init",
+			end_time = 0,
+			start_time = 0,
+			init = function (parent, ui_scenegraph, scenegraph_definition, widgets, params)
+				local alpha_multiplier = 0
 
-			if params.additional_widgets then
-				for i = 1, #params.additional_widgets do
-					local widget = params.additional_widgets[i]
-					widget.alpha_multiplier = alpha_multiplier
-				end
-			end
+				parent._animated_alpha_multiplier = alpha_multiplier
 
-			widgets.edge_top.style.texture.size[1] = widgets.popup_background.style.terminal.size[1]
-			widgets.edge_bottom.style.texture.size[1] = widgets.popup_background.style.terminal.size[1]
-			local popup_type = "default"
+				if params.additional_widgets then
+					for i = 1, #params.additional_widgets do
+						local widget = params.additional_widgets[i]
 
-			if parent._popup_type then
-				for name, _ in pairs(popup_type_style) do
-					if parent._popup_type == name then
-						popup_type = name
-
-						break
+						widget.alpha_multiplier = alpha_multiplier
 					end
 				end
-			end
 
-			widgets.popup_background.style.texture.color = popup_type_style[popup_type].background_color
-			widgets.popup_background.style.terminal.color = popup_type_style[popup_type].terminal_background_color
-			widgets.button.alpha_multiplier = 0
-		end
-	},
-	{
-		name = "open",
-		start_time = anim_start_delay + 0,
-		end_time = anim_start_delay + 0.3,
-		update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress, params)
-			local anim_progress = math.easeOutCubic(progress)
-			parent._animated_alpha_multiplier = anim_progress
-			local popup_height = params.popup_height
-			local window_height = popup_height * anim_progress
-			local background_height = widgets.popup_background.style.texture.size[2]
-			local background_limit = math.min(popup_height, background_height)
-			local normalized_end_height = background_limit / background_height
-			local uv_v_mid_value = normalized_end_height * 0.5
-			widgets.popup_background.style.texture.size_addition[2] = -background_height + background_limit * anim_progress
-			widgets.popup_background.style.texture.uvs[1][2] = uv_v_mid_value - uv_v_mid_value * anim_progress
-			widgets.popup_background.style.texture.uvs[2][2] = uv_v_mid_value + uv_v_mid_value * anim_progress
-			widgets.popup_background.style.background.size[2] = window_height + anim_progress * 26
-			widgets.popup_background.style.terminal.size_addition[2] = window_height + anim_progress * 26
-			widgets.edge_bottom.offset[2] = window_height * 0.5
-			widgets.edge_top.offset[2] = -window_height * 0.5
-		end
-	},
-	{
-		name = "fade_in",
-		start_time = anim_start_delay + 0.2,
-		end_time = anim_start_delay + 0.4,
-		update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress, params)
-			local anim_progress = math.easeOutCubic(progress)
+				widgets.edge_top.style.texture.size[1] = widgets.popup_background.style.terminal.size[1]
+				widgets.edge_bottom.style.texture.size[1] = widgets.popup_background.style.terminal.size[1]
 
-			if params.additional_widgets then
-				for i = 1, #params.additional_widgets do
-					local widget = params.additional_widgets[i]
-					widget.alpha_multiplier = anim_progress
+				local popup_type = "default"
+
+				if parent._popup_type then
+					for name, _ in pairs(popup_type_style) do
+						if parent._popup_type == name then
+							popup_type = name
+
+							break
+						end
+					end
 				end
+
+				widgets.popup_background.style.texture.color = popup_type_style[popup_type].background_color
+				widgets.popup_background.style.terminal.color = popup_type_style[popup_type].terminal_background_color
+				widgets.button.alpha_multiplier = 0
 			end
+		},
+		{
+			name = "open",
+			start_time = anim_start_delay + 0,
+			end_time = anim_start_delay + 0.3,
+			update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress, params)
+				local anim_progress = math.easeOutCubic(progress)
 
-			widgets.button.alpha_multiplier = anim_progress
-		end
-	}
-}
-animations.on_exit = {
-	{
-		name = "fade_out",
-		start_time = anim_start_delay + 0,
-		end_time = anim_start_delay + 0.4,
-		update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress, params)
-			local anim_progress = math.easeInCubic(1 - progress)
+				parent._animated_alpha_multiplier = anim_progress
 
-			if params.additional_widgets then
-				for i = 1, #params.additional_widgets do
-					local widget = params.additional_widgets[i]
-					widget.alpha_multiplier = anim_progress
+				local popup_height = params.popup_height
+				local window_height = popup_height * anim_progress
+				local background_height = widgets.popup_background.style.texture.size[2]
+				local background_limit = math.min(popup_height, background_height)
+				local normalized_end_height = background_limit / background_height
+				local uv_v_mid_value = normalized_end_height * 0.5
+
+				widgets.popup_background.style.texture.size_addition[2] = -background_height + background_limit * anim_progress
+				widgets.popup_background.style.texture.uvs[1][2] = uv_v_mid_value - uv_v_mid_value * anim_progress
+				widgets.popup_background.style.texture.uvs[2][2] = uv_v_mid_value + uv_v_mid_value * anim_progress
+				widgets.popup_background.style.background.size[2] = window_height + anim_progress * 26
+				widgets.popup_background.style.terminal.size_addition[2] = window_height + anim_progress * 26
+				widgets.edge_bottom.offset[2] = window_height * 0.5
+				widgets.edge_top.offset[2] = -window_height * 0.5
+			end
+		},
+		{
+			name = "fade_in",
+			start_time = anim_start_delay + 0.2,
+			end_time = anim_start_delay + 0.4,
+			update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress, params)
+				local anim_progress = math.easeOutCubic(progress)
+
+				if params.additional_widgets then
+					for i = 1, #params.additional_widgets do
+						local widget = params.additional_widgets[i]
+
+						widget.alpha_multiplier = anim_progress
+					end
 				end
-			end
 
-			widgets.button.alpha_multiplier = anim_progress
-		end
+				widgets.button.alpha_multiplier = anim_progress
+			end
+		}
 	},
-	{
-		name = "close",
-		start_time = anim_start_delay + 0.2,
-		end_time = anim_start_delay + 0.4,
-		update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress, params)
-			local anim_progress = math.easeInCubic(1 - progress)
-			parent._animated_alpha_multiplier = anim_progress
-			local popup_height = params.popup_height
-			local window_height = popup_height * anim_progress
-			local background_height = widgets.popup_background.style.texture.size[2]
-			local background_limit = math.min(popup_height, background_height)
-			local normalized_end_height = background_limit / background_height
-			local uv_v_mid_value = normalized_end_height * 0.5
-			widgets.popup_background.style.texture.size_addition[2] = -background_height + background_limit * anim_progress
-			widgets.popup_background.style.texture.uvs[1][2] = uv_v_mid_value - uv_v_mid_value * anim_progress
-			widgets.popup_background.style.texture.uvs[2][2] = uv_v_mid_value + uv_v_mid_value * anim_progress
-			widgets.popup_background.style.background.size[2] = window_height + anim_progress * 26
-			widgets.popup_background.style.terminal.size_addition[2] = window_height + anim_progress * 26
-			widgets.edge_bottom.offset[2] = window_height * 0.5
-			widgets.edge_top.offset[2] = -window_height * 0.5
-		end
+	on_exit = {
+		{
+			name = "fade_out",
+			start_time = anim_start_delay + 0,
+			end_time = anim_start_delay + 0.4,
+			update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress, params)
+				local anim_progress = math.easeInCubic(1 - progress)
+
+				if params.additional_widgets then
+					for i = 1, #params.additional_widgets do
+						local widget = params.additional_widgets[i]
+
+						widget.alpha_multiplier = anim_progress
+					end
+				end
+
+				widgets.button.alpha_multiplier = anim_progress
+			end
+		},
+		{
+			name = "close",
+			start_time = anim_start_delay + 0.2,
+			end_time = anim_start_delay + 0.4,
+			update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress, params)
+				local anim_progress = math.easeInCubic(1 - progress)
+
+				parent._animated_alpha_multiplier = anim_progress
+
+				local popup_height = params.popup_height
+				local window_height = popup_height * anim_progress
+				local background_height = widgets.popup_background.style.texture.size[2]
+				local background_limit = math.min(popup_height, background_height)
+				local normalized_end_height = background_limit / background_height
+				local uv_v_mid_value = normalized_end_height * 0.5
+
+				widgets.popup_background.style.texture.size_addition[2] = -background_height + background_limit * anim_progress
+				widgets.popup_background.style.texture.uvs[1][2] = uv_v_mid_value - uv_v_mid_value * anim_progress
+				widgets.popup_background.style.texture.uvs[2][2] = uv_v_mid_value + uv_v_mid_value * anim_progress
+				widgets.popup_background.style.background.size[2] = window_height + anim_progress * 26
+				widgets.popup_background.style.terminal.size_addition[2] = window_height + anim_progress * 26
+				widgets.edge_bottom.offset[2] = window_height * 0.5
+				widgets.edge_top.offset[2] = -window_height * 0.5
+			end
+		}
 	}
 }
 

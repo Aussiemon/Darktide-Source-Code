@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/cinematic_scene/templates/outro_fail_template.lua
+
 local cinematic_scene_templates = {
 	outro_fail = {
 		is_skippable = false,

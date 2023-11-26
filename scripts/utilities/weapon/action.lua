@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/utilities/weapon/action.lua
+
 local PowerLevelSettings = require("scripts/settings/damage/power_level_settings")
 local DEFAULT_POWER_LEVEL = PowerLevelSettings.default_power_level
 local Action = {}
@@ -67,7 +69,7 @@ Action.damage_template = function (action)
 	local fire_configuration = action.fire_configuration
 
 	if fire_configuration then
-		local damage_template = nil
+		local damage_template
 
 		if fire_configuration.flamer_gas_template then
 			damage_template = fire_configuration.flamer_gas_template.damage
@@ -111,7 +113,7 @@ Action.explosion_template = function (action)
 	local fire_configuration = action.fire_configuration
 
 	if fire_configuration then
-		local damage_template = nil
+		local damage_template
 
 		if fire_configuration.flamer_gas_template then
 			damage_template = fire_configuration.flamer_gas_template.damage

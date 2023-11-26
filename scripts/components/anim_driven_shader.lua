@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/components/anim_driven_shader.lua
+
 local AnimDrivenShader = component("AnimDrivenShader")
 
 AnimDrivenShader.init = function (self, unit)

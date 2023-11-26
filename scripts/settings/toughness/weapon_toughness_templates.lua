@@ -1,9 +1,12 @@
+﻿-- chunkname: @scripts/settings/toughness/weapon_toughness_templates.lua
+
 local ToughnessSettings = require("scripts/settings/toughness/toughness_settings")
 local ToughnessDepleted = require("scripts/utilities/toughness/toughness_depleted")
 local TalentSettings = require("scripts/settings/talent/talent_settings_new")
 local weapon_toughness_templates = {}
 local replenish_types = ToughnessSettings.replenish_types
 local gunlugger_talent_settings = TalentSettings.ogryn_1
+
 weapon_toughness_templates.default = {
 	regeneration_delay_modifier = {
 		lerp_perfect = 0,

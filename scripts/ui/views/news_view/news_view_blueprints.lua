@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/news_view/news_view_blueprints.lua
+
 local UIFonts = require("scripts/managers/ui/ui_fonts")
 local UIRenderer = require("scripts/managers/ui/ui_renderer")
 local NewsViewSettings = require("scripts/ui/views/news_view/news_view_settings")
@@ -60,6 +62,7 @@ local widget_blueprints_by_type = {
 			local content = widget.content
 			local image = element.image
 			local color = element.color
+
 			content.element = element
 			content.texture = image
 
@@ -109,6 +112,7 @@ local widget_blueprints_by_type = {
 
 			if new_indicator_width_offset then
 				local offset = style.new_indicator.offset
+
 				offset[1] = new_indicator_width_offset[1]
 				offset[2] = new_indicator_width_offset[2]
 				offset[3] = new_indicator_width_offset[3]
@@ -116,10 +120,12 @@ local widget_blueprints_by_type = {
 
 			content.element = element
 			content.text = text
+
 			local size = content.size
 			local text_style = style.text
 			local text_options = UIFonts.get_font_options_by_style(text_style)
 			local height = ui_renderer and UIRenderer.text_height(ui_renderer, text, text_style.font_type, text_style.font_size, size, text_options) or size[2]
+
 			size[2] = height + 0
 		end,
 		update = function (parent, widget, input_service, dt, t, ui_renderer)
@@ -168,6 +174,7 @@ local widget_blueprints_by_type = {
 
 			if new_indicator_width_offset then
 				local offset = style.new_indicator.offset
+
 				offset[1] = new_indicator_width_offset[1]
 				offset[2] = new_indicator_width_offset[2]
 				offset[3] = new_indicator_width_offset[3]
@@ -175,10 +182,12 @@ local widget_blueprints_by_type = {
 
 			content.element = element
 			content.text = text
+
 			local size = content.size
 			local text_style = style.text
 			local text_options = UIFonts.get_font_options_by_style(text_style)
 			local height = ui_renderer and UIRenderer.text_height(ui_renderer, text, text_style.font_type, text_style.font_size, size, text_options) or size[2]
+
 			size[2] = height + 0
 		end,
 		update = function (parent, widget, input_service, dt, t, ui_renderer)
@@ -219,6 +228,7 @@ local widget_blueprints_by_type = {
 
 			if new_indicator_width_offset then
 				local offset = style.new_indicator.offset
+
 				offset[1] = new_indicator_width_offset[1]
 				offset[2] = new_indicator_width_offset[2]
 				offset[3] = new_indicator_width_offset[3]
@@ -226,10 +236,12 @@ local widget_blueprints_by_type = {
 
 			content.element = element
 			content.text = text
+
 			local size = content.size
 			local text_style = style.text
 			local text_options = UIFonts.get_font_options_by_style(text_style)
 			local height = ui_renderer and UIRenderer.text_height(ui_renderer, text, text_style.font_type, text_style.font_size, size, text_options) or size[2]
+
 			size[2] = height + 0
 		end,
 		update = function (parent, widget, input_service, dt, t, ui_renderer)

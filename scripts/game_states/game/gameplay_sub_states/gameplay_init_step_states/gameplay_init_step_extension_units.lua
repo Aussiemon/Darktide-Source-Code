@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/game_states/game/gameplay_sub_states/gameplay_init_step_states/gameplay_init_step_extension_units.lua
+
 local GameplayInitStepInterface = require("scripts/game_states/game/gameplay_sub_states/gameplay_init_step_states/gameplay_init_step_state_interface")
 local GameplayInitStepStateNetworkEvents = require("scripts/game_states/game/gameplay_sub_states/gameplay_init_step_states/gameplay_init_step_network_events")
 local ScriptWorld = require("scripts/foundation/utilities/script_world")
@@ -9,7 +11,9 @@ end
 
 GameplayInitStepExtensionUnits.on_enter = function (self, parent, params)
 	local shared_state = params.shared_state
+
 	self._shared_state = shared_state
+
 	local world = shared_state.world
 	local level = shared_state.level
 
@@ -47,7 +51,7 @@ GameplayInitStepExtensionUnits._init_extension_unit_registration = function (sel
 
 	local extension_manager = Managers.state.extension
 	local units = Level.units(level, true)
-	local optional_category = nil
+	local optional_category
 
 	extension_manager:init_time_slice_add_and_register_level_units(world, units, optional_category)
 end

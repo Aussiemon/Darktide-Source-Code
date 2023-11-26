@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/dialogue/vo_query_constants.lua
+
 local vo_query_constants = {
 	concepts = {
 		on_demand_com_wheel = "on_demand_com_wheel",

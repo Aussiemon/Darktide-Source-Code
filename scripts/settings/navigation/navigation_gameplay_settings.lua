@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/navigation/navigation_gameplay_settings.lua
+
 local navigation_gameplay_settings = {
 	nav_world_config = {
 		budget = {

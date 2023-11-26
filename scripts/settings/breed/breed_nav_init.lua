@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/breed/breed_nav_init.lua
+
 local Breed = require("scripts/utilities/breed")
 local NavigationCostSettings = require("scripts/settings/navigation/navigation_cost_settings")
 local SmartObjectSettings = require("scripts/settings/navigation/smart_object_settings")

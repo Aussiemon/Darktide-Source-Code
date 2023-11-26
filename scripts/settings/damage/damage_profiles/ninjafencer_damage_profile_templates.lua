@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/damage/damage_profiles/ninjafencer_damage_profile_templates.lua
+
 local ArmorSettings = require("scripts/settings/damage/armor_settings")
 local AttackSettings = require("scripts/settings/damage/attack_settings")
 local PowerLevelSettings = require("scripts/settings/damage/power_level_settings")
@@ -13,6 +15,7 @@ table.make_unique(damage_templates)
 table.make_unique(overrides)
 
 local single_cleave = DamageProfileSettings.single_cleave
+
 damage_templates.light_ninjafencer = {
 	ragdoll_push_force = 100,
 	stagger_category = "melee",

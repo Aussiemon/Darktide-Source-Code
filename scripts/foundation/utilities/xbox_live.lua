@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/foundation/utilities/xbox_live.lua
+
 local Promise = require("scripts/foundation/utilities/promise")
 local FGRLLimits = require("scripts/foundation/utilities/fgrl_limits")
 local NO_XBOX_LIVE = "loc_xbox_live_not_available"
@@ -8,6 +10,8 @@ local function _handle_error(error_data)
 	if error_data.error_handled then
 		return Promise.rejected(error_data)
 	end
+
+	local header = error_data.header and error_data.header .. ": " or ""
 
 	if error_data.message then
 		Log.error("XboxLive", header .. "%s", error_data.message)
@@ -22,33 +26,21 @@ local function _handle_error(error_data)
 	return Promise.rejected(error_data)
 end
 
-local XboxLiveUtils = {
-	available = function ()
-		if Managers.account then
-			local connection_verified = Managers.account:verify_connection()
-		end
+local XboxLiveUtils = {}
 
-		if connection_verified then
-			if Application.xbox_live then
-				if Application.xbox_live() == true then
-					slot1 = not DevParameters.debug_disable_xbox_live
-				else
-					local is_available = false
-				end
-			end
-		end
+XboxLiveUtils.available = function ()
+	local connection_verified = Managers.account and Managers.account:verify_connection()
+	local is_available = connection_verified and Application.xbox_live and Application.xbox_live() == true and not DevParameters.debug_disable_xbox_live
 
-		if is_available then
-			return Promise.resolved()
-		else
-			slot3.message = Localize(NO_XBOX_LIVE)
-
-			return Promise.rejected({
-				header = "XboxLiveUtils.available()"
-			})
-		end
+	if is_available then
+		return Promise.resolved()
+	else
+		return Promise.rejected({
+			header = "XboxLiveUtils.available()",
+			message = Localize(NO_XBOX_LIVE)
+		})
 	end
-}
+end
 
 XboxLiveUtils.user_id = function ()
 	return XboxLiveUtils.available():next(function ()
@@ -57,10 +49,9 @@ XboxLiveUtils.user_id = function ()
 		if user_id then
 			return Promise.resolved(user_id)
 		else
-			slot2.message = Localize(MISSING_XUSER)
-
 			return Promise.rejected({
-				header = "XboxLiveUtils.user_id()"
+				header = "XboxLiveUtils.user_id()",
+				message = Localize(MISSING_XUSER)
 			})
 		end
 	end):catch(_handle_error)
@@ -81,16 +72,14 @@ XboxLiveUtils.get_user_profiles = function (xuids)
 		local profiles_async, error_code, error_message = XboxLiveProfile.get_user_profiles(user_id, xuids)
 
 		if error_code then
-			slot5.error_code = error_code
-
 			return Promise.rejected({
-				header = "XboxLiveProfile.get_user_profiles"
+				header = "XboxLiveProfile.get_user_profiles",
+				error_code = error_code
 			})
 		elseif error_message then
-			slot5.message = error_message
-
 			return Promise.rejected({
-				header = "XboxLiveProfile.get_user_profiles"
+				header = "XboxLiveProfile.get_user_profiles",
+				message = error_message
 			})
 		end
 
@@ -99,10 +88,9 @@ XboxLiveUtils.get_user_profiles = function (xuids)
 		local profiles, error_code = XboxLiveProfile.get_user_profiles_result(async_block)
 
 		if error_code then
-			slot4.error_code = error_code
-
 			return Promise.rejected({
-				header = "XboxLiveProfile.get_user_profiles_result"
+				header = "XboxLiveProfile.get_user_profiles_result",
+				error_code = error_code
 			})
 		end
 
@@ -115,16 +103,14 @@ XboxLiveUtils.get_user_presence_data = function (xuids)
 		local profiles_async, error_code, error_message = XSocial.get_user_presence_data(user_id, xuids)
 
 		if error_code then
-			slot5.error_code = error_code
-
 			return Promise.rejected({
-				header = "XSocial.get_user_presence_data"
+				header = "XSocial.get_user_presence_data",
+				error_code = error_code
 			})
 		elseif error_message then
-			slot5.message = error_message
-
 			return Promise.rejected({
-				header = "XSocial.get_user_presence_data"
+				header = "XSocial.get_user_presence_data",
+				message = error_message
 			})
 		end
 
@@ -133,10 +119,9 @@ XboxLiveUtils.get_user_presence_data = function (xuids)
 		local user_states, error_code = XSocial.get_user_presence_data_result(async_block)
 
 		if error_code then
-			slot4.error_code = error_code
-
 			return Promise.rejected({
-				header = "XSocial.get_user_presence_data_result"
+				header = "XSocial.get_user_presence_data_result",
+				error_code = error_code
 			})
 		end
 
@@ -149,16 +134,14 @@ XboxLiveUtils.get_block_list = function ()
 		local avoid_list_async, error_code, error_message = XboxLivePrivacy.get_avoid_list(user_id)
 
 		if error_code then
-			slot5.error_code = error_code
-
 			return Promise.rejected({
-				header = "XboxLivePrivacy.get_avoid_list"
+				header = "XboxLivePrivacy.get_avoid_list",
+				error_code = error_code
 			})
 		elseif error_message then
-			slot5.message = error_message
-
 			return Promise.rejected({
-				header = "XboxLivePrivacy.get_avoid_list"
+				header = "XboxLivePrivacy.get_avoid_list",
+				message = error_message
 			})
 		end
 
@@ -167,10 +150,9 @@ XboxLiveUtils.get_block_list = function ()
 		local avoid_list, error_code = XboxLivePrivacy.get_avoid_list_result(async_block)
 
 		if error_code then
-			slot4.error_code = error_code
-
 			return Promise.rejected({
-				header = "XboxLivePrivacy.get_avoid_list_result"
+				header = "XboxLivePrivacy.get_avoid_list_result",
+				error_code = error_code
 			})
 		end
 
@@ -183,16 +165,14 @@ XboxLiveUtils.get_mute_list = function ()
 		local mute_list_async, error_code, error_message = XboxLivePrivacy.get_mute_list(user_id)
 
 		if error_code then
-			slot5.error_code = error_code
-
 			return Promise.rejected({
-				header = "XboxLivePrivacy.get_mute_list"
+				header = "XboxLivePrivacy.get_mute_list",
+				error_code = error_code
 			})
 		elseif error_message then
-			slot5.message = error_message
-
 			return Promise.rejected({
-				header = "XboxLivePrivacy.get_mute_list"
+				header = "XboxLivePrivacy.get_mute_list",
+				message = error_message
 			})
 		end
 
@@ -201,10 +181,9 @@ XboxLiveUtils.get_mute_list = function ()
 		local mute_list, error_code = XboxLivePrivacy.get_mute_list_result(async_block)
 
 		if error_code then
-			slot4.error_code = error_code
-
 			return Promise.rejected({
-				header = "XboxLivePrivacy.get_mute_list_result"
+				header = "XboxLivePrivacy.get_mute_list_result",
+				error_code = error_code
 			})
 		end
 
@@ -217,16 +196,14 @@ XboxLiveUtils.get_activity = function (xuid_string_array)
 		local async_block, error_code, error_message = XboxLiveMPA.get_activity(user_id, xuid_string_array)
 
 		if error_code then
-			slot5.error_code = error_code
-
 			return Promise.rejected({
-				header = "XboxLiveMPA.get_activity"
+				header = "XboxLiveMPA.get_activity",
+				error_code = error_code
 			})
 		elseif error_message then
-			slot5.message = error_message
-
 			return Promise.rejected({
-				header = "XboxLiveMPA.get_activity"
+				header = "XboxLiveMPA.get_activity",
+				message = error_message
 			})
 		else
 			return Managers.xasync:wrap(async_block, XboxLiveMPA.release_block)
@@ -235,10 +212,9 @@ XboxLiveUtils.get_activity = function (xuid_string_array)
 		local result, error_code = XboxLiveMPA.get_activity_result(async_block)
 
 		if error_code then
-			slot4.error_code = error_code
-
 			return Promise.rejected({
-				header = "XboxLiveMPA.get_activity_result"
+				header = "XboxLiveMPA.get_activity_result",
+				error_code = error_code
 			})
 		else
 			table.dump(result, "RESULT", 2)
@@ -253,26 +229,21 @@ XboxLiveUtils.set_activity = function (connection_string, party_id, num_other_me
 	XboxLiveUtils.user_id():next(function (user_id)
 		local group_id = party_id
 
-		if not join_restriction then
-			local max_num_members = XblMultiplayerActivityJoinRestriction.JOIN_RESTRICTION_PUBLIC
-		end
+		join_restriction = join_restriction or XblMultiplayerActivityJoinRestriction.JOIN_RESTRICTION_PUBLIC
 
-		join_restriction = max_num_members
 		local max_num_members = 4
 		local allow_cross_platform_join = true
 		local async_block, error_code, error_message = XboxLiveMPA.set_activity(user_id, connection_string, group_id, join_restriction, num_members, max_num_members, allow_cross_platform_join)
 
 		if error_code then
-			slot8.error_code = error_code
-
 			return Promise.rejected({
-				header = "XboxLiveMPA.set_activity"
+				header = "XboxLiveMPA.set_activity",
+				error_code = error_code
 			})
 		elseif error_message then
-			slot8.message = error_message
-
 			return Promise.rejected({
-				header = "XboxLiveMPA.set_activity"
+				header = "XboxLiveMPA.set_activity",
+				message = error_message
 			})
 		else
 			return Managers.xasync:wrap(async_block, XboxLiveMPA.release_block)
@@ -288,16 +259,14 @@ XboxLiveUtils.delete_activity = function ()
 		local async_block, error_code, error_message = XboxLiveMPA.delete_activity(user_id)
 
 		if error_code then
-			slot5.error_code = error_code
-
 			return Promise.rejected({
-				header = "XboxLiveMPA.delete_activity"
+				header = "XboxLiveMPA.delete_activity",
+				error_code = error_code
 			})
 		elseif error_message then
-			slot5.message = error_message
-
 			return Promise.rejected({
-				header = "XboxLiveMPA.delete_activity"
+				header = "XboxLiveMPA.delete_activity",
+				message = error_message
 			})
 		else
 			return Managers.xasync:wrap(async_block, XboxLiveMPA.release_block)
@@ -312,16 +281,14 @@ XboxLiveUtils.batch_check_permission = function (permissions, xuids, anonymous_u
 		local batch_check_permission_async, error_code, error_message = XboxLivePrivacy.batch_check_permission(user_id, permissions, xuids, anonymous_user_types)
 
 		if error_code then
-			slot5.error_code = error_code
-
 			return Promise.rejected({
-				header = "XboxLivePrivacy.batch_check_permission"
+				header = "XboxLivePrivacy.batch_check_permission",
+				error_code = error_code
 			})
 		elseif error_message then
-			slot5.message = error_message
-
 			return Promise.rejected({
-				header = "XboxLivePrivacy.batch_check_permission"
+				header = "XboxLivePrivacy.batch_check_permission",
+				message = error_message
 			})
 		end
 
@@ -329,10 +296,9 @@ XboxLiveUtils.batch_check_permission = function (permissions, xuids, anonymous_u
 			local result, error_code = XboxLivePrivacy.batch_check_permission_result(async_block)
 
 			if error_code then
-				slot4.error_code = error_code
-
 				return Promise.rejected({
-					header = "XboxLivePrivacy.batch_check_permission_result"
+					header = "XboxLivePrivacy.batch_check_permission_result",
+					error_code = error_code
 				})
 			end
 
@@ -346,10 +312,9 @@ XboxLiveUtils.update_recent_player_teammate = function (xuid)
 		local _, _, error_message = XboxLiveMPA.update_recent_players(user_id, xuid, XblMultiplayerActivityEncounterType.ENCOUNTER_TYPE_TEAMMATE)
 
 		if error_message then
-			slot5.message = error_message
-
 			return Promise.rejected({
-				header = "XboxLiveMPA.update_recent_players"
+				header = "XboxLiveMPA.update_recent_players",
+				message = error_message
 			})
 		end
 	end):catch(function (error_data)
@@ -378,16 +343,14 @@ XboxLiveUtils.update_achievement = function (achievement_id, progress)
 		local async_block, error_code, error_message = XboxLiveAchievement.update_achievement(user_id, achievement_id, progress)
 
 		if error_code then
-			slot5.error_code = error_code
-
 			return Promise.rejected({
-				header = "XboxLiveAchievement.update_achievement"
+				header = "XboxLiveAchievement.update_achievement",
+				error_code = error_code
 			})
 		elseif error_message then
-			slot5.message = error_message
-
 			return Promise.rejected({
-				header = "XboxLiveAchievement.update_achievement"
+				header = "XboxLiveAchievement.update_achievement",
+				message = error_message
 			})
 		else
 			return Managers.xasync:wrap(async_block, XboxLiveAchievement.release_async_block)
@@ -402,16 +365,14 @@ XboxLiveUtils.get_all_achievements = function ()
 		local achievements_async, error_code, error_message = XboxLiveAchievement.get_achievement_async(user_id, XboxLiveAchievement.ACHIEVEMENT_TYPE_ALL, false, XboxLiveAchievement.ACHIEVEMENT_ORDER_BY_DEFAULT_ORDER, 0, 37)
 
 		if error_code then
-			slot5.error_code = error_code
-
 			return Promise.rejected({
-				header = "XboxLiveAchievement.get_achievement_async"
+				header = "XboxLiveAchievement.get_achievement_async",
+				error_code = error_code
 			})
 		elseif error_message then
-			slot5.message = error_message
-
 			return Promise.rejected({
-				header = "XboxLiveAchievement.get_achievement_async"
+				header = "XboxLiveAchievement.get_achievement_async",
+				message = error_message
 			})
 		else
 			return Managers.xasync:wrap(achievements_async, XboxLiveAchievement.release_async_block)
@@ -420,19 +381,17 @@ XboxLiveUtils.get_all_achievements = function ()
 		local achievement_result, error_code = XboxLiveAchievement.get_achievement_result(async_block)
 
 		if error_code then
-			slot4.error_code = error_code
-
 			return Promise.rejected({
-				header = "XboxLiveAchievement.get_achievement_result"
+				header = "XboxLiveAchievement.get_achievement_result",
+				error_code = error_code
 			})
 		else
 			local achievement_count, achievements, error_code = XboxLiveAchievement.result_get_achievements(achievement_result)
 
 			if error_code then
-				slot7.error_code = error_code
-
 				return Promise.rejected({
-					header = "XboxLiveAchievement.result_get_achievements"
+					header = "XboxLiveAchievement.result_get_achievements",
+					error_code = error_code
 				})
 			else
 				achievements = achievements or {}
@@ -455,16 +414,14 @@ XboxLiveUtils.title_storage_download = function (blob_path, blob_type, storage_t
 			local async_result, error_code, error_message = XboxLive.create_user_context(user_id)
 
 			if error_code then
-				slot6.error_code = error_code
-
 				return Promise.rejected({
-					header = "XboxLive.create_user_context"
+					header = "XboxLive.create_user_context",
+					error_code = error_code
 				})
 			elseif error_message then
-				slot6.message = error_message
-
 				return Promise.rejected({
-					header = "XboxLive.create_user_context"
+					header = "XboxLive.create_user_context",
+					message = error_message
 				})
 			else
 				return Managers.xasync:wrap(async_result, XboxLive.release_async_block_create_live_context_async):next(function ()
@@ -476,10 +433,9 @@ XboxLiveUtils.title_storage_download = function (blob_path, blob_type, storage_t
 		local async_result, error_code = TitleStorage.blob_download_async(user_id, blob_path, blob_type, storage_type, buffer_size)
 
 		if error_code then
-			slot4.error_code = error_code
-
 			return Promise.rejected({
-				header = "TitleStorage.blob_download_async"
+				header = "TitleStorage.blob_download_async",
+				error_code = error_code
 			})
 		else
 			return Managers.xasync:wrap(async_result, TitleStorage.release_async_block)
@@ -488,10 +444,9 @@ XboxLiveUtils.title_storage_download = function (blob_path, blob_type, storage_t
 		local download_result, download_size, error_code = TitleStorage.get_blob_download_result(async_block)
 
 		if error_code then
-			slot5.error_code = error_code
-
 			return Promise.rejected({
-				header = "TitleStorage.get_blob_download_result"
+				header = "TitleStorage.get_blob_download_result",
+				error_code = error_code
 			})
 		else
 			return download_result
@@ -502,25 +457,23 @@ end
 XboxLiveUtils.get_entitlements = function ()
 	return XboxLiveUtils.available():next(function (user_id)
 		local result_by_id = {}
-		local result, async_job, async_job_next_page, error_code, error_message = nil
-		async_job, slot8, error_message = XStore.query_entitlements_async({
+		local result, async_job, async_job_next_page, error_code, error_message
+
+		async_job, error_code, error_message = XStore.query_entitlements_async({
 			"consumable",
 			"unmanaged"
 		})
-		error_code = slot8
 
 		if not async_job then
 			if error_message then
-				slot8.message = error_message
-
 				return Promise.rejected({
-					header = "XStore.query_entitlements_async"
+					header = "XStore.query_entitlements_async",
+					message = error_message
 				})
 			else
-				slot8.message = string.format("query_entitlements_async returned error_code=0x%x", error_code)
-
 				return Promise.rejected({
-					header = "XStore.query_entitlements_async"
+					header = "XStore.query_entitlements_async",
+					message = string.format("query_entitlements_async returned error_code=0x%x", error_code)
 				})
 			end
 		end
@@ -545,17 +498,14 @@ XboxLiveUtils.get_entitlements = function ()
 					Log.error("XboxLive", string.format("Failed to fetch entitlements, error_code=0x%x", error_code))
 				end
 
-				slot1.code = error_code
-
 				return {
-					success = false
+					success = false,
+					code = error_code
 				}
 			end
 
 			if result ~= nil and error_code == nil then
-				slot1, slot2, slot3 = ipairs(result)
-
-				for _, v in slot1, slot2, slot3 do
+				for _, v in ipairs(result) do
 					result_by_id[v.storeId] = v
 				end
 
@@ -563,10 +513,9 @@ XboxLiveUtils.get_entitlements = function ()
 					return false
 				end
 
-				slot1.data = result_by_id
-
 				return {
-					success = true
+					success = true,
+					data = result_by_id
 				}
 			end
 
@@ -578,25 +527,23 @@ end
 XboxLiveUtils.get_associated_products = function ()
 	return XboxLiveUtils.available():next(function (user_id)
 		local result_by_id = {}
-		local result, async_job, async_job_next_page, error_code, error_message = nil
-		async_job, slot8, error_message = XStore.query_associated_products_async({
+		local result, async_job, async_job_next_page, error_code, error_message
+
+		async_job, error_code, error_message = XStore.query_associated_products_async({
 			"consumable",
 			"unmanaged"
 		})
-		error_code = slot8
 
 		if not async_job then
 			if error_message then
-				slot8.message = error_message
-
 				return Promise.rejected({
-					header = "XStore.query_associated_products_async"
+					header = "XStore.query_associated_products_async",
+					message = error_message
 				})
 			else
-				slot8.message = string.format("query_associated_products_async returned error_code=0x%x", error_code)
-
 				return Promise.rejected({
-					header = "XStore.query_associated_products_async"
+					header = "XStore.query_associated_products_async",
+					message = string.format("query_associated_products_async returned error_code=0x%x", error_code)
 				})
 			end
 		end
@@ -621,31 +568,25 @@ XboxLiveUtils.get_associated_products = function ()
 					Log.error("XboxLive", string.format("Failed to fetch associated products, error_code=0x%x", error_code))
 				end
 
-				slot1.code = error_code
-
 				return {
-					success = false
+					success = false,
+					code = error_code
 				}
 			end
 
-			if result ~= nil then
-				if error_code == nil then
-					slot1, slot2, slot3 = ipairs(result)
-
-					for _, v in slot1, slot2, slot3 do
-						result_by_id[v.storeId] = v
-					end
-
-					if async_job_next_page then
-						return false
-					end
-
-					slot1.data = result_by_id
-
-					return {
-						success = true
-					}
+			if result ~= nil and error_code == nil then
+				for _, v in ipairs(result) do
+					result_by_id[v.storeId] = v
 				end
+
+				if async_job_next_page then
+					return false
+				end
+
+				return {
+					success = true,
+					data = result_by_id
+				}
 			end
 
 			return false

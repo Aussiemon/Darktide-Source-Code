@@ -1,9 +1,11 @@
+﻿-- chunkname: @scripts/foundation/utilities/string.lua
+
 string.starts_with = function (str, start)
 	return str:sub(1, #start) == start
 end
 
 string.ends_with = function (str, ending)
-	return ending == "" or str:sub(-(#ending)) == ending
+	return ending == "" or str:sub(-#ending) == ending
 end
 
 string.split = function (str, sep)
@@ -80,8 +82,7 @@ string.encode_base64 = function (data)
 	local b = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"
 
 	return (data:gsub(".", function (x)
-		local r = ""
-		local b = x:byte()
+		local r, b = "", x:byte()
 
 		for i = 8, 1, -1 do
 			r = r .. (b % 2^i - b % 2^(i - 1) > 0 and "1" or "0")
@@ -109,15 +110,15 @@ end
 
 string.decode_base64 = function (data)
 	local b = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"
+
 	data = string.gsub(data, "[^" .. b .. "=]", "")
 
-	return data:gsub(".", function (x)
+	return (data:gsub(".", function (x)
 		if x == "=" then
 			return ""
 		end
 
-		local r = ""
-		local f = b:find(x) - 1
+		local r, f = "", b:find(x) - 1
 
 		for i = 6, 1, -1 do
 			r = r .. (f % 2^i - f % 2^(i - 1) > 0 and "1" or "0")
@@ -136,7 +137,7 @@ string.decode_base64 = function (data)
 		end
 
 		return string.char(c)
-	end)
+	end))
 end
 
 string.is_snake_case = function (str)

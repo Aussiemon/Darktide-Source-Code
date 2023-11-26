@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/character/growing_up.lua
+
 local growing_up = {
 	option_1 = {
 		description = "loc_character_growing_up_01_description",

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/behavior/nodes/actions/bt_shoot_position_action.lua
+
 require("scripts/extension_systems/behavior/nodes/bt_node")
 
 local Animation = require("scripts/utilities/animation")
@@ -13,11 +15,14 @@ local DEFAULT_NOT_ALLOWED_COOLDOWN = 0.5
 BtShootPositionAction.enter = function (self, unit, breed, blackboard, scratchpad, action_data, t)
 	local animation_extension = ScriptUnit.extension(unit, "animation_system")
 	local locomotion_extension = ScriptUnit.extension(unit, "locomotion_system")
+
 	scratchpad.animation_extension = animation_extension
 	scratchpad.locomotion_extension = locomotion_extension
 	scratchpad.navigation_extension = ScriptUnit.extension(unit, "navigation_system")
 	scratchpad.perception_extension = ScriptUnit.extension(unit, "perception_system")
+
 	local perception_component = Blackboard.write_component(blackboard, "perception")
+
 	scratchpad.behavior_component = Blackboard.write_component(blackboard, "behavior")
 	scratchpad.perception_component = perception_component
 	scratchpad.combat_vector_component = blackboard.combat_vector
@@ -33,6 +38,7 @@ BtShootPositionAction.enter = function (self, unit, breed, blackboard, scratchpa
 	self:_start_aiming(unit, t, scratchpad, action_data)
 
 	scratchpad.original_rotation_speed = locomotion_extension:rotation_speed()
+
 	local rotation_speed = action_data.rotation_speed
 
 	if rotation_speed then
@@ -41,8 +47,7 @@ BtShootPositionAction.enter = function (self, unit, breed, blackboard, scratchpa
 end
 
 BtShootPositionAction.leave = function (self, unit, breed, blackboard, scratchpad, action_data, t, reason, destroy)
-	local state = scratchpad.state
-	local perception_component = scratchpad.perception_component
+	local state, perception_component = scratchpad.state, scratchpad.perception_component
 
 	if state == "aiming" then
 		MinionPerception.set_target_lock(unit, perception_component, false)
@@ -64,7 +69,7 @@ BtShootPositionAction.run = function (self, unit, breed, blackboard, scratchpad,
 	local state = scratchpad.state
 	local is_anim_rotation_driven = scratchpad.is_anim_rotation_driven
 
-	if is_anim_rotation_driven and scratchpad.start_rotation_timing and scratchpad.start_rotation_timing <= t then
+	if is_anim_rotation_driven and scratchpad.start_rotation_timing and t >= scratchpad.start_rotation_timing then
 		local destination = POSITION_LOOKUP[scratchpad.perception_component.target_unit]
 		local ignore_set_anim_driven = true
 
@@ -85,7 +90,7 @@ local DEFAULT_NUM_AGGROED_FOR_FRIENDLY_FIRE_CALLOUT = 8
 
 BtShootPositionAction._start_aiming = function (self, unit, t, scratchpad, action_data)
 	local shoot_turn_anims = action_data.shoot_turn_anims
-	local triggered_turn_anim = nil
+	local triggered_turn_anim
 
 	if shoot_turn_anims then
 		local rotation = Unit.local_rotation(unit, 1)
@@ -101,6 +106,7 @@ BtShootPositionAction._start_aiming = function (self, unit, t, scratchpad, actio
 			local turn_anim_event = Animation.random_event(turn_anim_events)
 			local start_move_rotation_timings = action_data.start_move_rotation_timings
 			local start_rotation_timing = start_move_rotation_timings[turn_anim_event]
+
 			scratchpad.start_rotation_timing = t + start_rotation_timing
 			scratchpad.move_start_anim_event_name = turn_anim_event
 			scratchpad.current_aim_anim_event = turn_anim_event
@@ -124,9 +130,11 @@ BtShootPositionAction._start_aiming = function (self, unit, t, scratchpad, actio
 	end
 
 	scratchpad.behavior_component.move_state = "attacking"
+
 	local aim_durations = action_data.aim_duration[scratchpad.current_aim_anim_event]
 	local diff_aim_durations = Managers.state.difficulty:get_table_entry_by_challenge(aim_durations)
 	local aim_duration = math.random_range(diff_aim_durations[1], diff_aim_durations[2])
+
 	scratchpad.state = "aiming"
 	scratchpad.aim_duration = t + aim_duration
 
@@ -139,7 +147,7 @@ BtShootPositionAction._start_aiming = function (self, unit, t, scratchpad, actio
 	if friendly_fire_callout_vo_event then
 		local num_aggroed_minions = Managers.state.pacing:num_aggroed_minions()
 
-		if DEFAULT_NUM_AGGROED_FOR_FRIENDLY_FIRE_CALLOUT <= num_aggroed_minions then
+		if num_aggroed_minions >= DEFAULT_NUM_AGGROED_FOR_FRIENDLY_FIRE_CALLOUT then
 			local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
 			local breed = unit_data_extension:breed()
 
@@ -175,7 +183,7 @@ BtShootPositionAction._update_aim_turning = function (self, unit, scratchpad, ai
 
 			scratchpad.current_aim_rotation_direction_name = "right"
 		end
-	elseif current_aim_rotation_direction_name ~= "fwd" and AIM_TURN_FWD_DOT_THRESHOLD <= aim_dot then
+	elseif current_aim_rotation_direction_name ~= "fwd" and aim_dot >= AIM_TURN_FWD_DOT_THRESHOLD then
 		animation_extension:anim_event(aim_rotation_anims.fwd)
 
 		scratchpad.current_aim_rotation_direction_name = "fwd"

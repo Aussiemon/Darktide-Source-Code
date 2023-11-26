@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/utilities/action/chain_lightning.lua
+
 local Attack = require("scripts/utilities/attack/attack")
 local AttackSettings = require("scripts/settings/damage/attack_settings")
 local Breed = require("scripts/utilities/breed")
@@ -20,6 +22,7 @@ local CLOSE_EPSILON_SQUARED = 6.25
 local LINE_OF_SIGHT_FILTER = "filter_chain_lightning_line_of_sight"
 local LINE_OF_SIGHT_NODE = "enemy_aim_target_02"
 local DEFAULT_MAX_TARGETS = 1
+
 ChainLightning.breadth_first_validation_functions = {
 	node_available_within_depth_and_target_alive = function (t, node, max_jumps)
 		if not HEALTH_ALIVE[node:value("unit")] then
@@ -34,6 +37,7 @@ ChainLightning.breadth_first_validation_functions = {
 
 		local depth = node:depth()
 		local outside_depth = max_jumps < depth
+
 		outside_depth = outside_depth or depth <= 0
 
 		if outside_depth then
@@ -51,6 +55,7 @@ ChainLightning.breadth_first_validation_functions = {
 
 		local depth = node:depth()
 		local outside_depth = max_jumps < depth
+
 		outside_depth = outside_depth or depth <= 0
 
 		if outside_depth then
@@ -124,13 +129,14 @@ ChainLightning.jump_validation_functions = {
 		return valid_target
 	end
 }
-local _is_in_cover, _has_line_of_sight, _check_line_of_sight = nil
+
+local _is_in_cover, _has_line_of_sight, _check_line_of_sight
 
 ChainLightning.jump = function (t, physics_world, source_node, hit_units, broadphase, enemy_side_names, initial_travel_direction, radius, max_angle, close_max_angle, vertical_max_angle, max_z_diff, on_add_func, add_func_context, jump_validation_func)
 	local source_unit = source_node:value("unit")
 	local query_position = POSITION_LOOKUP[source_unit]
 	local depth = source_node:depth()
-	local travel_direction = nil
+	local travel_direction
 
 	if depth > 1 then
 		local current_node = source_node
@@ -160,7 +166,7 @@ ChainLightning.jump = function (t, physics_world, source_node, hit_units, broadp
 
 	table.clear(BROADPHASE_RESULTS)
 
-	local num_results = broadphase:query(query_position, radius, BROADPHASE_RESULTS, enemy_side_names)
+	local num_results = broadphase.query(broadphase, query_position, radius, BROADPHASE_RESULTS, enemy_side_names)
 
 	if num_results > 0 then
 		for ii = 1, num_results do
@@ -244,7 +250,7 @@ ChainLightning.max_targets = function (time_in_action, chain_settings, depth, us
 		return DEFAULT_MAX_TARGETS
 	end
 
-	local max_target_settings = nil
+	local max_target_settings
 	local max_targets_at_time = chain_settings.max_targets_at_time
 	local max_targets_at_depth = chain_settings.max_targets_at_depth
 
@@ -252,7 +258,7 @@ ChainLightning.max_targets = function (time_in_action, chain_settings, depth, us
 		for ii = #max_targets_at_time, 1, -1 do
 			local entry = max_targets_at_time[ii]
 
-			if entry.t <= time_in_action then
+			if time_in_action >= entry.t then
 				max_target_settings = entry
 
 				break
@@ -294,14 +300,14 @@ ChainLightning.targeting_parameters = function (time_in_action, chain_settings, 
 	local stat_buff_max_radius = not is_staff and stat_buffs and stat_buffs.chain_lightning_max_radius or 0
 	local stat_buff_jump_time = not is_staff and stat_buffs and stat_buffs.chain_lightning_jump_time_multiplier or 1
 	local stat_buff_max_jumps = not is_staff and stat_buffs and stat_buffs.chain_lightning_max_jumps or stat_buffs and is_staff and stat_buffs.chain_lightning_staff_max_jumps or 0
-	local max_jumps = nil
+	local max_jumps
 	local max_jumps_at_time = chain_settings and chain_settings.max_jumps_at_time
 
 	if max_jumps_at_time then
 		for ii = #max_jumps_at_time, 1, -1 do
 			local entry = max_jumps_at_time[ii]
 
-			if entry.t <= time_in_action then
+			if time_in_action >= entry.t then
 				max_jumps = entry.num_jumps
 
 				break
@@ -310,10 +316,13 @@ ChainLightning.targeting_parameters = function (time_in_action, chain_settings, 
 	end
 
 	max_jumps = (max_jumps or chain_settings and chain_settings.max_jumps or DEFAULT_MAX_JUMPS) + stat_buff_max_jumps
+
 	local max_angle = chain_settings and chain_settings.max_angle or DEFAULT_MAX_ANGLE
 	local close_max_angle = chain_settings and chain_settings.close_max_angle or max_angle
+
 	max_angle = max_angle + stat_buff_max_angle
 	close_max_angle = close_max_angle + stat_buff_max_angle
+
 	local vertical_max_angle = DEFAULT_VERTICAL_MAX_ANGLE
 	local max_z_diff = (chain_settings and chain_settings.max_z_diff or DEFAULT_MAX_Z_DIFF) + stat_buff_max_z_diff
 	local radius = (chain_settings and chain_settings.radius or DEFAULT_RADIUS) + stat_buff_max_radius
@@ -343,7 +352,7 @@ ChainLightning.execute_attack = function (target_unit, attacking_unit, power_lev
 	local breed = Breed.unit_breed_or_nil(target_unit)
 	local breed_hit_zones = breed.hit_zones
 	local num_breed_hit_zones = #breed_hit_zones
-	local hit_zone_name = nil
+	local hit_zone_name
 	local num_iterations = 0
 
 	if not is_critical_strike then
@@ -359,6 +368,7 @@ ChainLightning.execute_attack = function (target_unit, attacking_unit, power_lev
 	end
 
 	hit_zone_name = hit_zone_name or "center_mass"
+
 	local hit_zone_actors = HitZone.get_actor_names(target_unit, hit_zone_name)
 	local num_hit_actor_names = #hit_zone_actors
 	local hit_actor_name = hit_zone_actors[math.random(1, num_hit_actor_names)]

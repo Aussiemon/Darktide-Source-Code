@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/inventory_weapon_details_view/inventory_weapon_details_view_content_blueprints.lua
+
 local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templates")
 local ItemPassTemplates = require("scripts/ui/pass_templates/item_pass_templates")
 local ColorUtilities = require("scripts/utilities/ui/colors")
@@ -17,6 +19,7 @@ local stats_horizontal_spacing_size = {
 	InventoryWeaponDetailsViewSettings.stats_size[2]
 }
 local item_header_display_name_font_style = table.clone(UIFontSettings.header_3)
+
 item_header_display_name_font_style.offset = {
 	0,
 	-75,
@@ -24,7 +27,9 @@ item_header_display_name_font_style.offset = {
 }
 item_header_display_name_font_style.text_horizontal_alignment = "center"
 item_header_display_name_font_style.text_vertical_alignment = "bottom"
+
 local item_header_sub_display_name_font_style = table.clone(UIFontSettings.body_small)
+
 item_header_sub_display_name_font_style.offset = {
 	0,
 	-55,
@@ -32,7 +37,9 @@ item_header_sub_display_name_font_style.offset = {
 }
 item_header_sub_display_name_font_style.text_horizontal_alignment = "center"
 item_header_sub_display_name_font_style.text_vertical_alignment = "bottom"
+
 local item_description_font_style = table.clone(UIFontSettings.body_small)
+
 item_description_font_style.offset = {
 	0,
 	0,
@@ -40,7 +47,9 @@ item_description_font_style.offset = {
 }
 item_description_font_style.text_horizontal_alignment = "center"
 item_description_font_style.text_vertical_alignment = "center"
+
 local item_category_header_font_style = table.clone(UIFontSettings.header_3)
+
 item_category_header_font_style.offset = {
 	0,
 	0,
@@ -49,7 +58,9 @@ item_category_header_font_style.offset = {
 item_category_header_font_style.text_horizontal_alignment = "left"
 item_category_header_font_style.text_vertical_alignment = "bottom"
 item_category_header_font_style.text_color = Color.ui_grey_light(255, true)
+
 local item_property_value_font_style = table.clone(UIFontSettings.body_small)
+
 item_property_value_font_style.offset = {
 	50,
 	0,
@@ -58,6 +69,7 @@ item_property_value_font_style.offset = {
 item_property_value_font_style.text_horizontal_alignment = "left"
 item_property_value_font_style.text_vertical_alignment = "center"
 item_property_value_font_style.text_color = Color.ui_grey_light(255, true)
+
 local blueprints = {
 	spacing_vertical_edge_margin = {
 		size = {
@@ -99,12 +111,15 @@ local blueprints = {
 			local style = widget.style
 			local text = element.text
 			local localized_text = Localize(text)
+
 			content.text = localized_text
+
 			local text_style = style.text
 			local ui_renderer = parent._ui_renderer
 			local size = content.size
 			local text_options = UIFonts.get_font_options_by_style(text_style)
 			local _, height = UIRenderer.text_size(ui_renderer, localized_text, text_style.font_type, text_style.font_size, size, text_options)
+
 			widget.content.size[2] = height
 		end
 	},
@@ -171,6 +186,7 @@ local blueprints = {
 			local item_display_name = ItemUtils.display_name(item)
 			local item_sub_display_name = ItemUtils.sub_display_name(item)
 			local rarity_color = ItemUtils.rarity_color(item)
+
 			content.display_name = item_display_name
 			content.sub_display_name = item_sub_display_name
 			content.sub_display_name = item_sub_display_name
@@ -184,6 +200,7 @@ local blueprints = {
 			local content = widget.content
 			local text = element.text
 			local value = element.value
+
 			content.text = Localize(text)
 			content.progress = 0
 			content.anim_time = 0
@@ -195,11 +212,13 @@ local blueprints = {
 
 			if anim_time then
 				anim_time = anim_time + dt
+
 				local duration = InventoryWeaponDetailsViewSettings.stats_anim_duration
 				local time_progress = math.clamp(anim_time / duration, 0, 1)
 				local anim_progress = math.ease_out_exp(time_progress)
 				local target_value = content.target_value
 				local anim_fraction = target_value * anim_progress
+
 				content.progress = anim_fraction
 
 				if time_progress < 1 then
@@ -244,6 +263,7 @@ local blueprints = {
 			local style = widget.style
 			local text = element.text
 			local localized_text = Utf8.upper(Localize(text))
+
 			content.text = localized_text
 		end
 	},
@@ -280,6 +300,7 @@ local blueprints = {
 			local style = widget.style
 			local text = element.text
 			local localized_text = Utf8.upper(Localize(text))
+
 			content.text = localized_text
 		end
 	}

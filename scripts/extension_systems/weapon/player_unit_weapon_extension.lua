@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/weapon/player_unit_weapon_extension.lua
+
 local Action = require("scripts/utilities/weapon/action")
 local ActionHandler = require("scripts/utilities/action/action_handler")
 local AimAssist = require("scripts/utilities/aim_assist")
@@ -23,37 +25,57 @@ local proc_events = BuffSettings.proc_events
 local slot_configuration = PlayerCharacterConstants.slot_configuration
 local slot_configuration_by_type = PlayerCharacterConstants.slot_configuration_by_type
 local template_types = WeaponTweakTemplateSettings.template_types
-local _get_block_anim_event = nil
+local _get_block_anim_event
 local PlayerUnitWeaponExtension = class("PlayerUnitWeaponExtension")
 
 PlayerUnitWeaponExtension.init = function (self, extension_init_context, unit, extension_init_data, ...)
 	self._unit = unit
 	self._player = extension_init_data.player
+
 	local world = extension_init_context.world
+
 	self._world = world
+
 	local wwise_world = extension_init_context.wwise_world
+
 	self._wwise_world = wwise_world
+
 	local physics_world = extension_init_context.physics_world
+
 	self._physics_world = physics_world
 	self._input_manager = Managers.input
+
 	local fp_ext = ScriptUnit.extension(unit, "first_person_system")
+
 	self._first_person_extension = fp_ext
+
 	local input_extension = ScriptUnit.extension(unit, "input_system")
+
 	self._input_extension = input_extension
+
 	local buff_extension = ScriptUnit.extension(unit, "buff_system")
+
 	self._buff_extension = buff_extension
+
 	local unit_data = ScriptUnit.extension(unit, "unit_data_system")
+
 	self._inventory_component = unit_data:read_component("inventory")
 	self._first_person_component = unit_data:read_component("first_person")
 	self._warp_charge_component = unit_data:read_component("warp_charge")
+
 	local warp_charge_write_component = unit_data:write_component("warp_charge")
+
 	self._default_wielded_slot_name = extension_init_data.default_wielded_slot_name
+
 	local block_component = unit_data:write_component("block")
+
 	block_component.is_blocking = false
 	block_component.has_blocked = false
 	block_component.is_perfect_blocking = false
 	self._block_component = unit_data:read_component("block")
+
 	local alternate_fire_component = unit_data:write_component("alternate_fire")
+
 	alternate_fire_component.is_active = false
 	alternate_fire_component.start_t = 0
 	self._alternate_fire_write_component = alternate_fire_component
@@ -68,29 +90,39 @@ PlayerUnitWeaponExtension.init = function (self, extension_init_context, unit, e
 	self._spread_control_component = unit_data:write_component("spread_control")
 	self._recoil_control_component = unit_data:write_component("recoil_control")
 	self._sway_control_component = unit_data:write_component("sway_control")
+
 	local shooting_status_component = unit_data:write_component("shooting_status")
+
 	shooting_status_component.shooting = false
 	shooting_status_component.shooting_end_time = 0
 	shooting_status_component.num_shots = 0
 	self._shooting_status_component = shooting_status_component
+
 	local stamina_component = unit_data:write_component("stamina")
+
 	stamina_component.current_fraction = 1
 	stamina_component.regeneration_paused = false
 	stamina_component.last_drain_time = 0
 	self._stamina_component = stamina_component
+
 	local weapon_lock_view_component = unit_data:write_component("weapon_lock_view")
+
 	weapon_lock_view_component.state = "in_active"
 	weapon_lock_view_component.pitch = 0
 	weapon_lock_view_component.yaw = 0
 	self._weapon_lock_view_component = weapon_lock_view_component
+
 	local critical_strike_seed = extension_init_data.critical_strike_seed
 	local critical_strike_component = unit_data:write_component("critical_strike")
+
 	critical_strike_component.seed = critical_strike_seed
 	critical_strike_component.prd_state = nil
 	critical_strike_component.is_active = false
 	critical_strike_component.num_critical_shots = 0
 	self._critical_strike_component = critical_strike_component
+
 	local scanning_component = unit_data:write_component("scanning")
+
 	scanning_component.is_active = false
 	scanning_component.line_of_sight = false
 	scanning_component.scannable_unit = nil
@@ -99,9 +131,13 @@ PlayerUnitWeaponExtension.init = function (self, extension_init_context, unit, e
 	self:_init_action_components(unit_data)
 
 	self._unit_data_extension = unit_data
+
 	local animation_extension = ScriptUnit.extension(unit, "animation_system")
+
 	self._animation_extension = animation_extension
+
 	local is_server = extension_init_data.is_server
+
 	self._is_server = is_server
 
 	if is_server then
@@ -109,6 +145,7 @@ PlayerUnitWeaponExtension.init = function (self, extension_init_context, unit, e
 	end
 
 	local is_local_unit = extension_init_data.is_local_unit
+
 	self._is_local_unit = is_local_unit
 	self._is_human_controlled = extension_init_data.is_human_unit
 	self._weapons = {}
@@ -141,6 +178,7 @@ end
 
 PlayerUnitWeaponExtension._init_action_components = function (self, unit_data_extension)
 	local action_sweep = unit_data_extension:write_component("action_sweep")
+
 	action_sweep.sweep_position = Vector3.zero()
 	action_sweep.sweep_rotation = Quaternion.identity()
 	action_sweep.sweep_aborted = false
@@ -150,7 +188,9 @@ PlayerUnitWeaponExtension._init_action_components = function (self, unit_data_ex
 	action_sweep.is_sticky = false
 	action_sweep.attack_direction = Vector3.zero()
 	action_sweep.sweep_state = "before_damage_window"
+
 	local action_shoot = unit_data_extension:write_component("action_shoot")
+
 	action_shoot.fire_state = "shot"
 	action_shoot.fire_at_time = 0
 	action_shoot.fire_last_t = 0
@@ -159,19 +199,31 @@ PlayerUnitWeaponExtension._init_action_components = function (self, unit_data_ex
 	action_shoot.shooting_charge_level = 0
 	action_shoot.shooting_position = Vector3.zero()
 	action_shoot.shooting_rotation = Quaternion.identity()
+
 	local action_shoot_pellets = unit_data_extension:write_component("action_shoot_pellets")
+
 	action_shoot_pellets.num_pellets_fired = 0
+
 	local action_flamer_gas = unit_data_extension:write_component("action_flamer_gas")
+
 	action_flamer_gas.range = 0
+
 	local action_reload = unit_data_extension:write_component("action_reload")
+
 	action_reload.has_refilled_ammunition = false
 	action_reload.has_removed_ammunition = false
 	action_reload.has_cleared_overheat = false
+
 	local action_unwield = unit_data_extension:write_component("action_unwield")
+
 	action_unwield.slot_to_wield = "none"
+
 	local action_heal_target_over_time = unit_data_extension:write_component("action_heal_target_over_time")
+
 	action_heal_target_over_time.target_unit = nil
+
 	local action_place = unit_data_extension:write_component("action_place")
+
 	action_place.position = Vector3.zero()
 	action_place.rotation = Quaternion.identity()
 	action_place.can_place = false
@@ -179,34 +231,48 @@ PlayerUnitWeaponExtension._init_action_components = function (self, unit_data_ex
 	action_place.placed_on_unit = nil
 	action_place.rotation_step = 0
 	self._action_place_component = action_place
+
 	local action_push = unit_data_extension:write_component("action_push")
+
 	action_push.has_pushed = false
+
 	local action_aim_projectile = unit_data_extension:write_component("action_aim_projectile")
+
 	action_aim_projectile.direction = Vector3.zero()
 	action_aim_projectile.momentum = Vector3.zero()
 	action_aim_projectile.rotation = Quaternion.identity()
 	action_aim_projectile.position = Vector3.zero()
 	action_aim_projectile.speed = 0
 	self._action_aim_projectile_component = action_aim_projectile
+
 	local action_module_charge = unit_data_extension:write_component("action_module_charge")
+
 	action_module_charge.charge_start_time = 0
 	action_module_charge.charge_level = 0
 	action_module_charge.max_charge = 0
 	self._action_module_charge_component = action_module_charge
+
 	local action_module_position_finder = unit_data_extension:write_component("action_module_position_finder")
+
 	action_module_position_finder.position = Vector3.zero()
 	action_module_position_finder.normal = Vector3.zero()
 	action_module_position_finder.position_valid = false
 	self._action_module_position_finder_component = action_module_position_finder
+
 	local action_module_targeting = unit_data_extension:write_component("action_module_targeting")
+
 	action_module_targeting.target_unit_1 = nil
 	action_module_targeting.target_unit_2 = nil
 	action_module_targeting.target_unit_3 = nil
 	self._action_module_targeting_component = action_module_targeting
+
 	local action_throw_luggable = unit_data_extension:write_component("action_throw_luggable")
+
 	action_throw_luggable.thrown = false
 	action_throw_luggable.slot_to_wield = "none"
+
 	local weapon_tweak_templates = unit_data_extension:write_component("weapon_tweak_templates")
+
 	weapon_tweak_templates.sway_template_name = "none"
 	weapon_tweak_templates.spread_template_name = "none"
 	weapon_tweak_templates.suppression_template_name = "none"
@@ -223,7 +289,9 @@ PlayerUnitWeaponExtension._init_action_components = function (self, unit_data_ex
 	weapon_tweak_templates.burninating_template_name = "none"
 	weapon_tweak_templates.size_of_flame_template_name = "none"
 	self._weapon_tweak_templates_component = weapon_tweak_templates
+
 	local aim_assist_ramp = unit_data_extension:write_component("aim_assist_ramp")
+
 	aim_assist_ramp.multiplier = 0
 	aim_assist_ramp.decay_end_time = 0
 	self._aim_assist_ramp_component = aim_assist_ramp
@@ -231,58 +299,75 @@ end
 
 PlayerUnitWeaponExtension.extensions_ready = function (self, world, unit)
 	local visual_loadout_extension = ScriptUnit.extension(unit, "visual_loadout_system")
+
 	self._visual_loadout_extension = visual_loadout_extension
+
 	local fx_extension = ScriptUnit.extension(unit, "fx_system")
+
 	self._fx_extension = fx_extension
+
 	local ability_extension = ScriptUnit.extension(unit, "ability_system")
+
 	self._ability_extension = ability_extension
+
 	local first_person_extension = ScriptUnit.extension(unit, "first_person_system")
 	local first_person_unit = first_person_extension:first_person_unit()
+
 	self._first_person_unit = first_person_unit
+
 	local health_extension = ScriptUnit.extension(unit, "health_system")
+
 	self._health_extension = health_extension
+
 	local specialization_extension = ScriptUnit.extension(unit, "specialization_system")
+
 	self._specialization_extension = specialization_extension
+
 	local weapon_recoil_system = ScriptUnit.extension(unit, "weapon_recoil_system")
+
 	self._weapon_recoil_system = weapon_recoil_system
+
 	local unit_data_ext = self._unit_data_extension
+
 	self._locomotion_component = unit_data_ext:read_component("locomotion")
-	local action_context = {
-		first_person_unit = first_person_unit,
-		world = self._world,
-		physics_world = self._physics_world,
-		wwise_world = Managers.world:wwise_world(self._world),
-		player_unit = self._unit,
-		is_server = self._is_server,
-		is_local_unit = self._is_local_unit,
-		is_human_controlled = self._is_human_controlled,
-		unit_data_extension = self._unit_data_extension,
-		first_person_extension = first_person_extension,
-		fx_extension = fx_extension,
-		animation_extension = ScriptUnit.extension(unit, "animation_system"),
-		weapon_extension = ScriptUnit.extension(unit, "weapon_system"),
-		weapon_spread_extension = ScriptUnit.extension(unit, "weapon_spread_system"),
-		weapon_recoil_extension = weapon_recoil_system,
-		camera_extension = ScriptUnit.extension(unit, "camera_system"),
-		ability_extension = ability_extension,
-		visual_loadout_extension = visual_loadout_extension,
-		smart_targeting_extension = ScriptUnit.extension(unit, "smart_targeting_system"),
-		input_extension = self._input_extension,
-		dialogue_input = ScriptUnit.extension_input(unit, "dialogue_system"),
-		weapon_action_component = self._weapon_action_component,
-		first_person_component = unit_data_ext:read_component("first_person"),
-		sprint_character_state_component = unit_data_ext:read_component("sprint_character_state"),
-		locomotion_component = self._locomotion_component,
-		inventory_component = self._inventory_component,
-		movement_state_component = unit_data_ext:read_component("movement_state"),
-		weapon_lock_view_component = self._weapon_lock_view_component,
-		critical_strike_component = self._critical_strike_component
-	}
+
+	local action_context = {}
+
+	action_context.first_person_unit = first_person_unit
+	action_context.world = self._world
+	action_context.physics_world = self._physics_world
+	action_context.wwise_world = Managers.world:wwise_world(self._world)
+	action_context.player_unit = self._unit
+	action_context.is_server = self._is_server
+	action_context.is_local_unit = self._is_local_unit
+	action_context.is_human_controlled = self._is_human_controlled
+	action_context.unit_data_extension = self._unit_data_extension
+	action_context.first_person_extension = first_person_extension
+	action_context.fx_extension = fx_extension
+	action_context.animation_extension = ScriptUnit.extension(unit, "animation_system")
+	action_context.weapon_extension = ScriptUnit.extension(unit, "weapon_system")
+	action_context.weapon_spread_extension = ScriptUnit.extension(unit, "weapon_spread_system")
+	action_context.weapon_recoil_extension = weapon_recoil_system
+	action_context.camera_extension = ScriptUnit.extension(unit, "camera_system")
+	action_context.ability_extension = ability_extension
+	action_context.visual_loadout_extension = visual_loadout_extension
+	action_context.smart_targeting_extension = ScriptUnit.extension(unit, "smart_targeting_system")
+	action_context.input_extension = self._input_extension
+	action_context.dialogue_input = ScriptUnit.extension_input(unit, "dialogue_system")
+	action_context.weapon_action_component = self._weapon_action_component
+	action_context.first_person_component = unit_data_ext:read_component("first_person")
+	action_context.sprint_character_state_component = unit_data_ext:read_component("sprint_character_state")
+	action_context.locomotion_component = self._locomotion_component
+	action_context.inventory_component = self._inventory_component
+	action_context.movement_state_component = unit_data_ext:read_component("movement_state")
+	action_context.weapon_lock_view_component = self._weapon_lock_view_component
+	action_context.critical_strike_component = self._critical_strike_component
 
 	self._action_handler:set_action_context(action_context)
 	self._sway_weapon_module:extensions_ready(world, unit)
 
 	local archetype = unit_data_ext:archetype()
+
 	self._archetype_stamina_template = archetype.stamina
 end
 
@@ -293,6 +378,7 @@ PlayerUnitWeaponExtension.on_player_unit_spawn = function (self, spawn_ammo_perc
 		local wieldable_component = unit_data_extension:write_component(slot_name)
 		local ammo_reserve = wieldable_component.current_ammunition_reserve
 		local spawn_ammo_reserve = math.ceil(ammo_reserve * spawn_ammo_percentage)
+
 		wieldable_component.current_ammunition_reserve = spawn_ammo_reserve
 	end
 end
@@ -304,6 +390,7 @@ PlayerUnitWeaponExtension.on_player_unit_respawn = function (self, respawn_ammo_
 		local wieldable_component = unit_data_extension:write_component(slot_name)
 		local ammo_reserve = wieldable_component.current_ammunition_reserve
 		local respawn_ammo_reserve = math.ceil(ammo_reserve * respawn_ammo_percentage)
+
 		wieldable_component.current_ammunition_reserve = respawn_ammo_reserve
 	end
 end
@@ -377,6 +464,7 @@ PlayerUnitWeaponExtension.fixed_update = function (self, unit, dt, t, fixed_fram
 	self._action_handler:fixed_update(dt, t)
 
 	self._last_fixed_t = t
+
 	local shooting_status_component = self._shooting_status_component
 	local movement_state_component = self._movement_state_component
 	local weapon_movement_state = WeaponMovementState.translate_movement_state_component(movement_state_component)
@@ -385,6 +473,7 @@ PlayerUnitWeaponExtension.fixed_update = function (self, unit, dt, t, fixed_fram
 
 	if spread_template then
 		local spread_settings = spread_template[weapon_movement_state]
+
 		num_shots_clear_time = spread_settings.immediate_spread.num_shots_clear_time or 0
 	end
 
@@ -414,7 +503,9 @@ PlayerUnitWeaponExtension.on_wieldable_slot_equipped = function (self, item, slo
 	}
 	local weapon = Weapon:new(weapon_init_data)
 	local weapons = self._weapons
+
 	weapons[slot_name] = weapon
+
 	local config = slot_configuration[slot_name]
 	local component_data = inventory_component_data[config.slot_type]
 	local base_ammo = {}
@@ -429,6 +520,7 @@ PlayerUnitWeaponExtension.on_wieldable_slot_equipped = function (self, item, slo
 				local weapon_tweak_templates = weapon.weapon_tweak_templates
 				local templates = weapon_tweak_templates[template_types.ammo]
 				local ammo_template = templates[template_name]
+
 				clip_size = math.floor(ammo_template.ammunition_clip or 0)
 			end
 
@@ -442,6 +534,7 @@ PlayerUnitWeaponExtension.on_wieldable_slot_equipped = function (self, item, slo
 				local weapon_tweak_templates = weapon.weapon_tweak_templates
 				local templates = weapon_tweak_templates[template_types.ammo]
 				local ammo_template = templates[template_name]
+
 				reserve_size = math.floor(ammo_template.ammunition_reserve or 0)
 			end
 
@@ -457,13 +550,16 @@ PlayerUnitWeaponExtension.on_wieldable_slot_equipped = function (self, item, slo
 			end
 		elseif key == "existing_unit_3p" then
 			inventory_slot_component[key] = optional_existing_unit_3p
-		elseif key ~= "unequip_slot" then
+		elseif key == "unequip_slot" then
+			-- Nothing
+		else
 			inventory_slot_component[key] = data.default_value
 		end
 	end
 
 	self._base_ammo_by_slot[slot_name] = base_ammo
 	self._base_clip_by_slot[slot_name] = base_clip
+
 	local buffs = weapon.buffs
 
 	if not from_server_correction_occurred then
@@ -488,7 +584,9 @@ PlayerUnitWeaponExtension.on_wieldable_slot_unequipped = function (self, slot_na
 	local component_data = inventory_component_data[config.slot_type]
 
 	for key, data in pairs(component_data) do
-		if key ~= "unequip_slot" then
+		if key == "unequip_slot" then
+			-- Nothing
+		else
 			inventory_slot_component[key] = data.default_value
 		end
 	end
@@ -512,6 +610,7 @@ PlayerUnitWeaponExtension.on_slot_wielded = function (self, slot_name, t, skip_w
 	local action_name = "action_wield"
 	local action_settings = Action.action_settings(weapon_template, action_name)
 	local weapon_tweak_templates_component = self._weapon_tweak_templates_component
+
 	weapon_tweak_templates_component.dodge_template_name = weapon_template.dodge_template or "none"
 	weapon_tweak_templates_component.sprint_template_name = weapon_template.sprint_template or "none"
 	weapon_tweak_templates_component.stamina_template_name = weapon_template.stamina_template or "none"
@@ -551,6 +650,7 @@ PlayerUnitWeaponExtension.on_slot_unwielded = function (self, slot_name, t)
 	self._weapon_recoil_system:snap_camera_and_reset_recoil()
 
 	local weapon_tweak_templates_component = self._weapon_tweak_templates_component
+
 	weapon_tweak_templates_component.dodge_template_name = "none"
 	weapon_tweak_templates_component.sprint_template_name = "none"
 	weapon_tweak_templates_component.stamina_template_name = "none"
@@ -608,6 +708,7 @@ PlayerUnitWeaponExtension._start_action = function (self, action_name, action_se
 	table.clear(action_params)
 
 	action_params.weapon = weapon
+
 	local inventory_component = self._inventory_component
 	local wielded_slot = inventory_component.wielded_slot
 	local condition_func_params = self:condition_func_params(wielded_slot)
@@ -619,7 +720,7 @@ PlayerUnitWeaponExtension.server_correction_occurred = function (self, unit)
 	table.clear(action_params)
 
 	local weapon = self:_wielded_weapon(self._inventory_component, self._weapons)
-	local action_objects, actions = nil
+	local action_objects, actions
 
 	if weapon then
 		action_params.weapon = weapon
@@ -634,7 +735,7 @@ PlayerUnitWeaponExtension.start_action = function (self, action_name, t)
 	local weapon = self:_wielded_weapon(self._inventory_component, self._weapons)
 	local weapon_template = weapon.weapon_template
 	local action_settings = Action.action_settings(weapon_template, action_name)
-	local used_input = nil
+	local used_input
 	local transition_type = "forced"
 
 	self:_start_action(action_name, action_settings, t, used_input, transition_type)
@@ -732,11 +833,10 @@ PlayerUnitWeaponExtension.blocked_attack = function (self, attacking_unit, hit_w
 	local fx_sources = weapon.fx_sources
 	local block_source = fx_sources._block
 	local fx_extension = self._fx_extension
-	local external_properties = nil
+	local external_properties
 	local is_ranged = attack_type == attack_types.ranged
 	local block_alias = is_ranged and "ranged_blocked_attack" or "melee_blocked_attack"
-	local sync_to_clients = true
-	local include_client = false
+	local sync_to_clients, include_client = true, false
 
 	fx_extension:trigger_gear_wwise_event_with_position(block_alias, external_properties, sound_position, sync_to_clients, include_client)
 
@@ -753,7 +853,7 @@ PlayerUnitWeaponExtension.get_shield_block_position = function (self, hit_world_
 	local shield_block_source_name = weapon_template.shield_block_source_name
 	local first_person_unit = self._first_person_unit
 	local first_person_rotation = Unit.local_rotation(first_person_unit, 1)
-	local shield_pivot, shield_forward = nil
+	local shield_pivot, shield_forward
 
 	if shield_block_source_name then
 		local fx_sources = weapon.weapon_template.fx_sources
@@ -772,12 +872,16 @@ PlayerUnitWeaponExtension.get_shield_block_position = function (self, hit_world_
 		end
 
 		local shield_pose = Unit.world_pose(node_unit_3p, node_index_3p)
+
 		shield_pivot = Matrix4x4.translation(shield_pose)
+
 		local shield_rotation = Matrix4x4.rotation(shield_pose)
+
 		shield_forward = Quaternion.right(shield_rotation)
 	else
 		local first_person_position = Unit.local_position(first_person_unit, 1)
 		local first_person_forward = Quaternion.forward(first_person_rotation)
+
 		shield_pivot = first_person_position + first_person_forward
 		shield_forward = first_person_forward
 	end
@@ -816,6 +920,7 @@ local temp_table = {}
 PlayerUnitWeaponExtension.condition_func_params = function (self, wielded_slot)
 	local weapon = self._weapons[wielded_slot]
 	local inventory_slot_component = weapon and weapon.inventory_slot_component
+
 	temp_table.unit = self._unit
 	temp_table.ability_extension = self._ability_extension
 	temp_table.health_extension = self._health_extension
@@ -858,9 +963,9 @@ PlayerUnitWeaponExtension.update_weapon_actions = function (self, fixed_frame)
 
 	action_params.weapon = weapon
 	action_params.player_unit = self._unit
+
 	local fixed_time_step = self._fixed_time_step
-	local dt = fixed_time_step
-	local t = fixed_frame * fixed_time_step
+	local dt, t = fixed_time_step, fixed_frame * fixed_time_step
 
 	self:_update_weapon_special(weapon, dt, t)
 	self._action_handler:update_actions(fixed_frame, "weapon_action", condition_func_params, actions, action_objects, action_params)
@@ -965,6 +1070,7 @@ PlayerUnitWeaponExtension._apply_stat_buffs = function (self, inventory_slot_com
 		local capacity_modifier = stat_buffs.ammo_reserve_capacity
 		local clip_size_modifier = stat_buffs.clip_size_modifier
 		local ammo_hard_limit = NetworkConstants.ammunition.max
+
 		inventory_slot_component.current_ammunition_reserve = math.clamp(math.floor(inventory_slot_component.current_ammunition_reserve * capacity_modifier), 0, ammo_hard_limit)
 		inventory_slot_component.max_ammunition_reserve = math.clamp(math.floor(inventory_slot_component.max_ammunition_reserve * capacity_modifier), 0, ammo_hard_limit)
 		inventory_slot_component.max_ammunition_clip = math.clamp(math.floor(inventory_slot_component.max_ammunition_clip * clip_size_modifier), 0, ammo_hard_limit)
@@ -973,8 +1079,7 @@ PlayerUnitWeaponExtension._apply_stat_buffs = function (self, inventory_slot_com
 end
 
 PlayerUnitWeaponExtension._update_overheat = function (self, dt, t)
-	local unit = self._unit
-	local first_person_unit = self._first_person_unit
+	local unit, first_person_unit = self._unit, self._first_person_unit
 
 	for _, slot in pairs(self._weapons) do
 		Overheat.update(dt, t, slot.inventory_slot_component, slot.weapon_template.overheat_configuration, unit, first_person_unit)
@@ -1010,6 +1115,7 @@ PlayerUnitWeaponExtension._update_ammo = function (self)
 					local current_ammo_reserve = inventory_slot_component.current_ammunition_reserve
 					local current_ammo_percent = current_ammo_reserve / max_ammo_reserve
 					local new_current_ammo = math.floor(base_current_ammo * capacity_modifier * current_ammo_percent)
+
 					inventory_slot_component.current_ammunition_reserve = new_current_ammo
 					inventory_slot_component.max_ammunition_reserve = clamped_new_max_ammo
 				end
@@ -1035,6 +1141,7 @@ PlayerUnitWeaponExtension._update_ammo = function (self)
 					local current_clip = inventory_slot_component.current_ammunition_clip
 					local current_clip_percent = current_clip / clip_size
 					local new_current_clip = math.floor(current_clip_percent * clamped_new_clip_size)
+
 					inventory_slot_component.current_ammunition_clip = new_current_clip
 					inventory_slot_component.max_ammunition_clip = clamped_new_clip_size
 				end
@@ -1062,8 +1169,11 @@ PlayerUnitWeaponExtension.move_speed_modifier = function (self, t)
 		local buff_extension = self._buff_extension
 		local stat_buffs = buff_extension:stat_buffs()
 		local multiplier = stat_buffs.static_movement_reduction_multiplier
+
 		mod_diff = mod_diff * multiplier
+
 		local new_static_modifier = 1 - mod_diff
+
 		modifier = modifier * new_static_modifier
 	end
 

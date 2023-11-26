@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/constant_elements/elements/loading/constant_element_loading.lua
+
 local MatchmakingConstants = require("scripts/settings/network/matchmaking_constants")
 local CinematicSceneTemplates = require("scripts/settings/cinematic_scene/cinematic_scene_templates")
 local HOST_TYPES = MatchmakingConstants.HOST_TYPES
@@ -194,7 +196,7 @@ ConstantElementLoading._on_state_changed = function (self, new_state_name)
 end
 
 ConstantElementLoading._update_state_views = function (self, state_view_settings)
-	local valid_view_name, view_settings_override, view_context = nil
+	local valid_view_name, view_settings_override, view_context
 
 	for i = 1, #state_view_settings do
 		local settings = state_view_settings[i]

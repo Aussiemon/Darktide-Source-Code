@@ -1,4 +1,7 @@
+﻿-- chunkname: @scripts/settings/dialogue/dialogue_lookup.lua
+
 local DialogueSettings = require("scripts/settings/dialogue/dialogue_settings")
+
 DialogueLookup = DialogueLookup or {}
 
 setmetatable(DialogueLookup, nil)

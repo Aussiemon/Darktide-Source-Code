@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/buff/weapon_traits_buff_templates/base_weapon_trait_buff_templates.lua
+
 local Action = require("scripts/utilities/weapon/action")
 local Attack = require("scripts/utilities/attack/attack")
 local AttackSettings = require("scripts/settings/damage/attack_settings")
@@ -28,6 +30,7 @@ local function _regain_toughness_proc_func(params, template_data, template_conte
 
 	if not toughness_extension then
 		local unit = template_context.unit
+
 		toughness_extension = ScriptUnit.extension(unit, "toughness_system")
 		template_data.toughness_extension = toughness_extension
 	end
@@ -51,10 +54,13 @@ local function _consecutive_hits_proc_func(params, template_data, template_conte
 	else
 		local max_stacks = 5
 		local number_of_hits = template_data.number_of_hits + 1
+
 		template_data.number_of_hits = number_of_hits
+
 		local template = template_context.template
 		local override = template_context.template_override_data
 		local number_of_hits_per_stack = override and override.number_of_hits_per_stack or template.number_of_hits_per_stack or DEFAULT_NUMBER_OF_HITS_PER_STACK
+
 		template_data.target_number_of_stacks = math.clamp(math.floor(number_of_hits / number_of_hits_per_stack), 0, max_stacks)
 		template_data.last_hit_time = t
 	end
@@ -71,11 +77,13 @@ function _consecutive_hits_proc_func(params, template_data, template_context, t)
 		local template = template_context.template
 		local max_stacks = template.child_max_stacks or 5
 		local number_of_hits = template_data.number_of_hits + 1
+
 		template_data.number_of_hits = number_of_hits
 
 		if template_data.number_of_hits > 1 then
 			local override = template_context.template_override_data
 			local number_of_hits_per_stack = override and override.number_of_hits_per_stack or template.number_of_hits_per_stack or DEFAULT_NUMBER_OF_HITS_PER_STACK
+
 			template_data.target_number_of_stacks = math.clamp(math.floor((number_of_hits - 1) / number_of_hits_per_stack), 0, max_stacks)
 			template_data.last_hit_time = t
 		end
@@ -90,10 +98,13 @@ function _consecutive_hits_same_target_proc_func(params, template_data, template
 	else
 		local max_stacks = 5
 		local number_of_hits = template_data.number_of_hits + 1
+
 		template_data.number_of_hits = number_of_hits
+
 		local template = template_context.template
 		local override = template_context.template_override_data
 		local number_of_hits_per_stack = override and override.number_of_hits_per_stack or template.number_of_hits_per_stack or DEFAULT_NUMBER_OF_HITS_PER_STACK
+
 		template_data.target_number_of_stacks = math.clamp(math.floor(number_of_hits / number_of_hits_per_stack), 0, max_stacks)
 		template_data.last_hit_time = t
 	end
@@ -104,6 +115,7 @@ local function _add_debuff_on_hit_start(template_data, template_context)
 	local target_buff_data = template.target_buff_data
 	local template_override_data = template_context.template_override_data
 	local override_target_buff_data = template_override_data.target_buff_data
+
 	template_data.internal_buff_name = override_target_buff_data and override_target_buff_data.internal_buff_name or target_buff_data.internal_buff_name
 	template_data.num_stacks_on_proc = override_target_buff_data and override_target_buff_data.num_stacks_on_proc or target_buff_data.num_stacks_on_proc
 	template_data.max_stacks = override_target_buff_data and override_target_buff_data.max_stacks or target_buff_data.max_stacks
@@ -148,28 +160,30 @@ local function _add_debuff_on_hit_proc(params, template_data, template_context, 
 	_add_proc_debuff(t, params, template_data, template_context)
 end
 
-local base_templates = {
-	base_weapon_trait_add_buff_after_proc = {
-		predicted = false,
-		class_name = "proc_buff",
-		conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
-		start_func = function (template_data, template_context)
-			local unit = template_context.unit
-			template_data.buff_extension = ScriptUnit.has_extension(unit, "buff_system")
-		end,
-		proc_func = function (params, template_data, template_context)
-			local t = FixedFrame.get_latest_fixed_time()
-			local buff_to_add = template_context.template.buff_to_add
+local base_templates = {}
 
-			template_data.buff_extension:add_internally_controlled_buff(buff_to_add, t, "item_slot_name", template_context.item_slot_name)
-		end
-	}
+base_templates.base_weapon_trait_add_buff_after_proc = {
+	predicted = false,
+	class_name = "proc_buff",
+	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
+	start_func = function (template_data, template_context)
+		local unit = template_context.unit
+
+		template_data.buff_extension = ScriptUnit.has_extension(unit, "buff_system")
+	end,
+	proc_func = function (params, template_data, template_context)
+		local t = FixedFrame.get_latest_fixed_time()
+		local buff_to_add = template_context.template.buff_to_add
+
+		template_data.buff_extension:add_internally_controlled_buff(buff_to_add, t, "item_slot_name", template_context.item_slot_name)
+	end
 }
 
 local function chained_hits_start_func(template_data, template_context)
 	local unit = template_context.unit
 	local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
 	local weapon_action_component = unit_data_extension:read_component("weapon_action")
+
 	template_data.weapon_action_component = weapon_action_component
 end
 
@@ -789,6 +803,7 @@ base_templates.infinite_melee_cleave_on_crit = {
 	conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded,
 	start_func = function (template_data, template_context)
 		local unit_data_extension = ScriptUnit.extension(template_context.unit, "unit_data_system")
+
 		template_data.critical_strike_component = unit_data_extension:read_component("critical_strike")
 	end,
 	check_active_func = function (template_data, template_context)
@@ -845,6 +860,7 @@ base_templates.pass_past_armor_on_crit = {
 	},
 	start_func = function (template_data, template_context)
 		local unit_data_extension = ScriptUnit.extension(template_context.unit, "unit_data_system")
+
 		template_data.critical_strike_component = unit_data_extension:read_component("critical_strike")
 	end,
 	conditional_stat_buffs_func = ConditionalFunctions.all(ConditionalFunctions.is_item_slot_wielded, function (template_data, template_context)
@@ -1004,18 +1020,17 @@ base_templates.targets_receive_rending_debuff_on_charged_shots = {
 		local target_buff_data = template_override_data.target_buff_data
 		local threshold_num_stacks_on_proc = target_buff_data.threshold_num_stacks_on_proc
 		local charge_level = params.charge_level
-		local num_stacks = nil
+		local num_stacks
 		local num_thresholds = #threshold_num_stacks_on_proc
 		local lowest_segment = threshold_num_stacks_on_proc[1]
 		local highest_segment = threshold_num_stacks_on_proc[num_thresholds]
 
 		if charge_level < lowest_segment.threshold then
 			num_stacks = lowest_segment.num_stacks
-		elseif highest_segment.threshold < charge_level then
+		elseif charge_level > highest_segment.threshold then
 			num_stacks = highest_segment.num_stacks
 		else
-			local p1 = 0
-			local p2 = 0
+			local p1, p2 = 0, 0
 			local segment_progress = 0
 
 			for ii = 1, num_thresholds do
@@ -1029,6 +1044,7 @@ base_templates.targets_receive_rending_debuff_on_charged_shots = {
 					break
 				else
 					local segment_num_stacks = segment.num_stacks
+
 					p1 = segment_num_stacks
 					p2 = segment_num_stacks
 				end
@@ -1095,6 +1111,7 @@ base_templates.toughness_recovery_on_chained_attacks = {
 
 			if not toughness_extension then
 				local unit = template_context.unit
+
 				toughness_extension = ScriptUnit.extension(unit, "toughness_system")
 				template_data.toughness_extension = toughness_extension
 			end
@@ -1142,6 +1159,7 @@ base_templates.power_bonus_scaled_on_stamina = {
 	conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded,
 	start_func = function (template_data, template_context)
 		local unit_data_extension = ScriptUnit.extension(template_context.unit, "unit_data_system")
+
 		template_data.stamina_read_component = unit_data_extension:read_component("stamina")
 	end,
 	min_max_step_func = function (template_data, template_context)
@@ -1154,9 +1172,11 @@ base_templates.power_bonus_scaled_on_stamina = {
 		return steps
 	end
 }
+
 local untauntable_breeds = {
 	chaos_daemonhost = true
 }
+
 base_templates.taunt_target_on_staggered_hit = {
 	child_buff_template = "taunt_target_child",
 	predicted = false,
@@ -1376,6 +1396,7 @@ base_templates.power_bonus_on_first_attack = {
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
 		local unit_data_extension = unit and ScriptUnit.has_extension(unit, "unit_data_system")
+
 		template_data.weapon_action_component = unit_data_extension and unit_data_extension:read_component("weapon_action")
 	end,
 	update_func = function (template_data, template_context)
@@ -1424,18 +1445,20 @@ base_templates.power_bonus_on_first_attack = {
 		local template = template_context.template
 		local template_override_data = template_context.template_override_data
 		local duration = template_override_data and template_override_data.no_power_duration or template.no_power_duration
+
 		template_data.no_power_duration = t + duration
 	end,
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
 		local unit_data_extension = unit and ScriptUnit.has_extension(unit, "unit_data_system")
+
 		template_data.weapon_action_component = unit_data_extension and unit_data_extension:read_component("weapon_action")
 		template_data.no_power_duration = 0
 	end,
 	update_func = function (template_data, template_context)
 		local t = FixedFrame.get_latest_fixed_time()
 
-		if template_data.no_power_duration <= t then
+		if t >= template_data.no_power_duration then
 			template_context.stat_buff_index = 1
 		else
 			template_context.stat_buff_index = 2
@@ -1482,6 +1505,7 @@ base_templates.guaranteed_melee_crit_after_crit_weakspot_kill = {
 	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
+
 		template_data.buff_extension = ScriptUnit.has_extension(unit, "buff_system")
 	end,
 	check_proc_func = CheckProcFunctions.all(CheckProcFunctions.on_melee_crit_hit, CheckProcFunctions.on_weakspot_kill),
@@ -1528,6 +1552,7 @@ base_templates.guaranteed_melee_crit_on_activated_kill = {
 	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
+
 		template_data.buff_extension = ScriptUnit.has_extension(unit, "buff_system")
 	end,
 	check_proc_func = function (params, template_data, template_context)
@@ -1627,6 +1652,7 @@ base_templates.toughness_regen_on_wepon_special_elites = {
 	check_proc_func = CheckProcFunctions.all(CheckProcFunctions.on_elite_hit, CheckProcFunctions.on_melee_weapon_special_hit),
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
+
 		template_data.toughness_extension = ScriptUnit.has_extension(unit, "toughness_system")
 	end,
 	proc_func = function (params, template_data, template_context)
@@ -1637,11 +1663,13 @@ base_templates.toughness_regen_on_wepon_special_elites = {
 		end
 	end
 }
+
 local windup_increases_power_valid_actions = {
 	character_state_change = true,
 	sweep = true,
 	targeted_dash_aim = true
 }
+
 base_templates.windup_increases_power_parent = {
 	stacks_to_remove = 3,
 	predicted = false,
@@ -1934,6 +1962,7 @@ base_templates.power_bonus_on_first_shot = {
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
 		local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
+
 		template_data.shooting_status = unit_data_extension:read_component("shooting_status")
 	end,
 	conditional_stat_buffs_func = function (template_data, template_context)
@@ -1954,6 +1983,7 @@ base_templates.power_bonus_on_first_shot = {
 local function _follow_up_shots_start(template_data, template_context)
 	local unit = template_context.unit
 	local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
+
 	template_data.shooting_status_component = unit_data_extension and unit_data_extension:read_component("shooting_status")
 end
 
@@ -1965,6 +1995,7 @@ local function _follow_up_shots_conditional_stat_buff_func(template_data, templa
 	local shooting_status_component = template_data.shooting_status_component
 	local num_shots_fired = shooting_status_component.num_shots
 	local is_follow_up_shots = num_shots_fired == 1 or num_shots_fired == 2
+
 	is_follow_up_shots = num_shots_fired == 1 or num_shots_fired == 2 or num_shots_fired == 3
 
 	return is_follow_up_shots
@@ -2136,6 +2167,7 @@ local function _continuous_fire_start_func(template_data, template_context)
 	local unit = template_context.unit
 	local item_slot_name = template_context.item_slot_name
 	local unit_data_extension = unit and ScriptUnit.has_extension(unit, "unit_data_system")
+
 	template_data.shooting_status_component = unit_data_extension and unit_data_extension:read_component("shooting_status")
 	template_data.weapon_action_component = unit_data_extension and unit_data_extension:read_component("weapon_action")
 	template_data.inventory_slot_component = unit_data_extension and unit_data_extension:read_component(item_slot_name)
@@ -2148,7 +2180,7 @@ local function _get_number_of_continuous_fire_steps(template_data, template_cont
 	if not use_combo then
 		local shooting_status_component = template_data.shooting_status_component
 		local num_shots = shooting_status_component.num_shots
-		local continuous_fire_step = nil
+		local continuous_fire_step
 		local continuous_fire_step_func = template.continuous_fire_step_func
 
 		if continuous_fire_step_func then
@@ -2243,6 +2275,7 @@ base_templates.toughness_on_continuous_fire = {
 			local uncapped_fire_steps = true
 			local num_fire_steps = _get_number_of_continuous_fire_steps(template_data, template_context, uncapped_fire_steps)
 			local give_the_thing = false
+
 			give_the_thing = template_context.template.use_combo and num_fire_steps == NetworkConstants.action_combo_count.max and true or current_num_fire_steps < num_fire_steps
 			template_data.num_fire_steps = num_fire_steps
 
@@ -2255,6 +2288,7 @@ base_templates.toughness_on_continuous_fire = {
 	specific_proc_func = {
 		on_ammo_consumed = function (params, template_data, template_context)
 			local num_fire_steps = template_data.num_fire_steps or 0
+
 			template_data.toughness_regain_multiplier = math.min(num_fire_steps, 5)
 
 			_regain_toughness_proc_func(params, template_data, template_context)
@@ -2348,6 +2382,7 @@ base_templates.warpcharge_stepped_bonus = {
 		local unit = template_context.unit
 		local unit_data_extension = unit and ScriptUnit.has_extension(unit, "unit_data_system")
 		local warp_charge_component = unit_data_extension and unit_data_extension:read_component("warp_charge")
+
 		template_data.warp_charge_component = warp_charge_component
 	end,
 	min_max_step_func = function (template_data, template_context)
@@ -2378,6 +2413,7 @@ base_templates.faster_charge_on_chained_secondary_attacks = {
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
 		local unit_data_extension = unit and ScriptUnit.has_extension(unit, "unit_data_system")
+
 		template_data.weapon_action_component = unit_data_extension and unit_data_extension:read_component("weapon_action")
 	end,
 	min_max_step_func = function (template_data, template_context)
@@ -2418,6 +2454,7 @@ base_templates.faster_charge_on_chained_secondary_attacks_parent = {
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
 		local unit_data_extension = unit and ScriptUnit.has_extension(unit, "unit_data_system")
+
 		template_data.weapon_action_component = unit_data_extension and unit_data_extension:read_component("weapon_action")
 	end,
 	specific_check_proc_funcs = {
@@ -2454,6 +2491,7 @@ base_templates.vents_warpcharge_on_weakspot_hits = {
 		local unit = template_context.unit
 		local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
 		local warp_charge_component = unit_data_extension:write_component("warp_charge")
+
 		template_data.warp_charge_component = warp_charge_component
 		template_data.counter = 0
 	end,
@@ -2532,6 +2570,7 @@ base_templates.uninterruptable_while_charging = {
 		local unit = template_context.unit
 		local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
 		local weapon_action_component = unit_data_extension:read_component("weapon_action")
+
 		template_data.weapon_action_component = weapon_action_component
 	end,
 	conditional_stat_buffs_func = function (template_data, template_context)
@@ -2553,6 +2592,7 @@ base_templates.stacking_buff_on_charge_level = {
 		local unit = template_context.unit
 		local unit_data_extension = unit and ScriptUnit.has_extension(unit, "unit_data_system")
 		local action_module_charge_component = unit_data_extension and unit_data_extension:read_component("action_module_charge")
+
 		template_data.action_module_charge_component = action_module_charge_component
 	end,
 	min_max_step_func = function (template_data, template_context)
@@ -2749,11 +2789,13 @@ base_templates.weakspot_hit_resets_dodge_count = {
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
 		local unit_data_extension = ScriptUnit.has_extension(unit, "unit_data_system")
+
 		template_data.dodge_write_component = unit_data_extension:write_component("dodge_character_state")
 	end,
 	proc_func = function (params, template_data, template_context)
 		local t = FixedFrame.approximate_latest_fixed_time()
 		local dodge_write_component = template_data.dodge_write_component
+
 		dodge_write_component.consecutive_dodges = 0
 	end
 }
@@ -2792,6 +2834,7 @@ base_templates.chance_based_on_aim_time = {
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
 		local unit_data_extension = unit and ScriptUnit.has_extension(unit, "unit_data_system")
+
 		template_data.alternate_fire_component = unit_data_extension and unit_data_extension:read_component("alternate_fire")
 		template_data.action_shoot_component = unit_data_extension and unit_data_extension:read_component("action_shoot")
 	end,
@@ -2834,6 +2877,7 @@ base_templates.crit_chance_based_on_ammo_left = {
 		local item_slot_name = template_context.item_slot_name
 		local unit = template_context.unit
 		local unit_data_extension = unit and ScriptUnit.has_extension(unit, "unit_data_system")
+
 		template_data.inventory_slot_component = unit_data_extension and unit_data_extension:read_component(item_slot_name)
 	end,
 	min_max_step_func = function (template_data, template_context)
@@ -2952,8 +2996,11 @@ base_templates.power_scales_with_clip_percentage = {
 			local current_ammunition_clip = slot_inventory_component.current_ammunition_clip
 			local max_ammunition_clip = slot_inventory_component.max_ammunition_clip
 			local percentage = current_ammunition_clip / max_ammunition_clip
+
 			percentage = 1 - (percentage - 0.1) / 0.9
+
 			local steps = math.floor(percentage * 5)
+
 			steps = math.clamp(steps, 0, 5)
 
 			return steps
@@ -2974,6 +3021,7 @@ base_templates.move_ammo_from_reserve_to_clip_on_crit = {
 	start_func = function (template_data, template_context)
 		local item_slot_name = template_context.item_slot_name
 		local unit_data_extension = ScriptUnit.extension(template_context.unit, "unit_data_system")
+
 		template_data.inventory_slot_component = unit_data_extension:write_component(item_slot_name)
 	end,
 	proc_func = function (params, template_data, template_context)
@@ -2984,6 +3032,7 @@ base_templates.move_ammo_from_reserve_to_clip_on_crit = {
 		local override_data = template_context.template_override_data
 		local total_ammo_to_move = override_data and override_data.num_ammmo_to_move or template_context.template.num_ammmo_to_move
 		local number_of_bullets_missing_from_clip = max_ammunition_clip - current_ammunition_clip
+
 		total_ammo_to_move = math.min(total_ammo_to_move, number_of_bullets_missing_from_clip, current_ammunition_reserve)
 		inventory_slot_component.current_ammunition_clip = current_ammunition_clip + total_ammo_to_move
 		inventory_slot_component.current_ammunition_reserve = current_ammunition_reserve - total_ammo_to_move

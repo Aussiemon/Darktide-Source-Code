@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/breed/breed_shoot_templates/cultist/cultist_gunner_shoot_templates.lua
+
 local DamageSettings = require("scripts/settings/damage/damage_settings")
 local EffectTemplates = require("scripts/settings/fx/effect_templates")
 local HitScanTemplates = require("scripts/settings/projectile/hit_scan_templates")
@@ -12,17 +14,25 @@ local cultist_gunner_default = {
 	line_effect = LineEffects.cultist_autogun_bullet
 }
 local cultist_gunner_sweep = table.clone(cultist_gunner_default)
+
 cultist_gunner_sweep.hit_scan_template = HitScanTemplates.gunner_bullet
 cultist_gunner_sweep.spread = math.degrees_to_radians(1.5)
+
 local cultist_gunner_aimed = table.clone(cultist_gunner_default)
+
 cultist_gunner_aimed.hit_scan_template = HitScanTemplates.gunner_bullet
 cultist_gunner_aimed.spread = math.degrees_to_radians(0.5)
+
 local cultist_gunner_shoot_close = table.clone(cultist_gunner_default)
+
 cultist_gunner_shoot_close.hit_scan_template = HitScanTemplates.gunner_bullet
 cultist_gunner_shoot_close.spread = math.degrees_to_radians(2)
+
 local cultist_gunner_shoot_spray_n_pray = table.clone(cultist_gunner_default)
+
 cultist_gunner_shoot_spray_n_pray.hit_scan_template = HitScanTemplates.gunner_spray_n_pray
 cultist_gunner_shoot_spray_n_pray.spread = math.degrees_to_radians(0.75)
+
 local shoot_templates = {
 	cultist_gunner_default = cultist_gunner_default,
 	cultist_gunner_sweep = cultist_gunner_sweep,

@@ -1,5 +1,7 @@
+﻿-- chunkname: @scripts/extension_systems/toughness/minion_toughness_husk_extension.lua
+
 local MinionToughnessHuskExtension = class("MinionToughnessHuskExtension")
-local _get_network_values = nil
+local _get_network_values
 local CLIENT_RPCS = {
 	"rpc_minion_toughness_attack_absorbed"
 }
@@ -9,9 +11,12 @@ MinionToughnessHuskExtension.init = function (self, extension_init_context, unit
 	self._unit = unit
 	self._game_session = game_session
 	self._game_object_id = game_object_id
+
 	local breed = extension_init_data.breed
+
 	self._toughness_template = breed.toughness_template
 	self._stored_attacks = {}
+
 	local network_event_delegate = extension_init_context.network_event_delegate
 
 	network_event_delegate:register_session_unit_events(self, game_object_id, unpack(CLIENT_RPCS))

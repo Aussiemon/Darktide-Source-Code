@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/utilities/smart_targeting.lua
+
 local Action = require("scripts/utilities/weapon/action")
 local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
 local SmartTargeting = {}
@@ -5,7 +7,7 @@ local SmartTargeting = {}
 SmartTargeting.smart_targeting_template = function (t, weapon_action_component)
 	local weapon_template = WeaponTemplate.current_weapon_template(weapon_action_component)
 	local _, action_settings = Action.current_action(weapon_action_component, weapon_template)
-	local smart_targeting_template = nil
+	local smart_targeting_template
 
 	if action_settings then
 		local template = action_settings.smart_targeting_template

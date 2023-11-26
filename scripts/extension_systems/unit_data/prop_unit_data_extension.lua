@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/unit_data/prop_unit_data_extension.lua
+
 local PropData = require("scripts/settings/prop_data/prop_data")
 local HitZone = require("scripts/utilities/attack/hit_zone")
 local PropUnitDataExtension = class("PropUnitDataExtension")
@@ -10,12 +12,18 @@ end
 PropUnitDataExtension.setup_from_component = function (self, armor_data_name)
 	local breed = PropData[armor_data_name]
 	local unit = self._unit
+
 	self._breed = breed
+
 	local hit_zones = breed.hit_zones
+
 	self._hit_zone_lookup, self._hit_zone_actors_lookup = HitZone.initialize_lookup(unit, hit_zones)
+
 	local bind_pose = Unit.local_pose(unit, 1)
+
 	self._bind_pose = Matrix4x4Box(bind_pose)
 	self._node_to_bind_pose = {}
+
 	local inv_bind_pose = Matrix4x4.inverse(bind_pose)
 
 	for i = 1, #hit_zones do
@@ -30,6 +38,7 @@ PropUnitDataExtension.setup_from_component = function (self, armor_data_name)
 
 			if not self._node_to_bind_pose[node_index] then
 				local bind_pose_for_node = Actor.pose(actor)
+
 				bind_pose_for_node = Matrix4x4.multiply(bind_pose_for_node, inv_bind_pose)
 				self._node_to_bind_pose[node_index] = Matrix4x4Box(bind_pose_for_node)
 			end

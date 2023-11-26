@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/breed/breed_actions/renegade/renegade_flamer_actions.lua
+
 local BreedShootTemplates = require("scripts/settings/breed/breed_shoot_templates")
 local RenegadeFlamerSettings = require("scripts/settings/specials/renegade_flamer_settings")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")

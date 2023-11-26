@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/hud/elements/combat_feed/hud_element_combat_feed_settings.lua
+
 local hud_element_combat_feed_settings = {
 	max_messages = 8,
 	entry_spacing = 10,

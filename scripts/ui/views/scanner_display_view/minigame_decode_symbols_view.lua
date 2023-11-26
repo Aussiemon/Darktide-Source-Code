@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/scanner_display_view/minigame_decode_symbols_view.lua
+
 local MinigameSettings = require("scripts/settings/minigame/minigame_settings")
 local ScannerDisplayViewDecodeSymbolsSettings = require("scripts/ui/views/scanner_display_view/scanner_display_view_decode_symbols_settings")
 local UIWidget = require("scripts/managers/ui/ui_widget")
@@ -99,8 +101,11 @@ MinigameDecodeSymbolsView._create_symbol_widgets = function (self)
 					}
 				}, scenegraph_id, nil, widget_size)
 				local widget = UIWidget.init(widget_name, widget_definition)
+
 				grid_widgets[#grid_widgets + 1] = widget
+
 				local offset = widget.offset
+
 				offset[1] = starting_offset_x + (widget_size[1] + spacing) * (j - 1)
 				offset[2] = starting_offset_y + (widget_size[2] + spacing) * (i - 1)
 			end
@@ -121,7 +126,8 @@ MinigameDecodeSymbolsView._draw_cursor = function (self, widgets_by_name, decode
 	local symbols_per_stage = MinigameSettings.decode_symbols_items_per_stage
 	local cursor_position = self:_get_cursor_position_from_time(decode_start_time, gameplay_time)
 	local widget_target = widgets_by_name.symbol_frame
-	widget_target.style.frame.offset[1] = starting_offset_x + (widget_size[1] + spacing) * (symbols_per_stage - 1) * cursor_position
+
+	widget_target.style.frame.offset[1] = starting_offset_x + (widget_size[1] + spacing) * ((symbols_per_stage - 1) * cursor_position)
 	widget_target.style.frame.offset[2] = starting_offset_y + (widget_size[2] + spacing) * (current_decode_stage - 1)
 
 	if on_target then
@@ -151,6 +157,7 @@ MinigameDecodeSymbolsView._draw_targets = function (self, widgets_by_name, decod
 	local starting_offset_x = ScannerDisplayViewDecodeSymbolsSettings.decode_symbol_starting_offset_x
 	local starting_offset_y = ScannerDisplayViewDecodeSymbolsSettings.decode_symbol_starting_offset_y
 	local widget_target = widgets_by_name.symbol_highlight
+
 	widget_target.style.highlight.offset[1] = starting_offset_x + (widget_size[1] + spacing) * (decode_target - 1)
 	widget_target.style.highlight.offset[2] = starting_offset_y + (widget_size[2] + spacing) * (current_decode_stage - 1)
 

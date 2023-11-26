@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/locomotion/player_unit_locomotion_extension.lua
+
 local ForceRotation = require("scripts/extension_systems/locomotion/utilities/force_rotation")
 local ForceTranslation = require("scripts/extension_systems/locomotion/utilities/force_translation")
 local HubMovementLocomotion = require("scripts/extension_systems/locomotion/utilities/hub_movement_locomotion")
@@ -22,20 +24,32 @@ PlayerUnitLocomotionExtension.init = function (self, extension_init_context, uni
 	self._world = extension_init_context.world
 	self._physics_world = extension_init_context.physics_world
 	self._is_server = extension_init_context.is_server
+
 	local data_ext = ScriptUnit.extension(unit, "unit_data_system")
 	local loc_component = data_ext:write_component("locomotion")
+
 	self._locomotion_component = loc_component
+
 	local loc_steering_component = data_ext:write_component("locomotion_steering")
+
 	self._locomotion_steering_component = loc_steering_component
 	self._first_person_component = data_ext:read_component("first_person")
 	self._movement_settings_component = data_ext:read_component("movement_settings")
+
 	local inair_state_component = data_ext:write_component("inair_state")
+
 	self._inair_state_component = inair_state_component
+
 	local loc_force_rotation_component = data_ext:write_component("locomotion_force_rotation")
+
 	self._locomotion_force_rotation_component = loc_force_rotation_component
+
 	local loc_force_translation_component = data_ext:write_component("locomotion_force_translation")
+
 	self._locomotion_force_translation_component = loc_force_translation_component
+
 	local loc_push_component = data_ext:write_component("locomotion_push")
+
 	self._locomotion_push_component = loc_push_component
 	self._character_state_component = data_ext:read_component("character_state")
 	self._ladder_character_state_component = data_ext:read_component("ladder_character_state")
@@ -49,8 +63,10 @@ PlayerUnitLocomotionExtension.init = function (self, extension_init_context, uni
 	self._is_local_unit = extension_init_component.is_local_unit
 	self._step_timer = 0
 	self._step_anim_timer = 0
+
 	local pos = Unit.local_position(unit, 1)
 	local rot = Unit.local_rotation(unit, 1)
+
 	loc_component.velocity_current = Vector3.zero()
 	loc_steering_component.disable_push_velocity = false
 	loc_steering_component.target_rotation = rot
@@ -79,12 +95,18 @@ PlayerUnitLocomotionExtension.init = function (self, extension_init_context, uni
 
 	if self._is_server then
 		game_object_component_or_game_session.position = pos
+
 		local y, p, r = Quaternion.to_yaw_pitch_roll(rot)
+
 		game_object_component_or_game_session.yaw = y
 		game_object_component_or_game_session.pitch = p
 		game_object_component_or_game_session.roll = r
 		game_object_component_or_game_session.move_speed = 0
 		game_object_component_or_game_session.parent_unit_id = NetworkConstants.invalid_level_unit_id
+	end
+
+	if false then
+		-- Nothing
 	end
 
 	self._animation_extension = ScriptUnit.extension(unit, "animation_system")
@@ -100,18 +122,19 @@ PlayerUnitLocomotionExtension.init = function (self, extension_init_context, uni
 	self._latest_simulated_position = Vector3Box(pos)
 	self._player_unit_linker = PlayerUnitLinker:new(self._world, unit)
 	self._network_max_mover_frames = NetworkConstants.max_mover_frames
+
 	local out_of_bounds_manager = Managers.state.out_of_bounds
 	local soft_cap_extents = out_of_bounds_manager:soft_cap_extents()
 	local soft_cap_x, soft_cap_y, soft_cap_z = Vector3.to_elements(soft_cap_extents)
-	self._soft_cap_z = soft_cap_z
-	self._soft_cap_y = soft_cap_y
-	self._soft_cap_x = soft_cap_x
+
+	self._soft_cap_x, self._soft_cap_y, self._soft_cap_z = soft_cap_x, soft_cap_y, soft_cap_z
 	self._fixed_time_step = Managers.state.game_session.fixed_time_step
 end
 
 PlayerUnitLocomotionExtension.game_object_initialized = function (self, session, object_id)
 	self._game_session = session
 	self._game_object_id = object_id
+
 	local init_context = {
 		is_husk = false,
 		player_character_constants = self._constants,
@@ -120,6 +143,7 @@ PlayerUnitLocomotionExtension.game_object_initialized = function (self, session,
 		game_session = session,
 		game_object_id = object_id
 	}
+
 	self._movement_direction_animation_control = ThirdPersonHubMovementDirectionAnimationControl:new(self._unit, init_context)
 end
 
@@ -129,9 +153,7 @@ end
 
 PlayerUnitLocomotionExtension._handle_oob = function (self, position, velocity)
 	local x, y, z = Vector3.to_elements(position)
-	local soft_x = self._soft_cap_x
-	local soft_y = self._soft_cap_y
-	local soft_z = self._soft_cap_z
+	local soft_x, soft_y, soft_z = self._soft_cap_x, self._soft_cap_y, self._soft_cap_z
 
 	if soft_x <= math.abs(x) or soft_y <= math.abs(y) or soft_z <= math.abs(z) then
 		self:_on_soft_oob()
@@ -152,6 +174,7 @@ PlayerUnitLocomotionExtension._update_movement = function (self, unit, dt, t, lo
 
 	if move_method == "script_driven" then
 		local on_ground = inair_component.on_ground
+
 		position = self:_update_script_driven_movement(unit, dt, t, locomotion_component, steering_component, position, calculate_fall_velocity, on_ground, mover)
 	elseif move_method == "script_driven_hub" then
 		position = self:_update_script_driven_hub_movement(unit, dt, t, locomotion_component, steering_component, position, calculate_fall_velocity, mover)
@@ -161,9 +184,8 @@ PlayerUnitLocomotionExtension._update_movement = function (self, unit, dt, t, lo
 
 	self._latest_simulated_position:store(position)
 
-	local flying_frames = Mover.flying_frames(mover)
-	local standing_frames = Mover.standing_frames(mover)
-	local max_frames = self._network_max_mover_frames
+	local flying_frames, standing_frames, max_frames = Mover.flying_frames(mover), Mover.standing_frames(mover), self._network_max_mover_frames
+
 	inair_component.flying_frames = math.min(flying_frames, max_frames)
 	inair_component.standing_frames = math.min(standing_frames, max_frames)
 
@@ -174,20 +196,18 @@ PlayerUnitLocomotionExtension._update_movement = function (self, unit, dt, t, lo
 		local rotation = Quaternion.look(-Vector3.up())
 		local physics_world = self._physics_world
 		local _, num_hits = PhysicsWorld.immediate_overlap(physics_world, "shape", "capsule", "position", position, "rotation", rotation, "size", size, "collision_filter", self._collision_filter)
-		local new_on_ground = nil
+		local new_on_ground
 
 		if num_hits > 0 then
 			local time_flying = flying_frames * dt
 
-			if Mover.collides_down(mover) and self._constants.time_before_slope_protection < time_flying then
+			if Mover.collides_down(mover) and time_flying > self._constants.time_before_slope_protection then
 				new_on_ground = false
 			else
 				new_on_ground = true
 			end
-		elseif flying_frames ~= 0 or steering_component.velocity_wanted.z > 0 then
-			new_on_ground = false
 		else
-			new_on_ground = true
+			new_on_ground = flying_frames == 0 and steering_component.velocity_wanted.z <= 0
 		end
 
 		inair_component.on_ground = new_on_ground
@@ -220,7 +240,7 @@ PlayerUnitLocomotionExtension._do_minion_collision = function (self, unit, dt, d
 		local flat_player_pos = Vector3.flat(current_position)
 		local query_radius = 1
 		local query_position = current_position + flat_move_direction * 0.5
-		local num_results = broadphase:query(query_position, query_radius, BROADPHASE_RESULTS, enemy_side_names)
+		local num_results = broadphase.query(broadphase, query_position, query_radius, BROADPHASE_RESULTS, enemy_side_names)
 
 		for i = 1, num_results do
 			local minion_unit = BROADPHASE_RESULTS[i]
@@ -236,7 +256,7 @@ PlayerUnitLocomotionExtension._do_minion_collision = function (self, unit, dt, d
 				local wanted_delta_towards = move_vector_towards_factor * flat_move_speed * dt
 				local minion_distance = math.max(Vector3.length(minion_offset) - player_radius - minion_radius, 0)
 				local debug_alpha = 200
-				local debug_color = nil
+				local debug_color
 				local needs_break = false
 
 				if minion_distance < wanted_delta_towards then
@@ -248,6 +268,7 @@ PlayerUnitLocomotionExtension._do_minion_collision = function (self, unit, dt, d
 
 					if math.abs(move_right_delta) < player_radius + minion_radius then
 						debug_color = Color.light_green(debug_alpha)
+
 						local angle = math.asin(move_vector_towards_factor)
 
 						if angle < math.pi / 4 then
@@ -266,6 +287,7 @@ PlayerUnitLocomotionExtension._do_minion_collision = function (self, unit, dt, d
 							force_stop = true
 						else
 							local factor_to_contact = (wanted_delta_towards - minion_distance) / wanted_delta_towards
+
 							dragged_velocity = flat_move_velocity * factor_to_contact
 							dragged_velocity.z = fall_speed
 							self._locomotion_steering_component.local_move_x = 0
@@ -274,6 +296,7 @@ PlayerUnitLocomotionExtension._do_minion_collision = function (self, unit, dt, d
 							flat_move_speed = Vector3.length(flat_move_velocity)
 							flat_move_direction = flat_move_velocity / flat_move_speed
 							force_stop = true
+
 							local speed_difference = Vector3.length(dragged_velocity) - check_dragged_velocity
 						end
 					else
@@ -297,13 +320,14 @@ end
 
 local function _check_minion_collision_constrained_pos(minion_unit, minion_position, check_position, minion_radius, minion_min_dist_sq, flat_player_pos, velocity_flat_normalized)
 	local minion_dist_to_line_sq = Vector3.distance_squared(minion_position, check_position)
-	local constrained_target = nil
-	local min_dot = -1
-	local max_dot = 1
+	local constrained_target
+	local min_dot, max_dot = -1, 1
 
 	if minion_dist_to_line_sq < minion_min_dist_sq then
 		constrained_target = minion_position + Vector3.normalize(check_position - minion_position) * minion_radius * 2
+
 		local dot = Vector3.dot(velocity_flat_normalized, Vector3.normalize(constrained_target - flat_player_pos))
+
 		min_dot = math.max(min_dot, dot)
 		max_dot = math.min(max_dot, dot)
 	end
@@ -324,6 +348,7 @@ PlayerUnitLocomotionExtension._update_script_driven_movement = function (self, u
 	end
 
 	velocity_wanted = self:_handle_push_velocity(velocity_wanted, on_ground, dt, t)
+
 	local drag_koeff = self._use_drag and 0.00855 or 0
 	local speed = Vector3.length(velocity_wanted)
 	local drag_force = drag_koeff * speed * speed * Vector3.normalize(-velocity_wanted)
@@ -331,6 +356,7 @@ PlayerUnitLocomotionExtension._update_script_driven_movement = function (self, u
 
 	if calculate_fall_velocity then
 		local fall_speed = dragged_velocity.z - self._constants.gravity * dt
+
 		dragged_velocity.z = fall_speed
 	end
 
@@ -348,6 +374,7 @@ PlayerUnitLocomotionExtension._update_script_driven_movement = function (self, u
 
 			if velocity_flat_length > 0.001 then
 				velocity_flat_normalized = velocity_flat_normalized / velocity_flat_length
+
 				local broadphase_system = Managers.state.extension:system("broadphase_system")
 				local broadphase = broadphase_system.broadphase
 				local side_system = Managers.state.extension:system("side_system")
@@ -355,12 +382,11 @@ PlayerUnitLocomotionExtension._update_script_driven_movement = function (self, u
 				local enemy_side_names = side:relation_side_names("enemy")
 				local flat_player_pos = Vector3.flat(current_position)
 				local constrained_target = Vector3(0, 0, 0)
-				local min_dot = -1
-				local max_dot = 1
+				local min_dot, max_dot = -1, 1
 				local query_radius = 0.75
 				local query_position = current_position + velocity_flat_normalized * 0.5
 				local num_constraints = 0
-				local num_results = broadphase:query(query_position, query_radius, BROADPHASE_RESULTS, enemy_side_names)
+				local num_results = broadphase.query(broadphase, query_position, query_radius, BROADPHASE_RESULTS, enemy_side_names)
 
 				for i = 1, num_results do
 					local minion_unit = BROADPHASE_RESULTS[i]
@@ -391,11 +417,14 @@ PlayerUnitLocomotionExtension._update_script_driven_movement = function (self, u
 
 				if max_dot < min_dot or max_dot <= 0 then
 					local fall_speed = dragged_velocity.z
+
 					dragged_velocity = Vector3.zero()
 					dragged_velocity.z = fall_speed
 				elseif num_constraints > 0 then
 					constrained_target = constrained_target / num_constraints
+
 					local fall_speed = dragged_velocity.z
+
 					dragged_velocity = constrained_target - flat_player_pos
 
 					if Vector3.length(dragged_velocity) > 0.001 then
@@ -421,7 +450,7 @@ PlayerUnitLocomotionExtension._update_script_driven_movement = function (self, u
 	local dragged_z_velocity = dragged_velocity.z
 	local wanted_z_velocity = velocity_wanted.z
 
-	if wanted_z_velocity <= 0 then
+	if not (wanted_z_velocity > 0) then
 		if mover_z_velocity > 0.01 then
 			final_velocity.z = wanted_z_velocity
 		end
@@ -441,6 +470,7 @@ PlayerUnitLocomotionExtension._update_script_driven_movement = function (self, u
 	end
 
 	locomotion_component.velocity_current = final_velocity
+
 	local movement_state_component = self._movement_state_component
 
 	if movement_state_component.is_crouching then
@@ -492,8 +522,9 @@ PlayerUnitLocomotionExtension._update_new_push_velocity = function (self, t)
 	local locomotion_push = self._locomotion_push_component
 	local new_velocity = locomotion_push.new_velocity
 
-	if Vector3.length_squared(new_velocity) > 0 and locomotion_push.time_to_apply <= t then
+	if Vector3.length_squared(new_velocity) > 0 and t >= locomotion_push.time_to_apply then
 		local current_velocity = locomotion_push.velocity
+
 		locomotion_push.velocity = current_velocity + new_velocity
 		locomotion_push.new_velocity = Vector3.zero()
 	end
@@ -502,7 +533,7 @@ end
 PlayerUnitLocomotionExtension._apply_push_velocity = function (self, velocity_wanted, dt)
 	local locomotion_push = self._locomotion_push_component
 	local push_velocity = locomotion_push.velocity
-	local new_velocity = nil
+	local new_velocity
 
 	if Vector3.length_squared(push_velocity) == 0 then
 		new_velocity = velocity_wanted
@@ -517,7 +548,9 @@ PlayerUnitLocomotionExtension._apply_push_velocity = function (self, velocity_wa
 			new_velocity = velocity_wanted - push_direction * velocity_to_push_comparison + push_velocity
 		else
 			push_velocity = push_velocity + push_direction * velocity_to_push_comparison * dt
+
 			local wanted_component = velocity_wanted - push_direction * velocity_to_push_comparison
+
 			new_velocity = wanted_component + push_velocity
 		end
 	end
@@ -550,6 +583,7 @@ PlayerUnitLocomotionExtension._decay_push_velocity = function (self, on_ground, 
 	if not on_ground then
 		local final_velocity_dir = Vector3.normalize(final_velocity)
 		local push_scale = math.max(Vector3.dot(push_dir, final_velocity_dir), 0)^2
+
 		new_push_velocity = new_push_velocity * push_scale
 	end
 
@@ -627,6 +661,7 @@ PlayerUnitLocomotionExtension._update_rotation = function (self, unit, dt, t, lo
 	local look_rotation = self._first_person_component.rotation
 	local current_rotation = locomotion_component.rotation
 	local new_rotation, new_target_rotation = self:_calculate_rotation(unit, dt, t, locomotion_component, steering_component, force_rotation_component, look_rotation, steering_component.velocity_wanted, locomotion_component.velocity_current, current_rotation, steering_component.target_rotation)
+
 	steering_component.target_rotation = new_target_rotation
 	locomotion_component.rotation = new_rotation
 end
@@ -687,7 +722,7 @@ PlayerUnitLocomotionExtension.post_update = function (self, unit, dt, t)
 	local force_translation_component = self._locomotion_force_translation_component
 	local abs_pos = self._latest_simulated_position:unbox()
 	local remainder_t = t - self._last_fixed_t
-	local simulated_pos = nil
+	local simulated_pos
 
 	if force_translation_component.use_force_translation then
 		simulated_pos = ForceTranslation.get_translation(force_translation_component, locomotion_steering_component, t)
@@ -696,10 +731,12 @@ PlayerUnitLocomotionExtension.post_update = function (self, unit, dt, t)
 
 		if mode == "extrapolate" then
 			local extrapolation = locomotion_component.velocity_current * remainder_t
+
 			simulated_pos = abs_pos + extrapolation
 		elseif mode == "interpolate" then
 			local old_pos = self._old_position:unbox()
 			local t_value = remainder_t / self._fixed_time_step
+
 			simulated_pos = Vector3.lerp(old_pos, abs_pos, math.min(t_value, 1))
 		elseif mode == "raw" then
 			simulated_pos = abs_pos
@@ -731,7 +768,7 @@ PlayerUnitLocomotionExtension.post_update = function (self, unit, dt, t)
 
 		GameSession.set_game_object_field(game_session, game_object_id, "move_speed", math.clamp(movement_speed, 0, 20))
 
-		local sync_pos, sync_rot = nil
+		local sync_pos, sync_rot
 		local abs_rot = locomotion_component.rotation
 
 		if parent_unit then
@@ -755,7 +792,7 @@ local HUB_MOVEMENT_ROTATION_EPS = 0.3
 local HUB_MOVEMENT_ROTATION_EPS_SQ = HUB_MOVEMENT_ROTATION_EPS * HUB_MOVEMENT_ROTATION_EPS
 
 PlayerUnitLocomotionExtension._calculate_rotation = function (self, unit, dt, t, data, steering_component, force_rotation_component, look_rotation, velocity_wanted, velocity_current, current_rotation, current_target_rotation)
-	local final_rotation = nil
+	local final_rotation
 	local current_unnormalized_direction_flat = Vector3_flat(Quaternion_forward(look_rotation))
 	local flat_look_rotation = Quaternion_look(current_unnormalized_direction_flat)
 	local target_rotation = steering_component.target_rotation
@@ -780,6 +817,7 @@ PlayerUnitLocomotionExtension._calculate_rotation = function (self, unit, dt, t,
 			final_rotation = PlayerMovement.calculate_final_unit_rotation(current_rotation, target_rotation, target_rotation, dt * 5)
 		else
 			target_rotation = flat_look_rotation
+
 			local velocity_dot = Vector3_dot(flat_current_velocity, current_unnormalized_direction_flat)
 
 			if velocity_dot < -0.01 then
@@ -796,9 +834,11 @@ PlayerUnitLocomotionExtension._calculate_rotation = function (self, unit, dt, t,
 
 		if speed_sq < HUB_MOVEMENT_ROTATION_EPS_SQ then
 			local turn_in_place_rot_speed_multiplier = movement_settings.shared.turn_in_place_rot_speed_multiplier
+
 			final_rotation = math.quat_rotate_towards(current_rotation, current_target_rotation, movement_settings_move_state.rotation_speed_rad * dt * turn_in_place_rot_speed_multiplier)
 		else
 			target_rotation = Quaternion.normalize(Quaternion_look(flat_current_velocity))
+
 			local shared_movement_settings = movement_settings.shared
 			local animation_rotation_correction_weight = shared_movement_settings.animation_rotation_correction_weight
 			local rotation_correction = 0
@@ -825,7 +865,7 @@ end
 PlayerUnitLocomotionExtension.set_parent_unit = function (self, unit)
 	local locomotion_component = self._locomotion_component
 	local unit_id = NetworkConstants.invalid_level_unit_id
-	local is_level_unit = nil
+	local is_level_unit
 
 	if unit then
 		is_level_unit, unit_id = Managers.state.unit_spawner:game_object_id_or_level_index(unit)
@@ -866,8 +906,10 @@ end
 PlayerUnitLocomotionExtension.extensions_ready = function (self, world, unit)
 	self._first_person_extension = ScriptUnit.extension(unit, "first_person_system")
 	self._visual_loadout_extension = ScriptUnit.extension(unit, "visual_loadout_system")
+
 	local component_system = Managers.state.extension:system("component_system")
 	local components = component_system:get_components(unit, "FootIk")
+
 	self._foot_ik_script_component = components[1]
 
 	if not self._is_server then
@@ -877,17 +919,18 @@ PlayerUnitLocomotionExtension.extensions_ready = function (self, world, unit)
 			is_local_unit = self._is_local_unit,
 			is_server = self._is_server
 		}
+
 		self._movement_direction_animation_control = ThirdPersonHubMovementDirectionAnimationControl:new(unit, init_context)
 	end
 end
 
 PlayerUnitLocomotionExtension.server_correction_occurred = function (self, unit, from_frame)
 	self._last_fixed_t = from_frame * self._fixed_time_step
+
 	local mover = Unit.mover(unit)
 	local position = self._locomotion_component.position
 	local inair_state_component = self._inair_state_component
-	local flying_frames = inair_state_component.flying_frames
-	local standing_frames = inair_state_component.standing_frames
+	local flying_frames, standing_frames = inair_state_component.flying_frames, inair_state_component.standing_frames
 
 	Mover.set_state(mover, position, flying_frames, standing_frames)
 	self._player_unit_linker:mispredict_happened()

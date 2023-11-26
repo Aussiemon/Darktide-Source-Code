@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/perception/target_selection_templates/renegade_netgunner_target_selection_template.lua
+
 local AttackIntensity = require("scripts/utilities/attack_intensity")
 local MinionMovement = require("scripts/utilities/minion_movement")
 local MinionTargetSelection = require("scripts/utilities/minion_target_selection")
@@ -9,16 +11,27 @@ local function _calculate_score(breed, unit, target_unit, distance_sq, is_new_ta
 	local target_breed = target_unit_data_extension:breed()
 	local score = 0
 	local distance_weight, inverse_radius = MinionTargetSelection.distance_weight(target_selection_weights, distance_sq, breed)
+
 	score = score + distance_weight
+
 	local occupied_slots_weight = MinionTargetSelection.occupied_slots_weight(target_selection_weights, target_unit, target_breed, is_new_target, inverse_radius)
+
 	score = score + occupied_slots_weight
+
 	local archetype_weight = MinionTargetSelection.archetype_weight(target_selection_weights, target_unit, target_breed)
+
 	score = score + archetype_weight
+
 	local targeted_by_monster_weight = MinionTargetSelection.targeted_by_monster_weight(target_selection_weights, target_unit, unit)
+
 	score = score + targeted_by_monster_weight
+
 	local disabled_weight = MinionTargetSelection.disabled_weight(target_selection_weights, target_unit, target_breed)
+
 	score = score + disabled_weight
+
 	local weight_multiplier = MinionTargetSelection.weight_multiplier(target_unit)
+
 	score = score * weight_multiplier
 
 	return math.max(score, 0)
@@ -29,7 +42,7 @@ local target_selection_template = {}
 target_selection_template.renegade_netgunner = function (unit, side, perception_component, buff_extension, breed, target_units, line_of_sight_lookup, t, threat_units, force_new_target_attempt, force_new_target_attempt_config_or_nil, debug_target_weighting_or_nil)
 	local current_target_unit = perception_component.target_unit
 	local position = POSITION_LOOKUP[unit]
-	local best_score, best_target_unit, closest_distance_sq, closest_z_distance = nil
+	local best_score, best_target_unit, closest_distance_sq, closest_z_distance
 	local Vector3_distance_squared = Vector3.distance_squared
 	local valid_enemy_player_units = side.valid_enemy_player_units
 
@@ -49,26 +62,22 @@ target_selection_template.renegade_netgunner = function (unit, side, perception_
 			local target_position = POSITION_LOOKUP[current_target_unit]
 			local distance_sq = Vector3_distance_squared(position, target_position)
 			local z_distance = math.abs(position.z - target_position.z)
-			closest_z_distance = z_distance
-			closest_distance_sq = distance_sq
-			best_target_unit = current_target_unit
+
+			best_target_unit, closest_distance_sq, closest_z_distance = current_target_unit, distance_sq, z_distance
 
 			if force_new_target_attempt then
 				best_score = -math.huge
 			else
 				local is_new_target = false
+
 				best_score = _calculate_score(breed, unit, current_target_unit, distance_sq - stickiness, is_new_target, debug_target_weighting_or_nil)
 			end
 		else
-			closest_z_distance = math.huge
-			closest_distance_sq = math.huge
-			best_target_unit = nil
+			best_target_unit, closest_distance_sq, closest_z_distance = nil, math.huge, math.huge
 			best_score = -math.huge
 		end
 	else
-		closest_z_distance = math.huge
-		closest_distance_sq = math.huge
-		best_target_unit = nil
+		best_target_unit, closest_distance_sq, closest_z_distance = nil, math.huge, math.huge
 		best_score = -math.huge
 	end
 
@@ -92,13 +101,10 @@ target_selection_template.renegade_netgunner = function (unit, side, perception_
 				local target_position = POSITION_LOOKUP[taunter_unit]
 				local distance_to_target_sq = Vector3_distance_squared(position, target_position)
 				local z_distance = math.abs(position.z - target_position.z)
-				closest_z_distance = z_distance
-				closest_distance_sq = distance_to_target_sq
-				best_target_unit = taunter_unit
+
+				best_target_unit, closest_distance_sq, closest_z_distance = taunter_unit, distance_to_target_sq, z_distance
 			else
-				closest_z_distance = math.huge
-				closest_distance_sq = math.huge
-				best_target_unit = nil
+				best_target_unit, closest_distance_sq, closest_z_distance = nil, math.huge, math.huge
 			end
 		else
 			local num_target_units = #target_units
@@ -120,9 +126,8 @@ target_selection_template.renegade_netgunner = function (unit, side, perception_
 
 						if best_score < score then
 							local z_distance = math.abs(position.z - target_position.z)
-							closest_z_distance = z_distance
-							closest_distance_sq = distance_sq
-							best_target_unit = target_unit
+
+							best_target_unit, closest_distance_sq, closest_z_distance = target_unit, distance_sq, z_distance
 							best_score = score
 						end
 					end
@@ -133,6 +138,7 @@ target_selection_template.renegade_netgunner = function (unit, side, perception_
 
 	if best_target_unit then
 		local has_line_of_sight = line_of_sight_lookup[best_target_unit]
+
 		perception_component.has_line_of_sight = has_line_of_sight
 		perception_component.target_distance = math.sqrt(closest_distance_sq)
 		perception_component.target_distance_z = closest_z_distance

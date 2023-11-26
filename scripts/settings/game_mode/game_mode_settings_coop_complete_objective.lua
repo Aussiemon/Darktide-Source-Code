@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/game_mode/game_mode_settings_coop_complete_objective.lua
+
 local settings = {
 	host_singleplay = false,
 	bot_backfilling_allowed = true,

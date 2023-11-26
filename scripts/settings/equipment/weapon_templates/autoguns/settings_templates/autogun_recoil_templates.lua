@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/equipment/weapon_templates/autoguns/settings_templates/autogun_recoil_templates.lua
+
 local RecoilTemplate = require("scripts/utilities/recoil_template")
 local generate_offset_range = RecoilTemplate.generate_offset_range
 local create_scale = RecoilTemplate.create_scale
@@ -752,6 +754,7 @@ local burst_offset_range_moving = generate_offset_range(6, 0.1, 0, 0.95, create_
 local burst_random_range = generate_offset_range(9, 0.01, 0.02, 0.95, create_scale(burst_random_scale))
 local singleshot_offset_range = generate_offset_range(6, 0.0225, 0, 0.8, create_scale(singleshot_scale))
 local singleshot_random_range = generate_offset_range(6, 0.01, 0.02, 0.8, create_scale(singleshot_random_scale))
+
 recoil_templates.default_autogun_assault = {
 	still = {
 		camera_recoil_percentage = 0.75,
@@ -843,11 +846,13 @@ recoil_templates.default_autogun_assault = {
 	}
 }
 pitch_default = 0.03
+
 local firerate = 0.096
 local shot_decay = 3.5
 local rise_time = 0.04784000000000001
 local decay_time = firerate - rise_time
 local shot_rise = decay_time * shot_decay
+
 recoil_templates.default_autogun_killshot = {
 	still = {
 		camera_recoil_percentage = 0.5,

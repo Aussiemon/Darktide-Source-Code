@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/options/options_templates.lua
+
 local category_settings = {
 	{
 		path = "scripts/settings/options/interface_settings"
@@ -35,7 +37,7 @@ local function generate_settings(entries)
 
 	for _, entry in ipairs(entries) do
 		local path = entry.path
-		local config = nil
+		local config
 
 		if entry.dofile then
 			config = dofile(path)
@@ -60,7 +62,8 @@ local function generate_settings(entries)
 			validation_function = entry.validation_function,
 			can_be_reset = can_be_reset
 		}
-		local latest_group_name = nil
+
+		local latest_group_name
 
 		for _, setting in ipairs(settings) do
 			latest_group_name = settings.group_name or latest_group_name

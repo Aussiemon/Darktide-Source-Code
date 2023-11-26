@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/input/input_locale_name_overrides.lua
+
 local input_locale_name_overrides = {
 	keyboard = {
 		["numpad 0"] = Localize("loc_keyboard_input_numpad_0"),

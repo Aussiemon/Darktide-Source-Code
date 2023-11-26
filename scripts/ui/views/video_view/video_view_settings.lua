@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/video_view/video_view_settings.lua
+
 local VideoViewSettings = {
 	viewport_layer = 1,
 	level_name = "content/levels/ui/video_view/video_view",

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/hud/elements/mission_speaker_popup/hud_element_mission_speaker_popup_settings.lua
+
 local hud_element_mission_speaker_popup_settings = {
 	animation_out_duration = 0.3,
 	bar_spacing = 10,

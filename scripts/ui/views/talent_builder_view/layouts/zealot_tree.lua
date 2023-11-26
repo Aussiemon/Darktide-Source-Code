@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/talent_builder_view/layouts/zealot_tree.lua
+
 return {
 	name = "zealot_tree",
 	node_points = 30,

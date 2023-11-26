@@ -1,34 +1,39 @@
+﻿-- chunkname: @scripts/ui/views/lobby_view/lobby_view_content_blueprints.lua
+
 local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templates")
 local LobbyViewSettings = require("scripts/ui/views/lobby_view/lobby_view_settings")
 local MasterItems = require("scripts/backend/master_items")
 local ColorUtilities = require("scripts/utilities/ui/colors")
 local grid_width = LobbyViewSettings.grid_size[1]
-local blueprints = {
-	spacing_vertical = {
-		size = {
-			grid_width,
-			LobbyViewSettings.list_button_spacing
-		}
-	},
-	spacing_horizontal = {
-		size = {
-			(ButtonPassTemplates.ready_button.size[1] - ButtonPassTemplates.default_button_small.size[1]) * 0.5,
-			ButtonPassTemplates.default_button_small.size[2]
-		}
-	},
-	ready_button = {
-		size = ButtonPassTemplates.ready_button.size,
-		pass_template = ButtonPassTemplates.ready_button,
-		init = function (parent, widget, entry, callback_name)
-			local content = widget.content
-			content.hotspot.pressed_callback = callback(parent, callback_name, widget, entry)
-			content.select_callback = content.hotspot.pressed_callback
-			local display_name = entry.display_name
-			content.text = Localize(display_name)
-			content.icon = entry.icon
-			content.hotspot.use_is_focused = true
-		end
+local blueprints = {}
+
+blueprints.spacing_vertical = {
+	size = {
+		grid_width,
+		LobbyViewSettings.list_button_spacing
 	}
+}
+blueprints.spacing_horizontal = {
+	size = {
+		(ButtonPassTemplates.ready_button.size[1] - ButtonPassTemplates.default_button_small.size[1]) * 0.5,
+		ButtonPassTemplates.default_button_small.size[2]
+	}
+}
+blueprints.ready_button = {
+	size = ButtonPassTemplates.ready_button.size,
+	pass_template = ButtonPassTemplates.ready_button,
+	init = function (parent, widget, entry, callback_name)
+		local content = widget.content
+
+		content.hotspot.pressed_callback = callback(parent, callback_name, widget, entry)
+		content.select_callback = content.hotspot.pressed_callback
+
+		local display_name = entry.display_name
+
+		content.text = Localize(display_name)
+		content.icon = entry.icon
+		content.hotspot.use_is_focused = true
+	end
 }
 blueprints.secondary_button = {
 	size = ButtonPassTemplates.default_button_small.size,
@@ -36,9 +41,12 @@ blueprints.secondary_button = {
 	init = function (parent, widget, entry, callback_name)
 		local content = widget.content
 		local style = widget.style
+
 		content.hotspot.pressed_callback = callback(parent, callback_name, widget, entry)
 		content.select_callback = content.hotspot.pressed_callback
+
 		local display_name = entry.display_name
+
 		content.text = Localize(display_name)
 		content.icon = entry.icon
 		content.hotspot.use_is_focused = true
@@ -57,9 +65,12 @@ blueprints.button = {
 	pass_template = ButtonPassTemplates.list_button,
 	init = function (parent, widget, entry, callback_name)
 		local content = widget.content
+
 		content.hotspot.pressed_callback = callback(parent, callback_name, widget, entry)
 		content.select_callback = content.hotspot.pressed_callback
+
 		local display_name = entry.display_name
+
 		content.text = Localize(display_name)
 		content.icon = entry.icon
 	end
@@ -191,7 +202,7 @@ blueprints.item_icon = {
 				local default_color = style.default_color
 				local hover_color = style.hover_color
 				local selected_color = style.selected_color
-				local color = nil
+				local color
 
 				if is_selected and selected_color then
 					color = selected_color
@@ -230,7 +241,7 @@ blueprints.item_icon = {
 				local default_color = style.default_color
 				local hover_color = style.hover_color
 				local selected_color = style.selected_color
-				local color = nil
+				local color
 
 				if is_selected and selected_color then
 					color = selected_color
@@ -326,6 +337,7 @@ blueprints.talent = {
 		local style = widget.style
 		local content = widget.content
 		local talent_style_material_values = style.talent.material_values
+
 		talent_style_material_values.icon = entry.loadout.icon
 		talent_style_material_values.gradient_map = entry.node_type_settings.gradient_map
 		talent_style_material_values.frame = entry.node_type_settings.frame

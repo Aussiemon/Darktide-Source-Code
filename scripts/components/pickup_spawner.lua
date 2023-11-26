@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/components/pickup_spawner.lua
+
 local Pickups = require("scripts/settings/pickup/pickups")
 local PickupSpawner = component("PickupSpawner")
 local PICKUPS_BY_NAME = Pickups.by_name
@@ -5,8 +7,11 @@ local PICKUPS_BY_NAME = Pickups.by_name
 PickupSpawner.init = function (self, unit, is_server)
 	self._unit = unit
 	self._is_server = is_server
+
 	local spawn_method = self:get_data(unit, "spawn_method")
+
 	self._spawn_method = spawn_method
+
 	local pickup_spawner_extension = ScriptUnit.fetch_component_extension(unit, "pickup_system")
 
 	if pickup_spawner_extension then

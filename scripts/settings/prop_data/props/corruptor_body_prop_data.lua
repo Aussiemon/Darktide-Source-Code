@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/prop_data/props/corruptor_body_prop_data.lua
+
 local ArmorSettings = require("scripts/settings/damage/armor_settings")
 local BreedSettings = require("scripts/settings/breed/breed_settings")
 local HitZone = require("scripts/utilities/attack/hit_zone")

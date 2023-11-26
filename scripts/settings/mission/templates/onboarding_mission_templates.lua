@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/mission/templates/onboarding_mission_templates.lua
+
 local mission_templates = {
 	om_hub_01 = {
 		zone_id = "hub",

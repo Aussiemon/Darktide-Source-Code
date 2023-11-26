@@ -1,16 +1,21 @@
+﻿-- chunkname: @scripts/extension_systems/visual_loadout/wieldable_slot_scripts/flamer_gas_effects.lua
+
 local Action = require("scripts/utilities/weapon/action")
 local FlamerGasEffects = class("FlamerGasEffects")
 
 FlamerGasEffects.init = function (self, context, slot, weapon_template, fx_sources)
 	local wwise_world = context.wwise_world
+
 	self._world = context.world
 	self._wwise_world = wwise_world
 	self._weapon_actions = weapon_template.actions
 	self._is_husk = context.is_husk
 	self._is_local_unit = context.is_local_unit
 	self._particle_group_id = context.player_particle_group_id
+
 	local owner_unit = context.owner_unit
 	local unit_data_extension = ScriptUnit.extension(owner_unit, "unit_data_system")
+
 	self._action_module_position_finder_component = unit_data_extension:read_component("action_module_position_finder")
 	self._action_flamer_gas_component = unit_data_extension:read_component("action_flamer_gas")
 	self._first_person_component = unit_data_extension:read_component("first_person")
@@ -92,10 +97,12 @@ FlamerGasEffects._update_effects = function (self, dt, t)
 
 		if weapon_extension then
 			local weapon_handling_template = weapon_extension:weapon_handling_template()
+
 			fire_time = weapon_handling_template.fire_rate.fire_time
 		end
 
 		fire_time = fire_time * 0.7
+
 		local start_t = weapon_action_component.start_t or t
 		local time_in_action = t - start_t
 
@@ -105,6 +112,7 @@ FlamerGasEffects._update_effects = function (self, dt, t)
 
 			if position_valid then
 				local direction_vector = to_pos - from_pos
+
 				distance = Vector3.length(direction_vector)
 				sound_direction = Vector3.normalize(direction_vector)
 			end
@@ -114,8 +122,10 @@ FlamerGasEffects._update_effects = function (self, dt, t)
 
 			if not stream_effect_id then
 				local effect_id = World.create_particles(world, stream_effect_name, from_pos, rotation, nil, self._particle_group_id)
+
 				self._stream_effect_id = effect_id
 				self._move_after_stop = move_after_stop
+
 				local in_first_person = self._is_in_first_person
 
 				if in_first_person then
@@ -162,14 +172,10 @@ FlamerGasEffects._update_effects = function (self, dt, t)
 
 				data.time = impact_time
 				data.effect_name = effects.impact_effect
-				local new_impact_index = nil
 
-				if impact_index == #impact_data then
-					new_impact_index = 1
-				else
-					new_impact_index = impact_index + 1
-				end
+				local new_impact_index
 
+				new_impact_index = impact_index == #impact_data and 1 or impact_index + 1
 				self._impact_index = new_impact_index
 				self._impact_spawn_time = self._impact_spawn_rate
 			end
@@ -261,6 +267,7 @@ FlamerGasEffects._destroy_effects = function (self, allow_move, rotation)
 			local stoped_particles_rotation = self._stoped_particles_rotation
 			local stoped_particles_velocity = self._stoped_particles_velovity
 			local index = #stoped_particles + 1
+
 			stoped_particles[index] = stream_effect_id
 			stoped_particles_position[index] = Vector3Box(from_pos)
 			stoped_particles_rotation[index] = QuaternionBox(rotation)

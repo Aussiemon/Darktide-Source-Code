@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/player/bot_player.lua
+
 require("scripts/managers/player/human_player")
 
 local PlayerManager = require("scripts/foundation/managers/player/player_manager")

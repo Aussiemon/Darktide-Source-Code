@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/buff/buffs/weapon_trait_parent_proc_buff.lua
+
 require("scripts/extension_systems/buff/buffs/proc_buff")
 
 local BuffTemplates = require("scripts/settings/buff/buff_templates")
@@ -10,16 +12,24 @@ WeaponTraitParentProcBuff.init = function (self, context, template, start_time, 
 
 	local template_context = self._template_context
 	local is_server = template_context.is_server
+
 	self._is_server = is_server
 
 	if is_server then
 		local item_slot_name = template_context.item_slot_name
+
 		self._item_slot_name = item_slot_name
+
 		local child_buff_template = template.child_buff_template
+
 		self._child_buff_template = child_buff_template
+
 		local child_template = BuffTemplates[child_buff_template]
+
 		self._buff_extension = template_context.buff_extension
+
 		local max_child_stacks = (self._template_override_data.max_stacks or child_template.max_stacks or 1 or 1) + math.abs(child_template.stack_offset or 0)
+
 		self._num_child_stacks = 0
 		self._child_buff_indicies = Script.new_array(max_child_stacks)
 		self._remove_child_stack_start_t = 0
@@ -92,7 +102,7 @@ WeaponTraitParentProcBuff.update = function (self, dt, t, ...)
 			local duration = self._remove_child_stack_duration
 			local remove_t = start_t + duration
 
-			if t > remove_t then
+			if remove_t < t then
 				local leftover_time = t - remove_t
 				local leftover_through_child_duration = leftover_time / duration
 				local stacks_to_remove = template.stacks_to_remove or 1
@@ -133,11 +143,14 @@ WeaponTraitParentProcBuff._add_child_buff_stack = function (self, t, num_childre
 
 	for i = 1, num_children_to_add do
 		num_child_stacks = num_child_stacks + 1
+
 		local _, index = buff_extension:add_externally_controlled_buff(child_buff_template, t, "item_slot_name", item_slot_name, "parent_buff_template", template_name)
+
 		child_buff_indicies[num_child_stacks] = index
 	end
 
 	self._num_child_stacks = num_child_stacks
+
 	local child_duration = template_overrides.child_duration or template.child_duration
 
 	if child_duration then
@@ -175,6 +188,7 @@ WeaponTraitParentProcBuff.duration_progress = function (self)
 	local t = FixedFrame.get_latest_fixed_time()
 	local time_since_proc = t - active_start_time
 	local duration_progress = 1 - time_since_proc / child_duration
+
 	duration_progress = duration_progress > 0 and duration_progress or 0.01
 
 	return duration_progress

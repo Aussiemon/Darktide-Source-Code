@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/lobby_view/lobby_view_settings.lua
+
 local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templates")
 local lobby_view_settings = {
 	timer_name = "ui",

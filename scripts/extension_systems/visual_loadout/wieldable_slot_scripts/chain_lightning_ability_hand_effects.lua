@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/visual_loadout/wieldable_slot_scripts/chain_lightning_ability_hand_effects.lua
+
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/charge_effects")
 
 local Action = require("scripts/utilities/weapon/action")
@@ -43,9 +45,13 @@ ChainLightningAbilityHandEffects.init = function (self, context, slot, weapon_te
 	self._is_in_first_person = nil
 	self._cage_particle_ids = {}
 	self._charge_particle_ids = {}
+
 	local owner_unit = context.owner_unit
+
 	self._fx_extension = ScriptUnit.extension(owner_unit, "fx_system")
+
 	local unit_data_extension = ScriptUnit.extension(owner_unit, "unit_data_system")
+
 	self._critical_strike_component = unit_data_extension:read_component("critical_strike")
 	self._weapon_action_component = unit_data_extension:read_component("weapon_action")
 end
@@ -140,6 +146,7 @@ ChainLightningAbilityHandEffects._update_cage_vfx = function (self, t, fx_hand)
 
 	if not particle_id then
 		particle_id = World.create_particles(world, ARM_CAGE_VFX, Vector3.zero())
+
 		local in_first_person = self._is_in_first_person
 
 		if in_first_person then
@@ -177,6 +184,7 @@ ChainLightningAbilityHandEffects._update_charge_vfx = function (self, t)
 
 		if not particle_id then
 			particle_id = World.create_particles(world, FINGER_CHARGE_VFX, Vector3.zero())
+
 			local in_first_person = self._is_in_first_person
 
 			if in_first_person then

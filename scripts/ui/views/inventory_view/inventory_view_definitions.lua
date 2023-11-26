@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/inventory_view/inventory_view_definitions.lua
+
 local InventoryViewSettings = require("scripts/ui/views/inventory_view/inventory_view_settings")
 local ScrollbarPassTemplates = require("scripts/ui/pass_templates/scrollbar_pass_templates")
 local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templates")
@@ -383,126 +385,129 @@ local scenegraph_definition = {
 			180,
 			3
 		}
-	},
-	slot_attachments_header = {
-		vertical_alignment = "top",
-		parent = "loadout_frame",
-		horizontal_alignment = "center",
-		size = {
-			840,
-			50
-		},
-		position = {
-			0,
-			450,
-			1
-		}
-	},
-	slot_attachment_1 = {
-		vertical_alignment = "bottom",
-		parent = "loadout_frame",
-		horizontal_alignment = "center",
-		size = ItemPassTemplates.gear_icon_size,
-		position = {
-			-33 - (ItemPassTemplates.gear_icon_size[1] + 102),
-			-187,
-			-15
-		}
-	},
-	slot_attachment_2 = {
-		vertical_alignment = "bottom",
-		parent = "loadout_frame",
-		horizontal_alignment = "center",
-		size = ItemPassTemplates.gear_icon_size,
-		position = {
-			-33,
-			-187,
-			-15
-		}
-	},
-	slot_attachment_3 = {
-		vertical_alignment = "bottom",
-		parent = "loadout_frame",
-		horizontal_alignment = "center",
-		size = ItemPassTemplates.gear_icon_size,
-		position = {
-			-33 + ItemPassTemplates.gear_icon_size[1] + 102,
-			-187,
-			-15
-		}
-	},
-	button_emote_1 = {
-		vertical_alignment = "center",
-		parent = "canvas",
-		horizontal_alignment = "center",
-		size = {
-			0,
-			0
-		},
-		position = {
-			600,
-			-330,
-			0
-		}
-	},
-	button_emote_2 = {
-		vertical_alignment = "center",
-		parent = "canvas",
-		horizontal_alignment = "center",
-		size = {
-			0,
-			0
-		},
-		position = {
-			600,
-			-200,
-			0
-		}
-	},
-	button_emote_3 = {
-		vertical_alignment = "center",
-		parent = "canvas",
-		horizontal_alignment = "center",
-		size = {
-			0,
-			0
-		},
-		position = {
-			600,
-			-70,
-			0
-		}
-	},
-	button_emote_4 = {
-		vertical_alignment = "center",
-		parent = "canvas",
-		horizontal_alignment = "center",
-		size = {
-			0,
-			0
-		},
-		position = {
-			600,
-			60,
-			0
-		}
-	},
-	button_emote_5 = {
-		vertical_alignment = "center",
-		parent = "canvas",
-		horizontal_alignment = "center",
-		size = {
-			0,
-			0
-		},
-		position = {
-			600,
-			190,
-			0
-		}
 	}
 }
+
+scenegraph_definition.slot_attachments_header = {
+	vertical_alignment = "top",
+	parent = "loadout_frame",
+	horizontal_alignment = "center",
+	size = {
+		840,
+		50
+	},
+	position = {
+		0,
+		450,
+		1
+	}
+}
+scenegraph_definition.slot_attachment_1 = {
+	vertical_alignment = "bottom",
+	parent = "loadout_frame",
+	horizontal_alignment = "center",
+	size = ItemPassTemplates.gear_icon_size,
+	position = {
+		-33 - (ItemPassTemplates.gear_icon_size[1] + 102),
+		-187,
+		-15
+	}
+}
+scenegraph_definition.slot_attachment_2 = {
+	vertical_alignment = "bottom",
+	parent = "loadout_frame",
+	horizontal_alignment = "center",
+	size = ItemPassTemplates.gear_icon_size,
+	position = {
+		-33,
+		-187,
+		-15
+	}
+}
+scenegraph_definition.slot_attachment_3 = {
+	vertical_alignment = "bottom",
+	parent = "loadout_frame",
+	horizontal_alignment = "center",
+	size = ItemPassTemplates.gear_icon_size,
+	position = {
+		-33 + (ItemPassTemplates.gear_icon_size[1] + 102),
+		-187,
+		-15
+	}
+}
+scenegraph_definition.button_emote_1 = {
+	vertical_alignment = "center",
+	parent = "canvas",
+	horizontal_alignment = "center",
+	size = {
+		0,
+		0
+	},
+	position = {
+		600,
+		-330,
+		0
+	}
+}
+scenegraph_definition.button_emote_2 = {
+	vertical_alignment = "center",
+	parent = "canvas",
+	horizontal_alignment = "center",
+	size = {
+		0,
+		0
+	},
+	position = {
+		600,
+		-200,
+		0
+	}
+}
+scenegraph_definition.button_emote_3 = {
+	vertical_alignment = "center",
+	parent = "canvas",
+	horizontal_alignment = "center",
+	size = {
+		0,
+		0
+	},
+	position = {
+		600,
+		-70,
+		0
+	}
+}
+scenegraph_definition.button_emote_4 = {
+	vertical_alignment = "center",
+	parent = "canvas",
+	horizontal_alignment = "center",
+	size = {
+		0,
+		0
+	},
+	position = {
+		600,
+		60,
+		0
+	}
+}
+scenegraph_definition.button_emote_5 = {
+	vertical_alignment = "center",
+	parent = "canvas",
+	horizontal_alignment = "center",
+	size = {
+		0,
+		0
+	},
+	position = {
+		600,
+		190,
+		0
+	}
+}
+
 local tab_menu_title_text_font_style = table.clone(UIFontSettings.header_1)
+
 tab_menu_title_text_font_style.offset = {
 	0,
 	0,
@@ -511,7 +516,9 @@ tab_menu_title_text_font_style.offset = {
 tab_menu_title_text_font_style.text_horizontal_alignment = "left"
 tab_menu_title_text_font_style.text_vertical_alignment = "center"
 tab_menu_title_text_font_style.hover_text_color = Color.ui_brown_super_light(255, true)
+
 local wallet_text_font_style = table.clone(UIFontSettings.body)
+
 wallet_text_font_style.offset = {
 	-60,
 	0,
@@ -519,6 +526,7 @@ wallet_text_font_style.offset = {
 }
 wallet_text_font_style.text_horizontal_alignment = "right"
 wallet_text_font_style.text_vertical_alignment = "center"
+
 local widget_definitions = {
 	tab_menu_title_text = UIWidget.create_definition({
 		{
@@ -627,7 +635,9 @@ local animations = {
 
 				for i = 1, #widgets do
 					local widget = widgets[i]
+
 					widget.alpha_multiplier = 0
+
 					local offset = widget.offset
 
 					if not widget.default_offset then
@@ -648,6 +658,7 @@ local animations = {
 
 				for i = #widgets, 1, -1 do
 					local widget = widgets[i]
+
 					widget.alpha_multiplier = math.clamp(anim_progress * (1 + (i - 1) * 0.4), 0, 1)
 				end
 			end
@@ -663,12 +674,13 @@ local animations = {
 				local anim_progress = math.easeOutCubic(progress)
 				local x_anim_distance_max = 0
 				local x_anim_distance = x_anim_distance_max - x_anim_distance_max * anim_progress
-				local extra_amount = math.clamp(20 - 20 * anim_progress * 1.2, 0, 20)
+				local extra_amount = math.clamp(20 - 20 * (anim_progress * 1.2), 0, 20)
 
 				for i = #widgets, 1, -1 do
 					local widget = widgets[i]
 					local default_offset = widget.default_offset
 					local offset = widget.offset
+
 					offset[1] = default_offset[1] + x_anim_distance + extra_amount * (i + 1)
 				end
 			end
@@ -687,6 +699,7 @@ local animations = {
 
 				for i = #widgets, 1, -1 do
 					local widget = widgets[i]
+
 					widget.alpha_multiplier = math.min(math.clamp(anim_progress * (1 + (i - 1) * 0.4), 0, 1), widget.alpha_multiplier or 0)
 				end
 			end
@@ -702,6 +715,7 @@ local animations = {
 
 				for i = 1, #widgets do
 					local widget = widgets[i]
+
 					widget.alpha_multiplier = 0
 				end
 
@@ -710,6 +724,7 @@ local animations = {
 				if loadout_widgets then
 					for i = 1, #loadout_widgets do
 						local widget = loadout_widgets[i]
+
 						widget.alpha_multiplier = 0
 					end
 				end
@@ -728,18 +743,21 @@ local animations = {
 
 				for i = 1, #loadout_widgets do
 					local widget = loadout_widgets[i]
+
 					widget.alpha_multiplier = anim_progress
 				end
 
 				for i = 1, #widgets do
 					local widget = widgets[i]
+
 					widget.alpha_multiplier = anim_progress
 				end
 
 				parent.loadout_alpha_multiplier = anim_progress
+
 				local x_anim_distance_max = 50
 				local x_anim_distance = x_anim_distance_max - x_anim_distance_max * anim_progress
-				local extra_amount = math.clamp(15 - 15 * anim_progress * 1.2, 0, 15)
+				local extra_amount = math.clamp(15 - 15 * (anim_progress * 1.2), 0, 15)
 
 				parent:_set_scenegraph_position("slot_gear_head", scenegraph_definition.slot_gear_head.position[1] - x_anim_distance)
 				parent:_set_scenegraph_position("slot_gear_upperbody", scenegraph_definition.slot_gear_upperbody.position[1] - x_anim_distance - extra_amount)
@@ -767,6 +785,7 @@ local animations = {
 
 				for i = 1, #widgets do
 					local widget = widgets[i]
+
 					widget.alpha_multiplier = 0
 				end
 
@@ -775,6 +794,7 @@ local animations = {
 				if loadout_widgets then
 					for i = 1, #loadout_widgets do
 						local widget = loadout_widgets[i]
+
 						widget.alpha_multiplier = 0
 					end
 				end
@@ -793,18 +813,21 @@ local animations = {
 
 				for i = 1, #loadout_widgets do
 					local widget = loadout_widgets[i]
+
 					widget.alpha_multiplier = anim_progress
 				end
 
 				for i = 1, #widgets do
 					local widget = widgets[i]
+
 					widget.alpha_multiplier = anim_progress
 				end
 
 				parent.loadout_alpha_multiplier = anim_progress
+
 				local x_anim_distance_max = 50
 				local x_anim_distance = x_anim_distance_max - x_anim_distance_max * anim_progress
-				local extra_amount = math.clamp(15 - 15 * anim_progress * 1.2, 0, 15)
+				local extra_amount = math.clamp(15 - 15 * (anim_progress * 1.2), 0, 15)
 
 				parent:_set_scenegraph_position("loadout_frame", scenegraph_definition.loadout_frame.position[1] - x_anim_distance)
 			end

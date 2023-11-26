@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/game_states/game/state_game_score.lua
+
 local StateGameScore = class("StateGameScore")
 local EndViewSettings = require("scripts/ui/views/end_view/end_view_settings")
 local EndPartyViewSettings = require("scripts/ui/views/end_party_view/end_party_view_settings")
@@ -11,7 +13,9 @@ StateGameScore.on_enter = function (self, parent, params, creation_context)
 	self._current_view_index = nil
 	self._played_mission = params.mission_name
 	self._end_view_name = nil
+
 	local total_presentation_time = self:_get_total_presentation_time()
+
 	self._background_view_open = false
 
 	if DEDICATED_SERVER then
@@ -38,7 +42,7 @@ end
 StateGameScore._present_end_of_round_view = function (self)
 	local eor_view_name = self._end_view_name
 	local game_score_end_time = Managers.progression:game_score_end_time()
-	local session_report = nil
+	local session_report
 
 	if Managers.progression:session_report_success() then
 		session_report = Managers.progression:session_report()
@@ -60,6 +64,7 @@ end
 
 StateGameScore._get_total_presentation_time = function (self)
 	local duration = 0
+
 	duration = MAX_EOR_DURATION
 
 	return duration

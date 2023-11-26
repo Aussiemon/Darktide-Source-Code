@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/mission_objective/templates/prologue_objective_template.lua
+
 local mission_objective_templates = {
 	prologue = {
 		objectives = {

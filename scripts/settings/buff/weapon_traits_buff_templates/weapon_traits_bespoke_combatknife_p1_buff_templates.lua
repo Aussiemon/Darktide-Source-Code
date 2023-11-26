@@ -1,12 +1,14 @@
+﻿-- chunkname: @scripts/settings/buff/weapon_traits_buff_templates/weapon_traits_bespoke_combatknife_p1_buff_templates.lua
+
 local BaseWeaponTraitBuffTemplates = require("scripts/settings/buff/weapon_traits_buff_templates/base_weapon_trait_buff_templates")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local CheckProcFunctions = require("scripts/settings/buff/validation_functions/check_proc_functions")
 local ConditionalFunctions = require("scripts/settings/buff/validation_functions/conditional_functions")
 local proc_events = BuffSettings.proc_events
 local stat_buffs = BuffSettings.stat_buffs
-local templates = {
-	weapon_trait_bespoke_combatknife_p1_stacking_rending_on_weakspot_parent = table.clone(BaseWeaponTraitBuffTemplates.stacking_rending_on_weakspot_parent)
-}
+local templates = {}
+
+templates.weapon_trait_bespoke_combatknife_p1_stacking_rending_on_weakspot_parent = table.clone(BaseWeaponTraitBuffTemplates.stacking_rending_on_weakspot_parent)
 templates.weapon_trait_bespoke_combatknife_p1_stacking_rending_on_weakspot_parent.child_buff_template = "weapon_trait_bespoke_combatknife_p1_stacking_rending_on_weakspot_child"
 templates.weapon_trait_bespoke_combatknife_p1_stacking_rending_on_weakspot_child = table.clone(BaseWeaponTraitBuffTemplates.stacking_rending_on_weakspot_child)
 templates.weapon_trait_bespoke_combatknife_p1_chained_weakspot_hits_increases_power_parent = table.clone(BaseWeaponTraitBuffTemplates.chained_weakspot_hits_increases_power_parent)

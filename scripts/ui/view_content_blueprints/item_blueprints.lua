@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/view_content_blueprints/item_blueprints.lua
+
 local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templates")
 local ItemPassTemplates = require("scripts/ui/pass_templates/item_pass_templates")
 local ItemSlotSettings = require("scripts/settings/item/item_slot_settings")
@@ -25,10 +27,11 @@ local function is_item_equipped_in_slot(parent, item, slot_name)
 		local item_gear_id = item.gear_id
 
 		if item_gear_id then
-			-- Nothing
+			equipped = item_gear_id == equipped_gear_id or false
 		else
 			local item_name = item.name
 			local equipped_item_name = equipped_item and equipped_item.name
+
 			equipped = item_name and equipped_item_name and item_name == equipped_item_name or false
 		end
 	end
@@ -41,6 +44,7 @@ local function is_item_equipped_in_slot(parent, item, slot_name)
 		end
 
 		local item_name = item.gear.masterDataInstance.id
+
 		equipped = item_name == equipped_item_name
 	end
 
@@ -82,6 +86,7 @@ local function get_generic_profile(breed, gender, archetype)
 
 				if item_definition then
 					local slot_item = table.clone(item_definition)
+
 					dummy_profile.loadout[slot_name] = slot_item
 				end
 			end
@@ -94,6 +99,7 @@ end
 local function generate_blueprints_function(grid_size)
 	local grid_width = grid_size[1]
 	local group_header_font_style = table.clone(UIFontSettings.header_3)
+
 	group_header_font_style.offset = {
 		0,
 		0,
@@ -102,7 +108,9 @@ local function generate_blueprints_function(grid_size)
 	group_header_font_style.text_horizontal_alignment = "center"
 	group_header_font_style.text_vertical_alignment = "center"
 	group_header_font_style.text_color = Color.ui_grey_light(255, true)
+
 	local sub_header_font_style = table.clone(UIFontSettings.header_3)
+
 	sub_header_font_style.offset = {
 		0,
 		0,
@@ -112,7 +120,9 @@ local function generate_blueprints_function(grid_size)
 	sub_header_font_style.text_horizontal_alignment = "center"
 	sub_header_font_style.text_vertical_alignment = "center"
 	sub_header_font_style.text_color = Color.ui_grey_medium(255, true)
+
 	local cosmetic_item_display_name_text_style = table.clone(UIFontSettings.header_3)
+
 	cosmetic_item_display_name_text_style.text_horizontal_alignment = "left"
 	cosmetic_item_display_name_text_style.text_vertical_alignment = "center"
 	cosmetic_item_display_name_text_style.horizontal_alignment = "left"
@@ -130,6 +140,7 @@ local function generate_blueprints_function(grid_size)
 	local function _apply_package_item_icon_cb_func(widget, item)
 		local icon = item.icon
 		local material_values = widget.style.icon.material_values
+
 		material_values.texture_icon = icon
 		material_values.use_placeholder_texture = 0
 		widget.content.use_placeholder_texture = material_values.use_placeholder_texture
@@ -140,6 +151,7 @@ local function generate_blueprints_function(grid_size)
 		UIWidget.set_visible(widget, ui_renderer, true)
 
 		local material_values = widget.style.icon.material_values
+
 		material_values.texture_icon = nil
 		material_values.use_placeholder_texture = 1
 		widget.content.use_placeholder_texture = material_values.use_placeholder_texture
@@ -147,6 +159,7 @@ local function generate_blueprints_function(grid_size)
 
 	local function _apply_live_item_icon_cb_func(widget, grid_index, rows, columns, render_target)
 		local material_values = widget.style.icon.material_values
+
 		material_values.use_placeholder_texture = 0
 		material_values.use_render_target = 1
 		material_values.rows = rows
@@ -161,6 +174,7 @@ local function generate_blueprints_function(grid_size)
 		UIWidget.set_visible(widget, ui_renderer, true)
 
 		local material_values = widget.style.icon.material_values
+
 		material_values.use_placeholder_texture = 1
 		material_values.render_target = nil
 		widget.content.use_placeholder_texture = material_values.use_placeholder_texture
@@ -224,798 +238,478 @@ local function generate_blueprints_function(grid_size)
 			pass_template = ButtonPassTemplates.list_button,
 			init = function (parent, widget, element, callback_name)
 				local content = widget.content
+
 				content.text = element.display_name
 			end
-		}
-	}
-	blueprints.ui_item = {
-		size = ItemPassTemplates.ui_item_size,
-		pass_template = ItemPassTemplates.ui_item,
-		init = function (parent, widget, element, callback_name, secondary_callback_name, ui_renderer, double_click_callback)
-			local content = widget.content
-			local style = widget.style
-			content.hotspot.pressed_callback = callback_name and callback(parent, callback_name, widget, element)
-			content.hotspot.double_click_callback = double_click_callback and callback(parent, double_click_callback, widget, element)
-			content.hotspot.right_pressed_callback = secondary_callback_name and callback(parent, secondary_callback_name, widget, element)
-			content.element = element
-			content.locked = element.locked
-			local slot = element.slot
+		},
+		ui_item = {
+			size = ItemPassTemplates.ui_item_size,
+			pass_template = ItemPassTemplates.ui_item,
+			init = function (parent, widget, element, callback_name, secondary_callback_name, ui_renderer, double_click_callback)
+				local content = widget.content
+				local style = widget.style
 
-			if slot then
-				local item = element.item
-				content.item = item
-				local display_name = item and item.display_name
+				content.hotspot.pressed_callback = callback_name and callback(parent, callback_name, widget, element)
+				content.hotspot.double_click_callback = double_click_callback and callback(parent, double_click_callback, widget, element)
+				content.hotspot.right_pressed_callback = secondary_callback_name and callback(parent, secondary_callback_name, widget, element)
+				content.element = element
+				content.locked = element.locked
 
-				if display_name then
-					content.display_name = ItemUtils.display_name(item)
-					content.sub_display_name = ItemUtils.sub_display_name(item)
+				local slot = element.slot
+
+				if slot then
+					local item = element.item
+
+					content.item = item
+
+					local display_name = item and item.display_name
+
+					if display_name then
+						content.display_name = ItemUtils.display_name(item)
+						content.sub_display_name = ItemUtils.sub_display_name(item)
+					end
+
+					local item_icon_size = slot.item_icon_size
+
+					style.icon.material_values.icon_size = item_icon_size
+
+					local icon_color = slot.icon_color
+
+					if icon_color then
+						local color = style.icon.color
+
+						color[1] = icon_color[1]
+						color[2] = icon_color[2]
+						color[3] = icon_color[3]
+						color[4] = icon_color[4]
+					end
 				end
-
-				local item_icon_size = slot.item_icon_size
-				style.icon.material_values.icon_size = item_icon_size
-				local icon_color = slot.icon_color
-
-				if icon_color then
-					local color = style.icon.color
-					color[1] = icon_color[1]
-					color[2] = icon_color[2]
-					color[3] = icon_color[3]
-					color[4] = icon_color[4]
-				end
-			end
-		end,
-		update = function (parent, widget, input_service, dt, t, ui_renderer)
-			local view_instance = parent._parent or parent
-			local content = widget.content
-			local element = content.element
-			local slot = element.slot
-			local slot_name = slot.name
-			local item = element.real_item or element.item
-			local is_equipped = is_item_equipped_in_slot(view_instance, item, slot_name)
-			content.equipped = is_equipped
-		end,
-		load_icon = function (parent, widget, element, ui_renderer, dummy_profile, prioritize)
-			local content = widget.content
-			local item = element.item
-
-			if not content.icon_load_id and item then
+			end,
+			update = function (parent, widget, input_service, dt, t, ui_renderer)
+				local view_instance = parent._parent or parent
+				local content = widget.content
+				local element = content.element
 				local slot = element.slot
 				local slot_name = slot.name
-				local cb = callback(_apply_package_item_icon_cb_func, widget, item)
-				local render_context = {
-					camera_focus_slot_name = slot_name
-				}
-				content.icon_load_id = Managers.ui:load_item_icon(item, cb, render_context, dummy_profile, prioritize)
-			end
-		end,
-		unload_icon = function (parent, widget, element, ui_renderer)
-			local content = widget.content
+				local item = element.real_item or element.item
+				local is_equipped = is_item_equipped_in_slot(view_instance, item, slot_name)
 
-			if content.icon_load_id then
-				_remove_package_item_icon_cb_func(widget, ui_renderer)
-				Managers.ui:unload_item_icon(content.icon_load_id)
-
-				content.icon_load_id = nil
-			end
-		end,
-		destroy = function (parent, widget, element, ui_renderer)
-			local content = widget.content
-
-			if content.icon_load_id then
-				_remove_package_item_icon_cb_func(widget, ui_renderer)
-				Managers.ui:unload_item_icon(content.icon_load_id)
-
-				content.icon_load_id = nil
-			end
-		end,
-		update_item_icon_priority = function (parent, widget, element, ui_renderer, dummy_profile)
-			local content = widget.content
-
-			if content.icon_load_id then
-				Managers.ui:update_item_icon_priority(content.icon_load_id)
-			end
-		end
-	}
-	blueprints.gear_item = {
-		size = ItemPassTemplates.gear_icon_size,
-		pass_template = ItemPassTemplates.gear_item,
-		init = function (parent, widget, element, callback_name, secondary_callback_name, ui_renderer, double_click_callback)
-			local content = widget.content
-			local style = widget.style
-			content.hotspot.pressed_callback = callback_name and callback(parent, callback_name, widget, element)
-			content.hotspot.double_click_callback = double_click_callback and callback(parent, double_click_callback, widget, element)
-			content.hotspot.right_pressed_callback = secondary_callback_name and callback(parent, secondary_callback_name, widget, element)
-			content.element = element
-			local slot = element.slot
-
-			if slot then
+				content.equipped = is_equipped
+			end,
+			load_icon = function (parent, widget, element, ui_renderer, dummy_profile, prioritize)
+				local content = widget.content
 				local item = element.item
-				content.item = item
-				local display_name = item and item.display_name
 
-				if display_name then
-					content.display_name = ItemUtils.display_name(item)
-					content.sub_display_name = ItemUtils.sub_display_name(item)
+				if not content.icon_load_id and item then
+					local slot = element.slot
+					local slot_name = slot.name
+					local cb = callback(_apply_package_item_icon_cb_func, widget, item)
+					local render_context = {
+						camera_focus_slot_name = slot_name
+					}
+
+					content.icon_load_id = Managers.ui:load_item_icon(item, cb, render_context, dummy_profile, prioritize)
 				end
+			end,
+			unload_icon = function (parent, widget, element, ui_renderer)
+				local content = widget.content
 
-				local rarity = item and item.rarity
+				if content.icon_load_id then
+					_remove_package_item_icon_cb_func(widget, ui_renderer)
+					Managers.ui:unload_item_icon(content.icon_load_id)
 
-				if rarity then
-					local rarity_color, rarity_color_dark = ItemUtils.rarity_color(item)
-					style.background_gradient.color = table.clone(rarity_color_dark)
+					content.icon_load_id = nil
+				end
+			end,
+			destroy = function (parent, widget, element, ui_renderer)
+				local content = widget.content
+
+				if content.icon_load_id then
+					_remove_package_item_icon_cb_func(widget, ui_renderer)
+					Managers.ui:unload_item_icon(content.icon_load_id)
+
+					content.icon_load_id = nil
+				end
+			end,
+			update_item_icon_priority = function (parent, widget, element, ui_renderer, dummy_profile)
+				local content = widget.content
+
+				if content.icon_load_id then
+					Managers.ui:update_item_icon_priority(content.icon_load_id)
 				end
 			end
+		},
+		gear_item = {
+			size = ItemPassTemplates.gear_icon_size,
+			pass_template = ItemPassTemplates.gear_item,
+			init = function (parent, widget, element, callback_name, secondary_callback_name, ui_renderer, double_click_callback)
+				local content = widget.content
+				local style = widget.style
 
-			content.locked = element.locked
-			local offer = element.offer
+				content.hotspot.pressed_callback = callback_name and callback(parent, callback_name, widget, element)
+				content.hotspot.double_click_callback = double_click_callback and callback(parent, double_click_callback, widget, element)
+				content.hotspot.right_pressed_callback = secondary_callback_name and callback(parent, secondary_callback_name, widget, element)
+				content.element = element
 
-			if offer and offer.price then
-				local price_data = offer.price.amount
-				local type = price_data.type
-				local price = price_data.discounted_price or price_data.amount
-				local price_text = TextUtilities.format_currency(price)
-				content.has_price_tag = true
-				content.price_text = price_text
-				local wallet_settings = WalletSettings[type]
-				content.wallet_icon = wallet_settings.icon_texture_small
-				local price_text_style = style.price_text
-				local view_instance = parent._parent or parent
-				local can_afford = view_instance and view_instance.can_afford and view_instance:can_afford(price, type) or false
-				price_text_style.material = can_afford and wallet_settings.font_gradient_material or wallet_settings.font_gradient_material_insufficient_funds
+				local slot = element.slot
 
-				if not content.sold then
-					local owned_count = element.owned_count
-					local total_count = element.total_count
-					local owning_total_count = owned_count and total_count and owned_count == total_count
-					local is_owned = offer.state == "owned" or owning_total_count
-					content.sold = is_owned
+				if slot then
+					local item = element.item
 
-					if is_owned then
-						content.owned = is_owned and ""
-					elseif owned_count and total_count and total_count > 0 then
-						content.owned = owned_count > 0 and string.format("%d/%d", owned_count, total_count) or nil
+					content.item = item
+
+					local display_name = item and item.display_name
+
+					if display_name then
+						content.display_name = ItemUtils.display_name(item)
+						content.sub_display_name = ItemUtils.sub_display_name(item)
+					end
+
+					local rarity = item and item.rarity
+
+					if rarity then
+						local rarity_color, rarity_color_dark = ItemUtils.rarity_color(item)
+
+						style.background_gradient.color = table.clone(rarity_color_dark)
 					end
 				end
-			end
-		end,
-		update = function (parent, widget, input_service, dt, t, ui_renderer)
-			local view_instance = parent._parent or parent
-			local style = widget.style
-			local content = widget.content
-			local element = content.element
-			local slot = element.slot
-			local slot_name = slot.name
-			local item = element.real_item or element.item
-			local is_equipped = is_item_equipped_in_slot(view_instance, item, slot_name)
-			content.equipped = not element.disable_equipped_status and is_equipped
-			local price_text_style = style.price_text
-			local offer = element.offer
 
-			if offer and offer.price then
-				local price_data = offer.price.amount
-				local type = price_data.type
-				local price = price_data.discounted_price or price_data.amount
-				local price_text = TextUtilities.format_currency(price)
-				content.price_text = price_text
-				local wallet_settings = WalletSettings[type]
-				content.wallet_icon = wallet_settings.icon_texture_small
-				local can_afford = view_instance and view_instance.can_afford and view_instance:can_afford(price, type) or false
-				price_text_style.material = can_afford and wallet_settings.font_gradient_material or wallet_settings.font_gradient_material_insufficient_funds
-			end
+				content.locked = element.locked
 
-			if not content.sold then
-				local owned_count = element.owned_count
-				local total_count = element.total_count
-				local owning_total_count = owned_count and total_count and owned_count == total_count
-				local is_owned = offer and offer.state == "owned" or owning_total_count
-				content.sold = is_owned
+				local offer = element.offer
 
-				if is_owned then
-					content.owned = is_owned and ""
-				elseif owned_count and total_count and total_count > 0 then
-					content.owned = owned_count > 0 and string.format("%d/%d", owned_count, total_count) or nil
+				if offer and offer.price then
+					local price_data = offer.price.amount
+					local type = price_data.type
+					local price = price_data.discounted_price or price_data.amount
+					local price_text = TextUtilities.format_currency(price)
+
+					content.has_price_tag = true
+					content.price_text = price_text
+
+					local wallet_settings = WalletSettings[type]
+
+					content.wallet_icon = wallet_settings.icon_texture_small
+
+					local price_text_style = style.price_text
+					local view_instance = parent._parent or parent
+					local can_afford = view_instance and view_instance.can_afford and view_instance:can_afford(price, type) or false
+
+					price_text_style.material = can_afford and wallet_settings.font_gradient_material or wallet_settings.font_gradient_material_insufficient_funds
+
+					if not content.sold then
+						local owned_count = element.owned_count
+						local total_count = element.total_count
+						local owning_total_count = owned_count and total_count and owned_count == total_count
+						local is_owned = offer.state == "owned" or owning_total_count
+
+						content.sold = is_owned
+
+						if is_owned then
+							content.owned = is_owned and ""
+						elseif owned_count and total_count and total_count > 0 then
+							content.owned = owned_count > 0 and string.format("%d/%d", owned_count, total_count) or nil
+						end
+					end
 				end
-			end
-		end,
-		load_icon = function (parent, widget, element, ui_renderer, dummy_profile, prioritize)
-			local content = widget.content
-			local item = element.item
-
-			if not content.icon_load_id and item then
+			end,
+			update = function (parent, widget, input_service, dt, t, ui_renderer)
+				local view_instance = parent._parent or parent
+				local style = widget.style
+				local content = widget.content
+				local element = content.element
 				local slot = element.slot
 				local slot_name = slot.name
-				local cb = callback(_apply_live_item_icon_cb_func, widget)
-				local item_state_machine = item.state_machine
-				local item_animation_event = item.animation_event
-				local render_context = {
-					camera_focus_slot_name = slot_name,
-					state_machine = item_state_machine,
-					animation_event = item_animation_event
-				}
-				content.icon_load_id = Managers.ui:load_item_icon(item, cb, render_context, dummy_profile, prioritize)
-			end
-		end,
-		unload_icon = function (parent, widget, element, ui_renderer)
-			local content = widget.content
+				local item = element.real_item or element.item
+				local is_equipped = is_item_equipped_in_slot(view_instance, item, slot_name)
 
-			if content.icon_load_id then
-				_remove_live_item_icon_cb_func(widget, ui_renderer)
-				Managers.ui:unload_item_icon(content.icon_load_id)
+				content.equipped = not element.disable_equipped_status and is_equipped
 
-				content.icon_load_id = nil
-			end
-		end,
-		destroy = function (parent, widget, element, ui_renderer)
-			local content = widget.content
-
-			if content.icon_load_id then
-				_remove_live_item_icon_cb_func(widget, ui_renderer)
-				Managers.ui:unload_item_icon(content.icon_load_id)
-
-				content.icon_load_id = nil
-			end
-		end,
-		update_item_icon_priority = function (parent, widget, element, ui_renderer, dummy_profile)
-			local content = widget.content
-
-			if content.icon_load_id then
-				Managers.ui:update_item_icon_priority(content.icon_load_id)
-			end
-		end
-	}
-	blueprints.item_icon = {
-		size = ItemPassTemplates.icon_size,
-		pass_template = ItemPassTemplates.item_icon,
-		init = function (parent, widget, element, callback_name, secondary_callback_name, ui_renderer, double_click_callback)
-			local content = widget.content
-			local style = widget.style
-			content.hotspot.pressed_callback = callback_name and callback(parent, callback_name, widget, element)
-			content.hotspot.double_click_callback = double_click_callback and callback(parent, double_click_callback, widget, element)
-			content.hotspot.right_pressed_callback = secondary_callback_name and callback(parent, secondary_callback_name, widget, element)
-			content.element = element
-			local item = element.item
-			local rarity = item.rarity
-			local offer = element.offer
-
-			if offer and offer.price then
-				local price_data = offer.price.amount
-				local type = price_data.type
-				local price = price_data.amount
-				local price_text = TextUtilities.format_currency(price)
-				content.has_price_tag = true
-				content.price_text = price_text
-				local wallet_settings = WalletSettings[type]
-				content.wallet_icon = wallet_settings.icon_texture_small
 				local price_text_style = style.price_text
-				local view_instance = parent._parent or parent
-				local can_afford = view_instance and view_instance.can_afford and view_instance:can_afford(price, type) or false
-				price_text_style.material = can_afford and wallet_settings.font_gradient_material or wallet_settings.font_gradient_material_insufficient_funds
+				local offer = element.offer
 
-				if not content.sold then
-					local owned_count = element.owned_count
-					local total_count = element.total_count
-					local owning_total_count = owned_count and total_count and owned_count == total_count
-					local is_owned = offer.state == "owned" or owning_total_count
-					content.sold = is_owned
+				if offer and offer.price then
+					local price_data = offer.price.amount
+					local type = price_data.type
+					local price = price_data.discounted_price or price_data.amount
+					local price_text = TextUtilities.format_currency(price)
 
-					if is_owned then
-						content.owned = is_owned and ""
-					elseif owned_count and total_count and total_count > 0 then
-						content.owned = owned_count > 0 and string.format("%d/%d", owned_count, total_count) or nil
-					end
+					content.price_text = price_text
+
+					local wallet_settings = WalletSettings[type]
+
+					content.wallet_icon = wallet_settings.icon_texture_small
+
+					local can_afford = view_instance and view_instance.can_afford and view_instance:can_afford(price, type) or false
+
+					price_text_style.material = can_afford and wallet_settings.font_gradient_material or wallet_settings.font_gradient_material_insufficient_funds
 				end
-			end
-
-			if content.show_class_restrictions then
-				local item = element.visual_item
-				local text = ""
-
-				if type(item.archetypes) ~= "table" or #item.archetypes <= 0 then
-					item = element.item
-				end
-
-				if type(item.archetypes) == "table" and #item.archetypes > 0 then
-					for f = 1, #item.archetypes do
-						local archetype = item.archetypes[f]
-						local text_icon = UISettings.archetype_font_icon[archetype]
-						text = text and string.format("%s %s", text, text_icon) or text_icon
-					end
-				end
-
-				content.restriction_icon_text = text
-			end
-		end,
-		update = function (parent, widget, input_service, dt, t, ui_renderer)
-			local view_instance = parent._parent or parent
-			local style = widget.style
-			local content = widget.content
-			local element = content.element
-			local item = element.real_item or element.item
-
-			if item then
-				local slots = item and item.slots
-				local slot_name = element.slot_name or slots and slots[1]
-				local is_equipped = slot_name and is_item_equipped_in_slot(view_instance, item, slot_name)
-				content.equipped = is_equipped
-			end
-		end,
-		load_icon = function (parent, widget, element, ui_renderer, dummy_profile, prioritize)
-			local content = widget.content
-			local item = element.item or element.real_item
-
-			if not content.icon_load_id and item then
-				local cb = callback(_apply_live_item_icon_cb_func, widget)
-				content.icon_load_id = Managers.ui:load_item_icon(item, cb, nil, dummy_profile, prioritize)
-			end
-		end,
-		unload_icon = function (parent, widget, element, ui_renderer)
-			local content = widget.content
-
-			if content.icon_load_id then
-				_remove_live_item_icon_cb_func(widget, ui_renderer)
-				Managers.ui:unload_item_icon(content.icon_load_id)
-
-				content.icon_load_id = nil
-			end
-		end,
-		destroy = function (parent, widget, element, ui_renderer)
-			local content = widget.content
-
-			if content.icon_load_id then
-				_remove_live_item_icon_cb_func(widget, ui_renderer)
-				Managers.ui:unload_item_icon(content.icon_load_id)
-
-				content.icon_load_id = nil
-			end
-		end,
-		update_item_icon_priority = function (parent, widget, element, ui_renderer, dummy_profile)
-			local content = widget.content
-
-			if content.icon_load_id then
-				Managers.ui:update_item_icon_priority(content.icon_load_id)
-			end
-		end
-	}
-	blueprints.item = {
-		size = ItemPassTemplates.weapon_item_size,
-		pass_template = ItemPassTemplates.item,
-		init = function (parent, widget, element, callback_name, secondary_callback_name, ui_renderer, double_click_callback)
-			local content = widget.content
-			local style = widget.style
-			content.hotspot.pressed_callback = callback_name and callback(parent, callback_name, widget, element)
-			content.hotspot.double_click_callback = double_click_callback and callback(parent, double_click_callback, widget, element)
-			content.hotspot.right_pressed_callback = secondary_callback_name and callback(parent, secondary_callback_name, widget, element)
-			content.element = element
-			local item = element.item
-			local offer = element.offer
-
-			if offer and offer.price then
-				local price_data = offer.price.amount
-				local type = price_data.type
-				local price = price_data.amount
-				local price_text = tostring(price)
-				content.has_price_tag = true
-				content.price_text = price_text
-				local wallet_settings = WalletSettings[type]
-				content.wallet_icon = wallet_settings.icon_texture_small
-				local price_text_style = style.price_text
-				local view_instance = parent._parent or parent
-				local can_afford = view_instance and view_instance.can_afford and view_instance:can_afford(price, type) or false
-				price_text_style.material = can_afford and wallet_settings.font_gradient_material or wallet_settings.font_gradient_material_insufficient_funds
-			end
-
-			local display_name = item.display_name
-
-			if display_name then
-				content.display_name = ItemUtils.display_name(item)
-				local no_color = true
-				content.sub_display_name = ItemUtils.sub_display_name(item)
-			end
-
-			if style.item_level then
-				content.item_level = ItemUtils.item_level(item)
-			end
-
-			local item_type = item.item_type
-			local ITEM_TYPES = UISettings.ITEM_TYPES
-			local is_weapon = item_type == ITEM_TYPES.WEAPON_MELEE or item_type == ITEM_TYPES.WEAPON_RANGED
-			local traits = item.traits
-
-			if is_weapon and traits then
-				local trait_index = 1
-
-				for i = 1, #traits do
-					local trait = traits[i]
-					local trait_id = trait.id
-					local rarity = trait.rarity
-					local trait_item = MasterItems.get_item(trait_id)
-
-					if trait_item then
-						local texture_icon, texture_frame = ItemUtils.trait_textures(trait_item, rarity)
-						local pass_id = "trait_" .. trait_index
-						local trait_style = style[pass_id]
-
-						if trait_style then
-							local material_values = trait_style.material_values
-							material_values.icon = texture_icon
-							material_values.frame = texture_frame
-							material_values.overlay = 0
-						end
-
-						content[pass_id] = trait_id
-						trait_index = trait_index + 1
-					end
-				end
-
-				local trait_category = ItemUtils.trait_category(item)
-
-				Managers.data_service.crafting:trait_sticker_book(trait_category):next(function (seen_traits)
-					if seen_traits then
-						for i = 1, #traits do
-							local pass_id = "trait_" .. i
-							local trait = traits[i]
-							local trait_id = trait.id
-							local trait_rarity = trait.rarity
-
-							if trait then
-								for seen_trait_name, status in pairs(seen_traits) do
-									if seen_trait_name == trait_id and status ~= nil then
-										local trait_status = status[trait_rarity]
-
-										if trait_status == "unseen" then
-											local trait_style = style[pass_id]
-
-											if trait_style then
-												trait_style.material_values.overlay = 1
-											end
-
-											break
-										end
-									end
-								end
-							end
-						end
-					end
-				end)
-			end
-
-			local required_level = ItemUtils.character_level(item)
-			local view_instance = parent._parent or parent
-			local character_level = view_instance and view_instance.character_level and view_instance:character_level()
-			local level_requirement_met = not item and true or required_level and required_level <= character_level
-			content.level_requirement_met = level_requirement_met
-
-			if not level_requirement_met then
-				local required_level_text = Localize("loc_requires_level", true, {
-					level = required_level
-				})
-				content.required_level = required_level_text
-				local required_level_style = style.required_level
-				local required_level_text_width = UIRenderer.text_size(ui_renderer, required_level_text, required_level_style.font_type, required_level_style.font_size) or 0
-				local required_level_background_style = style.required_level_background
-				required_level_background_style.size[1] = required_level_text_width + 40
-			end
-
-			local rarity_color = ItemUtils.rarity_color(item)
-			style.sub_display_name.text_color = table.clone(rarity_color)
-			style.background_gradient.color = table.clone(rarity_color)
-			style.rarity_tag.color = table.clone(rarity_color)
-		end,
-		update = function (parent, widget, input_service, dt, t, ui_renderer)
-			local view_instance = parent._parent or parent
-			local style = widget.style
-			local content = widget.content
-			local element = content.element
-			local slot = element.slot
-			local item = element.real_item or element.item
-
-			if slot then
-				local slot_name = slot.name
-				local item_type = item.item_type
-				local is_equipped = nil
-
-				if item_type == UISettings.ITEM_TYPES.GADGET then
-					local slots = item and item.slots
-					is_equipped = is_item_equipped_in_any_slot(view_instance, item, slots)
-				else
-					is_equipped = is_item_equipped_in_slot(view_instance, item, slot_name)
-				end
-
-				content.equipped = is_equipped
-			end
-
-			local offer = element.offer
-
-			if offer and offer.price then
-				local price_data = offer.price.amount
-				local type = price_data.type
-				local price = price_data.amount
-				local wallet_settings = WalletSettings[type]
-				local price_text_style = style.price_text
-				local can_afford = view_instance and view_instance.can_afford and view_instance:can_afford(price, type) or false
-				price_text_style.material = can_afford and wallet_settings.font_gradient_material or wallet_settings.font_gradient_material_insufficient_funds
-			end
-		end,
-		load_icon = function (parent, widget, element, ui_renderer, dummy_profile, prioritize)
-			local content = widget.content
-			local item = element.item
-
-			if not content.icon_load_id and item then
-				local cb = callback(_apply_live_item_icon_cb_func, widget)
-				content.icon_load_id = Managers.ui:load_item_icon(item, cb, nil, dummy_profile, prioritize)
-			end
-		end,
-		unload_icon = function (parent, widget, element, ui_renderer)
-			local content = widget.content
-
-			if content.icon_load_id then
-				_remove_live_item_icon_cb_func(widget, ui_renderer)
-				Managers.ui:unload_item_icon(content.icon_load_id)
-
-				content.icon_load_id = nil
-			end
-		end,
-		destroy = function (parent, widget, element, ui_renderer)
-			local content = widget.content
-
-			if content.icon_load_id then
-				_remove_live_item_icon_cb_func(widget, ui_renderer)
-				Managers.ui:unload_item_icon(content.icon_load_id)
-
-				content.icon_load_id = nil
-			end
-		end,
-		update_item_icon_priority = function (parent, widget, element, ui_renderer, dummy_profile)
-			local content = widget.content
-
-			if content.icon_load_id then
-				Managers.ui:update_item_icon_priority(content.icon_load_id)
-			end
-		end
-	}
-	blueprints.gear_set = {
-		size = ItemPassTemplates.gear_bundle_size,
-		pass_template = ItemPassTemplates.gear_item,
-		init = function (parent, widget, element, callback_name, secondary_callback_name, ui_renderer, double_click_callback)
-			local content = widget.content
-			local style = widget.style
-			content.hotspot.pressed_callback = callback_name and callback(parent, callback_name, widget, element)
-			content.hotspot.double_click_callback = double_click_callback and callback(parent, double_click_callback, widget, element)
-			content.hotspot.right_pressed_callback = secondary_callback_name and callback(parent, secondary_callback_name, widget, element)
-			content.element = element
-			local item = element.item
-			local rarity = item and item.rarity
-			local rarity_color, rarity_color_dark = ItemUtils.rarity_color(item)
-
-			if rarity then
-				style.background_gradient.color = table.clone(rarity_color_dark)
-			end
-
-			local offer = element.offer
-
-			if offer and offer.price then
-				local price_data = offer.price.amount
-				local type = price_data.type
-				local price = price_data.discounted_price or price_data.amount
-				local price_text = TextUtilities.format_currency(price)
-				content.has_price_tag = true
-				content.price_text = price_text
-				local wallet_settings = WalletSettings[type]
-				content.wallet_icon = wallet_settings.icon_texture_small
-				local price_text_style = style.price_text
-				local view_instance = parent._parent or parent
-				local can_afford = view_instance and view_instance.can_afford and view_instance:can_afford(price, type) or false
-				price_text_style.material = can_afford and wallet_settings.font_gradient_material or wallet_settings.font_gradient_material_insufficient_funds
-
-				if not content.sold then
-					local owned_count = element.owned_count
-					local total_count = element.total_count
-					local owning_total_count = owned_count and total_count and owned_count == total_count
-					local is_owned = offer.state == "owned" or owning_total_count
-					content.sold = is_owned
-
-					if is_owned then
-						content.owned = is_owned and ""
-						content.owned_count_text = nil
-					elseif owned_count and total_count and owned_count > 0 and owned_count < total_count then
-						content.owned_count_text = string.format("%d/%d ", owned_count, total_count) or nil
-					end
-				end
-			end
-		end,
-		update = function (parent, widget, input_service, dt, t, ui_renderer)
-			local style = widget.style
-			local content = widget.content
-			local element = content.element
-			local offer = element.offer
-
-			if offer and offer.price then
-				local price_data = offer.price.amount
-				local type = price_data.type
-				local price = price_data.discounted_price or price_data.amount
-				local price_text = TextUtilities.format_currency(price)
-				content.has_price_tag = true
-				content.price_text = price_text
-				local wallet_settings = WalletSettings[type]
-				content.wallet_icon = wallet_settings.icon_texture_small
-				local price_text_style = style.price_text
-				local view_instance = parent._parent or parent
-				local can_afford = view_instance and view_instance.can_afford and view_instance:can_afford(price, type) or false
-				price_text_style.material = can_afford and wallet_settings.font_gradient_material or wallet_settings.font_gradient_material_insufficient_funds
 
 				if not content.sold then
 					local owned_count = element.owned_count
 					local total_count = element.total_count
 					local owning_total_count = owned_count and total_count and owned_count == total_count
 					local is_owned = offer and offer.state == "owned" or owning_total_count
+
 					content.sold = is_owned
 
 					if is_owned then
 						content.owned = is_owned and ""
-						content.owned_count_text = nil
-					elseif owned_count and total_count and owned_count > 0 and owned_count < total_count then
-						content.owned_count_text = string.format("%d/%d ", owned_count, total_count) or nil
+					elseif owned_count and total_count and total_count > 0 then
+						content.owned = owned_count > 0 and string.format("%d/%d", owned_count, total_count) or nil
 					end
 				end
-			end
-		end,
-		load_icon = function (parent, widget, element, ui_renderer, dummy_profile, prioritize)
-			local content = widget.content
-			local item = element.item or element.real_item
+			end,
+			load_icon = function (parent, widget, element, ui_renderer, dummy_profile, prioritize)
+				local content = widget.content
+				local item = element.item
 
-			if not content.icon_load_id and item then
-				local cb = callback(_apply_live_item_icon_cb_func, widget)
-				local preview_profile = dummy_profile or element.preview_profile
-				local gear_bundle_size = ItemPassTemplates.gear_bundle_size
-				local render_context = {
-					camera_focus_slot_name = "slot_set",
-					size = {
-						gear_bundle_size[1],
-						gear_bundle_size[2]
+				if not content.icon_load_id and item then
+					local slot = element.slot
+					local slot_name = slot.name
+					local cb = callback(_apply_live_item_icon_cb_func, widget)
+					local item_state_machine = item.state_machine
+					local item_animation_event = item.animation_event
+					local render_context = {
+						camera_focus_slot_name = slot_name,
+						state_machine = item_state_machine,
+						animation_event = item_animation_event
 					}
-				}
-				content.icon_load_id = Managers.ui:load_item_icon(item, cb, render_context, preview_profile, prioritize)
+
+					content.icon_load_id = Managers.ui:load_item_icon(item, cb, render_context, dummy_profile, prioritize)
+				end
+			end,
+			unload_icon = function (parent, widget, element, ui_renderer)
+				local content = widget.content
+
+				if content.icon_load_id then
+					_remove_live_item_icon_cb_func(widget, ui_renderer)
+					Managers.ui:unload_item_icon(content.icon_load_id)
+
+					content.icon_load_id = nil
+				end
+			end,
+			destroy = function (parent, widget, element, ui_renderer)
+				local content = widget.content
+
+				if content.icon_load_id then
+					_remove_live_item_icon_cb_func(widget, ui_renderer)
+					Managers.ui:unload_item_icon(content.icon_load_id)
+
+					content.icon_load_id = nil
+				end
+			end,
+			update_item_icon_priority = function (parent, widget, element, ui_renderer, dummy_profile)
+				local content = widget.content
+
+				if content.icon_load_id then
+					Managers.ui:update_item_icon_priority(content.icon_load_id)
+				end
 			end
-		end,
-		unload_icon = function (parent, widget, element, ui_renderer)
-			local content = widget.content
+		},
+		item_icon = {
+			size = ItemPassTemplates.icon_size,
+			pass_template = ItemPassTemplates.item_icon,
+			init = function (parent, widget, element, callback_name, secondary_callback_name, ui_renderer, double_click_callback)
+				local content = widget.content
+				local style = widget.style
 
-			if content.icon_load_id then
-				_remove_live_item_icon_cb_func(widget, ui_renderer)
-				Managers.ui:unload_item_icon(content.icon_load_id)
+				content.hotspot.pressed_callback = callback_name and callback(parent, callback_name, widget, element)
+				content.hotspot.double_click_callback = double_click_callback and callback(parent, double_click_callback, widget, element)
+				content.hotspot.right_pressed_callback = secondary_callback_name and callback(parent, secondary_callback_name, widget, element)
+				content.element = element
 
-				content.icon_load_id = nil
-			end
-		end,
-		destroy = function (parent, widget, element, ui_renderer)
-			local content = widget.content
+				local item = element.item
+				local rarity = item.rarity
+				local offer = element.offer
 
-			if content.icon_load_id then
-				_remove_live_item_icon_cb_func(widget, ui_renderer)
-				Managers.ui:unload_item_icon(content.icon_load_id)
+				if offer and offer.price then
+					local price_data = offer.price.amount
+					local type = price_data.type
+					local price = price_data.amount
+					local price_text = TextUtilities.format_currency(price)
 
-				content.icon_load_id = nil
-			end
-		end,
-		update_item_icon_priority = function (parent, widget, element, ui_renderer, dummy_profile)
-			local content = widget.content
+					content.has_price_tag = true
+					content.price_text = price_text
 
-			if content.icon_load_id then
-				Managers.ui:update_item_icon_priority(content.icon_load_id)
-			end
-		end
-	}
-	blueprints.store_item = {
-		size = ItemPassTemplates.store_item_size,
-		pass_template = ItemPassTemplates.item,
-		init = function (parent, widget, element, callback_name, secondary_callback_name, ui_renderer, double_click_callback)
-			local content = widget.content
-			local style = widget.style
-			content.store_item = true
-			content.hotspot.pressed_callback = callback_name and callback(parent, callback_name, widget, element)
-			content.hotspot.double_click_callback = double_click_callback and callback(parent, double_click_callback, widget, element)
-			content.hotspot.right_pressed_callback = secondary_callback_name and callback(parent, secondary_callback_name, widget, element)
-			content.element = element
-			local item = element.item
-			local real_item = element.real_item
-			local presentation_item = real_item or item
-			local slots = presentation_item and presentation_item.slots
-			local rarity = presentation_item and presentation_item.rarity
-			local rarity_color = ItemUtils.rarity_color(presentation_item)
-			local offer = element.offer
+					local wallet_settings = WalletSettings[type]
 
-			if offer and offer.price then
-				local price_data = offer.price.amount
-				local type = price_data.type
-				local price = price_data.amount
-				local price_text = TextUtilities.format_currency(price)
-				content.has_price_tag = true
-				content.price_text = price_text
-				local wallet_settings = WalletSettings[type]
-				content.wallet_icon = wallet_settings.icon_texture_small
-				local price_text_style = style.price_text
-				local view_instance = parent._parent or parent
-				local can_afford = view_instance and view_instance.can_afford and view_instance:can_afford(price, type) or false
-				price_text_style.material = can_afford and wallet_settings.font_gradient_material or wallet_settings.font_gradient_material_insufficient_funds
-				local is_active = offer.state == "active"
-				content.sold = not is_active
-				local is_owned = offer.state == "owned"
-				content.owned = is_owned
-			end
+					content.wallet_icon = wallet_settings.icon_texture_small
 
-			local item_type = item and item.item_type
+					local price_text_style = style.price_text
+					local view_instance = parent._parent or parent
+					local can_afford = view_instance and view_instance.can_afford and view_instance:can_afford(price, type) or false
 
-			if item_type == UISettings.ITEM_TYPES.GEAR_LOWERBODY or item_type == UISettings.ITEM_TYPES.GEAR_UPPERBODY or item_type == UISettings.ITEM_TYPES.GEAR_HEAD or item_type == UISettings.ITEM_TYPES.GEAR_EXTRA_COSMETIC or item_type == UISettings.ITEM_TYPES.END_OF_ROUND then
-				local icon_style = style.icon
-				local icon_size = icon_style.size
-				local icon_offset = icon_style.offset
-				icon_size[1] = UISettings.item_icon_size[1]
-				icon_offset[1] = icon_offset[1] - icon_size[1] * 0.3
-			end
+					price_text_style.material = can_afford and wallet_settings.font_gradient_material or wallet_settings.font_gradient_material_insufficient_funds
 
-			local item_level, has_item_level = nil
+					if not content.sold then
+						local owned_count = element.owned_count
+						local total_count = element.total_count
+						local owning_total_count = owned_count and total_count and owned_count == total_count
+						local is_owned = offer.state == "owned" or owning_total_count
 
-			if presentation_item then
-				item_level, has_item_level = ItemUtils.item_level(presentation_item)
-			end
+						content.sold = is_owned
 
-			if content.item_level then
-				content.item_level = has_item_level and item_level or ""
-			end
-
-			local required_level = presentation_item and ItemUtils.character_level(presentation_item)
-			local view_instance = parent._parent or parent
-			local character_level = view_instance and view_instance.character_level and view_instance:character_level()
-			local level_requirement_met = not presentation_item and true or required_level and required_level <= character_level
-			content.level_requirement_met = level_requirement_met
-
-			if not level_requirement_met then
-				content.required_level = Localize("loc_requires_level", true, {
-					level = required_level
-				})
-			end
-
-			local display_name = presentation_item and presentation_item.display_name
-
-			if display_name then
-				content.display_name = ItemUtils.display_name(presentation_item)
-				local no_color = true
-				content.sub_display_name = ItemUtils.sub_display_name(presentation_item, not level_requirement_met and required_level)
-			end
-
-			if rarity then
-				style.sub_display_name.text_color = table.clone(rarity_color)
-				style.background_gradient.color = table.clone(rarity_color)
-				style.rarity_tag.color = table.clone(rarity_color)
-			end
-
-			local ITEM_TYPES = UISettings.ITEM_TYPES
-			local is_weapon = item_type == ITEM_TYPES.WEAPON_MELEE or item_type == ITEM_TYPES.WEAPON_RANGED
-			local traits = presentation_item and presentation_item.traits
-
-			if is_weapon and traits then
-				local trait_index = 1
-
-				for i = 1, #traits do
-					local trait = traits[i]
-					local trait_id = trait.id
-					local trait_rarity = trait.rarity
-					local trait_item = MasterItems.get_item(trait_id)
-
-					if trait_item then
-						local texture_icon, texture_frame = ItemUtils.trait_textures(trait_item, trait_rarity)
-						local pass_id = "trait_" .. trait_index
-						local trait_style = style[pass_id]
-
-						if trait_style then
-							local material_values = trait_style.material_values
-							material_values.icon = texture_icon
-							material_values.frame = texture_frame
-							material_values.overlay = 0
+						if is_owned then
+							content.owned = is_owned and ""
+						elseif owned_count and total_count and total_count > 0 then
+							content.owned = owned_count > 0 and string.format("%d/%d", owned_count, total_count) or nil
 						end
+					end
+				end
 
-						content[pass_id] = trait_id
-						trait_index = trait_index + 1
+				if content.show_class_restrictions then
+					local item = element.visual_item
+					local text = ""
+
+					if type(item.archetypes) ~= "table" or not (#item.archetypes > 0) then
+						item = element.item
+					end
+
+					if type(item.archetypes) == "table" and #item.archetypes > 0 then
+						for f = 1, #item.archetypes do
+							local archetype = item.archetypes[f]
+							local text_icon = UISettings.archetype_font_icon[archetype]
+
+							text = text and string.format("%s %s", text, text_icon) or text_icon
+						end
+					end
+
+					content.restriction_icon_text = text
+				end
+			end,
+			update = function (parent, widget, input_service, dt, t, ui_renderer)
+				local view_instance = parent._parent or parent
+				local style = widget.style
+				local content = widget.content
+				local element = content.element
+				local item = element.real_item or element.item
+
+				if item then
+					local slots = item and item.slots
+					local slot_name = element.slot_name or slots and slots[1]
+					local is_equipped = slot_name and is_item_equipped_in_slot(view_instance, item, slot_name)
+
+					content.equipped = is_equipped
+				end
+			end,
+			load_icon = function (parent, widget, element, ui_renderer, dummy_profile, prioritize)
+				local content = widget.content
+				local item = element.item or element.real_item
+
+				if not content.icon_load_id and item then
+					local cb = callback(_apply_live_item_icon_cb_func, widget)
+
+					content.icon_load_id = Managers.ui:load_item_icon(item, cb, nil, dummy_profile, prioritize)
+				end
+			end,
+			unload_icon = function (parent, widget, element, ui_renderer)
+				local content = widget.content
+
+				if content.icon_load_id then
+					_remove_live_item_icon_cb_func(widget, ui_renderer)
+					Managers.ui:unload_item_icon(content.icon_load_id)
+
+					content.icon_load_id = nil
+				end
+			end,
+			destroy = function (parent, widget, element, ui_renderer)
+				local content = widget.content
+
+				if content.icon_load_id then
+					_remove_live_item_icon_cb_func(widget, ui_renderer)
+					Managers.ui:unload_item_icon(content.icon_load_id)
+
+					content.icon_load_id = nil
+				end
+			end,
+			update_item_icon_priority = function (parent, widget, element, ui_renderer, dummy_profile)
+				local content = widget.content
+
+				if content.icon_load_id then
+					Managers.ui:update_item_icon_priority(content.icon_load_id)
+				end
+			end
+		},
+		item = {
+			size = ItemPassTemplates.weapon_item_size,
+			pass_template = ItemPassTemplates.item,
+			init = function (parent, widget, element, callback_name, secondary_callback_name, ui_renderer, double_click_callback)
+				local content = widget.content
+				local style = widget.style
+
+				content.hotspot.pressed_callback = callback_name and callback(parent, callback_name, widget, element)
+				content.hotspot.double_click_callback = double_click_callback and callback(parent, double_click_callback, widget, element)
+				content.hotspot.right_pressed_callback = secondary_callback_name and callback(parent, secondary_callback_name, widget, element)
+				content.element = element
+
+				local item = element.item
+				local offer = element.offer
+
+				if offer and offer.price then
+					local price_data = offer.price.amount
+					local type = price_data.type
+					local price = price_data.amount
+					local price_text = tostring(price)
+
+					content.has_price_tag = true
+					content.price_text = price_text
+
+					local wallet_settings = WalletSettings[type]
+
+					content.wallet_icon = wallet_settings.icon_texture_small
+
+					local price_text_style = style.price_text
+					local view_instance = parent._parent or parent
+					local can_afford = view_instance and view_instance.can_afford and view_instance:can_afford(price, type) or false
+
+					price_text_style.material = can_afford and wallet_settings.font_gradient_material or wallet_settings.font_gradient_material_insufficient_funds
+				end
+
+				local display_name = item.display_name
+
+				if display_name then
+					content.display_name = ItemUtils.display_name(item)
+
+					local no_color = true
+
+					content.sub_display_name = ItemUtils.sub_display_name(item)
+				end
+
+				if style.item_level then
+					content.item_level = ItemUtils.item_level(item)
+				end
+
+				local item_type = item.item_type
+				local ITEM_TYPES = UISettings.ITEM_TYPES
+				local is_weapon = item_type == ITEM_TYPES.WEAPON_MELEE or item_type == ITEM_TYPES.WEAPON_RANGED
+				local traits = item.traits
+
+				if is_weapon and traits then
+					local trait_index = 1
+
+					for i = 1, #traits do
+						local trait = traits[i]
+						local trait_id = trait.id
+						local rarity = trait.rarity
+						local trait_item = MasterItems.get_item(trait_id)
+
+						if trait_item then
+							local texture_icon, texture_frame = ItemUtils.trait_textures(trait_item, rarity)
+							local pass_id = "trait_" .. trait_index
+							local trait_style = style[pass_id]
+
+							if trait_style then
+								local material_values = trait_style.material_values
+
+								material_values.icon = texture_icon
+								material_values.frame = texture_frame
+								material_values.overlay = 0
+							end
+
+							content[pass_id] = trait_id
+							trait_index = trait_index + 1
+						end
 					end
 
 					local trait_category = ItemUtils.trait_category(item)
@@ -1049,370 +743,804 @@ local function generate_blueprints_function(grid_size)
 						end
 					end)
 				end
-			end
-		end,
-		update = function (parent, widget, input_service, dt, t, ui_renderer)
-			local view_instance = parent._parent or parent
-			local style = widget.style
-			local content = widget.content
-			local element = content.element
-			local offer = element.offer
 
-			if offer and offer.price then
-				local price_data = offer.price.amount
-				local type = price_data.type
-				local price = price_data.amount
-				local wallet_settings = WalletSettings[type]
-				local price_text_style = style.price_text
-				local can_afford = view_instance and view_instance.can_afford and view_instance:can_afford(price, type) or false
-				price_text_style.material = can_afford and wallet_settings.font_gradient_material or wallet_settings.font_gradient_material_insufficient_funds
-				local is_active = offer.state == "active"
-				content.sold = not is_active
-			end
-		end,
-		load_icon = function (parent, widget, element, ui_renderer, dummy_profile, prioritize)
-			local content = widget.content
-			local item = element.item
-
-			if not content.icon_load_id and item then
-				local render_context = nil
-				local item_type = item.item_type
-				local ui_item_types = UISettings.ITEM_TYPES
-				local dummy_profile = nil
-
-				if item_type == ui_item_types.END_OF_ROUND then
-					local gender = item.genders and item.genders[1] or "male"
-					local breed = item.breeds and item.breeds[1] or "human"
-					local archetype = item.archetypes and item.archetypes[1] and Archetypes[item.archetypes[1]] or Archetypes.veteran
-					dummy_profile = get_generic_profile(breed, gender, archetype)
-				end
-
-				if item_type == ui_item_types.GEAR_HEAD or item_type == ui_item_types.GEAR_LOWERBODY or item_type == ui_item_types.GEAR_UPPERBODY or item_type == ui_item_types.GEAR_EXTRA_COSMETIC or item_type == ui_item_types.END_OF_ROUND then
-					local item_state_machine = item.state_machine
-					local item_animation_event = item.animation_event
-					local slots = item.slots
-					local slot_name = slots and slots[1]
-					render_context = {
-						camera_focus_slot_name = slot_name,
-						state_machine = item_state_machine,
-						animation_event = item_animation_event
-					}
-				end
-
-				local cb = callback(_apply_live_item_icon_cb_func, widget)
-				content.icon_load_id = Managers.ui:load_item_icon(item, cb, render_context, prioritize)
-			end
-		end,
-		unload_icon = function (parent, widget, element, ui_renderer)
-			local content = widget.content
-
-			if content.icon_load_id then
-				_remove_live_item_icon_cb_func(widget, ui_renderer)
-				Managers.ui:unload_item_icon(content.icon_load_id)
-
-				content.icon_load_id = nil
-			end
-		end,
-		destroy = function (parent, widget, element, ui_renderer)
-			local content = widget.content
-
-			if content.icon_load_id then
-				_remove_live_item_icon_cb_func(widget, ui_renderer)
-				Managers.ui:unload_item_icon(content.icon_load_id)
-
-				content.icon_load_id = nil
-			end
-		end,
-		update_item_icon_priority = function (parent, widget, element, ui_renderer, dummy_profile)
-			local content = widget.content
-
-			if content.icon_load_id then
-				Managers.ui:update_item_icon_priority(content.icon_load_id)
-			end
-		end
-	}
-	blueprints.general_goods_item = {
-		size = ItemPassTemplates.store_item_size,
-		pass_template = ItemPassTemplates.general_goods_item,
-		init = function (parent, widget, element, callback_name, secondary_callback_name, ui_renderer, double_click_callback)
-			local content = widget.content
-			local style = widget.style
-			content.store_item = true
-			content.hotspot.pressed_callback = callback_name and callback(parent, callback_name, widget, element)
-			content.hotspot.double_click_callback = double_click_callback and callback(parent, double_click_callback, widget, element)
-			content.hotspot.right_pressed_callback = secondary_callback_name and callback(parent, secondary_callback_name, widget, element)
-			content.element = element
-			local display_information = element.display_information
-			local display_name = display_information and display_information.display_name
-			local sub_header = display_information and display_information.sub_header
-			local background_icon = display_information and display_information.background_icon
-			local icon = display_information and display_information.icon
-
-			if display_name then
-				content.display_name = display_name
-			end
-
-			if sub_header then
-				content.sub_display_name = sub_header
-			end
-
-			if background_icon then
-				content.background_icon = background_icon
-			end
-
-			if icon then
-				content.icon = icon
-			end
-
-			local offer = element.offer
-
-			if offer and offer.price then
-				local price_data = offer.price.amount
-				local type = price_data.type
-				local price = price_data.amount
-				local price_text = TextUtilities.format_currency(price)
-				content.has_price_tag = true
-				content.price_text = price_text
-				local wallet_settings = WalletSettings[type]
-				content.wallet_icon = wallet_settings.icon_texture_small
-				local price_text_style = style.price_text
+				local required_level = ItemUtils.character_level(item)
 				local view_instance = parent._parent or parent
-				local can_afford = view_instance and view_instance.can_afford and view_instance:can_afford(price, type) or false
-				price_text_style.material = can_afford and wallet_settings.font_gradient_material or wallet_settings.font_gradient_material_insufficient_funds
+				local character_level = view_instance and view_instance.character_level and view_instance:character_level()
+				local level_requirement_met = not item and true or required_level and required_level <= character_level
+
+				content.level_requirement_met = level_requirement_met
+
+				if not level_requirement_met then
+					local required_level_text = Localize("loc_requires_level", true, {
+						level = required_level
+					})
+
+					content.required_level = required_level_text
+
+					local required_level_style = style.required_level
+					local required_level_text_width = UIRenderer.text_size(ui_renderer, required_level_text, required_level_style.font_type, required_level_style.font_size) or 0
+					local required_level_background_style = style.required_level_background
+
+					required_level_background_style.size[1] = required_level_text_width + 40
+				end
+
+				local rarity_color = ItemUtils.rarity_color(item)
+
+				style.sub_display_name.text_color = table.clone(rarity_color)
+				style.background_gradient.color = table.clone(rarity_color)
+				style.rarity_tag.color = table.clone(rarity_color)
+			end,
+			update = function (parent, widget, input_service, dt, t, ui_renderer)
+				local view_instance = parent._parent or parent
+				local style = widget.style
+				local content = widget.content
+				local element = content.element
+				local slot = element.slot
+				local item = element.real_item or element.item
+
+				if slot then
+					local slot_name = slot.name
+					local item_type = item.item_type
+					local is_equipped
+
+					if item_type == UISettings.ITEM_TYPES.GADGET then
+						local slots = item and item.slots
+
+						is_equipped = is_item_equipped_in_any_slot(view_instance, item, slots)
+					else
+						is_equipped = is_item_equipped_in_slot(view_instance, item, slot_name)
+					end
+
+					content.equipped = is_equipped
+				end
+
+				local offer = element.offer
+
+				if offer and offer.price then
+					local price_data = offer.price.amount
+					local type = price_data.type
+					local price = price_data.amount
+					local wallet_settings = WalletSettings[type]
+					local price_text_style = style.price_text
+					local can_afford = view_instance and view_instance.can_afford and view_instance:can_afford(price, type) or false
+
+					price_text_style.material = can_afford and wallet_settings.font_gradient_material or wallet_settings.font_gradient_material_insufficient_funds
+				end
+			end,
+			load_icon = function (parent, widget, element, ui_renderer, dummy_profile, prioritize)
+				local content = widget.content
+				local item = element.item
+
+				if not content.icon_load_id and item then
+					local cb = callback(_apply_live_item_icon_cb_func, widget)
+
+					content.icon_load_id = Managers.ui:load_item_icon(item, cb, nil, dummy_profile, prioritize)
+				end
+			end,
+			unload_icon = function (parent, widget, element, ui_renderer)
+				local content = widget.content
+
+				if content.icon_load_id then
+					_remove_live_item_icon_cb_func(widget, ui_renderer)
+					Managers.ui:unload_item_icon(content.icon_load_id)
+
+					content.icon_load_id = nil
+				end
+			end,
+			destroy = function (parent, widget, element, ui_renderer)
+				local content = widget.content
+
+				if content.icon_load_id then
+					_remove_live_item_icon_cb_func(widget, ui_renderer)
+					Managers.ui:unload_item_icon(content.icon_load_id)
+
+					content.icon_load_id = nil
+				end
+			end,
+			update_item_icon_priority = function (parent, widget, element, ui_renderer, dummy_profile)
+				local content = widget.content
+
+				if content.icon_load_id then
+					Managers.ui:update_item_icon_priority(content.icon_load_id)
+				end
 			end
-		end,
-		update = function (parent, widget, input_service, dt, t, ui_renderer)
-			local view_instance = parent._parent or parent
-			local style = widget.style
-			local content = widget.content
-			local element = content.element
-			local offer = element.offer
-
-			if offer and offer.price then
-				local price_data = offer.price.amount
-				local type = price_data.type
-				local price = price_data.amount
-				local wallet_settings = WalletSettings[type]
-				local price_text_style = style.price_text
-				local can_afford = view_instance and view_instance.can_afford and view_instance:can_afford(price, type) or false
-				price_text_style.material = can_afford and wallet_settings.font_gradient_material or wallet_settings.font_gradient_material_insufficient_funds
-			end
-		end,
-		destroy = function (parent, widget, element, ui_renderer)
-			return
-		end
-	}
-	blueprints.credits_goods_item = {
-		size = ItemPassTemplates.store_item_credits_goods_size,
-		pass_template = ItemPassTemplates.credits_goods_item,
-		init = function (parent, widget, element, callback_name, secondary_callback_name, ui_renderer, double_click_callback)
-			local content = widget.content
-			local style = widget.style
-			content.store_item = true
-			content.hotspot.pressed_callback = callback_name and callback(parent, callback_name, widget, element)
-			content.hotspot.double_click_callback = double_click_callback and callback(parent, double_click_callback, widget, element)
-			content.hotspot.right_pressed_callback = secondary_callback_name and callback(parent, secondary_callback_name, widget, element)
-			content.element = element
-			local display_name = element.display_name
-			local icon = element.icon
-			local item = element.item
-
-			if display_name then
-				content.display_name = display_name
-			end
-
-			if icon then
-				content.icon = icon
-			end
-
-			local view_instance = parent._parent or parent
-			local character_level = view_instance and view_instance.character_level and view_instance:character_level()
-			local level_requirement_met = true
-
-			if element.weapon_level_requirement then
-				level_requirement_met = element.weapon_level_requirement <= character_level
-			end
-
-			content.level_requirement_met = level_requirement_met
-
-			if level_requirement_met == false then
-				content.required_level = Localize("loc_requires_level", true, {
-					level = element.weapon_level_requirement
-				})
-			end
-		end,
-		update = function (parent, widget, input_service, dt, t, ui_renderer)
-			return
-		end,
-		destroy = function (parent, widget, element, ui_renderer)
-			return
-		end
-	}
-	blueprints.group_header = {
-		size = {
-			grid_width,
-			70
 		},
-		pass_template = {
-			{
-				value = "n/a",
-				pass_type = "text",
-				value_id = "text",
-				style = group_header_font_style
-			}
-		},
-		init = function (parent, widget, element, callback_name)
-			local content = widget.content
-			local display_name = element.display_name
-			local text = Utf8.upper(Localize(display_name))
-			content.element = element
-			content.localized_display_name = text
-			content.text = text
-		end,
-		update = function (parent, widget, input_service, dt, t, ui_renderer)
-			local content = widget.content
-			local element = content.element
-			local display_name = element.display_name
-			local group_header = content.group_header
-			local suffix_text = nil
-			local text = content.localized_display_name
+		gear_set = {
+			size = ItemPassTemplates.gear_bundle_size,
+			pass_template = ItemPassTemplates.gear_item,
+			init = function (parent, widget, element, callback_name, secondary_callback_name, ui_renderer, double_click_callback)
+				local content = widget.content
+				local style = widget.style
 
-			if suffix_text then
-				text = "{#color(194,154,116)}" .. text .. " {#color(255,242,230)}" .. Localize(suffix_text)
-			end
+				content.hotspot.pressed_callback = callback_name and callback(parent, callback_name, widget, element)
+				content.hotspot.double_click_callback = double_click_callback and callback(parent, double_click_callback, widget, element)
+				content.hotspot.right_pressed_callback = secondary_callback_name and callback(parent, secondary_callback_name, widget, element)
+				content.element = element
 
-			content.text = text
-		end
-	}
-	blueprints.sub_header = {
-		size = {
-			grid_width,
-			20
-		},
-		pass_template = {
-			{
-				value = "n/a",
-				pass_type = "text",
-				value_id = "text",
-				style = sub_header_font_style
-			}
-		},
-		init = function (parent, widget, element, callback_name)
-			local content = widget.content
-			local display_name = element.display_name
-			local text = Utf8.upper(Localize(display_name))
-			content.element = element
-			content.localized_display_name = text
-			content.text = text
-		end,
-		update = function (parent, widget, input_service, dt, t, ui_renderer)
-			local content = widget.content
-			local element = content.element
-			local display_name = element.display_name
-			local group_header = content.group_header
-			local suffix_text = nil
-			local text = content.localized_display_name
-
-			if suffix_text then
-				text = "{#color(194,154,116)}" .. text .. " {#color(255,242,230)}" .. Localize(suffix_text)
-			end
-
-			content.text = text
-		end
-	}
-	blueprints.item_name = {
-		size_function = function (parent, config, ui_renderer)
-			return config.size
-		end,
-		pass_template = ItemPassTemplates.item_name,
-		init = function (self, widget, element, callback_name, secondary_callback_name, ui_renderer)
-			local item = element.item
-			local ignore_localization = element.ignore_localization
-			local display_name = ignore_localization and item.display_name or ItemUtils.display_name(item)
-			local item_type = ignore_localization and item.item_type or ItemUtils.type_display_name(item)
-			widget.content.title = display_name
-
-			if item.rarity then
+				local item = element.item
+				local rarity = item and item.rarity
 				local rarity_color, rarity_color_dark = ItemUtils.rarity_color(item)
-				local rarity_display_name = ignore_localization and item.rarity_name or ItemUtils.rarity_display_name(item)
-				widget.style.background.material_values.line_color = {
-					rarity_color[2] / 255,
-					rarity_color[3] / 255,
-					rarity_color[4] / 255,
-					rarity_color[1] / 255
-				}
-				widget.style.background.material_values.background_color = {
-					rarity_color_dark[2] / 255,
-					rarity_color_dark[3] / 255,
-					rarity_color_dark[4] / 255,
-					rarity_color_dark[1] / 191.25
-				}
-				widget.content.description = string.format("{#color(%d, %d, %d)}%s{#reset()} • %s", rarity_color[2], rarity_color[3], rarity_color[4], rarity_display_name, item_type)
-			else
-				local background_color = Color.terminal_frame(191.25, true)
-				local line_color = Color.terminal_frame_hover(255, true)
-				widget.style.background.material_values.line_color = {
-					line_color[2] / 255,
-					line_color[3] / 255,
-					line_color[4] / 255,
-					line_color[1] / 255
-				}
-				widget.style.background.material_values.background_color = {
-					background_color[2] / 255,
-					background_color[3] / 255,
-					background_color[4] / 255,
-					background_color[1] / 255
-				}
-				widget.content.description = item_type
+
+				if rarity then
+					style.background_gradient.color = table.clone(rarity_color_dark)
+				end
+
+				local offer = element.offer
+
+				if offer and offer.price then
+					local price_data = offer.price.amount
+					local type = price_data.type
+					local price = price_data.discounted_price or price_data.amount
+					local price_text = TextUtilities.format_currency(price)
+
+					content.has_price_tag = true
+					content.price_text = price_text
+
+					local wallet_settings = WalletSettings[type]
+
+					content.wallet_icon = wallet_settings.icon_texture_small
+
+					local price_text_style = style.price_text
+					local view_instance = parent._parent or parent
+					local can_afford = view_instance and view_instance.can_afford and view_instance:can_afford(price, type) or false
+
+					price_text_style.material = can_afford and wallet_settings.font_gradient_material or wallet_settings.font_gradient_material_insufficient_funds
+
+					if not content.sold then
+						local owned_count = element.owned_count
+						local total_count = element.total_count
+						local owning_total_count = owned_count and total_count and owned_count == total_count
+						local is_owned = offer.state == "owned" or owning_total_count
+
+						content.sold = is_owned
+
+						if is_owned then
+							content.owned = is_owned and ""
+							content.owned_count_text = nil
+						elseif owned_count and total_count and owned_count > 0 and owned_count < total_count then
+							content.owned_count_text = string.format("%d/%d ", owned_count, total_count) or nil
+						end
+					end
+				end
+			end,
+			update = function (parent, widget, input_service, dt, t, ui_renderer)
+				local style = widget.style
+				local content = widget.content
+				local element = content.element
+				local offer = element.offer
+
+				if offer and offer.price then
+					local price_data = offer.price.amount
+					local type = price_data.type
+					local price = price_data.discounted_price or price_data.amount
+					local price_text = TextUtilities.format_currency(price)
+
+					content.has_price_tag = true
+					content.price_text = price_text
+
+					local wallet_settings = WalletSettings[type]
+
+					content.wallet_icon = wallet_settings.icon_texture_small
+
+					local price_text_style = style.price_text
+					local view_instance = parent._parent or parent
+					local can_afford = view_instance and view_instance.can_afford and view_instance:can_afford(price, type) or false
+
+					price_text_style.material = can_afford and wallet_settings.font_gradient_material or wallet_settings.font_gradient_material_insufficient_funds
+
+					if not content.sold then
+						local owned_count = element.owned_count
+						local total_count = element.total_count
+						local owning_total_count = owned_count and total_count and owned_count == total_count
+						local is_owned = offer and offer.state == "owned" or owning_total_count
+
+						content.sold = is_owned
+
+						if is_owned then
+							content.owned = is_owned and ""
+							content.owned_count_text = nil
+						elseif owned_count and total_count and owned_count > 0 and owned_count < total_count then
+							content.owned_count_text = string.format("%d/%d ", owned_count, total_count) or nil
+						end
+					end
+				end
+			end,
+			load_icon = function (parent, widget, element, ui_renderer, dummy_profile, prioritize)
+				local content = widget.content
+				local item = element.item or element.real_item
+
+				if not content.icon_load_id and item then
+					local cb = callback(_apply_live_item_icon_cb_func, widget)
+					local preview_profile = dummy_profile or element.preview_profile
+					local gear_bundle_size = ItemPassTemplates.gear_bundle_size
+					local render_context = {
+						camera_focus_slot_name = "slot_set",
+						size = {
+							gear_bundle_size[1],
+							gear_bundle_size[2]
+						}
+					}
+
+					content.icon_load_id = Managers.ui:load_item_icon(item, cb, render_context, preview_profile, prioritize)
+				end
+			end,
+			unload_icon = function (parent, widget, element, ui_renderer)
+				local content = widget.content
+
+				if content.icon_load_id then
+					_remove_live_item_icon_cb_func(widget, ui_renderer)
+					Managers.ui:unload_item_icon(content.icon_load_id)
+
+					content.icon_load_id = nil
+				end
+			end,
+			destroy = function (parent, widget, element, ui_renderer)
+				local content = widget.content
+
+				if content.icon_load_id then
+					_remove_live_item_icon_cb_func(widget, ui_renderer)
+					Managers.ui:unload_item_icon(content.icon_load_id)
+
+					content.icon_load_id = nil
+				end
+			end,
+			update_item_icon_priority = function (parent, widget, element, ui_renderer, dummy_profile)
+				local content = widget.content
+
+				if content.icon_load_id then
+					Managers.ui:update_item_icon_priority(content.icon_load_id)
+				end
 			end
+		},
+		store_item = {
+			size = ItemPassTemplates.store_item_size,
+			pass_template = ItemPassTemplates.item,
+			init = function (parent, widget, element, callback_name, secondary_callback_name, ui_renderer, double_click_callback)
+				local content = widget.content
+				local style = widget.style
 
-			local item_name_style = widget.style.title
-			local display_description_style = widget.style.description
+				content.store_item = true
+				content.hotspot.pressed_callback = callback_name and callback(parent, callback_name, widget, element)
+				content.hotspot.double_click_callback = double_click_callback and callback(parent, double_click_callback, widget, element)
+				content.hotspot.right_pressed_callback = secondary_callback_name and callback(parent, secondary_callback_name, widget, element)
+				content.element = element
 
-			if element.use_store_appearance then
-				item_name_style.material = "content/ui/materials/font_gradients/slug_font_gradient_gold"
-			else
-				item_name_style.material = "content/ui/materials/font_gradients/slug_font_gradient_header"
+				local item = element.item
+				local real_item = element.real_item
+				local presentation_item = real_item or item
+				local slots = presentation_item and presentation_item.slots
+				local rarity = presentation_item and presentation_item.rarity
+				local rarity_color = ItemUtils.rarity_color(presentation_item)
+				local offer = element.offer
+
+				if offer and offer.price then
+					local price_data = offer.price.amount
+					local type = price_data.type
+					local price = price_data.amount
+					local price_text = TextUtilities.format_currency(price)
+
+					content.has_price_tag = true
+					content.price_text = price_text
+
+					local wallet_settings = WalletSettings[type]
+
+					content.wallet_icon = wallet_settings.icon_texture_small
+
+					local price_text_style = style.price_text
+					local view_instance = parent._parent or parent
+					local can_afford = view_instance and view_instance.can_afford and view_instance:can_afford(price, type) or false
+
+					price_text_style.material = can_afford and wallet_settings.font_gradient_material or wallet_settings.font_gradient_material_insufficient_funds
+
+					local is_active = offer.state == "active"
+
+					content.sold = not is_active
+
+					local is_owned = offer.state == "owned"
+
+					content.owned = is_owned
+				end
+
+				local item_type = item and item.item_type
+
+				if item_type == UISettings.ITEM_TYPES.GEAR_LOWERBODY or item_type == UISettings.ITEM_TYPES.GEAR_UPPERBODY or item_type == UISettings.ITEM_TYPES.GEAR_HEAD or item_type == UISettings.ITEM_TYPES.GEAR_EXTRA_COSMETIC or item_type == UISettings.ITEM_TYPES.END_OF_ROUND then
+					local icon_style = style.icon
+					local icon_size = icon_style.size
+					local icon_offset = icon_style.offset
+
+					icon_size[1] = UISettings.item_icon_size[1]
+					icon_offset[1] = icon_offset[1] - icon_size[1] * 0.3
+				end
+
+				local item_level, has_item_level
+
+				if presentation_item then
+					item_level, has_item_level = ItemUtils.item_level(presentation_item)
+				end
+
+				if content.item_level then
+					content.item_level = has_item_level and item_level or ""
+				end
+
+				local required_level = presentation_item and ItemUtils.character_level(presentation_item)
+				local view_instance = parent._parent or parent
+				local character_level = view_instance and view_instance.character_level and view_instance:character_level()
+				local level_requirement_met = not presentation_item and true or required_level and required_level <= character_level
+
+				content.level_requirement_met = level_requirement_met
+
+				if not level_requirement_met then
+					content.required_level = Localize("loc_requires_level", true, {
+						level = required_level
+					})
+				end
+
+				local display_name = presentation_item and presentation_item.display_name
+
+				if display_name then
+					content.display_name = ItemUtils.display_name(presentation_item)
+
+					local no_color = true
+
+					content.sub_display_name = ItemUtils.sub_display_name(presentation_item, not level_requirement_met and required_level)
+				end
+
+				if rarity then
+					style.sub_display_name.text_color = table.clone(rarity_color)
+					style.background_gradient.color = table.clone(rarity_color)
+					style.rarity_tag.color = table.clone(rarity_color)
+				end
+
+				local ITEM_TYPES = UISettings.ITEM_TYPES
+				local is_weapon = item_type == ITEM_TYPES.WEAPON_MELEE or item_type == ITEM_TYPES.WEAPON_RANGED
+				local traits = presentation_item and presentation_item.traits
+
+				if is_weapon and traits then
+					local trait_index = 1
+
+					for i = 1, #traits do
+						local trait = traits[i]
+						local trait_id = trait.id
+						local trait_rarity = trait.rarity
+						local trait_item = MasterItems.get_item(trait_id)
+
+						if trait_item then
+							local texture_icon, texture_frame = ItemUtils.trait_textures(trait_item, trait_rarity)
+							local pass_id = "trait_" .. trait_index
+							local trait_style = style[pass_id]
+
+							if trait_style then
+								local material_values = trait_style.material_values
+
+								material_values.icon = texture_icon
+								material_values.frame = texture_frame
+								material_values.overlay = 0
+							end
+
+							content[pass_id] = trait_id
+							trait_index = trait_index + 1
+						end
+
+						local trait_category = ItemUtils.trait_category(item)
+
+						Managers.data_service.crafting:trait_sticker_book(trait_category):next(function (seen_traits)
+							if seen_traits then
+								for i = 1, #traits do
+									local pass_id = "trait_" .. i
+									local trait = traits[i]
+									local trait_id = trait.id
+									local trait_rarity = trait.rarity
+
+									if trait then
+										for seen_trait_name, status in pairs(seen_traits) do
+											if seen_trait_name == trait_id and status ~= nil then
+												local trait_status = status[trait_rarity]
+
+												if trait_status == "unseen" then
+													local trait_style = style[pass_id]
+
+													if trait_style then
+														trait_style.material_values.overlay = 1
+													end
+
+													break
+												end
+											end
+										end
+									end
+								end
+							end
+						end)
+					end
+				end
+			end,
+			update = function (parent, widget, input_service, dt, t, ui_renderer)
+				local view_instance = parent._parent or parent
+				local style = widget.style
+				local content = widget.content
+				local element = content.element
+				local offer = element.offer
+
+				if offer and offer.price then
+					local price_data = offer.price.amount
+					local type = price_data.type
+					local price = price_data.amount
+					local wallet_settings = WalletSettings[type]
+					local price_text_style = style.price_text
+					local can_afford = view_instance and view_instance.can_afford and view_instance:can_afford(price, type) or false
+
+					price_text_style.material = can_afford and wallet_settings.font_gradient_material or wallet_settings.font_gradient_material_insufficient_funds
+
+					local is_active = offer.state == "active"
+
+					content.sold = not is_active
+				end
+			end,
+			load_icon = function (parent, widget, element, ui_renderer, dummy_profile, prioritize)
+				local content = widget.content
+				local item = element.item
+
+				if not content.icon_load_id and item then
+					local render_context
+					local item_type = item.item_type
+					local ui_item_types = UISettings.ITEM_TYPES
+					local dummy_profile
+
+					if item_type == ui_item_types.END_OF_ROUND then
+						local gender = item.genders and item.genders[1] or "male"
+						local breed = item.breeds and item.breeds[1] or "human"
+						local archetype = item.archetypes and item.archetypes[1] and Archetypes[item.archetypes[1]] or Archetypes.veteran
+
+						dummy_profile = get_generic_profile(breed, gender, archetype)
+					end
+
+					if item_type == ui_item_types.GEAR_HEAD or item_type == ui_item_types.GEAR_LOWERBODY or item_type == ui_item_types.GEAR_UPPERBODY or item_type == ui_item_types.GEAR_EXTRA_COSMETIC or item_type == ui_item_types.END_OF_ROUND then
+						local item_state_machine = item.state_machine
+						local item_animation_event = item.animation_event
+						local slots = item.slots
+						local slot_name = slots and slots[1]
+
+						render_context = {
+							camera_focus_slot_name = slot_name,
+							state_machine = item_state_machine,
+							animation_event = item_animation_event
+						}
+					end
+
+					local cb = callback(_apply_live_item_icon_cb_func, widget)
+
+					content.icon_load_id = Managers.ui:load_item_icon(item, cb, render_context, prioritize)
+				end
+			end,
+			unload_icon = function (parent, widget, element, ui_renderer)
+				local content = widget.content
+
+				if content.icon_load_id then
+					_remove_live_item_icon_cb_func(widget, ui_renderer)
+					Managers.ui:unload_item_icon(content.icon_load_id)
+
+					content.icon_load_id = nil
+				end
+			end,
+			destroy = function (parent, widget, element, ui_renderer)
+				local content = widget.content
+
+				if content.icon_load_id then
+					_remove_live_item_icon_cb_func(widget, ui_renderer)
+					Managers.ui:unload_item_icon(content.icon_load_id)
+
+					content.icon_load_id = nil
+				end
+			end,
+			update_item_icon_priority = function (parent, widget, element, ui_renderer, dummy_profile)
+				local content = widget.content
+
+				if content.icon_load_id then
+					Managers.ui:update_item_icon_priority(content.icon_load_id)
+				end
 			end
+		},
+		general_goods_item = {
+			size = ItemPassTemplates.store_item_size,
+			pass_template = ItemPassTemplates.general_goods_item,
+			init = function (parent, widget, element, callback_name, secondary_callback_name, ui_renderer, double_click_callback)
+				local content = widget.content
+				local style = widget.style
 
-			local item_name_options = UIFonts.get_font_options_by_style(item_name_style)
-			local display_description_options = UIFonts.get_font_options_by_style(display_description_style)
-			local item_name_size = {
-				widget.content.size[1],
-				1080
-			}
-			local item_name_width, item_name_height = UIRenderer.text_size(ui_renderer, widget.content.title, item_name_style.font_type, item_name_style.font_size, item_name_size, item_name_options)
-			local display_description_width, display_description_height = UIRenderer.text_size(ui_renderer, widget.content.description, display_description_style.font_type, display_description_style.font_size, item_name_size, display_description_options)
-			local item_name_margin = 15
-			widget.content.size[2] = item_name_height + item_name_margin + display_description_height
-			widget.style.title.size = {
-				item_name_width + item_name_margin,
-				item_name_height
-			}
-			widget.style.description.size = {
-				display_description_width + item_name_margin,
-				display_description_height
-			}
-			widget.style.description.offset[2] = item_name_height + item_name_margin
-			local offset_x = 0
-			local offset_y = 0
+				content.store_item = true
+				content.hotspot.pressed_callback = callback_name and callback(parent, callback_name, widget, element)
+				content.hotspot.double_click_callback = double_click_callback and callback(parent, double_click_callback, widget, element)
+				content.hotspot.right_pressed_callback = secondary_callback_name and callback(parent, secondary_callback_name, widget, element)
+				content.element = element
 
-			if element.horizontal_alignment == "right" then
-				offset_x = -widget.content.size[1]
-			elseif element.horizontal_alignment == "center" then
-				offset_x = -widget.content.size[1] * 0.5
+				local display_information = element.display_information
+				local display_name = display_information and display_information.display_name
+				local sub_header = display_information and display_information.sub_header
+				local background_icon = display_information and display_information.background_icon
+				local icon = display_information and display_information.icon
+
+				if display_name then
+					content.display_name = display_name
+				end
+
+				if sub_header then
+					content.sub_display_name = sub_header
+				end
+
+				if background_icon then
+					content.background_icon = background_icon
+				end
+
+				if icon then
+					content.icon = icon
+				end
+
+				local offer = element.offer
+
+				if offer and offer.price then
+					local price_data = offer.price.amount
+					local type = price_data.type
+					local price = price_data.amount
+					local price_text = TextUtilities.format_currency(price)
+
+					content.has_price_tag = true
+					content.price_text = price_text
+
+					local wallet_settings = WalletSettings[type]
+
+					content.wallet_icon = wallet_settings.icon_texture_small
+
+					local price_text_style = style.price_text
+					local view_instance = parent._parent or parent
+					local can_afford = view_instance and view_instance.can_afford and view_instance:can_afford(price, type) or false
+
+					price_text_style.material = can_afford and wallet_settings.font_gradient_material or wallet_settings.font_gradient_material_insufficient_funds
+				end
+			end,
+			update = function (parent, widget, input_service, dt, t, ui_renderer)
+				local view_instance = parent._parent or parent
+				local style = widget.style
+				local content = widget.content
+				local element = content.element
+				local offer = element.offer
+
+				if offer and offer.price then
+					local price_data = offer.price.amount
+					local type = price_data.type
+					local price = price_data.amount
+					local wallet_settings = WalletSettings[type]
+					local price_text_style = style.price_text
+					local can_afford = view_instance and view_instance.can_afford and view_instance:can_afford(price, type) or false
+
+					price_text_style.material = can_afford and wallet_settings.font_gradient_material or wallet_settings.font_gradient_material_insufficient_funds
+				end
+			end,
+			destroy = function (parent, widget, element, ui_renderer)
+				return
 			end
+		},
+		credits_goods_item = {
+			size = ItemPassTemplates.store_item_credits_goods_size,
+			pass_template = ItemPassTemplates.credits_goods_item,
+			init = function (parent, widget, element, callback_name, secondary_callback_name, ui_renderer, double_click_callback)
+				local content = widget.content
+				local style = widget.style
 
-			if element.vertical_alignment == "bottom" then
-				offset_y = -widget.content.size[2]
-			elseif element.vertical_alignment == "center" then
-				offset_x = -widget.content.size[2] * 0.5
+				content.store_item = true
+				content.hotspot.pressed_callback = callback_name and callback(parent, callback_name, widget, element)
+				content.hotspot.double_click_callback = double_click_callback and callback(parent, double_click_callback, widget, element)
+				content.hotspot.right_pressed_callback = secondary_callback_name and callback(parent, secondary_callback_name, widget, element)
+				content.element = element
+
+				local display_name = element.display_name
+				local icon = element.icon
+				local item = element.item
+
+				if display_name then
+					content.display_name = display_name
+				end
+
+				if icon then
+					content.icon = icon
+				end
+
+				local view_instance = parent._parent or parent
+				local character_level = view_instance and view_instance.character_level and view_instance:character_level()
+				local level_requirement_met = true
+
+				if element.weapon_level_requirement then
+					level_requirement_met = character_level >= element.weapon_level_requirement
+				end
+
+				content.level_requirement_met = level_requirement_met
+
+				if level_requirement_met == false then
+					content.required_level = Localize("loc_requires_level", true, {
+						level = element.weapon_level_requirement
+					})
+				end
+			end,
+			update = function (parent, widget, input_service, dt, t, ui_renderer)
+				return
+			end,
+			destroy = function (parent, widget, element, ui_renderer)
+				return
 			end
+		},
+		group_header = {
+			size = {
+				grid_width,
+				70
+			},
+			pass_template = {
+				{
+					value = "n/a",
+					pass_type = "text",
+					value_id = "text",
+					style = group_header_font_style
+				}
+			},
+			init = function (parent, widget, element, callback_name)
+				local content = widget.content
+				local display_name = element.display_name
+				local text = Utf8.upper(Localize(display_name))
 
-			widget.offset[1] = offset_x
-			widget.offset[2] = offset_y
-			widget.original_offset = table.clone(widget.offset)
-		end
+				content.element = element
+				content.localized_display_name = text
+				content.text = text
+			end,
+			update = function (parent, widget, input_service, dt, t, ui_renderer)
+				local content = widget.content
+				local element = content.element
+				local display_name = element.display_name
+				local group_header = content.group_header
+				local suffix_text
+				local text = content.localized_display_name
+
+				if suffix_text then
+					text = "{#color(194,154,116)}" .. text .. " {#color(255,242,230)}" .. Localize(suffix_text)
+				end
+
+				content.text = text
+			end
+		},
+		sub_header = {
+			size = {
+				grid_width,
+				20
+			},
+			pass_template = {
+				{
+					value = "n/a",
+					pass_type = "text",
+					value_id = "text",
+					style = sub_header_font_style
+				}
+			},
+			init = function (parent, widget, element, callback_name)
+				local content = widget.content
+				local display_name = element.display_name
+				local text = Utf8.upper(Localize(display_name))
+
+				content.element = element
+				content.localized_display_name = text
+				content.text = text
+			end,
+			update = function (parent, widget, input_service, dt, t, ui_renderer)
+				local content = widget.content
+				local element = content.element
+				local display_name = element.display_name
+				local group_header = content.group_header
+				local suffix_text
+				local text = content.localized_display_name
+
+				if suffix_text then
+					text = "{#color(194,154,116)}" .. text .. " {#color(255,242,230)}" .. Localize(suffix_text)
+				end
+
+				content.text = text
+			end
+		},
+		item_name = {
+			size_function = function (parent, config, ui_renderer)
+				return config.size
+			end,
+			pass_template = ItemPassTemplates.item_name,
+			init = function (self, widget, element, callback_name, secondary_callback_name, ui_renderer)
+				local item = element.item
+				local ignore_localization = element.ignore_localization
+				local display_name = ignore_localization and item.display_name or ItemUtils.display_name(item)
+				local item_type = ignore_localization and item.item_type or ItemUtils.type_display_name(item)
+
+				widget.content.title = display_name
+
+				if item.rarity then
+					local rarity_color, rarity_color_dark = ItemUtils.rarity_color(item)
+					local rarity_display_name = ignore_localization and item.rarity_name or ItemUtils.rarity_display_name(item)
+
+					widget.style.background.material_values.line_color = {
+						rarity_color[2] / 255,
+						rarity_color[3] / 255,
+						rarity_color[4] / 255,
+						rarity_color[1] / 255
+					}
+					widget.style.background.material_values.background_color = {
+						rarity_color_dark[2] / 255,
+						rarity_color_dark[3] / 255,
+						rarity_color_dark[4] / 255,
+						rarity_color_dark[1] / 191.25
+					}
+					widget.content.description = string.format("{#color(%d, %d, %d)}%s{#reset()} • %s", rarity_color[2], rarity_color[3], rarity_color[4], rarity_display_name, item_type)
+				else
+					local background_color = Color.terminal_frame(191.25, true)
+					local line_color = Color.terminal_frame_hover(255, true)
+
+					widget.style.background.material_values.line_color = {
+						line_color[2] / 255,
+						line_color[3] / 255,
+						line_color[4] / 255,
+						line_color[1] / 255
+					}
+					widget.style.background.material_values.background_color = {
+						background_color[2] / 255,
+						background_color[3] / 255,
+						background_color[4] / 255,
+						background_color[1] / 255
+					}
+					widget.content.description = item_type
+				end
+
+				local item_name_style = widget.style.title
+				local display_description_style = widget.style.description
+
+				if element.use_store_appearance then
+					item_name_style.material = "content/ui/materials/font_gradients/slug_font_gradient_gold"
+				else
+					item_name_style.material = "content/ui/materials/font_gradients/slug_font_gradient_header"
+				end
+
+				local item_name_options = UIFonts.get_font_options_by_style(item_name_style)
+				local display_description_options = UIFonts.get_font_options_by_style(display_description_style)
+				local item_name_size = {
+					widget.content.size[1],
+					1080
+				}
+				local item_name_width, item_name_height = UIRenderer.text_size(ui_renderer, widget.content.title, item_name_style.font_type, item_name_style.font_size, item_name_size, item_name_options)
+				local display_description_width, display_description_height = UIRenderer.text_size(ui_renderer, widget.content.description, display_description_style.font_type, display_description_style.font_size, item_name_size, display_description_options)
+				local item_name_margin = 15
+
+				widget.content.size[2] = item_name_height + item_name_margin + display_description_height
+				widget.style.title.size = {
+					item_name_width + item_name_margin,
+					item_name_height
+				}
+				widget.style.description.size = {
+					display_description_width + item_name_margin,
+					display_description_height
+				}
+				widget.style.description.offset[2] = item_name_height + item_name_margin
+
+				local offset_x = 0
+				local offset_y = 0
+
+				if element.horizontal_alignment == "right" then
+					offset_x = -widget.content.size[1]
+				elseif element.horizontal_alignment == "center" then
+					offset_x = -widget.content.size[1] * 0.5
+				end
+
+				if element.vertical_alignment == "bottom" then
+					offset_y = -widget.content.size[2]
+				elseif element.vertical_alignment == "center" then
+					offset_x = -widget.content.size[2] * 0.5
+				end
+
+				widget.offset[1] = offset_x
+				widget.offset[2] = offset_y
+				widget.original_offset = table.clone(widget.offset)
+			end
+		}
 	}
 
 	return blueprints

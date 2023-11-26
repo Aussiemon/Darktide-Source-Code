@@ -1,9 +1,14 @@
+﻿-- chunkname: @scripts/loading/host_states/host_loaders_state.lua
+
 local HostLoadersState = class("HostLoadersState")
 
 HostLoadersState.init = function (self, state_machine, shared_state)
 	self._shared_state = shared_state
+
 	local loaders = shared_state.loaders
+
 	self._loaders = loaders
+
 	local mission_name = shared_state.mission_name
 	local level_name = shared_state.level_name
 	local circumstance_name = shared_state.circumstance_name

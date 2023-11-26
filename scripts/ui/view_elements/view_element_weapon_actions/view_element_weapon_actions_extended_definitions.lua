@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/view_elements/view_element_weapon_actions/view_element_weapon_actions_extended_definitions.lua
+
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local UIWorkspaceSettings = require("scripts/settings/ui/ui_workspace_settings")
 local scenegraph_definition = {

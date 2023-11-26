@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/hud/elements/player_ability/hud_element_player_slot_item_ability.lua
+
 local ColorUtilities = require("scripts/utilities/ui/colors")
 local HudElementPlayerAbilitySettings = require("scripts/ui/hud/elements/player_ability/hud_element_player_ability_settings")
 local InputUtils = require("scripts/managers/input/input_utils")
@@ -13,8 +15,10 @@ HudElementPlayerSlotItemAbility.init = function (self, parent, draw_layer, start
 
 	self._data = data
 	self._slot_id = data.slot_id
+
 	local slot_configuration = PlayerCharacterConstants.slot_configuration
 	local slot_config = slot_configuration[self._slot_id]
+
 	self._wield_input = slot_config.wield_input
 
 	self:_set_progress(1)
@@ -51,6 +55,7 @@ HudElementPlayerSlotItemAbility.set_charges_amount = function (self, amount)
 	local widgets_by_name = self._widgets_by_name
 	local widget = widgets_by_name.ability
 	local content = widget.content
+
 	content.text = amount and tostring(amount) or nil
 	widget.dirty = true
 end
@@ -58,7 +63,7 @@ end
 HudElementPlayerSlotItemAbility._set_widget_state_colors = function (self, on_cooldown, uses_charges, has_charges_left)
 	local widgets_by_name = self._widgets_by_name
 	local widget = widgets_by_name.ability
-	local source_colors = nil
+	local source_colors
 
 	if on_cooldown then
 		if uses_charges then
@@ -90,6 +95,7 @@ end
 HudElementPlayerSlotItemAbility.set_input_text = function (self, text)
 	local widgets_by_name = self._widgets_by_name
 	local widget = widgets_by_name.ability
+
 	widget.content.input_text = text
 	widget.dirty = true
 end
@@ -98,15 +104,18 @@ HudElementPlayerSlotItemAbility.set_icon = function (self, icon)
 	local widgets_by_name = self._widgets_by_name
 	local widget = widgets_by_name.ability
 	local content = widget.content
+
 	content.icon = icon
 	widget.dirty = true
 end
 
 HudElementPlayerSlotItemAbility._set_progress = function (self, progress)
 	self._ability_progress = progress
+
 	local widgets_by_name = self._widgets_by_name
 	local widget = widgets_by_name.ability
 	local content = widget.content
+
 	content.duration_progress = progress
 	widget.dirty = true
 end

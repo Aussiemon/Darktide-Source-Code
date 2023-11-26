@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/splash_video_view/splash_video_view.lua
+
 local Definitions = require("scripts/ui/views/splash_video_view/splash_video_view_definitions")
 local SplashVideoViewSettings = require("scripts/ui/views/splash_video_view/splash_video_view_settings")
 local UIRenderer = require("scripts/managers/ui/ui_renderer")
@@ -31,6 +33,7 @@ SplashVideoView.on_enter = function (self)
 			self._loop_video = context.loop_video or false
 			self._size = context.size or nil
 			self._position = context.position or nil
+
 			local short_video_name = video_name:sub(16)
 			local subtitles = SplashVideoViewSettings[short_video_name .. "_subtitles"]
 
@@ -135,6 +138,7 @@ SplashVideoView._setup_video = function (self, video_name, loop_video, size, pos
 	local widget = self._widgets_by_name.video
 	local widget_content = widget.content
 	local widget_style = widget.style.video
+
 	widget_content.video_path = video_name
 	widget_content.video_player_reference = video_player_reference
 
@@ -179,6 +183,7 @@ SplashVideoView._update_subtitles = function (self, dt, t)
 		self._active_subtitle_end_time = nil
 	elseif not time_for_next_subtitle and not active_subtitle_end_time then
 		local current_subtitle_start = current_subtitle.subtitle_start
+
 		self._time_for_next_subtitle = video_start_time + current_subtitle_start
 	end
 end
@@ -194,6 +199,7 @@ SplashVideoView._setup_background_world = function (self)
 	local world_name = SplashVideoViewSettings.world_name
 	local world_layer = SplashVideoViewSettings.world_layer
 	local world_timer_name = SplashVideoViewSettings.timer_name
+
 	self._world_spawner = UIWorldSpawner:new(world_name, world_layer, world_timer_name, self.view_name)
 
 	if self._context then

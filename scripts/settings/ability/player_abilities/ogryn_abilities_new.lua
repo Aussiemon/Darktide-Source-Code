@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/ability/player_abilities/ogryn_abilities_new.lua
+
 local LungeTemplates = require("scripts/settings/lunge/lunge_templates")
 local TalentSettings = require("scripts/settings/talent/talent_settings_new")
 local bonebreaker_talent_settings = TalentSettings.ogryn_2

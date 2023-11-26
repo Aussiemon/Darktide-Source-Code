@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/weapon/actions/action_shoot_hit_scan.lua
+
 require("scripts/extension_systems/weapon/actions/action_shoot")
 
 local HitScan = require("scripts/utilities/attack/hit_scan")
@@ -12,7 +14,7 @@ local IMPACT_FX_DATA = {
 }
 local ALL_HITS = {}
 local INDEX_DISTANCE = 2
-local _hit_sort_function, _find_line_effect = nil
+local _hit_sort_function, _find_line_effect
 
 ActionShootHitScan._shoot = function (self, position, rotation, power_level, charge_level)
 	local debug_drawer = self._debug_drawer
@@ -31,9 +33,11 @@ ActionShootHitScan._shoot = function (self, position, rotation, power_level, cha
 	local is_critical_strike = self._critical_strike_component.is_active
 	local direction = Quaternion.forward(rotation)
 	local instakill = false
-	local end_position, hit_weakspot, killing_blow, hit_minion, num_hit_units = nil
+	local end_position, hit_weakspot, killing_blow, hit_minion, num_hit_units
 	local rewind_ms = self:_rewind_ms(is_local_unit, player, position, direction, max_distance)
+
 	power_level = hit_scan_template.power_level or power_level or DEFAULT_POWER_LEVEL
+
 	local collision_tests = hit_scan_template.collision_tests
 
 	if collision_tests then
@@ -65,6 +69,7 @@ ActionShootHitScan._shoot = function (self, position, rotation, power_level, cha
 		end_position, hit_weakspot, killing_blow, hit_minion, num_hit_units = HitScan.process_hits(is_server, world, physics_world, player_unit, fire_config, ALL_HITS, position, direction, power_level, charge_level, IMPACT_FX_DATA, max_distance, debug_drawer, is_local_unit, player, instakill, is_critical_strike, weapon_item, wielded_slot)
 	else
 		local hits = HitScan.raycast(physics_world, position, direction, max_distance, nil, nil, rewind_ms, is_local_unit, player, is_server)
+
 		end_position, hit_weakspot, killing_blow, hit_minion, num_hit_units = HitScan.process_hits(is_server, world, physics_world, player_unit, fire_config, hits, position, direction, power_level, charge_level, IMPACT_FX_DATA, max_distance, debug_drawer, is_local_unit, player, instakill, is_critical_strike, weapon_item, wielded_slot)
 	end
 
@@ -84,12 +89,14 @@ ActionShootHitScan._shoot = function (self, position, rotation, power_level, cha
 	end
 
 	end_position = end_position or position + direction * max_distance
+
 	local fx_settings = action_settings.fx
 	local line_effect = _find_line_effect(fx_settings, charge_level)
 
 	self:_play_line_fx(line_effect, position, end_position)
 
 	local shot_result = self._shot_result
+
 	shot_result.data_valid = true
 	shot_result.hit_minion = hit_minion
 	shot_result.hit_weakspot = hit_weakspot
@@ -113,6 +120,7 @@ function _find_line_effect(fx_settings, charge_level)
 
 	if is_charge_dependant then
 		local line_effect_table = line_effect_to_play
+
 		line_effect_to_play = nil
 
 		for i = 1, #line_effect_table do

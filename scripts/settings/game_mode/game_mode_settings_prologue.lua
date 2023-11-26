@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/game_mode/game_mode_settings_prologue.lua
+
 local settings = {
 	use_prologue_profile = true,
 	bot_backfilling_allowed = false,

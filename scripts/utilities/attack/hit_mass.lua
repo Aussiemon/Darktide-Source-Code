@@ -1,14 +1,16 @@
+﻿-- chunkname: @scripts/utilities/attack/hit_mass.lua
+
 local Armor = require("scripts/utilities/attack/armor")
 local Breed = require("scripts/utilities/breed")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local buff_keywords = BuffSettings.keywords
 local HitMass = {}
-local _target_breed, _hit_mass_from_character, _hit_mass_from_object = nil
+local _target_breed, _hit_mass_from_character, _hit_mass_from_object
 
 HitMass.target_hit_mass = function (attacker_unit, target_unit, hit_weakspot)
 	local attacker_buff_extension = ScriptUnit.has_extension(attacker_unit, "buff_system")
 	local use_reduced_hit_mass = attacker_buff_extension and attacker_buff_extension:has_keyword(buff_keywords.use_reduced_hit_mass)
-	local hit_mass = nil
+	local hit_mass
 	local breed = _target_breed(target_unit)
 
 	if breed then
@@ -21,6 +23,7 @@ HitMass.target_hit_mass = function (attacker_unit, target_unit, hit_weakspot)
 		local stat_buffs = attacker_buff_extension:stat_buffs()
 		local consumed_hit_mass_modifier = stat_buffs.consumed_hit_mass_modifier or 1
 		local consumed_hit_mass_modifier_on_weakspot_hit = stat_buffs.consumed_hit_mass_modifier_on_weakspot_hit or 1
+
 		hit_mass = hit_mass * consumed_hit_mass_modifier
 
 		if hit_weakspot then
@@ -32,13 +35,14 @@ HitMass.target_hit_mass = function (attacker_unit, target_unit, hit_weakspot)
 end
 
 HitMass.consume_hit_mass = function (attacker_unit, target_unit, hit_mass_budget_attack, hit_mass_budget_impact, hit_weakspot, hit_mass_override)
-	local new_hit_mass_budget_attack, new_hit_mass_budget_impact = nil
+	local new_hit_mass_budget_attack, new_hit_mass_budget_impact
 
 	if hit_mass_override then
 		new_hit_mass_budget_attack = math.max(0, hit_mass_budget_attack - hit_mass_override)
 		new_hit_mass_budget_impact = math.max(0, hit_mass_budget_impact - hit_mass_override)
 	else
 		local target_hit_mass = HitMass.target_hit_mass(attacker_unit, target_unit, hit_weakspot)
+
 		new_hit_mass_budget_attack = math.max(0, hit_mass_budget_attack - target_hit_mass)
 		new_hit_mass_budget_impact = math.max(0, hit_mass_budget_impact - target_hit_mass)
 	end
@@ -97,12 +101,13 @@ function _hit_mass_from_character(unit, breed, use_reduced_hit_mass)
 	end
 
 	local is_player_or_prop_character = Breed.is_player(breed) or Breed.is_prop(breed) or Breed.is_living_prop(breed)
-	local hit_mass = nil
+	local hit_mass
 
 	if is_player_or_prop_character then
 		hit_mass = breed.hit_mass
 	else
 		local health_extension = ScriptUnit.extension(unit, "health_system")
+
 		hit_mass = health_extension:hit_mass()
 
 		if use_reduced_hit_mass then

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/player/human_player.lua
+
 local PlayerManager = require("scripts/foundation/managers/player/player_manager")
 local HumanPlayer = class("HumanPlayer")
 

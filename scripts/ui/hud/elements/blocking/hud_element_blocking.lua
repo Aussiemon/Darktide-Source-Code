@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/hud/elements/blocking/hud_element_blocking.lua
+
 local Definitions = require("scripts/ui/hud/elements/blocking/hud_element_blocking_definitions")
 local HudElementBlockingSettings = require("scripts/ui/hud/elements/blocking/hud_element_blocking_settings")
 local UIWidget = require("scripts/managers/ui/ui_widget")
@@ -48,6 +50,7 @@ HudElementBlocking._update_shield_amount = function (self)
 			if stamina_component and base_stamina_template then
 				local player_unit = player_extensions.unit
 				local current, max = Stamina.current_and_max_value(player_unit, stamina_component, base_stamina_template)
+
 				shield_amount = max
 				shield_amount_ceiled = math.ceil(max)
 			end
@@ -56,12 +59,16 @@ HudElementBlocking._update_shield_amount = function (self)
 
 	if shield_amount_ceiled ~= self._shield_amount then
 		local amount_difference = (self._shield_amount or 0) - shield_amount_ceiled
+
 		self._shield_amount = shield_amount_ceiled
+
 		local bar_size = HudElementBlockingSettings.bar_size
 		local segment_spacing = HudElementBlockingSettings.spacing
 		local total_segment_spacing = segment_spacing * math.max(shield_amount_ceiled - 1, 0)
 		local total_bar_length = bar_size[1] - total_segment_spacing
+
 		self._shield_width = math.round(shield_amount_ceiled > 0 and total_bar_length / shield_amount_ceiled or total_bar_length)
+
 		local widget = self._shield_widget
 
 		self:_set_scenegraph_size("shield", self._shield_width)
@@ -114,6 +121,7 @@ end
 HudElementBlocking._draw_widgets = function (self, dt, t, input_service, ui_renderer, render_settings)
 	if self._alpha_multiplier ~= 0 then
 		local previous_alpha_multiplier = render_settings.alpha_multiplier
+
 		render_settings.alpha_multiplier = self._alpha_multiplier
 
 		HudElementBlocking.super._draw_widgets(self, dt, t, input_service, ui_renderer, render_settings)
@@ -164,7 +172,9 @@ HudElementBlocking._draw_shields = function (self, dt, t, ui_renderer)
 	end
 
 	local gauge_widget = self._widgets_by_name.gauge
+
 	gauge_widget.content.value_text = string.format("%.0f%%", math.clamp(stamina_fraction, 0, 1) * 100)
+
 	local step_fraction = 1 / num_shields
 
 	if self._start_on_half_bar then
@@ -184,7 +194,7 @@ HudElementBlocking._draw_shields = function (self, dt, t, ui_renderer)
 
 		local end_value = i * step_fraction
 		local start_value = end_value - step_fraction
-		local is_full, is_half, is_empty = nil
+		local is_full, is_half, is_empty
 
 		if stamina_fraction >= start_value + step_fraction * 0.5 then
 			is_full = true
@@ -194,7 +204,7 @@ HudElementBlocking._draw_shields = function (self, dt, t, ui_renderer)
 			is_empty = true
 		end
 
-		local active_color = nil
+		local active_color
 
 		if is_empty then
 			active_color = STAMINA_STATE_COLORS.empty
@@ -206,6 +216,7 @@ HudElementBlocking._draw_shields = function (self, dt, t, ui_renderer)
 
 		local widget_style = widget.style
 		local widget_color = widget_style.full.color
+
 		widget_color[1] = active_color[1]
 		widget_color[2] = active_color[2]
 		widget_color[3] = active_color[3]

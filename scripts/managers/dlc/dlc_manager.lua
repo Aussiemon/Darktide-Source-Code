@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/dlc/dlc_manager.lua
+
 local DLCDurable = require("scripts/managers/dlc/dlc_durable")
 local DLCSettings = require("scripts/managers/dlc/dlc_settings")
 local ItemUtils = require("scripts/utilities/items")
@@ -47,6 +49,7 @@ DLCManager.initialize = function (self)
 		local name = durable_dlc_data.name
 		local class_name = durable_dlc_data.class_name
 		local class = CLASSES[class_name]
+
 		self._durable_dlcs[name] = class:new(durable_dlc_data)
 	end
 
@@ -92,6 +95,7 @@ DLCManager._try_check_steam_dlc = function (self, t)
 	end
 
 	self._check_steam_dlc = false
+
 	local cb_query_backend_result = callback(self, "cb_query_backend_result")
 
 	Managers.backend.interfaces.external_payment:reconcile_dlc():next(cb_query_backend_result)
@@ -124,7 +128,7 @@ DLCManager._try_evaluate_consumables = function (self, t)
 		return
 	end
 
-	if self._evaluate_consumables_timer < t then
+	if t > self._evaluate_consumables_timer then
 		local success_cb = callback(self, "cb_get_entitlements")
 
 		XboxLiveUtils.get_entitlements():next(success_cb)
@@ -155,13 +159,7 @@ DLCManager.cb_get_entitlements = function (self, data)
 		local is_consumable = false
 
 		for _, product_kind in ipairs(product_kinds) do
-			if product_kind ~= "consumable" and product_kind ~= "unmanaged" then
-				if false then
-					is_consumable = false
-				end
-			else
-				is_consumable = true
-			end
+			is_consumable = product_kind == "consumable" or product_kind == "unmanaged" or is_consumable
 		end
 
 		if is_in_user_collection and is_consumable then
@@ -231,6 +229,7 @@ DLCManager.cb_query_backend_result = function (self, data)
 
 	for i = 1, #results do
 		local result_data = results[i]
+
 		reward_queue[#reward_queue + 1] = result_data
 	end
 
@@ -421,6 +420,7 @@ DLCStates.present_rewards = function (dlc_manager, dt, t)
 
 					if item then
 						local item_type = item.item_type
+
 						item_rewards[#item_rewards + 1] = {
 							gear_id = gear_id,
 							item_type = item_type

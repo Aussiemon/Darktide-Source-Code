@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/hud/elements/spectate_fading/hud_element_spectate_fading_definitions.lua
+
 local scenegraph_definition = {
 	screen = {
 		scale = "fit",

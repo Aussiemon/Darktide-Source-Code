@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/equipment/weapon_handling_templates/weapon_charge_templates.lua
+
 local weapon_charge_templates = {
 	lasgun_p2_m1_charge_up = {
 		max_ammo_charge = 6,

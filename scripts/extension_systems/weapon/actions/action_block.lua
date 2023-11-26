@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/weapon/actions/action_block.lua
+
 require("scripts/extension_systems/weapon/actions/action_weapon_base")
 
 local ForceLookRotation = require("scripts/extension_systems/first_person/utilities/force_look_rotation")
@@ -8,6 +10,7 @@ ActionBlock.init = function (self, action_context, ...)
 	ActionBlock.super.init(self, action_context, ...)
 
 	local unit_data_extension = action_context.unit_data_extension
+
 	self._block_component = unit_data_extension:write_component("block")
 	self._movement_state_component = unit_data_extension:write_component("movement_state")
 	self._dodge_character_state_component = unit_data_extension:write_component("dodge_character_state")
@@ -33,7 +36,9 @@ ActionBlock.start = function (self, action_settings, t, time_scale, action_start
 
 	if weapon_lock_view_component and action_settings.force_look then
 		weapon_lock_view_component.state = "force_look"
+
 		local yaw, _, _ = self._input_extension:get_orientation()
+
 		weapon_lock_view_component.yaw = yaw
 		weapon_lock_view_component.pitch = 0
 	end

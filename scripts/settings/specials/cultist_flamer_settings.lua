@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/specials/cultist_flamer_settings.lua
+
 local STATES = table.index_lookup_table("passive", "aiming", "shooting")
 local cultist_flamer_settings = {
 	min_range = 3,

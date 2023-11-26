@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/equipment/weapon_handling_templates/weapon_burninating_templates.lua
+
 local weapon_burninating_templates = {
 	flamer_p1_m1 = {
 		initial_burn_delay = 0.1,

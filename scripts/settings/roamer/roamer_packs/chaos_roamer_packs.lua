@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/roamer/roamer_packs/chaos_roamer_packs.lua
+
 local roamer_packs = {
 	chaos_poxwalker_encampment = {
 		{

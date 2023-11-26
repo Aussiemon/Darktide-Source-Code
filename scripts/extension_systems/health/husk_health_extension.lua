@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/health/husk_health_extension.lua
+
 local HealthExtensionInterface = require("scripts/extension_systems/health/health_extension_interface")
 local HuskHealthExtension = class("HuskHealthExtension")
 
@@ -12,6 +14,7 @@ HuskHealthExtension.init = function (self, extension_init_context, unit, extensi
 	self.game_session = game_session
 	self.game_object_id = game_object_id
 	self.is_dead = false
+
 	local has_health_bar = extension_init_data and extension_init_data.has_health_bar
 
 	if has_health_bar then

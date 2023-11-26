@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/behavior/utility_considerations/cultists_berzerker_utility_considerations.lua
+
 local considerations = {
 	cultist_berzerker_combo_attack = {
 		slot_distance = {

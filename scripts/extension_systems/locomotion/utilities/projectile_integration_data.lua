@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/locomotion/utilities/projectile_integration_data.lua
+
 local ProjectileIntegrationData = {}
 local integration_data_interface = {
 	"previous_position",
@@ -63,6 +65,7 @@ local num_integration_data_fields = #integration_data_interface
 
 ProjectileIntegrationData.allocate_integration_data = function (store_data)
 	local integration_data = Script.new_map(num_integration_data_fields)
+
 	integration_data.previous_position = nil
 	integration_data.position = nil
 	integration_data.velocity = nil
@@ -133,8 +136,9 @@ ProjectileIntegrationData.fill_integration_data = function (integration_data, ow
 	local use_generous_bouncing = integrator_parameters.use_generous_bouncing
 	local rotate_towards_direction = integrator_parameters.rotate_towards_direction
 	local hit_zone_priority = integrator_parameters.hit_zone_priority
-	local air_drag = drag_coefficient and 0.5 * drag_coefficient * math.pi * radius * radius * air_density / mass or 0
+	local air_drag = drag_coefficient and 0.5 * drag_coefficient * (math.pi * radius * radius) * air_density / mass or 0
 	local velocity = speed * direction
+
 	integration_data.previous_position = position
 	integration_data.position = position
 	integration_data.velocity = velocity
@@ -226,7 +230,7 @@ ProjectileIntegrationData.unbox = function (integration_data)
 end
 
 ProjectileIntegrationData.mass_radius = function (locomotion_template, optional_locomotion_extension)
-	local mass, radius = nil
+	local mass, radius
 
 	if optional_locomotion_extension and locomotion_template.integrator_parameters.use_actor_mass_radius then
 		mass = optional_locomotion_extension:mass()

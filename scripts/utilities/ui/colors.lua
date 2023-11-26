@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/utilities/ui/colors.lua
+
 local ColorUtilities = {}
 
 ColorUtilities.color_lerp = function (source, target, p, out, ignore_alpha)
@@ -52,18 +54,17 @@ local function hue2rgb(p, q, t)
 end
 
 ColorUtilities.hsl2rgb = function (h, s, l)
-	local r, g, b = nil
+	local r, g, b
 
 	if s ~= 0 then
 		local q = l < 0.5 and l * (1 + s) or s + l * (1 - s)
 		local p = 2 * l - q
+
 		r = hue2rgb(p, q, h + 0.3333333333333333)
 		g = hue2rgb(p, q, h)
 		b = hue2rgb(p, q, h - 0.3333333333333333)
 	else
-		b = l
-		g = l
-		r = l
+		r, g, b = l, l, l
 	end
 
 	local floor = math.floor

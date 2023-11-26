@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/nav_block/nav_block_extension.lua
+
 local NavBlockExtension = class("NavBlockExtension")
 
 NavBlockExtension.init = function (self, extension_init_context, unit, extension_init_data, ...)
@@ -20,7 +22,7 @@ end
 NavBlockExtension.setup_from_component = function (self, unit, volume_name, start_blocked)
 	local unit_level_index = Managers.state.unit_spawner:level_index(unit)
 	local layer_name = "nav_block_volume_" .. tostring(unit_level_index) .. "_" .. volume_name
-	local volume_layer_allowed = nil
+	local volume_layer_allowed
 
 	if self._is_server then
 		volume_layer_allowed = not start_blocked
@@ -44,7 +46,7 @@ NavBlockExtension.set_block = function (self, volume_name, block)
 end
 
 NavBlockExtension._get_volume_alt_min_max = function (self, unit, volume_points, volume_height)
-	local alt_min, alt_max = nil
+	local alt_min, alt_max
 
 	for i = 1, #volume_points do
 		local alt = volume_points[i].z

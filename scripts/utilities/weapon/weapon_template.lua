@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/utilities/weapon/weapon_template.lua
+
 local WeaponTemplates = require("scripts/settings/equipment/weapon_templates/weapon_templates")
 local WeaponTemplate = {}
 
@@ -19,7 +21,7 @@ end
 
 WeaponTemplate.has_keyword = function (weapon_template, keyword)
 	local keywords = weapon_template.keywords
-	local has_keyword = nil
+	local has_keyword
 
 	if keywords then
 		has_keyword = table.array_contains(keywords, keyword)
@@ -48,7 +50,7 @@ WeaponTemplate.weapon_template = function (template_name)
 end
 
 WeaponTemplate.state_machines = function (weapon_template, breed_name)
-	local anim_state_machine_3p = nil
+	local anim_state_machine_3p
 	local breed_anim_state_machine_3p = weapon_template.breed_anim_state_machine_3p
 
 	if breed_anim_state_machine_3p then
@@ -57,7 +59,7 @@ WeaponTemplate.state_machines = function (weapon_template, breed_name)
 		anim_state_machine_3p = weapon_template.anim_state_machine_3p
 	end
 
-	local anim_state_machine_1p = nil
+	local anim_state_machine_1p
 	local breed_anim_state_machine_1p = weapon_template.breed_anim_state_machine_1p
 
 	if breed_anim_state_machine_1p then

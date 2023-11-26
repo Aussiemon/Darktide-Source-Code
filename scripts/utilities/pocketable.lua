@@ -1,10 +1,12 @@
+﻿-- chunkname: @scripts/utilities/pocketable.lua
+
 local MasterItems = require("scripts/backend/master_items")
 local Pickups = require("scripts/settings/pickup/pickups")
 local PlayerUnitVisualLoadout = require("scripts/extension_systems/visual_loadout/utilities/player_unit_visual_loadout")
 local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
 local SLOT_POCKETABLE = "slot_pocketable"
 local Pocketable = {}
-local _drop_pickup = nil
+local _drop_pickup
 
 Pocketable.drop_pocketable = function (t, physics_world, is_server, player_unit, inventory_component, visual_loadout_extension)
 	if not PlayerUnitVisualLoadout.slot_equipped(inventory_component, visual_loadout_extension, SLOT_POCKETABLE) then

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/game_states/state_game.lua
+
 require("core/volumetrics/lua/volumetrics_flow_callbacks")
 require("core/wwise/lua/wwise_flow_callbacks")
 require("scripts/global_tables")
@@ -72,10 +74,14 @@ local StateGame = class("StateGame")
 
 StateGame.on_enter = function (self, parent, params)
 	local event_delegate = NetworkEventDelegate:new()
+
 	self._event_delegate = event_delegate
+
 	local approve_channel_delegate = ApproveChannelDelegate:new()
+
 	self._approve_channel_delegate = approve_channel_delegate
 	self._vo_sources_cache = VOSourcesCache:new()
+
 	local creation_context = {
 		network_receive_function = function (dt)
 			Network.update_receive(dt, self._event_delegate.event_table)
@@ -99,9 +105,11 @@ StateGame.on_enter = function (self, parent, params)
 	end
 
 	local start_params = {}
-	local start_state = nil
+	local start_state
+
 	start_state = StateSplash
 	start_params.is_booting = true
+
 	local state_change_callbacks = {}
 
 	if not DEDICATED_SERVER then
@@ -120,7 +128,7 @@ StateGame.on_enter = function (self, parent, params)
 end
 
 local function _connection_options(is_dedicated_hub_server, is_dedicated_mission_server)
-	local options = nil
+	local options
 
 	if GameParameters.network_wan or GameParameters.prod_like_backend then
 		if DEDICATED_SERVER then
@@ -180,6 +188,7 @@ StateGame._init_managers = function (self, package_manager, localization_manager
 
 	local version_id = PLATFORM .. "#" .. (APPLICATION_SETTINGS.content_revision or LOCAL_CONTENT_REVISION or "")
 	local language = Managers.localization:language()
+
 	Managers.backend = BackendManager:new(function ()
 		return {
 			["request-id"] = math.uuid(),
@@ -198,7 +207,7 @@ StateGame._init_managers = function (self, package_manager, localization_manager
 
 	local is_dedicated_hub_server = false
 	local is_dedicated_mission_server = false
-	local mechanism_name = nil
+	local mechanism_name
 
 	if is_dedicated_mission_server then
 		mechanism_name = "idle"
@@ -225,12 +234,18 @@ StateGame._init_managers = function (self, package_manager, localization_manager
 			Managers.presence = PresenceManager:new()
 			Managers.party_immaterium = PartyImmateriumManager:new()
 		end
+
+		if false then
+			-- Nothing
+		end
 	else
 		Managers.presence = PresenceManagerDummy:new()
 	end
 
 	Managers.stats = StatsManager:new(not DEDICATED_SERVER, event_delegate)
+
 	local use_batched_saving = is_dedicated_mission_server and GameParameters.save_achievements_in_batch
+
 	Managers.achievements = AchievementsManager:new(not DEDICATED_SERVER, event_delegate, use_batched_saving)
 	Managers.voting = VotingManager:new(event_delegate)
 	Managers.progression = ProgressionManager:new()

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/hud/elements/team_panel_handler/hud_element_team_panel_handler.lua
+
 require("scripts/ui/hud/elements/player_panel_base/hud_element_player_panel_base")
 
 local definition_path = "scripts/ui/hud/elements/team_panel_handler/hud_element_team_panel_handler_definitions"
@@ -21,11 +23,15 @@ HudElementTeamPanelHandler.init = function (self, parent, draw_layer, start_scal
 	self._max_panels = HudElementTeamPanelHandlerSettings.max_panels
 	self._position_scenegraphs = self:_setup_position_scenegraphs()
 	self._unique_id_by_scenegraph = {}
+
 	local my_player = parent:player()
+
 	self._my_player = my_player
 	self._my_unique_id = my_player:unique_id()
+
 	local game_mode_manager = Managers.state.game_mode
 	local hud_settings = game_mode_manager:hud_settings()
+
 	self._player_composition_name = hud_settings.player_composition
 
 	Managers.event:register(self, PlayerCompositions.player_composition_changed_event, "_composition_changed")
@@ -146,13 +152,13 @@ HudElementTeamPanelHandler._player_scan = function (self, ui_renderer)
 			local num_other_player_panels = self:_num_other_player_panels()
 			local max_other_player_panels = max_panels - 1
 			local unique_id = temp_new_unique_ids[i]
-			local fixed_scenegraph_id = nil
+			local fixed_scenegraph_id
 
 			if unique_id == self._my_unique_id then
 				fixed_scenegraph_id = "local_player"
 				should_add = true
-			elseif num_other_player_panels < max_other_player_panels then
-				should_add = true
+			else
+				should_add = num_other_player_panels < max_other_player_panels and true or should_add
 			end
 
 			if should_add then
@@ -187,7 +193,7 @@ HudElementTeamPanelHandler._add_panel = function (self, unique_id, ui_renderer, 
 		scenegraph_id = scenegraph_id,
 		using_fixed_scenegraph_id = fixed_scenegraph_id ~= nil
 	}
-	local panel = nil
+	local panel
 	local host_type = Managers.connection:host_type()
 	local game_mode_name = Managers.state.game_mode and Managers.state.game_mode:game_mode_name()
 	local is_in_hub = host_type == "hub_server" or game_mode_name == "hub"
@@ -220,7 +226,7 @@ end
 
 HudElementTeamPanelHandler._remove_panel = function (self, unique_id, ui_renderer)
 	local player_panels_array = self._player_panels_array
-	local panel_data = nil
+	local panel_data
 	local num_player_panels = #player_panels_array
 
 	for i = 1, num_player_panels do
@@ -266,6 +272,7 @@ HudElementTeamPanelHandler._refresh_assigned_scenegraph_ids = function (self)
 		end
 
 		local scenegraph_id = data.scenegraph_id
+
 		self._unique_id_by_scenegraph[scenegraph_id] = unique_id
 	end
 end

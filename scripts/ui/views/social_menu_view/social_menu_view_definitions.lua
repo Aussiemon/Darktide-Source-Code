@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/social_menu_view/social_menu_view_definitions.lua
+
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local UIWorkspaceSettings = require("scripts/settings/ui/ui_workspace_settings")
 local scenegraph_definition = {

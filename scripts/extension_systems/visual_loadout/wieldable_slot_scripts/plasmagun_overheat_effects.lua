@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/visual_loadout/wieldable_slot_scripts/plasmagun_overheat_effects.lua
+
 local Component = require("scripts/utilities/component")
 local PlayerCharacterLoopingSoundAliases = require("scripts/settings/sound/player_character_looping_sound_aliases")
 local PlasmagunOverheatEffects = class("PlasmagunOverheatEffects")
@@ -16,6 +18,7 @@ PlasmagunOverheatEffects.init = function (self, context, slot, weapon_template, 
 	local visual_loadout_extension = context.visual_loadout_extension
 	local overheat_configuration = weapon_template.overheat_configuration
 	local overheat_fx = overheat_configuration.fx
+
 	self._owner_unit = owner_unit
 	self._is_husk = context.is_husk
 	self._is_local_unit = context.is_local_unit
@@ -26,7 +29,9 @@ PlasmagunOverheatEffects.init = function (self, context, slot, weapon_template, 
 	self._visual_loadout_extension = visual_loadout_extension
 	self._inventory_slot_component = unit_data_extension:read_component(slot.name)
 	self._overheat_configuration = overheat_configuration
+
 	local vfx_source_name = fx_sources[overheat_fx.vfx_source_name]
+
 	self._vfx_link_unit, self._vfx_link_node = fx_extension:vfx_spawner_unit_and_node(vfx_source_name)
 	self._looping_low_threshold_vfx_name = overheat_fx.looping_low_threshold_vfx
 	self._looping_high_threshold_vfx_name = overheat_fx.looping_high_threshold_vfx
@@ -66,8 +71,7 @@ end
 
 PlasmagunOverheatEffects._update_vfx = function (self, overheat_configuration, overheat_percentage)
 	local world = self._world
-	local vfx_link_unit = self._vfx_link_unit
-	local vfx_link_node = self._vfx_link_node
+	local vfx_link_unit, vfx_link_node = self._vfx_link_unit, self._vfx_link_node
 	local threshold_effect_ids = self._vfx_threshold_effect_ids
 	local visual_loadout_extension = self._visual_loadout_extension
 
@@ -78,6 +82,7 @@ PlasmagunOverheatEffects._update_vfx = function (self, overheat_configuration, o
 
 		if is_above_threshold and not was_above_threshold then
 			vfx_external_properties.stage = stage
+
 			local resolved, effect_name = visual_loadout_extension:resolve_gear_particle(LOOPING_VFX_ALIAS, vfx_external_properties)
 
 			if resolved then
@@ -110,12 +115,11 @@ PlasmagunOverheatEffects._update_threshold_sfx = function (self, overheat_config
 
 		if not was_above_threshold and is_above_threshold then
 			sfx_external_properties.stage = stage
+
 			local resolved, event_name, has_husk_events = visual_loadout_extension:resolve_gear_sound(SFX_ALIAS, sfx_external_properties)
 
 			if resolved then
-				if use_husk_event and has_husk_events then
-					event_name = event_name .. "_husk" or event_name
-				end
+				event_name = use_husk_event and has_husk_events and event_name .. "_husk" or event_name
 
 				WwiseWorld.trigger_resource_event(wwise_world, event_name, sfx_source_id)
 			end
@@ -154,6 +158,7 @@ PlasmagunOverheatEffects._update_material = function (self, overheat_percentage)
 	local min = math.min(material_overheat_percentage, overheat_percentage)
 	local max = math.max(material_overheat_percentage, overheat_percentage)
 	local lerp_t = 1 - math.abs(overheat_percentage - material_overheat_percentage) / 1
+
 	material_overheat_percentage = math.lerp(min, max, lerp_t)
 
 	for ii = 1, #components_1p do
@@ -223,24 +228,21 @@ PlasmagunOverheatEffects._start_sfx_loop = function (self, stage)
 	local stop_config = LOOPING_SFX_CONFIG.stop
 	local start_event_alias = start_config.event_alias
 	local stop_event_alias = stop_config.event_alias
-	local resolved, has_husk_events, event_name = nil
+	local resolved, has_husk_events, event_name
+
 	sfx_external_properties.stage = stage
 	resolved, event_name, has_husk_events = visual_loadout_extension:resolve_gear_sound(start_event_alias, sfx_external_properties)
 
 	if resolved then
-		if use_husk_event and has_husk_events then
-			event_name = event_name .. "_husk" or event_name
-		end
+		event_name = use_husk_event and has_husk_events and event_name .. "_husk" or event_name
 
 		local new_playing_id = WwiseWorld.trigger_resource_event(wwise_world, event_name, sfx_source_id)
+
 		self._looping_playing_ids[stage] = new_playing_id
 		resolved, event_name, has_husk_events = visual_loadout_extension:resolve_gear_sound(stop_event_alias, sfx_external_properties)
 
 		if resolved then
-			if use_husk_event and has_husk_events then
-				event_name = event_name .. "_husk" or event_name
-			end
-
+			event_name = use_husk_event and has_husk_events and event_name .. "_husk" or event_name
 			self._looping_stop_events[stage] = event_name
 		end
 	end

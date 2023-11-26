@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/weapon/special_classes/weapon_special_interface.lua
+
 local WeaponSpecialInterface = {
 	"update",
 	"process_hit",

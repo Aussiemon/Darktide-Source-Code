@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/trigger/trigger_conditions/trigger_condition_only_enter.lua
+
 require("scripts/extension_systems/trigger/trigger_conditions/trigger_condition_base")
 
 local TriggerConditionOnlyEnter = class("TriggerConditionOnlyEnter", "TriggerConditionBase")

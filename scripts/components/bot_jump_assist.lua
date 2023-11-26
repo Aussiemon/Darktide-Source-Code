@@ -1,9 +1,12 @@
+﻿-- chunkname: @scripts/components/bot_jump_assist.lua
+
 local BotNavTransition = require("scripts/managers/bot_nav_transition/utilities/bot_nav_transition")
 local SharedNav = require("scripts/components/utilities/shared_nav")
 local BotJumpAssist = component("BotJumpAssist")
 
 BotJumpAssist.init = function (self, unit, is_server)
 	self._is_server = is_server
+
 	local run_update = false
 
 	return run_update
@@ -46,9 +49,12 @@ BotJumpAssist.editor_init = function (self, unit)
 	end
 
 	local world = Application.main_world()
+
 	self._world = world
 	self._physics_world = World.physics_world(world)
+
 	local line_object = World.create_line_object(world)
+
 	self._line_object = line_object
 	self._drawer = DebugDrawer(line_object, "retained")
 	self._should_jump = self:get_data(unit, "should_jump")
@@ -123,8 +129,7 @@ BotJumpAssist._editor_debug_draw = function (self, unit)
 	local nav_world = BotJumpAssist._nav_info.nav_world
 
 	if nav_world and should_debug_draw then
-		local wanted_from = Unit.world_position(unit, 1)
-		local via = Unit.world_position(unit, Unit.node(unit, "waypoint"))
+		local wanted_from, via = Unit.world_position(unit, 1), Unit.world_position(unit, Unit.node(unit, "waypoint"))
 		local wanted_to = Unit.world_position(unit, Unit.node(unit, "destination"))
 		local traverse_logic = BotJumpAssist._nav_info.traverse_logic
 		local success, from, to = BotNavTransition.check_nav_mesh(wanted_from, wanted_to, nav_world, traverse_logic, drawer)

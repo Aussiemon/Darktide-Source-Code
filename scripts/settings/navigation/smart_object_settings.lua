@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/navigation/smart_object_settings.lua
+
 local minion_smart_object_templates = {}
 local smart_object_settings = {
 	jump_across_min_length = 3.5,
@@ -9,6 +11,7 @@ local smart_object_settings = {
 local function _create_template_entry(path)
 	local template = require(path)
 	local name = string.match(path, "^.+/(.+)_smart_object_template$")
+
 	minion_smart_object_templates[name] = template
 end
 

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/mutator/templates/mutator_minion_nurgle_blessing_templates.lua
+
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local buff_keywords = BuffSettings.keywords
 local mutator_templates = {

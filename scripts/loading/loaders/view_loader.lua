@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/loading/loaders/view_loader.lua
+
 local Loader = require("scripts/loading/loader")
 local Missions = require("scripts/settings/mission/mission_templates")
 local Views = require("scripts/ui/views/views")

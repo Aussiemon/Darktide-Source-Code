@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/options_view/options_view_definitions.lua
+
 local OptionsViewSettings = require("scripts/ui/views/options_view/options_view_settings")
 local ScrollbarPassTemplates = require("scripts/ui/pass_templates/scrollbar_pass_templates")
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
@@ -19,6 +21,7 @@ local settings_mask_size = {
 }
 local settings_grid_height = grid_height + mask_offset_y
 local tooltip_text_style = table.clone(UIFontSettings.body)
+
 tooltip_text_style.text_horizontal_alignment = "left"
 tooltip_text_style.text_vertical_alignment = "center"
 tooltip_text_style.horizontal_alignment = "left"
@@ -29,6 +32,7 @@ tooltip_text_style.offset = {
 	0,
 	2
 }
+
 local scenegraph_definition = {
 	screen = UIWorkspaceSettings.screen,
 	tooltip = {

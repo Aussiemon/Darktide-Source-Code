@@ -1,20 +1,23 @@
+﻿-- chunkname: @scripts/settings/roamer/roamer_settings.lua
+
 local RoamerPacks = require("scripts/settings/roamer/roamer_packs")
 local RoamerLimits = require("scripts/settings/roamer/roamer_limits")
 local HordeCompositions = require("scripts/managers/pacing/horde_pacing/horde_compositions")
-local roamer_settings = {
-	density_types = {
-		"none",
-		"high",
-		"low"
-	},
-	faction_types = {
-		"renegade",
-		"cultist"
-	},
-	encampment_types = {
-		"poxwalkers"
-	}
+local roamer_settings = {}
+
+roamer_settings.density_types = {
+	"none",
+	"high",
+	"low"
 }
+roamer_settings.faction_types = {
+	"renegade",
+	"cultist"
+}
+roamer_settings.encampment_types = {
+	"poxwalkers"
+}
+
 local default_packs = {
 	melee_low = {
 		renegade = RoamerPacks.renegade_melee_low,
@@ -49,6 +52,7 @@ local default_packs = {
 		cultist = RoamerPacks.chaos_poxwalker_encampment
 	}
 }
+
 roamer_settings.density_settings = {
 	{
 		low = {
@@ -760,12 +764,14 @@ roamer_settings.density_settings = {
 		}
 	}
 }
+
 local density_types = roamer_settings.density_types
 
 for i = 1, #density_types do
 	local density_type = density_types[i]
 
 	for j = 1, #roamer_settings.density_settings do
+		-- Nothing
 	end
 end
 
@@ -775,6 +781,7 @@ for i = 1, #encampment_types do
 	local encampment_type = encampment_types[i]
 
 	for j = 1, #roamer_settings.density_settings do
+		-- Nothing
 	end
 end
 

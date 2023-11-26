@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/equipment/weapon_templates/laspistols/settings_templates/laspistol_sway_templates.lua
+
 local sway_templates = {}
 local overrides = {}
 

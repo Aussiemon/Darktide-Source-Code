@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/decal/decal_settings.lua
+
 local decal_settings = {
 	blood = {
 		sort_order_base = 6000000,

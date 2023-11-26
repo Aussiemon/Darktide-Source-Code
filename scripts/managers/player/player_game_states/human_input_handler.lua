@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/player/player_game_states/human_input_handler.lua
+
 local InputHandlerSettings = require("scripts/managers/player/player_game_states/input_handler_settings")
 local HumanInputHandler = class("HumanInputHandler")
 
@@ -22,13 +24,18 @@ HumanInputHandler.init = function (self, player, is_server, client_clock_handler
 	end
 
 	self._player = player
+
 	local settings = InputHandlerSettings
 	local input_buffer_size = settings.client_input_buffer_size
+
 	self._input_buffer_size = input_buffer_size
 	self._send_buffer_size = settings.buffered_frames
+
 	local num_actions = #settings.actions
+
 	self._num_actions = num_actions
 	self._in_panic = false
+
 	local input_cache = Script.new_array(num_actions + 2)
 	local action_lookup = {}
 
@@ -38,22 +45,28 @@ HumanInputHandler.init = function (self, player, is_server, client_clock_handler
 	end
 
 	local num_ephemeral_actions = #settings.ephemeral_actions
+
 	self._num_ephemeral_actions = num_ephemeral_actions
+
 	local ephemeral_action_cache = {}
 
 	for i, ephemeral_action in ipairs(settings.ephemeral_actions) do
 		local index = num_actions + i
+
 		input_cache[index] = Script.new_array(input_buffer_size)
 		action_lookup[ephemeral_action] = index
 		ephemeral_action_cache[i] = false
 	end
 
 	local num_ui_interaction_actions = #settings.ui_interaction_actions
+
 	self._num_ui_interaction_actions = num_ui_interaction_actions
+
 	local ui_interaction_action_cache = {}
 
 	for i, ui_interaction_action in ipairs(settings.ui_interaction_actions) do
 		local index = num_actions + num_ephemeral_actions + i
+
 		input_cache[index] = Script.new_array(input_buffer_size)
 		action_lookup[ui_interaction_action] = index
 		ui_interaction_action_cache[i] = false
@@ -66,38 +79,55 @@ HumanInputHandler.init = function (self, player, is_server, client_clock_handler
 	self._ephemeral_actions = settings.ephemeral_actions
 	self._ui_interaction_actions = settings.ui_interaction_actions
 	self._yaw_index = num_actions + num_ephemeral_actions + num_ui_interaction_actions + 1
+
 	local yaw_cache = Script.new_array(input_buffer_size, 0)
+
 	yaw_cache[input_buffer_size] = 0
 	input_cache[self._yaw_index] = yaw_cache
 	self._pitch_index = self._yaw_index + 1
+
 	local pitch_cache = Script.new_array(input_buffer_size, 0)
+
 	pitch_cache[input_buffer_size] = 0
 	input_cache[self._pitch_index] = pitch_cache
 	self._roll_index = self._pitch_index + 1
+
 	local roll_cache = Script.new_array(input_buffer_size, 0)
+
 	roll_cache[input_buffer_size] = 0
 	input_cache[self._roll_index] = roll_cache
+
 	local account_data = Managers.save:account_data()
+
 	self._input_settings_table = account_data.input_settings
+
 	local num_input_settings = #settings.input_settings
+
 	self._num_input_settings = num_input_settings
 
 	for i, input_setting in ipairs(settings.input_settings) do
 		local index = self._roll_index + i
+
 		input_cache[index] = Script.new_array(input_buffer_size)
 		action_lookup[input_setting] = index
 	end
 
 	local action_network_type = settings.action_network_type
 	local pack_unpack_action_to_network_type_index = {}
+
 	self._pack_unpack_action_to_network_type_index = pack_unpack_action_to_network_type_index
+
 	local pack_unpack_actions = settings.pack_unpack_actions
+
 	self._pack_unpack_actions = pack_unpack_actions
+
 	local num_pack_unpack_actions = #pack_unpack_actions
+
 	self._num_pack_unpack_actions = num_pack_unpack_actions
 
 	for i = 1, num_pack_unpack_actions do
 		local action = pack_unpack_actions[i]
+
 		pack_unpack_action_to_network_type_index[action] = Network.type_index(action_network_type[action])
 	end
 
@@ -109,6 +139,7 @@ HumanInputHandler.initialize_client_fixed_frame = function (self, frame, input_s
 	self._frame = frame
 	self._last_frame_acknowledged = frame
 	self._last_frame_parsed = frame
+
 	local index = self:_buffer_index(frame)
 	local cache = self._input_cache
 
@@ -131,6 +162,7 @@ HumanInputHandler.pre_update = function (self, dt, t, input_service, ui_interact
 	for i = 1, self._num_ephemeral_actions do
 		local old_value = self._ephemeral_action_cache[i]
 		local new_value = old_value or input_service:get(self._ephemeral_actions[i])
+
 		self._ephemeral_action_cache[i] = old_value or new_value
 	end
 
@@ -175,9 +207,7 @@ end
 HumanInputHandler.get_orientation = function (self, frame)
 	local index = self:_buffer_index(frame)
 	local cache = self._input_cache
-	local y = cache[self._yaw_index][index]
-	local p = cache[self._pitch_index][index]
-	local r = cache[self._roll_index][index]
+	local y, p, r = cache[self._yaw_index][index], cache[self._pitch_index][index], cache[self._roll_index][index]
 
 	return y, p, r
 end
@@ -200,6 +230,7 @@ HumanInputHandler._parse_input = function (self, input_cache, input_service, ind
 
 	for i = 1, num_actions do
 		local action = actions[i]
+
 		input_cache[i][index] = input_service:get(action)
 	end
 
@@ -214,6 +245,7 @@ HumanInputHandler._parse_input = function (self, input_cache, input_service, ind
 
 	for i = 1, self._num_ui_interaction_actions do
 		local pos = num_actions + num_ephemeral_actions + i
+
 		input_cache[pos][index] = ui_interaction_action_cache[i]
 		ui_interaction_action_cache[i] = false
 	end
@@ -224,6 +256,7 @@ HumanInputHandler._parse_input = function (self, input_cache, input_service, ind
 	for i = 1, self._num_input_settings do
 		local input_setting = settings[i]
 		local cache_index = action_lookup[input_setting]
+
 		input_cache[cache_index][index] = self._input_settings_table[input_setting]
 	end
 
@@ -234,6 +267,7 @@ HumanInputHandler._parse_input = function (self, input_cache, input_service, ind
 		local action = pack_unpack_actions[i]
 		local cache_index = action_lookup[action]
 		local network_type_index = pack_unpack_action_to_network_type_index[action]
+
 		input_cache[cache_index][index] = Network.pack_unpack(network_type_index, input_cache[cache_index][index])
 	end
 end
@@ -243,11 +277,11 @@ HumanInputHandler.update = function (self, dt, t, input_service)
 
 	if self._is_server then
 		self:frame_parsed(frame)
-	elseif frame and self._last_frame_acknowledged < frame and Managers.state.game_session:can_send_session_bound_rpcs() and (not self._last_sent_frame or self._last_sent_frame < frame) then
+	elseif frame and frame > self._last_frame_acknowledged and Managers.state.game_session:can_send_session_bound_rpcs() and (not self._last_sent_frame or frame > self._last_sent_frame) then
 		local input_cache = self._input_cache
-		local start_frame = nil
+		local start_frame
 
-		if self._send_buffer_size < frame - self._last_frame_acknowledged then
+		if frame - self._last_frame_acknowledged > self._send_buffer_size then
 			start_frame = frame - self._send_buffer_size + 1
 		else
 			start_frame = self._last_frame_acknowledged + 1
@@ -293,7 +327,7 @@ HumanInputHandler.rpc_player_input_array_ack = function (self, channel_id, local
 end
 
 HumanInputHandler.frame_parsed = function (self, frame, remainder_time, frame_time)
-	if self._last_frame_parsed < frame then
+	if frame > self._last_frame_parsed then
 		self._last_frame_parsed = frame
 
 		if not self._is_server then
@@ -307,7 +341,7 @@ HumanInputHandler.frame_parsed = function (self, frame, remainder_time, frame_ti
 end
 
 HumanInputHandler.frame_acknowledged = function (self, frame)
-	if self._last_frame_acknowledged < frame then
+	if frame > self._last_frame_acknowledged then
 		self._last_frame_acknowledged = frame
 	end
 end

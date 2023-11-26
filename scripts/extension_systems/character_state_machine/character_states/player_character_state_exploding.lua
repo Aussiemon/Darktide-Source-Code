@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/character_state_machine/character_states/player_character_state_exploding.lua
+
 require("scripts/extension_systems/character_state_machine/character_states/player_character_state_base")
 
 local AcceleratedLocalSpaceMovement = require("scripts/extension_systems/character_state_machine/character_states/utilities/accelerated_local_space_movement")
@@ -13,6 +15,7 @@ PlayerCharacterStateExploding.init = function (self, ...)
 
 	local unit_data_extension = self._unit_data_extension
 	local state_component = unit_data_extension:write_component("exploding_character_state")
+
 	state_component.slot_name = "none"
 	state_component.reason = "overheat"
 	state_component.is_exploding = false
@@ -27,10 +30,13 @@ PlayerCharacterStateExploding.on_enter = function (self, unit, dt, t, previous_s
 	local wield_slot = params.wield_slot
 	local explode_action = params.explode_action
 	local state_component = self._exploding_character_state_component
+
 	state_component.slot_name = slot_name
 	state_component.reason = reason
 	state_component.is_exploding = true
+
 	local locomotion_steering = self._locomotion_steering_component
+
 	locomotion_steering.move_method = "script_driven"
 	locomotion_steering.calculate_fall_velocity = true
 
@@ -49,6 +55,7 @@ end
 
 PlayerCharacterStateExploding.on_exit = function (self, unit, t, next_state)
 	local state_component = self._exploding_character_state_component
+
 	state_component.is_exploding = false
 
 	IntoxicatedMovement.initialize_component(self._intoxicated_movement_component)
@@ -63,6 +70,7 @@ PlayerCharacterStateExploding.fixed_update = function (self, unit, dt, t, next_s
 	local velocity_current = locomotion_component.velocity_current
 	local is_crouching = false
 	local move_direction, move_speed, new_x, new_y, wants_move, stopped, moving_backwards = AcceleratedLocalSpaceMovement.wanted_movement(self._constants, input_extension, locomotion_steering_component, self._movement_settings_component, self._first_person_component, is_crouching, velocity_current, dt)
+
 	move_direction, move_speed = IntoxicatedMovement.update(self._intoxicated_movement_component, self._character_state_random_component, INTOXICATION_LEVEL, dt, t, move_direction, move_speed)
 	locomotion_steering_component.velocity_wanted = move_direction * move_speed
 	locomotion_steering_component.local_move_x = new_x

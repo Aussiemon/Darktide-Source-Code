@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/loading/loading_client.lua
+
 local Loader = require("scripts/loading/loader")
 local LocalCreateWorldState = require("scripts/loading/local_states/local_create_world_state")
 local LocalDetermineLevelState = require("scripts/loading/local_states/local_determine_level_state")
@@ -12,10 +14,12 @@ local ScriptWorld = require("scripts/foundation/utilities/script_world")
 local StateMachine = require("scripts/foundation/utilities/state_machine")
 local LocalWaitForMissionBriefingDoneState = require("scripts/loading/local_states/local_wait_for_mission_briefing_done_state")
 local LoadingClient = class("LoadingClient")
+
 LoadingClient.TIMEOUT = 30
 
 LoadingClient.init = function (self, network_delegate, host_channel_id, loaders)
 	self._network_delegate = network_delegate
+
 	local shared_state = {
 		state = "loading",
 		world_name = "level_world",
@@ -25,7 +29,7 @@ LoadingClient.init = function (self, network_delegate, host_channel_id, loaders)
 		loaders = loaders,
 		themes = {}
 	}
-	local parent = nil
+	local parent
 	local state_machine = StateMachine:new("LoadingClient", parent, shared_state)
 
 	state_machine:add_transition("LocalDetermineLevelState", "mission_determined", LocalLoadersState)
@@ -142,6 +146,7 @@ LoadingClient.load_mission = function (self, mission_name, level_name, circumsta
 	shared_state.level_name = level_name
 	shared_state.mission_name = mission_name
 	shared_state.circumstance_name = circumstance_name
+
 	local state = self._state_machine:state()
 
 	if state.load_mission then
@@ -177,15 +182,13 @@ LoadingClient.state = function (self)
 end
 
 LoadingClient.take_ownership_of_level = function (self)
-	local world, level = nil
+	local world, level
 	local themes = {}
 	local shared_state = self._shared_state
-	shared_state.world = world
-	world = shared_state.world
-	shared_state.level = level
-	level = shared_state.level
-	shared_state.themes = themes
-	themes = shared_state.themes
+
+	world, shared_state.world = shared_state.world, world
+	level, shared_state.level = shared_state.level, level
+	themes, shared_state.themes = shared_state.themes, themes
 
 	return world, level, themes, shared_state.world_name
 end

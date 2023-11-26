@@ -1,8 +1,9 @@
+﻿-- chunkname: @scripts/settings/breed/breeds_test.lua
+
 local Breed = require("scripts/utilities/breed")
 local MinionAttackSelection = require("scripts/utilities/minion_attack_selection/minion_attack_selection")
 local StaggerSettings = require("scripts/settings/damage/stagger_settings")
-local stagger_types = StaggerSettings.stagger_types
-local optional_stagger_types = StaggerSettings.optional_stagger_types
+local stagger_types, optional_stagger_types = StaggerSettings.stagger_types, StaggerSettings.optional_stagger_types
 local ALLOWED_BREED_PATTERN = "%s_allowed"
 local ATTACK_SELECTION_TEMPLATE_OVERRIDE_PATTERN = "%s_attack_selection_template_override"
 local CUSTOM_ATTACK_NAME_PATTERN = "%s_custom_attack_selection_%s"
@@ -93,8 +94,7 @@ local function _init_and_run_tests(breeds)
 			local target_selection_template = breed_data.target_selection_template
 			local target_selection_weights = breed_data.target_selection_weights
 			local sounds = breed_data.sounds
-			local events = sounds.events
-			local use_proximity_culling = sounds.use_proximity_culling
+			local events, use_proximity_culling = sounds.events, sounds.use_proximity_culling
 
 			for sound_alias, _ in pairs(use_proximity_culling) do
 				-- Nothing

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/talents_career_choice_view/talents_career_choice_view_definitions.lua
+
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local UIWorkspaceSettings = require("scripts/settings/ui/ui_workspace_settings")
@@ -25,48 +27,49 @@ local scrollbar_size = {
 	10,
 	list_size[2] - mask_margins[2] * 2
 }
-local scenegraph = {
-	screen = UIWorkspaceSettings.screen,
-	visible_area = {
-		vertical_alignment = "top",
-		parent = "screen",
-		horizontal_alignment = "center",
-		size = {
-			visible_area_width,
-			visible_area_height
-		},
-		position = {
-			0,
-			top_panel_size[2],
-			1
-		}
+local scenegraph = {}
+
+scenegraph.screen = UIWorkspaceSettings.screen
+scenegraph.visible_area = {
+	vertical_alignment = "top",
+	parent = "screen",
+	horizontal_alignment = "center",
+	size = {
+		visible_area_width,
+		visible_area_height
 	},
-	header = {
-		vertical_alignment = "top",
-		parent = "visible_area",
-		horizontal_alignment = "center",
-		size = {
-			800,
-			60
-		},
-		position = {
-			0,
-			48,
-			15
-		}
-	},
-	confirm_choice_button = {
-		vertical_alignment = "bottom",
-		parent = "visible_area",
-		horizontal_alignment = "center",
-		size = confirm_choice_button_size,
-		position = {
-			0,
-			-40,
-			15
-		}
+	position = {
+		0,
+		top_panel_size[2],
+		1
 	}
 }
+scenegraph.header = {
+	vertical_alignment = "top",
+	parent = "visible_area",
+	horizontal_alignment = "center",
+	size = {
+		800,
+		60
+	},
+	position = {
+		0,
+		48,
+		15
+	}
+}
+scenegraph.confirm_choice_button = {
+	vertical_alignment = "bottom",
+	parent = "visible_area",
+	horizontal_alignment = "center",
+	size = confirm_choice_button_size,
+	position = {
+		0,
+		-40,
+		15
+	}
+}
+
 local lipsum = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed eget eleifend lectus. Praesent ac pellentesque arcu. Etiam commodo"
 local widget_definitions = {
 	background = UIWidget.create_definition({
@@ -219,6 +222,7 @@ for i = 1, 3 do
 	}
 	local scenegraph_name = "career_" .. i
 	local list_name = scenegraph_name .. "_list"
+
 	scenegraph[scenegraph_name] = {
 		vertical_alignment = "top",
 		parent = "visible_area",
@@ -266,10 +270,12 @@ for i = 1, 3 do
 			5
 		}
 	}
+
 	local career_widget_name = WIDGET_NAME_PREFIX .. i
 	local widget_definition = UIWidget.create_definition(blueprints.career_banner.passes, scenegraph_name, {
 		banner_id = i
 	}, nil, ViewStyles.career_banner)
+
 	widget_definitions[career_widget_name] = widget_definition
 	widget_definitions[career_widget_name .. "_scrollbar"] = UIWidget.create_definition(ScrollbarPassTemplates.default_scrollbar, scenegraph_name .. "_scrollbar")
 	widget_definitions[career_widget_name .. "_mask"] = UIWidget.create_definition({
@@ -297,6 +303,7 @@ for i = 1, 4 do
 		15
 	}
 	local divider_name = "divider_" .. i
+
 	scenegraph[divider_name] = {
 		vertical_alignment = "top",
 		parent = "visible_area",
@@ -333,11 +340,13 @@ local function lerp_style(widget_styles, source_styles, target_styles, progress)
 
 						if to_x then
 							local from_x = from_property[1] or style_property[1]
+
 							style_property[1] = lerp(from_x, to_x, progress)
 						end
 
 						if to_y then
 							local from_y = from_property[2] or style_property[2]
+
 							style_property[2] = lerp(from_y, to_y, progress)
 						end
 					elseif property_name == "color" or property_name == "text_color" then
@@ -369,14 +378,19 @@ local animations = {
 				local banner_style = banner_widget.style
 				local banner_source_style = params.banner_source_style
 				local banner_target_style = params.banner_target_style
+
 				progress = math.ease_quad(progress)
 
 				lerp_style(banner_style, banner_source_style, banner_target_style, progress)
 
 				banner_style.background.material_values.saturation = math.lerp(banner_source_style.background.material_values.saturation, banner_target_style.background.material_values.saturation, progress)
+
 				local mask = widgets.mask
+
 				mask.style.mask.size = banner_style.talents_list.size
+
 				local talents_alpha = math.lerp(params.talents_start_alpha, params.talents_target_alpha, progress)
+
 				mask.alpha_multiplier = talents_alpha
 				widgets.scrollbar.alpha_multiplier = talents_alpha
 			end,

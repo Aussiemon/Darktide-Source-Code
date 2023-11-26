@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/telemetry/reporters/enemy_spawned_reporter.lua
+
 local ReporterInterface = require("scripts/managers/telemetry/reporters/reporter_interface")
 local EnemySpawnedReporter = class("EnemySpawnedReporter")
 

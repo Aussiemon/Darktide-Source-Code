@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/buff/weapon_traits_buff_templates/weapon_traits_bespoke_stubrevolver_p1_buff_templates.lua
+
 local BaseWeaponTraitBuffTemplates = require("scripts/settings/buff/weapon_traits_buff_templates/base_weapon_trait_buff_templates")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local CheckProcFunctions = require("scripts/settings/buff/validation_functions/check_proc_functions")
@@ -6,11 +8,11 @@ local FixedFrame = require("scripts/utilities/fixed_frame")
 local stat_buffs = BuffSettings.stat_buffs
 local proc_events = BuffSettings.proc_events
 local keywords = BuffSettings.keywords
-local templates = {
-	weapon_trait_bespoke_stubrevolver_p1_hipfire_while_sprinting = table.clone(BaseWeaponTraitBuffTemplates.hipfire_while_sprinting),
-	weapon_trait_bespoke_stubrevolver_p1_reload_speed_on_slide_parent = table.clone(BaseWeaponTraitBuffTemplates.reload_speed_on_close_kill_parent),
-	weapon_trait_bespoke_stubrevolver_p1_reload_speed_on_slide_child = table.clone(BaseWeaponTraitBuffTemplates.reload_speed_on_close_kill_child)
-}
+local templates = {}
+
+templates.weapon_trait_bespoke_stubrevolver_p1_hipfire_while_sprinting = table.clone(BaseWeaponTraitBuffTemplates.hipfire_while_sprinting)
+templates.weapon_trait_bespoke_stubrevolver_p1_reload_speed_on_slide_parent = table.clone(BaseWeaponTraitBuffTemplates.reload_speed_on_close_kill_parent)
+templates.weapon_trait_bespoke_stubrevolver_p1_reload_speed_on_slide_child = table.clone(BaseWeaponTraitBuffTemplates.reload_speed_on_close_kill_child)
 templates.weapon_trait_bespoke_stubrevolver_p1_reload_speed_on_slide_parent.child_buff_template = "weapon_trait_bespoke_stubrevolver_p1_reload_speed_on_slide_child"
 templates.weapon_trait_bespoke_stubrevolver_p1_suppression_on_close_kill = table.clone(BaseWeaponTraitBuffTemplates.suppression_on_close_kill)
 templates.weapon_trait_bespoke_stubrevolver_p1_crit_chance_based_on_aim_time = table.clone(BaseWeaponTraitBuffTemplates.chance_based_on_aim_time)

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/components/onboarding_objective_target.lua
+
 local OnboardingObjectiveTarget = component("OnboardingObjectiveTarget")
 
 OnboardingObjectiveTarget.init = function (self, unit)

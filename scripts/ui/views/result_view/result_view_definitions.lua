@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/result_view/result_view_definitions.lua
+
 local DefaultPassTemplates = require("scripts/ui/pass_templates/default_pass_templates")
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local UIWidget = require("scripts/managers/ui/ui_widget")
@@ -131,12 +133,14 @@ local title_text_font_setting_name = "header_1"
 local title_text_font_settings = UIFontSettings[title_text_font_setting_name]
 local title_text_font_color = title_text_font_settings.text_color
 local text_style = table.clone(title_text_font_settings)
+
 text_style.text_color = {
 	255,
 	203,
 	197,
 	175
 }
+
 local widget_definitions = {
 	title_divider_top = UIWidget.create_definition({
 		{

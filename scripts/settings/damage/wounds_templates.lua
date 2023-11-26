@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/damage/wounds_templates.lua
+
 local AttackSettings = require("scripts/settings/damage/attack_settings")
 local HitZone = require("scripts/utilities/attack/hit_zone")
 local WoundsSettings = require("scripts/settings/wounds/wounds_settings")
@@ -57,6 +59,7 @@ local linger_heavy = {
 	5,
 	6
 }
+
 wounds_templates.laser = {
 	[attack_results.damaged] = {
 		default = {

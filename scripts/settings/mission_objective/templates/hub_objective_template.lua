@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/mission_objective/templates/hub_objective_template.lua
+
 local mission_objective_templates = {
 	hub = {
 		objectives = {

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/equipment/weapon_templates/stub_pistols/settings_templates/stub_pistol_suppression_templates.lua
+
 local suppression_templates = {}
 local overrides = {}
 

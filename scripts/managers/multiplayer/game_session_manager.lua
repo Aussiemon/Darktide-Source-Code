@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/multiplayer/game_session_manager.lua
+
 local GameSessionManager = class("GameSessionManager")
 local NETWORK_EVENTS = {
 	"game_object_migrated_to_me",
@@ -19,6 +21,7 @@ GameSessionManager.init = function (self, fixed_time_step)
 	self._session_disconnected = false
 	self._is_server = nil
 	self._engine_game_session = Network.create_game_session()
+
 	local event_delegate = Managers.connection:network_event_delegate()
 
 	event_delegate:register_session_events(self, unpack(NETWORK_EVENTS))
@@ -96,7 +99,7 @@ end
 GameSessionManager.disconnect = function (self)
 	if self._session_host then
 		for peer_id, _ in pairs(self._joined_peers_cache) do
-			local engine_reason = nil
+			local engine_reason
 
 			self:_client_left(self:peer_to_channel(peer_id), peer_id, "game_session_manager_disconnect", engine_reason)
 		end
@@ -108,7 +111,7 @@ GameSessionManager.disconnect = function (self)
 
 	if self._session_client then
 		for peer_id, _ in pairs(self._joined_peers_cache) do
-			local engine_reason = nil
+			local engine_reason
 
 			self:_member_left(self:peer_to_channel(peer_id), peer_id, "game_session_manager_disconnect", engine_reason)
 		end
@@ -128,7 +131,7 @@ GameSessionManager.delayed_disconnects = function (self, result)
 	table.clear(result)
 
 	for peer_id, time in pairs(self._delayed_peer_disconnects) do
-		if GameSessionManager.DELAYED_DISCONNECT_TIME <= time then
+		if time >= GameSessionManager.DELAYED_DISCONNECT_TIME then
 			result[#result + 1] = peer_id
 		end
 	end
@@ -277,7 +280,7 @@ GameSessionManager.game_object_destroyed = function (self, game_object_id, owner
 
 	if type == "scanning_device" then
 		local level_unit_id = GameSession.game_object_field(self._engine_game_session, game_object_id, "level_unit_id")
-		local scanning_device_unit = nil
+		local scanning_device_unit
 
 		if unit_spawner:valid_unit_id(level_unit_id) then
 			scanning_device_unit = unit_spawner:unit(level_unit_id)
@@ -314,6 +317,7 @@ GameSessionManager.currently_lowest_reliable_send_buffer_size = function (self)
 	for peer, _ in pairs(self._joined_peers_cache) do
 		if peer ~= own_peer_id then
 			local buffer_size = Network.reliable_send_buffer_left(peer)
+
 			size = math.min(size, buffer_size)
 		end
 	end

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/character_appearance_view/character_appearance_view_settings.lua
+
 local area_width = 600
 local area_height = 642
 local character_appearance_view_settings = {

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/components/plasma_coil.lua
+
 local PlasmaCoil = component("PlasmaCoil")
 
 PlasmaCoil.init = function (self, unit)

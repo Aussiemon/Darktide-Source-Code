@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/equipment/weapon_templates/lasguns/lasgun_p3_m1.lua
+
 local BaseTemplateSettings = require("scripts/settings/equipment/weapon_templates/base_template_settings")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
@@ -25,103 +27,103 @@ local sprint_trait_templates = WeaponTraitTemplates[template_types.sprint]
 local ammo_trait_templates = WeaponTraitTemplates[template_types.ammo]
 local sway_trait_templates = WeaponTraitTemplates[template_types.sway]
 local movement_curve_modifier_trait_templates = WeaponTraitTemplates[template_types.movement_curve_modifier]
-local weapon_template = {
-	action_inputs = {
-		shoot = {
-			buffer_time = 0.25,
-			input_sequence = {
-				{
+local weapon_template = {}
+
+weapon_template.action_inputs = {
+	shoot = {
+		buffer_time = 0.25,
+		input_sequence = {
+			{
+				value = true,
+				input = "action_one_hold"
+			}
+		}
+	},
+	shoot_release = {
+		buffer_time = 0.3,
+		input_sequence = {
+			{
+				value = false,
+				input = "action_one_hold",
+				time_window = math.huge
+			}
+		}
+	},
+	zoom_shoot = {
+		buffer_time = 0.3,
+		input_sequence = {
+			{
+				value = true,
+				input = "action_one_hold"
+			}
+		}
+	},
+	zoom = {
+		buffer_time = 0.4,
+		input_sequence = {
+			{
+				value = true,
+				input = "action_two_hold",
+				input_setting = {
 					value = true,
-					input = "action_one_hold"
+					input = "action_two_pressed",
+					setting_value = true,
+					setting = "toggle_ads"
 				}
 			}
-		},
-		shoot_release = {
-			buffer_time = 0.3,
-			input_sequence = {
-				{
-					value = false,
-					input = "action_one_hold",
+		}
+	},
+	zoom_release = {
+		buffer_time = 0.3,
+		input_sequence = {
+			{
+				value = false,
+				input = "action_two_hold",
+				time_window = math.huge,
+				input_setting = {
+					setting_value = true,
+					setting = "toggle_ads",
+					value = true,
+					input = "action_two_pressed",
 					time_window = math.huge
 				}
 			}
-		},
-		zoom_shoot = {
-			buffer_time = 0.3,
-			input_sequence = {
-				{
-					value = true,
-					input = "action_one_hold"
-				}
+		}
+	},
+	reload = {
+		buffer_time = 0,
+		clear_input_queue = true,
+		input_sequence = {
+			{
+				value = true,
+				input = "weapon_reload"
 			}
-		},
-		zoom = {
-			buffer_time = 0.4,
-			input_sequence = {
-				{
-					value = true,
-					input = "action_two_hold",
-					input_setting = {
-						value = true,
-						input = "action_two_pressed",
-						setting_value = true,
-						setting = "toggle_ads"
-					}
-				}
+		}
+	},
+	wield = {
+		buffer_time = 0.2,
+		input_sequence = {
+			{
+				inputs = wield_inputs
 			}
-		},
-		zoom_release = {
-			buffer_time = 0.3,
-			input_sequence = {
-				{
-					value = false,
-					input = "action_two_hold",
-					time_window = math.huge,
-					input_setting = {
-						setting_value = true,
-						setting = "toggle_ads",
-						value = true,
-						input = "action_two_pressed",
-						time_window = math.huge
-					}
-				}
+		}
+	},
+	weapon_special = {
+		buffer_time = 0.4,
+		input_sequence = {
+			{
+				value = true,
+				input = "weapon_extra_pressed"
 			}
-		},
-		reload = {
-			buffer_time = 0,
-			clear_input_queue = true,
-			input_sequence = {
-				{
-					value = true,
-					input = "weapon_reload"
-				}
-			}
-		},
-		wield = {
-			buffer_time = 0.2,
-			input_sequence = {
-				{
-					inputs = wield_inputs
-				}
-			}
-		},
-		weapon_special = {
-			buffer_time = 0.4,
-			input_sequence = {
-				{
-					value = true,
-					input = "weapon_extra_pressed"
-				}
-			}
-		},
-		zoom_weapon_special = {
-			buffer_time = 0.26,
-			max_queue = 2,
-			input_sequence = {
-				{
-					value = true,
-					input = "weapon_extra_pressed"
-				}
+		}
+	},
+	zoom_weapon_special = {
+		buffer_time = 0.26,
+		max_queue = 2,
+		input_sequence = {
+			{
+				value = true,
+				input = "weapon_extra_pressed"
 			}
 		}
 	}
@@ -696,7 +698,9 @@ weapon_template.toughness_template = "default"
 weapon_template.movement_curve_modifier_template = "lasgun_p3"
 weapon_template.footstep_intervals = FootstepIntervalsTemplates.default
 weapon_template.smart_targeting_template = SmartTargetingTemplates.assault
+
 local WeaponBarUIDescriptionTemplates = require("scripts/settings/equipment/weapon_bar_ui_description_templates")
+
 weapon_template.base_stats = {
 	lasgun_p3_m1_dps_stat = {
 		display_name = "loc_stats_display_damage_stat",
@@ -790,6 +794,7 @@ weapon_template.base_stats = {
 	}
 }
 weapon_template.traits = {}
+
 local bespoke_lasgun_p3_traits = table.keys(WeaponTraitsBespokeLasgunP3)
 
 table.append(weapon_template.traits, bespoke_lasgun_p3_traits)

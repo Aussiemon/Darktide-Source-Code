@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/horde/templates/trickle_horde_template.lua
+
 local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
 local Breeds = require("scripts/settings/breed/breeds")
 local MainPathQueries = require("scripts/utilities/main_path_queries")
@@ -21,8 +23,7 @@ local function _compose_spawn_list(composition)
 
 	for i = 1, #breeds do
 		local breed_data = breeds[i]
-		local breed_name = breed_data.name
-		local amount = breed_data.amount
+		local breed_name, amount = breed_data.name, breed_data.amount
 		local num_to_spawn = math_random(amount[1], amount[2])
 
 		for j = 1, num_to_spawn do
@@ -36,8 +37,7 @@ local function _compose_spawn_list(composition)
 end
 
 local function _position_has_line_of_sight_to_any_enemy_player(physics_world, from_position, side, collision_filter)
-	local Vector3_length_squared = Vector3.length_squared
-	local Vector3_normalize = Vector3.normalize
+	local Vector3_length_squared, Vector3_normalize = Vector3.length_squared, Vector3.normalize
 	local PhysicsWorld_raycast = PhysicsWorld.raycast
 	local offset = Vector3.up()
 	local valid_enemy_player_units_positions = side.valid_enemy_player_units_positions
@@ -74,7 +74,7 @@ local function _try_find_occluded_position(nav_world, physics_world, nav_spawn_p
 		return false, nil, nil, nil
 	end
 
-	local wanted_position = nil
+	local wanted_position
 
 	if try_find_on_main_path then
 		local main_path_offset = optional_main_path_offset or DEFAULT_MAIN_PATH_OFFSET
@@ -84,6 +84,7 @@ local function _try_find_occluded_position(nav_world, physics_world, nav_spawn_p
 		end
 
 		local main_path_distance = math.max(travel_distance + main_path_offset, 0)
+
 		wanted_position = MainPathQueries.position_from_distance(main_path_distance)
 	else
 		wanted_position = path_position
@@ -117,10 +118,17 @@ local MAINPATH_OFFSET = 10
 local function _try_find_horde_position(nav_world, physics_world, nav_spawn_points, side, target_side, occluded_spawn_range, num_spawn_groups, optional_main_path_offset, optional_num_tries, optional_disallowed_positions)
 	local try_find_on_main_path = true
 	local num_tries = optional_num_tries or DEFAULT_NUM_TRIES
-	local success, horde_position, target_direction, target_unit = nil
+	local success, horde_position, target_direction, target_unit
 
 	for i = 1, num_tries do
-		optional_main_path_offset = optional_main_path_offset and optional_main_path_offset + (i > 1 and i * MAINPATH_OFFSET or 0)
+		if optional_main_path_offset then
+			if type(optional_main_path_offset) == "table" then
+				optional_main_path_offset = math.random_range(optional_main_path_offset[1], optional_main_path_offset[2])
+			end
+
+			optional_main_path_offset = optional_main_path_offset + (i > 1 and i * MAINPATH_OFFSET or 0)
+		end
+
 		success, horde_position, target_direction, target_unit = _try_find_occluded_position(nav_world, physics_world, nav_spawn_points, side, target_side, occluded_spawn_range, num_spawn_groups, try_find_on_main_path, optional_main_path_offset, optional_disallowed_positions)
 
 		if success then
@@ -172,14 +180,15 @@ horde_template.execute = function (physics_world, nav_world, side, target_side, 
 	local side_id = side.side_id
 	local minion_spawn_manager = Managers.state.minion_spawn
 	local flood_fill_positions = {}
-	local below = 2
-	local above = 2
+	local below, above = 2, 2
 	local num_positions = GwNavQueries.flood_fill_from_position(nav_world, horde_position, above, below, num_to_spawn, flood_fill_positions)
 	local breeds_can_patrol = true
 
 	for i = 1, num_positions do
 		local position = flood_fill_positions[i]
+
 		flood_fill_positions[#flood_fill_positions + 1] = position
+
 		local breed_name = spawn_list[i]
 		local breed = Breeds[breed_name]
 
@@ -210,6 +219,7 @@ horde_template.execute = function (physics_world, nav_world, side, target_side, 
 			else
 				local follow_index = MinionPatrols.get_follow_index(i)
 				local follow_unit = spawned_minions[follow_index]
+
 				patrol_component.patrol_leader_unit = follow_unit
 				patrol_component.patrol_index = i
 				patrol_component.should_patrol = true
@@ -222,6 +232,7 @@ horde_template.execute = function (physics_world, nav_world, side, target_side, 
 			local breed_name = spawn_list[i]
 			local spawn_position = flood_fill_positions[i]
 			local unit = minion_spawn_manager:spawn_minion(breed_name, spawn_position, spawn_rotation, side_id, aggro_states.aggroed, target_unit, nil, group_id, nil, nil, optional_spawn_max_health_modifier)
+
 			spawned_minions[i] = unit
 		end
 	end

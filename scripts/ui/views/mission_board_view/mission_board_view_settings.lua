@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/mission_board_view/mission_board_view_settings.lua
+
 local MissionBoardViewSettings = {
 	resource_renderer_enabled = false,
 	resource_renderer_material = "content/ui/materials/mission_board/render_target_scanlines",

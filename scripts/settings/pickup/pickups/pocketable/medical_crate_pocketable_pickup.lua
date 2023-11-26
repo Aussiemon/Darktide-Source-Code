@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/pickup/pickups/pocketable/medical_crate_pocketable_pickup.lua
+
 local pickup_data = {
 	description = "loc_pickup_pocketable_medical_crate_01",
 	name = "medical_crate_pocketable",

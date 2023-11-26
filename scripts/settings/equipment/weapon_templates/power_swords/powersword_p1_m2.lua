@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/equipment/weapon_templates/power_swords/powersword_p1_m2.lua
+
 local ArmorSettings = require("scripts/settings/damage/armor_settings")
 local BaseTemplateSettings = require("scripts/settings/equipment/weapon_templates/base_template_settings")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
@@ -36,15 +38,17 @@ local sway_trait_templates = WeaponTraitTemplates[template_types.sway]
 local toughness_trait_templates = WeaponTraitTemplates[template_types.toughness]
 local weapon_handling_trait_templates = WeaponTraitTemplates[template_types.weapon_handling]
 local movement_curve_modifier_trait_templates = WeaponTraitTemplates[template_types.movement_curve_modifier]
-local weapon_template = {
-	action_inputs = table.clone(MeleeActionInputSetupMid.action_inputs),
-	action_input_hierarchy = table.clone(MeleeActionInputSetupMid.action_input_hierarchy)
-}
+local weapon_template = {}
+
+weapon_template.action_inputs = table.clone(MeleeActionInputSetupMid.action_inputs)
+weapon_template.action_input_hierarchy = table.clone(MeleeActionInputSetupMid.action_input_hierarchy)
+
 local default_weapon_box = {
 	0.1,
 	0.075,
 	1.15
 }
+
 weapon_template.actions = {
 	action_unwield = {
 		allowed_during_sprint = true,
@@ -1593,6 +1597,7 @@ weapon_template.base_stats = {
 	}
 }
 weapon_template.traits = {}
+
 local bespoke_powersword_p1_traits = table.keys(WeaponTraitsBespokePowerswordP1)
 
 table.append(weapon_template.traits, bespoke_powersword_p1_traits)

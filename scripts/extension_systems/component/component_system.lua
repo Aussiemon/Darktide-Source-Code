@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/component/component_system.lua
+
 require("scripts/extension_systems/component/component_extension")
 
 local Component = require("scripts/utilities/component")
@@ -41,8 +43,11 @@ ComponentSystem.on_add_extension = function (self, world, unit, extension_name, 
 
 	for i = 1, #components do
 		local component_name = components[i]:name()
+
 		component_name_to_units_map[component_name] = component_name_to_units_map[component_name] or {}
+
 		local unit_list = component_name_to_units_map[component_name]
+
 		unit_list[#unit_list + 1] = unit
 	end
 

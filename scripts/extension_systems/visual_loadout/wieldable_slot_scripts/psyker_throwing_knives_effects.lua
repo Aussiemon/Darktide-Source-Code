@@ -1,7 +1,9 @@
+﻿-- chunkname: @scripts/extension_systems/visual_loadout/wieldable_slot_scripts/psyker_throwing_knives_effects.lua
+
 local Component = require("scripts/utilities/component")
 local PlayerCharacterLoopingSoundAliases = require("scripts/settings/sound/player_character_looping_sound_aliases")
 local Vo = require("scripts/utilities/vo")
-local _components = nil
+local _components
 local RECOVER_SOUND_ALIAS = "grenade_recover_indicator"
 local LOOPING_SOUND_ALIAS = "equipped_item_passive_loop"
 local LOOPING_PARTICLE_ALIAS = "equipped_item_passive"
@@ -17,6 +19,7 @@ local PsykerThrowingKnivesEffects = class("PsykerThrowingKnivesEffects")
 
 PsykerThrowingKnivesEffects.init = function (self, context, slot, weapon_template, fx_sources)
 	local owner_unit = context.owner_unit
+
 	self._owner_unit = owner_unit
 	self._is_husk = context.is_husk
 	self._is_local_unit = context.is_local_unit
@@ -30,6 +33,7 @@ PsykerThrowingKnivesEffects.init = function (self, context, slot, weapon_templat
 	self._t = 0
 	self._first_person_mode = true
 	self._remaining_ability_charges = 0
+
 	local visible_knives = {}
 
 	for ii = 1, #ATTACHMENT_NAMES do
@@ -92,7 +96,7 @@ PsykerThrowingKnivesEffects._update_ammo_count = function (self, t)
 	local components_lookup = self._first_person_mode and self._components_lookup_1p or self._components_lookup_3p
 	local visible_knives = self._visible_knives
 	local any_visible = false
-	local _, effect_name, event_name = nil
+	local _, effect_name, event_name
 
 	for ii = #ATTACHMENT_NAMES, 1, -1 do
 		local attachment_name = ATTACHMENT_NAMES[ii]
@@ -157,28 +161,27 @@ PsykerThrowingKnivesEffects._create_passive_sfx = function (self)
 		local sound_config = PlayerCharacterLoopingSoundAliases[LOOPING_SOUND_ALIAS]
 		local start_config = sound_config.start
 		local start_event_alias = start_config.event_alias
-		local resolved, has_husk_events, start_event_name, stop_event_name = nil
+		local resolved, has_husk_events, start_event_name, stop_event_name
+
 		resolved, start_event_name, has_husk_events = visual_loadout_extension:resolve_gear_sound(start_event_alias, external_properties)
 
 		if resolved then
 			local wwise_world = self._wwise_world
 			local source_id = fx_extension:sound_source(sfx_source_name)
 
-			if (is_husk or not is_local_unit) and has_husk_events then
-				start_event_name = start_event_name .. "_husk" or start_event_name
-			end
+			start_event_name = not (not is_husk and is_local_unit) and has_husk_events and start_event_name .. "_husk" or start_event_name
 
 			local playing_id = WwiseWorld.trigger_resource_event(wwise_world, start_event_name, source_id)
+
 			self._looping_passive_playing_id = playing_id
+
 			local stop_config = sound_config.stop
 			local stop_event_alias = stop_config.event_alias
+
 			resolved, stop_event_name, has_husk_events = visual_loadout_extension:resolve_gear_sound(stop_event_alias, external_properties)
 
 			if resolved then
-				if (is_husk or not is_local_unit) and has_husk_events then
-					stop_event_name = stop_event_name .. "_husk" or stop_event_name
-				end
-
+				stop_event_name = not (not is_husk and is_local_unit) and has_husk_events and stop_event_name .. "_husk" or stop_event_name
 				self._stop_event_name = stop_event_name
 			end
 		end
@@ -218,6 +221,7 @@ function _components(destination, destination_lookup, attachments, attachments_n
 				lookup_name = lookup_name,
 				component = component
 			}
+
 			destination[#destination + 1] = data
 			destination_lookup[lookup_name] = data
 		end

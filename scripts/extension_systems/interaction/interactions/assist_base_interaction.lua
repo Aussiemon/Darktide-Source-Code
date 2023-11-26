@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/interaction/interactions/assist_base_interaction.lua
+
 require("scripts/extension_systems/interaction/interactions/base_interaction")
 
 local Vo = require("scripts/utilities/vo")

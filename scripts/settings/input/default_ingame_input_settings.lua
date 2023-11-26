@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/input/default_ingame_input_settings.lua
+
 local DefaultIngameInputFilters = require("scripts/settings/input/default_ingame_input_filters")
 local default_ingame_input_settings = {
 	service_type = "Ingame",

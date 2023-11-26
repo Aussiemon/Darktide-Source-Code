@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/damage/damage_profiles/spraynpray_damage_profile_templates.lua
+
 local ArmorSettings = require("scripts/settings/damage/armor_settings")
 local PowerLevelSettings = require("scripts/settings/damage/power_level_settings")
 local DamageProfileSettings = require("scripts/settings/damage/damage_profile_settings")
@@ -13,6 +15,7 @@ table.make_unique(overrides)
 local crit_armor_mod = DamageProfileSettings.crit_armor_mod
 local crit_impact_armor_mod = DamageProfileSettings.crit_impact_armor_mod
 local single_cleave = DamageProfileSettings.single_cleave
+
 damage_templates.default_spraynpray = {
 	suppression_value = 4,
 	stagger_category = "ranged",

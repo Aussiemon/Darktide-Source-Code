@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/utilities/ui/text.lua
+
 local InputUtils = require("scripts/managers/input/input_utils")
 local TextUtilities = {}
 
@@ -13,7 +15,7 @@ end
 
 TextUtilities.localize_to_title_case = function (localization_key, optional_localization_context)
 	local localized_text = Localize(localization_key, optional_localization_context ~= nil, optional_localization_context)
-	local title_case_text = nil
+	local title_case_text
 
 	for word in string.gmatch(localized_text, "[^%s]+") do
 		local first_letter = Utf8.sub_string(word, 1, 1)
@@ -56,7 +58,7 @@ local SECONDS_IN_A_DAY = SECONDS_IN_AN_HOUR * 24
 
 local function _get_days(seconds)
 	local days = math.floor(seconds / SECONDS_IN_A_DAY)
-	local formatted_days = nil
+	local formatted_days
 
 	if days == 1 then
 		formatted_days = Localize("loc_text_util_time_left_1_day")
@@ -71,7 +73,7 @@ end
 
 local function _get_hours(seconds)
 	local hours = math.floor(seconds % SECONDS_IN_A_DAY / SECONDS_IN_AN_HOUR)
-	local formatted_hours = nil
+	local formatted_hours
 
 	if hours == 1 then
 		formatted_hours = Localize("loc_text_util_time_left_1_hour")
@@ -86,7 +88,7 @@ end
 
 local function _get_minutes(seconds)
 	local minutes = math.floor(seconds % SECONDS_IN_AN_HOUR / SECONDS_IN_A_MINUTE)
-	local formatted_minutes = nil
+	local formatted_minutes
 
 	if minutes == 1 then
 		formatted_minutes = Localize("loc_text_util_time_left_1_minute")
@@ -101,7 +103,8 @@ end
 
 local function _get_seconds(seconds)
 	seconds = math.floor(seconds % SECONDS_IN_A_MINUTE)
-	local formatted_seconds = nil
+
+	local formatted_seconds
 
 	if seconds == 1 then
 		formatted_seconds = Localize("loc_text_util_time_left_1_second")
@@ -115,15 +118,15 @@ local function _get_seconds(seconds)
 end
 
 TextUtilities.format_time_span_long_form_localized = function (num_seconds)
-	local _, major_time_unit_formatted, minor_time_unit, minor_time_unit_formatted = nil
+	local _, major_time_unit_formatted, minor_time_unit, minor_time_unit_formatted
 
-	if SECONDS_IN_A_DAY <= num_seconds then
+	if num_seconds >= SECONDS_IN_A_DAY then
 		_, major_time_unit_formatted = _get_days(num_seconds)
 		minor_time_unit, minor_time_unit_formatted = _get_hours(num_seconds)
-	elseif SECONDS_IN_AN_HOUR <= num_seconds then
+	elseif num_seconds >= SECONDS_IN_AN_HOUR then
 		_, major_time_unit_formatted = _get_hours(num_seconds)
 		minor_time_unit, minor_time_unit_formatted = _get_minutes(num_seconds)
-	elseif SECONDS_IN_A_MINUTE <= num_seconds then
+	elseif num_seconds >= SECONDS_IN_A_MINUTE then
 		_, major_time_unit_formatted = _get_minutes(num_seconds)
 		minor_time_unit = 0
 	else
@@ -196,6 +199,7 @@ TextUtilities.convert_to_roman_numerals = function (value)
 
 	while value > 0 do
 		local div = value / _roman_number_array[idx]
+
 		value = value % _roman_number_array[idx]
 
 		for j = 1, div do
@@ -213,6 +217,7 @@ local _formatted_character_name_character_name_params = {}
 TextUtilities.formatted_character_name = function (character_name, level)
 	if character_name ~= "" then
 		local character_name_params = _formatted_character_name_character_name_params
+
 		character_name_params.character_name = character_name
 		character_name_params.character_level = level
 		character_name = Localize("loc_social_menu_character_name_format", true, character_name_params)
@@ -248,7 +253,9 @@ TextUtilities.format_currency = function (value)
 		end
 
 		count = count + 1
+
 		local character = value_string:sub(i, i)
+
 		formatted_string = character .. formatted_string
 	end
 

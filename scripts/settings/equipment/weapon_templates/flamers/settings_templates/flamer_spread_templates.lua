@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/equipment/weapon_templates/flamers/settings_templates/flamer_spread_templates.lua
+
 local spread_templates = {}
 local overrides = {}
 

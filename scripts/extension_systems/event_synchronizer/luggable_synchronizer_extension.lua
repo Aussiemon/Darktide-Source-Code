@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/event_synchronizer/luggable_synchronizer_extension.lua
+
 local LuggableSynchronizerExtension = class("LuggableSynchronizerExtension", "EventSynchronizerBaseExtension")
 local VOLUME_NAME = "g_luggable_spawn_volume"
 
@@ -33,9 +35,7 @@ LuggableSynchronizerExtension.setup_from_component = function (self, objective_n
 		local mission_objective_system = Managers.state.extension:system("mission_objective_system")
 		local unit = self._unit
 
-		if is_side_mission_synchronizer then
-			objective_name = side_mission.name or objective_name
-		end
+		objective_name = is_side_mission_synchronizer and side_mission.name or objective_name
 
 		mission_objective_system:register_objective_synchronizer(objective_name, unit)
 	end
@@ -107,6 +107,7 @@ end
 
 LuggableSynchronizerExtension.register_connected_units = function (self, stage_units)
 	local old_sockets = self._sockets
+
 	self._volumes = _retrieve_units_by_zone(stage_units, VOLUME_NAME)
 	self._spawners = _retrieve_units_by_system(stage_units, "pickup_system")
 	self._sockets = _retrieve_units_by_system(stage_units, "luggable_socket_system")
@@ -269,8 +270,7 @@ LuggableSynchronizerExtension.finished_stage = function (self)
 end
 
 LuggableSynchronizerExtension._configure_spawner_markers = function (self)
-	local spawners = self._spawners
-	local spawners_with_marker_on_start = self._spawners_with_marker_on_start
+	local spawners, spawners_with_marker_on_start = self._spawners, self._spawners_with_marker_on_start
 
 	for i = 1, #spawners do
 		local spawner_unit = spawners[i]
@@ -289,7 +289,7 @@ LuggableSynchronizerExtension.spawn_luggable = function (self, spawner_unit)
 	if self._mission_active then
 		local pickup_extension = ScriptUnit.extension(spawner_unit, "pickup_system")
 		local mission_target_extension = ScriptUnit.has_extension(spawner_unit, "mission_objective_system")
-		local luggable_unit, _ = nil
+		local luggable_unit, _
 		local objective_name = self._objective_name
 		local objective_stage = 1
 
@@ -305,6 +305,7 @@ LuggableSynchronizerExtension.spawn_luggable = function (self, spawner_unit)
 		if self._is_side_mission_synchronizer then
 			local side_mission = Managers.state.mission:side_mission()
 			local pickup_name = side_mission.unit_name
+
 			objective_name = side_mission.name
 			luggable_unit, _ = pickup_extension:spawn_specific_item(nil, pickup_name)
 		else
@@ -329,7 +330,7 @@ end
 
 LuggableSynchronizerExtension._despawn_luggable = function (self, luggable_unit_to_del, respawn_at_spawner)
 	local spawner_to_luggable = self._spawner_to_luggable
-	local spawner_unit = nil
+	local spawner_unit
 
 	for spawner, luggable in pairs(spawner_to_luggable) do
 		if luggable_unit_to_del == luggable then
@@ -342,6 +343,7 @@ LuggableSynchronizerExtension._despawn_luggable = function (self, luggable_unit_
 	self._spawner_to_luggable[spawner_unit] = nil
 	self._luggable_reset_timers[luggable_unit_to_del] = nil
 	self._luggable_consume_timers[luggable_unit_to_del] = nil
+
 	local pickup_extension = ScriptUnit.has_extension(spawner_unit, "pickup_system")
 
 	pickup_extension:unspawn_item(luggable_unit_to_del)
@@ -389,7 +391,9 @@ LuggableSynchronizerExtension._find_free_random_unit = function (self, all_units
 
 	if #volumes > 0 then
 		local new_seed, rnd_num = math.next_random(self._seed, 1, #volumes)
+
 		self._seed = new_seed
+
 		local volume_index = rnd_num
 		local volume_unit = volumes[volume_index]
 
@@ -417,10 +421,11 @@ LuggableSynchronizerExtension._find_free_random_unit = function (self, all_units
 	end
 
 	local num_free_units = #free_units
-	local free_unit = nil
+	local free_unit
 
 	if num_free_units > 0 then
 		local new_seed, rnd_num = math.next_random(self._seed, 1, num_free_units)
+
 		self._seed = new_seed
 		free_unit = free_units[rnd_num]
 	end
@@ -498,7 +503,7 @@ LuggableSynchronizerExtension.set_carried_by = function (self, luggable_unit, pl
 	if player_unit_or_nil then
 		self._luggable_reset_timers[luggable_unit] = nil
 	else
-		local spawner_unit = nil
+		local spawner_unit
 
 		for spawner, luggable in pairs(self._spawner_to_luggable) do
 			if luggable_unit == luggable then

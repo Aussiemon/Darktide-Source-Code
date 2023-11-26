@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/equipment/weapon_handling_templates/weapon_size_of_flame_templates.lua
+
 local weapon_size_of_flame_templates = {
 	flamer_p1_m1 = {
 		range = {

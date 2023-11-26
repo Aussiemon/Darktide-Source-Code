@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/visual_loadout/wieldable_slot_scripts/zealot_relic_effects.lua
+
 local Action = require("scripts/utilities/weapon/action")
 local FixedFrame = require("scripts/utilities/fixed_frame")
 local PlayerCharacterLoopingSoundAliases = require("scripts/settings/sound/player_character_looping_sound_aliases")
@@ -13,6 +15,7 @@ ZealotRelicEffects.init = function (self, context, slot, weapon_template, fx_sou
 	local unit = context.owner_unit
 	local wwise_world = context.wwise_world
 	local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
+
 	self._is_husk = context.is_husk
 	self._is_local_unit = context.is_local_unit
 	self._unit = unit
@@ -29,8 +32,10 @@ ZealotRelicEffects.init = function (self, context, slot, weapon_template, fx_sou
 	self._num_tick = 0
 	self._ability_extension = ScriptUnit.extension(unit, "ability_system")
 	self._weapon_action_component = unit_data_extension:read_component("weapon_action")
+
 	local first_person_component = unit_data_extension:read_component("first_person")
 	local rotation = first_person_component.rotation
+
 	self._source_id = WwiseWorld.make_manual_source(wwise_world, unit, rotation)
 end
 
@@ -56,6 +61,7 @@ ZealotRelicEffects.update = function (self, unit, dt, t, frame)
 	end
 
 	self._tick_cooldown = tick_cooldown
+
 	local max = self._ability_extension:max_ability_cooldown("combat_ability")
 	local current = self._ability_extension:remaining_ability_cooldown("combat_ability")
 	local variable = (max - current) / max
@@ -185,28 +191,27 @@ ZealotRelicEffects._create_passive_sfx = function (self)
 		local sound_config = PlayerCharacterLoopingSoundAliases[EQUIPPED_LOOPING_SOUND_ALIAS]
 		local start_config = sound_config.start
 		local start_event_alias = start_config.event_alias
-		local resolved, has_husk_events, start_event_name, stop_event_name = nil
+		local resolved, has_husk_events, start_event_name, stop_event_name
+
 		resolved, start_event_name, has_husk_events = visual_loadout_extension:resolve_gear_sound(start_event_alias, external_properties)
 
 		if resolved then
 			local wwise_world = self._wwise_world
 			local source_id = fx_extension:sound_source(fx_source_name)
 
-			if (is_husk or not is_local_unit) and has_husk_events then
-				start_event_name = start_event_name .. "_husk" or start_event_name
-			end
+			start_event_name = not (not is_husk and is_local_unit) and has_husk_events and start_event_name .. "_husk" or start_event_name
 
 			local playing_id = WwiseWorld.trigger_resource_event(wwise_world, start_event_name, source_id)
+
 			self._looping_passive_playing_id = playing_id
+
 			local stop_config = sound_config.stop
 			local stop_event_alias = stop_config.event_alias
+
 			resolved, stop_event_name, has_husk_events = visual_loadout_extension:resolve_gear_sound(stop_event_alias, external_properties)
 
 			if resolved then
-				if (is_husk or not is_local_unit) and has_husk_events then
-					stop_event_name = stop_event_name .. "_husk" or stop_event_name
-				end
-
+				stop_event_name = not (not is_husk and is_local_unit) and has_husk_events and stop_event_name .. "_husk" or stop_event_name
 				self._stop_event_name = stop_event_name
 			end
 		end

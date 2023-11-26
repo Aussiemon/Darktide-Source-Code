@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/main_menu_view/main_menu_view_settings.lua
+
 local main_menu_view_settings = {
 	max_party_size = 4,
 	character_delete_button_hold_time = 3,

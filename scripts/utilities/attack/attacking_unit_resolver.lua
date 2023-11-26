@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/utilities/attack/attacking_unit_resolver.lua
+
 local AttackingUnitResolver = {}
 local PROJECTILE_EXTENSION = "ProjectileUnitLocomotionExtension"
 

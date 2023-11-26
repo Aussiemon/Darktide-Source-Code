@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/components/mission_objective_zone_synchronizer.lua
+
 local MissionObjectiveZoneSynchronizer = component("MissionObjectiveZoneSynchronizer")
 
 MissionObjectiveZoneSynchronizer.init = function (self, unit)

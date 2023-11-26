@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/wwise_game_sync/wwise_game_sync_settings.lua
+
 local wwise_game_sync_settings = {
 	music_state_reset_time = 2,
 	combat_state_horde_high_minimum_aggroed_minions = 10,

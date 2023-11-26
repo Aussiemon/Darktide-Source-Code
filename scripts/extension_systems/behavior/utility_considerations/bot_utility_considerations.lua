@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/behavior/utility_considerations/bot_utility_considerations.lua
+
 local considerations = {
 	bot_combat = {
 		distance_to_target = {

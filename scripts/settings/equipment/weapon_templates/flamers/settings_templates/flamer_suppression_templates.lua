@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/equipment/weapon_templates/flamers/settings_templates/flamer_suppression_templates.lua
+
 local suppression_templates = {}
 local overrides = {}
 

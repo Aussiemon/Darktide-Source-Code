@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/hud/elements/hud_health_bar_logic.lua
+
 local HudHealthBarLogic = class("HudHealthBarLogic")
 local settings_list = {
 	"duration_health",
@@ -23,6 +25,7 @@ HudHealthBarLogic.init = function (self, settings)
 
 	for i = 1, #self._update_order do
 		local name = self._update_order[i]
+
 		self._stored_fractions[name] = 1
 	end
 end
@@ -39,8 +42,10 @@ HudHealthBarLogic._sync_player_health = function (self, t, bar_progress, bar_max
 	if bar_progress ~= self._bar_progress or bar_max_progress ~= self._bar_max_progress then
 		local delta_progress = bar_progress - (self._bar_progress or 1)
 		local delta_max_progress = bar_max_progress - (self._bar_max_progress or 1)
+
 		self._bar_progress = bar_progress
 		self._bar_max_progress = bar_max_progress
+
 		local settings = self._settings
 		local health_animation_threshold = settings.health_animation_threshold * bar_max_progress
 		local should_animate_delta = health_animation_threshold < math.abs(delta_progress)
@@ -54,6 +59,7 @@ HudHealthBarLogic._sync_player_health = function (self, t, bar_progress, bar_max
 
 		if should_update_ghost then
 			force_update = delta_progress > 0 or not should_animate_delta
+
 			local ghost_duration = force_update and settings.duration_health or settings.duration_health_ghost
 			local ghost_delay = settings.ghost_delay
 
@@ -93,6 +99,7 @@ HudHealthBarLogic._set_bar_fraction = function (self, t, name, target_fraction, 
 			anim_data.end_value = anim_data.end_value + delta_fraction
 		else
 			local delay = animation_delay or 0
+
 			delay = refresh_delay_on_override and delay or math.max(anim_data.start_t + delay - t, 0)
 			anim_data.duration = duration
 			anim_data.delay = delay
@@ -187,6 +194,7 @@ end
 
 HudHealthBarLogic._set_alpha = function (self, alpha)
 	local alpha_fraction = alpha / 255
+
 	self._alpha_multiplier = alpha_fraction
 end
 
@@ -195,22 +203,24 @@ HudHealthBarLogic._update_bar_animation = function (self, anim_data, dt, t)
 	local delay = anim_data.delay
 	local start_t = anim_data.start_t + delay
 	local end_t = start_t + duration
-	local progress = nil
+	local progress
 
 	if math.abs(end_t - start_t) > 0.0001 then
 		progress = math.ilerp(start_t, end_t, t)
-	elseif start_t <= t then
-		progress = 1
 	else
-		progress = 0
+		progress = start_t <= t and 1 or 0
 	end
 
 	local start_value = anim_data.start_value
 	local end_value = anim_data.end_value
 	local fraction = math.clamp01(start_value + (end_value - start_value) * progress)
+
 	anim_data.fraction = fraction
+
 	local stored_fractions = self._stored_fractions
+
 	stored_fractions[anim_data.name] = fraction
+
 	local complete = progress == 1
 
 	return fraction, complete

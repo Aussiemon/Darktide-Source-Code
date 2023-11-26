@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/behavior/utility_considerations/renegade_grenadier_utility_considerations.lua
+
 local considerations = {
 	grenadier_quick_throw = {
 		has_line_of_sight = {

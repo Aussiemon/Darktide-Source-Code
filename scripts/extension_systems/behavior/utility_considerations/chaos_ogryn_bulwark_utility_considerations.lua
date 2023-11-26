@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/behavior/utility_considerations/chaos_ogryn_bulwark_utility_considerations.lua
+
 local considerations = {
 	shield_push = {
 		distance_to_target = {

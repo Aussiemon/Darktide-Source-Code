@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/pass_templates/stepper_pass_templates.lua
+
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local DangerSettings = require("scripts/settings/difficulty/danger_settings")
 local InputDevice = require("scripts/managers/input/input_device")
@@ -20,7 +22,7 @@ local function terminal_button_change_function(content, style, hotspot_id)
 	local hover_color = style.hover_color
 	local selected_color = style.selected_color
 	local disabled_color = style.disabled_color
-	local color = nil
+	local color
 
 	if disabled and disabled_color then
 		color = disabled_color
@@ -47,10 +49,12 @@ local function terminal_button_hover_change_function(content, style, hotspot_id)
 	local default_alpha = 155
 	local hover_alpha = anim_hover_progress * 100
 	local select_alpha = math.max(anim_select_progress, anim_focus_progress) * 50
+
 	style.color[1] = math.clamp(default_alpha + select_alpha + hover_alpha, 0, 255)
 end
 
 StepperPassTemplates.terminal_button_hover_change_function = terminal_button_hover_change_function
+
 local difficulty_picker_stepper_hotspot_content = {
 	on_hover_sound = UISoundEvents.default_mouse_hover,
 	on_pressed_sound = UISoundEvents.default_select
@@ -74,7 +78,7 @@ local function _make_difficulty_picker_rect_change_function(index)
 
 		ColorUtilities.color_copy(danger_color, style.color, true)
 
-		if index < min_danger or max_danger < index then
+		if min_danger > index or max_danger < index then
 			style.color[1] = 127
 			style.size[1] = 10
 			style.size[2] = 10
@@ -101,10 +105,12 @@ StepperPassTemplates.difficulty_stepper = {
 			if not content.disabled then
 				local min_danger = math.clamp(content.min_danger or MIN_DANGER, MIN_DANGER, MAX_DANGER)
 				local max_danger = math.clamp(content.max_danger or MAX_DANGER, MIN_DANGER, MAX_DANGER)
+
 				min_danger = min_danger <= max_danger and min_danger or max_danger
 				content.min_danger = min_danger
 				content.max_danger = max_danger
-				content.danger = min_danger <= content.danger and content.danger <= max_danger and content.danger or min_danger
+				content.danger = min_danger <= content.danger and max_danger >= content.danger and content.danger or min_danger
+
 				local danger = content.danger
 				local input_service = ui_renderer.input_service
 
@@ -130,9 +136,11 @@ StepperPassTemplates.difficulty_stepper = {
 
 				if content.last_danger ~= danger then
 					local danger_settings = DangerSettings.by_index[danger]
+
 					content.difficulty_text = Localize(danger_settings.display_name)
 					content.last_danger = danger
 					content.danger = danger
+
 					local cb = content.on_changed_callback
 
 					if cb then
@@ -143,6 +151,7 @@ StepperPassTemplates.difficulty_stepper = {
 				content._hover_index_1 = math.min(hover_index, danger)
 				content._hover_index_2 = math.max(hover_index, danger)
 				content.hover_danger = hover_index
+
 				local gamepad_active = InputDevice.gamepad_active
 
 				if content.was_gamepad_active ~= gamepad_active then
@@ -510,7 +519,9 @@ StepperPassTemplates.difficulty_stepper = {
 		}
 	}
 }
+
 local terminal_button_text_style = table.clone(UIFontSettings.button_primary)
+
 terminal_button_text_style.offset = {
 	0,
 	0,
@@ -929,6 +940,7 @@ StepperPassTemplates.terminal_stepper = {
 				local service_type = "View"
 				local alias_key = Managers.ui:get_input_alias_key(gamepad_action, service_type)
 				local input_text = InputUtils.input_text_for_current_input_device(service_type, alias_key)
+
 				content.text = string.format(Localize("loc_input_legend_text_template"), input_text, button_text)
 			else
 				content.text = button_text
@@ -943,53 +955,54 @@ StepperPassTemplates.terminal_stepper = {
 				color_lerp(default_color, hover_color, progress, color)
 			end
 		end
-	},
-	update = function (widget, renderer, dt)
-		local content = widget.content
-		local pressed_delay = content.pressed_delay or 0.1
-		local pressed_delay_time = content.pressed_delay_time
+	}
+}
 
-		if pressed_delay_time then
-			content.pressed_delay_time = pressed_delay_time - dt
+StepperPassTemplates.terminal_stepper.update = function (widget, renderer, dt)
+	local content = widget.content
+	local pressed_delay = content.pressed_delay or 0.1
+	local pressed_delay_time = content.pressed_delay_time
 
-			if content.pressed_delay_time <= 0 then
-				content.pressed_delay_time = nil
-			end
-		else
-			local left_pressed_callback = content.left_pressed_callback
-			local right_pressed_callback = content.right_pressed_callback
+	if pressed_delay_time then
+		content.pressed_delay_time = pressed_delay_time - dt
 
-			if left_pressed_callback and right_pressed_callback then
-				local hotspot_left = content.hotspot_left
-				local hotspot_right = content.hotspot_right
-				local hotspot = content.hotspot
+		if content.pressed_delay_time <= 0 then
+			content.pressed_delay_time = nil
+		end
+	else
+		local left_pressed_callback = content.left_pressed_callback
+		local right_pressed_callback = content.right_pressed_callback
 
-				if InputDevice.gamepad_active then
-					if hotspot.is_selected then
-						local input_service = renderer.input_service
+		if left_pressed_callback and right_pressed_callback then
+			local hotspot_left = content.hotspot_left
+			local hotspot_right = content.hotspot_right
+			local hotspot = content.hotspot
 
-						if input_service:get("navigate_left_continuous") then
-							left_pressed_callback()
+			if InputDevice.gamepad_active then
+				if hotspot.is_selected then
+					local input_service = renderer.input_service
 
-							content.pressed_delay_time = pressed_delay
-						elseif input_service:get("navigate_right_continuous") then
-							right_pressed_callback()
+					if input_service:get("navigate_left_continuous") then
+						left_pressed_callback()
 
-							content.pressed_delay_time = pressed_delay
-						end
+						content.pressed_delay_time = pressed_delay
+					elseif input_service:get("navigate_right_continuous") then
+						right_pressed_callback()
+
+						content.pressed_delay_time = pressed_delay
 					end
-				elseif hotspot_left.is_held then
-					left_pressed_callback()
-
-					content.pressed_delay_time = pressed_delay
-				elseif hotspot_right.is_held then
-					right_pressed_callback()
-
-					content.pressed_delay_time = pressed_delay
 				end
+			elseif hotspot_left.is_held then
+				left_pressed_callback()
+
+				content.pressed_delay_time = pressed_delay
+			elseif hotspot_right.is_held then
+				right_pressed_callback()
+
+				content.pressed_delay_time = pressed_delay
 			end
 		end
 	end
-}
+end
 
 return settings("StepperPassTemplates", StepperPassTemplates)

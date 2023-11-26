@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/behavior/ai_brain.lua
+
 local AiBrain = class("AiBrain")
 
 AiBrain.init = function (self, unit, breed, blackboard, behavior_tree)
@@ -39,6 +41,7 @@ AiBrain.set_behavior_tree = function (self, behavior_tree)
 	self._running_leaf_node = nil
 	self._running_leaf_node_result = "running"
 	self._evaluate_utility = true
+
 	local blackboard = self._blackboard
 	local root = behavior_tree:root()
 	local tree_node = root.tree_node
@@ -86,16 +89,12 @@ AiBrain.shutdown_behavior_tree = function (self, t, destroy)
 end
 
 AiBrain.update = function (self, unit, dt, t)
-	self._old_running_child_nodes = self._running_child_nodes
-	self._running_child_nodes = self._old_running_child_nodes
+	self._running_child_nodes, self._old_running_child_nodes = self._old_running_child_nodes, self._running_child_nodes
+
 	local breed = self._breed
-	local root_node = self._behavior_tree:root()
-	local node_data = self._node_data
-	local blackboard = self._blackboard
-	local scratchpad = self._scratchpad
-	local evaluate_utility = self._evaluate_utility
-	local old_running_child_nodes = self._old_running_child_nodes
-	local new_running_child_nodes = self._running_child_nodes
+	local root_node, node_data = self._behavior_tree:root(), self._node_data
+	local blackboard, scratchpad, evaluate_utility = self._blackboard, self._scratchpad, self._evaluate_utility
+	local old_running_child_nodes, new_running_child_nodes = self._old_running_child_nodes, self._running_child_nodes
 	local last_leaf_node_result = self._running_leaf_node_result
 	local last_leaf_node_running = last_leaf_node_result == "running"
 	local leaf_node = root_node:evaluate(unit, blackboard, scratchpad, dt, t, evaluate_utility, node_data, old_running_child_nodes, new_running_child_nodes, last_leaf_node_running)
@@ -104,16 +103,14 @@ AiBrain.update = function (self, unit, dt, t)
 
 	if last_leaf_node_done or leaf_node ~= last_leaf_node then
 		if last_leaf_node_done and leaf_node.parent ~= last_leaf_node.parent then
-			local reason = "aborted"
-			local destroy = false
+			local reason, destroy = "aborted", false
 			local parent_node = last_leaf_node.parent
 			local parent_tree_node = parent_node.tree_node
 			local parent_action_data = parent_tree_node.action_data
 
 			parent_node:leave(unit, breed, blackboard, scratchpad, parent_action_data, t, reason, destroy, node_data, old_running_child_nodes, new_running_child_nodes)
 		elseif not last_leaf_node_done and last_leaf_node then
-			local reason = "aborted"
-			local destroy = false
+			local reason, destroy = "aborted", false
 			local last_leaf_tree_node = last_leaf_node.tree_node
 			local last_leaf_action_data = last_leaf_tree_node.action_data
 
@@ -123,6 +120,7 @@ AiBrain.update = function (self, unit, dt, t)
 
 		local leaf_tree_node = leaf_node.tree_node
 		local leaf_action_data = leaf_tree_node.action_data
+
 		self._running_leaf_node = leaf_node
 
 		leaf_node:enter(unit, breed, blackboard, scratchpad, leaf_action_data, t, node_data, old_running_child_nodes, new_running_child_nodes)
@@ -134,6 +132,7 @@ AiBrain.update = function (self, unit, dt, t)
 	local root_action_data = root_tree_node.action_data
 	local result, evaluate_utility_next_frame = root_node:run(unit, breed, blackboard, scratchpad, root_action_data, dt, t, node_data, new_running_child_nodes)
 	local leaf_node_done = result ~= "running"
+
 	self._running_leaf_node_result = result
 	self._evaluate_utility = evaluate_utility_next_frame or leaf_node_done
 

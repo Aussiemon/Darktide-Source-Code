@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/inventory_weapons_view/inventory_weapons_view.lua
+
 local ContentBlueprints = require("scripts/ui/views/inventory_view/inventory_view_content_blueprints")
 local Definitions = require("scripts/ui/views/inventory_weapons_view/inventory_weapons_view_definitions")
 local InventoryWeaponsViewSettings = require("scripts/ui/views/inventory_weapons_view/inventory_weapons_view_settings")
@@ -64,28 +66,38 @@ InventoryWeaponsView._setup_background_frames_by_archetype = function (self, arc
 	local inventory_frames_by_archetype = UISettings.inventory_frames_by_archetype
 	local frame_textures = inventory_frames_by_archetype[archetype_name]
 	local widgets_by_name = self._widgets_by_name
+
 	widgets_by_name.corner_bottom_left.content.texture = frame_textures.left_lower
 	widgets_by_name.corner_bottom_right.content.texture = frame_textures.right_lower
 end
 
 InventoryWeaponsView._setup_item_grid_materials = function (self)
 	local grid_divider_top = self:_grid_widget_by_name("grid_divider_top")
+
 	grid_divider_top.content.texture = "content/ui/materials/frames/item_list_top"
 	grid_divider_top.style.texture.size = {
 		652,
 		118
 	}
+
 	local grid_divider_bottom = self:_grid_widget_by_name("grid_divider_bottom")
+
 	grid_divider_bottom.content.texture = "content/ui/materials/frames/item_list_lower"
 	grid_divider_bottom.style.texture.size = {
 		640,
 		36
 	}
+
 	local grid_divider_title = self:_grid_widget_by_name("grid_divider_title")
+
 	grid_divider_title.style.texture.color[1] = 0
+
 	local grid_title_background = self:_grid_widget_by_name("grid_title_background")
+
 	grid_title_background.alpha_multiplier = 0
+
 	local title_text = self:_grid_widget_by_name("title_text")
+
 	title_text.style.text.offset[2] = 4
 end
 
@@ -118,6 +130,7 @@ InventoryWeaponsView._setup_weapon_actions = function (self)
 			title_height = title_height,
 			edge_padding = edge_padding
 		}
+
 		self._weapon_actions = self:_add_element(ViewElementWeaponActions, reference_name, layer, context)
 
 		self:_update_weapon_actions_position()
@@ -141,6 +154,7 @@ end
 
 InventoryWeaponsView._setup_input_legend = function (self)
 	self._input_legend_element = self:_add_element(ViewElementInputLegend, "input_legend", 10)
+
 	local legend_inputs = self._definitions.legend_inputs
 
 	for i = 1, #legend_inputs do
@@ -154,6 +168,7 @@ end
 InventoryWeaponsView._register_button_callbacks = function (self)
 	local widgets_by_name = self._widgets_by_name
 	local equip_button = widgets_by_name.equip_button
+
 	equip_button.content.hotspot.pressed_callback = callback(self, "cb_on_equip_pressed")
 end
 
@@ -200,6 +215,7 @@ InventoryWeaponsView._set_preview_widgets_visibility = function (self, visible)
 	InventoryWeaponsView.super._set_preview_widgets_visibility(self, visible)
 
 	local widgets_by_name = self._widgets_by_name
+
 	widgets_by_name.equip_button.content.visible = visible
 end
 
@@ -313,6 +329,7 @@ InventoryWeaponsView._setup_background_world = function (self)
 		end
 
 		instance._default_camera_unit = camera_unit
+
 		local viewport_name = InventoryWeaponsViewSettings.viewport_name
 		local viewport_type = InventoryWeaponsViewSettings.viewport_type
 		local viewport_layer = InventoryWeaponsViewSettings.viewport_layer
@@ -327,7 +344,9 @@ InventoryWeaponsView._setup_background_world = function (self)
 	local world_name = InventoryWeaponsViewSettings.world_name
 	local world_layer = InventoryWeaponsViewSettings.world_layer
 	local world_timer_name = InventoryWeaponsViewSettings.timer_name
+
 	self._world_spawner = UIWorldSpawner:new(world_name, world_layer, world_timer_name, self.view_name)
+
 	local level_name = InventoryWeaponsViewSettings.level_name
 
 	self._world_spawner:spawn_level(level_name)
@@ -410,6 +429,7 @@ InventoryWeaponsView._fetch_inventory_items = function (self, selected_slot)
 		end
 
 		self._inventory_items = items_array
+
 		local layout = {}
 
 		for i = 1, #items_array do
@@ -420,7 +440,7 @@ InventoryWeaponsView._fetch_inventory_items = function (self, selected_slot)
 				local valid = true
 				local gear_id = item.gear_id
 				local is_new = self._context and self._context.new_items_gear_ids and self._context.new_items_gear_ids[gear_id]
-				local remove_new_marker_callback = nil
+				local remove_new_marker_callback
 
 				if is_new then
 					remove_new_marker_callback = self._parent and callback(self._parent, "remove_new_item_mark")
@@ -445,6 +465,7 @@ InventoryWeaponsView._fetch_inventory_items = function (self, selected_slot)
 		end
 
 		self._offer_items_layout = layout
+
 		local slot_display_name = selected_slot and selected_slot.display_name
 		local start_index = #layout > 0 and 1
 		local equipped_item = start_index and self:equipped_item_in_slot(slot_name)
@@ -478,12 +499,9 @@ InventoryWeaponsView._calc_text_size = function (self, widget, text_and_style_id
 	local text = widget.content[text_and_style_id]
 	local text_style = widget.style[text_and_style_id]
 	local text_options = UIFonts.get_font_options_by_style(text_style)
-
-	if not text_style.size and not widget.content.size then
-		local size = {
-			self:_scenegraph_size(widget.scenegraph_id)
-		}
-	end
+	local size = text_style.size or widget.content.size or {
+		self:_scenegraph_size(widget.scenegraph_id)
+	}
 
 	return UIRenderer.text_size(self._ui_renderer, text, text_style.font_type, text_style.font_size, size, text_options)
 end
@@ -720,7 +738,7 @@ InventoryWeaponsView._update_grid_widgets = function (self, dt, t, input_service
 	if widgets then
 		local previewed_item = self._previewed_item
 		local discard_item_hold_progress = self._discard_item_hold_progress
-		local previous_widget_offset, first_discarded_item_index = nil
+		local previous_widget_offset, first_discarded_item_index
 		local num_widgets = #widgets
 
 		for i = 1, num_widgets do
@@ -735,6 +753,7 @@ InventoryWeaponsView._update_grid_widgets = function (self, dt, t, input_service
 
 			if item then
 				local is_selected = previewed_item and previewed_item.gear_id == item.gear_id
+
 				style.salvage_circle.material_values.progress = is_selected and discard_item_hold_progress or 0
 			end
 
@@ -745,6 +764,7 @@ InventoryWeaponsView._update_grid_widgets = function (self, dt, t, input_service
 			if first_discarded_item_index and first_discarded_item_index < i then
 				local move_progress = math.easeInCubic(discard_anim_progress or 1)
 				local offset_difference_height = previous_widget_offset[2] - default_offset[2]
+
 				offset[2] = default_offset[2] + offset_difference_height * move_progress
 			end
 
@@ -805,9 +825,10 @@ InventoryWeaponsView._mark_item_for_discard = function (self, grid_index)
 	end
 
 	content.discarded = true
+
 	local item_grid = self._item_grid
 	local grid = item_grid:grid()
-	local new_grid_index = nil
+	local new_grid_index
 	local last_interactable_grid_index = grid:last_interactable_grid_index() - 1
 
 	if last_interactable_grid_index > 0 then
@@ -847,6 +868,7 @@ InventoryWeaponsView.event_discard_items = function (self, items)
 
 	for i = 1, #items do
 		local item = items[i]
+
 		gear_ids[item.gear_id] = true
 	end
 
@@ -977,12 +999,14 @@ InventoryWeaponsView._update_equip_button_status = function (self)
 			end
 		else
 			local equipped_item = self:equipped_item_in_slot(selected_slot_name)
+
 			disable_button = equipped_item and equipped_item.gear_id == previewed_item.gear_id
 		end
 
 		if not disable_button then
 			local required_level = ItemUtils.character_level(previewed_item)
 			local character_level = self:character_level()
+
 			level_requirement_met = required_level and required_level <= character_level
 
 			if not level_requirement_met then
@@ -993,8 +1017,10 @@ InventoryWeaponsView._update_equip_button_status = function (self)
 
 	if self._equip_button_disabled ~= disable_button then
 		self._equip_button_disabled = disable_button
+
 		local button = self._widgets_by_name.equip_button
 		local button_content = button.content
+
 		button_content.hotspot.disabled = disable_button
 
 		if level_requirement_met and not discard_item then
@@ -1015,6 +1041,7 @@ InventoryWeaponsView._update_item_discard_progress = function (self, dt)
 
 		local time = self._discard_item_timer + dt
 		local progress = math.min(time / InventoryWeaponsViewSettings.item_discard_hold_duration, 1)
+
 		self._discard_item_hold_progress = progress
 
 		if progress < 1 then
@@ -1022,6 +1049,7 @@ InventoryWeaponsView._update_item_discard_progress = function (self, dt)
 		else
 			self._discard_item_timer = nil
 			self._discard_item_hold_progress = nil
+
 			local selected_grid_index = self:selected_grid_index()
 
 			if selected_grid_index then

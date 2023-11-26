@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/multiplayer/multiplayer_session.lua
+
 local MatchmakingConstants = require("scripts/settings/network/matchmaking_constants")
 local RemotePlayer = require("scripts/managers/player/remote_player")
 local MasterItems = require("scripts/backend/master_items")
@@ -5,6 +7,7 @@ local ChatManagerConstants = require("scripts/foundation/managers/chat/chat_mana
 local PlayerManager = require("scripts/foundation/managers/player/player_manager")
 local HOST_TYPES = MatchmakingConstants.HOST_TYPES
 local MultiplayerSession = class("MultiplayerSession")
+
 MultiplayerSession.STATES = table.enum("booting", "host", "client", "dead")
 
 MultiplayerSession.init = function (self)
@@ -28,6 +31,7 @@ end
 MultiplayerSession.became_host = function (self, host_type, lobby_id)
 	self._state = self.STATES.host
 	self._host_type = host_type
+
 	local peer_id = Network.peer_id()
 
 	Managers.bot:create_synchronizer_host()
@@ -43,7 +47,7 @@ MultiplayerSession.became_host = function (self, host_type, lobby_id)
 	end
 
 	if not DEDICATED_SERVER then
-		local tag = nil
+		local tag
 
 		if host_type == HOST_TYPES.mission_server then
 			tag = ChatManagerConstants.ChannelTag.MISSION
@@ -227,7 +231,7 @@ MultiplayerSession.joined_host = function (self, channel_id, host_peer_id, host_
 	package_synchronizer_client:init_item_definitions(item_definitions)
 
 	if not DEDICATED_SERVER then
-		local tag = nil
+		local tag
 
 		if host_type == HOST_TYPES.mission_server then
 			tag = ChatManagerConstants.ChannelTag.MISSION
@@ -289,6 +293,7 @@ MultiplayerSession.disconnected_from_host = function (self, is_error, source, re
 	end
 
 	self._state = self.STATES.dead
+
 	local host_peer_id = self._joined_host_peer_id
 
 	self:_remove_remote_players(host_peer_id)
@@ -330,7 +335,7 @@ MultiplayerSession.failed_to_boot = function (self, is_error, source, reason, op
 end
 
 MultiplayerSession.other_client_joined = function (self, peer_id, player_sync_data)
-	local channel_id = nil
+	local channel_id
 	local is_server = false
 	local local_player_id_array = player_sync_data.local_player_id_array
 	local is_human_controlled_array = player_sync_data.is_human_controlled_array
@@ -386,6 +391,7 @@ MultiplayerSession._remove_remote_players = function (self, peer_id, optional_ou
 				local character_id = player:character_id()
 				local is_human = player:is_human_controlled()
 				local stat_id = player.stat_id
+
 				optional_out_player_data[#optional_out_player_data + 1] = {
 					account_id = account_id,
 					character_id = character_id,

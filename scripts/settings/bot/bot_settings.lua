@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/bot/bot_settings.lua
+
 local bot_settings = {
 	flat_move_to_previous_pos_epsilon = 0.25,
 	flat_move_to_epsilon = 0.05,

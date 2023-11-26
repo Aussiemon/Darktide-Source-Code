@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/view_elements/view_element_weapon_info/view_element_weapon_info_settings.lua
+
 local view_element_weapon_stats_settings = {
 	stats_size = {
 		500,

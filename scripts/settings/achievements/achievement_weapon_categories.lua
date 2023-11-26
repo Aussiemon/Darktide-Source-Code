@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/achievements/achievement_weapon_categories.lua
+
 local AchievementWeaponCategories = {
 	autogun_p1 = {
 		"autogun",

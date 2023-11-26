@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/level_prop/props/luggable_socket.lua
+
 local prop_data = {
 	unit_name = "content/environment/gameplay/luggable_sockets/socket_luggable_battery_01",
 	name = "luggable_socket",

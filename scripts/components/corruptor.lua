@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/components/corruptor.lua
+
 local Corruptor = component("Corruptor")
 
 Corruptor.init = function (self, unit)

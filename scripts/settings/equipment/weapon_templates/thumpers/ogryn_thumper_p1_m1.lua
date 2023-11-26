@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/equipment/weapon_templates/thumpers/ogryn_thumper_p1_m1.lua
+
 local BaseTemplateSettings = require("scripts/settings/equipment/weapon_templates/base_template_settings")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
@@ -27,83 +29,83 @@ local weapon_handling_trait_templates = WeaponTraitTemplates[template_types.weap
 local dodge_trait_templates = WeaponTraitTemplates[template_types.dodge]
 local sprint_trait_templates = WeaponTraitTemplates[template_types.sprint]
 local movement_curve_modifier_trait_templates = WeaponTraitTemplates[template_types.movement_curve_modifier]
-local weapon_template = {
-	action_inputs = {
-		wield = {
-			buffer_time = 0.2,
-			input_sequence = {
-				{
-					inputs = wield_inputs
-				}
+local weapon_template = {}
+
+weapon_template.action_inputs = {
+	wield = {
+		buffer_time = 0.2,
+		input_sequence = {
+			{
+				inputs = wield_inputs
 			}
-		},
-		shoot_pressed = {
-			buffer_time = 0.4,
-			input_sequence = {
-				{
+		}
+	},
+	shoot_pressed = {
+		buffer_time = 0.4,
+		input_sequence = {
+			{
+				value = true,
+				input = "action_one_pressed"
+			}
+		}
+	},
+	zoom_shoot = {
+		buffer_time = 0.26,
+		max_queue = 2,
+		input_sequence = {
+			{
+				value = true,
+				input = "action_one_pressed"
+			}
+		}
+	},
+	zoom = {
+		buffer_time = 0.4,
+		input_sequence = {
+			{
+				value = true,
+				input = "action_two_hold",
+				input_setting = {
 					value = true,
-					input = "action_one_pressed"
+					input = "action_two_pressed",
+					setting_value = true,
+					setting = "toggle_ads"
 				}
 			}
-		},
-		zoom_shoot = {
-			buffer_time = 0.26,
-			max_queue = 2,
-			input_sequence = {
-				{
+		}
+	},
+	zoom_release = {
+		buffer_time = 0.3,
+		input_sequence = {
+			{
+				value = false,
+				input = "action_two_hold",
+				time_window = math.huge,
+				input_setting = {
+					setting_value = true,
+					setting = "toggle_ads",
 					value = true,
-					input = "action_one_pressed"
+					input = "action_two_pressed",
+					time_window = math.huge
 				}
 			}
-		},
-		zoom = {
-			buffer_time = 0.4,
-			input_sequence = {
-				{
-					value = true,
-					input = "action_two_hold",
-					input_setting = {
-						value = true,
-						input = "action_two_pressed",
-						setting_value = true,
-						setting = "toggle_ads"
-					}
-				}
+		}
+	},
+	reload = {
+		buffer_time = 0.2,
+		input_sequence = {
+			{
+				value = true,
+				input = "weapon_reload"
 			}
-		},
-		zoom_release = {
-			buffer_time = 0.3,
-			input_sequence = {
-				{
-					value = false,
-					input = "action_two_hold",
-					time_window = math.huge,
-					input_setting = {
-						setting_value = true,
-						setting = "toggle_ads",
-						value = true,
-						input = "action_two_pressed",
-						time_window = math.huge
-					}
-				}
-			}
-		},
-		reload = {
-			buffer_time = 0.2,
-			input_sequence = {
-				{
-					value = true,
-					input = "weapon_reload"
-				}
-			}
-		},
-		bash = {
-			buffer_time = 0.4,
-			input_sequence = {
-				{
-					value = true,
-					input = "weapon_extra_pressed"
-				}
+		}
+	},
+	bash = {
+		buffer_time = 0.4,
+		input_sequence = {
+			{
+				value = true,
+				input = "weapon_extra_pressed"
 			}
 		}
 	}
@@ -720,7 +722,9 @@ weapon_template.actions = {
 		}
 	}
 }
+
 local WeaponBarUIDescriptionTemplates = require("scripts/settings/equipment/weapon_bar_ui_description_templates")
+
 weapon_template.base_stats = {
 	ogryn_thumper_dps_stat = {
 		display_name = "loc_stats_display_damage_stat",
@@ -888,6 +892,7 @@ weapon_template.stamina_template = "default"
 weapon_template.toughness_template = "default"
 weapon_template.footstep_intervals = FootstepIntervalsTemplates.ogryn_thumper_shotgun
 weapon_template.traits = {}
+
 local bespoke_traits = table.keys(WeaponTraitsBespokeThumperP1)
 
 table.append(weapon_template.traits, bespoke_traits)

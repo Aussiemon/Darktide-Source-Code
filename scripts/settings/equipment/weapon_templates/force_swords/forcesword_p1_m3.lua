@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/equipment/weapon_templates/force_swords/forcesword_p1_m3.lua
+
 local ActionSweepSettings = require("scripts/settings/equipment/action_sweep_settings")
 local BaseTemplateSettings = require("scripts/settings/equipment/weapon_templates/base_template_settings")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
@@ -24,10 +26,10 @@ local dodge_trait_templates = WeaponTraitTemplates[template_types.dodge]
 local sprint_trait_templates = WeaponTraitTemplates[template_types.sprint]
 local weapon_handling_trait_templates = WeaponTraitTemplates[template_types.weapon_handling]
 local movement_curve_modifier_trait_templates = WeaponTraitTemplates[template_types.movement_curve_modifier]
-local weapon_template = {
-	action_inputs = table.clone(ForceswordMeleeActionInputSetup.action_inputs),
-	action_input_hierarchy = table.clone(ForceswordMeleeActionInputSetup.action_input_hierarchy)
-}
+local weapon_template = {}
+
+weapon_template.action_inputs = table.clone(ForceswordMeleeActionInputSetup.action_inputs)
+weapon_template.action_input_hierarchy = table.clone(ForceswordMeleeActionInputSetup.action_input_hierarchy)
 weapon_template.action_inputs.vent = {
 	buffer_time = 0,
 	clear_input_queue = true,
@@ -56,6 +58,7 @@ weapon_template.action_input_hierarchy.vent = {
 }
 weapon_template.action_inputs.block.buffer_time = 0.1
 weapon_template.action_inputs.block_release.buffer_time = 0.35
+
 local base_sweep_box = {
 	0.15,
 	0.15,
@@ -1679,6 +1682,7 @@ weapon_template.base_stats = {
 	}
 }
 weapon_template.traits = {}
+
 local bespoke_forcesword_p1_traits = table.keys(WeaponTraitsBespokeForceswordP1)
 
 table.append(weapon_template.traits, bespoke_forcesword_p1_traits)

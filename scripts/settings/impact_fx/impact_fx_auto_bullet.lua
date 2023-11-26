@@ -1,10 +1,12 @@
+﻿-- chunkname: @scripts/settings/impact_fx/impact_fx_auto_bullet.lua
+
 local ArmorSettings = require("scripts/settings/damage/armor_settings")
 local ImpactFxHelper = require("scripts/utilities/impact_fx_helper")
 local SurfaceMaterialSettings = require("scripts/settings/surface_material_settings")
 local NO_SURFACE_DECAL = false
 local armor_types = ArmorSettings.types
 local hit_types = SurfaceMaterialSettings.hit_types
-local default_armor_decal = nil
+local default_armor_decal
 local blood_ball = {
 	"content/decals/blood_ball/blood_ball"
 }

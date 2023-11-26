@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/circumstance/templates/nurgle_manifestation_circumstance_template.lua
+
 local circumstance_templates = {
 	nurgle_manifestation_01 = {
 		dialogue_id = "circumstance_vo_nurgle_rot",

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/behavior/nodes/actions/bt_patrol_action.lua
+
 require("scripts/extension_systems/behavior/nodes/bt_node")
 
 local Animation = require("scripts/utilities/animation")
@@ -19,15 +21,25 @@ local DEFAULT_ROTATION_SPEED = 3.5
 
 BtPatrolAction.enter = function (self, unit, breed, blackboard, scratchpad, action_data, t)
 	local animation_extension = ScriptUnit.extension(unit, "animation_system")
+
 	scratchpad.animation_extension = animation_extension
+
 	local behavior_component = Blackboard.write_component(blackboard, "behavior")
+
 	scratchpad.behavior_component = behavior_component
+
 	local navigation_extension = ScriptUnit.extension(unit, "navigation_system")
+
 	scratchpad.navigation_extension = navigation_extension
+
 	local nav_world = navigation_extension:nav_world()
+
 	scratchpad.nav_world = nav_world
+
 	local traverse_logic = navigation_extension:traverse_logic()
+
 	scratchpad.traverse_logic = traverse_logic
+
 	local walk_speed = breed.walk_speed
 
 	navigation_extension:set_enabled(true, walk_speed)
@@ -37,9 +49,12 @@ BtPatrolAction.enter = function (self, unit, breed, blackboard, scratchpad, acti
 	end
 
 	local patrol_component = Blackboard.write_component(blackboard, "patrol")
+
 	scratchpad.patrol_component = patrol_component
+
 	local patrol_index = patrol_component.patrol_index
 	local is_patrol_leader = patrol_index == 1
+
 	scratchpad.is_patrol_leader = is_patrol_leader
 
 	if is_patrol_leader then
@@ -52,6 +67,7 @@ BtPatrolAction.enter = function (self, unit, breed, blackboard, scratchpad, acti
 
 		local group_extension = ScriptUnit.extension(unit, "group_system")
 		local group_system = Managers.state.extension:system("group_system")
+
 		scratchpad.group_system = group_system
 		scratchpad.group_id = group_extension:group_id()
 		scratchpad.group_extension = group_extension
@@ -59,6 +75,7 @@ BtPatrolAction.enter = function (self, unit, breed, blackboard, scratchpad, acti
 
 	local locomotion_extension = ScriptUnit.extension(unit, "locomotion_system")
 	local current_rotation_speed = locomotion_extension:rotation_speed()
+
 	scratchpad.original_rotation_speed = current_rotation_speed
 
 	locomotion_extension:set_rotation_speed(DEFAULT_ROTATION_SPEED or action_data.rotation_speed)
@@ -91,6 +108,7 @@ BtPatrolAction.leave = function (self, unit, breed, blackboard, scratchpad, acti
 	locomotion_extension:set_rotation_speed(scratchpad.original_rotation_speed)
 
 	scratchpad.behavior_component.move_state = "idle"
+
 	local default_nav_tag_layers_minions = NavigationCostSettings.default_nav_tag_layers_minions
 
 	for nav_tag_name, _ in pairs(NAV_TAG_LAYER_COSTS) do
@@ -132,6 +150,7 @@ BtPatrolAction.run = function (self, unit, breed, blackboard, scratchpad, action
 
 	if is_patrol_leader then
 		local navigation_extension = scratchpad.navigation_extension
+
 		scratchpad.has_followed_path = scratchpad.has_followed_path or navigation_extension:is_following_path()
 
 		if not scratchpad.wait_at_destination_t and is_patrol_leader and scratchpad.has_followed_path and navigation_extension:has_reached_destination() then
@@ -150,7 +169,7 @@ BtPatrolAction.run = function (self, unit, breed, blackboard, scratchpad, action
 			end
 		end
 
-		if scratchpad.wait_at_destination_t and scratchpad.wait_at_destination_t <= t then
+		if scratchpad.wait_at_destination_t and t >= scratchpad.wait_at_destination_t then
 			if patrol_component.auto_patrol then
 				self:_set_new_patrol_position(unit, patrol_component)
 			else
@@ -167,7 +186,7 @@ BtPatrolAction.run = function (self, unit, breed, blackboard, scratchpad, action
 
 	local move_state = behavior_component.move_state
 
-	if (not scratchpad.start_move_cooldown or scratchpad.start_move_cooldown <= t) and (move_state ~= "moving" or scratchpad.patrol_anim_end_at_t and scratchpad.patrol_anim_end_at_t <= t) then
+	if (not scratchpad.start_move_cooldown or t >= scratchpad.start_move_cooldown) and (move_state ~= "moving" or scratchpad.patrol_anim_end_at_t and t >= scratchpad.patrol_anim_end_at_t) then
 		self:_start_move_anim(unit, scratchpad, behavior_component, action_data, t)
 	end
 
@@ -177,11 +196,11 @@ end
 local DEFAULT_MOVE_ANIM_EVENT = "move_fwd"
 local ANIM_VARIABLE_NAME = "anim_move_speed"
 local DEFAULT_SPEED = 0.9
-local MIN_VARIABLE_VALUE = 0.2
-local MAX_VARIABLE_VALUE = 2
+local MIN_VARIABLE_VALUE, MAX_VARIABLE_VALUE = 0.2, 2
 
 BtPatrolAction._start_move_anim = function (self, unit, scratchpad, behavior_component, action_data, t)
 	behavior_component.move_state = "moving"
+
 	local move_event = Animation.random_event(action_data.anim_events or DEFAULT_MOVE_ANIM_EVENT)
 
 	scratchpad.animation_extension:anim_event(move_event)
@@ -192,7 +211,7 @@ BtPatrolAction._start_move_anim = function (self, unit, scratchpad, behavior_com
 		scratchpad.patrol_anim_end_at_t = t + duration
 	end
 
-	local speed = nil
+	local speed
 
 	if scratchpad.is_patrol_leader then
 		self:trigger_patrol_sound(scratchpad, true)
@@ -202,6 +221,7 @@ BtPatrolAction._start_move_anim = function (self, unit, scratchpad, behavior_com
 		local patrol_component = scratchpad.patrol_component
 		local patrol_leader_unit = patrol_component.patrol_leader_unit
 		local patrol_leader_nav_extension = ALIVE[patrol_leader_unit] and ScriptUnit.has_extension(patrol_leader_unit, "navigation_system")
+
 		speed = patrol_leader_nav_extension and patrol_leader_nav_extension:max_speed() or action_data.speeds[move_event] or DEFAULT_SPEED
 	end
 
@@ -242,6 +262,7 @@ BtPatrolAction._set_new_patrol_position = function (self, unit, patrol_component
 
 	if distance < MIN_DISTANCE_TO_NEW_PATROL_POS then
 		local extra_offset = math.clamp(wanted_distance + math.random_range(FALLBACK_DISTANCE_RANDOM_RANGE[1], FALLBACK_DISTANCE_RANDOM_RANGE[2]), 0, total_path_distance)
+
 		wanted_position = MainPathQueries.position_from_distance(extra_offset)
 	end
 
@@ -274,9 +295,7 @@ BtPatrolAction.trigger_patrol_sound = function (self, scratchpad, should_start)
 	end
 end
 
-local ABOVE = 2
-local BELOW = 2.5
-local HOTIZONTAL = 2
+local ABOVE, BELOW, HOTIZONTAL = 2, 2.5, 2
 local PATROL_OFFSET_SIDEWAYS = 1
 local PATORL_OFFSET_BACK = 1.25
 local SPEED_UP_DISTANCE = 0.5
@@ -293,8 +312,7 @@ BtPatrolAction._update_patrolling = function (self, unit, breed, blackboard, scr
 	end
 
 	local patrol_component = scratchpad.patrol_component
-	local nav_world = scratchpad.nav_world
-	local traverse_logic = scratchpad.traverse_logic
+	local nav_world, traverse_logic = scratchpad.nav_world, scratchpad.traverse_logic
 	local patrol_leader_unit = patrol_component.patrol_leader_unit
 
 	if not HEALTH_ALIVE[patrol_leader_unit] then
@@ -321,7 +339,7 @@ BtPatrolAction._update_patrolling = function (self, unit, breed, blackboard, scr
 	local current_velocity = patrol_leader_locomotion_extension:current_velocity()
 	local magnitude = Vector3.length(current_velocity)
 	local velocity_normalized = Vector3.normalize(current_velocity)
-	local current_follow_direction = nil
+	local current_follow_direction
 
 	if not scratchpad.current_follow_direction then
 		current_follow_direction = velocity_normalized
@@ -337,7 +355,7 @@ BtPatrolAction._update_patrolling = function (self, unit, breed, blackboard, scr
 	local _, is_right_side, is_left_side, is_third = MinionPatrols.get_follow_index(patrol_index)
 	local follow_unit_rotation = Unit.local_rotation(patrol_leader_unit, 1)
 	local follow_unit_position = POSITION_LOOKUP[patrol_leader_unit]
-	local follow_unit_right, follow_unit_bwd = nil
+	local follow_unit_right, follow_unit_bwd
 
 	if magnitude > 0.05 then
 		follow_unit_right = Vector3.cross(current_follow_direction, Vector3.up())
@@ -347,7 +365,7 @@ BtPatrolAction._update_patrolling = function (self, unit, breed, blackboard, scr
 		follow_unit_bwd = -Quaternion.forward(follow_unit_rotation)
 	end
 
-	local patrol_position = nil
+	local patrol_position
 
 	if is_third then
 		patrol_position = follow_unit_position
@@ -358,7 +376,9 @@ BtPatrolAction._update_patrolling = function (self, unit, breed, blackboard, scr
 	end
 
 	local back_offset = is_third and 2 or 1
-	patrol_position = patrol_position + follow_unit_bwd * PATORL_OFFSET_BACK * back_offset
+
+	patrol_position = patrol_position + follow_unit_bwd * (PATORL_OFFSET_BACK * back_offset)
+
 	local follow_unit_leader_speed = patrol_leader_nav_extension:max_speed()
 	local navigation_extension = scratchpad.navigation_extension
 
@@ -388,9 +408,9 @@ BtPatrolAction._update_patrolling = function (self, unit, breed, blackboard, scr
 	navigation_extension:move_to(position_on_navmesh)
 
 	local distance_to_patrol_position = Vector3.distance(POSITION_LOOKUP[unit], position_on_navmesh)
-	local new_speed = nil
+	local new_speed
 
-	if SPEED_UP_DISTANCE < distance_to_patrol_position then
+	if distance_to_patrol_position > SPEED_UP_DISTANCE then
 		new_speed = follow_unit_leader_speed + math.min(distance_to_patrol_position, MAX_SPEED_UP_SPEED)
 	elseif distance_to_patrol_position < SLOW_DOWN_DISTANCE then
 		new_speed = SLOW_DOWN_SPEED
@@ -398,6 +418,7 @@ BtPatrolAction._update_patrolling = function (self, unit, breed, blackboard, scr
 		local locomotion_extension = scratchpad.locomotion_extension
 		local current_speed = Vector3.length(locomotion_extension:current_velocity())
 		local speed_diff = distance_to_patrol_position - current_speed * dt
+
 		new_speed = follow_unit_leader_speed - speed_diff
 	end
 
@@ -407,6 +428,7 @@ BtPatrolAction._update_patrolling = function (self, unit, breed, blackboard, scr
 	navigation_extension:set_max_speed(wanted_speed)
 
 	scratchpad.previous_speed = wanted_speed
+
 	local variable_value = math.clamp(wanted_speed, MIN_VARIABLE_VALUE, MAX_VARIABLE_VALUE)
 	local old_variable_value = scratchpad.old_move_speed_variable
 

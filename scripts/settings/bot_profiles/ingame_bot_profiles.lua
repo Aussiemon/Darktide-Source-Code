@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/bot_profiles/ingame_bot_profiles.lua
+
 local BotSettings = require("scripts/settings/bot/bot_settings")
 local behavior_gestalts = BotSettings.behavior_gestalts
 

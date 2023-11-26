@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/player_character_options_view/player_character_options_view_definitions.lua
+
 local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templates")
 local PlayerCharacterOptionsViewSettings = require("scripts/ui/views/player_character_options_view/player_character_options_view_settings")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
@@ -544,6 +546,7 @@ local animation_definitions = {
 				local anim_progress = math.easeCubic(progress)
 				local window = widgets.window
 				local alpha = 100 * anim_progress
+
 				window.style.screen_background.color[1] = alpha
 				window.style.screen_background_vignette.color[1] = alpha
 			end
@@ -557,6 +560,7 @@ local animation_definitions = {
 				local window = widgets.window
 				local alpha = 255 * anim_progress
 				local window_style = window.style
+
 				window_style.background.color[1] = alpha
 				window_style.background_gradient.color[1] = 200 * anim_progress
 				window_style.outer_shadow.color[1] = 200 * anim_progress
@@ -573,6 +577,7 @@ local animation_definitions = {
 			start_time = 0.4,
 			update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress, params)
 				local anim_progress = math.easeOutCubic(progress)
+
 				parent._content_alpha_multiplier = anim_progress
 				widgets.inspect_button.alpha_multiplier = anim_progress
 				widgets.invite_button.alpha_multiplier = anim_progress
@@ -606,6 +611,7 @@ local animation_definitions = {
 			start_time = 0,
 			update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress, params)
 				local anim_progress = math.easeOutCubic(1 - progress)
+
 				parent._content_alpha_multiplier = anim_progress
 				widgets.inspect_button.alpha_multiplier = anim_progress
 				widgets.invite_button.alpha_multiplier = anim_progress
@@ -638,6 +644,7 @@ local animation_definitions = {
 				local window = widgets.window
 				local alpha = 255 * anim_progress
 				local window_style = window.style
+
 				window_style.background.color[1] = alpha
 				window_style.background_gradient.color[1] = 200 * anim_progress
 				window_style.outer_shadow.color[1] = 200 * anim_progress

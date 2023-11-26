@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/hud/elements/tactical_overlay/hud_element_tactical_overlay_definitions.lua
+
 local UIWorkspaceSettings = require("scripts/settings/ui/ui_workspace_settings")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local ElementSettings = require("scripts/ui/hud/elements/tactical_overlay/hud_element_tactical_overlay_settings")

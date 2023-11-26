@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/presence/presence_manager.lua
+
 local PresenceEntryMyself = require("scripts/managers/presence/presence_entry_myself")
 local PresenceEntryImmaterium = require("scripts/managers/presence/presence_entry_immaterium")
 local PresenceManagerInterface = require("scripts/managers/presence/presence_manager_interface")
@@ -358,7 +360,9 @@ PresenceManager.update = function (self, dt, t)
 
 	if self._character_name_update_interval <= 0 then
 		local profile = Managers.player:local_player_backend_profile()
+
 		self._character_name_update_interval = 1
+
 		local prev_character_profile = self._myself:character_profile()
 
 		if profile and (not prev_character_profile or prev_character_profile ~= profile) then
@@ -418,6 +422,7 @@ PresenceManager.update = function (self, dt, t)
 			end
 		else
 			local error = self._my_presence_stream:error()
+
 			self._my_presence_stream = nil
 
 			if error then
@@ -443,6 +448,7 @@ PresenceManager.update = function (self, dt, t)
 
 		if self._last_request_xbox_gamertag > 0.2 then
 			local buffer = {}
+
 			self._load_buffer_in_flight = {}
 
 			for id, _ in pairs(self._load_buffer_request_xbox_gamertag) do
@@ -473,13 +479,13 @@ PresenceManager.update = function (self, dt, t)
 		end
 	end
 
-	if self._next_activity_check <= t then
+	if t >= self._next_activity_check then
 		self:_check_activity()
 
 		self._next_activity_check = t + ACTIVITY_CHECK_INTERVAL
 	end
 
-	if self._next_cross_play_check <= t then
+	if t >= self._next_cross_play_check then
 		self:_check_cross_play()
 
 		self._next_cross_play_check = t + CROSS_PLAY_CHECK_INTERVAL

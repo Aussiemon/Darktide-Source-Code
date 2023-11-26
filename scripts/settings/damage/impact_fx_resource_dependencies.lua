@@ -1,9 +1,11 @@
+﻿-- chunkname: @scripts/settings/damage/impact_fx_resource_dependencies.lua
+
 local DamageSettings = require("scripts/settings/damage/damage_settings")
 local ImpactEffectSettings = require("scripts/settings/damage/impact_effect_settings")
 local damage_types = DamageSettings.damage_types
 local impact_fx_lookup = ImpactEffectSettings.impact_fx_lookup
 local ImpactFxResourceDependencies = {}
-local _fetch_impact_fx_lookups_recursive, _find_resources_recursive, _find_impact_decal_resources_recursive, _is_valid_resource, _is_valid_impact_decal_resource, _is_class = nil
+local _fetch_impact_fx_lookups_recursive, _find_resources_recursive, _find_impact_decal_resources_recursive, _is_valid_resource, _is_valid_impact_decal_resource, _is_class
 local TEMP_RESOURCE_PACKAGES = Script.new_map(128)
 local TEMP_IMPACT_FX_LOOKUPS = Script.new_map(16)
 
@@ -33,6 +35,7 @@ ImpactFxResourceDependencies.impact_decal_units = function (id, data_table)
 	end
 
 	local resource_packages = {}
+
 	_cached_templates[id] = resource_packages
 
 	table.clear(TEMP_IMPACT_FX_LOOKUPS)

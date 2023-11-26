@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/node_builder_view_base/node_builder_view_base_definitions.lua
+
 local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templates")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local UIWorkspaceSettings = require("scripts/settings/ui/ui_workspace_settings")

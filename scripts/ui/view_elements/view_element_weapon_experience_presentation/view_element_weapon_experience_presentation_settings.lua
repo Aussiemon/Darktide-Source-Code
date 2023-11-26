@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/view_elements/view_element_weapon_experience_presentation/view_element_weapon_experience_presentation_settings.lua
+
 local view_element_weapon_experience_presentation_settings = {
 	weapon_spawn_depth = 2,
 	level_up_delay = 0.1,

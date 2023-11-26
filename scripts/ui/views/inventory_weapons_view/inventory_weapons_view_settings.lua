@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/inventory_weapons_view/inventory_weapons_view_settings.lua
+
 local grid_size = {
 	640,
 	750

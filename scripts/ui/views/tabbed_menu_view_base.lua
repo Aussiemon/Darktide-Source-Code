@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/tabbed_menu_view_base.lua
+
 local UIWorldSpawner = require("scripts/managers/ui/ui_world_spawner")
 local ViewElementInputLegend = require("scripts/ui/view_elements/view_element_input_legend/view_element_input_legend")
 local ViewElementMenuPanel = require("scripts/ui/view_elements/view_element_menu_panel/view_element_menu_panel")
@@ -21,6 +23,7 @@ TabbedMenuViewBase.on_enter = function (self)
 
 	self._can_navigate = false
 	self._allow_close_hotkey = false
+
 	local definitions = self._definitions
 
 	if definitions.background_world_params then
@@ -89,7 +92,7 @@ TabbedMenuViewBase.update = function (self, dt, t, input_service)
 	end
 
 	if self._tab_bar_visibility_function then
-		local visible = self:_tab_bar_visibility_function()
+		local visible = self._tab_bar_visibility_function(self)
 		local tab_bar = self._elements.tab_bar
 
 		if tab_bar and tab_bar:visible() ~= visible then
@@ -122,6 +125,7 @@ end
 
 TabbedMenuViewBase.set_can_navigate = function (self, value)
 	local has_tab_bar_menu = self._elements.tab_bar ~= nil and #self._tab_bar_views > 1
+
 	self._can_navigate = value and has_tab_bar_menu
 end
 
@@ -156,6 +160,7 @@ TabbedMenuViewBase._setup_background_world = function (self, world_params)
 	local world_name = world_params.world_name or self.view_name .. "_world"
 	local world_layer = world_params.world_layer or 1
 	local world_timer_name = world_params.timer_name or "ui"
+
 	self._world_spawner = UIWorldSpawner:new(world_name, world_layer, world_timer_name, self.view_name)
 
 	if self._context then
@@ -194,12 +199,14 @@ TabbedMenuViewBase.spawn_profile = function (self, profile, visible_on_spawn)
 	local camera = self._world_spawner:camera()
 	local unit_spawner = self._world_spawner:unit_spawner()
 	local name = self.__class_name
+
 	self._profile_spawner = UIProfileSpawner:new(name, world, camera, unit_spawner)
 
 	self._profile_spawner:set_visibility(visible_on_spawn or false)
 
 	local spawn_position = Unit.world_position(spawn_point_unit, 1)
 	local spawn_rotation = Unit.world_rotation(spawn_point_unit, 1)
+
 	self._spawn_point_position = Vector3.to_array(spawn_position)
 
 	self._profile_spawner:spawn_profile(profile, spawn_position, spawn_rotation)
@@ -229,7 +236,7 @@ TabbedMenuViewBase._setup_tab_bar = function (self, tab_bar_params, additional_c
 		local play_backwards = true
 		local world_spawner = self._world_spawner
 		local active_story_id = world_spawner:active_story_id()
-		local start_time = nil
+		local start_time
 
 		if active_story_id then
 			start_time = world_spawner:story_time(active_story_id)
@@ -273,6 +280,7 @@ TabbedMenuViewBase._setup_tab_bar = function (self, tab_bar_params, additional_c
 
 				if not title_loc_key then
 					local view_settings = Views[view]
+
 					title_loc_key = view_settings.display_name
 				end
 
@@ -304,7 +312,9 @@ TabbedMenuViewBase._setup_input_legend = function (self, input_legend_params)
 	end
 
 	local layer = input_legend_params.layer or 10
+
 	self._input_legend_element = self:_add_element(ViewElementInputLegend, "input_legend", layer)
+
 	local buttons_params = input_legend_params.buttons_params
 
 	for i = 1, #buttons_params do
@@ -316,7 +326,7 @@ end
 
 TabbedMenuViewBase.add_input_legend_entry = function (self, entry_params)
 	local input_legend = self:_element("input_legend")
-	local press_callback = nil
+	local press_callback
 	local on_pressed_callback = entry_params.on_pressed_callback
 
 	if on_pressed_callback then
@@ -324,6 +334,7 @@ TabbedMenuViewBase.add_input_legend_entry = function (self, entry_params)
 
 		if not callback_parent and self._active_view then
 			local view_instance = self._active_view and Managers.ui:view_instance(self._active_view)
+
 			callback_parent = view_instance
 		end
 
@@ -392,7 +403,7 @@ TabbedMenuViewBase._switch_tab = function (self, index)
 			local input_legend_params = self._definitions.input_legend_params
 
 			if input_legend_params then
-				local merged_input_legend_params = nil
+				local merged_input_legend_params
 
 				if view_input_legend_buttons then
 					merged_input_legend_params = table.clone(input_legend_params)
@@ -423,7 +434,7 @@ TabbedMenuViewBase._switch_tab = function (self, index)
 			return false
 		end)
 	end)
-	local level_story_complete_callback = nil
+	local level_story_complete_callback
 
 	if story_name and view_function_on_level_story_complete then
 		level_story_complete_callback = active_view_callback

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/buff/minion_buff_extension.lua
+
 require("scripts/extension_systems/buff/buff_extension_base")
 
 local Ailment = require("scripts/utilities/ailment")
@@ -6,6 +8,7 @@ local BuffTemplates = require("scripts/settings/buff/buff_templates")
 local BuffExtensionBase = require("scripts/extension_systems/buff/buff_extension_base")
 local FixedFrame = require("scripts/utilities/fixed_frame")
 local MinionBuffExtension = class("MinionBuffExtension", "BuffExtensionBase")
+
 MinionBuffExtension.UPDATE_DISABLED_BY_DEFAULT = true
 
 MinionBuffExtension.init = function (self, extension_init_context, unit, extension_init_data, game_object_data_or_game_session, nil_or_game_object_id)
@@ -33,6 +36,7 @@ MinionBuffExtension.hot_join_sync = function (self, unit, sender, channel)
 		end
 
 		local local_indexes = buffs_to_sync[buff_instance]
+
 		local_indexes[#local_indexes + 1] = index
 	end
 
@@ -57,6 +61,7 @@ end
 
 MinionBuffExtension.game_object_initialized = function (self, game_session, game_object_id)
 	self._game_object_id = game_object_id
+
 	local buffs_added_before_game_object_creation = self._buffs_added_before_game_object_creation
 
 	if buffs_added_before_game_object_creation then
@@ -65,7 +70,7 @@ MinionBuffExtension.game_object_initialized = function (self, game_session, game
 			local buff_template_id = buff_added_before_game_object_creation.buff_template_id
 			local index = buff_added_before_game_object_creation.index
 			local optional_lerp_value = buff_added_before_game_object_creation.optional_lerp_value
-			local optional_slot_id, optional_parent_buff_template_id = nil
+			local optional_slot_id, optional_parent_buff_template_id
 			local from_specialization = false
 
 			Managers.state.game_session:send_rpc_clients("rpc_add_buff", game_object_id, buff_template_id, index, optional_lerp_value, optional_slot_id, optional_parent_buff_template_id, from_specialization)
@@ -220,7 +225,7 @@ MinionBuffExtension.add_externally_controlled_buff = function (self, template_na
 
 	local template = BuffTemplates[template_name]
 	local should_be_muted = not self:_check_keywords(template)
-	local local_index = nil
+	local local_index
 
 	if should_be_muted then
 		local_index = self:_next_local_index()
@@ -286,6 +291,7 @@ MinionBuffExtension._add_rpc_synced_buff = function (self, template, t, ...)
 			optional_lerp_value = optional_lerp_value
 		}
 		local buffs_added_before_game_object_creation = self._buffs_added_before_game_object_creation
+
 		buffs_added_before_game_object_creation[#buffs_added_before_game_object_creation + 1] = buff_added_before_game_object_creation
 	end
 
@@ -360,6 +366,7 @@ MinionBuffExtension._start_fx = function (self, index, template)
 			if effect_template then
 				local fx_system = Managers.state.extension:system("fx_system")
 				local effect_template_id = fx_system:start_template_effect(effect_template, unit)
+
 				self._effect_template_id = effect_template_id
 			end
 		end

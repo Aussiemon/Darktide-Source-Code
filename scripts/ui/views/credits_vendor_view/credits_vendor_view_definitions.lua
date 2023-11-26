@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/credits_vendor_view/credits_vendor_view_definitions.lua
+
 local title_height = 70
 local edge_padding = 44
 local grid_width = 640

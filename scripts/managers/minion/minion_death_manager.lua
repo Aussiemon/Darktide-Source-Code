@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/minion/minion_death_manager.lua
+
 local AttackIntensitySettings = require("scripts/settings/attack_intensity/attack_intensity_settings")
 local AttackSettings = require("scripts/settings/damage/attack_settings")
 local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
@@ -10,7 +12,7 @@ local Vo = require("scripts/utilities/vo")
 local buff_keywords = BuffSettings.keywords
 local proc_events = BuffSettings.proc_events
 local MinionDeathManager = class("MinionDeathManager")
-local _trigger_kill_vo, _trigger_on_kill_procs = nil
+local _trigger_kill_vo, _trigger_on_kill_procs
 local CLIENT_RPCS = {
 	"rpc_minion_set_dead"
 }
@@ -50,10 +52,13 @@ MinionDeathManager.die = function (self, unit, attacking_unit_or_nil, attack_dir
 	death_component.attack_direction:store(attack_direction)
 
 	death_component.hit_zone_name = hit_zone_name_or_nil
+
 	local damage_profile_name = damage_profile.name
+
 	death_component.damage_profile_name = damage_profile_name
 	death_component.herding_template_name = herding_template_or_nil and herding_template_or_nil.name or nil
 	death_component.killing_damage_type = damage_type_or_nil
+
 	local was_alive = not death_component.is_dead
 
 	if was_alive then
@@ -106,8 +111,7 @@ MinionDeathManager.die = function (self, unit, attacking_unit_or_nil, attack_dir
 			death_component.force_instant_ragdoll = true
 		else
 			local stagger_component = blackboard.stagger
-			local stagger_type = stagger_component.type
-			local num_triggered_staggers = stagger_component.num_triggered_staggers
+			local stagger_type, num_triggered_staggers = stagger_component.type, stagger_component.num_triggered_staggers
 
 			if num_triggered_staggers > 0 and INSTANT_RAGDOLL_STAGGER_TYPES[stagger_type] or stagger_component.controlled_stagger then
 				death_component.force_instant_ragdoll = true
@@ -310,8 +314,10 @@ function _trigger_on_kill_procs(unit, breed, attacking_unit_or_nil, attack_type_
 
 	if on_kill_area_suppression and attacking_side then
 		local lerp_values = DamageProfile.lerp_values(damage_profile, attacking_unit_or_nil)
+
 		lerp_values = DamageProfile.progress_lerp_values_path(lerp_values, "on_kill_area_suppression")
-		local optional_relation, optional_include_self = nil
+
+		local optional_relation, optional_include_self
 
 		Suppression.apply_area_minion_suppression(attacking_unit_or_nil, on_kill_area_suppression, victim_position, optional_relation, optional_include_self, lerp_values)
 	end

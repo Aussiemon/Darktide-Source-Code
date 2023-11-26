@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/buff/weapon_traits_buff_templates/weapon_traits_bespoke_plasmagun_p1_buff_templates.lua
+
 local BaseWeaponTraitBuffTemplates = require("scripts/settings/buff/weapon_traits_buff_templates/base_weapon_trait_buff_templates")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local CheckProcFunctions = require("scripts/settings/buff/validation_functions/check_proc_functions")
@@ -8,10 +10,10 @@ local slot_configuration = PlayerCharacterConstants.slot_configuration
 local keywords = BuffSettings.keywords
 local stat_buffs = BuffSettings.stat_buffs
 local proc_events = BuffSettings.proc_events
-local templates = {
-	weapon_trait_bespoke_plasmagun_p1_toughness_on_elite_kills = table.clone(BaseWeaponTraitBuffTemplates.toughness_on_elite_kills),
-	weapon_trait_bespoke_plasmagun_p1_targets_receive_rending_debuff = table.clone(BaseWeaponTraitBuffTemplates.targets_receive_rending_debuff)
-}
+local templates = {}
+
+templates.weapon_trait_bespoke_plasmagun_p1_toughness_on_elite_kills = table.clone(BaseWeaponTraitBuffTemplates.toughness_on_elite_kills)
+templates.weapon_trait_bespoke_plasmagun_p1_targets_receive_rending_debuff = table.clone(BaseWeaponTraitBuffTemplates.targets_receive_rending_debuff)
 templates.weapon_trait_bespoke_plasmagun_p1_targets_receive_rending_debuff.check_proc_func = CheckProcFunctions.on_ranged_hit
 templates.weapon_trait_bespoke_plasmagun_p1_power_bonus_on_continuous_fire = table.merge({
 	use_combo = true,
@@ -48,7 +50,9 @@ templates.weapon_trait_bespoke_plasmagun_p1_lower_overheat_gives_faster_charge =
 		if slot_type == "weapon" and not ConditionalFunctions.is_reloading(template_data, template_context) then
 			local slot_inventory_component = unit_data_extension:read_component(wielded_slot)
 			local overheat_current_percentage = slot_inventory_component.overheat_current_percentage
+
 			overheat_current_percentage = 1 - math.clamp01((overheat_current_percentage - 0.1) / 0.9)
+
 			local steps = math.round(overheat_current_percentage * 5)
 
 			return steps
@@ -87,7 +91,9 @@ templates.weapon_trait_bespoke_plasmagun_p1_crit_chance_scaled_on_heat = {
 		if slot_type == "weapon" and not ConditionalFunctions.is_reloading(template_data, template_context) then
 			local slot_inventory_component = unit_data_extension:read_component(wielded_slot)
 			local overheat_current_percentage = slot_inventory_component.overheat_current_percentage
+
 			overheat_current_percentage = math.clamp01((overheat_current_percentage - 0.1) / 0.9)
+
 			local steps = math.round(overheat_current_percentage * 5)
 
 			return steps
@@ -125,7 +131,9 @@ templates.weapon_trait_bespoke_plasmagun_p1_power_bonus_scaled_on_heat = {
 		if slot_type == "weapon" and not ConditionalFunctions.is_reloading(template_data, template_context) then
 			local slot_inventory_component = unit_data_extension:read_component(wielded_slot)
 			local overheat_current_percentage = slot_inventory_component.overheat_current_percentage
+
 			overheat_current_percentage = math.clamp01((overheat_current_percentage - 0.1) / 0.9)
+
 			local steps = math.round(overheat_current_percentage * 5)
 
 			return steps

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/behavior/utility_considerations/chaos_poxwalker_bomber_utility_considerations.lua
+
 local considerations = {
 	chaos_poxwalker_bomber_explode = {
 		distance_to_target = {

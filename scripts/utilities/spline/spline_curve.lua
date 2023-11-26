@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/utilities/spline/spline_curve.lua
+
 local Bezier = require("scripts/utilities/spline/bezier")
 local SplineMovementHermiteInterpolatedMetered = require("scripts/utilities/spline/spline_movement_hermite_interpolated_metered")
 local SplineCurve = class("SplineCurve")
@@ -5,8 +7,10 @@ local SplineCurve = class("SplineCurve")
 SplineCurve.init = function (self, points, class_name, movement_class, name, subdivisions)
 	self._t = 0
 	self._name = name
+
 	local splines = {}
 	local spline_class = Bezier
+
 	self._spline_class = spline_class
 
 	self:_build_splines(splines, points, spline_class)
@@ -38,6 +42,7 @@ SplineCurve._build_splines = function (self, splines, points, spline_class)
 		local spline_points = {
 			spline_class.spline_points(points, index)
 		}
+
 		splines[spline_index] = {
 			points = spline_points
 		}
@@ -50,6 +55,7 @@ end
 
 local function unpack_unbox(t, k)
 	k = k or 1
+
 	local var = t[k]
 
 	if not var then
@@ -64,11 +70,12 @@ SplineCurve.length = function (self, segments_per_spline)
 	local length = 0
 
 	for index, spline in ipairs(self._splines) do
-		if self._num_points < index then
+		if index > self._num_points then
 			break
 		end
 
 		local points = spline.points
+
 		length = length + spline_class.length(segments_per_spline, unpack_unbox(points))
 	end
 
@@ -82,6 +89,7 @@ SplineCurve.get_travel_dist_to_spline_point = function (self, point_index)
 	for i = 1, point_index do
 		local data = spline_points[i]
 		local segment_length = data.length
+
 		travel_dist = travel_dist + segment_length
 	end
 
@@ -94,7 +102,7 @@ SplineCurve.get_point_at_distance = function (self, dist)
 	local travel_dist = 0
 
 	for i = 1, #spline_points do
-		if self._num_points < i then
+		if i > self._num_points then
 			break
 		end
 
@@ -104,10 +112,7 @@ SplineCurve.get_point_at_distance = function (self, dist)
 		if dist < travel_dist + segment_length then
 			local t = (dist - travel_dist) / segment_length
 			local s = data.points
-			local p0 = s[1]:unbox()
-			local p1 = s[2]:unbox()
-			local p2 = s[3]:unbox()
-			local p3 = s[4]:unbox()
+			local p0, p1, p2, p3 = s[1]:unbox(), s[2]:unbox(), s[3]:unbox(), s[4]:unbox()
 			local position = spline_class.calc_point(t, p0, p1, p2, p3)
 			local tangent = spline_class.calc_tangent(t, p0, p1, p2, p3)
 

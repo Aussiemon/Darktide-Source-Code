@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/equipment/reload_templates/bolter_reload_template.lua
+
 local reload_template = {
 	name = "bolter",
 	states = {

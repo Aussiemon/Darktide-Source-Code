@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/server_metrics/server_metrics_manager_dummy.lua
+
 local ServerMetricsManagerDummy = class("DummyServerMetricsManager")
 local ServerMetricsManagerInterface = require("scripts/managers/server_metrics/server_metrics_manager_interface")
 

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/cinematic_scene/templates/hub_location_intro_gun_shop.lua
+
 local cinematic_scene_templates = {
 	hub_location_intro_gun_shop = {
 		is_skippable = true,

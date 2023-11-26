@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/mechanism/mechanisms/mechanism_hub.lua
+
 local MechanismBase = require("scripts/managers/mechanism/mechanisms/mechanism_base")
 local Missions = require("scripts/settings/mission/mission_templates")
 local PlayerVOStoryStage = require("scripts/utilities/player_vo_story_stage")
@@ -10,6 +12,7 @@ MechanismHub.init = function (self, ...)
 	MechanismHub.super.init(self, ...)
 
 	local mission_name = "hub_ship"
+
 	self._hub_mission_name = mission_name
 	self._hub_level_name = Missions[mission_name].level
 	self._hub_circumstance_name = "default"

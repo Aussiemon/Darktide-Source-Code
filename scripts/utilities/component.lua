@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/utilities/component.lua
+
 local Component = {}
 local component_interface = {
 	"init",
@@ -5,6 +7,7 @@ local component_interface = {
 	"disable",
 	"destroy"
 }
+
 Component.event_lookup = {}
 Component.lookup = {}
 Component.default_rpc_name = "rpc_trigger_client_component_event"

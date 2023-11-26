@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/player/player_game_states/authoritative_player_input_handler.lua
+
 local AdaptiveClockHandlerServer = require("scripts/managers/player/player_game_states/utilities/adaptive_clock_handler_server")
 local AuthoritativePlayerInputHandler = class("AuthoritativePlayerInputHandler")
 local InputHandlerSettings = require("scripts/managers/player/player_game_states/input_handler_settings")
@@ -6,18 +8,21 @@ local function _debug(...)
 	Log.debug("AuthoritativePlayerInputHandler", ...)
 end
 
-local _default_input_value = nil
+local _default_input_value
 
 AuthoritativePlayerInputHandler.init = function (self, player, is_server, fixed_time_step)
 	self._owner_peer_id = player:peer_id()
 	self._frame = 0
 	self._player = player
+
 	local settings = InputHandlerSettings
 	local num_buffered_frames = settings.buffered_frames
 	local num_actions = #settings.actions
 	local input_cache = Script.new_array(num_actions + 2)
 	local action_lookup = {}
+
 	self._action_lookup = action_lookup
+
 	local action_network_type = settings.action_network_type
 
 	for i, action in ipairs(settings.actions) do
@@ -30,6 +35,7 @@ AuthoritativePlayerInputHandler.init = function (self, player, is_server, fixed_
 
 	for i, ephemeral_action in ipairs(settings.ephemeral_actions) do
 		local index = num_actions + i
+
 		input_cache[index] = Script.new_array(num_buffered_frames)
 		input_cache[index][1] = _default_input_value(action_network_type[ephemeral_action])
 		action_lookup[ephemeral_action] = index
@@ -39,26 +45,34 @@ AuthoritativePlayerInputHandler.init = function (self, player, is_server, fixed_
 
 	for i, ui_interaction_action in ipairs(settings.ui_interaction_actions) do
 		local index = num_actions + num_ephemeral_actions + i
+
 		input_cache[index] = Script.new_array(num_buffered_frames)
 		input_cache[index][1] = _default_input_value(action_network_type[ui_interaction_action])
 		action_lookup[ui_interaction_action] = index
 	end
 
 	self._yaw_index = num_actions + num_ephemeral_actions + num_ui_interaction_actions + 1
+
 	local yaw_cache = Script.new_array(num_buffered_frames)
+
 	input_cache[self._yaw_index] = yaw_cache
 	yaw_cache[1] = 0
 	self._pitch_index = self._yaw_index + 1
+
 	local pitch_cache = Script.new_array(num_buffered_frames)
+
 	input_cache[self._pitch_index] = pitch_cache
 	pitch_cache[1] = 0
 	self._roll_index = self._pitch_index + 1
+
 	local roll_cache = Script.new_array(num_buffered_frames)
+
 	input_cache[self._roll_index] = roll_cache
 	roll_cache[1] = 0
 
 	for i, input_setting in ipairs(settings.input_settings) do
 		local index = self._roll_index + i
+
 		input_cache[index] = Script.new_array(num_buffered_frames)
 		input_cache[index][1] = false
 		action_lookup[input_setting] = index
@@ -73,8 +87,11 @@ end
 
 AuthoritativePlayerInputHandler._create_clock = function (self, fixed_time_step)
 	local clock_handler, clock_start = AdaptiveClockHandlerServer:new(self._player, fixed_time_step)
+
 	self._clock_handler = clock_handler
+
 	local last_frame = math.floor(clock_start / fixed_time_step)
+
 	self._received_frame = last_frame
 	self._last_acked_frame = last_frame
 	self._parsed_frame = last_frame
@@ -86,6 +103,7 @@ AuthoritativePlayerInputHandler.fixed_update = function (self, dt, t, frame)
 	end
 
 	self._frame = frame
+
 	local frames_late = frame - self._received_frame
 
 	if frames_late > 0 then
@@ -117,7 +135,7 @@ AuthoritativePlayerInputHandler.update = function (self, dt, t)
 		self._parsed_frame = self._frame - 1
 	end
 
-	if self._last_acked_frame < self._received_frame then
+	if self._received_frame > self._last_acked_frame then
 		self._last_acked_frame = self._received_frame
 
 		RPC.rpc_player_input_array_ack(self._player:channel_id(), self._player:local_player_id(), self._received_frame, self._clock_offset)
@@ -127,9 +145,7 @@ end
 AuthoritativePlayerInputHandler.get_orientation = function (self, frame)
 	local index = math.max(math.min(frame, self._received_frame) - self._parsed_frame, 1)
 	local cache = self._input_cache
-	local y = cache[self._yaw_index][index]
-	local p = cache[self._pitch_index][index]
-	local r = cache[self._roll_index][index]
+	local y, p, r = cache[self._yaw_index][index], cache[self._pitch_index][index], cache[self._roll_index][index]
 
 	return y, p, r
 end
@@ -144,7 +160,7 @@ AuthoritativePlayerInputHandler.rpc_player_input_array = function (self, channel
 	local end_frame = start_frame + end_frame_offset
 	local next_frame = self._received_frame + 1
 
-	if end_frame >= next_frame then
+	if next_frame <= end_frame then
 		self._clock_handler:frame_received(end_frame)
 
 		local cache = self._input_cache
@@ -167,6 +183,7 @@ AuthoritativePlayerInputHandler.rpc_player_input_array = function (self, channel
 
 			for j = 1, end_frame_offset + 1 do
 				local value = inputs[j]
+
 				cache[i][index_offset + j] = value
 			end
 		end

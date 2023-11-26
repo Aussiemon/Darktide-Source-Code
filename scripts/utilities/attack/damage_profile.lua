@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/utilities/attack/damage_profile.lua
+
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local PowerLevelSettings = require("scripts/settings/damage/power_level_settings")
 local PowerLevel = require("scripts/utilities/attack/power_level")
@@ -8,62 +10,68 @@ local DEFAULT_LERP_VALUE = WeaponTweakTemplateSettings.DEFAULT_LERP_VALUE
 local DEFALT_FALLBACK_LERP_VALUE = WeaponTweakTemplateSettings.DEFALT_FALLBACK_LERP_VALUE
 local DEFAULT_CRIT_MOD = DamageProfileSettings.default_crit_mod
 local MIN_CRIT_MOD = DamageProfileSettings.min_crit_mod
-local _distribute_power_level_to_power_type, _max_hit_mass = nil
+local _distribute_power_level_to_power_type, _max_hit_mass
 local armor_penetrating_conversion = {
 	armored = "unarmored",
 	super_armor = "armored"
 }
-local DamageProfile = {
-	target_settings = function (damage_profile, target_index)
-		local targets = damage_profile.targets
-		local target_settings = targets[target_index] or targets.default_target
+local DamageProfile = {}
 
-		return target_settings
-	end,
-	power_distribution_from_power_level = function (power_level, power_type, damage_profile, target_settings, is_critical_strike, dropoff_scalar, armor_type, damage_profile_lerp_values, stat_buffs_or_nil, attack_type_or_nil, weakspot_or_nil)
-		local scaled_power_level = PowerLevel.scale_power_level_to_power_type_curve(power_level, power_type, stat_buffs_or_nil, attack_type_or_nil, weakspot_or_nil)
-		local power_type_power = _distribute_power_level_to_power_type(power_type, scaled_power_level, damage_profile, target_settings, dropoff_scalar, damage_profile_lerp_values)
+DamageProfile.target_settings = function (damage_profile, target_index)
+	local targets = damage_profile.targets
+	local target_settings = targets[target_index] or targets.default_target
 
-		return power_type_power, scaled_power_level
-	end,
-	max_hit_mass = function (damage_profile, power_level, charge_level, lerp_values, is_critical_strike, unit, attack_type_or_nil)
-		local buff_extension = ScriptUnit.has_extension(unit, "buff_system")
-		local stat_buffs_or_nil = buff_extension and buff_extension:stat_buffs()
-		local scaled_power_level = PowerLevel.scale_by_charge_level(power_level, charge_level, damage_profile.charge_level_scaler)
-		local scaled_cleave_power_level = PowerLevel.scale_power_level_to_power_type_curve(scaled_power_level, "cleave", stat_buffs_or_nil, attack_type_or_nil)
-		local cleave_output = PowerLevelSettings.cleave_output
-		local cleave_min = cleave_output.min
-		local cleave_max = cleave_output.max
-		local cleave_range = cleave_max - cleave_min
-		local cleave_distribution = damage_profile.cleave_distribution or PowerLevelSettings.default_cleave_distribution
-		local max_hit_mass_attack, attack_distribution = _max_hit_mass(cleave_min, cleave_range, scaled_cleave_power_level, cleave_distribution, "attack", lerp_values)
-		local max_hit_mass_impact, impact_distribution = _max_hit_mass(cleave_min, cleave_range, scaled_cleave_power_level, cleave_distribution, "impact", lerp_values)
-		local psyker_smite_increase = damage_profile.psyker_smite
-		local attack_modifier = nil
-		local max_hit_mass_attack_modifier = stat_buffs_or_nil and stat_buffs_or_nil.max_hit_mass_attack_modifier or 1
-		local psyker_smite_max_hit_mass_attack_modifier = stat_buffs_or_nil and psyker_smite_increase and stat_buffs_or_nil.psyker_smite_max_hit_mass_attack_modifier or 1
-		attack_modifier = max_hit_mass_attack_modifier + psyker_smite_max_hit_mass_attack_modifier - 1
-		max_hit_mass_attack = max_hit_mass_attack * attack_modifier
-		local impact_modifier = nil
-		local max_hit_mass_impact_modifier = stat_buffs_or_nil and stat_buffs_or_nil.max_hit_mass_impact_modifier or 1
-		local psyker_smite_max_hit_mass_impact_modifier = stat_buffs_or_nil and psyker_smite_increase and stat_buffs_or_nil.psyker_smite_max_hit_mass_impact_modifier or 1
-		impact_modifier = max_hit_mass_impact_modifier + psyker_smite_max_hit_mass_impact_modifier - 1
-		max_hit_mass_impact = max_hit_mass_impact * impact_modifier
-		local crit_infinite_cleave_keyword = buff_extension and buff_extension:has_keyword(buff_keywords.critical_hit_infinite_cleave)
+	return target_settings
+end
 
-		if is_critical_strike and crit_infinite_cleave_keyword then
-			max_hit_mass_attack = math.huge
-		end
+DamageProfile.power_distribution_from_power_level = function (power_level, power_type, damage_profile, target_settings, is_critical_strike, dropoff_scalar, armor_type, damage_profile_lerp_values, stat_buffs_or_nil, attack_type_or_nil, weakspot_or_nil)
+	local scaled_power_level = PowerLevel.scale_power_level_to_power_type_curve(power_level, power_type, stat_buffs_or_nil, attack_type_or_nil, weakspot_or_nil)
+	local power_type_power = _distribute_power_level_to_power_type(power_type, scaled_power_level, damage_profile, target_settings, dropoff_scalar, damage_profile_lerp_values)
 
-		return max_hit_mass_attack, max_hit_mass_impact
+	return power_type_power, scaled_power_level
+end
+
+DamageProfile.max_hit_mass = function (damage_profile, power_level, charge_level, lerp_values, is_critical_strike, unit, attack_type_or_nil)
+	local buff_extension = ScriptUnit.has_extension(unit, "buff_system")
+	local stat_buffs_or_nil = buff_extension and buff_extension:stat_buffs()
+	local scaled_power_level = PowerLevel.scale_by_charge_level(power_level, charge_level, damage_profile.charge_level_scaler)
+	local scaled_cleave_power_level = PowerLevel.scale_power_level_to_power_type_curve(scaled_power_level, "cleave", stat_buffs_or_nil, attack_type_or_nil)
+	local cleave_output = PowerLevelSettings.cleave_output
+	local cleave_min, cleave_max = cleave_output.min, cleave_output.max
+	local cleave_range = cleave_max - cleave_min
+	local cleave_distribution = damage_profile.cleave_distribution or PowerLevelSettings.default_cleave_distribution
+	local max_hit_mass_attack, attack_distribution = _max_hit_mass(cleave_min, cleave_range, scaled_cleave_power_level, cleave_distribution, "attack", lerp_values)
+	local max_hit_mass_impact, impact_distribution = _max_hit_mass(cleave_min, cleave_range, scaled_cleave_power_level, cleave_distribution, "impact", lerp_values)
+	local psyker_smite_increase = damage_profile.psyker_smite
+	local attack_modifier
+	local max_hit_mass_attack_modifier = stat_buffs_or_nil and stat_buffs_or_nil.max_hit_mass_attack_modifier or 1
+	local psyker_smite_max_hit_mass_attack_modifier = stat_buffs_or_nil and psyker_smite_increase and stat_buffs_or_nil.psyker_smite_max_hit_mass_attack_modifier or 1
+
+	attack_modifier = max_hit_mass_attack_modifier + psyker_smite_max_hit_mass_attack_modifier - 1
+	max_hit_mass_attack = max_hit_mass_attack * attack_modifier
+
+	local impact_modifier
+	local max_hit_mass_impact_modifier = stat_buffs_or_nil and stat_buffs_or_nil.max_hit_mass_impact_modifier or 1
+	local psyker_smite_max_hit_mass_impact_modifier = stat_buffs_or_nil and psyker_smite_increase and stat_buffs_or_nil.psyker_smite_max_hit_mass_impact_modifier or 1
+
+	impact_modifier = max_hit_mass_impact_modifier + psyker_smite_max_hit_mass_impact_modifier - 1
+	max_hit_mass_impact = max_hit_mass_impact * impact_modifier
+
+	local crit_infinite_cleave_keyword = buff_extension and buff_extension:has_keyword(buff_keywords.critical_hit_infinite_cleave)
+
+	if is_critical_strike and crit_infinite_cleave_keyword then
+		max_hit_mass_attack = math.huge
 	end
-}
+
+	return max_hit_mass_attack, max_hit_mass_impact
+end
 
 function _max_hit_mass(cleave_min, cleave_range, scaled_cleave_power_level, cleave_distribution, power_type, lerp_values)
 	local distribution = cleave_distribution[power_type]
 
 	if type(distribution) == "table" then
 		local lerp_value = DamageProfile.lerp_value_from_path(lerp_values, "cleave_distribution", "attack")
+
 		distribution = DamageProfile.lerp_damage_profile_entry(distribution, lerp_value)
 	end
 
@@ -79,10 +87,11 @@ DamageProfile.armor_damage_modifier = function (power_type, damage_profile, targ
 
 	if armor_penetrating then
 		local new_armor_type = armor_penetrating_conversion[armor_type]
+
 		armor_type = new_armor_type or armor_type
 	end
 
-	local from_target_settings_near, from_target_settings_far, adm_near, adm_far, adm_near_charged, adm_far_charged = nil
+	local from_target_settings_near, from_target_settings_far, adm_near, adm_far, adm_near_charged, adm_far_charged
 	local target_adm_ranged = target_settings.armor_damage_modifier_ranged
 	local adm_ranged = damage_profile.armor_damage_modifier_ranged
 	local target_adm_ranged_charged = target_settings.armor_damage_modifier_ranged_charged
@@ -119,7 +128,7 @@ DamageProfile.armor_damage_modifier = function (power_type, damage_profile, targ
 	end
 
 	local should_calculate_adm_ranged = adm_near and adm_far
-	local lerp_value, armor_damage_modifier = nil
+	local lerp_value, armor_damage_modifier
 
 	if should_calculate_adm_ranged then
 		local near_lerp_values = from_target_settings_near and target_settings_lerp_values or damage_profile_lerp_values
@@ -168,16 +177,15 @@ DamageProfile.armor_damage_modifier = function (power_type, damage_profile, targ
 	else
 		local adm = target_settings.armor_damage_modifier
 		local target_settings_adm = adm and adm[power_type] and adm[power_type][armor_type]
-		local lerp_values = nil
+		local lerp_values
 
 		if target_settings_adm then
-			lerp_values = target_settings_lerp_values
-			armor_damage_modifier = target_settings_adm
+			armor_damage_modifier, lerp_values = target_settings_adm, target_settings_lerp_values
 		else
 			local damage_profile_adm = damage_profile.armor_damage_modifier
 			local damage_profile_settings_adm = damage_profile_adm and damage_profile_adm[power_type] and damage_profile_adm[power_type][armor_type]
-			lerp_values = damage_profile_lerp_values
-			armor_damage_modifier = damage_profile_settings_adm or PowerLevelSettings.default_armor_damage_modifier[power_type][armor_type]
+
+			armor_damage_modifier, lerp_values = damage_profile_settings_adm or PowerLevelSettings.default_armor_damage_modifier[power_type][armor_type], damage_profile_lerp_values
 		end
 
 		lerp_value = DamageProfile.lerp_value_from_path(lerp_values, "armor_damage_modifier", power_type, armor_type)
@@ -202,6 +210,7 @@ DamageProfile.armor_damage_modifier = function (power_type, damage_profile, targ
 		end
 
 		local critical_armor_damage_modifiers = armor_damage_modifier + armor_crit_mod
+
 		armor_damage_modifier = math.max(critical_armor_damage_modifiers, MIN_CRIT_MOD)
 	end
 
@@ -213,13 +222,7 @@ DamageProfile.dropoff_scalar = function (hit_distance, damage_profile, lerp_valu
 	local min, max = DamageProfile.ranges(damage_profile, lerp_values)
 
 	if min and max then
-		if max <= hit_distance then
-			dropoff_scalar = 1
-		elseif hit_distance <= min then
-			dropoff_scalar = 0
-		else
-			dropoff_scalar = (hit_distance - min) / (max - min)
-		end
+		dropoff_scalar = max <= hit_distance and 1 or hit_distance <= min and 0 or (hit_distance - min) / (max - min)
 	end
 
 	return dropoff_scalar
@@ -235,6 +238,7 @@ DamageProfile.ranges = function (damage_profile, lerp_values)
 
 		if lerpable_min then
 			local lerp_value = DamageProfile.lerp_value_from_path(lerp_values, "ranges", "min")
+
 			min = DamageProfile.lerp_damage_profile_entry(min, lerp_value)
 		end
 
@@ -242,6 +246,7 @@ DamageProfile.ranges = function (damage_profile, lerp_values)
 
 		if lerpable_max then
 			local lerp_value = DamageProfile.lerp_value_from_path(lerp_values, "ranges", "max")
+
 			max = DamageProfile.lerp_damage_profile_entry(max, lerp_value)
 		end
 
@@ -258,6 +263,7 @@ DamageProfile.boost_curve_multiplier = function (target_settings, boost_multipli
 	if lerpable_multiplier then
 		local target_settings_lerp_values = damage_profile_lerp_values.current_target_settings_lerp_values
 		local lerp_value = DamageProfile.lerp_value_from_path(target_settings_lerp_values, boost_multiplier_name)
+
 		multiplier = DamageProfile.lerp_damage_profile_entry(multiplier, lerp_value)
 	end
 
@@ -270,6 +276,7 @@ DamageProfile.suppression_value = function (damage_profile, damage_profile_lerp_
 
 	if lerpable_value then
 		local lerp_value = DamageProfile.lerp_value_from_path(damage_profile_lerp_values, "suppression_value")
+
 		suppression_value_or_nil = DamageProfile.lerp_damage_profile_entry(suppression_value_or_nil, lerp_value)
 	end
 
@@ -285,6 +292,7 @@ DamageProfile.suppression_attack_delay = function (damage_profile, damage_profil
 
 	if lerpable_value then
 		local lerp_value = DamageProfile.lerp_value_from_path(damage_profile_lerp_values, "suppression_attack_delay")
+
 		suppression_attack_delay_or_nil = DamageProfile.lerp_damage_profile_entry(suppression_attack_delay_or_nil, lerp_value)
 	end
 
@@ -310,6 +318,7 @@ DamageProfile.lerp_values = function (damage_profile, attacking_unit_or_nil, tar
 	local lerp_values = weapon_extension:damage_profile_lerp_values(damage_profile.name)
 	local targets = target_index_or_nil and lerp_values.targets
 	local target_settings_lerp_values = targets and (targets[target_index_or_nil] or targets.default_target) or TARGET_SETTINGS_NO_LERP_VALUES
+
 	lerp_values.current_target_settings_lerp_values = target_settings_lerp_values
 
 	return lerp_values
@@ -326,6 +335,7 @@ DamageProfile.lerp_value_from_path = function (lerp_values, ...)
 
 	for i = 1, depth - 1 do
 		local id = select(i, ...)
+
 		local_lerp_values = local_lerp_values[id] or EMPTY_PATH
 	end
 
@@ -337,12 +347,15 @@ end
 
 DamageProfile.progress_lerp_values_path = function (lerp_values, ...)
 	local default_lerp_value_or_nil = lerp_values[DEFAULT_LERP_VALUE]
+
 	EMPTY_PATH[DEFAULT_LERP_VALUE] = default_lerp_value_or_nil
+
 	local local_lerp_values = lerp_values
 	local depth = select("#", ...)
 
 	for i = 1, depth do
 		local id = select(i, ...)
+
 		local_lerp_values = local_lerp_values[id] or EMPTY_PATH
 	end
 
@@ -350,15 +363,14 @@ DamageProfile.progress_lerp_values_path = function (lerp_values, ...)
 end
 
 DamageProfile.lerp_damage_profile_entry = function (entry, lerp_value)
-	local min = entry[1]
-	local max = entry[2]
+	local min, max = entry[1], entry[2]
 	local t = lerp_value
 
 	return math.lerp(min, max, t)
 end
 
 function _distribute_power_level_to_power_type(power_type, power_level, damage_profile, target_settings, dropoff_scalar, damage_profile_lerp_values)
-	local from_target_settings, power_distribution_ranged = nil
+	local from_target_settings, power_distribution_ranged
 	local target_settings_power_distribution_ranged = target_settings.power_distribution_ranged
 
 	if target_settings_power_distribution_ranged then
@@ -370,7 +382,7 @@ function _distribute_power_level_to_power_type(power_type, power_level, damage_p
 	end
 
 	local target_settings_lerp_values = damage_profile_lerp_values.current_target_settings_lerp_values
-	local power_multiplier = nil
+	local power_multiplier
 
 	if dropoff_scalar and power_distribution_ranged then
 		local pdr_table = power_distribution_ranged[power_type]
@@ -380,17 +392,19 @@ function _distribute_power_level_to_power_type(power_type, power_level, damage_p
 
 		if type(power_near) == "table" then
 			local lerp_value = DamageProfile.lerp_value_from_path(lerp_values, "power_distribution_ranged", power_type, "near")
+
 			power_near = DamageProfile.lerp_damage_profile_entry(power_near, lerp_value)
 		end
 
 		if type(power_far) == "table" then
 			local lerp_value = DamageProfile.lerp_value_from_path(lerp_values, "power_distribution_ranged", power_type, "far")
+
 			power_far = DamageProfile.lerp_damage_profile_entry(power_far, lerp_value)
 		end
 
 		power_multiplier = math.lerp(power_near, power_far, math.sqrt(dropoff_scalar))
 	else
-		local power_distribution, lerp_values = nil
+		local power_distribution, lerp_values
 		local target_settings_power_distribution = target_settings.power_distribution
 
 		if target_settings_power_distribution then
@@ -405,6 +419,7 @@ function _distribute_power_level_to_power_type(power_type, power_level, damage_p
 
 		if type(power_multiplier) == "table" then
 			local lerp_value = DamageProfile.lerp_value_from_path(lerp_values, "power_distribution", power_type)
+
 			power_multiplier = DamageProfile.lerp_damage_profile_entry(power_multiplier, lerp_value)
 		end
 	end

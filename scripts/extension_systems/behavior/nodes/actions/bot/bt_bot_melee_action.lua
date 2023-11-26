@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/behavior/nodes/actions/bot/bt_bot_melee_action.lua
+
 require("scripts/extension_systems/behavior/nodes/bt_node")
 
 local Armor = require("scripts/utilities/attack/armor")
@@ -15,11 +17,14 @@ BtBotMeleeAction.enter = function (self, unit, breed, blackboard, scratchpad, ac
 	scratchpad.engage_change_time = 0
 	scratchpad.engage_update_time = 0
 	scratchpad.last_evaluate_t = t
+
 	local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
 	local inventory_component = unit_data_extension:read_component("inventory")
 	local visual_loadout_extension = ScriptUnit.extension(unit, "visual_loadout_system")
 	local weapon_template = PlayerUnitVisualLoadout.wielded_weapon_template(visual_loadout_extension, inventory_component)
+
 	scratchpad.weapon_template = weapon_template
+
 	local input_extension = ScriptUnit.extension(unit, "input_system")
 	local bot_unit_input = input_extension:bot_unit_input()
 	local soft_aiming = true
@@ -30,6 +35,7 @@ BtBotMeleeAction.enter = function (self, unit, breed, blackboard, scratchpad, ac
 	local bot_group = group_extension:bot_group()
 	local bot_group_data = group_extension:bot_group_data()
 	local navigation_extension = ScriptUnit.extension(unit, "navigation_system")
+
 	scratchpad.behavior_extension = ScriptUnit.extension(unit, "behavior_system")
 	scratchpad.bot_group = bot_group
 	scratchpad.bot_group_data = bot_group_data
@@ -49,9 +55,13 @@ BtBotMeleeAction.enter = function (self, unit, breed, blackboard, scratchpad, ac
 	scratchpad.action_input_extension = ScriptUnit.extension(unit, "action_input_system")
 	scratchpad.slot_extension = ScriptUnit.extension(unit, "slot_system")
 	scratchpad.random_dodge_check_t = 0
+
 	local archetype = unit_data_extension:archetype()
+
 	scratchpad.archetype_stamina_template = archetype.stamina
+
 	local attack_intensity_extension = ScriptUnit.extension(unit, "attack_intensity_system")
+
 	scratchpad.attack_intensity_extension = attack_intensity_extension
 end
 
@@ -108,7 +118,9 @@ BtBotMeleeAction._update_melee = function (self, unit, scratchpad, action_data, 
 
 	local perception_extension = scratchpad.perception_extension
 	local _, num_enemies_in_proximity = perception_extension:enemies_in_proximity()
+
 	scratchpad.num_enemies_in_proximity = num_enemies_in_proximity
+
 	local target_unit_data_extension = ScriptUnit.has_extension(target_unit, "unit_data_system")
 	local target_breed = target_unit_data_extension and target_unit_data_extension:breed()
 	local aim_position = self:_aim_position(target_unit, target_breed)
@@ -120,16 +132,13 @@ BtBotMeleeAction._update_melee = function (self, unit, scratchpad, action_data, 
 	local current_position = first_person_component.position
 	local follow_component = scratchpad.follow_component
 	local follow_position = follow_component.destination:unbox()
-	local attack_performed = false
-	local wants_engage, eval_timer = nil
-	local already_engaged = scratchpad.engaging
-	local engage_change_time = scratchpad.engage_change_time
+	local attack_performed, wants_engage, eval_timer = false
+	local already_engaged, engage_change_time = scratchpad.engaging, scratchpad.engage_change_time
 	local locomotion_component = scratchpad.locomotion_component
 	local current_velocity = locomotion_component.velocity_current
 	local target_velocity = self:_target_velocity(target_unit, target_breed)
 	local self_position = POSITION_LOOKUP[unit]
-	local nav_world = scratchpad.nav_world
-	local traverse_logic = scratchpad.traverse_logic
+	local nav_world, traverse_logic = scratchpad.nav_world, scratchpad.traverse_logic
 	local target_position = self:_target_unit_position(self_position, target_unit, action_data, nav_world, traverse_logic)
 	local attack_meta_data = self:_choose_attack(target_unit, target_breed, scratchpad)
 	local melee_range = self:_calculate_melee_range(target_breed, attack_meta_data)
@@ -185,7 +194,7 @@ BtBotMeleeAction._update_melee = function (self, unit, scratchpad, action_data, 
 		already_engaged = false
 	end
 
-	if already_engaged and not action_data.do_not_update_engage_position and scratchpad.engage_update_time < t then
+	if already_engaged and not action_data.do_not_update_engage_position and t > scratchpad.engage_update_time then
 		self:_update_engage_position(unit, self_position, target_unit, target_position, target_velocity, target_breed, scratchpad, t, melee_range, nav_world, traverse_logic)
 	end
 
@@ -196,7 +205,7 @@ end
 
 BtBotMeleeAction._can_start_attack = function (self, attack_meta_data, weapon_extension)
 	local action_input = attack_meta_data.action_inputs[1].action_input
-	local raw_input = nil
+	local raw_input
 	local fixed_t = FixedFrame.get_latest_fixed_time()
 
 	return weapon_extension:action_input_is_currently_valid("weapon_action", action_input, raw_input, fixed_t)
@@ -214,15 +223,17 @@ BtBotMeleeAction._update_attack = function (self, scratchpad, t)
 		end
 	end
 
-	if scratchpad.next_attack_action_input_t <= t then
+	if t >= scratchpad.next_attack_action_input_t then
 		local attack_meta_data = scratchpad.executing_attack_meta_data
 		local action_input_i = scratchpad.next_action_input_i
 		local action_inputs = attack_meta_data.action_inputs
 		local action_input_config = action_inputs[action_input_i]
 		local action_input = action_input_config.action_input
-		local raw_input = nil
+		local raw_input
 		local request_id = action_input_extension:bot_queue_action_input("weapon_action", action_input, raw_input)
+
 		scratchpad.attack_action_input_request_id = request_id
+
 		local next_action_input_i = action_input_i + 1
 		local next_action_input_config = action_inputs[next_action_input_i]
 
@@ -236,16 +247,17 @@ BtBotMeleeAction._update_attack = function (self, scratchpad, t)
 end
 
 BtBotMeleeAction._aim_position = function (self, target_unit, target_breed)
-	local aim_node_name = nil
+	local aim_node_name
 
 	if target_breed then
 		aim_node_name = target_breed.bot_melee_aim_node or "j_spine"
 	end
 
-	local aim_position = nil
+	local aim_position
 
 	if Unit.has_node(target_unit, aim_node_name) then
 		local aim_node = Unit.node(target_unit, aim_node_name)
+
 		aim_position = Unit.world_position(target_unit, aim_node)
 	else
 		aim_position = POSITION_LOOKUP[target_unit]
@@ -281,8 +293,7 @@ BtBotMeleeAction._choose_attack = function (self, target_unit, target_breed, scr
 	local target_armor = Armor.armor_type(target_unit, target_breed)
 	local weapon_template = scratchpad.weapon_template
 	local weapon_meta_data = weapon_template.attack_meta_data or DEFAULT_ATTACK_META_DATA
-	local best_attack_meta_data = nil
-	local best_utility = -math.huge
+	local best_attack_meta_data, best_utility = nil, -math.huge
 
 	for attack_input, attack_meta_data in pairs(weapon_meta_data) do
 		local utility = 0
@@ -300,8 +311,7 @@ BtBotMeleeAction._choose_attack = function (self, target_unit, target_breed, scr
 		end
 
 		if best_utility < utility then
-			best_utility = utility
-			best_attack_meta_data = attack_meta_data
+			best_attack_meta_data, best_utility = attack_meta_data, utility
 		end
 	end
 
@@ -311,7 +321,7 @@ end
 local DEFAULT_ENEMY_HITBOX_RADIUS_APPROXIMATION = 0.5
 
 BtBotMeleeAction._calculate_melee_range = function (self, target_breed, attack_meta_data)
-	local target_hitbox_radius_approximation = nil
+	local target_hitbox_radius_approximation
 
 	if target_breed then
 		target_hitbox_radius_approximation = target_breed.bot_hitbox_radius_approximation or DEFAULT_ENEMY_HITBOX_RADIUS_APPROXIMATION
@@ -326,14 +336,16 @@ BtBotMeleeAction._calculate_melee_range = function (self, target_breed, attack_m
 end
 
 BtBotMeleeAction._target_velocity = function (self, target_unit, target_breed)
-	local target_velocity = nil
+	local target_velocity
 
 	if Breed.is_player(target_breed) then
 		local target_unit_data_extension = ScriptUnit.extension(target_unit, "unit_data_system")
 		local locomotion_component = target_unit_data_extension:read_component("locomotion")
+
 		target_velocity = locomotion_component.velocity_current
 	elseif target_breed then
 		local target_locomotion_extension = ScriptUnit.extension(target_unit, "locomotion_system")
+
 		target_velocity = target_locomotion_extension:current_velocity()
 	else
 		target_velocity = Vector3.zero()
@@ -348,7 +360,7 @@ BtBotMeleeAction._is_in_melee_range = function (self, self_position, aim_positio
 	local check_position = self_position + relative_velocity * time_to_next_attack
 	local melee_range_sq = melee_range^2
 
-	return Vector3.distance_squared(aim_position, check_position) < melee_range_sq
+	return melee_range_sq > Vector3.distance_squared(aim_position, check_position)
 end
 
 BtBotMeleeAction._time_to_next_attack = function (self, scratchpad, t)
@@ -361,6 +373,7 @@ BtBotMeleeAction._time_to_next_attack = function (self, scratchpad, t)
 
 		for i = next_action_input_i + 1, num_action_inputs do
 			local config = action_inputs[i]
+
 			remaining_action_input_time = remaining_action_input_time + config.timing
 		end
 
@@ -387,7 +400,7 @@ BtBotMeleeAction._update_start_defend = function (self, scratchpad, defense_meta
 
 	if not start_defend_request_id then
 		local start_action_input = defense_meta_data.start_action_input
-		local raw_input = nil
+		local raw_input
 		local fixed_t = FixedFrame.get_latest_fixed_time()
 		local weapon_extension = scratchpad.weapon_extension
 
@@ -406,14 +419,15 @@ end
 
 BtBotMeleeAction._start_defend = function (self, action_input, scratchpad)
 	local action_input_extension = scratchpad.action_input_extension
-	local raw_input = nil
+	local raw_input
+
 	scratchpad.start_defend_request_id = action_input_extension:bot_queue_action_input("weapon_action", action_input, raw_input)
 end
 
 BtBotMeleeAction._stop_defend = function (self, scratchpad, defense_meta_data)
 	local action_input_extension = scratchpad.action_input_extension
 	local stop_action_input = defense_meta_data.stop_action_input
-	local raw_input = nil
+	local raw_input
 
 	action_input_extension:bot_queue_action_input("weapon_action", stop_action_input, raw_input)
 end
@@ -435,7 +449,8 @@ BtBotMeleeAction._update_defend = function (self, unit, should_defend, defense_m
 		local should_push, push_action_input, cant_push = self:_should_push(defense_meta_data, scratchpad, in_melee_range, target_unit, target_breed, fixed_t)
 
 		if should_push then
-			local raw_input = nil
+			local raw_input
+
 			scratchpad.push_request_id = action_input_extension:bot_queue_action_input("weapon_action", push_action_input, raw_input)
 		end
 
@@ -468,7 +483,7 @@ BtBotMeleeAction._should_push = function (self, defense_meta_data, scratchpad, i
 	local outnumbered = num_enemies > 1
 	local push_action_input = defense_meta_data.push_action_input
 	local weapon_extension = scratchpad.weapon_extension
-	local raw_input = nil
+	local raw_input
 	local push_action_is_available = weapon_extension:action_input_is_currently_valid("weapon_action", push_action_input, raw_input, fixed_t)
 	local cant_push = low_stamina or not push_action_is_available or not breed_is_pushable
 
@@ -518,7 +533,7 @@ BtBotMeleeAction._update_dodge = function (self, unit, scratchpad, target_unit, 
 	local bot_position = POSITION_LOOKUP[unit]
 	local target_position = POSITION_LOOKUP[target_unit]
 	local dodge_away_from_target = math.random() > 0.5
-	local escape_dir = nil
+	local escape_dir
 
 	if dodge_away_from_target then
 		escape_dir = Vector3.normalize(bot_position - target_position)
@@ -535,19 +550,21 @@ BtBotMeleeAction._update_dodge = function (self, unit, scratchpad, target_unit, 
 	end
 
 	if escape_dir then
-		local nav_world = scratchpad.nav_world
-		local traverse_logic = scratchpad.traverse_logic
+		local nav_world, traverse_logic = scratchpad.nav_world, scratchpad.traverse_logic
 		local to = bot_position + escape_dir * DODGE_RANGE_TEST_DISTANCE
 		local success = NavQueries.ray_can_go(nav_world, bot_position, to, traverse_logic, 1, 1)
 
 		if success then
 			local random_time = t + math.random() * 0.5
+
 			threat_data.expires = random_time
 
 			threat_data.escape_direction:store(escape_dir)
 
 			threat_data.dodge_t = math.min(t + math.random() * 0.5, random_time)
+
 			local dodge_check_range = cant_push and CANT_PUSH_DODGE_CHECK_RANDOM_RANGE or DODGE_CHECK_RANDOM_RANGE
+
 			scratchpad.random_dodge_check_t = t + math.random_range(dodge_check_range[1], dodge_check_range[2])
 		else
 			scratchpad.random_dodge_check_t = t + DODGE_CHECK_FAIL_COOLDOWN
@@ -594,7 +611,7 @@ end
 local NEAR_FOLLOW_POSITION_RANGE_SQ = 25
 
 BtBotMeleeAction._is_in_engage_range = function (self, self_position, target_position, action_data, follow_position)
-	local engage_range_sq = nil
+	local engage_range_sq
 
 	if Vector3.distance_squared(self_position, follow_position) < NEAR_FOLLOW_POSITION_RANGE_SQ then
 		engage_range_sq = action_data.engage_range_near_follow_position^2
@@ -602,17 +619,17 @@ BtBotMeleeAction._is_in_engage_range = function (self, self_position, target_pos
 		engage_range_sq = action_data.engage_range^2
 	end
 
-	return Vector3.distance_squared(self_position, target_position) < engage_range_sq
+	return engage_range_sq > Vector3.distance_squared(self_position, target_position)
 end
 
 local TARGET_NAV_MESH_ABOVE = 0.5
 local TARGET_NAV_MESH_BELOW = 2
 
 BtBotMeleeAction._target_unit_position = function (self, self_position, target_unit, action_data, nav_world, traverse_logic)
-	local target_unit_position = nil
+	local target_unit_position
 
 	if action_data.destroy_object then
-		local smart_objects = nil
+		local smart_objects
 		local nav_graph_extension = ScriptUnit.has_extension(target_unit, "nav_graph_system")
 
 		if nav_graph_extension then
@@ -622,11 +639,13 @@ BtBotMeleeAction._target_unit_position = function (self, self_position, target_u
 		if smart_objects then
 			local smart_object = smart_objects[1]
 			local entrance_position, exit_position = smart_object:get_entrance_exit_positions()
+
 			target_unit_position = math.closest_position(self_position, entrance_position, exit_position)
 		else
 			local node_name = "rp_center"
 			local node = Unit.has_node(target_unit, node_name) and Unit.node(target_unit, node_name) or 1
 			local node_position = Unit.world_position(target_unit, node)
+
 			target_unit_position = NavQueries.position_on_mesh(nav_world, node_position, TARGET_NAV_MESH_ABOVE, TARGET_NAV_MESH_BELOW, traverse_logic) or node_position
 		end
 	else
@@ -646,7 +665,7 @@ BtBotMeleeAction._allow_engage = function (self, self_unit, target_unit, target_
 	local override_range_default = action_data.override_engage_range_to_follow_position
 	local challenge_override_range = action_data.override_engage_range_to_follow_position_challenge
 	local lerp_t = (challenge_rating - START_CHALLENGE_VALUE) / (MAX_CHALLENGE_VALUE - START_CHALLENGE_VALUE)
-	local override_range = nil
+	local override_range
 
 	if lerp_t <= 0 then
 		override_range = override_range_default
@@ -664,10 +683,8 @@ BtBotMeleeAction._allow_engage = function (self, self_unit, target_unit, target_
 	end
 
 	local main_path_manager = Managers.state.main_path
-	local perception_component = scratchpad.perception_component
-	local bot_group_data = scratchpad.bot_group_data
-	local target_ally = perception_component.target_ally
-	local target_ally_needs_aid = perception_component.target_ally_needs_aid
+	local perception_component, bot_group_data = scratchpad.perception_component, scratchpad.bot_group_data
+	local target_ally, target_ally_needs_aid = perception_component.target_ally, perception_component.target_ally_needs_aid
 	local follow_unit = target_ally_needs_aid and target_ally or bot_group_data.follow_unit
 
 	if follow_unit and main_path_manager:is_main_path_ready() then
@@ -696,7 +713,7 @@ BtBotMeleeAction._allow_engage = function (self, self_unit, target_unit, target_
 			return false
 		end
 
-		if IN_PROXIMITY_DISTANCE_SQ < Vector3.distance_squared(POSITION_LOOKUP[self_unit], target_position) then
+		if Vector3.distance_squared(POSITION_LOOKUP[self_unit], target_position) > IN_PROXIMITY_DISTANCE_SQ then
 			return false
 		end
 	end
@@ -745,12 +762,13 @@ end
 BtBotMeleeAction._disengage = function (self, scratchpad, t)
 	scratchpad.engaging = false
 	scratchpad.engage_change_time = t
+
 	local melee_component = scratchpad.melee_component
+
 	melee_component.engage_position_set = false
 end
 
-local ENGAGE_NAV_MESH_ABOVE = 0.5
-local ENGAGE_NAV_MESH_BELOW = 0.5
+local ENGAGE_NAV_MESH_ABOVE, ENGAGE_NAV_MESH_BELOW = 0.5, 0.5
 
 local function _check_angle(nav_world, traverse_logic, target_position, start_direction, angle, distance)
 	local direction = Quaternion.rotate(Quaternion(Vector3.up(), angle), start_direction)
@@ -773,6 +791,7 @@ local function _calculate_engage_position(nav_world, traverse_logic, target_posi
 
 	for i = 1, SUBDIVISIONS_PER_SIDE do
 		local angle = ANGLE_INCREMENT * i
+
 		position = _check_angle(nav_world, traverse_logic, target_position, start_direction, angle, melee_distance)
 
 		if position then
@@ -795,33 +814,33 @@ local TARGET_MOVING_SPEED_THRESHOLD_SQ = 4
 local FACING_DOT = -0.25
 local ENGAGE_OFFSET_ANGLE = math.pi / 8
 local ENGAGE_POSITION_MIN_DISTANCE_SQ = 0.010000000000000002
-local ENGAGE_UPDATE_MIN_DISTANCE = 3
-local ENGAGE_UPDATE_MAX_DISTANCE = 7
-local ENGAGE_UPDATE_MIN_INTERVAL = 0.2
-local ENGAGE_UPDATE_MAX_INTERVAL = 2
+local ENGAGE_UPDATE_MIN_DISTANCE, ENGAGE_UPDATE_MAX_DISTANCE = 3, 7
+local ENGAGE_UPDATE_MIN_INTERVAL, ENGAGE_UPDATE_MAX_INTERVAL = 0.2, 2
 
 BtBotMeleeAction._update_engage_position = function (self, unit, self_position, target_unit, target_unit_position, target_velocity, target_breed, scratchpad, t, melee_range, nav_world, traverse_logic)
-	local melee_distance = nil
+	local melee_distance
 	local target_speed_sq = Vector3.length_squared(target_velocity)
-	melee_distance = TARGET_MOVING_SPEED_THRESHOLD_SQ < target_speed_sq and 0 or melee_range - 0.5
+
+	melee_distance = target_speed_sq > TARGET_MOVING_SPEED_THRESHOLD_SQ and 0 or melee_range - 0.5
+
 	local melee_distance_sq = melee_distance^2
 	local targeting_me = self:_is_targeting_me(unit, target_unit)
 	local enemy_offset = target_unit_position - self_position
 	local should_stop = false
-	local engage_position = nil
+	local engage_position
 
 	if target_breed and target_breed.bots_should_flank and (not targeting_me or target_breed.bots_flank_while_targeted) then
 		local enemy_rotation = Unit.local_rotation(target_unit, 1)
 		local enemy_direction = Quaternion.forward(enemy_rotation)
-		local engage_from = nil
+		local engage_from
 
-		if FACING_DOT < Vector3.dot(enemy_direction, enemy_offset) then
+		if Vector3.dot(enemy_direction, enemy_offset) > FACING_DOT then
 			engage_from = enemy_offset
 		else
 			local normalized_enemy_offset = Vector3.normalize(Vector3.flat(enemy_offset))
 			local normalized_enemy_direction = Vector3.normalize(Vector3.flat(enemy_direction))
 			local offset_angle = Vector3.flat_angle(-normalized_enemy_offset, normalized_enemy_direction)
-			local new_angle = nil
+			local new_angle
 
 			if offset_angle > 0 then
 				new_angle = offset_angle + ENGAGE_OFFSET_ANGLE
@@ -830,13 +849,13 @@ BtBotMeleeAction._update_engage_position = function (self, unit, self_position, 
 			end
 
 			local new_rotation = Quaternion.multiply(Quaternion(Vector3.up(), -new_angle), enemy_rotation)
+
 			engage_from = -Quaternion.forward(new_rotation)
 		end
 
 		engage_position = _calculate_engage_position(nav_world, traverse_logic, target_unit_position, engage_from, melee_distance)
-	elseif Vector3.distance_squared(self_position, target_unit_position) <= melee_distance_sq then
-		should_stop = true
-		engage_position = self_position
+	elseif melee_distance_sq >= Vector3.distance_squared(self_position, target_unit_position) then
+		engage_position, should_stop = self_position, true
 	else
 		engage_position = _calculate_engage_position(nav_world, traverse_logic, target_unit_position, enemy_offset, melee_distance)
 	end
@@ -846,7 +865,7 @@ BtBotMeleeAction._update_engage_position = function (self, unit, self_position, 
 		local previous_engage_position = melee_component.engage_position:unbox()
 		local engage_position_set = melee_component.engage_position_set
 
-		if not engage_position_set or ENGAGE_POSITION_MIN_DISTANCE_SQ < Vector3.distance_squared(engage_position, previous_engage_position) then
+		if not engage_position_set or Vector3.distance_squared(engage_position, previous_engage_position) > ENGAGE_POSITION_MIN_DISTANCE_SQ then
 			melee_component.engage_position:store(engage_position)
 
 			melee_component.engage_position_set = true
@@ -856,6 +875,7 @@ BtBotMeleeAction._update_engage_position = function (self, unit, self_position, 
 		local distance = Vector3.distance(self_position, engage_position)
 		local lerp_t = math.clamp(distance, ENGAGE_UPDATE_MIN_DISTANCE, ENGAGE_UPDATE_MAX_DISTANCE)
 		local interval = math.auto_lerp(ENGAGE_UPDATE_MIN_DISTANCE, ENGAGE_UPDATE_MAX_DISTANCE, ENGAGE_UPDATE_MIN_INTERVAL, ENGAGE_UPDATE_MAX_INTERVAL, lerp_t)
+
 		scratchpad.engage_update_time = t + interval
 	end
 end

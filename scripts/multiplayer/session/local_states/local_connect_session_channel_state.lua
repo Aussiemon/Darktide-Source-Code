@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/multiplayer/session/local_states/local_connect_session_channel_state.lua
+
 local LocalConnectSessionChannelState = class("LocalConnectSessionChannelState")
 
 LocalConnectSessionChannelState.init = function (self, state_machine, shared_state)

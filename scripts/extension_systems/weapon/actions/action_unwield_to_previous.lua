@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/weapon/actions/action_unwield_to_previous.lua
+
 require("scripts/extension_systems/weapon/actions/action_unwield")
 
 local ActionUnwieldToPrevious = class("ActionUnwieldToPrevious", "ActionUnwield")

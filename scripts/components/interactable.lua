@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/components/interactable.lua
+
 local Component = require("scripts/utilities/component")
 local Interactable = component("Interactable")
 
@@ -11,6 +13,7 @@ Interactable.init = function (self, unit, is_server)
 	end
 
 	local interactee_extension = ScriptUnit.has_extension(unit, "interactee_system")
+
 	self._interactee_extension = interactee_extension
 
 	if interactee_extension then
@@ -42,17 +45,17 @@ Interactable.init = function (self, unit, is_server)
 			self:interactable_disable(unit)
 		end
 
-		local interaction_context = {
-			duration = interaction_length,
-			shared_interaction = shared_interaction,
-			only_once = only_once,
-			interactor_item_to_equip = interactor_item_to_equip,
-			description = description,
-			action_text = action_text,
-			interaction_icon = interaction_icon ~= "use_template" and interaction_icon or nil,
-			ui_interaction_type = ui_interaction_type ~= "use_template" and ui_interaction_type or nil,
-			display_start_event = display_start_event
-		}
+		local interaction_context = {}
+
+		interaction_context.duration = interaction_length
+		interaction_context.shared_interaction = shared_interaction
+		interaction_context.only_once = only_once
+		interaction_context.interactor_item_to_equip = interactor_item_to_equip
+		interaction_context.description = description
+		interaction_context.action_text = action_text
+		interaction_context.interaction_icon = interaction_icon ~= "use_template" and interaction_icon or nil
+		interaction_context.ui_interaction_type = ui_interaction_type ~= "use_template" and ui_interaction_type or nil
+		interaction_context.display_start_event = display_start_event
 
 		interactee_extension:set_interaction_context(interaction_type, interaction_context, start_active)
 		interactee_extension:set_emissive_material_name(emissive_material_name)
@@ -62,6 +65,7 @@ Interactable.init = function (self, unit, is_server)
 		end
 
 		local has_animation_state_machine = Unit.has_animation_state_machine(unit)
+
 		self._support_simple_animation = self:get_data(unit, "support_simple_animation") and not has_animation_state_machine
 		self._support_prop_animation = self:get_data(unit, "support_prop_animation") and not self._support_simple_animation
 		self._animation_back_speed_modifier = self:get_data(unit, "animation_back_speed_modifier")
@@ -100,7 +104,9 @@ Interactable._setup_animation = function (self, interaction_length)
 	if self._support_simple_animation then
 		local unit = self._unit
 		local anim_length = Unit.simple_animation_length(unit)
+
 		self._anim_length = anim_length
+
 		local states = table.enum("forward", "backward")
 		local speed = 1
 
@@ -118,6 +124,7 @@ Interactable._setup_animation = function (self, interaction_length)
 				speed = speed
 			}
 		}
+
 		self._states = states
 		self._anim_data = anim_data
 		self._anim_length = anim_length
@@ -195,6 +202,7 @@ end
 Interactable.events.interaction_started = function (self, type, unit)
 	if self._support_simple_animation then
 		local is_playing_forward = self._is_playing_forward
+
 		is_playing_forward = is_playing_forward == nil and true or not is_playing_forward
 		self._is_playing_forward = is_playing_forward
 		self._interaction_cancled = false
@@ -238,9 +246,12 @@ Interactable._play_animation = function (self)
 		local speed = anim_data.speed * self._animation_back_speed_modifier
 
 		if state == "forward" then
-			if not self._interaction_cancled then
+			if self._interaction_cancled then
+				-- Nothing
+			else
 				local interaction_length = self._interaction_length
 				local length = interaction_length == 0 and 1 or interaction_length
+
 				speed = (self._anim_length - anim_time) / length
 			end
 		elseif self._interaction_cancled then
@@ -248,6 +259,7 @@ Interactable._play_animation = function (self)
 		else
 			local interaction_length = self._interaction_length
 			local length = interaction_length == 0 and 1 or interaction_length
+
 			speed = -(self._anim_length - (self._anim_length - anim_time)) / length
 		end
 
@@ -266,6 +278,7 @@ Interactable.update = function (self, unit, dt, t)
 
 	if Unit.is_playing_simple_animation(unit) then
 		local anim_speed = self._anim_speed
+
 		self._anim_time = math.clamp(self._anim_time + anim_speed * dt, 0, self._anim_length)
 
 		return true

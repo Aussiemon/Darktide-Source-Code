@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/view_elements/view_element_item_result_overlay/view_element_item_result_overlay.lua
+
 local InputUtils = require("scripts/managers/input/input_utils")
 local ScriptWorld = require("scripts/foundation/utilities/script_world")
 local UIRenderer = require("scripts/managers/ui/ui_renderer")
@@ -25,6 +27,7 @@ ViewElementItemResultOverlay.init = function (self, parent, draw_layer, start_sc
 	self:_setup_default_gui()
 
 	local background_widget_definition = self._definitions.background_widget_definition
+
 	self._background_widget = self:_create_widget("background_widget", background_widget_definition)
 end
 
@@ -35,10 +38,13 @@ ViewElementItemResultOverlay._setup_default_gui = function (self)
 	local world_layer = WORLD_LAYER_TOP_GUI + self._draw_layer
 	local world_name = reference_name .. "_ui_default_world"
 	local view_name = self._parent.view_name
+
 	self._world = ui_manager:create_world(world_name, world_layer, timer_name, view_name)
+
 	local viewport_name = reference_name .. "_ui_default_world_viewport"
 	local viewport_type = "overlay"
 	local viewport_layer = 1
+
 	self._viewport = ui_manager:create_viewport(self._world, viewport_name, viewport_type, viewport_layer)
 	self._viewport_name = viewport_name
 	self._ui_default_renderer = ui_manager:create_renderer(reference_name .. "_ui_default_renderer", self._world)
@@ -51,12 +57,15 @@ ViewElementItemResultOverlay._setup_background_gui = function (self)
 	local world_layer = WORLD_LAYER_BACKGROUND + self._draw_layer
 	local world_name = reference_name .. "_ui_background_world"
 	local view_name = self._parent.view_name
+
 	self._background_world = ui_manager:create_world(world_name, world_layer, timer_name, view_name)
+
 	local shading_environment = "content/shading_environments/ui/ui_popup_background"
 	local shading_callback = callback(self, "cb_background_shading_callback")
 	local viewport_name = reference_name .. "_ui_background_world_viewport"
 	local viewport_type = "overlay"
 	local viewport_layer = 1
+
 	self._background_viewport = ui_manager:create_viewport(self._background_world, viewport_name, viewport_type, viewport_layer, shading_environment, shading_callback)
 	self._background_viewport_name = viewport_name
 	self._ui_popup_background_renderer = ui_manager:create_renderer(reference_name .. "_ui_popup_background_renderer", self._background_world)
@@ -97,6 +106,7 @@ end
 
 ViewElementItemResultOverlay.start = function (self, presentation_data)
 	self._presentation_data = presentation_data
+
 	local widgets_by_name = self._widgets_by_name
 
 	self:_setup_background_gui()
@@ -104,6 +114,7 @@ ViewElementItemResultOverlay.start = function (self, presentation_data)
 	self._duration = presentation_data.duration or 0
 	self._time = 0
 	self._started = true
+
 	local sound_event = UISoundEvents.item_result_overlay_reward_in_rarity_1
 	local item = presentation_data.item
 
@@ -115,11 +126,13 @@ ViewElementItemResultOverlay.start = function (self, presentation_data)
 		local item_rarity = item.rarity
 		local effect_textures_by_rarity = ViewElementItemResultOverlaySettings.effect_textures_by_rarity
 		local rarity_glow_textures = effect_textures_by_rarity[item_rarity]
+
 		sound_event = ViewElementItemResultOverlaySettings.sound_events_by_item_rarity[item_rarity]
 
 		if rarity_glow_textures then
 			local rarity_glow_widget = widgets_by_name.rarity_glow
 			local rarity_glow_widget_content = rarity_glow_widget.content
+
 			rarity_glow_widget_content.glow = rarity_glow_textures.glow
 			rarity_glow_widget_content.particle = rarity_glow_textures.particle
 		end
@@ -132,6 +145,7 @@ ViewElementItemResultOverlay.start = function (self, presentation_data)
 	end
 
 	widgets_by_name.input_text.content.text = Localize("loc_item_result_overlay_input_description")
+
 	local title_text_widget = widgets_by_name.title_text
 	local ui_renderer = self._ui_default_renderer
 	local content = title_text_widget.content
@@ -198,14 +212,18 @@ ViewElementItemResultOverlay.draw = function (self, dt, t, ui_renderer, render_s
 	end
 
 	ui_renderer = self._ui_default_renderer
+
 	local previous_alpha_multiplier = render_settings.alpha_multiplier
 	local alpha_multiplier = self._alpha_multiplier or 0
+
 	render_settings.alpha_multiplier = alpha_multiplier
 
 	ViewElementItemResultOverlay.super.draw(self, dt, t, ui_renderer, render_settings, input_service)
 
 	local previous_layer = render_settings.start_layer
+
 	render_settings.start_layer = (previous_layer or 0) + self._draw_layer
+
 	local ui_scenegraph = self._ui_scenegraph
 	local ui_popup_background_renderer = self._ui_popup_background_renderer
 
@@ -242,7 +260,7 @@ ViewElementItemResultOverlay.update = function (self, dt, t, input_service)
 	end
 
 	if self._time and self._duration > 0 then
-		if self._duration <= self._time then
+		if self._time >= self._duration then
 			self._done = true
 		else
 			self._time = self._time + dt
@@ -299,6 +317,7 @@ ViewElementItemResultOverlay._setup_weapon_stats = function (self)
 			edge_padding = edge_padding
 		}
 		local scale = self:render_scale()
+
 		self._weapon_stats = ViewElementWeaponStats:new(self, layer, scale, context)
 	end
 end

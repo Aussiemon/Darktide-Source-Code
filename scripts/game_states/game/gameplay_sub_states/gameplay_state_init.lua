@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/game_states/game/gameplay_sub_states/gameplay_state_init.lua
+
 local GameplayInitStepFrameRate = require("scripts/game_states/game/gameplay_sub_states/gameplay_init_step_states/gameplay_init_step_frame_rate")
 local GameplayStateInterface = require("scripts/game_states/game/gameplay_sub_states/gameplay_state_interface")
 local GameplayStateRun = require("scripts/game_states/game/gameplay_sub_states/gameplay_state_run")
@@ -12,6 +14,7 @@ GameplayStateInit.on_enter = function (self, parent, params)
 		shared_state = shared_state
 	}
 	local state_machine = GameStateMachine:new(self, GameplayInitStepFrameRate, start_params, nil, nil, "GamePlayInit")
+
 	self._gameplay_state = parent
 	self._state_machine = state_machine
 	self._shared_state = shared_state

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/chunk_lod/chunk_lod_units.lua
+
 local ChunkLodUnits = class("ChunkLodUnits")
 
 ChunkLodUnits.init = function (self, level)

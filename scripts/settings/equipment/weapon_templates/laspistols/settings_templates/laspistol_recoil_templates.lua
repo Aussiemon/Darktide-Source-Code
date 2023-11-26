@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/equipment/weapon_templates/laspistols/settings_templates/laspistol_recoil_templates.lua
+
 local RecoilTemplate = require("scripts/utilities/recoil_template")
 local AIM_ASSIST_MULTIPLIER_FUNCTIONS = RecoilTemplate.AIM_ASSIST_MULTIPLIER_FUNCTIONS
 local recoil_templates = {}
@@ -183,7 +185,9 @@ recoil_templates.default_laspistol_assault = {
 		}
 	}
 }
+
 local multi = 0.3
+
 recoil_templates.default_laspistol_killshot = {
 	still = {
 		camera_recoil_percentage = 0.15,
@@ -327,7 +331,9 @@ recoil_templates.default_laspistol_killshot = {
 		}
 	}
 }
+
 local multi_2 = 1.7
+
 recoil_templates.default_laspistol_bfg = {
 	still = {
 		camera_recoil_percentage = 0.2,

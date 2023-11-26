@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/loading/loaders/signin_loader.lua
+
 local PACKAGES_TO_LOAD = {
 	"packages/ui/ui_signin_assets"
 }
@@ -26,6 +28,7 @@ SigninLoader.start_loading = function (self)
 		end
 
 		local id = package_manager:load(package_name, "SigninLoader", load_callback)
+
 		package_ids[id] = package_name
 	end
 end

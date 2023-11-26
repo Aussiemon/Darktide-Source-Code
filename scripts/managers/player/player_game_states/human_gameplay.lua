@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/player/player_game_states/human_gameplay.lua
+
 require("scripts/extension_systems/first_person/character_state_orientation/default_player_orientation")
 
 local CameraHandler = require("scripts/managers/player/player_game_states/camera_handler")
@@ -22,16 +24,20 @@ local HumanGameplay = class("HumanGameplay")
 
 HumanGameplay.init = function (self, player, game_state_context)
 	local is_server = game_state_context.is_server
+
 	self._player = player
 	self._player_unit = player.player_unit
 	self._last_frame = 0
 	self._is_server = is_server
+
 	local mission_name = game_state_context.mission_name
+
 	self._mission_name = mission_name
 
 	self:_init_input(player)
 
 	player.input_handler = HumanInputHandler:new(player, is_server, game_state_context.clock_handler)
+
 	local world = game_state_context.world
 	local level = game_state_context.level
 	local themes = game_state_context.themes
@@ -40,17 +46,19 @@ HumanGameplay.init = function (self, player, game_state_context)
 	camera_handler:spawn_camera(level, themes)
 
 	player.camera_handler = camera_handler
+
 	local orientation = player:get_orientation()
+
 	self._dead_player_orientation = DeadPlayerOrientation:new(player, orientation)
 
 	if is_server then
-		local position, rotation, parent, side = nil
+		local position, rotation, parent, side
 
 		if LEVEL_EDITOR_TEST then
 			local camera_position = Application.get_data("LevelEditor", "camera_position")
 			local camera_rotation = Application.get_data("LevelEditor", "camera_rotation")
-			rotation = camera_rotation
-			position = camera_position
+
+			position, rotation = camera_position, camera_rotation
 		else
 			local player_spawner_system = Managers.state.extension:system("player_spawner_system")
 			local wanted_spawn_point = player:wanted_spawn_point()
@@ -58,6 +66,7 @@ HumanGameplay.init = function (self, player, game_state_context)
 			player:set_wanted_spawn_point(nil)
 
 			local spawn_position, spawn_rotation, spawn_parent, spawn_side = player_spawner_system:next_free_spawn_point(wanted_spawn_point)
+
 			position = spawn_position
 			rotation = spawn_rotation
 			parent = spawn_parent
@@ -78,7 +87,9 @@ HumanGameplay.init = function (self, player, game_state_context)
 	self._has_own_hud = false
 	self._has_spectator_hud = false
 	self._spectated_player = nil
+
 	local game_mode_manager = Managers.state.game_mode
+
 	self._hotkey_settings = game_mode_manager:hotkey_settings()
 	self._default_player_class_name = game_mode_manager:default_player_orientation() or "DefaultPlayerOrientation"
 end
@@ -139,6 +150,7 @@ end
 
 HumanGameplay._create_player_orientation_classes = function (self, player)
 	local orientation = player:get_orientation()
+
 	self._default_player_orientation = CLASSES[self._default_player_class_name]:new(player, orientation)
 	self._hub_player_orientation = HubPlayerOrientation:new(player, orientation)
 	self._forced_player_orientation = ForcedPlayerOrientation:new(player, orientation)
@@ -200,6 +212,7 @@ end
 
 HumanGameplay._init_input = function (self)
 	local input_manager = Managers.input
+
 	self._input = input_manager:get_input_service("Ingame")
 end
 
@@ -260,7 +273,7 @@ HumanGameplay.pre_update = function (self, main_dt, main_t)
 
 	player.input_handler:pre_update(main_dt, main_t, input, ui_interaction_action)
 
-	local rotation_contraints = nil
+	local rotation_contraints
 	local sensitivity_modifier = 1
 
 	if player_unit_is_alive then
@@ -269,8 +282,10 @@ HumanGameplay.pre_update = function (self, main_dt, main_t)
 		local weapon_ext = ScriptUnit.extension(player_unit, "weapon_system")
 		local weapon_system_sensitivity_modifier = weapon_ext:sensitivity_modifier()
 		local weapon_system_rotation_contraints = weapon_ext:rotation_contraints()
+
 		sensitivity_modifier = weapon_system_sensitivity_modifier or 1
 		rotation_contraints = weapon_system_rotation_contraints
+
 		local lunge_character_state_component = unit_data_extension:read_component("lunge_character_state")
 
 		if lunge_character_state_component and lunge_character_state_component.is_lunging then
@@ -278,6 +293,7 @@ HumanGameplay.pre_update = function (self, main_dt, main_t)
 
 			if lunge_template then
 				local lunge_sensitivity_modifier = lunge_template.sensitivity_modifier or 1
+
 				sensitivity_modifier = 1 * math.min(weapon_system_sensitivity_modifier, lunge_sensitivity_modifier)
 
 				if lunge_template.rotation_contraints then
@@ -293,6 +309,7 @@ HumanGameplay.pre_update = function (self, main_dt, main_t)
 		self:_create_player_orientation_classes(player)
 
 		local unit_data_extension = ScriptUnit.has_extension(player.player_unit, "unit_data_system")
+
 		self._character_state_component = unit_data_extension:read_component("character_state")
 		self._force_look_rotation_component = unit_data_extension:read_component("force_look_rotation")
 		self._ledge_hanging_character_state_component = unit_data_extension:read_component("ledge_hanging_character_state")
@@ -357,11 +374,10 @@ end
 
 HumanGameplay.initialize_client_fixed_frame = function (self, fixed_frame)
 	self._last_frame = fixed_frame
+
 	local input = self:_get_input()
 	local player_orientation_class = self:_player_orientation_class()
-	local yaw = 0
-	local pitch = 0
-	local roll = 0
+	local yaw, pitch, roll = 0, 0, 0
 
 	if player_orientation_class then
 		yaw, pitch, roll = player_orientation_class:orientation()
@@ -372,11 +388,10 @@ end
 
 HumanGameplay.fixed_update = function (self, game_dt, game_t, fixed_frame)
 	self._last_frame = fixed_frame
+
 	local input = self:_get_input()
 	local player_orientation_class = self:_player_orientation_class()
-	local yaw = 0
-	local pitch = 0
-	local roll = 0
+	local yaw, pitch, roll = 0, 0, 0
 
 	if player_orientation_class then
 		yaw, pitch, roll = player_orientation_class:orientation()
@@ -406,8 +421,7 @@ HumanGameplay.update = function (self, main_dt, main_t)
 	local time_manager = Managers.time
 
 	if time_manager:has_timer("gameplay") then
-		local dt = time_manager:delta_time("gameplay")
-		local t = time_manager:time("gameplay")
+		local dt, t = time_manager:delta_time("gameplay"), time_manager:time("gameplay")
 
 		player.input_handler:update(dt, t, input)
 	end
@@ -441,6 +455,7 @@ HumanGameplay._update_spectating = function (self, camera_follow_unit_or_nil)
 		spectating_requires_update = true
 	elseif spectating_own_player then
 		local unit_data_ext = ScriptUnit.extension(camera_follow_unit_or_nil, "unit_data_system")
+
 		spectating_requires_update = not PlayerUnitStatus.is_hogtied(unit_data_ext:read_component("character_state"))
 	end
 

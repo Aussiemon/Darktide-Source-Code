@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/multiplayer/connection/connection_singleplayer.lua
+
 local ConnectionSingleplayer = class("ConnectionSingleplayer")
 local MatchmakingConstants = require("scripts/settings/network/matchmaking_constants")
 local ProfileSynchronizerHost = require("scripts/loading/profile_synchronizer_host")

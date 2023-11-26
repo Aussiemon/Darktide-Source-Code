@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/equipment/weapon_templates/ripperguns/settings_templates/rippergun_sway_templates.lua
+
 local sway_templates = {}
 local overrides = {}
 

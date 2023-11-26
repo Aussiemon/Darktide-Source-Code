@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/data_service/services/social/social_dummy.lua
+
 local PlatformSocialInterface = require("scripts/managers/data_service/services/social/platform_social_interface")
 local Promise = require("scripts/foundation/utilities/promise")
 local SocialDummy = class("SocialDummy")

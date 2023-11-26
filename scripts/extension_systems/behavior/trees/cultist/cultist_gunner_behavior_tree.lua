@@ -1,7 +1,14 @@
+﻿-- chunkname: @scripts/extension_systems/behavior/trees/cultist/cultist_gunner_behavior_tree.lua
+
 local BreedActions = require("scripts/settings/breed/breed_actions")
 local action_data = BreedActions.cultist_gunner
 local COVER_COMBAT = {
 	"BtSequenceNode",
+	condition_args = {
+		combat_ranges = {
+			far = true
+		}
+	},
 	{
 		"BtMoveToCoverAction",
 		name = "move_to_cover",
@@ -13,12 +20,7 @@ local COVER_COMBAT = {
 		action_data = action_data.in_cover
 	},
 	name = "has_cover",
-	condition = "has_cover",
-	condition_args = {
-		combat_ranges = {
-			far = true
-		}
-	}
+	condition = "has_cover"
 }
 local SUPPRESSED = {
 	"BtSequenceNode",

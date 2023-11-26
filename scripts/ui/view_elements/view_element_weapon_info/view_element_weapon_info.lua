@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/view_elements/view_element_weapon_info/view_element_weapon_info.lua
+
 local Definitions = require("scripts/ui/view_elements/view_element_weapon_info/view_element_weapon_info_definitions")
 local MasterItems = require("scripts/backend/master_items")
 local UISettings = require("scripts/settings/ui/ui_settings")
@@ -16,15 +18,19 @@ local EMPTY_TABLE = {}
 
 ViewElementWeaponInfo.init = function (self, parent, draw_layer, start_scale, optional_menu_settings)
 	local class_name = self.__class_name
+
 	self._unique_id = class_name .. "_" .. string.gsub(tostring(self), "table: ", "")
 
 	ViewElementWeaponInfo.super.init(self, parent, draw_layer, start_scale, optional_menu_settings, Definitions)
 
 	local menu_settings = self._menu_settings
+
 	self._default_grid_size = table.clone(menu_settings.grid_size)
 	self._default_mask_size = table.clone(menu_settings.mask_size)
+
 	local menu_settings = self._menu_settings
 	local grid_size = menu_settings.grid_size
+
 	self._bar_breakdown_widgets = {}
 	self._bar_breakdown_widgets_by_name = {}
 	self._ui_animations = {}
@@ -41,8 +47,10 @@ end
 
 ViewElementWeaponInfo.activate = function (self, activate)
 	self._active = activate
+
 	local widget = self._widgets_by_name.overlay
 	local content = widget.content
+
 	content.disabled = not activate
 end
 
@@ -63,7 +71,9 @@ ViewElementWeaponInfo._start_animation = function (self)
 	local to = self._pivot_offset[1]
 	local duration = 0.5
 	local easing = math.easeOutCubic
+
 	self._ui_animations.pivot = UIAnimation.init(func, target, target_index, from, to, duration, easing)
+
 	local func = UIAnimation.function_by_time
 	local target = self
 	local target_index = "_alpha_multiplier"
@@ -71,16 +81,22 @@ ViewElementWeaponInfo._start_animation = function (self)
 	local to = 1
 	local duration = 0.5
 	local easing = math.easeInCubic
+
 	self._ui_animations.alpha_multiplier = UIAnimation.init(func, target, target_index, from, to, duration, easing)
 	self._start_animation_done = true
 end
 
 ViewElementWeaponInfo._hide_dividers = function (self)
 	local grid_divider_top = self:widget_by_name("grid_divider_top")
+
 	grid_divider_top.style.texture.color[1] = 0
+
 	local grid_divider_bottom = self:widget_by_name("grid_divider_bottom")
+
 	grid_divider_bottom.style.texture.color[1] = 0
+
 	local grid_divider_title = self:widget_by_name("grid_divider_title")
+
 	grid_divider_title.style.texture.color[1] = 0
 end
 
@@ -169,6 +185,7 @@ local function add_presentation_traits(item, layout, grid_size)
 
 		if trait_item then
 			local widget_type = item_type == "GADGET" and "gadget_trait" or "weapon_trait"
+
 			layout[#layout + 1] = {
 				show_rating = true,
 				widget_type = widget_type,
@@ -219,6 +236,7 @@ ViewElementWeaponInfo.present_item = function (self, item)
 		}
 	}
 	local weapon_template = WeaponTemplate.weapon_template_from_item(item)
+
 	layout[#layout + 1] = {
 		widget_type = "extended_weapon_stats",
 		item = item
@@ -230,6 +248,7 @@ ViewElementWeaponInfo.present_item = function (self, item)
 	layout[#layout + 1] = {
 		widget_type = "divider"
 	}
+
 	local add_end_margin = false
 
 	if add_presentation_perks(item, layout, grid_size) then
@@ -291,6 +310,7 @@ ViewElementWeaponInfo.present_grid_layout = function (self, layout)
 	ViewElementWeaponInfo.super.present_grid_layout(self, layout, ContentBlueprints, left_click_callback, right_click_callback, grid_display_name, grow_direction)
 
 	local length = self:grid_length()
+
 	self._ui_scenegraph.grid_background.size[2] = length
 end
 
@@ -376,7 +396,7 @@ ViewElementWeaponInfo._scale_value_by_type = function (self, value, display_type
 end
 
 ViewElementWeaponInfo._value_to_text = function (self, value, is_signed)
-	if math.huge <= value then
+	if value >= math.huge then
 		return Localize("loc_weapon_stats_display_unlimited")
 	end
 
@@ -395,8 +415,7 @@ ViewElementWeaponInfo._get_stats_text = function (self, stat)
 	local value = self:_scale_value_by_type(stat.value, display_type)
 	local value_text = self:_value_to_text(value, is_signed)
 	local range = ""
-	local min = stat.min
-	local max = stat.max
+	local min, max = stat.min, stat.max
 
 	if min and max then
 		min = self:_scale_value_by_type(min, display_type)
@@ -408,10 +427,12 @@ ViewElementWeaponInfo._get_stats_text = function (self, stat)
 	local group_type_data = stat.group_type_data
 	local group_prefix = group_type_data and group_type_data.prefix and Localize(group_type_data.prefix) or ""
 	local prefix = override_data.prefix or type_data.prefix
+
 	prefix = prefix and Localize(prefix) .. " " or ""
+
 	local postfix = group_type_data and group_type_data.postfix and Localize(group_type_data.postfix) .. " " or ""
 	local display_units = override_data.display_units or type_data.display_units or ""
-	local suffix = (override_data.suffix or type_data.suffix) and Localize(override_data.suffix or type_data.suffix) or ""
+	local suffix = not (not override_data.suffix and not type_data.suffix) and Localize(override_data.suffix or type_data.suffix) or ""
 	local prefix_display_units = override_data.prefix_display_units or type_data.prefix_display_units or ""
 	local stat_text = string.format("%s %s%s%s%s:  {#color(250,189,73)}%s%s%s   %s", group_prefix, prefix, name, suffix, postfix, prefix_display_units, value_text, display_units, range)
 
@@ -428,8 +449,7 @@ ViewElementWeaponInfo._strip_redundant_stats = function (self, bar_data)
 		local override_data = stat.override_data or EMPTY_TABLE
 		local type_data = stat.type_data
 		local display_type = override_data.display_type or type_data.display_type
-		local min = stat.min
-		local max = stat.max
+		local min, max = stat.min, stat.max
 
 		if min and max then
 			local min = self:_scale_value_by_type(min, display_type)
@@ -454,9 +474,11 @@ ViewElementWeaponInfo._create_bar_breakdown_widgets = function (self, bar_data)
 	local widget = UIWidget.init("bar_breakdown_slate", bar_breakdown_widgets_definitions.bar_breakdown_slate)
 	local content = widget.content
 	local style = widget.style
+
 	content.header = Localize(bar_data.display_name)
 	bar_breakdown_widgets[#bar_breakdown_widgets + 1] = widget
 	bar_breakdown_widgets_by_name.bar_breakdown_slate = widget
+
 	local description_offset = 0
 	local entry_size = 40
 	local stripped_bar_data = self:_strip_redundant_stats(bar_data)
@@ -471,6 +493,7 @@ ViewElementWeaponInfo._create_bar_breakdown_widgets = function (self, bar_data)
 	local text_options = UIFonts.get_font_options_by_style(text_style)
 	local _, old_text_height = UIRenderer.text_size(ui_renderer, old_desc, text_style.font_type, text_style.font_size, text_size, text_options)
 	local _, new_text_height = UIRenderer.text_size(ui_renderer, new_desc, text_style.font_type, text_style.font_size, text_size, text_options)
+
 	description_offset = math.max(new_text_height - old_text_height, 0) + 20
 	content.description = new_desc
 
@@ -480,6 +503,7 @@ ViewElementWeaponInfo._create_bar_breakdown_widgets = function (self, bar_data)
 			local widget = UIWidget.init("entry", bar_breakdown_widgets_definitions.entry)
 			local content = widget.content
 			local stat_text = self:_get_stats_text(bar_entry)
+
 			content.text = stat_text
 			bar_breakdown_widgets[#bar_breakdown_widgets + 1] = widget
 			bar_breakdown_widgets_by_name["entry_" .. i] = widget
@@ -491,6 +515,7 @@ ViewElementWeaponInfo._create_bar_breakdown_widgets = function (self, bar_data)
 	local offset = 65
 	local base_size = 50
 	local size = base_size + num_entries * entry_size + description_offset
+
 	self._ui_scenegraph.bar_breakdown_slate.size[2] = size
 	self._ui_scenegraph.bar_breakdown_slate.world_position[2] = grid_length - size + offset
 	self._ui_scenegraph.entry.world_position[2] = grid_length - base_size + offset - description_offset

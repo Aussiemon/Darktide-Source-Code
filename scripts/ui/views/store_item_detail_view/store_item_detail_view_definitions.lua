@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/store_item_detail_view/store_item_detail_view_definitions.lua
+
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local ScrollbarPassTemplates = require("scripts/ui/pass_templates/scrollbar_pass_templates")
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
@@ -526,6 +528,7 @@ local scenegraph_definition = {
 	}
 }
 local wallet_text_font_style = table.clone(UIFontSettings.currency_title)
+
 wallet_text_font_style.text_horizontal_alignment = "left"
 wallet_text_font_style.text_vertical_alignment = "center"
 wallet_text_font_style.original_offset = {
@@ -539,7 +542,9 @@ wallet_text_font_style.offset = {
 	1
 }
 wallet_text_font_style.font_size = 28
+
 local title_style = table.clone(UIFontSettings.header_1)
+
 title_style.font_size = 40
 title_style.offset = {
 	0,
@@ -548,7 +553,9 @@ title_style.offset = {
 }
 title_style.text_horizontal_alignment = "center"
 title_style.text_vertical_alignment = "top"
+
 local sub_title_style = table.clone(UIFontSettings.header_5)
+
 sub_title_style.text_horizontal_alignment = "center"
 sub_title_style.text_vertical_alignment = "top"
 sub_title_style.offset = {
@@ -557,7 +564,9 @@ sub_title_style.offset = {
 	0
 }
 sub_title_style.text_color = Color.terminal_text_body(255, true)
+
 local grid_title_style = table.clone(UIFontSettings.header_3)
+
 grid_title_style.text_horizontal_alignment = "left"
 grid_title_style.text_vertical_alignment = "top"
 grid_title_style.offset = {
@@ -567,7 +576,9 @@ grid_title_style.offset = {
 }
 grid_title_style.font_size = 18
 grid_title_style.text_color = Color.terminal_text_body_sub_header(255, true)
+
 local grid_sub_title_style = table.clone(UIFontSettings.header_3)
+
 grid_sub_title_style.text_horizontal_alignment = "left"
 grid_sub_title_style.text_vertical_alignment = "top"
 grid_sub_title_style.offset = {
@@ -575,7 +586,9 @@ grid_sub_title_style.offset = {
 	-30,
 	0
 }
+
 local timer_text_style = table.clone(UIFontSettings.body_small)
+
 timer_text_style.text_horizontal_alignment = "left"
 timer_text_style.text_vertical_alignment = "top"
 timer_text_style.text_color = Color.ui_grey_light(255, true)
@@ -593,7 +606,9 @@ timer_text_style.offset = {
 }
 timer_text_style.horizontal_alignment = "left"
 timer_text_style.vertical_alignment = "center"
+
 local promo_text_font_style = table.clone(UIFontSettings.header_3)
+
 promo_text_font_style.text_horizontal_alignment = "left"
 promo_text_font_style.text_vertical_alignment = "center"
 promo_text_font_style.offset = {
@@ -601,17 +616,23 @@ promo_text_font_style.offset = {
 	0,
 	1
 }
+
 local description_text_font_style = table.clone(UIFontSettings.terminal_header_3)
+
 description_text_font_style.text_horizontal_alignment = "left"
 description_text_font_style.text_vertical_alignment = "top"
 description_text_font_style.font_size = 20
 description_text_font_style.text_color = Color.terminal_text_body(255, true)
+
 local item_title_style = table.clone(title_style)
+
 item_title_style.text_horizontal_alignment = "right"
 item_title_style.horizontal_alignment = "right"
 item_title_style.text_vertical_alignment = "top"
 item_title_style.vertical_alignment = "bottom"
+
 local item_sub_title_style = table.clone(UIFontSettings.terminal_header_3)
+
 item_sub_title_style.text_horizontal_alignment = "right"
 item_sub_title_style.horizontal_alignment = "right"
 item_sub_title_style.text_vertical_alignment = "top"
@@ -622,7 +643,9 @@ item_sub_title_style.offset = {
 	1
 }
 item_sub_title_style.font_size = 20
+
 local owned_title_style = table.clone(UIFontSettings.terminal_header_3)
+
 owned_title_style.text_horizontal_alignment = "right"
 owned_title_style.text_vertical_alignment = "top"
 owned_title_style.horizontal_alignment = "right"
@@ -633,7 +656,9 @@ owned_title_style.offset = {
 	3
 }
 owned_title_style.font_size = 20
+
 local item_restrictions_title_style = table.clone(UIFontSettings.terminal_header_3)
+
 item_restrictions_title_style.text_horizontal_alignment = "left"
 item_restrictions_title_style.horizontal_alignment = "left"
 item_restrictions_title_style.text_vertical_alignment = "top"
@@ -645,9 +670,13 @@ item_restrictions_title_style.offset = {
 }
 item_restrictions_title_style.font_size = 20
 item_restrictions_title_style.text_color = Color.terminal_text_body_sub_header(255, true)
+
 local item_restrictions_text_style = table.clone(item_restrictions_title_style)
+
 item_restrictions_text_style.text_color = Color.terminal_text_body(255, true)
+
 local set_text_font_style = table.clone(UIFontSettings.currency_title)
+
 set_text_font_style.text_horizontal_alignment = "left"
 set_text_font_style.text_vertical_alignment = "top"
 set_text_font_style.offset = {
@@ -656,7 +685,9 @@ set_text_font_style.offset = {
 	1
 }
 set_text_font_style.font_size = 24
+
 local owned_set_text_font_style = table.clone(UIFontSettings.body_small)
+
 owned_set_text_font_style.text_horizontal_alignment = "left"
 owned_set_text_font_style.text_vertical_alignment = "top"
 owned_set_text_font_style.horizontal_alignment = "left"
@@ -667,7 +698,9 @@ owned_set_text_font_style.offset = {
 	3
 }
 owned_set_text_font_style.text_color = Color.ui_orange_medium(255, true)
+
 local item_price_text_style = table.clone(UIFontSettings.body)
+
 item_price_text_style.text_horizontal_alignment = "right"
 item_price_text_style.text_vertical_alignment = "top"
 item_price_text_style.horizontal_alignment = "right"
@@ -677,10 +710,14 @@ item_price_text_style.offset = {
 	0,
 	4
 }
+
 local item_discount_price_text_style = table.clone(item_price_text_style)
+
 item_discount_price_text_style.text_color = Color.white(255, true)
 item_discount_price_text_style.text_horizontal_alignment = "left"
+
 local owned_item_text_style = table.clone(UIFontSettings.body)
+
 owned_item_text_style.text_horizontal_alignment = "right"
 owned_item_text_style.text_vertical_alignment = "center"
 owned_item_text_style.horizontal_alignment = "right"
@@ -691,7 +728,9 @@ owned_item_text_style.offset = {
 	2
 }
 owned_item_text_style.text_color = Color.terminal_text_header(255, true)
+
 local required_aquilas_title_style = table.clone(UIFontSettings.header_1)
+
 required_aquilas_title_style.font_size = 40
 required_aquilas_title_style.offset = {
 	0,
@@ -705,7 +744,9 @@ required_aquilas_title_style.offset = {
 	-55,
 	2
 }
+
 local required_aquilas_text_style = table.clone(UIFontSettings.terminal_header_3)
+
 required_aquilas_text_style.text_horizontal_alignment = "center"
 required_aquilas_text_style.text_vertical_alignment = "top"
 required_aquilas_text_style.horizontal_alignment = "center"
@@ -716,7 +757,9 @@ required_aquilas_text_style.offset = {
 	2
 }
 required_aquilas_text_style.text_color = Color.terminal_text_body(255, true)
+
 local purchase_button_text_style = table.clone(UIFontSettings.button_primary)
+
 purchase_button_text_style.offset = {
 	0,
 	0,
@@ -725,7 +768,9 @@ purchase_button_text_style.offset = {
 purchase_button_text_style.horizontal_alignment = "center"
 purchase_button_text_style.vertical_alignment = "center"
 purchase_button_text_style.font_size = 24
+
 local purchase_button_legend_text_style = table.clone(UIFontSettings.button_primary)
+
 purchase_button_legend_text_style.offset = {
 	0,
 	40,
@@ -734,7 +779,9 @@ purchase_button_legend_text_style.offset = {
 purchase_button_legend_text_style.horizontal_alignment = "center"
 purchase_button_legend_text_style.vertical_alignment = "bottom"
 purchase_button_legend_text_style.font_size = 14
+
 local item_price_style = table.clone(UIFontSettings.body)
+
 item_price_style.text_horizontal_alignment = "right"
 item_price_style.text_vertical_alignment = "bottom"
 item_price_style.horizontal_alignment = "right"
@@ -748,7 +795,9 @@ item_price_style.font_size = 20
 item_price_style.text_color = Color.white(255, true)
 item_price_style.default_color = Color.white(255, true)
 item_price_style.hover_color = Color.white(255, true)
+
 local item_owned_text_style = table.clone(UIFontSettings.header_2)
+
 item_owned_text_style.text_horizontal_alignment = "right"
 item_owned_text_style.text_vertical_alignment = "bottom"
 item_owned_text_style.horizontal_alignment = "right"
@@ -760,8 +809,10 @@ item_owned_text_style.offset = {
 	5,
 	20
 }
+
 local item_discount_price_style = table.clone(item_price_style)
 local bundle_owned_items_text = table.clone(item_price_style)
+
 bundle_owned_items_text.offset = {
 	15,
 	-5,
@@ -770,7 +821,9 @@ bundle_owned_items_text.offset = {
 bundle_owned_items_text.text_horizontal_alignment = "left"
 bundle_owned_items_text.text_color = Color.terminal_text_body(255, true)
 bundle_owned_items_text.font_size = 16
+
 local bundle_title = table.clone(UIFontSettings.terminal_header_3)
+
 bundle_title.text_horizontal_alignment = "left"
 bundle_title.text_vertical_alignment = "center"
 bundle_title.font_size = 24
@@ -784,7 +837,9 @@ bundle_title.size_addition = {
 	-30,
 	0
 }
+
 local bundle_description = table.clone(UIFontSettings.terminal_header_3)
+
 bundle_description.text_horizontal_alignment = "left"
 bundle_description.text_vertical_alignment = "center"
 bundle_description.font_size = 20
@@ -798,6 +853,7 @@ bundle_description.size_addition = {
 	-30,
 	0
 }
+
 local item_restrictions_pass = {
 	{
 		value_id = "title",

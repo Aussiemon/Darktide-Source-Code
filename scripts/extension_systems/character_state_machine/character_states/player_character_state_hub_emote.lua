@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/character_state_machine/character_states/player_character_state_hub_emote.lua
+
 require("scripts/extension_systems/character_state_machine/character_states/player_character_state_base")
 
 local PlayerCharacterStateHubEmote = class("PlayerCharacterStateHubEmote", "PlayerCharacterStateBase")
@@ -11,6 +13,7 @@ end
 
 PlayerCharacterStateHubEmote.on_enter = function (self, unit, dt, t, previous_state, params)
 	self._unit_id = Managers.state.unit_spawner:game_object_id(unit)
+
 	local emote_slot_id = params.emote_slot_id
 
 	Managers.state.emote:trigger_emote(unit, emote_slot_id)

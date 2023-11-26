@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/contracts/local_contract_tasks.lua
+
 local local_tasks = {}
 
 local function _create_checker(end_at, indices)
@@ -16,12 +18,13 @@ local function _create_checker(end_at, indices)
 end
 
 local function _create_task(task_name, stat, specifiers)
-	local end_at = 0
-	local indices = {}
+	local end_at, indices = 0, {}
+
 	specifiers = specifiers or {}
 
 	for backend_name, stat_name in pairs(specifiers) do
 		local index = table.index_of(stat:get_parameters(), stat_name)
+
 		indices[index] = backend_name
 		end_at = math.max(end_at, index)
 	end
@@ -30,6 +33,7 @@ local function _create_task(task_name, stat, specifiers)
 		stat_id = stat:get_id(),
 		checker = _create_checker(end_at, indices)
 	}
+
 	local_tasks[task_name] = task_data
 end
 

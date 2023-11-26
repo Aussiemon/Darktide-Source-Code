@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/equipment/item_material_overrides/item_material_overrides_gear_materials.lua
+
 local material_overrides = {
 	coated_wear_clean = {
 		property_overrides = {

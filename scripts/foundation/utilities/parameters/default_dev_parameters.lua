@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/foundation/utilities/parameters/default_dev_parameters.lua
+
 local categories = {
 	"Abilities",
 	"Achievements",
@@ -126,95 +128,95 @@ local function hang_ledge_toggle_draw(new_value, old_value)
 	end
 end
 
-local params = {
-	replace_input_settings_with_dev_parameters = {
-		value = false,
-		category = "Input"
+local params = {}
+
+params.replace_input_settings_with_dev_parameters = {
+	value = false,
+	category = "Input"
+}
+params.controller_selection = {
+	value = "latest",
+	category = "Input",
+	options = {
+		"latest",
+		"fixed",
+		"combined"
 	},
-	controller_selection = {
-		value = "latest",
-		category = "Input",
-		options = {
-			"latest",
-			"fixed",
-			"combined"
-		},
-		on_value_set = function (new_value, old_value)
-			Managers.input:set_selection_logic(new_value)
-		end
+	on_value_set = function (new_value, old_value)
+		Managers.input:set_selection_logic(new_value)
+	end
+}
+params.fixed_controller_type = {
+	value = "keyboard",
+	category = "Input",
+	options = {
+		"keyboard",
+		"xbox_controller",
+		"ps4_controller"
 	},
-	fixed_controller_type = {
-		value = "keyboard",
-		category = "Input",
-		options = {
-			"keyboard",
-			"xbox_controller",
-			"ps4_controller"
-		},
-		on_value_set = function (new_value, old_value)
-			Managers.input:set_selection_logic(nil, new_value)
-		end
-	},
-	debug_input_last_action_track_time = {
-		value = 1,
-		category = "Input"
-	},
-	debug_track_only_used_actions = {
-		value = true,
-		category = "Input"
-	},
-	grab_mouse = {
-		value = true,
-		category = "Input"
-	},
-	disable_debug_hotkeys = {
-		value = false,
-		category = "Input"
-	},
-	controller_look_scale = {
-		value = 1,
-		category = "Input"
-	},
-	controller_look_scale_ranged = {
-		value = 1,
-		category = "Input"
-	},
-	controller_look_scale_ranged_alternate_fire = {
-		value = 1,
-		category = "Input"
-	},
-	controller_invert_look_y = {
-		value = false,
-		category = "Input"
-	},
-	controller_look_dead_zone = {
-		value = 0.1,
-		category = "Input"
-	},
-	controller_enable_acceleration = {
-		value = true,
-		category = "Input"
-	},
-	show_mouse_input_filter = {
-		value = false,
-		category = "Input"
-	},
-	show_gamepad_input_filter = {
-		value = false,
-		category = "Input"
-	},
-	show_sensitivity_modifier = {
-		value = false,
-		category = "Input"
-	},
-	debug_visualize_look_raw_controller = {
-		value = false,
-		category = "Input"
-	},
-	debug_input_filter_response_curves = {
-		value = false,
-		category = "Input"
-	}
+	on_value_set = function (new_value, old_value)
+		Managers.input:set_selection_logic(nil, new_value)
+	end
+}
+params.debug_input_last_action_track_time = {
+	value = 1,
+	category = "Input"
+}
+params.debug_track_only_used_actions = {
+	value = true,
+	category = "Input"
+}
+params.grab_mouse = {
+	value = true,
+	category = "Input"
+}
+params.disable_debug_hotkeys = {
+	value = false,
+	category = "Input"
+}
+params.controller_look_scale = {
+	value = 1,
+	category = "Input"
+}
+params.controller_look_scale_ranged = {
+	value = 1,
+	category = "Input"
+}
+params.controller_look_scale_ranged_alternate_fire = {
+	value = 1,
+	category = "Input"
+}
+params.controller_invert_look_y = {
+	value = false,
+	category = "Input"
+}
+params.controller_look_dead_zone = {
+	value = 0.1,
+	category = "Input"
+}
+params.controller_enable_acceleration = {
+	value = true,
+	category = "Input"
+}
+params.show_mouse_input_filter = {
+	value = false,
+	category = "Input"
+}
+params.show_gamepad_input_filter = {
+	value = false,
+	category = "Input"
+}
+params.show_sensitivity_modifier = {
+	value = false,
+	category = "Input"
+}
+params.debug_visualize_look_raw_controller = {
+	value = false,
+	category = "Input"
+}
+params.debug_input_filter_response_curves = {
+	value = false,
+	category = "Input"
 }
 
 local function _debug_text_color_options()
@@ -627,7 +629,9 @@ params.character_profile_selector_placeholder = {
 	hidden = true,
 	category = "Player Character"
 }
-local _character_profile_selector_preview_value = nil
+
+local _character_profile_selector_preview_value
+
 params.character_profile_selector = {
 	category = "Player Character",
 	value = false,
@@ -721,6 +725,7 @@ params.character_profile_selector = {
 			local profile = local_profiles[ii]
 			local index = string.format("[%d]", ii)
 			local option_text = string.format(format_string, index, profile.name or "N/A", profile.loadout_description and string.format(": %s", profile.loadout_description) or "")
+
 			options_texts[#options_texts + 1] = option_text
 		end
 
@@ -1856,11 +1861,11 @@ params.sweep_spline_selected_weapon_template = {
 local function _attack_selection_template_override_options(breed_name)
 	local Breeds = require("scripts/settings/breed/breeds")
 	local data = Breeds[breed_name]
-	local options = {}
-	local attack_selection_templates = data.attack_selection_templates
+	local options, attack_selection_templates = {}, data.attack_selection_templates
 
 	for i = 1, #attack_selection_templates do
 		local template = attack_selection_templates[i]
+
 		options[i] = template.name
 	end
 
@@ -2580,12 +2585,8 @@ params.simulate_color_blindness = {
 
 		if new_value == "off" then
 			on = false
-		elseif new_value == "rare_protanomaly" then
-			mode = 0
-		elseif new_value == "common_deuteranomaly" then
-			mode = 1
 		else
-			mode = 2
+			mode = new_value == "rare_protanomaly" and 0 or new_value == "common_deuteranomaly" and 1 or 2
 		end
 
 		if on then
@@ -2644,7 +2645,9 @@ params.hit_marker_color_override = {
 		return options
 	end
 }
+
 local SHOW_INFO = BUILD == "dev" or BUILD == "debug"
+
 params.render_version_info = {
 	category = "Version Info",
 	value = SHOW_INFO
@@ -3854,7 +3857,8 @@ params.pong_timeout = {
 	category = "Network",
 	on_value_set = set_pong_timeout
 }
-local cached_network_functions = nil
+
+local cached_network_functions
 
 local function set_backend_delay(new_value)
 	local Promise = require("scripts/foundation/utilities/promise")

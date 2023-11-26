@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/error/error_manager.lua
+
 local ErrorInterface = require("scripts/managers/error/errors/error_interface")
 local Promise = require("scripts/foundation/utilities/promise")
 local StateError = require("scripts/game_states/game/state_error")
@@ -10,7 +12,9 @@ local ERROR_LEVEL = {
 	warning_popup = 3,
 	error = 4
 }
+
 ErrorManager.ERROR_LEVEL = ERROR_LEVEL
+
 local _, MAX_ERROR_LEVEL = table.max(ERROR_LEVEL)
 
 ErrorManager.init = function (self)
@@ -18,7 +22,7 @@ ErrorManager.init = function (self)
 end
 
 local function _log_error(error_object)
-	local original_traceback = nil
+	local original_traceback
 
 	if error_object.__traceback then
 		original_traceback = "\noriginal traceback: \n" .. error_object.__traceback .. "\n"
@@ -32,17 +36,21 @@ local function _log_error(error_object)
 end
 
 local function _notify_error(error_object)
-	local notification_text = nil
+	local notification_text
 	local loc_title = error_object:loc_title()
 
 	if loc_title then
 		local title = Localize(loc_title)
 		local loc_description, loc_description_params, string_format = error_object:loc_description()
+
 		string_format = string_format or "%s: %s"
+
 		local description = Localize(loc_description, loc_description_params ~= nil, loc_description_params)
+
 		notification_text = string.format(string_format, title, description)
 	else
 		local loc_description, loc_description_params, _ = error_object:loc_description()
+
 		notification_text = Localize(loc_description, loc_description_params ~= nil, loc_description_params)
 	end
 
@@ -57,6 +65,7 @@ local function _notify_popup(error_object)
 	local loc_title = error_object:loc_title()
 	local loc_description, loc_description_params = error_object:loc_description()
 	local options = error_object:options() or {}
+
 	options[#options + 1] = {
 		close_on_pressed = true,
 		text = "loc_popup_button_close"
@@ -75,7 +84,7 @@ local function _enqueue_error(error_object, queue)
 		local level = error_object:level()
 
 		for i = 1, #queue do
-			if queue[i]:level() < level then
+			if level > queue[i]:level() then
 				queue[i] = error_object
 
 				break

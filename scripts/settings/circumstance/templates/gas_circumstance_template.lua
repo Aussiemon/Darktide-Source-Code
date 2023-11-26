@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/circumstance/templates/gas_circumstance_template.lua
+
 local circumstance_templates = {
 	gas_01 = {
 		dialogue_id = "circumstance_vo_toxic_gas",

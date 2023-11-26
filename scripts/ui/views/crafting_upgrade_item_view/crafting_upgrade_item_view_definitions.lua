@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/crafting_upgrade_item_view/crafting_upgrade_item_view_definitions.lua
+
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local UIWorkspaceSettings = require("scripts/settings/ui/ui_workspace_settings")
 local CraftingSettings = require("scripts/settings/item/crafting_settings")
@@ -96,6 +98,7 @@ local animations = {
 
 				for i = 1, #widgets do
 					local widget = widgets[i]
+
 					widget.alpha_multiplier = 0
 				end
 			end
@@ -112,10 +115,12 @@ local animations = {
 
 				for i = 1, #widgets do
 					local widget = widgets[i]
+
 					widget.alpha_multiplier = anim_progress
 				end
 
 				parent._render_settings.alpha_multiplier = anim_progress
+
 				local x_anim_distance_max = 50
 				local x_anim_distance = x_anim_distance_max - x_anim_distance_max * anim_progress
 

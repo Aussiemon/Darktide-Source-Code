@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/scanner_display_view/scanner_display_view.lua
+
 local MinigameDecodeSymbolsView = require("scripts/ui/views/scanner_display_view/minigame_decode_symbols_view")
 local MinigameNoneView = require("scripts/ui/views/scanner_display_view/minigame_none_view")
 local MinigameScanView = require("scripts/ui/views/scanner_display_view/minigame_scan_view")
@@ -7,6 +9,7 @@ local ScriptWorld = require("scripts/foundation/utilities/script_world")
 local UIRenderer = require("scripts/managers/ui/ui_renderer")
 local DEBUG_RENDERING = false
 local ScannerDisplayView = class("ScannerDisplayView", "BaseView")
+
 ScannerDisplayView.MINIGAMES = {
 	[MinigameSettings.types.none] = MinigameNoneView,
 	[MinigameSettings.types.scan] = MinigameScanView,
@@ -15,6 +18,7 @@ ScannerDisplayView.MINIGAMES = {
 
 ScannerDisplayView.init = function (self, settings, context)
 	local class_name = self.__class_name
+
 	self._viewport_name = class_name .. "_ui_offscreen_world_viewport"
 	self._viewport_type = "overlay_offscreen_3"
 	self._viewport_layer = 1
@@ -22,6 +26,7 @@ ScannerDisplayView.init = function (self, settings, context)
 	self._offscreen_ui_renderer = nil
 	self._no_cursor = true
 	self._minigame = ScannerDisplayView.MINIGAMES[context.minigame_type]:new(context)
+
 	local definitions = ScannerDisplayViewDefinitions[context.minigame_type]
 
 	ScannerDisplayView.super.init(self, definitions, settings)
@@ -89,6 +94,7 @@ ScannerDisplayView._setup_offscreen_gui = function (self)
 	local viewport_type = self._viewport_type
 	local viewport_layer = self._viewport_layer
 	local renderer_name = class_name .. "_offscreen_ui_renderer"
+
 	self._viewport = ui_manager:create_viewport(world, viewport_name, viewport_type, viewport_layer)
 	self._offscreen_ui_renderer = ui_manager:create_renderer(renderer_name, world)
 end
@@ -98,6 +104,7 @@ ScannerDisplayView._create_offscreen_world = function (self)
 	local timer_name = "ui"
 	local class_name = self.__class_name
 	local world_name = class_name .. "_offscreen_world"
+
 	self._world_name = world_name
 	self._world = Managers.ui:create_world(world_name, world_layer, timer_name)
 end
@@ -121,6 +128,7 @@ ScannerDisplayView.draw = function (self, dt, t, input_service, layer)
 		local render_settings = self._render_settings
 		local ui_renderer = self._offscreen_ui_renderer
 		local ui_scenegraph = self._ui_scenegraph
+
 		render_settings.start_layer = layer
 		render_settings.scale = render_scale
 		render_settings.inverse_scale = render_scale and 1 / render_scale

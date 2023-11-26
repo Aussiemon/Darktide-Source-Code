@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/specialization/specialization_system.lua
+
 require("scripts/extension_systems/specialization/player_unit_specialization_extension")
 require("scripts/extension_systems/specialization/player_husk_specialization_extension")
 

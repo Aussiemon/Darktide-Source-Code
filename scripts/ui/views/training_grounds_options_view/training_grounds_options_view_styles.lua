@@ -1,6 +1,10 @@
+﻿-- chunkname: @scripts/ui/views/training_grounds_options_view/training_grounds_options_view_styles.lua
+
 UIFontSettings = require("scripts/managers/ui/ui_font_settings")
+
 local training_grounds_options_view_styles = {}
 local header_font_style = table.clone(UIFontSettings.header_2)
+
 header_font_style.offset = {
 	0,
 	0,
@@ -9,8 +13,10 @@ header_font_style.offset = {
 header_font_style.text_horizontal_alignment = "center"
 header_font_style.font_size = 32
 header_font_style.text_color = Color.terminal_text_header(255, true)
+
 local sub_header_font_style = table.clone(UIFontSettings.body)
 local sub_header_font_style = table.clone(UIFontSettings.body)
+
 sub_header_font_style.text_color = Color.terminal_text_body_sub_header(255, true)
 sub_header_font_style.offset = {
 	0,
@@ -20,7 +26,9 @@ sub_header_font_style.offset = {
 sub_header_font_style.text_horizontal_alignment = "center"
 sub_header_font_style.scenegraph_id = "sub_header"
 sub_header_font_style.font_size = 28
+
 local body_font_style = table.clone(UIFontSettings.body)
+
 body_font_style.text_color = Color.terminal_text_body(255, true)
 body_font_style.offset = {
 	0,
@@ -29,7 +37,9 @@ body_font_style.offset = {
 }
 body_font_style.scenegraph_id = "body"
 body_font_style.font_size = 24
+
 local play_button_font_style = table.clone(UIFontSettings.header_3)
+
 play_button_font_style.text_color = Color.ui_grey_medium(255, true)
 play_button_font_style.offset = {
 	0,
@@ -39,7 +49,9 @@ play_button_font_style.offset = {
 play_button_font_style.scenegraph_id = "play_button"
 play_button_font_style.horizontal_alignment = "center"
 play_button_font_style.vertical_alignment = "center"
+
 local rewards_header_font_style = table.clone(UIFontSettings.header_2)
+
 rewards_header_font_style.offset = {
 	0,
 	10,
@@ -47,7 +59,9 @@ rewards_header_font_style.offset = {
 }
 rewards_header_font_style.text_horizontal_alignment = "center"
 rewards_header_font_style.font_size = 24
+
 local select_difficulty_text_style = table.clone(UIFontSettings.header_2)
+
 select_difficulty_text_style.offset = {
 	0,
 	-60,
@@ -56,7 +70,9 @@ select_difficulty_text_style.offset = {
 select_difficulty_text_style.text_horizontal_alignment = "center"
 select_difficulty_text_style.vertical_alignment = "top"
 select_difficulty_text_style.font_size = 28
+
 local reward_font_style = table.clone(UIFontSettings.body)
+
 reward_font_style.text_color = Color.terminal_text_header(255, true)
 reward_font_style.offset = {
 	0,

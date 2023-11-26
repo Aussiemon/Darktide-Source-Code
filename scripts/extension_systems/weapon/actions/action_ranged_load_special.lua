@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/weapon/actions/action_ranged_load_special.lua
+
 require("scripts/extension_systems/weapon/actions/action_weapon_base")
 
 local AlternateFire = require("scripts/utilities/alternate_fire")
@@ -10,6 +12,7 @@ ActionReloadShotgunSpecial.init = function (self, action_context, ...)
 	ActionReloadShotgunSpecial.super.init(self, action_context, ...)
 
 	local unit_data_extension = action_context.unit_data_extension
+
 	self._action_reload_component = unit_data_extension:write_component("action_reload")
 	self._spread_control_component = unit_data_extension:write_component("spread_control")
 	self._sway_control_component = unit_data_extension:write_component("sway_control")
@@ -25,14 +28,17 @@ ActionReloadShotgunSpecial.start = function (self, action_settings, t, time_scal
 	end
 
 	local action_reload_component = self._action_reload_component
+
 	action_reload_component.has_refilled_ammunition = false
 	action_reload_component.has_removed_ammunition = false
+
 	local event_data = self._dialogue_input:get_event_data_payload()
 
 	self._dialogue_input:trigger_dialogue_event("reloading", event_data)
 
 	if Ammo.clip_ammo_is_full(self._player_unit) then
 		local inventory_slot_component = self._inventory_slot_component
+
 		inventory_slot_component.current_ammunition_clip = inventory_slot_component.current_ammunition_clip - 1
 		inventory_slot_component.current_ammunition_reserve = inventory_slot_component.current_ammunition_reserve + 1
 	end
@@ -57,7 +63,7 @@ ActionReloadShotgunSpecial._reload = function (self, t, time_in_action)
 	local time_scale = weapon_action_component.time_scale
 	local scaled_refill_at_time = refill_at_time / time_scale
 
-	if time_in_action > scaled_refill_at_time and not has_refilled_ammunition then
+	if scaled_refill_at_time < time_in_action and not has_refilled_ammunition then
 		local cost = reload_settings.cost
 
 		if cost and cost > 0 then

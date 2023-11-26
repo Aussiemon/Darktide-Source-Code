@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/talent/talent_settings_ogryn.lua
+
 local talent_settings = {
 	ogryn_shared = {
 		tank = {

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/weapon/actions/action_place_force_field.lua
+
 require("scripts/extension_systems/weapon/actions/action_place_base")
 
 local BuffSettings = require("scripts/settings/buff/buff_settings")
@@ -11,7 +13,7 @@ ActionPlaceForceField._calculate_placement_data = function (self)
 	local rotation = Unit.local_rotation(owner_unit, 1)
 	local downward_raycast_position = position + Vector3.up()
 	local _, _, _, _, actor = PhysicsWorld.raycast(self._physics_world, downward_raycast_position, Vector3.down(), 2, "closest", "types", "both", "collision_filter", "filter_player_place_deployable")
-	local unit_hit = nil
+	local unit_hit
 
 	if actor then
 		unit_hit = Actor.unit(actor)
@@ -47,8 +49,9 @@ ActionPlaceForceField._place_unit = function (self, action_settings, position, r
 	local unit_name = action_settings.functional_unit
 	local husk_unit_name = action_settings.functional_unit
 	local unit_template = "force_field"
-	local material = nil
+	local material
 	local unit = Managers.state.unit_spawner:spawn_network_unit(unit_name, unit_template, position, rotation, material, husk_unit_name, placed_on_unit, owner_unit)
+
 	self._force_field_unit = unit
 	self._placed_unit = true
 	self._placed_position = Vector3Box(position)

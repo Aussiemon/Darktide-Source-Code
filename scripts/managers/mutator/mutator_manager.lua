@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/mutator/mutator_manager.lua
+
 local CircumstanceTemplates = require("scripts/settings/circumstance/circumstance_templates")
 local MutatorTemplates = require("scripts/settings/mutator/mutator_templates")
 local MutatorManager = class("MutatorManager")
@@ -31,6 +33,7 @@ MutatorManager._load_mutators = function (self, circumstance_name)
 		for _, mutator_name in ipairs(mutators_to_load) do
 			local mutator_template = MutatorTemplates[mutator_name]
 			local mutator_class = require(mutator_template.class)
+
 			mutators[mutator_name] = mutator_class:new(is_server, network_event_delegate, mutator_template, self._nav_world, self._level_seed)
 		end
 	end

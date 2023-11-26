@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/training_grounds/shooting_range_steps.lua
+
 local Component = require("scripts/utilities/component")
 local FixedFrame = require("scripts/utilities/fixed_frame")
 local PerceptionSettings = require("scripts/settings/perception/perception_settings")
@@ -29,8 +31,9 @@ local function reset_enemies(scenario_system, breed_name, spawn_group_name, enem
 
 	for unit, directional_unit_extension in pairs(spawners) do
 		num_spawned = num_spawned + 1
-		local position = Unit.local_position(unit, 1)
-		local rotation = Unit.local_rotation(unit, 1)
+
+		local position, rotation = Unit.local_position(unit, 1), Unit.local_rotation(unit, 1)
+
 		enemies[num_spawned] = scenario_system:spawn_breed_ramping(breed_name, position, rotation, t, duration, side_id, delay)
 	end
 end
@@ -50,8 +53,7 @@ ShootingRangeSteps.init = {
 		Wwise.set_state("music_zone", "shooting_range")
 
 		local directional_unit = scenario_system:get_directional_unit("arena_middle")
-		local position = Unit.local_position(directional_unit, 1)
-		local rotation = Unit.local_rotation(directional_unit, 1)
+		local position, rotation = Unit.local_position(directional_unit, 1), Unit.local_rotation(directional_unit, 1)
 
 		PlayerMovement.teleport_fixed_update(player.player_unit, position, rotation)
 		scenario_system:spawn_attached_units_in_spawn_group("shooting_range_units")
@@ -67,10 +69,10 @@ local function _respawn_loadout_chest(scenario_system, step_data)
 	end
 
 	local loadout_unit = scenario_system:get_directional_unit("loadout_chest")
-	local position = Unit.local_position(loadout_unit, 1)
-	local rotation = Unit.local_rotation(loadout_unit, 1)
+	local position, rotation = Unit.local_position(loadout_unit, 1), Unit.local_rotation(loadout_unit, 1)
 	local unit_name = "content/environment/gameplay/chests/shooting_range_loadout"
 	local template_name = "shooting_range_loadout"
+
 	step_data.loadout_unit = unit_spawner:spawn_network_unit(unit_name, template_name, position, rotation)
 end
 
@@ -126,8 +128,8 @@ ShootingRangeSteps.portal_loop = {
 		local portal_directional = scenario_system:get_directional_unit_extension("shooting_range_portal")
 		local portal_unit = portal_directional:spawn_attached_unit()
 		local end_pos = Unit.local_position(portal_unit, 1)
-		step_data.end_rotation = QuaternionBox(Unit.local_rotation(portal_unit, 1))
-		step_data.end_position = Vector3Box(end_pos)
+
+		step_data.end_position, step_data.end_rotation = Vector3Box(end_pos), QuaternionBox(Unit.local_rotation(portal_unit, 1))
 
 		Managers.ui:play_3d_sound(TrainingGroundsSoundEvents.tg_end_portal_spawned, end_pos)
 	end,
@@ -158,6 +160,7 @@ ShootingRangeSteps.pickup_loop = {
 
 		if not ALIVE[med_unit] then
 			local directional_med = scenario_system:get_directional_unit("health_refill")
+
 			step_data.med_unit = pickup_system:spawn_pickup("medical_crate_pocketable", Unit.local_position(directional_med, 1), Unit.local_rotation(directional_med, 1))
 		end
 
@@ -165,6 +168,7 @@ ShootingRangeSteps.pickup_loop = {
 
 		if not ALIVE[ammo_unit] then
 			local directional_ammo = scenario_system:get_directional_unit("ammo_refill")
+
 			step_data.ammo_unit = pickup_system:spawn_pickup("small_clip", Unit.local_position(directional_ammo, 1), Unit.local_rotation(directional_ammo, 1))
 		end
 
@@ -172,6 +176,7 @@ ShootingRangeSteps.pickup_loop = {
 
 		if not ALIVE[grenade_unit] then
 			local directional_grenade = scenario_system:get_directional_unit("grenade_refill")
+
 			step_data.grenade_unit = pickup_system:spawn_pickup("small_grenade", Unit.local_position(directional_grenade, 1), Unit.local_rotation(directional_grenade, 1))
 		end
 
@@ -182,8 +187,7 @@ ShootingRangeSteps.pickup_loop = {
 local function _spawn_locked_vfx_unit(reference_unit, required_achievement)
 	local unit_name = "content/levels/training_grounds/fx/locked_sr_unit_indicator"
 	local template_name = "shooting_range_locked_indicator"
-	local position = Unit.local_position(reference_unit, 1)
-	local rotation = Unit.local_rotation(reference_unit, 1)
+	local position, rotation = Unit.local_position(reference_unit, 1), Unit.local_rotation(reference_unit, 1)
 	local locked_unit = Managers.state.unit_spawner:spawn_network_unit(unit_name, template_name, position, rotation)
 	local interactee_extension = ScriptUnit.extension(locked_unit, "interactee_system")
 	local achievement_definition = Managers.achievements:achievement_definition(required_achievement)
@@ -225,6 +229,7 @@ ShootingRangeSteps.enemies_loop = {
 				breed_name = breed_name
 			}
 			local required_achievement = breed_unlocks[breed_name]
+
 			spawn_data.required_achievement = required_achievement
 			spawn_datas[directional_unit] = spawn_data
 		end
@@ -241,14 +246,46 @@ ShootingRangeSteps.enemies_loop = {
 				local was_unlocked = spawn_data.was_unlocked
 				local unlocked = _breed_is_unlocked(spawn_data.breed_name, spawn_data.required_achievement)
 
-				if not unlocked and was_unlocked then
-					spawn_data.was_unlocked = false
+				if not unlocked then
+					if was_unlocked then
+						spawn_data.was_unlocked = false
 
-					scenario_system:dissolve_unit(spawned_unit, t)
+						scenario_system:dissolve_unit(spawned_unit, t)
 
-					spawn_data.unit = _spawn_locked_vfx_unit(directional_unit, spawn_data.required_achievement)
+						spawn_data.unit = _spawn_locked_vfx_unit(directional_unit, spawn_data.required_achievement)
+					end
 
 					break
+				elseif ALIVE[spawned_unit] and not was_unlocked then
+					Managers.state.unit_spawner:mark_for_deletion(spawned_unit)
+
+					spawn_data.was_unlocked = true
+					spawn_data.unit = nil
+					spawned_unit = nil
+
+					break
+				end
+
+				if not HEALTH_ALIVE[spawned_unit] then
+					if not spawn_data.dissolve_t then
+						spawn_data.dissolve_t = t + 2 + math.random_range(0, 1)
+
+						break
+					end
+
+					if t > spawn_data.dissolve_t then
+						scenario_system:dissolve_unit(spawned_unit, t)
+
+						spawn_data.dissolve_t = nil
+
+						local position, rotation = Unit.local_position(directional_unit, 1), Unit.local_rotation(directional_unit, 1)
+						local breed_name = spawn_data.breed_name
+						local new_unit = scenario_system:spawn_breed_ramping(breed_name, position, rotation, t, 2, 2, nil, aggro_state)
+
+						Managers.event:trigger("add_world_marker_unit", "damage_indicator", new_unit)
+
+						spawn_data.unit = new_unit
+					end
 				end
 			until true
 		end

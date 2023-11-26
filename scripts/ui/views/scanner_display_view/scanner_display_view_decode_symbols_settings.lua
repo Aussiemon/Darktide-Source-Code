@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/scanner_display_view/scanner_display_view_decode_symbols_settings.lua
+
 local UIWorkspaceSettings = require("scripts/settings/ui/ui_workspace_settings")
 local MinigameSettings = require("scripts/settings/minigame/minigame_settings")
 local screen_ratio = UIWorkspaceSettings.screen.size[1] / UIWorkspaceSettings.screen.size[2]

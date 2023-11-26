@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/interaction/player_interactee_extension.lua
+
 local Interactions = require("scripts/settings/interaction/interactions")
 local InteractionSettings = require("scripts/settings/interaction/interaction_settings")
 local InteractionTemplates = require("scripts/settings/interaction/interaction_templates")
@@ -6,6 +8,7 @@ local interaction_results = InteractionSettings.results
 
 PlayerInteracteeExtension.init = function (self, extension_init_context, unit, extension_init_data, game_object_data, game_object_id)
 	local is_server = extension_init_context.is_server
+
 	self._is_server = is_server
 	self._unit = unit
 	self._is_being_used = false
@@ -21,6 +24,7 @@ PlayerInteracteeExtension.init = function (self, extension_init_context, unit, e
 	if is_server or is_local_unit then
 		local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
 		local interactee_component = unit_data_extension:write_component("interactee")
+
 		interactee_component.interacted_with = false
 		interactee_component.interactor_unit = nil
 		self._interactee_component = interactee_component
@@ -29,9 +33,7 @@ end
 
 PlayerInteracteeExtension.hot_join_sync = function (self, unit, sender, channel)
 	if not self._active then
-		local unit_id = self._unit_id
-		local is_level_unit = false
-		local active = false
+		local unit_id, is_level_unit, active = self._unit_id, false, false
 
 		RPC.rpc_interaction_set_active(channel, unit_id, is_level_unit, active)
 	end
@@ -53,6 +55,7 @@ PlayerInteracteeExtension._set_interaction_contexts = function (self, interactio
 			if not interaction_objects[interaction_type] then
 				local interaction_template = InteractionTemplates[interaction_type]
 				local interaction_class_name = interaction_template.interaction_class_name
+
 				interaction_objects[interaction_type] = Interactions[interaction_class_name]:new(interaction_template)
 			end
 
@@ -108,8 +111,7 @@ end
 
 PlayerInteracteeExtension.set_active = function (self, is_active)
 	if self._is_server then
-		local unit_id = self._unit_id
-		local is_level_unit = false
+		local unit_id, is_level_unit = self._unit_id, false
 
 		Managers.state.game_session:send_rpc_clients("rpc_interaction_set_active", unit_id, is_level_unit, is_active)
 	end
@@ -333,8 +335,7 @@ end
 
 PlayerInteracteeExtension.started = function (self, interactor_unit)
 	if self._is_server then
-		local unit_id = self._unit_id
-		local is_level_unit = false
+		local unit_id, is_level_unit = self._unit_id, false
 		local interactor_object_id = Managers.state.unit_spawner:game_object_id(interactor_unit)
 
 		Managers.state.game_session:send_rpc_clients("rpc_interaction_started", unit_id, is_level_unit, interactor_object_id)
@@ -355,8 +356,7 @@ end
 
 PlayerInteracteeExtension.stopped = function (self, result)
 	if self._is_server then
-		local unit_id = self._unit_id
-		local is_level_unit = false
+		local unit_id, is_level_unit = self._unit_id, false
 		local result_id = NetworkLookup.interaction_result[result]
 
 		Managers.state.game_session:send_rpc_clients("rpc_interaction_stopped", unit_id, is_level_unit, result_id)
@@ -370,6 +370,7 @@ PlayerInteracteeExtension.stopped = function (self, result)
 
 	self._interactor_unit = nil
 	self._is_being_used = false
+
 	local interactee_component = self._interactee_component
 
 	if interactee_component then

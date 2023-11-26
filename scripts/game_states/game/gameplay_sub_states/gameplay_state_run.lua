@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/game_states/game/gameplay_sub_states/gameplay_state_run.lua
+
 local GameplayStateInterface = require("scripts/game_states/game/gameplay_sub_states/gameplay_state_interface")
 local MissionCleanupUtilies = require("scripts/game_states/game/gameplay_sub_states/utilities/mission_cleanup_utilities")
 local StateGameplayTestify = GameParameters.testify and require("scripts/game_states/game/state_gameplay_testify")
@@ -12,6 +14,7 @@ local GameplayStateRun = class("GameplayStateRun")
 GameplayStateRun.on_enter = function (self, parent, params)
 	local shared_state = params.shared_state
 	local is_server = shared_state.is_server
+
 	self._gameplay_state = parent
 	self._shared_state = shared_state
 	self._gameplay_timer_registered = is_server
@@ -50,8 +53,8 @@ end
 
 GameplayStateRun.update = function (self, main_dt, main_t)
 	local shared_state = self._shared_state
-	local is_server = shared_state.is_server
-	local is_dedicated_server = shared_state.is_dedicated_server
+	local is_server, is_dedicated_server = shared_state.is_server, shared_state.is_dedicated_server
+
 	self._fixed_frame_parsed = false
 
 	if self._crash_countdown > -1 then
@@ -252,6 +255,7 @@ GameplayStateRun.rpc_sync_clock = function (self, channel_id, time, offset)
 	if not self._gameplay_timer_registered then
 		self._gameplay_timer_registered = true
 		REPORTIFY_NETWORK_READY = true
+
 		local fixed_frame_transmit_rate = GameParameters.fixed_frame_transmit_rate
 
 		Network.set_max_transmit_rate(fixed_frame_transmit_rate)
@@ -263,6 +267,7 @@ GameplayStateRun.rpc_sync_clock = function (self, channel_id, time, offset)
 		shared_state.clock_handler_client:rpc_sync_clock(time + Managers.time:delta_time("main"), offset, last_frame)
 
 		self._fixed_frame_counter = last_frame
+
 		local world = shared_state.world
 
 		Managers.world:set_scene_update_callback(world, function ()

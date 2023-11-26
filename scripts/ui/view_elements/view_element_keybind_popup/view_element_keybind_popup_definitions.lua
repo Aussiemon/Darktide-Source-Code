@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/view_elements/view_element_keybind_popup/view_element_keybind_popup_definitions.lua
+
 local UIWorkspaceSettings = require("scripts/settings/ui/ui_workspace_settings")
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local UIWidget = require("scripts/managers/ui/ui_widget")
@@ -50,12 +52,17 @@ local scenegraph_definition = {
 	}
 }
 local action_text_style = table.clone(UIFontSettings.header_2)
+
 action_text_style.text_horizontal_alignment = "center"
 action_text_style.text_vertical_alignment = "top"
+
 local description_text_style = table.clone(UIFontSettings.body)
+
 description_text_style.text_horizontal_alignment = "center"
 description_text_style.text_vertical_alignment = "center"
+
 local warning_text_style = table.clone(UIFontSettings.body)
+
 warning_text_style.text_horizontal_alignment = "center"
 warning_text_style.text_vertical_alignment = "bottom"
 warning_text_style.text_color = {
@@ -64,9 +71,12 @@ warning_text_style.text_color = {
 	0,
 	0
 }
+
 local value_text_style = table.clone(UIFontSettings.header_3)
+
 value_text_style.text_horizontal_alignment = "center"
 value_text_style.text_vertical_alignment = "center"
+
 local widget_definitions = {
 	popup_background = UIWidget.create_definition({
 		{

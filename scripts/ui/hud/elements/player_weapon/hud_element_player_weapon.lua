@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/hud/elements/player_weapon/hud_element_player_weapon.lua
+
 local definition_path = "scripts/ui/hud/elements/player_weapon/hud_element_player_weapon_definitions"
 local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
 local HudElementPlayerWeaponSettings = require("scripts/ui/hud/elements/player_weapon/hud_element_player_weapon_settings")
@@ -24,13 +26,18 @@ HudElementPlayerWeapon.init = function (self, parent, draw_layer, start_scale, d
 	self._ability = data.ability
 	self._ability_type = data.ability_type
 	self._ability_extension = data.ability_extension
+
 	local slot_settings = self._slot_name and ItemSlotSettings[self._slot_name]
+
 	self._wield_input = self._ability_type or slot_settings.wield_input
 	self._gamepad_wield_input = slot_settings and slot_settings.gamepad_wield_input or self._wield_input
 	self._hide_input_on_gamepad_wielded = slot_settings and slot_settings.hide_input_on_gamepad_wielded
+
 	local weapon_template = data.weapon_template
+
 	self._weapon_name = data.weapon_name
 	self._weapon_template = weapon_template
+
 	local weapon_slots = {}
 	local slot_configuration = PlayerCharacterConstants.slot_configuration
 
@@ -41,7 +48,9 @@ HudElementPlayerWeapon.init = function (self, parent, draw_layer, start_scale, d
 	end
 
 	self._weapon_slots = weapon_slots
+
 	local is_weapon = self._slot_name == "slot_primary" or self._slot_name == "slot_secondary"
+
 	self._is_weapon = is_weapon
 
 	self:set_ammo_amount(nil)
@@ -51,12 +60,14 @@ HudElementPlayerWeapon.init = function (self, parent, draw_layer, start_scale, d
 	else
 		local item = data.item
 		local hud_icon = item.hud_icon
+
 		hud_icon = hud_icon or self._slot_name == "slot_primary" and "content/ui/materials/icons/weapons/hud/combat_blade_01" or "content/ui/materials/icons/weapons/hud/autogun_01"
 
 		self:set_icon(hud_icon, is_weapon)
 	end
 
 	local overheat_configuration = weapon_template.overheat_configuration
+
 	self._uses_overheat = overheat_configuration ~= nil
 	self._uses_ammo = self._weapon_template.uses_ammunition
 	self._infinite_ammo = not self._uses_ammo and self._uses_overheat
@@ -143,6 +154,7 @@ end
 HudElementPlayerWeapon._set_ammo_refill_alpha = function (self, alpha)
 	local widgets_by_name = self._widgets_by_name
 	local widget = widgets_by_name.background
+
 	widget.dirty = true
 end
 
@@ -163,7 +175,7 @@ HudElementPlayerWeapon.update = function (self, dt, t, ui_renderer, render_setti
 
 			self:_set_ammo_refill_alpha(0)
 		else
-			local anim_progress = math.ease_out_quad(math.ease_pulse(math.min(self._ammo_refill_progress, 1)))
+			local anim_progress = math.ease_out_quad(math.ease_pulse((math.min(self._ammo_refill_progress, 1))))
 			local alpha = 255 * anim_progress
 
 			self:_set_ammo_refill_alpha(alpha)
@@ -209,17 +221,11 @@ HudElementPlayerWeapon.update = function (self, dt, t, ui_renderer, render_setti
 					end
 
 					if update_total or update_clip then
-						if self._total_ammo and self._total_ammo < total_ammo then
+						if self._total_ammo and total_ammo > self._total_ammo then
 							self._ammo_refill_progress = 0
 						end
 
-						if total_ammo / total_max_ammo > 0.2 then
-							slot17 = false
-						else
-							slot17 = true
-						end
-
-						self._low_on_ammo = slot17
+						self._low_on_ammo = total_ammo / total_max_ammo <= 0.2
 
 						self:set_ammo_amount(total_ammo, total_max_ammo)
 
@@ -259,7 +265,9 @@ end
 
 HudElementPlayerWeapon.set_height_offset = function (self, height_offset)
 	self._height_offset = height_offset
+
 	local widgets_by_name = self._widgets_by_name
+
 	widgets_by_name.background.offset[2] = height_offset
 	widgets_by_name.background.dirty = true
 	widgets_by_name.icon.offset[2] = height_offset
@@ -276,6 +284,7 @@ HudElementPlayerWeapon._set_alpha = function (self, alpha_fraction)
 	local background_fraction = 0.7 + alpha_fraction * 0.3
 	local general_fraction = 0.8 + alpha_fraction * 0.2
 	local widgets_by_name = self._widgets_by_name
+
 	widgets_by_name.background.alpha_multiplier = 1
 	widgets_by_name.icon.alpha_multiplier = general_fraction
 	widgets_by_name.ammo_text.alpha_multiplier = general_fraction
@@ -310,13 +319,16 @@ HudElementPlayerWeapon.set_wield_anim_progress = function (self, progress, ui_re
 	local icon_size = icon_style.size
 	local icon_scale_multiplier = HudElementPlayerWeaponHandlerSettings.icon_shrink_scale
 	local default_icon_size = icon_style.default_size
+
 	icon_size[1] = default_icon_size[1] - default_icon_size[1] * icon_scale_multiplier * (1 - progress)
 	icon_size[2] = default_icon_size[2] - default_icon_size[2] * icon_scale_multiplier * (1 - progress)
+
 	local ammo_offsets = is_weapon and HudElementPlayerWeaponHandlerSettings.ammo_offsets_weapon or HudElementPlayerWeaponHandlerSettings.ammo_offsets_icon
 	local default_ammo_offset = ammo_offsets.default
 	local small_ammo_offset = ammo_offsets.small
 	local width_difference = size[1] - size_small[1]
-	widgets_by_name.ammo_text.offset[1] = -icon_size[1] + default_ammo_offset[1] + (small_ammo_offset[1] - default_ammo_offset[1]) * (1 - progress)
+
+	widgets_by_name.ammo_text.offset[1] = -icon_size[1] + (default_ammo_offset[1] + (small_ammo_offset[1] - default_ammo_offset[1]) * (1 - progress))
 	widgets_by_name.input_text.offset[1] = size[1] - width_difference * (1 - progress)
 
 	if self._infinite_ammo then
@@ -325,6 +337,7 @@ HudElementPlayerWeapon.set_wield_anim_progress = function (self, progress, ui_re
 		local infinite_symbol_size = HudElementPlayerWeaponSettings.infinite_symbol_size
 		local infinite_symbol_size_focused = HudElementPlayerWeaponSettings.infinite_symbol_size_focused
 		local infinite_symbol_style_size = widgets_by_name.overheat_infinite_symbol.style.texture.size
+
 		infinite_symbol_style_size[1] = (infinite_symbol_size_focused[1] - infinite_symbol_size[1]) * progress + infinite_symbol_size[1]
 		infinite_symbol_style_size[2] = (infinite_symbol_size_focused[2] - infinite_symbol_size[2]) * progress + infinite_symbol_size[2]
 	else
@@ -344,7 +357,9 @@ HudElementPlayerWeapon.set_wield_anim_progress = function (self, progress, ui_re
 			local font_size_difference = focused_font_size - default_font_size
 			local font_size_difference_animated = font_size_difference * progress
 			local animated_font_size = default_font_size + font_size_difference_animated
+
 			pass_style.font_size = animated_font_size
+
 			local wielded_color = low_on_ammo and HudElementPlayerWeaponSettings.urgent_color or color_tint_main_2
 			local secondary_color = low_on_ammo and HudElementPlayerWeaponSettings.urgent_color_wielded or pass_style.primary_counter and color_tint_main_1 or color_tint_main_3
 			local include_alpha = false
@@ -353,15 +368,18 @@ HudElementPlayerWeapon.set_wield_anim_progress = function (self, progress, ui_re
 
 			local index = pass_style.index
 			local max_ammo_digits = HudElementPlayerWeaponSettings.max_ammo_digits
-			pass_style.offset[1] = -((max_ammo_digits - index) * animated_font_size * 0.55)
+
+			pass_style.offset[1] = -((max_ammo_digits - index) * (animated_font_size * 0.55))
+
 			local ammo_text = ammo_text_content[pass_name]
 			local ammo_text_height = self:_get_style_text_height(ammo_text, pass_style, ui_renderer)
 
 			if pass_style.clip_ammo then
 				local additional_ammo_height = self._use_one_line_ammunition and 12 or 4
-				pass_style.offset[2] = background_scenegraph_height * 0.5 - ammo_text_height + additional_ammo_height - (1 - progress) * height_difference_scale
+
+				pass_style.offset[2] = background_scenegraph_height * 0.5 - ammo_text_height + (additional_ammo_height - (1 - progress) * height_difference_scale)
 			else
-				pass_style.offset[2] = background_scenegraph_height * 0.5 + 8 - (1 - progress) * height_difference_scale
+				pass_style.offset[2] = background_scenegraph_height * 0.5 + (8 - (1 - progress) * height_difference_scale)
 			end
 		end
 	end
@@ -389,10 +407,13 @@ HudElementPlayerWeapon.set_clip_amount = function (self, current, total)
 		local ammo_clip_max_row_rounds = math.min(default_ammo_clip_max_row_rounds, total)
 		local rows = math.ceil(total / ammo_clip_max_row_rounds)
 		local rounds_per_row = math.ceil(total / rows)
+
 		ammo_clip_max_row_rounds = rounds_per_row
+
 		local total_clip_spacing = clip_spacing * (ammo_clip_max_row_rounds - 1)
 		local ammo_total_rounds_width = size[1] - total_clip_spacing
 		local ammo_round_width = ammo_total_rounds_width / ammo_clip_max_row_rounds
+
 		self._ammo_clip_max_row_rounds = ammo_clip_max_row_rounds
 		self._ammo_round_width = ammo_round_width
 		self._ammo_round_clip_spacing = clip_spacing
@@ -413,7 +434,9 @@ local function convert_ammo_to_display_texts(amount, max_character, low_on_ammo,
 	table.clear(temp_ammo_display_texts)
 
 	local max_ammo_digits = HudElementPlayerWeaponSettings.max_ammo_digits
+
 	max_character = math.min(max_character, max_ammo_digits)
+
 	local length = string.len(amount)
 	local num_adds = max_character - length
 	local zero_string = "0"
@@ -440,6 +463,7 @@ end
 
 HudElementPlayerWeapon.set_ammo_amount = function (self, amount, total_max_amount)
 	self._total_ammo = amount
+
 	local is_weapon = self._is_weapon
 	local max_ammo_digits = HudElementPlayerWeaponSettings.max_ammo_digits
 
@@ -455,6 +479,7 @@ HudElementPlayerWeapon.set_ammo_amount = function (self, amount, total_max_amoun
 			for i = max_ammo_digits, 1, -1 do
 				local key = "ammo_amount_" .. i
 				local text = table.remove(display_texts, #display_texts)
+
 				content[key] = text or ""
 				style[key].drop_shadow = text and true or false
 			end
@@ -472,6 +497,7 @@ HudElementPlayerWeapon.set_ammo_amount = function (self, amount, total_max_amoun
 			for i = max_ammo_digits, 1, -1 do
 				local key = "ammo_spare_" .. i
 				local text = table.remove(display_texts, #display_texts)
+
 				content[key] = text or ""
 				style[key].drop_shadow = text and true or false
 			end
@@ -519,6 +545,7 @@ end
 HudElementPlayerWeapon.set_input_text = function (self, text, visible)
 	local widgets_by_name = self._widgets_by_name
 	local widget = widgets_by_name.input_text
+
 	widget.content.text = visible and text or " "
 	widget.dirty = true
 end
@@ -527,12 +554,14 @@ HudElementPlayerWeapon.set_icon = function (self, icon, is_weapon)
 	local widgets_by_name = self._widgets_by_name
 	local widget = widgets_by_name.icon
 	local content = widget.content
+
 	content.icon = icon
 	widget.dirty = true
 
 	if is_weapon then
 		local weapon_icon_size = HudElementPlayerWeaponHandlerSettings.weapon_icon_size
 		local icon_style = widget.style.icon
+
 		icon_style.size[1] = weapon_icon_size[1]
 		icon_style.default_size[1] = weapon_icon_size[1]
 		widget.dirty = true

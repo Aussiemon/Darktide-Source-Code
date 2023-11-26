@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/talents_view/talents_view.lua
+
 local Definitions = require("scripts/ui/views/talents_view/talents_view_definitions")
 local ProfileUtils = require("scripts/utilities/profile_utils")
 local TextUtilities = require("scripts/utilities/ui/text")
@@ -51,6 +53,7 @@ TalentsView.on_enter = function (self)
 	end
 
 	local focus_ring_widget = self._widgets_by_name.highlight_ring
+
 	focus_ring_widget.visible = false
 
 	self:_register_event("event_on_profile_preset_changed", "event_on_profile_preset_changed")
@@ -86,7 +89,9 @@ TalentsView.update = function (self, dt, t, input_service)
 
 	if self._view_alpha < 1 and self._init_done then
 		self._view_alpha = math.min(self._view_alpha + dt / ViewFadeTime, 1)
+
 		local render_settings = self._render_settings
+
 		render_settings.alpha_multiplier = self._view_alpha
 	end
 
@@ -157,11 +162,13 @@ TalentsView._setup_talent_presentation = function (self)
 	local player = self._preview_player
 	local profile = player:profile()
 	local selected_talents = table.create_copy(self._selected_talents, profile.talents)
+
 	self._selected_talents = selected_talents
 
 	self:_setup_grid()
 
 	local on_package_loaded = callback(self, "_populate_data", profile, selected_talents)
+
 	self._talent_icons_package_id = self._talent_service:load_icons_for_profile(profile, "TalentsView", on_package_loaded, true)
 end
 
@@ -181,6 +188,7 @@ TalentsView._update_focused_talent = function (self, force_update)
 			if is_focused then
 				local x, y = self._grid:grid_cell_world_position(content.column, content.row, 1)
 				local talent_widget_offset = talent_widget.offset
+
 				hotspot.is_focused = true
 
 				if current_focused_widget and not force_update then
@@ -190,6 +198,7 @@ TalentsView._update_focused_talent = function (self, force_update)
 				focus_ring_widget.visible = content.has_focus_ring
 				focus_ring_widget.offset[1] = x + talent_widget_offset[1]
 				focus_ring_widget.offset[2] = y + talent_widget_offset[2]
+
 				local focus_ring_content = focus_ring_widget.content
 
 				if not force_update then
@@ -203,6 +212,7 @@ TalentsView._update_focused_talent = function (self, force_update)
 			end
 		else
 			local focus_ring_content = focus_ring_widget.content
+
 			focus_ring_content.anim_focus_progress = hotspot.anim_focus_progress or 0
 		end
 	end
@@ -230,6 +240,7 @@ TalentsView._update_talent_details = function (self, dt)
 
 	if next_talent_name == details_widget_content.talent_name and details_widget.visible == false then
 		details_widget.visible = true
+
 		local next_talent = talent_widget_content and talent_widget_content.talent
 		local next_talent_icon = next_talent.icon
 		local large_talent_icon = next_talent.large_icon
@@ -238,8 +249,10 @@ TalentsView._update_talent_details = function (self, dt)
 			local widget_style = details_widget.style
 			local talent_name_style = widget_style.talent_name
 			local _, talent_name_height, min = self:_text_size_for_style(next_talent_name, talent_name_style)
+
 			talent_name_height = math.max(math.floor(talent_name_height + min[2]), talent_name_style.size[2])
-			local icon_frame_style, icon_style = nil
+
+			local icon_frame_style, icon_style
 
 			if next_talent_icon then
 				icon_frame_style = widget_style.talent_icon_frame
@@ -255,7 +268,9 @@ TalentsView._update_talent_details = function (self, dt)
 			icon_frame_style.visible = true
 			icon_style.offset[2] = talent_name_style.offset[2] + talent_name_height + icon_style.offset_to_text_above
 			icon_style.visible = true
+
 			local talent_description_style = widget_style.talent_description
+
 			talent_description_style.offset[2] = icon_style.offset[2] + icon_style.size[2] + talent_description_style.offset_to_icon_above
 		end
 	elseif next_talent_name == details_widget_content.talent_name then
@@ -266,7 +281,9 @@ TalentsView._update_talent_details = function (self, dt)
 		details_widget.visible = false
 		details_widget_content.talent_name = next_talent_name or ""
 		details_widget_content.talent_description = next_talent_description or ""
+
 		local widget_style = details_widget.style
+
 		widget_style.talent_icon_frame.visible = false
 		widget_style.talent_icon.visible = false
 		widget_style.large_icon_frame.visible = false
@@ -289,16 +306,19 @@ TalentsView._update_equip_button = function (self, dt)
 
 	if is_selectable and not equip_button.visible then
 		equip_button.visible = true
+
 		local equip_button_hotspot = equip_button_content.hotspot
 
 		if is_equipped then
 			local equip_button_text = ViewSettings.equip_button_text_unequip
 			local unequip_action = ViewSettings.equip_button_action_unequip
+
 			equip_button_content.text = TextUtilities.localize_with_button_hint(unequip_action, equip_button_text)
 			equip_button_hotspot.pressed_callback = talent_widget_hotspot.right_pressed_callback
 		else
 			local equip_button_text = ViewSettings.equip_button_text_equip
 			local equip_action = ViewSettings.equip_button_action_equip
+
 			equip_button_content.text = TextUtilities.localize_with_button_hint(equip_action, equip_button_text)
 			equip_button_hotspot.pressed_callback = talent_widget_hotspot.pressed_callback
 		end
@@ -326,9 +346,11 @@ TalentsView._select_widget_in_group = function (self, group, selected_widget)
 		local hotspot = widget_content.hotspot
 		local talent_name = widget_content.talent_name
 		local is_selected = widget == selected_widget and (not hotspot.is_selected or widget_content.is_new)
+
 		hotspot.is_selected = is_selected
 		selected_talents[talent_name] = is_selected or nil
 		widget_content.is_new = nil
+
 		local active_profile_preset_id = ProfileUtils.get_active_profile_preset_id()
 
 		if active_profile_preset_id then
@@ -339,6 +361,7 @@ TalentsView._select_widget_in_group = function (self, group, selected_widget)
 	end
 
 	local group_widget = group.group_widget
+
 	group_widget.content.is_new = nil
 	group_widget.content.group_has_selected_talent = group_has_selected_talent
 end
@@ -362,6 +385,7 @@ TalentsView._setup_grid = function (self)
 	grid:set_grid_size(num_columns, num_rows)
 
 	self._grid = grid
+
 	local scale = self._render_scale or 1
 end
 
@@ -370,7 +394,9 @@ TalentsView.event_on_profile_preset_changed = function (self, profile_preset)
 	local profile = player:profile()
 	local profile_preset_talents = profile_preset and profile_preset.talents
 	local selected_talents = table.create_copy(table.clone(self._selected_talents), profile_preset_talents)
+
 	self._selected_talents = selected_talents
+
 	local talent_widgets = self._talent_widgets
 
 	if talent_widgets then
@@ -382,6 +408,7 @@ TalentsView.event_on_profile_preset_changed = function (self, profile_preset)
 			if content.is_selectable then
 				local hotspot = content.hotspot
 				local talent_value = selected_talents[widget_name]
+
 				hotspot.is_selected = talent_value or false
 			end
 		end
@@ -400,6 +427,7 @@ TalentsView._populate_data = function (self, profile, selected_talents)
 	end
 
 	local talents = archetype.talents[specialization_name]
+
 	self._talents = talents
 
 	self:_populate_archetype_data(archetype, specialization)
@@ -413,9 +441,12 @@ end
 TalentsView._populate_archetype_data = function (self, archetype, specialization)
 	local archetype_header_widget = self._widgets_by_name.archetype_header
 	local content = archetype_header_widget.content
+
 	content.class_icon = archetype.archetype_icon_large
+
 	local localized_archetype_name = self:_localize(archetype.archetype_title)
 	local localized_specialization_name = self:_localize(specialization.title)
+
 	content.text = string.format("%s %s", localized_archetype_name, localized_specialization_name)
 end
 
@@ -431,6 +462,7 @@ TalentsView._set_level_bar = function (self, player_level)
 	local num_level_plates_small = player_level % num_levels_between_groups
 	local level_bar_width = level_bar_style.size[1]
 	local fill_width = level_bar_style.plate_big_width + (num_level_plates_big - 1) * level_bar_style.distance_between_big_plates + num_level_plates_small * level_bar_style.plate_small_width
+
 	level_bar_style.material_values.progression = fill_width / level_bar_width
 end
 
@@ -473,15 +505,17 @@ TalentsView._populate_talents_data = function (self, character_id, archetype, sp
 		local is_locked = player_level < required_level
 		local is_non_selectable = group_settings and group_settings.non_selectable_group
 		local group_talents = group_definition.talents
-		local group_widget = nil
+		local group_widget
 
 		if not is_group_invisible then
 			local grid_positions = group_settings.positions
 			local blueprint = is_locked and ViewBlueprints[group_settings.blueprint_locked] or ViewBlueprints[group_settings.blueprint] or ViewBlueprints.talent_group_single_slot
 			local group_widget_name = "group_" .. i
 			local init = blueprint.init
+
 			group_widget = self._grid:add_widget_to_grid(grid_positions[1][1], grid_positions[1][2], group_widget_name, blueprint, init, group_settings, group_definition, player_level)
 			group_index = group_index + 1
+
 			local is_empty_group = not is_locked and not is_non_selectable
 			local group_talent_widgets = {}
 
@@ -491,12 +525,14 @@ TalentsView._populate_talents_data = function (self, character_id, archetype, sp
 				local callback_group_index = group_widget and group_index
 				local is_selected_talent = selected_talents[talent_name] or false
 				local talent_widget = self:_create_talent_widget(talent_name, talent_index, talent, group_definition, group_settings, callback_group_index, is_locked, is_selected_talent)
+
 				talent_widgets[#talent_widgets + 1] = talent_widget
 				group_talent_widgets[talent_index] = talent_widget
 				is_empty_group = is_empty_group and not is_selected_talent
 			end
 
 			group_widget.content.group_has_selected_talent = not is_empty_group
+
 			local is_new_unlocked_group = talent_service:is_group_marked_as_new(character_id, i)
 
 			if is_new_unlocked_group then
@@ -505,6 +541,7 @@ TalentsView._populate_talents_data = function (self, character_id, archetype, sp
 				for j = 1, #group_talent_widgets do
 					local widget = group_talent_widgets[j]
 					local widget_content = widget.content
+
 					widget_content.is_new = is_empty_group
 				end
 
@@ -517,6 +554,7 @@ TalentsView._populate_talents_data = function (self, character_id, archetype, sp
 				talent_widgets = group_talent_widgets,
 				non_selectable_group = is_non_selectable
 			}
+
 			talent_groups[group_index] = new_talent_group
 		end
 	end
@@ -529,7 +567,7 @@ local _locked_talent_icon_blueprint = ViewBlueprints.locked_talent_icon
 TalentsView._create_talent_widget = function (self, name, talent_index, talent, group_definition, group_settings, callback_group_index, is_locked, is_selected_talent)
 	local talent_icon = talent.icon
 	local is_non_selectable = group_settings.non_selectable_group
-	local blueprint = nil
+	local blueprint
 
 	if talent_icon and is_locked then
 		blueprint = _locked_talent_icon_blueprint
@@ -542,7 +580,7 @@ TalentsView._create_talent_widget = function (self, name, talent_index, talent, 
 	end
 
 	local grid_position = group_settings.positions[talent_index]
-	local widget_offset_x = nil
+	local widget_offset_x
 	local num_talent_widgets = #group_definition.talents
 
 	if group_settings.even_talents_offset_x and num_talent_widgets % 2 == 0 then
@@ -557,18 +595,23 @@ TalentsView._create_talent_widget = function (self, name, talent_index, talent, 
 		end
 
 		local widget_content = widget.content
+
 		widget_content.has_focus_ring = blueprint.has_focus_ring
 		widget_content.talent_name = name
 		widget_content.talent = talent
 		widget_content.talent_display_name = self:_localize(talent.display_name)
 		widget_content.is_selectable = not is_non_selectable and not is_locked
+
 		local format_values = talent.format_values
 		local localized_description = self:_localize(talent.description, false, format_values)
+
 		widget_content.talent_description = localized_description
+
 		local widget_style = widget.style
 
 		if callback_group_index and not is_locked then
 			local hotspot = widget_content.hotspot
+
 			hotspot.is_selected = is_selected_talent
 
 			if not self._is_readonly then
@@ -579,6 +622,7 @@ TalentsView._create_talent_widget = function (self, name, talent_index, talent, 
 
 		local icon_style = widget_style.icon
 		local material_values = icon_style.material_values
+
 		material_values.icon_texture = talent_icon or talent.large_icon
 	end
 

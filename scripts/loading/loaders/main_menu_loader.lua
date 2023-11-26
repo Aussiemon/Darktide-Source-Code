@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/loading/loaders/main_menu_loader.lua
+
 local views_to_load = {
 	"main_menu_view",
 	"main_menu_background_view",
@@ -48,6 +50,7 @@ end
 MainMenuLoader.cleanup = function (self)
 	if not self._unloaded then
 		self._unloaded = true
+
 		local ui_manager = Managers.ui
 
 		if ui_manager then

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/equipment/weapon_templates/chain_swords/chainsword_2h_p1_m1.lua
+
 local ActionSweepSettings = require("scripts/settings/equipment/action_sweep_settings")
 local ArmorSettings = require("scripts/settings/damage/armor_settings")
 local BaseTemplateSettings = require("scripts/settings/equipment/weapon_templates/base_template_settings")
@@ -28,11 +30,12 @@ local sprint_trait_templates = WeaponTraitTemplates[template_types.sprint]
 local stamina_trait_templates = WeaponTraitTemplates[template_types.stamina]
 local toughness_trait_templates = WeaponTraitTemplates[template_types.toughness]
 local weapon_handling_trait_templates = WeaponTraitTemplates[template_types.weapon_handling]
-local weapon_template = {
-	action_inputs = table.clone(MeleeActionInputSetupMid.action_inputs),
-	action_input_hierarchy = table.clone(MeleeActionInputSetupMid.action_input_hierarchy)
-}
+local weapon_template = {}
+
+weapon_template.action_inputs = table.clone(MeleeActionInputSetupMid.action_inputs)
+weapon_template.action_input_hierarchy = table.clone(MeleeActionInputSetupMid.action_input_hierarchy)
 weapon_template.action_inputs.start_attack.buffer_time = 0.5
+
 local _force_abort_breed_tags_special_active = {
 	"elite",
 	"special",
@@ -261,6 +264,7 @@ local hit_stickyness_settings_heavy_smiter_special = {
 		start_modifier = 0.1
 	}
 }
+
 weapon_template.actions = {
 	action_unwield = {
 		allowed_during_sprint = true,
@@ -1667,6 +1671,7 @@ weapon_template.actions = {
 table.add_missing(weapon_template.actions, BaseTemplateSettings.actions)
 
 weapon_template.traits = {}
+
 local bespoke_chainsword_2h_p1_traits = table.keys(WeaponTraitsChainsword2hP1)
 
 table.append(weapon_template.traits, bespoke_chainsword_2h_p1_traits)
@@ -1713,7 +1718,9 @@ weapon_template.stamina_template = "smiter"
 weapon_template.toughness_template = "default"
 weapon_template.movement_curve_modifier_template = "chainsword_p1_m1"
 weapon_template.footstep_intervals = FootstepIntervalsTemplates.default
+
 local WeaponBarUIDescriptionTemplates = require("scripts/settings/equipment/weapon_bar_ui_description_templates")
+
 weapon_template.base_stats = {
 	chainsword_2h_dps_stat = {
 		display_name = "loc_stats_display_damage_stat",

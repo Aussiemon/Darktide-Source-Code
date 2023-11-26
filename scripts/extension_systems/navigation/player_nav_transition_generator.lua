@@ -1,17 +1,22 @@
+﻿-- chunkname: @scripts/extension_systems/navigation/player_nav_transition_generator.lua
+
 local PlayerNavTransitionGenerator = class("PlayerNavTransitionGenerator")
 local STATES = table.enum("waiting", "jumping", "falling", "ledge_vaulting")
 
 PlayerNavTransitionGenerator.init = function (self, unit, nav_world, traverse_logic)
 	self._nav_world = nav_world
 	self._traverse_logic = traverse_logic
+
 	local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
+
 	self._character_state_component = unit_data_extension:read_component("character_state")
 	self._inair_state_component = unit_data_extension:read_component("inair_state")
 	self._locomotion_component = unit_data_extension:read_component("locomotion")
 	self._ledge_vaulting_character_state_component = unit_data_extension:read_component("ledge_vaulting_character_state")
+
 	local invalid_vector = Vector3.invalid_vector()
-	self._via_position = Vector3Box(invalid_vector)
-	self._from_position = Vector3Box(invalid_vector)
+
+	self._from_position, self._via_position = Vector3Box(invalid_vector), Vector3Box(invalid_vector)
 	self._state = STATES.waiting
 end
 
@@ -34,8 +39,7 @@ local ALLOWED_STATES = {
 
 PlayerNavTransitionGenerator.fixed_update = function (self, unit, is_on_nav_mesh, latest_position_on_nav_mesh)
 	local current_position = self._locomotion_component.position
-	local state = self._state
-	local character_state_component = self._character_state_component
+	local state, character_state_component = self._state, self._character_state_component
 	local character_state_name = character_state_component.state_name
 
 	if state == STATES.waiting then
@@ -55,8 +59,7 @@ PlayerNavTransitionGenerator.fixed_update = function (self, unit, is_on_nav_mesh
 				self._from_position:store(from_position)
 
 				local ledge_vaulting_comp = self._ledge_vaulting_character_state_component
-				local left = ledge_vaulting_comp.left
-				local right = ledge_vaulting_comp.right
+				local left, right = ledge_vaulting_comp.left, ledge_vaulting_comp.right
 				local ledge_mid = Vector3.lerp(left, right, 0.5)
 				local via = Vector3.lerp(from_position, ledge_mid, 0.1)
 
@@ -110,8 +113,7 @@ PlayerNavTransitionGenerator._find_from_position = function (self, current_posit
 		return latest_position_on_nav_mesh
 	end
 
-	local nav_world = self._nav_world
-	local traverse_logic = self._traverse_logic
+	local nav_world, traverse_logic = self._nav_world, self._traverse_logic
 	local _, new_last_position = GwNavQueries.raycast(nav_world, latest_position_on_nav_mesh, current_position, traverse_logic)
 
 	if Vector3.distance_squared(current_position, new_last_position) < MAX_DISTANCE_FROM_NAV_MESH_SQ then

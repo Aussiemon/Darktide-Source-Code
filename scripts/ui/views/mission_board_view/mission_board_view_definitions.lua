@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/mission_board_view/mission_board_view_definitions.lua
+
 local MissionBoardViewStyles = require("scripts/ui/views/mission_board_view/mission_board_view_styles")
 local MissionBoardViewSettings = require("scripts/ui/views/mission_board_view/mission_board_view_settings")
 local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templates")
@@ -7,9 +9,9 @@ local InputDevice = require("scripts/managers/input/input_device")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local UIWorkspaceSettings = require("scripts/settings/ui/ui_workspace_settings")
-local MissionBoardViewDefinitions = {
-	pass_templates = {}
-}
+local MissionBoardViewDefinitions = {}
+
+MissionBoardViewDefinitions.pass_templates = {}
 MissionBoardViewDefinitions.pass_templates.mission_board_checkbox = {
 	{
 		pass_type = "hotspot",
@@ -1366,6 +1368,7 @@ MissionBoardViewDefinitions.widget_definitions.detail = UIWidget.create_definiti
 		visibility_function = _is_flash
 	}
 }, "detail", nil, nil, MissionBoardViewStyles.detail_widget_style)
+
 local objective_pass_template = {
 	{
 		value = "content/ui/materials/frames/frame_tile_2px",
@@ -1514,19 +1517,28 @@ local objective_pass_template = {
 		visibility_function = _has_speaker
 	}
 }
-local objective_1 = UIWidget.create_definition(objective_pass_template, "objective", nil, nil, MissionBoardViewStyles.objective_widget_style)
-objective_1.content.header_title = Localize("loc_misison_board_main_objective_title")
-objective_1.style.header_gradient.color = objective_1.style.header_gradient.color_main
-MissionBoardViewDefinitions.widget_definitions.objective_1 = objective_1
-local objective_2 = UIWidget.create_definition(objective_pass_template, "objective", nil, nil, MissionBoardViewStyles.objective_widget_style)
-objective_2.content.header_title = Localize("loc_mission_info_side_mission_label")
-objective_2.style.header_gradient.color = objective_2.style.header_gradient.color_side
-objective_2.offset = {
-	0,
-	190,
-	0
-}
-MissionBoardViewDefinitions.widget_definitions.objective_2 = objective_2
+
+do
+	local objective_1 = UIWidget.create_definition(objective_pass_template, "objective", nil, nil, MissionBoardViewStyles.objective_widget_style)
+
+	objective_1.content.header_title = Localize("loc_misison_board_main_objective_title")
+	objective_1.style.header_gradient.color = objective_1.style.header_gradient.color_main
+	MissionBoardViewDefinitions.widget_definitions.objective_1 = objective_1
+end
+
+do
+	local objective_2 = UIWidget.create_definition(objective_pass_template, "objective", nil, nil, MissionBoardViewStyles.objective_widget_style)
+
+	objective_2.content.header_title = Localize("loc_mission_info_side_mission_label")
+	objective_2.style.header_gradient.color = objective_2.style.header_gradient.color_side
+	objective_2.offset = {
+		0,
+		190,
+		0
+	}
+	MissionBoardViewDefinitions.widget_definitions.objective_2 = objective_2
+end
+
 MissionBoardViewDefinitions.widget_definitions.difficulty_stepper_window = UIWidget.create_definition({
 	{
 		pass_type = "rect",
@@ -1631,10 +1643,12 @@ MissionBoardViewDefinitions.widget_definitions.play_team_button_legend = UIWidge
 		}
 	}
 }, "play_team_button", nil, nil, MissionBoardViewStyles.play_team_button_legend)
+
 local mission_widget_hotspot_content = {
 	on_hover_sound = UISoundEvents.mission_board_node_hover,
 	on_pressed_sound = UISoundEvents.mission_board_node_pressed
 }
+
 MissionBoardViewDefinitions.mission_small_widget_template = UIWidget.create_definition({
 	{
 		pass_type = "hotspot",
@@ -2181,15 +2195,22 @@ end
 
 local function game_settings_anim_others(widgets_by_name, s)
 	local difficulty_stepper = widgets_by_name.difficulty_stepper
+
 	difficulty_stepper.alpha_multiplier = s
 	difficulty_stepper.offset[1] = -100 * (1 - s)
+
 	local difficulty_stepper_window = widgets_by_name.difficulty_stepper_window
+
 	difficulty_stepper_window.alpha_multiplier = s
 	difficulty_stepper_window.offset[1] = -100 * (1 - s)
+
 	local objective_1 = widgets_by_name.objective_1
+
 	objective_1.alpha_multiplier = s
 	objective_1.offset[1] = -100 * (1 - s)
+
 	local objective_2 = widgets_by_name.objective_2
+
 	objective_2.alpha_multiplier = s
 	objective_2.offset[1] = -100 * (1 - s)
 end
@@ -2239,6 +2260,7 @@ MissionBoardViewDefinitions.animations = {
 			start_time = 0,
 			init = function (parent, ui_scenegraph, _scenegraph_definition, widget, mission_board_view)
 				widget.visible = true
+
 				local style = widget.style
 
 				for _, pass_style in pairs(style) do
@@ -2247,10 +2269,12 @@ MissionBoardViewDefinitions.animations = {
 
 				style.location_rect.visible = true
 				style.location_corner.visible = true
+
 				local size = {
 					20,
 					20
 				}
+
 				style.location_rect.original_size = _scenegraph_definition.size
 				style.location_rect.size = size
 				style.location_frame.size = size
@@ -2323,6 +2347,7 @@ MissionBoardViewDefinitions.animations = {
 			end,
 			update = function (parent, ui_scenegraph, _scenegraph_definition, widget, progress, mission_board_view)
 				local style = widget.style
+
 				style.location_rect.color[1] = 255 * (1 - progress)
 			end,
 			on_complete = function (parent, ui_scenegraph, _scenegraph_definition, widget, mission_board_view)
@@ -2728,6 +2753,7 @@ end
 
 MissionBoardViewDefinitions.widget_definitions_functions.objective_1_pass_function = function (mission_type)
 	local objective_1 = UIWidget.create_definition(objective_pass_template, "objective", nil, nil, MissionBoardViewStyles.objective_widget_style_function(mission_type))
+
 	objective_1.content.header_title = Localize("loc_misison_board_main_objective_title")
 	objective_1.style.header_gradient.color = objective_1.style.header_gradient.color_main
 
@@ -2736,6 +2762,7 @@ end
 
 MissionBoardViewDefinitions.widget_definitions_functions.objective_2_pass_function = function (mission_type)
 	local objective_2 = UIWidget.create_definition(objective_pass_template, "objective", nil, nil, MissionBoardViewStyles.objective_widget_style_function(mission_type))
+
 	objective_2.content.header_title = Localize("loc_mission_info_side_mission_label")
 	objective_2.style.header_gradient.color = objective_2.style.header_gradient.color_side
 	objective_2.offset = {

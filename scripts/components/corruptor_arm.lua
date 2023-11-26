@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/components/corruptor_arm.lua
+
 local Bezier = require("scripts/utilities/spline/bezier")
 local CorruptorArm = component("CorruptorArm")
 
@@ -43,7 +45,9 @@ CorruptorArm.editor_init = function (self, unit)
 
 	if self._in_level_editor then
 		self._unit = unit
+
 		local line_render = World.create_line_object(self._world, true)
+
 		self._line_render = line_render
 		self._drawer = DebugDrawer(line_render, "retained")
 
@@ -51,6 +55,7 @@ CorruptorArm.editor_init = function (self, unit)
 
 		self._debug_text_ids = {}
 		self._guis = {}
+
 		local text_color = Color.red()
 		local text_position = Unit.local_position(unit, 1)
 		local translation_matrix = Matrix4x4.from_translation(text_position)
@@ -134,6 +139,7 @@ end
 
 CorruptorArm._spline_position = function (self, unit, multi_mesh, mesh_increment_add, attach_mesh, mesh_rotation, current_end_position)
 	mesh_rotation = mesh_rotation or 0
+
 	local mesh_amount = self._mesh_amount
 	local total_joint_amount = self._joint_amount
 	local joint_base_name = self._joint_base_name
@@ -146,7 +152,7 @@ CorruptorArm._spline_position = function (self, unit, multi_mesh, mesh_increment
 	local mesh_increment = 1 / mesh_amount
 
 	for joint_amount = 0, total_joint_amount do
-		local t = nil
+		local t
 
 		if multi_mesh then
 			t = (joint_increment * joint_amount * mesh_increment + mesh_increment_add) * current_end_position + 0.01
@@ -185,10 +191,11 @@ CorruptorArm._create_meshes = function (self, unit)
 	end
 
 	for i = 1, mesh_amount do
-		local attach_mesh = nil
+		local attach_mesh
 		local socket_node = Unit.node(unit, self._main_unit_root_name)
 		local socket_pos = Unit.world_position(unit, socket_node)
 		local socket_rot = Unit.world_rotation(unit, socket_node)
+
 		attach_mesh = World.spawn_unit_ex(world, tiling_mesh_name, nil, socket_pos, socket_rot)
 		attached_meshes[#attached_meshes + 1] = attach_mesh
 

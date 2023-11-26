@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/components/baked_physics.lua
+
 local BakedPhysics = component("BakedPhysics")
 
 BakedPhysics.editor_init = function (self, unit)

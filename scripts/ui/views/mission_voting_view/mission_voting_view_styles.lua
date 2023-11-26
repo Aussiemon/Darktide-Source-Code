@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/mission_voting_view/mission_voting_view_styles.lua
+
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local ColorUtilities = require("scripts/utilities/ui/colors")
@@ -10,6 +12,7 @@ local ui_terminal = Color.ui_terminal(255, true)
 local ui_difficulty_dimmed = Color.white(40, true)
 local black = Color.black(255, true)
 local title_font_style = table.clone(UIFontSettings.header_2)
+
 title_font_style.font_size = 28
 title_font_style.text_vertical_alignment = "bottom"
 title_font_style.offset = {
@@ -18,7 +21,9 @@ title_font_style.offset = {
 	12
 }
 title_font_style.text_horizontal_alignment = "center"
+
 local flash_title_style = table.clone(title_font_style)
+
 flash_title_style.size_addition = {
 	-20,
 	-20
@@ -29,6 +34,7 @@ flash_title_style.text_vertical_alignment = "center"
 flash_title_style.text_horizontal_alignment = "center"
 flash_title_style.fade_out_text_color = Color.terminal_text_header(0, true)
 flash_title_style.fade_in_text_color = flash_title_style.default_color
+
 local mission_detail_top = {
 	vertical_alignment = "top",
 	size = {
@@ -54,6 +60,7 @@ local mission_detail_bottom = {
 	}
 }
 local mission_title_font_style = table.clone(UIFontSettings.header_3)
+
 mission_title_font_style.font_size = 34
 mission_title_font_style.offset = {
 	0,
@@ -67,7 +74,9 @@ mission_title_font_style.text_color = {
 	229,
 	207
 }
+
 local mission_rewards_title_text_style = table.clone(UIFontSettings.header_3)
+
 mission_rewards_title_text_style.size = {
 	350,
 	35
@@ -86,7 +95,9 @@ mission_rewards_title_text_style.text_color = {
 	229,
 	207
 }
+
 local mission_type_font_style = table.clone(UIFontSettings.header_3)
+
 mission_type_font_style.font_size = 24
 mission_type_font_style.offset = {
 	0,
@@ -100,7 +111,9 @@ mission_type_font_style.text_color = {
 	191,
 	153
 }
+
 local challenge_text_font_style = table.clone(UIFontSettings.header_3)
+
 challenge_text_font_style.font_size = 34
 challenge_text_font_style.offset = {
 	-20,
@@ -119,6 +132,7 @@ challenge_text_font_style.size = {
 	300,
 	35
 }
+
 local mission_reward_text_style = {
 	font_size = 24,
 	scenegraph_id = "side_objective_pivot",
@@ -171,7 +185,9 @@ local stat_circumstances_bonuses_icon_style = {
 		64
 	}
 }
+
 stat_circumstances_bonuses_icon_style.offset = table.clone(stat_circumstances_bonuses_icon_style.orignal_offset)
+
 local styles = {
 	title_font_style = title_font_style,
 	mission_title_font_style = mission_title_font_style,
@@ -279,10 +295,13 @@ local styles = {
 			10
 		},
 		color = Color.chocolate(200, true)
-	},
-	player_portrait = {}
+	}
 }
+
+styles.player_portrait = {}
+
 local player_portrait = styles.player_portrait
+
 player_portrait.frame = {
 	horizontal_alignment = "center",
 	vertical_alignment = "center"
@@ -292,7 +311,9 @@ player_portrait.portrait = {
 	vertical_alignment = "center"
 }
 styles.salary = {}
+
 local salary_style = styles.salary
+
 salary_style.experience_icon = {
 	size = {
 		40,
@@ -314,7 +335,9 @@ salary_style.credits_icon = table.clone(salary_style.experience_icon)
 salary_style.credits_icon.base_margin_left = 15
 salary_style.credits_text = table.clone(salary_style.experience_text)
 styles.difficulty = {}
+
 local difficulty = styles.difficulty
+
 difficulty.difficulty_font = table.clone(UIFontSettings.mission_detail_sub_header)
 difficulty.difficulty_font.text_horizontal_alignment = "center"
 difficulty.difficulty_icon = {
@@ -339,11 +362,15 @@ difficulty.difficulty_icon = {
 	}
 }
 difficulty.diffulty_icon_background = table.clone(difficulty.difficulty_icon)
+
 local stat_diffulty_icon_background_style = difficulty.diffulty_icon_background
+
 stat_diffulty_icon_background_style.color = Color.terminal_background_dark(255, true)
 stat_diffulty_icon_background_style.amount = 5
 difficulty.diffulty_icon_background_frame = table.clone(difficulty.difficulty_icon)
+
 local diffulty_icon_background_frame_style = difficulty.diffulty_icon_background_frame
+
 diffulty_icon_background_frame_style.color = {
 	255,
 	169,
@@ -360,7 +387,9 @@ styles.difficulty_divider = {
 	color = ui_brown_dark
 }
 styles.mission_info_circumstance = {}
+
 local circumstance = styles.mission_info_circumstance
+
 circumstance.header = table.clone(UIFontSettings.mission_detail_sub_header)
 circumstance.header.text_horizontal_alignment = "center"
 circumstance.icon = {
@@ -372,7 +401,9 @@ circumstance.icon = {
 	}
 }
 circumstance.text = table.clone(UIFontSettings.mission_voting_body)
+
 local circumstance_text = circumstance.text
+
 circumstance_text.text_vertical_alignment = "bottom"
 circumstance_text.offset = {
 	60,
@@ -381,12 +412,16 @@ circumstance_text.offset = {
 }
 styles.circumstance_height_addition = 40
 styles.accept_button = {}
+
 local accept_button_style = styles.accept_button
+
 accept_button_style.hotspot = {
 	on_pressed_sound = ""
 }
 styles.decline_button = {}
+
 local decline_button_style = styles.decline_button
+
 decline_button_style.hotspot = {
 	on_pressed_sound = ""
 }
@@ -394,15 +429,21 @@ decline_button_style.frame = {
 	color = Color.ui_grey_medium(64, true)
 }
 styles.accept_confirmation = {}
+
 local accept_confirmation = styles.accept_confirmation
+
 accept_confirmation.subheader = table.clone(UIFontSettings.mission_voting_body)
 accept_confirmation.subheader.text_color = Color.ui_grey_medium(255, true)
 accept_confirmation.subheader.text_horizontal_alignment = "center"
 accept_confirmation.subheader.text_vertical_alignment = "bottom"
 styles.blueprints = {}
+
 local blueprints = styles.blueprints
+
 blueprints.main_objective = {}
+
 local main_objective = blueprints.main_objective
+
 main_objective.objective_header = table.clone(UIFontSettings.header_2)
 main_objective.objective_header.text_horizontal_alignment = "left"
 main_objective.objective_header.font_size = 28
@@ -434,7 +475,9 @@ main_objective.rewards_text = table.clone(UIFontSettings.mission_detail_sub_head
 main_objective.rewards_text.text_horizontal_alignment = "left"
 main_objective.rewards_text.text_color = Color.terminal_text_header(255, true)
 blueprints.side_mission = {}
+
 local side_mission = blueprints.side_mission
+
 side_mission.objective_header = table.clone(UIFontSettings.header_2)
 side_mission.objective_header.text_horizontal_alignment = "left"
 side_mission.objective_header.font_size = 28
@@ -468,7 +511,9 @@ side_mission.rewards_text = table.clone(UIFontSettings.mission_detail_sub_header
 side_mission.rewards_text.text_horizontal_alignment = "left"
 side_mission.rewards_text.text_color = Color.terminal_text_header(255, true)
 blueprints.circumstance = {}
+
 local circumstance = blueprints.circumstance
+
 circumstance.circumstance_icon = {
 	vertical_alignment = "top",
 	horizontal_alignment = "left",
@@ -484,7 +529,9 @@ circumstance.circumstance_icon = {
 	color = Color.golden_rod(255, true)
 }
 circumstance.circumstance_title = table.clone(UIFontSettings.header_2)
+
 local circumstance_title = circumstance.circumstance_title
+
 circumstance_title.text_vertical_alignment = "top"
 circumstance_title.offset = {
 	60,
@@ -493,7 +540,9 @@ circumstance_title.offset = {
 }
 circumstance_title.font_size = 28
 circumstance.body_text = table.clone(UIFontSettings.mission_detail_sub_header)
+
 local circumstance_description = circumstance.body_text
+
 circumstance_description.text_vertical_alignment = "top"
 circumstance_description.offset = {
 	60,
@@ -515,10 +564,11 @@ circumstance.reward_icon = {
 		32
 	}
 }
-blueprints.category_name = {
-	text = {}
-}
+blueprints.category_name = {}
+blueprints.category_name.text = {}
+
 local text = blueprints.category_name.text
+
 text.font_size = 20
 text.text_color = Color.ui_grey_medium(255, true)
 text.offset = {
@@ -527,7 +577,9 @@ text.offset = {
 	1
 }
 blueprints.detail = {}
+
 local detail = blueprints.detail
+
 detail.title = table.clone(UIFontSettings.header_3)
 detail.title.font_type = "itc_novarese_medium"
 detail.title.offset = {

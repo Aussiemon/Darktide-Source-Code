@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/equipment/weapon_templates/power_mauls_2h/powermaul_2h_p1_m1.lua
+
 local ActionSweepSettings = require("scripts/settings/equipment/action_sweep_settings")
 local AimAssistTemplates = require("scripts/settings/equipment/aim_assist_templates")
 local ArmorSettings = require("scripts/settings/damage/armor_settings")
@@ -34,10 +36,11 @@ local stamina_trait_templates = WeaponTraitTemplates[template_types.stamina]
 local explosion_trait_templates = WeaponTraitTemplates[template_types.explosion]
 local weapon_handling_trait_templates = WeaponTraitTemplates[template_types.weapon_handling]
 local movement_curve_modifier_trait_templates = WeaponTraitTemplates[template_types.movement_curve_modifier]
-local weapon_template = {
-	action_inputs = table.clone(MeleeActionInputSetupSlow.action_inputs),
-	action_input_hierarchy = table.clone(MeleeActionInputSetupSlow.action_input_hierarchy)
-}
+local weapon_template = {}
+
+weapon_template.action_inputs = table.clone(MeleeActionInputSetupSlow.action_inputs)
+weapon_template.action_input_hierarchy = table.clone(MeleeActionInputSetupSlow.action_input_hierarchy)
+
 local hit_zone_priority = {
 	[hit_zone_names.head] = 1,
 	[hit_zone_names.torso] = 2,
@@ -59,6 +62,7 @@ local heavy_hitbox = {
 	0.15,
 	1.4
 }
+
 weapon_template.action_inputs.push_follow_up = {
 	buffer_time = 0.2,
 	input_sequence = {
@@ -1833,6 +1837,7 @@ weapon_template.base_stats = {
 	}
 }
 weapon_template.traits = {}
+
 local weapon_traits_bespoke_powermaul_2h_p1 = table.keys(WeaponTraitsBespokePowermaul2hP1)
 
 table.append(weapon_template.traits, weapon_traits_bespoke_powermaul_2h_p1)

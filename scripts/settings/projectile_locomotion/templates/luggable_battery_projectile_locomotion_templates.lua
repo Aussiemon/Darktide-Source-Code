@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/projectile_locomotion/templates/luggable_battery_projectile_locomotion_templates.lua
+
 local ProjectileLocomotionSettings = require("scripts/settings/projectile_locomotion/projectile_locomotion_settings")
 local locomotion_states = ProjectileLocomotionSettings.states
 local luggable_projectile_locomotion_templates = {

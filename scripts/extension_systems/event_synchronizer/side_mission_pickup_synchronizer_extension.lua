@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/event_synchronizer/side_mission_pickup_synchronizer_extension.lua
+
 local PlayerUnitVisualLoadout = require("scripts/extension_systems/visual_loadout/utilities/player_unit_visual_loadout")
 local MasterItems = require("scripts/backend/master_items")
 local Pickups = require("scripts/settings/pickup/pickups")

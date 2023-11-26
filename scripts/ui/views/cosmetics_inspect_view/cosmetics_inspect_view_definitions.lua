@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/cosmetics_inspect_view/cosmetics_inspect_view_definitions.lua
+
 local CosmeticsInspectViewSettings = require("scripts/ui/views/cosmetics_inspect_view/cosmetics_inspect_view_settings")
 local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templates")
 local UIWorkspaceSettings = require("scripts/settings/ui/ui_workspace_settings")
@@ -210,6 +212,7 @@ local scenegraph_definition = {
 	}
 }
 local item_restrictions_title_style = table.clone(UIFontSettings.terminal_header_3)
+
 item_restrictions_title_style.text_horizontal_alignment = "left"
 item_restrictions_title_style.horizontal_alignment = "left"
 item_restrictions_title_style.text_vertical_alignment = "top"
@@ -221,9 +224,13 @@ item_restrictions_title_style.offset = {
 }
 item_restrictions_title_style.font_size = 20
 item_restrictions_title_style.text_color = Color.terminal_text_body_sub_header(255, true)
+
 local item_restrictions_text_style = table.clone(item_restrictions_title_style)
+
 item_restrictions_text_style.text_color = Color.terminal_text_body(255, true)
+
 local title_style = table.clone(UIFontSettings.header_1)
+
 title_style.font_size = 40
 title_style.offset = {
 	0,
@@ -232,7 +239,9 @@ title_style.offset = {
 }
 title_style.text_horizontal_alignment = "center"
 title_style.text_vertical_alignment = "top"
+
 local sub_title_style = table.clone(UIFontSettings.header_5)
+
 sub_title_style.text_horizontal_alignment = "center"
 sub_title_style.text_vertical_alignment = "top"
 sub_title_style.offset = {
@@ -241,11 +250,14 @@ sub_title_style.offset = {
 	0
 }
 sub_title_style.text_color = Color.terminal_text_body(255, true)
+
 local description_text_font_style = table.clone(UIFontSettings.terminal_header_3)
+
 description_text_font_style.text_horizontal_alignment = "left"
 description_text_font_style.text_vertical_alignment = "top"
 description_text_font_style.font_size = 20
 description_text_font_style.text_color = Color.terminal_text_body(255, true)
+
 local widget_definitions = {
 	bundle_background = UIWidget.create_definition({
 		{

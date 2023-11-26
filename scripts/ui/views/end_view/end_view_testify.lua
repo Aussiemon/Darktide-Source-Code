@@ -1,15 +1,17 @@
-local EndViewTestify = {}
+﻿-- chunkname: @scripts/ui/views/end_view/end_view_testify.lua
 
-EndViewTestify.fast_forward_end_of_round = function (end_view)
-	if end_view:can_skip() and end_view:skip_grace_time() <= 0 then
-		Managers.event:trigger("event_trigger_current_end_presentation_skip")
+local EndViewTestify = {
+	fast_forward_end_of_round = function (end_view)
+		if end_view:can_skip() and not (end_view:skip_grace_time() > 0) then
+			Managers.event:trigger("event_trigger_current_end_presentation_skip")
 
-		return Testify.RETRY
-	else
-		Managers.multiplayer_session:leave("skip_end_of_round")
+			return Testify.RETRY
+		else
+			Managers.multiplayer_session:leave("skip_end_of_round")
 
-		return
+			return
+		end
 	end
-end
+}
 
 return EndViewTestify

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/hud/elements/emote_wheel/hud_element_emote_wheel.lua
+
 local ChatManagerConstants = require("scripts/foundation/managers/chat/chat_manager_constants")
 local Definitions = require("scripts/ui/hud/elements/emote_wheel/hud_element_emote_wheel_definitions")
 local HudElementEmoteWheelSettings = require("scripts/ui/hud/elements/emote_wheel/hud_element_emote_wheel_settings")
@@ -13,10 +15,6 @@ local unit_alive = Unit.alive
 local INSTANT_WHEEL_THRESHOLD = 8
 local HOVER_GRACE_PERIOD = 0.4
 local default_slot_data = {
-	{
-		slot_id = "slot_animation_emote_5",
-		event_id = "emote_5"
-	},
 	[5] = {
 		slot_id = "slot_animation_emote_1",
 		event_id = "emote_1"
@@ -32,6 +30,10 @@ local default_slot_data = {
 	[2] = {
 		slot_id = "slot_animation_emote_4",
 		event_id = "emote_4"
+	},
+	{
+		slot_id = "slot_animation_emote_5",
+		event_id = "emote_5"
 	}
 }
 local HudElementEmoteWheel = class("HudElementEmoteWheel", "HudElementBase")
@@ -47,6 +49,7 @@ HudElementEmoteWheel.init = function (self, parent, draw_layer, start_scale)
 	self._interaction_scan_delay_duration = 0
 	self._presented_smart_tags_by_tag_id = {}
 	self._presented_smart_tags_by_marker_id = {}
+
 	local wheel_slots = HudElementEmoteWheelSettings.wheel_slots
 
 	self:_setup_entries(wheel_slots)
@@ -57,6 +60,7 @@ HudElementEmoteWheel.init = function (self, parent, draw_layer, start_scale)
 		local slot_data = default_slot_data[i]
 		local slot_id = slot_data.slot_id
 		local event_id = slot_data.event_id
+
 		wheel_options[#wheel_options + 1] = {
 			default_display_name = "loc_item_slot_empty",
 			slot_id = slot_id,
@@ -81,6 +85,7 @@ HudElementEmoteWheel._populate_wheel = function (self, options)
 		local entry = entries[i]
 		local widget = entry.widget
 		local content = widget.content
+
 		content.visible = option ~= nil
 		entry.option = option
 	end
@@ -103,6 +108,7 @@ HudElementEmoteWheel._setup_entries = function (self, num_entries)
 	for i = 1, num_entries do
 		local name = "entry_" .. i
 		local widget = self:_create_widget(name, definition)
+
 		entries[i] = {
 			widget = widget
 		}
@@ -128,6 +134,7 @@ local function _on_item_icon_load_cb_func(widget, item)
 	local content = widget.content
 	local icon = item.icon
 	local material_values = widget.style.icon.material_values
+
 	material_values.texture_map = icon
 	material_values.use_placeholder_texture = 0
 end
@@ -137,6 +144,7 @@ local function _remove_item_icon_load_cb_func(widget, ui_renderer)
 	UIWidget.set_visible(widget, ui_renderer, true)
 
 	local material_values = widget.style.icon.material_values
+
 	material_values.texture_map = "content/ui/textures/icons/emotes/empty"
 	material_values.use_placeholder_texture = 1
 end
@@ -173,6 +181,7 @@ HudElementEmoteWheel._update_slot_items = function (self, ui_renderer)
 
 				if equipped_item and not entry.icon_load_id then
 					local cb = callback(_on_item_icon_load_cb_func, widget, equipped_item)
+
 					entry.icon_load_id = Managers.ui:load_item_icon(equipped_item, cb)
 				end
 			end
@@ -201,6 +210,7 @@ end
 
 HudElementEmoteWheel._on_wheel_start = function (self, t, input_service)
 	self._event_to_play = nil
+
 	local entries = self._entries
 
 	for i = 1, #entries do
@@ -218,8 +228,11 @@ HudElementEmoteWheel._on_wheel_start = function (self, t, input_service)
 	end
 
 	local wheel_context = self._wheel_context
+
 	wheel_context.input_start_time = t
+
 	local tag_context = self._tag_context
+
 	wheel_context.simultaneous_press = tag_context.input_start_time and math.abs(tag_context.input_start_time - t) < 0.001
 end
 
@@ -317,11 +330,12 @@ HudElementEmoteWheel._handle_com_wheel = function (self, t, ui_renderer, render_
 
 	if start_time then
 		draw_wheel = self._wheel_active
+
 		local account_data = Managers.save:account_data()
 		local com_wheel_delay = account_data.input_settings.com_wheel_delay
 		local always_draw_t = start_time + com_wheel_delay
 
-		if t > always_draw_t then
+		if always_draw_t < t then
 			draw_wheel = true
 		elseif InputDevice.gamepad_active then
 			draw_wheel = draw_wheel or self:_should_draw_wheel_gamepad(input_service)
@@ -352,7 +366,7 @@ end
 
 HudElementEmoteWheel._should_draw_wheel_gamepad = function (self, input_service)
 	local look_delta = input_service:get("look_raw_controller") * INSTANT_WHEEL_THRESHOLD * 2
-	local is_dragging = INSTANT_WHEEL_THRESHOLD < Vector3.length(look_delta)
+	local is_dragging = Vector3.length(look_delta) > INSTANT_WHEEL_THRESHOLD
 	local wheel_context = self._wheel_context
 	local should_instant_draw = is_dragging
 
@@ -367,7 +381,7 @@ HudElementEmoteWheel._should_draw_wheel_gamepad = function (self, input_service)
 			local visible = entry.widget.content.visible
 			local entry_angle = entry.widget.content.angle
 
-			if visible and math.abs(entry_angle - look_angle) < half_entry_hover_angle then
+			if visible and half_entry_hover_angle > math.abs(entry_angle - look_angle) then
 				wheel_context.instant_drew = true
 
 				break
@@ -401,8 +415,7 @@ HudElementEmoteWheel._check_box_overlap = function (self, x1, y1, x2, y2, px, py
 end
 
 HudElementEmoteWheel._update_wheel_presentation = function (self, dt, t, ui_renderer, render_settings, input_service)
-	local screen_width = RESOLUTION_LOOKUP.width
-	local screen_height = RESOLUTION_LOOKUP.height
+	local screen_width, screen_height = RESOLUTION_LOOKUP.width, RESOLUTION_LOOKUP.height
 	local scale = render_settings.scale
 	local cursor = input_service and input_service:get("cursor")
 
@@ -422,7 +435,7 @@ HudElementEmoteWheel._update_wheel_presentation = function (self, dt, t, ui_rend
 	local entry_hover_degrees = 44
 	local entry_hover_degrees_half = entry_hover_degrees * 0.5
 	local any_hover = false
-	local hovered_entry = nil
+	local hovered_entry
 	local is_hover_started = false
 	local entries = self._entries
 
@@ -438,7 +451,7 @@ HudElementEmoteWheel._update_wheel_presentation = function (self, dt, t, ui_rend
 		if is_populated and cursor_distance_from_center > 130 * scale then
 			local angle_diff = (widget_angle_degrees - cursor_angle_degrees_from_center + 180 + 360) % 360 - 180
 
-			if entry_hover_degrees_half >= angle_diff and angle_diff >= -entry_hover_degrees_half then
+			if angle_diff <= entry_hover_degrees_half and angle_diff >= -entry_hover_degrees_half then
 				is_hover = true
 				any_hover = true
 				hovered_entry = entry
@@ -453,6 +466,7 @@ HudElementEmoteWheel._update_wheel_presentation = function (self, dt, t, ui_rend
 	end
 
 	local wheel_background_widget = self._widgets_by_name.wheel_background
+
 	wheel_background_widget.content.angle = cursor_angle_from_center
 	wheel_background_widget.content.force_hover = any_hover
 	wheel_background_widget.style.mark.color[1] = any_hover and 255 or 0
@@ -463,6 +477,7 @@ HudElementEmoteWheel._update_wheel_presentation = function (self, dt, t, ui_rend
 		local display_name = hovered_entry.display_name
 		local default_display_name = option.default_display_name
 		local localized_display_name = Localize(display_name or default_display_name)
+
 		wheel_background_widget.content.text = localized_display_name
 
 		if is_hover_started then
@@ -527,6 +542,7 @@ HudElementEmoteWheel._update_widget_locations = function (self)
 			local position_x = math.sin(angle) * radius
 			local position_y = math.cos(angle) * radius
 			local offset = widget.offset
+
 			widget.content.angle = angle
 			offset[1] = position_x
 			offset[2] = position_y
@@ -564,6 +580,7 @@ HudElementEmoteWheel._draw_widgets = function (self, dt, t, input_service, ui_re
 	end
 
 	render_settings.alpha_multiplier = active_progress
+
 	local entries = self._entries
 
 	if entries then
@@ -575,6 +592,7 @@ HudElementEmoteWheel._draw_widgets = function (self, dt, t, input_service, ui_re
 
 			if widget.content.hotspot.is_hover then
 				local hover_data = self._last_widget_hover_data
+
 				hover_data.t = t
 				hover_data.index = i
 			end

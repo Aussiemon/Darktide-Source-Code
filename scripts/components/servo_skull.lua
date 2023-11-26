@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/components/servo_skull.lua
+
 local ServoSkull = component("ServoSkull")
 
 ServoSkull.init = function (self, unit)

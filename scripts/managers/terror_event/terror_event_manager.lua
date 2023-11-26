@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/terror_event/terror_event_manager.lua
+
 local BreedQueries = require("scripts/utilities/breed_queries")
 local HordeSettings = require("scripts/settings/horde/horde_settings")
 local LoadedDice = require("scripts/utilities/loaded_dice")
@@ -20,7 +22,9 @@ TerrorEventManager.init = function (self, world, is_server, network_event_delega
 	self._terror_trickle_data = {
 		spawned_minion_data = {}
 	}
+
 	local event_templates, random_event_templates = self:_load_mission_event_templates(mission)
+
 	self._flow_events_network_lookup = self:_create_network_lookups(event_templates)
 
 	if is_server then
@@ -82,6 +86,7 @@ TerrorEventManager._create_network_lookups = function (self, events)
 
 			if flow_event_name and not flow_events_lookup[flow_event_name] then
 				local id = #flow_events_lookup + 1
+
 				flow_events_lookup[id] = flow_event_name
 				flow_events_lookup[flow_event_name] = id
 			end
@@ -99,10 +104,12 @@ TerrorEventManager._calculate_random_event_probabilities = function (self, rando
 
 		for i = 1, #event_chunk, 2 do
 			local event_weight = event_chunk[i + 1]
+
 			weight_list[#weight_list + 1] = event_weight
 		end
 
 		local p, a = LoadedDice.create(weight_list, false)
+
 		random_event_probabilities[event_chunk_name] = {
 			p,
 			a
@@ -118,6 +125,7 @@ TerrorEventManager.start_event = function (self, event_name, optional_seed)
 	end
 
 	local start_events = self._start_events
+
 	start_events[#start_events + 1] = {
 		name = event_name,
 		data = {
@@ -136,7 +144,9 @@ TerrorEventManager.start_random_event = function (self, event_chunk_name)
 	local event_chunk = self._random_event_templates[event_chunk_name]
 	local probability_table = self._random_event_probabilities[event_chunk_name]
 	local index = LoadedDice.roll(probability_table[1], probability_table[2])
+
 	index = index * 2 - 1
+
 	local event_name = event_chunk[index]
 	local has_minion_spawners = self:_event_has_minion_spawners(event_name)
 
@@ -230,13 +240,16 @@ TerrorEventManager.start_terror_trickle = function (self, template_name, spawner
 	local data = self._terror_trickle_data
 	local trickle_template = TerrorTrickleTemplates[template_name]
 	local difficulty_template = Managers.state.difficulty:get_table_entry_by_resistance(trickle_template)
+
 	data.template = difficulty_template
 	data.use_occluded_positions = use_occluded_positions
+
 	local side_system = Managers.state.extension:system("side_system")
 	local spawn_side = side_system:get_side_from_name(TEMP_SPAWN_SIDE_NAME)
 	local spawn_side_id = spawn_side.side_id
 	local target_side = side_system:get_side_from_name(TEMP_TARGET_SIDE_NAME)
 	local target_side_id = target_side.side_id
+
 	data.spawn_side_id = spawn_side_id
 	data.target_side_id = target_side_id
 	data.limit_spawners = limit_spawners
@@ -246,8 +259,14 @@ TerrorEventManager.start_terror_trickle = function (self, template_name, spawner
 		data.proximity_spawners = proximity_spawners
 	end
 
+	if false then
+		-- Nothing
+	end
+
 	data.wave_timer = delay or DEFAULT_WAVE_TIMER
+
 	local num_waves = difficulty_template.num_waves
+
 	data.num_waves = math.random(num_waves[1], num_waves[2])
 	data.wave_counter = 0
 	data.active = true
@@ -334,7 +353,7 @@ TerrorEventManager._update_terror_trickle = function (self, dt, t)
 		local use_occluded_positions = data.use_occluded_positions
 		local minion_spawn_system = Managers.state.extension:system("minion_spawner_system")
 		local spawner_group = data.spawner_group
-		local spawners = nil
+		local spawners
 
 		if spawner_group then
 			local side_system = Managers.state.extension:system("side_system")
@@ -349,6 +368,7 @@ TerrorEventManager._update_terror_trickle = function (self, dt, t)
 				for i = 1, num_valid_player_units do
 					local target_unit = valid_player_units[i]
 					local position = POSITION_LOOKUP[target_unit]
+
 					average_position = average_position + position
 				end
 
@@ -391,14 +411,18 @@ TerrorEventManager._update_terror_trickle = function (self, dt, t)
 
 		data.wave_counter = data.wave_counter + 1
 
-		if data.num_waves <= data.wave_counter then
+		if data.wave_counter >= data.num_waves then
 			local num_waves = template.num_waves
+
 			data.num_waves = math.random(num_waves[1], num_waves[2])
 			data.wave_counter = 0
+
 			local cooldown = template.cooldown
+
 			data.wave_timer = math.random(cooldown[1], cooldown[2])
 		else
 			local time_between_waves = template.time_between_waves
+
 			data.wave_timer = math.random(time_between_waves[1], time_between_waves[2])
 		end
 
@@ -425,7 +449,9 @@ TerrorEventManager._start_event = function (self, event_name, data)
 		spawned_minion_data = {}
 	}
 	local active_events = self._active_events
+
 	active_events[#active_events + 1] = new_event
+
 	local t = Managers.time:time("gameplay")
 	local node = nodes[1]
 	local node_type = node[1]
@@ -442,6 +468,7 @@ end
 
 TerrorEventManager._update_event = function (self, event, t, dt)
 	self._current_event = event
+
 	local nodes = event.nodes
 	local node_index = event.node_index
 	local node = nodes[node_index]
@@ -460,6 +487,7 @@ TerrorEventManager._update_event = function (self, event, t, dt)
 		end
 
 		event.node_index = node_index
+
 		local next_node = nodes[node_index]
 
 		if not next_node.disabled then

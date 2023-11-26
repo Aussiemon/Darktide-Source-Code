@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/interaction/interactions/chest_interaction.lua
+
 require("scripts/extension_systems/interaction/interactions/base_interaction")
 
 local ChestInteraction = class("ChestInteraction", "BaseInteraction")

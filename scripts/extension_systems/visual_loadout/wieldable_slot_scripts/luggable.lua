@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/visual_loadout/wieldable_slot_scripts/luggable.lua
+
 local Vo = require("scripts/utilities/vo")
 local ProjectileLocomotionSettings = require("scripts/settings/projectile_locomotion/projectile_locomotion_settings")
 local locomotion_states = ProjectileLocomotionSettings.states
@@ -5,16 +7,22 @@ local Luggable = class("Luggable")
 
 Luggable.init = function (self, context, slot, weapon_template, fx_sources)
 	local is_server = context.is_server
+
 	self._is_server = is_server
 	self._slot = slot
+
 	local item_unit_3p = slot.unit_3p
+
 	self._item_unit_3p = item_unit_3p
 	self._luggable_locomotion_extension = ScriptUnit.extension(item_unit_3p, "locomotion_system")
 	self._owner_unit = context.owner_unit
 	self._is_local_unit = context.is_local_unit
 	self._visual_loadout_extension = context.visual_loadout_extension
+
 	local unit_data_extension = context.unit_data_extension
+
 	self._action_throw_luggable_component = unit_data_extension:read_component("action_throw_luggable")
+
 	local mission_objective_target_extension = ScriptUnit.extension(item_unit_3p, "mission_objective_target_system")
 	local objective_name = mission_objective_target_extension:objective_name()
 	local mission_objective_system = Managers.state.extension:system("mission_objective_system")
@@ -25,7 +33,9 @@ Luggable.init = function (self, context, slot, weapon_template, fx_sources)
 	end
 
 	local item_unit_1p = slot.unit_1p
+
 	self._item_unit_1p = item_unit_1p
+
 	local dynamic_id = Unit.find_actor(item_unit_1p, "dynamic")
 
 	Unit.destroy_actor(item_unit_1p, dynamic_id)

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/cinematic_scene/templates/hub_location_intro_mission_board.lua
+
 local cinematic_scene_templates = {
 	hub_location_intro_mission_board = {
 		is_skippable = true,

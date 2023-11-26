@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/backend/version_check.lua
+
 local BackendUtilities = require("scripts/foundation/managers/backend/utilities/backend_utilities")
 local Promise = require("scripts/foundation/utilities/promise")
 local VersionChecker = class("VersionChecker")

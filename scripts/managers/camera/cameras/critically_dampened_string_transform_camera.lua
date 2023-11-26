@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/camera/cameras/critically_dampened_string_transform_camera.lua
+
 local BaseCamera = require("scripts/managers/camera/cameras/base_camera")
 local CriticallyDampenedString = require("scripts/utilities/critically_dampened_string")
 local CriticallyDampenedStringTransformCamera = class("CriticallyDampenedStringTransformCamera", "BaseCamera")

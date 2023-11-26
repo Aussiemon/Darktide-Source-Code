@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/components/networked_timer.lua
+
 local NetworkedTimer = component("NetworkedTimer")
 
 NetworkedTimer.init = function (self, unit, is_server)

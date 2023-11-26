@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/behavior/utility_considerations/chaos_deamonhost_utility_considerations.lua
+
 local considerations = {
 	warp_sweep = {
 		distance_to_target = {

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/social_menu_view/social_menu_view_settings.lua
+
 local social_menu_view_settings = {
 	widget_fade_delay = 0.35,
 	max_num_portraits = 50,

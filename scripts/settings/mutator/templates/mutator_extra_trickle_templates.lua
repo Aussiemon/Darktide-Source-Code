@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/mutator/templates/mutator_extra_trickle_templates.lua
+
 local HordeCompositions = require("scripts/managers/pacing/horde_pacing/horde_compositions")
 local mutator_templates = {
 	mutator_chaos_hounds = {

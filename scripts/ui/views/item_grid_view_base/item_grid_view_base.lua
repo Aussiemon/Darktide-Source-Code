@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/item_grid_view_base/item_grid_view_base.lua
+
 local Breeds = require("scripts/settings/breed/breeds")
 local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templates")
 local Definitions = require("scripts/ui/views/item_grid_view_base/item_grid_view_base_definitions")
@@ -18,6 +20,7 @@ ItemGridViewBase.init = function (self, definitions, settings, context)
 	end
 
 	local player = context.preview_player or self:_player()
+
 	self._preview_player = player
 	self._presentation_profile = table.clone_instance(self._preview_player:profile())
 
@@ -30,6 +33,7 @@ ItemGridViewBase.init = function (self, definitions, settings, context)
 	end
 
 	self._is_own_player = self._preview_player == Managers.player:local_player(1)
+
 	local merged_definitions = table.clone(Definitions)
 
 	if definitions then
@@ -58,6 +62,7 @@ ItemGridViewBase.on_enter = function (self)
 
 	self._item_definitions = MasterItems.get_cached()
 	self._inventory_items = {}
+
 	local context = self._context
 	local ui_renderer = context and context.ui_renderer
 
@@ -123,10 +128,13 @@ ItemGridViewBase._setup_default_gui = function (self)
 	local world_layer = 100
 	local world_name = reference_name .. "_ui_default_world"
 	local view_name = self.view_name
+
 	self._gui_world = ui_manager:create_world(world_name, world_layer, timer_name, view_name)
+
 	local viewport_name = reference_name .. "_ui_default_world_viewport"
 	local viewport_type = "overlay"
 	local viewport_layer = 1
+
 	self._gui_viewport = ui_manager:create_viewport(self._gui_world, viewport_name, viewport_type, viewport_layer)
 	self._gui_viewport_name = viewport_name
 	self._ui_default_renderer = ui_manager:create_renderer(reference_name .. "_ui_default_renderer", self._gui_world)
@@ -137,17 +145,21 @@ ItemGridViewBase._setup_menu_tabs = function (self, content)
 	local id = "tab_menu"
 	local layer = tab_menu_settings.layer or 10
 	local tab_menu_element = self:_add_element(ViewElementTabMenu, id, layer, tab_menu_settings)
+
 	self._tab_menu_element = tab_menu_element
+
 	local input_action_left = "navigate_primary_left_pressed"
 	local input_action_right = "navigate_primary_right_pressed"
 
 	tab_menu_element:set_input_actions(input_action_left, input_action_right)
 
 	local tab_button_template = table.clone(tab_menu_settings.button_template or ButtonPassTemplates.tab_menu_button_icon)
+
 	tab_button_template[1].style = {
 		on_hover_sound = UISoundEvents.tab_secondary_button_hovered,
 		on_pressed_sound = UISoundEvents.tab_secondary_button_pressed
 	}
+
 	local tab_ids = {}
 
 	for i = 1, #content do
@@ -156,6 +168,7 @@ ItemGridViewBase._setup_menu_tabs = function (self, content)
 		local display_icon = tab_content.icon
 		local pressed_callback = callback(self, "cb_switch_tab", i)
 		local tab_id = tab_menu_element:add_entry(display_name, pressed_callback, tab_button_template, display_icon)
+
 		tab_ids[i] = tab_id
 	end
 
@@ -226,6 +239,7 @@ ItemGridViewBase._present_layout_by_slot_filter = function (self, slot_filter, i
 
 		self._filtered_offer_items_layout = filtered_layout
 		self._grid_display_name = optional_display_name
+
 		local sort_options = self._sort_options
 
 		if sort_options then
@@ -268,6 +282,7 @@ end
 
 ItemGridViewBase._set_preview_widgets_visibility = function (self, visible)
 	local widgets_by_name = self._widgets_by_name
+
 	widgets_by_name.display_name.content.visible = visible
 	widgets_by_name.display_name_divider.content.visible = visible
 	widgets_by_name.display_name_divider_glow.content.visible = visible
@@ -338,7 +353,9 @@ ItemGridViewBase._preview_item = function (self, item)
 				if equipped_item and can_compare then
 					if not self._previewed_equipped_item or self._previewed_equipped_item.gear_id ~= equipped_item.gear_id then
 						self._previewed_equipped_item = equipped_item
+
 						local is_equipped = true
+
 						item_stats_context.present_equip_label_equipped = is_equipped
 
 						self._weapon_compare_stats:present_item(equipped_item, item_stats_context)
@@ -372,6 +389,7 @@ ItemGridViewBase._preview_item = function (self, item)
 	local sub_display_name = ItemUtils.sub_display_name(item)
 	local rarity_color = ItemUtils.rarity_color(item)
 	local widgets_by_name = self._widgets_by_name
+
 	widgets_by_name.sub_display_name.content.text = sub_display_name
 	widgets_by_name.display_name.content.text = display_name
 	widgets_by_name.display_name_divider_glow.style.texture.color = table.clone(rarity_color)
@@ -410,6 +428,7 @@ ItemGridViewBase._setup_weapon_preview = function (self)
 			ignore_blur = true,
 			draw_background = false
 		}
+
 		self._weapon_preview = self:_add_element(ViewElementInventoryWeaponPreview, reference_name, layer, context)
 		self._weapon_zoom_fraction = -3
 		self._weapon_zoom_target = 1
@@ -430,10 +449,8 @@ ItemGridViewBase._update_weapon_preview_viewport = function (self)
 	local weapon_preview = self._weapon_preview
 
 	if weapon_preview then
-		local width_scale = 1
-		local height_scale = 1
-		local x_scale = 0
-		local y_scale = 0
+		local width_scale, height_scale = 1, 1
+		local x_scale, y_scale = 0, 0
 
 		weapon_preview:set_viewport_position_normalized(x_scale, y_scale)
 		weapon_preview:set_viewport_size_normalized(width_scale, height_scale)
@@ -445,7 +462,7 @@ ItemGridViewBase._update_weapon_preview_viewport = function (self)
 		local weapon_zoom_fraction = self._weapon_zoom_fraction or 1
 		local use_custom_zoom = true
 		local optional_node_name = "p_zoom"
-		local optional_pos = nil
+		local optional_pos
 		local min_zoom = self._min_zoom
 		local max_zoom = self._max_zoom
 
@@ -462,7 +479,7 @@ end
 ItemGridViewBase._get_weapon_spawn_position_normalized = function (self)
 	self:_force_update_scenegraph()
 
-	local scale = nil
+	local scale
 	local pivot_world_position = self:_scenegraph_world_position("weapon_pivot", scale)
 	local parent_world_position = self:_scenegraph_world_position("weapon_viewport", scale)
 	local viewport_width, viewport_height = self:_scenegraph_size("weapon_viewport", scale)
@@ -502,7 +519,9 @@ ItemGridViewBase._setup_item_grid = function (self, optional_grid_settings)
 	local context = optional_grid_settings or self._definitions.grid_settings
 	local reference_name = "item_grid"
 	local layer = 10
+
 	self._item_grid = self:_add_element(ViewElementGrid, reference_name, layer, context)
+
 	local preview_player = self._preview_player
 
 	if preview_player then
@@ -599,6 +618,7 @@ ItemGridViewBase.on_exit = function (self)
 
 	if self._should_unload then
 		self._should_unload = nil
+
 		local frame_delay_count = 1
 
 		Managers.ui:unload_view(self.view_name, self.__class_name, frame_delay_count)
@@ -614,7 +634,7 @@ ItemGridViewBase.on_exit = function (self)
 end
 
 ItemGridViewBase.cb_on_sort_button_pressed = function (self, option)
-	local option_sort_index = nil
+	local option_sort_index
 	local sort_options = self._sort_options
 
 	for i = 1, #sort_options do
@@ -628,6 +648,7 @@ ItemGridViewBase.cb_on_sort_button_pressed = function (self, option)
 	if option_sort_index ~= self._selected_sort_option_index then
 		self._selected_sort_option_index = option_sort_index
 		self._selected_sort_option = option
+
 		local sort_function = option.sort_function
 
 		self:_sort_grid_layout(sort_function)
@@ -635,7 +656,7 @@ ItemGridViewBase.cb_on_sort_button_pressed = function (self, option)
 end
 
 ItemGridViewBase._cb_on_present = function (self)
-	local new_selection_index = nil
+	local new_selection_index
 	local grid_widgets = self._item_grid:widgets()
 	local selected_gear_id = self._selected_gear_id
 
@@ -689,7 +710,9 @@ ItemGridViewBase._sort_grid_layout = function (self, sort_function)
 	local widget_index = item_grid:selected_grid_index()
 	local selected_element = widget_index and item_grid:element_by_index(widget_index)
 	local selected_item = selected_element and selected_element.item
+
 	self._selected_gear_id = self._selected_gear_id or selected_item and selected_item.gear_id
+
 	local on_present_callback = callback(self, "_cb_on_present")
 
 	self:present_grid_layout(layout, on_present_callback)
@@ -808,6 +831,7 @@ ItemGridViewBase.update = function (self, dt, t, input_service)
 			self._item_grid:select_first_index()
 
 			selected_grid_widget = item_grid:selected_grid_widget()
+
 			local selected_grid_element = selected_grid_widget and selected_grid_widget.content.element
 			local selected_grid_item = selected_grid_element and selected_grid_element.item
 
@@ -826,9 +850,11 @@ ItemGridViewBase.draw = function (self, dt, t, input_service, layer)
 	local render_scale = self._render_scale
 	local render_settings = self._render_settings
 	local ui_renderer = self._ui_default_renderer
+
 	render_settings.start_layer = layer
 	render_settings.scale = render_scale
 	render_settings.inverse_scale = render_scale and 1 / render_scale
+
 	local ui_scenegraph = self._ui_scenegraph
 
 	UIRenderer.begin_pass(ui_renderer, ui_scenegraph, input_service, dt, render_settings)
@@ -994,7 +1020,7 @@ ItemGridViewBase.cb_on_inspect_pressed = function (self)
 		end
 
 		if not Managers.ui:view_active(view_name) then
-			local context = nil
+			local context
 
 			if item_type == "WEAPON_SKIN" then
 				local include_skin_item_texts = true
@@ -1020,12 +1046,15 @@ ItemGridViewBase.cb_on_inspect_pressed = function (self)
 				local profile = is_item_supported_on_played_character and player_profile or ItemUtils.create_mannequin_profile_by_item(visual_item, preffered_gender)
 				local slots = visual_item.slots
 				local slot_name = slots[1]
+
 				profile.loadout[slot_name] = visual_item
+
 				local archetype = profile.archetype
 				local breed_name = archetype.breed
 				local breed = Breeds[breed_name]
 				local state_machine = breed.inventory_state_machine
 				local animation_event = visual_item.inventory_animation_event or "inventory_idle_default"
+
 				context = {
 					disable_zoom = true,
 					profile = profile,

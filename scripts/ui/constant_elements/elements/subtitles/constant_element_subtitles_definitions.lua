@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/constant_elements/elements/subtitles/constant_element_subtitles_definitions.lua
+
 local UIWorkspaceSettings = require("scripts/settings/ui/ui_workspace_settings")
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local UIWidget = require("scripts/managers/ui/ui_widget")
@@ -20,6 +22,7 @@ local scenegraph_definition = {
 	}
 }
 local text_style = table.clone(UIFontSettings.body)
+
 text_style.horizontal_alignment = "center"
 text_style.vertical_alignment = "center"
 text_style.text_horizontal_alignment = "center"
@@ -31,6 +34,7 @@ text_style.offset = {
 }
 text_style.text_color = Color.white(255, true)
 text_style.size = size
+
 local widget_definitions = {
 	subtitles = UIWidget.create_definition({
 		{

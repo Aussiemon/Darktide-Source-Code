@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/view_elements/view_element_weapon_actions/view_element_weapon_actions.lua
+
 local Definitions = require("scripts/ui/view_elements/view_element_weapon_actions/view_element_weapon_actions_definitions")
 local MasterItems = require("scripts/backend/master_items")
 local WeaponIconUI = require("scripts/ui/weapon_icon_ui")
@@ -11,13 +13,16 @@ local ViewElementWeaponActions = class("ViewElementWeaponActions", "ViewElementG
 
 ViewElementWeaponActions.init = function (self, parent, draw_layer, start_scale, optional_menu_settings)
 	local class_name = self.__class_name
+
 	self._unique_id = class_name .. "_" .. string.gsub(tostring(self), "table: ", "")
 
 	ViewElementWeaponActions.super.init(self, parent, draw_layer, start_scale, optional_menu_settings, Definitions)
 
 	local menu_settings = self._menu_settings
+
 	self._default_grid_size = table.clone(menu_settings.grid_size)
 	self._default_mask_size = table.clone(menu_settings.mask_size)
+
 	local menu_settings = self._menu_settings
 	local grid_size = menu_settings.grid_size
 	local weapons_render_settings = {
@@ -33,6 +38,7 @@ ViewElementWeaponActions.init = function (self, parent, draw_layer, start_scale,
 		world_name = self._unique_id
 	}
 	local icon_render_type = "weapon"
+
 	self._weapon_icon_renderer_id = "ViewElementWeaponActions_" .. math.uuid()
 	self._weapon_icon_renderer = Managers.ui:create_single_icon_renderer(icon_render_type, self._weapon_icon_renderer_id, weapons_render_settings)
 
@@ -41,10 +47,15 @@ end
 
 ViewElementWeaponActions._hide_dividers = function (self)
 	local grid_divider_top = self:widget_by_name("grid_divider_top")
+
 	grid_divider_top.style.texture.color[1] = 0
+
 	local grid_divider_bottom = self:widget_by_name("grid_divider_bottom")
+
 	grid_divider_bottom.style.texture.color[1] = 0
+
 	local grid_divider_title = self:widget_by_name("grid_divider_title")
+
 	grid_divider_title.style.texture.color[1] = 0
 end
 
@@ -101,6 +112,7 @@ ViewElementWeaponActions.present_item = function (self, item)
 				end
 
 				local title_loc_key = weapon_action_title_display_names[key]
+
 				layout[#layout + 1] = {
 					widget_type = "weapon_attack_header",
 					display_name = title_loc_key
@@ -176,6 +188,7 @@ ViewElementWeaponActions.present_grid_layout = function (self, layout)
 	local grid_size = menu_settings.grid_size
 	local mask_size = menu_settings.mask_size
 	local default_grid_height = self._default_grid_size[2]
+
 	grid_size[2] = default_grid_height
 	mask_size[2] = default_grid_height
 
@@ -194,6 +207,7 @@ ViewElementWeaponActions._on_present_grid_layout_changed = function (self, layou
 	local grid_size = menu_settings.grid_size
 	local mask_size = menu_settings.mask_size
 	local new_grid_height = math.clamp(grid_length, 0, self._default_grid_size[2])
+
 	grid_size[2] = new_grid_height
 	mask_size[2] = new_grid_height
 

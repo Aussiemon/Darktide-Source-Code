@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/cinematic_scene/templates/hub_location_intro_contracts.lua
+
 local cinematic_scene_templates = {
 	hub_location_intro_contracts = {
 		is_skippable = true,

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/components/trigger.lua
+
 local Trigger = component("Trigger")
 
 Trigger.init = function (self, unit)

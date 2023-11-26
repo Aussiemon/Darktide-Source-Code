@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/hud/elements/damage_indicator/hud_element_damage_indicator_settings.lua
+
 local UIHudSettings = require("scripts/settings/ui/ui_hud_settings")
 local AttackSettings = require("scripts/settings/damage/attack_settings")
 local attack_results = AttackSettings.attack_results

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/mission_objective/templates/cm_archives_objective_template.lua
+
 local mission_objective_templates = {
 	cm_archives = {
 		main_objective_type = "control_objective",

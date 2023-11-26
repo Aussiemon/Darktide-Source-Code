@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/breed/breed_combat_ranges/cultist/cultist_flamer_combat_ranges.lua
+
 local EffectTemplates = require("scripts/settings/fx/effect_templates")
 local combat_ranges = {
 	name = "cultist_flamer",

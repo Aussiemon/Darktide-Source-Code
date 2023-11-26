@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/character_state_machine/character_states/player_character_state_dodging.lua
+
 require("scripts/extension_systems/character_state_machine/character_states/player_character_state_base")
 
 local BuffSettings = require("scripts/settings/buff/buff_settings")
@@ -14,6 +16,7 @@ PlayerCharacterStateDodging.init = function (self, character_state_init_context,
 
 	local unit_data_extension = character_state_init_context.unit_data
 	local dodge_character_state_component = unit_data_extension:write_component("dodge_character_state")
+
 	dodge_character_state_component.cooldown = 0
 	dodge_character_state_component.consecutive_dodges = 0
 	dodge_character_state_component.consecutive_dodges_cooldown = 0
@@ -30,16 +33,9 @@ end
 PlayerCharacterStateDodging._on_enter_animation = function (self, unit, dodge_direction, estimated_dodge_time, animation_extension)
 	local x_value = Vector3.x(dodge_direction)
 	local y_value = Vector3.y(dodge_direction)
-	local dodge_animation = nil
+	local dodge_animation
 
-	if math.abs(x_value) < math.abs(y_value) then
-		dodge_animation = "dodge_bwd"
-	elseif x_value > 0 then
-		dodge_animation = "dodge_right"
-	else
-		dodge_animation = "dodge_left"
-	end
-
+	dodge_animation = math.abs(y_value) > math.abs(x_value) and "dodge_bwd" or x_value > 0 and "dodge_right" or "dodge_left"
 	estimated_dodge_time = math.clamp(estimated_dodge_time, 0, 1)
 
 	animation_extension:anim_event_with_variable_float(dodge_animation, "dodge_time", estimated_dodge_time)
@@ -74,12 +70,12 @@ local function _find_speed_settings_index(time_in_dodge, start_index, dodge_spee
 end
 
 local function _find_current_dodge_speed(time_in_dodge, speed_settings_index, dodge_speed_at_times, speed_modifier, diminishing_return_factor, distance_scale)
-	local speed = nil
+	local speed
 	local num_dodge_speed_at_times = #dodge_speed_at_times
 	local total_modifier = speed_modifier * diminishing_return_factor
 	local next_speed_setting_index = speed_settings_index + 1
 
-	if num_dodge_speed_at_times >= next_speed_setting_index then
+	if next_speed_setting_index <= num_dodge_speed_at_times then
 		local current_speed_settings = dodge_speed_at_times[speed_settings_index]
 		local next_speed_settings = dodge_speed_at_times[next_speed_setting_index]
 		local current_time_in_setting = current_speed_settings.time_in_dodge
@@ -99,10 +95,12 @@ local function _find_current_dodge_speed(time_in_dodge, speed_settings_index, do
 		local time_between_settings = next_time_in_setting - current_time_in_setting
 		local time_in_setting = time_in_dodge / distance_scale - current_time_in_setting
 		local percentage_in_between = time_in_setting / time_between_settings
+
 		speed = math.lerp(current_setting_speed, next_setting_speed, percentage_in_between) * total_modifier
 	else
 		local current_speed_settings = dodge_speed_at_times[speed_settings_index]
 		local current_setting_speed = current_speed_settings.speed
+
 		speed = current_setting_speed * total_modifier
 	end
 
@@ -130,9 +128,11 @@ local function _calculate_dodge_total_time(base_dodge_template, diminishing_retu
 
 	while not hit_end do
 		time_in_dodge = time_in_dodge + time_step
+
 		local start_point = 1
 		local current_speed_setting_index = _find_speed_settings_index(time_in_dodge, start_point, dodge_speed_at_times, distance_scale)
 		local speed = _find_current_dodge_speed(time_in_dodge, current_speed_setting_index, dodge_speed_at_times, speed_modifier, diminishing_return_factor, distance_scale)
+
 		distance_travelled = distance_travelled + speed * time_step
 
 		if dodge_distance < distance_travelled then
@@ -151,11 +151,13 @@ PlayerCharacterStateDodging.on_enter = function (self, unit, dt, t, previous_sta
 	local dodge_character_state_component = self._dodge_character_state_component
 	local weapon_dodge_template = self._weapon_extension:dodge_template()
 	local dodge_direction = params.dodge_direction
+
 	dodge_character_state_component.dodge_direction = dodge_direction
 	params.dodge_direction = nil
+
 	local buff_extension = self._buff_extension
 
-	if dodge_character_state_component.consecutive_dodges_cooldown < t then
+	if t > dodge_character_state_component.consecutive_dodges_cooldown then
 		dodge_character_state_component.consecutive_dodges = 1
 	else
 		dodge_character_state_component.consecutive_dodges = math.min(dodge_character_state_component.consecutive_dodges + 1, NetworkConstants.max_consecutive_dodges)
@@ -163,10 +165,14 @@ PlayerCharacterStateDodging.on_enter = function (self, unit, dt, t, previous_sta
 
 	local diminishing_return_factor = _calculate_dodge_diminishing_return(dodge_character_state_component, weapon_dodge_template, self._buff_extension)
 	local base_distance = weapon_dodge_template and weapon_dodge_template.base_distance or base_dodge_template.base_distance
+
 	dodge_character_state_component.distance_left = base_distance * (weapon_dodge_template and weapon_dodge_template.distance_scale or 1) * diminishing_return_factor
 	dodge_character_state_component.jump_override_time = t + base_dodge_template.dodge_jump_override_timer
+
 	local movement_state = self._movement_state_component
+
 	dodge_character_state_component.started_from_crouch = movement_state.is_crouching
+
 	local estimated_dodge_time = _calculate_dodge_total_time(base_dodge_template, diminishing_return_factor, weapon_dodge_template, self._buff_extension)
 
 	self:_on_enter_animation(unit, dodge_direction, estimated_dodge_time, self._animation_extension)
@@ -174,6 +180,7 @@ PlayerCharacterStateDodging.on_enter = function (self, unit, dt, t, previous_sta
 	self._locomotion_steering_component.disable_velocity_rotation = true
 	movement_state.method = "dodging"
 	movement_state.is_dodging = true
+
 	local game_mode_name = Managers.state.game_mode:game_mode_name()
 
 	if game_mode_name == TRAINING_GROUNDS_GAME_MODE_NAME then
@@ -201,16 +208,20 @@ PlayerCharacterStateDodging.on_exit = function (self, unit, t, next_state)
 	local buff_extension = self._buff_extension
 	local time_in_dodge = t - self._character_state_component.entered_t
 	local cd = math.max(base_dodge_template.dodge_cooldown, base_dodge_template.dodge_jump_override_timer - time_in_dodge)
+
 	dodge_character_state_component.cooldown = t + cd
+
 	local weapon_consecutive_dodges_reset = weapon_dodge_template and weapon_dodge_template.consecutive_dodges_reset or 0
 	local stat_buffs = self._buff_extension:stat_buffs()
 	local buff_modifier = stat_buffs.dodge_cooldown_reset_modifier
 	local buff_dodge_cooldown_reset_modifier = buff_modifier and 1 - (buff_modifier - 1) or 1
 	local cooldown = (base_dodge_template.consecutive_dodges_reset + weapon_consecutive_dodges_reset) * buff_dodge_cooldown_reset_modifier
+
 	dodge_character_state_component.consecutive_dodges_cooldown = t + cooldown
 	dodge_character_state_component.dodge_time = t
 	self._movement_state_component.is_dodging = false
 	self._locomotion_steering_component.disable_velocity_rotation = false
+
 	local animation_extension = self._animation_extension
 	local dodge_animation = "dodge_end"
 
@@ -332,9 +343,13 @@ PlayerCharacterStateDodging._update_dodge = function (self, unit, dt, time_in_do
 	local unit_rotation = self._first_person_component.rotation
 	local flat_unit_rotation = Quaternion.look(Vector3.normalize(Vector3.flat(Quaternion.forward(unit_rotation))), Vector3.up())
 	local move_direction = Quaternion.rotate(flat_unit_rotation, dodge_character_state_component.dodge_direction)
+
 	self._locomotion_steering_component.velocity_wanted = move_direction * speed
+
 	local move_delta = speed * dt
+
 	dodge_character_state_component.distance_left = math.max(dodge_character_state_component.distance_left - move_delta, 0)
+
 	local slide_threshold_sq = self._constants.slide_move_speed_threshold_sq
 	local wants_slide = has_slide_input and slide_threshold_sq < current_length_sq
 

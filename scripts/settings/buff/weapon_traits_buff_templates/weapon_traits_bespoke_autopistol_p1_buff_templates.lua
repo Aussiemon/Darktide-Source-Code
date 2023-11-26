@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/buff/weapon_traits_buff_templates/weapon_traits_bespoke_autopistol_p1_buff_templates.lua
+
 local BaseWeaponTraitBuffTemplates = require("scripts/settings/buff/weapon_traits_buff_templates/base_weapon_trait_buff_templates")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local CheckProcFunctions = require("scripts/settings/buff/validation_functions/check_proc_functions")
@@ -6,26 +8,26 @@ local FireStepFunctions = require("scripts/settings/buff/fire_step_functions")
 local keywords = BuffSettings.keywords
 local stat_buffs = BuffSettings.stat_buffs
 local proc_events = BuffSettings.proc_events
-local templates = {
-	weapon_trait_bespoke_autopistol_p1_stacking_crit_bonus_on_continuous_fire = table.merge({
-		conditional_stat_buffs = {
-			[stat_buffs.critical_strike_chance] = 0.01
-		},
-		continuous_fire_step_func = FireStepFunctions.default_continuous_fire_step_func
-	}, BaseWeaponTraitBuffTemplates.stacking_buff_on_continuous_fire),
-	weapon_trait_bespoke_autopistol_p1_toughness_on_continuous_fire = table.merge({
-		toughness_fixed_percentage = 0.1,
-		continuous_fire_step_func = FireStepFunctions.toughness_regen_continuous_fire_step_func
-	}, BaseWeaponTraitBuffTemplates.toughness_on_continuous_fire),
-	weapon_trait_bespoke_autopistol_p1_power_bonus_on_continuous_fire = table.merge({
-		conditional_stat_buffs = {
-			[stat_buffs.power_level_modifier] = 0.02
-		},
-		continuous_fire_step_func = FireStepFunctions.default_continuous_fire_step_func
-	}, BaseWeaponTraitBuffTemplates.stacking_buff_on_continuous_fire),
-	weapon_trait_bespoke_autopistol_p1_reload_speed_on_slide_parent = table.clone(BaseWeaponTraitBuffTemplates.reload_speed_on_close_kill_parent),
-	weapon_trait_bespoke_autopistol_p1_reload_speed_on_slide_child = table.clone(BaseWeaponTraitBuffTemplates.reload_speed_on_close_kill_child)
-}
+local templates = {}
+
+templates.weapon_trait_bespoke_autopistol_p1_stacking_crit_bonus_on_continuous_fire = table.merge({
+	conditional_stat_buffs = {
+		[stat_buffs.critical_strike_chance] = 0.01
+	},
+	continuous_fire_step_func = FireStepFunctions.default_continuous_fire_step_func
+}, BaseWeaponTraitBuffTemplates.stacking_buff_on_continuous_fire)
+templates.weapon_trait_bespoke_autopistol_p1_toughness_on_continuous_fire = table.merge({
+	toughness_fixed_percentage = 0.1,
+	continuous_fire_step_func = FireStepFunctions.toughness_regen_continuous_fire_step_func
+}, BaseWeaponTraitBuffTemplates.toughness_on_continuous_fire)
+templates.weapon_trait_bespoke_autopistol_p1_power_bonus_on_continuous_fire = table.merge({
+	conditional_stat_buffs = {
+		[stat_buffs.power_level_modifier] = 0.02
+	},
+	continuous_fire_step_func = FireStepFunctions.default_continuous_fire_step_func
+}, BaseWeaponTraitBuffTemplates.stacking_buff_on_continuous_fire)
+templates.weapon_trait_bespoke_autopistol_p1_reload_speed_on_slide_parent = table.clone(BaseWeaponTraitBuffTemplates.reload_speed_on_close_kill_parent)
+templates.weapon_trait_bespoke_autopistol_p1_reload_speed_on_slide_child = table.clone(BaseWeaponTraitBuffTemplates.reload_speed_on_close_kill_child)
 templates.weapon_trait_bespoke_autopistol_p1_reload_speed_on_slide_parent.child_buff_template = "weapon_trait_bespoke_autopistol_p1_reload_speed_on_slide_child"
 templates.weapon_trait_bespoke_autopistol_p1_suppression_on_close_kill = table.clone(BaseWeaponTraitBuffTemplates.suppression_on_close_kill)
 templates.weapon_trait_bespoke_autopistol_p1_hipfire_while_sprinting = table.clone(BaseWeaponTraitBuffTemplates.hipfire_while_sprinting)

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/weapon/actions/utilities/sweep_spline.lua
+
 local Hermite = require("scripts/utilities/spline/hermite")
 local SweepSplineTemplates = require("scripts/settings/equipment/sweep_spline_templates")
 local SweepSpline = class("SweepSpline")
@@ -9,6 +11,7 @@ local function _apply_first_person_context(local_point, first_person, anchor_poi
 	if anchor_point_offset then
 		local local_anchor_point_offset = Vector3(anchor_point_offset[1], anchor_point_offset[2], anchor_point_offset[3])
 		local world_anchor_point_offset = Quaternion.rotate(rot, local_anchor_point_offset)
+
 		pos = pos + world_anchor_point_offset
 	end
 
@@ -22,6 +25,7 @@ SweepSpline.init = function (self, spline_settings, first_person_component)
 
 	if not spline_settings.points then
 		local template = SweepSplineTemplates[spline_settings.template]
+
 		spline_settings.points = table.clone(template.points)
 	end
 
@@ -42,14 +46,13 @@ SweepSpline.position_and_rotation = function (self, t)
 	local splines_index = t == 1 and num_splines or math.floor(spline_t) + 1
 	local local_t = spline_t - (splines_index - 1)
 	local points = self._splines[splines_index].points
-	local p1 = points[1]:unbox()
-	local p2 = points[2]:unbox()
-	local p3 = points[3]:unbox()
-	local p4 = points[4]:unbox()
+	local p1, p2, p3, p4 = points[1]:unbox(), points[2]:unbox(), points[3]:unbox(), points[4]:unbox()
 	local point = Hermite.calc_point(local_t, p1, p2, p3, p4)
 	local sweep_position, anchor_to_point_offset = _apply_first_person_context(point, self._first_person_component, self._anchor_point_offset)
 	local tangent = Hermite.calc_tangent(local_t, p1, p2, p3, p4)
+
 	tangent.y = 0
+
 	local tangent_dir = Vector3.normalize(tangent)
 	local roll = Vector3.angle(Vector3.right(), tangent_dir)
 
@@ -71,12 +74,16 @@ end
 
 SweepSpline._build = function (self, spline_settings)
 	self._anchor_point_offset = spline_settings.anchor_point_offset
+
 	local points = self:_create_points(spline_settings.points)
+
 	self._splines, self._num_splines = self:_build_splines(points)
+
 	local num_points = #points
 
 	for i = 1, num_points do
 		local point = points[i]
+
 		points[i] = Vector3Box(point)
 	end
 
@@ -89,6 +96,7 @@ SweepSpline._create_points = function (self, points)
 
 	for i = 1, #points do
 		local point = points[i]
+
 		spline_points[i] = Vector3(point[1], point[2], point[3])
 	end
 

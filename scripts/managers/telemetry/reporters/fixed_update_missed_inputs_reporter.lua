@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/telemetry/reporters/fixed_update_missed_inputs_reporter.lua
+
 local ReporterInterface = require("scripts/managers/telemetry/reporters/reporter_interface")
 local FixedUpdateMissedInputsReporter = class("FixedUpdateMissedInputsReporter")
 
@@ -29,6 +31,7 @@ FixedUpdateMissedInputsReporter.register_event = function (self, player)
 			telemetry_subject = subject,
 			telemetry_game_session = player:telemetry_game_session()
 		}
+
 		self._reports[player_key] = {
 			entries = 1,
 			player_data = player_data

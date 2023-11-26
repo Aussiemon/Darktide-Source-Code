@@ -1,8 +1,11 @@
+﻿-- chunkname: @scripts/extension_systems/character_state_machine/character_states/utilities/fall.lua
+
 local Attack = require("scripts/utilities/attack/attack")
 local Fall = {}
 
 Fall.set_fall_height = function (locomotion_component, inair_state_component)
 	local player_position = locomotion_component.position
+
 	inair_state_component.fell_from_height = player_position.z
 end
 
@@ -38,7 +41,7 @@ Fall.check_damage = function (unit, player_character_constants, locomotion_compo
 	local max_power_level = fall_damage_settings.max_power_level
 	local heavy_damage_threshold = fall_damage_settings.heavy_damage_height
 	local fall_distance = Fall.fall_distance(locomotion_component, in_air_character_state_component)
-	local damage_profile, damage_type = nil
+	local damage_profile, damage_type
 
 	if heavy_damage_threshold < fall_distance then
 		damage_profile = fall_damage_settings.damage_profile_heavy

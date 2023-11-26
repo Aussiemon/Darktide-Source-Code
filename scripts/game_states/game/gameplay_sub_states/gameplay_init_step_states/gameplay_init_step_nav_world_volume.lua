@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/game_states/game/gameplay_sub_states/gameplay_init_step_states/gameplay_init_step_nav_world_volume.lua
+
 local GameplayInitStepInterface = require("scripts/game_states/game/gameplay_sub_states/gameplay_init_step_states/gameplay_init_step_state_interface")
 local GameplayInitStepNavSpawnPoints = require("scripts/game_states/game/gameplay_sub_states/gameplay_init_step_states/gameplay_init_step_nav_spawn_points")
 local GameplayInitStepNavWorldVolume = class("GameplayInitStepNavWorldVolume")

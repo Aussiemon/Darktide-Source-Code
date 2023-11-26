@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/aim/player_husk_aim_extension.lua
+
 local SweepStickyness = require("scripts/utilities/action/sweep_stickyness")
 local ThirdPersonAimAnimationControl = require("scripts/extension_systems/aim/third_person_aim_animation_control")
 local ThirdPersonIdleFullbodyAnimationControl = require("scripts/extension_systems/aim/third_person_idle_fullbody_animation_control")
@@ -13,11 +15,15 @@ PlayerHuskAimExtension.init = function (self, extension_init_context, unit, exte
 	self._aim_animation_control = ThirdPersonAimAnimationControl:new(unit)
 	self._idle_fullbody_animation_control = ThirdPersonIdleFullbodyAnimationControl:new(unit)
 	self._look_delta_animation_control = ThirdPersonLookDeltaAnimationControl:new(unit)
+
 	local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
+
 	self._action_sweep_component = unit_data_extension:read_component("action_sweep")
 	self._sticky_aim_position_box = Vector3Box()
 	self._skticy_aim_blend = 0
+
 	local aim_direction = GameSession.game_object_field(game_session, game_object_id, "aim_direction")
+
 	self._aim_direction_box = Vector3Box(aim_direction)
 end
 
@@ -65,6 +71,7 @@ PlayerHuskAimExtension.update = function (self, unit, dt, t)
 	end
 
 	self._skticy_aim_blend = skticy_aim_blend
+
 	local new_aim_position = Vector3.lerp(aim_position, sticky_aim_position, skticy_aim_blend)
 
 	Unit.animation_set_constraint_target(unit, self._aim_constraint_variable, new_aim_position)

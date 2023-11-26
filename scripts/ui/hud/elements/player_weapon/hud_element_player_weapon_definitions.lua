@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/hud/elements/player_weapon/hud_element_player_weapon_definitions.lua
+
 local HudElementPlayerWeaponHandlerSettings = require("scripts/ui/hud/elements/player_weapon_handler/hud_element_player_weapon_handler_settings")
 local HudElementPlayerWeaponSettings = require("scripts/ui/hud/elements/player_weapon/hud_element_player_weapon_settings")
 local UIWorkspaceSettings = require("scripts/settings/ui/ui_workspace_settings")
@@ -36,21 +38,24 @@ local ammo_text_style = {
 	font_size = 48,
 	drop_shadow = false,
 	font_type = "machine_medium",
-	text_color = UIHudSettings.color_tint_main_1,
-	offset = {
-		-64,
-		0,
-		6
-	},
-	default_font_size = HudElementPlayerWeaponSettings.ammo_font_size_default,
-	focused_font_size = HudElementPlayerWeaponSettings.ammo_font_size_focused,
-	text_horizontal_alignment = "right",
-	text_vertical_alignment = "top",
-	vertical_alignment = "center",
-	drop_shadow = false,
-	clip_ammo = true
+	text_color = UIHudSettings.color_tint_main_1
 }
+
+ammo_text_style.offset = {
+	-64,
+	0,
+	6
+}
+ammo_text_style.default_font_size = HudElementPlayerWeaponSettings.ammo_font_size_default
+ammo_text_style.focused_font_size = HudElementPlayerWeaponSettings.ammo_font_size_focused
+ammo_text_style.text_horizontal_alignment = "right"
+ammo_text_style.text_vertical_alignment = "top"
+ammo_text_style.vertical_alignment = "center"
+ammo_text_style.drop_shadow = false
+ammo_text_style.clip_ammo = true
+
 local ammo_spare_text_style = table.clone(ammo_text_style)
+
 ammo_spare_text_style.offset = {
 	0,
 	0,
@@ -64,7 +69,9 @@ ammo_spare_text_style.default_text_color = ammo_text_style.text_color
 ammo_spare_text_style.default_font_size = HudElementPlayerWeaponSettings.ammo_font_size_default_small
 ammo_spare_text_style.focused_font_size = HudElementPlayerWeaponSettings.ammo_font_size_focused_small
 ammo_spare_text_style.clip_ammo = false
+
 local input_text_style = table.clone(UIFontSettings.hud_body)
+
 input_text_style.horizontal_alignment = "left"
 input_text_style.vertical_alignment = "center"
 input_text_style.text_horizontal_alignment = "left"

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/equipment/item_material_overrides/player_material_overrides_emissive.lua
+
 local material_overrides = {
 	emissive_red_01 = {
 		property_overrides = {

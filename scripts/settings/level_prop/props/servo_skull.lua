@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/level_prop/props/servo_skull.lua
+
 local prop_data = {
 	unit_name = "content/characters/npc/servo_skulls/attachments_base/servo_skull_scanning/servo_skull_scanning",
 	name = "servo_skull",

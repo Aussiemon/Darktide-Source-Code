@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/game_states/game/gameplay_sub_states/gameplay_init_step_states/gameplay_init_step_network_events.lua
+
 local GameplayInitStepInterface = require("scripts/game_states/game/gameplay_sub_states/gameplay_init_step_states/gameplay_init_step_state_interface")
 local GameplayInitStepTimer = require("scripts/game_states/game/gameplay_sub_states/gameplay_init_step_states/gameplay_init_step_timer")
 local GameplayRpcs = require("scripts/game_states/game/utilities/gameplay_rpcs")
@@ -7,7 +9,9 @@ local CLIENT_RPCS = GameplayRpcs.COMMON_CLIENT_RPCS
 
 GameplayInitStepNetworkEvents.on_enter = function (self, parent, params)
 	local shared_state = params.shared_state
+
 	self._shared_state = shared_state
+
 	local gameplay_state = parent:gameplay_state()
 	local is_server = shared_state.is_server
 

@@ -1,8 +1,12 @@
+﻿-- chunkname: @scripts/extension_systems/camera/player_husk_camera_extension.lua
+
 local PlayerHuskCameraExtension = class("PlayerHuskCameraExtension")
 
 PlayerHuskCameraExtension.init = function (self, extension_init_context, unit, extension_init_data, game_object_data_or_game_session, nil_or_game_object_id)
 	self._unit = unit
+
 	local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
+
 	self._first_person_extension = ScriptUnit.extension(unit, "first_person_system")
 	self._camera_tree_component = unit_data_extension:read_component("camera_tree")
 	self._is_local_unit = extension_init_data.is_local_unit
@@ -18,10 +22,9 @@ local NODE_OBJECT_NAMES = {
 
 PlayerHuskCameraExtension.camera_tree_node = function (self)
 	local camera_comp = self._camera_tree_component
-	local tree = camera_comp.tree
-	local node = camera_comp.node
+	local tree, node = camera_comp.tree, camera_comp.node
 	local object_name = NODE_OBJECT_NAMES[node]
-	local object = nil
+	local object
 
 	if object_name and Unit.has_node(self._unit, object_name) then
 		object = Unit.node(self._unit, object_name)

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/components/light_controller_flicker.lua
+
 LightControllerFlickerSettings = LightControllerFlickerSettings or {}
 LightControllerFlickerSettings.default = {
 	octaves = 5,

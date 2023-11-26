@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/grpc/grpc_stream.lua
+
 local Promise = require("scripts/foundation/utilities/promise")
 local GRPCStream = class("GRPCStream")
 

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/wallet_settings.lua
+
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local wallet_settings = {
 	credits = {

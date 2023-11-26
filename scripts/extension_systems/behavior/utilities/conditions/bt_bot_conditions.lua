@@ -1,56 +1,60 @@
+﻿-- chunkname: @scripts/extension_systems/behavior/utilities/conditions/bt_bot_conditions.lua
+
 local Ammo = require("scripts/utilities/ammo")
 local Overheat = require("scripts/utilities/overheat")
-local conditions = {
-	_can_activate_zealot_relic = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
-		local max_distance_sq = 100
-		local challenge_threshold = 1.75
-		local targeting_multiplier = 1.25
-		local self_position = POSITION_LOOKUP[unit]
-		local can_activate = false
-		local perception_extension = ScriptUnit.extension(unit, "perception_system")
-		local enemies_in_proximity, num_proximite_enemies = perception_extension:enemies_in_proximity()
-		local total_challenge_rating = 0
+local conditions = {}
 
-		for i = 1, num_proximite_enemies do
-			local enemy_unit = enemies_in_proximity[i]
-			local enemy_position = POSITION_LOOKUP[enemy_unit]
+conditions._can_activate_zealot_relic = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
+	local max_distance_sq = 100
+	local challenge_threshold = 1.75
+	local targeting_multiplier = 1.25
+	local self_position = POSITION_LOOKUP[unit]
+	local can_activate = false
+	local perception_extension = ScriptUnit.extension(unit, "perception_system")
+	local enemies_in_proximity, num_proximite_enemies = perception_extension:enemies_in_proximity()
+	local total_challenge_rating = 0
 
-			if Vector3.distance_squared(self_position, enemy_position) <= max_distance_sq then
-				local enemy_unit_data_extension = ScriptUnit.extension(enemy_unit, "unit_data_system")
-				local enemy_breed = enemy_unit_data_extension:breed()
-				local enemy_blackboard = BLACKBOARDS[enemy_unit]
-				local enemy_perception_component = enemy_blackboard.perception
-				local is_targeting_bot = enemy_perception_component.target_unit == unit
-				local challenge_rating = enemy_breed.challenge_rating * (is_targeting_bot and targeting_multiplier or 1)
-				total_challenge_rating = total_challenge_rating + challenge_rating
+	for i = 1, num_proximite_enemies do
+		local enemy_unit = enemies_in_proximity[i]
+		local enemy_position = POSITION_LOOKUP[enemy_unit]
 
-				if challenge_threshold <= total_challenge_rating then
-					can_activate = true
+		if max_distance_sq >= Vector3.distance_squared(self_position, enemy_position) then
+			local enemy_unit_data_extension = ScriptUnit.extension(enemy_unit, "unit_data_system")
+			local enemy_breed = enemy_unit_data_extension:breed()
+			local enemy_blackboard = BLACKBOARDS[enemy_unit]
+			local enemy_perception_component = enemy_blackboard.perception
+			local is_targeting_bot = enemy_perception_component.target_unit == unit
+			local challenge_rating = enemy_breed.challenge_rating * (is_targeting_bot and targeting_multiplier or 1)
 
-					break
-				end
+			total_challenge_rating = total_challenge_rating + challenge_rating
+
+			if challenge_threshold <= total_challenge_rating then
+				can_activate = true
+
+				break
 			end
 		end
-
-		return can_activate
-	end,
-	_can_activate_veteran_ranger_ability = function (unit, blackboard, scratchpad, conditions_args, action_data, is_running)
-		local perception_component = blackboard.perception
-		local enemy_unit = perception_component.target_enemy
-
-		if enemy_unit then
-			local unit_data_extension = ScriptUnit.extension(enemy_unit, "unit_data_system")
-			local breed = unit_data_extension:breed()
-			local tags = breed.tags
-
-			if tags.special or tags.elite then
-				return true
-			end
-		end
-
-		return false
 	end
-}
+
+	return can_activate
+end
+
+conditions._can_activate_veteran_ranger_ability = function (unit, blackboard, scratchpad, conditions_args, action_data, is_running)
+	local perception_component = blackboard.perception
+	local enemy_unit = perception_component.target_enemy
+
+	if enemy_unit then
+		local unit_data_extension = ScriptUnit.extension(enemy_unit, "unit_data_system")
+		local breed = unit_data_extension:breed()
+		local tags = breed.tags
+
+		if tags.special or tags.elite then
+			return true
+		end
+	end
+
+	return false
+end
 
 conditions.can_activate_ability = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
 	local ability_component_name = action_data.ability_component_name
@@ -76,8 +80,7 @@ conditions.can_activate_ability = function (unit, blackboard, scratchpad, condit
 	end
 
 	local activation_data = ability_meta_data.activation
-	local action_input = activation_data.action_input
-	local used_input = nil
+	local action_input, used_input = activation_data.action_input
 	local FixedFrame = require("scripts/utilities/fixed_frame")
 	local fixed_t = FixedFrame.get_latest_fixed_time()
 	local ability_extension = ScriptUnit.extension(unit, "ability_system")
@@ -155,7 +158,7 @@ conditions._has_reached_ally_aid_destination = function (unit, blackboard, scrat
 			local z_move_to_epsilon = BotSettings.z_move_to_epsilon
 			local offset = target_ally_aid_destination - self_position
 
-			return math.abs(offset.z) <= z_move_to_epsilon and Vector3.length_squared(Vector3.flat(offset)) <= flat_move_to_epsilon_sq
+			return z_move_to_epsilon >= math.abs(offset.z) and flat_move_to_epsilon_sq >= Vector3.length_squared(Vector3.flat(offset))
 		end
 	end
 end
@@ -183,7 +186,7 @@ conditions._has_reached_level_unit_destination = function (unit, blackboard, scr
 			local z_move_to_epsilon = BotSettings.z_move_to_epsilon
 			local offset = target_level_unit_destination - self_position
 
-			return math.abs(offset.z) <= z_move_to_epsilon and Vector3.length_squared(Vector3.flat(offset)) <= flat_move_to_epsilon_sq
+			return z_move_to_epsilon >= math.abs(offset.z) and flat_move_to_epsilon_sq >= Vector3.length_squared(Vector3.flat(offset))
 		end
 	end
 end
@@ -203,8 +206,7 @@ conditions.can_revive = function (unit, blackboard, scratchpad, condition_args, 
 		return false
 	end
 
-	local interactor_extension = ScriptUnit.extension(unit, "interactor_system")
-	local interaction_type = action_data.interaction_type
+	local interactor_extension, interaction_type = ScriptUnit.extension(unit, "interactor_system"), action_data.interaction_type
 	local can_interact_with_ally = interactor_extension:can_interact(target_ally, interaction_type)
 	local ally_destination_reached = conditions._has_reached_ally_aid_destination(unit, blackboard, scratchpad, condition_args, action_data, is_running)
 	local can_revive = can_interact_with_ally and ally_destination_reached
@@ -227,8 +229,7 @@ conditions.can_remove_net = function (unit, blackboard, scratchpad, condition_ar
 		return false
 	end
 
-	local interactor_extension = ScriptUnit.extension(unit, "interactor_system")
-	local interaction_type = action_data.interaction_type
+	local interactor_extension, interaction_type = ScriptUnit.extension(unit, "interactor_system"), action_data.interaction_type
 	local can_interact_with_ally = interactor_extension:can_interact(target_ally, interaction_type)
 	local ally_destination_reached = conditions._has_reached_ally_aid_destination(unit, blackboard, scratchpad, condition_args, action_data, is_running)
 	local can_remove_net = can_interact_with_ally and ally_destination_reached
@@ -245,8 +246,7 @@ conditions.can_rescue_hogtied = function (unit, blackboard, scratchpad, conditio
 		return false
 	end
 
-	local interactor_extension = ScriptUnit.extension(unit, "interactor_system")
-	local interaction_type = action_data.interaction_type
+	local interactor_extension, interaction_type = ScriptUnit.extension(unit, "interactor_system"), action_data.interaction_type
 	local can_interact_with_ally = interactor_extension:can_interact(target_ally, interaction_type)
 	local ally_destination_reached = conditions._has_reached_ally_aid_destination(unit, blackboard, scratchpad, condition_args, action_data, is_running)
 	local can_rescue_hogtied = can_interact_with_ally and ally_destination_reached
@@ -281,8 +281,7 @@ conditions.can_rescue_ledge_hanging = function (unit, blackboard, scratchpad, co
 		return false
 	end
 
-	local interactor_extension = ScriptUnit.extension(unit, "interactor_system")
-	local interaction_type = action_data.interaction_type
+	local interactor_extension, interaction_type = ScriptUnit.extension(unit, "interactor_system"), action_data.interaction_type
 	local can_interact_with_ally = interactor_extension:can_interact(target_ally, interaction_type)
 	local ally_destination_reached = conditions._has_reached_ally_aid_destination(unit, blackboard, scratchpad, condition_args, action_data, is_running)
 
@@ -295,9 +294,9 @@ conditions.can_loot = function (unit, blackboard, scratchpad, condition_args, ac
 	local interaction_unit = behavior_component.interaction_unit
 	local is_forced_pickup = behavior_component.forced_pickup_unit == interaction_unit
 	local pickup_component = blackboard.pickup
-	local loot_health = pickup_component.health_deployable and pickup_component.allowed_to_take_health_pickup and pickup_component.health_deployable == interaction_unit and (is_forced_pickup or pickup_component.health_deployable_distance < max_distance)
-	local loot_ammo = pickup_component.ammo_pickup and pickup_component.needs_ammo and pickup_component.ammo_pickup == interaction_unit and (is_forced_pickup or pickup_component.ammo_pickup_distance < max_distance)
-	local loot_mule = pickup_component.mule_pickup and pickup_component.mule_pickup == interaction_unit and (is_forced_pickup or pickup_component.mule_pickup_distance < max_distance)
+	local loot_health = pickup_component.health_deployable and pickup_component.allowed_to_take_health_pickup and pickup_component.health_deployable == interaction_unit and (is_forced_pickup or max_distance > pickup_component.health_deployable_distance)
+	local loot_ammo = pickup_component.ammo_pickup and pickup_component.needs_ammo and pickup_component.ammo_pickup == interaction_unit and (is_forced_pickup or max_distance > pickup_component.ammo_pickup_distance)
+	local loot_mule = pickup_component.mule_pickup and pickup_component.mule_pickup == interaction_unit and (is_forced_pickup or max_distance > pickup_component.mule_pickup_distance)
 
 	if loot_health or loot_ammo or loot_mule then
 		local interactee_extension = ScriptUnit.extension(interaction_unit, "interactee_system")
@@ -377,7 +376,7 @@ conditions.bot_in_melee_range = function (unit, blackboard, scratchpad, conditio
 	local behavior_extension = ScriptUnit.extension(unit, "behavior_system")
 	local is_taking_cover = behavior_extension:is_taking_cover()
 	local is_urgent_or_opportunity_target = perception_component.urgent_target_enemy == target_enemy or perception_component.opportunity_target_enemy == target_enemy
-	local melee_range = nil
+	local melee_range
 
 	if is_taking_cover or is_urgent_or_opportunity_target then
 		if wielded_slot == "slot_secondary" then
@@ -385,17 +384,16 @@ conditions.bot_in_melee_range = function (unit, blackboard, scratchpad, conditio
 		else
 			melee_range = enemy_breed.bot_opportunity_target_melee_range or 3
 		end
-	elseif wielded_slot == "slot_secondary" then
-		melee_range = 10
 	else
-		melee_range = 12
+		melee_range = wielded_slot == "slot_secondary" and 10 or 12
 	end
 
-	local target_aim_position = nil
+	local target_aim_position
 	local override_aim_node_name = enemy_breed.bot_melee_aim_node
 
 	if override_aim_node_name then
 		local override_aim_node = Unit.node(target_enemy, override_aim_node_name)
+
 		target_aim_position = Unit.world_position(target_enemy, override_aim_node)
 	else
 		target_aim_position = POSITION_LOOKUP[target_enemy]
@@ -434,14 +432,13 @@ conditions.has_target_and_ammo_greater_than = function (unit, blackboard, scratc
 
 	local ranged_slot_name = "slot_secondary"
 	local ammo_percentage = Ammo.current_slot_percentage(unit, ranged_slot_name)
-	local ammo_ok = condition_args.ammo_percentage < ammo_percentage
+	local ammo_ok = ammo_percentage > condition_args.ammo_percentage
 
 	if not ammo_ok then
 		return false
 	end
 
-	local overheat_limit = condition_args.overheat_limit
-	local overheat_limit_type = condition_args.overheat_limit_type
+	local overheat_limit, overheat_limit_type = condition_args.overheat_limit, condition_args.overheat_limit_type
 	local overheat_percentage = Overheat.slot_percentage(unit, ranged_slot_name, overheat_limit_type)
 	local overheat_ok = overheat_percentage < overheat_limit
 
@@ -485,12 +482,12 @@ conditions.should_vent_overheat = function (unit, blackboard, scratchpad, condit
 	local ranged_slot_name = "slot_secondary"
 	local overheat_limit_type = condition_args.overheat_limit_type
 	local overheat_percentage = Overheat.slot_percentage(unit, ranged_slot_name, overheat_limit_type)
-	local should_vent = nil
+	local should_vent
 
 	if scratchpad.reloading then
-		should_vent = condition_args.stop_percentage <= overheat_percentage
+		should_vent = overheat_percentage >= condition_args.stop_percentage
 	else
-		should_vent = condition_args.start_min_percentage <= overheat_percentage and overheat_percentage <= condition_args.start_max_percentage
+		should_vent = overheat_percentage >= condition_args.start_min_percentage and overheat_percentage <= condition_args.start_max_percentage
 	end
 
 	return should_vent

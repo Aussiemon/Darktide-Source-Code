@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/view_elements/view_element_player_panel/view_element_player_panel_definitions.lua
+
 local BarPassTemplates = require("scripts/ui/pass_templates/bar_pass_templates")
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local UIWidget = require("scripts/managers/ui/ui_widget")
@@ -120,14 +122,20 @@ local scenegraph_definition = {
 	}
 }
 local character_name_style = table.clone(UIFontSettings.header_3)
+
 character_name_style.text_horizontal_alignment = "left"
 character_name_style.text_vertical_alignment = "bottom"
+
 local character_title_style = table.clone(UIFontSettings.body_small)
+
 character_title_style.text_horizontal_alignment = "left"
 character_title_style.text_vertical_alignment = "bottom"
+
 local character_level_style = table.clone(UIFontSettings.body_small)
+
 character_level_style.text_horizontal_alignment = "right"
 character_level_style.text_vertical_alignment = "bottom"
+
 local widget_definitions = {
 	character_panel = UIWidget.create_definition({
 		{

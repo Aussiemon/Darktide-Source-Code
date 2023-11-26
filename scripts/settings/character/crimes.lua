@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/character/crimes.lua
+
 local crimes = {
 	veteran_1 = {
 		description = "loc_character_sentence_01_description",

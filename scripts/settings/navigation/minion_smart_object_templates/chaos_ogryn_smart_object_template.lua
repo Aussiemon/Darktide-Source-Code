@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/navigation/minion_smart_object_templates/chaos_ogryn_smart_object_template.lua
+
 local template = {
 	jump_up_anim_thresholds = {
 		{

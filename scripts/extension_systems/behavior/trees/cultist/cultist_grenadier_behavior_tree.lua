@@ -1,7 +1,14 @@
+﻿-- chunkname: @scripts/extension_systems/behavior/trees/cultist/cultist_grenadier_behavior_tree.lua
+
 local BreedActions = require("scripts/settings/breed/breed_actions")
 local action_data = BreedActions.cultist_grenadier
 local FAR_COMBAT = {
 	"BtSequenceNode",
+	condition_args = {
+		combat_ranges = {
+			far = true
+		}
+	},
 	{
 		"BtGrenadierFollowAction",
 		name = "follow",
@@ -13,15 +20,15 @@ local FAR_COMBAT = {
 		action_data = action_data.throw_grenade
 	},
 	name = "far_combat",
-	condition = "is_aggroed_in_combat_range_or_running",
-	condition_args = {
-		combat_ranges = {
-			far = true
-		}
-	}
+	condition = "is_aggroed_in_combat_range_or_running"
 }
 local CLOSE_COMBAT = {
 	"BtRandomUtilityNode",
+	condition_args = {
+		combat_ranges = {
+			close = true
+		}
+	},
 	{
 		"BtQuickGrenadeThrowAction",
 		name = "quick_throw_grenade",
@@ -39,12 +46,7 @@ local CLOSE_COMBAT = {
 		action_data = action_data.melee_attack
 	},
 	name = "close_combat",
-	condition = "is_aggroed_in_combat_range_or_running",
-	condition_args = {
-		combat_ranges = {
-			close = true
-		}
-	}
+	condition = "is_aggroed_in_combat_range_or_running"
 }
 local behavior_tree = {
 	"BtSelectorNode",

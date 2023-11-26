@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/components/door.lua
+
 local LevelProps = require("scripts/settings/level_prop/level_props")
 local Door = component("Door")
 
@@ -5,6 +7,7 @@ Door.init = function (self, unit, is_server)
 	self:enable(unit)
 
 	self._is_server = is_server
+
 	local door_extension = ScriptUnit.fetch_component_extension(unit, "door_system")
 
 	if door_extension then
@@ -162,6 +165,7 @@ Door._spawn_control_panels = function (self, unit)
 		local control_panel_unit_name = props_settings.unit_name
 		local control_panel_node = Unit.node(unit, node_name)
 		local control_panel_unit = World.spawn_unit_ex(world, control_panel_unit_name, nil, Unit.world_pose(unit, control_panel_node))
+
 		self._control_panel_units[#self._control_panel_units + 1] = control_panel_unit
 
 		World.link_unit(world, control_panel_unit, 1, unit, control_panel_node)

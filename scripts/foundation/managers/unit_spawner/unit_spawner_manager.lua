@@ -1,16 +1,22 @@
+﻿-- chunkname: @scripts/foundation/managers/unit_spawner/unit_spawner_manager.lua
+
 local GrowQueue = require("scripts/foundation/utilities/grow_queue")
 local ScriptWorld = require("scripts/foundation/utilities/script_world")
 local Unit_alive = Unit.alive
 local UNIT_TEMPLATE_GAME_OBJECT_TYPE = 1
+
 Level._unit_by_index = Level._unit_by_index or Level.unit_by_index
 Level.unit_by_index = nil
 Level._unit_index = Level._unit_index or Level.unit_index
 Level.unit_index = nil
 Level._name_hash_32 = Level._name_hash_32 or Level.name_hash_32
 Level.name_hash_32 = nil
+
 local UnitSpawnerManager = class("UnitSpawnerManager")
 local DELETION_STATES = table.enum("default", "during_extension_update", "removing_units")
+
 UnitSpawnerManager.DELETION_STATES = DELETION_STATES
+
 local NUM_ESTIMATED_TEMPLATE_UNITS = 256
 local CLIENT_RPCS = {
 	"rpc_is_fully_hot_join_synced"
@@ -86,7 +92,7 @@ UnitSpawnerManager.set_gameobject_to_unit_creator_function = function (self, fun
 end
 
 UnitSpawnerManager.commit_and_remove_pending_units = function (self)
-	local num_removed, num_added = nil
+	local num_removed, num_added
 
 	repeat
 		num_added = self:_add_pending_extensions()
@@ -151,6 +157,7 @@ UnitSpawnerManager._remove_units_marked_for_deletion = function (self)
 
 	local extension_manager = self._extension_manager
 	local temp_deleted_units_list = self._temp_units_list
+
 	self._num_deleted_units = 0
 
 	self:set_deletion_state(DELETION_STATES.removing_units)
@@ -264,6 +271,7 @@ end
 
 UnitSpawnerManager._remove_network_unit = function (self, unit)
 	local game_object_id = self._game_object_ids[unit]
+
 	self._game_object_ids[unit] = nil
 	self._network_units[game_object_id] = nil
 	self._husk_units[unit] = nil
@@ -284,10 +292,11 @@ UnitSpawnerManager.spawn_network_unit = function (self, unit_name, unit_template
 	}
 	local unit = self:_spawn_unit_with_extensions(unit_name, unit_template_name, position, rotation, material, game_object_data, ...)
 	local unit_template = self._unit_templates[unit_template_name]
-	local game_object_id = nil
+	local game_object_id
 
 	if self._game_session then
 		local game_object_type = unit_template.game_object_type(...)
+
 		game_object_id = GameSession.create_game_object(self._game_session, game_object_type, game_object_data)
 
 		self:_add_network_unit(unit, game_object_id, false)
@@ -318,8 +327,7 @@ UnitSpawnerManager._spawn_unit_with_extensions = function (self, unit_name, unit
 end
 
 UnitSpawnerManager._world_delete_units = function (self, units_list, num_units)
-	local game_session = self._game_session
-	local unit_template_by_unit = self._unit_template_by_unit
+	local game_session, unit_template_by_unit = self._game_session, self._unit_template_by_unit
 
 	for i = 1, num_units do
 		local unit = units_list[i]
@@ -364,6 +372,7 @@ UnitSpawnerManager.spawn_husk_unit = function (self, game_object_id, owner_id)
 	local unit_template_name = self._unit_template_network_lookup[GameSession.game_object_field(session, game_object_id, "unit_template")]
 	local unit_template = self._unit_templates[unit_template_name]
 	local unit = self:spawn_unit(unit_template.husk_unit(session, game_object_id))
+
 	self._unit_template_by_unit[unit] = unit_template
 
 	self:_add_network_unit(unit, game_object_id, true)
@@ -372,18 +381,22 @@ end
 
 UnitSpawnerManager.register_runtime_loaded_level = function (self, level)
 	local level_name_hash = Level._name_hash_32(level)
+
 	self._runtime_loaded_levels[level_name_hash] = self._runtime_loaded_levels[level_name_hash] or {}
+
 	local units_in_runtime_loaded_level = self._runtime_loaded_levels[level_name_hash]
 	local level_units = Level.units(level, true)
 
 	for _, unit in ipairs(level_units) do
 		local unit_index = Level._unit_index(level, unit)
+
 		units_in_runtime_loaded_level[unit_index] = unit
 	end
 end
 
 UnitSpawnerManager.unregister_runtime_loaded_level = function (self, level)
 	local level_name_hash = Level._name_hash_32(level)
+
 	self._runtime_loaded_levels[level_name_hash] = nil
 end
 

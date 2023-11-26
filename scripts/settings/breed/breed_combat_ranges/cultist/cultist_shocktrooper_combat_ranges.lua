@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/breed/breed_combat_ranges/cultist/cultist_shocktrooper_combat_ranges.lua
+
 local combat_ranges = {
 	name = "cultist_shocktrooper",
 	starting_combat_range = "far",

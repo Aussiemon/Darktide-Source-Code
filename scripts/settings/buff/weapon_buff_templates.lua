@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/buff/weapon_buff_templates.lua
+
 local AilmentSettings = require("scripts/settings/ailments/ailment_settings")
 local Attack = require("scripts/utilities/attack/attack")
 local AttackSettings = require("scripts/settings/damage/attack_settings")
@@ -27,38 +29,40 @@ local special_rules = SpecialRulesSetting.special_rules
 local stagger_results = AttackSettings.stagger_results
 local CHAIN_LIGHTNING_POWER_LEVEL = 500
 local psyker_talent_settings = TalentSettings.psyker_2
-local templates = {
-	flamer_assault = {
-		interval = 0.5,
-		duration = 4,
-		buff_id = "flamer_assault",
-		interval_stack_removal = true,
-		predicted = false,
-		refresh_duration_on_stack = true,
-		max_stacks_cap = 31,
-		max_stacks = 31,
-		class_name = "interval_buff",
-		keywords = {
-			buff_keywords.burning
-		},
-		interval_func = function (template_data, template_context, template)
-			local unit = template_context.unit
+local templates = {}
 
-			if HEALTH_ALIVE[unit] then
-				local damage_template = DamageProfileTemplates.burning
-				local stack_multiplier = template_context.stack_count / template.max_stacks
-				local smoothstep_multiplier = stack_multiplier * stack_multiplier * (3 - 2 * stack_multiplier)
-				local power_level = smoothstep_multiplier * 500
-				local owner_unit = template_context.is_server and template_context.owner_unit
-				local source_item = template_context.is_server and template_context.source_item
+templates.flamer_assault = {
+	interval = 0.5,
+	duration = 4,
+	buff_id = "flamer_assault",
+	interval_stack_removal = true,
+	predicted = false,
+	refresh_duration_on_stack = true,
+	max_stacks_cap = 31,
+	max_stacks = 31,
+	class_name = "interval_buff",
+	keywords = {
+		buff_keywords.burning
+	},
+	interval_func = function (template_data, template_context, template)
+		local unit = template_context.unit
 
-				Attack.execute(unit, damage_template, "power_level", power_level, "damage_type", damage_types.burning, "attacking_unit", owner_unit, "item", source_item)
-			end
-		end,
-		minion_effects = minion_burning_buff_effects.fire
-	}
+		if HEALTH_ALIVE[unit] then
+			local damage_template = DamageProfileTemplates.burning
+			local stack_multiplier = template_context.stack_count / template.max_stacks
+			local smoothstep_multiplier = stack_multiplier * stack_multiplier * (3 - 2 * stack_multiplier)
+			local power_level = smoothstep_multiplier * 500
+			local owner_unit = template_context.is_server and template_context.owner_unit
+			local source_item = template_context.is_server and template_context.source_item
+
+			Attack.execute(unit, damage_template, "power_level", power_level, "damage_type", damage_types.burning, "attacking_unit", owner_unit, "item", source_item)
+		end
+	end,
+	minion_effects = minion_burning_buff_effects.fire
 }
+
 local warpfire_broadphase_results = {}
+
 templates.warp_fire = {
 	interval = 0.75,
 	duration = 8,
@@ -114,7 +118,7 @@ templates.warp_fire = {
 					local victim_unit = template_context.unit
 					local position = POSITION_LOOKUP[victim_unit]
 					local distance = 5
-					local num_results = broadphase:query(position, distance, warpfire_broadphase_results, enemy_side_names)
+					local num_results = broadphase.query(broadphase, position, distance, warpfire_broadphase_results, enemy_side_names)
 
 					if num_results > 0 then
 						local i = 1
@@ -164,11 +168,7 @@ templates.warp_fire = {
 								end
 							end
 
-							if i == num_results then
-								i = 1
-							else
-								i = i + 1
-							end
+							i = i == num_results and 1 or i + 1
 						end
 					end
 				end
@@ -299,6 +299,7 @@ templates.ogryn_slabshield_shield_plant = {
 		local player_unit = template_context.unit
 		local slot_name = template_context.item_slot_name
 		local unit_data_extension = ScriptUnit.extension(player_unit, "unit_data_system")
+
 		template_data.inventory_slot_component = unit_data_extension:read_component(slot_name)
 	end,
 	conditional_stat_buffs_func = function (template_data, template_context)
@@ -341,6 +342,7 @@ local function _chain_lightning_start_func(template_data, template_context)
 
 	local unit = template_context.unit
 	local buff_extension = ScriptUnit.has_extension(unit, "buff_system")
+
 	template_data.buff_extension = buff_extension
 
 	if template_context.template.use_hit_mass_based_timing then
@@ -349,12 +351,14 @@ local function _chain_lightning_start_func(template_data, template_context)
 		local template = template_context.template
 		local hit_mass_cost = template.hit_mass_cost or 0.2
 		local attack_start_time = math.clamp((target_hit_mass - 1) * hit_mass_cost, 0, 2)
+
 		template_data.attack_start_time = attack_start_time
 	end
 
 	local unit_data = ScriptUnit.has_extension(unit, "unit_data_system")
 	local breed = unit_data and unit_data:breed()
 	local is_poxwalker_bomber = breed and breed.tags and breed.name == "chaos_poxwalker_bomber"
+
 	template_data.is_poxwalker_bomber = is_poxwalker_bomber
 end
 
@@ -376,7 +380,7 @@ local function _chain_lightning_interval_func(template_data, template_context, t
 	if HEALTH_ALIVE[unit] and can_attack then
 		local damage_template = template.interval_attack_damage_profile
 		local owner_unit = template_context.owner_unit
-		local attack_direction = nil
+		local attack_direction
 		local target_position = POSITION_LOOKUP[unit]
 		local owner_position = owner_unit and POSITION_LOOKUP[owner_unit]
 
@@ -384,7 +388,7 @@ local function _chain_lightning_interval_func(template_data, template_context, t
 			attack_direction = Vector3.normalize(target_position - owner_position)
 		end
 
-		local charge_level = nil
+		local charge_level
 		local max_charge_at_time = template.max_charge_at_time
 
 		if max_charge_at_time then
@@ -537,18 +541,23 @@ templates.taunted = {
 
 		local taunter_unit = template_context.owner_unit
 		local taunter_buff_extension = ScriptUnit.extension(taunter_unit, "buff_system")
+
 		template_data.taunter_buff_extension = taunter_buff_extension
+
 		local taunter_unit_data_extension = ScriptUnit.extension(taunter_unit, "unit_data_system")
 		local taunter_breed = taunter_unit_data_extension:breed()
 
 		if Breed.is_player(taunter_breed) then
 			local taunter_character_state_component = taunter_unit_data_extension:read_component("character_state")
+
 			template_data.taunter_character_state_component = taunter_character_state_component
 		end
 
 		local breed = template_context.breed
 		local is_disabler = breed.tags.disabler
+
 		template_data.is_disabler = is_disabler
+
 		local unit = template_context.unit
 		local blackboard = BLACKBOARDS[unit]
 		local perception_component = blackboard.perception

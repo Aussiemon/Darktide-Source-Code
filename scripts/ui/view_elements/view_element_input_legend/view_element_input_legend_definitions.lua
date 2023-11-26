@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/view_elements/view_element_input_legend/view_element_input_legend_definitions.lua
+
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local UIWorkspaceSettings = require("scripts/settings/ui/ui_workspace_settings")
 local ViewElementInputLegendSettings = require("scripts/ui/view_elements/view_element_input_legend/view_element_input_legend_settings")

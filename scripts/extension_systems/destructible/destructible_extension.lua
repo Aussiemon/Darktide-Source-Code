@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/destructible/destructible_extension.lua
+
 local DestructibleUtilities = require("scripts/extension_systems/destructible/utilities/destructible_utilities")
 local NavTagVolumeBox = require("scripts/extension_systems/navigation/utilities/nav_tag_volume_box")
 local DestructibleExtension = class("DestructibleExtension")
@@ -39,9 +41,11 @@ end
 
 DestructibleExtension.setup_from_component = function (self, depawn_timer_duration, despawn_when_destroyed, collision_actor_names, mass, speed, direction, force_direction_type, start_visible, is_nav_gate, broadphase_radius)
 	local unit = self._unit
+
 	self._despawn_when_destroyed = despawn_when_destroyed
 	self._depawn_timer_duration = depawn_timer_duration
 	self._broadphase_radius = broadphase_radius
+
 	local stages_info = {
 		parts_mass = mass,
 		parts_speed = speed,
@@ -72,6 +76,7 @@ DestructibleExtension.setup_stages = function (self)
 	local unit = self._unit
 	local health_extension = ScriptUnit.has_extension(unit, "health_system")
 	local info = self._stages_info
+
 	self._destruction_info = DestructibleUtilities.setup_stages(unit, info, health_extension)
 
 	self:set_visibility(self._stages_info.start_visible)
@@ -178,6 +183,7 @@ end
 
 DestructibleExtension.light_controller_setup = function (self, are_lights_enabled, fake_light)
 	local visibility_info = self._visibility_info
+
 	visibility_info.lights_enabled = are_lights_enabled
 	visibility_info.fake_light = fake_light
 
@@ -190,6 +196,7 @@ end
 
 DestructibleExtension.set_lights_enabled = function (self, are_lights_enabled)
 	local visibility_info = self._visibility_info
+
 	visibility_info.lights_enabled = are_lights_enabled
 
 	if self._destruction_info then

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/mechanism/mechanism_settings.lua
+
 local StateGameScore = require("scripts/game_states/game/state_game_score")
 local StateMissionServerExit = require("scripts/game_states/game/state_mission_server_exit")
 local mechanism_settings = {

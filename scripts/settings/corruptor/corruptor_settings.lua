@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/corruptor/corruptor_settings.lua
+
 local ExplosionTemplates = require("scripts/settings/damage/explosion_templates")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local DamageSettings = require("scripts/settings/damage/damage_settings")

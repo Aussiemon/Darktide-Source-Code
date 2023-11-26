@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/constant_elements/elements/mission_lobby_status/constant_element_mission_lobby_status.lua
+
 local definition_path = "scripts/ui/constant_elements/elements/mission_lobby_status/constant_element_mission_lobby_status_definitions"
 local ConstantMissionLobbyStatusSettings = require("scripts/ui/constant_elements/elements/mission_lobby_status/constant_element_mission_lobby_status_settings")
 local UIWidget = require("scripts/managers/ui/ui_widget")
@@ -17,6 +19,7 @@ ConstantMissionLobbyStatus.init = function (self, parent, draw_layer, start_scal
 		self._ui_scenegraph.pivot.position[1],
 		self._ui_scenegraph.pivot.position[2]
 	}
+
 	local number_of_slots = 4
 
 	self:_setup_ready_slots(number_of_slots)
@@ -30,6 +33,7 @@ end
 
 ConstantMissionLobbyStatus._event_voting_started = function (self, voting_id)
 	local widget = self._widgets_by_name.timer_text
+
 	widget.style.text.text_color = Color.ui_terminal(255, true)
 	widget.style.text.color = Color.ui_terminal(255, true)
 	self._active = true
@@ -54,6 +58,7 @@ end
 
 ConstantMissionLobbyStatus._event_ready_started = function (self, timer_update_function)
 	local widget = self._widgets_by_name.timer_text
+
 	widget.style.text.text_color = Color.ui_red_light(255, true)
 	widget.style.text.color = Color.ui_red_light(255, true)
 	self._timer_function = timer_update_function
@@ -62,6 +67,7 @@ end
 
 ConstantMissionLobbyStatus._event_ready_completed = function (self)
 	local widget = self._widgets_by_name.timer_text
+
 	widget.style.text.text_color = Color.ui_terminal(255, true)
 	widget.style.text.color = Color.ui_terminal(255, true)
 	self._active = false
@@ -91,6 +97,7 @@ ConstantMissionLobbyStatus._setup_ready_slots = function (self, amount)
 	for i = 1, amount do
 		local widget_name = "slot_" .. i
 		local widget = self:_create_widget(widget_name, widget_definition)
+
 		widgets[#widgets + 1] = widget
 		x_offset = x_offset + ready_slot_size[1]
 		widget.offset[1] = x_offset
@@ -113,6 +120,7 @@ ConstantMissionLobbyStatus._set_start_time = function (self, time)
 	for i = 1, #time_string_to_array do
 		local number = tonumber(time_string_to_array[i])
 		local symbol = UISettings.digital_clock_numbers[number]
+
 		symbols_text = symbols_text .. symbol
 	end
 
@@ -121,6 +129,7 @@ end
 
 ConstantMissionLobbyStatus._set_slot_status_by_index = function (self, index, occupied, ready)
 	local widget = self._slot_widgets[index]
+
 	widget.content.selected = ready
 	widget.content.occupied = occupied
 end
@@ -196,6 +205,7 @@ end
 ConstantMissionLobbyStatus._change_lobby_status_position = function (self, x, y)
 	local original_x = self._original_position[1]
 	local original_y = self._original_position[2]
+
 	x = x or original_x
 	y = y or original_y
 

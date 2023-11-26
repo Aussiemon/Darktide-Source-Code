@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/ability/archetype_specializations/ogryn_bonebreaker_specialization_new.lua
+
 local archetype_specialization = {
 	description_short = "loc_archetype_specialization_ogryn_2_description_short",
 	name = "ogryn_2",

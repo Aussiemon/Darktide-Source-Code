@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/weapon/actions/action_shoot_projectile.lua
+
 local AimProjectile = require("scripts/utilities/aim_projectile")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local MasterItems = require("scripts/backend/master_items")
@@ -10,12 +12,15 @@ ActionShootProjectile.init = function (self, action_context, action_params, acti
 	ActionShootProjectile.super.init(self, action_context, action_params, action_settings)
 
 	local weapon = action_params.weapon
+
 	self._weapon = weapon
 	self._weapon_unit = weapon.weapon_unit
 	self._weapon_template = weapon.weapon_template
 	self._inventory_slot_component = weapon.inventory_slot_component
 	self._item_definitions = MasterItems.get_cached()
+
 	local unit_data_extension = action_context.unit_data_extension
+
 	self._action_aim_projectile_component = unit_data_extension:read_component("action_aim_projectile")
 	self._side_system = Managers.state.extension:system("side_system")
 end
@@ -40,7 +45,7 @@ ActionShootProjectile._shoot = function (self)
 	end
 
 	local owner_unit = self._player_unit
-	local material = nil
+	local material
 	local weapon_item = self._weapon.item
 	local skip_aiming = fire_config and fire_config.skip_aiming
 	local shoot_position = action_component.shooting_position
@@ -50,6 +55,7 @@ ActionShootProjectile._shoot = function (self)
 	if not skip_aiming then
 		local aim_position = position
 		local aim_direction = direction
+
 		position, rotation, direction, speed, momentum = AimProjectile.get_spawn_parameters_from_aim_component(self._action_aim_projectile_component)
 		position = aim_position
 		direction = aim_direction

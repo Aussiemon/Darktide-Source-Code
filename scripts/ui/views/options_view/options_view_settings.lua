@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/options_view/options_view_settings.lua
+
 local options_view_settings = {
 	scrollbar_width = 10,
 	max_visible_dropdown_options = 5,

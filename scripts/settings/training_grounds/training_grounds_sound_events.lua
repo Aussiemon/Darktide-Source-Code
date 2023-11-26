@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/training_grounds/training_grounds_sound_events.lua
+
 local sound_events = {
 	tg_objective_complete = "wwise/events/ui/play_hud_tg_objective_complete",
 	tg_enemy_dissolve_start = "wwise/events/ui/play_hud_tg_enemy_dissolve_start",

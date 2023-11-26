@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/camera/camera_system.lua
+
 require("scripts/extension_systems/camera/player_unit_camera_extension")
 require("scripts/extension_systems/camera/player_husk_camera_extension")
 

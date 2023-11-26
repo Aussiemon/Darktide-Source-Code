@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/backend/social_interface.lua
+
 local Interface = {
 	"fetch_friends",
 	"send_friend_request",

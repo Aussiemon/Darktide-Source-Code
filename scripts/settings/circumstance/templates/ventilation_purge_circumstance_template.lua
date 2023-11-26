@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/circumstance/templates/ventilation_purge_circumstance_template.lua
+
 local circumstance_templates = {
 	ventilation_purge_01 = {
 		dialogue_id = "circumstance_vo_ventilation_purge",

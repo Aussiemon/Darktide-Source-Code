@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/equipment/weapon_templates/force_staffs/forcestaff_p3_m1.lua
+
 local BaseTemplateSettings = require("scripts/settings/equipment/weapon_templates/base_template_settings")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
@@ -32,6 +34,7 @@ local chain_settings_charged = {
 	max_angle = math.pi * 0.75
 }
 local chain_settings_charged_targeting = table.clone(chain_settings_charged)
+
 chain_settings_charged_targeting.radius = 20
 chain_settings_charged_targeting.max_angle = math.pi * 0.25
 chain_settings_charged_targeting.close_max_angle = math.pi * 0.5
@@ -1137,7 +1140,9 @@ weapon_template.charge_effects = {
 	sfx_source_name = "_left"
 }
 weapon_template.overclocks = {}
+
 local WeaponBarUIDescriptionTemplates = require("scripts/settings/equipment/weapon_bar_ui_description_templates")
+
 weapon_template.base_stats = {
 	forcestaff_p3_m1_dps_stat = {
 		display_name = "loc_stats_display_damage_stat",
@@ -1299,6 +1304,7 @@ weapon_template.base_stats = {
 	}
 }
 weapon_template.traits = {}
+
 local bespoke_forcestaff_p3_traits = table.keys(WeaponTraitsBespokeForcestaffP3)
 
 table.append(weapon_template.traits, bespoke_forcestaff_p3_traits)

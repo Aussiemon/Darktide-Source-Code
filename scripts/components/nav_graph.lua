@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/components/nav_graph.lua
+
 local NavGraphQueries = require("scripts/extension_systems/nav_graph/utilities/nav_graph_queries")
 local SharedNav = require("scripts/components/utilities/shared_nav")
 local NavGraph = component("NavGraph")
@@ -14,6 +16,7 @@ NavGraph.init = function (self, unit, is_server)
 
 	if nav_graph_extension then
 		self._nav_graph_extension = nav_graph_extension
+
 		local enabled_on_spawn = self:get_data(unit, "enabled_on_spawn")
 		local pregenerate_smart_objects = self:get_data(unit, "pregenerate_smart_objects")
 		local simple_smart_objects = pregenerate_smart_objects and self:_fetch_smart_objects(unit)
@@ -29,6 +32,7 @@ NavGraph._fetch_smart_objects = function (self, unit)
 
 	while has_smart_object do
 		local smart_object = self:_fetch_smart_object(unit, index)
+
 		index = index + 1
 
 		if smart_object then
@@ -53,12 +57,12 @@ NavGraph._fetch_smart_object = function (self, unit, index)
 		entrance_position = {
 			self:get_data(unit, "smart_objects", index, "entrance_position", 1),
 			self:get_data(unit, "smart_objects", index, "entrance_position", 2),
-			self:get_data(unit, "smart_objects", index, "entrance_position", 3)
+			(self:get_data(unit, "smart_objects", index, "entrance_position", 3))
 		},
 		exit_position = {
 			self:get_data(unit, "smart_objects", index, "exit_position", 1),
 			self:get_data(unit, "smart_objects", index, "exit_position", 2),
-			self:get_data(unit, "smart_objects", index, "exit_position", 3)
+			(self:get_data(unit, "smart_objects", index, "exit_position", 3))
 		},
 		data = {
 			is_bidirectional = self:get_data(unit, "smart_objects", index, "data", "is_bidirectional"),
@@ -67,17 +71,17 @@ NavGraph._fetch_smart_object = function (self, unit, index)
 			ledge_position = {
 				self:get_data(unit, "smart_objects", index, "data", "ledge_position", 1),
 				self:get_data(unit, "smart_objects", index, "data", "ledge_position", 2),
-				self:get_data(unit, "smart_objects", index, "data", "ledge_position", 3)
+				(self:get_data(unit, "smart_objects", index, "data", "ledge_position", 3))
 			},
 			ledge_position1 = {
 				self:get_data(unit, "smart_objects", index, "data", "ledge_position1", 1),
 				self:get_data(unit, "smart_objects", index, "data", "ledge_position1", 2),
-				self:get_data(unit, "smart_objects", index, "data", "ledge_position1", 3)
+				(self:get_data(unit, "smart_objects", index, "data", "ledge_position1", 3))
 			},
 			ledge_position2 = {
 				self:get_data(unit, "smart_objects", index, "data", "ledge_position2", 1),
 				self:get_data(unit, "smart_objects", index, "data", "ledge_position2", 2),
-				self:get_data(unit, "smart_objects", index, "data", "ledge_position2", 3)
+				(self:get_data(unit, "smart_objects", index, "data", "ledge_position2", 3))
 			}
 		}
 	}
@@ -103,6 +107,7 @@ NavGraph.editor_init = function (self, unit)
 	end
 
 	local world = Application.main_world()
+
 	self._world = world
 	self._physics_world = World.physics_world(world)
 	self._line_object = World.create_line_object(world)
@@ -131,8 +136,7 @@ NavGraph.editor_destroy = function (self, unit)
 		return
 	end
 
-	local line_object = self._line_object
-	local world = self._world
+	local line_object, world = self._line_object, self._world
 
 	LineObject.reset(line_object)
 	LineObject.dispatch(world, line_object)
@@ -158,8 +162,8 @@ NavGraph.editor_update = function (self, unit)
 	local should_debug_draw = self._debug_draw_enabled
 
 	if should_debug_draw then
-		local camera_position = LevelEditor:get_camera_location()
-		local unit_position = Unit.local_position(unit, 1)
+		local camera_position, unit_position = LevelEditor:get_camera_location(), Unit.local_position(unit, 1)
+
 		should_debug_draw = Vector3.distance_squared(camera_position, unit_position) < MAX_DEBUG_DRAW_CAMERA_DISTANCE_SQ
 	end
 
@@ -215,8 +219,7 @@ NavGraph._editor_debug_draw = function (self, unit)
 end
 
 NavGraph._generate_positions = function (self, unit)
-	local calculation_items = self._calculation_items
-	local debug_data_smart_objects = self._debug_data_smart_objects
+	local calculation_items, debug_data_smart_objects = self._calculation_items, self._debug_data_smart_objects
 
 	table.clear_array(debug_data_smart_objects, #debug_data_smart_objects)
 	table.clear_array(calculation_items, #calculation_items)
@@ -238,6 +241,7 @@ NavGraph._generate_positions = function (self, unit)
 				exit_position = Vector3Box(exit_position),
 				is_one_way = is_one_way
 			}
+
 			debug_data_smart_objects[i] = debug_data_smart_object
 		end
 	end

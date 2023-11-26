@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/equipment/weapon_templates/lasguns/settings_templates/lasgun_damage_profile_templates.lua
+
 local ArmorSettings = require("scripts/settings/damage/armor_settings")
 local DamageProfileSettings = require("scripts/settings/damage/damage_profile_settings")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
@@ -163,6 +165,7 @@ local lasgun_p2_armor_mod_low_charged = {
 		}
 	}
 }
+
 damage_templates.default_lasgun_killshot = {
 	staggering_headshot = true,
 	stagger_category = "killshot",

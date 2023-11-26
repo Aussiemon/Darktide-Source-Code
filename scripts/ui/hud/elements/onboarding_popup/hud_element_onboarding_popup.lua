@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/hud/elements/onboarding_popup/hud_element_onboarding_popup.lua
+
 local Definitions = require("scripts/ui/hud/elements/onboarding_popup/hud_element_onboarding_popup_definitions")
 local HudElementOnboardingPopupSettings = require("scripts/ui/hud/elements/onboarding_popup/hud_element_onboarding_popup_settings")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
@@ -33,11 +35,13 @@ HudElementOnboardingPopup.update = function (self, dt, t, ui_renderer, render_se
 		else
 			time_left = time_left - dt
 			self._time_left = time_left
+
 			local duration = self._duration
 			local progress = math.clamp(time_left / duration, 0, 1)
 			local widgets_by_name = self._widgets_by_name
 			local widget = widgets_by_name.popup
 			local content = widget.content
+
 			content.progress = progress
 		end
 	end
@@ -94,6 +98,7 @@ HudElementOnboardingPopup._present_new_message = function (self, text, duration,
 	local widgets_by_name = self._widgets_by_name
 	local widget = widgets_by_name.popup
 	local content = widget.content
+
 	content.text = text
 	content.duration = duration
 	content.progress = duration and 0 or nil
@@ -164,9 +169,10 @@ HudElementOnboardingPopup._set_widget_size_from_content = function (self, title)
 	local style = widget.style
 	local text_style = style.text
 	local _, text_height, _, _ = UIRenderer.text_size(self._ui_renderer, title, text_style.font_type, text_style.font_size, size)
-	total_height = text_height + text_height + 40
 
-	if size[2] < total_height then
+	total_height = text_height + (text_height + 40)
+
+	if total_height > size[2] then
 		widget.style.background.size[2] = total_height
 		widget.content.resize_size = {
 			size[1],

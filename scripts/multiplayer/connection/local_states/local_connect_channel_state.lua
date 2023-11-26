@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/multiplayer/connection/local_states/local_connect_channel_state.lua
+
 local LocalConnectChannelState = class("LocalConnectChannelState")
 
 LocalConnectChannelState.init = function (self, state_machine, shared_state)
@@ -9,6 +11,7 @@ LocalConnectChannelState.enter = function (self)
 	local host_peer_id = shared_state.host_peer_id
 	local approve_message = "connection"
 	local channel_id = shared_state.engine_lobby:open_channel(host_peer_id, approve_message)
+
 	shared_state.channel_id = channel_id
 	shared_state.event_list[#shared_state.event_list + 1] = {
 		name = "connecting",

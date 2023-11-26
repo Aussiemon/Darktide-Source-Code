@@ -1,5 +1,7 @@
+﻿-- chunkname: @scripts/extension_systems/weapon/weapon_action_movement_tester.lua
+
 local WeaponActionMovementTester = {}
-local _verify_curve = nil
+local _verify_curve
 
 WeaponActionMovementTester.parse_weapon_templates = function (weapon_templates)
 	for name, weapon_template in pairs(weapon_templates) do

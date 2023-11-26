@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/character/formative_event.lua
+
 local formative_event = {
 	option_1 = {
 		description = "loc_character_event_01_description",

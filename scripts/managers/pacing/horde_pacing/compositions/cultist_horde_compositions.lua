@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/pacing/horde_pacing/compositions/cultist_horde_compositions.lua
+
 local horde_compositions = {
 	cultist_trickle_assaulters = {
 		{

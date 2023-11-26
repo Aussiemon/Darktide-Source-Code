@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/crafting_view/crafting_view_declaration_settings.lua
+
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local WwiseGameSyncSettings = require("scripts/settings/wwise_game_sync/wwise_game_sync_settings")
 local view_settings = {

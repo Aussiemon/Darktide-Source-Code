@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/hud/elements/world_markers/templates/world_marker_template_health_bar.lua
+
 local HudHealthBarLogic = require("scripts/ui/hud/elements/hud_health_bar_logic")
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local UIWidget = require("scripts/managers/ui/ui_widget")
@@ -6,6 +8,7 @@ local size = {
 	200,
 	6
 }
+
 template.size = size
 template.name = "health_bar"
 template.unit_node = "j_head"
@@ -160,8 +163,11 @@ end
 
 template.on_enter = function (widget, marker, template)
 	local content = widget.content
+
 	content.spawn_progress_timer = 0
+
 	local bar_settings = template.bar_settings
+
 	marker.bar_logic = HudHealthBarLogic:new(bar_settings)
 end
 
@@ -183,20 +189,29 @@ template.update_function = function (parent, ui_renderer, widget, marker, templa
 		local bar_width = template.size[1]
 		local default_width_offset = -bar_width * 0.5
 		local health_width = bar_width * health_fraction
+
 		style.bar.size[1] = health_width
+
 		local ghost_bar_width = math.max(bar_width * health_ghost_fraction - health_width, 0)
 		local ghost_bar_style = style.ghost_bar
+
 		ghost_bar_style.offset[1] = default_width_offset + health_width
 		ghost_bar_style.size[1] = ghost_bar_width
+
 		local background_width = math.max(bar_width - ghost_bar_width - health_width, 0)
+
 		background_width = math.max(background_width - spacing, 0)
+
 		local background_style = style.background
+
 		background_style.offset[1] = default_width_offset + bar_width - background_width
 		background_style.size[1] = background_width
+
 		local health_max_style = style.health_max
 		local health_max_width = bar_width - math.max(bar_width * health_max_fraction, 0)
+
 		health_max_width = math.max(health_max_width - spacing, 0)
-		health_max_style.offset[1] = default_width_offset + bar_width - health_max_width * 0.5
+		health_max_style.offset[1] = default_width_offset + (bar_width - health_max_width * 0.5)
 		health_max_style.size[1] = health_max_width
 		marker.health_fraction = health_fraction
 	end
@@ -227,6 +242,7 @@ template.update_function = function (parent, ui_renderer, widget, marker, templa
 		local header_text_id = "header_text"
 		local header_style = style[header_text_id]
 		local header_default_font_size = header_style.default_font_size
+
 		header_style.font_size = header_style.default_font_size * scale
 		content.line_of_sight_progress = line_of_sight_progress
 		widget.alpha_multiplier = line_of_sight_progress

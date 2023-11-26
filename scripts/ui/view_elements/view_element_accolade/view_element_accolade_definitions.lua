@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/view_elements/view_element_accolade/view_element_accolade_definitions.lua
+
 local ViewElementAccoladeSettings = require("scripts/ui/view_elements/view_element_accolade/view_element_accolade_settings")
 local UIWorkspaceSettings = require("scripts/settings/ui/ui_workspace_settings")
 local UIWidget = require("scripts/managers/ui/ui_widget")

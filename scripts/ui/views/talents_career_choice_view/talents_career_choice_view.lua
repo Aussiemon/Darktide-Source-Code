@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/talents_career_choice_view/talents_career_choice_view.lua
+
 local Definitions = require("scripts/ui/views/talents_career_choice_view/talents_career_choice_view_definitions")
 local ScriptWorld = require("scripts/foundation/utilities/script_world")
 local InputUtils = require("scripts/managers/input/input_utils")
@@ -11,13 +13,14 @@ local PlayerSpecialization = require("scripts/utilities/player_specialization/pl
 local TextUtils = require("scripts/utilities/ui/text")
 local MASK_MARGIN = ViewStyles.mask_margin
 local BANNER_STATES = table.enum("idle", "greyed_out", "focused", "selected_show_talents", "selected_show_description")
-local BANNER_STATE_STYLES = {
-	[BANNER_STATES.idle] = ViewStyles.career_banner,
-	[BANNER_STATES.greyed_out] = ViewStyles.career_banner_greyed_out,
-	[BANNER_STATES.focused] = ViewStyles.career_banner_focused,
-	[BANNER_STATES.selected_show_talents] = ViewStyles.career_banner_show_talents,
-	[BANNER_STATES.selected_show_description] = ViewStyles.career_banner_show_description
-}
+local BANNER_STATE_STYLES = {}
+
+BANNER_STATE_STYLES[BANNER_STATES.idle] = ViewStyles.career_banner
+BANNER_STATE_STYLES[BANNER_STATES.greyed_out] = ViewStyles.career_banner_greyed_out
+BANNER_STATE_STYLES[BANNER_STATES.focused] = ViewStyles.career_banner_focused
+BANNER_STATE_STYLES[BANNER_STATES.selected_show_talents] = ViewStyles.career_banner_show_talents
+BANNER_STATE_STYLES[BANNER_STATES.selected_show_description] = ViewStyles.career_banner_show_description
+
 local TalentsCareerChoiceView = class("TalentsCareerChoiceView", "BaseView")
 
 TalentsCareerChoiceView.init = function (self, settings, context)
@@ -49,6 +52,7 @@ TalentsCareerChoiceView.on_enter = function (self)
 	self:_setup_archetype_data()
 
 	local confirm_button = self._widgets_by_name.confirm_choice_button
+
 	confirm_button.content.hotspot.pressed_callback = callback(self, "cb_confirm_choice_button_pressed")
 
 	self:_on_navigation_input_changed()
@@ -105,6 +109,7 @@ TalentsCareerChoiceView.update = function (self, dt, t, input_service)
 	end
 
 	local confirm_button = self._widgets_by_name.confirm_choice_button
+
 	confirm_button.content.hotspot.disabled = self._selected_banner_index == nil
 
 	return TalentsCareerChoiceView.super.update(self, dt, t, input_service)
@@ -183,8 +188,9 @@ TalentsCareerChoiceView._handle_input = function (self, input_service, dt, t)
 	end
 
 	self._pass_input = not input_handled
+
 	local career_banners = self._career_banners
-	local focused_banner_index, selected_banner_index = nil
+	local focused_banner_index, selected_banner_index
 
 	for i = 1, #career_banners do
 		local banner = career_banners[i]
@@ -211,6 +217,7 @@ TalentsCareerChoiceView._handle_input = function (self, input_service, dt, t)
 			end
 		elseif banner.is_selected and not selected_banner_index then
 			selected_banner_index = i
+
 			local current_state = banner.state
 
 			if input_service:get("secondary_action_pressed") then
@@ -277,11 +284,16 @@ TalentsCareerChoiceView._on_navigation_input_changed = function (self)
 		confirmation_button_content.text = Localize(confirm_choice_button_loc_key)
 		confirmation_button_content.hotspot.is_selected = false
 		text_param.button_hint = ""
+
 		local show_details_hint = Localize(show_details_hint_loc_key, true, text_param)
 		local hide_details_hint = Localize(hide_details_hint_loc_key, true, text_param)
+
 		text_param.button_hint = "[S]"
+
 		local show_description_hint = Localize(show_description_hint_loc_key, true, text_param)
+
 		text_param.button_hint = "[W]"
+
 		local show_talents_hint = Localize(show_talents_hint_loc_key, true, text_param)
 
 		for i, banner in pairs(banners) do
@@ -291,6 +303,7 @@ TalentsCareerChoiceView._on_navigation_input_changed = function (self)
 
 			local banner_widget = banner.banner_widget
 			local content = banner_widget.content
+
 			content.show_details_button_hint = show_details_hint
 			content.hide_details_button_hint = hide_details_hint
 			content.description_button_hint = show_description_hint
@@ -300,13 +313,18 @@ TalentsCareerChoiceView._on_navigation_input_changed = function (self)
 		confirmation_button_content.text = TextUtils.localize_with_button_hint("confirm_pressed", confirm_choice_button_loc_key)
 		confirmation_button_content.hotspot.is_selected = true
 		text_param.button_hint = ""
+
 		local show_details_hint = Localize(show_details_hint_loc_key, true, text_param)
 		local hide_details_hint = Localize(hide_details_hint_loc_key, true, text_param)
+
 		text_param.button_hint = ""
+
 		local show_description_hint = Localize(show_description_hint_loc_key, true, text_param)
+
 		text_param.button_hint = ""
+
 		local show_talents_hint = Localize(show_talents_hint_loc_key, true, text_param)
-		local focused_index, state = nil
+		local focused_index, state
 
 		for i = 1, #banners do
 			local banner = banners[i]
@@ -318,6 +336,7 @@ TalentsCareerChoiceView._on_navigation_input_changed = function (self)
 
 			local banner_widget = banner.banner_widget
 			local content = banner_widget.content
+
 			content.show_details_button_hint = show_details_hint
 			content.hide_details_button_hint = hide_details_hint
 			content.description_button_hint = show_description_hint
@@ -383,7 +402,9 @@ TalentsCareerChoiceView._set_banner_state = function (self, banner_index, state)
 	end
 
 	local banner_scrollbar_hotspot = banner.scrollbar.content.hotspot
+
 	banner_scrollbar_hotspot.is_selected = false
+
 	local animation_params = {
 		banner_source_style = BANNER_STATE_STYLES[banner.state],
 		banner_target_style = BANNER_STATE_STYLES[state]
@@ -410,6 +431,7 @@ TalentsCareerChoiceView._set_banner_state = function (self, banner_index, state)
 		end
 	elseif state == BANNER_STATES.focused then
 		local using_cursor_navigation = self._using_cursor_navigation
+
 		banner.is_selected = not using_cursor_navigation
 
 		if banner.state == BANNER_STATES.selected_show_talents or banner.state == BANNER_STATES.selected_show_description then
@@ -434,6 +456,7 @@ TalentsCareerChoiceView._play_banner_animation = function (self, banner_index, a
 		self._belated_banner_animations[banner_index] = animation_params
 	else
 		local banner = self._career_banners[banner_index]
+
 		running_animations[banner_index] = self:_start_animation("switch_state", banner, animation_params)
 	end
 end
@@ -448,6 +471,7 @@ TalentsCareerChoiceView._create_offscreen_renderer = function (self)
 	local viewport_layer = 1
 	local viewport = Managers.ui:create_viewport(world, viewport_name, viewport_type, viewport_layer)
 	local renderer_name = self.__class_name .. "offscreen_renderer"
+
 	self._offscreen_renderer = Managers.ui:create_renderer(renderer_name, world)
 	self._offscreen_world = {
 		name = world_name,
@@ -480,7 +504,9 @@ TalentsCareerChoiceView._setup_archetype_data = function (self)
 	local archetype = player_profile.archetype
 	local archetype_talents = archetype.talents
 	local archetype_specializations = archetype.specializations
+
 	self._archetype = archetype
+
 	local widget_name_prefix = self._definitions.widget_name_prefix
 	local widgets_by_name = self._widgets_by_name
 	local career_banners = {}
@@ -491,15 +517,19 @@ TalentsCareerChoiceView._setup_archetype_data = function (self)
 		if order then
 			local widget = widgets_by_name[widget_name_prefix .. order]
 			local content = widget.content
+
 			content.background = specialization.choice_banner
 			content.background_blurred = specialization.choice_banner .. "_blurred"
 			content.title = TextUtils.localize_to_upper(specialization.title)
 			content.short_description = specialization.description_short and self:_localize(specialization.description_short) or "Unique Point 1, Unique Point 2, Unique Point 3"
 			content.description = self:_localize(specialization.description)
+
 			local disabled = specialization.disabled
 			local hotspot = content.hotspot
+
 			hotspot.disabled = disabled
 			hotspot.pressed_callback = not disabled and callback(self, "cb_banner_button_pressed", order)
+
 			local banner = {
 				banner_widget = widget,
 				specialization = specialization_name,
@@ -535,7 +565,7 @@ TalentsCareerChoiceView._setup_details_list = function (self, column, archetype_
 	for j = 1, #talent_groups do
 		local talent_group = talent_groups[j]
 
-		if talent_group.required_level <= min_level and not talent_group.invisible_in_ui then
+		if min_level >= talent_group.required_level and not talent_group.invisible_in_ui then
 			local widget_name_prefix = list_name .. "_widget_" .. j .. "_"
 			local talents_in_group = talent_group.talents
 
@@ -561,6 +591,7 @@ TalentsCareerChoiceView._setup_details_list = function (self, column, archetype_
 				local widget_name = widget_name_prefix .. i
 				local new_widget = self:_create_widget(widget_name, widget_definition)
 				local content = new_widget.content
+
 				content.label = label
 				content.description = description
 				content.icon = icon
@@ -572,13 +603,16 @@ TalentsCareerChoiceView._setup_details_list = function (self, column, archetype_
 	end
 
 	alignment_widgets[#alignment_widgets + 1] = list_padding
+
 	local grid_widget = UIWidgetGrid:new(widgets, alignment_widgets, self._ui_scenegraph, grid_scenegraph_id, grid_direction)
 	local scrollbar_widget = self._widgets_by_name["career_" .. column .. "_scrollbar"]
 
 	grid_widget:assign_scrollbar(scrollbar_widget, grid_scenegraph_id, interaction_scenegraph_id)
 
 	scrollbar_widget.alpha_multiplier = 0
+
 	local mask = self._widgets_by_name["career_" .. column .. "_mask"]
+
 	mask.alpha_multiplier = 0
 	banner.grid = grid_widget
 	banner.details_widgets = widgets

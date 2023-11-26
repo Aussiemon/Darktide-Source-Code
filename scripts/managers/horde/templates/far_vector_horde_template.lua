@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/horde/templates/far_vector_horde_template.lua
+
 local MainPathQueries = require("scripts/utilities/main_path_queries")
 local NavQueries = require("scripts/utilities/nav_queries")
 local PerceptionSettings = require("scripts/settings/perception/perception_settings")
@@ -15,8 +17,7 @@ local horde_template = {
 
 local function _try_find_spawn_position(nav_world, traverse_logic, center_position, index, num_columns, max_attempts)
 	local Math_Random = math.random
-	local above = 2
-	local below = 2
+	local above, below = 2, 2
 	local offset = Vector3(-num_columns / 2 + index % num_columns, -num_columns / 2 + math.floor(index / num_columns), 0)
 
 	for i = 1, max_attempts do
@@ -41,8 +42,7 @@ local function _compose_spawn_list(composition)
 
 	for i = 1, #breeds do
 		local breed_data = breeds[i]
-		local breed_name = breed_data.name
-		local amount = breed_data.amount
+		local breed_name, amount = breed_data.name, breed_data.amount
 		local num_to_spawn = Math_random(amount[1], amount[2])
 
 		for j = 1, num_to_spawn do
@@ -56,8 +56,7 @@ local function _compose_spawn_list(composition)
 end
 
 local function _position_has_line_of_sight_to_any_enemy_player(physics_world, from_position, side, collision_filter)
-	local Vector3_length_squared = Vector3.length_squared
-	local Vector3_normalize = Vector3.normalize
+	local Vector3_length_squared, Vector3_normalize = Vector3.length_squared, Vector3.normalize
 	local PhysicsWorld_raycast = PhysicsWorld.raycast
 	local offset = Vector3.up()
 	local valid_enemy_player_units_positions = side.valid_enemy_player_units_positions
@@ -83,7 +82,7 @@ end
 
 local function _try_find_position_ahead_or_behind_target_on_main_path(physics_world, nav_world, traverse_logic, check_ahead, travel_distance, euclidean_distance, side, target_side)
 	local main_path_manager = Managers.state.main_path
-	local target_unit, target_travel_distance, target_path_position = nil
+	local target_unit, target_travel_distance, target_path_position
 	local target_side_id = target_side.side_id
 
 	if check_ahead then
@@ -186,7 +185,7 @@ horde_template.execute = function (physics_world, nav_world, side, target_side, 
 		return
 	end
 
-	local chance_spawning_ahead = nil
+	local chance_spawning_ahead
 
 	if optional_prefered_direction then
 		if optional_prefered_direction == "ahead" then

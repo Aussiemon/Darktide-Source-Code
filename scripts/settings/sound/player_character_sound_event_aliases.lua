@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/sound/player_character_sound_event_aliases.lua
+
 local events = {
 	sfx_foley_upper_body = {
 		has_husk_events = true,
@@ -3344,7 +3346,9 @@ for alias, data in pairs(looping_events) do
 	_replace_event_values(play_data.events, "play")
 
 	play_data.has_stop_event = nil
+
 	local play_alias = "play_" .. alias
+
 	events[play_alias] = play_data
 
 	if data.has_stop_event then
@@ -3353,7 +3357,9 @@ for alias, data in pairs(looping_events) do
 		_replace_event_values(stop_data.events, "stop")
 
 		stop_data.has_stop_event = nil
+
 		local stop_alias = "stop_" .. alias
+
 		events[stop_alias] = stop_data
 	end
 end

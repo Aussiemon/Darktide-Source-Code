@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/pacing/templates/default_pacing_template.lua
+
 local HordePacingTemplates = require("scripts/managers/pacing/horde_pacing/horde_pacing_templates")
 local SpecialsPacingTemplates = require("scripts/managers/pacing/specials_pacing/specials_pacing_templates")
 local MonsterPacingTemplates = require("scripts/managers/pacing/monster_pacing/monster_pacing_templates")

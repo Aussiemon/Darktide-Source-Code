@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/aim/third_person_aim_animation_control.lua
+
 local ThirdPersonAimAnimationControl = class("ThirdPersonAimAnimationControl")
 local AIM_DIRECTION_MAX = 1
 
@@ -5,7 +7,9 @@ ThirdPersonAimAnimationControl.init = function (self, unit)
 	self._unit = unit
 	self._animation_extension = ScriptUnit.extension(unit, "animation_system")
 	self._look_direction_anim_var = "aim"
+
 	local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
+
 	self._first_person_component = unit_data_extension:read_component("first_person")
 end
 

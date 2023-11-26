@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/loading/profile_synchronizer_host.lua
+
 local MasterItems = require("scripts/backend/master_items")
 local RPCQueue = require("scripts/utilities/rpc_queue")
 local ProfileUtils = require("scripts/utilities/profile_utils")
@@ -25,11 +27,13 @@ ProfileSynchronizerHost.register_rpcs = function (self, channel_id)
 	self._event_delegate:register_connection_channel_events(self, channel_id, unpack(RPCS))
 
 	self._registered_channel_ids[channel_id] = true
+
 	local rpc_queue_settings = {
 		max_rpcs = 1000,
 		time_between_sends = 0,
 		num_rpcs_per_send = 10
 	}
+
 	self._rpc_queues[channel_id] = RPCQueue:new(channel_id, rpc_queue_settings)
 end
 
@@ -78,10 +82,12 @@ end
 
 ProfileSynchronizerHost.start_initial_sync = function (self, channel_id, peer_id, local_player_ids)
 	local initial_syncs = self._initial_syncs[channel_id] or {}
+
 	initial_syncs[peer_id] = {}
 
 	for i = 1, #local_player_ids do
 		local local_player_id = local_player_ids[i]
+
 		initial_syncs[peer_id][local_player_id] = false
 	end
 
@@ -123,8 +129,10 @@ end
 ProfileSynchronizerHost.add_bot = function (self, local_player_id, profile)
 	local connected_peer_channel_ids = self._connected_peers
 	local generated_name = ProfileUtils.generate_random_name(profile)
+
 	generated_name = string.format("%s {#color(216,229,207,120)}[%s]{#reset()}", generated_name, Text.localize_to_upper("loc_bot_tag"))
 	profile.name = generated_name
+
 	local profile_json = ProfileUtils.pack_profile(profile)
 	local profile_chunks = {}
 
@@ -146,6 +154,7 @@ ProfileSynchronizerHost._profile_changed = function (self, local_player_id, peer
 		end
 
 		backend_profile_data = ProfileUtils.process_backend_body(backend_profile_data)
+
 		local new_profile = ProfileUtils.backend_profile_data_to_profile(backend_profile_data)
 		local profile_json = ProfileUtils.pack_backend_profile_data(backend_profile_data)
 		local profile_chunks = {}
@@ -157,6 +166,7 @@ ProfileSynchronizerHost._profile_changed = function (self, local_player_id, peer
 		end
 
 		local profile_updates = self._profile_updates[peer_id] or {}
+
 		profile_updates[local_player_id] = new_profile
 		self._profile_updates[peer_id] = profile_updates
 	end):catch(function (error)
@@ -175,8 +185,11 @@ ProfileSynchronizerHost.override_slot = function (self, peer_id, local_player_id
 	local player = Managers.player:player(peer_id, local_player_id)
 	local new_profile = table.clone_instance(player:profile())
 	local loadout_item_ids = new_profile.loadout_item_ids
+
 	loadout_item_ids[slot_name] = item_name and item_name .. slot_name or nil
+
 	local loadout_item_data = new_profile.loadout_item_data
+
 	loadout_item_data[slot_name] = {
 		id = item_name
 	}
@@ -195,7 +208,9 @@ ProfileSynchronizerHost.override_singleplay_profile = function (self, peer_id, l
 	end
 
 	new_profile = ProfileUtils.unpack_profile(profile_json)
+
 	local profile_updates = self._profile_updates[peer_id] or {}
+
 	profile_updates[local_player_id] = new_profile
 	self._profile_updates[peer_id] = profile_updates
 end
@@ -264,6 +279,7 @@ end
 
 ProfileSynchronizerHost.peer_disconnected = function (self, peer_id, channel_id)
 	local profile_sync_states = self._profile_sync_states
+
 	profile_sync_states[peer_id] = nil
 
 	for _, peer_states in pairs(profile_sync_states) do
@@ -381,6 +397,7 @@ ProfileSynchronizerHost.rpc_player_profile_synced = function (self, channel_id, 
 
 	if current_state == SYNC_STATES.syncing_need_resync then
 		peer_states[profile_peer_id][profile_local_player_id] = SYNC_STATES.not_synced
+
 		local profile = self._profile_updates[profile_peer_id][profile_local_player_id]
 		local profile_json = ProfileUtils.pack_profile(profile)
 		local profile_chunks = {}

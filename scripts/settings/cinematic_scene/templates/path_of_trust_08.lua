@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/cinematic_scene/templates/path_of_trust_08.lua
+
 local cinematic_scene_templates = {
 	path_of_trust_08 = {
 		is_skippable = true,

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/weapon/actions/action_chain_lightning_powerup.lua
+
 require("scripts/extension_systems/weapon/actions/action_chain_lightning_new")
 
 local ChainLightning = require("scripts/utilities/action/chain_lightning")
@@ -7,14 +9,16 @@ local SpecialRulesSetting = require("scripts/settings/ability/special_rules_sett
 local ActionChainLightningPowerup = class("ActionChainLightningPowerup", "ActionChainLightning")
 local special_rules = SpecialRulesSetting.special_rules
 local DEPTH_FIRST_VALIDATION = ChainLightning.depth_first_validation_functions
-local _on_transfer_func, _on_remove_func = nil
+local _on_transfer_func, _on_remove_func
 
 ActionChainLightningPowerup._action_specific_init = function (self, action_context, action_params, action_settings)
 	if self._is_server then
 		self._chain_root_node = nil
 		self._temp_targets = {}
 		self._hit_units = {}
+
 		local specialization_extension = ScriptUnit.has_extension(self._player_unit, "specialization_system")
+
 		self._func_context = {
 			action_settings = self._action_settings,
 			buff_extension = self._buff_extension,

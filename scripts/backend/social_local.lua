@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/backend/social_local.lua
+
 local Promise = require("scripts/foundation/utilities/promise")
 local Interface = require("scripts/backend/social_interface")
 local SocialConstants = require("scripts/managers/data_service/services/social/social_constants")
@@ -47,16 +49,20 @@ SocialLocal.send_friend_request = function (self, account_id, method)
 
 			if not method or method == "POST" then
 				local is_sent = not self._is_sent_friend_request
+
 				self._is_sent_friend_request = is_sent
+
 				local friend = {
 					accountName = "DummyData",
 					accountId = account_id,
 					status = is_sent and FriendStatus.invited or FriendStatus.invite,
 					invitedTime = tostring(server_time)
 				}
+
 				self._friends[account_id] = friend
 			elseif method == "PUT" then
 				local friend = self._friends[account_id]
+
 				friend.status = FriendStatus.friend
 				friend.friendedTime = tostring(server_time)
 			elseif method == "PATCH" or method == "DELETE" then

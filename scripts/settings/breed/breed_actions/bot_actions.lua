@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/breed/breed_actions/bot_actions.lua
+
 local UtilityConsiderations = require("scripts/extension_systems/behavior/utility_considerations")
 local action_data = {
 	name = "bot",

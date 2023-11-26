@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/ui/ui_manager.lua
+
 local Archetypes = require("scripts/settings/archetype/archetypes")
 local InputDevice = require("scripts/managers/input/input_device")
 local InputHoldTracker = require("scripts/managers/input/input_hold_tracker")
@@ -21,7 +23,9 @@ local UIViewHandler = require("scripts/managers/ui/ui_view_handler")
 local Views = require("scripts/ui/views/views")
 local WeaponIconUI = require("scripts/ui/weapon_icon_ui")
 local UIManager = class("UIManager")
+
 UIManager.DEBUG_TAG = "UI Manager"
+
 local DEBUG_RELOAD = false
 
 UIManager.init = function (self)
@@ -36,21 +40,26 @@ UIManager.init = function (self)
 	self._active_popups = {}
 	self._visible_widgets = {}
 	self._prev_visible_widgets = {}
+
 	local timer_name = "ui"
 	local parent_timer_name = "main"
 
 	Managers.time:register_timer(timer_name, parent_timer_name, 0)
 
 	self._timer_name = timer_name
+
 	local world_layer = 20
 	local world_name = "ui_world"
+
 	self._world_name = world_name
 	self._default_world_layer = world_layer
 	self._world = self:create_world(world_name, world_layer, timer_name)
+
 	local viewport_name = "ui_world_viewport"
 	local viewport_type = "overlay"
 	local viewport_layer = 1
-	local shading_environment = nil
+	local shading_environment
+
 	self._viewport = self:create_viewport(self._world, viewport_name, viewport_type, viewport_layer, shading_environment)
 	self._viewport_name = viewport_name
 	self._single_icon_renderers = {}
@@ -60,11 +69,15 @@ UIManager.init = function (self)
 	self:_setup_icon_renderers()
 
 	self._ui_loading_icon_renderer = self:create_renderer("ui_loading_icon_renderer")
+
 	local input_service_name = "View"
+
 	self._input_service_name = input_service_name
 	self._view_handler = UIViewHandler:new(Views, timer_name)
 	self._close_view_input_action = "back"
+
 	local constant_elements = require("scripts/ui/constant_elements/constant_elements")
+
 	self._ui_constant_elements = UIConstantElements:new(self, constant_elements)
 
 	self:_load_ui_element_packages(constant_elements, "constant_elements")
@@ -157,20 +170,20 @@ UIManager._setup_icon_renderers = function (self)
 		world_name = "weapon_skins_icon_world",
 		render_target_atlas_generator = self._render_target_atlas_generator
 	}
-	local back_buffer_render_handlers = {
-		portraits = self:create_single_icon_renderer("portrait", "portraits", portrait_render_settings),
-		appearance = self:create_single_icon_renderer("portrait", "appearance", appearance_render_settings),
-		cosmetics = self:create_single_icon_renderer("portrait", "cosmetics", cosmetics_render_settings),
-		weapons = self:create_single_icon_renderer("weapon", "weapons"),
-		weapon_skin = self:create_single_icon_renderer("weapon", "weapon_skin", weapon_skins_render_settings),
-		icon = self:create_single_icon_renderer("icon", "icon")
-	}
+	local back_buffer_render_handlers = {}
+
+	back_buffer_render_handlers.portraits = self:create_single_icon_renderer("portrait", "portraits", portrait_render_settings)
+	back_buffer_render_handlers.appearance = self:create_single_icon_renderer("portrait", "appearance", appearance_render_settings)
+	back_buffer_render_handlers.cosmetics = self:create_single_icon_renderer("portrait", "cosmetics", cosmetics_render_settings)
+	back_buffer_render_handlers.weapons = self:create_single_icon_renderer("weapon", "weapons")
+	back_buffer_render_handlers.weapon_skin = self:create_single_icon_renderer("weapon", "weapon_skin", weapon_skins_render_settings)
+	back_buffer_render_handlers.icon = self:create_single_icon_renderer("icon", "icon")
 	self._back_buffer_render_handlers = back_buffer_render_handlers
 end
 
 UIManager.create_single_icon_renderer = function (self, render_type, id, settings)
 	local single_icon_renderers = self._single_icon_renderers
-	local instance = nil
+	local instance
 
 	if render_type == "weapon" then
 		instance = WeaponIconUI:new(settings)
@@ -189,6 +202,7 @@ UIManager.destroy_single_icon_renderer = function (self, id)
 	local single_icon_renderers = self._single_icon_renderers
 	local instance = single_icon_renderers[id]
 	local single_icon_renderers_marked_for_destruction_array = self._single_icon_renderers_marked_for_destruction_array
+
 	single_icon_renderers_marked_for_destruction_array[#single_icon_renderers_marked_for_destruction_array + 1] = instance
 	self._single_icon_renderers_destruction_frame_counter = 2
 
@@ -210,6 +224,7 @@ UIManager._handle_single_icon_renderer_destruction = function (self, dt)
 
 	for i = #single_icon_renderers_marked_for_destruction_array, 1, -1 do
 		local instance = single_icon_renderers_marked_for_destruction_array[i]
+
 		single_icon_renderers_marked_for_destruction_array[i] = nil
 
 		instance:destroy()
@@ -242,7 +257,8 @@ end
 
 UIManager.create_renderer = function (self, name, world, create_resource_target, gui, gui_retained, material_name, optional_width, optional_height, ignore_back_buffer)
 	world = world or self._world
-	local renderer = nil
+
+	local renderer
 
 	if create_resource_target then
 		renderer = UIRenderer.create_resource_renderer(world, gui, gui_retained, name, material_name, optional_width, optional_height, ignore_back_buffer)
@@ -263,9 +279,10 @@ UIManager.load_hud_packages = function (self, element_definitions, complete_call
 end
 
 UIManager._load_ui_element_packages = function (self, element_definitions, reference_key, on_loaded_callback)
-	local ui_element_packages_data = {
-		on_loaded_callback = on_loaded_callback
-	}
+	local ui_element_packages_data = {}
+
+	ui_element_packages_data.on_loaded_callback = on_loaded_callback
+
 	local package_references = {}
 	local is_loading = false
 
@@ -297,6 +314,7 @@ UIManager._load_ui_element_packages = function (self, element_definitions, refer
 				local class_name = definition.class_name
 				local reference_name = reference_key .. "_packages_" .. class_name
 				local on_load_callback = callback(self, "_on_ui_element_package_loaded", reference_key, reference_name)
+
 				package_references[reference_name].id = package_manager:load(package, reference_name, on_load_callback)
 			end
 		end
@@ -324,6 +342,7 @@ UIManager._on_ui_element_package_loaded = function (self, reference_key, referen
 	local package_references_data = self._ui_element_package_references[reference_key]
 	local package_references = package_references_data.package_references
 	local data = package_references[reference_name]
+
 	data.is_loaded = true
 
 	for _, package_data in pairs(package_references) do
@@ -365,12 +384,14 @@ end
 
 UIManager.create_player_hud = function (self, peer_id, local_player_id, elements, visibility_groups)
 	visibility_groups = visibility_groups or require("scripts/ui/hud/hud_visibility_groups")
+
 	local enable_world_bloom = not self._spectator_hud
 	local params = {
 		peer_id = peer_id,
 		local_player_id = local_player_id or 1,
 		enable_world_bloom = enable_world_bloom
 	}
+
 	self._hud = UIHud:new(elements, visibility_groups, params)
 
 	Managers.event:trigger("event_player_hud_created")
@@ -378,6 +399,7 @@ end
 
 UIManager.create_spectator_hud = function (self, world_viewport_name, peer_id, local_player_id, elements, visibility_groups)
 	visibility_groups = visibility_groups or require("scripts/ui/hud/hud_visibility_groups")
+
 	local enable_world_bloom = not self._hud
 	local params = {
 		renderer_name = "spectator_hud_ui_renderer",
@@ -386,6 +408,7 @@ UIManager.create_spectator_hud = function (self, world_viewport_name, peer_id, l
 		world_viewport_name = world_viewport_name,
 		enable_world_bloom = enable_world_bloom
 	}
+
 	self._spectator_hud = UIHud:new(elements, visibility_groups, params)
 end
 
@@ -534,6 +557,7 @@ UIManager._show_error_popup = function (self, view_name)
 	local view_settings = Views[view_name]
 	local header = view_settings.killswitch_unavailable_header
 	local description = view_settings.killswitch_unavailable_description
+
 	popup_params.title_text = header
 	popup_params.description_text = description
 	popup_params.options = {
@@ -623,6 +647,7 @@ end
 UIManager.cb_on_game_state_change = function (self, previous_state_name, next_state_name)
 	local view_handler = self._view_handler
 	local active_views = view_handler:active_views()
+
 	self._current_sub_state_name = ""
 	self._current_state_name = next_state_name
 
@@ -645,6 +670,7 @@ end
 
 UIManager.create_viewport = function (self, world, viewport_name, viewport_type, viewport_layer, shading_environment_name, shading_callback, optional_render_targets)
 	shading_environment_name = shading_environment_name or GameParameters.default_ui_shading_environment
+
 	local viewport = ScriptWorld.create_viewport(world, viewport_name, viewport_type, viewport_layer, nil, nil, nil, nil, shading_environment_name, shading_callback, nil, optional_render_targets)
 
 	return viewport
@@ -656,13 +682,9 @@ UIManager.create_world = function (self, world_name, optional_layer, optional_ti
 		layer = layer,
 		timer_name = optional_timer_name or self._timer_name
 	}
-
-	if not optional_flags then
-		local flags = {
-			Application.DISABLE_PHYSICS
-		}
-	end
-
+	local flags = optional_flags or {
+		Application.DISABLE_PHYSICS
+	}
 	local world_manager = Managers.world
 	local world = world_manager:create_world(world_name, parameters, unpack(flags))
 
@@ -881,6 +903,7 @@ UIManager.update = function (self, dt, t)
 		end
 
 		local constant_elements = require("scripts/ui/constant_elements/constant_elements")
+
 		self._ui_constant_elements = UIConstantElements:new(self, constant_elements)
 		DEBUG_RELOAD = false
 	end
@@ -909,6 +932,7 @@ UIManager.render = function (self, dt, t)
 
 	if world then
 		local top_draw_layer = self:view_draw_top_layer()
+
 		top_draw_layer = top_draw_layer + self._default_world_layer
 
 		if top_draw_layer ~= self._world_draw_layer then
@@ -928,7 +952,7 @@ UIManager.render = function (self, dt, t)
 	local spectator_hud = self._spectator_hud
 
 	if hud then
-		local input_service = (spectator_hud or self._ui_constant_elements:using_input()) and self:input_service():null_service() or self:input_service()
+		local input_service = not (not spectator_hud and not self._ui_constant_elements:using_input()) and self:input_service():null_service() or self:input_service()
 
 		hud:draw(dt, t, input_service)
 	end
@@ -944,7 +968,7 @@ UIManager.post_update = function (self, dt, t)
 	local constant_element_using_input = self._ui_constant_elements:using_input()
 
 	if hud then
-		local input_service = (spectator_hud or constant_element_using_input) and self:input_service():null_service() or self:input_service()
+		local input_service = not (not spectator_hud and not constant_element_using_input) and self:input_service():null_service() or self:input_service()
 
 		hud:update(dt, t, input_service)
 	end
@@ -966,8 +990,7 @@ UIManager.post_update = function (self, dt, t)
 		end
 	end
 
-	self._prev_visible_widgets = visible_widgets
-	self._visible_widgets = prev_visible_widgets
+	self._visible_widgets, self._prev_visible_widgets = prev_visible_widgets, visible_widgets
 
 	table.clear(prev_visible_widgets)
 end
@@ -994,8 +1017,10 @@ UIManager._debug_draw_version_info = function (self, dt, t)
 	local h = RESOLUTION_LOOKUP.height
 	local scale = RESOLUTION_LOOKUP.scale
 	local inverse_scale = RESOLUTION_LOOKUP.inverse_scale
+
 	ui_renderer.scale = scale
 	ui_renderer.inverse_scale = inverse_scale
+
 	local font_size = 24
 	local font_type = "arial"
 	local font_height, font_min_y, font_max_y = UIFonts.font_height(gui, font_type, font_size)
@@ -1015,19 +1040,22 @@ UIManager._debug_draw_version_info = function (self, dt, t)
 		vertical_alignment = Gui.VerticalAlignBottom
 	}
 	local draw_layer = 999
+
 	font_size = math.floor(16 * scale)
-	local camera_position_string, camera_rotation_string, player_1p_position_string, player_3p_position_string = nil
+
+	local camera_position_string, camera_rotation_string, player_1p_position_string, player_3p_position_string
 	local camera_manager = Managers.state.camera
 	local free_flight_manager = Managers.free_flight
-	local player = nil
+	local player
 
 	if Managers.connection:is_initialized() then
 		local peer_id = Network.peer_id()
 		local local_player_id = 1
+
 		player = Managers.player:player(peer_id, local_player_id)
 	end
 
-	local camera_pos, camera_rot = nil
+	local camera_pos, camera_rot
 
 	if free_flight_manager and free_flight_manager:is_in_free_flight() then
 		camera_pos, camera_rot = free_flight_manager:camera_position_rotation("global")
@@ -1053,9 +1081,12 @@ UIManager._debug_draw_version_info = function (self, dt, t)
 		if unit_data_extension then
 			local first_person_read_component = unit_data_extension:read_component("first_person")
 			local player_1p_position = first_person_read_component.position
+
 			player_1p_position_string = string.format("Player 1p Position(%.2f, %.2f, %.2f)", player_1p_position.x, player_1p_position.y, player_1p_position.z)
+
 			local locomotion_read_component = unit_data_extension:read_component("locomotion")
 			local player_position = locomotion_read_component.position
+
 			player_3p_position_string = string.format("Player 3p Position(%.2f, %.2f, %.2f)", player_position.x, player_position.y, player_position.z)
 		end
 	end
@@ -1067,10 +1098,11 @@ UIManager._debug_draw_version_info = function (self, dt, t)
 	local main_objective_type = "n/a"
 	local mission_manager = Managers.state.mission
 	local mission = mission_manager and mission_manager:mission()
-	local chunk_name_string = nil
+	local chunk_name_string
 
 	if Managers.state and Managers.state.chunk_lod then
 		local chunk_name = Managers.state.chunk_lod:current_chunk_name() or "n/a"
+
 		chunk_name_string = string.format("Chunk: %s", chunk_name)
 	end
 
@@ -1090,31 +1122,32 @@ UIManager._debug_draw_version_info = function (self, dt, t)
 		game_mode_name = mission.game_mode_name
 	end
 
-	local num_hub_players = nil
+	local num_hub_players
 	local connection_manager = Managers.connection
 	local host_type = connection_manager:host_type()
 
 	if host_type and host_type == "hub_server" then
 		local members = connection_manager:num_members()
+
 		num_hub_players = string.format("Hub Players: %d", members)
 	end
 
 	local _unique_instance_id = Managers.connection:unique_instance_id()
-	local unique_instance_id_with_prefix = nil
+	local unique_instance_id_with_prefix
 
 	if _unique_instance_id then
 		unique_instance_id_with_prefix = string.format("Instance Id: %s", _unique_instance_id)
 	end
 
 	local _region = Managers.connection:region()
-	local region_with_prefix = nil
+	local region_with_prefix
 
 	if _region then
 		region_with_prefix = string.format("Region: %s", _region)
 	end
 
 	local _deployment_id = Managers.connection:deployment_id()
-	local deployment_id_with_prefix = nil
+	local deployment_id_with_prefix
 
 	if _deployment_id then
 		deployment_id_with_prefix = string.format("Deployment Id: %s", _deployment_id)
@@ -1124,6 +1157,7 @@ UIManager._debug_draw_version_info = function (self, dt, t)
 
 	if mechanism_name then
 		mechanism_name = string.format("Mechanism: %s", mechanism_name)
+
 		local mechanism_state = Managers.mechanism:mechanism_state()
 
 		if mechanism_state then
@@ -1145,11 +1179,12 @@ UIManager._debug_draw_version_info = function (self, dt, t)
 		network_info = network_info .. "|accelerated"
 	end
 
-	local progression_info = nil
+	local progression_info
 
 	if player then
 		local profile = player:profile()
 		local current_level = profile and profile.current_level or "n/a"
+
 		progression_info = string.format("Level: %s", current_level)
 	end
 
@@ -1158,35 +1193,39 @@ UIManager._debug_draw_version_info = function (self, dt, t)
 
 	if GameParameters.prod_like_backend then
 		local myself = Managers.presence:presence_entry_myself()
+
 		num_mission_members = myself:num_mission_members()
 	end
 
 	local presence_info = string.format("Presence: %s, num_mission_members: %s", presence, num_mission_members)
-	local difficulty_info = nil
+	local difficulty_info
 	local difficulty_manager = Managers.state.difficulty
 
 	if difficulty_manager then
 		local challenge = difficulty_manager:get_challenge()
 		local resistance = difficulty_manager:get_resistance()
+
 		difficulty_info = string.format("Difficulty: %s-%s", challenge, resistance)
 	end
 
-	local circumstance_info = nil
+	local circumstance_info
 	local circumstance_manager = Managers.state.circumstance
 
 	if circumstance_manager then
 		local name = circumstance_manager:circumstance_name() or "n/a"
+
 		circumstance_info = string.format("Circumstance: %s", name)
 	end
 
-	local selected_unit_info = nil
+	local selected_unit_info
 
 	if Debug:exists() then
 		local selected_unit = Debug.selected_unit and tostring(Debug.selected_unit) or "n/a"
+
 		selected_unit_info = string.format("Selected Unit: %s", selected_unit)
 	end
 
-	local vo_story_stage_info = nil
+	local vo_story_stage_info
 
 	if player and player:unit_is_alive() then
 		local player_unit = player.player_unit
@@ -1195,6 +1234,7 @@ UIManager._debug_draw_version_info = function (self, dt, t)
 		if dialogue_extension then
 			local context = dialogue_extension:get_context()
 			local vo_story_stage = context.story_stage
+
 			vo_story_stage_info = string.format("VO Story Stage: %s", vo_story_stage)
 		end
 	end
@@ -1303,10 +1343,13 @@ UIManager._debug_draw_feature_info = function (self, dt, t)
 	local scale = RESOLUTION_LOOKUP.scale
 	local inverse_scale = RESOLUTION_LOOKUP.inverse_scale
 	local draw_layer = 999
+
 	ui_renderer.scale = scale
 	ui_renderer.inverse_scale = inverse_scale
+
 	local feature_font_size = 18
 	local feature_font_type = "arial"
+
 	feature_font_size = math.floor(16 * scale)
 
 	UIFonts.data_by_type(feature_font_type)
@@ -1394,6 +1437,7 @@ UIManager._debug_draw_feature_info = function (self, dt, t)
 		UIRenderer.draw_text(ui_renderer, text, feature_font_size, feature_font_type, feature_pos, feature_box_size, val and feature_active_color or feature_notactive_color, feature_text_options)
 
 		local text_width, text_height, plupp, caret = UIRenderer.text_size(ui_renderer, text, feature_font_type, feature_font_size)
+
 		feature_pos[1] = feature_pos[1] + text_width * inverse_scale + 10 * inverse_scale
 	end
 
@@ -1407,6 +1451,7 @@ UIManager.load_view = function (self, view_name, reference_name, loaded_callback
 
 	if dynamic_package_name then
 		local package_reference_name = reference_name .. #packages_to_load_data
+
 		packages_to_load_data[#packages_to_load_data + 1] = {
 			package_name = dynamic_package_name,
 			reference_name = package_reference_name
@@ -1418,6 +1463,7 @@ UIManager.load_view = function (self, view_name, reference_name, loaded_callback
 
 	if package_name then
 		local package_reference_name = reference_name .. #packages_to_load_data
+
 		packages_to_load_data[#packages_to_load_data + 1] = {
 			package_name = package_name,
 			reference_name = package_reference_name
@@ -1428,6 +1474,7 @@ UIManager.load_view = function (self, view_name, reference_name, loaded_callback
 		for i = 1, #levels do
 			local level_name = levels[i]
 			local package_reference_name = reference_name .. #packages_to_load_data
+
 			packages_to_load_data[#packages_to_load_data + 1] = {
 				is_level_package = true,
 				package_name = level_name,
@@ -1454,10 +1501,12 @@ UIManager.load_view = function (self, view_name, reference_name, loaded_callback
 			loaded_callback = loaded_callback,
 			reference_name = reference_name
 		}
+
 		self._views_loading_data[view_name][reference_name] = view_loading_data
 
 		local function callback_fn(package_data, view_loading_data)
 			package_data.loaded = true
+
 			local packages_load_data = view_loading_data.packages_load_data
 
 			if package_data.is_level_package then
@@ -1468,6 +1517,7 @@ UIManager.load_view = function (self, view_name, reference_name, loaded_callback
 
 				for dependency_package_name, _ in pairs(level_dependency_packages) do
 					local package_reference_name = reference_name .. #packages_load_data
+
 					depenency_package_load_data[#depenency_package_load_data + 1] = {
 						package_name = dependency_package_name,
 						reference_name = package_reference_name
@@ -1520,6 +1570,7 @@ end
 
 UIManager.unload_view = function (self, view_name, reference_name, frame_delay_count)
 	reference_name = "UIManager_" .. reference_name
+
 	local view_loading_data = self._views_loading_data[view_name]
 
 	if not view_loading_data then
@@ -1557,6 +1608,7 @@ UIManager._update_package_unload_delay = function (self)
 	for i = num_packages, 1, -1 do
 		local package_info = package_unload_list[i]
 		local frame_delay = package_info.frame_delay
+
 		frame_delay = frame_delay - 1
 
 		if frame_delay < 0 then
@@ -1585,11 +1637,13 @@ end
 
 UIManager.unregister_world_extension_manager_lookup = function (self, world)
 	local world_name = World.get_data(world, "__world_name")
+
 	self._ui_extension_managers[world_name] = nil
 end
 
 UIManager.register_world_extension_manager_lookup = function (self, world, extension_manager)
 	local world_name = World.get_data(world, "__world_name")
+
 	self._ui_extension_managers[world_name] = extension_manager
 end
 
@@ -1618,20 +1672,21 @@ UIManager.event_show_ui_popup = function (self, data, callback)
 	local popup_type = data.type
 	local popup_id = self._popup_id_counter
 	local name = "popup_" .. popup_id
-	local popup = {
-		name = name,
-		type = popup_type,
-		data = data,
-		id = popup_id,
-		priority_order = priority_order
-	}
+	local popup = {}
+
+	popup.name = name
+	popup.type = popup_type
+	popup.data = data
+	popup.id = popup_id
+	popup.priority_order = priority_order
+
 	local active_popups = self._active_popups
 	local num_active_popups = #active_popups
-	local start_index = nil
+	local start_index
 
 	if num_active_popups > 0 then
 		for i = 1, num_active_popups do
-			if active_popups[i].priority_order < priority_order then
+			if priority_order > active_popups[i].priority_order then
 				start_index = i
 
 				break
@@ -1674,7 +1729,7 @@ UIManager.event_remove_ui_popups_by_priority = function (self, priority)
 	for i = #active_popups, 1, -1 do
 		local popup = active_popups[i]
 
-		if popup.priority_order < priority then
+		if priority > popup.priority_order then
 			popup.closing = true
 
 			table.remove(active_popups, i)
@@ -1766,7 +1821,7 @@ end
 UIManager.load_item_icon = function (self, real_item, cb, render_context, dummy_profile, prioritize, unload_cb)
 	local item_name = real_item.name
 	local gear_id = real_item.gear_id or item_name
-	local item = nil
+	local item
 
 	if real_item.gear then
 		item = MasterItems.create_preview_item_instance(real_item)
@@ -1775,6 +1830,7 @@ UIManager.load_item_icon = function (self, real_item, cb, render_context, dummy_
 	end
 
 	item.gear_id = gear_id
+
 	local slots = item.slots or {}
 	local item_type = item.item_type
 
@@ -1794,8 +1850,10 @@ UIManager.load_item_icon = function (self, real_item, cb, render_context, dummy_
 		return instance:load_weapon_icon(visual_item, cb, render_context, prioritize, unload_cb)
 	elseif table.find(slots, "slot_gear_head") or table.find(slots, "slot_gear_upperbody") or table.find(slots, "slot_gear_lowerbody") or table.find(slots, "slot_gear_extra_cosmetic") or table.find(slots, "slot_animation_end_of_round") then
 		local player = Managers.player:local_player(1)
+
 		dummy_profile = dummy_profile or player:profile()
-		local item_gender, item_breed, item_archetype = nil
+
+		local item_gender, item_breed, item_archetype
 
 		if item.genders and not table.is_empty(item.genders) then
 			for i = 1, #item.genders do
@@ -1847,6 +1905,7 @@ UIManager.load_item_icon = function (self, real_item, cb, render_context, dummy_
 			local breed = item_breed or item.breeds and item.breeds[1] or "human"
 			local archetype = item_archetype or item.archetypes and item.archetypes[1] and Archetypes[item.archetypes[1]] or breed == "ogryn" and Archetypes.ogryn or Archetypes.veteran
 			local gender = breed ~= "ogryn" and (item_gender or item.genders and item.genders[1]) or "male"
+
 			dummy_profile = {
 				loadout = {},
 				archetype = archetype,
@@ -1856,6 +1915,7 @@ UIManager.load_item_icon = function (self, real_item, cb, render_context, dummy_
 		end
 
 		dummy_profile.character_id = string.format("%s_%s_%s", gear_id, dummy_profile.breed, dummy_profile.gender)
+
 		local gender_name = dummy_profile.gender
 		local archetype = dummy_profile.archetype
 		local breed_name = archetype.breed
@@ -1873,6 +1933,7 @@ UIManager.load_item_icon = function (self, real_item, cb, render_context, dummy_
 
 		for i = 1, #slots do
 			local slot_name = slots[i]
+
 			loadout[slot_name] = item
 		end
 
@@ -1888,6 +1949,7 @@ UIManager.load_item_icon = function (self, real_item, cb, render_context, dummy_
 
 					if item_definition then
 						local slot_item = table.clone(item_definition)
+
 						dummy_profile.loadout[slot_name] = slot_item
 					end
 				end
@@ -1898,6 +1960,7 @@ UIManager.load_item_icon = function (self, real_item, cb, render_context, dummy_
 
 		if slots_to_hide then
 			local hide_slots = table.clone(item.hide_slots or {})
+
 			item.hide_slots = hide_slots
 
 			for i = 1, #slots_to_hide do
@@ -1910,6 +1973,7 @@ UIManager.load_item_icon = function (self, real_item, cb, render_context, dummy_
 
 		if prop_item then
 			local prop_item_slot = prop_item.slots[1]
+
 			dummy_profile.loadout[prop_item_slot] = prop_item
 			render_context.wield_slot = prop_item_slot
 		end
@@ -1934,6 +1998,7 @@ UIManager.load_item_icon = function (self, real_item, cb, render_context, dummy_
 		end
 
 		dummy_profile = ItemUtils.create_mannequin_profile_by_item(item)
+
 		local gender_name = dummy_profile.gender
 		local archetype = dummy_profile.archetype
 		local breed_name = archetype.breed
@@ -1950,6 +2015,7 @@ UIManager.load_item_icon = function (self, real_item, cb, render_context, dummy_
 
 					if item_definition then
 						local slot_item = table.clone(item_definition)
+
 						dummy_profile.loadout[slot_name] = slot_item
 					end
 				end
@@ -1959,6 +2025,7 @@ UIManager.load_item_icon = function (self, real_item, cb, render_context, dummy_
 		for i = 1, #items do
 			local set_item = items[i]
 			local first_slot_name = set_item.slots[1]
+
 			loadout[first_slot_name] = set_item
 		end
 

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/components/player_spawner.lua
+
 local PlayerSpawner = component("PlayerSpawner")
 
 PlayerSpawner.init = function (self, unit)

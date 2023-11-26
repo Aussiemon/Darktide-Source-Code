@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/contracts_view/contracts_view_settings.lua
+
 local contracts_view_settings = {
 	task_complexity_easy_icon = "content/ui/materials/icons/contracts/complexity_easy",
 	task_description_complete_missions = "loc_contracts_task_description_complete_missions",

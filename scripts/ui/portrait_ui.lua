@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/portrait_ui.lua
+
 local UIProfileSpawner = require("scripts/managers/ui/ui_profile_spawner")
 
 require("scripts/ui/render_target_icon_generator_base")
@@ -108,7 +110,9 @@ PortraitUI._spawn_profile = function (self, profile, render_context)
 	local camera = world_spawner:camera()
 	local unit_spawner = world_spawner:unit_spawner()
 	local profile_spawner = UIProfileSpawner:new("PortraitUI", world, camera, unit_spawner)
+
 	self._profile_spawner = profile_spawner
+
 	local spawn_position = Unit.world_position(self._spawn_point_unit, 1)
 	local spawn_rotation = Unit.world_rotation(self._spawn_point_unit, 1)
 	local optional_state_machine = render_context and render_context.state_machine
@@ -130,6 +134,7 @@ PortraitUI._spawn_profile = function (self, profile, render_context)
 		if camera_focus_slot_name then
 			local key = breed .. "_" .. camera_focus_slot_name
 			local new_camera_unit = self:_get_camera_unit_by_key(key)
+
 			camera_unit = new_camera_unit or camera_unit
 		end
 	end
@@ -215,6 +220,7 @@ PortraitUI.event_register_portrait_camera_human = function (self, camera_unit)
 
 	local camera_position = Unit.world_position(camera_unit, 1)
 	local camera_rotation = Unit.world_rotation(camera_unit, 1)
+
 	self._breed_camera_settings.human = {
 		camera_unit = camera_unit,
 		boxed_camera_start_position = Vector3.to_array(camera_position),
@@ -227,6 +233,7 @@ PortraitUI.event_register_portrait_camera_ogryn = function (self, camera_unit)
 
 	local camera_position = Unit.world_position(camera_unit, 1)
 	local camera_rotation = Unit.world_rotation(camera_unit, 1)
+
 	self._breed_camera_settings.ogryn = {
 		camera_unit = camera_unit,
 		boxed_camera_start_position = Vector3.to_array(camera_position),

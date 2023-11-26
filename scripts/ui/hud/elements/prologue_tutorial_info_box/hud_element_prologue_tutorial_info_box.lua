@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/hud/elements/prologue_tutorial_info_box/hud_element_prologue_tutorial_info_box.lua
+
 local Definitions = require("scripts/ui/hud/elements/prologue_tutorial_info_box/hud_element_prologue_tutorial_info_box_definitions")
 local HudElementPrologueTutorialInfoBoxSettings = require("scripts/ui/hud/elements/prologue_tutorial_info_box/hud_element_prologue_tutorial_info_box_settings")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
@@ -209,11 +211,14 @@ HudElementPrologueTutorialInfoBox._get_input_description_text = function (self, 
 		local service_type = "Ingame"
 		local include_input_type = true
 		local end_of_line = #input_actions ~= 1 and "\n" or ""
+
 		input_description_text = input_description_text .. TextUtils.localize_with_button_hint(input_action, description, nil, service_type, Localize("loc_input_legend_text_template"), include_input_type) .. end_of_line
+
 		local alias = self._input_manager:alias_object(service_type)
 		local alias_name = self._ui_manager:get_input_alias_key(input_action, service_type)
 		local alias_array_index = 1
 		local key_info = alias:get_keys_for_alias(alias_name, alias_array_index, devices)
+
 		self._previous_keys_info[#self._previous_keys_info + 1] = key_info
 	end
 
@@ -223,11 +228,14 @@ end
 HudElementPrologueTutorialInfoBox._set_widget_info = function (self, info_data)
 	local widget = self._widgets_by_name.info_widget
 	local content = widget.content
+
 	content.title_text = Utf8.upper(Localize(info_data.title))
 	content.description_text = Localize(info_data.description, true)
 	self._close_action_name = info_data.close_action
 	self._use_ingame_input = info_data.use_ingame_input
+
 	local input_description_text = self:_get_input_description_text(info_data)
+
 	content.input_description_text = input_description_text
 
 	self:_set_widget_size_from_content(info_data.description, info_data.title, input_description_text)
@@ -317,6 +325,7 @@ HudElementPrologueTutorialInfoBox._set_widget_size_from_content = function (self
 	end
 
 	style.description_text.size[1] = description_width
+
 	local default_description_size = style.description_text.size
 	local _, text_height, _, _ = UIRenderer.text_size(self._ui_renderer, description_loc_text, style.description_text.font_type, style.description_text.font_size, default_description_size)
 	local description_text_height = text_height
@@ -327,16 +336,20 @@ HudElementPrologueTutorialInfoBox._set_widget_size_from_content = function (self
 		local _, input_text_height, _, _ = UIRenderer.text_size(self._ui_renderer, input_description_text, style.input_description_text.font_type, style.input_description_text.font_size, default_input_description_size)
 		local input_description_text_height = input_text_height * 1.2
 		local input_description_width = info_box_settings.info_box_input_description_size[1]
+
 		style.input_description_text.size = {
 			input_description_width,
 			input_description_text_height
 		}
+
 		local offset_y = total_height + 35
+
 		style.input_description_text.offset[2] = offset_y
 		total_height = total_height + input_description_text_height
 	end
 
 	local height_adjust = 60
+
 	total_height = total_height + height_adjust
 	self._info_box_height = total_height
 
@@ -358,6 +371,7 @@ HudElementPrologueTutorialInfoBox._get_first_available_slot = function (self)
 	for i = 1, #self._entry_widgets do
 		local widget = self._entry_widgets[i]
 		local index = widget.content.index
+
 		unavailable_slots[#unavailable_slots + 1] = index
 	end
 
@@ -392,16 +406,22 @@ HudElementPrologueTutorialInfoBox._create_entry = function (self, objective_id, 
 	local definition = Definitions.create_entry_widget(scenegraph_id)
 	local entry_widgets = self._entry_widgets
 	local widget = UIWidget.init(widget_name, definition)
+
 	entry_widgets[widget_name] = widget
 	widget.dirty = true
+
 	local content = widget.content
 	local style = widget.style
 	local current_value = 0
 	local max_value = max_value
 	local counter_string = string.format(Localize("loc_objective_counter"), current_value, max_value)
+
 	content.counter_text = counter_string
+
 	local entry_text = Localize(name)
+
 	content.entry_text = entry_text
+
 	local default_size = info_box_settings.tracker_entry_size
 	local entry_text_width = UIRenderer.text_size(self._ui_renderer, entry_text, style.entry_text.font_type, style.entry_text.font_size, default_size)
 	local entry_text_x_offset = 50
@@ -434,6 +454,7 @@ HudElementPrologueTutorialInfoBox.event_player_update_objectives_tracker = funct
 
 	local content = widget.content
 	local text = string.format(Localize("loc_objective_counter"), current_value, max_value)
+
 	content.counter_text = text
 
 	if current_value == max_value then

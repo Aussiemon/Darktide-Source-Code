@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/locomotion/utilities/true_flight_projectile_integration.lua
+
 local ProjectileLocomotion = require("scripts/extension_systems/locomotion/utilities/projectile_locomotion")
 local TrueFlightDefaults = require("scripts/extension_systems/locomotion/utilities/true_flight_functions/true_flight_defaults")
 local TrueFlightFunctions = require("scripts/extension_systems/locomotion/utilities/true_flight_functions/true_flight_functions")
@@ -56,8 +58,9 @@ end
 local function _find_new_target(integration_data, position, dt, t)
 	local true_flight_template = integration_data.true_flight_template
 
-	if not integration_data.raycast_timer or integration_data.raycast_timer < t then
+	if not integration_data.raycast_timer or t > integration_data.raycast_timer then
 		local time_between_raycasts = true_flight_template.time_between_raycasts or 0.1
+
 		integration_data.raycast_timer = t + time_between_raycasts
 
 		local function is_valid_and_legitimate_target_func(integration_data, unit, position)
@@ -134,7 +137,7 @@ TrueFlightProjectileIntegration.integrate = function (physics_world, integration
 	local is_seeking = is_server and retry_target
 
 	if is_seeking then
-		local new_target, new_target_hit_zone = nil
+		local new_target, new_target_hit_zone
 
 		if is_seeking then
 			new_target, new_target_hit_zone = _find_new_target(integration_data, integration_data.position, dt, t)
@@ -149,7 +152,7 @@ TrueFlightProjectileIntegration.integrate = function (physics_world, integration
 
 	local validate_impact_func = _find_true_flight_function(true_flight_template, "impact_validate")
 	local on_impact_func = _find_true_flight_function(true_flight_template, "on_impact")
-	local actual_target_position = nil
+	local actual_target_position
 
 	if target_unit then
 		local target_hit_zone = integration_data.target_hit_zone
@@ -164,7 +167,7 @@ TrueFlightProjectileIntegration.integrate = function (physics_world, integration
 		actual_target_position = target_position
 	end
 
-	local new_position, new_rotation = nil
+	local new_position, new_rotation
 
 	if actual_target_position then
 		new_position, new_rotation = _update_towards_position(actual_target_position, physics_world, integration_data, dt, t, validate_impact_func, on_impact_func)

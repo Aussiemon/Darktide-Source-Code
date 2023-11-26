@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/damage/damage_profiles/killshot_damage_profile_templates.lua
+
 local ArmorSettings = require("scripts/settings/damage/armor_settings")
 local PowerLevelSettings = require("scripts/settings/damage/power_level_settings")
 local DamageProfileSettings = require("scripts/settings/damage/damage_profile_settings")
@@ -61,6 +63,7 @@ local killshot_armor_mod = {
 		}
 	}
 }
+
 damage_templates.default_killshot = {
 	suppression_value = 0.6,
 	ragdoll_push_force = 300,

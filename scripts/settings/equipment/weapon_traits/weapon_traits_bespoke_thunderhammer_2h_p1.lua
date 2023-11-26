@@ -1,6 +1,9 @@
+﻿-- chunkname: @scripts/settings/equipment/weapon_traits/weapon_traits_bespoke_thunderhammer_2h_p1.lua
+
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local templates = {}
 local stat_buffs = BuffSettings.stat_buffs
+
 templates.weapon_trait_bespoke_thunderhammer_2h_p1_hit_mass_consumption_reduction_on_kill = {
 	weapon_trait_bespoke_thunderhammer_2h_p1_hit_mass_consumption_reduction_on_kill = {
 		{

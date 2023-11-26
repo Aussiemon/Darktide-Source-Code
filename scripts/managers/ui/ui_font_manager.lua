@@ -1,5 +1,8 @@
+﻿-- chunkname: @scripts/managers/ui/ui_font_manager.lua
+
 local FontDefinitions = require("scripts/managers/ui/ui_fonts_definitions")
 local UIFontManager = class("UIFontManager")
+
 UIFontManager.DEBUG_TAG = "UI View Manager"
 
 local function _add_base_path(paths, base_path)
@@ -24,6 +27,7 @@ UIFontManager.init = function (self)
 	self._locale_specific_font_package = nil
 	self._font_definitions = {}
 	self._packages_to_unload = {}
+
 	local current_locale = Managers.localization and Managers.localization:language()
 	local locale_specific_font = current_locale and FontDefinitions.locale_specific_fonts[current_locale]
 
@@ -43,6 +47,7 @@ UIFontManager.set_locale = function (self, locale)
 		self:_setup_font_definitions()
 
 		local package_manager = Managers.package
+
 		self._packages_to_unload[#self._packages_to_unload + 1] = self._locale_specific_font_package
 		self._locale_specific_font_package = nil
 	end
@@ -51,6 +56,7 @@ UIFontManager.set_locale = function (self, locale)
 
 	if locale_fonts and locale_fonts.package then
 		local package_manager = Managers.package
+
 		self._locale_specific_font_package = package_manager:load(locale_fonts.package, "UIFontManager", callback(self, "_setup_font_definitions", locale_fonts))
 	else
 		self:_setup_font_definitions(locale_fonts)

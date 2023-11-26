@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/equipment/weapon_templates/ogryn_clubs/settings_templates/ogryn_club_damage_profile_templates.lua
+
 local ArmorSettings = require("scripts/settings/damage/armor_settings")
 local PowerLevelSettings = require("scripts/settings/damage/power_level_settings")
 local DamageProfileSettings = require("scripts/settings/damage/damage_profile_settings")
@@ -133,6 +135,7 @@ local smiter_light_default_am = {
 		[armor_types.void_shield] = damage_lerp_values.lerp_0_75
 	}
 }
+
 damage_templates.ogryn_club_light_tank = {
 	ragdoll_push_force = 400,
 	ragdoll_only = true,

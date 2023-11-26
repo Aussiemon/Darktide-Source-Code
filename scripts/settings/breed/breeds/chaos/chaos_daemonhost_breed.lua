@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/breed/breeds/chaos/chaos_daemonhost_breed.lua
+
 local ArmorSettings = require("scripts/settings/damage/armor_settings")
 local BossNameTemplates = require("scripts/settings/boss/boss_name_templates")
 local BossTemplates = require("scripts/settings/boss/boss_templates/boss_templates")

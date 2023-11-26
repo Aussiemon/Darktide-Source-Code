@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/roamer/roamer_packs/renegade_roamer_packs.lua
+
 local roamer_melee = "renegade_melee"
 local roamer_assault = "renegade_assault"
 local roamer_rifleman = "renegade_rifleman"

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/hud/elements/prologue_tutorial_info_box/hud_element_prologue_tutorial_info_box_definitions.lua
+
 local HudElementPrologueTutorialInfoBoxSettings = require("scripts/ui/hud/elements/prologue_tutorial_info_box/hud_element_prologue_tutorial_info_box_settings")
 local UIWorkspaceSettings = require("scripts/settings/ui/ui_workspace_settings")
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
@@ -117,12 +119,14 @@ local animations = {
 			start_time = 0,
 			init = function (parent, ui_scenegraph, scenegraph_definition, widget, progress)
 				widget.alpha_multiplier = 0
+
 				local style = widget.style
 				local alpha = 0
 				local scenegraph_id = widget.scenegraph_id
 				local scenegraph_definition = scenegraph_definition[scenegraph_id]
 				local size = scenegraph_definition.size
 				local size_x = size[1]
+
 				style.description_text.text_color[1] = alpha
 				widget.offset[1] = -size_x - 25
 			end
@@ -137,6 +141,7 @@ local animations = {
 				local size = scenegraph_definition.size
 				local size_x = size[1]
 				local anim_progress = math.easeOutCubic(progress)
+
 				widget.alpha_multiplier = anim_progress
 				widget.offset[1] = -size_x - 25 + (25 + size_x) * math.easeInCubic(progress)
 			end
@@ -149,6 +154,7 @@ local animations = {
 				local anim_progress = math.easeOutCubic(progress)
 				local style = widget.style
 				local alpha = anim_progress * 255
+
 				style.description_text.text_color[1] = alpha
 				style.input_description_text.text_color[1] = alpha
 			end
@@ -171,6 +177,7 @@ local animations = {
 				local anim_progress = math.easeInCubic(1 - progress)
 				local style = widget.style
 				local alpha = anim_progress * 255
+
 				style.description_text.text_color[1] = alpha
 				style.input_description_text.text_color[1] = alpha
 			end
@@ -181,11 +188,14 @@ local animations = {
 			start_time = 0,
 			update = function (parent, ui_scenegraph, scenegraph_definition, widget, progress)
 				local anim_progress = math.easeOutCubic(1 - progress)
+
 				widget.alpha_multiplier = anim_progress
+
 				local scenegraph_id = widget.scenegraph_id
 				local scenegraph_definition = scenegraph_definition[scenegraph_id]
 				local size = scenegraph_definition.size
 				local size_x = size[1]
+
 				widget.offset[1] = 25 + (-size_x - 25) * math.easeInCubic(progress)
 			end
 		},
@@ -205,10 +215,12 @@ local animations = {
 			start_time = 0,
 			init = function (parent, ui_scenegraph, scenegraph_definition, widget, params)
 				widget.alpha_multiplier = 0
+
 				local scenegraph_id = widget.scenegraph_id
 				local scenegraph_definition = scenegraph_definition[scenegraph_id]
 				local size = scenegraph_definition.size
 				local size_x = size[1]
+
 				widget.offset[1] = -size_x - 25
 			end
 		},
@@ -221,6 +233,7 @@ local animations = {
 				local scenegraph_definition = scenegraph_definition[scenegraph_id]
 				local size = scenegraph_definition.size
 				local size_x = size[1]
+
 				widget.offset[1] = -size_x - 25 + (25 + size_x) * math.easeInCubic(progress)
 			end
 		},
@@ -232,109 +245,120 @@ local animations = {
 				widget.alpha_multiplier = 1 * math.easeOutCubic(progress)
 			end
 		}
-	}
-}
-animations.remove_entry = {
-	{
-		name = "remove_entry",
-		end_time = 0.8,
-		start_time = 0,
-		update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress, params)
-			for _, widget in pairs(widgets) do
-				local scenegraph_id = widget.scenegraph_id
-				local scenegraph_definition = scenegraph_definition[scenegraph_id]
-				local size = scenegraph_definition.size
-				local size_x = size[1]
-				widget.offset[1] = 25 + (-size_x - 25) * math.easeInCubic(progress)
-			end
-		end
 	},
-	{
-		name = "fade_out",
-		end_time = 0.8,
-		start_time = 0.6,
-		update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress, params)
-			local alpha = -1 * math.easeOutCubic(progress)
+	remove_entry = {
+		{
+			name = "remove_entry",
+			end_time = 0.8,
+			start_time = 0,
+			update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress, params)
+				for _, widget in pairs(widgets) do
+					local scenegraph_id = widget.scenegraph_id
+					local scenegraph_definition = scenegraph_definition[scenegraph_id]
+					local size = scenegraph_definition.size
+					local size_x = size[1]
 
-			for _, widget in pairs(widgets) do
-				widget.alpha_multiplier = alpha
+					widget.offset[1] = 25 + (-size_x - 25) * math.easeInCubic(progress)
+				end
 			end
-		end
-	}
-}
-animations.uptick_entry = {
-	{
-		name = "blink",
-		end_time = 0.4,
-		start_time = 0,
-		update = function (parent, ui_scenegraph, scenegraph_definition, widget, progress, params)
-			local style = widget.style
-			local alpha = 190 + 65 * math.sin(Managers.time:time("ui") * 20)
-			style.frame.color[1] = alpha
-		end
+		},
+		{
+			name = "fade_out",
+			end_time = 0.8,
+			start_time = 0.6,
+			update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress, params)
+				local alpha = -1 * math.easeOutCubic(progress)
+
+				for _, widget in pairs(widgets) do
+					widget.alpha_multiplier = alpha
+				end
+			end
+		}
 	},
-	{
-		name = "reset_alpha",
-		end_time = 0.8,
-		start_time = 0.4,
-		update = function (parent, ui_scenegraph, scenegraph_definition, widget, progress, params)
-			local style = widget.style
-			local alpha = math.lerp(style.frame.color[1], 255, progress)
-			style.frame.color[1] = alpha
-		end
-	}
-}
-animations.complete_entry = {
-	{
-		name = "blink",
-		end_time = 0.8,
-		start_time = 0,
-		update = function (parent, ui_scenegraph, scenegraph_definition, widget, progress, params)
-			local style = widget.style
-			local alpha = 190 + 65 * math.sin(Managers.time:time("ui") * 20)
-			style.frame.color[1] = alpha
-		end
+	uptick_entry = {
+		{
+			name = "blink",
+			end_time = 0.4,
+			start_time = 0,
+			update = function (parent, ui_scenegraph, scenegraph_definition, widget, progress, params)
+				local style = widget.style
+				local alpha = 190 + 65 * math.sin(Managers.time:time("ui") * 20)
+
+				style.frame.color[1] = alpha
+			end
+		},
+		{
+			name = "reset_alpha",
+			end_time = 0.8,
+			start_time = 0.4,
+			update = function (parent, ui_scenegraph, scenegraph_definition, widget, progress, params)
+				local style = widget.style
+				local alpha = math.lerp(style.frame.color[1], 255, progress)
+
+				style.frame.color[1] = alpha
+			end
+		}
 	},
-	{
-		name = "reset_alpha",
-		end_time = 1.2,
-		start_time = 0.8,
-		update = function (parent, ui_scenegraph, scenegraph_definition, widget, progress, params)
-			local style = widget.style
-			local alpha = math.lerp(style.frame.color[1], 255, progress)
-			style.frame.color[1] = alpha
-		end
-	},
-	{
-		name = "fade_out_counter",
-		end_time = 0.6,
-		start_time = 0.4,
-		update = function (parent, ui_scenegraph, scenegraph_definition, widget, progress, params)
-			local style = widget.style
-			local alpha = 255 * (1 - progress)
-			style.counter_text.text_color[1] = alpha
-		end
-	},
-	{
-		name = "fade_in_checkmark",
-		end_time = 0.8,
-		start_time = 0.6,
-		init = function (parent, ui_scenegraph, scenegraph_definition, widget, params)
-			local content = widget.content
-			content.counter_text = ""
-			local style = widget.style
-			style.counter_text.font_size = 30
-		end,
-		update = function (parent, ui_scenegraph, scenegraph_definition, widget, progress, params)
-			local style = widget.style
-			local alpha = 255 * progress
-			style.counter_text.text_color[1] = alpha
-		end
+	complete_entry = {
+		{
+			name = "blink",
+			end_time = 0.8,
+			start_time = 0,
+			update = function (parent, ui_scenegraph, scenegraph_definition, widget, progress, params)
+				local style = widget.style
+				local alpha = 190 + 65 * math.sin(Managers.time:time("ui") * 20)
+
+				style.frame.color[1] = alpha
+			end
+		},
+		{
+			name = "reset_alpha",
+			end_time = 1.2,
+			start_time = 0.8,
+			update = function (parent, ui_scenegraph, scenegraph_definition, widget, progress, params)
+				local style = widget.style
+				local alpha = math.lerp(style.frame.color[1], 255, progress)
+
+				style.frame.color[1] = alpha
+			end
+		},
+		{
+			name = "fade_out_counter",
+			end_time = 0.6,
+			start_time = 0.4,
+			update = function (parent, ui_scenegraph, scenegraph_definition, widget, progress, params)
+				local style = widget.style
+				local alpha = 255 * (1 - progress)
+
+				style.counter_text.text_color[1] = alpha
+			end
+		},
+		{
+			name = "fade_in_checkmark",
+			end_time = 0.8,
+			start_time = 0.6,
+			init = function (parent, ui_scenegraph, scenegraph_definition, widget, params)
+				local content = widget.content
+
+				content.counter_text = ""
+
+				local style = widget.style
+
+				style.counter_text.font_size = 30
+			end,
+			update = function (parent, ui_scenegraph, scenegraph_definition, widget, progress, params)
+				local style = widget.style
+				local alpha = 255 * progress
+
+				style.counter_text.text_color[1] = alpha
+			end
+		}
 	}
 }
 
 local function create_entry_widget(scenegraph_id)
 	local counter_text_style = info_box_settings.counter_text_style
+
 	counter_text_style.offset = {
 		30,
 		0,
@@ -342,7 +366,9 @@ local function create_entry_widget(scenegraph_id)
 	}
 	counter_text_style.text_color = info_box_settings.tracker_entry_colors.entry_text
 	counter_text_style.default_text_color = info_box_settings.tracker_entry_colors.entry_text
+
 	local entry_text_style = info_box_settings.entry_text_style
+
 	entry_text_style.offset = {
 		80,
 		0,

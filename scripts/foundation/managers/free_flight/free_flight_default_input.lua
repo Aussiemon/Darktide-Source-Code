@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/foundation/managers/free_flight/free_flight_default_input.lua
+
 local FreeFlightDefaultInput = class("FreeFlightDefaultInput")
 
 FreeFlightDefaultInput.frustum_toggle = function (self)

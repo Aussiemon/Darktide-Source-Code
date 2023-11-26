@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/mission_objective/utilities/mission_objective_destination.lua
+
 require("scripts/extension_systems/mission_objective/utilities/mission_objective_base")
 
 local MissionObjectiveDestination = class("MissionObjectiveDestination", "MissionObjectiveBase")
@@ -52,7 +54,7 @@ local tracked_units = {}
 
 MissionObjectiveDestination._closest_distance = function (self)
 	local player_manager = Managers.player
-	local players = nil
+	local players
 
 	if self._peer_id then
 		players = player_manager:players_at_peer(self._peer_id)
@@ -68,7 +70,7 @@ MissionObjectiveDestination._closest_distance = function (self)
 		end
 	end
 
-	local lowest_distance = nil
+	local lowest_distance
 
 	for i = 1, #tracked_units do
 		local distance = self:_distance(tracked_units[i], self._target_unit)

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/weapon/weapon.lua
+
 require("scripts/extension_systems/weapon/special_classes/weapon_special_deactivate_after_num_activations")
 require("scripts/extension_systems/weapon/special_classes/weapon_special_explode_on_impact")
 require("scripts/extension_systems/weapon/special_classes/weapon_special_interface")
@@ -19,9 +21,11 @@ Weapon.init = function (self, init_data)
 	self.item = init_data.item
 	self.inventory_slot_component = init_data.inventory_slot_component
 	self.weapon_special_implementation = self:_init_weapon_special_implementation(self.weapon_template, init_data.weapon_special_context)
+
 	local optional_trait_lerp_value_override = init_data.optional_trait_lerp_value_override
 	local optional_tweak_template_lerp_value_override = init_data.optional_tweak_template_lerp_value_override
 	local weapon_tweak_templates, damage_profile_lerp_values, explosion_template_lerp_values, buffs = self:_init_traits(self.weapon_template, self.item, optional_trait_lerp_value_override, optional_tweak_template_lerp_value_override)
+
 	self.weapon_tweak_templates = weapon_tweak_templates
 	self.damage_profile_lerp_values = damage_profile_lerp_values
 	self.explosion_template_lerp_values = explosion_template_lerp_values

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/weapon/actions/action_scan_confirm.lua
+
 require("scripts/extension_systems/weapon/actions/action_weapon_base")
 
 local Scanning = require("scripts/utilities/scanning")
@@ -7,6 +9,7 @@ ActionScanConfirm.init = function (self, action_context, action_params, action_s
 	ActionScanConfirm.super.init(self, action_context, action_params, action_settings)
 
 	local unit_data_extension = action_context.unit_data_extension
+
 	self._scanning_compomnent = unit_data_extension:write_component("scanning")
 	self._fx_sources_name = self._weapon.fx_sources._speaker
 end
@@ -16,14 +19,17 @@ ActionScanConfirm.start = function (self, action_settings, ...)
 
 	local weapon_tweak_templates_component = self._weapon_tweak_templates_component
 	local weapon_template = self._weapon_template
+
 	weapon_tweak_templates_component.spread_template_name = action_settings.spread_template or weapon_template.spread_template or "none"
 	weapon_tweak_templates_component.recoil_template_name = action_settings.recoil_template or weapon_template.recoil_template or "none"
 	weapon_tweak_templates_component.sway_template_name = action_settings.sway_template or weapon_template.sway_template or "none"
 	weapon_tweak_templates_component.charge_template_name = action_settings.charge_template or weapon_template.charge_template or "none"
+
 	local scan_settings = self._action_settings.scan_settings
 	local first_person_component = self._first_person_component
 	local scannable_unit, line_of_sight = Scanning.find_scannable_unit(self._physics_world, first_person_component, scan_settings)
 	local scanning_compomnent = self._scanning_compomnent
+
 	scanning_compomnent.is_active = true
 	scanning_compomnent.scannable_unit = scannable_unit
 	scanning_compomnent.line_of_sight = line_of_sight
@@ -57,6 +63,7 @@ ActionScanConfirm.finish = function (self, reason, data, t, time_in_action)
 	end
 
 	local scanning_compomnent = self._scanning_compomnent
+
 	scanning_compomnent.is_active = false
 	scanning_compomnent.line_of_sight = false
 	scanning_compomnent.scannable_unit = nil

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/main_path/main_path_manager_testify.lua
+
 local MainPathQueries = require("scripts/utilities/main_path_queries")
 local MainPathManagerTestify = {
 	generate_unified_main_path = function (main_path_manager)

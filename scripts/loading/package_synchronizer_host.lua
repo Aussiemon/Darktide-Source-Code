@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/loading/package_synchronizer_host.lua
+
 local FixedFrame = require("scripts/utilities/fixed_frame")
 local Interrupt = require("scripts/utilities/attack/interrupt")
 local ItemPackage = require("scripts/foundation/managers/package/utilities/item_package")
@@ -14,6 +16,7 @@ local RPCS = {
 	"rpc_package_synchronizer_ready_peer",
 	"rpc_alias_loading_complete"
 }
+
 PackageSynchronizerHost.DEBUG_TAG = "PackageSynchronizerHost"
 
 local function _debug_print(str, ...)
@@ -31,6 +34,7 @@ PackageSynchronizerHost.init = function (self, network_delegate, hosted_synchron
 	self._network_delegate = network_delegate
 	self._hosted_synchronizer_client = hosted_synchronizer_client
 	self._mission_name = nil
+
 	local mechanism_manager = Managers.mechanism
 	local settings = mechanism_manager:player_package_synchronization_settings()
 
@@ -54,6 +58,7 @@ end
 
 PackageSynchronizerHost.set_mission_name = function (self, mission_name)
 	self._mission_name = mission_name
+
 	local hosted_synchronizer_client = self._hosted_synchronizer_client
 
 	if hosted_synchronizer_client then
@@ -99,6 +104,7 @@ PackageSynchronizerHost._reevaluate_all_profile_packages = function (self)
 
 					for i = 1, num_player_package_aliases do
 						local alias = player_package_aliases[i]
+
 						alias_states[alias] = SYNC_STATES.not_synced
 					end
 
@@ -119,6 +125,7 @@ PackageSynchronizerHost._set_prioritization_template = function (self, template_
 
 	for i = 1, #PlayerPackageAliases do
 		local alias = PlayerPackageAliases[i]
+
 		alias_states[alias] = SYNC_STATES.not_synced
 	end
 
@@ -203,9 +210,9 @@ PackageSynchronizerHost._player_profile_changed = function (self, sync_peer_id, 
 	local syncs = self._syncs
 	local player = Managers.player:player(sync_peer_id, sync_local_player_id)
 	local new_profile = player:profile()
-	local changed_profile_fields = {
-		player_unit_respawn = self:_calculate_player_unit_respawn(old_profile, new_profile)
-	}
+	local changed_profile_fields = {}
+
+	changed_profile_fields.player_unit_respawn = self:_calculate_player_unit_respawn(old_profile, new_profile)
 
 	if not changed_profile_fields.player_unit_respawn then
 		changed_profile_fields.inventory = self:_calculate_changed_inventory_items(old_profile, new_profile)
@@ -215,11 +222,13 @@ PackageSynchronizerHost._player_profile_changed = function (self, sync_peer_id, 
 	_debug_print("LoadingTimes: Player Profile Changed (peer: %s, player_id: %s)", tostring(sync_peer_id), tostring(sync_local_player_id))
 
 	syncs[sync_peer_id] = syncs[sync_peer_id] or {}
+
 	local sync_data = {
 		handled_profile_changes = false,
 		notified_clients = false,
 		changed_profile_fields = changed_profile_fields
 	}
+
 	syncs[sync_peer_id][sync_local_player_id] = sync_data
 
 	self:_handle_profile_changes_before_sync(player, sync_data)
@@ -271,20 +280,24 @@ PackageSynchronizerHost._calculate_changed_inventory_items = function (self, pro
 	local loadout = profile.visual_loadout
 	local new_loadout = new_profile.visual_loadout
 	local mission_name = self._mission_name
-	local mission_template = nil
+	local mission_template
 
 	if mission_name then
 		mission_template = MissionTemplates[mission_name]
 	end
 
 	for slot_name, item in pairs(loadout) do
-		local new_item = new_loadout[slot_name]
+		repeat
+			local new_item = new_loadout[slot_name]
 
-		if not new_item then
-			changed_loadout_items[slot_name] = {
-				reason = "item_removed"
-			}
-		else
+			if not new_item then
+				changed_loadout_items[slot_name] = {
+					reason = "item_removed"
+				}
+
+				break
+			end
+
 			local item_gear_id = item.gear_id
 			local new_item_gear_id = new_item.gear_id
 
@@ -293,57 +306,65 @@ PackageSynchronizerHost._calculate_changed_inventory_items = function (self, pro
 					reason = "item_replaced",
 					new_item = new_item
 				}
-			else
-				local dependencies = ItemPackage.compile_item_instance_dependencies(item, self._item_definitions, nil, mission_template)
-				local new_dependencies = ItemPackage.compile_item_instance_dependencies(new_item, self._item_definitions, nil, mission_template)
-				local item_altered = false
 
-				for package_name, _ in pairs(dependencies) do
-					if new_dependencies[package_name] == nil then
+				break
+			end
+
+			local dependencies = ItemPackage.compile_item_instance_dependencies(item, self._item_definitions, nil, mission_template)
+			local new_dependencies = ItemPackage.compile_item_instance_dependencies(new_item, self._item_definitions, nil, mission_template)
+			local item_altered = false
+
+			for package_name, _ in pairs(dependencies) do
+				if new_dependencies[package_name] == nil then
+					item_altered = true
+
+					break
+				end
+			end
+
+			if not item_altered then
+				for package_name, _ in pairs(new_dependencies) do
+					if dependencies[package_name] == nil then
 						item_altered = true
 
 						break
 					end
 				end
-
-				if not item_altered then
-					for package_name, _ in pairs(new_dependencies) do
-						if dependencies[package_name] == nil then
-							item_altered = true
-
-							break
-						end
-					end
-				end
-
-				item_altered = item_altered or self:_item_instance_altered(slot_name, item, profile, new_profile)
-
-				if item_altered then
-					changed_loadout_items[slot_name] = {
-						reason = "item_altered",
-						new_item = new_item
-					}
-				end
 			end
-		end
+
+			item_altered = item_altered or self:_item_instance_altered(slot_name, item, profile, new_profile)
+
+			if item_altered then
+				changed_loadout_items[slot_name] = {
+					reason = "item_altered",
+					new_item = new_item
+				}
+			end
+
+			break
+		until true
 	end
 
 	for slot_name, new_item in pairs(new_loadout) do
 		repeat
 			if ItemSlotSettings[slot_name] then
-				local item = loadout[slot_name]
+				do
+					local item = loadout[slot_name]
 
-				if not item then
-					changed_loadout_items[slot_name] = {
-						reason = "item_added",
-						new_item = new_item
-					}
+					if not item then
+						changed_loadout_items[slot_name] = {
+							reason = "item_added",
+							new_item = new_item
+						}
+					end
+
+					break
 				end
 
 				break
-			else
-				Log.error("ProfileUtil", string.format("Unknown gear slot %s", slot_name))
 			end
+
+			Log.error("ProfileUtil", string.format("Unknown gear slot %s", slot_name))
 		until true
 	end
 
@@ -690,13 +711,12 @@ PackageSynchronizerHost._handle_player_unit_respawn_after_sync = function (self,
 	end
 
 	local spawn_pose = sync_data.after_sync_spawn_pose_box:unbox()
-	local position = Matrix4x4.translation(spawn_pose)
-	local rotation = Matrix4x4.rotation(spawn_pose)
-	local parent = nil
+	local position, rotation = Matrix4x4.translation(spawn_pose), Matrix4x4.rotation(spawn_pose)
+	local parent
 	local force_spawn = true
-	local side_name, breed_name, character_state = nil
+	local side_name, breed_name, character_state
 	local is_respawn = false
-	local optional_damage, optional_permanent_damage = nil
+	local optional_damage, optional_permanent_damage
 
 	player_unit_spawn_manager:spawn_player(player, position, rotation, parent, force_spawn, side_name, breed_name, character_state, is_respawn, optional_damage, optional_permanent_damage)
 end
@@ -892,6 +912,7 @@ PackageSynchronizerHost.add_peer = function (self, new_peer_id)
 
 	for i = 1, #PlayerPackageAliases do
 		local alias = PlayerPackageAliases[i]
+
 		alias_states[alias] = SYNC_STATES.not_synced
 	end
 
@@ -899,6 +920,7 @@ PackageSynchronizerHost.add_peer = function (self, new_peer_id)
 
 	for peer_id, data in pairs(self._sync_states) do
 		local peer_states = data.peer_states
+
 		peer_states[new_peer_id] = {
 			player_states = {}
 		}
@@ -913,6 +935,7 @@ PackageSynchronizerHost.add_peer = function (self, new_peer_id)
 		new_peer_states[peer_id] = {
 			player_states = {}
 		}
+
 		local player_states = peer_states[peer_id].player_states
 
 		for local_player_id, _ in pairs(player_states) do
@@ -941,12 +964,14 @@ PackageSynchronizerHost.add_peer = function (self, new_peer_id)
 		ready = false,
 		peer_states = new_peer_states
 	}
+
 	self._sync_states[new_peer_id] = data
 
 	if new_peer_id ~= self._peer_id then
 		self._hosted_synchronizer_client:add_peer(new_peer_id)
 
 		local channel_id = Managers.connection:peer_to_channel(new_peer_id)
+
 		data.channel_id = channel_id
 
 		self._network_delegate:register_connection_channel_events(self, channel_id, unpack(RPCS))
@@ -958,6 +983,7 @@ PackageSynchronizerHost.add_bot = function (self, local_player_id)
 
 	for i = 1, #PlayerPackageAliases do
 		local alias = PlayerPackageAliases[i]
+
 		alias_states[alias] = SYNC_STATES.not_synced
 	end
 
@@ -967,6 +993,7 @@ PackageSynchronizerHost.add_bot = function (self, local_player_id)
 	for _, data in pairs(sync_states) do
 		local peer_data = data.peer_states[peer_id]
 		local player_states = peer_data.player_states
+
 		player_states[local_player_id] = {
 			alias_version = 1,
 			alias_states = table.clone(alias_states)
@@ -983,6 +1010,7 @@ PackageSynchronizerHost.remove_bot = function (self, local_player_id)
 	for _, data in pairs(sync_states) do
 		local peer_data = data.peer_states[peer_id]
 		local player_states = peer_data.player_states
+
 		player_states[local_player_id] = nil
 	end
 
@@ -999,7 +1027,9 @@ end
 
 PackageSynchronizerHost.ready_peer = function (self, peer_id)
 	local data = self._sync_states[peer_id]
+
 	data.ready = true
+
 	local my_peer_id = self._peer_id
 
 	if peer_id ~= my_peer_id and self._mission_name then
@@ -1013,10 +1043,12 @@ end
 
 PackageSynchronizerHost.remove_peer = function (self, peer_id)
 	local data = self._sync_states[peer_id]
+
 	self._sync_states[peer_id] = nil
 
 	for other_peer_id, other_peer_data in pairs(self._sync_states) do
 		local peer_states = other_peer_data.peer_states
+
 		peer_states[peer_id] = nil
 	end
 
@@ -1036,6 +1068,7 @@ PackageSynchronizerHost.alias_loading_complete = function (self, peer_id, loaded
 	local peer_states = self._sync_states[peer_id].peer_states
 	local player_states = peer_states[loaded_peer_id].player_states
 	local alias_states = player_states[loaded_local_player_id].alias_states
+
 	alias_states[alias] = SYNC_STATES.synced
 end
 

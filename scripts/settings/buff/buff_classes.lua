@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/buff/buff_classes.lua
+
 local function _require_buff_class(buff)
 	local base_path = "scripts/extension_systems/buff/buffs/"
 	local buff_file_name = base_path .. buff

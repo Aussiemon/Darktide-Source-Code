@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/level_prop/props/toxic_gas_volume.lua
+
 local prop_data = {
 	unit_name = "content/environment/volumetrics/toxic_fog_volume",
 	name = "toxic_fog_volume",

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/backend/contracts.lua
+
 local BackendUtilities = require("scripts/foundation/managers/backend/utilities/backend_utilities")
 local Contracts = class("Contracts")
 

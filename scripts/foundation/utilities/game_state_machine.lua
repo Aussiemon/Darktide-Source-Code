@@ -1,4 +1,7 @@
+﻿-- chunkname: @scripts/foundation/utilities/game_state_machine.lua
+
 local GameStateMachine = class("GameStateMachine")
+
 GameStateMachine.DEBUG = true
 
 local function _debug_print(format, ...)
@@ -60,8 +63,10 @@ end
 GameStateMachine._change_state = function (self)
 	local new_state = self._next_state
 	local params = self._next_state_params
+
 	self._next_state = nil
 	self._next_state_params = nil
+
 	local current_state_name = self:current_state_name()
 
 	if self._state and self._state.on_exit then

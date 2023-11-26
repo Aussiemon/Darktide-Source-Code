@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/visual_loadout/wieldable_slot_scripts/aim_luggable_effects.lua
+
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/aim_projectile_effects")
 
 local Action = require("scripts/utilities/weapon/action")
@@ -10,6 +12,7 @@ AimLuggableEffects.init = function (self, context, slot, weapon_template, fx_sou
 
 	local owner_unit = context.owner_unit
 	local unit_data_extension = ScriptUnit.extension(owner_unit, "unit_data_system")
+
 	self._luggable_component = unit_data_extension:read_component("slot_luggable")
 end
 
@@ -35,8 +38,11 @@ AimLuggableEffects._trajectory_settings = function (self)
 	if existing_unit then
 		local locomotion_extension_or_nil = existing_unit and ScriptUnit.extension(existing_unit, "locomotion_system")
 		local projectile_locomotion_template = locomotion_extension_or_nil and locomotion_extension_or_nil:locomotion_template()
+
 		_trajectory_settings.projectile_locomotion_template = projectile_locomotion_template
+
 		local mass, radius = ProjectileIntegrationData.mass_radius(projectile_locomotion_template, locomotion_extension_or_nil)
+
 		_trajectory_settings.mass = mass
 		_trajectory_settings.radius = radius
 	end

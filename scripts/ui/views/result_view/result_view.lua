@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/result_view/result_view.lua
+
 local definition_path = "scripts/ui/views/result_view/result_view_definitions"
 local ResultViewSettings = require("scripts/ui/views/result_view/result_view_settings")
 local UIRenderer = require("scripts/managers/ui/ui_renderer")
@@ -22,10 +24,10 @@ ResultView.on_enter = function (self)
 
 	self._entry_duration = ResultViewSettings.entry_duration
 	self._background_duration = ResultViewSettings.background_duration
+
 	local end_result = self._end_result
 	local victory = end_result and end_result == "won"
-	local title_text = ""
-	local sub_title_text = ""
+	local title_text, sub_title_text = "", ""
 
 	if victory then
 		title_text = "loc_victory_title"
@@ -49,6 +51,7 @@ end
 
 ResultView._set_overlay_opacity = function (self, opacity)
 	local widget = self._widgets_by_name.overlay
+
 	widget.alpha_multiplier = opacity
 end
 
@@ -59,7 +62,9 @@ ResultView._set_icon_backround_progress = function (self, progress)
 	local size_progress = math.easeOutCubic(progress)
 	local anim_progress = math.easeOutCubic(math.easeCubic(1 - progress))
 	local alpha_progress = math.clamp(math.ease_pulse(anim_progress * 0.5), 0, 1)
+
 	widget.alpha_multiplier = alpha_progress
+
 	local background_start_size = ResultViewSettings.background_start_size
 	local background_end_size = ResultViewSettings.background_end_size
 	local width = background_start_size[1] + (background_end_size[1] - background_start_size[1]) * size_progress
@@ -99,11 +104,12 @@ ResultView.update = function (self, dt, t)
 	end
 
 	if self._delay_duration then
-		if self._delay_duration <= t then
+		if t >= self._delay_duration then
 			self._exit_duration = ResultViewSettings.exit_duration
 			self._delay_duration = nil
 		else
 			local delay_duration = self._delay_duration - t
+
 			self._duration_progress = 1 - math.max(delay_duration / ResultViewSettings.duration, 0)
 		end
 	end
@@ -112,6 +118,7 @@ ResultView.update = function (self, dt, t)
 
 	if exit_duration then
 		exit_duration = math.max(exit_duration - dt, 0)
+
 		local progress = 1 - math.easeInCubic(exit_duration / ResultViewSettings.exit_duration)
 
 		self:_set_overlay_opacity(progress)
@@ -136,11 +143,13 @@ ResultView._set_timer_text = function (self, time)
 	local floor = math.floor
 	local timer_text = string.format("%.2d:%.2d", floor(time / 60) % 60, floor(time) % 60)
 	local widget = self._widgets_by_name.timer_text
+
 	widget.content.text = tostring(timer_text)
 end
 
 ResultView._set_text = function (self, text, text_id, background_id)
 	local widget = self._widgets_by_name[text_id]
+
 	widget.content.text = self:_localize(text)
 
 	if background_id then

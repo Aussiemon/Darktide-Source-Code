@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/inventory_weapon_cosmetics_view/inventory_weapon_cosmetics_view_definitions.lua
+
 local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templates")
 local InventoryWeaponCosmeticsViewSettings = require("scripts/ui/views/inventory_weapon_cosmetics_view/inventory_weapon_cosmetics_view_settings")
 local ItemUtils = require("scripts/utilities/items")
@@ -251,18 +253,26 @@ local scenegraph_definition = {
 	}
 }
 local display_name_style = table.clone(UIFontSettings.header_2)
+
 display_name_style.text_horizontal_alignment = "left"
 display_name_style.text_vertical_alignment = "bottom"
+
 local title_text_style = table.clone(UIFontSettings.header_2)
+
 title_text_style.text_horizontal_alignment = "center"
 title_text_style.text_vertical_alignment = "bottom"
+
 local sub_display_name_style = table.clone(UIFontSettings.header_3)
+
 sub_display_name_style.text_horizontal_alignment = "left"
 sub_display_name_style.text_vertical_alignment = "top"
 sub_display_name_style.text_color = Color.ui_grey_light(255, true)
+
 local description_text_style = table.clone(UIFontSettings.body_small)
+
 description_text_style.text_horizontal_alignment = "left"
 description_text_style.text_vertical_alignment = "top"
+
 local widget_definitions = {
 	corner_top_left = UIWidget.create_definition({
 		{

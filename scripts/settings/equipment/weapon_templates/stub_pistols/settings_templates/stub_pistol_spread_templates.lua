@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/equipment/weapon_templates/stub_pistols/settings_templates/stub_pistol_spread_templates.lua
+
 local spread_templates = {}
 local overrides = {}
 
@@ -194,7 +196,9 @@ spread_templates.default_stub_pistol_killshot = {
 		}
 	}
 }
+
 local p1_m2_modifier = 0.8
+
 spread_templates.stub_pistol_p1_m2_hip = {
 	still = {
 		max_spread = {
@@ -273,7 +277,9 @@ overrides.stub_pistol_p1_m2_ads = {
 	parent_template_name = "default_stub_pistol_killshot",
 	overrides = {}
 }
+
 local p1_m3_modifier = 1.8
+
 spread_templates.stub_pistol_p1_m3_hip = {
 	still = {
 		max_spread = {

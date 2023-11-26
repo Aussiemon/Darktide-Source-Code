@@ -1,9 +1,13 @@
+﻿-- chunkname: @scripts/foundation/utilities/fgrl_limits.lua
+
 local BURST_TIME = 15
 local SUSTAIN_TIME = 300
+
 FGRLLimits = FGRLLimits or {
 	tracked_interfaces = {},
 	stats = {}
 }
+
 local TRACKING_DATA = {
 	XUser = {
 		functions = {
@@ -119,7 +123,7 @@ local function interface_limit_reached(fgrl_stats, limits, interface_name, funct
 	local num_sustain_calls = #fgrl_stats.sustain_calls
 	local sustain_limit = limits.sustain_limit
 
-	if limits.sustain_limit <= num_sustain_calls then
+	if num_sustain_calls >= limits.sustain_limit then
 		return true, "SUSTAIN LIMIT REACHED - " .. interface_name .. (function_name and "." .. function_name or "") .. " (" .. num_sustain_calls .. "/" .. sustain_limit .. ")"
 	end
 
@@ -135,6 +139,7 @@ end
 local function track_fgrl(interface_name, function_name)
 	local time = Application.time_since_launch()
 	local interface_tracking_data = TRACKING_DATA[interface_name]
+
 	FGRLLimits.stats[interface_name] = FGRLLimits.stats[interface_name] or {
 		burst_calls = {},
 		sustain_calls = {},
@@ -142,12 +147,14 @@ local function track_fgrl(interface_name, function_name)
 		sustain_time = time + SUSTAIN_TIME,
 		function_stats = {}
 	}
-	local fgrl_stats = nil
+
+	local fgrl_stats
 	local function_tracking_data = interface_tracking_data.limits[function_name]
 
 	if function_tracking_data then
 		local function_stats = FGRLLimits.stats[interface_name].function_stats
 		local tracking_name = function_tracking_data.limit_group or function_name
+
 		function_stats[tracking_name] = function_stats[tracking_name] or {
 			burst_calls = {},
 			sustain_calls = {},
@@ -160,19 +167,20 @@ local function track_fgrl(interface_name, function_name)
 	end
 
 	local limits = interface_tracking_data.limits
+
 	limits = limits[function_name] or limits
 
 	if limits.limit_group then
 		limits = interface_tracking_data.limit_groups[limits.limit_group]
 	end
 
-	if fgrl_stats.burst_time <= time then
+	if time >= fgrl_stats.burst_time then
 		table.clear(fgrl_stats.burst_calls)
 
 		fgrl_stats.burst_time = time + BURST_TIME
 	end
 
-	if fgrl_stats.sustain_time <= time then
+	if time >= fgrl_stats.sustain_time then
 		table.clear(fgrl_stats.sustain_calls)
 
 		fgrl_stats.sustain_time = time + SUSTAIN_TIME

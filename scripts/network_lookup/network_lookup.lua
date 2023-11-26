@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/network_lookup/network_lookup.lua
+
 local ArchetypeSpecializations = require("scripts/settings/ability/archetype_specializations/archetype_specializations")
 local ArchetypeTalents = require("scripts/settings/ability/archetype_talents/archetype_talents")
 local AttackSettings = require("scripts/settings/damage/attack_settings")
@@ -77,6 +79,7 @@ local function _create_lookup(lookup, hashtable)
 end
 
 NetworkLookup = {}
+
 local archetype_specialization_names = {}
 
 for _, archetype_specializations in pairs(ArchetypeSpecializations) do
@@ -86,6 +89,7 @@ for _, archetype_specializations in pairs(ArchetypeSpecializations) do
 end
 
 NetworkLookup.archetype_specialization_names = _create_lookup({}, archetype_specialization_names)
+
 local archetype_talent_names = {}
 
 for _, archetype_talents in pairs(ArchetypeTalents) do
@@ -101,8 +105,10 @@ NetworkLookup.bot_orders = {
 	"drop",
 	"pickup"
 }
+
 local no_item_definitions = {}
 local bot_profiles = BotCharacterProfiles(no_item_definitions)
+
 NetworkLookup.bot_profile_names = _create_lookup({}, bot_profiles)
 NetworkLookup.breed_names = _create_lookup({}, Breeds)
 NetworkLookup.dialogue_breed_names = _create_lookup({}, DialogueBreedSettings)
@@ -190,12 +196,15 @@ NetworkLookup.moveable_platform_direction = {
 	"backward"
 }
 NetworkLookup.outline_types = _create_lookup({}, OutlineSettings.outline_types)
+
 local minion_attack_selection_template_names = {}
+
 NetworkLookup.minigame_states = _create_lookup({}, MinigameSettings.states)
 NetworkLookup.minion_attack_selection_template_names = _create_lookup(minion_attack_selection_template_names, MinionAttackSelectionTemplates)
 NetworkLookup.minion_fx_source_names = {
 	"muzzle"
 }
+
 local minion_inventory_slot_names = {}
 
 for breed_name, all_templates in pairs(MinionVisualLoadoutTemplates) do
@@ -207,6 +216,7 @@ for breed_name, all_templates in pairs(MinionVisualLoadoutTemplates) do
 			for slot_name, _ in pairs(inventory_slots) do
 				if not table.contains(minion_inventory_slot_names, slot_name) then
 					local j = #minion_inventory_slot_names + 1
+
 					minion_inventory_slot_names[j] = slot_name
 				end
 			end
@@ -215,6 +225,7 @@ for breed_name, all_templates in pairs(MinionVisualLoadoutTemplates) do
 end
 
 NetworkLookup.minion_inventory_slot_names = minion_inventory_slot_names
+
 local mission_objective_names = {}
 
 for _, template in pairs(MissionsObjectiveTemplates) do
@@ -251,6 +262,7 @@ NetworkLookup.player_character_particle_variable_names = {
 	"intensity"
 }
 NetworkLookup.player_character_particles = table.clone(PlayerCharacterParticleNames)
+
 local player_character_sounds = {
 	["wwise/events/weapon/play_indicator_crit"] = true,
 	["wwise/events/player/play_toughness_break"] = true,
@@ -324,7 +336,9 @@ NetworkLookup.player_inventory_slot_names = _create_lookup({}, PlayerCharacterCo
 NetworkLookup.presence_names = _create_lookup({}, PresenceSettings.settings)
 NetworkLookup.projectile_locomotion_states = _create_lookup({}, ProjectileLocomotionSettings.states)
 NetworkLookup.projectile_template_names = _create_lookup({}, ProjectileTemplates)
+
 local projectile_template_effects = {}
+
 NetworkLookup.projectile_templates_effect_names = {}
 
 for _, projectile_template in pairs(ProjectileTemplates) do
@@ -378,8 +392,8 @@ NetworkLookup.surface_materials = table.append({}, MaterialQuerySettings.surface
 NetworkLookup.surface_hit_types = _create_lookup({}, SurfaceMaterialSettings.hit_types)
 NetworkLookup.timed_explosives = _create_lookup({}, TimedExplosivesSettings)
 NetworkLookup.vfx = _create_lookup({}, VfxNames)
-local voting_options = {}
-local voting_results = {}
+
+local voting_options, voting_results = {}, {}
 
 for _, voting_template in pairs(VotingTemplates.network) do
 	if voting_template.options then
@@ -399,6 +413,7 @@ NetworkLookup.voting_options = _create_lookup({
 NetworkLookup.voting_results = _create_lookup({}, voting_results)
 NetworkLookup.voting_templates = _create_lookup({}, VotingTemplates.network)
 NetworkLookup.weapon_blood_amounts = _create_lookup({}, BloodSettings.weapon_blood_amounts)
+
 local EMPTY_TABLE = {}
 local weapon_modifiers = {}
 

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/view_elements/view_element_tab_menu/view_element_tab_menu_settings.lua
+
 local UIWorkspaceSettings = require("scripts/settings/ui/ui_workspace_settings")
 local view_element_tab_menu_settings = {
 	button_text_margin = 30,

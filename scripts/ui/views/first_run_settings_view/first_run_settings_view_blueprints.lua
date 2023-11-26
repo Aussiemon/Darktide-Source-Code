@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/first_run_settings_view/first_run_settings_view_blueprints.lua
+
 local CheckboxPassTemplates = require("scripts/ui/pass_templates/checkbox_pass_templates")
 local SliderPassTemplates = require("scripts/ui/pass_templates/slider_pass_templates")
 local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templates")
@@ -5,76 +7,85 @@ local DropdownPassTemplates = require("scripts/ui/pass_templates/dropdown_pass_t
 local settings_grid_width = 1000
 local settings_value_width = 500
 local settings_value_height = 64
-local blueprints = {
-	button = {
-		size = {
-			140,
-			80
-		},
-		pass_template = ButtonPassTemplates.list_button_with_icon,
-		init = function (parent, widget, entry, callback_name)
-			local content = widget.content
-			content.hotspot.pressed_callback = callback(parent, callback_name, widget, entry)
-			content.select_callback = content.hotspot.pressed_callback
-			local display_name = entry.display_name
-			content.text = Managers.localization:localize(display_name)
-			content.icon = entry.icon
-			content.entry = entry
-		end
+local blueprints = {}
+
+blueprints.button = {
+	size = {
+		140,
+		80
 	},
-	checkbox = {
-		size = {
-			settings_grid_width,
-			settings_value_height
-		},
-		pass_template = CheckboxPassTemplates.settings_checkbox(settings_grid_width, settings_value_height, settings_value_width, 2, true),
-		init = function (parent, widget, entry, callback_name)
-			local content = widget.content
-			local display_name = entry.display_name or "n/a"
-			content.text = Managers.localization:localize(display_name)
-			content.entry = entry
+	pass_template = ButtonPassTemplates.list_button_with_icon,
+	init = function (parent, widget, entry, callback_name)
+		local content = widget.content
 
-			for i = 1, 2 do
-				local widget_option_id = "option_" .. i
-				content[widget_option_id] = i == 1 and Managers.localization:localize("loc_setting_checkbox_on") or Managers.localization:localize("loc_setting_checkbox_off")
-			end
-		end,
-		update = function (parent, widget, input_service, dt, t)
-			local content = widget.content
-			local entry = content.entry
-			local value = entry.get_function()
-			local on_activated = entry.on_activated
-			local hotspot = content.hotspot
-			local new_value = nil
+		content.hotspot.pressed_callback = callback(parent, callback_name, widget, entry)
+		content.select_callback = content.hotspot.pressed_callback
 
-			if hotspot.on_pressed then
-				new_value = not value
-			end
+		local display_name = entry.display_name
 
-			for i = 1, 2 do
-				local widget_option_id = "option_hotspot_" .. i
-				local option_hotspot = content[widget_option_id]
-				local is_selected = value and i == 1 or not value and i == 2
-				option_hotspot.is_selected = is_selected
-			end
+		content.text = Managers.localization:localize(display_name)
+		content.icon = entry.icon
+		content.entry = entry
+	end
+}
+blueprints.checkbox = {
+	size = {
+		settings_grid_width,
+		settings_value_height
+	},
+	pass_template = CheckboxPassTemplates.settings_checkbox(settings_grid_width, settings_value_height, settings_value_width, 2, true),
+	init = function (parent, widget, entry, callback_name)
+		local content = widget.content
+		local display_name = entry.display_name or "n/a"
 
-			if new_value ~= nil and new_value ~= value then
-				on_activated(new_value, value)
-			end
+		content.text = Managers.localization:localize(display_name)
+		content.entry = entry
+
+		for i = 1, 2 do
+			local widget_option_id = "option_" .. i
+
+			content[widget_option_id] = i == 1 and Managers.localization:localize("loc_setting_checkbox_on") or Managers.localization:localize("loc_setting_checkbox_off")
 		end
-	}
+	end,
+	update = function (parent, widget, input_service, dt, t)
+		local content = widget.content
+		local entry = content.entry
+		local value = entry.get_function()
+		local on_activated = entry.on_activated
+		local hotspot = content.hotspot
+		local new_value
+
+		if hotspot.on_pressed then
+			new_value = not value
+		end
+
+		for i = 1, 2 do
+			local widget_option_id = "option_hotspot_" .. i
+			local option_hotspot = content[widget_option_id]
+			local is_selected = value and i == 1 or not value and i == 2
+
+			option_hotspot.is_selected = is_selected
+		end
+
+		if new_value ~= nil and new_value ~= value then
+			on_activated(new_value, value)
+		end
+	end
 }
 
 local function slider_init_function(parent, widget, entry, callback_name)
 	local content = widget.content
 	local display_name = entry.display_name or "n/a"
+
 	content.text = Managers.localization:localize(display_name)
 	content.entry = entry
 	content.area_length = settings_value_width
 	content.step_size = entry.normalized_step_size
 	content.apply_on_drag = entry.apply_on_drag and true
+
 	local get_function = entry.get_function
 	local value = get_function()
+
 	content.previous_slider_value = value
 	content.slider_value = value
 	content.pressed_callback = callback(parent, callback_name, widget, entry)
@@ -95,17 +106,14 @@ blueprints.percent_slider = {
 		local value = get_function() / 100
 		local on_activated = entry.on_activated
 		local format_value_function = entry.format_value_function
-		local drag_value, new_value = nil
+		local drag_value, new_value
 		local apply_on_drag = content.apply_on_drag
 		local drag_active = content.drag_active
 		local focused = using_gamepad and content.exclusive_focus
 
-		if drag_active or focused then
-			if not parent._selected_settings_widget then
-				-- Nothing
-			end
-
+		if (drag_active or focused) and (parent._selected_settings_widget or true) then
 			local slider_value = content.slider_value
+
 			drag_value = slider_value or get_function() / 100
 		elseif not focused then
 			local previous_slider_value = content.previous_slider_value
@@ -126,6 +134,7 @@ blueprints.percent_slider = {
 		end
 
 		content.drag_previously_active = drag_active
+
 		local display_value = format_value_function((drag_value or value) * 100)
 
 		if display_value then
@@ -182,18 +191,15 @@ blueprints.value_slider = {
 		local normalized_value = math.normalize_01(value, min_value, max_value)
 		local on_activated = entry.on_activated
 		local format_value_function = entry.format_value_function
-		local drag_value, new_normalized_value = nil
+		local drag_value, new_normalized_value
 		local apply_on_drag = content.apply_on_drag
 		local drag_active = content.drag_active
 		local drag_previously_active = content.drag_previously_active
 		local focused = content.exclusive_focus and using_gamepad
 
-		if drag_active or focused then
-			if not parent._selected_settings_widget then
-				-- Nothing
-			end
-
+		if (drag_active or focused) and (parent._selected_settings_widget or true) then
 			local slider_value = content.slider_value
+
 			drag_value = slider_value and explode_function(slider_value) or get_function()
 		elseif not focused or drag_previously_active then
 			local previous_slider_value = content.previous_slider_value
@@ -214,6 +220,7 @@ blueprints.value_slider = {
 		end
 
 		content.drag_previously_active = drag_active
+
 		local display_value = format_value_function(drag_value or value)
 
 		if display_value then
@@ -253,7 +260,9 @@ blueprints.value_slider = {
 		return pass_input
 	end
 }
+
 local max_visible_options = 5
+
 blueprints.dropdown = {
 	size = {
 		settings_grid_width,
@@ -271,20 +280,25 @@ blueprints.dropdown = {
 	init = function (parent, widget, entry, callback_name)
 		local content = widget.content
 		local display_name = entry.display_name or "n/a"
+
 		content.text = Managers.localization:localize(display_name)
 		content.entry = entry
+
 		local has_options_function = entry.options_function ~= nil
 		local has_dynamic_contents = entry.has_dynamic_contents
 		local options = entry.options or entry.options_function and entry.options_function()
 		local num_options = #options
 		local num_visible_options = math.min(num_options, max_visible_options)
+
 		content.num_visible_options = num_visible_options
+
 		local optional_num_decimals = entry.optional_num_decimals
 		local number_format = string.format("%%.%sf", optional_num_decimals or 0)
 		local options_by_id = {}
 
 		for i = 1, num_options do
 			local option = options[i]
+
 			options_by_id[option.id] = option
 		end
 
@@ -292,14 +306,20 @@ blueprints.dropdown = {
 		content.options_by_id = options_by_id
 		content.options = options
 		content.hotspot.pressed_callback = callback(parent, callback_name, widget, entry)
+
 		local widget_type = widget.type
 		local template = blueprints[widget_type]
 		local size = template.size
+
 		content.area_length = size[2] * num_visible_options
+
 		local scroll_length = math.max(size[2] * num_options - content.area_length, 0)
+
 		content.scroll_length = scroll_length
+
 		local spacing = 0
 		local scroll_amount = scroll_length > 0 and (size[2] + spacing) / scroll_length or 0
+
 		content.scroll_amount = scroll_amount
 	end,
 	update = function (parent, widget, input_service, dt, t)
@@ -322,7 +342,7 @@ blueprints.dropdown = {
 		end
 
 		local selected_index = content.selected_index
-		local value, new_value = nil
+		local value, new_value
 		local hotspot = content.hotspot
 		local hotspot_style = style.hotspot
 
@@ -336,13 +356,20 @@ blueprints.dropdown = {
 			hotspot_style.on_pressed_sound = hotspot_style.on_pressed_fold_out_sound
 		end
 
-		value = entry.get_function and entry.get_function() or content.internal_value or "<not selected>"
+		if entry.get_function then
+			value = entry.get_function()
+		else
+			value = content.internal_value or "<not selected>"
+		end
+
 		local localization_manager = Managers.localization
 		local preview_option = options_by_id[value]
 		local preview_option_id = preview_option and preview_option.i
 		local preview_value = preview_option and preview_option.display_name or "n/a"
 		local ignore_localization = preview_option and preview_option.ignore_localization
+
 		content.value_text = ignore_localization and preview_value or localization_manager:localize(preview_value)
+
 		local widget_type = widget.type
 		local template = blueprints[widget_type]
 		local size = template.size
@@ -354,6 +381,7 @@ blueprints.dropdown = {
 			local scroll_length = grid:scroll_length()
 			local total_length = grid:length()
 			local area_length = grid:area_length()
+
 			scroll_amount = scroll_length * scroll_progress
 			scroll_area_height = math.max(total_length - scroll_length, area_length)
 		end
@@ -366,7 +394,8 @@ blueprints.dropdown = {
 		end
 
 		content.grow_downwards = grow_downwards
-		local new_selection_index = nil
+
+		local new_selection_index
 
 		if not selected_index or not focused then
 			for i = 1, #options do
@@ -406,6 +435,7 @@ blueprints.dropdown = {
 			if num_visible_options < num_options then
 				local step_size = 1 / num_options
 				local new_scroll_percentage = math.min(selected_index - 1, num_options) * step_size
+
 				content.scroll_percentage = new_scroll_percentage
 				content.scroll_add = nil
 			end
@@ -417,6 +447,7 @@ blueprints.dropdown = {
 
 		if scroll_percentage then
 			local step_size = 1 / (num_options - (num_visible_options - 1))
+
 			content.start_index = math.max(1, math.ceil(scroll_percentage / step_size))
 		end
 
@@ -431,8 +462,10 @@ blueprints.dropdown = {
 			local option_hotspot_id = "option_hotspot_" .. option_index
 			local outline_style_id = "outline_" .. option_index
 			local option_hotspot = content[option_hotspot_id]
+
 			option_hovered = option_hovered or option_hotspot.is_hover
 			option_hotspot.is_selected = i == selected_index
+
 			local option = options[i]
 
 			if not new_value and focused and not using_gamepad and option_hotspot.on_pressed then
@@ -443,11 +476,16 @@ blueprints.dropdown = {
 
 			local option_display_name = option.display_name
 			local option_ignore_localization = option.ignore_localization
+
 			content[option_text_id] = option_ignore_localization and option_display_name or localization_manager:localize(option_display_name)
+
 			local options_y = size[2] * option_index
+
 			style[option_hotspot_id].offset[2] = grow_downwards and options_y or -options_y
 			style[option_text_id].offset[2] = grow_downwards and options_y or -options_y
+
 			local entry_length = style[option_hotspot_id].size[1]
+
 			entry_length = using_scrollbar and entry_length or settings_value_width
 			style[outline_style_id].size[1] = entry_length
 			style[option_text_id].size[1] = entry_length

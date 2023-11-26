@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/behavior/nodes/actions/bot/bt_bot_idle_action.lua
+
 require("scripts/extension_systems/behavior/nodes/bt_node")
 
 local BtBotIdleAction = class("BtBotIdleAction", "BtNode")

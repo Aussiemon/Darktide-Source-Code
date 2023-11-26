@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/ability/player_abilities/zealot_abilities_new.lua
+
 local LungeTemplates = require("scripts/settings/lunge/lunge_templates")
 local TalentSettings = require("scripts/settings/talent/talent_settings_new")
 local maniac_talent_settings = TalentSettings.zealot_2

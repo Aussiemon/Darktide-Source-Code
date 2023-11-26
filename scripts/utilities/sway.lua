@@ -1,6 +1,8 @@
+﻿-- chunkname: @scripts/utilities/sway.lua
+
 local WeaponMovementState = require("scripts/extension_systems/weapon/utilities/weapon_movement_state")
 local Sway = {}
-local _sway_values = nil
+local _sway_values
 
 Sway.add_immediate_sway = function (sway_template, sway_control_component, sway_component, movement_state_component, sway_type, optional_num_hits)
 	if not sway_template then
@@ -10,6 +12,7 @@ Sway.add_immediate_sway = function (sway_template, sway_control_component, sway_
 	local weapon_movement_state = WeaponMovementState.translate_movement_state_component(movement_state_component)
 	local movement_state_settings = sway_template[weapon_movement_state]
 	local new_immediate_pitch, new_immediate_yaw = _sway_values(movement_state_settings, sway_control_component, sway_component, sway_type, optional_num_hits)
+
 	sway_control_component.immediate_pitch = new_immediate_pitch
 	sway_control_component.immediate_yaw = new_immediate_yaw
 end
@@ -62,6 +65,7 @@ function _sway_values(movement_state_settings, sway_control_component, sway_comp
 			if added_pitch < projected_pitch then
 				local overflow = projected_pitch - added_pitch
 				local actual_added_pitch = math.max(added_pitch - overflow, 0)
+
 				wanted_pitch = current_immediate_pitch + actual_added_pitch
 			end
 
@@ -70,6 +74,7 @@ function _sway_values(movement_state_settings, sway_control_component, sway_comp
 			if wanted_yaw < projected_yaw then
 				local overflow = projected_yaw - added_yaw
 				local actual_added_yaw = math.max(added_yaw - overflow, 0)
+
 				wanted_yaw = current_immediate_yaw + actual_added_yaw
 			end
 		end

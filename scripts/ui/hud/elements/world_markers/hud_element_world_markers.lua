@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/hud/elements/world_markers/hud_element_world_markers.lua
+
 local Definitions = require("scripts/ui/hud/elements/world_markers/hud_element_world_markers_definitions")
 local HudElementWorldMarkersSettings = require("scripts/ui/hud/elements/world_markers/hud_element_world_markers_settings")
 local UIScenegraph = require("scripts/managers/ui/ui_scenegraph")
@@ -31,12 +33,14 @@ HudElementWorldMarkers.init = function (self, parent, draw_layer, start_scale)
 	self._markers_by_type = {}
 	self._raycast_frame_counter = 0
 	self._marker_templates = {}
+
 	local marker_templates = HudElementWorldMarkersSettings.marker_templates
 
 	for i = 1, #marker_templates do
 		local template_path = marker_templates[i]
 		local template = require(template_path)
 		local name = template.name
+
 		self._marker_templates[name] = template
 	end
 
@@ -73,7 +77,7 @@ HudElementWorldMarkers.event_request_world_markers_list = function (self, respon
 end
 
 HudElementWorldMarkers.event_remove_world_marker = function (self, id)
-	local marker_to_remove = nil
+	local marker_to_remove
 	local markers = self._markers
 
 	for i = 1, #markers do
@@ -102,9 +106,11 @@ HudElementWorldMarkers.event_add_world_marker_unit = function (self, marker_type
 	local widget_name = "marker_widget_id_" .. id
 	local template = self:_template_by_type(marker_type)
 	local widget = self:_create_widget_by_type(widget_name, template)
+
 	marker.widget = widget
 	marker.data = data
 	marker.template = template
+
 	local on_enter = template.on_enter
 
 	if on_enter then
@@ -127,9 +133,11 @@ HudElementWorldMarkers.event_add_world_marker_position = function (self, marker_
 	local widget_name = "marker_widget_id_" .. id
 	local template = self:_template_by_type(marker_type)
 	local widget = self:_create_widget_by_type(widget_name, template)
+
 	marker.widget = widget
 	marker.data = data or {}
 	marker.template = template
+
 	local on_enter = template.on_enter
 
 	if on_enter then
@@ -145,13 +153,18 @@ HudElementWorldMarkers._register_marker = function (self, marker)
 	local markers = self._markers
 	local markers_by_id = self._markers_by_id
 	local markers_by_type = self._markers_by_type
+
 	self._id_counter = self._id_counter + 1
+
 	local id = self._id_counter
+
 	marker.id = id
 	markers_by_id[id] = marker
 	markers[#markers + 1] = marker
+
 	local marker_type = marker.type
 	local type_markers = markers_by_type[marker_type] or {}
+
 	markers_by_type[marker_type] = type_markers
 	type_markers[#type_markers + 1] = marker
 
@@ -163,6 +176,7 @@ HudElementWorldMarkers._unregister_marker = function (self, marker)
 	local markers_by_id = self._markers_by_id
 	local markers_by_type = self._markers_by_type
 	local id = marker.id
+
 	markers_by_id[id] = nil
 
 	for i = 1, #markers do
@@ -189,7 +203,7 @@ end
 
 HudElementWorldMarkers._create_widget_by_type = function (self, name, template)
 	local scenegraph_id = "pivot"
-	local definition = template:create_widget_defintion(scenegraph_id)
+	local definition = template.create_widget_defintion(template, scenegraph_id)
 
 	return self:_create_widget(name, definition)
 end
@@ -206,7 +220,9 @@ end
 
 HudElementWorldMarkers._calculate_markers = function (self, dt, t, input_service, ui_renderer, render_settings)
 	local raycasts_allowed = self._raycast_frame_counter == 0
+
 	self._raycast_frame_counter = (self._raycast_frame_counter + 1) % HudElementWorldMarkersSettings.raycasts_frame_delay
+
 	local camera = self._camera
 
 	if camera then
@@ -246,7 +262,7 @@ HudElementWorldMarkers._calculate_markers = function (self, dt, t, input_service
 
 				local life_time = template.life_time
 				local check_line_of_sight = template.check_line_of_sight
-				local marker_position = nil
+				local marker_position
 
 				if update then
 					local world_position = marker.world_position
@@ -259,6 +275,7 @@ HudElementWorldMarkers._calculate_markers = function (self, dt, t, input_service
 						if ALIVE[unit] then
 							local unit_node = template.unit_node
 							local node = unit_node and Unit.has_node(unit, unit_node) and Unit.node(unit, unit_node) or 1
+
 							marker_position = Unit.world_position(unit, node)
 						else
 							remove = true
@@ -267,6 +284,7 @@ HudElementWorldMarkers._calculate_markers = function (self, dt, t, input_service
 
 					if life_time then
 						local duration = marker.duration or 0
+
 						duration = math.min(duration + dt, life_time)
 
 						if life_time <= duration then
@@ -294,14 +312,18 @@ HudElementWorldMarkers._calculate_markers = function (self, dt, t, input_service
 					Vector3Box.store(marker.position, marker_position)
 
 					local distance = Vector3.distance(marker_position, camera_position)
+
 					content.distance = distance
 					marker.distance = distance
+
 					local out_of_reach = max_distance and max_distance < distance
 					local draw = not out_of_reach
 
 					if not out_of_reach then
 						local marker_direction = Vector3.normalize(marker_position - camera_position)
+
 						marker_direction = Vector3.normalize(marker_direction)
+
 						local forward_dot_dir = Vector3.dot(camera_direction, marker_direction)
 						local is_inside_frustum = Camera.inside_frustum(camera, marker_position) > 0
 						local camera_left = Vector3.cross(camera_direction, Vector3.up())
@@ -318,16 +340,15 @@ HudElementWorldMarkers._calculate_markers = function (self, dt, t, input_service
 						end
 
 						local screen_x, screen_y = self:_get_screen_offset(scale)
+
 						x = x - screen_x
 						y = y - screen_y
-						local is_clamped = false
-						local is_clamped_left = false
-						local is_clamped_right = false
-						local is_clamped_up = false
-						local is_clamped_down = false
+
+						local is_clamped, is_clamped_left, is_clamped_right, is_clamped_up, is_clamped_down = false, false, false, false, false
 
 						if screen_clamp then
-							local clamped_x, clamped_y = nil
+							local clamped_x, clamped_y
+
 							clamped_x, clamped_y, is_clamped_left, is_clamped_right, is_clamped_up, is_clamped_down = self:_clamp_to_screen(x, y, screen_margins, is_behind, is_under, marker_position, camera_position_center, camera_position_left, camera_position_right, camera_position_up, camera_position_down)
 							is_clamped = is_clamped_left or is_clamped_right or is_clamped_up or is_clamped_down
 							x = clamped_x
@@ -338,22 +359,23 @@ HudElementWorldMarkers._calculate_markers = function (self, dt, t, input_service
 							if is_behind then
 								draw = false
 							elseif not is_inside_frustum then
-								local vertical_pixel_overlap, horizontal_pixel_overlap = nil
+								local vertical_pixel_overlap, horizontal_pixel_overlap
 
 								if x < 0 then
 									horizontal_pixel_overlap = math.abs(x)
-								elseif root_size[1] < x then
+								elseif x > root_size[1] then
 									horizontal_pixel_overlap = x - root_size[1]
 								end
 
 								if y < 0 then
 									vertical_pixel_overlap = math.abs(y)
-								elseif root_size[2] < y then
+								elseif y > root_size[2] then
 									vertical_pixel_overlap = y - root_size[2]
 								end
 
 								if vertical_pixel_overlap or horizontal_pixel_overlap then
 									draw = false
+
 									local check_widget_visible = template.check_widget_visible
 
 									if check_widget_visible then
@@ -385,7 +407,9 @@ HudElementWorldMarkers._calculate_markers = function (self, dt, t, input_service
 						marker.is_under = is_under
 						marker.distance = distance
 						marker.angle = angle
+
 						local offset = widget.offset
+
 						offset[1] = x * inverse_scale
 						offset[2] = y * inverse_scale
 
@@ -461,6 +485,7 @@ HudElementWorldMarkers._draw_markers = function (self, dt, t, input_service, ui_
 
 					if scale_settings then
 						marker.scale = self:_get_scale(scale_settings, distance)
+
 						local new_scale = marker.ignore_scale and 1 or marker.scale
 
 						self:_apply_scale(widget, new_scale)
@@ -474,6 +499,7 @@ HudElementWorldMarkers._draw_markers = function (self, dt, t, input_service, ui_
 
 					if draw then
 						local previous_alpha_multiplier = widget.alpha_multiplier
+
 						widget.alpha_multiplier = (previous_alpha_multiplier or 1) * alpha_multiplier
 
 						UIWidget.draw(widget, ui_renderer)
@@ -488,9 +514,9 @@ end
 
 HudElementWorldMarkers._get_fade = function (self, fade_settings, distance)
 	local easing_function = fade_settings.easing_function
-	local return_value = nil
+	local return_value
 
-	if fade_settings.distance_max < distance then
+	if distance > fade_settings.distance_max then
 		return_value = fade_settings.fade_from
 	elseif distance < fade_settings.distance_min then
 		return_value = fade_settings.fade_to
@@ -498,6 +524,7 @@ HudElementWorldMarkers._get_fade = function (self, fade_settings, distance)
 		local distance_fade_fraction = 1 - (distance - fade_settings.distance_min) / (fade_settings.distance_max - fade_settings.distance_min)
 		local eased_distance_fade_fraction = easing_function(distance_fade_fraction)
 		local adjusted_fade = fade_settings.fade_from + eased_distance_fade_fraction * (fade_settings.fade_to - fade_settings.fade_from)
+
 		return_value = adjusted_fade
 	end
 
@@ -511,7 +538,7 @@ end
 HudElementWorldMarkers._get_scale = function (self, scale_settings, distance)
 	local easing_function = scale_settings.easing_function
 
-	if scale_settings.distance_max < distance then
+	if distance > scale_settings.distance_max then
 		return scale_settings.scale_from
 	elseif distance < scale_settings.distance_min then
 		return scale_settings.scale_to
@@ -533,6 +560,7 @@ HudElementWorldMarkers._apply_scale = function (self, widget, scale)
 
 		if default_size then
 			local current_size = pass_style.area_size or pass_style.texture_size or pass_style.size
+
 			current_size[1] = math.lerp(current_size[1], default_size[1] * scale, lerp_multiplier)
 			current_size[2] = math.lerp(current_size[2], default_size[2] * scale, lerp_multiplier)
 		end
@@ -541,6 +569,7 @@ HudElementWorldMarkers._apply_scale = function (self, widget, scale)
 
 		if default_offset then
 			local offset = pass_style.offset
+
 			offset[1] = math.lerp(offset[1], default_offset[1] * scale, lerp_multiplier)
 			offset[2] = math.lerp(offset[2], default_offset[2] * scale, lerp_multiplier)
 		end
@@ -549,6 +578,7 @@ HudElementWorldMarkers._apply_scale = function (self, widget, scale)
 
 		if default_pivot then
 			local pivot = pass_style.pivot
+
 			pivot[1] = math.lerp(pivot[1], default_pivot[1] * scale, lerp_multiplier)
 			pivot[2] = math.lerp(pivot[2], default_pivot[2] * scale, lerp_multiplier)
 		end
@@ -572,10 +602,7 @@ end
 HudElementWorldMarkers._clamp_to_screen = function (self, x, y, screen_margins, is_behind, is_under, world_position, camera_position_center, camera_position_left, camera_position_right, camera_position_up, camera_position_down)
 	local root_size = UIScenegraph.size_scaled(self._ui_scenegraph, "screen")
 	local default_scale = RESOLUTION_LOOKUP.scale
-	local is_clamped_left = false
-	local is_clamped_right = false
-	local is_clamped_up = false
-	local is_clamped_down = false
+	local is_clamped_left, is_clamped_right, is_clamped_up, is_clamped_down = false, false, false, false
 	local root_width = root_size[1] * default_scale
 	local root_height = root_size[2] * default_scale
 	local margin_up = screen_margins and screen_margins.up or 0
@@ -693,6 +720,7 @@ HudElementWorldMarkers._async_raycast_result_cb = function (self, id, hit, hit_p
 	end
 
 	local marker = data[1]
+
 	marker.raycast_result = hit
 	marker.raycast_frame_count = 0
 end

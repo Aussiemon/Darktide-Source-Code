@@ -1,5 +1,9 @@
+﻿-- chunkname: @scripts/script_flow_nodes/ui_flow_callbacks.lua
+
 local MainFlowCallbacks = require("scripts/script_flow_nodes/flow_callbacks")
+
 UIFlowCallbacks = UIFlowCallbacks or {}
+
 local flow_return_table = {}
 local flow_callback_white_list = {
 	"get_component_data",

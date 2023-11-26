@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/game_states/game/state_splash.lua
+
 local SplashPageDefinitions = require("scripts/ui/views/splash_view/splash_view_page_definitions")
 local StateTitle = require("scripts/game_states/game/state_title")
 local StateSplash = class("StateSplash")
@@ -14,7 +16,9 @@ StateSplash.on_enter = function (self, parent, params, creation_context)
 	self._next_state = StateTitle
 	self._next_state_params = params
 	params.skip_title_screen_on_invite = true
+
 	local should_skip = _should_skip()
+
 	self._should_skip = should_skip
 
 	if should_skip then

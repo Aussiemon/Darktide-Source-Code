@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/wwise_game_sync/wwise_state_groups/wwise_state_group_circumstance.lua
+
 require("scripts/managers/wwise_game_sync/wwise_state_groups/wwise_state_group_base")
 
 local CircumstanceTemplates = require("scripts/settings/circumstance/circumstance_templates")

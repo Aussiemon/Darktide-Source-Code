@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/ability/equipped_ability_effect_scripts/shout_effects.lua
+
 local AbilityTemplate = require("scripts/utilities/ability/ability_template")
 local Action = require("scripts/utilities/weapon/action")
 local ShoutEffects = class("ShoutEffects")
@@ -11,8 +13,10 @@ ShoutEffects.init = function (self, context, ability_template)
 	self._vfx = ability_template.vfx
 	self._delay_t = self._vfx.delay
 	self._is_local_unit = context.is_local_unit
+
 	local unit = context.unit
 	local unit_data_extension = context.unit_data_extension
+
 	self._combat_ability_component = unit_data_extension:read_component("combat_ability")
 	self._combat_ability_action_component = unit_data_extension:read_component("combat_ability_action")
 	self._buff_extension = ScriptUnit.has_extension(unit, "buff_system")
@@ -47,7 +51,9 @@ ShoutEffects._update_aim_shout = function (self, unit, dt, t)
 	local buff_extension = self._buff_extension
 	local stat_buffs = buff_extension and buff_extension:stat_buffs()
 	local radius_modifier = stat_buffs and stat_buffs.shout_radius_modifier or 1
+
 	radius = radius * radius_modifier
+
 	local aim_shout_effect_id = self._aim_shout_effect_id
 	local correct_action_kind = current_action_kind == "shout_aim" or current_action_kind == "veteran_shout_aim"
 	local spawn_effects = correct_action_kind and not aim_shout_effect_id

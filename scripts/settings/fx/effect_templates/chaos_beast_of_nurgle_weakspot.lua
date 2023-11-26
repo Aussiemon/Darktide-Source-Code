@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/fx/effect_templates/chaos_beast_of_nurgle_weakspot.lua
+
 local MATERIAL_VARIABLE = "emissive_pulse"
 local PULSE_VARIABLE = "pulse_speed"
 local PULSE_SPEED = 9

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/door_control_panel/door_control_panel_system.lua
+
 require("scripts/extension_systems/door_control_panel/door_control_panel_extension")
 
 local NetworkLookup = require("scripts/network_lookup/network_lookup")

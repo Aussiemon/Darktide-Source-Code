@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/party_immaterium/party_immaterium_member.lua
+
 local PartyMemberInterface = require("scripts/managers/party_immaterium/party_member_interface")
 local PartyImmateriumMember = class("PartyImmateriumMember")
 

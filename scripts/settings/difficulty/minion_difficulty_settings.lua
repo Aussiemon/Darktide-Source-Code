@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/difficulty/minion_difficulty_settings.lua
+
 local minion_difficulty_settings = {}
 
 local function _equal_difficulty_values(val, val_2)
@@ -182,6 +184,7 @@ local function _shoot_steps_asc(from, to, ceil)
 
 	for i = 1, #steps do
 		local value = steps[i]
+
 		shoot_steps[i] = ceil and {
 			math.ceil(from * value),
 			math.ceil(to * value)
@@ -207,6 +210,7 @@ local function _shoot_steps_desc(from, to, ceil)
 
 	for i = 1, #steps do
 		local value = steps[i]
+
 		shoot_steps[i] = ceil and {
 			math.ceil(from * value),
 			math.ceil(to * value)

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/hud/elements/world_markers/templates/world_marker_template_player_assistance.lua
+
 local BreedActions = require("scripts/settings/breed/breed_actions")
 local ColorUtilities = require("scripts/utilities/ui/colors")
 local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
@@ -30,6 +32,7 @@ local indicator_size = {
 	28
 }
 local icon_height_offset = -60
+
 template.size = size
 template.name = "player_assistance"
 template.unit_node = "ui_interaction_marker"
@@ -85,6 +88,7 @@ local function _progress_bar_fraction(unit, unit_data_extension)
 		local game_session = Managers.state.game_session:game_session()
 		local warp_grabbed_execution_time = GameSession.game_object_field(game_session, game_object_id, "warp_grabbed_execution_time")
 		local t = Managers.time:time("gameplay")
+
 		progress_bar_fraction = math.clamp((warp_grabbed_execution_time - t) / DAEMONHOST_EXECUTE_TIMING, 0, 1)
 
 		return progress_bar_fraction
@@ -97,12 +101,14 @@ local function _progress_bar_fraction(unit, unit_data_extension)
 		local ledge_hanging_character_state_component = unit_data_extension:read_component("ledge_hanging_character_state")
 		local time_to_fall_down = ledge_hanging_character_state_component.time_to_fall_down
 		local t = Managers.time:time("gameplay")
+
 		progress_bar_fraction = math.clamp((time_to_fall_down - t) / TIME_UNTIL_FALL_DOWN_FROM_HANG_LEDGE, 0, 1)
 
 		return progress_bar_fraction
 	end
 
 	local health_extension = ScriptUnit.extension(unit, "health_system")
+
 	progress_bar_fraction = health_extension:current_health_percent()
 
 	return progress_bar_fraction
@@ -186,6 +192,7 @@ local function _setup_marker_by_visual_type(widget, marker, visual_type)
 
 	if template_settings_overrides then
 		local new_template = table.clone(marker.template)
+
 		marker.template = table.merge_recursive(new_template, template_settings_overrides)
 	end
 
@@ -289,6 +296,7 @@ template.create_widget_defintion = function (template, scenegraph_id)
 				if progress_bar_fraction then
 					local scale = content.scale or 1
 					local texture_size = style.texture_size
+
 					style.size[1] = texture_size[1]
 					style.size[2] = texture_size[2] * progress_bar_fraction
 					style.offset[2] = style.default_offset[2] * scale + (texture_size[2] - style.size[2]) * 0.5
@@ -407,7 +415,7 @@ template.create_widget_defintion = function (template, scenegraph_id)
 				}
 			},
 			visibility_function = function (content, style)
-				return content.distance < 10 and not content.is_clamped
+				return not (content.distance >= 10) and not content.is_clamped
 			end
 		},
 		{
@@ -471,6 +479,7 @@ end
 
 template.on_enter = function (widget, marker, template)
 	local content = widget.content
+
 	content.spawn_progress_timer = 0
 end
 
@@ -496,7 +505,9 @@ template.update_function = function (parent, ui_renderer, widget, marker, templa
 	end
 
 	local progress_bar_fraction = _progress_bar_fraction(marker_unit, unit_data_extension)
+
 	content.progress_bar_fraction = progress_bar_fraction
+
 	local is_hovered = data.is_hovered
 	local anim_hover_speed = 3
 
@@ -516,10 +527,12 @@ template.update_function = function (parent, ui_renderer, widget, marker, templa
 
 	if spawn_progress_timer then
 		spawn_progress_timer = spawn_progress_timer + dt
+
 		local duration = 1
 		local progress = math.min(spawn_progress_timer / duration, 1)
 		local anim_out_progress = math.ease_out_quad(progress)
 		local anim_in_progress = math.ease_out_exp(progress)
+
 		content.spawn_progress_timer = progress ~= 1 and spawn_progress_timer or nil
 		style.icon.color[1] = 255 * anim_in_progress
 		style.arrow.color[1] = 255 * anim_in_progress
@@ -534,8 +547,11 @@ template.update_function = function (parent, ui_renderer, widget, marker, templa
 	local pulse_progress = Application.time_since_launch() * speed % 1
 	local pulse_anim_progress = math.clamp((pulse_progress * 3 - 1)^2, 0, 1)
 	local alpha_multiplier = 0.7 + pulse_anim_progress * 0.3
+
 	widget.alpha_multiplier = alpha_multiplier
+
 	local distance_text = tostring(math.floor(distance)) .. "m"
+
 	content.text = distance > 1 and distance_text or ""
 	data.distance_text = distance_text
 	marker.ignore_scale = content.is_clamped

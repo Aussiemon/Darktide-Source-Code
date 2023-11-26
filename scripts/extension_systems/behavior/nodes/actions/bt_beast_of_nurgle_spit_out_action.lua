@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/behavior/nodes/actions/bt_beast_of_nurgle_spit_out_action.lua
+
 require("scripts/extension_systems/behavior/nodes/bt_node")
 
 local Animation = require("scripts/utilities/animation")
@@ -13,12 +15,17 @@ local BtBeastOfNurgleSpitOutAction = class("BtBeastOfNurgleSpitOutAction", "BtNo
 
 BtBeastOfNurgleSpitOutAction.enter = function (self, unit, breed, blackboard, scratchpad, action_data, t)
 	local spawn_component = blackboard.spawn
+
 	scratchpad.physics_world = spawn_component.physics_world
+
 	local perception_component = Blackboard.write_component(blackboard, "perception")
+
 	scratchpad.behavior_component = Blackboard.write_component(blackboard, "behavior")
 	scratchpad.perception_component = perception_component
 	scratchpad.behavior_component.move_state = "attacking"
+
 	local locomotion_extension = ScriptUnit.extension(unit, "locomotion_system")
+
 	scratchpad.animation_extension = ScriptUnit.extension(unit, "animation_system")
 	scratchpad.locomotion_extension = locomotion_extension
 	scratchpad.navigation_extension = ScriptUnit.extension(unit, "navigation_system")
@@ -26,27 +33,36 @@ BtBeastOfNurgleSpitOutAction.enter = function (self, unit, breed, blackboard, sc
 	scratchpad.broadphase_system = Managers.state.extension:system("broadphase_system")
 	scratchpad.side_system = Managers.state.extension:system("side_system")
 	scratchpad.fx_system = Managers.state.extension:system("fx_system")
+
 	local throw_directions = self:_calculate_randomized_throw_directions(action_data)
+
 	scratchpad.throw_directions = throw_directions
 
 	MinionPerception.set_target_lock(unit, perception_component, true)
 
 	local original_rotation_speed = locomotion_extension:rotation_speed()
+
 	scratchpad.original_rotation_speed = original_rotation_speed
 	scratchpad.initial_distance_to_target = perception_component.target_distance
+
 	local behavior_component = scratchpad.behavior_component
 	local consumed_unit = behavior_component.consumed_unit
 	local hit_unit_data_extension = ScriptUnit.extension(consumed_unit, "unit_data_system")
 	local disabled_state_input = hit_unit_data_extension:write_component("disabled_state_input")
+
 	scratchpad.consumed_unit = consumed_unit
 	scratchpad.hit_unit_disabled_state_input = disabled_state_input
+
 	local consumed_unit_breed_name = hit_unit_data_extension:breed().name
+
 	scratchpad.consumed_unit_breed_name = consumed_unit_breed_name
+
 	local self_flat_fwd = Vector3.flat(Quaternion.forward(Unit.local_rotation(unit, 1)))
 
 	Unit.set_local_rotation(unit, 1, Quaternion.look(self_flat_fwd))
 
 	local disabled_character_state_component = hit_unit_data_extension:read_component("disabled_character_state")
+
 	scratchpad.hit_unit_disabled_character_state_component = disabled_character_state_component
 
 	self:_align_throwing(unit, scratchpad, action_data)
@@ -76,6 +92,7 @@ BtBeastOfNurgleSpitOutAction.leave = function (self, unit, breed, blackboard, sc
 	end
 
 	scratchpad.behavior_component.consumed_unit = nil
+
 	local locomotion_extension = scratchpad.locomotion_extension
 
 	locomotion_extension:set_rotation_speed(scratchpad.original_rotation_speed)
@@ -105,7 +122,9 @@ BtBeastOfNurgleSpitOutAction._start_aligning = function (self, unit, scratchpad,
 	local fwd = Quaternion.forward(Unit.local_rotation(unit, 1))
 	local right = Vector3.cross(fwd, Vector3.up())
 	local relative_direction_name = MinionMovement.get_relative_direction_name(right, fwd, throw_direction)
+
 	scratchpad.state = "aligning"
+
 	local align_anim = action_data.align_anims[relative_direction_name]
 
 	scratchpad.animation_extension:anim_event(align_anim)
@@ -116,8 +135,7 @@ BtBeastOfNurgleSpitOutAction._start_aligning = function (self, unit, scratchpad,
 		MinionMovement.set_anim_driven(scratchpad, true)
 
 		local anim_data = action_data.anim_data[align_anim]
-		local rotation_sign = anim_data.sign
-		local rotation_radians = anim_data.rad
+		local rotation_sign, rotation_radians = anim_data.sign, anim_data.rad
 		local destination = POSITION_LOOKUP[unit] + throw_direction
 		local rotation_scale = Animation.calculate_anim_rotation_scale(unit, destination, rotation_sign, rotation_radians)
 
@@ -155,6 +173,10 @@ BtBeastOfNurgleSpitOutAction._align_throwing = function (self, unit, scratchpad,
 				return
 			end
 		end
+
+		if false then
+			-- Nothing
+		end
 	end
 
 	scratchpad.throw_rotation = QuaternionBox(Quaternion.inverse(Unit.local_rotation(unit, 1)))
@@ -170,7 +192,7 @@ BtBeastOfNurgleSpitOutAction._update_aligning = function (self, unit, scratchpad
 		locomotion_extension:set_wanted_rotation(wanted_rotation)
 	end
 
-	if scratchpad.align_duration and scratchpad.align_duration < t then
+	if scratchpad.align_duration and t > scratchpad.align_duration then
 		MinionMovement.set_anim_driven(scratchpad, false)
 		self:_add_threat_to_other_targets(unit, breed, scratchpad, scratchpad.consumed_unit)
 		self:_start_throwing(unit, scratchpad, action_data, t)
@@ -179,6 +201,7 @@ end
 
 BtBeastOfNurgleSpitOutAction._start_throwing = function (self, unit, scratchpad, action_data, t)
 	scratchpad.state = "throwing"
+
 	local throw_anim = action_data.throw_anims[scratchpad.consumed_unit_breed_name]
 
 	scratchpad.animation_extension:anim_event(throw_anim)
@@ -191,9 +214,11 @@ BtBeastOfNurgleSpitOutAction._update_throwing = function (self, unit, scratchpad
 	local throw_direction = scratchpad.throw_direction:unbox()
 	local locomotion_extension = scratchpad.locomotion_extension
 
-	if scratchpad.throw_at_t and scratchpad.throw_at_t < t then
+	if scratchpad.throw_at_t and t > scratchpad.throw_at_t then
 		scratchpad.throw_at_t = nil
+
 		local hit_unit_disabled_state_input = scratchpad.hit_unit_disabled_state_input
+
 		hit_unit_disabled_state_input.trigger_animation = "none"
 		hit_unit_disabled_state_input.disabling_unit = nil
 		scratchpad.wants_catapult = true
@@ -208,7 +233,9 @@ BtBeastOfNurgleSpitOutAction._update_throwing = function (self, unit, scratchpad
 			local catapult_z_force = action_data.catapult_z_force[scratchpad.consumed_unit_breed_name]
 			local direction = Vector3.normalize(throw_direction)
 			local velocity = direction * catapult_force
+
 			velocity.z = catapult_z_force
+
 			local catapulted_state_input = target_unit_data_extension:write_component("catapulted_state_input")
 
 			Catapulted.apply(catapulted_state_input, velocity)
@@ -216,7 +243,7 @@ BtBeastOfNurgleSpitOutAction._update_throwing = function (self, unit, scratchpad
 			scratchpad.wants_catapult = nil
 		end
 
-		if scratchpad.throw_duration and scratchpad.throw_duration < t then
+		if scratchpad.throw_duration and t > scratchpad.throw_duration then
 			MinionMovement.set_anim_driven(scratchpad, false)
 
 			local after_throw_taunt_anim_event = Animation.random_event(action_data.after_throw_taunt_anim)
@@ -224,6 +251,7 @@ BtBeastOfNurgleSpitOutAction._update_throwing = function (self, unit, scratchpad
 			scratchpad.animation_extension:anim_event(after_throw_taunt_anim_event)
 
 			local after_throw_taunt_duration = action_data.after_throw_taunt_duration
+
 			scratchpad.after_throw_taunt_duration = t + after_throw_taunt_duration
 			scratchpad.throw_duration = nil
 		elseif scratchpad.after_throw_taunt_duration then
@@ -234,7 +262,7 @@ BtBeastOfNurgleSpitOutAction._update_throwing = function (self, unit, scratchpad
 
 				locomotion_extension:set_wanted_rotation(flat_rotation)
 
-				if scratchpad.after_throw_taunt_duration <= t then
+				if t >= scratchpad.after_throw_taunt_duration then
 					scratchpad.state = "done"
 				end
 			end
@@ -245,12 +273,9 @@ end
 local ABOVE = 1
 local BELOW = 2
 local LATERAL = 2
-local MAX_STEPS = 20
-local MAX_TIME = 1.25
-local THROW_TELEPORT_UP_OFFSET_HUMAN = 1.5
-local THROW_TELEPORT_UP_OFFSET_OGRYN = 1.5
-local THROW_TELEPORT_FWD_OFFSET_HUMAN = 3.2
-local THROW_TELEPORT_FWD_OFFSET_OGRYN = 3.2
+local MAX_STEPS, MAX_TIME = 20, 1.25
+local THROW_TELEPORT_UP_OFFSET_HUMAN, THROW_TELEPORT_UP_OFFSET_OGRYN = 1.5, 1.5
+local THROW_TELEPORT_FWD_OFFSET_HUMAN, THROW_TELEPORT_FWD_OFFSET_OGRYN = 3.2, 3.2
 
 BtBeastOfNurgleSpitOutAction._test_throw_trajectory = function (self, unit, scratchpad, action_data, test_direction, to)
 	local unit_position = POSITION_LOOKUP[unit]
@@ -269,7 +294,9 @@ BtBeastOfNurgleSpitOutAction._test_throw_trajectory = function (self, unit, scra
 	local catapult_z_force = action_data.catapult_z_force[scratchpad.consumed_unit_breed_name]
 	local direction = Vector3.normalize(test_direction)
 	local catapult_velocity = direction * catapult_force
+
 	catapult_velocity.z = catapult_z_force
+
 	local speed = Vector3.length(catapult_velocity)
 	local target_velocity = Vector3(0, 0, 0)
 	local gravity = PlayerCharacterConstants.gravity
@@ -310,8 +337,10 @@ BtBeastOfNurgleSpitOutAction._calculate_randomized_throw_directions = function (
 
 	for i = 1, num_directions do
 		current_degree = current_degree + degree_per_direction
+
 		local radians = math.degrees_to_radians(current_degree)
 		local direction = Vector3(math.sin(radians), math.cos(radians), 0)
+
 		directions[i] = Vector3Box(direction)
 	end
 

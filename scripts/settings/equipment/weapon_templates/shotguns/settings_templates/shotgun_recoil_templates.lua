@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/equipment/weapon_templates/shotguns/settings_templates/shotgun_recoil_templates.lua
+
 local RecoilTemplate = require("scripts/utilities/recoil_template")
 local recoil_templates = {}
 local overrides = {}
@@ -101,6 +103,7 @@ local assault_offset_range = generate_offset_range(num_shot, 0.15, 0, lerp_dista
 local assault_random_range = generate_offset_range(num_shot, 0.05, 0.1, lerp_distance, create_scale(assault_random_scale))
 local special_offset = generate_offset_range(num_shot, 0.5, -0.1, lerp_distance, create_scale(killshot_scale))
 local special_random_offset = generate_offset_range(num_shot, 0.2, 0.25, lerp_distance, create_scale(killshot_scale))
+
 recoil_templates.default_shotgun_assault = {
 	still = {
 		camera_recoil_percentage = 0.25,

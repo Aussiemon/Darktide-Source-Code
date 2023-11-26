@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/achievements_view/achievements_view_blueprints.lua
+
 local AchievementFlags = require("scripts/settings/achievements/achievement_flags")
 local AchievementTypes = require("scripts/managers/achievements/achievement_types")
 local AchievementUIHelper = require("scripts/managers/achievements/utility/achievement_ui_helper")
@@ -21,6 +23,7 @@ local _format_progress_params = {}
 
 local function _format_progress(current_progress, goal)
 	local params = _format_progress_params
+
 	params.progress = current_progress
 	params.goal = goal
 
@@ -60,7 +63,7 @@ local function _common_frame_hover_change_function(content, style)
 	local default_color = style.default_color
 	local hover_color = style.hover_color
 	local focused_color = style.selected_color
-	local target_color = nil
+	local target_color
 
 	if hover_progress < focus_progress then
 		target_color = focused_color
@@ -77,7 +80,7 @@ local function _common_icon_hover_change_function(content, style)
 	local hotspot = content.hotspot
 	local focus_progress = hotspot.anim_focus_progress
 	local hover_progress = hotspot.anim_hover_progress
-	local target_color, icon_target_color = nil
+	local target_color, icon_target_color
 
 	if hover_progress < focus_progress then
 		hover_progress = focus_progress
@@ -135,6 +138,7 @@ local function _achievement_background_hover_change_function(content, style)
 	local hover_progress = _math_max(hotspot.anim_hover_progress, hotspot.anim_focus_progress)
 	local color = style.color
 	local alpha = style.alpha or 1
+
 	color[1] = alpha * hover_progress
 end
 
@@ -216,32 +220,41 @@ local _score_params = {}
 local function _achievement_common_pass_template_init(widget_content, widget_style, config, ui_renderer)
 	local achievement_definition = config.achievement_definition
 	local hotspot = widget_content.hotspot
+
 	hotspot.on_hover_sound = UISoundEvents.default_mouse_hover
 	hotspot.on_select_sound = nil
+
 	local label = AchievementUIHelper.localized_title(achievement_definition)
 	local description = AchievementUIHelper.localized_description(achievement_definition)
 	local label_style = widget_style.label
 	local description_style = widget_style.description
+
 	widget_content.label = label
 	widget_content.description = description
+
 	local score_params = _score_params
+
 	score_params.score = achievement_definition.score
 	widget_content.score = Localize("loc_achievements_view_score", true, score_params)
+
 	local icon_style = widget_style.icon
 	local icon_material_values = icon_style.material_values
+
 	icon_material_values.icon = achievement_definition.icon
+
 	local label_height = _text_height(ui_renderer, label, label_style)
 
-	if label_style.size[2] < label_height then
+	if label_height > label_style.size[2] then
 		label_style.size[2] = label_height
 	else
 		label_height = label_style.size[2]
 	end
 
 	description_style.offset[2] = label_style.offset[2] + label_height + description_style.offset[2]
+
 	local description_height = _text_height(ui_renderer, description, description_style)
 
-	if description_style.size[2] < description_height then
+	if description_height > description_style.size[2] then
 		description_style.size[2] = description_height
 	else
 		description_height = description_style.size[2]
@@ -296,8 +309,10 @@ local function _achievement_progress_bar_template_init(widget_content, widget_st
 	local achievement_type_name = achievement_definition.type
 	local achievement_type = AchievementTypes[achievement_type_name]
 	local progress, goal = achievement_type.get_progress(achievement_definition, player)
+
 	progress = math.min(progress, goal)
 	widget_content.progress = _format_progress(progress, goal)
+
 	local normalized_progress = progress / goal
 	local background_style = widget_style.progress_bar_background
 	local frame_style = widget_style.progress_bar_frame
@@ -306,6 +321,7 @@ local function _achievement_progress_bar_template_init(widget_content, widget_st
 	local text_style = widget_style.progress
 	local progress_bar_width = background_style.size[1] * normalized_progress
 	local alpha_multiplier = math.clamp01(-progress_bar_width / edge_style.relative_negative_offset_x)
+
 	bar_style.size[1] = progress_bar_width
 	edge_style.offset[1] = edge_style.offset[1] + progress_bar_width
 	background_style.offset[2] = background_style.offset[2] + content_height
@@ -341,9 +357,12 @@ local function _achievement_foldout_pass_template_init(widget, widget_content, w
 	local function fold_callback()
 		local content = widget_content
 		local unfolded = not content.unfolded
+
 		content.unfolded = unfolded
 		content.size[2] = unfolded and widget_content.unfolded_height or widget_content.folded_height
+
 		local arrow_style = widget_style.arrow
+
 		arrow_style.angle = math.degrees_to_radians(unfolded and 90 or -90)
 
 		Managers.ui:play_2d_sound(unfolded and arrow_style.unfold_sound or arrow_style.fold_sound)
@@ -367,15 +386,20 @@ local _small_reward_icon_template = {
 local function _small_reward_icon_template_init(widget_content, widget_style, config)
 	local achievement_definition = config.achievement_definition
 	local reward_item = AchievementUIHelper.get_reward_item(achievement_definition)
+
 	widget_content.item = reward_item
+
 	local reward_type_icon = ItemUtils.type_texture(reward_item)
 	local small_reward_icon_style = widget_style.reward_icon_small
 	local material_values = small_reward_icon_style.material_values
+
 	material_values.icon = reward_type_icon
+
 	local rarity = reward_item.rarity
 
 	if rarity then
 		local rarity_color, dark_rarity_color = ItemUtils.rarity_color(reward_item)
+
 		small_reward_icon_style.color = table.clone(rarity_color)
 	end
 end
@@ -384,8 +408,11 @@ local function _apply_live_item_icon_cb_func(widget, item_id, grid_index, rows, 
 	local widget_style = widget.style
 	local widget_content = widget.content
 	local icon_style = widget_style[item_id]
+
 	widget_content[item_id] = "content/ui/materials/icons/items/containers/item_container_landscape"
+
 	local material_values = icon_style.material_values
+
 	material_values.use_placeholder_texture = 0
 	material_values.use_render_target = 1
 	material_values.rows = rows
@@ -405,6 +432,7 @@ local function _remove_live_item_icon_cb_func(widget, item_id, ui_renderer)
 	local widget_content = widget.content
 	local icon_style = widget_style[item_id]
 	local material_values = icon_style.material_values
+
 	material_values.use_placeholder_texture = 1
 	material_values.use_render_target = 0
 	material_values.rows = nil
@@ -419,10 +447,13 @@ local function _apply_live_nameplate_icon_cb_func(widget, item_id, item)
 	local widget_style = widget.style
 	local widget_content = widget.content
 	local icon_style = widget_style[item_id]
+
 	widget_content[item_id] = "content/ui/materials/icons/items/containers/item_container_square"
+
 	local material_values = icon_style.material_values
 	local item_slot = ItemUtils.item_slot(item)
 	local icon_size = item_slot.item_icon_size
+
 	material_values.texture_icon = item.icon
 	material_values.icon_size = icon_size
 	material_values.use_placeholder_texture = 0
@@ -437,6 +468,7 @@ local function _remove_live_nameplate_icon_cb_func(widget, item_id, ui_renderer)
 	local widget_content = widget.content
 	local icon_style = widget_style[item_id]
 	local material_values = icon_style.material_values
+
 	widget_content[item_id] = nil
 	material_values.icon_size = nil
 	material_values.texture_icon = nil
@@ -475,7 +507,7 @@ local function _reward_load_icon_func(parent, widget, config, ui_renderer)
 				state_machine = item_state_machine,
 				animation_event = item_animation_event
 			}
-			local cb, unload_cb = nil
+			local cb, unload_cb
 
 			if item_group == "nameplates" then
 				cb = callback(_apply_live_nameplate_icon_cb_func, widget, reward_item_id)
@@ -561,6 +593,7 @@ local function _init_foldout_reward_pass_templates(widget_content, widget_style,
 	local reward_item, reward_item_group = AchievementUIHelper.get_reward_item(achievement_definition)
 	local reward_item_margin = pass_template_styles.reward_item_margins[2]
 	local offset_y = unfolded_height
+
 	widget_content.reward_ids = {
 		"reward_icon"
 	}
@@ -570,37 +603,54 @@ local function _init_foldout_reward_pass_templates(widget_content, widget_style,
 	widget_content.reward_groups = {
 		reward_item_group
 	}
+
 	local display_name = ItemUtils.display_name(reward_item)
 	local item_type = ItemUtils.type_display_name(reward_item)
+
 	widget_content.reward_display_name = display_name
+
 	local reward_icon_frame_style = widget_style.reward_icon_frame
 	local reward_icon_frame_offset = reward_icon_frame_style.offset
 	local top_margin = reward_icon_frame_offset[2]
+
 	reward_icon_frame_offset[2] = reward_icon_frame_offset[2] + offset_y
+
 	local reward_icon_background_style = widget_style.reward_icon_background
 	local reward_icon_background_offset = reward_icon_background_style.offset
+
 	reward_icon_background_offset[2] = reward_icon_background_offset[2] + offset_y
+
 	local rarity = reward_item.rarity
 
 	if rarity then
 		local rarity_color, dark_rarity_color = ItemUtils.rarity_color(reward_item)
+
 		widget_style.reward_icon_background.color = table.clone(dark_rarity_color)
+
 		local rarity_display_name = ItemUtils.rarity_display_name(reward_item)
+
 		widget_content.reward_sub_display_name = string.format("{#color(%d, %d, %d)}%s{#reset()} • %s", rarity_color[2], rarity_color[3], rarity_color[4], rarity_display_name, item_type)
 	else
 		widget_content.reward_sub_display_name = item_type
 	end
 
 	local reward_icon_style = widget_style.reward_icon
+
 	reward_icon_style.use_placeholder_texture = 1
 	reward_icon_style.offset[2] = reward_icon_style.offset[2] + offset_y
+
 	local reward_label_offset = widget_style.reward_label.offset
+
 	reward_label_offset[2] = reward_label_offset[2] + offset_y
+
 	local reward_display_name_style = widget_style.reward_display_name
 	local reward_display_name_offset = reward_display_name_style.offset
+
 	reward_display_name_offset[2] = reward_display_name_offset[2] + offset_y
+
 	local display_name_height = _text_height(ui_renderer, display_name, reward_display_name_style)
 	local reward_sub_display_name_offset = widget_style.reward_sub_display_name.offset
+
 	reward_sub_display_name_offset[2] = reward_sub_display_name_offset[2] + display_name_height + offset_y
 	offset_y = offset_y + top_margin + reward_icon_frame_style.size[2] + reward_item_margin
 
@@ -642,6 +692,7 @@ local function _add_sub_achievements_pass_style(style, config)
 	for achievement_id, _ in pairs(sub_achievements) do
 		local sub_achievement_icon_name = string.format("sub_icon_%s", achievement_id)
 		local sub_label_name = string.format("sub_label_%s", achievement_id)
+
 		style[sub_achievement_icon_name] = pass_styles.sub_icon
 		style[sub_label_name] = pass_styles.sub_label
 	end
@@ -660,14 +711,21 @@ local function _sub_achievements_pass_template_init(widget_content, widget_style
 		local sub_achievement = achievement_definitions[sub_achievement_id]
 		local sub_achievement_completed = achievements:achievement_completed(player, sub_achievement_id)
 		local sub_label_name = string.format("sub_label_%s", sub_achievement_id)
+
 		widget_content[sub_label_name] = AchievementUIHelper.localized_title(sub_achievement)
+
 		local sub_label_style = widget_style[sub_label_name]
+
 		sub_label_style.offset[2] = sub_label_style.offset[2] + sub_achievement_offset_y
+
 		local sub_achievement_icon_name = string.format("sub_icon_%s", sub_achievement_id)
 		local icon_style = widget_style[sub_achievement_icon_name]
 		local icon_offset = icon_style.offset
+
 		icon_offset[2] = icon_offset[2] + sub_achievement_offset_y
+
 		local icon_material_values = icon_style.material_values
+
 		icon_material_values.icon = sub_achievement.icon
 
 		if sub_achievement_completed then
@@ -734,6 +792,7 @@ local function _add_family_achievements_pass_style(style, config)
 	for i = 1, #family do
 		for pass_id, pass_style in pairs(pass_styles) do
 			local style_id = string.format("family_%s_%d", pass_id, i)
+
 			style[style_id] = pass_style
 		end
 	end
@@ -748,34 +807,46 @@ local function _init_family_achievements_pass_template(widget_content, widget_st
 	local sub_achievement_offset_y = unfolded_height
 	local family_label_style = widget_style.family_label
 	local family_label_offset = family_label_style.offset
+
 	family_label_offset[2] = family_label_offset[2] + sub_achievement_offset_y
+
 	local total_score = 0
 	local family = AchievementUIHelper.get_family(achievement_definition)
 	local index_in_family = achievement_definition.family_index
 
 	for i = 1, #family do
 		local family_achievement_definition = family[i]
+
 		sub_achievement_offset_y = family_label_offset[2] + family_label_style.size[2]
+
 		local sub_achievement_icon_name = "family_sub_icon_" .. i
 		local icon_style = widget_style[sub_achievement_icon_name]
 		local icon_offset = icon_style.offset
+
 		sub_achievement_offset_x = sub_achievement_offset_x + icon_offset[1]
 		sub_achievement_offset_y = sub_achievement_offset_y + icon_offset[2]
 		icon_offset[1] = sub_achievement_offset_x
 		icon_offset[2] = sub_achievement_offset_y
 		sub_achievement_offset_y = sub_achievement_offset_y + icon_style.size[2]
+
 		local sub_score_name = "family_sub_score_" .. i
 		local sub_achievement_score = family_achievement_definition.score
+
 		score_params.score = sub_achievement_score
 		widget_content[sub_score_name] = Localize("loc_achievements_view_score", true, _score_params)
+
 		local sub_label_style = widget_style[sub_score_name]
 		local sub_label_style_offset = sub_label_style.offset
+
 		sub_achievement_offset_y = sub_achievement_offset_y + sub_label_style_offset[2]
 		sub_label_style_offset[1] = sub_achievement_offset_x
 		sub_label_style_offset[2] = sub_achievement_offset_y
 		sub_achievement_offset_y = sub_achievement_offset_y + sub_label_style.size[2]
+
 		local icon_material_values = icon_style.material_values
+
 		icon_material_values.icon = family_achievement_definition.icon
+
 		local is_current = i == index_in_family
 
 		if i < index_in_family or is_complete and is_current then
@@ -830,8 +901,11 @@ local function _add_family_rewards_pass_template(pass_template, config)
 
 		if has_reward then
 			reward_count = reward_count + 1
+
 			local name_prefix = string.format("family_reward_%d_", reward_count)
+
 			step_param.step = i
+
 			local icon_name = name_prefix .. "icon"
 
 			table.append(pass_template, {
@@ -907,7 +981,9 @@ end
 
 local function _add_family_rewards_pass_style(style, config)
 	local achievement_definition = config.achievement_definition
+
 	style.family_reward_label = pass_template_styles.achievement_family.family_label
+
 	local reward_count = 0
 	local family = AchievementUIHelper.get_family(achievement_definition)
 	local pass_styles = pass_template_styles.achievement_family_reward
@@ -920,6 +996,7 @@ local function _add_family_rewards_pass_style(style, config)
 
 			for pass_id, pass_style in pairs(pass_styles) do
 				local style_id = string.format("family_reward_%d_%s", reward_count, pass_id)
+
 				style[style_id] = pass_style
 			end
 		end
@@ -941,7 +1018,9 @@ local function _init_family_rewards_pass_template(widget_content, widget_style, 
 	local current_column = 1
 	local family_reward_label_style = widget_style.family_reward_label
 	local family_label_offset = family_reward_label_style.offset
+
 	family_label_offset[2] = unfolded_height
+
 	local sub_reward_margins = pass_template_styles.family_sub_reward_margins
 	local rewards_offset_x = sub_reward_margins[1]
 	local rewards_offset_y = family_label_offset[2] + family_reward_label_style.size[2] - pass_template_styles.achievement_family_reward.icon.offset[2] + sub_reward_margins[2]
@@ -960,48 +1039,68 @@ local function _init_family_rewards_pass_template(widget_content, widget_style, 
 
 		if has_reward then
 			reward_count = reward_count + 1
+
 			local reward_icon_name = string.format("family_reward_%d_icon", reward_count)
+
 			reward_ids[reward_count] = reward_icon_name
 			reward_items[reward_count] = reward_item
 			reward_item_groups[reward_count] = item_groups
+
 			local icon_style = widget_style[reward_icon_name]
 			local icon_offset = icon_style.offset
+
 			icon_offset[1] = rewards_offset_x + icon_offset[1]
 			icon_offset[2] = rewards_offset_y + icon_offset[2]
+
 			local reward_icon_background_name = string.format("family_reward_%d_icon_background", reward_count)
 			local icon_background_style = widget_style[reward_icon_background_name]
 			local icon_background_offset = icon_background_style.offset
+
 			icon_background_offset[1] = icon_offset[1]
 			icon_background_offset[2] = icon_offset[2]
+
 			local reward_icon_frame_name = string.format("family_reward_%d_icon_frame", reward_count)
 			local frame_style = widget_style[reward_icon_frame_name]
 			local frame_offset = frame_style.offset
+
 			frame_offset[1] = rewards_offset_x + frame_offset[1]
 			frame_offset[2] = rewards_offset_y + frame_offset[2]
+
 			local reward_label_name = string.format("family_reward_%d_label", reward_count)
 			local label_style = widget_style[reward_label_name]
 			local label_offset = label_style.offset
+
 			label_offset[1] = rewards_offset_x + label_offset[1]
 			label_offset[2] = rewards_offset_y + label_offset[2]
+
 			local reward_display_name_id = string.format("family_reward_%d_display_name", reward_count)
 			local reward_display_name = ItemUtils.display_name(reward_item)
+
 			widget_content[reward_display_name_id] = reward_display_name
+
 			local display_name_style = widget_style[reward_display_name_id]
 			local display_name_offset = display_name_style.offset
+
 			display_name_offset[1] = rewards_offset_x + display_name_offset[1]
 			display_name_offset[2] = label_offset[2] + _text_height(ui_renderer, widget_content[reward_label_name], display_name_style) + text_spacing
+
 			local reward_sub_display_name_id = string.format("family_reward_%d_sub_display_name", reward_count)
 			local sub_display_name_style = widget_style[reward_sub_display_name_id]
 			local sub_display_name_offset = sub_display_name_style.offset
+
 			sub_display_name_offset[1] = rewards_offset_x + sub_display_name_offset[1]
 			sub_display_name_offset[2] = display_name_offset[2] + _text_height(ui_renderer, reward_display_name, display_name_style) + text_spacing
+
 			local rarity = reward_item.rarity
 			local item_type = ItemUtils.type_display_name(reward_item)
 
 			if rarity then
 				local rarity_color, dark_rarity_color = ItemUtils.rarity_color(reward_item)
+
 				icon_background_style.color = table.clone(dark_rarity_color)
+
 				local rarity_display_name = ItemUtils.rarity_display_name(reward_item)
+
 				widget_content[reward_sub_display_name_id] = string.format("{#color(%d, %d, %d)}%s{#reset()} • %s", rarity_color[2], rarity_color[3], rarity_color[4], rarity_display_name, item_type)
 			else
 				widget_content[reward_sub_display_name_id] = item_type
@@ -1014,6 +1113,7 @@ local function _init_family_rewards_pass_template(widget_content, widget_style, 
 				local reward_lock_name = string.format("family_reward_%d_lock", reward_count)
 				local lock_style = widget_style[reward_lock_name]
 				local lock_offset = lock_style.offset
+
 				lock_offset[1] = rewards_offset_x + lock_offset[1]
 				lock_offset[2] = rewards_offset_y + lock_offset[2]
 			end
@@ -1049,11 +1149,15 @@ local function _category_common_pass_templates_init(parent, widget, config, call
 	local content = widget.content
 	local style = widget.style
 	local label = config.label
+
 	content.text = Localize(label)
+
 	local hotspot = content.hotspot
+
 	hotspot.on_select_sound = nil
 	hotspot.pressed_callback = callback(parent, callback_name, widget, config, config.category)
 	hotspot.selected_callback = callback(config.selected_callback, widget, config, config.category)
+
 	local percent_done = config.percent_done
 
 	if percent_done then
@@ -1118,8 +1222,11 @@ local function _init_substat_templates(widget_content, widget_style, parent, con
 		local id_left = string.format("l_substat_%s", stat_name)
 		local id_right = string.format("r_substat_%s", stat_name)
 		local loc_stat_name = string.format("• %s", Localize(StatDefinitions[stat_name].stat_name or "unknown"))
+
 		widget_content[id_left] = loc_stat_name
+
 		local left_style = widget_style[id_left]
+
 		left_style.size = {
 			size,
 			30
@@ -1129,11 +1236,15 @@ local function _init_substat_templates(widget_content, widget_style, parent, con
 			unfolded_height,
 			5
 		}
+
 		local target = stat_settings.target
 		local value = math.min(Managers.stats:read_user_stat(player_id, stat_name), target)
 		local progress = _format_progress(value, target)
+
 		widget_content[id_right] = progress
+
 		local right_style = widget_style[id_right]
+
 		right_style.size = {
 			bar_right - size - bar_left - 3 * padding,
 			30
@@ -1144,7 +1255,9 @@ local function _init_substat_templates(widget_content, widget_style, parent, con
 			5
 		}
 		right_style.text_horizontal_alignment = "right"
+
 		local text_height = _text_height(ui_renderer, loc_stat_name, left_style)
+
 		unfolded_height = unfolded_height + text_height + padding
 	end
 
@@ -1163,6 +1276,7 @@ achievements_view_blueprints.category_list_padding_top = {
 achievements_view_blueprints.category_list_padding_bottom = {
 	size = blueprint_styles.category_list_padding_bottom.size
 }
+
 local category_button_template = table.clone(ButtonPassTemplates.terminal_list_button)
 
 table.append(category_button_template, {
@@ -1189,6 +1303,7 @@ achievements_view_blueprints.simple_category_button = {
 	style = blueprint_styles.simple_category_button,
 	init = _category_common_pass_templates_init
 }
+
 local foldout_category_button_template = table.clone(category_button_template)
 
 table.append(foldout_category_button_template, {
@@ -1210,6 +1325,7 @@ achievements_view_blueprints.top_category_button = {
 
 		local content = widget.content
 		local hotspot = content.hotspot
+
 		hotspot.on_pressed_sound = nil
 	end
 }
@@ -1248,14 +1364,19 @@ achievements_view_blueprints.header = {
 	init = function (parent, widget, config, callback_name, secondary_callback_name, ui_renderer)
 		local label = TextUtilities.localize_to_upper(config.display_name, config.localization_options)
 		local content = widget.content
+
 		content.label = label
+
 		local style = widget.style
 		local label_style = style.label
 		local label_width = _text_size(ui_renderer, label, label_style)
 		local divider_left_style = style.divider_left
 		local divider_width = divider_left_style.size[1] - math.floor(label_width / 2)
+
 		divider_left_style.size[1] = divider_width
+
 		local divider_right_style = style.divider_right
+
 		divider_right_style.size[1] = divider_width
 	end
 }
@@ -1272,6 +1393,7 @@ achievements_view_blueprints.description = {
 	init = function (parent, widget, config, callback_name, secondary_callback_name, ui_renderer)
 		local label = Localize(config.display_name, config.localization_options ~= nil, config.localization_options)
 		local content = widget.content
+
 		content.label = label
 		content.size[2] = math.max(content.size[2], _text_height(ui_renderer, label, widget.style.label))
 	end
@@ -1304,6 +1426,7 @@ achievements_view_blueprints.empty_space = {
 
 local function _set_icon_completed_style(style, config)
 	local icon = style.icon
+
 	icon.icon_default_color = Color.ui_achievement_icon_completed(nil, true)
 	icon.icon_hover_color = Color.ui_achievement_icon_completed_hover(nil, true)
 	icon.material_values = {
@@ -1474,9 +1597,11 @@ achievements_view_blueprints.achievement = {
 		end
 
 		folded_height = folded_height + ViewStyles.achievement_margins[2]
+
 		local widget_height = _math_max(folded_height, widget_content.size[2])
-		widget_content.size[2] = widget_height
-		folded_height = widget_height
+
+		folded_height, widget_content.size[2] = widget_height, widget_height
+
 		local unfolded_height = folded_height
 
 		if _has_foldout(config) then

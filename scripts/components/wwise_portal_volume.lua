@@ -1,9 +1,12 @@
+﻿-- chunkname: @scripts/components/wwise_portal_volume.lua
+
 local WwisePortalVolume = component("WwisePortalVolume")
 
 WwisePortalVolume.init = function (self, unit)
 	self._unit = unit
 	self._wwise_world = Wwise.wwise_world(Unit.world(unit))
 	self._open = false
+
 	local register_portal = self:get_data(unit, "register_portal")
 
 	if not register_portal then
@@ -29,7 +32,9 @@ WwisePortalVolume.editor_init = function (self, unit)
 	end
 
 	self._unit = unit
+
 	local world = Application.main_world()
+
 	self._world = world
 	self._line_object = World.create_line_object(self._world)
 	self._drawer = DebugDrawer(self._line_object, "retained")
@@ -182,6 +187,7 @@ WwisePortalVolume.door_apply_portal_obstruction = function (self, door_is_closed
 
 			if new_length > 0 then
 				local new_anim_time = anim_time - actual_open_time
+
 				new_anim_time = math.max(new_anim_time, 0)
 				normalize_anim_time = new_anim_time / new_length
 			else
@@ -195,6 +201,7 @@ WwisePortalVolume.door_apply_portal_obstruction = function (self, door_is_closed
 
 		normalize_anim_time = 1 - normalize_anim_time
 		normalize_anim_time = math.clamp(normalize_anim_time, 0, 1)
+
 		local obstruction = normalize_anim_time
 		local occlusion = normalize_anim_time
 

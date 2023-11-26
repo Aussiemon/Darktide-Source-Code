@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/breed/breeds/chaos/chaos_ogryn_executor_sounds.lua
+
 local ChaosOgrynCommonSounds = require("scripts/settings/breed/breeds/chaos/chaos_ogryn_common_sounds")
 local sound_data = {
 	events = {

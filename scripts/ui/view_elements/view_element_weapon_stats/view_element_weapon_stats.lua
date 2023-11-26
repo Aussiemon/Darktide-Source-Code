@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/view_elements/view_element_weapon_stats/view_element_weapon_stats.lua
+
 local Definitions = require("scripts/ui/view_elements/view_element_weapon_stats/view_element_weapon_stats_definitions")
 local MasterItems = require("scripts/backend/master_items")
 local ItemUtils = require("scripts/utilities/items")
@@ -13,6 +15,7 @@ local ViewElementWeaponStats = class("ViewElementWeaponStats", "ViewElementGrid"
 
 ViewElementWeaponStats.init = function (self, parent, draw_layer, start_scale, optional_menu_settings)
 	local class_name = self.__class_name
+
 	self._unique_id = class_name .. "_" .. string.gsub(tostring(self), "table: ", "")
 
 	ViewElementWeaponStats.super.init(self, parent, draw_layer, start_scale, optional_menu_settings, Definitions)
@@ -20,15 +23,19 @@ ViewElementWeaponStats.init = function (self, parent, draw_layer, start_scale, o
 	local menu_settings = self._menu_settings
 	local grid_size = menu_settings.grid_size
 	local mask_size = menu_settings.mask_size
+
 	self._default_grid_size = table.clone(grid_size)
 	self._default_mask_size = table.clone(mask_size)
 end
 
 ViewElementWeaponStats._replace_border = function (self)
 	local grid_divider_top = self:widget_by_name("grid_divider_top")
+
 	grid_divider_top.content.texture = "content/ui/materials/frames/item_info_upper_slots"
+
 	local style = grid_divider_top.style.texture
 	local scale = self._default_grid_size[1] / 1060
+
 	style.size = {
 		[2] = 116 * scale
 	}
@@ -40,6 +47,7 @@ end
 
 local function add_base_rating(item, layout, grid_size)
 	local base_stats_rating = ItemUtils.calculate_stats_rating(item)
+
 	layout[#layout + 1] = {
 		widget_type = "rating_info",
 		rating = base_stats_rating,
@@ -64,7 +72,9 @@ local function add_presentation_perks(item, layout, grid_size)
 			}
 		}
 		add_end_margin = true
+
 		local rating = item.override_perk_rating_string or ItemUtils.item_perk_rating(item)
+
 		layout[#layout + 1] = {
 			widget_type = "rating_info",
 			rating = rating,
@@ -90,6 +100,7 @@ local function add_presentation_perks(item, layout, grid_size)
 			local is_locked = item_locked and not perk.modified
 			local is_modified = perk.modified
 			local show_glow = perk.is_fake
+
 			layout[#layout + 1] = {
 				widget_type = "weapon_perk",
 				perk_item = perk_item,
@@ -126,6 +137,7 @@ local function add_presentation_traits(item, layout, grid_size)
 
 	if num_traits > 0 then
 		local rating = item.override_trait_rating_string or ItemUtils.item_trait_rating(item)
+
 		layout[#layout + 1] = {
 			widget_type = "rating_info",
 			rating = rating,
@@ -163,6 +175,7 @@ local function add_presentation_traits(item, layout, grid_size)
 			local is_locked = item_locked and not trait.modified
 			local is_modified = trait.modified
 			local show_glow = trait.is_fake
+
 			layout[#layout + 1] = {
 				add_background = true,
 				widget_type = widget_type,
@@ -262,6 +275,7 @@ ViewElementWeaponStats.present_item = function (self, item, context, on_present_
 
 		if obtained_display_name then
 			local unlocked = is_inventory_item()
+
 			layout[#layout + 1] = {
 				widget_type = "dynamic_spacing",
 				size = {
@@ -558,6 +572,10 @@ ViewElementWeaponStats.present_item = function (self, item, context, on_present_
 		}
 	end
 
+	if false then
+		-- Nothing
+	end
+
 	self:present_grid_layout(layout, on_present_callback, item)
 end
 
@@ -576,6 +594,7 @@ ViewElementWeaponStats.present_grid_layout = function (self, layout, on_present_
 	local mask_size = menu_settings.mask_size
 	local ContentBlueprints = generate_blueprints_function(grid_size, item)
 	local default_grid_height = self._default_grid_size[2]
+
 	grid_size[2] = default_grid_height
 	mask_size[2] = default_grid_height
 
@@ -594,6 +613,7 @@ ViewElementWeaponStats._on_present_grid_layout_changed = function (self, layout,
 	local grid_size = menu_settings.grid_size
 	local mask_size = menu_settings.mask_size
 	local new_grid_height = math.clamp(grid_length, 0, self._default_grid_size[2])
+
 	grid_size[2] = new_grid_height
 	mask_size[2] = new_grid_height
 

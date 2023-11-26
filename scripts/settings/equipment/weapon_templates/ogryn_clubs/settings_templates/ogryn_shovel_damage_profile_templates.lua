@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/equipment/weapon_templates/ogryn_clubs/settings_templates/ogryn_shovel_damage_profile_templates.lua
+
 local ArmorSettings = require("scripts/settings/damage/armor_settings")
 local PowerLevelSettings = require("scripts/settings/damage/power_level_settings")
 local DamageProfileSettings = require("scripts/settings/damage/damage_profile_settings")
@@ -111,6 +113,7 @@ local tank_heavy_am_default = {
 		[armor_types.void_shield] = damage_lerp_values.lerp_1
 	}
 }
+
 damage_templates.ogryn_shovel_light_tank = {
 	ragdoll_push_force = 350,
 	ragdoll_only = true,

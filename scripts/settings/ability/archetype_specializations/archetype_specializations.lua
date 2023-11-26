@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/ability/archetype_specializations/archetype_specializations.lua
+
 local ArchetypeTalents = require("scripts/settings/ability/archetype_talents/archetype_talents")
 local archetype_specializations_name = "ArchetypeSpecializations"
 local specializations = {}
@@ -16,6 +18,7 @@ local function _include_speciality_definition(file_name, base_specialization)
 
 	if base_specialization then
 		local base_talent_group_definitions = base_specialization and table.shallow_copy(base_specialization.talent_groups)
+
 		definition.talent_groups = table.append(base_talent_group_definitions, definition.talent_groups)
 	end
 

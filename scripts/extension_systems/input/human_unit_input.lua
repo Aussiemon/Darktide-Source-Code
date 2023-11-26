@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/input/human_unit_input.lua
+
 local HumanUnitInput = class("HumanUnitInput")
 
 HumanUnitInput.init = function (self, player, input_handler, fixed_frame)
@@ -21,10 +23,7 @@ HumanUnitInput.get = function (self, action)
 
 	if action == "move" then
 		local input = self._input_handler
-		local right = input:get("move_right", frame)
-		local left = input:get("move_left", frame)
-		local forward = input:get("move_forward", frame)
-		local backward = input:get("move_backward", frame)
+		local right, left, forward, backward = input:get("move_right", frame), input:get("move_left", frame), input:get("move_forward", frame), input:get("move_backward", frame)
 
 		return Vector3(right - left, forward - backward, 0)
 	else

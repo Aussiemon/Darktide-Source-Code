@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/credits_vendor_background_view/credits_vendor_background_view_definitions.lua
+
 local ItemUtils = require("scripts/utilities/items")
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local UISettings = require("scripts/settings/ui/ui_settings")

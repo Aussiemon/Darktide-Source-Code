@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/hud/elements/character_news_feed/hud_element_character_news_feed.lua
+
 local BackendInterface = require("scripts/backend/backend_interface")
 local Definitions = require("scripts/ui/hud/elements/character_news_feed/hud_element_character_news_feed_definitions")
 local HudElementCharacterNewsFeedSettings = require("scripts/ui/hud/elements/character_news_feed/hud_element_character_news_feed_settings")
@@ -22,7 +24,8 @@ HudElementCharacterNewsFeed._fetch_inventory_items = function (self)
 
 	self._inventory_items = nil
 	self._new_presentation_items = nil
-	local gear_promise = nil
+
+	local gear_promise
 
 	if Managers.backend:authenticated() then
 		gear_promise = Managers.data_service.gear:fetch_gear()
@@ -36,6 +39,7 @@ HudElementCharacterNewsFeed._fetch_inventory_items = function (self)
 
 			for gear_id, gear in pairs(gear_list) do
 				local gear_item = MasterItems.get_item_instance(gear, gear_id)
+
 				inventory[gear_id] = gear_item
 			end
 
@@ -47,10 +51,11 @@ HudElementCharacterNewsFeed._fetch_inventory_items = function (self)
 		local next_promise = gear_promise:next(next_function)
 
 		local function catch_function(errors)
-			local error_string = nil
+			local error_string
 
 			if type(errors) == "table" then
 				local gear_list_error = unpack(errors)
+
 				error_string = tostring(gear_list_error)
 			else
 				error_string = errors

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/behavior/nodes/actions/bt_chaos_hound_approach_action.lua
+
 require("scripts/extension_systems/behavior/nodes/bt_node")
 
 local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
@@ -13,13 +15,17 @@ local BtChaosHoundApproachAction = class("BtChaosHoundApproachAction", "BtNode")
 BtChaosHoundApproachAction.enter = function (self, unit, breed, blackboard, scratchpad, action_data, t)
 	local locomotion_extension = ScriptUnit.extension(unit, "locomotion_system")
 	local navigation_extension = ScriptUnit.extension(unit, "navigation_system")
+
 	scratchpad.animation_extension = ScriptUnit.extension(unit, "animation_system")
 	scratchpad.locomotion_extension = locomotion_extension
 	scratchpad.navigation_extension = navigation_extension
+
 	local stagger_component = Blackboard.write_component(blackboard, "stagger")
+
 	scratchpad.behavior_component = Blackboard.write_component(blackboard, "behavior")
 	scratchpad.perception_component = blackboard.perception
 	scratchpad.stagger_component = stagger_component
+
 	local speed = action_data.speed
 
 	navigation_extension:set_enabled(true, speed)
@@ -29,7 +35,9 @@ BtChaosHoundApproachAction.enter = function (self, unit, breed, blackboard, scra
 	locomotion_extension:set_rotation_speed(action_data.rotation_speed)
 
 	scratchpad.side_system = Managers.state.extension:system("side_system")
+
 	local spawn_component = blackboard.spawn
+
 	scratchpad.physics_world = spawn_component.physics_world
 	stagger_component.controlled_stagger = false
 	scratchpad.check_leap_t = 0
@@ -62,12 +70,9 @@ local NUM_FAILED_ATTEMPTS_TO_MANUAL_MOVE = 3
 local UPDATE_TARGET_DISTANCE_SQ = 1
 
 BtChaosHoundApproachAction.run = function (self, unit, breed, blackboard, scratchpad, action_data, dt, t)
-	local behavior_component = scratchpad.behavior_component
-	local perception_component = scratchpad.perception_component
-	local move_state = behavior_component.move_state
-	local target_unit = perception_component.target_unit
-	local target_distance = perception_component.target_distance
-	local too_close_distance = action_data.too_close_distance
+	local behavior_component, perception_component = scratchpad.behavior_component, scratchpad.perception_component
+	local move_state, target_unit = behavior_component.move_state, perception_component.target_unit
+	local target_distance, too_close_distance = perception_component.target_distance, action_data.too_close_distance
 	local is_in_stagger = scratchpad.stagger_duration and t <= scratchpad.stagger_duration
 
 	if not is_in_stagger and target_distance <= too_close_distance then
@@ -80,7 +85,7 @@ BtChaosHoundApproachAction.run = function (self, unit, breed, blackboard, scratc
 		return "failed"
 	end
 
-	if scratchpad.trigger_player_alert_vo_t < t and target_distance < action_data.trigger_player_alert_vo_distance then
+	if t > scratchpad.trigger_player_alert_vo_t and target_distance < action_data.trigger_player_alert_vo_distance then
 		Vo.pouncing_alert_event(target_unit, breed)
 
 		scratchpad.trigger_player_alert_vo_t = t + action_data.trigger_player_alert_vo_frequency
@@ -88,7 +93,7 @@ BtChaosHoundApproachAction.run = function (self, unit, breed, blackboard, scratc
 
 	local navigation_extension = scratchpad.navigation_extension
 
-	if scratchpad.check_leap_t < t then
+	if t > scratchpad.check_leap_t then
 		local can_start_leap, is_long_leap = self:_can_start_leap(unit, scratchpad, action_data, perception_component, t)
 
 		if can_start_leap then
@@ -97,7 +102,7 @@ BtChaosHoundApproachAction.run = function (self, unit, breed, blackboard, scratc
 			end
 
 			return "done"
-		elseif MAX_FAILED_LEAP_CHECKS <= scratchpad.num_failed_leap_checks then
+		elseif scratchpad.num_failed_leap_checks >= MAX_FAILED_LEAP_CHECKS then
 			self:_set_pounce_cooldown(unit, breed, scratchpad, target_unit, blackboard, t)
 
 			return "failed"
@@ -106,13 +111,12 @@ BtChaosHoundApproachAction.run = function (self, unit, breed, blackboard, scratc
 
 	local find_move_position_attempts = scratchpad.find_move_position_attempts
 
-	if NUM_FAILED_ATTEMPTS_TO_MANUAL_MOVE <= find_move_position_attempts then
+	if find_move_position_attempts >= NUM_FAILED_ATTEMPTS_TO_MANUAL_MOVE then
 		self:_move_to_target(scratchpad)
 	else
-		local target_position = POSITION_LOOKUP[target_unit]
-		local destination = navigation_extension:destination()
+		local target_position, destination = POSITION_LOOKUP[target_unit], navigation_extension:destination()
 		local target_to_destination_distance_sq = Vector3.distance_squared(target_position, destination)
-		local force_move = UPDATE_TARGET_DISTANCE_SQ < target_to_destination_distance_sq
+		local force_move = target_to_destination_distance_sq > UPDATE_TARGET_DISTANCE_SQ
 
 		MinionMovement.update_move_to_ranged_position(unit, t, scratchpad, action_data, target_unit, nil, nil, nil, force_move)
 	end
@@ -124,7 +128,7 @@ BtChaosHoundApproachAction.run = function (self, unit, breed, blackboard, scratc
 			MinionMovement.start_idle(scratchpad, behavior_component, action_data)
 
 			scratchpad.idle_duration = t + IDLE_DURATION
-		elseif scratchpad.idle_duration and scratchpad.idle_duration <= t then
+		elseif scratchpad.idle_duration and t >= scratchpad.idle_duration then
 			self:_set_pounce_cooldown(unit, breed, scratchpad, target_unit, blackboard, t)
 
 			return "failed"
@@ -137,7 +141,7 @@ BtChaosHoundApproachAction.run = function (self, unit, breed, blackboard, scratc
 		self:_start_move_anim(unit, scratchpad, action_data, t)
 	end
 
-	if scratchpad.is_anim_driven and scratchpad.start_rotation_timing and scratchpad.start_rotation_timing <= t then
+	if scratchpad.is_anim_driven and scratchpad.start_rotation_timing and t >= scratchpad.start_rotation_timing then
 		MinionMovement.update_anim_driven_start_rotation(unit, scratchpad, action_data, t)
 	end
 
@@ -169,8 +173,7 @@ BtChaosHoundApproachAction.run = function (self, unit, breed, blackboard, scratc
 	return "running"
 end
 
-local ABOVE = 1
-local BELOW = 2
+local ABOVE, BELOW = 1, 2
 local NAV_Z_CORRECTION = 0.1
 local TRAJECTORY_FAILED_COOLDOWN = 0.25
 
@@ -190,8 +193,7 @@ BtChaosHoundApproachAction._can_start_leap = function (self, unit, scratchpad, a
 	local target_unit = perception_component.target_unit
 	local target_position = POSITION_LOOKUP[target_unit]
 	local navigation_extension = scratchpad.navigation_extension
-	local nav_world = navigation_extension:nav_world()
-	local traverse_logic = navigation_extension:traverse_logic()
+	local nav_world, traverse_logic = navigation_extension:nav_world(), navigation_extension:traverse_logic()
 	local target_position_on_nav_mesh = NavQueries.position_on_mesh_with_outside_position(nav_world, traverse_logic, target_position, ABOVE, BELOW)
 
 	if not target_position_on_nav_mesh then
@@ -205,9 +207,9 @@ BtChaosHoundApproachAction._can_start_leap = function (self, unit, scratchpad, a
 		return false, false
 	end
 
-	local leap_start_position = nil
+	local leap_start_position
 	local current_speed = Vector3.length(scratchpad.locomotion_extension:current_velocity())
-	local use_long_leap = ChaosHoundSettings.long_leap_min_speed <= current_speed and ChaosHoundSettings.short_distance <= target_distance
+	local use_long_leap = current_speed >= ChaosHoundSettings.long_leap_min_speed and target_distance >= ChaosHoundSettings.short_distance
 
 	if use_long_leap then
 		local target_direction = Vector3.normalize(target_position - position)
@@ -249,9 +251,7 @@ BtChaosHoundApproachAction._can_start_leap = function (self, unit, scratchpad, a
 end
 
 BtChaosHoundApproachAction._check_leap = function (self, physics_world, start_position, target_position, target_velocity)
-	local speed = ChaosHoundSettings.leap_speed
-	local gravity = ChaosHoundSettings.leap_gravity
-	local acceptable_accuracy = ChaosHoundSettings.leap_acceptable_accuracy
+	local speed, gravity, acceptable_accuracy = ChaosHoundSettings.leap_speed, ChaosHoundSettings.leap_gravity, ChaosHoundSettings.leap_acceptable_accuracy
 	local angle_to_hit_target, est_pos = Trajectory.angle_to_hit_moving_target(start_position, target_position, speed, target_velocity, gravity, acceptable_accuracy)
 
 	if not angle_to_hit_target then
@@ -259,12 +259,12 @@ BtChaosHoundApproachAction._check_leap = function (self, physics_world, start_po
 	end
 
 	local _, time_in_flight = Trajectory.get_trajectory_velocity(start_position, est_pos, gravity, speed, angle_to_hit_target)
+
 	time_in_flight = math.min(time_in_flight, ChaosHoundSettings.leap_max_time_in_flight)
-	local debug = nil
-	local num_sections = ChaosHoundSettings.leap_num_sections
-	local collision_filter = ChaosHoundSettings.leap_collision_filter
-	local radius = ChaosHoundSettings.leap_radius
-	local relax_distance = ChaosHoundSettings.collision_radius
+
+	local debug
+	local num_sections, collision_filter = ChaosHoundSettings.leap_num_sections, ChaosHoundSettings.leap_collision_filter
+	local radius, relax_distance = ChaosHoundSettings.leap_radius, ChaosHoundSettings.collision_radius
 	local trajectory_is_ok = Trajectory.check_trajectory_collisions(physics_world, start_position, est_pos, gravity, speed, angle_to_hit_target, num_sections, collision_filter, time_in_flight, debug, radius, relax_distance)
 
 	return trajectory_is_ok
@@ -287,6 +287,7 @@ BtChaosHoundApproachAction._start_move_anim = function (self, unit, scratchpad, 
 		MinionMovement.set_anim_driven(scratchpad, true)
 
 		local start_rotation_timing = action_data.start_move_rotation_timings[start_move_event]
+
 		scratchpad.start_rotation_timing = t + start_rotation_timing
 		scratchpad.move_start_anim_event_name = start_move_event
 	else
@@ -307,8 +308,7 @@ local LATERAL = 2
 
 BtChaosHoundApproachAction._move_to_target = function (self, scratchpad)
 	local navigation_extension = scratchpad.navigation_extension
-	local nav_world = navigation_extension:nav_world()
-	local traverse_logic = navigation_extension:traverse_logic()
+	local nav_world, traverse_logic = navigation_extension:nav_world(), navigation_extension:traverse_logic()
 	local target_unit = scratchpad.perception_component.target_unit
 	local wanted_position = POSITION_LOOKUP[target_unit]
 	local goal_position = NavQueries.position_on_mesh_with_outside_position(nav_world, traverse_logic, wanted_position, ABOVE, BELOW, LATERAL)
@@ -331,8 +331,7 @@ end
 local TO_OFFSET_UP_DISTANCE = 2
 
 BtChaosHoundApproachAction._update_ground_normal_rotation = function (self, unit, target_unit, scratchpad)
-	local self_position = POSITION_LOOKUP[unit]
-	local offset_up = Vector3.up()
+	local self_position, offset_up = POSITION_LOOKUP[unit], Vector3.up()
 	local self_rotation = Unit.local_rotation(unit, 1)
 	local forward = Vector3.normalize(Quaternion.forward(self_rotation))
 	local from_position_1 = self_position + offset_up + forward
@@ -378,6 +377,7 @@ end
 BtChaosHoundApproachAction._set_pounce_cooldown = function (self, unit, breed, scratchpad, target_unit, blackboard, t)
 	local cooldown = Managers.state.difficulty:get_table_entry_by_challenge(MinionDifficultySettings.cooldowns.chaos_hound_pounce_fail)
 	local pounce_component = Blackboard.write_component(blackboard, "pounce")
+
 	pounce_component.pounce_cooldown = t + cooldown
 
 	self:_add_threat_to_other_targets(unit, breed, scratchpad, target_unit)

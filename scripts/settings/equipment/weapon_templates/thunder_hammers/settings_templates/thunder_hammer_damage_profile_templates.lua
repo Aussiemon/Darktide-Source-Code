@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/equipment/weapon_templates/thunder_hammers/settings_templates/thunder_hammer_damage_profile_templates.lua
+
 local ArmorSettings = require("scripts/settings/damage/armor_settings")
 local PowerLevelSettings = require("scripts/settings/damage/power_level_settings")
 local DamageProfileSettings = require("scripts/settings/damage/damage_profile_settings")
@@ -162,6 +164,7 @@ local hammer_tank_heavy_am = {
 		[armor_types.void_shield] = damage_lerp_values.lerp_1
 	}
 }
+
 damage_templates.thunderhammer_light = {
 	finesse_ability_damage_multiplier = 1.5,
 	ragdoll_push_force = 500,

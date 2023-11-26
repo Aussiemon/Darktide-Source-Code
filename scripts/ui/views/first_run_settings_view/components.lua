@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/first_run_settings_view/components.lua
+
 local components = {}
 
 local function save_account_settings(location_name, settings_name, value)
@@ -64,18 +66,20 @@ components.dropdown = function (template)
 	end
 
 	local entry = table.clone(template)
+
 	entry.on_value_changed = nil
-	local default_value = nil
+
+	local default_value
 
 	if type(template.default_value) == "function" then
-		default_value = template:default_value()
+		default_value = template.default_value(template)
 	else
 		default_value = template.default_value
 	end
 
 	entry.get_function = function ()
 		if template.get_function then
-			local value = template:get_function()
+			local value = template.get_function(template)
 
 			if value ~= nil then
 				return value
@@ -87,7 +91,7 @@ components.dropdown = function (template)
 
 	entry.on_activated = function (new_value, current_value, new_option)
 		if not _is_same(current_value, new_value) and template.on_value_changed then
-			template:on_value_changed(new_value, new_option)
+			template.on_value_changed(template, new_value, new_option)
 		end
 	end
 
@@ -98,11 +102,13 @@ end
 
 components.checkbox = function (template)
 	local entry = table.clone(template)
+
 	entry.on_value_changed = nil
-	local default_value = nil
+
+	local default_value
 
 	if type(template.default_value) == "function" then
-		default_value = template:default_value()
+		default_value = template.default_value(template)
 	else
 		default_value = template.default_value
 	end
@@ -111,7 +117,7 @@ components.checkbox = function (template)
 
 	entry.get_function = function ()
 		if template.get_function then
-			local value = template:get_function()
+			local value = template.get_function(template)
 
 			if value ~= nil then
 				return value
@@ -127,6 +133,7 @@ components.checkbox = function (template)
 		for i = 1, #template.options do
 			local option = template.options[i]
 			local id = option.id
+
 			options_by_id[id] = option
 		end
 	end
@@ -135,7 +142,7 @@ components.checkbox = function (template)
 		if not _is_same(current_value, new_value) and template.on_value_changed then
 			local option = options_by_id[tostring(new_value)]
 
-			template:on_value_changed(new_value, option)
+			template.on_value_changed(template, new_value, option)
 		end
 	end
 
@@ -149,23 +156,24 @@ components.percent_slider = function (template)
 	local convertion_value = value_range / 100
 	local step_size = template.step_size_value or 1
 	local percent_step_size = step_size / convertion_value
-	local default_value = nil
+	local default_value
 
 	if type(template.default_value) == "function" then
-		default_value = template:default_value()
+		default_value = template.default_value(template)
 	else
 		default_value = ((template.default_value or min_value) - min_value) / convertion_value
 	end
 
 	local function explode_value(percent_value)
 		local exploded_value = min_value + percent_value * convertion_value
+
 		exploded_value = math.round(exploded_value / step_size) * step_size
 
 		return exploded_value
 	end
 
 	local function value_get_function()
-		local exploded_value = template:get_function()
+		local exploded_value = template.get_function(template)
 
 		if exploded_value == nil then
 			exploded_value = default_value
@@ -180,7 +188,7 @@ components.percent_slider = function (template)
 		local exploded_value = explode_value(new_value)
 
 		if template.on_value_changed then
-			template:on_value_changed(exploded_value)
+			template.on_value_changed(template, exploded_value)
 		end
 	end
 
@@ -192,6 +200,7 @@ components.percent_slider = function (template)
 	end
 	local normalized_step_size = (percent_step_size or 1) / 100
 	local entry = table.clone(template)
+
 	entry.on_value_changed = nil
 	entry.apply_on_drag = true
 	entry.default_value = default_value or min_value
@@ -208,8 +217,14 @@ components.value_slider = function (template)
 	local max_value = template.max_value or 100
 	local step_size_value = template.step_size_value
 	local num_decimals = template.num_decimals
-	local default_value = nil
-	default_value = type(template.default_value) == "function" and template:default_value() or template.default_value or min_value
+	local default_value
+
+	if type(template.default_value) == "function" then
+		default_value = template.default_value(template)
+	else
+		default_value = template.default_value or min_value
+	end
+
 	local value_range = max_value - min_value
 	local new_num_decimals = num_decimals or 1
 	local step_size = step_size_value or 0.1
@@ -217,6 +232,7 @@ components.value_slider = function (template)
 
 	local function explode_function(normalized_value)
 		local exploded_value = min_value + normalized_value * value_range
+
 		exploded_value = math.round(exploded_value / step_size) * step_size
 
 		return exploded_value
@@ -224,7 +240,7 @@ components.value_slider = function (template)
 
 	local function value_get_function()
 		if template.get_function then
-			local value = template:get_function()
+			local value = template.get_function(template)
 
 			if value ~= nil then
 				return value
@@ -236,7 +252,7 @@ components.value_slider = function (template)
 
 	local function on_value_changed_function(new_value, current_value)
 		if template.on_value_changed then
-			template:on_value_changed(new_value)
+			template.on_value_changed(template, new_value)
 		end
 	end
 
@@ -250,6 +266,7 @@ components.value_slider = function (template)
 	end
 
 	local entry = table.clone(template)
+
 	entry.on_value_changed = nil
 	entry.apply_on_drag = true
 	entry.default_value = default_value

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/pass_templates/scrollbar_pass_templates.lua
+
 local UIResolution = require("scripts/managers/ui/ui_resolution")
 local ColorUtilities = require("scripts/utilities/ui/colors")
 local ScrollbarPassTemplates = {}
@@ -15,6 +17,7 @@ local scrollbar_base = {
 			local area_length = content.area_length or 0
 			local scrollbar_length = size[axis]
 			local thumb_disabled = scroll_length <= 0
+
 			content.thumb_disabled = thumb_disabled
 
 			if thumb_disabled then
@@ -26,6 +29,7 @@ local scrollbar_base = {
 			local thumb_length = scrollbar_length * thumb_size_fraction
 			local style_parent = style.parent
 			local hotspot_style = style_parent.hotspot
+
 			hotspot_style.size[axis] = thumb_length
 		end
 	},
@@ -42,156 +46,163 @@ local scrollbar_base = {
 				100
 			}
 		}
-	}
-}
-scrollbar_base[3] = {
-	pass_type = "logic",
-	value = function (pass, renderer, style, content, position, size)
-		local scroll_length = content.scroll_length or 0
+	},
+	{
+		pass_type = "logic",
+		value = function (pass, renderer, style, content, position, size)
+			local scroll_length = content.scroll_length or 0
 
-		if scroll_length <= 0 then
-			return
-		end
-
-		local axis = content.axis or 2
-		local scrollbar_length = size[axis]
-		local hotspot = content.hotspot
-		local on_pressed = hotspot.on_pressed
-
-		if not content.drag_active then
-			if on_pressed then
-				content.drag_active = true
-			else
+			if scroll_length <= 0 then
 				return
 			end
-		end
 
-		local input_service = renderer.input_service
-		local input_action = content.input_action or "left_hold"
-		local left_hold = input_service and input_service:get(input_action)
+			local axis = content.axis or 2
+			local scrollbar_length = size[axis]
+			local hotspot = content.hotspot
+			local on_pressed = hotspot.on_pressed
 
-		if not left_hold then
-			content.drag_active = nil
-			content.input_offset = nil
-
-			return
-		else
-			content.scroll_value = nil
-			content.scroll_add = nil
-		end
-
-		local style_parent = style.parent
-		local hotspot_style = style_parent.hotspot
-		local thumb_length = hotspot_style.size[axis]
-		local inverse_scale = renderer.inverse_scale
-		local base_cursor = input_service:get("cursor")
-		local cursor = IS_XBS and base_cursor or UIResolution.inverse_scale_vector(base_cursor, inverse_scale)
-		local cursor_direction = cursor[axis]
-		local input_coordinate = math.clamp(cursor_direction - position[axis], 0, scrollbar_length)
-		local input_offset = content.input_offset
-
-		if not input_offset then
-			input_offset = input_coordinate - hotspot_style.offset[axis]
-			content.input_offset = input_offset
-		end
-
-		local start_position = 0
-		local end_position = scrollbar_length - thumb_length
-		local current_position = input_coordinate - input_offset
-		current_position = math.clamp(current_position, start_position, end_position)
-		local percentage = current_position / end_position
-		content.value = percentage
-	end
-}
-scrollbar_base[4] = {
-	style_id = "mouse_scroll",
-	pass_type = "logic",
-	visibility_function = function (content, style)
-		return style.scenegraph_id
-	end,
-	value = function (pass, renderer, style, content, position, size)
-		if content.drag_active and not content.enable_gamepad_scrolling then
-			return
-		end
-
-		local scroll_length = content.scroll_length or 0
-
-		if scroll_length <= 0 then
-			return
-		end
-
-		local dt = renderer.dt
-		local input_service = renderer.input_service
-		local hotspot = content.hotspot
-		local axis = content.axis or 2
-		local is_hover = nil
-		local using_cursor_navigation = Managers.ui:using_cursor_navigation()
-
-		if using_cursor_navigation then
-			local inverse_scale = renderer.inverse_scale
-			local cursor = input_service:get("cursor")
-			local cursor_position = IS_XBS and cursor or UIResolution.inverse_scale_vector(cursor, inverse_scale)
-			is_hover = hotspot.is_hover or math.point_is_inside_2d_box(cursor_position, position, size)
-		else
-			is_hover = not content.using_custom_gamepad_navigation and (content.enable_gamepad_scrolling or hotspot.is_selected or hotspot.is_focused or content.focused or content.selected)
-		end
-
-		local scroll_axis = input_service:get("scroll_axis")
-		local scroll_multiplier = math.abs(scroll_axis[axis]) * 0.8
-		local scroll_amount = (content.scroll_amount or 0.1) * scroll_multiplier
-
-		if scroll_axis[axis] ~= 0 and is_hover then
-			local current_scroll_direction = scroll_axis[axis] > 0 and -1 or 1
-			local previous_scroll_add = content.scroll_add or 0
-
-			if content.current_scroll_direction and content.current_scroll_direction ~= current_scroll_direction then
-				previous_scroll_add = 0
+			if not content.drag_active then
+				if on_pressed then
+					content.drag_active = true
+				else
+					return
+				end
 			end
 
-			content.current_scroll_direction = current_scroll_direction
-			content.scroll_add = previous_scroll_add + scroll_amount
-		end
+			local input_service = renderer.input_service
+			local input_action = content.input_action or "left_hold"
+			local left_hold = input_service and input_service:get(input_action)
 
-		local scroll_add = content.scroll_add
+			if not left_hold then
+				content.drag_active = nil
+				content.input_offset = nil
 
-		if scroll_add then
-			local speed = content.scroll_speed or 10
-			local step = scroll_add * dt * speed
-
-			if math.abs(scroll_add) > scroll_amount / 500 then
-				content.scroll_add = math.max(scroll_add - step * 1.5, 0)
+				return
 			else
+				content.scroll_value = nil
 				content.scroll_add = nil
 			end
 
-			local current_scroll_direction = content.current_scroll_direction or 0
-			local current_scroll_value = content.scroll_value or content.value or 0
-			content.scroll_value = math.clamp(current_scroll_value + step * current_scroll_direction, 0, 1)
-			content.value = content.scroll_value
-		end
-	end
-}
-scrollbar_base[5] = {
-	pass_type = "logic",
-	value = function (pass, renderer, style, content, position, size)
-		local scroll_length = content.scroll_length or 0
+			local style_parent = style.parent
+			local hotspot_style = style_parent.hotspot
+			local thumb_length = hotspot_style.size[axis]
+			local inverse_scale = renderer.inverse_scale
+			local base_cursor = input_service:get("cursor")
+			local cursor = IS_XBS and base_cursor or UIResolution.inverse_scale_vector(base_cursor, inverse_scale)
+			local cursor_direction = cursor[axis]
+			local input_coordinate = math.clamp(cursor_direction - position[axis], 0, scrollbar_length)
+			local input_offset = content.input_offset
 
-		if scroll_length <= 0 then
-			return
-		end
+			if not input_offset then
+				input_offset = input_coordinate - hotspot_style.offset[axis]
+				content.input_offset = input_offset
+			end
 
-		local axis = content.axis or 2
-		local scrollbar_length = size[axis]
-		local style_parent = style.parent
-		local hotspot_style = style_parent.hotspot
-		local thumb_length = hotspot_style.size[axis]
-		local hotspot_offset = hotspot_style.offset
-		local end_position = scrollbar_length - thumb_length
-		local value = content.value or 0
-		local current_position = end_position * value
-		hotspot_offset[2] = current_position
-	end
+			local start_position = 0
+			local end_position = scrollbar_length - thumb_length
+			local current_position = input_coordinate - input_offset
+
+			current_position = math.clamp(current_position, start_position, end_position)
+
+			local percentage = current_position / end_position
+
+			content.value = percentage
+		end
+	},
+	{
+		style_id = "mouse_scroll",
+		pass_type = "logic",
+		visibility_function = function (content, style)
+			return style.scenegraph_id
+		end,
+		value = function (pass, renderer, style, content, position, size)
+			if content.drag_active and not content.enable_gamepad_scrolling then
+				return
+			end
+
+			local scroll_length = content.scroll_length or 0
+
+			if scroll_length <= 0 then
+				return
+			end
+
+			local dt = renderer.dt
+			local input_service = renderer.input_service
+			local hotspot = content.hotspot
+			local axis = content.axis or 2
+			local is_hover
+			local using_cursor_navigation = Managers.ui:using_cursor_navigation()
+
+			if using_cursor_navigation then
+				local inverse_scale = renderer.inverse_scale
+				local cursor = input_service:get("cursor")
+				local cursor_position = IS_XBS and cursor or UIResolution.inverse_scale_vector(cursor, inverse_scale)
+
+				is_hover = hotspot.is_hover or math.point_is_inside_2d_box(cursor_position, position, size)
+			else
+				is_hover = not content.using_custom_gamepad_navigation and (content.enable_gamepad_scrolling or hotspot.is_selected or hotspot.is_focused or content.focused or content.selected)
+			end
+
+			local scroll_axis = input_service:get("scroll_axis")
+			local scroll_multiplier = math.abs(scroll_axis[axis]) * 0.8
+			local scroll_amount = (content.scroll_amount or 0.1) * scroll_multiplier
+
+			if scroll_axis[axis] ~= 0 and is_hover then
+				local current_scroll_direction = scroll_axis[axis] > 0 and -1 or 1
+				local previous_scroll_add = content.scroll_add or 0
+
+				if content.current_scroll_direction and content.current_scroll_direction ~= current_scroll_direction then
+					previous_scroll_add = 0
+				end
+
+				content.current_scroll_direction = current_scroll_direction
+				content.scroll_add = previous_scroll_add + scroll_amount
+			end
+
+			local scroll_add = content.scroll_add
+
+			if scroll_add then
+				local speed = content.scroll_speed or 10
+				local step = scroll_add * (dt * speed)
+
+				if math.abs(scroll_add) > scroll_amount / 500 then
+					content.scroll_add = math.max(scroll_add - step * 1.5, 0)
+				else
+					content.scroll_add = nil
+				end
+
+				local current_scroll_direction = content.current_scroll_direction or 0
+				local current_scroll_value = content.scroll_value or content.value or 0
+
+				content.scroll_value = math.clamp(current_scroll_value + step * current_scroll_direction, 0, 1)
+				content.value = content.scroll_value
+			end
+		end
+	},
+	{
+		pass_type = "logic",
+		value = function (pass, renderer, style, content, position, size)
+			local scroll_length = content.scroll_length or 0
+
+			if scroll_length <= 0 then
+				return
+			end
+
+			local axis = content.axis or 2
+			local scrollbar_length = size[axis]
+			local style_parent = style.parent
+			local hotspot_style = style_parent.hotspot
+			local thumb_length = hotspot_style.size[axis]
+			local hotspot_offset = hotspot_style.offset
+			local end_position = scrollbar_length - thumb_length
+			local value = content.value or 0
+			local current_position = end_position * value
+
+			hotspot_offset[2] = current_position
+		end
+	}
 }
+
 ScrollbarPassTemplates.simple_scrollbar = table.clone(scrollbar_base)
 
 table.append(ScrollbarPassTemplates.simple_scrollbar, {
@@ -224,11 +235,13 @@ table.append(ScrollbarPassTemplates.simple_scrollbar, {
 		visibility_function = scrollbar_visibility_function,
 		change_function = function (content, style)
 			style.color[1] = 100 + content.hotspot.anim_hover_progress * 155
+
 			local axis = content.axis or 2
 			local parent_style = style.parent
 			local hotspot_style = parent_style.hotspot
 			local axis_offset = hotspot_style.offset[axis]
 			local axis_length = hotspot_style.size[axis]
+
 			style.size[axis] = axis_length
 			style.offset[axis] = axis_offset
 		end
@@ -285,8 +298,10 @@ table.append(ScrollbarPassTemplates.default_scrollbar, {
 			local hotspot_style = parent_style.hotspot
 			local axis_offset = hotspot_style.offset[axis]
 			local axis_length = hotspot_style.size[axis]
+
 			style.size[axis] = axis_length
 			style.offset[axis] = axis_offset
+
 			local hover_progress = content.hotspot.anim_hover_progress
 
 			ColorUtilities.color_lerp(style.idle_color, style.highlight_color, hover_progress, style.color, true)
@@ -326,6 +341,7 @@ table.append(ScrollbarPassTemplates.metal_scrollbar, {
 			local hotspot_style = parent_style.hotspot
 			local axis_offset = hotspot_style.offset[axis]
 			local axis_length = hotspot_style.size[axis]
+
 			style.size[axis] = axis_length
 			style.offset[axis] = axis_offset
 		end
@@ -352,9 +368,12 @@ table.append(ScrollbarPassTemplates.metal_scrollbar, {
 			local hotspot_style = parent_style.hotspot
 			local axis_offset = hotspot_style.offset[axis]
 			local axis_length = hotspot_style.size[axis]
+
 			style.size[axis] = axis_length
 			style.offset[axis] = axis_offset
+
 			local hover_progress = content.hotspot.anim_hover_progress
+
 			style.color[1] = 255 * hover_progress
 		end
 	}
@@ -411,8 +430,10 @@ table.append(ScrollbarPassTemplates.terminal_scrollbar, {
 			local hotspot_style = parent_style.hotspot
 			local axis_offset = hotspot_style.offset[axis]
 			local axis_length = hotspot_style.size[axis]
+
 			style.size[axis] = axis_length
 			style.offset[axis] = axis_offset
+
 			local hover_progress = content.hotspot.anim_hover_progress
 
 			ColorUtilities.color_lerp(style.idle_color, style.highlight_color, hover_progress, style.color, true)

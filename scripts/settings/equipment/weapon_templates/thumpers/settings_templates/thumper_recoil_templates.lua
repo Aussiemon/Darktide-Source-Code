@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/equipment/weapon_templates/thumpers/settings_templates/thumper_recoil_templates.lua
+
 local recoil_templates = {}
 local overrides = {}
 

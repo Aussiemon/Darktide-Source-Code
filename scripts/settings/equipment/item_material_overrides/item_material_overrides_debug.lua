@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/equipment/item_material_overrides/item_material_overrides_debug.lua
+
 local material_overrides = {
 	wear_sand_01 = {
 		property_overrides = {

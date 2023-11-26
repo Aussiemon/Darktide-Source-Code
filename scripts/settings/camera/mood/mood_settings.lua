@@ -1,7 +1,10 @@
+﻿-- chunkname: @scripts/settings/camera/mood/mood_settings.lua
+
 local WarpCharge = require("scripts/utilities/warp_charge")
 local mood_settings = {}
 local types = table.enum("corruption_taken", "corruption", "corruptor_proximity", "critical_health", "damage_taken", "knocked_down", "last_wound", "no_toughness", "sprinting_overtime", "sprinting", "suppression_high", "suppression_low", "suppression_ongoing", "toughness_absorbed_melee", "toughness_absorbed", "toughness_broken", "warped_critical", "warped_high_to_critical", "warped_low_to_high", "warped", "ogryn_combat_ability_charge", "ogryn_combat_ability_shout", "ogryn_combat_ability_stance", "psyker_combat_ability_shout", "psyker_force_field_sphere", "stealth", "veteran_stealth", "veteran_combat_ability_stance", "veteran_stealth_and_stance", "zealot_combat_ability_dash")
 local status = table.enum("active", "inactive", "removing")
+
 mood_settings.mood_types = types
 mood_settings.status = status
 mood_settings.priority = {
@@ -287,6 +290,7 @@ mood_settings.moods = {
 
 				if is_observing then
 					local observed_unit = camera_handler:camera_follow_unit()
+
 					player = Managers.state.player_unit_spawn:owner(observed_unit)
 				end
 
@@ -295,6 +299,7 @@ mood_settings.moods = {
 
 				if unit_data_extension then
 					local warp_charge_component = unit_data_extension:read_component("warp_charge")
+
 					psyker_overload = warp_charge_component.current_percentage
 				end
 
@@ -319,6 +324,7 @@ mood_settings.moods = {
 
 				if is_observing then
 					local observed_unit = camera_handler:camera_follow_unit()
+
 					player = Managers.state.player_unit_spawn:owner(observed_unit)
 				end
 
@@ -343,6 +349,7 @@ mood_settings.moods = {
 					World.set_particles_material_scalar(world, particle_id, "warp", "chaos_blend", current_value)
 
 					previous_values.chaos_blend = current_value
+
 					local options_peril_slider = Application.user_setting("interface_settings", "psyker_overload_intensity") or 100
 
 					World.set_particles_material_scalar(world, particle_id, "warp", "options_peril_slider_vfx", options_peril_slider / 100)
@@ -379,6 +386,7 @@ mood_settings.moods = {
 		}
 	}
 }
+
 local num_moods = 0
 
 for name, settings in pairs(mood_settings.moods) do

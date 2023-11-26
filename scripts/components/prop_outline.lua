@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/components/prop_outline.lua
+
 local PropOutline = component("PropOutline")
 
 PropOutline.init = function (self, unit)

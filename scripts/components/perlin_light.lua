@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/components/perlin_light.lua
+
 local PerlinLight = component("PerlinLight")
 
 PerlinLight.init = function (self, unit)

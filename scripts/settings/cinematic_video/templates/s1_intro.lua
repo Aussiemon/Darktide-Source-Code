@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/cinematic_video/templates/s1_intro.lua
+
 local cinematic_video_template = {
 	s1_intro = {
 		loop_video = false,

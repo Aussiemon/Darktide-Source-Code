@@ -1,8 +1,11 @@
+﻿-- chunkname: @scripts/managers/decal/decal_manager.lua
+
 local DecalSettings = require("scripts/settings/decal/decal_settings")
 local DecalManager = class("DecalManager")
 
 DecalManager.init = function (self, world)
 	self._decal_system = EngineOptimizedManagers.decal_manager_init(nil, world)
+
 	local lifetime = Application.user_setting("performance_settings", "decal_lifetime") or GameParameters.default_decal_lifetime
 	local impact_pool_size = Application.user_setting("performance_settings", "max_impact_decals") or GameParameters.default_max_impact_decals
 	local blood_pool_size = Application.user_setting("performance_settings", "max_blood_decals") or GameParameters.default_max_blood_decals
@@ -19,7 +22,7 @@ DecalManager.init_settings = function (self, lifetime, impact_pool_size, blood_p
 	local decal_system = self._decal_system
 
 	for pool_name, setting in pairs(DecalSettings) do
-		local pool_size = nil
+		local pool_size
 
 		if pool_name == "impact" then
 			pool_size = impact_pool_size
@@ -57,6 +60,7 @@ end
 DecalManager.register_decal_unit_ids = function (self, unit_ids)
 	for i = 1, #unit_ids do
 		local unit_id = unit_ids[i]
+
 		self._decal_unit_id_reference_counts[unit_id] = (self._decal_unit_id_reference_counts[unit_id] or 0) + 1
 	end
 end

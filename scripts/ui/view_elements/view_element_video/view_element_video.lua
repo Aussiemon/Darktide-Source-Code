@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/view_elements/view_element_video/view_element_video.lua
+
 local Definitions = require("scripts/ui/view_elements/view_element_video/view_element_video_definitions")
 local UIRenderer = require("scripts/managers/ui/ui_renderer")
 local UIWidget = require("scripts/managers/ui/ui_widget")
@@ -7,6 +9,7 @@ ViewElementVideo.init = function (self, parent, draw_layer, start_scale)
 	ViewElementVideo.super.init(self, parent, draw_layer, start_scale, Definitions)
 
 	local class_name = self.__class_name
+
 	self._video_player_reference = class_name .. "_" .. string.gsub(tostring(self), "table: ", "")
 end
 
@@ -40,13 +43,17 @@ ViewElementVideo.draw = function (self, dt, t, _, render_settings, input_service
 	end
 
 	local previous_alpha_multiplier = render_settings.alpha_multiplier
+
 	render_settings.alpha_multiplier = self._alpha_multiplier or 0
 
 	ViewElementVideo.super.draw(self, dt, t, video_ui_renderer, render_settings, input_service)
 
 	render_settings.alpha_multiplier = previous_alpha_multiplier
+
 	local previous_layer = render_settings.start_layer
+
 	render_settings.start_layer = (previous_layer or 0) + self._draw_layer
+
 	local ui_scenegraph = self._ui_scenegraph
 
 	UIRenderer.begin_pass(video_ui_renderer, ui_scenegraph, input_service, dt, render_settings)
@@ -59,6 +66,7 @@ end
 ViewElementVideo._destroy_current_video = function (self)
 	self._playing = false
 	self._video_completed = nil
+
 	local widget = self._widgets_by_name.video
 	local widget_content = widget.content
 	local video_player_reference = widget_content.video_player_reference
@@ -78,12 +86,14 @@ ViewElementVideo.setup_video = function (self, video_name, loop_video, video_ui_
 	self:_destroy_current_video()
 
 	self._video_ui_renderer = video_ui_renderer
+
 	local video_player_reference = self._video_player_reference
 
 	UIRenderer.create_video_player(self._video_ui_renderer, video_player_reference, nil, video_name, loop_video)
 
 	local widget = self._widgets_by_name.video
 	local widget_content = widget.content
+
 	widget_content.video_path = video_name
 	widget_content.video_player_reference = video_player_reference
 	self._video_speed = self._video_speed or 1
@@ -93,6 +103,7 @@ end
 
 ViewElementVideo.set_playback_speed = function (self, speed)
 	local video_player = self:_video_player()
+
 	self._video_speed = speed or 1
 
 	if self._playing then

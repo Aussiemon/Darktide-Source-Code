@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/options/controller_settings.lua
+
 local OptionsUtilities = require("scripts/utilities/ui/options")
 local SaveData = require("scripts/managers/save/save_data")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
@@ -6,16 +8,17 @@ local SettingsUtilitiesFunction = require("scripts/settings/options/settings_uti
 local SettingsUtilities = {}
 
 local function construct_interface_settings_boolean(template)
-	local entry = {
-		default_value = template.default_value,
-		display_name = template.display_name,
-		on_value_changed = template.on_value_changed,
-		indentation_level = template.indentation_level,
-		validation_function = template.validation_function,
-		tooltip_text = template.tooltip_text,
-		disable_rules = template.disable_rules,
-		id = template.id
-	}
+	local entry = {}
+
+	entry.default_value = template.default_value
+	entry.display_name = template.display_name
+	entry.on_value_changed = template.on_value_changed
+	entry.indentation_level = template.indentation_level
+	entry.validation_function = template.validation_function
+	entry.tooltip_text = template.tooltip_text
+	entry.disable_rules = template.disable_rules
+	entry.id = template.id
+
 	local id = template.id
 	local save_location = template.save_location
 	local default_value = template.default_value
@@ -66,6 +69,7 @@ local function construct_interface_settings_percent_slider(template)
 
 	local function explode_value(percent_value)
 		local exploded_value = min_value + percent_value * convertion_value
+
 		exploded_value = math.round(exploded_value / step_size) * step_size
 
 		return exploded_value
@@ -183,6 +187,7 @@ local function construct_interface_settings_dropdown(template)
 
 	for i = 1, #template.options do
 		local value = template.options[i]
+
 		options[#options + 1] = {
 			id = value.name,
 			value = value.name,
@@ -261,12 +266,12 @@ local function _response_curve_options()
 	return options
 end
 
-local settings_definitions = {
-	[#settings_definitions + 1] = {
-		group_name = "controller_settings",
-		display_name = "loc_settings_menu_group_controller_settings",
-		widget_type = "group_header"
-	}
+local settings_definitions = {}
+
+settings_definitions[#settings_definitions + 1] = {
+	group_name = "controller_settings",
+	display_name = "loc_settings_menu_group_controller_settings",
+	widget_type = "group_header"
 }
 
 function get_gamepad_input_layout_names(layouts)
@@ -289,6 +294,7 @@ end
 
 local gamepad_input_layouts = require("scripts/settings/input/gamepad_input_layouts")
 local gamepad_layout_names = get_gamepad_input_layout_names(gamepad_input_layouts)
+
 settings_definitions[#settings_definitions + 1] = {
 	save_location = "input_settings",
 	display_name = "loc_setting_controller_layout",
@@ -315,7 +321,7 @@ settings_definitions[#settings_definitions + 1] = {
 
 				for alias_name, new_values in pairs(aliases) do
 					if alias:bindable(alias_name) then
-						local key_info = nil
+						local key_info
 
 						if new_values ~= StrictNil then
 							key_info = alias:get_keys_for_alias_row(new_values, alias_array_index, devices)
@@ -558,6 +564,7 @@ settings_definitions[#settings_definitions + 1] = {
 	min_value = 0.1,
 	widget_type = "value_slider"
 }
+
 local template_functions = {
 	boolean = construct_interface_settings_boolean,
 	value_slider = construct_interface_settings_value_slider,

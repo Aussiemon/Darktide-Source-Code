@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/behavior/utility_considerations/chaos_ogryn_executor_utility_considerations.lua
+
 local considerations = {
 	chaos_ogryn_executor_moving_melee_attack = {
 		distance_to_slot = {

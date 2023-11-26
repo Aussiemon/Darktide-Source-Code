@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/cinematic_video/templates/hli_contracts.lua
+
 local cinematic_video_template = {
 	hli_contracts = {
 		loop_video = false,

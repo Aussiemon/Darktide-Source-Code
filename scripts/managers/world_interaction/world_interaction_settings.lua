@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/world_interaction/world_interaction_settings.lua
+
 local WorldInteractionSettings = {
 	foliage = {
 		local_player_multiplier = 2,

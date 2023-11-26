@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/mutator/templates/mutator_positive_templates.lua
+
 local mutator_templates = {
 	mutator_enchanced_grenade_ability = {
 		class = "scripts/managers/mutator/mutators/mutator_positive",

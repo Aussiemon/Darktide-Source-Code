@@ -1,9 +1,12 @@
+﻿-- chunkname: @scripts/managers/narrative/narrative_manager.lua
+
 local BackendError = require("scripts/managers/error/errors/backend_error")
 local Promise = require("scripts/foundation/utilities/promise")
 local Settings = require("scripts/settings/narrative/narrative_stories")
 local Stories = Settings.stories
 local Events = Settings.events
 local NarrativeManager = class("NarrativeManager")
+
 NarrativeManager.STORIES = table.enum(unpack(table.keys(Stories)))
 NarrativeManager.EVENTS = table.enum(unpack(table.keys(Events)))
 
@@ -61,6 +64,7 @@ local function _setup_backend_narrative_data(backend_data)
 
 	for event_name, _ in pairs(Events) do
 		local completed_on_backend = backend_events and (backend_events[event_name] == "true" or backend_events[event_name] == true)
+
 		data.events[event_name] = not not completed_on_backend
 
 		Log.debug("NarrativeManager", "Initiating event %s to %s", event_name, data.events[event_name])
@@ -166,6 +170,7 @@ NarrativeManager.complete_current_chapter = function (self, story_name, optional
 
 	local profile = _player_profile()
 	local character_id = profile.character_id
+
 	self._character_narrative_data[character_id].stories[story_name] = chapter.index
 
 	if chapter.on_complete then
@@ -198,6 +203,7 @@ NarrativeManager.complete_chapter_by_name = function (self, story_name, chapter_
 	end
 
 	local character_id = profile.character_id
+
 	self._character_narrative_data[character_id].stories[story_name] = chapter_index
 
 	if chapter.on_complete then
@@ -239,6 +245,7 @@ NarrativeManager.skip_story = function (self, story_name)
 	local profile = _player_profile()
 	local character_id = profile.character_id
 	local last_chapter = chapters[#chapters]
+
 	self._character_narrative_data[character_id].stories[story_name] = last_chapter.index
 
 	Managers.backend.interfaces.characters:set_narrative_story_chapter(character_id, story_name, last_chapter.backend_id):catch(function (err)
@@ -353,6 +360,7 @@ NarrativeManager.complete_event = function (self, event_name)
 
 	local profile = _player_profile()
 	local character_id = profile.character_id
+
 	self._character_narrative_data[character_id].events[event_name] = true
 
 	Managers.backend.interfaces.characters:set_narrative_event_completed(character_id, event_name):catch(function (err)

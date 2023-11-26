@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/crafting_replace_trait_view/crafting_replace_trait_view_declaration_settings.lua
+
 local view_settings = {
 	display_name = "loc_crafting_view_display_name",
 	state_bound = true,

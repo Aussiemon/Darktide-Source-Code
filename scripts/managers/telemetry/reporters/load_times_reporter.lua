@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/telemetry/reporters/load_times_reporter.lua
+
 local ReporterInterface = require("scripts/managers/telemetry/reporters/reporter_interface")
 local LoadTimesReporter = class("LoadTimesReporter")
 

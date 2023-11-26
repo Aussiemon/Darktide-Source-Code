@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/data_service/services/invites/invites_xbox_live.lua
+
 local InvitesXboxLive = class("InviteInvitesXboxLivesSteam")
 
 local function _error_report(error)
@@ -14,6 +16,7 @@ InvitesXboxLive.update = function (self)
 
 	for i = 1, #invites do
 		local invite = invites[i]
+
 		self._invites[#self._invites + 1] = invite
 		self._has_invite = true
 	end
@@ -27,6 +30,7 @@ InvitesXboxLive.get_invite = function (self)
 	if self._has_invite then
 		local invite = table.remove(self._invites)
 		local address = invite.connection_string
+
 		self._has_invite = #self._invites > 0
 
 		return address

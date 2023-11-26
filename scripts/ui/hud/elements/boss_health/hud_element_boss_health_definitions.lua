@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/hud/elements/boss_health/hud_element_boss_health_definitions.lua
+
 local HudElementBossHealthSettings = require("scripts/ui/hud/elements/boss_health/hud_element_boss_health_settings")
 local HudElementBossToughnessSettings = require("scripts/ui/hud/elements/boss_health/hud_element_boss_toughness_settings")
 local HudElementBossNameSettings = require("scripts/ui/hud/elements/boss_health/hud_element_boss_name_settings")
@@ -7,8 +9,7 @@ local UIWorkspaceSettings = require("scripts/settings/ui/ui_workspace_settings")
 local small_bar_spacing = 30
 local health_bar_size = HudElementBossHealthSettings.size
 local health_bar_size_small = HudElementBossHealthSettings.size_small
-local _ = health_bar_size[1]
-local health_bar_size_y = health_bar_size[2]
+local _, health_bar_size_y = health_bar_size[1], health_bar_size[2]
 local health_bar_position = {
 	0,
 	HudElementBossHealthSettings.edge_offset,
@@ -28,11 +29,13 @@ local name_text_position = {
 	0
 }
 local name_text_style = table.clone(HudElementBossNameSettings.style)
+
 name_text_style.offset = {
 	0,
 	15,
 	2
 }
+
 local scenegraph_definition = {
 	screen = UIWorkspaceSettings.screen,
 	background = {

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/buff/player_archetype_specialization/psyker_buff_templates_new.lua
+
 local Action = require("scripts/utilities/weapon/action")
 local AilmentSettings = require("scripts/settings/ailments/ailment_settings")
 local Attack = require("scripts/utilities/attack/attack")
@@ -35,7 +37,7 @@ local special_rules = SpecialRulesSetting.special_rules
 local stat_buffs = BuffSettings.stat_buffs
 local talent_settings_2 = TalentSettings.psyker_2
 local talent_settings_3 = TalentSettings.psyker_3
-local _psyker_passive_start, _psyker_passive_stop, _psyker_passive_conditional_stat_buffs, _psyker_passive_lerp_t, _psyker_passive_proc_on_hit, _psyker_passive_proc_on_combat_ability, _add_soul_function, _start_soul_function, _update_soul_function, _souls_stop_function, _souls_conditional_exit_function, _souls_proc_func, _psyker_marked_enemies_select_unit = nil
+local _psyker_passive_start, _psyker_passive_stop, _psyker_passive_conditional_stat_buffs, _psyker_passive_lerp_t, _psyker_passive_proc_on_hit, _psyker_passive_proc_on_combat_ability, _add_soul_function, _start_soul_function, _update_soul_function, _souls_stop_function, _souls_conditional_exit_function, _souls_proc_func, _psyker_marked_enemies_select_unit
 local templates = {}
 local base_max_souls = talent_settings_2.passive_1.base_max_souls
 local max_souls_talent = talent_settings_2.offensive_2_1.max_souls_talent
@@ -49,6 +51,7 @@ function _psyker_passive_start(template_data, template_context)
 	local fx_extension = ScriptUnit.extension(unit, "fx_system")
 	local first_person_extension = ScriptUnit.extension(unit, "first_person_system")
 	local coherency_extension = ScriptUnit.extension(unit, "coherency_system")
+
 	template_data.action_module_targeting_component = unit_data_extension:read_component("action_module_targeting")
 	template_data.specialization_resource_component = unit_data_extension:write_component("specialization_resource")
 	template_data.warp_charge_component = unit_data_extension:read_component("warp_charge")
@@ -56,10 +59,14 @@ function _psyker_passive_start(template_data, template_context)
 	template_data.fx_extension = fx_extension
 	template_data.coherency_extension = coherency_extension
 	template_data.num_souls = 0
+
 	local first_person_unit = first_person_extension:first_person_unit()
+
 	template_data.first_person_unit = first_person_unit
+
 	local inventory_item_name = "content/items/weapons/player/grenade_krak"
 	local item_definitions = MasterItems.get_cached()
+
 	template_data.item = item_definitions[inventory_item_name]
 	template_data.psyker_all_kills_can_generate_souls = specialization_extension:has_special_rule(special_rules.psyker_all_kills_can_generate_souls)
 	template_data.psyker_increased_max_souls = specialization_extension:has_special_rule(special_rules.psyker_increased_max_souls)
@@ -67,6 +74,7 @@ function _psyker_passive_start(template_data, template_context)
 	template_data.psyker_restore_cooldown_per_soul = specialization_extension:has_special_rule(special_rules.psyker_restore_cooldown_per_soul)
 	template_data.psyker_toughness_regen_soul = specialization_extension:has_special_rule(special_rules.psyker_toughness_regen_soul)
 	template_data.buff_name = template_data.psyker_increased_max_souls and "psyker_souls_increased_max_stacks" or "psyker_souls"
+
 	local is_playing = fx_extension:is_looping_particles_playing("psyker_biomancer_soul")
 
 	if not is_playing then
@@ -79,6 +87,7 @@ function _psyker_passive_start(template_data, template_context)
 	end
 
 	local toughness_talent_soul_requirement = talent_settings_2.defensive_2.soul_threshold
+
 	template_data.toughness_talent_soul_requirement = toughness_talent_soul_requirement
 	template_data.max_souls_talent = max_souls_talent
 	template_data.max_souls = template_data.psyker_increased_max_souls and max_souls_talent or base_max_souls
@@ -154,14 +163,12 @@ templates.psyker_passive_souls_from_elite_kills = {
 function _add_soul_function(template_data, template_context, t, previous_stack_count)
 	local stacks = template_context.stack_count
 	local max_stacks = template_context.template.max_stacks
-	template_data.specialization_resource_component.current_resource = math.clamp(stacks, 0, max_stacks)
-	local soul_screenspace_effect = nil
 
-	if stacks == max_stacks then
-		soul_screenspace_effect = "content/fx/particles/screenspace/screen_biomancer_maxsouls"
-	else
-		soul_screenspace_effect = "content/fx/particles/screenspace/screen_biomancer_souls"
-	end
+	template_data.specialization_resource_component.current_resource = math.clamp(stacks, 0, max_stacks)
+
+	local soul_screenspace_effect
+
+	soul_screenspace_effect = stacks == max_stacks and "content/fx/particles/screenspace/screen_biomancer_maxsouls" or "content/fx/particles/screenspace/screen_biomancer_souls"
 
 	template_data.fx_extension:spawn_exclusive_particle(soul_screenspace_effect, Vector3(0, 0, 1))
 
@@ -187,6 +194,7 @@ function _start_soul_function(template_data, template_context)
 	local fx_extension = ScriptUnit.extension(unit, "fx_system")
 	local specialization_resource_component = unit_data_extension:write_component("specialization_resource")
 	local specialization_extension = ScriptUnit.extension(unit, "specialization_system")
+
 	template_data.psyker_warpfire_on_max_souls = specialization_extension:has_special_rule(special_rules.psyker_warpfire_on_max_souls)
 	template_data.psyker_toughness_on_soul = specialization_extension:has_special_rule(special_rules.psyker_toughness_on_soul)
 	template_data.psyker_restore_cooldown_per_soul = specialization_extension:has_special_rule(special_rules.psyker_restore_cooldown_per_soul)
@@ -197,11 +205,14 @@ function _start_soul_function(template_data, template_context)
 	if template_context.is_server then
 		local broadphase_system = Managers.state.extension:system("broadphase_system")
 		local broadphase = broadphase_system.broadphase
+
 		template_data.broadphase = broadphase
 		template_data.broadphase_results = {}
+
 		local side_system = Managers.state.extension:system("side_system")
 		local side = side_system.side_by_unit[unit]
 		local enemy_side_names = side:relation_side_names("enemy")
+
 		template_data.enemy_side_names = enemy_side_names
 	end
 
@@ -217,21 +228,26 @@ function _update_soul_function(template_data, template_context, dt, t)
 	local max_stacks = template_context.template.max_stacks
 	local is_on_max = max_stacks <= stacks
 	local time_at_max = template_data.time_at_max or 0
+
 	time_at_max = is_on_max and time_at_max + dt or 0
 	template_data.time_at_max = time_at_max
+
 	local report_time = is_on_max and template_data.report_time or 0
+
 	report_time = report_time + (is_on_max and dt or 0)
 
-	if REPORT_INTERVALL < report_time then
+	if report_time > REPORT_INTERVALL then
 		Managers.stats:record_private("hook_psyker_time_at_max_souls", template_context.player, time_at_max)
 	end
 
 	template_data.report_time = report_time % REPORT_INTERVALL
+
 	local stacks = template_context.stack_count
 	local current_stacks = template_data.specialization_resource_component.current_resource
 
 	if current_stacks ~= stacks then
 		local max_stacks = template_context.template.max_stacks
+
 		template_data.specialization_resource_component.current_resource = math.clamp(stacks, 0, max_stacks)
 
 		if stacks < current_stacks then
@@ -272,6 +288,7 @@ end
 local souls_proc_events = {
 	[proc_events.on_combat_ability] = 1
 }
+
 templates.psyker_souls = {
 	predicted = false,
 	hud_priority = 1,
@@ -322,6 +339,7 @@ templates.psyker_shout_applies_warpfire = {
 		local unit = template_context.unit
 		local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
 		local warp_charge_component = unit_data_extension:write_component("warp_charge")
+
 		template_data.warp_charge_component = warp_charge_component
 	end,
 	specific_proc_func = {
@@ -331,6 +349,7 @@ templates.psyker_shout_applies_warpfire = {
 			local max_stacks = template.warpfire_max_stacks
 			local num_stacks = math.ceil(percent * max_stacks)
 			local num_warpfire_stacks = math.clamp(num_stacks, 1, max_stacks)
+
 			template_data.stacks = num_warpfire_stacks
 		end,
 		on_hit = function (params, template_data, template_context)
@@ -436,6 +455,7 @@ templates.psyker_chance_to_vent_on_kill = {
 		local unit = template_context.unit
 		local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
 		local warp_charge_component = unit_data_extension:write_component("warp_charge")
+
 		template_data.warp_charge_component = warp_charge_component
 		template_data.counter = 0
 	end,
@@ -492,7 +512,9 @@ templates.psyker_weakspot_kills_can_refund_knife = {
 		end
 	end
 }
+
 local external_properties = {}
+
 templates.psyker_knife_replenishment = {
 	predicted = false,
 	hud_priority = 4,
@@ -501,6 +523,7 @@ templates.psyker_knife_replenishment = {
 	class_name = "buff",
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
+
 		template_data.ability_extension = ScriptUnit.has_extension(unit, "ability_system")
 		template_data.fx_extension = ScriptUnit.extension(unit, "fx_system")
 		template_data.first_person_extension = ScriptUnit.extension(unit, "first_person_system")
@@ -537,10 +560,12 @@ templates.psyker_knife_replenishment = {
 		end
 
 		template_data.missing_charges = missing_charges
+
 		local next_knife_t = template_data.next_knife_t
 
 		if not next_knife_t then
 			local cooldown = ability_extension:max_ability_cooldown("grenade_ability")
+
 			template_data.next_knife_t = t + cooldown
 			template_data.cooldown = cooldown
 
@@ -549,6 +574,7 @@ templates.psyker_knife_replenishment = {
 
 		if next_knife_t < t then
 			template_data.next_knife_t = nil
+
 			local first_person_extension = template_data.first_person_extension
 
 			if first_person_extension and first_person_extension:is_in_first_person_mode() and missing_charges == 1 then
@@ -577,6 +603,7 @@ templates.psyker_knife_replenishment = {
 		return 1 - percentage_left
 	end
 }
+
 local marked_targets = {}
 
 function _psyker_marked_enemies_select_unit(template_data, template_context, last_unit_pos, t)
@@ -592,7 +619,7 @@ function _psyker_marked_enemies_select_unit(template_data, template_context, las
 	local direction = Vector3.normalize(Vector3.flat(Quaternion.forward(rotation)))
 	local position = POSITION_LOOKUP[unit]
 	local distance = template_data.distance
-	local num_results = broadphase:query(position, distance, broadphase_results, enemy_side_names)
+	local num_results = broadphase.query(broadphase, position, distance, broadphase_results, enemy_side_names)
 
 	for i = 1, num_results do
 		local enemy_unit = broadphase_results[i]
@@ -613,6 +640,7 @@ function _psyker_marked_enemies_select_unit(template_data, template_context, las
 
 					if has_line_of_sight then
 						local distance_to_unit = Vector3.distance_squared(last_unit_pos or unit_pos, position)
+
 						marked_targets[enemy_unit] = distance_to_unit
 					end
 				end
@@ -620,7 +648,7 @@ function _psyker_marked_enemies_select_unit(template_data, template_context, las
 		end
 	end
 
-	local chosen_unit = nil
+	local chosen_unit
 
 	if last_unit_pos then
 		local chosen_distance = math.huge
@@ -657,6 +685,7 @@ function _psyker_marked_enemies_select_unit(template_data, template_context, las
 		local outline_name = "psyker_marked_target"
 		local outline_id = NetworkLookup.outline_types[outline_name]
 		local channel_id = template_context.player:channel_id()
+
 		template_data.last_los = t
 
 		if channel_id and unit_id then
@@ -713,24 +742,32 @@ templates.psyker_marked_enemies_passive = {
 		local broadphase_system = Managers.state.extension:system("broadphase_system")
 		local broadphase = broadphase_system.broadphase
 		local template = template_context.template
+
 		template_data.broadphase = broadphase
 		template_data.broadphase_results = {}
+
 		local unit = template_context.unit
 		local side_system = Managers.state.extension:system("side_system")
 		local side = side_system.side_by_unit[unit]
 		local enemy_side_names = side:relation_side_names("enemy")
+
 		template_data.enemy_side_names = enemy_side_names
 		template_data.current_target = nil
 		template_data.secondary_target = nil
 		template_data.visual_loadout_extension = ScriptUnit.extension(unit, "visual_loadout_system")
+
 		local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
+
 		template_data.first_person_component = unit_data_extension:read_component("first_person")
+
 		local buff_extension = ScriptUnit.extension(unit, "buff_system")
+
 		template_data.buff_extension = buff_extension
 		template_data.last_seen = 0
 		template_data.last_los = 0
 		template_data.last_encountered = 0
 		template_data.last_seen_check = 0
+
 		local specialization_extension = ScriptUnit.extension(unit, "specialization_system")
 		local increased_stacks = specialization_extension:has_special_rule(special_rules.psyker_mark_increased_max_stacks)
 		local increased_duration = specialization_extension:has_special_rule(special_rules.psyker_mark_increased_duration)
@@ -802,7 +839,7 @@ templates.psyker_marked_enemies_passive = {
 			template_data.procced = false
 		end
 
-		if template_data.attacked_unit and template_data.attacked_unit_t < t then
+		if template_data.attacked_unit and t > template_data.attacked_unit_t then
 			template_data.attacked_unit = nil
 		end
 	end,
@@ -852,6 +889,7 @@ templates.psyker_marked_enemies_passive = {
 				template_data.attacked_unit = victim_unit
 				template_data.attacked_unit_t = t + 1
 				template_data.last_seen_check = t
+
 				local current_stacks = template_context.buff_extension:current_stacks(template_data.mark_bonus_buff)
 
 				if current_stacks > 0 and victim_unit == current_target then
@@ -905,7 +943,9 @@ templates.psyker_marked_enemies_passive_bonus = {
 		[keywords.count_as_dodge_vs_ranged] = true
 	}
 }
+
 local overcharge_max_stacks = TalentSettings.overcharge_stance.max_stacks
+
 templates.psyker_overcharge_stance = {
 	early_out_percentage = 1,
 	predicted = false,
@@ -952,11 +992,15 @@ templates.psyker_overcharge_stance = {
 		template_data.on_hit_charge_template = WeaponChargeTemplates.psyker_overcharge_stance_hit
 		template_data.on_kill_charge_template = WeaponChargeTemplates.psyker_overcharge_stance_kill
 		template_data.passive_charge_template = WeaponChargeTemplates.psyker_overcharge_stance_passive
+
 		local unit = template_context.unit
 		local specialization_extension = ScriptUnit.extension(unit, "specialization_system")
 		local weakspot_stacks = specialization_extension:has_special_rule(special_rules.psyker_overchage_stance_weakspot_kills)
+
 		template_data.weakspot_stacks = weakspot_stacks
+
 		local unit_data_extension = ScriptUnit.extension(template_context.unit, "unit_data_system")
+
 		template_data.warp_charge_component = unit_data_extension:write_component("warp_charge")
 		template_data.start_t = FixedFrame.get_latest_fixed_time()
 		template_data.negative_value = 0
@@ -1006,13 +1050,9 @@ templates.psyker_overcharge_stance = {
 		template_context.buff_extension:add_internally_controlled_buff("psyker_overcharge_stance_cool_off", t)
 
 		local stacks = math.min(overcharge_max_stacks, template_data.stacks + template_data.bonus_stacks)
-		local buff_name = nil
+		local buff_name
 
-		if template_data.weakspot_stacks then
-			buff_name = "psyker_overcharge_stance_finesse_damage"
-		else
-			buff_name = "psyker_overcharge_stance_damage"
-		end
+		buff_name = template_data.weakspot_stacks and "psyker_overcharge_stance_finesse_damage" or "psyker_overcharge_stance_damage"
 
 		template_context.buff_extension:add_internally_controlled_buff_with_stacks(buff_name, stacks, t)
 	end,
@@ -1067,6 +1107,7 @@ templates.psyker_overcharge_reduced_warp_charge = {
 	},
 	start_func = function (template_data, template_context)
 		local buff_extension = ScriptUnit.extension(template_context.unit, "buff_system")
+
 		template_data.buff_extension = buff_extension
 	end,
 	update_func = function (template_data, template_context)
@@ -1084,6 +1125,7 @@ templates.psyker_overcharge_reduced_toughness_damage_taken = {
 	},
 	start_func = function (template_data, template_context)
 		local buff_extension = ScriptUnit.extension(template_context.unit, "buff_system")
+
 		template_data.buff_extension = buff_extension
 	end,
 	update_func = function (template_data, template_context)
@@ -1101,6 +1143,7 @@ templates.psyker_overcharge_increased_movement_speed = {
 	},
 	start_func = function (template_data, template_context)
 		local buff_extension = ScriptUnit.extension(template_context.unit, "buff_system")
+
 		template_data.buff_extension = buff_extension
 	end,
 	update_func = function (template_data, template_context)
@@ -1177,7 +1220,9 @@ templates.psyker_aura_crit_chance_aura_improved = {
 		[stat_buffs.critical_strike_chance] = 0.06
 	}
 }
+
 local percent_toughness = talent_settings_2.toughness_1.percent_toughness
+
 templates.psyker_souls_replenish_toughness_stacking_buff = {
 	hud_priority = 3,
 	predicted = false,
@@ -1224,6 +1269,7 @@ templates.psyker_toughness_on_warp_generation = {
 
 		if percentage_change < 0 then
 			local toughness_percentage = talent_settings_2.toughness_4.multiplier
+
 			percentage_change = math.abs(percentage_change * toughness_percentage)
 
 			Toughness.replenish_percentage(template_context.unit, percentage_change, false, "toughness_on_warp_generation")
@@ -1259,6 +1305,7 @@ templates.psyker_warp_charge_increase_force_weapon_damage = {
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
 		local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
+
 		template_data.warp_charge_component = unit_data_extension:read_component("warp_charge")
 	end,
 	lerp_t_func = function (t, start_time, duration, template_data, template_context)
@@ -1280,6 +1327,7 @@ templates.psyker_reduced_warp_charge_cost_and_venting_speed = {
 		local unit = template_context.unit
 		local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
 		local specialization_resource_component = unit_data_extension:read_component("specialization_resource")
+
 		template_data.specialization_resource_component = specialization_resource_component
 	end,
 	lerp_t_func = function (t, start_time, duration, template_data, template_context)
@@ -1301,6 +1349,7 @@ templates.psyker_souls_increase_damage = {
 		local unit = template_context.unit
 		local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
 		local specialization_resource_component = unit_data_extension:read_component("specialization_resource")
+
 		template_data.specialization_resource_component = specialization_resource_component
 	end,
 	lerp_t_func = function (t, start_time, duration, template_data, template_context)
@@ -1319,12 +1368,15 @@ templates.psyker_elite_kills_add_warpfire = {
 	start_func = function (template_data, template_context)
 		local broadphase_system = Managers.state.extension:system("broadphase_system")
 		local broadphase = broadphase_system.broadphase
+
 		template_data.broadphase = broadphase
 		template_data.broadphase_results = {}
+
 		local unit = template_context.unit
 		local side_system = Managers.state.extension:system("side_system")
 		local side = side_system.side_by_unit[unit]
 		local enemy_side_names = side:relation_side_names("enemy")
+
 		template_data.enemy_side_names = enemy_side_names
 	end,
 	check_proc_func = function (params)
@@ -1357,7 +1409,7 @@ templates.psyker_elite_kills_add_warpfire = {
 		end
 
 		local distance = talent_settings_2.offensive_1_3.distance
-		local num_results = broadphase:query(position, distance, broadphase_results, enemy_side_names)
+		local num_results = broadphase.query(broadphase, position, distance, broadphase_results, enemy_side_names)
 		local has_extension = ScriptUnit.has_extension
 
 		if params.damage_type and params.damage_type == "warpfire" and not params.attack_type then
@@ -1388,6 +1440,7 @@ templates.psyker_aura_souls_on_kill = {
 		local unit = template_context.unit
 		local specialization_extension = ScriptUnit.extension(unit, "specialization_system")
 		local has_psyker_increased_max_souls = specialization_extension:has_special_rule(special_rules.psyker_increased_max_souls)
+
 		template_data.buff_name = has_psyker_increased_max_souls and "psyker_souls_increased_max_stacks" or "psyker_souls"
 		template_data.coherency_extension = ScriptUnit.extension(unit, "coherency_system")
 	end,
@@ -1404,7 +1457,7 @@ templates.psyker_aura_souls_on_kill = {
 
 		local proc_chance = talent_settings_2.coop_1.on_kill_proc_chance
 
-		if math.random() < proc_chance then
+		if proc_chance > math.random() then
 			local t = FixedFrame.get_latest_fixed_time()
 			local buff_extension = ScriptUnit.extension(template_context.unit, "buff_system")
 
@@ -1422,6 +1475,7 @@ templates.psyker_aura_cooldown_reduction_on_elite_kill = {
 	check_proc_func = CheckProcFunctions.on_elite_or_special_kill,
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
+
 		template_data.coherency_extension = ScriptUnit.has_extension(unit, "coherency_system")
 	end,
 	proc_func = function (params, template_data, template_context)
@@ -1501,6 +1555,7 @@ templates.psyker_block_costs_warp_charge = {
 		local unit = template_context.unit
 		local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
 		local warp_charge_component = unit_data_extension:read_component("warp_charge")
+
 		template_data.warp_charge_component = warp_charge_component
 	end,
 	visual_stack_count = function (template_data, template_context)
@@ -1536,6 +1591,7 @@ templates.psyker_warp_charge_reduces_toughness_damage_taken = {
 		local unit = template_context.unit
 		local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
 		local warp_charge_component = unit_data_extension:read_component("warp_charge")
+
 		template_data.warp_charge_component = warp_charge_component
 	end,
 	lerp_t_func = function (t, start_time, duration, template_data, template_context)
@@ -1555,6 +1611,7 @@ templates.psyker_venting_improvements = {
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
 		local unit_data_extension = unit and ScriptUnit.has_extension(unit, "unit_data_system")
+
 		template_data.weapon_action_component = unit_data_extension and unit_data_extension:read_component("weapon_action")
 	end,
 	check_active_func = function (template_data, template_context)
@@ -1579,6 +1636,7 @@ templates.psyker_smite_on_hit = {
 	},
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
+
 		template_data.next_allowed_t = 0
 		template_data.fx_extension = ScriptUnit.extension(unit, "fx_system")
 	end,
@@ -1623,7 +1681,7 @@ templates.psyker_smite_on_hit = {
 		local hit_world_position = hit_unit_pos
 		local attacked_unit_data_extension = ScriptUnit.has_extension(smite_target, "unit_data_system")
 		local target_breed = attacked_unit_data_extension and attacked_unit_data_extension:breed()
-		local hit_zone_name, hit_actor = nil
+		local hit_zone_name, hit_actor
 
 		if target_breed then
 			local hit_zone_weakspot_types = target_breed.hit_zone_weakspot_types
@@ -1631,11 +1689,14 @@ templates.psyker_smite_on_hit = {
 			local hit_zone = hit_zone_weakspot_types and (hit_zone_weakspot_types[preferred_hit_zone_name] and preferred_hit_zone_name or next(hit_zone_weakspot_types)) or hit_zone_names.center_mass
 			local actors = HitZone.get_actor_names(smite_target, hit_zone)
 			local hit_actor_name = actors and actors[1]
+
 			hit_zone_name = hit_zone
 
 			if hit_actor_name then
 				hit_actor = Unit.actor(smite_target, hit_actor_name)
+
 				local actor_node = Actor.node(hit_actor)
+
 				hit_world_position = Unit.world_position(smite_target, actor_node)
 			end
 		end
@@ -1692,6 +1753,7 @@ templates.psyker_smite_on_hit = {
 	end,
 	proc_func = function (params, template_data, template_context, t)
 		local attacked_unit = params.attacked_unit
+
 		template_data.smite_target = attacked_unit
 	end
 }
@@ -1705,6 +1767,7 @@ templates.psyker_soul_on_warpfire_kill = {
 		local unit = template_context.unit
 		local specialization_extension = ScriptUnit.has_extension(unit, "specialization_system")
 		local has_psyker_increased_max_souls = specialization_extension:has_special_rule(special_rules.psyker_increased_max_souls)
+
 		template_data.buff_name = has_psyker_increased_max_souls and "psyker_souls_increased_max_stacks" or "psyker_souls"
 		template_data.buff_extension = ScriptUnit.extension(unit, "buff_system")
 		template_data.psyker_increased_soul_generation = specialization_extension:has_special_rule(special_rules.psyker_increased_soul_generation)
@@ -1720,6 +1783,7 @@ templates.psyker_soul_on_warpfire_kill = {
 
 			if own_unit == attacking_unit then
 				local damage_type = params.damage_type
+
 				valid_target = damage_type == damage_types.warpfire
 			end
 		end
@@ -1766,6 +1830,7 @@ templates.psyker_increased_chain_lightning_size = {
 		[stat_buffs.chain_lightning_max_angle] = talent_settings_3.offensive_1.chain_lightning_max_angle
 	}
 }
+
 local empowered_chain_lightning_chance = talent_settings_3.passive_1.empowered_chain_lightning_chance
 local max_stack = talent_settings_3.passive_1.max_stacks
 local max_stack_talent = talent_settings_3.offensive_2.max_stacks_talent
@@ -1783,7 +1848,9 @@ end
 
 local function _on_empowered_ability_gained(template_data, template_context)
 	local max_stacks = template_data.increased_stacks and max_stack_talent or max_stack
+
 	template_data.charges = math.clamp(template_data.charges + 1, 0, max_stacks)
+
 	local buff_name = template_data.increased_stacks and "psyker_empowered_grenades_passive_visual_buff_increased" or "psyker_empowered_grenades_passive_visual_buff"
 	local t = FixedFrame.get_latest_fixed_time()
 
@@ -1804,13 +1871,16 @@ templates.psyker_empowered_grenades_passive = {
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
 		local specialization_extension = ScriptUnit.extension(unit, "specialization_system")
+
 		template_data.increased_stacks = specialization_extension:has_special_rule(special_rules.psyker_empowered_grenades_increased_max_stacks)
 		template_data.toughness_on_attack = specialization_extension:has_special_rule(special_rules.psyker_empowered_grenades_toughness_on_attack)
 		template_data.stack_on_elite_kills = specialization_extension:has_special_rule(special_rules.psyker_empowered_grenades_stack_on_elite_kills)
 		template_data.buff_extension = ScriptUnit.extension(unit, "buff_system")
 		template_data.coherency_extension = ScriptUnit.extension(unit, "coherency_system")
 		template_data.fx_extension = ScriptUnit.extension(unit, "fx_system")
+
 		local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
+
 		template_data.warp_charge_component = unit_data_extension:write_component("warp_charge")
 		template_data.charges = 0
 	end,
@@ -1937,9 +2007,13 @@ templates.psyker_empowered_grenades_passive_visual_buff = {
 		local unit = template_context.unit
 		local specialization_extension = ScriptUnit.extension(unit, "specialization_system")
 		local increased_stacks = specialization_extension:has_special_rule(special_rules.psyker_empowered_grenades_increased_max_stacks)
+
 		template_data.max_stacks = increased_stacks and max_stack_talent or max_stack
+
 		local fx_extension = ScriptUnit.extension(template_context.unit, "fx_system")
+
 		template_data.fx_extension = fx_extension
+
 		local screenspace_effect = "content/fx/particles/screenspace/screen_psyker_protectorate_passive_add_stack"
 
 		fx_extension:spawn_exclusive_particle(screenspace_effect, Vector3(0, 0, 1))
@@ -1981,7 +2055,7 @@ templates.psyker_empowered_grenades_passive_visual_buff = {
 		end
 	},
 	conditional_stack_exit_func = function (template_data, template_context)
-		if template_data.finish or template_data.max_stacks < template_context.stack_count then
+		if template_data.finish or template_context.stack_count > template_data.max_stacks then
 			template_data.finish = false
 
 			return true
@@ -2018,7 +2092,7 @@ templates.psyker_shield_stun_passive = {
 		local special_chance = talent_settings_3.offensive_3.special_proc_chance
 		local chance = talent_settings_3.offensive_3.proc_chance
 		local random = math.random()
-		local do_stun = (is_special or is_monster) and random <= special_chance or random <= chance
+		local do_stun = not (not is_special and not is_monster) and random <= special_chance or random <= chance
 
 		if do_stun then
 			local force_field_extension = ScriptUnit.extension(params.force_field_unit, "force_field_system")
@@ -2042,7 +2116,9 @@ templates.psyker_shield_stun_passive = {
 		end
 	end
 }
+
 local shield_toughness_ally = talent_settings_3.combat_ability.toughness_for_allies
+
 templates.psyker_boost_allies_in_sphere_buff = {
 	hud_icon = "content/ui/textures/icons/buffs/hud/psyker/psyker_3_tier_4_name_1",
 	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_ability",
@@ -2119,15 +2195,18 @@ templates.psyker_force_field_buff = {
 		on_screen_effect = "content/fx/particles/screenspace/screen_psyker_protectorate_shield_buff"
 	}
 }
+
 local distance = talent_settings_3.coop_3.distance
 local valid_distance_sq = distance * distance
 local toughness_percentage = talent_settings_3.coop_3.toughness_percentage
+
 templates.psyker_toughness_regen_at_shield = {
 	interval = 1,
 	predicted = false,
 	class_name = "interval_buff",
 	start_func = function (template_data, template_context)
 		local side_system = Managers.state.extension:system("side_system")
+
 		template_data.side = side_system.side_by_unit[template_context.unit]
 		template_data.force_field_system = Managers.state.extension:system("force_field_system")
 	end,
@@ -2200,7 +2279,7 @@ templates.psyker_stun_effect = {
 		if HEALTH_ALIVE[unit] then
 			local damage_template = DamageProfileTemplates.psyker_stun
 			local owner_unit = template_context.owner_unit
-			local attack_direction = nil
+			local attack_direction
 			local target_position = POSITION_LOOKUP[unit]
 			local owner_position = owner_unit and POSITION_LOOKUP[owner_unit]
 
@@ -2397,6 +2476,7 @@ templates.psyker_crits_regen_toughness_movement_speed = {
 	check_proc_func = CheckProcFunctions.on_crit,
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
+
 		template_data.buff_extension = ScriptUnit.extension(unit, "buff_system")
 	end,
 	proc_func = function (params, template_data, template_context)
@@ -2445,7 +2525,9 @@ templates.psyker_guaranteed_crit_on_multiple_weakspot_hits = {
 		template_context.buff_extension:add_internally_controlled_buff("psyker_guaranteed_ranged_shot_on_stacked", t)
 	end
 }
+
 local weakspot_crit_stacks = 5
+
 templates.psyker_guaranteed_ranged_shot_on_stacked = {
 	hud_icon = "content/ui/textures/icons/buffs/hud/psyker/psyker_1_tier_2_name_1",
 	predicted = false,
@@ -2461,7 +2543,7 @@ templates.psyker_guaranteed_ranged_shot_on_stacked = {
 		keywords.guaranteed_ranged_critical_strike
 	},
 	on_stack_added_func = function (template_data, template_context)
-		template_data.active = weakspot_crit_stacks <= template_context.stack_count
+		template_data.active = template_context.stack_count >= weakspot_crit_stacks
 	end,
 	proc_func = function (params, template_data, template_context)
 		local attack_type = params.attack_type
@@ -2486,6 +2568,7 @@ templates.psyker_aura_toughness_on_ally_knocked_down = {
 	},
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
+
 		template_data.coherency_extension = ScriptUnit.has_extension(unit, "coherency_system")
 	end,
 	proc_func = function (params, template_data, template_context)

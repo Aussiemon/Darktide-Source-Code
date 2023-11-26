@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/player_character_options_view/player_character_options_view_settings.lua
+
 local window_size = {
 	1400,
 	500

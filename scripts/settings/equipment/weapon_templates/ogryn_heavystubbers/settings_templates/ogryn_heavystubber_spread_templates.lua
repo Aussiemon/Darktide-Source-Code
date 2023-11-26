@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/equipment/weapon_templates/ogryn_heavystubbers/settings_templates/ogryn_heavystubber_spread_templates.lua
+
 local RecoilTemplate = require("scripts/utilities/recoil_template")
 local generate_offset_range = RecoilTemplate.generate_offset_range
 local create_scale = RecoilTemplate.create_scale
@@ -252,6 +254,7 @@ local braced_scale_m2 = {
 local braced_spread_range_m2 = generate_offset_range(90, 0.35, 0.4, 0.75, create_scale(braced_scale_m2))
 local assault_spread_range_m2 = generate_offset_range(90, 0.725, 0.775, 0.85, create_scale(assault_scale_m2))
 local assault_spread_range_m2_moving = generate_offset_range(90, 0.775, 0.825, 0.85, create_scale(assault_scale_m2))
+
 spread_templates.default_ogryn_heavystubber_braced = {
 	still = {
 		max_spread = {
@@ -729,8 +732,10 @@ spread_templates.default_ogryn_heavystubber_alternate_fire = {
 		}
 	}
 }
+
 local pitch_spread = 0.86
 local yaw_spread = pitch_spread * 1.2
+
 spread_templates.ogryn_heavystubber_spread_spraynpray_hip = {
 	still = {
 		max_spread = {
@@ -1313,8 +1318,10 @@ spread_templates.default_ogryn_heavystubber_braced_m2 = {
 		}
 	}
 }
+
 local pitch_spread_m3 = 0.97
 local yaw_spread_m3 = pitch_spread * 1.1
+
 spread_templates.ogryn_heavystubber_spread_spraynpray_hip_m3 = {
 	still = {
 		max_spread = {

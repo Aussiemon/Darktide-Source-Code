@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/scanner_display_view/minigame_none_view.lua
+
 local MinigameNoneView = class("MinigameNoneView")
 
 MinigameNoneView.init = function (self, context)

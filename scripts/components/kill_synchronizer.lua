@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/components/kill_synchronizer.lua
+
 local KillSynchronizer = component("KillSynchronizer")
 
 KillSynchronizer.init = function (self, unit)

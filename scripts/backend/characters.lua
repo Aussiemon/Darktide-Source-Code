@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/backend/characters.lua
+
 local Promise = require("scripts/foundation/utilities/promise")
 local BackendError = require("scripts/foundation/managers/backend/backend_error")
 local BackendUtilities = require("scripts/foundation/managers/backend/utilities/backend_utilities")
@@ -107,6 +109,7 @@ local function _process_stats(stats)
 
 	for i, v in ipairs(stats) do
 		local type_path = table.concat(v.typePath, "/")
+
 		result[type_path] = v.value
 	end
 
@@ -184,6 +187,7 @@ local function _process_narrative(data)
 
 	for i, v in ipairs(data) do
 		local type_path = v.typePath[2]
+
 		result[type_path] = v.value
 	end
 

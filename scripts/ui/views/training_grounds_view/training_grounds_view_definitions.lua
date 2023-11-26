@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/training_grounds_view/training_grounds_view_definitions.lua
+
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local UIWorkspaceSettings = require("scripts/settings/ui/ui_workspace_settings")

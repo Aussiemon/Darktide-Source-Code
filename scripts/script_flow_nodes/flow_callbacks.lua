@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/script_flow_nodes/flow_callbacks.lua
+
 local BotSpawning = require("scripts/managers/bot/bot_spawning")
 local CameraShake = require("scripts/utilities/camera/camera_shake")
 local Effect = require("scripts/extension_systems/fx/utilities/effect")
@@ -17,12 +19,11 @@ local ScriptWorld = "scripts/foundation/utilities/script_world"
 local Vo = require("scripts/utilities/vo")
 local slot_configuration = PlayerCharacterConstants.slot_configuration
 local unit_alive = Unit.alive
-local Vector3 = Vector3
-local Quaternion = Quaternion
-local Matrix4x4 = Matrix4x4
-local Unit = Unit
+local Vector3, Quaternion, Matrix4x4, Unit = Vector3, Quaternion, Matrix4x4, Unit
 local flow_return_table = {}
+
 FlowCallbacks = FlowCallbacks or {}
+
 local unit_flow_event = Unit.flow_event
 
 FlowCallbacks.clear_return_value = function ()
@@ -132,6 +133,7 @@ FlowCallbacks.get_component_data = function (params)
 	local guid = params.guid
 	local unit = params.unit
 	local key = params.key
+
 	flow_return_table.out_value = Unit.get_data(unit, "components", guid, "component_data", key)
 
 	return flow_return_table
@@ -188,7 +190,7 @@ local function _set_minion_foley_speed(unit, wwise_world, source_id)
 end
 
 local function _minion_auto_source_trigger_wwise_event(unit, param_sound_source_object, param_sound_position, wwise_world, wwise_event)
-	local wwise_playing_id, source_id = nil
+	local wwise_playing_id, source_id
 	local sound_source_object = 1
 
 	if param_sound_source_object then
@@ -197,6 +199,7 @@ local function _minion_auto_source_trigger_wwise_event(unit, param_sound_source_
 
 	if param_sound_position then
 		local world_position = Vector3.add(Unit.world_position(unit, sound_source_object), param_sound_position)
+
 		wwise_playing_id, source_id = WwiseWorld.trigger_resource_event(wwise_world, wwise_event, world_position)
 	else
 		wwise_playing_id, source_id = WwiseWorld.trigger_resource_event(wwise_world, wwise_event, unit, sound_source_object)
@@ -253,8 +256,7 @@ end
 
 FlowCallbacks.minion_fx = function (params)
 	if DEDICATED_SERVER then
-		flow_return_table.effect_id = nil
-		flow_return_table.playing_id = nil
+		flow_return_table.playing_id, flow_return_table.effect_id = nil
 
 		return flow_return_table
 	end
@@ -263,16 +265,14 @@ FlowCallbacks.minion_fx = function (params)
 	local name = params.name
 	local breed = ScriptUnit.extension(unit, "unit_data_system"):breed()
 	local sounds = breed.sounds
-	local wwise_events = sounds.events
-	local use_proximity_culling = sounds.use_proximity_culling
+	local wwise_events, use_proximity_culling = sounds.events, sounds.use_proximity_culling
 	local wwise_event = wwise_events[name]
 	local sound_uses_proximity_culling = use_proximity_culling[name]
 	local legacy_v2_proximity_extension = ScriptUnit.extension(unit, "legacy_v2_proximity_system")
 	local is_proximity_fx_enabled = legacy_v2_proximity_extension.is_proximity_fx_enabled
 
 	if sound_uses_proximity_culling and not is_proximity_fx_enabled then
-		flow_return_table.effect_id = nil
-		flow_return_table.playing_id = nil
+		flow_return_table.playing_id, flow_return_table.effect_id = nil
 
 		return flow_return_table
 	end
@@ -294,14 +294,13 @@ FlowCallbacks.minion_fx = function (params)
 				particle_name = particle_name[wielded_slot_name]
 			end
 		else
-			wwise_event = nil
-			particle_name = nil
+			particle_name, wwise_event = nil
 		end
 	end
 
 	local world_manager = Managers.world
 	local world = world_manager:world("level_world")
-	local wwise_playing_id = nil
+	local wwise_playing_id
 
 	if wwise_event then
 		local wwise_world = world_manager:wwise_world(world)
@@ -360,13 +359,12 @@ FlowCallbacks.minion_fx = function (params)
 	end
 
 	if not is_proximity_fx_enabled then
-		flow_return_table.effect_id = nil
-		flow_return_table.playing_id = wwise_playing_id
+		flow_return_table.playing_id, flow_return_table.effect_id = wwise_playing_id
 
 		return flow_return_table
 	end
 
-	local effect_id = nil
+	local effect_id
 
 	if particle_name then
 		if type(particle_name) == "table" then
@@ -377,6 +375,7 @@ FlowCallbacks.minion_fx = function (params)
 
 		if params.particle_linked then
 			effect_id = World.create_particles(world, particle_name)
+
 			local node = Unit.node(unit, node_name)
 			local pose = Matrix4x4.from_quaternion_position(params.particle_rotation_offset or Quaternion.identity(), params.particle_offset or Vector3.zero())
 
@@ -385,22 +384,21 @@ FlowCallbacks.minion_fx = function (params)
 			local node = Unit.node(unit, node_name)
 			local node_pose = Unit.world_pose(unit, node)
 			local pose = Matrix4x4.multiply(node_pose, Matrix4x4.from_quaternion_position(params.particle_rotation_offset or Quaternion.identity(), params.particle_offset or Vector3.zero()))
+
 			effect_id = World.create_particles(world, particle_name, Matrix4x4.translation(pose), Matrix4x4.rotation(pose))
 		else
 			effect_id = World.create_particles(world, particle_name, params.particle_offset or Vector3.zero(), params.particle_rotation_offset or Quaternion.identity())
 		end
 	end
 
-	flow_return_table.effect_id = effect_id
-	flow_return_table.playing_id = wwise_playing_id
+	flow_return_table.playing_id, flow_return_table.effect_id = wwise_playing_id, effect_id
 
 	return flow_return_table
 end
 
 FlowCallbacks.minion_material_fx = function (params)
 	if DEDICATED_SERVER then
-		flow_return_table.effect_id = nil
-		flow_return_table.playing_id = nil
+		flow_return_table.playing_id, flow_return_table.effect_id = nil
 
 		return flow_return_table
 	end
@@ -415,8 +413,7 @@ FlowCallbacks.minion_material_fx = function (params)
 	local is_proximity_fx_enabled = legacy_v2_proximity_extension.is_proximity_fx_enabled
 
 	if sound_uses_proximity_culling and not is_proximity_fx_enabled then
-		flow_return_table.effect_id = nil
-		flow_return_table.playing_id = nil
+		flow_return_table.playing_id, flow_return_table.effect_id = nil
 
 		return flow_return_table
 	end
@@ -442,7 +439,7 @@ FlowCallbacks.minion_material_fx = function (params)
 	local wwise_events = sounds.events
 	local wwise_event = wwise_events[name]
 	local vfx_table = breed.vfx.material_vfx[name]
-	local hit, material, impact_position, normal = nil
+	local hit, material, impact_position, normal
 
 	if wwise_event or vfx_table then
 		hit, material, impact_position, normal = MaterialQuery.query_material(World.get_data(world, "physics_world"), query_from, query_to, name)
@@ -452,7 +449,7 @@ FlowCallbacks.minion_material_fx = function (params)
 		end
 	end
 
-	local wwise_playing_id = nil
+	local wwise_playing_id
 
 	if wwise_event then
 		local wwise_world = World.get_data(world, "wwise_world")
@@ -507,6 +504,7 @@ FlowCallbacks.minion_material_fx = function (params)
 
 			if param_sound_position then
 				local world_position = Vector3.add(Unit.world_position(unit, sound_source_object), param_sound_position)
+
 				wwise_playing_id = WwiseWorld.trigger_resource_event(wwise_world, wwise_event, world_position)
 			else
 				wwise_playing_id = WwiseWorld.trigger_resource_event(wwise_world, wwise_event, unit, sound_source_object)
@@ -515,13 +513,12 @@ FlowCallbacks.minion_material_fx = function (params)
 	end
 
 	if not is_proximity_fx_enabled then
-		flow_return_table.effect_id = nil
-		flow_return_table.playing_id = wwise_playing_id
+		flow_return_table.playing_id, flow_return_table.effect_id = wwise_playing_id
 
 		return flow_return_table
 	end
 
-	local effect_id = nil
+	local effect_id
 
 	if hit then
 		local particle_name = vfx_table[material] or vfx_table.default
@@ -539,11 +536,12 @@ FlowCallbacks.minion_material_fx = function (params)
 
 			if params.particle_linked then
 				effect_id = World.create_particles(world, particle_name, Vector3.zero(), Quaternion.identity())
+
 				local pose = Matrix4x4.from_quaternion_position(params.particle_rotation_offset or Quaternion.identity(), params.particle_rotation_offset or Vector3.zero())
 
 				World.link_particles(world, effect_id, unit, node, pose, params.particle_orphaned_policy)
 			else
-				local position = nil
+				local position
 
 				if position_source == "Impact" then
 					position = impact_position
@@ -555,12 +553,13 @@ FlowCallbacks.minion_material_fx = function (params)
 					position = Vector3.zero()
 				end
 
-				local rotation = nil
+				local rotation
 
 				if rotation_source == "Normal" then
 					local particle_forward = normal
 					local right = Quaternion.right(unit_rotation)
 					local particle_up = Vector3.cross(particle_forward, right)
+
 					rotation = Quaternion.look(normal, particle_up)
 				elseif rotation_source == "Object" then
 					rotation = Unit.world_rotation(unit, node)
@@ -593,8 +592,7 @@ FlowCallbacks.minion_material_fx = function (params)
 		Managers.state.world_interaction:add_world_interaction(material, unit)
 	end
 
-	flow_return_table.effect_id = effect_id
-	flow_return_table.playing_id = wwise_playing_id
+	flow_return_table.playing_id, flow_return_table.effect_id = wwise_playing_id, effect_id
 
 	return flow_return_table
 end
@@ -623,7 +621,7 @@ end
 local function _should_play_player_fx(play_in, extension_unit)
 	local first_person_extension = ScriptUnit.extension(extension_unit, "first_person_system")
 	local is_in_first_person_mode = first_person_extension:is_in_first_person_mode()
-	local should_play_fx = nil
+	local should_play_fx
 
 	if play_in == "both" or play_in == nil then
 		should_play_fx = true
@@ -638,7 +636,7 @@ end
 
 local function _player_fx_source_and_extension_unit(params)
 	local first_person_unit = params.first_person_unit
-	local source_unit, extension_unit = nil
+	local source_unit, extension_unit
 
 	if first_person_unit then
 		extension_unit = Unit.get_data(first_person_unit, "owner_unit")
@@ -659,7 +657,7 @@ FlowCallbacks.player_voice = function (params)
 	local _, extension_unit = _player_fx_source_and_extension_unit(params)
 	local play_in = params.play_in
 	local should_play_fx = _should_play_player_fx(play_in, extension_unit)
-	local wwise_playing_id = nil
+	local wwise_playing_id
 
 	if should_play_fx then
 		local vce_alias = params.vce_alias
@@ -668,6 +666,7 @@ FlowCallbacks.player_voice = function (params)
 			local visual_loadout_extension = ScriptUnit.extension(extension_unit, "visual_loadout_system")
 			local fx_extension = ScriptUnit.extension(extension_unit, "fx_system")
 			local suppress_vo = params.suppress_vo or false
+
 			wwise_playing_id = PlayerVoiceGrunts.trigger_voice_non_synced(vce_alias, visual_loadout_extension, fx_extension, suppress_vo)
 		end
 	end
@@ -681,7 +680,7 @@ FlowCallbacks.player_fx = function (params)
 	local source_unit, extension_unit = _player_fx_source_and_extension_unit(params)
 	local play_in = params.play_in
 	local should_play_fx = _should_play_player_fx(play_in, extension_unit)
-	local wwise_playing_id, particle_id = nil
+	local wwise_playing_id, particle_id
 
 	if should_play_fx then
 		local world_manager = Managers.world
@@ -716,7 +715,8 @@ FlowCallbacks.player_fx = function (params)
 			end
 
 			local fx_extension = ScriptUnit.extension(extension_unit, "fx_system")
-			local external_properties = nil
+			local external_properties
+
 			wwise_playing_id = fx_extension:trigger_gear_wwise_event(sound_alias, external_properties, source_id)
 		end
 
@@ -738,6 +738,7 @@ FlowCallbacks.player_fx = function (params)
 
 				if link then
 					particle_id = World.create_particles(world, particle_name, Vector3.zero(), Quaternion.identity())
+
 					local pose = Matrix4x4.from_quaternion_position(rotation_offset, translation_offset)
 
 					World.link_particles(world, particle_id, source_unit, node_index, pose, orphaned_policy)
@@ -746,6 +747,7 @@ FlowCallbacks.player_fx = function (params)
 					local offset_pose = Matrix4x4.multiply(node_pose, Matrix4x4.from_quaternion_position(rotation_offset, translation_offset))
 					local translation = Matrix4x4.translation(offset_pose)
 					local rotation = Matrix4x4.rotation(offset_pose)
+
 					particle_id = World.create_particles(world, particle_name, translation, rotation)
 				end
 			end
@@ -763,7 +765,7 @@ FlowCallbacks.player_material_fx = function (params)
 	local unit = params.unit
 	local play_in = params.play_in
 	local should_play_fx = _should_play_player_fx(play_in, unit)
-	local wwise_playing_id = nil
+	local wwise_playing_id
 
 	if should_play_fx then
 		local query_position_object = Unit.node(unit, params.query_position_object)
@@ -773,6 +775,7 @@ FlowCallbacks.player_material_fx = function (params)
 		local physics_world = World.get_data(world, "physics_world")
 		local query_from = POSITION_LOOKUP[unit] + Vector3(0, 0, 0.5)
 		local query_to = query_from + Vector3(0, 0, -1)
+
 		wwise_playing_id = Footstep.trigger_material_footstep(sound_alias, wwise_world, physics_world, source_id, unit, query_position_object, query_from, query_to, params.sound_set_speed_parameter, params.sound_set_first_person_parameter)
 	end
 
@@ -788,7 +791,7 @@ FlowCallbacks.player_inventory_fx = function (params)
 	local sound_alias = params.sound_alias
 	local effect_alias = params.effect_alias
 	local first_person_unit = params.first_person_unit
-	local extension_unit = nil
+	local extension_unit
 
 	if first_person_unit then
 		extension_unit = Unit.get_data(first_person_unit, "owner_unit")
@@ -804,23 +807,26 @@ FlowCallbacks.player_inventory_fx = function (params)
 	local wielded_slot = inventory_component.wielded_slot
 	local play_in = params.play_in
 	local should_play_fx = _should_play_player_fx(play_in, extension_unit)
-	local wwise_playing_id = nil
+	local wwise_playing_id
 
 	if should_play_fx and wielded_slot and wielded_slot ~= "none" then
 		local fx_sources = visual_loadout_extension:source_fx_for_slot(wielded_slot)
 		local source_name = fx_sources and fx_sources[source_alias]
 		local slot_config = slot_configuration[wielded_slot]
 		local slot_type = slot_config.slot_type
+
 		external_properties.is_critical_strike = tostring(critical_strike_component.is_active)
 
 		if slot_type == "weapon" then
 			local inventory_slot_component = unit_data_extension:read_component(wielded_slot)
+
 			external_properties.special_active = tostring(inventory_slot_component.special_active)
 		end
 
 		if source_name then
 			if sound_alias and sound_alias ~= "" then
 				local sync_to_clients = true
+
 				wwise_playing_id = fx_extension:trigger_gear_wwise_event_with_source(sound_alias, external_properties, source_name, sync_to_clients)
 			end
 
@@ -841,7 +847,7 @@ end
 FlowCallbacks.player_inventory_event = function (params)
 	local first_person_unit = params.first_person_unit
 	local event_name = params.event_name
-	local extension_unit = nil
+	local extension_unit
 
 	if first_person_unit then
 		extension_unit = Unit.get_data(first_person_unit, "owner_unit")
@@ -932,6 +938,7 @@ end
 
 FlowCallbacks.get_networked_flow_state = function (params)
 	local out_value = Managers.state.networked_flow_state:flow_cb_get_state(params.unit, params.state_name)
+
 	flow_return_table.out_value = out_value
 
 	return flow_return_table
@@ -939,6 +946,7 @@ end
 
 FlowCallbacks.client_networked_flow_state_changed = function (params)
 	local out_value = Managers.state.networked_flow_state:flow_cb_get_state(params.unit, params.state_name)
+
 	flow_return_table.changed = true
 	flow_return_table.out_value = out_value
 
@@ -947,6 +955,7 @@ end
 
 FlowCallbacks.client_networked_flow_state_set = function (params)
 	local out_value = Managers.state.networked_flow_state:flow_cb_get_state(params.unit, params.state_name)
+
 	flow_return_table.set = true
 	flow_return_table.out_value = out_value
 
@@ -1093,12 +1102,12 @@ FlowCallbacks.tutorial_display_popup_message = function (params)
 		return
 	end
 
-	local info_data = {
-		description = params.description,
-		title = params.title,
-		close_action = params.close_action,
-		use_ingame_input = true
-	}
+	local info_data = {}
+
+	info_data.description = params.description
+	info_data.title = params.title
+	info_data.close_action = params.close_action
+	info_data.use_ingame_input = true
 
 	Managers.event:trigger("event_player_display_prologue_tutorial_info_box", local_player, info_data)
 end
@@ -1136,6 +1145,7 @@ FlowCallbacks.add_bot = function (params)
 	end
 
 	local profile_name = params.profile_identifier
+
 	flow_return_table.local_player_id = BotSpawning.spawn_bot_character(profile_name)
 
 	return flow_return_table
@@ -1184,8 +1194,7 @@ FlowCallbacks.bot_unit_by_profile_id = function (params)
 	return flow_return_table
 end
 
-local HOLD_POSITION_NAV_ABOVE = 0.5
-local HOLD_POSITION_NAV_BELOW = 2
+local HOLD_POSITION_NAV_ABOVE, HOLD_POSITION_NAV_BELOW = 0.5, 2
 
 FlowCallbacks.bot_hold_position = function (params)
 	local is_server = Managers.state.game_session:is_server()
@@ -1200,8 +1209,7 @@ FlowCallbacks.bot_hold_position = function (params)
 
 	if should_hold_position then
 		local navigation_extension = ScriptUnit.extension(player_unit, "navigation_system")
-		local nav_world = navigation_extension:nav_world()
-		local traverse_logic = navigation_extension:traverse_logic()
+		local nav_world, traverse_logic = navigation_extension:nav_world(), navigation_extension:traverse_logic()
 		local hold_position = params.position or POSITION_LOOKUP[player_unit]
 		local hold_position_on_nav_mesh = NavQueries.position_on_mesh(nav_world, hold_position, HOLD_POSITION_NAV_ABOVE, HOLD_POSITION_NAV_BELOW, traverse_logic)
 
@@ -1226,6 +1234,7 @@ FlowCallbacks.local_player_archetype_name = function (params)
 	end
 
 	local profile = local_player:profile()
+
 	flow_return_table.archetype_name = profile.archetype.name
 
 	return flow_return_table
@@ -1393,6 +1402,10 @@ FlowCallbacks.flow_callback_trigger_dialogue_event = function (params)
 
 		dialogue_extension:trigger_dialogue_event(params.concept, event_table, params.identifier)
 	end
+
+	if false then
+		-- Nothing
+	end
 end
 
 FlowCallbacks.trigger_player_vo = function (params)
@@ -1416,7 +1429,7 @@ FlowCallbacks.trigger_random_player_vo = function (params)
 	end
 
 	local trigger_id = params.trigger_id
-	local random_player_unit = nil
+	local random_player_unit
 	local side_system = Managers.state.extension:system("side_system")
 	local side_name = side_system:get_default_player_side_name()
 	local side = side_system:get_side_from_name(side_name)
@@ -1666,7 +1679,7 @@ FlowCallbacks.change_spawner_groups_terror_event = function (params)
 	if is_server then
 		local unit = params.unit
 		local new_spawner_group_names = params.new_spawner_group_names
-		local spawner_group_names = nil
+		local spawner_group_names
 
 		if new_spawner_group_names then
 			spawner_group_names = string.split_and_trim(new_spawner_group_names, ",")
@@ -1682,6 +1695,7 @@ FlowCallbacks.get_crossroad_road_id = function (params)
 	local crossroads_id = params.crossroads_id
 	local main_path_manager = Managers.state.main_path
 	local chosen_road_id = main_path_manager:crossroad_road_id(crossroads_id)
+
 	flow_return_table.road_id = chosen_road_id
 
 	return flow_return_table
@@ -1909,6 +1923,7 @@ FlowCallbacks.teleport_team_to_locations = function (params)
 	for unique_id, player in pairs(players) do
 		if player and player.player_unit then
 			index = index % num_destinations + 1
+
 			local unit = destination_units[index]
 			local position = Unit.world_position(unit, 1)
 			local rotation = Unit.world_rotation(unit, 1)
@@ -1963,6 +1978,7 @@ FlowCallbacks.teleport_player_by_local_id = function (params)
 	for par, val in pairs(params) do
 		if string.find(par, "player_id") then
 			local destination_par = "destination_unit" .. string.sub(par, string.find(par, "id") + 2, #par)
+
 			destination_units[val] = params[destination_par]
 		end
 	end
@@ -2020,10 +2036,11 @@ FlowCallbacks.is_player_near = function (params)
 	local players = player_manager:players()
 	local location_unit = params.location_unit
 	local distance = params.distance
+
 	flow_return_table.is_player_near = false
 
 	for unique_id, player in pairs(players) do
-		if player:unit_is_alive() and _distance(player.player_unit, location_unit) <= distance then
+		if player:unit_is_alive() and distance >= _distance(player.player_unit, location_unit) then
 			flow_return_table.is_player_near = true
 
 			return flow_return_table
@@ -2055,11 +2072,13 @@ FlowCallbacks.random_player_alive = function (params)
 	end
 
 	flow_return_table.player_unit = nil
+
 	local num_alive_players = table.size(alive_players)
 
 	if num_alive_players > 0 then
 		local random_index = math.random(1, num_alive_players)
 		local random_player = alive_players[random_index]
+
 		flow_return_table.player_unit = random_player.player_unit
 	end
 
@@ -2079,7 +2098,7 @@ end
 FlowCallbacks.get_unit_from_item_slot = function (params)
 	local unit = params.unit
 	local slot_name = params.slot
-	local slot_unit = nil
+	local slot_unit
 	local component_system = Managers.state.extension:system("component_system")
 	local player_customization_components = component_system:get_components(unit, "PlayerCustomization")
 
@@ -2115,6 +2134,7 @@ FlowCallbacks.minion_check_velocity_threshold = function (params)
 
 	local current_velocity = locomotion_extension:current_velocity()
 	local move_speed = Vector3.length(current_velocity)
+
 	flow_return_table.is_at_or_above = threshold <= move_speed
 
 	return flow_return_table
@@ -2142,6 +2162,7 @@ end
 FlowCallbacks.is_theme_active = function (params)
 	local theme_tag = params.theme_tag
 	local active_theme_tag = Managers.state.circumstance:active_theme_tag()
+
 	flow_return_table.active = active_theme_tag == theme_tag
 
 	return flow_return_table
@@ -2150,6 +2171,7 @@ end
 FlowCallbacks.get_render_config = function (params)
 	local type = params.type
 	local variable = params.variable
+
 	flow_return_table.enabled = Application.render_config(type, variable, false)
 
 	return flow_return_table
@@ -2234,19 +2256,17 @@ end
 local SPEED_EPSILON = 0.001
 
 FlowCallbacks.projectile_locomotion_engine_collision = function (params)
-	local impulse_force = params.impulse_force
-	local actor = params.actor
+	local impulse_force, actor = params.impulse_force, params.actor
 	local mass = Actor.mass(actor)
 	local delta_velocity = impulse_force / mass
 	local post_collision_velocity = Actor.velocity(actor)
 	local pre_collision_velocity = post_collision_velocity - delta_velocity
 	local speed = Vector3.length(pre_collision_velocity)
 
-	if SPEED_EPSILON < speed then
+	if speed > SPEED_EPSILON then
 		local unit = params.unit
 		local collision_direction = Vector3.normalize(pre_collision_velocity)
-		local collision_position = params.collision_position
-		local collision_actor = params.collision_actor
+		local collision_position, collision_actor = params.collision_position, params.collision_actor
 		local collision_normal = params.collision_normal
 		local collision_unit = Actor.unit(collision_actor)
 		local projectile_damage_extension = ScriptUnit.has_extension(unit, "projectile_damage_system")
@@ -2265,6 +2285,7 @@ end
 
 FlowCallbacks.get_current_mission = function (params)
 	local mission_name = Managers.state.mission:mission_name()
+
 	flow_return_table.mission_name = mission_name
 	flow_return_table.out = true
 	flow_return_table[mission_name] = true
@@ -2283,6 +2304,7 @@ FlowCallbacks.local_player_level = function (params)
 	local local_player = Managers.player:local_player(local_player_id)
 	local profile = local_player:profile()
 	local level = profile.current_level
+
 	flow_return_table.level = level
 
 	return flow_return_table
@@ -2294,6 +2316,7 @@ FlowCallbacks.local_player_level_larger_than = function (params)
 	local profile = local_player:profile()
 	local level = profile.current_level
 	local target_level = params.target_level
+
 	flow_return_table.level_larger_than = target_level <= level
 
 	return flow_return_table
@@ -2324,6 +2347,7 @@ end
 
 FlowCallbacks.is_narrative_event_completed = function (params)
 	local event_name = params.event_name
+
 	flow_return_table.event_completed = Managers.narrative:is_event_complete(event_name)
 
 	return flow_return_table
@@ -2331,6 +2355,7 @@ end
 
 FlowCallbacks.is_narrative_event_completable = function (params)
 	local event_name = params.event_name
+
 	flow_return_table.event_completed = Managers.narrative:can_complete_event(event_name)
 
 	return flow_return_table
@@ -2345,6 +2370,7 @@ end
 FlowCallbacks.is_narrative_chapter_completed = function (params)
 	local story_name = params.story_name
 	local chapter_name = params.chapter_name
+
 	flow_return_table.chapter_completed = Managers.narrative:is_chapter_complete(story_name, chapter_name)
 
 	return flow_return_table
@@ -2353,6 +2379,7 @@ end
 FlowCallbacks.complete_narrative_chapter = function (params)
 	local story_name = params.story_name
 	local chapter_name = params.chapter_name
+
 	flow_return_table.success = Managers.narrative:complete_current_chapter(story_name, chapter_name)
 
 	return flow_return_table

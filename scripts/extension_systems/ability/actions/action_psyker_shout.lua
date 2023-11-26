@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/ability/actions/action_psyker_shout.lua
+
 require("scripts/extension_systems/weapon/actions/action_ability_base")
 
 local Attack = require("scripts/utilities/attack/attack")
@@ -20,6 +22,7 @@ ActionPsykerShout.init = function (self, action_context, action_params, action_s
 	ActionPsykerShout.super.init(self, action_context, action_params, action_settings)
 
 	local unit_data_extension = action_context.unit_data_extension
+
 	self._weapon_action_component = unit_data_extension:read_component("weapon_action")
 	self._unit_data_extension = unit_data_extension
 	self._combat_ability_component = unit_data_extension:write_component("combat_ability")
@@ -42,6 +45,7 @@ ActionPsykerShout.start = function (self, action_settings, t, time_scale, action
 	local player_unit = self._player_unit
 	local rotation = self._first_person_component.rotation
 	local forward = Vector3.normalize(Vector3.flat(Quaternion.forward(rotation)))
+
 	self._shout_direction = forward
 	self._attack_direction = Vector3Box(forward)
 	self._shout_distance_traveled = 0
@@ -51,6 +55,7 @@ ActionPsykerShout.start = function (self, action_settings, t, time_scale, action
 	self._warp_charge_component = warp_charge_component
 	self._warp_charge_percent = warp_charge_percent
 	self._num_hits = 0
+
 	local wwise_state = action_settings.wwise_state
 
 	if wwise_state then
@@ -141,7 +146,7 @@ ActionPsykerShout.fixed_update = function (self, dt, t, time_in_action)
 			local actual_distance = math.sqrt(distance)
 			local min_range = 0.15 * shout_range
 			local scale_factor = 1 - (math.max(actual_distance, min_range) - min_range) / (shout_range - min_range)
-			local scaled_powerlevel = power_level * (0.25 + 0.75 * scale_factor * scale_factor)
+			local scaled_powerlevel = power_level * (0.25 + 0.75 * (scale_factor * scale_factor))
 
 			Attack.execute(unit, damage_profile, "attack_direction", attack_direction, "power_level", scaled_powerlevel, "hit_zone_name", hit_zone_name, "damage_type", damage_type, "attack_type", attack_type, "attacking_unit", player_unit)
 
@@ -185,14 +190,18 @@ ActionPsykerShout._handle_enemies = function (self, action_settings, side, t, sp
 	local damage_type = action_settings.damage_type
 	local attack_type = action_settings.attack_type
 	local power_level = action_settings.power_level or DEFAULT_POWER_LEVEL
+
 	power_level = power_level * (1 + self._warp_charge_percent)
+
 	local damage_per_warp_charge = specialization_extension:has_special_rule(special_rules.psyker_discharge_damage_per_warp_charge)
 	local damage_profile = damage_per_warp_charge and action_settings.damaging_damage_profile or action_settings.damage_profile
+
 	self._damage_profile = damage_profile
 	self._player_position = player_position
 	self._power_level = power_level
 	self._damage_type = damage_type
 	self._attack_type = attack_type
+
 	local shout_shape = action_settings.shout_shape
 
 	if shout_shape and shout_shape == "cone" then
@@ -207,13 +216,16 @@ ActionPsykerShout._handle_enemies = function (self, action_settings, side, t, sp
 		while total_range > 0 do
 			local range = previous_range > 0 and previous_range * 2 or 2.5
 			local slice_radius = range - previous_range
+
 			total_range = total_range - range
 			previous_range = range
+
 			local position = player_position + shout_direction * range
 
 			table.clear(broadphase_results)
 
-			local num_hits = broadphase:query(position, slice_radius, broadphase_results, enemy_side_names)
+			local num_hits = broadphase.query(broadphase, position, slice_radius, broadphase_results, enemy_side_names)
+
 			total_num_hits = total_num_hits + num_hits
 
 			for ii = 1, num_hits do
@@ -224,6 +236,7 @@ ActionPsykerShout._handle_enemies = function (self, action_settings, side, t, sp
 
 				if Vector3.length_squared(attack_direction) == 0 then
 					local player_rotation = locomotion_component.rotation
+
 					attack_direction = Quaternion.forward(player_rotation)
 				end
 

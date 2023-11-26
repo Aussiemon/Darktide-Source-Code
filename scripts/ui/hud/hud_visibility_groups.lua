@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/hud/hud_visibility_groups.lua
+
 local function _is_in_hub()
 	local game_mode_name = Managers.state.game_mode:game_mode_name()
 	local is_in_hub = game_mode_name == "hub"
@@ -92,27 +94,27 @@ local visibility_groups = {
 
 			return not player:unit_is_alive()
 		end
-	}
-}
-visibility_groups[12] = {
-	name = "alive",
-	validation_function = function (hud)
-		local player_extensions = hud:player_extensions()
+	},
+	{
+		name = "alive",
+		validation_function = function (hud)
+			local player_extensions = hud:player_extensions()
 
-		if player_extensions then
-			local health_extension = player_extensions.health
+			if player_extensions then
+				local health_extension = player_extensions.health
 
-			return health_extension:is_alive()
+				return health_extension:is_alive()
+			end
+
+			return false
 		end
-
-		return false
-	end
-}
-visibility_groups[13] = {
-	name = "onboarding",
-	validation_function = function (hud)
-		return hud:is_onboarding()
-	end
+	},
+	{
+		name = "onboarding",
+		validation_function = function (hud)
+			return hud:is_onboarding()
+		end
+	}
 }
 
 return visibility_groups

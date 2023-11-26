@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/talents_view/talents_view_blueprints.lua
+
 local ColorUtilities = require("scripts/utilities/ui/colors")
 local ViewStyles = require("scripts/ui/views/talents_view/talents_view_styles")
 local _color_lerp = ColorUtilities.color_lerp
@@ -16,6 +18,7 @@ local function _icon_select_change_function(content, style, animation, dt)
 
 	if is_new then
 		local pulse = content.is_new_pulse or 0
+
 		pulse = pulse + dt / style.pulse_time
 		content.is_new_pulse = pulse
 		intensity = math_max(_math_ease_sine(pulse), hover_progress) * (style.selected_hover_intensity or 0)
@@ -35,6 +38,7 @@ local function _icon_select_change_function(content, style, animation, dt)
 	end
 
 	local material_values = style.material_values
+
 	material_values.saturation = is_new and 1 or select_progress
 	material_values.intensity = intensity
 	material_values.frame_texture = select_progress == 1 and style.selected or style.unselected
@@ -44,6 +48,7 @@ local function _icon_frame_focus_change_function(content, style, animation, dt)
 	local hotspot_content = content.hotspot
 	local focus_progress = hotspot_content.anim_focus_progress
 	local color = style.color
+
 	color[1] = 255 * focus_progress
 end
 
@@ -63,7 +68,9 @@ local function _is_new_change_function(content, style, animation, dt)
 	end
 
 	content.fade_progress = fade_progress
+
 	local color = style.color or style.text_color
+
 	color[1] = fade_progress * style.alpha
 end
 
@@ -189,6 +196,7 @@ local blueprints = {
 		init = function (widget, group_settings)
 			local content = widget.content
 			local group_label = group_settings.label
+
 			content.group_name = Utf8.upper(Localize(group_label))
 		end
 	},
@@ -205,6 +213,7 @@ local blueprints = {
 		init = function (widget, group_settings)
 			local content = widget.content
 			local group_label = group_settings.label
+
 			content.group_name = Utf8.upper(Localize(group_label))
 		end
 	},
@@ -222,6 +231,7 @@ local blueprints = {
 		init = function (widget, group_settings, group_definition)
 			local content = widget.content
 			local group_label = group_settings.label
+
 			content.group_name = Utf8.upper(Localize(group_label))
 		end
 	},
@@ -276,6 +286,7 @@ local blueprints = {
 		init = function (widget, group_settings, group_definition, player_level)
 			local required_level = group_definition.required_level
 			local content = widget.content
+
 			content.level = required_level
 		end
 	},
@@ -304,6 +315,7 @@ local blueprints = {
 		style = ViewStyles.talent_group_tier_locked,
 		init = function (widget, group_settings, group_definition)
 			local content = widget.content
+
 			content.level = group_definition.required_level
 		end
 	}

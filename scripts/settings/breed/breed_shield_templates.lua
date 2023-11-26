@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/breed/breed_shield_templates.lua
+
 local breed_shield_templates = {}
 
 local function _create_breed_shield_entry(path)

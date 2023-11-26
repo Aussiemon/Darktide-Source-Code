@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/buff/weapon_traits_buff_templates/weapon_traits_bespoke_autogun_p1_buff_templates.lua
+
 local BaseWeaponTraitBuffTemplates = require("scripts/settings/buff/weapon_traits_buff_templates/base_weapon_trait_buff_templates")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local CheckProcFunctions = require("scripts/settings/buff/validation_functions/check_proc_functions")
@@ -5,10 +7,10 @@ local ConditionalFunctions = require("scripts/settings/buff/validation_functions
 local keywords = BuffSettings.keywords
 local stat_buffs = BuffSettings.stat_buffs
 local proc_events = BuffSettings.proc_events
-local templates = {
-	weapon_trait_bespoke_autogun_p1_consecutive_hits_increases_close_damage_parent = table.clone(BaseWeaponTraitBuffTemplates.consecutive_hits_increases_close_damage_parent),
-	weapon_trait_bespoke_autogun_p1_consecutive_hits_increases_close_damage_child = table.clone(BaseWeaponTraitBuffTemplates.consecutive_hits_increases_close_damage_child)
-}
+local templates = {}
+
+templates.weapon_trait_bespoke_autogun_p1_consecutive_hits_increases_close_damage_parent = table.clone(BaseWeaponTraitBuffTemplates.consecutive_hits_increases_close_damage_parent)
+templates.weapon_trait_bespoke_autogun_p1_consecutive_hits_increases_close_damage_child = table.clone(BaseWeaponTraitBuffTemplates.consecutive_hits_increases_close_damage_child)
 templates.weapon_trait_bespoke_autogun_p1_consecutive_hits_increases_close_damage_parent.child_buff_template = "weapon_trait_bespoke_autogun_p1_consecutive_hits_increases_close_damage_child"
 templates.weapon_trait_bespoke_autogun_p1_hipfire_while_sprinting = table.clone(BaseWeaponTraitBuffTemplates.hipfire_while_sprinting)
 templates.weapon_trait_bespoke_autogun_p1_increase_power_on_close_kill_parent = table.clone(BaseWeaponTraitBuffTemplates.increase_power_on_close_kill_parent)

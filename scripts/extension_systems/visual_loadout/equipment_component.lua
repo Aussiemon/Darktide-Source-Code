@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/visual_loadout/equipment_component.lua
+
 local Component = require("scripts/utilities/component")
 local VisualLoadoutLodGroup = require("scripts/extension_systems/visual_loadout/utilities/visual_loadout_lod_group")
 local VisualLoadoutCustomization = require("scripts/extension_systems/visual_loadout/utilities/visual_loadout_customization")
@@ -7,7 +9,7 @@ local unit_set_visibility = Unit.set_visibility
 local unit_flow_event = Unit.flow_event
 local ATTACHMENT_SPAWN_STATUS = table.enum("waiting_for_load", "fully_spawned")
 local FACIAL_HAIR_VISIBILITY_GROUPS = table.enum("eyebrows", "beard")
-local _should_spawn_3p, _should_spawn_1p = nil
+local _should_spawn_3p, _should_spawn_1p
 local EquipmentComponent = class("EquipmentComponent")
 
 EquipmentComponent.init = function (self, world, item_definitions, unit_spawner, unit_3p, optional_extension_manager, optional_item_streaming_settings, optional_force_highest_lod_step)
@@ -18,7 +20,9 @@ EquipmentComponent.init = function (self, world, item_definitions, unit_spawner,
 	self.lod_shadow_group_3p = VisualLoadoutLodGroup.try_init_and_fetch_lod_group(unit_3p, "lod_shadow")
 	self._extension_manager = optional_extension_manager
 	self._force_highest_lod_step = optional_force_highest_lod_step
+
 	local has_slot_package_streaming = optional_item_streaming_settings ~= nil
+
 	self._has_slot_package_streaming = has_slot_package_streaming
 
 	if has_slot_package_streaming then
@@ -29,32 +33,32 @@ end
 
 local function _create_slot_from_configuration(configuration, slot_options)
 	local slot_name = configuration.name
-	local slot = {
-		name = slot_name,
-		equipped = false,
-		item = nil,
-		unit_3p = nil,
-		unit_1p = nil,
-		parent_unit_3p = nil,
-		parent_unit_1p = nil,
-		attachments_3p = nil,
-		attachments_1p = nil,
-		hidden_3p = nil,
-		hidden_1p = nil,
-		wants_hidden_by_gameplay_1p = false,
-		wants_hidden_by_gameplay_3p = false,
-		buffable = configuration.buffable,
-		wieldable = configuration.wieldable,
-		wield_input = configuration.wield_input,
-		use_existing_unit_3p = configuration.use_existing_unit_3p,
-		item_loaded = nil,
-		attachment_spawn_status = nil,
-		deform_overrides = nil,
-		breed_name = nil,
-		hide_unit_in_slot = configuration.hide_unit_in_slot,
-		skip_link_children = slot_options.skip_link_children or false,
-		cached_nodes = {}
-	}
+	local slot = {}
+
+	slot.name = slot_name
+	slot.equipped = false
+	slot.item = nil
+	slot.unit_3p = nil
+	slot.unit_1p = nil
+	slot.parent_unit_3p = nil
+	slot.parent_unit_1p = nil
+	slot.attachments_3p = nil
+	slot.attachments_1p = nil
+	slot.hidden_3p = nil
+	slot.hidden_1p = nil
+	slot.wants_hidden_by_gameplay_1p = false
+	slot.wants_hidden_by_gameplay_3p = false
+	slot.buffable = configuration.buffable
+	slot.wieldable = configuration.wieldable
+	slot.wield_input = configuration.wield_input
+	slot.use_existing_unit_3p = configuration.use_existing_unit_3p
+	slot.item_loaded = nil
+	slot.attachment_spawn_status = nil
+	slot.deform_overrides = nil
+	slot.breed_name = nil
+	slot.hide_unit_in_slot = configuration.hide_unit_in_slot
+	slot.skip_link_children = slot_options.skip_link_children or false
+	slot.cached_nodes = {}
 
 	return slot
 end
@@ -68,6 +72,7 @@ EquipmentComponent.initialize_equipment = function (slot_configuration, optional
 
 	for slot_name, config in pairs(slot_configuration) do
 		local slot = _create_slot_from_configuration(config, slot_options[slot_name] or NO_OPTIONS)
+
 		equipment[slot_name] = slot
 	end
 
@@ -80,6 +85,7 @@ EquipmentComponent._attach_settings = function (self)
 	table.clear(temp)
 
 	local extension_manager = self._extension_manager
+
 	temp.world = self._world
 	temp.unit_spawner = self._unit_spawner
 	temp.from_script_component = false
@@ -112,6 +118,7 @@ EquipmentComponent.equip_item = function (self, unit_3p, unit_1p, slot, item, op
 	slot.breed_name = optional_breed_name
 	slot.parent_unit_3p = unit_3p
 	slot.parent_unit_1p = unit_1p
+
 	local attach_settings = self:_attach_settings()
 
 	if self._has_slot_package_streaming then
@@ -123,8 +130,8 @@ EquipmentComponent.equip_item = function (self, unit_3p, unit_1p, slot, item, op
 	self:_spawn_item_units(slot, unit_3p, unit_1p, attach_settings, optional_mission_template)
 
 	if slot.use_existing_unit_3p then
-		slot.attachments_3p = nil
-		slot.unit_3p = optional_existing_unit_3p
+		slot.unit_3p, slot.attachments_3p = optional_existing_unit_3p
+
 		local smart_tagging_id = Unit.find_actor(optional_existing_unit_3p, "smart_tagging")
 
 		if smart_tagging_id then
@@ -135,8 +142,7 @@ end
 
 EquipmentComponent._slot_is_loaded = function (self, slot)
 	local player = self._player
-	local peer_id = player:peer_id()
-	local local_player_id = player:local_player_id()
+	local peer_id, local_player_id = player:peer_id(), player:local_player_id()
 	local slot_is_loaded = self._package_synchronizer_client:alias_loaded(peer_id, local_player_id, slot.name)
 
 	return slot_is_loaded
@@ -144,7 +150,7 @@ end
 
 EquipmentComponent._spawn_item_units = function (self, slot, unit_3p, unit_1p, attach_settings, optional_mission_template)
 	local item = slot.item
-	local skip_attachments = nil
+	local skip_attachments
 
 	if slot.item_loaded then
 		skip_attachments = false
@@ -157,7 +163,7 @@ EquipmentComponent._spawn_item_units = function (self, slot, unit_3p, unit_1p, a
 	if _should_spawn_3p(slot) then
 		self:_fill_attach_settings_3p(attach_settings, slot)
 
-		local item_unit_3p, attachment_units_3p, attachment_name_to_unit_3p, _ = nil
+		local item_unit_3p, attachment_units_3p, attachment_name_to_unit_3p, _
 		local item_data = slot.item
 
 		if skip_attachments then
@@ -177,6 +183,7 @@ EquipmentComponent._spawn_item_units = function (self, slot, unit_3p, unit_1p, a
 			for ii = 1, #keys do
 				local key = keys[ii]
 				local unit = attachment_name_to_unit_3p[key]
+
 				attachment_name_to_unit_3p[unit] = key
 			end
 
@@ -213,7 +220,7 @@ EquipmentComponent._spawn_item_units = function (self, slot, unit_3p, unit_1p, a
 	if _should_spawn_1p(unit_1p, item, slot) then
 		self:_fill_attach_settings_1p(attach_settings, slot.breed_name)
 
-		local item_unit_1p, attachment_units_1p, attachment_name_to_unit_1p, _ = nil
+		local item_unit_1p, attachment_units_1p, attachment_name_to_unit_1p, _
 		local item_data = slot.item
 
 		if skip_attachments then
@@ -233,6 +240,7 @@ EquipmentComponent._spawn_item_units = function (self, slot, unit_3p, unit_1p, a
 			for ii = 1, #keys do
 				local key = keys[ii]
 				local unit = attachment_name_to_unit_1p[key]
+
 				attachment_name_to_unit_1p[unit] = key
 			end
 
@@ -304,6 +312,7 @@ EquipmentComponent._spawn_attachments = function (self, slot, optional_mission_t
 			for ii = 1, #keys do
 				local key = keys[ii]
 				local unit = attachment_name_to_unit_3p[key]
+
 				attachment_name_to_unit_3p[unit] = key
 			end
 
@@ -351,6 +360,7 @@ EquipmentComponent._spawn_attachments = function (self, slot, optional_mission_t
 			for ii = 1, #keys do
 				local key = keys[ii]
 				local unit = attachment_name_to_unit_1p[key]
+
 				attachment_name_to_unit_1p[unit] = key
 			end
 
@@ -382,8 +392,8 @@ EquipmentComponent.unequip_item = function (self, slot)
 	slot.item = nil
 	slot.deform_overrides = nil
 	slot.breed_name = nil
-	local unit_3p = slot.unit_3p
-	local unit_spawner = self._unit_spawner
+
+	local unit_3p, unit_spawner = slot.unit_3p, self._unit_spawner
 
 	if slot.use_existing_unit_3p then
 		if unit_alive(unit_3p) then
@@ -401,6 +411,7 @@ EquipmentComponent.unequip_item = function (self, slot)
 
 	slot.unit_3p = nil
 	slot.attachments_3p = nil
+
 	local unit_1p = slot.unit_1p
 
 	if unit_1p then
@@ -465,6 +476,7 @@ EquipmentComponent.equip_slot_dependencies = function (self, equipment, slot_equ
 
 				if parent_slot_unit_3p then
 					parent_unit_3p = parent_slot_unit_3p
+
 					local apply_to_parent = item.material_override_apply_to_parent
 
 					if apply_to_parent then
@@ -499,6 +511,7 @@ local function _get_hidden_slot_names(equipment, base_unit_name, wielded_slot_na
 			if hide_slots then
 				for i = 1, #hide_slots do
 					local other_slot_name_to_hide = hide_slots[i]
+
 					hidden_slot_names[other_slot_name_to_hide] = true
 				end
 			end
@@ -622,6 +635,7 @@ EquipmentComponent.try_spawn_attachments = function (self, equipment, slot_equip
 
 	if has_unspawned_attachments and all_unspawned_slots_are_loaded then
 		spawned_attachments = true
+
 		local slot_equip_order_n = #slot_equip_order
 
 		for i = 1, slot_equip_order_n do
@@ -702,7 +716,7 @@ EquipmentComponent.update_item_visibility = function (equipment, wielded_slot, u
 	local slot_body_face_unit = equipment.slot_body_face.unit_3p
 
 	for slot_name, slot in pairs(equipment) do
-		local is_hidden_3p, is_hidden_1p = nil
+		local is_hidden_3p, is_hidden_1p
 		local hide_unit_in_slot = slot.hide_unit_in_slot
 
 		if hide_unit_in_slot and slot[base_unit_name] then
@@ -710,8 +724,7 @@ EquipmentComponent.update_item_visibility = function (equipment, wielded_slot, u
 		end
 
 		if slot_names_to_hide[slot_name] then
-			is_hidden_1p = true
-			is_hidden_3p = true
+			is_hidden_3p, is_hidden_1p = true, true
 
 			if slot[base_unit_name] then
 				unit_set_unit_visibility(slot[base_unit_name], false, true)

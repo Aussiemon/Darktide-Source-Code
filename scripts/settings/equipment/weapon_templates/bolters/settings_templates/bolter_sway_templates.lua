@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/equipment/weapon_templates/bolters/settings_templates/bolter_sway_templates.lua
+
 local sway_templates = {}
 local overrides = {}
 

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/utilities/action/action_handler.lua
+
 local AbilityTemplates = require("scripts/settings/ability/ability_templates/ability_templates")
 local ActionAvailability = require("scripts/extension_systems/weapon/utilities/action_availability")
 local ActionHandlerSettings = require("scripts/settings/action/action_handler_settings")
@@ -10,10 +12,11 @@ local proc_events = BuffSettings.proc_events
 local ActionHandler = class("ActionHandler")
 local MAX_COMBO_COUNT = NetworkConstants.action_combo_count.max
 local EMPTY_TABLE = {}
-local _get_active_template, _get_reset_combo = nil
+local _get_active_template, _get_reset_combo
 
 ActionHandler.init = function (self, unit, data)
 	local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
+
 	self._unit_data_extension = unit_data_extension
 	self._actions = data.actions
 	self._action_kind_condition_funcs = data.action_kind_condition_funcs
@@ -34,6 +37,7 @@ end
 
 ActionHandler.add_component = function (self, component_name)
 	local component = self._unit_data_extension:write_component(component_name)
+
 	component.template_name = "none"
 	component.current_action_name = "none"
 	component.previous_action_name = "none"
@@ -52,6 +56,7 @@ end
 
 ActionHandler.set_tweak_component = function (self, component_name)
 	local component = self._unit_data_extension:write_component(component_name)
+
 	self._tweak_component = component
 end
 
@@ -62,6 +67,7 @@ end
 ActionHandler.set_active_template = function (self, id, template_name)
 	local handler_data = self._registered_components[id]
 	local component = handler_data.component
+
 	component.template_name = template_name
 end
 
@@ -75,7 +81,7 @@ end
 
 ActionHandler.wanted_character_state_transition = function (self)
 	local registered_components = self._registered_components
-	local wanted_state, params = nil
+	local wanted_state, params
 
 	for id, handler_data in pairs(registered_components) do
 		local running_action = handler_data.running_action
@@ -168,7 +174,7 @@ ActionHandler._update_timeline_anims = function (self, action, t, start_t, end_t
 	local fixed_time_step = Managers.state.game_session.fixed_time_step
 
 	for time_percentage, anim_events in pairs(anims) do
-		local time_to_play = nil
+		local time_to_play
 
 		if end_t == math.huge then
 			time_to_play = math.round((start_t + time_percentage) / fixed_time_step) * fixed_time_step
@@ -222,16 +228,19 @@ ActionHandler.start_action = function (self, id, action_objects, action_name, ac
 
 	if not action_objects[action_name] then
 		local action_context = self._action_context
+
 		action_objects[action_name] = self:_create_action(action_context, action_params, action_settings)
 	end
 
 	local action = action_objects[action_name]
 	local is_chain_action = transition_type == "chain"
+
 	action_start_params.is_chain_action = running_action and is_chain_action
 	action_start_params.combo_count = component.combo_count
 	action_start_params.used_input = used_input
 	action_start_params.auto_completed = self._action_input_extension:last_action_auto_completed(id)
 	handler_data.running_action = action
+
 	local tweak_component = self._tweak_component
 
 	if tweak_component then
@@ -241,18 +250,23 @@ ActionHandler.start_action = function (self, id, action_objects, action_name, ac
 	local time_scale = self:_calculate_time_scale(action_settings)
 	local sprint_ready_time = t + (action_settings.sprint_ready_time or 0)
 	local total_time = self:_calculate_action_total_time(action_settings, action_params, time_scale)
+
 	component.current_action_name = action_name
 	component.start_t = t
 	component.time_scale = time_scale
 	component.sprint_ready_time = sprint_ready_time
+
 	local is_infinite = total_time == math.huge
+
 	component.end_t = is_infinite and t or t + total_time
 	component.is_infinite_duration = is_infinite
+
 	local inventory_component = self._inventory_component
 	local wielded_slot = inventory_component.wielded_slot
 
 	if PlayerUnitVisualLoadout.is_slot_of_type(wielded_slot, "weapon") then
 		local inventory_slot_component = self._unit_data_extension:read_component(wielded_slot)
+
 		component.special_active_at_start = inventory_slot_component.special_active
 	else
 		component.special_active_at_start = false
@@ -300,6 +314,7 @@ ActionHandler._calculate_time_scale = function (self, action_settings)
 		local weapon_extension = ScriptUnit.extension(player_unit, "weapon_system")
 		local weapon_handling_template = weapon_extension:weapon_handling_template() or EMPTY_TABLE
 		local weapon_handling_time_scale = weapon_handling_template.time_scale or 1
+
 		time_scale = time_scale * weapon_handling_time_scale
 	end
 
@@ -311,8 +326,7 @@ ActionHandler._calculate_time_scale = function (self, action_settings)
 		return time_scale
 	end
 
-	local num_applied_stat_buffs = 0
-	local total_modifier = 0
+	local num_applied_stat_buffs, total_modifier = 0, 0
 
 	for ii = 1, #action_time_scale_stat_buffs do
 		local stat_buff = action_time_scale_stat_buffs[ii]
@@ -326,8 +340,8 @@ ActionHandler._calculate_time_scale = function (self, action_settings)
 
 	total_modifier = total_modifier - (num_applied_stat_buffs - 1)
 	time_scale = time_scale * total_modifier
-	local min = NetworkConstants.action_time_scale.min
-	local max = NetworkConstants.action_time_scale.max
+
+	local min, max = NetworkConstants.action_time_scale.min, NetworkConstants.action_time_scale.max
 
 	if time_scale < min or max < time_scale then
 		local active_buffs = "Buffs:"
@@ -354,6 +368,7 @@ ActionHandler._calculate_time_scale = function (self, action_settings)
 		for ii = 1, #action_time_scale_stat_buffs do
 			local key = action_time_scale_stat_buffs[ii]
 			local value = stat_buffs[key]
+
 			active_stat_buffs = string.format("%s (%s:%s),", active_stat_buffs, key, value and string.format("%.3f", value) or "n/a")
 		end
 
@@ -366,7 +381,7 @@ ActionHandler._calculate_time_scale = function (self, action_settings)
 end
 
 ActionHandler._anim_event = function (self, action_settings, action, is_chain, condition_func_params)
-	local anim_event, anim_event_3p = nil
+	local anim_event, anim_event_3p
 	local action_time_offset = action_settings.action_time_offset or 0
 	local chain_anim_event = action_settings.chain_anim_event
 
@@ -374,7 +389,7 @@ ActionHandler._anim_event = function (self, action_settings, action, is_chain, c
 		anim_event = chain_anim_event
 		anim_event_3p = action_settings.chain_anim_event_3p or chain_anim_event
 	elseif action_settings.anim_event_func then
-		anim_event, anim_event_3p = action_settings:anim_event_func(condition_func_params)
+		anim_event, anim_event_3p = action_settings.anim_event_func(action_settings, condition_func_params)
 		anim_event_3p = anim_event_3p or anim_event
 	else
 		anim_event = action_settings.anim_event
@@ -413,6 +428,7 @@ ActionHandler._update_combo_count = function (self, running_action, action_setti
 		component.combo_count = 0
 	elseif increase_combo then
 		local new_combo_count = math.min(component.combo_count + 1, MAX_COMBO_COUNT)
+
 		component.combo_count = new_combo_count
 	end
 end
@@ -430,6 +446,7 @@ ActionHandler.server_correction_occurred = function (self, id, action_objects, a
 		if not action then
 			local action_context = self._action_context
 			local action_settings = actions[current_action_name]
+
 			action = self:_create_action(action_context, action_params, action_settings)
 			action_objects[current_action_name] = action
 		end
@@ -512,7 +529,9 @@ ActionHandler._handle_action_input_on_stop_action = function (self, id, t, runni
 
 	if stop_input then
 		self._action_input_extension:action_transitioned_with_automatic_input(id, stop_input, t)
-	elseif not self._alternate_fire_component.is_active then
+	elseif self._alternate_fire_component.is_active then
+		-- Nothing
+	else
 		self._action_input_extension:clear_input_queue_and_sequences(id)
 	end
 
@@ -547,10 +566,10 @@ ActionHandler.action_settings_from_action_input = function (self, id, actions, a
 	local handler_data = registered_components[id]
 	local running_action = handler_data.running_action
 	local has_running_action = running_action ~= nil
-	local action_settings = nil
+	local action_settings
 
 	if not has_running_action then
-		local current_settings = nil
+		local current_settings
 		local current_priority = -math.huge
 
 		for name, settings in pairs(actions) do
@@ -675,7 +694,7 @@ ActionHandler._check_chain_actions = function (self, handler_data, current_actio
 	local conditional_state_to_action_input = current_action_settings.conditional_state_to_action_input or EMPTY_TABLE
 	local time_scale = component.time_scale
 	local current_action_t = t - current_action_start_t
-	local wanted_action_name, wanted_action_settings, wanted_used_input, automatic_input, reset_combo = nil
+	local wanted_action_name, wanted_action_settings, wanted_used_input, automatic_input, reset_combo
 	local running_action = handler_data.running_action
 	local running_action_state = running_action:running_action_state(t, current_action_t)
 
@@ -768,8 +787,10 @@ end
 ActionHandler._validate_single_chain_action = function (self, chain_action, t, current_action_t, time_scale, actions, condition_func_params, used_input, running_action_state)
 	local chain_time = chain_action.chain_time and chain_action.chain_time / time_scale
 	local chain_until = chain_action.chain_until and chain_action.chain_until / time_scale
-	local chain_validated = nil
+	local chain_validated
+
 	chain_validated = not chain_time or (chain_time and chain_time <= current_action_t or chain_until and current_action_t <= chain_until) and true
+
 	local running_action_state_requirement = chain_action.running_action_state_requirement
 
 	if running_action_state_requirement and (not running_action_state or not running_action_state_requirement[running_action_state]) then
@@ -785,7 +806,7 @@ ActionHandler._validate_single_chain_action = function (self, chain_action, t, c
 end
 
 ActionHandler._valid_action_from_action_input = function (self, actions, action_input, t, condition_func_params, used_input)
-	local current_settings, current_name = nil
+	local current_settings, current_name
 	local current_priority = -math.huge
 
 	for name, settings in pairs(actions) do
@@ -815,7 +836,7 @@ ActionHandler._check_start_actions = function (self, handler_data, t, actions, c
 		return nil, nil, nil, nil, nil
 	end
 
-	local wanted_action, wanted_action_settings, automatic_input = nil
+	local wanted_action, wanted_action_settings, automatic_input
 
 	if action_input then
 		wanted_action, wanted_action_settings = self:_valid_action_from_action_input(actions, action_input, t, condition_func_params, used_input)

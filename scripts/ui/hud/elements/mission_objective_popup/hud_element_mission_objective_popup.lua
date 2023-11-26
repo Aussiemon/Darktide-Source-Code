@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/hud/elements/mission_objective_popup/hud_element_mission_objective_popup.lua
+
 local Definitions = require("scripts/ui/hud/elements/mission_objective_popup/hud_element_mission_objective_popup_definitions")
 local HudElementMissionObjectivePopupSettings = require("scripts/ui/hud/elements/mission_objective_popup/hud_element_mission_objective_popup_settings")
 local UIFonts = require("scripts/managers/ui/ui_fonts")
@@ -68,8 +70,10 @@ HudElementMissionObjectivePopup._present_popup = function (self, popup_data)
 	end
 
 	self._active_popup_widget = widget
+
 	local animation_event = popup_data.animation_event
 	local popup_animation_id = self:_start_animation(animation_event, widget)
+
 	self._popup_animation_id = popup_animation_id
 end
 
@@ -128,7 +132,7 @@ HudElementMissionObjectivePopup.event_mission_objective_update = function (self,
 	end
 
 	local current_counter_amount = mission_objective:incremented_progression()
-	local update_text = nil
+	local update_text
 
 	if current_counter_amount and max_counter_amount then
 		update_text = tostring(current_counter_amount) .. "/" .. tostring(max_counter_amount)
@@ -185,7 +189,9 @@ HudElementMissionObjectivePopup._setup_mission_update_texts = function (self, wi
 	local parent = self._parent
 	local ui_renderer = parent:ui_renderer()
 	local content = widget.content
+
 	content.update_text = update_text
+
 	local style = widget.style
 	local icon_style = style.icon
 	local update_text_style = style.update_text
@@ -195,6 +201,7 @@ HudElementMissionObjectivePopup._setup_mission_update_texts = function (self, wi
 	local icon_width = icon_style.size[1]
 	local spacing = 5
 	local total_width = text_width + icon_width + spacing
+
 	update_text_style.offset[1] = icon_width + text_width * 0.5 + spacing - total_width * 0.5
 	icon_style.offset[1] = icon_width * 0.5 - total_width * 0.5
 end
@@ -205,8 +212,10 @@ HudElementMissionObjectivePopup._setup_mission_popup_texts = function (self, wid
 	local content = widget.content
 	local style = widget.style
 	local description_text_style = style.description_text
+
 	content.title_text = title_text
 	content.description_text = description_text
+
 	local text_size = description_text_style.size
 	local text_options = UIFonts.get_font_options_by_style(description_text_style)
 	local _, height, _, _ = UIRenderer.text_size(ui_renderer, description_text, description_text_style.font_type, description_text_style.font_size, text_size, text_options)

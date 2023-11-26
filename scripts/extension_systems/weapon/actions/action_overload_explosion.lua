@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/weapon/actions/action_overload_explosion.lua
+
 require("scripts/extension_systems/weapon/actions/action_weapon_base")
 
 local Attack = require("scripts/utilities/attack/attack")
@@ -19,6 +21,7 @@ ActionOverloadExplosion.init = function (self, action_context, action_params, ..
 	ActionOverloadExplosion.super.init(self, action_context, action_params, ...)
 
 	local weapon = action_params.weapon
+
 	self._on_start_source_name = weapon.fx_sources._overheat
 	self._exploding_character_state_component = action_context.unit_data_extension:write_component("exploding_character_state")
 end
@@ -31,7 +34,7 @@ ActionOverloadExplosion.start = function (self, action_settings, ...)
 
 	if on_start_sfx then
 		local sync_to_clients = true
-		local external_properties = nil
+		local external_properties
 
 		self._fx_extension:trigger_gear_wwise_event_with_source(on_start_sfx, external_properties, self._on_start_source_name, sync_to_clients)
 	end
@@ -97,7 +100,7 @@ ActionOverloadExplosion._explode = function (self, action_settings)
 	if self._is_server then
 		local explosion_template = action_settings.explosion_template
 		local position = self._locomotion_component.position
-		local impact_normal = nil
+		local impact_normal
 		local power_level = DEFAULT_POWER_LEVEL
 		local charge_level = 1
 

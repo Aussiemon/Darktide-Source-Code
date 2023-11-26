@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/components/chest.lua
+
 local Chest = component("Chest")
 
 Chest.init = function (self, unit)

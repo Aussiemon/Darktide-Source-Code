@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/behavior/trees/chaos/chaos_poxwalker_bomber_behavior_tree.lua
+
 local BreedActions = require("scripts/settings/breed/breed_actions")
 local action_data = BreedActions.chaos_poxwalker_bomber
 local behavior_tree = {

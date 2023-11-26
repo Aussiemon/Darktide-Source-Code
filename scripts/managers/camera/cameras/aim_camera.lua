@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/camera/cameras/aim_camera.lua
+
 local BaseCamera = require("scripts/managers/camera/cameras/base_camera")
 local AimCamera = class("AimCamera", "BaseCamera")
 

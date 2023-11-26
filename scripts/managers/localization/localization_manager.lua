@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/localization/localization_manager.lua
+
 local LocalizationMacros = require("scripts/managers/localization/localization_macros")
 local LocalizationManager = class("LocalizationManager")
 local STRING_RESOURCE_NAMES = {
@@ -60,7 +62,7 @@ end
 local LOCALIZATION_MANAGER_STATUS = table.enum("empty", "loading", "ready")
 
 local function _select_language()
-	local language = nil
+	local language
 
 	if PLATFORM == "win32" then
 		language = Application.user_setting("language_id") or HAS_STEAM and Steam:language() or DEFAULT_LANGUAGE
@@ -68,9 +70,11 @@ local function _select_language()
 		language = PS4.locale() or DEFAULT_LANGUAGE
 	elseif PLATFORM == "xb1" then
 		local locale = XboxLive.locale() or "error"
+
 		language = xbox_format_locale(locale)
 	elseif PLATFORM == "xbs" then
 		local locale = XboxLive.locale() or "error"
+
 		language = xbox_format_locale(locale)
 	elseif PLATFORM == "linux" then
 		language = "en"
@@ -84,7 +88,9 @@ Localize = Localize or false
 LocalizationManager.init = function (self)
 	self._backend_localizations = {}
 	self._string_cache = Script.new_map(STRING_CACHE_EXPECTED_SIZE)
+
 	local language = _select_language()
+
 	self._original_language = language
 	self._enable_string_tags = false
 	self._language = language
@@ -118,6 +124,7 @@ LocalizationManager.setup_localizers = function (self, strings_package_id)
 
 	for i = 1, num_string_resources do
 		local resource_name = STRING_RESOURCE_NAMES[i]
+
 		localizers[i] = Localizer(resource_name)
 	end
 
@@ -129,6 +136,7 @@ LocalizationManager._teardown_localizers = function (self)
 	print("[LocalizationManager] Tearing down localizers")
 
 	self._localizers = nil
+
 	local package_manager = Managers.package
 
 	package_manager:release(self._package_id)
@@ -142,7 +150,7 @@ LocalizationManager._lookup = function (self, key)
 
 	for ii = 1, #localizers do
 		local localizer = localizers[ii]
-		local loc_str = nil
+		local loc_str
 
 		if self._lookup_with_tag ~= nil and self._enable_string_tags then
 			loc_str = self:_lookup_with_tag(localizer, key)
@@ -255,6 +263,7 @@ LocalizationManager._process_string = function (self, str, context)
 
 	str = string.gsub(str, "%$([%a%d_]*):*([%a%d,_]*)%$", callback(_apply_macro_callback, error_table))
 	str = string.gsub(str, "{([%a%d_]*):*([%a%d%.%%]*)}", callback(_apply_interpolation_callback, error_table, context))
+
 	local error_string = #error_table > 0 and table.concat(error_table, "; ") or nil
 
 	return str, error_string

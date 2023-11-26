@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/weapon/actions/action_buff_target.lua
+
 require("scripts/extension_systems/weapon/actions/action_ability_base")
 
 local CoherencyUtils = require("scripts/extension_systems/coherency/coherency_utils")
@@ -12,7 +14,9 @@ ActionBuffTarget.init = function (self, action_context, action_params, action_se
 	ActionBuffTarget.super.init(self, action_context, action_params, action_setting)
 
 	self._specialization_extension = ScriptUnit.extension(self._player_unit, "specialization_system")
+
 	local unit_data_extension = self._unit_data_extension
+
 	self._action_module_targeting_component = unit_data_extension:write_component("action_module_targeting")
 end
 
@@ -49,8 +53,10 @@ ActionBuffTarget.fixed_update = function (self, dt, t, time_in_action)
 
 	if cast_time < time_in_action and not self._spell_cast then
 		self._spell_cast = true
+
 		local target_unit, self_cast = self:_get_target()
 		local action_module_targeting_component = self._action_module_targeting_component
+
 		action_module_targeting_component.target_unit_1 = nil
 		action_module_targeting_component.target_unit_2 = nil
 		action_module_targeting_component.target_unit_3 = nil
@@ -103,6 +109,7 @@ ActionBuffTarget.fixed_update = function (self, dt, t, time_in_action)
 
 				if character_state_component and PlayerUnitStatus.is_knocked_down(character_state_component) then
 					local assisted_state_input_component = unit_data_extension:write_component("assisted_state_input")
+
 					assisted_state_input_component.force_assist = true
 				end
 			end

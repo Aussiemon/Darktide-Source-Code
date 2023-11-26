@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/behavior/trees/renegade/renegade_berzerker_behavior_tree.lua
+
 local BreedActions = require("scripts/settings/breed/breed_actions")
 local action_data = BreedActions.renegade_berzerker
 local FAR_COMBAT = {
@@ -13,21 +15,26 @@ local FAR_COMBAT = {
 }
 local CLOSE_COMBAT = {
 	"BtSelectorNode",
+	condition_args = {
+		combat_ranges = {
+			close = true
+		}
+	},
 	{
 		"BtMeleeFollowTargetAction",
 		name = "assault_follow",
 		action_data = action_data.assault_follow
 	},
 	name = "close_combat",
-	condition = "is_aggroed_in_combat_range",
-	condition_args = {
-		combat_ranges = {
-			close = true
-		}
-	}
+	condition = "is_aggroed_in_combat_range"
 }
 local MELEE_COMBAT = {
 	"BtRandomUtilityNode",
+	condition_args = {
+		combat_ranges = {
+			melee = true
+		}
+	},
 	{
 		"BtMeleeFollowTargetAction",
 		name = "follow",
@@ -52,12 +59,7 @@ local MELEE_COMBAT = {
 		action_data = action_data.melee_attack
 	},
 	name = "melee_combat",
-	condition = "is_aggroed_in_combat_range",
-	condition_args = {
-		combat_ranges = {
-			melee = true
-		}
-	}
+	condition = "is_aggroed_in_combat_range"
 }
 local behavior_tree = {
 	"BtSelectorNode",

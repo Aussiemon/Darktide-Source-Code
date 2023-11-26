@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/hud/elements/player_panel_base/hud_element_player_panel_base.lua
+
 local HudHealthBarLogic = require("scripts/ui/hud/elements/hud_health_bar_logic")
 local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
 local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
@@ -17,6 +19,7 @@ local function convert_number_to_display_texts(amount, max_character, zero_numer
 	table.clear(temp_ammo_display_texts)
 
 	max_character = math.min(max_character + 1, 3)
+
 	local length = string.len(amount)
 	local num_adds = max_character - length
 	local zero_string = "0"
@@ -46,6 +49,7 @@ local HudElementPlayerPanelBase = class("HudElementPlayerPanelBase", "HudElement
 HudElementPlayerPanelBase.init = function (self, parent, draw_layer, start_scale, data, definition_path, definition_settings)
 	self._settings = definition_settings
 	self._supported_features = self._settings.feature_list
+
 	local definitions = require(definition_path)
 
 	HudElementPlayerPanelBase.super.init(self, parent, draw_layer, start_scale, definitions)
@@ -57,6 +61,7 @@ HudElementPlayerPanelBase.init = function (self, parent, draw_layer, start_scale
 
 		for i = 1, 10 do
 			local widget = self:_create_widget("health_bar_segment_" .. i, health_bar_segment_definition)
+
 			segment_widgets[i] = widget
 		end
 
@@ -73,6 +78,7 @@ HudElementPlayerPanelBase.init = function (self, parent, draw_layer, start_scale
 
 	self._default_rich_presence_text = self:_localize("loc_hud_player_rich_presence_default", true)
 	self._data = data
+
 	local weapon_slots = {}
 	local weapon_slot_configuration = PlayerCharacterConstants.slot_configuration_by_type.weapon
 
@@ -123,6 +129,7 @@ HudElementPlayerPanelBase._update_player_features = function (self, dt, t, playe
 	local ability_extension = extensions and extensions.ability
 	local coherency_extension = extensions and extensions.coherency
 	local buff_extension = extensions and extensions.buff
+
 	self._player = player
 
 	if supported_features.name then
@@ -164,7 +171,7 @@ HudElementPlayerPanelBase._update_player_features = function (self, dt, t, playe
 		end
 	end
 
-	local insignia_item = nil
+	local insignia_item
 	local profile = player:profile()
 
 	if profile then
@@ -208,6 +215,7 @@ HudElementPlayerPanelBase._update_player_features = function (self, dt, t, playe
 	if is_party_player ~= self._is_party_player or presence_id ~= self._presence_id then
 		self._is_party_player = is_party_player
 		self._presence_id = presence_id
+
 		local draw_rich_precense = is_party_player
 		local presence_text = player.presence_hud_text and player:presence_hud_text()
 
@@ -219,16 +227,17 @@ HudElementPlayerPanelBase._update_player_features = function (self, dt, t, playe
 
 		if archetype ~= self._archetype then
 			self._archetype = archetype
+
 			local character_title = ProfileUtils.character_title(profile, true)
 
 			self:_set_character_text(character_title, ui_renderer)
 		end
 	end
 
-	local dead = nil
+	local dead
 
 	if health_extension then
-		-- Nothing
+		dead = not health_extension or not health_extension:is_alive()
 	else
 		dead = true
 	end
@@ -265,8 +274,7 @@ HudElementPlayerPanelBase._update_player_features = function (self, dt, t, playe
 	local show_as_dead = dead or hogtied or dead and not is_party_player
 	local inventory_component = unit_data_extension and unit_data_extension:read_component("inventory")
 	local carrying_luggable = not dead and not disabled and visual_loadout_extension and self:_is_player_carrying_luggable(inventory_component, visual_loadout_extension) or false
-	local carrying_pocketable = false
-	local pocketable_hud_icon = nil
+	local carrying_pocketable, pocketable_hud_icon = false
 
 	if not dead and visual_loadout_extension then
 		carrying_pocketable, pocketable_hud_icon = self:_has_player_pocketable(inventory_component, visual_loadout_extension)
@@ -295,6 +303,7 @@ HudElementPlayerPanelBase._update_player_features = function (self, dt, t, playe
 
 	if supported_features.throwables then
 		local throwables_status, throwables_visible = self:_get_weapon_throwables_status(ability_extension)
+
 		throwables_visible = throwables_visible and not dead and not hogtied
 
 		if throwables_status ~= self._throwables_status or throwables_visible ~= self._throwables_visible then
@@ -307,6 +316,7 @@ HudElementPlayerPanelBase._update_player_features = function (self, dt, t, playe
 
 	if supported_features.ammo then
 		local ammo_status, ammo_visible = self:_get_weapon_ammo_status(unit_data_extension, visual_loadout_extension)
+
 		ammo_visible = ammo_visible and not dead and not hogtied
 
 		if ammo_status ~= self._ammo_status or ammo_visible ~= self._ammo_visible then
@@ -335,7 +345,7 @@ HudElementPlayerPanelBase._update_player_features = function (self, dt, t, playe
 		local update_max_toughness = max_toughness ~= self._max_toughness
 		local current_toughness = toughness_percentage * max_toughness
 		local current_toughness_visual = toughness_percentage * max_toughness_visual
-		local overshield_amount = max_toughness > current_toughness_visual and math.max(current_toughness - max_toughness_visual, 0) or 0
+		local overshield_amount = current_toughness_visual < max_toughness and math.max(current_toughness - max_toughness_visual, 0) or 0
 		local has_overshield = math.floor(overshield_amount) > 0
 		local toughness_bar_logic = self._toughness_bar_logic
 
@@ -345,6 +355,7 @@ HudElementPlayerPanelBase._update_player_features = function (self, dt, t, playe
 
 		if bar_fraction and bar_ghost_fraction or update_max_toughness or overshield_amount ~= self._overshield_amount then
 			local toughness_percentage_bar = toughness_extension and toughness_extension:current_toughness_percent_visual() or 0
+
 			bar_fraction = bar_fraction or self._toughness_fraction or 0
 			bar_ghost_fraction = bar_ghost_fraction or self._toughness_ghost_fraction or 0
 
@@ -378,6 +389,7 @@ HudElementPlayerPanelBase._update_player_features = function (self, dt, t, playe
 				if text_widget then
 					local text_widget_style = text_widget.style
 					local key = "text_1"
+
 					text_widget.dirty = true
 					self._overshield_amount = overshield_amount
 
@@ -483,6 +495,7 @@ HudElementPlayerPanelBase._update_player_features = function (self, dt, t, playe
 		if self._player_status ~= player_status then
 			local status_icon = UIHudSettings.player_status_icons[player_status]
 			local status_color = UIHudSettings.player_status_colors[player_status]
+
 			self._player_status = player_status
 
 			self:_set_status_icon(status_icon, status_color, ui_renderer)
@@ -507,7 +520,7 @@ HudElementPlayerPanelBase._update_player_features = function (self, dt, t, playe
 
 	if supported_features.health then
 		local max_health = health_extension and health_extension:max_health() or 0
-		local max_wounds = (not health_extension or knocked_down) and 1 or health_extension:max_wounds()
+		local max_wounds = not (health_extension and not knocked_down) and 1 or health_extension:max_wounds()
 		local permanent_damage = health_extension and health_extension:permanent_damage_taken() or 0
 		local health_percentage = health_extension and health_extension:current_health_percent() or 0
 		local health_max_percentage = max_health > 0 and 1 - permanent_damage / max_health or 0
@@ -516,8 +529,10 @@ HudElementPlayerPanelBase._update_player_features = function (self, dt, t, playe
 		health_bar_logic:update(dt, t, health_percentage, health_max_percentage)
 
 		local bar_fraction, bar_ghost_fraction, bar_max_fraction = health_bar_logic:animated_health_fractions()
+
 		bar_fraction = bar_fraction or health_percentage
 		bar_ghost_fraction = bar_ghost_fraction or 0
+
 		local update_max_health = max_health ~= self._max_health
 		local update_max_wounds = max_wounds ~= self._max_wounds
 
@@ -541,7 +556,7 @@ HudElementPlayerPanelBase._update_player_features = function (self, dt, t, playe
 end
 
 HudElementPlayerPanelBase._set_toughness_hit_anim_progress = function (self, progress, armor_break)
-	local anim_progress = math.easeInCubic(math.ease_pulse(math.min(progress, 1)))
+	local anim_progress = math.easeInCubic(math.ease_pulse((math.min(progress, 1))))
 	local alpha_progress = anim_progress
 	local max_alpha = 150
 
@@ -556,13 +571,18 @@ HudElementPlayerPanelBase._set_toughness_hit_anim_progress = function (self, pro
 	if widget then
 		local hit_indicator_style = widget.style.hit_indicator
 		local alpha = alpha_progress * max_alpha
+
 		hit_indicator_style.color[1] = alpha
+
 		local extra_size = armor_break and 40 or 0
 		local size_addition = hit_indicator_style.size_addition
 		local default_size_addition = hit_indicator_style.default_size_addition
+
 		size_addition[1] = default_size_addition[1] + extra_size * anim_progress
 		size_addition[2] = default_size_addition[2] + extra_size * anim_progress
+
 		local hit_indicator_armor_break_style = widget.style.hit_indicator_armor_break
+
 		hit_indicator_armor_break_style.color[1] = armor_break and alpha or 0
 		size_addition = hit_indicator_armor_break_style.size_addition
 		size_addition[1] = extra_size * anim_progress
@@ -580,7 +600,7 @@ HudElementPlayerPanelBase._has_player_pocketable = function (self, inventory_com
 	local pocketable_name = inventory_component[slot_id]
 	local weapon_template = pocketable_name and visual_loadout_extension:weapon_template_from_slot(slot_id)
 	local equipped = weapon_template ~= nil
-	local hud_icon = nil
+	local hud_icon
 
 	if equipped then
 		hud_icon = weapon_template.hud_icon_small
@@ -643,6 +663,7 @@ end
 
 HudElementPlayerPanelBase._set_dead = function (self, is_dead, show_as_dead, ui_renderer)
 	self._dead = is_dead
+
 	local is_alive = not show_as_dead
 	local supported_features = self._supported_features
 	local widgets_by_name = self._widgets_by_name
@@ -681,6 +702,7 @@ HudElementPlayerPanelBase._set_overshielded = function (self, supported_features
 	local widget = self._widgets_by_name.toughness
 	local texture_style = widget.style.texture
 	local color = is_overshielded and OVERSHIELDED_TOUGHNESS_COLOR or DEFAULT_TOUGHNESS_COLOR
+
 	texture_style.color = color
 
 	if supported_features.toughness_text and overshield_amount then
@@ -689,6 +711,7 @@ HudElementPlayerPanelBase._set_overshielded = function (self, supported_features
 		if text_widget then
 			local text_widget_style = text_widget.style
 			local key = "text_1"
+
 			text_widget.content[key] = overshield_amount
 			text_widget_style[key].text_color = color
 			text_widget.dirty = true
@@ -701,6 +724,7 @@ end
 HudElementPlayerPanelBase._set_shadowing_portrait = function (self, should_shadow)
 	local widget = self._widgets_by_name.player_icon
 	local material_values = widget.style.texture.material_values
+
 	material_values.desaturation = should_shadow and 1 or 0
 	material_values.intensity = should_shadow and 0.25 or 1
 	widget.dirty = true
@@ -716,6 +740,7 @@ HudElementPlayerPanelBase._set_status_icon = function (self, status_icon, status
 
 	if status_color then
 		local color = widget.style.texture.color
+
 		color[1] = status_color[1]
 		color[2] = status_color[2]
 		color[3] = status_color[3]
@@ -754,6 +779,7 @@ HudElementPlayerPanelBase._get_weapon_throwables_status = function (self, abilit
 
 	if max_ability_charges > 0 then
 		local ability_charges_fraction = remaining_ability_charges / max_ability_charges
+
 		ability_charges_status = math.ceil(ability_charges_fraction / (1 / max_status))
 
 		if max_ability_charges == 1 and remaining_ability_charges == 1 then
@@ -788,12 +814,14 @@ HudElementPlayerPanelBase._get_weapon_ammo_status = function (self, unit_data_ex
 
 		if inventory_component and uses_ammunition then
 			has_ammo = true
+
 			local max_clip = inventory_component.max_ammunition_clip or 0
 			local max_reserve = inventory_component.max_ammunition_reserve or 0
 			local current_clip = inventory_component.current_ammunition_clip or 0
 			local current_reserve = inventory_component.current_ammunition_reserve or 0
-			total_current_ammo = total_current_ammo + current_clip + current_reserve
-			total_max_ammo = total_max_ammo + max_clip + max_reserve
+
+			total_current_ammo = total_current_ammo + (current_clip + current_reserve)
+			total_max_ammo = total_max_ammo + (max_clip + max_reserve)
 		end
 	end
 
@@ -801,6 +829,7 @@ HudElementPlayerPanelBase._get_weapon_ammo_status = function (self, unit_data_ex
 
 	if total_max_ammo > 0 then
 		local weapon_ammo_fraction = total_current_ammo / total_max_ammo
+
 		ammo_status = math.ceil(weapon_ammo_fraction / (1 / max_status))
 	end
 
@@ -811,7 +840,7 @@ HudElementPlayerPanelBase._set_throwables_status = function (self, throwables_st
 	local widget = self._widgets_by_name.throwable
 	local style = widget.style.texture
 	local icon_color = style.color
-	local color = nil
+	local color
 
 	if throwables_status <= 0 then
 		color = UIHudSettings.color_tint_ammo_high
@@ -834,12 +863,13 @@ end
 
 HudElementPlayerPanelBase._set_ammo_level = function (self, ammo_status, visible, ui_renderer)
 	ammo_status = ammo_status or 1
+
 	local widget = self._widgets_by_name.ammo_status
 	local style = widget.style
 	local icon_style_name = "ammo"
 	local icon_style = style[icon_style_name]
 	local icon_color = icon_style.color
-	local color = nil
+	local color
 
 	if ammo_status <= 0 then
 		color = UIHudSettings.color_tint_ammo_high
@@ -874,6 +904,7 @@ end
 
 HudElementPlayerPanelBase._update_pocketable_presentation = function (self, pocketable_hud_icon, visible, ui_renderer)
 	local widget = self._widgets_by_name.pocketable
+
 	widget.content.texture = pocketable_hud_icon
 	visible = visible and pocketable_hud_icon ~= nil
 
@@ -893,6 +924,7 @@ end
 HudElementPlayerPanelBase._load_portrait_frame = function (self, item)
 	local cb = callback(self, "_cb_set_player_frame")
 	local icon_load_id = Managers.ui:load_item_icon(item, cb)
+
 	self._frame_loaded_info = {
 		icon_load_id = icon_load_id
 	}
@@ -909,6 +941,7 @@ HudElementPlayerPanelBase._unload_portrait_frame = function (self, ui_renderer)
 
 	if not self.destroyed then
 		local material_values = widget.style.texture.material_values
+
 		material_values.portrait_frame_texture = "content/ui/textures/nameplates/portrait_frames/default"
 		widget.dirty = true
 	end
@@ -930,7 +963,7 @@ HudElementPlayerPanelBase._cb_set_player_frame = function (self, item)
 		return
 	end
 
-	local icon = nil
+	local icon
 
 	if item.icon then
 		icon = item.icon
@@ -940,6 +973,7 @@ HudElementPlayerPanelBase._cb_set_player_frame = function (self, item)
 
 	local widget = self._widgets_by_name.player_icon
 	local material_values = widget.style.texture.material_values
+
 	material_values.portrait_frame_texture = icon
 	widget.dirty = true
 end
@@ -955,6 +989,7 @@ end
 HudElementPlayerPanelBase._load_portrait_insignia = function (self, item)
 	local cb = callback(self, "_cb_set_player_insignia")
 	local icon_load_id = Managers.ui:load_item_icon(item, cb)
+
 	self._insignia_loaded_info = {
 		icon_load_id = icon_load_id
 	}
@@ -972,6 +1007,7 @@ HudElementPlayerPanelBase._unload_portrait_insignia = function (self, ui_rendere
 	if not self.destroyed then
 		local insignia_style = widget.style.insignia
 		local material_values = insignia_style.material_values
+
 		insignia_style.color[1] = 0
 		material_values.texture_map = "content/ui/textures/nameplates/insignias/default"
 		widget.dirty = true
@@ -994,7 +1030,7 @@ HudElementPlayerPanelBase._cb_set_player_insignia = function (self, item)
 		return
 	end
 
-	local icon = nil
+	local icon
 
 	if item.icon then
 		icon = item.icon
@@ -1005,6 +1041,7 @@ HudElementPlayerPanelBase._cb_set_player_insignia = function (self, item)
 	local widget = self._widgets_by_name.player_icon
 	local insignia_style = widget.style.insignia
 	local material_values = insignia_style.material_values
+
 	insignia_style.color[1] = 255
 	material_values.texture_map = icon
 	widget.dirty = true
@@ -1013,6 +1050,7 @@ end
 HudElementPlayerPanelBase._request_player_icon = function (self, ui_renderer)
 	local widget = self._widgets_by_name.player_icon
 	local material_values = widget.style.texture.material_values
+
 	material_values.use_placeholder_texture = 1
 	widget.dirty = true
 
@@ -1027,6 +1065,7 @@ HudElementPlayerPanelBase._load_portrait_icon = function (self, ui_renderer)
 	local load_cb = callback(self, "_cb_set_player_icon")
 	local unload_cb = callback(self, "_cb_unset_player_icon")
 	local icon_load_id = Managers.ui:load_profile_portrait(profile, load_cb, nil, unload_cb)
+
 	self._portrait_loaded_info = {
 		icon_load_id = icon_load_id,
 		character_id = profile.character_id
@@ -1057,6 +1096,7 @@ end
 HudElementPlayerPanelBase._cb_set_player_icon = function (self, grid_index, rows, columns, render_target)
 	local widget = self._widgets_by_name.player_icon
 	local material_values = widget.style.texture.material_values
+
 	material_values.use_placeholder_texture = 0
 	material_values.rows = rows
 	material_values.columns = columns
@@ -1069,6 +1109,7 @@ end
 HudElementPlayerPanelBase._cb_unset_player_icon = function (self)
 	local widget = self._widgets_by_name.player_icon
 	local material_values = widget.style.texture.material_values
+
 	material_values.use_placeholder_texture = nil
 	material_values.rows = nil
 	material_values.columns = nil
@@ -1082,6 +1123,7 @@ HudElementPlayerPanelBase._set_character_text = function (self, character_title,
 
 	if character_text_widget then
 		local text = character_title
+
 		character_text_widget.content.text = text
 		character_text_widget.dirty = true
 	end
@@ -1147,6 +1189,7 @@ HudElementPlayerPanelBase._apply_toughness_fraction = function (self, toughness_
 	if toughness_fraction ~= self._toughness_fraction then
 		local toughness_id = "toughness"
 		local toughness_widget = widgets_by_name[toughness_id]
+
 		toughness_widget.style.texture.size[1] = bar_width * toughness_fraction
 		toughness_widget.dirty = true
 	end
@@ -1154,6 +1197,7 @@ HudElementPlayerPanelBase._apply_toughness_fraction = function (self, toughness_
 	if toughness_ghost_fraction ~= self._toughness_ghost_fraction then
 		local toughness_ghost_id = "toughness_ghost"
 		local toughness_ghost_widget = widgets_by_name[toughness_ghost_id]
+
 		toughness_ghost_widget.style.texture.size[1] = bar_width * toughness_ghost_fraction
 		toughness_ghost_widget.dirty = true
 	end
@@ -1169,7 +1213,7 @@ HudElementPlayerPanelBase._draw_health_bar = function (self, dt, t, ui_renderer)
 	local is_dead = self._dead
 	local knocked_down = self._knocked_down
 	local hogtied = self._hogtied
-	local health_max_wounds = (is_dead or hogtied) and 0 or self._health_max_wounds or 1
+	local health_max_wounds = not (not is_dead and not hogtied) and 0 or self._health_max_wounds or 1
 
 	if self._previously_drawn_health_segments and self._previously_drawn_health_segments ~= health_max_wounds then
 		for i = 1, #segment_widgets do
@@ -1184,6 +1228,7 @@ HudElementPlayerPanelBase._draw_health_bar = function (self, dt, t, ui_renderer)
 
 	self._previously_drawn_health_segments = nil
 	self._draw_health_segments = nil
+
 	local health_fraction = self._health_fraction or 1
 	local health_ghost_fraction = knocked_down and 0 or self._health_ghost_fraction
 	local health_max_fraction = knocked_down and 1 or self._health_max_fraction
@@ -1198,31 +1243,35 @@ HudElementPlayerPanelBase._draw_health_bar = function (self, dt, t, ui_renderer)
 	for i = health_max_wounds, 1, -1 do
 		local widget = segment_widgets[i]
 		local widget_offset = widget.offset
-		local segment_fraction_health = nil
+		local segment_fraction_health
 
 		if health_fraction then
 			local end_value = i * step_fraction
 			local start_value = end_value - step_fraction
+
 			segment_fraction_health = math.clamp((health_fraction - start_value) / step_fraction, 0, 1)
 		end
 
-		local segment_fraction_health_ghost = nil
+		local segment_fraction_health_ghost
 
 		if health_ghost_fraction then
 			local end_value = i * step_fraction
 			local start_value = end_value - step_fraction
+
 			segment_fraction_health_ghost = math.clamp((health_ghost_fraction - start_value) / step_fraction, 0, 1)
 		end
 
-		local segment_fraction_corruption = nil
+		local segment_fraction_corruption
 
 		if health_max_fraction then
 			local end_value = (num_segments + 1 - i) * step_fraction
 			local start_value = end_value - step_fraction
+
 			segment_fraction_corruption = math.clamp((1 - health_max_fraction - start_value) / step_fraction, 0, 1)
 		end
 
 		local widget_style = widget.style
+
 		widget_style.corruption.size[1] = segment_fraction_corruption * segment_width
 		widget_style.ghost.size[1] = segment_fraction_health_ghost * segment_width
 		widget_style.health.size[1] = segment_fraction_health * segment_width
@@ -1271,6 +1320,7 @@ HudElementPlayerPanelBase._apply_health_fraction = function (self, health_fracti
 
 	local settings = self._settings
 	local critical_health_threshold = settings.critical_health_threshold
+
 	self._on_critical_health = health_fraction <= critical_health_threshold
 
 	if update then
@@ -1290,6 +1340,7 @@ HudElementPlayerPanelBase._apply_widget_number_text = function (self, widget_id,
 
 		for i = 1, 3 do
 			local key = "text_" .. i
+
 			text_widget.content[key] = health_texts[i] or ""
 		end
 
@@ -1336,7 +1387,9 @@ HudElementPlayerPanelBase._update_coherency = function (self, coherency_extensio
 
 	if in_coherence_with_local_player ~= self._in_coherence_with_local_player or coherency_visible ~= self._coherency_visible then
 		self._in_coherence_with_local_player = in_coherence_with_local_player
+
 		local widget = self._widgets_by_name.coherency_indicator
+
 		self._coherency_visible = coherency_visible
 		widget.dirty = true
 
@@ -1352,7 +1405,9 @@ HudElementPlayerPanelBase._update_player_name_prefix = function (self, player)
 	if player_slot ~= self._player_slot or not self._player_name_prefix then
 		local player_slot_colors = UISettings.player_slot_colors
 		local color = player_slot and player_slot_colors[player_slot] or temp_player_color
+
 		self._player_slot = player_slot
+
 		local profile = player and player:profile()
 		local archetype = profile and profile.archetype
 		local string_symbol = archetype and archetype.string_symbol
@@ -1448,6 +1503,7 @@ HudElementPlayerPanelBase.set_dirty = function (self)
 
 		for i = 1, num_widgets do
 			local widget = health_bar_segment_widgets[i]
+
 			widget.dirty = true
 		end
 

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/hud/elements/world_markers/templates/world_marker_template_beacon.lua
+
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local template = {}
@@ -5,6 +7,7 @@ local size = {
 	20,
 	20
 }
+
 template.size = size
 template.name = "beacon"
 template.unit_node = "ui_marker"
@@ -104,6 +107,7 @@ end
 
 template.on_enter = function (widget)
 	local content = widget.content
+
 	content.spawn_progress_timer = 0
 end
 
@@ -118,6 +122,7 @@ template.update_function = function (parent, ui_renderer, widget, marker, templa
 	end
 
 	local distance_text = tostring(math.floor(distance)) .. "m"
+
 	content.text = distance > 1 and distance_text or ""
 
 	return animating

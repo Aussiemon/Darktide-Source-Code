@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/hazard_prop/hazard_prop_system.lua
+
 require("scripts/extension_systems/hazard_prop/hazard_prop_extension")
 
 local CircumstanceTemplates = require("scripts/settings/circumstance/circumstance_templates")
@@ -79,6 +81,7 @@ end
 HazardPropSystem.extensions_ready = function (self, world, unit)
 	if self._is_server then
 		local extension = self._unit_to_extension_map[unit]
+
 		self._prop_extensions[#self._prop_extensions + 1] = extension
 	end
 end
@@ -91,6 +94,7 @@ end
 
 HazardPropSystem._shuffle = function (self, source)
 	local seed = self._seed
+
 	self._seed = table.shuffle(source, seed)
 end
 
@@ -151,7 +155,7 @@ HazardPropSystem._sort_remainders = function (self, input)
 	local sorted = {}
 
 	while table.size(input) > 0 do
-		local top_key = nil
+		local top_key
 		local top_rem = -1
 
 		for key, rem in pairs(input) do

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/mission_objective/utilities/mission_objective_base.lua
+
 local MissionSoundEvents = require("scripts/settings/sound/mission_sound_events")
 local WwiseGameSyncSettings = require("scripts/settings/wwise_game_sync/wwise_game_sync_settings")
 local MissionObjectiveBase = class("MissionObjectiveBase")
@@ -112,6 +114,7 @@ MissionObjectiveBase.start_stage = function (self, stage)
 	self._progression = 0
 	self._second_progression = 0
 	self._objective_units = {}
+
 	local units = self:_get_active_units()
 	local synchronizer_extension = self._synchronizer_extension
 
@@ -134,6 +137,7 @@ MissionObjectiveBase.stage_done = function (self)
 			synchronizer_extension:finished_stage()
 
 			self._stage = self._stage + 1
+
 			local mission_objective_system = Managers.state.extension:system("mission_objective_system")
 
 			mission_objective_system:start_mission_objective_stage(self._name, self._stage)

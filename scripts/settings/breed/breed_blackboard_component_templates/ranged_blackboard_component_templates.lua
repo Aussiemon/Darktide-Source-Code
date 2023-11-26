@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/breed/breed_blackboard_component_templates/ranged_blackboard_component_templates.lua
+
 local base_template = require("scripts/settings/breed/breed_blackboard_component_templates/base_blackboard_component_template")
 local ranged_base = {
 	blocked = {
@@ -44,6 +46,7 @@ local ranged_base = {
 table.merge(ranged_base, base_template)
 
 local ranged_cover_user = table.clone(ranged_base)
+
 ranged_cover_user.cover = {
 	has_cover = "boolean",
 	navmesh_position = "Vector3Box",
@@ -54,7 +57,9 @@ ranged_cover_user.cover = {
 	peek_type = "string",
 	distance_to_cover = "number"
 }
+
 local netgunner = table.clone(ranged_base)
+
 netgunner.behavior = {
 	is_dragging = "boolean",
 	combat_range_sticky_time = "number",
@@ -72,11 +77,15 @@ netgunner.record_state = {
 netgunner.slot = nil
 netgunner.blocked = nil
 netgunner.suppression = nil
+
 local cultist_flamer = table.clone(ranged_base)
+
 cultist_flamer.slot = nil
 cultist_flamer.blocked = nil
 cultist_flamer.suppression = nil
+
 local grenadier = table.clone(ranged_base)
+
 grenadier.throw_grenade = {
 	anim_event = "string",
 	throw_position = "Vector3Box",
@@ -87,12 +96,16 @@ grenadier.throw_grenade = {
 grenadier.slot = nil
 grenadier.blocked = nil
 grenadier.suppression = nil
+
 local sniper = table.clone(ranged_cover_user)
+
 sniper.perception.has_good_last_los_position = "boolean"
 sniper.slot = nil
 sniper.blocked = nil
 sniper.suppression = nil
+
 local riflemen = table.clone(ranged_cover_user)
+
 riflemen.patrol = {
 	patrol_leader_unit = "Unit",
 	patrol_index = "number",
@@ -101,7 +114,9 @@ riflemen.patrol = {
 	walk_position = "Vector3Box",
 	auto_patrol = "boolean"
 }
+
 local ranged_patroller = table.clone(ranged_base)
+
 ranged_patroller.patrol = {
 	patrol_leader_unit = "Unit",
 	patrol_index = "number",
@@ -110,7 +125,9 @@ ranged_patroller.patrol = {
 	walk_position = "Vector3Box",
 	auto_patrol = "boolean"
 }
+
 local ranged_patroller_no_suppression = table.clone(ranged_base)
+
 ranged_patroller_no_suppression.patrol = {
 	patrol_leader_unit = "Unit",
 	patrol_index = "number",
@@ -120,10 +137,13 @@ ranged_patroller_no_suppression.patrol = {
 	auto_patrol = "boolean"
 }
 ranged_patroller_no_suppression.suppression = nil
+
 local renegade_flamer = table.clone(ranged_patroller)
+
 renegade_flamer.slot = nil
 renegade_flamer.blocked = nil
 renegade_flamer.suppression = nil
+
 local templates = {
 	cultist_flamer = cultist_flamer,
 	grenadier = grenadier,

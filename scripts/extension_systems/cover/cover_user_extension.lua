@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/cover/cover_user_extension.lua
+
 local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
 local CoverSettings = require("scripts/settings/cover/cover_settings")
 local CombatVectorSettings = require("scripts/settings/combat_vector/combat_vector_settings")
@@ -9,13 +11,16 @@ CoverUserExtension.init = function (self, extension_init_context, unit, extensio
 	self._cover_system = Managers.state.extension:system("cover_system")
 	self._side_system = Managers.state.extension:system("side_system")
 	self._unit = unit
+
 	local blackboard = BLACKBOARDS[unit]
 	local breed = extension_init_data.breed
 
 	self:_init_blackboard_components(blackboard, breed)
 
 	self._cover_config = breed.cover_config
+
 	local side_id = extension_init_data.side_id
+
 	self._side_id = side_id
 	self._nav_world = extension_init_context.nav_world
 end
@@ -79,11 +84,13 @@ CoverUserExtension.update = function (self, unit, dt, t)
 			self._max_distance_modifier_timer = t + max_distance_modifier_duration
 		elseif has_line_of_sight then
 			local time_diff = t - self._last_t
+
 			self._max_distance_modifier_timer = self._max_distance_modifier_timer + time_diff
 		else
 			local time_diff = max_distance_modifier_duration - (self._max_distance_modifier_timer - t)
 			local percentage = math.min(time_diff / max_distance_modifier_duration, 1)
 			local max_distance_modifier_percentage = cover_config.max_distance_modifier_percentage
+
 			self._max_distance_modifier = 1 - max_distance_modifier_percentage * percentage
 		end
 	end
@@ -97,7 +104,7 @@ CoverUserExtension.update = function (self, unit, dt, t)
 		elseif self._leave_cover_after_losing_los_duration then
 			if has_line_of_sight then
 				self._leave_cover_after_losing_los_duration = nil
-			elseif self._leave_cover_after_losing_los_duration < t then
+			elseif t > self._leave_cover_after_losing_los_duration then
 				leave_cover_after_losing_los = true
 			end
 		end
@@ -136,6 +143,7 @@ CoverUserExtension.update = function (self, unit, dt, t)
 			if not cover_slot_is_valid then
 				if cover_config.reaction_time_range and not self._reaction_time then
 					local reaction_time = math.random_range(cover_config.reaction_time_range[1], cover_config.reaction_time_range[2])
+
 					self._reaction_time = reaction_time
 				else
 					self._reaction_time = nil
@@ -145,6 +153,7 @@ CoverUserExtension.update = function (self, unit, dt, t)
 			else
 				local current_cover_position = current_cover_slot.navmesh_position:unbox()
 				local distance = Vector3.distance(POSITION_LOOKUP[unit], current_cover_position)
+
 				cover_component.distance_to_cover = distance
 			end
 		end
@@ -162,6 +171,7 @@ CoverUserExtension._claim_cover_slot = function (self, cover_slot)
 	local cover_slot_direction = cover_slot.direction
 	local cover_slot_type = cover_slot.type
 	local cover_slot_peek_type = cover_slot.peek_type
+
 	cover_component.has_cover = true
 
 	cover_component.position:store(cover_slot_position:unbox())
@@ -173,6 +183,7 @@ CoverUserExtension._claim_cover_slot = function (self, cover_slot)
 	cover_slot.occupied = true
 	self._current_cover_slot = cover_slot
 	self._current_cover_slot_id = cover_slot.id
+
 	local game_mode_name = Managers.state.game_mode:game_mode_name()
 
 	if game_mode_name == TRAINING_GROUNDS_GAME_MODE_NAME then
@@ -188,7 +199,7 @@ CoverUserExtension._find_cover_slot = function (self, unit, cover_config, target
 	local cover_system = self._cover_system
 	local search_sources = CoverSettings.user_search_sources
 	local search_source = cover_config.search_source
-	local search_position = nil
+	local search_position
 
 	if search_source == search_sources.from_self then
 		search_position = POSITION_LOOKUP[unit]
@@ -196,10 +207,11 @@ CoverUserExtension._find_cover_slot = function (self, unit, cover_config, target
 		search_position = POSITION_LOOKUP[target_unit]
 	elseif search_source == search_sources.from_combat_vector_start then
 		local combat_vector_system = self._combat_vector_system
+
 		search_position = combat_vector_system:get_from_position()
 	end
 
-	local radius = nil
+	local radius
 	local suppressed_search_radius = cover_config.suppressed_search_radius
 	local suppression_component = self._suppression_component
 	local is_suppressed = suppression_component and suppression_component.is_suppressed
@@ -211,7 +223,7 @@ CoverUserExtension._find_cover_slot = function (self, unit, cover_config, target
 	end
 
 	local nearby_cover_slots = cover_system:find_cover_slots(search_position, radius)
-	local best_cover_slot = nil
+	local best_cover_slot
 	local num_nearby_cover_slots = #nearby_cover_slots
 
 	for i = 1, num_nearby_cover_slots do
@@ -222,6 +234,7 @@ CoverUserExtension._find_cover_slot = function (self, unit, cover_config, target
 
 			if cover_slot_is_valid then
 				best_cover_slot = cover_slot
+
 				local suppressed_search_sticky_time = cover_config.suppressed_search_sticky_time
 
 				if is_suppressed and suppressed_search_sticky_time then
@@ -299,7 +312,7 @@ CoverUserExtension._validate_cover_slot = function (self, cover_slot, cover_conf
 	if is_main_path_available then
 		local combat_vector_system = self._combat_vector_system
 		local current_vector_type = self._combat_vector_extension:get_vector_type()
-		local combat_vector_direction = nil
+		local combat_vector_direction
 
 		if current_vector_type and current_vector_type ~= CombatVectorSettings.vector_types.main then
 			combat_vector_direction = combat_vector_system:get_flank_direction(current_vector_type)
@@ -345,7 +358,7 @@ CoverUserExtension._validate_cover_slot = function (self, cover_slot, cover_conf
 				local target_position = POSITION_LOOKUP[current_target_unit]
 				local z_distance = cover_slot_position.z - target_position.z
 
-				if max_distance_from_target_z_below > z_distance then
+				if z_distance < max_distance_from_target_z_below then
 					return false
 				end
 			end
@@ -378,8 +391,7 @@ CoverUserExtension._validate_cover_slot = function (self, cover_slot, cover_conf
 		local last_los_position = perception_extension:last_los_position(target_unit)
 
 		if last_los_position then
-			local cover_slot_position = cover_slot.position:unbox()
-			local slot_direction = cover_slot.direction:unbox()
+			local cover_slot_position, slot_direction = cover_slot.position:unbox(), cover_slot.direction:unbox()
 			local slot_to_target = Vector3.normalize(last_los_position - cover_slot_position)
 			local dot = Vector3.dot(slot_to_target, slot_direction)
 
@@ -390,8 +402,7 @@ CoverUserExtension._validate_cover_slot = function (self, cover_slot, cover_conf
 	end
 
 	if cover_config.dot_against_current_target and ALIVE[current_target_unit] then
-		local cover_slot_position = cover_slot.position:unbox()
-		local slot_direction = cover_slot.direction:unbox()
+		local cover_slot_position, slot_direction = cover_slot.position:unbox(), cover_slot.direction:unbox()
 		local slot_to_target = Vector3.normalize(POSITION_LOOKUP[current_target_unit] - cover_slot_position)
 		local dot = Vector3.dot(slot_to_target, slot_direction)
 
@@ -408,12 +419,14 @@ CoverUserExtension.release_cover_slot = function (self, optional_cover_disable_t
 
 	if current_cover_slot then
 		local cover_component = self._cover_component
+
 		cover_component.has_cover = false
 		cover_component.is_in_cover = false
 		current_cover_slot.occupied = false
 
 		if optional_cover_disable_t then
 			local t = Managers.time:time("gameplay")
+
 			current_cover_slot.disable_t = t + optional_cover_disable_t
 		end
 	end

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/mutator/templates/mutator_modify_pacing_templates.lua
+
 local HordeCompositions = require("scripts/managers/pacing/horde_pacing/horde_compositions")
 local RoamerPacks = require("scripts/settings/roamer/roamer_packs")
 local mutator_templates = {

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/dialogue/dialogue_system_subtitle.lua
+
 local DialogueSpeakerVoiceSettings = require("scripts/settings/dialogue/dialogue_speaker_voice_settings")
 local DialogueSystemSubtitle = class("DialogueSystemSubtitle")
 
@@ -55,12 +57,12 @@ DialogueSystemSubtitle.update = function (self, dt)
 end
 
 DialogueSystemSubtitle.create_subtitle = function (self, currently_playing_subtitle, speaker_name, duration, optional_delay)
-	local dialogue = {
-		currently_playing_subtitle = currently_playing_subtitle,
-		speaker_name = speaker_name,
-		duration = duration,
-		is_audible = true
-	}
+	local dialogue = {}
+
+	dialogue.currently_playing_subtitle = currently_playing_subtitle
+	dialogue.speaker_name = speaker_name
+	dialogue.duration = duration
+	dialogue.is_audible = true
 
 	if optional_delay then
 		self._subtitle_delay = optional_delay
@@ -85,6 +87,7 @@ end
 DialogueSystemSubtitle.remove_localized_dialogue = function (self, dialogue)
 	local localized_index = table.index_of(self._playing_localized_dialogues_array, dialogue)
 	local localized_audible_index = table.index_of(self._playing_audible_localized_dialogues_array, dialogue)
+
 	dialogue.last_audible = nil
 
 	table.remove(self._playing_localized_dialogues_array, localized_index)

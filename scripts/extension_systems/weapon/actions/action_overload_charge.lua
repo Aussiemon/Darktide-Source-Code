@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/weapon/actions/action_overload_charge.lua
+
 require("scripts/extension_systems/weapon/actions/action_charge")
 
 local ActionModules = require("scripts/extension_systems/weapon/actions/modules/action_modules")
@@ -7,6 +9,7 @@ ActionOverloadCharge.init = function (self, action_context, action_params, actio
 	ActionOverloadCharge.super.init(self, action_context, action_params, action_settings)
 
 	local overload_module_class_name = action_settings.overload_module_class_name
+
 	self._overload_module = ActionModules[overload_module_class_name]:new(self._player_unit, action_settings, self._inventory_slot_component)
 end
 

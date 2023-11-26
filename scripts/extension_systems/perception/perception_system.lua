@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/perception/perception_system.lua
+
 require("scripts/extension_systems/perception/minion_perception_extension")
 require("scripts/extension_systems/perception/bot_perception_extension")
 
@@ -31,10 +33,12 @@ PerceptionSystem._init_line_of_sight_raycasts = function (self, physics_world)
 		local line_of_sight_collision_filter = data.line_of_sight_collision_filter
 
 		if line_of_sight_collision_filter and not line_of_sight_raycast_data[line_of_sight_collision_filter] then
-			local los_data = {
-				current_casting_units = {}
-			}
+			local los_data = {}
+
+			los_data.current_casting_units = {}
+
 			local cb = callback(self, "physics_cb_line_of_sight_hit", line_of_sight_collision_filter)
+
 			los_data.raycast = PhysicsWorld.make_raycast(physics_world, cb, "closest", "types", "both", "collision_filter", line_of_sight_collision_filter)
 			line_of_sight_raycast_data[line_of_sight_collision_filter] = los_data
 		end
@@ -92,6 +96,7 @@ end
 
 PerceptionSystem.register_prioritized_unit_update = function (self, unit)
 	local perception_extension = self._unit_to_extension_map[unit]
+
 	self._prioritized_update_units[unit] = perception_extension
 end
 

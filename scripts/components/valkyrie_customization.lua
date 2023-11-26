@@ -1,7 +1,10 @@
+﻿-- chunkname: @scripts/components/valkyrie_customization.lua
+
 local ValkyrieCustomization = component("ValkyrieCustomization")
 
 ValkyrieCustomization.init = function (self, unit)
 	local world = Unit.world(unit)
+
 	self._unit = unit
 	self._world = world
 
@@ -131,9 +134,7 @@ end
 
 ValkyrieCustomization.destroy = function (self, unit)
 	local world = self._world
-	local unit_alive = Unit.alive
-	local unit_get_data = Unit.get_data
-	local unit_set_data = Unit.set_data
+	local unit_alive, unit_get_data, unit_set_data = Unit.alive, Unit.get_data, Unit.set_data
 
 	for i = 1, Unit.data_table_size(unit, "attached_items") do
 		if unit_alive(unit_get_data(unit, "attached_items", i)) ~= false then

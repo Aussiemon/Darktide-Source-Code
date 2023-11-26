@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/localization/forbidden_words.lua
+
 local forbidden_words = {
 	phrases = {
 		[5] = {

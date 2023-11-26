@@ -1,20 +1,23 @@
+﻿-- chunkname: @scripts/settings/options/input_settings.lua
+
 local OptionsUtilities = require("scripts/utilities/ui/options")
 local SaveData = require("scripts/managers/save/save_data")
 local SettingsUtilitiesFunction = require("scripts/settings/options/settings_utils")
 local SettingsUtilities = {}
 
 local function construct_interface_settings_boolean(template)
-	local entry = {
-		default_value = template.default_value,
-		display_name = template.display_name,
-		on_value_changed = template.on_value_changed,
-		indentation_level = template.indentation_level,
-		validation_function = template.validation_function,
-		tooltip_text = template.tooltip_text,
-		disable_rules = template.disable_rules,
-		id = template.id,
-		apply_on_startup = template.apply_on_startup
-	}
+	local entry = {}
+
+	entry.default_value = template.default_value
+	entry.display_name = template.display_name
+	entry.on_value_changed = template.on_value_changed
+	entry.indentation_level = template.indentation_level
+	entry.validation_function = template.validation_function
+	entry.tooltip_text = template.tooltip_text
+	entry.disable_rules = template.disable_rules
+	entry.id = template.id
+	entry.apply_on_startup = template.apply_on_startup
+
 	local id = template.id
 	local save_location = template.save_location
 	local default_value = template.default_value
@@ -61,6 +64,7 @@ local function construct_interface_settings_percent_slider(template)
 
 	local function explode_value(percent_value)
 		local exploded_value = min_value + percent_value * convertion_value
+
 		exploded_value = math.round(exploded_value / step_size) * step_size
 
 		return exploded_value
@@ -169,6 +173,7 @@ local function construct_interface_settings_dropdown(template)
 
 	for i = 1, #template.options do
 		local value = template.options[i]
+
 		options[#options + 1] = {
 			id = value.name,
 			value = value.name,

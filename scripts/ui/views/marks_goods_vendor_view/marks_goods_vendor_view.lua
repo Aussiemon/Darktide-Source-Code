@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/marks_goods_vendor_view/marks_goods_vendor_view.lua
+
 local VendorViewBase = require("scripts/ui/views/vendor_view_base/vendor_view_base")
 local Definitions = require("scripts/ui/views/marks_goods_vendor_view/marks_goods_vendor_view_definitions")
 local MarksGoodsVendorViewSettings = require("scripts/ui/views/marks_goods_vendor_view/marks_goods_vendor_view_settings")
@@ -9,6 +11,7 @@ MarksGoodsVendorView.init = function (self, settings, context)
 	MarksGoodsVendorView.super.init(self, Definitions, settings, context)
 
 	local parent = context and context.parent
+
 	self._parent = parent
 	self._debug = context and context.debug
 
@@ -26,6 +29,7 @@ MarksGoodsVendorView._setup_result_overlay = function (self, result_data)
 
 	local reference_name = "result_overlay"
 	local layer = 40
+
 	self._result_overlay = self:_add_element(ViewElementItemResultOverlay, reference_name, layer)
 
 	self:_update_result_overlay_position()
@@ -40,7 +44,7 @@ end
 
 MarksGoodsVendorView._get_store = function (self)
 	local store_service = Managers.data_service.store
-	local store_promise = nil
+	local store_promise
 
 	if self._show_temporary_store_items then
 		store_promise = store_service:get_marks_store_temporary()
@@ -231,6 +235,7 @@ end
 
 MarksGoodsVendorView._preview_item = function (self, item)
 	self._previewed_item = item
+
 	local visible = true
 
 	self:_set_preview_widgets_visibility(visible)

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/vendor_interaction_view_base/vendor_interaction_view_base_definitions.lua
+
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local UIWorkspaceSettings = require("scripts/settings/ui/ui_workspace_settings")
@@ -159,6 +161,7 @@ local scenegraph_definition = {
 	}
 }
 local wallet_text_font_style = table.clone(UIFontSettings.currency_title)
+
 wallet_text_font_style.text_horizontal_alignment = "right"
 wallet_text_font_style.text_vertical_alignment = "center"
 wallet_text_font_style.original_offset = {
@@ -166,7 +169,9 @@ wallet_text_font_style.original_offset = {
 	0,
 	1
 }
+
 local title_text_font_style = table.clone(UIFontSettings.header_1)
+
 title_text_font_style.offset = {
 	0,
 	0,
@@ -174,7 +179,9 @@ title_text_font_style.offset = {
 }
 title_text_font_style.text_horizontal_alignment = "left"
 title_text_font_style.text_vertical_alignment = "top"
+
 local description_text_font_style = table.clone(UIFontSettings.body)
+
 description_text_font_style.offset = {
 	0,
 	0,
@@ -186,6 +193,7 @@ description_text_font_style.size = {
 	700,
 	50
 }
+
 local widget_definitions = {
 	canvas_overlay = UIWidget.create_definition({
 		{
@@ -314,6 +322,7 @@ local animations = {
 			end,
 			update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress, params)
 				local anim_progress = math.easeOutCubic(progress)
+
 				parent._alpha_multiplier = anim_progress
 			end,
 			on_complete = function (parent, ui_scenegraph, scenegraph_definition, widgets, params)
@@ -338,6 +347,7 @@ local animations = {
 				end
 
 				local canvas_overlay = parent._widgets_by_name.canvas_overlay
+
 				canvas_overlay.alpha_multiplier = math.min(1 - alpha_multiplier, canvas_overlay.alpha_multiplier or 0)
 			end,
 			on_complete = function (parent, ui_scenegraph, scenegraph_definition, widgets, params)
@@ -362,6 +372,7 @@ local animations = {
 				end
 
 				local canvas_overlay = parent._widgets_by_name.canvas_overlay
+
 				canvas_overlay.alpha_multiplier = math.min(1 - alpha_multiplier, canvas_overlay.alpha_multiplier or 0)
 			end,
 			on_complete = function (parent, ui_scenegraph, scenegraph_definition, widgets, params)

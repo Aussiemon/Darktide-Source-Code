@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/splash_view/splash_view_definitions.lua
+
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local scenegraph_definition = {
 	screen = {

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/foundation/utilities/serialize.lua
+
 require("scripts/foundation/utilities/error")
 
 local function _basic_serialize(object)

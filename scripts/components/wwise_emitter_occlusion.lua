@@ -1,15 +1,21 @@
+﻿-- chunkname: @scripts/components/wwise_emitter_occlusion.lua
+
 local WwiseEmitterOcclusion = component("WwiseEmitterOcclusion")
 
 WwiseEmitterOcclusion.init = function (self, unit)
 	self:enable(unit)
 
 	self._unit = unit
+
 	local world = Unit.world(unit)
 	local wwise_world = Wwise.wwise_world(world)
+
 	self._wwise_world = wwise_world
 	self._sound_obstructor_id = nil
+
 	local occlusion_value = self:get_data(unit, "occlusion_value")
 	local acoustic_texture = self:get_data(unit, "acoustic_texture")
+
 	self._sound_obstructor_id = WwiseWorld.add_sound_obstructor_unit(wwise_world, unit, occlusion_value, acoustic_texture)
 end
 

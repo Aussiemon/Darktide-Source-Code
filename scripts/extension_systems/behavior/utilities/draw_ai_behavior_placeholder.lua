@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/behavior/utilities/draw_ai_behavior_placeholder.lua
+
 local ScriptGui = require("scripts/foundation/utilities/script_gui")
 local Utility = require("scripts/extension_systems/behavior/utilities/utility")
 local SMALL_FONT_SIZE = 16
@@ -19,8 +21,11 @@ local row_heights = {
 }
 local ROW_SPACING = NODE_HEIGHT * 0.5
 local BORDER_SPACING = NODE_HEIGHT
+
 DrawAiBehavior = DrawAiBehavior or {}
+
 local DrawAiBehavior = DrawAiBehavior
+
 DrawAiBehavior.winning_utility_value = 0
 DrawAiBehavior.circle_array = {}
 DrawAiBehavior.circle_array_index = 0
@@ -44,8 +49,7 @@ local function present_circle_array(gui, x, y)
 	local index = DrawAiBehavior.circle_array_index
 	local max_items = DrawAiBehavior.circle_max_size
 	local num_items = #a
-	local x1 = x
-	local y1 = y
+	local x1, y1 = x, y
 
 	ScriptGui.icrect(gui, RES_X, RES_Y, x1 - 5, y1, x1 + 300, y1 + num_items * FONT_SIZE + 10, LAYER, Color(100, 100, 100, 150))
 
@@ -101,10 +105,11 @@ end
 local function draw_utility_condition(gui, action_name, consideration, pos, win_size, blackboard, utility_data, bk_color)
 	local component_name = consideration.blackboard_component
 	local field_name = consideration.component_field
-	local value = nil
+	local value
 
 	if component_name then
 		local component = blackboard[component_name]
+
 		value = component[field_name]
 	else
 		value = utility_data[field_name]
@@ -131,6 +136,7 @@ local function draw_utility_spline(gui, t, consideration_data, temp_max_value, n
 	local w = size.x
 	local h = size.y
 	local line_color = Color(255 * fade_factor, 255, 255, 255)
+
 	thickness = thickness or 5
 
 	for i = 1, #spline - 2, 2 do
@@ -148,6 +154,7 @@ end
 local function draw_square(gui, t, pos, width, color, thickness)
 	thickness = thickness or 5
 	width = width * 0.5
+
 	local x1 = pos.x - width
 	local y1 = pos.y - width
 	local x2 = pos.x + width
@@ -178,12 +185,13 @@ local function get_utility_from_spline(spline, x)
 end
 
 local function draw_realtime_utility(gui, action_name, consideration, pos, win_size, blackboard, utility_data, t)
-	local value = nil
+	local value
 	local component_name = consideration.blackboard_component
 	local field_name = consideration.component_field
 
 	if component_name then
 		local component = blackboard[component_name]
+
 		value = component[field_name]
 	else
 		value = utility_data[field_name]
@@ -243,7 +251,7 @@ local function draw_utility_nodes(gui, blackboard, utility_data, running, action
 		DrawAiBehavior.winning_utility_value = utility
 	end
 
-	local sum_text = nil
+	local sum_text
 
 	if running then
 		sum_text = string.format("sum: %.1f, (%.1f)", utility, DrawAiBehavior.winning_utility_value)
@@ -286,7 +294,7 @@ local function draw_hook_box(gui, node, node_width, extra_height, header_text, h
 end
 
 local function draw_node(gui, node, text, running, x1, y1, node_width, extra_height, dt, tcolor)
-	local color = nil
+	local color
 
 	if running then
 		color = Color(200, 242, 152, 7)
@@ -329,8 +337,7 @@ local function draw_node(gui, node, text, running, x1, y1, node_width, extra_hei
 
 	ScriptGui.itext(gui, RES_X, RES_Y, node.__class_name, DevParameters.debug_text_font, SMALL_FONT_SIZE, x1 + TEXT_SPACING, y1, LAYER + 1, tcolor)
 
-	local bottom_y = y1 + NODE_HEIGHT + extra_height
-	local box_height = nil
+	local bottom_y, box_height = y1 + NODE_HEIGHT + extra_height
 
 	ScriptGui.irect(gui, RES_X, RES_Y, x1, y1, x1 + node_width, bottom_y, LAYER, color)
 	ScriptGui.itext(gui, RES_X, RES_Y, text, DevParameters.debug_text_font, FONT_SIZE, x1 + TEXT_SPACING, y1 + NODE_HEIGHT * 0.15, LAYER + 1, tcolor)
@@ -355,7 +362,7 @@ end
 local function draw_node_children(bt, gui, node, node_children, blackboard, running_node, row, x1, y1, node_width, extra_node_height, total_width, extra_utility_height, t, dt, node_data)
 	local row_height = row_heights[row] or 0
 	local child_y = y1 + row_height + ROW_SPACING
-	local start_x, start_y = nil
+	local start_x, start_y
 
 	if node.__class_name == "BtSequenceNode" then
 		start_x = x1
@@ -365,8 +372,7 @@ local function draw_node_children(bt, gui, node, node_children, blackboard, runn
 		start_y = child_y
 	end
 
-	local cx = start_x
-	local cy = start_y
+	local cx, cy = start_x, start_y
 	local next_row = row + 1
 	local draw_utility = node.__class_name == "BtRandomUtilityNode"
 	local line_color_normal = Color(150, 100, 255, 100)
@@ -391,6 +397,7 @@ local function draw_node_children(bt, gui, node, node_children, blackboard, runn
 		end
 
 		local child_extra_total_width, child_extra_total_height, child_extra_height, child_width = DrawAiBehavior.draw_tree(bt, gui, child, blackboard, running_node, next_row, dt, t, cx, cy, draw_utility, nil, node_data)
+
 		max_child_extra_total_width = math.max(max_child_extra_total_width, child_extra_total_width)
 		max_child_extra_height = math.max(max_child_extra_height, child_extra_height)
 		max_child_width = math.max(max_child_width, child_width)
@@ -418,12 +425,13 @@ local function draw_node_children(bt, gui, node, node_children, blackboard, runn
 	end
 
 	row_heights[next_row] = NODE_HEIGHT + max_child_extra_height
+
 	local xb = 5 / RES_X
 	local yb = 5 / RES_Y
 	local ocolor = Color(70, 55, 155, 200)
 	local bounding_box_x1 = start_x - xb
 	local bounding_box_y1 = child_y - yb
-	local bounding_box_x2, bounding_box_y2 = nil
+	local bounding_box_x2, bounding_box_y2
 
 	if node.__class_name == "BtSequenceNode" then
 		bounding_box_x2 = start_x + max_child_width + xb
@@ -436,7 +444,7 @@ local function draw_node_children(bt, gui, node, node_children, blackboard, runn
 
 	ScriptGui.irect(gui, RES_X, RES_Y, bounding_box_x1, bounding_box_y1, bounding_box_x2, bounding_box_y2, line_layer, ocolor)
 
-	local total_extra_height = nil
+	local total_extra_height
 
 	if node.__class_name == "BtSequenceNode" then
 		total_extra_height = cy - child_y
@@ -455,17 +463,19 @@ DrawAiBehavior.tree_width = function (gui, node)
 	local id_width = (id_max.x - id_min.x) / RES_X + TEXT_SPACING
 	local name_width = (name_max.x - name_min.x) / RES_X + TEXT_SPACING
 	local text_width = math.max(MIN_NODE_WIDTH, id_width, name_width)
+
 	nodes[id] = {
 		w = text_width
 	}
+
 	local node_children = node._children
 
 	if node_children then
-		local n = 0
-		local w = 0
+		local n, w = 0, 0
 
 		for _, child in pairs(node_children) do
 			local amount, width = DrawAiBehavior.tree_width(gui, child)
+
 			n = n + amount
 
 			if node.__class_name ~= "BtSequenceNode" then
@@ -511,10 +521,12 @@ DrawAiBehavior.draw_tree = function (bt, gui, node, blackboard, running_node, ro
 	if draw_utility and tree_node and action_data and considerations then
 		local utility_node_data = node_data[node.parent.identifier].utility_node_data
 		local utility_data = utility_node_data[node.identifier]
+
 		extra_utility_height = draw_utility_nodes(gui, blackboard, utility_data, running, action_data, text, considerations, x1, y1, extra_height, t)
 	end
 
 	extra_height = draw_node(gui, node, text, running, x1, y1, node_width, extra_height, dt, tcolor)
+
 	local max_child_extra_width = 0
 	local max_child_extra_height = 0
 	local node_children = node._children

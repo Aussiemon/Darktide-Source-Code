@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/equipment/weapon_templates/bot_lasgun_killshot.lua
+
 local BaseTemplateSettings = require("scripts/settings/equipment/weapon_templates/base_template_settings")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
@@ -24,65 +26,65 @@ local sway_trait_templates = WeaponTraitTemplates[template_types.sway]
 local toughness_trait_templates = WeaponTraitTemplates[template_types.toughness]
 local weapon_handling_trait_templates = WeaponTraitTemplates[template_types.weapon_handling]
 local movement_curve_modifier_trait_templates = WeaponTraitTemplates[template_types.movement_curve_modifier]
-local weapon_template = {
-	action_inputs = {
-		shoot_pressed = {
-			buffer_time = 0.5,
-			max_queue = 2,
-			input_sequence = {
-				{
-					value = true,
-					input = "action_one_pressed"
-				}
+local weapon_template = {}
+
+weapon_template.action_inputs = {
+	shoot_pressed = {
+		buffer_time = 0.5,
+		max_queue = 2,
+		input_sequence = {
+			{
+				value = true,
+				input = "action_one_pressed"
 			}
-		},
-		zoom_shoot = {
-			buffer_time = 0.26,
-			max_queue = 2,
-			input_sequence = {
-				{
-					value = true,
-					hold_input = "action_two_hold",
-					input = "action_one_pressed"
-				}
+		}
+	},
+	zoom_shoot = {
+		buffer_time = 0.26,
+		max_queue = 2,
+		input_sequence = {
+			{
+				value = true,
+				hold_input = "action_two_hold",
+				input = "action_one_pressed"
 			}
-		},
-		zoom = {
-			buffer_time = 0.4,
-			input_sequence = {
-				{
-					value = true,
-					input = "action_two_hold"
-				}
+		}
+	},
+	zoom = {
+		buffer_time = 0.4,
+		input_sequence = {
+			{
+				value = true,
+				input = "action_two_hold"
 			}
-		},
-		zoom_release = {
-			buffer_time = 0.3,
-			input_sequence = {
-				{
-					value = false,
-					input = "action_two_hold",
-					time_window = math.huge
-				}
+		}
+	},
+	zoom_release = {
+		buffer_time = 0.3,
+		input_sequence = {
+			{
+				value = false,
+				input = "action_two_hold",
+				time_window = math.huge
 			}
-		},
-		reload = {
-			buffer_time = 0,
-			clear_input_queue = true,
-			input_sequence = {
-				{
-					value = true,
-					input = "weapon_reload"
-				}
+		}
+	},
+	reload = {
+		buffer_time = 0,
+		clear_input_queue = true,
+		input_sequence = {
+			{
+				value = true,
+				input = "weapon_reload"
 			}
-		},
-		wield = {
-			buffer_time = 0,
-			clear_input_queue = true,
-			input_sequence = {
-				{
-					inputs = wield_inputs
-				}
+		}
+	},
+	wield = {
+		buffer_time = 0,
+		clear_input_queue = true,
+		input_sequence = {
+			{
+				inputs = wield_inputs
 			}
 		}
 	}

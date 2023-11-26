@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/event/event_manager.lua
+
 local EventManager = class("EventManager")
 
 EventManager.init = function (self)
@@ -9,6 +11,7 @@ EventManager.register = function (self, object, ...)
 	for i = 1, select("#", ...), 2 do
 		local event_name = select(i, ...)
 		local callback_name = select(i + 1, ...)
+
 		self._events[event_name] = self._events[event_name] or setmetatable({}, {
 			__mode = "v"
 		})
@@ -40,6 +43,7 @@ end
 
 EventManager.register_with_parameters = function (self, object, function_name, event_name, ...)
 	local cb = callback(object, function_name, ...)
+
 	self._callbacks[event_name] = self._callbacks[event_name] or {}
 	self._callbacks[event_name][object] = cb
 end

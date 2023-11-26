@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/telemetry/reporters/com_wheel_reporter.lua
+
 local ReporterInterface = require("scripts/managers/telemetry/reporters/reporter_interface")
 local ComWheelReporter = class("ComWheelReporter")
 

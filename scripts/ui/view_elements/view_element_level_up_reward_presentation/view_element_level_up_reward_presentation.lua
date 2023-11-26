@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/view_elements/view_element_level_up_reward_presentation/view_element_level_up_reward_presentation.lua
+
 local ScriptWorld = require("scripts/foundation/utilities/script_world")
 local UIRenderer = require("scripts/managers/ui/ui_renderer")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
@@ -16,6 +18,7 @@ local ViewElementLevelUpRewardPresentation = class("ViewElementLevelUpRewardPres
 
 ViewElementLevelUpRewardPresentation.init = function (self, parent, draw_layer, start_scale)
 	local definitions = require(definition_path)
+
 	self._time = nil
 	self._reference_name = "ViewElementLevelUpRewardPresentation_" .. tostring(self)
 
@@ -34,10 +37,13 @@ ViewElementLevelUpRewardPresentation._setup_default_gui = function (self)
 	local world_layer = WORLD_LAYER_TOP_GUI + self._draw_layer
 	local world_name = reference_name .. "_ui_default_world"
 	local view_name = self._parent.view_name
+
 	self._world = ui_manager:create_world(world_name, world_layer, timer_name, view_name)
+
 	local viewport_name = reference_name .. "_ui_default_world_viewport"
 	local viewport_type = "overlay"
 	local viewport_layer = 1
+
 	self._viewport = ui_manager:create_viewport(self._world, viewport_name, viewport_type, viewport_layer)
 	self._viewport_name = viewport_name
 	self._ui_default_renderer = ui_manager:create_renderer(reference_name .. "_ui_default_renderer", self._world)
@@ -50,16 +56,21 @@ ViewElementLevelUpRewardPresentation._setup_background_gui = function (self)
 	local world_layer = WORLD_LAYER_BACKGROUND + self._draw_layer
 	local world_name = reference_name .. "_ui_background_world"
 	local view_name = self._parent.view_name
+
 	self._background_world = ui_manager:create_world(world_name, world_layer, timer_name, view_name)
+
 	local shading_environment = "content/shading_environments/ui/ui_popup_background"
 	local shading_callback = callback(self, "cb_background_shading_callback")
 	local viewport_name = reference_name .. "_ui_background_world_viewport"
 	local viewport_type = "overlay"
 	local viewport_layer = 1
+
 	self._background_viewport = ui_manager:create_viewport(self._background_world, viewport_name, viewport_type, viewport_layer, shading_environment, shading_callback)
 	self._background_viewport_name = viewport_name
 	self._ui_popup_background_renderer = ui_manager:create_renderer(reference_name .. "_ui_popup_background_renderer", self._background_world)
+
 	local background_widget_definition = self._definitions.background_widget_definition
+
 	self._background_widget = self:_create_widget("background_widget", background_widget_definition)
 	self._blur_duration = BLUR_TIME
 end
@@ -100,12 +111,14 @@ ViewElementLevelUpRewardPresentation._initialize_preview_world = function (self)
 	local world_layer = WORLD_LAYER_ITEM + self._draw_layer
 	local world_timer_name = "ui"
 	local view_name = self._parent.view_name
+
 	self._world_spawner = UIWorldSpawner:new(world_name, world_layer, world_timer_name, view_name)
+
 	local viewport_name = self._reference_name .. "_viewport"
 	local viewport_type = "default"
 	local viewport_layer = 1
 	local shading_environment = ViewElementLevelUpRewardPresentationSettings.shading_environment
-	local camera_unit = nil
+	local camera_unit
 
 	self._world_spawner:create_viewport(camera_unit, viewport_name, viewport_type, viewport_layer, shading_environment)
 end
@@ -124,7 +137,7 @@ ViewElementLevelUpRewardPresentation._get_spawn_position = function (self)
 	local world_spawner = self._world_spawner
 	local camera = world_spawner:camera()
 	local scale = self._render_scale
-	local depth_multiplier = 1 + 1 - scale
+	local depth_multiplier = 1 + (1 - scale)
 	local weapon_spawn_depth = ViewElementLevelUpRewardPresentationSettings.weapon_spawn_depth * depth_multiplier
 	local world_depth = linear_to_clip_depth(weapon_spawn_depth, Camera.near_range(camera), Camera.far_range(camera))
 	local viewport_scenegraph_id = "pivot"
@@ -151,9 +164,13 @@ ViewElementLevelUpRewardPresentation.start = function (self)
 	self:_initialize_preview_world()
 
 	local presentation_data = self._presentation_data
+
 	self._duration = presentation_data.duration or 0
+
 	local on_enter_animation_callback = callback(self, "cb_start_reward_presentation")
+
 	self._on_enter_anim_id = self:_start_animation("on_enter", self._widgets_by_name, self, on_enter_animation_callback)
+
 	local world_spawner = self._world_spawner
 	local world = world_spawner:world()
 	local camera = world_spawner:camera()
@@ -188,12 +205,14 @@ ViewElementLevelUpRewardPresentation.start = function (self)
 		Log.info("ViewElementLevelUpRewardPresentation", "item_reward: %s", item_name)
 	elseif presentation_type == "unlock" then
 		local text = presentation_data.text
+
 		self._widgets_by_name.name_text.content.text = text
 		self._widgets_by_name.title_text.content.text = Managers.localization:localize("loc_level_up_reward_title_unlock")
 		self._widgets_by_name.texture.content.texture = "content/ui/materials/placeholders/eor_unlock"
 		texture_visible = true
 	elseif presentation_type == "acquired" then
 		local text = presentation_data.text
+
 		self._widgets_by_name.name_text.content.text = text
 		self._widgets_by_name.title_text.content.text = Managers.localization:localize("loc_level_up_reward_title_acquired")
 		self._widgets_by_name.texture.content.texture = "content/ui/materials/placeholders/eor_reward"
@@ -261,14 +280,18 @@ ViewElementLevelUpRewardPresentation.draw = function (self, dt, t, ui_renderer, 
 	end
 
 	ui_renderer = self._ui_default_renderer
+
 	local previous_alpha_multiplier = render_settings.alpha_multiplier
 	local alpha_multiplier = self._alpha_multiplier or 0
+
 	render_settings.alpha_multiplier = alpha_multiplier
 
 	ViewElementLevelUpRewardPresentation.super.draw(self, dt, t, ui_renderer, render_settings, input_service)
 
 	local previous_layer = render_settings.start_layer
+
 	render_settings.start_layer = (previous_layer or 0) + self._draw_layer
+
 	local ui_scenegraph = self._ui_scenegraph
 	local ui_popup_background_renderer = self._ui_popup_background_renderer
 
@@ -307,7 +330,7 @@ ViewElementLevelUpRewardPresentation.update = function (self, dt, t, input_servi
 	end
 
 	if self._time then
-		if self._duration <= self._time then
+		if self._time >= self._duration then
 			self._done = true
 		else
 			self._time = self._time + dt

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/multiplayer/connection/local_states/local_profiles_sync_state.lua
+
 local ProfileUtils = require("scripts/utilities/profile_utils")
 local RPCS = {
 	"rpc_sync_local_profiles_reply"
@@ -8,6 +10,7 @@ LocalProfilesSyncState.init = function (self, state_machine, shared_state)
 	self._shared_state = shared_state
 	self._time = 0
 	self._got_reply = false
+
 	local network_event_delegate = shared_state.event_delegate
 	local channel_id = shared_state.channel_id
 
@@ -18,8 +21,10 @@ LocalProfilesSyncState.init = function (self, state_machine, shared_state)
 	profile_synchronizer_client:register_rpcs(channel_id)
 
 	self._profile_synchronizer_client = profile_synchronizer_client
+
 	local peer_id = Network.peer_id()
 	local players_at_peer = Managers.player:players_at_peer(peer_id)
+
 	self._peer_id = peer_id
 	self._players = players_at_peer
 
@@ -34,9 +39,10 @@ end
 
 LocalProfilesSyncState.update = function (self, dt)
 	local shared_state = self._shared_state
+
 	self._time = self._time + dt
 
-	if shared_state.timeout < self._time then
+	if self._time > shared_state.timeout then
 		Log.info("LocalProfilesSyncState", "Timeout waiting for rpc_sync_local_profiles_reply")
 
 		return "timeout", {

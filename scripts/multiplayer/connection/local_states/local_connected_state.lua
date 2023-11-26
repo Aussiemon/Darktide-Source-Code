@@ -1,8 +1,9 @@
+﻿-- chunkname: @scripts/multiplayer/connection/local_states/local_connected_state.lua
+
 local LocalConnectedState = class("LocalConnectedState")
 
 LocalConnectedState.init = function (self, state_machine, shared_state)
 	self._shared_state = shared_state
-
 	shared_state.event_list[#shared_state.event_list + 1] = function ()
 		local channel_id = shared_state.channel_id
 
@@ -16,7 +17,6 @@ LocalConnectedState.init = function (self, state_machine, shared_state)
 			}
 		}
 	end
-
 	self._host_peer = Network.peer_id(shared_state.channel_id)
 end
 

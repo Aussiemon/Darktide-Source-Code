@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/deployables/medical_crate.lua
+
 local DamageSettings = require("scripts/settings/damage/damage_settings")
 local medical_crate = {
 	proximity_radius = 3,

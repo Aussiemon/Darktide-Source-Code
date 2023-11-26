@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/dialogue/tag_query.lua
+
 TagQuery = TagQuery or {}
 TagQuery.__index = TagQuery
 
@@ -7,6 +9,7 @@ TagQuery.add = function (self, ...)
 
 	for i = 1, n_args, 2 do
 		local key, value = select(i, ...)
+
 		query_context[key] = value
 	end
 end

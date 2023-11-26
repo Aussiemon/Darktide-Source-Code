@@ -1,7 +1,10 @@
+﻿-- chunkname: @scripts/settings/equipment/weapon_traits/weapon_traits_bespoke_autogun_p2.lua
+
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local templates = {}
 local stat_buffs = BuffSettings.stat_buffs
 local proc_events = BuffSettings.proc_events
+
 templates.weapon_trait_bespoke_autogun_p2_increase_power_on_close_kill = {
 	weapon_trait_bespoke_autogun_p2_increase_power_on_close_kill_parent = {
 		{

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/behavior/utility_considerations/renegade_captain_utility_considerations.lua
+
 local considerations = {
 	renegade_captain_charge = {
 		is_available = {

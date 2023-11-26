@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/behavior/nodes/actions/bt_stagger_action.lua
+
 require("scripts/extension_systems/behavior/nodes/bt_node")
 
 local Animation = require("scripts/utilities/animation")
@@ -19,9 +21,13 @@ BtStaggerAction.enter = function (self, unit, breed, blackboard, scratchpad, act
 	local locomotion_extension = ScriptUnit.extension(unit, "locomotion_system")
 	local stagger_component = blackboard.stagger
 	local num_triggered_staggers = stagger_component.num_triggered_staggers
+
 	scratchpad.current_triggered_stagger = num_triggered_staggers
+
 	local spawn_component = blackboard.spawn
+
 	scratchpad.physics_world = spawn_component.physics_world
+
 	local behavior_component = Blackboard.write_component(blackboard, "behavior")
 	local was_already_in_stagger = num_triggered_staggers > 1 and behavior_component.move_state == "stagger"
 
@@ -51,6 +57,7 @@ BtStaggerAction.enter = function (self, unit, breed, blackboard, scratchpad, act
 	if not scratchpad.current_hit_mass_modifier then
 		local health_extension = ScriptUnit.extension(unit, "health_system")
 		local current_hit_mass = health_extension:hit_mass()
+
 		scratchpad.original_hit_mass = current_hit_mass
 		scratchpad.current_hit_mass_modifier = hit_mass_modifier
 
@@ -63,6 +70,7 @@ BtStaggerAction.enter = function (self, unit, breed, blackboard, scratchpad, act
 
 	behavior_component.move_state = "stagger"
 	scratchpad.behavior_component = behavior_component
+
 	local stagger_type = stagger_component.type
 	local stagger_anims = action_data.stagger_anims[stagger_type]
 	local stagger_direction = stagger_component.direction:unbox()
@@ -76,6 +84,7 @@ BtStaggerAction.enter = function (self, unit, breed, blackboard, scratchpad, act
 	animation_extension:anim_event(stagger_anim)
 
 	scratchpad.animation_extension = animation_extension
+
 	local scale = stagger_component.length
 
 	locomotion_extension:set_anim_translation_scale(Vector3(scale, scale, scale))
@@ -88,8 +97,8 @@ BtStaggerAction.enter = function (self, unit, breed, blackboard, scratchpad, act
 	locomotion_extension:use_lerp_rotation(false)
 
 	scratchpad.locomotion_extension = locomotion_extension
-	local stagger_anim_duration = breed.stagger_durations[stagger_type]
-	local stagger_duration = stagger_component.duration
+
+	local stagger_anim_duration, stagger_duration = breed.stagger_durations[stagger_type], stagger_component.duration
 	local anim_duration_mod = action_data.stagger_duration_mods and action_data.stagger_duration_mods[stagger_anim] or 1
 
 	if action_data.ignore_extra_stagger_duration then
@@ -100,7 +109,9 @@ BtStaggerAction.enter = function (self, unit, breed, blackboard, scratchpad, act
 	end
 
 	scratchpad.stagger_time = t + stagger_duration * anim_duration_mod
+
 	local navigation_extension = ScriptUnit.extension(unit, "navigation_system")
+
 	scratchpad.nav_world = navigation_extension:nav_world()
 	scratchpad.traverse_logic = navigation_extension:traverse_logic()
 	scratchpad.stagger_hit_wall = nil
@@ -110,6 +121,7 @@ end
 
 BtStaggerAction.init_values = function (self, blackboard)
 	local stagger_component = Blackboard.write_component(blackboard, "stagger")
+
 	stagger_component.type = ""
 	stagger_component.length = 0
 
@@ -131,7 +143,7 @@ BtStaggerAction._select_stagger_anim_and_rotation = function (self, unit, impact
 	local impact_direction = Vector3.normalize(impact_vector)
 	local my_fwd = Vector3.normalize(Quaternion.forward(Unit.local_rotation(unit, 1)))
 	local angle = Vector3.angle(my_fwd, impact_direction)
-	local impact_rot, anim_table = nil
+	local impact_rot, anim_table
 
 	if impact_vector.z == -1 and stagger_anims.dwn then
 		impact_direction.z = 0
@@ -148,10 +160,12 @@ BtStaggerAction._select_stagger_anim_and_rotation = function (self, unit, impact
 			anim_table = stagger_anims.fwd
 		elseif Vector3.cross(my_fwd, impact_direction).z > 0 then
 			local dir = Vector3.cross(Vector3(0, 0, -1), impact_direction)
+
 			impact_rot = Quaternion.look(dir)
 			anim_table = stagger_anims.left
 		else
 			local dir = Vector3.cross(Vector3(0, 0, 1), impact_direction)
+
 			impact_rot = Quaternion.look(dir)
 			anim_table = stagger_anims.right
 		end
@@ -192,6 +206,7 @@ BtStaggerAction.leave = function (self, unit, breed, blackboard, scratchpad, act
 	end
 
 	local stagger_component = Blackboard.write_component(blackboard, "stagger")
+
 	stagger_component.count = 0
 	stagger_component.num_triggered_staggers = 0
 	stagger_component.type = ""
@@ -209,9 +224,9 @@ BtStaggerAction.run = function (self, unit, breed, blackboard, scratchpad, actio
 
 	if scratchpad.start_anim_driven then
 		scratchpad.start_anim_driven = nil
+
 		local locomotion_extension = scratchpad.locomotion_extension
-		local anim_driven = true
-		local script_driven_rotation = false
+		local anim_driven, script_driven_rotation = true, false
 		local affected_by_gravity = locomotion_extension.movement_type == "constrained_by_mover"
 		local velocity = locomotion_extension:current_velocity()
 		local override_velocity_z = affected_by_gravity and velocity.z > 0 and 0 or nil
@@ -256,7 +271,7 @@ BtStaggerAction.run = function (self, unit, breed, blackboard, scratchpad, actio
 
 	MinionShield.update_block_timings(scratchpad, unit, t)
 
-	local stagger_time_finished = scratchpad.stagger_time < t
+	local stagger_time_finished = t > scratchpad.stagger_time
 
 	if stagger_time_finished then
 		return "done"

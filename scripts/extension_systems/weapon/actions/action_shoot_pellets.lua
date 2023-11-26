@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/weapon/actions/action_shoot_pellets.lua
+
 require("scripts/extension_systems/weapon/actions/action_shoot")
 
 local Armor = require("scripts/utilities/attack/armor")
@@ -30,7 +32,7 @@ local MAX_NUM_HITS_UNITS = 128
 local MAX_NUM_SAVED_PELLET_HITS = 256
 local MAX_NUM_SURFACE_IMPACT_EFFECTS = 32
 local MAX_NUM_HITS_PER_UNIT = 32
-local _shotshell_template, _line_effect = nil
+local _shotshell_template, _line_effect
 
 ActionShootPellets.init = function (self, action_context, action_params, action_settings)
 	ActionShootPellets.super.init(self, action_context, action_params, action_settings)
@@ -65,6 +67,7 @@ ActionShootPellets.init = function (self, action_context, action_params, action_
 	self._num_hits_per_unit = {}
 	self._damage_per_unit = {}
 	self._num_impact_fx_per_unit = {}
+
 	local unit_damage_data = {}
 
 	for i = 1, MAX_NUM_HITS_UNITS do
@@ -74,6 +77,7 @@ ActionShootPellets.init = function (self, action_context, action_params, action_
 	self._unit_damage_data = unit_damage_data
 	self._unit_to_damage_data_index = {}
 	self._num_unit_damage_index = 0
+
 	local surface_impact_data = {}
 
 	for hit_type, _ in pairs(hit_types) do
@@ -104,7 +108,9 @@ ActionShootPellets.init = function (self, action_context, action_params, action_
 		stop = 0
 	}
 	self._num_saved_pellets = 0
+
 	local unit_data_extension = action_context.unit_data_extension
+
 	self._action_shoot_pellets_component = unit_data_extension:write_component("action_shoot_pellets")
 	self._action_reload_component = unit_data_extension:write_component("action_reload")
 end
@@ -155,6 +161,7 @@ ActionShootPellets._shoot = function (self, position, rotation, power_level, cha
 
 	for i = 1, num_pellets_this_frame do
 		num_pellets_fired = num_pellets_fired + 1
+
 		local pellet_rotation = weapon_spread_extension:target_style_spread(rotation, num_pellets_fired, num_pellets_total, num_spread_circles, bullseye, spread_pitch, spread_yaw, scatter_range, no_random_roll, roll_offset)
 		local direction = Quaternion.forward(pellet_rotation)
 		local rewind_ms = self:_rewind_ms(self._is_local_unit, self._player, position, direction, max_distance)
@@ -176,9 +183,9 @@ ActionShootPellets._shoot = function (self, position, rotation, power_level, cha
 		local hit_all_pellets_on_same = false
 
 		for hit_unit, number_of_hits in pairs(self._num_hits_per_unit) do
-			if number_of_hits == num_pellets_total then
-				hit_all_pellets_on_same = true
-			end
+			repeat
+				hit_all_pellets_on_same = number_of_hits == num_pellets_total and true or hit_all_pellets_on_same
+			until true
 		end
 
 		local hit_all_pellets = num_pellets_total <= number_of_pellets_hit
@@ -196,6 +203,7 @@ ActionShootPellets._shoot = function (self, position, rotation, power_level, cha
 		table.clear(self._unit_to_damage_data_index)
 
 		self._num_unit_damage_index = 0
+
 		local action_component = self._action_component
 		local player_unit = self._player_unit
 		local attacker_buff_extension = self._buff_extension
@@ -228,6 +236,7 @@ ActionShootPellets.fixed_update = function (self, dt, t, time_in_action)
 		local num_pellets_total = shotshell_template.num_pellets
 		local remaining_pellets = num_pellets_total - num_pellets_fired
 		local num_pellets_this_frame = math.min(shotshell_template.pellets_per_frame, remaining_pellets)
+
 		num_pellets_fired = num_pellets_fired + num_pellets_this_frame
 		self._action_shoot_pellets_component.num_pellets_fired = num_pellets_fired
 	end
@@ -244,11 +253,13 @@ ActionShootPellets._save_pellet_hits = function (self, shotshell_template, hit_r
 	local num_saved_pellets = self._num_saved_pellets + 1
 	local pellet_hits = saved_pellet_hits[num_saved_pellets]
 	local pellet_hit_damagable_target = false
+
 	self._num_saved_pellets = num_saved_pellets
 
 	table.clear(counted_units)
 
 	counted_units[self._player_unit] = true
+
 	local damage_config = shotshell_template.damage
 	local impact_config = damage_config.impact
 	local penetration_config = damage_config.penetration
@@ -274,6 +285,7 @@ ActionShootPellets._save_pellet_hits = function (self, shotshell_template, hit_r
 			end
 
 			num_hits = num_hits + 1
+
 			local hit_entry = pellet_hits.hit_results[num_hits]
 
 			hit_entry.actor:store(hit_actor)
@@ -402,14 +414,14 @@ ActionShootPellets._process_hits = function (self, power_level, t)
 		local try_penetration = not impact_config.destroy_on_impact and penetration_config
 		local exploded = false
 		local num_impact_fx = 0
-		local can_play_impact_fx = nil
+		local can_play_impact_fx
 		local stop = false
 
 		for index = 1, num_hits do
 			repeat
 				local num_unit_damage_index = self._num_unit_damage_index
 
-				if MAX_NUM_HITS_UNITS <= num_unit_damage_index then
+				if num_unit_damage_index >= MAX_NUM_HITS_UNITS then
 					break
 				end
 
@@ -456,8 +468,11 @@ ActionShootPellets._process_hits = function (self, power_level, t)
 				elseif is_damagable then
 					if self._is_server and HEALTH_ALIVE[hit_unit] then
 						local suppressed_hits_per_unit = self._suppressed_hits_per_unit[hit_unit] or 0
+
 						self._suppressed_hits_per_unit[hit_unit] = suppressed_hits_per_unit + 1
+
 						local suppressed_hit_positions_per_unit = self._suppressed_hit_positions_per_unit[hit_unit] or Vector3.zero()
+
 						self._suppressed_hit_positions_per_unit[hit_unit] = suppressed_hit_positions_per_unit + hit_position
 					end
 
@@ -473,11 +488,12 @@ ActionShootPellets._process_hits = function (self, power_level, t)
 						target_index = RangedAction.target_index(target_index, penetrated, penetration_config)
 						hit_mass_budget_attack, hit_mass_budget_impact = HitMass.consume_hit_mass(player_unit, hit_unit, hit_mass_budget_attack, hit_mass_budget_impact, hit_weakspot)
 						stop = HitMass.stopped_attack(hit_unit, hit_zone_name_or_nil, hit_mass_budget_attack, hit_mass_budget_impact, impact_config)
+
 						local instakill = false
 						local target_is_hazard_prop, hazard_prop_is_active = HazardProp.status(hit_unit)
 						local should_deal_damage = not target_is_hazard_prop or target_is_hazard_prop and hazard_prop_is_active
 						local total_damage_dealt = 0
-						local best_attack_result, best_damage_efficiency = nil
+						local best_attack_result, best_damage_efficiency
 
 						if should_deal_damage then
 							local hit_zone_power_levels = scaled_power_levels[hit_unit]
@@ -487,14 +503,17 @@ ActionShootPellets._process_hits = function (self, power_level, t)
 							for hit_zone_name, hit_zone_power_level in pairs(hit_zone_power_levels) do
 								local previous_hit_weakspot = hit_weakspot
 								local damage_dealt, attack_result, damage_efficiency, hit_weakspot = RangedAction.execute_attack(target_index, player_unit, hit_unit, hit_actor, hit_position, hit_distance, direction, hit_normal, hit_zone_name, damage_profile, damage_profile_lerp_values, hit_zone_power_level, charge_level, penetrated, damage_config, instakill, damage_type, is_critical_strike, weapon_item, triggered_proc_events)
+
 								total_damage_dealt = total_damage_dealt + damage_dealt
 								damage_per_unit[hit_unit] = (damage_per_unit[hit_unit] or 0) + damage_dealt
 								best_attack_result = attack_result
 								best_damage_efficiency = damage_efficiency
 								hit_weakspot = previous_hit_weakspot or hit_weakspot
 								killing_blow = killing_blow or attack_result == AttackSettings.attack_results.died
+
 								local breed_is_minion = Breed.is_minion(target_breed_or_nil)
 								local breed_is_living_prop = Breed.is_living_prop(target_breed_or_nil)
+
 								hit_minion = hit_minion or breed_is_minion or breed_is_living_prop
 							end
 						end
@@ -517,6 +536,7 @@ ActionShootPellets._process_hits = function (self, power_level, t)
 						local impact_damage_dealt = unit_damage_data[num_unit_damage_index].damage_dealt
 						local impact_attack_result = unit_damage_data[num_unit_damage_index].attack_result
 						local impact_damage_efficiency = unit_damage_data[num_unit_damage_index].damage_efficiency
+
 						stop = stop or unit_damage_data[num_unit_damage_index].stopped
 
 						if Breed.is_character(target_breed_or_nil) or Breed.count_as_character(target_breed_or_nil) then
@@ -535,6 +555,7 @@ ActionShootPellets._process_hits = function (self, power_level, t)
 								end
 
 								local stop_unit_index = unit_to_index_lookup.stop[hit_unit]
+
 								stop_hit_index = stop_hit_index + 1
 
 								ImpactEffect.save_surface_effect(stop_effects, stop_unit_index, stop_hit_index, position, hit_unit, hit_actor, hit_position, hit_normal)
@@ -547,7 +568,9 @@ ActionShootPellets._process_hits = function (self, power_level, t)
 					if exit_position then
 						try_penetration = false
 						penetrated = true
+
 						local object_thickness = Vector3.distance(hit_position, exit_position)
+
 						exit_distance = hit_distance + object_thickness
 
 						if penetration_config.exit_explosion_template and is_server then
@@ -571,6 +594,7 @@ ActionShootPellets._process_hits = function (self, power_level, t)
 
 							local entry_unit_index = unit_to_index_lookup.penetration_entry[hit_unit]
 							local exit_unit_index = unit_to_index_lookup.penetration_exit[hit_unit]
+
 							entry_effect_index = (unit_to_index_lookup.penetration_entry[hit_unit] or 0) + 1
 							exit_effect_index = (unit_to_index_lookup.penetration_exit[hit_unit] or 0) + 1
 							entry_hit_index = entry_hit_index + 1
@@ -592,6 +616,7 @@ ActionShootPellets._process_hits = function (self, power_level, t)
 							end
 
 							local stop_unit_index = unit_to_index_lookup.stop[hit_unit]
+
 							stop_hit_index = stop_hit_index + 1
 
 							ImpactEffect.save_surface_effect(stop_effects, stop_unit_index, stop_hit_index, position, hit_unit, hit_actor, hit_position, hit_normal, direction)
@@ -620,6 +645,7 @@ ActionShootPellets._process_hits = function (self, power_level, t)
 						end
 
 						local stop_unit_index = unit_to_index_lookup.stop[hit_unit]
+
 						stop_hit_index = stop_hit_index + 1
 
 						ImpactEffect.save_surface_effect(stop_effects, stop_unit_index, stop_hit_index, position, hit_unit, hit_actor, hit_position, hit_normal)
@@ -685,7 +711,9 @@ ActionShootPellets._process_hits = function (self, power_level, t)
 	ImpactEffect.play_shotshell_surface_effect(physics_world, player_unit, unit_to_index_lookup.stop, surface_impact_num_hits_per_unit.stop, surface_impact_data.stop, damage_type, hit_types.stop, IMPACT_FX_DATA)
 
 	self._num_saved_pellets = 0
+
 	local shot_result = self._shot_result
+
 	shot_result.data_valid = true
 	shot_result.hit_minion = hit_minion
 	shot_result.hit_weakspot = hit_weakspot
@@ -804,6 +832,7 @@ ActionShootPellets._scale_power_level_with_num_hits = function (self, shotshell_
 
 	for hit_unit, hit_zones in pairs(num_hits_per_unit_per_hit_zone) do
 		power_levels[hit_unit] = {}
+
 		local num_unit_hits = num_hits_per_unit[hit_unit]
 		local unit_data_extension = ScriptUnit.has_extension(hit_unit, "unit_data_system")
 		local breed_or_nil = unit_data_extension and unit_data_extension:breed()
@@ -815,6 +844,7 @@ ActionShootPellets._scale_power_level_with_num_hits = function (self, shotshell_
 		for hit_zone_name, hit_zone_hits in pairs(hit_zones) do
 			local ratio_of_total_hits = hit_zone_hits / num_unit_hits
 			local final_power_level = unit_power_level * ratio_of_total_hits
+
 			power_levels[hit_unit][hit_zone_name] = final_power_level
 		end
 

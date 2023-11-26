@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/equipment/weapon_tweak_stats_ui_data.lua
+
 local ArmorSettings = require("scripts/settings/damage/armor_settings")
 local WeaponMovementStateSettings = require("scripts/settings/equipment/weapon_movement_state_settings")
 local armor_types = ArmorSettings.types
@@ -1015,12 +1017,10 @@ local group_descriptions = {
 			local recoil_pitch = stat_groups.recoil_pitch
 			local recoil_yaw = stat_groups.recoil_yaw
 			local influence = stat_groups.recoil_influence or STAT_GROUP_ONE
-			local pitch_min, pitch_max, pitch_current = nil
+			local pitch_min, pitch_max, pitch_current
 
 			if recoil_pitch then
-				pitch_current = recoil_pitch.current
-				pitch_max = recoil_pitch.max
-				pitch_min = recoil_pitch.min
+				pitch_min, pitch_max, pitch_current = recoil_pitch.min, recoil_pitch.max, recoil_pitch.current
 			else
 				pitch_min = (stat_groups.recoil_pitch_range_min.min + stat_groups.recoil_pitch_range_max.min) / 2
 				pitch_max = (stat_groups.recoil_pitch_range_min.max + stat_groups.recoil_pitch_range_max.max) / 2
@@ -1030,12 +1030,11 @@ local group_descriptions = {
 			pitch_min = pitch_min * influence.min
 			pitch_max = pitch_max * influence.max
 			pitch_current = pitch_current * influence.current
-			local yaw_min, yaw_max, yaw_current = nil
+
+			local yaw_min, yaw_max, yaw_current
 
 			if recoil_yaw then
-				yaw_current = recoil_yaw.current
-				yaw_max = recoil_yaw.max
-				yaw_min = recoil_yaw.min
+				yaw_min, yaw_max, yaw_current = recoil_yaw.min, recoil_yaw.max, recoil_yaw.current
 			else
 				yaw_min = (stat_groups.recoil_yaw_range_min.min + stat_groups.recoil_yaw_range_max.min) / 2
 				yaw_max = (stat_groups.recoil_yaw_range_min.max + stat_groups.recoil_yaw_range_max.max) / 2
@@ -1045,6 +1044,7 @@ local group_descriptions = {
 			yaw_min = yaw_min * influence.min
 			yaw_max = yaw_max * influence.max
 			yaw_current = yaw_current * influence.current
+
 			local min = math.sqrt(pitch_min * pitch_min + yaw_min * yaw_min) * recoil_rise.min * 1000
 			local max = math.sqrt(pitch_max * pitch_max + yaw_max * yaw_max) * recoil_rise.max * 1000
 			local current = math.sqrt(pitch_current * pitch_current + yaw_current * yaw_current) * recoil_rise.current * 1000
@@ -1134,12 +1134,10 @@ local group_descriptions = {
 			local moving_recoil_pitch = stat_groups.moving_recoil_pitch
 			local moving_recoil_yaw = stat_groups.moving_recoil_yaw
 			local influence = stat_groups.moving_recoil_influence or STAT_GROUP_ONE
-			local pitch_min, pitch_max, pitch_current = nil
+			local pitch_min, pitch_max, pitch_current
 
 			if moving_recoil_pitch then
-				pitch_current = moving_recoil_pitch.current
-				pitch_max = moving_recoil_pitch.max
-				pitch_min = moving_recoil_pitch.min
+				pitch_min, pitch_max, pitch_current = moving_recoil_pitch.min, moving_recoil_pitch.max, moving_recoil_pitch.current
 			else
 				pitch_min = (stat_groups.moving_recoil_pitch_range_min.min + stat_groups.moving_recoil_pitch_range_max.min) / 2
 				pitch_max = (stat_groups.moving_recoil_pitch_range_min.max + stat_groups.moving_recoil_pitch_range_max.max) / 2
@@ -1149,12 +1147,11 @@ local group_descriptions = {
 			pitch_min = pitch_min * influence.min
 			pitch_max = pitch_max * influence.max
 			pitch_current = pitch_current * influence.current
-			local yaw_min, yaw_max, yaw_current = nil
+
+			local yaw_min, yaw_max, yaw_current
 
 			if moving_recoil_yaw then
-				yaw_current = moving_recoil_yaw.current
-				yaw_max = moving_recoil_yaw.max
-				yaw_min = moving_recoil_yaw.min
+				yaw_min, yaw_max, yaw_current = moving_recoil_yaw.min, moving_recoil_yaw.max, moving_recoil_yaw.current
 			else
 				yaw_min = (stat_groups.moving_recoil_yaw_range_min.min + stat_groups.moving_recoil_yaw_range_max.min) / 2
 				yaw_max = (stat_groups.moving_recoil_yaw_range_min.max + stat_groups.moving_recoil_yaw_range_max.max) / 2
@@ -1164,6 +1161,7 @@ local group_descriptions = {
 			yaw_min = yaw_min * influence.min
 			yaw_max = yaw_max * influence.max
 			yaw_current = yaw_current * influence.current
+
 			local min = math.sqrt(pitch_min * pitch_min + yaw_min * yaw_min) * moving_recoil_rise.min * 1000
 			local max = math.sqrt(pitch_max * pitch_max + yaw_max * yaw_max) * moving_recoil_rise.max * 1000
 			local current = math.sqrt(pitch_current * pitch_current + yaw_current * yaw_current) * moving_recoil_rise.current * 1000

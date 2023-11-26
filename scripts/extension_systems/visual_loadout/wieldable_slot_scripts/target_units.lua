@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/visual_loadout/wieldable_slot_scripts/target_units.lua
+
 local TargetUnits = class("TargetUnits")
 
 TargetUnits.init = function (self, context, slot, weapon_template, fx_sources)
@@ -11,8 +13,10 @@ TargetUnits.init = function (self, context, slot, weapon_template, fx_sources)
 	self._is_husk = context.is_husk
 	self._is_local_unit = context.is_local_unit
 	self._outline_system = Managers.state.extension:system("outline_system")
+
 	local owner_unit = context.owner_unit
 	local unit_data_extension = ScriptUnit.extension(owner_unit, "unit_data_system")
+
 	self._action_module_targeting_component = unit_data_extension:read_component("action_module_targeting")
 	self._target_unit_1 = nil
 	self._target_unit_2 = nil
@@ -65,6 +69,7 @@ TargetUnits._update_outlines = function (self)
 	end
 
 	self._target_unit_1 = new_unit_1
+
 	local new_unit_2 = self._action_module_targeting_component.target_unit_2
 	local old_unit_2 = self._target_unit_2
 
@@ -74,6 +79,7 @@ TargetUnits._update_outlines = function (self)
 	end
 
 	self._target_unit_2 = new_unit_2
+
 	local new_unit_3 = self._action_module_targeting_component.target_unit_3
 	local old_unit_3 = self._target_unit_3
 

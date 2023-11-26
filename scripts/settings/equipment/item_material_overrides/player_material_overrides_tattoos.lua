@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/equipment/item_material_overrides/player_material_overrides_tattoos.lua
+
 local material_overrides = {
 	empty_tattoo = {
 		texture_overrides = {

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/data_service/services/social/social_xbox_live.lua
+
 local PlatformSocialInterface = require("scripts/managers/data_service/services/social/platform_social_interface")
 local FriendXboxLive = require("scripts/managers/data_service/services/social/friend_xbox_live")
 local PlayerManager = require("scripts/foundation/managers/player/player_manager")
@@ -98,11 +100,14 @@ SocialXboxLive.fetch_friends_list = function (self)
 	end
 
 	local profiles = {}
+
 	self._friends_promise = Promise:new()
+
 	local friends_list = Managers.account:get_friends()
 
 	for i = 1, #friends_list do
 		local friend_data = friends_list[i]
+
 		profiles[#profiles + 1] = FriendXboxLive:new(friend_data)
 	end
 
@@ -137,6 +142,7 @@ SocialXboxLive.fetch_blocked_list = function (self)
 
 		for i = 1, #profiles do
 			local profile = profiles[i]
+
 			profiles[i] = FriendXboxLive:new(profile, is_blocked)
 		end
 
@@ -159,7 +165,7 @@ end
 SocialXboxLive.update = function (self, dt, t)
 	local queue = self._recent_players_retry_queue
 
-	if #queue > 0 and self._recent_players_retry_time <= t then
+	if #queue > 0 and t >= self._recent_players_retry_time then
 		for i = 1, #queue do
 			local account_id = queue[i]
 
@@ -185,6 +191,7 @@ end
 
 SocialXboxLive._update_recent_player = function (self, account_id)
 	local _, presence_promise = Managers.presence:get_presence(account_id)
+
 	self._recent_players_promises[account_id] = presence_promise
 
 	presence_promise:next(function (presence)
@@ -213,6 +220,7 @@ SocialXboxLive._update_recent_player = function (self, account_id)
 		Log.info("SocialXboxLive", "[update_recent_players] Updating... (account_id: %s, xuid: %s)", account_id, xuid)
 
 		local update_promise = XboxLiveUtils.update_recent_player_teammate(xuid)
+
 		self._recent_players_promises[account_id] = update_promise
 
 		return update_promise
@@ -224,6 +232,7 @@ SocialXboxLive._update_recent_player = function (self, account_id)
 
 		self._recent_players_promises[account_id] = nil
 		self._recent_players_retry_time = Managers.time:time("main") + RECENT_PLAYERS_RETRY_DELAY
+
 		local num_retries = self._recent_players_num_retries[account_id] or 0
 
 		if num_retries < RECENT_PLAYERS_MAX_RETRIES then

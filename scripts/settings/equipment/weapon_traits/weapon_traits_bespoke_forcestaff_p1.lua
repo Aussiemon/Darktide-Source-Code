@@ -1,6 +1,9 @@
+﻿-- chunkname: @scripts/settings/equipment/weapon_traits/weapon_traits_bespoke_forcestaff_p1.lua
+
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local templates = {}
 local stat_buffs = BuffSettings.stat_buffs
+
 templates.weapon_trait_bespoke_forcestaff_p1_vents_warpcharge_on_weakspot_hits = {
 	weapon_trait_bespoke_forcestaff_p1_vents_warpcharge_on_weakspot_hits = {
 		{

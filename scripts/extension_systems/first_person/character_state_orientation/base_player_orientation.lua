@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/first_person/character_state_orientation/base_player_orientation.lua
+
 local InputDevice = require("scripts/managers/input/input_device")
 local SweepStickyness = require("scripts/utilities/action/sweep_stickyness")
 local BasePlayerOrientation = class("BasePlayerOrientation")
@@ -6,6 +8,7 @@ BasePlayerOrientation.init = function (self, player, orientation)
 	local player_unit = player.player_unit
 	local unit_data_extension = ScriptUnit.has_extension(player_unit, "unit_data_system")
 	local first_person_extension = ScriptUnit.extension(player_unit, "first_person_system")
+
 	self._player = player
 	self._orientation = orientation
 	self._first_person_unit = first_person_extension:first_person_unit()
@@ -67,6 +70,7 @@ BasePlayerOrientation._fill_look_delta_context = function (self, context)
 	local targeting_data = smart_targeting_extension:targeting_data()
 	local is_sticky = SweepStickyness.is_sticking_to_unit(action_sweep_component)
 	local is_lunging = lunge_character_state_component and lunge_character_state_component.is_lunging
+
 	context.targeting_data = targeting_data
 	context.is_sticky = is_sticky
 	context.is_lunging = is_lunging
@@ -79,11 +83,14 @@ local _aim_assist_context = {}
 BasePlayerOrientation._aim_assist_context = function (self)
 	local last_pressed_device = InputDevice.last_pressed_device
 	local gamepad_active = last_pressed_device and last_pressed_device:type() == "xbox_controller"
+
 	_aim_assist_context.input_device_wants_aim_assist = gamepad_active
 	_aim_assist_context.targeting_data = self._smart_targeting_extension:targeting_data()
 	_aim_assist_context.first_person_unit = self._first_person_unit
+
 	local aim_assist_data = self._player.aim_assist_data
 	local wants_lock_on = aim_assist_data.wants_lock_on
+
 	_aim_assist_context.wants_lock_on = wants_lock_on
 
 	if wants_lock_on then

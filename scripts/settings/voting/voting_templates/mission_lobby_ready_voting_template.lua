@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/voting/voting_templates/mission_lobby_ready_voting_template.lua
+
 local OPTIONS = table.enum("yes", "no")
 local RESULTS = table.enum("approved")
 
@@ -6,10 +8,10 @@ local function _update_voting_view(context)
 end
 
 local function _open_voting_view(context)
-	local transition_time = nil
+	local transition_time
 	local close_previous = false
 	local close_all = true
-	local close_transition_time = nil
+	local close_transition_time
 
 	Managers.ui:open_view("lobby_view", transition_time, close_previous, close_all, close_transition_time, context)
 end

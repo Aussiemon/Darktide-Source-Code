@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/minion_visual_loadout/minion_visual_loadout_templates.lua
+
 local minion_visual_loadout_templates = {}
 
 local function _extract_templates(path)

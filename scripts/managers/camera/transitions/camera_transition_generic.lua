@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/camera/transitions/camera_transition_generic.lua
+
 local CameraTransitionBase = require("scripts/managers/camera/transitions/camera_transition_base")
 local CameraTransitionGeneric = class("CameraTransitionGeneric", "CameraTransitionBase")
 
@@ -14,7 +16,7 @@ CameraTransitionGeneric.update = function (self, dt, parameter_value, update_tim
 	local target = self._node_2[self._parameter](self._node_2)
 	local duration = self._duration
 	local speed = self._speed
-	local value, done = nil
+	local value, done
 
 	if speed and duration then
 		-- Nothing
@@ -30,6 +32,7 @@ CameraTransitionGeneric.update = function (self, dt, parameter_value, update_tim
 		end
 	elseif duration then
 		local t = self._time / duration
+
 		t = math.min(t, 1)
 
 		if self._transition_func then

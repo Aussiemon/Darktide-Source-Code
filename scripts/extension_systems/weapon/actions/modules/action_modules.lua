@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/weapon/actions/modules/action_modules.lua
+
 local BallisticRaycastPositionFinderActionModule = require("scripts/extension_systems/weapon/actions/modules/ballistic_raycast_position_finder_action_module")
 local ChainLightningTargetingActionModule = require("scripts/extension_systems/weapon/actions/modules/chain_lightning_targeting_action_module")
 local ClosestTargetingActionModule = require("scripts/extension_systems/weapon/actions/modules/closest_targeting_action_module")

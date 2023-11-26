@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/utilities/attack/block.lua
+
 local AttackSettings = require("scripts/settings/damage/attack_settings")
 local Action = require("scripts/utilities/weapon/action")
 local Breed = require("scripts/utilities/breed")
@@ -11,7 +13,7 @@ local stat_buff_types = BuffSettings.stat_buffs
 local buff_keywords = BuffSettings.keywords
 local DEFAULT_BLOCK_BREAK_DISORIENTATION_TYPE = "block_broken"
 local BLOCK_ANGLE_DISTANCE_SQUARED_EPSILON = 0.010000000000000002
-local _block_buff_modifier, _calculate_block_angle, _get_block_angles, _get_block_cost = nil
+local _block_buff_modifier, _calculate_block_angle, _get_block_angles, _get_block_cost
 local Block = {}
 local auto_block_interactions = {
 	rescue = true,
@@ -90,6 +92,7 @@ Block.is_blocking = function (target_unit, attacking_unit, attack_type, weapon_t
 		local is_within_inner_angle = block_angles.inner and block_angle <= block_angles.inner
 		local is_within_outer_angle = block_angles.outer and block_angle <= block_angles.outer
 		local has_block_cost = not not _get_block_cost(attack_type, stamina_template, is_within_inner_angle)
+
 		can_block = (is_within_inner_angle or is_within_outer_angle) and has_block_cost
 	end
 
@@ -128,6 +131,7 @@ Block.attempt_block_break = function (target_unit, attacking_unit, hit_world_pos
 		local block_angles = _get_block_angles(weapon_template, attack_type)
 		local block_angle = _calculate_block_angle(target_unit, attacking_unit, unit_data_extension)
 		local is_within_inner_angle = block_angles.inner and block_angle <= block_angles.inner
+
 		block_cost = _get_block_cost(attack_type, stamina_template, is_within_inner_angle) * block_modifier
 	end
 
@@ -138,6 +142,7 @@ Block.attempt_block_break = function (target_unit, attacking_unit, hit_world_pos
 
 	if action_setting and action_setting.parry_block and is_perfect_block then
 		local no_block_cost = is_perfect_block and buff_extension:has_keyword(buff_keywords.no_parry_block_cost)
+
 		block_cost = no_block_cost and 0 or math.clamp(block_cost, 0, 2)
 	end
 
@@ -166,14 +171,16 @@ Block.attempt_block_break = function (target_unit, attacking_unit, hit_world_pos
 				local excess = sum - 0.97
 
 				if excess > 0 then
-					block_cost = excess * 1 / warp_charge_efficiency_multiplier * max_stamina
+					block_cost = excess * (1 / warp_charge_efficiency_multiplier) * max_stamina
 				else
 					block_cost = 0
 				end
 
 				local t = Managers.state.extension:latest_fixed_t()
+
 				warp_charge_component.last_charge_at_t = t
 				warp_charge_component.current_percentage = new_warp_charge_percentage
+
 				local percentage_change = current_warp_charge - new_warp_charge_percentage
 				local param_table = buff_extension:request_proc_event_param_table()
 
@@ -246,7 +253,7 @@ function _get_block_cost(attack_type, stamina_template, is_inner)
 		return nil
 	end
 
-	local block_cost_group = nil
+	local block_cost_group
 
 	if attack_type == attack_types.melee and stamina_template.block_cost_melee then
 		block_cost_group = stamina_template.block_cost_melee
@@ -286,16 +293,18 @@ function _calculate_block_angle(target_unit, attacking_unit, target_unit_data_ex
 		return 0
 	end
 
-	local target_forward_flat_normalized = nil
+	local target_forward_flat_normalized
 
 	if target_unit_data_extension then
 		local first_person_component = target_unit_data_extension:read_component("first_person")
 		local first_person_rotation = first_person_component.rotation
 		local right = Quaternion.right(first_person_rotation)
+
 		target_forward_flat_normalized = Vector3.normalize(Vector3.cross(right, Vector3.down()))
 	else
 		local target_rotation = Unit.world_rotation(target_unit, 1)
 		local right = Quaternion.right(target_rotation)
+
 		target_forward_flat_normalized = Vector3.normalize(Vector3.cross(right, Vector3.down()))
 	end
 

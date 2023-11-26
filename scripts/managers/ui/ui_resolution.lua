@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/ui/ui_resolution.lua
+
 local NUM_SCREEN_FRAGMENTS_W = 1920
 local NUM_SCREEN_FRAGMENTS_H = 1080
 local UIResolution = {}

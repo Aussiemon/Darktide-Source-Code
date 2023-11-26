@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/behavior/trees/bot/bot_behavior_tree.lua
+
 local BreedActions = require("scripts/settings/breed/breed_actions")
 local action_data = BreedActions.bot
 local behavior_tree = {
@@ -90,18 +92,18 @@ local behavior_tree = {
 		},
 		{
 			"BtSelectorNode",
+			condition_args = {
+				overheat_limit_type = "critical_threshold",
+				overheat_limit = 0.9,
+				ammo_percentage = 0
+			},
 			{
 				"BtBotShootAction",
 				name = "shoot_priority_target",
 				action_data = action_data.shoot_priority_target
 			},
 			name = "ranged_priority_target",
-			condition = "has_target_and_ammo_greater_than",
-			condition_args = {
-				overheat_limit_type = "critical_threshold",
-				overheat_limit = 0.9,
-				ammo_percentage = 0
-			}
+			condition = "has_target_and_ammo_greater_than"
 		},
 		condition = "has_priority_or_urgent_target",
 		name = "attack_priority_target"
@@ -115,6 +117,7 @@ local behavior_tree = {
 		"BtRandomUtilityNode",
 		{
 			"BtSelectorNode",
+			action_data = action_data.combat,
 			{
 				"BtSelectorNode",
 				{
@@ -127,24 +130,24 @@ local behavior_tree = {
 			},
 			{
 				"BtSelectorNode",
+				condition_args = {
+					overheat_limit_type = "low_threshold",
+					overheat_limit = 0.9,
+					ammo_percentage = 0.5
+				},
 				{
 					"BtBotShootAction",
 					name = "shoot",
 					action_data = action_data.shoot
 				},
 				name = "ranged",
-				condition = "has_target_and_ammo_greater_than",
-				condition_args = {
-					overheat_limit_type = "low_threshold",
-					overheat_limit = 0.9,
-					ammo_percentage = 0.5
-				}
+				condition = "has_target_and_ammo_greater_than"
 			},
-			name = "combat",
-			action_data = action_data.combat
+			name = "combat"
 		},
 		{
 			"BtSelectorNode",
+			action_data = action_data.follow,
 			{
 				"BtBotTeleportToAllyAction",
 				condition = "cant_reach_ally",
@@ -152,6 +155,12 @@ local behavior_tree = {
 			},
 			{
 				"BtSelectorNode",
+				condition_args = {
+					start_min_percentage = 0.5,
+					start_max_percentage = 0.99,
+					overheat_limit_type = "low_threshold",
+					stop_percentage = 0.1
+				},
 				{
 					"BtBotInventorySwitchAction",
 					name = "switch_ranged_overheat",
@@ -163,13 +172,7 @@ local behavior_tree = {
 					name = "vent"
 				},
 				name = "vent_overheat",
-				condition = "should_vent_overheat",
-				condition_args = {
-					start_min_percentage = 0.5,
-					start_max_percentage = 0.99,
-					overheat_limit_type = "low_threshold",
-					stop_percentage = 0.1
-				}
+				condition = "should_vent_overheat"
 			},
 			{
 				"BtSelectorNode",
@@ -190,8 +193,7 @@ local behavior_tree = {
 				"BtBotFollowAction",
 				name = "successful_follow"
 			},
-			name = "follow",
-			action_data = action_data.follow
+			name = "follow"
 		},
 		name = "in_combat"
 	},

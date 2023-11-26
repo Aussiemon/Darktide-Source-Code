@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/breed/breeds/chaos/chaos_ogryn_common_sounds.lua
+
 local sound_data = {
 	events = {
 		footstep_land = "wwise/events/minions/play_minion_footsteps_chaos_ogryn_land",

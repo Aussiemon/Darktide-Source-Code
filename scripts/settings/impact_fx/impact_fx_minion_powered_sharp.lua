@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/impact_fx/impact_fx_minion_powered_sharp.lua
+
 local ArmorSettings = require("scripts/settings/damage/armor_settings")
 local NO_SURFACE_DECAL = false
 local armor_types = ArmorSettings.types
@@ -49,7 +51,7 @@ local unarmored = {
 		damage = blood_ball
 	}
 }
-local armored, super_armor = nil
+local armored, super_armor
 local disgustingly_resilient = {
 	sfx = {
 		weakspot_died = {
@@ -95,7 +97,7 @@ local disgustingly_resilient = {
 		damage = blood_ball
 	}
 }
-local resistant, berserker = nil
+local resistant, berserker
 local player = {
 	sfx = {
 		damage = {

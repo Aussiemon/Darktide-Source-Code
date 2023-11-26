@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/ui/ui_world_spawner.lua
+
 local ScriptWorld = require("scripts/foundation/utilities/script_world")
 local ScriptViewport = require("scripts/foundation/utilities/script_viewport")
 local UIUnitSpawner = require("scripts/managers/ui/ui_unit_spawner")
@@ -8,7 +10,9 @@ local UIWorldSpawner = class("UIWorldSpawner")
 
 UIWorldSpawner.init = function (self, world_name, world_layer, timer_name, optional_view_name, optional_flags)
 	self._world_name = world_name
+
 	local world = self:_create_world(world_name, world_layer, timer_name, optional_view_name, optional_flags)
+
 	self._storyteller = World.storyteller(world)
 
 	World.set_data(world, "__world_name", world_name)
@@ -41,6 +45,7 @@ UIWorldSpawner.play_story = function (self, story_name, start_time, play_backwar
 	local storyteller = self._storyteller
 	local story_id = storyteller:play_level_story(level, story_name)
 	local length = storyteller:length(story_id)
+
 	self._active_story_id = story_id
 	self._on_story_complete_callback = on_complete_callback
 	self._on_complete_callback_time_fraction = on_complete_callback_time_fraction
@@ -118,13 +123,16 @@ end
 
 UIWorldSpawner.spawn_level = function (self, level_name, included_object_sets, position, rotation, ignore_level_background)
 	self._level_name = level_name
+
 	local world = self._world
 	local spawn_units = true
 
 	self:_setup_extension_manager()
 
 	local level = ScriptWorld.spawn_level(world, level_name, position, rotation, spawn_units, ignore_level_background, included_object_sets)
+
 	self._level = level
+
 	local level_units = Level.units(level, true)
 	local category_name = "level_spawned"
 
@@ -178,7 +186,7 @@ UIWorldSpawner._setup_extension_manager = function (self)
 	local physics_world = World.physics_world(world)
 	local wwise_world = Managers.world:wwise_world(world)
 	local level_name = self._level_name
-	local is_server = nil
+	local is_server
 	local unit_templates = require("scripts/extension_systems/unit_templates")
 
 	require("scripts/extension_systems/cinematic_scene/cinematic_scene_system")
@@ -278,18 +286,16 @@ UIWorldSpawner._setup_extension_manager = function (self)
 	}
 	local circumstance_name = "default"
 	local use_time_slice = false
+
 	self._extension_manager = ExtensionManager:new(world, physics_world, wwise_world, nil, nil, level_name, circumstance_name, is_server, unit_templates, system_config, system_init_data, unit_categories, nil, nil, nil, {}, use_time_slice)
 
 	Managers.ui:register_world_extension_manager_lookup(world, self._extension_manager)
 end
 
 UIWorldSpawner._create_world = function (self, world_name, layer, timer_name, optional_view_name, optional_flags)
-	if not optional_flags then
-		local flags = {
-			Application.ENABLE_VOLUMETRICS
-		}
-	end
-
+	local flags = optional_flags or {
+		Application.ENABLE_VOLUMETRICS
+	}
 	local ui_manager = Managers.ui
 	local world = ui_manager:create_world(world_name, layer, timer_name, optional_view_name, flags)
 
@@ -317,14 +323,19 @@ UIWorldSpawner.create_viewport = function (self, camera_unit, viewport_name, vie
 	end
 
 	local viewport = ScriptWorld.create_viewport(world, viewport_name, viewport_type, viewport_layer, camera_unit, nil, nil, nil, shading_environment, shading_callback, nil, render_targets)
+
 	self._viewport = viewport
 	self._viewport_name = viewport_name
+
 	local camera = ScriptViewport.camera(viewport)
+
 	camera_unit = camera_unit or Camera.get_data(camera, "unit")
 	self._camera = camera
 	self._camera_unit = camera_unit
+
 	local camera_position = Unit.world_position(camera_unit, 1)
 	local camera_rotation = Unit.world_rotation(camera_unit, 1)
+
 	self._boxed_camera_start_position = Vector3Box(camera_position)
 	self._boxed_camera_start_rotation = QuaternionBox(camera_rotation)
 
@@ -345,8 +356,10 @@ UIWorldSpawner.change_camera_unit = function (self, camera_unit, add_shadow_cull
 	ScriptWorld.change_camera_unit(viewport, camera_unit, add_shadow_cull_camera)
 
 	local camera = ScriptViewport.camera(viewport)
+
 	self._camera = camera
 	self._camera_unit = camera_unit
+
 	local camera_position = Unit.world_position(camera_unit, 1)
 	local camera_rotation = Unit.world_rotation(camera_unit, 1)
 
@@ -460,6 +473,7 @@ end
 
 UIWorldSpawner._animate_axis = function (self, source, axis, value, animation_time, func_ptr, optional_start_time)
 	local data = source[axis]
+
 	data.from = animation_time and data.value or value
 	data.to = value
 	data.total_time = animation_time
@@ -475,6 +489,7 @@ UIWorldSpawner.set_camera_blur = function (self, blur_amount, duration, anim_fun
 
 	local current_blur = self._current_blur or 0
 	local blur_difference = blur_amount - current_blur
+
 	self._blur_animation_data = {
 		time = 0,
 		start_value = current_blur,
@@ -491,6 +506,7 @@ UIWorldSpawner._set_world_blur_value = function (self, blur_amount)
 	World.set_data(world, "fullscreen_blur", 0.75 * blur_amount)
 
 	self._world_blurred = blur_amount ~= 0
+
 	local world_name = self._world_name
 	local viewport_name = self._viewport_name
 
@@ -507,10 +523,13 @@ UIWorldSpawner._update_animation_data = function (self, animation_data, dt)
 
 		if total_time then
 			local old_time = data.time
+
 			data.time = math.min(old_time + dt, total_time)
+
 			local progress = total_time > 0 and math.min(1, data.time / total_time) or 1
 			local func = data.func
 			local anim_progress = func and func(progress) or progress
+
 			data.value = (data.to - data.from) * anim_progress + data.from
 
 			if progress == 1 then
@@ -527,6 +546,7 @@ UIWorldSpawner._update_camera_rotation = function (self)
 	local y = camera_rotation_animation_data.y.value
 	local z = camera_rotation_animation_data.z.value
 	local camera_anim_rotation = Quaternion.from_euler_angles_xyz(x, y, z)
+
 	camera_rotation = Quaternion.multiply(camera_rotation, camera_anim_rotation)
 
 	Unit.set_local_rotation(self._camera_unit, 1, camera_rotation)
@@ -536,6 +556,7 @@ UIWorldSpawner._update_camera_position = function (self)
 	local boxed_camera_start_position = self._boxed_camera_start_position
 	local camera_position_animation_data = self._camera_position_animation_data
 	local camera_position_new = Vector3.zero()
+
 	camera_position_new.x = boxed_camera_start_position[1] + camera_position_animation_data.x.value
 	camera_position_new.y = boxed_camera_start_position[2] + camera_position_animation_data.y.value
 	camera_position_new.z = boxed_camera_start_position[3] + camera_position_animation_data.z.value
@@ -553,7 +574,9 @@ UIWorldSpawner._update_world_blur = function (self, dt)
 	local time = blur_animation_data.time
 	local duration = blur_animation_data.duration
 	local anim_func = blur_animation_data.anim_func
+
 	time = math.min(time + dt, duration)
+
 	local progress = duration > 0 and time / duration or 0
 	local anim_progress = anim_func and anim_func(progress) or progress
 	local start_value = blur_animation_data.start_value
@@ -616,6 +639,7 @@ end
 UIWorldSpawner.set_world_disabled = function (self, disabled)
 	disabled = disabled or false
 	self._world_disabled = disabled
+
 	local world_name = self._world_name
 	local world_manager = Managers.world
 	local world_disabled_state = not world_manager:is_world_enabled(world_name)

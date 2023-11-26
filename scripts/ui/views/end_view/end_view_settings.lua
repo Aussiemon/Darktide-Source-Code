@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/end_view/end_view_settings.lua
+
 local end_view_settings = {
 	level_name = "content/levels/ui/end_of_round/ui_eor_background",
 	viewport_name = "ui_end_world_viewport",

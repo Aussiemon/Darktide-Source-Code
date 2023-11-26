@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/hud/elements/prologue_tutorial_info_box/hud_element_prologue_tutorial_info_box_settings.lua
+
 local UIHudSettings = require("scripts/settings/ui/ui_hud_settings")
 local hud_element_prologue_tutorial_info_box_settings = {
 	info_box_background_size = {

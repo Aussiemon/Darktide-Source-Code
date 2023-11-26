@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/constant_elements/elements/chat/constant_element_chat.lua
+
 local ChatManagerConstants = require("scripts/foundation/managers/chat/chat_manager_constants")
 local ChatSettings = require("scripts/ui/constant_elements/elements/chat/constant_element_chat_settings")
 local DefaultViewInputSettings = require("scripts/settings/input/default_view_input_settings")
@@ -114,7 +116,7 @@ ConstantElementChat.update = function (self, dt, t, ui_renderer, render_settings
 		self._time_since_last_update = time_since_last_update + dt
 	end
 
-	local target_state = nil
+	local target_state
 	local inactivity_timeout = ChatSettings.inactivity_timeout
 	local idle_timeout = ChatSettings.idle_timeout
 
@@ -146,6 +148,7 @@ ConstantElementChat._change_state = function (self, target_state)
 	}
 	local is_visible = self._is_visible
 	local speed = target_state == States.hidden and is_visible and ChatSettings.inactive_fade_speed or 1
+
 	self._chat_window_animation_id = self:_start_animation("fade_chat_window", self._widgets_by_name, params, nil, speed)
 	self._input_field_animation_id = self:_start_animation("fade_input_field", self._widgets_by_name, params, nil, speed)
 end
@@ -224,10 +227,11 @@ ConstantElementChat.cb_chat_manager_message_recieved = function (self, channel_h
 			return
 		end
 
-		local sender = nil
+		local sender
 
 		if message.is_current_user and channel.tag then
 			local channel_name = self:_channel_name(channel.tag, false, channel.channel_name)
+
 			sender = Managers.localization:localize("loc_chat_own_player", true, {
 				channel_name = channel_name
 			})
@@ -374,8 +378,11 @@ end
 
 ConstantElementChat._setup_input = function (self)
 	local input_manager = Managers.input
+
 	self._input_manager = input_manager
+
 	local scrollbar_widget = self._widgets_by_name.chat_scrollbar
+
 	scrollbar_widget.style.mouse_scroll.scenegraph_id = "chat_window"
 	scrollbar_widget.content.min_thumb_length = 0.05
 	self._input_field_widget = self._widgets_by_name.input_field
@@ -414,23 +421,27 @@ ConstantElementChat._setup_input_labels = function (self)
 
 	if has_virtual_keyboard and not is_writing then
 		local open_chat_input = self:_get_localized_input_text("show_chat")
+
 		active_placeholder_text = self:_localize("loc_chat_idle_placeholder_text", true, {
 			input = open_chat_input
 		})
 	elseif has_virtual_keyboard and is_writing and has_session and not present_tab_to_cycle then
 		local confirm_input = self:_get_localized_input_text("confirm")
 		local back_input = self:_get_localized_input_text("back")
+
 		active_placeholder_text = self:_localize("loc_chat_instruction_placeholder_text", true, {
 			continue_input = confirm_input,
 			cancel_input = back_input
 		})
 	elseif has_virtual_keyboard and not has_session or not has_virtual_keyboard and InputDevice.gamepad_active and is_writing then
 		local back_input = self:_get_localized_input_text("back")
+
 		active_placeholder_text = self:_localize("loc_chat_empty_placeholder_text", true, {
 			input = back_input
 		})
 	elseif present_tab_to_cycle then
 		local change_channel_input = self:_get_localized_input_text("cycle_chat_channel")
+
 		active_placeholder_text = self:_localize("loc_chat_active_placeholder_text", true, {
 			input = change_channel_input
 		})
@@ -455,6 +466,7 @@ end
 
 ConstantElementChat._start_chatting = function (self, ui_renderer)
 	local input_widget = self._input_field_widget
+
 	input_widget.content.input_text = ""
 	input_widget.content.caret_position = 1
 	input_widget.content.is_writing = true
@@ -536,7 +548,7 @@ ConstantElementChat._handle_console_input = function (self, input_service, ui_re
 			local new_input_text = XGameUI.resolve_text_entry(async_block)
 			local last_char = new_input_text:sub(#new_input_text)
 
-			if last_char == " " then
+			if last_char == "\x00" then
 				new_input_text = new_input_text:sub(1, #new_input_text - 1)
 			end
 
@@ -671,7 +683,7 @@ ConstantElementChat._next_connected_channel_handle = function (self, current_pri
 		end
 	end
 
-	local current_selected_channel_handle_index = nil
+	local current_selected_channel_handle_index
 
 	for i, v in ipairs(channels) do
 		if self._selected_channel_handle == v.session_handle then
@@ -700,6 +712,7 @@ ConstantElementChat._update_input_field = function (self, ui_renderer, widget)
 
 		if channel and channel.tag and (channel.session_text_state == ChatManagerConstants.ChannelConnectionState.CONNECTED or channel.session_media_state == ChatManagerConstants.ChannelConnectionState.CONNECTED) then
 			local channel_name = self:_channel_name(channel.tag, false, channel.channel_name)
+
 			to_channel_text = Managers.localization:localize("loc_chat_to_channel", true, {
 				channel_name = channel_name
 			})
@@ -708,11 +721,15 @@ ConstantElementChat._update_input_field = function (self, ui_renderer, widget)
 	end
 
 	widget.content.to_channel = to_channel_text
+
 	local field_margin_left = ChatSettings.input_field_margins[1]
 	local field_margin_right = ChatSettings.input_field_margins[4]
 	local offset = self:_text_size(ui_renderer, to_channel_text, to_channel_style)
+
 	offset = offset + to_channel_style.offset[1] + field_margin_left
+
 	local text_style = style.display_text
+
 	text_style.offset[1] = offset
 	text_style.size = text_style.size or {}
 	text_style.size_addition[1] = -(offset + field_margin_right)
@@ -729,6 +746,7 @@ ConstantElementChat._update_message_widgets_sizes = function (self, ui_renderer)
 
 	while widget and not widget.content.size do
 		local widget_size = self:_calculate_widget_size(widget, ui_renderer)
+
 		self._total_chat_height = self._total_chat_height + widget_size[2] + spacing
 		i = math.index_wrapper(i - 1, #message_widgets)
 		widget = message_widgets[i]
@@ -739,8 +757,10 @@ ConstantElementChat._scroll_to_latest_message = function (self)
 	self._first_visible_chat_message = self._last_message_index
 	self._scroll_extra_vertical_offset = 0
 	self._has_scrolled_back_in_history = false
+
 	local scrollbar_widget = self._widgets_by_name.chat_scrollbar
 	local scrollbar_content = scrollbar_widget.content
+
 	scrollbar_content.scroll_value = nil
 	scrollbar_content.value = 1
 end
@@ -754,11 +774,13 @@ ConstantElementChat._update_scrollbar = function (self, render_settings)
 	local scrollbar_content = scrollbar_widget.content
 	local scroll_value = scrollbar_content.scroll_value
 	local total_scroll_length = total_chat_height - chat_window_height
+
 	scrollbar_content.hotspot.is_focused = not InputDevice.gamepad_active or self:using_input()
 	scrollbar_content.focused = InputDevice.gamepad_active and self:using_input()
 	scrollbar_content.scroll_length = total_scroll_length
 	scrollbar_content.area_length = chat_window_height
 	scrollbar_content.scroll_amount = 1 / (total_num_messages * 3)
+
 	local is_scrollbar_active = scrollbar_content.drag_active or scroll_value
 
 	if self._has_scrolled_back_in_history then
@@ -800,9 +822,10 @@ ConstantElementChat._calculate_first_visible_widget = function (self, scroll_len
 	for i = 1, total_num_messages do
 		local widget = message_widgets[index]
 		local widget_height = widget.content.size[2]
+
 		message_vertical_offset = message_vertical_offset - (widget_height + spacing)
 
-		if window_bottom_position > message_vertical_offset then
+		if message_vertical_offset < window_bottom_position then
 			self._first_visible_chat_message = index
 			self._scroll_extra_vertical_offset = message_vertical_offset + widget_height + spacing - window_bottom_position
 
@@ -816,10 +839,12 @@ end
 ConstantElementChat._add_notification = function (self, message, channel_tag)
 	local widget_definition = self._message_widget_blueprints.notification
 	local widget = UIWidget.init(message, widget_definition)
+
 	widget.content.message = message
 
 	if channel_tag then
 		local channel_color = self:_channel_color(channel_tag)
+
 		widget.style.message.text_color = channel_color
 	end
 
@@ -852,6 +877,7 @@ ConstantElementChat._add_message = function (self, message, sender, channel)
 	}
 	local message_format = self:_format_chat_message(message_parameters)
 	local widget_content = new_message_widget.content
+
 	widget_content.message_format = message_format
 	widget_content.message = message_format
 	new_message_widget.alpha_multiplier = self._alpha
@@ -864,7 +890,7 @@ ConstantElementChat._add_message = function (self, message, sender, channel)
 end
 
 ConstantElementChat._scrub = function (self, text)
-	local scrubbed_text = nil
+	local scrubbed_text
 
 	while text ~= scrubbed_text do
 		text = scrubbed_text or text
@@ -897,6 +923,7 @@ ConstantElementChat._add_message_widget_to_message_list = function (self, new_me
 
 		if last_widget_size then
 			local removed_message_height = last_widget_size[2] + ChatSettings.message_spacing
+
 			self._total_chat_height = self._total_chat_height - removed_message_height
 			self._removed_height_since_last_frame = self._removed_height_since_last_frame + removed_message_height
 		end
@@ -904,6 +931,7 @@ ConstantElementChat._add_message_widget_to_message_list = function (self, new_me
 
 	messages[message_index] = new_message
 	message_widgets[message_index] = new_message_widget
+
 	local input_widget = self._input_field_widget
 
 	if not input_widget.content.is_writing or first_visible_message_index == last_message_index then
@@ -919,15 +947,18 @@ ConstantElementChat._calculate_widget_size = function (self, widget, ui_renderer
 	local message_style = widget_style.message
 	local widget_max_size = self:scenegraph_size("chat_message_area")
 	local _, message_height, min = self:_text_size(ui_renderer, widget_content.message, message_style, widget_max_size)
+
 	message_style.offset = {
 		-min.x,
 		-min.y,
 		0
 	}
+
 	local widget_size = {
 		widget_max_size[1],
 		message_height
 	}
+
 	widget_content.size = widget_size
 
 	return widget_size
@@ -1051,12 +1082,14 @@ ConstantElementChat._channel_name = function (self, channel_tag, colorize, chann
 
 	if not name then
 		local channel_loc_key = channel_metadata and channel_metadata.name
+
 		name = Managers.localization:localize(channel_loc_key)
 	end
 
 	if colorize then
 		local color = channel_metadata.color
 		local formatted_color = color[2] .. "," .. color[3] .. "," .. color[4] .. "," .. color[1]
+
 		name = "{# color(" .. formatted_color .. ")}" .. name .. "{#reset()}"
 	end
 
@@ -1179,7 +1212,7 @@ ConstantElementChat._find_participant_in_current_channel = function (self, chara
 		return nil, nil
 	end
 
-	local found_participant = nil
+	local found_participant
 	local singular = true
 
 	if self._selected_channel_handle and Managers.chat:sessions()[self._selected_channel_handle] then

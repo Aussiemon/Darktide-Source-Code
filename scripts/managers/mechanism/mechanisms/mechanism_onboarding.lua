@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/mechanism/mechanisms/mechanism_onboarding.lua
+
 local MatchmakingConstants = require("scripts/settings/network/matchmaking_constants")
 local MechanismBase = require("scripts/managers/mechanism/mechanisms/mechanism_base")
 local Missions = require("scripts/settings/mission/mission_templates")
@@ -11,9 +13,12 @@ MechanismOnboarding.init = function (self, ...)
 	MechanismOnboarding.super.init(self, ...)
 
 	local context = self._context
+
 	self._challenge_level = context.challenge_level
 	self._mission_name = context.mission_name
+
 	local mission_settings = Missions[self._mission_name]
+
 	self._level_name = mission_settings.level
 	self._singleplay_type = context.singleplay_type
 	self._init_scenario = context.init_scenario
@@ -118,6 +123,7 @@ MechanismOnboarding.wanted_transition = function (self)
 		if current_chapter then
 			local chapter_data = current_chapter.data
 			local mission_name = chapter_data.mission_name
+
 			self._mission_name = mission_name
 			self._level_name = Missions[mission_name].level
 

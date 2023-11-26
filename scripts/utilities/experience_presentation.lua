@@ -1,21 +1,27 @@
+﻿-- chunkname: @scripts/utilities/experience_presentation.lua
+
 local Experience = require("scripts/utilities/experience")
-local ExperiencePresentation = {
-	get_experience_animation_progress = function (progress)
-		return math.easeOutCubic(progress)
-	end,
-	get_experience_reverse_animation_progress = function (progress)
-		return 1 - (1 - progress)^0.3333333333333333
-	end,
-	start_presentation = function (data)
-		data.presentation_started = true
-	end,
-	presentation_started = function (data)
-		return data and data.presentation_started
-	end,
-	presentation_completed = function (data)
-		return data and data.presentation_completed
-	end
-}
+local ExperiencePresentation = {}
+
+ExperiencePresentation.get_experience_animation_progress = function (progress)
+	return math.easeOutCubic(progress)
+end
+
+ExperiencePresentation.get_experience_reverse_animation_progress = function (progress)
+	return 1 - (1 - progress)^0.3333333333333333
+end
+
+ExperiencePresentation.start_presentation = function (data)
+	data.presentation_started = true
+end
+
+ExperiencePresentation.presentation_started = function (data)
+	return data and data.presentation_started
+end
+
+ExperiencePresentation.presentation_completed = function (data)
+	return data and data.presentation_completed
+end
 
 ExperiencePresentation.update_presentation = function (data, dt, t)
 	if data.presentation_paused_timer then
@@ -31,9 +37,13 @@ ExperiencePresentation.update_presentation = function (data, dt, t)
 	local duration = data.duration
 	local time = data.time
 	local starting_experience = data.starting_experience
+
 	data.time = math.min(time + dt, duration)
+
 	local time_progress = time / duration
+
 	data.time_progress = time_progress
+
 	local progress = ExperiencePresentation.get_experience_animation_progress(time_progress)
 	local total_bar_progress = data.total_bar_progress
 	local start_bar_progress = data.start_bar_progress
@@ -43,7 +53,9 @@ ExperiencePresentation.update_presentation = function (data, dt, t)
 	local start_level = data.start_level
 	local current_level = start_level + math.floor(presentation_progress)
 	local previous_level = data.current_level
+
 	data.current_level = current_level
+
 	local level_up = false
 
 	if current_level ~= previous_level then
@@ -86,9 +98,10 @@ ExperiencePresentation.skip_to_next_timestamp = function (data)
 		data.presentation_paused_timer = nil
 	elseif total_bar_progress - current_total_bar_progress >= 1 - current_level_progress then
 		local level_difference = math.max(current_level - start_level, 0)
-		local progress_passed = level_difference + current_level_progress - start_bar_progress + 1 - current_level_progress
+		local progress_passed = level_difference + current_level_progress - start_bar_progress + (1 - current_level_progress)
 		local relative_progress_left = ExperiencePresentation.get_experience_reverse_animation_progress(math.min(progress_passed / total_bar_progress, 1))
 		local new_time = relative_progress_left * duration
+
 		data.time = new_time
 	else
 		data.time = duration
@@ -97,8 +110,11 @@ end
 
 ExperiencePresentation.setup_presentation_data = function (experience_settings, starting_experience, experience_gained, presentation_duration, level_up_delay)
 	level_up_delay = level_up_delay or 0
+
 	local max_level_experience = experience_settings.max_level_experience
+
 	experience_gained = math.min(experience_gained, max_level_experience - starting_experience)
+
 	local start_level, start_bar_progress = Experience.get_level(experience_settings, starting_experience)
 	local end_level, end_bar_progress = Experience.get_level(experience_settings, starting_experience + experience_gained)
 	local total_bar_progress = end_level - start_level + end_bar_progress - start_bar_progress

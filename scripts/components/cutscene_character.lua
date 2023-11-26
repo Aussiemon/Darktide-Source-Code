@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/components/cutscene_character.lua
+
 local CutsceneCharacter = component("CutsceneCharacter")
 
 CutsceneCharacter.init = function (self, unit)
@@ -8,14 +10,23 @@ CutsceneCharacter.init = function (self, unit)
 	self:enable(unit)
 
 	self._unit = unit
+
 	local cinematic_name = self:get_data(unit, "cinematic_name")
+
 	self._cinematic_name = cinematic_name
+
 	local character_type = self:get_data(unit, "character_type")
+
 	self._character_type = character_type
+
 	local breed_name = self:get_data(unit, "breed_name")
+
 	self._breed_name = breed_name
+
 	local cinematic_slot = self:get_data(unit, "cinematic_slot")
+
 	self._cinematic_slot = cinematic_slot
+
 	local equip_slot_on_loadout_assign = self:get_data(unit, "equip_slot_on_loadout_assign")
 	local cutscene_character_extension = ScriptUnit.fetch_component_extension(unit, "cutscene_character_system")
 

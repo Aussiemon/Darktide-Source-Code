@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/foundation/managers/player/player_manager_fixed_testify.lua
+
 local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
 local NO_WEAPON_MODIFIERS = {}
 
@@ -37,99 +39,94 @@ local function _weapon_trait_from_template(weapon_modifiers_or_nil, value)
 end
 
 local function _apply_all_weapon_modifiers(local_player, weapon_template)
-	local new_modifiers = {
-		base_stats = _weapon_modifier_from_template(weapon_template.base_stats, 0.5),
-		perks = _weapon_modifier_from_template(weapon_template.perks),
-		traits = _weapon_trait_from_template(weapon_template.traits),
-		overclocks = _weapon_modifier_from_template(weapon_template.overclocks)
-	}
+	local new_modifiers = {}
+
+	new_modifiers.base_stats = _weapon_modifier_from_template(weapon_template.base_stats, 0.5)
+	new_modifiers.perks = _weapon_modifier_from_template(weapon_template.perks)
+	new_modifiers.traits = _weapon_trait_from_template(weapon_template.traits)
+	new_modifiers.overclocks = _weapon_modifier_from_template(weapon_template.overclocks)
+
 	local weapon_system = Managers.state.extension:system("weapon_system")
 
 	weapon_system:debug_set_weapon_override(local_player, new_modifiers)
 end
 
-local PlayerManagerFixedTestify = {}
+local PlayerManagerFixedTestify = {
+	apply_weapon_progression_to_current_weapon_template = function (_, _, data)
+		local player = data.player
+		local player_unit = player.player_unit
+		local unit_data_extension = ScriptUnit.extension(player_unit, "unit_data_system")
+		local weapon_action_component = unit_data_extension:read_component("weapon_action")
+		local weapon_template = WeaponTemplate.current_weapon_template(weapon_action_component)
 
-PlayerManagerFixedTestify.apply_weapon_progression_to_current_weapon_template = function (_, _, data)
-	local player = data.player
-	local player_unit = player.player_unit
-	local unit_data_extension = ScriptUnit.extension(player_unit, "unit_data_system")
-	local weapon_action_component = unit_data_extension:read_component("weapon_action")
-	local weapon_template = WeaponTemplate.current_weapon_template(weapon_action_component)
+		_apply_all_weapon_modifiers(player, weapon_template)
+	end,
+	remove_weapon_progression_from_current_weapon_template = function (_, _, data)
+		local player = data.player
+		local weapon_system = Managers.state.extension:system("weapon_system")
+		local new_modifiers = {}
 
-	_apply_all_weapon_modifiers(player, weapon_template)
-end
+		weapon_system:debug_set_weapon_override(player, new_modifiers)
+	end,
+	reset_grenade_charges = function (_, _, data)
+		local player = data.player
+		local player_unit = player.player_unit
+		local unit_data_extension = ScriptUnit.extension(player_unit, "unit_data_system")
+		local components = unit_data_extension._components
+		local grenade_ability = components.grenade_ability
 
-PlayerManagerFixedTestify.remove_weapon_progression_from_current_weapon_template = function (_, _, data)
-	local player = data.player
-	local weapon_system = Managers.state.extension:system("weapon_system")
-	local new_modifiers = {}
+		for i = 1, #grenade_ability do
+			grenade_ability[i].num_charges = 2
+		end
+	end,
+	reset_magazine_ammo = function (_, _, data)
+		local player = data.player
+		local player_unit = player.player_unit
+		local unit_data_extension = ScriptUnit.extension(player_unit, "unit_data_system")
+		local components = unit_data_extension._components
+		local slot_secondary = components.slot_secondary
 
-	weapon_system:debug_set_weapon_override(player, new_modifiers)
-end
+		for i = 1, #slot_secondary do
+			if slot_secondary[i].max_ammunition_clip > 1 then
+				slot_secondary[i].current_ammunition_clip = slot_secondary[i].max_ammunition_clip - 1
+			end
+		end
+	end,
+	trigger_animation_event = function (_, _, player_unit, animation_event)
+		local animation_extension = ScriptUnit.extension(player_unit, "animation_system")
 
-PlayerManagerFixedTestify.reset_grenade_charges = function (_, _, data)
-	local player = data.player
-	local player_unit = player.player_unit
-	local unit_data_extension = ScriptUnit.extension(player_unit, "unit_data_system")
-	local components = unit_data_extension._components
-	local grenade_ability = components.grenade_ability
+		animation_extension:anim_event(animation_event)
+	end,
+	wait_for_action_completed = function (_, _, data)
+		local player = data.player
+		local player_unit = player.player_unit
+		local unit_data_extension = ScriptUnit.extension(player_unit, "unit_data_system")
+		local weapon_action_component = unit_data_extension:read_component("weapon_action")
+		local queue = weapon_action_component.__data
+		local queue_is_empty = true
 
-	for i = 1, #grenade_ability do
-		grenade_ability[i].num_charges = 2
-	end
-end
+		for i = 1, #queue do
+			if queue[i].current_action_name ~= "none" then
+				queue_is_empty = false
+			end
+		end
 
-PlayerManagerFixedTestify.reset_magazine_ammo = function (_, _, data)
-	local player = data.player
-	local player_unit = player.player_unit
-	local unit_data_extension = ScriptUnit.extension(player_unit, "unit_data_system")
-	local components = unit_data_extension._components
-	local slot_secondary = components.slot_secondary
+		if not queue_is_empty then
+			return Testify.RETRY
+		end
+	end,
+	wield_slot = function (_, t, data)
+		local player_unit = data.player.player_unit
+		local slot = data.slot
+		local inventory_component = ScriptUnit.extension(player_unit, "unit_data_system"):read_component("inventory")
+		local wielded_slot = inventory_component.wielded_slot
 
-	for i = 1, #slot_secondary do
-		if slot_secondary[i].max_ammunition_clip > 1 then
-			slot_secondary[i].current_ammunition_clip = slot_secondary[i].max_ammunition_clip - 1
+		if wielded_slot ~= slot then
+			local PlayerUnitVisualLoadout = require("scripts/extension_systems/visual_loadout/utilities/player_unit_visual_loadout")
+
+			PlayerUnitVisualLoadout.wield_slot(slot, player_unit, t)
 		end
 	end
-end
-
-PlayerManagerFixedTestify.trigger_animation_event = function (_, _, player_unit, animation_event)
-	local animation_extension = ScriptUnit.extension(player_unit, "animation_system")
-
-	animation_extension:anim_event(animation_event)
-end
-
-PlayerManagerFixedTestify.wait_for_action_completed = function (_, _, data)
-	local player = data.player
-	local player_unit = player.player_unit
-	local unit_data_extension = ScriptUnit.extension(player_unit, "unit_data_system")
-	local weapon_action_component = unit_data_extension:read_component("weapon_action")
-	local queue = weapon_action_component.__data
-	local queue_is_empty = true
-
-	for i = 1, #queue do
-		if queue[i].current_action_name ~= "none" then
-			queue_is_empty = false
-		end
-	end
-
-	if not queue_is_empty then
-		return Testify.RETRY
-	end
-end
-
-PlayerManagerFixedTestify.wield_slot = function (_, t, data)
-	local player_unit = data.player.player_unit
-	local slot = data.slot
-	local inventory_component = ScriptUnit.extension(player_unit, "unit_data_system"):read_component("inventory")
-	local wielded_slot = inventory_component.wielded_slot
-
-	if wielded_slot ~= slot then
-		local PlayerUnitVisualLoadout = require("scripts/extension_systems/visual_loadout/utilities/player_unit_visual_loadout")
-
-		PlayerUnitVisualLoadout.wield_slot(slot, player_unit, t)
-	end
-end
+}
 
 return PlayerManagerFixedTestify

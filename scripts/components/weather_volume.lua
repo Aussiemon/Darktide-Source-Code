@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/components/weather_volume.lua
+
 local WeatherVolume = component("WeatherVolume")
 
 WeatherVolume.init = function (self, unit)

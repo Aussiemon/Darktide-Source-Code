@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/equipment/weapon_templates/combat_axes/settings_templates/combat_axe_damage_profile_templates.lua
+
 local ArmorSettings = require("scripts/settings/damage/armor_settings")
 local PowerLevelSettings = require("scripts/settings/damage/power_level_settings")
 local DamageProfileSettings = require("scripts/settings/damage/damage_profile_settings")
@@ -70,6 +72,7 @@ local shovel_am = {
 		[armor_types.void_shield] = damage_lerp_values.lerp_1
 	}
 }
+
 damage_templates.heavy_axe = {
 	ragdoll_only = true,
 	finesse_ability_damage_multiplier = 2,

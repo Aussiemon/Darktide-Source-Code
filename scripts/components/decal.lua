@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/components/decal.lua
+
 local Decal = component("Decal")
 
 Decal.init = function (self, unit)

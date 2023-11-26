@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/circumstance/templates/hunting_grounds_circumstance_template.lua
+
 local circumstance_templates = {
 	hunting_grounds_01 = {
 		dialogue_id = "circumstance_vo_hunting_grounds",

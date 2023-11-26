@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/system_view/system_view_content_list.lua
+
 local MatchmakingConstants = require("scripts/settings/network/matchmaking_constants")
 local NarrativeStories = require("scripts/settings/narrative/narrative_stories")
 local Promise = require("scripts/foundation/utilities/promise")

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/equipment/weapon_templates/ogryn_heavystubbers/settings_templates/ogryn_heavystubber_damage_profile_templates.lua
+
 local ArmorSettings = require("scripts/settings/damage/armor_settings")
 local PowerLevelSettings = require("scripts/settings/damage/power_level_settings")
 local DamageProfileSettings = require("scripts/settings/damage/damage_profile_settings")
@@ -19,6 +21,7 @@ local damage_lerp_values = DamageProfileSettings.damage_lerp_values
 local single_cleave = DamageProfileSettings.single_cleave
 local light_cleave = DamageProfileSettings.light_cleave
 local default_shield_override_stagger_strength = 4
+
 damage_templates.default_ogryn_heavystubber_assault_snp = {
 	suppression_value = 2.5,
 	ragdoll_push_force = 600,

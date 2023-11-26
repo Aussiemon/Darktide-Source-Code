@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/impact_fx/impact_fx_blunt_thunder.lua
+
 local ArmorSettings = require("scripts/settings/damage/armor_settings")
 local NO_SURFACE_DECAL = false
 local armor_types = ArmorSettings.types
@@ -762,7 +764,7 @@ local disgustingly_resilient = {
 }
 local resistant = table.clone(unarmored)
 local berserker = table.clone(unarmored)
-local player = nil
+local player
 
 return {
 	armor = {

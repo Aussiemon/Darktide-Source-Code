@@ -1,8 +1,11 @@
+﻿-- chunkname: @scripts/components/mission_objective_target.lua
+
 local MissionObjectiveTarget = component("MissionObjectiveTarget")
 local TARGET_EVENT_TYPE = table.enum("none", "interactable", "destructible", "scanning")
 
 MissionObjectiveTarget.init = function (self, unit)
 	self._event_type = TARGET_EVENT_TYPE.none
+
 	local mission_objective_target_extension = ScriptUnit.fetch_component_extension(unit, "mission_objective_target_system")
 
 	if mission_objective_target_extension then
@@ -18,6 +21,7 @@ MissionObjectiveTarget.init = function (self, unit)
 		mission_objective_target_extension:setup_from_component(objective_name, ui_target_type, objective_stage, register_self, add_marker_on_registration, add_marker_on_objective_start, enabled_only_during_mission)
 
 		self._mission_objective_target_extension = mission_objective_target_extension
+
 		local start_visible = self:get_data(unit, "start_visible")
 
 		if Unit.has_visibility_group(unit, "main") and not start_visible then

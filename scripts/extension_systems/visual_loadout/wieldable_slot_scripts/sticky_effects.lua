@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/visual_loadout/wieldable_slot_scripts/sticky_effects.lua
+
 local Action = require("scripts/utilities/weapon/action")
 local Armor = require("scripts/utilities/attack/armor")
 local HitZone = require("scripts/utilities/attack/hit_zone")
@@ -6,7 +8,7 @@ local SweepStickyness = require("scripts/utilities/action/sweep_stickyness")
 local StickyEffects = class("StickyEffects")
 local STICKYNESS_SFX_LOOP_ALIAS = "melee_sticky_loop"
 local STICKYNESS_VFX_LOOP_ALIAS = "melee_sticky_loop"
-local _sticky_armor_type = nil
+local _sticky_armor_type
 local STICKY_FX_SOURCE_NAME = "_sticky"
 
 StickyEffects.init = function (self, context, slot, weapon_template, fx_sources)
@@ -15,14 +17,18 @@ StickyEffects.init = function (self, context, slot, weapon_template, fx_sources)
 	self._world = context.world
 	self._wwise_world = context.wwise_world
 	self._weapon_actions = weapon_template.actions
+
 	local unit_data_extension = context.unit_data_extension
 	local fx_extension = context.fx_extension
 	local visual_loadout_extension = context.visual_loadout_extension
+
 	self._fx_extension = fx_extension
 	self._visual_loadout_extension = visual_loadout_extension
 	self._action_sweep_component = unit_data_extension:read_component("action_sweep")
 	self._weapon_action_component = unit_data_extension:read_component("weapon_action")
+
 	local sticky_fx_source_name = fx_sources[STICKY_FX_SOURCE_NAME]
+
 	self._sticky_fx_source_name = sticky_fx_source_name
 	self._vfx_link_unit, self._vfx_link_node = fx_extension:vfx_spawner_unit_and_node(sticky_fx_source_name)
 	self._looping_playing_id = nil
@@ -95,7 +101,8 @@ StickyEffects._start_stickyness = function (self, t)
 			local sound_config = PlayerCharacterLoopingSoundAliases[sfx_loop_alias]
 			local start_config = sound_config.start
 			local start_event_alias = start_config.event_alias
-			local resolved, has_husk_events, start_event_name, stop_event_name = nil
+			local resolved, has_husk_events, start_event_name, stop_event_name
+
 			resolved, start_event_name, has_husk_events = visual_loadout_extension:resolve_gear_sound(start_event_alias, external_properties)
 
 			if resolved then
@@ -105,21 +112,19 @@ StickyEffects._start_stickyness = function (self, t)
 
 				WwiseWorld.set_switch(self._wwise_world, "armor_types", sticky_armor_type, source_id)
 
-				if (is_husk or not is_local_unit) and has_husk_events then
-					start_event_name = start_event_name .. "_husk" or start_event_name
-				end
+				start_event_name = not (not is_husk and is_local_unit) and has_husk_events and start_event_name .. "_husk" or start_event_name
 
 				local playing_id = WwiseWorld.trigger_resource_event(wwise_world, start_event_name, source_id)
+
 				self._looping_playing_id = playing_id
+
 				local stop_config = sound_config.stop
 				local stop_event_alias = stop_config.event_alias
+
 				resolved, stop_event_name, has_husk_events = visual_loadout_extension:resolve_gear_sound(stop_event_alias, external_properties)
 
 				if resolved then
-					if (is_husk or not is_local_unit) and has_husk_events then
-						stop_event_name = stop_event_name .. "_husk" or stop_event_name
-					end
-
+					stop_event_name = not (not is_husk and is_local_unit) and has_husk_events and stop_event_name .. "_husk" or stop_event_name
 					self._stop_event_name = stop_event_name
 				end
 			end
@@ -129,9 +134,10 @@ StickyEffects._start_stickyness = function (self, t)
 
 		if vfx_loop_alias then
 			local world = self._world
-			local vfx_link_unit = self._vfx_link_unit
-			local vfx_link_node = self._vfx_link_node
+			local vfx_link_unit, vfx_link_node = self._vfx_link_unit, self._vfx_link_node
+
 			external_properties.armor_type = _sticky_armor_type(action_sweep_component)
+
 			local resolved, effect_name = visual_loadout_extension:resolve_gear_particle(vfx_loop_alias, external_properties)
 
 			if resolved then
@@ -153,6 +159,7 @@ StickyEffects._update_stickyness = function (self)
 
 	if sticky_armor_type and sticky_armor_type ~= self._current_sticky_armor_type then
 		self._current_sticky_armor_type = sticky_armor_type
+
 		local source_id = self._fx_extension:sound_source(self._sticky_fx_source_name)
 
 		WwiseWorld.set_switch(self._wwise_world, "armor_types", sticky_armor_type, source_id)

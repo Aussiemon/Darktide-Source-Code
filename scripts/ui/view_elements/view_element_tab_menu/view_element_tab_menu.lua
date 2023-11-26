@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/view_elements/view_element_tab_menu/view_element_tab_menu.lua
+
 local Definitions = require("scripts/ui/view_elements/view_element_tab_menu/view_element_tab_menu_definitions")
 local ViewElementTabMenuSettings = require("scripts/ui/view_elements/view_element_tab_menu/view_element_tab_menu_settings")
 local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templates")
@@ -47,6 +49,7 @@ end
 
 ViewElementTabMenu.add_entry = function (self, display_name, on_pressed_callback, pass_template, optional_display_icon, optional_update_function, no_localization)
 	pass_template = pass_template or ButtonPassTemplates.tab_menu_button
+
 	local id = "entry_" .. self._entry_index
 	local scenegraph_id = "entry_pivot"
 	local default_size = self._menu_settings.button_size
@@ -62,6 +65,7 @@ ViewElementTabMenu.add_entry = function (self, display_name, on_pressed_callback
 	}
 	local display_text = no_localization == true and display_name or display_name and self:_localize(display_name)
 	local content = widget.content
+
 	content.hotspot.pressed_callback = on_pressed_callback
 	content.text = display_text or ""
 
@@ -93,8 +97,11 @@ ViewElementTabMenu._update_widget_size = function (self, widget, ui_renderer)
 		local text = content.text
 		local size = content.size
 		local text_options = UIFonts.get_font_options_by_style(text_style)
+
 		size[1] = 1920
+
 		local width, _ = UIRenderer.text_size(ui_renderer, text, text_style.font_type, text_style.font_size, size, text_options)
+
 		size[1] = width + self._menu_settings.button_text_margin
 	end
 end
@@ -179,7 +186,9 @@ end
 ViewElementTabMenu._draw_widgets = function (self, dt, t, input_service, ui_renderer, render_settings)
 	local menu_settings = self._menu_settings
 	local update_text_lengths = self._update_text_lengths and not menu_settings.fixed_button_size
+
 	self._update_text_lengths = nil
+
 	local grow_vertically = menu_settings.grow_vertically
 	local widgets_by_name = self._widgets_by_name
 	local entries = self._entries
@@ -205,8 +214,9 @@ ViewElementTabMenu._draw_widgets = function (self, dt, t, input_service, ui_rend
 			end
 
 			local size = widget.content.size
-			total_width = total_width + size[1] + button_spacing
-			total_height = total_height + size[2] + button_spacing
+
+			total_width = total_width + (size[1] + button_spacing)
+			total_height = total_height + (size[2] + button_spacing)
 		end
 
 		local left_size_offset = 0
@@ -233,6 +243,7 @@ ViewElementTabMenu._draw_widgets = function (self, dt, t, input_service, ui_rend
 
 		if grow_vertically then
 			local button_size = ViewElementTabMenuSettings.button_size
+
 			widgets_by_name.input_text_left.offset[1] = input_label_offset_x
 			widgets_by_name.input_text_left.offset[2] = top_size_offset - (button_size[2] + input_label_offset_y)
 		else
@@ -243,7 +254,9 @@ ViewElementTabMenu._draw_widgets = function (self, dt, t, input_service, ui_rend
 		for i = 1, num_entries do
 			local entry = entries[i]
 			local widget = entry.widget
+
 			widget.content.hotspot.is_focused = i == self._selected_index
+
 			local offset = widget.offset
 			local size = widget.content.size
 
@@ -308,6 +321,7 @@ ViewElementTabMenu._update_input_action_texts = function (self)
 	local input_action_left = self._input_action_left
 	local input_action_right = self._input_action_right
 	local widgets_by_name = self._widgets_by_name
+
 	widgets_by_name.input_text_left.content.text = not using_cursor_navigation and input_action_left and self:_get_input_text(input_action_left) or ""
 	widgets_by_name.input_text_right.content.text = not using_cursor_navigation and input_action_right and self:_get_input_text(input_action_right) or ""
 end

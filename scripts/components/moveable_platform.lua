@@ -1,7 +1,10 @@
+﻿-- chunkname: @scripts/components/moveable_platform.lua
+
 local MoveablePlatform = component("MoveablePlatform")
 
 MoveablePlatform.init = function (self, unit, is_server)
 	self._is_server = is_server
+
 	local moveable_platform_extension = ScriptUnit.fetch_component_extension(unit, "moveable_platform_system")
 
 	if moveable_platform_extension then
@@ -27,7 +30,9 @@ MoveablePlatform.editor_init = function (self, unit)
 	if rawget(_G, "LevelEditor") then
 		self._unit = unit
 		self._stop_units = {}
+
 		local world = Application.main_world()
+
 		self._world = world
 		self._debug_text_id = nil
 		self._gui = World.create_world_gui(world, Matrix4x4.identity(), 1, 1)
@@ -145,6 +150,7 @@ MoveablePlatform.editor_destroy = function (self, unit)
 
 	local world = self._world
 	local gui = self._gui
+
 	self._line_object = nil
 	self._world = nil
 
@@ -200,6 +206,7 @@ MoveablePlatform._calculate_story_speed = function (self, unit)
 
 			if NetworkConstants then
 				local story_speed_constants = NetworkConstants.story_speed
+
 				min_speed = story_speed_constants.min
 				max_speed = story_speed_constants.max
 			end
@@ -207,7 +214,7 @@ MoveablePlatform._calculate_story_speed = function (self, unit)
 			if override_forward then
 				story_speed_forward = story_length / self:get_data(unit, "story_time_forward")
 
-				if min_speed > story_speed_forward or max_speed < story_speed_forward then
+				if story_speed_forward < min_speed or max_speed < story_speed_forward then
 					self:_draw_warning(unit, string.format("The override forward speed is out of bounds (%s), it will be clamped between %s and %s", story_speed_forward, min_speed, max_speed))
 
 					story_speed_forward = math.clamp(story_speed_forward, min_speed, max_speed)
@@ -217,7 +224,7 @@ MoveablePlatform._calculate_story_speed = function (self, unit)
 			if override_backward then
 				story_speed_backward = story_length / self:get_data(unit, "story_time_backward")
 
-				if min_speed > story_speed_backward or max_speed < story_speed_backward then
+				if story_speed_backward < min_speed or max_speed < story_speed_backward then
 					self:_draw_warning(unit, string.format("The override backward speed is out of bounds (%s), it will be clamped between %s and %s", story_speed_backward, min_speed, max_speed))
 
 					story_speed_backward = math.clamp(story_speed_backward, min_speed, max_speed)

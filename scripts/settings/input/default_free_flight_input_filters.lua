@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/input/default_free_flight_input_filters.lua
+
 local default_free_flight_input_filters = {
 	reset_dof = {
 		filter_type = "and",

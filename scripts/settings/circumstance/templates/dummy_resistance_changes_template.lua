@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/circumstance/templates/dummy_resistance_changes_template.lua
+
 local circumstance_templates = {
 	dummy_more_resistance_01 = {
 		wwise_state = "None",

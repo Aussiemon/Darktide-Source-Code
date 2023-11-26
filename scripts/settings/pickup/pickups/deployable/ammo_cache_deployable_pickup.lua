@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/pickup/pickups/deployable/ammo_cache_deployable_pickup.lua
+
 local pickup_data = {
 	description = "loc_pickup_deployable_ammo_crate_01",
 	name = "ammo_cache_deployable",

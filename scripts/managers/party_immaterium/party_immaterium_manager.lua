@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/party_immaterium/party_immaterium_manager.lua
+
 local PartyImmateriumMember = require("scripts/managers/party_immaterium/party_immaterium_member")
 local PartyImmateriumConnection = require("scripts/managers/party_immaterium/party_immaterium_connection")
 local PartyImmateriumMemberMyself = require("scripts/managers/party_immaterium/party_immaterium_member_myself")
@@ -218,6 +220,7 @@ PartyImmateriumManager.start = function (self)
 	end
 
 	self._started = true
+
 	local default_party_id = ""
 
 	if GameParameters.testify then
@@ -258,6 +261,7 @@ PartyImmateriumManager._reset_party_data = function (self)
 	table.clear(self._resolved_join_permissions)
 
 	self._triggered_game_state_status = ""
+
 	local last_state = self._last_state
 
 	if last_state and last_state ~= PartyConstants.State.none then
@@ -304,6 +308,7 @@ PartyImmateriumManager.all_members = function (self)
 	table.clear(temp_all_members)
 
 	temp_all_members[1] = self._myself
+
 	local other_members = self._other_members
 
 	for i = 1, #other_members do
@@ -391,8 +396,11 @@ PartyImmateriumManager.leave_party = function (self)
 	end
 
 	local leaving_party_connection = self._party_connection
+
 	self._party_connection = nil
+
 	local default_party_id = ""
+
 	self._leave_party_promise = Managers.grpc:leave_party(self:party_id() or ""):next(function ()
 		if leaving_party_connection then
 			leaving_party_connection:abort()
@@ -480,11 +488,11 @@ PartyImmateriumManager.join_party = function (self, join_parameter, is_reconnect
 		join_parameter = self:_parse_join_parameter_string(join_parameter)
 	end
 
-	local party_connection = nil
+	local party_connection
 
 	return self:_can_join_new_party_check(join_parameter, is_reconnect):next(function ()
 		local party_id = join_parameter.party_id
-		local accept_party_promise = nil
+		local accept_party_promise
 		local is_party_id = party_id and party_id ~= ""
 
 		if is_party_id then
@@ -607,6 +615,7 @@ PartyImmateriumManager._handle_party_update_event = function (self, event)
 
 		if account_id ~= gRPC.get_account_id() then
 			local member = self:other_member_from_unique_id(account_id)
+
 			member = member or PartyImmateriumMember:new(account_id)
 
 			member:update_immaterium_entry(immaterium_entry)
@@ -1034,6 +1043,7 @@ end
 
 PartyImmateriumManager.consume_matched_hub_server_session_id = function (self)
 	local matched_hub_session_id = self._matched_hub_session_id
+
 	self._matched_hub_session_id = nil
 
 	return matched_hub_session_id
@@ -1140,6 +1150,7 @@ PartyImmateriumManager.get_your_standing_invite_code = function (self)
 	end
 
 	local promise = Promise:new()
+
 	self._standing_invite_code_promise = promise
 
 	self:_retry_get_your_standing_invite_code(party_id, promise)
@@ -1334,7 +1345,7 @@ PartyImmateriumManager._handle_invite_canceled = function (self, invite_token, p
 	else
 		self:_get_presence_promise(platform_user_id):next(function (invitee_presence)
 			local invitee_character_name = invitee_presence:character_name()
-			local message, sound_event = nil
+			local message, sound_event
 
 			if platform_user_id == canceler_account_id then
 				message = Localize("loc_party_notification_invite_declined", true, {
@@ -1376,7 +1387,7 @@ PartyImmateriumManager._handle_invite_accepted = function (self, invite_token, i
 
 	self:_get_presence_promise(invitee_account_id):next(function (invitee_presence)
 		local character_name = invitee_presence:character_name()
-		local message = nil
+		local message
 
 		if not character_name or character_name == "" then
 			message = Localize("loc_party_notification_invite_accepted_no_character")
@@ -1464,7 +1475,7 @@ PartyImmateriumManager._handle_immaterium_invite = function (self, party_id, inv
 			local character_name = inviter_presence:character_name()
 			local character_profile = inviter_presence:character_profile()
 			local character_level = character_profile and character_profile.current_level
-			local player_name_and_level = nil
+			local player_name_and_level
 
 			if character_level then
 				player_name_and_level = Localize("loc_social_menu_character_name_format", true, {
@@ -1576,7 +1587,7 @@ PartyImmateriumManager._request_to_join_popup = function (self, joiner_account_i
 		local character_name = inviter_presence:character_name()
 		local character_profile = inviter_presence:character_profile()
 		local character_level = character_profile and character_profile.current_level
-		local player_name_and_level = nil
+		local player_name_and_level
 
 		if character_level then
 			player_name_and_level = Localize("loc_social_menu_character_name_format", true, {

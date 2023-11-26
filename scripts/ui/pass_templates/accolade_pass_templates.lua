@@ -1,6 +1,9 @@
+﻿-- chunkname: @scripts/ui/pass_templates/accolade_pass_templates.lua
+
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local AccoladePassTemplates = {}
 local title_text_style = table.clone(UIFontSettings.header_3)
+
 title_text_style.offset = {
 	190,
 	0,
@@ -15,7 +18,9 @@ title_text_style.vertical_alignment = "center"
 title_text_style.horizontal_alignment = "center"
 title_text_style.text_vertical_alignment = "top"
 title_text_style.text_horizontal_alignment = "left"
+
 local sub_title_text_style = table.clone(UIFontSettings.body)
+
 sub_title_text_style.offset = {
 	190,
 	0,

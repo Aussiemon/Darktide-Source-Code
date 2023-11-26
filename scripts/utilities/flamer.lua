@@ -1,6 +1,8 @@
+﻿-- chunkname: @scripts/utilities/flamer.lua
+
 local MaterialQuery = require("scripts/utilities/material_query")
 local Flamer = {}
-local _get_start_position, _set_flamer_parabola, _query_ground_impact, _raycast_dynamics = nil
+local _get_start_position, _set_flamer_parabola, _query_ground_impact, _raycast_dynamics
 
 Flamer.start_aiming_fx = function (t, unit, vfx, sfx, wwise_world, world, data)
 	local from_unit = data.from_unit
@@ -46,6 +48,7 @@ Flamer.start_shooting_fx = function (t, unit, vfx, sfx, wwise_world, world, data
 			World.link_particles(world, flamer_particle_id, from_unit, from_node, Matrix4x4.identity(), orphaned_policy)
 
 			data.flamer_particle_id = flamer_particle_id
+
 			local num_parabola_control_points = vfx.num_parabola_control_points
 
 			if num_parabola_control_points then
@@ -296,10 +299,11 @@ function _set_flamer_parabola(world, data, start_position, control_point_1, cont
 	local num_variables = #parabola_particle_variables
 
 	for i = 1, num_variables do
-		local position = nil
+		local position
 
 		if i == 1 then
 			local flamer_start_position = data.set_muzzle_as_control_point_1 and control_point_1 or start_position
+
 			position = flamer_start_position
 		elseif i == 2 then
 			position = control_point_1

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/hud/elements/world_markers/templates/world_marker_template_interaction.lua
+
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local ColorUtilities = require("scripts/utilities/ui/colors")
@@ -35,6 +37,7 @@ local bar_size = {
 	10
 }
 local scale_fraction = 0.75
+
 template.size = size
 template.unit_node = "ui_interaction_marker"
 template.icon_size = icon_size
@@ -103,6 +106,7 @@ template.fade_settings = {
 	distance_min = template.max_distance - template.evolve_distance * 2,
 	easing_function = math.easeCubic
 }
+
 local template_visual_definitions = {
 	default = {
 		template_settings_overrides = {
@@ -352,6 +356,7 @@ local function setup_marker_by_interaction_type(widget, marker, ui_interaction_t
 
 	if template_settings_overrides then
 		local new_template = table.clone(marker.template)
+
 		marker.template = table.merge_recursive(new_template, template_settings_overrides)
 	end
 
@@ -363,6 +368,7 @@ local function setup_marker_by_interaction_type(widget, marker, ui_interaction_t
 
 		if override_settings then
 			local new_template = table.clone(marker.template)
+
 			marker.template = table.merge_recursive(new_template, override_settings)
 		end
 	end
@@ -529,6 +535,7 @@ end
 
 template.on_enter = function (widget, marker, self)
 	local content = widget.content
+
 	content.spawn_progress_timer = 0
 end
 
@@ -546,6 +553,7 @@ template.update_function = function (parent, ui_renderer, widget, marker, self, 
 	end
 
 	local is_tagged = marker.template.get_smart_tag_id(marker) ~= nil
+
 	content.tagged = is_tagged
 	marker.block_fade_settings = is_tagged
 	marker.block_max_distance = is_tagged
@@ -589,6 +597,7 @@ template.update_function = function (parent, ui_renderer, widget, marker, self, 
 	end
 
 	marker.ignore_scale = content.is_clamped
+
 	local global_scale = marker.ignore_scale and 1 or marker.scale
 
 	if marker.raycast_initialized then
@@ -607,8 +616,10 @@ template.update_function = function (parent, ui_renderer, widget, marker, self, 
 	local default_size = self.min_size
 	local max_size = self.max_size
 	local ring_size = style.ring.size
+
 	ring_size[1] = (default_size[1] + (max_size[1] - default_size[1]) * scale_progress) * global_scale
 	ring_size[2] = (default_size[2] + (max_size[2] - default_size[2]) * scale_progress) * global_scale
+
 	local ping_min_size = self.ping_min_size
 	local ping_max_size = self.ping_max_size
 	local ping_style = style.ping
@@ -616,22 +627,31 @@ template.update_function = function (parent, ui_renderer, widget, marker, self, 
 	local ping_speed = 7
 	local ping_anim_progress = 0.5 + math.sin(Application.time_since_launch() * ping_speed) * 0.5
 	local ping_pulse_size_increase = ping_anim_progress * 15
+
 	ping_size[1] = (ping_min_size[1] + (ping_max_size[1] - ping_min_size[1]) * scale_progress + ping_pulse_size_increase) * global_scale
 	ping_size[2] = (ping_min_size[2] + (ping_max_size[2] - ping_min_size[2]) * scale_progress + ping_pulse_size_increase) * global_scale
+
 	local ping_pivot = ping_style.pivot
+
 	ping_pivot[1] = ping_size[1] * 0.5
 	ping_pivot[2] = ping_size[2] * 0.5
+
 	local icon_max_size = self.icon_max_size
 	local icon_min_size = self.icon_min_size
 	local background_max_size = self.background_max_size
 	local background_min_size = self.background_min_size
 	local icon_size = style.icon.size
+
 	icon_size[1] = (icon_min_size[1] + (icon_max_size[1] - icon_min_size[1]) * scale_progress) * global_scale
 	icon_size[2] = (icon_min_size[2] + (icon_max_size[2] - icon_min_size[2]) * scale_progress) * global_scale
+
 	local background_size = style.background.size
+
 	background_size[1] = (background_min_size[1] + (background_max_size[1] - background_min_size[1]) * scale_progress) * global_scale
 	background_size[2] = (background_min_size[2] + (background_max_size[2] - background_min_size[2]) * scale_progress) * global_scale
+
 	local animating = scale_progress ~= content.scale_progress
+
 	content.line_of_sight_progress = line_of_sight_progress
 	content.scale_progress = scale_progress
 	widget.alpha_multiplier = line_of_sight_progress

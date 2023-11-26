@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/bot/bot_gestalt_target_selection_weights.lua
+
 local BotSettings = require("scripts/settings/bot/bot_settings")
 local behavior_gestalts = BotSettings.behavior_gestalts
 local DEFAULT_BREED_WEIGHT = 5

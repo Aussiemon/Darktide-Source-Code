@@ -1,16 +1,18 @@
+﻿-- chunkname: @scripts/ui/hud/elements/crosshair/templates/crosshair_template_ironsight.lua
+
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local UIHudSettings = require("scripts/settings/ui/ui_hud_settings")
-local template = {
-	name = "ironsight",
-	size = {
-		2,
-		2
-	},
-	hit_default_distance = 10,
-	hit_size = {
-		12,
-		2
-	}
+local template = {}
+
+template.name = "ironsight"
+template.size = {
+	2,
+	2
+}
+template.hit_default_distance = 10
+template.hit_size = {
+	12,
+	2
 }
 
 local function apply_color_values(destination_color, target_color, include_alpha, optional_alpha)
@@ -162,15 +164,22 @@ template.update_function = function (parent, ui_renderer, widget, crosshair_temp
 
 	if hit_alpha > 0 then
 		local top_left_style = style.hit_top_left
+
 		top_left_style.color = apply_color_values(top_left_style.color, hit_color or top_left_style.color, false, hit_alpha)
 		top_left_style.visible = true
+
 		local bottom_left_style = style.hit_bottom_left
+
 		bottom_left_style.color = apply_color_values(bottom_left_style.color, hit_color or bottom_left_style.color, false, hit_alpha)
 		bottom_left_style.visible = true
+
 		local top_right_style = style.hit_top_right
+
 		top_right_style.color = apply_color_values(top_right_style.color, hit_color or top_right_style.color, false, hit_alpha)
 		top_right_style.visible = true
+
 		local bottom_right_style = style.hit_bottom_right
+
 		bottom_right_style.color = apply_color_values(bottom_right_style.color, hit_color or bottom_right_style.color, false, hit_alpha)
 		bottom_right_style.visible = true
 	else

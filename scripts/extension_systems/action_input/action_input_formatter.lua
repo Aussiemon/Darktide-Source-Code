@@ -1,7 +1,9 @@
+﻿-- chunkname: @scripts/extension_systems/action_input/action_input_formatter.lua
+
 local ActionInputFormatterSettings = require("scripts/settings/action_input_formatter/action_input_formatter_settings")
 local NO_ACTION_INPUT = "NO_ACTION_INPUT"
 local NO_RAW_INPUT = "NO_RAW_INPUT"
-local _read_action_inputs, _read_hierarchy = nil
+local _read_action_inputs, _read_hierarchy
 local ActionInputFormatter = {}
 
 ActionInputFormatter.format = function (action_input_type, templates, raw_inputs)
@@ -9,13 +11,16 @@ ActionInputFormatter.format = function (action_input_type, templates, raw_inputs
 
 	for i = 1, #raw_inputs do
 		local raw_input = raw_inputs[i]
+
 		raw_inputs_network_lookup[i] = raw_input
 		raw_inputs_network_lookup[raw_input] = i
 	end
 
 	local no_raw_input_index = #raw_inputs_network_lookup + 1
+
 	raw_inputs_network_lookup[no_raw_input_index] = NO_RAW_INPUT
 	raw_inputs_network_lookup[NO_RAW_INPUT] = no_raw_input_index
+
 	local action_input_settings = ActionInputFormatterSettings[action_input_type]
 	local max_action_inputs = action_input_settings.max_action_inputs
 	local max_action_input_queue = action_input_settings.max_action_input_queue
@@ -29,18 +34,26 @@ ActionInputFormatter.format = function (action_input_type, templates, raw_inputs
 
 		if action_inputs then
 			local sequences = {}
+
 			action_inputs_configs[name] = sequences
+
 			local network_lookup = {}
+
 			action_inputs_network_lookups[name] = network_lookup
+
 			local num_action_inputs = 1
+
 			network_lookup[num_action_inputs] = NO_ACTION_INPUT
 			network_lookup[NO_ACTION_INPUT] = num_action_inputs
 			num_action_inputs = _read_action_inputs(name, action_inputs, sequences, network_lookup, num_action_inputs)
+
 			local hierarchy_data = template.action_input_hierarchy
 
 			if hierarchy_data then
 				local hierarchy = hierarchy_data
+
 				action_inputs_hierarchy[name] = hierarchy
+
 				local hierarchy_depth = _read_hierarchy(hierarchy_data, sequences)
 
 				if max_hierarchy_depth < hierarchy_depth then
@@ -58,8 +71,10 @@ end
 function _read_action_inputs(name, action_inputs, sequences, network_lookup, total_num_action_inputs)
 	for action_input, data in pairs(action_inputs) do
 		local network_lookup_i = #network_lookup + 1
+
 		network_lookup[network_lookup_i] = action_input
 		network_lookup[action_input] = network_lookup_i
+
 		local input_sequence = data.input_sequence
 		local num_elements = input_sequence and #input_sequence or 0
 		local clear_input_queue = data.clear_input_queue or false
@@ -83,6 +98,10 @@ function _read_action_inputs(name, action_inputs, sequences, network_lookup, tot
 				end
 			end
 
+			if false then
+				-- Nothing
+			end
+
 			config.elements[i] = element
 		end
 
@@ -95,7 +114,8 @@ end
 
 function _read_hierarchy(hierarchy_data, sequences, hierarchy_depth)
 	hierarchy_depth = hierarchy_depth and hierarchy_depth + 1 or 1
-	local best_children_hierarchy_depth = nil
+
+	local best_children_hierarchy_depth
 
 	for action_input, children in pairs(hierarchy_data) do
 		if type(children) == "table" then
@@ -107,7 +127,12 @@ function _read_hierarchy(hierarchy_data, sequences, hierarchy_depth)
 		else
 			local stay = children == "stay"
 			local base = children == "base"
-			slot11 = children == "previous"
+
+			if children ~= "previous" then
+				local var_3_0 = false
+			else
+				local previous = true
+			end
 		end
 	end
 

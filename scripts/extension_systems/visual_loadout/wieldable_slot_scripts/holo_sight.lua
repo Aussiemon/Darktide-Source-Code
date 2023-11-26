@@ -1,13 +1,16 @@
+﻿-- chunkname: @scripts/extension_systems/visual_loadout/wieldable_slot_scripts/holo_sight.lua
+
 local Action = require("scripts/utilities/weapon/action")
 local Component = require("scripts/utilities/component")
 local HoloSightTemplates = require("scripts/settings/equipment/holo_sight_templates")
 local HoloSight = class("HoloSight")
-local _slot_components, _update_glass_visibility = nil
+local _slot_components, _update_glass_visibility
 
 HoloSight.init = function (self, context, slot, weapon_template, fx_sources)
 	local owner_unit = context.owner_unit
 	local unit_data_extension = ScriptUnit.extension(owner_unit, "unit_data_system")
 	local alternate_fire_component = unit_data_extension:read_component("alternate_fire")
+
 	self._alternate_fire_component = alternate_fire_component
 	self._equipment_component = context.equipment_component
 	self._first_person_extension = ScriptUnit.extension(owner_unit, "first_person_system")
@@ -23,7 +26,9 @@ HoloSight.init = function (self, context, slot, weapon_template, fx_sources)
 	self._weapon_template = weapon_template
 	self._weapon_actions = weapon_template.actions
 	self._weapon_action_component = unit_data_extension:read_component("weapon_action")
+
 	local holo_sight_template = weapon_template.holo_sight_template
+
 	self._holo_sight_template = holo_sight_template or HoloSightTemplates.default
 end
 
@@ -82,6 +87,7 @@ HoloSight.update = function (self, unit, dt, t)
 
 		self._hip_at_t = hip_at_t
 		self._alternate_fire_at_t = alternate_fire_at_t
+
 		local action_settings = Action.current_action_settings_from_component(self._weapon_action_component, self._weapon_actions)
 		local action_kind = action_settings and action_settings.kind
 		local is_inspecting = action_kind == "inspect"

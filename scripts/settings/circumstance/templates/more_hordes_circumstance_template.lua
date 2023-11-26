@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/circumstance/templates/more_hordes_circumstance_template.lua
+
 local circumstance_templates = {
 	more_hordes_01 = {
 		wwise_state = "more_hordes_01",

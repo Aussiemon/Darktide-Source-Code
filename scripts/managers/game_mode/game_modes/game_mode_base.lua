@@ -1,6 +1,9 @@
+﻿-- chunkname: @scripts/managers/game_mode/game_modes/game_mode_base.lua
+
 local AFKChecker = require("scripts/managers/game_mode/afk_checker")
 local GameModeSettings = require("scripts/settings/game_mode/game_mode_settings")
 local GameModeBase = class("GameModeBase")
+
 GameModeBase.INTERFACE = {
 	"server_update",
 	"complete",
@@ -12,6 +15,7 @@ GameModeBase.INTERFACE = {
 	"player_time_until_spawn",
 	"cleanup_game_mode_units"
 }
+
 local CLIENT_RPCS = {
 	"rpc_change_game_mode_state"
 }
@@ -24,9 +28,13 @@ GameModeBase.init = function (self, game_mode_context, game_mode_name, network_e
 	self._name = game_mode_name
 	self._world = game_mode_context.world
 	self._is_server = game_mode_context.is_server
+
 	local settings = GameModeSettings[game_mode_name]
+
 	self._settings = settings
+
 	local states = settings.states
+
 	self._states = states
 	self._states_lookup = table.mirror_table(states)
 	self._state = states[1]
@@ -41,6 +49,7 @@ GameModeBase.init = function (self, game_mode_context, game_mode_name, network_e
 		local local_player_id = 1
 		local player = Managers.player:local_player(local_player_id)
 		local player_profile = player:profile()
+
 		self._cached_player_profile = table.clone_instance(player_profile)
 	end
 

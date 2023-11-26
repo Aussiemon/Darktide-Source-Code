@@ -1,5 +1,7 @@
+﻿-- chunkname: @scripts/utilities/pseudo_random_distribution.lua
+
 local PseudoRandomDistribution = {}
-local P2C = nil
+local P2C
 local MAX_PRD_STATE = NetworkConstants.max_prd_state
 
 PseudoRandomDistribution.flip_coin = function (chance, state, seed)
@@ -20,6 +22,7 @@ PseudoRandomDistribution.flip_coin = function (chance, state, seed)
 	end
 
 	local n = state or math.floor(chance / c)
+
 	new_seed, value = math_next_random(new_seed)
 
 	if value < n * c then

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/equipment/weapon_templates/combat_knives/settings_templates/combat_knife_damage_profile_templates.lua
+
 local ArmorSettings = require("scripts/settings/damage/armor_settings")
 local PowerLevelSettings = require("scripts/settings/damage/power_level_settings")
 local DamageProfileSettings = require("scripts/settings/damage/damage_profile_settings")
@@ -68,6 +70,7 @@ local medium_ninja_fencer_crit_mod = {
 		[armor_types.void_shield] = 0.75
 	}
 }
+
 damage_templates.light_combat_knife_ninja_fencer = {
 	finesse_ability_damage_multiplier = 3,
 	ragdoll_push_force = 10,

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/weapon/actions/action_unwield.lua
+
 require("scripts/extension_systems/weapon/actions/action_weapon_base")
 
 local AimAssist = require("scripts/utilities/aim_assist")
@@ -12,6 +14,7 @@ ActionUnwield.init = function (self, action_context, ...)
 	ActionUnwield.super.init(self, action_context, ...)
 
 	local unit_data = action_context.unit_data_extension
+
 	self._action_unwield_component = unit_data:write_component("action_unwield")
 	self._alternate_fire_component = unit_data:write_component("alternate_fire")
 	self._spread_control_component = unit_data:write_component("spread_control")
@@ -26,7 +29,9 @@ ActionUnwield.start = function (self, action_settings, t, time_scale, action_sta
 	local action_unwield = self._action_unwield_component
 	local used_input = action_start_params.used_input
 	local next_slot = self:_next_slot(used_input, action_settings)
+
 	action_unwield.slot_to_wield = next_slot
+
 	local current_wielded_slot = self._inventory_component.wielded_slot
 	local buff_extension = self._buff_extension
 	local next_weapon_template = self._visual_loadout_extension:weapon_template_from_slot(next_slot)

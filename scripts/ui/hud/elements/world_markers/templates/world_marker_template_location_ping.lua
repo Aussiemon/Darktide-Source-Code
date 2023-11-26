@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/hud/elements/world_markers/templates/world_marker_template_location_ping.lua
+
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local UISettings = require("scripts/settings/ui/ui_settings")
@@ -14,6 +16,7 @@ local icon_size = {
 	64,
 	64
 }
+
 template.size = size
 template.name = "location_ping"
 template.using_smart_tag_system = true
@@ -175,7 +178,9 @@ end
 
 template.on_enter = function (widget, marker, template)
 	local content = widget.content
+
 	content.spawn_progress_timer = 0
+
 	local data = marker.data
 	local player = data.player
 	local tag_instance = data.tag_instance
@@ -183,6 +188,7 @@ template.on_enter = function (widget, marker, template)
 	local player_slot = (tagger_player or player):slot()
 	local player_slot_color = UISettings.player_slot_colors[player_slot] or Color.ui_hud_green_light(255, true)
 	local style = widget.style
+
 	style.icon.color = table.clone(player_slot_color)
 	style.entry_icon_1.color = table.clone(player_slot_color)
 	style.entry_icon_2.color = table.clone(player_slot_color)
@@ -218,25 +224,31 @@ template.update_function = function (parent, ui_renderer, widget, marker, templa
 
 	if spawn_progress_timer then
 		spawn_progress_timer = spawn_progress_timer + dt
+
 		local duration = 1
 		local progress = math.min(spawn_progress_timer / duration, 1)
 		local anim_out_progress = math.ease_out_quad(progress)
 		local anim_in_progress = math.ease_out_exp(progress)
+
 		content.spawn_progress_timer = progress ~= 1 and spawn_progress_timer or nil
 		style.icon.color[1] = 255 * anim_in_progress
 		style.arrow.color[1] = 255 * anim_in_progress
 		style.text.text_color[1] = 255 * anim_in_progress
+
 		local entry_icon_1_style = style.entry_icon_1
 		local entry_icon_1_color = entry_icon_1_style.color
 		local entry_icon_1_size = entry_icon_1_style.size
 		local entry_icon_1_default_size = entry_icon_1_style.default_size
+
 		entry_icon_1_size[1] = entry_icon_1_default_size[1] + entry_icon_1_default_size[1] * anim_out_progress
 		entry_icon_1_size[2] = entry_icon_1_default_size[1] + entry_icon_1_default_size[2] * anim_out_progress
 		entry_icon_1_color[1] = 255 - 255 * anim_out_progress
+
 		local entry_icon_2_style = style.entry_icon_2
 		local entry_icon_2_color = entry_icon_2_style.color
 		local entry_icon_2_size = entry_icon_2_style.size
 		local entry_icon_2_default_size = entry_icon_2_style.default_size
+
 		entry_icon_2_size[1] = entry_icon_2_default_size[1] + entry_icon_2_default_size[1] * anim_in_progress
 		entry_icon_2_size[2] = entry_icon_2_default_size[1] + entry_icon_2_default_size[2] * anim_in_progress
 		entry_icon_2_color[1] = 255 - 255 * anim_in_progress
@@ -251,11 +263,14 @@ template.update_function = function (parent, ui_renderer, widget, marker, templa
 	if not content.is_inside_frustum then
 		local pulse_progress = Application.time_since_launch() * 1 % 1
 		local pulse_anim_progress = (pulse_progress * 2 - 1)^2
+
 		alpha_multiplier = 0.7 + pulse_anim_progress * 0.3
 	end
 
 	widget.alpha_multiplier = alpha_multiplier
+
 	local distance_text = tostring(math.floor(distance)) .. "m"
+
 	content.text = distance > 1 and distance_text or ""
 	data.distance_text = distance_text
 	marker.ignore_scale = content.is_clamped or is_hovered

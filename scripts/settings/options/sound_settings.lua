@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/options/sound_settings.lua
+
 local OptionsUtilities = require("scripts/utilities/ui/options")
 local SettingsUtilitiesFunction = require("scripts/settings/options/settings_utils")
 local SettingsUtilities = {}
@@ -7,6 +9,7 @@ local function construct_audio_settings_dropdown(template)
 	local id = template.id
 	local save_location = template.save_location
 	local default_value = template.default_value
+
 	entry.default_value = template.default_value
 	entry.display_name = template.display_name
 	entry.options = template.options
@@ -49,6 +52,7 @@ local function construct_audio_settings_boolean(template)
 	local id = template.id
 	local save_location = template.save_location
 	local default_value = template.default_value
+
 	entry.default_value = template.default_value
 	entry.display_name = template.display_name
 	entry.indentation_level = template.indentation_level
@@ -85,13 +89,14 @@ local function construct_audio_settings_boolean(template)
 	return entry
 end
 
-local settings = {
-	[#settings + 1] = {
-		group_name = "sound_volume",
-		display_name = "loc_settings_menu_group_volume",
-		widget_type = "group_header"
-	}
+local settings = {}
+
+settings[#settings + 1] = {
+	group_name = "sound_volume",
+	display_name = "loc_settings_menu_group_volume",
+	widget_type = "group_header"
 }
+
 local default_sound_volume = 100
 local default_sound_chat_volume = 50
 local master_volume_value_name = "option_master_slider"
@@ -122,6 +127,7 @@ master_volume_template.commit = function (value)
 end
 
 settings[#settings + 1] = master_volume_template
+
 local sfx_volume_value_name = "options_sfx_slider"
 local sfx_volume_display_name = "loc_settings_sfx_volume"
 
@@ -150,6 +156,7 @@ sfx_volume_template.commit = function (value)
 end
 
 settings[#settings + 1] = sfx_volume_template
+
 local music_volume_value_name = "options_music_slider"
 local music_volume_display_name = "loc_settings_music_volume"
 
@@ -178,7 +185,8 @@ music_volume_template.commit = function (value)
 end
 
 settings[#settings + 1] = music_volume_template
-local sound_device = nil
+
+local sound_device
 
 if not IS_XBS and Wwise.get_device_list and Wwise.get_device_list() then
 	sound_device = {
@@ -291,6 +299,10 @@ local speaker_settings = {
 		elseif value == 4 then
 			Wwise.set_panning_rule(PANNING_RULE_SPEAKERS)
 			Wwise.set_bus_config(mastering_bus_name, Wwise.AK_SPEAKER_SETUP_MONO)
+		end
+
+		if false then
+			-- Nothing
 		end
 	end
 }
@@ -463,6 +475,7 @@ local audio_voice_fx_setting = {
 		end
 	end
 }
+
 settings[#settings + 1] = {
 	group_name = "audio_settings",
 	display_name = "loc_settings_menu_group_audio_settings",
@@ -490,6 +503,7 @@ settings[#settings + 1] = {
 	display_name = "loc_settings_menu_group_voice_chat_settings",
 	widget_type = "group_header"
 }
+
 local chat_volume_value_name = "options_voip_volume_slider_v2"
 local chat_volume_display_name = "loc_settings_audio_voice_chat_volume"
 
@@ -527,7 +541,8 @@ end
 settings[#settings + 1] = chat_volume_template
 
 if not IS_XBS and rawget(_G, "Managers") and Managers.chat and Managers.chat.get_capture_devices then
-	local capture_device = nil
+	local capture_device
+
 	capture_device = {
 		display_name = "loc_setting_microphone_device",
 		id = "capture_device",
@@ -545,6 +560,7 @@ if not IS_XBS and rawget(_G, "Managers") and Managers.chat and Managers.chat.get
 			end
 		end
 	}
+
 	local i = 1
 
 	for _, device in ipairs(Managers.chat:get_capture_devices()) do

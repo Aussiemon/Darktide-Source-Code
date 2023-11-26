@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/constant_elements/elements/notification_feed/constant_element_notification_feed_settings.lua
+
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local constant_element_notification_feed_settings = {
 	default_alpha_value = 0.75,

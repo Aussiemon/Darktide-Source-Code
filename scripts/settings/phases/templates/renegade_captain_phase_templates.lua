@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/phases/templates/renegade_captain_phase_templates.lua
+
 local renegade_captain_templates = {
 	renegade_captain_default = {
 		melee = {

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/inventory_cosmetics_view/inventory_cosmetics_view.lua
+
 local ContentBlueprints = require("scripts/ui/views/inventory_view/inventory_view_content_blueprints")
 local Definitions = require("scripts/ui/views/inventory_cosmetics_view/inventory_cosmetics_view_definitions")
 local InventoryCosmeticsViewSettings = require("scripts/ui/views/inventory_cosmetics_view/inventory_cosmetics_view_settings")
@@ -60,7 +62,9 @@ InventoryCosmeticsView.init = function (self, settings, context)
 		self._animation_event_name_suffix = context.animation_event_name_suffix
 		self._animation_event_variable_data = context.animation_event_variable_data
 		self.item_type = context.item_type
+
 		local is_gear = not not string.find(self._selected_slot.name, "slot_gear")
+
 		self._camera_zoomed_in = true
 		self._initialize_zoom = is_gear
 	else
@@ -105,6 +109,7 @@ InventoryCosmeticsView.on_enter = function (self)
 			end
 
 			self._spawn_player = spawn_player
+
 			local has_rarity = false
 			local has_locked = false
 
@@ -140,8 +145,7 @@ InventoryCosmeticsView.on_enter = function (self)
 						sort_name = Localize("loc_inventory_item_grid_sort_title_rarity")
 					}),
 					sort_function = function (a, b)
-						local a_locked = a.locked
-						local b_locked = b.locked
+						local a_locked, b_locked = a.locked, b.locked
 
 						if not a_locked and b_locked == true then
 							return true
@@ -168,8 +172,7 @@ InventoryCosmeticsView.on_enter = function (self)
 						sort_name = Localize("loc_inventory_item_grid_sort_title_rarity")
 					}),
 					sort_function = function (a, b)
-						local a_locked = a.locked
-						local b_locked = b.locked
+						local a_locked, b_locked = a.locked, b.locked
 
 						if not a_locked and b_locked == true then
 							return true
@@ -198,8 +201,7 @@ InventoryCosmeticsView.on_enter = function (self)
 					sort_name = Localize("loc_inventory_item_grid_sort_title_name")
 				}),
 				sort_function = function (a, b)
-					local a_locked = a.locked
-					local b_locked = b.locked
+					local a_locked, b_locked = a.locked, b.locked
 
 					if not a_locked and b_locked == true then
 						return true
@@ -224,8 +226,7 @@ InventoryCosmeticsView.on_enter = function (self)
 					sort_name = Localize("loc_inventory_item_grid_sort_title_name")
 				}),
 				sort_function = function (a, b)
-					local a_locked = a.locked
-					local b_locked = b.locked
+					local a_locked, b_locked = a.locked, b.locked
 
 					if not a_locked and b_locked == true then
 						return true
@@ -267,6 +268,7 @@ end
 
 InventoryCosmeticsView._setup_input_legend = function (self)
 	self._input_legend_element = self:_add_element(ViewElementInputLegend, "input_legend", 10)
+
 	local legend_inputs = self._definitions.legend_inputs
 
 	for i = 1, #legend_inputs do
@@ -281,6 +283,7 @@ InventoryCosmeticsView._set_preview_widgets_visibility = function (self, visible
 	InventoryCosmeticsView.super._set_preview_widgets_visibility(self, visible)
 
 	local widgets_by_name = self._widgets_by_name
+
 	widgets_by_name.equip_button.content.visible = allow_equip_button and true or visible
 end
 
@@ -303,6 +306,7 @@ InventoryCosmeticsView._stop_previewing = function (self)
 	if self._spawned_prop_item_slot then
 		local presentation_profile = self._presentation_profile
 		local presentation_loadout = presentation_profile.loadout
+
 		presentation_loadout[self._spawned_prop_item_slot] = nil
 		self._spawned_prop_item_slot = nil
 	end
@@ -318,6 +322,7 @@ InventoryCosmeticsView._spawn_profile = function (self, profile, initial_rotatio
 	local world = self._world_spawner:world()
 	local camera = self._world_spawner:camera()
 	local unit_spawner = self._world_spawner:unit_spawner()
+
 	self._profile_spawner = UIProfileSpawner:new("InventoryCosmeticsView", world, camera, unit_spawner)
 
 	if disable_rotation_input then
@@ -330,6 +335,7 @@ InventoryCosmeticsView._spawn_profile = function (self, profile, initial_rotatio
 
 	if initial_rotation then
 		local character_initial_rotation = Quaternion.axis_angle(Vector3(0, 0, 1), initial_rotation)
+
 		spawn_rotation = Quaternion.multiply(character_initial_rotation, spawn_rotation)
 	end
 
@@ -376,6 +382,7 @@ InventoryCosmeticsView._preview_element = function (self, element)
 
 	self._previewed_item = item
 	self._previewed_element = element
+
 	local slots = item.slots or {}
 	local item_name = item.name
 	local gear_id = item.gear_id or item_name
@@ -385,7 +392,9 @@ InventoryCosmeticsView._preview_element = function (self, element)
 		local selected_slot_name = selected_slot and selected_slot.name
 		local presentation_profile = self._presentation_profile
 		local presentation_loadout = presentation_profile.loadout
+
 		presentation_loadout[selected_slot_name] = item
+
 		local animation_slot = ANIMATION_SLOTS_MAP[selected_slot_name]
 
 		if animation_slot then
@@ -415,6 +424,7 @@ InventoryCosmeticsView._preview_element = function (self, element)
 
 			if prop_item then
 				local prop_item_slot = prop_item.slots[1]
+
 				presentation_loadout[prop_item_slot] = prop_item
 
 				self._profile_spawner:wield_slot(prop_item_slot)
@@ -445,6 +455,7 @@ InventoryCosmeticsView._preview_element = function (self, element)
 		end
 
 		widgets_by_name.unlock_title.content.locked = element.locked
+
 		local generate_blueprints_function = require("scripts/ui/view_content_blueprints/item_blueprints")
 		local item_size = {
 			700,
@@ -465,12 +476,14 @@ InventoryCosmeticsView._preview_element = function (self, element)
 		local pass_template = template.pass_template_function and template.pass_template_function(self, config, ui_renderer) or template.pass_template
 		local optional_style = template.style_function and template.style_function(self, config, size) or template.style
 		local widget_definition = pass_template and UIWidget.create_definition(pass_template, scenegraph_id, nil, size, optional_style)
-		local widget = nil
+		local widget
 
 		if widget_definition then
 			local name = "item_name"
+
 			widget = self:_create_widget(name, widget_definition)
 			widget.type = widget_type
+
 			local init = template.init
 
 			if init then
@@ -520,6 +533,7 @@ InventoryCosmeticsView._preview_element = function (self, element)
 
 		if element.locked then
 			local added_height = 100
+
 			widget.offset[2] = widget.original_offset[2] + added_height
 			widgets_by_name.unlock_header.offset[2] = added_height
 			widgets_by_name.unlock_title.offset[2] = unlock_header_height + unlock_title_margin + added_height
@@ -549,6 +563,7 @@ end
 
 InventoryCosmeticsView._register_button_callbacks = function (self)
 	local widgets_by_name = self._widgets_by_name
+
 	widgets_by_name.equip_button.content.hotspot.pressed_callback = callback(self, "cb_on_equip_pressed")
 end
 
@@ -688,6 +703,7 @@ InventoryCosmeticsView._verify_items = function (self, source_items, owned_gear)
 	if owned_gear then
 		for gear_id, item in pairs(owned_gear) do
 			local item_name = item.name
+
 			owned_gear_by_master_id[item_name] = item
 		end
 	end
@@ -735,19 +751,23 @@ InventoryCosmeticsView._fetch_inventory_items = function (self, selected_slots)
 	for i = 1, #selected_slots do
 		local slot = selected_slots[i]
 		local slot_name = slot.name
+
 		filter[#filter + 1] = slot_name
 	end
 
 	local selected_slot = self._selected_slot
 	local selected_slot_name = selected_slot.name
 	local promises = {}
+
 	promises[#promises + 1] = Managers.data_service.gear:fetch_inventory(character_id, filter):next(function (items)
 		if self._destroyed then
 			return
 		end
 
 		local item_definitions = MasterItems.get_cached()
+
 		items = self:_verify_items(item_definitions, items)
+
 		local items_array = {}
 
 		for gear_id, item in pairs(items) do
@@ -755,6 +775,7 @@ InventoryCosmeticsView._fetch_inventory_items = function (self, selected_slots)
 		end
 
 		self._inventory_items = items_array
+
 		local valid_items = {}
 
 		for i = 1, #items_array do
@@ -814,10 +835,11 @@ InventoryCosmeticsView._achievement_items = function (self, selected_slot_name)
 		local reward_item = AchievementUIHelper.get_reward_item(achievement)
 
 		if reward_item and self:_item_valid_by_current_profile(reward_item) and selected_slot_name == reward_item.slots[1] then
-			local description_text = nil
+			local description_text
 
 			if achievement.type == "meta" then
 				local sub_penances_count = table.size(achievement.achievements)
+
 				description_text = Localize("loc_inventory_cosmetic_item_acquisition_penance_description_multiple_requirement", true, {
 					penance_amount = sub_penances_count
 				})
@@ -853,7 +875,7 @@ InventoryCosmeticsView._prepare_cosmetic_layout_data = function (self, result)
 
 	for i = 1, #inventory_items do
 		local inventory_item = inventory_items[i]
-		local found_achievement, found_store = nil
+		local found_achievement, found_store
 
 		for j = 1, #achievement_items do
 			local achievement_item = achievement_items[j]
@@ -881,7 +903,7 @@ InventoryCosmeticsView._prepare_cosmetic_layout_data = function (self, result)
 
 		local gear_id = inventory_item.gear_id
 		local is_new = self._context and self._context.new_items_gear_ids and self._context.new_items_gear_ids[gear_id]
-		local remove_new_marker_callback = nil
+		local remove_new_marker_callback
 
 		if is_new then
 			remove_new_marker_callback = self._parent and callback(self._parent, "remove_new_item_mark")
@@ -939,12 +961,9 @@ InventoryCosmeticsView._calc_text_size = function (self, widget, text_and_style_
 	local text = widget.content[text_and_style_id]
 	local text_style = widget.style[text_and_style_id]
 	local text_options = UIFonts.get_font_options_by_style(text_style)
-
-	if not text_style.size and not widget.content.size then
-		local size = {
-			self:_scenegraph_size(widget.scenegraph_id)
-		}
-	end
+	local size = text_style.size or widget.content.size or {
+		self:_scenegraph_size(widget.scenegraph_id)
+	}
 
 	return UIRenderer.text_size(self._ui_renderer, text, text_style.font_type, text_style.font_size, size, text_options)
 end
@@ -1089,14 +1108,17 @@ InventoryCosmeticsView._update_equip_button_status = function (self)
 		local selected_slot = self._selected_slot
 		local selected_slot_name = selected_slot and selected_slot.name
 		local equipped_item = selected_slot_name and self:equipped_item_in_slot(selected_slot_name)
+
 		disable_button = equipped_item and equipped_item.gear_id == previewed_item.gear_id
 		cannot_equip = self._previewed_element.locked
 	end
 
 	if self._equip_button_disabled ~= disable_button or self._equip_button_disabled ~= cannot_equip then
 		self._equip_button_disabled = disable_button or cannot_equip
+
 		local button = self._widgets_by_name.equip_button
 		local button_content = button.content
+
 		button_content.hotspot.disabled = disable_button or cannot_equip
 		button_content.visible = not cannot_equip
 		button_content.text = Utf8.upper(disable_button and Localize("loc_weapon_inventory_equipped_button") or Localize("loc_weapon_inventory_equip_button"))
@@ -1155,6 +1177,7 @@ InventoryCosmeticsView.update = function (self, dt, t, input_service)
 
 			self._player_spawned = true
 			self._spawn_player = false
+
 			local selected_slot = self._selected_slot
 			local selected_slot_name = selected_slot and selected_slot.name
 
@@ -1186,7 +1209,7 @@ end
 InventoryCosmeticsView._get_weapon_spawn_position_normalized = function (self)
 	self:_force_update_scenegraph()
 
-	local scale = nil
+	local scale
 	local pivot_world_position = self:_scenegraph_world_position("weapon_pivot", scale)
 	local parent_world_position = self:_scenegraph_world_position("weapon_viewport", scale)
 	local viewport_width, viewport_height = self:_scenegraph_size("weapon_viewport", scale)
@@ -1213,6 +1236,7 @@ InventoryCosmeticsView._setup_background_world = function (self)
 		end
 
 		instance._default_camera_unit = camera_unit
+
 		local viewport_name = InventoryCosmeticsViewSettings.viewport_name
 		local viewport_type = InventoryCosmeticsViewSettings.viewport_type
 		local viewport_layer = InventoryCosmeticsViewSettings.viewport_layer
@@ -1245,7 +1269,9 @@ InventoryCosmeticsView._setup_background_world = function (self)
 	local world_name = InventoryCosmeticsViewSettings.world_name
 	local world_layer = InventoryCosmeticsViewSettings.world_layer
 	local world_timer_name = InventoryCosmeticsViewSettings.timer_name
+
 	self._world_spawner = UIWorldSpawner:new(world_name, world_layer, world_timer_name, self.view_name)
+
 	local level_name = InventoryCosmeticsViewSettings.level_name
 
 	self._world_spawner:spawn_level(level_name)

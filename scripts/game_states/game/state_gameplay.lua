@@ -1,31 +1,36 @@
+﻿-- chunkname: @scripts/game_states/game/state_gameplay.lua
+
 local GameplayStateInit = require("scripts/game_states/game/gameplay_sub_states/gameplay_state_init")
 local GameStateMachine = require("scripts/foundation/utilities/game_state_machine")
 local PerformanceReporter = require("scripts/utilities/performance_reporter")
 local WorldRenderUtils = require("scripts/utilities/world_render")
 local StateGameplay = class("StateGameplay")
+
 StateGameplay.NEEDS_MISSION_LEVEL = true
 
 StateGameplay.on_enter = function (self, parent, params, creation_context)
 	local mechanism_data = params.mechanism_data
 	local world = params.world
-	local shared_state = {
-		is_server = params.is_host,
-		world = world,
-		world_name = params.world_name,
-		level_name = params.level_name,
-		level = params.level,
-		mission_name = params.mission_name,
-		themes = params.themes,
-		challenge = mechanism_data.challenge,
-		resistance = mechanism_data.resistance,
-		circumstance_name = mechanism_data.circumstance_name,
-		side_mission = mechanism_data.side_mission,
-		mission_giver_vo = mechanism_data.mission_giver_vo_override or "none",
-		physics_world = World.physics_world(world),
-		level_seed = GameParameters.level_seed or Managers.connection:session_seed(),
-		vo_sources_cache = creation_context.vo_sources_cache
-	}
+	local shared_state = {}
+
+	shared_state.is_server = params.is_host
+	shared_state.world = world
+	shared_state.world_name = params.world_name
+	shared_state.level_name = params.level_name
+	shared_state.level = params.level
+	shared_state.mission_name = params.mission_name
+	shared_state.themes = params.themes
+	shared_state.challenge = mechanism_data.challenge
+	shared_state.resistance = mechanism_data.resistance
+	shared_state.circumstance_name = mechanism_data.circumstance_name
+	shared_state.side_mission = mechanism_data.side_mission
+	shared_state.mission_giver_vo = mechanism_data.mission_giver_vo_override or "none"
+	shared_state.physics_world = World.physics_world(world)
+	shared_state.level_seed = GameParameters.level_seed or Managers.connection:session_seed()
+	shared_state.vo_sources_cache = creation_context.vo_sources_cache
+
 	local tick_rate = Managers.connection:tick_rate()
+
 	shared_state.fixed_time_step = 1 / tick_rate
 	shared_state.is_dedicated_server = Managers.connection:is_dedicated_hub_server() or Managers.connection:is_dedicated_mission_server()
 	shared_state.is_dedicated_mission_server = Managers.connection:is_dedicated_mission_server()
@@ -54,6 +59,7 @@ StateGameplay.on_enter = function (self, parent, params, creation_context)
 	end
 
 	local state_machine = GameStateMachine:new(self, GameplayStateInit, start_params, nil, sub_state_change_callbacks, "GamePlay")
+
 	self._state_machine = state_machine
 	self._shared_state = shared_state
 	self._testify_performance_reporter = nil
@@ -104,6 +110,7 @@ StateGameplay._handle_world_fullscreen_blur = function (self)
 		if apply_blur ~= self._game_world_fullscreen_blur_enabled or self._game_world_fullscreen_blur_amount ~= blur_amount then
 			local world_name = self._world_name
 			local viewport_name = self._viewport_name
+
 			self._game_world_fullscreen_blur_enabled = apply_blur
 			self._game_world_fullscreen_blur_amount = blur_amount
 
@@ -157,6 +164,7 @@ StateGameplay._check_transition = function (self)
 
 	if self._next_state == nil then
 		local next_state, next_state_context = Managers.mechanism:wanted_transition()
+
 		self._next_state = next_state
 		self._next_state_context = next_state_context
 	end

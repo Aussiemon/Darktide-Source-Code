@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/behavior/nodes/actions/bt_chaos_hound_skulk_action.lua
+
 require("scripts/extension_systems/behavior/nodes/bt_node")
 
 local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
@@ -7,16 +9,22 @@ local BtChaosHoundSkulkAction = class("BtChaosHoundSkulkAction", "BtNode")
 BtChaosHoundSkulkAction.enter = function (self, unit, breed, blackboard, scratchpad, action_data, t)
 	local locomotion_extension = ScriptUnit.extension(unit, "locomotion_system")
 	local navigation_extension = ScriptUnit.extension(unit, "navigation_system")
+
 	scratchpad.animation_extension = ScriptUnit.extension(unit, "animation_system")
 	scratchpad.combat_vector_extension = ScriptUnit.extension(unit, "combat_vector_system")
 	scratchpad.locomotion_extension = locomotion_extension
 	scratchpad.navigation_extension = navigation_extension
+
 	local stagger_component = Blackboard.write_component(blackboard, "stagger")
+
 	scratchpad.behavior_component = Blackboard.write_component(blackboard, "behavior")
 	scratchpad.perception_component = blackboard.perception
 	scratchpad.stagger_component = stagger_component
+
 	local combat_vector_component = blackboard.combat_vector
+
 	scratchpad.combat_vector_component = combat_vector_component
+
 	local speed = action_data.speed
 
 	navigation_extension:set_enabled(true, speed)
@@ -59,12 +67,12 @@ BtChaosHoundSkulkAction.run = function (self, unit, breed, blackboard, scratchpa
 	local current_combat_vector_position = scratchpad.current_combat_vector_position:unbox()
 	local distance_sq = Vector3.distance_squared(current_combat_vector_position, wanted_position)
 
-	if MIN_COMBAT_VECTOR_DISTANCE_CHANGE_SQ < distance_sq then
+	if distance_sq > MIN_COMBAT_VECTOR_DISTANCE_CHANGE_SQ then
 		self:_move_to_combat_vector(scratchpad, combat_vector_component, navigation_extension)
 	end
 
 	local behavior_component = scratchpad.behavior_component
-	local is_in_stagger = scratchpad.stagger_duration and t <= scratchpad.stagger_duration
+	local behavior_component, is_in_stagger = behavior_component, scratchpad.stagger_duration and t <= scratchpad.stagger_duration
 	local should_start_idle, should_be_idling = MinionMovement.should_start_idle(scratchpad, behavior_component)
 
 	if (should_start_idle or should_be_idling) and not is_in_stagger then
@@ -81,7 +89,7 @@ BtChaosHoundSkulkAction.run = function (self, unit, breed, blackboard, scratchpa
 		self:_start_move_anim(unit, scratchpad, action_data, t)
 	end
 
-	if scratchpad.is_anim_driven and scratchpad.start_rotation_timing and scratchpad.start_rotation_timing <= t then
+	if scratchpad.is_anim_driven and scratchpad.start_rotation_timing and t >= scratchpad.start_rotation_timing then
 		MinionMovement.update_anim_driven_start_rotation(unit, scratchpad, action_data, t)
 	end
 
@@ -122,6 +130,7 @@ BtChaosHoundSkulkAction._start_move_anim = function (self, unit, scratchpad, act
 		MinionMovement.set_anim_driven(scratchpad, true)
 
 		local start_rotation_timing = action_data.start_move_rotation_timings[start_move_event]
+
 		scratchpad.start_rotation_timing = t + start_rotation_timing
 		scratchpad.move_start_anim_event_name = start_move_event
 	else

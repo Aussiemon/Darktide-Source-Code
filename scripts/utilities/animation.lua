@@ -1,8 +1,10 @@
+﻿-- chunkname: @scripts/utilities/animation.lua
+
 local Animation = {}
 
 Animation.random_event = function (event, seed)
 	if type(event) == "table" then
-		local index = nil
+		local index
 
 		if seed then
 			seed, index = math.next_random(seed, 1, #event)
@@ -24,6 +26,7 @@ Animation.calculate_anim_rotation_scale = function (unit, target_pos, rotation_s
 	local unit_rot_radians = math.atan2(forward_dir.y, forward_dir.x)
 	local target_rot_radians = math.atan2(target_dir.y, target_dir.x)
 	local unit_to_target_rot_radians = target_rot_radians - unit_rot_radians
+
 	unit_to_target_rot_radians = unit_to_target_rot_radians * rotation_sign
 
 	if unit_to_target_rot_radians < 0 then

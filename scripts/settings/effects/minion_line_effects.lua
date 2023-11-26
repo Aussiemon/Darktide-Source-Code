@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/effects/minion_line_effects.lua
+
 local line_effects = {
 	renegade_lasbeam = {
 		sfx = "wwise/events/weapon/play_weapon_lasgun_crack_beam_nearby_husk",

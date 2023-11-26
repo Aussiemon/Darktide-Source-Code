@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/components/toxic_gas_fog_spawner.lua
+
 local ToxicGasFogSpawner = component("ToxicGasFogSpawner")
 
 ToxicGasFogSpawner.init = function (self, unit, is_server, nav_world)
@@ -24,8 +26,11 @@ ToxicGasFogSpawner.editor_init = function (self, unit)
 	end
 
 	local world = Application.main_world()
+
 	self._world = world
+
 	local line_object = World.create_line_object(world)
+
 	self._line_object = line_object
 	self._drawer = DebugDrawer(line_object, "retained")
 	self._gui = World.create_world_gui(world, Matrix4x4.identity(), 1, 1)

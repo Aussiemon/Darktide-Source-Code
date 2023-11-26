@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/end_party_view/end_party_view.lua
+
 local Definitions = require("scripts/ui/views/end_party_view/end_party_view_definitions")
 local EndPartyViewSettings = require("scripts/ui/views/end_party_view/end_party_view_settings")
 local EndViewSettings = require("scripts/ui/views/end_view/end_view_settings")
@@ -63,13 +65,16 @@ EndPartyView._set_game_data_fields = function (self, text_1, text_2, text_3)
 	local widget_1 = self._widgets_by_name.sub_title_text_1
 	local widget_2 = self._widgets_by_name.sub_title_text_2
 	local widget_3 = self._widgets_by_name.sub_title_text_3
+
 	widget_1.content.text = text_1
 	widget_2.content.text = text_2
 	widget_3.content.text = text_3
+
 	local widget_1_length = self:_get_text_widget_length(widget_1)
 	local widget_2_length = self:_get_text_widget_length(widget_2)
 	local widget_3_length = self:_get_text_widget_length(widget_3)
 	local spacing = math.min(300, (1920 - (widget_1_length + widget_2_length + widget_3_length)) * 0.5)
+
 	widget_1.offset[1] = -(widget_2_length + widget_1_length) * 0.5 - spacing
 	widget_2.offset[1] = 0
 	widget_3.offset[1] = (widget_2_length + widget_3_length) * 0.5 + spacing
@@ -122,6 +127,7 @@ EndPartyView._draw_widgets = function (self, dt, t, input_service, ui_renderer)
 		local position = Vector3.from_array(boxed_position)
 		local x, y = self:_convert_world_to_screen_position(camera, position)
 		local offset = widget.offset
+
 		offset[1] = x * inverse_scale
 		offset[2] = y * inverse_scale
 
@@ -168,10 +174,14 @@ EndPartyView._update_player_accolade_positions = function (self, dt, t)
 			if animation_duration then
 				if animation_duration > 0 then
 					entry.animation_duration = entry.animation_duration - dt
+
 					local progress = 1 - math.max(entry.animation_duration / EndPartyViewSettings.accolade_animation_duration, 0)
 					local anim_progress = math.easeOutCubic(progress)
+
 					alpha_multiplier = anim_progress
+
 					local max_offset = 50
+
 					anim_y_offset = max_offset - max_offset * anim_progress
 				else
 					entry.animation_duration = nil
@@ -208,12 +218,15 @@ EndPartyView._spawn_player_accolade = function (self, player, spawn_position, sp
 		spawn_offset = spawn_offset,
 		boxed_position = Vector3.to_array(spawn_position)
 	}
+
 	self._spawned_accolades_array[index] = entry
 end
 
 EndPartyView._spawn_player_panel = function (self, player, spawn_position)
 	local panel_definition = self._definitions.panel_definition
+
 	self._num_player_panels = self._num_player_panels + 1
+
 	local widget_name = "panel_" .. self._num_player_panels
 	local widget = self:_create_widget(widget_name, panel_definition)
 	local panel = {
@@ -221,6 +234,7 @@ EndPartyView._spawn_player_panel = function (self, player, spawn_position)
 		boxed_position = Vector3.to_array(spawn_position),
 		widget = widget
 	}
+
 	widget.content.hotspot.pressed_callback = callback(self, "_on_panel_pressed", panel, self._num_player_panels)
 
 	self:_set_player_name(panel)
@@ -257,6 +271,7 @@ EndPartyView._set_player_name = function (self, panel)
 	local widget = panel.widget
 	local player = panel.player
 	local name = player:name()
+
 	widget.content.player_name = name
 end
 
@@ -287,7 +302,7 @@ EndPartyView.update = function (self, dt, t)
 	if not self._continue_called then
 		if not self._time then
 			self._time = t + EndPartyViewSettings.duration
-		elseif self._time <= t then
+		elseif t >= self._time then
 			self:_continue()
 		else
 			local time = self._time - t + 1
@@ -319,6 +334,7 @@ EndPartyView._set_timer_text = function (self, time)
 	local floor = math.floor
 	local timer_text = string.format("%.2d:%.2d", floor(time / 60) % 60, floor(time) % 60)
 	local widget = self._widgets_by_name.timer_text
+
 	widget.content.text = tostring(timer_text)
 end
 

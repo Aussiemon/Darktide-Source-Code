@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/components/point_of_interest.lua
+
 local PointOfInterest = component("PointOfInterest")
 
 PointOfInterest.init = function (self, unit, is_server)

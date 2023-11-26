@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/cinematic_scene/cinematic_scene_extension.lua
+
 local CinematicSceneSettings = require("scripts/settings/cinematic_scene/cinematic_scene_settings")
 local CinematicSceneExtension = class("CinematicSceneExtension")
 

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/damage/damage_profiles/tank_damage_profile_templates.lua
+
 local ArmorSettings = require("scripts/settings/damage/armor_settings")
 local AttackSettings = require("scripts/settings/damage/attack_settings")
 local PowerLevelSettings = require("scripts/settings/damage/power_level_settings")
@@ -104,7 +106,9 @@ damage_templates.heavy_tank = {
 		}
 	}
 }
+
 local heavy_tank_shotgun = table.clone(damage_templates.heavy_tank)
+
 damage_templates.heavy_tank_shotgun = heavy_tank_shotgun
 damage_templates.shotgun_tank = {
 	ragdoll_only = true,

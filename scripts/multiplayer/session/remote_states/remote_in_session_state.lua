@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/multiplayer/session/remote_states/remote_in_session_state.lua
+
 local RemoteInSessionState = class("RemoteInSessionState")
 
 RemoteInSessionState.init = function (self, state_machine, shared_state)
@@ -6,6 +8,7 @@ end
 
 RemoteInSessionState.enter = function (self)
 	local shared_state = self._shared_state
+
 	shared_state.event_list[#shared_state.event_list + 1] = {
 		name = "session_joined",
 		parameters = {

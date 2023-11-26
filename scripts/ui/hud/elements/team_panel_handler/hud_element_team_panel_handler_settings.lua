@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/hud/elements/team_panel_handler/hud_element_team_panel_handler_settings.lua
+
 local hud_element_team_panel_handler_settings = {
 	max_panels = 4,
 	panel_size = {

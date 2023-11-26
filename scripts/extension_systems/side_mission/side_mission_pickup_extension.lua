@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/side_mission/side_mission_pickup_extension.lua
+
 local SideMissionPickupExtension = class("SideMissionPickupExtension")
 
 SideMissionPickupExtension.init = function (self, extension_init_context, unit, extension_init_data)

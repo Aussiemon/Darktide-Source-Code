@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/game_states/boot/state_require_scripts.lua
+
 require("scripts/game_states/boot/state_boot_sub_state_base")
 
 local StateRequireScripts = class("StateRequireScripts", "StateBootSubStateBase")
@@ -7,6 +9,7 @@ StateRequireScripts.on_enter = function (self, parent, params)
 
 	local state_params = self:_state_params()
 	local pm = state_params.package_manager
+
 	self._package_manager = pm
 end
 

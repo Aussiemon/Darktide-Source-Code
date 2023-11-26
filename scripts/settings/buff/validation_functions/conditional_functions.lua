@@ -1,57 +1,62 @@
+﻿-- chunkname: @scripts/settings/buff/validation_functions/conditional_functions.lua
+
 local Action = require("scripts/utilities/weapon/action")
 local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
 local Sprint = require("scripts/extension_systems/character_state_machine/character_states/utilities/sprint")
 local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
 local slot_configuration = PlayerCharacterConstants.slot_configuration
-local ConditionalFunctions = {
-	all = function (...)
-		local conditions = {
-			...
-		}
+local ConditionalFunctions = {}
 
-		return function (...)
-			for i = 1, #conditions do
-				if not conditions[i](...) then
-					return false
-				end
+ConditionalFunctions.all = function (...)
+	local conditions = {
+		...
+	}
+
+	return function (...)
+		for i = 1, #conditions do
+			if not conditions[i](...) then
+				return false
 			end
-
-			return true
-		end
-	end,
-	any = function (...)
-		local conditions = {
-			...
-		}
-
-		return function (...)
-			for i = 1, #conditions do
-				if conditions[i](...) then
-					return true
-				end
-			end
-
-			return false
-		end
-	end,
-	is_item_slot_wielded = function (template_data, template_context)
-		local item_slot_name = template_context.item_slot_name
-
-		if not item_slot_name then
-			return true
 		end
 
-		if not template_data.inventory_component then
-			local unit_data_extension = ScriptUnit.extension(template_context.unit, "unit_data_system")
-			template_data.inventory_component = unit_data_extension:read_component("inventory")
-		end
-
-		local wielded_slot = template_data.inventory_component.wielded_slot
-		local is_wielded = item_slot_name == wielded_slot
-
-		return is_wielded
+		return true
 	end
-}
+end
+
+ConditionalFunctions.any = function (...)
+	local conditions = {
+		...
+	}
+
+	return function (...)
+		for i = 1, #conditions do
+			if conditions[i](...) then
+				return true
+			end
+		end
+
+		return false
+	end
+end
+
+ConditionalFunctions.is_item_slot_wielded = function (template_data, template_context)
+	local item_slot_name = template_context.item_slot_name
+
+	if not item_slot_name then
+		return true
+	end
+
+	if not template_data.inventory_component then
+		local unit_data_extension = ScriptUnit.extension(template_context.unit, "unit_data_system")
+
+		template_data.inventory_component = unit_data_extension:read_component("inventory")
+	end
+
+	local wielded_slot = template_data.inventory_component.wielded_slot
+	local is_wielded = item_slot_name == wielded_slot
+
+	return is_wielded
+end
 
 ConditionalFunctions.is_item_slot_not_wielded = function (template_data, template_context)
 	return not ConditionalFunctions.is_item_slot_wielded(template_data, template_context)
@@ -73,13 +78,15 @@ local reloading_states = {
 
 ConditionalFunctions.has_stamina = function (template_data, template_context)
 	local unit_data_extension = ScriptUnit.extension(template_context.unit, "unit_data_system")
+
 	template_data.stamina_read_component = unit_data_extension:read_component("stamina")
+
 	local current_stamina_fraction = template_data.stamina_read_component.current_fraction
 	local buff_template = template_context.template
 	local override_data = template_context.template_override_data
 	local condtional_threshold = override_data.condtional_threshold or buff_template.condtional_threshold or 0
 
-	return current_stamina_fraction >= condtional_threshold
+	return condtional_threshold <= current_stamina_fraction
 end
 
 ConditionalFunctions.is_reloading = function (template_data, template_context)
@@ -173,6 +180,7 @@ ConditionalFunctions.is_lunging = function (template_data, template_context)
 
 	if not lunge_component then
 		local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
+
 		lunge_component = unit_data_extension:read_component("lunge_character_state")
 		template_data.lunge_component = lunge_component
 	end
@@ -194,6 +202,7 @@ ConditionalFunctions.is_sprinting = function (template_data, template_context)
 
 	if not sprint_character_state_component then
 		local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
+
 		sprint_character_state_component = unit_data_extension:read_component("sprint_character_state")
 		template_data.sprint_character_state_component = sprint_character_state_component
 	end
@@ -215,6 +224,7 @@ ConditionalFunctions.is_blocking = function (template_data, template_context)
 
 	if not block_component then
 		local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
+
 		block_component = unit_data_extension:read_component("block")
 		template_data.block_component = block_component
 	end

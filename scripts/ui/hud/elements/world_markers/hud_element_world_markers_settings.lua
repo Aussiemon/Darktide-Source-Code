@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/hud/elements/world_markers/hud_element_world_markers_settings.lua
+
 local hud_element_world_markers_settings = {
 	raycasts_per_frame = 10,
 	raycasts_frame_delay = 5,

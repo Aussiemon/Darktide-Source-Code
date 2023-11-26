@@ -1,16 +1,26 @@
+﻿-- chunkname: @scripts/components/placement_visibility.lua
+
 local PlacementVisibility = component("PlacementVisibility")
 
 PlacementVisibility.init = function (self, unit)
 	self._unit = unit
+
 	local interactee_extension = ScriptUnit.has_extension(unit, "interactee_system")
+
 	self._interactee_extension = interactee_extension
 	self._placed = false
 	self._show = interactee_extension and interactee_extension:active()
+
 	local material_slots = self:get_data(unit, "material_slots")
+
 	self._material_slots = material_slots
+
 	local main_materials = self:get_data(unit, "main_materials")
+
 	self._material_resources = main_materials
+
 	local ghost_material = self:get_data(unit, "ghost_material")
+
 	self._ghost_material = ghost_material
 
 	for i = 1, #material_slots do
@@ -77,6 +87,7 @@ end
 
 PlacementVisibility.events.interactee_hot_joined = function (self)
 	local interactee_extension = self._interactee_extension
+
 	self._show = interactee_extension and interactee_extension:active()
 
 	self:_update_visibility()

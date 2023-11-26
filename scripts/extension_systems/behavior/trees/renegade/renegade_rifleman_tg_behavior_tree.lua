@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/behavior/trees/renegade/renegade_rifleman_tg_behavior_tree.lua
+
 local BreedActions = require("scripts/settings/breed/breed_actions")
 local action_data = BreedActions.renegade_rifleman
 local behavior_tree = {

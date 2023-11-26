@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/minion_attack_selection/templates/renegade_captain_attack_selection_templates.lua
+
 local ALL_CATEGORIES = {
 	aoe = {
 		{
@@ -80,6 +82,7 @@ for category, entries in pairs(ALL_CATEGORIES) do
 	for i = 1, #entries do
 		local data = entries[i]
 		local num_attacks = #data.attack_names
+
 		total_attacks = total_attacks + num_attacks
 	end
 

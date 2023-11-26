@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/ui/ui_hud_settings.lua
+
 local ui_hud_settings = {
 	bloom_settings = {
 		offset_falloffs = {

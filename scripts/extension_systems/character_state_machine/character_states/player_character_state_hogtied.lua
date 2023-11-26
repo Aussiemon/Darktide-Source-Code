@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/character_state_machine/character_states/player_character_state_hogtied.lua
+
 require("scripts/extension_systems/character_state_machine/character_states/player_character_state_base")
 
 local Assist = require("scripts/extension_systems/character_state_machine/character_states/utilities/assist")
@@ -31,6 +33,7 @@ PlayerCharacterStateHogtied.extensions_ready = function (self, world, unit)
 	local is_server = self._is_server
 	local game_session_or_nil = self._game_session
 	local game_object_id_or_nil = self._game_object_id
+
 	self._assist = Assist:new(assist_anims, is_server, unit, game_session_or_nil, game_object_id_or_nil, "rescued")
 end
 

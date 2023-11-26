@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/training_grounds/training_grounds_info_lookup.lua
+
 local TrainingGroundsObjectivesLookup = require("scripts/settings/training_grounds/training_grounds_objectives_lookup")
 local TrainingGroundsActionsLookup = require("scripts/settings/training_grounds/training_grounds_actions_lookup")
 local step_info_lookup = {

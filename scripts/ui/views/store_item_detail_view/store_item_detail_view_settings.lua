@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/store_item_detail_view/store_item_detail_view_settings.lua
+
 local store_item_detail_view_settings = {
 	timer_name = "ui",
 	vo_event_vendor_purchase = {

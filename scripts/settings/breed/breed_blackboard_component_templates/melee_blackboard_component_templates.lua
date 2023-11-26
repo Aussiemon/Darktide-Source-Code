@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/breed/breed_blackboard_component_templates/melee_blackboard_component_templates.lua
+
 local base_template = require("scripts/settings/breed/breed_blackboard_component_templates/base_blackboard_component_template")
 local melee_base = {
 	behavior = {
@@ -28,10 +30,13 @@ local melee_base = {
 table.merge(melee_base, base_template)
 
 local melee_shield = table.clone(melee_base)
+
 melee_shield.shield = {
 	is_blocking = "boolean"
 }
+
 local melee_shield_patroller = table.clone(melee_shield)
+
 melee_shield_patroller.patrol = {
 	patrol_leader_unit = "Unit",
 	patrol_index = "number",
@@ -40,7 +45,9 @@ melee_shield_patroller.patrol = {
 	walk_position = "Vector3Box",
 	auto_patrol = "boolean"
 }
+
 local melee_patroller = table.clone(melee_base)
+
 melee_patroller.patrol = {
 	patrol_leader_unit = "Unit",
 	patrol_index = "number",
@@ -49,13 +56,17 @@ melee_patroller.patrol = {
 	walk_position = "Vector3Box",
 	auto_patrol = "boolean"
 }
+
 local melee_can_be_suppressed = table.clone(melee_base)
+
 melee_can_be_suppressed.suppression = {
 	suppress_value = "number",
 	direction = "Vector3Box",
 	is_suppressed = "boolean"
 }
+
 local melee_patroller_can_be_suppressed = table.clone(melee_base)
+
 melee_patroller_can_be_suppressed.suppression = {
 	suppress_value = "number",
 	direction = "Vector3Box",
@@ -69,6 +80,7 @@ melee_patroller_can_be_suppressed.patrol = {
 	walk_position = "Vector3Box",
 	auto_patrol = "boolean"
 }
+
 local templates = {
 	melee_base = melee_base,
 	melee_shield = melee_shield,

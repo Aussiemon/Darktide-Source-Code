@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/contracts/task_localization.lua
+
 local TaskLocalization = {}
 
 local function _create_task(id, optional_parameters)

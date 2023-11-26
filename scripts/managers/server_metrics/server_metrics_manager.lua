@@ -1,10 +1,12 @@
+﻿-- chunkname: @scripts/managers/server_metrics/server_metrics_manager.lua
+
 local ServerMetricsManager = class("ServerMetricsManager")
 local ServerMetricNames = require("scripts/managers/server_metrics/server_metrics_names")
 local ServerMetricsManagerInterface = require("scripts/managers/server_metrics/server_metrics_manager_dummy")
 local full_flush_interval = 300
 local target_frame_time = 1 / GameParameters.tick_rate + 0.0005
 local update_interval = 1
-local _log = nil
+local _log
 
 ServerMetricsManager.init = function (self)
 	self._metrics = {}
@@ -80,7 +82,7 @@ ServerMetricsManager.add_to_counter = function (self, metric_name, value)
 end
 
 ServerMetricsManager._flush_metric = function (self, metric, dt)
-	if metric.dirty and metric.flush_dt > 5 or full_flush_interval < metric.flush_dt then
+	if metric.dirty and metric.flush_dt > 5 or metric.flush_dt > full_flush_interval then
 		_log("metric: %s %s %f", metric.name, metric.type, metric.value)
 
 		metric.flush_dt = 0
@@ -108,7 +110,7 @@ ServerMetricsManager.update = function (self, dt)
 
 	self._last_update = self._last_update + dt
 
-	if update_interval < self._last_update then
+	if self._last_update > update_interval then
 		if Managers.state and Managers.state.minion_spawn then
 			self:set_gauge(ServerMetricNames.gauge.spawned_minions, Managers.state.minion_spawn:num_spawned_minions())
 		end

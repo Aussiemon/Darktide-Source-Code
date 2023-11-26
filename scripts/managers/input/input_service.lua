@@ -1,7 +1,10 @@
+﻿-- chunkname: @scripts/managers/input/input_service.lua
+
 local InputFilters = require("scripts/managers/input/input_filters")
 local InputUtils = require("scripts/managers/input/input_utils")
 local NullInputService = require("scripts/managers/input/null_input_service")
 local InputService = class("InputService")
+
 InputService.DEBUG_TAG = "Input Service"
 
 local function _default_boolean()
@@ -21,7 +24,7 @@ local function _boolean_combine(value_one, value_two)
 end
 
 local function _vector3_combine(value_one, value_two)
-	if Vector3.length(value_two) < Vector3.length(value_one) then
+	if Vector3.length(value_one) > Vector3.length(value_two) then
 		return value_one
 	else
 		return value_two
@@ -225,12 +228,13 @@ InputService.reverse_lookup = function (self, action_name)
 end
 
 InputService._rework_action_rule = function (self, action_definition)
-	local action_rule = {
-		callbacks = {},
-		debug_info = {},
-		type = action_definition.type,
-		key_alias = action_definition.key_alias
-	}
+	local action_rule = {}
+
+	action_rule.callbacks = {}
+	action_rule.debug_info = {}
+	action_rule.type = action_definition.type
+	action_rule.key_alias = action_definition.key_alias
+
 	local key_alias = action_definition.key_alias
 
 	if key_alias then
@@ -285,7 +289,7 @@ InputService._add_callback_to_action_rule = function (self, action_rule, name)
 	if info then
 		table.insert(action_rule.debug_info, name)
 
-		local cb = nil
+		local cb
 
 		if action_rule.type == "held" then
 			cb = callback(info.device, action_rule.type, info.index)
@@ -356,6 +360,7 @@ InputService._rework_filter = function (self, action_name)
 			default_value = default_value,
 			default_func = default_func
 		}
+
 		self._actions[action_name] = action_rule
 	end
 end
@@ -436,6 +441,7 @@ end
 
 InputService.stop_simulate_action = function (self, action_name)
 	local simulated_actions = self._simulated_actions
+
 	simulated_actions[action_name] = nil
 
 	if table.is_empty(simulated_actions) then

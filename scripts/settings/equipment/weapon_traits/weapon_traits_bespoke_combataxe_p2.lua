@@ -1,6 +1,9 @@
+﻿-- chunkname: @scripts/settings/equipment/weapon_traits/weapon_traits_bespoke_combataxe_p2.lua
+
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local templates = {}
 local stat_buffs = BuffSettings.stat_buffs
+
 templates.weapon_trait_bespoke_combataxe_p2_increase_power_on_hit = {
 	weapon_trait_bespoke_combataxe_p2_increase_power_on_hit_parent = {
 		{

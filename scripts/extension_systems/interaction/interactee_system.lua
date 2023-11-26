@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/interaction/interactee_system.lua
+
 require("scripts/extension_systems/interaction/interactee_extension")
 require("scripts/extension_systems/interaction/player_interactee_extension")
 

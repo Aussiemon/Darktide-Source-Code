@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/breed/breed_shoot_templates/renegade/renegade_shocktrooper_shoot_templates.lua
+
 local DamageSettings = require("scripts/settings/damage/damage_settings")
 local HitScanTemplates = require("scripts/settings/projectile/hit_scan_templates")
 local LineEffects = require("scripts/settings/effects/line_effects")

@@ -1,5 +1,7 @@
+﻿-- chunkname: @scripts/extension_systems/dialogue/tag_query_loader.lua
+
 local TagQuery = require("scripts/extension_systems/dialogue/tag_query")
-local OP = nil
+local OP
 
 if rawget(_G, "RuleDatabase") then
 	RuleDatabase.initialize_static_values()
@@ -21,6 +23,7 @@ if rawget(_G, "RuleDatabase") then
 		SUB = TagQuery.OP.SUB,
 		NUMSET = TagQuery.OP.NUMSET
 	}
+
 	OP = operator_string_lookup
 else
 	OP = TagQuery.OP
@@ -76,7 +79,7 @@ TagQueryLoader.unload_file = function (self, filename)
 	if package.loaded[filename] then
 		local load_order = package.load_order
 		local n_load_order = #load_order
-		local found_file = nil
+		local found_file
 
 		for i = n_load_order, 1, -1 do
 			if load_order[i] == filename then

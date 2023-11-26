@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/components/level_prop_customization.lua
+
 local LevelPropCustomization = component("LevelPropCustomization")
 
 LevelPropCustomization.init = function (self, unit)
@@ -88,7 +90,7 @@ LevelPropCustomization._spawn_children = function (self)
 
 			local full_pose = Matrix4x4.multiply(child_pose, parent_pose)
 			local world = self._world
-			local child_unit = nil
+			local child_unit
 
 			if child_unit_spawn_info.is_static then
 				child_unit = World.spawn_unit_ex(world, child_unit_name, nil, full_pose, nil, true)

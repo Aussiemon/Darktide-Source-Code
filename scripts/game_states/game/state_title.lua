@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/game_states/game/state_title.lua
+
 local HumanPlayer = require("scripts/managers/player/human_player")
 local MainMenuLoader = require("scripts/loading/loaders/main_menu_loader")
 local Popups = require("scripts/utilities/ui/popups")
@@ -31,6 +33,7 @@ local function _create_player(account_id, selected_profile)
 	if not local_player then
 		local telemetry_game_session = Managers.telemetry_events._session.game
 		local slot = 0
+
 		local_player = Managers.player:add_human_player(HumanPlayer, nil, Network.peer_id(), local_player_id, selected_profile, slot, account_id, "player1", telemetry_game_session)
 
 		Managers.telemetry_events:local_player_spawned(local_player)
@@ -58,7 +61,9 @@ StateTitle.on_enter = function (self, parent, params, creation_context)
 	self._next_state = StateMainMenu
 	self._next_state_params = params
 	self._is_booting = params.is_booting or false
+
 	local skip_title_screen_on_invite = params.skip_title_screen_on_invite
+
 	params.skip_title_screen_on_invite = nil
 	self._auth_queue_position = nil
 	self._queue_update_time = 0
@@ -77,11 +82,9 @@ StateTitle.on_enter = function (self, parent, params, creation_context)
 
 	if _should_skip(skip_title_screen_on_invite) then
 		if IS_XBS or IS_GDK then
-			local raw_input_device = nil
+			local raw_input_device
 
-			if IS_XBS then
-				raw_input_device = not GameParameters.testify and raw_input_device
-			end
+			raw_input_device = (not IS_XBS or not GameParameters.testify) and raw_input_device
 
 			self:_signin_profile(raw_input_device)
 		else
@@ -169,11 +172,13 @@ StateTitle._legal_verification = function (self)
 
 	local legal_promises = {
 		Managers.backend.interfaces.account:get_data("legal", "eula"),
-		[#legal_promises + 1] = Managers.backend.interfaces.account:get_data("legal", "cross_play_support"),
 		Managers.backend.interfaces.account:get_data("legal", "privacy_policy")
 	}
+
+	legal_promises[#legal_promises + 1] = Managers.backend.interfaces.account:get_data("legal", "cross_play_support")
+
 	local save_manager = Managers.save
-	local cross_play_support_status, account_data = nil
+	local cross_play_support_status, account_data
 
 	if save_manager then
 		account_data = save_manager:account_data()
@@ -246,6 +251,7 @@ StateTitle._legal_verification = function (self)
 					end
 				end
 			}
+
 			local context = {
 				title_text = "loc_privacy_policy_title",
 				description_text = "loc_privacy_policy_information_01b",
@@ -301,6 +307,7 @@ StateTitle._legal_verification = function (self)
 					end
 				end
 			}
+
 			local context = {
 				title_text = "loc_eula_title",
 				description_text = "loc_privacy_policy_information_01c",
@@ -309,24 +316,25 @@ StateTitle._legal_verification = function (self)
 
 			Managers.event:trigger("event_show_ui_popup", context)
 		elseif not cross_play_support_status then
-			local options = {
-				[#options + 1] = {
-					text = "loc_cross_play_support_accept_button_label",
-					close_on_pressed = true,
-					callback = function ()
-						if account_data then
-							account_data.crossplay_accepted = true
+			local options = {}
 
-							save_manager:queue_save()
-						end
+			options[#options + 1] = {
+				text = "loc_cross_play_support_accept_button_label",
+				close_on_pressed = true,
+				callback = function ()
+					if account_data then
+						account_data.crossplay_accepted = true
 
-						Managers.backend.interfaces.account:set_data("legal", {
-							cross_play_support = cross_play_support_status and cross_play_support_status + 1 or 1
-						})
-						self:_legal_verification()
+						save_manager:queue_save()
 					end
-				}
+
+					Managers.backend.interfaces.account:set_data("legal", {
+						cross_play_support = cross_play_support_status and cross_play_support_status + 1 or 1
+					})
+					self:_legal_verification()
+				end
 			}
+
 			local context = {
 				title_text = "loc_cross_play_support_title",
 				description_text = "loc_cross_play_support_information",
@@ -388,7 +396,9 @@ StateTitle._reset_state = function (self)
 	next_state_params.selected_profile = nil
 	next_state_params.has_created_first_character = nil
 	next_state_params.migration_data = nil
+
 	local backend_promise = self._backend_promise
+
 	self._backend_promise = nil
 
 	if backend_promise and backend_promise:is_pending() then
@@ -512,7 +522,7 @@ local UPDATE_QUEUE_POSITION_INTERVAL = 5
 StateTitle._update_queue_position = function (self, main_t)
 	self._queue_changed = false
 
-	if self._queue_update_time <= main_t then
+	if main_t >= self._queue_update_time then
 		self._auth_queue_position = Backend.get_auth_queue_position()
 		self._queue_update_time = main_t + UPDATE_QUEUE_POSITION_INTERVAL
 		self._queue_changed = true
@@ -595,6 +605,7 @@ StateTitle._signin = function (self)
 		if account_data and migration_data then
 			local current_index = migration_data.latest_completed and migration_data.latest_completed.index or -1
 			local added_index = migration_data.migrations and #migration_data.migrations or 0
+
 			account_data.latest_backend_migration_index = current_index + added_index
 
 			save_manager:queue_save()
@@ -608,16 +619,19 @@ StateTitle._signin = function (self)
 
 		if selected_profile then
 			local character_id = selected_profile.character_id
+
 			narrative_promise = Managers.narrative:load_character_narrative(character_id)
 		end
 
 		local stats_promise = Managers.stats:add_user(1, account_id)
 		local sync_promises = Promise.all(narrative_promise, stats_promise)
+
 		self._backend_promise = sync_promises
 		self._backend_data_synced = false
 
 		sync_promises:next(function ()
 			local achievement_promise = Managers.achievements:add_player(local_player)
+
 			self._backend_promise = achievement_promise
 
 			return achievement_promise
@@ -633,6 +647,7 @@ StateTitle._signin = function (self)
 		main_menu_loader:start_loading()
 
 		local next_state_params = self._next_state_params
+
 		next_state_params.main_menu_loader = main_menu_loader
 		next_state_params.profiles = profiles
 		next_state_params.gear = gear

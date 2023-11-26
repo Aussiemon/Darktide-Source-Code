@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/player/player_game_states/camera_handler.lua
+
 local AlternateFire = require("scripts/utilities/alternate_fire")
 local CameraTrees = require("scripts/settings/camera/camera_trees")
 local HubCameraSettings = require("scripts/settings/camera/hub_camera_settings")
@@ -75,15 +77,19 @@ CameraHandler.update = function (self, dt, t, player_orientation, input)
 		if unit_data_extension then
 			local character_state_component = unit_data_extension:read_component("character_state")
 			local assisted_state_input_component = unit_data_extension:read_component("assisted_state_input")
+
 			is_hogtied = PlayerUnitStatus.is_hogtied(character_state_component)
 			is_being_rescued = PlayerUnitStatus.is_assisted(assisted_state_input_component)
 			is_dead = PlayerUnitStatus.is_dead(character_state_component)
 		end
 
 		local was_hogtied = self._is_hogtied
+
 		self._is_hogtied = is_hogtied
+
 		local force_switch = false
 		local was_being_rescued = self._is_being_rescued
+
 		self._is_being_rescued = is_being_rescued
 
 		if is_dead then
@@ -142,8 +148,7 @@ end
 
 CameraHandler._update_camera_manager = function (self, dt, t, player_orientation)
 	local player = self._player
-	local camera_manager = Managers.state.camera
-	local viewport_name = player.viewport_name
+	local camera_manager, viewport_name = Managers.state.camera, player.viewport_name
 	local camera_follow_unit = self._camera_follow_unit
 
 	if self._mode == CameraModes.observer and self._first_person_spectating_mode and ALIVE[camera_follow_unit] then
@@ -173,6 +178,7 @@ CameraHandler._switch_follow_target = function (self, new_unit)
 	end
 
 	self._camera_follow_unit = new_unit
+
 	local is_player_unit = player_unit_spawn_manager:is_player_unit(new_unit)
 
 	if new_unit and is_player_unit then
@@ -193,7 +199,8 @@ CameraHandler.post_update = function (self, dt, t, player_orientation)
 
 	if cinematic_manager:active() then
 		local old_unit = self._camera_follow_unit
-		local new_unit = nil
+		local new_unit
+
 		new_unit, self._mode = cinematic_manager:active_camera()
 
 		if new_unit ~= old_unit then
@@ -265,10 +272,12 @@ CameraHandler._update_hub_camera_variables = function (self, dt, t, unit, viewpo
 
 	if move_method == "idle" or move_method == "turn_on_spot" then
 		idle_timer = idle_timer + dt
+
 		local idle_camera_zoom_delay = HubCameraSettings.idle_camera_zoom_delay
 
 		if idle_camera_zoom_delay < idle_timer then
 			local ramp_up = math.clamp(idle_timer - idle_camera_zoom_delay, 0, 1)
+
 			idle_camera_zoom = math_lerp(idle_camera_zoom, 1, dt * HubCameraSettings.idle_camera_zoom_speed * ramp_up)
 		end
 
@@ -276,13 +285,16 @@ CameraHandler._update_hub_camera_variables = function (self, dt, t, unit, viewpo
 	else
 		idle_camera_zoom = math_lerp(idle_camera_zoom, 0, dt * HubCameraSettings.idle_camera_zoom_out_speed)
 		idle_timer = 0
+
 		local speed_zoom_target = HubCameraSettings.move_state_speed_zoom_targets[move_state] or 0
+
 		camera_speed_zoom = math_lerp(camera_speed_zoom, speed_zoom_target, dt * HubCameraSettings.camera_speed_zoom_in_speed)
 	end
 
 	self._hub_idle_camera_zoom = idle_camera_zoom
 	self._hub_camera_speed_zoom = camera_speed_zoom
 	self._hub_idle_timer = idle_timer
+
 	local look_rotation = first_person.rotation
 	local camera_forward = quaternion_forward(look_rotation)
 	local camera_right = quaternion_right(look_rotation)
@@ -308,8 +320,7 @@ CameraHandler._update_follow = function (self, follow_unit_switch)
 
 	if self._mode == CameraModes.dead then
 		if follow_unit_switch then
-			local camera_manager = Managers.state.camera
-			local viewport_name = self._viewport_name
+			local camera_manager, viewport_name = Managers.state.camera, self._viewport_name
 
 			if follow_unit_available then
 				camera_manager:set_node_tree_root_position(viewport_name, DEFAULT_DEAD_CAMERA_TREE, POSITION_LOOKUP[follow_unit])
@@ -320,8 +331,7 @@ CameraHandler._update_follow = function (self, follow_unit_switch)
 	elseif follow_unit_available then
 		self:_update_follow_camera(follow_unit, follow_unit_switch)
 	elseif follow_unit_switch then
-		local camera_manager = Managers.state.camera
-		local viewport_name = self._viewport_name
+		local camera_manager, viewport_name = Managers.state.camera, self._viewport_name
 		local current_camera_node = camera_manager:current_camera_node(viewport_name)
 
 		if follow_unit_available then
@@ -356,19 +366,17 @@ end
 
 CameraHandler._update_follow_camera = function (self, unit, follow_unit_switch)
 	local mode = self._mode
-	local wanted_tree, wanted_camera_node, wanted_object = nil
+	local wanted_tree, wanted_camera_node, wanted_object
 
 	if mode == CameraModes.cutscene then
-		wanted_camera_node = CINEMATIC_CAMERA_NODE
-		wanted_tree = CINEMATIC_CAMERA_TREE
+		wanted_tree, wanted_camera_node = CINEMATIC_CAMERA_TREE, CINEMATIC_CAMERA_NODE
 	elseif mode == CameraModes.cutscene_gameplay then
-		wanted_camera_node = CINEMATIC_CAMERA_NODE
-		wanted_tree = CINEMATIC_GAMEPLAY_CAMERA_TREE
+		wanted_tree, wanted_camera_node = CINEMATIC_GAMEPLAY_CAMERA_TREE, CINEMATIC_CAMERA_NODE
 	elseif mode == CameraModes.testify then
-		wanted_camera_node = TESTIFY_CAMERA_NODE
-		wanted_tree = TESTIFY_CAMERA_TREE
+		wanted_tree, wanted_camera_node = TESTIFY_CAMERA_TREE, TESTIFY_CAMERA_NODE
 	else
 		local camera_extension = ScriptUnit.extension(unit, "camera_system")
+
 		wanted_tree, wanted_camera_node, wanted_object = camera_extension:camera_tree_node()
 	end
 
@@ -424,6 +432,7 @@ CameraHandler._follow_owner = function (self)
 	local player = self._player
 	local side_system = self._side_system
 	local side = side_system.side_by_unit[player.player_unit]
+
 	self._side_id = side.side_id
 
 	return player.player_unit
@@ -512,8 +521,7 @@ end
 CameraHandler.spawn_camera = function (self, level, themes)
 	local viewport_name = self._viewport_name
 	local camera_manager = Managers.state.camera
-	local pos = Vector3.zero()
-	local rot = Quaternion.identity()
+	local pos, rot = Vector3.zero(), Quaternion.identity()
 	local theme_shading_environment_name = self:_get_theme_shading_environment(themes)
 	local default_shading_environment_name = theme_shading_environment_name or Level.get_data(level, "shading_environment")
 	local viewport = camera_manager:create_viewport(viewport_name, nil, pos, rot, default_shading_environment_name)
@@ -524,8 +532,7 @@ CameraHandler.spawn_camera = function (self, level, themes)
 	camera_manager:set_variable(viewport_name, "external_fov_multiplier", external_fov_multiplier)
 	Managers.state.bone_lod:register_bone_lod_viewport(viewport)
 
-	self._camera_spawned = true
-	self._viewport = viewport
+	self._viewport, self._camera_spawned = viewport, true
 end
 
 CameraHandler._load_node_trees = function (self, viewport_name)
@@ -556,8 +563,7 @@ CameraHandler.destroy_camera = function (self)
 
 	camera_manager:destroy_viewport(viewport_name)
 
-	self._camera_spawned = false
-	self._viewport = nil
+	self._viewport, self._camera_spawned = nil, false
 end
 
 CameraHandler.destroy = function (self)

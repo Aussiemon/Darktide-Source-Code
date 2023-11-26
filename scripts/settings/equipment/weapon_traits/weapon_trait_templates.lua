@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/equipment/weapon_traits/weapon_trait_templates.lua
+
 local templates = {}
 
 local function _create_entry(path)

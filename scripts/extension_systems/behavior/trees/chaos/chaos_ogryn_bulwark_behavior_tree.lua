@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/behavior/trees/chaos/chaos_ogryn_bulwark_behavior_tree.lua
+
 local BreedActions = require("scripts/settings/breed/breed_actions")
 local action_data = BreedActions.chaos_ogryn_bulwark
 local FAR_COMBAT = {
@@ -13,6 +15,11 @@ local FAR_COMBAT = {
 }
 local MELEE_COMBAT = {
 	"BtSelectorNode",
+	condition_args = {
+		combat_ranges = {
+			melee = true
+		}
+	},
 	{
 		"BtCombatIdleAction",
 		name = "combat_idle",
@@ -56,12 +63,7 @@ local MELEE_COMBAT = {
 		name = "combat"
 	},
 	name = "melee_combat",
-	condition = "is_aggroed_in_combat_range",
-	condition_args = {
-		combat_ranges = {
-			melee = true
-		}
-	}
+	condition = "is_aggroed_in_combat_range"
 }
 local CLIMB_ENTER_HOOK = {
 	hook = "bulwark_climb_enter",

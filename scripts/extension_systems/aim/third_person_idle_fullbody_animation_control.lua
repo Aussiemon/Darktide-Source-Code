@@ -1,8 +1,12 @@
+﻿-- chunkname: @scripts/extension_systems/aim/third_person_idle_fullbody_animation_control.lua
+
 local ThirdPersonIdleFullbodyAnimationControl = class("ThirdPersonIdleFullbodyAnimationControl")
 
 ThirdPersonIdleFullbodyAnimationControl.init = function (self, unit)
 	self._locomotion_extension = ScriptUnit.extension(unit, "locomotion_system")
+
 	local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
+
 	self._movement_state_component = unit_data_extension:read_component("movement_state")
 	self._unit = unit
 	self._idle_fullbody_value = 0
@@ -37,6 +41,7 @@ ThirdPersonIdleFullbodyAnimationControl.update = function (self, dt, t)
 
 	if not is_moving and move_speed_squared < 0.01 then
 		local time_since_stop = t - self._is_moving_transition_start_t
+
 		stop_percent_done = math.clamp(time_since_stop / 0.8, 0, 1)
 		wanted_idle_fullbody_value = 1
 	end
@@ -45,6 +50,7 @@ ThirdPersonIdleFullbodyAnimationControl.update = function (self, dt, t)
 
 	if is_moving and move_speed_squared > 0.01 then
 		local time_since_start = t - self._is_moving_transition_start_t
+
 		start_percent_done = math.clamp(time_since_start / 0.2, 0, 1)
 		wanted_idle_fullbody_value = 0
 	end

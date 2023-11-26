@@ -1,4 +1,6 @@
-local Blackboard = nil
+﻿-- chunkname: @scripts/extension_systems/blackboard/utilities/blackboard_tests.lua
+
+local Blackboard
 local TEST_FAILED_STRING = "[Blackboard] Test Failed, %s!"
 local temp_args = {}
 
@@ -49,8 +51,10 @@ end
 
 local function _init_and_run_tests(blackboard_object)
 	local original_ferror = ferror
+
 	ferror = mockup_ferror
 	Blackboard = blackboard_object
+
 	local component_config = {
 		userdata_component = {
 			quaternion_a = "QuaternionBox",

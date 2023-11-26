@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/mission/templates/dust_mission_templates.lua
+
 local mission_templates = {
 	lm_scavenge = {
 		mission_name = "loc_mission_name_lm_scavenge",

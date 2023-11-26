@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/end_view/end_view_definitions.lua
+
 local ColorUtilities = require("scripts/utilities/ui/colors")
 local DefaultPassTemplates = require("scripts/ui/pass_templates/default_pass_templates")
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
@@ -213,6 +215,7 @@ local widget_definitions = {
 				end
 
 				content.disabled_progress = disabled_progress
+
 				local normal_color = style.normal_color
 				local disabled_color = style.disabled_color
 				local default_color = style.default_color
@@ -233,6 +236,7 @@ local widget_definitions = {
 			value = Localize("loc_eor_stay_in_party_continue_tooltip"),
 			change_function = function (content, style)
 				local disabled_progress = content.disabled_progress or 0
+
 				style.text_color[1] = _math_floor(disabled_progress * 255)
 			end,
 			visibility_function = function (content, style)
@@ -246,6 +250,7 @@ local widget_definitions = {
 			value = Localize("loc_eor_stay_in_party_vote_done_tooltip"),
 			change_function = function (content, style)
 				local visibility_progress = 1 - (content.disabled_progress or 1)
+
 				style.text_color[1] = _math_floor(visibility_progress * 255)
 			end,
 			visibility_function = function (content, style)
@@ -280,6 +285,7 @@ local widget_definitions = {
 				end
 
 				content.yes_vote_progress = yes_vote_progress
+
 				local normal_color = style.normal_color
 				local voted_yes_color = style.voted_yes_color
 				local default_color = style.default_color
@@ -308,6 +314,7 @@ local widget_definitions = {
 			value = Localize("loc_eor_stay_in_party_vote_tooltip"),
 			change_function = function (content, style)
 				local yes_vote_progress = content.yes_vote_progress or 0
+
 				style.text_color[1] = _math_floor(yes_vote_progress * 255)
 			end,
 			visibility_function = function (content, style)

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/wwise_game_sync/wwise_state_groups/wwise_state_group_minion_aggro_intensity.lua
+
 require("scripts/managers/wwise_game_sync/wwise_state_groups/wwise_state_group_base")
 
 local WwiseGameSyncSettings = require("scripts/settings/wwise_game_sync/wwise_game_sync_settings")
@@ -40,13 +42,13 @@ WwiseStateGroupMinionAggroIntensity._wwise_state = function (self)
 	local num_aggroed_minions = music_parameter_extension:num_aggroed_minions_near() or 0
 	local state_settings = self._state_settings
 
-	if state_settings.num_threshold_low < num_aggroed_minions and num_aggroed_minions < state_settings.num_threshold_medium then
+	if num_aggroed_minions > state_settings.num_threshold_low and num_aggroed_minions < state_settings.num_threshold_medium then
 		return STATES.low
 	elseif num_aggroed_minions <= state_settings.num_threshold_low then
 		return STATES.none
 	elseif num_aggroed_minions < state_settings.num_threshold_high then
 		return STATES.medium
-	elseif state_settings.num_threshold_high <= num_aggroed_minions then
+	elseif num_aggroed_minions >= state_settings.num_threshold_high then
 		return STATES.high
 	end
 end

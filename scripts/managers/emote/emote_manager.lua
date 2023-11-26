@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/emote/emote_manager.lua
+
 local EmoteManager = class("EmoteManager")
 local RPCs = {
 	"rpc_trigger_emote",
@@ -70,13 +72,10 @@ EmoteManager._stop_emote = function (self, index)
 		self:_trigger_face_event(unit, "pose_neutral")
 	end
 
-	local size = self._tracking_size
-	local id = self._tracking_id
-	local time = self._tracking_time
-	time[index] = time[size]
-	id[index] = id[size]
-	time[size] = nil
-	id[size] = nil
+	local size, id, time = self._tracking_size, self._tracking_id, self._tracking_time
+
+	id[index], time[index] = id[size], time[size]
+	id[size], time[size] = nil
 	self._tracking_size = size - 1
 end
 
@@ -104,6 +103,7 @@ EmoteManager._start_emote = function (self, unit, slot_id, rpc)
 	end
 
 	local duration = emote_item.animation_duration or 0
+
 	self._tracking_size = self._tracking_size + 1
 	self._tracking_id[self._tracking_size] = unit_id
 	self._tracking_time[self._tracking_size] = duration

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/level_prop/props/door_controlpanel_01.lua
+
 local prop_data = {
 	unit_name = "content/environment/artsets/imperial/global/props/doors/door_controlpanel_01/door_controlpanel_01",
 	name = "door_controlpanel_01",

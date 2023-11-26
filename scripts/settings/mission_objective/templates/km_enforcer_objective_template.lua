@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/mission_objective/templates/km_enforcer_objective_template.lua
+
 local mission_objective_templates = {
 	km_enforcer = {
 		main_objective_type = "kill_objective",

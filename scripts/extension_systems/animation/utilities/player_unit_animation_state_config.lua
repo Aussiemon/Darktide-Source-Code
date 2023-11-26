@@ -1,12 +1,10 @@
+﻿-- chunkname: @scripts/extension_systems/animation/utilities/player_unit_animation_state_config.lua
+
 local PlayerUnitAnimationStateConfig = {}
 
 PlayerUnitAnimationStateConfig.format = function (animation_state_settings)
-	local times_3p = {}
-	local animations_3p = {}
-	local states_3p = {}
-	local times_1p = {}
-	local animations_1p = {}
-	local states_1p = {}
+	local times_3p, animations_3p, states_3p = {}, {}, {}
+	local times_1p, animations_1p, states_1p = {}, {}, {}
 	local num_layers_3p = animation_state_settings.num_layers_3p
 
 	for i = 1, num_layers_3p do

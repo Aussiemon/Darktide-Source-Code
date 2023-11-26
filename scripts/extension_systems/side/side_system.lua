@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/side/side_system.lua
+
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
 local Side = require("scripts/extension_systems/side/side")
@@ -8,7 +10,9 @@ SideSystem.init = function (self, extension_system_creation_context, system_init
 	SideSystem.super.init(self, extension_system_creation_context, system_init_data, ...)
 
 	self._default_player_side_name = system_init_data.default_player_side_name
+
 	local side_compositions = system_init_data.side_compositions
+
 	self._sides, self._side_lookup, self._side_names = self:_create_sides(side_compositions)
 
 	self:_setup_relations(side_compositions, self._sides, self._side_lookup)
@@ -33,6 +37,7 @@ SideSystem._create_sides = function (self, side_compositions)
 		local definition = side_compositions[i]
 		local side_name = definition.name
 		local side = Side:new(definition, i)
+
 		sides[i] = side
 		side_lookup[side_name] = side
 		side_names[i] = side_name
@@ -55,6 +60,7 @@ SideSystem._setup_relations = function (self, side_compositions, sides, side_loo
 
 			for j = 1, #side_list do
 				local relation_side_name = side_list[j]
+
 				temp_sides[#temp_sides + 1] = side_lookup[relation_side_name]
 			end
 
@@ -91,6 +97,7 @@ SideSystem.on_add_extension = function (self, world, unit, extension_name, exten
 	extension.is_human_unit = extension_init_data.is_human_unit
 	extension.breed_tags = extension_init_data.breed and extension_init_data.breed.tags or EMPTY_TABLE
 	self._unit_extension_data[unit] = extension
+
 	local side_id = extension_init_data.side_id
 
 	self:_add_unit_to_side(unit, side_id)
@@ -148,6 +155,7 @@ SideSystem._add_unit_to_side = function (self, unit, side_id)
 	side_extension.side_id = side_id
 	side_extension.side = side
 	self.side_by_unit[unit] = side
+
 	local relation_types = Side.SIDE_RELATION_TYPES
 	local num_relation_types = #relation_types
 
@@ -263,8 +271,11 @@ SideSystem.add_aggroed_minion = function (self, unit)
 	for i = 1, num_enemy_sides do
 		local enemy_side = enemy_sides[i]
 		local num_aggroed_minion_target_units = enemy_side.num_aggroed_minion_target_units + 1
+
 		enemy_side.num_aggroed_minion_target_units = num_aggroed_minion_target_units
+
 		local aggroed_minion_target_units = enemy_side.aggroed_minion_target_units
+
 		aggroed_minion_target_units[num_aggroed_minion_target_units] = unit
 		aggroed_minion_target_units[unit] = num_aggroed_minion_target_units
 	end
@@ -281,6 +292,7 @@ SideSystem.remove_aggroed_minion = function (self, unit)
 		local index = aggroed_minion_target_units[unit]
 		local last_index = enemy_side.num_aggroed_minion_target_units
 		local last_unit = aggroed_minion_target_units[last_index]
+
 		aggroed_minion_target_units[index] = last_unit
 		aggroed_minion_target_units[last_unit] = index
 		aggroed_minion_target_units[last_index] = nil
@@ -349,6 +361,7 @@ SideSystem._update_frame_tables = function (self, side)
 			local character_state_component = unit_data_extension:read_component("character_state")
 			local valid = not PlayerUnitStatus.is_hogtied(character_state_component)
 			local position = POSITION_LOOKUP[unit]
+
 			num_player_units = num_player_units + 1
 			player_units[num_player_units] = unit
 			player_unit_positions[num_player_units] = position
@@ -406,6 +419,7 @@ SideSystem._update_enemy_frame_tables = function (self, side)
 			local character_state_component = unit_data_extension:read_component("character_state")
 			local valid = not PlayerUnitStatus.is_hogtied(character_state_component)
 			local position = POSITION_LOOKUP[unit]
+
 			num_enemy_player_units = num_enemy_player_units + 1
 			enemy_player_units[num_enemy_player_units] = unit
 			enemy_player_unit_positions[num_enemy_player_units] = position

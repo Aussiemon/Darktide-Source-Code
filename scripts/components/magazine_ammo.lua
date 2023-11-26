@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/components/magazine_ammo.lua
+
 local MagazineAmmo = component("MagazineAmmo")
 
 MagazineAmmo.editor_init = function (self, unit)
@@ -7,10 +9,12 @@ MagazineAmmo.editor_init = function (self, unit)
 	self._use_simple_animation_length = self:get_data(unit, "use_simple_animation_length")
 	self._dismantled = self:get_data(unit, "dismantled")
 	self._dismantled_ammo_mask = self:get_data(unit, "dismantled_ammo_mask")
+
 	local ammo_in_unit = self:get_data(unit, "ammo_in_unit") - 1
 	local max_ammo = self:get_data(unit, "max_ammo") - 1
 	local ammo = self:get_data(unit, "ammo") - 1
 	local ammo_offset = self:get_data(unit, "ammo_offset")
+
 	self._ammo_in_unit = ammo_in_unit
 	self._max_ammo = max_ammo
 	self._ammo = math.min(ammo, max_ammo)
@@ -40,10 +44,12 @@ MagazineAmmo.init = function (self, unit)
 	self._use_simple_animation_length = self:get_data(unit, "use_simple_animation_length")
 	self._dismantled = self:get_data(unit, "dismantled")
 	self._dismantled_ammo_mask = self:get_data(unit, "dismantled_ammo_mask")
+
 	local ammo_in_unit = self:get_data(unit, "ammo_in_unit") - 1
 	local max_ammo = self:get_data(unit, "max_ammo") - 1
 	local ammo = self:get_data(unit, "ammo") - 1
 	local ammo_offset = self:get_data(unit, "ammo_offset")
+
 	self._ammo_in_unit = ammo_in_unit
 	self._max_ammo = max_ammo
 	self._ammo = math.min(ammo, max_ammo)
@@ -83,10 +89,11 @@ MagazineAmmo._update_ammo_representation = function (self, unit, animate)
 	if self._is_animated then
 		local inv_max_ammo = 1 / max_ammo
 		local fraction = 1 - remaining_ammo / max_ammo
-		local anim_time_step, anim_time = nil
+		local anim_time_step, anim_time
 
 		if self._use_simple_animation_length then
 			local anim_length = Unit.simple_animation_length(unit)
+
 			anim_time_step = anim_length * inv_max_ammo
 			anim_time = fraction * anim_length
 		else

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/end_player_view/end_player_view.lua
+
 local ArchetypeTalents = require("scripts/settings/ability/archetype_talents/archetype_talents")
 local ColorUtilities = require("scripts/utilities/ui/colors")
 local Definitions = require("scripts/ui/views/end_player_view/end_player_view_definitions")
@@ -58,6 +60,7 @@ EndPlayerView.on_enter = function (self)
 		height = weapon_preview_size[2]
 	}
 	local icon_render_type = "weapon"
+
 	self._weapon_icon_renderer_id = "EndPlayerView_weapons_" .. math.uuid()
 	self._weapon_icon_renderer = Managers.ui:create_single_icon_renderer(icon_render_type, self._weapon_icon_renderer_id, weapons_render_settings)
 
@@ -66,6 +69,7 @@ EndPlayerView.on_enter = function (self)
 	local player = self:_player()
 	local profile = player:profile()
 	local load_callback = callback(self, "_create_cards")
+
 	self._talent_icons_package_id = Managers.data_service.talents:load_icons_for_profile(profile, "EndPlayerView", load_callback, true)
 
 	table.clear(self._timed_visibility_widgets)
@@ -135,6 +139,7 @@ end
 EndPlayerView.on_resolution_modified = function (self, scale)
 	local screen_width = RESOLUTION_LOOKUP.width
 	local screen_border = (screen_width + ViewStyles.card_width) / 2
+
 	self._carousel_left_border = -screen_border
 	self._carousel_right_border = screen_border
 end
@@ -278,7 +283,7 @@ EndPlayerView._finish_current_animation_state = function (self)
 
 		local t = state_data.end_time
 
-		self:_current_carousel_state_func(state_data, self._card_widgets, self._current_card, t)
+		self._current_carousel_state_func(self, state_data, self._card_widgets, self._current_card, t)
 	end
 end
 
@@ -288,6 +293,7 @@ EndPlayerView._setup_progress_bar = function (self)
 	local starting_experience = session_report.starting_experience
 	local max_level = experience_settings.max_level
 	local experience_table = experience_settings.experience_table
+
 	self._starting_experience = starting_experience
 	self._max_level = max_level
 	self._max_level_experience = experience_settings.max_level_experience
@@ -296,6 +302,7 @@ EndPlayerView._setup_progress_bar = function (self)
 	self:_update_experience_bar(0)
 
 	local experience_gain_widget = self._widgets_by_name.experience_gain
+
 	experience_gain_widget.visible = false
 end
 
@@ -355,7 +362,7 @@ end
 EndPlayerView._create_card_widget = function (self, index, card_type, card_data)
 	local blueprints = self._definitions.blueprints
 	local scenegraph_id = CARD_CAROUSEL_SCENEGRAPH_ID
-	local blueprint_name, optional_icon_size = nil
+	local blueprint_name, optional_icon_size
 
 	if card_type == CARD_TYPES.xp then
 		blueprint_name = "experience"
@@ -366,7 +373,7 @@ EndPlayerView._create_card_widget = function (self, index, card_type, card_data)
 		card_data.reward_item = self:_get_item(card_data)
 		card_data.item_group = "weapon_skin"
 	elseif card_type == CARD_TYPES.talents_unlock then
-		return
+		do return end
 
 		blueprint_name = "talents_unlocked"
 		card_data.talent_group_name, card_data.unlocked_talents = self:_get_unlocked_talents(card_data)
@@ -388,6 +395,7 @@ EndPlayerView._create_card_widget = function (self, index, card_type, card_data)
 	local widget_definition = UIWidget.create_definition(pass_template, scenegraph_id, nil, blueprint.size, style)
 	local widget_name = "card_" .. index
 	local widget = UIWidget.init(widget_name, widget_definition)
+
 	widget.content.blueprint_name = blueprint_name
 
 	blueprint.init(self, widget, index, card_data)
@@ -412,6 +420,7 @@ EndPlayerView._setup_wallets = function (self, wallet_data, salary_rewards)
 
 	for _, wallet_type in ipairs(wallet_types) do
 		wallet_widgets[wallet_type] = widgets_by_name[wallet_type .. "_wallet"]
+
 		local currency_gain_widget = widgets_by_name[wallet_type .. "_gain"]
 
 		if currency_gain_widget then
@@ -430,6 +439,7 @@ EndPlayerView._setup_wallets = function (self, wallet_data, salary_rewards)
 			local widget_content = wallet_widget.content
 			local total_amount = salary_reward.current_amount + salary_reward.amount_gained
 			local current_amount = salary_reward.current_amount
+
 			widget_content.start_amount = current_amount
 			widget_content.current_amount = current_amount
 			widget_content.total_amount = total_amount
@@ -447,6 +457,7 @@ EndPlayerView._setup_wallets = function (self, wallet_data, salary_rewards)
 
 		if widget_content and not widget_content.current_amount then
 			local current_amount = wallet.amount
+
 			widget_content.start_amount = current_amount
 			widget_content.current_amount = current_amount
 			widget_content.total_amount = current_amount
@@ -487,6 +498,7 @@ EndPlayerView._get_unlocked_talents = function (self, card_data)
 
 	for i = 1, #unlocked_talents do
 		local talent_id = unlocked_talents[i]
+
 		talent_icons[i] = talents[talent_id].icon
 	end
 
@@ -514,6 +526,7 @@ EndPlayerView._set_carousel_state = function (self, state_id)
 	table.create_copy(state_data, state_settings)
 
 	local func_name = state_settings.update_func_name
+
 	self._current_carousel_state_func = self._definitions.animations[func_name]
 	self._current_carousel_state = state_id
 
@@ -528,6 +541,7 @@ EndPlayerView._update_carousel = function (self, dt, t, input_service)
 
 		if not state_data.start_time then
 			state_data.start_time = t
+
 			local duration = state_data.duration
 
 			if duration then
@@ -535,7 +549,7 @@ EndPlayerView._update_carousel = function (self, dt, t, input_service)
 			end
 		end
 
-		local is_state_done = nil
+		local is_state_done
 		local skip_to_next_animation_state = self._skip_to_next_animation_state
 
 		if skip_to_next_animation_state then
@@ -544,7 +558,7 @@ EndPlayerView._update_carousel = function (self, dt, t, input_service)
 			is_state_done = true
 			self._skip_to_next_animation_state = false
 		else
-			is_state_done = self:_current_carousel_state_func(state_data, self._card_widgets, self._current_card, t)
+			is_state_done = self._current_carousel_state_func(self, state_data, self._card_widgets, self._current_card, t)
 		end
 
 		if is_state_done then
@@ -610,7 +624,9 @@ EndPlayerView._update_experience_bar = function (self, new_experience)
 	local starting_experience = self._starting_experience
 	local max_level_experience = self._max_level_experience
 	local current_experience = math.min(starting_experience + new_experience, max_level_experience)
+
 	self._current_experience = current_experience
+
 	local experience_for_current_level = self._experience_for_current_level
 	local experience_for_next_level = self._experience_for_next_level
 	local current_level = self._current_level
@@ -630,9 +646,13 @@ EndPlayerView._update_experience_bar = function (self, new_experience)
 		end
 
 		current_level = experience_for_next_level <= current_experience and max_level or next_level - 1
+
 		local current_level_widget = widgets_by_name.current_level_text
+
 		current_level_widget.content.text = tostring(math.min(current_level, max_level - 1))
+
 		local next_level_widget = widgets_by_name.next_level_text
+
 		next_level_widget.content.text = tostring(next_level)
 		experience_for_current_level = experience_table[current_level]
 		self._current_level = current_level
@@ -642,15 +662,20 @@ EndPlayerView._update_experience_bar = function (self, new_experience)
 
 	local character_progress_widget = widgets_by_name.character_progress_text
 	local text_params = _update_experience_bar_text_params
+
 	text_params.experience = current_experience
 	text_params.experience_for_next_level = experience_for_next_level
 	character_progress_widget.content.text = Localize("loc_eor_xp_bar_progression_text", true, text_params)
+
 	local bar_progress = current_level == max_level and 1 or math.ilerp(experience_for_current_level, experience_for_next_level, current_experience)
 	local progress_bar_widget = widgets_by_name.progress_bar
+
 	progress_bar_widget.content.progress = bar_progress
+
 	local gain_widget_name = "experience_gain"
 	local experience_gain_widget = widgets_by_name[gain_widget_name]
 	local experience_gain_widget_content = experience_gain_widget.content
+
 	experience_gain_widget_content.text = string.format("+ %d", new_experience)
 	experience_gain_widget_content.progress = bar_progress
 	experience_gain_widget_content.visibility_timer = ViewSettings.animation_times.xp_gain_visibility_time
@@ -663,12 +688,15 @@ EndPlayerView._update_wallet = function (self, new_value, wallet_type)
 	if wallet_widget then
 		local wallet_content = wallet_widget.content
 		local current_amount = math.min(new_value, wallet_content.total_amount)
+
 		wallet_content.current_amount = current_amount
 		wallet_content.text = tostring(current_amount)
+
 		local currency_gain_widget = self._currency_gain_widgets[wallet_type]
 
 		if currency_gain_widget then
 			local currency_gain_content = currency_gain_widget.content
+
 			currency_gain_content.text = string.format("+ %d", new_value - wallet_content.start_amount)
 			currency_gain_content.visibility_timer = ViewSettings.animation_times.currency_gain_visibility_time
 			self._timed_visibility_widgets[wallet_type] = currency_gain_widget
@@ -686,6 +714,7 @@ EndPlayerView._belate_wallet_update = function (self, new_value, wallet_type)
 			local wallet_content = wallet_widget.content
 			local currency_gain_content = currency_gain_widget.content
 			local amount = new_value - wallet_content.start_amount
+
 			currency_gain_content.amount = amount
 			currency_gain_content.text = string.format("+ %d", amount)
 			currency_gain_content.visibility_timer = ViewSettings.animation_times.currency_gain_visibility_time
@@ -707,6 +736,7 @@ EndPlayerView._update_belated_wallets = function (self, amount_progress)
 		if amount and amount > 0 then
 			local total_amount = wallet_content.total_amount
 			local current_amount = math.floor(math.lerp(start_amount, total_amount, amount_progress))
+
 			wallet_content.text = tostring(current_amount)
 		end
 	end
@@ -717,6 +747,7 @@ EndPlayerView._retract_currency_gain_widgets = function (self, progress)
 
 	for wallet_id, widget in pairs(currency_gain_widgets) do
 		local content = widget.content
+
 		widget.offset[2] = math.lerp(0, -content.size[2], progress)
 		content.visibility_timer = math.max(1 - 4 * progress, 0)
 	end

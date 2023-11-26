@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/pickup/pickups/consumable/large_clip_pickup.lua
+
 local pickup_data = {
 	description = "loc_pickup_consumable_large_clip_01",
 	name = "large_clip",

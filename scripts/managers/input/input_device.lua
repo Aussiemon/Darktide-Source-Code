@@ -1,5 +1,8 @@
+﻿-- chunkname: @scripts/managers/input/input_device.lua
+
 local InputUtils = require("scripts/managers/input/input_utils")
 local InputDevice = class("InputDevice")
+
 InputDevice.DEFAULT_HELD_THRESHOLD = InputDevice.DEFAULT_HELD_THRESHOLD or 0.5
 InputDevice.last_pressed_of_type = {}
 InputDevice.last_pressed_device = nil
@@ -30,6 +33,7 @@ end
 
 InputDevice.update = function (self, dt, t)
 	local old_state = self._active
+
 	self._active = self._raw_device:active()
 
 	if self._active and (self._raw_device.any_pressed() or self:_any_analog_input()) and self:_verify_device() then
@@ -107,7 +111,7 @@ InputDevice.slot = function (self)
 end
 
 InputDevice.held = function (self, id)
-	return self._default_held_threshold < self._raw_device.button(id)
+	return self._raw_device.button(id) > self._default_held_threshold
 end
 
 InputDevice.type = function (self)

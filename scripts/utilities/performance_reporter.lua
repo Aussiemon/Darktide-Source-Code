@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/utilities/performance_reporter.lua
+
 local PerformanceReporter = class("PerformanceReporter")
 local application_get_frame_times = Application.get_frame_times
 local application_get_batchcount_stats = Application.get_batchcount_stats
@@ -16,6 +18,7 @@ end
 
 PerformanceReporter._initialize_tables = function (self)
 	local measurements = self._measurements
+
 	measurements.frame_time_main = {}
 
 	if self._measure_thread_frame_time then
@@ -45,7 +48,7 @@ PerformanceReporter.update = function (self, dt, t)
 end
 
 PerformanceReporter._measure_frame_time = function (self, dt)
-	local frame_time_render, frame_time_gpu = nil
+	local frame_time_render, frame_time_gpu
 
 	if self._measure_thread_frame_time then
 		frame_time_render, frame_time_gpu = application_get_frame_times()
@@ -57,6 +60,7 @@ PerformanceReporter._measure_frame_time = function (self, dt)
 
 	local measurements = self._measurements
 	local frame_count = self._frame_count + 1
+
 	self._frame_count = frame_count
 	measurements.frame_time_main[frame_count] = dt * 1000
 

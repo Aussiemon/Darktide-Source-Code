@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/backend/blocked_accounts.lua
+
 local Promise = require("scripts/foundation/utilities/promise")
 local BackendError = require("scripts/foundation/managers/backend/backend_error")
 local BlockedAccounts = class("BlockedAccounts")

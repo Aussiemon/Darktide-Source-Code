@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/ability/archetype_specializations/zealot_maniac_specialization_new.lua
+
 local archetype_specialization = {
 	description_short = "loc_archetype_specialization_zealot_maniac_description_short",
 	name = "zealot_2",

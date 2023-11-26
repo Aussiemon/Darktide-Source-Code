@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/behavior/nodes/actions/bt_shoot_pattern_action.lua
+
 require("scripts/extension_systems/behavior/nodes/bt_node")
 
 local Animation = require("scripts/utilities/animation")
@@ -11,13 +13,18 @@ local BtShootPatternAction = class("BtShootPatternAction", "BtNode")
 
 BtShootPatternAction.enter = function (self, unit, breed, blackboard, scratchpad, action_data, t)
 	local behavior_component = Blackboard.write_component(blackboard, "behavior")
+
 	behavior_component.move_state = "attacking"
 	scratchpad.locomotion_extension = ScriptUnit.extension(unit, "locomotion_system")
 	scratchpad.perception_extension = ScriptUnit.extension(unit, "perception_system")
+
 	local perception_component = Blackboard.write_component(blackboard, "perception")
+
 	scratchpad.aim_component = Blackboard.write_component(blackboard, "aim")
 	scratchpad.perception_component = perception_component
+
 	local spawn_component = blackboard.spawn
+
 	scratchpad.world = spawn_component.world
 	scratchpad.physics_world = spawn_component.physics_world
 
@@ -25,6 +32,7 @@ BtShootPatternAction.enter = function (self, unit, breed, blackboard, scratchpad
 
 	local visual_loadout_extension = ScriptUnit.extension(unit, "visual_loadout_system")
 	local weapon_item = visual_loadout_extension:slot_item(action_data.inventory_slot)
+
 	scratchpad.weapon_item = weapon_item
 	scratchpad.controlled_aim_position = Vector3Box()
 	scratchpad.shots_fired = 0
@@ -38,6 +46,7 @@ end
 
 BtShootPatternAction.leave = function (self, unit, breed, blackboard, scratchpad, action_data, t, reason, destroy)
 	local aim_component = scratchpad.aim_component
+
 	aim_component.controlled_aiming = false
 
 	MinionPerception.set_target_lock(unit, scratchpad.perception_component, false)
@@ -72,9 +81,11 @@ BtShootPatternAction._start = function (self, unit, t, scratchpad, action_data)
 	animation_extension:anim_event(start_event)
 
 	scratchpad.current_aim_anim_event = start_event
+
 	local start_durations = action_data.start_duration[start_event]
 	local diff_start_durations = Managers.state.difficulty:get_table_entry_by_challenge(start_durations)
 	local start_duration = math.random_range(diff_start_durations[1], diff_start_durations[2])
+
 	scratchpad.state = "starting"
 	scratchpad.start_duration = t + start_duration
 end
@@ -85,7 +96,7 @@ BtShootPatternAction._update_starting = function (self, unit, t, scratchpad, act
 	local perception_component = scratchpad.perception_component
 	local has_line_of_sight = perception_component.has_line_of_sight
 
-	if scratchpad.start_duration < t then
+	if t > scratchpad.start_duration then
 		local perception_extension = scratchpad.perception_extension
 		local target_unit = perception_component.target_unit
 		local last_los_position = perception_extension:last_los_position(target_unit)
@@ -104,8 +115,11 @@ end
 
 BtShootPatternAction._start_shooting = function (self, unit, t, scratchpad, action_data)
 	scratchpad.state = "shooting"
+
 	local aim_component = scratchpad.aim_component
+
 	aim_component.controlled_aiming = true
+
 	local perception_component = scratchpad.perception_component
 	local target_unit = perception_component.target_unit
 	local last_los_position = scratchpad.perception_extension:last_los_position(target_unit)
@@ -115,9 +129,11 @@ BtShootPatternAction._start_shooting = function (self, unit, t, scratchpad, acti
 
 	local pattern = action_data.pattern
 	local num_pattern_points = #pattern
+
 	scratchpad.num_pattern_points = num_pattern_points
 	scratchpad.pattern = pattern
 	scratchpad.pattern_index = 1
+
 	local first_pattern_point = pattern[1]
 
 	self:_setup_pattern_point(scratchpad, first_pattern_point, last_los_position)
@@ -151,9 +167,10 @@ BtShootPatternAction._update_shooting = function (self, unit, t, dt, scratchpad,
 		return true
 	end
 
-	if scratchpad.next_shoot_timing and scratchpad.next_shoot_timing < t then
+	if scratchpad.next_shoot_timing and t > scratchpad.next_shoot_timing then
 		local time_per_shot = action_data.time_per_shot
 		local diff_time_per_shot = Managers.state.difficulty:get_table_entry_by_challenge(time_per_shot)
+
 		time_per_shot = math.random_range(diff_time_per_shot[1], diff_time_per_shot[2])
 
 		self:_shoot(unit, scratchpad, action_data)
@@ -179,12 +196,12 @@ BtShootPatternAction._shoot = function (self, unit, scratchpad, action_data)
 		local fx_system = scratchpad.fx_system
 		local effect_template = shoot_template.effect_template
 		local global_effect_id = fx_system:start_template_effect(effect_template, unit)
+
 		scratchpad.global_effect_id = global_effect_id
 	end
 
 	local fx_extension = scratchpad.fx_extension
-	local shoot_event_name = shoot_template.shoot_sound_event
-	local inventory_slot_name = action_data.inventory_slot
+	local shoot_event_name, inventory_slot_name = shoot_template.shoot_sound_event, action_data.inventory_slot
 
 	if shoot_event_name then
 		local is_ranged_attack = true
@@ -251,7 +268,9 @@ BtShootPatternAction._update_controlled_aiming = function (self, unit, scratchpa
 	local pattern_timer_percentage = pattern_timer / pattern_duration
 	local pattern_position = scratchpad.pattern_position:unbox()
 	local new_pattern_position = Vector3.lerp(pattern_position, pattern_goal_position, pattern_timer_percentage)
+
 	new_pattern_position = self:_sin_cos_offset(new_pattern_position, pattern_right, pattern_point.distance, pattern_point.sin or 0, pattern_point.cos or 0, t)
+
 	local aim_component = scratchpad.aim_component
 
 	aim_component.controlled_aim_position:store(new_pattern_position)

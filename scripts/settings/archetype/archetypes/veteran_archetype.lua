@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/archetype/archetypes/veteran_archetype.lua
+
 local ArchetypeDodgeTemplates = require("scripts/settings/dodge/archetype_dodge_templates")
 local ArchetypeSpecializations = require("scripts/settings/ability/archetype_specializations/archetype_specializations")
 local ArchetypeSprintTemplates = require("scripts/settings/sprint/archetype_sprint_templates")

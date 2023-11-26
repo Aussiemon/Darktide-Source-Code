@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/prologue_character_profile_override.lua
+
 local Archetypes = require("scripts/settings/archetype/archetypes")
 
 local function profile_overrides(item_definitions)

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/weapon/actions/utilities/ballistic_raycast.lua
+
 local BallisticRaycast = {}
 local DEFAULT_MAX_STEPS = 10
 local DEFAULT_MAX_TIME = 1.5

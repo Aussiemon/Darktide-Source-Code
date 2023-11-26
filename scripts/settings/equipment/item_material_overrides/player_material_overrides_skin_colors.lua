@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/equipment/item_material_overrides/player_material_overrides_skin_colors.lua
+
 local material_overrides = {
 	skin_caucasian_01 = {
 		property_overrides = {

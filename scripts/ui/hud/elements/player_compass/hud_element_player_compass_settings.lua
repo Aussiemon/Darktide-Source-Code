@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/hud/elements/player_compass/hud_element_player_compass_settings.lua
+
 local hud_element_player_compass_settings = {
 	step_height_small = 8,
 	step_height_large = 12,
@@ -22,17 +24,17 @@ local hud_element_player_compass_settings = {
 	},
 	degree_direction_icons = {
 		[0] = "content/ui/vector_textures/hud/compass_icon_direction_north",
-		[180.0] = "content/ui/vector_textures/hud/compass_icon_direction_south",
-		[270.0] = "content/ui/vector_textures/hud/compass_icon_direction_west",
-		[360.0] = "content/ui/vector_textures/hud/compass_icon_direction_north",
-		[90.0] = "content/ui/vector_textures/hud/compass_icon_direction_east"
+		[180] = "content/ui/vector_textures/hud/compass_icon_direction_south",
+		[270] = "content/ui/vector_textures/hud/compass_icon_direction_west",
+		[360] = "content/ui/vector_textures/hud/compass_icon_direction_north",
+		[90] = "content/ui/vector_textures/hud/compass_icon_direction_east"
 	},
 	degree_direction_abbreviations = {
 		[0] = "N",
-		[180.0] = "S",
-		[270.0] = "W",
-		[360.0] = "N",
-		[90.0] = "E"
+		[180] = "S",
+		[270] = "W",
+		[360] = "N",
+		[90] = "E"
 	}
 }
 

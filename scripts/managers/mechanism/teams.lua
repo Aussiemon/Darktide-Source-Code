@@ -1,13 +1,17 @@
+﻿-- chunkname: @scripts/managers/mechanism/teams.lua
+
 local Team = require("scripts/managers/mechanism/team")
 local Teams = class("Teams")
 
 Teams.init = function (self, team_settings)
 	local teams = {}
+
 	self._teams = teams
 	self._peer_to_team_lookup = {}
 
 	for i = 1, #team_settings do
 		local team_config = team_settings[i]
+
 		teams[i] = Team:new(team_config)
 	end
 end
@@ -24,6 +28,7 @@ Teams.has_space_in_any_team_for_peers = function (self, peer_ids)
 
 	for i = 1, num_teams do
 		local team = teams[i]
+
 		num_space = num_space + team:num_unoccupied_slots()
 	end
 

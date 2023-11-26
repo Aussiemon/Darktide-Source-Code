@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/dlc/dlc_durable.lua
+
 local DLCDurable = class("DLCDurable")
 
 DLCDurable.init = function (self, durable_dlc_data)

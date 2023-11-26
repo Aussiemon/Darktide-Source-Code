@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/equipment/weapon_templates/autopistols/settings_templates/autopistol_hitscan_templates.lua
+
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local hitscan_templates = {}
 local overrides = {}

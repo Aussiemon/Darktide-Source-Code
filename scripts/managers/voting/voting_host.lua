@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/voting/voting_host.lua
+
 local VotingHost = class("VotingHost")
 
 local function _info(...)
@@ -10,11 +12,17 @@ VotingHost.init = function (self, voting_id, initiator_peer, template, optional_
 	self._voting_id = voting_id
 	self._initiator_peer = initiator_peer
 	self._template = template
+
 	local params = optional_params or {}
+
 	self._params = params
+
 	local network_interface = template.network_interface()
+
 	self._network_interface = network_interface
+
 	local duration = template.duration
+
 	self._duration = duration
 	self._time = 0
 	self._member_list = {}
@@ -22,6 +30,7 @@ VotingHost.init = function (self, voting_id, initiator_peer, template, optional_
 	self._result = nil
 	self._abort_reason = nil
 	self._state = STATES.in_progress
+
 	local member_list = network_interface:member_peers()
 
 	if not DEDICATED_SERVER then
@@ -38,7 +47,9 @@ VotingHost.init = function (self, voting_id, initiator_peer, template, optional_
 
 	for i = 1, #member_list do
 		local peer_id = member_list[i]
+
 		self._member_list[i] = peer_id
+
 		local initial_vote_option = initial_votes_by_peer[peer_id]
 
 		if initial_vote_option then
@@ -85,9 +96,13 @@ end
 
 VotingHost.on_member_joined = function (self, peer_id)
 	local member_list = self._member_list
+
 	member_list[#member_list + 1] = peer_id
+
 	local votes = self._votes
+
 	votes[peer_id] = StrictNil
+
 	local votes_list_lookup = {}
 
 	for i = 1, #member_list do
@@ -209,6 +224,7 @@ end
 
 VotingHost.register_vote = function (self, voter_peer_id, option)
 	self._votes[voter_peer_id] = option
+
 	local option_id = NetworkLookup.voting_options[option]
 	local voting_id = self._voting_id
 
@@ -225,7 +241,9 @@ VotingHost.update = function (self, dt, t)
 	end
 
 	local time = self._time + dt
+
 	self._time = time
+
 	local template = self._template
 	local evaluate_delay = template.evaluate_delay
 
@@ -249,6 +267,7 @@ VotingHost.update = function (self, dt, t)
 	if result then
 		self._state = STATES.completed
 		self._result = result
+
 		local result_id = NetworkLookup.voting_results[result]
 		local voting_id = self._voting_id
 
@@ -260,8 +279,10 @@ end
 VotingHost.complete_vote = function (self)
 	local template = self._template
 	local result = template.complete_vote(self._votes)
+
 	self._result = result
 	self._state = STATES.completed
+
 	local result_id = NetworkLookup.voting_results[result]
 	local voting_id = self._voting_id
 

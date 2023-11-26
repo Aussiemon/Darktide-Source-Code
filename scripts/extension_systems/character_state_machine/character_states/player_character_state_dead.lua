@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/character_state_machine/character_states/player_character_state_dead.lua
+
 require("scripts/extension_systems/character_state_machine/character_states/player_character_state_base")
 
 local FirstPersonView = require("scripts/utilities/first_person_view")
@@ -22,6 +24,7 @@ PlayerCharacterStateDead.on_enter = function (self, unit, dt, t, previous_state,
 	FirstPersonView.exit(t, self._first_person_mode_component)
 
 	self._locomotion_steering_component.velocity_wanted = Vector3.zero()
+
 	local ignore_immunity = true
 	local inventory_component = self._inventory_component
 	local visual_loadout_extension = self._visual_loadout_extension
@@ -70,7 +73,7 @@ PlayerCharacterStateDead.fixed_update = function (self, unit, dt, t, next_state_
 		return
 	end
 
-	if self._time_to_despawn and self._time_to_despawn < t then
+	if self._time_to_despawn and t > self._time_to_despawn then
 		Managers.state.player_unit_spawn:despawn_safe(self._player)
 
 		self._time_to_despawn = nil

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/behavior/trees/renegade/renegade_shocktrooper_behavior_tree.lua
+
 local BreedActions = require("scripts/settings/breed/breed_actions")
 local action_data = BreedActions.renegade_shocktrooper
 local FAR_COMBAT = {
@@ -13,6 +15,11 @@ local FAR_COMBAT = {
 }
 local CLOSE_COMBAT = {
 	"BtSelectorNode",
+	condition_args = {
+		combat_ranges = {
+			close = true
+		}
+	},
 	{
 		"BtRunStopAndShootAction",
 		leave_hook = "reset_enter_combat_range_flag",
@@ -49,15 +56,15 @@ local CLOSE_COMBAT = {
 		name = "close_combat_utility"
 	},
 	name = "close_combat",
-	condition = "is_aggroed_in_combat_range",
-	condition_args = {
-		combat_ranges = {
-			close = true
-		}
-	}
+	condition = "is_aggroed_in_combat_range"
 }
 local MELEE_COMBAT = {
 	"BtRandomUtilityNode",
+	condition_args = {
+		combat_ranges = {
+			melee = true
+		}
+	},
 	{
 		"BtMeleeFollowTargetAction",
 		name = "melee_follow",
@@ -88,12 +95,7 @@ local MELEE_COMBAT = {
 		action_data = action_data.moving_melee_attack
 	},
 	name = "melee_combat",
-	condition = "is_aggroed_in_combat_range",
-	condition_args = {
-		combat_ranges = {
-			melee = true
-		}
-	}
+	condition = "is_aggroed_in_combat_range"
 }
 local behavior_tree = {
 	"BtSelectorNode",

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/equipment/weapon_templates/force_swords/settings_templates/force_sword_damage_profile_templates.lua
+
 local ArmorSettings = require("scripts/settings/damage/armor_settings")
 local PowerLevelSettings = require("scripts/settings/damage/power_level_settings")
 local DamageProfileSettings = require("scripts/settings/damage/damage_profile_settings")
@@ -25,6 +27,7 @@ local light_cleave = DamageProfileSettings.light_cleave
 local medium_cleave = DamageProfileSettings.medium_cleave
 local big_cleave = DamageProfileSettings.big_cleave
 local default_shield_override_stagger_strength = 4
+
 damage_templates.heavy_force_sword = {
 	sticky_attack = false,
 	force_weapon_damage = true,
@@ -1047,6 +1050,7 @@ damage_templates.force_sword_push_followup_fling = {
 		default_target = {}
 	}
 }
+
 local power_am = {
 	attack = {
 		[armor_types.unarmored] = damage_lerp_values.lerp_1,
@@ -1069,6 +1073,7 @@ local power_am = {
 		[armor_types.void_shield] = damage_lerp_values.lerp_1
 	}
 }
+
 damage_templates.forcesword_active_cleave_light = {
 	finesse_ability_damage_multiplier = 1.5,
 	ignore_stagger_reduction = true,

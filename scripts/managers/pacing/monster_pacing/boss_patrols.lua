@@ -1,8 +1,11 @@
+﻿-- chunkname: @scripts/managers/pacing/monster_pacing/boss_patrols.lua
+
 local boss_patrols = {}
 
 local function _create_boss_patrol_entry(path)
 	local boss_patrol = require(path)
 	local name = boss_patrol.name
+
 	boss_patrols[name] = boss_patrol
 end
 

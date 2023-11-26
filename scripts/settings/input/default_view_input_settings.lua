@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/input/default_view_input_settings.lua
+
 local DefaultViewInputFilters = require("scripts/settings/input/default_view_input_filters")
 local default_view_input_settings = {
 	service_type = "View",

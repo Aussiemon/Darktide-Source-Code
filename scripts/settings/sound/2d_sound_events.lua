@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/sound/2d_sound_events.lua
+
 local TerrorEventTemplates = require("scripts/settings/terror_event/terror_event_templates")
 local HordePacingTemplates = require("scripts/managers/pacing/horde_pacing/horde_pacing_templates")
 local SpecialsPacingTemplates = require("scripts/managers/pacing/specials_pacing/specials_pacing_templates")

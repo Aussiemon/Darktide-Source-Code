@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/damage/damage_profiles/demolitions_damage_profile_templates.lua
+
 local ArmorSettings = require("scripts/settings/damage/armor_settings")
 local PowerLevelSettings = require("scripts/settings/damage/power_level_settings")
 local GibbingSettings = require("scripts/settings/gibbing/gibbing_settings")
@@ -688,7 +690,9 @@ damage_templates.force_staff_demolition_close.power_distribution.attack = 0.1
 damage_templates.force_staff_demolition_default = table.clone(damage_templates.default_grenade)
 damage_templates.force_staff_demolition_default.power_distribution_ranged.attack.near = 0.25
 damage_templates.force_staff_demolition_default.power_distribution_ranged.attack.far = 0.05
+
 local ogryn_thumper_p1_m2_default = table.clone(damage_templates.default_grenade)
+
 ogryn_thumper_p1_m2_default.armor_damage_modifier_ranged.near.attack[armor_types.armored] = {
 	0.3,
 	0.7
@@ -707,7 +711,9 @@ ogryn_thumper_p1_m2_default.armor_damage_modifier_ranged.far.impact[armor_types.
 }
 ogryn_thumper_p1_m2_default.opt_in_stagger_duration_multiplier = true
 damage_templates.ogryn_thumper_p1_m2_default = ogryn_thumper_p1_m2_default
+
 local ogryn_thumper_p1_m2_close = table.clone(damage_templates.close_grenade)
+
 ogryn_thumper_p1_m2_close.armor_damage_modifier.attack[armor_types.armored] = {
 	0.3,
 	0.7
@@ -719,7 +725,9 @@ ogryn_thumper_p1_m2_close.armor_damage_modifier.impact[armor_types.armored] = {
 ogryn_thumper_p1_m2_close.opt_in_stagger_duration_multiplier = true
 ogryn_thumper_p1_m2_close.power_distribution.attack = 250
 damage_templates.ogryn_thumper_p1_m2_close = ogryn_thumper_p1_m2_close
+
 local ogryn_thumper_p1_m2_default_instant = table.clone(damage_templates.default_grenade)
+
 ogryn_thumper_p1_m2_default_instant.armor_damage_modifier_ranged.near.attack[armor_types.armored] = {
 	0.25,
 	0.5
@@ -769,7 +777,9 @@ ogryn_thumper_p1_m2_default_instant.power_distribution_ranged.impact.near = {
 	10
 }
 damage_templates.ogryn_thumper_p1_m2_default_instant = ogryn_thumper_p1_m2_default_instant
+
 local ogryn_thumper_p1_m2_close_instant = table.clone(damage_templates.close_grenade)
+
 ogryn_thumper_p1_m2_close_instant.armor_damage_modifier.attack[armor_types.armored] = {
 	0.25,
 	0.75
@@ -795,7 +805,9 @@ ogryn_thumper_p1_m2_close_instant.power_distribution.impact = {
 	80
 }
 damage_templates.ogryn_thumper_p1_m2_close_instant = ogryn_thumper_p1_m2_close_instant
+
 local ogryn_grenade = table.clone(damage_templates.default_grenade)
+
 ogryn_grenade.armor_damage_modifier_ranged.near.attack[armor_types.armored] = {
 	1,
 	1.6
@@ -868,7 +880,9 @@ ogryn_grenade.damage_type = damage_types.grenade_frag
 ogryn_grenade.gibbing_power = GibbingPower.heavy
 ogryn_grenade.ragdoll_push_force = 1200
 damage_templates.ogryn_grenade = ogryn_grenade
+
 local close_ogryn_grenade = table.clone(damage_templates.close_grenade)
+
 close_ogryn_grenade.armor_damage_modifier.attack[armor_types.armored] = {
 	1.25,
 	1.85

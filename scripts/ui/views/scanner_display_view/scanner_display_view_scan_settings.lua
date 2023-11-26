@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/scanner_display_view/scanner_display_view_scan_settings.lua
+
 local UIWorkspaceSettings = require("scripts/settings/ui/ui_workspace_settings")
 local screen_ratio = UIWorkspaceSettings.screen.size[1] / UIWorkspaceSettings.screen.size[2]
 local scan_skull_size_factor = 0.92

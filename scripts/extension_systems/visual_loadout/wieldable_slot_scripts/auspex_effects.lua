@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/visual_loadout/wieldable_slot_scripts/auspex_effects.lua
+
 local PlayerUnitData = require("scripts/extension_systems/unit_data/utilities/player_unit_data")
 local AuspexEffects = class("AuspexEffects")
 local LOOPING_SOUND_ALIAS = "sfx_minigame_loop"
@@ -8,14 +10,17 @@ local PARAMETER_VALUE = 2
 AuspexEffects.init = function (self, context, slot, weapon_template, fx_sources)
 	local is_husk = context.is_husk
 	local owner_unit = context.owner_unit
+
 	self._wwise_world = context.wwise_world
 	self._fx_source_name = fx_sources[FX_SOURCE_NAME]
 	self._is_husk = is_husk
 	self._fx_extension = ScriptUnit.extension(owner_unit, "fx_system")
+
 	local unit_data_extension = ScriptUnit.extension(owner_unit, "unit_data_system")
 
 	if not is_husk then
 		local looping_sound_component_name = PlayerUnitData.looping_sound_component_name(LOOPING_SOUND_ALIAS)
+
 		self._looping_sound_component = unit_data_extension:read_component(looping_sound_component_name)
 	end
 end

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/behavior/trees/cultist/cultist_shocktrooper_behavior_tree.lua
+
 local BreedActions = require("scripts/settings/breed/breed_actions")
 local action_data = BreedActions.cultist_shocktrooper
 local FAR_COMBAT = {
@@ -58,6 +60,11 @@ local CLOSE_COMBAT = {
 }
 local MELEE_COMBAT = {
 	"BtRandomUtilityNode",
+	condition_args = {
+		combat_ranges = {
+			melee = true
+		}
+	},
 	{
 		"BtMeleeAttackAction",
 		name = "bayonet_charge_attack",
@@ -88,12 +95,7 @@ local MELEE_COMBAT = {
 		action_data = action_data.bayonet_melee_attack
 	},
 	name = "melee_combat",
-	condition = "is_aggroed_in_combat_range",
-	condition_args = {
-		combat_ranges = {
-			melee = true
-		}
-	}
+	condition = "is_aggroed_in_combat_range"
 }
 local behavior_tree = {
 	"BtSelectorNode",

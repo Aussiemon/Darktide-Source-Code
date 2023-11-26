@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/equipment/weapon_templates/combat_swords/combatsword_p3_m2.lua
+
 local ArmorSettings = require("scripts/settings/damage/armor_settings")
 local BaseTemplateSettings = require("scripts/settings/equipment/weapon_templates/base_template_settings")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
@@ -37,13 +39,17 @@ local weapon_handling_trait_templates = WeaponTraitTemplates[template_types.weap
 local movement_curve_modifier_trait_templates = WeaponTraitTemplates[template_types.movement_curve_modifier]
 local weapon_template = {}
 local combat_sword_action_inputs = table.clone(MeleeActionInputSetupFast.action_inputs)
+
 combat_sword_action_inputs.parry = {
 	buffer_time = 0
 }
+
 local combat_sword_action_input_hierarchy = table.clone(MeleeActionInputSetupFast.action_input_hierarchy)
+
 combat_sword_action_input_hierarchy.parry = "base"
 weapon_template.action_inputs = combat_sword_action_inputs
 weapon_template.action_input_hierarchy = combat_sword_action_input_hierarchy
+
 local default_weapon_box = {
 	0.15,
 	0.15,
@@ -1101,7 +1107,9 @@ weapon_template.stamina_template = "ninjafencer"
 weapon_template.toughness_template = "default"
 weapon_template.movement_curve_modifier_template = "combataxe_p1_m1"
 weapon_template.footstep_intervals = FootstepIntervalsTemplates.default
+
 local WeaponBarUIDescriptionTemplates = require("scripts/settings/equipment/weapon_bar_ui_description_templates")
+
 weapon_template.base_stats = {
 	combatsword_p3_m2_dps_stat = {
 		display_name = "loc_stats_display_damage_stat",
@@ -1359,6 +1367,7 @@ weapon_template.base_stats = {
 	}
 }
 weapon_template.traits = {}
+
 local bespoke_combatsword_p3_traits = table.keys(WeaponTraitsBespokeCombatswordP3)
 
 table.append(weapon_template.traits, bespoke_combatsword_p3_traits)

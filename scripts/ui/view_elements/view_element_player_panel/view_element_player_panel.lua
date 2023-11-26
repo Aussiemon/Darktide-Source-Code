@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/view_elements/view_element_player_panel/view_element_player_panel.lua
+
 local Definitions = require("scripts/ui/view_elements/view_element_player_panel/view_element_player_panel_definitions")
 local ViewElementPlayerPanelSettings = require("scripts/ui/view_elements/view_element_player_panel/view_element_player_panel_settings")
 local ViewElementPlayerPanel = class("ViewElementPlayerPanel", "ViewElementBase")
@@ -59,6 +61,7 @@ end
 ViewElementPlayerPanel._load_insignia = function (self, item)
 	local cb = callback(self, "_cb_set_player_insignia")
 	local icon_load_id = Managers.ui:load_item_icon(item, cb)
+
 	self._insignia_loaded_info = {
 		icon_load_id = icon_load_id
 	}
@@ -73,6 +76,7 @@ ViewElementPlayerPanel._unload_insignia = function (self)
 
 	if not self.destroyed then
 		local material_values = self._widgets_by_name.character_insigna.style.texture.material_values
+
 		material_values.texture_map = "content/ui/textures/nameplates/insignias/default"
 	end
 
@@ -88,7 +92,7 @@ ViewElementPlayerPanel._cb_set_player_insignia = function (self, item)
 	local loadout = self._preview_profile.loadout
 	local frame_item = loadout.slot_insignia
 	local frame_item_gear_id = frame_item and frame_item.gear_id
-	local icon = nil
+	local icon
 
 	if frame_item_gear_id == item.gear_id then
 		icon = item.icon
@@ -97,6 +101,7 @@ ViewElementPlayerPanel._cb_set_player_insignia = function (self, item)
 	end
 
 	local material_values = self._widgets_by_name.character_insigna.style.texture.material_values
+
 	material_values.texture_map = icon
 	self._widgets_by_name.character_insigna.content.visible = true
 end
@@ -109,6 +114,7 @@ end
 ViewElementPlayerPanel._load_portrait_frame = function (self, item)
 	local cb = callback(self, "_cb_set_player_frame")
 	local icon_load_id = Managers.ui:load_item_icon(item, cb)
+
 	self._frame_loaded_info = {
 		icon_load_id = icon_load_id
 	}
@@ -123,6 +129,7 @@ ViewElementPlayerPanel._unload_portrait_frame = function (self)
 
 	if not self.destroyed then
 		local material_values = self._widgets_by_name.character_portrait.style.texture.material_values
+
 		material_values.portrait_frame_texture = "content/ui/textures/nameplates/portrait_frames/default"
 	end
 
@@ -137,7 +144,7 @@ ViewElementPlayerPanel._cb_set_player_frame = function (self, item)
 	local loadout = self._preview_profile.loadout
 	local frame_item = loadout.slot_portrait_frame
 	local frame_item_gear_id = frame_item and frame_item.gear_id
-	local icon = nil
+	local icon
 
 	if frame_item_gear_id == item.gear_id then
 		icon = item.icon
@@ -146,11 +153,13 @@ ViewElementPlayerPanel._cb_set_player_frame = function (self, item)
 	end
 
 	local material_values = self._widgets_by_name.character_portrait.style.texture.material_values
+
 	material_values.portrait_frame_texture = icon
 end
 
 ViewElementPlayerPanel._request_player_icon = function (self)
 	local material_values = self._widgets_by_name.character_portrait.style.texture.material_values
+
 	material_values.use_placeholder_texture = 1
 
 	self:_load_portrait_icon()
@@ -161,6 +170,7 @@ ViewElementPlayerPanel._load_portrait_icon = function (self)
 	local load_cb = callback(self, "_cb_set_player_icon")
 	local unload_cb = callback(self, "_cb_unset_player_icon")
 	local icon_load_id = Managers.ui:load_profile_portrait(profile, load_cb, nil, unload_cb)
+
 	self._portrait_loaded_info = {
 		icon_load_id = icon_load_id
 	}
@@ -182,8 +192,11 @@ end
 
 ViewElementPlayerPanel._cb_set_player_icon = function (self, grid_index, rows, columns)
 	local widget = self._widgets_by_name.character_portrait
+
 	widget.content.texture = "content/ui/materials/base/ui_portrait_frame_base"
+
 	local material_values = widget.style.texture.material_values
+
 	material_values.use_placeholder_texture = 0
 	material_values.rows = rows
 	material_values.columns = columns
@@ -193,6 +206,7 @@ end
 ViewElementPlayerPanel._cb_unset_player_icon = function (self)
 	local widget = self._widgets_by_name.character_portrait
 	local material_values = widget.style.texture.material_values
+
 	material_values.use_placeholder_texture = nil
 	material_values.rows = nil
 	material_values.columns = nil

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/visual_loadout/wieldable_slot_scripts/lasgun_ammo_display.lua
+
 local Component = require("scripts/utilities/component")
 local LasgunAmmoDisplay = class("LasgunAmmoDisplay")
 local CRITICAL_THRESHOLD_MULTIPLIER = 0.1
@@ -5,7 +7,9 @@ local CRITICAL_THRESHOLD_MULTIPLIER = 0.1
 LasgunAmmoDisplay.init = function (self, context, slot, weapon_template, fx_sources)
 	local owner_unit = context.owner_unit
 	local unit_data_extension = ScriptUnit.extension(owner_unit, "unit_data_system")
+
 	self._wieldable_component = unit_data_extension:read_component(slot.name)
+
 	local unit_components = {}
 	local num_attachments_1p = #slot.attachments_1p
 

@@ -1,5 +1,8 @@
+﻿-- chunkname: @scripts/managers/mechanism/mechanisms/mechanism_base.lua
+
 local MechanismSettings = require("scripts/settings/mechanism/mechanism_settings")
 local MechanismBase = class("MechanismBase")
+
 MechanismBase.INTERFACE = {
 	"wanted_transition",
 	"sync_data",
@@ -11,9 +14,13 @@ MechanismBase.INTERFACE = {
 MechanismBase.init = function (self, mechanism_name, network_event_delegate, mechanism_context, optional_teams)
 	self.name = mechanism_name
 	self._context = mechanism_context
+
 	local settings = MechanismSettings[mechanism_name]
+
 	self._settings = settings
+
 	local states = settings.states
+
 	self._states = states
 	self._states_lookup = table.mirror_table(states)
 	self._state_index = 1
@@ -62,8 +69,11 @@ MechanismBase._proceed_to_next_state = function (self)
 		return CHANGED, DONE
 	else
 		self._state_index = next_index
+
 		local state = states[next_index]
+
 		self._state = state
+
 		local optional_game_state = self._game_states[state]
 
 		return CHANGED, NOT_DONE, optional_game_state

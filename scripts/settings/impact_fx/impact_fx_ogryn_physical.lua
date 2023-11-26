@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/impact_fx/impact_fx_ogryn_physical.lua
+
 local ArmorSettings = require("scripts/settings/damage/armor_settings")
 local NO_SURFACE_DECAL = false
 local armor_types = ArmorSettings.types
@@ -75,7 +77,7 @@ local disgustingly_resilient = {
 }
 local resistant = table.clone(disgustingly_resilient)
 local berserker = table.clone(disgustingly_resilient)
-local player = nil
+local player
 
 return {
 	armor = {

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/scripted_scenario/scripted_scenario_utility.lua
+
 local ScriptedScenarioUtility = {}
 
 ScriptedScenarioUtility.parse_condition_steps = function (steps)
@@ -7,15 +9,16 @@ ScriptedScenarioUtility.parse_condition_steps = function (steps)
 	for step_name, func in pairs(steps._condition) do
 		steps.condition_if[step_name] = function (...)
 			local template = func(...)
+
 			template.name = step_name
 			template.condition_type = "if"
 			template.is_condition = true
 
 			return template
 		end
-
 		steps.condition_elseif[step_name] = function (...)
 			local template = func(...)
+
 			template.name = step_name
 			template.condition_type = "elseif"
 			template.is_condition = true

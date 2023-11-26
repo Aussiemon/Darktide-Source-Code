@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/player/player_game_states/utilities/adaptive_clock_handler_client.lua
+
 local AdaptiveClockHandlerClient = class("AdaptiveClockHandlerClient")
 local FRAMETIME_BUFFER_SIZE = 10
 local TIME_PER_SAMPLE = 0.5
@@ -24,12 +26,15 @@ AdaptiveClockHandlerClient.init = function (self, network_event_delegate, fixed_
 	self._offset_correction = 0
 	self._has_registered_timer = false
 	self._in_panic = false
+
 	local diagnostics = Script.new_array(DIAGNOSTICS_SIZE)
+
 	self._diagnostics = diagnostics
 	diagnostics[0] = DIAGNOSTICS_BUFFER
 
 	for i = 1, DIAGNOSTICS_BUFFER do
 		local diag_i = (i - 1) * DIAGNOSTICS_STRIDE
+
 		diagnostics[diag_i + 1] = 0
 		diagnostics[diag_i + 2] = 0
 		diagnostics[diag_i + 3] = 0
@@ -68,7 +73,7 @@ AdaptiveClockHandlerClient.rpc_sync_clock = function (self, clock_start, clock_o
 end
 
 AdaptiveClockHandlerClient._frame_discrepancy_buffer = function (self)
-	return math.max(self._max_frame_time, 0.006944444444444444)
+	return (math.max(self._max_frame_time, 0.006944444444444444))
 end
 
 AdaptiveClockHandlerClient._target_offset = function (self)
@@ -97,7 +102,9 @@ AdaptiveClockHandlerClient.post_update = function (self, main_dt)
 	end
 
 	local offset_this_frame = (self._time_scale - self._base_time_scale) * main_dt
+
 	self._current_offset = self._current_offset + offset_this_frame
+
 	local target_offset = self:_target_offset()
 	local offset_change_required = target_offset - self._current_offset
 
@@ -112,15 +119,21 @@ AdaptiveClockHandlerClient.post_update = function (self, main_dt)
 	Managers.time:set_local_scale("gameplay", self._time_scale)
 
 	local diagnostics_timer = self._diagnostics_timer + main_dt
+
 	self._diagnostics_timer = diagnostics_timer
+
 	local time_since_last_diagnostics = diagnostics_timer - self._last_diagnostics_timer
 
-	if DIAGNOSTICS_UPDATE_FREQUENCY < time_since_last_diagnostics then
+	if time_since_last_diagnostics > DIAGNOSTICS_UPDATE_FREQUENCY then
 		self._last_diagnostics_timer = diagnostics_timer
+
 		local diag = self._diagnostics
 		local i = (diag[0] + 1 - 1) % DIAGNOSTICS_BUFFER + 1
+
 		diag[0] = i
+
 		local diag_i = (i - 1) * DIAGNOSTICS_STRIDE
+
 		diag[diag_i + 1] = time_since_last_diagnostics
 		diag[diag_i + 2] = target_offset
 		diag[diag_i + 3] = self._current_offset
@@ -139,12 +152,13 @@ AdaptiveClockHandlerClient.in_panic = function (self)
 end
 
 AdaptiveClockHandlerClient.diagnostics_dump = function (self)
-	local dump = nil
+	local dump
 	local diag = self._diagnostics
 	local i = diag[0]
 
 	for j = 1, DIAGNOSTICS_BUFFER do
 		i = (i + 1 - 1) % DIAGNOSTICS_BUFFER + 1
+
 		local diag_i = (i - 1) * DIAGNOSTICS_STRIDE
 		local t = diag[diag_i + 1]
 		local target = diag[diag_i + 2]
@@ -169,7 +183,9 @@ end
 
 AdaptiveClockHandlerClient.rpc_sync_clock_offset = function (self, channel_id, offset, server_gameplay_t)
 	self._server_offset = offset
+
 	local gameplay_offset = Managers.time:time("gameplay") - server_gameplay_t
+
 	self._server_gameplay_t = server_gameplay_t
 
 	if self._server_gameplay_t_offset then

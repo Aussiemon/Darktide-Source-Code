@@ -1,7 +1,15 @@
+﻿-- chunkname: @scripts/extension_systems/behavior/trees/chaos/chaos_newly_infected_behavior_tree.lua
+
 local BreedActions = require("scripts/settings/breed/breed_actions")
 local action_data = BreedActions.chaos_newly_infected
 local FAR_AND_CLOSE_COMBAT = {
 	"BtSelectorNode",
+	condition_args = {
+		combat_ranges = {
+			far = true,
+			close = true
+		}
+	},
 	{
 		"BtMeleeFollowTargetAction",
 		name = "follow",
@@ -14,16 +22,15 @@ local FAR_AND_CLOSE_COMBAT = {
 		action_data = action_data.assault_follow
 	},
 	name = "far_and_close_combat",
-	condition = "is_aggroed_in_combat_range",
-	condition_args = {
-		combat_ranges = {
-			far = true,
-			close = true
-		}
-	}
+	condition = "is_aggroed_in_combat_range"
 }
 local MELEE_COMBAT = {
 	"BtRandomUtilityNode",
+	condition_args = {
+		combat_ranges = {
+			melee = true
+		}
+	},
 	{
 		"BtMeleeFollowTargetAction",
 		name = "follow",
@@ -63,12 +70,7 @@ local MELEE_COMBAT = {
 		action_data = action_data.running_melee_attack
 	},
 	name = "melee_combat",
-	condition = "is_aggroed_in_combat_range",
-	condition_args = {
-		combat_ranges = {
-			melee = true
-		}
-	}
+	condition = "is_aggroed_in_combat_range"
 }
 local behavior_tree = {
 	"BtSelectorNode",

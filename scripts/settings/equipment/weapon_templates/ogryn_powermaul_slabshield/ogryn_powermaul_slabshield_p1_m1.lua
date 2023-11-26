@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/equipment/weapon_templates/ogryn_powermaul_slabshield/ogryn_powermaul_slabshield_p1_m1.lua
+
 local ActionSweepSettings = require("scripts/settings/equipment/action_sweep_settings")
 local AttackSettings = require("scripts/settings/damage/attack_settings")
 local BaseTemplateSettings = require("scripts/settings/equipment/weapon_templates/base_template_settings")
@@ -23,13 +25,14 @@ local damage_trait_templates = WeaponTraitTemplates[template_types.damage]
 local dodge_trait_templates = WeaponTraitTemplates[template_types.dodge]
 local weapon_handling_trait_templates = WeaponTraitTemplates[template_types.weapon_handling]
 local stamina_trait_templates = WeaponTraitTemplates[template_types.stamina]
-local weapon_template = {
-	action_inputs = table.clone(MeleeActionInputSetupSlow.action_inputs),
-	action_input_hierarchy = table.clone(MeleeActionInputSetupSlow.action_input_hierarchy)
-}
+local weapon_template = {}
+
+weapon_template.action_inputs = table.clone(MeleeActionInputSetupSlow.action_inputs)
+weapon_template.action_input_hierarchy = table.clone(MeleeActionInputSetupSlow.action_input_hierarchy)
 weapon_template.action_input_hierarchy.special_action_hold = {
 	special_action_release = "base"
 }
+
 local hit_zone_priority = {
 	[hit_zone_names.head] = 1,
 	[hit_zone_names.torso] = 2,
@@ -1279,7 +1282,9 @@ weapon_template.actions = {
 		}
 	}
 }
+
 local WeaponBarUIDescriptionTemplates = require("scripts/settings/equipment/weapon_bar_ui_description_templates")
+
 weapon_template.base_stats = {
 	ogryn_powermaul_slabshield_dps_stat = {
 		display_name = "loc_stats_display_damage_stat",
@@ -1586,6 +1591,7 @@ weapon_template.stamina_template = "ogryn_powermaul_slabshield_p1_m1"
 weapon_template.toughness_template = "default"
 weapon_template.footstep_intervals = FootstepIntervalsTemplates.slabshield
 weapon_template.traits = {}
+
 local bespoke_ogryn_powermaul_slabshield_traits = table.keys(WeaponTraitsBespokeOgrynPowerMaulSlabshieldP1)
 
 table.append(weapon_template.traits, bespoke_ogryn_powermaul_slabshield_traits)

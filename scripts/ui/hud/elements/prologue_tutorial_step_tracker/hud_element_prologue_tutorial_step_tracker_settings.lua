@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/hud/elements/prologue_tutorial_step_tracker/hud_element_prologue_tutorial_step_tracker_settings.lua
+
 local UIHudSettings = require("scripts/settings/ui/ui_hud_settings")
 local hud_element_prologue_tutorial_objectives_tracker_settings = {
 	icon = "content/ui/materials/icons/mission_type/default",

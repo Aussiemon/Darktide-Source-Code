@@ -1,23 +1,26 @@
+﻿-- chunkname: @scripts/extension_systems/weapon/actions/utilities/action_utility.lua
+
 local FixedFrame = require("scripts/utilities/fixed_frame")
 local MasterItems = require("scripts/backend/master_items")
 local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
-local ActionUtility = {
-	has_ammunition = function (inventory_slot_component, action_settings)
-		local ammunition_usage = action_settings.ammunition_usage
+local ActionUtility = {}
 
-		if ammunition_usage then
-			if ammunition_usage <= inventory_slot_component.current_ammunition_clip then
-				return true
-			elseif inventory_slot_component.current_ammunition_clip > 0 and action_settings.allow_shots_with_less_than_required_ammo then
-				return true
-			else
-				return false
-			end
-		else
+ActionUtility.has_ammunition = function (inventory_slot_component, action_settings)
+	local ammunition_usage = action_settings.ammunition_usage
+
+	if ammunition_usage then
+		if ammunition_usage <= inventory_slot_component.current_ammunition_clip then
 			return true
+		elseif inventory_slot_component.current_ammunition_clip > 0 and action_settings.allow_shots_with_less_than_required_ammo then
+			return true
+		else
+			return false
 		end
+	else
+		return true
 	end
-}
+end
+
 local EPSILON = 1e-05
 
 ActionUtility.is_within_trigger_time = function (time_in_action, dt, first_trigger_time, trigger_interval)

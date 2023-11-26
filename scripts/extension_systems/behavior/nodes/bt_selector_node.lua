@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/behavior/nodes/bt_selector_node.lua
+
 require("scripts/extension_systems/behavior/nodes/bt_node")
 
 local BtConditions = require("scripts/extension_systems/behavior/utilities/bt_conditions")
@@ -29,7 +31,7 @@ end
 
 BtSelectorNode.evaluate = function (self, unit, blackboard, scratchpad, dt, t, evaluate_utility, node_data, old_running_child_nodes, new_running_child_nodes, last_leaf_node_running)
 	local CONDITIONS = BtConditions
-	local leaf_node = nil
+	local leaf_node
 	local node_identifier = self.identifier
 	local last_running_node = old_running_child_nodes[node_identifier]
 	local children = self._children

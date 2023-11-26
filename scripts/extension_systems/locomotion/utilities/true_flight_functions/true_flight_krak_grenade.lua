@@ -1,59 +1,69 @@
+﻿-- chunkname: @scripts/extension_systems/locomotion/utilities/true_flight_functions/true_flight_krak_grenade.lua
+
 local Armor = require("scripts/utilities/attack/armor")
 local ProjectileIntegration = require("scripts/extension_systems/locomotion/utilities/projectile_integration")
 local TrueFlightDefaults = require("scripts/extension_systems/locomotion/utilities/true_flight_functions/true_flight_defaults")
-local _check_target_armor, _broadphase_query, _play_fx_target_found_fx = nil
-local true_flight_krak_grenade = {
-	krak_projectile_locomotion = function (physics_world, integration_data, dt, t)
-		local position = ProjectileIntegration.integrate_position(physics_world, integration_data, dt, t)
-		local rotation = ProjectileIntegration.integrate_rotation(physics_world, integration_data, dt, t)
+local _check_target_armor, _broadphase_query, _play_fx_target_found_fx
+local true_flight_krak_grenade = {}
+
+true_flight_krak_grenade.krak_projectile_locomotion = function (physics_world, integration_data, dt, t)
+	local position = ProjectileIntegration.integrate_position(physics_world, integration_data, dt, t)
+	local rotation = ProjectileIntegration.integrate_rotation(physics_world, integration_data, dt, t)
+
+	return position, rotation
+end
+
+true_flight_krak_grenade.krak_update_towards_position = function (target_position, physics_world, integration_data, dt, t, optional_validate_impact_func, optional_on_impact_func)
+	local true_flight_template = integration_data.true_flight_template
+	local trigger_time = true_flight_template.trigger_time
+	local on_target_time = integration_data.on_target_time
+	local have_triggered = trigger_time < on_target_time
+	local velocity = integration_data.velocity
+	local position = integration_data.position
+	local towards_target = target_position - position
+	local wanted_direction = Vector3.normalize(towards_target)
+	local current_direction = Vector3.normalize(velocity)
+	local dot_product = Vector3.dot(wanted_direction, current_direction)
+	local slow_down_dot_product_threshold = true_flight_template.slow_down_dot_product_threshold
+	local slow_down_factor = true_flight_template.slow_down_factor
+	local should_slow_down = dot_product < slow_down_dot_product_threshold
+
+	if not have_triggered and should_slow_down then
+		local slow_down_lerp = math.clamp(on_target_time / (trigger_time * 0.2), 0, 1)
+		local slow_down = math.lerp(1, slow_down_factor, slow_down_lerp)
+		local current_min_slowdown = integration_data.min_slow_down or 1
+
+		integration_data.min_slow_down = math.min(current_min_slowdown, slow_down)
+		dt = dt * slow_down
+
+		if dt > 0 then
+			ProjectileIntegration.integrate(physics_world, integration_data, dt, t, false)
+		end
+
+		integration_data.integrate = true
+		position = integration_data.position
+
+		local rotation = integration_data.rotation
 
 		return position, rotation
-	end,
-	krak_update_towards_position = function (target_position, physics_world, integration_data, dt, t, optional_validate_impact_func, optional_on_impact_func)
-		local true_flight_template = integration_data.true_flight_template
-		local trigger_time = true_flight_template.trigger_time
-		local on_target_time = integration_data.on_target_time
-		local have_triggered = trigger_time < on_target_time
-		local velocity = integration_data.velocity
-		local position = integration_data.position
-		local towards_target = target_position - position
-		local wanted_direction = Vector3.normalize(towards_target)
-		local current_direction = Vector3.normalize(velocity)
-		local dot_product = Vector3.dot(wanted_direction, current_direction)
-		local slow_down_dot_product_threshold = true_flight_template.slow_down_dot_product_threshold
-		local slow_down_factor = true_flight_template.slow_down_factor
-		local should_slow_down = dot_product < slow_down_dot_product_threshold
+	else
+		integration_data.integrate = true
 
-		if not have_triggered and should_slow_down then
-			local slow_down_lerp = math.clamp(on_target_time / (trigger_time * 0.2), 0, 1)
-			local slow_down = math.lerp(1, slow_down_factor, slow_down_lerp)
-			local current_min_slowdown = integration_data.min_slow_down or 1
-			integration_data.min_slow_down = math.min(current_min_slowdown, slow_down)
-			dt = dt * slow_down
+		local min_slow_down = integration_data.min_slow_down or 1
+		local time_after_trigger = on_target_time - trigger_time
+		local speed_up_lerp = math.clamp(time_after_trigger / (trigger_time * 0.2), 0, 1)
+		local speed_up = math.lerp(min_slow_down, 1, speed_up_lerp)
 
-			if dt > 0 then
-				ProjectileIntegration.integrate(physics_world, integration_data, dt, t, false)
-			end
+		dt = dt * speed_up
 
-			integration_data.integrate = true
-			position = integration_data.position
-			local rotation = integration_data.rotation
+		local rotation
 
-			return position, rotation
-		else
-			integration_data.integrate = true
-			local min_slow_down = integration_data.min_slow_down or 1
-			local time_after_trigger = on_target_time - trigger_time
-			local speed_up_lerp = math.clamp(time_after_trigger / (trigger_time * 0.2), 0, 1)
-			local speed_up = math.lerp(min_slow_down, 1, speed_up_lerp)
-			dt = dt * speed_up
-			local rotation = nil
-			position, rotation = TrueFlightDefaults.default_update_towards_position(target_position, physics_world, integration_data, dt, t, optional_validate_impact_func, optional_on_impact_func)
+		position, rotation = TrueFlightDefaults.default_update_towards_position(target_position, physics_world, integration_data, dt, t, optional_validate_impact_func, optional_on_impact_func)
 
-			return position, rotation
-		end
+		return position, rotation
 	end
-}
+end
+
 local broadphase_results = {}
 
 true_flight_krak_grenade.krak_find_armored_target = function (integration_data, position, is_valid_and_legitimate_targe_func)
@@ -74,16 +84,18 @@ true_flight_krak_grenade.krak_find_armored_target = function (integration_data, 
 
 	table.clear(broadphase_results)
 
-	local number_of_results = nil
+	local number_of_results
 	local veclocity = integration_data.velocity
 	local current_direction = Vector3.normalize(veclocity)
 	local offset = current_direction * forward_search_distance_to_find_target
 	local seach_position = position + offset
+
 	number_of_results = _broadphase_query(owner_unit, seach_position, broadphase_radius, broadphase_results)
+
 	local check_all_hit_zones = true_flight_template.check_all_hit_zones
-	local closest_unit = nil
+	local closest_unit
 	local closest_distance = math.huge
-	local target_hit_zone = nil
+	local target_hit_zone
 
 	if number_of_results > 0 then
 		for i = 1, number_of_results do
@@ -127,9 +139,9 @@ function _check_target_armor(unit, target_armor_types, default_hit_zone, current
 	if check_all_hit_zones then
 		local vector3_distance_squared = Vector3.distance_squared
 		local breed_hit_zones = breed.hit_zones
-		local cloest_hit_zone_name = nil
+		local cloest_hit_zone_name
 		local closest_distance = math.huge
-		local closest_position = nil
+		local closest_position
 
 		for i = 1, #breed_hit_zones do
 			local hit_zone_name = breed_hit_zones[i].name

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/minion_visual_loadout/templates/renegade_assault_visual_loadout_templates.lua
+
 local MissionSettings = require("scripts/settings/mission/mission_settings")
 local zone_ids = MissionSettings.mission_zone_ids
 local templates = {
@@ -104,6 +106,7 @@ local basic_renegade_assault_template = {
 	}
 }
 local default_1 = table.clone(basic_renegade_assault_template)
+
 default_2 = table.clone(basic_renegade_assault_template)
 default_2.gib_variations = {
 	"face_02_b"
@@ -131,15 +134,21 @@ templates.renegade_assault.default = {
 	default_2,
 	default_3
 }
+
 local foundry_1 = table.clone(basic_renegade_assault_template)
+
 foundry_1.slots.envrionmental_override.items = {
 	"content/items/characters/minions/environment_overrides/dirt_02"
 }
+
 local foundry_2 = table.clone(default_2)
+
 foundry_2.slots.envrionmental_override.items = {
 	"content/items/characters/minions/environment_overrides/dirt_02"
 }
+
 local foundry_3 = table.clone(default_3)
+
 foundry_3.slots.envrionmental_override.items = {
 	"content/items/characters/minions/environment_overrides/dirt_02"
 }
@@ -148,15 +157,21 @@ templates.renegade_assault[zone_ids.tank_foundry] = {
 	foundry_2,
 	foundry_3
 }
+
 local dust_1 = table.clone(basic_renegade_assault_template)
+
 dust_1.slots.envrionmental_override.items = {
 	"content/items/characters/minions/environment_overrides/sand_02"
 }
+
 local dust_2 = table.clone(default_2)
+
 dust_2.slots.envrionmental_override.items = {
 	"content/items/characters/minions/environment_overrides/sand_02"
 }
+
 local dust_3 = table.clone(default_3)
+
 dust_3.slots.envrionmental_override.items = {
 	"content/items/characters/minions/environment_overrides/sand_02"
 }
@@ -165,15 +180,21 @@ templates.renegade_assault[zone_ids.dust] = {
 	dust_2,
 	dust_3
 }
+
 local watertown_1 = table.clone(basic_renegade_assault_template)
+
 watertown_1.slots.envrionmental_override.items = {
 	"content/items/characters/minions/environment_overrides/acid_02"
 }
+
 local watertown_2 = table.clone(default_2)
+
 watertown_2.slots.envrionmental_override.items = {
 	"content/items/characters/minions/environment_overrides/acid_02"
 }
+
 local watertown_3 = table.clone(default_3)
+
 watertown_3.slots.envrionmental_override.items = {
 	"content/items/characters/minions/environment_overrides/acid_02"
 }

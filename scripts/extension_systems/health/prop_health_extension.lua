@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/health/prop_health_extension.lua
+
 local Component = require("scripts/utilities/component")
 local HealthExtensionInterface = require("scripts/extension_systems/health/health_extension_interface")
 local PropHealthExtension = class("PropHealthExtension")
@@ -25,6 +27,7 @@ local HEALTH_DIFFICULTY_SCALING = {
 PropHealthExtension.setup_from_component = function (self, max_health, difficulty_scaling, invulnerable, unkillable, breed_white_list, ignored_collider_actor_names, speed_on_hit)
 	if difficulty_scaling then
 		local health_scale = Managers.state.difficulty:get_table_entry_by_challenge(HEALTH_DIFFICULTY_SCALING)
+
 		max_health = max_health * health_scale
 	end
 
@@ -40,6 +43,7 @@ PropHealthExtension.setup_from_component = function (self, max_health, difficult
 
 		for ii = 1, #ignored_collider_actor_names do
 			local actor = Unit.actor(unit, ignored_collider_actor_names[ii])
+
 			self._ignored_colliders[actor] = true
 		end
 	end
@@ -68,6 +72,7 @@ local function _add_force_on_parts(actor, mass, speed, attack_direction)
 		local random_y = math.random() * 2 - 1
 		local random_z = math.random() * 2 - 1
 		local random_direction = Vector3(random_x, random_y, random_z)
+
 		random_direction = Vector3.normalize(random_direction)
 		direction = random_direction
 	end
@@ -83,6 +88,7 @@ PropHealthExtension.add_damage = function (self, damage_amount, permanent_damage
 	if self:_can_receive_damage(attacking_unit, attack_type) then
 		local max_health = self._max_health
 		local health = self._health - damage_amount
+
 		health = math.clamp(health, 0, max_health)
 		self._health = health
 

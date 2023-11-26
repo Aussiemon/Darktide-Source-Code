@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/equipment/item_material_overrides/item_material_overrides_ammo.lua
+
 local material_overrides = {
 	ammo_display_100 = {
 		property_overrides = {

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/ability/archetype_talents/veteran_talents_new.lua
+
 local ArmorSettings = require("scripts/settings/damage/armor_settings")
 local PlayerAbilities = require("scripts/settings/ability/player_abilities/player_abilities")
 local SpecialRulesSetting = require("scripts/settings/ability/special_rules_settings")
@@ -15,6 +17,7 @@ local improved_medical_crate = BuffSettings.keyword_settings[BuffSettings.keywor
 local smoke_grenade = ProjectileTemplates.smoke_grenade
 local armor_types = ArmorSettings.types
 local math_round = math.round
+
 math_round = math_round or function (value)
 	if value >= 0 then
 		return math.floor(value + 0.5)
@@ -22,6 +25,7 @@ math_round = math_round or function (value)
 		return math.ceil(value - 0.5)
 	end
 end
+
 local archetype_talents = {
 	archetype = "veteran",
 	specialization = "veteran_2",

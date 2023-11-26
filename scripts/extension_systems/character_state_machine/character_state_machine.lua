@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/character_state_machine/character_state_machine.lua
+
 local CharacterStateMachine = class("CharacterStateMachine")
 
 CharacterStateMachine.init = function (self, unit, is_server, states, start_state, dt, t)
@@ -20,9 +22,13 @@ CharacterStateMachine.init = function (self, unit, is_server, states, start_stat
 			return
 		end
 	}
+
 	local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
+
 	self._unit_data_extension = unit_data_extension
+
 	local character_state_component = unit_data_extension:write_component("character_state")
+
 	self._character_state_component = character_state_component
 	character_state_component.previous_state_name = "dummy"
 	character_state_component.state_name = is_server and start_state or "dummy"
@@ -76,7 +82,8 @@ end
 
 CharacterStateMachine.fixed_update = function (self, unit, dt, t, frame, ...)
 	local params = self._params
-	local next_state = nil
+	local next_state
+
 	next_state = self._state_current:fixed_update(unit, dt, t, params, frame, ...)
 
 	if next_state ~= nil then
@@ -103,7 +110,7 @@ end
 CharacterStateMachine.exit_current_state = function (self)
 	if self._state_current then
 		local t = Managers.time:time("gameplay")
-		local next_state = nil
+		local next_state
 
 		self._state_current:on_exit(self._unit, t, next_state)
 
@@ -125,6 +132,7 @@ CharacterStateMachine._change_state = function (self, unit, dt, t, next_state, p
 	local old_state_name = self._state_current.name
 	local new_state = self._states[next_state]
 	local character_state_component = self._character_state_component
+
 	character_state_component.previous_state_name = old_state_name
 	character_state_component.state_name = new_state.name
 	character_state_component.entered_t = t

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/buff/buffs/buff.lua
+
 local BuffArgs = require("scripts/extension_systems/buff/utility/buff_args")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local ConditionalFunctions = require("scripts/settings/buff/validation_functions/conditional_functions")
@@ -28,6 +30,7 @@ local function _update_duration(self, template, template_data, template_context,
 	local extra_duration = template_data.extra_duration or 0
 	local total_duration = duration + extra_duration
 	local start_time = self._start_time
+
 	self._duration_progress = math.clamp01((total_duration - (t - start_time)) / total_duration)
 
 	if t > start_time + total_duration then
@@ -65,7 +68,9 @@ Buff.init = function (self, context, template, start_time, instance_id, ...)
 	self._player = context.player
 	self._unit = context.unit
 	self._template = template
+
 	local template_override_data = self:_calculate_template_override_data(template_context)
+
 	self._template_override_data = template_override_data
 	template_context.template_override_data = template_override_data
 	self._template_data = {}
@@ -75,6 +80,7 @@ Buff.init = function (self, context, template, start_time, instance_id, ...)
 	self._instance_id = instance_id
 	self._finished = false
 	self._lerped_stat_buffs = {}
+
 	local unit_data_extension = ScriptUnit.has_extension(self._unit, "unit_data_system")
 
 	if unit_data_extension and self._player then
@@ -113,8 +119,10 @@ Buff.init = function (self, context, template, start_time, instance_id, ...)
 	self._update_funcs = update_funcs
 	self._num_update_funcs = #update_funcs
 	self._num_constant_keywords = template.keywords and #template.keywords
+
 	local conditional_keywords_func = template.conditional_keywords_func or template.conditional_stat_buffs_func
 	local conditional_keywords = conditional_keywords_func and template.conditional_keywords
+
 	self._conditional_keywords_func = conditional_keywords_func
 	self._num_conditional_keywords = conditional_keywords and #conditional_keywords
 end
@@ -136,7 +144,7 @@ end
 local function _add_overrides(overrides, trait_item, rarity, template_name, override_data, parent_buff_template_or_nil)
 	for buff_name, rarity_data in pairs(overrides) do
 		local should_merge_overrides = buff_name == template_name or parent_buff_template_or_nil and parent_buff_template_or_nil == buff_name or false
-		local current_rarity_data = nil
+		local current_rarity_data
 
 		for i = rarity, 1, -1 do
 			current_rarity_data = rarity_data[i]
@@ -213,7 +221,7 @@ Buff._calculate_specialization_override_data = function (self, override_data, pa
 	end
 
 	local specialization_extension = ScriptUnit.extension(self._unit, "specialization_system")
-	local tier = nil
+	local tier
 
 	if parent_buff_template_or_nil then
 		tier = specialization_extension:buff_template_tier(parent_buff_template_or_nil)
@@ -230,15 +238,20 @@ end
 Buff.set_buff_component = function (self, buff_component, component_keys, component_index)
 	local template = self._template
 	local start_time = self._start_time
+
 	self._buff_component = buff_component
 	self._component_keys = component_keys
 	self._component_index = component_index
+
 	local template_name_key = component_keys.template_name_key
 	local start_time_key = component_keys.start_time_key
 	local stack_count_key = component_keys.stack_count_key
+
 	buff_component[template_name_key] = template.name
 	buff_component[start_time_key] = start_time
+
 	local stack_count = self:stack_count()
+
 	buff_component[stack_count_key] = stack_count
 end
 
@@ -250,6 +263,7 @@ Buff.remove_buff_component = function (self)
 	local active_start_time_key = component_keys.active_start_time_key
 	local stack_count_key = component_keys.stack_count_key
 	local proc_count_key = component_keys.proc_count_key
+
 	buff_component[template_name_key] = "none"
 	buff_component[start_time_key] = 0
 	buff_component[active_start_time_key] = 0
@@ -337,6 +351,7 @@ Buff.max_stacks = function (self)
 
 	if max_stacks then
 		local stack_offset = template.stack_offset or 0
+
 		max_stacks = max_stacks + math.abs(stack_offset)
 	end
 
@@ -370,6 +385,7 @@ Buff.set_stack_count = function (self, wanted_stack_count)
 	local template = self._template
 	local max_stacks = self:max_stacks()
 	local new_stack_count = math.max(wanted_stack_count, 0)
+
 	self._template_context.stack_count = new_stack_count
 
 	if wanted_stack_count <= max_stacks then
@@ -492,9 +508,7 @@ Buff._calculate_stat_buffs = function (self, current_stat_buffs, stat_buffs)
 	local stat_buff_overrides = template_override_data and template_override_data.stat_buffs
 
 	for key, value in pairs(stat_buffs) do
-		if stat_buff_overrides then
-			value = stat_buff_overrides[key] or value
-		end
+		value = stat_buff_overrides and stat_buff_overrides[key] or value
 
 		local current_value = current_stat_buffs[key]
 		local stat_buff_type = stat_buff_types[key]
@@ -537,7 +551,9 @@ Buff.update_stat_buffs = function (self, current_stat_buffs, t)
 		local duration = template.duration
 		local template_override_data = self._template_override_data
 		local lerped_stat_buffs_overrides = template_override_data and template_override_data.lerped_stat_buffs
+
 		lerped_stat_buffs = lerped_stat_buffs_overrides or lerped_stat_buffs
+
 		local lerp_t = template.lerp_t_func and template.lerp_t_func(t, start_time, duration, self._template_data, self._template_context) or self._template_context.buff_lerp_value
 
 		table.clear(self._lerped_stat_buffs)
@@ -547,6 +563,7 @@ Buff.update_stat_buffs = function (self, current_stat_buffs, t)
 			local max = data.max
 			local lerp_func = data.lerp_value_func or math.lerp
 			local lerped_value = lerp_func(min, max, lerp_t)
+
 			self._lerped_stat_buffs[key] = lerped_value
 		end
 
@@ -563,7 +580,9 @@ Buff.update_stat_buffs = function (self, current_stat_buffs, t)
 		if not conditional_lerped_stat_buffs_func or conditional_lerped_stat_buffs_func(self._template_data, self._template_context) then
 			local template_override_data = self._template_override_data
 			local lerped_stat_buffs_overrides = template_override_data and template_override_data.conditional_lerped_stat_buffs
+
 			conditional_lerped_stat_buffs = lerped_stat_buffs_overrides or conditional_lerped_stat_buffs
+
 			local lerp_t = template.lerp_t_func and template.lerp_t_func(t, start_time, duration, self._template_data, self._template_context) or self._template_context.buff_lerp_value
 
 			table.clear(self._lerped_stat_buffs)
@@ -573,6 +592,7 @@ Buff.update_stat_buffs = function (self, current_stat_buffs, t)
 				local max = data.max
 				local lerp_func = data.lerp_value_func or math.lerp
 				local lerped_value = lerp_func(min, max, lerp_t)
+
 				self._lerped_stat_buffs[key] = lerped_value
 			end
 
@@ -646,7 +666,9 @@ Buff.get_hud_data = function (self)
 	return_table.hud_icon = self:_hud_icon()
 	return_table.hud_icon_gradient_map = self:hud_icon_gradient_map()
 	return_table.hud_priority = self:hud_priority()
+
 	local stack_count = self:visual_stack_count()
+
 	return_table.stack_count = stack_count
 	return_table.show_stack_count = self:_hud_show_stack_count() or stack_count > 1
 	return_table.is_negative = self:is_negative()

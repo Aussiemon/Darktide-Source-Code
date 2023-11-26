@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/inventory_cosmetics_view/inventory_cosmetics_view_definitions.lua
+
 local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templates")
 local ColorUtilities = require("scripts/utilities/ui/colors")
 local InputUtils = require("scripts/managers/input/input_utils")
@@ -240,20 +242,27 @@ local scenegraph_definition = {
 	}
 }
 local unlock_header_style = table.clone(UIFontSettings.header_3)
+
 unlock_header_style.text_horizontal_alignment = "left"
 unlock_header_style.text_vertical_alignment = "top"
 unlock_header_style.text_color = Color.terminal_text_body_sub_header(255, true)
+
 local unlock_title_style = table.clone(UIFontSettings.body_medium)
+
 unlock_title_style.text_horizontal_alignment = "left"
 unlock_title_style.text_vertical_alignment = "top"
 unlock_title_style.text_color = Color.terminal_icon(255, true)
+
 local unlock_icon_style = table.clone(unlock_title_style)
+
 unlock_icon_style.offset = {
 	-20,
 	0,
 	0
 }
+
 local unlock_details_style = table.clone(UIFontSettings.body_medium)
+
 unlock_details_style.text_horizontal_alignment = "left"
 unlock_details_style.text_vertical_alignment = "top"
 unlock_details_style.text_color = {
@@ -262,12 +271,15 @@ unlock_details_style.text_color = {
 	140,
 	115
 }
+
 local input_legend_button_style = table.clone(UIFontSettings.body_small)
+
 input_legend_button_style.text_horizontal_alignment = "left"
 input_legend_button_style.text_vertical_alignment = "top"
 input_legend_button_style.text_color = Color.ui_grey_light(255, true)
 input_legend_button_style.default_text_color = Color.ui_grey_light(255, true)
 input_legend_button_style.hover_color = Color.white(255, true)
+
 local widget_definitions = {
 	corner_top_left = UIWidget.create_definition({
 		{

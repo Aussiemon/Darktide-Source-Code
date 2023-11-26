@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/camera/camera_effect_settings.lua
+
 local CameraEffectSettings = {
 	sequence = {
 		landed_soft = {
@@ -1344,6 +1346,7 @@ local swing_impact_no_damage_shake = {
 	amplitude = 0.03,
 	octaves = 12
 }
+
 CameraEffectSettings.shake.swing_impact_up_no_damage = swing_impact_no_damage_shake
 CameraEffectSettings.shake.swing_impact_down_no_damage = swing_impact_no_damage_shake
 CameraEffectSettings.shake.swing_impact_left_no_damage = swing_impact_no_damage_shake

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/data_service/services/invites/invites_dummy.lua
+
 local InvitesDummy = class("InvitesDummy")
 
 InvitesDummy.init = function (self)

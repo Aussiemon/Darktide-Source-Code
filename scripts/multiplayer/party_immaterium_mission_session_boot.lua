@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/multiplayer/party_immaterium_mission_session_boot.lua
+
 local BackendInterface = require("scripts/backend/backend_interface")
 local ConnectionClient = require("scripts/multiplayer/connection/connection_client")
 local SessionBootBase = require("scripts/multiplayer/session_boot_base")
@@ -65,6 +67,7 @@ end
 
 PartyImmateriumMissionSessionBoot._start_handshaking = function (self, noAcceleratedConnection)
 	self._jwt_ticket = self._server_details.ticket
+
 	local properties = self._server_details.serverDetails.properties
 	local network_hash = properties.network_hash
 	local host_type = properties.host_type
@@ -197,6 +200,7 @@ PartyImmateriumMissionSessionBoot.update = function (self, dt)
 				_info("Found lobby, joining...")
 
 				local lobby_data = browser:lobby(1)
+
 				self._engine_lobby = Network.join_lan_lobby(lobby_data.id)
 
 				self:_set_state(STATES.joining)
@@ -230,6 +234,7 @@ PartyImmateriumMissionSessionBoot.result = function (self)
 	self:_set_window_title("client %s", Network.peer_id())
 
 	local connection_client = self._connection_client
+
 	self._connection_client = nil
 	self._engine_lobby = nil
 

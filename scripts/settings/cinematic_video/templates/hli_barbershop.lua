@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/cinematic_video/templates/hli_barbershop.lua
+
 local cinematic_video_template = {
 	hli_barbershop = {
 		loop_video = false,

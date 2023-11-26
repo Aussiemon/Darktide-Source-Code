@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/foundation/utilities/schema.lua
+
 local Schema = class("Schema")
 
 Schema.init = function (self, schema)
@@ -22,6 +24,7 @@ end
 
 Schema.get_path = function (self, ref)
 	ref = ref:gsub("#", "")
+
 	local pattern = "([^/]+)"
 	local parts = {}
 

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/damage/damage_profile_templates.lua
+
 local WeaponTweaks = require("scripts/utilities/weapon_tweaks")
 local templates = {}
 local loaded_files = {}

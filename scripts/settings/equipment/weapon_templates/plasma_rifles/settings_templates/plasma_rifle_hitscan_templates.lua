@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/equipment/weapon_templates/plasma_rifles/settings_templates/plasma_rifle_hitscan_templates.lua
+
 local ExplosionTemplates = require("scripts/settings/damage/explosion_templates")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local ArmorSettings = require("scripts/settings/damage/armor_settings")

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/cosmetics_inspect_view/cosmetics_inspect_view_settings.lua
+
 local cosmetics_inspect_view_settings = {
 	shading_environment = "content/shading_environments/ui/inventory",
 	world_layer = 1,

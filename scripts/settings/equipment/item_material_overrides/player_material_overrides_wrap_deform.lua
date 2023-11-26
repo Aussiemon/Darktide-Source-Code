@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/equipment/item_material_overrides/player_material_overrides_wrap_deform.lua
+
 local material_overrides = {
 	wrap_deform_human_body_female = {
 		texture_overrides = {

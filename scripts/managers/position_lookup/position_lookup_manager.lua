@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/position_lookup/position_lookup_manager.lua
+
 local unit_alive = Unit.alive
 local unit_world_position = Unit.world_position
 local position_lookup_register_unit = PositionLookup.register_unit
@@ -10,8 +12,11 @@ local temp_pos_lookup = Script.new_map(512)
 PositionLookupManager.init = function (self, optional_num_keys)
 	local num_keys = optional_num_keys or DEFAULT_NUM_KEYS
 	local position_lookup_system = PositionLookup.init()
+
 	self._position_lookup_system = position_lookup_system
+
 	local unit_state_lookup = Script.new_map(num_keys)
+
 	self._unit_state_lookup = unit_state_lookup
 	self._position_lookup = setmetatable(Script.new_map(num_keys), {
 		__index = function (t, unit)

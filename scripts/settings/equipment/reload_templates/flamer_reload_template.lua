@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/equipment/reload_templates/flamer_reload_template.lua
+
 local reload_template = {
 	name = "flamer_rifle",
 	states = {

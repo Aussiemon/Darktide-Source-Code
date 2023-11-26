@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/hud/hud_elements_spectator.lua
+
 local elements = {
 	{
 		package = "packages/ui/hud/mission_speaker_popup/mission_speaker_popup",

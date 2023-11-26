@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/damage/damage_profiles/luggable_damage_profile_templates.lua
+
 local ArmorSettings = require("scripts/settings/damage/armor_settings")
 local CatapultingTemplates = require("scripts/settings/damage/catapulting_templates")
 local DamageProfileSettings = require("scripts/settings/damage/damage_profile_settings")
@@ -22,6 +24,7 @@ local crit_armor_mod = DamageProfileSettings.crit_armor_mod
 local crit_impact_armor_mod = DamageProfileSettings.crit_impact_armor_mod
 local damage_types = DamageSettings.damage_types
 local double_cleave = DamageProfileSettings.double_cleave
+
 damage_templates.luggable_battery = {
 	interrupt_alternate_fire = true,
 	suppression_value = 15,

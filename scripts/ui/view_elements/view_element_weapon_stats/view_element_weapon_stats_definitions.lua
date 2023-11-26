@@ -1,9 +1,12 @@
+﻿-- chunkname: @scripts/ui/view_elements/view_element_weapon_stats/view_element_weapon_stats_definitions.lua
+
 local ScrollbarPassTemplates = require("scripts/ui/pass_templates/scrollbar_pass_templates")
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local UIWorkspaceSettings = require("scripts/settings/ui/ui_workspace_settings")
 local rating_text_style = table.clone(UIFontSettings.body_small)
+
 rating_text_style.text_horizontal_alignment = "right"
 rating_text_style.text_vertical_alignment = "center"
 rating_text_style.text_color = Color.white(255, true)
@@ -14,7 +17,9 @@ rating_text_style.offset = {
 	300
 }
 rating_text_style.material = "content/ui/materials/font_gradients/slug_font_gradient_item_level"
+
 local rating_header_text_style = table.clone(UIFontSettings.body_small)
+
 rating_header_text_style.text_horizontal_alignment = "right"
 rating_header_text_style.text_vertical_alignment = "center"
 rating_header_text_style.text_color = Color.terminal_text_body(255, true)
@@ -28,7 +33,9 @@ rating_header_text_style.offset = {
 	3,
 	300
 }
+
 local basic_text_style = table.clone(UIFontSettings.body_small)
+
 basic_text_style.text_horizontal_alignment = "left"
 basic_text_style.text_vertical_alignment = "center"
 basic_text_style.text_color = Color.terminal_text_body(255, true)
@@ -42,6 +49,7 @@ basic_text_style.offset = {
 	3,
 	300
 }
+
 local scenegraph_definition = {
 	screen = UIWorkspaceSettings.screen,
 	pivot = {

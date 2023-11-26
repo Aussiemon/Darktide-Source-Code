@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/cosmetics_vendor_background_view/cosmetics_vendor_background_view_definitions.lua
+
 local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templates")
 local ItemSlotSettings = require("scripts/settings/item/item_slot_settings")
 local ItemUtils = require("scripts/utilities/items")
@@ -476,13 +478,16 @@ local cosmetic_weapon_tabs = {}
 
 for archetype_name, settings in pairs(Archetypes) do
 	local cosmetics_vendor_option_tab = table.clone_instance(cosmetics_vendor_option_tab_definition)
+
 	cosmetic_gear_tabs[#cosmetic_gear_tabs + 1] = cosmetics_vendor_option_tab
 	cosmetics_vendor_option_tab.view_function_context = {
 		archetype_name = archetype_name
 	}
 	cosmetics_vendor_option_tab.display_name = settings.archetype_name
 	cosmetics_vendor_option_tab.ui_selection_order = settings.ui_selection_order
+
 	local weapon_cosmetics_vendor_option_tab = table.clone_instance(weapon_cosmetics_vendor_option_tab_definition)
+
 	cosmetic_weapon_tabs[#cosmetic_weapon_tabs + 1] = weapon_cosmetics_vendor_option_tab
 	weapon_cosmetics_vendor_option_tab.view_function_context = {
 		archetype_name = archetype_name
@@ -630,6 +635,7 @@ local animations = {
 				end
 
 				local canvas_overlay = parent._widgets_by_name.canvas_overlay
+
 				canvas_overlay.alpha_multiplier = math.min(1 - alpha_multiplier, canvas_overlay.alpha_multiplier or 0)
 			end,
 			on_complete = function (parent, ui_scenegraph, scenegraph_definition, widgets, params)
@@ -733,6 +739,7 @@ local option_button_settings = {
 				local default_alpha = 0
 				local hover_alpha = anim_hover_progress * 255
 				local select_alpha = math.max(anim_select_progress, anim_focus_progress) * 255
+
 				style.color[1] = math.clamp(default_alpha + select_alpha + hover_alpha, 0, 255)
 			end
 		},
@@ -777,6 +784,7 @@ local option_button_settings = {
 				local start_uv = 0
 				local end_uv = 1
 				local current_uv = (max_uv - min_uv) * progress * 0.5
+
 				style.uvs[1][1] = start_uv + current_uv
 				style.uvs[1][2] = start_uv + current_uv
 				style.uvs[2][1] = end_uv - current_uv

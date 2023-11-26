@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/mechanism/mechanisms/mechanism_sandbox.lua
+
 local MechanismBase = require("scripts/managers/mechanism/mechanisms/mechanism_base")
 local Missions = require("scripts/settings/mission/mission_templates")
 local StateGameplay = require("scripts/game_states/game/state_gameplay")
@@ -8,8 +10,10 @@ MechanismSandbox.init = function (self, ...)
 	MechanismSandbox.super.init(self, ...)
 
 	local mission_name = GameParameters.mission
+
 	self._mission_name = mission_name
-	local level_name = nil
+
+	local level_name
 
 	if LEVEL_EDITOR_TEST then
 		level_name = Application.get_data("LevelEditor", "level_resource_name") or "__level_editor_test"

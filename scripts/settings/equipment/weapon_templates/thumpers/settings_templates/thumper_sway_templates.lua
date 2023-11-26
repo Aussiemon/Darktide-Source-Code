@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/equipment/weapon_templates/thumpers/settings_templates/thumper_sway_templates.lua
+
 local sway_templates = {}
 local overrides = {}
 

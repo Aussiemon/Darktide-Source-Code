@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/minigame/minigame_classes.lua
+
 local function _require_minigame_class(minigame)
 	local base = "scripts/extension_systems/minigame/minigames/minigame_"
 	local minigame_file_name = base .. minigame

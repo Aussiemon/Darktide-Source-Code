@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/fx/effect_templates/chaos_plague_ogryn_charge_impact.lua
+
 local SFX_ATTACK_VCE = "wwise/events/minions/play_enemy_plague_ogryn_vce_attack"
 local SFX_BELLY_BOUNCE = "wwise/events/minions/play_enemy_character_foley_plague_ogryn_belly_bounce"
 local SFX_TONGUE_FLUTTER = "wwise/events/minions/play_enemy_character_foley_plague_ogryn_tongue_flutter"

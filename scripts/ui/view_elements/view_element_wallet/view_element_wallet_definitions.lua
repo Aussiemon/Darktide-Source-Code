@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/view_elements/view_element_wallet/view_element_wallet_definitions.lua
+
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local UIWorkspaceSettings = require("scripts/settings/ui/ui_workspace_settings")
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
@@ -20,6 +22,7 @@ local scenegraph_definition = {
 	}
 }
 local wallet_text_font_style = table.clone(UIFontSettings.currency_title)
+
 wallet_text_font_style.text_horizontal_alignment = "right"
 wallet_text_font_style.text_vertical_alignment = "center"
 wallet_text_font_style.offset = {
@@ -28,6 +31,7 @@ wallet_text_font_style.offset = {
 	1
 }
 wallet_text_font_style.font_size = 18
+
 local widget_definitions = {}
 local wallet_definitions = UIWidget.create_definition({
 	{

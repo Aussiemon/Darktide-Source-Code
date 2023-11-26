@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/equipment/weapon_templates/ogryn_power_mauls/settings_templates/ogryn_power_maul_damage_profile_templates.lua
+
 local ArmorSettings = require("scripts/settings/damage/armor_settings")
 local PowerLevelSettings = require("scripts/settings/damage/power_level_settings")
 local DamageProfileSettings = require("scripts/settings/damage/damage_profile_settings")
@@ -156,6 +158,7 @@ local tank_heavy_active_am = {
 		[armor_types.void_shield] = damage_lerp_values.lerp_2
 	}
 }
+
 damage_templates.ogryn_powermaul_light_smiter = {
 	ragdoll_push_force = 800,
 	ignore_shield = false,
@@ -1036,6 +1039,7 @@ damage_templates.ogryn_powermaul_light_tank = {
 		}
 	}
 }
+
 local human_tank_light_default_am = {
 	attack = {
 		[armor_types.unarmored] = damage_lerp_values.lerp_1_25,
@@ -1102,6 +1106,7 @@ local human_smiter_default_am = {
 		[armor_types.void_shield] = damage_lerp_values.lerp_0_75
 	}
 }
+
 damage_templates.powermaul_2h_light_tank = {
 	dead_ragdoll_mod = 1.5,
 	ragdoll_push_force = 500,

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/game_states/state_game_testify.lua
+
 local BotSpawning = require("scripts/managers/bot/bot_spawning")
 local Breeds = require("scripts/settings/breed/breeds")
 local CircumstanceTemplates = require("scripts/settings/circumstance/circumstance_templates")
@@ -24,7 +26,9 @@ local function retrieve_items_for_archetype(archetype, filtered_slots, workflow_
 		"RELEASABLE",
 		"FUNCTIONAL"
 	}
+
 	workflow_states = workflow_states and workflow_states or WORKFLOW_STATES
+
 	local item_definitions = MasterItems.get_cached()
 	local items = {}
 
@@ -220,9 +224,7 @@ local StateGameTestify = {
 		return current_state_name
 	end,
 	display_and_graphics_presets_settings = function ()
-		local settings = RenderSettings.settings
-		local render_settings = {}
-		local i = 0
+		local settings, render_settings, i = RenderSettings.settings, {}, 0
 
 		for j = 1, #settings do
 			if settings[j].display_name == "loc_settings_menu_group_graphics" then
@@ -329,7 +331,7 @@ local StateGameTestify = {
 		option_data.setting.on_activated(option_data.new_value, option_data.setting)
 	end,
 	setting_value = function (_, setting)
-		return setting:get_function()
+		return setting.get_function(setting)
 	end,
 	side_missions = function ()
 		local side_missions = MissionObjectives.side_mission.objectives
@@ -365,7 +367,7 @@ local StateGameTestify = {
 	end,
 	take_a_screenshot = function (state_game, screenshot_settings)
 		local type = "file_system"
-		local window = nil
+		local window
 		local scale = 1
 		local save_depth = false
 		local output_dir = screenshot_settings.output_dir

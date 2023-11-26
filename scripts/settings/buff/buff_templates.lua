@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/buff/buff_templates.lua
+
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local buff_categories = BuffSettings.buff_categories
 local templates = {}

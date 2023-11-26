@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/dialogue/voice_fx_preset_settings.lua
+
 local voice_fx_preset_settings = {
 	voice_fx_rtpc_rare = 2,
 	voice_fx_rtpc_none = 0,

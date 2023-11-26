@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/interaction/interactions/grenade_interaction.lua
+
 require("scripts/extension_systems/interaction/interactions/pickup_interaction")
 
 local Pickups = require("scripts/settings/pickup/pickups")
@@ -5,7 +7,7 @@ local SpecialRulesSetting = require("scripts/settings/ability/special_rules_sett
 local GrenadeInteraction = class("GrenadeInteraction", "PickupInteraction")
 local ABILITY_TYPE = "grenade_ability"
 local special_rules = SpecialRulesSetting.special_rules
-local _grenades_disabled = nil
+local _grenades_disabled
 
 GrenadeInteraction.stop = function (self, world, interactor_unit, unit_data_component, t, result, interactor_is_server)
 	if interactor_is_server then

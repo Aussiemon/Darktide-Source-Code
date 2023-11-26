@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/equipment/weapon_templates/ogryn_heavystubbers/settings_templates/ogryn_heavystubber_recoil_templates.lua
+
 local RecoilTemplate = require("scripts/utilities/recoil_template")
 local generate_offset_range = RecoilTemplate.generate_offset_range
 local create_scale = RecoilTemplate.create_scale
@@ -399,6 +401,7 @@ local assault_offset_range_m3 = generate_offset_range(50, 0.045, 0, 0.95, create
 local assault_random_range_m3 = generate_offset_range(50, 0.01, 0.035, 0.95, create_scale(assault_random_scale_m3))
 local braced_offset_range_m3 = generate_offset_range(50, 0.01, 0, 0.95, create_scale(braced_scale_m3))
 local braced_random_range_m3 = generate_offset_range(50, 0.0075, 0.0075, 0.95, create_scale(braced_random_scale_m3))
+
 recoil_templates.default_ogryn_heavystubber_recoil_spraynpray = {
 	still = {
 		camera_recoil_percentage = 0.75,
@@ -741,11 +744,13 @@ recoil_templates.default_ogryn_heavystubber_recoil_spraynpray_brace = {
 	}
 }
 pitch_default = 0.03
+
 local firerate = 0.096
 local shot_decay = 3.5
 local rise_time = 0.04784000000000001
 local decay_time = firerate - rise_time
 local shot_rise = decay_time * shot_decay
+
 recoil_templates.default_ogryn_heavystubber_recoil_spraynpray_hip_m2 = {
 	still = {
 		camera_recoil_percentage = 0.85,

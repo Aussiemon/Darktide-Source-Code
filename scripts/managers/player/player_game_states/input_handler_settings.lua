@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/player/player_game_states/input_handler_settings.lua
+
 local input_handler_settings = {
 	buffered_frames = 20,
 	client_input_buffer_size = 600,

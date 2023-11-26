@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/damage/damage_profiles/psyker_smite_damage_profile_templates.lua
+
 local PowerLevelSettings = require("scripts/settings/damage/power_level_settings")
 local DamageProfileSettings = require("scripts/settings/damage/damage_profile_settings")
 local GibbingSettings = require("scripts/settings/gibbing/gibbing_settings")
@@ -23,6 +25,7 @@ local no_cleave = DamageProfileSettings.no_cleave
 local double_cleave = DamageProfileSettings.double_cleave
 local light_cleave = DamageProfileSettings.light_cleave
 local big_cleave = DamageProfileSettings.big_cleave
+
 damage_templates.psyker_smite_kill = {
 	ignore_stagger_reduction = true,
 	ragdoll_push_force = 0,

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/damage/impact_fx_parser.lua
+
 local ArmorSettings = require("scripts/settings/damage/armor_settings")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
 local ImpactFxInjector = require("scripts/settings/damage/impact_fx_injector")
@@ -18,7 +20,12 @@ local function _include_impact_fx_configs(target_table, damage_or_surface_types,
 
 		if exists then
 			local fx_config = require(full_path)
+
 			target_table[damage_type_or_surface_material] = fx_config
+		end
+
+		if false then
+			-- Nothing
 		end
 	end
 end
@@ -34,13 +41,12 @@ local function _extract_armor_hit_fx(fx_type_config, hit_type)
 end
 
 local function _extract_armor_hit_vfx(vfx_config, hit_type)
-	local vfx, vfx_1p, vfx_3p = nil
+	local vfx, vfx_1p, vfx_3p
 	local fx = vfx_config and vfx_config[hit_type]
 
 	if fx then
 		for _, vfx_entry in ipairs(fx) do
-			local only_1p = vfx_entry.only_1p
-			local only_3p = vfx_entry.only_3p
+			local only_1p, only_3p = vfx_entry.only_1p, vfx_entry.only_3p
 
 			if only_1p then
 				vfx_1p = vfx_1p or {}
@@ -65,7 +71,7 @@ local function _extract_armor_hit_vfx(vfx_config, hit_type)
 end
 
 local function _extract_armor_hit_sfx(sfx_config, hit_type)
-	local sfx, sfx_husk, sfx_1p, sfx_3p, sfx_1p_direction_interface = nil
+	local sfx, sfx_husk, sfx_1p, sfx_3p, sfx_1p_direction_interface
 	local fx = sfx_config and sfx_config[hit_type]
 
 	if fx then
@@ -121,7 +127,7 @@ local function _create_surface_impact_fx_entry(material_type, damage_fx, materia
 		return fx_table
 	end
 
-	local sfx, material_switch_sfx, sfx_husk, material_switch_sfx_husk = nil
+	local sfx, material_switch_sfx, sfx_husk, material_switch_sfx_husk
 
 	if damage_fx.sfx or material_fx.sfx then
 		table.clear(temp_table)
@@ -131,15 +137,19 @@ local function _create_surface_impact_fx_entry(material_type, damage_fx, materia
 		for _, sfx_entry in ipairs(temp_table) do
 			if sfx_entry.group then
 				material_switch_sfx = material_switch_sfx or {}
+
 				local table_to_use = _target_sfx_table(material_switch_sfx, sfx_entry)
+
 				table_to_use[#table_to_use + 1] = table.clone(sfx_entry)
 				table_to_use[#table_to_use].append_husk_to_event_name = nil
 				table_to_use[#table_to_use].state = material_type
 
 				if sfx_entry.append_husk_to_event_name then
 					material_switch_sfx_husk = material_switch_sfx_husk or {}
+
 					local husk_table_to_use = _target_sfx_table(material_switch_sfx_husk, sfx_entry)
 					local husk_event_name = sfx_entry.event .. "_husk"
+
 					husk_table_to_use[#husk_table_to_use + 1] = table.clone(sfx_entry)
 					husk_table_to_use[#husk_table_to_use].event = husk_event_name
 					husk_table_to_use[#husk_table_to_use].append_husk_to_event_name = nil
@@ -147,13 +157,17 @@ local function _create_surface_impact_fx_entry(material_type, damage_fx, materia
 				end
 			else
 				sfx = sfx or {}
+
 				local event_name = sfx_entry.event
 				local table_to_use = _target_sfx_table(sfx, sfx_entry)
+
 				table_to_use[#table_to_use + 1] = event_name
 
 				if sfx_entry.append_husk_to_event_name then
 					sfx_husk = sfx_husk or {}
+
 					local husk_table_to_use = _target_sfx_table(sfx_husk, sfx_entry)
+
 					husk_table_to_use[#husk_table_to_use + 1] = event_name .. "_husk"
 				end
 			end
@@ -225,8 +239,11 @@ local function _create_armor_impact_fx_templates(lookup_table, templates_table, 
 					blood_ball = _extract_armor_hit_fx(blood_ball_config, hit_type)
 				}
 
-				if table.size(fx_table) ~= 0 then
+				if table.size(fx_table) == 0 then
+					-- Nothing
+				else
 					local fx_name = string.format("armor_fx_%s_%s_%s", damage_type, armor_type, hit_type)
+
 					fx_table.name = fx_name
 					templates_table[fx_name] = fx_table
 
@@ -234,6 +251,10 @@ local function _create_armor_impact_fx_templates(lookup_table, templates_table, 
 				end
 			end
 		end
+	end
+
+	if false then
+		-- Nothing
 	end
 end
 
@@ -251,8 +272,11 @@ local function _create_surface_impact_fx_templates(lookup_table, templates_table
 			local decal = surface_material_decal[hit_type]
 			local fx_table = _create_surface_impact_fx_entry(material_type, damage_fx, material_fx, decal)
 
-			if table.size(fx_table) ~= 0 then
+			if table.size(fx_table) == 0 then
+				-- Nothing
+			else
 				local fx_name = string.format("surface_fx_%s_%s_%s", damage_type, material_type, hit_type)
+
 				fx_table.name = fx_name
 				templates_table[fx_name] = table.clone(fx_table)
 

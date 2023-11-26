@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/mutator/mutators/mutator_modify_pacing.lua
+
 require("scripts/managers/mutator/mutators/mutator_base")
 
 local MutatorModifyPacing = class("MutatorModifyPacing", "MutatorBase")
@@ -8,6 +10,7 @@ MutatorModifyPacing.init = function (self, is_server, network_event_delegate, mu
 	self._is_active = false
 	self._buffs = {}
 	self._template = mutator_template
+
 	local template = self._template
 	local init_modify_pacing = template.init_modify_pacing
 

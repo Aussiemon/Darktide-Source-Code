@@ -1,16 +1,12 @@
-local Vector3 = Vector3
-local Quaternion = Quaternion
-local Matrix4x4 = Matrix4x4
+﻿-- chunkname: @scripts/foundation/utilities/math.lua
+
+local Vector3, Quaternion, Matrix4x4 = Vector3, Quaternion, Matrix4x4
 local Vector3_dot = Vector3 and Vector3.dot
 local math = math
-local math_sqrt = math.sqrt
-local math_cos = math.cos
-local math_sin = math.sin
-local math_random = math.random
-local math_abs = math.abs
-local math_min = math.min
-local math_max = math.max
+local math_sqrt, math_cos, math_sin, math_random = math.sqrt, math.cos, math.sin, math.random
+local math_abs, math_min, math_max = math.abs, math.min, math.max
 local pi = math.pi
+
 math.two_pi = pi * 2
 math.half_pi = pi * 0.5
 math.inverse_sqrt_2 = 1 / math_sqrt(2)
@@ -141,7 +137,7 @@ math.random_range = function (min, max)
 end
 
 math.random_array_entry = function (array, optional_seed)
-	local index = nil
+	local index
 
 	if optional_seed then
 		optional_seed, index = math.next_random(optional_seed, #array)
@@ -157,7 +153,7 @@ math.mod_two_pi = function (angle)
 end
 
 math.point_is_inside_2d_box = function (pos, lower_left_corner, size)
-	return lower_left_corner[1] < pos[1] and pos[1] < lower_left_corner[1] + size[1] and lower_left_corner[2] < pos[2] and pos[2] < lower_left_corner[2] + size[2]
+	return pos[1] > lower_left_corner[1] and pos[1] < lower_left_corner[1] + size[1] and pos[2] > lower_left_corner[2] and pos[2] < lower_left_corner[2] + size[2]
 end
 
 math.box_overlap_point_radius = function (x1, y1, x2, y2, circle_x, circle_y, circle_radius)
@@ -170,7 +166,7 @@ math.box_overlap_point_radius = function (x1, y1, x2, y2, circle_x, circle_y, ci
 end
 
 math.box_overlap_box = function (a_pos, a_size, b_pos, b_size)
-	return b_pos[1] <= a_pos[1] + a_size[1] and a_pos[1] <= b_pos[1] + b_size[1] and b_pos[2] <= a_pos[2] + a_size[2] and a_pos[2] <= b_pos[2] + b_size[2]
+	return a_pos[1] + a_size[1] >= b_pos[1] and b_pos[1] + b_size[1] >= a_pos[1] and a_pos[2] + a_size[2] >= b_pos[2] and b_pos[2] + b_size[2] >= a_pos[2]
 end
 
 math.point_in_sphere = function (sphere_position, sphere_radius, point)
@@ -182,7 +178,7 @@ math.point_in_sphere = function (sphere_position, sphere_radius, point)
 end
 
 math.point_is_inside_aabb = function (pos, aabb_pos, aabb_half_extents)
-	return pos.x >= aabb_pos.x - aabb_half_extents.x and pos.x <= aabb_pos.x + aabb_half_extents.x and pos.y >= aabb_pos.y - aabb_half_extents.y and pos.y <= aabb_pos.y + aabb_half_extents.y and pos.z >= aabb_pos.z - aabb_half_extents.z and pos.z <= aabb_pos.z + aabb_half_extents.z
+	return not (pos.x < aabb_pos.x - aabb_half_extents.x) and not (pos.x > aabb_pos.x + aabb_half_extents.x) and not (pos.y < aabb_pos.y - aabb_half_extents.y) and not (pos.y > aabb_pos.y + aabb_half_extents.y) and not (pos.z < aabb_pos.z - aabb_half_extents.z) and not (pos.z > aabb_pos.z + aabb_half_extents.z)
 end
 
 math.point_is_inside_oobb = function (pos, oobb_pose, oobb_radius)
@@ -204,7 +200,7 @@ math.point_is_inside_2d_triangle = function (pos, p1, p2, p3)
 	end
 
 	local pca_n = Vector3.cross(pc, pa)
-	local best_normal = Vector3_dot(pbc_n, pbc_n) < Vector3_dot(pab_n, pab_n) and pab_n or pbc_n
+	local best_normal = Vector3_dot(pab_n, pab_n) > Vector3_dot(pbc_n, pbc_n) and pab_n or pbc_n
 	local dot_product = Vector3_dot(best_normal, pca_n)
 
 	if dot_product < 0 then
@@ -220,12 +216,10 @@ math.point_is_inside_2d_triangle = function (pos, p1, p2, p3)
 end
 
 math.circular_to_square_coordinates = function (vector)
-	local x = vector.x
-	local y = vector.y
+	local x, y = vector.x, vector.y
 	local w = x * x - y * y
 	local k = 4 * math.inverse_sqrt_2
-	local u = x * k
-	local v = y * k
+	local u, v = x * k, y * k
 
 	return Vector2(0.5 * (math_sqrt(math_max(2 + u + w, 0)) - math_sqrt(math_max(2 - u + w, 0))), 0.5 * (math_sqrt(math_max(2 + v - w, 0)) - math_sqrt(math_max(2 - v - w, 0))))
 end
@@ -277,7 +271,7 @@ Geometry.is_point_inside_triangle = function (point_on_plane, tri_a, tri_b, tri_
 	end
 
 	local pca_n = Vector3.cross(pc, pa)
-	local best_normal = Vector3_dot(pbc_n, pbc_n) < Vector3_dot(pab_n, pab_n) and pab_n or pbc_n
+	local best_normal = Vector3_dot(pab_n, pab_n) > Vector3_dot(pbc_n, pbc_n) and pab_n or pbc_n
 	local dot_product = Vector3_dot(best_normal, pca_n)
 
 	if dot_product < 0 then
@@ -317,10 +311,12 @@ Geometry.closest_point_on_line = EngineOptimized.closest_point_on_line
 Geometry.closest_point_on_polyline = function (point, points, start_index, end_index)
 	local vector3_distance_squared = Vector3.distance_squared
 	local closest_point_on_line = Geometry.closest_point_on_line
+
 	start_index = start_index or 1
 	end_index = end_index or #points
+
 	local shortest_distance = math.huge
-	local result_position, result_index = nil
+	local result_position, result_index
 
 	for i = start_index, end_index - 1 do
 		local p1 = points[i]
@@ -522,7 +518,7 @@ math.ease_out_elastic = function (t)
 
 	local p = 0.3
 
-	return 2^(-10 * t) * math_sin((t - p * 0.25) * 2 * pi / p) + 1
+	return 2^(-10 * t) * math_sin((t - p * 0.25) * (2 * pi) / p) + 1
 end
 
 math.ease_sine = function (t)
@@ -542,16 +538,13 @@ math.random_seed = function (seed)
 end
 
 math.distance_2d = function (x1, y1, x2, y2)
-	local dx = x2 - x1
-	local dy = y2 - y1
+	local dx, dy = x2 - x1, y2 - y1
 
 	return math_sqrt(dx * dx + dy * dy)
 end
 
 math.distance_3d = function (x1, y1, z1, x2, y2, z2)
-	local dx = x2 - x1
-	local dy = y2 - y1
-	local dz = z2 - z1
+	local dx, dy, dz = x2 - x1, y2 - y1, z2 - z1
 
 	return math_sqrt(dx * dx + dy * dy + dz * dz)
 end
@@ -603,7 +596,7 @@ end
 math.quat_rotate_towards = function (from, to, angle_rad)
 	local target_angle = math.quat_angle(from, to)
 
-	if math_abs(target_angle) < angle_rad or target_angle <= 0 then
+	if angle_rad > math_abs(target_angle) or target_angle <= 0 then
 		return to
 	end
 
@@ -623,6 +616,7 @@ math.uuid = function ()
 end
 
 local _uuidv4_pattern = "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx"
+
 _uuidv4_pattern = string.gsub(_uuidv4_pattern, "x", "%%x")
 _uuidv4_pattern = string.gsub(_uuidv4_pattern, "y", "[89ab]")
 _uuidv4_pattern = string.gsub(_uuidv4_pattern, "-", "%%-")

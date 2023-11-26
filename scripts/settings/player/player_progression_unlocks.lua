@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/player/player_progression_unlocks.lua
+
 local player_progression_unlocks = {
 	pot_contracts = 11,
 	talent_1 = 5,
@@ -33,8 +35,8 @@ local player_progression_unlocks = {
 			15
 		},
 		auric = {
-			[4.0] = 30,
-			[5.0] = 30
+			[4] = 30,
+			[5] = 30
 		}
 	},
 	mission_type_unlocks = {

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/credits_goods_vendor_view/credits_goods_vendor_view.lua
+
 local CreditsGoodsVendorViewSettings = require("scripts/ui/views/credits_goods_vendor_view/credits_goods_vendor_view_settings")
 local Definitions = require("scripts/ui/views/credits_goods_vendor_view/credits_goods_vendor_view_definitions")
 local InputUtils = require("scripts/managers/input/input_utils")
@@ -14,6 +16,7 @@ CreditsGoodsVendorView.init = function (self, settings, context)
 	CreditsGoodsVendorView.super.init(self, Definitions, settings, context)
 
 	local parent = context and context.parent
+
 	self._parent = parent
 	self._debug = context and context.debug
 
@@ -27,8 +30,9 @@ CreditsGoodsVendorView.set_loading_state = function (self, state)
 end
 
 CreditsGoodsVendorView.present_grid_layout = function (self, layout, on_present_callback)
-	local show_info = layout and table.size(layout) <= 0 or false
+	local show_info = layout and not (table.size(layout) > 0) or false
 	local widgets_by_name = self._widgets_by_name
+
 	widgets_by_name.title_text.content.visible = not show_info
 	widgets_by_name.description_text.content.visible = not show_info
 	widgets_by_name.divider.content.visible = not show_info
@@ -70,6 +74,7 @@ CreditsGoodsVendorView._setup_item_grid = function (self)
 		local text_style = style.text
 		local text_options = UIFonts.get_font_options_by_style(text_style)
 		local _, height = UIRenderer.text_size(ui_renderer, content.text, text_style.font_type, text_style.font_size, text_style.size, text_options)
+
 		height = height + 10
 
 		self:_set_scenegraph_size("title_text", nil, height)
@@ -90,9 +95,12 @@ CreditsGoodsVendorView._setup_item_grid = function (self)
 		local text_style = style.text
 		local text_options = UIFonts.get_font_options_by_style(text_style)
 		local _, height = UIRenderer.text_size(ui_renderer, content.text, text_style.font_type, text_style.font_size, text_style.size, text_options)
+
 		height = height + 10
+
 		local definitions = self._definitions
 		local grid_settings = definitions.grid_settings
+
 		grid_settings.top_padding = height
 
 		self:_set_scenegraph_size("description_text", nil, height)
@@ -105,8 +113,10 @@ CreditsGoodsVendorView._setup_item_grid = function (self)
 	end
 
 	total_height = total_height + 40
+
 	local definitions = self._definitions
 	local grid_settings = definitions.grid_settings
+
 	grid_settings.top_padding = total_height
 
 	CreditsGoodsVendorView.super._setup_item_grid(self)
@@ -121,6 +131,7 @@ CreditsGoodsVendorView._setup_result_overlay = function (self, result_data)
 
 	local reference_name = "result_overlay"
 	local layer = 40
+
 	self._result_overlay = self:_add_element(ViewElementItemResultOverlay, reference_name, layer)
 
 	self:_update_result_overlay_position()
@@ -192,9 +203,11 @@ CreditsGoodsVendorView._convert_offers_to_layout_entries = function (self, item_
 
 			if master_item then
 				local hud_icon = master_item.hud_icon
+
 				hud_icon = hud_icon or "content/ui/materials/icons/weapons/hud/combat_blade_01"
+
 				local display_name = master_item.display_name and Localize(master_item.display_name) or "n/a"
-				local weapon_level_requirement = nil
+				local weapon_level_requirement
 
 				for weapon_level, weapon_list in ipairs(archetype_weapon_unlocks) do
 					for i = 1, #weapon_list do
@@ -230,7 +243,7 @@ CreditsGoodsVendorView._convert_offers_to_layout_entries = function (self, item_
 	end
 
 	table.sort(layout, function (a, b)
-		return b.weapon_level_requirement < a.weapon_level_requirement
+		return a.weapon_level_requirement > b.weapon_level_requirement
 	end)
 
 	return layout
@@ -326,6 +339,7 @@ end
 
 CreditsGoodsVendorView._register_button_callbacks = function (self)
 	local widgets_by_name = self._widgets_by_name
+
 	widgets_by_name.purchase_button.content.hotspot.released_callback = callback(self, "_cb_on_purchase_pressed")
 end
 
@@ -369,6 +383,7 @@ CreditsGoodsVendorView._preview_element = function (self, element)
 
 	if info_box_widget then
 		local content = info_box_widget.content
+
 		content.header = display_name
 		content.icon = icon
 	end
@@ -384,6 +399,7 @@ end
 
 CreditsGoodsVendorView._set_preview_widgets_visibility = function (self, visible)
 	local widgets_by_name = self._widgets_by_name
+
 	widgets_by_name.price_text.content.visible = visible
 	widgets_by_name.purchase_button.content.visible = visible
 	widgets_by_name.price_icon.content.visible = visible

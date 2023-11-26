@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/out_of_bounds/out_of_bounds_manager.lua
+
 local OutOfBoundsManager = class("OutOfBoundsManager")
 local World_update_out_of_bounds_checker = World.update_out_of_bounds_checker
 local Unit_local_position = Unit.local_position
@@ -24,6 +26,7 @@ local function out_of_bounds_error(current_hard_oob)
 		if Unit_has_node(unit, RAGDOLL_POSITION_NODE_NAME) then
 			local ragdoll_position_node_index = Unit_node(unit, RAGDOLL_POSITION_NODE_NAME)
 			local ragdoll_position = Unit_world_position(unit, ragdoll_position_node_index)
+
 			ragdoll_position_text = string.format(" : %s = %s", RAGDOLL_POSITION_NODE_NAME, tostring(ragdoll_position))
 		end
 

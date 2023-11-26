@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/circumstance/templates/assault_circumstance_template.lua
+
 local circumstance_templates = {
 	assault_01 = {
 		wwise_state = "assault_01",

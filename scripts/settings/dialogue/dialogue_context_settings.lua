@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/dialogue/dialogue_context_settings.lua
+
 local Vo = require("scripts/utilities/vo")
 local dialogue_context_settings = {}
 
@@ -24,6 +26,7 @@ dialogue_context_settings.number_of_kills_callback = function (dialogue_context_
 	end
 
 	timed_counter.last_triggered_time = timed_counter.time_lived
+
 	local current_unit = dialogue_context_extension._unit
 
 	if not ScriptUnit.has_extension(current_unit, "dialogue_system") then
@@ -35,6 +38,7 @@ dialogue_context_settings.number_of_kills_callback = function (dialogue_context_
 	local dialogue_extension = ScriptUnit.extension(current_unit, "dialogue_system")
 	local timeset = Managers.time:time("gameplay") + 900
 	local killstreak_query = dialogue_extension:get_event_data_payload()
+
 	killstreak_query.killer_class = dialogue_extension:vo_class_name()
 	killstreak_query.number_of_kills = timed_counter.count
 
@@ -63,6 +67,7 @@ dialogue_context_settings.number_of_knocked_down_callback = function (dialogue_c
 	end
 
 	timed_counter.last_triggered_time = timed_counter.time_lived
+
 	local current_unit = dialogue_context_extension._unit
 
 	if not ScriptUnit.has_extension(current_unit, "dialogue_system") then
@@ -94,6 +99,7 @@ dialogue_context_settings.number_of_head_pops_callback = function (dialogue_cont
 	end
 
 	timed_counter.last_triggered_time = timed_counter.time_lived
+
 	local current_unit = dialogue_context_extension._unit
 
 	if not ScriptUnit.has_extension(current_unit, "dialogue_system") then
@@ -104,6 +110,7 @@ dialogue_context_settings.number_of_head_pops_callback = function (dialogue_cont
 
 	local dialogue_extension = ScriptUnit.extension(current_unit, "dialogue_system")
 	local head_pops_query = dialogue_extension:get_event_data_payload()
+
 	head_pops_query.killer_class = dialogue_extension:vo_class_name()
 
 	dialogue_extension:trigger_dialogue_event("multiple_head_pops", head_pops_query)
@@ -120,6 +127,7 @@ dialogue_context_settings.number_of_head_pops = {
 	trigger_when_higher = 2,
 	trigger_function = dialogue_context_settings.number_of_head_pops_callback
 }
+
 local suppression_query = {}
 
 dialogue_context_settings.number_of_player_suppressions_callback = function (dialogue_context_extension, timed_counter, t)
@@ -130,6 +138,7 @@ dialogue_context_settings.number_of_player_suppressions_callback = function (dia
 	end
 
 	timed_counter.last_triggered_time = timed_counter.time_lived
+
 	local current_unit = dialogue_context_extension._unit
 
 	if not ScriptUnit.has_extension(current_unit, "dialogue_system") then
@@ -167,6 +176,7 @@ dialogue_context_settings.number_of_armor_hits_callback = function (dialogue_con
 	end
 
 	timed_counter.last_triggered_time = timed_counter.time_lived
+
 	local current_unit = dialogue_context_extension._unit
 
 	if not ScriptUnit.has_extension(current_unit, "dialogue_system") then
@@ -177,6 +187,7 @@ dialogue_context_settings.number_of_armor_hits_callback = function (dialogue_con
 
 	local dialogue_extension = ScriptUnit.extension(current_unit, "dialogue_system")
 	local armor_hit_query = dialogue_extension:get_event_data_payload()
+
 	armor_hit_query.player_class = dialogue_extension:vo_class_name()
 
 	dialogue_extension:trigger_faction_dialogue_query("player_tip_armor_hit", armor_hit_query, nil, dialogue_extension._faction_breed_name, true)

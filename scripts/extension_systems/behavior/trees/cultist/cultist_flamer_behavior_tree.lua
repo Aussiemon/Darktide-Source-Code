@@ -1,19 +1,21 @@
+﻿-- chunkname: @scripts/extension_systems/behavior/trees/cultist/cultist_flamer_behavior_tree.lua
+
 local BreedActions = require("scripts/settings/breed/breed_actions")
 local action_data = BreedActions.cultist_flamer
 local MELEE_COMBAT = {
 	"BtRandomUtilityNode",
+	condition_args = {
+		combat_ranges = {
+			melee = true
+		}
+	},
 	{
 		"BtMeleeAttackAction",
 		name = "melee_attack",
 		action_data = action_data.melee_attack
 	},
 	name = "melee_combat",
-	condition = "is_aggroed_in_combat_range",
-	condition_args = {
-		combat_ranges = {
-			melee = true
-		}
-	}
+	condition = "is_aggroed_in_combat_range"
 }
 local COMBAT = {
 	"BtSequenceNode",

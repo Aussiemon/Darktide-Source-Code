@@ -1,8 +1,10 @@
+﻿-- chunkname: @scripts/settings/equipment/weapon_templates/pocketables/ammo_cache_pocketable.lua
+
 local PockatablesTemplateSettings = require("scripts/settings/equipment/weapon_templates/pocketables/settings_templates/pockatables_template_settings")
 local FootstepIntervalsTemplates = require("scripts/settings/equipment/footstep/footstep_intervals_templates")
-local weapon_template = {
-	action_inputs = {}
-}
+local weapon_template = {}
+
+weapon_template.action_inputs = {}
 
 table.add_missing(weapon_template.action_inputs, PockatablesTemplateSettings.action_inputs)
 

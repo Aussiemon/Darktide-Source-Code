@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/equipment/weapon_templates/ripperguns/settings_templates/rippergun_suppression_templates.lua
+
 local suppression_templates = {}
 local overrides = {}
 

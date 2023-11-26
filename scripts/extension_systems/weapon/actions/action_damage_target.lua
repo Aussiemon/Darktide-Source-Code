@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/weapon/actions/action_damage_target.lua
+
 require("scripts/extension_systems/weapon/actions/action_weapon_base")
 
 local ActionUtility = require("scripts/extension_systems/weapon/actions/utilities/action_utility")
@@ -19,7 +21,9 @@ ActionDamageTarget.init = function (self, action_context, action_params, action_
 	ActionDamageTarget.super.init(self, action_context, action_params, action_settings)
 
 	self._action_settings = action_settings
+
 	local unit_data_extension = action_context.unit_data_extension
+
 	self._warp_charge_component = unit_data_extension:write_component("warp_charge")
 	self._action_module_charge_component = unit_data_extension:write_component("action_module_charge")
 	self._action_module_targeting_component = unit_data_extension:write_component("action_module_targeting")
@@ -29,6 +33,7 @@ ActionDamageTarget.start = function (self, action_settings, t, time_scale, start
 	ActionDamageTarget.super.start(self, action_settings, t, time_scale, start_params)
 
 	self._dealt_damage = false
+
 	local last_action_warp_charge_percent = start_params.starting_warp_charge_percent
 
 	if last_action_warp_charge_percent then
@@ -38,7 +43,9 @@ ActionDamageTarget.start = function (self, action_settings, t, time_scale, start
 		local stat_buffs = self._buff_extension:stat_buffs()
 		local warp_charge_reduction = stat_buffs.warp_charge_amount or 1
 		local new_dif = dif * warp_charge_reduction
+
 		extreme_warp_charge_threshold = 1 - new_dif
+
 		local empowered_grenade = self._buff_extension:has_keyword(buff_keywords.psyker_empowered_grenade)
 
 		if empowered_grenade or last_action_warp_charge_percent < extreme_warp_charge_threshold then
@@ -89,6 +96,7 @@ ActionDamageTarget._consume_charge_level = function (self)
 
 	local action_module_charge_component = self._action_module_charge_component
 	local charge_level = action_module_charge_component.charge_level
+
 	action_module_charge_component.charge_level = 0
 
 	return charge_level
@@ -113,7 +121,7 @@ ActionDamageTarget._deal_damage = function (self, charge_level)
 	local target_unit_data_extension = ScriptUnit.has_extension(target_unit, "unit_data_system")
 	local target_breed = target_unit_data_extension and target_unit_data_extension:breed()
 	local hit_world_position = hit_unit_pos
-	local hit_zone_name, hit_actor = nil
+	local hit_zone_name, hit_actor
 
 	if target_breed then
 		local hit_zone_weakspot_types = target_breed.hit_zone_weakspot_types
@@ -121,9 +129,12 @@ ActionDamageTarget._deal_damage = function (self, charge_level)
 		local hit_zone = hit_zone_weakspot_types and (hit_zone_weakspot_types[preferred_hit_zone_name] and preferred_hit_zone_name or next(hit_zone_weakspot_types)) or hit_zone_names.center_mass
 		local actors = HitZone.get_actor_names(target_unit, hit_zone)
 		local hit_actor_name = actors[1]
+
 		hit_zone_name = hit_zone
 		hit_actor = Unit.actor(target_unit, hit_actor_name)
+
 		local actor_node = Actor.node(hit_actor)
+
 		hit_world_position = Unit.world_position(target_unit, actor_node)
 	end
 

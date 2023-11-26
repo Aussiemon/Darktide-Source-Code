@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/equipment/weapon_templates/flamers/settings_templates/flamer_sway_templates.lua
+
 local sway_templates = {}
 local overrides = {}
 

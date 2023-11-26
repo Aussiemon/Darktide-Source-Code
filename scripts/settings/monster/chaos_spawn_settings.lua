@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/monster/chaos_spawn_settings.lua
+
 local chaos_spawn_settings = {
 	offset_in_front_of_target = 3,
 	max_leap_distance = 25,

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/backend/master_items.lua
+
 local MasterItems = {}
 
 local function assert_backend()
@@ -109,7 +111,7 @@ local function _fallback_item(gear)
 	return fallback
 end
 
-local _merge_item_data_recursive = nil
+local _merge_item_data_recursive
 
 function _merge_item_data_recursive(dest, source)
 	for key, value in pairs(source) do
@@ -162,6 +164,7 @@ local function _update_master_data(item_instance)
 
 	local gear = rawget(item_instance, "__gear")
 	local item = rawget(MasterItems.get_cached(), gear.masterDataInstance.id)
+
 	item = item or _fallback_item(gear)
 
 	if item then

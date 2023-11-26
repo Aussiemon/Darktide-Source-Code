@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/item_grid_view_base/item_grid_view_base_definitions.lua
+
 local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templates")
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
@@ -33,30 +35,34 @@ local grid_settings = {
 	title_height = title_height,
 	edge_padding = edge_padding
 }
-local weapon_stats_grid_settings = nil
-local padding = 12
-local width = 530
-local height = 920
-weapon_stats_grid_settings = {
-	scrollbar_width = 7,
-	ignore_blur = true,
-	title_height = 70,
-	use_parent_world = false,
-	using_custom_gamepad_navigation = false,
-	grid_spacing = {
-		0,
-		0
-	},
-	grid_size = {
-		width - padding,
-		height
-	},
-	mask_size = {
-		width + 40,
-		height
-	},
-	edge_padding = padding
-}
+local weapon_stats_grid_settings
+
+do
+	local padding = 12
+	local width, height = 530, 920
+
+	weapon_stats_grid_settings = {
+		scrollbar_width = 7,
+		ignore_blur = true,
+		title_height = 70,
+		use_parent_world = false,
+		using_custom_gamepad_navigation = false,
+		grid_spacing = {
+			0,
+			0
+		},
+		grid_size = {
+			width - padding,
+			height
+		},
+		mask_size = {
+			width + 40,
+			height
+		},
+		edge_padding = padding
+	}
+end
+
 local scenegraph_definition = {
 	screen = UIWorkspaceSettings.screen,
 	canvas = {
@@ -124,7 +130,7 @@ local scenegraph_definition = {
 			0
 		},
 		position = {
-			-1140 + grid_size[1] - 50,
+			-1140 + (grid_size[1] - 50),
 			80,
 			3
 		}
@@ -215,11 +221,15 @@ local scenegraph_definition = {
 	}
 }
 local display_name_style = table.clone(UIFontSettings.header_2)
+
 display_name_style.text_horizontal_alignment = "left"
 display_name_style.text_vertical_alignment = "center"
+
 local sub_display_name_style = table.clone(UIFontSettings.body)
+
 sub_display_name_style.text_horizontal_alignment = "left"
 sub_display_name_style.text_vertical_alignment = "center"
+
 local widget_definitions = {
 	display_name_divider = UIWidget.create_definition({
 		{
@@ -287,6 +297,7 @@ local animations = {
 			end,
 			update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress, params)
 				local anim_progress = math.easeOutCubic(progress)
+
 				parent._alpha_multiplier = anim_progress
 			end,
 			on_complete = function (parent, ui_scenegraph, scenegraph_definition, widgets, params)

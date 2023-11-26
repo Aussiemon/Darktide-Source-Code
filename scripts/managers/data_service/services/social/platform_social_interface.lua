@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/data_service/services/social/platform_social_interface.lua
+
 local platform_social_interface = {
 	"friends_list_has_changes",
 	"fetch_friends_list",

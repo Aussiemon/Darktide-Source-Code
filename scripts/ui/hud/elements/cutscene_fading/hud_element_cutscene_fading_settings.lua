@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/hud/elements/cutscene_fading/hud_element_cutscene_fading_settings.lua
+
 local hud_element_cutscene_fading_settings = {
 	render_settings = {
 		viewport_type = "overlay",

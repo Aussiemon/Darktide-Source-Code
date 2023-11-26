@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/components/demolition_synchronizer.lua
+
 local DemolitionSynchronizer = component("DemolitionSynchronizer")
 
 DemolitionSynchronizer.init = function (self, unit, is_server)
@@ -5,6 +7,7 @@ DemolitionSynchronizer.init = function (self, unit, is_server)
 	self._is_server = is_server
 	self._attached_units = {}
 	self._destructed_units = 0
+
 	local demolition_synchronizer_extension = ScriptUnit.fetch_component_extension(unit, "event_synchronizer_system")
 
 	if demolition_synchronizer_extension then

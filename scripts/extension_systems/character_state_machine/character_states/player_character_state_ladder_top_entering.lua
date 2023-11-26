@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/character_state_machine/character_states/player_character_state_ladder_top_entering.lua
+
 require("scripts/extension_systems/character_state_machine/character_states/player_character_state_base")
 
 local ForceRotation = require("scripts/extension_systems/locomotion/utilities/force_rotation")
@@ -16,8 +18,10 @@ local LADDER_ENTER_END_NODE = "node_enter_end"
 PlayerCharacterStateLadderTopEntering.on_enter = function (self, unit, dt, t, previous_state, params)
 	local ladder_unit = params.ladder_unit
 	local locomotion_steering = self._locomotion_steering_component
+
 	locomotion_steering.move_method = "script_driven"
 	locomotion_steering.calculate_fall_velocity = false
+
 	local animation_time = self._constants.ladder_top_entering_animation_time
 	local duration = self._constants.ladder_top_entering_time
 	local ladder_character_state_component = self._ladder_character_state_component
@@ -26,6 +30,7 @@ PlayerCharacterStateLadderTopEntering.on_enter = function (self, unit, dt, t, pr
 	local top_node = Unit.node(ladder_unit, LADDER_TOP_NODE)
 	local exit_pos = Unit.world_position(ladder_unit, enter_end_node or top_node)
 	local velocity_wanted = self:_velocity_wanted(ladder_unit, unit, duration)
+
 	locomotion_steering.velocity_wanted = velocity_wanted
 	ladder_character_state_component.top_enter_leave_timer = t + duration
 	ladder_character_state_component.end_position = exit_pos
@@ -114,8 +119,9 @@ PlayerCharacterStateLadderTopEntering._check_transition = function (self, t, nex
 		return health_transition
 	end
 
-	if self._ladder_character_state_component.top_enter_leave_timer <= t then
+	if t >= self._ladder_character_state_component.top_enter_leave_timer then
 		local ladder_unit = Managers.state.unit_spawner:unit(self._ladder_character_state_component.ladder_unit_id, true)
+
 		next_state_params.ladder_unit = ladder_unit
 
 		return "ladder_climbing"

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/components/barrel_overheat.lua
+
 local BarrelOverheat = component("BarrelOverheat")
 local BARREL_OVERHEAT_MATERIAL_VARIABLE = "overheat"
 

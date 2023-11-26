@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/talent_builder_view/talent_builder_view_definitions.lua
+
 local ColorUtilities = require("scripts/utilities/ui/colors")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local UIWorkspaceSettings = require("scripts/settings/ui/ui_workspace_settings")
@@ -313,16 +315,20 @@ local overlay_scenegraph_definition = {
 
 local function node_highligt_change_function(content, style, _, dt)
 	local alpha_anim_progress = content.alpha_anim_progress or 0
-	local alpha_fraction = nil
+	local alpha_fraction
 
 	if content.highlighted and content.has_points_spent then
 		local alpha_speed = 2
+
 		alpha_anim_progress = math.min(alpha_anim_progress + dt * alpha_speed, 1)
+
 		local bounce_amount = 3.14
 		local bounce_value = math.abs(math.sin(bounce_amount * (alpha_anim_progress + 1) * (alpha_anim_progress + 1)) * (1 - alpha_anim_progress))
+
 		alpha_fraction = 1 - bounce_value
 	else
 		local alpha_speed = 8
+
 		alpha_anim_progress = math.max(alpha_anim_progress - dt * alpha_speed, 0)
 		alpha_fraction = alpha_anim_progress
 	end
@@ -336,7 +342,9 @@ local function node_icon_change_function(content, style, _, dt)
 
 	if node_data then
 		local material_values = style.material_values
+
 		material_values.saturation = content.locked and 1 or 1
+
 		local intensity_speed = 8
 
 		if intensity_speed then
@@ -349,6 +357,7 @@ local function node_icon_change_function(content, style, _, dt)
 			end
 
 			content.intensity_anim_progress = intensity_anim_progress
+
 			local highlight_intensity_anim_progress = content.highlight_intensity_anim_progress or 0
 			local highlight_intensity_speed = 0.8
 			local highlight_intensity = 0
@@ -363,11 +372,12 @@ local function node_icon_change_function(content, style, _, dt)
 			content.highlight_intensity_anim_progress = highlight_intensity_anim_progress
 
 			if content.locked then
-				material_values.intensity = -0.65 + highlight_intensity + 0.65 * intensity_anim_progress
+				material_values.intensity = -0.65 + (highlight_intensity + 0.65 * intensity_anim_progress)
 			else
 				local pulse_speed = 5.5
 				local pulse_progress = 0.5 + math.sin(Application.time_since_launch() * pulse_speed) * 0.5
-				material_values.intensity = -0.25 + highlight_intensity + math.max(0.15 * pulse_progress, 0.25 * intensity_anim_progress)
+
+				material_values.intensity = -0.25 + (highlight_intensity + math.max(0.15 * pulse_progress, 0.25 * intensity_anim_progress))
 			end
 		end
 
@@ -996,11 +1006,14 @@ local widget_definitions = {
 
 				if effect_progress < 1 then
 					local selection_anim_speed = 1.5
+
 					effect_progress = effect_progress + dt * selection_anim_speed
 					material_values.effect_progress = math.min(effect_progress, 1)
+
 					local size_addition = style.size_addition
 					local size_increase_value = 5
 					local size_anim_value = -size_increase_value + math.min(math.ease_pulse(effect_progress), 1) * size_increase_value
+
 					size_addition[1] = size_anim_value
 					size_addition[2] = size_anim_value
 				end
@@ -1252,6 +1265,7 @@ local widget_definitions = {
 				local hotspot = content.hotspot
 				local anim_progress = math.max(hotspot.anim_hover_progress, hotspot.anim_select_progress)
 				local hover_alpha = anim_progress * 255
+
 				style.color[1] = hover_alpha
 			end
 		}
@@ -1343,6 +1357,7 @@ local widget_definitions = {
 				local hotspot = content.hotspot
 				local anim_progress = math.max(hotspot.anim_hover_progress, hotspot.anim_select_progress)
 				local hover_alpha = anim_progress * 255
+
 				style.color[1] = hover_alpha
 			end
 		}
@@ -1434,6 +1449,7 @@ local widget_definitions = {
 				local hotspot = content.hotspot
 				local anim_progress = math.max(hotspot.anim_hover_progress, hotspot.anim_select_progress)
 				local hover_alpha = anim_progress * 255
+
 				style.color[1] = hover_alpha
 			end
 		}
@@ -2070,6 +2086,7 @@ local animations = {
 
 				widgets.tutorial_button_1.alpha_multiplier = 0
 				widgets.tutorial_button_2.alpha_multiplier = 0
+
 				local tutorial_grid = parent._tutorial_grid
 				local grid_widgets = tutorial_grid and tutorial_grid:widgets()
 
@@ -2088,6 +2105,7 @@ local animations = {
 				local anim_progress = math.easeCubic(progress)
 				local tutorial_window = widgets.tutorial_window
 				local alpha = 100 * anim_progress
+
 				tutorial_window.style.screen_background.color[1] = alpha
 				tutorial_window.style.screen_background_vignette.color[1] = alpha
 			end
@@ -2101,6 +2119,7 @@ local animations = {
 				local tutorial_window = widgets.tutorial_window
 				local alpha = 255 * anim_progress
 				local window_style = tutorial_window.style
+
 				window_style.background.color[1] = alpha
 				window_style.background_gradient.color[1] = 200 * anim_progress
 				window_style.outer_shadow.color[1] = 200 * anim_progress
@@ -2128,8 +2147,10 @@ local animations = {
 
 				widgets.tutorial_button_1.alpha_multiplier = anim_progress
 				widgets.tutorial_button_2.alpha_multiplier = anim_progress
+
 				local alpha = 255 * anim_progress
 				local tutorial_window = widgets.tutorial_window
+
 				tutorial_window.style.title.text_color[1] = alpha
 				tutorial_window.style.page_counter.text_color[1] = alpha
 				tutorial_window.style.image.color[1] = alpha

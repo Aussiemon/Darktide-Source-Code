@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/behavior/trees/chaos/chaos_beast_of_nurgle_behavior_tree.lua
+
 local BreedActions = require("scripts/settings/breed/breed_actions")
 local action_data = BreedActions.chaos_beast_of_nurgle
 local HUNT = {
@@ -12,6 +14,9 @@ local HUNT = {
 }
 local VOMIT = {
 	"BtSequenceNode",
+	condition_args = {
+		wanted_distance = 10
+	},
 	{
 		"BtBeastOfNurgleAlignAction",
 		name = "align",
@@ -24,10 +29,7 @@ local VOMIT = {
 		action_data = action_data.vomit
 	},
 	name = "vomiting",
-	condition = "beast_of_nurgle_should_vomit",
-	condition_args = {
-		wanted_distance = 10
-	}
+	condition = "beast_of_nurgle_should_vomit"
 }
 local CONSUME = {
 	"BtSequenceNode",
@@ -61,6 +63,7 @@ local DASH_AND_CONSUME = {
 }
 local SPIT_OUT_CONSUMED_UNIT = {
 	"BtSequenceNode",
+	action_data = action_data.spit_out,
 	{
 		"BtBeastOfNurgleSpitOutAction",
 		name = "spit_out",
@@ -68,8 +71,7 @@ local SPIT_OUT_CONSUMED_UNIT = {
 		action_data = action_data.spit_out
 	},
 	name = "spit_out",
-	condition = "beast_of_nurgle_has_spit_out_target",
-	action_data = action_data.spit_out
+	condition = "beast_of_nurgle_has_spit_out_target"
 }
 local MELEE_PUSH_BACK_ATTACKS = {
 	"BtSelectorNode",
@@ -135,6 +137,7 @@ local MELEE_PUSH_BACK_ATTACKS = {
 }
 local RUN_AWAY = {
 	"BtSequenceNode",
+	action_data = action_data.run_away,
 	{
 		"BtRunAwayAction",
 		name = "run_away",
@@ -142,8 +145,7 @@ local RUN_AWAY = {
 		action_data = action_data.run_away
 	},
 	name = "run_away",
-	condition = "beast_of_nurgle_wants_to_run_away",
-	action_data = action_data.run_away
+	condition = "beast_of_nurgle_wants_to_run_away"
 }
 local ALERTED = {
 	"BtSequenceNode",

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/voting/voting_templates/new_hub_session_voting_template_immaterium.lua
+
 local new_hub_session_voting_template_immaterium = {
 	voting_impl = "party_immaterium",
 	name = "new_hub_session_immaterium",

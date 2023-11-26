@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/voice_over/voice_over_spawn_manager.lua
+
 local DialogueBreedSettings = require("scripts/settings/dialogue/dialogue_breed_settings")
 local LevelProps = require("scripts/settings/level_prop/level_props")
 local Vo = require("scripts/utilities/vo")
@@ -14,6 +16,7 @@ end
 
 VoiceOverSpawnManager.on_gameplay_post_init = function (self, level)
 	self._level = level
+
 	local vo_classes_2d = DialogueBreedSettings.voice_classes_2d
 	local mission_info = Managers.state.mission:mission()
 	local mission_brief_vo = mission_info and mission_info.mission_brief_vo
@@ -23,6 +26,7 @@ VoiceOverSpawnManager.on_gameplay_post_init = function (self, level)
 
 		if mission_giver_packs then
 			local mission_giver = self:current_voice_profile()
+
 			vo_classes_2d = mission_giver_packs[mission_giver]
 		end
 	end
@@ -38,8 +42,7 @@ VoiceOverSpawnManager.on_gameplay_post_init = function (self, level)
 end
 
 VoiceOverSpawnManager.delete_units = function (self)
-	local voice_over_units = self._voice_over_units
-	local unit_spawner_manager = self._unit_spawner_manager
+	local voice_over_units, unit_spawner_manager = self._voice_over_units, self._unit_spawner_manager
 
 	for voice_profile, vo_unit in pairs(voice_over_units) do
 		unit_spawner_manager:mark_for_deletion(vo_unit)
@@ -54,8 +57,7 @@ VoiceOverSpawnManager._create_units = function (self, dialogue_breed_settings)
 	local unit_name = props_settings.unit_name
 	local unit_template_name = props_settings.unit_template_name
 	local voice_over_settings = table.clone(props_settings)
-	local voice_profiles = dialogue_breed_settings.wwise_voices
-	local voice_over_units = self._voice_over_units
+	local voice_profiles, voice_over_units = dialogue_breed_settings.wwise_voices, self._voice_over_units
 
 	for _, voice_profile in pairs(voice_profiles) do
 		local vo_unit = unit_spawner_manager:spawn_network_unit(unit_name, unit_template_name, nil, nil, nil, voice_over_settings)

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/buff/weapon_traits_buff_templates/weapon_traits_bespoke_forcestaff_p1_buff_templates.lua
+
 local BaseWeaponTraitBuffTemplates = require("scripts/settings/buff/weapon_traits_buff_templates/base_weapon_trait_buff_templates")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local CheckProcFunctions = require("scripts/settings/buff/validation_functions/check_proc_functions")
@@ -6,12 +8,12 @@ local WarpCharge = require("scripts/utilities/warp_charge")
 local keywords = BuffSettings.keywords
 local stat_buffs = BuffSettings.stat_buffs
 local proc_events = BuffSettings.proc_events
-local templates = {
-	weapon_trait_bespoke_forcestaff_p1_vents_warpcharge_on_weakspot_hits = table.clone(BaseWeaponTraitBuffTemplates.vents_warpcharge_on_weakspot_hits),
-	weapon_trait_bespoke_forcestaff_p1_suppression_on_close_kill = table.clone(BaseWeaponTraitBuffTemplates.suppression_on_close_kill),
-	weapon_trait_bespoke_forcestaff_p1_hipfire_while_sprinting = table.clone(BaseWeaponTraitBuffTemplates.hipfire_while_sprinting),
-	weapon_trait_bespoke_forcestaff_p1_followup_shots_ranged_damage = table.clone(BaseWeaponTraitBuffTemplates.followup_shots_ranged_damage)
-}
+local templates = {}
+
+templates.weapon_trait_bespoke_forcestaff_p1_vents_warpcharge_on_weakspot_hits = table.clone(BaseWeaponTraitBuffTemplates.vents_warpcharge_on_weakspot_hits)
+templates.weapon_trait_bespoke_forcestaff_p1_suppression_on_close_kill = table.clone(BaseWeaponTraitBuffTemplates.suppression_on_close_kill)
+templates.weapon_trait_bespoke_forcestaff_p1_hipfire_while_sprinting = table.clone(BaseWeaponTraitBuffTemplates.hipfire_while_sprinting)
+templates.weapon_trait_bespoke_forcestaff_p1_followup_shots_ranged_damage = table.clone(BaseWeaponTraitBuffTemplates.followup_shots_ranged_damage)
 templates.weapon_trait_bespoke_forcestaff_p1_followup_shots_ranged_damage.conditional_stat_buffs = {
 	[stat_buffs.charge_level_modifier] = 0.05
 }
@@ -39,11 +41,14 @@ templates.weapon_trait_bespoke_forcestaff_p1_rend_armor_on_aoe_charge = {
 		local unit = template_context.unit
 		local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
 		local weapon_action_component = unit_data_extension:read_component("weapon_action")
+
 		template_data.weapon_action_component = weapon_action_component
+
 		local template = template_context.template
 		local target_buff_data = template.target_buff_data
 		local template_override_data = template_context.template_override_data
 		local override_target_buff_data = template_override_data.target_buff_data
+
 		template_data.internal_buff_name = override_target_buff_data and override_target_buff_data.internal_buff_name or target_buff_data.internal_buff_name
 		template_data.num_stacks_on_proc = override_target_buff_data and override_target_buff_data.num_stacks_on_proc or target_buff_data.num_stacks_on_proc
 		template_data.max_stacks = override_target_buff_data and override_target_buff_data.max_stacks or target_buff_data.max_stacks

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/hud/elements/player_ability_handler/hud_element_player_ability_handler_definitions.lua
+
 local HudElementPlayerAbilityHandlerSettings = require("scripts/ui/hud/elements/player_ability_handler/hud_element_player_ability_handler_settings")
 local UIWorkspaceSettings = require("scripts/settings/ui/ui_workspace_settings")
 local scenegraph_definition = {

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/animation/utilities/player_unit_animation_state.lua
+
 local PlayerUnitAnimationMachineSettings = require("scripts/settings/animation/player_unit_animation_state_machine_settings")
 local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
 local PlayerUnitAnimationStateConfig = require("scripts/extension_systems/animation/utilities/player_unit_animation_state_config")
@@ -11,30 +13,30 @@ local Unit_animation_get_state = Unit.animation_get_state
 local Unit_animation_get_time = Unit.animation_get_time
 local _output_table = {}
 local TIMES_3P, ANIMS_3P, STATES_3P, TIMES_1P, ANIMS_1P, STATES_1P = PlayerUnitAnimationStateConfig.format(animation_rollback)
-local NUM_LAYERS_3P = animation_rollback.num_layers_3p
-local NUM_LAYERS_1P = animation_rollback.num_layers_1p
-local _set_anim_state_machine, _record_times, _record_animations, _record_states, _override_times, _override_animations, _override_states, _compare_animations, _compare_states, _compare_times, _log = nil
-local PlayerUnitAnimationState = {
-	init_anim_state_component = function (animation_state_component)
-		local invalid_player_anim_time = NetworkConstants.invalid_player_anim_time
-		local invalid_player_anim = NetworkConstants.invalid_player_anim
-		local invalid_player_anim_state = NetworkConstants.invalid_player_anim_state
-		animation_state_component.num_layers_3p = NUM_LAYERS_3P
-		animation_state_component.num_layers_1p = NUM_LAYERS_1P
+local NUM_LAYERS_3P, NUM_LAYERS_1P = animation_rollback.num_layers_3p, animation_rollback.num_layers_1p
+local _set_anim_state_machine, _record_times, _record_animations, _record_states, _override_times, _override_animations, _override_states, _compare_animations, _compare_states, _compare_times, _log
+local PlayerUnitAnimationState = {}
 
-		for i = 1, NUM_LAYERS_3P do
-			animation_state_component[TIMES_3P[i]] = invalid_player_anim_time
-			animation_state_component[ANIMS_3P[i]] = invalid_player_anim
-			animation_state_component[STATES_3P[i]] = invalid_player_anim_state
-		end
+PlayerUnitAnimationState.init_anim_state_component = function (animation_state_component)
+	local invalid_player_anim_time = NetworkConstants.invalid_player_anim_time
+	local invalid_player_anim = NetworkConstants.invalid_player_anim
+	local invalid_player_anim_state = NetworkConstants.invalid_player_anim_state
 
-		for i = 1, NUM_LAYERS_1P do
-			animation_state_component[TIMES_1P[i]] = invalid_player_anim_time
-			animation_state_component[ANIMS_1P[i]] = invalid_player_anim
-			animation_state_component[STATES_1P[i]] = invalid_player_anim_state
-		end
+	animation_state_component.num_layers_3p = NUM_LAYERS_3P
+	animation_state_component.num_layers_1p = NUM_LAYERS_1P
+
+	for i = 1, NUM_LAYERS_3P do
+		animation_state_component[TIMES_3P[i]] = invalid_player_anim_time
+		animation_state_component[ANIMS_3P[i]] = invalid_player_anim
+		animation_state_component[STATES_3P[i]] = invalid_player_anim_state
 	end
-}
+
+	for i = 1, NUM_LAYERS_1P do
+		animation_state_component[TIMES_1P[i]] = invalid_player_anim_time
+		animation_state_component[ANIMS_1P[i]] = invalid_player_anim
+		animation_state_component[STATES_1P[i]] = invalid_player_anim_state
+	end
+end
 
 PlayerUnitAnimationState.set_anim_state_machine = function (player_unit, first_person_unit, weapon_template, is_local_unit, anim_variables_3p, anim_variables_1p)
 	local unit_data_extension = ScriptUnit.extension(player_unit, "unit_data_system")
@@ -60,12 +62,14 @@ PlayerUnitAnimationState.cache_anim_variable_ids = function (player_unit, first_
 	for i = 1, num_3p_variables do
 		local variable_name = animation_variables_to_cache_3p[i]
 		local id = Unit_animation_find_variable(player_unit, variable_name)
+
 		anim_variables_3p[variable_name] = id
 	end
 
 	for i = 1, num_1p_variables do
 		local variable_name = animation_variables_to_cache_1p[i]
 		local id = Unit_animation_find_variable(first_person_unit, variable_name)
+
 		anim_variables_1p[variable_name] = id
 	end
 end
@@ -155,8 +159,7 @@ local function _retrieve_time(time, invalid_player_anim_time, simulated_time)
 	end
 end
 
-local temp_times_3p = {}
-local temp_times_1p = {}
+local temp_times_3p, temp_times_1p = {}, {}
 
 function _override_times(animation_state_component, player_unit, first_person_unit, simulated_time, override_3p, override_1p)
 	local invalid_player_anim_time = NetworkConstants.invalid_player_anim_time
@@ -168,6 +171,7 @@ function _override_times(animation_state_component, player_unit, first_person_un
 
 		for i = 1, num_layers_3p do
 			local time = _retrieve_time(animation_state_component[TIMES_3P[i]], invalid_player_anim_time, simulated_time)
+
 			temp_times_3p[i] = time
 		end
 
@@ -181,6 +185,7 @@ function _override_times(animation_state_component, player_unit, first_person_un
 
 		for i = 1, num_layers_1p do
 			local time = _retrieve_time(animation_state_component[TIMES_1P[i]], invalid_player_anim_time, simulated_time)
+
 			temp_times_1p[i] = time
 		end
 
@@ -193,6 +198,7 @@ function _record_animations(animation_state_component, player_unit, first_person
 
 	for i = 1, num_anims_3p do
 		local anim = anims_3p[i]
+
 		animation_state_component[ANIMS_3P[i]] = anim
 	end
 
@@ -200,6 +206,7 @@ function _record_animations(animation_state_component, player_unit, first_person
 
 	for i = 1, num_anims_1p do
 		local anim = anims_1p[i]
+
 		animation_state_component[ANIMS_1P[i]] = anim
 	end
 end
@@ -219,8 +226,7 @@ function _compare_animations(animation_state_component, simulated_animation_stat
 	return false, false
 end
 
-local temp_anims_3p = {}
-local temp_anims_1p = {}
+local temp_anims_3p, temp_anims_1p = {}, {}
 
 function _override_animations(animation_state_component, player_unit, first_person_unit, override_3p, override_1p)
 	local invalid_player_anim = NetworkConstants.invalid_player_anim
@@ -265,18 +271,22 @@ end
 function _record_states(animation_state_component, player_unit, first_person_unit)
 	local invalid_player_anim_state = NetworkConstants.invalid_player_anim_state
 	local states_3p, num_states_3p = Unit_animation_get_state(player_unit, _output_table)
+
 	animation_state_component.num_layers_3p = num_states_3p
 
 	for i = 1, num_states_3p do
 		local state = states_3p[i] or invalid_player_anim_state
+
 		animation_state_component[STATES_3P[i]] = state
 	end
 
 	local states_1p, num_states_1p = Unit_animation_get_state(first_person_unit, _output_table)
+
 	animation_state_component.num_layers_1p = num_states_1p
 
 	for i = 1, num_states_1p do
 		local state = states_1p[i] or invalid_player_anim_state
+
 		animation_state_component[STATES_1P[i]] = state
 	end
 end
@@ -307,8 +317,7 @@ function _compare_states(animation_state_component, simulated_animation_state_co
 	return wants_override_3p, wants_override_1p
 end
 
-local temp_states_3p = {}
-local temp_states_1p = {}
+local temp_states_3p, temp_states_1p = {}, {}
 
 function _override_states(animation_state_component, player_unit, first_person_unit, override_3p, override_1p)
 	local invalid_player_anim_state = NetworkConstants.invalid_player_anim_state

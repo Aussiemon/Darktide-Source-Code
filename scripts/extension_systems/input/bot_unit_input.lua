@@ -1,9 +1,12 @@
+﻿-- chunkname: @scripts/extension_systems/input/bot_unit_input.lua
+
 local InputHandlerSettings = require("scripts/managers/player/player_game_states/input_handler_settings")
 local BotUnitInput = class("BotUnitInput")
 
 BotUnitInput.init = function (self, physics_world, player)
 	local ephemeral_actions = InputHandlerSettings.ephemeral_actions
 	local num_ephemeral_actions = #ephemeral_actions
+
 	self._input = {}
 	self._ephemeral_input = Script.new_map(num_ephemeral_actions)
 	self._move = {
@@ -28,6 +31,7 @@ end
 
 BotUnitInput.extensions_ready = function (self, world, unit)
 	local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
+
 	self._first_person_component = unit_data_extension:read_component("first_person")
 	self._character_state_component = unit_data_extension:read_component("character_state")
 	self._ladder_character_state_component = unit_data_extension:read_component("ladder_character_state")
@@ -38,8 +42,7 @@ BotUnitInput.extensions_ready = function (self, world, unit)
 end
 
 BotUnitInput.fixed_update = function (self, unit, dt, t, frame)
-	local input = self._input
-	local ephemeral_input = self._ephemeral_input
+	local input, ephemeral_input = self._input, self._ephemeral_input
 
 	table.merge(input, ephemeral_input)
 	table.clear(ephemeral_input)
@@ -110,6 +113,7 @@ BotUnitInput.set_look_at_player_unit = function (self, player_unit, rotation_all
 	if player_unit then
 		local unit_data_extension = ScriptUnit.extension(player_unit, "unit_data_system")
 		local first_person_component = unit_data_extension:read_component("first_person")
+
 		self._look_at_player_first_person_component = first_person_component
 	else
 		self._look_at_player_first_person_component = nil
@@ -147,11 +151,10 @@ BotUnitInput._update_movement = function (self, unit, input, dt, t)
 	local is_on_nav_mesh = navigation_extension.is_on_nav_mesh
 	local unit_position = POSITION_LOOKUP[unit]
 	local position_on_navmesh = is_on_nav_mesh and navigation_extension:latest_position_on_nav_mesh() or unit_position
-	local transition_jump = nil
+	local transition_jump
 	local first_person_component = self._first_person_component
-	local camera_position = first_person_component.position
-	local camera_rotation = first_person_component.rotation
-	local wanted_rotation = nil
+	local camera_position, camera_rotation = first_person_component.position, first_person_component.rotation
+	local wanted_rotation
 	local character_state_component = self._character_state_component
 	local character_state_name = character_state_component.state_name
 	local on_ladder = character_state_name == "ladder_climbing"
@@ -179,11 +182,13 @@ BotUnitInput._update_movement = function (self, unit, input, dt, t)
 		wanted_rotation = self._aim_rotation:unbox()
 	elseif self._aiming and self._soft_aiming then
 		local direction = self._aim_position:unbox() - camera_position
+
 		wanted_rotation = Quaternion_lerp(camera_rotation, Quaternion_look(direction, up), math.min(dt * 5, 1))
 	elseif self._aiming then
 		wanted_rotation = Quaternion_look(self._aim_position:unbox() - camera_position, up)
 	elseif look_at_player_unit and (has_cinematic_finished or look_at_player_has_moved) and (not current_goal or not navigation_extension:is_in_transition()) then
 		local look_rotation = self:_calculate_look_at_player_rotation(unit, camera_position, up)
+
 		wanted_rotation = Quaternion_lerp(camera_rotation, look_rotation, math.min(dt * 5, 1))
 	elseif current_goal then
 		local direction = current_goal - position_on_navmesh
@@ -197,6 +202,7 @@ BotUnitInput._update_movement = function (self, unit, input, dt, t)
 		end
 	else
 		local unit_rotation = Unit.local_rotation(unit, 1)
+
 		wanted_rotation = Quaternion_lerp(camera_rotation, unit_rotation, math.min(dt * 2, 1))
 	end
 
@@ -205,10 +211,11 @@ BotUnitInput._update_movement = function (self, unit, input, dt, t)
 
 	player:set_orientation(wanted_yaw, wanted_pitch, wanted_roll)
 
-	local flat_goal_vector, flat_goal_direction = nil
+	local flat_goal_vector, flat_goal_direction
 
 	if current_goal then
 		local goal_vector = current_goal - position_on_navmesh
+
 		flat_goal_vector = Vector3.flat(goal_vector)
 		flat_goal_direction = Vector3.normalize(flat_goal_vector)
 
@@ -225,7 +232,8 @@ BotUnitInput._update_movement = function (self, unit, input, dt, t)
 
 			if transition_jump then
 				local bot_direction = current_speed_sq < JUMP_DOT_USE_WANTED_DIR_EPS_SQ and flat_goal_direction or flat_velocity_current_direction
-				transition_jump_valid = MIN_JUMP_DIRECTION_DOT <= Vector3.dot(bot_direction, flat_goal_direction)
+
+				transition_jump_valid = Vector3.dot(bot_direction, flat_goal_direction) >= MIN_JUMP_DIRECTION_DOT
 			end
 
 			if lower_hit and not upper_hit or transition_jump_valid then
@@ -250,11 +258,13 @@ BotUnitInput._update_movement = function (self, unit, input, dt, t)
 			move.x = 0
 			move.y = 0
 		end
-	elseif t < threat_data.expires and threat_data.dodge_t < t then
+	elseif t < threat_data.expires and t > threat_data.dodge_t then
 		self:dodge()
 
 		self._avoiding_aoe_threat = true
+
 		local direction = threat_data.escape_direction:unbox()
+
 		move.x = Vector3.dot(Quaternion.right(wanted_rotation), direction)
 		move.y = Vector3.dot(Quaternion.forward(wanted_rotation), direction)
 	elseif not current_goal then
@@ -274,11 +284,12 @@ BotUnitInput._update_movement = function (self, unit, input, dt, t)
 
 		local flat_right = Vector3.flat(Quaternion.right(wanted_rotation))
 		local flat_forward = Vector3.flat(Quaternion.forward(wanted_rotation))
+
 		move.x = move_scale * Vector3.dot(flat_right, flat_goal_direction)
 		move.y = move_scale * Vector3.dot(flat_forward, flat_goal_direction)
 	end
 
-	if self._avoiding_aoe_threat and threat_data.expires <= t then
+	if self._avoiding_aoe_threat and t >= threat_data.expires then
 		if navigation_extension:destination_reached() then
 			navigation_extension:stop()
 		end
@@ -302,6 +313,7 @@ BotUnitInput._calculate_look_at_player_rotation = function (self, unit, camera_p
 		local yaw = math.clamp(Quaternion.yaw(delta_rotation), -max_yaw, max_yaw)
 		local pitch = Quaternion.pitch(delta_rotation)
 		local capped_delta_rotation = Quaternion.from_yaw_pitch_roll(yaw, pitch, 0)
+
 		look_rotation = Quaternion_multiply(unit_rotation, capped_delta_rotation)
 	end
 
@@ -315,9 +327,9 @@ BotUnitInput._obstacle_check = function (self, position, current_speed_sq, goal_
 	local jump_range_check_epsilon = 0.05
 	local width = 0.4
 	local depth = math.abs(math.min(0.5, Vector3.length(goal_vector) - jump_range_check_epsilon))
-	local height, half_extra_upper_depth, half_extra_upper_height = nil
+	local height, half_extra_upper_depth, half_extra_upper_height
 
-	if STUCK_JUMP_SPEED_THRESHOLD_SQ < current_speed_sq then
+	if current_speed_sq > STUCK_JUMP_SPEED_THRESHOLD_SQ then
 		height = 0.4
 		half_extra_upper_depth = 0.55
 		half_extra_upper_height = (0.8 - height) * 0.5

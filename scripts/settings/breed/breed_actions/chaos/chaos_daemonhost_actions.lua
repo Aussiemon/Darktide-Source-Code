@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/breed/breed_actions/chaos/chaos_daemonhost_actions.lua
+
 local ChaosDaemonhostSettings = require("scripts/settings/monster/chaos_daemonhost_settings")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local DamageSettings = require("scripts/settings/damage/damage_settings")

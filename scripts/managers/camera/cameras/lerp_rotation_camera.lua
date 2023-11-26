@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/camera/cameras/lerp_rotation_camera.lua
+
 local BaseCamera = require("scripts/managers/camera/cameras/base_camera")
 local LerpRotationCamera = class("LerpRotationCamera", "BaseCamera")
 
@@ -24,10 +26,10 @@ LerpRotationCamera.parse_parameters = function (self, camera_settings, parent_no
 end
 
 LerpRotationCamera.update = function (self, dt, position, rotation, data)
-	local lerp_rotation = nil
+	local lerp_rotation
 
 	if data.end_rotation_variable then
-		local start_rotation_variable = nil
+		local start_rotation_variable
 
 		if data.start_rotation_variable then
 			start_rotation_variable = data.start_rotation_variable:unbox()
@@ -35,12 +37,14 @@ LerpRotationCamera.update = function (self, dt, position, rotation, data)
 
 		if not self._old_lerp_rotation then
 			local old_lerp_rotation = start_rotation_variable or rotation
+
 			self._old_lerp_rotation = QuaternionBox(old_lerp_rotation)
 		end
 
 		local old_rotation = self._old_lerp_rotation:unbox()
 		local end_rotation = data.end_rotation_variable:unbox()
 		local lerp_t = dt * 2
+
 		lerp_rotation = Quaternion.lerp(old_rotation, end_rotation, lerp_t)
 
 		self._old_lerp_rotation:store(lerp_rotation)

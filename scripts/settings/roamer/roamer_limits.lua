@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/roamer/roamer_limits.lua
+
 local DEFAULT_REPLACEMENTS = {
 	chaos_ogryn_bulwark = {
 		renegade = {

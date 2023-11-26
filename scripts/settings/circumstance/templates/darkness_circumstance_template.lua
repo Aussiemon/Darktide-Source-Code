@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/circumstance/templates/darkness_circumstance_template.lua
+
 local circumstance_templates = {
 	darkness_01 = {
 		dialogue_id = "circumstance_vo_darkness",

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/behavior/nodes/actions/bt_shoot_liquid_beam_action.lua
+
 require("scripts/extension_systems/behavior/nodes/bt_node")
 
 local Animation = require("scripts/utilities/animation")
@@ -17,18 +19,25 @@ local STATES = table.index_lookup_table("passive", "aiming", "shooting")
 
 BtShootLiquidBeamAction.enter = function (self, unit, breed, blackboard, scratchpad, action_data, t)
 	local behavior_component = Blackboard.write_component(blackboard, "behavior")
+
 	behavior_component.move_state = "attacking"
 	scratchpad.behavior_component = behavior_component
+
 	local navigation_extension = ScriptUnit.extension(unit, "navigation_system")
 	local nav_world = navigation_extension:nav_world()
+
 	scratchpad.nav_world = nav_world
 	scratchpad.navigation_extension = navigation_extension
 	scratchpad.animation_extension = ScriptUnit.extension(unit, "animation_system")
+
 	local locomotion_extension = ScriptUnit.extension(unit, "locomotion_system")
+
 	scratchpad.locomotion_extension = locomotion_extension
 	scratchpad.perception_extension = ScriptUnit.extension(unit, "perception_system")
 	scratchpad.perception_component = Blackboard.write_component(blackboard, "perception")
+
 	local aim_component = Blackboard.write_component(blackboard, "aim")
+
 	scratchpad.aim_component = aim_component
 
 	MinionAttack.init_scratchpad_shooting_variables(unit, scratchpad, action_data, blackboard, breed)
@@ -37,18 +46,21 @@ BtShootLiquidBeamAction.enter = function (self, unit, breed, blackboard, scratch
 
 	if rotation_speed then
 		local current_rotation_speed = locomotion_extension:rotation_speed()
+
 		scratchpad.original_rotation_speed = current_rotation_speed
 
 		locomotion_extension:set_rotation_speed(rotation_speed)
 	end
 
 	local spawn_component = blackboard.spawn
+
 	scratchpad.spawn_component = spawn_component
 	scratchpad.breed = breed
 
 	self:_start_aiming(unit, t, scratchpad, action_data)
 
 	local fx_system = Managers.state.extension:system("fx_system")
+
 	scratchpad.fx_system = fx_system
 	scratchpad.unit = unit
 	scratchpad.hit_units = {}
@@ -70,9 +82,13 @@ BtShootLiquidBeamAction.leave = function (self, unit, breed, blackboard, scratch
 	self:_stop_liquid_beam(unit, scratchpad, blackboard)
 
 	local aim_component = scratchpad.aim_component
+
 	aim_component.controlled_aiming = false
+
 	local behavior_component = Blackboard.write_component(blackboard, "behavior")
+
 	behavior_component.move_state = "idle"
+
 	local is_anim_driven = scratchpad.is_anim_driven
 
 	if is_anim_driven then
@@ -90,7 +106,7 @@ BtShootLiquidBeamAction.run = function (self, unit, breed, blackboard, scratchpa
 	local shoot_state = scratchpad.shoot_state
 	local has_line_of_sight = scratchpad.perception_component.has_line_of_sight
 
-	if has_line_of_sight and action_data.can_strafe_shoot and shoot_state == "shooting" and (not scratchpad.next_try_to_strafe_shoot or scratchpad.next_try_to_strafe_shoot <= t) then
+	if has_line_of_sight and action_data.can_strafe_shoot and shoot_state == "shooting" and (not scratchpad.next_try_to_strafe_shoot or t >= scratchpad.next_try_to_strafe_shoot) then
 		self:_try_start_strafe_shooting(unit, t, scratchpad, action_data, breed)
 	end
 
@@ -118,6 +134,7 @@ BtShootLiquidBeamAction.run = function (self, unit, breed, blackboard, scratchpa
 				scratchpad.animation_extension:anim_event(end_anim_event)
 
 				local end_duration = action_data.end_durations[end_anim_event]
+
 				scratchpad.end_duration = t + end_duration
 				scratchpad.shoot_state = "ending"
 
@@ -127,7 +144,7 @@ BtShootLiquidBeamAction.run = function (self, unit, breed, blackboard, scratchpa
 			end
 		end
 	elseif shoot_state == "ending" then
-		if scratchpad.end_duration <= t then
+		if t >= scratchpad.end_duration then
 			return "done"
 		else
 			return "running"
@@ -138,7 +155,7 @@ BtShootLiquidBeamAction.run = function (self, unit, breed, blackboard, scratchpa
 	local self_position = POSITION_LOOKUP[unit]
 	local distance_to_target = Vector3.distance(self_position, target_position)
 
-	if action_data.range < distance_to_target or distance_to_target < action_data.min_range then
+	if distance_to_target > action_data.range or distance_to_target < action_data.min_range then
 		return "done"
 	end
 
@@ -149,6 +166,7 @@ local MAX_AIM_DURATION = 2
 
 BtShootLiquidBeamAction._start_aiming = function (self, unit, t, scratchpad, action_data)
 	scratchpad.aim_component.controlled_aiming = true
+
 	local aim_anim_events = action_data.aim_anim_events or "aim"
 	local aim_event = Animation.random_event(aim_anim_events)
 
@@ -159,6 +177,7 @@ BtShootLiquidBeamAction._start_aiming = function (self, unit, t, scratchpad, act
 	if type(aim_duration) == "table" then
 		local diff_aim_durations = Managers.state.difficulty:get_table_entry_by_challenge(aim_duration)
 		local duration = math.random_range(diff_aim_durations[1], diff_aim_durations[2])
+
 		scratchpad.aim_duration = duration
 	else
 		scratchpad.aim_duration = aim_duration
@@ -211,7 +230,7 @@ BtShootLiquidBeamAction._update_aim_turning = function (self, unit, scratchpad, 
 
 				scratchpad.current_aim_rotation_direction_name = "right"
 			end
-		elseif current_aim_rotation_direction_name ~= "fwd" and AIM_TURN_FWD_DOT_THRESHOLD < aim_dot then
+		elseif current_aim_rotation_direction_name ~= "fwd" and aim_dot > AIM_TURN_FWD_DOT_THRESHOLD then
 			animation_extension:anim_event(aim_rotation_anims.fwd)
 
 			scratchpad.current_aim_rotation_direction_name = "fwd"
@@ -287,6 +306,7 @@ BtShootLiquidBeamAction._start_shooting = function (self, unit, t, scratchpad, a
 	MinionAttack.start_shooting(unit, scratchpad, t, action_data, FIRST_SHOOT_TIMING)
 
 	scratchpad.shoot_state = "shooting"
+
 	local liquid_paint_id_from_component = action_data.liquid_paint_id_from_component
 
 	if liquid_paint_id_from_component then
@@ -304,6 +324,7 @@ BtShootLiquidBeamAction._start_shooting = function (self, unit, t, scratchpad, a
 		local shot_from, distance_to_from = self:_get_from_shoot_pos(unit, scratchpad, action_data)
 		local distance = Vector3.distance(unit_position, shot_from)
 		local place_liquid_timing = t + distance / action_data.place_liquid_timing_speed
+
 		scratchpad.place_liquid_timing = place_liquid_timing
 		scratchpad.distance_to_from = distance_to_from
 	end
@@ -347,9 +368,8 @@ BtShootLiquidBeamAction._update_shooting = function (self, unit, t, dt, scratchp
 			end
 		end
 
-		if scratchpad.aoe_bot_threat_timing and scratchpad.aoe_bot_threat_timing <= t then
-			local aoe_bot_threat_size = action_data.aoe_bot_threat_size:unbox()
-			local aoe_bot_threat_duration = action_data.aoe_bot_threat_duration
+		if scratchpad.aoe_bot_threat_timing and t >= scratchpad.aoe_bot_threat_timing then
+			local aoe_bot_threat_size, aoe_bot_threat_duration = action_data.aoe_bot_threat_size:unbox(), action_data.aoe_bot_threat_duration
 			local aoe_bot_threat_rotation = Quaternion.look(flat_to_target_direction)
 			local side_system = Managers.state.extension:system("side_system")
 			local side = side_system.side_by_unit[unit]
@@ -366,20 +386,21 @@ BtShootLiquidBeamAction._update_shooting = function (self, unit, t, dt, scratchp
 
 			scratchpad.aoe_bot_threat_timing = nil
 		end
-	elseif scratchpad.next_shoot_timing and scratchpad.next_shoot_timing <= t then
+	elseif scratchpad.next_shoot_timing and t >= scratchpad.next_shoot_timing then
 		scratchpad.shooting_liquid_beam = true
 		scratchpad.shot_start_t = t
 		scratchpad.next_shoot_timing = nil
+
 		local shot_from = self:_get_from_shoot_pos(unit, scratchpad, action_data)
 		local shot_to = self:_get_to_shoot_pos(unit, scratchpad, action_data)
+
 		scratchpad.from_shot_position = Vector3Box(shot_from)
 		scratchpad.to_shot_position = Vector3Box(shot_to)
 		scratchpad.next_sphere_cast_t = t + action_data.sphere_cast_frequency
 	end
 end
 
-local BELOW = 2
-local ABOVE = 1
+local BELOW, ABOVE = 2, 1
 local RAYCAST_DOWN_LENGTH = 5
 
 BtShootLiquidBeamAction._update_shooting_liquid_beam = function (self, unit, t, dt, scratchpad, action_data)
@@ -413,7 +434,7 @@ BtShootLiquidBeamAction._update_shooting_liquid_beam = function (self, unit, t, 
 		end
 	end
 
-	if scratchpad.place_liquid_timing and end_position and scratchpad.place_liquid_timing < t then
+	if scratchpad.place_liquid_timing and end_position and t > scratchpad.place_liquid_timing then
 		local side_system = Managers.state.extension:system("side_system")
 		local side = side_system.side_by_unit[unit]
 		local liquid_paint_id_from_component = action_data.liquid_paint_id_from_component
@@ -448,7 +469,7 @@ BtShootLiquidBeamAction._update_shooting_liquid_beam = function (self, unit, t, 
 
 		if attack_finished_grace_period and not scratchpad.attack_finished_grace_period then
 			scratchpad.attack_finished_grace_period = t + attack_finished_grace_period
-		elseif not scratchpad.attack_finished_grace_period or scratchpad.attack_finished_grace_period <= t then
+		elseif not scratchpad.attack_finished_grace_period or t >= scratchpad.attack_finished_grace_period then
 			scratchpad.shooting_liquid_beam = false
 			scratchpad.shot_start_t = nil
 			scratchpad.next_shoot_timing = nil
@@ -459,8 +480,8 @@ BtShootLiquidBeamAction._update_shooting_liquid_beam = function (self, unit, t, 
 end
 
 local function _clamp_network_position(position)
-	local network_min = NetworkConstants.min_position
-	local network_max = NetworkConstants.max_position
+	local network_min, network_max = NetworkConstants.min_position, NetworkConstants.max_position
+
 	position[1] = math.clamp(position[1], network_min, network_max)
 	position[2] = math.clamp(position[2], network_min, network_max)
 	position[3] = math.clamp(position[3], network_min, network_max)
@@ -471,12 +492,13 @@ end
 BtShootLiquidBeamAction._update_liquid_beam_positions = function (self, dt, scratchpad, action_data, from_position, to_position)
 	local segment_list, total_length = self:_try_get_trajectory(scratchpad, action_data, from_position, to_position)
 	local num_segments = segment_list and #segment_list
-	local end_position = nil
+	local end_position
 
 	if segment_list and total_length and num_segments > 1 and total_length > 1 then
 		local control_points = self:_calculate_control_points(scratchpad, segment_list, total_length, dt)
 		local control_point_1 = _clamp_network_position(control_points[1]:unbox())
 		local control_point_2 = _clamp_network_position(control_points[2]:unbox())
+
 		end_position = _clamp_network_position(control_points[3]:unbox())
 
 		self:_set_game_object_field(scratchpad, "aim_position", end_position)
@@ -495,6 +517,7 @@ BtShootLiquidBeamAction._start_effect_template = function (self, unit, scratchpa
 	local effect_template = action_data.effect_template
 	local fx_system = scratchpad.fx_system
 	local liquid_beam_effect_id = fx_system:start_template_effect(effect_template, unit)
+
 	scratchpad.liquid_beam_effect_id = liquid_beam_effect_id
 end
 
@@ -512,8 +535,7 @@ end
 
 BtShootLiquidBeamAction._set_game_object_field = function (self, scratchpad, key, value)
 	local spawn_component = scratchpad.spawn_component
-	local game_session = spawn_component.game_session
-	local game_object_id = spawn_component.game_object_id
+	local game_session, game_object_id = spawn_component.game_session, spawn_component.game_object_id
 
 	GameSession.set_game_object_field(game_session, game_object_id, key, value)
 end
@@ -527,10 +549,10 @@ BtShootLiquidBeamAction._get_from_shoot_pos = function (self, unit, scratchpad, 
 	local direction = Vector3.flat(Vector3.normalize(to - from))
 	local distance = Vector3.distance(from, to)
 	local range_percentage_front = action_data.range_percentage_front
-	local shot_from = to - direction * distance * range_percentage_front
+	local shot_from = to - direction * (distance * range_percentage_front)
 	local shot_from_on_navmesh = NavQueries.position_on_mesh(nav_world, shot_from, ABOVE, BELOW)
 	local target_position_on_navmesh = NavQueries.position_on_mesh(nav_world, to, ABOVE, BELOW)
-	local on_ground_position = nil
+	local on_ground_position
 
 	if shot_from_on_navmesh and target_position_on_navmesh then
 		local _, raycast_position = GwNavQueries.raycast(nav_world, target_position_on_navmesh, shot_from_on_navmesh)
@@ -543,6 +565,7 @@ BtShootLiquidBeamAction._get_from_shoot_pos = function (self, unit, scratchpad, 
 	end
 
 	on_ground_position = on_ground_position or self:_ray_cast(scratchpad.physics_world, shot_from + Vector3.up(), Vector3.down(), RAYCAST_DOWN_LENGTH, action_data)
+
 	local final_position = on_ground_position or shot_from
 	local distance_to_from = Vector3.distance(to, final_position)
 
@@ -557,13 +580,16 @@ BtShootLiquidBeamAction._get_to_shoot_pos = function (self, unit, scratchpad, ac
 	local target_position = POSITION_LOOKUP[target_unit]
 	local perception_extension = scratchpad.perception_extension
 	local to = perception_extension:last_los_position(target_unit)
+
 	to.z = target_position.z
+
 	local direction = Vector3.flat(Vector3.normalize(to - from))
 	local shot_to = to + direction * range_back
 	local on_ground_position = NavQueries.position_on_mesh(scratchpad.nav_world, shot_to, ABOVE, BELOW)
+
 	on_ground_position = on_ground_position or self:_ray_cast(scratchpad.physics_world, shot_to + Vector3(0, 0, 1), Vector3.down(), RAYCAST_DOWN_LENGTH, action_data)
 
-	if on_ground_position and target_position.z < on_ground_position.z then
+	if on_ground_position and on_ground_position.z > target_position.z then
 		return on_ground_position
 	end
 
@@ -630,6 +656,7 @@ BtShootLiquidBeamAction._shoot_sphere_cast = function (self, unit, t, shoot_posi
 				end
 
 				hit_units[hit_unit] = true
+
 				local is_enemy = side_system:is_enemy(unit, hit_unit)
 
 				if is_enemy then
@@ -643,8 +670,7 @@ BtShootLiquidBeamAction._shoot_sphere_cast = function (self, unit, t, shoot_posi
 end
 
 local SPEED_MULTIPLIER = 2
-local MIN_TRAJECTORY_SPEED = 8
-local MAX_TRAJECTORY_SPEED = 18
+local MIN_TRAJECTORY_SPEED, MAX_TRAJECTORY_SPEED = 8, 18
 local MAX_TIME = 1.5
 local MAX_STEPS = 30
 
@@ -681,6 +707,7 @@ local function _get_point_on_segment(segments, num_segments, length)
 		local segment = segments[i]
 		local to_segment = segment - prev_segment
 		local distance = Vector3.length(to_segment)
+
 		current_length = current_length + distance
 
 		if length <= current_length then
@@ -693,16 +720,18 @@ local function _get_point_on_segment(segments, num_segments, length)
 end
 
 BtShootLiquidBeamAction._get_from_position = function (self, unit, scratchpad, action_data)
-	local from_position = nil
+	local from_position
 	local weapon_item = scratchpad.weapon_item
 
 	if weapon_item then
 		local fx_source_name = action_data.fx_source_name
 		local attachment_unit, node = MinionVisualLoadout.attachment_unit_and_node_from_node_name(weapon_item, fx_source_name)
+
 		from_position = Unit.world_position(attachment_unit, node)
 	elseif action_data.from_node then
 		local from_node_name = action_data.from_node
 		local from_node = Unit.node(unit, from_node_name)
+
 		from_position = Unit.world_position(unit, from_node)
 	end
 
@@ -762,12 +791,12 @@ BtShootLiquidBeamAction._try_start_strafe_shooting = function (self, unit, t, sc
 	local self_position = POSITION_LOOKUP[unit]
 	local distance = perception_component.target_distance
 	local target_unit = perception_component.target_unit
-	local wanted_position = nil
+	local wanted_position
 
-	if action_data.strafe_shoot_distance < distance then
+	if distance > action_data.strafe_shoot_distance then
 		local ranged_position = action_data.strafe_shoot_ranged_position_fallback and MinionMovement.find_ranged_position(unit, t, scratchpad, action_data, target_unit)
 
-		if ranged_position and action_data.strafe_shoot_distance < Vector3.distance(ranged_position, self_position) then
+		if ranged_position and Vector3.distance(ranged_position, self_position) > action_data.strafe_shoot_distance then
 			wanted_position = ranged_position
 		else
 			return
@@ -816,7 +845,7 @@ BtShootLiquidBeamAction._update_trying_to_strafe_shoot = function (self, unit, t
 	local is_following_path = navigation_extension:is_following_path()
 
 	if not is_following_path then
-		if scratchpad.trying_to_start_strafe_shooting_duration < t then
+		if t > scratchpad.trying_to_start_strafe_shooting_duration then
 			navigation_extension:set_enabled(false)
 
 			scratchpad.shoot_state = "shooting"
@@ -869,7 +898,7 @@ BtShootLiquidBeamAction._update_strafe_shooting = function (self, unit, t, dt, s
 	local rotation = Quaternion.look(target_position - self_position)
 	local moving_direction_name = MinionMovement.get_moving_direction_name(unit, scratchpad, nil, rotation)
 
-	if moving_direction_name ~= scratchpad.moving_direction_name and scratchpad.strafe_anim_switch_duration <= t then
+	if moving_direction_name ~= scratchpad.moving_direction_name and t >= scratchpad.strafe_anim_switch_duration then
 		local strafe_anim_events = action_data.strafe_anim_events
 		local start_move_event = strafe_anim_events[moving_direction_name]
 
@@ -877,6 +906,7 @@ BtShootLiquidBeamAction._update_strafe_shooting = function (self, unit, t, dt, s
 
 		scratchpad.moving_direction_name = moving_direction_name
 		scratchpad.current_aim_anim_event = start_move_event
+
 		local strafe_speeds = action_data.strafe_speeds
 		local strafe_speed = strafe_speeds and strafe_speeds[start_move_event]
 
@@ -891,7 +921,7 @@ BtShootLiquidBeamAction._update_strafe_shooting = function (self, unit, t, dt, s
 	local current_node, next_node_in_path = scratchpad.navigation_extension:current_and_next_node_positions_in_path()
 	local destination = next_node_in_path or current_node
 	local flat_direction = Vector3.normalize(Vector3.flat(destination - self_position))
-	local wanted_rotation = nil
+	local wanted_rotation
 
 	if current_strafe_direction == "fwd" then
 		wanted_rotation = Quaternion.look(flat_direction)

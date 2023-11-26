@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/data_service/services/talents_service.lua
+
 local PlayerManager = require("scripts/foundation/managers/player/player_manager")
 local PlayerSpecializationUtil = require("scripts/utilities/player_specialization/player_specialization")
 local TalentLayoutParser = require("scripts/ui/views/talent_builder_view/utilities/talent_layout_parser")

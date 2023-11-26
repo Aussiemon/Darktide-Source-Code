@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/hud/elements/emote_wheel/hud_element_emote_wheel_definitions.lua
+
 local HudElementSmartTaggingSettings = require("scripts/ui/hud/elements/emote_wheel/hud_element_emote_wheel_settings")
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
@@ -118,6 +120,7 @@ local button_pass_template = {
 		},
 		change_function = function (content, style)
 			style.angle = math.pi + (content.angle or 0)
+
 			local color = style.color
 			local ignore_alpha = false
 			local hotspot = content.hotspot
@@ -150,6 +153,7 @@ local button_pass_template = {
 		},
 		change_function = function (content, style)
 			style.angle = math.pi + (content.angle or 0)
+
 			local hotspot = content.hotspot
 			local color = style.color
 			local ignore_alpha = false
@@ -219,6 +223,7 @@ local button_pass_template = {
 			local default_text_color = style.default_text_color
 			local text_color = style.text_color
 			local progress = 1 - content.hotspot.anim_input_progress * 0.3
+
 			text_color[2] = default_text_color[2] * progress
 			text_color[3] = default_text_color[3] * progress
 			text_color[4] = default_text_color[4] * progress
@@ -226,6 +231,7 @@ local button_pass_template = {
 	}
 }
 local wheel_font_style = table.clone(UIFontSettings.hud_body)
+
 wheel_font_style.font_size = 28
 wheel_font_style.horizontal_alignment = "center"
 wheel_font_style.vertical_alignment = "center"
@@ -236,6 +242,7 @@ wheel_font_style.offset = {
 	0,
 	4
 }
+
 local widget_definitions = {
 	wheel_background = UIWidget.create_definition({
 		{
@@ -314,6 +321,7 @@ local widget_definitions = {
 			},
 			change_function = function (content, style)
 				style.angle = math.pi - (content.angle or 0)
+
 				local color = style.color
 				local ignore_alpha = true
 				local anim_hover_progress = content.force_hover and 1 or 0
@@ -324,6 +332,7 @@ local widget_definitions = {
 	}, "background")
 }
 local input_interact_text_style = table.clone(UIFontSettings.hud_body)
+
 input_interact_text_style.horizontal_alignment = "left"
 input_interact_text_style.vertical_alignment = "top"
 input_interact_text_style.text_horizontal_alignment = "left"
@@ -339,7 +348,9 @@ input_interact_text_style.offset = {
 	-28,
 	5
 }
+
 local description_text_style = table.clone(UIFontSettings.hud_body)
+
 description_text_style.horizontal_alignment = "left"
 description_text_style.vertical_alignment = "top"
 description_text_style.text_horizontal_alignment = "left"
@@ -349,6 +360,7 @@ description_text_style.offset = {
 	5,
 	5
 }
+
 local interaction_line_definition = UIWidget.create_definition({
 	{
 		value = "content/ui/materials/dividers/faded_line_left_01",

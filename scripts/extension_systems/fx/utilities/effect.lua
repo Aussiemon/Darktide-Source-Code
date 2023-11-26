@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/fx/utilities/effect.lua
+
 local Effect = {}
 
 local function _is_follow_target_unit(target_unit_or_nil)

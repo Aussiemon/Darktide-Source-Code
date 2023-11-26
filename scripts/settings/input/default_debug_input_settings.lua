@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/input/default_debug_input_settings.lua
+
 local DefaultDebugInputFilters = require("scripts/settings/input/default_debug_input_filters")
 local default_debug_input_settings = {
 	service_type = "Debug",

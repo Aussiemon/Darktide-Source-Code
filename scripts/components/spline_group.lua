@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/components/spline_group.lua
+
 local SplineGroup = component("SplineGroup")
 
 SplineGroup.init = function (self, unit)

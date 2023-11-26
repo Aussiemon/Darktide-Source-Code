@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/telemetry/telemetry_manager.lua
+
 local TelemetryManagerTestify = GameParameters.testify and require("scripts/managers/telemetry/telemetry_manager_testify")
 local TelemetrySettings = require("scripts/managers/telemetry/telemetry_settings")
 local POST_INTERVAL = TelemetrySettings.batch.post_interval
@@ -31,6 +33,7 @@ TelemetryManager.register_event = function (self, event)
 	end
 
 	local raw_event = event:raw()
+
 	raw_event.time = self._t
 	raw_event.data = self:_convert_userdata(raw_event.data)
 
@@ -69,9 +72,9 @@ TelemetryManager._ready_to_post_batch = function (self, t)
 		return false
 	end
 
-	if POST_INTERVAL < t - self._batch_post_time then
+	if t - self._batch_post_time > POST_INTERVAL then
 		return true
-	elseif FULL_POST_INTERVAL < t - self._batch_post_time and BATCH_SIZE <= #self._events then
+	elseif t - self._batch_post_time > FULL_POST_INTERVAL and #self._events >= BATCH_SIZE then
 		return true
 	end
 end
@@ -85,6 +88,7 @@ TelemetryManager.post_batch = function (self)
 
 	self._batch_in_flight = true
 	self._batch_post_time = math.floor(self._t)
+
 	local headers = {
 		["x-reference-time"] = tostring(self._t)
 	}

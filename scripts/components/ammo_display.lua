@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/components/ammo_display.lua
+
 local AmmoDisplay = component("AmmoDisplay")
 
 AmmoDisplay.editor_init = function (self, unit)

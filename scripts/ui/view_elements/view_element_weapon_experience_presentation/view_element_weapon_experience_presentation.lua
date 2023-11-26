@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/view_elements/view_element_weapon_experience_presentation/view_element_weapon_experience_presentation.lua
+
 local ExperiencePresentation = require("scripts/utilities/experience_presentation")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local UIWeaponSpawner = require("scripts/managers/ui/ui_weapon_spawner")
@@ -9,6 +11,7 @@ local ViewElementWeaponExperiencePresentation = class("ViewElementWeaponExperien
 
 ViewElementWeaponExperiencePresentation.init = function (self, parent, draw_layer, start_scale)
 	local definitions = require(definition_path)
+
 	self._time = nil
 	self._reference_name = "ViewElementWeaponExperiencePresentation_" .. tostring(self)
 
@@ -23,12 +26,14 @@ ViewElementWeaponExperiencePresentation._initialize_preview_world = function (se
 	local world_layer = 10
 	local world_timer_name = "ui"
 	local view_name = self._parent.view_name
+
 	self._world_spawner = UIWorldSpawner:new(world_name, world_layer, world_timer_name, view_name)
+
 	local viewport_name = self._reference_name .. "_viewport"
 	local viewport_type = "default_with_alpha"
 	local viewport_layer = 1
 	local shading_environment = ViewElementWeaponExperiencePresentationSettings.shading_environment
-	local camera_unit = nil
+	local camera_unit
 
 	self._world_spawner:create_viewport(camera_unit, viewport_name, viewport_type, viewport_layer, shading_environment)
 	self:_update_viewport_resolution()
@@ -66,7 +71,7 @@ ViewElementWeaponExperiencePresentation._get_spawn_position = function (self)
 	local world_spawner = self._world_spawner
 	local camera = world_spawner:camera()
 	local scale = self._render_scale
-	local depth_multiplier = 1 + 1 - scale
+	local depth_multiplier = 1 + (1 - scale)
 	local weapon_spawn_depth = ViewElementWeaponExperiencePresentationSettings.weapon_spawn_depth * depth_multiplier
 	local world_depth = linear_to_clip_depth(weapon_spawn_depth, Camera.near_range(camera), Camera.far_range(camera))
 	local viewport_scenegraph_id = "viewport"
@@ -112,34 +117,42 @@ ViewElementWeaponExperiencePresentation.start = function (self, presentation_dat
 	local starting_experience = presentation_data.starting_experience
 	local experience_gained = presentation_data.experience_gained
 	local experience_settings = presentation_data.experience_settings
+
 	self._duration = duration
 
 	self:_setup_experience_presentation_data(experience_settings, starting_experience, experience_gained, self._duration)
 
 	local on_enter_animation_callback = callback(self, "cb_start_experience_presentation")
+
 	self._on_enter_anim_id = self:_start_animation("on_enter", self._widgets_by_name, self, on_enter_animation_callback)
+
 	local world_spawner = self._world_spawner
 	local world = world_spawner:world()
 	local camera = world_spawner:camera()
 	local unit_spawner = world_spawner:unit_spawner()
 	local spawn_position = self:_get_spawn_position()
-	local spawn_rotation = nil
+	local spawn_rotation
 	local previewer_reference_name = self._reference_name
+
 	self._ui_weapon_spawner = UIWeaponSpawner:new(previewer_reference_name, world, camera, unit_spawner)
 
 	self._ui_weapon_spawner:activate_auto_spin()
 	self._ui_weapon_spawner:start_presentation(item, spawn_position, spawn_rotation)
 
 	local weapon_name = item.name
+
 	self._widgets_by_name.name_text.content.text = weapon_name or "n/a"
 end
 
 ViewElementWeaponExperiencePresentation._setup_experience_presentation_data = function (self, experience_settings, starting_experience, experience_gained, presentation_duration)
 	local level_up_delay = ViewElementWeaponExperiencePresentationSettings.level_up_delay
 	local experience_data = ExperiencePresentation.setup_presentation_data(experience_settings, starting_experience, experience_gained, presentation_duration, level_up_delay)
+
 	self._experience_data = experience_data
+
 	local start_level = experience_data.start_level
 	local start_bar_progress = experience_data.start_bar_progress
+
 	self._current_level = start_level
 
 	self:_set_next_level(start_level + 1)
@@ -188,6 +201,7 @@ end
 ViewElementWeaponExperiencePresentation.draw = function (self, dt, t, ui_renderer, render_settings, input_service)
 	local previous_alpha_multiplier = render_settings.alpha_multiplier
 	local alpha_multiplier = self._alpha_multiplier or 0
+
 	render_settings.alpha_multiplier = alpha_multiplier
 
 	ViewElementWeaponExperiencePresentation.super.draw(self, dt, t, ui_renderer, render_settings, input_service)
@@ -206,8 +220,7 @@ ViewElementWeaponExperiencePresentation.update = function (self, dt, t, input_se
 		self._ui_weapon_spawner:update(dt, t, input_service)
 	end
 
-	local counting_experience = false
-	local counting_experience_progress = nil
+	local counting_experience, counting_experience_progress = false
 	local experience_data = self._experience_data
 
 	if experience_data and not ExperiencePresentation.presentation_completed(experience_data) and ExperiencePresentation.presentation_started(experience_data) then
@@ -257,12 +270,14 @@ end
 
 ViewElementWeaponExperiencePresentation._set_next_level = function (self, level)
 	local widgets_by_name = self._widgets_by_name
+
 	widgets_by_name.current_level_text.content.text = level > 1 and tostring(level - 1) or ""
 	widgets_by_name.next_level_text.content.text = tostring(level)
 end
 
 ViewElementWeaponExperiencePresentation._set_experience_text = function (self, text)
 	local widget = self._widgets_by_name.experience_text
+
 	widget.content.text = text
 end
 
@@ -271,6 +286,7 @@ ViewElementWeaponExperiencePresentation._set_bar_progress = function (self, prog
 	local default_width = default_scenegraph.size[1]
 	local widgets_by_name = self._widgets_by_name
 	local progress_bar = widgets_by_name.progress_bar
+
 	progress_bar.content.progress = progress
 	progress_bar.content.bar_length = default_width
 end

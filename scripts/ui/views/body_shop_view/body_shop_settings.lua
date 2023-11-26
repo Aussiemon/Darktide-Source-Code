@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/body_shop_view/body_shop_settings.lua
+
 local body_shop_settings = {
 	shading_environment = "content/shading_environments/ui/character_create",
 	world_layer = 1,

@@ -1,11 +1,16 @@
+﻿-- chunkname: @scripts/extension_systems/visual_loadout/wieldable_slot_scripts/revolver_bullets.lua
+
 local Component = require("scripts/utilities/component")
-local _components = nil
+local _components
 local RevolverBullets = class("RevolverBullets")
 
 RevolverBullets.init = function (self, context, slot, weapon_template, fx_sources)
 	local owner_unit = context.owner_unit
+
 	self._owner_unit = owner_unit
+
 	local unit_data_extension = ScriptUnit.extension(owner_unit, "unit_data_system")
+
 	self._inventory_slot_component = unit_data_extension:read_component(slot.name)
 	self._first_person_extension = ScriptUnit.extension(owner_unit, "first_person_system")
 	self._bullets = {
@@ -125,6 +130,7 @@ function _components(destination, destination_lookup, attachments, attachments_n
 				lookup_name = lookup_name,
 				component = component
 			}
+
 			destination[#destination + 1] = data
 			destination_lookup[lookup_name] = data
 		end

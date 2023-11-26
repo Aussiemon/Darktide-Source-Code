@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/hud/elements/area_notification_popup/hud_element_area_notification_popup_settings.lua
+
 local hud_element_area_notification_popup_settings = {
 	events = {
 		{

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/main_menu_view/main_menu_view_definitions.lua
+
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templates")
 local ScrollbarPassTemplates = require("scripts/ui/pass_templates/scrollbar_pass_templates")
@@ -6,6 +8,7 @@ local TextUtils = require("scripts/utilities/ui/text")
 local DefaultViewInputSettings = require("scripts/settings/input/default_view_input_settings")
 local ColorUtilities = require("scripts/utilities/ui/colors")
 local text_style = table.clone(UIFontSettings.body_small)
+
 text_style.vertical_alignment = "center"
 text_style.text_horizontal_alignment = "left"
 text_style.text_vertical_alignment = "center"
@@ -15,7 +18,9 @@ text_style.offset = {
 	0
 }
 text_style.text_color = Color.terminal_text_body(255, true)
+
 local friends_online_text = table.clone(UIFontSettings.symbol)
+
 friends_online_text.vertical_alignment = "center"
 friends_online_text.text_horizontal_alignment = "left"
 friends_online_text.text_vertical_alignment = "center"
@@ -26,7 +31,9 @@ friends_online_text.offset = {
 }
 friends_online_text.font_size = 24
 friends_online_text.text_color = Color.terminal_text_body(255, true)
+
 local strike_team_text = table.clone(UIFontSettings.symbol)
+
 strike_team_text.vertical_alignment = "center"
 strike_team_text.text_horizontal_alignment = "left"
 strike_team_text.text_vertical_alignment = "center"
@@ -37,7 +44,9 @@ strike_team_text.offset = {
 }
 strike_team_text.font_size = 24
 strike_team_text.text_color = Color.terminal_text_body(255, true)
+
 local symbol_style = table.clone(UIFontSettings.symbol)
+
 symbol_style.text_vertical_alignment = "center"
 symbol_style.offset = {
 	0,
@@ -46,14 +55,18 @@ symbol_style.offset = {
 }
 symbol_style.font_size = 24
 symbol_style.text_color = Color.terminal_text_body(255, true)
+
 local character_name = table.clone(UIFontSettings.header_2)
+
 character_name.text_horizontal_alignment = "center"
 character_name.offset = {
 	0,
 	220,
 	1
 }
+
 local specialization_name = table.clone(UIFontSettings.body)
+
 specialization_name.text_horizontal_alignment = "center"
 specialization_name.offset = {
 	0,
@@ -61,7 +74,9 @@ specialization_name.offset = {
 	1
 }
 specialization_name.text_color = Color.terminal_text_body_sub_header(255, true)
+
 local overlay_text_style = table.clone(UIFontSettings.header_2)
+
 overlay_text_style.offset = {
 	0,
 	0,
@@ -69,20 +84,26 @@ overlay_text_style.offset = {
 }
 overlay_text_style.text_vertical_alignment = "center"
 overlay_text_style.text_horizontal_alignment = "center"
+
 local new_button_text_style = table.clone(UIFontSettings.button_primary)
+
 new_button_text_style.offset = {
 	0,
 	0,
 	6
 }
+
 local new_character_intro = table.clone(UIFontSettings.body)
+
 new_character_intro.text_horizontal_alignment = "center"
 new_character_intro.offset = {
 	0,
 	30,
 	0
 }
+
 local slots_count_text_style = table.clone(UIFontSettings.body_small)
+
 slots_count_text_style.vertical_alignment = "top"
 slots_count_text_style.text_horizontal_alignment = "center"
 slots_count_text_style.text_vertical_alignment = "top"
@@ -91,12 +112,16 @@ slots_count_text_style.offset = {
 	0,
 	0
 }
+
 local gamertag_style = table.clone(UIFontSettings.header_2)
+
 gamertag_style.text_horizontal_alignment = "right"
 gamertag_style.text_vertical_alignment = "top"
 gamertag_style.text_color = Color.terminal_text_body_sub_header(255, true)
 gamertag_style.font_size = 24
+
 local gamertag_input_style = table.clone(UIFontSettings.body)
+
 gamertag_input_style.text_horizontal_alignment = "right"
 gamertag_input_style.text_vertical_alignment = "top"
 gamertag_input_style.text_color = {
@@ -106,7 +131,9 @@ gamertag_input_style.text_color = {
 	255
 }
 gamertag_input_style.font_size = 20
+
 local wallet_title = table.clone(UIFontSettings.header_1)
+
 wallet_title.offset = {
 	-10,
 	-20,
@@ -120,6 +147,7 @@ wallet_title.size = {
 	300,
 	0
 }
+
 local scenegraph_definition = {
 	screen = {
 		scale = "fit",

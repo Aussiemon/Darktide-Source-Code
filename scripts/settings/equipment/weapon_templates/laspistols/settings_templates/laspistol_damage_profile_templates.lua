@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/equipment/weapon_templates/laspistols/settings_templates/laspistol_damage_profile_templates.lua
+
 local ArmorSettings = require("scripts/settings/damage/armor_settings")
 local DamageProfileSettings = require("scripts/settings/damage/damage_profile_settings")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
@@ -42,6 +44,7 @@ local pistol_crit_mod = {
 		[armor_types.void_shield] = 0.75
 	}
 }
+
 damage_templates.default_laspistol_killshot = {
 	stagger_category = "killshot",
 	cleave_distribution = single_cleave,

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/components/decoder_synchronizer.lua
+
 local DecoderSynchronizer = component("DecoderSynchronizer")
 
 DecoderSynchronizer.init = function (self, unit, is_server)

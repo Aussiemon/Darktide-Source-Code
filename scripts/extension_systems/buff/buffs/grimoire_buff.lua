@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/buff/buffs/grimoire_buff.lua
+
 require("scripts/extension_systems/buff/buffs/buff")
 
 local Attack = require("scripts/utilities/attack/attack")

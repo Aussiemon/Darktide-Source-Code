@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/constant_elements/elements/notification_feed/constant_element_notification_feed.lua
+
 local AchievementUIHelper = require("scripts/managers/achievements/utility/achievement_ui_helper")
 local ConstantElementNotificationFeedSettings = require("scripts/ui/constant_elements/elements/notification_feed/constant_element_notification_feed_settings")
 local ContractCriteriaParser = require("scripts/utilities/contract_criteria_parser")
@@ -17,11 +19,13 @@ local _localization_context = {}
 local function _apply_package_item_icon_cb_func(widget, item)
 	local icon = item.icon
 	local material_values = widget.style.icon.material_values
+
 	material_values.texture_map = icon
 end
 
 local function _remove_package_item_icon_cb_func(widget, ui_renderer)
 	local material_values = widget.style.icon.material_values
+
 	material_values.texture_map = nil
 
 	if ui_renderer then
@@ -32,6 +36,7 @@ end
 
 local function _apply_live_item_icon_cb_func(widget, grid_index, rows, columns, render_target)
 	local material_values = widget.style.icon.material_values
+
 	material_values.use_placeholder_texture = 0
 	material_values.use_render_target = 1
 	material_values.rows = rows
@@ -42,6 +47,7 @@ end
 
 local function _remove_live_item_icon_cb_func(widget, ui_renderer)
 	local material_values = widget.style.icon.material_values
+
 	material_values.use_placeholder_texture = 1
 	material_values.texture_icon = nil
 
@@ -131,6 +137,7 @@ ConstantElementNotificationFeed.init = function (self, parent, draw_layer, start
 			widget_definition = Definitions.notification_message
 		}
 	}
+
 	local event_manager = Managers.event
 	local events = ConstantElementNotificationFeedSettings.events
 
@@ -182,6 +189,7 @@ ConstantElementNotificationFeed._set_texts = function (self, notification, texts
 
 	for i = 1, #texts do
 		local text = texts[i]
+
 		widget.content[string.format("text_%d", i)] = text
 	end
 end
@@ -190,8 +198,7 @@ ConstantElementNotificationFeed.event_remove_notification = function (self, noti
 	local notification = self:_notification_by_id(notification_id)
 
 	if notification then
-		notification.total_time = 0
-		notification.time = 0
+		notification.time, notification.total_time = 0, 0
 	end
 end
 
@@ -227,7 +234,7 @@ ConstantElementNotificationFeed.destroy = function (self)
 end
 
 ConstantElementNotificationFeed._generate_notification_data = function (self, message_type, data)
-	local notification_data = nil
+	local notification_data
 
 	if message_type == MESSAGE_TYPES.default then
 		notification_data = {
@@ -246,7 +253,7 @@ ConstantElementNotificationFeed._generate_notification_data = function (self, me
 			}
 		}
 	elseif message_type == MESSAGE_TYPES.alert then
-		slot4 = {
+		local var_15_0 = {
 			texts = {
 				{
 					display_name = data.text,
@@ -276,25 +283,26 @@ ConstantElementNotificationFeed._generate_notification_data = function (self, me
 			-- Nothing
 		end
 
-		slot4.icon_color = {
+		var_15_0.icon_color = {
 			255,
 			255,
 			208,
 			208
 		}
-		slot4.enter_sound_event = UISoundEvents.notification_warning
-		notification_data = slot4
+		var_15_0.enter_sound_event = UISoundEvents.notification_warning
+		notification_data = var_15_0
 	elseif message_type == MESSAGE_TYPES.item_granted then
 		local item = data
 		local item_type = item.item_type
 		local visual_item = item
 		local has_rarity = not not visual_item.rarity
-		local texts, rarity_color, background_rarity_color = nil
+		local texts, rarity_color, background_rarity_color
 		local enter_sound_event = UISoundEvents.notification_item_received_rarity_1
-		local icon_material_values = nil
+		local icon_material_values
 
 		if has_rarity then
 			local sound_event_name = string.format("notification_item_received_rarity_%d", visual_item.rarity)
+
 			enter_sound_event = UISoundEvents[sound_event_name] or enter_sound_event
 			rarity_color, background_rarity_color = ItemUtils.rarity_color(visual_item)
 			rarity_color = table.clone(rarity_color)
@@ -332,7 +340,7 @@ ConstantElementNotificationFeed._generate_notification_data = function (self, me
 			}
 		end
 
-		local icon, icon_size = nil
+		local icon, icon_size
 
 		if item_type == "PORTRAIT_FRAME" then
 			icon = "content/ui/materials/base/ui_default_base"
@@ -352,13 +360,17 @@ ConstantElementNotificationFeed._generate_notification_data = function (self, me
 		elseif item_type == "TRAIT" then
 			icon = "content/ui/materials/icons/traits/traits_container"
 			icon_size = "medium"
+
 			local rarity = visual_item.rarity
 			local texture_icon, texture_frame = ItemUtils.trait_textures(visual_item, rarity)
+
 			icon_material_values = {
 				icon = texture_icon,
 				frame = texture_frame
 			}
+
 			local trait_sound_events_by_rarity = ConstantElementNotificationFeedSettings.trait_sound_events_by_rarity
+
 			enter_sound_event = trait_sound_events_by_rarity[rarity]
 		else
 			icon = "content/ui/materials/icons/items/containers/item_container_landscape"
@@ -395,6 +407,7 @@ ConstantElementNotificationFeed._generate_notification_data = function (self, me
 		if amount_size and type(amount_size) == "string" and wallet_settings then
 			local pickup_localization_by_size = wallet_settings.pickup_localization_by_size
 			local localization_key = pickup_localization_by_size[amount_size]
+
 			amount_size = Localize(localization_key)
 			ignore_wallet_display_name = true
 		end
@@ -402,12 +415,15 @@ ConstantElementNotificationFeed._generate_notification_data = function (self, me
 		if wallet_settings then
 			local icon_texture_large = wallet_settings and wallet_settings.icon_texture_big
 			local selected_color = Color.terminal_corner_selected(255, true)
+
 			amount = string.format("{#color(%d,%d,%d)}%s %s{#reset()}", selected_color[2], selected_color[3], selected_color[4], amount_size or TextUtils.format_currency(amount), not ignore_wallet_display_name and Localize(wallet_settings.display_name) or "")
+
 			local text = Localize(optional_localization_key or "loc_notification_feed_currency_acquired", true, {
 				amount = amount,
 				player_name = player_name
 			})
 			local enter_sound_event = wallet_settings.notification_sound_event
+
 			notification_data = {
 				icon_size = "currency",
 				texts = {
@@ -422,6 +438,7 @@ ConstantElementNotificationFeed._generate_notification_data = function (self, me
 		end
 	elseif message_type == MESSAGE_TYPES.achievement then
 		local achievement_title = AchievementUIHelper.localized_title(data)
+
 		notification_data = {
 			icon_size = "medium",
 			icon = "content/ui/materials/icons/achievements/achievement_icon_container",
@@ -468,6 +485,7 @@ ConstantElementNotificationFeed._generate_notification_data = function (self, me
 		local criteria = data.criteria
 		local title, _, _ = ContractCriteriaParser.localize_criteria(criteria)
 		local type = criteria.taskType
+
 		notification_data = {
 			icon = "content/ui/materials/icons/contracts/contract_task",
 			icon_size = "medium",
@@ -571,6 +589,10 @@ ConstantElementNotificationFeed._generate_notification_data = function (self, me
 		}
 	end
 
+	if false then
+		-- Nothing
+	end
+
 	if not notification_data then
 		return
 	end
@@ -586,7 +608,7 @@ ConstantElementNotificationFeed._add_notification_message = function (self, mess
 	local notifications = self._notifications
 	local num_notifications = #notifications
 
-	if ConstantElementNotificationFeedSettings.max_visible_notifications <= num_notifications then
+	if num_notifications >= ConstantElementNotificationFeedSettings.max_visible_notifications then
 		self._queue_notifications[#self._queue_notifications + 1] = {
 			message_type = message_type,
 			data = data,
@@ -605,6 +627,7 @@ ConstantElementNotificationFeed._add_notification_message = function (self, mess
 	if notification_data then
 		local notification = self:_create_notification_entry(notification_data)
 		local notification_id = notification.id
+
 		notification.done_callback = done_callback
 
 		if callback then
@@ -662,7 +685,7 @@ ConstantElementNotificationFeed._remove_notification = function (self, notificat
 				done_callback()
 			end
 
-			if self._queue_notifications[1] and ConstantElementNotificationFeedSettings.max_visible_notifications > #self._notifications then
+			if self._queue_notifications[1] and not (#self._notifications >= ConstantElementNotificationFeedSettings.max_visible_notifications) then
 				local notification = self._queue_notifications[1]
 				local message_type = notification.message_type
 				local data = notification.data
@@ -687,18 +710,19 @@ ConstantElementNotificationFeed._create_notification_entry = function (self, not
 	local pass_template = pass_template_function and pass_template_function(self) or notification_template.widget_definition.pass_template
 	local widget_definition = UIWidget.create_definition(pass_template, "background", nil)
 	local widget = self:_create_widget(name, widget_definition)
-	local notification = {
-		priority_order = notification_template.priority_order,
-		total_time = notification_template.total_time,
-		widget = widget,
-		id = id,
-		time = 0,
-		data = notification_data,
-		animation_enter = notification_template.animation_enter,
-		animation_exit = notification_template.animation_exit,
-		enter_sound_event = notification_data.enter_sound_event,
-		exit_sound_event = notification_data.exit_sound_event
-	}
+	local notification = {}
+
+	notification.priority_order = notification_template.priority_order
+	notification.total_time = notification_template.total_time
+	notification.widget = widget
+	notification.id = id
+	notification.time = 0
+	notification.data = notification_data
+	notification.animation_enter = notification_template.animation_enter
+	notification.animation_exit = notification_template.animation_exit
+	notification.enter_sound_event = notification_data.enter_sound_event
+	notification.exit_sound_event = notification_data.exit_sound_event
+
 	local notifications = self._notifications
 	local num_notifications = #notifications
 	local init = notification_template.widget_definition.init
@@ -723,13 +747,14 @@ ConstantElementNotificationFeed._create_notification_entry = function (self, not
 			}
 			local on_load_callback = callback(self, "_on_item_icon_loaded", notification, item)
 			local icon_load_id = Managers.ui:load_item_icon(item, on_load_callback, context)
+
 			notification.item_loaded_info = {
 				icon_load_id = icon_load_id
 			}
 		end
 	end
 
-	local start_index = nil
+	local start_index
 
 	if num_notifications > 0 then
 		for i = 1, num_notifications do
@@ -744,6 +769,7 @@ ConstantElementNotificationFeed._create_notification_entry = function (self, not
 	end
 
 	start_index = start_index or 1
+
 	local start_height = self:_get_height_of_notification_index(start_index)
 
 	self:_set_widget_position(widget, nil, start_height)
@@ -823,7 +849,7 @@ ConstantElementNotificationFeed._align_notification_widgets = function (self, dt
 			local widget_offset = widget.offset
 			local widget_height = widget.size[2]
 
-			if widget_offset[2] < offset_y then
+			if offset_y > widget_offset[2] then
 				widget_offset[2] = math.lerp(widget_offset[2], offset_y, dt * 6)
 			else
 				widget_offset[2] = math.lerp(widget_offset[2], offset_y, dt * 2)
@@ -870,6 +896,7 @@ ConstantElementNotificationFeed._draw_widgets = function (self, dt, t, input_ser
 
 		if notification then
 			notification.time = (notification.time or 0) + dt
+
 			local widget = notification.widget
 
 			UIWidget.draw(widget, ui_renderer)

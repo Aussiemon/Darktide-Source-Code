@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/body_shop_view/body_shop_definitions.lua
+
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local UIWorkspaceSettings = require("scripts/settings/ui/ui_workspace_settings")
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
@@ -19,8 +21,10 @@ local scenegraph_definition = {
 	}
 }
 local text_style = table.clone(UIFontSettings.header_1)
+
 text_style.text_horizontal_alignment = "center"
 text_style.text_vertical_alignment = "center"
+
 local widget_definitions = {
 	placeholder_box = UIWidget.create_definition({
 		{

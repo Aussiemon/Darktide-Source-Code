@@ -1,7 +1,9 @@
+﻿-- chunkname: @scripts/extension_systems/destructible/utilities/destructible_utilities.lua
+
 local LightControllerUtilities = require("core/scripts/common/light_controller_utilities")
-local DestructibleUtilities = {
-	FORCE_DIRECTION = table.enum("random_direction", "attack_direction", "provided_direction_relative", "provided_direction_world")
-}
+local DestructibleUtilities = {}
+
+DestructibleUtilities.FORCE_DIRECTION = table.enum("random_direction", "attack_direction", "provided_direction_relative", "provided_direction_world")
 
 local function _set_meshes_visiblity(unit, meshes, visible)
 	local Unit_set_mesh_visibility = Unit.set_mesh_visibility
@@ -13,13 +15,16 @@ end
 
 DestructibleUtilities.setup_stages = function (unit, parameters, health_extension)
 	local destructible_parameters = table.shallow_copy(parameters)
+
 	destructible_parameters.current_stage_index = 1
+
 	local initial_actor = Unit.actor(unit, "c_destructible")
+
 	destructible_parameters.initial_actor = ActorBox(initial_actor)
 
 	Unit.set_visibility(unit, "main", true)
 
-	local parent_node = nil
+	local parent_node
 
 	if Unit.has_node(unit, "ds_1") then
 		parent_node = Unit.node(unit, "ds_1")
@@ -42,6 +47,7 @@ DestructibleUtilities.setup_stages = function (unit, parameters, health_extensio
 		_set_meshes_visiblity(unit, destructible_parameters.meshes, false)
 
 		destructible_parameters.lights = Unit.get_node_lights(unit, parent_node, true, false) or {}
+
 		local unit_actors = Unit.get_node_actors(unit, parent_node, true, false) or {}
 		local dynamic_actors = {}
 		local static_actors = {}
@@ -102,6 +108,7 @@ local function _add_force_on_parts(actors, mass, speed, attack_direction)
 			local random_y = math.random() * 2 - 1
 			local random_z = math.random() * 2 - 1
 			local random_direction = Vector3(random_x, random_y, random_z)
+
 			direction = Vector3.normalize(random_direction)
 		end
 
@@ -134,6 +141,7 @@ local function _dequeue_stage(unit, destructible_parameters, visibility_info, at
 				elseif destructible_parameters.force_direction_type == DestructibleUtilities.FORCE_DIRECTION.provided_direction_relative then
 					local local_direction = destructible_parameters.force_direction:unbox()
 					local unit_rotation = Unit.world_rotation(unit, 1)
+
 					attack_direction = Quaternion.rotate(unit_rotation, local_direction)
 				end
 
@@ -162,6 +170,7 @@ DestructibleUtilities.add_damage = function (unit, destructible_parameters, visi
 
 	if current_stage_index > 0 and damage > 0 then
 		local health_after_damage = destructible_parameters.health - damage
+
 		destructible_parameters.health = math.max(0, health_after_damage)
 
 		if health_after_damage <= 0 then

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/character_state_machine/character_states/utilities/assist.lua
+
 local PlayerAssistNotifications = require("scripts/utilities/player_assist_notifications")
 local Assist = class("Assist")
 local FORCE_ASSIST_DURATION = 1.5
@@ -8,7 +10,9 @@ Assist.init = function (self, anim_settings, is_server, unit, game_session_or_ni
 	self._game_session = game_session_or_nil
 	self._game_object_id = game_object_id_or_nil
 	self._anim_settings = anim_settings
+
 	local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
+
 	self._animation_extension = ScriptUnit.extension(unit, "animation_system")
 	self._interactee_extension = ScriptUnit.extension(unit, "interactee_system")
 	self._interactee_component = unit_data_extension:read_component("interactee")
@@ -27,6 +31,7 @@ Assist.update = function (self, dt, t)
 	local assisted_state_input_component = self._assisted_state_input_component
 	local being_assisted = assisted_state_input_component.in_progress
 	local assist_done = false
+
 	being_assisted = being_assisted or self:_try_assist_start(dt, t)
 
 	self:_try_start_anim()

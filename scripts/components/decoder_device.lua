@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/components/decoder_device.lua
+
 local DecoderDevice = component("DecoderDevice")
 
 DecoderDevice.init = function (self, unit, is_server)

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/hud/elements/wield_info/hud_element_wield_info_definitions.lua
+
 local UIWorkspaceSettings = require("scripts/settings/ui/ui_workspace_settings")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
@@ -34,9 +36,12 @@ local scenegraph_definition = {
 	}
 }
 local description_style = table.clone(UIFontSettings.hud_body)
+
 description_style.text_horizontal_alignment = "center"
 description_style.text_vertical_alignment = "top"
+
 local input_style = table.clone(UIFontSettings.hud_body)
+
 input_style.text_horizontal_alignment = "center"
 input_style.text_vertical_alignment = "center"
 input_style.offset = {
@@ -45,6 +50,7 @@ input_style.offset = {
 	2
 }
 input_style.text_color = Color.ui_hud_green_super_light(255, true)
+
 local input_info_definition = UIWidget.create_definition({
 	{
 		style_id = "icon",

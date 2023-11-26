@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/hud/elements/player_health/hud_element_player_health_settings.lua
+
 local UIHudSettings = require("scripts/settings/ui/ui_hud_settings")
 local color_tint_0 = UIHudSettings.color_tint_0
 local color_tint_1 = UIHudSettings.color_tint_1

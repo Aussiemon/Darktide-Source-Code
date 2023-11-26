@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/marks_vendor_view/marks_vendor_view.lua
+
 local VendorViewBase = require("scripts/ui/views/vendor_view_base/vendor_view_base")
 local Definitions = require("scripts/ui/views/marks_vendor_view/marks_vendor_view_definitions")
 local MarksVendorViewSettings = require("scripts/ui/views/marks_vendor_view/marks_vendor_view_settings")
@@ -7,6 +9,7 @@ MarksVendorView.init = function (self, settings, context)
 	MarksVendorView.super.init(self, Definitions, settings, context)
 
 	local parent = context and context.parent
+
 	self._parent = parent
 
 	if parent then
@@ -16,7 +19,7 @@ end
 
 MarksVendorView._get_store = function (self)
 	local store_service = Managers.data_service.store
-	local store_promise = nil
+	local store_promise
 
 	if self._show_temporary_store_items then
 		store_promise = store_service:get_marks_store_temporary()

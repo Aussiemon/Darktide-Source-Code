@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/level_prop/props/corruptor_pustule.lua
+
 local prop_data = {
 	unit_name = "content/environment/gameplay/corruptor/corruptor_bulb",
 	name = "corruptor_pustule",

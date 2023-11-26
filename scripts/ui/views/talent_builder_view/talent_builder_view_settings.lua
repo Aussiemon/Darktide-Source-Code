@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/talent_builder_view/talent_builder_view_settings.lua
+
 local node_definitions = require("scripts/ui/views/talent_builder_view/talent_builder_view_node_definitions")
 local summary_window_size = {
 	800,

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/pickup_animation/pickup_animation_system.lua
+
 require("scripts/extension_systems/pickup_animation/pickup_animation_extension")
 
 local PickupAnimationSystem = class("PickupAnimationSystem", "ExtensionSystemBase")

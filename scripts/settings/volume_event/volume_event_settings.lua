@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/volume_event/volume_event_settings.lua
+
 local VolumeEventFilters = require("scripts/settings/volume_event/volume_event_filters")
 local VolumeEventFunctions = require("scripts/settings/volume_event/volume_event_functions")
 local extension_aliases = {

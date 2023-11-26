@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/result_view/result_view_settings.lua
+
 local result_view_settings = {
 	text_background_edge_width = 235,
 	duration = 3,

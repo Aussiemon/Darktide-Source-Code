@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/backend/region_latency.lua
+
 local Promise = require("scripts/foundation/utilities/promise")
 local Interface = {
 	"pre_get_region_latencies",
@@ -135,6 +137,7 @@ RegionLatency._do_refresh = function (self)
 			end
 
 			latencies = filtered_latencies
+
 			local total_diff = 0
 			local total = 0
 
@@ -146,6 +149,7 @@ RegionLatency._do_refresh = function (self)
 				end
 
 				local l2 = latencies[i + 1]
+
 				total_diff = total_diff + math.abs(l - l2)
 			end
 
@@ -176,7 +180,7 @@ RegionLatency._do_refresh = function (self)
 				sent = sent,
 				lost = lost
 			}
-			local region_latency_entry = nil
+			local region_latency_entry
 
 			for i, entry in ipairs(region_latencies) do
 				if entry.region == region.region then
@@ -241,7 +245,7 @@ RegionLatency.get_reef_info_based_on_region_latencies = function (self, region_l
 				reefs[reef_name] = reef
 			end
 
-			if not reef.min_latency or region_latency.latency < reef.min_latency then
+			if not reef.min_latency or reef.min_latency > region_latency.latency then
 				reef.min_latency = region_latency.latency
 			end
 

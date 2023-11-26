@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/behavior/nodes/actions/bt_strafe_shoot_action.lua
+
 require("scripts/extension_systems/behavior/nodes/bt_node")
 
 local Animation = require("scripts/utilities/animation")
@@ -11,6 +13,7 @@ local BtStrafeShootAction = class("BtStrafeShootAction", "BtNode")
 BtStrafeShootAction.enter = function (self, unit, breed, blackboard, scratchpad, action_data, t)
 	local animation_extension = ScriptUnit.extension(unit, "animation_system")
 	local navigation_extension = ScriptUnit.extension(unit, "navigation_system")
+
 	scratchpad.animation_extension = animation_extension
 	scratchpad.locomotion_extension = ScriptUnit.extension(unit, "locomotion_system")
 	scratchpad.navigation_extension = navigation_extension
@@ -35,8 +38,7 @@ BtStrafeShootAction.enter = function (self, unit, breed, blackboard, scratchpad,
 		scratchpad.cooldown = 0
 	end
 
-	local start_aim_anims = action_data.start_aim_anims
-	local speed = nil
+	local start_aim_anims, speed = action_data.start_aim_anims
 
 	if start_aim_anims then
 		local start_aim_anim = Animation.random_event(start_aim_anims)
@@ -44,6 +46,7 @@ BtStrafeShootAction.enter = function (self, unit, breed, blackboard, scratchpad,
 		animation_extension:anim_event(start_aim_anim)
 
 		local start_aim_duration = action_data.start_aim_durations[start_aim_anim]
+
 		scratchpad.start_aim_duration = t + start_aim_duration
 		speed = 0
 	else
@@ -132,6 +135,7 @@ BtStrafeShootAction._update_shooting = function (self, unit, t, scratchpad, acti
 	if fired_last_shot then
 		local cooldown_range = action_data.shoot_cooldown
 		local diff_cooldown_range = Managers.state.difficulty:get_table_entry_by_challenge(cooldown_range)
+
 		scratchpad.cooldown = t + math.random_range(diff_cooldown_range[1], diff_cooldown_range[2])
 		scratchpad.state = "cooldown"
 	end
@@ -141,7 +145,7 @@ BtStrafeShootAction._update_cooldown = function (self, unit, t, scratchpad, acti
 	local target_unit = scratchpad.perception_component.target_unit
 	local attack_allowed = AttackIntensity.minion_can_attack(unit, action_data.attack_intensity_type, target_unit)
 
-	if attack_allowed and scratchpad.cooldown < t then
+	if attack_allowed and t > scratchpad.cooldown then
 		MinionAttack.start_shooting(unit, scratchpad, t, action_data)
 
 		scratchpad.state = "shooting"

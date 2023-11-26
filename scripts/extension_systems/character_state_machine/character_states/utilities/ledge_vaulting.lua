@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/character_state_machine/character_states/utilities/ledge_vaulting.lua
+
 local PlayerUnitVisualLoadout = require("scripts/extension_systems/visual_loadout/utilities/player_unit_visual_loadout")
 local LedgeVaulting = {}
 
@@ -17,7 +19,7 @@ LedgeVaulting.can_enter = function (ledge_finder_extension, ledge_tweak_data, un
 	local character_state_component = unit_data_extension:read_component("character_state")
 	local state_name = character_state_component.state_name
 	local in_air = state_name == "falling" or state_name == "jumping"
-	local allowed_height_distance_max, allowed_height_distance_min = nil
+	local allowed_height_distance_max, allowed_height_distance_min
 
 	if in_air then
 		allowed_height_distance_max = ledge_tweak_data.inair_allowed_height_distance_max or ledge_tweak_data.allowed_height_distance_max
@@ -34,7 +36,7 @@ LedgeVaulting.can_enter = function (ledge_finder_extension, ledge_tweak_data, un
 	local first_person_component = unit_data_extension:read_component("first_person")
 	local fp_rotation = first_person_component.rotation
 	local wanted_move_dir = Quaternion.rotate(fp_rotation, move_norm)
-	local good_ledge = nil
+	local good_ledge
 
 	for i = num_ledges, 1, -1 do
 		local ledge = ledge_data[i]

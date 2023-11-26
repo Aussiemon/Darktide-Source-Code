@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/constant_elements/elements/subtitles/constant_element_subtitles_settings.lua
+
 local constant_element_subtitles_settings = {
 	events = {
 		{

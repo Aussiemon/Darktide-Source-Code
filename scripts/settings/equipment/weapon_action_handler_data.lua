@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/equipment/weapon_action_handler_data.lua
+
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local MasterItems = require("scripts/backend/master_items")
 local Overheat = require("scripts/utilities/overheat")
@@ -18,62 +20,62 @@ local function _require_weapon_action(action)
 	return class
 end
 
-local weapon_action_data = {
-	actions = {
-		activate_special = _require_weapon_action("action_activate_special"),
-		aim = _require_weapon_action("action_aim"),
-		aim_force_field = _require_weapon_action("action_aim_force_field"),
-		aim_projectile = _require_weapon_action("action_aim_projectile"),
-		block = _require_weapon_action("action_block"),
-		buff_target = _require_weapon_action("action_buff_target"),
-		charge = _require_weapon_action("action_charge"),
-		charge_ammo = _require_weapon_action("action_charge_ammo"),
-		chain_lightning = _require_weapon_action("action_chain_lightning_new"),
-		chain_lightning_powerup = _require_weapon_action("action_chain_lightning_powerup"),
-		damage_target = _require_weapon_action("action_damage_target"),
-		discard = _require_weapon_action("action_discard"),
-		dummy = _require_weapon_action("action_dummy"),
-		flamer_gas = _require_weapon_action("action_flamer_gas"),
-		flamer_gas_burst = _require_weapon_action("action_flamer_gas_burst"),
-		heal_target_over_time = _require_weapon_action("action_heal_target_over_time"),
-		inspect = _require_weapon_action("action_inspect"),
-		melee_explosive = _require_weapon_action("action_melee_explosive"),
-		overload_charge = _require_weapon_action("action_overload_charge"),
-		overload_charge_position_finder = _require_weapon_action("action_overload_charge_position_finder"),
-		overload_charge_target_finder = _require_weapon_action("action_overload_charge_target_finder"),
-		overload_explosion = _require_weapon_action("action_overload_explosion"),
-		overload_target_finder = _require_weapon_action("action_overload_target_finder"),
-		place_deployable = _require_weapon_action("action_place_deployable"),
-		place_pickup = _require_weapon_action("action_place_pickup"),
-		place_force_field = _require_weapon_action("action_place_force_field"),
-		push = _require_weapon_action("action_push"),
-		ranged_load_special = _require_weapon_action("action_ranged_load_special"),
-		ranged_wield = _require_weapon_action("action_ranged_wield"),
-		reload_shotgun = _require_weapon_action("action_reload_shotgun"),
-		reload_state = _require_weapon_action("action_reload_state"),
-		shoot_hit_scan = _require_weapon_action("action_shoot_hit_scan"),
-		shoot_pellets = _require_weapon_action("action_shoot_pellets"),
-		shoot_projectile = _require_weapon_action("action_shoot_projectile"),
-		smite_targeting = _require_weapon_action("action_smite_targeting"),
-		spawn_projectile = _require_weapon_action("action_spawn_projectile"),
-		sweep = _require_weapon_action("action_sweep"),
-		scan = _require_weapon_action("action_scan"),
-		scan_confirm = _require_weapon_action("action_scan_confirm"),
-		target_finder = _require_weapon_action("action_target_finder"),
-		throw_grenade = _require_weapon_action("action_throw_grenade"),
-		throw_luggable = _require_weapon_action("action_throw_luggable"),
-		toggle_special = _require_weapon_action("action_toggle_weapon_special"),
-		trigger_explosion = _require_weapon_action("action_trigger_explosion"),
-		unaim = _require_weapon_action("action_unaim"),
-		unwield = _require_weapon_action("action_unwield"),
-		unwield_to_previous = _require_weapon_action("action_unwield_to_previous"),
-		unwield_to_specific = _require_weapon_action("action_unwield_to_specific"),
-		vent_overheat = _require_weapon_action("action_vent_overheat"),
-		vent_warp_charge = _require_weapon_action("action_vent_warp_charge"),
-		wield = _require_weapon_action("action_wield"),
-		windup = _require_weapon_action("action_windup"),
-		zealot_channel = _require_weapon_action("action_zealot_channel")
-	}
+local weapon_action_data = {}
+
+weapon_action_data.actions = {
+	activate_special = _require_weapon_action("action_activate_special"),
+	aim = _require_weapon_action("action_aim"),
+	aim_force_field = _require_weapon_action("action_aim_force_field"),
+	aim_projectile = _require_weapon_action("action_aim_projectile"),
+	block = _require_weapon_action("action_block"),
+	buff_target = _require_weapon_action("action_buff_target"),
+	charge = _require_weapon_action("action_charge"),
+	charge_ammo = _require_weapon_action("action_charge_ammo"),
+	chain_lightning = _require_weapon_action("action_chain_lightning_new"),
+	chain_lightning_powerup = _require_weapon_action("action_chain_lightning_powerup"),
+	damage_target = _require_weapon_action("action_damage_target"),
+	discard = _require_weapon_action("action_discard"),
+	dummy = _require_weapon_action("action_dummy"),
+	flamer_gas = _require_weapon_action("action_flamer_gas"),
+	flamer_gas_burst = _require_weapon_action("action_flamer_gas_burst"),
+	heal_target_over_time = _require_weapon_action("action_heal_target_over_time"),
+	inspect = _require_weapon_action("action_inspect"),
+	melee_explosive = _require_weapon_action("action_melee_explosive"),
+	overload_charge = _require_weapon_action("action_overload_charge"),
+	overload_charge_position_finder = _require_weapon_action("action_overload_charge_position_finder"),
+	overload_charge_target_finder = _require_weapon_action("action_overload_charge_target_finder"),
+	overload_explosion = _require_weapon_action("action_overload_explosion"),
+	overload_target_finder = _require_weapon_action("action_overload_target_finder"),
+	place_deployable = _require_weapon_action("action_place_deployable"),
+	place_pickup = _require_weapon_action("action_place_pickup"),
+	place_force_field = _require_weapon_action("action_place_force_field"),
+	push = _require_weapon_action("action_push"),
+	ranged_load_special = _require_weapon_action("action_ranged_load_special"),
+	ranged_wield = _require_weapon_action("action_ranged_wield"),
+	reload_shotgun = _require_weapon_action("action_reload_shotgun"),
+	reload_state = _require_weapon_action("action_reload_state"),
+	shoot_hit_scan = _require_weapon_action("action_shoot_hit_scan"),
+	shoot_pellets = _require_weapon_action("action_shoot_pellets"),
+	shoot_projectile = _require_weapon_action("action_shoot_projectile"),
+	smite_targeting = _require_weapon_action("action_smite_targeting"),
+	spawn_projectile = _require_weapon_action("action_spawn_projectile"),
+	sweep = _require_weapon_action("action_sweep"),
+	scan = _require_weapon_action("action_scan"),
+	scan_confirm = _require_weapon_action("action_scan_confirm"),
+	target_finder = _require_weapon_action("action_target_finder"),
+	throw_grenade = _require_weapon_action("action_throw_grenade"),
+	throw_luggable = _require_weapon_action("action_throw_luggable"),
+	toggle_special = _require_weapon_action("action_toggle_weapon_special"),
+	trigger_explosion = _require_weapon_action("action_trigger_explosion"),
+	unaim = _require_weapon_action("action_unaim"),
+	unwield = _require_weapon_action("action_unwield"),
+	unwield_to_previous = _require_weapon_action("action_unwield_to_previous"),
+	unwield_to_specific = _require_weapon_action("action_unwield_to_specific"),
+	vent_overheat = _require_weapon_action("action_vent_overheat"),
+	vent_warp_charge = _require_weapon_action("action_vent_warp_charge"),
+	wield = _require_weapon_action("action_wield"),
+	windup = _require_weapon_action("action_windup"),
+	zealot_channel = _require_weapon_action("action_zealot_channel")
 }
 
 local function _ammo_check(action_settings, condition_func_params)
@@ -172,7 +174,7 @@ local function _weapon_special_active_cooldown(action_settings, condition_func_p
 		local t = Managers.time:time("gameplay")
 		local time_since_active = t - activated_time
 
-		if activation_cooldown > time_since_active then
+		if time_since_active < activation_cooldown then
 			return false
 		end
 	end
@@ -335,6 +337,7 @@ weapon_action_data.action_kind_condition_funcs = {
 
 		if ability_type then
 			local ability_extension = condition_func_params.ability_extension
+
 			can_use = ability_extension:can_use_ability(ability_type)
 		end
 
@@ -346,6 +349,7 @@ weapon_action_data.action_kind_condition_funcs = {
 
 		if ability_type then
 			local ability_extension = condition_func_params.ability_extension
+
 			can_use = ability_extension:can_use_ability(ability_type)
 		end
 
@@ -354,6 +358,7 @@ weapon_action_data.action_kind_condition_funcs = {
 		if required_charge_level then
 			local action_module_charge_component = condition_func_params.action_module_charge_component
 			local charge_level = action_module_charge_component.charge_level
+
 			can_use = can_use and required_charge_level <= charge_level
 		end
 
@@ -385,6 +390,7 @@ weapon_action_data.action_kind_total_time_funcs = {
 		return special_active and action_settings.total_time_deactivate or action_settings.total_time
 	end
 }
+
 local DEFAULT_NO_AMMO_DELAY_TIME = 1
 
 local function _delay_from_last_ammunition_usage(condition_func_params, action_params, remaining_time, t)
@@ -394,7 +400,7 @@ local function _delay_from_last_ammunition_usage(condition_func_params, action_p
 	local no_ammo_delay = weapon_template and weapon_template.no_ammo_delay or DEFAULT_NO_AMMO_DELAY_TIME
 	local end_t = inventory_slot_component.last_ammunition_usage + no_ammo_delay
 
-	return t >= end_t
+	return end_t <= t
 end
 
 local function _no_ammo(condition_func_params, action_params, remaining_time)

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/crafting_modify_options_view/crafting_modify_options_view_declaration_settings.lua
+
 local view_settings = {
 	display_name = "loc_crafting_view_display_name",
 	state_bound = true,

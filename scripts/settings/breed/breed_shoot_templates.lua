@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/breed/breed_shoot_templates.lua
+
 local breed_shoot_templates = {}
 
 local function _create_breed_shoot_templates(path)

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/presence/presence_manager_interface.lua
+
 local PresenceManagerInterface = {
 	"init",
 	"get_presence",

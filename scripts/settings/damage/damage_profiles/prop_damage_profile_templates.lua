@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/damage/damage_profiles/prop_damage_profile_templates.lua
+
 local ArmorSettings = require("scripts/settings/damage/armor_settings")
 local CatapultingTemplates = require("scripts/settings/damage/catapulting_templates")
 local ForcedLookSettings = require("scripts/settings/damage/forced_look_settings")
@@ -124,6 +126,7 @@ local breach_charge_explosion_close = {
 		[armor_types.void_shield] = 1
 	}
 }
+
 damage_templates.barrel_explosion_close = {
 	disorientation_type = "grenadier",
 	interrupt_alternate_fire = true,

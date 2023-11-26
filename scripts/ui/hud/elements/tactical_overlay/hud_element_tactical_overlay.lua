@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/hud/elements/tactical_overlay/hud_element_tactical_overlay.lua
+
 local CircumstanceTemplates = require("scripts/settings/circumstance/circumstance_templates")
 local Definitions = require("scripts/ui/hud/elements/tactical_overlay/hud_element_tactical_overlay_definitions")
 local InputDevice = require("scripts/managers/input/input_device")
@@ -41,7 +43,9 @@ HudElementTacticalOverlay.update = function (self, dt, t, ui_renderer, render_se
 	HudElementTacticalOverlay.super.update(self, dt, t, ui_renderer, render_settings, is_input_blocked and input_service:null_service() or input_service)
 
 	local service_type = "Ingame"
+
 	input_service = is_input_blocked and input_service:null_service() or Managers.input:get_input_service(service_type)
+
 	local active = false
 
 	if not input_service:is_null_service() and input_service:get("tactical_overlay_hold") then
@@ -72,11 +76,14 @@ HudElementTacticalOverlay._update_left_panel_elements = function (self, ui_rende
 	local total_size = 0
 	local margin = 20
 	local scenegraph = self._ui_scenegraph
+
 	total_size = total_size + scenegraph.mission_info_panel.size[2]
+
 	local circumstance_info_widget = self._widgets_by_name.circumstance_info
 
 	if circumstance_info_widget.visible == true then
 		local title_margin = 20
+
 		total_size = total_size + margin + title_margin
 
 		self:set_scenegraph_position("circumstance_info_panel", nil, total_size)
@@ -97,9 +104,11 @@ HudElementTacticalOverlay._update_left_panel_elements = function (self, ui_rende
 		local description_margin = 5
 		local min_height = circumstance_info_widget.style.icon.size[2]
 		local title_height = math.max(min_height, circumstance_name_height)
+
 		circumstance_name_style.size[2] = title_height
 		circumstance_description_style.offset[2] = title_height + circumstance_name_style.offset[2] + description_margin
 		circumstance_description_style.size[2] = circumstance_description_height
+
 		local circumstance_height = circumstance_description_style.offset[2] + circumstance_description_style.size[2] + circumstance_info_widget.style.icon.offset[2]
 
 		self:_set_scenegraph_size("circumstance_info_panel", nil, circumstance_height)
@@ -123,6 +132,7 @@ end
 
 HudElementTacticalOverlay._set_difficulty_icons = function (self, style, difficulty_value)
 	local difficulty_icon_style = style.difficulty_icon
+
 	difficulty_icon_style.amount = difficulty_value
 end
 
@@ -130,6 +140,7 @@ HudElementTacticalOverlay._setup_left_panel_widgets = function (self)
 	local definitions = {
 		widget_definitions = self._definitions.left_panel_widgets_definitions
 	}
+
 	self._left_panel_widgets = {}
 
 	self:_create_widgets(definitions, self._left_panel_widgets, self._widgets_by_name)
@@ -150,6 +161,7 @@ HudElementTacticalOverlay._sync_mission_info = function (self)
 	local mission_info_content = mission_info_widget.content
 	local mission_type_name = mission_type and mission_type.name or default_mission_type_name
 	local mission_type_icon = mission_type and mission_type.icon or default_mission_type_icon
+
 	mission_info_content.icon = mission_type_icon
 	mission_info_content.mission_type = Localize(mission_type_name)
 	mission_info_content.mission_name = Utf8.upper(Localize(mission_name))
@@ -175,6 +187,7 @@ HudElementTacticalOverlay._sync_circumstance_info = function (self)
 			local circumstance_icon = circumstance_ui_settings.icon
 			local circumstance_display_name = circumstance_ui_settings.display_name
 			local circumstance_description = circumstance_ui_settings.description
+
 			circumstance_info_content.icon = circumstance_icon
 			circumstance_info_content.circumstance_name = Localize(circumstance_display_name)
 			circumstance_info_content.circumstance_description = Localize(circumstance_description)
@@ -204,11 +217,13 @@ end
 HudElementTacticalOverlay._draw_widgets = function (self, dt, t, input_service, ui_renderer, render_settings)
 	if self._alpha_multiplier ~= 0 then
 		local alpha_multiplier = render_settings.alpha_multiplier
+
 		render_settings.alpha_multiplier = self._alpha_multiplier
 
 		HudElementTacticalOverlay.super._draw_widgets(self, dt, t, input_service, ui_renderer, render_settings)
 
 		render_settings.alpha_multiplier = alpha_multiplier
+
 		local left_panel_widgets = self._left_panel_widgets
 		local num_left_panel_widget = #left_panel_widgets
 
@@ -234,9 +249,12 @@ end
 HudElementTacticalOverlay._update_materials_collected = function (self)
 	local plasteel_info_widget = self._widgets_by_name.plasteel_info
 	local plasteel_info_content = plasteel_info_widget.content
+
 	plasteel_info_content.plasteel_amount_id = self:_total_materials_collected("plasteel")
+
 	local diamantine_info_widget = self._widgets_by_name.diamantine_info
 	local diamantine_info_content = diamantine_info_widget.content
+
 	diamantine_info_content.diamantine_amount_id = self:_total_materials_collected("diamantine")
 end
 

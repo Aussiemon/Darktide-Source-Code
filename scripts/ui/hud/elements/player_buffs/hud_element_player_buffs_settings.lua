@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/hud/elements/player_buffs/hud_element_player_buffs_settings.lua
+
 local UIHudSettings = require("scripts/settings/ui/ui_hud_settings")
 local get_hud_color = UIHudSettings.get_hud_color
 local hud_element_player_buffs_settings = {

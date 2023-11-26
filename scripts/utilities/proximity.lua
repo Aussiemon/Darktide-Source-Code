@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/utilities/proximity.lua
+
 local Proximity = {}
 local query_results = {}
 
@@ -26,8 +28,11 @@ Proximity.check_sticky_proximity = function (unit, relation_side_names, radius, 
 	Proximity.check_proximity_of_position(unit_position, relation_side_names, radius, out_result_table, filter_function, broadphase)
 
 	stickiness_time = stickiness_time or 0
+
 	local use_limit = stickiness_limit ~= nil
+
 	stickiness_limit = stickiness_limit or 0
+
 	local stickiness_limit_squared = stickiness_limit * stickiness_limit
 
 	for prev_found_unit, prev_found_extension in pairs(prev_proximity_units) do
@@ -39,6 +44,7 @@ Proximity.check_sticky_proximity = function (unit, relation_side_names, radius, 
 			if not time_check and use_limit then
 				local prev_unit_position = POSITION_LOOKUP[prev_found_unit]
 				local distance_squared = Vector3.distance_squared(prev_unit_position, unit_position)
+
 				distance_check = stickiness_limit_squared < distance_squared
 			end
 

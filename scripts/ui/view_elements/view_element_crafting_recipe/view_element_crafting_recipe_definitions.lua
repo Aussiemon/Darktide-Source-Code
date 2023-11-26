@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/view_elements/view_element_crafting_recipe/view_element_crafting_recipe_definitions.lua
+
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templates")
@@ -103,6 +105,7 @@ local scenegraph_definition = {
 	}
 }
 local continue_button_pass_template = table.clone(ButtonPassTemplates.terminal_button)
+
 continue_button_pass_template[#continue_button_pass_template + 1] = {
 	style_id = "button_attention",
 	pass_type = "texture",
@@ -153,12 +156,14 @@ continue_button_pass_template[#continue_button_pass_template + 1] = {
 			local pulse_progress = Application.time_since_launch() * speed % 1
 			local pulse_anim_progress = (pulse_progress * 2 - 1)^2
 			local alpha_multiplier = 0.6 + pulse_anim_progress * 0.4
+
 			alpha = 255 * alpha_multiplier
 		end
 
 		style.color[1] = alpha
 	end
 }
+
 local widget_definitions = {
 	grid_background = UIWidget.create_definition({
 		{
@@ -285,9 +290,11 @@ local widget_definitions = {
 	}, "continue_button_background")
 }
 local cost_text_font_style = table.clone(UIFontSettings.currency_title)
+
 cost_text_font_style.text_horizontal_alignment = "left"
 cost_text_font_style.text_vertical_alignment = "center"
 cost_text_font_style.font_size = 20
+
 local cost_definitions = UIWidget.create_definition({
 	{
 		value_id = "texture",

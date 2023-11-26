@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/training_grounds/training_grounds_servitor_handler.lua
+
 local TrainingGroundsServitorHandler = class("TrainingGroundsServitorHandler")
 local MOVEMENT_STATES = table.enum("still", "idle", "direct", "arc")
 
@@ -43,7 +45,9 @@ TrainingGroundsServitorHandler.init = function (self, scripted_scenario_system, 
 	self._speed = 3
 	self._idle_speed = 0.5
 	self._idle_circle_radius = 3
+
 	local idle_angular_speed = 2 * math.asin(self._idle_speed / (2 * self._idle_circle_radius))
+
 	self._idle_next_point_rotation = QuaternionBox(Quaternion.axis_angle(Vector3.up(), idle_angular_speed))
 	self._rotation_speed = math.pi
 	self._float_z_offset_magnitude = 0.015
@@ -76,6 +80,7 @@ TrainingGroundsServitorHandler.spawn_servitor = function (self, position, rotati
 	local unit_name = "content/environment/artsets/imperial/training_grounds/placeholder/placeholder_servitor_2"
 	local template_name = "training_grounds_servitor"
 	local unit_spawner = Managers.state.unit_spawner
+
 	self._unit = unit_spawner:spawn_network_unit(unit_name, template_name, position, rotation)
 	self._interactee_extension = ScriptUnit.extension(self._unit, "interactee_system")
 
@@ -92,6 +97,7 @@ end
 
 TrainingGroundsServitorHandler.update_lookat_position = function (self, optional_position)
 	local lookat_data = self._lookat_data
+
 	lookat_data.use_velocity = not optional_position
 
 	if optional_position then
@@ -107,7 +113,9 @@ TrainingGroundsServitorHandler._move = function (self, dt)
 	end
 
 	local servitor_pos = Unit.local_position(self._unit, 1)
+
 	servitor_pos[3] = servitor_pos[3] - self._current_float_z_offset
+
 	local wanted_pos = servitor_pos + velocity * dt
 	local physics_world = self._physics_world
 	local radius = 0.5
@@ -136,7 +144,7 @@ TrainingGroundsServitorHandler._move = function (self, dt)
 		for i = 1, num_hits do
 			local hit = hits[i]
 
-			if hit.distance <= closest then
+			if closest >= hit.distance then
 				closest = hit.distance
 			end
 		end
@@ -146,7 +154,7 @@ TrainingGroundsServitorHandler._move = function (self, dt)
 		for i = 1, num_hits do
 			local hit = hits[i]
 
-			if hit.distance <= closest then
+			if closest >= hit.distance then
 				closest = hit.distance
 				position = position + hit.position
 				normal = normal + hit.normal
@@ -156,10 +164,14 @@ TrainingGroundsServitorHandler._move = function (self, dt)
 
 		position = position / parsed_hits
 		normal = normal / parsed_hits
+
 		local stop_pos = position + normal * radius
 		local distance_to_stop = math.max(Vector3.length(stop_pos - current_pos) - margin, 0)
+
 		distance_to_stop = math.min(distance_to_stop, remaining_distance)
+
 		local move_direction = Vector3.normalize(wanted_pos - current_pos)
+
 		current_pos = current_pos + move_direction * distance_to_stop
 		remaining_distance = remaining_distance - distance_to_stop
 		move_direction = Vector3.normalize(Vector3.cross(Vector3.cross(normal, Vector3.normalize(move_direction)), normal))
@@ -183,6 +195,7 @@ TrainingGroundsServitorHandler.move_to_unit_relative_arc = function (self, relat
 	local start_position = Unit.local_position(self._unit, 1)
 	local target_position, relative_unit_rotation = get_relative_position_rotation(relative_unit, relative_position, rotate_position_relative_to_unit)
 	local start_relative_position = start_position - target_position
+
 	self._move_arc_data = {
 		start_relative_position = Vector3Box(start_relative_position),
 		start_relative_unit_rotation = QuaternionBox(relative_unit_rotation),
@@ -213,7 +226,9 @@ TrainingGroundsServitorHandler._calculate_arc = function (self, dt)
 	local relative_position = servitor_pos - target_position
 	local start_relative_position = move_data.start_relative_position:unbox()
 	local rotation_diff = Quaternion.multiply(Quaternion.inverse(relative_unit_rotation), move_data.start_relative_unit_rotation:unbox())
+
 	start_relative_position = Quaternion.rotate(rotation_diff, start_relative_position)
+
 	local distance_from_target = Vector3.length(relative_position)
 	local right_offset = Vector3.zero()
 	local relative_unit_forward = Quaternion.forward(relative_unit_rotation)
@@ -222,13 +237,20 @@ TrainingGroundsServitorHandler._calculate_arc = function (self, dt)
 	if projected_distance < 0 then
 		local turn_start_distance = 10
 		local turn_end_distance = 1
+
 		distance_from_target = math.abs(projected_distance)
+
 		local curve_t = math.ilerp(turn_start_distance, turn_end_distance, distance_from_target) + math.ilerp(turn_end_distance, 0, distance_from_target) * 0.5
 		local t_speed = self._speed / distance_from_target * dt
+
 		curve_t = curve_t + t_speed
+
 		local current_offset = (3 * curve_t * curve_t - 2 * curve_t * curve_t * curve_t) * max_arc_offset
+
 		current_offset = math.clamp(current_offset, 0, max_arc_offset)
+
 		local relative_right = Quaternion.right(relative_unit_rotation)
+
 		right_offset = relative_right * current_offset * math.sign(Vector3.dot(relative_right, relative_position))
 	end
 
@@ -237,7 +259,9 @@ TrainingGroundsServitorHandler._calculate_arc = function (self, dt)
 	end
 
 	local wanted_pos = target_position + relative_unit_forward * math.sign(projected_distance) * math.max(distance_from_target - self._speed, 0) + right_offset
+
 	wanted_pos[3] = wanted_pos[3] + self._current_float_z_offset
+
 	local move = wanted_pos - servitor_pos
 	local move_length = Vector3.length(move)
 	local slow_down_distance = 2
@@ -293,6 +317,7 @@ TrainingGroundsServitorHandler._calculate_direct = function (self, dt)
 
 	local relative_position = move_data.relative_position:unbox()
 	local move_to_pos = get_relative_position_rotation(relative_unit, relative_position, move_data.rotate_position_relative_to_unit)
+
 	move_to_pos[3] = move_to_pos[3] + self._current_float_z_offset
 
 	self._move_to_pos:store(move_to_pos)
@@ -342,7 +367,9 @@ TrainingGroundsServitorHandler._calculate_idle = function (self, dt, t)
 	local delta = Vector3.flat(Unit.local_position(self._unit, 1) - idle_circle_position)
 	local closest_point_delta = Vector3.normalize(delta) * idle_circle_radius
 	local wanted_pos = idle_circle_position + Quaternion.rotate(self._idle_next_point_rotation:unbox(), closest_point_delta)
+
 	wanted_pos[3] = wanted_pos[3] + self._current_float_z_offset
+
 	local move = wanted_pos - Unit.local_position(self._unit, 1)
 	local velocity = Vector3.normalize(move) * self._idle_speed
 
@@ -357,7 +384,7 @@ TrainingGroundsServitorHandler._handle_lookat = function (self, dt)
 	local lookat_data = self._lookat_data
 	local velocity = self._velocity:unbox()
 	local unit = self._unit
-	local lookat_pos = nil
+	local lookat_pos
 
 	if lookat_data.use_velocity then
 		local velocity = self._velocity:unbox()
@@ -389,7 +416,8 @@ TrainingGroundsServitorHandler._handle_floating_z_offset = function (self, dt, t
 	local target_z_offset = math.sin(t * self._float_z_speed) * self._float_z_offset_magnitude
 	local current_z_offset = self._current_float_z_offset
 	local position = Unit.local_position(self._unit, 1)
-	position[3] = position[3] + target_z_offset - current_z_offset
+
+	position[3] = position[3] + (target_z_offset - current_z_offset)
 
 	Unit.set_local_position(self._unit, 1, position)
 

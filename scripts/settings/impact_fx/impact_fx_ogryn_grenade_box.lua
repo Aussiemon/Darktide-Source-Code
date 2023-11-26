@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/impact_fx/impact_fx_ogryn_grenade_box.lua
+
 local ArmorSettings = require("scripts/settings/damage/armor_settings")
 local ImpactFxHelper = require("scripts/utilities/impact_fx_helper")
 local SurfaceMaterialSettings = require("scripts/settings/surface_material_settings")
@@ -743,7 +745,7 @@ local disgustingly_resilient = {
 }
 local resistant = table.clone(unarmored)
 local berserker = table.clone(unarmored)
-local player = nil
+local player
 local surface_fx = {}
 local default_surface_fx = {
 	[hit_types.stop] = {

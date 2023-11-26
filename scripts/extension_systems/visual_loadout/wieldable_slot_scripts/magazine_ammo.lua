@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/visual_loadout/wieldable_slot_scripts/magazine_ammo.lua
+
 local Action = require("scripts/utilities/weapon/action")
 local Component = require("scripts/utilities/component")
 local ReloadStates = require("scripts/extension_systems/weapon/utilities/reload_states")
@@ -5,14 +7,18 @@ local MagazineAmmo = class("MagazineAmmo")
 
 MagazineAmmo.init = function (self, context, slot, weapon_template, fx_sources)
 	local owner_unit = context.owner_unit
+
 	self._weapon_template = weapon_template
 	self._weapon_actions = weapon_template.actions
 	self._reload_template = weapon_template.reload_template
 	self._is_reloading = false
 	self._ammo_clip_at_reload_start = 0
+
 	local unit_data_extension = ScriptUnit.extension(owner_unit, "unit_data_system")
+
 	self._inventory_slot_component = unit_data_extension:read_component(slot.name)
 	self._weapon_action_component = unit_data_extension:read_component("weapon_action")
+
 	local unit_components = {}
 	local num_attachments_1p = #slot.attachments_1p
 
@@ -64,6 +70,7 @@ MagazineAmmo.update = function (self, unit, dt, t)
 	end
 
 	self._is_reloading = is_reloading
+
 	local show_full_magazine = false
 
 	if is_reloading then
@@ -73,12 +80,12 @@ MagazineAmmo.update = function (self, unit, dt, t)
 		local reload_state = ReloadStates.reload_state(reload_template, inventory_slot_component)
 		local show_magazine_ammo_time = reload_state.show_magazine_ammo_time or 0
 
-		if time_in_action >= show_magazine_ammo_time then
+		if show_magazine_ammo_time <= time_in_action then
 			show_full_magazine = true
 		end
 	end
 
-	local ammo_in_magazine = nil
+	local ammo_in_magazine
 
 	if is_reloading then
 		if show_full_magazine then

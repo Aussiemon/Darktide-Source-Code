@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/player/remote_player.lua
+
 local AuthoritativePlayerInputHandler = require("scripts/managers/player/player_game_states/authoritative_player_input_handler")
 local PlayerManager = require("scripts/foundation/managers/player/player_manager")
 local Missions = require("scripts/settings/mission/mission_templates")
@@ -25,6 +27,7 @@ RemotePlayer.init = function (self, unique_id, session_id, channel_id, peer_id, 
 
 		if rawget(mission_settings, "spawn_settings") then
 			local spawn_settings = mission_settings.spawn_settings
+
 			self._wanted_spawn_point = spawn_settings.next_mission
 		end
 	end

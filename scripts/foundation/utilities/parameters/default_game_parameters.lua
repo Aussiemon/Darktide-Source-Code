@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/foundation/utilities/parameters/default_game_parameters.lua
+
 DefaultGameParameters = DefaultGameParameters or {}
 DefaultGameParameters.log_level = 2
 DefaultGameParameters.time_step_policy = {

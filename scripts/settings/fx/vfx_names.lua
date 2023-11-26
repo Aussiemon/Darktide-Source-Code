@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/fx/vfx_names.lua
+
 local BreedShieldTemplates = require("scripts/settings/breed/breed_shield_templates")
 local BreedShootTemplates = require("scripts/settings/breed/breed_shoot_templates")
 local ExplosionTemplates = require("scripts/settings/damage/explosion_templates")
@@ -17,6 +19,7 @@ local function _add_vfx_names_from_explosion_templates(templates)
 
 				for j = 1, #effects do
 					local effect_name = effects[j]
+
 					vfx_names[effect_name] = true
 				end
 			end
@@ -27,6 +30,7 @@ local function _add_vfx_names_from_explosion_templates(templates)
 		if vfx then
 			for i = 1, #vfx do
 				local vfx_name = vfx[i]
+
 				vfx_names[vfx_name] = true
 			end
 		end
@@ -65,6 +69,7 @@ for name, template in pairs(GroundImpactFxTemplates) do
 			if type(vfx) == "table" then
 				for i = 1, #vfx do
 					local entry = vfx[i]
+
 					vfx_names[entry] = true
 				end
 			else

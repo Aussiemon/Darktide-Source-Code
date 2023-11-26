@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/navigation/minion_navigation_extension_tests.lua
+
 local unit_alive = Unit.alive
 local self = {
 	total_time = 120,
@@ -24,10 +26,12 @@ local function _test_movement_modifier(dt, t)
 	end
 
 	local extension = ScriptUnit.extension(unit, "navigation_system")
+
 	self.start_time = self.start_time or t
+
 	local ids = self.ids
 
-	if self.total_time < t - self.start_time then
+	if t - self.start_time > self.total_time then
 		for _, id in ipairs(ids) do
 			extension:remove_movement_modifier(id)
 		end
@@ -44,10 +48,11 @@ local function _test_movement_modifier(dt, t)
 			local num_ids = #ids
 			local p = (self.max_size - num_ids) / self.max_size
 
-			if math.random() < p then
+			if p > math.random() then
 				Log.debug("MinionNavigationExtension", "add")
 
 				local id = extension:add_movement_modifier(0.5 + math.random())
+
 				ids[num_ids + 1] = id
 			else
 				Log.debug("MinionNavigationExtension", "remove")

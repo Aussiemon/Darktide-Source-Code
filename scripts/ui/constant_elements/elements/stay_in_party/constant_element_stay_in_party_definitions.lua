@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/constant_elements/elements/stay_in_party/constant_element_stay_in_party_definitions.lua
+
 local UIWorkspaceSettings = require("scripts/settings/ui/ui_workspace_settings")
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local UIWidget = require("scripts/managers/ui/ui_widget")
@@ -94,21 +96,27 @@ local scenegraph_definition = {
 	}
 }
 local vote_count_text_style = table.clone(UIFontSettings.header_1)
+
 vote_count_text_style.text_color = Color.white(255, true)
 vote_count_text_style.font_size = 45
 vote_count_text_style.font_type = "proxima_nova_medium"
 vote_count_text_style.text_vertical_alignment = "center"
 vote_count_text_style.text_horizontal_alignment = "center"
+
 local vote_caption_style = table.clone(UIFontSettings.header_3)
+
 vote_caption_style.text_color = Color.white(255, true)
 vote_caption_style.font_size = 30
 vote_caption_style.text_vertical_alignment = "bottom"
 vote_caption_style.text_horizontal_alignment = "left"
+
 local warning_text_style = table.clone(UIFontSettings.header_3)
+
 warning_text_style.text_color = Color.orange_red(255, true)
 warning_text_style.font_size = 26
 warning_text_style.text_vertical_alignment = "bottom"
 warning_text_style.text_horizontal_alignment = "left"
+
 local widget_definitions = {
 	outline_rect = UIWidget.create_definition({
 		{

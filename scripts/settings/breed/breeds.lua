@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/breed/breeds.lua
+
 local StaggerSettings = require("scripts/settings/damage/stagger_settings")
 local stagger_types = StaggerSettings.stagger_types
 local breeds = {}

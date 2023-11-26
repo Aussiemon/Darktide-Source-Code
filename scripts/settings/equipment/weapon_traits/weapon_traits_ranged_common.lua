@@ -1,7 +1,10 @@
+﻿-- chunkname: @scripts/settings/equipment/weapon_traits/weapon_traits_ranged_common.lua
+
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local weapon_traits_ranged_common = {}
 local buff_stat_buffs = BuffSettings.stat_buffs
 local buff_proc_events = BuffSettings.proc_events
+
 weapon_traits_ranged_common.weapon_trait_ranged_common_wield_increased_attack = {
 	weapon_trait_ranged_common_wield_increased_attack_buff = {
 		{

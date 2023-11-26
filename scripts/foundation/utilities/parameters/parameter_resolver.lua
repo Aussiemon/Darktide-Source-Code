@@ -1,5 +1,8 @@
+﻿-- chunkname: @scripts/foundation/utilities/parameters/parameter_resolver.lua
+
 local DefaultGameParameters = require("scripts/foundation/utilities/parameters/default_game_parameters")
 local DefaultDevParameters = require("scripts/foundation/utilities/parameters/default_dev_parameters").parameters
+
 GameParameters = GameParameters or {}
 DevParameters = DevParameters or {}
 ParameterResolver = ParameterResolver or {}
@@ -13,11 +16,12 @@ ParameterResolver.resolve_command_line = function ()
 	local args = {
 		Application.argv()
 	}
-	ParameterResolver._command_line_parameters = {
-		parameters = {},
-		game = {},
-		dev = {}
-	}
+
+	ParameterResolver._command_line_parameters = {}
+	ParameterResolver._command_line_parameters.parameters = {}
+	ParameterResolver._command_line_parameters.game = {}
+	ParameterResolver._command_line_parameters.dev = {}
+
 	local parameters = ParameterResolver._command_line_parameters.parameters
 
 	local function first_char(s)
@@ -36,7 +40,7 @@ ParameterResolver.resolve_command_line = function ()
 	local i = 1
 
 	local function has_more_args()
-		return i <= num_args
+		return num_args >= i
 	end
 
 	local function has_more_args_after_current()
@@ -61,12 +65,9 @@ ParameterResolver.resolve_command_line = function ()
 
 	local function warn_multiple_definitions(parameter_name, old)
 		local value = parameters[parameter_name]
-
-		if type(value) ~= "table" or not value then
-			local t = {
-				value
-			}
-		end
+		local t = type(value) == "table" and value or {
+			value
+		}
 
 		debug("Multiple defintions of '%s'\nUsing [%s].\nold value [%s]", parameter_name, table.tostring(t), table.tostring(old))
 	end
@@ -100,6 +101,7 @@ ParameterResolver.resolve_command_line = function ()
 			step_to_next_arg()
 		else
 			local param = parameter(arg)
+
 			max_param_string_length = math.max(max_param_string_length, #param)
 
 			if parameters[param] then
@@ -143,12 +145,14 @@ ParameterResolver.resolve_command_line = function ()
 						parameters[param] = value
 					elseif type(parameters[param]) == "table" then
 						local value_table = parameters[param]
+
 						value_table[#value_table + 1] = value
 					else
 						local value_table = {
 							current_value,
 							value
 						}
+
 						parameters[param] = value_table
 					end
 				end
@@ -169,7 +173,7 @@ local function _find_value_in_options(value, options)
 		local option = options[i]
 
 		if value_type == "number" and type(option) == "number" then
-			if math.abs(value - option) <= max_number_diff then
+			if max_number_diff >= math.abs(value - option) then
 				return true
 			end
 		elseif value == option then
@@ -187,6 +191,7 @@ ParameterResolver.resolve_dev_parameters = function ()
 
 	for param, config in pairs(DefaultDevParameters) do
 		local value = config.value
+
 		dev_parameters[param] = type(value) == "table" and table.clone(value) or value
 	end
 

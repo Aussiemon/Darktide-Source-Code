@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/equipment/weapon_traits/weapon_traits_bespoke_autopistol_p1.lua
+
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local WeaponTweakTemplateSettings = require("scripts/settings/equipment/weapon_templates/weapon_tweak_template_settings")
 local templates = {}
@@ -8,6 +10,7 @@ end
 
 local stat_buffs = BuffSettings.stat_buffs
 local proc_events = BuffSettings.proc_events
+
 templates.weapon_trait_bespoke_autopistol_p1_stacking_crit_bonus_on_continuous_fire = {
 	weapon_trait_bespoke_autopistol_p1_stacking_crit_bonus_on_continuous_fire = {
 		{

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/ability/archetype_specializations/veteran_ranger_specialization_new.lua
+
 local archetype_specialization = {
 	description = "loc_archetype_career_veteran_ranger_description",
 	name = "veteran_2",

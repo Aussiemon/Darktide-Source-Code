@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/hud/elements/player_health/hud_element_player_health_definitions.lua
+
 local HudElementPlayerHealthSettings = require("scripts/ui/hud/elements/player_health/hud_element_player_health_settings")
 local HudElementPlayerToughnessSettings = require("scripts/ui/hud/elements/player_health/hud_element_player_toughness_settings")
 local UIWorkspaceSettings = require("scripts/settings/ui/ui_workspace_settings")

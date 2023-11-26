@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/pass_templates/slider_pass_templates.lua
+
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local UIResolution = require("scripts/managers/ui/ui_resolution")
 local ListHeaderPassTemplates = require("scripts/ui/pass_templates/list_header_templates")
@@ -17,6 +19,7 @@ local function thumb_position_change_function(content, style)
 	end
 
 	local slider_horizontal_offset = content.slider_horizontal_offset or 0
+
 	style.offset[1] = slider_horizontal_offset
 end
 
@@ -52,6 +55,7 @@ SliderPassTemplates._settings_slider = function (width, height, settings_area_wi
 	local slider_horizontal_offset = header_width + SLIDER_ENDPLATE_WIDTH
 	local thumb_highlight_expanded_size = THUMB_HIGHLIGHT_SIZE + ListHeaderPassTemplates.highlight_size_addition
 	local value_font_style = table.clone(UIFontSettings.list_button)
+
 	value_font_style.size = {
 		LABEL_WIDTH,
 		height
@@ -62,6 +66,7 @@ SliderPassTemplates._settings_slider = function (width, height, settings_area_wi
 		8
 	}
 	value_font_style.text_horizontal_alignment = "right"
+
 	local passes = ListHeaderPassTemplates.list_header(header_width - LABEL_WIDTH, height, use_is_focused)
 	local slider_passes = {
 		{
@@ -187,6 +192,7 @@ SliderPassTemplates._settings_slider = function (width, height, settings_area_wi
 				local service_type = "View"
 				local alias_key = Managers.ui:get_input_alias_key(gamepad_action, service_type)
 				local input_text = InputUtils.input_text_for_current_input_device(service_type, alias_key)
+
 				content.slider_action_gamepad = input_text
 			end,
 			visibility_function = function (content, style)
@@ -273,9 +279,10 @@ SliderPassTemplates._settings_slider = function (width, height, settings_area_wi
 
 				if not input_offset then
 					local current_thumb_position = content.slider_value * slider_area_width
+
 					input_offset = input_coordinate - current_thumb_position
 
-					if input_offset < 0 or SLIDER_THUMB_SIZE < input_offset then
+					if input_offset < 0 or input_offset > SLIDER_THUMB_SIZE then
 						input_offset = SLIDER_THUMB_SIZE * 0.5
 					end
 
@@ -283,6 +290,7 @@ SliderPassTemplates._settings_slider = function (width, height, settings_area_wi
 				end
 
 				input_coordinate = math.clamp(input_coordinate - input_offset, 0, slider_area_width)
+
 				local slider_value = input_coordinate / slider_area_width
 				local step_size = content.step_size
 
@@ -316,7 +324,9 @@ SliderPassTemplates._settings_slider = function (width, height, settings_area_wi
 
 				if scroll_axis ~= 0 then
 					content.scroll_axis = scroll_axis
+
 					local previous_scroll_add = content.scroll_add or 0
+
 					content.scroll_add = previous_scroll_add + (step_size or scroll_amount) * scroll_axis
 				end
 
@@ -330,7 +340,8 @@ SliderPassTemplates._settings_slider = function (width, height, settings_area_wi
 						content.scroll_add = nil
 					else
 						local speed = content.scroll_speed or 8
-						step = scroll_add * dt * speed
+
+						step = scroll_add * (dt * speed)
 
 						if math.abs(scroll_add) > scroll_amount / 10 then
 							content.scroll_add = scroll_add - step
@@ -340,6 +351,7 @@ SliderPassTemplates._settings_slider = function (width, height, settings_area_wi
 					end
 
 					local input_slider_value = content.slider_value or 0
+
 					content.slider_value = math.clamp(input_slider_value + step, 0, 1)
 				end
 			end
@@ -370,6 +382,7 @@ SliderPassTemplates._settings_slider = function (width, height, settings_area_wi
 			end,
 			change_function = function (content, style)
 				local slider_value = content.parent.slider_value or 0
+
 				content.parent.slider_horizontal_offset = slider_horizontal_offset + slider_value * slider_area_width
 			end
 		}
@@ -447,13 +460,18 @@ SliderPassTemplates._settings_slider = function (width, height, settings_area_wi
 				local is_disabled = content.entry and content.entry.disabled or false
 				local active = content.drag_active or content.focused
 				local progress = is_disabled and 0 or active and 1 or content.track_hotspot.anim_hover_progress
+
 				style.color[1] = 255 * math.easeOutCubic(progress)
+
 				local new_size = math.lerp(thumb_highlight_expanded_size, THUMB_HIGHLIGHT_SIZE, math.easeInCubic(progress))
 				local size = style.size
+
 				size[1] = new_size
 				size[2] = new_size
+
 				local offset_addition = (new_size - SLIDER_THUMB_SIZE) * 0.5
 				local axis = content.axis or 1
+
 				style.offset[axis] = style.offset[axis] - offset_addition
 			end
 		}
@@ -474,6 +492,7 @@ SliderPassTemplates._slider = function (width, height, value_width, use_is_focus
 	local settings_area_width = width - slider_horizontal_offset
 	local slider_area_width = settings_area_width - (SLIDER_ENDPLATE_WIDTH * 2 + SLIDER_THUMB_SIZE)
 	local value_font_style = table.clone(UIFontSettings.list_button)
+
 	value_font_style.size = {
 		label_width - SLIDER_ENDPLATE_WIDTH - 4,
 		height
@@ -484,6 +503,7 @@ SliderPassTemplates._slider = function (width, height, value_width, use_is_focus
 		8
 	}
 	value_font_style.text_horizontal_alignment = "right"
+
 	local passes = {
 		{
 			style_id = "hotspot",
@@ -500,7 +520,9 @@ SliderPassTemplates._slider = function (width, height, value_width, use_is_focus
 			value = function (pass, renderer, style, content, position, size)
 				local hotspot = content.hotspot
 				local highlight_progress = math.max(hotspot.anim_select_progress, hotspot.anim_hover_progress, hotspot.anim_focus_progress)
+
 				content.highlight_progress = highlight_progress
+
 				local dt = renderer.dt
 				local exclusive_focus = content.exclusive_focus
 				local anim_exclusive_focus_progress = content.anim_exclusive_focus_progress or 0
@@ -635,6 +657,7 @@ SliderPassTemplates._slider = function (width, height, value_width, use_is_focus
 				local service_type = "View"
 				local alias_key = Managers.ui:get_input_alias_key(gamepad_action, service_type)
 				local input_text = InputUtils.input_text_for_current_input_device(service_type, alias_key)
+
 				content.slider_action_gamepad = input_text
 			end,
 			visibility_function = function (content, style)
@@ -721,9 +744,10 @@ SliderPassTemplates._slider = function (width, height, value_width, use_is_focus
 
 				if not input_offset then
 					local current_thumb_position = content.slider_value * slider_area_width
+
 					input_offset = input_coordinate - current_thumb_position
 
-					if input_offset < 0 or SLIDER_THUMB_SIZE < input_offset then
+					if input_offset < 0 or input_offset > SLIDER_THUMB_SIZE then
 						input_offset = SLIDER_THUMB_SIZE * 0.5
 					end
 
@@ -731,6 +755,7 @@ SliderPassTemplates._slider = function (width, height, value_width, use_is_focus
 				end
 
 				input_coordinate = math.clamp(input_coordinate - input_offset, 0, slider_area_width)
+
 				local slider_value = input_coordinate / slider_area_width
 				local step_size = content.step_size
 
@@ -764,7 +789,9 @@ SliderPassTemplates._slider = function (width, height, value_width, use_is_focus
 
 				if scroll_axis ~= 0 then
 					content.scroll_axis = scroll_axis
+
 					local previous_scroll_add = content.scroll_add or 0
+
 					content.scroll_add = previous_scroll_add + (step_size or scroll_amount) * scroll_axis
 				end
 
@@ -778,7 +805,8 @@ SliderPassTemplates._slider = function (width, height, value_width, use_is_focus
 						content.scroll_add = nil
 					else
 						local speed = content.scroll_speed or 8
-						step = scroll_add * dt * speed
+
+						step = scroll_add * (dt * speed)
 
 						if math.abs(scroll_add) > scroll_amount / 10 then
 							content.scroll_add = scroll_add - step
@@ -788,6 +816,7 @@ SliderPassTemplates._slider = function (width, height, value_width, use_is_focus
 					end
 
 					local input_slider_value = content.slider_value or 0
+
 					content.slider_value = math.clamp(input_slider_value + step, 0, 1)
 				end
 			end
@@ -818,6 +847,7 @@ SliderPassTemplates._slider = function (width, height, value_width, use_is_focus
 			end,
 			change_function = function (content, style)
 				local slider_value = content.parent.slider_value or 0
+
 				content.parent.slider_horizontal_offset = slider_horizontal_offset + slider_value * slider_area_width
 			end
 		}
@@ -895,13 +925,18 @@ SliderPassTemplates._slider = function (width, height, value_width, use_is_focus
 				local is_disabled = content.entry and content.entry.disabled or false
 				local active = content.drag_active or content.focused
 				local progress = is_disabled and 0 or active and 1 or content.track_hotspot.anim_hover_progress
+
 				style.color[1] = 255 * math.easeOutCubic(progress)
+
 				local new_size = math.lerp(thumb_highlight_expanded_size, THUMB_HIGHLIGHT_SIZE, math.easeInCubic(progress))
 				local size = style.size
+
 				size[1] = new_size
 				size[2] = new_size
+
 				local offset_addition = (new_size - SLIDER_THUMB_SIZE) * 0.5
 				local axis = content.axis or 1
+
 				style.offset[axis] = style.offset[axis] - offset_addition
 			end
 		}

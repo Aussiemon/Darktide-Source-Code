@@ -1,11 +1,15 @@
+﻿-- chunkname: @scripts/ui/views/custom_settings_view/custom_settings_view_definitions.lua
+
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local UIWorkspaceSettings = require("scripts/settings/ui/ui_workspace_settings")
 local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templates")
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local ScrollbarPassTemplates = require("scripts/ui/pass_templates/scrollbar_pass_templates")
 local title_text_style = table.clone(UIFontSettings.header_2)
+
 title_text_style.text_horizontal_alignment = "center"
 title_text_style.text_vertical_alignment = "top"
+
 local scenegraph_definitions = {
 	screen = UIWorkspaceSettings.screen,
 	canvas = {

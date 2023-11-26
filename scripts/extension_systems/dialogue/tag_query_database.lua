@@ -1,6 +1,9 @@
+﻿-- chunkname: @scripts/extension_systems/dialogue/tag_query_database.lua
+
 local TagQuery = require("scripts/extension_systems/dialogue/tag_query")
 local DialogueCategoryConfig = require("scripts/settings/dialogue/dialogue_category_config")
 local TagQueryDatabase = class("TagQueryDatabase")
+
 TagQueryDatabase.NUM_DATABASE_RULES = 4095
 
 TagQueryDatabase.init = function (self, dialogue_system)
@@ -23,6 +26,7 @@ end
 
 TagQueryDatabase.add_object_context = function (self, object, context_name, context)
 	local object_context_list = self._contexts_by_object[object] or {}
+
 	self._contexts_by_object[object] = object_context_list
 	object_context_list[context_name] = context
 end
@@ -82,16 +86,19 @@ TagQueryDatabase.define_rule = function (self, rule_definition)
 	local dialogue_name = rule_definition.name
 	local criterias = rule_definition.criterias
 	local real_criterias = table.clone(criterias)
+
 	rule_definition.real_criterias = real_criterias
+
 	local num_criterias = #criterias
 	local context_indexes = context_indexes
+
 	rule_definition.n_criterias = num_criterias
 
 	for i = 1, num_criterias do
 		local criteria = criterias[i]
 		local context_name = criteria[1]
 		local operator = criteria[3]
-		local value = nil
+		local value
 
 		if operator == "TIMEDIFF" then
 			operator = criteria[4]
@@ -108,27 +115,29 @@ TagQueryDatabase.define_rule = function (self, rule_definition)
 		end
 
 		local operator_index = operator_lookup[operator]
+
 		criteria[3] = operator_index
+
 		local value_type = type(value)
 
 		if value_type == "string" then
 			criteria[4] = value
 		elseif value_type == "boolean" then
-			if value then
-				value = 1
-			else
-				value = 0
-			end
-
+			value = value and 1 or 0
 			criteria[4] = value
 		elseif value_type == "number" then
 			criteria[4] = value
 		elseif value_type == "table" then
 			criteria[4] = value
 		end
+
+		if false then
+			-- Nothing
+		end
 	end
 
 	local rule_id = RuleDatabase.add_rule(self._database, dialogue_name, num_criterias, criterias)
+
 	self._rule_id_mapping[rule_id] = rule_definition
 	self._rule_id_mapping[rule_definition.name] = rule_id
 	self._rules_n = self._rules_n + 1
@@ -136,6 +145,7 @@ end
 
 TagQueryDatabase.remove_rule = function (self, rule_name)
 	local rule_id = self._rule_id_mapping[rule_name]
+
 	self._rule_id_mapping[rule_id] = nil
 	self._rule_id_mapping[rule_name] = nil
 	self._rules_n = self._rules_n - 1
@@ -149,7 +159,7 @@ end
 
 TagQueryDatabase.iterate_queries = function (self, t)
 	local num_iterations = #self._queries
-	local best_query = nil
+	local best_query
 	local best_query_value = 0
 
 	for i = 1, num_iterations do
@@ -193,14 +203,15 @@ TagQueryDatabase._iterate_query = function (self, t)
 		return query
 	end
 
-	local nice_array = {
-		self.global_context or dummy_table,
-		query_context or dummy_table,
-		user_context_list.user_context or dummy_table,
-		user_context_list.user_memory or dummy_table,
-		user_context_list.faction_memory or dummy_table,
-		0
-	}
+	local nice_array = {}
+
+	nice_array[1] = self.global_context or dummy_table
+	nice_array[2] = query_context or dummy_table
+	nice_array[3] = user_context_list.user_context or dummy_table
+	nice_array[4] = user_context_list.user_memory or dummy_table
+	nice_array[5] = user_context_list.faction_memory or dummy_table
+	nice_array[6] = 0
+
 	local dialogue_extension = ScriptUnit.extension_input(source, "dialogue_system")
 
 	if dialogue_extension and dialogue_extension:faction_name() and dialogue_extension:faction_name() == "imperium" then

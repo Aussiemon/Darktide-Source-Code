@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/components/monster_spawner.lua
+
 local BreedActions = require("scripts/settings/breed/breed_actions")
 local ChaosDaemonhostSettings = require("scripts/settings/monster/chaos_daemonhost_settings")
 local MainPathQueries = require("scripts/utilities/main_path_queries")
@@ -70,8 +72,11 @@ MonsterSpawner.editor_init = function (self, unit)
 	end
 
 	local world = Application.main_world()
+
 	self._world = world
+
 	local line_object = World.create_line_object(world)
+
 	self._line_object = line_object
 	self._drawer = DebugDrawer(line_object, "retained")
 	self._gui = World.create_world_gui(world, Matrix4x4.identity(), 1, 1)
@@ -255,7 +260,7 @@ end
 
 MonsterSpawner._debug_draw_main_path_connection = function (self, unit, drawer)
 	local gui = self._gui
-	local debug_text_id, section_debug_text_id = nil
+	local debug_text_id, section_debug_text_id
 	local is_main_path_registered = MainPathQueries.is_main_path_registered()
 	local failed_color = Color.red()
 
@@ -270,10 +275,10 @@ MonsterSpawner._debug_draw_main_path_connection = function (self, unit, drawer)
 			local section_color = Color(255, section_color_table[1], section_color_table[2], section_color_table[3])
 			local text_position = position + Vector3.up() * 4
 			local tm = Matrix4x4.from_translation(text_position)
+
 			section_debug_text_id = Gui.text_3d(gui, section, FONT_MATERIAL, SECTION_FONT_SIZE, FONT, tm, Vector3.zero(), 3, section_color)
-			local above = 1
-			local below = 1
-			local horizontal = 1
+
+			local above, below, horizontal = 1, 1, 1
 			local position_on_navmesh = NavQueries.position_on_mesh_with_outside_position(nav_world, nil, position, above, below, horizontal)
 
 			if position_on_navmesh then
@@ -304,6 +309,7 @@ MonsterSpawner._debug_draw_main_path_connection = function (self, unit, drawer)
 				local text_color = failed_color
 				local error_text_position = position + Vector3.up() * 3
 				local error_tm = Matrix4x4.from_translation(error_text_position)
+
 				debug_text_id = Gui.text_3d(gui, text, FONT_MATERIAL, FONT_SIZE, FONT, error_tm, Vector3.zero(), 3, text_color)
 			end
 		else
@@ -311,6 +317,7 @@ MonsterSpawner._debug_draw_main_path_connection = function (self, unit, drawer)
 			local text_color = failed_color
 			local text_position = position + Vector3.up() * 3
 			local tm = Matrix4x4.from_translation(text_position)
+
 			debug_text_id = Gui.text_3d(gui, text, FONT_MATERIAL, FONT_SIZE, FONT, tm, Vector3.zero(), 3, text_color)
 		end
 	else
@@ -318,6 +325,7 @@ MonsterSpawner._debug_draw_main_path_connection = function (self, unit, drawer)
 		local text_color = failed_color
 		local text_position = Unit.local_position(unit, 1) + Vector3.up() * 3
 		local tm = Matrix4x4.from_translation(text_position)
+
 		debug_text_id = Gui.text_3d(self._gui, text, FONT_MATERIAL, FONT_SIZE, FONT, tm, Vector3.zero(), 3, text_color)
 	end
 

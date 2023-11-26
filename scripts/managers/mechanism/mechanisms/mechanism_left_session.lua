@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/mechanism/mechanisms/mechanism_left_session.lua
+
 local MechanismBase = require("scripts/managers/mechanism/mechanisms/mechanism_base")
 local StateExitToMainMenu = require("scripts/game_states/game/state_exit_to_main_menu")
 local StateLoading = require("scripts/game_states/game/state_loading")
@@ -28,7 +30,9 @@ MechanismLeftSession.init = function (self, ...)
 		self:_leave_party()
 	elseif reason == "session_completed" then
 		self:_leave_party()
-	elseif reason ~= "leave_mission_stay_in_party" then
+	elseif reason == "leave_mission_stay_in_party" then
+		-- Nothing
+	else
 		self._next_state = StateExitToMainMenu
 	end
 end
@@ -63,7 +67,7 @@ MechanismLeftSession.wanted_transition = function (self)
 	if self._timeout_at then
 		local t = Managers.time:time("main")
 
-		if self._timeout_at < t then
+		if t > self._timeout_at then
 			self._left_session_done = true
 
 			return false, StateExitToMainMenu, {}
@@ -82,6 +86,7 @@ MechanismLeftSession.wanted_transition = function (self)
 			self:_set_state("wait_for_session")
 
 			local t = Managers.time:time("main")
+
 			self._timeout_at = t + TIMEOUT
 
 			return false, StateLoading, {}

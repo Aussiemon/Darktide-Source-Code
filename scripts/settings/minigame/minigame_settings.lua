@@ -1,10 +1,14 @@
-local minigame_settings = {
-	types = table.enum("none", "decode_symbols", "scan"),
-	states = table.enum("none", "active", "completed")
-}
+﻿-- chunkname: @scripts/settings/minigame/minigame_settings.lua
+
+local minigame_settings = {}
+
+minigame_settings.types = table.enum("none", "decode_symbols", "scan")
+minigame_settings.states = table.enum("none", "active", "completed")
 minigame_settings.default_minigame_type = minigame_settings.types.decode_symbols
+
 local num_stages = 4
 local num_symbols_per_stage = 7
+
 minigame_settings.decode_symbols_sweep_duration = 2
 minigame_settings.decode_target_margin = 0.2
 minigame_settings.disengage_view_angle_h = math.degrees_to_radians(76)

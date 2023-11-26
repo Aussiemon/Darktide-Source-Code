@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/behavior/nodes/actions/bt_chaos_daemonhost_die_action.lua
+
 require("scripts/extension_systems/behavior/nodes/bt_node")
 
 local Animation = require("scripts/utilities/animation")
@@ -11,11 +13,12 @@ local BtChaosDaemonhostDieAction = class("BtChaosDaemonhostDieAction", "BtNode")
 
 BtChaosDaemonhostDieAction.enter = function (self, unit, breed, blackboard, scratchpad, action_data, t)
 	local death_component = Blackboard.write_component(blackboard, "death")
+
 	scratchpad.death_component = death_component
+
 	local death_type_stage = action_data.death_type_stage or STAGES.death_normal
 	local spawn_component = blackboard.spawn
-	local game_session = spawn_component.game_session
-	local game_object_id = spawn_component.game_object_id
+	local game_session, game_object_id = spawn_component.game_session, spawn_component.game_object_id
 
 	GameSession.set_game_object_field(game_session, game_object_id, "stage", death_type_stage)
 
@@ -27,7 +30,9 @@ BtChaosDaemonhostDieAction.enter = function (self, unit, breed, blackboard, scra
 
 	local anim_durations = action_data.durations
 	local duration = anim_durations[anim_event]
+
 	scratchpad.duration = t + duration
+
 	local anim_driven_until = action_data.anim_driven_until and action_data.anim_driven_until[anim_event]
 
 	if anim_driven_until then

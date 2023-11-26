@@ -1,5 +1,8 @@
+﻿-- chunkname: @scripts/settings/damage/stagger_settings.lua
+
 local stagger_settings = {}
 local stagger_types = table.enum("light", "medium", "heavy", "light_ranged", "sticky", "electrocuted", "killshot", "shield_block", "shield_heavy_block", "shield_broken", "explosion", "wall_collision", "blinding")
+
 stagger_settings.stagger_types = stagger_types
 stagger_settings.stagger_categories = {
 	melee = {

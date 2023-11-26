@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/hud/elements/world_markers/templates/world_marker_template_objective.lua
+
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local UIHudSettings = require("scripts/settings/ui/ui_hud_settings")
@@ -15,6 +17,7 @@ local indicator_size = {
 	16,
 	28
 }
+
 template.size = size
 template.unit_node = "ui_objective_marker"
 template.position_offset = {
@@ -31,6 +34,7 @@ template.screen_margins = {
 	left = 450,
 	right = 450
 }
+
 local template_visual_definitions = {
 	default = {
 		template_settings_overrides = {
@@ -246,6 +250,7 @@ local function setup_marker_by_visual_type(widget, marker, visual_type)
 
 	if template_settings_overrides then
 		local new_template = table.clone(marker.template)
+
 		marker.template = table.merge_recursive(new_template, template_settings_overrides)
 	end
 
@@ -517,6 +522,7 @@ end
 
 template.on_enter = function (widget)
 	local content = widget.content
+
 	content.spawn_progress_timer = 0
 end
 
@@ -545,13 +551,16 @@ template.update_function = function (parent, ui_renderer, widget, marker, templa
 		local angle = time_since_launch * rotation_speed % math.pi * 2
 		local third_lap = math.pi * 2 / 3
 		local start_offset = -math.pi * 0.25
-		style.demolition_marker_1.angle = start_offset + third_lap * 4 + angle
-		style.demolition_marker_2.angle = start_offset + third_lap * 3 + angle
-		style.demolition_marker_3.angle = start_offset + third_lap * 2 + angle
+
+		style.demolition_marker_1.angle = start_offset + (third_lap * 4 + angle)
+		style.demolition_marker_2.angle = start_offset + (third_lap * 3 + angle)
+		style.demolition_marker_3.angle = start_offset + (third_lap * 2 + angle)
 		style.demolition_marker_shadow_1.angle = style.demolition_marker_1.angle
 		style.demolition_marker_shadow_2.angle = style.demolition_marker_2.angle
 		style.demolition_marker_shadow_3.angle = style.demolition_marker_3.angle
+
 		local width_distance_offset = offset_distance + offset_distance * 0.25 * pulse_progress
+
 		style.demolition_marker_1.default_offset[1] = width_distance_offset
 		style.demolition_marker_2.default_offset[1] = width_distance_offset
 		style.demolition_marker_3.default_offset[1] = width_distance_offset
@@ -567,7 +576,9 @@ template.update_function = function (parent, ui_renderer, widget, marker, templa
 	end
 
 	local distance_text = tostring(math.floor(distance)) .. "m"
+
 	content.text = distance > 1 and distance_text or ""
+
 	local unit = marker.unit
 	local hud_element = data.hud_element
 

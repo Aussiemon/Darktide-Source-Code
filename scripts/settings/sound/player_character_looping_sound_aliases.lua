@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/sound/player_character_looping_sound_aliases.lua
+
 local PlayerCharacterLoopingSoundAliases = {
 	ability_no_target_activating = {
 		start = {

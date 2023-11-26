@@ -1,9 +1,12 @@
+﻿-- chunkname: @scripts/components/overheat_display.lua
+
 local OverheatDisplay = component("OverheatDisplay")
 
 OverheatDisplay.editor_init = function (self, unit)
 	local overheat = self:get_data(unit, "overheat")
 	local overheat_display_steps = self:get_data(unit, "overheat_display_steps")
 	local warning_threshold = self:get_data(unit, "warning_threshold")
+
 	self._overheat = overheat
 	self._overheat_display_steps = overheat_display_steps
 	self._warning_threshold = warning_threshold
@@ -19,6 +22,7 @@ OverheatDisplay.init = function (self, unit)
 	local overheat = self:get_data(unit, "overheat")
 	local overheat_display_steps = self:get_data(unit, "overheat_display_steps")
 	local warning_threshold = self:get_data(unit, "warning_threshold")
+
 	self._overheat = overheat
 	self._overheat_display_steps = overheat_display_steps
 	self._warning_threshold = warning_threshold

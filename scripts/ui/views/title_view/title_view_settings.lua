@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/title_view/title_view_settings.lua
+
 local title_view_settings = {
 	shading_environment = "content/shading_environments/ui/title_screen",
 	timer_name = "ui",

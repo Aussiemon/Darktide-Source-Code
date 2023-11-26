@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/multiplayer/connection/connection_local_state_machine.lua
+
 local LocalAwaitConnectionBootedState = require("scripts/multiplayer/connection/local_states/local_await_connection_booted_state")
 local LocalAwaitHostConnectState = require("scripts/multiplayer/connection/local_states/local_await_host_connect_state")
 local LocalConnectChannelState = require("scripts/multiplayer/connection/local_states/local_connect_channel_state")
@@ -18,11 +20,12 @@ local LocalSyncStatsState = require("scripts/multiplayer/connection/local_states
 local LocalWaitForClaimState = require("scripts/multiplayer/connection/local_states/local_wait_for_claim_state")
 local StateMachine = require("scripts/foundation/utilities/state_machine")
 local ConnectionLocalStateMachine = class("ConnectionLocalStateMachine")
+
 ConnectionLocalStateMachine.TIMEOUT = 15
 ConnectionLocalStateMachine.RESERVE_TIMEOUT = 300
 
 ConnectionLocalStateMachine.init = function (self, event_delegate, engine_lobby, host_peer_id, network_hash, host_type, profile_synchronizer_client, slots_to_reserve, jwt_ticket)
-	local parent = nil
+	local parent
 	local shared_state = {
 		boot_complete = false,
 		has_reserved = false,
@@ -39,8 +42,11 @@ ConnectionLocalStateMachine.init = function (self, event_delegate, engine_lobby,
 		ready_to_claim_slots = slots_to_reserve == nil,
 		event_list = {}
 	}
+
 	self._shared_state = shared_state
+
 	local state_machine = StateMachine:new("ConnectionLocalStateMachine", parent, shared_state)
+
 	self._state_machine = state_machine
 
 	state_machine:add_transition("LocalConnectChannelState", "channel connected", LocalVersionCheckState)

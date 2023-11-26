@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/monster/chaos_daemonhost_settings.lua
+
 local STAGES = {
 	passive = 1,
 	aggroed = 6,

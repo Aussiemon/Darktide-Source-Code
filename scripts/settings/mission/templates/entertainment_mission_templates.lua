@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/mission/templates/entertainment_mission_templates.lua
+
 local mission_templates = {
 	fm_armoury = {
 		mission_name = "loc_mission_name_fm_armoury",

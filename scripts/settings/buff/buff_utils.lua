@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/buff/buff_utils.lua
+
 local ArmorSettings = require("scripts/settings/damage/armor_settings")
 local Attack = require("scripts/utilities/attack/attack")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")

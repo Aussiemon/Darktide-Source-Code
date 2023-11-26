@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/item/rarity_settings.lua
+
 local RaritySettings = {
 	[0] = {
 		display_name = "",

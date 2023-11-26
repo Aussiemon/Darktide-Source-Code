@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/equipment/weapon_ui_stats_templates.lua
+
 local ArmorSettings = require("scripts/settings/damage/armor_settings")
 local WeaponTweakTemplateSettings = require("scripts/settings/equipment/weapon_templates/weapon_tweak_template_settings")
 local WeaponUIStatsDamageSettings = require("scripts/settings/equipment/weapon_ui_stats_damage_settings")

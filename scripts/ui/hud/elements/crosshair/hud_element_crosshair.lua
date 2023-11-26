@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/hud/elements/crosshair/hud_element_crosshair.lua
+
 local definition_path = "scripts/ui/hud/elements/crosshair/hud_element_crosshair_definitions"
 local Action = require("scripts/utilities/weapon/action")
 local AttackSettings = require("scripts/settings/damage/attack_settings")
@@ -35,21 +37,25 @@ HudElementCrosshair.init = function (self, parent, draw_layer, start_scale, defi
 	HudElementCrosshair.super.init(self, parent, draw_layer, start_scale, definitions)
 
 	local scenegraph_id = "pivot"
+
 	self._crosshair_templates = {}
 	self._crosshair_widget_definitions = {}
+
 	local crosshair_templates = HudElementCrosshairSettings.templates
 
 	for i = 1, #crosshair_templates do
 		local template_path = crosshair_templates[i]
 		local template = require(template_path)
 		local name = template.name
+
 		self._crosshair_templates[name] = template
-		self._crosshair_widget_definitions[name] = template:create_widget_defintion(scenegraph_id)
+		self._crosshair_widget_definitions[name] = template.create_widget_defintion(template, scenegraph_id)
 	end
 
 	self._crosshair_position_x = 0
 	self._crosshair_position_y = 0
 	self._hit_report_array = {}
+
 	local event_manager = Managers.event
 
 	event_manager:register(self, "event_crosshair_hit_report", "event_crosshair_hit_report")
@@ -59,6 +65,7 @@ HudElementCrosshair.init = function (self, parent, draw_layer, start_scale, defi
 
 	if save_manager then
 		local account_data = save_manager:account_data()
+
 		self._forced_dot_crosshair = account_data.interface_settings.forced_dot_crosshair_enabled
 	end
 end
@@ -73,6 +80,7 @@ end
 
 HudElementCrosshair.event_crosshair_hit_report = function (self, hit_weakspot, attack_result, did_damage, hit_world_position, damage_efficiency, is_critical_strike)
 	did_damage = did_damage or damage_efficiency == "push"
+
 	local hit_report_array = self._hit_report_array
 	local new_result = attack_result == attack_results.damaged and hit_weakspot and "weakspot" or attack_result == attack_results.damaged and is_critical_strike and "is_critical_strike" or attack_result
 	local new_prio = ATTACK_RESULT_PRIORITY[new_result] or math.huge
@@ -97,6 +105,7 @@ end
 
 HudElementCrosshair.event_update_forced_dot_crosshair = function (self, value)
 	self._forced_dot_crosshair = value
+
 	local crosshair_settings = self:_crosshair_settings()
 
 	self:_sync_active_crosshair(crosshair_settings)
@@ -115,7 +124,7 @@ HudElementCrosshair.hit_indicator = function (self)
 		local did_damage = hit_report_array[4]
 		local damage_efficiency = hit_report_array[5]
 		local is_critical_strike = hit_report_array[7]
-		local color = nil
+		local color
 
 		if attack_result == attack_results.blocked or not did_damage then
 			color = hit_indicator_colors.blocked
@@ -150,17 +159,19 @@ HudElementCrosshair._spread_yaw_pitch = function (self)
 	if player_extensions then
 		local unit_data_extension = player_extensions.unit_data
 		local buff_extension = player_extensions.buff
-		local yaw, pitch = nil
+		local yaw, pitch
 
 		if unit_data_extension then
 			local spread_component = unit_data_extension:read_component("spread")
 			local suppression_component = unit_data_extension:read_component("suppression")
+
 			yaw = spread_component.yaw
 			pitch = spread_component.pitch
 
 			if buff_extension then
 				local stat_buffs = buff_extension:stat_buffs()
 				local modifier = stat_buffs.spread_modifier or 1
+
 				yaw = yaw * modifier
 				pitch = pitch * modifier
 			end
@@ -173,8 +184,7 @@ HudElementCrosshair._spread_yaw_pitch = function (self)
 end
 
 HudElementCrosshair._recoil_yaw_pitch = function (self, player_extensions)
-	local yaw = 0
-	local pitch = 0
+	local yaw, pitch = 0, 0
 
 	if player_extensions then
 		local unit_data_extension = player_extensions.unit_data
@@ -184,6 +194,7 @@ HudElementCrosshair._recoil_yaw_pitch = function (self, player_extensions)
 			local recoil_template = weapon_extension:recoil_template()
 			local recoil_component = unit_data_extension:read_component("recoil")
 			local movement_state_component = unit_data_extension:read_component("movement_state")
+
 			yaw, pitch = Recoil.weapon_offset(recoil_template, recoil_component, movement_state_component)
 		end
 	end
@@ -235,7 +246,7 @@ HudElementCrosshair._crosshair_settings = function (self)
 
 			if weapon_template then
 				local _, action_settings = Action.current_action(weapon_action_component, weapon_template)
-				local crosshair_settings = nil
+				local crosshair_settings
 
 				if action_settings then
 					crosshair_settings = action_settings.crosshair
@@ -257,7 +268,7 @@ HudElementCrosshair._crosshair_settings = function (self)
 end
 
 HudElementCrosshair._get_current_crosshair_type = function (self, crosshair_settings)
-	local crosshair_type = nil
+	local crosshair_type
 
 	if crosshair_settings then
 		local parent = self._parent
@@ -272,6 +283,7 @@ HudElementCrosshair._get_current_crosshair_type = function (self, crosshair_sett
 
 			if slot_type == "weapon" then
 				local inventory_slot_component = unit_data_extension:read_component(wielded_slot)
+
 				is_special_active = inventory_slot_component.special_active
 			end
 
@@ -313,6 +325,7 @@ HudElementCrosshair._sync_active_crosshair = function (self, crosshair_settings)
 
 		if widget_definition then
 			self._widget = self:_create_widget(crosshair_type, widget_definition)
+
 			local template = self._crosshair_templates[crosshair_type]
 			local on_enter = template.on_enter
 
@@ -328,8 +341,7 @@ end
 local CROSSHAIR_POSITION_LERP_SPEED = 35
 
 HudElementCrosshair._crosshair_position = function (self, dt, t, ui_renderer)
-	local target_x = 0
-	local target_y = 0
+	local target_x, target_y = 0, 0
 	local ui_renderer_scale = ui_renderer.scale
 	local parent = self._parent
 	local player_extensions = parent:player_extensions()
@@ -345,31 +357,33 @@ HudElementCrosshair._crosshair_position = function (self, dt, t, ui_renderer)
 		local recoil_template = weapon_extension:recoil_template()
 		local recoil_component = unit_data_extension:read_component("recoil")
 		local movement_state_component = unit_data_extension:read_component("movement_state")
+
 		shoot_rotation = Recoil.apply_weapon_recoil_rotation(recoil_template, recoil_component, movement_state_component, shoot_rotation)
+
 		local sway_component = unit_data_extension:read_component("sway")
 		local sway_template = weapon_extension:sway_template()
+
 		shoot_rotation = Sway.apply_sway_rotation(sway_template, sway_component, movement_state_component, shoot_rotation)
+
 		local range = 50
 		local shoot_direction = Quaternion.forward(shoot_rotation)
 		local world_aim_position = shoot_position + shoot_direction * range
 		local screen_aim_position = Camera.world_to_screen(player_camera, world_aim_position)
-		local abs_target_x = screen_aim_position.x
-		local abs_target_y = screen_aim_position.y
+		local abs_target_x, abs_target_y = screen_aim_position.x, screen_aim_position.y
 		local pivot_position = self:scenegraph_world_position("pivot", ui_renderer_scale)
-		local pivot_x = pivot_position[1]
-		local pivot_y = pivot_position[2]
+		local pivot_x, pivot_y = pivot_position[1], pivot_position[2]
+
 		target_x = abs_target_x - pivot_x
 		target_y = abs_target_y - pivot_y
 	end
 
-	local current_x = self._crosshair_position_x * ui_renderer_scale
-	local current_y = self._crosshair_position_y * ui_renderer_scale
+	local current_x, current_y = self._crosshair_position_x * ui_renderer_scale, self._crosshair_position_y * ui_renderer_scale
 	local ui_renderer_inverse_scale = ui_renderer.inverse_scale
 	local lerp_t = math.min(CROSSHAIR_POSITION_LERP_SPEED * dt, 1)
 	local x = math.lerp(current_x, target_x, lerp_t) * ui_renderer_inverse_scale
 	local y = math.lerp(current_y, target_y, lerp_t) * ui_renderer_inverse_scale
-	self._crosshair_position_y = y
-	self._crosshair_position_x = x
+
+	self._crosshair_position_x, self._crosshair_position_y = x, y
 
 	return x, y
 end
@@ -383,6 +397,7 @@ HudElementCrosshair._draw_widgets = function (self, dt, t, input_service, ui_ren
 
 	if widget then
 		local widget_offset = widget.offset
+
 		widget_offset[1] = x
 		widget_offset[2] = y
 

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/weapon/actions/action_place_pickup.lua
+
 require("scripts/extension_systems/weapon/actions/action_place_base")
 
 local Pickups = require("scripts/settings/pickup/pickups")
@@ -10,7 +12,7 @@ ActionPlacePickup._place_unit = function (self, action_settings, position, rotat
 	local pickup_name = action_settings.pickup_name or weapon_template.pickup_name
 	local player_or_nil = Managers.state.player_unit_spawn:owner(player_unit)
 	local pickup_system = Managers.state.extension:system("pickup_system")
-	local placed_unit = nil
+	local placed_unit
 
 	if player_or_nil then
 		placed_unit = pickup_system:player_spawn_pickup(pickup_name, position, rotation, player_or_nil, player_or_nil:session_id(), placed_on_unit)

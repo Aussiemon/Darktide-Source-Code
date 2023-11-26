@@ -1,6 +1,9 @@
+﻿-- chunkname: @scripts/extension_systems/interaction/interactions/view_interaction.lua
+
 require("scripts/extension_systems/interaction/interactions/base_interaction")
 
 HubLocationIntroductionSettings = require("scripts/settings/cinematic_video/hub_location_introduction_settings")
+
 local PlayerProgressionUnlocks = require("scripts/settings/player/player_progression_unlocks")
 local ViewInteraction = class("ViewInteraction", "BaseInteraction")
 local ui_view_level_requirement = {
@@ -75,7 +78,7 @@ ViewInteraction._check_view_requirements = function (self, interactor_unit, ui_i
 	local player_profile = player:profile()
 	local level_requirement = ui_view_level_requirement[ui_interaction]
 
-	if level_requirement and player_profile.current_level < level_requirement then
+	if level_requirement and level_requirement > player_profile.current_level then
 		table.clear(view_requirement_failure_context)
 
 		view_requirement_failure_context.level = level_requirement
@@ -90,8 +93,7 @@ ViewInteraction._check_view_requirements = function (self, interactor_unit, ui_i
 	end
 
 	if story_data then
-		local story_name = story_data.story
-		local chapter_name = story_data.chapter
+		local story_name, chapter_name = story_data.story, story_data.chapter
 		local story_requirement_met = Managers.narrative:is_chapter_complete(story_name, chapter_name, player)
 
 		if not story_requirement_met then

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/cinematic_scene/templates/intro_abc_template.lua
+
 local cinematic_scene_templates = {
 	intro_abc = {
 		is_skippable = false,

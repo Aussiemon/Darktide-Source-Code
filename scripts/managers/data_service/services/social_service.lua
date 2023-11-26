@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/data_service/services/social_service.lua
+
 local PartyConstants = require("scripts/settings/network/party_constants")
 local PlayerCompositions = require("scripts/utilities/players/player_compositions")
 local PlayerInfo = require("scripts/managers/data_service/services/social/player_info")
@@ -22,27 +24,40 @@ end
 SocialService.init = function (self, backend_interfaces)
 	if LEVEL_EDITOR_TEST then
 		local SocialDummy = require("scripts/managers/data_service/services/social/social_dummy")
+
 		self._platform_social = SocialDummy:new()
+
 		local InvitesDummy = require("scripts/managers/data_service/services/invites/invites_dummy")
+
 		self._invites = InvitesDummy:new()
 	else
 		local platform = PresenceEntryMyself.get_platform()
+
 		self._platform = platform
 
 		if platform == Platforms.steam then
 			local SocialSteam = require("scripts/managers/data_service/services/social/social_steam")
+
 			self._platform_social = SocialSteam:new()
+
 			local InvitesSteam = require("scripts/managers/data_service/services/invites/invites_steam")
+
 			self._invites = InvitesSteam:new()
 		elseif platform == Platforms.xbox then
 			local SocialXboxLive = require("scripts/managers/data_service/services/social/social_xbox_live")
+
 			self._platform_social = SocialXboxLive:new()
+
 			local InvitesXboxLive = require("scripts/managers/data_service/services/invites/invites_xbox_live")
+
 			self._invites = InvitesXboxLive:new()
 		else
 			local SocialDummy = require("scripts/managers/data_service/services/social/social_dummy")
+
 			self._platform_social = SocialDummy:new()
+
 			local InvitesDummy = require("scripts/managers/data_service/services/invites/invites_dummy")
+
 			self._invites = InvitesDummy:new()
 		end
 	end
@@ -166,6 +181,7 @@ SocialService.fetch_party_members = function (self)
 
 	if self:is_in_mission() then
 		local dont_clear_table = true
+
 		temp_team_members = PlayerCompositions.players("players", _temp_team_members, dont_clear_table)
 
 		for unique_id_1, player_1 in pairs(temp_team_members) do
@@ -236,6 +252,7 @@ SocialService.fetch_friends = function (self, force_update)
 
 	local function aggregate_function(friends_data)
 		local friends = {}
+
 		self._friends_list_has_changed = false
 
 		for friends_data_index = 1, num_promises do
@@ -286,6 +303,7 @@ SocialService.fetch_friend_invites = function (self, force_update)
 
 	friend_invites_promise = self:_fetch_fatshark_friends():next(function (friends_data)
 		self._friend_invites_has_changed = false
+
 		local friend_invites = _fetch_friend_invites_friend_invites
 
 		if not friends_data then
@@ -333,7 +351,7 @@ SocialService.fetch_recent_companions = function (self, character_id, force_refr
 		local recent_participants = data.recentParticipants
 
 		table.sort(recent_participants, function (a, b)
-			return b.playedAt < a.playedAt
+			return a.playedAt > b.playedAt
 		end)
 
 		for i = 1, #recent_participants do
@@ -412,14 +430,18 @@ SocialService.fetch_blocked_accounts = function (self, force_update)
 
 	local platform_blocked_promise = self._platform_social:fetch_blocked_list()
 	local fatshark_blocked_promise = self._backend_interfaces:fetch_blocked_accounts()
+
 	blocked_accounts_promise = Promise.all(platform_blocked_promise, fatshark_blocked_promise):next(function (data)
 		local PLATFORM_BLOCKED_LIST = 1
 		local FATSHARK_BLOCKED_LIST = 2
+
 		self._blocked_accounts_list_changed = false
 		self._current_communication_restriction_iteration = Managers.account:communication_restriction_iteration()
+
 		local platform_blocked_data = data[PLATFORM_BLOCKED_LIST]
 		local fatshark_blocked_data = data[FATSHARK_BLOCKED_LIST]
 		local blocked_accounts = fatshark_blocked_data and fatshark_blocked_data.blockList or {}
+
 		self._max_blocked_accounts = fatshark_blocked_data.maxBlocks or 0
 
 		self:_update_blocked_players(blocked_accounts, platform_blocked_data)
@@ -707,7 +729,7 @@ end
 SocialService._get_kick_voting_template = function (self, player_info)
 	local party_status = player_info:party_status()
 	local is_in_mission = self:is_in_mission()
-	local voting_template = nil
+	local voting_template
 
 	if is_in_mission and (party_status == PartyStatus.same_mission or party_status == PartyStatus.mine) then
 		voting_template = "kick_from_mission"
@@ -762,7 +784,7 @@ SocialService.initiate_kick_vote = function (self, player_info)
 end
 
 SocialService.can_befriend = function (self)
-	if self._max_fatshark_friends <= self._num_fatshark_friends then
+	if self._num_fatshark_friends >= self._max_fatshark_friends then
 		local reason = "loc_social_cannot_befriend_reason_max_num_friends"
 
 		return false, reason
@@ -773,7 +795,7 @@ end
 
 SocialService.send_friend_request = function (self, account_id)
 	local player_info = self._players_by_account_id[account_id]
-	local friend_status = nil
+	local friend_status
 
 	if player_info then
 		friend_status = player_info:friend_status()
@@ -798,7 +820,7 @@ end
 
 SocialService.accept_friend_request = function (self, account_id)
 	local player_info = self._players_by_account_id[account_id]
-	local friend_status = nil
+	local friend_status
 
 	if player_info then
 		friend_status = player_info:friend_status()
@@ -823,7 +845,7 @@ end
 
 SocialService.reject_friend_request = function (self, account_id)
 	local player_info = self._players_by_account_id[account_id]
-	local friend_status = nil
+	local friend_status
 
 	if player_info then
 		friend_status = player_info:friend_status()
@@ -861,7 +883,7 @@ end
 
 SocialService.unfriend_player = function (self, account_id)
 	local player_info = self._players_by_account_id[account_id]
-	local friend_status = nil
+	local friend_status
 
 	if player_info then
 		friend_status = player_info:friend_status()
@@ -968,7 +990,7 @@ SocialService.can_block = function (self, account_id)
 		local reason = "loc_social_fail_reason_user_not_online"
 
 		return false, reason
-	elseif self._max_blocked_accounts <= self._num_blocked_accounts then
+	elseif self._num_blocked_accounts >= self._max_blocked_accounts then
 		local reason = "loc_social_cannot_block_reason_max_num_reached"
 
 		return false, reason
@@ -1035,6 +1057,7 @@ SocialService._fetch_platform_friends = function (self)
 		for i = 1, #platform_friends_data do
 			local friend = platform_friends_data[i]
 			local player_info = self:_get_player_info_by_platform_friend(friend)
+
 			friends[i] = player_info
 		end
 
@@ -1060,6 +1083,7 @@ SocialService._fetch_fatshark_friends = function (self, force_update)
 
 	fatshark_friends_promise = self._backend_interfaces:fetch_friends():next(function (fatshark_friends_data)
 		self._max_fatshark_friends = fatshark_friends_data.maxFriends
+
 		local fatshark_friends = fatshark_friends_data.friends
 		local friends = {}
 
@@ -1102,7 +1126,9 @@ SocialService._update_blocked_players = function (self, blocked_accounts, platfo
 
 	for account_id, account_info in pairs(blocked_accounts) do
 		local account_name = account_info.accountName
+
 		previous_blocked_players[account_id] = nil
+
 		local player_info = self:get_player_info_by_account_id(account_id)
 
 		player_info:set_account(account_id, account_name)

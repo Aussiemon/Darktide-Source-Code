@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/hud/elements/onboarding_popup/hud_element_onboarding_popup_settings.lua
+
 local hud_element_onboarding_popup_settings = {
 	events = {
 		{

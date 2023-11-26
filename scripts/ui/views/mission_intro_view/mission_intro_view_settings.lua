@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/mission_intro_view/mission_intro_view_settings.lua
+
 local mission_intro_view_settings = {
 	world_layer = 2,
 	timer_name = "ui",

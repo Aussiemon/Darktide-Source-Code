@@ -1,4 +1,7 @@
+﻿-- chunkname: @scripts/tests/test_cases/misc_test_cases.lua
+
 local TestifySnippets = require("scripts/tests/testify_snippets")
+
 MiscTestCases = {}
 
 local function _ensure_table_structure(tbl, ...)
@@ -6,6 +9,7 @@ local function _ensure_table_structure(tbl, ...)
 
 	for i = 1, num_args do
 		local arg = select(i, ...)
+
 		tbl[arg] = tbl[arg] or {}
 		tbl = tbl[arg]
 	end
@@ -45,6 +49,7 @@ MiscTestCases.validate_minion_visual_loadout_templates = function ()
 						for item_i, item_name in ipairs(slot_data.items) do
 							if not rawget(item_definitions, item_name) then
 								local items = _ensure_table_structure(missing_items, breed_name, template_name, variation_i, slot_name)
+
 								items[item_i] = item_name
 							end
 						end
@@ -248,7 +253,7 @@ MiscTestCases.validate_attachment_stripping = function ()
 	Testify:run_case(function (dt, t)
 		TestifySnippets.skip_splash_and_title_screen()
 
-		return
+		do return end
 
 		local item_definitions = Testify:make_request("all_items")
 		local stripped_children = {}
@@ -325,7 +330,7 @@ MiscTestCases.check_unwanted_skin_attachments = function ()
 	Testify:run_case(function (dt, t)
 		TestifySnippets.skip_splash_and_title_screen()
 
-		return
+		do return end
 
 		local item_definitions = Testify:make_request("all_items")
 		local faulty_skin_attachment_overrides = {}
@@ -516,8 +521,7 @@ MiscTestCases.play_all_vfx = function (case_settings)
 			include_properties = false
 		})
 		local particles = Testify:make_request("metadata_wait_for_query_results", query_handle)
-		local num_particles = #particles
-		local i = 1
+		local num_particles, i = #particles, 1
 		local particle_ids = {}
 
 		for particle_name, _ in pairs(particles) do
@@ -525,6 +529,7 @@ MiscTestCases.play_all_vfx = function (case_settings)
 				Log.info("Testify", "%s/%s Playing vfx %s", i, num_particles, particle_name)
 
 				local particle_id = Testify:make_request("create_particles", world, particle_name, boxed_spawn_position, particle_life_time)
+
 				particle_ids[particle_name] = particle_id
 			end
 
@@ -570,8 +575,7 @@ MiscTestCases.spawn_all_units = function (case_settings)
 			include_properties = false
 		})
 		local units = Testify:make_request("metadata_wait_for_query_results", query_handle)
-		local num_units = table.size(units)
-		local i = 1
+		local num_units, i = table.size(units), 1
 
 		TestifySnippets.wait(1)
 

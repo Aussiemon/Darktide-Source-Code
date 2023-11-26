@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/player/player_unit_spawn_manager.lua
+
 local BotSpawning = require("scripts/managers/bot/bot_spawning")
 local Breeds = require("scripts/settings/breed/breeds")
 local UnitSpawnerManager = require("scripts/foundation/managers/unit_spawner/unit_spawner_manager")
@@ -29,6 +31,7 @@ PlayerUnitSpawnManager.init = function (self, is_server, level_seed, has_navmesh
 	if self._is_server then
 		local settings = Managers.state.game_mode:settings()
 		local bot_backfilling_allowed = settings.bot_backfilling_allowed
+
 		self._queued_bots_n = 0
 
 		if bot_backfilling_allowed then
@@ -165,6 +168,7 @@ PlayerUnitSpawnManager.spawn_player = function (self, player, position, rotation
 
 	if not is_respawn and game_mode_manager:should_spawn_dead(player) then
 		local unique_id = player:unique_id()
+
 		self._players_without_unit[unique_id] = player
 
 		return
@@ -252,7 +256,9 @@ PlayerUnitSpawnManager.assign_unit_ownership = function (self, unit, player, is_
 
 	if is_player_unit then
 		player.player_unit = unit
+
 		local unique_id = player:unique_id()
+
 		self._players_with_unit[unique_id] = player
 		self._players_without_unit[unique_id] = nil
 
@@ -265,7 +271,9 @@ PlayerUnitSpawnManager.relinquish_unit_ownership = function (self, unit)
 
 	if unit == player.player_unit then
 		player.player_unit = nil
+
 		local unique_id = player:unique_id()
+
 		self._players_with_unit[unique_id] = nil
 		self._players_without_unit[unique_id] = player
 	end
@@ -392,6 +400,7 @@ PlayerUnitSpawnManager._on_client_left = function (self, removed_players_data)
 	local available_slots = self:_num_available_bot_slots()
 	local num_players_leaving = #removed_players_data
 	local bots_to_add = math.min(available_slots, num_players_leaving)
+
 	self._queued_bots_n = self._queued_bots_n + bots_to_add
 end
 
@@ -404,6 +413,7 @@ PlayerUnitSpawnManager._num_available_bot_slots = function (self)
 	local max_bots = bot_backfilling_allowed and settings.max_bots or 0
 	local num_bots = bot_synchronizer_host:num_bots() + self._queued_bots_n
 	local desired_bot_count = max_players - num_players
+
 	desired_bot_count = math.clamp(desired_bot_count, 0, max_bots)
 
 	return desired_bot_count - num_bots

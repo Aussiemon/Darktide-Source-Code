@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/liquid_area/husk_liquid_area_extension.lua
+
 local LiquidAreaSettings = require("scripts/settings/liquid_area/liquid_area_settings")
 local CLIENT_RPCS = {
 	"rpc_add_liquid",
@@ -9,20 +11,23 @@ local CLIENT_RPCS = {
 local HuskLiquidAreaExtension = class("HuskLiquidAreaExtension")
 
 HuskLiquidAreaExtension.init = function (self, extension_init_context, unit, extension_init_data, game_session, game_object_id)
-	local world = extension_init_context.world
-	local wwise_world = extension_init_context.wwise_world
-	self._wwise_world = wwise_world
-	self._nav_world = extension_init_context.nav_world
-	self._world = world
+	local world, wwise_world = extension_init_context.world, extension_init_context.wwise_world
+
+	self._world, self._nav_world, self._wwise_world = world, extension_init_context.nav_world, wwise_world
 	self._traverse_logic = extension_init_context.traverse_logic
 	self._unit = unit
 	self._flow = {}
+
 	local template = extension_init_data.template
+
 	self._vfx_name_rim = template.vfx_name_rim
 	self._vfx_name_filled = template.vfx_name_filled
+
 	local sfx_name_start = template.sfx_name_start
+
 	self._sfx_name_start = sfx_name_start
 	self._sfx_name_stop = template.sfx_name_stop
+
 	local position = Unit.world_position(unit, 1)
 
 	if sfx_name_start then
@@ -35,14 +40,14 @@ HuskLiquidAreaExtension.init = function (self, extension_init_context, unit, ext
 	end
 
 	local network_event_delegate = extension_init_context.network_event_delegate
-	self._game_object_id = game_object_id
-	self._network_event_delegate = network_event_delegate
+
+	self._network_event_delegate, self._game_object_id = network_event_delegate, game_object_id
 
 	network_event_delegate:register_session_unit_events(self, game_object_id, unpack(CLIENT_RPCS))
 
-	self._liquid_radius = 0
-	self._liquid_center = Vector3Box()
+	self._liquid_center, self._liquid_radius = Vector3Box(), 0
 	self._recalculate_liquid_size = false
+
 	local additional_unit_vfx = template.additional_unit_vfx
 
 	if additional_unit_vfx then
@@ -112,18 +117,17 @@ HuskLiquidAreaExtension.update = function (self, unit, dt, t, context, listener_
 end
 
 HuskLiquidAreaExtension._calculate_liquid_size = function (self)
-	local Vector3_max = Vector3.max
-	local Vector3_min = Vector3.min
+	local Vector3_max, Vector3_min = Vector3.max, Vector3.min
 	local temp_positions = Managers.frame_table:get_table()
 	local flow = self._flow
 	local _, first_liquid = next(flow)
 	local first_position = first_liquid.position:unbox()
-	local max_position = first_position
-	local min_position = first_position
+	local max_position, min_position = first_position, first_position
 	local num_liquid = 0
 
 	for _, liquid in pairs(flow) do
 		local position = liquid.position:unbox()
+
 		max_position = Vector3_max(max_position, position)
 		min_position = Vector3_min(min_position, position)
 		num_liquid = num_liquid + 1
@@ -150,17 +154,17 @@ HuskLiquidAreaExtension._calculate_liquid_size = function (self)
 	self._liquid_radius = math.sqrt(max_distance_sq)
 end
 
-local NAV_MESH_ABOVE = LiquidAreaSettings.NAV_MESH_ABOVE
-local NAV_MESH_BELOW = LiquidAreaSettings.nav_mesh_below
+local NAV_MESH_ABOVE, NAV_MESH_BELOW = LiquidAreaSettings.NAV_MESH_ABOVE, LiquidAreaSettings.nav_mesh_below
 
 HuskLiquidAreaExtension._rotation_from_nav_mesh = function (self, position)
 	local altitude, vertex_1, vertex_2, vertex_3 = GwNavQueries.triangle_from_position(self._nav_world, position, NAV_MESH_ABOVE, NAV_MESH_BELOW, self._traverse_logic)
-	local rotation = nil
+	local rotation
 
 	if altitude then
 		local v1_to_v2 = Vector3.normalize(vertex_2 - vertex_1)
 		local v1_to_v3 = Vector3.normalize(vertex_3 - vertex_1)
 		local normal = Vector3.normalize(Vector3.cross(v1_to_v2, v1_to_v3))
+
 		rotation = Quaternion.look(v1_to_v2, normal)
 	else
 		rotation = Quaternion.identity()
@@ -172,7 +176,7 @@ end
 HuskLiquidAreaExtension._add_liquid = function (self, unit_position, real_index, offset_position, is_filled)
 	local position = unit_position + offset_position
 	local rotation = self:_rotation_from_nav_mesh(position)
-	local rim_particle_id = nil
+	local rim_particle_id
 	local vfx_name_rim = self._vfx_name_rim
 
 	if vfx_name_rim then
@@ -241,14 +245,16 @@ end
 
 HuskLiquidAreaExtension._set_liquid_filled = function (self, real_index)
 	local liquid = self._flow[real_index]
+
 	liquid.full = true
+
 	local vfx_name_filled = self._vfx_name_filled
 
 	if not liquid.filled_particle_id then
 		if vfx_name_filled then
-			local position = liquid.position:unbox()
-			local rotation = liquid.rotation:unbox()
+			local position, rotation = liquid.position:unbox(), liquid.rotation:unbox()
 			local filled_particle_id = World.create_particles(self._world, vfx_name_filled, position, rotation)
+
 			liquid.filled_particle_id = filled_particle_id
 		else
 			liquid.filled_particle_id = nil

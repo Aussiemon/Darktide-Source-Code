@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/buff/buffs/conditional_switch_stat_buff.lua
+
 require("scripts/extension_systems/buff/buffs/buff")
 
 local ConditionalSwitchStatBuff = class("ConditionalSwitchStatBuff", "Buff")

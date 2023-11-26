@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/breed/breed_actions/chaos/chaos_beast_of_nurgle_actions.lua
+
 local BreedShootTemplates = require("scripts/settings/breed/breed_shoot_templates")
 local ChaosBeastOfNurgleSettings = require("scripts/settings/monster/chaos_beast_of_nurgle_settings")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
@@ -1106,6 +1108,7 @@ local action_data = {
 		run_anim_event = "move_fwd"
 	}
 }
+
 action_data.weakspot_stagger = table.clone(action_data.stagger)
 action_data.weakspot_stagger.stagger_immune = true
 

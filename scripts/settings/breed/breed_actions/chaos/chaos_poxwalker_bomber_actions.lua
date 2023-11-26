@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/breed/breed_actions/chaos/chaos_poxwalker_bomber_actions.lua
+
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local EffectTemplates = require("scripts/settings/fx/effect_templates")
 local ExplosionTemplates = require("scripts/settings/damage/explosion_templates")

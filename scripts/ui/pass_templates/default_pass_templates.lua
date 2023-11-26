@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/pass_templates/default_pass_templates.lua
+
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local DefaultPassTemplates = {}
 
@@ -67,9 +69,11 @@ DefaultPassTemplates.header_3_text = {
 DefaultPassTemplates.body_text = {
 	create_font_settings_text_pass("body")
 }
+
 local simple_button_font_setting_name = "button_medium"
 local simple_button_font_settings = UIFontSettings[simple_button_font_setting_name]
 local simple_button_font_color = simple_button_font_settings.text_color
+
 DefaultPassTemplates.simple_button = {
 	{
 		pass_type = "hotspot",
@@ -126,6 +130,7 @@ DefaultPassTemplates.simple_button = {
 			local default_text_color = style.default_text_color
 			local text_color = style.text_color
 			local progress = 1 - content.hotspot.anim_input_progress * 0.3
+
 			text_color[2] = default_text_color[2] * progress
 			text_color[3] = default_text_color[3] * progress
 			text_color[4] = default_text_color[4] * progress

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/ui/ui_fonts_definitions.lua
+
 local FONT_TYPES = table.enum("serif", "sans_serif")
 local definitions = {
 	custom_font = "darktide_custom_regular",

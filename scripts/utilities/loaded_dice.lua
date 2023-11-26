@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/utilities/loaded_dice.lua
+
 local LoadedDice = {}
 local temp_small_probabilities = {}
 local temp_large_probabilities = {}
@@ -18,7 +20,7 @@ local function create_normalized_probabilities(probabilities, num_probabilities)
 end
 
 LoadedDice.create = function (probabilities, normalized)
-	local result_probabilities = nil
+	local result_probabilities
 	local num_probabilities = #probabilities
 
 	if normalized then
@@ -47,8 +49,11 @@ LoadedDice.create = function (probabilities, normalized)
 
 	while next(small) ~= nil and next(large) ~= nil do
 		local less = small[#small]
+
 		small[#small] = nil
+
 		local more = large[#large]
+
 		large[#large] = nil
 		alias[less] = more
 		result_probabilities[more] = result_probabilities[more] + result_probabilities[less] - average

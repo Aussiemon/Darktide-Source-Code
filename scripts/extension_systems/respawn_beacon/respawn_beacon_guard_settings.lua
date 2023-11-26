@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/respawn_beacon/respawn_beacon_guard_settings.lua
+
 local DEFAULT_TRAVEL_DISTANCE_THRESHOLD = 40
 local respawn_beacon_guard_settings = {
 	{

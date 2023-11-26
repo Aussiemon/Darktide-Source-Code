@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/constant_elements/elements/chat/constant_element_chat_settings.lua
+
 require("scripts/foundation/utilities/color")
 
 local ChatManagerConstants = require("scripts/foundation/managers/chat/chat_manager_constants")
@@ -100,29 +102,30 @@ local history_limit = 500
 local message_limit_in_characters = 200
 local close_on_backspace = false
 local ChannelTags = ChatManagerConstants.ChannelTag
-local channel_metadata = {
-	[ChannelTags.PARTY] = {
-		name = "loc_chat_channel_mission",
-		color = mission_channel_color
-	},
-	[ChannelTags.MISSION] = {
-		name = "loc_chat_channel_mission",
-		color = mission_channel_color
-	},
-	[ChannelTags.HUB] = {
-		name = "loc_chat_channel_hub",
-		color = hub_channel_color
-	},
-	[ChannelTags.CLAN] = {
-		color = clan_channel_color
-	},
-	[ChannelTags.PRIVATE] = {
-		color = clan_channel_color
-	},
-	placeholder = {
-		color = Color.magenta(255, true)
-	}
+local channel_metadata = {}
+
+channel_metadata[ChannelTags.PARTY] = {
+	name = "loc_chat_channel_mission",
+	color = mission_channel_color
 }
+channel_metadata[ChannelTags.MISSION] = {
+	name = "loc_chat_channel_mission",
+	color = mission_channel_color
+}
+channel_metadata[ChannelTags.HUB] = {
+	name = "loc_chat_channel_hub",
+	color = hub_channel_color
+}
+channel_metadata[ChannelTags.CLAN] = {
+	color = clan_channel_color
+}
+channel_metadata[ChannelTags.PRIVATE] = {
+	color = clan_channel_color
+}
+channel_metadata.placeholder = {
+	color = Color.magenta(255, true)
+}
+
 local channel_priority = {
 	[ChannelTags.MISSION] = 1,
 	[ChannelTags.PARTY] = 2,

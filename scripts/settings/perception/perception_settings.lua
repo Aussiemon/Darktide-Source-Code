@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/perception/perception_settings.lua
+
 local perception_settings = {
 	max_priority_blackboard_update_distance = 10,
 	aggro_states = table.enum("passive", "alerted", "aggroed"),

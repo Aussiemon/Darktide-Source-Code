@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/end_player_view/end_player_view_blueprints.lua
+
 local ColorUtils = require("scripts/utilities/ui/colors")
 local ItemUtils = require("scripts/utilities/items")
 local RaritySettings = require("scripts/settings/item/rarity_settings")
@@ -65,9 +67,12 @@ end
 
 local function _card_default_frame_pass_template_init(widget, index)
 	local style = widget.style
+
 	widget.alpha_multiplier = 0
 	widget.offset[1] = index * ViewStyles.card_offset_x
+
 	local frame_color = table.clone(style.dimmed_out_color)
+
 	style.frame_default_top.color = frame_color
 	style.frame_default_middle.color = frame_color
 	style.frame_default_bottom.color = frame_color
@@ -123,6 +128,7 @@ local function _card_levelup_frame_pass_template_init(widget, index)
 
 	local style = widget.style
 	local frame_color = table.clone(style.start_color)
+
 	style.frame_levelup_top.color = frame_color
 	style.frame_levelup_bottom.color = frame_color
 	style.spires.color = frame_color
@@ -131,7 +137,7 @@ local function _card_levelup_frame_pass_template_init(widget, index)
 end
 
 local function _get_currency_icon(pass_template, currency)
-	local background_id, icon_id, icon_material = nil
+	local background_id, icon_id, icon_material
 
 	if currency == "experience" then
 		background_id = "experience_icon_background"
@@ -140,7 +146,9 @@ local function _get_currency_icon(pass_template, currency)
 	elseif currency then
 		background_id = currency .. "_icon_background"
 		icon_id = currency .. "_icon"
+
 		local wallet_settings = WalletSettings[currency]
+
 		icon_material = wallet_settings and wallet_settings.icon_texture_big
 	else
 		background_id = "icon_background"
@@ -167,11 +175,13 @@ local function _get_stat_pass_template(pass_template, stat, label, row_type, off
 
 	if not offset_y then
 		local previous_row_style = pass_template[last_index].style
+
 		offset_y = previous_row_style.offset[2] + previous_row_style.size[2]
 	end
 
 	local next_index = pass_template[last_index].is_empty_row and last_index or last_index + 1
 	local label_style = row_type == "small" and table.clone(card_content_styles.text_small) or table.clone(card_content_styles.text_normal)
+
 	label_style.offset[2] = offset_y
 	pass_template[next_index] = {
 		pass_type = "text",
@@ -180,7 +190,9 @@ local function _get_stat_pass_template(pass_template, stat, label, row_type, off
 		value = Localize(label),
 		style = label_style
 	}
+
 	local value_style = table.clone(label_style)
+
 	value_style.text_horizontal_alignment = "right"
 	next_index = next_index + 1
 	pass_template[next_index] = {
@@ -194,13 +206,9 @@ end
 
 local function _get_item_pass_templates(pass_template, item_data)
 	local item_group = item_data.item_group
-	local icon_material = nil
+	local icon_material
 
-	if item_group == "nameplates" then
-		icon_material = "content/ui/materials/icons/items/containers/item_container_square"
-	else
-		icon_material = "content/ui/materials/icons/items/containers/item_container_landscape"
-	end
+	icon_material = item_group == "nameplates" and "content/ui/materials/icons/items/containers/item_container_square" or "content/ui/materials/icons/items/containers/item_container_landscape"
 
 	if not icon_material then
 		return
@@ -244,7 +252,7 @@ local function _get_item_pass_styles(pass_style, item_data)
 	local item_rarity_color = RaritySettings[item_rarity].color
 	local item_rarity_dark_color = RaritySettings[item_rarity].color_dark
 	local item_icon_style = pass_style.item_icon
-	local horizontal_aspect_ratio = nil
+	local horizontal_aspect_ratio
 
 	if item_group == "weapons" or item_group == "devices" then
 		horizontal_aspect_ratio = 2
@@ -257,35 +265,53 @@ local function _get_item_pass_styles(pass_style, item_data)
 
 	local icon_size = item_icon_style.size
 	local icon_height = icon_size[2]
+
 	icon_size[1] = icon_height * horizontal_aspect_ratio
+
 	local item_icon_offset = item_icon_style.offset
 	local item_icon_bottom = item_icon_offset[2] + icon_height
 	local item_display_name_style = pass_style.item_display_name
+
 	item_display_name_style.in_focus_text_color = table.clone(item_rarity_color)
 	item_display_name_style.dimmed_out_text_color = table.clone(item_rarity_dark_color)
+
 	local item_sub_display_name_style = pass_style.item_sub_display_name
+
 	item_sub_display_name_style.in_focus_text_color = table.clone(item_rarity_color)
 	item_sub_display_name_style.dimmed_out_text_color = table.clone(item_rarity_dark_color)
+
 	local sub_display_name_offset = item_sub_display_name_style.offset
+
 	sub_display_name_offset[2] = item_icon_bottom + sub_display_name_offset[2]
+
 	local item_level_style = pass_style.item_level
 	local item_level_offset = item_level_style.offset
+
 	item_level_offset[2] = item_icon_bottom + item_level_offset[2]
+
 	local added_to_inventory_text_style = pass_style.added_to_inventory_text
 	local added_to_inventory_text_offset = added_to_inventory_text_style.offset
+
 	added_to_inventory_text_offset[2] = item_icon_bottom + added_to_inventory_text_offset[2]
+
 	local offset_compressed = item_icon_style.offset_compressed
 
 	if offset_compressed then
 		item_icon_style.offset_original[2] = item_icon_offset[2]
+
 		local icon_bottom_compressed = offset_compressed[2] + icon_height * 0.5
 		local item_sub_display_name_offset_compressed = item_sub_display_name_style.offset_compressed
+
 		item_sub_display_name_offset_compressed[2] = icon_bottom_compressed + item_sub_display_name_offset_compressed[2]
 		item_sub_display_name_style.offset_original[2] = sub_display_name_offset[2]
+
 		local item_level_offset_compressed = item_level_style.offset_compressed
+
 		item_level_offset_compressed[2] = icon_bottom_compressed + item_level_offset_compressed[2]
 		item_level_style.offset_original[2] = item_level_offset[2]
+
 		local added_text_offset_compressed = added_to_inventory_text_style.offset_compressed
+
 		added_text_offset_compressed[2] = icon_bottom_compressed + added_text_offset_compressed[2]
 		added_to_inventory_text_style.offset_original[2] = added_to_inventory_text_offset[2]
 	end
@@ -303,10 +329,12 @@ local function _item_pass_template_init(widget, config)
 	local item_group = config.item_group
 	local item_rarity = config.rarity or 1
 	local item_level = config.item_level
+
 	content.reward_item = reward_item
 	content.item_display_name = ItemUtils.display_name(reward_item)
 	content.item_sub_display_name = ItemUtils.sub_display_name(reward_item)
 	content.item_group = item_group
+
 	local item_level_style = widget.style.item_level
 
 	if item_level_style then
@@ -319,6 +347,7 @@ local function _apply_live_nameplate_icon_cb_func(widget, item)
 	local widget_style = widget.style
 	local icon_style = widget_style.item_icon
 	local material_values = icon_style.material_values
+
 	material_values.texture_icon = item.icon
 
 	if item.item_type == ITEM_TYPES.CHARACTER_INSIGNIA then
@@ -334,6 +363,7 @@ local function _apply_live_item_icon_cb_func(widget, grid_index, rows, columns, 
 	local widget_style = widget.style
 	local icon_style = widget_style.item_icon
 	local material_values = icon_style.material_values
+
 	material_values.use_placeholder_texture = 0
 	material_values.use_render_target = 1
 	material_values.rows = rows
@@ -346,6 +376,7 @@ local function _remove_live_item_icon_cb_func(widget, ui_renderer)
 	local widget_style = widget.style
 	local icon_style = widget_style.item_icon
 	local material_values = icon_style.material_values
+
 	material_values.texture_icon = nil
 	material_values.use_placeholder_texture = 1
 	material_values.use_render_target = 0
@@ -371,18 +402,22 @@ local function _reward_load_icon_func(parent, widget, config, optional_icon_size
 			size = optional_icon_size
 		}
 		local item_group = content.item_group
-		local cb = nil
+		local cb
 
 		if item_group == "nameplates" then
 			cb = callback(_apply_live_nameplate_icon_cb_func, widget)
 			content.icon_load_id = Managers.ui:load_item_icon(reward_item, cb, render_context)
 		elseif item_group == "weapon_skin" then
 			cb = callback(_apply_live_item_icon_cb_func, widget)
+
 			local preview_item = ItemUtils.weapon_skin_preview_item(reward_item)
+
 			content.icon_load_id = parent:load_weapon_pattern_icon(preview_item or reward_item, cb, render_context)
 		else
 			cb = callback(_apply_live_item_icon_cb_func, widget)
+
 			local prioritize = true
+
 			content.icon_load_id = Managers.ui:load_item_icon(reward_item, cb, render_context, prioritize)
 		end
 	end
@@ -410,6 +445,7 @@ local function _insert_empty_row(pass_template)
 		[2] = ViewStyles.card_content_empty_row_height
 	}
 	local pass_type = "rect"
+
 	pass_template[#pass_template + 1] = {
 		is_empty_row = true,
 		pass_type = pass_type,
@@ -452,12 +488,14 @@ end_player_view_blueprints.experience = {
 		_card_default_frame_pass_template_init(widget, index)
 
 		content.label = Localize("loc_eor_card_title_experience")
+
 		local details = config.rewards[1].details
 		local circumstance_xp = details.from_circumstance
 		local side_mission_xp = details.from_side_mission
 		local side_mission_bonus_xp = details.from_side_mission_bonus
 		local total_bonus_xp = details.from_total_bonus
 		local total_xp_gained = details.total
+
 		content.base_xp = total_xp_gained - (circumstance_xp + side_mission_xp + side_mission_bonus_xp + total_bonus_xp)
 		content.base_xp_previous_value = 0
 		content.side_mission_xp = side_mission_xp
@@ -519,6 +557,7 @@ end_player_view_blueprints.salary = {
 		_card_default_frame_pass_template_init(widget, index)
 
 		content.label = Localize("loc_eor_card_title_salary")
+
 		local rewards = config.rewards
 
 		for i = 1, #rewards do
@@ -686,6 +725,7 @@ end_player_view_blueprints.talents_unlocked = {
 		for i = 1, 3 do
 			local talent_icon_id = "talent_icon_" .. i
 			local talent_icon_background_id = "talent_icon_background_" .. i
+
 			pass_template[#pass_template + 1] = {
 				value = "content/ui/materials/icons/talents/menu/talent_terminal_frame",
 				pass_type = "texture",
@@ -722,6 +762,7 @@ end_player_view_blueprints.talents_unlocked = {
 		content.dim_out_animation = "unlocked_talents_dim_out_content"
 		content.level_up_label = Localize("loc_eor_unlocked_talents_label")
 		content.talents_unlocked_text = Localize("loc_eor_card_talent_group_unlocked")
+
 		local unlocked_talents = config.unlocked_talents
 		local widget_style = widget.style
 
@@ -729,6 +770,7 @@ end_player_view_blueprints.talents_unlocked = {
 			local talent_icon_id = "talent_icon_" .. i
 			local icon_style = widget_style[talent_icon_id]
 			local material_values = icon_style.material_values
+
 			material_values.icon_texture = unlocked_talents[i]
 		end
 	end
@@ -790,15 +832,19 @@ end_player_view_blueprints.item_reward = {
 	init = function (parent, widget, index, config)
 		local content = widget.content
 		local style = widget.style
+
 		widget.offset[1] = index * ViewStyles.card_offset_x
 		widget.alpha_multiplier = 0
 		widget.content.size = table.clone(style.size)
+
 		local frame_color = table.clone(style.default_frame_dimmed_out_color)
+
 		style.frame_top.color = frame_color
 		style.frame_middle.color = frame_color
 		style.frame_bottom.color = frame_color
 		style.frame_color = frame_color
 		style.text_color = table.clone(style.in_focus_text_color)
+
 		local item_rarity = config.rarity or 1
 		local background_color = style.rarity_background.color
 

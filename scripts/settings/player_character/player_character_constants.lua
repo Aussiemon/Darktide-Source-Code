@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/player_character/player_character_constants.lua
+
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
 local HubMovementSettingsTemplates = require("scripts/settings/player_character/hub_movement_settings_templates")
@@ -173,7 +175,7 @@ local constants = {
 		local slide_tweak_values = SLIDE_TWEAK_VALUES[slide_tweak_type]
 		local max_slide_speed = slide_tweak_values.max_slide_speed or 5.5
 
-		if speed > max_slide_speed then
+		if max_slide_speed < speed then
 			local p = speed / max_slide_speed - 1
 			local min = slide_tweak_values.above_max_slide_friction_min or 12
 			local max = slide_tweak_values.above_max_slide_friction_max or 30
@@ -193,13 +195,9 @@ local constants = {
 		end
 	end,
 	push_friction_function = function (push_speed, on_ground)
-		local friction_speed = nil
+		local friction_speed
 
-		if on_ground then
-			friction_speed = 15
-		else
-			friction_speed = 0.00225 * push_speed * push_speed
-		end
+		friction_speed = on_ground and 15 or 0.00225 * push_speed * push_speed
 
 		return friction_speed
 	end,
@@ -610,16 +608,19 @@ local constants = {
 		}
 	}
 }
+
 constants.move_speed_sq = constants.move_speed^2
 constants.slide_move_speed_threshold_sq = constants.slide_move_speed_threshold^2
 constants.sprint_jump_speed_threshold_sq = constants.sprint_jump_speed_threshold^2
 constants.sprint_move_speed_threshold_sq = constants.sprint_move_speed_threshold^2
+
 local inventory_component_data = constants.inventory_component_data
 local weapon_component_data = inventory_component_data.weapon
 
 for _, lookups in pairs(buff_target_component_lookups) do
 	for i = 1, #lookups do
 		local key = lookups[i]
+
 		weapon_component_data[key] = {
 			default_value = -1,
 			network_type = "buff_id"
@@ -655,6 +656,7 @@ for slot_name, config in pairs(slot_configuration) do
 end
 
 constants.wield_inputs = wield_inputs
+
 local slot_configuration_by_type = {}
 
 for slot_name, config in pairs(slot_configuration) do
@@ -668,6 +670,7 @@ for slot_name, config in pairs(slot_configuration) do
 end
 
 constants.slot_configuration_by_type = slot_configuration_by_type
+
 local equip_order = {}
 local slot_priorities = {}
 
@@ -684,6 +687,7 @@ end)
 
 for i = 1, #slot_priorities do
 	local slot_name = slot_priorities[i].slot_name
+
 	equip_order[#equip_order + 1] = slot_name
 end
 
@@ -718,6 +722,7 @@ end
 
 constants.buff_component_key_lookup = buff_component_key_lookup
 constants.player_package_aliases = {}
+
 local quick_wield_configuration = constants.quick_wield_configuration
 
 for from_slot, to_slot in pairs(quick_wield_configuration) do

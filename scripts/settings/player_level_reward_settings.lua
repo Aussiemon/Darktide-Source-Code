@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/player_level_reward_settings.lua
+
 local MasterItems = require("scripts/backend/master_items")
 local display_duration = 0.8
 local defined_level_rewards = {
@@ -83,6 +85,7 @@ end
 for i = 1, 30 do
 	local random_item_index = math.random(1, #weapon_items_array)
 	local item = weapon_items_array[random_item_index]
+
 	rewards[#rewards + 1] = {
 		text = "testing testing",
 		type = "item",

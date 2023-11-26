@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/servo_skull/servo_skull_system.lua
+
 require("scripts/extension_systems/servo_skull/servo_skull_extension")
 require("scripts/extension_systems/servo_skull/servo_skull_activator_extension")
 

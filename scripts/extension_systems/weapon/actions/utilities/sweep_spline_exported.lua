@@ -1,5 +1,7 @@
+﻿-- chunkname: @scripts/extension_systems/weapon/actions/utilities/sweep_spline_exported.lua
+
 local SweepSplineExported = class("SweepSplineExported")
-local _find_frame, _apply_first_person_context, _damage_window_frames, _build_matrix = nil
+local _find_frame, _apply_first_person_context, _damage_window_frames, _build_matrix
 
 SweepSplineExported.init = function (self, action_settings, first_person_component)
 	self._first_person_component = first_person_component
@@ -56,15 +58,20 @@ SweepSplineExported._build = function (self, action_settings)
 
 	local start_frame, end_frame = _damage_window_frames(action_settings, full_frame_to_time_map, num_frames)
 	local matrices = {}
+
 	self._matrices = matrices
+
 	local frame_to_time_map = {}
+
 	self._frame_to_time_map = frame_to_time_map
+
 	local num_hit_detection_frames = 0
 
 	for frame = start_frame, end_frame do
 		local t = full_frame_to_time_map[frame]
 		local matrix_data = matrices_data[t]
 		local matrix = _build_matrix(matrix_data)
+
 		num_hit_detection_frames = num_hit_detection_frames + 1
 		matrices[num_hit_detection_frames] = Matrix4x4Box(matrix)
 		frame_to_time_map[num_hit_detection_frames] = t
@@ -101,6 +108,7 @@ function _apply_first_person_context(local_point, local_rotation, first_person, 
 	if anchor_point_offset then
 		local local_anchor_point_offset = Vector3(anchor_point_offset[1], anchor_point_offset[2], anchor_point_offset[3])
 		local world_anchor_point_offset = Quaternion.rotate(rot, local_anchor_point_offset)
+
 		pos = pos + world_anchor_point_offset
 	end
 

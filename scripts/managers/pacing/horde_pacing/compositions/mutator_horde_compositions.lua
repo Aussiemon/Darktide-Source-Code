@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/pacing/horde_pacing/compositions/mutator_horde_compositions.lua
+
 local horde_compositions = {
 	mutator_chaos_hounds = {
 		{

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/pacing/horde_pacing/compositions/renegade_horde_compositions.lua
+
 local horde_compositions = {
 	renegade_small = {
 		{

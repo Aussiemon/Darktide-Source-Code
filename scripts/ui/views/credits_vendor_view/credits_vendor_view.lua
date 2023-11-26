@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/credits_vendor_view/credits_vendor_view.lua
+
 require("scripts/ui/views/vendor_view_base/vendor_view_base")
 
 local Definitions = require("scripts/ui/views/credits_vendor_view/credits_vendor_view_definitions")
@@ -9,6 +11,7 @@ local CreditsVendorView = class("CreditsVendorView", "VendorViewBase")
 
 CreditsVendorView.init = function (self, settings, context)
 	local parent = context and context.parent
+
 	self._parent = parent
 	self._optional_store_service = context and context.optional_store_service
 
@@ -38,7 +41,7 @@ end
 
 CreditsVendorView._get_store = function (self)
 	local store_service = Managers.data_service.store
-	local store_promise = nil
+	local store_promise
 	local optional_store_service = self._optional_store_service
 
 	if optional_store_service and store_service[optional_store_service] then
@@ -85,6 +88,7 @@ CreditsVendorView._purchase_item = function (self, offer)
 
 	promise:next(function (result)
 		self._purchase_promise = nil
+
 		local widgets_by_name = self._widgets_by_name
 		local purchase_sound = widgets_by_name.purchase_button.content.purchase_sound
 

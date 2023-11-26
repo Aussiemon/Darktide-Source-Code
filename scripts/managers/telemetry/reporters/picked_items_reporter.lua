@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/telemetry/reporters/picked_items_reporter.lua
+
 local ReporterInterface = require("scripts/managers/telemetry/reporters/reporter_interface")
 local PickedItemsReporter = class("PickedItemsReporter")
 
@@ -29,6 +31,7 @@ PickedItemsReporter.register_event = function (self, player, item_name)
 			telemetry_subject = subject,
 			telemetry_game_session = player:telemetry_game_session()
 		}
+
 		self._reports[player_key] = {
 			player_data = player_data,
 			entries = {

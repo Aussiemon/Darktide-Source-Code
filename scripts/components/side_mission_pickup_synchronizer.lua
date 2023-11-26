@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/components/side_mission_pickup_synchronizer.lua
+
 local SideMissionPickupSynchronizer = component("SideMissionPickupSynchronizer")
 
 SideMissionPickupSynchronizer.init = function (self, unit)

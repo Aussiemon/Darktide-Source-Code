@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/equipment/item_material_overrides/player_material_overrides_gear_decals.lua
+
 local decal_table = {
 	decal_atlas_cadia_01 = "content/textures/gear_decals/decal_atlas_cadia_01",
 	decal_atlas_ogryn_01 = "content/textures/gear_decals/decal_atlas_ogryn_01",
@@ -50,16 +52,16 @@ local material_overrides = {
 		}
 	}
 }
-local material_override_name, texture_override_name, property_override_name, material_override, slot_and_decal_string, decal_index, slot_index = nil
+local material_override_name, texture_override_name, property_override_name, material_override, slot_and_decal_string, decal_index, slot_index
 
 for _, m_type in pairs(material_types) do
 	for atlas, res in pairs(decal_table) do
 		slot_index = 1
 
-		while slot_amount >= slot_index do
+		while slot_index <= slot_amount do
 			decal_index = 1
 
-			while decal_amount >= decal_index do
+			while decal_index <= decal_amount do
 				material_override = {
 					texture_overrides = {},
 					property_overrides = {}

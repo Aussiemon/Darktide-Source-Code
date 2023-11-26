@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/buff/utility/buff_args.lua
+
 local BuffArgs = {}
 local ARGS = {
 	{
@@ -27,6 +29,7 @@ local NUM_ARGS = #ARGS
 for i = 1, NUM_ARGS do
 	local argument = ARGS[i]
 	local arg_name = argument.name
+
 	ARGS[arg_name] = ARGS[i]
 end
 
@@ -35,6 +38,7 @@ BuffArgs.add_args_to_context = function (context, added_args, ...)
 
 	for i = 1, num_args, 2 do
 		local arg, val = select(i, ...)
+
 		context[arg] = val
 		added_args[arg] = val
 	end

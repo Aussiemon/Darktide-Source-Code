@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/breed/breed_units_test.lua
+
 local Breed = require("scripts/utilities/breed")
 local Breeds = require("scripts/settings/breed/breeds")
 local MasterItems = require("scripts/backend/master_items")
@@ -109,8 +111,8 @@ local function _resource_dependencies()
 	local resource_dependencies = {}
 
 	for breed_name, breed in pairs(Breeds) do
-		local base_unit = breed.base_unit
-		local state_machine = breed.state_machine
+		local base_unit, state_machine = breed.base_unit, breed.state_machine
+
 		resource_dependencies[base_unit] = true
 
 		if state_machine then
@@ -119,19 +121,19 @@ local function _resource_dependencies()
 
 		if Breed.is_player(breed) then
 			local first_person_unit = breed.first_person_unit
+
 			resource_dependencies[first_person_unit] = true
 
 			for item_name, item in pairs(item_definitions) do
 				local breeds = item.breeds
 				local weapon_template_name = item.weapon_template
 
-				if type(weapon_template_name) ~= "string" or weapon_template_name == "" then
-					weapon_template_name = false
-				end
+				weapon_template_name = type(weapon_template_name) == "string" and weapon_template_name ~= "" and weapon_template_name
 
 				if weapon_template_name and breeds and table.contains(breeds, breed_name) then
 					local weapon_template = WeaponTemplates[weapon_template_name]
 					local _, state_machine_1p = WeaponTemplate.state_machines(weapon_template, breed_name)
+
 					resource_dependencies[state_machine_1p] = true
 				end
 			end

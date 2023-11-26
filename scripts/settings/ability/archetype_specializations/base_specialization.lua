@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/ability/archetype_specializations/base_specialization.lua
+
 local base_specialization = {
 	archetype = "none",
 	name = "none",

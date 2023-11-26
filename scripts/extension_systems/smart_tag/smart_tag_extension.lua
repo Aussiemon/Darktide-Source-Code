@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/smart_tag/smart_tag_extension.lua
+
 local SmartTag = require("scripts/extension_systems/smart_tag/smart_tag")
 local SmartTagSettings = require("scripts/settings/smart_tag/smart_tag_settings")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
@@ -7,6 +9,7 @@ local SmartTagExtension = class("SmartTagExtension")
 SmartTagExtension.init = function (self, extension_init_context, unit, extension_init_data, ...)
 	self._unit = unit
 	self._is_server = extension_init_context.is_server
+
 	local target_type = extension_init_data.target_type
 
 	if target_type then
@@ -54,12 +57,12 @@ SmartTagExtension.game_object_initialized = function (self, session, object_id)
 end
 
 SmartTagExtension._set_tag_on_spawn = function (self)
-	local tagger_unit = nil
+	local tagger_unit
 	local tag_template = self:contextual_tag_template(tagger_unit)
 
 	if tag_template then
 		local target_unit = self._unit
-		local target_location = nil
+		local target_location
 		local smart_tag_system = Managers.state.extension:system("smart_tag_system")
 
 		smart_tag_system:set_tag(tag_template.name, tagger_unit, target_unit, target_location)
@@ -78,6 +81,7 @@ SmartTagExtension._setup_display_name = function (self, unit)
 	elseif target_type == "breed" then
 		local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
 		local breed = unit_data_extension:breed()
+
 		self._breed = breed
 		self._display_name = breed.display_name
 	end
@@ -172,6 +176,10 @@ SmartTagExtension._contextual_tag_template_name = function (self, tagger_unit)
 				return "enemy_over_here"
 			end
 		end
+
+		if false then
+			-- Nothing
+		end
 	elseif target_type == "health_station" then
 		local health_station_extension = ScriptUnit.extension(unit, "health_station_system")
 		local has_battery = health_station_extension:battery_in_slot()
@@ -186,6 +194,7 @@ end
 
 SmartTagExtension.register_owned_tag = function (self, tag_id)
 	local owned_tag_ids = self._owned_tag_ids
+
 	owned_tag_ids[#owned_tag_ids + 1] = tag_id
 end
 

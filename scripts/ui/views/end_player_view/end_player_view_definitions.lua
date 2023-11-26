@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/end_player_view/end_player_view_definitions.lua
+
 local BarPassTemplates = require("scripts/ui/pass_templates/bar_pass_templates")
 local ColorUtilities = require("scripts/utilities/ui/colors")
 local UIWorkspaceSettings = require("scripts/settings/ui/ui_workspace_settings")

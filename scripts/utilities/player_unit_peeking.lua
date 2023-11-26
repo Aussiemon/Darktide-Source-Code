@@ -1,7 +1,9 @@
+﻿-- chunkname: @scripts/utilities/player_unit_peeking.lua
+
 local SpecialRulesSetting = require("scripts/settings/ability/special_rules_settings")
 local special_rules = SpecialRulesSetting.special_rules
 local PlayerUnitPeeking = {}
-local _initialize_3p, _initialize_1p = nil
+local _initialize_3p, _initialize_1p
 
 PlayerUnitPeeking.start = function (peeking_component, t)
 	peeking_component.is_peeking = true
@@ -49,13 +51,14 @@ PlayerUnitPeeking.fixed_update = function (peeking_component, ledge_finder_exten
 		end
 	end
 
-	local peeking_is_possible = false
-	local peeking_ledge = nil
+	local peeking_is_possible, peeking_ledge = false
 	local can_peek = has_significant_obstacle_in_front and is_crouching
+
 	can_peek = can_peek and specialization_extension:has_special_rule(special_rules.veteran_cover_peeking)
 
 	if can_peek then
 		local num_ledges, ledges = ledge_finder_extension:ledges()
+
 		peeking_ledge = PlayerUnitPeeking.best_peekable_ledge(num_ledges, ledges, first_person_extension, breed)
 		peeking_is_possible = peeking_ledge ~= nil
 	end
@@ -81,7 +84,7 @@ PlayerUnitPeeking.best_peekable_ledge = function (num_ledges, ledges, first_pers
 		local ledge = ledges[i]
 		local height_distance = ledge.height_distance_from_player_unit
 
-		if ledge.distance_flat_sq_from_player_unit <= significant_obstacle_distance_sq and height_distance >= crouch_height - 0.2 and height_distance <= default_height - 0.2 then
+		if significant_obstacle_distance_sq >= ledge.distance_flat_sq_from_player_unit and height_distance >= crouch_height - 0.2 and height_distance <= default_height - 0.2 then
 			return ledge
 		end
 	end
@@ -112,10 +115,12 @@ PlayerUnitPeeking.update_third_person_animations = function (unit_3p, data, dt)
 			local default_crouch_height = first_person_extension:default_height("crouch")
 			local default_standing_height = first_person_extension:default_height("default")
 			local p = math.ilerp(default_crouch_height, default_standing_height, extrapolated_character_height)
+
 			wanted_peek_y = math.lerp(0.1, 1, p)
 		end
 
 		local lerped_peek_y = math.lerp(data.lerped_peek_y, wanted_peek_y, math.min(dt * 10, 1))
+
 		data.lerped_peek_y = lerped_peek_y
 
 		Unit.animation_set_variable(unit_3p, peek_y_index, lerped_peek_y)
@@ -124,6 +129,7 @@ end
 
 function _initialize_3p(unit, data)
 	local unit_data = ScriptUnit.extension(unit, "unit_data_system")
+
 	data.peeking_component = unit_data:read_component("peeking")
 	data.first_person_extension = ScriptUnit.extension(unit, "first_person_system")
 	data.lerped_peek_y = 0

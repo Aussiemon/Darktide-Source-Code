@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/breed/breeds/chaos/chaos_ogryn_gunner_breed.lua
+
 local ArmorSettings = require("scripts/settings/damage/armor_settings")
 local BreedBlackboardComponentTemplates = require("scripts/settings/breed/breed_blackboard_component_templates")
 local BreedCombatRanges = require("scripts/settings/breed/breed_combat_ranges")

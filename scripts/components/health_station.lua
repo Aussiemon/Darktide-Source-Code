@@ -1,7 +1,10 @@
+﻿-- chunkname: @scripts/components/health_station.lua
+
 local HealthStation = component("HealthStation")
 
 HealthStation.init = function (self, unit, is_server)
 	self._unit = unit
+
 	local health_station_extension = ScriptUnit.fetch_component_extension(unit, "health_station_system")
 
 	if health_station_extension then

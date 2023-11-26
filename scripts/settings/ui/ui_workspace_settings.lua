@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/ui/ui_workspace_settings.lua
+
 local ui_workspace_settings = {
 	screen = {
 		scale = "fit",

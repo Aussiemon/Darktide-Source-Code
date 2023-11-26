@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/behavior/utility_considerations/chaos_ogryn_gunner_utility_considerations.lua
+
 local considerations = {
 	chaos_ogryn_gunner_melee = {
 		distance_to_target = {

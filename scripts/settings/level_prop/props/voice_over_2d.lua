@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/level_prop/props/voice_over_2d.lua
+
 local prop_data = {
 	unit_name = "content/vo/voice_over_2d",
 	name = "voice_over_2d",

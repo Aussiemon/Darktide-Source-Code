@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/components/cinematic_scene.lua
+
 local CinematicScene = component("CinematicScene")
 
 CinematicScene.init = function (self, unit)
@@ -5,11 +7,13 @@ CinematicScene.init = function (self, unit)
 
 	local cinematic_name = self:get_data(unit, "cinematic_name")
 	local cinematic_category = self:get_data(unit, "cinematic_category")
+
 	self._origin_level_name = self:get_data(unit, "origin_level_name")
 	self._unit_type = self:get_data(unit, "unit_type")
 	self._cinematic_name = self:get_data(unit, "cinematic_name")
 	self._cinematic_category = cinematic_category
-	local origin_level_name = nil
+
+	local origin_level_name
 
 	if self._unit_type == "destination" and self._origin_level_name ~= "" then
 		origin_level_name = self._origin_level_name

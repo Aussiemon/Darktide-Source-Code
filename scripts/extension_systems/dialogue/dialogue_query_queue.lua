@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/dialogue/dialogue_query_queue.lua
+
 local DialogueQueryQueue = class("DialogueQueryQueue")
 
 DialogueQueryQueue.init = function (self)
@@ -7,7 +9,7 @@ end
 
 DialogueQueryQueue.get_query = function (self, t)
 	local found_time = math.huge
-	local answer_query = nil
+	local answer_query
 
 	for query_time, query in pairs(self._input_query_queue) do
 		if query_time < t and query_time < found_time then

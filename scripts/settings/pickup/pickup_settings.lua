@@ -1,6 +1,8 @@
-local pickup_settings = {
-	distribution_types = table.enum("guaranteed", "end_event", "mid_event", "primary", "secondary", "side_mission", "manual")
-}
+﻿-- chunkname: @scripts/settings/pickup/pickup_settings.lua
+
+local pickup_settings = {}
+
+pickup_settings.distribution_types = table.enum("guaranteed", "end_event", "mid_event", "primary", "secondary", "side_mission", "manual")
 pickup_settings.min_chest_spawner_ratio = {
 	[pickup_settings.distribution_types.primary] = 0.25,
 	[pickup_settings.distribution_types.secondary] = 0.25

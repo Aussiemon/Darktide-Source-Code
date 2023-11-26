@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/multiplayer/session/session_remote_state_machine.lua
+
 local StateMachine = require("scripts/foundation/utilities/state_machine")
 local RemoteApproveSessionChannelState = require("scripts/multiplayer/session/remote_states/remote_approve_session_channel_state")
 local RemoteInSessionState = require("scripts/multiplayer/session/remote_states/remote_in_session_state")
@@ -10,6 +12,7 @@ local function _warning(...)
 end
 
 local SessionRemoteStateMachine = class("SessionRemoteStateMachine")
+
 SessionRemoteStateMachine.TIMEOUT = 30
 
 SessionRemoteStateMachine.init = function (self, network_delegate, client_peer_id, engine_lobby, engine_gamesession, gameobject_callback_object)
@@ -25,9 +28,12 @@ SessionRemoteStateMachine.init = function (self, network_delegate, client_peer_i
 		timeout = SessionRemoteStateMachine.TIMEOUT,
 		event_list = {}
 	}
+
 	self._shared_state = shared_state
-	local parent = nil
+
+	local parent
 	local state_machine = StateMachine:new("SessionRemoteStateMachine", parent, shared_state)
+
 	self._state_machine = state_machine
 
 	state_machine:add_transition("RemoteApproveSessionChannelState", "approved", RemoteWaitForJoinState)
@@ -65,7 +71,9 @@ SessionRemoteStateMachine.approve_channel = function (self, channel_id)
 
 	if state.__class_name == "RemoteApproveSessionChannelState" then
 		self._shared_state.channel_id = channel_id
+
 		local shared_state = self._shared_state
+
 		shared_state.event_list[#shared_state.event_list + 1] = {
 			name = "session_joining",
 			parameters = {
@@ -92,6 +100,7 @@ end
 
 SessionRemoteStateMachine.peer_joined = function (self, peer_id)
 	local old = self._known_peers[peer_id] or false
+
 	self._known_peers[peer_id] = true
 
 	return old
@@ -99,6 +108,7 @@ end
 
 SessionRemoteStateMachine.peer_left = function (self, peer_id)
 	local old = self._known_peers[peer_id] or false
+
 	self._known_peers[peer_id] = nil
 
 	return old

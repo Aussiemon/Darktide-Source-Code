@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/save/script_save_token.lua
+
 local TokenInterface = require("scripts/foundation/managers/token/token_interface")
 local ScriptSaveToken = class("ScriptSaveToken")
 

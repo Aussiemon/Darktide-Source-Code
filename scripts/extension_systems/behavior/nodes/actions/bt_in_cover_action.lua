@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/behavior/nodes/actions/bt_in_cover_action.lua
+
 require("scripts/extension_systems/behavior/nodes/bt_node")
 
 local Animation = require("scripts/utilities/animation")
@@ -11,12 +13,16 @@ local BtInCoverAction = class("BtInCoverAction", "BtNode")
 
 BtInCoverAction.enter = function (self, unit, breed, blackboard, scratchpad, action_data, t)
 	local behavior_component = Blackboard.write_component(blackboard, "behavior")
+
 	behavior_component.move_state = "attacking"
+
 	local cover_component = Blackboard.write_component(blackboard, "cover")
+
 	scratchpad.aim_component = Blackboard.write_component(blackboard, "aim")
 	scratchpad.cover_component = cover_component
 	scratchpad.perception_component = Blackboard.write_component(blackboard, "perception")
 	scratchpad.suppression_component = blackboard.suppression
+
 	local locomotion_extension = ScriptUnit.extension(unit, "locomotion_system")
 
 	locomotion_extension:set_movement_type("script_driven")
@@ -56,9 +62,11 @@ local DEFAULT_DONE_COVER_DISABLE_RANGE = {
 
 BtInCoverAction.leave = function (self, unit, breed, blackboard, scratchpad, action_data, t, reason, destroy)
 	local cover_component = scratchpad.cover_component
+
 	cover_component.is_in_cover = false
+
 	local cover_user_extension = ScriptUnit.extension(unit, "cover_system")
-	local disable_cover_range = nil
+	local disable_cover_range
 
 	if reason ~= "done" then
 		disable_cover_range = action_data.aborted_disable_cover_range or DEFAULT_ABORTED_COVER_DISABLE_RANGE
@@ -115,8 +123,10 @@ BtInCoverAction._enter_cover = function (self, unit, breed, scratchpad, action_d
 	scratchpad.animation_extension:anim_event(enter_cover_anim_event)
 
 	local enter_cover_duration = action_data.enter_cover_durations[enter_cover_anim_state]
+
 	scratchpad.enter_cover_duration = t + enter_cover_duration
 	scratchpad.state = "entering"
+
 	local breed_name = breed.name
 
 	Vo.enemy_generic_vo_event(unit, "take_cover", breed_name)
@@ -130,7 +140,7 @@ BtInCoverAction._update_entering = function (self, unit, scratchpad, action_data
 	local enter_cover_duration = scratchpad.enter_cover_duration
 	local min_peak_distance = action_data.min_peak_distance or DEFAULT_MIN_PEAK_DISTANCE
 	local perception_component = scratchpad.perception_component
-	local can_peak = ALIVE[perception_component.target_unit] and perception_component.target_distance < min_peak_distance
+	local can_peak = ALIVE[perception_component.target_unit] and min_peak_distance > perception_component.target_distance
 
 	if can_peak and enter_cover_duration <= t then
 		self:_start_peeking(unit, scratchpad, action_data, cover_component, nil, t)
@@ -172,10 +182,12 @@ BtInCoverAction._start_suppressed = function (self, unit, scratchpad, action_dat
 		animation_extension:anim_event(enter_cover_anim_state)
 
 		local enter_cover_duration = action_data.enter_cover_durations[enter_cover_anim_state]
+
 		scratchpad.delayed_suppressed_anim_t = t + enter_cover_duration
 	else
 		local suppressed_anim = action_data.suppressed_anim
 		local suppressed_duration = action_data.suppressed_duration or DEFAULT_SUPPRESSED_DURATION
+
 		scratchpad.suppressed_duration = t + math.random_range(suppressed_duration[1], suppressed_duration[2])
 
 		animation_extension:anim_event(suppressed_anim)
@@ -192,17 +204,19 @@ BtInCoverAction._start_suppressed = function (self, unit, scratchpad, action_dat
 end
 
 BtInCoverAction._update_suppressed = function (self, unit, scratchpad, action_data, t, cover_component, is_suppressed)
-	if scratchpad.delayed_suppressed_anim_t and scratchpad.delayed_suppressed_anim_t <= t then
+	if scratchpad.delayed_suppressed_anim_t and t >= scratchpad.delayed_suppressed_anim_t then
 		local suppressed_anim = action_data.suppressed_anim
 
 		scratchpad.animation_extension:anim_event(suppressed_anim)
 
 		scratchpad.delayed_suppressed_anim_t = nil
+
 		local suppressed_duration = action_data.suppressed_duration or DEFAULT_SUPPRESSED_DURATION
+
 		scratchpad.suppressed_duration = t + math.random_range(suppressed_duration[1], suppressed_duration[2])
-	elseif not is_suppressed and scratchpad.suppressed_duration and scratchpad.suppressed_duration <= t then
+	elseif not is_suppressed and scratchpad.suppressed_duration and t >= scratchpad.suppressed_duration then
 		local min_peak_distance = action_data.min_peak_distance or DEFAULT_MIN_PEAK_DISTANCE
-		local can_peak = scratchpad.perception_component.target_distance < min_peak_distance
+		local can_peak = min_peak_distance > scratchpad.perception_component.target_distance
 
 		if can_peak then
 			self:_start_peeking(unit, scratchpad, action_data, cover_component, nil, t)
@@ -231,10 +245,11 @@ BtInCoverAction._get_peek_identifier = function (self, unit, scratchpad, action_
 	local cover_type = cover_component.type
 	local peek_types = CoverSettings.peek_types
 	local cover_types = CoverSettings.types
-	local peek_identifier = nil
+	local peek_identifier
 
 	if peek_type == peek_types.both then
 		local left_or_right = _target_is_left_or_right(unit, scratchpad, action_data)
+
 		peek_identifier = left_or_right
 	elseif peek_type == peek_types.right then
 		if cover_type == cover_types.low then
@@ -269,12 +284,14 @@ end
 
 BtInCoverAction._start_peeking = function (self, unit, scratchpad, action_data, cover_component, peek_identifier, t)
 	peek_identifier = peek_identifier or self:_get_peek_identifier(unit, scratchpad, action_data, cover_component)
+
 	local anim_event = action_data.peek_anim_events[peek_identifier]
 	local animation_extension = scratchpad.animation_extension
 
 	animation_extension:anim_event(anim_event)
 
 	local peek_duration = action_data.peek_duration
+
 	scratchpad.peek_duration = t + peek_duration
 	scratchpad.current_peak_identifier = peek_identifier
 	scratchpad.state = "peeking"
@@ -308,7 +325,7 @@ BtInCoverAction._update_peeking = function (self, unit, scratchpad, action_data,
 			AttackIntensity.set_attacked(target_unit)
 		else
 			local min_peak_distance = action_data.min_peak_distance or DEFAULT_MIN_PEAK_DISTANCE
-			local can_peak = scratchpad.perception_component.target_distance < min_peak_distance
+			local can_peak = min_peak_distance > scratchpad.perception_component.target_distance
 
 			if can_peak then
 				local peek_identifier = self:_get_peek_identifier(unit, scratchpad, action_data, cover_component)
@@ -324,8 +341,7 @@ end
 
 BtInCoverAction._has_clear_shot_from_aiming_when_peeking = function (self, unit, scratchpad, action_data, perception_component, target_unit)
 	local cover_component = scratchpad.cover_component
-	local cover_type = cover_component.type
-	local peek_identifier = scratchpad.current_peak_identifier
+	local cover_type, peek_identifier = cover_component.type, scratchpad.current_peak_identifier
 	local clear_shot_offset_from_peeking = action_data.clear_shot_offset_from_peeking[cover_type]
 	local boxed_offset = clear_shot_offset_from_peeking[peek_identifier]
 
@@ -366,6 +382,7 @@ BtInCoverAction._start_aiming = function (self, unit, scratchpad, action_data, t
 	if cover_aim_stances then
 		local cover_type = scratchpad.cover_component.type
 		local aim_stance = cover_aim_stances[cover_type]
+
 		scratchpad.aim_stance = aim_stance
 	end
 
@@ -379,6 +396,7 @@ BtInCoverAction._start_aiming = function (self, unit, scratchpad, action_data, t
 
 	local start_aiming_at_target_timings = action_data.start_aiming_at_target_timings
 	local start_aiming_at_target_timing = start_aiming_at_target_timings[aim_event]
+
 	scratchpad.start_aiming_at_target_timing = t + start_aiming_at_target_timing
 	scratchpad.state = "aiming"
 
@@ -390,7 +408,7 @@ BtInCoverAction._update_aiming = function (self, unit, breed, scratchpad, blackb
 		return
 	end
 
-	if scratchpad.start_aiming_at_target_timing <= t then
+	if t >= scratchpad.start_aiming_at_target_timing then
 		self:_aim_at_target(unit, t, action_data, scratchpad, blackboard)
 	end
 
@@ -430,6 +448,7 @@ BtInCoverAction._aim_at_target = function (self, unit, t, action_data, scratchpa
 	end
 
 	local aim_component = scratchpad.aim_component
+
 	aim_component.lean_dot = lean_dot
 
 	MinionAttack.update_scope_reflection(unit, scratchpad, t, action_data)

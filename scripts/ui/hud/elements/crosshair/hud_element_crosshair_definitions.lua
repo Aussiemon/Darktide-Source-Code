@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/hud/elements/crosshair/hud_element_crosshair_definitions.lua
+
 local UIWorkspaceSettings = require("scripts/settings/ui/ui_workspace_settings")
 local scenegraph_definition = {
 	screen = UIWorkspaceSettings.screen,

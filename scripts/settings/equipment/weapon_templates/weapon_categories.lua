@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/equipment/weapon_templates/weapon_categories.lua
+
 local WeaponCategories = {
 	"grenade",
 	"psyker",

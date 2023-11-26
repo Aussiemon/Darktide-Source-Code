@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/components/buff_volume.lua
+
 local BuffVolume = component("BuffVolume")
 
 BuffVolume.init = function (self, unit, is_server, nav_world)
@@ -24,12 +26,16 @@ BuffVolume.init = function (self, unit, is_server, nav_world)
 	self._inverse = self:get_data(unit, "inverse")
 	self._buff_affected_units = {}
 	self._unit = unit
+
 	local extension_manager = Managers.state.extension
 	local broadphase_system = extension_manager:system("broadphase_system")
+
 	self._broadphase = broadphase_system.broadphase
+
 	local affected_side_name = self:get_data(unit, "affected_side_name")
 	local side_system = extension_manager:system("side_system")
 	local side = side_system:get_side_from_name(affected_side_name)
+
 	self._affected_side = side
 	self._affected_side_names = side:relation_side_names("allied")
 
@@ -60,11 +66,9 @@ local TEMP_ALREADY_CHECKED_UNITS = {}
 local BROADPHASE_RESULTS = {}
 
 BuffVolume.update = function (self, unit, dt, t)
-	local broadphase = self._broadphase
-	local side_names = self._side_names
-	local broadphase_center = self._broadphase_center:unbox()
-	local broadphase_radius = self._broadphase_radius
-	local num_results = broadphase:query(broadphase_center, broadphase_radius, BROADPHASE_RESULTS, side_names)
+	local broadphase, side_names = self._broadphase, self._side_names
+	local broadphase_center, broadphase_radius = self._broadphase_center:unbox(), self._broadphase_radius
+	local num_results = broadphase.query(broadphase, broadphase_center, broadphase_radius, BROADPHASE_RESULTS, side_names)
 
 	if num_results == 0 and not self._inverse then
 		return true
@@ -120,6 +124,7 @@ BuffVolume._update_buffs = function (self, unit, dt, t, num_results)
 
 				if buff_extension and not TEMP_ALREADY_CHECKED_UNITS[affected_unit] then
 					local local_index, component_index = self:_add_buff(affected_unit, t)
+
 					buff_affected_units[affected_unit] = {
 						local_index = local_index,
 						component_index = component_index
@@ -172,6 +177,7 @@ BuffVolume._update_inverse_buffs = function (self, unit, dt, t)
 
 				if buff_extension and not TEMP_ALREADY_CHECKED_UNITS[affected_unit] then
 					local local_index, component_index = self:_add_buff(affected_unit, t)
+
 					buff_affected_units[affected_unit] = {
 						local_index = local_index,
 						component_index = component_index
@@ -216,12 +222,11 @@ local TEMP_POSITIONS = {}
 
 BuffVolume._calculate_broadphase_size = function (self)
 	self._broadphase_center, self._broadphase_radius = Vector3Box()
-	local Vector3_max = Vector3.max
-	local Vector3_min = Vector3.min
+
+	local Vector3_max, Vector3_min = Vector3.max, Vector3.min
 	local volume_points = Unit.volume_points(self._unit, "volume")
 	local first_position = volume_points[1]
-	local max_position = first_position
-	local min_position = first_position
+	local max_position, min_position = first_position, first_position
 	local num_points = 0
 
 	for _, point in pairs(volume_points) do
@@ -257,6 +262,7 @@ end
 
 BuffVolume.disable_buffs = function (self)
 	self._buffs_enabled = false
+
 	local buff_affected_units = self._buff_affected_units
 
 	if not buff_affected_units then
@@ -281,8 +287,11 @@ BuffVolume.editor_init = function (self, unit)
 	end
 
 	local world = Application.main_world()
+
 	self._world = world
+
 	local line_object = World.create_line_object(world)
+
 	self._line_object = line_object
 	self._drawer = DebugDrawer(line_object, "retained")
 	self._gui = World.create_world_gui(world, Matrix4x4.identity(), 1, 1)

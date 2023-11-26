@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/mission_objective/templates/fm_armoury_objective_template.lua
+
 local mission_objective_templates = {
 	fm_armoury = {
 		main_objective_type = "fortification_objective",

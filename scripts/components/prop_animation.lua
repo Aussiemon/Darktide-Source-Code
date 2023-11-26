@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/components/prop_animation.lua
+
 local PropAnimation = component("PropAnimation")
 
 PropAnimation.init = function (self, unit)

@@ -1,7 +1,14 @@
+﻿-- chunkname: @scripts/extension_systems/behavior/trees/renegade/renegade_assault_behavior_tree.lua
+
 local BreedActions = require("scripts/settings/breed/breed_actions")
 local action_data = BreedActions.renegade_assault
 local FAR_COMBAT = {
 	"BtRandomUtilityNode",
+	condition_args = {
+		combat_ranges = {
+			far = true
+		}
+	},
 	{
 		"BtRangedFollowTargetAction",
 		name = "follow",
@@ -19,12 +26,7 @@ local FAR_COMBAT = {
 		action_data = action_data.shoot
 	},
 	name = "far_combat",
-	condition = "is_aggroed_in_combat_range",
-	condition_args = {
-		combat_ranges = {
-			far = true
-		}
-	}
+	condition = "is_aggroed_in_combat_range"
 }
 local SUPPRESSED = {
 	"BtSequenceNode",
@@ -43,6 +45,11 @@ local SUPPRESSED = {
 }
 local CLOSE_COMBAT = {
 	"BtSelectorNode",
+	condition_args = {
+		combat_ranges = {
+			close = true
+		}
+	},
 	{
 		"BtRunStopAndShootAction",
 		leave_hook = "reset_enter_combat_range_flag",
@@ -70,15 +77,15 @@ local CLOSE_COMBAT = {
 		name = "close_combat_utility"
 	},
 	name = "close_combat",
-	condition = "is_aggroed_in_combat_range",
-	condition_args = {
-		combat_ranges = {
-			close = true
-		}
-	}
+	condition = "is_aggroed_in_combat_range"
 }
 local MELEE_COMBAT = {
 	"BtSelectorNode",
+	condition_args = {
+		combat_ranges = {
+			melee = true
+		}
+	},
 	{
 		"BtCombatIdleAction",
 		name = "melee_combat_idle",
@@ -117,12 +124,7 @@ local MELEE_COMBAT = {
 		name = "combat"
 	},
 	name = "melee_combat",
-	condition = "is_aggroed_in_combat_range",
-	condition_args = {
-		combat_ranges = {
-			melee = true
-		}
-	}
+	condition = "is_aggroed_in_combat_range"
 }
 local behavior_tree = {
 	"BtSelectorNode",

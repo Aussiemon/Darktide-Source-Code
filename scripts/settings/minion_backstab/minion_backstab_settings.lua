@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/minion_backstab/minion_backstab_settings.lua
+
 local minion_backstab_settings = {
 	ranged_backstab_event = "wwise/events/player/play_backstab_indicator_ranged",
 	melee_elite_backstab_event = "wwise/events/player/play_backstab_indicator_melee_elite",

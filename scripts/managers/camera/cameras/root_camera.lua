@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/camera/cameras/root_camera.lua
+
 local BaseCamera = require("scripts/managers/camera/cameras/base_camera")
 local RootCamera = class("RootCamera", "BaseCamera")
 
@@ -21,6 +23,7 @@ RootCamera.set_root_unit = function (self, unit, object, preserve_yaw)
 		local forward_flat = Vector3(forward.x, forward.y, 0)
 		local forward_flat_normalized = Vector3.normalize(forward_flat)
 		local init_yaw = math.atan2(forward_flat_normalized.x, forward_flat_normalized.y)
+
 		self._aim_yaw = -init_yaw
 	end
 end
@@ -31,6 +34,7 @@ RootCamera.parse_parameters = function (self, camera_settings, parent_node)
 	end
 
 	local degrees_to_radians = math.pi / 180
+
 	self._vertical_fov = camera_settings.vertical_fov and camera_settings.vertical_fov * degrees_to_radians
 	self._should_apply_fov_multiplier = camera_settings.should_apply_fov_multiplier or false
 	self._custom_vertical_fov = camera_settings.custom_vertical_fov and camera_settings.custom_vertical_fov * degrees_to_radians
@@ -54,7 +58,7 @@ RootCamera.update = function (self, dt, data)
 		return
 	end
 
-	local position, rotation = nil
+	local position, rotation
 	local root_unit = self._root_unit
 	local root_object = self._root_object
 

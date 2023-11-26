@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/equipment/weapon_templates/combat_blades/ogryn_combatblade_p1_m2.lua
+
 local ActionSweepSettings = require("scripts/settings/equipment/action_sweep_settings")
 local BaseTemplateSettings = require("scripts/settings/equipment/weapon_templates/base_template_settings")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
@@ -36,8 +38,10 @@ local default_weapon_box = {
 	0.15,
 	1.1
 }
+
 weapon_template.action_inputs = table.clone(MeleeActionInputSetupSlow.action_inputs)
 weapon_template.action_input_hierarchy = table.clone(MeleeActionInputSetupSlow.action_input_hierarchy)
+
 local hit_zone_priority = {
 	[hit_zone_names.head] = 1,
 	[hit_zone_names.torso] = 2,
@@ -1118,7 +1122,9 @@ weapon_template.stamina_template = "default"
 weapon_template.toughness_template = "default"
 weapon_template.movement_curve_modifier_template = "default"
 weapon_template.footstep_intervals = FootstepIntervalsTemplates.ogryn_combat_blade
+
 local WeaponBarUIDescriptionTemplates = require("scripts/settings/equipment/weapon_bar_ui_description_templates")
+
 weapon_template.base_stats = {
 	ogryn_combatblade_p1_m1_dps_stat = {
 		display_name = "loc_stats_display_damage_stat",
@@ -1325,6 +1331,7 @@ weapon_template.base_stats = {
 	}
 }
 weapon_template.traits = {}
+
 local bespoke_ogryn_combatblade_p1 = table.keys(WeaponTraitsBespokeOgrynCombatbladeP1)
 
 table.append(weapon_template.traits, bespoke_ogryn_combatblade_p1)

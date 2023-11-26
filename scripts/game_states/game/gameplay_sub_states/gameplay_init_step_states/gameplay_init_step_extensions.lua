@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/game_states/game/gameplay_sub_states/gameplay_init_step_states/gameplay_init_step_extensions.lua
+
 local ExtensionManager = require("scripts/foundation/managers/extension/extension_manager")
 local GameplayInitStepInterface = require("scripts/game_states/game/gameplay_sub_states/gameplay_init_step_states/gameplay_init_step_state_interface")
 local GameplayInitStepManagers = require("scripts/game_states/game/gameplay_sub_states/gameplay_init_step_states/gameplay_init_step_managers")
@@ -11,7 +13,9 @@ end
 
 GameplayInitStepExtensions.on_enter = function (self, parent, params)
 	local shared_state = params.shared_state
+
 	self._shared_state = shared_state
+
 	local world = shared_state.world
 	local physics_world = shared_state.physics_world
 	local is_server = shared_state.is_server
@@ -63,6 +67,7 @@ GameplayInitStepExtensions._init_extensions = function (self, world, physics_wor
 
 	for i = 1, num_sides do
 		local side_data = side_compositions[i]
+
 		side_names[i] = side_data.name
 	end
 
@@ -120,7 +125,9 @@ GameplayInitStepExtensions._init_extensions = function (self, world, physics_wor
 			level_seed = level_seed
 		}
 	}
+
 	Managers.state.level_props_broadphase = LevelPropsBroadphaseManager:new()
+
 	local unit_categories = {
 		"flow_spawned",
 		"level_spawned",
@@ -129,6 +136,7 @@ GameplayInitStepExtensions._init_extensions = function (self, world, physics_wor
 	local UnitTemplates = require("scripts/extension_systems/unit_templates")
 	local ExtensionSystemConfiguration = require("scripts/extension_systems/extension_system_configuration")
 	local use_time_slice = true
+
 	Managers.state.extension = ExtensionManager:new(world, physics_world, wwise_world, nav_world, has_navmesh, level_name, circumstance_name, is_server, UnitTemplates, ExtensionSystemConfiguration, system_init_data, unit_categories, network_event_delegate, fixed_time_step, game_session, soft_cap_out_of_bounds_units, use_time_slice)
 end
 

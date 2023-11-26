@@ -1,7 +1,10 @@
+﻿-- chunkname: @scripts/components/hazard_prop.lua
+
 local HazardProp = component("HazardProp")
 
 HazardProp.init = function (self, unit, is_server)
 	self._is_server = is_server
+
 	local hazard_prop_extension = ScriptUnit.fetch_component_extension(unit, "hazard_prop_system")
 
 	if hazard_prop_extension then

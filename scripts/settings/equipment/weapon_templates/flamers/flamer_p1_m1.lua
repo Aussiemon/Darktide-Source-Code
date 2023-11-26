@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/equipment/weapon_templates/flamers/flamer_p1_m1.lua
+
 local BaseTemplateSettings = require("scripts/settings/equipment/weapon_templates/base_template_settings")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
@@ -23,95 +25,95 @@ local burninating_trait_templates = WeaponTraitTemplates[template_types.burninat
 local movement_curve_modifier_trait_templates = WeaponTraitTemplates[template_types.movement_curve_modifier]
 local size_of_flame_trait_templates = WeaponTraitTemplates[template_types.size_of_flame]
 local weapon_handling_trait_templates = WeaponTraitTemplates[template_types.weapon_handling]
-local weapon_template = {
-	action_inputs = {
-		shoot_pressed = {
-			buffer_time = 0.5,
-			max_queue = 2,
-			input_sequence = {
-				{
+local weapon_template = {}
+
+weapon_template.action_inputs = {
+	shoot_pressed = {
+		buffer_time = 0.5,
+		max_queue = 2,
+		input_sequence = {
+			{
+				value = true,
+				input = "action_one_pressed"
+			}
+		}
+	},
+	brace_pressed = {
+		buffer_time = 0.1,
+		input_sequence = {
+			{
+				value = true,
+				input = "action_two_hold",
+				input_setting = {
 					value = true,
-					input = "action_one_pressed"
+					input = "action_two_pressed",
+					setting_value = true,
+					setting = "toggle_ads"
 				}
 			}
-		},
-		brace_pressed = {
-			buffer_time = 0.1,
-			input_sequence = {
-				{
+		}
+	},
+	brace_release = {
+		buffer_time = 0.1,
+		input_sequence = {
+			{
+				value = false,
+				input = "action_two_hold",
+				time_window = math.huge,
+				input_setting = {
+					setting_value = true,
+					setting = "toggle_ads",
 					value = true,
-					input = "action_two_hold",
-					input_setting = {
-						value = true,
-						input = "action_two_pressed",
-						setting_value = true,
-						setting = "toggle_ads"
-					}
-				}
-			}
-		},
-		brace_release = {
-			buffer_time = 0.1,
-			input_sequence = {
-				{
-					value = false,
-					input = "action_two_hold",
-					time_window = math.huge,
-					input_setting = {
-						setting_value = true,
-						setting = "toggle_ads",
-						value = true,
-						input = "action_two_pressed",
-						time_window = math.huge
-					}
-				}
-			}
-		},
-		shoot_braced = {
-			buffer_time = 0.25,
-			input_sequence = {
-				{
-					value = true,
-					input = "action_one_hold"
-				}
-			}
-		},
-		shoot_braced_release = {
-			buffer_time = 0.41,
-			input_sequence = {
-				{
-					value = false,
-					input = "action_one_hold",
+					input = "action_two_pressed",
 					time_window = math.huge
 				}
 			}
-		},
-		reload = {
-			buffer_time = 0,
-			clear_input_queue = true,
-			input_sequence = {
-				{
-					value = true,
-					input = "weapon_reload"
-				}
+		}
+	},
+	shoot_braced = {
+		buffer_time = 0.25,
+		input_sequence = {
+			{
+				value = true,
+				input = "action_one_hold"
 			}
-		},
-		wield = {
-			buffer_time = 0,
-			clear_input_queue = true,
-			input_sequence = {
-				{
-					inputs = wield_inputs
-				}
+		}
+	},
+	shoot_braced_release = {
+		buffer_time = 0.41,
+		input_sequence = {
+			{
+				value = false,
+				input = "action_one_hold",
+				time_window = math.huge
 			}
-		},
-		special_action = {
-			buffer_time = 0.2,
-			input_sequence = {
-				{
-					value = true,
-					input = "weapon_extra_pressed"
-				}
+		}
+	},
+	reload = {
+		buffer_time = 0,
+		clear_input_queue = true,
+		input_sequence = {
+			{
+				value = true,
+				input = "weapon_reload"
+			}
+		}
+	},
+	wield = {
+		buffer_time = 0,
+		clear_input_queue = true,
+		input_sequence = {
+			{
+				inputs = wield_inputs
+			}
+		}
+	},
+	special_action = {
+		buffer_time = 0.2,
+		input_sequence = {
+			{
+				value = true,
+				input = "weapon_extra_pressed"
 			}
 		}
 	}
@@ -671,7 +673,9 @@ weapon_template.overclocks = {
 		flamer_p1_m1_mobility_stat = -0.1
 	}
 }
+
 local WeaponBarUIDescriptionTemplates = require("scripts/settings/equipment/weapon_bar_ui_description_templates")
+
 weapon_template.base_stats = {
 	flamer_p1_m1_ammo_stat = {
 		display_name = "loc_stats_display_ammo_stat",
@@ -791,6 +795,7 @@ weapon_template.base_stats = {
 	}
 }
 weapon_template.traits = {}
+
 local bespoke_forcestaff_p1_traits = table.keys(WeaponTraitsBespokeFlamerP1)
 
 table.append(weapon_template.traits, bespoke_forcestaff_p1_traits)

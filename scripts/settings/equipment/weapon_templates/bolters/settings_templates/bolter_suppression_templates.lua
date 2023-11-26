@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/equipment/weapon_templates/bolters/settings_templates/bolter_suppression_templates.lua
+
 local suppression_templates = {}
 local overrides = {}
 

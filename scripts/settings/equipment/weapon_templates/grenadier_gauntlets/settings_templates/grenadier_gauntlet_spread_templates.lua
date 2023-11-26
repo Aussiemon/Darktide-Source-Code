@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/equipment/weapon_templates/grenadier_gauntlets/settings_templates/grenadier_gauntlet_spread_templates.lua
+
 local spread_templates = {}
 local overrides = {}
 

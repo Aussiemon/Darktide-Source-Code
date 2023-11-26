@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/equipment/weapon_templates/force_staffs/settings_templates/force_staff_spread_templates.lua
+
 local spread_templates = {}
 local overrides = {}
 

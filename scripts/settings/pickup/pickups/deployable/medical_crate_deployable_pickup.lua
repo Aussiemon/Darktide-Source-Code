@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/pickup/pickups/deployable/medical_crate_deployable_pickup.lua
+
 local pickup_data = {
 	description = "loc_pickup_deployable_medical_crate_01",
 	name = "medical_crate_deployable",

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/damage/damage_profiles/smiter_damage_profile_templates.lua
+
 local ArmorSettings = require("scripts/settings/damage/armor_settings")
 local AttackSettings = require("scripts/settings/damage/attack_settings")
 local PowerLevelSettings = require("scripts/settings/damage/power_level_settings")
@@ -15,6 +17,7 @@ table.make_unique(overrides)
 
 local single_cleave = DamageProfileSettings.single_cleave
 local medium_cleave = DamageProfileSettings.medium_cleave
+
 damage_templates.medium_smiter = {
 	ragdoll_only = true,
 	ragdoll_push_force = 350,
@@ -139,7 +142,9 @@ damage_templates.medium_smiter_pushfollow.cleave_distribution = {
 	attack = 0.1,
 	impact = 0.1
 }
+
 local medium_smiter_combat_blade = table.clone(damage_templates.medium_smiter)
+
 damage_templates.medium_smiter_combat_blade = medium_smiter_combat_blade
 damage_templates.spell_smiter = {
 	ragdoll_push_force = 350,

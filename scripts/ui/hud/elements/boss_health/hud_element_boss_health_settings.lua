@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/hud/elements/boss_health/hud_element_boss_health_settings.lua
+
 local hud_element_boss_health_settings = {
 	duration_health_ghost = 4.5,
 	alpha_fade_delay = 2.6,

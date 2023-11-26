@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/backend/matchmaker.lua
+
 local Promise = require("scripts/foundation/utilities/promise")
 local PrivilegesManager = require("scripts/managers/privileges/privileges_manager")
 local PrivilegesManagerConstants = require("scripts/managers/privileges/privileges_manager_constants")
@@ -25,7 +27,7 @@ Matchmaker._get_xbox_live_sandbox_id = function (self)
 end
 
 Matchmaker._get_common_queue_ticket_data = function (self, matchmaker_type, alias_type, dedicated_alias_parameter)
-	local platform_alias_promise = nil
+	local platform_alias_promise
 	local authenticate_method = Managers.backend:get_auth_method()
 
 	local function avoid_list_id_formatter(id)
@@ -34,6 +36,7 @@ Matchmaker._get_common_queue_ticket_data = function (self, matchmaker_type, alia
 
 	if authenticate_method == Managers.backend.AUTH_METHOD_STEAM and HAS_STEAM then
 		local beta_branch = Steam.beta_branch() or ""
+
 		platform_alias_promise = Promise.resolved(alias_type .. ":steam:" .. beta_branch)
 
 		function avoid_list_id_formatter(id)

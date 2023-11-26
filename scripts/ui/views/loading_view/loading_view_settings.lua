@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/loading_view/loading_view_settings.lua
+
 local loading_view_settings = {
 	hint_text_update_duration = 0.3,
 	entry_duration = 1,

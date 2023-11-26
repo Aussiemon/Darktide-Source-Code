@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/buff/weapon_traits_buff_templates/weapon_traits_buff_examples.lua
+
 local Ammo = require("scripts/utilities/ammo")
 local AttackSettings = require("scripts/settings/damage/attack_settings")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
@@ -51,6 +53,7 @@ local example_weapon_trait_ranged_buff_lerp = {
 	},
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
+
 		template_data.health_extension = ScriptUnit.extension(unit, "health_system")
 	end,
 	conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded,

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/networked_timer/networked_timer_system.lua
+
 require("scripts/extension_systems/networked_timer/networked_timer_extension")
 
 local NetworkedTimerSystem = class("NetworkedTimerSystem", "ExtensionSystemBase")

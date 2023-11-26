@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/character_state_machine/character_state_machine_extension.lua
+
 local CharacterStateMachine = require("scripts/extension_systems/character_state_machine/character_state_machine")
 local IntoxicatedMovement = require("scripts/extension_systems/character_state_machine/character_states/utilities/intoxicated_movement")
 local LungeTemplates = require("scripts/settings/lunge/lunge_templates")
@@ -5,13 +7,17 @@ local CharacterStateMachineExtension = class("CharacterStateMachineExtension")
 
 CharacterStateMachineExtension.init = function (self, extension_init_context, unit, extension_init_data, game_object_data_or_game_session, game_object_id)
 	local world = extension_init_context.world
+
 	self._state_class_list = extension_init_data.state_class_list
 	self._unit = unit
 	self._world = world
 	self._is_local_unit = extension_init_data.is_local_unit
+
 	local unit_data = ScriptUnit.extension(unit, "unit_data_system")
+
 	self._character_state_component = unit_data:read_component("character_state")
 	self._movement_state_component = unit_data:read_component("movement_state")
+
 	local is_server = extension_init_context.is_server
 	local ledge_finder_extension_or_nil = ScriptUnit.has_extension(unit, "ledge_finder_system")
 	local steering_component, move_state_component, ladder_character_state_component = self:_init_components(unit_data, extension_init_data)
@@ -24,6 +30,7 @@ end
 
 CharacterStateMachineExtension._init_components = function (self, unit_data, extension_init_data)
 	local steering = unit_data:write_component("locomotion_steering")
+
 	steering.velocity_wanted = Vector3.zero()
 	steering.local_move_x = 0
 	steering.local_move_y = 0
@@ -31,7 +38,9 @@ CharacterStateMachineExtension._init_components = function (self, unit_data, ext
 	steering.move_method = "script_driven"
 	steering.disable_velocity_rotation = false
 	steering.disable_minion_collision = false
+
 	local move_state = unit_data:write_component("movement_state")
+
 	move_state.is_dodging = false
 	move_state.is_effective_dodge = false
 	move_state.is_crouching = false
@@ -40,48 +49,70 @@ CharacterStateMachineExtension._init_components = function (self, unit_data, ext
 	move_state.method = "idle"
 	move_state.can_crouch = true
 	move_state.can_exit_crouch = true
+
 	local ladder_character_state_component = unit_data:write_component("ladder_character_state")
+
 	ladder_character_state_component.ladder_cooldown = 0
 	ladder_character_state_component.ladder_unit_id = NetworkConstants.invalid_level_unit_id
 	ladder_character_state_component.top_enter_leave_timer = 0
 	ladder_character_state_component.end_position = Vector3.zero()
 	ladder_character_state_component.start_position = Vector3.zero()
+
 	local stun_state_input = unit_data:write_component("stun_state_input")
+
 	stun_state_input.disorientation_type = "none"
 	stun_state_input.push_direction = Vector3.zero()
 	stun_state_input.stun_frame = 0
 	self._stun_state_input_component = stun_state_input
+
 	local catapulted_state_input = unit_data:write_component("catapulted_state_input")
+
 	catapulted_state_input.new_input = false
 	catapulted_state_input.velocity = Vector3.zero()
 	self._catapulted_state_input = catapulted_state_input
+
 	local dead_state_input = unit_data:write_component("dead_state_input")
+
 	dead_state_input.die = false
 	dead_state_input.despawn_time = 0
+
 	local knocked_down_state_input = unit_data:write_component("knocked_down_state_input")
+
 	knocked_down_state_input.knock_down = false
+
 	local hogtied_state_input = unit_data:write_component("hogtied_state_input")
+
 	hogtied_state_input.hogtie = false
+
 	local disabled_state_input = unit_data:write_component("disabled_state_input")
+
 	disabled_state_input.wants_disable = false
 	disabled_state_input.disabling_unit = nil
 	disabled_state_input.disabling_type = "none"
 	disabled_state_input.trigger_animation = "none"
 	self._disabled_state_input = disabled_state_input
+
 	local assisted_state_input = unit_data:write_component("assisted_state_input")
+
 	assisted_state_input.in_progress = false
 	assisted_state_input.success = false
 	assisted_state_input.force_assist = false
+
 	local debug_state_input = unit_data:write_component("debug_state_input")
+
 	debug_state_input.self_assist = false
 	self._lunge_character_state_component = unit_data:read_component("lunge_character_state")
+
 	local character_state_random = unit_data:write_component("character_state_random")
+
 	character_state_random.seed = extension_init_data.initial_seed
+
 	local intoxicated_movement_component = unit_data:write_component("intoxicated_movement")
 
 	IntoxicatedMovement.initialize_component(intoxicated_movement_component)
 
 	local minigame_character_state_component = unit_data:write_component("minigame_character_state")
+
 	minigame_character_state_component.interface_unit_id = NetworkConstants.invalid_level_unit_id
 
 	return steering, move_state, ladder_character_state_component
@@ -93,10 +124,12 @@ CharacterStateMachineExtension._create_state_machine = function (self, unit, is_
 
 	for name, class in pairs(state_class_list) do
 		local state_instance = class:new(state_init_context, name)
+
 		states[name] = state_instance
 	end
 
 	local state_machine = CharacterStateMachine:new(self._unit, is_server, states, start_state, dt, t)
+
 	self._state_machine = state_machine
 end
 
@@ -201,7 +234,7 @@ CharacterStateMachineExtension._clear_state_input_components = function (self, f
 	if stun_state_input.disorientation_type ~= "none" then
 		local wanted_frame = stun_state_input.stun_frame + 1
 
-		if fixed_frame >= wanted_frame then
+		if wanted_frame <= fixed_frame then
 			stun_state_input.disorientation_type = "none"
 			stun_state_input.push_direction = Vector3.zero()
 			stun_state_input.stun_frame = 0
@@ -216,6 +249,7 @@ CharacterStateMachineExtension._clear_state_input_components = function (self, f
 	end
 
 	local disabled_state_input = self._disabled_state_input
+
 	disabled_state_input.wants_disable = false
 end
 

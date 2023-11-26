@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/components/vector_field_effect.lua
+
 local VectorFieldEffect = component("VectorFieldEffect")
 
 VectorFieldEffect.init = function (self, unit)
@@ -13,7 +15,9 @@ VectorFieldEffect.init = function (self, unit)
 	self._settings = {
 		duration = self._duration
 	}
+
 	local world = Application.main_world()
+
 	self._vector_field = World.vector_field(world, "wind")
 	self._effect_path = "vector_fields/" .. self._effect
 
@@ -126,6 +130,7 @@ local effects = {
 	"push_pull",
 	"whirl"
 }
+
 VectorFieldEffect.component_data = {
 	effect = {
 		ui_type = "combo_box",

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/minion_visual_loadout/templates/renegade_captain_visual_loadout_templates.lua
+
 local templates = {
 	renegade_captain = {}
 }
@@ -135,6 +137,7 @@ local renegade_captain_default = {
 	}
 }
 local default_1 = table.clone(renegade_captain_default)
+
 templates.renegade_captain.default = {
 	default_1
 }

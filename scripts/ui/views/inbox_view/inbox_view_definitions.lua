@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/inbox_view/inbox_view_definitions.lua
+
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local InboxViewSettings = require("scripts/ui/views/inbox_view/inbox_view_settings")
@@ -386,35 +388,55 @@ local scenegraph_definition = {
 	}
 }
 local character_name_style = table.clone(UIFontSettings.header_3)
+
 character_name_style.text_horizontal_alignment = "left"
 character_name_style.text_vertical_alignment = "bottom"
+
 local character_title_style = table.clone(UIFontSettings.body_small)
+
 character_title_style.text_horizontal_alignment = "left"
 character_title_style.text_vertical_alignment = "bottom"
+
 local character_level_style = table.clone(UIFontSettings.body_small)
+
 character_level_style.text_horizontal_alignment = "right"
 character_level_style.text_vertical_alignment = "bottom"
+
 local loading_style = table.clone(UIFontSettings.header_1)
+
 loading_style.text_horizontal_alignment = "center"
 loading_style.text_vertical_alignment = "center"
+
 local reward_type_style = table.clone(UIFontSettings.body)
+
 reward_type_style.text_horizontal_alignment = "left"
 reward_type_style.text_vertical_alignment = "top"
+
 local reward_time_style = table.clone(UIFontSettings.body)
+
 reward_time_style.text_horizontal_alignment = "right"
 reward_time_style.text_vertical_alignment = "top"
+
 local item_name_style = table.clone(UIFontSettings.header_2)
+
 item_name_style.text_horizontal_alignment = "left"
 item_name_style.text_vertical_alignment = "top"
+
 local item_type_style = table.clone(UIFontSettings.body)
+
 item_type_style.text_horizontal_alignment = "left"
 item_type_style.text_vertical_alignment = "center"
+
 local reward_reason_style = table.clone(UIFontSettings.body)
+
 reward_reason_style.text_horizontal_alignment = "left"
 reward_reason_style.text_vertical_alignment = "bottom"
+
 local divider_text_style = table.clone(UIFontSettings.header_3)
+
 divider_text_style.text_horizontal_alignment = "left"
 divider_text_style.text_vertical_alignment = "top"
+
 local widget_definitions = {
 	background = UIWidget.create_definition({
 		{
@@ -758,6 +780,7 @@ local item_definitions = {
 			change_function = function (content, style, _, dt)
 				local hotspot = content.hotspot
 				local anim_progress = hotspot.anim_hover_progress
+
 				style.color[1] = anim_progress * 255
 				style.hdr = anim_progress == 1
 			end

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/mission_objective/mission_objective_ui_strings.lua
+
 local mission_objective_ui_strings = {
 	"empty_objective_string",
 	"loc_objective_debug_locate_scanner_header",

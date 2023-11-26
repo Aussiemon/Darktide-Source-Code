@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/weapon/actions/action_activate_special.lua
+
 require("scripts/extension_systems/weapon/actions/action_weapon_base")
 
 local ActionUtility = require("scripts/extension_systems/weapon/actions/utilities/action_utility")
@@ -8,9 +10,12 @@ ActionActivateSpecial.init = function (self, action_context, action_params, acti
 
 	local fx_sources = action_params.weapon.fx_sources
 	local abort_fx_source_name = action_settings.abort_fx_source_name
+
 	self._abort_fx_source_name = fx_sources[abort_fx_source_name]
+
 	local weapon_template = self._weapon_template
 	local weapon_special_tweak_data = weapon_template and weapon_template.weapon_special_tweak_data
+
 	self._weapon_special_tweak_data = weapon_special_tweak_data
 end
 
@@ -18,10 +23,12 @@ ActionActivateSpecial.start = function (self, action_settings, t, time_scale, pa
 	ActionActivateSpecial.super.start(self, action_settings, t, time_scale, params)
 
 	self._weapon_tweak_templates_component.charge_template_name = action_settings.charge_template or "none"
+
 	local particle_name = action_settings.pre_activation_vfx_name
 
 	if particle_name then
 		local node_name = action_settings.pre_activation_vfx_node
+
 		self._pre_activation_particle_id = self._fx_extension:spawn_unit_particles(particle_name, node_name, true, "stop", nil, nil, nil, false)
 	end
 end

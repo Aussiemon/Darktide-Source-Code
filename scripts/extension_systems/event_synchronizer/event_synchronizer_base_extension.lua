@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/event_synchronizer/event_synchronizer_base_extension.lua
+
 local EventSynchronizerBaseExtension = class("EventSynchronizerBaseExtension")
 
 EventSynchronizerBaseExtension.init = function (self, extension_init_context, unit, extension_init_data, ...)

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/navigation/navigation_system.lua
+
 require("scripts/extension_systems/navigation/bot_navigation_extension")
 require("scripts/extension_systems/navigation/minion_navigation_extension")
 
@@ -25,6 +27,7 @@ end
 
 NavigationSystem.set_enabled_unit = function (self, unit, enabled)
 	local extension = self._unit_to_extension_map[unit]
+
 	self._enabled_units[unit] = enabled and extension or nil
 end
 

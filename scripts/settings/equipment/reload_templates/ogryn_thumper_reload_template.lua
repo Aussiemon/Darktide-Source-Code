@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/equipment/reload_templates/ogryn_thumper_reload_template.lua
+
 local reload_template = {
 	name = "ogryn_thumper",
 	states = {

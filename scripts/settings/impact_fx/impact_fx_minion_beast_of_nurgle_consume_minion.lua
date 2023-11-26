@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/impact_fx/impact_fx_minion_beast_of_nurgle_consume_minion.lua
+
 local ArmorSettings = require("scripts/settings/damage/armor_settings")
 local NO_SURFACE_DECAL = false
 local armor_types = ArmorSettings.types
@@ -34,7 +36,7 @@ local unarmored = {
 local armored = table.clone(unarmored)
 local berserker = table.clone(unarmored)
 local disgustingly_resilient = table.clone(unarmored)
-local player = nil
+local player
 local resistant = table.clone(unarmored)
 local super_armor = table.clone(unarmored)
 

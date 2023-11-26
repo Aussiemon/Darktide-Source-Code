@@ -1,7 +1,10 @@
+﻿-- chunkname: @scripts/settings/equipment/weapon_traits/weapon_traits_bespoke_combatsword_p1.lua
+
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local templates = {}
 local stat_buffs = BuffSettings.stat_buffs
 local keywords = BuffSettings.keywords
+
 templates.weapon_trait_bespoke_combatsword_p1_chained_hits_increases_melee_cleave = {
 	weapon_trait_bespoke_combatsword_p1_chained_hits_increases_melee_cleave_parent = {
 		{

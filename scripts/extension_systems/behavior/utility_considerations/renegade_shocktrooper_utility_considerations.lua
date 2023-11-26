@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/behavior/utility_considerations/renegade_shocktrooper_utility_considerations.lua
+
 local considerations = {
 	renegade_shocktrooper_step_shoot = {
 		distance_to_target = {

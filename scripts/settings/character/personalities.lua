@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/character/personalities.lua
+
 local personalities = {
 	male_veteran_1 = {
 		description = "loc_veteran_male_a__intro_01",

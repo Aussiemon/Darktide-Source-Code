@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/horde/horde_manager.lua
+
 local HordeSettings = require("scripts/settings/horde/horde_settings")
 local HordeTemplates = require("scripts/managers/horde/horde_templates")
 local HORDE_TYPES = HordeSettings.horde_types
@@ -22,14 +24,14 @@ end
 
 HordeManager.horde = function (self, horde_type, horde_template_name, side_id, target_side_id, composition, ...)
 	local side_system = Managers.state.extension:system("side_system")
-	local side = side_system:get_side(side_id)
-	local target_side = side_system:get_side(target_side_id)
+	local side, target_side = side_system:get_side(side_id), side_system:get_side(target_side_id)
 	local horde_template = HordeTemplates[horde_template_name]
-	local physics_world = self._physics_world
-	local nav_world = self._nav_world
+	local physics_world, nav_world = self._physics_world, self._nav_world
 	local horde, horde_position, target_unit, spawned_direction = horde_template.execute(physics_world, nav_world, side, target_side, composition, ...)
 	local hordes = self._hordes
+
 	hordes[horde_type][#hordes[horde_type] + 1] = horde
+
 	local success = horde ~= nil
 	local group_id = horde and horde.group_id
 
@@ -38,11 +40,9 @@ end
 
 HordeManager.can_spawn = function (self, horde_type, horde_template_name, side_id, target_side_id, composition, ...)
 	local side_system = Managers.state.extension:system("side_system")
-	local side = side_system:get_side(side_id)
-	local target_side = side_system:get_side(target_side_id)
+	local side, target_side = side_system:get_side(side_id), side_system:get_side(target_side_id)
 	local horde_template = HordeTemplates[horde_template_name]
-	local physics_world = self._physics_world
-	local nav_world = self._nav_world
+	local physics_world, nav_world = self._physics_world, self._nav_world
 	local can_spawn = horde_template.can_spawn(physics_world, nav_world, side, target_side, composition, ...)
 
 	return can_spawn
@@ -73,6 +73,7 @@ HordeManager.horde_positions = function (self, horde_type)
 	for ii = 1, #hordes do
 		local horde = hordes[ii]
 		local position = group_system:group_position(horde.group_id)
+
 		HORDE_POSITIONS[#HORDE_POSITIONS + 1] = position
 	end
 
@@ -89,7 +90,7 @@ HordeManager.update = function (self, dt, t)
 		local num_hordes = #hordes
 		local horde_index = 1
 
-		while num_hordes >= horde_index do
+		while horde_index <= num_hordes do
 			local horde = hordes[horde_index]
 			local horde_template_name = horde.template_name
 			local horde_template = HordeTemplates[horde_template_name]
@@ -108,6 +109,7 @@ HordeManager.update = function (self, dt, t)
 			elseif group.min_members_spawned then
 				local group_members = group.members
 				local num_group_members = #group_members
+
 				total_alive_horde_minions = total_alive_horde_minions + num_group_members
 				horde_index = horde_index + 1
 			else

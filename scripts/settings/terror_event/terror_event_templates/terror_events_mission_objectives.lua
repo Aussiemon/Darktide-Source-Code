@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/terror_event/terror_event_templates/terror_events_mission_objectives.lua
+
 local template = {
 	events = {
 		kill_event_template_target = {

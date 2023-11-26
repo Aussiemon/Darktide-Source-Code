@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/terror_event/terror_trickle_templates/default_terror_trickle_templates.lua
+
 local HordeCompositions = require("scripts/managers/pacing/horde_pacing/horde_compositions")
 local MIXED_COMPOSITIONS = {
 	renegade = {

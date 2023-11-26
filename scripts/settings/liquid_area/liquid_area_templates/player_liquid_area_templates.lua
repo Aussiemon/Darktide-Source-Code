@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/liquid_area/liquid_area_templates/player_liquid_area_templates.lua
+
 local LiquidSpread = require("scripts/extension_systems/liquid_area/utilities/liquid_spread")
 local templates = {
 	fire_grenade = {

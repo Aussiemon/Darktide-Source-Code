@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/mission_objective/templates/hm_cartel_objective_template.lua
+
 local mission_objective_templates = {
 	hm_cartel = {
 		main_objective_type = "decode_objective",

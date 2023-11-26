@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/pass_templates/character_select_pass_templates.lua
+
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local ColorUtilities = require("scripts/utilities/ui/colors")
@@ -22,9 +24,10 @@ local icon_size = {
 	120,
 	120
 }
-local CharacterSelectPassTemplates = {
-	character_create_size = character_create_size
-}
+local CharacterSelectPassTemplates = {}
+
+CharacterSelectPassTemplates.character_create_size = character_create_size
+
 local list_button_hotspot_default_style = {
 	anim_select_speed = 8,
 	anim_hover_speed = 8,
@@ -58,6 +61,7 @@ local character_text_margin = {
 local text_margin = portrait_size[1] + badge_size[1] + character_info_margin[1] + character_text_margin[1]
 local text_width = character_create_size[1] - text_margin
 local character_name_style = table.clone(UIFontSettings.header_3)
+
 character_name_style.text_horizontal_alignment = "left"
 character_name_style.text_vertical_alignment = "top"
 character_name_style.horizontal_alignment = "left"
@@ -74,7 +78,9 @@ character_name_style.offset = {
 character_name_style.text_color = Color.terminal_text_header(255, true)
 character_name_style.default_color = Color.terminal_text_header(255, true)
 character_name_style.hover_color = Color.white(255, true)
+
 local character_title_style = table.clone(UIFontSettings.body_small)
+
 character_title_style.text_horizontal_alignment = "left"
 character_title_style.text_vertical_alignment = "bottom"
 character_title_style.horizontal_alignment = "left"
@@ -109,7 +115,9 @@ local function character_button_change_function(content, style)
 
 	local max_alpha = style.max_alpha or 255
 	local min_alpha = style.min_alpha or 0
+
 	color[1] = math_lerp(min_alpha, max_alpha, hover_progress) * math_max(hover_progress, select_progress)
+
 	local selected_layer = style.selected_layer
 
 	if selected_layer then
@@ -129,6 +137,7 @@ local function character_background_change_function(content, style)
 	local hover_alpha = style.hover_alpha
 	local selected_alpha = style.selected_alpha
 	local alpha = math_lerp(selected_alpha, hover_alpha, hover_progress)
+
 	color[1] = alpha * select_progress
 end
 

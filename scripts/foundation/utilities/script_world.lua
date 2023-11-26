@@ -1,31 +1,38 @@
+﻿-- chunkname: @scripts/foundation/utilities/script_world.lua
+
 local ScriptCamera = require("scripts/foundation/utilities/script_camera")
 local ScriptViewport = require("scripts/foundation/utilities/script_viewport")
-local ScriptWorld = {
-	name = function (world)
-		return World.get_data(world, "name")
-	end,
-	activate = function (world)
-		World.set_data(world, "active", true)
-	end,
-	deactivate = function (world)
-		World.set_data(world, "active", false)
-	end,
-	pause = function (world)
-		World.set_data(world, "paused", true)
-	end,
-	unpause = function (world)
-		World.set_data(world, "paused", false)
-	end,
-	bottom_viewport = function (world)
-		local render_queue = World.get_data(world, "render_queue")
+local ScriptWorld = {}
 
-		if render_queue then
-			return render_queue[1]
-		else
-			return nil
-		end
+ScriptWorld.name = function (world)
+	return World.get_data(world, "name")
+end
+
+ScriptWorld.activate = function (world)
+	World.set_data(world, "active", true)
+end
+
+ScriptWorld.deactivate = function (world)
+	World.set_data(world, "active", false)
+end
+
+ScriptWorld.pause = function (world)
+	World.set_data(world, "paused", true)
+end
+
+ScriptWorld.unpause = function (world)
+	World.set_data(world, "paused", false)
+end
+
+ScriptWorld.bottom_viewport = function (world)
+	local render_queue = World.get_data(world, "render_queue")
+
+	if render_queue then
+		return render_queue[1]
+	else
+		return nil
 	end
-}
+end
 
 ScriptWorld.create_viewport = function (world, name, template, layer, camera_unit, position, rotation, add_shadow_cull_camera, shading_environment_name, shading_callback, mood_setting, render_targets)
 	local viewports = World.get_data(world, "viewports")
@@ -84,7 +91,7 @@ ScriptWorld.has_viewport = function (world, name)
 end
 
 ScriptWorld.viewport = function (world, name, return_free_flight_viewport)
-	local viewport = nil
+	local viewport
 
 	if return_free_flight_viewport then
 		viewport = World.get_data(world, "free_flight_viewports")[name] or World.get_data(world, "viewports")[name]
@@ -98,6 +105,7 @@ end
 ScriptWorld.destroy_viewport = function (world, name, ignore_camera_destruction)
 	local viewports = World.get_data(world, "viewports")
 	local viewport = viewports[name]
+
 	viewports[name] = nil
 
 	ScriptWorld.destroy_shading_environment(world, viewport)
@@ -168,6 +176,7 @@ ScriptWorld.create_free_flight_viewport = function (world, overridden_viewport_n
 	Viewport.set_data(free_flight_viewport, "layer", Viewport.get_data(overridden_viewport, "layer"))
 
 	local free_flight_viewports = World.get_data(world, "free_flight_viewports")
+
 	free_flight_viewports[overridden_viewport_name] = free_flight_viewport
 
 	ScriptWorld.create_shading_environment(world, free_flight_viewport, shading_environment_name, shading_callback, mood_setting or "default")
@@ -197,6 +206,7 @@ end
 ScriptWorld.destroy_free_flight_viewport = function (world, name)
 	local viewports = World.get_data(world, "free_flight_viewports")
 	local viewport = viewports[name]
+
 	viewports[name] = nil
 
 	ScriptWorld.destroy_shading_environment(world, viewport)
@@ -380,10 +390,12 @@ end
 ScriptWorld.spawn_level = function (world, name, position, rotation, spawn_units, ignore_background, included_object_sets, excluded_object_sets)
 	local levels = World.get_data(world, "levels")
 	local spawned_level_count = World.get_data(world, "spawned_level_count")
+
 	position = position or Vector3.zero()
 	rotation = rotation or Quaternion.identity()
+
 	local scale = Vector3(1, 1, 1)
-	local level = nil
+	local level
 
 	if spawn_units then
 		level = World.spawn_level(world, name, position, rotation, scale, included_object_sets, excluded_object_sets)
@@ -435,6 +447,7 @@ ScriptWorld._unregister_nested_levels = function (levels, parent_level)
 
 	for i = 1, num_sub_levels do
 		local sub_level_name = Level.name(sub_levels[i])
+
 		levels[sub_level_name] = nil
 
 		Log.info("ScriptWorld", "Unregistering sub level named: %q", sub_level_name)

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/social_menu_roster_view/social_menu_roster_view_blueprints.lua
+
 local SocialConstants = require("scripts/managers/data_service/services/social/social_constants")
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templates")
@@ -27,6 +29,7 @@ local function _player_name_or_status_change_function(content, style)
 		if activity_id ~= content.activity_id then
 			if activity_id then
 				local activity_loc_string = player_info:player_activity_loc_string()
+
 				_activity_param.activity = Localize(activity_loc_string)
 				content.name_or_activity = Localize("loc_social_menu_in_activity", true, _activity_param)
 			else
@@ -56,8 +59,11 @@ end
 local function _account_name_change_function(content, style)
 	local player_info = content.player_info
 	local platform = player_info:platform()
+
 	content.account_name = player_info:user_display_name()
+
 	local no_character_name = player_info:character_name() == ""
+
 	style.font_size = no_character_name and style.font_size_large or style.font_size_default
 	style.offset[2] = no_character_name and style.vertical_offset_large or style.vertical_offset_default
 	style.default_color = no_character_name and style.default_color_large or style.default_color_default
@@ -131,6 +137,7 @@ social_roster_view_blueprints.player_plaque = {
 			change_function = function (content, style)
 				local player_info = content.player_info
 				local num_members = player_info:player_activity_id() == "mission" and player_info:num_mission_members() or player_info:num_party_members()
+
 				content.party_membership = string.format(_in_other_party_format, num_members)
 
 				_listbutton_label_change_function(content, style)
@@ -150,11 +157,13 @@ social_roster_view_blueprints.player_plaque = {
 	style = blueprint_styles.player_plaque,
 	init = function (parent, widget, player_info, callback_name, secondary_callback_name, ui_renderer)
 		local widget_content = widget.content
+
 		widget_content.player_info = player_info
 		widget_content.online_status = player_info:online_status()
 		widget_content.party_status = player_info:party_status()
 		widget_content.is_blocked = false
 		widget_content.parent = parent
+
 		local character_name = parent:formatted_character_name(player_info)
 
 		if character_name ~= "" then
@@ -164,18 +173,23 @@ social_roster_view_blueprints.player_plaque = {
 
 		if player_info:is_own_player() then
 			widget_content.is_own_player = true
+
 			local name_or_activity_style = widget.style.name_or_activity
+
 			name_or_activity_style.default_color = name_or_activity_style.own_player_color
 			name_or_activity_style.material = name_or_activity_style.own_player_material
 		end
 
 		local hotspot = widget_content.hotspot
+
 		hotspot.use_is_focused = true
 		hotspot.pressed_callback = callback(parent, "cb_show_popup_menu_for_player", player_info)
 	end,
 	get_name_suffix = _player_widget_name_function
 }
+
 local _online_status_text_params = {}
+
 social_roster_view_blueprints.player_plaque_platform_online = {
 	size = blueprint_styles.player_plaque.size,
 	pass_template = {
@@ -237,13 +251,16 @@ social_roster_view_blueprints.player_plaque_platform_online = {
 		end
 
 		local widget_content = widget.content
+
 		widget_content.player_info = player_info
 		widget_content.account_name = player_info:user_display_name()
 		widget_content.online_status = player_info:online_status()
 		widget_content.status = Localize("loc_social_menu_player_online_status_platform_online", false, text_params)
 		widget_content.is_blocked = false
 		widget_content.parent = parent
+
 		local hotspot = widget_content.hotspot
+
 		hotspot.use_is_focused = true
 		hotspot.pressed_callback = callback(parent, "cb_show_popup_menu_for_player", player_info)
 	end,
@@ -298,12 +315,15 @@ social_roster_view_blueprints.player_plaque_blocked = {
 	style = blueprint_styles.player_plaque_blocked,
 	init = function (parent, widget, player_info, callback_name, secondary_callback_name, ui_renderer)
 		local widget_content = widget.content
+
 		widget_content.player_info = player_info
 		widget_content.account_name = player_info:user_display_name()
 		widget_content.online_status = player_info:online_status()
 		widget_content.is_blocked = true
 		widget_content.parent = parent
+
 		local hotspot = widget_content.hotspot
+
 		hotspot.use_is_focused = true
 		hotspot.pressed_callback = callback(parent, "cb_show_popup_menu_for_player", player_info)
 	end,
@@ -353,18 +373,23 @@ social_roster_view_blueprints.player_plaque_offline = {
 	style = blueprint_styles.player_plaque_offline,
 	init = function (parent, widget, player_info, callback_name, secondary_callback_name, ui_renderer)
 		local widget_content = widget.content
+
 		widget_content.player_info = player_info
 		widget_content.account_name = player_info:user_display_name()
 		widget_content.online_status = player_info:online_status()
 		widget_content.is_blocked = false
 		widget_content.parent = parent
+
 		local hotspot = widget_content.hotspot
+
 		hotspot.use_is_focused = true
 		hotspot.pressed_callback = callback(parent, "cb_show_popup_menu_for_player", player_info)
 	end,
 	get_name_suffix = _player_widget_name_function
 }
+
 local _header_params = {}
+
 social_roster_view_blueprints.group_header = {
 	size = blueprint_styles.group_header.size,
 	pass_template = {
@@ -380,6 +405,7 @@ social_roster_view_blueprints.group_header = {
 		local header = context.header
 		local num_members = context.num_members
 		local header_params = _header_params
+
 		header_params.platform = social_service:platform_display_name()
 		header_params.num_in_group = num_members
 		widget_content.text = Localize(header, true, _header_params)

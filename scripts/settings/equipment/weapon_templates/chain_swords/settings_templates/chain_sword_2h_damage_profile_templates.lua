@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/equipment/weapon_templates/chain_swords/settings_templates/chain_sword_2h_damage_profile_templates.lua
+
 local ArmorSettings = require("scripts/settings/damage/armor_settings")
 local PowerLevelSettings = require("scripts/settings/damage/power_level_settings")
 local DamageProfileSettings = require("scripts/settings/damage/damage_profile_settings")
@@ -136,6 +138,7 @@ local chain_sword_heavy_mod = {
 		[armor_types.void_shield] = damage_lerp_values.lerp_1
 	}
 }
+
 damage_templates.default_light_chainsword_2h = {
 	sticky_attack = false,
 	finesse_ability_damage_multiplier = 1.5,

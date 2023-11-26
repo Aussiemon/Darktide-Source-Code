@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/account_profile_overview_view/account_profile_overview_view_definitions.lua
+
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local UIWorkspaceSettings = require("scripts/settings/ui/ui_workspace_settings")
@@ -32,135 +34,136 @@ local scrollbar_offset = {
 }
 local visible_area_width = screen_size[1]
 local visible_area_height = screen_size[2] - (top_panel_size[2] + bottom_panel_size[2])
-local scenegraph = {
-	screen = UIWorkspaceSettings.screen,
-	visible_area = {
-		vertical_alignment = "top",
-		parent = "screen",
-		horizontal_alignment = "center",
-		size = {
-			visible_area_width,
-			visible_area_height
-		},
-		position = {
-			0,
-			top_panel_size[2],
-			1
-		}
+local scenegraph = {}
+
+scenegraph.screen = UIWorkspaceSettings.screen
+scenegraph.visible_area = {
+	vertical_alignment = "top",
+	parent = "screen",
+	horizontal_alignment = "center",
+	size = {
+		visible_area_width,
+		visible_area_height
 	},
-	header = {
-		vertical_alignment = "top",
-		parent = "visible_area",
-		horizontal_alignment = "left",
-		size = {
-			visible_area_width,
-			250
-		},
-		position = {
-			0,
-			0,
-			1
-		}
-	},
-	header_inner = {
-		vertical_alignment = "top",
-		parent = "header",
-		horizontal_alignment = "center",
-		size = {
-			1577,
-			176
-		},
-		position = {
-			8,
-			54,
-			1
-		}
-	},
-	player_name = {
-		vertical_alignment = "top",
-		parent = "header_inner",
-		horizontal_alignment = "left",
-		size = {
-			progress_bar_width,
-			70
-		},
-		position = {
-			0,
-			12,
-			1
-		}
-	},
-	account_rank = {
-		vertical_alignment = "top",
-		parent = "header_inner",
-		horizontal_alignment = "left",
-		size = {
-			270,
-			23
-		},
-		position = {
-			84,
-			85,
-			1
-		}
-	},
-	progress_bar = {
-		vertical_alignment = "bottom",
-		parent = "header_inner",
-		horizontal_alignment = "left",
-		size = {
-			progress_bar_width,
-			progress_bar_height
-		},
-		position = {
-			0,
-			0,
-			1
-		}
-	},
-	progression_reward_icon = {
-		vertical_alignment = "bottom",
-		parent = "header_inner",
-		horizontal_alignment = "right",
-		size = {
-			reward_icon_size,
-			reward_icon_size
-		},
-		position = {
-			0,
-			-6,
-			1
-		}
-	},
-	progression_reward_label = {
-		vertical_alignment = "top",
-		parent = "header_inner",
-		horizontal_alignment = "right",
-		size = {
-			reward_icon_size + 30,
-			23
-		},
-		position = {
-			15,
-			2,
-			1
-		}
-	},
-	show_all_commendations_button = {
-		vertical_alignment = "bottom",
-		horizontal_alignment = "left",
-		parent = COMMENDATIONS_COLUMN,
-		size = {
-			column_width,
-			64
-		},
-		position = {
-			0,
-			20,
-			5
-		}
+	position = {
+		0,
+		top_panel_size[2],
+		1
 	}
 }
+scenegraph.header = {
+	vertical_alignment = "top",
+	parent = "visible_area",
+	horizontal_alignment = "left",
+	size = {
+		visible_area_width,
+		250
+	},
+	position = {
+		0,
+		0,
+		1
+	}
+}
+scenegraph.header_inner = {
+	vertical_alignment = "top",
+	parent = "header",
+	horizontal_alignment = "center",
+	size = {
+		1577,
+		176
+	},
+	position = {
+		8,
+		54,
+		1
+	}
+}
+scenegraph.player_name = {
+	vertical_alignment = "top",
+	parent = "header_inner",
+	horizontal_alignment = "left",
+	size = {
+		progress_bar_width,
+		70
+	},
+	position = {
+		0,
+		12,
+		1
+	}
+}
+scenegraph.account_rank = {
+	vertical_alignment = "top",
+	parent = "header_inner",
+	horizontal_alignment = "left",
+	size = {
+		270,
+		23
+	},
+	position = {
+		84,
+		85,
+		1
+	}
+}
+scenegraph.progress_bar = {
+	vertical_alignment = "bottom",
+	parent = "header_inner",
+	horizontal_alignment = "left",
+	size = {
+		progress_bar_width,
+		progress_bar_height
+	},
+	position = {
+		0,
+		0,
+		1
+	}
+}
+scenegraph.progression_reward_icon = {
+	vertical_alignment = "bottom",
+	parent = "header_inner",
+	horizontal_alignment = "right",
+	size = {
+		reward_icon_size,
+		reward_icon_size
+	},
+	position = {
+		0,
+		-6,
+		1
+	}
+}
+scenegraph.progression_reward_label = {
+	vertical_alignment = "top",
+	parent = "header_inner",
+	horizontal_alignment = "right",
+	size = {
+		reward_icon_size + 30,
+		23
+	},
+	position = {
+		15,
+		2,
+		1
+	}
+}
+scenegraph.show_all_commendations_button = {
+	vertical_alignment = "bottom",
+	horizontal_alignment = "left",
+	parent = COMMENDATIONS_COLUMN,
+	size = {
+		column_width,
+		64
+	},
+	position = {
+		0,
+		20,
+		5
+	}
+}
+
 local columns = {
 	BOONS_COLUMN,
 	COMMENDATIONS_COLUMN,
@@ -175,6 +178,7 @@ local horizontal_alignments = {
 for i, column in ipairs(columns) do
 	local column_position = -((i - 2) * 175)
 	local list_name = column .. "_list"
+
 	scenegraph[column] = {
 		vertical_alignment = "top",
 		parent = "visible_area",

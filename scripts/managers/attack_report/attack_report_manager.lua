@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/attack_report/attack_report_manager.lua
+
 local AttackSettings = require("scripts/settings/damage/attack_settings")
 local Breed = require("scripts/utilities/breed")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
@@ -7,7 +9,7 @@ local attack_types = AttackSettings.attack_types
 local damage_efficiencies = AttackSettings.damage_efficiencies
 local mood_types = MoodSettings.mood_types
 local AttackReportManager = class("AttackReportManager")
-local _trigger_hit_report, _trigger_damage_indicator, _play_camera_effect_shake_event = nil
+local _trigger_hit_report, _trigger_damage_indicator, _play_camera_effect_shake_event
 local PI = math.pi
 local DAMAGE_INDICATOR_ATTACK_RESULTS = {
 	[attack_results.damaged] = true,
@@ -99,7 +101,7 @@ AttackReportManager.add_attack_result = function (self, damage_profile, attacked
 
 	Log.debug("AttackReportManager", "Added attack result damage_profile: %q attacked_unit: %q attacking_unit: %q attack_direction: %q hit_weakspot: %q damage: %q attack_result: %q attack_type: %q damage_efficiency: %q", damage_profile.name, attacked_unit, attacking_unit, attack_direction, hit_weakspot, damage, attack_result, attack_type, damage_efficiency)
 
-	if RING_BUFFER_SIZE < size + 1 then
+	if size + 1 > RING_BUFFER_SIZE then
 		local buffer_data = ring_buffer[read_index]
 
 		self:_process_attack_result(buffer_data)
@@ -111,6 +113,7 @@ AttackReportManager.add_attack_result = function (self, damage_profile, attacked
 	end
 
 	local buffer_data = ring_buffer[write_index]
+
 	buffer_data.damage_profile = damage_profile
 	buffer_data.attacked_unit = attacked_unit
 	buffer_data.attacking_unit = attacking_unit
@@ -218,7 +221,7 @@ AttackReportManager._process_attack_result = function (self, buffer_data)
 
 		local unit_spawner_manager = Managers.state.unit_spawner
 		local attacking_unit_id = attacking_unit and unit_spawner_manager:game_object_id(attacking_unit)
-		local attacked_unit_is_level_unit, attacked_unit_id = nil
+		local attacked_unit_is_level_unit, attacked_unit_id
 
 		if attacked_unit then
 			attacked_unit_is_level_unit, attacked_unit_id = unit_spawner_manager:game_object_id_or_level_index(attacked_unit)
@@ -262,10 +265,13 @@ function _trigger_damage_indicator(attacked_unit, attacking_unit, attack_directi
 	local first_person_component = unit_data_extension:read_component("first_person")
 	local rotation = first_person_component.rotation
 	local forward = Quaternion.forward(rotation)
+
 	forward.z = 0
+
 	local forward_dot_dir = Vector3.dot(forward, attack_direction)
 	local right_dot_dir = Vector3.dot(Quaternion.right(rotation), attack_direction)
 	local angle = math.atan2(right_dot_dir, forward_dot_dir)
+
 	angle = angle + PI
 
 	if attacking_unit and attacked_unit ~= attacking_unit then

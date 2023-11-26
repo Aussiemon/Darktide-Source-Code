@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/first_run_settings_view/first_run_settings_view.lua
+
 local Definitions = require("scripts/ui/views/first_run_settings_view/first_run_settings_view_definitions")
 local ContentBlueprints = require("scripts/ui/views/first_run_settings_view/first_run_settings_view_blueprints")
 local UIWidget = require("scripts/managers/ui/ui_widget")
@@ -168,6 +170,10 @@ local screen_3 = {
 				Wwise.set_panning_rule(PANNING_RULE_SPEAKERS)
 				Wwise.set_bus_config(mastering_bus_name, Wwise.AK_SPEAKER_SETUP_MONO)
 			end
+
+			if false then
+				-- Nothing
+			end
 		end
 	}
 }
@@ -268,6 +274,7 @@ FirstRunSettingsView._change_settings_page = function (self, next_index)
 		end
 
 		local widget, alignment = self:_create_setting_widget(widget_options, i)
+
 		settings[#settings + 1] = widget
 		settings_alignment[#settings_alignment + 1] = alignment
 	end
@@ -284,7 +291,7 @@ FirstRunSettingsView._create_setting_widget = function (self, widget_options, su
 	local callback_name = "cb_on_settings_pressed"
 	local scenegraph_id = "grid_content_pivot"
 	local widget_type = widget_options.widget_type
-	local widget = nil
+	local widget
 	local template = ContentBlueprints[widget_type]
 	local size = template.size_function and template.size_function(self, widget_options) or template.size
 	local pass_template_function = template.pass_template_function
@@ -293,8 +300,10 @@ FirstRunSettingsView._create_setting_widget = function (self, widget_options, su
 
 	if widget_definition then
 		local name = "widget_" .. suffix
+
 		widget = self:_create_widget(name, widget_definition)
 		widget.type = widget_type
+
 		local init = template.init
 
 		if init then
@@ -362,10 +371,13 @@ FirstRunSettingsView._setup_offscreen_gui = function (self)
 	local world_layer = 10
 	local world_name = class_name .. "_ui_offscreen_world"
 	local view_name = self.view_name
+
 	self._offscreen_world = ui_manager:create_world(world_name, world_layer, timer_name, view_name)
+
 	local viewport_name = class_name .. "_ui_offscreen_world_viewport"
 	local viewport_type = "overlay_offscreen"
 	local viewport_layer = 1
+
 	self._offscreen_viewport = ui_manager:create_viewport(self._offscreen_world, viewport_name, viewport_type, viewport_layer)
 	self._offscreen_viewport_name = viewport_name
 	self._ui_offscreen_renderer = ui_manager:create_renderer(class_name .. "_ui_offscreen_renderer", self._offscreen_world)

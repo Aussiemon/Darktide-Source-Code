@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/multiplayer/approve_channel_delegate.lua
+
 local ApproveChannelDelegate = class("ApproveChannelDelegate")
 
 local function _warning(...)
@@ -26,11 +28,13 @@ end
 ApproveChannelDelegate.register = function (self, lobby_id, message, object)
 	local key = self.make_key(lobby_id, message)
 	local registered_object = self._registered_lobbies[key]
+
 	self._registered_lobbies[key] = object
 end
 
 ApproveChannelDelegate.unregister = function (self, lobby_id, message)
 	local key = self.make_key(lobby_id, message)
+
 	self._registered_lobbies[key] = nil
 end
 

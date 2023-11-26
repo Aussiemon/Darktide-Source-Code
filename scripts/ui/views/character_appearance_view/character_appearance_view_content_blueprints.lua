@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/character_appearance_view/character_appearance_view_content_blueprints.lua
+
 local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templates")
 local CharacterAppearanceViewFontStyle = require("scripts/ui/views/character_appearance_view/character_appearance_view_font_style")
 local CharacterAppearanceViewSettings = require("scripts/ui/views/character_appearance_view/character_appearance_view_settings")
@@ -14,6 +16,7 @@ local function terminal_button_change_function(content, style)
 	local color = style.color
 	local default_color = style.default_color
 	local selected_color = style.selected_color
+
 	style.color[1] = is_selected and selected_color[1] or default_color[1]
 	style.color[2] = is_selected and selected_color[2] or default_color[2]
 	style.color[3] = is_selected and selected_color[3] or default_color[3]
@@ -27,7 +30,7 @@ local function item_change_function(content, style)
 	local default_color = style.default_color
 	local selected_color = style.selected_color
 	local hover_color = style.hover_color
-	local color = nil
+	local color
 
 	if is_selected then
 		color = selected_color
@@ -67,10 +70,13 @@ local blueprints = {
 		pass_template = TextInputPassTemplates.terminal_input_field,
 		init = function (parent, widget, initial_name)
 			local content = widget.content
+
 			content.input_text = initial_name
 			content.max_length = 18
 			content.virtual_keyboard_title = Localize("loc_character_create_set_name_virtual_keyboard_title")
+
 			local hotspot = content.hotspot
+
 			hotspot.use_is_focused = true
 		end,
 		update = function (parent, widget)
@@ -96,11 +102,13 @@ local blueprints = {
 		pass_template = ButtonPassTemplates.terminal_list_button,
 		init = function (parent, widget, element, option, grid_index, callback_name)
 			local content = widget.content
+
 			content.hotspot.use_is_focused = true
 			content.hotspot.pressed_callback = callback(parent, callback_name, widget, option, grid_index)
 			content.text = option.text
 			content.value_text = Managers.localization:localize("loc_character_create_value_selected")
 			content.draw_arrow = element.entries ~= nil
+
 			local active_page_number = parent._active_page_number
 			local active_page = parent._pages[active_page_number]
 
@@ -315,6 +323,7 @@ local blueprints = {
 		init = function (parent, widget, element, option, grid_index, callback_name)
 			local content = widget.content
 			local style = widget.style
+
 			content.hotspot.use_is_focused = true
 			content.hotspot.pressed_callback = callback(parent, callback_name, widget, option, grid_index)
 			content.text = option.text
@@ -363,12 +372,17 @@ local blueprints = {
 				change_function = function (content, style, _, dt)
 					local hotspot = content.hotspot
 					local progress = math.max(hotspot.anim_focus_progress, hotspot.anim_hover_progress)
+
 					style.color[1] = 255 * math.easeOutCubic(progress)
+
 					local size_addition = 10 * math.easeInCubic(1 - progress)
 					local style_size_additon = style.size_addition
+
 					style_size_additon[1] = size_addition * 2
 					style.size_addition[2] = size_addition * 2
+
 					local offset = style.offset
+
 					offset[1] = -size_addition
 					offset[2] = -size_addition
 					style.hdr = progress == 1
@@ -451,6 +465,7 @@ local blueprints = {
 		},
 		init = function (parent, widget, element, option, grid_index, callback_name)
 			local content = widget.content
+
 			content.hotspot.use_is_focused = true
 			content.hotspot.pressed_callback = callback(parent, callback_name, widget, option, grid_index)
 			content.text = option.value.display_name and option.value.display_name
@@ -616,6 +631,7 @@ local blueprints = {
 		},
 		init = function (parent, widget, element, option, grid_index, callback_name)
 			local content = widget.content
+
 			content.hotspot.use_is_focused = true
 			content.hotspot.pressed_callback = callback(parent, callback_name, widget, option, grid_index)
 		end
@@ -821,6 +837,7 @@ local blueprints = {
 		init = function (parent, widget, element, option, grid_index, callback_name)
 			local content = widget.content
 			local style = widget.style
+
 			content.hotspot.use_is_focused = true
 			style.icon.material_values = {
 				texture_map = content.icon_texture
@@ -977,6 +994,7 @@ local blueprints = {
 		init = function (parent, widget, element, option, grid_index, callback_name)
 			local content = widget.content
 			local style = widget.style
+
 			content.hotspot.use_is_focused = true
 			content.hotspot.pressed_callback = callback(parent, callback_name, widget, option, grid_index)
 			content.texture = element.texture
@@ -1136,6 +1154,7 @@ local blueprints = {
 		init = function (parent, widget, element, option, grid_index, callback_name)
 			local content = widget.content
 			local style = widget.style
+
 			content.hotspot.use_is_focused = true
 			content.hotspot.pressed_callback = callback(parent, callback_name, widget, option, grid_index)
 			content.texture = element.texture
@@ -1279,7 +1298,9 @@ local blueprints = {
 				change_function = function (content, style)
 					local position_diff = 150
 					local value = content.slider_value
+
 					style.offset[2] = value * 300 - position_diff
+
 					local default_color = style.default_color
 					local hover_color = style.hover_color
 					local color = style.color
@@ -1313,6 +1334,7 @@ local blueprints = {
 					local value = content.slider_value
 					local hotspot = content.hotspot
 					local progress = math.max(hotspot.anim_focus_progress, hotspot.anim_hover_progress)
+
 					style.offset[2] = value * 300 - position_diff
 					style.hdr = progress == 1
 				end
@@ -1339,11 +1361,16 @@ local blueprints = {
 					local position_diff = 150
 					local value = content.slider_value
 					local hotspot = content.hotspot
+
 					style.offset[2] = value * 300 - position_diff
+
 					local progress = math.max(hotspot.anim_focus_progress, hotspot.anim_hover_progress)
+
 					style.color[1] = 255 * math.easeOutCubic(progress)
+
 					local new_size = math.lerp(78, 58, math.easeInCubic(progress))
 					local size = style.size
+
 					size[1] = new_size
 					size[2] = new_size
 				end
@@ -1389,12 +1416,14 @@ local blueprints = {
 					else
 						local cursor = IS_XBS and base_cursor or UIResolution.inverse_scale_vector(base_cursor, renderer.inverse_scale)
 						local input_coordinate = cursor[2] - (position[2] + 60)
+
 						input_coordinate = math.clamp(input_coordinate, 0, 300)
 						slider_value = input_coordinate / 300
 					end
 
 					if slider_value ~= content.slider_value then
 						content.slider_value = slider_value
+
 						local inverted_value = 1 - slider_value
 
 						content.entry.on_value_updated(inverted_value)
@@ -1404,11 +1433,14 @@ local blueprints = {
 		},
 		init = function (parent, widget, element, option, grid_index, callback_name)
 			local content = widget.content
+
 			content.hotspot.use_is_focused = true
+
 			local height_range = parent._character_create:get_height_values_range()
 			local min_height = height_range.min
 			local max_height = height_range.max
 			local value = parent._character_create:height()
+
 			content.slider_value = 1 - math.ilerp(min_height, max_height, value)
 			content.hotspot.pressed_callback = callback(parent, callback_name, widget, option, grid_index)
 		end,
@@ -1418,6 +1450,7 @@ local blueprints = {
 			local min_height = height_range.min
 			local max_height = height_range.max
 			local value = parent._character_create:height()
+
 			content.slider_value = 1 - math.ilerp(min_height, max_height, value)
 		end
 	},
@@ -1934,6 +1967,7 @@ local blueprints = {
 		},
 		init = function (parent, widget, element, option, grid_index, callback_name)
 			local content = widget.content
+
 			content.hotspot.use_is_focused = true
 			content.hotspot.pressed_callback = callback(parent, callback_name, widget, option, grid_index)
 			content.voice_hotspot.pressed_callback = callback(option, "on_voice_pressed_function", widget)
@@ -2077,6 +2111,7 @@ local pulse_animations = {
 	init = function (widget)
 		for i = 1, 6 do
 			local pass = widget.style["pulse_" .. i]
+
 			pass.min_value = math.random(5, 15)
 			pass.max_value = math.random(20, 50)
 			pass.speed = math.random(5, 20)
@@ -2092,6 +2127,7 @@ local pulse_animations = {
 			local speed = pass.speed
 			local wave_value = math.sin(progress * speed)
 			local current_value = min + wave_value * wave_value * (max - min)
+
 			pass.size[2] = current_value
 		end
 

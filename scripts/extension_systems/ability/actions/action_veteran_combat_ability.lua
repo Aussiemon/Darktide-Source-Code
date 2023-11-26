@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/ability/actions/action_veteran_combat_ability.lua
+
 require("scripts/extension_systems/ability/actions/action_stance_change")
 
 local Action = require("scripts/utilities/weapon/action")
@@ -22,6 +24,7 @@ ActionVeteranCombatAbility.init = function (self, action_context, action_params,
 	ActionVeteranCombatAbility.super.init(self, action_context, action_params, action_settings)
 
 	local unit_data_extension = action_context.unit_data_extension
+
 	self._weapon_action_component = unit_data_extension:read_component("weapon_action")
 	self._inventory_slot_secondary_component = unit_data_extension:write_component("slot_secondary")
 	self._inventory_component = unit_data_extension:read_component("inventory")
@@ -33,7 +36,7 @@ end
 ActionVeteranCombatAbility.start = function (self, action_settings, t, time_scale, action_start_params)
 	ActionVeteranCombatAbility.super.start(self, action_settings, t, time_scale, action_start_params)
 
-	local stop_current_action = nil
+	local stop_current_action
 	local vo_tags = action_settings.vo_tags
 	local player_unit = self._player_unit
 	local inventory_component = self._inventory_component
@@ -138,17 +141,14 @@ ActionVeteranCombatAbility.start = function (self, action_settings, t, time_scal
 		self._combat_ability_component.active = true
 	end
 
-	local anim, anim_3p = nil
+	local anim, anim_3p
 
 	if stagger_nearby_enemies then
-		anim_3p = "ability_shout"
-		anim = "ability_shout"
+		anim, anim_3p = "ability_shout", "ability_shout"
 	elseif enter_stealth then
-		anim_3p = nil
-		anim = "ability_cloak"
+		anim, anim_3p = "ability_cloak"
 	else
-		anim_3p = nil
-		anim = "reload_end"
+		anim, anim_3p = "reload_end"
 	end
 
 	if anim or anim_3p then
@@ -181,6 +181,7 @@ ActionVeteranCombatAbility.finish = function (self, reason, data, t, time_in_act
 
 	if self._weapon_actions_blocked then
 		self._weapon_actions_blocked = nil
+
 		local weapon_extension = ScriptUnit.extension(self._player_unit, "weapon_system")
 
 		weapon_extension:unblock_actions("weapon_action")

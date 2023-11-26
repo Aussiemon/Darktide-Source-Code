@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/coherency/husk_coherency_extension.lua
+
 local FixedFrame = require("scripts/utilities/fixed_frame")
 local HuskCoherencyExtension = class("HuskCoherencyExtension")
 local EMPTY_TABLE = {}

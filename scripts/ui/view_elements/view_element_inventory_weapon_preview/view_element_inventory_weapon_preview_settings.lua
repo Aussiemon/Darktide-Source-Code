@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/view_elements/view_element_inventory_weapon_preview/view_element_inventory_weapon_preview_settings.lua
+
 local view_element_inventory_weapon_preview_settings = {
 	weapon_spawn_depth = 1.2,
 	shading_environment = "content/shading_environments/ui/ui_item_preview",

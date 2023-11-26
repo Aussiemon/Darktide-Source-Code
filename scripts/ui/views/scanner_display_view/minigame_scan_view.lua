@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/scanner_display_view/minigame_scan_view.lua
+
 local ScannerDisplayViewScanSettings = require("scripts/ui/views/scanner_display_view/scanner_display_view_scan_settings")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local Scanning = require("scripts/utilities/scanning")
@@ -23,12 +25,16 @@ MinigameScanView.init = function (self, context)
 	self:_create_segment_widgets()
 
 	self._wwise_world = context.wwise_world
+
 	local owner_unit = context.device_owner_unit
 	local player_visual_loadout_extension = ScriptUnit.extension(owner_unit, "visual_loadout_system")
 	local fx_sources = player_visual_loadout_extension:source_fx_for_slot(SLOT_NAME)
+
 	self._player_fx_extension = ScriptUnit.extension(owner_unit, "fx_system")
 	self._fx_source_name = fx_sources[FX_SOURCE_NAME]
+
 	local unit_data_extension = ScriptUnit.extension(context.device_owner_unit, "unit_data_system")
+
 	self._scanning_component = unit_data_extension:read_component("scanning")
 	self._weapon_action_component = unit_data_extension:read_component("weapon_action")
 	self._first_person_component = unit_data_extension:read_component("first_person")
@@ -65,12 +71,10 @@ local function _calculate_aupex_scanner_hud_view_values(scanning_compomnent, wea
 
 		return is_active, progress and progress >= 1, progress, 1
 	elseif action_settings and action_settings.kind == "scan" then
-		local total_score, angle_score, distance_score = nil
+		local total_score, angle_score, distance_score
 
 		if is_active and line_of_sight then
-			distance_score = 1
-			angle_score = 1
-			total_score = 1
+			total_score, angle_score, distance_score = 1, 1, 1
 		elseif scan_settings and scannable_unit then
 			total_score, angle_score, distance_score = Scanning.calculate_score(scannable_unit, first_person_component, scan_settings)
 		end
@@ -87,23 +91,28 @@ local ON_SPOT_THRESHOLD = 1
 MinigameScanView.update = function (self, dt, t, widgets_by_name)
 	local latest_fixed_t = FixedFrame.get_latest_fixed_time()
 	local is_active, blinking, progress, color_lerp = _calculate_aupex_scanner_hud_view_values(self._scanning_component, self._weapon_action_component, self._first_person_component, latest_fixed_t)
+
 	self._is_scaning = is_active
+
 	local target = is_active and progress or 0
 	local current = self._scanning_intensity
 	local to_target = target - current
 	local direction = math.sign(to_target)
 	local distance = math.abs(to_target)
-	local is_target_on_spot = ON_SPOT_THRESHOLD <= target
+	local is_target_on_spot = target >= ON_SPOT_THRESHOLD
 	local max_speed = MAX_SPEED * (is_target_on_spot and 2 or 1)
 	local move = math.clamp(max_speed * direction * dt, -distance, distance)
+
 	self._color_lerp = color_lerp or 0
 	self._scanning_intensity = math.clamp01(current + move)
 	self._blinking = blinking
 	self._blink_time = self._blink_time + dt
+
 	local WWISE_PARAMETER_NAME_BEEP_VOLUME = "scanner_beep_volume"
 	local sfx_source = self._player_fx_extension:sound_source(self._fx_source_name)
 	local current_beep = WwiseWorld.get_source_parameter(self._wwise_world, WWISE_PARAMETER_NAME_BEEP_VOLUME, sfx_source)
 	local current_beep_normalized = 1 - math.clamp01(current_beep / -48)
+
 	self._intense_blink_alpha = current_beep_normalized > 0.7 and 1 or 0
 end
 
@@ -153,6 +162,7 @@ MinigameScanView._draw_segments = function (self, ui_renderer)
 	for i = 1, max_segments do
 		local segment_widget = segments[i]
 		local segement_color = segment_widget.style.segment.color
+
 		segement_color[2] = r
 		segement_color[3] = g
 		segement_color[4] = b
@@ -212,6 +222,7 @@ MinigameScanView._create_wallet_widgets = function (self, material_name, widget_
 				}
 			}, scenegraph_id, nil, widget_size)
 			local widget = UIWidget.init(widget_name, widget_definition)
+
 			widgets[#widgets + 1] = widget
 		end
 	end
@@ -256,6 +267,7 @@ MinigameScanView._create_segment_widgets = function (self)
 			}
 		}, scenegraph_id, nil, widget_size)
 		local widget = UIWidget.init(widget_name, widget_definition)
+
 		segments[#segments + 1] = widget
 		angle = angle - angle_step
 	end

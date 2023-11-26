@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/behavior/nodes/actions/bt_aggroed_patrol_action.lua
+
 require("scripts/extension_systems/behavior/nodes/bt_node")
 
 local Animation = require("scripts/utilities/animation")
@@ -28,19 +30,31 @@ local DEFAULT_ROTATION_SPEED = 3.5
 
 BtAggroedPatrolAction.enter = function (self, unit, breed, blackboard, scratchpad, action_data, t)
 	local animation_extension = ScriptUnit.extension(unit, "animation_system")
+
 	scratchpad.animation_extension = animation_extension
+
 	local behavior_component = Blackboard.write_component(blackboard, "behavior")
+
 	scratchpad.behavior_component = behavior_component
+
 	local navigation_extension = ScriptUnit.extension(unit, "navigation_system")
+
 	scratchpad.navigation_extension = navigation_extension
+
 	local nav_world = navigation_extension:nav_world()
+
 	scratchpad.nav_world = nav_world
+
 	local traverse_logic = navigation_extension:traverse_logic()
+
 	scratchpad.traverse_logic = traverse_logic
 	scratchpad.perception_component = Blackboard.write_component(blackboard, "perception")
 	scratchpad.perception_extension = ScriptUnit.extension(unit, "perception_system")
+
 	local aim_component = Blackboard.write_component(blackboard, "aim")
+
 	scratchpad.aim_component = aim_component
+
 	local walk_speed = breed.walk_speed
 
 	navigation_extension:set_enabled(true, walk_speed)
@@ -50,9 +64,12 @@ BtAggroedPatrolAction.enter = function (self, unit, breed, blackboard, scratchpa
 	end
 
 	local patrol_component = Blackboard.write_component(blackboard, "patrol")
+
 	scratchpad.patrol_component = patrol_component
+
 	local patrol_index = patrol_component.patrol_index
 	local is_patrol_leader = patrol_index == 1
+
 	scratchpad.is_patrol_leader = is_patrol_leader
 
 	if is_patrol_leader then
@@ -65,10 +82,14 @@ BtAggroedPatrolAction.enter = function (self, unit, breed, blackboard, scratchpa
 
 		local group_extension = ScriptUnit.extension(unit, "group_system")
 		local group_system = Managers.state.extension:system("group_system")
+
 		scratchpad.group_system = group_system
+
 		local group_id = group_extension:group_id()
+
 		scratchpad.group_id = group_id
 		scratchpad.group_extension = group_extension
+
 		local walk_position_direction = Vector3.normalize(walk_position - POSITION_LOOKUP[unit])
 		local unit_fwd = Quaternion.forward(Unit.local_rotation(unit, 1))
 		local dot = Vector3.dot(walk_position_direction, unit_fwd)
@@ -97,6 +118,7 @@ BtAggroedPatrolAction.enter = function (self, unit, breed, blackboard, scratchpa
 
 	local locomotion_extension = ScriptUnit.extension(unit, "locomotion_system")
 	local current_rotation_speed = locomotion_extension:rotation_speed()
+
 	scratchpad.original_rotation_speed = current_rotation_speed
 
 	locomotion_extension:set_rotation_speed(DEFAULT_ROTATION_SPEED or action_data.rotation_speed)
@@ -109,12 +131,14 @@ BtAggroedPatrolAction.enter = function (self, unit, breed, blackboard, scratchpa
 	MinionAttack.init_scratchpad_shooting_variables(unit, scratchpad, action_data, blackboard, breed)
 
 	local spawn_component = blackboard.spawn
+
 	scratchpad.spawn_component = spawn_component
 	scratchpad.breed = breed
 
 	self:_start_aiming(unit, t, scratchpad, action_data)
 
 	local fx_system = Managers.state.extension:system("fx_system")
+
 	scratchpad.fx_system = fx_system
 	scratchpad.unit = unit
 	scratchpad.hit_units = {}
@@ -142,7 +166,9 @@ BtAggroedPatrolAction.leave = function (self, unit, breed, blackboard, scratchpa
 	self:_stop_liquid_beam(unit, scratchpad, blackboard)
 
 	local aim_component = scratchpad.aim_component
+
 	aim_component.controlled_aiming = false
+
 	local navigation_extension = scratchpad.navigation_extension
 
 	navigation_extension:set_enabled(false)
@@ -152,6 +178,7 @@ BtAggroedPatrolAction.leave = function (self, unit, breed, blackboard, scratchpa
 	locomotion_extension:set_rotation_speed(scratchpad.original_rotation_speed)
 
 	scratchpad.behavior_component.move_state = "idle"
+
 	local default_nav_tag_layers_minions = NavigationCostSettings.default_nav_tag_layers_minions
 
 	for nav_tag_name, _ in pairs(NAV_TAG_LAYER_COSTS) do
@@ -193,6 +220,7 @@ BtAggroedPatrolAction.run = function (self, unit, breed, blackboard, scratchpad,
 
 	if is_patrol_leader then
 		local navigation_extension = scratchpad.navigation_extension
+
 		scratchpad.has_followed_path = scratchpad.has_followed_path or navigation_extension:is_following_path()
 
 		if not scratchpad.wait_at_destination_t and is_patrol_leader and scratchpad.has_followed_path and navigation_extension:has_reached_destination() then
@@ -202,7 +230,7 @@ BtAggroedPatrolAction.run = function (self, unit, breed, blackboard, scratchpad,
 
 	local move_state = behavior_component.move_state
 
-	if (not scratchpad.start_move_cooldown or scratchpad.start_move_cooldown <= t) and (move_state ~= "moving" or scratchpad.patrol_anim_end_at_t and scratchpad.patrol_anim_end_at_t <= t) then
+	if (not scratchpad.start_move_cooldown or t >= scratchpad.start_move_cooldown) and (move_state ~= "moving" or scratchpad.patrol_anim_end_at_t and t >= scratchpad.patrol_anim_end_at_t) then
 		self:_start_move_anim(unit, scratchpad, behavior_component, action_data, t)
 	end
 
@@ -231,19 +259,21 @@ BtAggroedPatrolAction.run = function (self, unit, breed, blackboard, scratchpad,
 				scratchpad.animation_extension:anim_event(end_anim_event)
 
 				local end_duration = action_data.end_durations[end_anim_event]
+
 				scratchpad.end_duration = t + end_duration
 				scratchpad.shoot_state = "ending"
 			else
 				self:_stop_liquid_beam(unit, scratchpad, blackboard)
 
 				local end_duration = action_data.end_duration
+
 				scratchpad.end_duration = t + end_duration
 				scratchpad.shoot_state = "ending"
 			end
 
 			return "running"
 		end
-	elseif shoot_state == "ending" and scratchpad.end_duration <= t then
+	elseif shoot_state == "ending" and t >= scratchpad.end_duration then
 		self:_start_aiming(unit, t, scratchpad, action_data)
 
 		return "running"
@@ -260,7 +290,7 @@ BtAggroedPatrolAction.run = function (self, unit, breed, blackboard, scratchpad,
 			end
 		end
 
-		if scratchpad.wait_at_destination_t and scratchpad.wait_at_destination_t <= t then
+		if scratchpad.wait_at_destination_t and t >= scratchpad.wait_at_destination_t then
 			if patrol_component.auto_patrol then
 				self:_set_new_patrol_position(unit, patrol_component)
 			else
@@ -281,11 +311,11 @@ end
 local DEFAULT_MOVE_ANIM_EVENT = "move_fwd"
 local ANIM_VARIABLE_NAME = "anim_move_speed"
 local DEFAULT_SPEED = 0.9
-local MIN_VARIABLE_VALUE = 0.2
-local MAX_VARIABLE_VALUE = 2
+local MIN_VARIABLE_VALUE, MAX_VARIABLE_VALUE = 0.2, 2
 
 BtAggroedPatrolAction._start_move_anim = function (self, unit, scratchpad, behavior_component, action_data, t)
 	behavior_component.move_state = "moving"
+
 	local move_event = Animation.random_event(action_data.anim_events or DEFAULT_MOVE_ANIM_EVENT)
 
 	scratchpad.animation_extension:anim_event(move_event)
@@ -296,7 +326,7 @@ BtAggroedPatrolAction._start_move_anim = function (self, unit, scratchpad, behav
 		scratchpad.patrol_anim_end_at_t = t + duration
 	end
 
-	local speed = nil
+	local speed
 
 	if scratchpad.is_patrol_leader then
 		self:trigger_patrol_sound(scratchpad, true)
@@ -306,6 +336,7 @@ BtAggroedPatrolAction._start_move_anim = function (self, unit, scratchpad, behav
 		local patrol_component = scratchpad.patrol_component
 		local patrol_leader_unit = patrol_component.patrol_leader_unit
 		local patrol_leader_nav_extension = ALIVE[patrol_leader_unit] and ScriptUnit.has_extension(patrol_leader_unit, "navigation_system")
+
 		speed = patrol_leader_nav_extension and patrol_leader_nav_extension:max_speed() or action_data.speeds[move_event] or DEFAULT_SPEED
 	end
 
@@ -346,6 +377,7 @@ BtAggroedPatrolAction._set_new_patrol_position = function (self, unit, patrol_co
 
 	if distance < MIN_DISTANCE_TO_NEW_PATROL_POS then
 		local extra_offset = math.clamp(wanted_distance + math.random_range(FALLBACK_DISTANCE_RANDOM_RANGE[1], FALLBACK_DISTANCE_RANDOM_RANGE[2]), 0, total_path_distance)
+
 		wanted_position = MainPathQueries.position_from_distance(extra_offset)
 	end
 
@@ -378,9 +410,7 @@ BtAggroedPatrolAction.trigger_patrol_sound = function (self, scratchpad, should_
 	end
 end
 
-local ABOVE = 2
-local BELOW = 2.5
-local HOTIZONTAL = 2
+local ABOVE, BELOW, HOTIZONTAL = 2, 2.5, 2
 local PATROL_OFFSET_SIDEWAYS = 0.75
 local PATORL_OFFSET_BACK = 0.25
 local SPEED_UP_DISTANCE = 0.5
@@ -397,8 +427,7 @@ BtAggroedPatrolAction._update_patrolling = function (self, unit, breed, blackboa
 	end
 
 	local patrol_component = scratchpad.patrol_component
-	local nav_world = scratchpad.nav_world
-	local traverse_logic = scratchpad.traverse_logic
+	local nav_world, traverse_logic = scratchpad.nav_world, scratchpad.traverse_logic
 	local patrol_leader_unit = patrol_component.patrol_leader_unit
 
 	if not HEALTH_ALIVE[patrol_leader_unit] then
@@ -410,7 +439,7 @@ BtAggroedPatrolAction._update_patrolling = function (self, unit, breed, blackboa
 	local current_velocity = patrol_leader_locomotion_extension:current_velocity()
 	local magnitude = Vector3.length(current_velocity)
 	local velocity_normalized = Vector3.normalize(current_velocity)
-	local current_follow_direction = nil
+	local current_follow_direction
 
 	if not scratchpad.current_follow_direction then
 		current_follow_direction = velocity_normalized
@@ -426,18 +455,21 @@ BtAggroedPatrolAction._update_patrolling = function (self, unit, breed, blackboa
 	local _, is_right_side, is_left_side, is_third = MinionPatrols.get_follow_index(patrol_index)
 	local follow_unit_rotation = Unit.local_rotation(patrol_leader_unit, 1)
 	local follow_unit_position = POSITION_LOOKUP[patrol_leader_unit]
-	local follow_unit_right, follow_unit_bwd = nil
+	local follow_unit_right, follow_unit_bwd
+
 	follow_unit_right = Quaternion.right(follow_unit_rotation)
 	follow_unit_bwd = -Quaternion.forward(follow_unit_rotation)
-	local patrol_position = nil
+
+	local patrol_position
 
 	if patrol_index % 2 == 0 then
-		patrol_position = follow_unit_position + follow_unit_right * PATROL_OFFSET_SIDEWAYS * patrol_index
+		patrol_position = follow_unit_position + follow_unit_right * (PATROL_OFFSET_SIDEWAYS * patrol_index)
 	else
-		patrol_position = follow_unit_position + -follow_unit_right * PATROL_OFFSET_SIDEWAYS * (patrol_index + 1)
+		patrol_position = follow_unit_position + -follow_unit_right * (PATROL_OFFSET_SIDEWAYS * (patrol_index + 1))
 	end
 
-	patrol_position = patrol_position + follow_unit_bwd * PATORL_OFFSET_BACK * patrol_index
+	patrol_position = patrol_position + follow_unit_bwd * (PATORL_OFFSET_BACK * patrol_index)
+
 	local follow_unit_leader_speed = patrol_leader_nav_extension:max_speed()
 	local navigation_extension = scratchpad.navigation_extension
 
@@ -474,9 +506,9 @@ BtAggroedPatrolAction._update_patrolling = function (self, unit, breed, blackboa
 	navigation_extension:move_to(position_on_navmesh)
 
 	local distance_to_patrol_position = Vector3.distance(POSITION_LOOKUP[unit], position_on_navmesh)
-	local new_speed = nil
+	local new_speed
 
-	if SPEED_UP_DISTANCE < distance_to_patrol_position then
+	if distance_to_patrol_position > SPEED_UP_DISTANCE then
 		new_speed = follow_unit_leader_speed + math.min(distance_to_patrol_position, MAX_SPEED_UP_SPEED)
 	elseif distance_to_patrol_position < SLOW_DOWN_DISTANCE then
 		new_speed = SLOW_DOWN_SPEED
@@ -484,6 +516,7 @@ BtAggroedPatrolAction._update_patrolling = function (self, unit, breed, blackboa
 		local locomotion_extension = scratchpad.locomotion_extension
 		local current_speed = Vector3.length(locomotion_extension:current_velocity())
 		local speed_diff = distance_to_patrol_position - current_speed * dt
+
 		new_speed = follow_unit_leader_speed - speed_diff
 	end
 
@@ -493,6 +526,7 @@ BtAggroedPatrolAction._update_patrolling = function (self, unit, breed, blackboa
 	navigation_extension:set_max_speed(wanted_speed)
 
 	scratchpad.previous_speed = wanted_speed
+
 	local variable_value = math.clamp(wanted_speed, MIN_VARIABLE_VALUE, MAX_VARIABLE_VALUE)
 	local old_variable_value = scratchpad.old_move_speed_variable
 
@@ -507,6 +541,7 @@ local MAX_AIM_DURATION = 2
 
 BtAggroedPatrolAction._start_aiming = function (self, unit, t, scratchpad, action_data)
 	scratchpad.aim_component.controlled_aiming = true
+
 	local aim_anim_events = action_data.aim_anim_events or "aim"
 	local aim_event = Animation.random_event(aim_anim_events)
 	local aim_duration = action_data.aim_duration[aim_event]
@@ -514,6 +549,7 @@ BtAggroedPatrolAction._start_aiming = function (self, unit, t, scratchpad, actio
 	if type(aim_duration) == "table" then
 		local diff_aim_durations = Managers.state.difficulty:get_table_entry_by_challenge(aim_duration)
 		local duration = math.random_range(diff_aim_durations[1], diff_aim_durations[2])
+
 		scratchpad.aim_duration = duration
 	else
 		scratchpad.aim_duration = aim_duration
@@ -521,6 +557,7 @@ BtAggroedPatrolAction._start_aiming = function (self, unit, t, scratchpad, actio
 
 	scratchpad.shoot_state = "aiming"
 	scratchpad.max_aim_duration = MAX_AIM_DURATION
+
 	local vo_event = action_data.vo_event
 
 	if vo_event then
@@ -559,7 +596,7 @@ BtAggroedPatrolAction._update_aim_turning = function (self, unit, scratchpad, ac
 
 				scratchpad.current_aim_rotation_direction_name = "right"
 			end
-		elseif current_aim_rotation_direction_name ~= "fwd" and AIM_TURN_FWD_DOT_THRESHOLD < aim_dot then
+		elseif current_aim_rotation_direction_name ~= "fwd" and aim_dot > AIM_TURN_FWD_DOT_THRESHOLD then
 			animation_extension:anim_event(aim_rotation_anims.fwd)
 
 			scratchpad.current_aim_rotation_direction_name = "fwd"
@@ -635,6 +672,7 @@ BtAggroedPatrolAction._start_shooting = function (self, unit, t, scratchpad, act
 	MinionAttack.start_shooting(unit, scratchpad, t, action_data, FIRST_SHOOT_TIMING)
 
 	scratchpad.shoot_state = "shooting"
+
 	local liquid_paint_id_from_component = action_data.liquid_paint_id_from_component
 
 	if liquid_paint_id_from_component then
@@ -652,6 +690,7 @@ BtAggroedPatrolAction._start_shooting = function (self, unit, t, scratchpad, act
 		local shot_from, distance_to_from = self:_get_from_shoot_pos(unit, scratchpad, action_data)
 		local distance = Vector3.distance(unit_position, shot_from)
 		local place_liquid_timing = t + distance / action_data.place_liquid_timing_speed
+
 		scratchpad.place_liquid_timing = place_liquid_timing
 		scratchpad.distance_to_from = distance_to_from
 	end
@@ -695,9 +734,8 @@ BtAggroedPatrolAction._update_shooting = function (self, unit, t, dt, scratchpad
 			end
 		end
 
-		if scratchpad.aoe_bot_threat_timing and scratchpad.aoe_bot_threat_timing <= t then
-			local aoe_bot_threat_size = action_data.aoe_bot_threat_size:unbox()
-			local aoe_bot_threat_duration = action_data.aoe_bot_threat_duration
+		if scratchpad.aoe_bot_threat_timing and t >= scratchpad.aoe_bot_threat_timing then
+			local aoe_bot_threat_size, aoe_bot_threat_duration = action_data.aoe_bot_threat_size:unbox(), action_data.aoe_bot_threat_duration
 			local aoe_bot_threat_rotation = Quaternion.look(flat_to_target_direction)
 			local side_system = Managers.state.extension:system("side_system")
 			local side = side_system.side_by_unit[unit]
@@ -714,20 +752,21 @@ BtAggroedPatrolAction._update_shooting = function (self, unit, t, dt, scratchpad
 
 			scratchpad.aoe_bot_threat_timing = nil
 		end
-	elseif scratchpad.next_shoot_timing and scratchpad.next_shoot_timing <= t then
+	elseif scratchpad.next_shoot_timing and t >= scratchpad.next_shoot_timing then
 		scratchpad.shooting_liquid_beam = true
 		scratchpad.shot_start_t = t
 		scratchpad.next_shoot_timing = nil
+
 		local shot_from = self:_get_from_shoot_pos(unit, scratchpad, action_data)
 		local shot_to = self:_get_to_shoot_pos(unit, scratchpad, action_data)
+
 		scratchpad.from_shot_position = Vector3Box(shot_from)
 		scratchpad.to_shot_position = Vector3Box(shot_to)
 		scratchpad.next_sphere_cast_t = t + action_data.sphere_cast_frequency
 	end
 end
 
-local BELOW = 2
-local ABOVE = 1
+local BELOW, ABOVE = 2, 1
 local RAYCAST_DOWN_LENGTH = 5
 
 BtAggroedPatrolAction._update_shooting_liquid_beam = function (self, unit, t, dt, scratchpad, action_data)
@@ -761,7 +800,7 @@ BtAggroedPatrolAction._update_shooting_liquid_beam = function (self, unit, t, dt
 		end
 	end
 
-	if scratchpad.place_liquid_timing and end_position and scratchpad.place_liquid_timing < t then
+	if scratchpad.place_liquid_timing and end_position and t > scratchpad.place_liquid_timing then
 		local side_system = Managers.state.extension:system("side_system")
 		local side = side_system.side_by_unit[unit]
 		local liquid_paint_id_from_component = action_data.liquid_paint_id_from_component
@@ -796,7 +835,7 @@ BtAggroedPatrolAction._update_shooting_liquid_beam = function (self, unit, t, dt
 
 		if attack_finished_grace_period and not scratchpad.attack_finished_grace_period then
 			scratchpad.attack_finished_grace_period = t + attack_finished_grace_period
-		elseif not scratchpad.attack_finished_grace_period or scratchpad.attack_finished_grace_period <= t then
+		elseif not scratchpad.attack_finished_grace_period or t >= scratchpad.attack_finished_grace_period then
 			scratchpad.shooting_liquid_beam = false
 			scratchpad.shot_start_t = nil
 			scratchpad.next_shoot_timing = nil
@@ -807,8 +846,8 @@ BtAggroedPatrolAction._update_shooting_liquid_beam = function (self, unit, t, dt
 end
 
 local function _clamp_network_position(position)
-	local network_min = NetworkConstants.min_position
-	local network_max = NetworkConstants.max_position
+	local network_min, network_max = NetworkConstants.min_position, NetworkConstants.max_position
+
 	position[1] = math.clamp(position[1], network_min, network_max)
 	position[2] = math.clamp(position[2], network_min, network_max)
 	position[3] = math.clamp(position[3], network_min, network_max)
@@ -819,12 +858,13 @@ end
 BtAggroedPatrolAction._update_liquid_beam_positions = function (self, dt, scratchpad, action_data, from_position, to_position)
 	local segment_list, total_length = self:_try_get_trajectory(scratchpad, action_data, from_position, to_position)
 	local num_segments = segment_list and #segment_list
-	local end_position = nil
+	local end_position
 
 	if segment_list and total_length and num_segments > 1 and total_length > 1 then
 		local control_points = self:_calculate_control_points(scratchpad, segment_list, total_length, dt)
 		local control_point_1 = _clamp_network_position(control_points[1]:unbox())
 		local control_point_2 = _clamp_network_position(control_points[2]:unbox())
+
 		end_position = _clamp_network_position(control_points[3]:unbox())
 
 		self:_set_game_object_field(scratchpad, "aim_position", end_position)
@@ -843,6 +883,7 @@ BtAggroedPatrolAction._start_effect_template = function (self, unit, scratchpad,
 	local effect_template = action_data.effect_template
 	local fx_system = scratchpad.fx_system
 	local liquid_beam_effect_id = fx_system:start_template_effect(effect_template, unit)
+
 	scratchpad.liquid_beam_effect_id = liquid_beam_effect_id
 end
 
@@ -860,8 +901,7 @@ end
 
 BtAggroedPatrolAction._set_game_object_field = function (self, scratchpad, key, value)
 	local spawn_component = scratchpad.spawn_component
-	local game_session = spawn_component.game_session
-	local game_object_id = spawn_component.game_object_id
+	local game_session, game_object_id = spawn_component.game_session, spawn_component.game_object_id
 
 	GameSession.set_game_object_field(game_session, game_object_id, key, value)
 end
@@ -875,10 +915,10 @@ BtAggroedPatrolAction._get_from_shoot_pos = function (self, unit, scratchpad, ac
 	local direction = Vector3.flat(Vector3.normalize(to - from))
 	local distance = Vector3.distance(from, to)
 	local range_percentage_front = action_data.range_percentage_front
-	local shot_from = to - direction * distance * range_percentage_front
+	local shot_from = to - direction * (distance * range_percentage_front)
 	local shot_from_on_navmesh = NavQueries.position_on_mesh(nav_world, shot_from, ABOVE, BELOW)
 	local target_position_on_navmesh = NavQueries.position_on_mesh(nav_world, to, ABOVE, BELOW)
-	local on_ground_position = nil
+	local on_ground_position
 
 	if shot_from_on_navmesh and target_position_on_navmesh then
 		local _, raycast_position = GwNavQueries.raycast(nav_world, target_position_on_navmesh, shot_from_on_navmesh)
@@ -891,6 +931,7 @@ BtAggroedPatrolAction._get_from_shoot_pos = function (self, unit, scratchpad, ac
 	end
 
 	on_ground_position = on_ground_position or self:_ray_cast(scratchpad.physics_world, shot_from + Vector3.up(), Vector3.down(), RAYCAST_DOWN_LENGTH, action_data)
+
 	local final_position = on_ground_position or shot_from
 	local distance_to_from = Vector3.distance(to, final_position)
 
@@ -905,13 +946,16 @@ BtAggroedPatrolAction._get_to_shoot_pos = function (self, unit, scratchpad, acti
 	local target_position = POSITION_LOOKUP[target_unit]
 	local perception_extension = scratchpad.perception_extension
 	local to = perception_extension:last_los_position(target_unit)
+
 	to.z = target_position.z
+
 	local direction = Vector3.flat(Vector3.normalize(to - from))
 	local shot_to = to + direction * range_back
 	local on_ground_position = NavQueries.position_on_mesh(scratchpad.nav_world, shot_to, ABOVE, BELOW)
+
 	on_ground_position = on_ground_position or self:_ray_cast(scratchpad.physics_world, shot_to + Vector3(0, 0, 1), Vector3.down(), RAYCAST_DOWN_LENGTH, action_data)
 
-	if on_ground_position and target_position.z < on_ground_position.z then
+	if on_ground_position and on_ground_position.z > target_position.z then
 		return on_ground_position
 	end
 
@@ -978,6 +1022,7 @@ BtAggroedPatrolAction._shoot_sphere_cast = function (self, unit, t, shoot_positi
 				end
 
 				hit_units[hit_unit] = true
+
 				local is_enemy = side_system:is_enemy(unit, hit_unit)
 
 				if is_enemy then
@@ -991,8 +1036,7 @@ BtAggroedPatrolAction._shoot_sphere_cast = function (self, unit, t, shoot_positi
 end
 
 local SPEED_MULTIPLIER = 2
-local MIN_TRAJECTORY_SPEED = 8
-local MAX_TRAJECTORY_SPEED = 18
+local MIN_TRAJECTORY_SPEED, MAX_TRAJECTORY_SPEED = 8, 18
 local MAX_TIME = 1.5
 local MAX_STEPS = 30
 
@@ -1029,6 +1073,7 @@ local function _get_point_on_segment(segments, num_segments, length)
 		local segment = segments[i]
 		local to_segment = segment - prev_segment
 		local distance = Vector3.length(to_segment)
+
 		current_length = current_length + distance
 
 		if length <= current_length then
@@ -1041,16 +1086,18 @@ local function _get_point_on_segment(segments, num_segments, length)
 end
 
 BtAggroedPatrolAction._get_from_position = function (self, unit, scratchpad, action_data)
-	local from_position = nil
+	local from_position
 	local weapon_item = scratchpad.weapon_item
 
 	if weapon_item then
 		local fx_source_name = action_data.fx_source_name
 		local attachment_unit, node = MinionVisualLoadout.attachment_unit_and_node_from_node_name(weapon_item, fx_source_name)
+
 		from_position = Unit.world_position(attachment_unit, node)
 	elseif action_data.from_node then
 		local from_node_name = action_data.from_node
 		local from_node = Unit.node(unit, from_node_name)
+
 		from_position = Unit.world_position(unit, from_node)
 	end
 

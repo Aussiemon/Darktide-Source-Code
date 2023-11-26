@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/components/weapon_icon_alignment.lua
+
 local WeaponIconAlignment = component("WeaponIconAlignment")
 
 WeaponIconAlignment.init = function (self, unit)
@@ -7,6 +9,7 @@ end
 WeaponIconAlignment.editor_init = function (self, unit)
 	local in_editor = true
 	local world = Unit.world(unit)
+
 	self._item_definitions = self:_get_item_definitions(unit, world, in_editor)
 end
 

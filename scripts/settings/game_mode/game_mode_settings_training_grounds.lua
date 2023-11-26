@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/game_mode/game_mode_settings_training_grounds.lua
+
 local settings = {
 	default_player_side_name = "heroes",
 	name = "training_grounds",

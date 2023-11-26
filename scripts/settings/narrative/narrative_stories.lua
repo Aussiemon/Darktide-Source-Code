@@ -1,8 +1,10 @@
+﻿-- chunkname: @scripts/settings/narrative/narrative_stories.lua
+
 local PlayerProgressionUnlocks = require("scripts/settings/player/player_progression_unlocks")
 
 local function level_at_least(x)
 	return function (player_profile)
-		return x <= player_profile.current_level
+		return player_profile.current_level >= x
 	end
 end
 
@@ -87,7 +89,7 @@ end
 
 local function can_start_path_of_trust(required_level)
 	return function (player_profile)
-		return required_level <= player_profile.current_level and Managers.narrative:is_event_complete("onboarding_step_chapel_video_viewed")
+		return player_profile.current_level >= required_level and Managers.narrative:is_event_complete("onboarding_step_chapel_video_viewed")
 	end
 end
 

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/ability/archetype_talents/ogryn_talents_new.lua
+
 local AbilityTemplates = require("scripts/settings/ability/ability_templates/ability_templates")
 local ExplosionTemplates = require("scripts/settings/damage/explosion_templates")
 local PlayerAbilities = require("scripts/settings/ability/player_abilities/player_abilities")
@@ -19,6 +21,7 @@ local ogryn_grenade_box_cluster = ProjectileTemplates.ogryn_grenade_box_cluster
 local ogryn_grenade_frag_explosion_template = ExplosionTemplates.ogryn_grenade_frag
 local ogryn_taunt_shout = AbilityTemplates.ogryn_taunt_shout
 local math_round = math.round
+
 math_round = math_round or function (value)
 	if value >= 0 then
 		return math.floor(value + 0.5)
@@ -26,6 +29,7 @@ math_round = math_round or function (value)
 		return math.ceil(value - 0.5)
 	end
 end
+
 local archetype_talents = {
 	archetype = "ogryn",
 	specialization = "ogryn_2",

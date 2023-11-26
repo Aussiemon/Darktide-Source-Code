@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/item/rank_settings.lua
+
 local RankSettings = {
 	[0] = {
 		display_name = "n/a",
@@ -76,9 +78,10 @@ local RankSettings = {
 			weapon = -999,
 			gadget = -999
 		}
-	},
-	max_trait_rank = 4,
-	max_perk_rank = 4
+	}
 }
+
+RankSettings.max_trait_rank = 4
+RankSettings.max_perk_rank = 4
 
 return settings("RankSettings", RankSettings)

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/view_transition_ui.lua
+
 local ScriptWorld = require("scripts/foundation/utilities/script_world")
 local ViewTransitionUI = class("ViewTransitionUI", "ConstantElementBase")
 
@@ -19,16 +21,21 @@ ViewTransitionUI._setup_renderer = function (self)
 	local timer_name = render_settings.timer_name
 	local world_layer = render_settings.world_layer
 	local world_name = name_prefix .. "_ui_world"
+
 	self._world = ui_manager:create_world(world_name, world_layer, timer_name)
 	self._world_name = world_name
 	self._world_draw_layer = world_layer
 	self._world_default_layer = world_layer
+
 	local viewport_name = name_prefix .. "_ui_world_viewport"
 	local viewport_type = render_settings.viewport_type
 	local viewport_layer = render_settings.viewport_layer
+
 	self._background_viewport = ui_manager:create_viewport(self._world, viewport_name, viewport_type, viewport_layer)
 	self._viewport_name = viewport_name
+
 	local renderer_name = name_prefix .. "_ui_renderer"
+
 	self._ui_renderer = ui_manager:create_renderer(renderer_name, self._world)
 	self._renderer_name = renderer_name
 end
@@ -40,6 +47,7 @@ ViewTransitionUI._destroy_renderer = function (self)
 		Managers.ui:destroy_renderer(self._renderer_name)
 
 		self._renderer_name = nil
+
 		local world = self._world
 		local viewport_name = self._viewport_name
 

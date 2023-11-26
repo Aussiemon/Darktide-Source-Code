@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/input/default_debug_input_filters.lua
+
 local default_debug_input_filters = {
 	pixeldistance = {
 		filter_type = "and",

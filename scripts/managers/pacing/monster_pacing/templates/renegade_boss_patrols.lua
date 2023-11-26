@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/pacing/monster_pacing/templates/renegade_boss_patrols.lua
+
 local BOSS_PATROLS = {
 	name = "renegade_boss_patrols",
 	challenge_templates = {

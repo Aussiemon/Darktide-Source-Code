@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/event_synchronizer/event_synchronizer_system.lua
+
 require("scripts/extension_systems/event_synchronizer/event_synchronizer_base_extension")
 require("scripts/extension_systems/event_synchronizer/decoder_synchronizer_extension")
 require("scripts/extension_systems/event_synchronizer/demolition_synchronizer_extension")

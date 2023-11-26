@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/equipment/reload_templates/lasgun_elysian_reload_template.lua
+
 local reload_template = {
 	name = "lasgun_elysian",
 	states = {

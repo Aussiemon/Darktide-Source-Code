@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/components/minion_spawner.lua
+
 local Component = require("scripts/utilities/component")
 local MinionSpawnerSpawnPosition = require("scripts/extension_systems/minion_spawner/utilities/minion_spawner_spawn_position")
 local SharedNav = require("scripts/components/utilities/shared_nav")
@@ -6,11 +8,14 @@ local MinionSpawner = component("MinionSpawner")
 MinionSpawner.init = function (self, unit, is_server)
 	self._unit = unit
 	self._is_server = is_server
+
 	local spawner_extension = ScriptUnit.fetch_component_extension(unit, "minion_spawner_system")
 
 	if spawner_extension then
 		local spawner_groups, spawn_position_offset, exit_position_offset, anim_data, exclude_from_pacing, exclude_from_specials_pacing, spawn_type, exit_rotation_num_directions, exit_rotation_random_degree_range = self:_get_data(unit)
+
 		self._anim_data = anim_data
+
 		local tm = Unit.world_pose(unit, 1)
 		local has_spawn_node = Unit.has_node(unit, "spawn_node")
 
@@ -33,19 +38,20 @@ MinionSpawner._get_data = function (self, unit)
 	local spawn_position_offset = self:get_data(unit, "spawn_offset")
 	local exit_position_offset = self:get_data(unit, "exit_offset")
 	local anim_duration = self:get_data(unit, "duration")
-	local anim_data = nil
+	local anim_data
 
 	if anim_duration ~= 0 then
 		local anim_length = Unit.simple_animation_length(unit)
-		local spawning_started_anim = {
-			time_from = self:get_data(unit, "spawning_started_time_from") * anim_length,
-			time_to = self:get_data(unit, "spawning_started_time_to") * anim_length
-		}
+		local spawning_started_anim = {}
+
+		spawning_started_anim.time_from = self:get_data(unit, "spawning_started_time_from") * anim_length
+		spawning_started_anim.time_to = self:get_data(unit, "spawning_started_time_to") * anim_length
 		spawning_started_anim.speed = (spawning_started_anim.time_to - spawning_started_anim.time_from) / anim_duration
-		local spawning_done_anim = {
-			time_from = self:get_data(unit, "spawning_done_time_from") * anim_length,
-			time_to = self:get_data(unit, "spawning_done_time_to") * anim_length
-		}
+
+		local spawning_done_anim = {}
+
+		spawning_done_anim.time_from = self:get_data(unit, "spawning_done_time_from") * anim_length
+		spawning_done_anim.time_to = self:get_data(unit, "spawning_done_time_to") * anim_length
 		spawning_done_anim.speed = (spawning_done_anim.time_to - spawning_done_anim.time_from) / anim_duration
 		anim_data = {
 			spawning_started = spawning_started_anim,
@@ -112,11 +118,15 @@ MinionSpawner.editor_init = function (self, unit)
 	end
 
 	self._unit = unit
+
 	local world = Application.main_world()
+
 	self._world = world
 	self._line_object = World.create_line_object(world)
 	self._drawer = DebugDrawer(self._line_object, "retained")
+
 	local _, spawn_offset, exit_offset = self:_get_data(unit)
+
 	self._spawn_offset = spawn_offset
 	self._exit_offset = exit_offset
 

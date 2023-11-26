@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/foundation/managers/token/token_interface.lua
+
 local token_interface = {
 	"update",
 	"info",

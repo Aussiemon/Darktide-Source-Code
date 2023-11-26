@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/equipment/item_material_overrides/item_material_overrides_gear_patterns.lua
+
 local material_overrides = {
 	pattern_camo_weapon_empty = {
 		texture_overrides = {

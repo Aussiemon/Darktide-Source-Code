@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/main_menu_background_view/main_menu_background_view_settings.lua
+
 local main_menu_background_view_settings = {
 	shading_environment = "content/shading_environments/ui/main_menu",
 	debug_character_count = 4,

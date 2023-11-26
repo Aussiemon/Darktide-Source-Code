@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/input/gamepad_input_layouts.lua
+
 local default_settings = require("scripts/settings/input/default_ingame_input_settings")
 local layouts = {
 	default = {

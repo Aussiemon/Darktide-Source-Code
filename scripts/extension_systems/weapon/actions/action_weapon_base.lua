@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/weapon/actions/action_weapon_base.lua
+
 require("scripts/extension_systems/weapon/actions/action_base")
 
 local AimAssist = require("scripts/utilities/aim_assist")
@@ -15,10 +17,13 @@ ActionWeaponBase.init = function (self, action_context, action_params, action_se
 	ActionWeaponBase.super.init(self, action_context, action_params, action_settings)
 
 	local unit_data_extension = action_context.unit_data_extension
+
 	self._weapon_extension = action_context.weapon_extension
 	self._weapon_recoil_extension = action_context.weapon_recoil_extension
 	self._weapon_spread_extension = action_context.weapon_spread_extension
+
 	local weapon_action_component = action_context.weapon_action_component
+
 	self._weapon_action_component = weapon_action_component
 	self._critical_strike_component = action_context.critical_strike_component
 	self._weapon_lock_view_component = action_context.weapon_lock_view_component
@@ -27,7 +32,9 @@ ActionWeaponBase.init = function (self, action_context, action_params, action_se
 	self._warp_charge_component = unit_data_extension:write_component("warp_charge")
 	self._alternate_fire_component = unit_data_extension:write_component("alternate_fire")
 	self._peeking_component = unit_data_extension:write_component("peeking")
+
 	local weapon = action_params.weapon
+
 	self._weapon = weapon
 	self._weapon_unit = weapon.weapon_unit
 	self._weapon_template = weapon.weapon_template
@@ -41,7 +48,9 @@ ActionWeaponBase.start = function (self, action_settings, t, time_scale, action_
 
 	if weapon_lock_view_component and action_settings.lock_view then
 		weapon_lock_view_component.state = "weapon_lock"
+
 		local yaw, pitch, _ = self._input_extension:get_orientation()
+
 		weapon_lock_view_component.yaw = yaw
 		weapon_lock_view_component.pitch = pitch
 	end
@@ -88,6 +97,7 @@ ActionWeaponBase.finish = function (self, reason, data, t, time_in_action)
 
 	if not action_settings.keep_critical_strike then
 		local critical_strike_component = self._critical_strike_component
+
 		critical_strike_component.is_active = false
 		critical_strike_component.num_critical_shots = 0
 	end
@@ -114,13 +124,9 @@ ActionWeaponBase._check_for_critical_strike = function (self, is_melee, is_range
 	local seed = critical_strike_component.seed
 	local prd_state = critical_strike_component.prd_state
 	local guaranteed_crit = buff_extension:has_keyword("guaranteed_critical_strike") or is_ranged and buff_extension:has_keyword("guaranteed_ranged_critical_strike") or is_melee and buff_extension:has_keyword("guaranteed_melee_critical_strike") or action_auto_crit
-	local chance = nil
+	local chance
 
-	if guaranteed_crit then
-		chance = 1
-	else
-		chance = CriticalStrike.chance(player, weapon_handling_template, is_ranged, is_melee)
-	end
+	chance = guaranteed_crit and 1 or CriticalStrike.chance(player, weapon_handling_template, is_ranged, is_melee)
 
 	local is_critical_strike, new_prd_state, new_seed = CriticalStrike.is_critical_strike(chance, prd_state, seed)
 
@@ -151,6 +157,7 @@ ActionWeaponBase._check_for_lucky_strike = function (self, is_melee, is_ranged, 
 	local seed = critical_strike_component.seed
 	local prd_state = critical_strike_component.prd_state
 	local is_lucky_strike, new_prd_state, new_seed = CriticalStrike.is_critical_strike(chance, prd_state, seed)
+
 	self._critical_strike_component.seed = new_seed
 
 	if is_lucky_strike then
@@ -168,6 +175,7 @@ ActionWeaponBase._increase_action_duration = function (self, additional_time)
 	end
 
 	local new_end_t = weapon_action_component.end_t + additional_time
+
 	weapon_action_component.end_t = new_end_t
 end
 
@@ -179,10 +187,12 @@ end
 
 ActionWeaponBase._set_weapon_special = function (self, active, t)
 	local last_start_time = self._inventory_slot_component.special_active_start_t
+
 	self._inventory_slot_component.special_active = active
 
 	if active then
 		self._inventory_slot_component.special_active_start_t = t
+
 		local weapon_special_implementation = self._weapon.weapon_special_implementation
 
 		if weapon_special_implementation then
@@ -206,6 +216,7 @@ end
 ActionWeaponBase._setup_charge_template = function (self, action_settings)
 	local weapon_tweak_templates_component = self._weapon_tweak_templates_component
 	local weapon_template = self._weapon_template
+
 	weapon_tweak_templates_component.charge_template_name = action_settings.charge_template or weapon_template.charge_template or "none"
 end
 

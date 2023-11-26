@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/components/minigame.lua
+
 local Minigame = component("Minigame")
 
 Minigame.init = function (self, unit)

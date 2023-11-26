@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/pickup/pickups/pocketable/ammo_cache_pocketable_pickup.lua
+
 local pickup_data = {
 	description = "loc_pickup_pocketable_ammo_crate_01",
 	name = "ammo_cache_pocketable",

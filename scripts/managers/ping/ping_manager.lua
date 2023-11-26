@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/ping/ping_manager.lua
+
 local Promise = require("scripts/foundation/utilities/promise")
 local PingManager = class("PingManager")
 
@@ -13,6 +15,7 @@ PingManager.ping = function (self, timeout, targets)
 	end
 
 	local promise = Promise:new()
+
 	self._ping_operation_promises[id] = promise
 
 	return promise

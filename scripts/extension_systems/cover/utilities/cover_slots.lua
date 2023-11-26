@@ -1,27 +1,30 @@
+﻿-- chunkname: @scripts/extension_systems/cover/utilities/cover_slots.lua
+
 local NavQueries = require("scripts/utilities/nav_queries")
 local CoverSettings = require("scripts/settings/cover/cover_settings")
-local CoverSlots = {
-	fetch_node_positions = function (unit)
-		local node_positions = {}
-		local node_index = 1
+local CoverSlots = {}
 
-		while true do
-			local node_name = "cp_0" .. node_index
+CoverSlots.fetch_node_positions = function (unit)
+	local node_positions = {}
+	local node_index = 1
 
-			if Unit.has_node(unit, node_name) then
-				local node = Unit.node(unit, node_name)
-				local position = Unit.world_position(unit, node)
-				node_positions[#node_positions + 1] = Vector3Box(position)
-			else
-				break
-			end
+	while true do
+		local node_name = "cp_0" .. node_index
 
-			node_index = node_index + 1
+		if Unit.has_node(unit, node_name) then
+			local node = Unit.node(unit, node_name)
+			local position = Unit.world_position(unit, node)
+
+			node_positions[#node_positions + 1] = Vector3Box(position)
+		else
+			break
 		end
 
-		return node_positions
+		node_index = node_index + 1
 	end
-}
+
+	return node_positions
+end
 
 CoverSlots.create = function (physics_world, nav_world, unit, cover_type, node_positions)
 	local slot_width = CoverSettings.slot_width
@@ -56,17 +59,17 @@ CoverSlots.create = function (physics_world, nav_world, unit, cover_type, node_p
 				local user_offset = left * slot_user_offset
 
 				if num_fitting_slots == 1 then
-					local mid_position = node_position + node_to_next_node_direction * distance_to_node * 0.5
+					local mid_position = node_position + node_to_next_node_direction * (distance_to_node * 0.5)
 					local navmesh_position = mid_position + navmesh_offset
 					local position = mid_position + user_offset
 
 					CoverSlots._add_slot(physics_world, unit, navmesh_position, position, left, cover_type, nav_world, cover_slots)
 				elseif cover_type == cover_types.low then
 					local slot_width_offset = distance_to_node / num_fitting_slots
-					local start_position = node_position - node_to_next_node_direction * slot_width_offset * 0.5
+					local start_position = node_position - node_to_next_node_direction * (slot_width_offset * 0.5)
 
 					for j = 1, num_fitting_slots do
-						local edge_position = start_position + node_to_next_node_direction * j * slot_width_offset
+						local edge_position = start_position + node_to_next_node_direction * (j * slot_width_offset)
 						local navmesh_position = edge_position + navmesh_offset
 						local position = edge_position + user_offset
 
@@ -98,21 +101,22 @@ local COVER_SLOT_ID = 0
 local MIN_SLOT_TO_NAVMESH_DISTANCE = 1.5
 
 CoverSlots._add_slot = function (physics_world, unit, navmesh_position, slot_position, left, cover_type, nav_world, cover_slots)
-	local above = 0.75
-	local below = 0.75
-	local horizontal = CoverSettings.slot_navmesh_outside_search_distance
+	local above, below, horizontal = 0.75, 0.75, CoverSettings.slot_navmesh_outside_search_distance
 	local position_on_navmesh = NavQueries.position_on_mesh_with_outside_position(nav_world, nil, navmesh_position, above, below, horizontal)
 
 	if position_on_navmesh then
 		local boxed_navmesh_position = Vector3Box(position_on_navmesh)
 
-		if MIN_SLOT_TO_NAVMESH_DISTANCE < Vector3.distance(position_on_navmesh, slot_position) then
+		if Vector3.distance(position_on_navmesh, slot_position) > MIN_SLOT_TO_NAVMESH_DISTANCE then
 			return
 		end
 
 		slot_position.z = boxed_navmesh_position.z
+
 		local boxed_slot_position = Vector3Box(slot_position)
+
 		COVER_SLOT_ID = COVER_SLOT_ID + 1
+
 		local cover_slot = {
 			navmesh_position = boxed_navmesh_position,
 			position = boxed_slot_position,

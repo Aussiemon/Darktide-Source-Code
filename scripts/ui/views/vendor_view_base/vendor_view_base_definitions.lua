@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/vendor_view_base/vendor_view_base_definitions.lua
+
 local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templates")
 local UIWorkspaceSettings = require("scripts/settings/ui/ui_workspace_settings")
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
@@ -77,11 +79,15 @@ local scenegraph_definition = {
 	}
 }
 local display_name_style = table.clone(UIFontSettings.header_2)
+
 display_name_style.text_horizontal_alignment = "left"
 display_name_style.text_vertical_alignment = "center"
+
 local sub_display_name_style = table.clone(UIFontSettings.body)
+
 sub_display_name_style.text_horizontal_alignment = "left"
 sub_display_name_style.text_vertical_alignment = "center"
+
 local price_text_style = table.clone(UIFontSettings.currency_title)
 local widget_definitions = {
 	price_text = UIWidget.create_definition({
@@ -130,6 +136,7 @@ local animations = {
 			end,
 			update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress, params)
 				local anim_progress = math.easeOutCubic(progress)
+
 				parent._alpha_multiplier = anim_progress
 			end,
 			on_complete = function (parent, ui_scenegraph, scenegraph_definition, widgets, params)

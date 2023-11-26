@@ -1,6 +1,8 @@
+﻿-- chunkname: @scripts/utilities/character_sheet.lua
+
 local NodeLayout = require("scripts/ui/views/node_builder_view_base/utilities/node_layout")
 local CharacterSheet = {}
-local _fill_ability_blitz_or_aura = nil
+local _fill_ability_blitz_or_aura
 local TRASH_TABLE = {}
 local PASSIVES_BEST_IDENTIFIER = {}
 local COHERENCY_BEST_IDENTIFIER = {}
@@ -9,12 +11,8 @@ local SPECIAL_RULE_BEST_IDENTIFIER = {}
 CharacterSheet.class_loadout = function (profile, destination, force_base_talents, optional_selected_nodes)
 	local ability = destination.ability or TRASH_TABLE
 	local blitz = destination.blitz or TRASH_TABLE
-	local aura = destination.aura or TRASH_TABLE
-	local passives = destination.passives
-	local coherency_buffs = destination.coherency
-	local special_rules = destination.special_rules
-	local buff_template_tiers = destination.buff_template_tiers
-	local iconics = destination.iconics
+	local ability, blitz, aura = ability, blitz, destination.aura or TRASH_TABLE
+	local passives, coherency_buffs, special_rules, buff_template_tiers, iconics = destination.passives, destination.coherency, destination.special_rules, destination.buff_template_tiers, destination.iconics
 
 	table.clear(ability)
 	table.clear(blitz)
@@ -53,46 +51,47 @@ CharacterSheet.class_loadout = function (profile, destination, force_base_talent
 	local talent_layout = require(talent_layout_file_path)
 	local nodes = talent_layout.nodes
 	local selected_nodes = optional_selected_nodes or profile.selected_nodes
-	local combat_ability, grenade_ability = nil
-	local found_base_ability = false
-	local found_base_blitz = false
-	local found_base_aura = false
+	local combat_ability, grenade_ability
+	local found_base_ability, found_base_blitz, found_base_aura = false, false, false
 	local base_talents = archetype.base_talents
 
 	for talent_name, selected_points in pairs(base_talents) do
 		local talent = archetype_talents[talent_name]
-		local player_ability = talent.player_ability
 
-		if player_ability and player_ability.ability_type == "combat_ability" then
-			if found_base_ability then
-				Log.error("CharacterSheet", "Found multiple combat abilities in base_talents, one will be chosen at random.")
-			else
-				found_base_ability = true
+		do
+			local player_ability = talent.player_ability
 
-				_fill_ability_blitz_or_aura(ability, talent, talent.large_icon)
+			if player_ability and player_ability.ability_type == "combat_ability" then
+				if found_base_ability then
+					Log.error("CharacterSheet", "Found multiple combat abilities in base_talents, one will be chosen at random.")
+				else
+					found_base_ability = true
 
-				combat_ability = player_ability.ability
+					_fill_ability_blitz_or_aura(ability, talent, talent.large_icon)
+
+					combat_ability = player_ability.ability
+				end
+			elseif player_ability and player_ability.ability_type == "grenade_ability" then
+				if found_base_blitz then
+					Log.error("CharacterSheet", "Found multiple grenade abilities in base_talents, one will be chosen at random.")
+				else
+					found_base_blitz = true
+
+					_fill_ability_blitz_or_aura(blitz, talent, talent.icon)
+
+					grenade_ability = player_ability.ability
+				end
+			elseif talent.coherency then
+				if found_base_aura then
+					Log.error("CharacterSheet", "Found multiple talents with coherency in base_talents, one will be chosen as aura at random.")
+				else
+					found_base_aura = true
+
+					_fill_ability_blitz_or_aura(aura, talent, talent.icon)
+				end
+			elseif iconics then
+				iconics[#iconics + 1] = talent
 			end
-		elseif player_ability and player_ability.ability_type == "grenade_ability" then
-			if found_base_blitz then
-				Log.error("CharacterSheet", "Found multiple grenade abilities in base_talents, one will be chosen at random.")
-			else
-				found_base_blitz = true
-
-				_fill_ability_blitz_or_aura(blitz, talent, talent.icon)
-
-				grenade_ability = player_ability.ability
-			end
-		elseif talent.coherency then
-			if found_base_aura then
-				Log.error("CharacterSheet", "Found multiple talents with coherency in base_talents, one will be chosen as aura at random.")
-			else
-				found_base_aura = true
-
-				_fill_ability_blitz_or_aura(aura, talent, talent.icon)
-			end
-		elseif iconics then
-			iconics[#iconics + 1] = talent
 		end
 
 		if passives then
@@ -111,7 +110,9 @@ CharacterSheet.class_loadout = function (profile, destination, force_base_talent
 							Log.error("CharacterSheet", "Multiple passives with the same identifier(%q) in base_talents for archetype(%q). Will choose one at random.", identifier, archetype.name)
 						else
 							PASSIVES_BEST_IDENTIFIER[sub_identifier] = -1
+
 							local buff_template_name = buff_template_names[jj]
+
 							passives[sub_identifier] = buff_template_name
 							buff_template_tiers[buff_template_name] = selected_points
 						end
@@ -120,7 +121,9 @@ CharacterSheet.class_loadout = function (profile, destination, force_base_talent
 					Log.error("CharacterSheet", "Multiple passives with the same identifier(%q) in base_talents for archetype(%q). Will choose one at random.", identifier, archetype.name)
 				else
 					PASSIVES_BEST_IDENTIFIER[identifier] = -1
+
 					local buff_template_name = passive.buff_template_name
+
 					passives[identifier] = buff_template_name
 					buff_template_tiers[buff_template_name] = selected_points
 				end
@@ -137,7 +140,9 @@ CharacterSheet.class_loadout = function (profile, destination, force_base_talent
 					Log.error("CharacterSheet", "Multiple coherency with the same identifier(%q) in base_talents for archetype(%q). Will choose one at random.", identifier, archetype.name)
 				else
 					COHERENCY_BEST_IDENTIFIER[identifier] = -1
+
 					local buff_template_name = coherency.buff_template_name
+
 					coherency_buffs[identifier] = buff_template_name
 					buff_template_tiers[buff_template_name] = selected_points
 				end
@@ -176,9 +181,7 @@ CharacterSheet.class_loadout = function (profile, destination, force_base_talent
 	if not force_base_talents then
 		local combat_ability_step_count = -1
 		local grenade_ability_step_count = -1
-		local found_ability = false
-		local found_blitz = false
-		local found_aura = false
+		local found_ability, found_blitz, found_aura = false, false, false
 		local num_nodes = #nodes
 
 		for ii = 1, num_nodes do
@@ -265,6 +268,7 @@ CharacterSheet.class_loadout = function (profile, destination, force_base_talent
 
 							if not prev_best_identifier or prev_best_identifier < step_count then
 								COHERENCY_BEST_IDENTIFIER[identifier] = step_count
+
 								local buff_template_name = coherency.buff_template_name
 
 								if buff_template_name then

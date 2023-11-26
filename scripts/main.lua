@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/main.lua
+
 Main = Main or {}
 
 require("scripts/boot_init")

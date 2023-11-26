@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/game_states/game/gameplay_sub_states/gameplay_init_step_states/gameplay_init_step_frame_rate.lua
+
 local GameplayInitStepInterface = require("scripts/game_states/game/gameplay_sub_states/gameplay_init_step_states/gameplay_init_step_state_interface")
 local GameplayInitStepOutOfBounds = require("scripts/game_states/game/gameplay_sub_states/gameplay_init_step_states/gameplay_init_step_out_of_bounds")
 local GameplayInitStepFrameRate = class("GameplayInitStepFrameRate")

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/components/wwise_room_volume.lua
+
 local WwiseRoomVolume = component("WwiseRoomVolume")
 
 WwiseRoomVolume.init = function (self, unit)
@@ -63,6 +65,10 @@ WwiseRoomVolume.destroy = function (self, unit)
 
 	if rooms_and_portals_manager then
 		rooms_and_portals_manager:remove_room(self)
+	end
+
+	if false then
+		-- Nothing
 	end
 end
 

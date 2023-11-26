@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/development/debug_functions.lua
+
 local BotSpawning = require("scripts/managers/bot/bot_spawning")
 local Breed = require("scripts/utilities/breed")
 local DebugSingleton = require("scripts/foundation/utilities/debug/debug_singleton")
@@ -10,7 +12,7 @@ local PlayerSpecializationUtils = require("scripts/utilities/player_specializati
 local Promise = require("scripts/foundation/utilities/promise")
 local ScriptedScenarios = require("scripts/extension_systems/scripted_scenario/scripted_scenarios")
 local level_trigger_event = Level.trigger_event
-local ui_manager = nil
+local ui_manager
 local WEAPON_CATEGORY = "Player Equipment - Weapons"
 local WEAPON_CATEGORY_DESCRIPTIONS = {
 	prototype = "PROTOTYPE (free to test, but don't report issues)",
@@ -360,6 +362,7 @@ local USE_EVENTS = {
 	om_hub_01 = true,
 	prologue = true
 }
+
 functions.play_cutscene = {
 	name = "Play Cutscene",
 	category = "Cinematics",
@@ -658,7 +661,7 @@ local function _print_camera_teleport_cmd()
 	local player = Managers.player:local_player(1)
 	local camera_manager = Managers.state.camera
 	local free_flight_manager = Managers.free_flight
-	local camera_pos, camera_rot = nil
+	local camera_pos, camera_rot
 
 	if free_flight_manager and free_flight_manager:is_in_free_flight() then
 		camera_pos, camera_rot = free_flight_manager:camera_position_rotation("global")
@@ -724,6 +727,7 @@ functions.teleport_all_luggables_to_me = {
 		end
 	end
 }
+
 local mission_board_error_text = "Failed fetching missions"
 local mission_board_options = {}
 local mission_board_data = {}
@@ -748,6 +752,7 @@ local function _fetch_mission_board()
 		for i = 1, #missions do
 			local mission = missions[i]
 			local text = string.format("%s. %s (chl %s res %s)", i, mission.map, mission.challenge, mission.resistance)
+
 			mission_board_options[#mission_board_options + 1] = text
 			mission_board_data[text] = mission
 		end
@@ -866,6 +871,7 @@ local function _init_scripted_scenarios(scenario_templates)
 
 			for j = 1, #sorted_scenarios do
 				local scenario_name = sorted_scenarios[j]
+
 				all_scenarios[#all_scenarios + 1] = string.format("%s.%s", scenario_type, scenario_name)
 			end
 		end
@@ -954,6 +960,7 @@ functions.crash_server = {
 		_crash_server()
 	end
 }
+
 local _is_disconnected = false
 
 local function _disconnect(seconds)
@@ -967,6 +974,7 @@ local function _disconnect(seconds)
 
 	local title_request = Managers.backend.title_request
 	local url_request = Managers.backend.url_request
+
 	Managers.backend.title_request = Managers.backend.failed_request
 	Managers.backend.url_request = Managers.backend.failed_request
 
@@ -1178,6 +1186,10 @@ local function _equip_slot_on_value_set_function(item_name, old_item_name, slot_
 				Log.error("DebugFunctions", "Equipping %s to %s failed. You probably have Steam running together with a local character profile! %s", item_data.name, slot_name, errors)
 			end)
 		end
+
+		if false then
+			-- Nothing
+		end
 	elseif is_server then
 		local profile_synchronizer_host = Managers.profile_synchronization:synchronizer_host()
 
@@ -1235,6 +1247,7 @@ end
 local function _add_weapon_category(slot_name, breed_name, workflow_state, definitions)
 	local function_key = string.format("equip_%s_%s_%s", workflow_state, slot_name, breed_name)
 	local category = string.format("%s - %s", WEAPON_CATEGORY, WEAPON_CATEGORY_DESCRIPTIONS[workflow_state])
+
 	functions[function_key] = {
 		category = category,
 		name = slot_name,
@@ -1331,19 +1344,35 @@ local function _create_weapon_categories(item_definitions, data, slot_name)
 				for j = 1, #breeds do
 					definitions.releasable[breeds[j]][name] = item
 				end
-			elseif shippable then
+
+				break
+			end
+
+			if shippable then
 				for j = 1, #breeds do
 					definitions.shippable[breeds[j]][name] = item
 				end
-			elseif functional then
+
+				break
+			end
+
+			if functional then
 				for j = 1, #breeds do
 					definitions.functional[breeds[j]][name] = item
 				end
-			elseif prototype then
+
+				break
+			end
+
+			if prototype then
 				for j = 1, #breeds do
 					definitions.prototype[breeds[j]][name] = item
 				end
-			elseif blockout then
+
+				break
+			end
+
+			if blockout then
 				for j = 1, #breeds do
 					definitions.blockout[breeds[j]][name] = item
 				end
@@ -1412,15 +1441,13 @@ local function _init_weapons(player_items)
 
 	for slot_name, data in pairs(PlayerCharacterConstants.slot_configuration) do
 		local is_weapon = false
-		local item_definitions, optional_first_entry, category = nil
+		local item_definitions, optional_first_entry, category
 
 		if data.wieldable and data.slot_type == "weapon" then
 			item_definitions = slot_item_definitions_lookup[slot_name] or {}
 			is_weapon = true
 		elseif not data.wieldable then
-			category = "Player Equipment - Gear"
-			optional_first_entry = "none"
-			item_definitions = slot_item_definitions_lookup[slot_name] or {}
+			item_definitions, optional_first_entry, category = slot_item_definitions_lookup[slot_name] or {}, "none", "Player Equipment - Gear"
 		end
 
 		if item_definitions then
@@ -1601,6 +1628,7 @@ local function _init_equipment(player_items)
 		for slot_name, config in pairs(slot_configuration) do
 			if not config.wieldable or config.slot_type == "weapon" then
 				local item_name = inventory_component[slot_name]
+
 				equipment_data[slot_name] = item_name
 			end
 		end
@@ -1744,6 +1772,7 @@ local function _delete_characters(character_profiles)
 
 	for _, character_profile in pairs(character_profiles) do
 		local character_id = character_profile.character_id
+
 		character_ids[#character_ids + 1] = character_id
 	end
 
@@ -1923,6 +1952,7 @@ local function _select_player_voice(selected_voice)
 end
 
 local DialogueBreedSettings = require("scripts/settings/dialogue/dialogue_breed_settings")
+
 functions.select_player_voice = {
 	name = "Select Player Voice",
 	category = "Player Voice",
@@ -2022,7 +2052,7 @@ functions.debug_stagger_selected_unit_with_animation = {
 
 		if selected_unit then
 			local Stagger = require("scripts/utilities/attack/stagger")
-			local stagger_direction = nil
+			local stagger_direction
 
 			Stagger.debug_trigger_minion_stagger(selected_unit, stagger_direction, stagger_animation)
 		end
@@ -2093,6 +2123,7 @@ functions.force_max_suppression = {
 
 		if not selected_unit then
 			local local_player = Managers.player:local_player(1)
+
 			selected_unit = local_player.player_unit
 		end
 
@@ -2114,6 +2145,7 @@ functions.add_max_suppression = {
 
 		if not selected_unit then
 			local local_player = Managers.player:local_player(1)
+
 			selected_unit = local_player.player_unit
 		end
 
@@ -2170,12 +2202,7 @@ local function _dump_selected_talents_on_activated(new_value, old_value)
 		local name = HAS_STEAM and Steam.user_name(Steam.user_id()) or local_player:name()
 		local archetype = local_player:archetype_name()
 		local talents = profile.talents
-		local s = string.format([[
-Account ID: %s
-Character ID: %s
-Name: %s
-Archetype: %s
-Talents:]], account_id, character_id, name, archetype)
+		local s = string.format("Account ID: %s\nCharacter ID: %s\nName: %s\nArchetype: %s\nTalents:", account_id, character_id, name, archetype)
 
 		for talent_name, _ in pairs(talents) do
 			s = string.format("%s\n%s", s, talent_name)
@@ -2247,11 +2274,17 @@ local function _params_to_string(actual, defaults)
 			if value ~= default_value then
 				if value == true then
 					params_as_strings[#params_as_strings + 1] = string.format("-%s", name)
-				elseif type(value) == "string" and string.find(value, " ") ~= nil then
-					params_as_strings[#params_as_strings + 1] = string.format("-%s \"%s\"", name, value)
-				else
-					params_as_strings[#params_as_strings + 1] = string.format("-%s %s", name, value)
+
+					break
 				end
+
+				if type(value) == "string" and string.find(value, " ") ~= nil then
+					params_as_strings[#params_as_strings + 1] = string.format("-%s \"%s\"", name, value)
+
+					break
+				end
+
+				params_as_strings[#params_as_strings + 1] = string.format("-%s %s", name, value)
 			end
 		until true
 	end
@@ -2371,51 +2404,54 @@ functions.set_xp = {
 	number_button = true,
 	on_activated = _set_xp
 }
-local Stories = require("scripts/settings/narrative/narrative_stories").stories
 
-local function _get_chapter_names(chapters)
-	local names = {
-		"reset"
-	}
+do
+	local Stories = require("scripts/settings/narrative/narrative_stories").stories
 
-	for i = 1, #chapters do
-		names[i + 1] = chapters[i].name
-	end
+	local function _get_chapter_names(chapters)
+		local names = {
+			"reset"
+		}
 
-	return names
-end
-
-for story_name, chapters in pairs(Stories) do
-	local function _set_story(chapter_name)
-		if chapter_name ~= "reset" then
-			Managers.narrative:force_story_chapter(story_name, chapter_name)
-		else
-			Managers.narrative:force_story_chapter(story_name)
+		for i = 1, #chapters do
+			names[i + 1] = chapters[i].name
 		end
+
+		return names
 	end
 
-	functions[string.format("force_story_%s", story_name)] = {
+	for story_name, chapters in pairs(Stories) do
+		local function _set_story(chapter_name)
+			if chapter_name ~= "reset" then
+				Managers.narrative:force_story_chapter(story_name, chapter_name)
+			else
+				Managers.narrative:force_story_chapter(story_name)
+			end
+		end
+
+		functions[string.format("force_story_%s", story_name)] = {
+			category = "Progression",
+			name = string.format("Force %s to specific chapter", story_name),
+			on_activated = _set_story,
+			options_function = _get_chapter_names(chapters)
+		}
+	end
+
+	local function _get_story_names()
+		return table.keys(Stories)
+	end
+
+	local function _skip_story(story_name)
+		Managers.narrative:skip_story(story_name)
+	end
+
+	functions.skip_story = {
+		name = "Skip narrative story",
 		category = "Progression",
-		name = string.format("Force %s to specific chapter", story_name),
-		on_activated = _set_story,
-		options_function = _get_chapter_names(chapters)
+		on_activated = _skip_story,
+		options_function = _get_story_names
 	}
 end
-
-local function _get_story_names()
-	return table.keys(Stories)
-end
-
-local function _skip_story(story_name)
-	Managers.narrative:skip_story(story_name)
-end
-
-functions.skip_story = {
-	name = "Skip narrative story",
-	category = "Progression",
-	on_activated = _skip_story,
-	options_function = _get_story_names
-}
 
 local function _list_narrative_event_names()
 	local NarrativeStories = require("scripts/settings/narrative/narrative_stories")
@@ -2444,6 +2480,7 @@ functions.reset_narrative_event = {
 	on_activated = _uncomplete_narrative_event,
 	options_function = _list_narrative_event_names
 }
+
 local Views = require("scripts/ui/views/views")
 
 local function _ui_manager_not_initialized()
@@ -2459,8 +2496,7 @@ local function _get_all_active_views()
 end
 
 local function _get_all_view_names()
-	local filtered_views = {}
-	local i = 1
+	local filtered_views, i = {}, 1
 
 	for view_name, view in pairs(Views) do
 		local testify_flags = view.testify_flags
@@ -2525,7 +2561,8 @@ functions.open_view = {
 		end
 	end
 }
-local selected_voice, selected_sound_event_type, selected_sound_event, player_manager = nil
+
+local selected_voice, selected_sound_event_type, selected_sound_event, player_manager
 
 local function _dialogue_extension()
 	local player = player_manager:local_player(1)
@@ -2543,6 +2580,7 @@ local function _select_voice(voice)
 	selected_voice = voice
 	selected_sound_event_type = nil
 	selected_sound_event = nil
+
 	local dialogue_extension = _dialogue_extension()
 
 	if dialogue_extension then
@@ -2838,12 +2876,15 @@ local function force_character_state(new_value)
 
 	if new_value == "hogtied" then
 		local hogtied_state_input = unit_data_extension:write_component("hogtied_state_input")
+
 		hogtied_state_input.hogtie = true
 	elseif new_value == "knocked_down" then
 		local knocked_down_state_input = unit_data_extension:write_component("knocked_down_state_input")
+
 		knocked_down_state_input.knock_down = true
 	elseif new_value == "dead" then
 		local dead_state_input = unit_data_extension:write_component("dead_state_input")
+
 		dead_state_input.die = true
 	end
 end

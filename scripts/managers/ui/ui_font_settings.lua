@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/ui/ui_font_settings.lua
+
 require("scripts/foundation/utilities/color")
 
 local ui_font_settings = {

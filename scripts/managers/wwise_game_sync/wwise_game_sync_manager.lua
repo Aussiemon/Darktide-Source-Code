@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/wwise_game_sync/wwise_game_sync_manager.lua
+
 local BackgroundMute = require("scripts/utilities/background_mute")
 local WwiseGameSyncSettings = require("scripts/settings/wwise_game_sync/wwise_game_sync_settings")
 local WwiseStateGroupCircumstance = require("scripts/managers/wwise_game_sync/wwise_state_groups/wwise_state_group_circumstance")
@@ -26,7 +28,9 @@ local WWISE_STATE_GROUP_SETTINGS = {
 
 WwiseGameSyncManager.init = function (self, world_manager)
 	self._world = self:_create_world(world_manager)
+
 	local wwise_world = world_manager:wwise_world(self._world)
+
 	self._wwise_world = wwise_world
 
 	WwiseWorld.trigger_resource_event(wwise_world, "wwise/events/music/play_music_manager")

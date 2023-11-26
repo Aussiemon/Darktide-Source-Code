@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/pickup/pickups/side_mission/consumable_pickup.lua
+
 local pickup_data = {
 	description = "loc_pickup_side_mission_consumable_01",
 	name = "consumable",

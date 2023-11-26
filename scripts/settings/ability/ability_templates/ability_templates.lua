@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/ability/ability_templates/ability_templates.lua
+
 local ability_templates = {}
 
 local function _require_ability_templates(path_prefix, template_names)
@@ -5,6 +7,7 @@ local function _require_ability_templates(path_prefix, template_names)
 		local template_name = template_names[i]
 		local full_path = string.format(path_prefix, template_name)
 		local template_data = require(full_path)
+
 		template_data.name = template_name
 		ability_templates[template_name] = template_data
 	end

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/component/component_extension.lua
+
 local Components = require("scripts/components/components")
 local ComponentExtension = class("ComponentExtension")
 
@@ -159,8 +161,7 @@ end
 
 ComponentExtension._parse_components = function (self, unit)
 	local cbs = self._event_callbacks
-	local is_server = self._is_server
-	local nav_world = self._nav_world
+	local is_server, nav_world = self._is_server, self._nav_world
 	local i = 1
 	local component_guid = Unit.get_data(unit, "component_guids", 1)
 
@@ -169,6 +170,7 @@ ComponentExtension._parse_components = function (self, unit)
 		local component_class = Components[component_name]
 		local component, run_update = component_class:new(component_guid, i, unit, is_server, nav_world)
 		local is_enabled = component:get_data(unit, "starts_enabled")
+
 		component.is_enabled = is_enabled == nil and true or is_enabled or false
 
 		if component.update and component.is_enabled and run_update then
@@ -177,6 +179,7 @@ ComponentExtension._parse_components = function (self, unit)
 
 		self._component_list[i] = component
 		self._components[component_guid] = component
+
 		local registered_events = component_class.events
 
 		for event_name, event_function in pairs(registered_events) do
@@ -197,8 +200,7 @@ end
 
 ComponentExtension.add_component = function (self, component_name, unit, starts_enabled)
 	local cbs = self._event_callbacks
-	local is_server = self._is_server
-	local nav_world = self._nav_world
+	local is_server, nav_world = self._is_server, self._nav_world
 	local component_guid = Application.guid()
 	local i = 1
 	local existing_component_guid = Unit.get_data(unit, "component_guids", 1)
@@ -213,6 +215,7 @@ ComponentExtension.add_component = function (self, component_name, unit, starts_
 
 	local component_class = Components[component_name]
 	local component, run_update = component_class:new(component_guid, i, unit, is_server, nav_world)
+
 	component.name = component_name
 	component.is_enabled = starts_enabled == nil and true or starts_enabled or false
 
@@ -222,6 +225,7 @@ ComponentExtension.add_component = function (self, component_name, unit, starts_
 
 	self._component_list[i] = component
 	self._components[component_guid] = component
+
 	local registered_events = component_class.events
 
 	for event_name, event_function in pairs(registered_events) do

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/bot/bot_manager_testify.lua
+
 local BotSpawning = require("scripts/managers/bot/bot_spawning")
 local MasterItems = require("scripts/backend/master_items")
 local BotManagerTestify = {

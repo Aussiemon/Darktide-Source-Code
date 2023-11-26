@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/breed/breed_actions/cultist/cultist_flamer_actions.lua
+
 local BreedShootTemplates = require("scripts/settings/breed/breed_shoot_templates")
 local CultistFlamerSettings = require("scripts/settings/specials/cultist_flamer_settings")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")

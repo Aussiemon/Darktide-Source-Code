@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/minion_visual_loadout/templates/cultist_gunner_visual_loadout_templates.lua
+
 local MissionSettings = require("scripts/settings/mission/mission_settings")
 local zone_ids = MissionSettings.mission_zone_ids
 local basic_cultist_gunner_template = {
@@ -77,26 +79,32 @@ local basic_cultist_gunner_template = {
 		}
 	}
 }
-local templates = {
-	cultist_gunner = {
-		default = {},
-		[zone_ids.tank_foundry] = {},
-		[zone_ids.dust] = {},
-		[zone_ids.watertown] = {}
-	}
+local templates = {}
+
+templates.cultist_gunner = {
+	default = {},
+	[zone_ids.tank_foundry] = {},
+	[zone_ids.dust] = {},
+	[zone_ids.watertown] = {}
 }
 templates.cultist_gunner.default[1] = table.clone(basic_cultist_gunner_template)
+
 local foundry_1 = table.clone(basic_cultist_gunner_template)
+
 foundry_1.slots.envrionmental_override.items = {
 	"content/items/characters/minions/environment_overrides/dirt_02"
 }
 templates.cultist_gunner.tank_foundry[1] = foundry_1
+
 local dust_1 = table.clone(basic_cultist_gunner_template)
+
 dust_1.slots.envrionmental_override.items = {
 	"content/items/characters/minions/environment_overrides/sand_02"
 }
 templates.cultist_gunner.dust[1] = dust_1
+
 local watertown_1 = table.clone(basic_cultist_gunner_template)
+
 watertown_1.slots.envrionmental_override.items = {
 	"content/items/characters/minions/environment_overrides/acid_02"
 }

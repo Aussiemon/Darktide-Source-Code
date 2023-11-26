@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/components/broadphase.lua
+
 local Broadphase = component("Broadphase")
 
 Broadphase.init = function (self, unit)

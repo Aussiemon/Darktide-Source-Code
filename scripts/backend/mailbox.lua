@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/backend/mailbox.lua
+
 local Promise = require("scripts/foundation/utilities/promise")
 local BackendUtilities = require("scripts/foundation/managers/backend/utilities/backend_utilities")
 local MailBox = class("MailBox")
@@ -37,7 +39,7 @@ local function _patch_mail(mail, body)
 end
 
 MailBox.get_mail_paged = function (self, character_id, limit, source)
-	local promise = nil
+	local promise
 
 	if character_id then
 		promise = BackendUtilities.make_account_title_request("characters", BackendUtilities.url_builder(character_id):path("/mail"):query("source", source):query("limit", limit))
@@ -47,6 +49,7 @@ MailBox.get_mail_paged = function (self, character_id, limit, source)
 
 	return promise:next(function (data)
 		local result = BackendUtilities.wrap_paged_response(data.body)
+
 		result.globals = data.body._embedded.globals
 
 		for i, v in ipairs(result.items) do

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/first_person/player_husk_first_person_extension.lua
+
 local FirstPersonLookDeltaAnimationControl = require("scripts/extension_systems/first_person/first_person_look_delta_animation_control")
 local FirstPersonRunSpeedAnimationControl = require("scripts/extension_systems/first_person/first_person_run_speed_animation_control")
 local Footstep = require("scripts/utilities/footstep")
@@ -12,11 +14,15 @@ PlayerHuskFirstPersonExtension.init = function (self, extension_init_context, un
 	local wwise_world = extension_init_context.wwise_world
 	local physics_world = extension_init_context.physics_world
 	local breed = extension_init_data.breed
+
 	self._wwise_world = wwise_world
 	self._world = extension_init_context.world
+
 	local heights = extension_init_data.heights
+
 	self._heights = heights
 	self._extrapolated_character_height = heights.default
+
 	local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
 	local first_person_component = unit_data_extension:read_component("first_person")
 	local character_state_component = unit_data_extension:read_component("character_state")
@@ -24,10 +30,12 @@ PlayerHuskFirstPersonExtension.init = function (self, extension_init_context, un
 	local movement_state_component = unit_data_extension:read_component("movement_state")
 	local weapon_action_component = unit_data_extension:read_component("weapon_action")
 	local alternate_fire_component = unit_data_extension:read_component("alternate_fire")
+
 	self._first_person_mode_component = unit_data_extension:read_component("first_person_mode")
 	self._unit_data_extension = unit_data_extension
 	self._first_person_component = first_person_component
 	self._character_state_component = character_state_component
+
 	local pose_scale = breed.first_person_pose_scale or 1
 	local character_height = heights.default
 	local position_root = Unit.local_position(unit, 1)
@@ -41,6 +49,7 @@ PlayerHuskFirstPersonExtension.init = function (self, extension_init_context, un
 	Matrix4x4.set_scale(pose, Vector3(pose_scale, pose_scale, pose_scale))
 
 	local first_person_unit = unit_spawner_manager:spawn_unit(unit_name, pose)
+
 	self._first_person_unit = first_person_unit
 	self._unit = unit
 
@@ -49,7 +58,9 @@ PlayerHuskFirstPersonExtension.init = function (self, extension_init_context, un
 	self._is_camera_follow_target = false
 	self._is_first_person_spectated = false
 	self._footstep_time = 0
+
 	local feet_source_id = WwiseWorld.make_manual_source(wwise_world, unit, 1)
+
 	self._footstep_context = {
 		character_state_component = character_state_component,
 		sprint_character_state_component = sprint_character_state_component,
@@ -70,6 +81,7 @@ end
 PlayerHuskFirstPersonExtension.extensions_ready = function (self, world, unit)
 	local first_person_unit = self._first_person_unit
 	local is_husk = true
+
 	self._run_animation_speed_control = FirstPersonRunSpeedAnimationControl:new(first_person_unit, unit)
 	self._look_delta_animation_control = FirstPersonLookDeltaAnimationControl:new(first_person_unit, unit, is_husk)
 	self._footstep_context.locomotion_extension = ScriptUnit.extension(unit, "locomotion_system")
@@ -101,6 +113,7 @@ end
 
 PlayerHuskFirstPersonExtension.update = function (self, unit, dt, t)
 	self._show_1p_equipment, self._wants_1p_camera = self:_update_first_person_mode(t)
+
 	local is_in_first_person_mode = self:is_in_first_person_mode()
 
 	if is_in_first_person_mode then
@@ -118,6 +131,7 @@ PlayerHuskFirstPersonExtension.update = function (self, unit, dt, t)
 	if not self._unit_data_extension.is_resimulating then
 		local previous_frame_character_state_name = self._previous_frame_character_state_name
 		local footstep_context = self._footstep_context
+
 		self._footstep_time = Footstep.update_1p_footsteps(t, self._footstep_time, previous_frame_character_state_name, is_in_first_person_mode, footstep_context, FOOTSTEP_SOUND_ALIAS, UPPER_BODY_FOLEY, WEAPON_FOLEY, EXTRA_FOLEY)
 
 		Footstep.update_3p_footsteps(previous_frame_character_state_name, is_in_first_person_mode, footstep_context, FOOTSTEP_SOUND_ALIAS, UPPER_BODY_FOLEY, WEAPON_FOLEY, EXTRA_FOLEY)
@@ -143,7 +157,7 @@ end
 
 PlayerHuskFirstPersonExtension._update_first_person_mode = function (self, t)
 	local wants_1p_camera = self._first_person_mode_component.wants_1p_camera
-	local show_1p_equipment = wants_1p_camera and self._first_person_mode_component.show_1p_equipment_at_t < t
+	local show_1p_equipment = wants_1p_camera and t > self._first_person_mode_component.show_1p_equipment_at_t
 
 	return show_1p_equipment, wants_1p_camera
 end

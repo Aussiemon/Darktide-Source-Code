@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/hud/hud_elements_player_hub.lua
+
 local elements = {
 	{
 		class_name = "HudElementCharacterNewsFeed",

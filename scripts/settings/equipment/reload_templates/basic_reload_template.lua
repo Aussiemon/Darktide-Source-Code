@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/equipment/reload_templates/basic_reload_template.lua
+
 local reload_template = {
 	name = "basic",
 	states = {

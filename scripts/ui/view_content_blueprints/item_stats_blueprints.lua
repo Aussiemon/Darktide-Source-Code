@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/view_content_blueprints/item_stats_blueprints.lua
+
 local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templates")
 local ColorUtilities = require("scripts/utilities/ui/colors")
 local ItemPassTemplates = require("scripts/ui/pass_templates/item_pass_templates")
@@ -39,7 +41,7 @@ local function _stat_value_to_text(stat, is_int)
 	local type_data = stat.type_data
 	local value = _scale_stat_value_by_type(stat.value, type_data.display_type)
 
-	if math.huge <= value then
+	if value >= math.huge then
 		return Localize("loc_weapon_stats_display_unlimited")
 	elseif type_data.signed and value >= 0 then
 		if is_int then
@@ -85,6 +87,7 @@ end
 local function generate_blueprints_function(grid_size, optional_item)
 	local grid_width = grid_size[1]
 	local equipped_display_name_style = table.clone(UIFontSettings.header_3)
+
 	equipped_display_name_style.font_size = 24
 	equipped_display_name_style.offset = {
 		0,
@@ -94,7 +97,9 @@ local function generate_blueprints_function(grid_size, optional_item)
 	equipped_display_name_style.text_horizontal_alignment = "center"
 	equipped_display_name_style.text_vertical_alignment = "top"
 	equipped_display_name_style.text_color = Color.terminal_text_header(255, true)
+
 	local weapon_display_name_style = table.clone(UIFontSettings.header_3)
+
 	weapon_display_name_style.font_size = 24
 	weapon_display_name_style.offset = {
 		20,
@@ -108,7 +113,9 @@ local function generate_blueprints_function(grid_size, optional_item)
 	weapon_display_name_style.text_horizontal_alignment = "left"
 	weapon_display_name_style.text_vertical_alignment = "top"
 	weapon_display_name_style.text_color = Color.terminal_text_header(255, true)
+
 	local weapon_type_name_style = table.clone(UIFontSettings.header_3)
+
 	weapon_type_name_style.offset = {
 		20,
 		12,
@@ -122,7 +129,9 @@ local function generate_blueprints_function(grid_size, optional_item)
 	weapon_type_name_style.text_horizontal_alignment = "left"
 	weapon_type_name_style.text_vertical_alignment = "top"
 	weapon_type_name_style.text_color = Color.terminal_text_body(255, true)
+
 	local weapon_keyword_style = table.clone(UIFontSettings.header_3)
+
 	weapon_keyword_style.offset = {
 		0,
 		-20,
@@ -136,7 +145,9 @@ local function generate_blueprints_function(grid_size, optional_item)
 	weapon_keyword_style.text_horizontal_alignment = "center"
 	weapon_keyword_style.text_vertical_alignment = "center"
 	weapon_keyword_style.text_color = Color.terminal_text_header(255, true)
+
 	local weapon_skin_requirement_header_style = table.clone(UIFontSettings.header_3)
+
 	weapon_skin_requirement_header_style.offset = {
 		10,
 		0,
@@ -150,7 +161,9 @@ local function generate_blueprints_function(grid_size, optional_item)
 	weapon_skin_requirement_header_style.text_horizontal_alignment = "left"
 	weapon_skin_requirement_header_style.text_vertical_alignment = "top"
 	weapon_skin_requirement_header_style.text_color = Color.terminal_corner_selected(255, true)
+
 	local weapon_skin_requirement_style = table.clone(UIFontSettings.body)
+
 	weapon_skin_requirement_style.offset = {
 		10,
 		0,
@@ -164,7 +177,9 @@ local function generate_blueprints_function(grid_size, optional_item)
 	weapon_skin_requirement_style.text_horizontal_alignment = "left"
 	weapon_skin_requirement_style.text_vertical_alignment = "top"
 	weapon_skin_requirement_style.text_color = Color.terminal_text_body(255, true)
+
 	local weapon_stat_text_style = table.clone(UIFontSettings.body)
+
 	weapon_stat_text_style.offset = {
 		0,
 		0,
@@ -178,7 +193,9 @@ local function generate_blueprints_function(grid_size, optional_item)
 	weapon_stat_text_style.text_horizontal_alignment = "left"
 	weapon_stat_text_style.text_vertical_alignment = "top"
 	weapon_stat_text_style.text_color = Color.terminal_text_body(255, true)
+
 	local weapon_value_style = table.clone(UIFontSettings.body)
+
 	weapon_value_style.offset = {
 		0,
 		0,
@@ -193,7 +210,9 @@ local function generate_blueprints_function(grid_size, optional_item)
 	weapon_value_style.text_vertical_alignment = "top"
 	weapon_value_style.text_color = Color.white(255, true)
 	weapon_value_style.material = "content/ui/materials/font_gradients/slug_font_gradient_item_level"
+
 	local gear_stat_text_style = table.clone(UIFontSettings.body)
+
 	gear_stat_text_style.offset = {
 		0,
 		-42,
@@ -207,7 +226,9 @@ local function generate_blueprints_function(grid_size, optional_item)
 	gear_stat_text_style.text_horizontal_alignment = "left"
 	gear_stat_text_style.text_vertical_alignment = "bottom"
 	gear_stat_text_style.text_color = Color.terminal_text_body(255, true)
+
 	local gear_value_style = table.clone(UIFontSettings.body)
+
 	gear_value_style.offset = {
 		0,
 		-10,
@@ -222,7 +243,9 @@ local function generate_blueprints_function(grid_size, optional_item)
 	gear_value_style.text_vertical_alignment = "bottom"
 	gear_value_style.text_color = Color.white(255, true)
 	gear_value_style.material = "content/ui/materials/font_gradients/slug_font_gradient_item_level"
+
 	local stamina_value_style = table.clone(UIFontSettings.body)
+
 	stamina_value_style.offset = {
 		0,
 		0,
@@ -235,7 +258,9 @@ local function generate_blueprints_function(grid_size, optional_item)
 	stamina_value_style.text_horizontal_alignment = "left"
 	stamina_value_style.text_vertical_alignment = "top"
 	stamina_value_style.text_color = Color.terminal_text_body(255, true)
+
 	local modification_lock_style = table.clone(UIFontSettings.body)
+
 	modification_lock_style.offset = {
 		10,
 		-2,
@@ -245,9 +270,13 @@ local function generate_blueprints_function(grid_size, optional_item)
 	modification_lock_style.text_vertical_alignment = "bottom"
 	modification_lock_style.text_color = Color.terminal_corner(255, true)
 	modification_lock_style.visible = false
+
 	local modification_modified_style = table.clone(modification_lock_style)
+
 	modification_modified_style.text_color = Color.terminal_icon(255, true)
+
 	local weapon_perk_style = table.clone(UIFontSettings.body)
+
 	weapon_perk_style.offset = {
 		98,
 		3,
@@ -261,7 +290,9 @@ local function generate_blueprints_function(grid_size, optional_item)
 	weapon_perk_style.text_horizontal_alignment = "left"
 	weapon_perk_style.text_vertical_alignment = "top"
 	weapon_perk_style.text_color = Color.terminal_text_body(255, true)
+
 	local gadget_trait_style = table.clone(UIFontSettings.body)
+
 	gadget_trait_style.offset = {
 		98,
 		0,
@@ -274,7 +305,9 @@ local function generate_blueprints_function(grid_size, optional_item)
 	gadget_trait_style.text_horizontal_alignment = "left"
 	gadget_trait_style.text_vertical_alignment = "center"
 	gadget_trait_style.text_color = Color.terminal_text_header(255, true)
+
 	local weapon_traits_style = table.clone(UIFontSettings.header_3)
+
 	weapon_traits_style.offset = {
 		98,
 		0,
@@ -287,7 +320,9 @@ local function generate_blueprints_function(grid_size, optional_item)
 	weapon_traits_style.text_horizontal_alignment = "left"
 	weapon_traits_style.text_vertical_alignment = "top"
 	weapon_traits_style.text_color = Color.terminal_text_header(255, true)
+
 	local weapon_traits_description_style = table.clone(UIFontSettings.body)
+
 	weapon_traits_description_style.offset = {
 		98,
 		20,
@@ -301,7 +336,9 @@ local function generate_blueprints_function(grid_size, optional_item)
 	weapon_traits_description_style.text_horizontal_alignment = "left"
 	weapon_traits_description_style.text_vertical_alignment = "top"
 	weapon_traits_description_style.text_color = Color.terminal_text_body(255, true)
+
 	local description_style = table.clone(UIFontSettings.body)
+
 	description_style.offset = {
 		20,
 		0,
@@ -316,7 +353,9 @@ local function generate_blueprints_function(grid_size, optional_item)
 	description_style.text_horizontal_alignment = "center"
 	description_style.text_vertical_alignment = "top"
 	description_style.text_color = Color.terminal_text_body_sub_header(255, true)
+
 	local obtained_label_style = table.clone(UIFontSettings.body)
+
 	obtained_label_style.offset = {
 		20,
 		4,
@@ -330,7 +369,9 @@ local function generate_blueprints_function(grid_size, optional_item)
 	obtained_label_style.text_horizontal_alignment = "left"
 	obtained_label_style.text_vertical_alignment = "top"
 	obtained_label_style.text_color = Color.terminal_text_header(255, true)
+
 	local obtained_header_style = table.clone(UIFontSettings.header_3)
+
 	obtained_header_style.offset = {
 		20,
 		0,
@@ -344,7 +385,9 @@ local function generate_blueprints_function(grid_size, optional_item)
 	obtained_header_style.text_horizontal_alignment = "left"
 	obtained_header_style.text_vertical_alignment = "top"
 	obtained_header_style.text_color = Color.terminal_text_body_sub_header(255, true)
+
 	local achievement_description_style = table.clone(UIFontSettings.body)
+
 	achievement_description_style.offset = {
 		20,
 		0,
@@ -359,7 +402,9 @@ local function generate_blueprints_function(grid_size, optional_item)
 	achievement_description_style.text_horizontal_alignment = "left"
 	achievement_description_style.text_vertical_alignment = "top"
 	achievement_description_style.text_color = Color.terminal_text_body(255, true)
+
 	local weapon_attack_info_style = table.clone(UIFontSettings.body)
+
 	weapon_attack_info_style.offset = {
 		52,
 		0,
@@ -372,7 +417,9 @@ local function generate_blueprints_function(grid_size, optional_item)
 	weapon_attack_info_style.text_horizontal_alignment = "left"
 	weapon_attack_info_style.text_vertical_alignment = "center"
 	weapon_attack_info_style.text_color = Color.terminal_text_body(255, true)
+
 	local weapon_attack_header_style = table.clone(UIFontSettings.body)
+
 	weapon_attack_header_style.offset = {
 		10,
 		0,
@@ -385,7 +432,9 @@ local function generate_blueprints_function(grid_size, optional_item)
 	weapon_attack_header_style.text_horizontal_alignment = "left"
 	weapon_attack_header_style.text_vertical_alignment = "center"
 	weapon_attack_header_style.text_color = Color.terminal_text_header(255, true)
+
 	local weapon_action_text_style = table.clone(UIFontSettings.body)
+
 	weapon_action_text_style.offset = {
 		0,
 		0,
@@ -399,7 +448,9 @@ local function generate_blueprints_function(grid_size, optional_item)
 	weapon_action_text_style.text_horizontal_alignment = "right"
 	weapon_action_text_style.text_vertical_alignment = "bottom"
 	weapon_action_text_style.text_color = Color.terminal_text_body(255, true)
+
 	local weapon_action_value_style = table.clone(UIFontSettings.body)
+
 	weapon_action_value_style.offset = {
 		0,
 		0,
@@ -414,7 +465,9 @@ local function generate_blueprints_function(grid_size, optional_item)
 	weapon_action_value_style.text_vertical_alignment = "bottom"
 	weapon_action_value_style.text_color = Color.white(255, true)
 	weapon_action_value_style.material = "content/ui/materials/font_gradients/slug_font_gradient_item_level"
+
 	local rating_info_style = table.clone(UIFontSettings.header_3)
+
 	rating_info_style.offset = {
 		-25,
 		10,
@@ -428,7 +481,9 @@ local function generate_blueprints_function(grid_size, optional_item)
 	rating_info_style.text_horizontal_alignment = "right"
 	rating_info_style.text_vertical_alignment = "top"
 	rating_info_style.text_color = Color.terminal_text_body(255, true)
+
 	local rating_header_style = table.clone(UIFontSettings.header_3)
+
 	rating_header_style.offset = {
 		20,
 		10,
@@ -442,7 +497,9 @@ local function generate_blueprints_function(grid_size, optional_item)
 	rating_header_style.text_horizontal_alignment = "left"
 	rating_header_style.text_vertical_alignment = "top"
 	rating_header_style.text_color = Color.terminal_text_body_sub_header(255, true)
+
 	local special_description_style = table.clone(UIFontSettings.body)
+
 	special_description_style.offset = {
 		10,
 		10,
@@ -456,7 +513,9 @@ local function generate_blueprints_function(grid_size, optional_item)
 	special_description_style.text_horizontal_alignment = "left"
 	special_description_style.text_vertical_alignment = "top"
 	special_description_style.text_color = Color.terminal_text_body_dark(255, true)
+
 	local weapon_display_name_header_style = table.clone(UIFontSettings.header_2)
+
 	weapon_display_name_header_style.size = {
 		grid_width - 20,
 		50
@@ -471,7 +530,9 @@ local function generate_blueprints_function(grid_size, optional_item)
 	weapon_display_name_header_style.text_vertical_alignment = "center"
 	weapon_display_name_header_style.text_color = Color.white(255, true)
 	weapon_display_name_header_style.material = "content/ui/materials/font_gradients/slug_font_gradient_item_level"
+
 	local weapon_attack_type_desc_style = table.clone(UIFontSettings.body)
+
 	weapon_attack_type_desc_style.offset = {
 		10,
 		10,
@@ -485,7 +546,9 @@ local function generate_blueprints_function(grid_size, optional_item)
 	weapon_attack_type_desc_style.text_horizontal_alignment = "center"
 	weapon_attack_type_desc_style.text_vertical_alignment = "top"
 	weapon_attack_type_desc_style.text_color = Color.terminal_text_body_dark(0, true)
+
 	local weapon_attack_type_display_name_header_style = table.clone(UIFontSettings.header_2)
+
 	weapon_attack_type_display_name_header_style.size = {
 		grid_width - 20,
 		50
@@ -499,7 +562,9 @@ local function generate_blueprints_function(grid_size, optional_item)
 	weapon_attack_type_display_name_header_style.text_horizontal_alignment = "left"
 	weapon_attack_type_display_name_header_style.text_vertical_alignment = "center"
 	weapon_attack_type_display_name_header_style.text_color = Color.white(255, true)
+
 	local weapon_rarity_header_style = table.clone(UIFontSettings.header_2)
+
 	weapon_rarity_header_style.size = {
 		grid_width - 20
 	}
@@ -512,7 +577,9 @@ local function generate_blueprints_function(grid_size, optional_item)
 	weapon_rarity_header_style.text_horizontal_alignment = "left"
 	weapon_rarity_header_style.text_vertical_alignment = "center"
 	weapon_rarity_header_style.text_color = Color.terminal_text_header(255, true)
+
 	local rating_icon_style = table.clone(UIFontSettings.body)
+
 	rating_icon_style.offset = {
 		0,
 		0,
@@ -523,7 +590,9 @@ local function generate_blueprints_function(grid_size, optional_item)
 	rating_icon_style.text_vertical_alignment = "top"
 	rating_icon_style.text_color = Color.white(255, true)
 	rating_icon_style.material = "content/ui/materials/font_gradients/slug_font_gradient_item_level"
+
 	local rating_value_style = table.clone(UIFontSettings.body)
+
 	rating_value_style.offset = {
 		0,
 		0,
@@ -533,7 +602,9 @@ local function generate_blueprints_function(grid_size, optional_item)
 	rating_value_style.text_horizontal_alignment = "left"
 	rating_value_style.text_vertical_alignment = "top"
 	rating_value_style.text_color = Color.white(255, true)
+
 	local weapon_keyword_expanded_header_style = table.clone(UIFontSettings.header_3)
+
 	weapon_keyword_expanded_header_style.offset = {
 		0,
 		0,
@@ -544,7 +615,9 @@ local function generate_blueprints_function(grid_size, optional_item)
 	weapon_keyword_expanded_header_style.text_vertical_alignment = "top"
 	weapon_keyword_expanded_header_style.text_color = Color.white(255, true)
 	weapon_keyword_expanded_header_style.material = "content/ui/materials/font_gradients/slug_font_gradient_item_level"
+
 	local weapon_keyword_desc_style = table.clone(UIFontSettings.body)
+
 	weapon_keyword_desc_style.size = {
 		grid_width * 0.5 - 10,
 		400
@@ -558,7 +631,9 @@ local function generate_blueprints_function(grid_size, optional_item)
 	weapon_keyword_desc_style.text_horizontal_alignment = "left"
 	weapon_keyword_desc_style.text_vertical_alignment = "top"
 	weapon_keyword_desc_style.text_color = Color.terminal_text_header(255, true)
+
 	local damage_grid_x_header_style = table.clone(UIFontSettings.body)
+
 	damage_grid_x_header_style.offset = {
 		0,
 		0,
@@ -575,7 +650,9 @@ local function generate_blueprints_function(grid_size, optional_item)
 	damage_grid_x_header_style.text_color = Color.terminal_text_body_dark(255, true)
 	damage_grid_x_header_style.base_text_color = Color.terminal_text_body_dark(255, true)
 	damage_grid_x_header_style.selected_text_color = Color.terminal_corner_selected(255, true)
+
 	local damage_grid_y_header_style = table.clone(UIFontSettings.body)
+
 	damage_grid_y_header_style.offset = {
 		0,
 		0,
@@ -592,7 +669,9 @@ local function generate_blueprints_function(grid_size, optional_item)
 	damage_grid_y_header_style.text_color = Color.terminal_text_body_dark(255, true)
 	damage_grid_y_header_style.base_text_color = Color.terminal_text_body_dark(255, true)
 	damage_grid_y_header_style.selected_text_color = Color.terminal_corner_selected(255, true)
+
 	local damage_stat_style = table.clone(UIFontSettings.header_2)
+
 	damage_stat_style.offset = {
 		0,
 		5,
@@ -607,7 +686,9 @@ local function generate_blueprints_function(grid_size, optional_item)
 	damage_stat_style.text_horizontal_alignment = "center"
 	damage_stat_style.text_vertical_alignment = "top"
 	damage_stat_style.text_color = Color.white(255, true)
+
 	local damage_legend_style = table.clone(UIFontSettings.header_2)
+
 	damage_legend_style.offset = {
 		0,
 		0,
@@ -664,9 +745,10 @@ local function generate_blueprints_function(grid_size, optional_item)
 
 		for j = 1, #y_axis_headers do
 			for i = #x_axis_headers, 1, -1 do
-				local index = (j - 1) * #x_axis_headers + #x_axis_headers - (i - 1)
+				local index = (j - 1) * #x_axis_headers + (#x_axis_headers - (i - 1))
 				local damage = math.floor(attack_damage[index] + 0.5)
 				local impact = math.floor(impact_damage[index] + 0.5)
+
 				pass_templates[#pass_templates + 1] = {
 					value = "content/ui/materials/frames/frame_tile_1px",
 					pass_type = "texture",
@@ -764,6 +846,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 
 		for i = 1, #x_axis_headers do
 			local header = x_axis_headers[#x_axis_headers - (i - 1)]
+
 			pass_templates[#pass_templates + 1] = {
 				pass_type = "text",
 				style_id = "x_axis_header_" .. i,
@@ -781,6 +864,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 
 		for i = #y_axis_headers, 1, -1 do
 			local header = y_axis_headers[i]
+
 			pass_templates[#pass_templates + 1] = {
 				pass_type = "text",
 				style_id = "y_axis_header_" .. i,
@@ -857,11 +941,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 			return
 		end
 
-		if not attack_data[chain_index] then
-			if chain_index ~= 1 then
-				attack_data = false
-			end
-		end
+		attack_data = attack_data[chain_index] or chain_index == 1 and attack_data
 
 		if not attack_data or table.is_empty(attack_data) then
 			attack_data = damage_stats[1][1]
@@ -874,6 +954,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 		end
 
 		widget.visible = true
+
 		local attack_type_data = attack_data.type_data
 		local attack_damage = attack_data.attack
 		local impact_damage = attack_data.impact
@@ -884,9 +965,10 @@ local function generate_blueprints_function(grid_size, optional_item)
 				if no_data then
 					content["damage_stat_" .. i .. "_" .. j] = "{#color(171,91,81)}-  {#color(95,152,180)}-"
 				else
-					local index = (j - 1) * num_columns + num_columns - (i - 1)
+					local index = (j - 1) * num_columns + (num_columns - (i - 1))
 					local damage = math.floor(attack_damage[index] + 0.5)
 					local impact = math.floor(impact_damage[index] + 0.5)
+
 					content["damage_stat_" .. i .. "_" .. j] = "{#color(171,91,81)} " .. damage .. "  {#color(95,152,180)} " .. impact
 				end
 			end
@@ -1227,6 +1309,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 				}
 			}
 		}
+
 		local displayed_attacks = weapon_template.displayed_attacks
 
 		if displayed_attacks then
@@ -1258,6 +1341,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 							local offset_x = base_offset + -icon_step * (#data.attack_chain - 1) * 0.5 + (i - 1) * icon_step
 							local attack_type = data.attack_chain[i]
 							local icon = UISettings.weapon_action_type_icons[attack_type] or "content/ui/materials/icons/traits/empty"
+
 							pass_templates[#pass_templates + 1] = {
 								pass_type = "texture",
 								value_id = "icon_" .. index .. "_" .. i,
@@ -1281,7 +1365,8 @@ local function generate_blueprints_function(grid_size, optional_item)
 								},
 								change_function = function (content, style, animations, dt)
 									local hotspot = content["icon_hotspot_" .. index .. "_" .. i]
-									style.color = (hotspot.is_hover or hotspot.is_selected) and style.selected_color or style.base_color
+
+									style.color = not (not hotspot.is_hover and not hotspot.is_selected) and style.selected_color or style.base_color
 								end
 							}
 							pass_templates[#pass_templates + 1] = {
@@ -1307,6 +1392,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 					else
 						local attack_type = data.type
 						local icon = UISettings.weapon_action_type_icons[attack_type] or "content/ui/materials/icons/traits/empty"
+
 						pass_templates[#pass_templates + 1] = {
 							pass_type = "texture",
 							value_id = "icon_" .. index .. "_1",
@@ -1330,7 +1416,8 @@ local function generate_blueprints_function(grid_size, optional_item)
 							},
 							change_function = function (content, style, animations, dt)
 								local hotspot = content["icon_hotspot_" .. index .. "_1"]
-								style.color = (hotspot.is_hover or hotspot.is_selected) and style.selected_color or style.base_color
+
+								style.color = not (not hotspot.is_hover and not hotspot.is_selected) and style.selected_color or style.base_color
 							end
 						}
 						pass_templates[#pass_templates + 1] = {
@@ -1363,8 +1450,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 	local function _update_pattern_type(widget, parent, ui_renderer)
 		local content = widget.content
 		local style = widget.style
-		local attack_index = 1
-		local chain_index = 1
+		local attack_index, chain_index = 1, 1
 
 		if parent.current_attack_index then
 			attack_index, chain_index = parent:current_attack_index()
@@ -1386,7 +1472,9 @@ local function generate_blueprints_function(grid_size, optional_item)
 			local action_name = action_table and action_table[chain_index] and action_table[chain_index].action_name
 			local action = action_name and weapon_template.actions[action_name]
 			local explosion_template = action and Action.explosion_template(action)
+
 			content.extra_information = explosion_template and Localize("loc_weapon_stats_display_explosions_vary") or ""
+
 			local is_ranged_weapon = Item.is_weapon_template_ranged(item)
 			local weapon_action_title_display_names = is_ranged_weapon and UISettings.weapon_action_title_display_names or UISettings.weapon_action_title_display_names_melee
 			local weapon_action_display_order_array = UISettings.weapon_action_display_order_array
@@ -1403,13 +1491,16 @@ local function generate_blueprints_function(grid_size, optional_item)
 					local display_name = Localize(display_name)
 					local desc_id = UISettings.attack_type_desc_lookup[attack_type] or data.desc
 					local desc = desc_id and Localize(desc_id) or ""
+
 					content.attack_type_icon = attack_type_icon
 					content.attack_type_name = display_name
 					content.attack_type_desc = desc
+
 					local attack_type_icon_style = style.attack_type_icon
 					local attack_type_name_style = style.attack_type_name
 					local attack_type_desc_style = style.attack_type_desc
 					local text_width = get_style_text_width(display_name, attack_type_name_style, ui_renderer)
+
 					attack_type_name_style.text_color[1] = 255
 					attack_type_desc_style.text_color[1] = 255
 					attack_type_icon_style.offset[1] = -text_width * 0.5 - attack_type_icon_style.size[1] - spacing
@@ -1423,7 +1514,9 @@ local function generate_blueprints_function(grid_size, optional_item)
 
 	local function _update_connection_line(old_attack_index, old_chain_index, new_attack_index, new_chain_index, content, style)
 		content["icon_hotspot_" .. old_attack_index .. "_" .. old_chain_index].is_selected = false
+
 		local hotspot_offset = style["icon_hotspot_" .. new_attack_index .. "_" .. new_chain_index].offset[1]
+
 		style.top_line.offset[1] = hotspot_offset
 		style.hover_frame_border.offset[1] = hotspot_offset
 		style.hover_frame_corner.offset[1] = hotspot_offset
@@ -1486,6 +1579,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 				local display_name = Localize(type_display_name or data.display_name)
 				local icon_texture = UISettings.weapon_action_type_icons[data.type]
 				local fire_mode_icon = data.fire_mode and UISettings.weapon_fire_type_icons[data.fire_mode]
+
 				pass_templates[#pass_templates + 1] = {
 					pass_type = "texture",
 					value = icon_texture or "content/ui/materials/backgrounds/default_square",
@@ -1579,6 +1673,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 	local function _apply_package_item_icon_cb_func(widget, item, optional_texture_id)
 		local icon = item.icon
 		local material_values = widget.style.icon.material_values
+
 		material_values[optional_texture_id or "texture_icon"] = icon
 		material_values.use_placeholder_texture = 0
 		widget.content.use_placeholder_texture = material_values.use_placeholder_texture
@@ -1591,6 +1686,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 		end
 
 		local material_values = widget.style.icon.material_values
+
 		material_values[optional_texture_id or "texture_icon"] = nil
 		material_values.use_placeholder_texture = 1
 		widget.content.use_placeholder_texture = material_values.use_placeholder_texture
@@ -1598,6 +1694,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 
 	local function _apply_live_item_icon_cb_func(widget, grid_index, rows, columns, render_target)
 		local material_values = widget.style.icon.material_values
+
 		material_values.use_placeholder_texture = 0
 		material_values.rows = rows
 		material_values.columns = columns
@@ -1613,6 +1710,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 		end
 
 		local material_values = widget.style.icon.material_values
+
 		material_values.use_placeholder_texture = 1
 		material_values.texture_icon = nil
 		widget.content.use_placeholder_texture = material_values.use_placeholder_texture
@@ -1727,6 +1825,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 					end,
 					change_function = function (content, style, _, dt)
 						local add = -0.5 * dt
+
 						style.rotation_progress = ((style.rotation_progress or 0) + add) % 1
 						style.angle = style.rotation_progress * math.pi * 2
 					end
@@ -1844,35 +1943,48 @@ local function generate_blueprints_function(grid_size, optional_item)
 			init = function (parent, widget, element, callback_name, _, ui_renderer)
 				local content = widget.content
 				local style = widget.style
+
 				content.element = element
+
 				local item = element.item
 				local display_name = ItemUtils.display_name(item)
 				local type_name = ItemUtils.sub_display_name(item)
+
 				content.display_name = display_name
 				content.type_name = type_name
+
 				local type_name_style = style.type_name
 				local display_name_text_height = get_style_text_height(display_name, weapon_display_name_style, ui_renderer)
+
 				type_name_style.offset[2] = type_name_style.offset[2] + display_name_text_height
+
 				local rarity_color = ItemUtils.rarity_color(item)
+
 				style.background.color = table.clone(rarity_color)
 				style.background.material_values = {
 					direction = 1
 				}
 				style.display_name.text_color = table.clone(rarity_color)
 				style.type_name.text_color = table.clone(rarity_color)
+
 				local weapon_template = WeaponTemplate.weapon_template_from_item(item)
 				local displayed_attacks = weapon_template.displayed_attacks
 				local is_ranged_weapon = ItemUtils.is_weapon_template_ranged(item)
 				local item_level = item.override_item_rating_string or ItemUtils.item_level(item)
+
 				content.rating_value = item_level
+
 				local value_width = get_style_text_width(item_level, style.rating_value, ui_renderer)
 				local text_width = get_style_text_width(item_level, style.rating_text, ui_renderer)
+
 				style.rating_text.offset[1] = style.rating_text.offset[1] - (value_width - text_width)
+
 				local weapon_stats = WeaponStats:new(item)
 				local main_stats = weapon_stats:get_main_stats()
 
 				if is_ranged_weapon and main_stats.magazine then
 					local magazine = main_stats.magazine
+
 					content.text_ammo_title = Localize("loc_glossary_term_ammunition")
 					content.text_ammo_value = string.format("%i/%i", magazine.ammo, magazine.reserve)
 				else
@@ -1892,6 +2004,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 							380
 						}
 					}
+
 					content.icon_load_id = Managers.ui:load_item_icon(item, cb, context)
 				end
 			end,
@@ -1991,17 +2104,22 @@ local function generate_blueprints_function(grid_size, optional_item)
 			init = function (parent, widget, element, callback_name, _, ui_renderer)
 				local content = widget.content
 				local style = widget.style
+
 				content.element = element
+
 				local item = element.item
 				local display_name = ItemUtils.display_name(item)
 				local type_name = ItemUtils.sub_display_name(item)
+
 				content.display_name = display_name
 				content.type_name = type_name
+
 				local type_name_style = style.type_name
 				local display_name_style = style.display_name
 
 				if item.rarity then
 					local rarity_color, rarity_color_dark = ItemUtils.rarity_color(item)
+
 					style.background.color = table.clone(rarity_color_dark)
 					style.background.material_values = {
 						direction = 1
@@ -2011,6 +2129,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 				end
 
 				local display_name_text_height = get_style_text_height(display_name, weapon_display_name_style, ui_renderer)
+
 				type_name_style.offset[2] = type_name_style.offset[2] + display_name_text_height
 			end
 		},
@@ -2096,6 +2215,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 					end,
 					change_function = function (content, style, _, dt)
 						local add = -0.5 * dt
+
 						style.rotation_progress = ((style.rotation_progress or 0) + add) % 1
 						style.angle = style.rotation_progress * math.pi * 2
 					end
@@ -2225,6 +2345,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 			init = function (parent, widget, element, callback_name)
 				local content = widget.content
 				local style = widget.style
+
 				content.element = element
 				style.background.material_values = {
 					direction = 1
@@ -2236,6 +2357,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 				if not content.icon_load_id then
 					local visual_item = element.visual_item
 					local cb = callback(_apply_live_item_icon_cb_func, widget)
+
 					content.icon_load_id = Managers.ui:load_item_icon(visual_item, cb)
 				end
 			end,
@@ -2331,6 +2453,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 					end,
 					change_function = function (content, style, _, dt)
 						local add = -0.5 * dt
+
 						style.rotation_progress = ((style.rotation_progress or 0) + add) % 1
 						style.angle = style.rotation_progress * math.pi * 2
 					end
@@ -2373,8 +2496,11 @@ local function generate_blueprints_function(grid_size, optional_item)
 			init = function (parent, widget, element, callback_name)
 				local content = widget.content
 				local style = widget.style
+
 				content.element = element
+
 				local item = element.item
+
 				content.display_name = ItemUtils.display_name(item)
 				content.type_name = ItemUtils.sub_display_name(item)
 			end,
@@ -2398,6 +2524,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 						}
 					}
 					local cb = callback(_apply_live_item_icon_cb_func, widget)
+
 					content.icon_load_id = Managers.ui:load_item_icon(item, cb, render_context, profile)
 				end
 			end,
@@ -2504,6 +2631,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 					end,
 					change_function = function (content, style, _, dt)
 						local add = -0.5 * dt
+
 						style.rotation_progress = ((style.rotation_progress or 0) + add) % 1
 						style.angle = style.rotation_progress * math.pi * 2
 					end
@@ -2569,21 +2697,30 @@ local function generate_blueprints_function(grid_size, optional_item)
 			init = function (parent, widget, element, callback_name, _, ui_renderer)
 				local content = widget.content
 				local style = widget.style
+
 				content.element = element
+
 				local item = element.item
 				local display_name = ItemUtils.display_name(item)
 				local type_name = ItemUtils.sub_display_name(item)
+
 				content.display_name = display_name
 				content.type_name = type_name
+
 				local type_name_style = style.type_name
 				local item_level = item.override_item_rating_string or ItemUtils.item_level(item)
+
 				content.rating_value = item_level
+
 				local display_name_text_height = get_style_text_height(display_name, weapon_display_name_style, ui_renderer)
+
 				type_name_style.offset[2] = type_name_style.offset[2] + display_name_text_height
+
 				local item_rarity = item.rarity
 
 				if item_rarity then
 					local rarity_color = ItemUtils.rarity_color(item)
+
 					style.background.color = table.clone(rarity_color)
 					style.display_name.text_color = table.clone(rarity_color)
 					style.type_name.text_color = table.clone(rarity_color)
@@ -2605,6 +2742,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 							400
 						}
 					}
+
 					content.icon_load_id = Managers.ui:load_item_icon(item, cb, context)
 				end
 			end,
@@ -2727,6 +2865,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 					end,
 					change_function = function (content, style, _, dt)
 						local add = -0.5 * dt
+
 						style.rotation_progress = ((style.rotation_progress or 0) + add) % 1
 						style.angle = style.rotation_progress * math.pi * 2
 					end
@@ -2734,6 +2873,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 			},
 			init = function (parent, widget, element, callback_name, _, ui_renderer)
 				local content = widget.content
+
 				content.element = element
 			end,
 			load_icon = function (parent, widget, element)
@@ -2747,6 +2887,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 					local render_context = {
 						camera_focus_slot_name = slot_name
 					}
+
 					content.icon_load_id = Managers.ui:load_item_icon(item, cb, render_context)
 				end
 			end,
@@ -2844,6 +2985,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 					end,
 					change_function = function (content, style, _, dt)
 						local add = -0.5 * dt
+
 						style.rotation_progress = ((style.rotation_progress or 0) + add) % 1
 						style.angle = style.rotation_progress * math.pi * 2
 					end
@@ -2851,6 +2993,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 			},
 			init = function (parent, widget, element, callback_name, _, ui_renderer)
 				local content = widget.content
+
 				content.element = element
 			end,
 			load_icon = function (parent, widget, element)
@@ -2864,6 +3007,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 					local render_context = {
 						camera_focus_slot_name = slot_name
 					}
+
 					content.icon_load_id = Managers.ui:load_item_icon(item, cb, render_context)
 				end
 			end,
@@ -2961,6 +3105,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 					end,
 					change_function = function (content, style, _, dt)
 						local add = -0.5 * dt
+
 						style.rotation_progress = ((style.rotation_progress or 0) + add) % 1
 						style.angle = style.rotation_progress * math.pi * 2
 					end
@@ -2968,6 +3113,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 			},
 			init = function (parent, widget, element, callback_name, _, ui_renderer)
 				local content = widget.content
+
 				content.element = element
 			end,
 			load_icon = function (parent, widget, element)
@@ -2982,6 +3128,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 						camera_focus_slot_name = slot_name
 					}
 					local profile = element.profile
+
 					content.icon_load_id = Managers.ui:load_item_icon(item, cb, render_context, profile)
 				end
 			end,
@@ -3084,13 +3231,20 @@ local function generate_blueprints_function(grid_size, optional_item)
 			init = function (parent, widget, element, callback_name, secondary_callback_name, ui_renderer)
 				local content = widget.content
 				local style = widget.style
+
 				content.element = element
+
 				local item = element.item
+
 				content.text = ItemUtils.keywords_text(item)
+
 				local text_width = get_style_text_width(content.text, style.text, ui_renderer)
 				local frame_style = style.frame
+
 				frame_style.size[1] = text_width + 50
+
 				local inner_frame_style = style.inner_frame
+
 				inner_frame_style.size[1] = text_width + 50
 			end
 		},
@@ -4041,8 +4195,10 @@ local function generate_blueprints_function(grid_size, optional_item)
 			init = function (parent, widget, element, callback_name)
 				local content = widget.content
 				local style = widget.style
+
 				content.element = element
 				style.background.visible = element.add_background or false
+
 				local item = element.item
 				local weapon_stats = WeaponStats:new(item)
 				local compairing_stats = weapon_stats:get_compairing_stats()
@@ -4082,15 +4238,20 @@ local function generate_blueprints_function(grid_size, optional_item)
 					local background_id = "background_" .. i
 					local bar_id = "bar_" .. i
 					local percentage_id = "percentage_" .. i
+
 					widget.content.text = Localize(stat_data.display_name)
+
 					local anim_duration = 1
 					local value = stat_data.fraction
 					local current_progress = content.progress or 0
 					local start_value = current_progress
 					local end_value = value
 					local bar_style = style[bar_id]
+
 					bar_style.size[1] = bar_size * value
+
 					local display_name = Localize(stat_data.display_name)
+
 					content[text_id] = display_name
 					content[percentage_id] = math.floor(value * 100 + 0.5) .. "%"
 					content["bar_breakdown_" .. i] = bar_breakdown[i]
@@ -4114,13 +4275,16 @@ local function generate_blueprints_function(grid_size, optional_item)
 					}
 				}
 				content.gamepad_selected_index = {}
+
 				local main_stats = weapon_stats:get_main_stats()
 				local is_ranged_weapon = weapon_stats:is_ranged_weapon()
 				local uses_overheat = weapon_stats:uses_overheat()
+
 				parent._weapon_advanced_stats = weapon_stats._weapon_statistics
 
 				if content.element.interactive then
 					local base_stats_rating = ItemUtils.calculate_stats_rating(item)
+
 					content.text_extra_value = " " .. base_stats_rating
 					style.text_extra_value.text_color = Color.white(255, true)
 					style.text_extra_value.font_size = 30
@@ -4141,7 +4305,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 					parent_active = parent:is_active()
 				end
 
-				local stat_data = nil
+				local stat_data
 
 				if InputDevice.gamepad_active then
 					local gamepad_selected_index_x = content.gamepad_selected_index[1]
@@ -4162,29 +4326,26 @@ local function generate_blueprints_function(grid_size, optional_item)
 
 					content.gamepad_selected_index[1] = index_x
 					content.gamepad_selected_index[2] = index_y
+
 					local selected_index = gamepad_bar_matrix[index_y][index_x]
 
 					for i = 1, 6 do
 						local is_hover = parent_active and i == selected_index
+
 						style["hover_frame_" .. i].color[1] = is_hover and 128 or 0
 						style["hover_frame_border_" .. i].color[1] = is_hover and 128 or 0
 						style["hover_frame_corner_" .. i].color[1] = is_hover and 128 or 0
-
-						if is_hover then
-							stat_data = content["bar_breakdown_" .. i] or stat_data
-						end
+						stat_data = is_hover and content["bar_breakdown_" .. i] or stat_data
 					end
 				else
 					for i = 1, 6 do
 						local hotspot = content["hotspot_" .. i]
 						local is_hover = parent_active and hotspot.is_hover
+
 						style["hover_frame_" .. i].color[1] = is_hover and 128 or 0
 						style["hover_frame_border_" .. i].color[1] = is_hover and 128 or 0
 						style["hover_frame_corner_" .. i].color[1] = is_hover and 128 or 0
-
-						if is_hover then
-							stat_data = content["bar_breakdown_" .. i] or stat_data
-						end
+						stat_data = is_hover and content["bar_breakdown_" .. i] or stat_data
 					end
 				end
 
@@ -4238,9 +4399,12 @@ local function generate_blueprints_function(grid_size, optional_item)
 				local style = widget.style
 				local rating_value = element.rating
 				local header = element.header
+
 				content.rating = " " .. rating_value
 				content.header = header or ""
+
 				local text_width = get_style_text_width(content.rating, rating_info_style, ui_renderer)
+
 				style.frame.size[1] = text_width + 50
 			end
 		},
@@ -4275,7 +4439,9 @@ local function generate_blueprints_function(grid_size, optional_item)
 			init = function (parent, widget, element, callback_name, secondary_callback_name, ui_renderer)
 				local content = widget.content
 				local style = widget.style
+
 				content.item = element.item
+
 				local index = 1
 				local attack_icon_style = style["attack_icon_" .. index]
 				local fire_mode_icon_style = style["fire_mode_icon_" .. index]
@@ -4436,12 +4602,15 @@ local function generate_blueprints_function(grid_size, optional_item)
 			init = function (parent, widget, element, callback_name)
 				local content = widget.content
 				local style = widget.style
+
 				content.element = element
 				style.background.visible = element.add_background or false
+
 				local perk_item = element.perk_item
 				local perk_value = element.perk_value
 				local perk_rarity = element.perk_rarity
 				local description = ItemUtils.perk_description(perk_item, perk_rarity, perk_value)
+
 				content.text = description
 				content.rank = ItemUtils.perk_textures(perk_item, perk_rarity)
 				style.locked.visible = element.is_locked or false
@@ -4451,7 +4620,9 @@ local function generate_blueprints_function(grid_size, optional_item)
 
 				if element.show_rating then
 					content.rating = " " .. ItemUtils.perk_rating(perk_item, perk_rarity)
+
 					local description_size = element.description_size or {}
+
 					style.description.size[1] = description_size[1] or style.description.size[1]
 					style.description.size[2] = description_size[2] or style.description.size[2]
 				end
@@ -4604,13 +4775,17 @@ local function generate_blueprints_function(grid_size, optional_item)
 			init = function (parent, widget, element, callback_name)
 				local content = widget.content
 				local style = widget.style
+
 				content.element = element
 				style.background.visible = element.add_background or false
+
 				local trait_item = element.trait_item
 				local trait_value = element.trait_value
 				local trait_rarity = element.trait_rarity
 				local display_name = trait_item.display_name
+
 				content.display_name = Localize(display_name)
+
 				local texture_icon, texture_frame = ItemUtils.trait_textures(trait_item, trait_rarity)
 				local icon_material_values = style.icon.material_values
 
@@ -4623,6 +4798,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 				end
 
 				local description = ItemUtils.trait_description(trait_item, trait_rarity, trait_value)
+
 				content.description = description
 				style.locked.visible = element.is_locked or false
 				style.modified.visible = element.is_modified or false
@@ -4631,8 +4807,11 @@ local function generate_blueprints_function(grid_size, optional_item)
 
 				if element.show_rating then
 					local rating_value = ItemUtils.trait_rating(trait_item, trait_rarity, trait_value)
+
 					content.rating = " " .. rating_value
+
 					local description_size = element.description_size or {}
+
 					style.description.size[1] = description_size[1] or style.description.size[1]
 					style.description.size[2] = description_size[2] or style.description.size[2]
 				end
@@ -4706,12 +4885,15 @@ local function generate_blueprints_function(grid_size, optional_item)
 			init = function (parent, widget, element, callback_name)
 				local content = widget.content
 				local style = widget.style
+
 				content.element = element
 				style.background.visible = element.add_background or false
+
 				local trait_item = element.trait_item
 				local trait_value = element.trait_value or 0
 				local trait_rarity = element.trait_rarity
 				local description = ItemUtils.trait_description(trait_item, trait_rarity, trait_value)
+
 				content.text = description
 			end,
 			update = function (parent, widget, input_service, dt, t, ui_renderer)
@@ -4745,10 +4927,13 @@ local function generate_blueprints_function(grid_size, optional_item)
 			},
 			init = function (parent, widget, element, callback_name)
 				local content = widget.content
+
 				content.element = element
+
 				local item = element.item
 				local description = item.description
 				local description_localized = description and Localize(description) or ""
+
 				content.description = description_localized
 			end,
 			update = function (parent, widget, input_service, dt, t, ui_renderer)
@@ -4780,6 +4965,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 			},
 			init = function (parent, widget, element, callback_name)
 				local content = widget.content
+
 				content.element = element
 				content.text = Localize("loc_item_source_obtained_title")
 			end,
@@ -4812,8 +4998,11 @@ local function generate_blueprints_function(grid_size, optional_item)
 			},
 			init = function (parent, widget, element, callback_name)
 				local content = widget.content
+
 				content.element = element
+
 				local label = element.label or ""
+
 				content.label = label
 			end,
 			update = function (parent, widget, input_service, dt, t, ui_renderer)
@@ -4856,8 +5045,11 @@ local function generate_blueprints_function(grid_size, optional_item)
 			},
 			init = function (parent, widget, element, callback_name)
 				local content = widget.content
+
 				content.element = element
+
 				local description = element.description or ""
+
 				content.description = description
 			end,
 			update = function (parent, widget, input_service, dt, t, ui_renderer)
@@ -4890,9 +5082,12 @@ local function generate_blueprints_function(grid_size, optional_item)
 			},
 			init = function (parent, widget, element, callback_name)
 				local content = widget.content
+
 				content.element = element
+
 				local item = element.item
 				local text = ItemUtils.weapon_skin_requirement_text(item)
+
 				content.description = text
 			end,
 			update = function (parent, widget, input_service, dt, t, ui_renderer)
@@ -4909,6 +5104,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 				local text = Localize("loc_item_equippable_on_header")
 				local text_height = get_style_text_height(text, weapon_skin_requirement_header_style, ui_renderer)
 				local entry_height = math.max(0, text_height + 10)
+
 				weapon_skin_requirement_header_style.size[2] = entry_height
 
 				return {
@@ -4926,8 +5122,11 @@ local function generate_blueprints_function(grid_size, optional_item)
 			},
 			init = function (parent, widget, element, callback_name)
 				local content = widget.content
+
 				content.element = element
+
 				local item = element.item
+
 				content.text = Localize("loc_item_equippable_on_header")
 			end
 		},
@@ -4957,8 +5156,11 @@ local function generate_blueprints_function(grid_size, optional_item)
 			},
 			init = function (parent, widget, element, callback_name)
 				local content = widget.content
+
 				content.element = element
+
 				local data = element.data
+
 				content.special_description = data.desc and Localize(data.desc) or ""
 			end,
 			update = function (parent, widget, input_service, dt, t, ui_renderer)
@@ -4980,8 +5182,11 @@ local function generate_blueprints_function(grid_size, optional_item)
 			},
 			init = function (parent, widget, element, callback_name)
 				local content = widget.content
+
 				content.element = element
+
 				local header = element.header or "missing_header"
+
 				content.header = header
 			end,
 			update = function (parent, widget, input_service, dt, t, ui_renderer)
@@ -5021,10 +5226,14 @@ local function generate_blueprints_function(grid_size, optional_item)
 			},
 			init = function (parent, widget, element, callback_name)
 				local content = widget.content
+
 				content.element = element
+
 				local data = element.data
 				local display_name = data.display_name
+
 				content.text = Localize(display_name)
+
 				local attack_type = data.type
 				local icon = UISettings.weapon_action_type_icons[attack_type]
 
@@ -5092,7 +5301,9 @@ local function generate_blueprints_function(grid_size, optional_item)
 			},
 			init = function (parent, widget, element, callback_name)
 				local content = widget.content
+
 				content.element = element
+
 				local data = element.data
 				local attack_type = data.type
 				local icon = UISettings.weapon_action_type_icons[attack_type] or "content/ui/materials/base/ui_default_base"
@@ -5104,7 +5315,9 @@ local function generate_blueprints_function(grid_size, optional_item)
 				local attack_fire_mode = data.fire_mode
 				local icon2 = UISettings.weapon_fire_type_icons[attack_fire_mode]
 				local fire_mode_prefix_key = UISettings.weapon_fire_type_display_text[attack_fire_mode]
+
 				content.icon2 = icon2
+
 				local display_name = data.display_name
 				local text = Localize(display_name)
 
@@ -5132,7 +5345,9 @@ local function generate_blueprints_function(grid_size, optional_item)
 			init = function (parent, widget, element, callback_name)
 				local content = widget.content
 				local style = widget.style
+
 				content.element = element
+
 				local display_name = element.display_name
 
 				if Managers.localization:exists(display_name) then
@@ -5142,6 +5357,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 				end
 
 				local text_color = element.text_color
+
 				style.text.text_color = text_color or style.text.text_color
 			end
 		},
@@ -5189,9 +5405,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 					local full_display_name = Localize(display_name .. "_mouseover")
 					local keyword_height = get_style_text_height(Localize(full_display_name), weapon_keyword_desc_style, ui_renderer)
 
-					if entry_height < keyword_height then
-						entry_height = keyword_height or entry_height
-					end
+					entry_height = entry_height < keyword_height and keyword_height or entry_height
 				end
 
 				return {
@@ -5266,14 +5480,17 @@ local function generate_blueprints_function(grid_size, optional_item)
 
 				for i = 1, #displayed_keywords do
 					local display_name = displayed_keywords[i].display_name
+
 					content["header_" .. i] = Localize(display_name)
 					style["header_" .. i].text_color[1] = 255
+
 					local description = displayed_keywords[i].description
 
 					if description then
 						content["desc_" .. i] = Localize(description)
 					else
 						local desc_id = display_name .. "_mouseover"
+
 						content["desc_" .. i] = Managers.localization:exists(desc_id) and Localize(desc_id) or ""
 					end
 
@@ -5644,6 +5861,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 				local advanced_weapon_stats = weapon_stats._weapon_statistics
 				local power_stats = advanced_weapon_stats.power_stats
 				local stats = advanced_weapon_stats.stats
+
 				content.element = element
 				content.display_name = display_name
 				content.rarity_name = type_name
@@ -5655,6 +5873,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 						local attack = power_stat.attack or 0
 						local type_data = power_stat.type_data
 						local display_name = type_data.display_name or "N/A"
+
 						content["text_action_header_" .. i .. "_value"] = Localize(display_name)
 						content["text_action_" .. i .. "_value"] = math.floor(attack + 0.5)
 						style["text_action_header_" .. i].text_color[1] = 255
@@ -5671,12 +5890,16 @@ local function generate_blueprints_function(grid_size, optional_item)
 						content.text_stat_1_value = Localize("loc_weapon_stats_display_unlimited")
 						style.text_stat_header_1.text_color[1] = 255
 						style.text_stat_1.text_color[1] = 255
+
 						local rate_of_fire = main_stats.rate_of_fire
+
 						content.text_stat_header_2_value = Localize("loc_weapon_stats_display_rate_of_fire")
 						content.text_stat_2_value = string.format("%.2f/s", 1 / rate_of_fire)
 						style.text_stat_header_2.text_color[1] = 255
 						style.text_stat_2.text_color[1] = 255
+
 						local charge_duration = main_stats.charge_duration or 0
+
 						content.text_stat_header_3_value = Localize("loc_weapon_stats_display_charge_speed")
 						content.text_stat_3_value = string.format("%.2fs", charge_duration)
 						style.text_stat_header_3.text_color[1] = 255
@@ -5688,42 +5911,57 @@ local function generate_blueprints_function(grid_size, optional_item)
 					elseif is_ranged_weapon then
 						local ammo_clip = _stat_value_to_text(stats.ammo_clip, true)
 						local ammo_reserve = _stat_value_to_text(stats.ammo_reserve, true)
+
 						content.text_stat_header_1_value = Localize("loc_weapon_stat_title_ammo")
 						content.text_stat_1_value = ammo_clip .. "/" .. ammo_reserve
 						style.text_stat_header_1.text_color[1] = 255
 						style.text_stat_1.text_color[1] = 255
+
 						local rate_of_fire = main_stats.rate_of_fire
+
 						content.text_stat_header_2_value = Localize("loc_weapon_stats_display_rate_of_fire")
 						content.text_stat_2_value = string.format("%.2f/s", 1 / rate_of_fire)
 						style.text_stat_header_2.text_color[1] = 255
 						style.text_stat_2.text_color[1] = 255
+
 						local reload_time = main_stats.reload_time
+
 						content.text_stat_header_3_value = Localize("loc_basic_reload_input")
 						content.text_stat_3_value = string.format("%.2fs", reload_time)
 						style.text_stat_header_3.text_color[1] = 255
 						style.text_stat_3.text_color[1] = 255
+
 						local stamina = stats.stamina
+
 						content.text_stat_header_4_value = Localize("loc_stats_display_stamina_title")
 						content.text_stat_4_value = _stat_value_to_text(stamina)
 						style.text_stat_header_4.text_color[1] = 255
 						style.text_stat_4.text_color[1] = 255
 					else
 						content.text_stat_header_1_value = Localize("loc_weapon_stats_display_sprint_speed")
+
 						local sprint_speed = stats.sprint_speed
+
 						content.text_stat_1_value = _stat_value_to_text(sprint_speed)
 						style.text_stat_header_1.text_color[1] = 255
 						style.text_stat_1.text_color[1] = 255
 						content.text_stat_header_2_value = Localize("loc_weapon_stats_display_dodge_distance")
+
 						local dodge_distance = stats.dodge_distance
+
 						content.text_stat_2_value = _stat_value_to_text(dodge_distance)
 						style.text_stat_header_2.text_color[1] = 255
 						style.text_stat_2.text_color[1] = 255
 						content.text_stat_header_3_value = Localize("loc_weapon_stats_display_effective_dodges")
+
 						local effective_dodges = stats.effective_dodges
+
 						content.text_stat_3_value = _stat_value_to_text(effective_dodges)
 						style.text_stat_header_3.text_color[1] = 255
 						style.text_stat_3.text_color[1] = 255
+
 						local stamina = stats.stamina
+
 						content.text_stat_header_4_value = Localize("loc_stats_display_stamina_title")
 						content.text_stat_4_value = _stat_value_to_text(stamina)
 						style.text_stat_header_4.text_color[1] = 255
@@ -5797,7 +6035,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 
 				local value = signed and stat_value or stat_value * math.sign(stat_value)
 
-				if math.huge <= value then
+				if value >= math.huge then
 					value = Localize("loc_weapon_stats_display_unlimited")
 				elseif signed and value >= 0 then
 					value = string.format("+%.2f", value) .. display_units
@@ -5819,7 +6057,9 @@ local function generate_blueprints_function(grid_size, optional_item)
 				local content = widget.content
 				local style = widget.style
 				local item = element.item
+
 				content.item = item
+
 				local weapon_template = WeaponTemplate.weapon_template_from_item(item)
 				local displayed_attacks = weapon_template.displayed_attacks
 
@@ -5854,25 +6094,29 @@ local function generate_blueprints_function(grid_size, optional_item)
 							end
 
 							local header_style = style[id]
+
 							header_style.text_color[1] = 255
 							header_style.offset[1] = -step * (num_elements - 1) * 0.5 + (index - 1) * step
+
 							local divider_id = "divider_" .. index
 							local divider_style = style[divider_id]
+
 							divider_style.color[1] = 128
 							divider_style.offset[1] = -step * (num_elements - 1) * 0.5 + (index - 1) * step - 10
 							divider_style.size[1] = 200
 						end
 					end
 
-					local attack_index = 1
-					local chain_index = 1
+					local attack_index, chain_index = 1, 1
 
 					if parent.current_attack_index then
 						attack_index, chain_index = parent:current_attack_index()
 					end
 
 					content.gamepad_selected_attack = 1
+
 					local content_hotspot = content["icon_hotspot_" .. attack_index .. "_" .. chain_index]
+
 					content_hotspot.is_selected = true
 
 					_update_connection_line(attack_index, chain_index, attack_index, chain_index, content, style)
@@ -5897,8 +6141,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 					local weapon_action_title_display_names = is_ranged_weapon and UISettings.weapon_action_title_display_names or UISettings.weapon_action_title_display_names_melee
 					local weapon_action_display_order_array = UISettings.weapon_action_display_order_array
 					local num_elements = #weapon_action_display_order_array
-					local attack_index = 1
-					local chain_index = 1
+					local attack_index, chain_index = 1, 1
 
 					if parent.current_attack_index then
 						attack_index, chain_index = parent:current_attack_index()
@@ -6125,6 +6368,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 			},
 			init = function (parent, widget, element)
 				local content = widget.content
+
 				content.item = element.item
 			end,
 			update = function (parent, widget, input_service, dt, t, ui_renderer)
@@ -6144,15 +6388,18 @@ local function generate_blueprints_function(grid_size, optional_item)
 				local content = widget.content
 				local style = widget.style
 				local item = element.item
+
 				content.item = item
+
 				local weapon_stats = WeaponStats:new(item)
+
 				content.weapon_stats = weapon_stats
 			end,
 			update = function (parent, widget, input_service, dt, t, ui_renderer)
 				local content = widget.content
 				local style = widget.style
 				local index = 1
-				local x_hover, y_hover = nil
+				local x_hover, y_hover
 				local hotspot_content = content["hotspot_" .. index]
 
 				while hotspot_content do
@@ -6160,24 +6407,20 @@ local function generate_blueprints_function(grid_size, optional_item)
 					local y = hotspot_content.y
 					local is_hover = hotspot_content.is_hover
 
-					if is_hover then
-						x_hover = x or x_hover
-					end
-
-					if is_hover then
-						y_hover = y or y_hover
-					end
+					x_hover = is_hover and x or x_hover
+					y_hover = is_hover and y or y_hover
 
 					local border_style = style["hover_frame_border_" .. x .. "_" .. y]
 					local corner_style = style["hover_frame_corner_" .. x .. "_" .. y]
 					local bg_style = style["hover_bg_" .. x .. "_" .. y]
 					local x_header = style["x_axis_header_" .. x]
 					local y_header = style["y_axis_header_" .. y]
+
 					border_style.color = is_hover and border_style.selected_color or border_style.base_color
 					corner_style.color = is_hover and corner_style.selected_color or corner_style.base_color
 					bg_style.color[1] = is_hover and 128 or 0
-					x_header.text_color = (is_hover or x == x_hover) and x_header.selected_text_color or x_header.base_text_color
-					y_header.text_color = (is_hover or y == y_hover) and y_header.selected_text_color or y_header.base_text_color
+					x_header.text_color = not (not is_hover and x ~= x_hover) and x_header.selected_text_color or x_header.base_text_color
+					y_header.text_color = not (not is_hover and y ~= y_hover) and y_header.selected_text_color or y_header.base_text_color
 					index = index + 1
 					hotspot_content = content["hotspot_" .. index]
 				end
@@ -6187,8 +6430,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 				local damage_stats = advanced_weapon_stats.damage
 
 				if damage_stats then
-					local attack_index = 1
-					local chain_index = 1
+					local attack_index, chain_index = 1, 1
 
 					if parent.current_attack_index then
 						attack_index, chain_index = parent:current_attack_index()
@@ -6651,7 +6893,9 @@ local function generate_blueprints_function(grid_size, optional_item)
 			init = function (parent, widget, element, callback_name)
 				local content = widget.content
 				local style = widget.style
+
 				content.element = element
+
 				local attack_chain = element.attack_chain
 				local num_attacks = #attack_chain
 				local width_offset = 0
@@ -6665,11 +6909,16 @@ local function generate_blueprints_function(grid_size, optional_item)
 					local attack_icon = attack_type and UISettings.weapon_action_type_icons[attack_type]
 					local hotspot_pass_id = "hotspot_icon_" .. i
 					local pass_id = "icon_" .. i
+
 					content[pass_id] = attack_icon
+
 					local display_name = Localize(UISettings.attack_type_lookup[attack_type] or "Missing Attack Type")
+
 					content["icon_name_" .. i] = display_name
+
 					local desc_id = UISettings.attack_type_desc_lookup[attack_type]
 					local desc = desc_id and Localize(desc_id) or ""
+
 					content["desc_" .. i] = desc
 					style.hover_bg.base_offset = table.clone(style.hover_bg.offset)
 					style.hover_frame.base_offset = table.clone(style.hover_frame.offset)
@@ -6686,12 +6935,14 @@ local function generate_blueprints_function(grid_size, optional_item)
 					if attack_icon then
 						local pass_style = style[pass_id]
 						local hotstpot_pass_style = style[hotspot_pass_id]
+
 						pass_style.offset[1] = start_width_offset + width_offset
 						hotstpot_pass_style.offset[1] = start_width_offset + width_offset
 						width_offset = width_offset + icon_width + spacing
 
 						if i < 5 then
 							local spacing_pass_id = "spacing_icon_" .. i
+
 							style[spacing_pass_id].offset[1] = pass_style.offset[1] + (icon_width * 2 + spacing) * 0.5 - spacing_icon_width * 0.5
 						end
 					end
@@ -6711,10 +6962,12 @@ local function generate_blueprints_function(grid_size, optional_item)
 
 					if hotspot_content.is_hover then
 						icon_style.color = Color.white(255, true)
+
 						local icon_name = content["icon_name_" .. index]
 						local icon = content["icon_" .. index]
 						local description = content["desc_" .. index]
 						local text_height = get_style_text_height(description, style.hover_icon_desc, ui_renderer) + 20
+
 						style.hover_bg.color[1] = 210
 						style.hover_frame.color[1] = 255
 						style.hover_frame_corner.color[1] = 255
@@ -6778,6 +7031,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 			},
 			init = function (parent, widget, element)
 				local style = widget.style
+
 				style.background.visible = element.add_background or false
 			end,
 			size_function = function (parent, config)

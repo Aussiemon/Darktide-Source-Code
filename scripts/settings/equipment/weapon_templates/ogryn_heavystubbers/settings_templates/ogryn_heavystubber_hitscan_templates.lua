@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/equipment/weapon_templates/ogryn_heavystubbers/settings_templates/ogryn_heavystubber_hitscan_templates.lua
+
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local hitscan_templates = {}
 local overrides = {}

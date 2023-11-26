@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/store_view/store_view_definitions.lua
+
 local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templates")
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local UIWidget = require("scripts/managers/ui/ui_widget")
@@ -284,6 +286,7 @@ local scenegraph_definition = {
 	}
 }
 local emporium_font_style = table.clone(UIFontSettings.header_1)
+
 emporium_font_style.text_horizontal_alignment = "center"
 emporium_font_style.text_vertical_alignment = "center"
 emporium_font_style.offset = {
@@ -295,7 +298,9 @@ emporium_font_style.size = {
 	nil,
 	85
 }
+
 local required_aquilas_title_style = table.clone(UIFontSettings.header_1)
+
 required_aquilas_title_style.font_size = 40
 required_aquilas_title_style.offset = {
 	0,
@@ -309,6 +314,7 @@ required_aquilas_title_style.offset = {
 	-55,
 	2
 }
+
 local widget_definitions = {
 	background = UIWidget.create_definition({
 		{
@@ -663,6 +669,7 @@ local animations = {
 			end,
 			update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress, params)
 				local anim_progress = math.easeOutCubic(progress)
+
 				parent._alpha_multiplier = anim_progress
 			end,
 			on_complete = function (parent, ui_scenegraph, scenegraph_definition, widgets, params)
@@ -700,6 +707,7 @@ local animations = {
 			start_time = 0,
 			update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress, params)
 				local anim_progress = math.easeOutCubic(progress)
+
 				params.widget.style.texture.material_values.shine = anim_progress
 			end
 		}

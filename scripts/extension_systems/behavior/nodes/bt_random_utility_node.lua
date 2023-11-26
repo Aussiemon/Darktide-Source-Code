@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/behavior/nodes/bt_random_utility_node.lua
+
 require("scripts/extension_systems/behavior/nodes/bt_node")
 
 local BtConditions = require("scripts/extension_systems/behavior/utilities/bt_conditions")
@@ -9,7 +11,9 @@ BtRandomUtilityNode.init = function (self, ...)
 
 	self._children = {}
 	self._action_list = {}
+
 	local tree_node = self.tree_node
+
 	self._fallback_node_name = tree_node.fallback_node
 	self._fail_cooldown_duration = tree_node.fail_cooldown or 0
 end
@@ -21,6 +25,7 @@ BtRandomUtilityNode.init_values = function (self, blackboard, action_data, node_
 	local children = self._children
 	local num_children = table.size(children)
 	local utility_node_data = Script.new_map(num_children)
+
 	node_data[node_identifier] = {
 		fail_cooldown_t = 0,
 		utility_node_data = utility_node_data
@@ -45,6 +50,7 @@ BtRandomUtilityNode.ready = function (self, lua_node)
 
 	for name, child_node in pairs(children) do
 		local action_data = child_node.tree_node.action_data
+
 		action_list[#action_list + 1] = action_data
 	end
 end
@@ -55,6 +61,7 @@ end
 
 local function _swap(t, i, j)
 	local temp = t[i]
+
 	t[i] = t[j]
 	t[j] = temp
 end
@@ -62,7 +69,7 @@ end
 local function _randomize_actions(unit, actions, blackboard, scratchpad, t, utility_node_data, node_children, fallback_node_name, last_running_child_node, last_leaf_node_running)
 	local CONDITIONS = BtConditions
 	local get_action_utility = Utility.get_action_utility
-	local fallback_node = nil
+	local fallback_node
 	local total_utility_score = 0
 	local num_actions = #actions
 
@@ -77,6 +84,7 @@ local function _randomize_actions(unit, actions, blackboard, scratchpad, t, util
 
 		if CONDITIONS[condition_name](unit, blackboard, scratchpad, tree_node.condition_args, tree_node.action_data, is_running) then
 			local utility_data = utility_node_data[action_name]
+
 			score = get_action_utility(action, blackboard, t, utility_data)
 
 			if action_name == fallback_node_name then
@@ -89,7 +97,7 @@ local function _randomize_actions(unit, actions, blackboard, scratchpad, t, util
 	end
 
 	for i = 1, num_actions do
-		local picked_index = nil
+		local picked_index
 		local random_utility_score = math.random() * total_utility_score
 
 		for j = i, num_actions do
@@ -112,6 +120,7 @@ local function _randomize_actions(unit, actions, blackboard, scratchpad, t, util
 		end
 
 		local picked_action = actions[picked_index]
+
 		total_utility_score = total_utility_score - picked_action.utility_score
 
 		if picked_index ~= i then
@@ -133,7 +142,7 @@ BtRandomUtilityNode.evaluate = function (self, unit, blackboard, scratchpad, dt,
 	end
 
 	local CONDITIONS = BtConditions
-	local leaf_node = nil
+	local leaf_node
 	local running_child_node = old_running_child_nodes[node_identifier]
 	local running_child_condition_name = running_child_node and running_child_node.condition_name
 	local running_child_tree_node = running_child_node and running_child_node.tree_node
@@ -165,6 +174,7 @@ BtRandomUtilityNode.evaluate = function (self, unit, blackboard, scratchpad, dt,
 		local action_name = action.name
 		local child_node = node_children[action_name]
 		local utility_data = utility_node_data[action_name]
+
 		utility_data.last_time = t
 
 		if child_node.evaluate then
@@ -197,6 +207,7 @@ BtRandomUtilityNode.evaluate = function (self, unit, blackboard, scratchpad, dt,
 	end
 
 	local fail_cooldown_duration = self._fail_cooldown_duration
+
 	data.fail_cooldown_t = t + fail_cooldown_duration
 
 	return nil
@@ -214,6 +225,7 @@ BtRandomUtilityNode.run = function (self, unit, breed, blackboard, scratchpad, a
 		local data = node_data[node_identifier]
 		local utility_node_data = data.utility_node_data
 		local utility_data = utility_node_data[running_node_id]
+
 		utility_data.last_done_time = t
 	end
 

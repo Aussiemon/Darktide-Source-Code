@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/ability/actions/action_ogryn_shout.lua
+
 require("scripts/extension_systems/weapon/actions/action_ability_base")
 
 local BuffSettings = require("scripts/settings/buff/buff_settings")
@@ -12,6 +14,7 @@ ActionShout.init = function (self, action_context, action_params, action_setting
 	ActionShout.super.init(self, action_context, action_params, action_settings)
 
 	local unit_data_extension = action_context.unit_data_extension
+
 	self._unit_data_extension = unit_data_extension
 	self._weapon_action_component = unit_data_extension:read_component("weapon_action")
 	self._combat_ability_component = unit_data_extension:write_component("combat_ability")
@@ -41,6 +44,7 @@ ActionShout.start = function (self, action_settings, t, time_scale, action_start
 	table.clear(external_properties)
 
 	local ability = self._ability
+
 	external_properties.ability_template = ability and ability.ability_template
 
 	self._fx_extension:trigger_gear_wwise_event_with_source("ability_shout", external_properties, source_name, sync_to_clients, include_client)

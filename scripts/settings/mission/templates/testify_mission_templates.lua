@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/mission/templates/testify_mission_templates.lua
+
 local mission_templates = {
 	spawn_all_enemies = {
 		mechanism_name = "adventure",

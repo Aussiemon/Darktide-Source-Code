@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/constant_elements/elements/software_cursor/constant_element_software_cursor_definitions.lua
+
 local InputDevice = require("scripts/managers/input/input_device")
 local UIWorkspaceSettings = require("scripts/settings/ui/ui_workspace_settings")
 local UIWidget = require("scripts/managers/ui/ui_widget")

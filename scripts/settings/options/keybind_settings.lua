@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/options/keybind_settings.lua
+
 local SaveData = require("scripts/managers/save/save_data")
 local group_name_display_names = {
 	input_group_interface = "loc_keybind_category_interface",
@@ -36,6 +38,7 @@ if IS_XBS or IS_WINDOWS then
 					local display_name = alias:description(alias_name)
 					local group_name = alias:group(alias_name)
 					local sort_order = alias:sort_order(alias_name)
+
 					settings[#settings + 1] = {
 						widget_type = "keybind",
 						alias = alias,
@@ -114,6 +117,7 @@ for i = 1, #settings do
 
 	if group_name and not groups_added[group_name] then
 		groups_added[group_name] = true
+
 		local group_header_entry = {
 			widget_type = "group_header",
 			group_name = group_name,

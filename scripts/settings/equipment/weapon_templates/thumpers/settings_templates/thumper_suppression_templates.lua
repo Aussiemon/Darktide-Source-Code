@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/equipment/weapon_templates/thumpers/settings_templates/thumper_suppression_templates.lua
+
 local suppression_templates = {}
 local overrides = {}
 

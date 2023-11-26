@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/shield/prop_shield_extension.lua
+
 local PropShieldExtension = class("PropShieldExtension")
 
 PropShieldExtension.init = function (self, extension_init_context, unit, extension_init_data, game_object_data)

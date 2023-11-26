@@ -1,12 +1,14 @@
+﻿-- chunkname: @scripts/settings/buff/weapon_traits_buff_templates/weapon_traits_bespoke_combataxe_p3_buff_templates.lua
+
 local BaseWeaponTraitBuffTemplates = require("scripts/settings/buff/weapon_traits_buff_templates/base_weapon_trait_buff_templates")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local ConditionalFunctions = require("scripts/settings/buff/validation_functions/conditional_functions")
 local keywords = BuffSettings.keywords
 local stat_buffs = BuffSettings.stat_buffs
 local proc_events = BuffSettings.proc_events
-local templates = {
-	weapon_trait_bespoke_combataxe_p3_chained_hits_increases_power_parent = table.clone(BaseWeaponTraitBuffTemplates.chained_hits_increases_power_parent)
-}
+local templates = {}
+
+templates.weapon_trait_bespoke_combataxe_p3_chained_hits_increases_power_parent = table.clone(BaseWeaponTraitBuffTemplates.chained_hits_increases_power_parent)
 templates.weapon_trait_bespoke_combataxe_p3_chained_hits_increases_power_parent.child_buff_template = "weapon_trait_bespoke_combataxe_p3_chained_hits_increases_power_child"
 templates.weapon_trait_bespoke_combataxe_p3_chained_hits_increases_power_child = table.clone(BaseWeaponTraitBuffTemplates.chained_hits_increases_power_child)
 templates.weapon_trait_bespoke_combataxe_p3_consecutive_hits_increases_stagger_parent = table.clone(BaseWeaponTraitBuffTemplates.consecutive_hits_increases_stagger_parent)

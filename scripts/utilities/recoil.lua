@@ -1,7 +1,9 @@
+﻿-- chunkname: @scripts/utilities/recoil.lua
+
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local WeaponMovementState = require("scripts/extension_systems/weapon/utilities/weapon_movement_state")
 local Recoil = {}
-local _seeded_random_range, _dampen_target_to_max_angle = nil
+local _seeded_random_range, _dampen_target_to_max_angle
 
 Recoil.set_shooting = function (recoil_control_component, shooting)
 	if shooting ~= recoil_control_component.shooting then
@@ -48,8 +50,7 @@ Recoil.recoil_movement_state_settings = function (recoil_template, movement_stat
 	return movement_state_settings
 end
 
-local TEMP_PITCH_RANGE = Script.new_array(2)
-local TEMP_YAW_RANGE = Script.new_array(2)
+local TEMP_PITCH_RANGE, TEMP_YAW_RANGE = Script.new_array(2), Script.new_array(2)
 
 Recoil.add_recoil = function (t, recoil_template, read_recoil_component, recoil_control_component, movement_state_component, fp_rotation, unit)
 	if not recoil_template then
@@ -62,10 +63,10 @@ Recoil.add_recoil = function (t, recoil_template, read_recoil_component, recoil_
 	local new_num_shots = num_shots + 1
 	local seed = recoil_control_component.seed
 	local weapon_movement_state = WeaponMovementState.translate_movement_state_component(movement_state_component)
-	local random_pitch, random_yaw = nil
+	local random_pitch, random_yaw
 	local movement_state_settings = recoil_template[weapon_movement_state]
 	local deterministic_recoil = buff_extension:has_keyword(buff_keywords.deterministic_recoil)
-	local pitch_range, yaw_range = nil
+	local pitch_range, yaw_range
 	local num_offset_ranges = movement_state_settings.num_offset_ranges
 	local offset_index = math.min(new_num_shots, num_offset_ranges)
 	local offset_table = movement_state_settings.offset
@@ -73,18 +74,23 @@ Recoil.add_recoil = function (t, recoil_template, read_recoil_component, recoil_
 	if offset_table then
 		local offset = movement_state_settings.offset[offset_index]
 		local offset_random_range = movement_state_settings.offset_random_range[offset_index]
-		yaw_range = TEMP_YAW_RANGE
-		pitch_range = TEMP_PITCH_RANGE
+
+		pitch_range, yaw_range = TEMP_PITCH_RANGE, TEMP_YAW_RANGE
+
 		local pitch_base = offset.pitch
 		local pitch_mod = offset_random_range.pitch
+
 		pitch_range[1] = pitch_base - pitch_mod
 		pitch_range[2] = pitch_base + pitch_mod
+
 		local yaw_base = offset.yaw
 		local yaw_mod = offset_random_range.yaw
+
 		yaw_range[1] = yaw_base - yaw_mod
 		yaw_range[2] = yaw_base + yaw_mod
 	else
 		local offset_range = movement_state_settings.offset_range[offset_index]
+
 		pitch_range = offset_range.pitch
 		yaw_range = offset_range.yaw
 	end
@@ -109,6 +115,7 @@ Recoil.add_recoil = function (t, recoil_template, read_recoil_component, recoil_
 	local yaw_limit = offset_limit.yaw
 	local base_target_pitch = current_pitch + _dampen_target_to_max_angle(current_pitch, random_pitch, pitch_limit)
 	local base_target_yaw = current_yaw + _dampen_target_to_max_angle(current_yaw, random_yaw, yaw_limit)
+
 	recoil_control_component.target_pitch = base_target_pitch
 	recoil_control_component.target_yaw = base_target_yaw
 	recoil_control_component.rise_end_time = t + movement_state_settings.rise_duration
@@ -146,7 +153,7 @@ Recoil.aim_assist_multiplier = function (recoil_template, recoil_control_compone
 		return 1
 	end
 
-	return aim_assist_settings:multiplier_function(recoil_control_component, recoil_component)
+	return aim_assist_settings.multiplier_function(aim_assist_settings, recoil_control_component, recoil_component)
 end
 
 Recoil.apply_weapon_recoil_rotation = function (recoil_template, recoil_component, movement_state_component, current_rotation)

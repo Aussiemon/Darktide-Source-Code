@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/loading/local_states/local_theme_state.lua
+
 local CircumstanceTemplates = require("scripts/settings/circumstance/circumstance_templates")
 local ThemePackage = require("scripts/foundation/managers/package/utilities/theme_package")
 local ThemeStateTestify = GameParameters.testify and require("scripts/loading/host_states/theme_state_testify")
@@ -6,8 +8,11 @@ local LocalThemeState = class("LocalThemeState")
 LocalThemeState.init = function (self, state_machine, shared_state)
 	self._shared_state = shared_state
 	self._level_spawner = nil
+
 	local world = shared_state.world
+
 	self._world = world
+
 	local themes = shared_state.themes
 	local circumstance_name = shared_state.circumstance_name
 
@@ -23,6 +28,7 @@ LocalThemeState.init = function (self, state_machine, shared_state)
 
 		for _, theme_name in pairs(theme_names) do
 			local theme = World.create_theme(world, theme_name)
+
 			themes[#themes + 1] = theme
 		end
 	else

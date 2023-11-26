@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/game_states/game/state_victory_defeat.lua
+
 local StateVictoryDefeat = class("StateVictoryDefeat")
 local EOR_VIEW_NAME = "end_view"
 
@@ -37,6 +39,7 @@ StateVictoryDefeat.update = function (self, main_dt, main_t)
 		Managers.mechanism:trigger_event("ready_for_game_score", Network.peer_id(), success)
 
 		self._done = true
+
 		local ui_manager = Managers.ui
 
 		if fail and ui_manager and ui_manager:view_active(EOR_VIEW_NAME) then

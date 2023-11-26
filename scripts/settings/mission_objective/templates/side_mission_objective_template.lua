@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/mission_objective/templates/side_mission_objective_template.lua
+
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local proc_events = BuffSettings.proc_events
 local mission_objective_templates = {

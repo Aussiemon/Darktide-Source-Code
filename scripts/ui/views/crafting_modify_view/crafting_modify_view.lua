@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/crafting_modify_view/crafting_modify_view.lua
+
 local CraftingModifyViewDefinitions = require("scripts/ui/views/crafting_modify_view/crafting_modify_view_definitions")
 local CraftingSettings = require("scripts/settings/item/crafting_settings")
 local ItemSlotSettings = require("scripts/settings/item/item_slot_settings")
@@ -45,6 +47,7 @@ CraftingModifyView.on_enter = function (self)
 		"WEAPON_RANGED",
 		"GADGET"
 	}
+
 	self._inventory_promise = Managers.data_service.gear:fetch_inventory(character_id, nil, item_type_filter_list)
 
 	self._inventory_promise:next(callback(self, "_cb_fetch_inventory_items"))
@@ -146,6 +149,7 @@ end
 CraftingModifyView._set_trait_inventory_focused = function (self, focus)
 	local crafting_recipe = self._crafting_recipe
 	local trait_inventory = self._trait_inventory
+
 	self._trait_inventory_focused = focus
 
 	if focus then
@@ -184,7 +188,7 @@ CraftingModifyView._set_selected_grid = function (self, new_selected_grid)
 	elseif new_selected_grid == "crafting_recipe" then
 		local previously_active_view_name = self._parent:previously_active_view_name()
 		local widgets = crafting_recipe:widgets()
-		local selection_index = nil
+		local selection_index
 
 		for i = 1, #widgets do
 			local widget = widgets[i]
@@ -243,6 +247,7 @@ CraftingModifyView._handle_input = function (self, input_service)
 
 			if self._current_select_grid_index ~= selected_index then
 				self._current_select_grid_index = selected_index
+
 				local widgets = self._item_grid:widgets()
 				local widget = widgets[selected_index]
 
@@ -297,6 +302,7 @@ CraftingModifyView._cb_fetch_inventory_items = function (self, items)
 	end
 
 	self._inventory_items = items
+
 	local layout = {}
 
 	for item_id, item in pairs(items) do
@@ -304,6 +310,7 @@ CraftingModifyView._cb_fetch_inventory_items = function (self, items)
 
 		if not item.no_crafting and slots then
 			local slot_name = slots[1]
+
 			layout[#layout + 1] = {
 				widget_type = "item",
 				item = item,
@@ -313,6 +320,7 @@ CraftingModifyView._cb_fetch_inventory_items = function (self, items)
 	end
 
 	self._offer_items_layout = layout
+
 	local tabs_content = CraftingModifyViewDefinitions.item_category_tabs_content
 
 	self:_setup_menu_tabs(tabs_content)
@@ -322,6 +330,7 @@ CraftingModifyView._cb_fetch_inventory_items = function (self, items)
 
 	if preselected_item then
 		self._selected_gear_id = preselected_item.gear_id
+
 		local item_slots = preselected_item.slots
 
 		for i = 1, #tabs_content do
@@ -364,7 +373,9 @@ CraftingModifyView._setup_menu_tabs = function (self, content)
 		}
 	}
 	local tab_menu_element = self:_add_element(ViewElementTabMenu, id, layer, tab_menu_settings)
+
 	self._tab_menu_element = tab_menu_element
+
 	local input_action_left = "navigate_primary_left_pressed"
 	local input_action_right = "navigate_primary_right_pressed"
 
@@ -378,6 +389,7 @@ CraftingModifyView._setup_menu_tabs = function (self, content)
 		local display_icon = tab_content.icon
 		local pressed_callback = callback(self, "cb_switch_tab", i)
 		local tab_id = tab_menu_element:add_entry(i, pressed_callback, tab_button_template, display_icon, nil, true)
+
 		tab_ids[i] = tab_id
 	end
 

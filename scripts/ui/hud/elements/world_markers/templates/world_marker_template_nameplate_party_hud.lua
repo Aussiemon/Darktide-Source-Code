@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/hud/elements/world_markers/templates/world_marker_template_nameplate_party_hud.lua
+
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local template = {}
@@ -5,6 +7,7 @@ local size = {
 	400,
 	20
 }
+
 template.size = size
 template.name = "nameplate_party_hud"
 template.unit_node = "j_head"
@@ -72,6 +75,7 @@ template.on_enter = function (widget, marker)
 	local archetype = profile and profile.archetype
 	local string_symbol = archetype and archetype.string_symbol or ""
 	local text = string_symbol .. " " .. data:name() .. " - " .. tostring(character_level) .. " "
+
 	content.header_text = text
 end
 
@@ -83,6 +87,7 @@ template.update_function = function (parent, ui_renderer, widget, marker, templa
 		local scale = marker.scale
 		local header_text_id = "header_text"
 		local header_style = style[header_text_id]
+
 		header_style.font_size = header_style.default_font_size * scale
 	end
 end

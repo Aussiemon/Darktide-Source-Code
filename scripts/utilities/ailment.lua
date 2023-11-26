@@ -1,8 +1,10 @@
+﻿-- chunkname: @scripts/utilities/ailment.lua
+
 local AilmentSettings = require("scripts/settings/ailments/ailment_settings")
 local MATERIAL_KEY = "offset_time_duration"
 local ailment_effect_templates = AilmentSettings.effect_templates
 local Ailment = {}
-local _apply_ailment_effect = nil
+local _apply_ailment_effect
 
 Ailment.play_ailment_effect_template = function (unit, ailment_effect, optional_include_children, optional_custom_duration, optional_custom_offset_time)
 	local template = ailment_effect_templates[ailment_effect]

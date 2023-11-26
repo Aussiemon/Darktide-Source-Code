@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/system_view/system_view_definitions.lua
+
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local SystemViewSettings = require("scripts/ui/views/system_view/system_view_settings")

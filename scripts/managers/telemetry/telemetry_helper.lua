@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/telemetry/telemetry_helper.lua
+
 local TelemetryHelper = class("TelemetryHelper")
 
 TelemetryHelper.unit_position = function (unit)

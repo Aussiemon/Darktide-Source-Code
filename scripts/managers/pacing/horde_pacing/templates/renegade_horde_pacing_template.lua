@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/pacing/horde_pacing/templates/renegade_horde_pacing_template.lua
+
 local HordeCompositions = require("scripts/managers/pacing/horde_pacing/horde_compositions")
 local HordeSettings = require("scripts/settings/horde/horde_settings")
 local HordeTemplates = require("scripts/managers/horde/horde_templates")
@@ -159,13 +161,13 @@ local HIGH_CHALLENGE_RATING = 35
 local function has_medium_challenge_rating()
 	local total_challenge_rating = Managers.state.pacing:total_challenge_rating()
 
-	return MEDIUM_CHALLENGE_RATING <= total_challenge_rating and total_challenge_rating < HIGH_CHALLENGE_RATING
+	return total_challenge_rating >= MEDIUM_CHALLENGE_RATING and total_challenge_rating < HIGH_CHALLENGE_RATING
 end
 
 local function has_high_challenge_rating()
 	local total_challenge_rating = Managers.state.pacing:total_challenge_rating()
 
-	return HIGH_CHALLENGE_RATING <= total_challenge_rating
+	return total_challenge_rating >= HIGH_CHALLENGE_RATING
 end
 
 local function has_below_high_challenge_rating()

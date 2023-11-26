@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/terror_event/terror_event_templates/terror_events_perf_enemies_scene_a.lua
+
 local template = {
 	random_events = {},
 	events = {

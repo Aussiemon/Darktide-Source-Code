@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/talents_view/talents_view_settings.lua
+
 local talents_view_settings = {
 	equip_button_text_equip = "loc_talents_button_equip",
 	grid_num_columns = 11,

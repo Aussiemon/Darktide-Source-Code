@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/behavior/nodes/actions/bt_shoot_action.lua
+
 require("scripts/extension_systems/behavior/nodes/bt_node")
 
 local Animation = require("scripts/utilities/animation")
@@ -17,11 +19,14 @@ local DEFAULT_NOT_ALLOWED_COOLDOWN = 0.5
 BtShootAction.enter = function (self, unit, breed, blackboard, scratchpad, action_data, t)
 	local animation_extension = ScriptUnit.extension(unit, "animation_system")
 	local locomotion_extension = ScriptUnit.extension(unit, "locomotion_system")
+
 	scratchpad.animation_extension = animation_extension
 	scratchpad.locomotion_extension = locomotion_extension
 	scratchpad.navigation_extension = ScriptUnit.extension(unit, "navigation_system")
 	scratchpad.perception_extension = ScriptUnit.extension(unit, "perception_system")
+
 	local perception_component = Blackboard.write_component(blackboard, "perception")
+
 	scratchpad.behavior_component = Blackboard.write_component(blackboard, "behavior")
 	scratchpad.perception_component = perception_component
 	scratchpad.combat_vector_component = blackboard.combat_vector
@@ -47,6 +52,7 @@ BtShootAction.enter = function (self, unit, breed, blackboard, scratchpad, actio
 		end
 
 		scratchpad.behavior_component.move_state = "attacking"
+
 		local not_allowed_cooldown = action_data.not_allowed_cooldown or DEFAULT_NOT_ALLOWED_COOLDOWN
 
 		self:_start_cooldown(unit, t, scratchpad, action_data, not_allowed_cooldown)
@@ -61,6 +67,7 @@ BtShootAction.enter = function (self, unit, breed, blackboard, scratchpad, actio
 	end
 
 	scratchpad.original_rotation_speed = locomotion_extension:rotation_speed()
+
 	local rotation_speed = action_data.rotation_speed
 
 	if rotation_speed then
@@ -75,13 +82,13 @@ BtShootAction.enter = function (self, unit, breed, blackboard, scratchpad, actio
 
 	if action_data.cover_crouch_check then
 		local cover_system = Managers.state.extension:system("cover_system")
+
 		scratchpad.cover_system = cover_system
 	end
 end
 
 BtShootAction.leave = function (self, unit, breed, blackboard, scratchpad, action_data, t, reason, destroy)
-	local state = scratchpad.state
-	local perception_component = scratchpad.perception_component
+	local state, perception_component = scratchpad.state, scratchpad.perception_component
 
 	if state == "aiming" then
 		MinionPerception.set_target_lock(unit, perception_component, false)
@@ -119,6 +126,7 @@ BtShootAction.run = function (self, unit, breed, blackboard, scratchpad, action_
 
 	if scratchpad.attempting_multi_target_switch then
 		scratchpad.attempting_multi_target_switch = false
+
 		local perception_component = scratchpad.perception_component
 
 		if perception_component.target_changed then
@@ -132,7 +140,7 @@ BtShootAction.run = function (self, unit, breed, blackboard, scratchpad, action_
 
 	local is_anim_rotation_driven = scratchpad.is_anim_rotation_driven
 
-	if is_anim_rotation_driven and scratchpad.start_rotation_timing and scratchpad.start_rotation_timing <= t then
+	if is_anim_rotation_driven and scratchpad.start_rotation_timing and t >= scratchpad.start_rotation_timing then
 		local destination = POSITION_LOOKUP[scratchpad.perception_component.target_unit]
 		local ignore_set_anim_driven = true
 
@@ -144,7 +152,7 @@ BtShootAction.run = function (self, unit, breed, blackboard, scratchpad, action_
 
 	local has_line_of_sight = scratchpad.perception_component.has_line_of_sight
 
-	if has_line_of_sight and action_data.can_strafe_shoot and state == "shooting" and (not scratchpad.next_try_to_strafe_shoot or scratchpad.next_try_to_strafe_shoot <= t) then
+	if has_line_of_sight and action_data.can_strafe_shoot and state == "shooting" and (not scratchpad.next_try_to_strafe_shoot or t >= scratchpad.next_try_to_strafe_shoot) then
 		self:_try_start_strafe_shooting(unit, t, scratchpad, action_data, breed)
 	end
 
@@ -166,7 +174,7 @@ BtShootAction.run = function (self, unit, breed, blackboard, scratchpad, action_
 		end
 	end
 
-	if scratchpad.should_reevaluate_in_t and scratchpad.should_reevaluate_in_t <= t then
+	if scratchpad.should_reevaluate_in_t and t >= scratchpad.should_reevaluate_in_t then
 		scratchpad.should_reevaluate = true
 		scratchpad.should_reevaluate_in_t = nil
 	end
@@ -179,7 +187,7 @@ local DEFAULT_NUM_AGGROED_FOR_FRIENDLY_FIRE_CALLOUT = 8
 
 BtShootAction._start_aiming = function (self, unit, t, scratchpad, action_data)
 	local shoot_turn_anims = action_data.shoot_turn_anims
-	local triggered_turn_anim = nil
+	local triggered_turn_anim
 
 	if shoot_turn_anims then
 		local rotation = Unit.local_rotation(unit, 1)
@@ -195,6 +203,7 @@ BtShootAction._start_aiming = function (self, unit, t, scratchpad, action_data)
 			local turn_anim_event = Animation.random_event(turn_anim_events)
 			local start_move_rotation_timings = action_data.start_move_rotation_timings
 			local start_rotation_timing = start_move_rotation_timings[turn_anim_event]
+
 			scratchpad.start_rotation_timing = t + start_rotation_timing
 			scratchpad.move_start_anim_event_name = turn_anim_event
 			scratchpad.current_aim_anim_event = turn_anim_event
@@ -227,9 +236,11 @@ BtShootAction._start_aiming = function (self, unit, t, scratchpad, action_data)
 	end
 
 	scratchpad.behavior_component.move_state = "attacking"
+
 	local aim_durations = action_data.aim_duration[scratchpad.current_aim_anim_event]
 	local diff_aim_durations = Managers.state.difficulty:get_table_entry_by_challenge(aim_durations)
 	local aim_duration = math.random_range(diff_aim_durations[1], diff_aim_durations[2])
+
 	scratchpad.state = "aiming"
 	scratchpad.aim_duration = t + aim_duration
 
@@ -244,7 +255,7 @@ BtShootAction._start_aiming = function (self, unit, t, scratchpad, action_data)
 	if friendly_fire_callout_vo_event then
 		local num_aggroed_minions = Managers.state.pacing:num_aggroed_minions()
 
-		if DEFAULT_NUM_AGGROED_FOR_FRIENDLY_FIRE_CALLOUT <= num_aggroed_minions then
+		if num_aggroed_minions >= DEFAULT_NUM_AGGROED_FOR_FRIENDLY_FIRE_CALLOUT then
 			local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
 			local breed = unit_data_extension:breed()
 
@@ -280,7 +291,7 @@ BtShootAction._update_aim_turning = function (self, unit, scratchpad, aim_dot, f
 
 			scratchpad.current_aim_rotation_direction_name = "right"
 		end
-	elseif current_aim_rotation_direction_name ~= "fwd" and AIM_TURN_FWD_DOT_THRESHOLD < aim_dot then
+	elseif current_aim_rotation_direction_name ~= "fwd" and aim_dot > AIM_TURN_FWD_DOT_THRESHOLD then
 		animation_extension:anim_event(aim_rotation_anims.fwd)
 
 		scratchpad.current_aim_rotation_direction_name = "fwd"
@@ -413,7 +424,7 @@ BtShootAction._try_start_strafe_shooting = function (self, unit, t, scratchpad, 
 	if distance < action_data.strafe_shoot_distance or target_distance < target_to_combat_vector_distance then
 		local ranged_position = action_data.strafe_shoot_ranged_position_fallback and MinionMovement.find_ranged_position(unit, t, scratchpad, action_data, target_unit)
 
-		if ranged_position and action_data.strafe_shoot_distance < Vector3.distance(ranged_position, self_position) then
+		if ranged_position and Vector3.distance(ranged_position, self_position) > action_data.strafe_shoot_distance then
 			wanted_position = ranged_position
 		else
 			return
@@ -460,7 +471,7 @@ BtShootAction._update_trying_to_strafe_shoot = function (self, unit, t, scratchp
 	local is_following_path = navigation_extension:is_following_path()
 
 	if not is_following_path then
-		if scratchpad.trying_to_start_strafe_shooting_duration < t then
+		if t > scratchpad.trying_to_start_strafe_shooting_duration then
 			navigation_extension:set_enabled(false)
 
 			scratchpad.state = "shooting"
@@ -522,7 +533,7 @@ BtShootAction._update_strafe_shooting = function (self, unit, t, scratchpad, act
 	local rotation = Quaternion.look(target_position - self_position)
 	local moving_direction_name = MinionMovement.get_moving_direction_name(unit, scratchpad, nil, rotation)
 
-	if moving_direction_name ~= scratchpad.moving_direction_name and scratchpad.strafe_anim_switch_duration <= t then
+	if moving_direction_name ~= scratchpad.moving_direction_name and t >= scratchpad.strafe_anim_switch_duration then
 		local strafe_anim_events = action_data.strafe_anim_events
 		local start_move_event = strafe_anim_events[moving_direction_name]
 
@@ -530,6 +541,7 @@ BtShootAction._update_strafe_shooting = function (self, unit, t, scratchpad, act
 
 		scratchpad.moving_direction_name = moving_direction_name
 		scratchpad.current_aim_anim_event = start_move_event
+
 		local strafe_speeds = action_data.strafe_speeds
 		local strafe_speed = strafe_speeds and strafe_speeds[start_move_event]
 
@@ -544,7 +556,7 @@ BtShootAction._update_strafe_shooting = function (self, unit, t, scratchpad, act
 	local current_node, next_node_in_path = scratchpad.navigation_extension:current_and_next_node_positions_in_path()
 	local destination = next_node_in_path or current_node
 	local flat_direction = Vector3.normalize(Vector3.flat(destination - self_position))
-	local wanted_rotation = nil
+	local wanted_rotation
 
 	if current_strafe_direction == "fwd" then
 		wanted_rotation = Quaternion.look(flat_direction)
@@ -616,11 +628,13 @@ BtShootAction._start_cooldown = function (self, unit, t, scratchpad, action_data
 
 	if not cooldown then
 		local diff_cooldown_range = Managers.state.difficulty:get_table_entry_by_challenge(cooldown_range)
+
 		cooldown = math.random_range(diff_cooldown_range[1], diff_cooldown_range[2])
 	end
 
 	scratchpad.cooldown = t + cooldown
 	scratchpad.state = "cooldown"
+
 	local behavior_component = scratchpad.behavior_component
 
 	if not scratchpad.current_aim_anim_event then
@@ -641,6 +655,7 @@ BtShootAction._start_cooldown = function (self, unit, t, scratchpad, action_data
 	end
 
 	behavior_component.move_state = "idle"
+
 	local cooldown_vo_event = action_data.cooldown_vo_event
 
 	if cooldown_vo_event then
@@ -662,7 +677,7 @@ BtShootAction._update_cooldown = function (self, unit, t, scratchpad, action_dat
 		scratchpad.locomotion_extension:set_wanted_rotation(flat_rotation)
 	end
 
-	if scratchpad.cooldown < t then
+	if t > scratchpad.cooldown then
 		local attack_allowed = AttackIntensity.minion_can_attack(unit, action_data.attack_intensity_type, target_unit)
 
 		if attack_allowed then

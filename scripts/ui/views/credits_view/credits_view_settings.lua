@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/credits_view/credits_view_settings.lua
+
 local credits_view_settings = {
 	style_settings = {
 		header = {

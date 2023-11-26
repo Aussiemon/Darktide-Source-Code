@@ -1,28 +1,30 @@
-local NavTagVolumeBox = {
-	create_from_pose = function (nav_world, tm, half_size)
-		local half_size_x, half_size_y, half_size_z = Vector3.to_elements(half_size)
-		local position = Matrix4x4.translation(tm)
-		local altitude = position.z
-		local altitude_min = altitude - half_size_z
-		local altitude_max = altitude + half_size_z
-		local p1 = Matrix4x4.transform(tm, Vector3(half_size_x, half_size_y, 0))
-		local p2 = Matrix4x4.transform(tm, Vector3(half_size_x, -half_size_y, 0))
-		local p3 = Matrix4x4.transform(tm, Vector3(-half_size_x, -half_size_y, 0))
-		local p4 = Matrix4x4.transform(tm, Vector3(-half_size_x, half_size_y, 0))
+﻿-- chunkname: @scripts/extension_systems/navigation/utilities/nav_tag_volume_box.lua
 
-		Vector3.set_z(p1, altitude_min)
-		Vector3.set_z(p2, altitude_min)
-		Vector3.set_z(p3, altitude_min)
-		Vector3.set_z(p4, altitude_min)
+local NavTagVolumeBox = {}
 
-		return {
-			p1,
-			p2,
-			p3,
-			p4
-		}, altitude_min, altitude_max
-	end
-}
+NavTagVolumeBox.create_from_pose = function (nav_world, tm, half_size)
+	local half_size_x, half_size_y, half_size_z = Vector3.to_elements(half_size)
+	local position = Matrix4x4.translation(tm)
+	local altitude = position.z
+	local altitude_min = altitude - half_size_z
+	local altitude_max = altitude + half_size_z
+	local p1 = Matrix4x4.transform(tm, Vector3(half_size_x, half_size_y, 0))
+	local p2 = Matrix4x4.transform(tm, Vector3(half_size_x, -half_size_y, 0))
+	local p3 = Matrix4x4.transform(tm, Vector3(-half_size_x, -half_size_y, 0))
+	local p4 = Matrix4x4.transform(tm, Vector3(-half_size_x, half_size_y, 0))
+
+	Vector3.set_z(p1, altitude_min)
+	Vector3.set_z(p2, altitude_min)
+	Vector3.set_z(p3, altitude_min)
+	Vector3.set_z(p4, altitude_min)
+
+	return {
+		p1,
+		p2,
+		p3,
+		p4
+	}, altitude_min, altitude_max
+end
 
 NavTagVolumeBox.create_from_node = function (nav_world, unit, node_name, half_size)
 	local node_index = Unit.node(unit, node_name)

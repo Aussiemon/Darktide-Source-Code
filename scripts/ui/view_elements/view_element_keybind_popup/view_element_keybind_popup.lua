@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/view_elements/view_element_keybind_popup/view_element_keybind_popup.lua
+
 local definition_path = "scripts/ui/view_elements/view_element_keybind_popup/view_element_keybind_popup_definitions"
 local ScriptWorld = require("scripts/foundation/utilities/script_world")
 local WorldRenderUtils = require("scripts/utilities/world_render")
@@ -14,6 +16,7 @@ ViewElementKeybindPopup.init = function (self, parent, draw_layer, start_scale)
 	self:_setup_background_gui()
 
 	local background_widget_definition = self._definitions.background_widget_definition
+
 	self._background_widget = self:_create_widget("background_widget", background_widget_definition)
 	self._blur_duration = BLUR_TIME
 end
@@ -52,10 +55,13 @@ ViewElementKeybindPopup._setup_default_gui = function (self)
 	local world_layer = self._draw_layer + 10
 	local world_name = class_name .. "_ui_default_world"
 	local view_name = self._parent.view_name
+
 	self._world = ui_manager:create_world(world_name, world_layer, timer_name, view_name)
+
 	local viewport_name = class_name .. "_ui_default_world_viewport"
 	local viewport_type = "overlay"
 	local viewport_layer = 1
+
 	self._viewport = ui_manager:create_viewport(self._world, viewport_name, viewport_type, viewport_layer)
 	self._viewport_name = viewport_name
 	self._ui_default_renderer = ui_manager:create_renderer(class_name .. "_ui_default_renderer", self._world)
@@ -68,12 +74,15 @@ ViewElementKeybindPopup._setup_background_gui = function (self)
 	local world_layer = self._draw_layer + 9
 	local world_name = class_name .. "_ui_background_world"
 	local view_name = self._parent.view_name
+
 	self._background_world = ui_manager:create_world(world_name, world_layer, timer_name, view_name)
+
 	local shading_environment = "content/shading_environments/ui/ui_popup_background"
 	local shading_callback = callback(self, "cb_shading_callback")
 	local viewport_name = class_name .. "_ui_background_world_viewport"
 	local viewport_type = "overlay"
 	local viewport_layer = 1
+
 	self._background_viewport = ui_manager:create_viewport(self._background_world, viewport_name, viewport_type, viewport_layer, shading_environment, shading_callback)
 	self._background_viewport_name = viewport_name
 	self._ui_popup_background_renderer = ui_manager:create_renderer(class_name .. "_ui_popup_background_renderer", self._background_world)
@@ -144,14 +153,19 @@ end
 
 ViewElementKeybindPopup.draw = function (self, dt, t, ui_renderer, render_settings, input_service)
 	ui_renderer = self._ui_default_renderer
+
 	local previous_alpha_multiplier = render_settings.alpha_multiplier
+
 	render_settings.alpha_multiplier = self._alpha_multiplier or 0
 
 	ViewElementKeybindPopup.super.draw(self, dt, t, ui_renderer, render_settings, input_service)
 
 	render_settings.alpha_multiplier = previous_alpha_multiplier
+
 	local previous_layer = render_settings.start_layer
+
 	render_settings.start_layer = (previous_layer or 0) + self._draw_layer
+
 	local ui_scenegraph = self._ui_scenegraph
 	local ui_popup_background_renderer = self._ui_popup_background_renderer
 
@@ -167,6 +181,7 @@ ViewElementKeybindPopup._pulse_action_text = function (self)
 	local value_text = widgets_by_name.value_text
 	local speed = 4
 	local anim_progress = 0.5 + math.sin(Application.time_since_launch() * speed) * 0.5
+
 	value_text.alpha_multiplier = 0.4 + 0.6 * anim_progress
 end
 
@@ -177,18 +192,21 @@ end
 ViewElementKeybindPopup.set_value_text = function (self, value)
 	local widgets_by_name = self._widgets_by_name
 	local value_text = widgets_by_name.value_text
+
 	value_text.content.text = value
 end
 
 ViewElementKeybindPopup.set_action_text = function (self, action)
 	local widgets_by_name = self._widgets_by_name
 	local action_text = widgets_by_name.action_text
+
 	action_text.content.text = action
 end
 
 ViewElementKeybindPopup.set_description_text = function (self, description)
 	local widgets_by_name = self._widgets_by_name
 	local description_text = widgets_by_name.description_text
+
 	description_text.content.text = description
 end
 

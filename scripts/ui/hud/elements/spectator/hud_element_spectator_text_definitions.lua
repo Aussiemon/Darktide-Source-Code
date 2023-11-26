@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/hud/elements/spectator/hud_element_spectator_text_definitions.lua
+
 local UIWorkspaceSettings = require("scripts/settings/ui/ui_workspace_settings")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
@@ -53,6 +55,7 @@ local scenegraph_definition = {
 	}
 }
 local rescued_style = table.clone(UIFontSettings.body)
+
 rescued_style.text_horizontal_alignment = "center"
 rescued_style.text_vertical_alignment = "top"
 rescued_style.text_color = Color.terminal_text_body(255, true)
@@ -63,14 +66,19 @@ rescued_style.offset = {
 }
 rescued_style.text_horizontal_alignment = "center"
 rescued_style.text_vertical_alignment = "center"
+
 local spectating_style = table.clone(UIFontSettings.body)
+
 spectating_style.text_horizontal_alignment = "center"
 spectating_style.text_vertical_alignment = "top"
 spectating_style.text_color = Color.terminal_text_body(255, true)
+
 local cycle_style = table.clone(UIFontSettings.body)
+
 cycle_style.text_horizontal_alignment = "center"
 cycle_style.text_vertical_alignment = "top"
 cycle_style.text_color = Color.terminal_text_body_sub_header(255, true)
+
 local widget_definitions = {
 	rescued_text = UIWidget.create_definition({
 		{

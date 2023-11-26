@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/specials/chaos_hound_settings.lua
+
 local chaos_hound_settings = {
 	long_leap_start_offset_distance = 8,
 	leap_target_node_name = "j_spine",

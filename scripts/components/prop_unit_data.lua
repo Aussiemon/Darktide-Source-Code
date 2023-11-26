@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/components/prop_unit_data.lua
+
 local PropData = require("scripts/settings/prop_data/prop_data")
 local PropUnitData = component("PropUnitData")
 

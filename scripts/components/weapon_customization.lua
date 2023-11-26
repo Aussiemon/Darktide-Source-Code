@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/components/weapon_customization.lua
+
 local VisualLoadoutCustomization = require("scripts/extension_systems/visual_loadout/utilities/visual_loadout_customization")
 local MasterItems = require("scripts/backend/master_items")
 local LocalLoader = require("scripts/settings/equipment/local_items_loader")
@@ -6,6 +8,7 @@ local WeaponCustomization = component("WeaponCustomization")
 WeaponCustomization.editor_init = function (self, unit)
 	local in_editor = true
 	local world = Unit.world(unit)
+
 	self._unit = unit
 	self._world = world
 	self._in_editor = in_editor
@@ -24,6 +27,7 @@ WeaponCustomization.init = function (self, unit)
 
 	local in_editor = false
 	local world = Unit.world(unit)
+
 	self._unit = unit
 	self._world = world
 	self._in_editor = in_editor
@@ -81,7 +85,9 @@ WeaponCustomization._customize = function (self, unit, item_definitions)
 	end
 
 	local attach_settings = self._attach_settings
+
 	attach_settings.item_definitions = item_definitions or attach_settings.item_definitions
+
 	local item_data = rawget(attach_settings.item_definitions, item)
 
 	if not item_data then
@@ -91,7 +97,9 @@ WeaponCustomization._customize = function (self, unit, item_definitions)
 	end
 
 	local weapon_skin_item = self:get_data(unit, "weapon_skin_item")
+
 	weapon_skin_item = weapon_skin_item or item_data.slot_weapon_skin
+
 	local skin_data = weapon_skin_item and weapon_skin_item ~= "" and rawget(attach_settings.item_definitions, weapon_skin_item)
 
 	self:spawn_item_attachments(unit, item_data, skin_data)
@@ -143,6 +151,7 @@ WeaponCustomization.spawn_item_attachments = function (self, unit, item_data, sk
 		for i = 1, #sorted_attachments do
 			local key = sorted_attachments[i]
 			local attachment_slot_data = attachments[key]
+
 			attachment_units = VisualLoadoutCustomization.attach_hierarchy(attachment_slot_data, skin_overrides, attach_settings, unit, attachment_units)
 
 			if attachment_units then

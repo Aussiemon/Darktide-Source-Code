@@ -1,8 +1,11 @@
+﻿-- chunkname: @scripts/extension_systems/health/health_extension.lua
+
 local HealthExtensionInterface = require("scripts/extension_systems/health/health_extension_interface")
 local HealthExtension = class("HealthExtension")
 
 HealthExtension.init = function (self, extension_init_context, unit, extension_init_data, game_object_data)
 	local health = extension_init_data.health or Unit.get_data(unit, "health")
+
 	self._health = health
 	self._unit = unit
 	self._is_unkillable = not not extension_init_data.is_unkillable
@@ -10,13 +13,16 @@ HealthExtension.init = function (self, extension_init_context, unit, extension_i
 	self._last_hit_was_critical = false
 	self._was_hit_by_critical_hit_this_render_frame = false
 	self._damage = 0
+
 	local hit_mass = extension_init_data.hit_mass or 1
+
 	self._hit_mass = hit_mass
 	self._is_dead = false
 	game_object_data.health = self._health
 	game_object_data.damage = self._damage
 	game_object_data.hit_mass = self._hit_mass
 	game_object_data.is_dead = self._is_dead
+
 	local has_health_bar = extension_init_data.has_health_bar
 
 	if has_health_bar then
@@ -166,7 +172,7 @@ HealthExtension.health_depleted = function (self)
 	if self._is_unkillable then
 		return false
 	else
-		return self._health <= self._damage
+		return self._damage >= self._health
 	end
 end
 

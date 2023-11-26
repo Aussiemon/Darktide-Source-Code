@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/slot/slot_system_settings.lua
+
 local MOVER_RADIUS = 0.6
 local NAVMESH_DISTANCE_FROM_WALL = 0.5
 local slot_position_check_index = {

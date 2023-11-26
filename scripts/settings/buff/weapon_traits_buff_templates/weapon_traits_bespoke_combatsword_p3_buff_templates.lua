@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/buff/weapon_traits_buff_templates/weapon_traits_bespoke_combatsword_p3_buff_templates.lua
+
 local Ammo = require("scripts/utilities/ammo")
 local AttackSettings = require("scripts/settings/damage/attack_settings")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
@@ -23,10 +25,10 @@ local keywords = BuffSettings.keywords
 local stat_buffs = BuffSettings.stat_buffs
 local proc_events = BuffSettings.proc_events
 local replenish_types = ToughnessSettings.replenish_types
-local templates = {
-	weapon_trait_bespoke_combatsword_p3_increased_melee_damage_on_multiple_hits = table.clone(BaseWeaponTraitBuffTemplates.increased_melee_damage_on_multiple_hits),
-	weapon_trait_bespoke_combatsword_p3_stacking_rending_on_weakspot_parent = table.clone(BaseWeaponTraitBuffTemplates.stacking_rending_on_weakspot_parent)
-}
+local templates = {}
+
+templates.weapon_trait_bespoke_combatsword_p3_increased_melee_damage_on_multiple_hits = table.clone(BaseWeaponTraitBuffTemplates.increased_melee_damage_on_multiple_hits)
+templates.weapon_trait_bespoke_combatsword_p3_stacking_rending_on_weakspot_parent = table.clone(BaseWeaponTraitBuffTemplates.stacking_rending_on_weakspot_parent)
 templates.weapon_trait_bespoke_combatsword_p3_stacking_rending_on_weakspot_parent.child_buff_template = "weapon_trait_bespoke_combatsword_p3_stacking_rending_on_weakspot_child"
 templates.weapon_trait_bespoke_combatsword_p3_stacking_rending_on_weakspot_child = table.clone(BaseWeaponTraitBuffTemplates.stacking_rending_on_weakspot_child)
 templates.weapon_trait_bespoke_combatsword_p3_chained_hits_increases_crit_chance_parent = table.clone(BaseWeaponTraitBuffTemplates.chained_hits_increases_crit_chance_parent)

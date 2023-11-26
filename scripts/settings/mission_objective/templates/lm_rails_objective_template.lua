@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/mission_objective/templates/lm_rails_objective_template.lua
+
 local mission_objective_templates = {
 	lm_rails = {
 		main_objective_type = "luggable_objective",

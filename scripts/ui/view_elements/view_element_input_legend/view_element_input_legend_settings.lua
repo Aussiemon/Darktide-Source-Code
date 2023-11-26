@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/view_elements/view_element_input_legend/view_element_input_legend_settings.lua
+
 local UIWorkspaceSettings = require("scripts/settings/ui/ui_workspace_settings")
 local view_element_input_legend_settings = {
 	button_edge_margin = 170,

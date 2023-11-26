@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/end_player_view/end_player_view_settings.lua
+
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local end_player_view_settings = {
 	carousel_initial_states = {
@@ -73,6 +75,7 @@ local function _calculate_fixed_card_time(card_states)
 
 	for i = 1, #card_states do
 		local card_state = card_states[i]
+
 		time = time + (card_state.duration or 0)
 	end
 

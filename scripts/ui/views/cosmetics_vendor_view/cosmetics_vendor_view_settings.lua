@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/cosmetics_vendor_view/cosmetics_vendor_view_settings.lua
+
 local cosmetics_vendor_view_settings = {
 	timer_name = "ui",
 	total_blur_duration = 0.5,

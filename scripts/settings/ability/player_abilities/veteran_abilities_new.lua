@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/ability/player_abilities/veteran_abilities_new.lua
+
 local TalentSettings = require("scripts/settings/talent/talent_settings_new")
 local shock_trooper_talent_settings = TalentSettings.veteran_1
 local ranger_talent_settings = TalentSettings.veteran_2
@@ -59,9 +61,10 @@ local abilities = {
 		archetypes = {
 			"veteran"
 		}
-	},
-	veteran_combat_ability_stance = table.clone(base_ability)
+	}
 }
+
+abilities.veteran_combat_ability_stance = table.clone(base_ability)
 abilities.veteran_combat_ability_stance.hud_icon = "content/ui/textures/icons/abilities/hud/veteran/veteran_ability_volley_fire_stance"
 abilities.veteran_combat_ability_stance.ability_template_tweak_data.class_tag = "ranger"
 abilities.veteran_combat_ability_stance.ability_template_tweak_data.wield_secondary_slot = true

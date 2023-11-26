@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/hud/elements/spectator/hud_element_spectator_text.lua
+
 local Definitions = require("scripts/ui/hud/elements/spectator/hud_element_spectator_text_definitions")
 local UIRenderer = require("scripts/managers/ui/ui_renderer")
 local InputUtils = require("scripts/managers/input/input_utils")
@@ -28,6 +30,7 @@ HudElementSpectatorText.update = function (self, dt, t, ui_renderer, render_sett
 		local rescued_text_widget_text_style = rescued_text_widget.style.text
 		local rescued_text = rescued_text_widget.content.text
 		local text_width, text_height = UIRenderer.text_size(ui_renderer, rescued_text, rescued_text_widget_text_style.font_type, rescued_text_widget_text_style.font_size)
+
 		rescued_text_widget.style.background.size[1] = text_width + 60
 		rescued_text_widget.style.background_overlay.size[1] = text_width + 60
 		rescued_text_widget.style.background_frame.size[1] = text_width + 60
@@ -38,10 +41,13 @@ HudElementSpectatorText.update = function (self, dt, t, ui_renderer, render_sett
 		local player = self._parent:player()
 		local name = player:name()
 		local formated_name = " " .. name
+
 		self._widgets_by_name.spectating_text.content.text = Localize("loc_spectator_mode_spectating_player", true, {
 			player_name = formated_name
 		})
+
 		local input_text = self:_get_cycle_input_text()
+
 		self._widgets_by_name.cycle_text.content.text = Localize("loc_spectator_mode_input_cycle_player", true, {
 			input = input_text
 		})

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/circumstance/templates/extra_trickle_circumstance_template.lua
+
 local circumstance_templates = {
 	snipers_01 = {
 		wwise_state = "hunting_grounds_01",

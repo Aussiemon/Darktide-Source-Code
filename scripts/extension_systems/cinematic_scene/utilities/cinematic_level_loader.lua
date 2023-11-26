@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/cinematic_scene/utilities/cinematic_level_loader.lua
+
 local ItemPackage = require("scripts/foundation/managers/package/utilities/item_package")
 local MasterItems = require("scripts/backend/master_items")
 local CinematicLevelLoader = class("CinematicLevelLoader")
@@ -17,6 +19,7 @@ end
 
 CinematicLevelLoader.start_loading = function (self, cinematic_name, level_names, callback)
 	local ready_callbacks = self._level_ready_callbacks
+
 	ready_callbacks[#ready_callbacks + 1] = callback
 
 	if #level_names == 0 then
@@ -25,30 +28,26 @@ CinematicLevelLoader.start_loading = function (self, cinematic_name, level_names
 		end
 
 		table.clear(ready_callbacks)
-	else
-		if self._cinematic_name == nil then
-			self._cinematic_name = cinematic_name
-			local item_definitions = MasterItems.get_cached()
+	elseif self._cinematic_name == nil then
+		self._cinematic_name = cinematic_name
 
-			for _, level_name in ipairs(level_names) do
-				self._levels_to_load[level_name] = PACKAGE_LOAD_STATES.level_load
-			end
+		local item_definitions = MasterItems.get_cached()
 
-			for _, level_name in ipairs(level_names) do
-				local function pkg_callback(_pkg_name)
-					self:_level_load_done_callback(item_definitions, level_name)
-				end
-
-				local id = Managers.package:load(level_name, "CinematicLevelLoader", pkg_callback)
-				self._package_ids[id] = level_name
-			end
-
-			return
+		for _, level_name in ipairs(level_names) do
+			self._levels_to_load[level_name] = PACKAGE_LOAD_STATES.level_load
 		end
 
-		if self._cinematic_name == cinematic_name and self:_is_loading_done() then
-			callback(self._cinematic_name, self._levels_to_load)
+		for _, level_name in ipairs(level_names) do
+			local function pkg_callback(_pkg_name)
+				self:_level_load_done_callback(item_definitions, level_name)
+			end
+
+			local id = Managers.package:load(level_name, "CinematicLevelLoader", pkg_callback)
+
+			self._package_ids[id] = level_name
 		end
+	elseif self._cinematic_name == cinematic_name and self:_is_loading_done() then
+		callback(self._cinematic_name, self._levels_to_load)
 	end
 end
 
@@ -69,7 +68,9 @@ CinematicLevelLoader._level_load_done_callback = function (self, item_definition
 		end
 	else
 		self._levels_to_load[level_name] = PACKAGE_LOAD_STATES.packages_load
+
 		local packages_to_load = self._packages_to_load
+
 		packages_to_load[level_name] = {}
 
 		for package_name, _ in pairs(item_packages_to_load) do
@@ -85,6 +86,7 @@ CinematicLevelLoader._level_load_done_callback = function (self, item_definition
 
 		for package_name, _ in pairs(packages_to_load[level_name]) do
 			local id = package_manager:load(package_name, "CinematicLevelLoader", callback)
+
 			package_ids[id] = package_name
 		end
 	end
@@ -93,7 +95,9 @@ end
 CinematicLevelLoader._load_done_callback = function (self, package_id, level_name)
 	local package_name = self._package_ids[package_id]
 	local packages_to_load = self._packages_to_load
+
 	packages_to_load[level_name][package_name] = true
+
 	local all_packages_finished_loading = true
 
 	for name, loaded in pairs(packages_to_load[level_name]) do

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/locomotion/minion_locomotion_extension.lua
+
 local Attack = require("scripts/utilities/attack/attack")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local LOCOMOTION_GRAVITY = 20
@@ -5,9 +7,11 @@ local MinionLocomotionExtension = class("MinionLocomotionExtension")
 
 MinionLocomotionExtension.init = function (self, extension_init_context, unit, extension_init_data, game_object_data)
 	self._unit = unit
+
 	local breed = extension_init_data.breed
 	local game_object_type = breed.game_object_type
 	local sync_full_rotation = Network.object_has_field(game_object_type, "rotation")
+
 	self._engine_extension_id = MinionLocomotion.register_extension(unit, LOCOMOTION_GRAVITY, sync_full_rotation)
 	self.movement_type = "snap_to_navmesh"
 
@@ -96,6 +100,7 @@ MinionLocomotionExtension.set_movement_type = function (self, movement_type, ove
 	end
 
 	self.movement_type = movement_type
+
 	local unit = self._unit
 
 	if movement_type == "constrained_by_mover" then

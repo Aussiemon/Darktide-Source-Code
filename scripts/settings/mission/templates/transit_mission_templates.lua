@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/mission/templates/transit_mission_templates.lua
+
 local mission_templates = {
 	cm_habs = {
 		mission_name = "loc_mission_name_cm_habs",

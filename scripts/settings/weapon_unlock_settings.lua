@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/weapon_unlock_settings.lua
+
 local weapon_unlock_settings = {
 	psyker_1 = {},
 	zealot_1 = {},

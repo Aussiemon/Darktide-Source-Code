@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/equipment/local_items_loader.lua
+
 local ItemPackage = require("scripts/foundation/managers/package/utilities/item_package")
 local Promise = require("scripts/foundation/utilities/promise")
 local LocalLoader = class("LocalLoader")
@@ -28,6 +30,7 @@ LocalLoader.QUERY_POLL_INTERVAL_SECONDS = 0.1
 
 LocalLoader._wait_for_query = function (query_handle, timeout_s, start_time)
 	start_time = start_time or Managers and Managers.time:time("main") or 0
+
 	local results = Metadata.claim_results(query_handle)
 
 	if not results then
@@ -83,7 +86,7 @@ LocalLoader.get_items_from_metadata_db = function ()
 
 		for i, p in ipairs(sorted_items) do
 			local k, v = unpack(p)
-			local item = nil
+			local item
 
 			if not v or v == "" then
 				Log.error("LocalLoader", "Properties for %s unexpectedly empty", k)

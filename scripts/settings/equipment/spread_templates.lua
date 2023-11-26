@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/equipment/spread_templates.lua
+
 local WeaponMovementStateSettings = require("scripts/settings/equipment/weapon_movement_state_settings")
 local WeaponTweaks = require("scripts/utilities/weapon_tweaks")
 local weapon_movement_states = WeaponMovementStateSettings.weapon_movement_states
@@ -1423,8 +1425,10 @@ spread_templates.laspistol_assault = {
 		}
 	}
 }
+
 local pitch_spread = 0.8
 local yaw_spread = pitch_spread * 1
+
 spread_templates.lasgun_brace = {
 	[still] = {
 		max_spread = {
@@ -3209,6 +3213,7 @@ spread_templates.psyker_smite = {
 		}
 	}
 }
+
 local _immediate_spread_types = {
 	"suppression_hit",
 	"damage_hit",
@@ -3240,6 +3245,7 @@ for name, template in pairs(spread_templates) do
 
 		if inheritance_settings then
 			local new_move_state_settings = _inherit(move_state_settings, inheritance_settings)
+
 			spread_templates[name][movement_state] = new_move_state_settings
 		end
 	end
@@ -3262,6 +3268,10 @@ for name, template in pairs(spread_templates) do
 		local num_shots_clear_time = move_state_settings.immediate_spread.num_shots_clear_time
 
 		if type(num_shots_clear_time) == "table" then
+			-- Nothing
+		end
+
+		if false then
 			-- Nothing
 		end
 	end

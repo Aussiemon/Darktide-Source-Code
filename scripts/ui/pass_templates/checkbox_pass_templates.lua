@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/pass_templates/checkbox_pass_templates.lua
+
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local UIResolution = require("scripts/managers/ui/ui_resolution")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
@@ -16,12 +18,17 @@ local function list_item_highlight_change_function(content, style)
 	local use_is_focused = hotspot.use_is_focused
 	local focus_progress = use_is_focused and hotspot.anim_focus_progress or not use_is_focused and hotspot.anim_select_progress
 	local progress = math.max(hotspot.anim_hover_progress, focus_progress)
+
 	style.color[1] = 255 * math.easeOutCubic(progress)
+
 	local size_addition = highlight_size_addition * math.easeInCubic(1 - progress)
 	local style_size_addition = style.size_addition
+
 	style_size_addition[1] = size_addition * 2
 	style_size_addition[2] = size_addition * 2
+
 	local offset = style.offset
+
 	offset[1] = size_addition
 	offset[2] = -size_addition
 	style.hdr = progress == 1
@@ -37,7 +44,7 @@ local function terminal_button_change_function(content, style)
 	local hover_color = style.hover_color
 	local selected_color = style.selected_color
 	local disabled_color = style.disabled_color
-	local color = nil
+	local color
 
 	if disabled and disabled_color then
 		color = disabled_color
@@ -64,6 +71,7 @@ local function terminal_button_hover_change_function(content, style)
 	local default_alpha = 155
 	local hover_alpha = anim_hover_progress * 100
 	local select_alpha = math.max(anim_select_progress, anim_focus_progress) * 50
+
 	style.color[1] = math.clamp(default_alpha + select_alpha + hover_alpha, 0, 255)
 end
 
@@ -72,6 +80,7 @@ CheckboxPassTemplates.terminal_button_hover_change_function = terminal_button_ho
 CheckboxPassTemplates.settings_checkbox = function (width, height, settings_area_width, num_options, use_is_focused)
 	local header_width = width - settings_area_width
 	local passes = ListHeaderPassTemplates.list_header(header_width, height, use_is_focused)
+
 	passes[#passes + 1] = {
 		pass_type = "texture",
 		value = "content/ui/materials/frames/hover",
@@ -96,6 +105,7 @@ CheckboxPassTemplates.settings_checkbox = function (width, height, settings_area
 		change_function = list_item_highlight_change_function,
 		visibility_function = list_item_highight_focused_visibility_function
 	}
+
 	local option_width = settings_area_width / num_options
 	local option_size = {
 		option_width,
@@ -105,11 +115,14 @@ CheckboxPassTemplates.settings_checkbox = function (width, height, settings_area
 	for i = 1, num_options do
 		local horizontal_offset = -((num_options - i) * option_width)
 		local option_font_style = table.clone(UIFontSettings.list_button)
+
 		option_font_style.horizontal_alignment = "right"
 		option_font_style.text_horizontal_alignment = "center"
 		option_font_style.size = option_size
 		option_font_style.offset[1] = horizontal_offset
+
 		local hotspot_id = "option_hotspot_" .. i
+
 		passes[#passes + 1] = {
 			pass_type = "hotspot",
 			content_id = hotspot_id,
@@ -142,6 +155,7 @@ CheckboxPassTemplates.settings_checkbox = function (width, height, settings_area
 				local default_alpha = 255
 				local disabled_alpha = default_alpha * 0.8
 				local current_alpha = content.disabled and disabled_alpha or default_alpha
+
 				style.color[1] = current_alpha * content[hotspot_id].anim_select_progress
 			end,
 			visibility_function = function (content, style)
@@ -182,6 +196,7 @@ CheckboxPassTemplates.settings_checkbox = function (width, height, settings_area
 end
 
 local terminal_button_text_style = table.clone(UIFontSettings.button_primary)
+
 terminal_button_text_style.offset = {
 	70,
 	0,
@@ -444,6 +459,7 @@ CheckboxPassTemplates.terminal_checkbox_button = {
 				local service_type = "View"
 				local alias_key = Managers.ui:get_input_alias_key(gamepad_action, service_type)
 				local input_text = InputUtils.input_text_for_current_input_device(service_type, alias_key)
+
 				content.text = string.format(Localize("loc_input_legend_text_template"), input_text, button_text)
 			else
 				content.text = button_text

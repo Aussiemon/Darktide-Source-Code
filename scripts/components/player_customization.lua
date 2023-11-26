@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/components/player_customization.lua
+
 local VisualLoadoutCustomization = require("scripts/extension_systems/visual_loadout/utilities/visual_loadout_customization")
 local MasterItems = require("scripts/backend/master_items")
 local LocalLoader = require("scripts/settings/equipment/local_items_loader")
@@ -6,6 +8,7 @@ local PlayerCustomization = component("PlayerCustomization")
 PlayerCustomization.editor_init = function (self, unit)
 	local in_editor = true
 	local world = Unit.world(unit)
+
 	self._unit = unit
 	self._world = world
 	self._in_editor = in_editor
@@ -26,6 +29,7 @@ PlayerCustomization.init = function (self, unit)
 
 	local in_editor = false
 	local world = Unit.world(unit)
+
 	self._unit = unit
 	self._world = world
 	self._in_editor = in_editor
@@ -83,11 +87,14 @@ PlayerCustomization._customize = function (self, unit, item_definitions)
 	local face_attachment_items = self:get_data(unit, "face_attachments")
 	local global_material_override_table = self:get_data(unit, "global_material_override")
 	local item_defs = item_definitions or attach_settings.item_definitions
+
 	attach_settings.item_definitions = item_defs
+
 	local item_table = {}
 
 	for _, item_name in pairs(item_names) do
 		local item = rawget(item_defs, item_name)
+
 		item = item or false
 		item_table[#item_table + 1] = item
 	end
@@ -98,7 +105,9 @@ PlayerCustomization._customize = function (self, unit, item_definitions)
 
 	if face_unit then
 		local face_sm_override = self:get_data(unit, "face_sm_override")
+
 		self._face_sm_override = face_sm_override
+
 		local face_sm_init_event = self:get_data(unit, "face_sm_init_event")
 
 		self:_override_face_anim(face_unit, face_sm_override, face_sm_init_event)
@@ -232,7 +241,7 @@ PlayerCustomization.spawn_items = function (self, items, optional_mission_templa
 end
 
 PlayerCustomization._spawn_facial_items = function (self, face_item_name, face_attachment_items)
-	local face_unit, face_attachment_units = nil
+	local face_unit, face_attachment_units
 
 	if self._attach_settings.is_first_person then
 		return
@@ -249,9 +258,8 @@ PlayerCustomization._spawn_facial_items = function (self, face_item_name, face_a
 		end
 
 		for k, item in pairs(face_attachment_items) do
-			face_item_data_clone.attachments[k] = {
-				item = item
-			}
+			face_item_data_clone.attachments[k] = {}
+			face_item_data_clone.attachments[k].item = item
 		end
 
 		face_unit, face_attachment_units = VisualLoadoutCustomization.spawn_item(face_item_data_clone, self._attach_settings, self._unit, nil, nil, nil)
@@ -277,6 +285,7 @@ PlayerCustomization._spawn_facial_items = function (self, face_item_name, face_a
 		if face_slots then
 			local face_slot = face_slots[1]
 			local units_by_slot_name = self._units_by_slot_name
+
 			units_by_slot_name[face_slot] = face_unit
 		end
 

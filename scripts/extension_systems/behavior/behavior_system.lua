@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/behavior/behavior_system.lua
+
 require("scripts/extension_systems/behavior/minion_behavior_extension")
 require("scripts/extension_systems/behavior/combat_range_user_behavior_extension")
 require("scripts/extension_systems/behavior/bot_behavior_extension")
@@ -19,6 +21,7 @@ BehaviorSystem._create_behavior_trees = function (self)
 
 	for tree_name, root in pairs(BehaviorTrees) do
 		local tree = BehaviorTree:new(root, tree_name)
+
 		behavior_trees[tree_name] = tree
 	end
 end

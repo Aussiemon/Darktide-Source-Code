@@ -1,7 +1,10 @@
+﻿-- chunkname: @scripts/settings/equipment/weapon_traits/weapon_traits_bespoke_forcestaff_p2.lua
+
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local templates = {}
 local stat_buffs = BuffSettings.stat_buffs
 local proc_events = BuffSettings.proc_events
+
 templates.weapon_trait_bespoke_forcestaff_p2_suppression_on_close_kill = {
 	weapon_trait_bespoke_forcestaff_p2_suppression_on_close_kill = {
 		{

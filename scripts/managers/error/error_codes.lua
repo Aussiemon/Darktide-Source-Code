@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/error/error_codes.lua
+
 local ErrorCodesLookup = {
 	kicked_on_session_report_fail = {
 		code = 1001
@@ -174,15 +176,16 @@ local function echo(...)
 	return ...
 end
 
-local ErrorCodes = {
-	_config_from_error_string = function (error_string)
-		local error_string_lower = string.lower(error_string)
-		local error_config = ErrorCodesLookup[error_string_lower]
-		error_config = error_config or ErrorCodesLookup.unknown_error
+local ErrorCodes = {}
 
-		return error_config
-	end
-}
+ErrorCodes._config_from_error_string = function (error_string)
+	local error_string_lower = string.lower(error_string)
+	local error_config = ErrorCodesLookup[error_string_lower]
+
+	error_config = error_config or ErrorCodesLookup.unknown_error
+
+	return error_config
+end
 
 ErrorCodes.get_error_code_string_from_reason = function (error_string)
 	local error_config = ErrorCodes._config_from_error_string(error_string)

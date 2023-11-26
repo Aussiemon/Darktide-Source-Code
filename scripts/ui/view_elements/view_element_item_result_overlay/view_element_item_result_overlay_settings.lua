@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/view_elements/view_element_item_result_overlay/view_element_item_result_overlay_settings.lua
+
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local view_element_item_result_overlay_settings = {
 	weapon_spawn_depth = 1.2,

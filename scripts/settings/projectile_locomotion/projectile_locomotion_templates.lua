@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/projectile_locomotion/projectile_locomotion_templates.lua
+
 local projectile_locomotion_templates = {}
 
 local function _extract_projectile_locomotion_templates(path)

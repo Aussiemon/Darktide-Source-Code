@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/hud/elements/prologue_tutorial_step_tracker/hud_element_prologue_tutorial_step_tracker_definitions.lua
+
 local HudElementPrologueTutorialObjectivesTrackerSettings = require("scripts/ui/hud/elements/prologue_tutorial_step_tracker/hud_element_prologue_tutorial_step_tracker_settings")
 local UIWorkspaceSettings = require("scripts/settings/ui/ui_workspace_settings")
 local UIHudSettings = require("scripts/settings/ui/ui_hud_settings")
@@ -34,8 +36,10 @@ local scenegraph_definition = {
 	}
 }
 local description_text_style = objective_tracker_settings.description_text_style
+
 description_text_style.text_color = objective_tracker_settings.entry_colors.description_text
 description_text_style.default_text_color = objective_tracker_settings.entry_colors.description_text
+
 local widget_definitions = {
 	step_tracker = UIWidget.create_definition({
 		{
@@ -127,6 +131,7 @@ local animations = {
 				local scenegraph_definition = scenegraph_definition[scenegraph_id]
 				local size = scenegraph_definition.size
 				local size_x = size[1]
+
 				widget.offset[1] = -25 + -size_x * math.easeInCubic(progress)
 			end
 		},
@@ -149,6 +154,7 @@ local animations = {
 				local scenegraph_definition = scenegraph_definition[scenegraph_id]
 				local size = scenegraph_definition.size
 				local size_x = size[1]
+
 				widget.offset[1] = -size_x - 25 + (25 + size_x) * math.easeInCubic(progress)
 			end
 		},
@@ -158,6 +164,7 @@ local animations = {
 			start_time = 0.6,
 			update = function (parent, ui_scenegraph, scenegraph_definition, widget, progress, params)
 				local alpha = -1 * math.easeOutCubic(progress)
+
 				widget.alpha_multiplier = alpha
 			end
 		}

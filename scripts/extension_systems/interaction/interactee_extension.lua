@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/interaction/interactee_extension.lua
+
 local Component = require("scripts/utilities/component")
 local Interactions = require("scripts/settings/interaction/interactions")
 local InteractionSettings = require("scripts/settings/interaction/interaction_settings")
@@ -9,11 +11,14 @@ local interaction_results = InteractionSettings.results
 
 InteracteeExtension.init = function (self, extension_init_context, unit, extension_init_data, game_object_data, game_object_id)
 	local is_server = extension_init_context.is_server
+
 	self._is_server = is_server
 	self._unit = unit
 	self._used = false
 	self._is_being_used = false
+
 	local start_active = not extension_init_data.start_inactive
+
 	self._started_active = start_active
 	self._active = start_active
 	self._spawn_cooldown = extension_init_data.spawn_interaction_cooldown
@@ -58,10 +63,7 @@ InteracteeExtension.hot_join_sync = function (self, unit, sender, channel)
 	local active_type_changed = self._active_interaction_changed
 
 	if is_active ~= self._started_active or active_type_changed or self._used then
-		local unit_id = self._unit_id
-		local is_level_unit = self._is_level_unit
-		local is_used = self._used
-		local active_type_id = 0
+		local unit_id, is_level_unit, is_used, active_type_id = self._unit_id, self._is_level_unit, self._used, 0
 
 		if active_type_changed then
 			active_type_id = NetworkLookup.interaction_type_strings[self._active_interaction_type]
@@ -73,8 +75,7 @@ end
 
 InteracteeExtension.game_object_initialized = function (self, session, game_object_id)
 	if not self._is_level_unit then
-		self._is_level_unit = false
-		self._unit_id = game_object_id
+		self._unit_id, self._is_level_unit = game_object_id, false
 	end
 end
 
@@ -90,6 +91,7 @@ InteracteeExtension.set_interaction_context = function (self, interaction_type, 
 			end
 
 			local interaction_class_name = interaction_template.interaction_class_name
+
 			interactions[interaction_type] = Interactions[interaction_class_name]:new(interaction_template)
 		end
 
@@ -171,8 +173,7 @@ end
 
 InteracteeExtension.set_active = function (self, is_active)
 	if self._is_server then
-		local unit_id = self._unit_id
-		local is_level_unit = self._is_level_unit
+		local unit_id, is_level_unit = self._unit_id, self._is_level_unit
 
 		Managers.state.game_session:send_rpc_clients("rpc_interaction_set_active", unit_id, is_level_unit, is_active)
 	end
@@ -193,7 +194,7 @@ InteracteeExtension.update_light = function (self)
 		return
 	end
 
-	local color_box = nil
+	local color_box
 
 	if self._used then
 		color_box = emissive_colors.used
@@ -268,8 +269,7 @@ InteracteeExtension.set_missing_players = function (self, is_missing)
 	end
 
 	if self._is_server then
-		local unit_id = self._unit_id
-		local is_level_unit = self._is_level_unit
+		local unit_id, is_level_unit = self._unit_id, self._is_level_unit
 
 		Managers.state.game_session:send_rpc_clients("rpc_interaction_set_missing_player", unit_id, is_level_unit, is_missing)
 	end
@@ -295,6 +295,7 @@ InteracteeExtension.disable_display_start_event = function (self)
 	end
 
 	local override_context = self._override_contexts[active_interaction_type]
+
 	override_context.display_start_event = false
 end
 
@@ -355,6 +356,7 @@ InteracteeExtension.set_action_text = function (self, text)
 
 	if active_interaction_type then
 		local override_context = self._override_contexts[active_interaction_type]
+
 		override_context.action_text = text
 	end
 end
@@ -377,6 +379,7 @@ InteracteeExtension.set_description = function (self, description)
 
 	if active_interaction_type then
 		local override_context = self._override_contexts[active_interaction_type]
+
 		override_context.description = description
 	end
 end
@@ -386,6 +389,7 @@ InteracteeExtension.set_duration = function (self, duration)
 
 	if active_interaction_type then
 		local override_context = self._override_contexts[active_interaction_type]
+
 		override_context.duration = duration
 	end
 end
@@ -408,6 +412,7 @@ InteracteeExtension.set_block_text = function (self, text, block_text_context)
 
 	if active_interaction_type then
 		local override_context = self._override_contexts[active_interaction_type]
+
 		override_context.block_text = text
 		override_context.block_text_context = block_text_context
 	end
@@ -478,8 +483,7 @@ end
 
 InteracteeExtension.started = function (self, interactor_unit)
 	if self._is_server then
-		local unit_id = self._unit_id
-		local is_level_unit = self._is_level_unit
+		local unit_id, is_level_unit = self._unit_id, self._is_level_unit
 		local interactor_object_id = Managers.state.unit_spawner:game_object_id(interactor_unit)
 
 		Managers.state.game_session:send_rpc_clients("rpc_interaction_started", unit_id, is_level_unit, interactor_object_id)
@@ -494,8 +498,7 @@ end
 
 InteracteeExtension.stopped = function (self, result)
 	if self._is_server then
-		local unit_id = self._unit_id
-		local is_level_unit = self._is_level_unit
+		local unit_id, is_level_unit = self._unit_id, self._is_level_unit
 		local result_id = NetworkLookup.interaction_result[result]
 
 		Managers.state.game_session:send_rpc_clients("rpc_interaction_stopped", unit_id, is_level_unit, result_id)

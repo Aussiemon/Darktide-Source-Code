@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/view_elements/view_element_level_up_reward_presentation/view_element_level_up_reward_presentation_definitions.lua
+
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local UIWorkspaceSettings = require("scripts/settings/ui/ui_workspace_settings")
@@ -61,11 +63,15 @@ local scenegraph_definition = {
 	}
 }
 local title_text_style = table.clone(UIFontSettings.header_1)
+
 title_text_style.text_horizontal_alignment = "center"
 title_text_style.text_vertical_alignment = "center"
+
 local name_text_style = table.clone(UIFontSettings.header_2)
+
 name_text_style.text_horizontal_alignment = "center"
 name_text_style.text_vertical_alignment = "center"
+
 local widget_definitions = {
 	title_text = UIWidget.create_definition({
 		{
@@ -107,6 +113,7 @@ local animations = {
 			end_time = anim_start_delay + 0.5,
 			update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress, params)
 				local anim_progress = math.easeOutCubic(progress)
+
 				parent._alpha_multiplier = anim_progress
 			end
 		},

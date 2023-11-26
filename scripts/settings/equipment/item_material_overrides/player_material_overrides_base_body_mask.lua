@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/equipment/item_material_overrides/player_material_overrides_base_body_mask.lua
+
 local material_overrides = {
 	mask_default = {
 		property_overrides = {

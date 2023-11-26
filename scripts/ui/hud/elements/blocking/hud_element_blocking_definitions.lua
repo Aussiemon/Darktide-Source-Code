@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/hud/elements/blocking/hud_element_blocking_definitions.lua
+
 local HudElementBlockingSettings = require("scripts/ui/hud/elements/blocking/hud_element_blocking_settings")
 local UIWorkspaceSettings = require("scripts/settings/ui/ui_workspace_settings")
 local UIWidget = require("scripts/managers/ui/ui_widget")
@@ -47,6 +49,7 @@ local scenegraph_definition = {
 	}
 }
 local value_text_style = table.clone(UIFontSettings.body_small)
+
 value_text_style.offset = {
 	0,
 	10,
@@ -61,7 +64,9 @@ value_text_style.horizontal_alignment = "left"
 value_text_style.text_horizontal_alignment = "left"
 value_text_style.text_vertical_alignment = "top"
 value_text_style.text_color = UIHudSettings.color_tint_main_1
+
 local name_text_style = table.clone(value_text_style)
+
 name_text_style.offset = {
 	0,
 	10,
@@ -71,6 +76,7 @@ name_text_style.horizontal_alignment = "right"
 name_text_style.text_horizontal_alignment = "right"
 name_text_style.text_color = UIHudSettings.color_tint_main_2
 name_text_style.drop_shadow = false
+
 local widget_definitions = {
 	gauge = UIWidget.create_definition({
 		{

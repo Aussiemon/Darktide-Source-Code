@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/game_states/game/gameplay_sub_states/gameplay_init_step_states/gameplay_init_step_state_last.lua
+
 local GameplayInitStepInterface = require("scripts/game_states/game/gameplay_sub_states/gameplay_init_step_states/gameplay_init_step_state_interface")
 local SessionClient = require("scripts/multiplayer/session/session_client")
 local GameplayInitStepStateLast = class("GameplayInitStepStateLast")

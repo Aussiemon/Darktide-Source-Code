@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/components/timed_explosive.lua
+
 local AttackSettings = require("scripts/settings/damage/attack_settings")
 local Explosion = require("scripts/utilities/attack/explosion")
 local ExplosionTemplates = require("scripts/settings/damage/explosion_templates")
@@ -9,11 +11,14 @@ TimedExplosive.init = function (self, unit, is_server)
 	self._unit = unit
 	self._power_level = self:get_data(unit, "power_level")
 	self._charge_level = self:get_data(unit, "charge_level")
+
 	local setting_name = self:get_data(unit, "setting_name")
 	local settings = TimedExplosivesSettings[setting_name]
+
 	self._fuse_time = settings.fuse_time or self:get_data(unit, "fuse_time")
 	self._fuse_timer = nil
 	self._exploded = false
+
 	local start_timer_on_spawn = self:get_data(unit, "start_timer_on_spawn")
 
 	if start_timer_on_spawn then
@@ -21,14 +26,23 @@ TimedExplosive.init = function (self, unit, is_server)
 	end
 
 	self._explosion_template = ExplosionTemplates[settings.explosion_template_name]
+
 	local world = Managers.world:world("level_world")
+
 	self._world = world
+
 	local physics_world = World.physics_world(world)
+
 	self._physics_world = physics_world
+
 	local wwise_world = Managers.world:wwise_world(world)
+
 	self._wwise_world = wwise_world
+
 	local manual_source = WwiseWorld.make_manual_source(wwise_world, unit, 1)
+
 	self._source_id = manual_source
+
 	local start_sound_event = settings.start_sound_event
 
 	if start_sound_event then
@@ -36,9 +50,13 @@ TimedExplosive.init = function (self, unit, is_server)
 	end
 
 	local stop_sound_event_time = settings.stop_sound_event_time
+
 	self._stop_sound_event_time = stop_sound_event_time
+
 	local stop_sound_event = settings.stop_sound_event
+
 	self._stop_sound_event = stop_sound_event
+
 	local start_flow_event = settings.start_flow_event
 
 	if start_flow_event then
@@ -74,6 +92,7 @@ end
 
 TimedExplosive._update_timer = function (self, dt)
 	local fuse_timer = self._fuse_timer
+
 	fuse_timer = fuse_timer - dt
 	self._fuse_timer = math.max(fuse_timer, 0)
 end
@@ -132,6 +151,7 @@ TimedExplosive._create_explosion = function (self)
 		local explosion_position = Unit.local_position(unit, 1)
 		local power_level = self._power_level
 		local charge_level = self._charge_level
+
 		self._exploded = true
 
 		Explosion.create_explosion(self._world, self._physics_world, explosion_position, Vector3.up(), unit, self._explosion_template, power_level, charge_level, attack_type)

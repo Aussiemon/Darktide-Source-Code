@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/pickup/pickups/reward/reward_01_pickup.lua
+
 local pickup_data = {
 	description = "loc_pickup_small_metal",
 	name = "reward_01_pickup",

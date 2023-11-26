@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/crafting_upgrade_item_view/crafting_upgrade_item_view.lua
+
 local CraftingUpgradeItemViewDefinitions = require("scripts/ui/views/crafting_upgrade_item_view/crafting_upgrade_item_view_definitions")
 local CraftingSettings = require("scripts/settings/item/crafting_settings")
 local ViewElementCraftingRecipe = require("scripts/ui/view_elements/view_element_crafting_recipe/view_element_crafting_recipe")
@@ -82,7 +84,9 @@ CraftingUpgradeItemView._setup_result_overlay = function (self, result_data)
 
 	local reference_name = "result_overlay"
 	local layer = 40
+
 	self._result_overlay = self:_add_element(ViewElementItemResultOverlay, reference_name, layer)
+
 	local result_title_text_localized = Utf8.upper(Localize("loc_crafting_upgrade_reward_popup_title"))
 
 	self._result_overlay:set_title_text(result_title_text_localized)
@@ -240,11 +244,14 @@ CraftingUpgradeItemView._perform_crafting = function (self)
 	self._crafting_recipe:set_continue_button_force_disabled(true)
 
 	local craft_promise = self._parent:craft(self._recipe, self._ingredients)
+
 	self._craft_promise = craft_promise
 
 	craft_promise:next(function (results)
 		self._craft_promise = nil
+
 		local new_item = results.items[1]
+
 		self._item = new_item
 		self._ingredients.item = new_item
 		self._result_item = new_item

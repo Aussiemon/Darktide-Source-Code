@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/data_service/services/mission_board_service.lua
+
 local Promise = require("scripts/foundation/utilities/promise")
 local MissionBoardService = class("MissionBoardService")
 
@@ -10,7 +12,8 @@ MissionBoardService.fetch_mission = function (self, mission_id)
 end
 
 MissionBoardService.fetch = function (self, on_expiry, pause_time)
-	local missions_promise, happening_promise = nil
+	local missions_promise, happening_promise
+
 	pause_time = pause_time or 1
 	missions_promise = self._backend_interface.mission_board:fetch(on_expiry, pause_time)
 	happening_promise = self._backend_interface.mission_happenings:fetch_current()
@@ -20,10 +23,12 @@ MissionBoardService.fetch = function (self, on_expiry, pause_time)
 		local t = Managers.time:time("main")
 		local server_time = Managers.backend:get_server_time(t)
 		local mission_data_expiry = tonumber(missions_data.refreshAt)
+
 		missions_data.expiry_game_time = (mission_data_expiry - server_time) / 1000 + t
 
 		if happening_data then
 			local happening_expiry = tonumber(happening_data.expiry) or 0
+
 			happening_data.expiry_game_time = (happening_expiry - server_time) / 1000 + t
 			missions_data.happening = happening_data
 		end
@@ -34,6 +39,7 @@ MissionBoardService.fetch = function (self, on_expiry, pause_time)
 			local mission = missions[i]
 			local start = mission.start
 			local expiry = mission.expiry
+
 			mission.duration = (expiry - start) / 1000
 			mission.expiry_game_time = (tonumber(expiry) - server_time) / 1000 + t
 			mission.start_game_time = (tonumber(start) - server_time) / 1000 + t
@@ -43,7 +49,9 @@ MissionBoardService.fetch = function (self, on_expiry, pause_time)
 			mission.mission_reward = mission.credits
 			mission.start_server_time = start
 			mission.expiry_server_time = expiry
+
 			local flags = mission.flags
+
 			flags.happening_mission = flags.event and flags.altered
 		end
 

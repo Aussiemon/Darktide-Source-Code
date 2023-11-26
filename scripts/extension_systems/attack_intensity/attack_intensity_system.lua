@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/attack_intensity/attack_intensity_system.lua
+
 require("scripts/extension_systems/attack_intensity/minion_attack_intensity_extension")
 require("scripts/extension_systems/attack_intensity/player_unit_attack_intensity_extension")
 
@@ -31,6 +33,7 @@ end
 AttackIntensitySystem.on_remove_extension = function (self, unit, extension_name)
 	if unit == self._current_update_unit then
 		local current_update_unit, current_update_extension = next(self._minion_attack_intensity_extension_data, unit)
+
 		self._current_update_unit = current_update_unit
 		self._current_update_extension = current_update_extension
 	end

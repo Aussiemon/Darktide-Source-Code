@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/tests/testify_expect.lua
+
 local TestifyExpect = class("TestifyExpect")
 
 TestifyExpect.init = function (self)
@@ -61,6 +63,7 @@ TestifyExpect._expect = function (self, expect, condition, message)
 		message = message
 	}
 	local expects = self._expects
+
 	expects[#expects + 1] = expect_data
 end
 

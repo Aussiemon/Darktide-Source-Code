@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/side/side_tests.lua
+
 local function init_and_run_tests(Side)
 	local side_extension_dummy = {
 		breed_tags = {},

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/constant_elements/elements/popup_handler/constant_element_popup_handler_settings.lua
+
 local constant_element_popup_handler_settings = {
 	title_offset_height = 30,
 	total_width_spacing = 8,

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/first_person/character_state_orientation/smooth_force_view_player_orientation.lua
+
 require("scripts/extension_systems/first_person/character_state_orientation/base_player_orientation")
 
 local Action = require("scripts/utilities/weapon/action")
@@ -12,6 +14,7 @@ SmoothForceViewPlayerOrientation.init = function (self, player, orientation)
 	SmoothForceViewPlayerOrientation.super.init(self, player, orientation)
 
 	local settings = PlayerOrientationSettings.default
+
 	self._mouse_scale = settings.mouse_scale
 	self._min_pitch = settings.min_pitch
 	self._max_pitch = settings.max_pitch
@@ -52,28 +55,26 @@ SmoothForceViewPlayerOrientation.pre_update = function (self, main_t, main_dt, i
 	local stick_to_position = SweepStickyness.stick_to_position(action_sweep_component)
 	local player_position = Unit.world_position(first_person_unit, 1)
 	local stuck_direction = Vector3.normalize(stick_to_position - player_position)
-	local stuck_dir_x = stuck_direction.x
-	local stuck_dir_y = stuck_direction.y
-	local stuck_dir_z = stuck_direction.z
+	local stuck_dir_x, stuck_dir_y, stuck_dir_z = stuck_direction.x, stuck_direction.y, stuck_direction.z
 	local wanted_yaw = math.atan2(stuck_dir_y, stuck_dir_x) - HALF_PI
 	local wanted_pitch = math.asin(stuck_dir_z)
+
 	wanted_yaw = math.mod_two_pi(wanted_yaw)
 	wanted_pitch = math.mod_two_pi(wanted_pitch)
-	local look_delta_x = look_delta.x
-	local look_delta_y = look_delta.y
+
+	local look_delta_x, look_delta_y = look_delta.x, look_delta.y
 	local yaw = Orientation.clamp_from_origin(orientation.yaw, look_delta_x, wanted_yaw, CONSTRAINT)
 	local pitch = Orientation.clamp_from_origin(orientation.pitch, -look_delta_y, wanted_pitch, CONSTRAINT)
-	local new_yaw = math.mod_two_pi(yaw)
-	local new_pitch = math.mod_two_pi(pitch)
-	local delta_yaw, delta_pitch = nil
+	local new_yaw, new_pitch = math.mod_two_pi(yaw), math.mod_two_pi(pitch)
+	local delta_yaw, delta_pitch
 
-	if new_yaw - HALF_PI < 0 or PI_2 < new_yaw + HALF_PI then
+	if new_yaw - HALF_PI < 0 or new_yaw + HALF_PI > PI_2 then
 		delta_yaw = (wanted_yaw + PI) % PI_2 - (new_yaw + PI) % PI_2
 	else
 		delta_yaw = wanted_yaw - new_yaw
 	end
 
-	if new_pitch - HALF_PI < 0 or PI_2 < new_pitch + HALF_PI then
+	if new_pitch - HALF_PI < 0 or new_pitch + HALF_PI > PI_2 then
 		delta_pitch = (wanted_pitch + PI) % PI_2 - (new_pitch + PI) % PI_2
 	else
 		delta_pitch = wanted_pitch - new_pitch
@@ -93,6 +94,7 @@ SmoothForceViewPlayerOrientation.pre_update = function (self, main_t, main_dt, i
 	if current_action_settings then
 		local special_active_at_start = weapon_action_component.special_active_at_start
 		local hit_stickyness_settings = special_active_at_start and current_action_settings.hit_stickyness_settings_special_active or current_action_settings.hit_stickyness_settings
+
 		disable_vertical_force_view = hit_stickyness_settings and hit_stickyness_settings.disable_vertical_force_view
 	end
 

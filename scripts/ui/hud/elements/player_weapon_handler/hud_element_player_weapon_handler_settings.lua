@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/hud/elements/player_weapon_handler/hud_element_player_weapon_handler_settings.lua
+
 local hud_element_player_weapon_handler_settings = {
 	icon_shrink_scale = 0.25,
 	wield_anim_speed = 8,

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/behavior/nodes/actions/bt_blocked_action.lua
+
 require("scripts/extension_systems/behavior/nodes/bt_node")
 
 local Animation = require("scripts/utilities/animation")
@@ -9,7 +11,9 @@ local ROTATION_SPEED = 100
 
 BtBlockedAction.enter = function (self, unit, breed, blackboard, scratchpad, action_data, t)
 	local spawn_component = blackboard.spawn
+
 	scratchpad.physics_world = spawn_component.physics_world
+
 	local anim_events = action_data.blocked_anims
 	local block_anim = Animation.random_event(anim_events)
 	local animation_extension = ScriptUnit.extension(unit, "animation_system")
@@ -19,17 +23,24 @@ BtBlockedAction.enter = function (self, unit, breed, blackboard, scratchpad, act
 	local buff_extension = ScriptUnit.extension(unit, "buff_system")
 	local stat_buffs = buff_extension:stat_buffs()
 	local melee_attack_speed = stat_buffs.melee_attack_speed or 1
+
 	scratchpad.melee_attack_speed = melee_attack_speed
+
 	local locomotion_extension = ScriptUnit.extension(unit, "locomotion_system")
+
 	scratchpad.locomotion_extension = locomotion_extension
+
 	local behavior_component = Blackboard.write_component(blackboard, "behavior")
+
 	behavior_component.move_state = "stagger"
+
 	local navigation_extension = ScriptUnit.extension(unit, "navigation_system")
+
 	scratchpad.nav_world = navigation_extension:nav_world()
 	scratchpad.original_rotation_speed = locomotion_extension:rotation_speed()
 	scratchpad.traverse_logic = navigation_extension:traverse_logic()
-	local anim_driven = true
-	local script_driven_rotation = false
+
+	local anim_driven, script_driven_rotation = true, false
 	local affected_by_gravity = locomotion_extension.movement_type == "constrained_by_mover"
 	local velocity = locomotion_extension:current_velocity()
 	local override_velocity_z = affected_by_gravity and velocity.z > 0 and 0 or nil
@@ -39,21 +50,26 @@ BtBlockedAction.enter = function (self, unit, breed, blackboard, scratchpad, act
 	locomotion_extension:set_wanted_velocity(Vector3.zero())
 	locomotion_extension:use_lerp_rotation(false)
 
-	local blocked_duration_timing = nil
+	local blocked_duration_timing
 	local durations = action_data.blocked_duration
 
 	if type(durations) == "table" then
 		blocked_duration_timing = durations[block_anim]
+
 		local blocked_duration = t + blocked_duration_timing
+
 		scratchpad.blocked_duration = blocked_duration
 	else
 		blocked_duration_timing = durations
+
 		local blocked_duration = t + blocked_duration_timing
+
 		scratchpad.blocked_duration = blocked_duration
 	end
 
 	if melee_attack_speed then
 		local new_duration = blocked_duration_timing / melee_attack_speed
+
 		scratchpad.blocked_duration = t + new_duration
 	end
 
@@ -62,6 +78,7 @@ end
 
 BtBlockedAction.init_values = function (self, blackboard)
 	local blocked_component = Blackboard.write_component(blackboard, "blocked")
+
 	blocked_component.is_blocked = false
 end
 
@@ -79,6 +96,7 @@ BtBlockedAction.leave = function (self, unit, breed, blackboard, scratchpad, act
 	locomotion_extension:set_anim_translation_scale(Vector3(1, 1, 1))
 
 	local blocked_component = Blackboard.write_component(blackboard, "blocked")
+
 	blocked_component.is_blocked = false
 
 	MinionShield.reset_block_timings(scratchpad, unit)

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/projectile/projectile_templates.lua
+
 local projectile_templates = {}
 
 local function _require_templates(path)
@@ -14,6 +16,7 @@ _require_templates("scripts/settings/projectile/player_projectile_templates")
 for name, template in pairs(projectile_templates) do
 	template.name = name
 	template.same_side_suppression_enabled = false
+
 	local impact_damage = template.damage.impact
 
 	if impact_damage then

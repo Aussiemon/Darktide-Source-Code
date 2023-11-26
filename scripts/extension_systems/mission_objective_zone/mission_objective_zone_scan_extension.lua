@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/mission_objective_zone/mission_objective_zone_scan_extension.lua
+
 local MasterItems = require("scripts/backend/master_items")
 local MissionObjectiveScanning = require("scripts/settings/mission_objective/mission_objective_scanning")
 local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
@@ -13,6 +15,7 @@ MissionObjectiveZoneScanExtension.init = function (self, extension_init_context,
 	MissionObjectiveZoneScanExtension.super.init(self, extension_init_context, unit, extension_init_data, ...)
 
 	local is_server = extension_init_context.is_server
+
 	self._is_server = is_server
 	self._num_scanned_objects_per_player = {}
 	self._registered_players = 0
@@ -32,6 +35,7 @@ MissionObjectiveZoneScanExtension.init = function (self, extension_init_context,
 
 	if is_server then
 		self._players_with_scanned_objects = {}
+
 		local event_manager = Managers.event
 
 		event_manager:register(self, "player_unit_despawned", "_on_player_unit_despawned")
@@ -169,7 +173,7 @@ MissionObjectiveZoneScanExtension._select_scannable_units_for_event = function (
 	local i = 1
 	local spawned = 0
 
-	while num_scannables_in_zone > spawned do
+	while spawned < num_scannables_in_zone do
 		local index = random_table[i]
 		local selected_unit = scannable_units[index]
 
@@ -202,6 +206,7 @@ end
 
 MissionObjectiveZoneScanExtension.register_scannable_unit = function (self, scannable_unit)
 	local scannable_units = self._scannable_units
+
 	scannable_units[#scannable_units + 1] = scannable_unit
 	self._scannable_units = scannable_units
 
@@ -269,6 +274,7 @@ MissionObjectiveZoneScanExtension.release_scanned_object_from_player = function 
 
 		self._players_with_scanned_objects[player] = nil
 		self._registered_players = self._registered_players - 1
+
 		local scanned_object_points = 0
 
 		if self._is_server then
@@ -303,14 +309,16 @@ MissionObjectiveZoneScanExtension.max_scannable_objects_per_player = function (s
 end
 
 MissionObjectiveZoneScanExtension.add_scanned_points_to_player = function (self, player, scanned_points)
-	local new_scan_points = nil
+	local new_scan_points
 
 	if scanned_points > 0 then
 		local current_scanned_points = self._num_scanned_objects_per_player[player]
+
 		new_scan_points = current_scanned_points and current_scanned_points + scanned_points or scanned_points
 	end
 
 	self._num_scanned_objects_per_player[player] = new_scan_points
+
 	local is_mission_giver_line = false
 
 	self:_play_vo(player, SCANNING_VO_LINES.scan_performed, is_mission_giver_line)
@@ -367,6 +375,7 @@ MissionObjectiveZoneScanExtension.activate_zone = function (self)
 		end
 
 		self._selected_scannable_units = selected_scannable_units
+
 		local current_objective_name = self._mission_objective_zone_system:current_objective_name()
 
 		if current_objective_name then
@@ -419,8 +428,9 @@ MissionObjectiveZoneScanExtension._vo_timer = function (self, dt)
 		vo_line_timer = math.max(vo_line_timer - dt, 0)
 	else
 		vo_line_timer = self._vo_line_interval
+
 		local is_mission_giver_line = true
-		local player = nil
+		local player
 
 		self:_play_vo(player, SCANNING_VO_LINES.event_scan_skull_waiting, is_mission_giver_line)
 	end

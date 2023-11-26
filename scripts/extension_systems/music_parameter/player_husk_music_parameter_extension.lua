@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/music_parameter/player_husk_music_parameter_extension.lua
+
 local PlayerHuskMusicParameterExtension = class("PlayerHuskMusicParameterExtension")
 
 PlayerHuskMusicParameterExtension.init = function (self, extension_init_context, unit, extension_init_data, game_object_data)
@@ -14,18 +16,15 @@ PlayerHuskMusicParameterExtension.init = function (self, extension_init_context,
 end
 
 PlayerHuskMusicParameterExtension.on_game_object_created = function (self, game_session, game_object_id)
-	self._game_object_id = game_object_id
-	self._game_session = game_session
+	self._game_session, self._game_object_id = game_session, game_object_id
 end
 
 PlayerHuskMusicParameterExtension.on_game_object_destroyed = function (self, game_session, game_object_id)
-	self._game_object_id = nil
-	self._game_session = nil
+	self._game_session, self._game_object_id = nil
 end
 
 PlayerHuskMusicParameterExtension.update = function (self, unit, dt, t)
-	local game_session = self._game_session
-	local game_object_id = self._game_object_id
+	local game_session, game_object_id = self._game_session, self._game_object_id
 
 	if not game_session or not game_object_id or t < self._update_timer then
 		return

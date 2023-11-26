@@ -1,5 +1,7 @@
+﻿-- chunkname: @scripts/utilities/specialization_resource_dependencies.lua
+
 local SpecializationResourceDependencies = {}
-local _resolve_data_recursive, _is_valid_wwise_resource_name, _is_valid_fx_resource_name = nil
+local _resolve_data_recursive, _is_valid_wwise_resource_name, _is_valid_fx_resource_name
 local TEMP_SOUND_RESOURCE_PACKAGES = {}
 local TEMP_PARTICLE_RESOURCE_PACKAGES = {}
 
@@ -50,6 +52,10 @@ function _resolve_data_recursive(data, resource_packages, validation_func)
 
 					if Application.can_get_resource("package", husk_event) then
 						resource_packages[husk_event] = true
+					end
+
+					if false then
+						-- Nothing
 					end
 				end
 			end

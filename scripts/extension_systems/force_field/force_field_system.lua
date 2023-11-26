@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/force_field/force_field_system.lua
+
 require("scripts/extension_systems/force_field/force_field_extension")
 
 local BuffSettings = require("scripts/settings/buff/buff_settings")
@@ -10,6 +12,7 @@ ForceFieldSystem.init = function (self, context, system_init_data, ...)
 	ForceFieldSystem.super.init(self, context, system_init_data, ...)
 
 	local broadphase_system = Managers.state.extension:system("broadphase_system")
+
 	self._broadphase = broadphase_system.broadphase
 	self._extension_data = {}
 	self._unit_update_list = {}
@@ -75,6 +78,7 @@ ForceFieldSystem.on_add_extension = function (self, world, unit, extension_name,
 		units_inside = {},
 		broadphase_results = {}
 	}
+
 	self._extension_data[unit] = extension_data
 	extension.extension_data = extension_data
 	self._unit_update_list[#self._unit_update_list + 1] = unit
@@ -85,7 +89,9 @@ end
 ForceFieldSystem.on_remove_extension = function (self, removed_unit, extension_name)
 	if self._is_server then
 		local unit_extension_data = self._extension_data[removed_unit]
+
 		self._extension_data[removed_unit] = nil
+
 		local extension = self._unit_to_extension_map[removed_unit]
 		local units_inside = unit_extension_data.units_inside
 		local valid_player_units = extension.side.valid_player_units
@@ -99,6 +105,7 @@ ForceFieldSystem.on_remove_extension = function (self, removed_unit, extension_n
 	end
 
 	self._extension_data[removed_unit] = nil
+
 	local unit_update_list = self._unit_update_list
 
 	for key, unit in pairs(unit_update_list) do
@@ -154,10 +161,12 @@ local update_index = 1
 
 ForceFieldSystem._check_unit_collisions = function (self, t)
 	local unit_to_extension_map = self._unit_to_extension_map
+
 	frame_count = frame_count + 1
 
-	if frame_max <= frame_count then
+	if frame_count >= frame_max then
 		frame_count = 0
+
 		local num_units_to_update = #self._unit_update_list
 
 		if num_units_to_update == 0 then
@@ -180,7 +189,7 @@ ForceFieldSystem._check_unit_collisions = function (self, t)
 
 		table.clear_array(extension_data.broadphase_results, #extension_data.broadphase_results)
 
-		extension_data.num_results = broadphase:query(broadphase_center, broadphase_radius, extension_data.broadphase_results, enemy_side_names)
+		extension_data.num_results = broadphase.query(broadphase, broadphase_center, broadphase_radius, extension_data.broadphase_results, enemy_side_names)
 	end
 
 	local extension_data = self._extension_data
@@ -268,6 +277,7 @@ end
 
 ForceFieldSystem.is_object_inside_force_field = function (self, position, radius, handle_height)
 	radius = radius or 0.1
+
 	local unit_to_extension_map = self._unit_to_extension_map
 
 	for unit, extension in pairs(unit_to_extension_map) do

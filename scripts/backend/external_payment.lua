@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/backend/external_payment.lua
+
 local BackendUtilities = require("scripts/foundation/managers/backend/utilities/backend_utilities")
 local Promise = require("scripts/foundation/utilities/promise")
 local XboxLiveUtils = require("scripts/foundation/utilities/xbox_live")
@@ -409,6 +411,7 @@ ExternalPayment._decorate_option = function (self, option, platform_entitlements
 		end
 
 		local pending_txn_promise = Promise:new()
+
 		self.pending_txn_promise = pending_txn_promise
 
 		Managers.backend.interfaces.external_payment:init_txn(self.id):next(function (order_id)
@@ -480,7 +483,7 @@ ExternalPayment._decorate_option = function (self, option, platform_entitlements
 end
 
 ExternalPayment.get_options = function (self)
-	local entitlement_promise = nil
+	local entitlement_promise
 
 	if is_xbox_live() then
 		entitlement_promise = XboxLiveUtils.get_associated_products()

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/view_elements/view_element_perks_item/view_element_perks_item.lua
+
 local ViewElementPerksItemBlueprints = require("scripts/ui/view_elements/view_element_perks_item/view_element_perks_item_blueprints")
 local ViewElementPerksItemDefinitions = require("scripts/ui/view_elements/view_element_perks_item/view_element_perks_item_definitions")
 local RankSettings = require("scripts/settings/item/rank_settings")
@@ -11,6 +13,7 @@ local ViewElementPerksItem = class("ViewElementPerksItem", "ViewElementGrid")
 
 ViewElementPerksItem.init = function (self, parent, draw_layer, start_scale, optional_menu_settings)
 	self._reference_name = "ViewElementPerksItem_" .. tostring(self)
+
 	local definitions = ViewElementPerksItemDefinitions
 
 	ViewElementPerksItem.super.init(self, parent, draw_layer, start_scale, definitions.menu_settings, definitions)
@@ -45,6 +48,7 @@ ViewElementPerksItem.show_overlay = function (self, show)
 	local to = show and 128 or 0
 	local duration = 0.5
 	local easing = math.easeOutCubic
+
 	self._ui_animations.pivot = UIAnimation.init(func, target, target_index, from, to, duration, easing)
 end
 
@@ -54,6 +58,7 @@ ViewElementPerksItem.clear_marks = function (self)
 	for i = 1, #widgets do
 		local recipe_widget = widgets[i]
 		local content = recipe_widget.content
+
 		content.marked = false
 	end
 
@@ -75,6 +80,7 @@ ViewElementPerksItem.cb_on_grid_entry_left_pressed = function (self, widget, con
 
 	self._marked_widget = widget
 	self._marked_perk_item = perk_item
+
 	local external_left_click_callback = self._external_left_click_callback
 
 	if external_left_click_callback then
@@ -86,6 +92,7 @@ ViewElementPerksItem.cb_on_grid_entry_left_pressed = function (self, widget, con
 	for i = 1, #recipe_widgets do
 		local recipe_widget = recipe_widgets[i]
 		local content = recipe_widget.content
+
 		content.marked = widget and recipe_widget == widget or false
 	end
 
@@ -111,7 +118,9 @@ ViewElementPerksItem.start_animation = function (self)
 	local to = self._pivot_offset[1]
 	local duration = 0.5
 	local easing = math.easeOutCubic
+
 	self._ui_animations.pivot = UIAnimation.init(func, target, target_index, from, to, duration, easing)
+
 	local func = UIAnimation.function_by_time
 	local target = self
 	local target_index = "_alpha_multiplier"
@@ -119,6 +128,7 @@ ViewElementPerksItem.start_animation = function (self)
 	local to = 1
 	local duration = 0.5
 	local easing = math.easeInCubic
+
 	self._ui_animations.alpha_multiplier = UIAnimation.init(func, target, target_index, from, to, duration, easing)
 end
 
@@ -152,7 +162,7 @@ ViewElementPerksItem.select_best_widget = function (self, allow_only_marked_widg
 	local marked_perk_item = self._marked_perk_item
 	local marked_perk_item_id = marked_perk_item and marked_perk_item.name
 	local marked_perk_item_rarity = marked_perk_item and marked_perk_item.rarity
-	local widget_to_select = nil
+	local widget_to_select
 	local recipe_widgets = self:widgets()
 
 	for i = 1, #recipe_widgets do
@@ -195,12 +205,15 @@ ViewElementPerksItem.draw = function (self, dt, t, ui_renderer, render_settings,
 
 	local old_alpha_multiplier = render_settings.alpha_multiplier
 	local alpha_multiplier = self._active and self._alpha_multiplier or 0
+
 	render_settings.alpha_multiplier = render_settings.alpha_multiplier * alpha_multiplier
 
 	ViewElementPerksItem.super.draw(self, dt, t, ui_renderer, render_settings, input_service)
 
 	render_settings.alpha_multiplier = old_alpha_multiplier
+
 	local previous_layer = render_settings.start_layer
+
 	render_settings.start_layer = (previous_layer or 0) + self._draw_layer
 end
 
@@ -250,6 +263,7 @@ ViewElementPerksItem._setup_tabs = function (self)
 		local name = "rank_" .. i
 		local definition = widget_definitions[i]
 		local widget = UIWidget.init(name, definition)
+
 		widgets_by_name[name] = widget
 		widgets[#widgets + 1] = widget
 	end
@@ -284,6 +298,7 @@ ViewElementPerksItem._update_tabs = function (self)
 		local widget_name = "rank_" .. i
 		local widget = widgets_by_name[widget_name]
 		local content = widget.content
+
 		content.selected = current_rank == i
 	end
 end
@@ -336,16 +351,17 @@ ViewElementPerksItem._present = function (self, first_presentation)
 
 	local rank = self._rank
 	local perks_data = self._perks_by_rank[self._rank].perks
-	local layout = {
-		[#layout + 1] = {
-			widget_type = "spacing_vertical_small"
-		}
+	local layout = {}
+
+	layout[#layout + 1] = {
+		widget_type = "spacing_vertical_small"
 	}
 
 	for i = 1, #perks_data do
 		local perk_name = perks_data[i]
 		local MasterItems = require("scripts/backend/master_items")
 		local perk_item = table.clone_instance(MasterItems.get_item(perk_name))
+
 		perk_item.rarity = rank
 		layout[#layout + 1] = {
 			widget_type = "perk",
@@ -357,6 +373,7 @@ ViewElementPerksItem._present = function (self, first_presentation)
 	layout[#layout + 1] = {
 		widget_type = "spacing_vertical"
 	}
+
 	local left_click_callback = callback(self, "cb_on_grid_entry_left_pressed")
 	local on_present_callback = not first_presentation and callback(self, "_cb_present_grid_layout")
 

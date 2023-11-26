@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/dialogue/dialogue_queries.lua
+
 local DialogueSettings = require("scripts/settings/dialogue/dialogue_settings")
 
 local function record_telemetry(dialogue)
@@ -11,6 +13,7 @@ end
 
 local temp_weight_table = {}
 local temp_indexes = {}
+
 DialogueQueries = {
 	get_sound_event_duration = function (dialogue, index)
 		if dialogue.sound_events_duration then

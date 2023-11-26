@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/multiplayer/utilities/name_generator.lua
+
 local NameGenerator = NameGenerator or {}
 
 NameGenerator.generate_lobby_name = function ()

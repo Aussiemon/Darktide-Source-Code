@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/lobby_view/lobby_view.lua
+
 local definition_path = "scripts/ui/views/lobby_view/lobby_view_definitions"
 local Breeds = require("scripts/settings/breed/breeds")
 local CharacterSheet = require("scripts/utilities/character_sheet")
@@ -60,11 +62,13 @@ local function _generate_seed(player_id, mission_id)
 
 	for i = 1, 3 do
 		local num = string.byte(player_id, i) or 1
+
 		seed = seed * num
 	end
 
 	for i = 1, 3 do
 		local num = string.byte(mission_id, i) or 1
+
 		seed = seed * num
 	end
 
@@ -80,6 +84,7 @@ LobbyView.init = function (self, settings, context)
 	self._show_weapons = false
 	self._slot_changes = false
 	self._use_gamepad_tooltip_navigation = false
+
 	local definitions = require(definition_path)
 
 	LobbyView.super.init(self, definitions, settings)
@@ -109,6 +114,7 @@ LobbyView._initialize_background_world = function (self)
 
 	self._human_spawn_point_units = {}
 	self._ogryn_spawn_point_units = {}
+
 	local max_spawn_slots = 4
 
 	for i = 1, max_spawn_slots do
@@ -126,7 +132,6 @@ LobbyView._initialize_background_world = function (self)
 				self:_sync_votes()
 			end
 		end
-
 		self[event_name_ogryn] = function (self, spawn_unit)
 			self._ogryn_spawn_point_units[i] = spawn_unit
 
@@ -146,7 +151,9 @@ LobbyView._initialize_background_world = function (self)
 	local world_name = LobbyViewSettings.world_name
 	local world_layer = LobbyViewSettings.world_layer
 	local world_timer_name = LobbyViewSettings.timer_name
+
 	self._world_spawner = UIWorldSpawner:new(world_name, world_layer, world_timer_name, self.view_name)
+
 	local level_name = LobbyViewSettings.level_name
 
 	self._world_spawner:spawn_level(level_name)
@@ -187,7 +194,7 @@ LobbyView._setup_mission_descriptions = function (self)
 		local zone_display_name = zone_info and zone_info.name
 		local mission_type = MissionTypes[mission_settings.mission_type]
 		local mission_type_name = mission_type and mission_type.name
-		local circumstance_name = nil
+		local circumstance_name
 
 		if mission_data.circumstance_name ~= "default" then
 			local ui_settings = Circumstances[mission_data.circumstance_name].ui
@@ -199,31 +206,30 @@ LobbyView._setup_mission_descriptions = function (self)
 
 		local sub_title = mission_type_name and self:_localize(mission_type_name) or ""
 
-		if zone_display_name then
-			sub_title = sub_title .. " · " .. self:_localize(zone_display_name) or sub_title
-		end
-
-		if circumstance_name then
-			sub_title = sub_title .. " · " .. circumstance_name or sub_title
-		end
+		sub_title = zone_display_name and sub_title .. " · " .. self:_localize(zone_display_name) or sub_title
+		sub_title = circumstance_name and sub_title .. " · " .. circumstance_name or sub_title
 
 		local widgets_by_name = self._widgets_by_name
+
 		widgets_by_name.mission_title.content.title = mission_display_name and self:_localize(mission_display_name) or "N/A"
 		widgets_by_name.mission_title.content.sub_title = sub_title or "N/A"
+
 		local title_width = self:_text_size(widgets_by_name.mission_title.content.title, widgets_by_name.mission_title.style.title.font_type, widgets_by_name.mission_title.style.title.font_size)
 		local end_margin = 10
+
 		widgets_by_name.mission_title.style.divider.size[1] = title_width + end_margin
 	end
 end
 
 LobbyView._setup_menu_list = function (self)
 	local menu_list_config = {}
+
 	menu_list_config[#menu_list_config + 1] = {
 		display_name = "loc_lobby_entry_ready",
 		widget_type = "ready_button",
 		update_function = function (parent, widget, entry)
 			local current_ready_status = parent:_own_player_ready_status()
-			local text = nil
+			local text
 
 			if current_ready_status then
 				text = self:_localize("loc_lobby_entry_unready")
@@ -232,11 +238,14 @@ LobbyView._setup_menu_list = function (self)
 			end
 
 			local widget_content = widget.content
+
 			widget_content.text = text
 			widget_content.active = current_ready_status
 			widget_content.gamepad_action = "confirm_pressed"
+
 			local in_preview = parent:_in_preview()
 			local hotspot = widget.content.hotspot
+
 			hotspot.disabled = in_preview
 		end,
 		pressed_function = function (parent, widget, entry)
@@ -257,6 +266,7 @@ end
 
 LobbyView._setup_input_legend = function (self)
 	self._input_legend_element = self:_add_element(ViewElementInputLegend, "input_legend", 10)
+
 	local legend_inputs = self._definitions.legend_inputs
 
 	for i = 1, #legend_inputs do
@@ -318,6 +328,7 @@ LobbyView._update_loadout_widgets_for_navigation = function (self)
 		if self._show_weapons then
 			for f = 1, weapon_count do
 				local index = (i - 1) * weapon_count + f
+
 				available_widgets[index] = false
 
 				if slot.occupied and slot.weapon_widgets[f] and slot.weapon_widgets[f].content.slot then
@@ -328,6 +339,7 @@ LobbyView._update_loadout_widgets_for_navigation = function (self)
 			for f = 1, talent_count do
 				if slot.occupied then
 					local index = (i - 1) * talent_count + f
+
 					available_widgets[index] = false
 
 					if slot.talent_widgets[f] and slot.talent_widgets[f].content.loadout_id then
@@ -436,15 +448,19 @@ LobbyView._setup_menu_list_entries = function (self, config)
 			pressed_function = entry_config.pressed_function,
 			update_function = entry_config.update_function
 		}
+
 		entries[#entries + 1] = entry
 	end
 
 	local scenegraph_id = "grid_content_pivot"
 	local callback_name = "cb_on_list_entry_pressed"
+
 	self._menu_list_widgets, self._menu_alignment_list = self:_setup_list_content_widgets(entries, scenegraph_id, callback_name)
+
 	local grid_scenegraph_id = "grid_background"
 	local grid_spacing = LobbyViewSettings.grid_spacing
 	local grid_direction = "up"
+
 	self._menu_list_grid = UIWidgetGrid:new(self._menu_list_widgets, self._menu_alignment_list, self._ui_scenegraph, grid_scenegraph_id, grid_direction, grid_spacing, nil, true)
 end
 
@@ -458,13 +474,14 @@ LobbyView._setup_list_content_widgets = function (self, content, scenegraph_id, 
 	for i = 1, amount do
 		local entry = content[i]
 		local widget_type = entry.widget_type
-		local widget = nil
+		local widget
 		local template = ContentBlueprints[widget_type]
 		local size = template.size
 		local pass_template = template.pass_template
 
 		if pass_template and not widget_definitions[widget_type] then
 			local scenegraph_definition = definitions.scenegraph_definition
+
 			widget_definitions[widget_type] = UIWidget.create_definition(pass_template, scenegraph_id, nil, size)
 		end
 
@@ -472,7 +489,9 @@ LobbyView._setup_list_content_widgets = function (self, content, scenegraph_id, 
 
 		if widget_definition then
 			local name = scenegraph_id .. "_widget_" .. i
+
 			widget = self:_create_widget(name, widget_definition)
+
 			local init = template.init
 
 			if init then
@@ -547,8 +566,11 @@ LobbyView._setup_spawn_slots = function (self)
 			weapon_widgets = {},
 			talent_widgets = {}
 		}
+
 		spawn_slots[i] = spawn_slot
+
 		local widget_offset_x = 300 + (i - 1) * 320
+
 		spawn_slot.panel_widget.offset[1] = widget_offset_x
 		spawn_slot.loading_widget.offset[1] = widget_offset_x
 	end
@@ -722,6 +744,7 @@ end
 
 LobbyView._get_previous_occupied_slot_index = function (self, from_index)
 	local spawn_slots = self._spawn_slots
+
 	from_index = from_index or #spawn_slots
 
 	if from_index <= 1 then
@@ -739,6 +762,7 @@ end
 
 LobbyView._get_next_occupied_slot_index = function (self, from_index)
 	local spawn_slots = self._spawn_slots
+
 	from_index = from_index or 1
 
 	if from_index >= #spawn_slots then
@@ -824,7 +848,7 @@ LobbyView._assign_player_to_slot = function (self, player, slot)
 	local profile = player:profile()
 	local archetype_settings = profile.archetype
 	local breed_name = archetype_settings.breed
-	local spawn_point_unit = nil
+	local spawn_point_unit
 
 	if breed_name == "ogryn" then
 		spawn_point_unit = slot.ogryn_spawn_point_unit
@@ -852,6 +876,7 @@ LobbyView._assign_player_to_slot = function (self, player, slot)
 	local character_name = ProfileUtils.character_name(profile)
 	local character_title = ProfileUtils.character_title(profile)
 	local character_level = tostring(profile.current_level) .. " "
+
 	panel_content.character_title = character_title
 	panel_content.has_guild = false
 	slot.loaded = false
@@ -862,12 +887,14 @@ LobbyView._assign_player_to_slot = function (self, player, slot)
 	slot.unique_id = unique_id
 	slot.boxed_position = Vector3.to_array(spawn_position)
 	slot.boxed_rotation = QuaternionBox(spawn_rotation)
+
 	local weapon_slots = {
 		"slot_primary",
 		"slot_secondary"
 	}
 	local seed = _generate_seed(unique_id, self._mission_data.backend_mission_id)
 	local _, random_slot = math.next_random(seed, 1, #weapon_slots)
+
 	slot.default_slot = weapon_slots[random_slot]
 	panel_content.character_name = string.format("%s %s", character_level, character_name)
 
@@ -877,6 +904,7 @@ end
 
 LobbyView._cb_set_player_frame = function (self, widget, item)
 	local material_values = widget.style.character_portrait.material_values
+
 	material_values.portrait_frame_texture = item.icon
 end
 
@@ -892,6 +920,7 @@ LobbyView._request_player_icon = function (self, slot)
 	local panel_widget = slot.panel_widget
 	local panel_style = panel_widget.style
 	local material_values = panel_style.character_portrait.material_values
+
 	material_values.use_placeholder_texture = 1
 
 	self:_load_portrait_icon(slot)
@@ -902,13 +931,16 @@ LobbyView._load_portrait_icon = function (self, slot)
 	local load_cb = callback(self, "_cb_set_player_icon", slot)
 	local unload_cb = callback(self, "_cb_unset_player_icon", slot)
 	local icon_load_id = Managers.ui:load_profile_portrait(profile, load_cb, nil, unload_cb)
+
 	slot.icon_load_id = icon_load_id
+
 	local loadout = slot.profile.loadout
 	local panel_widget = slot.panel_widget
 	local frame_item = loadout and loadout.slot_portrait_frame
 
 	if frame_item then
 		local cb = callback(self, "_cb_set_player_frame", panel_widget)
+
 		slot.frame_load_id = Managers.ui:load_item_icon(frame_item, cb)
 	end
 
@@ -916,6 +948,7 @@ LobbyView._load_portrait_icon = function (self, slot)
 
 	if insignia_item then
 		local cb = callback(self, "_cb_set_player_insignia", panel_widget)
+
 		slot.insignia_load_id = Managers.ui:load_item_icon(insignia_item, cb)
 	end
 end
@@ -963,8 +996,11 @@ end
 
 LobbyView._cb_set_player_icon = function (self, slot, grid_index, rows, columns, render_target)
 	local widget = slot.panel_widget
+
 	widget.content.character_portrait = "content/ui/materials/base/ui_portrait_frame_base"
+
 	local material_values = widget.style.character_portrait.material_values
+
 	material_values.use_placeholder_texture = 0
 	material_values.rows = rows
 	material_values.columns = columns
@@ -975,6 +1011,7 @@ end
 LobbyView._cb_unset_player_icon = function (self, slot)
 	local widget = slot.panel_widget
 	local material_values = widget.style.character_portrait.material_values
+
 	material_values.use_placeholder_texture = nil
 	material_values.rows = nil
 	material_values.columns = nil
@@ -1045,7 +1082,7 @@ LobbyView._draw_widgets = function (self, dt, t, input_service, ui_renderer)
 		local inverse_scale = ui_renderer.inverse_scale
 		local spawn_slots = self._spawn_slots
 		local num_slots = #spawn_slots
-		local hovered_slot, hovered_item, hovered_talent = nil
+		local hovered_slot, hovered_item, hovered_talent
 
 		for i = 1, num_slots do
 			local is_even = i % 2 == 0
@@ -1060,11 +1097,13 @@ LobbyView._draw_widgets = function (self, dt, t, input_service, ui_renderer)
 
 			for f = 1, #slot.weapon_widgets do
 				local weapon_widget = slot.weapon_widgets[f]
+
 				weapon_widget.offset[1] = weapon_widget.original_offset[1] + widget_offset_x + 35
 			end
 
 			for f = 1, #slot.talent_widgets do
 				local talent_widget = slot.talent_widgets[f]
+
 				talent_widget.offset[1] = talent_widget.original_offset[1] + widget_offset_x + 35
 			end
 
@@ -1084,7 +1123,9 @@ LobbyView._draw_widgets = function (self, dt, t, input_service, ui_renderer)
 
 						if is_hover then
 							hovered_slot = slot
+
 							local item = weapon_widget.content.item
+
 							hovered_item = item
 							self._hovered_tooltip_panel_widget = panel_widget
 						end
@@ -1099,12 +1140,14 @@ LobbyView._draw_widgets = function (self, dt, t, input_service, ui_renderer)
 
 						if is_hover then
 							hovered_slot = slot
+
 							local profile = slot.player:profile()
 
 							CharacterSheet.class_loadout(profile, class_loadout)
 
 							local loadout_id = talent_widget.content.loadout_id
 							local loadout = class_loadout[loadout_id]
+
 							hovered_talent = {
 								talent = loadout.talent,
 								loadout_id = loadout_id,
@@ -1181,6 +1224,7 @@ LobbyView._set_slot_focused_by_index = function (self, index)
 	for i = 1, #spawn_slots do
 		local slot = spawn_slots[i]
 		local is_hover = i == index
+
 		slot.is_hover = is_hover
 		slot.panel_widget.content.hotspot.is_focused = is_hover
 	end
@@ -1277,6 +1321,7 @@ LobbyView._sync_votes = function (self)
 			local player = slot.player
 			local peer_id = player:peer_id()
 			local vote = votes[peer_id]
+
 			is_ready = vote ~= StrictNil and vote == "yes"
 		end
 
@@ -1290,9 +1335,13 @@ LobbyView._set_slot_ready_status = function (self, slot, is_ready)
 	end
 
 	slot.ready = is_ready
+
 	local widget = slot.panel_widget
+
 	widget.content.is_ready = is_ready
+
 	local material_values = widget.style.character_portrait.material_values
+
 	material_values.desaturation = is_ready and 1 or 0
 	material_values.intensity = is_ready and 0.25 or 1
 
@@ -1334,7 +1383,7 @@ LobbyView.set_own_player_ready_status = function (self, is_ready)
 end
 
 LobbyView._check_loadout_changes = function (self)
-	local talents = nil
+	local talents
 
 	for i = 1, #self._spawn_slots do
 		local spawn_slot = self._spawn_slots[i]
@@ -1480,6 +1529,7 @@ LobbyView._setup_talents_widgets = function (self, spawn_slot)
 
 			local offset_height = data.offset_height
 			local offset_width = data.offset_width
+
 			talent_widget.original_offset = {
 				offset_width,
 				offset_height,
@@ -1555,6 +1605,7 @@ LobbyView._setup_weapon_widgets = function (self, spawn_slot)
 
 			local offset_height = data.offset_height
 			local offset_width = data.offset_width
+
 			weapon_widget.original_offset = {
 				offset_width,
 				offset_height,
@@ -1574,7 +1625,7 @@ LobbyView._setup_weapon_widgets = function (self, spawn_slot)
 
 	local archetype_settings = profile.archetype
 	local breed_name = archetype_settings.breed
-	local spawn_point_unit = nil
+	local spawn_point_unit
 
 	if breed_name == "ogryn" then
 		spawn_point_unit = spawn_slot.ogryn_spawn_point_unit
@@ -1611,11 +1662,13 @@ LobbyView._set_weapons_visibility = function (self)
 		if slot.occupied then
 			for i = 1, #slot.weapon_widgets do
 				local weapon_widgets = slot.weapon_widgets[i]
+
 				weapon_widgets.content.visible = is_active
 			end
 
 			for i = 1, #slot.talent_widgets do
 				local talent_widget = slot.talent_widgets[i]
+
 				talent_widget.content.visible = not is_active
 			end
 		end
@@ -1633,6 +1686,7 @@ LobbyView.trigger_on_exit_animation = function (self)
 
 	if finished and result == "approved" then
 		self._is_animating_on_exit = true
+
 		local reference_name = "input_legend"
 
 		self:_remove_element(reference_name)
@@ -1651,6 +1705,7 @@ LobbyView.trigger_on_exit_animation = function (self)
 
 		for i = 1, #self._spawn_slots do
 			local slot = self._spawn_slots[i]
+
 			slot.panel_widget.content.hotspot.disabled = true
 		end
 
@@ -1719,8 +1774,10 @@ LobbyView._setup_tooltip_info = function (self, talent_hover_data)
 	local widget = widgets_by_name.talent_tooltip
 	local content = widget.content
 	local style = widget.style
+
 	content.title = "title"
 	content.description = "<<UNASSIGNED TALENT NODE>>"
+
 	local talent = talent_hover_data.talent
 
 	if talent then
@@ -1728,23 +1785,34 @@ LobbyView._setup_tooltip_info = function (self, talent_hover_data)
 		local points_spent = 1
 		local node_type = loadout_to_type[talent_hover_data.loadout_id]
 		local node_settings = TalentBuilderViewSettings.settings_by_node_type[node_type]
+
 		content.talent_type_title = Localize(node_settings.display_name) or ""
+
 		local talent_type_title_height = self:_get_text_height(content.talent_type_title, style.talent_type_title, dummy_tooltip_text_size)
+
 		style.talent_type_title.offset[2] = text_vertical_offset
 		style.talent_type_title.size[2] = talent_type_title_height
 		text_vertical_offset = text_vertical_offset + talent_type_title_height
+
 		local description = TalentLayoutParser.talent_description(talent, points_spent, Color.ui_terminal(255, true))
 		local localized_title = self:_localize(talent.display_name)
+
 		content.title = localized_title
 		content.description = description
+
 		local widget_width, _ = self:_scenegraph_size(widget.scenegraph_id, self._ui_scenegraph)
 		local text_size_addition = style.title.size_addition
+
 		dummy_tooltip_text_size[1] = widget_width + text_size_addition[1]
+
 		local title_height = self:_get_text_height(content.title, style.title, dummy_tooltip_text_size)
+
 		style.title.offset[2] = text_vertical_offset
 		style.title.size[2] = title_height
 		text_vertical_offset = text_vertical_offset + title_height + 10
+
 		local description_height = self:_get_text_height(content.description, style.description, dummy_tooltip_text_size)
+
 		style.description.offset[2] = text_vertical_offset
 		style.description.size[2] = description_height
 		text_vertical_offset = text_vertical_offset + description_height
@@ -1776,6 +1844,7 @@ LobbyView._update_talent_tooltip_position = function (self)
 		local tooltip_offset = tooltip_widget.offset
 		local panel_width, panel_height = self:_scenegraph_size(panel_scenegraph_id, ui_scenegraph)
 		local tooltip_width, tooltip_height = self:_scenegraph_size(tooltip_widget.scenegraph_id, ui_scenegraph)
+
 		tooltip_offset[1] = panel_scenegraph_world_position[1] + panel_offset[1] + panel_width * 0.5 - tooltip_width * 0.5
 		tooltip_offset[2] = panel_scenegraph_world_position[2] + panel_height - tooltip_height - 40
 	end
@@ -1800,6 +1869,7 @@ end
 LobbyView._on_tooltip_hover_start = function (self, slot, data)
 	if self._show_weapons then
 		local item = data
+
 		self._currently_hovered_item = item
 
 		if self._item_stats then
@@ -1820,12 +1890,14 @@ LobbyView._on_tooltip_hover_start = function (self, slot, data)
 		self._tooltip_draw_delay = 0.1
 	else
 		local loadout = data
+
 		self._hovered_slot_talent_data = loadout
 
 		self:_setup_tooltip_info(loadout)
 		self:_update_talent_tooltip_position()
 
 		local widgets_by_name = self._widgets_by_name
+
 		widgets_by_name.talent_tooltip.content.visible = true
 		widgets_by_name.talent_tooltip.alpha_multiplier = 0
 		self._tooltip_alpha_multiplier = 0
@@ -1842,6 +1914,7 @@ LobbyView._on_tooltip_hover_stop = function (self)
 	end
 
 	local widgets_by_name = self._widgets_by_name
+
 	widgets_by_name.talent_tooltip.content.visible = false
 	widgets_by_name.talent_tooltip.alpha_multiplier = 0
 	self._tooltip_draw_delay = 0

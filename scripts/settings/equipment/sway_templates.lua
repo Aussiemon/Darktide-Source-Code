@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/equipment/sway_templates.lua
+
 local WeaponMovementStateSettings = require("scripts/settings/equipment/weapon_movement_state_settings")
 local WeaponTweaks = require("scripts/utilities/weapon_tweaks")
 local weapon_movement_states = WeaponMovementStateSettings.weapon_movement_states
@@ -980,6 +982,7 @@ sway_templates.shotgun_alternate_fire = {
 		}
 	}
 }
+
 local _movement_states = {
 	"still",
 	"moving",
@@ -1018,6 +1021,7 @@ for name, template in pairs(sway_templates) do
 
 		if inheritance_settings then
 			local new_move_state_settings = _inherit(move_state_settings, inheritance_settings)
+
 			sway_templates[name][movement_state] = new_move_state_settings
 			move_state_settings = new_move_state_settings
 		end

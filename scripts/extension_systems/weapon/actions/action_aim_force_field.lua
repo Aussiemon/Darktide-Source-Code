@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/weapon/actions/action_aim_force_field.lua
+
 require("scripts/extension_systems/weapon/actions/action_weapon_base")
 
 local BallisticRaycast = require("scripts/extension_systems/weapon/actions/utilities/ballistic_raycast")
@@ -7,6 +9,7 @@ ActionAimForceField.init = function (self, action_context, ...)
 	ActionAimForceField.super.init(self, action_context, ...)
 
 	local unit_data_extension = action_context.unit_data_extension
+
 	self._action_component = unit_data_extension:write_component("action_place")
 end
 
@@ -51,7 +54,7 @@ ActionAimForceField.fixed_update = function (self, dt, t)
 		rotation = self:_rotate(position, rotation, place_configuration)
 	end
 
-	local hit_unit = nil
+	local hit_unit
 
 	if actor then
 		hit_unit = Actor.unit(actor)
@@ -87,6 +90,7 @@ ActionAimForceField._rotate = function (self, position, rotation, place_configur
 	if has_input then
 		current_rotation_step = (current_rotation_step + 1) % rotation_steps
 		self._action_component.rotation_step = current_rotation_step
+
 		local rotation_animation_1p = place_configuration.anim_rotate_event
 		local rotation_animation_3p = place_configuration.anim_rotate_event_3p or rotation_animation_1p
 

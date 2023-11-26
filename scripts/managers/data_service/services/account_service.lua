@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/data_service/services/account_service.lua
+
 local BackendError = require("scripts/managers/error/errors/backend_error")
 local ErrorCodes = require("scripts/managers/error/error_codes")
 local GameVersionError = require("scripts/managers/error/errors/game_version_error")

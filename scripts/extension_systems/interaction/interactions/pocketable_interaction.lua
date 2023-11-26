@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/interaction/interactions/pocketable_interaction.lua
+
 require("scripts/extension_systems/interaction/interactions/pickup_interaction")
 
 local Pickups = require("scripts/settings/pickup/pickups")
@@ -53,6 +55,7 @@ PocketableInteraction.interactor_condition_func = function (self, interactor_uni
 		local pickup_data = Pickups.by_name[pickup_name]
 		local inventory_item = Pocketable.item_from_name(pickup_data.inventory_item)
 		local wanted_item_name = inventory_item.name
+
 		has_same_item = item_name == wanted_item_name
 	end
 

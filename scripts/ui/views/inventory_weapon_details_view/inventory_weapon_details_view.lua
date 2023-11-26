@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/inventory_weapon_details_view/inventory_weapon_details_view.lua
+
 local Definitions = require("scripts/ui/views/inventory_weapon_details_view/inventory_weapon_details_view_definitions")
 local InventoryWeaponDetailsViewSettings = require("scripts/ui/views/inventory_weapon_details_view/inventory_weapon_details_view_settings")
 local ItemStatSettings = require("scripts/settings/item/item_stat_settings")
@@ -61,6 +63,7 @@ end
 
 InventoryWeaponDetailsView._setup_input_legend = function (self)
 	self._input_legend_element = self:_add_element(ViewElementInputLegend, "input_legend", 50)
+
 	local legend_inputs = self._definitions.legend_inputs
 
 	for i = 1, #legend_inputs do
@@ -141,6 +144,7 @@ InventoryWeaponDetailsView._setup_weapon_info = function (self)
 			title_height = title_height,
 			edge_padding = edge_padding
 		}
+
 		self._weapon_info = self:_add_element(ViewElementWeaponInfo, reference_name, layer, context)
 
 		self:_update_weapon_info_position()
@@ -186,6 +190,7 @@ InventoryWeaponDetailsView._setup_weapon_actions_extended = function (self)
 			title_height = title_height,
 			edge_padding = edge_padding
 		}
+
 		self._weapon_actions_extended = self:_add_element(ViewElementWeaponActionsExtended, reference_name, layer, context)
 
 		self:_update_weapon_actions_extended_position()
@@ -238,6 +243,7 @@ InventoryWeaponDetailsView._setup_attack_patterns = function (self)
 			title_height = title_height,
 			edge_padding = edge_padding
 		}
+
 		self._attack_patterns = self:_add_element(ViewElementWeaponPatterns, reference_name, layer, context)
 
 		self:_update_weapon_actions_extended_position()
@@ -275,10 +281,13 @@ InventoryWeaponDetailsView._setup_default_gui = function (self)
 	local world_layer = 100
 	local world_name = reference_name .. "_ui_default_world"
 	local view_name = self.view_name
+
 	self._gui_world = ui_manager:create_world(world_name, world_layer, timer_name, view_name)
+
 	local viewport_name = reference_name .. "_ui_default_world_viewport"
 	local viewport_type = "overlay"
 	local viewport_layer = 1
+
 	self._gui_viewport = ui_manager:create_viewport(self._gui_world, viewport_name, viewport_type, viewport_layer)
 	self._gui_viewport_name = viewport_name
 	self._ui_default_renderer = ui_manager:create_renderer(reference_name .. "_ui_default_renderer", self._gui_world)
@@ -293,6 +302,7 @@ InventoryWeaponDetailsView._preview_item = function (self, item)
 	})
 
 	self._previewed_item = item
+
 	local slots = item.slots
 
 	if slots and (table.find(slots, "slot_primary") or table.find(slots, "slot_secondary")) then
@@ -330,6 +340,7 @@ InventoryWeaponDetailsView._setup_weapon_preview = function (self)
 	if not self._weapon_preview then
 		local reference_name = "weapon_preview"
 		local layer = 1
+
 		self._weapon_preview = self:_add_element(ViewElementInventoryWeaponPreview, reference_name, layer, {
 			draw_background = true
 		})
@@ -343,10 +354,8 @@ InventoryWeaponDetailsView._update_weapon_preview_viewport = function (self)
 	local weapon_preview = self._weapon_preview
 
 	if weapon_preview then
-		local width_scale = 1
-		local height_scale = 1
-		local x_scale = 0
-		local y_scale = 0
+		local width_scale, height_scale = 1, 1
+		local x_scale, y_scale = 0, 0
 
 		weapon_preview:set_viewport_position_normalized(x_scale, y_scale)
 		weapon_preview:set_viewport_size_normalized(width_scale, height_scale)
@@ -358,7 +367,7 @@ InventoryWeaponDetailsView._update_weapon_preview_viewport = function (self)
 		local weapon_zoom_fraction = self._weapon_zoom_fraction or 1
 		local use_custom_zoom = true
 		local optional_node_name = "p_zoom"
-		local optional_pos = nil
+		local optional_pos
 		local min_zoom = self._min_zoom
 		local max_zoom = self._max_zoom
 
@@ -399,7 +408,7 @@ end
 InventoryWeaponDetailsView._get_weapon_spawn_position_normalized = function (self)
 	self:_force_update_scenegraph()
 
-	local scale = nil
+	local scale
 	local pivot_world_position = self:_scenegraph_world_position("weapon_pivot", scale)
 	local parent_world_position = self:_scenegraph_world_position("weapon_viewport", scale)
 	local viewport_width, viewport_height = self:_scenegraph_size("weapon_viewport", scale)
@@ -425,6 +434,7 @@ end
 
 InventoryWeaponDetailsView._cb_on_ui_visibility_toggled = function (self, id)
 	self._visibility_toggled_on = not self._visibility_toggled_on
+
 	local display_name = self._visibility_toggled_on and "loc_menu_toggle_ui_visibility_off" or "loc_menu_toggle_ui_visibility_on"
 
 	self._input_legend_element:set_display_name(id, display_name)
@@ -438,7 +448,7 @@ InventoryWeaponDetailsView._handle_input = function (self, input_service, dt, t)
 		local scroll_speed = 0.25
 
 		if InputDevice.gamepad_active then
-			scroll = math.abs(scroll_axis[1]) < math.abs(scroll) and scroll or 0
+			scroll = math.abs(scroll) > math.abs(scroll_axis[1]) and scroll or 0
 			scroll_speed = 0.1
 		end
 
@@ -460,9 +470,11 @@ InventoryWeaponDetailsView.draw = function (self, dt, t, input_service, layer)
 	local render_scale = self._render_scale
 	local render_settings = self._render_settings
 	local ui_renderer = self._ui_renderer
+
 	render_settings.start_layer = layer
 	render_settings.scale = render_scale
 	render_settings.inverse_scale = render_scale and 1 / render_scale
+
 	local ui_scenegraph = self._ui_scenegraph
 
 	UIRenderer.begin_pass(ui_renderer, ui_scenegraph, input_service, dt, render_settings)
@@ -482,10 +494,7 @@ InventoryWeaponDetailsView._draw_elements = function (self, dt, t, ui_renderer, 
 		if element then
 			local element_name = element.__class_name
 
-			if element_name ~= "ViewElementInventoryWeaponPreview" or element_name ~= "ViewElementInputLegend" then
-				ui_renderer = self._ui_default_renderer or ui_renderer
-			end
-
+			ui_renderer = not (element_name == "ViewElementInventoryWeaponPreview" and element_name == "ViewElementInputLegend") and self._ui_default_renderer or ui_renderer
 			render_settings.alpha_multiplier = element_name ~= "ViewElementInputLegend" and alpha_multiplier or 1
 
 			element:draw(dt, t, ui_renderer, render_settings, input_service)
@@ -506,13 +515,16 @@ InventoryWeaponDetailsView._draw_widgets = function (self, dt, t, input_service,
 	end
 
 	local always_visible_widget_names = self._always_visible_widget_names
+
 	self._alpha_multiplier = alpha_multiplier
+
 	local widgets = self._widgets
 	local num_widgets = #widgets
 
 	for i = 1, num_widgets do
 		local widget = widgets[i]
 		local widget_name = widget.name
+
 		render_settings.alpha_multiplier = always_visible_widget_names[widget_name] and 1 or alpha_multiplier
 
 		UIWidget.draw(widget, ui_renderer)
@@ -541,10 +553,13 @@ InventoryWeaponDetailsView._setup_offscreen_gui = function (self)
 	local world_layer = 1
 	local world_name = class_name .. "_ui_offscreen_world"
 	local view_name = self.view_name
+
 	self._world = ui_manager:create_world(world_name, world_layer, timer_name, view_name)
+
 	local viewport_name = class_name .. "_ui_offscreen_world_viewport"
 	local viewport_type = "overlay_offscreen"
 	local viewport_layer = 1
+
 	self._viewport = ui_manager:create_viewport(self._world, viewport_name, viewport_type, viewport_layer)
 	self._viewport_name = viewport_name
 	self._ui_offscreen_renderer = ui_manager:create_renderer(class_name .. "_ui_offscreen_renderer", self._world)
@@ -604,8 +619,7 @@ function _get_stats_text(stat)
 	local is_signed = type_data.signed
 	local value = _scale_value_by_type(stat.value, display_type)
 	local value_text = _value_to_text(value, is_signed)
-	local min = stat.min
-	local max = stat.max
+	local min, max = stat.min, stat.max
 
 	if min and max then
 		min = _scale_value_by_type(min, display_type)
@@ -658,7 +672,9 @@ InventoryWeaponDetailsView._draw_weapon_stats = function (self, ui_renderer, inp
 
 		for i = 1, #power_stats do
 			local stat = power_stats[i]
+
 			position.y = attack_stats_y_offset + row_height * i
+
 			local name = stat.type_data.display_name
 			local attack_power = stat.attack
 			local attack_power_text = string.format("%s: %.0f", name, attack_power)
@@ -675,11 +691,15 @@ InventoryWeaponDetailsView._draw_weapon_stats = function (self, ui_renderer, inp
 		local armor_text_len = 200
 		local damage_field_len = 150
 		local damage_start_y = 150
+
 		position.y = damage_start_y
+
 		local num_attacks = #damage_stats
 		local input = input_service:get("navigation_keys_virtual_axis")
 		local attack_idx = math.clamp(self._attack_stats_idx + input[1], 1, num_attacks)
+
 		self._attack_stats_idx = attack_idx
+
 		local attack_data = damage_stats[attack_idx]
 
 		if attack_data then
@@ -694,6 +714,7 @@ InventoryWeaponDetailsView._draw_weapon_stats = function (self, ui_renderer, inp
 			local num_armor_types = #attack_data_def / 3
 			local armor_idx = 1
 			local damage_idx = 1
+
 			position.x = damage_start_x + armor_text_len + damage_field_len
 
 			UIRenderer.draw_text(ui_renderer, Localize(hit_types[1].display_name), font_size, font_type, position, box_size, color, text_options)
@@ -722,32 +743,39 @@ InventoryWeaponDetailsView._draw_weapon_stats = function (self, ui_renderer, inp
 				local weakpoint_imp = impact_damage[damage_idx + 1]
 				local crit_imp = impact_damage[damage_idx + 2]
 				local weakpoint_crit_imp = impact_damage[damage_idx + 3]
+
 				position.y = damage_start_y + i * row_height
 				position.x = damage_start_x
+
 				local armor_type_text = armor_type
 
 				UIRenderer.draw_text(ui_renderer, armor_type_text, font_size, font_type, position, box_size, color, text_options)
 
 				local x_offset = damage_start_x + armor_text_len
+
 				position.x = x_offset + damage_field_len
+
 				local body_hit_text = string.format("%.0f / %.0f" .. ": " .. idx, body_dmg, body_imp)
 
 				UIRenderer.draw_text(ui_renderer, body_hit_text, font_size, font_type, position, box_size, color, text_options)
 
 				idx = idx + 1
 				position.x = x_offset + damage_field_len * 2
+
 				local weakpoint_hit_text = string.format("%.0f / %.0f" .. ": " .. idx, weakpoint_dmg, weakpoint_imp)
 
 				UIRenderer.draw_text(ui_renderer, weakpoint_hit_text, font_size, font_type, position, box_size, color, text_options)
 
 				idx = idx + 1
 				position.x = x_offset + damage_field_len * 3
+
 				local crit_hit_text = string.format("%.0f / %.0f" .. ": " .. idx, crit_dmg, crit_imp)
 
 				UIRenderer.draw_text(ui_renderer, crit_hit_text, font_size, font_type, position, box_size, color, text_options)
 
 				idx = idx + 1
 				position.x = x_offset + damage_field_len * 4
+
 				local weakpoint_crit_hit_text = string.format("%.0f / %.0f" .. ": " .. idx, weakpoint_crit_dmg, weakpoint_crit_imp)
 
 				UIRenderer.draw_text(ui_renderer, weakpoint_crit_hit_text, font_size, font_type, position, box_size, color, text_options)
@@ -758,14 +786,18 @@ InventoryWeaponDetailsView._draw_weapon_stats = function (self, ui_renderer, inp
 			end
 
 			local attack_stats = attack_data.action_stats
+
 			position.x = damage_start_x
+
 			local attack_stats_y_offset = position.y + row_height * 2
+
 			position.y = attack_stats_y_offset
 
 			UIRenderer.draw_text(ui_renderer, "Attack Stats", font_size, font_type, position, box_size, color, text_options)
 
 			attack_stats_y_offset = position.y + row_height
 			position.y = attack_stats_y_offset
+
 			local attack_power = attack_damage.base_power
 			local attack_power_text = string.format("attack power: %.0f", attack_power)
 
@@ -773,6 +805,7 @@ InventoryWeaponDetailsView._draw_weapon_stats = function (self, ui_renderer, inp
 
 			attack_stats_y_offset = position.y + row_height
 			position.y = attack_stats_y_offset
+
 			local impact_power = impact_damage.base_power
 			local impact_power_text = string.format("impact power: %.0f", impact_power)
 
@@ -781,6 +814,7 @@ InventoryWeaponDetailsView._draw_weapon_stats = function (self, ui_renderer, inp
 			for i = 1, #attack_stats do
 				local stat_field = attack_stats[i]
 				local stat_text = _get_stats_text(stat_field)
+
 				position.y = attack_stats_y_offset + row_height * i
 
 				UIRenderer.draw_text(ui_renderer, stat_text, font_size, font_type, position, box_size, color, text_options)
@@ -793,6 +827,7 @@ InventoryWeaponDetailsView._draw_weapon_stats = function (self, ui_renderer, inp
 	if general_stats then
 		local stats_start_x = 1500
 		local stats_start_y = 100
+
 		position.x = stats_start_x
 		position.y = stats_start_y
 
@@ -801,6 +836,7 @@ InventoryWeaponDetailsView._draw_weapon_stats = function (self, ui_renderer, inp
 		for i = 1, #general_stats do
 			local stat_field = general_stats[i]
 			local stat_text = _get_stats_text(stat_field)
+
 			position.y = stats_start_y + row_height * i
 
 			UIRenderer.draw_text(ui_renderer, stat_text, font_size, font_type, position, box_size, color, text_options)
@@ -809,15 +845,21 @@ InventoryWeaponDetailsView._draw_weapon_stats = function (self, ui_renderer, inp
 
 	local bar_stats_start_x = 700
 	local bar_stats_start_y = 400
+
 	position.x = bar_stats_start_x
+
 	local bar_stat_y_offset = bar_stats_start_y
+
 	position.y = bar_stat_y_offset
+
 	local bar_breakdown_stats = advanced_stats.bar_breakdown
 
 	if bar_breakdown_stats then
 		for bar_idx = 1, #bar_breakdown_stats do
 			local bar_data = bar_breakdown_stats[bar_idx]
+
 			position.y = bar_stat_y_offset
+
 			local bar_text = string.format("%s: %.0f%%", bar_data.display_name, bar_data.value * 100)
 
 			UIRenderer.draw_text(ui_renderer, bar_text, font_size, font_type, position, box_size, color, text_options)
@@ -825,6 +867,7 @@ InventoryWeaponDetailsView._draw_weapon_stats = function (self, ui_renderer, inp
 			for bar_affected_stat_idx = 1, #bar_data do
 				local sub_stat = bar_data[bar_affected_stat_idx]
 				local stat_text = _get_stats_text(sub_stat)
+
 				bar_stat_y_offset = bar_stat_y_offset + row_height
 				position.y = bar_stat_y_offset
 
@@ -850,7 +893,7 @@ InventoryWeaponDetailsView._remove_element = function (self, reference_name)
 		end
 	end
 
-	local ui_renderer = (element_name ~= "ViewElementInventoryWeaponPreview" or element_name ~= "ViewElementInputLegend") and self._ui_default_renderer or self._ui_renderer
+	local ui_renderer = not (element_name == "ViewElementInventoryWeaponPreview" and element_name == "ViewElementInputLegend") and self._ui_default_renderer or self._ui_renderer
 
 	element:destroy(ui_renderer)
 

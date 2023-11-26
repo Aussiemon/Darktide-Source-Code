@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/equipment/weapon_templates/thunder_hammers/thunderhammer_2h_p1_m2.lua
+
 local AimAssistTemplates = require("scripts/settings/equipment/aim_assist_templates")
 local ArmorSettings = require("scripts/settings/damage/armor_settings")
 local BaseTemplateSettings = require("scripts/settings/equipment/weapon_templates/base_template_settings")
@@ -36,12 +38,13 @@ local sway_trait_templates = WeaponTraitTemplates[template_types.sway]
 local toughness_trait_templates = WeaponTraitTemplates[template_types.toughness]
 local weapon_handling_trait_templates = WeaponTraitTemplates[template_types.weapon_handling]
 local movement_curve_modifier_trait_templates = WeaponTraitTemplates[template_types.movement_curve_modifier]
-local weapon_template = {
-	action_inputs = table.clone(MeleeActionInputSetupMid.action_inputs),
-	action_input_hierarchy = table.clone(MeleeActionInputSetupMid.action_input_hierarchy)
-}
+local weapon_template = {}
+
+weapon_template.action_inputs = table.clone(MeleeActionInputSetupMid.action_inputs)
+weapon_template.action_input_hierarchy = table.clone(MeleeActionInputSetupMid.action_input_hierarchy)
 weapon_template.action_inputs.block.buffer_time = 0.1
 weapon_template.action_inputs.block_release.buffer_time = 0.35
+
 local default_weapon_box = {
 	0.2,
 	0.15,
@@ -53,6 +56,7 @@ local _force_abort_breed_tags_special_active = {
 	"monster",
 	"captain"
 }
+
 weapon_template.actions = {
 	action_unwield = {
 		allowed_during_sprint = true,
@@ -1654,6 +1658,7 @@ weapon_template.base_stats = {
 	}
 }
 weapon_template.traits = {}
+
 local bespoke_thunderhammer_2h_p1_traits = table.keys(WeaponTraitsBespokeThunderhammerP1)
 
 table.append(weapon_template.traits, bespoke_thunderhammer_2h_p1_traits)

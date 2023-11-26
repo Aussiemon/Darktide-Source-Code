@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/player_character_options_view/player_character_options_view.lua
+
 local Breeds = require("scripts/settings/breed/breeds")
 local Definitions = require("scripts/ui/views/player_character_options_view/player_character_options_view_definitions")
 local PlayerCharacterOptionsViewSettings = require("scripts/ui/views/player_character_options_view/player_character_options_view_settings")
@@ -12,7 +14,9 @@ PlayerCharacterOptionsView.init = function (self, settings, context)
 	self._inspected_player = context and context.player or self:_player()
 	self._peer_id = self._inspected_player:peer_id()
 	self._local_player_id = self._inspected_player:local_player_id()
+
 	local account_id = context and context.account_id or self._inspected_player:account_id()
+
 	self._account_id = account_id
 	self._player_info = Managers.data_service.social:get_player_info_by_account_id(account_id)
 
@@ -49,7 +53,9 @@ PlayerCharacterOptionsView.on_enter = function (self)
 
 	local profile_archetype = profile.archetype
 	local archetype_name = profile_archetype.name
+
 	self._widgets_by_name.class_badge.style.badge.material_values.badge = PlayerCharacterOptionsViewSettings.archetype_badge_texture_by_name[archetype_name]
+
 	local archetype = profile and profile.archetype
 	local string_symbol = archetype and archetype.string_symbol
 	local character_title = string_symbol .. " " .. ProfileUtils.character_title(profile, true)
@@ -77,6 +83,7 @@ end
 PlayerCharacterOptionsView._set_class_name = function (self, name)
 	local widget = self._widgets_by_name.class_name
 	local text = name
+
 	widget.content.text = text
 end
 
@@ -103,6 +110,7 @@ PlayerCharacterOptionsView._generate_player_icon = function (self)
 			image_size[2] * size_multiplier
 		}
 	}
+
 	self._player_icon_load_id = Managers.ui:load_profile_portrait(profile, load_cb, render_context)
 end
 
@@ -112,6 +120,7 @@ PlayerCharacterOptionsView._cb_set_player_icon = function (self, grid_index, row
 	if self._entered then
 		local widget = self._widgets_by_name.window_image
 		local material_values = widget.style.texture.material_values
+
 		material_values.use_placeholder_texture = 0
 		material_values.use_render_target = 1
 		material_values.rows = rows
@@ -186,8 +195,7 @@ PlayerCharacterOptionsView.update = function (self, dt, t, input_service, layer)
 end
 
 PlayerCharacterOptionsView._update_invite_button_status = function (self)
-	local can_invite = false
-	local cannot_invite_reason = nil
+	local can_invite, cannot_invite_reason = false
 	local player_info = self._player_info
 
 	if player_info then
@@ -195,6 +203,7 @@ PlayerCharacterOptionsView._update_invite_button_status = function (self)
 	end
 
 	local widget = self._widgets_by_name.invite_button
+
 	widget.content.hotspot.disabled = not can_invite
 end
 
@@ -206,6 +215,7 @@ end
 
 PlayerCharacterOptionsView._setup_buttons_interactions = function (self)
 	local widgets_by_name = self._widgets_by_name
+
 	widgets_by_name.inspect_button.content.hotspot.pressed_callback = callback(self, "_on_inspect_pressed")
 	widgets_by_name.invite_button.content.hotspot.pressed_callback = callback(self, "_on_invite_pressed")
 	widgets_by_name.close_button.content.hotspot.pressed_callback = callback(self, "_on_close_pressed")
@@ -257,10 +267,12 @@ end
 
 PlayerCharacterOptionsView._set_selected_gamepad_navigation_index = function (self, index)
 	self._selected_gamepad_navigation_index = index
+
 	local button_gamepad_navigation_list = self._button_gamepad_navigation_list
 
 	for i = 1, #button_gamepad_navigation_list do
 		local widget = button_gamepad_navigation_list[i]
+
 		widget.content.hotspot.is_selected = i == index
 	end
 end
@@ -273,7 +285,7 @@ PlayerCharacterOptionsView._handle_button_gamepad_navigation = function (self, i
 	end
 
 	local button_gamepad_navigation_list = self._button_gamepad_navigation_list
-	local new_index = nil
+	local new_index
 
 	if input_service:get("navigate_up_continuous") then
 		new_index = math.max(selected_gamepad_navigation_index - 1, 1)

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/equipment/weapon_templates/ripperguns/settings_templates/rippergun_damage_profile_templates.lua
+
 local ArmorSettings = require("scripts/settings/damage/armor_settings")
 local AttackSettings = require("scripts/settings/damage/attack_settings")
 local DamageProfileSettings = require("scripts/settings/damage/damage_profile_settings")
@@ -19,6 +21,7 @@ table.make_unique(damage_templates)
 table.make_unique(overrides)
 
 local double_cleave = DamageProfileSettings.double_cleave
+
 damage_templates.default_rippergun_assault = {
 	ragdoll_only = true,
 	stagger_category = "ranged",

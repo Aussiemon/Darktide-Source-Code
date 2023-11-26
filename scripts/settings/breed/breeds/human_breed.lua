@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/breed/breeds/human_breed.lua
+
 local ArmorSettings = require("scripts/settings/damage/armor_settings")
 local BotSettings = require("scripts/settings/bot/bot_settings")
 local BreedSettings = require("scripts/settings/breed/breed_settings")

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/player/player_game_states/remote_player_gameplay.lua
+
 local RemotePlayerGameplay = class("RemotePlayerGameplay")
 
 RemotePlayerGameplay.init = function (self, player, game_state_context)
@@ -19,8 +21,7 @@ RemotePlayerGameplay.update = function (self, main_dt, main_t)
 
 		if input_handler then
 			local time_manager = Managers.time
-			local game_dt = time_manager:delta_time("gameplay")
-			local game_t = time_manager:time("gameplay")
+			local game_dt, game_t = time_manager:delta_time("gameplay"), time_manager:time("gameplay")
 
 			input_handler:update(game_dt, game_t)
 		end

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/boss/boss_system.lua
+
 require("scripts/extension_systems/boss/boss_extension")
 
 local BossSystem = class("BossSystem", "ExtensionSystemBase")

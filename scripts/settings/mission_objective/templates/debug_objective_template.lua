@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/mission_objective/templates/debug_objective_template.lua
+
 local mission_objective_templates = {
 	debug = {
 		objectives = {

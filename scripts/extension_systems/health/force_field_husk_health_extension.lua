@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/health/force_field_husk_health_extension.lua
+
 local HealthExtensionInterface = require("scripts/extension_systems/health/health_extension_interface")
 local ForceFieldHuskHealthExtension = class("ForceFieldHuskHealthExtension")
 

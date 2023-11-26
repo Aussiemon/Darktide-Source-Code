@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/scanner_display_view/scanner_display_view_definitions_scan.lua
+
 local ScannerDisplayViewScanSettings = require("scripts/ui/views/scanner_display_view/scanner_display_view_scan_settings")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local UIWorkspaceSettings = require("scripts/settings/ui/ui_workspace_settings")

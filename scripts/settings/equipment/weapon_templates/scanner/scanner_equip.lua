@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/equipment/weapon_templates/scanner/scanner_equip.lua
+
 local BaseTemplateSettings = require("scripts/settings/equipment/weapon_templates/base_template_settings")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
@@ -6,68 +8,68 @@ local PlayerCharacterConstants = require("scripts/settings/player_character/play
 local SmartTargetingTemplates = require("scripts/settings/equipment/smart_targeting_templates")
 local damage_types = DamageSettings.damage_types
 local wield_inputs = PlayerCharacterConstants.wield_inputs
-local weapon_template = {
-	action_inputs = {
-		scan_start = {
-			buffer_time = 0.4,
-			input_sequence = {
-				{
-					value = true,
-					input = "action_two_hold"
-				}
+local weapon_template = {}
+
+weapon_template.action_inputs = {
+	scan_start = {
+		buffer_time = 0.4,
+		input_sequence = {
+			{
+				value = true,
+				input = "action_two_hold"
 			}
-		},
-		scan_cancel = {
-			buffer_time = 0.02,
-			input_sequence = {
-				{
-					value = false,
-					input = "action_two_hold",
-					time_window = math.huge
-				}
-			}
-		},
-		scan_confirm = {
-			buffer_time = 0.4,
-			input_sequence = {
-				{
-					value = true,
-					input = "action_one_pressed"
-				}
-			}
-		},
-		scan_confirm_cancel = {
-			buffer_time = 0.02,
-			input_sequence = {
-				{
-					value = false,
-					input = "action_one_hold",
-					time_window = math.huge
-				}
-			}
-		},
-		push = {
-			buffer_time = 0.4,
-			input_sequence = {
-				{
-					value = true,
-					input = "action_one_pressed"
-				}
-			}
-		},
-		wield = {
-			buffer_time = 0,
-			clear_input_queue = true,
-			input_sequence = {
-				{
-					inputs = wield_inputs
-				}
-			}
-		},
-		unwield = {
-			clear_input_queue = true,
-			buffer_time = 0
 		}
+	},
+	scan_cancel = {
+		buffer_time = 0.02,
+		input_sequence = {
+			{
+				value = false,
+				input = "action_two_hold",
+				time_window = math.huge
+			}
+		}
+	},
+	scan_confirm = {
+		buffer_time = 0.4,
+		input_sequence = {
+			{
+				value = true,
+				input = "action_one_pressed"
+			}
+		}
+	},
+	scan_confirm_cancel = {
+		buffer_time = 0.02,
+		input_sequence = {
+			{
+				value = false,
+				input = "action_one_hold",
+				time_window = math.huge
+			}
+		}
+	},
+	push = {
+		buffer_time = 0.4,
+		input_sequence = {
+			{
+				value = true,
+				input = "action_one_pressed"
+			}
+		}
+	},
+	wield = {
+		buffer_time = 0,
+		clear_input_queue = true,
+		input_sequence = {
+			{
+				inputs = wield_inputs
+			}
+		}
+	},
+	unwield = {
+		clear_input_queue = true,
+		buffer_time = 0
 	}
 }
 
@@ -121,6 +123,7 @@ local scan_settings = {
 		distance = 0.8
 	}
 }
+
 weapon_template.actions = {
 	action_unwield_to_previous_and_unequip = {
 		allowed_during_sprint = true,

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/data_service/data_service_backend_cache.lua
+
 local Promise = require("scripts/foundation/utilities/promise")
 local DataServiceBackendCache = class("DataServiceBackendCache")
 
@@ -48,6 +50,7 @@ DataServiceBackendCache._fetch_backend_data = function (self, cache_key, backend
 	end
 
 	local backend_promise = backend_func()
+
 	self._backend_requests[cache_key] = {
 		promise = backend_promise,
 		backend_func = backend_func
@@ -56,6 +59,7 @@ DataServiceBackendCache._fetch_backend_data = function (self, cache_key, backend
 	backend_promise:next(function (result)
 		self._backend_requests[cache_key] = nil
 		self._cached_data[cache_key] = result
+
 		local external_promises = self._external_promises[cache_key]
 
 		for i = 1, #external_promises do
@@ -70,6 +74,7 @@ DataServiceBackendCache._fetch_backend_data = function (self, cache_key, backend
 	end):catch(function (err)
 		self._backend_requests[cache_key] = nil
 		self._cached_data[cache_key] = nil
+
 		local external_promises = self._external_promises[cache_key]
 
 		for i = 1, #external_promises do

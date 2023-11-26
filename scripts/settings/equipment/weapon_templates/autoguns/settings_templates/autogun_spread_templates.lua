@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/equipment/weapon_templates/autoguns/settings_templates/autogun_spread_templates.lua
+
 local spread_templates = {}
 local overrides = {}
 
@@ -197,7 +199,9 @@ spread_templates.default_autogun_assault = {
 		}
 	}
 }
+
 local p1_m1_multi = 1.25
+
 spread_templates.autogun_assault_p1_m1 = {
 	still = {
 		max_spread = {
@@ -391,7 +395,9 @@ spread_templates.autogun_assault_p1_m1 = {
 		}
 	}
 }
+
 local p1_m2_multi = 1
+
 spread_templates.autogun_assault_p1_m2 = {
 	still = {
 		max_spread = {
@@ -1323,7 +1329,9 @@ spread_templates.default_autogun_spraynpray = {
 		}
 	}
 }
+
 local p2_perfect_multi = 0.75
+
 spread_templates.autogun_p2_m1_hip = {
 	still = {
 		max_spread = {

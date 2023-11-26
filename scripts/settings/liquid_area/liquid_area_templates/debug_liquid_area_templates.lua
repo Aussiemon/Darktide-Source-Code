@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/liquid_area/liquid_area_templates/debug_liquid_area_templates.lua
+
 local debug_templates = {
 	debug_paint = {
 		vfx_name_filled = "content/fx/particles/weapons/grenades/flame_grenade_hostile_fire_lingering_green",

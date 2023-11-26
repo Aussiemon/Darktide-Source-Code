@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/camera/environment_blend.lua
+
 local EnvironmentBlend = class("EnvironmentBlend")
 
 EnvironmentBlend.init = function (self, world)
@@ -21,6 +23,7 @@ EnvironmentBlend.register_environment = function (self, blend)
 	end
 
 	local layer_blends = blend_layers[layer]
+
 	layer_blends[#layer_blends + 1] = blend
 end
 
@@ -58,6 +61,7 @@ EnvironmentBlend.blend_list = function (self, camera_pos, default_shading_enviro
 				if weight > 0 then
 					local resource = blend:resource()
 					local blend_mask = blend:blend_mask()
+
 					blend_list[#blend_list + 1] = blend_mask
 					blend_list[#blend_list + 1] = weight
 					blend_list[#blend_list + 1] = resource

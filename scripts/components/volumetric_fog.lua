@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/components/volumetric_fog.lua
+
 local VolumetricFog = component("VolumetricFog")
 
 VolumetricFog.init = function (self, unit)

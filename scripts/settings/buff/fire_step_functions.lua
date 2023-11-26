@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/buff/fire_step_functions.lua
+
 local ConditionalFunctions = require("scripts/settings/buff/validation_functions/conditional_functions")
 local FireStepFunctions = {
 	default_continuous_fire_step_func = function (template_data, template_context)

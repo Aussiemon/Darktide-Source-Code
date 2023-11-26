@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/mission_objective/templates/dm_propaganda_objective_template.lua
+
 local mission_objective_templates = {
 	dm_propaganda = {
 		main_objective_type = "demolition_objective",

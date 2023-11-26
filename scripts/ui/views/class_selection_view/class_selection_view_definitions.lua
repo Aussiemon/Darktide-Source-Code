@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/class_selection_view/class_selection_view_definitions.lua
+
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templates")
 local ClassSelectionViewSettings = require("scripts/ui/views/class_selection_view/class_selection_view_settings")
@@ -575,6 +577,7 @@ local archetype_option_definition = UIWidget.create_definition({
 		change_function = function (content, style)
 			local hotspot = content.hotspot
 			local anim_progress = hotspot.anim_select_progress
+
 			style.color[1] = anim_progress * 255
 		end,
 		visibility_function = function (content, style)
@@ -604,7 +607,8 @@ local archetype_option_definition = UIWidget.create_definition({
 			}
 		},
 		change_function = function (content, style)
-			local color = content.hotspot.is_selected and style.selected_color or (content.hotspot.is_hover or content.hotspot.is_focused) and style.hover_color or style.default_color
+			local color = content.hotspot.is_selected and style.selected_color or not (not content.hotspot.is_hover and not content.hotspot.is_focused) and style.hover_color or style.default_color
+
 			style.color = {
 				color[1],
 				color[2],
@@ -688,9 +692,12 @@ local class_option_definition = UIWidget.create_definition({
 		change_function = function (content, style, _, dt)
 			local hotspot = content.hotspot
 			local progress = math.max(hotspot.anim_hover_progress, hotspot.anim_focus_progress)
+
 			style.color[1] = 255 * math.easeOutCubic(progress)
+
 			local size_addition = 20 + 20 * math.easeInCubic(1 - progress)
 			local style_size_additon = style.size_addition
+
 			style_size_additon[1] = size_addition
 			style_size_additon[2] = size_addition
 			style.hdr = progress == 1
@@ -704,6 +711,7 @@ local class_option_definition = UIWidget.create_definition({
 		style = ClassSelectionViewFontStyle.class_option_title,
 		change_function = function (content, style)
 			local hotspot = content.hotspot
+
 			style.text_color = hotspot.is_focused and style.default_color or style.disabled_color
 		end
 	}
@@ -748,6 +756,7 @@ local animations = {
 			end,
 			update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress, params)
 				local anim_progress = math.easeOutCubic(progress)
+
 				widgets.transition_fade.alpha_multiplier = 1 - anim_progress
 			end
 		}
@@ -760,11 +769,13 @@ local animations = {
 			init = function (parent, ui_scenegraph, scenegraph_definition, widgets, params)
 				for i = 1, #parent._class_options_widgets do
 					local widget = parent._class_options_widgets[i]
+
 					widget.style.icon.material_values.progression = 0
 				end
 			end,
 			update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress, params)
 				local anim_progress = math.easeOutCubic(progress)
+
 				params.selected_class_widget.style.icon.material_values.progression = anim_progress
 			end
 		}

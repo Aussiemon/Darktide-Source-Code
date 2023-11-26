@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/item/item_slot_settings.lua
+
 local UISettings = require("scripts/settings/ui/ui_settings")
 local item_slot_settings = {
 	slot_body_face = {

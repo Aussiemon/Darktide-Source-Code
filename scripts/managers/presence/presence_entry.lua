@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/presence/presence_entry.lua
+
 local presence_entry_interface = {
 	"account_id",
 	"account_name",

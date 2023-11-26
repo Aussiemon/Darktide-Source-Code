@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/utilities/trajectory.lua
+
 local Trajectory = {}
 
 local function _wanted_projectile_angle(distance_vector, projectile_gravity, projectile_speed)
@@ -37,12 +39,12 @@ local function _wanted_projectile_speed(distance_vector, projectile_gravity, wan
 end
 
 Trajectory.angle_to_hit_moving_target = function (from_position, target_position, projectile_speed, target_velocity, gravity, acceptable_accuracy, use_greatest_angle)
-	local angle = nil
+	local angle
 	local EPSILON = 0.01
 	local estimated_target_position = target_position
 	local flat_distance = Vector3.length(Vector3.flat(estimated_target_position - from_position))
 	local old_flat_distance = flat_distance
-	local t = nil
+	local t
 
 	for i = 1, 10 do
 		local height = estimated_target_position.z - from_position.z
@@ -61,10 +63,12 @@ Trajectory.angle_to_hit_moving_target = function (from_position, target_position
 		local second_degree_component = math.sqrt(sqrt_val)
 		local angle1 = math.atan((speed_sq + second_degree_component) / (gravity * flat_distance))
 		local angle2 = math.atan((speed_sq - second_degree_component) / (gravity * flat_distance))
+
 		angle = use_greatest_angle and math.max(angle1, angle2) or math.min(angle1, angle2)
 		t = flat_distance / (projectile_speed * math.cos(angle))
 		estimated_target_position = target_position + t * target_velocity
 		flat_distance = Vector3.length(Vector3.flat(estimated_target_position - from_position))
+
 		local distance_error = math.abs(old_flat_distance - flat_distance)
 
 		if distance_error <= acceptable_accuracy then
@@ -87,6 +91,7 @@ Trajectory.get_trajectory_velocity = function (from_position, target_position, g
 
 	if not angle and projectile_speed then
 		local a1, a2 = _wanted_projectile_angle(to_target, -gravity, projectile_speed)
+
 		angle = a1 or a2
 	end
 
@@ -110,14 +115,17 @@ Trajectory.check_trajectory_collisions = function (physics_world, from_position,
 	local x_vel_0 = math.cos(angle) * projectile_speed
 	local y_vel_0 = math.sin(angle) * projectile_speed
 	local segment_pos1 = from_position
+
 	sections = sections or DEFAULT_NUM_SECTIONS
 
 	for i = 1, sections do
-		local t = time_in_flight * i / sections
+		local t = time_in_flight * (i / sections)
 		local x = x_vel_0 * t
 		local z = y_vel_0 * t - 0.5 * gravity * t^2
 		local segment_pos2 = from_position + to_target_flat * x
+
 		segment_pos2.z = segment_pos2.z + z
+
 		local current_velocity = segment_pos2 - segment_pos1
 		local length = Vector3.length(current_velocity)
 		local hit, hit_pos, _, _, _ = PhysicsWorld.raycast(physics_world, segment_pos1, current_velocity, length, "closest", "collision_filter", collision_filter)
@@ -126,7 +134,7 @@ Trajectory.check_trajectory_collisions = function (physics_world, from_position,
 			local fail_on_collision = true
 
 			if i == sections then
-				fail_on_collision = LAST_SECTION_EPSILON_SQ < Vector3.distance_squared(hit_pos, target_position)
+				fail_on_collision = Vector3.distance_squared(hit_pos, target_position) > LAST_SECTION_EPSILON_SQ
 			end
 
 			if fail_on_collision then
@@ -141,8 +149,7 @@ Trajectory.check_trajectory_collisions = function (physics_world, from_position,
 		return true, nil
 	end
 
-	local start_t = 0
-	local end_t = time_in_flight - DEFAULT_SPHERE_SWEEP_TIME_STEP * DEFAULT_SPHERE_SWEEP_TIME_STEP
+	local start_t, end_t = 0, time_in_flight - DEFAULT_SPHERE_SWEEP_TIME_STEP * DEFAULT_SPHERE_SWEEP_TIME_STEP
 	local hit_position, _, new_position = Trajectory.sphere_sweep_collision_check(physics_world, from_position, to_target_flat, x_vel_0, y_vel_0, gravity, optional_radius, collision_filter, start_t, end_t, debug_draw)
 	local success = hit_position == nil or optional_relax_distance ~= nil and Vector3.distance_squared(new_position, target_position) <= optional_relax_distance * optional_relax_distance
 
@@ -170,10 +177,12 @@ Trajectory.sphere_sweep_collision_check = function (physics_world, start_positio
 		t = math.min(t + DEFAULT_SPHERE_SWEEP_TIME_STEP, end_t)
 		x = x_vel_0 * t
 		z = y_vel_0 * t - 0.5 * gravity * t^2
+
 		local segment_pos2_x = start_position_x + flat_direction_x * x
 		local segment_pos2_y = start_position_y + flat_direction_y * x
 		local segment_pos2_z = start_position_z + z + radius
 		local segment_pos2 = Vector3(segment_pos2_x, segment_pos2_y, segment_pos2_z)
+
 		SPHERE_SWEEP_POSITIONS[i] = segment_pos1
 		SPHERE_SWEEP_POSITIONS[i + 1] = segment_pos2
 		segment_pos1 = segment_pos2
@@ -183,13 +192,11 @@ Trajectory.sphere_sweep_collision_check = function (physics_world, start_positio
 
 	if hits then
 		local hit = hits[1]
-		local hit_position = hit.position
-		local hit_normal = hit.normal
-		local hit_distance = hit.distance
-		local from = SPHERE_SWEEP_POSITIONS[hit_position_index]
-		local to = SPHERE_SWEEP_POSITIONS[hit_position_index + 1]
+		local hit_position, hit_normal, hit_distance = hit.position, hit.normal, hit.distance
+		local from, to = SPHERE_SWEEP_POSITIONS[hit_position_index], SPHERE_SWEEP_POSITIONS[hit_position_index + 1]
 		local check_direction = Vector3.normalize(to - from)
 		local new_position = from + check_direction * hit_distance
+
 		new_position.z = new_position.z - radius
 
 		return hit_position, hit_normal, new_position
@@ -210,7 +217,9 @@ Trajectory.ballistic_raycast = function (physics_world, collision_filter, origin
 	local gravity = Vector3(0, 0, -z_gravity)
 	local time_step = (optional_max_time or MAX_TIME) / (optional_max_steps or MAX_STEPS)
 	local position = original_position
+
 	SEGMENTS[1] = position
+
 	local total_length = 0
 
 	for i = 1, MAX_STEPS do
@@ -219,6 +228,7 @@ Trajectory.ballistic_raycast = function (physics_world, collision_filter, origin
 		local direction = Vector3.normalize(delta)
 		local distance = Vector3.length(delta)
 		local _, hit_position, hit_distance, _, _ = PhysicsWorld.raycast(physics_world, position, direction, distance, "closest", "types", "both", "collision_filter", collision_filter)
+
 		total_length = total_length + (hit_distance or distance)
 
 		if hit_position then
@@ -243,7 +253,9 @@ Trajectory.test_throw_trajectory = function (unit, hit_unit_breed_name, physics_
 	local from = unit_position + test_direction + up
 	local direction = Vector3.normalize(test_direction)
 	local catapult_velocity = direction * force
+
 	catapult_velocity.z = z_force
+
 	local speed = Vector3.length(catapult_velocity)
 	local target_velocity = Vector3(0, 0, 0)
 	local angle, estimated_position = Trajectory.angle_to_hit_moving_target(from, to, speed, target_velocity, gravity, 1)

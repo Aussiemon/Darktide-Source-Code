@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/camera/camera_trees.lua
+
 return {
 	cinematic_gameplay = "cinematic_gameplay",
 	first_person = "player_first_person",

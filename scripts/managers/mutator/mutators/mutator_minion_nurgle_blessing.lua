@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/mutator/mutators/mutator_minion_nurgle_blessing.lua
+
 require("scripts/managers/mutator/mutators/mutator_base")
 
 local MutatorMinionNurgleBlessing = class("MutatorMinionNurgleBlessing", "MutatorBase")
@@ -8,6 +10,7 @@ MutatorMinionNurgleBlessing.init = function (self, is_server, network_event_dele
 	self._is_active = false
 	self._buffs = {}
 	self._template = mutator_template
+
 	local template = self._template
 	local modify_pacing_settings = template.modify_pacing
 

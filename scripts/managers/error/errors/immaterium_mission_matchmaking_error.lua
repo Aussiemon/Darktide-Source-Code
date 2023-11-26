@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/error/errors/immaterium_mission_matchmaking_error.lua
+
 local ErrorCodes = require("scripts/managers/error/error_codes")
 local ErrorInterface = require("scripts/managers/error/errors/error_interface")
 local ErrorManager = require("scripts/managers/error/error_manager")

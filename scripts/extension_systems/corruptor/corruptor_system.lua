@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/corruptor/corruptor_system.lua
+
 require("scripts/extension_systems/corruptor/corruptor_extension")
 
 local CorruptorSystem = class("CorruptorSystem", "ExtensionSystemBase")

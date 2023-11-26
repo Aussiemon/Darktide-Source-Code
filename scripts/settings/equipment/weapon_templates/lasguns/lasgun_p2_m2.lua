@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/equipment/weapon_templates/lasguns/lasgun_p2_m2.lua
+
 local BaseTemplateSettings = require("scripts/settings/equipment/weapon_templates/base_template_settings")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
@@ -33,156 +35,156 @@ local toughness_trait_templates = WeaponTraitTemplates[template_types.toughness]
 local weapon_handling_trait_templates = WeaponTraitTemplates[template_types.weapon_handling]
 local movement_curve_modifier_trait_templates = WeaponTraitTemplates[template_types.movement_curve_modifier]
 local charge_trait_templates = WeaponTraitTemplates[template_types.charge]
-local weapon_template = {
-	action_inputs = {
-		shoot_pressed = {
-			buffer_time = 0.53,
-			max_queue = 1,
-			input_sequence = {
-				{
+local weapon_template = {}
+
+weapon_template.action_inputs = {
+	shoot_pressed = {
+		buffer_time = 0.53,
+		max_queue = 1,
+		input_sequence = {
+			{
+				value = true,
+				input = "action_one_hold"
+			}
+		}
+	},
+	shoot_release_charged = {
+		buffer_time = 0.52,
+		clear_input_queue = true,
+		input_sequence = {
+			{
+				value = false,
+				input = "action_one_hold",
+				time_window = math.huge
+			}
+		}
+	},
+	zoom_shoot_pressed = {
+		buffer_time = 0.52,
+		max_queue = 2,
+		input_sequence = {
+			{
+				value = true,
+				input = "action_one_pressed"
+			}
+		}
+	},
+	zoom_shoot_release_charged = {
+		buffer_time = 0.52,
+		clear_input_queue = true,
+		input_sequence = {
+			{
+				value = false,
+				input = "action_one_hold",
+				time_window = math.huge
+			}
+		}
+	},
+	zoom = {
+		buffer_time = 0.4,
+		input_sequence = {
+			{
+				value = true,
+				input = "action_two_hold",
+				input_setting = {
 					value = true,
-					input = "action_one_hold"
+					input = "action_two_pressed",
+					setting_value = true,
+					setting = "toggle_ads"
 				}
 			}
-		},
-		shoot_release_charged = {
-			buffer_time = 0.52,
-			clear_input_queue = true,
-			input_sequence = {
-				{
-					value = false,
-					input = "action_one_hold",
+		}
+	},
+	zoom_release = {
+		buffer_time = 0.3,
+		input_sequence = {
+			{
+				value = false,
+				input = "action_two_hold",
+				time_window = math.huge,
+				input_setting = {
+					setting_value = true,
+					setting = "toggle_ads",
+					value = true,
+					input = "action_two_pressed",
 					time_window = math.huge
 				}
 			}
-		},
-		zoom_shoot_pressed = {
-			buffer_time = 0.52,
-			max_queue = 2,
-			input_sequence = {
-				{
-					value = true,
-					input = "action_one_pressed"
-				}
+		}
+	},
+	reload = {
+		buffer_time = 0,
+		clear_input_queue = true,
+		input_sequence = {
+			{
+				value = true,
+				input = "weapon_reload"
 			}
-		},
-		zoom_shoot_release_charged = {
-			buffer_time = 0.52,
-			clear_input_queue = true,
-			input_sequence = {
-				{
-					value = false,
-					input = "action_one_hold",
-					time_window = math.huge
-				}
+		}
+	},
+	wield = {
+		buffer_time = 0,
+		clear_input_queue = true,
+		input_sequence = {
+			{
+				inputs = wield_inputs
 			}
-		},
-		zoom = {
-			buffer_time = 0.4,
-			input_sequence = {
-				{
-					value = true,
-					input = "action_two_hold",
-					input_setting = {
-						value = true,
-						input = "action_two_pressed",
-						setting_value = true,
-						setting = "toggle_ads"
-					}
-				}
+		}
+	},
+	special_action = {
+		buffer_time = 0.2,
+		input_sequence = {
+			{
+				value = true,
+				input = "weapon_extra_pressed"
 			}
-		},
-		zoom_release = {
-			buffer_time = 0.3,
-			input_sequence = {
-				{
-					value = false,
-					input = "action_two_hold",
-					time_window = math.huge,
-					input_setting = {
-						setting_value = true,
-						setting = "toggle_ads",
-						value = true,
-						input = "action_two_pressed",
-						time_window = math.huge
-					}
-				}
+		}
+	},
+	special_action_hold = {
+		buffer_time = 0.2,
+		input_sequence = {
+			{
+				value = true,
+				hold_input = "weapon_extra_hold",
+				input = "weapon_extra_hold"
 			}
-		},
-		reload = {
-			buffer_time = 0,
-			clear_input_queue = true,
-			input_sequence = {
-				{
-					value = true,
-					input = "weapon_reload"
-				}
+		}
+	},
+	special_action_release = {
+		buffer_time = 0.2,
+		input_sequence = {
+			{
+				value = true,
+				hold_input = "weapon_extra_release",
+				input = "weapon_extra_release"
 			}
-		},
-		wield = {
-			buffer_time = 0,
-			clear_input_queue = true,
-			input_sequence = {
-				{
-					inputs = wield_inputs
-				}
+		}
+	},
+	special_action_light = {
+		buffer_time = 0.3,
+		max_queue = 1,
+		input_sequence = {
+			{
+				value = false,
+				time_window = 0.25,
+				input = "weapon_extra_hold"
 			}
-		},
-		special_action = {
-			buffer_time = 0.2,
-			input_sequence = {
-				{
-					value = true,
-					input = "weapon_extra_pressed"
-				}
-			}
-		},
-		special_action_hold = {
-			buffer_time = 0.2,
-			input_sequence = {
-				{
-					value = true,
-					hold_input = "weapon_extra_hold",
-					input = "weapon_extra_hold"
-				}
-			}
-		},
-		special_action_release = {
-			buffer_time = 0.2,
-			input_sequence = {
-				{
-					value = true,
-					hold_input = "weapon_extra_release",
-					input = "weapon_extra_release"
-				}
-			}
-		},
-		special_action_light = {
-			buffer_time = 0.3,
-			max_queue = 1,
-			input_sequence = {
-				{
-					value = false,
-					time_window = 0.25,
-					input = "weapon_extra_hold"
-				}
-			}
-		},
-		special_action_heavy = {
-			buffer_time = 0.5,
-			max_queue = 1,
-			input_sequence = {
-				{
-					value = true,
-					duration = 0.25,
-					input = "weapon_extra_hold"
-				},
-				{
-					value = false,
-					time_window = 1.5,
-					auto_complete = false,
-					input = "weapon_extra_hold"
-				}
+		}
+	},
+	special_action_heavy = {
+		buffer_time = 0.5,
+		max_queue = 1,
+		input_sequence = {
+			{
+				value = true,
+				duration = 0.25,
+				input = "weapon_extra_hold"
+			},
+			{
+				value = false,
+				time_window = 1.5,
+				auto_complete = false,
+				input = "weapon_extra_hold"
 			}
 		}
 	}
@@ -243,6 +245,7 @@ local RESET_CHARGE_ACTION_KINDS = {
 	unaim = true,
 	sweep = true
 }
+
 weapon_template.actions = {
 	action_unwield = {
 		allowed_during_sprint = true,
@@ -313,6 +316,7 @@ weapon_template.actions = {
 		prevent_sprint = true,
 		total_time = 3.7,
 		action_movement_curve = {
+			start_modifier = 0.8 * action_movement_curve_mark_modifier,
 			{
 				t = 0.3,
 				modifier = 0.7 * action_movement_curve_mark_modifier
@@ -320,8 +324,7 @@ weapon_template.actions = {
 			{
 				t = 1,
 				modifier = 0.55 * action_movement_curve_mark_modifier
-			},
-			start_modifier = 0.8 * action_movement_curve_mark_modifier
+			}
 		},
 		allowed_chain_actions = {
 			combat_ability = {
@@ -384,6 +387,7 @@ weapon_template.actions = {
 		dont_clear_num_shots = true,
 		total_time = 0.65,
 		action_movement_curve = {
+			start_modifier = 0.5 * action_movement_curve_mark_modifier,
 			{
 				t = 0.05,
 				modifier = 0.4 * action_movement_curve_mark_modifier
@@ -407,8 +411,7 @@ weapon_template.actions = {
 			{
 				modifier = 1,
 				t = 1.4
-			},
-			start_modifier = 0.5 * action_movement_curve_mark_modifier
+			}
 		},
 		fx = {
 			no_ammo_shoot_sfx_alias = "ranged_no_ammo",
@@ -604,6 +607,7 @@ weapon_template.actions = {
 			crosshair_type = "charge_up_ads"
 		},
 		action_movement_curve = {
+			start_modifier = 0.25 * action_movement_curve_mark_modifier,
 			{
 				t = 0.05,
 				modifier = 0.6 * action_movement_curve_mark_modifier
@@ -623,8 +627,7 @@ weapon_template.actions = {
 			{
 				t = 0.7,
 				modifier = 0.9 * action_movement_curve_mark_modifier
-			},
-			start_modifier = 0.25 * action_movement_curve_mark_modifier
+			}
 		},
 		fx = {
 			no_ammo_shoot_sfx_alias = "ranged_no_ammo",
@@ -973,6 +976,7 @@ weapon_template.actions = {
 			crosshair_type = "dot"
 		},
 		action_movement_curve = {
+			start_modifier = 1.1 * action_movement_curve_mark_modifier,
 			{
 				t = 0.1,
 				modifier = 1.3 * action_movement_curve_mark_modifier
@@ -1000,8 +1004,7 @@ weapon_template.actions = {
 			{
 				t = 1,
 				modifier = 0.75 * action_movement_curve_mark_modifier
-			},
-			start_modifier = 1.1 * action_movement_curve_mark_modifier
+			}
 		},
 		allowed_chain_actions = {
 			combat_ability = {
@@ -1073,6 +1076,7 @@ weapon_template.actions = {
 			crosshair_type = "dot"
 		},
 		action_movement_curve = {
+			start_modifier = 1.1 * action_movement_curve_mark_modifier,
 			{
 				t = 0.1,
 				modifier = 1.3 * action_movement_curve_mark_modifier
@@ -1100,8 +1104,7 @@ weapon_template.actions = {
 			{
 				t = 1,
 				modifier = 0.75 * action_movement_curve_mark_modifier
-			},
-			start_modifier = 1.1 * action_movement_curve_mark_modifier
+			}
 		},
 		allowed_chain_actions = {
 			combat_ability = {
@@ -1294,7 +1297,9 @@ weapon_template.toughness_template = "default"
 weapon_template.movement_curve_modifier_template = "lasgun_p1_m1"
 weapon_template.footstep_intervals = FootstepIntervalsTemplates.default
 weapon_template.smart_targeting_template = SmartTargetingTemplates.killshot
+
 local WeaponBarUIDescriptionTemplates = require("scripts/settings/equipment/weapon_bar_ui_description_templates")
+
 weapon_template.base_stats = {
 	lasgun_p2_m2_dps_stat = {
 		display_name = "loc_stats_display_damage_stat",
@@ -1390,6 +1395,7 @@ weapon_template.base_stats = {
 	}
 }
 weapon_template.traits = {}
+
 local bespoke_lasgun_p2_traits = table.keys(WeaponTraitsBespokeLasgunP2)
 
 table.append(weapon_template.traits, bespoke_lasgun_p2_traits)

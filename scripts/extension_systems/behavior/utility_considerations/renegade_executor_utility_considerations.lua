@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/behavior/utility_considerations/renegade_executor_utility_considerations.lua
+
 local considerations = {
 	renegade_executor_moving_melee_attack = {
 		slot_distance = {

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/mission_objective/templates/km_station_objective_template.lua
+
 local mission_objective_templates = {
 	km_station = {
 		main_objective_type = "kill_objective",

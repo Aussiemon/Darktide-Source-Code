@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/utilities/attack/player_unit_status.lua
+
 local Crouch = require("scripts/extension_systems/character_state_machine/character_states/utilities/crouch")
 local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
 local critical_health = PlayerCharacterConstants.critical_health
@@ -247,11 +249,12 @@ PlayerUnitStatus.is_in_critical_health = function (health_extension, toughness_e
 	return is_in_critical_health, critical_health_status
 end
 
-local AbilityTemplate, Action = nil
+local AbilityTemplate, Action
 
 PlayerUnitStatus.is_aiming_lunge = function (combat_ability_action_read_component)
 	AbilityTemplate = AbilityTemplate or require("scripts/utilities/ability/ability_template")
 	Action = Action or require("scripts/utilities/weapon/action")
+
 	local ability_template = AbilityTemplate.current_ability_template(combat_ability_action_read_component)
 	local _, current_action_settings = Action.current_action(combat_ability_action_read_component, ability_template)
 	local current_action_kind = current_action_settings and current_action_settings.kind

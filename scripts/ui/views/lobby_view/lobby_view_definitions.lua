@@ -1,30 +1,36 @@
+﻿-- chunkname: @scripts/ui/views/lobby_view/lobby_view_definitions.lua
+
 local LobbyViewSettings = require("scripts/ui/views/lobby_view/lobby_view_settings")
 local UIWorkspaceSettings = require("scripts/settings/ui/ui_workspace_settings")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local LobbyViewFontStyle = require("scripts/ui/views/lobby_view/lobby_view_font_style")
 local ColorUtilities = require("scripts/utilities/ui/colors")
-local item_stats_grid_settings = nil
-local padding = 12
-local width = 530
-local height = 920
-item_stats_grid_settings = {
-	scrollbar_width = 7,
-	ignore_blur = true,
-	title_height = 70,
-	grid_spacing = {
-		0,
-		0
-	},
-	grid_size = {
-		width - padding,
-		height
-	},
-	mask_size = {
-		width + 40,
-		height
-	},
-	edge_padding = padding
-}
+local item_stats_grid_settings
+
+do
+	local padding = 12
+	local width, height = 530, 920
+
+	item_stats_grid_settings = {
+		scrollbar_width = 7,
+		ignore_blur = true,
+		title_height = 70,
+		grid_spacing = {
+			0,
+			0
+		},
+		grid_size = {
+			width - padding,
+			height
+		},
+		mask_size = {
+			width + 40,
+			height
+		},
+		edge_padding = padding
+	}
+end
+
 local scenegraph_definition = {
 	screen = UIWorkspaceSettings.screen,
 	canvas = {
@@ -712,9 +718,12 @@ local panel_definition = UIWidget.create_definition({
 		},
 		change_function = function (content, style)
 			local anim_progress = math.max(content.hotspot.anim_focus_progress, content.hotspot.anim_select_progress)
+
 			style.color[1] = anim_progress * 255
+
 			local size_addition = style.size_addition
 			local size_padding = 30 - math.easeInCubic(anim_progress) * 15
+
 			size_addition[1] = size_padding
 			size_addition[2] = size_padding
 		end
@@ -771,6 +780,7 @@ local loading_definition = UIWidget.create_definition({
 		},
 		change_function = function (content, style)
 			local progress = -(Application.time_since_launch() * 0.3) % 1
+
 			style.angle = math.pi * 2 * progress
 		end
 	},
@@ -791,6 +801,7 @@ local loading_definition = UIWidget.create_definition({
 		},
 		change_function = function (content, style)
 			local progress = Application.time_since_launch() * 0.45 % 1
+
 			style.angle = math.pi * 2 * progress
 		end
 	},

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/ui/ui_renderer.lua
+
 local ScriptWorld = require("scripts/foundation/utilities/script_world")
 local UIResolution = require("scripts/managers/ui/ui_resolution")
 local UIFonts = require("scripts/managers/ui/ui_fonts")
@@ -14,6 +16,7 @@ end
 
 local SNAP_PIXEL_POSITIONS = false
 local STRING_IDENTIFIER = "string"
+
 UIRenderer.TARGET_TYPES = table.enum("WorldViewport", "LDR", "HDR", "LDRHDR")
 
 local function _snap_to_position(position, scale)
@@ -42,7 +45,9 @@ end
 UIRenderer.add_render_pass = function (ui_renderer, sort_key, name, clear, ...)
 	local render_passes = ui_renderer.render_passes
 
-	if not render_passes[name] then
+	if render_passes[name] then
+		-- Nothing
+	else
 		Gui.render_pass(ui_renderer.gui, sort_key, name, clear, ...)
 
 		render_passes[name] = true
@@ -129,7 +134,7 @@ UIRenderer.create_material = function (self, material_name, retained_mode)
 	local gui = retained_mode and self.gui_retained or self.gui
 	local render_settings = self.render_settings
 	local material_flags = _get_material_flag(render_settings, nil, self.render_pass_flag)
-	local material = nil
+	local material
 
 	if material_flags then
 		material = Gui.create_material(gui, material_name, material_flags)
@@ -158,30 +163,18 @@ UIRenderer.material = function (self, material_name, retained_mode)
 	end
 end
 
-local Color = Color
-local Vector2 = Vector2
-local Vector3 = Vector3
-local Gui2_slug_text = Gui2.slug_text
-local Gui2_update_slug_text = Gui2.update_slug_text
+local Color, Vector2, Vector3 = Color, Vector2, Vector3
+local Gui2_slug_text, Gui2_update_slug_text = Gui2.slug_text, Gui2.update_slug_text
 local Gui2_slug_text_extents = Gui2.slug_text_extents
-local Gui_slug_text_3d = Gui.slug_text_3d
-local Gui_update_slug_text_3d = Gui.update_slug_text_3d
-local Gui_slug_icon = Gui.slug_icon
-local Gui_update_slug_icon = Gui.update_slug_icon
-local Gui_slug_icon_3d = Gui.slug_icon_3d
-local Gui_update_slug_icon_3d = Gui.update_slug_icon_3d
-local Gui_slug_picture = Gui.slug_picture
-local Gui_update_slug_picture = Gui.update_slug_picture
-local Gui_triangle = Gui.triangle
-local Gui_update_triangle = Gui.update_triangle
-local Gui2_rect = Gui2.rect
-local Gui2_update_rect = Gui2.update_rect
-local Gui2_bitmap = Gui2.bitmap
-local Gui2_update_bitmap = Gui2.update_bitmap
-local Gui2_bitmap_uv = Gui2.bitmap_uv
-local Gui2_update_bitmap_uv = Gui2.update_bitmap_uv
-local Gui2_bitmap_3d = Gui2.bitmap_3d
-local Gui2_update_bitmap_3d = Gui2.update_bitmap_3d
+local Gui_slug_text_3d, Gui_update_slug_text_3d = Gui.slug_text_3d, Gui.update_slug_text_3d
+local Gui_slug_icon, Gui_update_slug_icon = Gui.slug_icon, Gui.update_slug_icon
+local Gui_slug_icon_3d, Gui_update_slug_icon_3d = Gui.slug_icon_3d, Gui.update_slug_icon_3d
+local Gui_slug_picture, Gui_update_slug_picture = Gui.slug_picture, Gui.update_slug_picture
+local Gui_triangle, Gui_update_triangle = Gui.triangle, Gui.update_triangle
+local Gui2_rect, Gui2_update_rect = Gui2.rect, Gui2.update_rect
+local Gui2_bitmap, Gui2_update_bitmap = Gui2.bitmap, Gui2.update_bitmap
+local Gui2_bitmap_uv, Gui2_update_bitmap_uv = Gui2.bitmap_uv, Gui2.update_bitmap_uv
+local Gui2_bitmap_3d, Gui2_update_bitmap_3d = Gui2.bitmap_3d, Gui2.update_bitmap_3d
 
 UIRenderer.script_draw_bitmap = function (self, material, gui_position, gui_size, color, retained_id)
 	table.clear(optional_gui_args)
@@ -193,7 +186,7 @@ UIRenderer.script_draw_bitmap = function (self, material, gui_position, gui_size
 		retained_id = nil
 	end
 
-	local snap_pixel_positions, alpha_multiplier = nil
+	local snap_pixel_positions, alpha_multiplier
 	local color_intensity_multiplier = 1
 
 	if render_settings then
@@ -217,6 +210,7 @@ UIRenderer.script_draw_bitmap = function (self, material, gui_position, gui_size
 	end
 
 	snap_pixel_positions = snap_pixel_positions and self.scale >= 1
+
 	local material_flags = type(material) == STRING_IDENTIFIER and _get_material_flag(render_settings, nil, self.render_pass_flag) or 0
 	local render_pass = self.base_render_pass
 
@@ -229,6 +223,7 @@ UIRenderer.script_draw_bitmap = function (self, material, gui_position, gui_size
 	end
 
 	optional_gui_args.snap_pixel_positions = snap_pixel_positions
+
 	local gui = retained_mode and self.gui_retained or self.gui
 
 	if retained_id then
@@ -252,7 +247,7 @@ UIRenderer.script_draw_bitmap_uv = function (self, material, gui_position, gui_s
 		retained_id = nil
 	end
 
-	local snap_pixel_positions, alpha_multiplier = nil
+	local snap_pixel_positions, alpha_multiplier
 	local color_intensity_multiplier = 1
 
 	if render_settings then
@@ -276,6 +271,7 @@ UIRenderer.script_draw_bitmap_uv = function (self, material, gui_position, gui_s
 	end
 
 	snap_pixel_positions = snap_pixel_positions and self.scale >= 1
+
 	local material_flags = type(material) == STRING_IDENTIFIER and _get_material_flag(render_settings, nil, self.render_pass_flag) or 0
 	local render_pass = self.base_render_pass
 
@@ -289,7 +285,9 @@ UIRenderer.script_draw_bitmap_uv = function (self, material, gui_position, gui_s
 
 	local uv00 = uvs[1]
 	local uv11 = uvs[2]
+
 	optional_gui_args.snap_pixel_positions = snap_pixel_positions
+
 	local gui = retained_mode and self.gui_retained or self.gui
 
 	if retained_id then
@@ -331,11 +329,12 @@ UIRenderer.script_draw_bitmap_3d = function (self, material, tm, gui_position, g
 	end
 
 	snap_pixel_positions = snap_pixel_positions and self.scale >= 1
+
 	local material_flags = type(material) == STRING_IDENTIFIER and _get_material_flag(render_settings, nil, self.render_pass_flag)
 
 	if optional_uvs then
-		local new_uvs1 = optional_uvs[1]
-		local new_uvs2 = optional_uvs[2]
+		local new_uvs1, new_uvs2 = optional_uvs[1], optional_uvs[2]
+
 		optional_gui_args.uv00 = Vector2(new_uvs1[1], new_uvs1[2])
 		optional_gui_args.uv11 = Vector2(new_uvs2[1], new_uvs2[2])
 	end
@@ -353,6 +352,7 @@ UIRenderer.script_draw_bitmap_3d = function (self, material, tm, gui_position, g
 	optional_gui_args.position_offset = gui_position
 	optional_gui_args.size = gui_size
 	optional_gui_args.snap_pixel_positions = snap_pixel_positions
+
 	local gui = retained_mode and self.gui_retained or self.gui
 
 	if retained_id then
@@ -371,7 +371,7 @@ UIRenderer.script_draw_text = function (self, text, font_size, font_type, gui_po
 		retained_id = nil
 	end
 
-	local snap_pixel_positions, alpha_multiplier, color_intensity_multiplier = nil
+	local snap_pixel_positions, alpha_multiplier, color_intensity_multiplier
 
 	if render_settings then
 		snap_pixel_positions = render_settings.snap_pixel_positions
@@ -393,6 +393,7 @@ UIRenderer.script_draw_text = function (self, text, font_size, font_type, gui_po
 	end
 
 	snap_pixel_positions = snap_pixel_positions and self.scale >= 1
+
 	local font_data = UIFonts.data_by_type(font_type)
 	local font = font_data.path
 	local flags = font_data.render_flags or 0
@@ -406,7 +407,8 @@ UIRenderer.script_draw_text = function (self, text, font_size, font_type, gui_po
 	additional_settings.color = color
 	additional_settings.render_pass = self.base_render_pass
 	additional_settings.snap_pixel_positions = snap_pixel_positions
-	local id = nil
+
+	local id
 	local gui = retained_mode and self.gui_retained or self.gui
 
 	if retained_id then
@@ -428,7 +430,9 @@ UIRenderer.script_draw_text_3d = function (self, text, font_size, font_type, tm,
 
 	local alpha_multiplier = render_settings and render_settings.alpha_multiplier or 1
 	local color_intensity_multiplier = render_settings and render_settings.color_intensity_multiplier or 1
+
 	color = color and Color(color[1] * alpha_multiplier, color[2] * color_intensity_multiplier, color[3] * color_intensity_multiplier, color[4] * color_intensity_multiplier)
+
 	local snap_pixel_positions = render_settings and render_settings.snap_pixel_positions
 
 	if snap_pixel_positions == nil then
@@ -437,6 +441,7 @@ UIRenderer.script_draw_text_3d = function (self, text, font_size, font_type, tm,
 
 	if snap_pixel_positions then
 		local scale = self.scale
+
 		gui_position = _snap_to_position(gui_position, scale)
 	end
 
@@ -463,24 +468,13 @@ UIRenderer.script_draw_text_3d = function (self, text, font_size, font_type, tm,
 
 	slug_render_params = table.append(slug_render_params, options or dummy_text_options)
 	gui_position = gui_position or Vector3.zero()
+
 	local gui = retained_mode and self.gui_retained or self.gui
 	local gui_func = retained_id and Gui_update_slug_text_3d or Gui_slug_text_3d
 
 	table.clear_array(gui_args, 20)
 
-	gui_args[13], gui_args[14], gui_args[15], gui_args[16], gui_args[17], gui_args[18], gui_args[19], gui_args[20] = unpack(slug_render_params)
-	gui_args[12] = flags
-	gui_args[11] = "flags"
-	gui_args[10] = color
-	gui_args[9] = gui_size
-	gui_args[8] = gui_layer
-	gui_args[7] = gui_position
-	gui_args[6] = tm
-	gui_args[5] = font_size
-	gui_args[4] = font
-	gui_args[3] = text
-	gui_args[2] = retained_id
-	gui_args[1] = gui
+	gui_args[1], gui_args[2], gui_args[3], gui_args[4], gui_args[5], gui_args[6], gui_args[7], gui_args[8], gui_args[9], gui_args[10], gui_args[11], gui_args[12], gui_args[13], gui_args[14], gui_args[15], gui_args[16], gui_args[17], gui_args[18], gui_args[19], gui_args[20] = gui, retained_id, text, font, font_size, tm, gui_position, gui_layer, gui_size, color, "flags", flags, unpack(slug_render_params)
 
 	table.compact_array(gui_args)
 
@@ -493,6 +487,7 @@ UIRenderer.create_video_player = function (self, reference_name, world, resource
 	local video_players = self.video_players
 	local video_world = world or self.world
 	local video_player = video_world:create_video_player(resource, set_loop)
+
 	video_players[reference_name] = video_player
 
 	if set_loop == false then
@@ -545,6 +540,7 @@ UIRenderer.end_pass = function (self)
 	self.render_settings = nil
 	self.scale = nil
 	self.inverse_scale = nil
+
 	local ui_scenegraph_queue = self.ui_scenegraph_queue
 	local num_scenegraph_queues = #ui_scenegraph_queue
 
@@ -567,6 +563,7 @@ UIRenderer.draw_slug_icon = function (self, resource, index, position, size, col
 	local scale = self.scale
 	local alpha_multiplier = render_settings and render_settings.alpha_multiplier or 1
 	local color_intensity_multiplier = render_settings and render_settings.color_intensity_multiplier or 1
+
 	color = Color(color[1] * alpha_multiplier, color[2] * color_intensity_multiplier, color[3] * color_intensity_multiplier, color[4] * color_intensity_multiplier)
 	position = UIResolution.scale_vector(position, scale)
 	size = UIResolution.scale_vector(size, scale)
@@ -609,16 +606,7 @@ UIRenderer.draw_slug_icon = function (self, resource, index, position, size, col
 
 	table.clear_array(gui_args, 20)
 
-	gui_args[10], gui_args[11], gui_args[12], gui_args[13], gui_args[14], gui_args[15], gui_args[16], gui_args[17], gui_args[18] = unpack(slug_render_params)
-	gui_args[9] = color
-	gui_args[8] = size
-	gui_args[7] = position
-	gui_args[6] = render_pass
-	gui_args[5] = self.render_pass_flag
-	gui_args[4] = index
-	gui_args[3] = resource
-	gui_args[2] = retained_id
-	gui_args[1] = gui
+	gui_args[1], gui_args[2], gui_args[3], gui_args[4], gui_args[5], gui_args[6], gui_args[7], gui_args[8], gui_args[9], gui_args[10], gui_args[11], gui_args[12], gui_args[13], gui_args[14], gui_args[15], gui_args[16], gui_args[17], gui_args[18] = gui, retained_id, resource, index, self.render_pass_flag, render_pass, position, size, color, unpack(slug_render_params)
 
 	table.compact_array(gui_args)
 
@@ -630,6 +618,7 @@ end
 UIRenderer.draw_slug_multi_icon = function (self, resource, index, position, size, color, axis, spacing, direction, draw_count, optional_material, retained_ids)
 	axis = axis or 1
 	direction = direction or 1
+
 	local render_settings = self.render_settings
 	local retained_mode = not not retained_ids
 
@@ -639,12 +628,15 @@ UIRenderer.draw_slug_multi_icon = function (self, resource, index, position, siz
 
 	local alpha_multiplier = render_settings and render_settings.alpha_multiplier or 1
 	local color_intensity_multiplier = render_settings and render_settings.color_intensity_multiplier or 1
+
 	color = color and Color(color[1] * alpha_multiplier, color[2] * color_intensity_multiplier, color[3] * color_intensity_multiplier, color[4] * color_intensity_multiplier)
+
 	local scale = self.scale
 	local gui_position = UIResolution.scale_vector(position, scale)
 	local gui_size = UIResolution.scale_vector(size, scale)
 	local start_axis_position = gui_position[axis]
 	local size_axis_length = gui_size[axis]
+
 	spacing = (spacing or 0) * table.clear(slug_render_params)
 
 	if optional_material then
@@ -671,21 +663,13 @@ UIRenderer.draw_slug_multi_icon = function (self, resource, index, position, siz
 
 	for i = 1, draw_count do
 		gui_position[axis] = start_axis_position + (size_axis_length + spacing) * (i - 1) * direction
+
 		local draw_resource = is_resource_array and resource[i] or resource
 		local retained_id = retained_ids and retained_ids[i] or nil
 
 		table.clear_array(gui_args, 20)
 
-		gui_args[10], gui_args[11], gui_args[12], gui_args[13], gui_args[14], gui_args[15], gui_args[16], gui_args[17], gui_args[18] = unpack(slug_render_params)
-		gui_args[9] = color
-		gui_args[8] = size
-		gui_args[7] = position
-		gui_args[6] = render_pass
-		gui_args[5] = self.render_pass_flag
-		gui_args[4] = index
-		gui_args[3] = draw_resource
-		gui_args[2] = retained_id
-		gui_args[1] = gui
+		gui_args[1], gui_args[2], gui_args[3], gui_args[4], gui_args[5], gui_args[6], gui_args[7], gui_args[8], gui_args[9], gui_args[10], gui_args[11], gui_args[12], gui_args[13], gui_args[14], gui_args[15], gui_args[16], gui_args[17], gui_args[18] = gui, retained_id, draw_resource, index, self.render_pass_flag, render_pass, position, size, color, unpack(slug_render_params)
 
 		table.compact_array(gui_args)
 
@@ -704,15 +688,21 @@ UIRenderer.draw_slug_icon_rotated = function (self, resource, index, size, posit
 	end
 
 	local alpha_multiplier = render_settings and render_settings.alpha_multiplier or 1
+
 	color = color and Color(color[1] * alpha_multiplier, color[2], color[3], color[4])
+
 	local scale = self.scale
+
 	size = UIResolution.scale_vector(size, scale)
+
 	local scaled_pivot = UIResolution.scale_vector(pivot, scale)
 	local tm = Rotation2D(Vector3.zero(), angle, Vector2(scaled_pivot[1], scaled_pivot[2]))
 	local translation = Matrix4x4.translation(tm)
 	local scaled_position = UIResolution.scale_vector(position, scale)
+
 	translation.x = translation.x + scaled_position.x
 	translation.z = translation.z + scaled_position.y
+
 	local snap_pixel_positions = render_settings and render_settings.snap_pixel_positions
 
 	if snap_pixel_positions == nil then
@@ -744,16 +734,7 @@ UIRenderer.draw_slug_icon_rotated = function (self, resource, index, size, posit
 
 	table.clear_array(gui_args, 20)
 
-	gui_args[10], gui_args[11], gui_args[12], gui_args[13], gui_args[14], gui_args[15], gui_args[16], gui_args[17], gui_args[18] = unpack(slug_render_params)
-	gui_args[9] = color
-	gui_args[8] = size
-	gui_args[7] = layer
-	gui_args[6] = Vector3.zero()
-	gui_args[5] = tm
-	gui_args[4] = index
-	gui_args[3] = resource
-	gui_args[2] = retained_id
-	gui_args[1] = gui
+	gui_args[1], gui_args[2], gui_args[3], gui_args[4], gui_args[5], gui_args[6], gui_args[7], gui_args[8], gui_args[9], gui_args[10], gui_args[11], gui_args[12], gui_args[13], gui_args[14], gui_args[15], gui_args[16], gui_args[17], gui_args[18] = gui, retained_id, resource, index, tm, Vector3.zero(), layer, size, color, unpack(slug_render_params)
 
 	table.compact_array(gui_args)
 
@@ -773,9 +754,11 @@ UIRenderer.draw_slug_picture = function (self, resource, position, size, color, 
 	local scale = self.scale
 	local alpha_multiplier = render_settings and render_settings.alpha_multiplier or 1
 	local color_intensity_multiplier = render_settings and render_settings.color_intensity_multiplier or 1
+
 	color = Color(color[1] * alpha_multiplier, color[2] * color_intensity_multiplier, color[3] * color_intensity_multiplier, color[4] * color_intensity_multiplier)
 	position = UIResolution.scale_vector(position, scale)
 	size = UIResolution.scale_vector(size, scale)
+
 	local snap_pixel_positions = render_settings and render_settings.snap_pixel_positions
 
 	if snap_pixel_positions == nil then
@@ -815,16 +798,7 @@ UIRenderer.draw_slug_picture = function (self, resource, position, size, color, 
 
 	table.clear_array(gui_args, 20)
 
-	gui_args[10], gui_args[11], gui_args[12], gui_args[13], gui_args[14], gui_args[15], gui_args[16], gui_args[17], gui_args[18] = unpack(slug_render_params)
-	gui_args[9] = color
-	gui_args[8] = size
-	gui_args[7] = position
-	gui_args[6] = render_pass
-	gui_args[5] = self.render_pass_flag
-	gui_args[4] = 1
-	gui_args[3] = resource
-	gui_args[2] = retained_id
-	gui_args[1] = gui
+	gui_args[1], gui_args[2], gui_args[3], gui_args[4], gui_args[5], gui_args[6], gui_args[7], gui_args[8], gui_args[9], gui_args[10], gui_args[11], gui_args[12], gui_args[13], gui_args[14], gui_args[15], gui_args[16], gui_args[17], gui_args[18] = gui, retained_id, resource, 1, self.render_pass_flag, render_pass, position, size, color, unpack(slug_render_params)
 
 	table.compact_array(gui_args)
 
@@ -837,8 +811,10 @@ UIRenderer.draw_rect = function (self, gui_position, gui_size, color, retained_i
 	table.clear(optional_gui_args)
 
 	local scale = self.scale
+
 	gui_position = Gui.scale_vector3(gui_position, scale)
 	gui_size = Gui.scale_vector3(gui_size, scale)
+
 	local render_settings = self.render_settings
 	local retained_mode = not not retained_id
 
@@ -846,7 +822,7 @@ UIRenderer.draw_rect = function (self, gui_position, gui_size, color, retained_i
 		retained_id = nil
 	end
 
-	local snap_pixel_positions, alpha_multiplier, color_intensity_multiplier = nil
+	local snap_pixel_positions, alpha_multiplier, color_intensity_multiplier
 
 	if render_settings then
 		snap_pixel_positions = render_settings.snap_pixel_positions
@@ -869,6 +845,7 @@ UIRenderer.draw_rect = function (self, gui_position, gui_size, color, retained_i
 	end
 
 	snap_pixel_positions = snap_pixel_positions and self.scale >= 1
+
 	local render_pass = self.base_render_pass
 
 	if render_pass then
@@ -880,6 +857,7 @@ UIRenderer.draw_rect = function (self, gui_position, gui_size, color, retained_i
 	end
 
 	optional_gui_args.snap_pixel_positions = snap_pixel_positions
+
 	local gui = retained_mode and self.gui_retained or self.gui
 
 	if retained_id then
@@ -909,7 +887,7 @@ UIRenderer.draw_triangle = function (self, position, size, ui_style, retained_id
 	local color = Color(style_color[1] * alpha_multiplier, style_color[2] * color_intensity_multiplier, style_color[3] * color_intensity_multiplier, style_color[4] * color_intensity_multiplier)
 	local layer = position[3]
 	local base_pos = Vector3(position[1], 0, position[2])
-	local pos1, pos2, pos3 = nil
+	local pos1, pos2, pos3
 	local corners_from_style = ui_style.triangle_corners
 
 	if corners_from_style and #corners_from_style == 3 then
@@ -949,15 +927,7 @@ UIRenderer.draw_triangle = function (self, position, size, ui_style, retained_id
 
 	table.clear_array(gui_args, 20)
 
-	gui_args[9] = color
-	gui_args[8] = layer
-	gui_args[7] = UIResolution.scale_vector(pos3, scale, nil, true)
-	gui_args[6] = UIResolution.scale_vector(pos2, scale, nil, true)
-	gui_args[5] = UIResolution.scale_vector(pos1, scale, nil, true)
-	gui_args[4] = render_pass
-	gui_args[3] = self.render_pass_flag
-	gui_args[2] = retained_id
-	gui_args[1] = gui
+	gui_args[1], gui_args[2], gui_args[3], gui_args[4], gui_args[5], gui_args[6], gui_args[7], gui_args[8], gui_args[9] = gui, retained_id, self.render_pass_flag, render_pass, UIResolution.scale_vector(pos1, scale, nil, true), UIResolution.scale_vector(pos2, scale, nil, true), UIResolution.scale_vector(pos3, scale, nil, true), layer, color
 
 	table.compact_array(gui_args)
 
@@ -968,7 +938,9 @@ end
 
 UIRenderer.draw_rect_rotated = function (self, size, position, angle, pivot, color)
 	local scale = self.scale
+
 	size = UIResolution.scale_vector(size, scale)
+
 	local scaled_pivot = UIResolution.scale_vector(pivot, scale)
 	local tm = Rotation2D(Vector3.zero(), angle, Vector2(scaled_pivot[1], scaled_pivot[2]))
 	local translation = Matrix4x4.translation(tm)
@@ -991,7 +963,9 @@ UIRenderer.draw_rect_rotated = function (self, size, position, angle, pivot, col
 
 	local alpha_multiplier = render_settings and render_settings.alpha_multiplier or 1
 	local color_intensity_multiplier = render_settings and render_settings.color_intensity_multiplier or 1
+
 	color = Color(color[1] * alpha_multiplier, color[2] * color_intensity_multiplier, color[3] * color_intensity_multiplier, color[4] * color_intensity_multiplier)
+
 	local layer = position[3]
 
 	if render_settings then
@@ -1012,6 +986,7 @@ end
 UIRenderer.draw_multi_texture = function (self, material, position, size, color, axis, spacing, direction, draw_count, retained_ids)
 	axis = axis or 1
 	direction = direction or 1
+
 	local retained_mode = not not retained_ids
 
 	if retained_ids == true then
@@ -1023,15 +998,19 @@ UIRenderer.draw_multi_texture = function (self, material, position, size, color,
 	local gui_size = UIResolution.scale_vector(size, scale)
 	local start_axis_position = gui_position[axis]
 	local size_axis_length = gui_size[axis]
+
 	spacing = (spacing or 0) * scale
+
 	local is_material_array = type(material) == "table"
 	local new_retained_ids = {}
 
 	for i = 1, draw_count do
 		gui_position[3] = position[3]
 		gui_position[axis] = start_axis_position + (size_axis_length + spacing) * (i - 1) * direction
+
 		local draw_material = is_material_array and material[i] or material
 		local retained_id = retained_ids and retained_ids[i] or nil
+
 		new_retained_ids[i] = UIRenderer.script_draw_bitmap(self, draw_material, gui_position, gui_size, color, retained_id)
 	end
 
@@ -1048,9 +1027,13 @@ end
 
 UIRenderer.draw_texture_rotated = function (self, material, size, position, angle, pivot, color, optional_uvs, retained_id)
 	local scale = self.scale
+
 	size = Gui.scale_vector3(size, scale)
+
 	local tm = Rotation2D(Vector3.zero(), angle, Vector2(UIResolution.scale_lua_vector2(pivot, scale)))
+
 	tm = Rotation2D.translate(tm, position, scale)
+
 	local layer = math.max(position[3], 1)
 
 	return UIRenderer.script_draw_bitmap_3d(self, material, tm, nil, layer, size, color, optional_uvs, retained_id)
@@ -1058,17 +1041,17 @@ end
 
 UIRenderer.draw_text = function (self, text, font_size, font_type, position, size, color, options, retained_id)
 	local scale = self.scale
+
 	position = UIResolution.scale_vector(position, scale)
 	size = size and UIResolution.scale_vector(size, scale)
+
 	local return_value = UIRenderer.script_draw_text(self, text, font_size, font_type, position, size, color, options, retained_id)
 
 	return return_value
 end
 
 UIRenderer.word_wrap = function (self, text, font_type, font_size, width)
-	local whitespace = " 。，"
-	local soft_dividers = " -+&/*"
-	local return_dividers = "\n"
+	local whitespace, soft_dividers, return_dividers = " 。，", " -+&/*", "\n"
 	local reuse_global_table = true
 	local scale = self.scale or 1
 	local font_data = UIFonts.data_by_type(font_type)
@@ -1087,8 +1070,10 @@ UIRenderer.text_height = function (self, text, font_type, font_size, optional_si
 	local font_data = UIFonts.data_by_type(font_type)
 	local font = font_data.path
 	local flags = font_data.render_flags or 0
+
 	optional_size = optional_size and Vector2(optional_size[1], optional_size[2])
-	local additional_settings = nil
+
+	local additional_settings
 
 	if not options then
 		table.clear(optional_gui_args)
@@ -1100,6 +1085,7 @@ UIRenderer.text_height = function (self, text, font_type, font_size, optional_si
 
 	additional_settings.flags = flags
 	additional_settings.optional_size = optional_size
+
 	local min, max, _ = Gui2.slug_text_max_extents(self.gui, text, font, font_size, additional_settings)
 	local min_x, min_y = Vector3.to_elements(min)
 	local max_x, max_y = Vector3.to_elements(max)
@@ -1112,8 +1098,10 @@ UIRenderer.text_size = function (self, text, font_type, font_size, optional_size
 	local font_data = UIFonts.data_by_type(font_type)
 	local font = font_data.path
 	local flags = font_data.render_flags or 0
+
 	optional_size = optional_size and Vector2(optional_size[1], optional_size[2])
-	local additional_settings = nil
+
+	local additional_settings
 
 	if not options then
 		table.clear(optional_gui_args)
@@ -1125,7 +1113,8 @@ UIRenderer.text_size = function (self, text, font_type, font_size, optional_size
 
 	additional_settings.flags = flags
 	additional_settings.optional_size = optional_size
-	local min, max, caret = use_max_extents and Gui2.slug_text_max_extents or Gui2_slug_text_extents(self.gui, text, font, font_size, additional_settings)
+
+	local min, max, caret = (use_max_extents and Gui2.slug_text_max_extents or Gui2_slug_text_extents)(self.gui, text, font, font_size, additional_settings)
 	local min_x, min_y = Vector3.to_elements(min)
 	local max_x, max_y = Vector3.to_elements(max)
 	local width = max_x - min_x
@@ -1143,8 +1132,11 @@ UIRenderer.draw_video = function (self, material_name, position, size, color, vi
 	local render_settings = self.render_settings
 	local alpha_multiplier = render_settings and render_settings.alpha_multiplier or 1
 	local color_intensity_multiplier = render_settings and render_settings.color_intensity_multiplier or 1
+
 	color = color and Color(color[1] * alpha_multiplier, color[2] * color_intensity_multiplier, color[3] * color_intensity_multiplier, color[4] * color_intensity_multiplier)
+
 	local scale = self.scale
+
 	position = UIResolution.scale_vector(position, scale)
 
 	if render_settings then
@@ -1178,6 +1170,7 @@ local CIRCLE_VERTS = 32
 
 for i = 1, CIRCLE_VERTS do
 	local a = i / CIRCLE_VERTS * math.pi * 2
+
 	circleVerts[i * 2 - 1] = math.cos(a)
 	circleVerts[i * 2] = math.sin(a)
 end
@@ -1190,7 +1183,9 @@ UIRenderer.draw_circle = function (self, position, radius, size, color)
 	local render_settings = self.render_settings
 	local alpha_multiplier = render_settings and render_settings.alpha_multiplier or 1
 	local color_intensity_multiplier = render_settings and render_settings.color_intensity_multiplier or 1
+
 	color = color and Color(color[1] * alpha_multiplier, color[2] * color_intensity_multiplier, color[3] * color_intensity_multiplier, color[4] * color_intensity_multiplier)
+
 	local layer = position[3]
 
 	if render_settings then
@@ -1198,7 +1193,9 @@ UIRenderer.draw_circle = function (self, position, radius, size, color)
 	end
 
 	local p1 = position
+
 	p1.z = p1.y
+
 	local x = p1.x
 	local y = p1.y
 	local p2 = Vector3(x + circleVerts[1] * radius, 0, y + circleVerts[2] * radius)
@@ -1219,7 +1216,7 @@ end
 UIRenderer.is_clipped = function (self, position, size)
 	local x0, y0, x1, y1 = unpack(self.current_clipping_rect)
 
-	return position.y <= y1 and y0 <= position.y + size.y and position.x <= x1 and x0 <= position.x + size.x
+	return y1 >= position.y and y0 <= position.y + size.y and x1 >= position.x and x0 <= position.x + size.x
 end
 
 UIRenderer.clip_is_enclosing = function (self, position, size)
@@ -1273,6 +1270,7 @@ UIRenderer.crop_text_width = function (self, text, font_type, font_size, max_wid
 
 		if crop_from_left then
 			local crop_prefix = crop_suffix
+
 			text = crop_prefix .. text
 			caret[1] = caret[1] + suffix_caret[1]
 		else
@@ -1301,6 +1299,7 @@ UIRenderer.scaled_font_size_by_width = function (self, text, font_type, font_siz
 		until text_width <= max_width
 
 		local num_char = Utf8.string_length(text)
+
 		text = Utf8.sub_string(text, 1, num_char) .. "..."
 	end
 
@@ -1334,6 +1333,7 @@ local function debug_render_scenegraph(ui_renderer, scenegraph, n_scenegraph)
 	local draw_text_color = Color.white(255, true)
 	local font_size = 10
 	local font_type = "arial"
+
 	ui_renderer.render_settings.material_flags = 0
 
 	for i = 1, n_scenegraph do
@@ -1345,8 +1345,8 @@ local function debug_render_scenegraph(ui_renderer, scenegraph, n_scenegraph)
 
 		if not scenegraph_object_parent and not scenegraph_object_scale or scenegraph_object_scale == "fit" then
 			local inverse_scale = ui_renderer.inverse_scale
-			local w = RESOLUTION_LOOKUP.width
-			local h = RESOLUTION_LOOKUP.height
+			local w, h = RESOLUTION_LOOKUP.width, RESOLUTION_LOOKUP.height
+
 			size[1] = w * inverse_scale
 			size[2] = h * inverse_scale
 			draw = false
@@ -1401,7 +1401,7 @@ UIRenderer.debug_pixel_distance = function (self)
 		local font_size = 14
 
 		if cursor_distance > 0 then
-			if math.abs(cursor.y - debug_startpoint[2]) < math.abs(cursor.x - debug_startpoint[1]) then
+			if math.abs(cursor.x - debug_startpoint[1]) > math.abs(cursor.y - debug_startpoint[2]) then
 				Gui.rect(self.gui, Vector3.from_array(debug_startpoint), Vector2(cursor.x - debug_startpoint[1], 20), Color(128, 255, 255, 255))
 
 				local text = string.format("%d pixels.", cursor.x - debug_startpoint[1])

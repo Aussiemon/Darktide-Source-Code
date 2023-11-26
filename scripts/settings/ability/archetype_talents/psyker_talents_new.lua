@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/ability/archetype_talents/psyker_talents_new.lua
+
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local BuffTemplates = require("scripts/settings/buff/buff_templates")
 local PlayerAbilities = require("scripts/settings/ability/player_abilities/player_abilities")
@@ -10,6 +12,7 @@ local special_rules = SpecialRulesSetting.special_rules
 local stat_buffs = BuffSettings.stat_buffs
 local proc_events = BuffSettings.proc_events
 local math_round = math.round
+
 math_round = math_round or function (value)
 	if value >= 0 then
 		return math.floor(value + 0.5)
@@ -17,6 +20,7 @@ math_round = math_round or function (value)
 		return math.ceil(value - 0.5)
 	end
 end
+
 local psyker_combat_ability_extra_charge = BuffTemplates.psyker_combat_ability_extra_charge
 local psyker_force_field_buff = BuffTemplates.psyker_force_field_buff
 local psyker_force_field = PlayerAbilities.psyker_force_field

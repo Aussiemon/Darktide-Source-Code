@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/view_elements/view_element_server_migration/view_element_server_migration.lua
+
 local definition_path = "scripts/ui/view_elements/view_element_server_migration/view_element_server_migration_definitions"
 local UIRenderer = require("scripts/managers/ui/ui_renderer")
 local UIWidget = require("scripts/managers/ui/ui_widget")
@@ -40,6 +42,7 @@ local widget_passes = {
 		},
 		init = function (widget, data)
 			local content = widget.content
+
 			content.text = data.display_name
 		end
 	},
@@ -66,6 +69,7 @@ local widget_passes = {
 		},
 		init = function (widget, data)
 			local content = widget.content
+
 			content.text = data.display_name
 		end
 	},
@@ -127,6 +131,7 @@ local widget_passes = {
 		init = function (widget, data)
 			local content = widget.content
 			local wallet_data = WalletSettings[data.currency_type]
+
 			content.currency = Localize(wallet_data.display_name)
 			content.icon = wallet_data.icon_texture_small
 			content.value = data.value
@@ -232,6 +237,7 @@ ViewElemenServerMigration._create_offscreen_renderer = function (self)
 	local viewport_layer = 1
 	local viewport = Managers.ui:create_viewport(world, viewport_name, viewport_type, viewport_layer)
 	local renderer_name = self.__class_name .. "server_migraton_renderer"
+
 	self._offscreen_renderer = Managers.ui:create_renderer(renderer_name, world)
 	self._offscreen_world = {
 		name = world_name,
@@ -249,13 +255,16 @@ ViewElemenServerMigration._create_default_gui = function (self)
 	local world_layer = 122
 	local world_name = class_name .. "_ui_default_world"
 	local view_name = self.view_name
+
 	self._world = ui_manager:create_world(world_name, world_layer, timer_name, view_name)
 	self._world_name = world_name
 	self._world_draw_layer = world_layer
 	self._world_default_layer = world_layer
+
 	local viewport_name = class_name .. "_ui_default_world_viewport"
 	local viewport_type = "overlay"
 	local viewport_layer = 1
+
 	self._viewport = ui_manager:create_viewport(self._world, viewport_name, viewport_type, viewport_layer)
 	self._viewport_name = viewport_name
 	self._ui_default_renderer = ui_manager:create_renderer(class_name .. "_ui_default_renderer", self._world)
@@ -268,18 +277,22 @@ ViewElemenServerMigration._create_background_gui = function (self)
 	local world_layer = 121
 	local world_name = class_name .. "_ui_background_world"
 	local view_name = self.view_name
+
 	self._background_world = ui_manager:create_world(world_name, world_layer, timer_name, view_name)
 	self._background_world_name = world_name
 	self._background_world_draw_layer = world_layer
 	self._background_world_default_layer = world_layer
+
 	local shading_environment = "content/shading_environments/ui/ui_popup_background"
 	local shading_callback = callback(self, "cb_shading_callback")
 	local viewport_name = class_name .. "_ui_background_world_viewport"
 	local viewport_type = "overlay"
 	local viewport_layer = 1
+
 	self._background_viewport = ui_manager:create_viewport(self._background_world, viewport_name, viewport_type, viewport_layer, shading_environment, shading_callback)
 	self._background_viewport_name = viewport_name
 	self._ui_background_renderer = ui_manager:create_renderer(class_name .. "_ui_background_renderer", self._background_world)
+
 	local max_value = 0.75
 
 	WorldRenderUtils.enable_world_fullscreen_blur(world_name, viewport_name, max_value)
@@ -314,10 +327,12 @@ end
 
 ViewElemenServerMigration.change_page_presentation = function (self, index)
 	local presentation_data = self._presentation_data
+
 	self._use_offscreen = {}
 
 	if self._grids then
 		for i = 1, #self._grids do
+			-- Nothing
 		end
 
 		self._grids = {}
@@ -337,6 +352,7 @@ ViewElemenServerMigration.change_page_presentation = function (self, index)
 	for i = 1, #presentation_data do
 		for j = 1, #presentation_data[i] do
 			local scrollbar_widget = presentation_data[i][j].scrollbar_widget
+
 			scrollbar_widget.content.visible = false
 		end
 	end
@@ -361,6 +377,7 @@ ViewElemenServerMigration.change_page_presentation = function (self, index)
 			local widget_data = grid_data.widgets[i]
 			local passes_data = widget_passes[widget_data.pass_template]
 			local size = widget_data.data and widget_data.data.size or passes_data.size
+
 			size[1] = size[1] or grid_size[1]
 			size[2] = size[2] or grid_size[2]
 
@@ -438,6 +455,7 @@ ViewElemenServerMigration.change_page_presentation = function (self, index)
 	end
 
 	self._widgets_by_name.title.content.title = presentation_data[index].display_name and Localize(presentation_data[index].display_name) or ""
+
 	local added_height = 220
 	local total_grid_height = 0
 	local total_spacing_height = 0
@@ -452,12 +470,14 @@ ViewElemenServerMigration.change_page_presentation = function (self, index)
 
 		for i = 1, #grid_placement do
 			local row = grid_placement[i]
+
 			grid_row_height[i] = 0
 			spacing_by_row[i] = 0
 
 			for k = 1, #row do
 				local id = row[k]
 				local current_spacing = grid_spacing and grid_spacing[id] and grid_spacing[id][2] or 0
+
 				grid_row_height[i] = math.max(grid_row_height[i], height_by_grid[id])
 				spacing_by_row[i] = math.max(spacing_by_row[i], current_spacing)
 			end
@@ -475,6 +495,7 @@ ViewElemenServerMigration.change_page_presentation = function (self, index)
 				local grid_data = presentation_data[index][id]
 				local grid_scenegraph_id = grid_data.grid_scenegraph_id
 				local y_position = (grid_row_height[i - 1] or 0) + start_offset
+
 				position_by_grid[id] = y_position
 			end
 		end
@@ -493,7 +514,7 @@ ViewElemenServerMigration.change_page_presentation = function (self, index)
 		local spacing_value = grid_spacing and grid_spacing[i] and grid_spacing[i][2] or 0
 
 		if grid_placement and grid_spacing then
-			local row_id = nil
+			local row_id
 
 			for j = 1, #grid_placement do
 				local row = grid_placement[j]
@@ -521,6 +542,7 @@ ViewElemenServerMigration.change_page_presentation = function (self, index)
 		end
 
 		local position = (position_by_grid[i] or 0) - total_grid_height * 0.5 + height_by_grid[i] * 0.5
+
 		position = position + spacing_value
 
 		self:_set_scenegraph_position(grid_scenegraph_id, nil, position)
@@ -528,11 +550,14 @@ ViewElemenServerMigration.change_page_presentation = function (self, index)
 
 	for i = 1, #spacing_by_row do
 		local spacing = spacing_by_row[i]
+
 		total_spacing_height = total_spacing_height + spacing
 	end
 
 	local total_height = added_height + total_grid_height + total_spacing_height
+
 	self._grid_height = total_height
+
 	local button_size = self._ui_scenegraph.button_pivot.size
 	local slider_margin = 10
 	local height_edge_margin = 20
@@ -578,6 +603,7 @@ ViewElemenServerMigration._generate_slider_widget = function (self, current_inde
 		end
 
 		local offset = (slide_selector.size[1] + slide_selector.margin) * (i - 1)
+
 		widget.offset = {
 			offset - total_offset_size * 0.5,
 			0,
@@ -614,6 +640,7 @@ ViewElemenServerMigration.present = function (self, migration_data)
 		for i = 1, #profiles do
 			local character_profile = profiles[i]
 			local character_id = character_profile.character_id
+
 			migration_by_character_id[character_id] = {
 				character_profile.name
 			}
@@ -622,8 +649,9 @@ ViewElemenServerMigration.present = function (self, migration_data)
 		for currency_type, data in pairs(WalletSettings) do
 			if currency_type ~= "aquilas" then
 				wallet_currencies[currency_type] = {
-					[1.0] = 0
+					[1] = 0
 				}
+
 				local order_id = table.find(currency_order, currency_type)
 
 				if order_id ~= nil then
@@ -693,6 +721,29 @@ ViewElemenServerMigration.present = function (self, migration_data)
 				display_name = "loc_wallet_merge_title"
 			},
 			{
+				grid_placement = {
+					{
+						1,
+						2
+					},
+					{
+						3
+					}
+				},
+				grid_spacing = {
+					{
+						0,
+						20
+					},
+					{
+						0,
+						20
+					},
+					{
+						0,
+						20
+					}
+				},
 				{
 					grid_scenegraph_id = "wallet_grid_1",
 					type = "total",
@@ -748,30 +799,7 @@ ViewElemenServerMigration.present = function (self, migration_data)
 						}
 					}
 				},
-				display_name = "loc_wallet_merge_receipt_title",
-				grid_placement = {
-					{
-						1,
-						2
-					},
-					{
-						3
-					}
-				},
-				grid_spacing = {
-					{
-						0,
-						20
-					},
-					{
-						0,
-						20
-					},
-					{
-						0,
-						20
-					}
-				}
+				display_name = "loc_wallet_merge_receipt_title"
 			}
 		}
 
@@ -796,6 +824,7 @@ ViewElemenServerMigration.present = function (self, migration_data)
 				for i = 1, #wallet_by_order do
 					local currency_type = currency_order[i]
 					local currency_data = wallet_by_order[i]
+
 					widgets[#widgets + 1] = {
 						pass_template = "currency_text",
 						data = {
@@ -822,6 +851,7 @@ ViewElemenServerMigration.present = function (self, migration_data)
 					for i = 1, #wallet_by_order do
 						local currency_type = currency_order[i]
 						local currency_data = wallet_by_order[i]
+
 						widgets[#widgets + 1] = {
 							pass_template = "currency_text",
 							data = {
@@ -884,6 +914,7 @@ ViewElemenServerMigration.draw = function (self, dt, t, ui_renderer, render_sett
 	local ui_renderer = self._ui_default_renderer
 	local ui_scenegraph = self._ui_scenegraph
 	local previous_alpha_multiplier = render_settings.alpha_multiplier
+
 	render_settings.alpha_multiplier = self._animated_alpha_multiplier or 1
 
 	ViewElemenServerMigration.super.draw(self, dt, t, ui_renderer, render_settings, input_service)
@@ -936,7 +967,7 @@ end
 
 ViewElemenServerMigration._setup_presentation = function (self)
 	local height = self._grid_height
-	local on_enter_animation_callback = nil
+	local on_enter_animation_callback
 	local additional_widgets = {
 		unpack(self._grid_widgets),
 		unpack(self._selection_widgets)
@@ -945,7 +976,9 @@ ViewElemenServerMigration._setup_presentation = function (self)
 		popup_height = height,
 		additional_widgets = additional_widgets
 	}
+
 	self._on_enter_anim_id = self:_start_animation("on_enter", self._widgets_by_name, params, on_enter_animation_callback)
+
 	local enter_popup_sound = UISoundEvents.system_popup_enter
 
 	self:_play_sound(enter_popup_sound)
@@ -967,6 +1000,7 @@ ViewElemenServerMigration._cleanup_presentation = function (self)
 		popup_height = height,
 		additional_widgets = additional_widgets
 	}
+
 	self._on_exit_anim_id = self:_start_animation("on_exit", self._widgets_by_name, params)
 
 	self:_play_sound(UISoundEvents.system_popup_exit)

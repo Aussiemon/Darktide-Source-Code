@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/buff/weapon_traits_buff_templates/weapon_traits_bespoke_forcestaff_p2_buff_templates.lua
+
 local BaseWeaponTraitBuffTemplates = require("scripts/settings/buff/weapon_traits_buff_templates/base_weapon_trait_buff_templates")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local CheckProcFunctions = require("scripts/settings/buff/validation_functions/check_proc_functions")
@@ -6,16 +8,16 @@ local ExplosionTemplates = require("scripts/settings/damage/explosion_templates"
 local keywords = BuffSettings.keywords
 local stat_buffs = BuffSettings.stat_buffs
 local proc_events = BuffSettings.proc_events
-local templates = {
-	weapon_trait_bespoke_forcestaff_p2_suppression_on_close_kill = table.clone(BaseWeaponTraitBuffTemplates.suppression_on_close_kill),
-	weapon_trait_bespoke_forcestaff_p2_hipfire_while_sprinting = table.clone(BaseWeaponTraitBuffTemplates.hipfire_while_sprinting),
-	weapon_trait_bespoke_forcestaff_p2_warp_charge_critical_strike_chance_bonus = table.merge({
-		conditional_stat_buffs = {
-			[stat_buffs.critical_strike_chance] = 0.02
-		}
-	}, BaseWeaponTraitBuffTemplates.warpcharge_stepped_bonus),
-	weapon_trait_bespoke_forcestaff_p2_uninterruptable_while_charging = table.clone(BaseWeaponTraitBuffTemplates.uninterruptable_while_charging)
-}
+local templates = {}
+
+templates.weapon_trait_bespoke_forcestaff_p2_suppression_on_close_kill = table.clone(BaseWeaponTraitBuffTemplates.suppression_on_close_kill)
+templates.weapon_trait_bespoke_forcestaff_p2_hipfire_while_sprinting = table.clone(BaseWeaponTraitBuffTemplates.hipfire_while_sprinting)
+templates.weapon_trait_bespoke_forcestaff_p2_warp_charge_critical_strike_chance_bonus = table.merge({
+	conditional_stat_buffs = {
+		[stat_buffs.critical_strike_chance] = 0.02
+	}
+}, BaseWeaponTraitBuffTemplates.warpcharge_stepped_bonus)
+templates.weapon_trait_bespoke_forcestaff_p2_uninterruptable_while_charging = table.clone(BaseWeaponTraitBuffTemplates.uninterruptable_while_charging)
 templates.weapon_trait_bespoke_forcestaff_p2_uninterruptable_while_charging.uninteruptable_actions = {
 	action_charge_flame = true
 }
@@ -73,6 +75,7 @@ templates.weapon_trait_bespoke_forcestaff_p2_bonus_melee_damage_on_burninating =
 		local target_buff_data = template.target_buff_data
 		local template_override_data = template_context.template_override_data
 		local override_target_buff_data = template_override_data.target_buff_data
+
 		template_data.internal_buff_name = override_target_buff_data and override_target_buff_data.internal_buff_name or target_buff_data.internal_buff_name
 		template_data.num_stacks_on_proc = override_target_buff_data and override_target_buff_data.num_stacks_on_proc or target_buff_data.num_stacks_on_proc
 		template_data.max_stacks = override_target_buff_data and override_target_buff_data.max_stacks or target_buff_data.max_stacks

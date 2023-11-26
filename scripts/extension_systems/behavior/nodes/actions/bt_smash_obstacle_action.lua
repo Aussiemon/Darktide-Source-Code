@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/behavior/nodes/actions/bt_smash_obstacle_action.lua
+
 require("scripts/extension_systems/behavior/nodes/bt_node")
 
 local Animation = require("scripts/utilities/animation")
@@ -11,6 +13,7 @@ BtSmashObstacleAction.enter = function (self, unit, breed, blackboard, scratchpa
 	if navigation_extension:use_smart_object(true) then
 		local nav_smart_object_component = blackboard.nav_smart_object
 		local target_unit = nav_smart_object_component.unit
+
 		scratchpad.navigation_extension = navigation_extension
 		scratchpad.locomotion_extension = ScriptUnit.extension(unit, "locomotion_system")
 		scratchpad.target_unit = target_unit
@@ -37,9 +40,13 @@ BtSmashObstacleAction._start_rotate_towards_exit = function (self, unit, scratch
 	local exit_position = scratchpad.exit_position:unbox()
 	local look_direction_wanted = Vector3.normalize(Vector3.flat(exit_position - entrance_position))
 	local wanted_rotation = Quaternion.look(look_direction_wanted)
+
 	scratchpad.wanted_rotation = QuaternionBox(wanted_rotation)
+
 	local current_rotation_speed = locomotion_extension:rotation_speed()
+
 	scratchpad.original_rotation_speed = current_rotation_speed
+
 	local rotation = Unit.local_rotation(unit, 1)
 	local look_direction = Quaternion.forward(rotation)
 	local radians = Vector3.angle(look_direction, look_direction_wanted)
@@ -64,7 +71,9 @@ BtSmashObstacleAction._start_attack_anim = function (self, unit, blackboard, scr
 
 	scratchpad.attack_hit_time = t + attack_damage_timing
 	scratchpad.attack_done_time = t + attack_duration
+
 	local behavior_component = Blackboard.write_component(blackboard, "behavior")
+
 	behavior_component.move_state = "attacking"
 end
 
@@ -119,6 +128,7 @@ BtSmashObstacleAction.run = function (self, unit, breed, blackboard, scratchpad,
 
 	if attack_hit_time and attack_hit_time <= t then
 		scratchpad.attack_hit_time = nil
+
 		local target_unit = scratchpad.target_unit
 
 		self:_hit_target(unit, breed, target_unit, action_data)

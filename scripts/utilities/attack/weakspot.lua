@@ -1,6 +1,8 @@
+﻿-- chunkname: @scripts/utilities/attack/weakspot.lua
+
 local WeakspotSettings = require("scripts/settings/damage/weakspot_settings")
 local Weakspot = {}
-local _weakspot_type = nil
+local _weakspot_type
 
 Weakspot.hit_weakspot = function (breed_or_nil, hit_zone_name)
 	local weakspot_type = _weakspot_type(breed_or_nil, hit_zone_name)

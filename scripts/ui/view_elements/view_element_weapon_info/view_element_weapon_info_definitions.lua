@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/view_elements/view_element_weapon_info/view_element_weapon_info_definitions.lua
+
 local ScrollbarPassTemplates = require("scripts/ui/pass_templates/scrollbar_pass_templates")
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
@@ -103,6 +105,7 @@ local widget_definitions = {
 	}, "screen")
 }
 local header_style = table.clone(UIFontSettings.header_2)
+
 header_style.font_size = 18
 header_style.size = {
 	600,
@@ -111,7 +114,9 @@ header_style.size = {
 header_style.text_horizontal_alignment = "left"
 header_style.text_vertical_alignment = "top"
 header_style.text_color = Color.terminal_text_body(255, true)
+
 local description_style = table.clone(UIFontSettings.body)
+
 description_style.font_size = 18
 description_style.size = {
 	600,
@@ -120,7 +125,9 @@ description_style.size = {
 description_style.text_horizontal_alignment = "left"
 description_style.text_vertical_alignment = "bottom"
 description_style.text_color = Color.terminal_text_body_dark(255, true)
+
 local bar_breakdown_entry_style = table.clone(UIFontSettings.body)
+
 bar_breakdown_entry_style.offset = {
 	0,
 	0,
@@ -134,6 +141,7 @@ bar_breakdown_entry_style.font_size = 16
 bar_breakdown_entry_style.text_horizontal_alignment = "left"
 bar_breakdown_entry_style.text_vertical_alignment = "top"
 bar_breakdown_entry_style.text_color = Color.terminal_text_body(255, true)
+
 local bar_breakdown_widgets_definitions = {
 	bar_breakdown_slate = UIWidget.create_definition({
 		{

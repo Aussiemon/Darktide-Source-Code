@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/presence/presence_entry_immaterium.lua
+
 local PresenceEntryInterface = require("scripts/managers/presence/presence_entry")
 local PresenceSettings = require("scripts/settings/presence/presence_settings")
 local Promise = require("scripts/foundation/utilities/promise")
@@ -6,6 +8,7 @@ local PresenceEntryImmaterium = class("PresenceEntryImmaterium")
 
 PresenceEntryImmaterium.init = function (self, my_own_platform, platform, platform_user_id)
 	self._my_own_platform = my_own_platform
+
 	local immaterium_entry = {
 		account_name = "",
 		platform = "",
@@ -97,7 +100,7 @@ PresenceEntryImmaterium.start_stream = function (self)
 end
 
 PresenceEntryImmaterium.update_with = function (self, new_entry)
-	if not self._immaterium_entry or self._immaterium_entry.last_update < new_entry.last_update then
+	if not self._immaterium_entry or new_entry.last_update > self._immaterium_entry.last_update then
 		self._immaterium_entry = self:_process_platform_id_convert(new_entry)
 		self._immaterium_entry = self:_process_character_profile_convert(new_entry)
 
@@ -225,6 +228,7 @@ end
 
 PresenceEntryImmaterium.reset_alive_queried = function (self)
 	local alive_queried = self._alive_queried
+
 	self._alive_queried = false
 
 	return alive_queried

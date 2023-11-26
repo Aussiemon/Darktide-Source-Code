@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/impact_fx/impact_fx_minion_direct_flamer.lua
+
 local ArmorSettings = require("scripts/settings/damage/armor_settings")
 local NO_SURFACE_DECAL = false
 local armor_types = ArmorSettings.types
@@ -20,11 +22,13 @@ local unarmored = {
 local armored = table.clone(unarmored)
 local super_armor = table.clone(unarmored)
 local disgustingly_resilient = table.clone(unarmored)
+
 disgustingly_resilient.blood_ball = {
 	weakspot_died = disgusting_blood_ball,
 	died = disgusting_blood_ball,
 	dead = disgusting_blood_ball
 }
+
 local resistant = table.clone(unarmored)
 local berserker = table.clone(unarmored)
 local player = {

@@ -1,10 +1,12 @@
+﻿-- chunkname: @scripts/managers/presence/presence_entry_myself.lua
+
 local PresenceEntryInterface = require("scripts/managers/presence/presence_entry")
 local PresenceSettings = require("scripts/settings/presence/presence_settings")
 local Promise = require("scripts/foundation/utilities/promise")
 local PresenceEntryMyself = class("PresenceEntryMyself")
 
 PresenceEntryMyself.get_platform = function ()
-	local platform = nil
+	local platform
 	local authenticate_method = Managers.backend:get_auth_method()
 
 	if authenticate_method == Managers.backend.AUTH_METHOD_STEAM and HAS_STEAM then
@@ -24,6 +26,7 @@ end
 
 PresenceEntryMyself.init = function (self)
 	local platform = self.get_platform()
+
 	self._platform = platform
 	self._profile_version_counter = 1
 
@@ -88,6 +91,7 @@ end
 
 PresenceEntryMyself.set_character_profile = function (self, character_profile)
 	local profile_version_counter = self._profile_version_counter + 1
+
 	self._profile_version_counter = profile_version_counter
 	character_profile.hash = profile_version_counter
 	self._character_profile = character_profile

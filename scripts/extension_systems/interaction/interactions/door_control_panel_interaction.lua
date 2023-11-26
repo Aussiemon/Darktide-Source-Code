@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/interaction/interactions/door_control_panel_interaction.lua
+
 require("scripts/extension_systems/interaction/interactions/base_interaction")
 
 local DoorControlPanelInteraction = class("DoorControlPanelInteraction", "BaseInteraction")

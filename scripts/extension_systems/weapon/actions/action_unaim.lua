@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/weapon/actions/action_unaim.lua
+
 require("scripts/extension_systems/weapon/actions/action_weapon_base")
 
 local AimAssist = require("scripts/utilities/aim_assist")
@@ -8,6 +10,7 @@ ActionUnaim.init = function (self, action_context, action_params, action_setting
 	ActionUnaim.super.init(self, action_context, action_params, action_settings)
 
 	local unit_data_extension = action_context.unit_data_extension
+
 	self._spread_control_component = unit_data_extension:write_component("spread_control")
 	self._sway_control_component = unit_data_extension:write_component("sway_control")
 	self._aim_assist_ramp_component = unit_data_extension:write_component("aim_assist_ramp")

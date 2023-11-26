@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/multiplayer/session/remote_states/remote_leave_session_state.lua
+
 local RemoteLeaveSessionState = class("RemoteLeaveSessionState")
 
 RemoteLeaveSessionState.init = function (self, state_machine, shared_state)
@@ -7,6 +9,7 @@ end
 RemoteLeaveSessionState.enter = function (self, reason)
 	local shared_state = self._shared_state
 	local channel_id = shared_state.channel_id
+
 	reason.peer_id = shared_state.peer_id
 	reason.channel_id = channel_id
 

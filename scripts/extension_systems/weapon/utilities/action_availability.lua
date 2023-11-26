@@ -1,13 +1,16 @@
+﻿-- chunkname: @scripts/extension_systems/weapon/utilities/action_availability.lua
+
 local ActionHandlerSettings = require("scripts/settings/action/action_handler_settings")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local group_keywords = BuffSettings.group_keywords
 local group_to_keywords = BuffSettings.group_to_keywords
 local ActionAvailability = {}
-local _buff_keyword_allows_action_during_sprint = nil
+local _buff_keyword_allows_action_during_sprint
 local disallowed_action_kinds_during_lunge = {}
 
 for i = 1, #ActionHandlerSettings.disallowed_action_kinds_during_lunge do
 	local action_kind = ActionHandlerSettings.disallowed_action_kinds_during_lunge[i]
+
 	disallowed_action_kinds_during_lunge[action_kind] = true
 end
 
@@ -29,6 +32,7 @@ local allowed_action_kinds_during_sprint = {}
 
 for ii = 1, #ActionHandlerSettings.allowed_action_kinds_during_sprint do
 	local action_kind = ActionHandlerSettings.allowed_action_kinds_during_sprint[ii]
+
 	allowed_action_kinds_during_sprint[action_kind] = true
 end
 
@@ -95,6 +99,7 @@ local combo_increase_actions = {}
 
 for ii = 1, #ActionHandlerSettings.combo_increase do
 	local action_kind = ActionHandlerSettings.combo_increase[ii]
+
 	combo_increase_actions[action_kind] = true
 end
 
@@ -110,6 +115,7 @@ local combo_hold_actions = {}
 
 for ii = 1, #ActionHandlerSettings.combo_hold do
 	local action_kind = ActionHandlerSettings.combo_hold[ii]
+
 	combo_hold_actions[action_kind] = true
 end
 

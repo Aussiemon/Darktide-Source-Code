@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/breed/breeds/chaos/chaos_spawn_sounds.lua
+
 local sound_data = {
 	events = {
 		vce_4_attack_combo = "wwise/events/minions/play_chaos_spawn_vce_4_attack_combo",

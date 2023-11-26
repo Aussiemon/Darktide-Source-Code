@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/achievements/achievement_categories.lua
+
 local AchievementCategoriesInterface = {
 	"name",
 	"display_name",

@@ -1,8 +1,12 @@
+﻿-- chunkname: @scripts/ui/hud/elements/tactical_overlay/hud_element_tactical_overlay_settings.lua
+
 local hud_element_tactical_overlay_settings = {}
-local styles = {
-	difficulty = {}
-}
+local styles = {}
+
+styles.difficulty = {}
+
 local difficulty = styles.difficulty
+
 difficulty.difficulty_icon = {
 	vertical_alignment = "top",
 	spacing = 8,
@@ -25,11 +29,15 @@ difficulty.difficulty_icon = {
 	}
 }
 difficulty.diffulty_icon_background = table.clone(difficulty.difficulty_icon)
+
 local stat_diffulty_icon_background_style = difficulty.diffulty_icon_background
+
 stat_diffulty_icon_background_style.color = Color.terminal_background(255, true)
 stat_diffulty_icon_background_style.amount = 5
 difficulty.diffulty_icon_background_frame = table.clone(difficulty.difficulty_icon)
+
 local diffulty_icon_background_frame_style = difficulty.diffulty_icon_background_frame
+
 diffulty_icon_background_frame_style.color = {
 	255,
 	169,

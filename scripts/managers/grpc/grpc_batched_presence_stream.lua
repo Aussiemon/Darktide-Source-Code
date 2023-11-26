@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/grpc/grpc_batched_presence_stream.lua
+
 local GRPCBatchedPresenceStream = class("GRPCBatchedPresenceStream")
 
 local function _info(...)

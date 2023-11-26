@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/health/health_extension_interface.lua
+
 local HealthExtensionInterface = {
 	"pre_update",
 	"add_damage",

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/equipment/weapon_templates/grenades/psyker_smite.lua
+
 local BaseTemplateSettings = require("scripts/settings/equipment/weapon_templates/base_template_settings")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
@@ -6,138 +8,138 @@ local PlayerCharacterConstants = require("scripts/settings/player_character/play
 local SmartTargetingTemplates = require("scripts/settings/equipment/smart_targeting_templates")
 local damage_types = DamageSettings.damage_types
 local wield_inputs = PlayerCharacterConstants.wield_inputs
-local weapon_template = {
-	action_inputs = {
-		charge_power = {
-			buffer_time = 0.31,
-			max_queue = 1,
-			input_sequence = {
-				{
-					value = true,
-					input = "action_two_hold"
-				}
+local weapon_template = {}
+
+weapon_template.action_inputs = {
+	charge_power = {
+		buffer_time = 0.31,
+		max_queue = 1,
+		input_sequence = {
+			{
+				value = true,
+				input = "action_two_hold"
 			}
-		},
-		charge_power_release = {
-			buffer_time = 0.31,
-			max_queue = 1,
-			input_sequence = {
-				{
-					value = false,
-					input = "action_two_hold",
-					time_window = math.huge
-				}
+		}
+	},
+	charge_power_release = {
+		buffer_time = 0.31,
+		max_queue = 1,
+		input_sequence = {
+			{
+				value = false,
+				input = "action_two_hold",
+				time_window = math.huge
 			}
-		},
-		charge_power_sticky = {
-			buffer_time = 0.31,
-			max_queue = 1,
-			input_sequence = {
-				{
-					value = true,
-					input = "action_one_hold"
-				}
+		}
+	},
+	charge_power_sticky = {
+		buffer_time = 0.31,
+		max_queue = 1,
+		input_sequence = {
+			{
+				value = true,
+				input = "action_one_hold"
 			}
-		},
-		charge_power_lock_on = {
-			buffer_time = 0.1,
-			input_sequence = {
-				{
-					value = true,
-					input = "action_one_hold"
-				}
+		}
+	},
+	charge_power_lock_on = {
+		buffer_time = 0.1,
+		input_sequence = {
+			{
+				value = true,
+				input = "action_one_hold"
 			}
-		},
-		charge_power_sticky_release = {
-			buffer_time = 0.31,
-			max_queue = 1,
-			input_sequence = {
-				{
-					value = false,
-					input = "action_one_hold",
-					time_window = math.huge
-				}
+		}
+	},
+	charge_power_sticky_release = {
+		buffer_time = 0.31,
+		max_queue = 1,
+		input_sequence = {
+			{
+				value = false,
+				input = "action_one_hold",
+				time_window = math.huge
 			}
-		},
-		use_power = {
-			buffer_time = 0.7,
-			input_sequence = {
-				{
-					value = true,
-					input = "none"
-				}
+		}
+	},
+	use_power = {
+		buffer_time = 0.7,
+		input_sequence = {
+			{
+				value = true,
+				input = "none"
 			}
-		},
-		combat_ability = {
-			buffer_time = 0,
-			clear_input_queue = true,
-			input_sequence = {
-				{
-					value = true,
-					input = "combat_ability_pressed"
-				}
+		}
+	},
+	combat_ability = {
+		buffer_time = 0,
+		clear_input_queue = true,
+		input_sequence = {
+			{
+				value = true,
+				input = "combat_ability_pressed"
 			}
-		},
-		charge = {
-			buffer_time = 0,
-			input_sequence = {
-				{
-					value = true,
-					input = "action_two_hold"
-				}
+		}
+	},
+	charge = {
+		buffer_time = 0,
+		input_sequence = {
+			{
+				value = true,
+				input = "action_two_hold"
 			}
-		},
-		wield = {
-			buffer_time = 0.5,
-			clear_input_queue = true,
-			input_sequence = {
-				{
-					inputs = wield_inputs
-				}
+		}
+	},
+	wield = {
+		buffer_time = 0.5,
+		clear_input_queue = true,
+		input_sequence = {
+			{
+				inputs = wield_inputs
 			}
-		},
-		vent = {
-			buffer_time = 0,
-			clear_input_queue = true,
-			input_sequence = {
-				{
-					value = true,
-					input = "weapon_reload_hold"
-				}
+		}
+	},
+	vent = {
+		buffer_time = 0,
+		clear_input_queue = true,
+		input_sequence = {
+			{
+				value = true,
+				input = "weapon_reload_hold"
 			}
-		},
-		vent_release = {
-			buffer_time = 0.1,
-			input_sequence = {
-				{
-					value = false,
-					input = "weapon_reload_hold",
-					time_window = math.huge
-				}
+		}
+	},
+	vent_release = {
+		buffer_time = 0.1,
+		input_sequence = {
+			{
+				value = false,
+				input = "weapon_reload_hold",
+				time_window = math.huge
 			}
-		},
-		inspect_start = {
-			buffer_time = 0,
-			input_sequence = {
-				{
-					value = true,
-					input = "weapon_inspect_hold"
-				},
-				{
-					value = true,
-					duration = 0.2,
-					input = "weapon_inspect_hold"
-				}
+		}
+	},
+	inspect_start = {
+		buffer_time = 0,
+		input_sequence = {
+			{
+				value = true,
+				input = "weapon_inspect_hold"
+			},
+			{
+				value = true,
+				duration = 0.2,
+				input = "weapon_inspect_hold"
 			}
-		},
-		inspect_stop = {
-			buffer_time = 0.02,
-			input_sequence = {
-				{
-					value = false,
-					input = "weapon_inspect_hold",
-					time_window = math.huge
-				}
+		}
+	},
+	inspect_stop = {
+		buffer_time = 0.02,
+		input_sequence = {
+			{
+				value = false,
+				input = "weapon_inspect_hold",
+				time_window = math.huge
 			}
 		}
 	}

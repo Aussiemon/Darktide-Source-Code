@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/extension_system_configuration.lua
+
 local function _system_require(dir, ...)
 	local path = "scripts/extension_systems/" .. dir
 

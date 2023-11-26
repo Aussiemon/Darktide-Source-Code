@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/cinematic_scene/templates/cutscene_5.lua
+
 local cinematic_scene_templates = {
 	cutscene_5 = {
 		is_skippable = true,

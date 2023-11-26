@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/hud/elements/mission_objective_feed/hud_element_mission_objective_feed_definitions.lua
+
 local HudElementMissionObjectiveFeedSettings = require("scripts/ui/hud/elements/mission_objective_feed/hud_element_mission_objective_feed_settings")
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local UIHudSettings = require("scripts/settings/ui/ui_hud_settings")

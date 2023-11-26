@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/first_person/character_state_orientation/forced_player_orientation.lua
+
 require("scripts/extension_systems/first_person/character_state_orientation/base_player_orientation")
 
 local Fov = require("scripts/utilities/camera/fov")
@@ -10,6 +12,7 @@ ForcedPlayerOrientation.init = function (self, player, orientation)
 	ForcedPlayerOrientation.super.init(self, player, orientation)
 
 	local settings = PlayerOrientationSettings.default
+
 	self._mouse_scale = settings.mouse_scale
 	self._min_pitch = settings.min_pitch
 	self._max_pitch = settings.max_pitch
@@ -43,6 +46,7 @@ ForcedPlayerOrientation.pre_update = function (self, main_t, main_dt, input, sen
 	local yaw_offset, pitch_offset = ForceLookRotation.yaw_pitch_offset(force_look_rotation_component)
 	local yaw = (self._orientation.yaw - look_delta.x + yaw_offset) % PI_2
 	local pitch = math.clamp((self._orientation.pitch + PI) % PI_2 - PI + look_delta.y + pitch_offset, min_pitch, max_pitch) % PI_2
+
 	self._orientation.yaw = math.mod_two_pi(yaw)
 	self._orientation.pitch = math.mod_two_pi(pitch)
 	self._orientation.roll = 0

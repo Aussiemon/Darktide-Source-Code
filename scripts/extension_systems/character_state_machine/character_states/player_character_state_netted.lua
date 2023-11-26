@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/character_state_machine/character_states/player_character_state_netted.lua
+
 require("scripts/extension_systems/character_state_machine/character_states/player_character_state_base")
 
 local Assist = require("scripts/extension_systems/character_state_machine/character_states/utilities/assist")
@@ -33,8 +35,11 @@ PlayerCharacterStateNetted.init = function (self, character_state_init_context, 
 
 	local unit_data_extension = character_state_init_context.unit_data
 	local looping_sound_component_name = PlayerUnitData.looping_sound_component_name(LOOPING_SOUND_ALIAS)
+
 	self._looping_sound_component = unit_data_extension:read_component(looping_sound_component_name)
+
 	local disabled_character_state_component = unit_data_extension:write_component("disabled_character_state")
+
 	disabled_character_state_component.is_disabled = false
 	disabled_character_state_component.disabling_unit = nil
 	disabled_character_state_component.disabling_type = "none"
@@ -52,6 +57,7 @@ PlayerCharacterStateNetted.extensions_ready = function (self, world, unit)
 	local is_server = self._is_server
 	local game_session_or_nil = self._game_session
 	local game_object_id_or_nil = self._game_object_id
+
 	self._assist = Assist:new(assist_anims, is_server, unit, game_session_or_nil, game_object_id_or_nil, "saved")
 end
 
@@ -63,7 +69,9 @@ end
 PlayerCharacterStateNetted.on_enter = function (self, unit, dt, t, previous_state, params)
 	local disabling_unit = self._disabled_state_input.disabling_unit
 	local disabling_unit_data_extension = ScriptUnit.extension(disabling_unit, "unit_data_system")
+
 	self._disabling_breed = disabling_unit_data_extension:breed()
+
 	local locomotion_component = self._locomotion_component
 	local locomotion_force_rotation_component = self._locomotion_force_rotation_component
 	local locomotion_steering_component = self._locomotion_steering_component
@@ -85,6 +93,7 @@ PlayerCharacterStateNetted.on_enter = function (self, unit, dt, t, previous_stat
 	if is_server then
 		local navigation_extension = ScriptUnit.extension(unit, "navigation_system")
 		local drag_position = Netted.calculate_drag_position(locomotion_component, navigation_extension, disabling_unit, self._nav_world)
+
 		disabled_character_state_component.target_drag_position = drag_position
 	end
 
@@ -92,6 +101,7 @@ PlayerCharacterStateNetted.on_enter = function (self, unit, dt, t, previous_stat
 	disabled_character_state_component.disabling_type = "netted"
 	disabled_character_state_component.disabling_unit = disabling_unit
 	locomotion_steering_component.disable_minion_collision = true
+
 	local disabling_unit_rotation = Unit.world_rotation(disabling_unit, 1)
 	local force_rotation = Quaternion.look(-Quaternion.forward(disabling_unit_rotation))
 	local start_rotation = force_rotation
@@ -128,6 +138,7 @@ PlayerCharacterStateNetted.on_exit = function (self, unit, t, next_state)
 	end
 
 	disabled_character_state_component.has_reached_drag_position = false
+
 	local locomotion_force_rotation_component = self._locomotion_force_rotation_component
 
 	if locomotion_force_rotation_component.use_force_rotation then
@@ -162,7 +173,9 @@ PlayerCharacterStateNetted.on_exit = function (self, unit, t, next_state)
 	end
 
 	local locomotion_steering_component = self._locomotion_steering_component
+
 	locomotion_steering_component.disable_minion_collision = false
+
 	local rewind_ms = LagCompensation.rewind_ms(is_server, self._is_local_unit, self._player)
 
 	FirstPersonView.enter(t, self._first_person_mode_component, rewind_ms)
@@ -201,7 +214,7 @@ PlayerCharacterStateNetted._update_netted = function (self, unit, dt, t)
 	local character_state_component = self._character_state_component
 	local fp_anim_t = character_state_component.entered_t + constants.netted_fp_anim_duration
 
-	if t > fp_anim_t then
+	if fp_anim_t < t then
 		local is_in_fp = self._first_person_mode_component.wants_1p_camera
 
 		if is_in_fp then
@@ -273,6 +286,7 @@ PlayerCharacterStateNetted._update_drag = function (self, unit, dt, t, target_dr
 		local wanted_speed = drag_speed * slowdown_factor
 		local direction = Vector3.normalize(target_drag_position - current_position)
 		local wanted_velocity = direction * wanted_speed
+
 		self._locomotion_steering_component.velocity_wanted = wanted_velocity
 	end
 end
@@ -288,7 +302,7 @@ PlayerCharacterStateNetted._is_stuck = function (self, current_position)
 
 	if distance < min_drag_distance then
 		frames_with_no_movement = frames_with_no_movement + 1
-		is_stuck = MAX_FRAMES_STUCK <= frames_with_no_movement
+		is_stuck = frames_with_no_movement >= MAX_FRAMES_STUCK
 	else
 		frames_with_no_movement = 0
 
@@ -304,9 +318,12 @@ PlayerCharacterStateNetted._on_drag_completed = function (self, t)
 	FirstPersonView.exit(t, self._first_person_mode_component)
 
 	local locomotion_steering_component = self._locomotion_steering_component
+
 	locomotion_steering_component.velocity_wanted = Vector3.zero()
 	locomotion_steering_component.calculate_fall_velocity = true
+
 	local disabled_character_state_component = self._disabled_character_state_component
+
 	disabled_character_state_component.has_reached_drag_position = true
 	self._frames_with_no_movement = 0
 	self._previous_position = nil
@@ -318,6 +335,7 @@ PlayerCharacterStateNetted._add_buffs = function (self, t)
 
 	if not self._damage_tick_buff_indexes then
 		local _, local_index, component_index = buff_extension:add_externally_controlled_buff(constants.netted_damage_tick_buff, t)
+
 		self._damage_tick_buff_indexes = {
 			local_index = local_index,
 			component_index = component_index

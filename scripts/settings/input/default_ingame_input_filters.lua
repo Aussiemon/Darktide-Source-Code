@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/input/default_ingame_input_filters.lua
+
 local default_ingame_input_filters = {
 	move_keys = {
 		filter_type = "virtual_axis",

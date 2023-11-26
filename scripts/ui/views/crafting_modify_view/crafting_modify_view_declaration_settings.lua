@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/crafting_modify_view/crafting_modify_view_declaration_settings.lua
+
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local view_settings = {
 	state_bound = true,

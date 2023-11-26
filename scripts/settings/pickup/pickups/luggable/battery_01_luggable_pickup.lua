@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/pickup/pickups/luggable/battery_01_luggable_pickup.lua
+
 local ProjectileTemplates = require("scripts/settings/projectile/projectile_templates")
 local pickup_data = {
 	description = "loc_pickup_luggable_battery_01",

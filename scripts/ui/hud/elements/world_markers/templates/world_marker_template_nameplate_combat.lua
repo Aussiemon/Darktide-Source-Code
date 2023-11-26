@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/hud/elements/world_markers/templates/world_marker_template_nameplate_combat.lua
+
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local UISettings = require("scripts/settings/ui/ui_settings")
@@ -14,6 +16,7 @@ local icon_size = {
 	128,
 	128
 }
+
 template.size = size
 template.name = "nameplate_party"
 template.unit_node = "player_name"
@@ -130,6 +133,7 @@ template.on_enter = function (widget, marker)
 	local player_slot = data:slot()
 	local player_slot_color = UISettings.player_slot_colors[player_slot] or Color.ui_hud_green_light(255, true)
 	local color_string = "{#color(" .. player_slot_color[2] .. "," .. player_slot_color[3] .. "," .. player_slot_color[4] .. ")}"
+
 	content.header_text = color_string .. "{#reset()} " .. data:name()
 	content.icon_text = color_string .. "{#reset()}"
 end
@@ -168,11 +172,14 @@ template.update_function = function (parent, ui_renderer, widget, marker, templa
 		local header_text_id = "header_text"
 		local header_style = style[header_text_id]
 		local header_default_font_size = header_style.default_font_size
+
 		header_style.font_size = header_style.default_font_size * scale
 		content.line_of_sight_progress = line_of_sight_progress
 		widget.alpha_multiplier = 1
 		content.edge_clamp_progress = edge_clamp_progress
+
 		local clamped_alpha = 255 - 255 * edge_clamp_progress
+
 		style.icon_text.text_color[1] = distance > 15 and clamped_alpha or 0
 		style.arrow.color[1] = distance > 15 and clamped_alpha or 0
 	end

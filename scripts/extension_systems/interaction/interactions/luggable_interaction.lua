@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/interaction/interactions/luggable_interaction.lua
+
 require("scripts/extension_systems/interaction/interactions/base_interaction")
 
 local Luggable = require("scripts/utilities/luggable")

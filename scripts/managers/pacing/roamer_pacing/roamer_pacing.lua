@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/pacing/roamer_pacing/roamer_pacing.lua
+
 local Breeds = require("scripts/settings/breed/breeds")
 local LoadedDice = require("scripts/utilities/loaded_dice")
 local MainPathQueries = require("scripts/utilities/main_path_queries")
@@ -15,6 +17,7 @@ RoamerPacing.init = function (self, nav_world, level_path, seed, pacing_control)
 	self._nav_world = nav_world
 	self._original_seed = seed
 	self._seed = seed
+
 	local roamer_pack_probabilities = {}
 
 	for name, packs in pairs(RoamerPacks) do
@@ -22,10 +25,12 @@ RoamerPacing.init = function (self, nav_world, level_path, seed, pacing_control)
 
 		for i = 1, #packs do
 			local pack = packs[i]
+
 			probabilities[i] = pack.weight
 		end
 
 		local prob, alias = LoadedDice.create(probabilities, false)
+
 		roamer_pack_probabilities[name] = {
 			prob = prob,
 			alias = alias
@@ -39,6 +44,7 @@ RoamerPacing.init = function (self, nav_world, level_path, seed, pacing_control)
 	if not self._override_faction then
 		local faction_index = self:_random(1, #RoamerSettings.faction_types)
 		local current_faction = RoamerSettings.faction_types[faction_index]
+
 		self._current_faction = current_faction
 	else
 		self._current_faction = self._override_faction
@@ -68,8 +74,9 @@ local PATROL_NAV_TAG_LAYER_COSTS = {
 RoamerPacing.on_gameplay_post_init = function (self, level)
 	local nav_world = self._nav_world
 	local traverse_logic, nav_tag_cost_table = Navigation.create_traverse_logic(nav_world, NAV_TAG_LAYER_COSTS, nil, false)
-	self._nav_tag_cost_table = nav_tag_cost_table
-	self._traverse_logic = traverse_logic
+
+	self._traverse_logic, self._nav_tag_cost_table = traverse_logic, nav_tag_cost_table
+
 	local nav_mesh_manager = Managers.state.nav_mesh
 
 	for i = 1, #FORBIDDEN_NAV_TAG_VOLUME_TYPES do
@@ -88,26 +95,36 @@ RoamerPacing.on_gameplay_post_init = function (self, level)
 		Log.info("RoamerPacing", "Generating Roamers using seed %d", self._seed)
 
 		self._spawn_point_positions = spawn_point_positions
+
 		local nav_spawn_points = main_path_manager:nav_spawn_points()
+
 		self._nav_spawn_points = nav_spawn_points
 		self._roamer_groups = {}
 		self._roamer_lookup = {}
+
 		local patrol_data = {
 			patrols = {},
 			active_patrols = {},
 			claimed_patrol_zone_indexes = {}
 		}
+
 		self._patrol_data = patrol_data
+
 		local zones = self:_create_zones(spawn_point_positions)
+
 		self._zones = zones
+
 		local roamers = {}
 
 		self:_generate_roamers(zones, roamers)
 
 		self._roamers = roamers
 		self._roamer_update_index = 1
+
 		local num_roamers = #roamers
+
 		self._num_roamers = num_roamers
+
 		local num_zones = #zones
 
 		if num_roamers == 0 then
@@ -115,6 +132,7 @@ RoamerPacing.on_gameplay_post_init = function (self, level)
 		end
 
 		local patrol_traverse_logic, patrol_nav_tag_cost_table = Navigation.create_traverse_logic(nav_world, PATROL_NAV_TAG_LAYER_COSTS, nil, false)
+
 		patrol_data.patrol_traverse_logic = patrol_traverse_logic
 		patrol_data.patrol_nav_tag_cost_table = patrol_nav_tag_cost_table
 
@@ -128,6 +146,7 @@ RoamerPacing.on_gameplay_post_init = function (self, level)
 		end
 
 		local astar = GwNavAStar.create(nav_world)
+
 		patrol_data.astar = astar
 	end
 end
@@ -182,15 +201,16 @@ RoamerPacing._create_zones = function (self, spawn_point_positions)
 	local faction_zone_length = self:_random(faction_zone_length_table[1], faction_zone_length_table[2])
 	local faction_index = self:_random(1, #RoamerSettings.faction_types)
 	local current_faction = self._override_faction or self._current_faction
+
 	self._current_faction = current_faction
 	self._current_density_type = density_type
+
 	local empty_zone_count = 0
 	local group_system = Managers.state.extension:system("group_system")
 	local group_id = group_system:generate_group_id()
 	local num_encampments_to_spawn = self._num_encampments_override or self:_random(RoamerSettings.num_encampments[1], RoamerSettings.num_encampments[2])
-	local num_encampments = 0
-	local num_encampment_blocked_zones = 0
-	local chosen_packs, pack_pick = nil
+	local num_encampments, num_encampment_blocked_zones = 0, 0
+	local chosen_packs, pack_pick
 	local num_spawn_point_positions = #spawn_point_positions
 
 	for i = 1, num_spawn_point_positions do
@@ -198,85 +218,89 @@ RoamerPacing._create_zones = function (self, spawn_point_positions)
 			if empty_zone_count > 0 then
 				empty_zone_count = empty_zone_count - 1
 				zones[#zones + 1] = {}
-			else
-				local spawn_positions = spawn_point_positions[i]
-				local num_roamers_range = self._num_roamer_range_override or density_setting.num_roamers_range[current_faction]
-				local num_to_spawn = self:_random(num_roamers_range[1], num_roamers_range[2])
-				local sub_zones, total_roamer_slots = self:_create_sub_zones(spawn_positions, density_setting, group_id, num_to_spawn)
-				local packs = density_setting.packs
 
-				if not chosen_packs then
-					pack_pick = pack_pick or self:_random(1, #packs)
-					local pack_override = self._all_pack_override or self._packs_override and self._packs_override[density_type]
-					chosen_packs = pack_override and pack_override[current_faction] or packs[pack_pick][current_faction]
+				break
+			end
+
+			local spawn_positions = spawn_point_positions[i]
+			local num_roamers_range = self._num_roamer_range_override or density_setting.num_roamers_range[current_faction]
+			local num_to_spawn = self:_random(num_roamers_range[1], num_roamers_range[2])
+			local sub_zones, total_roamer_slots = self:_create_sub_zones(spawn_positions, density_setting, group_id, num_to_spawn)
+			local packs = density_setting.packs
+
+			if not chosen_packs then
+				pack_pick = pack_pick or self:_random(1, #packs)
+
+				local pack_override = self._all_pack_override or self._packs_override and self._packs_override[density_type]
+
+				chosen_packs = pack_override and pack_override[current_faction] or packs[pack_pick][current_faction]
+			end
+
+			local ambience_sfx = RoamerSettings.ambience_sfx[density_type]
+			local aggro_sfx = RoamerSettings.aggro_sfx[density_type]
+			local pause_spawn_type_when_aggroed = RoamerSettings.pause_spawn_type_when_aggroed[density_type]
+			local zone = {
+				aggro_sfx = aggro_sfx,
+				ambience_sfx = ambience_sfx,
+				density_type = density_type,
+				faction = current_faction,
+				group_id = group_id,
+				limits = density_setting.limits,
+				num_to_spawn = math.min(num_to_spawn, total_roamer_slots),
+				pause_spawn_type_when_aggroed = pause_spawn_type_when_aggroed,
+				roamer_packs = chosen_packs,
+				sub_zones = sub_zones,
+				spawn_point_index = i
+			}
+
+			zones[#zones + 1] = zone
+			faction_zone_length = faction_zone_length - 1
+
+			if faction_zone_length <= 0 and density_type == "none" then
+				faction_index = faction_index % #RoamerSettings.faction_types + 1
+				current_faction = self._override_faction or RoamerSettings.faction_types[faction_index]
+				faction_zone_length = self:_random(faction_zone_length_table[1], faction_zone_length_table[2])
+			end
+
+			density_zone_count = density_zone_count - 1
+			num_encampment_blocked_zones = math.max(num_encampment_blocked_zones - 1, 0)
+
+			if density_zone_count == 0 then
+				local new_density_type
+				local has_randomized_encampment = self:_random() <= (self._override_chance_of_encampment or RoamerSettings.chance_of_encampment)
+				local should_spawn_encampment = num_encampment_blocked_zones == 0 and num_encampments < num_encampments_to_spawn and has_randomized_encampment
+
+				if should_spawn_encampment then
+					local encampment_types = RoamerSettings.encampment_types
+
+					new_density_type = encampment_types[self:_random(1, #encampment_types)]
+					num_encampments = num_encampments + 1
+					num_encampment_blocked_zones = RoamerSettings.num_encampment_blocked_zones
+				else
+					new_density_type = density_type == "low" and "high" or density_type == "none" and "low" or "none"
 				end
 
-				local ambience_sfx = RoamerSettings.ambience_sfx[density_type]
-				local aggro_sfx = RoamerSettings.aggro_sfx[density_type]
-				local pause_spawn_type_when_aggroed = RoamerSettings.pause_spawn_type_when_aggroed[density_type]
-				local zone = {
-					aggro_sfx = aggro_sfx,
-					ambience_sfx = ambience_sfx,
-					density_type = density_type,
-					faction = current_faction,
-					group_id = group_id,
-					limits = density_setting.limits,
-					num_to_spawn = math.min(num_to_spawn, total_roamer_slots),
-					pause_spawn_type_when_aggroed = pause_spawn_type_when_aggroed,
-					roamer_packs = chosen_packs,
-					sub_zones = sub_zones,
-					spawn_point_index = i
-				}
-				zones[#zones + 1] = zone
-				faction_zone_length = faction_zone_length - 1
+				if density_type == "none" then
+					local random_add_step = pack_pick + self:_random(1, #packs - 1)
 
-				if faction_zone_length <= 0 and density_type == "none" then
-					faction_index = faction_index % #RoamerSettings.faction_types + 1
-					current_faction = self._override_faction or RoamerSettings.faction_types[faction_index]
-					faction_zone_length = self:_random(faction_zone_length_table[1], faction_zone_length_table[2])
+					pack_pick = random_add_step > 6 and random_add_step % 6 or random_add_step
 				end
 
-				density_zone_count = density_zone_count - 1
-				num_encampment_blocked_zones = math.max(num_encampment_blocked_zones - 1, 0)
+				density_setting = density_settings[new_density_type]
+				density_zone_range = density_setting.zone_range
+				density_zone_count = self:_random(density_zone_range[1], density_zone_range[2])
 
-				if density_zone_count == 0 then
-					local new_density_type = nil
-					local has_randomized_encampment = self:_random() <= (self._override_chance_of_encampment or RoamerSettings.chance_of_encampment)
-					local should_spawn_encampment = num_encampment_blocked_zones == 0 and num_encampments < num_encampments_to_spawn and has_randomized_encampment
+				local empty_zone_range = density_setting.empty_zone_range
 
-					if should_spawn_encampment then
-						local encampment_types = RoamerSettings.encampment_types
-						new_density_type = encampment_types[self:_random(1, #encampment_types)]
-						num_encampments = num_encampments + 1
-						num_encampment_blocked_zones = RoamerSettings.num_encampment_blocked_zones
-					elseif density_type == "low" then
-						new_density_type = "high"
-					elseif density_type == "none" then
-						new_density_type = "low"
-					else
-						new_density_type = "none"
-					end
+				if empty_zone_range then
+					empty_zone_count = self:_random(empty_zone_range[1], empty_zone_range[2])
+				end
 
-					if density_type == "none" then
-						local random_add_step = pack_pick + self:_random(1, #packs - 1)
-						pack_pick = random_add_step > 6 and random_add_step % 6 or random_add_step
-					end
+				density_type = new_density_type
+				chosen_packs = nil
 
-					density_setting = density_settings[new_density_type]
-					density_zone_range = density_setting.zone_range
-					density_zone_count = self:_random(density_zone_range[1], density_zone_range[2])
-					local empty_zone_range = density_setting.empty_zone_range
-
-					if empty_zone_range then
-						empty_zone_count = self:_random(empty_zone_range[1], empty_zone_range[2])
-					end
-
-					density_type = new_density_type
-					chosen_packs = nil
-
-					if i < num_spawn_point_positions then
-						group_id = group_system:generate_group_id()
-					end
+				if i < num_spawn_point_positions then
+					group_id = group_system:generate_group_id()
 				end
 			end
 		until true
@@ -296,13 +320,15 @@ RoamerPacing._create_sub_zones = function (self, spawn_positions, density_settin
 		local num_sub_zone_positions = #sub_zone_positions
 
 		if num_sub_zone_positions > 0 then
-			local sub_zone = nil
+			local sub_zone
 			local num_roamer_slots = 0
 
 			if try_fill_one_sub_zone then
 				sub_zone = Script.new_array(1)
+
 				local spawn_position = sub_zone_positions[self:_random(1, num_sub_zone_positions)]
 				local sub_zone_location, new_num_roamer_slots = self:_create_sub_zone_location(spawn_position, density_setting, group_id)
+
 				sub_zone[1] = sub_zone_location
 				num_roamer_slots = num_roamer_slots + new_num_roamer_slots
 			else
@@ -311,6 +337,7 @@ RoamerPacing._create_sub_zones = function (self, spawn_positions, density_settin
 				for k = 1, num_sub_zone_positions do
 					local spawn_position = sub_zone_positions[k]
 					local sub_zone_location, new_num_roamer_slots = self:_create_sub_zone_location(spawn_position, density_setting, group_id)
+
 					sub_zone[#sub_zone + 1] = sub_zone_location
 					num_roamer_slots = num_roamer_slots + new_num_roamer_slots
 				end
@@ -369,6 +396,7 @@ RoamerPacing._limit_roamer_breeds = function (self, breed_name, limit_settings, 
 
 			if not ZONE_BREED_LIMITATIONS_COUNT[breed_name] then
 				ZONE_BREED_LIMITATIONS_COUNT[breed_name] = 1
+
 				local should_skip_roamer = true
 
 				return false, should_skip_roamer
@@ -429,183 +457,190 @@ RoamerPacing._generate_roamers = function (self, zones, roamers)
 	local current_faction = self._current_faction
 	local current_density_type = self._current_density_type
 	local patrols = self._patrol_data.patrols
-	local num_patrols = PatrolSettings.num_patrols_per_zone
-	local min_members_in_patrol = PatrolSettings.min_members_in_patrol
+	local num_patrols, min_members_in_patrol = PatrolSettings.num_patrols_per_zone, PatrolSettings.min_members_in_patrol
 	local main_path_manager = Managers.state.main_path
 	local spawn_point_positions = main_path_manager:spawn_point_positions()
 
 	for i = start_zone_index, num_zones do
-		local zone = zones[i]
-		local num_to_spawn = zone.num_to_spawn
+		repeat
+			local zone = zones[i]
+			local num_to_spawn = zone.num_to_spawn
 
-		if not num_to_spawn then
-			-- Nothing
-		else
+			if not num_to_spawn then
+				break
+			end
+
 			local sub_zones = zone.sub_zones
 			local num_sub_zones = #sub_zones
 
-			if num_sub_zones ~= 0 then
-				local roamer_packs = zone.roamer_packs
-				local roamer_packs_name = roamer_packs.name
-				local roamer_pack_probability = roamer_pack_probabilities[roamer_packs_name]
-				local probability = roamer_pack_probability.prob
-				local alias = roamer_pack_probability.alias
-				local limit_difficulty_settings = zone.limits
-				local ambience_sfx = zone.ambience_sfx
-				local aggro_sfx = zone.aggro_sfx
-				local pause_spawn_type_when_aggroed = zone.pause_spawn_type_when_aggroed
-				local faction = zone.faction
-				local density_type = zone.density_type
-				local spawn_point_index = zone.spawn_point_index
-				local limit_settings = limit_difficulty_settings and Managers.state.difficulty:get_table_entry_by_resistance(limit_difficulty_settings)
-				local tag_limits = limit_settings and table.clone(limit_settings.tag_limits)
+			if num_sub_zones == 0 then
+				break
+			end
 
-				if tag_limits then
-					for tag, limit in pairs(tag_limits) do
-						if type(limit) == "table" then
-							tag_limits[tag] = math.random(limit[1], limit[2])
-						end
+			local roamer_packs = zone.roamer_packs
+			local roamer_packs_name = roamer_packs.name
+			local roamer_pack_probability = roamer_pack_probabilities[roamer_packs_name]
+			local probability, alias = roamer_pack_probability.prob, roamer_pack_probability.alias
+			local limit_difficulty_settings = zone.limits
+			local ambience_sfx = zone.ambience_sfx
+			local aggro_sfx = zone.aggro_sfx
+			local pause_spawn_type_when_aggroed = zone.pause_spawn_type_when_aggroed
+			local faction = zone.faction
+			local density_type = zone.density_type
+			local spawn_point_index = zone.spawn_point_index
+			local limit_settings = limit_difficulty_settings and Managers.state.difficulty:get_table_entry_by_resistance(limit_difficulty_settings)
+			local tag_limits = limit_settings and table.clone(limit_settings.tag_limits)
+
+			if tag_limits then
+				for tag, limit in pairs(tag_limits) do
+					if type(limit) == "table" then
+						tag_limits[tag] = math.random(limit[1], limit[2])
 					end
-				end
-
-				local tries = 0
-				local roamers_per_sub_zone = num_to_spawn > 1 and math.floor(num_to_spawn / num_sub_zones) or 1
-				num_to_spawn = roamers_per_sub_zone * num_sub_zones
-				local sub_zone_index = 1
-				local num_spawned = 0
-
-				while num_to_spawn > 0 and sub_zone_index <= num_sub_zones and tries < max_tries do
-					local sub_zone = sub_zones[sub_zone_index]
-					local num_sub_zone_locations = #sub_zone
-
-					if num_sub_zone_locations > 0 then
-						local random_sub_zone_location_index = self:_random(1, num_sub_zone_locations)
-						local random_sub_zone_location = sub_zone[random_sub_zone_location_index]
-						local shared_aggro_trigger = random_sub_zone_location.shared_aggro_trigger
-						local group_id = random_sub_zone_location.group_id
-
-						if group_id ~= old_group_id then
-							table.clear(ZONE_BREED_COUNT)
-							table.clear(ZONE_BREED_TAG_COUNT)
-							table.clear(ZONE_BREED_LIMITATIONS_COUNT)
-
-							old_group_id = group_id
-							num_patrols = PatrolSettings.num_patrols_per_zone
-						end
-
-						local roamer_slots = random_sub_zone_location.roamer_slots
-						local seed, roamer_pack_index = LoadedDice.roll_seeded(probability, alias, self._seed)
-						self._seed = seed
-						local roamer_pack = roamer_packs[roamer_pack_index]
-						local breed_names = roamer_pack.breeds
-						local num_breeds = #breed_names
-						local num_roamer_slots = #roamer_slots
-						local num_to_spawn_in_pack = math.min(num_roamer_slots, roamers_per_sub_zone)
-						local sub_zone_location_position = random_sub_zone_location.position:unbox()
-						local spawn_point_group_index = random_sub_zone_location.spawn_point_group_index
-						local start_index = Managers.state.main_path:node_index_by_nav_group_index(spawn_point_group_index)
-						local end_index = start_index + 1
-						local _, travel_distance, _, _, _ = MainPathQueries.closest_position_between_nodes(sub_zone_location_position, start_index, end_index)
-						local patrol, patrol_id = nil
-						local spawn_positions = spawn_point_positions[spawn_point_index]
-						local num_spawn_positions = #spawn_positions
-
-						if num_spawn_positions > 0 and num_patrols > 0 and min_members_in_patrol <= num_to_spawn and min_members_in_patrol <= num_to_spawn_in_pack then
-							local num_patrollable_breeds = 0
-
-							for j = 1, num_breeds do
-								local breed_name = breed_names[j]
-
-								if Breeds[breed_name].can_patrol then
-									num_patrollable_breeds = num_patrollable_breeds + 1
-								end
-							end
-
-							if min_members_in_patrol <= num_patrollable_breeds then
-								patrol = {}
-								num_patrols = num_patrols - 1
-								patrol_id = #patrols + 1
-							end
-						end
-
-						for j = 0, num_to_spawn_in_pack - 1 do
-							if num_to_spawn == 0 then
-								break
-							end
-
-							local breed_index = j % num_breeds + 1
-							local breed_name = breed_names[breed_index]
-							local replaced_breed_name, should_skip_roamer = self:_limit_roamer_breeds(breed_name, limit_settings, faction, tag_limits)
-
-							if not should_skip_roamer then
-								local side_id = 2
-								local roamer_slot = roamer_slots[j + 1]
-								local roamer_id = #roamers + 1
-								local roamer = {
-									aggro_sfx = aggro_sfx,
-									ambience_sfx = ambience_sfx,
-									breed_name = replaced_breed_name or breed_name,
-									faction = faction,
-									group_id = group_id,
-									patrol_id = patrol_id,
-									pause_spawn_type_when_aggroed = pause_spawn_type_when_aggroed,
-									position = roamer_slot.position,
-									roamer_id = roamer_id,
-									rotation = roamer_slot.rotation,
-									shared_aggro_trigger = shared_aggro_trigger,
-									zone_id = i,
-									sub_zone_id = sub_zone_index,
-									travel_distance = travel_distance,
-									density_type = density_type,
-									side_id = side_id
-								}
-								roamers[roamer_id] = roamer
-
-								if patrol and Breeds[breed_name].can_patrol then
-									patrol[#patrol + 1] = roamer_id
-								end
-
-								num_to_spawn = num_to_spawn - 1
-								num_spawned = num_spawned + 1
-							else
-								num_to_spawn = num_to_spawn - 1
-								num_spawned = num_spawned + 1
-							end
-						end
-
-						if patrol then
-							patrols[patrol_id] = patrol
-						end
-
-						if faction ~= current_faction then
-							self._faction_travel_distances[#self._faction_travel_distances + 1] = {
-								travel_distance = travel_distance,
-								faction = faction,
-								density_type = density_type
-							}
-							current_faction = faction
-						end
-
-						if density_type ~= current_density_type then
-							self._density_type_travel_distances[#self._density_type_travel_distances + 1] = {
-								travel_distance = travel_distance,
-								density_type = density_type
-							}
-							current_density_type = density_type
-						end
-
-						table.remove(sub_zone, random_sub_zone_location_index)
-					end
-
-					if roamers_per_sub_zone <= num_spawned or num_sub_zone_locations == 0 then
-						sub_zone_index = sub_zone_index + 1
-						num_spawned = 0
-					end
-
-					tries = tries + 1
 				end
 			end
-		end
+
+			local tries = 0
+			local roamers_per_sub_zone = num_to_spawn > 1 and math.floor(num_to_spawn / num_sub_zones) or 1
+
+			num_to_spawn = roamers_per_sub_zone * num_sub_zones
+
+			local sub_zone_index = 1
+			local num_spawned = 0
+
+			while num_to_spawn > 0 and sub_zone_index <= num_sub_zones and tries < max_tries do
+				local sub_zone = sub_zones[sub_zone_index]
+				local num_sub_zone_locations = #sub_zone
+
+				if num_sub_zone_locations > 0 then
+					local random_sub_zone_location_index = self:_random(1, num_sub_zone_locations)
+					local random_sub_zone_location = sub_zone[random_sub_zone_location_index]
+					local shared_aggro_trigger = random_sub_zone_location.shared_aggro_trigger
+					local group_id = random_sub_zone_location.group_id
+
+					if group_id ~= old_group_id then
+						table.clear(ZONE_BREED_COUNT)
+						table.clear(ZONE_BREED_TAG_COUNT)
+						table.clear(ZONE_BREED_LIMITATIONS_COUNT)
+
+						old_group_id = group_id
+						num_patrols = PatrolSettings.num_patrols_per_zone
+					end
+
+					local roamer_slots = random_sub_zone_location.roamer_slots
+					local seed, roamer_pack_index = LoadedDice.roll_seeded(probability, alias, self._seed)
+
+					self._seed = seed
+
+					local roamer_pack = roamer_packs[roamer_pack_index]
+					local breed_names = roamer_pack.breeds
+					local num_breeds = #breed_names
+					local num_roamer_slots = #roamer_slots
+					local num_to_spawn_in_pack = math.min(num_roamer_slots, roamers_per_sub_zone)
+					local sub_zone_location_position = random_sub_zone_location.position:unbox()
+					local spawn_point_group_index = random_sub_zone_location.spawn_point_group_index
+					local start_index = Managers.state.main_path:node_index_by_nav_group_index(spawn_point_group_index)
+					local end_index = start_index + 1
+					local _, travel_distance, _, _, _ = MainPathQueries.closest_position_between_nodes(sub_zone_location_position, start_index, end_index)
+					local patrol, patrol_id
+					local spawn_positions = spawn_point_positions[spawn_point_index]
+					local num_spawn_positions = #spawn_positions
+
+					if num_spawn_positions > 0 and num_patrols > 0 and min_members_in_patrol <= num_to_spawn and min_members_in_patrol <= num_to_spawn_in_pack then
+						local num_patrollable_breeds = 0
+
+						for j = 1, num_breeds do
+							local breed_name = breed_names[j]
+
+							if Breeds[breed_name].can_patrol then
+								num_patrollable_breeds = num_patrollable_breeds + 1
+							end
+						end
+
+						if min_members_in_patrol <= num_patrollable_breeds then
+							patrol = {}
+							num_patrols = num_patrols - 1
+							patrol_id = #patrols + 1
+						end
+					end
+
+					for j = 0, num_to_spawn_in_pack - 1 do
+						if num_to_spawn == 0 then
+							break
+						end
+
+						local breed_index = j % num_breeds + 1
+						local breed_name = breed_names[breed_index]
+						local replaced_breed_name, should_skip_roamer = self:_limit_roamer_breeds(breed_name, limit_settings, faction, tag_limits)
+
+						if not should_skip_roamer then
+							local side_id = 2
+							local roamer_slot = roamer_slots[j + 1]
+							local roamer_id = #roamers + 1
+							local roamer = {
+								aggro_sfx = aggro_sfx,
+								ambience_sfx = ambience_sfx,
+								breed_name = replaced_breed_name or breed_name,
+								faction = faction,
+								group_id = group_id,
+								patrol_id = patrol_id,
+								pause_spawn_type_when_aggroed = pause_spawn_type_when_aggroed,
+								position = roamer_slot.position,
+								roamer_id = roamer_id,
+								rotation = roamer_slot.rotation,
+								shared_aggro_trigger = shared_aggro_trigger,
+								zone_id = i,
+								sub_zone_id = sub_zone_index,
+								travel_distance = travel_distance,
+								density_type = density_type,
+								side_id = side_id
+							}
+
+							roamers[roamer_id] = roamer
+
+							if patrol and Breeds[breed_name].can_patrol then
+								patrol[#patrol + 1] = roamer_id
+							end
+
+							num_to_spawn = num_to_spawn - 1
+							num_spawned = num_spawned + 1
+						else
+							num_to_spawn = num_to_spawn - 1
+							num_spawned = num_spawned + 1
+						end
+					end
+
+					if patrol then
+						patrols[patrol_id] = patrol
+					end
+
+					if faction ~= current_faction then
+						self._faction_travel_distances[#self._faction_travel_distances + 1] = {
+							travel_distance = travel_distance,
+							faction = faction,
+							density_type = density_type
+						}
+						current_faction = faction
+					end
+
+					if density_type ~= current_density_type then
+						self._density_type_travel_distances[#self._density_type_travel_distances + 1] = {
+							travel_distance = travel_distance,
+							density_type = density_type
+						}
+						current_density_type = density_type
+					end
+
+					table.remove(sub_zone, random_sub_zone_location_index)
+				end
+
+				if roamers_per_sub_zone <= num_spawned or num_sub_zone_locations == 0 then
+					sub_zone_index = sub_zone_index + 1
+					num_spawned = 0
+				end
+
+				tries = tries + 1
+			end
+		until true
 	end
 end
 
@@ -696,7 +731,7 @@ RoamerPacing.update = function (self, dt, t, side_id, target_side_id)
 			end
 		end
 
-		if not roamer_got_removed or self._num_roamers < roamer_update_index then
+		if not roamer_got_removed or roamer_update_index > self._num_roamers then
 			self._roamer_update_index = roamer_update_index % self._num_roamers + 1
 		end
 	end
@@ -718,8 +753,7 @@ RoamerPacing._alert_roamer_group = function (self, aggroing_unit, target_unit, a
 	local group = group_extension:group()
 	local members = group.members
 	local roamer_lookup = self._roamer_lookup
-	local ALIVE = ALIVE
-	local POSITION_LOOKUP = POSITION_LOOKUP
+	local ALIVE, POSITION_LOOKUP = ALIVE, POSITION_LOOKUP
 	local aggroing_unit_position = POSITION_LOOKUP[aggroing_unit]
 
 	for i = 1, #members do
@@ -778,8 +812,7 @@ RoamerPacing._alert_roamer_group = function (self, aggroing_unit, target_unit, a
 	end
 end
 
-local NAV_ABOVE = 0.1
-local NAV_BELOW = 0.1
+local NAV_ABOVE, NAV_BELOW = 0.1, 0.1
 
 RoamerPacing._try_activate_roamer = function (self, roamer, side_id)
 	local position = roamer.position:unbox()
@@ -794,6 +827,7 @@ RoamerPacing._try_activate_roamer = function (self, roamer, side_id)
 	local group_id = roamer.group_id
 	local stim_buff_name = roamer.stim_buff_name
 	local spawned_unit = self:_spawn_roamer(breed_name, position, rotation, group_id, side_id, stim_buff_name)
+
 	roamer.spawned_unit = spawned_unit
 	roamer.active = true
 	self._roamer_lookup[spawned_unit] = roamer
@@ -821,6 +855,7 @@ RoamerPacing._try_activate_roamer = function (self, roamer, side_id)
 
 		if patrol_should_activate then
 			local active_patrols = self._patrol_data.active_patrols
+
 			active_patrols[patrol_id] = true
 		end
 	end
@@ -844,6 +879,7 @@ RoamerPacing._deactivate_roamer = function (self, roamer)
 
 		self._num_roamers = self._num_roamers - 1
 		roamer.active = false
+
 		local patrols = self._patrol_data.patrols
 
 		for i = #patrols, 1, -1 do
@@ -864,10 +900,12 @@ RoamerPacing._deactivate_roamer = function (self, roamer)
 	end
 
 	self._roamer_lookup[roamer_unit] = nil
+
 	local patrol_id = roamer.patrol_id
 
 	if patrol_id then
 		local active_patrols = self._patrol_data.active_patrols
+
 		active_patrols[patrol_id] = nil
 	end
 
@@ -896,6 +934,7 @@ RoamerPacing._update_faction_switch = function (self, ahead_travel_distance)
 
 	if travel_distance <= ahead_travel_distance then
 		local new_faction = self._override_faction or next_faction_distances.faction
+
 		self._current_faction = new_faction
 		self._current_density_type = next_faction_distances.density_type
 
@@ -944,8 +983,7 @@ RoamerPacing._handle_group_ambience_sfx = function (self, roamer, activated)
 	local min_members = group_ambience_sfx.min_members
 
 	if activated and min_members <= num_members and not started_group_ambience then
-		local start_event = group_ambience_sfx.start
-		local stop_event = group_ambience_sfx.stop
+		local start_event, stop_event = group_ambience_sfx.start, group_ambience_sfx.stop
 
 		group_system:start_group_sfx(group_id, start_event, stop_event, min_members)
 
@@ -957,6 +995,7 @@ end
 
 RoamerPacing._random = function (self, ...)
 	local seed, value = math.next_random(self._seed, ...)
+
 	self._seed = seed
 
 	return value
@@ -968,6 +1007,7 @@ RoamerPacing.aggro_zone_range = function (self, target_unit, range)
 
 	if not group_index then
 		local position_on_main_path = MainPathQueries.closest_position(from_position)
+
 		group_index = SpawnPointQueries.group_from_position(self._nav_world, self._nav_spawn_points, position_on_main_path)
 	end
 

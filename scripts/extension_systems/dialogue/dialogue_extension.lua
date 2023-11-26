@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/dialogue/dialogue_extension.lua
+
 local Breed = require("scripts/utilities/breed")
 local DialogueBreedSettings = require("scripts/settings/dialogue/dialogue_breed_settings")
 local DialogueCategoryConfig = require("scripts/settings/dialogue/dialogue_category_config")
@@ -10,8 +12,7 @@ local Vo = require("scripts/utilities/vo")
 local DialogueExtension = class("DialogueExtension")
 
 local function _has_wwise_voice_switch_config(breed_configuration)
-	local wwise_voice_switch_group = breed_configuration.wwise_voice_switch_group
-	local wwise_voices = breed_configuration.wwise_voices
+	local wwise_voice_switch_group, wwise_voices = breed_configuration.wwise_voice_switch_group, breed_configuration.wwise_voices
 
 	return wwise_voice_switch_group ~= nil and wwise_voice_switch_group ~= "" and wwise_voices ~= nil and #wwise_voices > 0
 end
@@ -93,6 +94,7 @@ DialogueExtension.init = function (self, dialogue_system, dialogue_system_wwise,
 	if breed then
 		local breed_name = breed.name
 		local dialogue_breed_settings = DialogueBreedSettings[breed_name]
+
 		self._faction_breed_name = breed.faction_name
 
 		if _has_wwise_voice_switch_config(dialogue_breed_settings) then
@@ -100,10 +102,11 @@ DialogueExtension.init = function (self, dialogue_system, dialogue_system_wwise,
 				extension_per_breed_wwise_voice_index[breed_name] = 1
 			end
 
-			local selected_voice_index = nil
+			local selected_voice_index
 
 			if dialogue_breed_settings.randomize_voice then
 				local voice_selection_seed = extension_init_data.seed
+
 				voice_selection_seed, selected_voice_index = math.next_random(voice_selection_seed, 1, #dialogue_breed_settings.wwise_voices)
 			else
 				selected_voice_index = extension_per_breed_wwise_voice_index[breed_name]
@@ -124,9 +127,11 @@ DialogueExtension.init = function (self, dialogue_system, dialogue_system_wwise,
 		if Breed.is_player(breed) then
 			self._is_a_player = true
 			self._context.is_player = "true"
+
 			local first_person_extension = ScriptUnit.extension(unit, "first_person_system")
 			local first_person_unit = first_person_extension:first_person_unit()
 			local fx_extension = ScriptUnit.extension(unit, "fx_system")
+
 			self._fx_extension = fx_extension
 
 			PlayerVoiceGrunts.create_voice(fx_extension, first_person_unit, "ap_camera_node")
@@ -134,6 +139,7 @@ DialogueExtension.init = function (self, dialogue_system, dialogue_system_wwise,
 
 		self._context.breed_name = breed_name
 		self._stop_vce_event = dialogue_breed_settings.stop_vce_event
+
 		local vo_events = dialogue_breed_settings.vo_events
 
 		if vo_events then
@@ -158,6 +164,7 @@ DialogueExtension.init = function (self, dialogue_system, dialogue_system_wwise,
 	if selected_voice then
 		self._is_a_player = true
 		self._context.is_player = "true"
+
 		local player_unit_spawn_manager = Managers.state.player_unit_spawn
 		local player = player_unit_spawn_manager:owner(unit)
 
@@ -192,6 +199,7 @@ DialogueExtension.init = function (self, dialogue_system, dialogue_system_wwise,
 	end
 
 	local profile_name, voice_content = vo_sources_cache:get_default_voice_profile()
+
 	self._vo_profile_name = profile_name
 	self._vo_choice = voice_content
 	self._context.voice_template = self._vo_profile_name
@@ -266,6 +274,7 @@ DialogueExtension.cleanup = function (self)
 	table.clear(self._context)
 
 	self._dialogue_timer = nil
+
 	local registered_vo_events = self._registered_vo_events
 
 	if registered_vo_events then
@@ -286,13 +295,15 @@ end
 DialogueExtension.on_extensions_ready = function (self)
 	local play_unit = self._unit
 	local vo_center_percent = 0
-	local voice_node = nil
+	local voice_node
 
 	if self._local_player then
 		play_unit = ScriptUnit.extension(self._unit, "first_person_system"):first_person_unit()
 		vo_center_percent = 100
 		voice_node = Unit.node(play_unit, "ap_camera_node")
+
 		local destination = {}
+
 		destination[1], destination[2], destination[3] = Vector3.to_elements(POSITION_LOOKUP[self._unit])
 		self._local_player_start_pos = destination
 	elseif Unit.has_node(play_unit, "ap_voice") then
@@ -342,11 +353,13 @@ DialogueExtension._update_random_talk_lines = function (self, t)
 
 	if next_random_talk_line_update_t < t then
 		self._next_random_talk_line_update_t = t + self._random_talk_tick_time_t
+
 		local event_name = "generic_vo_event"
 
 		table.clear(self._trigger_event_data_payload)
 
 		local event_data = self:get_event_data_payload()
+
 		event_data.trigger_id = self._random_talk_trigger_id
 
 		self:trigger_dialogue_event(event_name, event_data)
@@ -356,7 +369,7 @@ end
 DialogueExtension._update_mission_update_vo = function (self)
 	local t = Managers.time:time("main")
 
-	if self._next_mission_fetch_t <= t then
+	if t >= self._next_mission_fetch_t then
 		local missions_data, missions = self._dialogue_system:mission_board()
 
 		if not missions_data or not missions_data.expiry_game_time then
@@ -370,7 +383,7 @@ DialogueExtension._update_mission_update_vo = function (self)
 		self._next_mission_play_vo_t = 0
 	end
 
-	if self._next_mission_play_vo_t <= t then
+	if t >= self._next_mission_play_vo_t then
 		local missions = self._missions
 
 		for i = 1, #missions do
@@ -383,17 +396,14 @@ DialogueExtension._update_mission_update_vo = function (self)
 					local mission_name = mission_data.map
 					local circumstance = mission_data.circumstance or "default"
 					local event_name = "mission_update_vo"
-					local is_circumstance = nil
+					local is_circumstance
 
-					if circumstance == "default" then
-						is_circumstance = "false"
-					else
-						is_circumstance = "true"
-					end
+					is_circumstance = circumstance == "default" and "false" or "true"
 
 					table.clear(self._trigger_event_data_payload)
 
 					local event_data = self:get_event_data_payload()
+
 					event_data.mission = mission_name
 					event_data.is_circumstance = is_circumstance
 					event_data.trigger_id = "mission_update"
@@ -502,6 +512,7 @@ DialogueExtension.trigger_networked_dialogue_event = function (self, event_name,
 
 		for key, value in pairs(event_data) do
 			local context_name_id = self._dialogue_system.dialogueLookupContexts.all_context_names[key]
+
 			array_event_data[current_pair] = context_name_id
 			array_event_data_is_number[current_pair] = false
 			current_pair = current_pair + 1
@@ -515,6 +526,7 @@ DialogueExtension.trigger_networked_dialogue_event = function (self, event_name,
 				end
 
 				local value_id = self._dialogue_system.dialogueLookupContexts[key][value]
+
 				array_event_data[current_pair] = value_id
 				array_event_data_is_number[current_pair] = false
 			end
@@ -545,6 +557,7 @@ end
 
 DialogueExtension.set_vo_profile = function (self, profile_name)
 	local vo_sources_cache = self._vo_sources_cache
+
 	self._wwise_voice_switch_group = self._wwise_voice_switch_group or DialogueSettings.default_voice_switch_group
 	self._wwise_voice_switch_value = profile_name
 	self._vo_profile_name = profile_name
@@ -607,6 +620,7 @@ end
 
 DialogueExtension.set_voice_fx_preset = function (self, optional_voice_fx_preset_name)
 	local voice_fx_preset = VoiceFxPresetSettings[optional_voice_fx_preset_name] or VoiceFxPresetSettings.voice_fx_rtpc_none
+
 	self._voice_fx_preset = voice_fx_preset
 	self._context.voice_fx_preset = voice_fx_preset
 end
@@ -704,6 +718,7 @@ DialogueExtension.play_local_vo_events = function (self, rule_names, wwise_route
 				on_play_callback = on_play_callback,
 				seed = seed
 			}
+
 			rule_queue[#rule_queue + 1] = vo_event
 		end
 	end
@@ -717,10 +732,11 @@ DialogueExtension.play_local_vo_event = function (self, rule_name, wwise_route_k
 		return
 	end
 
-	local dialogue_index = nil
+	local dialogue_index
 
 	if seed then
 		local _, random_n = math.next_random(seed, 1, rule.sound_events_n)
+
 		dialogue_index = random_n
 	else
 		dialogue_index = DialogueQueries.get_dialogue_event_index(rule)
@@ -731,7 +747,7 @@ DialogueExtension.play_local_vo_event = function (self, rule_name, wwise_route_k
 	local wwise_playing = currently_playing_dialogue and self._dialogue_system_wwise:is_playing(currently_playing_dialogue.currently_playing_event_id)
 
 	if sound_event and not wwise_playing then
-		local pre_wwise_event, post_wwise_event = nil
+		local pre_wwise_event, post_wwise_event
 		local dialogue = {}
 		local wwise_route = WwiseRouting[wwise_route_key]
 
@@ -739,8 +755,10 @@ DialogueExtension.play_local_vo_event = function (self, rule_name, wwise_route_k
 
 		dialogue_system._dialog_sequence_events = dialogue_system:_create_sequence_events_table(pre_wwise_event, wwise_route, sound_event, post_wwise_event)
 		dialogue.currently_playing_event_id = self:play_event(dialogue_system._dialog_sequence_events[1])
+
 		local speaker_name = self:get_context().voice_template
 		local unit = self._unit
+
 		dialogue_system._playing_units[unit] = self
 		dialogue.currently_playing_unit = unit
 		dialogue.speaker_name = speaker_name
@@ -748,8 +766,10 @@ DialogueExtension.play_local_vo_event = function (self, rule_name, wwise_route_k
 		dialogue.currently_playing_subtitle = subtitles_event
 		dialogue.wwise_route = wwise_route_key
 		dialogue.is_audible = true
+
 		local dialogue_category = dialogue.category
 		local category_setting = DialogueCategoryConfig[dialogue_category]
+
 		dialogue_system._playing_dialogues[dialogue] = category_setting
 
 		self:set_currently_playing_dialogue(dialogue)
@@ -794,6 +814,7 @@ end
 
 DialogueExtension.store_in_memory = function (self, memory_name, argument_name, value)
 	local target_memory = self["_" .. memory_name]
+
 	target_memory[argument_name] = value
 end
 
@@ -808,16 +829,18 @@ DialogueExtension.evaluate_rules = function (self, rules, seed)
 
 	for i = 1, #rules do
 		local rule_name = rules[i]
-		local dialogue_index = nil
+		local dialogue_index
 
 		if seed then
 			local _, random_n = math.next_random(seed, 1, self._vo_choice[rule_name].sound_events_n)
+
 			dialogue_index = random_n
 		else
 			dialogue_index = math.random(1, self._vo_choice[rule_name].sound_events_n)
 		end
 
 		local sound_event, subtitles_event, sound_event_duration = self:get_dialogue_event(rule_name, dialogue_index)
+
 		results[i] = {
 			sound_event = sound_event,
 			subtitles_event = subtitles_event,

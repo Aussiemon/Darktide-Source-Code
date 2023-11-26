@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/cosmetics_vendor_background_view/cosmetics_vendor_background_view.lua
+
 local Definitions = require("scripts/ui/views/cosmetics_vendor_background_view/cosmetics_vendor_background_view_definitions")
 local VendorInteractionViewBase = require("scripts/ui/views/vendor_interaction_view_base/vendor_interaction_view_base")
 local ViewSettings = require("scripts/ui/views/cosmetics_vendor_view/cosmetics_vendor_view_settings")
@@ -42,6 +44,7 @@ end
 
 CosmeticsVendorBackgroundView._set_wallet_background_width = function (self, width)
 	width = 150 + width
+
 	local scenegraph_id = "corner_top_right"
 	local definitions = self._definitions
 	local scenegraph_definition = definitions.scenegraph_definition
@@ -70,9 +73,11 @@ CosmeticsVendorBackgroundView.draw = function (self, dt, t, input_service, layer
 	local render_scale = self._render_scale
 	local render_settings = self._render_settings
 	local ui_renderer = self._ui_renderer
+
 	render_settings.start_layer = layer
 	render_settings.scale = render_scale
 	render_settings.inverse_scale = render_scale and 1 / render_scale
+
 	local ui_scenegraph = self._ui_scenegraph
 	local situational_input_service = self._presenting_options and input_service or input_service:null_service()
 

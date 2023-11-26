@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/character_state_machine/character_states/utilities/accelerated_local_space_movement.lua
+
 local AcceleratedLocalSpaceMovement = {}
 local math = math
 local math_min = math.min
@@ -52,6 +54,7 @@ local _speed_function = AcceleratedLocalSpaceMovement.speed_function
 
 AcceleratedLocalSpaceMovement.wanted_movement = function (player_character_constants, input_source, locomotion_steering_component, movement_settings_component, first_person_component, is_crouching, velocity_current, dt, move_speed_multiplier)
 	move_speed_multiplier = move_speed_multiplier or 1
+
 	local move_input = input_source:get("move")
 	local wants_move = Vector3_length_squared(move_input) > 0
 	local acc = player_character_constants.acceleration
@@ -59,11 +62,9 @@ AcceleratedLocalSpaceMovement.wanted_movement = function (player_character_const
 	local x = locomotion_steering_component.local_move_x
 	local y = locomotion_steering_component.local_move_y
 	local wanted_x, wanted_y = Vector3.to_elements(move_input)
-	local new_x = _speed_function(x, wanted_x, wanted_y, acc, dec, dt)
-	local new_y = _speed_function(y, wanted_y, wanted_x, acc, dec, dt)
+	local new_x, new_y = _speed_function(x, wanted_x, wanted_y, acc, dec, dt), _speed_function(y, wanted_y, wanted_x, acc, dec, dt)
 	local stopped = new_x == 0 and new_y == 0
-	local new_x_abs = math_abs(new_x)
-	local new_y_abs = math_abs(new_y)
+	local new_x_abs, new_y_abs = math_abs(new_x), math_abs(new_y)
 	local biggest_speed = math_max(new_x_abs, new_y_abs)
 	local speed_scale = stopped and 0 or math_sqrt(math_min(biggest_speed, new_x_abs * new_x_abs + new_y_abs * new_y_abs))
 	local moving_backwards = new_y < 0
@@ -72,10 +73,11 @@ AcceleratedLocalSpaceMovement.wanted_movement = function (player_character_const
 		local bw_move_scale = player_character_constants.backward_move_scale
 		local direction_proportion = math_sqrt(math_cos(math_atan(new_x / new_y)))
 		local bw_speed_multiplier = math_lerp(1, bw_move_scale, direction_proportion)
+
 		speed_scale = speed_scale * bw_speed_multiplier
 	end
 
-	local current_max_move_speed = nil
+	local current_max_move_speed
 	local run_speed = player_character_constants.move_speed
 	local look_rotation = first_person_component.rotation
 	local flat_look_direction = Vector3_normalize(Vector3_flat(Quaternion_forward(look_rotation)))
@@ -117,14 +119,13 @@ AcceleratedLocalSpaceMovement.refresh_local_move_variables = function (max_move_
 	local flat_forward = Vector3_normalize(Vector3_flat(Quaternion_forward(aim_rot)))
 	local local_move_direction = Vector3(Vector3_dot(Quaternion.right(aim_rot), move_direction), Vector3_dot(flat_forward, move_direction), 0)
 	local abs = math_abs
-	local x = local_move_direction.x
-	local y = local_move_direction.y
-	local move_x, move_y = nil
+	local x, y = local_move_direction.x, local_move_direction.y
+	local move_x, move_y
 
 	if x == 0 and y == 0 then
 		move_x = 0
 		move_y = 0
-	elseif abs(y) < abs(x) then
+	elseif abs(x) > abs(y) then
 		move_x = local_speed * math.sign(x)
 		move_y = move_x / x * y
 	else

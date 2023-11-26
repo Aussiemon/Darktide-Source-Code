@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/equipment/weapon_templates/bot_autogun_killshot.lua
+
 local AimAssistTemplates = require("scripts/settings/equipment/aim_assist_templates")
 local BaseTemplateSettings = require("scripts/settings/equipment/weapon_templates/base_template_settings")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
@@ -25,130 +27,130 @@ local sprint_trait_templates = WeaponTraitTemplates[template_types.sprint]
 local ammo_trait_templates = WeaponTraitTemplates[template_types.ammo]
 local sway_trait_templates = WeaponTraitTemplates[template_types.sway]
 local movement_curve_modifier_trait_templates = WeaponTraitTemplates[template_types.movement_curve_modifier]
-local weapon_template = {
-	action_inputs = {
-		shoot = {
-			buffer_time = 0,
-			max_queue = 1,
-			input_sequence = {
-				{
-					value = true,
-					input = "action_one_pressed"
-				}
+local weapon_template = {}
+
+weapon_template.action_inputs = {
+	shoot = {
+		buffer_time = 0,
+		max_queue = 1,
+		input_sequence = {
+			{
+				value = true,
+				input = "action_one_pressed"
 			}
-		},
-		shoot_release = {
-			buffer_time = 0.31,
-			input_sequence = {
-				{
-					value = false,
-					input = "action_one_hold",
-					time_window = math.huge
-				}
+		}
+	},
+	shoot_release = {
+		buffer_time = 0.31,
+		input_sequence = {
+			{
+				value = false,
+				input = "action_one_hold",
+				time_window = math.huge
 			}
-		},
-		zoom_shoot = {
-			buffer_time = 0,
-			max_queue = 1,
-			input_sequence = {
-				{
-					value = true,
-					hold_input = "action_two_hold",
-					input = "action_one_pressed"
-				}
+		}
+	},
+	zoom_shoot = {
+		buffer_time = 0,
+		max_queue = 1,
+		input_sequence = {
+			{
+				value = true,
+				hold_input = "action_two_hold",
+				input = "action_one_pressed"
 			}
-		},
-		zoom = {
-			buffer_time = 0.4,
-			input_sequence = {
-				{
-					value = true,
-					input = "action_two_hold"
-				}
+		}
+	},
+	zoom = {
+		buffer_time = 0.4,
+		input_sequence = {
+			{
+				value = true,
+				input = "action_two_hold"
 			}
-		},
-		zoom_release = {
-			buffer_time = 0.3,
-			input_sequence = {
-				{
-					value = false,
-					input = "action_two_hold",
-					time_window = math.huge
-				}
+		}
+	},
+	zoom_release = {
+		buffer_time = 0.3,
+		input_sequence = {
+			{
+				value = false,
+				input = "action_two_hold",
+				time_window = math.huge
 			}
-		},
-		reload = {
-			buffer_time = 0.2,
-			input_sequence = {
-				{
-					value = true,
-					input = "weapon_reload"
-				}
+		}
+	},
+	reload = {
+		buffer_time = 0.2,
+		input_sequence = {
+			{
+				value = true,
+				input = "weapon_reload"
 			}
-		},
-		wield = {
-			buffer_time = 0.2,
-			input_sequence = {
-				{
-					inputs = wield_inputs
-				}
+		}
+	},
+	wield = {
+		buffer_time = 0.2,
+		input_sequence = {
+			{
+				inputs = wield_inputs
 			}
-		},
-		special_action = {
-			buffer_time = 0.2,
-			input_sequence = {
-				{
-					value = true,
-					input = "weapon_extra_pressed"
-				}
+		}
+	},
+	special_action = {
+		buffer_time = 0.2,
+		input_sequence = {
+			{
+				value = true,
+				input = "weapon_extra_pressed"
 			}
-		},
-		special_action_hold = {
-			buffer_time = 0.2,
-			input_sequence = {
-				{
-					value = true,
-					hold_input = "weapon_extra_hold",
-					input = "weapon_extra_hold"
-				}
+		}
+	},
+	special_action_hold = {
+		buffer_time = 0.2,
+		input_sequence = {
+			{
+				value = true,
+				hold_input = "weapon_extra_hold",
+				input = "weapon_extra_hold"
 			}
-		},
-		special_action_release = {
-			buffer_time = 0.2,
-			input_sequence = {
-				{
-					value = true,
-					hold_input = "weapon_extra_release",
-					input = "weapon_extra_release"
-				}
+		}
+	},
+	special_action_release = {
+		buffer_time = 0.2,
+		input_sequence = {
+			{
+				value = true,
+				hold_input = "weapon_extra_release",
+				input = "weapon_extra_release"
 			}
-		},
-		special_action_light = {
-			buffer_time = 0.3,
-			max_queue = 1,
-			input_sequence = {
-				{
-					value = false,
-					time_window = 0.25,
-					input = "weapon_extra_hold"
-				}
+		}
+	},
+	special_action_light = {
+		buffer_time = 0.3,
+		max_queue = 1,
+		input_sequence = {
+			{
+				value = false,
+				time_window = 0.25,
+				input = "weapon_extra_hold"
 			}
-		},
-		special_action_heavy = {
-			buffer_time = 0.5,
-			max_queue = 1,
-			input_sequence = {
-				{
-					value = true,
-					duration = 0.25,
-					input = "weapon_extra_hold"
-				},
-				{
-					value = false,
-					time_window = 1.5,
-					auto_complete = false,
-					input = "weapon_extra_hold"
-				}
+		}
+	},
+	special_action_heavy = {
+		buffer_time = 0.5,
+		max_queue = 1,
+		input_sequence = {
+			{
+				value = true,
+				duration = 0.25,
+				input = "weapon_extra_hold"
+			},
+			{
+				value = false,
+				time_window = 1.5,
+				auto_complete = false,
+				input = "weapon_extra_hold"
 			}
 		}
 	}
@@ -949,6 +951,7 @@ weapon_template.base_stats = {
 	}
 }
 weapon_template.traits = {}
+
 local bespoke_autogun_p3_traits = table.keys(WeaponTraitsBespokeAutogunP3)
 
 table.append(weapon_template.traits, bespoke_autogun_p3_traits)

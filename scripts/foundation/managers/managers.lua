@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/foundation/managers/managers.lua
+
 Managers = Managers or {
 	state = {}
 }

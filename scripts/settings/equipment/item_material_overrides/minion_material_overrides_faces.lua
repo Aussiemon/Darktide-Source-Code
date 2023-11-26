@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/equipment/item_material_overrides/minion_material_overrides_faces.lua
+
 local material_overrides = {
 	traitor_guard_face_tattoo_berserker = {
 		texture_overrides = {

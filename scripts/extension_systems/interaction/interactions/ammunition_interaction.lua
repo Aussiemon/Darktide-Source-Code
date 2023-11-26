@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/interaction/interactions/ammunition_interaction.lua
+
 require("scripts/extension_systems/interaction/interactions/pickup_interaction")
 
 local Ammo = require("scripts/utilities/ammo")
@@ -9,7 +11,7 @@ local Vo = require("scripts/utilities/vo")
 local buff_proc_events = BuffSettings.proc_events
 local special_rules = SpecialRulesSetting.special_rules
 local AmmunitionInteraction = class("AmmunitionInteraction", "PickupInteraction")
-local _ammo_refills_grenades = nil
+local _ammo_refills_grenades
 
 AmmunitionInteraction.stop = function (self, world, interactor_unit, unit_data_component, t, result, interactor_is_server)
 	if interactor_is_server then
@@ -78,7 +80,9 @@ AmmunitionInteraction._add_ammo = function (self, interactor_unit, pickup_data)
 			local pickup_amount = pickup_data.ammo_amount_func(max_ammo_reserve, max_ammo_clip, pickup_data)
 			local missing_clip = max_ammo_clip - ammo_clip
 			local new_ammo_amount = math.min(ammo_reserve + pickup_amount, max_ammo_reserve + missing_clip)
+
 			wieldable_component.current_ammunition_reserve = new_ammo_amount
+
 			local missing_player_ammo = max_ammo_reserve - ammo_reserve
 
 			if missing_player_ammo < pickup_amount * DialogueSettings.ammo_hog_pickup_share and not pickup_data.ammo_crate then
@@ -130,6 +134,7 @@ AmmunitionInteraction._add_ammo = function (self, interactor_unit, pickup_data)
 		if ability_extension and ability_extension:ability_is_equipped("grenade_ability") then
 			local max_grenade_charges = ability_extension:max_ability_charges("grenade_ability")
 			local num_charges = pickup_data.ammo_amount_func(max_grenade_charges, 0, pickup_data)
+
 			num_charges = math.clamp(num_charges, 0, max_grenade_charges)
 
 			ability_extension:restore_ability_charge("grenade_ability", num_charges)

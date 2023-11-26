@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/fx/effect_templates/renegade_captain_power_sword_sweep.lua
+
 local Component = require("scripts/utilities/component")
 local MinionVisualLoadout = require("scripts/utilities/minion_visual_loadout")
 local FX_SOURCE_NAME = "fx_shaft"
@@ -28,8 +30,11 @@ local effect_template = {
 		_start_vfx(attachment_unit, position, node_index, template_data, template_context)
 
 		template_data.attachment_unit = attachment_unit
+
 		local unit_components = Component.get_components_by_name(attachment_unit, "WeaponMaterialVariables")
+
 		template_data.unit_components = unit_components
+
 		local world = template_context.world
 		local t = World.time(world)
 

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/stamina/weapon_stamina_templates.lua
+
 local weapon_stamina_templates = {}
 local _block_cost_default = {
 	inner = {
@@ -9,6 +11,7 @@ local _block_cost_default = {
 		lerp_basic = 3
 	}
 }
+
 weapon_stamina_templates.default = {
 	stamina_modifier = 4,
 	sprint_cost_per_second = {

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/equipment/weapon_templates/power_mauls/settings_templates/power_maul_damage_profile_templates.lua
+
 local ArmorSettings = require("scripts/settings/damage/armor_settings")
 local PowerLevelSettings = require("scripts/settings/damage/power_level_settings")
 local DamageProfileSettings = require("scripts/settings/damage/damage_profile_settings")
@@ -144,6 +146,7 @@ local tank_heavy_active_am = {
 		[armor_types.void_shield] = damage_lerp_values.lerp_2
 	}
 }
+
 damage_templates.powermaul_light_smiter = {
 	ragdoll_push_force = 100,
 	ragdoll_only = true,

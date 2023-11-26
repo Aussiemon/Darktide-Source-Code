@@ -1,12 +1,17 @@
+﻿-- chunkname: @scripts/components/particle_effect.lua
+
 local ParticleEffect = component("ParticleEffect")
 
 ParticleEffect.init = function (self, unit)
 	self._unit = unit
 	self._world = Unit.world(unit)
+
 	local particle_name = self:get_data(unit, "particle")
+
 	self._particle_name = particle_name
 	self._particle_id = nil
 	self._particle_node = 1
+
 	local particle_node_name = self:get_data(unit, "particle_node_name")
 
 	if Unit.has_node(unit, particle_node_name) then
@@ -67,7 +72,9 @@ ParticleEffect._create_particle = function (self)
 	local world_rotation = Unit.world_rotation(unit, 1)
 	local world_scale = Unit.world_scale(unit, 1)
 	local particle_id = World.create_particles(world, particle_name, world_position, world_rotation, world_scale)
+
 	self._particle_id = particle_id
+
 	local scalar_parameters = self:get_data(unit, "scalar_parameters")
 	local success = self:_set_non_boxed_parameters(world, particle_id, scalar_parameters, World.set_particles_material_scalar)
 
@@ -78,6 +85,7 @@ ParticleEffect._create_particle = function (self)
 	end
 
 	local vector_two_parameters = self:get_data(unit, "vector_two_parameters")
+
 	success = self:_set_boxed_parameters(world, particle_id, vector_two_parameters, World.set_particles_material_vector2)
 
 	if not success then
@@ -87,6 +95,7 @@ ParticleEffect._create_particle = function (self)
 	end
 
 	local vector_three_parameters = self:get_data(unit, "vector_three_parameters")
+
 	success = self:_set_boxed_parameters(world, particle_id, vector_three_parameters, World.set_particles_material_vector3)
 
 	if not success then
@@ -96,6 +105,7 @@ ParticleEffect._create_particle = function (self)
 	end
 
 	local vector_four_parameters = self:get_data(unit, "vector_four_parameters")
+
 	success = self:_set_boxed_parameters(world, particle_id, vector_four_parameters, World.set_particles_material_vector4)
 
 	if not success then

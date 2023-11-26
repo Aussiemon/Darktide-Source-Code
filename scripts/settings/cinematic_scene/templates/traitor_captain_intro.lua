@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/cinematic_scene/templates/traitor_captain_intro.lua
+
 local cinematic_scene_templates = {
 	traitor_captain_intro = {
 		is_skippable = false,

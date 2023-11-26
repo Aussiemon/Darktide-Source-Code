@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/training_grounds/training_grounds_objectives_lookup.lua
+
 local objectives_lookup = {
 	tag_sniper = {
 		max_value = 1,

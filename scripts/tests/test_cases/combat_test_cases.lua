@@ -1,5 +1,9 @@
+﻿-- chunkname: @scripts/tests/test_cases/combat_test_cases.lua
+
 local TestifySnippets = require("scripts/tests/testify_snippets")
+
 CombatTestCases = {}
+
 local base_talents = {
 	veteran_1 = {},
 	veteran_2 = {
@@ -262,7 +266,7 @@ CombatTestCases.validate_minion_pathing_on_mission = function (case_settings)
 		local mission_name = settings.mission_name
 		local initial_wait_time = settings.initial_wait_time or 4
 		local nav_mesh_above = settings.nav_mesh_above or 0.5
-		local nav_mesh_below = settings.nav_mesh_below or 0.5
+		local nav_mesh_above, nav_mesh_below = nav_mesh_above, settings.nav_mesh_below or 0.5
 		local specific_breed_names = settings.specific_breed_names
 		local flags = {
 			"validate_minion_pathing_on_mission"
@@ -297,8 +301,7 @@ CombatTestCases.validate_minion_pathing_on_mission = function (case_settings)
 		local start_positions = table.values(minion_multi_teleporter_positions)
 		local num_start_positions = #start_positions
 		local spawn_position = start_positions[1]
-		local minion_pathing_data = Script.new_array(num_minion_breeds)
-		local total_path_queries = 0
+		local minion_pathing_data, total_path_queries = Script.new_array(num_minion_breeds), 0
 		local minion_spawn_data = {
 			breed_side = 1,
 			spawn_position = spawn_position
@@ -307,7 +310,9 @@ CombatTestCases.validate_minion_pathing_on_mission = function (case_settings)
 		for i = 1, num_minion_breeds do
 			local breed_data = minion_breeds[i]
 			local breed_name = breed_data.name
+
 			minion_spawn_data.breed_name = breed_name
+
 			local unit = Testify:make_request("spawn_minion", minion_spawn_data)
 			local traverse_logic = Testify:make_request("traverse_logic", unit)
 			local destinations, num_destinations = Testify:make_request("positions_on_nav_mesh", unified_main_path, nav_mesh_above, nav_mesh_below, traverse_logic)
@@ -333,8 +338,7 @@ CombatTestCases.validate_minion_pathing_on_mission = function (case_settings)
 		Log.info("Testify", "Setup done - num_minion_breeds: %d | total_path_queries: %d (start_positions: %d main_path: %d)", num_minion_breeds, total_path_queries, num_start_positions, #unified_main_path)
 
 		local num_remaining_path_queries = total_path_queries
-		local log_query_interval = total_path_queries * 0.1
-		local next_log_query_value = total_path_queries
+		local log_query_interval, next_log_query_value = total_path_queries * 0.1, total_path_queries
 
 		while num_remaining_path_queries > 0 do
 			local new_num_remaining_path_queries, error_message = Testify:make_request("check_and_update_minion_pathing_test", minion_pathing_data, num_remaining_path_queries)
@@ -422,6 +426,7 @@ CombatTestCases.spawn_all_enemies = function (case_settings)
 			Log.info("Testify", "Spawning " .. breed_name)
 
 			minion.unit = Testify:make_request("spawn_minion", minion)
+
 			local is_minion_alive = Testify:make_request("is_unit_alive", minion.unit)
 
 			if not is_minion_alive then
@@ -552,6 +557,7 @@ CombatTestCases.ensure_breed_ragdoll_actors = function (case_settings)
 				x = math.cos(angle) * distance,
 				y = math.sin(angle) * distance
 			}
+
 			spawn_positions[i] = {
 				x = player_current_position.x + spawn_position_offset.x,
 				y = player_current_position.y + spawn_position_offset.y,
@@ -576,12 +582,10 @@ CombatTestCases.ensure_breed_ragdoll_actors = function (case_settings)
 						breed_side = breed_side
 					}
 
-					if num_edges < spawn_index then
-						spawn_index = 1
-					end
-
+					spawn_index = num_edges < spawn_index and 1 or spawn_index
 					minion_data.spawn_position = spawn_positions[spawn_index]
 					spawn_index = spawn_index + 1
+
 					local hit_zone_ragdoll_actors = breed.hit_zone_ragdoll_actors
 
 					if hit_zone_ragdoll_actors then
@@ -676,6 +680,7 @@ CombatTestCases.gib_all_minions = function (case_settings)
 				x = math.cos(angle) * distance,
 				y = math.sin(angle) * distance
 			}
+
 			spawn_positions[i] = {
 				x = player_current_position.x + spawn_position_offset.x,
 				y = player_current_position.y + spawn_position_offset.y,
@@ -687,11 +692,13 @@ CombatTestCases.gib_all_minions = function (case_settings)
 
 		local function _run_gib(minion_data, hit_zone_name, gibbing_type, gib_settings)
 			local breed_name = minion_data.breed_name
-			spawn_index = num_edges < spawn_index and 1 or spawn_index
+
+			spawn_index = spawn_index > num_edges and 1 or spawn_index
 			minion_data.spawn_position = spawn_positions[spawn_index]
 			spawn_index = spawn_index + 1
+
 			local minion_unit = Testify:make_request("spawn_minion", minion_data)
-			local is_minion_alive = nil
+			local is_minion_alive
 			local minion_time_of_spawn = os.clock()
 
 			while os.clock() - minion_time_of_spawn < gib_timer do

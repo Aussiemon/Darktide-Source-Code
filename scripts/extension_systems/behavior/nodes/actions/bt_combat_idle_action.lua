@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/behavior/nodes/actions/bt_combat_idle_action.lua
+
 require("scripts/extension_systems/behavior/nodes/bt_node")
 
 local Animation = require("scripts/utilities/animation")
@@ -5,6 +7,7 @@ local Blackboard = require("scripts/extension_systems/blackboard/utilities/black
 local MinionMovement = require("scripts/utilities/minion_movement")
 local Vo = require("scripts/utilities/vo")
 local BtCombatIdleAction = class("BtCombatIdleAction", "BtNode")
+
 BtCombatIdleAction.TIME_TO_FIRST_EVALUATE = {
 	0.3,
 	0.5
@@ -28,11 +31,15 @@ BtCombatIdleAction.enter = function (self, unit, breed, blackboard, scratchpad, 
 	end
 
 	local locomotion_extension = ScriptUnit.extension(unit, "locomotion_system")
+
 	scratchpad.locomotion_extension = locomotion_extension
 	scratchpad.time_to_next_evaluate = t + math.random_range(BtCombatIdleAction.TIME_TO_FIRST_EVALUATE[1], BtCombatIdleAction.TIME_TO_FIRST_EVALUATE[2])
+
 	local perception_component = blackboard.perception
+
 	scratchpad.perception_component = perception_component
 	scratchpad.perception_extension = ScriptUnit.extension(unit, "perception_system")
+
 	local vo_event = action_data.vo_event
 
 	if vo_event then
@@ -45,11 +52,13 @@ BtCombatIdleAction.run = function (self, unit, breed, blackboard, scratchpad, ac
 		MinionMovement.rotate_towards_target_unit(unit, scratchpad)
 	end
 
-	local should_evaluate = nil
+	local should_evaluate
 
-	if scratchpad.time_to_next_evaluate < t then
+	if t > scratchpad.time_to_next_evaluate then
 		should_evaluate = true
+
 		local consecutive_evaluate_interval = BtCombatIdleAction.CONSECUTIVE_EVALUATE_INTERVAL
+
 		scratchpad.time_to_next_evaluate = t + math.random_range(consecutive_evaluate_interval[1], consecutive_evaluate_interval[2])
 	end
 

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/slot/slot_templates.lua
+
 local slot_templates = {
 	renegade_melee = {
 		{

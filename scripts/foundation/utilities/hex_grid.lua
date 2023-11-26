@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/foundation/utilities/hex_grid.lua
+
 local HexGrid = class("HexGrid")
 local pi_div_3 = math.pi / 3
 local two_pi = math.two_pi
@@ -40,12 +42,15 @@ HexGrid.init = function (self, center, xy_extents, z_extents, x_cell_size, z_cel
 	local y_vector = Vector3.forward()
 	local z_vector = Vector3.up()
 	local y_cell_size = math.tan(pi_div_3) * 0.5 * x_cell_size
-	local root = center - x_vector * (xy_extents + 1 + xy_extents * 0.5) * x_cell_size - y_vector * (xy_extents + 1) * y_cell_size - z_vector * (z_extents + 1) * z_cell_size
+	local root = center - x_vector * ((xy_extents + 1 + xy_extents * 0.5) * x_cell_size) - y_vector * ((xy_extents + 1) * y_cell_size) - z_vector * (z_extents + 1) * z_cell_size
+
 	self._root_position = Vector3Box(root)
 	self._x_cell_size = x_cell_size
 	self._y_cell_size = y_cell_size
 	self._z_cell_size = z_cell_size
+
 	local row_size = xy_extents * 2 + 1
+
 	self._row_size = row_size
 	self._layer_size = row_size * row_size
 end
@@ -59,7 +64,9 @@ HexGrid.ijk_from_real_index = function (self, real_index)
 	local i = real_index % row_size
 	local left = (real_index - i) / row_size
 	local j = left % row_size
+
 	left = left - j
+
 	local k = left / row_size
 
 	return i, j + 1, k + 1

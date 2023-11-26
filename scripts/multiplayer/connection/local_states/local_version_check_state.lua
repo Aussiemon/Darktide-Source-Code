@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/multiplayer/connection/local_states/local_version_check_state.lua
+
 local RPCS = {
 	"rpc_check_version_reply"
 }
@@ -20,9 +22,10 @@ end
 
 LocalVersionCheckState.update = function (self, dt)
 	local shared_state = self._shared_state
+
 	self._time = self._time + dt
 
-	if shared_state.timeout < self._time then
+	if self._time > shared_state.timeout then
 		Log.info("LocalVersionCheckState", "Timeout waiting for rpc_check_version_reply")
 
 		return "timeout", {

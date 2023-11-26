@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/decoder_device/decoder_device_system.lua
+
 require("scripts/extension_systems/decoder_device/decoder_device_extension")
 
 local DecoderDeviceSystem = class("DecoderDeviceSystem", "ExtensionSystemBase")

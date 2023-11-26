@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/game_states/game/gameplay_sub_states/gameplay_init_step_states/gameplay_init_step_out_of_bounds.lua
+
 local GameplayInitStepInterface = require("scripts/game_states/game/gameplay_sub_states/gameplay_init_step_states/gameplay_init_step_state_interface")
 local GameplayInitStepNavWorld = require("scripts/game_states/game/gameplay_sub_states/gameplay_init_step_states/gameplay_init_step_nav_world")
 local OutOfBoundsManager = require("scripts/managers/out_of_bounds/out_of_bounds_manager")
@@ -5,7 +7,9 @@ local GameplayInitStepOutOfBounds = class("GameplayInitStepOutOfBounds")
 
 GameplayInitStepOutOfBounds.on_enter = function (self, parent, params)
 	local shared_state = params.shared_state
+
 	self._shared_state = shared_state
+
 	local world = shared_state.world
 
 	self:_init_out_of_bounds_checker(world, shared_state)
@@ -20,8 +24,7 @@ GameplayInitStepOutOfBounds.update = function (self, main_dt, main_t)
 end
 
 GameplayInitStepOutOfBounds._init_out_of_bounds_checker = function (self, world, out_shared_state)
-	local min_position = NetworkConstants.min_position
-	local max_position = NetworkConstants.max_position
+	local min_position, max_position = NetworkConstants.min_position, NetworkConstants.max_position
 	local network_position_extent = math.min((max_position - min_position) * 0.5, math.abs(min_position), max_position)
 	local hard_cap_extents = Vector3(network_position_extent, network_position_extent, network_position_extent)
 	local percentage_of_hard_cap = 0.9

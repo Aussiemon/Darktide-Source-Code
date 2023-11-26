@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/equipment/weapon_templates/grenadier_gauntlets/ogryn_gauntlet_p1_m1.lua
+
 local BaseTemplateSettings = require("scripts/settings/equipment/weapon_templates/base_template_settings")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
@@ -24,139 +26,139 @@ local wounds_shapes = WoundsSettings.shapes
 local ammo_trait_templates = WeaponTraitTemplates[template_types.ammo]
 local damage_trait_templates = WeaponTraitTemplates[template_types.damage]
 local explosion_trait_templates = WeaponTraitTemplates[template_types.explosion]
-local weapon_template = {
-	action_inputs = {
-		start_attack = {
-			buffer_time = 0.75,
-			max_queue = 1,
-			input_sequence = {
-				{
+local weapon_template = {}
+
+weapon_template.action_inputs = {
+	start_attack = {
+		buffer_time = 0.75,
+		max_queue = 1,
+		input_sequence = {
+			{
+				value = true,
+				input = "action_one_pressed"
+			}
+		}
+	},
+	attack_cancel = {
+		buffer_time = 0.1,
+		input_sequence = {
+			{
+				value = true,
+				hold_input = "action_one_hold",
+				input = "action_two_pressed"
+			}
+		}
+	},
+	light_attack = {
+		buffer_time = 0.3,
+		max_queue = 1,
+		input_sequence = {
+			{
+				value = false,
+				time_window = 0.25,
+				input = "action_one_hold"
+			}
+		}
+	},
+	heavy_attack = {
+		buffer_time = 0.5,
+		max_queue = 1,
+		input_sequence = {
+			{
+				value = true,
+				duration = 0.25,
+				input = "action_one_hold"
+			},
+			{
+				value = false,
+				time_window = 1.5,
+				auto_complete = true,
+				input = "action_one_hold"
+			}
+		}
+	},
+	special_action_start = {
+		buffer_time = 0.2,
+		input_sequence = {
+			{
+				value = true,
+				input = "weapon_extra_pressed"
+			}
+		}
+	},
+	special_action_execute = {
+		buffer_time = 0.2,
+		input_sequence = {
+			{
+				value = true,
+				duration = 0,
+				input = "weapon_extra_hold"
+			},
+			{
+				value = false,
+				time_window = 2.8,
+				auto_complete = true,
+				input = "weapon_extra_hold"
+			}
+		}
+	},
+	zoom_shoot = {
+		buffer_time = 0.46,
+		max_queue = 2,
+		input_sequence = {
+			{
+				value = true,
+				input = "action_one_pressed"
+			}
+		}
+	},
+	zoom = {
+		buffer_time = 0.4,
+		input_sequence = {
+			{
+				value = true,
+				input = "action_two_hold",
+				input_setting = {
 					value = true,
-					input = "action_one_pressed"
+					input = "action_two_pressed",
+					setting_value = true,
+					setting = "toggle_ads"
 				}
 			}
-		},
-		attack_cancel = {
-			buffer_time = 0.1,
-			input_sequence = {
-				{
+		}
+	},
+	zoom_release = {
+		buffer_time = 0.3,
+		input_sequence = {
+			{
+				value = false,
+				input = "action_two_hold",
+				time_window = math.huge,
+				input_setting = {
+					setting_value = true,
+					setting = "toggle_ads",
 					value = true,
-					hold_input = "action_one_hold",
-					input = "action_two_pressed"
+					input = "action_two_pressed",
+					time_window = math.huge
 				}
 			}
-		},
-		light_attack = {
-			buffer_time = 0.3,
-			max_queue = 1,
-			input_sequence = {
-				{
-					value = false,
-					time_window = 0.25,
-					input = "action_one_hold"
-				}
+		}
+	},
+	reload = {
+		buffer_time = 0,
+		clear_input_queue = true,
+		input_sequence = {
+			{
+				value = true,
+				input = "weapon_reload"
 			}
-		},
-		heavy_attack = {
-			buffer_time = 0.5,
-			max_queue = 1,
-			input_sequence = {
-				{
-					value = true,
-					duration = 0.25,
-					input = "action_one_hold"
-				},
-				{
-					value = false,
-					time_window = 1.5,
-					auto_complete = true,
-					input = "action_one_hold"
-				}
-			}
-		},
-		special_action_start = {
-			buffer_time = 0.2,
-			input_sequence = {
-				{
-					value = true,
-					input = "weapon_extra_pressed"
-				}
-			}
-		},
-		special_action_execute = {
-			buffer_time = 0.2,
-			input_sequence = {
-				{
-					value = true,
-					duration = 0,
-					input = "weapon_extra_hold"
-				},
-				{
-					value = false,
-					time_window = 2.8,
-					auto_complete = true,
-					input = "weapon_extra_hold"
-				}
-			}
-		},
-		zoom_shoot = {
-			buffer_time = 0.46,
-			max_queue = 2,
-			input_sequence = {
-				{
-					value = true,
-					input = "action_one_pressed"
-				}
-			}
-		},
-		zoom = {
-			buffer_time = 0.4,
-			input_sequence = {
-				{
-					value = true,
-					input = "action_two_hold",
-					input_setting = {
-						value = true,
-						input = "action_two_pressed",
-						setting_value = true,
-						setting = "toggle_ads"
-					}
-				}
-			}
-		},
-		zoom_release = {
-			buffer_time = 0.3,
-			input_sequence = {
-				{
-					value = false,
-					input = "action_two_hold",
-					time_window = math.huge,
-					input_setting = {
-						setting_value = true,
-						setting = "toggle_ads",
-						value = true,
-						input = "action_two_pressed",
-						time_window = math.huge
-					}
-				}
-			}
-		},
-		reload = {
-			buffer_time = 0,
-			clear_input_queue = true,
-			input_sequence = {
-				{
-					value = true,
-					input = "weapon_reload"
-				}
-			}
-		},
-		wield = {
-			buffer_time = 0.2,
-			input_sequence = {
-				{
-					inputs = wield_inputs
-				}
+		}
+	},
+	wield = {
+		buffer_time = 0.2,
+		input_sequence = {
+			{
+				inputs = wield_inputs
 			}
 		}
 	}
@@ -1408,6 +1410,7 @@ weapon_template.alternate_fire_settings = {
 	}
 }
 weapon_template.traits = {}
+
 local bespoke_ogryn_gauntlet_p1_traits = table.keys(WeaponTraitsOgrynGauntletP1)
 
 table.append(weapon_template.traits, bespoke_ogryn_gauntlet_p1_traits)
@@ -1447,7 +1450,9 @@ weapon_template.toughness_template = "default"
 weapon_template.combo_reset_duration = 0.5
 weapon_template.footstep_intervals = FootstepIntervalsTemplates.ogryn_gauntlet
 weapon_template.overclocks = {}
+
 local WeaponBarUIDescriptionTemplates = require("scripts/settings/equipment/weapon_bar_ui_description_templates")
+
 weapon_template.base_stats = {
 	ogryn_gauntlet_p1_m1_ammo = {
 		display_name = "loc_stats_display_ammo_stat",

@@ -1,9 +1,11 @@
+﻿-- chunkname: @scripts/utilities/minion_death.lua
+
 local AttackSettings = require("scripts/settings/damage/attack_settings")
 local ImpactEffect = require("scripts/utilities/attack/impact_effect")
 local attack_results = AttackSettings.attack_results
 local damage_efficiencies = AttackSettings.damage_efficiencies
 local MinionDeath = {}
-local _gib, _push_ragdoll = nil
+local _gib, _push_ragdoll
 
 MinionDeath.die = function (unit, attacking_unit_or_nil, attack_direction, hit_zone_name_or_nil, damage_profile, attack_type_or_nil, herding_template_or_nil, is_critical_strike_or_nil, damage_type_or_nil)
 	Managers.state.minion_death:die(unit, attacking_unit_or_nil, attack_direction, hit_zone_name_or_nil, damage_profile, attack_type_or_nil, herding_template_or_nil, damage_type_or_nil)
@@ -46,7 +48,7 @@ MinionDeath.attack_ragdoll = function (ragdoll_unit, attack_direction, damage_pr
 
 		local damage = 1
 		local attack_result = attack_results.damaged
-		local hit_normal = nil
+		local hit_normal
 		local attack_was_stopped = false
 		local damage_efficiency = damage_efficiencies.full
 

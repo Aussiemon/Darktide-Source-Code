@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/game_mode/game_modes/game_mode_coop_complete_objective.lua
+
 local BotSpawning = require("scripts/managers/bot/bot_spawning")
 local CinematicSceneSettings = require("scripts/settings/cinematic_scene/cinematic_scene_settings")
 local GameModeBase = require("scripts/managers/game_mode/game_modes/game_mode_base")
@@ -66,6 +68,7 @@ GameModeCoopCompleteObjective.evaluate_end_conditions = function (self)
 			local dead_grace_time = settings.mission_end_grace_time_dead
 			local grace_time = all_players_disabled and disabled_grace_time or all_players_dead and dead_grace_time or 0
 			local next_state = all_players_disabled and "about_to_fail_disabled" or "about_to_fail_dead"
+
 			self._end_t = t + grace_time
 
 			self:_change_state(next_state)
@@ -93,7 +96,7 @@ GameModeCoopCompleteObjective.evaluate_end_conditions = function (self)
 			self:_change_state("running")
 		end
 
-		if failure_conditions_met and self._end_t < t then
+		if failure_conditions_met and t > self._end_t then
 			self._failed = true
 
 			self:_gamemode_complete("lost")
@@ -348,7 +351,7 @@ GameModeCoopCompleteObjective._store_persistent_player_data = function (self, pl
 	local ability_extension = ScriptUnit.extension(unit, "ability_system")
 	local equipped_abilities = ability_extension:equipped_abilities()
 	local grenade_ability = equipped_abilities.grenade_ability
-	local grenades_percent = nil
+	local grenades_percent
 
 	if grenade_ability and not grenade_ability.exclude_from_persistant_player_data then
 		local num_grenades = ability_extension:remaining_ability_charges("grenade_ability")
@@ -400,7 +403,9 @@ GameModeCoopCompleteObjective._apply_persistent_player_data = function (self, pl
 			Log.info("GameModeCoopCompleteObjective", "Player %s inherited persistent data from previous self: %s", account_id, table.tostring(selected_data, 3))
 		elseif #bot_data > 0 then
 			selected_data = table.remove(bot_data, #bot_data)
+
 			local settings = self._settings.persistent_player_data_settings
+
 			selected_data.damage_percent = math.min(selected_data.damage_percent, settings.max_damage_percent)
 			selected_data.permanent_damage_percent = math.min(selected_data.permanent_damage_percent, settings.max_permanent_damage_percent)
 
@@ -516,11 +521,13 @@ end
 
 GameModeCoopCompleteObjective._set_ready_time_to_spawn = function (self, player, time)
 	local unique_id = player:unique_id()
+
 	self._players_respawn_time[unique_id] = time
 
 	if self._is_server then
 		local peer_id = player:peer_id()
 		local local_player_id = player:local_player_id()
+
 		time = time or 0
 
 		Managers.state.game_session:send_rpc_clients("rpc_set_player_respawn_time", peer_id, local_player_id, time)

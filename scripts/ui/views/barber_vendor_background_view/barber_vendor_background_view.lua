@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/barber_vendor_background_view/barber_vendor_background_view.lua
+
 local Definitions = require("scripts/ui/views/barber_vendor_background_view/barber_vendor_background_view_definitions")
 local VendorInteractionViewBase = require("scripts/ui/views/vendor_interaction_view_base/vendor_interaction_view_base")
 local ViewSettings = require("scripts/ui/views/barber_vendor_background_view/barber_vendor_background_view_settings")

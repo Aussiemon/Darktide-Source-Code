@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/behavior/nodes/generated/bt_chaos_beast_of_nurgle_selector_node.lua
+
 require("scripts/extension_systems/behavior/nodes/bt_node")
 
 local BtChaosBeastOfNurgleSelectorNode = class("BtChaosBeastOfNurgleSelectorNode", "BtNode")
@@ -30,701 +32,942 @@ BtChaosBeastOfNurgleSelectorNode.evaluate = function (self, unit, blackboard, sc
 	local node_identifier = self.identifier
 	local last_running_node = old_running_child_nodes[node_identifier]
 	local children = self._children
-	local node_exit_spawner = children[1]
-	local spawn_component = blackboard.spawn
-	local condition_result = spawn_component.is_exiting_spawner
 
-	if condition_result then
-		new_running_child_nodes[node_identifier] = node_exit_spawner
+	do
+		local node_exit_spawner = children[1]
+		local spawn_component = blackboard.spawn
+		local condition_result = spawn_component.is_exiting_spawner
 
-		return node_exit_spawner
+		if condition_result then
+			new_running_child_nodes[node_identifier] = node_exit_spawner
+
+			return node_exit_spawner
+		end
 	end
 
-	local node_smart_object = children[2]
-	local condition_result = nil
+	do
+		local node_smart_object = children[2]
+		local condition_result
 
-	repeat
-		local nav_smart_object_component = blackboard.nav_smart_object
-		local smart_object_id = nav_smart_object_component.id
-		local smart_object_is_next = smart_object_id ~= -1
+		repeat
+			local nav_smart_object_component = blackboard.nav_smart_object
+			local smart_object_id = nav_smart_object_component.id
+			local smart_object_is_next = smart_object_id ~= -1
 
-		if not smart_object_is_next then
-			condition_result = false
-		else
+			if not smart_object_is_next then
+				condition_result = false
+
+				break
+			end
+
 			local navigation_extension = ScriptUnit.extension(unit, "navigation_system")
 			local is_smart_objecting = navigation_extension:is_using_smart_object()
 
 			if is_smart_objecting then
 				condition_result = true
-			else
-				local smart_object_unit = nav_smart_object_component.unit
 
-				if not ALIVE[smart_object_unit] then
-					condition_result = false
-				else
-					local nav_graph_extension = ScriptUnit.extension(smart_object_unit, "nav_graph_system")
-					local nav_graph_added = nav_graph_extension:nav_graph_added(smart_object_id)
+				break
+			end
 
-					if not nav_graph_added then
-						condition_result = false
-					else
-						local behavior_component = blackboard.behavior
-						local is_in_moving_state = behavior_component.move_state == "moving"
-						local entrance_is_at_bot_progress_on_path = nav_smart_object_component.entrance_is_at_bot_progress_on_path
-						condition_result = is_in_moving_state and entrance_is_at_bot_progress_on_path
-					end
-				end
+			local smart_object_unit = nav_smart_object_component.unit
+
+			if not ALIVE[smart_object_unit] then
+				condition_result = false
+
+				break
+			end
+
+			local nav_graph_extension = ScriptUnit.extension(smart_object_unit, "nav_graph_system")
+			local nav_graph_added = nav_graph_extension:nav_graph_added(smart_object_id)
+
+			if not nav_graph_added then
+				condition_result = false
+
+				break
+			end
+
+			local behavior_component = blackboard.behavior
+			local is_in_moving_state = behavior_component.move_state == "moving"
+			local entrance_is_at_bot_progress_on_path = nav_smart_object_component.entrance_is_at_bot_progress_on_path
+
+			condition_result = is_in_moving_state and entrance_is_at_bot_progress_on_path
+		until true
+
+		if condition_result then
+			local leaf_node = node_smart_object:evaluate(unit, blackboard, scratchpad, dt, t, evaluate_utility, node_data, old_running_child_nodes, new_running_child_nodes, last_leaf_node_running)
+
+			if leaf_node then
+				new_running_child_nodes[node_identifier] = node_smart_object
+
+				return leaf_node
 			end
 		end
-	until true
+	end
 
-	if condition_result then
-		local leaf_node = node_smart_object:evaluate(unit, blackboard, scratchpad, dt, t, evaluate_utility, node_data, old_running_child_nodes, new_running_child_nodes, last_leaf_node_running)
+	do
+		local node_death = children[3]
+		local death_component = blackboard.death
+		local is_dead = death_component.is_dead
+		local condition_result = is_dead
 
-		if leaf_node then
-			new_running_child_nodes[node_identifier] = node_smart_object
+		if condition_result then
+			new_running_child_nodes[node_identifier] = node_death
 
-			return leaf_node
+			return node_death
 		end
 	end
 
-	local node_death = children[3]
-	local death_component = blackboard.death
-	local is_dead = death_component.is_dead
-	local condition_result = is_dead
+	do
+		local node_stagger = children[4]
+		local stagger_component = blackboard.stagger
+		local is_staggered = stagger_component.num_triggered_staggers > 0 and stagger_component.type == "explosion"
+		local condition_result = is_staggered
 
-	if condition_result then
-		new_running_child_nodes[node_identifier] = node_death
+		if condition_result then
+			new_running_child_nodes[node_identifier] = node_stagger
 
-		return node_death
+			return node_stagger
+		end
 	end
 
-	local node_stagger = children[4]
-	local stagger_component = blackboard.stagger
-	local is_staggered = stagger_component.num_triggered_staggers > 0 and stagger_component.type == "explosion"
-	local condition_result = is_staggered
+	do
+		local node_weakspot_stagger = children[5]
+		local is_running = last_leaf_node_running and last_running_node == node_weakspot_stagger
+		local condition_result
 
-	if condition_result then
-		new_running_child_nodes[node_identifier] = node_stagger
+		repeat
+			if is_running then
+				condition_result = true
 
-		return node_stagger
-	end
+				break
+			end
 
-	local node_weakspot_stagger = children[5]
-	local is_running = last_leaf_node_running and last_running_node == node_weakspot_stagger
-	local condition_result = nil
-
-	repeat
-		if is_running then
-			condition_result = true
-		else
 			local behavior_component = blackboard.behavior
 			local consumed_unit = behavior_component.consumed_unit
 
 			if not HEALTH_ALIVE[consumed_unit] or ALIVE[scratchpad.consumed_unit] then
 				condition_result = false
-			else
-				local stagger_component = blackboard.stagger
-				local is_staggered = stagger_component.num_triggered_staggers > 0 and stagger_component.type == "heavy"
-				condition_result = is_staggered
+
+				break
 			end
-		end
-	until true
 
-	if condition_result then
-		new_running_child_nodes[node_identifier] = node_weakspot_stagger
+			local stagger_component = blackboard.stagger
+			local is_staggered = stagger_component.num_triggered_staggers > 0 and stagger_component.type == "heavy"
 
-		return node_weakspot_stagger
-	end
-
-	local node_spit_out = children[6]
-	local tree_node = node_spit_out.tree_node
-	local action_data = tree_node.action_data
-	local is_running = last_leaf_node_running and last_running_node == node_spit_out
-	local condition_result = nil
-
-	repeat
-		local sub_condition_result_01, condition_result = nil
-
-		repeat
-			local sub_condition_result_01, condition_result = nil
-
-			repeat
-				local perception_component = blackboard.perception
-
-				if not is_running and perception_component.lock_target then
-					condition_result = false
-				else
-					local target_unit = perception_component.target_unit
-					condition_result = HEALTH_ALIVE[target_unit]
-				end
-			until true
-
-			sub_condition_result_01 = condition_result
-			local has_target_unit = sub_condition_result_01
-
-			if not has_target_unit then
-				condition_result = false
-			else
-				local perception_component = blackboard.perception
-				local is_aggroed = perception_component.aggro_state == "aggroed"
-				condition_result = is_aggroed
-			end
+			condition_result = is_staggered
 		until true
 
-		sub_condition_result_01 = condition_result
-		local is_aggroed = sub_condition_result_01
+		if condition_result then
+			new_running_child_nodes[node_identifier] = node_weakspot_stagger
 
-		if not is_aggroed then
-			condition_result = false
-		else
+			return node_weakspot_stagger
+		end
+	end
+
+	do
+		local node_spit_out = children[6]
+		local tree_node = node_spit_out.tree_node
+		local action_data = tree_node.action_data
+		local is_running = last_leaf_node_running and last_running_node == node_spit_out
+		local condition_result
+
+		repeat
+			local sub_condition_result_01
+
+			do
+				local condition_result
+
+				repeat
+					local sub_condition_result_01
+
+					do
+						local condition_result
+
+						repeat
+							local perception_component = blackboard.perception
+
+							if not is_running and perception_component.lock_target then
+								condition_result = false
+
+								break
+							end
+
+							local target_unit = perception_component.target_unit
+
+							condition_result = HEALTH_ALIVE[target_unit]
+						until true
+
+						sub_condition_result_01 = condition_result
+					end
+
+					local has_target_unit = sub_condition_result_01
+
+					if not has_target_unit then
+						condition_result = false
+
+						break
+					end
+
+					local perception_component = blackboard.perception
+					local is_aggroed = perception_component.aggro_state == "aggroed"
+
+					condition_result = is_aggroed
+				until true
+
+				sub_condition_result_01 = condition_result
+			end
+
+			local is_aggroed = sub_condition_result_01
+
+			if not is_aggroed then
+				condition_result = false
+
+				break
+			end
+
 			local behavior_component = blackboard.behavior
 			local consumed_unit = behavior_component.consumed_unit
 
 			if not HEALTH_ALIVE[consumed_unit] then
 				condition_result = false
-			elseif is_running then
-				condition_result = true
-			elseif behavior_component.force_spit_out then
-				condition_result = true
-			else
-				local health_extension = ScriptUnit.extension(consumed_unit, "health_system")
-				local permanent_damage_taken_percent = health_extension:permanent_damage_taken_percent()
-				local required_permanent_damage_taken_percent = Managers.state.difficulty:get_table_entry_by_challenge(action_data.required_permanent_damage_taken_percent)
-				condition_result = permanent_damage_taken_percent >= required_permanent_damage_taken_percent
+
+				break
 			end
-		end
-	until true
 
-	if condition_result then
-		local leaf_node = node_spit_out:evaluate(unit, blackboard, scratchpad, dt, t, evaluate_utility, node_data, old_running_child_nodes, new_running_child_nodes, last_leaf_node_running)
+			if is_running then
+				condition_result = true
 
-		if leaf_node then
-			new_running_child_nodes[node_identifier] = node_spit_out
+				break
+			end
 
-			return leaf_node
+			if behavior_component.force_spit_out then
+				condition_result = true
+
+				break
+			end
+
+			local health_extension = ScriptUnit.extension(consumed_unit, "health_system")
+			local permanent_damage_taken_percent = health_extension:permanent_damage_taken_percent()
+			local required_permanent_damage_taken_percent = Managers.state.difficulty:get_table_entry_by_challenge(action_data.required_permanent_damage_taken_percent)
+
+			condition_result = not (permanent_damage_taken_percent < required_permanent_damage_taken_percent)
+		until true
+
+		if condition_result then
+			local leaf_node = node_spit_out:evaluate(unit, blackboard, scratchpad, dt, t, evaluate_utility, node_data, old_running_child_nodes, new_running_child_nodes, last_leaf_node_running)
+
+			if leaf_node then
+				new_running_child_nodes[node_identifier] = node_spit_out
+
+				return leaf_node
+			end
 		end
 	end
 
-	local node_dashing_and_consuming = children[7]
-	local is_running = last_leaf_node_running and last_running_node == node_dashing_and_consuming
-	local condition_result = nil
-
-	repeat
-		local sub_condition_result_01, condition_result = nil
+	do
+		local node_dashing_and_consuming = children[7]
+		local is_running = last_leaf_node_running and last_running_node == node_dashing_and_consuming
+		local condition_result
 
 		repeat
-			local perception_component = blackboard.perception
+			local sub_condition_result_01
 
-			if not is_running and perception_component.lock_target then
-				condition_result = false
-			else
-				local target_unit = perception_component.target_unit
-				condition_result = HEALTH_ALIVE[target_unit]
+			do
+				local condition_result
+
+				repeat
+					local perception_component = blackboard.perception
+
+					if not is_running and perception_component.lock_target then
+						condition_result = false
+
+						break
+					end
+
+					local target_unit = perception_component.target_unit
+
+					condition_result = HEALTH_ALIVE[target_unit]
+				until true
+
+				sub_condition_result_01 = condition_result
 			end
-		until true
 
-		sub_condition_result_01 = condition_result
-		local has_target_unit = sub_condition_result_01
+			local has_target_unit = sub_condition_result_01
 
-		if not has_target_unit then
-			condition_result = false
-		else
+			if not has_target_unit then
+				condition_result = false
+
+				break
+			end
+
 			local behavior_component = blackboard.behavior
 			local scratchpad_consumed_unit = scratchpad.consumed_unit
 
 			if HEALTH_ALIVE[scratchpad_consumed_unit] then
 				condition_result = true
-			else
-				local consumed_unit = behavior_component.consumed_unit
 
-				if HEALTH_ALIVE[consumed_unit] then
-					condition_result = false
-				else
-					local perception_component = blackboard.perception
-					local target_unit = perception_component.target_unit
-					local target_unit_data_extension = ScriptUnit.extension(target_unit, "unit_data_system")
-					local target_breed = target_unit_data_extension:breed()
-					local Breed = require("scripts/utilities/breed")
+				break
+			end
 
-					if not Breed.is_player(target_breed) then
-						condition_result = false
-					else
-						local character_state_component = target_unit_data_extension:read_component("character_state")
-						local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
-						local is_disabled = PlayerUnitStatus.is_disabled(character_state_component)
+			local consumed_unit = behavior_component.consumed_unit
 
-						if is_disabled then
-							condition_result = false
-						else
-							local buff_extension = ScriptUnit.extension(target_unit, "buff_system")
-							local vomit_buff_name = "chaos_beast_of_nurgle_hit_by_vomit"
-							local current_stacks = buff_extension:current_stacks(vomit_buff_name)
-							local wants_to_eat = behavior_component.wants_to_eat
-							condition_result = current_stacks == 3 or wants_to_eat
-						end
-					end
-				end
+			if HEALTH_ALIVE[consumed_unit] then
+				condition_result = false
+
+				break
+			end
+
+			local perception_component = blackboard.perception
+			local target_unit = perception_component.target_unit
+			local target_unit_data_extension = ScriptUnit.extension(target_unit, "unit_data_system")
+			local target_breed = target_unit_data_extension:breed()
+			local Breed = require("scripts/utilities/breed")
+
+			if not Breed.is_player(target_breed) then
+				condition_result = false
+
+				break
+			end
+
+			local character_state_component = target_unit_data_extension:read_component("character_state")
+			local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
+			local is_disabled = PlayerUnitStatus.is_disabled(character_state_component)
+
+			if is_disabled then
+				condition_result = false
+
+				break
+			end
+
+			local buff_extension = ScriptUnit.extension(target_unit, "buff_system")
+			local vomit_buff_name = "chaos_beast_of_nurgle_hit_by_vomit"
+			local current_stacks = buff_extension:current_stacks(vomit_buff_name)
+			local wants_to_eat = behavior_component.wants_to_eat
+
+			if current_stacks ~= 3 then
+				condition_result = wants_to_eat
+
+				do break end
+
+				condition_result = false
+
+				break
+			end
+
+			condition_result = true
+		until true
+
+		if condition_result then
+			local leaf_node = node_dashing_and_consuming:evaluate(unit, blackboard, scratchpad, dt, t, evaluate_utility, node_data, old_running_child_nodes, new_running_child_nodes, last_leaf_node_running)
+
+			if leaf_node then
+				new_running_child_nodes[node_identifier] = node_dashing_and_consuming
+
+				return leaf_node
 			end
 		end
-	until true
+	end
 
-	if condition_result then
-		local leaf_node = node_dashing_and_consuming:evaluate(unit, blackboard, scratchpad, dt, t, evaluate_utility, node_data, old_running_child_nodes, new_running_child_nodes, last_leaf_node_running)
+	do
+		local node_melee_push_back_attacks = children[8]
+		local condition_result
 
-		if leaf_node then
-			new_running_child_nodes[node_identifier] = node_dashing_and_consuming
+		repeat
+			local behavior_component = blackboard.behavior
+			local melee_cooldown = behavior_component.melee_cooldown
+			local t = Managers.time:time("gameplay")
 
-			return leaf_node
+			condition_result = not (t < melee_cooldown)
+		until true
+
+		if condition_result then
+			local leaf_node = node_melee_push_back_attacks:evaluate(unit, blackboard, scratchpad, dt, t, evaluate_utility, node_data, old_running_child_nodes, new_running_child_nodes, last_leaf_node_running)
+
+			if leaf_node then
+				new_running_child_nodes[node_identifier] = node_melee_push_back_attacks
+
+				return leaf_node
+			end
 		end
 	end
 
-	local node_melee_push_back_attacks = children[8]
-	local condition_result = nil
+	do
+		local node_alerted_sequence = children[9]
+		local is_running = last_leaf_node_running and last_running_node == node_alerted_sequence
+		local condition_result
 
-	repeat
-		local behavior_component = blackboard.behavior
-		local melee_cooldown = behavior_component.melee_cooldown
-		local t = Managers.time:time("gameplay")
-		condition_result = t >= melee_cooldown
-	until true
+		repeat
+			if is_running then
+				condition_result = true
 
-	if condition_result then
-		local leaf_node = node_melee_push_back_attacks:evaluate(unit, blackboard, scratchpad, dt, t, evaluate_utility, node_data, old_running_child_nodes, new_running_child_nodes, last_leaf_node_running)
+				break
+			end
 
-		if leaf_node then
-			new_running_child_nodes[node_identifier] = node_melee_push_back_attacks
+			local sub_condition_result_01
 
-			return leaf_node
-		end
-	end
-
-	local node_alerted_sequence = children[9]
-	local is_running = last_leaf_node_running and last_running_node == node_alerted_sequence
-	local condition_result = nil
-
-	repeat
-		if is_running then
-			condition_result = true
-		else
-			local sub_condition_result_01, condition_result = nil
-
-			repeat
-				local sub_condition_result_01, condition_result = nil
+			do
+				local condition_result
 
 				repeat
-					local perception_component = blackboard.perception
+					local sub_condition_result_01
 
-					if not is_running and perception_component.lock_target then
-						condition_result = false
-					else
-						local target_unit = perception_component.target_unit
-						condition_result = HEALTH_ALIVE[target_unit]
+					do
+						local condition_result
+
+						repeat
+							local perception_component = blackboard.perception
+
+							if not is_running and perception_component.lock_target then
+								condition_result = false
+
+								break
+							end
+
+							local target_unit = perception_component.target_unit
+
+							condition_result = HEALTH_ALIVE[target_unit]
+						until true
+
+						sub_condition_result_01 = condition_result
 					end
+
+					local has_target_unit = sub_condition_result_01
+
+					if not has_target_unit then
+						condition_result = false
+
+						break
+					end
+
+					local perception_component = blackboard.perception
+					local is_aggroed = perception_component.aggro_state == "aggroed"
+
+					condition_result = is_aggroed
 				until true
 
 				sub_condition_result_01 = condition_result
-				local has_target_unit = sub_condition_result_01
+			end
 
-				if not has_target_unit then
-					condition_result = false
-				else
-					local perception_component = blackboard.perception
-					local is_aggroed = perception_component.aggro_state == "aggroed"
-					condition_result = is_aggroed
-				end
-			until true
-
-			sub_condition_result_01 = condition_result
 			local is_aggroed = sub_condition_result_01
 
 			if not is_aggroed then
 				condition_result = false
-			else
-				local perception_component = blackboard.perception
-				local behavior_component = blackboard.behavior
-				local target_is_close = perception_component.target_distance < 5.25
-				condition_result = behavior_component.wants_to_play_alerted and not target_is_close
+
+				break
 			end
-		end
-	until true
 
-	if condition_result then
-		local leaf_node = node_alerted_sequence:evaluate(unit, blackboard, scratchpad, dt, t, evaluate_utility, node_data, old_running_child_nodes, new_running_child_nodes, last_leaf_node_running)
+			local perception_component = blackboard.perception
+			local behavior_component = blackboard.behavior
+			local target_is_close = perception_component.target_distance < 5.25
 
-		if leaf_node then
-			new_running_child_nodes[node_identifier] = node_alerted_sequence
+			condition_result = behavior_component.wants_to_play_alerted and not target_is_close
+		until true
 
-			return leaf_node
+		if condition_result then
+			local leaf_node = node_alerted_sequence:evaluate(unit, blackboard, scratchpad, dt, t, evaluate_utility, node_data, old_running_child_nodes, new_running_child_nodes, last_leaf_node_running)
+
+			if leaf_node then
+				new_running_child_nodes[node_identifier] = node_alerted_sequence
+
+				return leaf_node
+			end
 		end
 	end
 
-	local node_change_target = children[10]
-	local is_running = last_leaf_node_running and last_running_node == node_change_target
-	local condition_result = nil
+	do
+		local node_change_target = children[10]
+		local is_running = last_leaf_node_running and last_running_node == node_change_target
+		local condition_result
 
-	repeat
-		if is_running then
-			condition_result = true
-		else
+		repeat
+			if is_running then
+				condition_result = true
+
+				break
+			end
+
 			local perception_component = blackboard.perception
 
 			if perception_component.target_changed then
 				local new_target_unit = perception_component.target_unit
 				local target_is_close = perception_component.target_distance < 5.25
+
 				condition_result = new_target_unit and ALIVE[new_target_unit] and not target_is_close
-			else
-				condition_result = false
+
+				break
 			end
-		end
-	until true
 
-	if condition_result then
-		new_running_child_nodes[node_identifier] = node_change_target
-
-		return node_change_target
-	end
-
-	local node_run_away = children[11]
-	local tree_node = node_run_away.tree_node
-	local action_data = tree_node.action_data
-	local is_running = last_leaf_node_running and last_running_node == node_run_away
-	local condition_result = nil
-
-	repeat
-		local sub_condition_result_01, condition_result = nil
-
-		repeat
-			local sub_condition_result_01, condition_result = nil
-
-			repeat
-				local perception_component = blackboard.perception
-
-				if not is_running and perception_component.lock_target then
-					condition_result = false
-				else
-					local target_unit = perception_component.target_unit
-					condition_result = HEALTH_ALIVE[target_unit]
-				end
-			until true
-
-			sub_condition_result_01 = condition_result
-			local has_target_unit = sub_condition_result_01
-
-			if not has_target_unit then
-				condition_result = false
-			else
-				local perception_component = blackboard.perception
-				local is_aggroed = perception_component.aggro_state == "aggroed"
-				condition_result = is_aggroed
-			end
+			condition_result = false
 		until true
 
-		sub_condition_result_01 = condition_result
-		local is_aggroed = sub_condition_result_01
+		if condition_result then
+			new_running_child_nodes[node_identifier] = node_change_target
 
-		if not is_aggroed then
-			condition_result = false
-		else
+			return node_change_target
+		end
+	end
+
+	do
+		local node_run_away = children[11]
+		local tree_node = node_run_away.tree_node
+		local action_data = tree_node.action_data
+		local is_running = last_leaf_node_running and last_running_node == node_run_away
+		local condition_result
+
+		repeat
+			local sub_condition_result_01
+
+			do
+				local condition_result
+
+				repeat
+					local sub_condition_result_01
+
+					do
+						local condition_result
+
+						repeat
+							local perception_component = blackboard.perception
+
+							if not is_running and perception_component.lock_target then
+								condition_result = false
+
+								break
+							end
+
+							local target_unit = perception_component.target_unit
+
+							condition_result = HEALTH_ALIVE[target_unit]
+						until true
+
+						sub_condition_result_01 = condition_result
+					end
+
+					local has_target_unit = sub_condition_result_01
+
+					if not has_target_unit then
+						condition_result = false
+
+						break
+					end
+
+					local perception_component = blackboard.perception
+					local is_aggroed = perception_component.aggro_state == "aggroed"
+
+					condition_result = is_aggroed
+				until true
+
+				sub_condition_result_01 = condition_result
+			end
+
+			local is_aggroed = sub_condition_result_01
+
+			if not is_aggroed then
+				condition_result = false
+
+				break
+			end
+
 			local behavior_component = blackboard.behavior
 			local consumed_unit = behavior_component.consumed_unit
 
 			if not HEALTH_ALIVE[consumed_unit] then
 				condition_result = false
-			else
-				local health_extension = ScriptUnit.extension(consumed_unit, "health_system")
-				local permanent_damage_taken_percent = health_extension:permanent_damage_taken_percent()
-				local required_permanent_damage_taken_percent = Managers.state.difficulty:get_table_entry_by_challenge(action_data.required_permanent_damage_taken_percent)
-				condition_result = required_permanent_damage_taken_percent > permanent_damage_taken_percent
+
+				break
 			end
-		end
-	until true
 
-	if condition_result then
-		local leaf_node = node_run_away:evaluate(unit, blackboard, scratchpad, dt, t, evaluate_utility, node_data, old_running_child_nodes, new_running_child_nodes, last_leaf_node_running)
+			local health_extension = ScriptUnit.extension(consumed_unit, "health_system")
+			local permanent_damage_taken_percent = health_extension:permanent_damage_taken_percent()
+			local required_permanent_damage_taken_percent = Managers.state.difficulty:get_table_entry_by_challenge(action_data.required_permanent_damage_taken_percent)
 
-		if leaf_node then
-			new_running_child_nodes[node_identifier] = node_run_away
+			condition_result = not (required_permanent_damage_taken_percent <= permanent_damage_taken_percent)
+		until true
 
-			return leaf_node
+		if condition_result then
+			local leaf_node = node_run_away:evaluate(unit, blackboard, scratchpad, dt, t, evaluate_utility, node_data, old_running_child_nodes, new_running_child_nodes, last_leaf_node_running)
+
+			if leaf_node then
+				new_running_child_nodes[node_identifier] = node_run_away
+
+				return leaf_node
+			end
 		end
 	end
 
-	local node_consume_minion = children[12]
-	local tree_node = node_consume_minion.tree_node
-	local action_data = tree_node.action_data
-	local is_running = last_leaf_node_running and last_running_node == node_consume_minion
-	local condition_result = nil
+	do
+		local node_consume_minion = children[12]
+		local tree_node = node_consume_minion.tree_node
+		local action_data = tree_node.action_data
+		local is_running = last_leaf_node_running and last_running_node == node_consume_minion
+		local condition_result
 
-	repeat
-		if is_running then
-			condition_result = true
-		else
+		repeat
+			if is_running then
+				condition_result = true
+
+				break
+			end
+
 			local behavior_component = blackboard.behavior
 			local t = Managers.time:time("gameplay")
 
 			if t < behavior_component.consume_minion_cooldown then
 				condition_result = false
-			else
-				local health_extension = ScriptUnit.extension(unit, "health_system")
-				local current_health_percent = health_extension:current_health_percent()
 
-				if action_data.health_percent_threshold < current_health_percent then
-					condition_result = false
-				else
-					local num_nearby_units_threshold = action_data.num_nearby_units_threshold
-					local broadphase_component = blackboard.nearby_units_broadphase
-					local num_broadphase_units = broadphase_component.num_units
-					condition_result = num_nearby_units_threshold <= num_broadphase_units
-				end
+				break
 			end
-		end
-	until true
 
-	if condition_result then
-		new_running_child_nodes[node_identifier] = node_consume_minion
+			local health_extension = ScriptUnit.extension(unit, "health_system")
+			local current_health_percent = health_extension:current_health_percent()
 
-		return node_consume_minion
-	end
-
-	local node_consuming = children[13]
-	local is_running = last_leaf_node_running and last_running_node == node_consuming
-	local condition_result = nil
-
-	repeat
-		local sub_condition_result_01, condition_result = nil
-
-		repeat
-			local sub_condition_result_01, condition_result = nil
-
-			repeat
-				local perception_component = blackboard.perception
-
-				if not is_running and perception_component.lock_target then
-					condition_result = false
-				else
-					local target_unit = perception_component.target_unit
-					condition_result = HEALTH_ALIVE[target_unit]
-				end
-			until true
-
-			sub_condition_result_01 = condition_result
-			local has_target_unit = sub_condition_result_01
-
-			if not has_target_unit then
+			if current_health_percent > action_data.health_percent_threshold then
 				condition_result = false
-			else
-				local perception_component = blackboard.perception
-				local is_aggroed = perception_component.aggro_state == "aggroed"
-				condition_result = is_aggroed
+
+				break
 			end
+
+			local num_nearby_units_threshold = action_data.num_nearby_units_threshold
+			local broadphase_component = blackboard.nearby_units_broadphase
+			local num_broadphase_units = broadphase_component.num_units
+
+			condition_result = num_nearby_units_threshold <= num_broadphase_units
 		until true
 
-		sub_condition_result_01 = condition_result
-		local is_aggroed = sub_condition_result_01
+		if condition_result then
+			new_running_child_nodes[node_identifier] = node_consume_minion
 
-		if not is_aggroed then
-			condition_result = false
-		elseif is_running then
-			condition_result = true
-		else
+			return node_consume_minion
+		end
+	end
+
+	do
+		local node_consuming = children[13]
+		local is_running = last_leaf_node_running and last_running_node == node_consuming
+		local condition_result
+
+		repeat
+			local sub_condition_result_01
+
+			do
+				local condition_result
+
+				repeat
+					local sub_condition_result_01
+
+					do
+						local condition_result
+
+						repeat
+							local perception_component = blackboard.perception
+
+							if not is_running and perception_component.lock_target then
+								condition_result = false
+
+								break
+							end
+
+							local target_unit = perception_component.target_unit
+
+							condition_result = HEALTH_ALIVE[target_unit]
+						until true
+
+						sub_condition_result_01 = condition_result
+					end
+
+					local has_target_unit = sub_condition_result_01
+
+					if not has_target_unit then
+						condition_result = false
+
+						break
+					end
+
+					local perception_component = blackboard.perception
+					local is_aggroed = perception_component.aggro_state == "aggroed"
+
+					condition_result = is_aggroed
+				until true
+
+				sub_condition_result_01 = condition_result
+			end
+
+			local is_aggroed = sub_condition_result_01
+
+			if not is_aggroed then
+				condition_result = false
+
+				break
+			end
+
+			if is_running then
+				condition_result = true
+
+				break
+			end
+
 			local perception_component = blackboard.perception
 			local target_is_close = perception_component.target_distance < 5
 
 			if not target_is_close then
 				condition_result = false
-			else
-				local behavior_component = blackboard.behavior
-				local cooldown = behavior_component.consume_cooldown
-				local t = Managers.time:time("gameplay")
 
-				if t < cooldown then
-					condition_result = false
-				else
-					local target_unit = perception_component.target_unit
-					local buff_extension = ScriptUnit.extension(target_unit, "buff_system")
-					local vomit_buff_name = "chaos_beast_of_nurgle_hit_by_vomit"
-					local current_stacks = buff_extension:current_stacks(vomit_buff_name)
-					condition_result = current_stacks ~= 0
-				end
+				break
 			end
-		end
-	until true
 
-	if condition_result then
-		local leaf_node = node_consuming:evaluate(unit, blackboard, scratchpad, dt, t, evaluate_utility, node_data, old_running_child_nodes, new_running_child_nodes, last_leaf_node_running)
+			local behavior_component = blackboard.behavior
+			local cooldown = behavior_component.consume_cooldown
+			local t = Managers.time:time("gameplay")
 
-		if leaf_node then
-			new_running_child_nodes[node_identifier] = node_consuming
+			if t < cooldown then
+				condition_result = false
 
-			return leaf_node
+				break
+			end
+
+			local target_unit = perception_component.target_unit
+			local buff_extension = ScriptUnit.extension(target_unit, "buff_system")
+			local vomit_buff_name = "chaos_beast_of_nurgle_hit_by_vomit"
+			local current_stacks = buff_extension:current_stacks(vomit_buff_name)
+
+			condition_result = current_stacks ~= 0
+		until true
+
+		if condition_result then
+			local leaf_node = node_consuming:evaluate(unit, blackboard, scratchpad, dt, t, evaluate_utility, node_data, old_running_child_nodes, new_running_child_nodes, last_leaf_node_running)
+
+			if leaf_node then
+				new_running_child_nodes[node_identifier] = node_consuming
+
+				return leaf_node
+			end
 		end
 	end
 
-	local node_vomiting = children[14]
-	local tree_node = node_vomiting.tree_node
-	local condition_args = tree_node.condition_args
-	local is_running = last_leaf_node_running and last_running_node == node_vomiting
-	local condition_result = nil
+	do
+		local node_vomiting = children[14]
+		local tree_node = node_vomiting.tree_node
+		local condition_args = tree_node.condition_args
+		local is_running = last_leaf_node_running and last_running_node == node_vomiting
+		local condition_result
 
-	repeat
-		local behavior_component = blackboard.behavior
-		local vomit_cooldown = behavior_component.vomit_cooldown
-		local t = Managers.time:time("gameplay")
+		repeat
+			local behavior_component = blackboard.behavior
+			local vomit_cooldown = behavior_component.vomit_cooldown
+			local t = Managers.time:time("gameplay")
 
-		if t < vomit_cooldown then
-			condition_result = false
-		else
-			local sub_condition_result_01, condition_result = nil
+			if t < vomit_cooldown then
+				condition_result = false
 
-			repeat
-				local sub_condition_result_01, condition_result = nil
+				break
+			end
+
+			local sub_condition_result_01
+
+			do
+				local condition_result
 
 				repeat
-					local perception_component = blackboard.perception
+					local sub_condition_result_01
 
-					if not is_running and perception_component.lock_target then
-						condition_result = false
-					else
-						local target_unit = perception_component.target_unit
-						condition_result = HEALTH_ALIVE[target_unit]
+					do
+						local condition_result
+
+						repeat
+							local perception_component = blackboard.perception
+
+							if not is_running and perception_component.lock_target then
+								condition_result = false
+
+								break
+							end
+
+							local target_unit = perception_component.target_unit
+
+							condition_result = HEALTH_ALIVE[target_unit]
+						until true
+
+						sub_condition_result_01 = condition_result
 					end
+
+					local has_target_unit = sub_condition_result_01
+
+					if not has_target_unit then
+						condition_result = false
+
+						break
+					end
+
+					local perception_component = blackboard.perception
+					local is_aggroed = perception_component.aggro_state == "aggroed"
+
+					condition_result = is_aggroed
 				until true
 
 				sub_condition_result_01 = condition_result
-				local has_target_unit = sub_condition_result_01
+			end
 
-				if not has_target_unit then
-					condition_result = false
-				else
-					local perception_component = blackboard.perception
-					local is_aggroed = perception_component.aggro_state == "aggroed"
-					condition_result = is_aggroed
-				end
-			until true
-
-			sub_condition_result_01 = condition_result
 			local is_aggroed = sub_condition_result_01
 
 			if not is_aggroed then
 				condition_result = false
-			elseif is_running then
-				condition_result = true
-			else
-				local perception_component = blackboard.perception
 
-				if not perception_component.has_line_of_sight then
-					condition_result = false
-				else
-					local target_unit = perception_component.target_unit
-					local line_of_sight_id = "vomit"
-					local perception_extension = ScriptUnit.extension(unit, "perception_system")
-					local has_clear_shot = perception_extension:has_line_of_sight_by_id(target_unit, line_of_sight_id)
-
-					if not has_clear_shot then
-						condition_result = false
-					else
-						local target_distance_z = perception_component.target_distance_z
-
-						if target_distance_z >= 3 then
-							condition_result = false
-						else
-							local target_distance = perception_component.target_distance
-							local wanted_distance = condition_args.wanted_distance
-
-							if wanted_distance < target_distance then
-								condition_result = false
-							else
-								local consumed_unit = behavior_component.consumed_unit
-								condition_result = not HEALTH_ALIVE[consumed_unit] or target_unit ~= consumed_unit
-							end
-						end
-					end
-				end
+				break
 			end
-		end
-	until true
 
-	if condition_result then
-		local leaf_node = node_vomiting:evaluate(unit, blackboard, scratchpad, dt, t, evaluate_utility, node_data, old_running_child_nodes, new_running_child_nodes, last_leaf_node_running)
+			if is_running then
+				condition_result = true
 
-		if leaf_node then
-			new_running_child_nodes[node_identifier] = node_vomiting
+				break
+			end
 
-			return leaf_node
+			local perception_component = blackboard.perception
+
+			if not perception_component.has_line_of_sight then
+				condition_result = false
+
+				break
+			end
+
+			local target_unit = perception_component.target_unit
+			local line_of_sight_id = "vomit"
+			local perception_extension = ScriptUnit.extension(unit, "perception_system")
+			local has_clear_shot = perception_extension:has_line_of_sight_by_id(target_unit, line_of_sight_id)
+
+			if not has_clear_shot then
+				condition_result = false
+
+				break
+			end
+
+			local target_distance_z = perception_component.target_distance_z
+
+			if target_distance_z >= 3 then
+				condition_result = false
+
+				break
+			end
+
+			local target_distance = perception_component.target_distance
+			local wanted_distance = condition_args.wanted_distance
+
+			if wanted_distance < target_distance then
+				condition_result = false
+
+				break
+			end
+
+			local consumed_unit = behavior_component.consumed_unit
+
+			condition_result = not HEALTH_ALIVE[consumed_unit] or target_unit ~= consumed_unit
+		until true
+
+		if condition_result then
+			local leaf_node = node_vomiting:evaluate(unit, blackboard, scratchpad, dt, t, evaluate_utility, node_data, old_running_child_nodes, new_running_child_nodes, last_leaf_node_running)
+
+			if leaf_node then
+				new_running_child_nodes[node_identifier] = node_vomiting
+
+				return leaf_node
+			end
 		end
 	end
 
-	local node_hunting = children[15]
-	local is_running = last_leaf_node_running and last_running_node == node_hunting
-	local condition_result = nil
-
-	repeat
-		local sub_condition_result_01, condition_result = nil
+	do
+		local node_hunting = children[15]
+		local is_running = last_leaf_node_running and last_running_node == node_hunting
+		local condition_result
 
 		repeat
-			local sub_condition_result_01, condition_result = nil
+			local sub_condition_result_01
 
-			repeat
-				local perception_component = blackboard.perception
+			do
+				local condition_result
 
-				if not is_running and perception_component.lock_target then
-					condition_result = false
-				else
-					local target_unit = perception_component.target_unit
-					condition_result = HEALTH_ALIVE[target_unit]
-				end
-			until true
+				repeat
+					local sub_condition_result_01
 
-			sub_condition_result_01 = condition_result
-			local has_target_unit = sub_condition_result_01
+					do
+						local condition_result
 
-			if not has_target_unit then
-				condition_result = false
-			else
-				local perception_component = blackboard.perception
-				local is_aggroed = perception_component.aggro_state == "aggroed"
-				condition_result = is_aggroed
+						repeat
+							local perception_component = blackboard.perception
+
+							if not is_running and perception_component.lock_target then
+								condition_result = false
+
+								break
+							end
+
+							local target_unit = perception_component.target_unit
+
+							condition_result = HEALTH_ALIVE[target_unit]
+						until true
+
+						sub_condition_result_01 = condition_result
+					end
+
+					local has_target_unit = sub_condition_result_01
+
+					if not has_target_unit then
+						condition_result = false
+
+						break
+					end
+
+					local perception_component = blackboard.perception
+					local is_aggroed = perception_component.aggro_state == "aggroed"
+
+					condition_result = is_aggroed
+				until true
+
+				sub_condition_result_01 = condition_result
 			end
-		until true
 
-		sub_condition_result_01 = condition_result
-		local is_aggroed = sub_condition_result_01
+			local is_aggroed = sub_condition_result_01
 
-		if not is_aggroed then
-			condition_result = false
-		elseif is_running then
-			condition_result = true
-		else
+			if not is_aggroed then
+				condition_result = false
+
+				break
+			end
+
+			if is_running then
+				condition_result = true
+
+				break
+			end
+
 			local perception_component = blackboard.perception
 			local target_is_far_away = perception_component.target_distance > 3.5
 
 			if target_is_far_away then
 				condition_result = true
-			else
-				local target_unit = perception_component.target_unit
-				local buff_extension = ScriptUnit.extension(target_unit, "buff_system")
-				local vomit_buff_name = "chaos_beast_of_nurgle_hit_by_vomit"
-				local target_is_vomited = buff_extension:current_stacks(vomit_buff_name) > 0
-				condition_result = target_is_vomited and true or false
+
+				break
 			end
-		end
-	until true
 
-	if condition_result then
-		local is_aggroed = node_hunting
-		local perception_component = unit
-		local target_is_far_away = blackboard
-		local leaf_node = node_hunting.evaluate(is_aggroed, perception_component, target_is_far_away, scratchpad, dt, t, evaluate_utility, node_data, old_running_child_nodes, new_running_child_nodes, last_leaf_node_running)
+			local target_unit = perception_component.target_unit
+			local buff_extension = ScriptUnit.extension(target_unit, "buff_system")
+			local vomit_buff_name = "chaos_beast_of_nurgle_hit_by_vomit"
+			local target_is_vomited = buff_extension:current_stacks(vomit_buff_name) > 0
 
-		if leaf_node then
-			new_running_child_nodes[node_identifier] = node_hunting
+			condition_result = target_is_vomited and true or false
+		until true
 
-			return leaf_node
+		if condition_result then
+			local leaf_node = node_hunting:evaluate(unit, blackboard, scratchpad, dt, t, evaluate_utility, node_data, old_running_child_nodes, new_running_child_nodes, last_leaf_node_running)
+
+			if leaf_node then
+				new_running_child_nodes[node_identifier] = node_hunting
+
+				return leaf_node
+			end
 		end
 	end
 
 	local node_idle = children[16]
+
 	new_running_child_nodes[node_identifier] = node_idle
 
 	return node_idle

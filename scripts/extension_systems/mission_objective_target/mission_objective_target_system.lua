@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/mission_objective_target/mission_objective_target_system.lua
+
 require("scripts/extension_systems/mission_objective_target/mission_objective_target_extension")
 
 local MissionObjectiveTargetSystem = class("MissionObjectiveTargetSystem", "ExtensionSystemBase")

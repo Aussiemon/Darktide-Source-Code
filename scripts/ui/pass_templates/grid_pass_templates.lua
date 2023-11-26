@@ -1,7 +1,10 @@
+﻿-- chunkname: @scripts/ui/pass_templates/grid_pass_templates.lua
+
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local GridPassTemplates = {}
 local grid_button_font_setting_name = "button_medium"
 local grid_button_font_settings = UIFontSettings[grid_button_font_setting_name]
+
 GridPassTemplates.grid_button = {
 	{
 		pass_type = "hotspot",
@@ -92,6 +95,7 @@ GridPassTemplates.grid_button = {
 			local default_text_color = style.default_text_color
 			local text_color = style.text_color
 			local progress = 1 - content.hotspot.anim_input_progress * 0.3
+
 			text_color[2] = default_text_color[2] * progress
 			text_color[3] = default_text_color[3] * progress
 			text_color[4] = default_text_color[4] * progress

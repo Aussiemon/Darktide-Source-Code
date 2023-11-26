@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/utilities/character_create.lua
+
 local Breeds = require("scripts/settings/breed/breeds")
 local Archetypes = require("scripts/settings/archetype/archetypes")
 local HomePlanets = require("scripts/settings/character/home_planets")
@@ -41,10 +43,14 @@ CharacterCreate.init = function (self, item_definitions, owned_gear, optional_re
 	self:_setup_default_values()
 
 	self._item_definitions = item_definitions
+
 	local verified_items = self:_verify_items(item_definitions, owned_gear)
 	local item_categories = self:_setup_item_categories(verified_items)
+
 	self._item_categories = item_categories
+
 	local appearance_presets = self:_setup_appearance_presets(verified_items)
+
 	self._appearance_presets = appearance_presets
 
 	if optional_real_profile then
@@ -55,6 +61,7 @@ CharacterCreate.init = function (self, item_definitions, owned_gear, optional_re
 		local gender = optional_real_profile.gender
 		local breed = optional_real_profile.archetype.breed
 		local height = optional_real_profile.personal.character_height
+
 		self._character_height = height
 		self._profile = {
 			name = "",
@@ -68,6 +75,7 @@ CharacterCreate.init = function (self, item_definitions, owned_gear, optional_re
 			gender = gender,
 			breed = breed
 		}
+
 		local loadout = optional_real_profile.loadout
 
 		if loadout then
@@ -99,6 +107,7 @@ CharacterCreate.init = function (self, item_definitions, owned_gear, optional_re
 			}
 		}
 		self._character_height = 1
+
 		local randomized_archetype = self:_randomize_archetype()
 
 		self:set_archetype(randomized_archetype)
@@ -181,17 +190,19 @@ CharacterCreate._setup_default_values = function (self)
 		"female",
 		"male"
 	}
+
 	local sorted_personalities = {}
 
 	for key, settings in pairs(Personalities) do
 		local archetype = settings.archetype
-		local destination = nil
+		local destination
 
 		if not sorted_personalities[archetype] then
 			sorted_personalities[archetype] = {}
 		end
 
 		destination = sorted_personalities[archetype]
+
 		local breed = settings.breed
 
 		if not destination[breed] then
@@ -199,6 +210,7 @@ CharacterCreate._setup_default_values = function (self)
 		end
 
 		destination = destination[breed]
+
 		local gender = settings.gender
 
 		if not destination[gender] then
@@ -210,6 +222,7 @@ CharacterCreate._setup_default_values = function (self)
 	end
 
 	self._sorted_personalities = sorted_personalities
+
 	local home_planets_array = {}
 
 	for key, settings in pairs(HomePlanets) do
@@ -217,6 +230,7 @@ CharacterCreate._setup_default_values = function (self)
 	end
 
 	self._home_planets_array = home_planets_array
+
 	local childhood_array = {}
 
 	for key, settings in pairs(Childhood) do
@@ -224,6 +238,7 @@ CharacterCreate._setup_default_values = function (self)
 	end
 
 	self._childhood_array = childhood_array
+
 	local growing_up_array = {}
 
 	for key, settings in pairs(GrowingUp) do
@@ -231,6 +246,7 @@ CharacterCreate._setup_default_values = function (self)
 	end
 
 	self._growing_up_array = growing_up_array
+
 	local formative_event_array = {}
 
 	for key, settings in pairs(FormativeEvent) do
@@ -238,10 +254,11 @@ CharacterCreate._setup_default_values = function (self)
 	end
 
 	self._formative_event_array = formative_event_array
+
 	local sorted_crimes = {}
 
 	for key, settings in pairs(Crimes) do
-		local destination = nil
+		local destination
 		local archetype = settings.archetype
 
 		if not sorted_crimes[archetype] then
@@ -253,6 +270,7 @@ CharacterCreate._setup_default_values = function (self)
 	end
 
 	self._sorted_crimes = sorted_crimes
+
 	local inventory_slots_array = {}
 
 	for slot_name, slot_info in pairs(ItemSlotSettings) do
@@ -405,7 +423,13 @@ CharacterCreate._setup_item_categories = function (self, source_items)
 		}
 		local table_key = loop_table_order[lookup_index]
 		local values = {}
-		values = item[table_key] and not table.is_empty(item[table_key]) and item[table_key] or default_table_arrays[table_key] or {}
+
+		if item[table_key] and not table.is_empty(item[table_key]) then
+			values = item[table_key]
+		else
+			values = default_table_arrays[table_key] or {}
+		end
+
 		local next_lookup_index = lookup_index < #loop_table_order and lookup_index + 1 or nil
 
 		for _, key in ipairs(values) do
@@ -479,6 +503,7 @@ end
 
 CharacterCreate.set_archetype = function (self, archetype)
 	local is_diff_archetype = self._profile.archetype ~= archetype
+
 	self._profile.archetype = archetype
 
 	self:_increase_value_version("archetype")
@@ -519,6 +544,7 @@ end
 
 CharacterCreate._fetch_suggested_names_by_profile = function (self)
 	self._archetype_random_names = {}
+
 	local archetype = self._profile.archetype.name
 	local gender = self:gender()
 	local planet_option = self:planet()
@@ -564,6 +590,7 @@ end
 
 CharacterCreate.set_item_per_slot_preview = function (self, slot_name, item, profile)
 	local loadout = profile.loadout
+
 	loadout[slot_name] = item
 
 	self:_increase_value_version({
@@ -767,6 +794,7 @@ end
 
 CharacterCreate.set_gear_visible = function (self, visible)
 	local previous_visiblity = self._visible
+
 	self._visible = visible
 
 	if not visible and visible ~= previous_visiblity then
@@ -798,7 +826,7 @@ end
 
 CharacterCreate._increase_value_version = function (self, value_keys)
 	if type(value_keys) == "table" then
-		local register_value_version = nil
+		local register_value_version
 
 		function register_value_version(save_location, value_keys, current_index)
 			local current_key = value_keys[current_index]
@@ -823,12 +851,15 @@ end
 CharacterCreate._generate_backend_profile = function (self)
 	local profile = self._profile
 	local new_profile = table.create_copy_instance(nil, profile)
+
 	new_profile.archetype = profile.archetype.name
 	new_profile.career = {
 		specialization = profile.specialization
 	}
 	new_profile.specialization = nil
+
 	local new_loadout = {}
+
 	new_profile.inventory = new_loadout
 	new_profile.loadout = nil
 
@@ -841,6 +872,7 @@ CharacterCreate._generate_backend_profile = function (self)
 	local personality = self:personality()
 	local personality_settings = Personalities[personality]
 	local character_voice = personality_settings.character_voice
+
 	new_profile.selected_voice = character_voice
 	new_profile.character_height = self._character_height
 	new_profile.id = Application.guid()

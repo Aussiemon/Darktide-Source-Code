@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/training_grounds_options_view/training_grounds_options_view_settings.lua
+
 local training_grounds_options_view_settings = {
 	rewards_claimed_text = "loc_training_grounds_claimed_rewards",
 	play_settings = {

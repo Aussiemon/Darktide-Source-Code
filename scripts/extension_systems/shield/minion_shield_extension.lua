@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/shield/minion_shield_extension.lua
+
 local AttackSettings = require("scripts/settings/damage/attack_settings")
 local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
 local Breed = require("scripts/utilities/breed")
@@ -21,21 +23,23 @@ MinionShieldExtension.init = function (self, extension_init_context, unit, exten
 	self._template = shield_template
 	self._regen_hit_strength_rate = shield_template.regen_hit_strength_rate
 	self._hit_strength = 0
+
 	local visual_loadout_extension = ScriptUnit.extension(unit, "visual_loadout_system")
 	local shield_item = visual_loadout_extension:slot_item(shield_template.open_up_vfx_slot_name)
+
 	self._shield_item = shield_item
 end
 
 MinionShieldExtension._init_blackboard_components = function (self, blackboard)
 	local shield_write_component = Blackboard.write_component(blackboard, "shield")
+
 	shield_write_component.is_blocking = IS_BLOCKING_INITIALLY
 	self._shield_component = shield_write_component
 	self._stagger_component = blackboard.stagger
 end
 
 MinionShieldExtension.game_object_initialized = function (self, session, object_id)
-	self._game_object_id = object_id
-	self._game_session = session
+	self._game_session, self._game_object_id = session, object_id
 end
 
 MinionShieldExtension.update = function (self, context, dt, t)
@@ -43,6 +47,7 @@ MinionShieldExtension.update = function (self, context, dt, t)
 
 	if not is_staggered then
 		local regen_hit_strength_rate = self._regen_hit_strength_rate
+
 		self._hit_strength = math.max(self._hit_strength - regen_hit_strength_rate * dt, 0)
 	end
 end
@@ -118,9 +123,7 @@ MinionShieldExtension.apply_stagger = function (self, unit, damage_profile, stag
 		local in_open_up_stagger = stagger_component.num_triggered_staggers > 0 and stagger_component.type == stagger_types.shield_heavy_block
 
 		if in_open_up_stagger then
-			length_scale = 1
-			duration_scale = 1
-			stagger_type = stagger_types.shield_broken
+			stagger_type, duration_scale, length_scale = stagger_types.shield_broken, 1, 1
 			self._hit_strength = 0
 		end
 
@@ -128,10 +131,14 @@ MinionShieldExtension.apply_stagger = function (self, unit, damage_profile, stag
 	end
 
 	local override_multiplier = damage_profile.shield_multiplier or DEFAULT_MULTIPLIER
+
 	stagger_strength = override_multiplier * (stagger_strength or 0)
+
 	local template = self._template
 	local default_min_stagger_strength = template.attack_type_min_stagger_strength and template.attack_type_min_stagger_strength[attack_type] or 0
+
 	stagger_strength = math.max(stagger_strength, default_min_stagger_strength)
+
 	local override_stagger_strength = damage_profile.shield_override_stagger_strength
 
 	if override_stagger_strength then
@@ -141,15 +148,15 @@ MinionShieldExtension.apply_stagger = function (self, unit, damage_profile, stag
 	local open_up_threshold = template.open_up_threshold
 	local quarter_open_up_threshold = open_up_threshold / 20
 	local hit_strength = self._hit_strength
+
 	hit_strength = math.min(hit_strength + stagger_strength, open_up_threshold)
 	self._hit_strength = hit_strength
 
 	if attack_result == attack_results.damaged then
 		return stagger_type, duration_scale, length_scale
 	elseif hit_strength == open_up_threshold then
-		length_scale = 1
-		duration_scale = 1
-		stagger_type = stagger_types.shield_heavy_block
+		stagger_type, duration_scale, length_scale = stagger_types.shield_heavy_block, 1, 1
+
 		local fx_system = Managers.state.extension:system("fx_system")
 		local shield_item = self._shield_item
 		local fx_source_name = template.open_up_vfx_node
@@ -161,13 +168,9 @@ MinionShieldExtension.apply_stagger = function (self, unit, damage_profile, stag
 
 		self._hit_strength = 0
 	elseif quarter_open_up_threshold < hit_strength then
-		length_scale = 1
-		duration_scale = 1
-		stagger_type = stagger_types.shield_block
+		stagger_type, duration_scale, length_scale = stagger_types.shield_block, 1, 1
 	else
-		length_scale = 0
-		duration_scale = 0
-		stagger_type = nil
+		stagger_type, duration_scale, length_scale = nil, 0, 0
 	end
 
 	return stagger_type, duration_scale, length_scale

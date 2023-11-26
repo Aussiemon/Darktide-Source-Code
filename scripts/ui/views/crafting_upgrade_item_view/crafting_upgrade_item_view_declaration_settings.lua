@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/crafting_upgrade_item_view/crafting_upgrade_item_view_declaration_settings.lua
+
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local CraftingUpgradeItemViewDeclarationSettings = {
 	state_bound = true,

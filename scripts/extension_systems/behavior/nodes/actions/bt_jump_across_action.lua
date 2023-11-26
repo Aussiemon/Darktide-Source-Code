@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/behavior/nodes/actions/bt_jump_across_action.lua
+
 require("scripts/extension_systems/behavior/nodes/bt_node")
 
 local Animation = require("scripts/utilities/animation")
@@ -10,8 +12,11 @@ BtJumpAcrossAction.enter = function (self, unit, breed, blackboard, scratchpad, 
 
 	if navigation_extension:use_smart_object(true) then
 		scratchpad.navigation_extension = navigation_extension
+
 		local nav_smart_object_component = blackboard.nav_smart_object
+
 		scratchpad.nav_smart_object_component = nav_smart_object_component
+
 		local animation_extension = ScriptUnit.extension(unit, "animation_system")
 
 		animation_extension:anim_event(BASE_LAYER_EMPTY_EVENT)
@@ -20,12 +25,17 @@ BtJumpAcrossAction.enter = function (self, unit, breed, blackboard, scratchpad, 
 		local spawn_component = blackboard.spawn
 		local anim_translation_scale_factor = spawn_component.anim_translation_scale_factor
 		local jump_anim_event = self:_start_jump(unit, breed, animation_extension, locomotion_extension, navigation_extension, nav_smart_object_component, anim_translation_scale_factor, scratchpad, action_data, t)
+
 		scratchpad.locomotion_extension = locomotion_extension
+
 		local behavior_component = Blackboard.write_component(blackboard, "behavior")
+
 		behavior_component.move_state = "jumping"
 		scratchpad.behavior_component = behavior_component
+
 		local blend_timings = action_data.blend_timings
 		local blend_duration = blend_timings and blend_timings[jump_anim_event] or 0
+
 		scratchpad.blend_timing = t + blend_duration
 	else
 		scratchpad.failed_to_use_smart_object = true
@@ -37,9 +47,13 @@ BtJumpAcrossAction._start_jump = function (self, unit, breed, animation_extensio
 	local exit_position = nav_smart_object_component.exit_position:unbox()
 	local entrance_to_exit_flat = Vector3.flat(exit_position - entrance_position)
 	local wanted_rotation = Quaternion.look(entrance_to_exit_flat)
+
 	scratchpad.wanted_rotation = QuaternionBox(wanted_rotation)
+
 	local current_rotation_speed = locomotion_extension:rotation_speed()
+
 	scratchpad.original_rotation_speed = current_rotation_speed
+
 	local rotation = Unit.local_rotation(unit, 1)
 	local look_direction = Quaternion.forward(rotation)
 	local current_radians = math.atan2(look_direction.y, look_direction.x)
@@ -58,7 +72,7 @@ BtJumpAcrossAction._start_jump = function (self, unit, breed, animation_extensio
 	local smart_object_type = nav_smart_object_component.type
 	local anim_thresholds = smart_object_template.jump_across_anim_thresholds[smart_object_type] or smart_object_template.jump_across_anim_thresholds.jump
 	local num_anim_thresholds = #anim_thresholds
-	local jump_anim_event = nil
+	local jump_anim_event
 
 	for i = 1, num_anim_thresholds do
 		local anim_threshold = anim_thresholds[i]
@@ -69,9 +83,12 @@ BtJumpAcrossAction._start_jump = function (self, unit, breed, animation_extensio
 			animation_extension:anim_event(jump_anim_event)
 
 			scratchpad.ending_anim_event = jump_anim_event
+
 			local anim_timings = action_data.anim_timings
 			local jump_duration = anim_timings[jump_anim_event]
+
 			scratchpad.jump_done_t = t + jump_duration
+
 			local animation_distance = anim_threshold.anim_horizontal_lengths or anim_threshold.anim_horizontal_length
 
 			if type(animation_distance) == "table" then
@@ -110,6 +127,7 @@ BtJumpAcrossAction.leave = function (self, unit, breed, blackboard, scratchpad, 
 			local ending_move_states = action_data.ending_move_states
 			local ending_move_state = ending_move_states[anim_event]
 			local behavior_component = scratchpad.behavior_component
+
 			behavior_component.move_state = ending_move_state
 		end
 	end
@@ -132,11 +150,9 @@ BtJumpAcrossAction.run = function (self, unit, breed, blackboard, scratchpad, ac
 		return "failed"
 	end
 
-	if scratchpad.blend_timing and scratchpad.blend_timing <= t then
+	if scratchpad.blend_timing and t >= scratchpad.blend_timing then
 		local locomotion_extension = scratchpad.locomotion_extension
-		local anim_driven = true
-		local affected_by_gravity = false
-		local script_driven_rotation = true
+		local anim_driven, affected_by_gravity, script_driven_rotation = true, false, true
 
 		locomotion_extension:set_anim_driven(anim_driven, affected_by_gravity, script_driven_rotation)
 
@@ -148,7 +164,7 @@ BtJumpAcrossAction.run = function (self, unit, breed, blackboard, scratchpad, ac
 
 	locomotion_extension:set_wanted_rotation(wanted_rotation)
 
-	if scratchpad.jump_done_t <= t then
+	if t >= scratchpad.jump_done_t then
 		local navigation_extension = scratchpad.navigation_extension
 
 		if self:_is_unit_on_navmesh(unit, navigation_extension) then

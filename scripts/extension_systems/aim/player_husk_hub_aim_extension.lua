@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/aim/player_husk_hub_aim_extension.lua
+
 local HubAimConstraints = require("scripts/extension_systems/aim/utilities/hub_aim_constraints")
 local PlayerHuskHubAimExtension = class("PlayerHuskHubAimExtension")
 

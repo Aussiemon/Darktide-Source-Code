@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/locomotion/locomotion_system.lua
+
 require("scripts/extension_systems/locomotion/deployable_husk_locomotion_extension")
 require("scripts/extension_systems/locomotion/deployable_unit_locomotion_extension")
 require("scripts/extension_systems/locomotion/minion_husk_locomotion_extension")

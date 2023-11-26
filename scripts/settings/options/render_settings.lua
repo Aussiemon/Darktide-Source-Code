@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/options/render_settings.lua
+
 local DefaultGameParameters = require("scripts/foundation/utilities/parameters/default_game_parameters")
 local OptionsUtilities = require("scripts/utilities/ui/options")
 local SettingsUtilitiesFunction = require("scripts/settings/options/settings_utils")
@@ -1931,7 +1933,7 @@ for _, template in ipairs(RENDER_TEMPLATES) do
 end
 
 local function create_render_settings_entry(template)
-	local entry = nil
+	local entry
 	local id = template.id
 	local display_name = template.display_name
 	local indentation_level = template.indentation_level
@@ -1952,7 +1954,7 @@ local function create_render_settings_entry(template)
 				SettingsUtilities.verify_and_apply_changes(template, value)
 			end,
 			on_changed = on_changed or function (value, template)
-				local option = nil
+				local option
 
 				for i = 1, #options do
 					if options[i].id == value then
@@ -1977,7 +1979,7 @@ local function create_render_settings_entry(template)
 				end
 
 				local dirty = false
-				local current_value = template:get_function()
+				local current_value = template.get_function(template)
 
 				if not SettingsUtilities.is_same(current_value, value) then
 					SettingsUtilities.set_user_setting(template.save_location, template.id, value)
@@ -2004,7 +2006,7 @@ local function create_render_settings_entry(template)
 	elseif default_value_type == "number" then
 		local function change_function(value, template)
 			local dirty = false
-			local current_value = template:get_function()
+			local current_value = template.get_function(template)
 
 			if not SettingsUtilities.is_same(current_value, value) then
 				dirty = true
@@ -2034,6 +2036,7 @@ local function create_render_settings_entry(template)
 			value_get_function = get_function,
 			on_value_changed_function = change_function
 		}
+
 		entry = OptionsUtilities.create_value_slider_template(slider_params)
 
 		entry.on_activated = function (value, template)
@@ -2049,7 +2052,7 @@ local function create_render_settings_entry(template)
 			end,
 			on_changed = on_changed or function (value, template)
 				local dirty = false
-				local current_value = template:get_function()
+				local current_value = template.get_function(template)
 
 				if current_value == nil then
 					current_value = template.default_value
@@ -2097,6 +2100,7 @@ render_settings[#render_settings + 1] = {
 	display_name = "loc_settings_menu_group_display",
 	widget_type = "group_header"
 }
+
 local resolution_undefined_return_value = 0
 local resolution_custom_return_value = -1
 
@@ -2136,8 +2140,9 @@ local function generate_resolution_options()
 		for i = 1, num_modes do
 			local width, height = DisplayAdapter.mode(adapter_index, output_screen, i)
 
-			if DefaultGameParameters.lowest_resolution <= width then
+			if width >= DefaultGameParameters.lowest_resolution then
 				local index = #options + 1
+
 				options[index] = {
 					ignore_localization = true,
 					id = index,
@@ -2176,8 +2181,7 @@ local function generate_resolution_options()
 end
 
 local function _vfov_to_hfov(vfov)
-	local width = RESOLUTION_LOOKUP.width
-	local height = RESOLUTION_LOOKUP.height
+	local width, height = RESOLUTION_LOOKUP.width, RESOLUTION_LOOKUP.height
 	local aspect_ratio = width / height
 	local hfov = math.round(2 * math.deg(math.atan(math.tan(math.rad(vfov) / 2) * aspect_ratio)))
 
@@ -2188,6 +2192,7 @@ local _fov_format_params = {}
 local min_value = IS_XBS and DefaultGameParameters.min_console_vertical_fov or DefaultGameParameters.min_vertical_fov
 local max_value = IS_XBS and DefaultGameParameters.max_console_vertical_fov or DefaultGameParameters.max_vertical_fov
 local default_value = DefaultGameParameters.vertical_fov
+
 render_settings[#render_settings + 1] = {
 	apply_on_startup = false,
 	display_name = "loc_settings_gameplay_fov",
@@ -2231,19 +2236,23 @@ render_settings[#render_settings + 1] = {
 		local value_range = template.max_value - template.min_value
 		local exploded_value = template.min_value + normalized_value * value_range
 		local step_size = template.step_size_value or 1
+
 		exploded_value = math.round(exploded_value / step_size) * step_size
 
 		return exploded_value
 	end,
 	format_value_function = function (vfov)
 		local format_params = _fov_format_params
+
 		format_params.hfov = _vfov_to_hfov(vfov)
 		format_params.vfov = vfov
 
 		return Localize("loc_settings_gameplay_fov_presentation_format", true, format_params)
 	end
 }
+
 local resolution_options = generate_resolution_options()
+
 render_settings[#render_settings + 1] = {
 	id = "resolution",
 	display_name = "loc_setting_resolution",
@@ -2282,14 +2291,16 @@ render_settings[#render_settings + 1] = {
 		return true, template.require_apply
 	end,
 	get_function = function (template)
-		local resolution_width, resolution_height = nil
+		local resolution_width, resolution_height
 
 		if not Application.user_setting("fullscreen") and Application.back_buffer_size then
 			local window_width, window_height = Application.back_buffer_size()
+
 			resolution_width = window_width
 			resolution_height = window_height
 		else
 			local resolution = Application.user_setting("screen_resolution")
+
 			resolution_width = resolution and resolution[1]
 			resolution_height = resolution and resolution[2]
 		end
@@ -2401,7 +2412,7 @@ local screen_mode_setting = {
 		local user_screen_mode = Application.user_setting("screen_mode")
 		local screen_mode = user_screen_mode
 		local is_fullscreen = Application.is_fullscreen and Application.is_fullscreen()
-		local fullscreen = nil
+		local fullscreen
 
 		if is_fullscreen ~= nil then
 			fullscreen = is_fullscreen
@@ -2428,7 +2439,7 @@ local screen_mode_setting = {
 	on_changed = function (value, template)
 		local dirty = false
 		local options = template.options
-		local option = nil
+		local option
 
 		for i = 1, #options do
 			if options[i].id == value then
@@ -2511,7 +2522,9 @@ local screen_mode_setting = {
 		}
 	}
 }
+
 render_settings[#render_settings + 1] = create_render_settings_entry(screen_mode_setting)
+
 local platform = PLATFORM
 
 for i = 1, #RENDER_TEMPLATES do
@@ -2529,7 +2542,7 @@ local function reset_function()
 
 	for i = 1, #render_settings do
 		local setting = render_settings[i]
-		local is_valid = nil
+		local is_valid
 
 		if setting.validation_function then
 			is_valid = setting.validation_function()

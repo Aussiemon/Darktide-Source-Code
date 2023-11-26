@@ -1,10 +1,14 @@
+﻿-- chunkname: @scripts/components/interpolate_animation_variable.lua
+
 local InterpolateAnimationVariable = component("InterpolateAnimationVariable")
 
 InterpolateAnimationVariable.init = function (self, unit)
 	self._unit = unit
 	self._variable_name = self:get_data(unit, "variable_name")
+
 	local val_from = self:get_data(unit, "val_from")
 	local val_to = self:get_data(unit, "val_to")
+
 	self._method = self:get_data(unit, "method")
 	self._transition_time = self:get_data(unit, "transition_time")
 	self._transition_speed = 1 / self._transition_time
@@ -98,6 +102,7 @@ InterpolateAnimationVariable.start_transition = function (self, target_value)
 		self._animation_time = 1
 	else
 		local current_speed = Unit.animation_get_variable(self._unit, self._anim_variable)
+
 		self._animation_time = (current_speed - from) / (to - from)
 
 		if math.abs(self._animation_time) >= 1 then

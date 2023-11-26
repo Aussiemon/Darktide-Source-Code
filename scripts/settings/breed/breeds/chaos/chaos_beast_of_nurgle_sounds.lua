@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/breed/breeds/chaos/chaos_beast_of_nurgle_sounds.lua
+
 local sound_data = {
 	events = {
 		vce_chew = "wwise/events/minions/play_beast_of_nurgle_vce_chew",

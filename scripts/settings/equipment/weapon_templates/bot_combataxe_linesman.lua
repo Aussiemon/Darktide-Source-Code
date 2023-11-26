@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/equipment/weapon_templates/bot_combataxe_linesman.lua
+
 local ActionSweepSettings = require("scripts/settings/equipment/action_sweep_settings")
 local ArmorSettings = require("scripts/settings/damage/armor_settings")
 local BaseTemplateSettings = require("scripts/settings/equipment/weapon_templates/base_template_settings")
@@ -32,12 +34,13 @@ local sway_trait_templates = WeaponTraitTemplates[template_types.sway]
 local toughness_trait_templates = WeaponTraitTemplates[template_types.toughness]
 local weapon_handling_trait_templates = WeaponTraitTemplates[template_types.weapon_handling]
 local movement_curve_modifier_trait_templates = WeaponTraitTemplates[template_types.movement_curve_modifier]
-local weapon_template = {
-	action_inputs = table.clone(MeleeActionInputSetupMid.action_inputs),
-	action_input_hierarchy = table.clone(MeleeActionInputSetupMid.action_input_hierarchy)
-}
+local weapon_template = {}
+
+weapon_template.action_inputs = table.clone(MeleeActionInputSetupMid.action_inputs)
+weapon_template.action_input_hierarchy = table.clone(MeleeActionInputSetupMid.action_input_hierarchy)
 weapon_template.action_inputs.block.buffer_time = 0.1
 weapon_template.action_inputs.block_release.buffer_time = 0.35
+
 local combat_axe_sweep_box = {
 	0.15,
 	0.15,
@@ -1280,6 +1283,7 @@ weapon_template.base_stats = {
 	}
 }
 weapon_template.traits = {}
+
 local bespoke_combataxe_p1_traits = table.keys(WeaponTraitsBespokeCombataxeP1)
 
 table.append(weapon_template.traits, bespoke_combataxe_p1_traits)

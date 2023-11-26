@@ -1,63 +1,65 @@
-local weapon_movement_curve_modifier_templates = {
-	default = {
-		modifier = {
-			lerp_perfect = 1,
-			lerp_basic = 0.5
-		}
-	},
-	lasgun_p1_m1 = {
-		modifier = {
-			lerp_perfect = 1,
-			lerp_basic = 0.25
-		}
-	},
-	lasgun_p1_m2 = {
-		modifier = {
-			lerp_perfect = 1.25,
-			lerp_basic = 0.5
-		}
-	},
-	lasgun_p3 = {
-		modifier = {
-			lerp_perfect = 1,
-			lerp_basic = 0.6
-		}
-	},
-	chainsword_p1_m1 = {
-		modifier = {
-			lerp_perfect = 1.5,
-			lerp_basic = 0.5
-		}
-	},
-	combataxe_p1_m1 = {
-		modifier = {
-			lerp_perfect = 1.5,
-			lerp_basic = 0.5
-		}
-	},
-	forcesword_p1_m1 = {
-		modifier = {
-			lerp_perfect = 1.25,
-			lerp_basic = 0.5
-		}
-	},
-	thumper_p1_m2 = {
-		modifier = {
-			lerp_perfect = 1.25,
-			lerp_basic = 0.5
-		}
-	},
-	autopistol_p1_m1 = {
-		modifier = {
-			lerp_perfect = 1.5,
-			lerp_basic = 0.5
-		}
-	},
-	ogryn_club_p1_m1 = {
-		modifier = {
-			lerp_perfect = 1.5,
-			lerp_basic = 0.5
-		}
+﻿-- chunkname: @scripts/settings/equipment/weapon_handling_templates/weapon_movement_curve_modifier_templates.lua
+
+local weapon_movement_curve_modifier_templates = {}
+
+weapon_movement_curve_modifier_templates.default = {
+	modifier = {
+		lerp_perfect = 1,
+		lerp_basic = 0.5
+	}
+}
+weapon_movement_curve_modifier_templates.lasgun_p1_m1 = {
+	modifier = {
+		lerp_perfect = 1,
+		lerp_basic = 0.25
+	}
+}
+weapon_movement_curve_modifier_templates.lasgun_p1_m2 = {
+	modifier = {
+		lerp_perfect = 1.25,
+		lerp_basic = 0.5
+	}
+}
+weapon_movement_curve_modifier_templates.lasgun_p3 = {
+	modifier = {
+		lerp_perfect = 1,
+		lerp_basic = 0.6
+	}
+}
+weapon_movement_curve_modifier_templates.chainsword_p1_m1 = {
+	modifier = {
+		lerp_perfect = 1.5,
+		lerp_basic = 0.5
+	}
+}
+weapon_movement_curve_modifier_templates.combataxe_p1_m1 = {
+	modifier = {
+		lerp_perfect = 1.5,
+		lerp_basic = 0.5
+	}
+}
+weapon_movement_curve_modifier_templates.forcesword_p1_m1 = {
+	modifier = {
+		lerp_perfect = 1.25,
+		lerp_basic = 0.5
+	}
+}
+weapon_movement_curve_modifier_templates.thumper_p1_m2 = {
+	modifier = {
+		lerp_perfect = 1.25,
+		lerp_basic = 0.5
+	}
+}
+weapon_movement_curve_modifier_templates.autopistol_p1_m1 = {
+	modifier = {
+		lerp_perfect = 1.5,
+		lerp_basic = 0.5
+	}
+}
+weapon_movement_curve_modifier_templates.ogryn_club_p1_m1 = {
+	modifier = {
+		lerp_perfect = 1.5,
+		lerp_basic = 0.5
 	}
 }
 

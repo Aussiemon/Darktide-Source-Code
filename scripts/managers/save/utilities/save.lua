@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/save/utilities/save.lua
+
 local ScriptSaveToken = require("scripts/managers/save/script_save_token")
 local Save = {}
 local SaveDummy = {

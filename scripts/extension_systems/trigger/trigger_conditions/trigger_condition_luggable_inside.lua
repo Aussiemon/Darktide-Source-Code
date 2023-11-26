@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/trigger/trigger_conditions/trigger_condition_luggable_inside.lua
+
 require("scripts/extension_systems/trigger/trigger_conditions/trigger_condition_base")
 
 local ProjectileLocomotionSettings = require("scripts/settings/projectile_locomotion/projectile_locomotion_settings")
@@ -51,7 +53,7 @@ TriggerConditionLuggableInside.on_volume_enter = function (self, entering_unit, 
 end
 
 TriggerConditionLuggableInside._socket_luggable = function (self, luggable_unit)
-	local closest_distance, closest_socket_extension = nil
+	local closest_distance, closest_socket_extension
 	local sockets_in_volume = self._sockets_in_volume
 
 	for ii = 1, #sockets_in_volume do

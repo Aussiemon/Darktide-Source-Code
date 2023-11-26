@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/pickup/pickups/consumable/small_metal_pickup.lua
+
 local pickup_data = {
 	description = "loc_pickup_small_metal",
 	name = "small_metal",

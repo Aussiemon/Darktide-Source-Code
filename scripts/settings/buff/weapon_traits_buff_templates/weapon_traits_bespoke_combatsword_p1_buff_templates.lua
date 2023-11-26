@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/buff/weapon_traits_buff_templates/weapon_traits_bespoke_combatsword_p1_buff_templates.lua
+
 local BaseWeaponTraitBuffTemplates = require("scripts/settings/buff/weapon_traits_buff_templates/base_weapon_trait_buff_templates")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local CheckProcFunctions = require("scripts/settings/buff/validation_functions/check_proc_functions")
@@ -5,9 +7,9 @@ local ConditionalFunctions = require("scripts/settings/buff/validation_functions
 local stat_buffs = BuffSettings.stat_buffs
 local proc_events = BuffSettings.proc_events
 local keywords = BuffSettings.keywords
-local templates = {
-	weapon_trait_bespoke_combatsword_p1_chained_hits_increases_melee_cleave_parent = table.clone(BaseWeaponTraitBuffTemplates.chained_hits_increases_melee_cleave_parent)
-}
+local templates = {}
+
+templates.weapon_trait_bespoke_combatsword_p1_chained_hits_increases_melee_cleave_parent = table.clone(BaseWeaponTraitBuffTemplates.chained_hits_increases_melee_cleave_parent)
 templates.weapon_trait_bespoke_combatsword_p1_chained_hits_increases_melee_cleave_parent.child_buff_template = "weapon_trait_bespoke_combatsword_p1_chained_hits_increases_melee_cleave_child"
 templates.weapon_trait_bespoke_combatsword_p1_chained_hits_increases_melee_cleave_child = table.clone(BaseWeaponTraitBuffTemplates.chained_hits_increases_melee_cleave_child)
 templates.weapon_trait_bespoke_combatsword_p1_chained_hits_increases_crit_chance_parent = table.clone(BaseWeaponTraitBuffTemplates.chained_hits_increases_crit_chance_parent)

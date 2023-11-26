@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/game_mode/game_mode_manager.lua
+
 local GameModeBase = require("scripts/managers/game_mode/game_modes/game_mode_base")
 local GameModeManagerTestify = GameParameters.testify and require("scripts/managers/game_mode/game_mode_manager_testify")
 local GameModeSettings = require("scripts/settings/game_mode/game_mode_settings")
@@ -7,6 +9,7 @@ local GAME_MODES = {}
 for name, settings in pairs(GameModeSettings) do
 	local class_file_name = settings.class_file_name
 	local class = require(class_file_name)
+
 	GAME_MODES[name] = class
 end
 
@@ -17,6 +20,7 @@ local GameModeManager = class("GameModeManager")
 
 GameModeManager.init = function (self, game_mode_context, game_mode_name, gameplay_modifiers, network_event_delegate)
 	self._is_server = game_mode_context.is_server
+
 	local game_mode = GAME_MODES[game_mode_name]:new(game_mode_context, game_mode_name, network_event_delegate)
 
 	assert_interface(game_mode, GameModeBase.INTERFACE)
@@ -79,6 +83,7 @@ end
 
 GameModeManager.register_physics_safe_callback = function (self, cb)
 	local index = self._num_physics_safe_callbacks + 1
+
 	self._physics_safe_callbacks[index] = cb
 	self._num_physics_safe_callbacks = index
 end
@@ -89,12 +94,14 @@ GameModeManager._async_raycast_result_cb = function (self, id, hits, num_hits)
 	local cb = queue[index - 1]
 	local num_args = queue[index - 2]
 	local data_buffer = self._raycast_data
+
 	queue[index - 1] = nil
 	queue[index - 2] = nil
 	index = index - 2
 
 	for ii = 1, num_args do
 		local jj = index - ii
+
 		data_buffer[ii] = queue[jj]
 		queue[jj] = nil
 	end
@@ -113,6 +120,7 @@ GameModeManager.add_safe_raycast = function (self, raycast_object, pos, dir, len
 	local queue = self._raycast_queue
 	local tail = self._raycast_queue_tail
 	local num_args = select("#", ...)
+
 	queue[tail - 1] = raycast_object
 	queue[tail - 2], queue[tail - 3], queue[tail - 4] = Vector3.to_elements(pos)
 	queue[tail - 5], queue[tail - 6], queue[tail - 7] = Vector3.to_elements(dir)
@@ -145,6 +153,7 @@ GameModeManager._do_raycasts = function (self)
 		local raycast_dir = Vector3(queue[head - 5], queue[head - 6], queue[head - 7])
 		local length = queue[head - 8]
 		local id = raycast_object:cast(raycast_pos, raycast_dir, length)
+
 		self._async_raycast_handles[id] = head - 8
 
 		for ii = head - 1, head - 8, -1 do

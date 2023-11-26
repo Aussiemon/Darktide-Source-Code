@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/damage/weakspot_settings.lua
+
 local weakspot_settings = {}
 local weakspot_types = table.enum("headshot", "weakspot", "protected", "protected_weakspot", "shield")
 local finesse_boost_modifers = {

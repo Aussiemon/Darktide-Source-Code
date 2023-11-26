@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/breed/breed_combat_ranges/renegade/renegade_gunner_combat_ranges.lua
+
 local combat_ranges = {
 	name = "renegade_gunner",
 	starting_combat_range = "far",

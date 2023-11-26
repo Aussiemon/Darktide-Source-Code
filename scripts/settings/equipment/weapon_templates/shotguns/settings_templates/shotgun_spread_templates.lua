@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/equipment/weapon_templates/shotguns/settings_templates/shotgun_spread_templates.lua
+
 local spread_templates = {}
 local overrides = {}
 

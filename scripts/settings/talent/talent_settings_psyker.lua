@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/talent/talent_settings_psyker.lua
+
 local talent_settings = {
 	shared = {
 		venting = {

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/view_elements/view_element_perks_item/view_element_perks_item_blueprints.lua
+
 local ItemUtils = require("scripts/utilities/items")
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
@@ -6,6 +8,7 @@ local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templ
 local ColorUtilities = require("scripts/utilities/ui/colors")
 local TextUtilities = require("scripts/utilities/ui/text")
 local amount_style = table.clone(UIFontSettings.body_small)
+
 amount_style.text_color = Color.terminal_icon(nil, true)
 amount_style.offset = {
 	0,
@@ -14,7 +17,9 @@ amount_style.offset = {
 }
 amount_style.text_horizontal_alignment = "center"
 amount_style.text_vertical_alignment = "bottom"
+
 local unknown_style = table.clone(amount_style)
+
 unknown_style.offset = {
 	0,
 	-5,
@@ -22,21 +27,24 @@ unknown_style.offset = {
 }
 unknown_style.font_size = 10
 unknown_style.text_color[1] = 60
-local ViewElementPerksItemBlueprints = {
-	spacing_vertical_small = {
-		size = {
-			430,
-			5
-		}
-	},
-	spacing_vertical = {
-		size = {
-			430,
-			20
-		}
+
+local ViewElementPerksItemBlueprints = {}
+
+ViewElementPerksItemBlueprints.spacing_vertical_small = {
+	size = {
+		430,
+		5
 	}
 }
+ViewElementPerksItemBlueprints.spacing_vertical = {
+	size = {
+		430,
+		20
+	}
+}
+
 local weapon_perk_style = table.clone(UIFontSettings.body)
+
 weapon_perk_style.offset = {
 	45,
 	0,
@@ -79,7 +87,7 @@ local function item_selection_button_change_function(content, style)
 	local hover_color = style.hover_color
 	local selected_color = style.selected_color
 	local disabled_color = style.disabled_color
-	local color = nil
+	local color
 
 	if disabled and disabled_color then
 		color = disabled_color
@@ -98,6 +106,7 @@ end
 
 local function item_selection_button_hover_change_function(content, style)
 	local hotspot = content.hotspot
+
 	style.color[1] = 100 + math.max(hotspot.anim_hover_progress, content.hotspot.anim_select_progress) * 155
 end
 
@@ -117,7 +126,9 @@ ViewElementPerksItemBlueprints.perk = {
 			change_function = function (content, style, animations, dt)
 				local parent_content = content.parent
 				local perk_amount = parent_content.perk_amount or 0
+
 				parent_content.hover_multiplier = perk_amount > 0 and 1 or 0.25
+
 				local is_hover = content.is_hover
 
 				if InputDevice.gamepad_active then
@@ -132,11 +143,13 @@ ViewElementPerksItemBlueprints.perk = {
 						local my_config = content.parent.config
 						local my_perk_item = my_config.perk_item
 						local my_perk_id = my_perk_item.name
+
 						is_hover = my_perk_id == selected_perk_id
 					end
 				end
 
 				local lerp_direction = is_hover and 1 or -1
+
 				content.parent.progress = math.clamp((content.parent.progress or 0) + dt * lerp_direction * 6, 0, 1)
 			end
 		},
@@ -277,7 +290,7 @@ ViewElementPerksItemBlueprints.perk = {
 			style = weapon_perk_style,
 			change_function = function (content, style)
 				local hotspot = content.hotspot
-				local default_color = (hotspot.disabled or content.is_wasteful) and style.disabled_color or style.default_color
+				local default_color = not (not hotspot.disabled and not content.is_wasteful) and style.disabled_color or style.default_color
 				local hover_color = style.hover_color
 				local text_color = style.text_color
 				local progress = math.max(math.max(hotspot.anim_focus_progress, hotspot.anim_select_progress), math.max(hotspot.anim_hover_progress, hotspot.anim_input_progress))
@@ -289,11 +302,14 @@ ViewElementPerksItemBlueprints.perk = {
 	init = function (parent, widget, config, callback_name)
 		local content = widget.content
 		local style = widget.style
+
 		content.config = config
 		content.parent = parent
+
 		local perk_item = config.perk_item
 		local perk_rarity = config.perk_rarity
 		local content = widget.content
+
 		content.description = ItemUtils.perk_description(perk_item, perk_rarity, 1)
 		content.rank = ItemUtils.perk_textures(perk_item, perk_rarity)
 		content.hotspot.pressed_callback = callback(parent, callback_name, widget, config)
@@ -320,6 +336,7 @@ ViewElementPerksItemBlueprints.perk = {
 				local my_config = content.config
 				local my_perk_item = my_config.perk_item
 				local my_perk_id = my_perk_item.name
+
 				is_hover = my_perk_id == selected_perk_id
 			end
 		end
@@ -329,6 +346,7 @@ ViewElementPerksItemBlueprints.perk = {
 		end
 
 		content.is_wasteful = false
+
 		local item_perks = ingredients.item.perks
 
 		for i = 1, #item_perks do

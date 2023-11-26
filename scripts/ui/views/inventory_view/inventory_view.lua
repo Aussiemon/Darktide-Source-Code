@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/inventory_view/inventory_view.lua
+
 local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templates")
 local ContentBlueprints = require("scripts/ui/views/inventory_view/inventory_view_content_blueprints")
 local Definitions = require("scripts/ui/views/inventory_view/inventory_view_definitions")
@@ -73,6 +75,7 @@ InventoryView.on_enter = function (self)
 	self:_setup_offscreen_gui()
 
 	local tab_menu_back_button_widget = self._widgets_by_name.tab_menu_back_button
+
 	tab_menu_back_button_widget.content.hotspot.pressed_callback = callback(self, "on_back_pressed")
 
 	self:_update_wallets_presentation(nil, not self._is_own_player)
@@ -175,6 +178,7 @@ InventoryView._display_title_text = function (self, text)
 	local title_text_widget = widgets_by_name.tab_menu_title_text
 	local tab_menu_back_button_widget = widgets_by_name.tab_menu_back_button
 	local visible_title_text = text ~= nil
+
 	title_text_widget.content.visible = visible_title_text
 	tab_menu_back_button_widget.content.visible = visible_title_text
 	tab_menu_back_button_widget.content.hotspot.anim_hover_progress = 0
@@ -210,6 +214,7 @@ InventoryView._switch_active_layout = function (self, tab_context)
 	local draw_wallet = tab_context.draw_wallet
 	local allow_item_hover_information = tab_context.allow_item_hover_information
 	local item_hover_information_offset = tab_context.item_hover_information_offset
+
 	self._active_category_tab_context = tab_context
 	self._allow_item_hover_information = allow_item_hover_information
 
@@ -307,10 +312,13 @@ InventoryView._setup_offscreen_gui = function (self)
 	local world_layer = 10
 	local world_name = class_name .. "_ui_offscreen_world"
 	local view_name = self.view_name
+
 	self._world = ui_manager:create_world(world_name, world_layer, timer_name, view_name)
+
 	local viewport_name = class_name .. "_ui_offscreen_world_viewport"
 	local viewport_type = "overlay_offscreen"
 	local viewport_layer = 1
+
 	self._viewport = ui_manager:create_viewport(self._world, viewport_name, viewport_type, viewport_layer)
 	self._viewport_name = viewport_name
 	self._ui_offscreen_renderer = ui_manager:create_renderer(class_name .. "_ui_offscreen_renderer", self._world)
@@ -617,15 +625,18 @@ InventoryView._setup_individual_layout = function (self, layout)
 		local widget_suffix = "entry_" .. tostring(index)
 		local scenegraph_id = entry.scenegraph_id
 		local widget, _ = self:_create_entry_widget_from_config(entry, widget_suffix, left_click_callback_name, right_click_callback_name, scenegraph_id)
+
 		widgets[#widgets + 1] = widget
 
 		if entry.loadout_slot then
 			local exclamation_widget = self:_create_exclamation_widget_from_config(entry, widget_suffix, scenegraph_id)
+
 			exclamation_widget.content.slot = entry.slot
 			excalamation_widgets[#excalamation_widgets + 1] = exclamation_widget
 		end
 
 		local content = widget.content
+
 		content.index = index
 	end
 
@@ -646,12 +657,13 @@ InventoryView._setup_grid_layout = function (self, layout)
 	local alignment_widgets = {}
 	local left_click_callback_name = "cb_on_grid_entry_pressed"
 	local right_click_callback_name = "cb_on_grid_entry_right_pressed"
-	local previous_group_header_name = nil
+	local previous_group_header_name
 	local group_header_index = 0
 
 	for index, entry in ipairs(layout) do
 		local widget_suffix = "entry_" .. tostring(index)
 		local widget, alignment_widget = self:_create_entry_widget_from_config(entry, widget_suffix, left_click_callback_name, right_click_callback_name)
+
 		widgets[#widgets + 1] = widget
 		alignment_widgets[#alignment_widgets + 1] = alignment_widget
 
@@ -667,11 +679,14 @@ InventoryView._setup_grid_layout = function (self, layout)
 
 	self._grid_widgets = widgets
 	self._grid_alignment_widgets = alignment_widgets
+
 	local grid_scenegraph_id = "grid_background"
 	local grid_pivot_scenegraph_id = "grid_content_pivot"
 	local grid_spacing = InventoryViewSettings.grid_spacing
 	local grid = self:_setup_grid(self._grid_widgets, self._grid_alignment_widgets, grid_scenegraph_id, grid_spacing)
+
 	self._grid = grid
+
 	local widgets_by_name = self._widgets_by_name
 	local grid_scrollbar_widget_id = "grid_scrollbar"
 	local scrollbar_widget = widgets_by_name[grid_scrollbar_widget_id]
@@ -695,6 +710,7 @@ InventoryView._destroy_previous_tab = function (self)
 
 	if self._tab_menu_element then
 		self._tab_menu_element = nil
+
 		local id = "tab_menu"
 
 		self:_remove_element(id)
@@ -716,12 +732,16 @@ InventoryView._setup_menu_tabs = function (self, content)
 		}
 	}
 	local tab_menu_element = self:_add_element(ViewElementTabMenu, id, layer, tab_menu_settings)
+
 	self._tab_menu_element = tab_menu_element
+
 	local tab_button_template = table.clone(ButtonPassTemplates.tab_menu_button_icon)
+
 	tab_button_template[1].style = {
 		on_hover_sound = UISoundEvents.tab_secondary_button_hovered,
 		on_pressed_sound = UISoundEvents.tab_secondary_button_pressed
 	}
+
 	local tab_ids = {}
 
 	for i = 1, #content do
@@ -730,6 +750,7 @@ InventoryView._setup_menu_tabs = function (self, content)
 		local display_icon = tab_content.icon
 		local pressed_callback = callback(self, "cb_switch_tab", i)
 		local tab_id = tab_menu_element:add_entry(display_name, pressed_callback, tab_button_template, display_icon)
+
 		tab_ids[i] = tab_id
 	end
 
@@ -757,7 +778,7 @@ end
 InventoryView._create_entry_widget_from_config = function (self, config, suffix, callback_name, secondary_callback_name, optional_scenegraph_id)
 	local scenegraph_id = optional_scenegraph_id or "grid_content_pivot"
 	local widget_type = config.widget_type
-	local widget = nil
+	local widget
 	local template = ContentBlueprints[widget_type]
 	local size = template.size_function and template.size_function(self, config) or template.size
 	local pass_template_function = template.pass_template_function
@@ -766,8 +787,10 @@ InventoryView._create_entry_widget_from_config = function (self, config, suffix,
 
 	if widget_definition then
 		local name = "widget_" .. suffix
+
 		widget = self:_create_widget(name, widget_definition)
 		widget.type = widget_type
+
 		local init = template.init
 
 		if init then
@@ -891,6 +914,7 @@ end
 InventoryView._draw_elements = function (self, dt, t, ui_renderer, render_settings, input_service)
 	local previous_alpha_multiplier = render_settings.alpha_multiplier
 	local loadout_alpha_multiplier = self.loadout_alpha_multiplier
+
 	render_settings.alpha_multiplier = loadout_alpha_multiplier or 0
 
 	InventoryView.super._draw_elements(self, dt, t, ui_renderer, render_settings, input_service)
@@ -952,7 +976,7 @@ InventoryView._update_blueprint_widgets = function (self, widgets, dt, t, input_
 		end
 
 		local handle_input = false
-		local hovered_item = nil
+		local hovered_item
 
 		for i = 1, #widgets do
 			local widget = widgets[i]
@@ -972,6 +996,7 @@ InventoryView._update_blueprint_widgets = function (self, widgets, dt, t, input_
 
 				if is_hover or is_selected then
 					local item = content.item
+
 					hovered_item = item
 				end
 			end
@@ -1002,7 +1027,7 @@ InventoryView._handle_input = function (self, input_service)
 	local grid_widgets = self._grid_widgets
 
 	if grid_widgets then
-		local new_highlighted_group_header, new_highlighted_group_header_text = nil
+		local new_highlighted_group_header, new_highlighted_group_header_text
 
 		for i = 1, #grid_widgets do
 			local widget = grid_widgets[i]
@@ -1013,6 +1038,7 @@ InventoryView._handle_input = function (self, input_service)
 				local group_header = content.group_header
 				local element = content.element
 				local slot_title = element.slot_title
+
 				new_highlighted_group_header_text = slot_title
 				new_highlighted_group_header = group_header
 
@@ -1095,6 +1121,7 @@ end
 InventoryView._find_closest_value = function (self, list, start_coordinates, direction, threshold, current_index, result_index)
 	threshold = threshold or 5
 	current_index = current_index or 1
+
 	local next_index = current_index + 1
 	local current_hotspot = list[current_index].content.hotspot
 
@@ -1109,7 +1136,7 @@ InventoryView._find_closest_value = function (self, list, start_coordinates, dir
 	local widget_coordinates_current = self:_get_coordinates_from_widget(list[current_index])
 	local widget_coordinates_evaluated = result_index and self:_get_coordinates_from_widget(list[result_index])
 	local use_lower = false
-	local start_coordinate_name, start_edge_coordinate_name, end_edge_coordinate_name, center_coordinate_name = nil
+	local start_coordinate_name, start_edge_coordinate_name, end_edge_coordinate_name, center_coordinate_name
 
 	if direction == DIRECTION.UP then
 		start_coordinate_name = "end_y"
@@ -1157,7 +1184,7 @@ InventoryView._find_closest_value = function (self, list, start_coordinates, dir
 end
 
 InventoryView._handle_individual_widget_selection = function (self, input_service)
-	local widget_index = nil
+	local widget_index
 
 	if input_service:get("navigate_up_continuous") then
 		widget_index = self:_find_closest_widget_node_neighbour(DIRECTION.UP)
@@ -1171,6 +1198,7 @@ InventoryView._handle_individual_widget_selection = function (self, input_servic
 
 	if widget_index then
 		self._current_selected_loadout_index = widget_index
+
 		local widget = self._loadout_widgets[self._current_selected_loadout_index]
 		local new_selection_index = widget.content.index
 
@@ -1330,6 +1358,7 @@ end
 
 InventoryView._request_wallets_update = function (self)
 	self._next_wallet_update_duration = nil
+
 	local local_player = self:_player()
 	local preview_player = self._preview_player
 	local character_id = preview_player:character_id()
@@ -1371,6 +1400,7 @@ InventoryView._update_wallets_presentation = function (self, wallets_data, hide_
 
 			if wallet_settings.show_in_character_menu then
 				num_active_widgets = num_active_widgets + 1
+
 				local widget = widgets[num_active_widgets]
 
 				if not widget then
@@ -1385,6 +1415,7 @@ InventoryView._update_wallets_presentation = function (self, wallets_data, hide_
 				local balance = wallet and wallet.balance
 				local amount = balance and balance.amount or 0
 				local text = TextUtilities.format_currency(amount)
+
 				widget.content.text = text
 				widget.content.icon = wallet_settings.icon_texture_small
 				widget.offset[2] = -((num_active_widgets - 1) * 50)

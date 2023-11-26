@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/buff/liquid_area_buff_templates.lua
+
 local Attack = require("scripts/utilities/attack/attack")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local BurningSettings = require("scripts/settings/burning/burning_settings")
@@ -50,228 +52,228 @@ local function _scaled_damage_interval_function(template_data, template_context,
 
 	local optional_owner_unit = template_context.is_server and template_context.owner_unit or nil
 	local optional_source_item = template_context.is_server and template_context.source_item or nil
-	local damage_template = template.damage_template
-	local damage_type = template.damage_type
+	local damage_template, damage_type = template.damage_template, template.damage_type
 
 	Attack.execute(unit, damage_template, "power_level", power_level, "damage_type", damage_type, "attacking_unit", optional_owner_unit, "item", optional_source_item)
 end
 
-local templates = {
-	leaving_liquid_fire_spread_increase = {
-		unique_buff_id = "fire_spread_increase",
-		predicted = false,
-		hud_icon = "content/ui/textures/icons/buffs/hud/states_fire_buff_hud",
-		unique_buff_priority = 1,
-		duration = 1.75,
-		class_name = "buff",
-		is_negative = true,
-		lerped_stat_buffs = {
-			[buff_stat_buffs.spread_modifier] = {
-				max = 0,
-				min = 1
-			}
-		},
-		lerp_t_func = function (t, start_time, duration, template_data, template_context)
-			return math.smoothstep(t, start_time, start_time + duration)
-		end
+local templates = {}
+
+templates.leaving_liquid_fire_spread_increase = {
+	unique_buff_id = "fire_spread_increase",
+	predicted = false,
+	hud_icon = "content/ui/textures/icons/buffs/hud/states_fire_buff_hud",
+	unique_buff_priority = 1,
+	duration = 1.75,
+	class_name = "buff",
+	is_negative = true,
+	lerped_stat_buffs = {
+		[buff_stat_buffs.spread_modifier] = {
+			max = 0,
+			min = 1
+		}
 	},
-	flame_grenade_liquid_area = {
-		power_level_random = true,
-		predicted = false,
-		max_stacks = 1,
-		class_name = "interval_buff",
-		keywords = {
-			buff_keywords.burning
-		},
-		power_level = {
-			default = {
-				500,
-				625,
-				750,
-				875
-			}
-		},
-		damage_template = DamageProfileTemplates.flame_grenade_liquid_area_fire_burning,
-		damage_type = damage_types.burning,
-		interval = {
-			0.5,
-			1.25
-		},
-		interval_func = _scaled_damage_interval_function,
-		minion_effects = minion_burning_buff_effects.fire
-	},
-	fire_burninating = {
-		power_level_random = true,
-		predicted = false,
-		max_stacks = 10,
-		duration = 1,
-		class_name = "interval_buff",
-		keywords = {
-			buff_keywords.burning
-		},
-		power_level = {
-			default = {
-				250,
-				375,
-				625,
-				750
-			}
-		},
-		damage_template = DamageProfileTemplates.liquid_area_fire_burning,
-		damage_type = damage_types.burning,
-		interval = {
-			0.5,
-			1.5
-		},
-		interval_func = _scaled_damage_interval_function,
-		minion_effects = minion_burning_buff_effects.fire
-	},
-	prop_in_corruptor_liquid_corruption = {
-		interval = 1,
-		predicted = false,
-		hud_icon = "content/ui/textures/icons/buffs/hud/states_nurgle_eaten_buff_hud",
-		max_stacks = 1,
-		class_name = "interval_buff",
-		is_negative = true,
-		power_level = {
-			default = {
-				50,
-				100,
-				150,
-				150,
-				200
-			}
-		},
-		damage_template = DamageProfileTemplates.corruptor_liquid_corruption,
-		damage_type = damage_types.corruption,
-		interval_func = _scaled_damage_interval_function
-	},
-	prop_in_liquid_fire_burning_movement_slow = {
-		class_name = "interval_buff",
-		interval = 0.5,
-		predicted = true,
-		hud_priority = 1,
-		hud_icon = "content/ui/textures/icons/buffs/hud/states_fire_buff_hud",
-		max_stacks = 1,
-		is_negative = true,
-		stat_buffs = {
-			[buff_stat_buffs.movement_speed] = -0.25
-		},
-		keywords = {
-			buff_keywords.burning
-		},
-		power_level = {
-			default = {
-				500,
-				600,
-				750,
-				850,
-				1000
-			},
-			player = {
-				100,
-				200,
-				300,
-				400,
-				500
-			}
-		},
-		damage_template = DamageProfileTemplates.liquid_area_fire_burning_barrel,
-		damage_type = damage_types.burning,
-		interval_func = _scaled_damage_interval_function,
-		minion_effects = minion_burning_buff_effects.fire
-	},
-	renegade_grenadier_in_fire_liquid = {
-		class_name = "interval_buff",
-		predicted = false,
-		hud_priority = 1,
-		interval = 0.2,
-		hud_icon = "content/ui/textures/icons/buffs/hud/states_fire_buff_hud",
-		max_stacks = 1,
-		is_negative = true,
-		stat_buffs = {
-			[buff_stat_buffs.movement_speed] = -0.19999999999999996
-		},
-		keywords = {
-			buff_keywords.burning
-		},
-		forbidden_keywords = {
-			buff_keywords.renegade_grenadier_liquid_immunity
-		},
-		power_level = {
-			default = {
-				400,
-				400,
-				400,
-				400,
-				400
-			},
-			player = MinionDifficultySettings.power_level.renegade_grenadier_fire
-		},
-		damage_template = DamageProfileTemplates.grenadier_liquid_fire_burning,
-		damage_type = damage_types.burning,
-		interval_func = _scaled_damage_interval_function,
-		minion_effects = minion_burning_buff_effects.fire
-	},
-	cultist_flamer_in_fire_liquid = {
-		interval = 0.25,
-		predicted = false,
-		hud_priority = 1,
-		hud_icon = "content/ui/textures/icons/buffs/hud/states_green_fire_buff_hud",
-		max_stacks = 1,
-		class_name = "interval_buff",
-		is_negative = true,
-		keywords = {
-			buff_keywords.burning
-		},
-		forbidden_keywords = {
-			buff_keywords.cultist_flamer_liquid_immunity
-		},
-		power_level = {
-			default = {
-				400,
-				400,
-				400,
-				400,
-				400
-			},
-			player = MinionDifficultySettings.power_level.cultist_flamer_fire
-		},
-		damage_template = DamageProfileTemplates.cultist_flamer_liquid_fire_burning,
-		damage_type = damage_types.burning,
-		interval_func = _scaled_damage_interval_function,
-		minion_effects = minion_burning_buff_effects.chemfire
-	},
-	renegade_flamer_in_fire_liquid = {
-		interval = 0.25,
-		predicted = false,
-		hud_priority = 1,
-		hud_icon = "content/ui/textures/icons/buffs/hud/states_fire_buff_hud",
-		max_stacks = 1,
-		class_name = "interval_buff",
-		is_negative = true,
-		keywords = {
-			buff_keywords.burning
-		},
-		forbidden_keywords = {
-			buff_keywords.renegade_flamer_liquid_immunity
-		},
-		power_level = {
-			default = {
-				400,
-				400,
-				400,
-				400,
-				400
-			},
-			player = MinionDifficultySettings.power_level.renegade_flamer_fire
-		},
-		damage_template = DamageProfileTemplates.renegade_flamer_liquid_fire_burning,
-		damage_type = damage_types.burning,
-		interval_func = _scaled_damage_interval_function,
-		minion_effects = minion_burning_buff_effects.fire
-	}
+	lerp_t_func = function (t, start_time, duration, template_data, template_context)
+		return math.smoothstep(t, start_time, start_time + duration)
+	end
 }
+templates.flame_grenade_liquid_area = {
+	power_level_random = true,
+	predicted = false,
+	max_stacks = 1,
+	class_name = "interval_buff",
+	keywords = {
+		buff_keywords.burning
+	},
+	power_level = {
+		default = {
+			500,
+			625,
+			750,
+			875
+		}
+	},
+	damage_template = DamageProfileTemplates.flame_grenade_liquid_area_fire_burning,
+	damage_type = damage_types.burning,
+	interval = {
+		0.5,
+		1.25
+	},
+	interval_func = _scaled_damage_interval_function,
+	minion_effects = minion_burning_buff_effects.fire
+}
+templates.fire_burninating = {
+	power_level_random = true,
+	predicted = false,
+	max_stacks = 10,
+	duration = 1,
+	class_name = "interval_buff",
+	keywords = {
+		buff_keywords.burning
+	},
+	power_level = {
+		default = {
+			250,
+			375,
+			625,
+			750
+		}
+	},
+	damage_template = DamageProfileTemplates.liquid_area_fire_burning,
+	damage_type = damage_types.burning,
+	interval = {
+		0.5,
+		1.5
+	},
+	interval_func = _scaled_damage_interval_function,
+	minion_effects = minion_burning_buff_effects.fire
+}
+templates.prop_in_corruptor_liquid_corruption = {
+	interval = 1,
+	predicted = false,
+	hud_icon = "content/ui/textures/icons/buffs/hud/states_nurgle_eaten_buff_hud",
+	max_stacks = 1,
+	class_name = "interval_buff",
+	is_negative = true,
+	power_level = {
+		default = {
+			50,
+			100,
+			150,
+			150,
+			200
+		}
+	},
+	damage_template = DamageProfileTemplates.corruptor_liquid_corruption,
+	damage_type = damage_types.corruption,
+	interval_func = _scaled_damage_interval_function
+}
+templates.prop_in_liquid_fire_burning_movement_slow = {
+	class_name = "interval_buff",
+	interval = 0.5,
+	predicted = true,
+	hud_priority = 1,
+	hud_icon = "content/ui/textures/icons/buffs/hud/states_fire_buff_hud",
+	max_stacks = 1,
+	is_negative = true,
+	stat_buffs = {
+		[buff_stat_buffs.movement_speed] = -0.25
+	},
+	keywords = {
+		buff_keywords.burning
+	},
+	power_level = {
+		default = {
+			500,
+			600,
+			750,
+			850,
+			1000
+		},
+		player = {
+			100,
+			200,
+			300,
+			400,
+			500
+		}
+	},
+	damage_template = DamageProfileTemplates.liquid_area_fire_burning_barrel,
+	damage_type = damage_types.burning,
+	interval_func = _scaled_damage_interval_function,
+	minion_effects = minion_burning_buff_effects.fire
+}
+templates.renegade_grenadier_in_fire_liquid = {
+	class_name = "interval_buff",
+	predicted = false,
+	hud_priority = 1,
+	interval = 0.2,
+	hud_icon = "content/ui/textures/icons/buffs/hud/states_fire_buff_hud",
+	max_stacks = 1,
+	is_negative = true,
+	stat_buffs = {
+		[buff_stat_buffs.movement_speed] = -0.19999999999999996
+	},
+	keywords = {
+		buff_keywords.burning
+	},
+	forbidden_keywords = {
+		buff_keywords.renegade_grenadier_liquid_immunity
+	},
+	power_level = {
+		default = {
+			400,
+			400,
+			400,
+			400,
+			400
+		},
+		player = MinionDifficultySettings.power_level.renegade_grenadier_fire
+	},
+	damage_template = DamageProfileTemplates.grenadier_liquid_fire_burning,
+	damage_type = damage_types.burning,
+	interval_func = _scaled_damage_interval_function,
+	minion_effects = minion_burning_buff_effects.fire
+}
+templates.cultist_flamer_in_fire_liquid = {
+	interval = 0.25,
+	predicted = false,
+	hud_priority = 1,
+	hud_icon = "content/ui/textures/icons/buffs/hud/states_green_fire_buff_hud",
+	max_stacks = 1,
+	class_name = "interval_buff",
+	is_negative = true,
+	keywords = {
+		buff_keywords.burning
+	},
+	forbidden_keywords = {
+		buff_keywords.cultist_flamer_liquid_immunity
+	},
+	power_level = {
+		default = {
+			400,
+			400,
+			400,
+			400,
+			400
+		},
+		player = MinionDifficultySettings.power_level.cultist_flamer_fire
+	},
+	damage_template = DamageProfileTemplates.cultist_flamer_liquid_fire_burning,
+	damage_type = damage_types.burning,
+	interval_func = _scaled_damage_interval_function,
+	minion_effects = minion_burning_buff_effects.chemfire
+}
+templates.renegade_flamer_in_fire_liquid = {
+	interval = 0.25,
+	predicted = false,
+	hud_priority = 1,
+	hud_icon = "content/ui/textures/icons/buffs/hud/states_fire_buff_hud",
+	max_stacks = 1,
+	class_name = "interval_buff",
+	is_negative = true,
+	keywords = {
+		buff_keywords.burning
+	},
+	forbidden_keywords = {
+		buff_keywords.renegade_flamer_liquid_immunity
+	},
+	power_level = {
+		default = {
+			400,
+			400,
+			400,
+			400,
+			400
+		},
+		player = MinionDifficultySettings.power_level.renegade_flamer_fire
+	},
+	damage_template = DamageProfileTemplates.renegade_flamer_liquid_fire_burning,
+	damage_type = damage_types.burning,
+	interval_func = _scaled_damage_interval_function,
+	minion_effects = minion_burning_buff_effects.fire
+}
+
 local PLAYER_SLIDING_IN_SLIME_POWER_LEVEL_MULTIPLIER = 1.25
 local PLAYER_SLIDING_INTERVAL_OVERRIDE = 0.25
 
@@ -331,8 +333,7 @@ local function _beast_of_nurgle_in_slime_interval_function(template_data, templa
 	end
 
 	local optional_source_item = template_context.is_server and template_context.source_item or nil
-	local damage_template = template.damage_template
-	local damage_type = template.damage_type
+	local damage_template, damage_type = template.damage_template, template.damage_type
 
 	Attack.execute(unit, damage_template, "power_level", power_level, "damage_type", damage_type, "attacking_unit", optional_owner_unit, "item", optional_source_item)
 end
@@ -419,8 +420,7 @@ local function _toxic_gas_interval_function(template_data, template_context, tem
 	if should_apply_damage then
 		local optional_owner_unit = template_context.is_server and template_context.owner_unit or nil
 		local optional_source_item = template_context.is_server and template_context.source_item or nil
-		local damage_template = template.damage_template
-		local damage_type = template.damage_type
+		local damage_template, damage_type = template.damage_template, template.damage_type
 
 		Attack.execute(unit, damage_template, "power_level", power_level, "damage_type", damage_type, "attacking_unit", optional_owner_unit, "item", optional_source_item)
 	end
@@ -429,6 +429,7 @@ end
 local EMPOWERED_BREEDS = {
 	chaos_poxwalker = true
 }
+
 templates.in_toxic_gas = {
 	predicted = false,
 	hud_priority = 1,
@@ -476,6 +477,7 @@ templates.in_toxic_gas = {
 				if buff_extension and not buff_extension:has_keyword("empowered") then
 					local t = Managers.time:time("gameplay")
 					local _, buff_id = buff_extension:add_externally_controlled_buff("empowered_poxwalker", t)
+
 					template_data.empowered_buff_id = buff_id
 				end
 			end
@@ -594,7 +596,9 @@ templates.left_toxic_gas = {
 		}
 	}
 }
+
 local cultist_flamer_leaving_liquid_fire_spread_increase = table.clone(templates.leaving_liquid_fire_spread_increase)
+
 cultist_flamer_leaving_liquid_fire_spread_increase.forbidden_keywords = {
 	buff_keywords.cultist_flamer_liquid_immunity
 }
@@ -602,13 +606,17 @@ templates.cultist_flamer_leaving_liquid_fire_spread_increase = cultist_flamer_le
 cultist_flamer_leaving_liquid_fire_spread_increase.hud_priority = 1
 cultist_flamer_leaving_liquid_fire_spread_increase.hud_icon = "content/ui/textures/icons/buffs/hud/states_green_fire_buff_hud"
 cultist_flamer_leaving_liquid_fire_spread_increase.is_negative = true
+
 local renegade_flamer_leaving_liquid_fire_spread_increase = table.clone(templates.cultist_flamer_leaving_liquid_fire_spread_increase)
+
 renegade_flamer_leaving_liquid_fire_spread_increase.hud_icon = "content/ui/textures/icons/buffs/hud/states_fire_buff_hud"
 renegade_flamer_leaving_liquid_fire_spread_increase.forbidden_keywords = {
 	buff_keywords.renegade_flamer_liquid_immunity
 }
 templates.renegade_flamer_leaving_liquid_fire_spread_increase = renegade_flamer_leaving_liquid_fire_spread_increase
+
 local renegade_grenadier_leaving_liquid_fire_spread_increase = table.clone(templates.leaving_liquid_fire_spread_increase)
+
 renegade_grenadier_leaving_liquid_fire_spread_increase.hud_priority = 1
 renegade_grenadier_leaving_liquid_fire_spread_increase.hud_icon = "content/ui/textures/icons/buffs/hud/states_fire_buff_hud"
 renegade_grenadier_leaving_liquid_fire_spread_increase.is_negative = true

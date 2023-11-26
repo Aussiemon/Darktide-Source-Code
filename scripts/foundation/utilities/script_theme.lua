@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/foundation/utilities/script_theme.lua
+
 local ScriptTheme = {}
 
 ScriptTheme.object_sets_to_hide = function (themes)

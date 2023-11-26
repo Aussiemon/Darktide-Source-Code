@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/cosmetics_vendor_view/cosmetics_vendor_view_definitions.lua
+
 local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templates")
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
@@ -36,28 +38,32 @@ local grid_settings = {
 	title_height = title_height,
 	edge_padding = edge_padding
 }
-local weapon_stats_grid_settings = nil
-local padding = 12
-local width = 530
-local height = 920
-weapon_stats_grid_settings = {
-	scrollbar_width = 7,
-	ignore_blur = true,
-	title_height = 70,
-	grid_spacing = {
-		0,
-		0
-	},
-	grid_size = {
-		width - padding,
-		height
-	},
-	mask_size = {
-		width + 40,
-		height
-	},
-	edge_padding = padding
-}
+local weapon_stats_grid_settings
+
+do
+	local padding = 12
+	local width, height = 530, 920
+
+	weapon_stats_grid_settings = {
+		scrollbar_width = 7,
+		ignore_blur = true,
+		title_height = 70,
+		grid_spacing = {
+			0,
+			0
+		},
+		grid_size = {
+			width - padding,
+			height
+		},
+		mask_size = {
+			width + 40,
+			height
+		},
+		edge_padding = padding
+	}
+end
+
 local category_button_size = {
 	100,
 	100
@@ -157,7 +163,7 @@ local scenegraph_definition = {
 			0
 		},
 		position = {
-			-1140 + grid_size[1] - 50,
+			-1140 + (grid_size[1] - 50),
 			40,
 			3
 		}
@@ -291,6 +297,7 @@ local item_restrictions_title_style = {
 	}
 }
 local owned_item_text_style = table.clone(UIFontSettings.body)
+
 owned_item_text_style.text_horizontal_alignment = "right"
 owned_item_text_style.text_vertical_alignment = "center"
 owned_item_text_style.horizontal_alignment = "center"
@@ -301,6 +308,7 @@ owned_item_text_style.offset = {
 	2
 }
 owned_item_text_style.text_color = Color.terminal_text_header(255, true)
+
 local item_restrictions_body_style = {
 	font_size = 20,
 	text_vertical_alignment = "top",
@@ -480,7 +488,9 @@ local animations = {
 			end,
 			update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress, parent)
 				local anim_progress = math.easeOutCubic(progress)
+
 				parent.animated_alpha_multiplier = anim_progress
+
 				local x_anim_distance_max = 50
 				local x_anim_distance = x_anim_distance_max - x_anim_distance_max * anim_progress
 

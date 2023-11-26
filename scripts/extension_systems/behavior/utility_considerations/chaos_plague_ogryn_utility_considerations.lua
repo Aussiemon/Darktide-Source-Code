@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/behavior/utility_considerations/chaos_plague_ogryn_utility_considerations.lua
+
 local considerations = {
 	chaos_plague_ogryn_catapult_attack = {
 		distance_to_target = {

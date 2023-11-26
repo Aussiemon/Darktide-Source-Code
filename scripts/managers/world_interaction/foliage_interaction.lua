@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/world_interaction/foliage_interaction.lua
+
 FoliageInteraction = class("FoliageInteraction")
 
 FoliageInteraction.init = function (self, gui, settings)
@@ -35,7 +37,7 @@ FoliageInteraction._update_foliage_players = function (self, dt, t)
 			local mover = Unit.mover(player_unit)
 
 			if Mover.collides_down(mover) then
-				local texture_size = nil
+				local texture_size
 
 				if player.local_player then
 					TEXTURE_SIZE[1] = texture_world_size[1] * local_player_multiplier
@@ -93,7 +95,7 @@ FoliageInteraction._update_foliage_ai = function (self, local_player_unit, dt, t
 	end
 
 	local ai_broadphase = Managers.state.entity:system("ai_system").broadphase
-	local ai_unit = nil
+	local ai_unit
 	local num_enemies = Broadphase.query(ai_broadphase, player_pos, window_size * 0.5, ENEMIES)
 
 	for i = 1, num_enemies do

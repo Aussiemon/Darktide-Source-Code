@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/player_character/player_character_creator_presets.lua
+
 local presets = {
 	human = {
 		male = {

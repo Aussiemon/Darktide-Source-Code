@@ -1,15 +1,18 @@
+﻿-- chunkname: @scripts/global_tables.lua
+
 local UIResolution = require("scripts/managers/ui/ui_resolution")
+
 BLACKBOARDS = BLACKBOARDS or Script.new_map(256)
 HEALTH_ALIVE = HEALTH_ALIVE or Script.new_map(1024)
 RESOLUTION_LOOKUP = RESOLUTION_LOOKUP or {}
+
 local resolution_lookup = RESOLUTION_LOOKUP
 
 function UPDATE_RESOLUTION_LOOKUP(force_update, optional_scale_multiplier)
-	local w, h, is_fullscreen = nil
+	local w, h, is_fullscreen
 
 	if DEDICATED_SERVER then
-		h = 600
-		w = 800
+		w, h = 800, 600
 		is_fullscreen = true
 	else
 		w, h = Application.back_buffer_size()
@@ -22,9 +25,7 @@ function UPDATE_RESOLUTION_LOOKUP(force_update, optional_scale_multiplier)
 	local height_scale = h / UIResolution.height_fragments()
 	local scale = math.min(width_scale, height_scale)
 
-	if Application.user_setting("hud_clamp_ui_scaling") then
-		scale = math.min(scale, 1) or scale
-	end
+	scale = Application.user_setting("hud_clamp_ui_scaling") and math.min(scale, 1) or scale
 
 	if optional_scale_multiplier then
 		scale = scale * optional_scale_multiplier

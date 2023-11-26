@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/equipment/weapon_templates/stub_pistols/settings_templates/stub_pistol_sway_templates.lua
+
 local sway_templates = {}
 local overrides = {}
 

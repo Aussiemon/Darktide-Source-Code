@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/mission/templates/prologue_mission_templates.lua
+
 local mission_templates = {
 	prologue = {
 		zone_id = "prologue",

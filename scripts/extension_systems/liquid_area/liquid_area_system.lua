@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/liquid_area/liquid_area_system.lua
+
 require("scripts/extension_systems/liquid_area/liquid_area_extension")
 require("scripts/extension_systems/liquid_area/husk_liquid_area_extension")
 
@@ -13,12 +15,13 @@ LiquidAreaSystem.init = function (self, ...)
 end
 
 LiquidAreaSystem.update = function (self, context, dt, t)
-	local listener_position_or_nil = nil
+	local listener_position_or_nil
 	local local_player = Managers.player:local_player(1)
 
 	if local_player then
 		local viewport_name = local_player.viewport_name
 		local listener_pose = Managers.state.camera:listener_pose(viewport_name)
+
 		listener_position_or_nil = Matrix4x4.translation(listener_pose)
 	end
 
@@ -28,11 +31,12 @@ end
 LiquidAreaSystem.on_gameplay_post_init = function (self, level)
 	if self._is_server then
 		local traverse_logic, nav_tag_cost_table = Navigation.create_traverse_logic(self._nav_world, NAV_TAG_LAYER_COSTS, nil, false)
-		self._nav_tag_cost_table = nav_tag_cost_table
-		self._traverse_logic = traverse_logic
+
+		self._traverse_logic, self._nav_tag_cost_table = traverse_logic, nav_tag_cost_table
 		self._extension_init_context.traverse_logic = traverse_logic
 	else
 		local traverse_logic = Managers.state.nav_mesh:client_traverse_logic()
+
 		self._traverse_logic = traverse_logic
 		self._extension_init_context.traverse_logic = traverse_logic
 	end
@@ -48,6 +52,7 @@ LiquidAreaSystem.on_add_extension = function (self, world, unit, extension_name,
 		end
 
 		local unit_map = self._liquid_paint_id_to_unit_map[liquid_paint_id]
+
 		unit_map[unit] = extension
 	end
 
@@ -61,6 +66,7 @@ LiquidAreaSystem.on_remove_extension = function (self, unit, extension_name)
 
 		if liquid_paint_id then
 			local unit_map = self._liquid_paint_id_to_unit_map[liquid_paint_id]
+
 			unit_map[unit] = nil
 		end
 	end
@@ -100,7 +106,7 @@ LiquidAreaSystem.stop_paint = function (self, liquid_paint_id)
 end
 
 LiquidAreaSystem.paint = function (self, liquid_paint_id, max_liquid_paint_distance, nav_mesh_position, optional_brush_size)
-	local closest_liquid_unit, closest_liquid_extension = nil
+	local closest_liquid_unit, closest_liquid_extension
 	local closest_liquid_distance_sq = math.huge
 	local max_liquid_paint_distance_sq = max_liquid_paint_distance * max_liquid_paint_distance
 	local Vector3_distance_squared = Vector3.distance_squared

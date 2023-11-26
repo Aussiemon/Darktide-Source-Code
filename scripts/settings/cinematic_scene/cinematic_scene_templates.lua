@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/cinematic_scene/cinematic_scene_templates.lua
+
 local cinematic_scene_templates = {}
 
 local function _extract_cinematic_scene_templates(path)

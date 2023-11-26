@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/buff/weapon_traits_buff_templates/weapon_traits_bespoke_forcesword_p1_buff_templates.lua
+
 local BaseWeaponTraitBuffTemplates = require("scripts/settings/buff/weapon_traits_buff_templates/base_weapon_trait_buff_templates")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local CheckProcFunctions = require("scripts/settings/buff/validation_functions/check_proc_functions")
@@ -6,9 +8,9 @@ local WarpCharge = require("scripts/utilities/warp_charge")
 local keywords = BuffSettings.keywords
 local stat_buffs = BuffSettings.stat_buffs
 local proc_events = BuffSettings.proc_events
-local templates = {
-	weapon_trait_bespoke_forcesword_p1_guaranteed_melee_crit_on_activated_kill = table.clone(BaseWeaponTraitBuffTemplates.guaranteed_melee_crit_on_activated_kill)
-}
+local templates = {}
+
+templates.weapon_trait_bespoke_forcesword_p1_guaranteed_melee_crit_on_activated_kill = table.clone(BaseWeaponTraitBuffTemplates.guaranteed_melee_crit_on_activated_kill)
 templates.weapon_trait_bespoke_forcesword_p1_guaranteed_melee_crit_on_activated_kill.buff_data.internal_buff_name = "weapon_trait_bespoke_forcesword_p1_guaranteed_melee_crit_on_activated_kill_effect"
 templates.weapon_trait_bespoke_forcesword_p1_guaranteed_melee_crit_on_activated_kill_effect = table.clone(BaseWeaponTraitBuffTemplates.guaranteed_melee_crit_on_activated_kill_effect)
 templates.weapon_trait_bespoke_forcesword_p1_can_block_ranged = {
@@ -123,6 +125,7 @@ templates.weapon_trait_bespoke_forcesword_p1_chained_hits_vents_warpcharge = {
 		local unit = template_context.unit
 		local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
 		local warp_charge_component = unit_data_extension:write_component("warp_charge")
+
 		template_data.warp_charge_component = warp_charge_component
 		template_data.counter = 0
 	end,

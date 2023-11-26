@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/buff/buffs/stepped_stat_buff.lua
+
 require("scripts/extension_systems/buff/buffs/buff")
 
 local BuffSettings = require("scripts/settings/buff/buff_settings")
@@ -34,7 +36,7 @@ SteppedStatBuff.stat_buff_stacking_count = function (self)
 	local template = self._template
 	local bonus_step_func = template.bonus_step_func
 	local bonus_step = bonus_step_func and bonus_step_func(template_data, template_context) or 0
-	local min, max = nil
+	local min, max
 	local min_max_step_func = template.min_max_step_func
 
 	if min_max_step_func then
@@ -43,6 +45,7 @@ SteppedStatBuff.stat_buff_stacking_count = function (self)
 
 	min = min or 0
 	max = max or self:max_stacks()
+
 	local step = math.clamp(stack_count + bonus_step, min, max)
 
 	return step

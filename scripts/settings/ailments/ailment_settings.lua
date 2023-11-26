@@ -1,5 +1,8 @@
+﻿-- chunkname: @scripts/settings/ailments/ailment_settings.lua
+
 local ailment_settings = {}
 local effects = table.enum("burning_fast", "burning_slow", "burning", "chain_lightning_ability", "chem_burning_fast", "chem_burning_slow", "chem_burning", "electrocution", "freezing_fast", "freezing_slow", "freezing", "gas_fast", "gas_slow", "gas", "stun", "warpfire")
+
 ailment_settings.effects = effects
 ailment_settings.effect_templates = {
 	[effects.burning_fast] = {

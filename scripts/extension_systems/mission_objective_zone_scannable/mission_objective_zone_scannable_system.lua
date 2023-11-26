@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/mission_objective_zone_scannable/mission_objective_zone_scannable_system.lua
+
 require("scripts/extension_systems/mission_objective_zone_scannable/mission_objective_zone_scannable_extension")
 
 local MissionObjectiveZoneScannableSystem = class("MissionObjectiveZoneScannableSystem", "ExtensionSystemBase")
@@ -10,6 +12,7 @@ MissionObjectiveZoneScannableSystem.init = function (self, context, system_init_
 	MissionObjectiveZoneScannableSystem.super.init(self, context, system_init_data, ...)
 
 	local network_event_delegate = context.network_event_delegate
+
 	self._network_event_delegate = network_event_delegate
 
 	if not self._is_server then

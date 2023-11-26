@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/buff/minion_buff_templates.lua
+
 local Attack = require("scripts/utilities/attack/attack")
 local Breed = require("scripts/utilities/breed")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
@@ -11,88 +13,89 @@ local buff_keywords = BuffSettings.keywords
 local buff_stat_buffs = BuffSettings.stat_buffs
 local damage_types = DamageSettings.damage_types
 local minion_burning_buff_effects = BurningSettings.buff_effects.minions
-local templates = {
-	cultist_flamer_hit_by_flame = {
-		interval = 0.5,
-		predicted = false,
-		refresh_duration_on_stack = true,
-		max_stacks = 1,
-		duration = 1,
-		class_name = "interval_buff",
-		keywords = {
-			buff_keywords.burning
-		},
-		interval_func = function (template_data, template_context)
-			local unit = template_context.unit
+local templates = {}
 
-			if HEALTH_ALIVE[unit] then
-				local damage_template = DamageProfileTemplates.grenadier_liquid_fire_burning
-				local power_level_table = MinionDifficultySettings.power_level.cultist_flamer_on_hit_fire
-				local power_level = Managers.state.difficulty:get_table_entry_by_challenge(power_level_table)
-				local optional_owner_unit = template_context.is_server and template_context.owner_unit or nil
+templates.cultist_flamer_hit_by_flame = {
+	interval = 0.5,
+	predicted = false,
+	refresh_duration_on_stack = true,
+	max_stacks = 1,
+	duration = 1,
+	class_name = "interval_buff",
+	keywords = {
+		buff_keywords.burning
+	},
+	interval_func = function (template_data, template_context)
+		local unit = template_context.unit
 
-				Attack.execute(unit, damage_template, "power_level", power_level, "damage_type", "burning", "attacking_unit", optional_owner_unit)
-			end
-		end,
-		minion_effects = minion_burning_buff_effects.chemfire
-	},
-	cultist_flamer_liquid_immunity = {
-		unique_buff_id = "cultist_flamer_liquid_immunity",
-		class_name = "buff",
-		unique_buff_priority = 1,
-		keywords = {
-			buff_keywords.cultist_flamer_liquid_immunity
-		}
-	},
-	renegade_flamer_hit_by_flame = {
-		interval = 0.5,
-		predicted = false,
-		refresh_duration_on_stack = true,
-		max_stacks = 1,
-		duration = 1,
-		class_name = "interval_buff",
-		keywords = {
-			buff_keywords.burning
-		},
-		interval_func = function (template_data, template_context)
-			local unit = template_context.unit
+		if HEALTH_ALIVE[unit] then
+			local damage_template = DamageProfileTemplates.grenadier_liquid_fire_burning
+			local power_level_table = MinionDifficultySettings.power_level.cultist_flamer_on_hit_fire
+			local power_level = Managers.state.difficulty:get_table_entry_by_challenge(power_level_table)
+			local optional_owner_unit = template_context.is_server and template_context.owner_unit or nil
 
-			if HEALTH_ALIVE[unit] then
-				local damage_template = DamageProfileTemplates.grenadier_liquid_fire_burning
-				local power_level_table = MinionDifficultySettings.power_level.renegade_flamer_on_hit_fire
-				local power_level = Managers.state.difficulty:get_table_entry_by_challenge(power_level_table)
-				local optional_owner_unit = template_context.is_server and template_context.owner_unit or nil
-
-				Attack.execute(unit, damage_template, "power_level", power_level, "damage_type", "burning", "attacking_unit", optional_owner_unit)
-			end
-		end,
-		minion_effects = minion_burning_buff_effects.fire
-	},
-	renegade_flamer_liquid_immunity = {
-		unique_buff_id = "renegade_flamer_liquid_immunity",
-		class_name = "buff",
-		unique_buff_priority = 1,
-		keywords = {
-			buff_keywords.renegade_flamer_liquid_immunity
-		}
-	},
-	renegade_grenadier_liquid_immunity = {
-		unique_buff_id = "renegade_grenadier_liquid_immunity",
-		class_name = "buff",
-		unique_buff_priority = 1,
-		keywords = {
-			buff_keywords.renegade_grenadier_liquid_immunity
-		}
-	},
-	beast_of_nurgle_liquid_immunity = {
-		unique_buff_id = "beast_of_nurgle_liquid_immunity",
-		class_name = "buff",
-		unique_buff_priority = 1,
-		keywords = {
-			buff_keywords.beast_of_nurgle_liquid_immunity
-		}
+			Attack.execute(unit, damage_template, "power_level", power_level, "damage_type", "burning", "attacking_unit", optional_owner_unit)
+		end
+	end,
+	minion_effects = minion_burning_buff_effects.chemfire
+}
+templates.cultist_flamer_liquid_immunity = {
+	unique_buff_id = "cultist_flamer_liquid_immunity",
+	class_name = "buff",
+	unique_buff_priority = 1,
+	keywords = {
+		buff_keywords.cultist_flamer_liquid_immunity
 	}
 }
+templates.renegade_flamer_hit_by_flame = {
+	interval = 0.5,
+	predicted = false,
+	refresh_duration_on_stack = true,
+	max_stacks = 1,
+	duration = 1,
+	class_name = "interval_buff",
+	keywords = {
+		buff_keywords.burning
+	},
+	interval_func = function (template_data, template_context)
+		local unit = template_context.unit
+
+		if HEALTH_ALIVE[unit] then
+			local damage_template = DamageProfileTemplates.grenadier_liquid_fire_burning
+			local power_level_table = MinionDifficultySettings.power_level.renegade_flamer_on_hit_fire
+			local power_level = Managers.state.difficulty:get_table_entry_by_challenge(power_level_table)
+			local optional_owner_unit = template_context.is_server and template_context.owner_unit or nil
+
+			Attack.execute(unit, damage_template, "power_level", power_level, "damage_type", "burning", "attacking_unit", optional_owner_unit)
+		end
+	end,
+	minion_effects = minion_burning_buff_effects.fire
+}
+templates.renegade_flamer_liquid_immunity = {
+	unique_buff_id = "renegade_flamer_liquid_immunity",
+	class_name = "buff",
+	unique_buff_priority = 1,
+	keywords = {
+		buff_keywords.renegade_flamer_liquid_immunity
+	}
+}
+templates.renegade_grenadier_liquid_immunity = {
+	unique_buff_id = "renegade_grenadier_liquid_immunity",
+	class_name = "buff",
+	unique_buff_priority = 1,
+	keywords = {
+		buff_keywords.renegade_grenadier_liquid_immunity
+	}
+}
+templates.beast_of_nurgle_liquid_immunity = {
+	unique_buff_id = "beast_of_nurgle_liquid_immunity",
+	class_name = "buff",
+	unique_buff_priority = 1,
+	keywords = {
+		buff_keywords.beast_of_nurgle_liquid_immunity
+	}
+}
+
 local RELATION = "enemy"
 local DAEMONHOST_CORRUPTION_AURA_RESULTS = {}
 local CORRUPTION_AURA_DAMAGE_TYPE = "corruption"
@@ -104,6 +107,7 @@ local CORRUPTION_AURA_PERMANENT_PERCENT = {
 	0.45,
 	0.45
 }
+
 templates.daemonhost_corruption_aura = {
 	interval = 1,
 	refresh_duration_on_stack = true,
@@ -125,7 +129,7 @@ templates.daemonhost_corruption_aura = {
 			local broadphase_system = Managers.state.extension:system("broadphase_system")
 			local broadphase = broadphase_system.broadphase
 			local position = POSITION_LOOKUP[unit]
-			local num_results = broadphase:query(position, CORRUPTION_AURA_RADIUS, DAEMONHOST_CORRUPTION_AURA_RESULTS, target_side_names)
+			local num_results = broadphase.query(broadphase, position, CORRUPTION_AURA_RADIUS, DAEMONHOST_CORRUPTION_AURA_RESULTS, target_side_names)
 			local damage_profile = DamageProfileTemplates.daemonhost_corruption_aura
 			local power_level_table = MinionDifficultySettings.power_level.daemonhost_corruption_aura
 			local power_level = Managers.state.difficulty:get_table_entry_by_challenge(power_level_table)
@@ -205,6 +209,7 @@ templates.chaos_beast_of_nurgle_being_eaten = {
 	damage_type = damage_types.minion_vomit,
 	start_func = function (template_data, template_context)
 		local t = Managers.time:time("gameplay")
+
 		template_data.start_t = t
 	end,
 	interval_func = function (template_data, template_context)

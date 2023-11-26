@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/proximity/side_relation_gameplay_logic/proximity_heal.lua
+
 local Breed = require("scripts/utilities/breed")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local Health = require("scripts/utilities/health")
@@ -12,14 +14,19 @@ ProximityHeal.init = function (self, logic_context, init_data, owner_unit_or_nil
 	self._side_name = logic_context.side_name
 	self._units_in_proximity = {}
 	self._units_healed = {}
+
 	local med_kit_settings = init_data
+
 	self._med_kit_settings = med_kit_settings
 	self._amount_of_damage_healed = 0
 	self._fx_time_table = {}
+
 	local t = Managers.time:time("gameplay")
+
 	self._start_time = t
 	self._current_t = t
 	self._owner_unit_or_nil = owner_unit_or_nil
+
 	local players_have_improved_keyword = false
 	local side_system = Managers.state.extension:system("side_system")
 	local side = side_system:get_side_from_name(self._side_name)
@@ -69,6 +76,7 @@ end
 
 ProximityHeal.update = function (self, dt, t)
 	self._current_t = t
+
 	local healing_reserve = self._heal_reserve
 
 	if healing_reserve and healing_reserve < self._amount_of_damage_healed then
@@ -108,6 +116,7 @@ ProximityHeal.update = function (self, dt, t)
 
 			local heal_amount = max_health * heal_percentage * heal_amount_modifier * speed_multiplier
 			local health_added = Health.add(unit, heal_amount, heal_type)
+
 			amount_healed_this_tick = amount_healed_this_tick + health_added * cost_multiplier
 
 			if optional_buff then
@@ -157,6 +166,7 @@ ProximityHeal.job_completed = function (self)
 
 	if healing_reserve then
 		local amount_of_damage_healed = self._amount_of_damage_healed
+
 		is_health_depleted = healing_reserve <= amount_of_damage_healed
 	end
 
@@ -165,7 +175,8 @@ ProximityHeal.job_completed = function (self)
 
 	if life_time then
 		local life_span = self._current_t - self._start_time
-		is_life_span_over = self._heal_time <= life_span
+
+		is_life_span_over = life_span >= self._heal_time
 	end
 
 	return is_health_depleted or is_life_span_over

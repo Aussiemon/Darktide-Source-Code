@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/equipment/weapon_templates/autopistols/settings_templates/autopistol_spread_templates.lua
+
 local spread_templates = {}
 local overrides = {}
 
@@ -208,8 +210,10 @@ spread_templates.autopistol_assault_p1m2 = {
 		}
 	}
 }
+
 local pitch_spread = 0.6
 local yaw_spread = pitch_spread * 1.75
+
 spread_templates.default_autopistol_spraynpray = {
 	still = {
 		max_spread = {

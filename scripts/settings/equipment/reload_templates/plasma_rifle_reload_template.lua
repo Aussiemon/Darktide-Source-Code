@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/equipment/reload_templates/plasma_rifle_reload_template.lua
+
 local reload_template = {
 	name = "plasma_rifle",
 	states = {

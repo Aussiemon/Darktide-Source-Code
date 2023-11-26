@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/particles/player_character_looping_particle_aliases.lua
+
 local ArmorSettings = require("scripts/settings/damage/armor_settings")
 local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
 local armor_types = ArmorSettings.types

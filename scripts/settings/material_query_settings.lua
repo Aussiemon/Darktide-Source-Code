@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/material_query_settings.lua
+
 local material_query_settings = {}
 local surface_materials = {
 	"cloth",
@@ -28,6 +30,7 @@ local Unit_material_id = Unit.material_id
 for ii = 1, #surface_materials do
 	local material_name = surface_materials[ii]
 	local material_id = Unit_material_id(material_name)
+
 	surface_materials_lookup[material_id] = material_name
 end
 

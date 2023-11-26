@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/game_states/game/gameplay_sub_states/utilities/mission_cleanup_utilities.lua
+
 local GameplayRpcs = require("scripts/game_states/game/utilities/gameplay_rpcs")
 local SERVER_RPCS = GameplayRpcs.COMMON_SERVER_RPCS
 local CLIENT_RPCS = GameplayRpcs.COMMON_CLIENT_RPCS
@@ -22,6 +24,7 @@ MissionCleanupUtilies.cleanup = function (shared_state, gameplay_state)
 	end
 
 	REPORTIFY_NETWORK_READY = false
+
 	local physics_world = shared_state.physics_world
 
 	if physics_world then

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/pass_templates/dropdown_pass_templates.lua
+
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local UIResolution = require("scripts/managers/ui/ui_resolution")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
@@ -17,6 +19,7 @@ local DROPDOWN_BUTTON_CLEARANCE = DROPDOWN_BUTTON_SIZE[1] + 2 * DROPDOWN_BUTTON_
 
 DropdownPassTemplates.settings_dropdown = function (width, height, settings_area_width, num_options, use_is_focused)
 	local value_font_style = table.clone(UIFontSettings.list_button)
+
 	value_font_style.size = {
 		settings_area_width - (DROPDOWN_BUTTON_CLEARANCE + DROPDOWN_BUTTON_MARGIN),
 		height
@@ -24,6 +27,7 @@ DropdownPassTemplates.settings_dropdown = function (width, height, settings_area
 	value_font_style.offset[1] = -DROPDOWN_BUTTON_CLEARANCE
 	value_font_style.offset[3] = 8
 	value_font_style.horizontal_alignment = "right"
+
 	local scrollbar_area_width = DROPDOWN_BUTTON_MARGIN
 	local scrollbar_width = 10
 	local scrollbar_horizontal_offset = 0
@@ -36,6 +40,7 @@ DropdownPassTemplates.settings_dropdown = function (width, height, settings_area
 
 		if pass.style_id and pass.style_id == "hotspot" then
 			local style = pass.style
+
 			style.on_pressed_fold_out_sound = UISoundEvents.default_dropdown_expand
 			style.on_pressed_fold_in_sound = UISoundEvents.default_dropdown_minimize
 
@@ -47,6 +52,7 @@ DropdownPassTemplates.settings_dropdown = function (width, height, settings_area
 		local anim_progress = content.anim_exclusive_focus_progress
 		local style_height = style.size[2]
 		local height_addition = -(style_height * (1 - math.easeCubic(anim_progress)))
+
 		style.size_addition[2] = height_addition
 
 		if content.grow_downwards then
@@ -56,6 +62,7 @@ DropdownPassTemplates.settings_dropdown = function (width, height, settings_area
 		end
 
 		local alpha_progress = math.easeOutCubic(anim_progress)
+
 		style.color[1] = 255 * alpha_progress
 	end
 
@@ -85,6 +92,7 @@ DropdownPassTemplates.settings_dropdown = function (width, height, settings_area
 				local default_alpha = 255
 				local disabled_alpha = default_alpha * 0.8
 				local current_alpha = content.disabled and disabled_alpha or default_alpha
+
 				style.color[1] = current_alpha
 			end
 		},
@@ -168,12 +176,17 @@ DropdownPassTemplates.settings_dropdown = function (width, height, settings_area
 			change_function = function (content, style)
 				local progress = content.highlight_progress or 0
 				local alpha_progress = math.clamp(math.easeOutCubic(progress - content.anim_exclusive_focus_progress), 0, 1)
+
 				style.color[1] = 255 * alpha_progress
+
 				local size_addition = highlight_size_addition * math.easeInCubic(1 - progress)
 				local style_size_addition = style.size_addition
+
 				style_size_addition[1] = size_addition * 2
 				style_size_addition[2] = size_addition * 2
+
 				local offset = style.offset
+
 				offset[1] = size_addition
 				offset[2] = -size_addition
 				style.hdr = alpha_progress == 1
@@ -297,14 +310,19 @@ DropdownPassTemplates.settings_dropdown = function (width, height, settings_area
 				local hotspot_style = parent_style.scrollbar_hotspot
 				local axis_offset = hotspot_style.offset[axis]
 				local axis_length = hotspot_style.size[axis]
+
 				style.size[axis] = axis_length
 				style.offset[axis] = axis_offset
+
 				local track_style = style.parent.scrollbar_track
 				local track_visible_height = track_style.size[2] + track_style.size_addition[2]
 				local thumb_total_height = axis_offset - height + axis_length
 				local thumb_height_addition = math.clamp(track_visible_height - thumb_total_height, -axis_length, 0)
+
 				style.size_addition[2] = thumb_height_addition
+
 				local anim_progress = content.anim_exclusive_focus_progress
+
 				style.color[1] = 255 * anim_progress
 			end
 		},
@@ -316,6 +334,7 @@ DropdownPassTemplates.settings_dropdown = function (width, height, settings_area
 				local scroll_length = content.scroll_length or 0
 				local area_length = content.area_length or 0
 				local thumb_disabled = scroll_length <= 0
+
 				content.thumb_disabled = thumb_disabled
 
 				if thumb_disabled then
@@ -327,6 +346,7 @@ DropdownPassTemplates.settings_dropdown = function (width, height, settings_area
 				local thumb_length = (area_length - size[axis]) * thumb_size_fraction
 				local style_parent = style.parent
 				local hotspot_style = style_parent.scrollbar_hotspot
+
 				hotspot_style.size[axis] = thumb_length
 			end
 		},
@@ -388,8 +408,11 @@ DropdownPassTemplates.settings_dropdown = function (width, height, settings_area
 				local start_position = 0
 				local end_position = scrollbar_length - thumb_length
 				local current_position = input_coordinate - input_offset
+
 				current_position = math.clamp(current_position, start_position, end_position)
+
 				local percentage = current_position / end_position
+
 				content.scroll_percentage = percentage
 			end
 		},
@@ -417,6 +440,7 @@ DropdownPassTemplates.settings_dropdown = function (width, height, settings_area
 				local end_position = scrollbar_length - thumb_length
 				local scroll_percentage = content.scroll_percentage or 0
 				local current_position = end_position * scroll_percentage
+
 				hotspot_offset[2] = track_axis_offset + current_position
 			end
 		},
@@ -449,7 +473,9 @@ DropdownPassTemplates.settings_dropdown = function (width, height, settings_area
 
 				if axis_input ~= 0 and is_hover then
 					content.axis_input = axis_input
+
 					local previous_scroll_add = content.scroll_add or 0
+
 					content.scroll_add = previous_scroll_add + axis_input * scroll_amount
 				end
 
@@ -457,7 +483,7 @@ DropdownPassTemplates.settings_dropdown = function (width, height, settings_area
 
 				if scroll_add then
 					local speed = content.scroll_speed or 5
-					local step = scroll_add * dt * speed
+					local step = scroll_add * (dt * speed)
 
 					if math.abs(scroll_add) > scroll_amount / 500 then
 						content.scroll_add = scroll_add - step
@@ -494,6 +520,7 @@ DropdownPassTemplates.settings_dropdown = function (width, height, settings_area
 			anim_select_progress = 0
 		}
 		local hotspot_style = table.clone(default_hotspot_style)
+
 		hotspot_style.vertical_alignment = "top"
 		hotspot_style.horizontal_alignment = "right"
 		hotspot_style.size = {
@@ -505,7 +532,9 @@ DropdownPassTemplates.settings_dropdown = function (width, height, settings_area
 			height * i,
 			0
 		}
+
 		local option_font_style = table.clone(value_font_style)
+
 		option_font_style.default_color = Color.terminal_text_body(255, true)
 		option_font_style.offset = {
 			-scrollbar_area_width,
@@ -520,8 +549,10 @@ DropdownPassTemplates.settings_dropdown = function (width, height, settings_area
 			-scrollbar_area_width - DROPDOWN_BUTTON_MARGIN,
 			0
 		}
+
 		local hotspot_id = "option_hotspot_" .. i
 		local text_id = "option_text_" .. i
+
 		options_passes[#options_passes + 1] = {
 			pass_type = "hotspot",
 			content_id = hotspot_id,
@@ -562,12 +593,16 @@ DropdownPassTemplates.settings_dropdown = function (width, height, settings_area
 				local gamepad_navigation_progress = not using_cursor_navigation and hotspot.anim_select_progress or 0
 				local progress = math.max(cursor_navigation_progress, gamepad_navigation_progress)
 				local focus_alpha = style.parent[text_id].text_color[1]
+
 				style.color[1] = math.min(255 * math.easeOutCubic(progress), focus_alpha)
+
 				local size_addition = highlight_size_addition * math.easeInCubic(1 - progress)
 				local style_size_addition = style.size_addition
+
 				style_size_addition[1] = size_addition * 2
 				style_size_addition[2] = size_addition * 2
-				local offset_y = nil
+
+				local offset_y
 
 				if content.grow_downwards then
 					offset_y = i * height
@@ -576,6 +611,7 @@ DropdownPassTemplates.settings_dropdown = function (width, height, settings_area
 				end
 
 				local offset = style.offset
+
 				offset[1] = header_width - size_addition
 				offset[2] = offset_y - size_addition
 				style.hdr = focus_alpha == 255
@@ -595,7 +631,9 @@ DropdownPassTemplates.settings_dropdown = function (width, height, settings_area
 				local hotspot = content[hotspot_id]
 				local focus_progress = math.easeCubic(content.anim_exclusive_focus_progress)
 				local alpha_progress = math.clamp((focus_progress - current_fraction) / option_fraction, 0, 1)
+
 				text_color[1] = 255 * math.easeCubic(alpha_progress)
+
 				local highlight_progress = math.max(hotspot.anim_select_progress, hotspot.anim_hover_progress)
 				local exclude_alpha = true
 

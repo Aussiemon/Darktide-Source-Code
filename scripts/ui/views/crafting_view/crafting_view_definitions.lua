@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/crafting_view/crafting_view_definitions.lua
+
 local CraftingSettings = require("scripts/settings/item/crafting_settings")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local UIWorkspaceSettings = require("scripts/settings/ui/ui_workspace_settings")
@@ -252,6 +254,7 @@ local crafting_tab_params = {
 
 for i, recipe in pairs(CraftingSettings.recipes_ui_order) do
 	local view_name = recipe.view_name
+
 	crafting_tab_params[view_name] = {
 		hide_tabs = true,
 		layer = 10,

@@ -1,7 +1,12 @@
+﻿-- chunkname: @scripts/extension_systems/behavior/trees/renegade/renegade_captain_behavior_tree.lua
+
 local BreedActions = require("scripts/settings/breed/breed_actions")
 local action_data = BreedActions.renegade_captain
 local HELLGUN = {
 	"BtRandomUtilityNode",
+	condition_args = {
+		slot_name = "slot_hellgun"
+	},
 	{
 		"BtRangedFollowTargetAction",
 		name = "ranged_follow",
@@ -46,13 +51,13 @@ local HELLGUN = {
 		}
 	},
 	name = "hellgun_combat",
-	condition = "slot_wielded",
-	condition_args = {
-		slot_name = "slot_hellgun"
-	}
+	condition = "slot_wielded"
 }
 local NETGUN = {
 	"BtSelectorNode",
+	condition_args = {
+		slot_name = "slot_netgun"
+	},
 	{
 		"BtSequenceNode",
 		{
@@ -77,13 +82,13 @@ local NETGUN = {
 		name = "net_sequence_far"
 	},
 	name = "netgun_combat",
-	condition = "slot_wielded",
-	condition_args = {
-		slot_name = "slot_netgun"
-	}
+	condition = "slot_wielded"
 }
 local BOLT_PISTOL = {
 	"BtRandomUtilityNode",
+	condition_args = {
+		slot_name = "slot_bolt_pistol"
+	},
 	{
 		"BtRangedFollowTargetAction",
 		name = "ranged_follow",
@@ -109,13 +114,13 @@ local BOLT_PISTOL = {
 		}
 	},
 	name = "bolt_pistol_combat",
-	condition = "slot_wielded",
-	condition_args = {
-		slot_name = "slot_bolt_pistol"
-	}
+	condition = "slot_wielded"
 }
 local PLASMA_PISTOL = {
 	"BtRandomUtilityNode",
+	condition_args = {
+		slot_name = "slot_plasma_pistol"
+	},
 	{
 		"BtRangedFollowTargetAction",
 		name = "ranged_follow",
@@ -160,13 +165,13 @@ local PLASMA_PISTOL = {
 		}
 	},
 	name = "plasma_pistol_combat",
-	condition = "slot_wielded",
-	condition_args = {
-		slot_name = "slot_plasma_pistol"
-	}
+	condition = "slot_wielded"
 }
 local SHOTGUN = {
 	"BtRandomUtilityNode",
+	condition_args = {
+		slot_name = "slot_shotgun"
+	},
 	{
 		"BtRangedFollowTargetAction",
 		name = "ranged_follow",
@@ -192,13 +197,13 @@ local SHOTGUN = {
 		}
 	},
 	name = "shotgun_combat",
-	condition = "slot_wielded",
-	condition_args = {
-		slot_name = "slot_shotgun"
-	}
+	condition = "slot_wielded"
 }
 local POWER_SWORD = {
 	"BtSelectorNode",
+	condition_args = {
+		slot_name = "slot_power_sword"
+	},
 	{
 		"BtRandomUtilityNode",
 		{
@@ -294,13 +299,13 @@ local POWER_SWORD = {
 		action_data = action_data.melee_combat_idle
 	},
 	name = "power_sword_combat",
-	condition = "slot_wielded",
-	condition_args = {
-		slot_name = "slot_power_sword"
-	}
+	condition = "slot_wielded"
 }
 local POWERMAUL = {
 	"BtSelectorNode",
+	condition_args = {
+		slot_name = "slot_powermaul"
+	},
 	{
 		"BtRandomUtilityNode",
 		{
@@ -415,10 +420,7 @@ local POWERMAUL = {
 		action_data = action_data.melee_combat_idle
 	},
 	name = "powermaul_combat",
-	condition = "slot_wielded",
-	condition_args = {
-		slot_name = "slot_powermaul"
-	}
+	condition = "slot_wielded"
 }
 local CHARGE = {
 	"BtChargeAction",

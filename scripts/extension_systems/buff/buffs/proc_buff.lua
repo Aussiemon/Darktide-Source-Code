@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/buff/buffs/proc_buff.lua
+
 require("scripts/extension_systems/buff/buffs/buff")
 
 local BuffSettings = require("scripts/settings/buff/buff_settings")
@@ -11,6 +13,7 @@ ProcBuff.init = function (self, context, template, start_time, instance_id, ...)
 
 	local active_duration = self:_active_duration()
 	local cooldown = self:_cooldown_duration() or 0
+
 	self._active_start_time = start_time - (active_duration + cooldown)
 	self._active_vfx = {}
 	self._num_proc_keywords = template.proc_keywords and #template.proc_keywords
@@ -22,8 +25,11 @@ ProcBuff.set_buff_component = function (self, buff_component, component_keys, co
 	ProcBuff.super.set_buff_component(self, buff_component, component_keys, component_index)
 
 	local active_start_time = self._active_start_time
+
 	buff_component = self._buff_component
+
 	local active_start_time_key = component_keys.active_start_time_key
+
 	buff_component[active_start_time_key] = active_start_time
 end
 
@@ -44,6 +50,7 @@ ProcBuff.destroy = function (self)
 	if buff_component then
 		local component_keys = self._component_keys
 		local active_start_time = component_keys.active_start_time_key
+
 		buff_component[active_start_time] = 0
 	end
 
@@ -83,9 +90,7 @@ ProcBuff._active_duration = function (self)
 	local active_duration = self._template.active_duration or 0
 	local template_override_data = self._template_override_data
 
-	if template_override_data then
-		active_duration = template_override_data.active_duration or active_duration
-	end
+	active_duration = template_override_data and template_override_data.active_duration or active_duration
 
 	return active_duration
 end
@@ -170,9 +175,7 @@ ProcBuff._cooldown_duration = function (self)
 	local cooldown_duration = template.cooldown_duration
 	local template_override_data = self._template_override_data
 
-	if template_override_data then
-		cooldown_duration = template_override_data.cooldown_duration or cooldown_duration
-	end
+	cooldown_duration = template_override_data and template_override_data.cooldown_duration or cooldown_duration
 
 	return cooldown_duration
 end
@@ -183,7 +186,9 @@ ProcBuff.update = function (self, dt, t, portable_random)
 	local template = self._template
 	local template_data = self._template_data
 	local template_context = self._template_context
+
 	template_context.active_percentage = self:_active_percentage(t)
+
 	local is_active = self:_is_proc_active(t)
 	local has_activated = self._has_activated
 	local proc_update_func = template.proc_update_func
@@ -299,7 +304,7 @@ ProcBuff.update_proc_events = function (self, t, proc_events, num_proc_events, p
 		local can_activate = self:_can_activate(t)
 
 		if proc_chance and condition_ok and can_activate then
-			local portable_random_to_use = (is_local_proc_event or not is_predicted_buff) and local_portable_random or portable_random
+			local portable_random_to_use = not (not is_local_proc_event and is_predicted_buff) and local_portable_random or portable_random
 			local will_proc = proc_chance == 1
 			local random_value = will_proc and 0 or portable_random_to_use:next_random()
 
@@ -321,11 +326,13 @@ ProcBuff.update_proc_events = function (self, t, proc_events, num_proc_events, p
 					if not is_local_proc_event then
 						activated_proc = true
 						self._active_start_time = t
+
 						local buff_component = self._buff_component
 
 						if buff_component then
 							local component_keys = self._component_keys
 							local active_start_time_key = component_keys.active_start_time_key
+
 							buff_component[active_start_time_key] = t
 						end
 					end

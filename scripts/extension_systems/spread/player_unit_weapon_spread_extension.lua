@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/spread/player_unit_weapon_spread_extension.lua
+
 local Suppression = require("scripts/utilities/attack/suppression")
 local WeaponMovementState = require("scripts/extension_systems/weapon/utilities/weapon_movement_state")
 local Spread = require("scripts/utilities/spread")
@@ -8,11 +10,12 @@ local DEFAULT_FIRST_SHOT_MIN_RATIO = 0.25
 local DEFAULT_FIRST_SHOT_RANDOM_RATIO = 0.4
 local DEFAULT_MAX_YAW_DELTA = 2
 local DEFAULT_MAX_PITCH_DELTA = 3
-local _spread_settings, _rotation_from_offset = nil
+local _spread_settings, _rotation_from_offset
 
 PlayerUnitWeaponSpreadExtension.init = function (self, extension_init_context, unit, extension_init_data, ...)
 	local world = extension_init_context.world
 	local initial_seed = extension_init_data.spread_seed
+
 	self._unit = unit
 	self._world = world
 	self._spread_template = nil
@@ -22,6 +25,7 @@ end
 
 PlayerUnitWeaponSpreadExtension._init_components = function (self, unit, initial_seed)
 	local unit_data_ext = ScriptUnit.extension(unit, "unit_data_system")
+
 	self._movement_state_component = unit_data_ext:read_component("movement_state")
 	self._locomotion_component = unit_data_ext:read_component("locomotion")
 	self._spread_component = unit_data_ext:write_component("spread")
@@ -83,14 +87,12 @@ PlayerUnitWeaponSpreadExtension._update_spread = function (self, dt, t, spread_s
 			local charge_max_yaw = spread_template.charge_scale.max_yaw
 			local pitch_charge_offset = math.lerp(1, charge_max_pitch, math.sqrt(charge_level))
 			local yaw_charge_offset = math.lerp(1, charge_max_yaw, math.sqrt(charge_level))
+
 			min_pitch = min_pitch * pitch_charge_offset
 			min_yaw = min_yaw * yaw_charge_offset
 			start_pitch = min_pitch
 			start_yaw = min_yaw
-
-			if charge_level ~= 0 then
-				decay_settings = spread_settings.decay.charging or decay_settings
-			end
+			decay_settings = charge_level ~= 0 and spread_settings.decay.charging or decay_settings
 		end
 	end
 
@@ -98,8 +100,8 @@ PlayerUnitWeaponSpreadExtension._update_spread = function (self, dt, t, spread_s
 	local max_yaw = spread_settings.max_spread.yaw
 	local pitch_ratio = 1 - pitch / max_pitch
 	local yaw_ratio = 1 - yaw / max_yaw
-	local pitch_decay_curve = 0.3 + 2 * pitch_ratio * pitch_ratio
-	local yaw_decay_curve = 0.3 + 2 * yaw_ratio * yaw_ratio
+	local pitch_decay_curve = 0.3 + 2 * (pitch_ratio * pitch_ratio)
+	local yaw_decay_curve = 0.3 + 2 * (yaw_ratio * yaw_ratio)
 
 	if pitch ~= start_pitch then
 		local decay = decay_settings.pitch
@@ -136,7 +138,7 @@ PlayerUnitWeaponSpreadExtension._player_event_decay = function (self, decay, t)
 	local crouch_transition_grace_time = decay.crouch_transition_grace_time or 0
 	local crouch_transition_grace = t <= self._movement_state_component.is_crouching_transition_start_t + crouch_transition_grace_time
 	local is_in_player_event = enter_alternate_fire_grace or crouch_transition_grace
-	local decay_settings = nil
+	local decay_settings
 
 	if is_in_player_event then
 		decay_settings = decay.player_event or decay.idle
@@ -161,7 +163,7 @@ PlayerUnitWeaponSpreadExtension.randomized_spread = function (self, current_rota
 	end
 
 	local randomized_spread = spread_settings.randomized_spread or EMPTY_TABLE
-	local random_value = nil
+	local random_value
 	local seed = spread_control_component.seed
 	local previous_yaw_offset = spread_control_component.previous_yaw_offset
 	local previous_pitch_offset = spread_control_component.previous_pitch_offset
@@ -170,7 +172,9 @@ PlayerUnitWeaponSpreadExtension.randomized_spread = function (self, current_rota
 	local spread_component = self._spread_component
 	local current_pitch = spread_component.pitch * spread_modifier
 	local current_yaw = spread_component.yaw * spread_modifier
+
 	current_pitch, current_yaw = Suppression.apply_suppression_offsets_to_spread(suppression_component, current_pitch, current_yaw)
+
 	local min_spread_ratio = randomized_spread.min_ratio or DEFAULT_MIN_RATIO
 	local random_spread_ratio = randomized_spread.random_ratio or DEFAULT_RANDOM_RATIO
 	local first_shot = shooting_status_component.num_shots == 0
@@ -181,8 +185,11 @@ PlayerUnitWeaponSpreadExtension.randomized_spread = function (self, current_rota
 	end
 
 	seed, random_value = math.next_random(seed)
+
 	local multiplier = min_spread_ratio + random_spread_ratio * random_value
+
 	seed, random_value = math.next_random(seed)
+
 	local random_roll_rotation = random_value * PI_2
 	local yaw_offset = math.sin(random_roll_rotation) * current_yaw * multiplier
 	local pitch_offset = math.cos(random_roll_rotation) * current_pitch * multiplier
@@ -195,6 +202,7 @@ PlayerUnitWeaponSpreadExtension.randomized_spread = function (self, current_rota
 	local yaw_rotation, lerped_yaw_offset = _rotation_from_offset(yaw_offset, previous_yaw_offset, randomized_spread.max_yaw_delta or DEFAULT_MAX_YAW_DELTA, Vector3.up())
 	local pitch_rotation, lerped_pitch_offset = _rotation_from_offset(pitch_offset, previous_pitch_offset, randomized_spread.max_pitch_delta or DEFAULT_MAX_PITCH_DELTA, Vector3.right())
 	local final_rotation = Quaternion.multiply(current_rotation, pitch_rotation)
+
 	final_rotation = Quaternion.multiply(final_rotation, yaw_rotation)
 
 	if not optional_skip_update_component_data then
@@ -208,7 +216,8 @@ end
 
 PlayerUnitWeaponSpreadExtension.target_style_spread = function (self, current_rotation, num_shots_fired, num_shots_in_attack, num_spread_circles, bullseye, spread_pitch, spread_yaw, scatter_range, no_random, roll_offset)
 	local seed = self._spread_control_component.seed
-	local final_rotation = nil
+	local final_rotation
+
 	final_rotation, seed = Spread.target_style_spread(current_rotation, num_shots_fired, num_shots_in_attack, num_spread_circles, bullseye, spread_pitch, spread_yaw, scatter_range, no_random, roll_offset, seed)
 	self._spread_control_component.seed = seed
 

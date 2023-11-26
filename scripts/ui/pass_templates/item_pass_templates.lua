@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/pass_templates/item_pass_templates.lua
+
 local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templates")
 local ColorUtilities = require("scripts/utilities/ui/colors")
 local ItemUtils = require("scripts/utilities/items")
@@ -12,6 +14,7 @@ local gadget_size = UISettings.gadget_size
 local gadget_item_size = UISettings.gadget_item_size
 local gadget_icon_size = UISettings.gadget_icon_size
 local item_icon_size = UISettings.item_icon_size
+
 ItemPassTemplates.store_item_goods_size = {
 	weapon_item_size[1],
 	weapon_item_size[2] + 40
@@ -48,7 +51,7 @@ local function item_change_function(content, style)
 	local default_color = style.default_color
 	local selected_color = style.selected_color
 	local hover_color = style.hover_color
-	local color = nil
+	local color
 
 	if is_selected or is_focused then
 		color = selected_color
@@ -64,6 +67,7 @@ local function item_change_function(content, style)
 end
 
 local item_display_name_text_style = table.clone(UIFontSettings.header_3)
+
 item_display_name_text_style.text_horizontal_alignment = "left"
 item_display_name_text_style.text_vertical_alignment = "top"
 item_display_name_text_style.horizontal_alignment = "right"
@@ -81,7 +85,9 @@ item_display_name_text_style.size = {
 item_display_name_text_style.text_color = Color.terminal_text_header(255, true)
 item_display_name_text_style.default_color = Color.terminal_text_header(255, true)
 item_display_name_text_style.hover_color = Color.terminal_text_header_selected(255, true)
+
 local credits_item_display_name_text_style = table.clone(item_display_name_text_style)
+
 credits_item_display_name_text_style.horizontal_alignment = "left"
 credits_item_display_name_text_style.vertical_alignment = "center"
 credits_item_display_name_text_style.text_vertical_alignment = "center"
@@ -94,7 +100,9 @@ credits_item_display_name_text_style.font_size = 16
 credits_item_display_name_text_style.size = {
 	ItemPassTemplates.store_item_credits_goods_size[1] * 0.66
 }
+
 local item_sub_display_name_text_style = table.clone(UIFontSettings.body_small)
+
 item_sub_display_name_text_style.text_horizontal_alignment = "left"
 item_sub_display_name_text_style.text_vertical_alignment = "top"
 item_sub_display_name_text_style.horizontal_alignment = "right"
@@ -112,7 +120,9 @@ item_sub_display_name_text_style.size = {
 item_sub_display_name_text_style.text_color = Color.terminal_text_body_sub_header(255, true)
 item_sub_display_name_text_style.default_color = Color.terminal_text_body_sub_header(255, true)
 item_sub_display_name_text_style.hover_color = Color.terminal_text_body(255, true)
+
 local item_level_text_style = table.clone(UIFontSettings.body_small)
+
 item_level_text_style.text_horizontal_alignment = "right"
 item_level_text_style.text_vertical_alignment = "bottom"
 item_level_text_style.horizontal_alignment = "right"
@@ -131,7 +141,9 @@ item_level_text_style.text_color = Color.white(255, true)
 item_level_text_style.default_color = Color.white(255, true)
 item_level_text_style.hover_color = Color.white(255, true)
 item_level_text_style.material = "content/ui/materials/font_gradients/slug_font_gradient_item_level"
+
 local gadget_item_level_text_style = table.clone(UIFontSettings.body_small)
+
 gadget_item_level_text_style.text_horizontal_alignment = "center"
 gadget_item_level_text_style.text_vertical_alignment = "top"
 gadget_item_level_text_style.horizontal_alignment = "center"
@@ -146,7 +158,9 @@ gadget_item_level_text_style.text_color = Color.white(255, true)
 gadget_item_level_text_style.default_color = Color.white(255, true)
 gadget_item_level_text_style.hover_color = Color.white(255, true)
 gadget_item_level_text_style.material = "content/ui/materials/font_gradients/slug_font_gradient_item_level"
+
 local required_level_text_style = table.clone(UIFontSettings.body_small)
+
 required_level_text_style.text_horizontal_alignment = "center"
 required_level_text_style.text_vertical_alignment = "center"
 required_level_text_style.horizontal_alignment = "center"
@@ -167,7 +181,9 @@ required_level_text_style.text_color = {
 	67,
 	67
 }
+
 local required_level_general_good_text_style = table.clone(credits_item_display_name_text_style)
+
 required_level_general_good_text_style.text_color = {
 	255,
 	159,
@@ -178,7 +194,9 @@ required_level_general_good_text_style.size = {
 	150
 }
 required_level_general_good_text_style.offset[3] = 10
+
 local gear_item_slot_title_text_style = table.clone(UIFontSettings.header_3)
+
 gear_item_slot_title_text_style.text_horizontal_alignment = "center"
 gear_item_slot_title_text_style.text_vertical_alignment = "bottom"
 gear_item_slot_title_text_style.horizontal_alignment = "center"
@@ -197,14 +215,18 @@ gear_item_slot_title_text_style.offset = {
 gear_item_slot_title_text_style.text_color = Color.terminal_text_header(255, true)
 gear_item_slot_title_text_style.default_color = Color.terminal_text_header(255, true)
 gear_item_slot_title_text_style.hover_color = Color.terminal_text_header_selected(255, true)
+
 local ui_item_emote_slot_title_text_style = table.clone(gear_item_slot_title_text_style)
+
 ui_item_emote_slot_title_text_style.offset = {
 	0,
 	-(ItemPassTemplates.gear_icon_size[2] + 5),
 	8
 }
 ui_item_emote_slot_title_text_style.font_size = 14
+
 local ui_item_slot_title_text_style = table.clone(UIFontSettings.header_3)
+
 ui_item_slot_title_text_style.text_horizontal_alignment = "center"
 ui_item_slot_title_text_style.text_vertical_alignment = "bottom"
 ui_item_slot_title_text_style.horizontal_alignment = "center"
@@ -219,7 +241,9 @@ ui_item_slot_title_text_style.offset = {
 ui_item_slot_title_text_style.text_color = Color.ui_brown_light(255, true)
 ui_item_slot_title_text_style.default_color = Color.ui_brown_light(255, true)
 ui_item_slot_title_text_style.hover_color = Color.ui_brown_super_light(255, true)
+
 local item_owned_text_style = table.clone(UIFontSettings.header_2)
+
 item_owned_text_style.text_horizontal_alignment = "right"
 item_owned_text_style.text_vertical_alignment = "bottom"
 item_owned_text_style.horizontal_alignment = "right"
@@ -230,7 +254,9 @@ item_owned_text_style.offset = {
 	15
 }
 item_owned_text_style.text_color = Color.terminal_text_body(255, true)
+
 local item_price_style = table.clone(UIFontSettings.body)
+
 item_price_style.text_horizontal_alignment = "right"
 item_price_style.text_vertical_alignment = "bottom"
 item_price_style.horizontal_alignment = "right"
@@ -244,20 +270,26 @@ item_price_style.font_size = 20
 item_price_style.text_color = Color.white(255, true)
 item_price_style.default_color = Color.white(255, true)
 item_price_style.hover_color = Color.white(255, true)
+
 local gear_item_price_style = table.clone(item_price_style)
+
 gear_item_price_style.offset = {
 	-29,
 	-3,
 	12
 }
+
 local gear_item_owned_count_style = table.clone(item_price_style)
+
 gear_item_owned_count_style.offset = {
 	-8,
 	-35,
 	15
 }
 gear_item_owned_count_style.text_color = Color.terminal_text_body(255, true)
+
 local item_sold_style = table.clone(UIFontSettings.body)
+
 item_sold_style.text_horizontal_alignment = "right"
 item_sold_style.text_vertical_alignment = "bottom"
 item_sold_style.horizontal_alignment = "right"
@@ -269,7 +301,9 @@ item_sold_style.offset = {
 }
 item_sold_style.text_color = Color.terminal_text_header(255, true)
 item_sold_style.font_size = 20
+
 local item_lock_symbol_text_style = table.clone(UIFontSettings.header_3)
+
 item_lock_symbol_text_style.text_color = Color.terminal_icon(255, true)
 item_lock_symbol_text_style.default_color = Color.terminal_icon(255, true)
 item_lock_symbol_text_style.hover_color = Color.terminal_icon_selected(255, true)
@@ -415,6 +449,7 @@ ItemPassTemplates.gear_item = {
 		},
 		change_function = function (content, style)
 			local hotspot = content.hotspot
+
 			style.color[1] = math.max(hotspot.anim_focus_progress, hotspot.anim_select_progress) * 255
 		end
 	},
@@ -499,6 +534,7 @@ ItemPassTemplates.gear_item = {
 		end,
 		change_function = function (content, style, _, dt)
 			local add = -0.5 * dt
+
 			style.rotation_progress = ((style.rotation_progress or 0) + add) % 1
 			style.angle = style.rotation_progress * math.pi * 2
 		end
@@ -621,7 +657,7 @@ ItemPassTemplates.gear_item = {
 			local hover_color = style.hover_color
 			local text_color = style.text_color
 			local selected_color = style.selected_color
-			local color = nil
+			local color
 
 			if is_selected or is_focused then
 				color = selected_color
@@ -660,11 +696,14 @@ ItemPassTemplates.gear_item = {
 			local speed = 5
 			local anim_progress = 1 - (0.5 + math.sin(Application.time_since_launch() * speed) * 0.5)
 			local hotspot = content.hotspot
+
 			style.color[1] = 150 + anim_progress * 80
+
 			local hotspot = content.hotspot
 
 			if hotspot.is_selected or hotspot.on_hover_exit then
 				content.element.new_item_marker = nil
+
 				local element = content.element
 				local item = element and (element.real_item or element.item)
 
@@ -865,6 +904,7 @@ ItemPassTemplates.gear_item_slot = {
 		end,
 		change_function = function (content, style, _, dt)
 			local add = -0.5 * dt
+
 			style.rotation_progress = ((style.rotation_progress or 0) + add) % 1
 			style.angle = style.rotation_progress * math.pi * 2
 		end
@@ -884,6 +924,7 @@ ItemPassTemplates.gear_item_slot = {
 		},
 		change_function = function (content, style)
 			local hotspot = content.hotspot
+
 			style.color[1] = math.max(hotspot.anim_focus_progress, hotspot.anim_select_progress) * 255
 		end
 	},
@@ -1082,6 +1123,7 @@ ItemPassTemplates.ui_item = {
 		end,
 		change_function = function (content, style, _, dt)
 			local add = -0.5 * dt
+
 			style.rotation_progress = ((style.rotation_progress or 0) + add) % 1
 			style.angle = style.rotation_progress * math.pi * 2
 		end
@@ -1101,6 +1143,7 @@ ItemPassTemplates.ui_item = {
 		},
 		change_function = function (content, style)
 			local hotspot = content.hotspot
+
 			style.color[1] = math.max(hotspot.anim_focus_progress, hotspot.anim_select_progress) * 255
 		end
 	},
@@ -1198,7 +1241,7 @@ ItemPassTemplates.ui_item = {
 			local hover_color = style.hover_color
 			local text_color = style.text_color
 			local selected_color = style.selected_color
-			local color = nil
+			local color
 
 			if is_selected or is_focused then
 				color = selected_color
@@ -1237,11 +1280,14 @@ ItemPassTemplates.ui_item = {
 			local speed = 5
 			local anim_progress = 1 - (0.5 + math.sin(Application.time_since_launch() * speed) * 0.5)
 			local hotspot = content.hotspot
+
 			style.color[1] = 150 + anim_progress * 80
+
 			local hotspot = content.hotspot
 
 			if hotspot.is_selected or hotspot.on_hover_exit then
 				content.element.new_item_marker = nil
+
 				local element = content.element
 				local item = element and (element.real_item or element.item)
 
@@ -1437,6 +1483,7 @@ ItemPassTemplates.ui_item_slot = {
 		end,
 		change_function = function (content, style, _, dt)
 			local add = -0.5 * dt
+
 			style.rotation_progress = ((style.rotation_progress or 0) + add) % 1
 			style.angle = style.rotation_progress * math.pi * 2
 		end
@@ -1456,6 +1503,7 @@ ItemPassTemplates.ui_item_slot = {
 		},
 		change_function = function (content, style)
 			local hotspot = content.hotspot
+
 			style.color[1] = math.max(hotspot.anim_focus_progress, hotspot.anim_select_progress) * 255
 		end
 	},
@@ -1705,6 +1753,7 @@ ItemPassTemplates.ui_item_emote_slot = {
 		end,
 		change_function = function (content, style, _, dt)
 			local add = -0.5 * dt
+
 			style.rotation_progress = ((style.rotation_progress or 0) + add) % 1
 			style.angle = style.rotation_progress * math.pi * 2
 		end
@@ -1724,6 +1773,7 @@ ItemPassTemplates.ui_item_emote_slot = {
 		},
 		change_function = function (content, style)
 			local hotspot = content.hotspot
+
 			style.color[1] = math.max(hotspot.anim_focus_progress, hotspot.anim_select_progress) * 255
 		end
 	},
@@ -1953,6 +2003,7 @@ ItemPassTemplates.ui_item_pose_slot = {
 		end,
 		change_function = function (content, style, _, dt)
 			local add = -0.5 * dt
+
 			style.rotation_progress = ((style.rotation_progress or 0) + add) % 1
 			style.angle = style.rotation_progress * math.pi * 2
 		end
@@ -1972,6 +2023,7 @@ ItemPassTemplates.ui_item_pose_slot = {
 		},
 		change_function = function (content, style)
 			local hotspot = content.hotspot
+
 			style.color[1] = math.max(hotspot.anim_focus_progress, hotspot.anim_select_progress) * 255
 		end
 	},
@@ -2139,6 +2191,7 @@ ItemPassTemplates.item_slot = {
 		},
 		change_function = function (content, style)
 			local hotspot = content.hotspot
+
 			style.color[1] = math.max(hotspot.anim_focus_progress, hotspot.anim_select_progress) * 255
 		end
 	},
@@ -2216,6 +2269,7 @@ ItemPassTemplates.item_slot = {
 		end,
 		change_function = function (content, style, _, dt)
 			local add = -0.5 * dt
+
 			style.rotation_progress = ((style.rotation_progress or 0) + add) % 1
 			style.angle = style.rotation_progress * math.pi * 2
 		end
@@ -2525,6 +2579,7 @@ ItemPassTemplates.item = {
 		},
 		change_function = function (content, style)
 			local hotspot = content.hotspot
+
 			style.color[1] = math.max(hotspot.anim_focus_progress, hotspot.anim_select_progress) * 255
 		end
 	},
@@ -2560,11 +2615,14 @@ ItemPassTemplates.item = {
 			local speed = 5
 			local anim_progress = 1 - (0.5 + math.sin(Application.time_since_launch() * speed) * 0.5)
 			local hotspot = content.hotspot
+
 			style.color[1] = 150 + anim_progress * 80
+
 			local hotspot = content.hotspot
 
 			if hotspot.is_selected or hotspot.on_hover_exit then
 				content.element.new_item_marker = nil
+
 				local element = content.element
 				local item = element and (element.real_item or element.item)
 
@@ -2648,6 +2706,7 @@ ItemPassTemplates.item = {
 		end,
 		change_function = function (content, style, _, dt)
 			local add = -0.5 * dt
+
 			style.rotation_progress = ((style.rotation_progress or 0) + add) % 1
 			style.angle = style.rotation_progress * math.pi * 2
 		end
@@ -3091,6 +3150,7 @@ ItemPassTemplates.general_goods_item = {
 		},
 		change_function = function (content, style)
 			local hotspot = content.hotspot
+
 			style.color[1] = 50
 		end
 	},
@@ -3114,6 +3174,7 @@ ItemPassTemplates.general_goods_item = {
 		},
 		change_function = function (content, style)
 			local hotspot = content.hotspot
+
 			style.color[1] = math.max(hotspot.anim_focus_progress, hotspot.anim_select_progress) * 255
 		end
 	},
@@ -3617,6 +3678,7 @@ ItemPassTemplates.item_icon = {
 		end,
 		change_function = function (content, style, _, dt)
 			local add = -0.5 * dt
+
 			style.rotation_progress = ((style.rotation_progress or 0) + add) % 1
 			style.angle = style.rotation_progress * math.pi * 2
 		end
@@ -3836,11 +3898,14 @@ ItemPassTemplates.item_icon = {
 			local speed = 5
 			local anim_progress = 1 - (0.5 + math.sin(Application.time_since_launch() * speed) * 0.5)
 			local hotspot = content.hotspot
+
 			style.color[1] = 150 + anim_progress * 80
+
 			local hotspot = content.hotspot
 
 			if hotspot.is_selected or hotspot.on_hover_exit then
 				content.element.new_item_marker = nil
+
 				local element = content.element
 				local item = element and (element.real_item or element.item)
 
@@ -3851,7 +3916,9 @@ ItemPassTemplates.item_icon = {
 		end
 	}
 }
+
 local emote_item_slot_title_style = table.clone(UIFontSettings.body)
+
 emote_item_slot_title_style.text_horizontal_alignment = "left"
 emote_item_slot_title_style.text_vertical_alignment = "center"
 emote_item_slot_title_style.horizontal_alignment = "left"
@@ -3864,7 +3931,9 @@ emote_item_slot_title_style.offset = {
 emote_item_slot_title_style.text_color = Color.ui_brown_super_light(255, true)
 emote_item_slot_title_style.default_color = Color.ui_brown_super_light(255, true)
 emote_item_slot_title_style.hover_color = Color.ui_brown_super_light(255, true)
+
 local emote_item_slot_name_style = table.clone(UIFontSettings.body)
+
 emote_item_slot_name_style.text_horizontal_alignment = "right"
 emote_item_slot_name_style.text_vertical_alignment = "center"
 emote_item_slot_name_style.horizontal_alignment = "right"
@@ -3906,9 +3975,12 @@ ItemPassTemplates.emote_item_slot = {
 		},
 		change_function = function (content, style)
 			local anim_progress = math.max(math.max(content.hotspot.anim_hover_progress, content.hotspot.anim_select_progress), content.hotspot.anim_focus_progress)
+
 			style.color[1] = anim_progress * 255
+
 			local size_addition = style.size_addition
 			local size_padding = 10 - math.easeInCubic(anim_progress) * 10
+
 			size_addition[1] = size_padding
 			size_addition[2] = size_padding
 		end
@@ -3997,7 +4069,9 @@ ItemPassTemplates.emote_item_slot = {
 		end
 	}
 }
+
 local animation_item_slot_title_style = table.clone(UIFontSettings.body)
+
 animation_item_slot_title_style.text_horizontal_alignment = "left"
 animation_item_slot_title_style.text_vertical_alignment = "center"
 animation_item_slot_title_style.horizontal_alignment = "left"
@@ -4010,7 +4084,9 @@ animation_item_slot_title_style.offset = {
 animation_item_slot_title_style.text_color = Color.ui_brown_super_light(255, true)
 animation_item_slot_title_style.default_color = Color.ui_brown_super_light(255, true)
 animation_item_slot_title_style.hover_color = Color.ui_brown_super_light(255, true)
+
 local animation_item_slot_name_style = table.clone(UIFontSettings.body)
+
 animation_item_slot_name_style.text_horizontal_alignment = "right"
 animation_item_slot_name_style.text_vertical_alignment = "center"
 animation_item_slot_name_style.horizontal_alignment = "right"
@@ -4052,9 +4128,12 @@ ItemPassTemplates.animation_item_slot = {
 		},
 		change_function = function (content, style)
 			local anim_progress = math.max(math.max(content.hotspot.anim_hover_progress, content.hotspot.anim_select_progress), content.hotspot.anim_focus_progress)
+
 			style.color[1] = anim_progress * 255
+
 			local size_addition = style.size_addition
 			local size_padding = 10 - math.easeInCubic(anim_progress) * 10
+
 			size_addition[1] = size_padding
 			size_addition[2] = size_padding
 		end
@@ -4135,8 +4214,10 @@ ItemPassTemplates.animation_item_slot = {
 		end
 	}
 }
+
 local gadget_size = ItemPassTemplates.gadget_size
 local gadget_display_name_text_style = table.clone(UIFontSettings.header_3)
+
 gadget_display_name_text_style.text_horizontal_alignment = "center"
 gadget_display_name_text_style.text_vertical_alignment = "top"
 gadget_display_name_text_style.horizontal_alignment = "center"
@@ -4154,11 +4235,15 @@ gadget_display_name_text_style.text_color = Color.terminal_text_header(255, true
 gadget_display_name_text_style.default_color = Color.terminal_text_header(255, true)
 gadget_display_name_text_style.hover_color = Color.terminal_text_header_selected(255, true)
 gadget_display_name_text_style.font_size = 20
+
 local gadget_empty_text_style = table.clone(gadget_display_name_text_style)
+
 gadget_empty_text_style.text_color = Color.terminal_text_body_sub_header(255, true)
 gadget_empty_text_style.default_color = Color.terminal_text_body_sub_header(255, true)
 gadget_empty_text_style.hover_color = Color.terminal_text_body(255, true)
+
 local gadget_lock_symbol_text_style = table.clone(gadget_display_name_text_style)
+
 gadget_lock_symbol_text_style.text_color = Color.terminal_frame(255, true)
 gadget_lock_symbol_text_style.default_color = Color.terminal_frame(255, true)
 gadget_lock_symbol_text_style.hover_color = Color.terminal_text_body_sub_header(255, true)
@@ -4338,6 +4423,7 @@ ItemPassTemplates.gadget_item_slot = {
 		end,
 		change_function = function (content, style, _, dt)
 			local add = -0.5 * dt
+
 			style.rotation_progress = ((style.rotation_progress or 0) + add) % 1
 			style.angle = style.rotation_progress * math.pi * 2
 		end
@@ -4430,6 +4516,7 @@ ItemPassTemplates.gadget_item_slot = {
 		},
 		change_function = function (content, style)
 			local hotspot = content.hotspot
+
 			style.color[1] = math.max(hotspot.anim_focus_progress or 0, hotspot.anim_select_progress or 0) * 255
 		end
 	},
@@ -4526,7 +4613,9 @@ ItemPassTemplates.gadget_item_slot = {
 		end
 	}
 }
+
 local item_name_title_style = table.clone(UIFontSettings.header_1)
+
 item_name_title_style.text_horizontal_alignment = "right"
 item_name_title_style.text_vertical_alignment = "top"
 item_name_title_style.horizontal_alignment = "right"
@@ -4537,7 +4626,9 @@ item_name_title_style.offset = {
 }
 item_name_title_style.text_color = Color.white(255, true)
 item_name_title_style.font_size = 38
+
 local item_name_description_style = table.clone(UIFontSettings.body)
+
 item_name_description_style.text_horizontal_alignment = "right"
 item_name_description_style.text_vertical_alignment = "top"
 item_name_description_style.horizontal_alignment = "right"

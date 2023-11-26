@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/buff/player_buff_templates.lua
+
 local Attack = require("scripts/utilities/attack/attack")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local CheckProcFunctions = require("scripts/settings/buff/validation_functions/check_proc_functions")
@@ -15,47 +17,50 @@ local keywords = BuffSettings.keywords
 local special_rules = SpecialRulesSetting.special_rules
 local stat_buffs = BuffSettings.stat_buffs
 local zealot_1 = TalentSettings.zealot_1
-local templates = {
-	knocked_down_damage_reduction = {
-		predicted = false,
-		class_name = "buff",
-		lerped_stat_buffs = {
-			[stat_buffs.damage_taken_multiplier] = {
-				max = 1,
-				min = 0
-			}
-		},
-		start_func = function (template_data, template_context)
-			local unit = template_context.unit
-			local health_extension = ScriptUnit.extension(unit, "health_system")
-			template_data.health_extension = health_extension
-		end,
-		lerp_t_func = function (t, start_time, duration, template_data, template_context)
-			local health_extension = template_data.health_extension
-			local health_percentage = health_extension:current_health_percent()
-			local active_duration = t - start_time
-			local alive_t = 20
-			local time_percent = 1 - math.min(active_duration, alive_t) / alive_t
+local templates = {}
 
-			if time_percent <= 0 then
-				return 1
-			end
+templates.knocked_down_damage_reduction = {
+	predicted = false,
+	class_name = "buff",
+	lerped_stat_buffs = {
+		[stat_buffs.damage_taken_multiplier] = {
+			max = 1,
+			min = 0
+		}
+	},
+	start_func = function (template_data, template_context)
+		local unit = template_context.unit
+		local health_extension = ScriptUnit.extension(unit, "health_system")
 
-			if time_percent < health_percentage then
-				local full_damage_percentage_diff = 0.2
-				local lerp_t = math.min((health_percentage - time_percent) / full_damage_percentage_diff, 1)
+		template_data.health_extension = health_extension
+	end,
+	lerp_t_func = function (t, start_time, duration, template_data, template_context)
+		local health_extension = template_data.health_extension
+		local health_percentage = health_extension:current_health_percent()
+		local active_duration = t - start_time
+		local alive_t = 20
+		local time_percent = 1 - math.min(active_duration, alive_t) / alive_t
 
-				return lerp_t
-			end
-
-			return 0
+		if time_percent <= 0 then
+			return 1
 		end
-	}
+
+		if time_percent < health_percentage then
+			local full_damage_percentage_diff = 0.2
+			local lerp_t = math.min((health_percentage - time_percent) / full_damage_percentage_diff, 1)
+
+			return lerp_t
+		end
+
+		return 0
+	end
 }
+
 local MIN_DISTANCE_SQUARED = 2500
 local MAX_DISTANCE_SQUARED = 22500
 local MIN_POWER_LEVEL = PowerLevelSettings.default_power_level
 local MAX_POWER_LEVEL = PowerLevelSettings.max_power_level
+
 templates.knocked_down_damage_tick = {
 	interval = 2,
 	hud_icon = "content/ui/textures/icons/buffs/hud/states_knocked_down_buff_hud",
@@ -64,8 +69,11 @@ templates.knocked_down_damage_tick = {
 	is_negative = true,
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
+
 		template_data.health_extension = ScriptUnit.extension(unit, "health_system")
+
 		local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
+
 		template_data.assisted_state_input = unit_data_extension:read_component("assisted_state_input")
 	end,
 	interval_func = function (template_data, template_context)
@@ -117,8 +125,11 @@ templates.netted_damage_tick = {
 	class_name = "interval_buff",
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
+
 		template_data.health_extension = ScriptUnit.extension(unit, "health_system")
+
 		local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
+
 		template_data.assisted_state_input = unit_data_extension:read_component("assisted_state_input")
 		template_data.num_ticks = 1
 	end,
@@ -149,7 +160,9 @@ templates.netted_damage_tick = {
 		if HEALTH_ALIVE[unit] then
 			local template = template_context.template
 			local num_ticks = template_data.num_ticks
+
 			template_data.num_ticks = num_ticks + 1
+
 			local max_power_level = Managers.state.difficulty:get_table_entry_by_challenge(template.power_level)
 			local ticks_to_max_power_level = Managers.state.difficulty:get_table_entry_by_challenge(template.ticks_to_full_power_level)
 			local power_level = max_power_level * math.min(1, num_ticks / ticks_to_max_power_level)
@@ -200,6 +213,7 @@ templates.coherency_toughness_regen = {
 	},
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
+
 		template_data.specialization_extension = ScriptUnit.extension(unit, "specialization_system")
 	end,
 	min_max_step_func = function (template_data, template_context)
@@ -226,6 +240,7 @@ templates.sprint_with_stamina_buff = {
 		local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
 		local archetype = unit_data_extension:archetype()
 		local base_stamina_template = archetype.stamina
+
 		template_data.base_stamina_template = base_stamina_template
 		template_data.stamina_component = unit_data_extension:read_component("stamina")
 		template_data.sprint_character_state_component = unit_data_extension:read_component("sprint_character_state")

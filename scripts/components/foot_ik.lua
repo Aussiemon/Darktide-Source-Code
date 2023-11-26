@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/components/foot_ik.lua
+
 local FootIk = component("FootIk")
 
 FootIk.init = function (self, unit)
@@ -135,12 +137,14 @@ FootIk._instantiate_ik_data = function (self)
 		right = {}
 	}
 	self._past_leaning_sample = {}
+
 	local init_hips_pos = Unit.local_position(self._unit, self._hips_handle)
 	local init_hips_rot = Unit.local_rotation(self._unit, self._hips_handle)
 	local init_left_pos = Unit.local_position(self._unit, self._left_handle)
 	local init_left_rot = Unit.local_rotation(self._unit, self._left_handle)
 	local init_right_pos = Unit.local_position(self._unit, self._right_handle)
 	local init_right_rot = Unit.local_rotation(self._unit, self._right_handle)
+
 	self._past_leaning_sample.move = Vector3Box(init_hips_pos)
 	self._past_leaning_sample.orient = QuaternionBox(init_hips_rot)
 	self._past_surface_sample.hips.move = Vector3Box(init_hips_pos)
@@ -207,6 +211,7 @@ FootIk._distance_warp_sampling = function (self, left_ref_pos, right_ref_pos, di
 	local right_ref_parent_inv_m = Unit.world_pose(self._unit, self._right_handle_ref_parent)
 	local left_ref_local_pos = Unit.local_position(self._unit, self._left_handle_ref)
 	local right_ref_local_pos = Unit.local_position(self._unit, self._right_handle_ref)
+
 	distance_warp_sample.left = Vector3(left_ref_local_pos.x, left_ref_local_pos.y * self._warp_distance_test, left_ref_local_pos.z)
 
 	Vector3.set_y(left_ref_local_pos, left_ref_local_pos.y + distance_warp_sample.left.y)
@@ -292,9 +297,12 @@ FootIk._get_foot_surface_data = function (self, unit_pose, foot_pose, weight, or
 	end
 
 	local flat_foot_orient = Quaternion.look(flat_foot_forward, Vector3.up())
+
 	from_pos = from_pos + flat_foot_forward * 0.2
+
 	local from_pose = Matrix4x4.from_quaternion_position(flat_foot_orient, from_pos)
 	local hit_type, hit_distance, surface_normal = self:_raycast_surface(from_pose, self.raycast_distance)
+
 	surface_data.move = self:_get_handle_movement_to_surface(hit_distance, weight, hit_type)
 	surface_data.orient = self:_get_handle_orientation_to_surface(orient_ref, weight, orient_ref_p, surface_normal)
 	surface_data.hit_type = hit_type
@@ -335,7 +343,7 @@ FootIk._surface_sampling = function (self, unit_pose, left_ref_pose, right_ref_p
 end
 
 FootIk._lean_in_acceleration_sampling = function (self, leaning_sample, past_leaning_sample)
-	local velocity_current, velocity_wanted = nil
+	local velocity_current, velocity_wanted
 
 	if self.in_editor then
 		velocity_current = Vector3.zero()
@@ -364,13 +372,16 @@ FootIk._lean_in_acceleration_sampling = function (self, leaning_sample, past_lea
 
 	local inv_parent_m = Matrix4x4.inverse(Unit.world_pose(self._unit, self._hips_handle_ref_parent))
 	local hips_leaning_m = Matrix4x4.multiply(orient_hips_w, inv_parent_m)
+
 	leaning_sample.orient = Matrix4x4.rotation(hips_leaning_m)
+
 	local local_diff = Quaternion.rotate(Matrix4x4.rotation(inv_parent_m), velocity_wanted - velocity_current)
 	local acc_diff = Vector3.distance(velocity_wanted, velocity_current)
 	local ref_v = Matrix4x4.translation(hips_leaning_m)
+
 	leaning_sample.move = Vector3(ref_v.x - local_diff.x * leaning_balance, ref_v.y - local_diff.y * leaning_balance, ref_v.z - acc_diff * leaning_descend)
 
-	if Vector3.length(velocity_wanted) < current_speed then
+	if current_speed > Vector3.length(velocity_wanted) then
 		leaning_sample.move = Vector3.lerp(Vector3Box.unbox(past_leaning_sample.move), leaning_sample.move, self.dt * self.stop_balance_speed)
 		leaning_sample.orient = Quaternion.lerp(QuaternionBox.unbox(past_leaning_sample.orient), leaning_sample.orient, self.dt * self.stop_leaning_speed)
 	else
@@ -423,6 +434,7 @@ FootIk.update = function (self, unit, dt, t)
 
 	if dt < 1 / fps_threshold then
 		local unit_data_extension = ScriptUnit.extension(self._unit, "unit_data_system")
+
 		self._locomotion_component = unit_data_extension:read_component("locomotion")
 		self._locomotion_steering_component = unit_data_extension:read_component("locomotion_steering")
 		self._hub_jog_character_state_component = unit_data_extension:read_component("hub_jog_character_state")

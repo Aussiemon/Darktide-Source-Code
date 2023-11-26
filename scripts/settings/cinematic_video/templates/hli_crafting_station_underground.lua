@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/cinematic_video/templates/hli_crafting_station_underground.lua
+
 local cinematic_video_template = {
 	hli_crafting_station_underground = {
 		loop_video = false,

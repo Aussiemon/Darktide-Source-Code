@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/animation/authoritative_player_unit_animation_extension.lua
+
 local PlayerUnitAnimationState = require("scripts/extension_systems/animation/utilities/player_unit_animation_state")
 local AuthoritativePlayerUnitAnimationExtension = class("AuthoritativePlayerUnitAnimationExtension")
 local VARIABLES_INDEXES_RPC_CACHE = {}
@@ -8,13 +10,16 @@ local max_anim_variable_float_value = NetworkConstants.anim_variable_float.max
 AuthoritativePlayerUnitAnimationExtension.init = function (self, extension_init_context, unit, extension_init_data)
 	self._unit = unit
 	self._player = extension_init_data.player
+
 	local unit_data = ScriptUnit.extension(unit, "unit_data_system")
 	local animation_state = unit_data:write_component("animation_state")
 
 	PlayerUnitAnimationState.init_anim_state_component(animation_state)
 
 	self._animation_state_component = animation_state
+
 	local is_local_unit = extension_init_data.is_local_unit
+
 	self._is_local_unit = is_local_unit
 	self._anim_variable_ids_third_person = {}
 	self._anim_variable_ids_first_person = {}
@@ -22,6 +27,7 @@ end
 
 AuthoritativePlayerUnitAnimationExtension.extensions_ready = function (self, world, unit)
 	local first_person_unit = ScriptUnit.extension(unit, "first_person_system"):first_person_unit()
+
 	self._first_person_unit = first_person_unit
 
 	PlayerUnitAnimationState.cache_anim_variable_ids(unit, first_person_unit, self._anim_variable_ids_third_person, self._anim_variable_ids_first_person)
@@ -51,7 +57,7 @@ AuthoritativePlayerUnitAnimationExtension.anim_event = function (self, event_nam
 end
 
 AuthoritativePlayerUnitAnimationExtension.anim_event_with_variable_float = function (self, event_name, variable_name, variable_value)
-	if variable_value < min_anim_variable_float_value or max_anim_variable_float_value < variable_value then
+	if variable_value < min_anim_variable_float_value or variable_value > max_anim_variable_float_value then
 		variable_value = math.clamp(variable_value, min_anim_variable_float_value, max_anim_variable_float_value)
 	end
 
@@ -82,7 +88,7 @@ AuthoritativePlayerUnitAnimationExtension.anim_event_with_variable_floats = func
 		local variable_index = Unit.animation_find_variable(unit, variable_name)
 
 		if variable_value and variable_index then
-			if variable_value < min_anim_variable_float_value or max_anim_variable_float_value < variable_value then
+			if variable_value < min_anim_variable_float_value or variable_value > max_anim_variable_float_value then
 				variable_value = math.clamp(variable_value, min_anim_variable_float_value, max_anim_variable_float_value)
 			end
 
@@ -141,7 +147,7 @@ AuthoritativePlayerUnitAnimationExtension.anim_event_1p = function (self, event_
 end
 
 AuthoritativePlayerUnitAnimationExtension.anim_event_with_variable_float_1p = function (self, event_name, variable_name, variable_value)
-	if variable_value < min_anim_variable_float_value or max_anim_variable_float_value < variable_value then
+	if variable_value < min_anim_variable_float_value or variable_value > max_anim_variable_float_value then
 		variable_value = math.clamp(variable_value, min_anim_variable_float_value, max_anim_variable_float_value)
 	end
 
@@ -169,7 +175,7 @@ AuthoritativePlayerUnitAnimationExtension.anim_event_with_variable_floats_1p = f
 		local variable_index = Unit.animation_find_variable(first_person_unit, variable_name)
 
 		if variable_value and variable_index then
-			if variable_value < min_anim_variable_float_value or max_anim_variable_float_value < variable_value then
+			if variable_value < min_anim_variable_float_value or variable_value > max_anim_variable_float_value then
 				variable_value = math.clamp(variable_value, min_anim_variable_float_value, max_anim_variable_float_value)
 			end
 
@@ -202,9 +208,7 @@ AuthoritativePlayerUnitAnimationExtension.anim_event_with_variable_floats_1p = f
 end
 
 AuthoritativePlayerUnitAnimationExtension.inventory_slot_wielded = function (self, weapon_template)
-	local unit = self._unit
-	local first_person_unit = self._first_person_unit
-	local is_local_unit = self._is_local_unit
+	local unit, first_person_unit, is_local_unit = self._unit, self._first_person_unit, self._is_local_unit
 
 	PlayerUnitAnimationState.set_anim_state_machine(unit, first_person_unit, weapon_template, is_local_unit, self._anim_variable_ids_third_person, self._anim_variable_ids_first_person)
 	PlayerUnitAnimationState.record_animation_state(self._animation_state_component, unit, first_person_unit)

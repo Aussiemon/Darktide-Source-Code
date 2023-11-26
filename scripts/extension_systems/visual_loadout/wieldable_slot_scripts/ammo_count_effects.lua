@@ -1,8 +1,11 @@
+﻿-- chunkname: @scripts/extension_systems/visual_loadout/wieldable_slot_scripts/ammo_count_effects.lua
+
 local AmmoCountEffects = class("AmmoCountEffects")
 local WWISE_PARAMETER_NAME = "weapon_ammo_count"
 
 AmmoCountEffects.init = function (self, context, slot, weapon_template, fx_sources)
 	local unit_data_extension = context.unit_data_extension
+
 	self._owner_unit = context.owner_unit
 	self._is_husk = context.is_husk
 	self._is_local_unit = context.is_local_unit
@@ -28,8 +31,7 @@ AmmoCountEffects.update = function (self, unit, dt, t)
 	local current_clip = inventory_slot_component.current_ammunition_clip
 
 	if self._last_clip_size ~= current_clip then
-		local muzzle_source = self._fx_extension:sound_source(self._muzzle_fx_source_name)
-		local wwise_world = self._wwise_world
+		local muzzle_source, wwise_world = self._fx_extension:sound_source(self._muzzle_fx_source_name), self._wwise_world
 		local max_clip = inventory_slot_component.max_ammunition_clip
 		local ammo_percentage = max_clip > 0 and current_clip / max_clip * 100 or 0
 

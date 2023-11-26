@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/input/default_imgui_input_settings.lua
+
 local default_imgui_input_settings = {
 	service_type = "Imgui",
 	supported_devices = {

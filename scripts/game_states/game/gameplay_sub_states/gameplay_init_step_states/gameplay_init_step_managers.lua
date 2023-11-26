@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/game_states/game/gameplay_sub_states/gameplay_init_step_states/gameplay_init_step_managers.lua
+
 local AttackReportManager = require("scripts/managers/attack_report/attack_report_manager")
 local BloodManager = require("scripts/managers/blood/blood_manager")
 local BotNavTransitionManager = require("scripts/managers/bot_nav_transition/bot_nav_transition_manager")
@@ -31,7 +33,9 @@ local GameplayInitStepManagers = class("GameplayInitStepManagers")
 
 GameplayInitStepManagers.on_enter = function (self, parent, params)
 	local shared_state = params.shared_state
+
 	self._shared_state = shared_state
+
 	local world = shared_state.world
 	local level_name = shared_state.level_name
 	local is_server = shared_state.is_server
@@ -68,16 +72,20 @@ GameplayInitStepManagers._init_state_managers = function (self, world, physics_w
 	self:_init_unit_spawner(world, is_server, level_name, network_event_delegate)
 
 	Managers.state.camera = CameraManager:new(world)
+
 	local mission_manager = Managers.state.mission
 	local mission = mission_manager:mission()
 	local player_manager = Managers.player
 	local local_player = player_manager:local_player(1)
+
 	Managers.state.chunk_lod = ChunkLodManager:new(world, mission, local_player)
 	Managers.state.network_story = NetworkStoryManager:new(world, is_server, network_event_delegate)
 	Managers.state.networked_flow_state = NetworkedFlowStateManager:new(world, is_server, network_event_delegate)
 	Managers.state.difficulty = DifficultyManager:new(is_server, resistance, challenge)
+
 	local mission_template = MissionTemplates[mission_name]
 	local game_mode_name = mission_template.game_mode_name
+
 	Managers.state.player_unit_spawn = PlayerUnitSpawnManager:new(is_server, level_seed, has_navmesh, game_mode_name, network_event_delegate, soft_cap_out_of_bounds_units)
 	Managers.state.player_overlap_manager = PlayerOverlapManager:new(physics_world)
 	Managers.state.decal = DecalManager:new(world)
@@ -111,6 +119,7 @@ GameplayInitStepManagers._init_unit_spawner = function (self, world, is_server, 
 	local extension_manager = Managers.state.extension
 	local UnitTemplates = require("scripts/extension_systems/unit_templates")
 	local unit_spawner_manager = UnitSpawnerManager:new(world, extension_manager, is_server, UnitTemplates, game_session, level_name, network_event_delegate)
+
 	Managers.state.unit_job = UnitJobManager:new(unit_spawner_manager)
 	Managers.state.unit_spawner = unit_spawner_manager
 end

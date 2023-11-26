@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/hud/elements/crosshair/hud_element_crosshair_settings.lua
+
 local shield_size = {
 	31,
 	38

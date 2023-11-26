@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/inventory_weapon_cosmetics_view/inventory_weapon_cosmetics_view_settings.lua
+
 local inventory_weapon_cosmetics_view_settings = {
 	scrollbar_width = 7,
 	timer_name = "ui",

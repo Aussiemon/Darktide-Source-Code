@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/hud/elements/mission_speaker_popup/hud_element_mission_speaker_popup_definitions.lua
+
 local UIWorkspaceSettings = require("scripts/settings/ui/ui_workspace_settings")
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local UIWidget = require("scripts/managers/ui/ui_widget")
@@ -19,6 +21,7 @@ local scenegraph_definition = {
 	}
 }
 local name_text_style = table.clone(UIFontSettings.hud_body)
+
 name_text_style.horizontal_alignment = "right"
 name_text_style.vertical_alignment = "top"
 name_text_style.text_horizontal_alignment = "right"
@@ -34,13 +37,16 @@ name_text_style.offset = {
 }
 name_text_style.drop_shadow = true
 name_text_style.font_size = 24
+
 local title_text_style = table.clone(name_text_style)
+
 title_text_style.offset = {
 	-(portrait_size[1] + 20),
 	-10,
 	2
 }
 title_text_style.text_color = UIHudSettings.color_tint_main_2
+
 local widget_definitions = {
 	popup = UIWidget.create_definition({
 		{
@@ -130,6 +136,7 @@ local num_bars = HudElementMissionSpeakerPopupSettings.bar_amount
 
 for i = 1, num_bars do
 	local name = "bar_" .. i
+
 	widget_definitions[name] = UIWidget.create_definition({
 		{
 			value = "content/ui/materials/backgrounds/default_square",
@@ -186,92 +193,97 @@ for i = 1, num_bars do
 	}, "background")
 end
 
-local animations = {}
-animations.popup_enter = {
-	{
-		name = "hide everything",
-		end_time = 0,
-		start_time = 0,
-		init = function (parent, ui_scenegraph, scenegraph_definition, widgets)
-			for key, widget in pairs(widgets) do
-				widget.alpha_multiplier = 0
+local animations = {
+	popup_enter = {
+		{
+			name = "hide everything",
+			end_time = 0,
+			start_time = 0,
+			init = function (parent, ui_scenegraph, scenegraph_definition, widgets)
+				for key, widget in pairs(widgets) do
+					widget.alpha_multiplier = 0
+				end
+
+				widgets.popup.style.portrait.material_values.distortion = 1
 			end
+		},
+		{
+			name = "icon_fade_in",
+			end_time = 0.5,
+			start_time = 0.1,
+			update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress)
+				local anim_progress = math.easeOutCubic(progress)
+				local popup_widget = widgets.popup
 
-			widgets.popup.style.portrait.material_values.distortion = 1
-		end
-	},
-	{
-		name = "icon_fade_in",
-		end_time = 0.5,
-		start_time = 0.1,
-		update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress)
-			local anim_progress = math.easeOutCubic(progress)
-			local popup_widget = widgets.popup
-			popup_widget.alpha_multiplier = anim_progress
-			popup_widget.offset[1] = 50 - 50 * anim_progress
-		end
-	},
-	{
-		name = "icon_distortion",
-		end_time = 2,
-		start_time = 0.3,
-		update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress)
-			local anim_progress = math.ease_out_exp(math.bounce(progress))
-			local popup_widget = widgets.popup
-			popup_widget.style.portrait.material_values.distortion = anim_progress
-		end
-	},
-	{
-		name = "text_fade_in",
-		end_time = 1,
-		start_time = 0.6,
-		update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress)
-			local anim_progress = math.easeCubic(progress)
-			local popup_widget = widgets.popup
+				popup_widget.alpha_multiplier = anim_progress
+				popup_widget.offset[1] = 50 - 50 * anim_progress
+			end
+		},
+		{
+			name = "icon_distortion",
+			end_time = 2,
+			start_time = 0.3,
+			update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress)
+				local anim_progress = math.ease_out_exp(math.bounce(progress))
+				local popup_widget = widgets.popup
 
-			for key, widget in pairs(widgets) do
-				if key ~= "popup" then
-					widget.alpha_multiplier = anim_progress
+				popup_widget.style.portrait.material_values.distortion = anim_progress
+			end
+		},
+		{
+			name = "text_fade_in",
+			end_time = 1,
+			start_time = 0.6,
+			update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress)
+				local anim_progress = math.easeCubic(progress)
+				local popup_widget = widgets.popup
+
+				for key, widget in pairs(widgets) do
+					if key ~= "popup" then
+						widget.alpha_multiplier = anim_progress
+					end
 				end
 			end
-		end
-	}
-}
-animations.popup_exit = {
-	{
-		name = "text_fade_out",
-		end_time = 0.3,
-		start_time = 0,
-		update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress)
-			local anim_progress = 1 - math.easeOutCubic(progress)
+		}
+	},
+	popup_exit = {
+		{
+			name = "text_fade_out",
+			end_time = 0.3,
+			start_time = 0,
+			update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress)
+				local anim_progress = 1 - math.easeOutCubic(progress)
 
-			for key, widget in pairs(widgets) do
-				if key ~= "popup" then
-					widget.alpha_multiplier = anim_progress
+				for key, widget in pairs(widgets) do
+					if key ~= "popup" then
+						widget.alpha_multiplier = anim_progress
+					end
 				end
 			end
-		end
-	},
-	{
-		name = "icon_distortion",
-		end_time = 0.8,
-		start_time = 0.3,
-		update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress)
-			local anim_progress = 1 - math.easeOutCubic(progress)
-			local popup_widget = widgets.popup
-			popup_widget.style.portrait.material_values.distortion = anim_progress
-		end
-	},
-	{
-		name = "icon_fade_out",
-		end_time = 1,
-		start_time = 0.5,
-		update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress)
-			local anim_progress = 1 - math.easeOutCubic(progress)
-			local popup_widget = widgets.popup
-			popup_widget.alpha_multiplier = anim_progress
-			popup_widget.offset[1] = 50 - 50 * anim_progress
-		end
+		},
+		{
+			name = "icon_distortion",
+			end_time = 0.8,
+			start_time = 0.3,
+			update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress)
+				local anim_progress = 1 - math.easeOutCubic(progress)
+				local popup_widget = widgets.popup
+
+				popup_widget.style.portrait.material_values.distortion = anim_progress
+			end
+		},
+		{
+			name = "icon_fade_out",
+			end_time = 1,
+			start_time = 0.5,
+			update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress)
+				local anim_progress = 1 - math.easeOutCubic(progress)
+				local popup_widget = widgets.popup
+
+				popup_widget.alpha_multiplier = anim_progress
+				popup_widget.offset[1] = 50 - 50 * anim_progress
+			end
+		}
 	}
 }
 

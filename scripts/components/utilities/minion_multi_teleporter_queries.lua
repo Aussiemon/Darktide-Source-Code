@@ -1,10 +1,10 @@
+﻿-- chunkname: @scripts/components/utilities/minion_multi_teleporter_queries.lua
+
 local NavQueries = require("scripts/utilities/nav_queries")
 local SmartObject = require("scripts/extension_systems/nav_graph/utilities/smart_object")
 local MinionMultiTeleporterQueries = {}
-local NAV_MESH_ABOVE = 0.4
-local NAV_MESH_BELOW = 0.4
-local LAYER_TYPE = "teleporters"
-local IS_BIDIRECTIONAL = false
+local NAV_MESH_ABOVE, NAV_MESH_BELOW = 0.4, 0.4
+local LAYER_TYPE, IS_BIDIRECTIONAL = "teleporters", false
 
 MinionMultiTeleporterQueries.generate_smart_object = function (unit, nav_world, destination_teleporter_unit)
 	local unit_position = Unit.world_position(unit, 1)
@@ -30,8 +30,7 @@ MinionMultiTeleporterQueries.generate_smart_object = function (unit, nav_world, 
 	return smart_object, smart_object_id
 end
 
-local TEMP_SMART_OBJECTS = {}
-local TEMP_SMART_OBJECT_ID_LOOKUP = {}
+local TEMP_SMART_OBJECTS, TEMP_SMART_OBJECT_ID_LOOKUP = {}, {}
 
 MinionMultiTeleporterQueries.generate_smart_objects = function (unit, nav_world, teleporter_units)
 	table.clear_array(TEMP_SMART_OBJECTS, #TEMP_SMART_OBJECTS)

@@ -1,7 +1,10 @@
+﻿-- chunkname: @scripts/components/hideable_ammo.lua
+
 local HideableAmmo = component("HideableAmmo")
 
 HideableAmmo.init = function (self, unit)
 	self._unit = unit
+
 	local start_hidden = self:get_data(unit, "start_hidden")
 
 	if start_hidden then

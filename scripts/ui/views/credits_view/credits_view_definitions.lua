@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/credits_view/credits_view_definitions.lua
+
 local UIWorkspaceSettings = require("scripts/settings/ui/ui_workspace_settings")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 
@@ -126,6 +128,7 @@ local animations = {
 			end,
 			update = function (parent, ui_scenegraph, scenegraph_definition, widget, progress, params)
 				local anim_progress = 255 * (1 - progress)
+
 				widget.style.texture.color[1] = anim_progress
 			end
 		},
@@ -138,6 +141,7 @@ local animations = {
 			end,
 			update = function (parent, ui_scenegraph, scenegraph_definition, widget, progress, params)
 				local anim_progress = 255 * progress
+
 				widget.style.texture.color[1] = anim_progress
 			end
 		}

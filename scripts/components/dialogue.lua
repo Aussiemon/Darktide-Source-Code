@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/components/dialogue.lua
+
 local Dialogue = component("Dialogue")
 
 Dialogue.init = function (self, unit)
@@ -6,11 +8,13 @@ Dialogue.init = function (self, unit)
 	local player_selected_voice = self:get_data(unit, "player_selected_voice")
 	local faction_memory_name = self:get_data(unit, "faction_memory_name")
 	local enabled = self:get_data(unit, "enabled")
+
 	self._dialogue_class = dialogue_class
 	self._dialogue_profile = dialogue_profile
 	self._player_selected_voice = player_selected_voice
 	self._faction_memory_name = faction_memory_name
 	self._enabled = enabled
+
 	local dialogue_extension = ScriptUnit.fetch_component_extension(unit, "dialogue_system")
 
 	if dialogue_extension then

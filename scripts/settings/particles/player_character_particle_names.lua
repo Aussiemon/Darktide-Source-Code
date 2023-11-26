@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/particles/player_character_particle_names.lua
+
 local player_character_particle_names_lookup = {
 	["content/fx/particles/impacts/surfaces/impact_sand"] = true,
 	["content/fx/particles/weapons/grenades/flame_grenade_initial_blast"] = true,

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/talent/talent_settings_veteran.lua
+
 local DamageSettings = require("scripts/settings/damage/damage_settings")
 local talent_settings = {
 	veteran_1 = {

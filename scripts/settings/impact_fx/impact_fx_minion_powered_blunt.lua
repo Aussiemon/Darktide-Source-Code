@@ -1,10 +1,12 @@
+﻿-- chunkname: @scripts/settings/impact_fx/impact_fx_minion_powered_blunt.lua
+
 local ArmorSettings = require("scripts/settings/damage/armor_settings")
 local NO_SURFACE_DECAL = false
 local armor_types = ArmorSettings.types
 local blood_ball = {
 	"content/decals/blood_ball/blood_ball"
 }
-local unarmored, armored, super_armor, disgustingly_resilient, resistant, berserker = nil
+local unarmored, armored, super_armor, disgustingly_resilient, resistant, berserker
 local player = {
 	sfx = {
 		damage = {

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/constant_elements/elements/chat/constant_element_chat_definitions.lua
+
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local UIWorkspaceSettings = require("scripts/settings/ui/ui_workspace_settings")
@@ -177,6 +179,7 @@ local animations = {
 
 				for i = 1, #message_widgets do
 					local widget = message_widgets[i]
+
 					widget.alpha_multiplier = alpha_multiplier
 				end
 
@@ -202,6 +205,7 @@ local animations = {
 				local input_field_widget = widgets.input_field
 				local input_field_content = input_field_widget.content
 				local is_controller_controlled = IS_XBS and InputDevice.gamepad_active
+
 				input_field_content.visible = true
 
 				if is_controller_controlled then
@@ -209,6 +213,7 @@ local animations = {
 					params.input_field_target = params.target_alpha
 				else
 					local active = input_field_content.is_writing
+
 					params.input_field_source = input_field_widget.alpha_multiplier or 0
 					params.input_field_target = active and 1 or 0
 				end
@@ -216,11 +221,13 @@ local animations = {
 			update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress, params)
 				local eased_progress = math.easeCubic(progress)
 				local input_field_widget = widgets.input_field
+
 				input_field_widget.alpha_multiplier = math.lerp(params.input_field_source, params.input_field_target, eased_progress)
 			end,
 			on_complete = function (parent, ui_scenegraph, scenegraph_definition, widgets, params)
 				local input_field = widgets.input_field
 				local input_field_content = input_field.content
+
 				input_field_content.visible = params.input_field_target > 0
 			end
 		}

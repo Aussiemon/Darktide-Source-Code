@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/event_synchronizer/kill_synchronizer_extension.lua
+
 local KillSynchronizerExtension = class("KillSynchronizerExtension", "EventSynchronizerBaseExtension")
 
 KillSynchronizerExtension.init = function (self, extension_init_context, unit, extension_init_data, ...)
@@ -49,6 +51,7 @@ end
 
 KillSynchronizerExtension.register_minion_unit = function (self, unit)
 	local registered_units = self._registered_units
+
 	registered_units[unit] = true
 	self._registered_units = registered_units
 	self._num_registered_units = self._num_registered_units + 1

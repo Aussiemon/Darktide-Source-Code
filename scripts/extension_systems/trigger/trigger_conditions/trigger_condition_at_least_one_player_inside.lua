@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/trigger/trigger_conditions/trigger_condition_at_least_one_player_inside.lua
+
 require("scripts/extension_systems/trigger/trigger_conditions/trigger_condition_base")
 
 local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/hud/elements/cutscene_overlay/hud_element_cutscene_overlay.lua
+
 local Definitions = require("scripts/ui/hud/elements/cutscene_overlay/hud_element_cutscene_overlay_definitions")
 local HudElementCutsceneOverlaySettings = require("scripts/ui/hud/elements/cutscene_overlay/hud_element_cutscene_overlay_settings")
 local HudElementCutsceneOverlay = class("HudElementCutsceneOverlay", "HudElementBase")
@@ -14,6 +16,7 @@ HudElementCutsceneOverlay._draw_widgets = function (self, dt, t, input_service, 
 	local cutscene_height = w / aspect_ratio
 	local letterbox_height = (h - cutscene_height) * 0.5 * inverse_scale
 	local widgets_by_name = self._widgets_by_name
+
 	widgets_by_name.top.style.rect.size[2] = letterbox_height
 	widgets_by_name.bottom.style.rect.size[2] = letterbox_height
 

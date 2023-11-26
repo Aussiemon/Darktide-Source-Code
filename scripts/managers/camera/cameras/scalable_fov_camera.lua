@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/camera/cameras/scalable_fov_camera.lua
+
 local BaseCamera = require("scripts/managers/camera/cameras/base_camera")
 local ScalableFovCamera = class("ScalableFovCamera", "TransformCamera")
 
@@ -14,6 +16,7 @@ ScalableFovCamera.update = function (self, dt, position, rotation, data)
 	local scale = data[self._scale_variable] or 1
 	local scale_value = self._scale_function(scale)
 	local max_fov_offset = self._max_fov_offset
+
 	self._current_fov_offset = max_fov_offset * scale_value
 
 	BaseCamera.update(self, dt, position, rotation, data)

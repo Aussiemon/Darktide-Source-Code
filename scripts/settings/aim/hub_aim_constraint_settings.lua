@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/aim/hub_aim_constraint_settings.lua
+
 local hub_aim_constraint_settings = {
 	passive_aim_angle_threshold = 120,
 	head_look_up_offset = 25,

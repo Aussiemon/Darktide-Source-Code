@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/specials/renegade_flamer_mutator_settings.lua
+
 local STATES = table.index_lookup_table("passive", "aiming", "shooting")
 local renegade_flamer_mutator_settings = {
 	min_range = 3,

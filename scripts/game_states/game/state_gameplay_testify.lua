@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/game_states/game/state_gameplay_testify.lua
+
 local Attack = require("scripts/utilities/attack/attack")
 local AttackSettings = require("scripts/settings/damage/attack_settings")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
@@ -72,8 +74,7 @@ local ranged_damage_types = {
 }
 
 local function _all_cameras(camera_types)
-	local cameras = {}
-	local i = 0
+	local cameras, i = {}, 0
 	local data_check_performance = camera_types.performance and "is_" .. camera_types.performance .. "_camera" or nil
 	local data_check_screenshot = camera_types.screenshot and "is_" .. camera_types.screenshot .. "_camera" or nil
 	local world = Managers.world:world("level_world")
@@ -107,6 +108,7 @@ local function _all_cameras(camera_types)
 					},
 					go_to_camera_position_link = go_to_camera_position_link
 				}
+
 				i = i + 1
 				cameras[i] = camera
 			end
@@ -127,9 +129,10 @@ local StateGameplayTestify = {
 		return cameras, length
 	end,
 	all_cameras_of_type = function (_, _, camera_type)
-		local camera_types = {
-			[camera_type] = camera_type
-		}
+		local camera_types = {}
+
+		camera_types[camera_type] = camera_type
+
 		local cameras, length = _all_cameras(camera_types)
 
 		return cameras, length
@@ -140,23 +143,17 @@ local StateGameplayTestify = {
 
 		for i = num_pathing_data, 1, -1 do
 			local pathing_data = minion_pathing_data[i]
-			local unit = pathing_data.unit
-			local breed = pathing_data.breed
+			local unit, breed = pathing_data.unit, pathing_data.breed
 			local navigation_extension = ScriptUnit.extension(unit, "navigation_system")
-			local is_computing_path = navigation_extension:is_computing_path()
-			local has_path = navigation_extension:has_path()
+			local is_computing_path, has_path = navigation_extension:is_computing_path(), navigation_extension:has_path()
 
 			if not is_computing_path then
-				local start_positions = pathing_data.start_positions
-				local num_start_positions = pathing_data.num_start_positions
-				local destinations = pathing_data.destinations
-				local num_destinations = pathing_data.num_destinations
-				local start_position_index = pathing_data.start_position_index
-				local destination_index = pathing_data.destination_index
+				local start_positions, num_start_positions = pathing_data.start_positions, pathing_data.num_start_positions
+				local destinations, num_destinations = pathing_data.destinations, pathing_data.num_destinations
+				local start_position_index, destination_index = pathing_data.start_position_index, pathing_data.destination_index
 
 				if not has_path then
-					local start_position = start_positions[start_position_index]:unbox()
-					local destination = destinations[destination_index]:unbox()
+					local start_position, destination = start_positions[start_position_index]:unbox(), destinations[destination_index]:unbox()
 					local error_message = string.format("%s failed pathing (from: %s to: %s).", breed.name, tostring(start_position), tostring(destination))
 
 					return num_remaining_path_queries, error_message
@@ -164,13 +161,17 @@ local StateGameplayTestify = {
 
 				if destination_index < num_destinations then
 					local new_destination_index = destination_index + 1
+
 					pathing_data.destination_index = new_destination_index
+
 					local destination = destinations[new_destination_index]:unbox()
 
 					navigation_extension:move_to(destination)
 				elseif start_position_index < num_start_positions then
 					local new_start_position_index = start_position_index + 1
+
 					pathing_data.start_position_index = new_start_position_index
+
 					local new_start_position = start_positions[new_start_position_index]:unbox()
 					local locomotion_extension = ScriptUnit.extension(unit, "locomotion_system")
 
@@ -178,7 +179,9 @@ local StateGameplayTestify = {
 					navigation_extension:set_nav_bot_position(new_start_position)
 
 					local new_destination_index = 1
+
 					pathing_data.destination_index = new_destination_index
+
 					local destination = destinations[new_destination_index]:unbox()
 
 					navigation_extension:move_to(destination)
@@ -419,8 +422,10 @@ local StateGameplayTestify = {
 			local gibbing_type = parameters.gibbing_type
 			local gib_settings = parameters.gib_settings
 			local damage_profile = table.clone(DamageProfileTemplates.minion_instakill)
+
 			damage_profile.gibbing_type = gibbing_type
 			damage_profile.gibbing_power = gib_settings.gibbing_threshold or gibbing_power.always
+
 			local hit_zone_name = parameters.hit_zone_name
 
 			Attack.execute(unit, damage_profile, "hit_zone_name", hit_zone_name, "instakill", true)
@@ -454,8 +459,7 @@ local StateGameplayTestify = {
 	end,
 	positions_on_nav_mesh = function (state_gameplay, nav_world, positions, above, below, optional_traverse_logic)
 		local num_positions = #positions
-		local positions_on_nav_mesh = Script.new_array(num_positions)
-		local num_positions_on_nav_mesh = 0
+		local positions_on_nav_mesh, num_positions_on_nav_mesh = Script.new_array(num_positions), 0
 
 		for i = 1, num_positions do
 			local position = positions[i]:unbox()

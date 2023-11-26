@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/foundation/managers/chat/chat_manager_interface.lua
+
 local Interface = {
 	"initialize",
 	"is_initialized",

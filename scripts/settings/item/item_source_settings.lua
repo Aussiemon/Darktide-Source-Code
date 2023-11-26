@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/item/item_source_settings.lua
+
 local ItemSourceSettings = {
 	{
 		display_name = "loc_item_source_achievement",

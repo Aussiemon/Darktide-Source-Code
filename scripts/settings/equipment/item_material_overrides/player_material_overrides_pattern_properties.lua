@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/equipment/item_material_overrides/player_material_overrides_pattern_properties.lua
+
 local material_overrides = {
 	pattern_tiling_01 = {
 		property_overrides = {

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/damage/damage_profiles/buff_damage_profile_templates.lua
+
 local ArmorSettings = require("scripts/settings/damage/armor_settings")
 local DamageProfileSettings = require("scripts/settings/damage/damage_profile_settings")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
@@ -60,6 +62,7 @@ local corruptor_corruption_adm = {
 	[armor_types.disgustingly_resilient] = 0,
 	[armor_types.void_shield] = 0
 }
+
 damage_templates.liquid_area_fire_burning = {
 	override_allow_friendly_fire = true,
 	ignore_shield = true,

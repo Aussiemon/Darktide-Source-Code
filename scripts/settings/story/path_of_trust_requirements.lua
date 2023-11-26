@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/story/path_of_trust_requirements.lua
+
 local PathOfTrustRequirements = {
 	{
 		level = 3,

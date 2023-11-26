@@ -1,9 +1,17 @@
+﻿-- chunkname: @scripts/extension_systems/behavior/trees/renegade/renegade_rifleman_behavior_tree.lua
+
 local BreedActions = require("scripts/settings/breed/breed_actions")
 local action_data = BreedActions.renegade_rifleman
 local COVER_COMBAT = {
 	"BtRandomUtilityNode",
+	condition_args = {
+		combat_ranges = {
+			far = true
+		}
+	},
 	{
 		"BtSequenceNode",
+		action_data = action_data.has_cover,
 		{
 			"BtMoveToCoverAction",
 			name = "move_to_cover",
@@ -14,8 +22,7 @@ local COVER_COMBAT = {
 			name = "in_cover",
 			action_data = action_data.in_cover
 		},
-		name = "has_cover",
-		action_data = action_data.has_cover
+		name = "has_cover"
 	},
 	{
 		"BtShootAction",
@@ -24,15 +31,15 @@ local COVER_COMBAT = {
 		action_data = action_data.move_to_cover_shoot
 	},
 	name = "cover_combat",
-	condition = "has_cover",
+	condition = "has_cover"
+}
+local FAR_COMBAT = {
+	"BtRandomUtilityNode",
 	condition_args = {
 		combat_ranges = {
 			far = true
 		}
-	}
-}
-local FAR_COMBAT = {
-	"BtRandomUtilityNode",
+	},
 	{
 		"BtMoveToCombatVectorAction",
 		name = "move_to_combat_vector_far",
@@ -53,15 +60,15 @@ local FAR_COMBAT = {
 		action_data = action_data.far_combat_idle
 	},
 	name = "far_combat",
-	condition = "is_aggroed_in_combat_range",
-	condition_args = {
-		combat_ranges = {
-			far = true
-		}
-	}
+	condition = "is_aggroed_in_combat_range"
 }
 local CLOSE_COMBAT = {
 	"BtRandomUtilityNode",
+	condition_args = {
+		combat_ranges = {
+			close = true
+		}
+	},
 	{
 		"BtCombatIdleAction",
 		name = "close_combat_idle",
@@ -82,15 +89,15 @@ local CLOSE_COMBAT = {
 		action_data = action_data.shoot
 	},
 	name = "close_combat",
-	condition = "is_aggroed_in_combat_range",
-	condition_args = {
-		combat_ranges = {
-			close = true
-		}
-	}
+	condition = "is_aggroed_in_combat_range"
 }
 local MELEE_COMBAT = {
 	"BtRandomUtilityNode",
+	condition_args = {
+		combat_ranges = {
+			melee = true
+		}
+	},
 	{
 		"BtMeleeAttackAction",
 		name = "bayonet_charge_attack",
@@ -121,12 +128,7 @@ local MELEE_COMBAT = {
 		action_data = action_data.melee_attack
 	},
 	name = "melee_combat",
-	condition = "is_aggroed_in_combat_range",
-	condition_args = {
-		combat_ranges = {
-			melee = true
-		}
-	}
+	condition = "is_aggroed_in_combat_range"
 }
 local behavior_tree = {
 	"BtSelectorNode",

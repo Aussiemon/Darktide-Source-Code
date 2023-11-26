@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/free_flight/free_flight_teleporter.lua
+
 local PlayerMovement = require("scripts/utilities/player_movement")
 local FreeFlightTeleporter = class("FreeFlightTeleporter")
 local SERVER_RPCS = {

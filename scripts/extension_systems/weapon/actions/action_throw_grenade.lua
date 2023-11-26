@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/weapon/actions/action_throw_grenade.lua
+
 require("scripts/extension_systems/weapon/actions/action_ability_base")
 
 local ActionUtility = require("scripts/extension_systems/weapon/actions/utilities/action_utility")
@@ -13,7 +15,9 @@ ActionThrowGrenade.init = function (self, action_context, action_params, action_
 	ActionThrowGrenade.super.init(self, action_context, action_params, action_settings)
 
 	self._item_definitions = MasterItems.get_cached()
+
 	local unit_data_extension = action_context.unit_data_extension
+
 	self._action_aim_projectile_component = unit_data_extension:read_component("action_aim_projectile")
 	self._action_settings = action_settings
 	self._ability_extension = action_context.ability_extension
@@ -36,7 +40,7 @@ end
 ActionThrowGrenade.fixed_update = function (self, dt, t, time_in_action)
 	local rewind_ms = LagCompensation.rewind_ms(self._is_server, self._is_local_unit, self._player) / 1000 / 2
 
-	if self._spawn_at_time and self._spawn_at_time < t + rewind_ms then
+	if self._spawn_at_time and t + rewind_ms > self._spawn_at_time then
 		self._spawn_at_time = nil
 
 		self:_spawn_projectile()
@@ -59,7 +63,7 @@ ActionThrowGrenade._spawn_projectile = function (self)
 		local projectile_template = ActionUtility.get_projectile_template(action_settings, weapon_template, ability_extension)
 		local locomotion_template = projectile_template.locomotion_template
 		local owner_unit = self._player_unit
-		local material = nil
+		local material
 		local fire_config = action_settings.fire_configuration
 		local skip_aiming = fire_config and fire_config.skip_aiming
 		local first_person_component = self._first_person_component
@@ -70,6 +74,7 @@ ActionThrowGrenade._spawn_projectile = function (self)
 		if not skip_aiming then
 			local aim_position = position
 			local aim_direction = direction
+
 			position, rotation, direction, speed, momentum = AimProjectile.get_spawn_parameters_from_aim_component(self._action_aim_projectile_component)
 			position = aim_position
 			direction = aim_direction
@@ -81,6 +86,7 @@ ActionThrowGrenade._spawn_projectile = function (self)
 			local first_person_extension = ScriptUnit.extension(owner_unit, "first_person_system")
 			local first_person_unit = first_person_extension:first_person_unit()
 			local node = Unit.node(first_person_unit, spawn_node)
+
 			position = Unit.world_position(first_person_unit, node)
 		end
 
@@ -96,12 +102,13 @@ ActionThrowGrenade._spawn_projectile = function (self)
 			local stat_buffs = buff_extension:stat_buffs()
 			local extra_grenade_throw_chance = stat_buffs.extra_grenade_throw_chance
 			local extra_direction = direction
-			local extra_grenade = extra_grenade_throw_chance > 0 and math.random() < extra_grenade_throw_chance
+			local extra_grenade = extra_grenade_throw_chance > 0 and extra_grenade_throw_chance > math.random()
 
 			if extra_grenade then
 				local split_settings = projectile_template.split_settings
 				local split_angle = split_settings and split_settings.split_angle or math.pi * 0.05
 				local angle = split_angle * (math.random() < 0.5 and -1 or 1)
+
 				extra_direction = Quaternion.rotate(Quaternion.axis_angle(Vector3.up(), angle), extra_direction)
 
 				if split_settings and split_settings.even_split then

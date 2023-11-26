@@ -1,7 +1,11 @@
-local projectile_locomotion_settings = {
-	impact_results = table.enum("stagger", "stick", "removed")
-}
+﻿-- chunkname: @scripts/settings/projectile_locomotion/projectile_locomotion_settings.lua
+
+local projectile_locomotion_settings = {}
+
+projectile_locomotion_settings.impact_results = table.enum("stagger", "stick", "removed")
+
 local locomotion_states = table.enum("none", "sleep", "carried", "manual_physics", "engine_physics", "socket_lock", "sticky", "true_flight")
+
 projectile_locomotion_settings.states = locomotion_states
 projectile_locomotion_settings.moving_states = {
 	[locomotion_states.manual_physics] = true,

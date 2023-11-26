@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/url_loader/url_loader_manager.lua
+
 local UrlLoaderManager = class("UrlLoaderManager")
 
 UrlLoaderManager.init = function (self)
@@ -9,6 +11,7 @@ UrlLoaderManager.load_texture = function (self, url, require_auth)
 		require_auth = require_auth or true
 	}):next(function (data)
 		local count = self.ref_count[url]
+
 		count = not count and 1 or count + 1
 		self.ref_count[url] = count
 
@@ -29,7 +32,9 @@ UrlLoaderManager.load_local_texture = function (self, texture_data)
 	local url = texture_data.url
 	local count = self.ref_count[url]
 
-	if count then
+	if not count then
+		-- Nothing
+	else
 		count = count + 1
 	end
 
@@ -38,6 +43,7 @@ end
 
 UrlLoaderManager.unload_texture = function (self, texture)
 	local count = self.ref_count[texture.url]
+
 	count = count - 1
 
 	if count == 0 then

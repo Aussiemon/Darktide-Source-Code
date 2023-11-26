@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/damage/explosion_templates/prop_explosion_templates.lua
+
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local explosion_templates = {
 	explosive_barrel = {

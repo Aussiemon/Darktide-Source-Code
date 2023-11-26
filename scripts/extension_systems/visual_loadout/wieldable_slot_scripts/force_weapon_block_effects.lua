@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/visual_loadout/wieldable_slot_scripts/force_weapon_block_effects.lua
+
 local Action = require("scripts/utilities/weapon/action")
 local ForceWeaponBlockEffects = class("ForceWeaponBlockEffects")
 local PlayerUnitData = require("scripts/extension_systems/unit_data/utilities/player_unit_data")
@@ -6,18 +8,24 @@ local BLOCK_LOOP_SOUND_ALIAS = "block_loop"
 
 ForceWeaponBlockEffects.init = function (self, context, slot, weapon_template, fx_sources)
 	local is_husk = context.is_husk
+
 	self._world = context.world
 	self._weapon_actions = weapon_template.actions
 	self._is_husk = is_husk
+
 	local owner_unit = context.owner_unit
 	local first_person_extension = ScriptUnit.extension(owner_unit, "first_person_system")
+
 	self._first_person_unit = first_person_extension:first_person_unit()
+
 	local unit_data_extension = ScriptUnit.extension(owner_unit, "unit_data_system")
+
 	self._block_component = unit_data_extension:read_component("block")
 	self._weapon_action_component = unit_data_extension:read_component("weapon_action")
 
 	if not is_husk then
 		local looping_sound_component_name = PlayerUnitData.looping_sound_component_name(BLOCK_LOOP_SOUND_ALIAS)
+
 		self._looping_sound_component = unit_data_extension:read_component(looping_sound_component_name)
 	end
 

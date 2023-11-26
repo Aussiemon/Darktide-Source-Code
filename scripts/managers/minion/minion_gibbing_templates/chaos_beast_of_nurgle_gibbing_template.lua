@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/minion/minion_gibbing_templates/chaos_beast_of_nurgle_gibbing_template.lua
+
 local GibbingSettings = require("scripts/settings/gibbing/gibbing_settings")
 local GibbingThresholds = GibbingSettings.gibbing_thresholds
 local gibbing_template = {

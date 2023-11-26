@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/breed/breed_combat_ranges/chaos/chaos_poxwalker_bomber_combat_ranges.lua
+
 local combat_ranges = {
 	name = "chaos_poxwalker_bomber",
 	starting_combat_range = "far",

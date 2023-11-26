@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/hud/elements/overcharge/hud_element_overcharge_definitions.lua
+
 local HudElementOverchargeSettings = require("scripts/ui/hud/elements/overcharge/hud_element_overcharge_settings")
 local UIWorkspaceSettings = require("scripts/settings/ui/ui_workspace_settings")
 local UIWidget = require("scripts/managers/ui/ui_widget")
@@ -35,6 +37,7 @@ local scenegraph_definition = {
 	}
 }
 local overheat_text_style = table.clone(UIFontSettings.hud_body)
+
 overheat_text_style.offset = {
 	-30,
 	0,
@@ -50,7 +53,9 @@ overheat_text_style.text_horizontal_alignment = "right"
 overheat_text_style.text_vertical_alignment = "top"
 overheat_text_style.text_color = UIHudSettings.color_tint_main_2
 overheat_text_style.font_type = "machine_medium"
+
 local overheat_numeral_text_style = table.clone(UIFontSettings.hud_body)
+
 overheat_numeral_text_style.offset = {
 	-30,
 	20,
@@ -66,7 +71,9 @@ overheat_numeral_text_style.text_horizontal_alignment = "right"
 overheat_numeral_text_style.text_vertical_alignment = "top"
 overheat_numeral_text_style.text_color = UIHudSettings.color_tint_alert_2
 overheat_numeral_text_style.font_type = "machine_medium"
+
 local overcharge_numeral_text_style = table.clone(overheat_numeral_text_style)
+
 overcharge_numeral_text_style.offset = {
 	0,
 	0,
@@ -96,6 +103,7 @@ overcharge_numeral_text_style.font_size_threshold = {
 		color = Color.ui_hud_overcharge_high(153, true)
 	}
 }
+
 local widget_definitions = {
 	overheat = UIWidget.create_definition({
 		{

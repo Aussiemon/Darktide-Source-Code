@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/visual_loadout/wieldable_slot_scripts/flamer_pilot_light_effects.lua
+
 local FlamerPilotLightEffects = class("FlamerPilotLightEffects")
 local LOOPING_PARTICLE_ALIAS = "equipped_item_passive"
 local FX_SOURCE_NAME = "_pilot"
@@ -5,11 +7,15 @@ local EXTERNAL_PROPERTIES = {}
 
 FlamerPilotLightEffects.init = function (self, context, slot, weapon_template, fx_sources)
 	self._world = context.world
+
 	local fx_extension = context.fx_extension
 	local visual_loadout_extension = context.visual_loadout_extension
+
 	self._fx_extension = fx_extension
 	self._visual_loadout_extension = visual_loadout_extension
+
 	local fx_source_name = fx_sources[FX_SOURCE_NAME]
+
 	self._fx_source_name = fx_source_name
 	self._vfx_link_unit, self._vfx_link_node = fx_extension:vfx_spawner_unit_and_node(fx_source_name)
 	self._looping_effect_id = nil

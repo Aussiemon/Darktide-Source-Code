@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/interaction/interaction_templates.lua
+
 local interaction_templates = {
 	default = {
 		only_once = false,

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/ui/ui_passes.lua
+
 local UIResolution = require("scripts/managers/ui/ui_resolution")
 local UISettings = require("scripts/settings/ui/ui_settings")
 local UIRenderer = require("scripts/managers/ui/ui_renderer")
@@ -112,6 +114,7 @@ UIPasses.texture = {
 		local material_values = ui_style.material_values
 		local scale_to_material = ui_style.scale_to_material
 		local gui_material = (material_values or scale_to_material) and get_pass_material(ui_renderer, value, pass_data, retained_mode)
+
 		value = gui_material or value
 
 		if material_values then
@@ -129,6 +132,7 @@ UIPasses.texture = {
 
 		if retained_mode then
 			local retained_id = pass_data.retained_id or true
+
 			retained_id = UIRenderer.script_draw_bitmap(ui_renderer, value, gui_position, gui_size, color, retained_id)
 			pass_data.retained_id = retained_id or pass_data.retained_id
 			pass_data.dirty = false
@@ -171,6 +175,7 @@ UIPasses.texture_uv = {
 		local material_values = ui_style.material_values
 		local scale_to_material = ui_style.scale_to_material
 		local gui_material = (material_values or scale_to_material) and get_pass_material(ui_renderer, value, pass_data, retained_mode)
+
 		value = gui_material or value
 
 		if material_values then
@@ -188,6 +193,7 @@ UIPasses.texture_uv = {
 
 		if retained_mode then
 			local retained_id = pass_data.retained_id or true
+
 			retained_id = UIRenderer.script_draw_bitmap_uv(ui_renderer, value, gui_position, gui_size, uvs, color, retained_id)
 			pass_data.retained_id = retained_id or pass_data.retained_id
 			pass_data.dirty = false
@@ -241,6 +247,7 @@ UIPasses.multi_texture = {
 			end
 		elseif retained_mode then
 			local retained_id = use_retained_mode(pass, ui_renderer.render_settings) and (pass_data.retained_id and pass_data.retained_id or true)
+
 			retained_id = UIRenderer.draw_texture(ui_renderer, value, position, size, color, axis, spacing, direction, amount, retained_id)
 			pass_data.retained_id = retained_id and retained_id or pass_data.retained_id
 			pass_data.dirty = false
@@ -274,6 +281,7 @@ UIPasses.slug_icon = {
 
 		if use_retained_mode(pass, ui_renderer.render_settings) then
 			local retained_id = use_retained_mode(pass, ui_renderer.render_settings) and (pass_data.retained_id and pass_data.retained_id or true)
+
 			retained_id = UIRenderer.draw_slug_icon(ui_renderer, value, draw_index, position, size, color, material, retained_id)
 			pass_data.retained_id = retained_id and retained_id or pass_data.retained_id
 			pass_data.dirty = false
@@ -306,6 +314,7 @@ UIPasses.slug_picture = {
 
 		if use_retained_mode(pass, ui_renderer.render_settings) then
 			local retained_id = use_retained_mode(pass, ui_renderer.render_settings) and (pass_data.retained_id and pass_data.retained_id or true)
+
 			retained_id = UIRenderer.draw_slug_picture(ui_renderer, value, position, size, color, material, retained_id)
 			pass_data.retained_id = retained_id and retained_id or pass_data.retained_id
 			pass_data.dirty = false
@@ -343,6 +352,7 @@ UIPasses.multi_slug_icon = {
 
 		if use_retained_mode(pass, ui_renderer.render_settings) then
 			local retained_id = use_retained_mode(pass, ui_renderer.render_settings) and (pass_data.retained_id and pass_data.retained_id or true)
+
 			retained_id = UIRenderer.draw_slug_multi_icon(ui_renderer, value, draw_index, position, size, color, axis, spacing, direction, amount, material, retained_id)
 			pass_data.retained_id = retained_id and retained_id or pass_data.retained_id
 			pass_data.dirty = false
@@ -368,7 +378,7 @@ UIPasses.shader_tiled_texture = {
 	end,
 	draw = function (pass, ui_renderer, ui_style, ui_content, position, size)
 		local pass_data = pass.data
-		local color = nil
+		local color
 		local value_id = pass.value_id or "value_id"
 		local value = ui_content[value_id]
 
@@ -402,6 +412,7 @@ UIPasses.shader_tiled_texture = {
 
 		if use_retained_mode(pass, ui_renderer.render_settings) then
 			local retained_id = use_retained_mode(pass, ui_renderer.render_settings) and (pass_data.retained_id and pass_data.retained_id or true)
+
 			retained_id = UIRenderer.draw_texture(ui_renderer, value, position, size, color, retained_id)
 			pass_data.retained_id = retained_id and retained_id or pass_data.retained_id
 			pass_data.dirty = false
@@ -446,6 +457,7 @@ UIPasses.rotated_slug_icon = {
 
 		if use_retained_mode(pass, ui_renderer.render_settings) then
 			local retained_id = use_retained_mode(pass, ui_renderer.render_settings) and (pass_data.retained_id and pass_data.retained_id or true)
+
 			retained_id = UIRenderer.draw_slug_icon_rotated(ui_renderer, value, draw_index, size, position, angle, pivot, color, material, retained_id)
 			pass_data.retained_id = retained_id and retained_id or pass_data.retained_id
 			pass_data.dirty = false
@@ -500,6 +512,7 @@ UIPasses.rotated_texture = {
 		local material_values = ui_style.material_values
 		local scale_to_material = ui_style.scale_to_material
 		local gui_material = (material_values or scale_to_material) and get_pass_material(ui_renderer, value, pass_data, retained_mode)
+
 		value = gui_material or value
 
 		if material_values then
@@ -514,6 +527,7 @@ UIPasses.rotated_texture = {
 
 		if retained_mode then
 			local retained_id = pass_data.retained_id or true
+
 			retained_id = UIRenderer.draw_texture_rotated(ui_renderer, value, size, position, angle, pivot, color, uvs, retained_id)
 			pass_data.retained_id = retained_id and retained_id or pass_data.retained_id
 			pass_data.dirty = false
@@ -543,6 +557,7 @@ UIPasses.rect = {
 		if use_retained_mode(pass, ui_renderer.render_settings) then
 			local pass_data = pass.data
 			local retained_id = pass_data.retained_id or true
+
 			retained_id = UIRenderer.draw_rect(ui_renderer, position, size, color, retained_id)
 			pass_data.retained_id = retained_id or pass_data.retained_id
 			pass_data.dirty = false
@@ -591,6 +606,7 @@ UIPasses.triangle = {
 
 		if use_retained_mode(pass, ui_renderer.render_settings) then
 			local retained_id = use_retained_mode(pass, ui_renderer.render_settings) and (pass_data.retained_id and pass_data.retained_id or true)
+
 			retained_id = UIRenderer.draw_triangle(ui_renderer, position, size, ui_style, retained_id)
 			pass_data.retained_id = retained_id and retained_id or pass_data.retained_id
 			pass_data.dirty = false
@@ -639,6 +655,7 @@ UIPasses.circle = {
 
 		if use_retained_mode(pass, ui_renderer.render_settings) then
 			local retained_id = use_retained_mode(pass, ui_renderer.render_settings) and (pass_data.retained_id and pass_data.retained_id or true)
+
 			retained_id = UIRenderer.draw_circle(ui_renderer, pos_center, radius, size, color, retained_id)
 			pass_data.retained_id = retained_id and retained_id or pass_data.retained_id
 			pass_data.dirty = false
@@ -658,7 +675,7 @@ UIPasses.video = {
 		local video_player_reference = ui_content.video_player_reference
 		local y_slot_name = ui_style.y_slot_name
 		local uv_slot_name = ui_style.uv_slot_name
-		local is_complete = nil
+		local is_complete
 
 		if video_player_reference and value then
 			is_complete = UIRenderer.draw_video(ui_renderer, value, position, size, color, video_player_reference, y_slot_name, uv_slot_name)
@@ -667,7 +684,9 @@ UIPasses.video = {
 		ui_content.video_completed = is_complete
 	end
 }
+
 local temp_text_options = Script.new_map(32)
+
 UIPasses.text = {
 	init = function (pass)
 		return {
@@ -699,7 +718,7 @@ UIPasses.text = {
 	end,
 	draw = function (pass, ui_renderer, ui_style, ui_content, position, size)
 		local pass_data = pass.data
-		local retained_ids = nil
+		local retained_ids
 
 		table.clear(temp_text_options)
 		UIFonts.get_font_options_by_style(ui_style, temp_text_options)
@@ -710,7 +729,7 @@ UIPasses.text = {
 			retained_ids = pass_data.retained_ids and pass_data.retained_ids or true
 		end
 
-		local new_retained_ids = nil
+		local new_retained_ids
 
 		if retained_ids == true then
 			new_retained_ids = {}
@@ -736,11 +755,13 @@ UIPasses.text = {
 		local font_type = ui_style.font_type
 		local font_size = ui_style.font_size
 		local ui_scale = ui_renderer.scale
+
 		font_size = math.max(font_size * ui_scale, 1)
+
 		local text_color = ui_style.text_color
 		local retained_id = retained_ids and (new_retained_ids and true or retained_ids[1])
 		local gui_position = Gui.scale_vector3(position, ui_scale)
-		local gui_size = nil
+		local gui_size
 
 		if size then
 			gui_size = Gui.scale_vector3(size, ui_scale)
@@ -761,6 +782,7 @@ UIPasses.text = {
 
 		if box_color or ui_style.debug_draw_box then
 			gui_position[3] = math.max(gui_position[3] - 1, 1)
+
 			local text_box_color = box_color or Color.magenta(50, true)
 
 			UIRenderer.draw_rect(ui_renderer, gui_position, gui_size, text_box_color)
@@ -773,7 +795,7 @@ UIPasses.hover = {
 	end,
 	draw = function (pass, ui_renderer, ui_style, ui_content, position, size)
 		local was_hover = ui_content.is_hover
-		local is_hover = nil
+		local is_hover
 		local input_service = ui_renderer.input_service
 		local cursor = input_service and input_service:get("cursor") or NilCursor
 		local scale = ui_renderer.scale
@@ -783,6 +805,7 @@ UIPasses.hover = {
 			local half_size = ui_renderer:get_scaling() * size / 2
 			local pos_center = Vector3.flat(UIResolution.scale_vector(position, scale)) + half_size
 			local square_distance = Vector3.distance_squared(Vector3.from_array(cursor), pos_center)
+
 			is_hover = square_distance <= half_size.x * half_size.y
 		else
 			local pixel_pos = position
@@ -820,7 +843,7 @@ local function calculate_outer_box(anchor_position, vertices)
 	local largest_y = -1
 
 	for i = 1, #vertices do
-		if vertices[i][1] < smallest_x then
+		if smallest_x > vertices[i][1] then
 			smallest_x = vertices[i][1]
 		end
 
@@ -828,7 +851,7 @@ local function calculate_outer_box(anchor_position, vertices)
 			largest_x = vertices[i][1]
 		end
 
-		if vertices[i][2] < smallest_y then
+		if smallest_y > vertices[i][2] then
 			smallest_y = vertices[i][2]
 		end
 
@@ -851,6 +874,7 @@ end
 
 local double_click_threshold = UISettings.double_click_threshold
 local cursor_value_type_name = "Vector3"
+
 UIPasses.hotspot = {
 	init = function (pass, content)
 		return
@@ -872,7 +896,7 @@ UIPasses.hotspot = {
 		end
 
 		local was_hover = ui_content.is_hover
-		local is_hover = nil
+		local is_hover
 		local cursor_name = "cursor"
 		local input_service = ui_renderer.input_service
 		local cursor = input_service and input_service:get(cursor_name)
@@ -883,7 +907,7 @@ UIPasses.hotspot = {
 
 		local inverse_scale = ui_renderer.inverse_scale
 		local scale = ui_renderer.scale
-		local cursor_position = nil
+		local cursor_position
 
 		if PLATFORM == "xbs" and not gamepad_active then
 			cursor_position = Vector3(cursor[1], cursor[2], cursor[3])
@@ -902,6 +926,8 @@ UIPasses.hotspot = {
 			local half_size_y = pixel_size[2] / 2
 			local pos_center = Vector3(pixel_pos[1] + half_size_x, pixel_pos[2] + half_size_y, 0)
 			local square_distance = Vector3.distance_squared(cursor_position, pos_center)
+
+			is_hover = square_distance <= half_size_x * half_size_y or false
 		elseif hover_type == "triangle" then
 			local vertices = ui_style.triangle_corners
 			local outer_box = ui_content._outer_box
@@ -913,12 +939,14 @@ UIPasses.hotspot = {
 			end
 
 			is_hover = math.point_is_inside_2d_box(cursor_position, outer_box.position, outer_box.size)
+
 			local is_inside_outer_box = is_hover
 
 			if is_inside_outer_box == true then
 				local p1 = Vector3(vertices[1][1], vertices[1][2], 0) + pixel_pos
 				local p2 = Vector3(vertices[2][1], vertices[2][2], 0) + pixel_pos
 				local p3 = Vector3(vertices[3][1], vertices[3][2], 0) + pixel_pos
+
 				is_hover = math.point_is_inside_2d_triangle(cursor_position, p1, p2, p3)
 			end
 		else
@@ -926,6 +954,7 @@ UIPasses.hotspot = {
 		end
 
 		ui_content.cursor_hover = is_hover
+
 		local force_hover = ui_content.force_hover
 
 		if force_hover then
@@ -996,7 +1025,7 @@ UIPasses.hotspot = {
 			end
 		end
 
-		local input_pressed, input_released, input_hold = nil
+		local input_pressed, input_released, input_hold
 
 		if force_input_pressed then
 			input_pressed = true
@@ -1013,7 +1042,7 @@ UIPasses.hotspot = {
 		end
 
 		local right_input_pressed = input_service and input_service:get("right_pressed")
-		local is_held, on_pressed, on_released, on_double_click = nil
+		local is_held, on_pressed, on_released, on_double_click
 		local double_click_timer = ui_content.double_click_timer or 0
 
 		if double_click_timer > 0 then
@@ -1026,6 +1055,7 @@ UIPasses.hotspot = {
 
 				if input_released then
 					on_released = true
+
 					local released_callback = ui_content.released_callback
 
 					if released_callback then
@@ -1036,6 +1066,7 @@ UIPasses.hotspot = {
 				if double_click_timer > 0 then
 					on_double_click = true
 					double_click_timer = 0
+
 					local double_click_callback = ui_content.double_click_callback
 
 					if double_click_callback then
@@ -1044,6 +1075,7 @@ UIPasses.hotspot = {
 				else
 					on_pressed = true
 					double_click_timer = double_click_threshold
+
 					local pressed_callback = ui_content.pressed_callback
 
 					if pressed_callback then
@@ -1052,6 +1084,7 @@ UIPasses.hotspot = {
 				end
 			elseif right_input_pressed then
 				on_pressed = true
+
 				local right_pressed_callback = ui_content.right_pressed_callback
 
 				if right_pressed_callback then
@@ -1104,6 +1137,7 @@ UIPasses.hotspot = {
 		ui_content.on_released = on_released
 		ui_content.on_pressed = on_pressed
 		ui_content.on_double_click = on_double_click
+
 		local anim_hover_speed = ui_style and ui_style.anim_hover_speed
 
 		if anim_hover_speed then

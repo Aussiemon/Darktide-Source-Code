@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/ability/player_abilities/psyker_abilities_new.lua
+
 local TalentSettings = require("scripts/settings/talent/talent_settings_new")
 local biomancer_talent_settings = TalentSettings.psyker_2
 local protectorate_talent_settings = TalentSettings.psyker_3

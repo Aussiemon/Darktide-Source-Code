@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/ability/actions/action_directional_dash_aim.lua
+
 require("scripts/extension_systems/weapon/actions/action_ability_base")
 
 local ActionDirectionalDashAim = class("ActionDirectionalDashAim", "ActionAbilityBase")
@@ -6,6 +8,7 @@ ActionDirectionalDashAim.init = function (self, action_context, ...)
 	ActionDirectionalDashAim.super.init(self, action_context, ...)
 
 	local unit_data_extension = action_context.unit_data_extension
+
 	self._lunge_character_state_component = unit_data_extension:write_component("lunge_character_state")
 end
 

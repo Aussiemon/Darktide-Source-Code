@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/breed/breeds/cultist/cultist_mutant_breed.lua
+
 local ArmorSettings = require("scripts/settings/damage/armor_settings")
 local BreedBlackboardComponentTemplates = require("scripts/settings/breed/breed_blackboard_component_templates")
 local BreedSettings = require("scripts/settings/breed/breed_settings")

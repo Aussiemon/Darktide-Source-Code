@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/mutator/mutators/mutator_extra_trickle_hordes.lua
+
 require("scripts/managers/mutator/mutators/mutator_base")
 
 local MutatorExtraTrickleHordes = class("MutatorExtraTrickleHordes", "MutatorBase")

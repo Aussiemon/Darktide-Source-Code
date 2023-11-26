@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/components/light_controller.lua
+
 local LightControllerUtilities = require("core/scripts/common/light_controller_utilities")
 local LightControllerFlickerSettings = require("scripts/settings/components/light_controller_flicker")
 
@@ -123,7 +125,7 @@ LightController.enable_flicker = function (self)
 
 	if light_controller_extension then
 		local is_enabled = true
-		local configuration = nil
+		local configuration
 		local is_deterministic = false
 
 		light_controller_extension:set_flicker_state(is_enabled, configuration, is_deterministic)
@@ -135,7 +137,7 @@ LightController.disable_flicker = function (self)
 
 	if light_controller_extension then
 		local is_enabled = false
-		local configuration = nil
+		local configuration
 		local is_deterministic = false
 
 		light_controller_extension:set_flicker_state(is_enabled, configuration, is_deterministic)

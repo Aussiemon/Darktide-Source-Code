@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/unit_data/player_husk_data_component_config.lua
+
 local husk_data_component_config = {
 	character_state = {
 		"state_name"

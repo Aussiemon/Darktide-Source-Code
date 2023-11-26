@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/components/mission_luggable_spawner.lua
+
 local MissionLuggableSpawner = component("MissionLuggableSpawner")
 
 MissionLuggableSpawner.init = function (self, unit, is_server)

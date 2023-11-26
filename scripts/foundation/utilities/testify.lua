@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/foundation/utilities/testify.lua
+
 local TestifyExpect = require("scripts/tests/testify_expect")
 local SIGNALS = {
 	current_request = "current_request",
@@ -12,6 +14,7 @@ local SERVER_RPCS = {
 local CLIENT_RPCS = {
 	"rpc_testify_make_request"
 }
+
 Testify = {
 	_are_rpcs_registered = false,
 	_requests = {},
@@ -21,6 +24,7 @@ Testify = {
 	RETRY = newproxy(false),
 	expect = TestifyExpect:new()
 }
+
 local __raw_print = print
 local cjson_decode = cjson.decode
 local cjson_encode = cjson.encode
@@ -89,6 +93,7 @@ end
 
 Testify.make_request = function (self, request_name, ...)
 	local request_parameters, num_parameters = table_pack(...)
+
 	request_parameters.length = num_parameters
 
 	self:_print("Requesting %s", request_name)
@@ -106,6 +111,7 @@ Testify.make_request_to_runner = function (self, request_name, ...)
 
 	self._requests[request_name] = request_parameters
 	self._responses[request_name] = nil
+
 	local request = {
 		name = request_name,
 		parameters = request_parameters
@@ -244,12 +250,14 @@ end
 
 Testify.make_request_on_client = function (self, peer_id, request_name, wait_for_response, ...)
 	wait_for_response = wait_for_response == true or false
+
 	local request_parameters, num_parameters = table_pack(...)
 
 	self:_print("Requesting %s on peer %s", request_name, peer_id)
 
 	self._responses[request_name] = nil
 	request_parameters = cjson_encode(request_parameters)
+
 	local channel_id = self._peers[peer_id]
 
 	if not channel_id then

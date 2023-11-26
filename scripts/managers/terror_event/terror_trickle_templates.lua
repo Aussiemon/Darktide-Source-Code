@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/terror_event/terror_trickle_templates.lua
+
 local terror_trickle_templates = {}
 
 local function _create_terror_trickle_template_entry(path)

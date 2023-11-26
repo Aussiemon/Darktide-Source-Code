@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/damage/impact_fx_templates_tests.lua
+
 local IMPACT_FX_INTERFACE = {
 	sfx_1p_direction_interface = true,
 	name = true,
@@ -15,11 +17,12 @@ local IMPACT_FX_INTERFACE = {
 	unit = true,
 	blood_ball = true
 }
-local success = nil
+local success
 
 local function _validate(full_message, test, this_message, ...)
 	if not test then
 		success = false
+
 		local new_message = full_message .. "\n" .. string.format(this_message, ...)
 
 		return new_message
@@ -30,6 +33,7 @@ end
 
 local function test(impact_fx_templates)
 	success = true
+
 	local error_msg = "One or more impact FX templates failed validation:"
 
 	for name, impact_fx in pairs(impact_fx_templates) do
@@ -41,10 +45,12 @@ local function test(impact_fx_templates)
 
 		if vfx then
 			error_msg = _validate(error_msg, type(vfx) == "table", "%q: vfx needs to be a table.", name)
+
 			local num_vfx = #vfx
 
 			for i = 1, num_vfx do
 				local entry = vfx[i]
+
 				error_msg = _validate(error_msg, entry.effects, "%q: entry %d for vfx needs to have 'effects' entry defined", name, i)
 				error_msg = _validate(error_msg, not entry.effects.normal_rotation, "%q: entry %d has 'normal_rotation' defined inside 'effects' table. Move it to the parent.", name, i)
 				error_msg = _validate(error_msg, not entry.effects.reverse, "%q: entry %d has 'reverse' defined inside 'effects' table. Move it to the parent.", name, i)
@@ -55,10 +61,12 @@ local function test(impact_fx_templates)
 
 		if vfx_1p then
 			error_msg = _validate(error_msg, type(vfx_1p) == "table", "%q: vfx_1p needs to be a table.", name)
+
 			local num_vfx_1p = #vfx_1p
 
 			for i = 1, num_vfx_1p do
 				local entry = vfx_1p[i]
+
 				error_msg = _validate(error_msg, entry.effects, "%q: entry %d for vfx needs to have 'effects' entry defined", name, i)
 				error_msg = _validate(error_msg, not entry.effects.normal_rotation, "%q: entry %d has 'normal_rotation' defined inside 'effects' table. Move it to the parent.", name, i)
 				error_msg = _validate(error_msg, not entry.effects.reverse, "%q: entry %d has 'reverse' defined inside 'effects' table. Move it to the parent.", name, i)
@@ -69,10 +77,12 @@ local function test(impact_fx_templates)
 
 		if vfx_3p then
 			error_msg = _validate(error_msg, type(vfx_3p) == "table", "%q: vfx_3p needs to be a table.", name)
+
 			local num_vfx_3p = #vfx_3p
 
 			for i = 1, num_vfx_3p do
 				local entry = vfx_3p[i]
+
 				error_msg = _validate(error_msg, entry.effects, "%q: entry %d for vfx needs to have 'effects' entry defined", name, i)
 				error_msg = _validate(error_msg, not entry.effects.normal_rotation, "%q: entry %d has 'normal_rotation' defined inside 'effects' table. Move it to the parent.", name, i)
 				error_msg = _validate(error_msg, not entry.effects.reverse, "%q: entry %d has 'reverse' defined inside 'effects' table. Move it to the parent.", name, i)
@@ -101,6 +111,7 @@ local function test(impact_fx_templates)
 
 		if material_switch_sfx then
 			error_msg = _validate(error_msg, type(material_switch_sfx) == "table", "%q: material_switch_sfx needs to be a table.", name)
+
 			local num_material_switch_sfx = #material_switch_sfx
 
 			for i = 1, num_material_switch_sfx do
@@ -113,6 +124,7 @@ local function test(impact_fx_templates)
 
 		if decal then
 			error_msg = _validate(error_msg, type(decal) == "table", "%q: decal needs to be a table.", name)
+
 			local extents = decal.extents
 			local uniform_extents = decal.uniform_extents
 

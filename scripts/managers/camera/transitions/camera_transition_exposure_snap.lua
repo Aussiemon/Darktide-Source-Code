@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/camera/transitions/camera_transition_exposure_snap.lua
+
 require("scripts/managers/camera/transitions/camera_transition_base")
 
 local CameraTransitionExposureSnap = class("CameraTransitionExposureSnap", "CameraTransitionBase")

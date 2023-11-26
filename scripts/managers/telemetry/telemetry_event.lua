@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/telemetry/telemetry_event.lua
+
 local TelemetryEvent = class("TelemetryEvent")
 local type_name = Script.type_name
 

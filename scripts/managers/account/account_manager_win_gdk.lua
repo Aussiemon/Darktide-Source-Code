@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/account/account_manager_win_gdk.lua
+
 local XboxPrivileges = require("scripts/managers/account/xbox_privileges")
 local render_settings = require("scripts/settings/options/render_settings")
 local XboxLiveUtils = require("scripts/foundation/utilities/xbox_live")
@@ -55,7 +57,7 @@ AccountManagerWinGDK.signin_profile = function (self, signin_callback)
 		return
 	end
 
-	local async_task = nil
+	local async_task
 	local users = XUser.users()
 
 	if #users > 1 then
@@ -244,6 +246,10 @@ AccountManagerWinGDK.verify_gdk_store_account = function (self, optional_callbac
 		end
 	end
 
+	if false then
+		-- Nothing
+	end
+
 	return false
 end
 
@@ -315,6 +321,7 @@ end
 AccountManagerWinGDK._set_user_data = function (self, user_id)
 	local user_info = XUser.user_info(user_id)
 	local gamertag = XUser.get_gamertag(user_id)
+
 	self._is_guest = user_info.guest
 	self._xuid = user_info.xuid
 	self._user_id = user_id

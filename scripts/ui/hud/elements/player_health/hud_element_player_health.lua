@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/hud/elements/player_health/hud_element_player_health.lua
+
 local definition_path = "scripts/ui/hud/elements/player_health/hud_element_player_health_definitions"
 local HudElementPlayerHealthSettings = require("scripts/ui/hud/elements/player_health/hud_element_player_health_settings")
 local HudElementPlayerToughnessSettings = require("scripts/ui/hud/elements/player_health/hud_element_player_toughness_settings")
@@ -24,11 +26,15 @@ HudElementPlayerHealth.update = function (self, dt, t, ui_renderer, render_setti
 	if player_extensions then
 		local health_extension = player_extensions.health
 		local toughness_extension = player_extensions.toughness
+
 		health_percentage = health_extension:current_health_percent()
+
 		local permanent_damage = health_extension:permanent_damage_taken()
 		local max_health = health_extension:max_health()
+
 		health_max_percentage = (max_health - permanent_damage) / max_health
 		toughness_percentage = toughness_extension:current_toughness_percent()
+
 		local unit_data_extension = player_extensions.unit_data
 		local disabled = self:_is_player_disabled(unit_data_extension)
 
@@ -66,11 +72,15 @@ end
 
 HudElementPlayerHealth._set_disabled = function (self, disabled)
 	self._disabled = disabled
+
 	local widgets_by_name = self._widgets_by_name
+
 	widgets_by_name.death_pulse.content.visible = disabled
 	widgets_by_name.toughness_death_pulse.content.visible = disabled
+
 	local color_tint_5 = UIHudSettings.color_tint_5
 	local health_bar_frame_color = widgets_by_name.frame.style.texture.color
+
 	health_bar_frame_color[2] = disabled and 255 or color_tint_5[2]
 	health_bar_frame_color[3] = disabled and 0 or color_tint_5[3]
 	health_bar_frame_color[4] = disabled and 0 or color_tint_5[4]
@@ -84,6 +94,7 @@ end
 
 HudElementPlayerHealth._set_bar_alpha = function (self, alpha_fraction)
 	local widgets_by_name = self._widgets_by_name
+
 	widgets_by_name.health.alpha_multiplier = alpha_fraction
 	widgets_by_name.health_ghost.alpha_multiplier = alpha_fraction
 	widgets_by_name.background.alpha_multiplier = alpha_fraction
@@ -101,15 +112,22 @@ HudElementPlayerHealth._apply_health_fraction = function (self, health_fraction,
 	local health_id = "health"
 	local health_width = math.floor(bar_width * health_fraction)
 	local health_widget = widgets_by_name[health_id]
+
 	health_widget.style.texture.size[1] = health_width
+
 	local health_ghost_id = "health_ghost"
 	local health_ghost_width = math.max(bar_width * health_ghost_fraction - health_width, 0)
 	local health_ghost_widget = widgets_by_name[health_ghost_id]
+
 	health_ghost_widget.style.texture.size[1] = health_width + health_ghost_width
+
 	local health_max_id = "health_max"
 	local health_max_width = bar_width - math.max(bar_width * health_max_fraction, 0)
+
 	health_max_width = math.max(health_max_width, 0)
+
 	local health_max_widget = widgets_by_name[health_max_id]
+
 	health_max_widget.style.texture.size[1] = health_max_width
 end
 
@@ -121,15 +139,22 @@ HudElementPlayerHealth._apply_toughness_fraction = function (self, health_fracti
 	local health_id = "toughness"
 	local health_width = math.floor(bar_width * health_fraction)
 	local health_widget = widgets_by_name[health_id]
+
 	health_widget.style.texture.size[1] = health_width
+
 	local health_ghost_id = "toughness_ghost"
 	local health_ghost_width = math.max(bar_width * health_ghost_fraction - health_width, 0)
 	local health_ghost_widget = widgets_by_name[health_ghost_id]
+
 	health_ghost_widget.style.texture.size[1] = health_width + health_ghost_width
+
 	local health_max_id = "toughness_max"
 	local health_max_width = bar_width - math.max(bar_width * health_max_fraction, 0)
+
 	health_max_width = math.max(health_max_width, 0)
+
 	local health_max_widget = widgets_by_name[health_max_id]
+
 	health_max_widget.style.texture.size[1] = health_max_width
 end
 

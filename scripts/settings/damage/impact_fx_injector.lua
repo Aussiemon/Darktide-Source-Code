@@ -1,29 +1,31 @@
+﻿-- chunkname: @scripts/settings/damage/impact_fx_injector.lua
+
 local ArmorSettings = require("scripts/settings/damage/armor_settings")
 local armor_hit_types = ArmorSettings.hit_types
 local armor_types = ArmorSettings.types
 local hit_effect_armor_type = ArmorSettings.hit_effect_types
-local _inject_armor_impact_fx, _inject_surface_impact_fx, _inject_surface_decal_fx = nil
-local ImpactFxInjector = {
-	inject = function (damage_type, fx_config)
-		local armor_config = fx_config.armor
+local _inject_armor_impact_fx, _inject_surface_impact_fx, _inject_surface_decal_fx
+local ImpactFxInjector = {}
 
-		if armor_config then
-			_inject_armor_impact_fx(damage_type, armor_config)
-		end
+ImpactFxInjector.inject = function (damage_type, fx_config)
+	local armor_config = fx_config.armor
 
-		local surface_config = fx_config.surface
-
-		if surface_config then
-			_inject_surface_impact_fx(damage_type, surface_config)
-		end
-
-		local surface_decal_config = fx_config.surface_decal
-
-		if surface_decal_config then
-			_inject_surface_decal_fx(damage_type, fx_config)
-		end
+	if armor_config then
+		_inject_armor_impact_fx(damage_type, armor_config)
 	end
-}
+
+	local surface_config = fx_config.surface
+
+	if surface_config then
+		_inject_surface_impact_fx(damage_type, surface_config)
+	end
+
+	local surface_decal_config = fx_config.surface_decal
+
+	if surface_decal_config then
+		_inject_surface_decal_fx(damage_type, fx_config)
+	end
+end
 
 function _inject_armor_impact_fx(damage_type, armor_config)
 	local has_prop_armored_overrides = armor_config[hit_effect_armor_type.prop_armored] ~= nil

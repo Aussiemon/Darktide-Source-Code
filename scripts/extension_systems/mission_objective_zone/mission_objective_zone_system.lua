@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/mission_objective_zone/mission_objective_zone_system.lua
+
 require("scripts/extension_systems/mission_objective_zone/mission_objective_zone_base_extension")
 require("scripts/extension_systems/mission_objective_zone/mission_objective_zone_capture_extension")
 require("scripts/extension_systems/mission_objective_zone/mission_objective_zone_scan_extension")
@@ -5,7 +7,9 @@ require("scripts/extension_systems/mission_objective_zone/mission_objective_zone
 local LevelProps = require("scripts/settings/level_prop/level_props")
 local MissionObjectiveScanning = require("scripts/settings/mission_objective/mission_objective_scanning")
 local MissionObjectiveZoneSystem = class("MissionObjectiveZoneSystem", "ExtensionSystemBase")
+
 MissionObjectiveZoneSystem.SERVO_SKULL_TARGET_STATES = table.enum("disabled", "enabled")
+
 local SERVO_SKULL_MARKER_TYPES = MissionObjectiveScanning.servo_skull_marker_types
 local SERVO_SKULL_TARGET_STATES = MissionObjectiveZoneSystem.SERVO_SKULL_TARGET_STATES
 local CLIENT_RPCS = {
@@ -95,7 +99,9 @@ MissionObjectiveZoneSystem.hot_join_sync = function (self, sender, channel)
 end
 
 MissionObjectiveZoneSystem.destroy = function (self)
-	if not self._is_server then
+	if self._is_server then
+		-- Nothing
+	else
 		self._network_event_delegate:unregister_events(unpack(CLIENT_RPCS))
 	end
 
@@ -125,7 +131,7 @@ end
 MissionObjectiveZoneSystem._select_units_for_event = function (self)
 	local zone_units = self._zone_units
 	local seed = self._seed
-	local random_table = nil
+	local random_table
 	local mission_objective_system = self._mission_objective_system
 
 	for objective_name, units in pairs(zone_units) do
@@ -148,7 +154,7 @@ MissionObjectiveZoneSystem._select_units_for_event = function (self)
 
 			for i = 1, start_num_zones do
 				local spline_end_position = spline_path_end_positions[i]
-				local selected_unit, closest, zone_seed = nil
+				local selected_unit, closest, zone_seed
 
 				for n = 1, num_units do
 					local unit = sorted_units[n]
@@ -176,6 +182,7 @@ MissionObjectiveZoneSystem._select_units_for_event = function (self)
 
 			for i = 1, num_active_zones do
 				local index = random_table[i]
+
 				selected_units[#selected_units + 1] = sorted_units[index]
 			end
 		end
@@ -218,6 +225,7 @@ end
 MissionObjectiveZoneSystem._register_servo_skull = function (self, servo_skull_unit)
 	self._servo_skull_unit = servo_skull_unit
 	self._spline_follower_extension = ScriptUnit.extension(servo_skull_unit, "spline_follower_system")
+
 	local is_server = self._is_server
 
 	if is_server then
@@ -267,6 +275,7 @@ MissionObjectiveZoneSystem._evaluate_next_step = function (self, objective_name,
 			self:_follow_spline(objective_name)
 		else
 			local unit = selected_zone_units[current_index]
+
 			current_index = current_index + 1
 			self._current_index = current_index
 
@@ -313,6 +322,7 @@ MissionObjectiveZoneSystem.at_end_of_spline = function (self, last_spline)
 
 	if is_server and self._current_objective_name then
 		self._on_last_spline = last_spline
+
 		local activate_zone = true
 
 		self:_evaluate_next_step(self._current_objective_name, activate_zone)
@@ -409,6 +419,7 @@ end
 
 MissionObjectiveZoneSystem.register_finished_zone = function (self)
 	self._progress = self._progress + 1
+
 	local objective_name = self._current_objective_name
 
 	self:_evaluate_next_step(objective_name)

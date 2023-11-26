@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/multiplayer/connection/connection_client.lua
+
 local RPCS = {
 	"rpc_player_connected",
 	"rpc_player_disconnected",
@@ -18,7 +20,9 @@ ConnectionClient.init = function (self, event_delegate, engine_lobby, destroy_lo
 	self._matched_game_session_id = optional_matched_game_session_id
 	self._accelerated_endpoint = optional_accelerated_endpoint
 	self._initial_party_id = optional_initial_party_id
+
 	local profile_synchronizer_client = ProfileSynchronizerClient:new(event_delegate)
+
 	self._profile_synchronizer_client = profile_synchronizer_client
 	self._region = nil
 	self._deployment_id = nil
@@ -185,7 +189,7 @@ end
 
 ConnectionClient.server_name = function (self)
 	local engine_lobby = self._engine_lobby
-	local server_name = nil
+	local server_name
 
 	if engine_lobby.server_name then
 		server_name = engine_lobby:server_name()

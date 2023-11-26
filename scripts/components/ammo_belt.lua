@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/components/ammo_belt.lua
+
 local AmmoBelt = component("AmmoBelt")
 
 AmmoBelt.editor_init = function (self, unit)
@@ -5,9 +7,11 @@ AmmoBelt.editor_init = function (self, unit)
 	self._use_simple_animation_length = self:get_data(unit, "use_simple_animation_length")
 	self._dismantled = self:get_data(unit, "dismantled")
 	self._dismantled_ammo_mask = self:get_data(unit, "dismantled_ammo_mask")
+
 	local ammo_in_unit = self:get_data(unit, "ammo_in_unit")
 	local max_ammo = self:get_data(unit, "max_ammo")
 	local ammo = self:get_data(unit, "ammo")
+
 	self._ammo_in_unit = ammo_in_unit
 	self._max_ammo = max_ammo
 	self._ammo = math.min(ammo, max_ammo)
@@ -25,9 +29,11 @@ AmmoBelt.init = function (self, unit)
 	self._use_simple_animation_length = self:get_data(unit, "use_simple_animation_length")
 	self._dismantled = self:get_data(unit, "dismantled")
 	self._dismantled_ammo_mask = self:get_data(unit, "dismantled_ammo_mask")
+
 	local ammo_in_unit = self:get_data(unit, "ammo_in_unit")
 	local max_ammo = self:get_data(unit, "max_ammo")
 	local ammo = self:get_data(unit, "ammo")
+
 	self._ammo_in_unit = ammo_in_unit
 	self._max_ammo = max_ammo
 	self._ammo = math.min(ammo, max_ammo)
@@ -56,6 +62,7 @@ AmmoBelt._update_ammo_representation = function (self, unit, is_animated)
 
 	if above_cutoff then
 		local spent_ammo = max_ammo - remaining_ammo
+
 		remaining_ammo = ammo_in_unit - spent_ammo % 2 - 1
 		max_ammo = ammo_in_unit
 	else
@@ -64,10 +71,11 @@ AmmoBelt._update_ammo_representation = function (self, unit, is_animated)
 
 	local inv_max_ammo = 1 / max_ammo
 	local fraction = 1 - remaining_ammo / max_ammo
-	local anim_time_step, anim_time = nil
+	local anim_time_step, anim_time
 
 	if self._use_simple_animation_length then
 		local anim_length = Unit.simple_animation_length(unit)
+
 		anim_time_step = anim_length * inv_max_ammo
 		anim_time = fraction * anim_length
 	else

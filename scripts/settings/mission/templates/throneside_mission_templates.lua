@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/mission/templates/throneside_mission_templates.lua
+
 local mission_templates = {
 	cm_archives = {
 		mission_name = "loc_mission_name_cm_archives",

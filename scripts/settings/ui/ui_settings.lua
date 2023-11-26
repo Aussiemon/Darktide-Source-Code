@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/ui/ui_settings.lua
+
 require("scripts/foundation/utilities/color")
 
 local ui_settings = {
@@ -261,7 +263,7 @@ local ui_settings = {
 		Color.player_slot_1(255, true),
 		Color.player_slot_2(255, true),
 		Color.player_slot_3(255, true),
-		Color.player_slot_4(255, true)
+		(Color.player_slot_4(255, true))
 	},
 	weapon_action_title_display_names = {
 		secondary = "loc_weapon_action_title_secondary",

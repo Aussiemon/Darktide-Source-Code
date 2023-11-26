@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/render_target_atlas_generator.lua
+
 local RenderTargetAtlasGenerator = class("RenderTargetAtlasGenerator")
 
 RenderTargetAtlasGenerator.init = function (self, render_settings)
@@ -10,7 +12,9 @@ end
 
 RenderTargetAtlasGenerator.generate_atlas_grid_index = function (self, slot_width, slot_height, optional_atlas_width, optional_atlas_height)
 	local atlas = self:_get_available_atlas_by_slot_size(slot_width, slot_height)
+
 	atlas = atlas or self:_create_atlas_grid(slot_width, slot_height, optional_atlas_width, optional_atlas_height)
+
 	local grid_index = self:_get_atlas_free_grid_index(atlas)
 
 	self:_occupy_atlas_grid_index(atlas, grid_index)
@@ -24,6 +28,7 @@ RenderTargetAtlasGenerator.free_atlas_grid_index = function (self, atlas_id, gri
 	local atlas = self:_get_atlas_by_id(atlas_id)
 	local occupied_grid_slots = atlas.occupied_grid_slots
 	local num_used_grid_slots = atlas.num_used_grid_slots
+
 	atlas.num_used_grid_slots = num_used_grid_slots - 1
 	occupied_grid_slots[grid_index] = false
 
@@ -90,6 +95,7 @@ RenderTargetAtlasGenerator.destroy = function (self)
 	end
 
 	self._atlases = nil
+
 	local handle_instantly = true
 
 	self:_handle_atlas_destruction(nil, handle_instantly)
@@ -130,6 +136,7 @@ RenderTargetAtlasGenerator._create_uv_grid = function (self, grid_size, slot_siz
 				}
 			}
 			local grid_index = #uv_grid + 1
+
 			uv_grid[grid_index] = uvs
 		end
 	end
@@ -163,6 +170,7 @@ RenderTargetAtlasGenerator._create_atlas_grid = function (self, slot_width, slot
 		occupied_grid_slots = {},
 		max_grid_slots = num_columns * num_rows
 	}
+
 	self._atlases[#self._atlases + 1] = atlas
 
 	return atlas

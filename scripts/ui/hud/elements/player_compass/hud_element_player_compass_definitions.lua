@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/hud/elements/player_compass/hud_element_player_compass_definitions.lua
+
 local HudElementPlayerCompassSettings = require("scripts/ui/hud/elements/player_compass/hud_element_player_compass_settings")
 local UIWorkspaceSettings = require("scripts/settings/ui/ui_workspace_settings")
 local UIWidget = require("scripts/managers/ui/ui_widget")

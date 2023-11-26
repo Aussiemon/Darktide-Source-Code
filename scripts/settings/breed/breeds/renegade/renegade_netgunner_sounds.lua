@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/breed/breeds/renegade/renegade_netgunner_sounds.lua
+
 local RenegadeCommonSounds = require("scripts/settings/breed/breeds/renegade/renegade_common_sounds")
 local sound_data = {
 	events = {

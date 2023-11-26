@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/equipment/weapon_templates/ripperguns/settings_templates/rippergun_spread_templates.lua
+
 local spread_templates = {}
 local overrides = {}
 

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/account/account_manager_xbox_live.lua
+
 local InputDevice = require("scripts/managers/input/input_device")
 local XboxPrivileges = require("scripts/managers/account/xbox_privileges")
 local DefaultGameParameters = require("scripts/foundation/utilities/parameters/default_game_parameters")
@@ -163,7 +165,7 @@ AccountManagerXboxLive.signin_profile = function (self, signin_callback, optiona
 
 		self._signin_state = SIGNIN_STATES.fetching_privileges
 	else
-		local async_task, error_code = nil
+		local async_task, error_code
 		local users = XUser.users()
 
 		if #users > 1 then
@@ -330,6 +332,7 @@ end
 
 AccountManagerXboxLive._cb_user_signed_in = function (self, optional_input_device, async_block)
 	self._do_re_signin = nil
+
 	local user_id = XUser.get_user_result(async_block)
 
 	self:_set_user_data(user_id)
@@ -363,6 +366,7 @@ end
 AccountManagerXboxLive._set_user_data = function (self, user_id)
 	local user_info = XUser.user_info(user_id)
 	local gamertag = XUser.get_gamertag(user_id)
+
 	self._is_guest = user_info.guest
 	self._xuid = user_info.xuid
 	self._user_id = user_id
@@ -381,6 +385,7 @@ AccountManagerXboxLive._set_active_device = function (self, optional_input_devic
 
 	local device_type = optional_input_device.type()
 	local device_id = optional_input_device.device_id()
+
 	InputDevice.default_device_id[device_type] = device_id
 	self._active_controller = optional_input_device
 end
@@ -568,7 +573,7 @@ AccountManagerXboxLive._apply_render_settings = function (self, settings)
 			end
 		end
 
-		local valid = not setting.validation_function or setting:validation_function()
+		local valid = not setting.validation_function or setting.validation_function(setting)
 
 		if valid then
 			local apply_on_startup = setting.apply_on_startup
@@ -632,6 +637,7 @@ end
 
 AccountManagerXboxLive._handle_user_changes = function (self, dt, t)
 	local local_user_changed, user_state_changed, user_privileges_changed, user_device_association_changed = XUser.user_info_changed()
+
 	self._local_user_changed = local_user_changed or self._local_user_changed
 	self._user_state_changed = user_state_changed or self._user_state_changed
 	self._user_privileges_changed = user_privileges_changed or self._user_privileges_changed
@@ -683,7 +689,9 @@ AccountManagerXboxLive._update_active_profile = function (self)
 	if user then
 		self._is_guest = user.guest
 		self._user_id = user.id
+
 		local state = XUser.get_state(user.id)
+
 		profile_active = state ~= XUserState.SignedOut
 	end
 
@@ -765,6 +773,7 @@ end
 AccountManagerXboxLive._show_disconnect_error = function (self)
 	if self._active_controller then
 		local device_type = self._active_controller.type()
+
 		InputDevice.default_device_id[device_type] = nil
 	end
 
@@ -803,6 +812,7 @@ end
 AccountManagerXboxLive._show_signed_out_error = function (self)
 	if self._active_controller then
 		local device_type = self._active_controller.type()
+
 		InputDevice.default_device_id[device_type] = nil
 	end
 

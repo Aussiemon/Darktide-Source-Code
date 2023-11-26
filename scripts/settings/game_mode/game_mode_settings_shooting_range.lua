@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/game_mode/game_mode_settings_shooting_range.lua
+
 local settings = {
 	default_player_side_name = "heroes",
 	name = "shooting_range",

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/dialogue/dialogue_speaker_voice_settings.lua
+
 local dialogue_speaker_voice_settings = {
 	veteran_male_a = {
 		full_name = "loc_character_class_veteran",

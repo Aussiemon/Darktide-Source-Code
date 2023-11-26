@@ -1,24 +1,27 @@
+﻿-- chunkname: @scripts/settings/options/interface_settings.lua
+
 local OptionsUtilities = require("scripts/utilities/ui/options")
 local SettingsUtilitiesFunction = require("scripts/settings/options/settings_utils")
 local SettingsUtilities = {}
 
 local function construct_interface_settings_boolean(template)
-	local entry = {
-		default_value = template.default_value,
-		display_name = template.display_name,
-		on_value_changed = template.on_value_changed,
-		indentation_level = template.indentation_level,
-		tooltip_text = template.tooltip_text,
-		disable_rules = template.disable_rules,
-		validation_function = template.validation_function,
-		apply_on_startup = template.apply_on_startup
-	}
+	local entry = {}
+
+	entry.default_value = template.default_value
+	entry.display_name = template.display_name
+	entry.on_value_changed = template.on_value_changed
+	entry.indentation_level = template.indentation_level
+	entry.tooltip_text = template.tooltip_text
+	entry.disable_rules = template.disable_rules
+	entry.validation_function = template.validation_function
+	entry.apply_on_startup = template.apply_on_startup
+
 	local id = template.id
 	local save_location = template.save_location
 	local default_value = template.default_value
 
 	entry.get_function = function ()
-		local old_value = nil
+		local old_value
 
 		if template.use_local_save then
 			old_value = SettingsUtilities.get_local_settings(id)
@@ -34,7 +37,7 @@ local function construct_interface_settings_boolean(template)
 	end
 
 	entry.on_activated = function (new_value)
-		local current_value = nil
+		local current_value
 
 		if template.use_local_save then
 			current_value = SettingsUtilities.get_local_settings(id)
@@ -75,6 +78,7 @@ local function construct_interface_settings_percent_slider(template)
 
 	local function explode_value(percent_value)
 		local exploded_value = min_value + percent_value * conversion_value
+
 		exploded_value = math.round(exploded_value / step_size) * step_size
 
 		return exploded_value
@@ -97,7 +101,7 @@ local function construct_interface_settings_percent_slider(template)
 	end
 
 	local value_get_function = template.get_function or function ()
-		local exploded_value = nil
+		local exploded_value
 
 		if template.use_local_save then
 			exploded_value = SettingsUtilities.get_local_settings(id)
@@ -160,7 +164,7 @@ local function construct_interface_settings_value_slider(template)
 	end
 
 	local function value_get_function()
-		local value = nil
+		local value
 
 		if template.use_local_save then
 			value = SettingsUtilities.get_local_settings(id)
@@ -204,6 +208,7 @@ local function construct_interface_settings_dropdown(template)
 
 	for i = 1, #template.options do
 		local value = template.options[i]
+
 		options[#options + 1] = {
 			id = value.name,
 			value = value.name,

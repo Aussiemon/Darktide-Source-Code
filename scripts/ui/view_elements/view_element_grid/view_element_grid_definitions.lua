@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/view_elements/view_element_grid/view_element_grid_definitions.lua
+
 local ScrollbarPassTemplates = require("scripts/ui/pass_templates/scrollbar_pass_templates")
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
@@ -222,19 +224,25 @@ local function create_definitions(settings)
 	}
 	local title_text_font_style = table.clone(UIFontSettings.grid_title)
 	local sort_button_style = table.clone(UIFontSettings.body_small)
+
 	sort_button_style.text_horizontal_alignment = "left"
 	sort_button_style.text_vertical_alignment = "center"
 	sort_button_style.text_color = Color.terminal_text_body(255, true)
 	sort_button_style.default_text_color = Color.terminal_text_body(255, true)
 	sort_button_style.hover_color = Color.terminal_text_header_selected(255, true)
+
 	local empty_message_style = table.clone(UIFontSettings.grid_title)
+
 	empty_message_style.text_horizontal_alignment = "center"
 	empty_message_style.text_vertical_alignment = "center"
+
 	local timer_text_style = table.clone(sort_button_style)
+
 	timer_text_style.text_horizontal_alignment = "right"
 	timer_text_style.font_size = 24
 	timer_text_style.text_color = Color.terminal_text_body_sub_header(255, true)
 	timer_text_style.default_text_color = Color.terminal_text_body_sub_header(255, true)
+
 	local widget_definitions = {
 		title_text = UIWidget.create_definition({
 			{
@@ -380,8 +388,10 @@ local function create_definitions(settings)
 				},
 				change_function = function (content, style, _, dt)
 					local add = -0.5 * dt
+
 					style.rotation_progress = ((style.rotation_progress or 0) + add) % 1
 					style.angle = style.rotation_progress * math.pi * 2
+
 					local is_loading = content.is_loading
 				end,
 				visibility_function = function (content, style)

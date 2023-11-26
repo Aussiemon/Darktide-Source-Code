@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/event_synchronizer/decoder_synchronizer_extension.lua
+
 local MissionSoundEvents = require("scripts/settings/sound/mission_sound_events")
 local DecoderSynchronizerExtension = class("DecoderSynchronizerExtension", "EventSynchronizerBaseExtension")
 local STATES = table.enum("none", "activating_devices", "timer_on", "timer_paused", "complete")
@@ -28,6 +30,7 @@ DecoderSynchronizerExtension.setup_from_component = function (self, min_time_unt
 	self._objective_name = objective_name
 	self._auto_start = auto_start
 	self._setup_only = setup_only
+
 	local unit = self._unit
 
 	self._mission_objective_system:register_objective_synchronizer(objective_name, unit)
@@ -77,6 +80,7 @@ DecoderSynchronizerExtension._retrieve_decoder_units = function (self, units)
 
 	for i = 1, num_active_units do
 		local index = random_table[i]
+
 		result[#result + 1] = decoder_units[index]
 	end
 
@@ -84,28 +88,26 @@ DecoderSynchronizerExtension._retrieve_decoder_units = function (self, units)
 end
 
 DecoderSynchronizerExtension.fixed_update = function (self, unit, dt, t)
-	if self._is_server and self._event_active then
-		if self._current_state == STATES.none then
-			-- Nothing
-		elseif self._current_state == STATES.activating_devices then
-			-- Nothing
-		elseif self._current_state == STATES.timer_on then
-			if self._pause_timer < self._time_till_next_stall then
-				self._pause_timer = self._pause_timer + dt
-			else
-				self:pause_event()
-				self._mission_objective_system:sound_event(MissionSoundEvents.decode_blocked)
-				self:_set_state(STATES.timer_paused)
-			end
-
-			if self:_network_timer_is_finished() then
-				self:_set_state(STATES.complete)
-			end
-		elseif self._current_state == STATES.timer_paused then
-			-- Nothing
-		elseif self._current_state == STATES.complete then
-			self:finished_stage()
+	if not self._is_server or not self._event_active or self._current_state == STATES.none then
+		-- Nothing
+	elseif self._current_state == STATES.activating_devices then
+		-- Nothing
+	elseif self._current_state == STATES.timer_on then
+		if self._pause_timer < self._time_till_next_stall then
+			self._pause_timer = self._pause_timer + dt
+		else
+			self:pause_event()
+			self._mission_objective_system:sound_event(MissionSoundEvents.decode_blocked)
+			self:_set_state(STATES.timer_paused)
 		end
+
+		if self:_network_timer_is_finished() then
+			self:_set_state(STATES.complete)
+		end
+	elseif self._current_state == STATES.timer_paused then
+		-- Nothing
+	elseif self._current_state == STATES.complete then
+		self:finished_stage()
 	end
 end
 
@@ -121,6 +123,7 @@ DecoderSynchronizerExtension._get_next_random_stall_time = function (self)
 
 	if stall_once_per_device and #self._used_devices == #self._attached_devices - 1 then
 		local remaining_time = self._networked_timer_extension:get_remaining_time()
+
 		remaining_time = remaining_time - 0.1
 		return_time = remaining_time
 	end
@@ -146,16 +149,15 @@ DecoderSynchronizerExtension._get_random_decoding_device = function (self)
 		end
 	end
 
-	local rnd_unit = nil
+	local rnd_unit
 
-	if stall_once_per_device then
-		devices = remaining_devices or devices
-	end
+	devices = stall_once_per_device and remaining_devices or devices
 
 	local device_amount = #devices
 
 	if device_amount > 0 then
 		local rnd_index = math.random(1, device_amount)
+
 		rnd_unit = devices[rnd_index]
 
 		if stall_once_per_device then
@@ -170,12 +172,14 @@ DecoderSynchronizerExtension.unblock_decoding_progression = function (self)
 	local attached_devices = self._attached_devices
 	local num_devices = #attached_devices
 	local total_active = self._total_active_devices
+
 	total_active = total_active + 1
 	self._total_active_devices = total_active
 
 	if total_active == num_devices then
 		if not self._setup_only then
 			local rnd_time = self:_get_next_random_stall_time()
+
 			self._time_till_next_stall = rnd_time
 
 			for i = 1, num_devices do
@@ -238,8 +242,10 @@ DecoderSynchronizerExtension.pause_event = function (self)
 		self:_pause_network_timer()
 
 		local total_active = self._total_active_devices
+
 		total_active = total_active - 1
 		self._total_active_devices = total_active
+
 		local rnd_unit = self:_get_random_decoding_device()
 
 		if rnd_unit then

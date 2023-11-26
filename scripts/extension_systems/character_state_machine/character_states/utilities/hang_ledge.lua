@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/character_state_machine/character_states/utilities/hang_ledge.lua
+
 local NavQueries = require("scripts/utilities/nav_queries")
 local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
 local LEDGE_TRIGGER_NODE_NAME = "g_ledge_trigger"
@@ -5,7 +7,7 @@ local HAND_HOLD_NODE_NAME = "g_hand_hold_area"
 local RESPAWN_AREA_NODE_NAME = "g_respawn_area"
 local CLOSE_NAVMESH_DISTANCE_SQUARED = 16
 local HangLedge = {}
-local _is_position_in_line_of_sight = nil
+local _is_position_in_line_of_sight
 
 HangLedge.calculate_new_position = function (hang_ledge_unit, player_position)
 	local hang_ledge_scale = Unit.local_scale(hang_ledge_unit, 1)
@@ -16,8 +18,10 @@ HangLedge.calculate_new_position = function (hang_ledge_unit, player_position)
 	local hand_hold_rotation = Unit.world_rotation(hang_ledge_unit, hand_hold_node)
 	local hand_hold_scale = Unit.local_scale(hang_ledge_unit, hand_hold_node)
 	local hand_hold_right_vector = Quaternion.right(hand_hold_rotation)
-	local position_offset = 1 - 0.3 * 1 / hang_ledge_scale.x * 1 / hand_hold_scale.x
+	local position_offset = 1 - 0.3 * (1 / hang_ledge_scale.x) * (1 / hand_hold_scale.x)
+
 	position_offset = position_offset * hang_ledge_scale.x * hand_hold_scale.x
+
 	local left_point = hand_hold_position - hand_hold_right_vector * position_offset
 	local right_point = hand_hold_position + hand_hold_right_vector * position_offset
 	local player_new_position = Geometry.closest_point_on_line(player_position, left_point, right_point)
@@ -46,7 +50,7 @@ HangLedge.calculate_offset_rotation = function (physics_world, hang_ledge_unit, 
 	local first_ray_succeded = _is_position_in_line_of_sight(physics_world, ray_origin_position, below_player_position)
 
 	if not first_ray_succeded then
-		local ray_succeded, hit_position, ray_goal_position = nil
+		local ray_succeded, hit_position, ray_goal_position
 		local num_rays = 5
 
 		for i = 1, num_rays do
@@ -66,6 +70,7 @@ HangLedge.calculate_offset_rotation = function (physics_world, hang_ledge_unit, 
 			local to_goal_position = Vector3.normalize(ray_goal_position - hang_ledge_position)
 			local cross_dir = Vector3.cross(right_dir, to_goal_position)
 			local new_rotation = Quaternion.look(cross_dir)
+
 			rotation = new_rotation
 		end
 	end
@@ -79,6 +84,7 @@ HangLedge.calculate_falling_start_position = function (hang_ledge_unit, hanging_
 	local hang_ledge_forward = Quaternion.forward(hang_ledge_rotation)
 	local hanging_unit_position = Unit.local_position(hanging_unit, 1)
 	local new_position = hanging_unit_position - hang_ledge_forward * distance_from_ledge
+
 	new_position.z = new_position.z - player_height
 
 	return new_position
@@ -113,6 +119,7 @@ HangLedge.calculate_pull_up_end_position = function (nav_world, hang_ledge_unit,
 
 	if new_position_on_nav then
 		local distance_squared = Vector3.distance_squared(new_position, new_position_on_nav)
+
 		is_close = distance_squared <= CLOSE_NAVMESH_DISTANCE_SQUARED
 
 		if is_close then
@@ -133,6 +140,7 @@ end
 
 function _is_position_in_line_of_sight(physics_world, from_position, target_position, collision_filter)
 	collision_filter = collision_filter or "filter_minion_line_of_sight_check"
+
 	local to_target = target_position - from_position
 	local distance = Vector3.length(to_target)
 

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/view_elements/view_element_item_result_overlay/view_element_item_result_overlay_definitions.lua
+
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local UIWorkspaceSettings = require("scripts/settings/ui/ui_workspace_settings")
@@ -89,9 +91,12 @@ local scenegraph_definition = {
 	}
 }
 local title_text_style = table.clone(UIFontSettings.header_1)
+
 title_text_style.text_horizontal_alignment = "center"
 title_text_style.text_vertical_alignment = "top"
+
 local input_text_style = table.clone(UIFontSettings.header_3)
+
 input_text_style.text_horizontal_alignment = "center"
 input_text_style.text_vertical_alignment = "bottom"
 
@@ -101,7 +106,7 @@ local function bottom_particle_change_function(content, style, animations, dt)
 	local progress_speed = material_values.progress_speed or 0.7
 	local new_progress = (progress + dt * progress_speed) % 1
 
-	if progress > new_progress then
+	if new_progress < progress then
 		material_values.rotation = math.random_range(0, 0.5)
 		material_values.intensity = math.random_range(0, 1)
 		material_values.progress_speed = math.random_range(0.25, 1)
@@ -116,7 +121,7 @@ local function top_particle_change_function(content, style, animations, dt)
 	local progress_speed = material_values.progress_speed or 0.7
 	local new_progress = (progress + dt * progress_speed) % 1
 
-	if progress > new_progress then
+	if new_progress < progress then
 		material_values.rotation = math.random_range(0.5, 1)
 		material_values.intensity = math.random_range(0, 1)
 		material_values.progress_speed = math.random_range(0.25, 1)
@@ -378,6 +383,7 @@ local animations = {
 			end_time = anim_start_delay + 0.5,
 			update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress, params)
 				local anim_progress = math.easeOutCubic(progress)
+
 				parent._alpha_multiplier = anim_progress
 			end
 		},

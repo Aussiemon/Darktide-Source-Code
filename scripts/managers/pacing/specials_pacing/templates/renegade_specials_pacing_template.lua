@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/pacing/specials_pacing/templates/renegade_specials_pacing_template.lua
+
 local DEFAULT_FORESHADOW_STINGERS = {
 	renegade_netgunner = "wwise/events/minions/play_minion_special_netgunner_spawn",
 	chaos_hound = "wwise/events/minions/play_enemy_chaos_hound_spawn"

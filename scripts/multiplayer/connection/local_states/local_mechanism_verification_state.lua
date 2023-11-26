@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/multiplayer/connection/local_states/local_mechanism_verification_state.lua
+
 local RPCS = {
 	"rpc_check_mechanism_reply"
 }
@@ -35,9 +37,10 @@ end
 
 LocalMechanismVerificationState.update = function (self, dt)
 	local shared_state = self._shared_state
+
 	self._time = self._time + dt
 
-	if shared_state.timeout < self._time then
+	if self._time > shared_state.timeout then
 		Log.info("LocalMechanismVerificationState", "Timeout waiting for rpc_check_mechanism_reply")
 
 		return "timeout", {

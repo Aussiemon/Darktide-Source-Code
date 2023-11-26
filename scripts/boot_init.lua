@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/boot_init.lua
+
 if jit then
 	jit.off()
 end
@@ -83,7 +85,9 @@ HAS_STEAM = rawget(_G, "Steam") and true or false
 DEDICATED_SERVER = Application.is_dedicated_server()
 CLASSES = CLASSES or {}
 SETTINGS = SETTINGS or {}
-local valid = nil
+
+local valid
+
 valid, LOCAL_CONTENT_REVISION = pcall(require, "scripts/optional/content_revision")
 
 if not valid then

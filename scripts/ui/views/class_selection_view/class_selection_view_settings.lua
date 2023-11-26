@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/class_selection_view/class_selection_view_settings.lua
+
 local scrollbar_width = 10
 local class_selection_view_settings = {
 	timer_name = "ui",

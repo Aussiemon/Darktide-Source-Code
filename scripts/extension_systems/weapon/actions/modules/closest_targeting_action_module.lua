@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/weapon/actions/modules/closest_targeting_action_module.lua
+
 local ClosestTargetingActionModule = class("ClosestTargetingActionModule")
 
 ClosestTargetingActionModule.init = function (self, physics_world, player_unit, component, action_settings)
@@ -5,12 +7,15 @@ ClosestTargetingActionModule.init = function (self, physics_world, player_unit, 
 	self._player_unit = player_unit
 	self._component = component
 	self._action_settings = action_settings
+
 	local unit_data_extension = ScriptUnit.extension(player_unit, "unit_data_system")
+
 	self._first_person_component = unit_data_extension:read_component("first_person")
 end
 
 ClosestTargetingActionModule.start = function (self, action_settings, t)
 	local component = self._component
+
 	component.target_unit_1 = nil
 	component.target_unit_2 = nil
 	component.target_unit_3 = nil
@@ -36,7 +41,7 @@ ClosestTargetingActionModule.fixed_update = function (self, dt, t)
 	table.clear(BROADPHASE_RESULTS)
 	table.clear(hit_units)
 
-	local num_results = broadphase:query(query_position, RADIUS, BROADPHASE_RESULTS, enemy_side_names)
+	local num_results = broadphase.query(broadphase, query_position, RADIUS, BROADPHASE_RESULTS, enemy_side_names)
 	local num_targets = 0
 
 	for i = 1, num_results do
@@ -69,6 +74,7 @@ end
 ClosestTargetingActionModule.finish = function (self, reason, data, t)
 	if reason == "hold_input_released" or reason == "stunned" then
 		local component = self._component
+
 		component.target_unit_1 = nil
 		component.target_unit_2 = nil
 		component.target_unit_3 = nil

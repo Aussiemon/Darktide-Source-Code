@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/equipment/weapon_templates/force_staffs/forcestaff_p4_m1.lua
+
 local BaseTemplateSettings = require("scripts/settings/equipment/weapon_templates/base_template_settings")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
@@ -20,122 +22,122 @@ local damage_trait_templates = WeaponTraitTemplates[template_types.damage]
 local explosion_trait_templates = WeaponTraitTemplates[template_types.explosion]
 local charge_trait_templates = WeaponTraitTemplates[template_types.charge]
 local warp_charge_trait_templates = WeaponTraitTemplates[template_types.warp_charge]
-local weapon_template = {
-	smart_targeting_template = SmartTargetingTemplates.force_staff_single_target,
-	action_inputs = {
-		shoot_pressed = {
-			buffer_time = 0.15,
-			max_queue = 2,
-			input_sequence = {
-				{
-					value = true,
-					input = "action_one_pressed"
-				}
+local weapon_template = {}
+
+weapon_template.smart_targeting_template = SmartTargetingTemplates.force_staff_single_target
+weapon_template.action_inputs = {
+	shoot_pressed = {
+		buffer_time = 0.15,
+		max_queue = 2,
+		input_sequence = {
+			{
+				value = true,
+				input = "action_one_pressed"
 			}
-		},
-		charge = {
-			buffer_time = 0.1,
-			input_sequence = {
-				{
-					value = true,
-					input = "action_two_hold"
-				}
+		}
+	},
+	charge = {
+		buffer_time = 0.1,
+		input_sequence = {
+			{
+				value = true,
+				input = "action_two_hold"
 			}
-		},
-		charge_release = {
-			buffer_time = 0.1,
-			input_sequence = {
-				{
-					value = false,
-					input = "action_two_hold",
-					time_window = math.huge
-				}
+		}
+	},
+	charge_release = {
+		buffer_time = 0.1,
+		input_sequence = {
+			{
+				value = false,
+				input = "action_two_hold",
+				time_window = math.huge
 			}
-		},
-		shoot_charged = {
-			buffer_time = 0.5,
-			input_sequence = {
-				{
-					value = true,
-					hold_input = "action_two_hold",
-					input = "action_one_pressed"
-				}
+		}
+	},
+	shoot_charged = {
+		buffer_time = 0.5,
+		input_sequence = {
+			{
+				value = true,
+				hold_input = "action_two_hold",
+				input = "action_one_pressed"
 			}
-		},
-		wield = {
-			buffer_time = 0,
-			clear_input_queue = true,
-			input_sequence = {
-				{
-					inputs = wield_inputs
-				}
+		}
+	},
+	wield = {
+		buffer_time = 0,
+		clear_input_queue = true,
+		input_sequence = {
+			{
+				inputs = wield_inputs
 			}
-		},
-		vent = {
-			buffer_time = 0,
-			clear_input_queue = true,
-			input_sequence = {
-				{
-					value = true,
-					input = "weapon_reload_hold"
-				}
+		}
+	},
+	vent = {
+		buffer_time = 0,
+		clear_input_queue = true,
+		input_sequence = {
+			{
+				value = true,
+				input = "weapon_reload_hold"
 			}
-		},
-		vent_release = {
-			buffer_time = 0.1,
-			input_sequence = {
-				{
-					value = false,
-					input = "weapon_reload_hold",
-					time_window = math.huge
-				}
+		}
+	},
+	vent_release = {
+		buffer_time = 0.1,
+		input_sequence = {
+			{
+				value = false,
+				input = "weapon_reload_hold",
+				time_window = math.huge
 			}
-		},
-		special_action = {
-			buffer_time = 0.2,
-			input_sequence = {
-				{
-					value = true,
-					input = "weapon_extra_pressed"
-				}
+		}
+	},
+	special_action = {
+		buffer_time = 0.2,
+		input_sequence = {
+			{
+				value = true,
+				input = "weapon_extra_pressed"
 			}
-		},
-		special_action_hold = {
-			buffer_time = 0.2,
-			input_sequence = {
-				{
-					value = true,
-					hold_input = "weapon_extra_hold",
-					input = "weapon_extra_hold"
-				}
+		}
+	},
+	special_action_hold = {
+		buffer_time = 0.2,
+		input_sequence = {
+			{
+				value = true,
+				hold_input = "weapon_extra_hold",
+				input = "weapon_extra_hold"
 			}
-		},
-		special_action_light = {
-			buffer_time = 0.3,
-			max_queue = 1,
-			input_sequence = {
-				{
-					value = false,
-					time_window = 0.25,
-					input = "weapon_extra_hold"
-				}
+		}
+	},
+	special_action_light = {
+		buffer_time = 0.3,
+		max_queue = 1,
+		input_sequence = {
+			{
+				value = false,
+				time_window = 0.25,
+				input = "weapon_extra_hold"
 			}
-		},
-		special_action_heavy = {
-			buffer_time = 0.5,
-			max_queue = 1,
-			input_sequence = {
-				{
-					value = true,
-					duration = 0.25,
-					input = "weapon_extra_hold"
-				},
-				{
-					value = false,
-					time_window = 1.5,
-					auto_complete = false,
-					input = "weapon_extra_hold"
-				}
+		}
+	},
+	special_action_heavy = {
+		buffer_time = 0.5,
+		max_queue = 1,
+		input_sequence = {
+			{
+				value = true,
+				duration = 0.25,
+				input = "weapon_extra_hold"
+			},
+			{
+				value = false,
+				time_window = 1.5,
+				auto_complete = false,
+				input = "weapon_extra_hold"
 			}
 		}
 	}
@@ -1080,7 +1082,9 @@ weapon_template.stamina_template = "default"
 weapon_template.toughness_template = "default"
 weapon_template.warp_charge_template = "forcestaff_p4_m1"
 weapon_template.footstep_intervals = FootstepIntervalsTemplates.default
+
 local WeaponBarUIDescriptionTemplates = require("scripts/settings/equipment/weapon_bar_ui_description_templates")
+
 weapon_template.base_stats = {
 	forcestaff_p4_m1_dps_stat = {
 		display_name = "loc_stats_display_damage_stat",
@@ -1185,6 +1189,7 @@ weapon_template.base_stats = {
 	}
 }
 weapon_template.traits = {}
+
 local bespoke_forcestaff_p4_traits = table.keys(WeaponTraitsBespokeForcestaffP4)
 
 table.append(weapon_template.traits, bespoke_forcestaff_p4_traits)

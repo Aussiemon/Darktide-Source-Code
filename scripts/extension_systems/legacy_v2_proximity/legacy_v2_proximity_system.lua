@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/legacy_v2_proximity/legacy_v2_proximity_system.lua
+
 local Breed = require("scripts/utilities/breed")
 local DialogueBreedSettings = require("scripts/settings/dialogue/dialogue_breed_settings")
 local DialogueSettings = require("scripts/settings/dialogue/dialogue_settings")
@@ -66,6 +68,7 @@ LegacyV2ProximitySystem._spread_start_times = function (self)
 
 	for unit, extension in pairs(self._unit_extension_data) do
 		local delta = (index - 1) / num_players
+
 		extension.raycast_timer = RAYCAST_ENEMY_CHECK_INTERVAL * delta
 		extension.hear_timer = HEAR_ENEMY_CHECK_INTERVAL * delta
 		index = index + 1
@@ -86,6 +89,7 @@ LegacyV2ProximitySystem.on_add_extension = function (self, world, unit, extensio
 
 		if extension_name == "PlayerProximityExtension" then
 			extension.current_ptype = 0
+
 			local position = POSITION_LOOKUP[unit]
 			local proximity_types = {
 				friends_close = {
@@ -117,6 +121,7 @@ LegacyV2ProximitySystem.on_add_extension = function (self, world, unit, extensio
 					broadphase = self._enemy_broadphase
 				}
 			}
+
 			extension.proximity_array = {
 				proximity_types.friends_close,
 				proximity_types.friends_distant,
@@ -130,6 +135,7 @@ LegacyV2ProximitySystem.on_add_extension = function (self, world, unit, extensio
 			extension.player_broadphase_id = Broadphase.add(self._player_units_broadphase, unit, position, 0.5)
 			self._player_unit_extensions_map[unit] = extension
 			self._num_players = self._num_players + 1
+
 			local breed = extension_init_data.breed
 
 			if _can_trigger_vo(DialogueBreedSettings[breed.name]) then
@@ -142,13 +148,16 @@ LegacyV2ProximitySystem.on_add_extension = function (self, world, unit, extensio
 
 			local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
 			local first_person_component = unit_data_extension:read_component("first_person")
+
 			self._player_unit_component_map[unit] = first_person_component
 		elseif extension_name == "AIProximityExtension" then
 			local position = POSITION_LOOKUP[unit]
+
 			extension.enemy_broadphase_id = Broadphase.add(self._enemy_broadphase, unit, position, 0.5)
 			extension.bot_reaction_times = {}
 			extension.has_been_seen = false
 			self._ai_unit_extensions_map[unit] = extension
+
 			local breed = extension_init_data.breed
 
 			if _can_trigger_vo(DialogueBreedSettings[breed.name]) then
@@ -188,6 +197,7 @@ LegacyV2ProximitySystem.extensions_ready = function (self, world, unit, extensio
 		local side_system = Managers.state.extension:system("side_system")
 		local side_id = extension.side_id
 		local side = side_system:get_side(side_id)
+
 		extension.side = side
 	end
 end
@@ -237,6 +247,7 @@ LegacyV2ProximitySystem.add_distance_based_vo_query = function (self, source_uni
 	end
 
 	local next_element = #self._distance_based_vo_queries + 1
+
 	self._distance_based_vo_queries[next_element] = {
 		source = source_unit,
 		concept_name = concept_name,
@@ -249,16 +260,14 @@ LegacyV2ProximitySystem.update = function (self, ...)
 end
 
 LegacyV2ProximitySystem.physics_async_update = function (self, context, dt, t)
-	local Broadphase_move = Broadphase.move
-	local POSITION_LOOKUP = POSITION_LOOKUP
+	local Broadphase_move, POSITION_LOOKUP = Broadphase.move, POSITION_LOOKUP
 	local enemy_broadphase = self._enemy_broadphase
 
 	if not self._ai_unit_extensions_map[self._next_ai_unit] then
 		self._next_ai_unit = nil
 	end
 
-	local counter = 0
-	local max_count = 7
+	local counter, max_count = 0, 7
 
 	while counter < max_count do
 		local unit, extension = next(self._ai_unit_extensions_map, self._next_ai_unit)
@@ -272,8 +281,7 @@ LegacyV2ProximitySystem.physics_async_update = function (self, context, dt, t)
 		counter = counter + 1
 	end
 
-	local player_unit_extensions_map = self._player_unit_extensions_map
-	local player_units_broadphase = self._player_units_broadphase
+	local player_unit_extensions_map, player_units_broadphase = self._player_unit_extensions_map, self._player_units_broadphase
 
 	for unit, extension in pairs(player_unit_extensions_map) do
 		local position = POSITION_LOOKUP[unit]
@@ -281,8 +289,7 @@ LegacyV2ProximitySystem.physics_async_update = function (self, context, dt, t)
 		Broadphase_move(player_units_broadphase, extension.player_broadphase_id, position)
 	end
 
-	local special_unit_extension_map = self._special_unit_extension_map
-	local special_units_broadphase = self._special_units_broadphase
+	local special_unit_extension_map, special_units_broadphase = self._special_unit_extension_map, self._special_units_broadphase
 
 	for unit, extension in pairs(special_unit_extension_map) do
 		local position = POSITION_LOOKUP[unit]
@@ -308,10 +315,8 @@ LegacyV2ProximitySystem.physics_async_update = function (self, context, dt, t)
 		end
 	end
 
-	local enemy_check_raycasts = self._enemy_check_raycasts
-	local player_unit_component_map = self._player_unit_component_map
-	local ray_read_index = self._raycast_read_index
-	local ray_write_index = self._raycast_write_index
+	local enemy_check_raycasts, player_unit_component_map = self._enemy_check_raycasts, self._player_unit_component_map
+	local ray_read_index, ray_write_index = self._raycast_read_index, self._raycast_write_index
 	local ray_max = self._raycast_max_index
 	local broadphase_result = self._broadphase_result
 
@@ -320,14 +325,16 @@ LegacyV2ProximitySystem.physics_async_update = function (self, context, dt, t)
 	end
 
 	local unit, extension = next(player_unit_extensions_map, self._next_unit)
+
 	self._next_unit = unit
 
 	if ALIVE[unit] then
 		local position = POSITION_LOOKUP[unit]
+
 		extension.current_ptype = extension.current_ptype % 4 + 1
+
 		local proximity_data = extension.proximity_array[extension.current_ptype]
-		local broadphase = proximity_data.broadphase
-		local radius = proximity_data.distance
+		local broadphase, radius = proximity_data.broadphase, proximity_data.distance
 		local num_nearby_units = Broadphase.query(broadphase, position, radius, broadphase_result)
 		local num_matching_units = proximity_data.count_start
 
@@ -343,9 +350,12 @@ LegacyV2ProximitySystem.physics_async_update = function (self, context, dt, t)
 
 		if num_matching_units < last_num_matching_units * 0.67 or num_matching_units > last_num_matching_units * 1.49 then
 			proximity_data.num = num_matching_units
+
 			local dialogue_extension = ScriptUnit.extension(unit, "dialogue_system")
 			local event_data = dialogue_extension:get_event_data_payload()
+
 			event_data.num_units = num_matching_units
+
 			local proximity_type = proximity_data.id
 			local send_friends_distant = false
 
@@ -363,24 +373,27 @@ LegacyV2ProximitySystem.physics_async_update = function (self, context, dt, t)
 			end
 		end
 
-		if extension.raycast_timer < t then
+		if t > extension.raycast_timer then
 			if self._num_specials > 0 then
 				local first_person_component = player_unit_component_map[unit]
 				local look_rot = first_person_component.rotation
 				local look_direction = Quaternion.forward(look_rot)
 				local pos_flat = Vector3.flat(position)
+
 				look_direction.z = 0
+
 				local num_nearby_special_units = Broadphase.query(special_units_broadphase, position, SPECIAL_PROXIMITY_DISTANCE, broadphase_result)
 
 				for i = 1, num_nearby_special_units do
 					local nearby_unit = broadphase_result[i]
+
 					broadphase_result[i] = nil
 
 					if nearby_unit ~= unit and HEALTH_ALIVE[nearby_unit] then
 						local nearby_unit_pos = POSITION_LOOKUP[nearby_unit]
 						local nearby_unit_pos_flat = Vector3.flat(nearby_unit_pos)
 
-						if extension.hear_timer < t then
+						if t > extension.hear_timer then
 							local heard = false
 							local distance_sq = Vector3.distance_squared(nearby_unit_pos, position)
 
@@ -406,7 +419,7 @@ LegacyV2ProximitySystem.physics_async_update = function (self, context, dt, t)
 						local direction_unit_nearby_unit = Vector3.normalize(nearby_unit_pos_flat - pos_flat)
 						local result = Vector3.dot(direction_unit_nearby_unit, look_direction)
 
-						if DialogueSettings.seen_enemy_precision < result then
+						if result > DialogueSettings.seen_enemy_precision then
 							enemy_check_raycasts[ray_write_index] = unit
 							enemy_check_raycasts[ray_write_index + 1] = nearby_unit
 							ray_write_index = (ray_write_index + 1) % ray_max + 1
@@ -464,6 +477,7 @@ LegacyV2ProximitySystem._update_nearby_enemies = function (self)
 		end
 
 		local temp = self._near_units_last
+
 		self._near_units_last = self._near_units_new
 		self._near_units_new = temp
 
@@ -485,8 +499,7 @@ LegacyV2ProximitySystem._process_distance_based_vo_query = function (self)
 
 	local concept = to_query.concept_name
 	local query_data = to_query.query_data
-	local position = POSITION_LOOKUP[source_unit]
-	local broadphase_result = self._broadphase_result
+	local position, broadphase_result = POSITION_LOOKUP[source_unit], self._broadphase_result
 	local num_nearby_enemies = Broadphase.query(self._enemy_broadphase, position, HEARD_SPEAK_DEFAULT_DISTANCE, broadphase_result)
 	local num_answering = math.min(num_nearby_enemies, 5)
 	local step = math.floor(num_nearby_enemies / num_answering)
@@ -520,7 +533,9 @@ local INDEX_ACTOR = 4
 LegacyV2ProximitySystem._make_async_raycast_to_center = function (self, raycast_object, unit, unit_position, nearby_unit)
 	local unit_center_matrix, _ = Unit.box(nearby_unit)
 	local ray_target = Matrix4x4.translation(unit_center_matrix)
+
 	ray_target = ray_target + Vector3(0, 0, 1)
+
 	local to_target = ray_target - unit_position
 	local ray_direction = Vector3.normalize(to_target)
 	local ray_length = Vector3.length(to_target)
@@ -545,7 +560,7 @@ LegacyV2ProximitySystem._async_raycast_result_cb = function (self, id, hits, num
 		return
 	end
 
-	local hit_target = nil
+	local hit_target
 
 	for i = 1, num_hits do
 		local hit_data = hits[i]
@@ -599,9 +614,9 @@ LegacyV2ProximitySystem.post_update = function (self, ...)
 
 	if read_index ~= self._raycast_write_index then
 		self._raycast_read_index = (read_index + 1) % self._raycast_max_index + 1
+
 		local enemy_check_raycasts = self._enemy_check_raycasts
-		local unit = enemy_check_raycasts[read_index]
-		local nearby_unit = enemy_check_raycasts[read_index + 1]
+		local unit, nearby_unit = enemy_check_raycasts[read_index], enemy_check_raycasts[read_index + 1]
 		local ALIVE = ALIVE
 
 		if ALIVE[unit] and ALIVE[nearby_unit] then

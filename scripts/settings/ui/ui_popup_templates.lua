@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/ui/ui_popup_templates.lua
+
 ui_popup_templates = {
 	s1_intro_hub = {
 		button_text = "loc_popup_cutscene_strategium_accept_button",

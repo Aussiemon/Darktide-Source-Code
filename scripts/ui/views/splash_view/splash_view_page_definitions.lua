@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/splash_view/splash_view_page_definitions.lua
+
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local splash_definitions = {
 	{

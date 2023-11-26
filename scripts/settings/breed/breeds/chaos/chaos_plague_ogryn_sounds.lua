@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/breed/breeds/chaos/chaos_plague_ogryn_sounds.lua
+
 local sound_data = {
 	events = {
 		foley_belly = "wwise/events/minions/play_enemy_character_foley_plague_ogryn_belly_bounce",

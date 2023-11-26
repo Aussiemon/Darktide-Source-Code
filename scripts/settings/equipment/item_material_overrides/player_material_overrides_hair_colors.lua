@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/equipment/item_material_overrides/player_material_overrides_hair_colors.lua
+
 local material_overrides = {
 	hair_color_bardin = {
 		texture_overrides = {

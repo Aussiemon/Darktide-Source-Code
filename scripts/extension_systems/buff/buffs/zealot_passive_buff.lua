@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/buff/buffs/zealot_passive_buff.lua
+
 require("scripts/extension_systems/buff/buffs/buff")
 
 local ZealotManiacPassiveBuff = class("ZealotManiacPassiveBuff", "Buff")

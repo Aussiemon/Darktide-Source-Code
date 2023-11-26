@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/hud/elements/player_weapon_handler/hud_element_player_weapon_handler_definitions.lua
+
 local HudElementPlayerWeaponHandlerSettings = require("scripts/ui/hud/elements/player_weapon_handler/hud_element_player_weapon_handler_settings")
 local UIWorkspaceSettings = require("scripts/settings/ui/ui_workspace_settings")
 local slots_settings = HudElementPlayerWeaponHandlerSettings.slots_settings
@@ -26,6 +28,7 @@ for i = 1, max_slots do
 		screen_offset[2] + position_y,
 		0
 	}
+
 	scenegraph_definition[scenegraph_id] = {
 		vertical_alignment = "bottom",
 		parent = "screen",

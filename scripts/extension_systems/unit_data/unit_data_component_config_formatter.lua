@@ -1,5 +1,7 @@
+﻿-- chunkname: @scripts/extension_systems/unit_data/unit_data_component_config_formatter.lua
+
 local UnitDataComponentConfigFormatter = {}
-local _get_network_info = nil
+local _get_network_info
 local LUA_TYPES = {
 	number = "number",
 	weapon_sway = "number",
@@ -81,7 +83,7 @@ UnitDataComponentConfigFormatter.format = function (config, gameobject_name, hus
 	local formatted_husk_config = {}
 	local formatted_husk_hud_config = {}
 	local lookup_index = 0
-	local global_network_lookup_string = nil
+	local global_network_lookup_string
 	local sorted_components = table.keys(config)
 
 	table.sort(sorted_components)
@@ -94,7 +96,9 @@ UnitDataComponentConfigFormatter.format = function (config, gameobject_name, hus
 		local component_name = sorted_components[component_index]
 		local component = config[component_name]
 		local component_config = {}
+
 		formatted_config[component_name] = component_config
+
 		local sorted_fields = table.keys(component)
 
 		table.sort(sorted_fields)
@@ -104,11 +108,13 @@ UnitDataComponentConfigFormatter.format = function (config, gameobject_name, hus
 		for field_index = 1, num_sorted_fields do
 			local field_name = sorted_fields[field_index]
 			local data = component[field_name]
+
 			lookup_index = lookup_index + 1
+
 			local field_network_name = component_name .. "_" .. field_name
-			local field_type, field_network_type, lookup = nil
+			local field_type, field_network_type, lookup
 			local skip_predict_verification = false
-			local use_network_lookup = nil
+			local use_network_lookup
 
 			if type(data) == "table" then
 				field_type = "string"
@@ -117,16 +123,19 @@ UnitDataComponentConfigFormatter.format = function (config, gameobject_name, hus
 
 				if not use_network_lookup then
 					lookup = {}
+
 					local lookup_size = #data
 
 					for i = 1, lookup_size do
 						local val = data[i]
+
 						lookup[i] = val
 						lookup[val] = i
 					end
 
 					if not field_network_type then
 						local num_bits = math.floor(math.log(lookup_size) / math.log(2)) + 1
+
 						field_network_type = "lookup_" .. num_bits .. "bit"
 					end
 				end
@@ -137,7 +146,7 @@ UnitDataComponentConfigFormatter.format = function (config, gameobject_name, hus
 				field_type = LUA_TYPES[field_network_type]
 			end
 
-			local additional_data = nil
+			local additional_data
 
 			if field_network_type == "locomotion_parent" then
 				locomotion_parent.component_name = component_name
@@ -181,7 +190,9 @@ UnitDataComponentConfigFormatter.format = function (config, gameobject_name, hus
 	for component_i = 1, #sorted_husk_components do
 		local component_name = sorted_husk_components[component_i]
 		local formatted_husk_component = {}
+
 		formatted_husk_config[component_name] = formatted_husk_component
+
 		local husk_component = husk_config[component_name]
 		local formatted_component = formatted_config[component_name]
 
@@ -189,7 +200,9 @@ UnitDataComponentConfigFormatter.format = function (config, gameobject_name, hus
 
 		for field_i = 1, #husk_component do
 			local field_name = husk_component[field_i]
+
 			formatted_husk_component[field_name] = true
+
 			local network_name, network_type = _get_network_info(field_name, formatted_component, field_network_lookup)
 		end
 	end
@@ -201,7 +214,9 @@ UnitDataComponentConfigFormatter.format = function (config, gameobject_name, hus
 	for component_i = 1, #sorted_husk_hud_components do
 		local component_name = sorted_husk_hud_components[component_i]
 		local formatted_husk_hud_component = {}
+
 		formatted_husk_hud_config[component_name] = formatted_husk_hud_component
+
 		local husk_hud_component = husk_hud_config[component_name]
 		local formatted_component = formatted_config[component_name]
 
@@ -216,6 +231,7 @@ UnitDataComponentConfigFormatter.format = function (config, gameobject_name, hus
 			end
 
 			formatted_husk_hud_component[field_name] = true
+
 			local network_name, network_type = _get_network_info(field_name, formatted_component, field_network_lookup)
 		end
 	end
@@ -227,8 +243,7 @@ function _get_network_info(field_name, formatted_component, field_network_lookup
 	local formatted_field = formatted_component[field_name]
 	local field_lookup_index = formatted_field.lookup_index
 	local field = field_network_lookup[field_lookup_index]
-	local network_name = field[4]
-	local network_type = field[5]
+	local network_name, network_type = field[4], field[5]
 	local converted_type = HUSK_NETWORK_TYPE_CONVERSION[network_type] or network_type
 
 	return network_name, converted_type

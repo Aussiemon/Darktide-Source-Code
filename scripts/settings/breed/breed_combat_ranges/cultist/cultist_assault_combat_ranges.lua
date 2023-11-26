@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/breed/breed_combat_ranges/cultist/cultist_assault_combat_ranges.lua
+
 local combat_ranges = {
 	name = "cultist_assault",
 	calculate_target_velocity_dot = true,

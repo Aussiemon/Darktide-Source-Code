@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/social_menu_notifications_view/social_menu_notifications_view.lua
+
 local definition_path = "scripts/ui/views/social_menu_notifications_view/social_menu_notifications_view_definitions"
 local ScriptWorld = require("scripts/foundation/utilities/script_world")
 local UIFonts = require("scripts/managers/ui/ui_fonts")
@@ -57,12 +59,15 @@ end
 
 SocialMenuNotificationsView._setup_notifications_grid = function (self)
 	local widgets, alignment_widgets = self:_create_notification_widgets()
+
 	self._grid_widgets = widgets
 	self._grid_alignment_widgets = alignment_widgets
+
 	local grid_scenegraph_id = "grid"
 	local grid_spacing = ViewStyles.grid_spacing
 	local grid_direction = "down"
 	local grid = UIWidgetGrid:new(widgets, alignment_widgets, self._ui_scenegraph, grid_scenegraph_id, grid_direction, grid_spacing)
+
 	self._grid = grid
 end
 
@@ -118,20 +123,23 @@ SocialMenuNotificationsView._update_notification_widgets = function (self, dt, i
 		local widget = widgets[i]
 		local widget_content = widget.content
 		local age = widget_content.age + dt
-		local age_formatted = nil
+		local age_formatted
 
 		if seconds_in_a_day < age then
 			local days = math.floor(age / seconds_in_a_day)
+
 			age_formatted = self:_localize("loc_social_menu_notifications_age_days", true, {
 				days = days
 			})
 		elseif seconds_in_an_hour < age then
 			local hours = math.floor(age / seconds_in_an_hour)
+
 			age_formatted = self:_localize("loc_social_menu_notifications_age_hours", true, {
 				hours = hours
 			})
 		elseif seconds_in_a_minute < age then
 			local minutes = math.floor(age / seconds_in_a_minute)
+
 			age_formatted = self:_localize("loc_social_menu_notifications_age_minutes", true, {
 				minutes = minutes
 			})
@@ -141,6 +149,7 @@ SocialMenuNotificationsView._update_notification_widgets = function (self, dt, i
 
 		widget_content.age = age
 		widget_content.age_formatted = age_formatted
+
 		local hotspot = widget_content.hotspot
 
 		if hotspot.is_hover or hotspot.is_selected then
@@ -206,7 +215,7 @@ local GuildNames = {
 
 SocialMenuNotificationsView._generate_random_notification = function (self, order, last_used_time_stamp)
 	local notification_types = self._definitions.notification_types
-	local notification_type = nil
+	local notification_type
 	local n = 0
 
 	for type_name in pairs(notification_types) do
@@ -217,7 +226,7 @@ SocialMenuNotificationsView._generate_random_notification = function (self, orde
 		end
 	end
 
-	local time_since_last_message = math.floor(math.random() * math.max(order - 2, 0) * 24 * 3600 + math.random() * (order - 1) * 3600 + math.random() * order * 60)
+	local time_since_last_message = math.floor(math.random() * (math.max(order - 2, 0) * 24 * 3600) + math.random() * (order - 1) * 3600 + math.random() * order * 60)
 
 	return {
 		is_read = math.random() > 1 / order,
@@ -240,10 +249,12 @@ SocialMenuNotificationsView._set_dummy_data = function (self, num_items)
 
 	dummy_data.server_time = os.time()
 	num_items = num_items or math.floor(math.random() * 1.05)
+
 	local last_used_time_stamp = dummy_data.server_time
 
 	for i = 1, num_items do
 		local random_notification = self:_generate_random_notification(i, last_used_time_stamp)
+
 		dummy_data.notifications[i] = random_notification
 		last_used_time_stamp = random_notification.time
 	end

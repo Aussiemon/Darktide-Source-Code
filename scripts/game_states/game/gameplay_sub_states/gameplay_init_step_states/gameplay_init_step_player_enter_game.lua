@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/game_states/game/gameplay_sub_states/gameplay_init_step_states/gameplay_init_step_player_enter_game.lua
+
 local BotGameplay = require("scripts/managers/player/player_game_states/bot_gameplay")
 local GameplayInitStepInterface = require("scripts/game_states/game/gameplay_sub_states/gameplay_init_step_states/gameplay_init_step_state_interface")
 local GameplayInitStepMusic = require("scripts/game_states/game/gameplay_sub_states/gameplay_init_step_states/gameplay_init_step_music")
@@ -11,7 +13,9 @@ end
 
 GameplayInitStepPlayerEnterGame.on_enter = function (self, parent, params)
 	local shared_state = params.shared_state
+
 	self._shared_state = shared_state
+
 	local gameplay_state = parent:gameplay_state()
 	local themes = shared_state.themes
 	local is_server = shared_state.is_server

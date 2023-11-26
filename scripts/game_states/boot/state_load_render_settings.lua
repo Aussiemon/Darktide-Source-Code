@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/game_states/boot/state_load_render_settings.lua
+
 require("scripts/game_states/boot/state_boot_sub_state_base")
 
 local render_options = require("scripts/settings/options/render_settings")
@@ -25,7 +27,7 @@ StateLoadRenderSettings._state_update = function (self, dt)
 
 		for i = 1, #settings_to_run do
 			local setting = settings_to_run[i]
-			local value = setting:get_function()
+			local value = setting.get_function(setting)
 
 			setting.on_activated(value, setting)
 		end
@@ -53,7 +55,7 @@ StateLoadRenderSettings._check_settings_to_tun = function (self, settings, setti
 			local apply_on_startup = setting.apply_on_startup
 
 			if apply_on_startup then
-				local valid = not setting.validation_function or setting:validation_function()
+				local valid = not setting.validation_function or setting.validation_function(setting)
 
 				if valid then
 					local get_function = setting.get_function

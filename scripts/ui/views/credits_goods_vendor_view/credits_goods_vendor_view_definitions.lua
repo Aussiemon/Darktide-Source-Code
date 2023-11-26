@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/credits_goods_vendor_view/credits_goods_vendor_view_definitions.lua
+
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templates")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
@@ -165,7 +167,9 @@ local scenegraph_definition = {
 	}
 }
 local price_text_style = table.clone(UIFontSettings.currency_title)
+
 price_text_style.font_size = 18
+
 local widget_definitions = {
 	price_text = UIWidget.create_definition({
 		{

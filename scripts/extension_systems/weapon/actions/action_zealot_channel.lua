@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/weapon/actions/action_zealot_channel.lua
+
 require("scripts/extension_systems/weapon/actions/action_ability_base")
 
 local Attack = require("scripts/utilities/attack/attack")
@@ -18,6 +20,7 @@ ActionZealotChannel.init = function (self, action_context, action_params, action
 	ActionZealotChannel.super.init(self, action_context, action_params, action_settings)
 
 	local unit_data_extension = action_context.unit_data_extension
+
 	self._weapon_action_component = unit_data_extension:read_component("weapon_action")
 	self._unit_data_extension = unit_data_extension
 	self._combat_ability_component = unit_data_extension:write_component("combat_ability")
@@ -31,6 +34,7 @@ ActionZealotChannel.start = function (self, action_settings, t, time_scale, acti
 	local locomotion_position = locomotion_component.position
 	local player_position = locomotion_position
 	local player_unit = self._player_unit
+
 	self._combat_ability_component.active = true
 	self._ability_extension = ScriptUnit.extension(player_unit, "ability_system")
 	self._coherency_extension = ScriptUnit.extension(player_unit, "coherency_system")
@@ -43,6 +47,7 @@ ActionZealotChannel.start = function (self, action_settings, t, time_scale, acti
 	self._defensive_buff = self._specialization_extension:has_special_rule(special_rules.zealot_channel_grants_defensive_buff) and action_settings.defensive_buff
 	self._toughness_bonus_buff = action_settings.toughness_bonus_buff
 	self._zealot_channel_staggers = self._specialization_extension:has_special_rule(special_rules.zealot_channel_staggers)
+
 	local wwise_state = action_settings.wwise_state
 
 	if wwise_state then
@@ -91,6 +96,7 @@ ActionZealotChannel.start = function (self, action_settings, t, time_scale, acti
 	end
 
 	self._total_num_ticks = math.ceil(action_settings.total_time - 0.5 / TICK_RATE)
+
 	local buff_extension = ScriptUnit.extension(player_unit, "buff_system")
 	local param_table = buff_extension:request_proc_event_param_table()
 
@@ -107,7 +113,7 @@ end
 
 ActionZealotChannel.fixed_update = function (self, dt, t, time_in_action)
 	if not self._is_server then
-		if self._next_tick_t <= t then
+		if t >= self._next_tick_t then
 			self._next_tick_t = self._next_tick_t + TICK_RATE
 
 			self:trigger_anim_event("raise", "raise")
@@ -130,7 +136,7 @@ ActionZealotChannel.fixed_update = function (self, dt, t, time_in_action)
 		end
 	end
 
-	if self._next_tick_t <= t then
+	if t >= self._next_tick_t then
 		self._next_tick_t = self._next_tick_t + TICK_RATE
 
 		self:_on_channel_tick(in_coherence_units, t, time_in_action)
@@ -138,7 +144,7 @@ ActionZealotChannel.fixed_update = function (self, dt, t, time_in_action)
 		self._num_ticks = self._num_ticks + 1
 	end
 
-	if self._next_vo and self._next_vo <= t then
+	if self._next_vo and t >= self._next_vo then
 		local vo_tag = self._vo_tag
 
 		Vo.play_combat_ability_event(self._player_unit, vo_tag)
@@ -181,7 +187,9 @@ ActionZealotChannel._on_channel_tick = function (self, in_coherence_units, t, ti
 
 	if self._zealot_channel_staggers then
 		local action_settings = self._action_settings
+
 		time_in_action = math.min(time_in_action, 5)
+
 		local radius_time_in_action_multiplier = action_settings.radius_time_in_action_multiplier or 0
 		local radius = action_settings.radius + time_in_action * radius_time_in_action_multiplier
 		local base_power_level = time_in_action > 0.5 and action_settings.power_level or 0
@@ -189,7 +197,7 @@ ActionZealotChannel._on_channel_tick = function (self, in_coherence_units, t, ti
 		self:_zealot_stagger(radius, base_power_level)
 	end
 
-	if self._add_buff_time < time_in_action then
+	if time_in_action > self._add_buff_time then
 		for in_coherence_unit, _ in pairs(in_coherence_units) do
 			local buff_extension = ScriptUnit.has_extension(in_coherence_unit, "buff_system")
 
@@ -243,7 +251,7 @@ ActionZealotChannel._zealot_stagger = function (self, radius, power_level)
 	local player_units = side.valid_enemy_player_units
 	local broadphase_system = Managers.state.extension:system("broadphase_system")
 	local broadphase = broadphase_system.broadphase
-	local num_hits = broadphase:query(player_position, radius, broadphase_results, enemy_side_names)
+	local num_hits = broadphase.query(broadphase, player_position, radius, broadphase_results, enemy_side_names)
 	local damage_profile = action_settings.damage_profile
 
 	for ii = 1, num_hits do
@@ -263,30 +271,39 @@ ActionZealotChannel._zealot_stagger = function (self, radius, power_level)
 				Suppression.apply_suppression_decay_delay(enemy_unit, math.random_range(SUPPRESSION_DECAY_DELAY[1], SUPPRESSION_DECAY_DELAY[2]))
 
 				HIT_UNITS[enemy_unit] = true
-			elseif enemy_breed.can_be_blinded and not HIT_UNITS[enemy_unit] then
-				local blackboard = BLACKBOARDS[enemy_unit]
-				local stagger_component = blackboard.stagger
-				local is_staggered = stagger_component.num_triggered_staggers > 0
 
-				if not is_staggered then
-					local random_duration_range = math.random_range(2.6666666666666665, 4)
-
-					Stagger.force_stagger(enemy_unit, "blinding", attack_direction, random_duration_range, 1, 0.3333333333333333)
-				end
-			else
-				local hit_zone_name = "torso"
-
-				Attack.execute(enemy_unit, damage_profile, "attack_direction", attack_direction, "power_level", power_level, "hit_zone_name", hit_zone_name, "attacking_unit", unit)
+				break
 			end
+
+			if enemy_breed.can_be_blinded and not HIT_UNITS[enemy_unit] then
+				do
+					local blackboard = BLACKBOARDS[enemy_unit]
+					local stagger_component = blackboard.stagger
+					local is_staggered = stagger_component.num_triggered_staggers > 0
+
+					if not is_staggered then
+						local random_duration_range = math.random_range(2.6666666666666665, 4)
+
+						Stagger.force_stagger(enemy_unit, "blinding", attack_direction, random_duration_range, 1, 0.3333333333333333)
+					end
+				end
+
+				break
+			end
+
+			local hit_zone_name = "torso"
+
+			Attack.execute(enemy_unit, damage_profile, "attack_direction", attack_direction, "power_level", power_level, "hit_zone_name", hit_zone_name, "attacking_unit", unit)
 		until true
 	end
 
 	self._num_ticks_done = self._num_ticks_done + 1
+
 	local force_stagger_radius = action_settings.force_stagger_radius
 	local force_stagger_duration = action_settings.force_stagger_duration
 
 	if force_stagger_radius then
-		num_hits = broadphase:query(player_position, force_stagger_radius, broadphase_results, enemy_side_names)
+		num_hits = broadphase.query(broadphase, player_position, force_stagger_radius, broadphase_results, enemy_side_names)
 
 		for ii = 1, num_hits do
 			repeat
@@ -305,18 +322,26 @@ ActionZealotChannel._zealot_stagger = function (self, radius, power_level)
 					if self._num_ticks_done == 1 or self._num_ticks_done % 2 == 1 then
 						Stagger.force_stagger(enemy_unit, "blinding", attack_direction, force_stagger_duration, 1, force_stagger_duration)
 					end
-				elseif not HIT_UNITS[enemy_unit] then
-					if enemy_breed.can_be_blinded then
-						local blackboard = BLACKBOARDS[enemy_unit]
-						local stagger_component = blackboard.stagger
-						local is_staggered = stagger_component.num_triggered_staggers > 0
 
-						if not is_staggered then
-							Stagger.force_stagger(enemy_unit, "blinding", attack_direction, force_stagger_duration, 1, force_stagger_duration)
+					break
+				end
+
+				if not HIT_UNITS[enemy_unit] then
+					if enemy_breed.can_be_blinded then
+						do
+							local blackboard = BLACKBOARDS[enemy_unit]
+							local stagger_component = blackboard.stagger
+							local is_staggered = stagger_component.num_triggered_staggers > 0
+
+							if not is_staggered then
+								Stagger.force_stagger(enemy_unit, "blinding", attack_direction, force_stagger_duration, 1, force_stagger_duration)
+							end
 						end
-					else
-						Stagger.force_stagger(enemy_unit, "blinding", attack_direction, force_stagger_duration, 1, force_stagger_duration)
+
+						break
 					end
+
+					Stagger.force_stagger(enemy_unit, "blinding", attack_direction, force_stagger_duration, 1, force_stagger_duration)
 				end
 			until true
 		end

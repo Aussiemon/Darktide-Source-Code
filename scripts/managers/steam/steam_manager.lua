@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/steam/steam_manager.lua
+
 local SteamManager = class("SteamManager")
 
 SteamManager.init = function (self)

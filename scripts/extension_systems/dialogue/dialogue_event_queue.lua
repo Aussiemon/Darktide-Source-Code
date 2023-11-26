@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/dialogue/dialogue_event_queue.lua
+
 local DialogueBreedSettings = require("scripts/settings/dialogue/dialogue_breed_settings")
 local DialogueCategoryConfig = require("scripts/settings/dialogue/dialogue_category_config")
 local DialogueEventQueue = class("DialogueEventQueue")
@@ -36,7 +38,7 @@ DialogueEventQueue.update_new_events = function (self, dt, t)
 			local unit_data_extension = ScriptUnit.has_extension(unit, "unit_data_system")
 			local breed_data = unit_data_extension and unit_data_extension:breed() or Unit.get_data(unit, "breed")
 			local breed_name = breed_data and breed_data.name
-			local source_name = nil
+			local source_name
 
 			if breed_name and not breed_data.is_player then
 				source_name = DialogueBreedSettings[breed_name].vo_class_name
@@ -95,10 +97,12 @@ end
 
 DialogueEventQueue._append_event_implementation = function (self, unit, event_name, event_data, identifier)
 	local base_index = self._index_input_event_queue
+
 	self._input_event_queue[base_index + 0] = unit
 	self._input_event_queue[base_index + 1] = event_name
 	self._input_event_queue[base_index + 2] = identifier or ""
 	self._input_event_queue[base_index + 3] = table.size(event_data)
+
 	local base_index_event_data = base_index + 4
 
 	for key, value in pairs(event_data) do

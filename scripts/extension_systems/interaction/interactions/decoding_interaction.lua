@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/interaction/interactions/decoding_interaction.lua
+
 require("scripts/extension_systems/interaction/interactions/base_interaction")
 
 local InteractionSettings = require("scripts/settings/interaction/interaction_settings")
@@ -11,7 +13,9 @@ DecodingInteraction.stop = function (self, world, interactor_unit, unit_data_com
 		local unit_data_extension = ScriptUnit.extension(interactor_unit, "unit_data_system")
 		local target_unit = unit_data_component.target_unit
 		local minigame_character_state = unit_data_extension:write_component("minigame_character_state")
+
 		minigame_character_state.interface_unit_id = Managers.state.unit_spawner:level_index(target_unit)
+
 		local interactee_extension = ScriptUnit.extension(target_unit, "interactee_system")
 		local item = interactee_extension:interactor_item_to_equip()
 

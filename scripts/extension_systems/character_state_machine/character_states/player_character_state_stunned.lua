@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/character_state_machine/character_states/player_character_state_stunned.lua
+
 require("scripts/extension_systems/character_state_machine/character_states/player_character_state_base")
 
 local AcceleratedLocalSpaceMovement = require("scripts/extension_systems/character_state_machine/character_states/utilities/accelerated_local_space_movement")
@@ -18,6 +20,7 @@ PlayerCharacterStateStunned.init = function (self, character_state_init_context,
 
 	local unit_data = character_state_init_context.unit_data
 	local stunned_character_state_component = unit_data:write_component("stunned_character_state")
+
 	stunned_character_state_component.start_time = 0
 	stunned_character_state_component.disorientation_type = "none"
 	stunned_character_state_component.stunned = false
@@ -37,8 +40,10 @@ PlayerCharacterStateStunned.on_enter = function (self, unit, dt, t, previous_sta
 	local locomotion_component = self._locomotion_component
 	local locomotion_steering_component = self._locomotion_steering_component
 	local stunned_character_state_component = self._stunned_character_state_component
+
 	locomotion_steering_component.move_method = "script_driven"
 	locomotion_steering_component.calculate_fall_velocity = true
+
 	local first_person_component = self._first_person_component
 
 	AcceleratedLocalSpaceMovement.refresh_local_move_variables(self._constants.move_speed, locomotion_steering_component, locomotion_component, first_person_component)
@@ -46,12 +51,14 @@ PlayerCharacterStateStunned.on_enter = function (self, unit, dt, t, previous_sta
 	local disorientation_type = params.disorientation_type
 	local disorientation_template = disorientation_templates[disorientation_type]
 	local stun_settings = disorientation_template.stun
+
 	self._previous_frame_state = previous_state
 	locomotion_steering_component.velocity_wanted = Vector3.zero()
 	stunned_character_state_component.start_time = t
 	stunned_character_state_component.disorientation_type = disorientation_type
 	stunned_character_state_component.stunned = true
 	stunned_character_state_component.actions_interrupted = false
+
 	local start_anim = stun_settings.start_anim
 	local start_anim_3p = stun_settings.start_anim_3p or start_anim
 
@@ -77,6 +84,7 @@ end
 
 PlayerCharacterStateStunned.on_exit = function (self, unit, t, next_state)
 	local stunned_character_state_component = self._stunned_character_state_component
+
 	stunned_character_state_component.stunned = false
 	stunned_character_state_component.start_time = 0
 	stunned_character_state_component.disorientation_type = "none"
@@ -107,7 +115,7 @@ PlayerCharacterStateStunned.fixed_update = function (self, unit, dt, t, next_sta
 	local stun_settings = disorientation_template.stun
 	local action_delay = stun_settings.action_delay
 	local stun_settings_interrupt_delay = stun_settings.interrupt_delay
-	local interrupt_delay = nil
+	local interrupt_delay
 
 	if stun_settings_interrupt_delay ~= nil then
 		interrupt_delay = stun_settings_interrupt_delay or 0
@@ -158,10 +166,12 @@ PlayerCharacterStateStunned.fixed_update = function (self, unit, dt, t, next_sta
 
 	local buff_extension = ScriptUnit.extension(unit, "buff_system")
 	local stat_buffs = buff_extension:stat_buffs()
+
 	move_speed = move_speed * stat_buffs.movement_speed
 	locomotion_steering_component.velocity_wanted = move_direction * move_speed
 	locomotion_steering_component.local_move_x = new_x
 	locomotion_steering_component.local_move_y = new_y
+
 	local previous_frame_state = self._previous_frame_state
 
 	if previous_frame_state then
@@ -177,7 +187,9 @@ PlayerCharacterStateStunned._play_end_animation = function (self)
 	local disorientation_template = disorientation_templates[self._stunned_character_state_component.disorientation_type]
 	local stun_settings = disorientation_template.stun
 	local stunned_character_state_component = self._stunned_character_state_component
+
 	stunned_character_state_component.exit_event_played = true
+
 	local end_anim = stun_settings.end_anim
 	local end_anim_3p = stun_settings.end_anim_3p or end_anim
 

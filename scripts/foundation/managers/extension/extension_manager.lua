@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/foundation/managers/extension/extension_manager.lua
+
 require("scripts/foundation/utilities/script_unit")
 
 local ExtensionConfig = require("scripts/foundation/managers/extension/extension_config")
@@ -16,6 +18,7 @@ ExtensionManager.init = function (self, world, physics_world, wwise_world, nav_w
 	self._systems = {}
 	self._extension_to_system_map = {}
 	self._extension_config = ExtensionConfig:new()
+
 	local extension_system_creation_context = {
 		world = world,
 		physics_world = physics_world,
@@ -30,8 +33,10 @@ ExtensionManager.init = function (self, world, physics_world, wwise_world, nav_w
 		game_session = game_session,
 		soft_cap_out_of_bounds_units = optional_soft_cap_out_of_bounds_units
 	}
+
 	self._extension_system_holder = ExtensionSystemHolder:new(extension_system_creation_context, system_configuration, system_init_data, fixed_time_step, use_time_slice)
 	self._unit_templates = unit_templates
+
 	local categories = {}
 
 	for i = 1, #unit_category_list do
@@ -44,11 +49,11 @@ ExtensionManager.init = function (self, world, physics_world, wwise_world, nav_w
 	self._registered_level_units = {}
 
 	if use_time_slice then
-		local time_slice_unit_registration_data = {
-			last_index = 0,
-			ready = false,
-			parameters = {}
-		}
+		local time_slice_unit_registration_data = {}
+
+		time_slice_unit_registration_data.last_index = 0
+		time_slice_unit_registration_data.ready = false
+		time_slice_unit_registration_data.parameters = {}
 		time_slice_unit_registration_data.parameters.world = nil
 		time_slice_unit_registration_data.parameters.unit_list_to_register = nil
 		time_slice_unit_registration_data.parameters.num_units = 0
@@ -84,6 +89,7 @@ end
 
 ExtensionManager.fixed_update = function (self, dt, t, frame)
 	self._in_fixed_update = true
+
 	local temp_byte_count = Script.temp_byte_count()
 
 	self._extension_system_holder:fixed_update(dt, t, frame)
@@ -189,12 +195,12 @@ end
 ExtensionManager.add_unit_extensions = function (self, world, unit, extension_config, game_object_data_or_session, ...)
 	local ignore_extensions_list = self._ignore_extensions_list
 	local extension_to_system_map = self._extension_to_system_map
-	local self_units = self._units
-	local self_extensions = self._extensions
-	local self_systems = self._systems
+	local self_units, self_extensions, self_systems = self._units, self._extensions, self._systems
 	local unit_extensions_list = self._unit_extensions_list
 	local extension_list = {}
+
 	unit_extensions_list[unit] = extension_list
+
 	local num_extensions = extension_config:num_extensions()
 
 	if num_extensions == 0 then
@@ -218,6 +224,7 @@ ExtensionManager.add_unit_extensions = function (self, world, unit, extension_co
 	for i = 1, num_extensions do
 		repeat
 			local name, init_args, _ = extension_config:extension(i)
+
 			extension_list[#extension_list + 1] = name
 
 			if ignore_extensions_list[name] then
@@ -229,12 +236,15 @@ ExtensionManager.add_unit_extensions = function (self, world, unit, extension_co
 
 			if unit_in_runtime_loaded_level and not system:run_in_runtime_loaded_level() then
 				extension_list[#extension_list] = nil
-			else
-				local extension = system:on_add_extension(world, unit, name, init_args, game_object_data_or_session, ...)
-				self_extensions[name] = self_extensions[name] or {}
-				self_units[unit] = self_units[unit] or {}
-				self_units[unit][name] = extension
+
+				break
 			end
+
+			local extension = system:on_add_extension(world, unit, name, init_args, game_object_data_or_session, ...)
+
+			self_extensions[name] = self_extensions[name] or {}
+			self_units[unit] = self_units[unit] or {}
+			self_units[unit][name] = extension
 		until true
 	end
 
@@ -331,6 +341,7 @@ ExtensionManager.register_unit = function (self, world, unit, optional_category)
 
 	if optional_category then
 		local category_table = self._unit_categories[optional_category]
+
 		category_table[unit] = unit
 
 		Unit.set_data(unit, "__unit_category", optional_category)
@@ -339,6 +350,7 @@ end
 
 ExtensionManager.add_and_register_units = function (self, world, unit_list, num_units, optional_category)
 	num_units = num_units or #unit_list
+
 	local added_list = TEMP_TABLE
 	local num_added = 0
 
@@ -366,6 +378,7 @@ ExtensionManager.add_and_register_units = function (self, world, unit_list, num_
 
 		for i = 1, num_units do
 			local unit = unit_list[i]
+
 			category_table[unit] = unit
 
 			Unit.set_data(unit, "__unit_category", optional_category)
@@ -379,6 +392,7 @@ end
 
 ExtensionManager.init_time_slice_add_and_register_level_units = function (self, world, unit_list, optional_category)
 	local time_slice_unit_registration_data = self._time_slice_unit_registration_data
+
 	time_slice_unit_registration_data.last_index = 0
 	time_slice_unit_registration_data.ready = false
 	time_slice_unit_registration_data.parameters.world = world
@@ -394,7 +408,7 @@ ExtensionManager.update_time_slice_add_and_register_level_units = function (self
 	local unit_list = time_slice_unit_registration_data.parameters.unit_list_to_register
 	local num_units = time_slice_unit_registration_data.parameters.num_units
 	local optional_category = time_slice_unit_registration_data.parameters.optional_category
-	local category_table = nil
+	local category_table
 
 	if optional_category then
 		category_table = self._unit_categories[optional_category]
@@ -468,6 +482,7 @@ ExtensionManager.register_units_extensions = function (self, unit_list, num_unit
 
 			for extension_name, extension in pairs(unit_extensions) do
 				self_extensions[extension_name][unit] = extension
+
 				local system = systems[systems_map[extension_name]]
 
 				system:register_extension_update(unit, extension_name, extension)
@@ -552,8 +567,7 @@ ExtensionManager.unregister_unit_category = function (self, category)
 end
 
 ExtensionManager.unregister_units = function (self, units, num_units, unregister_from_level_units)
-	local self_units = self._units
-	local self_extensions = self._extensions
+	local self_units, self_extensions = self._units, self._extensions
 	local unit_extensions_list = self._unit_extensions_list
 	local ignore_extensions_list = self._ignore_extensions_list
 
@@ -601,6 +615,7 @@ ExtensionManager.unregister_units = function (self, units, num_units, unregister
 
 			self_units[unit] = nil
 			unit_extensions_list[unit] = nil
+
 			local position_lookup_manager = Managers.state.position_lookup
 
 			if position_lookup_manager then
@@ -616,6 +631,7 @@ ExtensionManager.add_ignore_extensions = function (self, ignore_extensions)
 
 	for i = 1, num_extensions do
 		local extension_name = ignore_extensions[i]
+
 		ignore_extensions_list[extension_name] = true
 	end
 end
@@ -646,11 +662,13 @@ ExtensionManager.fixed_update_resimulate_unit = function (self, unit, from_frame
 	for extension_name, extension in pairs(extensions) do
 		if extension.fixed_update then
 			local system_name = extension_to_system_map[extension_name]
+
 			TEMP_SYSTEM_MAP[system_name] = extension_name
 		end
 
 		if extension.server_correction_occurred then
 			local system_name = extension_to_system_map[extension_name]
+
 			SERVER_CORRECTION_SYSTEM_MAP[system_name] = extension_name
 		end
 	end

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/splash_view/splash_view.lua
+
 local Definitions = require("scripts/ui/views/splash_view/splash_view_definitions")
 local SplashViewSettings = require("scripts/ui/views/splash_view/splash_view_settings")
 local SplashPageDefinitions = require("scripts/ui/views/splash_view/splash_view_page_definitions")
@@ -36,6 +38,7 @@ end
 
 SplashView._setup_input_legend = function (self)
 	self._input_legend_element = self:_add_element(ViewElementInputLegend, "input_legend", 100)
+
 	local legend_inputs = SplashPageDefinitions.legend_inputs
 	local input_legends_by_key = {}
 
@@ -78,6 +81,7 @@ SplashView._setup_input_legend = function (self)
 				}
 			}
 		}, entry_widget.scenegraph_id)
+
 		self._skip_bar_widget = self:_create_widget("skip", widget_definition)
 	end
 end
@@ -148,6 +152,7 @@ SplashView.draw = function (self, dt, t, input_service, layer)
 		local position = self._input_legend_element:scenegraph_position(entry_widget.scenegraph_id)
 		local width = 100
 		local z_offset = render_settings.draw_layer or 0
+
 		z_offset = z_offset + self._input_legend_element._draw_layer + 1
 		self._skip_bar_widget.offset = {
 			position[1] + entry_widget.offset[1] + (entry_widget.content.size[1] - width) * 0.5,
@@ -158,7 +163,9 @@ SplashView.draw = function (self, dt, t, input_service, layer)
 			width,
 			5
 		}
+
 		local progress = UISettings.cutscenes_skip.hold_time and math.min(self._hold_timer / UISettings.cutscenes_skip.hold_time, 1) or 1
+
 		self._skip_bar_widget.style.fill.size[1] = width * progress
 
 		UIRenderer.begin_pass(ui_renderer, ui_scenegraph, input_service, dt, render_settings)
@@ -200,7 +207,7 @@ SplashView._draw_widgets = function (self, dt, t, input_service, ui_renderer)
 			local page_duration = page.duration
 			local alpha_multiplier = 1
 			local local_time = current_time - total_page_duration
-			local draw = page_duration >= local_time
+			local draw = local_time <= page_duration
 
 			if draw then
 				if not page.initialized then
@@ -221,9 +228,11 @@ SplashView._draw_widgets = function (self, dt, t, input_service, ui_renderer)
 
 				if local_time < time_between_pages then
 					local pause_progress = math.clamp(local_time / time_between_pages, 0, 1)
+
 					alpha_multiplier = math.easeInCubic(pause_progress)
 				elseif local_time > local_time - time_between_pages then
 					local pause_progress = math.clamp((page_duration - local_time) / time_between_pages, 0, 1)
+
 					alpha_multiplier = math.easeOutCubic(pause_progress)
 				end
 
@@ -329,6 +338,7 @@ SplashView._on_skip_pressed = function (self)
 		for i = 1, #page_definitions do
 			local page = page_definitions[i]
 			local page_duration = page.duration
+
 			total_page_duration = total_page_duration + page_duration
 
 			if current_time < total_page_duration then
@@ -368,13 +378,13 @@ SplashView.update = function (self, dt, t, input_service)
 		end
 	end
 
-	if UISettings.cutscenes_skip.hold_time < self._hold_timer then
+	if self._hold_timer > UISettings.cutscenes_skip.hold_time then
 		self._legend_active = 0
 		self._hold_timer = 0
 		self._show_skip = false
 
 		self:_on_skip_pressed()
-	elseif UISettings.cutscenes_skip.fade_inactivity_time < self._legend_active then
+	elseif self._legend_active > UISettings.cutscenes_skip.fade_inactivity_time then
 		self._show_skip = false
 		self._legend_active = 0
 		self._hold_timer = 0
@@ -412,7 +422,7 @@ SplashView.update = function (self, dt, t, input_service)
 	if not self._done then
 		self._current_time = self._current_time + dt
 
-		if self._total_duration <= self._current_time then
+		if self._current_time >= self._total_duration then
 			self._done = true
 		end
 	end

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/utilities/experience.lua
+
 local Experience = {}
 
 Experience.required_experience_for_level = function (experience_settings, level)
@@ -18,6 +20,7 @@ end
 
 Experience.get_level = function (experience_settings, experience)
 	experience = experience or 0
+
 	local exp_total = 0
 	local level = 0
 	local progress = 0
@@ -32,6 +35,7 @@ Experience.get_level = function (experience_settings, experience)
 
 	for i = 1, max_level do
 		local previous_exp_total = exp_total
+
 		exp_total = exp_total + experience_per_level_array[i]
 
 		if experience == exp_total then

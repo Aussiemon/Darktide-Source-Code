@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/components/destructible.lua
+
 local Component = require("scripts/utilities/component")
 local Destructible = component("Destructible")
 
@@ -5,6 +7,7 @@ Destructible.init = function (self, unit, is_server)
 	self._unit = unit
 	self._is_server = is_server
 	self._enabled = self:get_data(unit, "start_enabled")
+
 	local destructible_extension = ScriptUnit.has_extension(unit, "destructible_system")
 
 	if destructible_extension then

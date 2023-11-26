@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/hud/elements/player_ability_handler/hud_element_player_ability_handler_settings.lua
+
 local ability_size = {
 	92,
 	80

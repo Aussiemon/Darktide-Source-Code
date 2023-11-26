@@ -1,7 +1,10 @@
+﻿-- chunkname: @scripts/managers/ui/ui_unit_spawner.lua
+
 local GrowQueue = require("scripts/foundation/utilities/grow_queue")
 local Unit_alive = Unit.alive
 local UIUnitSpawner = class("UIUnitSpawner")
 local DELETION_STATES = table.enum("default", "in_network_layers", "removing_units")
+
 UIUnitSpawner.DELETION_STATES = DELETION_STATES
 
 UIUnitSpawner.init = function (self, world)
@@ -17,7 +20,7 @@ UIUnitSpawner.destroy = function (self)
 end
 
 UIUnitSpawner.remove_pending_units = function (self)
-	local num_removed = nil
+	local num_removed
 
 	repeat
 		num_removed = self:_remove_units_marked_for_deletion()
@@ -43,6 +46,7 @@ UIUnitSpawner._remove_units_marked_for_deletion = function (self)
 	end
 
 	local temp_deleted_units_list = self._temp_units_list
+
 	self._num_deleted_units = 0
 
 	self:_set_deletion_state(DELETION_STATES.removing_units)
@@ -59,8 +63,7 @@ UIUnitSpawner._remove_units_marked_for_deletion = function (self)
 
 	self:_set_deletion_state(DELETION_STATES.default)
 
-	local world = self._world
-	local num_deleted_units = self._num_deleted_units
+	local world, num_deleted_units = self._world, self._num_deleted_units
 
 	self:_world_delete_units(world, temp_deleted_units_list, num_deleted_units)
 

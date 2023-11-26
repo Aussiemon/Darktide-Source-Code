@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/behavior/nodes/actions/bt_chaos_hound_target_pounced_action.lua
+
 require("scripts/extension_systems/behavior/nodes/bt_node")
 
 local Attack = require("scripts/utilities/attack/attack")
@@ -10,14 +12,20 @@ local BtChaosHoundTargetPouncedAction = class("BtChaosHoundTargetPouncedAction",
 
 BtChaosHoundTargetPouncedAction.enter = function (self, unit, breed, blackboard, scratchpad, action_data, t)
 	local behavior_component = Blackboard.write_component(blackboard, "behavior")
+
 	behavior_component.move_state = "attacking"
+
 	local pounce_component = Blackboard.write_component(blackboard, "pounce")
+
 	scratchpad.pounce_component = pounce_component
+
 	local animation_extension = ScriptUnit.extension(unit, "animation_system")
+
 	scratchpad.animation_extension = animation_extension
 	scratchpad.locomotion_extension = ScriptUnit.extension(unit, "locomotion_system")
 	scratchpad.start_position_boxed = Vector3Box(POSITION_LOOKUP[unit])
 	scratchpad.lerp_position_duration = t + action_data.lerp_position_time
+
 	local pounce_target = pounce_component.pounce_target
 	local target_unit_data_extension = ScriptUnit.extension(pounce_target, "unit_data_system")
 	local target_unit_breed_name = target_unit_data_extension:breed_name()
@@ -26,6 +34,7 @@ BtChaosHoundTargetPouncedAction.enter = function (self, unit, breed, blackboard,
 	animation_extension:anim_event(pounce_anim_event)
 
 	local disabled_state_input = target_unit_data_extension:write_component("disabled_state_input")
+
 	disabled_state_input.wants_disable = true
 	disabled_state_input.disabling_unit = unit
 	disabled_state_input.disabling_type = "pounced"
@@ -33,8 +42,11 @@ BtChaosHoundTargetPouncedAction.enter = function (self, unit, breed, blackboard,
 	scratchpad.disabled_character_state_component = target_unit_data_extension:read_component("disabled_character_state")
 	scratchpad.disabled_state_input_component = disabled_state_input
 	scratchpad.target_character_state_component = target_unit_data_extension:read_component("character_state")
+
 	local record_state_component = Blackboard.write_component(blackboard, "record_state")
+
 	scratchpad.record_state_component = record_state_component
+
 	local initial_damage_profile = action_data.initial_damage_profile
 
 	self:_damage_target(unit, pounce_target, action_data, action_data.impact_power_level, initial_damage_profile)
@@ -42,14 +54,12 @@ BtChaosHoundTargetPouncedAction.enter = function (self, unit, breed, blackboard,
 	local explosion_template = action_data.enter_explosion_template
 
 	if explosion_template then
-		local power_level = action_data.explosion_power_level
-		local charge_level = 1
+		local power_level, charge_level = action_data.explosion_power_level, 1
 		local explosion_attack_type = AttackSettings.attack_types.explosion
 		local up = Quaternion.up(Unit.local_rotation(unit, 1))
 		local explosion_position = POSITION_LOOKUP[unit] + up * 0.1
 		local spawn_component = blackboard.spawn
-		local world = spawn_component.world
-		local physics_world = spawn_component.physics_world
+		local world, physics_world = spawn_component.world, spawn_component.physics_world
 
 		Explosion.create_explosion(world, physics_world, explosion_position, up, unit, explosion_template, power_level, charge_level, explosion_attack_type)
 	end
@@ -57,10 +67,13 @@ end
 
 BtChaosHoundTargetPouncedAction.init_values = function (self, blackboard)
 	local pounce_component = Blackboard.write_component(blackboard, "pounce")
+
 	pounce_component.pounce_target = nil
 	pounce_component.pounce_cooldown = 0
 	pounce_component.started_leap = false
+
 	local record_state_component = Blackboard.write_component(blackboard, "record_state")
+
 	record_state_component.has_disabled_player = false
 end
 
@@ -77,6 +90,7 @@ BtChaosHoundTargetPouncedAction.leave = function (self, unit, breed, blackboard,
 	scratchpad.locomotion_extension:set_movement_type("snap_to_navmesh")
 
 	local cooldown = Managers.state.difficulty:get_table_entry_by_challenge(MinionDifficultySettings.cooldowns.chaos_hound_pounce)
+
 	pounce_component.pounce_cooldown = t + cooldown
 end
 
@@ -106,7 +120,7 @@ BtChaosHoundTargetPouncedAction.run = function (self, unit, breed, blackboard, s
 		end
 	end
 
-	if scratchpad.next_damage_t < t then
+	if t > scratchpad.next_damage_t then
 		self:_damage_target(unit, pounce_target, action_data, action_data.power_level)
 
 		scratchpad.next_damage_t = t + action_data.damage_frequency
@@ -150,6 +164,7 @@ end
 
 BtChaosHoundTargetPouncedAction._damage_target = function (self, unit, pounce_target, action_data, power_level_table, damage_profile)
 	damage_profile = damage_profile or action_data.damage_profile
+
 	local power_level = Managers.state.difficulty:get_table_entry_by_challenge(power_level_table)
 	local jaw_node = Unit.node(unit, action_data.hit_position_node)
 	local hit_position = Unit.world_position(unit, jaw_node)

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/camera/hub_camera_settings.lua
+
 local hub_camera_settings = {
 	camera_speed_zoom_in_speed = 1,
 	camera_speed_zoom_out_speed = 1,

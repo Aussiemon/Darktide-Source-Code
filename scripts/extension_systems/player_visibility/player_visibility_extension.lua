@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/player_visibility/player_visibility_extension.lua
+
 local PlayerVisibilityExtension = class("PlayerVisibilityExtension")
 
 PlayerVisibilityExtension.init = function (self, extension_init_context, unit, extension_init_data, ...)
@@ -7,6 +9,7 @@ PlayerVisibilityExtension.init = function (self, extension_init_context, unit, e
 	self._unit_tbl = {
 		unit
 	}
+
 	local first_person_extension = ScriptUnit.has_extension(unit, "first_person_system")
 
 	if first_person_extension then

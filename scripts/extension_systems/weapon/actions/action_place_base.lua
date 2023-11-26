@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/weapon/actions/action_place_base.lua
+
 require("scripts/extension_systems/weapon/actions/action_weapon_base")
 
 local AimPlaceUtil = require("scripts/extension_systems/weapon/actions/utilities/aim_place_util")
@@ -9,6 +11,7 @@ ActionPlaceBase.init = function (self, action_context, ...)
 	ActionPlaceBase.super.init(self, action_context, ...)
 
 	local unit_data_extension = action_context.unit_data_extension
+
 	self._action_component = unit_data_extension:write_component("action_place")
 	self._weapon_system = Managers.state.extension:system("weapon_system")
 end
@@ -18,6 +21,7 @@ ActionPlaceBase.start = function (self, action_settings, t, time_scale, action_s
 
 	local can_place, position, rotation, placed_on_unit = self:_get_placement_data()
 	local action_component = self._action_component
+
 	action_component.can_place = can_place
 	action_component.position = position
 	action_component.rotation = rotation

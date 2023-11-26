@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/talent_builder_view/layouts/ogryn_tree.lua
+
 return {
 	name = "ogryn_tree",
 	node_points = 30,

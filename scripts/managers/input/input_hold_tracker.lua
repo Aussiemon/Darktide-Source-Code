@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/input/input_hold_tracker.lua
+
 local InputUtils = require("scripts/managers/input/input_utils")
 local InputHoldTracker = class("InputHoldTracker")
 
@@ -13,6 +15,7 @@ end
 InputHoldTracker.start_tracking = function (self, action_name, time_completed, cb_completed)
 	local action_type = self._input_service:get_action_type(action_name)
 	local id = self._track_id + 1
+
 	self._track_id = id
 	self._tracked_actions[id] = {
 		time_held = 0,
@@ -44,7 +47,7 @@ InputHoldTracker.update = function (self, dt)
 		if input_service:get(action_name) then
 			time_held = time_held + dt
 
-			if data.time_completed <= time_held then
+			if time_held >= data.time_completed then
 				data.cb_completed()
 
 				self._tracked_actions[id] = nil

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/cinematic_video/hub_location_introduction_settings.lua
+
 hub_location_introduction_settings = {
 	mission_board_view = {
 		video_template = "hli_mission_board",

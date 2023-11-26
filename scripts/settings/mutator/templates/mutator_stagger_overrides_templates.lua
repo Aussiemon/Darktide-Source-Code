@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/mutator/templates/mutator_stagger_overrides_templates.lua
+
 local StaggerSettings = require("scripts/settings/damage/stagger_settings")
 local stagger_types = StaggerSettings.stagger_types
 local mutator_templates = {

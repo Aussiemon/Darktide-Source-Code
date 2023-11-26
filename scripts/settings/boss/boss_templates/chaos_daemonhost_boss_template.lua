@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/boss/boss_templates/chaos_daemonhost_boss_template.lua
+
 local ChaosDaemonhostSettings = require("scripts/settings/monster/chaos_daemonhost_settings")
 local Vo = require("scripts/utilities/vo")
 local STAGES = ChaosDaemonhostSettings.stages
@@ -12,9 +14,12 @@ local template = {
 	name = "chaos_daemonhost",
 	start = function (template_data, template_context)
 		local unit = template_data.unit
+
 		template_data.game_session = Managers.state.game_session:game_session()
 		template_data.game_object_id = Managers.state.unit_spawner:game_object_id(unit)
+
 		local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
+
 		template_data.breed = unit_data_extension:breed()
 		template_data.next_vo_trigger_t = 0
 	end,
@@ -23,8 +28,7 @@ local template = {
 			return
 		end
 
-		local game_session = template_data.game_session
-		local game_object_id = template_data.game_object_id
+		local game_session, game_object_id = template_data.game_session, template_data.game_object_id
 		local stage = GameSession.game_object_field(game_session, game_object_id, "stage")
 
 		if stage ~= STAGES.aggroed then

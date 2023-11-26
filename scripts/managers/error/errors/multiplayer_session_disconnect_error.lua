@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/error/errors/multiplayer_session_disconnect_error.lua
+
 local ErrorCodes = require("scripts/managers/error/error_codes")
 local ErrorInterface = require("scripts/managers/error/errors/error_interface")
 local ErrorManager = require("scripts/managers/error/error_manager")
@@ -5,6 +7,7 @@ local MultiplayerSessionDisconnectError = class("MultiplayerSessionDisconnectErr
 
 MultiplayerSessionDisconnectError.init = function (self, error_source, error_reason, optional_error_details)
 	self._error_reason = error_reason
+
 	local error_details = "n/a"
 
 	if optional_error_details then

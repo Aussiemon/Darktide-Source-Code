@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/behavior/nodes/actions/bt_sniper_movement_action.lua
+
 require("scripts/extension_systems/behavior/nodes/bt_node")
 
 local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
@@ -5,6 +7,7 @@ local MainPathQueries = require("scripts/utilities/main_path_queries")
 local MinionMovement = require("scripts/utilities/minion_movement")
 local NavQueries = require("scripts/utilities/nav_queries")
 local BtSniperMovementAction = class("BtSniperMovementAction", "BtNode")
+
 BtSniperMovementAction.TIME_TO_FIRST_EVALUATE = {
 	2,
 	2.5
@@ -16,19 +19,27 @@ BtSniperMovementAction.CONSECUTIVE_EVALUATE_INTERVAL = {
 
 BtSniperMovementAction.enter = function (self, unit, breed, blackboard, scratchpad, action_data, t)
 	local navigation_extension = ScriptUnit.extension(unit, "navigation_system")
+
 	scratchpad.animation_extension = ScriptUnit.extension(unit, "animation_system")
 	scratchpad.locomotion_extension = ScriptUnit.extension(unit, "locomotion_system")
 	scratchpad.navigation_extension = navigation_extension
 	scratchpad.nav_world = navigation_extension:nav_world()
+
 	local astar = GwNavAStar.create(scratchpad.nav_world)
+
 	scratchpad.astar = astar
+
 	local cover_component = Blackboard.write_component(blackboard, "cover")
+
 	scratchpad.behavior_component = Blackboard.write_component(blackboard, "behavior")
 	scratchpad.cover_component = cover_component
 	scratchpad.perception_component = blackboard.perception
 	scratchpad.stagger_component = Blackboard.write_component(blackboard, "stagger")
+
 	local combat_vector_component = blackboard.combat_vector
+
 	scratchpad.combat_vector_component = combat_vector_component
+
 	local run_speed = breed.run_speed
 
 	navigation_extension:set_enabled(true, run_speed)
@@ -86,28 +97,28 @@ BtSniperMovementAction.run = function (self, unit, breed, blackboard, scratchpad
 	end
 
 	local should_start_idle, should_be_idling = MinionMovement.should_start_idle(scratchpad, behavior_component)
-	local should_evaluate = not scratchpad.running_stagger_block_evaluate and scratchpad.time_to_next_evaluate <= t
+	local should_evaluate = not scratchpad.running_stagger_block_evaluate and t >= scratchpad.time_to_next_evaluate
 
 	if should_start_idle or should_be_idling then
 		if should_start_idle then
 			MinionMovement.start_idle(scratchpad, behavior_component, action_data)
 		end
 
-		local evaluate = not scratchpad.running_stagger_block_evaluate and scratchpad.time_to_next_evaluate < t
+		local evaluate = not scratchpad.running_stagger_block_evaluate and t > scratchpad.time_to_next_evaluate
 
 		return "running", evaluate
 	end
 
 	local move_type = self:_get_move_type(scratchpad, action_data)
 
-	if move_state ~= "moving" or move_type ~= scratchpad.current_move_type and scratchpad.move_type_switch_stickiness <= t then
+	if move_state ~= "moving" or move_type ~= scratchpad.current_move_type and t >= scratchpad.move_type_switch_stickiness then
 		self:_start_move_anim(unit, t, behavior_component, scratchpad, action_data, move_type)
 
 		scratchpad.current_move_type = move_type
 		scratchpad.move_type_switch_stickiness = t + action_data.move_type_switch_stickiness
 	end
 
-	if scratchpad.is_anim_driven and scratchpad.start_rotation_timing and scratchpad.start_rotation_timing <= t then
+	if scratchpad.is_anim_driven and scratchpad.start_rotation_timing and t >= scratchpad.start_rotation_timing then
 		MinionMovement.update_anim_driven_start_rotation(unit, scratchpad, action_data, t)
 	end
 
@@ -123,7 +134,7 @@ end
 BtSniperMovementAction._start_move_anim = function (self, unit, t, behavior_component, scratchpad, action_data, move_type)
 	local animation_extension = scratchpad.animation_extension
 	local path_distance = scratchpad.navigation_extension:remaining_distance_from_progress_to_end_of_path()
-	local should_use_anim_driven_event = action_data.anim_driven_min_distance <= path_distance
+	local should_use_anim_driven_event = path_distance >= action_data.anim_driven_min_distance
 	local start_move_anim_events = action_data.start_move_anim_events
 	local anim_events = start_move_anim_events
 
@@ -137,6 +148,7 @@ BtSniperMovementAction._start_move_anim = function (self, unit, t, behavior_comp
 			MinionMovement.set_anim_driven(scratchpad, true)
 
 			local start_rotation_timing = action_data.start_move_rotation_timings[start_move_event]
+
 			scratchpad.start_rotation_timing = t + start_rotation_timing
 			scratchpad.move_start_anim_event_name = start_move_event
 		else
@@ -211,7 +223,7 @@ end
 
 BtSniperMovementAction._start_astar = function (self, unit, scratchpad, action_data)
 	local astar_index = scratchpad.astar_index
-	local astar_position = nil
+	local astar_position
 	local valid_destinations = scratchpad.valid_destinations
 
 	if valid_destinations[astar_index] ~= 0 then
@@ -225,6 +237,7 @@ BtSniperMovementAction._start_astar = function (self, unit, scratchpad, action_d
 	end
 
 	scratchpad.astar_index = scratchpad.astar_index - 1
+
 	local traverse_logic = scratchpad.navigation_extension:traverse_logic()
 	local navmesh_position = astar_position and NavQueries.position_on_mesh_with_outside_position(scratchpad.nav_world, traverse_logic, astar_position, 1, 1, 1)
 
@@ -277,14 +290,14 @@ BtSniperMovementAction._evaluate_destinations = function (self, unit, scratchpad
 
 		for i = 2, node_count do
 			local node = GwNavAStar.node_at_index(astar, i)
-			local num_results = broadphase:query(node, BROADPHASE_RADIUS, BROADPHASE_RESULTS, target_side_names)
+			local num_results = broadphase.query(broadphase, node, BROADPHASE_RADIUS, BROADPHASE_RESULTS, target_side_names)
 
 			for j = 1, num_results do
 				local result = BROADPHASE_RESULTS[j]
 				local pos = POSITION_LOOKUP[result]
 				local distance = Vector3.distance(pos, self_position)
 
-				if MAX_DISTANCE_FROM_TARGETS_IN_BROADPHASE < distance then
+				if distance > MAX_DISTANCE_FROM_TARGETS_IN_BROADPHASE then
 					path_is_valid = false
 
 					break

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/visual_loadout/wieldable_slot_scripts/chain_lightning_hand_effects.lua
+
 local Action = require("scripts/utilities/weapon/action")
 local ChainLightningHandEffects = class("ChainLightningHandEffects")
 local Unit_world_position = Unit.world_position
@@ -13,6 +15,7 @@ ChainLightningHandEffects.init = function (self, context, slot, weapon_template,
 	self._weapon_actions = weapon_template.actions
 	self._wwise_world = context.wwise_world
 	self._first_person_unit = context.first_person_unit
+
 	local weapon_chain_settings = weapon_template.chain_settings
 	local right_fx_source_name = fx_sources[weapon_chain_settings.right_fx_source_name]
 	local left_fx_source_name = fx_sources[weapon_chain_settings.left_fx_source_name]
@@ -30,9 +33,13 @@ ChainLightningHandEffects.init = function (self, context, slot, weapon_template,
 	self._is_in_first_person = nil
 	self._right_hand_particle_id = nil
 	self._left_hand_particle_id = nil
+
 	local owner_unit = context.owner_unit
+
 	self._fx_extension = ScriptUnit.extension(owner_unit, "fx_system")
+
 	local unit_data_extension = ScriptUnit.extension(owner_unit, "unit_data_system")
+
 	self._action_module_charge_component = unit_data_extension:read_component("action_module_charge")
 	self._critical_strike_component = unit_data_extension:read_component("critical_strike")
 	self._weapon_action_component = unit_data_extension:read_component("weapon_action")
@@ -68,7 +75,9 @@ ChainLightningHandEffects._update_vfx = function (self, t)
 	local use_charge = fx_settings and fx_settings.use_charge
 	local action_module_charge_component = self._action_module_charge_component
 	local charge_level = use_charge and action_module_charge_component.charge_level or 1
+
 	self._charge_level = charge_level
+
 	local action_kind = action_settings and action_settings.kind
 	local targeting = action_kind == "overload_charge_target_finder" or action_kind == "overload_target_finder"
 	local attacking = action_kind == "chain_lightning" or action_kind == "chain_lightning_powerup"
@@ -81,13 +90,17 @@ ChainLightningHandEffects._update_vfx = function (self, t)
 
 		if play_right then
 			self._right_hand_particle_id = self:_update_hand_vfx(t, world, self._right_hand_particle_id, spawner_unit_right, spawner_node_right)
+
 			local has_any_particle_effect = self._right_hand_particle_id ~= nil
+
 			self._no_target_particle_right_id = self:_update_no_target_vfx(t, world, self._no_target_particle_right_id, has_any_particle_effect, spawner_unit_right, spawner_node_right)
 		end
 
 		if play_left then
 			self._left_hand_particle_id = self:_update_hand_vfx(t, world, self._left_hand_particle_id, spawner_unit_left, spawner_node_left)
+
 			local has_any_particle_effect = self._left_hand_particle_id ~= nil
+
 			self._no_target_particle_left_id = self:_update_no_target_vfx(t, world, self._no_target_particle_left_id, has_any_particle_effect, spawner_unit_left, spawner_node_left)
 		end
 	elseif targeting then
@@ -173,6 +186,7 @@ end
 
 ChainLightningHandEffects._reset = function (self)
 	local world = self._world
+
 	self._right_hand_particle_id = self:_stop_vfx(world, self._right_hand_particle_id)
 	self._left_hand_particle_id = self:_stop_vfx(world, self._left_hand_particle_id)
 	self._no_target_particle_right_id = self:_stop_vfx(world, self._no_target_particle_right_id)

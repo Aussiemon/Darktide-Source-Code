@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/components/minion_customization.lua
+
 local VisualLoadoutCustomization = require("scripts/extension_systems/visual_loadout/utilities/visual_loadout_customization")
 local MasterItems = require("scripts/backend/master_items")
 local LocalLoader = require("scripts/settings/equipment/local_items_loader")
@@ -6,6 +8,7 @@ local MinionCustomization = component("MinionCustomization")
 MinionCustomization.editor_init = function (self, unit)
 	local in_editor = true
 	local world = Unit.world(unit)
+
 	self._unit = unit
 	self._world = world
 	self._in_editor = in_editor
@@ -24,6 +27,7 @@ MinionCustomization.init = function (self, unit)
 
 	local in_editor = false
 	local world = Unit.world(unit)
+
 	self._unit = unit
 	self._world = world
 	self._in_editor = in_editor
@@ -77,6 +81,7 @@ MinionCustomization._customize = function (self, unit, item_definitions)
 	local attach_settings = self._attach_settings
 	local item_table = self:get_data(unit, "attachment_items")
 	local global_material_override_table = self:get_data(unit, "global_material_override")
+
 	attach_settings.item_definitions = item_definitions or attach_settings.item_definitions
 
 	self:spawn_items(item_table)

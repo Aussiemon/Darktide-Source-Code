@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/hud/elements/wield_info/training_grounds_wield_info_passives_templates.lua
+
 local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
 local SLOT_DEVICE_NAME = "slot_device"
 local SLOT_GRENADE_NAME = "slot_grenade_ability"

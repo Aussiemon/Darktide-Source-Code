@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/backend/game_settings.lua
+
 local Promise = require("scripts/foundation/utilities/promise")
 local BackendUtilities = require("scripts/foundation/managers/backend/utilities/backend_utilities")
 local GameSettings = class("GameSettings")
@@ -18,7 +20,7 @@ GameSettings.resolve_backend_game_settings = function (self)
 		local parsed = {}
 
 		for param, value in pairs(data.properties) do
-			local parsed_value = nil
+			local parsed_value
 
 			if value.S then
 				parsed_value = value.S

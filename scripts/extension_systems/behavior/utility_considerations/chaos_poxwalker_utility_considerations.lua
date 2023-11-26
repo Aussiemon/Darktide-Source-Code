@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/behavior/utility_considerations/chaos_poxwalker_utility_considerations.lua
+
 local considerations = {
 	chaos_poxwalker_moving_melee_attack = {
 		slot_distance = {

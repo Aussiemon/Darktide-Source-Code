@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/character_state_machine/character_states/player_character_state_ladder_climbing.lua
+
 require("scripts/extension_systems/character_state_machine/character_states/player_character_state_base")
 
 local DisruptiveStateTransition = require("scripts/extension_systems/character_state_machine/character_states/utilities/disruptive_state_transition")
@@ -34,6 +36,7 @@ end
 PlayerCharacterStateLadderClimbing.on_enter = function (self, unit, dt, t, previous_state, params)
 	local ladder_unit = params.ladder_unit
 	local locomotion_steering = self._locomotion_steering_component
+
 	locomotion_steering.move_method = "script_driven"
 	locomotion_steering.calculate_fall_velocity = false
 
@@ -98,7 +101,9 @@ PlayerCharacterStateLadderClimbing.fixed_update = function (self, unit, dt, t, n
 	local player_rotation = self._first_person_component.rotation
 	local ladder_rotation = Unit.world_rotation(ladder_unit, 1)
 	local _, velocity = self:_move_on_ladder(move_x, move_y, player_rotation, ladder_rotation, unit, ladder_unit)
+
 	self._locomotion_steering_component.velocity_wanted = velocity
+
 	local transition = self:_check_transition(unit, ladder_unit, t, next_state_params)
 
 	return transition
@@ -156,7 +161,7 @@ PlayerCharacterStateLadderClimbing._check_transition = function (self, unit, lad
 
 	if not colliding then
 		local ladder_top_pos = Unit.world_position(ladder_unit, Unit.node(ladder_unit, LADDER_TOP_NODE))
-		local above_climb_off_height = ladder_top_pos.z < position.z
+		local above_climb_off_height = position.z > ladder_top_pos.z
 
 		if above_climb_off_height and velocity_current.z > 0 then
 			next_state_params.ladder_unit = ladder_unit
@@ -199,7 +204,9 @@ PlayerCharacterStateLadderClimbing._move_on_ladder = function (self, move_x, mov
 	local player_pitch = Quaternion.pitch(player_rotation)
 	local pitch_value = player_pitch + constants.climb_pitch_offset
 	local speed_lerp_interval = math.degrees_to_radians(constants.climb_speed_lerp_interval)
+
 	pitch_value = math.clamp(math.auto_lerp(-speed_lerp_interval, speed_lerp_interval, -1, 1, pitch_value), -1, 1)
+
 	local looking_down = pitch_value < 0
 	local has_movement_x = math.abs(move_x) > 0
 	local has_movement_y = math.abs(move_y) > 0
@@ -208,7 +215,7 @@ PlayerCharacterStateLadderClimbing._move_on_ladder = function (self, move_x, mov
 	local moving_backward = not moving_forward
 	local mover_collides_down = Mover.collides_down(Unit.mover(unit))
 	local on_ground = mover_collides_down and (looking_down and moving_forward or moving_backward)
-	local x_input, y_input = nil
+	local x_input, y_input
 
 	if on_ground then
 		x_input = move_x * percentage_to_increase_x_input
@@ -221,7 +228,7 @@ PlayerCharacterStateLadderClimbing._move_on_ladder = function (self, move_x, mov
 		end
 
 		if has_movement_y then
-			local percentage_to_increase_y_input = nil
+			local percentage_to_increase_y_input
 
 			if not looking_down then
 				percentage_to_increase_y_input = 1 - (1 - pitch_value) * (1 - pitch_value)
@@ -239,10 +246,11 @@ PlayerCharacterStateLadderClimbing._move_on_ladder = function (self, move_x, mov
 		end
 	end
 
-	local direction = nil
+	local direction
 
 	if on_ground then
 		local flat_player_rotation = Quaternion.look(Vector3.flat(Quaternion.forward(player_rotation)), Vector3.up())
+
 		direction = Quaternion.rotate(flat_player_rotation, Vector3(x_input, y_input, 0))
 	else
 		direction = Quaternion.rotate(ladder_rotation, Vector3(x_input, 0, y_input))
@@ -272,7 +280,7 @@ end
 PlayerCharacterStateLadderClimbing._on_ladder_animation = function (self, unit, velocity, ladder_unit, animation_extension)
 	local movement_state = self._movement_state_component
 	local move_method = movement_state.method
-	local moving = Z_MOVE_EPSILON < math.abs(velocity.z)
+	local moving = math.abs(velocity.z) > Z_MOVE_EPSILON
 
 	if not moving and move_method ~= move_methods.ladder_idle then
 		movement_state.method = move_methods.ladder_idle
@@ -288,7 +296,7 @@ end
 local FOOTSTEP_MIN_INTERVAL = 0.1
 
 PlayerCharacterStateLadderClimbing._on_ladder_footsteps = function (self, t, unit, velocity, position_1p, position_3p, ladder_unit)
-	if self._earliest_next_footstep <= t then
+	if t >= self._earliest_next_footstep then
 		local bottom_pos = Unit.world_position(ladder_unit, Unit.node(ladder_unit, LADDER_BOTTOM_NODE))
 		local distance_from_bottom = position_3p.z - bottom_pos.z
 		local closest_rung_index = math.round(distance_from_bottom / DOUBLE_RUNG_DISTANCE)
@@ -298,6 +306,7 @@ PlayerCharacterStateLadderClimbing._on_ladder_footsteps = function (self, t, uni
 
 		if not is_on_rung and self._was_on_rung then
 			self._earliest_next_footstep = t + FOOTSTEP_MIN_INTERVAL
+
 			local hand_position = bottom_pos + Vector3.up() * (position_1p.z - bottom_pos.z)
 			local foot_position = bottom_pos + Vector3.up() * (position_3p.z - bottom_pos.z + DOUBLE_RUNG_DISTANCE)
 

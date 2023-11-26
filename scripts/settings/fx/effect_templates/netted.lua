@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/fx/effect_templates/netted.lua
+
 local Unit_has_node = Unit.has_node
 local Unit_node = Unit.node
 local Unit_world_position = Unit.world_position

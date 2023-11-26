@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/crafting_extract_trait_view/crafting_extract_trait_view_definitions.lua
+
 local UIWorkspaceSettings = require("scripts/settings/ui/ui_workspace_settings")
 local CraftingSettings = require("scripts/settings/item/crafting_settings")
 local weapon_stats_context = CraftingSettings.weapon_stats_context
@@ -59,6 +61,7 @@ local animations = {
 
 				for i = 1, #widgets do
 					local widget = widgets[i]
+
 					widget.alpha_multiplier = 0
 				end
 			end
@@ -75,10 +78,12 @@ local animations = {
 
 				for i = 1, #widgets do
 					local widget = widgets[i]
+
 					widget.alpha_multiplier = anim_progress
 				end
 
 				parent._render_settings.alpha_multiplier = anim_progress
+
 				local x_anim_distance_max = 50
 				local x_anim_distance = x_anim_distance_max - x_anim_distance_max * anim_progress
 

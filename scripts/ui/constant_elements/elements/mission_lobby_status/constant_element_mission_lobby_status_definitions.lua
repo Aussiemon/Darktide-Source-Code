@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/constant_elements/elements/mission_lobby_status/constant_element_mission_lobby_status_definitions.lua
+
 local ConstantMissionLobbyStatusSettings = require("scripts/ui/constant_elements/elements/mission_lobby_status/constant_element_mission_lobby_status_settings")
 local UIWorkspaceSettings = require("scripts/settings/ui/ui_workspace_settings")
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
@@ -75,6 +77,7 @@ local scenegraph_definition = {
 	}
 }
 local team_status_text_style = table.clone(UIFontSettings.header_4)
+
 team_status_text_style.text_vertical_alignment = "center"
 team_status_text_style.text_horizontal_alignment = "right"
 team_status_text_style.offset = {
@@ -82,13 +85,17 @@ team_status_text_style.offset = {
 	0,
 	0
 }
+
 local timer_new_text_style = table.clone(UIFontSettings.body)
+
 timer_new_text_style.text_color = Color.ui_terminal(25.5, true)
 timer_new_text_style.font_size = 94
 timer_new_text_style.font_type = "proxima_nova_medium"
 timer_new_text_style.text_vertical_alignment = "center"
 timer_new_text_style.text_horizontal_alignment = "center"
+
 local timer_active_new_text_style = table.clone(UIFontSettings.body)
+
 timer_active_new_text_style.text_color = Color.ui_terminal(255, true)
 timer_active_new_text_style.color = Color.ui_terminal(255, true)
 timer_active_new_text_style.font_size = 94
@@ -100,6 +107,7 @@ timer_active_new_text_style.offset = {
 	0,
 	0
 }
+
 local widget_definitions = {
 	timer_background = UIWidget.create_definition({
 		{

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/components/holo_sight.lua
+
 local HoloSight = component("HoloSight")
 
 HoloSight.editor_init = function (self, unit)

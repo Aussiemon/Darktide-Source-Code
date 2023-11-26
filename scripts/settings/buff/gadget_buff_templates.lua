@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/buff/gadget_buff_templates.lua
+
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local Keywords = BuffSettings.keywords
 local FixedFrame = require("scripts/utilities/fixed_frame")
@@ -7,6 +9,7 @@ local proc_events = BuffSettings.proc_events
 
 local function value_lerp_0dp(min, max, lerp_t)
 	local value = math.lerp(min, max, lerp_t)
+
 	value = math.round_with_precision(value, 0)
 
 	return value
@@ -14,6 +17,7 @@ end
 
 local function value_lerp_2dp(min, max, lerp_t)
 	local value = math.lerp(min, max, lerp_t)
+
 	value = math.round_with_precision(value, 2)
 
 	return value
@@ -21,6 +25,7 @@ end
 
 local templates = {}
 local DISPLAY = table.enum("number", "percentage")
+
 templates.gadget_coherency_aura_lingers = {
 	class_name = "stepped_range_buff",
 	predicted = false,

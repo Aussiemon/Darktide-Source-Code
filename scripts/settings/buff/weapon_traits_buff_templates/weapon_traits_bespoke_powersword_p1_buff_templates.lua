@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/buff/weapon_traits_buff_templates/weapon_traits_bespoke_powersword_p1_buff_templates.lua
+
 local BaseWeaponTraitBuffTemplates = require("scripts/settings/buff/weapon_traits_buff_templates/base_weapon_trait_buff_templates")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local CheckProcFunctions = require("scripts/settings/buff/validation_functions/check_proc_functions")
@@ -5,9 +7,9 @@ local ConditionalFunctions = require("scripts/settings/buff/validation_functions
 local stat_buffs = BuffSettings.stat_buffs
 local proc_events = BuffSettings.proc_events
 local keywords = BuffSettings.keywords
-local templates = {
-	weapon_trait_bespoke_powersword_p1_chained_hits_increases_melee_cleave_parent = table.clone(BaseWeaponTraitBuffTemplates.chained_hits_increases_melee_cleave_parent)
-}
+local templates = {}
+
+templates.weapon_trait_bespoke_powersword_p1_chained_hits_increases_melee_cleave_parent = table.clone(BaseWeaponTraitBuffTemplates.chained_hits_increases_melee_cleave_parent)
 templates.weapon_trait_bespoke_powersword_p1_chained_hits_increases_melee_cleave_parent.child_buff_template = "weapon_trait_bespoke_powersword_p1_chained_hits_increases_melee_cleave_child"
 templates.weapon_trait_bespoke_powersword_p1_chained_hits_increases_melee_cleave_child = table.clone(BaseWeaponTraitBuffTemplates.chained_hits_increases_melee_cleave_child)
 templates.weapon_trait_bespoke_powersword_p1_increased_melee_damage_on_multiple_hits = table.clone(BaseWeaponTraitBuffTemplates.increased_melee_damage_on_multiple_hits)
@@ -38,10 +40,13 @@ templates.weapon_trait_bespoke_powersword_p1_extended_activation_duration_on_cha
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
 		local unit_data_extension = unit and ScriptUnit.has_extension(unit, "unit_data_system")
+
 		template_data.shooting_status_component = unit_data_extension and unit_data_extension:read_component("shooting_status")
 		template_data.weapon_action_component = unit_data_extension and unit_data_extension:read_component("weapon_action")
 		template_data.weapon_action_component = unit_data_extension and unit_data_extension:read_component("weapon_action")
+
 		local item_slot_name = template_context.item_slot_name
+
 		template_data.inventory_slot_component = unit_data_extension and unit_data_extension:read_component(item_slot_name)
 	end,
 	min_max_step_func = function (template_data, template_context)

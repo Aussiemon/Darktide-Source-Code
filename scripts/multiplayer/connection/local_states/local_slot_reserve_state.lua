@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/multiplayer/connection/local_states/local_slot_reserve_state.lua
+
 local RPCS = {
 	"rpc_reserve_slots_reply"
 }
@@ -21,9 +23,10 @@ end
 
 LocalSlotReserveState.update = function (self, dt)
 	local shared_state = self._shared_state
+
 	self._time = self._time + dt
 
-	if shared_state.timeout < self._time then
+	if self._time > shared_state.timeout then
 		Log.info("LocalSlotReserveState", "Timeout waiting for rpc_reserve_slots_reply")
 
 		return "timeout", {

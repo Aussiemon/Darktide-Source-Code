@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/components/emissive_light.lua
+
 local EmissiveLight = component("EmissiveLight")
 
 EmissiveLight.init = function (self, unit)

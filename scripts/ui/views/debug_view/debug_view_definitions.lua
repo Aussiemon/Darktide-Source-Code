@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/debug_view/debug_view_definitions.lua
+
 local DefaultPassTemplates = require("scripts/ui/pass_templates/default_pass_templates")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local scenegraph_definition = {

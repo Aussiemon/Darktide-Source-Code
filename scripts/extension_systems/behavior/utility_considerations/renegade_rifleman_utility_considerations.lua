@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/behavior/utility_considerations/renegade_rifleman_utility_considerations.lua
+
 local considerations = {
 	renegade_rifleman_bayonet_charge = {
 		distance_to_slot = {

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/liquid_area/liquid_area_templates.lua
+
 local liquid_area_templates = {}
 
 local function _add_template_entries(path)

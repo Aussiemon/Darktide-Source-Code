@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/equipment/weapon_templates/flamers/settings_templates/flamer_damage_profile_templates.lua
+
 local ArmorSettings = require("scripts/settings/damage/armor_settings")
 local PowerLevelSettings = require("scripts/settings/damage/power_level_settings")
 local DamageProfileSettings = require("scripts/settings/damage/damage_profile_settings")
@@ -21,6 +23,7 @@ local damage_lerp_values = DamageProfileSettings.damage_lerp_values
 local single_cleave = DamageProfileSettings.single_cleave
 local double_cleave = DamageProfileSettings.double_cleave
 local medium_cleave = DamageProfileSettings.medium_cleave
+
 damage_templates.default_flamer_killshot = {
 	suppression_value = 4,
 	ignore_shield = false,
@@ -274,6 +277,7 @@ overrides.light_flamer_demolition = {
 		}
 	}
 }
+
 local assault_flamer_armor_mod = {
 	near = {
 		attack = {
@@ -366,6 +370,7 @@ local assault_flamer_burst_armor_mod = {
 		}
 	}
 }
+
 damage_templates.default_flamer_assault = {
 	duration_scale_bonus = 0.5,
 	accumulative_stagger_strength_multiplier = 0.5,

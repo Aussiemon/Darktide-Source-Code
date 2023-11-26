@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/hud/elements/cutscene_fading/hud_element_cutscene_fading_definitions.lua
+
 local scenegraph_definition = {
 	screen = {
 		scale = "fit",

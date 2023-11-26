@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/equipment/weapon_templates/force_staffs/settings_templates/force_staff_damage_profile_templates.lua
+
 local ArmorSettings = require("scripts/settings/damage/armor_settings")
 local AttackSettings = require("scripts/settings/damage/attack_settings")
 local DamageProfileSettings = require("scripts/settings/damage/damage_profile_settings")
@@ -25,6 +27,7 @@ local single_cleave = DamageProfileSettings.single_cleave
 local medium_cleave = DamageProfileSettings.medium_cleave
 local double_cleave = DamageProfileSettings.double_cleave
 local big_cleave = DamageProfileSettings.big_cleave
+
 damage_templates.force_staff_ball = {
 	force_weapon_damage = true,
 	stagger_override = "medium",
@@ -521,6 +524,7 @@ overrides.force_staff_bash_stab_heavy = {
 		}
 	}
 }
+
 local assault_warpfire_armor_mod = {
 	near = {
 		attack = {
@@ -567,6 +571,7 @@ local assault_warpfire_armor_mod = {
 		}
 	}
 }
+
 damage_templates.default_warpfire_assault = {
 	duration_scale_bonus = 0.5,
 	accumulative_stagger_strength_multiplier = 0.5,

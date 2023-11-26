@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/equipment/weapon_templates/ogryn_clubs/ogryn_club_p2_m2.lua
+
 local ActionSweepSettings = require("scripts/settings/equipment/action_sweep_settings")
 local BaseTemplateSettings = require("scripts/settings/equipment/weapon_templates/base_template_settings")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
@@ -1804,6 +1806,7 @@ weapon_template.base_stats = {
 	}
 }
 weapon_template.traits = {}
+
 local bespoke_ogryn_club_p2 = table.keys(WeaponTraitsBespokeOgrynClubP2)
 
 table.append(weapon_template.traits, bespoke_ogryn_club_p2)

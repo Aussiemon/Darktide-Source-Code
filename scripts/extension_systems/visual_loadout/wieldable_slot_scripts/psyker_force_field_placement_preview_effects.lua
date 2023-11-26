@@ -1,12 +1,16 @@
+﻿-- chunkname: @scripts/extension_systems/visual_loadout/wieldable_slot_scripts/psyker_force_field_placement_preview_effects.lua
+
 local PsykerForceFieldPlacementPreviewEffects = class("PsykerForceFieldPlacementPreviewEffects")
 
 PsykerForceFieldPlacementPreviewEffects.init = function (self, context, slot, weapon_template, fx_sources)
 	local wwise_world = context.wwise_world
+
 	self._world = context.world
 	self._wwise_world = wwise_world
 	self._weapon_actions = weapon_template.actions
 	self._is_husk = context.is_husk
 	self._is_local_unit = context.is_local_unit
+
 	local owner_unit = context.owner_unit
 	local unit_data_extension = ScriptUnit.extension(owner_unit, "unit_data_system")
 
@@ -59,6 +63,7 @@ PsykerForceFieldPlacementPreviewEffects._update_effects = function (self, dt, t)
 		if shield_unit then
 			local previous_position = self._previous_position:unbox()
 			local previous_rotation = self._previous_rotation:unbox()
+
 			position = Vector3.lerp(previous_position, position, dt * 20)
 			rotation = Quaternion.lerp(previous_rotation, rotation, dt * 20)
 
@@ -66,6 +71,7 @@ PsykerForceFieldPlacementPreviewEffects._update_effects = function (self, dt, t)
 			Unit.set_local_rotation(shield_unit, 1, rotation)
 		else
 			local unit = action_settings.visual_unit
+
 			self._start_t = t
 			self._shield_unit = Managers.state.unit_spawner:spawn_unit(unit, position, rotation)
 		end

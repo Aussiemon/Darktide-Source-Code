@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/ui/qr/qrencode.lua
+
 local debugging = false
 local testing = false
 local bit_xor = require("bit").bxor
@@ -14,10 +16,12 @@ local function binary(x, digits)
 		["7"] = "111",
 		["4"] = "100"
 	}
+
 	s = string.gsub(s, "(.)", function (d)
 		return a[d]
 	end)
 	s = string.gsub(s, "^0*(.*)$", "%1")
+
 	local fmtstring = string.format("%%%ds", digits)
 	local ret = string.format(fmtstring, s)
 
@@ -33,7 +37,7 @@ local function fill_matrix_position(matrix, bitstring, x, y)
 end
 
 local function get_mode(str)
-	local mode = nil
+	local mode
 
 	if string.match(str, "^[0-9]+$") then
 		return 1
@@ -298,7 +302,7 @@ local function get_version_eclevel(len, mode, requested_ec_level)
 		local_mode = 4
 	end
 
-	local bytes, bits, digits, modebits, c = nil
+	local bytes, bits, digits, modebits, c
 	local tab = {
 		{
 			10,
@@ -321,8 +325,7 @@ local function get_version_eclevel(len, mode, requested_ec_level)
 	}
 	local minversion = 40
 	local maxec_level = requested_ec_level or 1
-	local min = 1
-	local max = 4
+	local min, max = 1, 4
 
 	if requested_ec_level and requested_ec_level >= 1 and requested_ec_level <= 4 then
 		min = requested_ec_level
@@ -397,7 +400,7 @@ local function get_length(str, version, mode)
 			12
 		}
 	}
-	local digits = nil
+	local digits
 
 	if version < 10 then
 		digits = tab[1][i]
@@ -407,13 +410,17 @@ local function get_length(str, version, mode)
 		digits = tab[3][i]
 	end
 
+	if false then
+		-- Nothing
+	end
+
 	local len = binary(#str, digits)
 
 	return len
 end
 
 local function get_version_eclevel_mode_bistringlength(str, requested_ec_level, mode)
-	local local_mode = nil
+	local local_mode
 
 	if mode then
 		local_mode = mode
@@ -421,8 +428,10 @@ local function get_version_eclevel_mode_bistringlength(str, requested_ec_level, 
 		local_mode = get_mode(str)
 	end
 
-	local version, ec_level = nil
+	local version, ec_level
+
 	version, ec_level = get_version_eclevel(#str, local_mode, requested_ec_level)
+
 	local length_string = get_length(str, version, local_mode)
 
 	return version, ec_level, binary(local_mode, 4), local_mode, length_string
@@ -528,7 +537,7 @@ local asciitbl = {
 
 local function encode_string_numeric(str)
 	local bitstring = ""
-	local int = nil
+	local int
 
 	string.gsub(str, "..?.?", function (a)
 		int = tonumber(a)
@@ -547,7 +556,7 @@ end
 
 local function encode_string_ascii(str)
 	local bitstring = ""
-	local int, b1, b2 = nil
+	local int, b1, b2
 
 	string.gsub(str, "..?", function (a)
 		if #a == 2 then
@@ -582,11 +591,16 @@ local function encode_data(str, mode)
 	elseif mode == 4 then
 		return encode_string_binary(str)
 	end
+
+	if false then
+		-- Nothing
+	end
 end
 
 local function add_pad_data(version, ec_level, data)
-	local count_to_pad, missing_digits = nil
+	local count_to_pad, missing_digits
 	local cpty = capacity[version][ec_level] * 8
+
 	count_to_pad = math.min(4, cpty - #data)
 
 	if count_to_pad > 0 then
@@ -1461,7 +1475,7 @@ local function convert_to_int(tab, len_message)
 end
 
 local function calculate_error_correction(data, num_ec_codewords)
-	local mp = nil
+	local mp
 
 	if type(data) == "string" then
 		mp = convert_bitstring_to_bytes(data)
@@ -1469,12 +1483,15 @@ local function calculate_error_correction(data, num_ec_codewords)
 		mp = data
 	end
 
+	if false then
+		-- Nothing
+	end
+
 	local len_message = #mp
 	local highest_exponent = len_message + num_ec_codewords - 1
-	local gp_alpha, tmp, he = nil
+	local gp_alpha, tmp, he
 	local gp_int = {}
-	local mp_int = {}
-	local mp_alpha = {}
+	local mp_int, mp_alpha = {}, {}
 
 	for i = 1, len_message do
 		mp_int[highest_exponent - i + 1] = mp[i]
@@ -1489,6 +1506,7 @@ local function calculate_error_correction(data, num_ec_codewords)
 
 	while num_ec_codewords <= highest_exponent do
 		gp_alpha = get_generator_polynominal_adjusted(num_ec_codewords, highest_exponent)
+
 		local exp = mp_alpha[highest_exponent]
 
 		for i = highest_exponent, highest_exponent - num_ec_codewords, -1 do
@@ -3724,7 +3742,7 @@ local function arrange_codewords_and_calculate_ec(version, ec_level, data)
 	end
 
 	local blocks = ecblocks[version][ec_level]
-	local size_datablock_bytes, size_ecblock_bytes = nil
+	local size_datablock_bytes, size_ecblock_bytes
 	local datablocks = {}
 	local ecblocks = {}
 	local count = 1
@@ -3737,6 +3755,7 @@ local function arrange_codewords_and_calculate_ec(version, ec_level, data)
 			size_ecblock_bytes = blocks[2 * i][1] - blocks[2 * i][2]
 			cpty_ec_bits = cpty_ec_bits + size_ecblock_bytes * 8
 			datablocks[#datablocks + 1] = string.sub(data, pos * 8 + 1, (pos + size_datablock_bytes) * 8)
+
 			local tmp_tab = calculate_error_correction(datablocks[#datablocks], size_ecblock_bytes)
 			local tmp_str = ""
 
@@ -3751,6 +3770,7 @@ local function arrange_codewords_and_calculate_ec(version, ec_level, data)
 	end
 
 	local arranged_data = ""
+
 	pos = 1
 
 	repeat
@@ -3764,6 +3784,7 @@ local function arrange_codewords_and_calculate_ec(version, ec_level, data)
 	until #arranged_data == #data
 
 	local arranged_ec = ""
+
 	pos = 1
 
 	repeat
@@ -3815,7 +3836,8 @@ local function add_position_detection_patterns(tab_x)
 end
 
 local function add_timing_pattern(tab_x)
-	local line, col = nil
+	local line, col
+
 	line = 7
 	col = 9
 
@@ -4099,7 +4121,7 @@ local alignment_pattern = {
 local function add_alignment_pattern(tab_x)
 	local version = (#tab_x - 17) / 4
 	local ap = alignment_pattern[version]
-	local pos_x, pos_y = nil
+	local pos_x, pos_y
 
 	for x = 1, #ap do
 		for y = 1, #ap do
@@ -4146,7 +4168,7 @@ local typeinfo = {
 		"110001100011000",
 		"110110001000001",
 		"110100101110110",
-		[-1.0] = "111111111111111"
+		[-1] = "111111111111111"
 	},
 	{
 		[0] = "101010000010010",
@@ -4157,7 +4179,7 @@ local typeinfo = {
 		"100000011001110",
 		"100111110010111",
 		"100101010100000",
-		[-1.0] = "111111111111111"
+		[-1] = "111111111111111"
 	},
 	{
 		[0] = "011010101011111",
@@ -4168,7 +4190,7 @@ local typeinfo = {
 		"010000110000011",
 		"010111011011010",
 		"010101111101101",
-		[-1.0] = "111111111111111"
+		[-1] = "111111111111111"
 	},
 	{
 		[0] = "001011010001001",
@@ -4179,13 +4201,13 @@ local typeinfo = {
 		"000001001010101",
 		"000110100001100",
 		"000100000111011",
-		[-1.0] = "111111111111111"
+		[-1] = "111111111111111"
 	}
 }
 
 local function add_typeinfo_to_matrix(matrix, ec_level, mask)
 	local ec_mask_type = typeinfo[ec_level][mask]
-	local bit = nil
+	local bit
 
 	for i = 1, 7 do
 		bit = string.sub(ec_mask_type, i, i)
@@ -4266,7 +4288,8 @@ local function add_version_information(matrix, version)
 
 	local size = #matrix
 	local bitstring = version_information[version - 6]
-	local x, y, bit, start_x, start_y = nil
+	local x, y, bit, start_x, start_y
+
 	start_x = #matrix - 10
 	start_y = 1
 
@@ -4291,8 +4314,9 @@ local function add_version_information(matrix, version)
 end
 
 local function prepare_matrix_with_mask(version, ec_level, mask)
-	local size = nil
+	local size
 	local tab_x = {}
+
 	size = version * 4 + 17
 
 	for i = 1, size do
@@ -4318,6 +4342,7 @@ end
 local function get_pixel_with_mask(mask, x, y, value)
 	x = x - 1
 	y = y - 1
+
 	local invert = false
 
 	if mask == -1 then
@@ -4352,6 +4377,10 @@ local function get_pixel_with_mask(mask, x, y, value)
 		end
 	elseif mask == 7 and math.fmod(math.fmod(x * y, 3) + math.fmod(x + y, 2), 2) == 0 then
 		invert = true
+	end
+
+	if false then
+		-- Nothing
 	end
 
 	if invert then
@@ -4427,11 +4456,11 @@ end
 
 local function add_data_to_matrix(matrix, data, mask)
 	local size = #matrix
-	local x, y, positions, _x, _y, m = nil
+	local x, y, positions, _x, _y, m
 	local dir = "up"
 	local byte_number = 0
-	y = size
-	x = size
+
+	x, y = size, size
 
 	string.gsub(data, ".?.?.?.?.?.?.?.?", function (byte)
 		byte_number = byte_number + 1
@@ -4452,13 +4481,10 @@ local function add_data_to_matrix(matrix, data, mask)
 end
 
 local function calculate_penalty(matrix)
-	local penalty1 = 0
-	local penalty2 = 0
-	local penalty3 = 0
-	local penalty4 = 0
+	local penalty1, penalty2, penalty3, penalty4 = 0, 0, 0, 0
 	local size = #matrix
 	local number_of_dark_cells = 0
-	local last_bit_blank, is_blank, number_of_consecutive_bits = nil
+	local last_bit_blank, is_blank, number_of_consecutive_bits
 
 	for x = 1, size do
 		number_of_consecutive_bits = 0
@@ -4534,6 +4560,7 @@ local function calculate_penalty(matrix)
 	end
 
 	local dark_ratio = number_of_dark_cells / (size * size)
+
 	penalty4 = math.floor(math.abs(dark_ratio * 100 - 50)) * 2
 
 	return penalty1 + penalty2 + penalty3 + penalty4
@@ -4550,7 +4577,8 @@ local function get_matrix_and_penalty(version, ec_level, data, mask)
 end
 
 local function get_matrix_with_lowest_penalty(version, ec_level, data)
-	local tab, penalty, tab_min_penalty, min_penalty = nil
+	local tab, penalty, tab_min_penalty, min_penalty
+
 	tab_min_penalty, min_penalty = get_matrix_and_penalty(version, ec_level, data, 0)
 
 	for i = 1, 7 do
@@ -4566,7 +4594,8 @@ local function get_matrix_with_lowest_penalty(version, ec_level, data)
 end
 
 local function qrcode(str, ec_level, mode)
-	local arranged_data, version, data_raw, mode, len_bitstring = nil
+	local arranged_data, version, data_raw, mode, len_bitstring
+
 	version, ec_level, data_raw, mode, len_bitstring = get_version_eclevel_mode_bistringlength(str, ec_level)
 	data_raw = data_raw .. len_bitstring
 	data_raw = data_raw .. encode_data(str, mode)
@@ -4578,6 +4607,7 @@ local function qrcode(str, ec_level, mode)
 	end
 
 	arranged_data = arranged_data .. string.rep("0", remainder[version])
+
 	local tab = get_matrix_with_lowest_penalty(version, ec_level, arranged_data)
 
 	return true, tab

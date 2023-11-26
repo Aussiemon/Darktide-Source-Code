@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/networked_timer/networked_timer_extension.lua
+
 local NetworkedTimerExtension = class("NetworkedTimerExtension")
 
 NetworkedTimerExtension.init = function (self, extension_init_context, unit, extension_init_data, ...)

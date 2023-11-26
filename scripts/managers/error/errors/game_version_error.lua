@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/error/errors/game_version_error.lua
+
 local ErrorInterface = require("scripts/managers/error/errors/error_interface")
 local ErrorManager = require("scripts/managers/error/error_manager")
 local GameVersionError = class("GameVersionError")

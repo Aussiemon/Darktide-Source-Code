@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/fx/effect_templates/corruptor_ambience.lua
+
 local WWISE_CORRUPTOR_DISTANCE_PARAMETER = "corruptor_distance"
 local WWISE_DEFAULT_CORRUPTOR_DISTANCE = 100
 local SFX_AMBIENCE_START = "wwise/events/world/play_corruptor_ambience"
@@ -18,16 +20,20 @@ local resources = {
 	sfx_idle_stop = SFX_AMBIENCE_STOP,
 	on_screen_particle_effect = ON_SCREEN_PARTICLE_EFFECT
 }
-local _distance_to_local_player_or_nil = nil
+local _distance_to_local_player_or_nil
 local effect_template = {
 	name = "corruptor_ambience",
 	resources = resources,
 	start = function (template_data, template_context)
 		local position = template_data.position
+
 		template_data.position_boxed = Vector3Box(position)
+
 		local world = template_context.world
 		local on_screen_effect_id = World.create_particles(world, ON_SCREEN_PARTICLE_EFFECT, Vector3(0, 0, 1))
+
 		template_data.on_screen_effect_id = on_screen_effect_id
+
 		local wwise_world = template_context.wwise_world
 		local source_id = WwiseWorld.make_manual_source(wwise_world, position, Quaternion.identity())
 
@@ -76,6 +82,7 @@ local effect_template = {
 function _distance_to_local_player_or_nil(position)
 	local local_player = Managers.player:local_player(1)
 	local local_player_unit = local_player and local_player.player_unit
+
 	local_player_unit = local_player_unit or local_player and local_player.camera_handler:camera_follow_unit()
 
 	if not local_player_unit or not ALIVE[local_player_unit] then

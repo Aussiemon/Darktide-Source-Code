@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/voting/voting_manager.lua
+
 local Promise = require("scripts/foundation/utilities/promise")
 local VotingByImmateriumPartyImpl = require("scripts/managers/voting/voting_by_immaterium_party_impl")
 local VotingByNetworkImpl = require("scripts/managers/voting/voting_by_network_impl")
@@ -20,6 +22,10 @@ VotingManager._get_impl_by_template = function (self, template)
 	elseif template.voting_impl == "party_immaterium" then
 		return self._immaterium_party_voting_impl
 	elseif template.voting_impl then
+		-- Nothing
+	end
+
+	if false then
 		-- Nothing
 	end
 end

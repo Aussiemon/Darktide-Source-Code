@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/view_elements/view_element_crafting_recipe/view_element_crafting_recipe_blueprints.lua
+
 local ItemUtils = require("scripts/utilities/items")
 local WalletSettings = require("scripts/settings/wallet_settings")
 local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templates")
@@ -7,21 +9,23 @@ local UIFonts = require("scripts/managers/ui/ui_fonts")
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local UIRenderer = require("scripts/managers/ui/ui_renderer")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
-local ViewElementCraftingRecipeBlueprints = {
-	spacing_vertical_small = {
-		size = {
-			430,
-			5
-		}
-	},
-	spacing_vertical = {
-		size = {
-			430,
-			20
-		}
+local ViewElementCraftingRecipeBlueprints = {}
+
+ViewElementCraftingRecipeBlueprints.spacing_vertical_small = {
+	size = {
+		430,
+		5
 	}
 }
+ViewElementCraftingRecipeBlueprints.spacing_vertical = {
+	size = {
+		430,
+		20
+	}
+}
+
 local navigation_button_pass_template = table.merge({}, ButtonPassTemplates.terminal_list_button_with_background_and_icon)
+
 navigation_button_pass_template[#navigation_button_pass_template + 1] = {
 	pass_type = "text",
 	value = Localize("loc_action_interaction_coming_soon"),
@@ -77,10 +81,13 @@ ViewElementCraftingRecipeBlueprints.navigation_button = {
 	init = function (parent, widget, config, callback_name)
 		local recipe = config.recipe
 		local content = widget.content
+
 		content.text = Localize(recipe.display_name)
 		content.icon = recipe.icon
 		content.coming_soon = recipe.ui_disabled
+
 		local hotspot = content.hotspot
+
 		hotspot.disabled = true
 		hotspot.pressed_callback = callback(parent, callback_name, widget, config)
 	end,
@@ -96,6 +103,7 @@ ViewElementCraftingRecipeBlueprints.navigation_button = {
 
 		if validation_function then
 			local item = parent.content.item
+
 			content.hotspot.disabled = not validation_function(item)
 		end
 
@@ -110,8 +118,11 @@ ViewElementCraftingRecipeBlueprints.craft_button = {
 	pass_template = ButtonPassTemplates.terminal_button,
 	init = function (parent, widget, config, callback_name)
 		local content = widget.content
+
 		content.text = Localize(config.text or "loc_confirm")
+
 		local hotspot = content.hotspot
+
 		hotspot.on_pressed_sound = config.sound_event
 		hotspot.pressed_callback = callback(parent, callback_name, widget, config)
 		hotspot.disabled = true
@@ -139,7 +150,9 @@ ViewElementCraftingRecipeBlueprints.title = {
 		widget.content.text = Localize(config.text)
 	end
 }
+
 local description_text_style = UIFontSettings.body_small
+
 ViewElementCraftingRecipeBlueprints.description = {
 	size = {
 		430,
@@ -168,6 +181,7 @@ ViewElementCraftingRecipeBlueprints.description = {
 	},
 	init = function (parent, widget, config)
 		widget.content.text = Localize(config.text)
+
 		local override_color = config.color
 
 		if override_color then
@@ -186,7 +200,7 @@ local function item_selection_button_change_function(content, style)
 	local hover_color = style.hover_color
 	local selected_color = style.selected_color
 	local disabled_color = style.disabled_color
-	local color = nil
+	local color
 
 	if disabled and disabled_color then
 		color = disabled_color
@@ -205,10 +219,12 @@ end
 
 local function item_selection_button_hover_change_function(content, style)
 	local hotspot = content.hotspot
+
 	style.color[1] = 100 + math.max(hotspot.anim_hover_progress, content.hotspot.anim_select_progress) * 155
 end
 
 local weapon_perk_style = table.clone(UIFontSettings.body)
+
 weapon_perk_style.offset = {
 	45,
 	0,
@@ -419,12 +435,15 @@ ViewElementCraftingRecipeBlueprints.perk_button = {
 	},
 	init = function (parent, widget, config, callback_name, secondary_callback_name, ui_renderer)
 		local content = widget.content
+
 		content.description = ItemUtils.perk_description(config.item, config.rarity, config.value)
 		content.rank = ItemUtils.perk_textures(config.item, config.rarity)
 		content.hotspot.pressed_callback = callback(parent, secondary_callback_name, widget, config)
 	end
 }
+
 local weapon_traits_style = table.clone(UIFontSettings.header_3)
+
 weapon_traits_style.offset = {
 	98,
 	10,
@@ -455,7 +474,9 @@ weapon_traits_style.disabled_color = {
 	60,
 	60
 }
+
 local weapon_traits_description_style = table.clone(UIFontSettings.body)
+
 weapon_traits_description_style.offset = {
 	98,
 	30,
@@ -655,16 +676,23 @@ ViewElementCraftingRecipeBlueprints.trait_button = {
 	init = function (parent, widget, config, callback_name, secondary_callback_name, ui_renderer)
 		local content = widget.content
 		local style = widget.style
+
 		content.hotspot.pressed_callback = callback(parent, secondary_callback_name, widget, config)
+
 		local rarity = config.rarity
 		local item = config.item
+
 		content.display_name = Localize(item.display_name)
 		content.description = ItemUtils.trait_description(item, rarity, config.value)
+
 		local icon_material_values = style.icon.material_values
+
 		icon_material_values.icon, icon_material_values.frame = ItemUtils.trait_textures(item, rarity)
 	end
 }
+
 local warning_text_style = table.clone(UIFontSettings.body_small)
+
 warning_text_style.text_color = Color.ui_red_light(nil, true)
 ViewElementCraftingRecipeBlueprints.warning = {
 	size = {
@@ -696,6 +724,7 @@ ViewElementCraftingRecipeBlueprints.warning = {
 		local parent_content = parent.content
 		local can_craft = parent_content.can_craft
 		local fail_reason = parent_content.fail_reason
+
 		widget.style.text.visible = not can_craft and fail_reason
 
 		if not can_craft then
@@ -709,13 +738,14 @@ ViewElementCraftingRecipeBlueprints.recipe_costs = {
 		32
 	},
 	pass_template_function = function (self, config, ui_renderer)
-		local passes = {
-			[#passes + 1] = {
-				pass_type = "text",
-				value = Localize("loc_price"),
-				style = UIFontSettings.body
-			}
+		local passes = {}
+
+		passes[#passes + 1] = {
+			pass_type = "text",
+			value = Localize("loc_price"),
+			style = UIFontSettings.body
 		}
+
 		local x_offset = 0
 		local costs = config.data.costs
 
@@ -725,6 +755,7 @@ ViewElementCraftingRecipeBlueprints.recipe_costs = {
 			local wallet_settings = WalletSettings[cost_type]
 			local amount_label = TextUtilities.format_currency(cost.amount)
 			local price_style = table.clone(UIFontSettings.body)
+
 			price_style.text_horizontal_alignment = "right"
 			price_style.offset = {
 				x_offset,
@@ -747,7 +778,9 @@ ViewElementCraftingRecipeBlueprints.recipe_costs = {
 				style_id = cost_type,
 				style = price_style
 			}
+
 			local price_text_size = UIRenderer.text_size(ui_renderer, amount_label, price_style.font_type, price_style.font_size)
+
 			x_offset = x_offset - price_text_size - 5
 			passes[#passes + 1] = {
 				pass_type = "texture",
@@ -773,6 +806,7 @@ ViewElementCraftingRecipeBlueprints.recipe_costs = {
 	end,
 	init = function (parent, widget, config, callback_name)
 		local content = widget.content
+
 		content.data = config.data
 	end,
 	update = function (parent, widget, input_service, dt, t, ui_renderer)
@@ -783,6 +817,7 @@ ViewElementCraftingRecipeBlueprints.recipe_costs = {
 		for _, cost in pairs(costs) do
 			local cost_type = cost.type
 			local cost_style = style[cost_type]
+
 			cost_style.material = cost.can_afford and cost_style.default_material or cost_style.insufficient_material
 		end
 
@@ -794,12 +829,16 @@ ViewElementCraftingRecipeBlueprints.recipe_costs = {
 			local cost_type = cost.type
 			local wallet_settings = WalletSettings[cost_type]
 			local amount_label = TextUtilities.format_currency(cost.amount)
+
 			content[cost_type] = amount_label
+
 			local price_style = style[cost_type]
+
 			price_style.offset[1] = x_offset
 
 			if has_cost then
 				local price_text_size = UIRenderer.text_size(ui_renderer, amount_label, price_style.font_type, price_style.font_size)
+
 				x_offset = x_offset - price_text_size - 5
 				style["icon_" .. i].offset[1] = x_offset
 				x_offset = x_offset - 28 - 12
@@ -810,7 +849,9 @@ ViewElementCraftingRecipeBlueprints.recipe_costs = {
 		end
 	end
 }
+
 local TEMP_TABLE = {}
+
 ViewElementCraftingRecipeBlueprints.trait_background = {
 	size = {
 		440,
@@ -871,6 +912,7 @@ ViewElementCraftingRecipeBlueprints.trait_background = {
 			change_function = function (content, style, animations, dt)
 				local lerp_direction = content.is_hover and 1 or -1
 				local speed = 5
+
 				content.hover_progress = math.clamp(content.hover_progress + dt * lerp_direction * speed, 0, 1)
 			end
 		},
@@ -898,6 +940,7 @@ ViewElementCraftingRecipeBlueprints.trait_background = {
 					style.color[1] = 158 + math.sin(Application.time_since_launch() * 4) * 97
 				else
 					local value = math.easeOutCubic(content.hotspot_1.hover_progress)
+
 					style.color[1] = 255 * value
 				end
 			end
@@ -962,6 +1005,7 @@ ViewElementCraftingRecipeBlueprints.trait_background = {
 			change_function = function (content, style, animations, dt)
 				local ingredients = content.ingredients
 				local has_ingredient = ingredients.trait_ids[1]
+
 				style.color = has_ingredient and style.filled_color or style.unfilled_color
 			end
 		},
@@ -1015,6 +1059,7 @@ ViewElementCraftingRecipeBlueprints.trait_background = {
 			change_function = function (content, style, animations, dt)
 				local lerp_direction = content.is_hover and 1 or -1
 				local speed = 3
+
 				content.hover_progress = math.clamp(content.hover_progress + dt * lerp_direction * speed, 0, 1)
 			end
 		},
@@ -1043,6 +1088,7 @@ ViewElementCraftingRecipeBlueprints.trait_background = {
 					style.color[1] = 158 + math.sin(Application.time_since_launch() * 4) * 97
 				else
 					local value = math.easeOutCubic(content.hotspot_2.hover_progress)
+
 					style.color[1] = 255 * value
 				end
 			end
@@ -1125,6 +1171,7 @@ ViewElementCraftingRecipeBlueprints.trait_background = {
 			change_function = function (content, style, animations, dt)
 				local ingredients = content.ingredients
 				local has_ingredient = ingredients.trait_ids[2]
+
 				style.color = has_ingredient and style.filled_color or style.unfilled_color
 			end
 		},
@@ -1178,6 +1225,7 @@ ViewElementCraftingRecipeBlueprints.trait_background = {
 			change_function = function (content, style, animations, dt)
 				local lerp_direction = content.is_hover and 1 or -1
 				local speed = 3
+
 				content.hover_progress = math.clamp(content.hover_progress + dt * lerp_direction * speed, 0, 1)
 			end
 		},
@@ -1205,6 +1253,7 @@ ViewElementCraftingRecipeBlueprints.trait_background = {
 					style.color[1] = 158 + math.sin(Application.time_since_launch() * 4) * 97
 				else
 					local value = math.easeOutCubic(content.hotspot_3.hover_progress)
+
 					style.color[1] = 255 * value
 				end
 			end
@@ -1288,6 +1337,7 @@ ViewElementCraftingRecipeBlueprints.trait_background = {
 				local ingredients = content.ingredients
 				local trait_ids = ingredients.trait_ids
 				local has_ingredient = ingredients.trait_ids[3]
+
 				style.color = has_ingredient and style.filled_color or style.unfilled_color
 			end
 		},
@@ -1321,10 +1371,15 @@ ViewElementCraftingRecipeBlueprints.trait_background = {
 		local content = widget.content
 		local style = widget.style
 		local icon_material_values = style.icon_1.material_values
+
 		icon_material_values.icon = ""
+
 		local icon_material_values = style.icon_2.material_values
+
 		icon_material_values.icon = ""
+
 		local icon_material_values = style.icon_3.material_values
+
 		icon_material_values.icon = ""
 		content.ingredients = config.ingredients
 		content.additional_data = config.additional_data
@@ -1361,6 +1416,7 @@ ViewElementCraftingRecipeBlueprints.trait_background = {
 				local trait_collection = sticker_book and sticker_book[trait_name]
 				local is_wildcard = trait_collection and (not trait_collection[rarity + 1] or sticker_book[trait_name][rarity + 1] == "invalid")
 				local texture_icon, texture_frame = ItemUtils.trait_textures(trait_item, rarity)
+
 				icon_material_values.icon = is_wildcard and wildcard_texture or texture_icon
 				icon_material_values.frame = texture_frame
 
@@ -1402,10 +1458,12 @@ ViewElementCraftingRecipeBlueprints.trait_background = {
 		end
 	end
 }
+
 local counter_size = {
 	430,
 	90
 }
+
 ViewElementCraftingRecipeBlueprints.modifications_counter = {
 	size = counter_size,
 	pass_template = {
@@ -1471,6 +1529,7 @@ ViewElementCraftingRecipeBlueprints.modifications_counter = {
 
 		if item then
 			local num_modifications, max_modifications = ItemUtils.modifications_by_rarity(item)
+
 			widget.content.counter = string.format(" %d/%d", num_modifications, max_modifications)
 			widget.content.item = item
 		end
@@ -1480,6 +1539,7 @@ ViewElementCraftingRecipeBlueprints.modifications_counter = {
 
 		if item ~= widget.content.item then
 			local num_modifications, max_modifications = ItemUtils.modifications_by_rarity(item)
+
 			widget.content.counter = string.format(" %d/%d", num_modifications, max_modifications)
 			widget.content.item = item
 		end

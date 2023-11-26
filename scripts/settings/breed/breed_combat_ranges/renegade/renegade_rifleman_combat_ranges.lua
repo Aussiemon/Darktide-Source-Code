@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/breed/breed_combat_ranges/renegade/renegade_rifleman_combat_ranges.lua
+
 local combat_ranges = {
 	name = "renegade_rifleman",
 	calculate_target_velocity_dot = true,

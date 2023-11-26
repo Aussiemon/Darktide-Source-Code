@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/backend/wallet.lua
+
 local BackendUtilities = require("scripts/foundation/managers/backend/utilities/backend_utilities")
 local Wallet = class("Wallet")
 

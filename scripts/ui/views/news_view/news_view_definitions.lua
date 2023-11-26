@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/news_view/news_view_definitions.lua
+
 local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templates")
 local NewsViewSettings = require("scripts/ui/views/news_view/news_view_settings")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
@@ -177,7 +179,7 @@ local widget_definitions = {
 				material_values = {}
 			},
 			visibility_function = function (content, style)
-				return style.material_values and style.material_values.texture or style.force_view
+				return style.material_values and not not style.material_values.texture or style.force_view
 			end
 		}
 	}, "window_content"),
@@ -413,277 +415,282 @@ local widget_definitions = {
 		original_text = "next_button"
 	})
 }
-local animation_definitions = {}
-animation_definitions.on_enter = {
-	{
-		name = "init",
-		end_time = 0,
-		start_time = 0,
-		init = function (parent, ui_scenegraph, scenegraph_definition, widgets, params)
-			local window = widgets.window
+local animation_definitions = {
+	on_enter = {
+		{
+			name = "init",
+			end_time = 0,
+			start_time = 0,
+			init = function (parent, ui_scenegraph, scenegraph_definition, widgets, params)
+				local window = widgets.window
 
-			for _, pass_style in pairs(window.style) do
-				local color = pass_style.text_color or pass_style.color
+				for _, pass_style in pairs(window.style) do
+					local color = pass_style.text_color or pass_style.color
 
-				if color then
-					color[1] = 0
+					if color then
+						color[1] = 0
+					end
 				end
-			end
 
-			widgets.previous_button.alpha_multiplier = 0
-			widgets.next_button.alpha_multiplier = 0
-			widgets.window_image.alpha_multiplier = 0
-			parent._content_alpha_multiplier = 0
+				widgets.previous_button.alpha_multiplier = 0
+				widgets.next_button.alpha_multiplier = 0
+				widgets.window_image.alpha_multiplier = 0
+				parent._content_alpha_multiplier = 0
 
-			if parent._slides then
-				local slides_amount = #parent._slides
+				if parent._slides then
+					local slides_amount = #parent._slides
 
-				for i = 1, slides_amount do
-					local slide_circle_widget = widgets["slide_circ_" .. i]
+					for i = 1, slides_amount do
+						local slide_circle_widget = widgets["slide_circ_" .. i]
 
-					if slide_circle_widget then
-						widgets["slide_circ_" .. i].alpha_multiplier = 0
+						if slide_circle_widget then
+							widgets["slide_circ_" .. i].alpha_multiplier = 0
+						end
+					end
+				end
+
+				local grid = parent._grid
+				local grid_widgets = grid and grid:widgets()
+
+				if grid_widgets then
+					for i = 1, #grid_widgets do
+						grid_widgets[i].alpha_multiplier = 0
+					end
+
+					local grid_scrollbar = grid:grid_scrollbar()
+
+					if grid_scrollbar then
+						grid_scrollbar.alpha_multiplier = 0
 					end
 				end
 			end
+		},
+		{
+			name = "fade_in_background",
+			end_time = 1.2,
+			start_time = 0,
+			update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress, params)
+				local anim_progress = math.easeCubic(progress)
+				local window = widgets.window
+				local alpha = 100 * anim_progress
 
-			local grid = parent._grid
-			local grid_widgets = grid and grid:widgets()
-
-			if grid_widgets then
-				for i = 1, #grid_widgets do
-					grid_widgets[i].alpha_multiplier = 0
-				end
-
-				local grid_scrollbar = grid:grid_scrollbar()
-
-				if grid_scrollbar then
-					grid_scrollbar.alpha_multiplier = 0
-				end
+				window.style.screen_background.color[1] = alpha
+				window.style.screen_background_vignette.color[1] = alpha
 			end
-		end
-	},
-	{
-		name = "fade_in_background",
-		end_time = 1.2,
-		start_time = 0,
-		update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress, params)
-			local anim_progress = math.easeCubic(progress)
-			local window = widgets.window
-			local alpha = 100 * anim_progress
-			window.style.screen_background.color[1] = alpha
-			window.style.screen_background_vignette.color[1] = alpha
-		end
-	},
-	{
-		name = "fade_in_window",
-		end_time = 0.2,
-		start_time = 0,
-		update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress, params)
-			local anim_progress = math.easeOutCubic(progress)
-			local window = widgets.window
-			local alpha = 255 * anim_progress
-			local window_style = window.style
-			window_style.background.color[1] = alpha
-			window_style.background_gradient.color[1] = 200 * anim_progress
-			window_style.outer_shadow.color[1] = 200 * anim_progress
-			window_style.frame.color[1] = alpha
-			window_style.corner.color[1] = alpha
-			window_style.edge_top.color[1] = alpha
-			window_style.edge_bottom.color[1] = alpha
-			window_style.window_background.color[1] = alpha
-		end
-	},
-	{
-		name = "fade_in_content",
-		end_time = 0.7,
-		start_time = 0.4,
-		update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress, params)
-			local anim_progress = math.easeOutCubic(progress)
-			local grid = parent._grid
-			local grid_widgets = grid and grid:widgets()
+		},
+		{
+			name = "fade_in_window",
+			end_time = 0.2,
+			start_time = 0,
+			update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress, params)
+				local anim_progress = math.easeOutCubic(progress)
+				local window = widgets.window
+				local alpha = 255 * anim_progress
+				local window_style = window.style
 
-			if grid_widgets then
-				for i = 1, #grid_widgets do
-					grid_widgets[i].alpha_multiplier = anim_progress
-				end
-
-				local grid_scrollbar = grid:grid_scrollbar()
-
-				if grid_scrollbar then
-					grid_scrollbar.alpha_multiplier = anim_progress
-				end
+				window_style.background.color[1] = alpha
+				window_style.background_gradient.color[1] = 200 * anim_progress
+				window_style.outer_shadow.color[1] = 200 * anim_progress
+				window_style.frame.color[1] = alpha
+				window_style.corner.color[1] = alpha
+				window_style.edge_top.color[1] = alpha
+				window_style.edge_bottom.color[1] = alpha
+				window_style.window_background.color[1] = alpha
 			end
+		},
+		{
+			name = "fade_in_content",
+			end_time = 0.7,
+			start_time = 0.4,
+			update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress, params)
+				local anim_progress = math.easeOutCubic(progress)
+				local grid = parent._grid
+				local grid_widgets = grid and grid:widgets()
 
-			parent._content_alpha_multiplier = anim_progress
-			widgets.previous_button.alpha_multiplier = anim_progress
-			widgets.next_button.alpha_multiplier = anim_progress
-			widgets.window_image.alpha_multiplier = anim_progress
+				if grid_widgets then
+					for i = 1, #grid_widgets do
+						grid_widgets[i].alpha_multiplier = anim_progress
+					end
 
-			if parent._slides then
-				local slides_amount = #parent._slides
+					local grid_scrollbar = grid:grid_scrollbar()
 
-				for i = 1, slides_amount do
-					local slide_circle_widget = widgets["slide_circ_" .. i]
+					if grid_scrollbar then
+						grid_scrollbar.alpha_multiplier = anim_progress
+					end
+				end
 
-					if slide_circle_widget then
-						slide_circle_widget.alpha_multiplier = anim_progress
+				parent._content_alpha_multiplier = anim_progress
+				widgets.previous_button.alpha_multiplier = anim_progress
+				widgets.next_button.alpha_multiplier = anim_progress
+				widgets.window_image.alpha_multiplier = anim_progress
+
+				if parent._slides then
+					local slides_amount = #parent._slides
+
+					for i = 1, slides_amount do
+						local slide_circle_widget = widgets["slide_circ_" .. i]
+
+						if slide_circle_widget then
+							slide_circle_widget.alpha_multiplier = anim_progress
+						end
 					end
 				end
 			end
-		end
+		},
+		{
+			name = "move",
+			end_time = 0.4,
+			start_time = 0,
+			init = function (parent, ui_scenegraph, scenegraph_definition, widgets, params)
+				parent:_set_scenegraph_size("window", nil, 100)
+			end,
+			update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress, params)
+				local anim_progress = math.easeCubic(progress)
+				local y_anim_distance_max = 50
+				local y_anim_distance = y_anim_distance_max - y_anim_distance_max * anim_progress
+
+				parent:_set_scenegraph_size("window", nil, 100 + (scenegraph_definition.window.size[2] - 100) * anim_progress)
+			end
+		}
 	},
-	{
-		name = "move",
-		end_time = 0.4,
-		start_time = 0,
-		init = function (parent, ui_scenegraph, scenegraph_definition, widgets, params)
-			parent:_set_scenegraph_size("window", nil, 100)
-		end,
-		update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress, params)
-			local anim_progress = math.easeCubic(progress)
-			local y_anim_distance_max = 50
-			local y_anim_distance = y_anim_distance_max - y_anim_distance_max * anim_progress
+	on_exit = {
+		{
+			name = "fade_out_content",
+			end_time = 0.3,
+			start_time = 0,
+			update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress, params)
+				local anim_progress = math.easeOutCubic(1 - progress)
+				local grid = parent._grid
+				local grid_widgets = grid and grid:widgets()
 
-			parent:_set_scenegraph_size("window", nil, 100 + (scenegraph_definition.window.size[2] - 100) * anim_progress)
-		end
-	}
-}
-animation_definitions.on_exit = {
-	{
-		name = "fade_out_content",
-		end_time = 0.3,
-		start_time = 0,
-		update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress, params)
-			local anim_progress = math.easeOutCubic(1 - progress)
-			local grid = parent._grid
-			local grid_widgets = grid and grid:widgets()
+				if grid_widgets then
+					for i = 1, #grid_widgets do
+						grid_widgets[i].alpha_multiplier = anim_progress
+					end
 
-			if grid_widgets then
-				for i = 1, #grid_widgets do
-					grid_widgets[i].alpha_multiplier = anim_progress
+					local grid_scrollbar = grid:grid_scrollbar()
+
+					if grid_scrollbar then
+						grid_scrollbar.alpha_multiplier = anim_progress
+					end
 				end
 
-				local grid_scrollbar = grid:grid_scrollbar()
+				parent._content_alpha_multiplier = anim_progress
+				widgets.previous_button.alpha_multiplier = anim_progress
+				widgets.next_button.alpha_multiplier = anim_progress
+				widgets.window_image.alpha_multiplier = anim_progress
 
-				if grid_scrollbar then
-					grid_scrollbar.alpha_multiplier = anim_progress
+				local slides_amount = #parent._slides
+
+				for i = 1, slides_amount do
+					widgets["slide_circ_" .. i].alpha_multiplier = anim_progress
 				end
 			end
+		},
+		{
+			name = "move",
+			end_time = 0.7,
+			start_time = 0.3,
+			init = function (parent, ui_scenegraph, scenegraph_definition, widgets, params)
+				parent:_set_scenegraph_size("window", nil, 100)
+			end,
+			update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress, params)
+				local anim_progress = math.easeCubic(1 - progress)
+				local y_anim_distance_max = 50
+				local y_anim_distance = y_anim_distance_max - y_anim_distance_max * anim_progress
 
-			parent._content_alpha_multiplier = anim_progress
-			widgets.previous_button.alpha_multiplier = anim_progress
-			widgets.next_button.alpha_multiplier = anim_progress
-			widgets.window_image.alpha_multiplier = anim_progress
-			local slides_amount = #parent._slides
-
-			for i = 1, slides_amount do
-				widgets["slide_circ_" .. i].alpha_multiplier = anim_progress
+				parent:_set_scenegraph_size("window", nil, 100 + (scenegraph_definition.window.size[2] - 100) * anim_progress)
 			end
-		end
-	},
-	{
-		name = "move",
-		end_time = 0.7,
-		start_time = 0.3,
-		init = function (parent, ui_scenegraph, scenegraph_definition, widgets, params)
-			parent:_set_scenegraph_size("window", nil, 100)
-		end,
-		update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress, params)
-			local anim_progress = math.easeCubic(1 - progress)
-			local y_anim_distance_max = 50
-			local y_anim_distance = y_anim_distance_max - y_anim_distance_max * anim_progress
+		},
+		{
+			name = "fade_out_window",
+			end_time = 0.5,
+			start_time = 0.3,
+			update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress, params)
+				local anim_progress = math.easeOutCubic(1 - progress)
+				local window = widgets.window
+				local alpha = 255 * anim_progress
+				local window_style = window.style
 
-			parent:_set_scenegraph_size("window", nil, 100 + (scenegraph_definition.window.size[2] - 100) * anim_progress)
-		end
-	},
-	{
-		name = "fade_out_window",
-		end_time = 0.5,
-		start_time = 0.3,
-		update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress, params)
-			local anim_progress = math.easeOutCubic(1 - progress)
-			local window = widgets.window
-			local alpha = 255 * anim_progress
-			local window_style = window.style
-			window_style.background.color[1] = alpha
-			window_style.background_gradient.color[1] = 200 * anim_progress
-			window_style.outer_shadow.color[1] = 200 * anim_progress
-			window_style.frame.color[1] = alpha
-			window_style.corner.color[1] = alpha
-			window_style.edge_top.color[1] = alpha
-			window_style.edge_bottom.color[1] = alpha
-			window_style.window_background.color[1] = alpha
-		end
-	},
-	{
-		name = "delay",
-		end_time = 0.6,
-		start_time = 0.5
-	}
-}
-animation_definitions.change_content_in = {
-	{
-		name = "init",
-		end_time = 0,
-		start_time = 0,
-		init = function (parent, ui_scenegraph, scenegraph_definition, widgets, params)
-			local alpha_multiplier = 0
-
-			parent:_play_sound(UISoundEvents.news_feed_slide_enter)
-
-			for _, widget in pairs(widgets) do
-				widget.alpha_multiplier = alpha_multiplier
+				window_style.background.color[1] = alpha
+				window_style.background_gradient.color[1] = 200 * anim_progress
+				window_style.outer_shadow.color[1] = 200 * anim_progress
+				window_style.frame.color[1] = alpha
+				window_style.corner.color[1] = alpha
+				window_style.edge_top.color[1] = alpha
+				window_style.edge_bottom.color[1] = alpha
+				window_style.window_background.color[1] = alpha
 			end
-
-			parent._content_alpha_multiplier = 0
-		end
+		},
+		{
+			name = "delay",
+			end_time = 0.6,
+			start_time = 0.5
+		}
 	},
-	{
-		name = "fade_in",
-		start_time = anim_start_delay + 0,
-		end_time = anim_start_delay + 0.2,
-		update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress, params)
-			local anim_progress = math.easeOutCubic(progress)
+	change_content_in = {
+		{
+			name = "init",
+			end_time = 0,
+			start_time = 0,
+			init = function (parent, ui_scenegraph, scenegraph_definition, widgets, params)
+				local alpha_multiplier = 0
 
-			for _, widget in pairs(widgets) do
-				widget.alpha_multiplier = anim_progress
+				parent:_play_sound(UISoundEvents.news_feed_slide_enter)
+
+				for _, widget in pairs(widgets) do
+					widget.alpha_multiplier = alpha_multiplier
+				end
+
+				parent._content_alpha_multiplier = 0
 			end
+		},
+		{
+			name = "fade_in",
+			start_time = anim_start_delay + 0,
+			end_time = anim_start_delay + 0.2,
+			update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress, params)
+				local anim_progress = math.easeOutCubic(progress)
 
-			parent._content_alpha_multiplier = anim_progress
-		end
-	}
-}
-animation_definitions.change_content_out = {
-	{
-		name = "init",
-		end_time = 0,
-		start_time = 0,
-		init = function (parent, ui_scenegraph, scenegraph_definition, widgets, params)
-			local alpha_multiplier = 1
+				for _, widget in pairs(widgets) do
+					widget.alpha_multiplier = anim_progress
+				end
 
-			parent:_play_sound(UISoundEvents.news_feed_slide_exit)
-
-			for _, widget in pairs(widgets) do
-				widget.alpha_multiplier = alpha_multiplier
+				parent._content_alpha_multiplier = anim_progress
 			end
-
-			parent._content_alpha_multiplier = 0
-		end
+		}
 	},
-	{
-		name = "fade_out",
-		start_time = anim_start_delay + 0,
-		end_time = anim_start_delay + 0.2,
-		update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress, params)
-			local anim_progress = math.easeInCubic(1 - progress)
+	change_content_out = {
+		{
+			name = "init",
+			end_time = 0,
+			start_time = 0,
+			init = function (parent, ui_scenegraph, scenegraph_definition, widgets, params)
+				local alpha_multiplier = 1
 
-			for _, widget in pairs(widgets) do
-				widget.alpha_multiplier = anim_progress
+				parent:_play_sound(UISoundEvents.news_feed_slide_exit)
+
+				for _, widget in pairs(widgets) do
+					widget.alpha_multiplier = alpha_multiplier
+				end
+
+				parent._content_alpha_multiplier = 0
 			end
+		},
+		{
+			name = "fade_out",
+			start_time = anim_start_delay + 0,
+			end_time = anim_start_delay + 0.2,
+			update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress, params)
+				local anim_progress = math.easeInCubic(1 - progress)
 
-			parent._content_alpha_multiplier = anim_progress
-		end
+				for _, widget in pairs(widgets) do
+					widget.alpha_multiplier = anim_progress
+				end
+
+				parent._content_alpha_multiplier = anim_progress
+			end
+		}
 	}
 }
 local slide_thumb_size = NewsViewSettings.slide_thumb_size

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/trigger/trigger_extension.lua
+
 local TriggerActionSafeVolume = require("scripts/extension_systems/trigger/trigger_actions/trigger_action_safe_volume")
 local TriggerActionSendFlow = require("scripts/extension_systems/trigger/trigger_actions/trigger_action_send_flow")
 local TriggerActionSetLocation = require("scripts/extension_systems/trigger/trigger_actions/trigger_action_set_location")
@@ -61,6 +63,7 @@ TriggerExtension.setup_from_component = function (self, trigger_condition, condi
 	self._is_active = start_active
 	self._volume_type = volume_type_or_nil or self._volume_type
 	self._target_extension_name = target_extension_name_or_nil or self._target_extension_name
+
 	local is_server = self._is_server
 	local unit = self._unit
 	local volume_event_system = self._volume_event_system

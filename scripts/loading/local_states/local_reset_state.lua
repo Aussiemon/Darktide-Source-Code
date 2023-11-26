@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/loading/local_states/local_reset_state.lua
+
 local LocalResetState = class("LocalResetState")
 
 LocalResetState.init = function (self, state_machine, shared_state)
@@ -19,6 +21,7 @@ end
 LocalResetState.load_mission = function (self)
 	local shared_state = self._shared_state
 	local mission_name = shared_state.mission_name
+
 	self._mission_name = mission_name
 end
 

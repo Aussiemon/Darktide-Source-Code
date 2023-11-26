@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/voting/voting_templates.lua
+
 local voting_templates = {
 	network = {},
 	party_immaterium = {}

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/components/mission_objective_zone.lua
+
 local MissionObjectiveZoneUtilites = require("scripts/extension_systems/mission_objective/utilities/mission_objective_zone")
 local MissionObjectiveZone = component("MissionObjectiveZone")
 local ZONE_TYPES = MissionObjectiveZoneUtilites.ZONE_TYPES
@@ -19,6 +21,10 @@ MissionObjectiveZone.init = function (self, unit)
 			local item_to_equip = self:get_data(unit, "item_to_equip")
 
 			mission_objective_zone_extension:setup_from_component(num_scannable_objects, max_scannable_objects_per_player, ZONE_TYPES.scan, item_to_equip)
+		end
+
+		if false then
+			-- Nothing
 		end
 	end
 end

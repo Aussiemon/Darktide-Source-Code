@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/components/safe_volume.lua
+
 local TriggerSettings = require("scripts/extension_systems/trigger/trigger_settings")
 local ONLY_ONCE = TriggerSettings.only_once
 local ACTION_TARGETS = TriggerSettings.action_targets

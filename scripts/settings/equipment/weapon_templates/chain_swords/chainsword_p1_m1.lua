@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/equipment/weapon_templates/chain_swords/chainsword_p1_m1.lua
+
 local ActionSweepSettings = require("scripts/settings/equipment/action_sweep_settings")
 local ArmorSettings = require("scripts/settings/damage/armor_settings")
 local BaseTemplateSettings = require("scripts/settings/equipment/weapon_templates/base_template_settings")
@@ -33,12 +35,13 @@ local stamina_trait_templates = WeaponTraitTemplates[template_types.stamina]
 local sway_trait_templates = WeaponTraitTemplates[template_types.sway]
 local toughness_trait_templates = WeaponTraitTemplates[template_types.toughness]
 local weapon_handling_trait_templates = WeaponTraitTemplates[template_types.weapon_handling]
-local weapon_template = {
-	action_inputs = table.clone(MeleeActionInputSetupMid.action_inputs),
-	action_input_hierarchy = table.clone(MeleeActionInputSetupMid.action_input_hierarchy)
-}
+local weapon_template = {}
+
+weapon_template.action_inputs = table.clone(MeleeActionInputSetupMid.action_inputs)
+weapon_template.action_input_hierarchy = table.clone(MeleeActionInputSetupMid.action_input_hierarchy)
 weapon_template.action_inputs.block.buffer_time = 0.1
 weapon_template.action_inputs.block_release.buffer_time = 0.35
+
 local _force_abort_breed_tags_special_active = {
 	"elite",
 	"special",
@@ -1960,7 +1963,9 @@ weapon_template.overclocks = {
 		chainsword_p1_m1_dps_stat = 0.1
 	}
 }
+
 local WeaponBarUIDescriptionTemplates = require("scripts/settings/equipment/weapon_bar_ui_description_templates")
+
 weapon_template.base_stats = {
 	chainsword_p1_m1_dps_stat = {
 		display_name = "loc_stats_display_damage_stat",
@@ -2337,6 +2342,7 @@ weapon_template.base_stats = {
 	}
 }
 weapon_template.traits = {}
+
 local bespoke_chainsword_p1_traits = table.keys(WeaponTraitsChainswordP1)
 
 table.append(weapon_template.traits, bespoke_chainsword_p1_traits)

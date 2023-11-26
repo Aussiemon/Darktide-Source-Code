@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/loading/loaders/breed_loader.lua
+
 local BreedResourceDependencies = require("scripts/utilities/breed_resource_dependencies")
 local Breeds = require("scripts/settings/breed/breeds")
 local Loader = require("scripts/loading/loader")
@@ -16,14 +18,14 @@ BreedLoader.destroy = function (self)
 end
 
 BreedLoader.start_loading = function (self, mission_name, level_editor_level, circumstance_name)
-	local chosen_breeds = Breeds
-	local item_definitions = MasterItems.get_cached()
+	local chosen_breeds, item_definitions = Breeds, MasterItems.get_cached()
 	local breeds_to_load = BreedResourceDependencies.generate(chosen_breeds, item_definitions)
 
 	if table.is_empty(breeds_to_load) then
 		self._load_state = LOAD_STATES.done
 	else
 		self._load_state = LOAD_STATES.packages_load
+
 		local callback = callback(self, "_load_done_callback")
 		local packages_to_load = self._packages_to_load
 
@@ -35,6 +37,7 @@ BreedLoader.start_loading = function (self, mission_name, level_editor_level, ci
 
 		for package_name, _ in pairs(packages_to_load) do
 			local id = package_manager:load(package_name, "BreedLoader", callback)
+
 			self._package_ids[id] = package_name
 		end
 	end
@@ -43,7 +46,9 @@ end
 BreedLoader._load_done_callback = function (self, id)
 	local package_name = self._package_ids[id]
 	local packages_to_load = self._packages_to_load
+
 	packages_to_load[package_name] = true
+
 	local all_packages_finished_loading = true
 
 	for _, loaded in pairs(packages_to_load) do

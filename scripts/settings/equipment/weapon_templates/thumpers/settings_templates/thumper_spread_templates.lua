@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/equipment/weapon_templates/thumpers/settings_templates/thumper_spread_templates.lua
+
 local spread_templates = {}
 local overrides = {}
 

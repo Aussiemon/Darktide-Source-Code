@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/nav_mesh/nav_mesh_manager.lua
+
 local Attack = require("scripts/utilities/attack/attack")
 local Breed = require("scripts/utilities/breed")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
@@ -18,8 +20,10 @@ NavMeshManager.init = function (self, world, nav_world, is_server, network_event
 	self._is_server = is_server
 	self._level_spawned = false
 	self._sparse_nav_graph_connected = false
+
 	local nav_tag_volume_data = self:_require_nav_tag_volume_data(level_name, {})
 	local nav_tag_volume_layers = self:_create_nav_tag_volumes_from_level_data(nav_tag_volume_data)
+
 	self._nav_tag_volume_data = nav_tag_volume_data
 	self._nav_cost_map_lookup = self:_setup_nav_cost_map_lookup()
 	self._nav_tag_layer_lookup = self:_setup_nav_tag_layer_lookup(nav_tag_volume_layers)
@@ -110,7 +114,9 @@ NavMeshManager.add_nav_tag_volume = function (self, bottom_points, altitude_min,
 	end
 
 	self._nav_tag_allowed_layers[layer_name] = allowed
+
 	local nav_tag_volume_data = self._nav_tag_volume_data
+
 	nav_tag_volume_data[#nav_tag_volume_data + 1] = {
 		name = layer_name,
 		type = optional_type,
@@ -169,6 +175,7 @@ end
 
 NavMeshManager._initialize_client_traverse_logic = function (self, nav_world)
 	local navtag_layer_cost_table = GwNavTagLayerCostTable.create()
+
 	self._navtag_layer_cost_table = navtag_layer_cost_table
 
 	self:initialize_nav_tag_cost_table(navtag_layer_cost_table, {})
@@ -435,7 +442,7 @@ NavMeshManager._recompute_nav_cost_maps = function (self)
 end
 
 NavMeshManager.update = function (self, dt, t)
-	if self._should_recompute_nav_cost_maps and self._next_nav_cost_map_recomputation_t < t then
+	if self._should_recompute_nav_cost_maps and t > self._next_nav_cost_map_recomputation_t then
 		self:_recompute_nav_cost_maps()
 
 		self._should_recompute_nav_cost_maps = false
@@ -457,8 +464,7 @@ NavMeshManager.hot_join_sync = function (self, sender, channel)
 	end
 end
 
-local NAV_MESH_ABOVE = 0.5
-local NAV_MESH_BELOW = 0.5
+local NAV_MESH_ABOVE, NAV_MESH_BELOW = 0.5, 0.5
 
 NavMeshManager.set_allowed_nav_tag_layer = function (self, layer_name, allowed)
 	if not self._is_server then
@@ -466,7 +472,9 @@ NavMeshManager.set_allowed_nav_tag_layer = function (self, layer_name, allowed)
 	end
 
 	local layer_id = self._nav_tag_layer_lookup[layer_name]
+
 	self._nav_tag_allowed_layers[layer_name] = allowed
+
 	local nav_world = self._nav_world
 	local damage_profile = DamageProfileTemplates.default
 	local slot_system = Managers.state.extension:system("slot_system")
@@ -527,6 +535,7 @@ end
 
 NavMeshManager.rpc_set_allowed_nav_tag_layer = function (self, channel_id, layer_id, allowed)
 	local layer_name = self._nav_tag_layer_lookup[layer_id]
+
 	self._nav_tag_allowed_layers[layer_name] = allowed
 
 	if allowed then

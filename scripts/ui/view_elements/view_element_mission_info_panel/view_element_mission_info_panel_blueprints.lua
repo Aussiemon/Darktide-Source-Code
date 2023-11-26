@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/view_elements/view_element_mission_info_panel/view_element_mission_info_panel_blueprints.lua
+
 local CircumstanceTemplates = require("scripts/settings/circumstance/circumstance_templates")
 local MissionInfoStyles = require("scripts/ui/view_elements/view_element_mission_info_panel/view_element_mission_info_panel_styles")
 local MissionBoardSettings = require("scripts/ui/views/mission_board_view/mission_board_view_settings")
@@ -20,10 +22,12 @@ local function _calculate_text_size(widget, text_and_style_id, ui_renderer)
 	return UIRenderer.text_size(ui_renderer, text, text_style.font_type, text_style.font_size, size, text_options)
 end
 
-local details_widgets_blueprints = {
-	templates = {}
-}
+local details_widgets_blueprints = {}
+
+details_widgets_blueprints.templates = {}
+
 local blueprint_templates = details_widgets_blueprints.templates
+
 blueprint_templates.report_header = {
 	size = blueprint_styles.report_header.size,
 	pass_template = {
@@ -46,6 +50,7 @@ blueprint_templates.report_header = {
 	style = blueprint_styles.report_header,
 	init = function (widget, widget_data)
 		local widget_content = widget.content
+
 		widget_content.headline = widget_data.headline
 		widget_content.time_left_update = widget_data.time_left_update
 	end
@@ -74,13 +79,15 @@ blueprint_templates.negative_circumstance_header = {
 	init = function (widget, widget_data, ui_renderer)
 		local circumstance_template = widget_data.circumstance_template
 		local widget_content = widget.content
+
 		widget_content.icon = circumstance_template.ui.icon
 		widget_content.title = Localize(circumstance_template.ui.display_name)
+
 		local _, title_text_height = _calculate_text_size(widget, "title", ui_renderer)
 		local widget_style = widget.style
 		local total_widget_height = widget_style.title.offset[2] + title_text_height + widget_style.bottom_margin
 
-		if widget_content.size[2] < total_widget_height then
+		if total_widget_height > widget_content.size[2] then
 			widget_content.size[2] = total_widget_height
 		end
 	end
@@ -106,7 +113,9 @@ blueprint_templates.circumstance_bullet_point = {
 	style = blueprint_styles.circumstance_bullet_point,
 	init = function (widget, widget_data, ui_renderer)
 		local widget_content = widget.content
+
 		widget_content.text = Localize(widget_data.bullet_point)
+
 		local widget_size = widget_content.size
 		local _, text_height = _calculate_text_size(widget, "text", ui_renderer)
 		local style = widget.style
@@ -114,7 +123,7 @@ blueprint_templates.circumstance_bullet_point = {
 		local bottom_margin = style.bottom_margin
 		local total_text_height = text_offset[2] + text_height + bottom_margin
 
-		if widget_size[2] < total_text_height then
+		if total_text_height > widget_size[2] then
 			widget_size[2] = total_text_height
 		end
 	end
@@ -149,15 +158,17 @@ blueprint_templates.side_mission = {
 	init = function (widget, widget_data, ui_renderer)
 		local side_mission_template = widget_data.side_mission_template
 		local widget_content = widget.content
+
 		widget_content.title = Localize(side_mission_template.header)
 		widget_content.description = Localize(side_mission_template.description)
+
 		local style = widget.style
 		local _, title_height = _calculate_text_size(widget, "title", ui_renderer)
 		local bottom_margin = style.bottom_margin
 		local total_text_height = style.title.offset[2] + title_height + bottom_margin
 		local description_offset = style.description.offset
 
-		if description_offset[2] < total_text_height then
+		if total_text_height > description_offset[2] then
 			description_offset[2] = total_text_height
 		else
 			total_text_height = description_offset[2]
@@ -165,9 +176,10 @@ blueprint_templates.side_mission = {
 
 		local widget_size = widget_content.size
 		local _, description_height = _calculate_text_size(widget, "description", ui_renderer)
+
 		total_text_height = total_text_height + description_height + bottom_margin
 
-		if widget_size[2] < total_text_height then
+		if total_text_height > widget_size[2] then
 			widget_size[2] = total_text_height
 		end
 
@@ -196,6 +208,7 @@ blueprint_templates.bonus = {
 	style = blueprint_styles.bonus,
 	init = function (widget, widget_data)
 		local widget_content = widget.content
+
 		widget_content.category = widget_data.category
 		widget_content.title = widget_data.title
 
@@ -207,6 +220,7 @@ blueprint_templates.bonus = {
 	end
 }
 details_widgets_blueprints.utility_functions = {}
+
 local blueprint_utility_functions = details_widgets_blueprints.utility_functions
 
 blueprint_utility_functions.base_xp_calculation = function (resistance_level, challenge_level)
@@ -217,7 +231,9 @@ local _widget_data = {}
 
 local function _next_element(index)
 	local details_data = _widget_data
+
 	index = index + 1
+
 	local next_element = details_data[index]
 
 	if next_element then
@@ -241,11 +257,15 @@ local function _prepare_circumstance_data(circumstance, num_elements)
 			return num_elements
 		end
 
-		local circumstance_header_data = nil
+		local circumstance_header_data
+
 		circumstance_header_data, num_elements = _next_element(num_elements)
+
 		local is_positive_circumstance = circumstance_template.ui.favourable_to_players
+
 		circumstance_header_data.template = is_positive_circumstance and "positive_circumstance_header" or "negative_circumstance_header"
 		circumstance_header_data.widget_data.circumstance_template = circumstance_template
+
 		local mutators = circumstance_template.mutators
 
 		if mutators then
@@ -253,7 +273,7 @@ local function _prepare_circumstance_data(circumstance, num_elements)
 				local mutator_name = mutators[i]
 				local mutator = MutatorTemplates[mutator_name]
 				local descriptions = mutator.description
-				local circumstance_bullet_point_data = nil
+				local circumstance_bullet_point_data
 
 				for j = 1, #descriptions do
 					circumstance_bullet_point_data, num_elements = _next_element(num_elements)
@@ -263,7 +283,8 @@ local function _prepare_circumstance_data(circumstance, num_elements)
 			end
 		end
 
-		local spacing = nil
+		local spacing
+
 		spacing, num_elements = _next_element(num_elements)
 		spacing.template = "list_spacing"
 	end
@@ -273,23 +294,30 @@ end
 
 blueprint_utility_functions.prepare_details_data = function (mission_data, map_data)
 	local num_elements = 0
-	local risk_reward_data = nil
+	local risk_reward_data
+
 	risk_reward_data, num_elements = _next_element(num_elements)
 	risk_reward_data.template = "risk_and_reward"
 	risk_reward_data.widget_data.mission_data = mission_data
+
 	local circumstance = mission_data.circumstance
+
 	num_elements = _prepare_circumstance_data(circumstance, num_elements)
+
 	local side_mission = mission_data.side_mission
 
 	if side_mission then
 		local template = side_mission_templates[side_mission]
 
 		if template then
-			local side_mission_data = nil
+			local side_mission_data
+
 			side_mission_data, num_elements = _next_element(num_elements)
 			side_mission_data.template = "side_mission"
 			side_mission_data.widget_data.side_mission_template = side_mission_templates[side_mission]
-			local spacing = nil
+
+			local spacing
+
 			spacing, num_elements = _next_element(num_elements)
 			spacing.template = "list_spacing"
 		end
@@ -300,12 +328,16 @@ end
 
 blueprint_utility_functions.prepare_report_data = function (happening_data, time_left_callback)
 	local num_elements = 0
-	local header_data = nil
+	local header_data
+
 	header_data, num_elements = _next_element(num_elements)
 	header_data.template = "report_header"
+
 	local header_widget_data = header_data.widget_data
+
 	header_widget_data.headline = happening_data.name and happening_data.name or Localize("loc_mission_board_event_panel_label")
 	header_widget_data.time_left_update = time_left_callback
+
 	local circumstances = happening_data.circumstances
 
 	for i = 1, #circumstances do

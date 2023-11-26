@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/contracts/contract_settings.lua
+
 local MissionTemplates = require("scripts/settings/mission/mission_templates")
 local StatsDefinitions = require("scripts/managers/stats/stat_definitions")
 local WalletSettings = require("scripts/settings/wallet_settings")
@@ -12,6 +14,7 @@ local task_parameter_strings = {
 	grimoire = "loc_contract_task_pickup_type_grimoire",
 	ranged = "loc_contract_task_weapon_type_ranged"
 }
+
 ContractSettings.kill_bosses = {
 	description = "loc_contracts_task_description_kill_bosses",
 	title = "loc_contracts_task_label_kill_bosses",

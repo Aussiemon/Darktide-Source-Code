@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/equipment/weapon_templates/combat_axes/combataxe_p2_m1.lua
+
 local ActionSweepSettings = require("scripts/settings/equipment/action_sweep_settings")
 local ArmorSettings = require("scripts/settings/damage/armor_settings")
 local BaseTemplateSettings = require("scripts/settings/equipment/weapon_templates/base_template_settings")
@@ -25,10 +27,12 @@ local sprint_trait_templates = WeaponTraitTemplates[template_types.sprint]
 local stamina_trait_templates = WeaponTraitTemplates[template_types.stamina]
 local weapon_handling_trait_templates = WeaponTraitTemplates[template_types.weapon_handling]
 local movement_curve_modifier_trait_templates = WeaponTraitTemplates[template_types.movement_curve_modifier]
-local weapon_template = {
-	action_inputs = table.clone(MeleeActionInputSetupFast.action_inputs)
-}
+local weapon_template = {}
+
+weapon_template.action_inputs = table.clone(MeleeActionInputSetupFast.action_inputs)
+
 local combat_axe_p3_action_input_hierarchy = table.clone(MeleeActionInputSetupFast.action_input_hierarchy)
+
 combat_axe_p3_action_input_hierarchy.special_action = {
 	attack_cancel = "base",
 	grenade_ability = "base",
@@ -46,6 +50,7 @@ combat_axe_p3_action_input_hierarchy.special_action = {
 	}
 }
 weapon_template.action_input_hierarchy = combat_axe_p3_action_input_hierarchy
+
 local hit_zone_priority = {
 	[hit_zone_names.head] = 1,
 	[hit_zone_names.torso] = 2,
@@ -62,6 +67,7 @@ local default_weapon_box = {
 	0.15,
 	1
 }
+
 weapon_template.actions = {
 	action_unwield = {
 		allowed_during_sprint = true,
@@ -1239,7 +1245,9 @@ weapon_template.stamina_template = "ninjafencer"
 weapon_template.toughness_template = "default"
 weapon_template.movement_curve_modifier_template = "combataxe_p1_m1"
 weapon_template.footstep_intervals = FootstepIntervalsTemplates.default
+
 local WeaponBarUIDescriptionTemplates = require("scripts/settings/equipment/weapon_bar_ui_description_templates")
+
 weapon_template.base_stats = {
 	combataxe_p2_m1_dps_stat = {
 		display_name = "loc_stats_display_damage_stat",
@@ -1523,6 +1531,7 @@ weapon_template.base_stats = {
 	}
 }
 weapon_template.traits = {}
+
 local bespoke_combataxe_p2_traits = table.keys(WeaponTraitsBespokeCombataxeP2)
 
 table.append(weapon_template.traits, bespoke_combataxe_p2_traits)

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/circumstance/templates/flash_mission_circumstance_template.lua
+
 local only_melee_mission_overrides = {
 	pickup_settings = {
 		rubberband_pool = {

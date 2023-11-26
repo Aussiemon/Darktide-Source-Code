@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/components/door_control_panel.lua
+
 local DoorControlPanel = component("DoorControlPanel")
 
 DoorControlPanel.init = function (self, unit)

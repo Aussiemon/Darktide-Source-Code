@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/hud/elements/team_panel_handler/hud_element_team_panel_handler_definitions.lua
+
 local HudElementTeamPanelHandlerSettings = require("scripts/ui/hud/elements/team_panel_handler/hud_element_team_panel_handler_settings")
 local HudElementTeamPlayerPanelSettings = require("scripts/ui/hud/elements/team_player_panel/hud_element_team_player_panel_settings")
 local HudElementPersonalPlayerPanelSettings = require("scripts/ui/hud/elements/personal_player_panel/hud_element_personal_player_panel_settings")
@@ -34,6 +36,7 @@ for i = 1, max_panels - 1 do
 		position_y,
 		panel_offset[3]
 	}
+
 	scenegraph_definition[scenegraph_id] = {
 		vertical_alignment = "bottom",
 		parent = "screen",

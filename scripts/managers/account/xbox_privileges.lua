@@ -1,6 +1,10 @@
+﻿-- chunkname: @scripts/managers/account/xbox_privileges.lua
+
 local PrivilegesManagerConstants = require("scripts/managers/privileges/privileges_manager_constants")
 local FGRLLimits = require("scripts/foundation/utilities/fgrl_limits")
+
 XboxPrivileges = class("XboxPrivileges")
+
 local DEFAULT_PRIVILEGES = DEFAULT_PRIVILEGES or {}
 local ATTEMPT_RESOLUTION_PRIVILEGES = ATTEMPT_RESOLUTION_PRIVILEGES or {}
 local XBOX_PRIVILEGE_LUT = XBOX_PRIVILEGE_LUT or {}
@@ -85,6 +89,7 @@ XboxPrivileges._send_batched_user_restrictions = function (self, batch_type, t)
 	local batch = self._batched_user_restrictions[batch_type]
 	local xuids = table.keys(batch.xuids)
 	local restrictions = table.keys(batch.restrictions)
+
 	self._batched_user_restrictions[batch_type] = nil
 	self._batch_send_timer[batch_type] = nil
 
@@ -123,6 +128,7 @@ XboxPrivileges._send_batched_user_restrictions = function (self, batch_type, t)
 				local xuid = result.target_xuid
 				local permission = result.permission_requested
 				local is_allowed = result.is_allowed
+
 				user_restrictions[xuid] = self._user_restrictions[xuid] or {}
 				user_restrictions[xuid][permission] = not result.is_allowed
 
@@ -177,7 +183,7 @@ XboxPrivileges.fetch_all_privileges = function (self, user_id, fetch_done_cb)
 		else
 			self._privileges_data[privilege] = {
 				has_privilege = has_privilege,
-				deny_reason = HRESULT.S_OK < deny_reason and PrivilegesManagerConstants.DenyReason[deny_reason] or "OK",
+				deny_reason = deny_reason > HRESULT.S_OK and PrivilegesManagerConstants.DenyReason[deny_reason] or "OK",
 				resolution_required = resolution_required
 			}
 		end
@@ -193,9 +199,10 @@ end
 XboxPrivileges.update_privileges = function (self, user_id)
 	for _, privilege in pairs(DEFAULT_PRIVILEGES) do
 		local has_privilege, deny_reason, resolution_required = XUser.check_privilege(user_id, XUserPrivilegeOptions.None, privilege)
+
 		self._privileges_data[privilege] = {
 			has_privilege = has_privilege,
-			deny_reason = HRESULT.S_OK < deny_reason and PrivilegesManagerConstants.DenyReason[deny_reason] or "OK",
+			deny_reason = deny_reason > HRESULT.S_OK and PrivilegesManagerConstants.DenyReason[deny_reason] or "OK",
 			resolution_required = resolution_required
 		}
 	end
@@ -225,12 +232,12 @@ end
 XboxPrivileges._cb_user_privilege_failed = function (self, user_id, privilege, result)
 	local h_result = result[1]
 
-	debug_log("[XboxPrivileges] User %q failed getting privilege %q - Reason: %s", tostring(user_id), XBOX_PRIVILEGE_LUT[privilege] or "unknown", HRESULT.S_OK < h_result and PrivilegesManagerConstants.DenyReason[h_result] or "UNKNOWN")
+	debug_log("[XboxPrivileges] User %q failed getting privilege %q - Reason: %s", tostring(user_id), XBOX_PRIVILEGE_LUT[privilege] or "unknown", h_result > HRESULT.S_OK and PrivilegesManagerConstants.DenyReason[h_result] or "UNKNOWN")
 
 	self._async_privileges[privilege] = nil
 	self._privileges_data[privilege] = {
 		has_privilege = false,
-		deny_reason = HRESULT.S_OK < h_result and PrivilegesManagerConstants.DenyReason[h_result] or "UNKNOWN"
+		deny_reason = h_result > HRESULT.S_OK and PrivilegesManagerConstants.DenyReason[h_result] or "UNKNOWN"
 	}
 
 	if table.is_empty(self._async_privileges) and self._fetch_done_cb then

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/ability/archetype_talents/base_talents.lua
+
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local PlayerAbilities = require("scripts/settings/ability/player_abilities/player_abilities")
 local stat_buffs = BuffSettings.stat_buffs

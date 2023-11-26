@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/video_view/video_view_definitions.lua
+
 local UIWorkspaceSettings = require("scripts/settings/ui/ui_workspace_settings")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local scenegraph_definition = {

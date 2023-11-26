@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/servo_skull/servo_skull_extension.lua
+
 local MissionObjectiveScanning = require("scripts/settings/mission_objective/mission_objective_scanning")
 local MissionSoundEvents = require("scripts/settings/sound/mission_sound_events")
 local Vo = require("scripts/utilities/vo")
@@ -43,59 +45,57 @@ ServoSkullExtension.hot_join_sync = function (self, unit, sender)
 end
 
 ServoSkullExtension.update = function (self, unit, dt, t)
-	if self._is_server then
-		if self._servo_skull_state == STATES.inactive then
-			-- Nothing
-		elseif self._servo_skull_state == STATES.traveling then
-			if not self._player_close then
-				if self:_servo_skull_is_wandering() then
-					self:_vo_timer(dt)
-				elseif self._vo_line_timer ~= 0 then
-					self._vo_line_timer = 0
-				end
+	if not self._is_server or self._servo_skull_state == STATES.inactive then
+		-- Nothing
+	elseif self._servo_skull_state == STATES.traveling then
+		if not self._player_close then
+			if self:_servo_skull_is_wandering() then
+				self:_vo_timer(dt)
+			elseif self._vo_line_timer ~= 0 then
+				self._vo_line_timer = 0
 			end
-		elseif self._servo_skull_state == STATES.scanning then
-			local pulse_timer = self._pulse_timer
-
-			if pulse_timer > 0 then
-				pulse_timer = math.max(pulse_timer - dt, 0)
-			else
-				pulse_timer = self._pulse_interval
-
-				if self:_zone_has_active_scannables() then
-					self:do_pulse_fx()
-
-					self._activate_scannable_indicator_particle = true
-
-					table.clear(self._units_to_ignore)
-
-					self._pulse_fx_timer = self._pulse_fx_travel_time_per_meter
-				else
-					self:set_servo_skull_state(STATES.idle)
-
-					self._pulse_timer = 0
-				end
-			end
-
-			self._pulse_timer = pulse_timer
-		elseif self._servo_skull_state == STATES.idle then
-			local scannable_check_timer = self._scannable_check_timer
-
-			if scannable_check_timer > 0 then
-				scannable_check_timer = math.max(scannable_check_timer - dt, 0)
-			else
-				scannable_check_timer = self._scannable_check_interval
-
-				if self:_zone_has_active_scannables() then
-					self:set_servo_skull_state(STATES.scanning)
-					self._mission_objective_system:music_event(MissionSoundEvents.scanning_scan_start)
-
-					self._scannable_check_timer = 0
-				end
-			end
-
-			self._scannable_check_timer = scannable_check_timer
 		end
+	elseif self._servo_skull_state == STATES.scanning then
+		local pulse_timer = self._pulse_timer
+
+		if pulse_timer > 0 then
+			pulse_timer = math.max(pulse_timer - dt, 0)
+		else
+			pulse_timer = self._pulse_interval
+
+			if self:_zone_has_active_scannables() then
+				self:do_pulse_fx()
+
+				self._activate_scannable_indicator_particle = true
+
+				table.clear(self._units_to_ignore)
+
+				self._pulse_fx_timer = self._pulse_fx_travel_time_per_meter
+			else
+				self:set_servo_skull_state(STATES.idle)
+
+				self._pulse_timer = 0
+			end
+		end
+
+		self._pulse_timer = pulse_timer
+	elseif self._servo_skull_state == STATES.idle then
+		local scannable_check_timer = self._scannable_check_timer
+
+		if scannable_check_timer > 0 then
+			scannable_check_timer = math.max(scannable_check_timer - dt, 0)
+		else
+			scannable_check_timer = self._scannable_check_interval
+
+			if self:_zone_has_active_scannables() then
+				self:set_servo_skull_state(STATES.scanning)
+				self._mission_objective_system:music_event(MissionSoundEvents.scanning_scan_start)
+
+				self._scannable_check_timer = 0
+			end
+		end
+
+		self._scannable_check_timer = scannable_check_timer
 	end
 
 	if not DEDICATED_SERVER and self._scanning_active then
@@ -106,7 +106,7 @@ ServoSkullExtension.update = function (self, unit, dt, t)
 			local skull_position = POSITION_LOOKUP[self._unit]
 			local player_position = POSITION_LOOKUP[local_player.player_unit]
 
-			if MissionObjectiveScanning.go_to_marker_activation_range <= Vector3.distance(skull_position, player_position) then
+			if Vector3.distance(skull_position, player_position) >= MissionObjectiveScanning.go_to_marker_activation_range then
 				set_marker = true
 			end
 		end
@@ -166,11 +166,13 @@ ServoSkullExtension.at_end_of_spline = function (self, last_spline)
 
 		if scannable_units then
 			self._scannable_units = scannable_units
+
 			local scannable_units_distance = self._scannable_units_distance
 			local servo_skull_position = POSITION_LOOKUP[self._unit]
 
 			for i = 1, #scannable_units do
 				local scannable_unit = scannable_units[i]
+
 				scannable_units_distance[scannable_unit] = Vector3.distance(POSITION_LOOKUP[scannable_unit], servo_skull_position)
 			end
 
@@ -185,6 +187,7 @@ end
 ServoSkullExtension.player_nearby = function (self, player_nearby)
 	if self._player_close ~= player_nearby then
 		self._player_close = player_nearby
+
 		local flow_event_name = player_nearby and "lua_player_close" or "lua_no_player_close"
 
 		Unit.flow_event(self._unit, flow_event_name)
@@ -280,6 +283,7 @@ end
 
 ServoSkullExtension._objective = function (self)
 	local current_objective_name = self._mission_objective_zone_system:current_objective_name()
+
 	self._mission_objective = self._mission_objective_system:get_active_objective(current_objective_name)
 
 	return self._mission_objective
@@ -294,7 +298,7 @@ ServoSkullExtension._servo_skull_is_wandering = function (self)
 	local players = player_manager:players()
 	local servo_skull_position = Unit.world_position(self._unit, 1)
 	local wandering_distance = self._wandering_distance
-	local closest_distance = nil
+	local closest_distance
 	local ALIVE = ALIVE
 
 	for k, player in pairs(players) do

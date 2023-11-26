@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/locomotion/utilities/true_flight_functions/true_flight_functions.lua
+
 local true_flight_functions = {}
 
 local function _extract_true_flight_functions(path)

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/hud/hud_elements_player_onboarding.lua
+
 local elements = {
 	{
 		package = "packages/ui/hud/wield_info/wield_info",

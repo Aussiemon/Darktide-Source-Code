@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/minigame/minigames/minigame_base.lua
+
 local MinigameBase = class("MinigameBase")
 
 MinigameBase.init = function (self, unit, is_server, seed)

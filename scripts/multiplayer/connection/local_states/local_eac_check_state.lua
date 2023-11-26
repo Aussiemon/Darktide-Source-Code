@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/multiplayer/connection/local_states/local_eac_check_state.lua
+
 local RPCS = {
 	"rpc_request_eac_approval_reply"
 }
@@ -9,6 +11,7 @@ LocalEacCheckState.init = function (self, state_machine, shared_state)
 	self._time = 0
 	self._host_responded = false
 	self._host_response = false
+
 	local has_eac = false
 
 	if has_eac then
@@ -30,9 +33,10 @@ end
 
 LocalEacCheckState.update = function (self, dt)
 	local shared_state = self._shared_state
+
 	self._time = self._time + dt
 
-	if shared_state.timeout < self._time then
+	if self._time > shared_state.timeout then
 		if self._host_responded then
 			Log.info("LocalEacCheckState", "Timeout waiting for EAC state")
 		else

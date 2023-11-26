@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/multiplayer/session/local_states/local_wait_for_session_host_state.lua
+
 local LocalWaitForSessionHostState = class("LocalWaitForSessionHostState")
 
 LocalWaitForSessionHostState.init = function (self, state_machine, shared_state)
@@ -17,7 +19,7 @@ LocalWaitForSessionHostState.update = function (self, dt)
 
 	self._time = self._time + dt
 
-	if shared_state.timeout < self._time then
+	if self._time > shared_state.timeout then
 		Log.info("LocalWaitForSessionHostState", "Timeout waiting for game session host")
 
 		return "timeout", {

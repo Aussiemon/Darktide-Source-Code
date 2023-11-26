@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/components/mission_path_blocker.lua
+
 local MissionPathBlocker = component("MissionPathBlocker")
 
 MissionPathBlocker.init = function (self, unit, is_server)

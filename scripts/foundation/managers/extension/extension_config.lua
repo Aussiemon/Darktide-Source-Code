@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/foundation/managers/extension/extension_config.lua
+
 require("scripts/foundation/utilities/script_unit")
 
 local ExtensionConfig = class("ExtensionConfig")
@@ -24,6 +26,7 @@ end
 ExtensionConfig.add = function (self, extension_class_name, init_args, remove_when_killed)
 	local index = self._num_extensions * 3 + 1
 	local exts = self._extension_data
+
 	exts[index] = extension_class_name
 	exts[index + 1] = init_args
 	exts[index + 2] = remove_when_killed

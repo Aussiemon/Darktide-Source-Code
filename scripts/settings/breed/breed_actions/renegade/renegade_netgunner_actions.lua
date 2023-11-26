@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/breed/breed_actions/renegade/renegade_netgunner_actions.lua
+
 local BreedShootTemplates = require("scripts/settings/breed/breed_shoot_templates")
 local EffectTemplates = require("scripts/settings/fx/effect_templates")
 local HitZone = require("scripts/utilities/attack/hit_zone")

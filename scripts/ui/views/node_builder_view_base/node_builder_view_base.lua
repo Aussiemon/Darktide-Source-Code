@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/node_builder_view_base/node_builder_view_base.lua
+
 local Definitions = require("scripts/ui/views/node_builder_view_base/node_builder_view_base_definitions")
 local BaseView = require("scripts/ui/views/base_view")
 local UIFonts = require("scripts/managers/ui/ui_fonts")
@@ -7,6 +9,7 @@ local UIScenegraph = require("scripts/managers/ui/ui_scenegraph")
 local ColorUtilities = require("scripts/utilities/ui/colors")
 local NODE_STATUS = table.enum("locked", "available", "unavailable", "capped")
 local NodeBuilderViewBase = class("NodeBuilderViewBase", "BaseView")
+
 NodeBuilderViewBase.NODE_STATUS = NODE_STATUS
 
 NodeBuilderViewBase.init = function (self, definitions, settings, context)
@@ -40,6 +43,7 @@ NodeBuilderViewBase.on_enter = function (self)
 	NodeBuilderViewBase.super.on_enter(self)
 
 	local overlay_scenegraph_definition = self._definitions.overlay_scenegraph_definition
+
 	self._ui_overlay_scenegraph = UIScenegraph.init_scenegraph(overlay_scenegraph_definition, self._render_scale)
 
 	self:_setup_node_connection_widget()
@@ -53,6 +57,7 @@ NodeBuilderViewBase.on_enter = function (self)
 	end
 
 	self._layout_widgets = layout_widgets
+
 	local first_layout = self._layouts[1]
 	local first_layout_name = first_layout and first_layout.name
 
@@ -119,8 +124,10 @@ NodeBuilderViewBase._create_node_widget = function (self, node)
 	self:_add_scenegraph_definition(widget_name, table.clone(node_scenegraph_definition))
 
 	local widget = self:_create_widget(widget_name, node_definition)
+
 	widget.scenegraph_id = widget_name
 	widget.content.node_data = node
+
 	local hotspot = widget.content.hotspot
 
 	if hotspot then
@@ -226,6 +233,7 @@ NodeBuilderViewBase._can_remove_point_in_node = function (self, node)
 			can_remove = true
 		else
 			local children = node.children
+
 			can_remove = true
 
 			for _, child_name in ipairs(children) do
@@ -256,6 +264,7 @@ NodeBuilderViewBase._can_node_traverse_to_start = function (self, node, ignore_l
 	end
 
 	ignore_list[node.widget_name] = true
+
 	local points_spent_on_node_widgets = self._points_spent_on_node_widgets
 	local parents = node.parents
 
@@ -346,8 +355,11 @@ end
 
 NodeBuilderViewBase._add_scenegraph_definition = function (self, name, definition)
 	local scenegraph_definition = self._definitions.scenegraph_definition
+
 	scenegraph_definition[name] = definition
+
 	local scenegraph = UIScenegraph.init_scenegraph(scenegraph_definition, self._render_scale)
+
 	self._ui_scenegraph = scenegraph
 
 	self:apply_active_background_size()
@@ -355,7 +367,7 @@ NodeBuilderViewBase._add_scenegraph_definition = function (self, name, definitio
 end
 
 NodeBuilderViewBase._activate_layout_by_name = function (self, name)
-	local active_layout = nil
+	local active_layout
 
 	for i = 1, #self._layouts do
 		local layout = self._layouts[i]
@@ -373,15 +385,15 @@ NodeBuilderViewBase._activate_layout_by_name = function (self, name)
 
 	local nodes = active_layout.nodes
 	local nodes_render_order_list = {}
-	local lowest_node_height = math.huge
-	local highest_node_height = 0
+	local lowest_node_height, highest_node_height = math.huge, 0
 
 	for i = 1, #nodes do
 		local node = nodes[i]
+
 		self._node_widgets[#self._node_widgets + 1] = self:_create_node_widget(node)
 		nodes_render_order_list[i] = node
 
-		if node.y < lowest_node_height then
+		if lowest_node_height > node.y then
 			lowest_node_height = node.y
 		end
 
@@ -402,7 +414,7 @@ NodeBuilderViewBase.recreate_widget_for_node = function (self, node)
 	self:clear_node_points()
 
 	local node_widgets = self._node_widgets
-	local widget_index = nil
+	local widget_index
 
 	for i = 1, #node_widgets do
 		local node_widget = node_widgets[i]
@@ -433,7 +445,7 @@ NodeBuilderViewBase._increase_render_priority_of_node = function (self, priority
 
 	table.remove(nodes, node_current_index)
 
-	local wanted_move_index = nil
+	local wanted_move_index
 
 	for i = 1, #nodes do
 		local node = nodes[i]
@@ -467,7 +479,9 @@ end
 
 NodeBuilderViewBase._add_node = function (self, x, y)
 	local active_layout = self:get_active_layout()
+
 	active_layout.dirty = true
+
 	local nodes = active_layout.nodes
 	local node = {
 		y_normalized = 0,
@@ -485,6 +499,7 @@ NodeBuilderViewBase._add_node = function (self, x, y)
 			min_points_spent = 0
 		}
 	}
+
 	nodes[#nodes + 1] = node
 	self._nodes_render_order_list[#self._nodes_render_order_list + 1] = self._nodes_render_order_list
 	self._node_widgets[#self._node_widgets + 1] = self:_create_node_widget(node)
@@ -524,7 +539,9 @@ end
 
 NodeBuilderViewBase._remove_node = function (self, widget_name)
 	local active_layout = self:get_active_layout()
+
 	active_layout.dirty = true
+
 	local nodes = active_layout.nodes
 
 	for i = 1, #nodes do
@@ -602,8 +619,11 @@ NodeBuilderViewBase.update = function (self, dt, t, input_service)
 	end
 
 	local player_mode = self._player_mode
+
 	self._can_close = not player_mode and not active_layout.dirty
+
 	local render_scale = Managers.ui:view_render_scale()
+
 	self._render_scale = render_scale * self._current_zoom
 
 	self:_update_node_widgets()
@@ -637,7 +657,7 @@ end
 NodeBuilderViewBase._update_node_widgets = function (self)
 	local widgets = self._node_widgets
 	local can_draw_tooltip = false
-	local hovered_widget = nil
+	local hovered_widget
 	local allowed_node_input = self:_allowed_node_input()
 
 	for i = 1, #widgets do
@@ -645,6 +665,7 @@ NodeBuilderViewBase._update_node_widgets = function (self)
 		local content = widget.content
 		local hotspot = content.hotspot
 		local already_spent_node_points, max_points = self:_node_points_by_widget(widget)
+
 		content.has_points_spent = already_spent_node_points > 0
 
 		self:_set_node_points_spent_text(widget, already_spent_node_points, max_points)
@@ -672,6 +693,7 @@ NodeBuilderViewBase._update_node_widgets = function (self)
 		end
 
 		local status = self:_node_availability_status(node_data)
+
 		content.locked = status == NODE_STATUS.locked
 	end
 
@@ -681,6 +703,7 @@ end
 
 NodeBuilderViewBase._set_node_points_spent_text = function (self, widget, points_spent, max_points)
 	local content = widget.content
+
 	content.text = tostring(points_spent) .. " / " .. tostring(max_points)
 end
 
@@ -745,6 +768,7 @@ NodeBuilderViewBase._points_spent_in_group = function (self, group_name)
 
 		if node.group_name == group_name then
 			local node_widget_name = node.widget_name
+
 			points_spent = points_spent + (points_spent_on_node_widgets[node_widget_name] or 0)
 		end
 	end
@@ -779,7 +803,7 @@ NodeBuilderViewBase._node_availability_status = function (self, node, can_always
 	local can_afford = can_always_afford or points_available > 0
 	local max_points = node.max_points or 0
 
-	if points_spent_in_node >= max_points then
+	if max_points <= points_spent_in_node then
 		return NODE_STATUS.capped
 	end
 
@@ -830,7 +854,7 @@ NodeBuilderViewBase._node_availability_status = function (self, node, can_always
 
 		if num_parents > 0 then
 			local all_parents_chosen = requirements.all_parents_chosen
-			local return_result = nil
+			local return_result
 			local points_spent_on_all_parents = true
 
 			for i = 1, num_parents do
@@ -916,8 +940,11 @@ NodeBuilderViewBase._add_node_point_on_widget = function (self, widget)
 	end
 
 	self._node_points_spent = self._node_points_spent + 1
+
 	local name = widget.name
+
 	self._points_spent_on_node_widgets[name] = (self._points_spent_on_node_widgets[name] or 0) + 1
+
 	local node = widget.content.node_data
 	local instant_tooltip = true
 
@@ -997,6 +1024,7 @@ NodeBuilderViewBase._assign_link_between_nodes = function (self, selected_node, 
 
 	pressed_node.parents[#pressed_node.parents + 1] = selected_node.widget_name
 	selected_node.children[#selected_node.children + 1] = pressed_node.widget_name
+
 	local active_layout = self:get_active_layout()
 
 	if not active_layout then
@@ -1008,7 +1036,9 @@ end
 
 NodeBuilderViewBase._remove_node_point_on_widget = function (self, widget)
 	self._node_points_spent = math.max(self._node_points_spent - 1, 0)
+
 	local name = widget.name
+
 	self._points_spent_on_node_widgets[name] = math.max((self._points_spent_on_node_widgets[name] or 0) - 1, 0)
 
 	if self._points_spent_on_node_widgets[name] == 0 then
@@ -1086,6 +1116,7 @@ NodeBuilderViewBase._handle_input = function (self, input_service, dt, t)
 	end
 
 	self._input_handled_current_frame = nil
+
 	local render_settings = self._render_settings
 	local widgets_by_name = self._widgets_by_name
 	local next_input_hold = input_service:get("next_hold")
@@ -1112,13 +1143,15 @@ NodeBuilderViewBase._handle_input = function (self, input_service, dt, t)
 	self._dragging_background = dragging_background
 
 	if not input_handled and allowed_node_input then
-		local scroll = nil
+		local scroll
 		local scroll_axis = input_service:get("scroll_axis")
+
 		scroll = scroll_axis and scroll_axis[2] or 0
 		scroll = math.abs(scroll)
 
 		if math.abs(scroll) > 0.1 then
 			local previous_direction_multiplier = self._scroll_direction_multiplier
+
 			self._scroll_direction_multiplier = scroll_axis[2] > 0 and 1 or -1
 
 			if previous_direction_multiplier and previous_direction_multiplier ~= self._scroll_direction_multiplier then
@@ -1132,7 +1165,7 @@ NodeBuilderViewBase._handle_input = function (self, input_service, dt, t)
 			local scroll_direction_multiplier = self._scroll_direction_multiplier or 1
 			local scroll_add = self._scroll_add
 			local speed = 20
-			local step = math.max(scroll_add * dt * speed, 0.001)
+			local step = math.max(scroll_add * (dt * speed), 0.001)
 
 			if scroll_add > scroll / 500 then
 				self._scroll_add = math.max(self._scroll_add - step, 0)
@@ -1194,8 +1227,10 @@ NodeBuilderViewBase._handle_scenegraph_coordinates = function (self, widget_name
 	local left_pressed = input_service:get(input_key_pressed)
 	local cursor_position = input_service:get(cursor_name)
 	local scenegraph_width, scenegraph_height = self:_scenegraph_size(scenegraph_id)
+
 	_temp_widget_size[1] = scenegraph_width * render_scale
 	_temp_widget_size[2] = scenegraph_height * render_scale
+
 	local handled = false
 
 	if left_pressed then
@@ -1220,6 +1255,7 @@ NodeBuilderViewBase._handle_scenegraph_coordinates = function (self, widget_name
 
 		if not scenegraph_settings then
 			local scenegraph_position_x, scenegraph_position_y, _ = self:_scenegraph_position(scenegraph_id)
+
 			scenegraph_settings = {
 				x = scenegraph_position_x,
 				y = scenegraph_position_y,
@@ -1246,14 +1282,14 @@ NodeBuilderViewBase._handle_scenegraph_coordinates = function (self, widget_name
 			self._draging_scenegraph_widget_name = nil
 		end
 
-		local final_x = 0
-		local final_y = 0
+		local final_x, final_y = 0, 0
 		local cursor_end_coordinates = self._cursor_end_coordinates
 
 		if cursor_end_coordinates then
 			local cursor_start_coordinates = self._cursor_start_coordinates
 			local diff_x = (cursor_end_coordinates[1] - cursor_start_coordinates[1]) * render_inverse_scale
 			local diff_y = (cursor_end_coordinates[2] - cursor_start_coordinates[2]) * render_inverse_scale
+
 			final_x = scenegraph_settings.x + diff_x
 			final_y = scenegraph_settings.y + diff_y
 
@@ -1274,7 +1310,7 @@ NodeBuilderViewBase._handle_scenegraph_coordinates = function (self, widget_name
 			if cursor_pixel_threshold then
 				local cursor_distance = math.distance_2d(cursor_start_position[1], cursor_start_position[2], cursor_position[1], cursor_position[2])
 
-				if math.abs(cursor_distance) < cursor_pixel_threshold then
+				if cursor_pixel_threshold > math.abs(cursor_distance) then
 					pixel_distance_valid = false
 				end
 			end
@@ -1288,9 +1324,12 @@ NodeBuilderViewBase._handle_scenegraph_coordinates = function (self, widget_name
 
 						if grid_snapping_position then
 							local background_x, background_y = self:_background_position()
+
 							final_x = grid_snapping_position[1] + math.abs(background_x)
 							final_y = grid_snapping_position[2] + math.abs(background_y)
+
 							local grid_size = self._grid_size
+
 							final_x = final_x + (grid_size - scenegraph_width) * 0.5
 							final_y = final_y + (grid_size - scenegraph_height) * 0.5
 						end
@@ -1322,9 +1361,12 @@ NodeBuilderViewBase.draw = function (self, dt, t, input_service, layer)
 	local render_settings = self._render_settings
 	local render_scale = RESOLUTION_LOOKUP.scale
 	local render_inverse_scale = 1 / render_scale
+
 	render_settings.scale = render_scale
 	render_settings.inverse_scale = render_inverse_scale
+
 	local ui_renderer = self._ui_renderer
+
 	render_settings.start_layer = layer
 
 	UIRenderer.begin_pass(ui_renderer, self._ui_overlay_scenegraph, input_service, dt, render_settings)
@@ -1349,9 +1391,11 @@ NodeBuilderViewBase.draw_layout = function (self, dt, t, input_service, layer)
 	local start_layer = render_settings.start_layer
 	local render_scale = self._render_scale
 	local ui_renderer = self._ui_renderer
+
 	render_settings.start_layer = layer
 	render_settings.scale = render_scale
 	render_settings.inverse_scale = render_scale and 1 / render_scale
+
 	local ui_scenegraph = self._ui_scenegraph
 
 	UIRenderer.begin_pass(ui_renderer, ui_scenegraph, input_service, dt, render_settings)
@@ -1372,6 +1416,7 @@ NodeBuilderViewBase.draw_layout = function (self, dt, t, input_service, layer)
 
 	if active_layout then
 		render_settings.start_layer = render_settings.start_layer + 10
+
 		local inverse_scale = render_settings.inverse_scale or 1
 		local screen_height = RESOLUTION_LOOKUP.height
 		local node_widgets = self._node_widgets
@@ -1460,14 +1505,17 @@ NodeBuilderViewBase._draw_layout_node_connections = function (self, dt, t, input
 						local child_widget_width, child_widget_height = self:_scenegraph_size(child_widget_scenegraph_id)
 						local offset_x = node_widget_world_position[1] - node_connection_widget_world_position[1] - (node_connection_widget_width - node_widget_width) * 0.5
 						local offset_y = node_widget_world_position[2] - node_connection_widget_world_position[2] - (node_connection_widget_height - node_widget_height) * 0.5
+
 						node_connection_widget.offset[1] = offset_x
 						node_connection_widget.offset[2] = offset_y
+
 						local distance = math.distance_2d(child_widget_world_position[1] + child_widget_width * 0.5, child_widget_world_position[2] + child_widget_height * 0.5, node_widget_world_position[1] + node_widget_width * 0.5, node_widget_world_position[2] + node_widget_height * 0.5)
 						local angle = math.angle(child_widget_world_position[1] + child_widget_width * 0.5, child_widget_world_position[2] + child_widget_height * 0.5, node_widget_world_position[1] + node_widget_width * 0.5, node_widget_world_position[2] + node_widget_height * 0.5)
 						local inverse_scale = render_settings.inverse_scale or 1
 						local visible = math.min(child_widget_world_position[2], node_widget_world_position[2]) < screen_height * inverse_scale
 						local child_node = child_widget.content.node_data
 						local drawn = self:_draw_connection_between_widgets(ui_renderer, visible, dt, node, child_node, offset_x, offset_y, distance, angle)
+
 						parent_frame_connection_draw_list[child_node_name] = drawn
 					end
 				end
@@ -1492,7 +1540,7 @@ NodeBuilderViewBase._draw_connection_between_widgets = function (self, ui_render
 	local child_status = self:_node_availability_status(child_node) or NODE_STATUS.available
 	local child_node_name = child_node.widget_name
 	local child_points_spent = points_spent_on_node_widgets[child_node_name] or 0
-	local color_status = nil
+	local color_status
 
 	if is_parent_starting_node then
 		if child_points_spent > 0 then
@@ -1500,12 +1548,8 @@ NodeBuilderViewBase._draw_connection_between_widgets = function (self, ui_render
 		elseif self._points_available > 0 then
 			color_status = "locked"
 		end
-	elseif child_status == NODE_STATUS.locked or child_status == NODE_STATUS.unavailable or children_unlock_points > points_spent_on_parent then
-		color_status = "locked"
-	elseif child_points_spent > 0 then
-		color_status = "chosen"
 	else
-		color_status = "unlocked"
+		color_status = not (child_status ~= NODE_STATUS.locked and child_status ~= NODE_STATUS.unavailable and children_unlock_points <= points_spent_on_parent) and "locked" or child_points_spent > 0 and "chosen" or "unlocked"
 	end
 
 	self:_apply_node_connection_line_colors(color_status)
@@ -1548,7 +1592,7 @@ NodeBuilderViewBase._apply_node_connection_line_colors = function (self, color_s
 		return
 	end
 
-	local color = nil
+	local color
 
 	if color_status == "locked" then
 		color = line_colors.locked

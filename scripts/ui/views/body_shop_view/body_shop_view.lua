@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/body_shop_view/body_shop_view.lua
+
 local BodyShopViewSettings = require("scripts/ui/views/body_shop_view/body_shop_settings")
 local Definitions = require("scripts/ui/views/body_shop_view/body_shop_definitions")
 local UIWorldSpawner = require("scripts/managers/ui/ui_world_spawner")
@@ -27,6 +29,7 @@ BodyShopView._setup_background_world = function (self)
 	local world_name = BodyShopViewSettings.world_name
 	local world_layer = BodyShopViewSettings.world_layer
 	local world_timer_name = BodyShopViewSettings.timer_name
+
 	self._world_spawner = UIWorldSpawner:new(world_name, world_layer, world_timer_name, self.view_name)
 
 	if self._context then
@@ -83,6 +86,7 @@ end
 
 BodyShopView._setup_input_legend = function (self)
 	self._input_legend_element = self:_add_element(ViewElementInputLegend, "input_legend", 10)
+
 	local legend_inputs = self._definitions.legend_inputs
 
 	for i = 1, #legend_inputs do
@@ -100,6 +104,7 @@ BodyShopView._handle_background_blur = function (self)
 	if apply_blur ~= self._game_world_fullscreen_blur_enabled or self._game_world_fullscreen_blur_amount ~= blur_amount then
 		local world_name = BodyShopViewSettings.world_name
 		local viewport_name = BodyShopViewSettings.viewport_name
+
 		self._game_world_fullscreen_blur_enabled = apply_blur
 		self._game_world_fullscreen_blur_amount = blur_amount
 

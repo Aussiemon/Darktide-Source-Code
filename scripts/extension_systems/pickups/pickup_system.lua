@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/pickups/pickup_system.lua
+
 require("scripts/extension_systems/pickups/pickup_spawner_extension")
 
 local CircumstanceTemplates = require("scripts/settings/circumstance/circumstance_templates")
@@ -19,6 +21,7 @@ PickupSystem.init = function (self, context, system_init_data, ...)
 	PickupSystem.super.init(self, context, system_init_data, ...)
 
 	local is_server = context.is_server
+
 	self._soft_cap_out_of_bounds_units = context.soft_cap_out_of_bounds_units
 	self._mission_pool_adjustments = system_init_data.mission.pickup_settings
 	self._backend_pool_adjustments = context.pickup_pool_adjustments
@@ -41,6 +44,7 @@ PickupSystem.init = function (self, context, system_init_data, ...)
 
 	if not is_server then
 		local network_event_delegate = context.network_event_delegate
+
 		self._network_event_delegate = network_event_delegate
 
 		network_event_delegate:register_session_events(self, unpack(CLIENT_RPCS))
@@ -61,6 +65,7 @@ PickupSystem._fetch_settings = function (self)
 
 	if mission_pickup_settings then
 		selected_pools = self:_get_pickup_pool_from_difficulty(distribution_pool, difficulty)
+
 		local pickup_settings_adjust = self:_get_pickup_pool_from_difficulty(mission_pickup_settings, difficulty)
 
 		self:_add_to_table(selected_pools, pickup_settings_adjust)
@@ -112,6 +117,7 @@ PickupSystem._create_game_object = function (self)
 		game_object_type = NetworkLookup.game_object_types.materials_collected
 	}
 	local game_session = self._game_session
+
 	self._materials_collected_game_object_id = GameSession.create_game_object(game_session, "materials_collected", game_object_data_table)
 end
 
@@ -242,8 +248,7 @@ PickupSystem._populate_pickups = function (self)
 	if mission_pickup_settings then
 		if mission_pickup_settings.rubberband_pool then
 			local rubberband_pool = mission_pickup_settings.rubberband_pool
-			local start_count = {}
-			local spawned = {}
+			local start_count, spawned = {}, {}
 
 			for type, pickup_table in pairs(rubberband_pool) do
 				local type_size = 0
@@ -274,9 +279,10 @@ PickupSystem._populate_pickups = function (self)
 		local unit_name = side_mission.unit_name
 		local side_settings = {}
 		local pickup = PICKUPS_BY_NAME[unit_name]
-		side_settings[pickup.group] = {
-			[unit_name] = side_mission.collect_amount
-		}
+
+		side_settings[pickup.group] = {}
+		side_settings[pickup.group][unit_name] = side_mission.collect_amount
+
 		local time = Managers.backend:get_server_time(0) / 1000
 		local seed = os.date("%Y", time) * 55 + os.date("%V", time)
 
@@ -343,9 +349,10 @@ PickupSystem.get_rubberband_pickup = function (self, distribution_type, percenta
 
 		if player_unit then
 			player_count = player_count + 1
-			total_ammo = total_ammo + 1 - Ammo.current_total_percentage(player_unit)
-			total_grenades = total_grenades + 1 - _current_grenade_percentage(player_unit)
-			total_health = total_health + 1 - Health.current_health_percent(player_unit)
+			total_ammo = total_ammo + (1 - Ammo.current_total_percentage(player_unit))
+			total_grenades = total_grenades + (1 - _current_grenade_percentage(player_unit))
+			total_health = total_health + (1 - Health.current_health_percent(player_unit))
+
 			local unit_data_extension = ScriptUnit.extension(player_unit, "unit_data_system")
 			local inventory_component = unit_data_extension:read_component("inventory")
 			local item_name = inventory_component[SLOT_POCKETABLE]
@@ -404,12 +411,15 @@ PickupSystem.get_rubberband_pickup = function (self, distribution_type, percenta
 
 	total_weight = self._rubberband_free_spots / pool_size / RubberbandSettings.base_spawn_rate
 	self._rubberband_free_spots = self._rubberband_free_spots - 1
+
 	local new_seed, rnd = math.next_random(self._seed)
+
 	self._seed = new_seed
 	rnd = rnd * math.max(total_weight, 1)
 
 	if rnd <= weights[AMMO] then
 		pool = pool.ammo
+
 		local SMALL_CLIP = 1
 		local LARGE_CLIP = 2
 		local AMMO_CACHE = 3
@@ -418,6 +428,7 @@ PickupSystem.get_rubberband_pickup = function (self, distribution_type, percenta
 
 		weights[SMALL_CLIP] = math.sqrt(pool.small_clip) / (total_ammo + 0.01)
 		weights[LARGE_CLIP] = math.sqrt(pool.large_clip)
+
 		local ammo_special_spawned = special_spawned.ammo_cache_pocketable
 
 		if not ammo_special_spawned or percentage_through_level >= ammo_special_spawned + block_distance then
@@ -482,7 +493,7 @@ PickupSystem.get_guaranteed_pickup = function (self, pickup_options)
 	for i = 1, num_options do
 		local pickup_name = pickup_options[i]
 		local already_spawned = guaranteed_spawned_pickups[pickup_name]
-		local pickup_weight = nil
+		local pickup_weight
 
 		if already_spawned and PickupSettings.pickup_pool_value[pickup_name] then
 			pickup_weight = 1 / (already_spawned * PickupSettings.pickup_pool_value[pickup_name])
@@ -495,11 +506,13 @@ PickupSystem.get_guaranteed_pickup = function (self, pickup_options)
 	end
 
 	local new_seed, rnd = math.next_random(self._seed)
+
 	self._seed = new_seed
 	rnd = rnd * total_weight
+
 	local pickup_index = 1
 
-	while pickup_options_weight[pickup_index] < rnd do
+	while rnd > pickup_options_weight[pickup_index] do
 		if pickup_index == num_options then
 			break
 		end
@@ -508,6 +521,7 @@ PickupSystem.get_guaranteed_pickup = function (self, pickup_options)
 	end
 
 	local selected_name = pickup_options[pickup_index]
+
 	guaranteed_spawned_pickups[selected_name] = (guaranteed_spawned_pickups[selected_name] or 0) + 1
 
 	return selected_name
@@ -594,10 +608,11 @@ PickupSystem._spawn_spread_pickups = function (self, distribution_type, pickup_p
 		end
 
 		seed = self:_shuffle(pickups_to_spawn, seed)
+
 		local num_sections = #pickups_to_spawn
 		local section_size = 1 / num_sections
 		local section_start_point = 0
-		local section_end_point = nil
+		local section_end_point
 		local spawn_debt = 0
 
 		if #usable_spawners >= 2 then
@@ -605,6 +620,7 @@ PickupSystem._spawn_spread_pickups = function (self, distribution_type, pickup_p
 			local last_spawner_percentage_through_level = usable_spawners[#usable_spawners].extension:percentage_through_level()
 			local section_scale = 1 - first_spawner_percentage_through_level - (1 - last_spawner_percentage_through_level)
 			local section_start_point_offset = first_spawner_percentage_through_level
+
 			section_size = section_scale / num_sections
 			section_start_point = section_start_point_offset
 		end
@@ -614,6 +630,7 @@ PickupSystem._spawn_spread_pickups = function (self, distribution_type, pickup_p
 			table.clear(used_spawners)
 
 			section_end_point = section_start_point + section_size
+
 			local num_pickup_spawners = #usable_spawners
 
 			for j = 1, num_pickup_spawners do
@@ -627,18 +644,21 @@ PickupSystem._spawn_spread_pickups = function (self, distribution_type, pickup_p
 			end
 
 			section_start_point = section_end_point
+
 			local num_section_spawners = #section_spawners
 
 			if num_section_spawners > 0 and spawn_debt >= 0 then
 				local remaining_sections = num_sections - i + 1
 				local pickups_in_section = math.min(1 + math.ceil(spawn_debt / remaining_sections), num_section_spawners)
+
 				seed = self:_shuffle(section_spawners, seed)
+
 				local num_spawned_pickups_in_section = 0
-				local previously_selected_spawner = nil
+				local previously_selected_spawner
 
 				for j = 1, pickups_in_section do
 					local num_available_section_spawners = #section_spawners
-					local selected_spawner, pickup_index = nil
+					local selected_spawner, pickup_index
 
 					if previously_selected_spawner then
 						local percentage_through_level = previously_selected_spawner.extension:percentage_through_level()
@@ -654,7 +674,8 @@ PickupSystem._spawn_spread_pickups = function (self, distribution_type, pickup_p
 					end
 
 					for k = 1, num_available_section_spawners do
-						local index = nil
+						local index
+
 						selected_spawner, index = self:_check_spawn(section_spawners[k], pickups_to_spawn, pickup_type)
 
 						if selected_spawner then
@@ -746,8 +767,7 @@ end
 
 PickupSystem.update = function (self, system_context, dt, t)
 	if self._is_server then
-		local spawned_pickups = self._spawned_pickups
-		local soft_cap_out_of_bounds_units = self._soft_cap_out_of_bounds_units
+		local spawned_pickups, soft_cap_out_of_bounds_units = self._spawned_pickups, self._soft_cap_out_of_bounds_units
 
 		for i = #spawned_pickups, 1, -1 do
 			local unit = spawned_pickups[i]
@@ -777,10 +797,12 @@ PickupSystem.spawn_pickup = function (self, pickup_name, position, rotation, pic
 
 	if pickup_settings.spawn_offset then
 		local spawn_offset = pickup_settings.spawn_offset:unbox()
+
 		position = position + Quaternion.rotate(rotation, spawn_offset)
 	end
 
 	local pickup_unit, pickup_unit_go_id = Managers.state.unit_spawner:spawn_network_unit(unit_name, unit_template_name, position, rotation, nil, pickup_settings, placed_on_unit, spawn_interaction_cooldown)
+
 	self._spawned_pickups[#self._spawned_pickups + 1] = pickup_unit
 	self._pickup_to_interactors[pickup_unit] = {}
 
@@ -793,6 +815,7 @@ end
 
 PickupSystem.player_spawn_pickup = function (self, pickup_name, position, rotation, player, player_session_id, placed_on_unit)
 	local pickup_unit, pickup_unit_go_id = self:spawn_pickup(pickup_name, position, rotation, nil, placed_on_unit)
+
 	self._pickup_to_owner[pickup_unit] = player_session_id
 	self._pickup_to_owner_player[pickup_unit] = player
 
@@ -803,11 +826,13 @@ PickupSystem.despawn_pickup = function (self, pickup_unit)
 	local unit_spawner_manager = Managers.state.unit_spawner
 	local spawned_pickups = self._spawned_pickups
 	local num_spawned_pickups = #spawned_pickups
+
 	self._pickup_to_spawner[pickup_unit] = nil
 	self._pickup_to_owner[pickup_unit] = nil
 	self._pickup_to_owner_player[pickup_unit] = nil
 	self._pickup_to_interactors[pickup_unit] = nil
-	local deleted_index = nil
+
+	local deleted_index
 	local ALIVE = ALIVE
 
 	for i = 1, num_spawned_pickups do
@@ -828,6 +853,7 @@ end
 PickupSystem.interact_with = function (self, pickup_unit, player_session_id)
 	if player_session_id and not self:has_interacted(pickup_unit, player_session_id) then
 		local interactors = self._pickup_to_interactors[pickup_unit]
+
 		interactors[#interactors + 1] = player_session_id
 	end
 end
@@ -918,6 +944,7 @@ PickupSystem._show_collected_materials_notification = function (self, peer_id, m
 
 	if save_manager then
 		local account_data = save_manager:account_data()
+
 		show_pickup_notification = account_data.interface_settings.show_crafting_pickup_notification
 	end
 
@@ -939,6 +966,7 @@ PickupSystem.get_collected_materials = function (self)
 		local diamantine_large = GameSession.game_object_field(game_session, game_object_id, "diamantine_large")
 		local plasteel_small = GameSession.game_object_field(game_session, game_object_id, "plasteel_small")
 		local plasteel_large = GameSession.game_object_field(game_session, game_object_id, "plasteel_large")
+
 		self._material_collected.diamantine = {
 			small = diamantine_small,
 			large = diamantine_large

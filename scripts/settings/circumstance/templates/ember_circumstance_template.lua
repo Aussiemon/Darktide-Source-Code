@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/circumstance/templates/ember_circumstance_template.lua
+
 local circumstance_templates = {
 	ember_01 = {
 		dialogue_id = "circumstance_vo_ember",

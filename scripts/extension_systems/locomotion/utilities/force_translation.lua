@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/locomotion/utilities/force_translation.lua
+
 local ForceTranslation = {}
 
 ForceTranslation.start = function (locomotion_force_translation_component, locomotion_steering_component, force_translation, start_translation, start_time, duration)

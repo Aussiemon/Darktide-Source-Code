@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/chest/chest_system.lua
+
 local NetworkLookup = require("scripts/network_lookup/network_lookup")
 
 require("scripts/extension_systems/chest/chest_extension")

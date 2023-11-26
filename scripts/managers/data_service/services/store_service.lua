@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/data_service/services/store_service.lua
+
 local DataServiceBackendCache = require("scripts/managers/data_service/data_service_backend_cache")
 local FixedFrame = require("scripts/utilities/fixed_frame")
 local PlayerManager = require("scripts/foundation/managers/player/player_manager")
@@ -43,7 +45,7 @@ StoreService.update_wallet_caps = function (self)
 end
 
 StoreService.verify_wallet_caps = function (self)
-	local wallet_caps_promise = nil
+	local wallet_caps_promise
 
 	if not self._wallet_caps_backend_updated then
 		wallet_caps_promise = self:update_wallet_caps()
@@ -71,7 +73,7 @@ StoreService.get_credits_store = function (self, ignore_event_trigger)
 		local player = Managers.player:local_player(local_player_id)
 		local character_id = player:character_id()
 		local archetype_name = player:archetype_name()
-		local store_promise = nil
+		local store_promise
 		local time_since_launch = Application.time_since_launch()
 
 		if archetype_name == "veteran" then
@@ -87,10 +89,11 @@ StoreService.get_credits_store = function (self, ignore_event_trigger)
 		return store_promise:catch(function (error)
 			Log.error("StoreService", "Error fetching credits store: %s", error)
 		end):next(function (store_catalogue)
-			local offers, current_rotation_end = nil
+			local offers, current_rotation_end
 
 			if store_catalogue then
 				local store_data = store_catalogue.data
+
 				offers = store_data.personal
 				current_rotation_end = store_data.currentRotationEnd
 			end
@@ -118,7 +121,7 @@ StoreService.get_credits_goods_store = function (self, ignore_event_trigger)
 		local player = Managers.player:local_player(local_player_id)
 		local character_id = player:character_id()
 		local archetype_name = player:archetype_name()
-		local store_promise = nil
+		local store_promise
 		local time_since_launch = Application.time_since_launch()
 
 		if archetype_name == "veteran" then
@@ -134,10 +137,11 @@ StoreService.get_credits_goods_store = function (self, ignore_event_trigger)
 		return store_promise:catch(function (error)
 			Log.error("StoreService", "Error fetching credits store: %s", error)
 		end):next(function (store_catalogue)
-			local offers, current_rotation_end = nil
+			local offers, current_rotation_end
 
 			if store_catalogue then
 				local store_data = store_catalogue.data
+
 				offers = store_data.public
 				current_rotation_end = store_data.currentRotationEnd
 			end
@@ -164,8 +168,10 @@ StoreService.get_credits_cosmetics_store = function (self, archetype_name)
 		local local_player_id = 1
 		local player = Managers.player:local_player(local_player_id)
 		local character_id = player:character_id()
+
 		archetype_name = archetype_name or player:archetype_name()
-		local store_promise = nil
+
+		local store_promise
 		local time_since_launch = Application.time_since_launch()
 
 		if archetype_name == "veteran" then
@@ -181,10 +187,11 @@ StoreService.get_credits_cosmetics_store = function (self, archetype_name)
 		return store_promise:catch(function (error)
 			Log.error("StoreService", "Error fetching credits cosmetics store: %s", error)
 		end):next(function (store_catalogue)
-			local offers, current_rotation_end = nil
+			local offers, current_rotation_end
 
 			if store_catalogue then
 				local store_data = store_catalogue.data
+
 				offers = store_data.public
 				current_rotation_end = store_data.currentRotationEnd
 			end
@@ -203,8 +210,10 @@ StoreService.get_credits_weapon_cosmetics_store = function (self, archetype_name
 		local local_player_id = 1
 		local player = Managers.player:local_player(local_player_id)
 		local character_id = player:character_id()
+
 		archetype_name = archetype_name or player:archetype_name()
-		local store_promise = nil
+
+		local store_promise
 		local time_since_launch = Application.time_since_launch()
 
 		if archetype_name == "veteran" then
@@ -220,10 +229,11 @@ StoreService.get_credits_weapon_cosmetics_store = function (self, archetype_name
 		return store_promise:catch(function (error)
 			Log.error("StoreService", "Error fetching credits cosmetics store: %s", error)
 		end):next(function (store_catalogue)
-			local offers, current_rotation_end = nil
+			local offers, current_rotation_end
 
 			if store_catalogue then
 				local store_data = store_catalogue.data
+
 				offers = store_data.public
 				current_rotation_end = store_data.currentRotationEnd
 			end
@@ -243,7 +253,7 @@ StoreService.get_marks_store = function (self)
 		local player = Managers.player:local_player(local_player_id)
 		local character_id = player:character_id()
 		local archetype_name = player:archetype_name()
-		local store_promise = nil
+		local store_promise
 		local time_since_launch = Application.time_since_launch()
 
 		if archetype_name == "veteran" then
@@ -259,10 +269,11 @@ StoreService.get_marks_store = function (self)
 		return store_promise:catch(function (error)
 			Log.error("StoreService", "Error fetching marks store: %s", error)
 		end):next(function (store_catalogue)
-			local offers, current_rotation_end = nil
+			local offers, current_rotation_end
 
 			if store_catalogue then
 				local store_data = store_catalogue.data
+
 				offers = store_data.public_filtered
 			end
 
@@ -280,7 +291,7 @@ StoreService.get_marks_store_temporary = function (self)
 		local player = Managers.player:local_player(local_player_id)
 		local character_id = player:character_id()
 		local archetype_name = player:archetype_name()
-		local store_promise = nil
+		local store_promise
 		local time_since_launch = Application.time_since_launch()
 
 		if archetype_name == "veteran" then
@@ -296,10 +307,11 @@ StoreService.get_marks_store_temporary = function (self)
 		return store_promise:catch(function (error)
 			Log.error("StoreService", "Error fetching credits store: %s", error)
 		end):next(function (store_catalogue)
-			local offers, current_rotation_end = nil
+			local offers, current_rotation_end
 
 			if store_catalogue then
 				local store_data = store_catalogue.data
+
 				offers = store_data.personal
 				current_rotation_end = store_data.currentRotationEnd
 			end
@@ -315,6 +327,7 @@ end
 local function _purchased_item_to_gear(item)
 	local gear = table.clone(item)
 	local gear_id = gear.uuid
+
 	gear.overrides = nil
 	gear.id = nil
 	gear.uuid = nil
@@ -327,7 +340,7 @@ StoreService.purchase_item = function (self, offer)
 	local price = offer.price
 	local amount = price.amount
 	local wallet_type = amount.type
-	local wallet_promise = nil
+	local wallet_promise
 
 	if wallet_type == "credits" or wallet_type == "marks" then
 		wallet_promise = self:combined_wallets()
@@ -444,7 +457,7 @@ StoreService.combined_wallets = function (self)
 end
 
 StoreService.account_wallets = function (self, skip_decoration)
-	local wallets_promise = nil
+	local wallets_promise
 
 	if self._wallets_cache then
 		wallets_promise = self._wallets_cache:get_data("__account", function ()
@@ -473,7 +486,7 @@ end
 
 StoreService.character_wallets = function (self, skip_decoration)
 	local character_id = _current_character_id()
-	local wallets_promise = nil
+	local wallets_promise
 
 	if self._wallets_cache then
 		wallets_promise = self._wallets_cache:get_data(character_id, function ()
@@ -631,10 +644,11 @@ StoreService.get_premium_store = function (self, storefront_key)
 	return promise:catch(function (error)
 		Log.error("StoreService", "Failed to fetch premium storefront %s %s", storefront_key, error)
 	end):next(function (store_catalogue)
-		local offers, current_rotation_end, layout_config, decorate_offer, catalog_validity, bundle_rules = nil
+		local offers, current_rotation_end, layout_config, decorate_offer, catalog_validity, bundle_rules
 
 		if store_catalogue then
 			local store_data = store_catalogue.data
+
 			offers = store_catalogue.public_filtered
 			layout_config = store_catalogue.layout_config
 			current_rotation_end = store_data and store_data.currentRotationEnd

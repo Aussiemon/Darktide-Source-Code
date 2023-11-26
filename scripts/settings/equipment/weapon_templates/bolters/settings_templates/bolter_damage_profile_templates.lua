@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/equipment/weapon_templates/bolters/settings_templates/bolter_damage_profile_templates.lua
+
 local ArmorSettings = require("scripts/settings/damage/armor_settings")
 local PowerLevelSettings = require("scripts/settings/damage/power_level_settings")
 local DamageProfileSettings = require("scripts/settings/damage/damage_profile_settings")
@@ -19,6 +21,7 @@ local crit_impact_armor_mod = DamageProfileSettings.crit_impact_armor_mod
 local damage_lerp_values = DamageProfileSettings.damage_lerp_values
 local single_cleave = DamageProfileSettings.single_cleave
 local double_cleave = DamageProfileSettings.double_cleave
+
 damage_templates.default_bolter_killshot = {
 	suppression_value = 10,
 	ragdoll_only = true,

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/data_service/services/crafting_service.lua
+
 local CraftingSettings = require("scripts/settings/item/crafting_settings")
 local DataServiceBackendCache = require("scripts/managers/data_service/data_service_backend_cache")
 local ItemUtils = require("scripts/utilities/items")
@@ -176,6 +178,7 @@ CraftingService.warm_trait_sticker_book_cache = function (self)
 
 			if item.item_type == "WEAPON_MELEE" or item.item_type == "WEAPON_RANGED" then
 				local trait_category_id = ItemUtils.trait_category(item)
+
 				found_trait_categories[trait_category_id] = true
 			end
 		end

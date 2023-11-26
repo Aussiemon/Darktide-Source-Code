@@ -1,5 +1,8 @@
+﻿-- chunkname: @scripts/managers/save/save_data.lua
+
 local SaveData = class("SaveData")
 local default_hold = PLATFORM == "win32"
+
 SaveData.default_account_data = {
 	latest_backend_migration_index = -1,
 	crossplay_accepted = false,
@@ -96,7 +99,9 @@ SaveData.populate = function (self, save_data)
 			if self.account_data_version == save_data.account_data_version then
 				for account_id, account_data in pairs(data.account_data) do
 					local new_data = table.clone(SaveData.default_account_data)
+
 					data.account_data[account_id] = table.merge_recursive(new_data, account_data)
+
 					local character_data = data.account_data[account_id].character_data
 
 					if character_data then
@@ -126,8 +131,7 @@ SaveData.populate = function (self, save_data)
 
 				for account_id, account_data in pairs(data.account_data) do
 					local new_data = table.clone(SaveData.default_account_data)
-					local saved_input_settings = account_data.input_settings
-					local new_input_settings = new_data.input_settings
+					local saved_input_settings, new_input_settings = account_data.input_settings, new_data.input_settings
 
 					for setting, default_value in pairs(new_input_settings) do
 						local saved_value = saved_input_settings[setting]

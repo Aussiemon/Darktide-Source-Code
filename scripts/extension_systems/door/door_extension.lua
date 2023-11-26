@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/door/door_extension.lua
+
 local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
 local Breed = require("scripts/utilities/breed")
 local LevelProps = require("scripts/settings/level_prop/level_props")
@@ -30,15 +32,21 @@ DoorExtension.init = function (self, extension_init_context, unit, extension_ini
 	self._volume_added = false
 	self._last_state_change = -100
 	self._animation_extension = ScriptUnit.extension(unit, "animation_system")
+
 	local extension_manager = Managers.state.extension
 	local side_system = extension_manager:system("side_system")
+
 	self._side_names = side_system:side_names()
+
 	local broadphase_system = extension_manager:system("broadphase_system")
+
 	self._broadphase_system = broadphase_system
 	self._broadphase = broadphase_system.broadphase
+
 	local tm, half_size = Unit.box(unit)
 	local bottom_center_position = Matrix4x4.translation(tm) + Vector3.down() * half_size.z
 	local radius = math.max(half_size.x, half_size.y)
+
 	self._broadphase_check_position = Vector3Box(bottom_center_position)
 	self._broadphase_check_radius = radius
 	self._bounding_box = Matrix4x4Box(tm)
@@ -61,6 +69,7 @@ end
 
 DoorExtension.setup_from_component = function (self, door_type, start_state, open_duration, close_duration, allow_closing, self_closing_time, blocked_time, open_type, control_panel_props, control_panels_active, ignore_broadphase)
 	local unit = self._unit
+
 	self._type = door_type
 	self._open_type = open_type
 	self._start_state = start_state
@@ -123,6 +132,7 @@ DoorExtension._spawn_control_panels = function (self, control_panel_props, contr
 		if spawn_offset_boxed then
 			local spawn_offset = spawn_offset_boxed:unbox()
 			local control_panel_pose = Unit.world_pose(unit, control_panel_node)
+
 			control_panel_position = Matrix4x4.transform(control_panel_pose, spawn_offset)
 		end
 
@@ -211,7 +221,7 @@ DoorExtension._should_nav_block = function (self)
 	local closed = current_state == STATES.closed
 	local anim_time = self:_normalized_anim_time()
 	local blocked_time = self._blocked_time
-	local should_nav_block = nil
+	local should_nav_block
 
 	if closed then
 		should_nav_block = blocked_time <= anim_time or anim_time == 0
@@ -247,6 +257,7 @@ end
 
 DoorExtension._normalized_anim_time = function (self)
 	local anim_time_normalized = self:_anim_time() / self:_anim_duration()
+
 	anim_time_normalized = math.clamp(anim_time_normalized, 0, 1)
 
 	return anim_time_normalized
@@ -362,6 +373,7 @@ DoorExtension.can_close = function (self, use_proximity_check)
 
 	if not use_proximity_check or not self:_minion_proximity_check() then
 		local open_type = self._open_type
+
 		can_close = self._current_state ~= STATES.closed
 		can_close = can_close and (open_type == OPEN_TYPES.close_only or open_type == OPEN_TYPES.none)
 	end
@@ -376,10 +388,8 @@ DoorExtension._minion_proximity_check = function (self)
 
 	local check_radius = self._broadphase_check_radius
 	local check_position = self._broadphase_check_position:unbox()
-	local broadphase = self._broadphase
-	local side_names = self._side_names
-	local bounding_box = self._bounding_box:unbox()
-	local half_extents = self._bounding_box_half_extents:unbox()
+	local broadphase, side_names = self._broadphase, self._side_names
+	local bounding_box, half_extents = self._bounding_box:unbox(), self._bounding_box_half_extents:unbox()
 	local num_results = Broadphase.query(broadphase, check_position, check_radius, broadphase_results, side_names)
 
 	for i = 1, num_results do
@@ -502,6 +512,7 @@ DoorExtension.teleport_bots = function (self)
 				local node_position = Unit.world_position(unit, node)
 				local blackboard = BLACKBOARDS[bot_unit]
 				local follow_component = Blackboard.write_component(blackboard, "follow")
+
 				follow_component.level_forced_teleport = true
 
 				follow_component.level_forced_teleport_position:store(node_position)

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/blood/blood_manager.lua
+
 local BloodSettings = require("scripts/settings/blood/blood_settings")
 local blood_ball_settings = BloodSettings.blood_ball
 local damage_type_speed = BloodSettings.blood_ball.damage_type_speed
@@ -48,8 +50,7 @@ BloodManager._create_blood_ball_buffer = function (self)
 end
 
 BloodManager.delete_units = function (self)
-	local world = self._world
-	local blood_ball_units = self._blood_ball_units
+	local world, blood_ball_units = self._world, self._blood_ball_units
 
 	for unit, _ in pairs(blood_ball_units) do
 		World.destroy_unit(world, unit)
@@ -182,6 +183,7 @@ BloodManager._spawn_blood_ball = function (self, blood_ball_data)
 	local speed = blood_ball_data.speed
 	local unit_name = blood_ball_data.unit_name
 	local blood_ball_unit = Blood.spawn_blood_ball(self._blood_system, unit_name, position, rotation, direction, speed)
+
 	self._blood_ball_units[blood_ball_unit] = true
 end
 
@@ -227,6 +229,7 @@ BloodManager.add_weapon_blood = function (self, player, slot_name, amount)
 	local player_unit = player.player_unit
 	local amount_scalar = blood_amounts[amount] or blood_amounts.default
 	local weapon_blood = self._weapon_blood[player_unit] or {}
+
 	weapon_blood[slot_name] = math.min((weapon_blood[slot_name] or 0) + amount_scalar, blood_amounts.full)
 	self._weapon_blood[player_unit] = weapon_blood
 
@@ -248,6 +251,7 @@ BloodManager.rpc_add_weapon_blood = function (self, channel_id, game_object_id, 
 		local blood_amounts = BloodSettings.weapon_blood_amounts
 		local amount_scalar = blood_amounts[weapon_blood_amount] or blood_amounts.default
 		local weapon_blood = self._weapon_blood[player_unit] or {}
+
 		weapon_blood[slot_name] = math.min((weapon_blood[slot_name] or 0) + amount_scalar, blood_amounts.full)
 		self._weapon_blood[player_unit] = weapon_blood
 	end

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/barber_vendor_background_view/barber_vendor_background_view_settings.lua
+
 local barber_vendor_background_view_settings = {
 	vo_event_vendor_greeting = {
 		"barber_hello"

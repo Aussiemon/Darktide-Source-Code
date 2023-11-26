@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/breed/breeds/chaos/chaos_daemonhost_sounds.lua
+
 local sound_data = {
 	events = {
 		vce_awaken_short = "wwise/events/minions/play_enemy_daemonhost_alert_scream_short",

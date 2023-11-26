@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/foundation/utilities/table.lua
+
 local table = table
 
 table.is_empty = function (t)
@@ -152,15 +154,12 @@ table.compact_array = function (t)
 	local p = 0
 
 	for k, v in pairs(t) do
-		if v then
-			p = p + 1
-		end
+		p = v and p + 1 or p
 	end
 
-	local i = 1
-	local k = 1
+	local i, k = 1, 1
 
-	while p >= k do
+	while k <= p do
 		if t[i] then
 			t[k] = t[i]
 			t[i] = k == i and t[i] or nil
@@ -244,8 +243,7 @@ table.array_contains = function (t, element)
 end
 
 table.array_equals = function (a, b)
-	local a_size = #a
-	local b_size = #b
+	local a_size, b_size = #a, #b
 
 	if a_size ~= b_size then
 		return false
@@ -263,12 +261,13 @@ end
 table.equals = function (a, b)
 	for key, a_value in pairs(a) do
 		local b_value = b[key]
-		local a_type = type(a_value)
-		local b_type = type(b_value)
+		local a_type, b_type = type(a_value), type(b_value)
 
 		if a_value == b_value then
 			-- Nothing
-		elseif a_type ~= "table" or b_type ~= "table" or not table.equals(a_value, b_value) then
+		elseif a_type == "table" and b_type == "table" and table.equals(a_value, b_value) then
+			-- Nothing
+		else
 			return false
 		end
 	end
@@ -381,8 +380,7 @@ table.reverse = function (t)
 	local size = #t
 
 	for i = 1, math.floor(size / 2) do
-		t[size - i + 1] = t[i]
-		t[i] = t[size - i + 1]
+		t[i], t[size - i + 1] = t[size - i + 1], t[i]
 	end
 end
 
@@ -454,7 +452,7 @@ table.dump = function (t, tag, max_depth, print_func)
 	end
 end
 
-local _value_to_string_array, _table_tostring_array = nil
+local _value_to_string_array, _table_tostring_array
 
 function _value_to_string_array(v, depth, max_depth, skip_private, sort_keys)
 	if type(v) == "table" then
@@ -510,7 +508,7 @@ function _table_tostring_array(t, depth, max_depth, skip_private, sort_keys)
 			string_keys[string_key_count + 1] = key
 			string_key_count = string_key_count + 1
 		else
-			local key_str = nil
+			local key_str
 
 			if is_number then
 				key_str = string.format("[%i]", key)
@@ -535,6 +533,7 @@ function _table_tostring_array(t, depth, max_depth, skip_private, sort_keys)
 	for i = 1, string_key_count do
 		local key_str = string_keys[i]
 		local value = t[key_str]
+
 		str[#str + 1] = tabs
 		str[#str + 1] = key_str
 		str[#str + 1] = " = "
@@ -557,8 +556,7 @@ end
 local _buffer = {}
 
 table.minidump = function (t, name)
-	local b = _buffer
-	local i = 1
+	local b, i = _buffer, 1
 
 	if name then
 		b[1] = "["
@@ -585,16 +583,16 @@ end
 table.shuffle = function (source, seed)
 	if seed then
 		for ii = #source, 2, -1 do
-			local swap = nil
+			local swap
+
 			seed, swap = math.next_random(seed, ii)
-			source[ii] = source[swap]
-			source[swap] = source[ii]
+			source[swap], source[ii] = source[ii], source[swap]
 		end
 	else
 		for ii = #source, 2, -1 do
 			local swap = math.random(ii)
-			source[ii] = source[swap]
-			source[swap] = source[ii]
+
+			source[swap], source[ii] = source[ii], source[swap]
 		end
 	end
 
@@ -606,8 +604,7 @@ table.max = function (t)
 
 	for key, value in pairs(t) do
 		if max_value < value then
-			max_value = value
-			max_key = key
+			max_key, max_value = key, value
 		end
 	end
 
@@ -648,6 +645,7 @@ table.get_random_array_indices = function (size, num_picks)
 
 	for i = 1, num_picks do
 		local random_index = math.random(1, size)
+
 		random_indices[i] = all[random_index]
 		all[random_index] = all[size]
 		size = size - 1
@@ -696,6 +694,7 @@ end
 table.mirror_array_inplace = function (t)
 	for i = 1, #t do
 		local value = t[i]
+
 		t[value] = i
 	end
 
@@ -760,6 +759,7 @@ table.array_to_table = function (array, array_n, out_table)
 	for i = 1, array_n, 2 do
 		local key = array[i]
 		local value = array[i + 1]
+
 		out_table[key] = value
 	end
 end
@@ -785,15 +785,15 @@ table.add_meta_logging = function (real_table, debug_enabled, debug_name)
 	real_table = real_table or {}
 
 	if debug_enabled then
-		local front_table = {
-			__index = function (table, key)
-				local value = rawget(real_table, key)
+		local front_table = {}
 
-				print("meta getting", debug_name, key, value)
+		front_table.__index = function (table, key)
+			local value = rawget(real_table, key)
 
-				return value
-			end
-		}
+			print("meta getting", debug_name, key, value)
+
+			return value
+		end
 
 		setmetatable(front_table, front_table)
 
@@ -810,6 +810,7 @@ end
 
 local function ripairs_it(t, i)
 	i = i - 1
+
 	local v = t[i]
 
 	if v ~= nil then
@@ -827,6 +828,7 @@ end
 
 table.swap_delete = function (t, index)
 	local table_length = #t
+
 	t[index] = t[table_length]
 	t[table_length] = nil
 end
@@ -864,6 +866,7 @@ table.enum = function (...)
 
 	for i = 1, select("#", ...) do
 		local v = select(i, ...)
+
 		t[v] = v
 	end
 
@@ -883,6 +886,7 @@ table.index_lookup_table = function (...)
 
 	for i = 1, select("#", ...) do
 		local v = select(i, ...)
+
 		t[v] = i
 		t[i] = v
 	end
@@ -894,12 +898,14 @@ end
 
 table.make_unique = function (t)
 	t.__data = {}
+
 	local metatable = {
 		__index = function (t, k)
 			return rawget(t.__data, k)
 		end,
 		__newindex = function (t, k, v)
 			local data = rawget(t, "__data")
+
 			data[k] = v
 		end
 	}
@@ -927,6 +933,7 @@ table.make_strict_with_interface = function (t, name, interface)
 
 	for i = 1, #interface do
 		local field_name = interface[i]
+
 		valid_keys[field_name] = true
 	end
 
@@ -979,7 +986,9 @@ table.make_locked = function (original_t, optional_error_message)
 		end,
 		__newindex = function (t, key, val)
 			t.__locked = true
+
 			local data = rawget(t, "__data")
+
 			data[key] = val
 		end
 	})
@@ -1032,7 +1041,7 @@ table.check_interface = function (data, interface_lookup, optional_error_message
 end
 
 table.make_strict_readonly = function (data, name, optional_interface, optional_error_message_interface, optional_error_message__index, optional_error_message__newindex)
-	local interface = nil
+	local interface
 
 	if optional_interface then
 		interface = table.set(optional_interface, {})
@@ -1103,10 +1112,11 @@ table.generate_random_table = function (from, to, seed)
 	local last_seed = seed
 
 	for iter = 1, to do
-		local index = nil
+		local index
 
 		if last_seed then
 			local new_seed, rnd = math.next_random(last_seed, from, to)
+
 			index = rnd
 			last_seed = new_seed
 		else
@@ -1114,6 +1124,7 @@ table.generate_random_table = function (from, to, seed)
 		end
 
 		local val = temp[index]
+
 		temp[index] = temp[from]
 		result[iter] = val
 		from = from + 1
@@ -1153,16 +1164,13 @@ table.remove_empty_values = function (t)
 end
 
 table.array_remove_if = function (t, predicate)
-	local i = 1
-	local v = nil
+	local i, v = 1
 
 	for j = 1, #t do
-		t[j] = nil
-		v = t[j]
+		v, t[j] = t[j]
 
 		if not predicate(v) then
-			i = i + 1
-			t[i] = v
+			t[i], i = v, i + 1
 		end
 	end
 end

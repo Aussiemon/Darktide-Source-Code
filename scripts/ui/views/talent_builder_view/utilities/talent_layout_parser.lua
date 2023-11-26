@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/talent_builder_view/utilities/talent_layout_parser.lua
+
 local ArmorSettings = require("scripts/settings/damage/armor_settings")
 local BuffTemplates = require("scripts/settings/buff/buff_templates")
 local DamageCalculation = require("scripts/utilities/attack/damage_calculation")
@@ -6,81 +8,83 @@ local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_t
 local PowerLevelSettings = require("scripts/settings/damage/power_level_settings")
 local TextUtilities = require("scripts/utilities/ui/text")
 local armor_types = ArmorSettings.types
-local TalentLayoutParser = {
-	verify = function (talent_layout)
-		if not talent_layout.version or type(talent_layout.version) ~= "number" then
-			return false, "missing version"
-		end
+local TalentLayoutParser = {}
 
-		if not talent_layout.nodes then
-			return false, "no nodes"
-		end
+TalentLayoutParser.verify = function (talent_layout)
+	if not talent_layout.version or type(talent_layout.version) ~= "number" then
+		return false, "missing version"
+	end
 
-		return true
-	end,
-	pack_backend_data = function (talent_layout, points_spent_on_nodes)
-		local nodes = talent_layout.nodes
-		local num_nodes = #nodes
-		local node_string = ""
+	if not talent_layout.nodes then
+		return false, "no nodes"
+	end
 
-		for i = 1, num_nodes do
-			local node = nodes[i]
-			local widget_name = node.widget_name
-			local points_spent = points_spent_on_nodes[widget_name] or 0
+	return true
+end
 
-			if points_spent > 0 then
-				node_string = string.format("%s%i|%i,", node_string, i - 1, points_spent)
-			end
-		end
+TalentLayoutParser.pack_backend_data = function (talent_layout, points_spent_on_nodes)
+	local nodes = talent_layout.nodes
+	local num_nodes = #nodes
+	local node_string = ""
 
-		local version = talent_layout.version
-		local backend_data = string.format("%i;%s", version, node_string:sub(1, -2))
+	for i = 1, num_nodes do
+		local node = nodes[i]
+		local widget_name = node.widget_name
+		local points_spent = points_spent_on_nodes[widget_name] or 0
 
-		return backend_data
-	end,
-	unpack_backend_data = function (talent_layout, backend_data, points_spent_on_nodes)
-		local version_length = string.find(backend_data, ";")
-
-		if version_length == nil then
-			Log.info("TalentLayoutParser", "Failed parsing talent string. Could not locate \";\" for version number. (%q)", backend_data)
-
-			return
-		end
-
-		local version = tonumber(string.sub(backend_data, 1, version_length - 1))
-		local correct_version = talent_layout.version == version
-
-		if correct_version then
-			local nodes = talent_layout.nodes
-			local points_spent_s = string.sub(backend_data, version_length + 1)
-			local has_any_points_spent = string.len(points_spent_s) > 0
-
-			if has_any_points_spent then
-				local first_char_is_a_number = tonumber(string.sub(points_spent_s, 1, 1)) ~= nil
-
-				if first_char_is_a_number then
-					for backend_node_index, points_spent_in_node in string.gmatch(points_spent_s, "(%d+)|(%d+)") do
-						local node_index = tonumber(backend_node_index) + 1
-						local node = nodes[node_index]
-
-						if not node then
-							Log.info("TalentLayoutParser", "Failed parsing talent string, found node_index(%i) not present in current layout.", node_index)
-							table.clear(points_spent_on_nodes)
-
-							break
-						end
-
-						points_spent_on_nodes[tostring(node_index)] = tonumber(points_spent_in_node)
-					end
-				else
-					Log.info("TalentLayoutParser", "Failed parsing talent string, first character of selected talents part (after ;) was not a number. %s", backend_data)
-				end
-			end
-		else
-			Log.info("TalentLayoutParser", "Failed parsing talent string, mismatching version numbers (layout:%i backend:%i)", talent_layout.version, version)
+		if points_spent > 0 then
+			node_string = string.format("%s%i|%i,", node_string, i - 1, points_spent)
 		end
 	end
-}
+
+	local version = talent_layout.version
+	local backend_data = string.format("%i;%s", version, node_string:sub(1, -2))
+
+	return backend_data
+end
+
+TalentLayoutParser.unpack_backend_data = function (talent_layout, backend_data, points_spent_on_nodes)
+	local version_length = string.find(backend_data, ";")
+
+	if version_length == nil then
+		Log.info("TalentLayoutParser", "Failed parsing talent string. Could not locate \";\" for version number. (%q)", backend_data)
+
+		return
+	end
+
+	local version = tonumber(string.sub(backend_data, 1, version_length - 1))
+	local correct_version = talent_layout.version == version
+
+	if correct_version then
+		local nodes = talent_layout.nodes
+		local points_spent_s = string.sub(backend_data, version_length + 1)
+		local has_any_points_spent = string.len(points_spent_s) > 0
+
+		if has_any_points_spent then
+			local first_char_is_a_number = tonumber(string.sub(points_spent_s, 1, 1)) ~= nil
+
+			if first_char_is_a_number then
+				for backend_node_index, points_spent_in_node in string.gmatch(points_spent_s, "(%d+)|(%d+)") do
+					local node_index = tonumber(backend_node_index) + 1
+					local node = nodes[node_index]
+
+					if not node then
+						Log.info("TalentLayoutParser", "Failed parsing talent string, found node_index(%i) not present in current layout.", node_index)
+						table.clear(points_spent_on_nodes)
+
+						break
+					end
+
+					points_spent_on_nodes[tostring(node_index)] = tonumber(points_spent_in_node)
+				end
+			else
+				Log.info("TalentLayoutParser", "Failed parsing talent string, first character of selected talents part (after ;) was not a number. %s", backend_data)
+			end
+		end
+	else
+		Log.info("TalentLayoutParser", "Failed parsing talent string, mismatching version numbers (layout:%i backend:%i)", talent_layout.version, version)
+	end
+end
 
 TalentLayoutParser.selected_talents_from_selected_nodes = function (talent_layout, points_spent_on_nodes, selected_talents)
 	local nodes = talent_layout.nodes
@@ -94,6 +98,7 @@ TalentLayoutParser.selected_talents_from_selected_nodes = function (talent_layou
 
 			if talent ~= "not_selected" and talent ~= nil then
 				local previous_points = selected_talents[talent] or 0
+
 				selected_talents[talent] = previous_points + points_spent
 			end
 		end
@@ -111,21 +116,16 @@ local function _num_decimals(value)
 	end
 
 	only_decimals = digit_10_v - math.floor(digit_10_v)
+
 	local digit_100_v = only_decimals * 10
 
 	if digit_100_v > 1 then
 		has_digit_100 = true
 	end
 
-	local num_decimals = nil
+	local num_decimals
 
-	if has_digit_100 then
-		num_decimals = 2
-	elseif has_digit_10 then
-		num_decimals = 1
-	else
-		num_decimals = 0
-	end
+	num_decimals = has_digit_100 and 2 or has_digit_10 and 1 or 0
 
 	return num_decimals
 end
@@ -141,8 +141,10 @@ local FORMATING_FUNCTIONS = {
 		end
 
 		local num_decimals = config.num_decimals
+
 		num_decimals = num_decimals or _num_decimals(value)
-		local formatter = nil
+
+		local formatter
 
 		if num_decimals > 0 then
 			formatter = string.format("%%.%df", num_decimals)
@@ -162,8 +164,10 @@ local FORMATING_FUNCTIONS = {
 		end
 
 		local num_decimals = config.num_decimals
+
 		num_decimals = num_decimals or _num_decimals(value)
-		local formatter = nil
+
+		local formatter
 
 		if num_decimals > 0 then
 			formatter = string.format("%%.%df", num_decimals)
@@ -194,22 +198,22 @@ local function _calculate_damage_profile(config)
 	local armor_type = config.armor_type or armor_types.unarmored
 	local target_settings = DamageProfile.target_settings(damage_profile, 0)
 	local lerp_values = EMPTY_TABLE
-	local hit_zone_name, charge_level, breed_or_nil, attacker_breed_or_nil = nil
+	local hit_zone_name, charge_level, breed_or_nil, attacker_breed_or_nil
 	local is_critical_strike = false
 	local hit_weakspot = false
 	local hit_shield = false
 	local is_backstab = false
 	local is_flanking = false
-	local dropoff_scalar = nil
+	local dropoff_scalar
 	local attacker_stat_buffs = EMPTY_TABLE
 	local target_stat_buffs = EMPTY_TABLE
-	local target_buff_extension, armor_penetrating, target_toughness_extension = nil
+	local target_buff_extension, armor_penetrating, target_toughness_extension
 	local target_stagger_count = 0
 	local num_triggered_staggers = 0
 	local is_attacked_unit_suppressed = false
-	local distance, target_unit = nil
+	local distance, target_unit
 	local auto_completed_action = false
-	local stagger_impact = nil
+	local stagger_impact
 
 	return DamageCalculation.calculate(damage_profile, damage_type, target_settings, lerp_values, hit_zone_name, power_level, charge_level, breed_or_nil, attacker_breed_or_nil, is_critical_strike, hit_weakspot, hit_shield, is_backstab, is_flanking, dropoff_scalar, attack_type, attacker_stat_buffs, target_stat_buffs, target_buff_extension, armor_penetrating, target_toughness_extension, armor_type, target_stagger_count, num_triggered_staggers, is_attacked_unit_suppressed, distance, target_unit, auto_completed_action, stagger_impact)
 end
@@ -232,11 +236,12 @@ local FIND_VALUE_FUNCTIONS = {
 	buff_template = function (config, points_spent)
 		local buff_template_name = config.buff_template_name
 		local buff_template = BuffTemplates[buff_template_name]
-		local base_table = nil
+		local base_table
 
 		if config.tier then
 			local specialization_overrides = buff_template.specialization_overrides
 			local use_tier = math.clamp(points_spent, 1, #specialization_overrides)
+
 			base_table = specialization_overrides[use_tier]
 		else
 			base_table = buff_template
@@ -284,6 +289,7 @@ local DEV_INFO_FUNCTIONS = {
 
 		for _, armor_type in pairs(INTERESTING_ARMOR_TYPES) do
 			config.armor_type = armor_type
+
 			local damage, damage_efficiency, base_damage, base_buff_damage, rending_damage, finesse_boost_damage, backstab_damage, flanking_damage, armor_damage_modifier, hit_zone_damage_multiplier = _calculate_damage_profile(config)
 
 			if table.index_of(MODIFIER_VALUES, armor_damage_modifier) == -1 then
@@ -305,14 +311,15 @@ local DEV_INFO_FUNCTIONS = {
 		end)
 
 		config.armor_type = old_armor_type
+
 		local damage, damage_efficiency, base_damage, base_buff_damage, rending_damage, finesse_boost_damage, backstab_damage, flanking_damage, armor_damage_modifier, hit_zone_damage_multiplier = _calculate_damage_profile(config)
 		local base_damage_value_string = TextUtilities.apply_color_to_text(string.format("%d", base_damage), Color.ui_terminal(255, true))
 		local base_damage_string = string.format("%s base damage\n", base_damage_value_string)
-		local armors_string = nil
+		local armors_string
 
 		for _, mod_values in ipairs(MODIFIER_VALUES) do
 			local group = ARMOR_TYPE_GROUPS[mod_values]
-			local armors = nil
+			local armors
 
 			for _, armor_type in ipairs(group) do
 				if armors then
@@ -349,6 +356,7 @@ local DEV_INFO_FUNCTIONS = {
 			local value, key = _value_from_path(buff_template, path)
 			local format_function = FORMATING_FUNCTIONS[value_config.format_type] or FORMATING_FUNCTIONS.default
 			local value_s = TextUtilities.apply_color_to_text(format_function(value, value_config), Color.ui_terminal(255, true))
+
 			values_string = values_string .. string.format("%s: %s ", key, value_s)
 		end
 
@@ -359,7 +367,7 @@ local FORMAT_VALUES_TEMP = {}
 
 TalentLayoutParser.talent_description = function (talent_definition, points_spent, value_color)
 	local format_values = talent_definition.format_values
-	local actual_format_values = nil
+	local actual_format_values
 
 	if format_values then
 		actual_format_values = FORMAT_VALUES_TEMP
@@ -368,11 +376,12 @@ TalentLayoutParser.talent_description = function (talent_definition, points_spen
 
 		for key, config in pairs(format_values) do
 			if type(config) == "table" then
-				local value = nil
+				local value
 				local find_value_config = config.find_value
 
 				if find_value_config then
 					local find_value_function = FIND_VALUE_FUNCTIONS[find_value_config.find_value_type] or FIND_VALUE_FUNCTIONS.default
+
 					value = find_value_function(find_value_config, points_spent)
 				else
 					value = config.value

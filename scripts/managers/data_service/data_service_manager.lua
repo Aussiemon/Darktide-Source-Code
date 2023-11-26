@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/data_service/data_service_manager.lua
+
 local BackendInterface = require("scripts/backend/backend_interface")
 local SERVICES = {
 	mission_board = require("scripts/managers/data_service/services/mission_board_service"),

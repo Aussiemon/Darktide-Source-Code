@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/view_elements/view_element_trait_inventory/view_element_trait_inventory.lua
+
 local ViewElementTraitInventoryBlueprints = require("scripts/ui/view_elements/view_element_trait_inventory/view_element_trait_inventory_blueprints")
 local ViewElementTraitInventoryDefinitions = require("scripts/ui/view_elements/view_element_trait_inventory/view_element_trait_inventory_definitions")
 local ItemUtils = require("scripts/utilities/items")
@@ -13,6 +15,7 @@ local ViewElementTraitInventory = class("ViewElementTraitInventory", "ViewElemen
 
 ViewElementTraitInventory.init = function (self, parent, draw_layer, start_scale, optional_menu_settings)
 	self._reference_name = "ViewElementTraitInventory_" .. tostring(self)
+
 	local definitions = ViewElementTraitInventoryDefinitions
 
 	ViewElementTraitInventory.super.init(self, parent, draw_layer, start_scale, definitions.menu_settings, definitions)
@@ -47,6 +50,7 @@ ViewElementTraitInventory.show_overlay = function (self, show)
 	local to = show and 128 or 0
 	local duration = 0.5
 	local easing = math.easeOutCubic
+
 	self._ui_animations.pivot = UIAnimation.init(func, target, target_index, from, to, duration, easing)
 end
 
@@ -56,6 +60,7 @@ ViewElementTraitInventory.clear_marks = function (self)
 	for i = 1, #widgets do
 		local recipe_widget = widgets[i]
 		local content = recipe_widget.content
+
 		content.marked = false
 	end
 
@@ -77,6 +82,7 @@ ViewElementTraitInventory.cb_on_grid_entry_left_pressed = function (self, widget
 
 	self._marked_widget = widget
 	self._marked_trait_item = trait_item
+
 	local external_left_click_callback = self._external_left_click_callback
 
 	if external_left_click_callback then
@@ -88,6 +94,7 @@ ViewElementTraitInventory.cb_on_grid_entry_left_pressed = function (self, widget
 	for i = 1, #recipe_widgets do
 		local recipe_widget = recipe_widgets[i]
 		local content = recipe_widget.content
+
 		content.marked = widget and recipe_widget == widget or false
 	end
 
@@ -113,7 +120,9 @@ ViewElementTraitInventory.start_animation = function (self)
 	local to = self._pivot_offset[1]
 	local duration = 0.5
 	local easing = math.easeOutCubic
+
 	self._ui_animations.pivot = UIAnimation.init(func, target, target_index, from, to, duration, easing)
+
 	local func = UIAnimation.function_by_time
 	local target = self
 	local target_index = "_alpha_multiplier"
@@ -121,6 +130,7 @@ ViewElementTraitInventory.start_animation = function (self)
 	local to = 1
 	local duration = 0.5
 	local easing = math.easeInCubic
+
 	self._ui_animations.alpha_multiplier = UIAnimation.init(func, target, target_index, from, to, duration, easing)
 end
 
@@ -154,7 +164,7 @@ ViewElementTraitInventory.select_best_widget = function (self, allow_only_marked
 	local marked_trait_item = self._marked_trait_item
 	local marked_trait_item_id = marked_trait_item and marked_trait_item.gear.masterDataInstance.id
 	local marked_trait_item_rarity = marked_trait_item and marked_trait_item.rarity
-	local widget_to_select = nil
+	local widget_to_select
 	local recipe_widgets = self:widgets()
 
 	for i = 1, #recipe_widgets do
@@ -197,12 +207,15 @@ ViewElementTraitInventory.draw = function (self, dt, t, ui_renderer, render_sett
 
 	local old_alpha_multiplier = render_settings.alpha_multiplier
 	local alpha_multiplier = self._active and self._alpha_multiplier or 0
+
 	render_settings.alpha_multiplier = render_settings.alpha_multiplier * alpha_multiplier
 
 	ViewElementTraitInventory.super.draw(self, dt, t, ui_renderer, render_settings, input_service)
 
 	render_settings.alpha_multiplier = old_alpha_multiplier
+
 	local previous_layer = render_settings.start_layer
+
 	render_settings.start_layer = (previous_layer or 0) + self._draw_layer
 end
 
@@ -227,16 +240,20 @@ ViewElementTraitInventory._update_info_box = function (self)
 	local content = trait_info_box.content
 	local style = trait_info_box.style
 	local is_hover = self._hovered_trait_item ~= nil
+
 	style.display_name.visible = is_hover
 	style.description.visible = is_hover
 	style.icon.visible = is_hover
 
 	if is_hover and self._hovered_trait_item ~= self._old_hovered_trait_item then
 		local trait_item = self._hovered_trait_item
+
 		content.display_name = Localize(trait_item.display_name)
 		content.description = ItemUtils.trait_description(trait_item, trait_item.rarity, trait_item.value)
+
 		local texture_icon, texture_frame = ItemUtils.trait_textures(trait_item, trait_item.rarity)
 		local icon_material_values = style.icon.material_values
+
 		icon_material_values.icon = texture_icon
 		icon_material_values.frame = texture_frame
 	end
@@ -277,6 +294,7 @@ ViewElementTraitInventory._update_tab_counts = function (self)
 			for i = 1, RankSettings.max_trait_rank do
 				local trait_status = status[i]
 				local has_seen = trait_status == "seen"
+
 				NUM_BLESSINGS[i] = (NUM_BLESSINGS[i] or 0) + (has_seen and 1 or 0)
 
 				if trait_status ~= "invalid" then
@@ -291,6 +309,7 @@ ViewElementTraitInventory._update_tab_counts = function (self)
 	for i = 1, RankSettings.max_trait_rank do
 		local widget = widgets_by_name["rank_" .. i]
 		local content = widget.content
+
 		content.blessings = NUM_BLESSINGS[i] .. "/" .. MAX_BLESSINGS[i]
 	end
 end
@@ -307,6 +326,7 @@ ViewElementTraitInventory._setup_tabs = function (self)
 		local name = "rank_" .. i
 		local definition = widget_definitions[i]
 		local widget = UIWidget.init(name, definition)
+
 		widgets_by_name[name] = widget
 		widgets[#widgets + 1] = widget
 	end
@@ -342,6 +362,7 @@ ViewElementTraitInventory._update_tabs = function (self)
 		local widget_name = "rank_" .. i
 		local widget = widgets_by_name[widget_name]
 		local content = widget.content
+
 		content.selected = current_rank == i
 	end
 end
@@ -393,10 +414,10 @@ ViewElementTraitInventory._present = function (self, first_presentation)
 	end
 
 	local rank = self._rank
-	local layout = {
-		[#layout + 1] = {
-			widget_type = "spacing_vertical_small"
-		}
+	local layout = {}
+
+	layout[#layout + 1] = {
+		widget_type = "spacing_vertical_small"
 	}
 
 	for trait_name, seen_status in pairs(self._sticker_book) do
@@ -418,6 +439,7 @@ ViewElementTraitInventory._present = function (self, first_presentation)
 			}
 			local MasterItems = require("scripts/backend/master_items")
 			local trait_stack_item = MasterItems.get_item_instance(fake_trait, fake_trait.uuid)
+
 			layout[#layout + 1] = {
 				trait_amount = 1,
 				widget_type = "trait",
@@ -434,6 +456,7 @@ ViewElementTraitInventory._present = function (self, first_presentation)
 	layout[#layout + 1] = {
 		widget_type = "spacing_vertical"
 	}
+
 	local left_click_callback = callback(self, "cb_on_grid_entry_left_pressed")
 	local on_present_callback = not first_presentation and callback(self, "_cb_present_grid_layout")
 

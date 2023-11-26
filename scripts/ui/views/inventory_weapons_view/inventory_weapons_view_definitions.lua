@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/inventory_weapons_view/inventory_weapons_view_definitions.lua
+
 local InventoryWeaponsViewSettings = require("scripts/ui/views/inventory_weapons_view/inventory_weapons_view_settings")
 local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templates")
 local UIWorkspaceSettings = require("scripts/settings/ui/ui_workspace_settings")
@@ -143,7 +145,7 @@ local scenegraph_definition = {
 			0
 		},
 		position = {
-			-1140 + grid_size[1] - 50,
+			-1140 + (grid_size[1] - 50),
 			60,
 			3
 		}

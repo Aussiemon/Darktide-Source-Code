@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/behavior/nodes/actions/bt_renegade_netgunner_approach_action.lua
+
 require("scripts/extension_systems/behavior/nodes/bt_node")
 
 local Animation = require("scripts/utilities/animation")
@@ -10,12 +12,15 @@ local BtRenegadeNetgunnerApproachAction = class("BtRenegadeNetgunnerApproachActi
 BtRenegadeNetgunnerApproachAction.enter = function (self, unit, breed, blackboard, scratchpad, action_data, t)
 	scratchpad.behavior_component = Blackboard.write_component(blackboard, "behavior")
 	scratchpad.perception_component = blackboard.perception
+
 	local locomotion_extension = ScriptUnit.extension(unit, "locomotion_system")
 	local navigation_extension = ScriptUnit.extension(unit, "navigation_system")
+
 	scratchpad.animation_extension = ScriptUnit.extension(unit, "animation_system")
 	scratchpad.locomotion_extension = locomotion_extension
 	scratchpad.navigation_extension = navigation_extension
 	scratchpad.perception_extension = ScriptUnit.extension(unit, "perception_system")
+
 	local speed = action_data.speed
 
 	navigation_extension:set_enabled(true, speed)
@@ -26,6 +31,7 @@ BtRenegadeNetgunnerApproachAction.enter = function (self, unit, breed, blackboar
 
 	if action_data.effect_template then
 		local fx_system = Managers.state.extension:system("fx_system")
+
 		scratchpad.fx_system = fx_system
 		scratchpad.global_effect_id = fx_system:start_template_effect(action_data.effect_template, unit)
 	end
@@ -45,8 +51,7 @@ local UPDATE_TARGET_DISTANCE_SQ = 1
 BtRenegadeNetgunnerApproachAction.run = function (self, unit, breed, blackboard, scratchpad, action_data, dt, t)
 	local perception_component = scratchpad.perception_component
 	local target_unit = perception_component.target_unit
-	local target_distance = perception_component.target_distance
-	local leave_distance = action_data.leave_distance
+	local target_distance, leave_distance = perception_component.target_distance, action_data.leave_distance
 
 	if target_distance <= leave_distance then
 		local clear_shot_line_of_sight_id = action_data.clear_shot_line_of_sight_id
@@ -61,7 +66,7 @@ BtRenegadeNetgunnerApproachAction.run = function (self, unit, breed, blackboard,
 	local destination = scratchpad.navigation_extension:destination()
 	local target_to_destination_distance_sq = Vector3.distance_squared(target_position, destination)
 
-	if UPDATE_TARGET_DISTANCE_SQ < target_to_destination_distance_sq then
+	if target_to_destination_distance_sq > UPDATE_TARGET_DISTANCE_SQ then
 		self:_move_to_target(scratchpad, target_unit)
 
 		local vo_event = action_data.vo_event
@@ -99,16 +104,15 @@ BtRenegadeNetgunnerApproachAction._start_move_anim = function (self, scratchpad,
 	scratchpad.animation_extension:anim_event(move_event)
 
 	local behavior_component = scratchpad.behavior_component
+
 	behavior_component.move_state = "moving"
 end
 
-local ABOVE = 1
-local BELOW = 2
+local ABOVE, BELOW = 1, 2
 
 BtRenegadeNetgunnerApproachAction._move_to_target = function (self, scratchpad, target_unit)
 	local navigation_extension = scratchpad.navigation_extension
-	local nav_world = navigation_extension:nav_world()
-	local traverse_logic = navigation_extension:traverse_logic()
+	local nav_world, traverse_logic = navigation_extension:nav_world(), navigation_extension:traverse_logic()
 	local wanted_position = POSITION_LOOKUP[target_unit]
 	local goal_position = NavQueries.position_on_mesh_with_outside_position(nav_world, traverse_logic, wanted_position, ABOVE, BELOW)
 

@@ -1,10 +1,14 @@
+﻿-- chunkname: @scripts/extension_systems/dissolve/minion_dissolve_extension.lua
+
 local DISSOLVE_START_FLOW_EVENT = "dissolve_start"
 local DISSOLVE_END_FLOW_EVENT = "dissolve_end"
 local MinionDissolveExtension = class("MinionDissolveExtension")
 
 MinionDissolveExtension.init = function (self, extension_init_context, unit, extension_init_data, ...)
 	self._unit = unit
+
 	local breed = extension_init_data.breed
+
 	self._breed = breed
 	self._dissolve_config = breed.dissolve_config
 	self._start_flow_event_triggered = false
@@ -67,6 +71,7 @@ MinionDissolveExtension.update = function (self, unit, dt, t)
 		end
 
 		self._dissolve_data = nil
+
 		local Destroy_actor = Unit.destroy_actor
 		local Unit_actor = Unit.actor
 		local breed = self._breed
@@ -91,10 +96,13 @@ MinionDissolveExtension.update = function (self, unit, dt, t)
 
 	elapsed = elapsed + dt
 	dissolve_data.elapsed = elapsed
+
 	local from = dissolve_config.from
 	local to = dissolve_config.to
 	local value = math.lerp(from, to, elapsed / duration)
+
 	dissolve_data.value = value
+
 	local dissolve_unit = dissolve_data.dissolve_unit
 	local material_names = dissolve_config.material_names
 	local material_variable_name = dissolve_config.material_variable_name
@@ -122,6 +130,7 @@ MinionDissolveExtension._dissolve = function (self, delay, t)
 	local slot_name = dissolve_config.slot_name
 	local visual_loadout_extension = ScriptUnit.extension(unit, "visual_loadout_system")
 	local slot_unit = visual_loadout_extension:slot_unit(slot_name)
+
 	self._dissolve_data = {
 		elapsed = 0,
 		start_t = t + delay,

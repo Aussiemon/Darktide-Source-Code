@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/hud/elements/crosshair/templates/crosshair_template_shotgun_slug.lua
+
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local UIHudSettings = require("scripts/settings/ui/ui_hud_settings")
 local template = {}
@@ -17,6 +19,7 @@ local hit_size = {
 	12,
 	2
 }
+
 template.name = "shotgun_slug"
 template.size = size
 template.hit_size = hit_size
@@ -274,12 +277,19 @@ template.update_function = function (parent, ui_renderer, widget, crosshair_temp
 		local spread_offset_y = spread_distance * pitch
 		local spread_offset_x = spread_distance * yaw
 		local up_style = style.up
+
 		up_style.offset[2] = up_style.default_offset[2] - spread_offset_y
+
 		local down_style = style.down
+
 		down_style.offset[2] = down_style.default_offset[2] + spread_offset_y
+
 		local left_style = style.left
+
 		left_style.offset[1] = left_style.default_offset[1] - spread_offset_x
+
 		local right_style = style.right
+
 		right_style.offset[1] = right_style.default_offset[1] + spread_offset_x
 	end
 
@@ -287,15 +297,22 @@ template.update_function = function (parent, ui_renderer, widget, crosshair_temp
 
 	if hit_alpha > 0 then
 		local top_left_style = style.hit_top_left
+
 		top_left_style.color = apply_color_values(top_left_style.color, hit_color or top_left_style.color, false, hit_alpha)
 		top_left_style.visible = true
+
 		local bottom_left_style = style.hit_bottom_left
+
 		bottom_left_style.color = apply_color_values(bottom_left_style.color, hit_color or bottom_left_style.color, false, hit_alpha)
 		bottom_left_style.visible = true
+
 		local top_right_style = style.hit_top_right
+
 		top_right_style.color = apply_color_values(top_right_style.color, hit_color or top_right_style.color, false, hit_alpha)
 		top_right_style.visible = true
+
 		local bottom_right_style = style.hit_bottom_right
+
 		bottom_right_style.color = apply_color_values(bottom_right_style.color, hit_color or bottom_right_style.color, false, hit_alpha)
 		bottom_right_style.visible = true
 	else

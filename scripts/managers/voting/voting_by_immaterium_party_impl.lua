@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/voting/voting_by_immaterium_party_impl.lua
+
 local VotingTemplates = require("scripts/settings/voting/voting_templates")
 local Promise = require("scripts/foundation/utilities/promise")
 local VotingManagerImmateriumPartyTestify = GameParameters.testify and require("scripts/managers/voting/voting_by_immaterium_party_impl_testify")
@@ -60,6 +62,7 @@ VotingManagerImmateriumParty.start_voting = function (self, template_name, param
 	end
 
 	local template = VotingTemplates[template_name]
+
 	params.template_name = template_name
 
 	if template.static_params then
@@ -68,10 +71,10 @@ VotingManagerImmateriumParty.start_voting = function (self, template_name, param
 		end
 	end
 
-	local params_promise = nil
+	local params_promise
 
 	if template.fetch_my_vote_params then
-		params_promise = template:fetch_my_vote_params(params, "yes")
+		params_promise = template.fetch_my_vote_params(template, params, "yes")
 	else
 		params_promise = Promise.resolved({})
 	end
@@ -120,10 +123,10 @@ VotingManagerImmateriumParty.cast_vote = function (self, voting_id, option)
 	end
 
 	local template = VotingTemplates[current_vote.params.template_name]
-	local vote_params_promise = nil
+	local vote_params_promise
 
 	if template.fetch_my_vote_params then
-		vote_params_promise = template:fetch_my_vote_params(current_vote.params, option)
+		vote_params_promise = template.fetch_my_vote_params(template, current_vote.params, option)
 	else
 		vote_params_promise = Promise.resolved({})
 	end
@@ -151,6 +154,7 @@ VotingManagerImmateriumParty.update = function (self, dt, t)
 			local current_vote = self._initial_current_vote
 			local template = VotingTemplates[current_vote.params.template_name]
 			local abort_reason = "disappeared"
+
 			self._current_vote_state = "finished"
 
 			_info("Party Vote Aborted: %s", abort_reason)

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/vendor_view_base/vendor_view_base.lua
+
 local Definitions = require("scripts/ui/views/vendor_view_base/vendor_view_base_definitions")
 local ItemSlotSettings = require("scripts/settings/item/item_slot_settings")
 local ItemUtils = require("scripts/utilities/items")
@@ -8,7 +10,7 @@ local WalletSettings = require("scripts/settings/wallet_settings")
 local TextUtilities = require("scripts/utilities/ui/text")
 local Promise = require("scripts/foundation/utilities/promise")
 local ItemGridViewBase = require("scripts/ui/views/item_grid_view_base/item_grid_view_base")
-local definition_merge_recursive = nil
+local definition_merge_recursive
 
 function definition_merge_recursive(dest, source, stop_recursive)
 	for key, value in pairs(source) do
@@ -33,7 +35,7 @@ end
 local VendorViewBase = class("VendorViewBase", "ItemGridViewBase")
 
 VendorViewBase.init = function (self, definitions, settings, context)
-	local merged_definitions = nil
+	local merged_definitions
 
 	if definitions then
 		merged_definitions = table.clone(definitions)
@@ -49,6 +51,7 @@ VendorViewBase.init = function (self, definitions, settings, context)
 	self._fetch_account_items = context and context.fetch_account_items
 	self._account_items = {}
 	self._hide_price = context and context.hide_price
+
 	local optional_sort_options = context and context.optional_sort_options
 
 	if optional_sort_options then
@@ -90,6 +93,7 @@ end
 
 VendorViewBase._register_button_callbacks = function (self)
 	local widgets_by_name = self._widgets_by_name
+
 	widgets_by_name.purchase_button.content.hotspot.pressed_callback = callback(self, "_cb_on_purchase_pressed")
 end
 
@@ -122,6 +126,7 @@ VendorViewBase._switch_tab = function (self, index, ignore_item_selection)
 	self:_stop_previewing()
 
 	self._previewed_offer = nil
+
 	local tabs_content = self._tabs_content
 	local tab_content = tabs_content[index]
 	local slot_types = tab_content.slot_types
@@ -149,6 +154,7 @@ VendorViewBase._set_preview_widgets_visibility = function (self, visible)
 	VendorViewBase.super._set_preview_widgets_visibility(self, visible)
 
 	local widgets_by_name = self._widgets_by_name
+
 	widgets_by_name.price_text.content.visible = not self._hide_price and visible or false
 	widgets_by_name.price_icon.content.visible = not self._hide_price and visible or false
 	widgets_by_name.purchase_button.content.visible = visible
@@ -262,18 +268,22 @@ VendorViewBase._fetch_store_items = function (self, ignore_focus_on_offer)
 		end
 
 		local use_item_categories = self._use_item_categories or false
+
 		self._store_promise = store_promise
 
 		store_promise:next(function (data)
 			local offers = data.offers
+
 			self._offers = offers
 
 			self:_update_bundle_offers_owned_skus()
 			self:set_loading_state(false)
 
 			local layout = self:_convert_offers_to_layout_entries(self._offers)
+
 			self._offer_items_layout = layout
 			self._current_rotation_end = data.current_rotation_end
+
 			local menu_tab_content_array, _ = self:_generate_menu_tabs(layout, offers)
 
 			if self._tab_menu_element then
@@ -317,6 +327,7 @@ VendorViewBase._fetch_store_items = function (self, ignore_focus_on_offer)
 			end
 
 			self._store_promise = nil
+
 			local focus_on_first_offer = true
 
 			if self._previewed_offer then
@@ -366,7 +377,7 @@ VendorViewBase._fetch_store_items = function (self, ignore_focus_on_offer)
 		return store_promise
 	end
 
-	local return_promise = nil
+	local return_promise
 	local fetch_account_items = self._fetch_account_items
 
 	if fetch_account_items then
@@ -415,6 +426,7 @@ VendorViewBase._generate_menu_tabs = function (self, layout, offers)
 						slot_types = use_item_categories and store_category_slot_stypes,
 						store_category = store_category
 					}
+
 					menu_tab_content_by_store_category[store_category] = tab_content
 					menu_tab_content_array[#menu_tab_content_array + 1] = tab_content
 				end
@@ -510,6 +522,7 @@ VendorViewBase._convert_offers_to_layout_entries = function (self, item_offers)
 				else
 					local is_cosmetics_gear = item_type == "GEAR_EXTRA_COSMETIC" or item_type == "GEAR_HEAD" or item_type == "GEAR_UPPERBODY" or item_type == "GEAR_LOWERBODY"
 					local widget_type = is_cosmetics_gear and "gear_item" or "store_item"
+
 					layout[#layout + 1] = {
 						item = item,
 						widget_type = widget_type,
@@ -543,7 +556,7 @@ VendorViewBase._convert_offers_to_layout_entries = function (self, item_offers)
 
 					total_count = total_count + 1
 
-					if set_item.rarity and set_item.rarity < rarity then
+					if set_item.rarity and rarity > set_item.rarity then
 						rarity = set_item.rarity
 					end
 				end
@@ -565,6 +578,7 @@ VendorViewBase._convert_offers_to_layout_entries = function (self, item_offers)
 					rarity = rarity,
 					description = sku.description
 				}
+
 				layout[#layout + 1] = {
 					widget_type = "gear_set",
 					item = fake_set_item,
@@ -591,17 +605,19 @@ VendorViewBase._update_bundle_offers_owned_skus = function (self)
 			local category = sku.category
 
 			if category == "bundle" then
-				local owned_skus = nil
+				local owned_skus
 				local bundled = offer.description.contents.bundled
 				local price_data = offer.price.amount
 				local price_amount = price_data.amount
-				local discounted_price = nil
+				local discounted_price
 				local total_count = 0
 
 				for k = 1, #bundled do
 					local info = bundled[k]
 					local gear_id = info.description.gearId
+
 					total_count = total_count + 1
+
 					local owned = self:is_item_owned(gear_id)
 
 					if owned and info.sku then
@@ -611,6 +627,7 @@ VendorViewBase._update_bundle_offers_owned_skus = function (self)
 						end
 
 						owned_skus[#owned_skus + 1] = info.sku.id
+
 						local discount_value = info.discountValue and info.discountValue.amount
 
 						if discounted_price and discount_value then
@@ -649,6 +666,7 @@ VendorViewBase._generate_mannequin_loadout = function (self, profile)
 
 				if item_definition then
 					local slot_item = table.clone(item_definition)
+
 					new_loadout[slot_name] = slot_item
 				end
 			end
@@ -702,6 +720,7 @@ VendorViewBase._update_button_disable_state = function (self)
 					local info = bundled[k]
 					local gear_id = info.description.gearId
 					local set_item = MasterItems.get_store_item_instance(info.description, gear_id)
+
 					items[#items + 1] = set_item
 
 					if self:is_item_owned(gear_id) then
@@ -714,6 +733,7 @@ VendorViewBase._update_button_disable_state = function (self)
 				button_disabled = owned_count == total_count
 			elseif category == "item_instance" then
 				local gear_id = offer.description.gearId
+
 				button_disabled = self:is_item_owned(gear_id)
 			end
 		end
@@ -728,13 +748,17 @@ VendorViewBase._set_display_price = function (self, price_data)
 	local price = price_data and (price_data.discounted_price or price_data.amount)
 	local type = price_data and price_data.type
 	local can_afford = price and self:can_afford(price, type)
-	local price_text = nil
+	local price_text
+
 	price_text = price and TextUtilities.format_currency(price) or ""
+
 	local widgets_by_name = self._widgets_by_name
 	local price_text_widget = widgets_by_name.price_text
 	local price_text_widget_style = price_text_widget.style
 	local price_text_style = price_text_widget_style.text
+
 	price_text_widget.content.text = price_text
+
 	local wallet_settings = WalletSettings[type]
 
 	if wallet_settings then
@@ -748,6 +772,7 @@ VendorViewBase._set_display_price = function (self, price_data)
 	local price_icon_width, _ = self:_scenegraph_size(price_icon_scenegraph_id)
 	local price_icon_spacing = 10
 	local total_width = text_width + price_icon_spacing + price_icon_width
+
 	price_icon_widget.offset[1] = -total_width * 0.5 + price_icon_width * 0.5
 	price_text_widget.offset[1] = price_icon_widget.offset[1] + text_width * 0.5 + price_icon_width * 0.5 + price_icon_spacing
 end
@@ -833,6 +858,7 @@ VendorViewBase._on_purchase_complete = function (self, items)
 
 		if item then
 			local gear_id = item.gear_id
+
 			self._account_items[gear_id] = item
 
 			if offer_items_layout then
@@ -869,6 +895,7 @@ VendorViewBase._update_wallets_presentation = function (self, wallets_data)
 			local wallet = wallets_data:by_type(type)
 			local balance = wallet and wallet.balance
 			local amount = balance and balance.amount or 0
+
 			self._current_balance[type] = amount
 		end
 	end
@@ -901,6 +928,7 @@ VendorViewBase._handle_input = function (self, input_service, dt, t)
 
 				if self._current_select_grid_index ~= selected_index then
 					self._current_select_grid_index = selected_index
+
 					local widgets = grid:widgets()
 					local widget = widgets[selected_index]
 

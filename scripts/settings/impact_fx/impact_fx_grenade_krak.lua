@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/impact_fx/impact_fx_grenade_krak.lua
+
 local ArmorSettings = require("scripts/settings/damage/armor_settings")
 local ImpactFxHelper = require("scripts/utilities/impact_fx_helper")
 local SurfaceMaterialSettings = require("scripts/settings/surface_material_settings")

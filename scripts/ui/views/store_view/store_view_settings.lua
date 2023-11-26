@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/store_view/store_view_settings.lua
+
 local store_view_settings = {
 	shading_environment = "content/shading_environments/ui/store",
 	min_time_to_disply_timer = 86400,

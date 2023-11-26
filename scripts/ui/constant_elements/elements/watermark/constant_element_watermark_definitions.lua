@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/constant_elements/elements/watermark/constant_element_watermark_definitions.lua
+
 local ConstantElementWatermarkSettings = require("scripts/ui/constant_elements/elements/watermark/constant_element_watermark_settings")
 local UIWorkspaceSettings = require("scripts/settings/ui/ui_workspace_settings")
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
@@ -183,6 +185,7 @@ local widget_definitions = {
 	}, "watermark_canvas")
 }
 local title_text_style = table.clone(UIFontSettings.header_3)
+
 title_text_style.font_size = 18
 title_text_style.offset = {
 	0,
@@ -196,7 +199,9 @@ title_text_style.text_color = {
 	255
 }
 title_text_style.text_horizontal_alignment = "center"
+
 local description_text_style = table.clone(UIFontSettings.header_3)
+
 description_text_style.font_size = 18
 description_text_style.offset = {
 	0,

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/breed/breed_shield_templates/chaos/chaos_ogryn_bulwark_shield_template.lua
+
 local AttackSettings = require("scripts/settings/damage/attack_settings")
 local attack_types = AttackSettings.attack_types
 local shield_templates = {

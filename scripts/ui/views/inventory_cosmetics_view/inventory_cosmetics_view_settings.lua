@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/inventory_cosmetics_view/inventory_cosmetics_view_settings.lua
+
 local grid_size = {
 	424,
 	750

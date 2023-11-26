@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/equipment/weapon_handling_templates/weapon_ammo_templates.lua
+
 local weapon_ammo_templates = {
 	no_ammo = {
 		ammunition_clip = 0,

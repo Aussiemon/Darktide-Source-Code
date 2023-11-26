@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/contracts_view/contracts_view_definitions.lua
+
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local UIWorkspaceSettings = require("scripts/settings/ui/ui_workspace_settings")
 local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templates")
@@ -492,30 +494,44 @@ local widget_blueprints = {
 			local reward_amount = task_info.reward.amount
 			local reward_text = string.format(ViewSettings.contract_reward_string_format, reward_amount)
 			local widget_content = widget.content
+
 			widget_content.task_name = task_name
 			widget_content.task_description = config.task_description
 			widget_content.task_target = config.task_target
 			widget_content.task_reward_text = reward_text
 			widget_content.task_info = task_info
 			widget_content.task_is_fulfilled = task_is_fulfilled
+
 			local hotspot = widget_content.hotspot
+
 			hotspot.pressed_callback = callback(parent, callback_name, widget, config)
+
 			local widget_style = widget.style
 			local progress_bar_style = widget_style.progress_bar
 			local progress_bar_width = normalized_progress * progress_bar_style.size[1]
+
 			progress_bar_style.size[1] = progress_bar_width
+
 			local material_values = widget_style.icon.material_values
+
 			material_values.contract_type = task_type and UISettings.contracts_icons_by_type[task_type] or UISettings.contracts_icons_by_type.default
 			material_values.checkbox = task_is_fulfilled and 1 or 0
+
 			local task_progress_bar_edge_style = widget_style.progress_bar_edge
+
 			task_progress_bar_edge_style.offset[1] = task_progress_bar_edge_style.offset[1] + progress_bar_width
+
 			local alpha_multiplier = math.clamp(normalized_progress / 0.2, 0, 1)
+
 			task_progress_bar_edge_style.color[1] = 255 * alpha_multiplier
 
 			if task_is_fulfilled then
 				local reward_icon_style = widget_style.task_reward_icon
+
 				reward_icon_style.color = reward_icon_style.fulfilled_color
+
 				local reward_text_style = widget_style.task_reward_text
+
 				reward_text_style.text_color = reward_text_style.fulfilled_color
 			end
 		end

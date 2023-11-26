@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/breed/breeds/chaos/chaos_plague_ogryn_breed.lua
+
 local ArmorSettings = require("scripts/settings/damage/armor_settings")
 local BossNameTemplates = require("scripts/settings/boss/boss_name_templates")
 local BreedBlackboardComponentTemplates = require("scripts/settings/breed/breed_blackboard_component_templates")

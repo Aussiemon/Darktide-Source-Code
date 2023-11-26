@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/door/door_system.lua
+
 require("scripts/extension_systems/door/door_extension")
 
 local LevelPropsBroadphase = require("scripts/utilities/level_props/level_props_broadphase")
@@ -51,7 +53,11 @@ DoorSystem.update_level_props_broadphase = function (self)
 
 			if units_nearby and not in_update_list then
 				self:enable_update_function("DoorExtension", "update", unit, extension)
-			elseif not units_nearby and in_update_list then
+
+				break
+			end
+
+			if not units_nearby and in_update_list then
 				self:disable_update_function("DoorExtension", "update", unit, extension)
 			end
 		until true

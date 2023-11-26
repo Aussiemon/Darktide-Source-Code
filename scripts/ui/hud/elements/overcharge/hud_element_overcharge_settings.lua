@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/hud/elements/overcharge/hud_element_overcharge_settings.lua
+
 local shield_size = {
 	31,
 	38

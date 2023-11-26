@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/perception/minion_perception_extension.lua
+
 local AttackIntensity = require("scripts/utilities/attack_intensity")
 local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
 local Breed = require("scripts/utilities/breed")
@@ -13,19 +15,25 @@ MinionPerceptionExtension.init = function (self, extension_init_context, unit, e
 	self:_init_blackboard_components(blackboard)
 
 	local extension_manager = Managers.state.extension
+
 	self._side_system = extension_manager:system("side_system")
 	self._blackboard_system = extension_manager:system("blackboard_system")
 	self._broadphase_system = extension_manager:system("broadphase_system")
 	self._perception_system = extension_manager:system("perception_system")
 	self._smoke_fog_system = Managers.state.extension:system("smoke_fog_system")
+
 	local breed = extension_init_data.breed
+
 	self._breed = breed
 	self._unit = unit
 	self._reports_known_position = breed.reports_known_position or breed.cover_config ~= nil
+
 	local initial_aggro_state = extension_init_data.aggro_state
+
 	self._initial_aggro_state = initial_aggro_state
 	self._is_priority_blackboard_update = false
 	self._delayed_alerts = {}
+
 	local use_action_controlled_alert = breed.use_action_controlled_alert
 
 	self:set_use_action_controlled_alert(use_action_controlled_alert)
@@ -42,13 +50,14 @@ MinionPerceptionExtension.init = function (self, extension_init_context, unit, e
 	self._running_line_of_sight_checks = {}
 	self._num_running_raycasts = 0
 	self._force_new_aim = {}
+
 	local line_of_sight_data = breed.line_of_sight_data
 	local max_main_index = #line_of_sight_data
-	local line_of_sight_lookup_by_id = Script.new_map(max_main_index)
-	local num_blocked_per_main_index = Script.new_array(max_main_index)
+	local line_of_sight_lookup_by_id, num_blocked_per_main_index = Script.new_map(max_main_index), Script.new_array(max_main_index)
 
 	for main_index = 1, max_main_index do
 		local id = line_of_sight_data[main_index].id
+
 		line_of_sight_lookup_by_id[id] = {}
 		num_blocked_per_main_index[main_index] = 0
 	end
@@ -64,17 +73,22 @@ MinionPerceptionExtension.init = function (self, extension_init_context, unit, e
 	self._target_selection_template = breed.target_selection_template
 	self._target_changed_attack_intensities = breed.target_changed_attack_intensities
 	self._force_new_target_attempt = false
+
 	local threat_config = breed.threat_config
+
 	self._threat_config = threat_config
 	self._threat_decay_disabled = threat_config.decay_disabled
 	self._threat_units = {}
+
 	local ignore_detection_los_modifiers = breed.ignore_detection_los_modifiers
+
 	self._ignore_detection_los_modifiers = ignore_detection_los_modifiers
 	self._is_monster = breed.tags.monster
 end
 
 MinionPerceptionExtension._init_blackboard_components = function (self, blackboard)
 	local perception_component = Blackboard.write_component(blackboard, "perception")
+
 	perception_component.aggro_state = aggro_states.passive
 	perception_component.target_unit = nil
 
@@ -104,10 +118,9 @@ MinionPerceptionExtension.extensions_ready = function (self, world, unit)
 end
 
 MinionPerceptionExtension.game_object_initialized = function (self, session, game_object_id)
-	self._game_object_id = game_object_id
-	self._game_session = session
-	local initial_aggro_state = self._initial_aggro_state
-	local initial_target_unit = self._initial_target_unit
+	self._game_session, self._game_object_id = session, game_object_id
+
+	local initial_aggro_state, initial_target_unit = self._initial_aggro_state, self._initial_target_unit
 
 	if initial_aggro_state then
 		if initial_aggro_state == aggro_states.aggroed then
@@ -129,6 +142,7 @@ end
 MinionPerceptionExtension.on_reload = function (self)
 	local breed = self._breed
 	local target_selection_template = breed.target_selection_template
+
 	self._target_selection_template = target_selection_template
 end
 
@@ -178,6 +192,7 @@ local FORCE_NEW_AIM_DISTANCE = 5
 
 MinionPerceptionExtension.cb_line_of_sight_hit = function (self, hit, hit_position)
 	self._num_running_raycasts = self._num_running_raycasts - 1
+
 	local processing_line_of_sight_data = self._processing_line_of_sight_data
 	local current_offset_index = processing_line_of_sight_data.offset_index
 	local current_main_index = processing_line_of_sight_data.main_index
@@ -197,6 +212,7 @@ MinionPerceptionExtension.cb_line_of_sight_hit = function (self, hit, hit_positi
 	end
 
 	processing_line_of_sight_data.offset_index = 1
+
 	local max_main_index = #line_of_sight_data
 
 	if current_main_index < max_main_index then
@@ -206,6 +222,7 @@ MinionPerceptionExtension.cb_line_of_sight_hit = function (self, hit, hit_positi
 	end
 
 	processing_line_of_sight_data.main_index = 1
+
 	local line_of_sight_queue = self._line_of_sight_queue
 	local target_unit = line_of_sight_queue[1]
 
@@ -215,26 +232,21 @@ MinionPerceptionExtension.cb_line_of_sight_hit = function (self, hit, hit_positi
 
 	if ALIVE[target_unit] then
 		local had_los = self._line_of_sight_lookup[target_unit]
-		local line_of_sight_lookup_by_id = self._line_of_sight_lookup_by_id
-		local last_los_positions = self._last_los_positions
-		local has_los = false
-		local least_blocked_main_index = nil
-		local least_blocked_percentage = 1
+		local line_of_sight_lookup_by_id, last_los_positions = self._line_of_sight_lookup_by_id, self._last_los_positions
+		local has_los, least_blocked_main_index, least_blocked_percentage = false, nil, 1
 
 		for i = 1, max_main_index do
 			local data = line_of_sight_data[i]
-			local num_blocked = num_blocked_per_main_index[i]
-			local num_offsets = data.num_offsets
-			local id = data.id
+			local num_blocked, num_offsets, id = num_blocked_per_main_index[i], data.num_offsets, data.id
 			local has_unblocked_raycast = num_blocked < num_offsets
+
 			line_of_sight_lookup_by_id[id][target_unit] = has_unblocked_raycast
 
 			if has_unblocked_raycast then
 				local blocked_percentage = num_blocked / num_offsets
 
-				if least_blocked_percentage > blocked_percentage then
-					least_blocked_percentage = blocked_percentage
-					least_blocked_main_index = i
+				if blocked_percentage < least_blocked_percentage then
+					least_blocked_main_index, least_blocked_percentage = i, blocked_percentage
 				end
 
 				has_los = true
@@ -253,7 +265,7 @@ MinionPerceptionExtension.cb_line_of_sight_hit = function (self, hit, hit_positi
 				local last_los = last_los_positions[target_unit]
 				local distance_to_last_los = Vector3.distance(last_los:unbox(), los_to_position)
 
-				if FORCE_NEW_AIM_DISTANCE < distance_to_last_los then
+				if distance_to_last_los > FORCE_NEW_AIM_DISTANCE then
 					self._force_new_aim[target_unit] = true
 				end
 			end
@@ -322,8 +334,9 @@ MinionPerceptionExtension.alert = function (self, enemy_unit)
 		self:aggro()
 	else
 		perception_component.aggro_state = aggro_states.alerted
+
 		local unit = self._unit
-		local target_distance = nil
+		local target_distance
 
 		if perception_component.target_unit then
 			target_distance = perception_component.target_distance
@@ -352,7 +365,7 @@ MinionPerceptionExtension.alert_nearby_allies = function (self, target_unit, opt
 	local broadphase = broadphase_system.broadphase
 	local from_position = POSITION_LOOKUP[unit]
 	local target_position = POSITION_LOOKUP[target_unit]
-	local num_results = broadphase:query(from_position, optional_radius or DEFAULT_ALERT_NEARBY_RADIUS, BROADPHASE_RESULTS, side_name)
+	local num_results = broadphase.query(broadphase, from_position, optional_radius or DEFAULT_ALERT_NEARBY_RADIUS, BROADPHASE_RESULTS, side_name)
 
 	for i = 1, num_results do
 		repeat
@@ -369,7 +382,7 @@ MinionPerceptionExtension.alert_nearby_allies = function (self, target_unit, opt
 				local should_alert = not optional_require_los or perception_extension:has_line_of_sight(target_unit)
 
 				if should_alert then
-					should_alert = not optional_max_distance_to_target or Vector3.distance(POSITION_LOOKUP[nearby_unit], target_position) <= optional_max_distance_to_target
+					should_alert = not optional_max_distance_to_target or optional_max_distance_to_target >= Vector3.distance(POSITION_LOOKUP[nearby_unit], target_position)
 
 					if should_alert then
 						perception_extension:alert(target_unit)
@@ -382,6 +395,7 @@ end
 
 MinionPerceptionExtension.delayed_alert = function (self, enemy_unit, delay, optional_ignore_alerted_los)
 	local t = Managers.time:time("gameplay")
+
 	self._delayed_alerts[enemy_unit] = t + delay
 
 	self:set_ignore_alerted_los(optional_ignore_alerted_los)
@@ -389,6 +403,7 @@ end
 
 MinionPerceptionExtension.set_ignore_alerted_los = function (self, value)
 	local perception_component = self._perception_component
+
 	perception_component.ignore_alerted_los = value and true or false
 end
 
@@ -405,8 +420,7 @@ MinionPerceptionExtension.set_threat_decay_enabled = function (self, enabled)
 end
 
 MinionPerceptionExtension.force_new_target_attempt = function (self, optional_config)
-	self._force_new_target_attempt_config = optional_config
-	self._force_new_target_attempt = true
+	self._force_new_target_attempt, self._force_new_target_attempt_config = true, optional_config
 end
 
 MinionPerceptionExtension._set_target_unit = function (self, target_unit)
@@ -478,14 +492,12 @@ MinionPerceptionExtension._update_line_of_sight = function (self, unit, target_u
 end
 
 MinionPerceptionExtension._line_of_sight_check = function (self, unit, target_unit, los_collision_filter)
-	local perception_system = self._perception_system
-	local up = Vector3.up()
+	local perception_system, up = self._perception_system, Vector3.up()
 	local line_of_sight_data = self._line_of_sight_data
 
 	for main_index = 1, #line_of_sight_data do
 		local data = line_of_sight_data[main_index]
-		local from_node = data.from_node
-		local to_node = data.to_node
+		local from_node, to_node = data.from_node, data.to_node
 		local los_node = Unit.node(unit, from_node)
 		local los_to_node = Unit.node(target_unit, to_node)
 		local los_from_position = Unit.world_position(unit, los_node)
@@ -494,14 +506,14 @@ MinionPerceptionExtension._line_of_sight_check = function (self, unit, target_un
 		if from_offsets then
 			local right = Quaternion.right(Unit.local_rotation(unit, 1))
 			local from_offset = from_offsets:unbox()
+
 			los_from_position = los_from_position + Vector3(right.x * from_offset.x, right.y * from_offset.x, from_offset.z)
 		end
 
 		local los_to_position = Unit.world_position(target_unit, los_to_node)
 		local to_los_position = los_to_position - los_from_position
 		local right_vector = Vector3.normalize(Vector3.cross(to_los_position, up))
-		local raycast_offsets = data.offsets
-		local num_offsets = data.num_offsets
+		local raycast_offsets, num_offsets = data.offsets, data.num_offsets
 
 		for i = 1, num_offsets do
 			local raycast_offset = raycast_offsets[i]:unbox()
@@ -540,8 +552,7 @@ MinionPerceptionExtension._on_target_change = function (self, old_target_unit, n
 		AttackIntensity.add_intensity(new_target_unit, attack_intensities)
 	end
 
-	local is_monster = self._is_monster
-	local unit = self._unit
+	local is_monster, unit = self._is_monster, self._unit
 
 	if is_monster then
 		if ALIVE[old_target_unit] then
@@ -554,14 +565,17 @@ MinionPerceptionExtension._on_target_change = function (self, old_target_unit, n
 	end
 
 	local perception_component = self._perception_component
+
 	perception_component.target_unit = new_target_unit
 	perception_component.previous_target_unit = old_target_unit
 	perception_component.target_changed = true
+
 	local time_manager = Managers.time
 	local t = time_manager:time("gameplay")
+
 	perception_component.target_changed_t = t
-	local game_session = self._game_session
-	local game_object_id = self._game_object_id
+
+	local game_session, game_object_id = self._game_session, self._game_object_id
 	local target_unit_id = new_target_unit and Managers.state.unit_spawner:game_object_id(new_target_unit) or NetworkConstants.invalid_game_object_id
 
 	GameSession.set_game_object_field(game_session, game_object_id, "target_unit_id", target_unit_id)
@@ -620,11 +634,12 @@ MinionPerceptionExtension.add_threat = function (self, threat_unit, threat_to_ad
 	local threat_attack_type_multiplier = optional_attack_type and threat_config.attack_type_multiplier and threat_config.attack_type_multiplier[optional_attack_type]
 
 	if threat_attack_type_multiplier then
-		threat_multiplier = threat_multiplier + threat_attack_type_multiplier - 1
+		threat_multiplier = threat_multiplier + (threat_attack_type_multiplier - 1)
 	end
 
 	local new_threat = (threat_units[threat_unit] or 0) + threat_to_add * threat_multiplier
 	local threat = math.min(new_threat, max_threat)
+
 	threat_units[threat_unit] = threat
 end
 
@@ -643,12 +658,10 @@ MinionPerceptionExtension.update = function (self, unit, dt, t)
 		perception_component.target_changed = false
 	end
 
-	local force_new_target_attempt = self._force_new_target_attempt
-	local force_new_target_attempt_config = self._force_new_target_attempt_config
+	local force_new_target_attempt, force_new_target_attempt_config = self._force_new_target_attempt, self._force_new_target_attempt_config
 
 	if force_new_target_attempt then
-		self._force_new_target_attempt_config = nil
-		self._force_new_target_attempt = false
+		self._force_new_target_attempt, self._force_new_target_attempt_config = false
 	end
 
 	local delayed_alerts = self._delayed_alerts
@@ -693,7 +706,7 @@ MinionPerceptionExtension._within_detection_los_range = function (self, unit, un
 
 	local mutator_manager = Managers.state.mutator
 	local los_modifier = mutator_manager:mutator(DARKNESS_LOS_MODIFIER_NAME) and DARKNESS_LOS_MODIFIER_NAME or mutator_manager:mutator(VENTILATION_PURGE_LOS_MODIFIER_NAME) and VENTILATION_PURGE_LOS_MODIFIER_NAME
-	local detection_los_requirement = nil
+	local detection_los_requirement
 
 	if los_modifier then
 		detection_los_requirement = CIRCUMSTANCE_DETECTION_DISTANCE_LOS_REQUIREMENTS[los_modifier]
@@ -713,7 +726,7 @@ MinionPerceptionExtension._within_detection_los_range = function (self, unit, un
 		end
 	end
 
-	local is_within_range = not detection_los_requirement or Vector3.distance(unit_position, target_position) <= detection_los_requirement
+	local is_within_range = not detection_los_requirement or detection_los_requirement >= Vector3.distance(unit_position, target_position)
 
 	if not is_within_range then
 		return false

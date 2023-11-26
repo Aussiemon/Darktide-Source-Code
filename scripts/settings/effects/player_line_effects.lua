@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/effects/player_line_effects.lua
+
 local line_effects = {
 	lasbeam = {
 		sfx = "wwise/events/weapon/play_weapon_lasgun_crack_beam_nearby",

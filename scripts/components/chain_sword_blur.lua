@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/components/chain_sword_blur.lua
+
 local ChainSwordBlur = component("ChainSwordBlur")
 local BLUR_NODE_NAME = "fx_chain_blur"
 local BLUR_VISIBILITY_GROUP = "chain_blur"
@@ -9,7 +11,9 @@ ChainSwordBlur.init = function (self, unit)
 	self:enable(unit)
 
 	self._unit = unit
+
 	local blur_mesh = Unit.mesh(unit, BLUR_NODE_NAME)
+
 	self._chain_blur_material = Mesh.material(blur_mesh, 1)
 	self._max_speed = self:get_data(unit, "max_speed")
 	self._min_speed = self:get_data(unit, "min_speed")
@@ -23,6 +27,7 @@ end
 
 ChainSwordBlur._set_speed = function (self, speed)
 	speed = speed or DEFAULT_MIN_SPEED
+
 	local min_speed = self._min_speed
 	local max_speed = self._max_speed
 	local visible = min_speed < speed

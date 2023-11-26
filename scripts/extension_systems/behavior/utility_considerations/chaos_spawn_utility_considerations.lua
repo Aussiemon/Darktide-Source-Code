@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/behavior/utility_considerations/chaos_spawn_utility_considerations.lua
+
 local considerations = {
 	chaos_spawn_claw_attack = {
 		distance_to_target = {

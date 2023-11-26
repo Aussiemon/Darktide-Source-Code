@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/smart_tag/smart_tag_settings.lua
+
 local MinionPerception = require("scripts/utilities/minion_perception")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local VOQueryConstants = require("scripts/settings/dialogue/vo_query_constants")

@@ -1,16 +1,22 @@
+﻿-- chunkname: @scripts/extension_systems/visual_loadout/wieldable_slot_scripts/device.lua
+
 local Device = class("Device")
 local HOLO_SCREEN_VISIBILITY_GROUP = "display_solid"
 
 Device.init = function (self, context, slot, weapon_template, fx_sources)
 	local item_unit_1p = slot.unit_1p
 	local item_unit_3p = slot.unit_3p
+
 	self._item_unit_1p = item_unit_1p
 	self._item_unit_3p = item_unit_3p
 
 	if not context.is_husk then
 		local owner_unit = context.owner_unit
+
 		self._owner_unit = owner_unit
+
 		local unit_data_extension = ScriptUnit.extension(owner_unit, "unit_data_system")
+
 		self._minigame_character_state_component = unit_data_extension:read_component("minigame_character_state")
 		self._interactor_extension = ScriptUnit.extension(owner_unit, "interactor_system")
 	end
@@ -40,7 +46,7 @@ Device.wield = function (self)
 			local is_level_unit = true
 			local minigame_character_state_component = self._minigame_character_state_component
 			local level_unit_id = minigame_character_state_component.interface_unit_id
-			local interface_unit = nil
+			local interface_unit
 
 			if level_unit_id ~= NetworkConstants.invalid_level_unit_id then
 				interface_unit = Managers.state.unit_spawner:unit(level_unit_id, is_level_unit)

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/monster/monster_settings.lua
+
 local monster_settings = {
 	spawn_distance = 40,
 	boss_patrol_extra_spawn_distance = 20,

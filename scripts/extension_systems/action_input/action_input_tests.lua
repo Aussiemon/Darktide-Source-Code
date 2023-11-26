@@ -1,8 +1,11 @@
-local _hierarchy_test, _action_input_tests = nil
+﻿-- chunkname: @scripts/extension_systems/action_input/action_input_tests.lua
+
+local _hierarchy_test, _action_input_tests
 
 local function action_input_tests(action_templates)
 	for name, template in pairs(action_templates) do
 		local success, error_msg = _hierarchy_test(template)
+
 		success, error_msg = _action_input_tests(template)
 	end
 end
@@ -51,8 +54,7 @@ function _action_input_tests(template)
 								if num_inputs > 0 then
 									for j = 1, #inputs do
 										local input_config = inputs[j]
-										local input = input_config.input
-										local value = input_config.value
+										local input, value = input_config.input, input_config.value
 
 										if type(input) == "nil" then
 											success = false

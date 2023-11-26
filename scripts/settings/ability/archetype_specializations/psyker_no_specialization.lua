@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/ability/archetype_specializations/psyker_no_specialization.lua
+
 local archetype_specialization = {
 	archetype = "psyker",
 	name = "none",

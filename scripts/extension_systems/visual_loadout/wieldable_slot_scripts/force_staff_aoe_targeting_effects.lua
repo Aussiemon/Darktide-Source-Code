@@ -1,22 +1,29 @@
+﻿-- chunkname: @scripts/extension_systems/visual_loadout/wieldable_slot_scripts/force_staff_aoe_targeting_effects.lua
+
 local Action = require("scripts/utilities/weapon/action")
 local ForceStaffAoeTargetingEffects = class("ForceStaffAoeTargetingEffects")
 local SPAWN_POS = Vector3Box(400, 400, 400)
 
 ForceStaffAoeTargetingEffects.init = function (self, context, slot, weapon_template, fx_sources)
 	local wwise_world = context.wwise_world
+
 	self._world = context.world
 	self._wwise_world = wwise_world
 	self._weapon_actions = weapon_template.actions
 	self._is_husk = context.is_husk
 	self._is_local_unit = context.is_local_unit
 	self._fx_extension = context.fx_extension
+
 	local owner_unit = context.owner_unit
 	local unit_data_extension = ScriptUnit.extension(owner_unit, "unit_data_system")
+
 	self._action_module_charge_component = unit_data_extension:read_component("action_module_charge")
 	self._action_module_position_finder_component = unit_data_extension:read_component("action_module_position_finder")
 	self._first_person_component = unit_data_extension:read_component("first_person")
 	self._weapon_action_component = unit_data_extension:read_component("weapon_action")
+
 	local source_id = WwiseWorld.make_manual_source(wwise_world, SPAWN_POS:unbox())
+
 	self._decal_unit = nil
 	self._effect_id = nil
 	self._scaling_effect_id = nil
@@ -78,7 +85,7 @@ ForceStaffAoeTargetingEffects._update_targeting_effects = function (self)
 	local old_effect_id = self._effect_id
 	local old_scaling_effect_id = self._scaling_effect_id
 	local old_playing_id = self._targeting_playing_id
-	local decal_unit, effect_id, scaling_effect_id = nil
+	local decal_unit, effect_id, scaling_effect_id
 
 	if decal_unit_name and not old_decal_unit then
 		decal_unit = World.spawn_unit_ex(world, decal_unit_name, nil, spawn_pos)
@@ -104,6 +111,7 @@ ForceStaffAoeTargetingEffects._update_targeting_effects = function (self)
 
 		if scale_variable_name then
 			local variable_index = World.find_particles_variable(world, scaling_effect_name, scale_variable_name)
+
 			self._scale_variable_index = variable_index
 		else
 			self._scale_variable_index = nil
@@ -118,13 +126,14 @@ ForceStaffAoeTargetingEffects._update_targeting_effects = function (self)
 	if wwise_event and not old_playing_id then
 		local should_use_husk_event = has_husk_events and self._fx_extension:should_play_husk_effect()
 
-		if should_use_husk_event then
-			wwise_event = wwise_event .. "_husk" or wwise_event
-		end
+		wwise_event = should_use_husk_event and wwise_event .. "_husk" or wwise_event
 
 		local playing_id = WwiseWorld.trigger_resource_event(wwise_world, wwise_event, source_id)
+
 		self._targeting_playing_id = playing_id
+
 		local stop_event = position_finder_fx.wwise_event_stop
+
 		self._wwise_event_stop = should_use_husk_event and stop_event .. "_husk" or stop_event
 	elseif not wwise_event and old_playing_id then
 		local stop_event = self._wwise_event_stop

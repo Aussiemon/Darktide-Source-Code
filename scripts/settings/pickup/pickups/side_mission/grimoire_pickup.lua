@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/pickup/pickups/side_mission/grimoire_pickup.lua
+
 local pickup_data = {
 	description = "loc_pickup_side_mission_pocketable_01",
 	name = "grimoire",

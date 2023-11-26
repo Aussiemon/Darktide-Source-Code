@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/damage/explosion_templates/player_explosion_templates.lua
+
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
 local TalentSettings = require("scripts/settings/talent/talent_settings_new")

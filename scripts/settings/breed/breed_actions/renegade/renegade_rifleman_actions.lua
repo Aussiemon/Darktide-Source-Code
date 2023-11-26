@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/breed/breed_actions/renegade/renegade_rifleman_actions.lua
+
 local BreedShootTemplates = require("scripts/settings/breed/breed_shoot_templates")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
@@ -1167,6 +1169,7 @@ local action_data = {
 		run_anim_event = "move_fwd"
 	}
 }
+
 action_data.shoot_training_grounds_sprint = table.clone_instance(action_data.shoot)
 action_data.shoot_training_grounds_sprint.time_per_shot = shooting_difficulty_settings.time_per_shot_tg_sprint
 

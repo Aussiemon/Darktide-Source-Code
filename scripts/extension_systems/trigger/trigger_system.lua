@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/trigger/trigger_system.lua
+
 require("scripts/extension_systems/trigger/trigger_extension")
 
 local LevelPropsBroadphase = require("scripts/utilities/level_props/level_props_broadphase")

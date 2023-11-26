@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/utilities/breed_resource_dependencies.lua
+
 local BreedActions = require("scripts/settings/breed/breed_actions")
 local ImpactFxResourceDependencies = require("scripts/settings/damage/impact_fx_resource_dependencies")
 local ItemPackage = require("scripts/foundation/managers/package/utilities/item_package")
@@ -5,9 +7,8 @@ local BreedResourceDependencies = {}
 local TEMP_BREED_RESOURCE_PACKAGES = {}
 
 BreedResourceDependencies.generate = function (breeds, item_definitions)
-	local resource_packages = {}
-	local iterator_func = pairs
-	local temp_breed_names, temp_package_names = nil
+	local resource_packages, iterator_func = {}, pairs
+	local temp_breed_names, temp_package_names
 
 	for breed_name, breed_data in iterator_func(breeds, temp_breed_names) do
 		BreedResourceDependencies._resolve_recursive(breed_data, item_definitions, TEMP_BREED_RESOURCE_PACKAGES)
@@ -61,6 +62,7 @@ BreedResourceDependencies._resolve_impact_fx = function (data, resource_packages
 
 	for i = 1, #impact_fx_resource_packages do
 		local resource = impact_fx_resource_packages[i]
+
 		resource_packages[resource] = true
 	end
 end

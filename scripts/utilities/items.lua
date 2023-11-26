@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/utilities/items.lua
+
 local AchievementUIHelper = require("scripts/managers/achievements/utility/achievement_ui_helper")
 local Archetypes = require("scripts/settings/archetype/archetypes")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
@@ -63,6 +65,7 @@ ItemUtils.mark_item_id_as_new = function (item, skip_notification)
 		end
 
 		local new_items = character_data.new_items
+
 		new_items[gear_id] = true
 
 		if item_type then
@@ -92,6 +95,7 @@ ItemUtils.mark_item_id_as_new = function (item, skip_notification)
 
 		for i = 1, #item_archetypes do
 			local archetype_name = item_archetypes[i]
+
 			account_data.new_account_items_by_archetype[archetype_name] = account_data.new_account_items_by_archetype[archetype_name] or {}
 			account_data.new_account_items_by_archetype[archetype_name][gear_id] = true
 		end
@@ -99,6 +103,7 @@ ItemUtils.mark_item_id_as_new = function (item, skip_notification)
 
 	local new_item_notifications = character_data.new_item_notifications
 	local show_notification = skip_notification and not skip_notification or true
+
 	new_item_notifications[gear_id] = {
 		show_notification = show_notification
 	}
@@ -118,6 +123,7 @@ ItemUtils.unmark_item_id_as_new = function (gear_id)
 
 	if new_items and new_items[gear_id] then
 		new_items[gear_id] = nil
+
 		local new_items_by_type = character_data.new_items_by_type
 
 		if new_items_by_type then
@@ -293,9 +299,11 @@ ItemUtils.display_name = function (item)
 	local variant_localization_key = UISettings.item_variant_localization_lookup[variant]
 	local variant_display_name_localized = variant_localization_key and localization_function(variant_localization_key) or "-"
 	local display_name_localized = display_name and localization_function(display_name) or "-"
+
 	temp_item_name_localization_context.pattern = pattern_display_name_localized
 	temp_item_name_localization_context.variant = variant_display_name_localized
 	temp_item_name_localization_context.item_display_name = display_name_localized
+
 	local no_cache = true
 
 	return display_name_localized
@@ -317,6 +325,7 @@ ItemUtils.sub_display_name = function (item, required_level, no_color)
 	if item.rarity then
 		local rarity_display_name_localized = ItemUtils.rarity_display_name(item)
 		local rarity_color = ItemUtils.rarity_color(item)
+
 		temp_item_sub_display_name_localization_context.rarity_color_r = rarity_color[2]
 		temp_item_sub_display_name_localization_context.rarity_color_g = rarity_color[3]
 		temp_item_sub_display_name_localization_context.rarity_color_b = rarity_color[4]
@@ -329,6 +338,7 @@ ItemUtils.sub_display_name = function (item, required_level, no_color)
 
 	if required_level then
 		local no_cache = true
+
 		text = text .. " · {#color(120,120,120)}" .. Localize("loc_requires_level", no_cache, {
 			level = required_level
 		})
@@ -355,7 +365,7 @@ ItemUtils.character_level = function (item)
 	return character_level
 end
 
-local find_link_attachment_item_slot_path = nil
+local find_link_attachment_item_slot_path
 
 function find_link_attachment_item_slot_path(target_table, slot_id, item, link_item, optional_path)
 	local unused_trinket_name = "content/items/weapons/player/trinkets/unused_trinket"
@@ -377,7 +387,9 @@ function find_link_attachment_item_slot_path(target_table, slot_id, item, link_i
 				end
 			else
 				local previous_path = path
+
 				path = path and path .. "." .. k or k
+
 				local alternative_path, path_item = find_link_attachment_item_slot_path(t, slot_id, item, link_item, path)
 
 				if alternative_path then
@@ -398,7 +410,7 @@ local trinket_slot_order = {
 ItemUtils.weapon_trinket_preview_item = function (item, optional_preview_item)
 	local preview_item_name = optional_preview_item or "content/items/weapons/player/trinkets/preview_trinket"
 	local preview_item = preview_item_name and MasterItems.get_item(preview_item_name)
-	local visual_item = nil
+	local visual_item
 
 	if preview_item then
 		visual_item = table.clone_instance(preview_item)
@@ -432,7 +444,7 @@ end
 ItemUtils.weapon_skin_preview_item = function (item, include_skin_item_info)
 	local preview_item_name = item.preview_item
 	local preview_item = preview_item_name and MasterItems.get_item(preview_item_name)
-	local visual_item = nil
+	local visual_item
 
 	if preview_item then
 		visual_item = table.clone_instance(preview_item)
@@ -514,7 +526,7 @@ ItemUtils.obtained_display_name = function (item)
 	local display_name_localization_key = source_settings and source_settings.display_name
 	local display_name_localized = display_name_localization_key and Localize(display_name_localization_key)
 	local display_name = display_name_localized
-	local optional_description = nil
+	local optional_description
 
 	if display_name and source_settings and source_settings.is_achievement then
 		local slots = item.slots
@@ -526,6 +538,7 @@ ItemUtils.obtained_display_name = function (item)
 			if achievement then
 				if achievement.type == "meta" then
 					local sub_penances_count = table.size(achievement.achievements)
+
 					optional_description = Localize("loc_inventory_cosmetic_item_acquisition_penance_description_multiple_requirement", true, {
 						penance_amount = sub_penances_count
 					})
@@ -541,6 +554,7 @@ ItemUtils.obtained_display_name = function (item)
 					g = key_value_color[3],
 					b = key_value_color[4]
 				})
+
 				display_name = Localize(display_name_localization_key, true, {
 					achievement_label = achievement_label_colored
 				})
@@ -574,6 +588,7 @@ ItemUtils.keywords_text = function (item)
 		for i = 1, #displayed_keywords do
 			local keyword = displayed_keywords[i]
 			local display_name = keyword.display_name
+
 			text = text .. Localize(display_name)
 
 			if i ~= #displayed_keywords then
@@ -697,7 +712,9 @@ ItemUtils.retrieve_items_for_archetype = function (archetype, filtered_slots, wo
 		"RELEASABLE",
 		"FUNCTIONAL"
 	}
+
 	workflow_states = workflow_states and workflow_states or WORKFLOW_STATES
+
 	local item_definitions = MasterItems.get_cached()
 	local items = {}
 
@@ -762,7 +779,9 @@ local temp_item_rank_localization_context = {
 
 ItemUtils.rank_display_text = function (item)
 	local weapon_rank = Managers.progression:get_item_rank(item)
+
 	temp_item_rank_localization_context.rank = weapon_rank
+
 	local no_cache = true
 
 	return Localize("loc_item_display_rank_format_key", no_cache, temp_item_rank_localization_context)
@@ -782,7 +801,7 @@ ItemUtils.equip_weapon_trinket = function (weapon_item, trinket_item, optional_p
 	local attach_point = optional_path
 
 	if not attach_point then
-		local link_attachment_item_to_slot = nil
+		local link_attachment_item_to_slot
 		local unused_trinket_name = "content/items/weapons/player/trinkets/unused_trinket"
 
 		function link_attachment_item_to_slot(target_table, slot_id, item, optional_path)
@@ -799,7 +818,9 @@ ItemUtils.equip_weapon_trinket = function (weapon_item, trinket_item, optional_p
 						return path
 					else
 						local previous_path = path
+
 						path = path and path .. "." .. k or k
+
 						local alternative_path = link_attachment_item_to_slot(t, slot_id, item, path)
 
 						if alternative_path then
@@ -813,6 +834,7 @@ ItemUtils.equip_weapon_trinket = function (weapon_item, trinket_item, optional_p
 		end
 
 		local master_item = weapon_item.__master_item
+
 		attach_point = link_attachment_item_to_slot(master_item, "slot_trinket_1", trinket_item)
 		attach_point = attach_point or link_attachment_item_to_slot(master_item, "slot_trinket_2", trinket_item)
 	end
@@ -910,7 +932,7 @@ ItemUtils.equip_slot_items = function (items)
 end
 
 ItemUtils.is_item_compatible_with_profile = function (item, profile)
-	local item_gender, item_breed, item_archetype = nil
+	local item_gender, item_breed, item_archetype
 
 	if item.genders and not table.is_empty(item.genders) then
 		for i = 1, #item.genders do
@@ -1097,9 +1119,7 @@ end
 ItemUtils.sort_element_key_comparator = function (definitions)
 	return function (a, b)
 		for i = 1, #definitions, 3 do
-			local order = definitions[i]
-			local key = definitions[i + 1]
-			local func = definitions[i + 2]
+			local order, key, func = definitions[i], definitions[i + 1], definitions[i + 2]
 			local is_lt = func(key and a[key] or a, key and b[key] or b)
 
 			if is_lt ~= nil then
@@ -1117,13 +1137,11 @@ end
 
 ItemUtils.sort_comparator = function (definitions)
 	return function (a, b)
-		local a_item = a.item
-		local b_item = b.item
+		local a_item, b_item = a.item, b.item
 
 		if a_item and b_item then
 			for i = 1, #definitions, 2 do
-				local order = definitions[i]
-				local func = definitions[i + 1]
+				local order, func = definitions[i], definitions[i + 1]
 				local is_lt = func(a_item, b_item)
 
 				if is_lt ~= nil then
@@ -1199,7 +1217,7 @@ end
 
 ItemUtils.compare_item_type = function (a, b)
 	local a_item_type = a.item_type or ""
-	local b_type = b.item_type or ""
+	local a_item_type, b_type = a_item_type, b.item_type or ""
 
 	if a_item_type < b_type then
 		return true
@@ -1212,7 +1230,7 @@ end
 
 ItemUtils.compare_item_name = function (a, b)
 	local a_display_name = a.display_name and Localize(a.display_name) or ""
-	local b_display_name = b.display_name and Localize(b.display_name) or ""
+	local a_display_name, b_display_name = a_display_name, b.display_name and Localize(b.display_name) or ""
 
 	if a_display_name < b_display_name then
 		return true
@@ -1225,7 +1243,7 @@ end
 
 ItemUtils.compare_item_rarity = function (a, b)
 	local a_rarity = a.rarity or 0
-	local b_rarity = b.rarity or 0
+	local a_rarity, b_rarity = a_rarity, b.rarity or 0
 
 	if a_rarity < b_rarity then
 		return true
@@ -1238,7 +1256,7 @@ end
 
 ItemUtils.compare_item_level = function (a, b)
 	local a_itemLevel = a.itemLevel or 0
-	local b_itemLevel = b.itemLevel or 0
+	local a_itemLevel, b_itemLevel = a_itemLevel, b.itemLevel or 0
 
 	if a_itemLevel < b_itemLevel then
 		return true
@@ -1279,6 +1297,7 @@ ItemUtils.perk_description = function (item, rarity, lerp_value)
 			if description_rarity == rarity then
 				local description_key = data.string_key
 				local description_value = data.string_value
+
 				description_values[description_key] = description_value
 			end
 		end
@@ -1321,6 +1340,7 @@ ItemUtils.perk_description = function (item, rarity, lerp_value)
 				local min = value.min
 				local max = value.max
 				local lerp_value_func = value.lerp_value_func or math.lerp
+
 				value = lerp_value_func(min, max, lerp_value)
 			elseif is_meta_buff and type(value) == "table" then
 				value = buff_template.lerp_function(value, lerp_value)
@@ -1339,6 +1359,7 @@ ItemUtils.perk_description = function (item, rarity, lerp_value)
 	end
 
 	description_values.duration = buff_template.duration
+
 	local final_description = Localize(description, true, description_values)
 
 	Log.debug("ItemUtils", "perk_description %s", table.tostring(description_values))
@@ -1370,6 +1391,7 @@ ItemUtils.item_perk_rating = function (item)
 	for i = 1, num_perks do
 		local perk = perks[i]
 		local rank_item_type_name = item.item_type == "GADGET" and "gadget" or "weapon"
+
 		rating = rating + RankSettings[perk.rarity or 0].perk_rating[rank_item_type_name]
 	end
 
@@ -1384,6 +1406,7 @@ ItemUtils.item_trait_rating = function (item)
 	if item.item_type == "GADGET" then
 		for i = 1, num_traits do
 			local trait = traits[i]
+
 			rating = rating + math.round(trait.value * 100)
 		end
 	else
@@ -1392,6 +1415,7 @@ ItemUtils.item_trait_rating = function (item)
 		for i = 1, num_traits do
 			local trait = traits[i]
 			local rank_item_type_name = item.item_type == "GADGET" and "gadget" or "weapon"
+
 			rating = rating + RankSettings[trait.rarity or 0].trait_rating[rank_item_type_name]
 
 			if trait.is_fake then
@@ -1404,10 +1428,11 @@ ItemUtils.item_trait_rating = function (item)
 end
 
 ItemUtils.trait_category = function (item)
-	local trait_category = nil
+	local trait_category
 
 	if item.item_type == "TRAIT" then
 		local trait_name = item.name
+
 		trait_category = string.match(trait_name, "^content/items/traits/([%w_]+)/")
 	elseif item.trait_category then
 		trait_category = item.trait_category
@@ -1488,15 +1513,13 @@ ItemUtils.modifications_by_rarity = function (item)
 end
 
 ItemUtils.create_mannequin_profile_by_item = function (item, prefered_gender, prefered_archetype)
-	local item_gender, item_breed, item_archetype = nil
+	local item_gender, item_breed, item_archetype
 
 	if item.genders and not table.is_empty(item.genders) then
 		if prefered_gender and table.find(item.genders, prefered_gender) then
 			item_gender = prefered_gender
-		elseif table.find(item.genders, "male") then
-			item_gender = "male"
 		else
-			item_gender = item.genders[1]
+			item_gender = table.find(item.genders, "male") and "male" or item.genders[1]
 		end
 	elseif (not item.genders or item.genders and table.is_empty(item.genders)) and prefered_gender then
 		item_gender = prefered_gender
@@ -1507,16 +1530,13 @@ ItemUtils.create_mannequin_profile_by_item = function (item, prefered_gender, pr
 			item_archetype = type(prefered_archetype) == "string" and Archetypes[prefered_archetype] or prefered_archetype
 		else
 			local archetype = item.archetypes[1]
+
 			item_archetype = type(archetype) == "string" and Archetypes[archetype] or archetype
 		end
 	end
 
 	if item.breeds and not table.is_empty(item.breeds) then
-		if #item.breeds > 1 and item_archetype and item_archetype.name == "ogryn" and table.find(item.breeds, "ogryn") then
-			item_breed = "ogryn"
-		else
-			item_breed = item.breeds[1]
-		end
+		item_breed = #item.breeds > 1 and item_archetype and item_archetype.name == "ogryn" and table.find(item.breeds, "ogryn") and "ogryn" or item.breeds[1]
 	end
 
 	local breed = item_breed or item.breeds and item.breeds[1] or "human"
@@ -1535,6 +1555,7 @@ ItemUtils.create_mannequin_profile_by_item = function (item, prefered_gender, pr
 
 				if item_definition then
 					local slot_item = table.clone(item_definition)
+
 					loadout[slot_name] = slot_item
 				end
 			end

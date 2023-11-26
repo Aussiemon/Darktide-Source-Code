@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/breed/breed_blackboard_component_templates/base_blackboard_component_template.lua
+
 local base_template = {
 	spawn = {
 		unit = "Unit",

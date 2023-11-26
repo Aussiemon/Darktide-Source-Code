@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/multiplayer/connection/local_states/local_sync_stats_state.lua
+
 local LocalSyncStatsState = class("LocalSyncStatsState")
 local RPCS = {
 	"rpc_stat_version_mismatch",
@@ -10,6 +12,7 @@ end
 
 LocalSyncStatsState.init = function (self, state_machine, shared_state)
 	self._shared_state = shared_state
+
 	local network_event_delegate = shared_state.event_delegate
 	local channel_id = shared_state.channel_id
 
@@ -18,6 +21,7 @@ LocalSyncStatsState.init = function (self, state_machine, shared_state)
 	self._time = 0
 	self._versions_match = false
 	self._loading_accounts = {}
+
 	local players_at_peer = Managers.player:players_at_peer(Network.peer_id())
 
 	for _, player in pairs(players_at_peer) do
@@ -45,9 +49,10 @@ end
 
 LocalSyncStatsState.update = function (self, dt)
 	local shared_state = self._shared_state
+
 	self._time = self._time + dt
 
-	if shared_state.timeout < self._time then
+	if self._time > shared_state.timeout then
 		Log.info("LocalSyncStatsState", "Timeout waiting for stats to sync.")
 
 		return "timeout", {

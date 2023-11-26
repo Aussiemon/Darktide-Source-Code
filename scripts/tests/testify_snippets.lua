@@ -1,17 +1,20 @@
-local TestifySnippets = {
-	create_new_character = function ()
-		Testify:make_request("wait_for_view_to_close", "main_menu_background_view")
-		Testify:make_request("create_new_character")
-	end,
-	create_character_if_none = function ()
-		local is_any_character_created = Testify:make_request("is_any_character_created")
+﻿-- chunkname: @scripts/tests/testify_snippets.lua
 
-		if not is_any_character_created then
-			Testify:make_request("navigate_to_create_character_from_main_menu")
-			Testify:make_request("create_random_character")
-		end
+local TestifySnippets = {}
+
+TestifySnippets.create_new_character = function ()
+	Testify:make_request("wait_for_view_to_close", "main_menu_background_view")
+	Testify:make_request("create_new_character")
+end
+
+TestifySnippets.create_character_if_none = function ()
+	local is_any_character_created = Testify:make_request("is_any_character_created")
+
+	if not is_any_character_created then
+		Testify:make_request("navigate_to_create_character_from_main_menu")
+		Testify:make_request("create_random_character")
 	end
-}
+end
 
 TestifySnippets.skip_title_and_main_menu_and_create_character_if_none = function ()
 	if not DEDICATED_SERVER then
@@ -58,6 +61,7 @@ TestifySnippets.load_mission_in_mission_board = function (level_key, challenge, 
 	resistance = resistance or 1
 	circumstance_name = circumstance_name or "default"
 	side_mission = side_mission or "default"
+
 	local params = {
 		map = level_key,
 		challenge = challenge,
@@ -78,8 +82,7 @@ TestifySnippets.mission_circumstances = function (mission_name)
 	local level = mission_settings.level
 	local mission_themes = Testify:make_request("mission_themes", level)
 	local circumstances = Testify:make_request("circumstances")
-	local mission_circumstances = {}
-	local i = 0
+	local mission_circumstances, i = {}, 0
 
 	for circumstance_name, circumstance in pairs(circumstances) do
 		local theme_tag = circumstance.theme_tag
@@ -193,7 +196,9 @@ end
 
 TestifySnippets.send_request_to_all_peers = function (request_name, wait_for_response, num_retries, ...)
 	local peer_ids = Testify:peers()
+
 	num_retries = num_retries or 1
+
 	local retry_time = 30
 
 	for _, peer_id in ipairs(peer_ids) do
@@ -277,6 +282,7 @@ TestifySnippets.lua_trace_statistics = function ()
 	TestifySnippets.wait(1)
 
 	local lua_trace_statistics = Testify:make_request_to_runner("lua_trace_statistics")
+
 	lua_trace_statistics = cjson.decode(lua_trace_statistics)
 
 	return lua_trace_statistics
@@ -288,6 +294,7 @@ TestifySnippets.memory_tree = function (depth, ascii_separator, memory_limit)
 	TestifySnippets.wait(1)
 
 	local memory_tree = Testify:make_request_to_runner("stop_memory_tree_monitoring")
+
 	memory_tree = cjson.decode(memory_tree)
 
 	return memory_tree
@@ -299,6 +306,7 @@ TestifySnippets.memory_resources_all = function (include_details)
 	TestifySnippets.wait(1)
 
 	local memory_resources_all = Testify:make_request_to_runner("stop_memory_resources_all_monitoring")
+
 	memory_resources_all = cjson.decode(memory_resources_all)
 
 	if include_details then
@@ -310,6 +318,7 @@ TestifySnippets.memory_resources_all = function (include_details)
 
 			if resource_type_size and (size_threshold == -1 or size_threshold < tonumber(resource_type_size)) then
 				local memory_resources_details = TestifySnippets.memory_resources_details(key, max_resources_number)
+
 				memory_resources_all[key].details = memory_resources_details
 			end
 		end
@@ -324,6 +333,7 @@ TestifySnippets.memory_resources_details = function (resource_name, max_resource
 	TestifySnippets.wait(0.5)
 
 	local memory_resources_details = Testify:make_request_to_runner("stop_memory_resources_details_monitoring")
+
 	memory_resources_details = cjson.decode(memory_resources_details)
 
 	return memory_resources_details
@@ -478,7 +488,9 @@ TestifySnippets.equip_all_traits_support_snippet = function (player, slot_name, 
 		slot_name = slot_name,
 		traits = traits
 	}
+
 	units_to_spawn = units_to_spawn or 1
+
 	local breed_name = "chaos_ogryn_executor"
 	local minion = {
 		breed_side = 2,
@@ -550,6 +562,7 @@ TestifySnippets.appearance_options_widgets = function (appearance_slots_widget_n
 		Testify:make_request("trigger_widget_callback", slot_widget_name)
 
 		local widgets = Testify:make_request("character_appearance_view_options_widgets")
+
 		appearance_options_widgets[slot_name] = widgets
 	end
 

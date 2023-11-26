@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/mission_intro_view/mission_intro_view_definitions.lua
+
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local scenegraph_definition = {
 	canvas = {

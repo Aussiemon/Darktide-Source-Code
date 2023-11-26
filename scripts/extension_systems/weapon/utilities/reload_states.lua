@@ -1,23 +1,27 @@
-local Ammo = require("scripts/utilities/ammo")
-local _reset_state = nil
-local ReloadStates = {
-	reload_kinds = {
-		reload_shotgun = true,
-		reload_state = true
-	},
-	reset = function (reload_template, inventory_slot_component)
-		_reset_state(reload_template, inventory_slot_component)
-	end,
-	start_reload_state = function (reload_template, inventory_slot_component)
-		local state_name = inventory_slot_component.reload_state
-		local state_config = reload_template[state_name]
-		local anim_1p = state_config.anim_1p
-		local anim_3p = state_config.anim_3p or anim_1p
-		local action_time_offset = state_config.action_time_offset
+﻿-- chunkname: @scripts/extension_systems/weapon/utilities/reload_states.lua
 
-		return anim_1p, anim_3p, action_time_offset
-	end
+local Ammo = require("scripts/utilities/ammo")
+local _reset_state
+local ReloadStates = {}
+
+ReloadStates.reload_kinds = {
+	reload_shotgun = true,
+	reload_state = true
 }
+
+ReloadStates.reset = function (reload_template, inventory_slot_component)
+	_reset_state(reload_template, inventory_slot_component)
+end
+
+ReloadStates.start_reload_state = function (reload_template, inventory_slot_component)
+	local state_name = inventory_slot_component.reload_state
+	local state_config = reload_template[state_name]
+	local anim_1p = state_config.anim_1p
+	local anim_3p = state_config.anim_3p or anim_1p
+	local action_time_offset = state_config.action_time_offset
+
+	return anim_1p, anim_3p, action_time_offset
+end
 
 ReloadStates.get_total_time = function (reload_template, inventory_slot_component)
 	local reload_state = ReloadStates.reload_state(reload_template, inventory_slot_component)
@@ -65,6 +69,7 @@ end
 
 function _reset_state(reload_template, inventory_slot_component)
 	local first_state = reload_template.states[1]
+
 	inventory_slot_component.reload_state = first_state
 end
 

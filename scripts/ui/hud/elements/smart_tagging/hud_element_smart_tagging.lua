@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/hud/elements/smart_tagging/hud_element_smart_tagging.lua
+
 local ChatManagerConstants = require("scripts/foundation/managers/chat/chat_manager_constants")
 local Definitions = require("scripts/ui/hud/elements/smart_tagging/hud_element_smart_tagging_definitions")
 local HudElementSmartTaggingSettings = require("scripts/ui/hud/elements/smart_tagging/hud_element_smart_tagging_settings")
@@ -24,6 +26,7 @@ HudElementSmartTagging.init = function (self, parent, draw_layer, start_scale)
 	self._interaction_scan_delay_duration = 0
 	self._presented_smart_tags_by_tag_id = {}
 	self._presented_smart_tags_by_marker_id = {}
+
 	local wheel_slots = HudElementSmartTaggingSettings.wheel_slots
 
 	self:_setup_entries(wheel_slots)
@@ -125,6 +128,7 @@ HudElementSmartTagging._populate_wheel = function (self, options)
 		local entry = entries[i]
 		local widget = entry.widget
 		local content = widget.content
+
 		content.visible = option ~= nil
 		entry.option = option
 
@@ -151,6 +155,7 @@ HudElementSmartTagging._setup_entries = function (self, num_entries)
 	for i = 1, num_entries do
 		local name = "entry_" .. i
 		local widget = self:_create_widget(name, definition)
+
 		entries[i] = {
 			widget = widget
 		}
@@ -179,6 +184,7 @@ end
 
 HudElementSmartTagging._on_tag_start = function (self, t)
 	local tag_context = self._tag_context
+
 	tag_context.enemy_tagged = false
 	tag_context.marker_handled = false
 	tag_context.input_start_time = t
@@ -187,11 +193,14 @@ end
 
 HudElementSmartTagging._on_com_wheel_start = function (self, t, input_service)
 	local wheel_context = self._com_wheel_context
+
 	wheel_context.input_start_time = t
 	wheel_context.is_double_tap = wheel_context.input_stop_time and t - wheel_context.input_stop_time <= DOUBLE_TAP_DELAY
 	wheel_context.camera_still_on_tag = Vector3.length_squared(input_service:get("look_raw") + input_service:get("look_raw_controller")) <= 0
 	wheel_context.single_tap_location_tag = nil
+
 	local tag_context = self._tag_context
+
 	wheel_context.simultaneous_press = tag_context.input_start_time and math.abs(tag_context.input_start_time - t) < 0.001
 end
 
@@ -333,7 +342,7 @@ HudElementSmartTagging._on_com_wheel_stop_callback = function (self, t, ui_rende
 			if target_position and allow_single_tap and not marker_handled then
 				wheel_context.single_tap_location_tag = {
 					tag_type = com_wheel_single_tap,
-					spawn_time = t + DOUBLE_TAP_DELAY - (t - wheel_context.input_start_time),
+					spawn_time = t + (DOUBLE_TAP_DELAY - (t - wheel_context.input_start_time)),
 					position = Vector3Box(target_position)
 				}
 			end
@@ -430,11 +439,12 @@ HudElementSmartTagging._handle_com_wheel = function (self, t, ui_renderer, rende
 
 	if start_time then
 		draw_wheel = self._wheel_active
+
 		local account_data = Managers.save:account_data()
 		local com_wheel_delay = account_data.input_settings.com_wheel_delay
 		local always_draw_t = start_time + com_wheel_delay
 
-		if t > always_draw_t then
+		if always_draw_t < t then
 			draw_wheel = true
 		elseif InputDevice.gamepad_active then
 			draw_wheel = draw_wheel or self:_should_draw_wheel_gamepad(input_service)
@@ -456,7 +466,7 @@ HudElementSmartTagging._handle_com_wheel = function (self, t, ui_renderer, rende
 
 	local location_tag = wheel_context.single_tap_location_tag
 
-	if location_tag and location_tag.spawn_time <= t then
+	if location_tag and t >= location_tag.spawn_time then
 		local position = Vector3Box.unbox(location_tag.position)
 
 		self:_trigger_smart_tag(location_tag.tag_type, nil, position)
@@ -471,7 +481,7 @@ end
 
 HudElementSmartTagging._should_draw_wheel_gamepad = function (self, input_service)
 	local look_delta = input_service:get("look_raw_controller") * INSTANT_WHEEL_THRESHOLD * 2
-	local is_dragging = INSTANT_WHEEL_THRESHOLD < Vector3.length(look_delta)
+	local is_dragging = Vector3.length(look_delta) > INSTANT_WHEEL_THRESHOLD
 	local wheel_context = self._com_wheel_context
 
 	if not wheel_context.camera_still_on_tag then
@@ -491,7 +501,7 @@ HudElementSmartTagging._should_draw_wheel_gamepad = function (self, input_servic
 			local visible = entry.widget.content.visible
 			local entry_angle = entry.widget.content.angle
 
-			if visible and math.abs(entry_angle - look_angle) < half_entry_hover_angle then
+			if visible and half_entry_hover_angle > math.abs(entry_angle - look_angle) then
 				wheel_context.instant_drew = true
 
 				break
@@ -584,7 +594,7 @@ HudElementSmartTagging._find_world_marker_target = function (self, ui_renderer, 
 	local world_markers_list = self._world_markers_list
 	local ui_scale = render_settings.scale
 	local selected_marker_distance = math.huge
-	local selected_marker = nil
+	local selected_marker
 	local parent = self._parent
 	local player = parent:player()
 	local player_unit = player.player_unit
@@ -610,8 +620,7 @@ HudElementSmartTagging._find_world_marker_target = function (self, ui_renderer, 
 				local y1 = y - height * 0.5
 				local y2 = y + height * 0.5
 				local radius = HudElementSmartTaggingSettings.cursor_tag_radius
-				local resolution_width = RESOLUTION_LOOKUP.width
-				local resolution_height = RESOLUTION_LOOKUP.height
+				local resolution_width, resolution_height = RESOLUTION_LOOKUP.width, RESOLUTION_LOOKUP.height
 
 				if math.box_overlap_point_radius(x1, y1, x2, y2, 0.5 * resolution_width, 0.5 * resolution_height, radius) and distance < selected_marker_distance then
 					selected_marker_distance = distance
@@ -637,8 +646,7 @@ HudElementSmartTagging._check_box_overlap = function (self, x1, y1, x2, y2, px, 
 end
 
 HudElementSmartTagging._update_wheel_presentation = function (self, dt, t, ui_renderer, render_settings, input_service)
-	local screen_width = RESOLUTION_LOOKUP.width
-	local screen_height = RESOLUTION_LOOKUP.height
+	local screen_width, screen_height = RESOLUTION_LOOKUP.width, RESOLUTION_LOOKUP.height
 	local scale = render_settings.scale
 	local cursor = input_service and input_service:get("cursor")
 
@@ -658,7 +666,7 @@ HudElementSmartTagging._update_wheel_presentation = function (self, dt, t, ui_re
 	local entry_hover_degrees = 44
 	local entry_hover_degrees_half = entry_hover_degrees * 0.5
 	local any_hover = false
-	local hovered_entry = nil
+	local hovered_entry
 	local entries = self._entries
 
 	for i = 1, #entries do
@@ -673,7 +681,7 @@ HudElementSmartTagging._update_wheel_presentation = function (self, dt, t, ui_re
 		if is_populated and cursor_distance_from_center > 130 * scale then
 			local angle_diff = (widget_angle_degrees - cursor_angle_degrees_from_center + 180 + 360) % 360 - 180
 
-			if entry_hover_degrees_half >= angle_diff and angle_diff >= -entry_hover_degrees_half then
+			if angle_diff <= entry_hover_degrees_half and angle_diff >= -entry_hover_degrees_half then
 				is_hover = true
 				any_hover = true
 				hovered_entry = entry
@@ -684,6 +692,7 @@ HudElementSmartTagging._update_wheel_presentation = function (self, dt, t, ui_re
 	end
 
 	local wheel_background_widget = self._widgets_by_name.wheel_background
+
 	wheel_background_widget.content.angle = cursor_angle_from_center
 	wheel_background_widget.content.force_hover = any_hover
 	wheel_background_widget.style.mark.color[1] = any_hover and 255 or 0
@@ -691,6 +700,7 @@ HudElementSmartTagging._update_wheel_presentation = function (self, dt, t, ui_re
 	if hovered_entry then
 		local option = hovered_entry.option
 		local display_name = option.display_name
+
 		wheel_background_widget.content.text = Localize(display_name)
 	end
 end
@@ -748,15 +758,14 @@ HudElementSmartTagging._update_widget_locations = function (self)
 		if entry then
 			local option = entry.option
 
-			if option then
-				start_angle = option.start_angle or start_angle
-			end
+			start_angle = option and option.start_angle or start_angle
 
 			local widget = entry.widget
 			local angle = start_angle + (i - 1) * radians_per_widget
 			local position_x = math.sin(angle) * radius
 			local position_y = math.cos(angle) * radius
 			local offset = widget.offset
+
 			widget.content.angle = angle
 			offset[1] = position_x
 			offset[2] = position_y
@@ -791,7 +800,7 @@ HudElementSmartTagging._find_best_smart_tag_interaction = function (self, ui_ren
 	local target_marker, _ = self:_find_world_marker_target(ui_renderer, render_settings)
 	local best_marker = target_marker
 	local best_unit = ALIVE[raycast_data.unit] and raycast_data.unit
-	local best_position = nil
+	local best_position
 
 	if raycast_data.static_hit_position then
 		best_position = Vector3Box.unbox(raycast_data.static_hit_position)
@@ -822,6 +831,7 @@ HudElementSmartTagging._handle_interaction_draw = function (self, dt, t, input_s
 
 		if not best_marker and best_unit then
 			local marker = self:_find_marker_by_unit(best_unit)
+
 			best_marker = marker
 		end
 
@@ -830,15 +840,17 @@ HudElementSmartTagging._handle_interaction_draw = function (self, dt, t, input_s
 				local marker_id = best_marker.id
 				local smart_tag_presentation_data = self._presented_smart_tags_by_marker_id[marker_id]
 				local tag_id = smart_tag_presentation_data and smart_tag_presentation_data.tag_id
-				local tag_template, display_name = nil
+				local tag_template, display_name
 
 				if tag_id then
 					local tag = smart_tag_system:tag_by_id(tag_id)
+
 					display_name = tag:display_name()
 					tag_template = tag:template()
 				else
 					local marker_unit = best_marker.unit
 					local smart_tag_extension = ScriptUnit.has_extension(marker_unit, "smart_tag_system")
+
 					tag_template = smart_tag_extension:contextual_tag_template(player_unit)
 					display_name = smart_tag_extension:display_name(player_unit)
 				end
@@ -882,6 +894,7 @@ HudElementSmartTagging._update_tags_interaction_hover_status = function (self)
 
 	for tag_id, tag_presentation_data in pairs(presented_smart_tags_by_tag_id) do
 		local tag_marker_id = tag_presentation_data.marker_id
+
 		tag_presentation_data.is_hovered = active_interaction_data and active_interaction_data.marker_id == tag_marker_id
 	end
 end
@@ -896,6 +909,7 @@ HudElementSmartTagging._draw_widgets = function (self, dt, t, input_service, ui_
 	end
 
 	render_settings.alpha_multiplier = active_progress
+
 	local entries = self._entries
 
 	if entries then
@@ -907,6 +921,7 @@ HudElementSmartTagging._draw_widgets = function (self, dt, t, input_service, ui_
 
 			if widget.content.hotspot.is_hover then
 				local hover_data = self._last_widget_hover_data
+
 				hover_data.t = t
 				hover_data.index = i
 			end
@@ -1039,6 +1054,7 @@ HudElementSmartTagging._add_smart_tag_presentation = function (self, tag_instanc
 		tagger_player = tagger_player,
 		is_my_tag = is_my_tag
 	}
+
 	presented_smart_tags_by_tag_id[tag_id] = data
 
 	if not is_hotjoin_synced then
@@ -1056,7 +1072,7 @@ HudElementSmartTagging._add_smart_tag_presentation = function (self, tag_instanc
 
 				if player_unit then
 					local voice_tag_id = tag_template.voice_tag_id
-					local target_unit = nil
+					local target_unit
 
 					if not voice_tag_id then
 						target_unit = tag_instance:target_unit()
@@ -1067,6 +1083,7 @@ HudElementSmartTagging._add_smart_tag_presentation = function (self, tag_instanc
 							if unit_data_extension then
 								local breed = unit_data_extension:breed()
 								local breed_name = breed.name
+
 								voice_tag_id = breed_name
 							end
 						end
@@ -1105,6 +1122,7 @@ end
 HudElementSmartTagging._cb_presentation_tag_spawned = function (self, tag_instance, marker_id)
 	local tag_id = tag_instance:id()
 	local presentation_data = self._presented_smart_tags_by_tag_id[tag_id]
+
 	presentation_data.spawned = true
 	presentation_data.marker_id = marker_id
 	self._presented_smart_tags_by_marker_id[marker_id] = presentation_data
@@ -1117,6 +1135,7 @@ HudElementSmartTagging._remove_smart_tag_presentation = function (self, tag_id)
 
 	if presentation_data then
 		presented_smart_tags_by_tag_id[tag_id] = nil
+
 		local marker_id = presentation_data.marker_id
 
 		if marker_id then
@@ -1138,6 +1157,7 @@ HudElementSmartTagging._draw_active_interaction_line = function (self, dt, t, in
 	local marker_widget_offset = marker_widget.offset
 	local line_target_x = pivot_screen_position[1]
 	local line_target_y = pivot_screen_position[2]
+
 	line_widget_offset[1] = line_target_x
 	line_widget_offset[2] = line_target_y
 
@@ -1154,8 +1174,10 @@ local function _get_input_text(alias_name, input_text_key, hold_required)
 	local color_tint_text = true
 	local input_text = InputUtils.input_text_for_current_input_device(service_type, alias_name, color_tint_text)
 	local input_display_text = Localize(input_text_key)
+
 	input_action_localization_params.input = input_text
 	input_action_localization_params.action = input_display_text
+
 	local input_type_string = hold_required and "loc_interaction_input_type_hold" or "loc_interaction_input_type"
 
 	return Localize(input_type_string, true, input_action_localization_params)
@@ -1172,7 +1194,7 @@ HudElementSmartTagging._update_tag_interaction_information = function (self, act
 	local tag_id = active_interaction_data.tag_id
 	local tag_template = active_interaction_data.tag_template
 	local distance = marker and marker.distance
-	local distance_text_localized = nil
+	local distance_text_localized
 
 	if distance and distance > 1 then
 		distance_text_localized = tostring(math.floor(distance)) .. "m"
@@ -1187,6 +1209,7 @@ HudElementSmartTagging._update_tag_interaction_information = function (self, act
 
 		if unit then
 			local smart_tag_system = Managers.state.extension:system("smart_tag_system")
+
 			tag_id = smart_tag_system:unit_tag_id(unit)
 		end
 	end
@@ -1218,9 +1241,12 @@ HudElementSmartTagging._update_tag_interaction_information = function (self, act
 
 	local line_widget = self._interaction_line_widget
 	local line_widget_content = line_widget.content
+
 	description_format_localization_params.distance = distance_text_localized
 	description_format_localization_params.description = description_text_localized
+
 	local final_description_text = Localize("loc_smart_tag_description_format_key", true, description_format_localization_params)
+
 	line_widget_content.input_text = input_text_tag
 	line_widget_content.description_text = final_description_text
 end
@@ -1232,6 +1258,7 @@ HudElementSmartTagging._update_tag_interaction_animation = function (self, dt, t
 	if intro_anim_progress ~= 1 then
 		local intro_anim_time = active_interaction_data.intro_anim_time
 		local intro_anim_duration = active_interaction_data.intro_anim_duration
+
 		intro_anim_time = intro_anim_time + dt
 		intro_anim_progress = math.min(intro_anim_time / intro_anim_duration, 1)
 		active_interaction_data.intro_anim_time = intro_anim_time
@@ -1240,6 +1267,7 @@ HudElementSmartTagging._update_tag_interaction_animation = function (self, dt, t
 
 	local alpha_progress = math.easeInCubic(intro_anim_progress)
 	local line_widget = self._interaction_line_widget
+
 	line_widget.alpha_multiplier = alpha_progress
 end
 

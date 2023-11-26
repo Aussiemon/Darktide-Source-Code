@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/mission_objective/templates/training_grounds_objective_template.lua
+
 local mission_objective_templates = {
 	training_grounds = {
 		objectives = {

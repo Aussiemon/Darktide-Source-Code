@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/game_states/game/gameplay_sub_states/gameplay_init_step_states/gameplay_init_step_state_wait_for_group.lua
+
 local GameplayInitStepInterface = require("scripts/game_states/game/gameplay_sub_states/gameplay_init_step_states/gameplay_init_step_state_interface")
 local GameplayInitStepStateLast = require("scripts/game_states/game/gameplay_sub_states/gameplay_init_step_states/gameplay_init_step_state_last")
 local GameplayInitStepStateWaitForGroup = class("GameplayInitStepStateWaitForGroup")
@@ -7,9 +9,12 @@ local CLIENT_RPCS = {
 
 GameplayInitStepStateWaitForGroup.on_enter = function (self, parent, params)
 	local shared_state = params.shared_state
+
 	self._shared_state = shared_state
 	self._ready_to_spawn = true
+
 	local is_server = shared_state.is_server
+
 	self._is_server = is_server
 
 	if Managers.connection:host_type() == "hub_server" then
@@ -29,6 +34,10 @@ GameplayInitStepStateWaitForGroup.on_enter = function (self, parent, params)
 			network_event_delegate:register_session_events(self, unpack(CLIENT_RPCS))
 
 			self._network_events_registered = true
+		end
+
+		if false then
+			-- Nothing
 		end
 
 		self._ready_to_spawn = false

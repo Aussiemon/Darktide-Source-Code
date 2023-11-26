@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/account_profile_popup_view/account_profile_popup_view.lua
+
 local Definitions = require("scripts/ui/views/account_profile_popup_view/account_profile_popup_view_definitions")
 local AccountProfilePopupView = class("AccountProfilePopupView", "BaseView")
 
@@ -27,6 +29,7 @@ end
 AccountProfilePopupView.close_view = function (self)
 	if not self._is_closing then
 		self._is_closing = true
+
 		local view_name = self.view_name
 
 		local function on_done_callback()
@@ -67,6 +70,7 @@ AccountProfilePopupView._populate_popup = function (self, context)
 	end
 
 	local headline_widget = widgets_by_name.headline
+
 	headline_widget.content.text = self:_localize(context.headline)
 end
 

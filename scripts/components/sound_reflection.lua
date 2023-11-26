@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/components/sound_reflection.lua
+
 local SoundReflection = component("SoundReflection")
 
 SoundReflection.init = function (self, unit)
@@ -18,7 +20,9 @@ SoundReflection.init = function (self, unit)
 	end
 
 	self._first_person_extension = first_person_extension
+
 	local world = Unit.world(unit)
+
 	self._world = world
 	self._wwise_world = Wwise.wwise_world(world)
 	self._physics_world = World.physics_world(world)
@@ -39,7 +43,9 @@ SoundReflection.init = function (self, unit)
 	self._use_material_reactions = true
 	self._last_position = Vector3Box(0, 0, 0)
 	self._material_reaction_event = "wwise/events/weapon/play_weapon_material_reaction_rattle"
+
 	local MaterialQuerySettings = require("scripts/settings/material_query_settings")
+
 	self._surface_materials_lookup = MaterialQuerySettings.surface_materials_lookup
 	self._event_time = 0
 	self._event_limit = 0.3
@@ -56,7 +62,7 @@ SoundReflection.editor_validate = function (self, unit)
 end
 
 SoundReflection.events.update_sound_reflection = function (self)
-	if self._event_time <= self._t then
+	if self._t >= self._event_time then
 		self._event_time = self._t + self._event_limit
 
 		self:_set_reflection(true)
@@ -82,7 +88,7 @@ end
 SoundReflection.update = function (self, unit, dt, t)
 	self._t = t
 
-	if self._update_time <= t then
+	if t >= self._update_time then
 		self._update_time = t + self._update_interval
 
 		self:_set_reflection()
@@ -106,6 +112,7 @@ SoundReflection._set_reflection = function (self, from_event)
 	for ii = 1, #directions do
 		local current_rotation = Quaternion.multiply(rotation, directions[ii]:unbox())
 		local distance, reflection_position, material = self:_reflection_distance(position, Quaternion.forward(current_rotation), max_distance, query_material)
+
 		distance = math.clamp(distance or max_distance, 0, max_distance)
 		distances[ii] = distance
 		positions[ii] = reflection_position
@@ -113,6 +120,7 @@ SoundReflection._set_reflection = function (self, from_event)
 	end
 
 	local index = #directions + 1
+
 	distances[index], positions[index], materials[index] = self:_reflection_distance(position, Quaternion.up(rotation), max_distance, query_material)
 
 	self:_set_wwise_reflection_parameters()
@@ -143,7 +151,7 @@ SoundReflection._reflection_distance = function (self, position, direction, max_
 			if unit ~= nil and unit ~= self._unit then
 				local hit_pos = result[INDEX_POSITION]
 				local hit_distance = Vector3.distance(hit_pos, position)
-				local material = nil
+				local material
 
 				if query_material then
 					local material_ids = Unit.query_material(unit, hit_pos - direction * 0.2, hit_pos + direction * 0.2, QUERY_MATERIAL_CONTEXTS, _query_material_buffer)

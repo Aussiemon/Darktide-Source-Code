@@ -1,78 +1,84 @@
+﻿-- chunkname: @scripts/ui/views/mission_board_view/mission_board_view_styles.lua
+
 local ColorUtilities = require("scripts/utilities/ui/colors")
 local MissionBoardViewSettings = require("scripts/ui/views/mission_board_view/mission_board_view_settings")
 local DangerSettings = require("scripts/settings/difficulty/danger_settings")
-local MissionBoardViewStyles = {
-	difficulty_bar_change_function = function (content, style)
-		if content.is_locked then
-			ColorUtilities.color_copy(MissionBoardViewSettings.color_disabled, style.color, true)
-		else
-			local max_danger = 5
-			local danger_level = 1
+local MissionBoardViewStyles = {}
 
-			if content.danger then
-				danger_level = math.clamp(content.danger, 1, max_danger)
-			end
+MissionBoardViewStyles.difficulty_bar_change_function = function (content, style)
+	if content.is_locked then
+		ColorUtilities.color_copy(MissionBoardViewSettings.color_disabled, style.color, true)
+	else
+		local max_danger = 5
+		local danger_level = 1
 
-			local danger_color = DangerSettings.by_index[danger_level] and DangerSettings.by_index[danger_level].color or DangerSettings.by_index[1].color
-
-			ColorUtilities.color_copy(danger_color, style.color, true)
-		end
-	end,
-	mission_glow_change_function = function (content, style, animations, dt)
-		local color = style.color
-
-		if content.hotspot.is_selected_mission_board then
-			color[2] = 250
-			color[3] = 189
-			color[4] = 73
-		elseif content.hotspot.is_hover then
-			color[2] = 204
-			color[3] = 255
-			color[4] = 204
-		else
-			color[2] = 0
-			color[3] = 0
-			color[4] = 0
-		end
-	end,
-	update_mission_line = function (content, style)
-		if content.is_locked then
-			ColorUtilities.color_copy(MissionBoardViewSettings.color_disabled, style.color, true)
-		end
-	end,
-	is_hover_with_locked_change_function = function (content, style)
-		local hotspot = content.hotspot
-		local is_selected = hotspot.is_selected
-		local is_selected_mission_board = hotspot.is_selected_mission_board
-		local is_focused = hotspot.is_focused
-		local is_hover = hotspot.is_hover
-		local disabled = hotspot.disabled
-		local default_color = style.default_color
-		local hover_color = style.hover_color
-		local selected_color = style.selected_color
-		local disabled_color = style.disabled_color
-		local color = nil
-
-		if disabled and disabled_color then
-			color = disabled_color
-		elseif (is_selected or is_focused or is_selected_mission_board) and selected_color then
-			color = selected_color
-		elseif is_hover and hover_color then
-			color = hover_color
-		elseif default_color then
-			color = default_color
+		if content.danger then
+			danger_level = math.clamp(content.danger, 1, max_danger)
 		end
 
-		if color then
-			ColorUtilities.color_copy(color, style.color)
-		end
-	end,
-	is_locked_change_function = function (content, style)
-		if content.is_locked then
-			ColorUtilities.color_copy(MissionBoardViewSettings.color_disabled, style.color, true)
-		end
+		local danger_color = DangerSettings.by_index[danger_level] and DangerSettings.by_index[danger_level].color or DangerSettings.by_index[1].color
+
+		ColorUtilities.color_copy(danger_color, style.color, true)
 	end
-}
+end
+
+MissionBoardViewStyles.mission_glow_change_function = function (content, style, animations, dt)
+	local color = style.color
+
+	if content.hotspot.is_selected_mission_board then
+		color[2] = 250
+		color[3] = 189
+		color[4] = 73
+	elseif content.hotspot.is_hover then
+		color[2] = 204
+		color[3] = 255
+		color[4] = 204
+	else
+		color[2] = 0
+		color[3] = 0
+		color[4] = 0
+	end
+end
+
+MissionBoardViewStyles.update_mission_line = function (content, style)
+	if content.is_locked then
+		ColorUtilities.color_copy(MissionBoardViewSettings.color_disabled, style.color, true)
+	end
+end
+
+MissionBoardViewStyles.is_hover_with_locked_change_function = function (content, style)
+	local hotspot = content.hotspot
+	local is_selected = hotspot.is_selected
+	local is_selected_mission_board = hotspot.is_selected_mission_board
+	local is_focused = hotspot.is_focused
+	local is_hover = hotspot.is_hover
+	local disabled = hotspot.disabled
+	local default_color = style.default_color
+	local hover_color = style.hover_color
+	local selected_color = style.selected_color
+	local disabled_color = style.disabled_color
+	local color
+
+	if disabled and disabled_color then
+		color = disabled_color
+	elseif (is_selected or is_focused or is_selected_mission_board) and selected_color then
+		color = selected_color
+	elseif is_hover and hover_color then
+		color = hover_color
+	elseif default_color then
+		color = default_color
+	end
+
+	if color then
+		ColorUtilities.color_copy(color, style.color)
+	end
+end
+
+MissionBoardViewStyles.is_locked_change_function = function (content, style)
+	if content.is_locked then
+		ColorUtilities.color_copy(MissionBoardViewSettings.color_disabled, style.color, true)
+	end
+end
 
 local function _get_color_by_name(color_name, mission_type)
 	if not mission_type then
@@ -83,22 +89,25 @@ local function _get_color_by_name(color_name, mission_type)
 end
 
 MissionBoardViewStyles.timer_logic = function (pass, ui_renderer, logic_style, content, position, size)
-	local t0 = content.start_game_time
-	local t1 = content.expiry_game_time
+	local t0, t1 = content.start_game_time, content.expiry_game_time
 
 	if t0 and t1 then
 		local style = logic_style.parent
 		local t = Managers.time:time("main")
+
 		style.timer_bar.material_values.progress = 1 - math.max(0, t - t0) / (t1 - t0)
+
 		local time_left = math.max(0, t1 - t)
 		local seconds = time_left % 60
 		local minutes = math.floor(time_left / 60)
+
 		content.timer_text = string.format("%02d:%02d", minutes, seconds)
 	end
 end
 
 local function _apply_difficulty_scale(vector_like_table)
 	local scale_factor = 2
+
 	vector_like_table[1] = vector_like_table[1] * scale_factor
 	vector_like_table[2] = vector_like_table[2] * scale_factor
 

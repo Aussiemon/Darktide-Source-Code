@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/equipment/reload_templates/heavy_stubber_twin_linked_reload_template.lua
+
 local reload_template = {
 	name = "heavy_stubber_twin_linked",
 	states = {

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/character_state_machine/character_states/player_character_state_catapulted.lua
+
 require("scripts/extension_systems/character_state_machine/character_states/player_character_state_base")
 
 local DisruptiveStateTransition = require("scripts/extension_systems/character_state_machine/character_states/utilities/disruptive_state_transition")
@@ -53,17 +55,20 @@ PlayerCharacterStateCatapulted.on_enter = function (self, unit, dt, t, previous_
 	local locomotion = self._locomotion_component
 	local inventory_component = self._inventory_component
 	local visual_loadout_extension = self._visual_loadout_extension
+
 	locomotion_steering.move_method = "script_driven"
 	locomotion_steering.calculate_fall_velocity = false
 	locomotion_steering.velocity_wanted = velocity
 	locomotion_steering.disable_minion_collision = true
 	inair_state.on_ground = false
+
 	local rotation = first_person.rotation
 	local forward = Quaternion.forward(rotation)
 	local direction = Vector3.normalize(velocity)
 	local locomotion_position = locomotion.position
-	local catapulted_direction = nil
+	local catapulted_direction
 	local dot = Vector3.dot(forward, direction)
+
 	catapulted_direction = dot > 0 and "forward" or "backward"
 	self._catapulted_direction = catapulted_direction
 	self._start_catapulted_height = locomotion_position.z
@@ -144,7 +149,9 @@ PlayerCharacterStateCatapulted.fixed_update = function (self, unit, dt, t, next_
 	end
 
 	local fall_speed = velocity_current.z - gravity_acceleration * dt
+
 	self._locomotion_steering_component.velocity_wanted = Vector3(velocity_current.x, velocity_current.y, fall_speed)
+
 	local constants = self._constants
 	local inair_state_component = self._inair_state_component
 

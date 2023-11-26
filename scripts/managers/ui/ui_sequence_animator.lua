@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/ui/ui_sequence_animator.lua
+
 local UISequenceAnimator = class("UISequenceAnimator")
 
 UISequenceAnimator.init = function (self, ui_scenegraph, scenegraph_definition, animation_definitions)
@@ -10,8 +12,10 @@ end
 
 UISequenceAnimator.start_animation = function (self, parent, animation_sequence_name, widgets, params, speed, callback, delay)
 	delay = delay or 0
+
 	local animation_sequence = self._animation_definitions[animation_sequence_name]
 	local animation_id = self._animation_id + 1
+
 	self._animation_id = animation_id
 	self._active_animations[animation_id] = {
 		time = 0,
@@ -25,6 +29,7 @@ UISequenceAnimator.start_animation = function (self, parent, animation_sequence_
 		params = params or {},
 		times = {}
 	}
+
 	local times = self._active_animations[animation_id].times
 
 	for i = 1, #animation_sequence do
@@ -34,12 +39,14 @@ UISequenceAnimator.start_animation = function (self, parent, animation_sequence_
 
 		if speed then
 			local duration = (end_time - start_time) / speed
+
 			start_time = start_time / speed
 			end_time = start_time + duration
 		end
 
 		local start_time_index = (i - 1) * 2 + 1
 		local end_time_index = (i - 1) * 2 + 2
+
 		times[start_time_index] = delay + start_time
 		times[end_time_index] = delay + end_time
 	end
@@ -64,7 +71,9 @@ UISequenceAnimator.update = function (self, dt, t)
 		local params = data.params
 		local force_complete = data.force_complete
 		local time = data.time + dt
+
 		data.time = time
+
 		local all_done = true
 		local animation_sequence = animation_definitions[animation_sequence_name]
 
@@ -84,6 +93,7 @@ UISequenceAnimator.update = function (self, dt, t)
 
 				if not running_animations[animation_name] then
 					running_animations[animation_name] = true
+
 					local init = animation.init
 
 					if init then
@@ -93,9 +103,7 @@ UISequenceAnimator.update = function (self, dt, t)
 
 				local update = animation.update
 
-				if update then
-					update_scenegraph = update(parent, ui_scenegraph, scenegraph_definition, widgets, local_progress, params) or update_scenegraph
-				end
+				update_scenegraph = update and update(parent, ui_scenegraph, scenegraph_definition, widgets, local_progress, params) or update_scenegraph
 
 				if local_progress == 1 then
 					local on_complete = animation.on_complete
@@ -129,6 +137,7 @@ end
 UISequenceAnimator.complete_animation = function (self, animation_id)
 	local animation_definitions = self._animation_definitions
 	local animation = self._active_animations[animation_id]
+
 	animation.force_complete = true
 end
 

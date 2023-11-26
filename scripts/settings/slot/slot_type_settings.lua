@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/slot/slot_type_settings.lua
+
 local slot_type_settings = {
 	normal = {
 		count = 9,

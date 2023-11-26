@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/behavior/nodes/actions/bt_dash_action.lua
+
 require("scripts/extension_systems/behavior/nodes/bt_node")
 
 local Animation = require("scripts/utilities/animation")
@@ -19,12 +21,17 @@ local BtDashAction = class("BtDashAction", "BtNode")
 
 BtDashAction.enter = function (self, unit, breed, blackboard, scratchpad, action_data, t)
 	local spawn_component = blackboard.spawn
+
 	scratchpad.physics_world = spawn_component.physics_world
 	scratchpad.hit_targets = {}
+
 	local perception_component = Blackboard.write_component(blackboard, "perception")
+
 	scratchpad.behavior_component = Blackboard.write_component(blackboard, "behavior")
 	scratchpad.perception_component = perception_component
+
 	local locomotion_extension = ScriptUnit.extension(unit, "locomotion_system")
+
 	scratchpad.animation_extension = ScriptUnit.extension(unit, "animation_system")
 	scratchpad.locomotion_extension = locomotion_extension
 	scratchpad.navigation_extension = ScriptUnit.extension(unit, "navigation_system")
@@ -35,13 +42,17 @@ BtDashAction.enter = function (self, unit, breed, blackboard, scratchpad, action
 	MinionPerception.set_target_lock(unit, perception_component, true)
 
 	scratchpad.velocity_stored = Vector3Box(0, 0, 0)
+
 	local randomized_dash_directions = {}
 
 	self:_calculate_dash_directions(randomized_dash_directions)
 
 	scratchpad.randomized_dash_directions = randomized_dash_directions
+
 	local original_rotation_speed = locomotion_extension:rotation_speed()
+
 	scratchpad.original_rotation_speed = original_rotation_speed
+
 	local num_dashes = action_data.num_dashes
 
 	if num_dashes then
@@ -53,9 +64,11 @@ BtDashAction.enter = function (self, unit, breed, blackboard, scratchpad, action
 	self:_start_buildup(unit, scratchpad, action_data, t)
 
 	scratchpad.max_duration_t = action_data.max_duration and t + action_data.max_duration
+
 	local target_unit = perception_component.target_unit
 	local target_position = POSITION_LOOKUP[target_unit]
 	local to_self_from_target = Vector3.normalize(target_position - POSITION_LOOKUP[unit])
+
 	target_position = target_position - to_self_from_target * 0.5
 
 	self:_move_to_position(scratchpad, target_position, action_data)
@@ -95,6 +108,7 @@ BtDashAction.leave = function (self, unit, breed, blackboard, scratchpad, action
 	end
 
 	scratchpad.behavior_component.move_state = "idle"
+
 	local slot_system = Managers.state.extension:system("slot_system")
 
 	slot_system:do_slot_search(unit, true)
@@ -139,7 +153,7 @@ BtDashAction.run = function (self, unit, breed, blackboard, scratchpad, action_d
 			self:_start_reached_destination(unit, scratchpad, action_data, t)
 		end
 	elseif state == "reached_destination" then
-		if scratchpad.reached_destination_duration <= t then
+		if t >= scratchpad.reached_destination_duration then
 			if not scratchpad.num_dashes or scratchpad.num_dashes == 1 then
 				return "done"
 			else
@@ -157,10 +171,12 @@ BtDashAction.run = function (self, unit, breed, blackboard, scratchpad, action_d
 
 				if Vector3.distance(target_position, POSITION_LOOKUP[unit]) > 40 then
 					local target_unit = scratchpad.perception_component.target_unit
+
 					target_position = POSITION_LOOKUP[target_unit]
 				end
 
 				local to_self_from_target = Vector3.normalize(target_position - POSITION_LOOKUP[unit])
+
 				target_position = target_position - to_self_from_target * 0.5
 
 				self:_move_to_position(scratchpad, target_position, action_data)
@@ -193,7 +209,7 @@ BtDashAction.run = function (self, unit, breed, blackboard, scratchpad, action_d
 		return "done"
 	end
 
-	if scratchpad.max_duration_t and scratchpad.max_duration_t <= t then
+	if scratchpad.max_duration_t and t >= scratchpad.max_duration_t then
 		return "done"
 	end
 
@@ -208,10 +224,13 @@ BtDashAction._start_buildup = function (self, unit, scratchpad, action_data, t)
 
 	scratchpad.state = "buildup"
 	scratchpad.hit_targets = {}
+
 	local behavior_component = scratchpad.behavior_component
+
 	behavior_component.move_state = "moving"
 	scratchpad.started_dash_anim = nil
 	scratchpad.dash_duration = nil
+
 	local global_effect_id = scratchpad.global_effect_id
 
 	if global_effect_id then
@@ -226,26 +245,32 @@ end
 BtDashAction._start_dashing = function (self, unit, scratchpad, action_data, t)
 	scratchpad.state = "dashing"
 	scratchpad.dash_started_at_t = t
+
 	local behavior_component = scratchpad.behavior_component
+
 	behavior_component.move_state = "moving"
 	scratchpad.target_dodged_during_attack = nil
+
 	local effect_template = action_data.dash_effect_template
 
 	if effect_template then
 		local fx_system = scratchpad.fx_system
 		local global_effect_id = fx_system:start_template_effect(effect_template, unit)
+
 		scratchpad.global_effect_id = global_effect_id
 	end
 end
 
 BtDashAction._start_reached_destination = function (self, unit, scratchpad, action_data, t)
 	scratchpad.state = "reached_destination"
+
 	local reached_destination_anim_events = action_data.reached_destination_anim_events
 	local reached_destination_anim_event = Animation.random_event(reached_destination_anim_events)
 
 	scratchpad.animation_extension:anim_event(reached_destination_anim_event)
 
 	local reached_destination_duration = action_data.reached_destination_durations[reached_destination_anim_event]
+
 	scratchpad.reached_destination_duration = t + reached_destination_duration
 	scratchpad.stored_dash_position = nil
 end
@@ -269,10 +294,9 @@ local BELOW = 2
 
 BtDashAction._move_to_position = function (self, scratchpad, target_position, action_data)
 	local navigation_extension = scratchpad.navigation_extension
-	local nav_world = navigation_extension:nav_world()
-	local traverse_logic = navigation_extension:traverse_logic()
+	local nav_world, traverse_logic = navigation_extension:nav_world(), navigation_extension:traverse_logic()
 	local random_target_position = action_data.random_target_position
-	local goal_position = nil
+	local goal_position
 
 	if random_target_position then
 		goal_position = scratchpad.stored_dash_position and scratchpad.stored_dash_position:unbox() or self:_get_dash_position(target_position, scratchpad, action_data)
@@ -346,10 +370,8 @@ BtDashAction._update_dash_buildup = function (self, unit, scratchpad, action_dat
 		return
 	end
 
-	local behavior_component = scratchpad.behavior_component
-	local navigation_extension = scratchpad.navigation_extension
-	local _ = behavior_component.move_state
-	local is_following_path = navigation_extension:is_following_path()
+	local behavior_component, navigation_extension = scratchpad.behavior_component, scratchpad.navigation_extension
+	local _, is_following_path = behavior_component.move_state, navigation_extension:is_following_path()
 
 	if is_following_path then
 		if not scratchpad.started_dash_anim then
@@ -376,6 +398,7 @@ end
 
 BtDashAction._start_dash_direction_anim = function (self, unit, scratchpad, action_data, t)
 	scratchpad.locomotion_extension = ScriptUnit.extension(unit, "locomotion_system")
+
 	local moving_direction_name = MinionMovement.get_moving_direction_name(unit, scratchpad)
 	local dash_direction_anim_events = action_data.dash_direction_anim_events
 	local dash_anim_events = dash_direction_anim_events[moving_direction_name]
@@ -386,6 +409,7 @@ BtDashAction._start_dash_direction_anim = function (self, unit, scratchpad, acti
 
 		local start_move_rotation_timings = action_data.start_move_rotation_timings
 		local start_rotation_timing = start_move_rotation_timings[dash_anim]
+
 		scratchpad.start_rotation_timing = t + start_rotation_timing
 		scratchpad.move_start_anim_event_name = dash_anim
 	else
@@ -397,13 +421,16 @@ BtDashAction._start_dash_direction_anim = function (self, unit, scratchpad, acti
 
 	local dash_direction_durations = action_data.dash_direction_durations
 	local dash_duration = dash_direction_durations[dash_anim]
+
 	scratchpad.dash_duration = t + dash_duration
 end
 
 BtDashAction._start_dash_anim = function (self, unit, scratchpad, action_data, t)
 	scratchpad.locomotion_extension = ScriptUnit.extension(unit, "locomotion_system")
+
 	local dash_anim_events = action_data.dash_anim_events
 	local dash_anim = Animation.random_event(dash_anim_events)
+
 	scratchpad.start_rotation_timing = nil
 	scratchpad.move_start_anim_event_name = nil
 
@@ -411,6 +438,7 @@ BtDashAction._start_dash_anim = function (self, unit, scratchpad, action_data, t
 
 	local dash_durations = action_data.dash_durations
 	local dash_duration = dash_durations[dash_anim]
+
 	scratchpad.dash_duration = t + dash_duration
 end
 
@@ -437,7 +465,9 @@ BtDashAction._calculate_dash_directions = function (self, randomized_directions)
 
 	for i = 1, NUM_DIRECTIONS do
 		current_radians = current_radians + RADIANS_PER_DIRECTION
+
 		local direction = Vector3(math.sin(current_radians), math.cos(current_radians), 0)
+
 		randomized_directions[i] = Vector3Box(direction)
 	end
 
@@ -453,10 +483,12 @@ BtDashAction._get_dash_position = function (self, target_position, scratchpad, a
 	local randomized_dash_directions = scratchpad.randomized_dash_directions
 	local randomized_direction = randomized_dash_directions[math.random(1, #randomized_dash_directions)]:unbox()
 	local z_offset = Vector3(0, 0, RAYCAST_Z_OFFSET)
+
 	target_position = target_position + z_offset
+
 	local randomized_position = target_position + randomized_direction * range
-	local nav_world = scratchpad.navigation_extension:nav_world()
-	local traverse_logic = scratchpad.navigation_extension:traverse_logic()
+	local nav_world, traverse_logic = scratchpad.navigation_extension:nav_world(), scratchpad.navigation_extension:traverse_logic()
+
 	randomized_position = NavQueries.position_on_mesh_with_outside_position(nav_world, nil, randomized_position, 2, 1, 1)
 
 	if not randomized_position then

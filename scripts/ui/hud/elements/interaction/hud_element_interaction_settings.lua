@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/hud/elements/interaction/hud_element_interaction_settings.lua
+
 local input_box_height = 40
 local background_size = {
 	400,

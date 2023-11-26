@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/projectile/hit_scan_templates.lua
+
 local ArmorSettings = require("scripts/settings/damage/armor_settings")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local ExplosionTemplates = require("scripts/settings/damage/explosion_templates")

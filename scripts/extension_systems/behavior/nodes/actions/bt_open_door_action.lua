@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/behavior/nodes/actions/bt_open_door_action.lua
+
 require("scripts/extension_systems/behavior/nodes/bt_node")
 
 local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
@@ -12,6 +14,7 @@ BtOpenDoorAction.enter = function (self, unit, breed, blackboard, scratchpad, ac
 		local door_unit = nav_smart_object_component.unit
 		local entrance_position = nav_smart_object_component.entrance_position:unbox()
 		local exit_position = nav_smart_object_component.exit_position:unbox()
+
 		scratchpad.navigation_extension = navigation_extension
 		scratchpad.locomotion_extension = ScriptUnit.extension(unit, "locomotion_system")
 		scratchpad.door_unit_extension = ScriptUnit.extension(door_unit, "door_system")
@@ -25,10 +28,14 @@ end
 BtOpenDoorAction._start_rotate_towards_exit = function (self, unit, scratchpad, action_data, t, entrance_position, exit_position)
 	local look_direction_wanted = Vector3.normalize(Vector3.flat(exit_position - entrance_position))
 	local wanted_rotation = Quaternion.look(look_direction_wanted)
+
 	scratchpad.wanted_rotation = QuaternionBox(wanted_rotation)
+
 	local locomotion_extension = scratchpad.locomotion_extension
 	local current_rotation_speed = locomotion_extension:rotation_speed()
+
 	scratchpad.original_rotation_speed = current_rotation_speed
+
 	local rotation = Unit.local_rotation(unit, 1)
 	local look_direction = Quaternion.forward(rotation)
 	local radians = Vector3.angle(look_direction, look_direction_wanted)
@@ -73,6 +80,7 @@ BtOpenDoorAction.run = function (self, unit, breed, blackboard, scratchpad, acti
 
 				scratchpad.rotation_done_time = nil
 				scratchpad.open_door_time = t + (open_door_time or 0)
+
 				local behavior_component = Blackboard.write_component(blackboard, "behavior")
 				local animation_extension = ScriptUnit.extension(unit, "animation_system")
 
@@ -95,7 +103,7 @@ BtOpenDoorAction.run = function (self, unit, breed, blackboard, scratchpad, acti
 		scratchpad.open_door_time = t + (open_door_time or 0)
 	end
 
-	if not door_unit_extension:nav_blocked() and (not scratchpad.open_door_time or scratchpad.open_door_time <= t) then
+	if not door_unit_extension:nav_blocked() and (not scratchpad.open_door_time or t >= scratchpad.open_door_time) then
 		return "done"
 	end
 

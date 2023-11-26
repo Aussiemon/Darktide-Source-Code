@@ -1,8 +1,11 @@
+﻿-- chunkname: @scripts/settings/level_prop/level_props.lua
+
 local props = {}
 
 local function _create_prop_entry(path)
 	local prop_data = require(path)
 	local prop_name = prop_data.name
+
 	props[prop_name] = prop_data
 end
 

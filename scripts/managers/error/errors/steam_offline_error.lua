@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/error/errors/steam_offline_error.lua
+
 local ErrorInterface = require("scripts/managers/error/errors/error_interface")
 local SteamOfflineError = class("SteamOfflineError")
 

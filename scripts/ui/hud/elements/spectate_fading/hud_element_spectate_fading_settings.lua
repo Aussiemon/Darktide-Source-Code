@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/hud/elements/spectate_fading/hud_element_spectate_fading_settings.lua
+
 local hud_element_spectate_fading_settings = {
 	render_settings = {
 		viewport_type = "overlay",

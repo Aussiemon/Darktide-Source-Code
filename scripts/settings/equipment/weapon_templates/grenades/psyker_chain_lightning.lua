@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/equipment/weapon_templates/grenades/psyker_chain_lightning.lua
+
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
 local FootstepIntervalsTemplates = require("scripts/settings/equipment/footstep/footstep_intervals_templates")
@@ -126,6 +128,7 @@ local chain_settings_spread_charge_targeting = {
 	},
 	max_angle = math.pi * 0.25
 }
+
 weapon_template.action_inputs = {
 	shoot_light_pressed = {
 		buffer_time = 0.2,

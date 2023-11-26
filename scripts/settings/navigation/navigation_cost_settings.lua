@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/navigation/navigation_cost_settings.lua
+
 local IGNORE_NAV_COST_MAP_LAYER = "ignore"
 local default_nav_cost_maps_minions = {
 	daemonhost = 1,

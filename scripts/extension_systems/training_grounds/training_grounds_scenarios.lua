@@ -1,8 +1,11 @@
+﻿-- chunkname: @scripts/extension_systems/training_grounds/training_grounds_scenarios.lua
+
 local TrainingGroundsSteps = require("scripts/extension_systems/training_grounds/training_grounds_steps")
 local TrainingGroundsItemNames = require("scripts/settings/training_grounds/training_grounds_item_names")
 local scenarios = {}
 local post_scenario_complete_ui_remove_delay = 1
 local post_ui_removed_transition_start_delay = 1.8
+
 scenarios.default = {
 	steps = {
 		TrainingGroundsSteps.dynamic.swap_scenario("training_grounds", "basic_training")

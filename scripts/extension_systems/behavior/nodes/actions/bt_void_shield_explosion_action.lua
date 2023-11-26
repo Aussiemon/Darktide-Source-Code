@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/behavior/nodes/actions/bt_void_shield_explosion_action.lua
+
 require("scripts/extension_systems/behavior/nodes/bt_node")
 
 local Animation = require("scripts/utilities/animation")
@@ -8,7 +10,9 @@ local BtVoidShieldExplosionAction = class("BtVoidShieldExplosionAction", "BtNode
 
 BtVoidShieldExplosionAction.enter = function (self, unit, breed, blackboard, scratchpad, action_data, t)
 	scratchpad.animation_extension = ScriptUnit.extension(unit, "animation_system")
+
 	local behavior_component = Blackboard.write_component(blackboard, "behavior")
+
 	behavior_component.move_state = "attacking"
 	scratchpad.fx_system = Managers.state.extension:system("fx_system")
 
@@ -38,11 +42,15 @@ BtVoidShieldExplosionAction._start_attack = function (self, t, unit, scratchpad,
 	local attack_anim_damage_timings = action_data.attack_anim_damage_timings
 	local attack_damage_timing = attack_anim_damage_timings[attack_event]
 	local attack_damage_t = t + attack_damage_timing
+
 	scratchpad.attack_damage_t = attack_damage_t
+
 	local attack_anim_durations = action_data.attack_anim_durations
 	local attack_duration = attack_anim_durations[attack_event]
 	local attack_duration_t = t + attack_duration
+
 	scratchpad.attack_duration_t = attack_duration_t
+
 	local animation_extension = scratchpad.animation_extension
 
 	animation_extension:anim_event(attack_event)
@@ -81,7 +89,7 @@ BtVoidShieldExplosionAction._deal_damage = function (self, t, unit, action_data)
 	local from = POSITION_LOOKUP[unit]
 	local broadphase_radius = action_data.radius
 	local broadphase_results = Managers.frame_table:get_table()
-	local num_results = broadphase:query(from, broadphase_radius, broadphase_results, target_side_names)
+	local num_results = broadphase.query(broadphase, from, broadphase_radius, broadphase_results, target_side_names)
 	local ALIVE = ALIVE
 
 	for i = 1, num_results do
@@ -109,6 +117,7 @@ BtVoidShieldExplosionAction._start_effect_template = function (self, unit, scrat
 	local effect_template = action_data.effect_template
 	local fx_system = scratchpad.fx_system
 	local global_effect_id = fx_system:start_template_effect(effect_template, unit)
+
 	scratchpad.global_effect_id = global_effect_id
 end
 

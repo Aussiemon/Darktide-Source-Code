@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/equipment/weapon_templates/laspistols/settings_templates/laspistol_spread_templates.lua
+
 local spread_templates = {}
 local overrides = {}
 
@@ -94,7 +96,9 @@ spread_templates.default_laspistol_killshot = {
 		}
 	}
 }
+
 local spread_multi = 0.65
+
 spread_templates.default_laspistol_assault = {
 	still = {
 		max_spread = {

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/view_elements/view_element_input_legend/view_element_input_legend.lua
+
 local definition_path = "scripts/ui/view_elements/view_element_input_legend/view_element_input_legend_definitions"
 local InputUtils = require("scripts/managers/input/input_utils")
 local DefaultViewInputSettings = require("scripts/settings/input/default_view_input_settings")
@@ -28,6 +30,7 @@ ViewElementInputLegend.add_entry = function (self, display_name, input_action, v
 
 	if sound_overrides then
 		local hotspot = widget_definition.content.hotspot
+
 		hotspot.on_pressed_sound = sound_overrides.on_pressed_sound
 		hotspot.on_hover_sound = sound_overrides.on_hover_sound
 		hotspot.on_released_sound = sound_overrides.on_released_sound
@@ -74,8 +77,11 @@ ViewElementInputLegend._update_widget_size = function (self, widget, ui_renderer
 	local text = content.text
 	local size = content.size
 	local text_options = UIFonts.get_font_options_by_style(text_style)
+
 	size[1] = 1920
+
 	local width, height = UIRenderer.text_size(ui_renderer, text, text_style.font_type, text_style.font_size, size, text_options)
+
 	size[1] = width + ViewElementInputLegendSettings.button_text_margin
 end
 
@@ -147,6 +153,7 @@ ViewElementInputLegend._handle_input = function (self, dt, t, input_service)
 
 				if on_pressed_callback then
 					local id = entry.id
+
 					input_handled = true
 
 					on_pressed_callback(id)
@@ -251,10 +258,10 @@ ViewElementInputLegend._draw_widgets = function (self, dt, t, input_service, ui_
 				local size = widget.content.size
 
 				if side == "center_alignment" then
-					total_center_alignment_size = total_center_alignment_size + size[1] + button_spacing
+					total_center_alignment_size = total_center_alignment_size + (size[1] + button_spacing)
 				elseif side == "left_alignment" then
 					offset[1] = left_size_offset
-					left_size_offset = left_size_offset + size[1] + button_spacing
+					left_size_offset = left_size_offset + (size[1] + button_spacing)
 
 					UIWidget.draw(widget, ui_renderer)
 				else
@@ -269,12 +276,14 @@ ViewElementInputLegend._draw_widgets = function (self, dt, t, input_service, ui_
 
 			if visibility_function then
 				local id = entry.id
+
 				entry.is_visible = visibility_function(self._parent, id)
 			end
 		end
 
 		if total_center_alignment_size > 0 then
 			total_center_alignment_size = total_center_alignment_size - button_spacing
+
 			local center_size_offset = (inversed_parent_width - total_center_alignment_size) / 2
 
 			for i = 1, num_entries do
@@ -284,8 +293,9 @@ ViewElementInputLegend._draw_widgets = function (self, dt, t, input_service, ui_
 					local widget = entry.widget
 					local offset = widget.offset
 					local size = widget.content.size
+
 					offset[1] = center_size_offset
-					center_size_offset = center_size_offset + size[1] + button_spacing
+					center_size_offset = center_size_offset + (size[1] + button_spacing)
 
 					UIWidget.draw(widget, ui_renderer)
 				end

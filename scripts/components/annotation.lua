@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/components/annotation.lua
+
 local Annotation = component("Annotation")
 
 Annotation.init = function (self, unit)
@@ -32,7 +34,9 @@ end
 
 Annotation.editor_init = function (self, unit)
 	self._unit = unit
+
 	local world = Application.main_world()
+
 	self._world = world
 	self._should_debug_draw = true
 	self._gui = World.create_world_gui(world, Matrix4x4.identity(), 1, 1)
@@ -106,14 +110,14 @@ Annotation._editor_draw_text = function (self)
 		local text_pose = Unit.world_pose(unit, 1)
 		local offset = self:_offset(unit, gui, description, FONT, font_size)
 		local layer = 1
+
 		self._debug_text_id = Gui.text_3d(gui, description, FONT_MATERIAL, font_size, FONT, text_pose, offset, layer, text_color)
 	end
 end
 
 Annotation._offset = function (self, unit, gui, text, font, font_size)
 	local min, max = Gui.slug_text_max_extents(gui, text, font, font_size, "flags", Gui.FormatDirectives)
-	local text_width = max.x - min.x
-	local text_height = max.y - min.y
+	local text_width, text_height = max.x - min.x, max.y - min.y
 	local offset = Vector3(-text_width * 0.5, text_height * 0.5, 0)
 
 	return offset

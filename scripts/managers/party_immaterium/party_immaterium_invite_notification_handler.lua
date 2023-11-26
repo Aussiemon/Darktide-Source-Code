@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/party_immaterium/party_immaterium_invite_notification_handler.lua
+
 local InputUtils = require("scripts/managers/input/input_utils")
 local PartyImmateriumInviteNotificationHandler = class("PartyImmateriumInviteNotificationHandler")
 local INPUT_SERVICE_TYPE = "View"
@@ -63,8 +65,8 @@ PartyImmateriumInviteNotificationHandler.update = function (self, dt, t)
 		return
 	end
 
-	if active_invite.auto_decline_at <= t then
-		local answer_code = nil
+	if t >= active_invite.auto_decline_at then
+		local answer_code
 
 		Managers.grpc:cancel_invite_to_party(active_invite.party_id, active_invite.invite_token, answer_code):catch(function (error)
 			Log.warning("PartyImmateriumInviteNotificationHandler", "Could not cancel invite, error: %s", table.tostring(error, 3))
@@ -86,7 +88,9 @@ end
 
 PartyImmateriumInviteNotificationHandler._activate_next_invite = function (self)
 	local invite = table.remove(self._invite_queue, 1)
+
 	self._active_invite = invite
+
 	local color_tint_text = true
 	local input_text = InputUtils.input_text_for_current_input_device(INPUT_SERVICE_TYPE, ACCEPT_INPUT_ALIAS, color_tint_text)
 	local texts = {
@@ -94,9 +98,9 @@ PartyImmateriumInviteNotificationHandler._activate_next_invite = function (self)
 		Localize("loc_social_party_invite_received_description", true, {
 			player_name = invite.inviter_name
 		}),
-		Localize("loc_social_party_invite_accept", true, {
+		(Localize("loc_social_party_invite_accept", true, {
 			input = input_text
-		})
+		}))
 	}
 
 	Managers.event:trigger("event_add_notification_message", "matchmaking", {

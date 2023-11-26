@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/damage/damage_profiles/ability_damage_profile_templates.lua
+
 local ArmorSettings = require("scripts/settings/damage/armor_settings")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
 local PowerLevelSettings = require("scripts/settings/damage/power_level_settings")

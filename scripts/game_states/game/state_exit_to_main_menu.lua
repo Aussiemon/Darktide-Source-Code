@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/game_states/game/state_exit_to_main_menu.lua
+
 local MainMenuLoader = require("scripts/loading/loaders/main_menu_loader")
 local StateMainMenu = require("scripts/game_states/game/state_main_menu")
 local StateError = require("scripts/game_states/game/state_error")
@@ -9,6 +11,7 @@ StateExitToMainMenu.on_enter = function (self, parent, params, creation_context)
 	self._next_state_params = {}
 	self._backend_answered = nil
 	self._profile_data = nil
+
 	local player_game_state_mapping = {}
 	local game_state_context = {}
 
@@ -43,6 +46,7 @@ StateExitToMainMenu._update_loading = function (self)
 	if self._next_state == StateMainMenu then
 		if profiles_data then
 			local next_state_params = self._next_state_params
+
 			next_state_params.main_menu_loader = main_menu_loader
 			next_state_params.profiles = profiles_data.profiles
 			next_state_params.gear = profiles_data.gear

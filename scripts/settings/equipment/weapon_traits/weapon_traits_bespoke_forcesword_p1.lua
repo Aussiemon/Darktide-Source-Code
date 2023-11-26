@@ -1,6 +1,9 @@
+﻿-- chunkname: @scripts/settings/equipment/weapon_traits/weapon_traits_bespoke_forcesword_p1.lua
+
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local templates = {}
 local stat_buffs = BuffSettings.stat_buffs
+
 templates.weapon_trait_bespoke_forcesword_p1_guaranteed_melee_crit_on_activated_kill = {
 	weapon_trait_bespoke_forcesword_p1_guaranteed_melee_crit_on_activated_kill = {
 		{}

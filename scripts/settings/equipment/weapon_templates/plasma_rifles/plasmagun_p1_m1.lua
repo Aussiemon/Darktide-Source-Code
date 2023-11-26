@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/equipment/weapon_templates/plasma_rifles/plasmagun_p1_m1.lua
+
 local BaseTemplateSettings = require("scripts/settings/equipment/weapon_templates/base_template_settings")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
@@ -21,110 +23,110 @@ local template_types = WeaponTweakTemplateSettings.template_types
 local damage_trait_templates = WeaponTraitTemplates[template_types.damage]
 local ammo_trait_templates = WeaponTraitTemplates[template_types.ammo]
 local charge_trait_templates = WeaponTraitTemplates[template_types.charge]
-local weapon_template = {
-	action_inputs = {
-		shoot_charge = {
-			buffer_time = 0.5,
-			input_sequence = {
-				{
+local weapon_template = {}
+
+weapon_template.action_inputs = {
+	shoot_charge = {
+		buffer_time = 0.5,
+		input_sequence = {
+			{
+				value = true,
+				input = "action_one_pressed"
+			}
+		}
+	},
+	charged_enough = {
+		buffer_time = 0.3
+	},
+	shoot_cancel = {
+		buffer_time = 0.1,
+		input_sequence = {
+			{
+				value = true,
+				input = "action_two_pressed"
+			}
+		}
+	},
+	brace = {
+		buffer_time = 0,
+		input_sequence = {
+			{
+				value = true,
+				input = "action_two_hold",
+				input_setting = {
 					value = true,
-					input = "action_one_pressed"
+					input = "action_two_pressed",
+					setting_value = true,
+					setting = "toggle_ads"
 				}
 			}
-		},
-		charged_enough = {
-			buffer_time = 0.3
-		},
-		shoot_cancel = {
-			buffer_time = 0.1,
-			input_sequence = {
-				{
+		}
+	},
+	brace_release = {
+		buffer_time = 0.1,
+		input_sequence = {
+			{
+				value = false,
+				input = "action_two_hold",
+				time_window = math.huge,
+				input_setting = {
+					setting_value = true,
+					setting = "toggle_ads",
 					value = true,
-					input = "action_two_pressed"
-				}
-			}
-		},
-		brace = {
-			buffer_time = 0,
-			input_sequence = {
-				{
-					value = true,
-					input = "action_two_hold",
-					input_setting = {
-						value = true,
-						input = "action_two_pressed",
-						setting_value = true,
-						setting = "toggle_ads"
-					}
-				}
-			}
-		},
-		brace_release = {
-			buffer_time = 0.1,
-			input_sequence = {
-				{
-					value = false,
-					input = "action_two_hold",
-					time_window = math.huge,
-					input_setting = {
-						setting_value = true,
-						setting = "toggle_ads",
-						value = true,
-						input = "action_two_pressed",
-						time_window = math.huge
-					}
-				}
-			}
-		},
-		shoot_braced = {
-			buffer_time = 0.1,
-			input_sequence = {
-				{
-					value = true,
-					input = "action_one_pressed"
-				}
-			}
-		},
-		reload = {
-			buffer_time = 0.2,
-			input_sequence = {
-				{
-					value = true,
-					input = "weapon_reload"
-				}
-			}
-		},
-		vent = {
-			buffer_time = 0,
-			clear_input_queue = true,
-			input_sequence = {
-				{
-					value = true,
-					input = "weapon_extra_hold"
-				}
-			}
-		},
-		vent_override = {
-			clear_input_queue = true,
-			buffer_time = 0
-		},
-		vent_release = {
-			buffer_time = 1.51,
-			input_sequence = {
-				{
-					value = false,
-					input = "weapon_extra_hold",
+					input = "action_two_pressed",
 					time_window = math.huge
 				}
 			}
-		},
-		wield = {
-			buffer_time = 0,
-			clear_input_queue = true,
-			input_sequence = {
-				{
-					inputs = wield_inputs
-				}
+		}
+	},
+	shoot_braced = {
+		buffer_time = 0.1,
+		input_sequence = {
+			{
+				value = true,
+				input = "action_one_pressed"
+			}
+		}
+	},
+	reload = {
+		buffer_time = 0.2,
+		input_sequence = {
+			{
+				value = true,
+				input = "weapon_reload"
+			}
+		}
+	},
+	vent = {
+		buffer_time = 0,
+		clear_input_queue = true,
+		input_sequence = {
+			{
+				value = true,
+				input = "weapon_extra_hold"
+			}
+		}
+	},
+	vent_override = {
+		clear_input_queue = true,
+		buffer_time = 0
+	},
+	vent_release = {
+		buffer_time = 1.51,
+		input_sequence = {
+			{
+				value = false,
+				input = "weapon_extra_hold",
+				time_window = math.huge
+			}
+		}
+	},
+	wield = {
+		buffer_time = 0,
+		clear_input_queue = true,
+		input_sequence = {
+			{
+				inputs = wield_inputs
 			}
 		}
 	}
@@ -534,11 +536,11 @@ weapon_template.actions = {
 			return false
 		end,
 		timed_smart_targeting_template = {
+			default = SmartTargetingTemplates.assault,
 			{
 				t = 0.7,
 				template = SmartTargetingTemplates.alternate_fire_bfg
-			},
-			default = SmartTargetingTemplates.assault
+			}
 		}
 	},
 	action_vent = {
@@ -1007,6 +1009,7 @@ weapon_template.toughness_template = "default"
 weapon_template.footstep_intervals = FootstepIntervalsTemplates.plasmagun
 weapon_template.smart_targeting_template = SmartTargetingTemplates.assault
 weapon_template.traits = {}
+
 local bespoke_plasmagun_p1_traits = table.keys(WeaponTraitsBespokePlasmagunP1)
 
 table.append(weapon_template.traits, bespoke_plasmagun_p1_traits)

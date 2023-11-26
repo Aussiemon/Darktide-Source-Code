@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/buff/buff_extension_interface.lua
+
 local BuffExtensionInterface = {
 	"add_externally_controlled_buff",
 	"add_internally_controlled_buff",

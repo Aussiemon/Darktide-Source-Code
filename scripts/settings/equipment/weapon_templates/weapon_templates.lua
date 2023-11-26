@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/equipment/weapon_templates/weapon_templates.lua
+
 local WeaponTweakTemplates = require("scripts/extension_systems/weapon/utilities/weapon_tweak_templates")
 local WeaponUIStatsTemplates = require("scripts/settings/equipment/weapon_ui_stats_templates")
 local weapon_templates = {}
@@ -330,6 +332,7 @@ local function _generate_ui_stats_template(weapon_template, combos)
 
 	for i = 1, #combos do
 		local action_name = combos[i][1]
+
 		power_stats[#power_stats + 1] = {
 			charge_level = 1,
 			dropoff_scalar = 0,
@@ -347,6 +350,7 @@ local function _generate_ui_stats_template(weapon_template, combos)
 
 		for j = 1, #combo do
 			local action_name = combo[j]
+
 			combo_table[#combo_table + 1] = {
 				dropoff_scalar = 0,
 				charge_level = 1,
@@ -384,6 +388,7 @@ local function _generate_special_ui_stats_template(weapon_template)
 	local default_ranged_per_action_stats = settings.default_ranged_per_action_stats
 	local displayed_weapon_stats_table = weapon_template.displayed_weapon_stats_table
 	local damage = displayed_weapon_stats_table.damage
+
 	damage[#damage + 1] = {
 		{
 			dropoff_scalar = 0,
@@ -452,9 +457,9 @@ local function _generate_chain_attack_info(weapon_template, working_templates, f
 	table.clear(COMBOS)
 
 	local name = weapon_template.name
-	local start_action = nil
+	local start_action
 	local actions = weapon_template.actions
-	local start_action_name = nil
+	local start_action_name
 
 	for _, start_input_template in ipairs(start_input_templates) do
 		start_action_name = _find_action_based_on_input(weapon_template.action_inputs, start_input_template)
@@ -476,11 +481,13 @@ local function _generate_chain_attack_info(weapon_template, working_templates, f
 
 	local chain_actions = start_action and start_action.allowed_chain_actions
 
-	if chain_actions then
+	if not chain_actions then
+		-- Nothing
+	else
 		for i = 1, #chain_attack_actions do
 			local attack_actions = chain_attack_actions[i]
 			local combo = {}
-			local action_name = nil
+			local action_name
 
 			for i = 1, #attack_actions do
 				local action = attack_actions[i]
@@ -493,6 +500,7 @@ local function _generate_chain_attack_info(weapon_template, working_templates, f
 			end
 
 			local attack_name = chain_actions[action_name] and chain_actions[action_name].action_name
+
 			attack_name = attack_name or start_action.name
 
 			while attack_name do
@@ -501,17 +509,21 @@ local function _generate_chain_attack_info(weapon_template, working_templates, f
 				end
 
 				combo[#combo + 1] = attack_name
+
 				local chain_actions = actions[attack_name].allowed_chain_actions
 				local start_attack_name = chain_actions.start_attack and chain_actions.start_attack.action_name or nil
 
 				if start_attack_name then
 					attack_name = nil
+
 					local start_attack = actions[start_attack_name]
+
 					chain_actions = start_attack.allowed_chain_actions
 					attack_name = chain_actions[action_name] and chain_actions[action_name].action_name or nil
 				elseif not actions[attack_name].fire_configuration and not actions[attack_name].damage_profile then
 					for i = 1, #charge_input_templates do
 						local input_template = charge_input_templates[i]
+
 						action_name = _find_action_based_on_input(weapon_template.action_inputs, input_template)
 						attack_name = chain_actions[action_name] and chain_actions[action_name].action_name
 

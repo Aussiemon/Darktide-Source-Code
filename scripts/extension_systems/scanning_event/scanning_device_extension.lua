@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/scanning_event/scanning_device_extension.lua
+
 local SplineCurve = require("scripts/utilities/spline/spline_curve")
 local LevelEventSettings = require("scripts/settings/level_event/level_event_settings")
 local ScanningDeviceExtension = class("ScanningDeviceExtension")
@@ -61,6 +63,7 @@ ScanningDeviceExtension._create_game_object = function (self)
 		level_unit_id = level_unit_id
 	}
 	local game_session = self._game_session
+
 	self._go_id = GameSession.create_game_object(game_session, "scanning_device", go_data_table)
 end
 
@@ -110,6 +113,7 @@ ScanningDeviceExtension.travel_along_spline = function (self, spline, spline_nam
 
 	local world = self._world
 	local unit = self._unit
+
 	self._spline_curve = self:_init_movement_spline(world, unit, spline)
 	self._end_position = end_position
 	self._end_rotation = end_rotation
@@ -119,6 +123,7 @@ ScanningDeviceExtension.travel_along_spline = function (self, spline, spline_nam
 
 	if self._hot_join_sync then
 		self._hot_join_sync = false
+
 		local past_spline_start_position = self._hot_join_sync_past_spline_start_position
 		local at_end_position = self._hot_join_sync_at_end_position
 
@@ -194,12 +199,14 @@ ScanningDeviceExtension.update = function (self, unit, dt, t)
 			elseif go_id and GameSession.game_object_exists(game_session, go_id) then
 				local error_compensation_speed = self:_error_speed_calculation(dt, t, game_session, go_id, movement)
 				local network_speed = GameSession.game_object_field(game_session, go_id, "speed")
+
 				new_speed = network_speed + error_compensation_speed
 			end
 
 			movement:set_speed(new_speed)
 
 			local movement_status = movement:update(dt, t)
+
 			self._current_movment_status = movement_status
 
 			if movement_status ~= "end" then
@@ -216,6 +223,7 @@ ScanningDeviceExtension.update = function (self, unit, dt, t)
 			if should_move_to_end_position and movement_status == "end" and not self._at_end_position then
 				if self._update_position_to_end_splin_position then
 					self._update_position_to_end_splin_position = false
+
 					local end_position = self._end_position:unbox()
 
 					Unit.set_local_position(unit, 1, end_position)
@@ -259,14 +267,18 @@ ScanningDeviceExtension._move_to_spline = function (self, dt)
 	local rotation = Quaternion.look(dir, Vector3.up())
 	local delta = dt * self._to_start_spline_speed
 	local direct_to_end_position = false
+
 	self._past_spline_start_position = self:_move_towards_position(delta, spline_start_position, rotation, direct_to_end_position)
 end
 
 ScanningDeviceExtension._move_to_end_position = function (self, dt, direct_to_end_position)
 	local end_position = self._end_position:unbox()
 	local end_rotation = self._end_rotation:unbox()
+
 	end_position = Vector3(end_position.x, end_position.y, end_position.z + self._end_position_height)
+
 	local delta = dt * self._to_end_position_speed
+
 	self._at_end_position = self:_move_towards_position(delta, end_position, end_rotation, direct_to_end_position)
 end
 
@@ -304,12 +316,13 @@ ScanningDeviceExtension._error_speed_calculation = function (self, dt, t, game, 
 		local curr_subdivision_index = movement:current_subdivision_index()
 		local curr_spline_t = movement:current_t()
 		local error_distance = movement:distance(curr_spline_index, curr_subdivision_index, curr_spline_t, spline_index, subdiv, spline_t)
+
 		old_vals.spline_index = spline_index
 		old_vals.subdivision_index = subdiv
 		old_vals.spline_t = spline_t
 		old_vals.error_compensation_speed = error_distance / ERROR_RECOUP_TIME
 		old_vals.last_synch_time = t
-	elseif ERROR_RECOUP_TIME <= t - old_vals.last_synch_time then
+	elseif t - old_vals.last_synch_time >= ERROR_RECOUP_TIME then
 		old_vals.error_compensation_speed = 0
 	end
 

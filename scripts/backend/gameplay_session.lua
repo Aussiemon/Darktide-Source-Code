@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/backend/gameplay_session.lua
+
 local Promise = require("scripts/foundation/utilities/promise")
 local BackendError = require("scripts/foundation/managers/backend/backend_error")
 local BackendUtilities = require("scripts/foundation/managers/backend/utilities/backend_utilities")
@@ -30,6 +32,7 @@ GameplaySession._poll_for_end_of_round_internal = function (self, session_id, pa
 				end
 			else
 				local character_data = data.session.participants[participant]
+
 				ok_to_fetch = character_data and character_data.rewarded
 			end
 
@@ -44,7 +47,7 @@ GameplaySession._poll_for_end_of_round_internal = function (self, session_id, pa
 
 		Log.debug("GamePlaySession", "Not complete yet")
 
-		if game_session_timeout_s < now - start_time then
+		if now - start_time > game_session_timeout_s then
 			Log.warning("GamePlaySession", "Timeout reached waiting for eor")
 
 			return Promise.rejected(BackendUtilities.create_error(BackendError.NoIdentifier, "Timeout reached waiting for eor"))
@@ -201,12 +204,12 @@ GameplaySession.events = function (self, session_id, events)
 		})
 	end
 
-	local batches = {}
-	local from = {}
+	local batches, from = {}, {}
 
 	for position = 1, #events, max_events_per_batch do
 		local remaining_size = math.min(#events - position + 1, max_events_per_batch)
 		local batch = table.slice(events, position, remaining_size)
+
 		batches[#batches + 1] = batch
 		from[#from + 1] = position
 	end

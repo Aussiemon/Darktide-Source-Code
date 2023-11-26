@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/fx/effect_templates/chaos_hound_mutator_approach.lua
+
 local Effect = require("scripts/extension_systems/fx/utilities/effect")
 local MinionPerception = require("scripts/utilities/minion_perception")
 local APPROACH_SOUND_EVENT = "wwise/events/minions/play_chaos_hound_mutator_vce_bark"
@@ -16,38 +18,44 @@ local resources = {
 	approach_vfx = PARTICLE_NAME,
 	eye_vfx = PARTICLE_2_NAME
 }
-local _trigger_sound = nil
+local _trigger_sound
 local effect_template = {
 	name = "chaos_hound_mutator_approach",
 	resources = resources,
 	start = function (template_data, template_context)
 		template_data.next_trigger_t = 0
+
 		local world = template_context.world
 		local unit = template_data.unit
 		local unit_position = POSITION_LOOKUP[unit]
 		local particle_id = World.create_particles(world, PARTICLE_NAME, unit_position)
+
 		template_data.particle_id = particle_id
+
 		local orphaned_policy = "stop"
 		local node_1 = Unit.node(unit, PARTICLE_NODE)
 
 		World.link_particles(world, particle_id, unit, node_1, Matrix4x4.identity(), orphaned_policy)
 
 		local particle_2_id = World.create_particles(world, PARTICLE_2_NAME, unit_position)
+
 		template_data.particle_2_id = particle_2_id
+
 		local node_2 = Unit.node(unit, PARTICLE_2_NODE)
 
 		World.link_particles(world, particle_2_id, unit, node_2, Matrix4x4.identity(), orphaned_policy)
 
 		local particle_3_id = World.create_particles(world, PARTICLE_3_NAME, unit_position)
+
 		template_data.particle_3_id = particle_3_id
+
 		local node_3 = Unit.node(unit, PARTICLE_3_NODE)
 
 		World.link_particles(world, particle_3_id, unit, node_3, Matrix4x4.identity(), orphaned_policy)
 	end,
 	update = function (template_data, template_context, dt, t)
 		local unit = template_data.unit
-		local game_session = template_context.game_session
-		local game_object_id = Managers.state.unit_spawner:game_object_id(unit)
+		local game_session, game_object_id = template_context.game_session, Managers.state.unit_spawner:game_object_id(unit)
 		local target_unit = MinionPerception.target_unit(game_session, game_object_id)
 
 		if not ALIVE[target_unit] then
@@ -59,12 +67,12 @@ local effect_template = {
 		local distance_to_target_unit = Vector3.distance(unit_position, target_position)
 
 		if not template_data.triggered then
-			local can_trigger = template_data.next_trigger_t < t and distance_to_target_unit <= TRIGGER_DISTANCE
+			local can_trigger = t > template_data.next_trigger_t and distance_to_target_unit <= TRIGGER_DISTANCE
 
 			if can_trigger then
 				_trigger_sound(unit, target_unit, template_data, template_context, t)
 			end
-		elseif RESTART_TRIGGER_DISTANCE <= distance_to_target_unit then
+		elseif distance_to_target_unit >= RESTART_TRIGGER_DISTANCE then
 			template_data.triggered = false
 		end
 	end,

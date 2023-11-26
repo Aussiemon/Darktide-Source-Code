@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/foundation/utilities/ring_buffer.lua
+
 require("scripts/foundation/utilities/table")
 
 local RingBuffer = class("RingBuffer")
@@ -53,16 +55,14 @@ RingBuffer._advance_indices = function (self)
 	local max_length = self._max_length
 	local tail_index = self._tail_index
 	local head_index = self._head_index
+
 	head_index = head_index == max_length and 1 or head_index + 1
+
 	local is_full = head_index == tail_index
 	local first_element_added = tail_index == 0 and head_index == 1
 
 	if is_full or first_element_added then
-		if tail_index == max_length then
-			tail_index = 1
-		else
-			tail_index = tail_index + 1
-		end
+		tail_index = tail_index == max_length and 1 or tail_index + 1
 	end
 
 	self._is_full = is_full
@@ -78,10 +78,8 @@ RingBuffer._retreat_index = function (self)
 	if tail_index == head_index then
 		tail_index = 0
 		head_index = 0
-	elseif tail_index == max_length then
-		tail_index = 1
 	else
-		tail_index = tail_index + 1
+		tail_index = tail_index == max_length and 1 or tail_index + 1
 	end
 
 	self._is_full = false
@@ -96,7 +94,7 @@ RingBuffer.push = function (self, data)
 end
 
 RingBuffer.pop = function (self)
-	local result = nil
+	local result
 
 	if not self:is_empty() then
 		result = self._buffer[self._tail_index]

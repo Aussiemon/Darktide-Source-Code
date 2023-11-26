@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/components/weapon_material_variables.lua
+
 local WeaponMaterialVariables = component("WeaponMaterialVariables")
 
 WeaponMaterialVariables.init = function (self, unit)

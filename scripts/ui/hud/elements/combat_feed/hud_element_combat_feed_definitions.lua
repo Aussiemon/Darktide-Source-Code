@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/hud/elements/combat_feed/hud_element_combat_feed_definitions.lua
+
 local ConstantElementNotificationFeedSettings = require("scripts/ui/constant_elements/elements/notification_feed/constant_element_notification_feed_settings")
 local UIWorkspaceSettings = require("scripts/settings/ui/ui_workspace_settings")
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/hud/elements/world_markers/templates/world_marker_template_damage_indicator.lua
+
 local HudHealthBarLogic = require("scripts/ui/hud/elements/hud_health_bar_logic")
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local UIHudSettings = require("scripts/settings/ui/ui_hud_settings")
@@ -9,6 +11,7 @@ local size = {
 	6
 }
 local damage_number_types = table.enum("readable", "floating", "flashy")
+
 template.show_health_bar = true
 template.show_numbers = true
 template.show_armor_types = true
@@ -71,6 +74,7 @@ template.bar_settings = {
 	alpha_fade_min_value = 50,
 	alpha_fade_duration = 0.6
 }
+
 local armor_type_string_lookup = {
 	disgustingly_resilient = "loc_weapon_stats_display_disgustingly_resilient",
 	super_armor = "loc_weapon_stats_display_super_armor",
@@ -79,6 +83,7 @@ local armor_type_string_lookup = {
 	berserker = "loc_weapon_stats_display_berzerker",
 	unarmored = "loc_weapon_stats_display_unarmored"
 }
+
 template.fade_settings = {
 	fade_to = 1,
 	fade_from = 0.5,
@@ -128,6 +133,7 @@ local function _readable_damage_number_function(ui_content, ui_renderer, ui_styl
 			local expand_time = damage_number.expand_time
 			local expand_progress = math.clamp(expand_time / expand_duration, 0, 1)
 			local anim_progress = 1 - expand_progress
+
 			font_size = font_size + damage_number_settings.expand_bonus_scale * anim_progress
 
 			if expand_progress >= 1 then
@@ -136,10 +142,11 @@ local function _readable_damage_number_function(ui_content, ui_renderer, ui_styl
 			else
 				damage_number.expand_time = expand_time + ui_renderer.dt
 			end
-		elseif damage_number.shrink_start_t and damage_number.shrink_start_t < time then
+		elseif damage_number.shrink_start_t and time > damage_number.shrink_start_t then
 			local diff = time - damage_number.shrink_start_t
 			local percentage = diff / damage_number_settings.shrink_duration
 			local scale = 1 - percentage
+
 			font_size = font_size * scale
 			text_color[1] = text_color[1] * scale
 		end
@@ -150,6 +157,7 @@ local function _readable_damage_number_function(ui_content, ui_renderer, ui_styl
 
 		if current_order == 0 then
 			local scale_size = damage_number.was_critical and damage_number_settings.crit_hit_size_scale or damage_number_settings.first_hit_size_scale
+
 			font_size = font_size * scale_size
 		end
 
@@ -209,6 +217,7 @@ local function _floating_damage_number_function(ui_content, ui_renderer, ui_styl
 			local expand_time = damage_number.expand_time
 			local expand_progress = math.clamp(expand_time / expand_duration, 0, 1)
 			local anim_progress = 1 - expand_progress
+
 			font_size = font_size + damage_number_settings.expand_bonus_scale * anim_progress
 
 			if expand_progress >= 1 then
@@ -217,10 +226,11 @@ local function _floating_damage_number_function(ui_content, ui_renderer, ui_styl
 			else
 				damage_number.expand_time = expand_time + ui_renderer.dt
 			end
-		elseif damage_number.shrink_start_t and damage_number.shrink_start_t < time then
+		elseif damage_number.shrink_start_t and time > damage_number.shrink_start_t then
 			local diff = time - damage_number.shrink_start_t
 			local percentage = diff / damage_number_settings.shrink_duration
 			local scale = 1 - percentage
+
 			font_size = font_size * scale
 			text_color[1] = text_color[1] * scale
 		end
@@ -231,6 +241,7 @@ local function _floating_damage_number_function(ui_content, ui_renderer, ui_styl
 
 		if current_order == 0 then
 			local scale_size = damage_number.was_critical and damage_number_settings.crit_hit_size_scale or damage_number_settings.first_hit_size_scale
+
 			font_size = font_size * scale_size
 		end
 
@@ -263,6 +274,7 @@ local function _flashy_damage_number_function(ui_content, ui_renderer, ui_style,
 
 		if damage_number.hit_world_position then
 			local world_to_screen_position = Camera.world_to_screen(ui_content.player_camera, damage_number.hit_world_position:unbox())
+
 			y_position = world_to_screen_position[2] - 75
 			x_position = world_to_screen_position[1]
 		end
@@ -296,11 +308,12 @@ local function _flashy_damage_number_function(ui_content, ui_renderer, ui_style,
 		local font_size = value <= 99 and default_font_size or hundreds_font_size
 		local dmg_scale_multiplier = 1
 
-		if flashy_font_size_dmg_scale_range[1] < value then
+		if value > flashy_font_size_dmg_scale_range[1] then
 			local min = flashy_font_size_dmg_scale_range[1]
 			local max = flashy_font_size_dmg_scale_range[2]
 			local lerp = math.min((value - min) / (max - min), 1)
 			local multiplier = math.lerp(flashy_font_size_dmg_multiplier[1], flashy_font_size_dmg_multiplier[2], lerp)
+
 			font_size = font_size * multiplier
 			dmg_scale_multiplier = multiplier
 		end
@@ -311,6 +324,7 @@ local function _flashy_damage_number_function(ui_content, ui_renderer, ui_style,
 			local expand_time = damage_number.expand_time
 			local expand_progress = math.clamp(expand_time / expand_duration, 0, 1)
 			local anim_progress = 1 - expand_progress
+
 			font_size = font_size + damage_number_settings.expand_bonus_scale * anim_progress
 
 			if expand_progress >= 1 then
@@ -319,10 +333,11 @@ local function _flashy_damage_number_function(ui_content, ui_renderer, ui_style,
 			else
 				damage_number.expand_time = expand_time + ui_renderer.dt
 			end
-		elseif damage_number.shrink_start_t and damage_number.shrink_start_t < time then
+		elseif damage_number.shrink_start_t and time > damage_number.shrink_start_t then
 			local diff = time - damage_number.shrink_start_t
 			local percentage = diff / damage_number_settings.shrink_duration
 			local scale = 1 - percentage
+
 			font_size = font_size * scale
 			text_color[1] = text_color[1] * scale
 		end
@@ -333,6 +348,7 @@ local function _flashy_damage_number_function(ui_content, ui_renderer, ui_style,
 
 		if current_order == 0 then
 			local scale_size = damage_number.was_critical and damage_number_settings.crit_hit_size_scale or damage_number_settings.first_hit_size_scale
+
 			font_size = font_size * scale_size
 		end
 
@@ -341,6 +357,7 @@ local function _flashy_damage_number_function(ui_content, ui_renderer, ui_style,
 		local float_value = 45 * math.lerp(0.8, 1.2, random_number) * dmg_scale_multiplier
 		local float_y_value = float_value * 1.25
 		local float_x_value = float_right and float_value or -float_value
+
 		position[2] = y_position - math.ease_out_elastic(time) * float_y_value + time * float_y_value
 		position[1] = x_position + math.ease_out_elastic(time) * float_x_value + (float_right and time * float_value or time * -float_value) - (not float_right and font_size * 0.5 or 0)
 
@@ -695,14 +712,19 @@ end
 
 template.on_enter = function (widget, marker, template)
 	local content = widget.content
+
 	content.spawn_progress_timer = 0
 	content.damage_taken = 0
 	content.damage_numbers = {}
+
 	local bar_settings = template.bar_settings
+
 	marker.bar_logic = HudHealthBarLogic:new(bar_settings)
+
 	local unit = marker.unit
 	local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
 	local breed = unit_data_extension:breed()
+
 	content.header_text = breed.name
 	content.breed = breed
 	content.unit_data_extension = unit_data_extension
@@ -718,8 +740,9 @@ template.update_function = function (parent, ui_renderer, widget, marker, templa
 	local is_dead = not health_extension or not health_extension:is_alive()
 	local health_percent = is_dead and 0 or health_extension:current_health_percent()
 	local max_health = Managers.state.difficulty:get_minion_max_health(content.breed.name)
-	local damage_taken = nil
+	local damage_taken
 	local player_camera = parent._parent and parent._parent:player_camera()
+
 	content.player_camera = player_camera
 
 	if not is_dead then
@@ -734,6 +757,7 @@ template.update_function = function (parent, ui_renderer, widget, marker, templa
 		if last_damaging_unit then
 			content.last_hit_zone_name = health_extension:last_hit_zone_name() or "center_mass"
 			content.last_damaging_unit = last_damaging_unit
+
 			local breed = content.breed
 			local hit_zone_weakspot_types = breed.hit_zone_weakspot_types
 
@@ -744,6 +768,7 @@ template.update_function = function (parent, ui_renderer, widget, marker, templa
 			end
 
 			content.was_critical = health_extension:was_hit_by_critical_hit_this_render_frame()
+
 			local last_hit_world_position = health_extension:last_hit_world_position()
 
 			if last_hit_world_position then
@@ -831,6 +856,7 @@ template.update_function = function (parent, ui_renderer, widget, marker, templa
 				latest_damage_number.time = 0
 				latest_damage_number.y_position = nil
 				latest_damage_number.start_time = t
+
 				local breed = content.breed
 				local hit_zone_weakspot_types = breed.hit_zone_weakspot_types
 
@@ -866,22 +892,33 @@ template.update_function = function (parent, ui_renderer, widget, marker, templa
 			local bar_width = template.size[1]
 			local default_width_offset = -bar_width * 0.5
 			local health_width = bar_width * health_fraction
+
 			style.bar.size[1] = health_width
+
 			local ghost_bar_width = math.max(bar_width * health_ghost_fraction - health_width, 0)
 			local ghost_bar_style = style.ghost_bar
+
 			ghost_bar_style.offset[1] = default_width_offset + health_width
 			ghost_bar_style.size[1] = ghost_bar_width
+
 			local background_width = math.max(bar_width - ghost_bar_width - health_width, 0)
+
 			background_width = math.max(background_width - spacing, 0)
+
 			local background_style = style.background
+
 			background_style.offset[1] = default_width_offset + bar_width - background_width
 			background_style.size[1] = background_width
+
 			local health_max_style = style.health_max
 			local health_max_width = bar_width - math.max(bar_width * health_max_fraction, 0)
+
 			health_max_width = math.max(health_max_width - spacing, 0)
-			health_max_style.offset[1] = default_width_offset + bar_width - health_max_width * 0.5
+			health_max_style.offset[1] = default_width_offset + (bar_width - health_max_width * 0.5)
 			health_max_style.size[1] = health_max_width
+
 			local health_end_style = style.bar_end
+
 			health_end_style.offset[1] = -(bar_width - bar_width * health_fraction) + 6 + math.abs(default_width_offset)
 			marker.health_fraction = health_fraction
 		end
@@ -942,7 +979,9 @@ template.update_function = function (parent, ui_renderer, widget, marker, templa
 	if fade_delay then
 		fade_delay = fade_delay - dt
 		content.fade_delay = fade_delay >= 0 and fade_delay or nil
+
 		local progress = math.clamp(fade_delay / damage_number_settings.fade_delay, 0, 1)
+
 		alpha_multiplier = alpha_multiplier * progress
 
 		if template.fade_bar_on_death then

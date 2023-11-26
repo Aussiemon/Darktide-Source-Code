@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/character_state_machine/character_states/player_character_state_interacting.lua
+
 require("scripts/extension_systems/character_state_machine/character_states/player_character_state_base")
 
 local Crouch = require("scripts/extension_systems/character_state_machine/character_states/utilities/crouch")
@@ -22,9 +24,12 @@ PlayerCharacterStateInteracting.init = function (self, character_state_init_cont
 
 	local unit_data_extension = character_state_init_context.unit_data
 	local interacting_character_state_component = unit_data_extension:write_component("interacting_character_state")
+
 	interacting_character_state_component.interaction_template = "none"
 	self._interacting_character_state_component = interacting_character_state_component
+
 	local looping_sound_component_name = PlayerUnitData.looping_sound_component_name(LOOPING_SOUND_ALIAS)
+
 	self._looping_sound_component = unit_data_extension:read_component(looping_sound_component_name)
 	self._sway_control_component = unit_data_extension:write_component("sway_control")
 	self._spread_control_component = unit_data_extension:write_component("spread_control")
@@ -41,8 +46,10 @@ PlayerCharacterStateInteracting.on_enter = function (self, unit, dt, t, previous
 	local interactee_unit = interaction_component.target_unit
 	local interaction_template_name = interaction_component.type
 	local template = InteractionTemplates[interaction_template_name]
+
 	self._interacting_character_state_component.interaction_template = interaction_template_name
-	local start_anim_event, start_anim_event_3p = nil
+
+	local start_anim_event, start_anim_event_3p
 	local start_anim_event_func = template.start_anim_event_func
 
 	if start_anim_event_func then
@@ -100,11 +107,15 @@ PlayerCharacterStateInteracting.on_enter = function (self, unit, dt, t, previous
 	end
 
 	local locomotion_steering_component = self._locomotion_steering_component
+
 	locomotion_steering_component.velocity_wanted = Vector3.zero()
+
 	local interactee_position = Unit.local_position(interactee_unit, 1)
 	local interactor_position = Unit.local_position(unit, 1)
 	local direction = interactee_position - interactor_position
+
 	direction = Vector3.normalize(Vector3.flat(direction))
+
 	local force_rotation = Quaternion.look(direction)
 	local locomotion_force_rotation_component = self._locomotion_force_rotation_component
 
@@ -130,8 +141,10 @@ PlayerCharacterStateInteracting.on_exit = function (self, unit, t, next_state)
 	local interactee_unit = interaction_component.target_unit
 	local interaction_template_name = interacting_character_state.interaction_template
 	local template = InteractionTemplates[interaction_template_name]
+
 	interacting_character_state.interaction_template = "none"
-	local stop_anim_event, stop_anim_event_3p = nil
+
+	local stop_anim_event, stop_anim_event_3p
 	local stop_anim_event_func = template.stop_anim_event_func
 
 	if stop_anim_event_func then
@@ -141,7 +154,7 @@ PlayerCharacterStateInteracting.on_exit = function (self, unit, t, next_state)
 		stop_anim_event_3p = template.stop_anim_event_3p or stop_anim_event
 	end
 
-	local interrupt_anim_event, interrupt_anim_event_3p = nil
+	local interrupt_anim_event, interrupt_anim_event_3p
 	local interrupt_anim_event_func = template.interrupt_anim_event_func
 
 	if interrupt_anim_event_func then

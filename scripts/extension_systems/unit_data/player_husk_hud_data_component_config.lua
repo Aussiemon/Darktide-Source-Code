@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/unit_data/player_husk_hud_data_component_config.lua
+
 local PlayerUnitData = require("scripts/extension_systems/unit_data/utilities/player_unit_data")
 local husk_hud_data_component_config = {
 	action_heal_target_over_time = {
@@ -58,6 +60,7 @@ local looping_sound_aliases = {}
 for i = 1, #looping_sound_aliases do
 	local looping_sound_alias = looping_sound_aliases[i]
 	local component_name = PlayerUnitData.looping_sound_component_name(looping_sound_alias)
+
 	husk_hud_data_component_config[component_name] = {
 		"is_playing"
 	}

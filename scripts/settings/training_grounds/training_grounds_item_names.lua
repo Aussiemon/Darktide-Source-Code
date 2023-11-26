@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/training_grounds/training_grounds_item_names.lua
+
 local item_names = {
 	unarmed_training_grounds = "content/items/weapons/player/melee/unarmed_training_grounds",
 	chainsword_p1_m1 = "content/items/weapons/player/melee/chainsword_p1_m1",

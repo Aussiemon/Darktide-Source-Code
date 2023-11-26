@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/behavior/nodes/actions/bt_change_target_action.lua
+
 require("scripts/extension_systems/behavior/nodes/bt_node")
 
 local Animation = require("scripts/utilities/animation")
@@ -15,8 +17,11 @@ BtChangeTargetAction.enter = function (self, unit, breed, blackboard, scratchpad
 	scratchpad.locomotion_extension = locomotion_extension
 	scratchpad.navigation_extension = navigation_extension
 	scratchpad.behavior_component = Blackboard.write_component(blackboard, "behavior")
+
 	local perception_component = blackboard.perception
+
 	scratchpad.target_unit = perception_component.target_unit
+
 	local rotation_speed = action_data.rotation_speed
 
 	if rotation_speed then
@@ -51,7 +56,7 @@ BtChangeTargetAction.run = function (self, unit, breed, blackboard, scratchpad, 
 
 	local is_anim_driven = scratchpad.is_anim_driven
 
-	if is_anim_driven and scratchpad.change_target_start_rotation_timing and scratchpad.change_target_start_rotation_timing <= t then
+	if is_anim_driven and scratchpad.change_target_start_rotation_timing and t >= scratchpad.change_target_start_rotation_timing then
 		local target_position = POSITION_LOOKUP[target_unit]
 
 		MinionMovement.update_anim_driven_change_target_rotation(unit, scratchpad, action_data, t, target_position)
@@ -92,7 +97,9 @@ BtChangeTargetAction._start_change_target_anim = function (self, unit, breed, t,
 	local target_unit = scratchpad.target_unit
 	local target_position = POSITION_LOOKUP[target_unit]
 	local moving_direction_name = MinionMovement.get_change_target_direction(unit, target_position)
+
 	scratchpad.moving_direction_name = moving_direction_name
+
 	local change_target_anim_events = action_data.change_target_anim_events[moving_direction_name]
 	local change_target_anim_event = Animation.random_event(change_target_anim_events)
 	local animation_extension = scratchpad.animation_extension
@@ -104,6 +111,7 @@ BtChangeTargetAction._start_change_target_anim = function (self, unit, breed, t,
 
 		local change_target_rotation_timings = action_data.change_target_rotation_timings
 		local change_target_start_rotation_timing = change_target_rotation_timings[change_target_anim_event]
+
 		scratchpad.change_target_start_rotation_timing = t + change_target_start_rotation_timing
 		scratchpad.change_target_anim_event_name = change_target_anim_event
 	else

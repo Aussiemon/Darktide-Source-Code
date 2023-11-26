@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/components/toxic_gas_fog.lua
+
 local Component = require("scripts/utilities/component")
 local NavQueries = require("scripts/utilities/nav_queries")
 local SharedNav = require("scripts/components/utilities/shared_nav")
@@ -5,11 +7,14 @@ local ToxicGasFog = component("ToxicGasFog")
 
 ToxicGasFog.init = function (self, unit, is_server, nav_world)
 	self._unit = unit
+
 	local run_update = false
+
 	self._is_server = is_server
 
 	if rawget(_G, "LevelEditor") and ToxicGasFog._nav_info == nil then
 		ToxicGasFog._nav_info = SharedNav.create_nav_info()
+
 		local nav_gen_guid = SharedNav.check_new_navmesh_generated(ToxicGasFog._nav_info, self._my_nav_gen_guid, true)
 
 		if nav_gen_guid then
@@ -94,6 +99,7 @@ ToxicGasFog.editor_init = function (self, unit)
 
 	if ToxicGasFog._nav_info == nil then
 		ToxicGasFog._nav_info = SharedNav.create_nav_info()
+
 		local with_traverse_logic = true
 		local nav_gen_guid = SharedNav.check_new_navmesh_generated(ToxicGasFog._nav_info, self._my_nav_gen_guid, with_traverse_logic)
 
@@ -105,9 +111,13 @@ ToxicGasFog.editor_init = function (self, unit)
 	end
 
 	self._unit = unit
+
 	local world = Application.main_world()
+
 	self._world = world
+
 	local line_object = World.create_line_object(world)
+
 	self._line_object = line_object
 	self._drawer = DebugDrawer(line_object, "retained")
 	self._gui = World.create_world_gui(world, Matrix4x4.identity(), 1, 1)

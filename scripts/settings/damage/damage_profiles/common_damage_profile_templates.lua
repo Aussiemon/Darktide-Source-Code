@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/damage/damage_profiles/common_damage_profile_templates.lua
+
 local ArmorSettings = require("scripts/settings/damage/armor_settings")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
 local ForcedLookSettings = require("scripts/settings/damage/forced_look_settings")
@@ -16,6 +18,7 @@ table.make_unique(overrides)
 local default_armor_mod = DamageProfileSettings.default_armor_mod
 local crit_armor_mod = DamageProfileSettings.crit_armor_mod
 local crit_impact_armor_mod = DamageProfileSettings.crit_impact_armor_mod
+
 damage_templates.default = {
 	stagger_category = "melee",
 	armor_damage_modifier = {

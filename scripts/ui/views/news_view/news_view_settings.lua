@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/news_view/news_view_settings.lua
+
 local window_size = {
 	1400,
 	700

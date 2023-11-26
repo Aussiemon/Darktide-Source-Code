@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/mission/templates/hub_mission_templates.lua
+
 local mission_templates = {
 	hub_ship = {
 		zone_id = "hub",

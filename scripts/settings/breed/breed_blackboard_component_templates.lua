@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/breed/breed_blackboard_component_templates.lua
+
 local breed_blackboard_component_templates = {}
 
 local function _create_breed_blackboard_component_templates(path)

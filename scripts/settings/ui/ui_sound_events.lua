@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/ui/ui_sound_events.lua
+
 local ui_sound_events = {
 	character_create_planet_select = "wwise/events/ui/play_ui_character_create_select_planet",
 	mission_objective_popup_new = "wwise/events/ui/play_hud_new_objective",

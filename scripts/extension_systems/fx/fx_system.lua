@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/fx/fx_system.lua
+
 require("scripts/extension_systems/fx/minion_fx_extension")
 require("scripts/extension_systems/fx/player_unit_fx_extension")
 require("scripts/extension_systems/fx/projectile_fx_extension")
@@ -12,7 +14,7 @@ local IS_DIRECTION_INTERFACE = true
 local PI = math.pi
 local impact_fx_templates = ImpactEffectSettings.impact_fx_templates
 local surface_material_groups_lookup = MaterialQuerySettings.surface_material_groups_lookup
-local _create_impact_sfx, _create_impact_vfx, _create_material_switch_sfx, _create_projection_decal, _impact_fx, _play_material_switch_sfx, _play_impact_fx_template = nil
+local _create_impact_sfx, _create_impact_vfx, _create_material_switch_sfx, _create_projection_decal, _impact_fx, _play_material_switch_sfx, _play_impact_fx_template
 local CLIENT_RPCS = {
 	"rpc_play_impact_fx",
 	"rpc_play_surface_impact_fx",
@@ -30,8 +32,11 @@ FxSystem.init = function (self, extension_system_creation_context, ...)
 	FxSystem.super.init(self, extension_system_creation_context, ...)
 
 	self._physics_world = extension_system_creation_context.physics_world
+
 	local max_num_template_effects = NetworkConstants.max_template_effect_buffer_index
+
 	self._max_num_template_effects = max_num_template_effects
+
 	local template_effects = Script.new_array(max_num_template_effects)
 
 	for i = 1, max_num_template_effects do
@@ -45,8 +50,9 @@ FxSystem.init = function (self, extension_system_creation_context, ...)
 
 	self._template_effects = template_effects
 	self._running_template_effects = Script.new_array(max_num_template_effects)
-	local is_server = self._is_server
-	local game_session = extension_system_creation_context.game_session
+
+	local is_server, game_session = self._is_server, extension_system_creation_context.game_session
+
 	self._template_context = {
 		is_server = is_server,
 		world = self._world,
@@ -56,7 +62,9 @@ FxSystem.init = function (self, extension_system_creation_context, ...)
 	self._latest_player_particle_group_id = 0
 	self.unit_to_particle_group_lookup = Script.new_map(256)
 	self._spawned_impact_fx_units = Script.new_map(8)
+
 	local ambisonics_manual_source_id = WwiseWorld.make_manual_source(self._wwise_world, Vector3(0, 0, 0), Quaternion.identity())
+
 	self._ambisonics_manual_source_id = ambisonics_manual_source_id
 
 	if is_server then
@@ -69,6 +77,7 @@ end
 FxSystem.on_add_extension = function (self, world, unit, extension_name, extension_init_data, ...)
 	if extension_name == "PlayerUnitFxExtension" then
 		local player_particle_group_id = self._latest_player_particle_group_id + 1
+
 		self._latest_player_particle_group_id = player_particle_group_id
 		extension_init_data.player_particle_group_id = player_particle_group_id
 		self.unit_to_particle_group_lookup[unit] = player_particle_group_id
@@ -139,8 +148,7 @@ FxSystem.hot_join_sync = function (self, sender, channel)
 
 	for i = 1, #running_template_effects do
 		local template_effect = running_template_effects[i]
-		local buffer_index = template_effect.buffer_index
-		local template = template_effect.template
+		local buffer_index, template = template_effect.buffer_index, template_effect.template
 		local template_name = template.name
 		local template_id = NetworkLookup.effect_templates[template_name]
 		local optional_unit = template_effect.optional_unit
@@ -189,10 +197,9 @@ end
 
 FxSystem.start_template_effect = function (self, template, optional_unit, optional_node, optional_position)
 	local template_name = template.name
-	local buffer_index, template_effect = nil
+	local buffer_index, template_effect
 	local max_num_template_effects = self._max_num_template_effects
-	local global_effect_id = self._next_global_effect_id
-	local template_effects = self._template_effects
+	local global_effect_id, template_effects = self._next_global_effect_id, self._template_effects
 
 	for i = 1, max_num_template_effects do
 		buffer_index = global_effect_id % max_num_template_effects + 1
@@ -215,6 +222,7 @@ FxSystem.start_template_effect = function (self, template, optional_unit, option
 
 	template_effect.global_effect_id = global_effect_id
 	self._next_global_effect_id = global_effect_id + 1
+
 	local template_id = NetworkLookup.effect_templates[template_name]
 	local optional_unit_id = Managers.state.unit_spawner:game_object_id(optional_unit)
 
@@ -225,11 +233,9 @@ end
 
 FxSystem._start_template_effect = function (self, template_effect, template, optional_unit, optional_node, optional_position)
 	if not DEDICATED_SERVER then
-		local template_data = template_effect.template_data
-		local template_context = self._template_context
-		template_data.position = optional_position
-		template_data.node = optional_node
-		template_data.unit = optional_unit
+		local template_data, template_context = template_effect.template_data, self._template_context
+
+		template_data.unit, template_data.node, template_data.position = optional_unit, optional_node, optional_position
 
 		template.start(template_data, template_context)
 	end
@@ -240,9 +246,10 @@ FxSystem._start_template_effect = function (self, template_effect, template, opt
 
 	template_effect.optional_unit = optional_unit
 	template_effect.optional_node = optional_node
-	template_effect.template = template
-	template_effect.is_running = true
+	template_effect.is_running, template_effect.template = true, template
+
 	local running_template_effects = self._running_template_effects
+
 	running_template_effects[#running_template_effects + 1] = template_effect
 end
 
@@ -273,8 +280,7 @@ FxSystem.has_running_global_effect_id = function (self, global_effect_id)
 end
 
 FxSystem._stop_template_effect = function (self, template_effect, template)
-	local template_data = template_effect.template_data
-	local template_context = self._template_context
+	local template_data, template_context = template_effect.template_data, self._template_context
 
 	if not DEDICATED_SERVER then
 		template.stop(template_data, template_context)
@@ -287,8 +293,8 @@ FxSystem._stop_template_effect = function (self, template_effect, template)
 
 	table.clear(template_data)
 
-	template_effect.template = nil
-	template_effect.is_running = false
+	template_effect.is_running, template_effect.template = false
+
 	local running_template_effects = self._running_template_effects
 	local index_to_remove = table.index_of(running_template_effects, template_effect)
 
@@ -430,7 +436,7 @@ end
 
 FxSystem.trigger_wwise_event = function (self, event_name, optional_position, optional_unit, optional_node, optional_parameter_name, optional_parameter_value, optional_ambisonics)
 	local wwise_world = self._wwise_world
-	local source_id = nil
+	local source_id
 
 	if optional_position then
 		source_id = WwiseWorld.make_auto_source(wwise_world, optional_position)
@@ -454,7 +460,7 @@ FxSystem.trigger_wwise_event = function (self, event_name, optional_position, op
 
 	if optional_position or optional_unit or optional_ambisonics then
 		local event_id = NetworkLookup.sound_events[event_name]
-		local optional_parameter_id = nil
+		local optional_parameter_id
 
 		if optional_parameter_name then
 			optional_parameter_id = NetworkLookup.sound_parameters[optional_parameter_name]
@@ -476,11 +482,13 @@ FxSystem.trigger_ground_impact_fx = function (self, ground_impact_fx_template, i
 
 	if not impact_effects then
 		local group = surface_material_groups_lookup[impact_material_or_nil]
+
 		impact_effects = group and material_fx_templates[group]
 	end
 
 	if not impact_effects then
 		local default = ground_impact_fx_template.default
+
 		impact_effects = material_fx_templates[default]
 	end
 
@@ -579,6 +587,7 @@ FxSystem.rpc_play_impact_fx = function (self, channel_id, impact_fx_name_id, pos
 
 	local optional_target_unit = optional_target_unit_id and Managers.state.unit_spawner:unit(optional_target_unit_id)
 	local optional_will_be_predicted = false
+
 	direction = Vector3.normalize(direction)
 	optional_hit_normal = optional_hit_normal and Vector3.normalize(optional_hit_normal)
 
@@ -595,6 +604,7 @@ FxSystem.rpc_play_surface_impact_fx = function (self, channel_id, hit_position, 
 	local damage_type = NetworkLookup.damage_types[damage_type_id]
 	local hit_type = NetworkLookup.surface_hit_types[hit_type_id]
 	local optional_will_be_predicted = false
+
 	optional_hit_normal = optional_hit_normal and Vector3.normalize(optional_hit_normal)
 
 	self:play_surface_impact_fx(hit_position, hit_direction, SOURCE_PARAMETERS, attacking_unit, optional_hit_normal, damage_type, hit_type, optional_will_be_predicted)
@@ -629,7 +639,7 @@ end
 FxSystem.rpc_trigger_wwise_event = function (self, channel_id, event_id, optional_position, optional_unit_id, optional_node, optional_parameter_id, optional_parameter_value, optional_ambisonics)
 	local event_name = NetworkLookup.sound_events[event_id]
 	local wwise_world = self._wwise_world
-	local source_id = nil
+	local source_id
 
 	if optional_position then
 		source_id = WwiseWorld.make_auto_source(wwise_world, optional_position)
@@ -637,6 +647,7 @@ FxSystem.rpc_trigger_wwise_event = function (self, channel_id, event_id, optiona
 		WwiseWorld.trigger_resource_event(wwise_world, event_name, source_id)
 	elseif optional_unit_id then
 		local unit = Managers.state.unit_spawner:unit(optional_unit_id)
+
 		source_id = WwiseWorld.make_auto_source(wwise_world, unit, optional_node)
 
 		WwiseWorld.trigger_resource_event(wwise_world, event_name, source_id)
@@ -676,7 +687,7 @@ function _create_impact_vfx(world, vfx, position, direction, normal, optional_pa
 	local num_vfx = #vfx
 
 	if num_vfx > 0 then
-		local direction_rotation, normal_rotation, reverse_direction_rotation, reverse_normal_rotation = nil
+		local direction_rotation, normal_rotation, reverse_direction_rotation, reverse_normal_rotation
 
 		for i = 1, num_vfx do
 			local entry = vfx[i]
@@ -684,7 +695,7 @@ function _create_impact_vfx(world, vfx, position, direction, normal, optional_pa
 			local use_normal_rotation = entry.normal_rotation
 			local reverse = entry.reverse
 			local effect_name = effects[math.random(1, #effects)]
-			local rotation = nil
+			local rotation
 
 			if use_normal_rotation and reverse then
 				reverse_normal_rotation = reverse_normal_rotation or Quaternion.look(normal and -normal or -direction)
@@ -750,7 +761,7 @@ end
 
 function _impact_fx(impact_fx, attacking_unit, unit_to_extension_map, table_name, husk_table_name, target_player_is_in_1p)
 	local fx = impact_fx[table_name]
-	local husk_fx = nil
+	local husk_fx
 
 	if not target_player_is_in_1p and husk_table_name then
 		local fx_extension = unit_to_extension_map[attacking_unit]
@@ -769,11 +780,12 @@ local DECAL_Z = 0.5
 function _create_projection_decal(t, decal_settings, position, rotation, normal, hit_unit, hit_actor)
 	local extents = decal_settings.extents
 	local uniform_extents = decal_settings.uniform_extents
-	local x, y, z = nil
+	local x, y, z
 
 	if extents then
 		local min = extents.min
 		local max = extents.max
+
 		x = math.random_range(min.x, max.x)
 		y = math.random_range(min.y, max.y)
 
@@ -786,6 +798,7 @@ function _create_projection_decal(t, decal_settings, position, rotation, normal,
 		local min = uniform_extents.min
 		local max = uniform_extents.max
 		local scale = math.random_range(min, max)
+
 		x = scale
 		y = scale
 
@@ -807,6 +820,7 @@ function _create_projection_decal(t, decal_settings, position, rotation, normal,
 	local decal_unit_name = decal_units[math.random(1, num_decal_units)]
 	local random_rad = math.random() * PI
 	local random_rot = Quaternion.axis_angle(Vector3.up(), random_rad)
+
 	rotation = Quaternion.multiply(rotation, random_rot)
 
 	Managers.state.decal:add_projection_decal(decal_unit_name, position, rotation, normal, decal_extents, hit_actor, hit_unit, t)
@@ -864,10 +878,11 @@ function _play_impact_fx_template(t, world, wwise_world, unit_to_extension_map, 
 		end
 
 		local play_vfx = not target_player_is_in_1p
-		local play_1p_vfx, play_3p_vfx = nil
+		local play_1p_vfx, play_3p_vfx
 
 		if attacker_first_person_extension and not target_player_is_in_1p then
 			local in_first_person = attacker_first_person_extension:is_in_first_person_mode()
+
 			play_1p_vfx = in_first_person
 			play_3p_vfx = not in_first_person
 		else

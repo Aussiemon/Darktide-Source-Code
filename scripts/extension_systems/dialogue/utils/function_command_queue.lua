@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/dialogue/utils/function_command_queue.lua
+
 local FunctionCommandQueue = class("FunctionCommandQueue")
 
 FunctionCommandQueue.init = function (self, max_num_args)
@@ -31,7 +33,7 @@ FunctionCommandQueue.cleanup_destroyed_unit = function (self, unit)
 	local list_size = self.command_index
 	local i = 1
 
-	while list_size >= i do
+	while i <= list_size do
 		local base_index = (i - 1) * stride
 		local function_call = command_queue[base_index + 1]
 
@@ -43,6 +45,7 @@ FunctionCommandQueue.cleanup_destroyed_unit = function (self, unit)
 
 				for j = 1, stride do
 					local copy_index = base_list_size + j
+
 					command_queue[base_index + j] = command_queue[copy_index]
 					command_queue[copy_index] = nil
 				end
@@ -63,7 +66,9 @@ FunctionCommandQueue.queue_function_command = function (self, function_call, ...
 	local index = self.command_index
 	local command_queue = self.command_queue
 	local base_index = index * self.command_stride
+
 	command_queue[base_index + 1] = function_call
+
 	local select = select
 	local num_args = select("#", ...)
 

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/crafting_replace_trait_view/crafting_replace_trait_view.lua
+
 local CraftingReplaceTraitViewDefinitions = require("scripts/ui/views/crafting_replace_trait_view/crafting_replace_trait_view_definitions")
 local CraftingSettings = require("scripts/settings/item/crafting_settings")
 local InputDevice = require("scripts/managers/input/input_device")
@@ -32,6 +34,7 @@ CraftingReplaceTraitView.on_enter = function (self)
 	self._parent:set_active_view_instance(self)
 
 	local crafting_recipe_context = table.clone_instance(CraftingSettings.crafting_recipe_context)
+
 	crafting_recipe_context.refresh_on_grid_pressed = false
 	self._weapon_stats = self:_add_element(ViewElementWeaponStats, "weapon_stats", 10, CraftingSettings.weapon_stats_context, "weapon_stats_pivot")
 	self._crafting_recipe = self:_add_element(ViewElementCraftingRecipe, "crafting_recipe", 10, crafting_recipe_context, "crafting_recipe_pivot")
@@ -43,6 +46,7 @@ CraftingReplaceTraitView.on_enter = function (self)
 
 	local trait_category = ItemUtils.trait_category(self._item)
 	local traits_promises = Managers.data_service.crafting:trait_sticker_book(trait_category)
+
 	self._traits_promises = traits_promises
 
 	traits_promises:next(callback(self, "_cb_fetch_trait_data")):catch(function (err)
@@ -92,6 +96,7 @@ CraftingReplaceTraitView._get_wallet = function (self)
 				local currency = wallets_data.wallets[i].balance
 				local type = currency.type
 				local amount = currency.amount
+
 				wallets_values[type] = amount
 			end
 
@@ -122,6 +127,7 @@ end
 CraftingReplaceTraitView._set_trait_inventory_focused = function (self, focus)
 	local crafting_recipe = self._crafting_recipe
 	local trait_inventory = self._trait_inventory
+
 	self._trait_inventory_focused = focus
 
 	if focus then
@@ -178,13 +184,17 @@ CraftingReplaceTraitView._perform_crafting = function (self)
 	self._crafting_recipe:set_continue_button_force_disabled(true)
 
 	local craft_promise = self._parent:craft(self._recipe, self._ingredients)
+
 	self._craft_promise = craft_promise
 
 	craft_promise:next(function (results)
 		self._craft_promise = nil
+
 		local new_item = results.items[1]
+
 		self._item = new_item
 		self._ingredients.item = new_item
+
 		local optional_present_callback = callback(function ()
 			self:_on_navigation_input_changed()
 		end)
@@ -204,6 +214,7 @@ end
 CraftingReplaceTraitView.cb_on_trait_selected = function (self, widget, config)
 	if self._using_cursor_navigation or not self._trait_inventory_focused then
 		local remove_inventory_focus = self._using_cursor_navigation and self._trait_inventory_focused
+
 		self._perform_trait_selection_data = {
 			widget = widget,
 			config = config,
@@ -220,6 +231,7 @@ CraftingReplaceTraitView._on_trait_selected = function (self, widget, config)
 	end
 
 	local previous_existing_trait_index = self._ingredients.existing_trait_index
+
 	self._ingredients.existing_trait_index = index
 
 	self._weapon_stats:select_trait(index)
@@ -233,6 +245,7 @@ CraftingReplaceTraitView._on_trait_selected = function (self, widget, config)
 	for i = 1, #recipe_widgets do
 		local recipe_widget = recipe_widgets[i]
 		local content = recipe_widget.content
+
 		content.marked = index and recipe_widget == widget or false
 	end
 
@@ -288,7 +301,9 @@ CraftingReplaceTraitView._update_elements = function (self, dt, t, input_service
 		local widget = self._perform_trait_selection_data.widget
 		local config = self._perform_trait_selection_data.config
 		local remove_inventory_focus = self._perform_trait_selection_data.remove_inventory_focus
+
 		self._perform_trait_selection_data = nil
+
 		local selected_successful = self:_on_trait_selected(widget, config)
 
 		if selected_successful then
@@ -301,6 +316,7 @@ end
 
 CraftingReplaceTraitView.remove_ingredient = function (self, ingredient_index)
 	local trait_ids = self._ingredients.trait_ids
+
 	trait_ids[ingredient_index] = nil
 	self._resync_can_craft = true
 end
@@ -308,6 +324,7 @@ end
 CraftingReplaceTraitView.update = function (self, dt, t, input_service)
 	if self._resync_can_craft then
 		local marked_trait_item = self._trait_inventory:marked_trait_item()
+
 		self._ingredients.trait_ids[1] = marked_trait_item and marked_trait_item.gear_id
 		self._ingredients.trait_master_ids[1] = marked_trait_item and marked_trait_item.name
 		self._ingredients.tiers[1] = marked_trait_item and marked_trait_item.rarity

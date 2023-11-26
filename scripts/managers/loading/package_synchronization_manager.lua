@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/loading/package_synchronization_manager.lua
+
 local PackageSynchronizerHost = require("scripts/loading/package_synchronizer_host")
 local PackageSynchronizerClient = require("scripts/loading/package_synchronizer_client")
 local PackageSynchronizationManager = class("PackageSynchronizationManager")
@@ -30,9 +32,11 @@ PackageSynchronizationManager.create_synchronizer_host_and_client = function (se
 	self:cleanup()
 
 	self._peer_id = Network.peer_id()
+
 	local network_delegate = Managers.connection:network_event_delegate()
 	local is_host = true
-	local host_channel_id = nil
+	local host_channel_id
+
 	self._package_synchronizer_client = PackageSynchronizerClient:new(self._peer_id, is_host, network_delegate, host_channel_id)
 	self._package_synchronizer_host = PackageSynchronizerHost:new(network_delegate, self._package_synchronizer_client)
 
@@ -63,7 +67,9 @@ PackageSynchronizationManager.create_synchronizer_client = function (self, is_ho
 	self:cleanup()
 
 	self._peer_id = Network.peer_id()
+
 	local network_delegate = Managers.connection:network_event_delegate()
+
 	self._package_synchronizer_client = PackageSynchronizerClient:new(self._peer_id, is_host, network_delegate, host_channel_id)
 
 	return self._package_synchronizer_client

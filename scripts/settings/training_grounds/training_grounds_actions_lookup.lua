@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/training_grounds/training_grounds_actions_lookup.lua
+
 local actions_lookup = {
 	attack_chains = {
 		{

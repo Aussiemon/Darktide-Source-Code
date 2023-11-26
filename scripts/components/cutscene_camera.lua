@@ -1,13 +1,14 @@
+﻿-- chunkname: @scripts/components/cutscene_camera.lua
+
 local CutsceneCamera = component("CutsceneCamera")
 
 CutsceneCamera.init = function (self, unit)
-	self._data = {
-		dof_enabled = math.ceil(Unit.local_position(unit, Unit.node(unit, "Enabled")).y),
-		focal_distance = Unit.local_position(unit, Unit.node(unit, "Distance")).y,
-		focal_region = Unit.local_position(unit, Unit.node(unit, "Region")).y,
-		focal_padding = Unit.local_position(unit, Unit.node(unit, "Padding")).y,
-		focal_scale = Unit.local_position(unit, Unit.node(unit, "Scale")).y
-	}
+	self._data = {}
+	self._data.dof_enabled = math.ceil(Unit.local_position(unit, Unit.node(unit, "Enabled")).y)
+	self._data.focal_distance = Unit.local_position(unit, Unit.node(unit, "Distance")).y
+	self._data.focal_region = Unit.local_position(unit, Unit.node(unit, "Region")).y
+	self._data.focal_padding = Unit.local_position(unit, Unit.node(unit, "Padding")).y
+	self._data.focal_scale = Unit.local_position(unit, Unit.node(unit, "Scale")).y
 
 	if rawget(_G, "LevelEditor") and Unit.has_data(unit, "dof_planes") and not Unit.get_data(unit, "dof_planes") then
 		Unit.set_visibility(unit, "dof_planes", false)

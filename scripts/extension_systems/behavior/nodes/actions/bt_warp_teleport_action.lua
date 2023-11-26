@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/behavior/nodes/actions/bt_warp_teleport_action.lua
+
 require("scripts/extension_systems/behavior/nodes/bt_node")
 
 local Animation = require("scripts/utilities/animation")
@@ -13,14 +15,18 @@ BtWarpTeleportAction.enter = function (self, unit, breed, blackboard, scratchpad
 	animation_extension:anim_event(teleport_in_anim_event)
 
 	local teleport_timing = action_data.teleport_timings[teleport_in_anim_event]
+
 	scratchpad.teleport_timing = t + teleport_timing
 	scratchpad.locomotion_extension = ScriptUnit.extension(unit, "locomotion_system")
 	scratchpad.navigation_extension = ScriptUnit.extension(unit, "navigation_system")
 	scratchpad.perception_component = blackboard.perception
+
 	local teleport_directions = self:_calculate_randomized_teleport_directions(action_data)
+
 	scratchpad.teleport_directions = teleport_directions
 	scratchpad.state = "teleporting_in"
 	scratchpad.teleport_direction_index = 1
+
 	local fx_system = Managers.state.extension:system("fx_system")
 	local position = POSITION_LOOKUP[unit]
 	local wwise_in_event = action_data.wwise_teleport_in
@@ -28,7 +34,9 @@ BtWarpTeleportAction.enter = function (self, unit, breed, blackboard, scratchpad
 	fx_system:trigger_wwise_event(wwise_in_event, position)
 
 	scratchpad.fx_system = fx_system
+
 	local behavior_component = Blackboard.write_component(blackboard, "behavior")
+
 	behavior_component.move_state = "idle"
 end
 
@@ -52,7 +60,7 @@ BtWarpTeleportAction.run = function (self, unit, breed, blackboard, scratchpad, 
 			locomotion_extension:set_wanted_rotation(rotation)
 		end
 
-		if scratchpad.teleport_timing <= t then
+		if t >= scratchpad.teleport_timing then
 			if scratchpad.teleport_position then
 				self:_teleport(unit, scratchpad, action_data, t)
 			else
@@ -60,7 +68,7 @@ BtWarpTeleportAction.run = function (self, unit, breed, blackboard, scratchpad, 
 			end
 		end
 	elseif state == "teleporting_out" then
-		if scratchpad.teleport_finished_timing <= t then
+		if t >= scratchpad.teleport_finished_timing then
 			return "done"
 		end
 
@@ -85,8 +93,10 @@ BtWarpTeleportAction._calculate_randomized_teleport_directions = function (self,
 
 	for i = 1, num_directions do
 		current_degree = current_degree + degree_per_direction
+
 		local radians = math.degrees_to_radians(current_degree)
 		local direction = Vector3(math.sin(radians), math.cos(radians), 0)
+
 		directions[i] = Vector3Box(direction)
 	end
 
@@ -96,21 +106,18 @@ BtWarpTeleportAction._calculate_randomized_teleport_directions = function (self,
 end
 
 local MAX_TRIES = 10
-local ABOVE = 3
-local BELOW = 3
-local LATERAL = 1
-local DISTANCE_FROM_NAV_MESH = 0
+local ABOVE, BELOW, LATERAL, DISTANCE_FROM_NAV_MESH = 3, 3, 1, 0
 
 BtWarpTeleportAction._find_teleport_position = function (self, unit, scratchpad, action_data)
 	local navigation_extension = scratchpad.navigation_extension
-	local nav_world = navigation_extension:nav_world()
-	local traverse_logic = navigation_extension:traverse_logic()
+	local nav_world, traverse_logic = navigation_extension:nav_world(), navigation_extension:traverse_logic()
 	local target_unit = scratchpad.perception_component.target_unit
 	local target_navigation_extension = ScriptUnit.extension(target_unit, "navigation_system")
 	local target_position_on_nav_mesh = target_navigation_extension:latest_position_on_nav_mesh()
 
 	if not target_position_on_nav_mesh then
 		local target_position = POSITION_LOOKUP[target_unit]
+
 		target_position_on_nav_mesh = NavQueries.position_on_mesh_with_outside_position(nav_world, traverse_logic, target_position, ABOVE, BELOW, LATERAL, DISTANCE_FROM_NAV_MESH)
 
 		if not target_position_on_nav_mesh then
@@ -139,10 +146,11 @@ BtWarpTeleportAction._find_teleport_position = function (self, unit, scratchpad,
 		local teleport_direction = teleport_directions[teleport_direction_index]:unbox()
 		local teleport_test_position = target_position_on_nav_mesh + teleport_direction * teleport_distance
 		local teleport_nav_mesh_position = NavQueries.position_on_mesh(nav_world, teleport_test_position, ABOVE, BELOW, traverse_logic)
-		local final_position = nil
+		local final_position
 
 		if teleport_nav_mesh_position then
 			local success, hit_position = GwNavQueries.raycast(nav_world, target_position_on_nav_mesh, teleport_nav_mesh_position, traverse_logic)
+
 			final_position = success and teleport_nav_mesh_position or hit_position
 		end
 
@@ -192,6 +200,7 @@ BtWarpTeleportAction._teleport = function (self, unit, scratchpad, action_data, 
 	animation_extension:anim_event(teleport_out_anim_event)
 
 	local teleport_finished_timing = action_data.teleport_finished_timings[teleport_out_anim_event]
+
 	scratchpad.teleport_finished_timing = t + teleport_finished_timing
 	scratchpad.state = "teleporting_out"
 end

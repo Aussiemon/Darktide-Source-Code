@@ -1,5 +1,9 @@
+﻿-- chunkname: @scripts/foundation/utilities/log.lua
+
 Log = Log or {}
+
 local Log = Log
+
 Log.LOG_TYPE_DEBUG = {
 	tag = "DEBUG",
 	external_func = "debug",
@@ -36,6 +40,7 @@ __print_error = __print_error or print_error
 __print_warning = __print_warning or print_warning
 __print = __print or print
 Log.DEFAULT_LOG_LEVEL = 2
+
 local temp_args = {}
 
 Log.init = function (global_log_level)
@@ -60,6 +65,7 @@ end
 
 Log.set_global_log_level = function (level)
 	local error_string = string.format("Global log level must be an integer between 1 and %i.", #Log._types)
+
 	Log._global_log_level = level
 
 	Log._update_external_functions(level, Log._lowest_category_level)
@@ -98,6 +104,7 @@ Log._update_external_functions = function (global_level, lowest_category_level)
 
 	for i = 1, num_log_types do
 		local item = log_types[i]
+
 		Log[item.tag] = i
 
 		if global_level <= i then
@@ -124,10 +131,12 @@ end
 
 Log.set_category_log_level = function (category, level)
 	Log._category_levels[category] = level
+
 	local log_types = Log._types
 
 	for i = 1, #log_types do
 		local active = level <= i or nil
+
 		log_types[i].active_categories[category] = active
 	end
 
@@ -137,6 +146,7 @@ end
 
 Log.reset_category_log_level = function (category)
 	Log._category_levels[category] = nil
+
 	local log_types = Log._types
 
 	for i = 1, #log_types do
@@ -265,14 +275,13 @@ end
 
 Log.init(GameParameters.log_level)
 
-local log_levels = nil
+local log_levels
 
 if log_levels ~= Log.__old_log_levels then
 	Log._info(Log.INTERNAL_CATEGORY, "Reloading log levels.")
 
 	for i = 1, #log_levels, 2 do
-		local category = log_levels[i]
-		local level = log_levels[i + 1]
+		local category, level = log_levels[i], log_levels[i + 1]
 
 		Log.set_category_log_level(category, level)
 	end

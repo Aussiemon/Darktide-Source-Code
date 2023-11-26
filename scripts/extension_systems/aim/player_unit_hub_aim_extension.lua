@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/aim/player_unit_hub_aim_extension.lua
+
 local HubAimConstraints = require("scripts/extension_systems/aim/utilities/hub_aim_constraints")
 local HubAimConstraintSettings = require("scripts/settings/aim/hub_aim_constraint_settings")
 local ThirdPersonAimAnimationControl = require("scripts/extension_systems/aim/third_person_aim_animation_control")
@@ -9,16 +11,22 @@ local STATES = HubAimConstraintSettings.states
 
 PlayerUnitHubAimExtension.init = function (self, extension_init_context, unit, extension_init_data, game_object_data_or_game_session, nil_or_game_object_id)
 	local is_server = extension_init_context.is_server
+
 	self._is_server = is_server
+
 	local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
+
 	self._locomotion_read_component = unit_data_extension:read_component("locomotion")
 	self._locomotion_steering_read_component = unit_data_extension:read_component("locomotion_steering")
 	self._hub_jog_character_state_component = unit_data_extension:read_component("hub_jog_character_state")
+
 	local first_person_read_component = unit_data_extension:read_component("first_person")
+
 	self._first_person_read_component = first_person_read_component
 
 	if is_server then
 		local aim_rotation = first_person_read_component.rotation
+
 		game_object_data_or_game_session.aim_direction = Quaternion.forward(aim_rotation)
 	else
 		self._game_session_id = game_object_data_or_game_session
@@ -65,6 +73,7 @@ PlayerUnitHubAimExtension.update = function (self, unit, dt, t)
 	local is_moving = hub_aim_constraints:is_moving()
 	local head_direction, torso_direction, is_passive = self:_directions_and_passive_state(unit)
 	local aim_state = self:_aim_state(self._hub_jog_character_state_component, is_passive)
+
 	head_direction, torso_direction = self:_target_goal_positions(unit, head_direction, torso_direction, is_passive, is_moving)
 
 	hub_aim_constraints:update(head_direction, torso_direction, is_moving, aim_state, dt, t)
@@ -85,8 +94,8 @@ PlayerUnitHubAimExtension._directions_and_passive_state = function (self, unit)
 	local velocity_wanted = self._locomotion_steering_read_component.velocity_wanted
 	local wanted_velocity_direction = Vector3.normalize(velocity_wanted)
 	local angular_diff = Quaternion.angle(unit_rotation, aim_rotation)
-	local is_passive = math.rad(HubAimConstraintSettings.passive_aim_angle_threshold) < angular_diff
-	local head_direction, torso_direction = nil
+	local is_passive = angular_diff > math.rad(HubAimConstraintSettings.passive_aim_angle_threshold)
+	local head_direction, torso_direction
 
 	if is_passive then
 		if Vector3.length_squared(velocity_wanted) > 0 then
@@ -94,11 +103,13 @@ PlayerUnitHubAimExtension._directions_and_passive_state = function (self, unit)
 			torso_direction = wanted_velocity_direction * 1
 		else
 			local unit_forward = Quaternion.forward(unit_rotation)
+
 			head_direction = unit_forward
 			torso_direction = unit_forward * 1
 		end
 	else
 		local aim_forward = Quaternion.forward(aim_rotation)
+
 		head_direction = aim_forward
 		torso_direction = aim_forward * 1
 	end
@@ -126,7 +137,7 @@ PlayerUnitHubAimExtension._target_goal_positions = function (self, unit, head_di
 	local unit_rotation = Unit.world_rotation(unit, 1)
 	local unit_forward = Quaternion.forward(unit_rotation)
 	local head_unit_forward = Quaternion.rotate(Quaternion.axis_angle(Quaternion.right(unit_rotation), math.rad(HubAimConstraintSettings.head_look_up_offset)), unit_forward)
-	local horizontal_weights, vertical_weights = nil
+	local horizontal_weights, vertical_weights
 
 	if is_moving then
 		if is_passive then
@@ -148,6 +159,7 @@ PlayerUnitHubAimExtension._target_goal_positions = function (self, unit, head_di
 	local h_torso_w = horizontal_weights.torso
 	local v_head_w = vertical_weights.head
 	local v_torso_w = vertical_weights.torso
+
 	head_direction.x = (1 - h_head_w) * head_unit_forward.x + h_head_w * head_direction.x
 	torso_direction.x = (1 - h_torso_w) * unit_forward.x + h_torso_w * torso_direction.x
 	head_direction.y = (1 - h_head_w) * head_unit_forward.y + h_head_w * head_direction.y

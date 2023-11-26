@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/fx/minion_fx_extension.lua
+
 local Effect = require("scripts/extension_systems/fx/utilities/effect")
 local LineEffects = require("scripts/settings/effects/line_effects")
 local MinionVisualLoadout = require("scripts/utilities/minion_visual_loadout")
@@ -10,6 +12,7 @@ local CLIENT_RPCS = {
 
 MinionFxExtension.init = function (self, extension_init_context, unit, extension_init_data, game_object_data_or_game_session, nil_or_game_object_id)
 	local is_server = extension_init_context.is_server
+
 	self._is_server = is_server
 	self._world = extension_init_context.world
 	self._wwise_world = extension_init_context.wwise_world
@@ -17,6 +20,7 @@ MinionFxExtension.init = function (self, extension_init_context, unit, extension
 
 	if not is_server then
 		local network_event_delegate = extension_init_context.network_event_delegate
+
 		self._network_event_delegate = network_event_delegate
 		self._game_object_id = nil_or_game_object_id
 
@@ -52,8 +56,7 @@ MinionFxExtension.trigger_inventory_wwise_event = function (self, event_name, in
 
 	self:_trigger_inventory_wwise_event(event_name, inventory_slot_name, fx_source_name, optional_target_unit, is_ranged_attack)
 
-	local game_object_id = self._game_object_id
-	local optional_target_unit_id = Managers.state.unit_spawner:game_object_id(optional_target_unit)
+	local game_object_id, optional_target_unit_id = self._game_object_id, Managers.state.unit_spawner:game_object_id(optional_target_unit)
 	local event_id = NetworkLookup.sound_events[event_name]
 	local inventory_slot_id = NetworkLookup.minion_inventory_slot_names[inventory_slot_name]
 	local fx_source_name_id = NetworkLookup.minion_fx_source_names[fx_source_name]
@@ -62,8 +65,7 @@ MinionFxExtension.trigger_inventory_wwise_event = function (self, event_name, in
 end
 
 MinionFxExtension._trigger_inventory_wwise_event = function (self, event_name, inventory_slot_name, fx_source_name, optional_target_unit, is_ranged_attack)
-	local visual_loadout_extension = self._visual_loadout_extension
-	local wwise_world = self._wwise_world
+	local visual_loadout_extension, wwise_world = self._visual_loadout_extension, self._wwise_world
 	local inventory_item = visual_loadout_extension:slot_item(inventory_slot_name)
 	local attachment_unit, node = MinionVisualLoadout.attachment_unit_and_node_from_node_name(inventory_item, fx_source_name)
 	local auto_source_id = WwiseWorld.make_auto_source(wwise_world, attachment_unit, node)
@@ -93,12 +95,10 @@ end
 local ORPHANED_POLICY = "stop"
 
 MinionFxExtension._trigger_inventory_vfx = function (self, vfx_name, inventory_slot_name, fx_source_name)
-	local visual_loadout_extension = self._visual_loadout_extension
-	local world = self._world
+	local visual_loadout_extension, world = self._visual_loadout_extension, self._world
 	local inventory_item = visual_loadout_extension:slot_item(inventory_slot_name)
 	local attachment_unit, node = MinionVisualLoadout.attachment_unit_and_node_from_node_name(inventory_item, fx_source_name)
-	local position = Vector3.zero()
-	local pose = Matrix4x4.identity()
+	local position, pose = Vector3.zero(), Matrix4x4.identity()
 	local particle_id = World.create_particles(world, vfx_name, position)
 
 	World.link_particles(world, particle_id, attachment_unit, node, pose, ORPHANED_POLICY)
@@ -136,8 +136,7 @@ end
 local MAX_EMITTERS = 100
 
 MinionFxExtension._trigger_unit_line_fx = function (self, line_effect, inventory_slot_name, fx_source_name, end_position)
-	local visual_loadout_extension = self._visual_loadout_extension
-	local world = self._world
+	local visual_loadout_extension, world = self._visual_loadout_extension, self._world
 	local inventory_item = visual_loadout_extension:slot_item(inventory_slot_name)
 	local attachment_unit, node = MinionVisualLoadout.attachment_unit_and_node_from_node_name(inventory_item, fx_source_name)
 	local spawner_pose = Unit.world_pose(attachment_unit, node)
@@ -170,7 +169,7 @@ MinionFxExtension._trigger_unit_line_fx = function (self, line_effect, inventory
 		while spawn_emitters do
 			local new_emitter_distance = emitter_distance + distance * math.pow(1 + increase, num_emitters)
 
-			if line_length < new_emitter_distance + 1 or MAX_EMITTERS <= num_emitters then
+			if line_length < new_emitter_distance + 1 or num_emitters >= MAX_EMITTERS then
 				spawn_emitters = false
 			else
 				local spawn_pos = spawner_position + line_direction * new_emitter_distance

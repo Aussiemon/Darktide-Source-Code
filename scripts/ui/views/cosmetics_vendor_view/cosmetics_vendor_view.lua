@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/cosmetics_vendor_view/cosmetics_vendor_view.lua
+
 require("scripts/ui/views/vendor_view_base/vendor_view_base")
 
 local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templates")
@@ -22,6 +24,7 @@ local CosmeticsVendorView = class("CosmeticsVendorView", "VendorViewBase")
 
 CosmeticsVendorView.init = function (self, settings, context)
 	local parent = context and context.parent
+
 	self._parent = parent
 	self._optional_store_service = context and context.optional_store_service
 	self._disable_equipped_status = true
@@ -33,6 +36,7 @@ CosmeticsVendorView.on_enter = function (self)
 	CosmeticsVendorView.super.on_enter(self)
 
 	self._render_settings.alpha_multiplier = 0
+
 	local context = self._context
 	local option_button_definitions = context.option_button_definitions
 
@@ -63,12 +67,15 @@ CosmeticsVendorView._set_preview_widgets_visibility = function (self, visible)
 	CosmeticsVendorView.super._set_preview_widgets_visibility(self, visible)
 
 	local widgets_by_name = self._widgets_by_name
+
 	widgets_by_name.item_restrictions.content.visible = visible
+
 	local set_item_parts_representation_widgets = self._set_item_parts_representation_widgets
 
 	if set_item_parts_representation_widgets then
 		for i = 1, #set_item_parts_representation_widgets do
 			local widget = set_item_parts_representation_widgets[i]
+
 			widget.content.visible = visible
 		end
 	end
@@ -98,6 +105,7 @@ CosmeticsVendorView._reset_mannequin = function (self)
 
 					if item_definition then
 						local slot_item = table.clone(item_definition)
+
 						self._mannequin_loadout[required_item_slot_name] = slot_item
 					end
 				end
@@ -212,7 +220,7 @@ CosmeticsVendorView._preview_item = function (self, element)
 		self:_setup_set_item_parts_representation(set_items)
 	end
 
-	local restrictions_text, present_restrictions_text = nil
+	local restrictions_text, present_restrictions_text
 
 	if item_type == "WEAPON_SKIN" then
 		restrictions_text, present_restrictions_text = ItemUtils.weapon_skin_requirement_text(previewed_item)
@@ -271,9 +279,12 @@ CosmeticsVendorView._setup_set_item_parts_representation = function (self, items
 			local owned = self:is_item_owned(gear_id)
 			local widget = self:_create_widget("item_part_" .. i, widget_definition)
 			local content = widget.content
+
 			content.icon = icon
 			content.owned = owned
+
 			local offset = widget.offset
+
 			offset[1] = (i - 1) * 70
 			set_item_parts_representation_widgets[#set_item_parts_representation_widgets + 1] = widget
 		end
@@ -327,12 +338,14 @@ CosmeticsVendorView._setup_item_texts = function (self, item, restrictions_text)
 	local pass_template = template.pass_template_function and template.pass_template_function(self, config, ui_renderer) or template.pass_template
 	local optional_style = template.style_function and template.style_function(self, config, size) or template.style
 	local widget_definition = pass_template and UIWidget.create_definition(pass_template, scenegraph_id, nil, size, optional_style)
-	local widget = nil
+	local widget
 
 	if widget_definition then
 		local name = "item_name"
+
 		widget = self:_create_widget(name, widget_definition)
 		widget.type = widget_type
+
 		local init = template.init
 
 		if init then
@@ -356,6 +369,7 @@ CosmeticsVendorView._setup_item_restrictions_text = function (self, restrictions
 
 	if restrictions_text then
 		item_restrictions_content.text = restrictions_text
+
 		local restriction_title_style = item_restrictions_style.title
 		local restriction_text_style = item_restrictions_style.text
 		local restriction_title_options = UIFonts.get_font_options_by_style(restriction_title_style)
@@ -409,7 +423,7 @@ CosmeticsVendorView._initialize_background_profile = function (self, optional_ar
 		self._profile_spawner = nil
 	end
 
-	local profile = nil
+	local profile
 	local player = self:_player()
 	local player_profile = player and player:profile()
 
@@ -427,12 +441,14 @@ CosmeticsVendorView._initialize_background_profile = function (self, optional_ar
 		end
 
 		local loadout = {}
+
 		profile = {
 			loadout = loadout,
 			archetype = archetype,
 			gender = gender_name,
 			breed = breed_name
 		}
+
 		local slot_items_per_slot = UISettings.item_preview_required_slot_items_per_slot_by_breed_and_gender[breed_name][gender_name]
 
 		for slot_name, item_path in pairs(slot_items_per_slot) do
@@ -450,6 +466,7 @@ CosmeticsVendorView._initialize_background_profile = function (self, optional_ar
 
 	if player_profile and player_profile.archetype.name == self._preview_profile.archetype.name then
 		local gear_profile = table.clone_instance(player_profile)
+
 		self._default_gear_loadout = table.clone_instance(gear_profile.loadout)
 		self._gear_loadout = table.clone_instance(gear_profile.loadout)
 		gear_profile.loadout = self._gear_loadout
@@ -485,10 +502,11 @@ CosmeticsVendorView._cb_on_purchase_pressed = function (self)
 end
 
 CosmeticsVendorView.present_items = function (self, optional_context)
-	local optional_archetype_name = nil
+	local optional_archetype_name
 
 	if optional_context then
 		local archetype_name = optional_context.archetype_name
+
 		optional_archetype_name = archetype_name
 	end
 
@@ -496,7 +514,9 @@ CosmeticsVendorView.present_items = function (self, optional_context)
 	self:_initialize_background_profile(optional_archetype_name)
 
 	local presentation_profile = self._store_presentation_profile
+
 	self._active_archetype_name = presentation_profile.archetype.name
+
 	local ignore_focus_on_offer = true
 	local promises = {
 		self:_update_wallets(),
@@ -516,6 +536,7 @@ CosmeticsVendorView.present_items = function (self, optional_context)
 			for i = 1, #profiles_data.profiles do
 				local profile = profiles_data.profiles[i]
 				local archetype_name = profile.archetype.name
+
 				self._player_available_archetypes[archetype_name] = true
 			end
 		end
@@ -537,6 +558,7 @@ CosmeticsVendorView._fetch_store_items = function (self, ignore_focus_on_offer, 
 	return CosmeticsVendorView.super._fetch_store_items(self, ignore_focus_on_offer):next(function (data)
 		if not self._spawned_profile then
 			local context = self._context
+
 			self._spawn_player = context and context.spawn_player
 			self._initial_rotation = nil
 		end
@@ -602,7 +624,7 @@ end
 CosmeticsVendorView._get_store = function (self)
 	local active_archetype_name = self._active_archetype_name
 	local store_service = Managers.data_service.store
-	local store_promise = nil
+	local store_promise
 	local optional_store_service = self._optional_store_service
 
 	if optional_store_service and store_service[optional_store_service] then
@@ -774,7 +796,7 @@ CosmeticsVendorView.on_resolution_modified = function (self, scale)
 end
 
 CosmeticsVendorView._spawn_profile = function (self, profile, initial_rotation, disable_rotation_input, keep_current_rotation)
-	local current_rotation_angle = nil
+	local current_rotation_angle
 
 	if self._profile_spawner then
 		if keep_current_rotation then
@@ -793,6 +815,7 @@ CosmeticsVendorView._spawn_profile = function (self, profile, initial_rotation, 
 	local world = self._world_spawner:world()
 	local camera = self._world_spawner:camera()
 	local unit_spawner = self._world_spawner:unit_spawner()
+
 	self._profile_spawner = UIProfileSpawner:new("CosmeticsVendorView", world, camera, unit_spawner)
 
 	if initial_rotation then
@@ -826,7 +849,9 @@ end
 CosmeticsVendorView.draw = function (self, dt, t, input_service, layer)
 	local render_settings = self._render_settings
 	local previous_alpha_multiplier = render_settings.alpha_multiplier
+
 	render_settings.alpha_multiplier = self.animated_alpha_multiplier or 0
+
 	local ui_scenegraph = self._ui_scenegraph
 	local ui_renderer = self._ui_default_renderer
 
@@ -879,9 +904,11 @@ CosmeticsVendorView._setup_option_buttons = function (self, options)
 	for i = 1, #options do
 		local option = options[i]
 		local pressed_callback = callback(self, "on_option_button_pressed", i, option)
+
 		item_category_sort_button.style = {
 			on_pressed_sound = UISoundEvents.default_button_pressed
 		}
+
 		local display_name = option.display_name
 
 		options_tab_bar:add_entry(display_name, pressed_callback, item_category_sort_button, option.icon)
@@ -923,6 +950,7 @@ CosmeticsVendorView.on_option_button_pressed = function (self, index, option, fo
 	end
 
 	self._selected_option_button_index = index
+
 	local slot_names = option.slot_names
 	local slot_name = option.slot_name or slot_names and slot_names[1]
 	local item_types = option.item_types
@@ -930,6 +958,7 @@ CosmeticsVendorView.on_option_button_pressed = function (self, index, option, fo
 	self._options_tab_bar:set_selected_index(index)
 
 	local instant_zoom = self._next_zoom_instant or self._selected_slot == nil
+
 	self._next_zoom_instant = nil
 	self._selected_slot = ItemSlotSettings[slot_name]
 
@@ -943,7 +972,7 @@ CosmeticsVendorView.on_option_button_pressed = function (self, index, option, fo
 	local profile_spawner = self._profile_spawner
 
 	if profile_spawner then
-		local initial_rotation = nil
+		local initial_rotation
 
 		if slot_name == "slot_gear_extra_cosmetic" then
 			initial_rotation = math.pi
@@ -964,15 +993,18 @@ end
 CosmeticsVendorView._set_layout_display_name = function (self, display_name)
 	local widgets_by_name = self._widgets_by_name
 	local widget = widgets_by_name.title_text
+
 	widget.content.text = display_name and Localize(display_name) or "n/a"
 end
 
 CosmeticsVendorView._setup_background_world = function (self)
 	local context = self._context
 	local level_settings = context and context.spawn_player and CosmeticsVendorViewSettings.gear_level_settings or CosmeticsVendorViewSettings.weapon_level_settings
+
 	self._breeds_item_camera_by_slot_id = {}
 	self._breeds_default_camera_settings = {}
-	local starting_camera_unit = nil
+
+	local starting_camera_unit
 
 	for breed_name, settings in pairs(Breeds) do
 		if settings.breed_type == "player" then
@@ -985,6 +1017,7 @@ CosmeticsVendorView._setup_background_world = function (self)
 
 				local camera_position = Unit.world_position(camera_unit, 1)
 				local camera_rotation = Unit.world_rotation(camera_unit, 1)
+
 				instance._breeds_default_camera_settings[breed_name] = {
 					camera_unit = camera_unit,
 					original_position_boxed = Vector3Box(camera_position),
@@ -1025,7 +1058,9 @@ CosmeticsVendorView._setup_background_world = function (self)
 	local world_name = level_settings.world_name
 	local world_layer = level_settings.world_layer
 	local world_timer_name = CosmeticsVendorViewSettings.timer_name
+
 	self._world_spawner = UIWorldSpawner:new(world_name, world_layer, world_timer_name, self.view_name)
+
 	local level_name = level_settings.level_name
 
 	self._world_spawner:spawn_level(level_name)

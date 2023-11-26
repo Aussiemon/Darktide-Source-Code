@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/equipment/weapon_templates/autopistols/settings_templates/autopistol_recoil_templates.lua
+
 local RecoilTemplate = require("scripts/utilities/recoil_template")
 local generate_offset_range = RecoilTemplate.generate_offset_range
 local create_scale = RecoilTemplate.create_scale
@@ -136,6 +138,7 @@ local spray_n_pray_offset_range = generate_offset_range(num_shot, pitch_base, ya
 local spray_n_pray_random_range = generate_offset_range(30, 0.015, 0.02, 0.8, create_scale(spray_n_pray_random_scale))
 local assault_offset_range = generate_offset_range(30, 0.04, 0, 0.25, create_scale(assault_scale))
 local assault_random_range = generate_offset_range(30, 0.015, 0.03, 0.25, create_scale(assault_random_scale))
+
 recoil_templates.default_autopistol_assault = {
 	still = {
 		camera_recoil_percentage = 0.8,
@@ -193,12 +196,14 @@ recoil_templates.default_autopistol_assault = {
 		}
 	}
 }
+
 local yaw_offset_l = 0.05
 local yaw_offset_r = 0.3
 local pitch_low = 0.07500000000000001
 local pitch_high = 0.125
 local offset_perfect = 0.25
 local random_range = 0.25
+
 recoil_templates.default_autopistol_spraynpray = {
 	still = {
 		camera_recoil_percentage = 0.8,

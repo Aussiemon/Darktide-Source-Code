@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/hud/elements/hud_boss_health_bar_logic.lua
+
 local HudBossHealthBarLogic = class("HudBossHealthBarLogic")
 local settings_list = {
 	"duration_health",
@@ -23,6 +25,7 @@ HudBossHealthBarLogic.init = function (self, settings)
 
 	for i = 1, #self._update_order do
 		local name = self._update_order[i]
+
 		self._stored_fractions[name] = 1
 	end
 end
@@ -45,9 +48,11 @@ HudBossHealthBarLogic._sync_player_health = function (self, bar_progress, bar_ma
 		end
 
 		local current_bar_max_progress = self._bar_max_progress or 1
+
 		self._bar_progress = bar_progress
 		self._bar_max_progress = bar_max_progress
 		bar_progress = bar_progress * bar_max_progress
+
 		local stored_fractions = self._stored_fractions
 		local name = "health"
 		local previous_fraction = stored_fractions[name]
@@ -78,9 +83,12 @@ HudBossHealthBarLogic._set_bar_fraction = function (self, name, fraction, curren
 	local bar_animations = self._bar_animations
 	local anim_data = bar_animations[name]
 	local is_animating = anim_data ~= nil
+
 	anim_data = anim_data or {}
+
 	local animate = not force_update
-	local duration, previous_missing_fraction = nil
+	local duration, previous_missing_fraction
+
 	current_fraction = current_fraction or anim_data.fraction or previous_fraction
 
 	if not force_update then
@@ -88,6 +96,7 @@ HudBossHealthBarLogic._set_bar_fraction = function (self, name, fraction, curren
 			duration = (fraction - current_fraction) * total_duration
 		else
 			local difference = current_fraction - fraction
+
 			duration = difference * total_duration
 
 			if animation_threshold then
@@ -187,6 +196,7 @@ end
 
 HudBossHealthBarLogic._set_alpha = function (self, alpha)
 	local alpha_fraction = alpha / 255
+
 	self._alpha_multiplier = alpha_fraction
 end
 
@@ -197,7 +207,7 @@ HudBossHealthBarLogic._update_bar_animation = function (self, anim_data, dt)
 	local start_value = anim_data.start_value
 	local end_value = anim_data.end_value
 	local anim_fraction = math.easeCubic(progress)
-	local fraction = nil
+	local fraction
 
 	if start_value < end_value then
 		fraction = start_value + (end_value - start_value) * progress
@@ -207,6 +217,7 @@ HudBossHealthBarLogic._update_bar_animation = function (self, anim_data, dt)
 
 	anim_data.time = time + dt
 	anim_data.fraction = fraction
+
 	local complete = progress == 1
 
 	return fraction, complete

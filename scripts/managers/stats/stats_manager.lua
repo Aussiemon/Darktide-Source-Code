@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/stats/stats_manager.lua
+
 local GrowQueue = require("scripts/foundation/utilities/grow_queue")
 local PriorityQueue = require("scripts/foundation/utilities/priority_queue")
 local Promise = require("scripts/foundation/utilities/promise")
@@ -8,6 +10,7 @@ local CLIENT_RPCS = {
 	"rpc_stat_update"
 }
 local UserStates = table.enum("pulling", "pushing", "idle", "tracking")
+
 StatsManager.user_states = UserStates
 
 StatsManager.init = function (self, is_client, event_delegate, rpc_settings)
@@ -108,7 +111,9 @@ StatsManager._update_rpcs = function (self, user)
 	for _ = 1, count do
 		local stat_key = queue:pop_first()
 		local stat = definitions[stat_key]
+
 		dirty[stat_key] = false
+
 		local value_to_send = self:_parse_backend_value(data[stat_key])
 
 		RPC.rpc_stat_update(channel_id, user.local_player_id, stat.index, value_to_send)
@@ -122,10 +127,9 @@ StatsManager._update_triggers = function (self, user, t)
 		return
 	end
 
-	while not trigger_queue:empty() and trigger_queue:peek() <= t do
+	while not trigger_queue:empty() and t >= trigger_queue:peek() do
 		local _, values = trigger_queue:pop()
-		local trigger = values[1]
-		local stat = values[2]
+		local trigger, stat = values[1], values[2]
 
 		self:_trigger(user, trigger(stat, user.data, unpack(values, 3)))
 	end
@@ -142,6 +146,7 @@ StatsManager.update = function (self, dt, t)
 
 		while not rpc_queue:empty() do
 			local stat_name = rpc_queue:pop_first()
+
 			rpc_dirty[stat_name] = false
 
 			for _, user in pairs(users) do
@@ -215,6 +220,7 @@ StatsManager._download_stats = function (self, key)
 	local backend_promise = Managers.backend.interfaces.commendations:get_commendations(account_id, false, true):next(function (data)
 		return data.stats
 	end)
+
 	user.state = UserStates.pulling
 	user.promise = backend_promise
 
@@ -223,8 +229,8 @@ StatsManager._download_stats = function (self, key)
 		user.saved_data = {}
 
 		for i = 1, #backend_stats do
-			local stat_id = backend_stats[i].stat
-			local value = backend_stats[i].value
+			local stat_id, value = backend_stats[i].stat, backend_stats[i].value
+
 			user.data[stat_id] = self:_parse_backend_value(value)
 			user.saved_data[stat_id] = value
 		end
@@ -241,6 +247,7 @@ StatsManager.add_user = function (self, key, account_id, rpc_channel, local_play
 	end
 
 	users[key] = self:_empty_user(key, account_id, rpc_channel, local_player_id)
+
 	local listeners = self._listeners
 
 	for listener_id, listener in pairs(listeners) do
@@ -304,6 +311,7 @@ StatsManager._data_version = function (self, data)
 
 		if flags.backend then
 			local send_value = self:_parse_backend_value(data[id] or stat.default)
+
 			version = (11 * version + send_value + 1) % 32768
 		end
 	end
@@ -337,6 +345,7 @@ end
 StatsManager.reload = function (self, key)
 	local user = self._users[key]
 	local team_data = self._team.data
+
 	user.data = setmetatable({}, {
 		__index = team_data
 	})
@@ -350,8 +359,10 @@ end
 
 StatsManager.start_session = function (self, session_config)
 	local parsed_session_config, config_error = StatConfigParser.modify("session", session_config)
+
 	self._session_config = parsed_session_config
 	self._session_stash = {}
+
 	local team = self._team
 
 	table.clear(team.data)
@@ -376,6 +387,7 @@ StatsManager.start_session = function (self, session_config)
 
 				if is_from_team then
 					local triggers = team_triggers[from_stat_name] or {}
+
 					triggers[#triggers + 1] = {
 						stat = to_stat,
 						func = trigger.trigger,
@@ -391,6 +403,7 @@ end
 
 StatsManager.stop_session = function (self)
 	local team = self._team
+
 	team.triggers = {}
 
 	team.trigger_queue:clear()
@@ -425,6 +438,7 @@ StatsManager._get_stashed_data = function (self, user)
 
 	local session_stash = self._session_stash
 	local stashed_data = session_stash[account_id]
+
 	session_stash[account_id] = nil
 
 	return stashed_data
@@ -455,6 +469,7 @@ StatsManager.start_tracking_user = function (self, key, user_config)
 
 			if value ~= user_data[stat_name] and not ignore_recover then
 				user_data[stat_name] = value
+
 				local ignore_sync = flags.hook or flags.no_sync
 
 				if is_remote and not ignore_sync then
@@ -491,6 +506,7 @@ StatsManager.start_tracking_user = function (self, key, user_config)
 					local to_user = to_team and team or user
 					local from_triggers = from_team and team.triggers or user_triggers
 					local triggers = from_triggers[from_stat_id] or {}
+
 					triggers[#triggers + 1] = {
 						stat = stat,
 						func = stat_trigger.trigger,
@@ -560,6 +576,7 @@ StatsManager.stop_tracking_user = function (self, key)
 	user.trigger_queue:delete()
 
 	user.trigger_queue = nil
+
 	local account_id = user.account_id
 
 	if not self:_valid_account_id(account_id) then
@@ -577,10 +594,8 @@ StatsManager.stop_tracking_user = function (self, key)
 		}
 	end
 
-	local changes = {}
-	local change_count = 0
-	local current_data = user.data
-	local last_saved_data = user.saved_data
+	local changes, change_count = {}, 0
+	local current_data, last_saved_data = user.data, user.saved_data
 
 	for _, stat in pairs(self._definitions) do
 		local id = stat.id
@@ -611,6 +626,7 @@ StatsManager.stop_tracking_user = function (self, key)
 			completed = {}
 		}
 	})
+
 	user.state = UserStates.pushing
 	user.promise = backend_promise
 	user.save_done_promise = backend_promise:next(function ()
@@ -620,6 +636,7 @@ StatsManager.stop_tracking_user = function (self, key)
 
 		for i = 1, change_count do
 			local change = changes[i]
+
 			user.saved_data[change.stat] = change.value
 		end
 	end)
@@ -650,6 +667,7 @@ StatsManager._attach_listener = function (self, key, listener_id)
 	for i = 1, #stat_names do
 		local stat_name = stat_names[i]
 		local stat_listeners = user_listeners[stat_name] or {}
+
 		stat_listeners[#stat_listeners + 1] = listener_id
 		user_listeners[stat_name] = stat_listeners
 	end
@@ -682,12 +700,14 @@ end
 
 StatsManager.add_listener = function (self, key, stat_names, callback_fn)
 	local listener_id = self._next_listener_id
+
 	self._next_listener_id = self._next_listener_id + 1
 	self._listeners[listener_id] = {
 		key = key,
 		stat_names = stat_names,
 		callback_fn = callback_fn
 	}
+
 	local user = self._users[key]
 
 	if user then
@@ -766,6 +786,7 @@ StatsManager.rpc_stat_update = function (self, _, local_player_id, stat_index, s
 
 	if user and stat then
 		local flags = stat.flags
+
 		user.data[stat_name] = stat_value
 
 		if flags.team then

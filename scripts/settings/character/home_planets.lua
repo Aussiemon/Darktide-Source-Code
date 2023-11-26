@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/character/home_planets.lua
+
 local home_planets = {
 	option_1 = {
 		description = "loc_character_birthplace_planet_01_description",

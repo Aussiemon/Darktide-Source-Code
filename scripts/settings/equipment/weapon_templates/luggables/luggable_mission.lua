@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/equipment/weapon_templates/luggables/luggable_mission.lua
+
 local BaseTemplateSettings = require("scripts/settings/equipment/weapon_templates/base_template_settings")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
@@ -5,70 +7,70 @@ local DamageSettings = require("scripts/settings/damage/damage_settings")
 local SmartTargetingTemplates = require("scripts/settings/equipment/smart_targeting_templates")
 local damage_types = DamageSettings.damage_types
 local wield_inputs = PlayerCharacterConstants.wield_inputs
-local weapon_template = {
-	action_inputs = {
-		push = {
-			buffer_time = 0,
-			clear_input_queue = true,
-			input_sequence = {
-				{
-					value = true,
-					input = "action_two_pressed"
-				}
+local weapon_template = {}
+
+weapon_template.action_inputs = {
+	push = {
+		buffer_time = 0,
+		clear_input_queue = true,
+		input_sequence = {
+			{
+				value = true,
+				input = "action_two_pressed"
 			}
-		},
-		aim_luggable = {
-			buffer_time = 0,
-			input_sequence = {
-				{
-					value = true,
-					input = "action_one_hold"
-				}
+		}
+	},
+	aim_luggable = {
+		buffer_time = 0,
+		input_sequence = {
+			{
+				value = true,
+				input = "action_one_hold"
 			}
-		},
-		aim_cancel_push = {
-			buffer_time = 0.1,
-			input_sequence = {
-				{
-					value = true,
-					hold_input = "action_one_hold",
-					input = "action_two_pressed"
-				}
+		}
+	},
+	aim_cancel_push = {
+		buffer_time = 0.1,
+		input_sequence = {
+			{
+				value = true,
+				hold_input = "action_one_hold",
+				input = "action_two_pressed"
 			}
-		},
-		aim_cancel_push_release = {
-			dont_queue = true,
-			buffer_time = 0,
-			input_sequence = {
-				{
-					input_mode = "all",
-					inputs = {
-						{
-							value = false,
-							input = "action_two_hold"
-						}
-					},
-					time_window = math.huge
-				}
+		}
+	},
+	aim_cancel_push_release = {
+		dont_queue = true,
+		buffer_time = 0,
+		input_sequence = {
+			{
+				input_mode = "all",
+				inputs = {
+					{
+						value = false,
+						input = "action_two_hold"
+					}
+				},
+				time_window = math.huge
 			}
-		},
-		throw = {
-			buffer_time = 0,
-			clear_input_queue = true,
-			max_queue = 2,
-			input_sequence = {
-				{
-					value = false,
-					input = "action_one_hold"
-				}
+		}
+	},
+	throw = {
+		buffer_time = 0,
+		clear_input_queue = true,
+		max_queue = 2,
+		input_sequence = {
+			{
+				value = false,
+				input = "action_one_hold"
 			}
-		},
-		drop = {
-			buffer_time = 0.2,
-			input_sequence = {
-				{
-					inputs = wield_inputs
-				}
+		}
+	},
+	drop = {
+		buffer_time = 0.2,
+		input_sequence = {
+			{
+				inputs = wield_inputs
 			}
 		}
 	}

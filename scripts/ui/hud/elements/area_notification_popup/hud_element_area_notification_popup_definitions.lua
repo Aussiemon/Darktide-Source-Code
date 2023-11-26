@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/hud/elements/area_notification_popup/hud_element_area_notification_popup_definitions.lua
+
 local UIWorkspaceSettings = require("scripts/settings/ui/ui_workspace_settings")
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local UIWidget = require("scripts/managers/ui/ui_widget")
@@ -21,6 +23,7 @@ local scenegraph_definition = {
 	}
 }
 local title_text_style = table.clone(UIFontSettings.hud_body)
+
 title_text_style.horizontal_alignment = "center"
 title_text_style.vertical_alignment = "center"
 title_text_style.text_horizontal_alignment = "center"
@@ -36,7 +39,9 @@ title_text_style.offset = {
 }
 title_text_style.text_color = UIHudSettings.color_tint_main_1
 title_text_style.font_type = "machine_medium"
+
 local description_text_style = table.clone(UIFontSettings.header_2)
+
 description_text_style.horizontal_alignment = "center"
 description_text_style.vertical_alignment = "center"
 description_text_style.text_horizontal_alignment = "center"
@@ -53,6 +58,7 @@ description_text_style.offset = {
 }
 description_text_style.font_type = "machine_medium"
 description_text_style.font_size = 30
+
 local widget_definitions = {
 	area_popup = UIWidget.create_definition({
 		{
@@ -117,6 +123,7 @@ local animations = {
 			update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress)
 				local anim_progress = math.clamp(math.ease_out_exp(math.bounce(progress)), 0, 1)
 				local widget = widgets.background
+
 				widget.style.texture.material_values.distortion = 0.1 + (1 - progress) * 0.9
 			end
 		},
@@ -127,6 +134,7 @@ local animations = {
 			update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress)
 				local anim_progress = math.easeOutCubic(progress)
 				local background_widget = widgets.background
+
 				background_widget.alpha_multiplier = anim_progress
 				background_widget.offset[2] = 50 - 50 * anim_progress
 			end
@@ -166,6 +174,7 @@ local animations = {
 			update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress)
 				local anim_progress = math.easeCubic(progress)
 				local widget = widgets.background
+
 				widget.style.texture.material_values.distortion = 0.1 + progress * 0.9
 			end
 		},
@@ -176,6 +185,7 @@ local animations = {
 			update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress)
 				local anim_progress = math.easeOutCubic(progress)
 				local background_widget = widgets.background
+
 				background_widget.alpha_multiplier = 1 - anim_progress
 			end
 		}

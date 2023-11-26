@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/event_synchronizer/mission_objective_zone_synchronizer_extension.lua
+
 local MissionObjectiveZoneUtilites = require("scripts/extension_systems/mission_objective/utilities/mission_objective_zone")
 local MissionObjectiveZoneSynchronizerExtension = class("MissionObjectiveZoneSynchronizerExtension", "EventSynchronizerBaseExtension")
 local ZONE_TYPES = MissionObjectiveZoneUtilites.ZONE_TYPES
@@ -111,7 +113,7 @@ end
 
 MissionObjectiveZoneSynchronizerExtension.progression = function (self)
 	local mission_objective_zone_system = self._mission_objective_zone_system
-	local progression = nil
+	local progression
 
 	if self._zone_type == ZONE_TYPES.scan then
 		progression = mission_objective_zone_system:scannable_progression()

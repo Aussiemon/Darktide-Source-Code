@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/breed/breed_actions/chaos/chaos_spawn_actions.lua
+
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
 local GroundImpactFxTemplates = require("scripts/settings/fx/ground_impact_fx_templates")
@@ -168,6 +170,7 @@ local action_data = {
 			move_start_fwd = 0.9333333333333333
 		},
 		move_jump_left_anims = {
+			ray_angle = math.pi * 0.25,
 			{
 				"move_jump_left_45",
 				ray_dist = 5,
@@ -184,10 +187,10 @@ local action_data = {
 				ray_angle = -math.pi * 0.5
 			},
 			name = "move_jump_left_anims",
-			ray_dist = 8,
-			ray_angle = math.pi * 0.25
+			ray_dist = 8
 		},
 		move_jump_right_anims = {
+			ray_angle = -math.pi * 0.25,
 			{
 				"move_jump_right_45",
 				ray_dist = 5,
@@ -204,8 +207,7 @@ local action_data = {
 				ray_angle = math.pi * 0.5
 			},
 			name = "move_jump_right_anims",
-			ray_dist = 8,
-			ray_angle = -math.pi * 0.25
+			ray_dist = 8
 		},
 		move_jump_fwd_anims = {
 			{
@@ -238,6 +240,7 @@ local action_data = {
 			ray_dist = 8
 		},
 		move_jump_only_left_anims = {
+			ray_angle = math.pi * 0.25,
 			{
 				"move_jump_left_45",
 				ray_dist = 5,
@@ -248,8 +251,7 @@ local action_data = {
 				ray_dist = 5,
 				ray_angle = 0
 			},
-			ray_dist = 8,
-			ray_angle = math.pi * 0.25
+			ray_dist = 8
 		},
 		move_jump_only_fwd_left_anims = {
 			{
@@ -266,6 +268,7 @@ local action_data = {
 			ray_dist = 8
 		},
 		move_jump_only_right_anims = {
+			ray_angle = -math.pi * 0.25,
 			{
 				"move_jump_right_45",
 				ray_dist = 5,
@@ -276,8 +279,7 @@ local action_data = {
 				ray_dist = 5,
 				ray_angle = 0
 			},
-			ray_dist = 8,
-			ray_angle = -math.pi * 0.25
+			ray_dist = 8
 		},
 		move_jump_only_fwd_right_anims = {
 			{

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/projectile/player_projectile_templates.lua
+
 local ArmorSettings = require("scripts/settings/damage/armor_settings")
 local AttackingUnitResolver = require("scripts/utilities/attack/attacking_unit_resolver")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
@@ -8,31 +10,31 @@ local LiquidAreaTemplates = require("scripts/settings/liquid_area/liquid_area_te
 local ProjectileLocomotionTemplates = require("scripts/settings/projectile_locomotion/projectile_locomotion_templates")
 local damage_types = DamageSettings.damage_types
 local armor_types = ArmorSettings.types
-local projectile_templates = {
-	ogryn_gauntlet_grenade = {
-		locomotion_template = ProjectileLocomotionTemplates.ogryn_gauntlet_grenade,
-		damage = {
-			fuse = {
-				fuse_time = 0.75,
-				explosion_template = ExplosionTemplates.default_gauntlet_grenade
-			},
-			impact = {
-				damage_profile = DamageProfileTemplates.default_gauntlet_bfg,
-				damage_type = damage_types.grenade_frag,
-				explosion_template = ExplosionTemplates.default_gauntlet_grenade
-			}
+local projectile_templates = {}
+
+projectile_templates.ogryn_gauntlet_grenade = {
+	locomotion_template = ProjectileLocomotionTemplates.ogryn_gauntlet_grenade,
+	damage = {
+		fuse = {
+			fuse_time = 0.75,
+			explosion_template = ExplosionTemplates.default_gauntlet_grenade
 		},
-		effects = {
-			spawn = {
-				vfx = {
-					orphaned_policy = "destroy",
-					link = true,
-					particle_name = "content/fx/particles/weapons/grenades/grenade_trail"
-				},
-				sfx = {
-					looping_event_name = "wwise/events/weapon/play_player_combat_weapon_grenader_loop",
-					looping_stop_event_name = "wwise/events/weapon/stop_player_combat_weapon_grenader_loop"
-				}
+		impact = {
+			damage_profile = DamageProfileTemplates.default_gauntlet_bfg,
+			damage_type = damage_types.grenade_frag,
+			explosion_template = ExplosionTemplates.default_gauntlet_grenade
+		}
+	},
+	effects = {
+		spawn = {
+			vfx = {
+				orphaned_policy = "destroy",
+				link = true,
+				particle_name = "content/fx/particles/weapons/grenades/grenade_trail"
+			},
+			sfx = {
+				looping_event_name = "wwise/events/weapon/play_player_combat_weapon_grenader_loop",
+				looping_stop_event_name = "wwise/events/weapon/stop_player_combat_weapon_grenader_loop"
 			}
 		}
 	}

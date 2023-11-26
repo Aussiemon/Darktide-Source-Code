@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/mission/mission_types.lua
+
 local MissionTypes = {
 	["01"] = {
 		id = 1,

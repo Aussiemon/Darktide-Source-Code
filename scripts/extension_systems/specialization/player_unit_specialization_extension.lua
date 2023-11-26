@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/specialization/player_unit_specialization_extension.lua
+
 local CharacterSheet = require("scripts/utilities/character_sheet")
 local PlayerSpecialization = require("scripts/utilities/player_specialization/player_specialization")
 local WarpCharge = require("scripts/utilities/warp_charge")
@@ -5,17 +7,23 @@ local PlayerUnitSpecializationExtension = class("PlayerUnitSpecializationExtensi
 
 PlayerUnitSpecializationExtension.init = function (self, extension_init_context, unit, extension_init_data, ...)
 	self._unit = unit
+
 	local player = extension_init_data.player
+
 	self._player = player
 	self._world = extension_init_context.world
 	self._wwise_world = extension_init_context.wwise_world
+
 	local first_person_extension = ScriptUnit.extension(unit, "first_person_system")
 	local first_person_unit = first_person_extension:first_person_unit()
+
 	self._first_person_unit = first_person_unit
 	self._is_local_unit = extension_init_data.is_local_unit
+
 	local archetype = extension_init_data.archetype
 	local specialization_name = extension_init_data.specialization_name
 	local talents = extension_init_data.talents
+
 	self._archetype = archetype
 	self._specialization_name = specialization_name
 	self._talents = talents
@@ -34,6 +42,7 @@ PlayerUnitSpecializationExtension._init_components = function (self)
 	local unit_data_extension = ScriptUnit.extension(self._unit, "unit_data_system")
 	local warp_charge_component = unit_data_extension:write_component("warp_charge")
 	local specialization_resource_component = unit_data_extension:write_component("specialization_resource")
+
 	warp_charge_component.state = "idle"
 	warp_charge_component.last_charge_at_t = 0
 	warp_charge_component.remove_at_t = 0
@@ -111,15 +120,12 @@ local class_loadout = {
 PlayerUnitSpecializationExtension._apply_specialization_and_talents = function (self, archetype, specialization_name, talents, fixed_t)
 	local ability_extension = self._ability_extension
 	local buff_extension = self._buff_extension
-	local combat_ability, grenade_ability, passives, coherency_buffs, special_rules, buff_template_tiers = nil
+	local combat_ability, grenade_ability, passives, coherency_buffs, special_rules, buff_template_tiers
 	local game_mode_manager = Managers.state.game_mode
 	local game_mode_settings = game_mode_manager:settings()
 
 	if game_mode_manager:specializations_disabled() then
-		buff_template_tiers = {}
-		special_rules = {}
-		coherency_buffs = {}
-		passives = {}
+		passives, coherency_buffs, special_rules, buff_template_tiers = {}, {}, {}, {}
 	else
 		local force_base_talents = game_mode_settings and game_mode_settings.force_base_talents
 		local profile = self._player:profile()
@@ -165,6 +171,7 @@ PlayerUnitSpecializationExtension._apply_specialization_and_talents = function (
 
 	for _, buff_template_name in pairs(passives) do
 		local _, local_index, component_index = buff_extension:add_externally_controlled_buff(buff_template_name, fixed_t, "from_specialization", true)
+
 		passive_buff_indices[#passive_buff_indices + 1] = {
 			local_index = local_index,
 			component_index = component_index

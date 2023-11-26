@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/utilities/impact_fx_helper.lua
+
 local MaterialQuerySettings = require("scripts/settings/material_query_settings")
 local SurfaceMaterialSettings = require("scripts/settings/surface_material_settings")
 local hit_types = SurfaceMaterialSettings.hit_types

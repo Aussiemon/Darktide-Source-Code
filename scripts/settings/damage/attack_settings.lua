@@ -1,7 +1,9 @@
-local attack_settings = {
-	attack_results = table.enum("damaged", "died", "dodged", "blocked", "toughness_absorbed", "toughness_absorbed_melee", "toughness_broken", "shield_blocked", "knock_down", "friendly_fire"),
-	stagger_results = table.enum("stagger", "no_stagger")
-}
+﻿-- chunkname: @scripts/settings/damage/attack_settings.lua
+
+local attack_settings = {}
+
+attack_settings.attack_results = table.enum("damaged", "died", "dodged", "blocked", "toughness_absorbed", "toughness_absorbed_melee", "toughness_broken", "shield_blocked", "knock_down", "friendly_fire")
+attack_settings.stagger_results = table.enum("stagger", "no_stagger")
 attack_settings.is_damaging_result = {
 	[attack_settings.attack_results.damaged] = true,
 	[attack_settings.attack_results.died] = true,
@@ -16,7 +18,9 @@ attack_settings.is_damaging_result = {
 }
 attack_settings.attack_types = table.enum("melee", "ranged", "explosion", "shout", "buff", "push", "door_smash")
 attack_settings.melee_attack_strength = table.enum("heavy", "light")
+
 local damage_efficiencies = table.enum("full", "reduced", "negated", "push")
+
 attack_settings.damage_efficiencies = damage_efficiencies
 
 attack_settings.armor_damage_modifier_to_damage_efficiency = function (armor_damage_modifier, armor_type, rending_damage)

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/corruptor_arm/corruptor_arm_extension.lua
+
 local Component = require("scripts/utilities/component")
 local CorruptorPustule = require("scripts/settings/level_prop/props/corruptor_pustule")
 local CorruptorSettings = require("scripts/settings/corruptor/corruptor_settings")
@@ -29,8 +31,7 @@ CorruptorArmExtension.extensions_ready = function (self, world, unit)
 end
 
 CorruptorArmExtension.setup_from_component = function (self, activation_delay, arm_length, corruptor_arm_component)
-	self._arm_length = arm_length
-	self._activation_delay = activation_delay
+	self._activation_delay, self._arm_length = activation_delay, arm_length
 	self._corruptor_arm_component = corruptor_arm_component
 end
 
@@ -150,8 +151,8 @@ CorruptorArmExtension._animation_update = function (self, unit, dt)
 
 		if math.abs(self._animation_pos - self._animation_target) <= math.abs(animation_increment) then
 			local animation_pos = self._animation_target
-			self._animation_speed = 0
-			self._animation_pos = animation_pos
+
+			self._animation_pos, self._animation_speed = animation_pos, 0
 
 			if animation_pos >= 1 then
 				self:_fully_extended(unit)
@@ -182,6 +183,7 @@ CorruptorArmExtension.set_animation_target = function (self, target, speed_multi
 	self._animation_speed_multiplier_type = speed_multiplier_type
 	self._animation_target = target
 	self._animation_speed = (target - self._animation_pos) / math.lerp(1, self._arm_length, CorruptorSettings.animation_length_impact) * speed_multiplier
+
 	local unit = self._unit
 
 	if optional_hot_join_animation_pos then
@@ -231,7 +233,9 @@ CorruptorArmExtension._start_extending = function (self)
 	WwiseWorld.trigger_resource_event(self._wwise_world, SFX_ARM_EXTENDING_START, source_id)
 
 	self._source_id = source_id
+
 	local particle_id = World.create_particles(self._world, ARM_EXTENDING_PARTICLE_NAME, position, Quaternion.identity())
+
 	self._particle_id = particle_id
 	self._is_extending = true
 end
@@ -259,8 +263,7 @@ CorruptorArmExtension._spawn_targets = function (self, unit)
 	local unit_spawner_manager = Managers.state.unit_spawner
 	local target_unit_name = CorruptorPustule.unit_name
 	local target_units = self._target_units
-	local destructible_count = CorruptorSettings.destructible_count
-	local destructible_node_names = CorruptorSettings.destructible_node_names
+	local destructible_count, destructible_node_names = CorruptorSettings.destructible_count, CorruptorSettings.destructible_node_names
 
 	for i = 1, destructible_count do
 		local node_name = destructible_node_names[i]
@@ -268,6 +271,7 @@ CorruptorArmExtension._spawn_targets = function (self, unit)
 		local pustule_position = Unit.world_position(unit, spawn_node)
 		local pustule_rotation = Unit.world_rotation(unit, spawn_node)
 		local pustule_unit, _ = unit_spawner_manager:spawn_network_unit(target_unit_name, "level_prop", pustule_position, pustule_rotation, nil, CorruptorPustule)
+
 		target_units[i] = pustule_unit
 	end
 

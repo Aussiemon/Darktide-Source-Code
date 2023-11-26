@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/mission_objective/utilities/mission_objective_side.lua
+
 require("scripts/extension_systems/mission_objective/utilities/mission_objective_base")
 
 local MissionObjectiveSide = class("MissionObjectiveSide", "MissionObjectiveBase")
@@ -46,6 +48,7 @@ MissionObjectiveSide.update_progression = function (self)
 	if amount_to_collect > 0 then
 		local current_amount = self:incremented_progression()
 		local progression = current_amount / amount_to_collect
+
 		progression = math.clamp(progression, 0, 1)
 
 		self:set_progression(progression)

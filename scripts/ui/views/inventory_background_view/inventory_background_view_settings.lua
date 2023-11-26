@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/inventory_background_view/inventory_background_view_settings.lua
+
 local inventory_background_view = {
 	shading_environment = "content/shading_environments/ui/inventory",
 	world_layer = 2,

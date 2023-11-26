@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/components/shading_environment_volume.lua
+
 local ShadingEnvironmentVolume = component("ShadingEnvironmentVolume")
 
 ShadingEnvironmentVolume.init = function (self, unit)
@@ -9,6 +11,7 @@ ShadingEnvironmentVolume.enable = function (self, unit)
 
 	if environment_extension then
 		self._extension = environment_extension
+
 		local fade_in_distance = self:get_data(unit, "fade_in_distance")
 		local blend_layer = self:get_data(unit, "blend_layer")
 		local override = self:get_data(unit, "override")

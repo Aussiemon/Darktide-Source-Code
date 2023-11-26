@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/trigger/trigger_extension_testify.lua
+
 local TriggerSettings = require("scripts/extension_systems/trigger/trigger_settings")
 local ACTION_TARGETS = TriggerSettings.action_targets
 local TriggerExtensionTestify = {

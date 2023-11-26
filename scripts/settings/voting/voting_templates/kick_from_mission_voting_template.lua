@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/voting/voting_templates/kick_from_mission_voting_template.lua
+
 local InputUtils = require("scripts/managers/input/input_utils")
 local SocialConstants = require("scripts/managers/data_service/services/social/social_constants")
 local OPTIONS = table.enum("yes", "no")
@@ -28,6 +30,7 @@ local function _player_name(kicked_peer_id)
 
 	if players_at_peer then
 		local player = players_at_peer[1]
+
 		player_name = player:name()
 	end
 
@@ -149,7 +152,7 @@ local kick_from_mission_voting_template = {
 			num_voters = num_voters + 1
 		end
 
-		if min_num_voters > num_voters then
+		if num_voters < min_num_voters then
 			return false, "not enough players"
 		end
 

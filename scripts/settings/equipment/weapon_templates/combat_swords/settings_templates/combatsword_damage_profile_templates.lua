@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/equipment/weapon_templates/combat_swords/settings_templates/combatsword_damage_profile_templates.lua
+
 local ArmorSettings = require("scripts/settings/damage/armor_settings")
 local PowerLevelSettings = require("scripts/settings/damage/power_level_settings")
 local DamageProfileSettings = require("scripts/settings/damage/damage_profile_settings")
@@ -93,6 +95,7 @@ local smiter_am = {
 		[armor_types.void_shield] = damage_lerp_values.lerp_1
 	}
 }
+
 damage_templates.light_combatsword_linesman = {
 	ragdoll_push_force = 100,
 	stagger_category = "melee",
@@ -541,6 +544,7 @@ damage_templates.heavy_combatsword_p2_smiter_up = {
 		}
 	}
 }
+
 local p3_fencer_crit_mod = {
 	attack = {
 		[armor_types.unarmored] = 0,
@@ -563,6 +567,7 @@ local p3_fencer_crit_mod = {
 		[armor_types.void_shield] = 0.75
 	}
 }
+
 damage_templates.light_combatsword_linesman_p3 = {
 	ragdoll_push_force = 100,
 	stagger_category = "melee",

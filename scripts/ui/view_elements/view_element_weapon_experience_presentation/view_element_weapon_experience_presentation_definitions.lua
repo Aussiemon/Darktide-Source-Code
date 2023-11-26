@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/view_elements/view_element_weapon_experience_presentation/view_element_weapon_experience_presentation_definitions.lua
+
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local UIWorkspaceSettings = require("scripts/settings/ui/ui_workspace_settings")
@@ -107,15 +109,21 @@ local scenegraph_definition = {
 	}
 }
 local name_text_style = table.clone(UIFontSettings.header_3)
+
 name_text_style.text_horizontal_alignment = "left"
 name_text_style.text_vertical_alignment = "bottom"
+
 local experience_text_style = table.clone(UIFontSettings.header_3)
+
 experience_text_style.text_horizontal_alignment = "right"
 experience_text_style.text_vertical_alignment = "bottom"
 experience_text_style.text_color = Color.ui_brown_super_light(255, true)
+
 local level_text_style = table.clone(UIFontSettings.header_3)
+
 level_text_style.text_horizontal_alignment = "center"
 level_text_style.text_vertical_alignment = "center"
+
 local widget_definitions = {
 	progress_bar = UIWidget.create_definition(BarPassTemplates.experience_bar, "progress_bar"),
 	experience_text = UIWidget.create_definition({
@@ -168,6 +176,7 @@ local animations = {
 			end_time = anim_start_delay + 0.5,
 			update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress, params)
 				local anim_progress = math.easeOutCubic(progress)
+
 				parent._alpha_multiplier = anim_progress
 			end
 		},
@@ -177,6 +186,7 @@ local animations = {
 			end_time = anim_start_delay + 0.7,
 			update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress, params)
 				local anim_progress = math.easeCubic(progress)
+
 				widgets.progress_bar.alpha_multiplier = anim_progress
 			end
 		}

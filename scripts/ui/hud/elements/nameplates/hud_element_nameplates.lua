@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/hud/elements/nameplates/hud_element_nameplates.lua
+
 local HudElementNameplatesSettings = require("scripts/ui/hud/elements/nameplates/hud_element_nameplates_settings")
 local HudElementNameplates = class("HudElementNameplates")
 local Missions = require("scripts/settings/mission/mission_templates")
@@ -8,8 +10,10 @@ HudElementNameplates.init = function (self, parent, draw_layer, start_scale)
 	self._nameplate_units = {}
 	self._scan_delay = HudElementNameplatesSettings.scan_delay
 	self._scan_delay_duration = 0
+
 	local mission_name = Managers.state.mission:mission_name()
 	local mission_settings = Missions[mission_name]
+
 	self._is_mission_hub = mission_settings.is_hub
 end
 
@@ -26,7 +30,7 @@ end
 HudElementNameplates._nameplate_extension_scan = function (self)
 	local parent = self._parent
 	local my_player = parent:player()
-	local marker_type = nil
+	local marker_type
 	local event_manager = Managers.event
 	local nameplate_units = self._nameplate_units
 	local extensions = self:_player_extensions(my_player)
@@ -34,6 +38,7 @@ HudElementNameplates._nameplate_extension_scan = function (self)
 
 	if extensions then
 		local buff_extension = extensions.buff
+
 		has_disable_nameplates_buff = buff_extension and buff_extension:has_keyword("hud_nameplates_disabled")
 	end
 
@@ -66,6 +71,7 @@ HudElementNameplates._nameplate_extension_scan = function (self)
 					nameplate_units[unit] = {
 						synced = true
 					}
+
 					local marker_callback = callback(self, "_on_nameplate_marker_spawned", unit)
 
 					event_manager:trigger("add_world_marker_unit", marker_type, unit, marker_callback, player)

@@ -1,10 +1,14 @@
+﻿-- chunkname: @scripts/extension_systems/behavior/nodes/actions/bot/bt_bot_reload_action.lua
+
 require("scripts/extension_systems/behavior/nodes/bt_node")
 
 local BtBotReloadAction = class("BtBotReloadAction", "BtNode")
 
 BtBotReloadAction.enter = function (self, unit, breed, blackboard, scratchpad, action_data, t)
 	scratchpad.is_reloading = true
+
 	local action_input_extension = ScriptUnit.extension(unit, "action_input_system")
+
 	scratchpad.action_input_extension = action_input_extension
 end
 

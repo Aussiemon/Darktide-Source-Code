@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/constant_elements/elements/subtitles/constant_element_subtitles.lua
+
 local Definitions = require("scripts/ui/constant_elements/elements/subtitles/constant_element_subtitles_definitions")
 local DialogueSpeakerVoiceSettings = require("scripts/settings/dialogue/dialogue_speaker_voice_settings")
 local ConstantElementSubtitlesSettings = require("scripts/ui/constant_elements/elements/subtitles/constant_element_subtitles_settings")
@@ -83,6 +85,7 @@ ConstantElementSubtitles._setup_subtitles_enabled = function (self)
 	local save_data = Managers.save:account_data()
 	local interface_settings = save_data.interface_settings
 	local subtitle_enabled = interface_settings.subtitle_enabled
+
 	self._subtitle_enabled = subtitle_enabled
 end
 
@@ -116,6 +119,7 @@ ConstantElementSubtitles._update_letterbox_size = function (self)
 			local width = letterbox_lines_width[i]
 			local widget = self._letterbox_widget
 			local rect_size = widget.style.rect.size
+
 			rect_size[1] = width
 			rect_size[2] = text_height
 		end
@@ -127,7 +131,7 @@ ConstantElementSubtitles._setup_letterbox = function (self)
 	local interface_settings = save_data.interface_settings
 	local subtitle_background_opacity = interface_settings.subtitle_background_opacity
 	local subtitle_background_enabled = subtitle_background_opacity > 0
-	local alpha = subtitle_background_enabled and 255 * subtitle_background_opacity * 0.01 or nil
+	local alpha = subtitle_background_enabled and 255 * (subtitle_background_opacity * 0.01) or nil
 
 	self:_set_letterbox_opacity(alpha)
 end
@@ -136,7 +140,7 @@ ConstantElementSubtitles._setup_text_opacity = function (self)
 	local save_data = Managers.save:account_data()
 	local interface_settings = save_data.interface_settings
 	local subtitle_text_opacity = interface_settings.subtitle_text_opacity or 100
-	local alpha = 255 * subtitle_text_opacity * 0.01
+	local alpha = 255 * (subtitle_text_opacity * 0.01)
 
 	self:_set_text_opacity(alpha)
 end
@@ -146,11 +150,13 @@ ConstantElementSubtitles._set_text_opacity = function (self, alpha)
 	local widget = widgets_by_name.subtitles
 	local style = widget.style
 	local text_style = style.text
+
 	text_style.text_color[1] = alpha or 0
 end
 
 ConstantElementSubtitles._set_letterbox_opacity = function (self, alpha)
 	local widget = self._letterbox_widget
+
 	widget.style.rect.color[1] = alpha or 0
 	self._draw_letterbox = alpha ~= nil
 end
@@ -237,16 +243,18 @@ ConstantElementSubtitles.update = function (self, dt, t, ui_renderer, render_set
 
 		if currently_playing_subtitle ~= self._line_currently_playing then
 			self._line_currently_playing = currently_playing_subtitle
-			local player = nil
+
+			local player
 			local currently_playing_unit = currently_playing.currently_playing_unit
 
 			if currently_playing_unit then
 				local state_manager = Managers.state
 				local player_unit_spawn_manager = state_manager and state_manager.player_unit_spawn
+
 				player = player_unit_spawn_manager and player_unit_spawn_manager:is_player_unit(currently_playing_unit) and player_unit_spawn_manager:owner(currently_playing_unit)
 			end
 
-			local speaker_display_name = nil
+			local speaker_display_name
 
 			if player and player:is_human_controlled() then
 				speaker_display_name = player:name()
@@ -254,13 +262,16 @@ ConstantElementSubtitles.update = function (self, dt, t, ui_renderer, render_set
 				local speaker_name = currently_playing.speaker_name
 				local speaker_voice_settings = DialogueSpeakerVoiceSettings[speaker_name]
 				local character_short_name = speaker_voice_settings.short_name
+
 				speaker_display_name = self:_localize(character_short_name)
 			end
 
 			local no_cache = true
 			local currently_playing_subtitle_localized = self:_localize(currently_playing_subtitle, no_cache)
+
 			subtitle_format_context.speaker = speaker_display_name
 			subtitle_format_context.subtitle = currently_playing_subtitle_localized
+
 			local string_exists = Managers.localization:exists(currently_playing_subtitle)
 
 			if not string_exists then
@@ -319,11 +330,14 @@ ConstantElementSubtitles._set_font_size = function (self, new_size)
 	local widget = widgets_by_name.subtitles
 	local style = widget.style
 	local text_style = style.text
+
 	text_style.font_size = new_size
+
 	local parent = self._parent
 	local ui_renderer = parent:ui_renderer()
 	local text_options = UIFonts.get_font_options_by_style(text_style)
 	local text_width, text_height, _, _ = UIRenderer.text_size(ui_renderer, DUMMY_MEASURE_TEXT_LINE, text_style.font_type, text_style.font_size, dummy_text_size, text_options)
+
 	text_style.size[1] = text_width
 	text_style.size[2] = text_height
 end
@@ -332,8 +346,10 @@ ConstantElementSubtitles._display_text_line = function (self, text, duration)
 	local widgets_by_name = self._widgets_by_name
 	local widget = widgets_by_name.subtitles
 	local content = widget.content
+
 	content.text = text
 	self._line_duration = duration
+
 	local parent = self._parent
 	local ui_renderer = parent:ui_renderer()
 	local style = widget.style
@@ -352,6 +368,7 @@ ConstantElementSubtitles._display_text_line = function (self, text, duration)
 		local text_line = rows[i]
 		local line_text_width, _, _, _ = UIRenderer.text_size(ui_renderer, text_line, text_style.font_type, text_style.font_size, dummy_text_size, text_options)
 		local line_height = UIRenderer.text_height(ui_renderer, text_line, text_style.font_type, text_style.font_size, dummy_text_size, text_options)
+
 		self._letterbox_lines_width[i] = line_text_width + 20
 
 		if text_max_height < line_height then
@@ -361,7 +378,9 @@ ConstantElementSubtitles._display_text_line = function (self, text, duration)
 
 	self._letterbox_total_height = math.ceil(total_height)
 	self._letterbox_height = math.ceil(text_max_height)
+
 	local total_spacing = math.max(self._letterbox_total_height - self._letterbox_height * num_rows, 0)
+
 	self._letterbox_spacing = total_spacing > 0 and total_spacing / num_rows or 0
 end
 
@@ -386,6 +405,7 @@ ConstantElementSubtitles._draw_widgets = function (self, dt, t, input_service, u
 			local widget = self._letterbox_widget
 			local offset = widget.offset
 			local rect_size = widget.style.rect.size
+
 			rect_size[1] = width
 			rect_size[2] = text_height
 			offset[2] = start_offset

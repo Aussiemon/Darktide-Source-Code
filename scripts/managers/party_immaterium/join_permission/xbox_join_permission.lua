@@ -1,8 +1,10 @@
+﻿-- chunkname: @scripts/managers/party_immaterium/join_permission/xbox_join_permission.lua
+
 local Promise = require("scripts/foundation/utilities/promise")
 local XboxLiveUtilities = require("scripts/foundation/utilities/xbox_live")
 local XboxJoinPermission = {}
 local empty_array = {}
-local deny_reasons = nil
+local deny_reasons
 
 if XblPermissionDenyReason then
 	deny_reasons = {
@@ -17,7 +19,7 @@ if XblPermissionDenyReason then
 	}
 end
 
-local PERMISSION_ARRAY = nil
+local PERMISSION_ARRAY
 
 if XblPermission then
 	PERMISSION_ARRAY = {

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/game_states/game/state_first_run_settings.lua
+
 local StateTitle = require("scripts/game_states/game/state_title")
 local view_name = "first_run_settings_view"
 local StateFirstRunSettings = class("StateFirstRunSettings")

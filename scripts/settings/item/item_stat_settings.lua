@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/item/item_stat_settings.lua
+
 local item_stat_settings = {
 	lasgun_p1_m1_stability_stat = {
 		display_name = "loc_weapon_stats_title_handling",

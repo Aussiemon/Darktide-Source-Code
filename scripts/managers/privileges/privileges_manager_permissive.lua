@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/privileges/privileges_manager_permissive.lua
+
 local Promise = require("scripts/foundation/utilities/promise")
 local PERMISSIVE_RESPONSE = {
 	has_privilege = true

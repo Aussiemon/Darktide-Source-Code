@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/cover/cover_system.lua
+
 require("scripts/extension_systems/cover/cover_extension")
 require("scripts/extension_systems/cover/cover_user_extension")
 
@@ -13,6 +15,7 @@ CoverSystem.init = function (self, extension_system_creation_context, ...)
 
 	local nav_world = extension_system_creation_context.nav_world
 	local extension_init_context = self._extension_init_context
+
 	extension_init_context.nav_world = nav_world
 	self._cover_unit_extension_data = {}
 	self._cover_user_unit_extension_data = {}
@@ -21,7 +24,9 @@ CoverSystem.init = function (self, extension_system_creation_context, ...)
 	self._cover_unit_broadphase_ids = {}
 	self._current_update_unit = nil
 	self._current_update_extension = nil
+
 	local is_server = extension_system_creation_context.is_server
+
 	self._is_server = is_server
 end
 
@@ -30,7 +35,9 @@ CoverSystem.on_add_extension = function (self, world, unit, extension_name, exte
 
 	if extension_name == "CoverExtension" then
 		self._cover_unit_extension_data[unit] = extension
+
 		local cover_unit_broadphase_ids = self._cover_unit_broadphase_ids
+
 		cover_unit_broadphase_ids[unit] = {}
 	end
 
@@ -48,6 +55,7 @@ end
 CoverSystem.on_remove_extension = function (self, unit, extension_name)
 	if extension_name == "CoverExtension" then
 		self._cover_unit_extension_data[unit] = nil
+
 		local cover_unit_broadphase_ids = self._cover_unit_broadphase_ids[unit]
 		local cover_slot_broadphase_lookup = self._cover_slot_broadphase_lookup
 		local broadphase = self._broadphase
@@ -107,8 +115,11 @@ CoverSystem.add_cover_slot_to_broadphase = function (self, cover_unit, cover_slo
 	local boxed_position = cover_slot.position
 	local broadphase_id = Broadphase.add(self._broadphase, nil, boxed_position:unbox(), BROADPHASE_COVER_RADIUS, BROADPHASE_CATEGORIES)
 	local cover_slot_broadphase_lookup = self._cover_slot_broadphase_lookup
+
 	cover_slot_broadphase_lookup[broadphase_id] = cover_slot
+
 	local cover_unit_broadphase_ids = self._cover_unit_broadphase_ids[cover_unit]
+
 	cover_unit_broadphase_ids[#cover_unit_broadphase_ids + 1] = broadphase_id
 end
 
@@ -119,12 +130,13 @@ CoverSystem.find_cover_slots = function (self, search_position, radius)
 	table.clear_array(cover_slot_results, #cover_slot_results)
 
 	local broadphase = self._broadphase
-	local num_results = broadphase:query(search_position, radius, broadphase_results, BROADPHASE_CATEGORIES)
+	local num_results = broadphase.query(broadphase, search_position, radius, broadphase_results, BROADPHASE_CATEGORIES)
 	local cover_slot_broadphase_lookup = self._cover_slot_broadphase_lookup
 
 	for i = 1, num_results do
 		local id = broadphase_results[i]
 		local cover_slot = cover_slot_broadphase_lookup[id]
+
 		cover_slot_results[i] = cover_slot
 	end
 

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/equipment/item_material_overrides/player_material_overrides_eye_colors.lua
+
 local material_overrides = {
 	eyes_default_small_pupil_01 = {
 		property_overrides = {

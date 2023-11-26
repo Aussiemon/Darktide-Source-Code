@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/experience_settings.lua
+
 local experience_per_level_array = {
 	0,
 	200,

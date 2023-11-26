@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/achievements_view/achievements_view_definitions.lua
+
 local InputDevice = require("scripts/managers/input/input_device")
 local ScrollbarPassTemplates = require("scripts/ui/pass_templates/scrollbar_pass_templates")
 local UIWidget = require("scripts/managers/ui/ui_widget")

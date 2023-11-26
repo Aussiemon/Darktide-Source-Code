@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/components/networked_unique_randomize.lua
+
 local Component = require("scripts/utilities/component")
 local NetworkedUniqueRandomize = component("NetworkedUniqueRandomize")
 

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/inbox_view/inbox_view.lua
+
 local Definitions = require("scripts/ui/views/inbox_view/inbox_view_definitions")
 local InboxViewSettings = require("scripts/ui/views/inbox_view/inbox_view_settings")
 local ViewElementInputLegend = require("scripts/ui/view_elements/view_element_input_legend/view_element_input_legend")
@@ -35,6 +37,7 @@ InboxView.on_enter = function (self)
 	local context = self._context
 	local player = context and context.player or self:_player()
 	local profile = player:profile()
+
 	self._presentation_profile = table.clone_instance(profile)
 
 	self:_set_player_profile_information(player)
@@ -42,6 +45,7 @@ end
 
 InboxView._setup_input_legend = function (self)
 	self._input_legend_element = self:_add_element(ViewElementInputLegend, "input_legend", 10)
+
 	local legend_inputs = self._definitions.legend_inputs
 
 	for i = 1, #legend_inputs do
@@ -58,6 +62,7 @@ InboxView._set_player_profile_information = function (self, player)
 	local current_level = profile.current_level
 	local character_title = ProfileUtils.character_title(profile)
 	local widgets_by_name = self._widgets_by_name
+
 	widgets_by_name.character_name.content.text = character_name
 	widgets_by_name.character_title.content.text = character_title
 	widgets_by_name.character_level.content.text = tostring(current_level) .. " "
@@ -69,6 +74,7 @@ end
 
 InboxView._request_player_icon = function (self)
 	local material_values = self._widgets_by_name.character_portrait.style.texture.material_values
+
 	material_values.use_placeholder_texture = 1
 
 	self:_load_portrait_icon()
@@ -79,6 +85,7 @@ InboxView._load_portrait_icon = function (self)
 	local load_cb = callback(self, "_cb_set_player_icon")
 	local unload_cb = callback(self, "_cb_unset_player_icon")
 	local icon_load_id = Managers.ui:load_profile_portrait(profile, load_cb, nil, unload_cb)
+
 	self._portrait_loaded_info = {
 		icon_load_id = icon_load_id
 	}
@@ -87,6 +94,7 @@ end
 InboxView._cb_set_player_icon = function (self, grid_index, rows, columns)
 	local widget = self._widgets_by_name.character_portrait
 	local material_values = widget.style.texture.material_values
+
 	widget.content.texture = "content/ui/materials/base/ui_portrait_frame_base"
 	material_values.use_placeholder_texture = 0
 	material_values.rows = rows
@@ -97,6 +105,7 @@ end
 InboxView._cb_unset_player_icon = function (self)
 	local widget = self._widgets_by_name.character_portrait
 	local material_values = widget.style.texture.material_values
+
 	material_values.use_placeholder_texture = nil
 	material_values.rows = nil
 	material_values.columns = nil
@@ -115,6 +124,7 @@ InboxView._set_experience_bar = function (self, experience_fraction, duration)
 
 	local widgets_by_name = self._widgets_by_name
 	local widget = widgets_by_name.character_experience
+
 	widget.content.progress = experience_fraction
 	self._current_experience_fraction = experience_fraction
 end
@@ -125,11 +135,13 @@ InboxView._fetch_character_progression = function (self, player)
 	end
 
 	self._fetching_character_progression = true
-	local profiles_promise = nil
+
+	local profiles_promise
 	local character_id = player:character_id()
 
 	if Managers.backend:authenticated() then
 		local backend_interface = Managers.backend.interfaces
+
 		profiles_promise = backend_interface.progression:get_progression("character", character_id):next(function (results)
 			local progression_data = results
 			local current_level_experience = progression_data and progression_data.currentXpInLevel or 0
@@ -142,6 +154,7 @@ InboxView._fetch_character_progression = function (self, player)
 		end)
 	else
 		profiles_promise = Promise.new()
+
 		local level_experience_progress = 0
 
 		profiles_promise:resolve(level_experience_progress)
@@ -176,6 +189,7 @@ InboxView._create_offscreen_renderer = function (self)
 	local viewport_layer = 1
 	local viewport = Managers.ui:create_viewport(world, viewport_name, viewport_type, viewport_layer)
 	local renderer_name = self.__class_name .. "offscreen_renderer"
+
 	self._offscreen_renderer = Managers.ui:create_renderer(renderer_name, world)
 	self._offscreen_world = {
 		name = world_name,
@@ -188,6 +202,7 @@ end
 
 InboxView._create_grid = function (self, entries)
 	self._current_scrollbar_progress = nil
+
 	local widgets = {}
 	local size = ItemPassTemplates.icon_size
 	local pass_template = ItemPassTemplates.item
@@ -196,7 +211,7 @@ InboxView._create_grid = function (self, entries)
 		15
 	}
 	local scenegraph_width = size[1] * 4 + grid_spacing[1] * 3
-	local scenegraph_height = nil
+	local scenegraph_height
 
 	self:_set_scenegraph_size("grid_background", scenegraph_width, scenegraph_height)
 	self:_set_scenegraph_size("grid_mask", scenegraph_width + 20, scenegraph_height)
@@ -207,6 +222,7 @@ InboxView._create_grid = function (self, entries)
 
 		if content.icon_load_id then
 			local material_values = widget.style.icon.material_values
+
 			material_values.use_placeholder_texture = 1
 
 			Managers.ui:unload_item_icon(content.icon_load_id)
@@ -221,12 +237,15 @@ InboxView._create_grid = function (self, entries)
 		local name = "widget_inventory_" .. i
 		local widget = self:_create_widget(name, widget_definition)
 		local content = widget.content
+
 		content.hotspot.pressed_callback = callback(self, "cb_on_grid_entry_pressed", widget, entry)
 		content.element = entry
+
 		local slot = entry.slot
 
 		if slot then
 			local item = entry.item
+
 			content.item = item
 
 			if item then
@@ -251,6 +270,7 @@ end
 
 InboxView._apply_item_icon_cb_func = function (self, widget, grid_index, rows, columns)
 	local material_values = widget.style.icon.material_values
+
 	material_values.use_placeholder_texture = 0
 	material_values.rows = rows
 	material_values.columns = columns
@@ -259,6 +279,7 @@ end
 
 InboxView._remove_item_icon_cb_func = function (self, widget, ui_renderer)
 	local material_values = widget.style.icon.material_values
+
 	material_values.use_placeholder_texture = 1
 end
 
@@ -311,6 +332,7 @@ InboxView._update_grid_widgets_visibility = function (self)
 			local widget = widgets[i]
 			local content = widget.content
 			local visible = self._inbox_grid.grid:is_widget_visible(widget)
+
 			content.visible = visible
 		end
 
@@ -336,6 +358,7 @@ InboxView._update_grid_widgets_visibility = function (self)
 
 				if not content.icon_load_id then
 					local cb = callback(self, "_apply_item_icon_cb_func", widget)
+
 					content.icon_load_id = Managers.ui:load_item_icon(item, cb)
 				end
 			end
@@ -392,6 +415,7 @@ InboxView._destroy_grid_widgets = function (self)
 
 			if content.icon_load_id then
 				local material_values = widget.style.icon.material_values
+
 				material_values.use_placeholder_texture = 1
 
 				Managers.ui:unload_item_icon(content.icon_load_id)
@@ -409,7 +433,7 @@ InboxView.on_exit = function (self)
 end
 
 InboxView._fetch_store_items = function (self)
-	local store_promise = nil
+	local store_promise
 
 	self:_set_loading_visible(true)
 
@@ -471,6 +495,7 @@ end
 
 InboxView._preview_element = function (self, element)
 	local item = element.item
+
 	self._previewed_item = item
 
 	self:_setup_item_stats(item)
@@ -478,14 +503,18 @@ InboxView._preview_element = function (self, element)
 	local display_name = ItemUtils.display_name(item)
 	local sub_display_name = ItemUtils.sub_display_name(item)
 	local widgets_by_name = self._widgets_by_name
+
 	widgets_by_name.item_detail.content.name = display_name
 	widgets_by_name.item_detail.content.item_type = sub_display_name
+
 	local item_widget = widgets_by_name.item_image
 	local content = item_widget.content
+
 	content.disabled = true
 
 	if content.icon_load_id then
 		local material_values = item_widget.style.icon.material_values
+
 		material_values.use_placeholder_texture = 1
 
 		Managers.ui:unload_item_icon(content.icon_load_id)
@@ -494,7 +523,9 @@ InboxView._preview_element = function (self, element)
 	end
 
 	local cb = callback(self, "_apply_item_icon_cb_func", item_widget)
+
 	content.icon_load_id = Managers.ui:load_item_icon(item, cb)
+
 	local visible = true
 
 	self:_set_preview_widgets_visibility(visible)
@@ -502,6 +533,7 @@ end
 
 InboxView._set_loading_visible = function (self, visible)
 	local widgets_by_name = self._widgets_by_name
+
 	widgets_by_name.loading.content.visible = visible
 	widgets_by_name.inventory_grid.content.visible = not visible
 
@@ -510,11 +542,13 @@ end
 
 InboxView._set_empty_list = function (self)
 	local widgets_by_name = self._widgets_by_name
+
 	widgets_by_name.loading.content.text = "No Items available"
 end
 
 InboxView._set_preview_widgets_visibility = function (self, visible)
 	local widgets_by_name = self._widgets_by_name
+
 	widgets_by_name.item_background.content.visible = visible
 	widgets_by_name.item_detail_intro.content.visible = visible
 	widgets_by_name.item_image.content.visible = visible
@@ -523,11 +557,13 @@ InboxView._set_preview_widgets_visibility = function (self, visible)
 	widgets_by_name.stats_divider.content.visible = visible
 	widgets_by_name.modifications_divider.content.visible = visible
 	widgets_by_name.blessings_divider.content.visible = visible
+
 	local stat_widgets = self._stat_widgets
 
 	if stat_widgets then
 		for i = 1, #stat_widgets do
 			local widget = stat_widgets[i]
+
 			widget.content.visible = visible
 		end
 	end
@@ -541,6 +577,7 @@ InboxView._setup_stats_preview_widgets = function (self)
 		40
 	}
 	local weapon_bar_text_style = table.clone(UIFontSettings.body_small)
+
 	weapon_bar_text_style.text_horizontal_alignment = "left"
 	weapon_bar_text_style.text_vertical_alignment = "center"
 	weapon_bar_text_style.offset = {
@@ -548,6 +585,7 @@ InboxView._setup_stats_preview_widgets = function (self)
 		0,
 		0
 	}
+
 	local weapon_stats_bar_background_margin = 2
 	local weapon_stat_bar = {
 		{
@@ -604,6 +642,7 @@ InboxView._setup_stats_preview_widgets = function (self)
 			change_function = function (content, style)
 				local progress = content.progress or 0
 				local new_bar_length = stats_size[1] * progress
+
 				style.size[1] = new_bar_length
 			end
 		},
@@ -632,8 +671,11 @@ InboxView._setup_stats_preview_widgets = function (self)
 			},
 			change_function = function (content, style)
 				local progress = content.progress or 0
+
 				style.offset[1] = stats_size[1] * progress - 8
+
 				local alpha_multiplier = math.clamp(progress / 0.2, 0, 1)
+
 				style.color[1] = 255 * alpha_multiplier
 			end
 		}
@@ -648,6 +690,7 @@ InboxView._setup_stats_preview_widgets = function (self)
 		local column = (i - 1) % max_rows + 1
 		local row = math.ceil(i / max_rows)
 		local offset = widget.offset
+
 		offset[2] = (column - 1) * stats_size[2] + (column - 1) * spacing
 		offset[1] = (row - 1) * stats_size[1]
 		widgets[#widgets + 1] = widget
@@ -670,6 +713,7 @@ InboxView._setup_item_stats = function (self, item)
 
 		if widget then
 			widget.content.text = Localize(data.title)
+
 			local value = data.progress
 
 			self:_set_stat_bar_value(i, value, anim_duration)
@@ -691,6 +735,7 @@ InboxView._set_stat_bar_value = function (self, stat_index, value, duration, sho
 		duration = duration,
 		widget = widget
 	}
+
 	stats_animation_progress[#stats_animation_progress + 1] = anim_data
 end
 
@@ -708,11 +753,14 @@ InboxView._update_stat_bar_animations = function (self, dt)
 		local start_value = data.start_value
 		local time = data.time
 		local widget = data.widget
+
 		time = time + dt
+
 		local time_progress = math.clamp(time / duration, 0, 1)
 		local anim_progress = math.ease_out_exp(time_progress)
 		local target_value = end_value - start_value
 		local anim_fraction = start_value + target_value * anim_progress
+
 		widget.content.progress = anim_fraction
 
 		if time_progress < 1 then

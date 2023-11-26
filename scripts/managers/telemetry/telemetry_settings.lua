@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/telemetry/telemetry_settings.lua
+
 local Crashify = require("scripts/settings/crashify/crashify")
 local settings = {
 	enabled = true,

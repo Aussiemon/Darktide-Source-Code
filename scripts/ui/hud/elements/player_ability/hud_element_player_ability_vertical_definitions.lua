@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/hud/elements/player_ability/hud_element_player_ability_vertical_definitions.lua
+
 local HudElementPlayerAbilityHandlerSettings = require("scripts/ui/hud/elements/player_ability_handler/hud_element_player_ability_handler_settings")
 local UIWorkspaceSettings = require("scripts/settings/ui/ui_workspace_settings")
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
@@ -18,6 +20,7 @@ local scenegraph_definition = {
 	}
 }
 local counter_text_style = table.clone(UIFontSettings.hud_body)
+
 counter_text_style.horizontal_alignment = "center"
 counter_text_style.vertical_alignment = "center"
 counter_text_style.text_horizontal_alignment = "center"
@@ -33,7 +36,9 @@ counter_text_style.offset = {
 	2
 }
 counter_text_style.drop_shadow = false
+
 local input_text_style = table.clone(UIFontSettings.hud_body)
+
 input_text_style.horizontal_alignment = "center"
 input_text_style.vertical_alignment = "top"
 input_text_style.text_horizontal_alignment = "center"
@@ -55,6 +60,7 @@ input_text_style.text_color = {
 	100,
 	100
 }
+
 local widget_definitions = {
 	ability = UIWidget.create_definition({
 		{
@@ -103,6 +109,7 @@ local widget_definitions = {
 			},
 			change_function = function (content, style)
 				local duration_progress = content.duration_progress
+
 				style.material_values.progress = duration_progress
 			end
 		},

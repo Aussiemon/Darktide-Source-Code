@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/equipment/weapon_templates/lasguns/settings_templates/lasgun_recoil_templates.lua
+
 local RecoilTemplate = require("scripts/utilities/recoil_template")
 local AIM_ASSIST_MULTIPLIER_FUNCTIONS = RecoilTemplate.AIM_ASSIST_MULTIPLIER_FUNCTIONS
 local generate_offset_range = RecoilTemplate.generate_offset_range
@@ -189,6 +191,7 @@ local assault_p3_m1_random_range = generate_offset_range(90, 0.02, 0.015, 0.75, 
 local killshot_p3_m1_offset_range = generate_offset_range(90, 0.0025, 0, 0.75, create_scale(killshot_p3_m1_scale))
 local killshot_p3_m1_random_range = generate_offset_range(90, 0.01, 0.0175, 0.75, create_scale(killshot_p3_m1_random_scale))
 local pitch_default = 0.08
+
 recoil_templates.hip_lasgun_assault = {
 	still = {
 		camera_recoil_percentage = 0.25,
@@ -704,9 +707,11 @@ recoil_templates.hip_lasgun_p2_killshot = {
 		}
 	}
 }
+
 local yaw_spread = 0.03
 local pitch_spread = 0.025
 local pitch_offset = 0.04
+
 recoil_templates.default_lasgun_killshot = {
 	still = {
 		camera_recoil_percentage = 0.2,
@@ -2166,7 +2171,9 @@ recoil_templates.default_lasgun_spraynpray = {
 		}
 	}
 }
+
 local p2_m1_pitch = 0.05
+
 recoil_templates.lasgun_p2_m1_ads_killshot = {
 	still = {
 		camera_recoil_percentage = 0.1,

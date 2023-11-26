@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/backend/crafting.lua
+
 local CraftingSettings = require("scripts/settings/item/crafting_settings")
 local BackendUtilities = require("scripts/foundation/managers/backend/utilities/backend_utilities")
 local MasterItems = require("scripts/backend/master_items")
@@ -11,6 +13,7 @@ local function _send_crafting_operation(request_body)
 		body = request_body
 	}):next(function (data)
 		data.body._links = nil
+
 		local body = data.body
 		local items = body.items
 
@@ -32,6 +35,7 @@ Crafting.refresh_crafting_costs = function (self)
 	return Managers.backend:title_request(BackendUtilities.url_builder("/data/account/crafting/costs"):to_string()):next(function (data)
 		local weapon_crafting_costs = data.body.costs.weapon
 		local gadget_crafting_costs = data.body.costs.gadget
+
 		self._crafting_costs = {
 			weapon = weapon_crafting_costs,
 			gadget = gadget_crafting_costs
@@ -61,7 +65,7 @@ Crafting.trait_sticker_book = function (self, trait_category_id)
 			local status = {}
 
 			for i = 1, num_ranks do
-				local value = nil
+				local value
 
 				if bit.band(bit.rshift(trait_bitmask, i + 3), 1) == 0 then
 					value = TRAIT_STICKER_BOOK_ENUM.invalid

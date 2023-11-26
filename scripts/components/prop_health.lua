@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/components/prop_health.lua
+
 local PropHealth = component("PropHealth")
 
 PropHealth.init = function (self, unit, is_server)

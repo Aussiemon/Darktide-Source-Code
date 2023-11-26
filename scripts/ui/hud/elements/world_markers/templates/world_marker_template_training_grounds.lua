@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/hud/elements/world_markers/templates/world_marker_template_training_grounds.lua
+
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local UIHudSettings = require("scripts/settings/ui/ui_hud_settings")
@@ -11,6 +13,7 @@ local arrow_size = {
 	70,
 	70
 }
+
 template.size = size
 template.unit_node = 1
 template.name = "training_grounds"
@@ -22,6 +25,7 @@ template.screen_margins = {
 	left = 450,
 	right = 450
 }
+
 local template_visual_definitions = {
 	default = {
 		template_settings_overrides = {
@@ -112,6 +116,7 @@ local function setup_marker_by_visual_type(widget, marker, visual_type)
 
 	if template_settings_overrides then
 		local new_template = table.clone(marker.template)
+
 		marker.template = table.merge_recursive(new_template, template_settings_overrides)
 	end
 
@@ -238,6 +243,7 @@ end
 
 template.on_enter = function (widget)
 	local content = widget.content
+
 	content.spawn_progress_timer = 0
 end
 
@@ -246,7 +252,9 @@ template.update_function = function (parent, ui_renderer, widget, marker, templa
 	local content = widget.content
 	local style = widget.style
 	local is_inside_frustum = content.is_inside_frustum
+
 	marker.block_fade_settings = not is_inside_frustum
+
 	local data = marker.data
 	local ui_target_type = data.ui_target_type or "default"
 	local distance = content.distance
@@ -258,7 +266,9 @@ template.update_function = function (parent, ui_renderer, widget, marker, templa
 	end
 
 	local distance_text = tostring(math.floor(distance)) .. "m"
+
 	content.text = distance > 1 and distance_text or ""
+
 	local unit = marker.unit
 	local hud_element = data.hud_element
 

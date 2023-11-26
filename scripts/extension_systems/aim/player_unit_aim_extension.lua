@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/aim/player_unit_aim_extension.lua
+
 local SweepStickyness = require("scripts/utilities/action/sweep_stickyness")
 local ThirdPersonAimAnimationControl = require("scripts/extension_systems/aim/third_person_aim_animation_control")
 local ThirdPersonIdleFullbodyAnimationControl = require("scripts/extension_systems/aim/third_person_idle_fullbody_animation_control")
@@ -6,17 +8,22 @@ local PlayerUnitAimExtension = class("PlayerUnitAimExtension")
 
 PlayerUnitAimExtension.init = function (self, extension_init_context, unit, extension_init_data, ...)
 	local is_server = extension_init_context.is_server
+
 	self._is_server = is_server
+
 	local unit_data_ext = ScriptUnit.extension(unit, "unit_data_system")
 	local fp_comp = unit_data_ext:read_component("first_person")
+
 	self._first_person_component = fp_comp
 
 	if is_server then
 		local game_object_data = ...
 		local aim_rotation = fp_comp.rotation
+
 		game_object_data.aim_direction = Quaternion.forward(aim_rotation)
 	else
 		local game_session, game_object_id, owner_id = ...
+
 		self._game_session_id = game_session
 		self._game_object_id = game_object_id
 	end
@@ -26,7 +33,9 @@ PlayerUnitAimExtension.init = function (self, extension_init_context, unit, exte
 	self._aim_constraint_target_name = extension_init_data.aim_constraint_target_name
 	self._aim_constraint_variable = nil
 	self._aim_contraint_distance = extension_init_data.aim_constraint_distance
+
 	local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
+
 	self._action_sweep_component = unit_data_extension:read_component("action_sweep")
 	self._aim_animation_control = ThirdPersonAimAnimationControl:new(unit)
 	self._idle_fullbody_animation_control = ThirdPersonIdleFullbodyAnimationControl:new(unit)
@@ -86,6 +95,7 @@ PlayerUnitAimExtension.update = function (self, unit, dt, t)
 	end
 
 	self._skticy_aim_blend = skticy_aim_blend
+
 	local new_aim_position = Vector3.lerp(aim_position, sticky_aim_position, skticy_aim_blend)
 
 	Unit.animation_set_constraint_target(unit, self._aim_constraint_variable, new_aim_position)

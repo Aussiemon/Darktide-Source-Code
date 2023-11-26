@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/breed/breeds/renegade/renegade_captain_sounds.lua
+
 local sound_data = {
 	events = {
 		vce_combo_attack_single = "wwise/events/minions/play_minion_captain__combo_attack_single_vce",

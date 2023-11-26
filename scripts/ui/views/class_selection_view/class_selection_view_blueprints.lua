@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/class_selection_view/class_selection_view_blueprints.lua
+
 local ClassSelectionViewFontStyle = require("scripts/ui/views/class_selection_view/class_selection_view_font_style")
 local UIRenderer = require("scripts/managers/ui/ui_renderer")
 local ItemPassTemplates = require("scripts/ui/pass_templates/item_pass_templates")
@@ -9,6 +11,7 @@ local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 
 local function _apply_live_item_icon_cb_func(widget, grid_index, rows, columns, render_target)
 	local material_values = widget.style.icon.material_values
+
 	material_values.use_placeholder_texture = 0
 	material_values.use_render_target = 1
 	material_values.rows = rows
@@ -24,6 +27,7 @@ local function _remove_live_item_icon_cb_func(widget, ui_renderer)
 	end
 
 	local material_values = widget.style.icon.material_values
+
 	material_values.use_placeholder_texture = 1
 	material_values.render_target = nil
 end
@@ -40,6 +44,7 @@ end
 
 local max_width = ClassSelectionViewSettings.class_details_size[1] - 5
 local talent_blueprint_description_style = table.clone(UIFontSettings.body)
+
 talent_blueprint_description_style.offset = {
 	98,
 	25,
@@ -53,7 +58,9 @@ talent_blueprint_description_style.font_size = 20
 talent_blueprint_description_style.text_horizontal_alignment = "left"
 talent_blueprint_description_style.text_vertical_alignment = "top"
 talent_blueprint_description_style.text_color = Color.terminal_text_body(255, true)
+
 local talent_blueprint_title_style = table.clone(UIFontSettings.header_3)
+
 talent_blueprint_title_style.offset = {
 	98,
 	0,
@@ -66,7 +73,9 @@ talent_blueprint_title_style.font_size = 20
 talent_blueprint_title_style.text_horizontal_alignment = "left"
 talent_blueprint_title_style.text_vertical_alignment = "top"
 talent_blueprint_title_style.text_color = Color.terminal_text_header(255, true)
+
 local weapon_description_style = table.clone(UIFontSettings.body)
+
 weapon_description_style.offset = {
 	47,
 	0,
@@ -80,6 +89,7 @@ weapon_description_style.font_size = 20
 weapon_description_style.text_horizontal_alignment = "left"
 weapon_description_style.text_vertical_alignment = "center"
 weapon_description_style.text_color = Color.terminal_text_header(255, true)
+
 local class_selection_view_blueprints = {
 	talent_info = {
 		size = {
@@ -155,12 +165,18 @@ local class_selection_view_blueprints = {
 		init = function (parent, widget, element, callback_name)
 			local content = widget.content
 			local style = widget.style
+
 			content.element = element
+
 			local description = element.description
+
 			content.description = description
+
 			local display_name = element.display_name
 			local localized_title = Localize(display_name)
+
 			content.display_name = localized_title
+
 			local icon = element.icon
 			local gradient_map = element.gradient_map
 			local frame = element.frame
@@ -241,8 +257,10 @@ local class_selection_view_blueprints = {
 			local style = widget.style
 			local content = widget.content
 			local description = element.description
+
 			content.element = element
 			content.text = description
+
 			local size = content.size
 			local text_style = style.text
 			local text_options = UIFonts.get_font_options_by_style(text_style)
@@ -285,6 +303,7 @@ local class_selection_view_blueprints = {
 
 			if new_indicator_width_offset then
 				local offset = style.new_indicator.offset
+
 				offset[1] = new_indicator_width_offset[1]
 				offset[2] = new_indicator_width_offset[2]
 				offset[3] = new_indicator_width_offset[3]
@@ -292,10 +311,12 @@ local class_selection_view_blueprints = {
 
 			content.element = element
 			content.text = text
+
 			local size = content.size
 			local text_style = style.text
 			local text_options = UIFonts.get_font_options_by_style(text_style)
 			local height = UIRenderer.text_height(ui_renderer, text, text_style.font_type, text_style.font_size, size, text_options)
+
 			size[2] = height + 0
 		end,
 		update = function (parent, widget, input_service, dt, t, ui_renderer)
@@ -328,13 +349,17 @@ local class_selection_view_blueprints = {
 		},
 		init = function (parent, widget, element)
 			widget.element = element
+
 			local text = element.text
+
 			widget.content.text = text
+
 			local title_style = widget.style.text
 			local _, title_text_height = UIRenderer.text_size(parent._ui_renderer, text, title_style.font_type, title_style.font_size, {
 				ClassSelectionViewSettings.class_details_size[1],
 				math.huge
 			})
+
 			widget.content.size = {
 				max_width,
 				title_text_height
@@ -383,6 +408,7 @@ local class_selection_view_blueprints = {
 		},
 		init = function (parent, widget, element, _, _, ui_renderer)
 			widget.content.element = element
+
 			local ability = element.ability
 
 			if element.icon_size then
@@ -399,9 +425,12 @@ local class_selection_view_blueprints = {
 			end
 
 			widget.content.title = Localize(ability.display_name)
+
 			local format_values = ability.format_values
 			local localized_description = Localize(ability.description, false, format_values)
+
 			widget.content.description = localized_description
+
 			local title_style = widget.style.title
 			local description_style = widget.style.description
 			local title_width = max_width - title_style.offset[1]
@@ -416,6 +445,7 @@ local class_selection_view_blueprints = {
 				description_width,
 				math.huge
 			}, description_style_options)
+
 			title_style.size = {
 				title_width,
 				title_text_height
@@ -425,11 +455,13 @@ local class_selection_view_blueprints = {
 				description_text_height
 			}
 			description_style.offset[2] = description_style.offset[2] + title_style.size[2]
+
 			local total_text_size = description_text_height + description_style.offset[2]
 			local total_height = math.max(widget.style.texture.size[2], total_text_size)
 
 			if total_height == total_text_size then
 				local bottom_margin = 20
+
 				total_height = total_height + bottom_margin
 			end
 
@@ -440,6 +472,7 @@ local class_selection_view_blueprints = {
 		end,
 		load_icon = function (self, widget, element)
 			local ability = element.ability
+
 			widget.style.texture.material_values.icon_texture = ability.large_icon or ability.icon
 		end
 	},
@@ -534,10 +567,12 @@ local class_selection_view_blueprints = {
 		init = function (parent, widget, element)
 			widget.content.element = element
 			widget.content.title = Localize(element.display_name)
+
 			local title_style = widget.style.title
 			local right_margin = 10
 			local title_width = max_width - title_style.offset[1] - right_margin
 			local total_height = UISettings.weapon_icon_size[2]
+
 			title_style.size = {
 				title_width - UISettings.weapon_icon_size[1],
 				total_height
@@ -561,6 +596,7 @@ local class_selection_view_blueprints = {
 					state_machine = item_state_machine,
 					animation_event = item_animation_event
 				}
+
 				content.icon_load_id = Managers.ui:load_item_icon(item, cb, render_context, dummy_profile)
 			end
 		end,
@@ -588,11 +624,13 @@ local class_selection_view_blueprints = {
 		init = function (parent, widget, element, _, _, ui_renderer)
 			widget.element = element
 			widget.content.description = element.text and Localize(element.text) or ""
+
 			local description_style = widget.style.description
 			local _, description_text_height = UIRenderer.text_size(ui_renderer, widget.content.description, description_style.font_type, description_style.font_size, {
 				max_width,
 				math.huge
 			})
+
 			widget.content.size = {
 				max_width,
 				description_text_height
@@ -653,6 +691,7 @@ local class_selection_view_blueprints = {
 		},
 		init = function (parent, widget, element, _, _, ui_renderer)
 			widget.element = element
+
 			local attributes = ""
 
 			if element.text then
@@ -661,17 +700,20 @@ local class_selection_view_blueprints = {
 
 				for i = 1, #attributes_list do
 					local attribute = attributes_list[i]
+
 					attribute = attribute:match("^%s*(.-)%s*$")
 					attributes = i == 1 and attribute or attributes .. " · " .. attribute
 				end
 			end
 
 			widget.content.class_attributes = attributes
+
 			local attributes_style = widget.style.class_attributes
 			local _, attributes_text_height = UIRenderer.text_size(ui_renderer, widget.content.class_attributes, attributes_style.font_type, attributes_style.font_size, {
 				max_width,
 				math.huge
 			})
+
 			widget.content.size = {
 				max_width,
 				attributes_text_height

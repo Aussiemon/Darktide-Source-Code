@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/ui/ui_widget.lua
+
 local UIPasses = require("scripts/managers/ui/ui_passes")
 local UIScenegraph = require("scripts/managers/ui/ui_scenegraph")
 local DefaultPassValues = require("scripts/ui/default_pass_values")
@@ -16,6 +18,7 @@ local function initialize_pass_definitions(pass_definitions, content, style, wid
 		local ui_pass = UIPasses[pass_type]
 		local data = ui_pass.init(pass, content, style) or {}
 		local pass_instance = table.clone(pass)
+
 		pass_instance.data = data
 		data._parent_name = widget_name
 		passes[i] = pass_instance
@@ -33,6 +36,7 @@ UIWidget.init = function (name, widget_definition)
 		0
 	}
 	local size = widget_definition.size and table.clone(widget_definition.size) or nil
+
 	content.size = size
 	content.size_table = {}
 
@@ -165,7 +169,7 @@ UIWidget.add_definition_pass = function (destination, pass_info)
 		content[content_id] = pass_content
 	end
 
-	local pass_style = nil
+	local pass_style
 	local style_id = pass_info.style_id
 	local default_style = DefaultPassStyles[pass_type]
 
@@ -175,9 +179,11 @@ UIWidget.add_definition_pass = function (destination, pass_info)
 
 		if not pass_style then
 			local existing_style = style[style_id]
+
 			pass_style = existing_style or table.clone(default_style)
 		else
 			local existing_style = style[style_id]
+
 			pass_style = table.merge(existing_style or table.clone(default_style), pass_style)
 		end
 	end
@@ -187,12 +193,13 @@ UIWidget.add_definition_pass = function (destination, pass_info)
 	end
 
 	local default_value = DefaultPassValues[pass_type]
-	local value_id = nil
+	local value_id
 
 	if default_value then
 		value_id = pass_info.value_id or "value_id_" .. pass_index
+
 		local value_content_table = pass_content or content
-		local value = nil
+		local value
 
 		if pass_info.value then
 			if type(pass_info.value) == "table" then
@@ -218,6 +225,7 @@ UIWidget.add_definition_pass = function (destination, pass_info)
 		scenegraph_id = pass_info.scenegraph_id,
 		retained_mode = pass_info.retained_mode
 	}
+
 	passes[pass_index] = new_pass_info
 end
 
@@ -236,7 +244,9 @@ local function _draw_widget_passes(widget, position, ui_renderer, visible)
 
 	if not size then
 		local scenegraph_id = widget.scenegraph_id
+
 		size = content.size_table
+
 		local w, h = UIScenegraph.get_size(ui_scenegraph, scenegraph_id, scale)
 
 		if widget_optional_scale then
@@ -244,8 +254,7 @@ local function _draw_widget_passes(widget, position, ui_renderer, visible)
 			h = h * widget_optional_scale
 		end
 
-		size[2] = h
-		size[1] = w
+		size[1], size[2] = w, h
 	end
 
 	local dt = ui_renderer.dt
@@ -253,8 +262,10 @@ local function _draw_widget_passes(widget, position, ui_renderer, visible)
 	local previous_render_settings_alpha_multiplier = render_settings.alpha_multiplier
 	local alpha_multiplier = (render_settings.alpha_multiplier or 1) * (ui_renderer.alpha_multiplier or 1)
 	local color_intensity_multiplier = (render_settings.color_intensity_multiplier or 1) * (ui_renderer.color_intensity_multiplier or 1)
+
 	render_settings.color_intensity_multiplier = color_intensity_multiplier
 	render_settings.alpha_multiplier = alpha_multiplier
+
 	local render_settings_material_flags = render_settings.material_flags or 0
 	local material_flags = render_settings_material_flags
 
@@ -279,6 +290,7 @@ local function _draw_widget_passes(widget, position, ui_renderer, visible)
 	end
 
 	render_settings.material_flags = material_flags
+
 	local material_flags_w_hdr = bit_or(material_flags, GuiMaterialFlag.GUI_HDR_LAYER)
 	local render_settings_world_target_position = render_settings.world_target_position
 
@@ -286,18 +298,15 @@ local function _draw_widget_passes(widget, position, ui_renderer, visible)
 		render_settings.world_target_position = style.world_target_position
 	end
 
-	local pos_x, pos_y, pos_z = nil
+	local pos_x, pos_y, pos_z
 
 	if type(position) == "table" then
-		pos_z = position[3]
-		pos_y = position[2]
-		pos_x = position[1]
+		pos_x, pos_y, pos_z = position[1], position[2], position[3]
 	else
 		pos_x, pos_y, pos_z = Vector3.to_elements(position)
 	end
 
-	local size_x = size[1]
-	local size_y = size[2]
+	local size_x, size_y = size[1], size[2]
 
 	for i = 1, #passes do
 		repeat
@@ -357,6 +366,7 @@ local function _draw_widget_passes(widget, position, ui_renderer, visible)
 
 			if pass_data.retained_id or pass_data.retained_ids then
 				local visible_previous = pass_data.visible
+
 				pass_data.visible = pass_visibility
 
 				if visible_previous and not pass_visibility then
@@ -377,11 +387,8 @@ local function _draw_widget_passes(widget, position, ui_renderer, visible)
 			end
 
 			if ui_pass.draw then
-				local pass_pos_x = pos_x
-				local pass_pos_y = pos_y
-				local pass_pos_z = pos_z
-				local pass_size_x = size_x
-				local pass_size_y = size_y
+				local pass_pos_x, pass_pos_y, pass_pos_z = pos_x, pos_y, pos_z
+				local pass_size_x, pass_size_y = size_x, size_y
 				local pass_scenegraph_id = style_data.scenegraph_id or pass_info.scenegraph_id
 
 				if pass_scenegraph_id then
@@ -395,9 +402,7 @@ local function _draw_widget_passes(widget, position, ui_renderer, visible)
 					local world_pos = UIScenegraph.world_position(ui_scenegraph, pass_scenegraph_id)
 
 					if type(world_pos) == "table" then
-						pass_pos_z = world_pos[3]
-						pass_pos_y = world_pos[2]
-						pass_pos_x = world_pos[1]
+						pass_pos_x, pass_pos_y, pass_pos_z = world_pos[1], world_pos[2], world_pos[3]
 					else
 						pass_pos_x, pass_pos_y, pass_pos_z = Vector3.to_elements(world_pos)
 					end
@@ -415,13 +420,8 @@ local function _draw_widget_passes(widget, position, ui_renderer, visible)
 					local height = style_data_size and style_data_size[2] or pass_size_y
 
 					if style_data_size_addition then
-						if style_data_size_addition[1] then
-							width = width + style_data_size_addition[1] or width
-						end
-
-						if style_data_size_addition[2] then
-							height = height + style_data_size_addition[2] or height
-						end
+						width = style_data_size_addition[1] and width + style_data_size_addition[1] or width
+						height = style_data_size_addition[2] and height + style_data_size_addition[2] or height
 					end
 
 					local horizontal_alignment = style_data.horizontal_alignment
@@ -502,6 +502,7 @@ UIWidget.draw = function (widget, ui_renderer)
 	end
 
 	local gamepad_active = InputDevice.gamepad_active
+
 	content.is_gamepad_active = gamepad_active
 
 	if content.disable_with_gamepad then
@@ -522,6 +523,7 @@ UIWidget.set_visible = function (widget, ui_renderer, visible)
 
 		if pass_info.retained_mode or pass_data.material then
 			local visible_previous = pass_data.visible
+
 			pass_data.visible = visible
 
 			if not visible or pass_data.material then

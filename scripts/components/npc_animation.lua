@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/components/npc_animation.lua
+
 local NpcAnimation = component("NpcAnimation")
 
 NpcAnimation.init = function (self, unit)
@@ -22,6 +24,7 @@ NpcAnimation.init = function (self, unit)
 
 			if has_bone_lod_manager and use_bone_lod and not is_in_ui_world then
 				local bone_lod_radius = self:get_data(unit, "bone_lod_radius")
+
 				self._bone_lod_id = Managers.state.bone_lod:register_unit(unit, bone_lod_radius, true)
 			end
 		end

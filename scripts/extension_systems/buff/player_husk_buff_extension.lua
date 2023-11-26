@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/buff/player_husk_buff_extension.lua
+
 local BuffExtensionInterface = require("scripts/extension_systems/buff/buff_extension_interface")
 local PlayerHuskBuffExtension = class("PlayerHuskBuffExtension")
 local RPCS = {
@@ -15,6 +17,7 @@ PlayerHuskBuffExtension.init = function (self, extension_init_context, unit, ext
 	self._game_session = game_session
 	self._player = extension_init_data.player
 	self._keywords = {}
+
 	local network_event_delegate = extension_init_context.network_event_delegate
 
 	network_event_delegate:register_session_unit_events(self, self._game_object_id, unpack(RPCS))
@@ -36,6 +39,7 @@ PlayerHuskBuffExtension.pre_update = function (self, unit, dt, t, fixed_frame)
 	for ii = 1, #game_object_buff_keywords do
 		if game_object_buff_keywords[ii] then
 			local keyword = NetworkLookup.synced_buff_keywords[ii]
+
 			active_keywords[keyword] = true
 		end
 	end

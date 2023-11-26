@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/equipment/item_material_overrides/minion_material_overrides_gear.lua
+
 local material_overrides = {
 	mutant_charger_cloth_var_01 = {
 		texture_overrides = {

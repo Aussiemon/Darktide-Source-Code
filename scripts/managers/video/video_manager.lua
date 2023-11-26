@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/video/video_manager.lua
+
 local UIPopupTemplates = require("scripts/settings/ui/ui_popup_templates")
 local VideoManager = class("VideoManager")
 

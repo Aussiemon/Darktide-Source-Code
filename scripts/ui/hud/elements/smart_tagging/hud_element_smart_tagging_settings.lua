@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/hud/elements/smart_tagging/hud_element_smart_tagging_settings.lua
+
 local hud_element_smart_tagging_settings = {
 	anim_speed = 8,
 	min_radius = 185,

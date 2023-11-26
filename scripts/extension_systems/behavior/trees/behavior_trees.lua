@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/behavior/trees/behavior_trees.lua
+
 require("scripts/foundation/utilities/settings")
 require("scripts/foundation/utilities/table")
 
@@ -6,6 +8,7 @@ local behavior_trees = {}
 local function _create_behavior_tree_entry(path)
 	local behavior_tree = require(path)
 	local behavior_tree_name = behavior_tree.name
+
 	behavior_trees[behavior_tree_name] = behavior_tree
 end
 
@@ -48,6 +51,7 @@ local function _setup_generated_behavior_trees()
 	for bt_name, bt_node in pairs(behavior_trees) do
 		local capitalized_bt_name = bt_name:gsub("^%l", string.upper)
 		local camel_case_bt_name = capitalized_bt_name:gsub("_(%l)", string.upper)
+
 		bt_node[1] = string.format("Bt%sSelectorNode", camel_case_bt_name)
 		bt_node.name = bt_name .. "_GENERATED"
 	end

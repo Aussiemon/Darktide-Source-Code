@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/utilities/luggable.lua
+
 local MasterItems = require("scripts/backend/master_items")
 local Pickups = require("scripts/settings/pickup/pickups")
 local PlayerUnitVisualLoadout = require("scripts/extension_systems/visual_loadout/utilities/player_unit_visual_loadout")
@@ -9,11 +11,13 @@ Luggable.drop_luggable = function (t, unit, inventory_component, visual_loadout_
 		return
 	end
 
-	local unit_data_extension, existing_unit = nil
+	local unit_data_extension, existing_unit
 
 	if enable_physics then
 		unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
+
 		local inventory_slot_component = unit_data_extension:read_component(SLOT_LUGGABLE)
+
 		existing_unit = inventory_slot_component.existing_unit_3p
 	end
 
@@ -40,12 +44,13 @@ Luggable.enable_physics = function (first_person_component, locomotion_component
 	local look_rotation = first_person_component.rotation
 	local look_direction = Quaternion.forward(look_rotation)
 	local player_position = locomotion_component.position
-	local position = nil
+	local position
 	local projectile_locomotion_extension = ScriptUnit.has_extension(existing_unit, "locomotion_system")
 
 	if projectile_locomotion_extension then
 		local radius = projectile_locomotion_extension:radius()
-		position = player_position + Vector3.up() * radius * 1.1
+
+		position = player_position + Vector3.up() * (radius * 1.1)
 	else
 		position = Vector3.lerp(player_position, look_position, 0.7)
 	end
@@ -88,8 +93,7 @@ Luggable.link_to_player_unit = function (world, player_unit, luggable_unit, item
 	local unit_data_extension = ScriptUnit.extension(player_unit, "unit_data_system")
 	local breed_name = unit_data_extension:breed_name()
 	local attach_node_to_use = breed_attach_node[breed_name] or attach_node
-	local node = Unit.node(player_unit, attach_node_to_use)
-	local map_nodes = false
+	local node, map_nodes = Unit.node(player_unit, attach_node_to_use), false
 
 	World.link_unit(world, luggable_unit, 1, player_unit, node, map_nodes)
 

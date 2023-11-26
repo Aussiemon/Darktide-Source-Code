@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/breed/breed_blackboard_component_templates/chaos_beast_of_nurgle_blackboard_component_templates.lua
+
 local base_template = require("scripts/settings/breed/breed_blackboard_component_templates/base_blackboard_component_template")
 local chaos_beast_of_nurgle = {
 	behavior = {

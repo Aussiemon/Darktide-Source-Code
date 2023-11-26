@@ -1,6 +1,9 @@
+﻿-- chunkname: @scripts/settings/equipment/weapon_traits/weapon_traits_bespoke_ogryn_combatblade_p1.lua
+
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local templates = {}
 local stat_buffs = BuffSettings.stat_buffs
+
 templates.weapon_trait_bespoke_ogryn_combatblade_p1_crit_chance_on_push = {
 	weapon_trait_bespoke_ogryn_combatblade_p1_crit_chance_on_push = {
 		{

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/pass_templates/text_input_pass_templates.lua
+
 local ColorUtilities = require("scripts/utilities/ui/colors")
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local UIRenderer = require("scripts/managers/ui/ui_renderer")
@@ -17,8 +19,11 @@ local TextInputPassTemplates = {}
 local function _crop_text_width(ui_renderer, text, max_width, last_start_position, caret_position, font_type, font_size)
 	text = text or ""
 	max_width = max_width > 0 and max_width or 0
+
 	local original_text_length = _utf8_string_length(text)
+
 	caret_position = caret_position or original_text_length + 1
+
 	local prefix = ""
 	local suffix = ""
 	local start_index = 1
@@ -81,6 +86,7 @@ local function _crop_text_width(ui_renderer, text, max_width, last_start_positio
 		end
 
 		local text_til_caret_pos = _utf8_sub_string(cropped_text, 1, num_chars_before_caret_pos)
+
 		_1, _2, _3, caret_offset = _ui_renderer_text_size(ui_renderer, text_til_caret_pos, font_type, scaled_font_size)
 	end
 
@@ -134,6 +140,7 @@ end
 
 local function _remove_text(input_text, selection_start, selection_end, caret_position)
 	local selection_length = selection_end - selection_start
+
 	input_text = Utf8.string_remove(input_text, selection_start, selection_length)
 
 	if caret_position then
@@ -205,7 +212,7 @@ local text_input_base = {
 			local caret_position = content.caret_position or 1
 			local updated_input_text = content.input_text or ""
 			local is_selecting = input_service:get("select_text")
-			local last_input = nil
+			local last_input
 
 			if input_service:get("navigate_left_continuous") then
 				if input_service:get("navigate_text_modifier") then
@@ -228,6 +235,7 @@ local text_input_base = {
 
 				if clipboard_text then
 					local max_length = content.max_length
+
 					updated_input_text, caret_position = _insert_text(updated_input_text, caret_position, clipboard_text, max_length)
 					last_input = clipboard_text
 				end
@@ -291,10 +299,13 @@ local text_input_base = {
 					local title = content.virtual_keyboard_title or content.placeholder_text
 					local description = content.virtual_keyboard_description or ""
 					local input_text = content.input_text or ""
+
 					content.input_text = ""
 					content.selected_text = input_text
+
 					local max_length = content.max_length
 					local x_game_ui = XGameUI.new_block()
+
 					content.x_async_block = x_game_ui
 
 					XGameUI.show_text_entry_async(x_game_ui, title, description, input_text, "default", max_length)
@@ -305,7 +316,7 @@ local text_input_base = {
 						local new_input_text = XGameUI.resolve_text_entry(async_block)
 						local last_char = string.sub(new_input_text, #new_input_text)
 
-						if last_char == " " then
+						if last_char == "\x00" then
 							new_input_text = string.sub(new_input_text, 1, #new_input_text - 1)
 						end
 
@@ -355,7 +366,9 @@ local text_input_base = {
 
 			if has_selection and not is_selecting then
 				local last_input = content.last_input
+
 				content.last_input = nil
+
 				local deselect = false
 
 				if input_service:get("clipboard_copy") then
@@ -445,13 +458,14 @@ local text_input_base = {
 
 			if not text_has_changed and not placeholder_text_has_changed and not caret_position_has_changed and not force_caret_update then
 				return
-			elseif content.max_length and content.max_length < text_length then
+			elseif content.max_length and text_length > content.max_length then
 				content.input_text = old_input_text
 
 				return
 			end
 
 			new_caret_position = new_caret_position and _math_clamp(new_caret_position, 1, text_length + 1)
+
 			local display_text_style = ui_style.parent.display_text
 			local caret_style = ui_style.parent.input_caret
 			local max_text_width = size[1] - 1
@@ -461,6 +475,7 @@ local text_input_base = {
 			end
 
 			local display_text, caret_offset, first_pos = _crop_text_width(ui_renderer, new_input_text, max_text_width, content._input_text_first_visible_pos, new_caret_position, display_text_style.font_type, display_text_style.font_size)
+
 			content.caret_position = new_caret_position
 			content._input_text = new_input_text
 			content.display_text = display_text
@@ -470,50 +485,54 @@ local text_input_base = {
 			content.force_caret_update = nil
 			caret_style.offset[1] = display_text_style.offset[1] + caret_offset
 		end
+	},
+	{
+		pass_type = "logic",
+		value = function (pass, ui_renderer, ui_style, content, position, size)
+			if not content._selection_changed then
+				return
+			end
+
+			content._selection_changed = nil
+
+			local selection_start = content._selection_start
+			local selection_end = content._selection_end
+			local display_text = content.display_text
+			local display_text_style = ui_style.parent.display_text
+			local first_visible_character_pos = content._input_text_first_visible_pos or 1
+
+			if first_visible_character_pos > 1 then
+				local offset = first_visible_character_pos - _ellipsis_length - 1
+
+				selection_start = _math_max(selection_start - offset, 1)
+				selection_end = selection_end - offset
+			end
+
+			local text_up_to_selection_start = _utf8_sub_string(display_text, 1, selection_start - 1)
+			local _1, _2, _3, select_start_offset = _ui_renderer_text_size(ui_renderer, text_up_to_selection_start, display_text_style.font_type, display_text_style.font_size)
+			local last_visible_character_pos = _utf8_string_length(display_text) + first_visible_character_pos
+
+			if last_visible_character_pos < selection_end then
+				selection_end = last_visible_character_pos
+			end
+
+			local visibly_selected_text = _utf8_sub_string(display_text, selection_start, selection_end - 1)
+			local _1, _2, _3, selection_width = _ui_renderer_text_size(ui_renderer, visibly_selected_text, display_text_style.font_type, display_text_style.font_size)
+			local selection_style = ui_style.parent.selection
+			local selection_offset = selection_style.offset or {}
+			local selection_size = selection_style.size or {}
+
+			selection_offset[1] = display_text_style.offset[1] + select_start_offset[1]
+			selection_size[1] = selection_width[1]
+			selection_style.offset = selection_offset
+			selection_style.size = selection_size
+		end,
+		visibility_function = _selection_visibility_function
 	}
-}
-text_input_base[6] = {
-	pass_type = "logic",
-	value = function (pass, ui_renderer, ui_style, content, position, size)
-		if not content._selection_changed then
-			return
-		end
-
-		content._selection_changed = nil
-		local selection_start = content._selection_start
-		local selection_end = content._selection_end
-		local display_text = content.display_text
-		local display_text_style = ui_style.parent.display_text
-		local first_visible_character_pos = content._input_text_first_visible_pos or 1
-
-		if first_visible_character_pos > 1 then
-			local offset = first_visible_character_pos - _ellipsis_length - 1
-			selection_start = _math_max(selection_start - offset, 1)
-			selection_end = selection_end - offset
-		end
-
-		local text_up_to_selection_start = _utf8_sub_string(display_text, 1, selection_start - 1)
-		local _1, _2, _3, select_start_offset = _ui_renderer_text_size(ui_renderer, text_up_to_selection_start, display_text_style.font_type, display_text_style.font_size)
-		local last_visible_character_pos = _utf8_string_length(display_text) + first_visible_character_pos
-
-		if selection_end > last_visible_character_pos then
-			selection_end = last_visible_character_pos
-		end
-
-		local visibly_selected_text = _utf8_sub_string(display_text, selection_start, selection_end - 1)
-		local _1, _2, _3, selection_width = _ui_renderer_text_size(ui_renderer, visibly_selected_text, display_text_style.font_type, display_text_style.font_size)
-		local selection_style = ui_style.parent.selection
-		local selection_offset = selection_style.offset or {}
-		local selection_size = selection_style.size or {}
-		selection_offset[1] = display_text_style.offset[1] + select_start_offset[1]
-		selection_size[1] = selection_width[1]
-		selection_style.offset = selection_offset
-		selection_style.size = selection_size
-	end,
-	visibility_function = _selection_visibility_function
 }
 local _simple_input_field_padding = 4
 local _simple_input_text_style = table.clone(UIFontSettings.body)
+
 _simple_input_text_style.text_color = Color.white(255, true)
 _simple_input_text_style.size_addition = {
 	-(_simple_input_field_padding * 2),
@@ -525,9 +544,13 @@ _simple_input_text_style.offset = {
 	1
 }
 _simple_input_text_style.text_vertical_alignment = "center"
+
 local _simple_input_placeholder_text_style = table.clone(_simple_input_text_style)
+
 _simple_input_placeholder_text_style.text_color = Color.ui_grey_medium(200, true)
+
 local _simple_input_limit_text_style = table.clone(_simple_input_text_style)
+
 _simple_input_limit_text_style.text_horizontal_alignment = "right"
 _simple_input_limit_text_style.text_color = Color.ui_grey_light(255, true)
 _simple_input_limit_text_style.font_size = 18
@@ -656,6 +679,7 @@ table.append(TextInputPassTemplates.simple_input_field, {
 			local new_input_text = content.input_text
 			local text_length = new_input_text and _utf8_string_length(new_input_text) or 0
 			local max_length = content.max_length or 0
+
 			content.limit_text = string.format("%d/%d", text_length, max_length)
 		end,
 		visibility_function = function (content, style)
@@ -666,6 +690,7 @@ table.append(TextInputPassTemplates.simple_input_field, {
 
 local _terminal_input_field_padding = 4
 local _terminal_input_text_style = table.clone(UIFontSettings.body)
+
 _terminal_input_text_style.text_color = Color.terminal_text_header_selected(255, true)
 _terminal_input_text_style.size_addition = {
 	-(_terminal_input_field_padding * 2),
@@ -677,9 +702,13 @@ _terminal_input_text_style.offset = {
 	1
 }
 _terminal_input_text_style.text_vertical_alignment = "center"
+
 local _terminal_input_placeholder_text_style = table.clone(_terminal_input_text_style)
+
 _terminal_input_placeholder_text_style.text_color = Color.terminal_text_body_sub_header(255, true)
+
 local _terminal_input_limit_text_style = table.clone(_terminal_input_text_style)
+
 _terminal_input_limit_text_style.text_horizontal_alignment = "right"
 _terminal_input_limit_text_style.text_color = Color.terminal_text_header(255, true)
 _terminal_input_limit_text_style.font_size = 18
@@ -800,6 +829,7 @@ table.append(TextInputPassTemplates.terminal_input_field, {
 			local new_input_text = content.input_text
 			local text_length = new_input_text and _utf8_string_length(new_input_text) or 0
 			local max_length = content.max_length or 0
+
 			content.limit_text = string.format("%d/%d", text_length, max_length)
 		end,
 		visibility_function = function (content, style)
@@ -809,6 +839,7 @@ table.append(TextInputPassTemplates.terminal_input_field, {
 })
 
 local input_text_style = table.clone(UIFontSettings.chat_input)
+
 input_text_style.offset = {
 	ChatSettings.window_margins[1],
 	0,
@@ -818,6 +849,7 @@ input_text_style.size_addition = {
 	0,
 	0
 }
+
 local input_caret_style = {
 	vertical_alignment = "center",
 	offset = {
@@ -837,9 +869,12 @@ local input_frame_style = {
 	color = ChatSettings.insertion_caret_color
 }
 local placeholder_text_style = table.clone(input_text_style)
+
 placeholder_text_style.base_offset = table.clone(input_text_style.offset)
 placeholder_text_style.text_color = ChatSettings.input_text_idle_color
+
 local placeholder_fade_time = ChatSettings.placeholder_fade_time
+
 TextInputPassTemplates.chat_input_field = table.clone(text_input_base)
 
 table.append(TextInputPassTemplates.chat_input_field, {
@@ -854,7 +889,7 @@ table.append(TextInputPassTemplates.chat_input_field, {
 			local widget_content = pass_content.parent or pass_content
 			local should_be_visible = widget_content.is_writing
 			local alpha = style_data.color[1]
-			local fade_step = dt * 1 / placeholder_fade_time * 255
+			local fade_step = dt * (1 / placeholder_fade_time) * 255
 
 			if not should_be_visible and alpha > 0 then
 				style_data.color[1] = _math_max(alpha - fade_step, 0)
@@ -908,7 +943,7 @@ table.append(TextInputPassTemplates.chat_input_field, {
 		style = table.clone(placeholder_text_style),
 		change_function = function (pass_content, style_data, animations, dt)
 			local alpha = style_data.text_color[1]
-			local fade_step = dt * 1 / placeholder_fade_time * 255
+			local fade_step = dt * (1 / placeholder_fade_time) * 255
 			local input_text = pass_content.input_text
 
 			if input_text and #input_text > 0 then

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/telemetry/telemetry_events.lua
+
 local TelemetryEvent = require("scripts/managers/telemetry/telemetry_event")
 local TelemetrySettings = require("scripts/managers/telemetry/telemetry_settings")
 local TelemetryHelper = require("scripts/managers/telemetry/telemetry_helper")
@@ -127,6 +129,7 @@ end
 TelemetryEvents.mission_session_started = function (self, session_id, map)
 	self._session.gameplay = session_id
 	self._context.map = map
+
 	local event = self:_create_event("mission_session_started")
 
 	self._manager:register_event(event)
@@ -134,6 +137,7 @@ end
 
 TelemetryEvents.hub_session_started = function (self, session_id)
 	self._session.gameplay = session_id
+
 	local event = self:_create_event("hub_session_started")
 
 	self._manager:register_event(event)
@@ -202,6 +206,7 @@ end
 
 TelemetryEvents.player_authenticated = function (self, account)
 	self._subject.account_id = string.value_or_nil(account.sub)
+
 	local event = self:_create_event("player_authenticated")
 
 	self._manager:register_event(event)
@@ -254,6 +259,10 @@ TelemetryEvents.system_settings = function (self, account_id)
 				model = "lockheart"
 			}
 		end
+	end
+
+	if false then
+		-- Nothing
 	end
 
 	local event = self:_create_event("system_settings")
@@ -329,7 +338,9 @@ TelemetryEvents.player_knocked_down = function (self, player, data)
 	data.coherency = TelemetryHelper.unit_coherency(player.player_unit)
 	data.chunk = TelemetryHelper.chunk_at_unit(player.player_unit)
 
-	if data.reason ~= "damage" then
+	if data.reason == "damage" then
+		-- Nothing
+	else
 		data.victim_position = TelemetryHelper.unit_position(player.player_unit)
 	end
 
@@ -362,7 +373,9 @@ TelemetryEvents.player_died = function (self, player, data)
 	data.coherency = TelemetryHelper.unit_coherency(player.player_unit)
 	data.chunk = TelemetryHelper.chunk_at_unit(player.player_unit)
 
-	if data.reason ~= "damage" then
+	if data.reason == "damage" then
+		-- Nothing
+	else
 		data.victim_position = TelemetryHelper.unit_position(player.player_unit)
 	end
 
@@ -773,6 +786,7 @@ end
 
 TelemetryEvents.character_creation_time = function (self, character_id, time)
 	self._subject.character_id = character_id
+
 	local event = TelemetryEvent:new(SOURCE, {
 		account_id = self._subject.account_id,
 		character_id = character_id
@@ -836,7 +850,7 @@ TelemetryEvents.vote_completed = function (self, name, result, votes, params)
 	local event = self:_create_event("vote_completed")
 	local kick_peer_id = params.kick_peer_id
 	local players_at_peer = kick_peer_id and Managers.player:players_at_peer(kick_peer_id)
-	local kicked_accounts = nil
+	local kicked_accounts
 
 	if kick_peer_id and players_at_peer then
 		kicked_accounts = {}

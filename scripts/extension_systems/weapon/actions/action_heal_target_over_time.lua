@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/weapon/actions/action_heal_target_over_time.lua
+
 require("scripts/extension_systems/weapon/actions/action_weapon_base")
 
 local Breed = require("scripts/utilities/breed")
@@ -11,10 +13,15 @@ ActionHealTargetOverTime.init = function (self, action_context, action_params, a
 	ActionHealTargetOverTime.super.init(self, action_context, action_params, action_settings)
 
 	local unit_data_extension = action_context.unit_data_extension
+
 	self._action_component = unit_data_extension:write_component("action_heal_target_over_time")
+
 	local component_name = PlayerUnitData.looping_sound_component_name(TARGET_LOOPING_SOUND_ALIAS)
+
 	self._looping_sound_component = unit_data_extension:read_component(component_name)
+
 	local weapon = action_params.weapon
+
 	self._fx_sound_source_name = weapon.fx_sources._muzzle
 end
 

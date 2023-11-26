@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/toughness/minion_toughness_extension.lua
+
 local AttackSettings = require("scripts/settings/damage/attack_settings")
 local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
 local Explosion = require("scripts/utilities/attack/explosion")
@@ -8,6 +10,7 @@ MinionToughnessExtension.init = function (self, extension_init_context, unit, ex
 	self._world = extension_init_context.world
 	self._physics_world = extension_init_context.physics_world
 	self._unit = unit
+
 	local breed = extension_init_data.breed
 	local toughness_template = breed.toughness_template
 
@@ -15,14 +18,19 @@ MinionToughnessExtension.init = function (self, extension_init_context, unit, ex
 
 	game_object_data.toughness = self._max_toughness
 	self._toughness_template = toughness_template
+
 	local blackboard = BLACKBOARDS[unit]
+
 	self._blackboard = blackboard
 
 	self:_init_blackboard_components(blackboard)
 
 	local fx_system = Managers.state.extension:system("fx_system")
+
 	self._fx_system = fx_system
+
 	local health_extension = ScriptUnit.extension(unit, "health_system")
+
 	self._health_extension = health_extension
 	self._is_invulnerable = false
 	self._stored_attacks = {}
@@ -30,6 +38,7 @@ end
 
 MinionToughnessExtension._init_blackboard_components = function (self, blackboard)
 	local toughness_component = Blackboard.write_component(blackboard, "toughness")
+
 	self._toughness_component = toughness_component
 	toughness_component.max_toughness = self:max_toughness()
 	toughness_component.toughness_damage = self:toughness_damage()
@@ -38,6 +47,7 @@ end
 
 MinionToughnessExtension._initialize_toughness = function (self, unit, toughness_template)
 	local max_toughness = Managers.state.difficulty:get_table_entry_by_challenge(toughness_template.max)
+
 	self._max_toughness = max_toughness
 	self._toughness_damage = toughness_template.start_depleted and max_toughness or 0
 
@@ -50,6 +60,7 @@ MinionToughnessExtension._initialize_toughness = function (self, unit, toughness
 	end
 
 	self._toughness_regen_delay = 0
+
 	local session = self._game_session
 
 	if session then
@@ -65,6 +76,7 @@ end
 
 MinionToughnessExtension._set_blackboard_values = function (self)
 	local toughness_component = self._toughness_component
+
 	toughness_component.max_toughness = self:max_toughness()
 	toughness_component.toughness_damage = self:toughness_damage()
 	toughness_component.toughness_percent = self:current_toughness_percent()
@@ -73,12 +85,14 @@ end
 MinionToughnessExtension.game_object_initialized = function (self, session, object_id)
 	self._game_session = session
 	self._game_object_id = object_id
+
 	local toughness_template = self._toughness_template
 	local effect_template = toughness_template.effect_template
 
 	if effect_template then
 		local fx_system = self._fx_system
 		local unit = self._unit
+
 		self._global_effect_id = fx_system:start_template_effect(effect_template, unit)
 	end
 end
@@ -132,13 +146,14 @@ MinionToughnessExtension._update_toughness = function (self, dt, t)
 
 	if self._override_regen_speed then
 		local regen_rate = self._override_regen_speed
+
 		self._toughness_damage = math.max(toughness_damage - regen_rate * dt, 0)
 	end
 
 	if toughness_damage > 0 then
 		local regenerate_full_delay = self._regenerate_full_delay
 
-		if regenerate_full_delay and self._max_toughness <= toughness_damage then
+		if regenerate_full_delay and toughness_damage >= self._max_toughness then
 			if regenerate_full_delay < t then
 				self._toughness_damage = 0
 				self._regenerate_full_delay = nil
@@ -146,6 +161,7 @@ MinionToughnessExtension._update_toughness = function (self, dt, t)
 			end
 		elseif toughness_regen_delay < t and not self._override_regen_speed then
 			local regen_rate = toughness_template.regeneration_speed
+
 			self._toughness_damage = math.max(toughness_damage - regen_rate * dt, 0)
 		end
 
@@ -173,6 +189,7 @@ MinionToughnessExtension._update_toughness = function (self, dt, t)
 
 		if depleted_settings and depleted_settings.stagger_strength_multiplier then
 			local stagger_component = Blackboard.write_component(self._blackboard, "stagger")
+
 			stagger_component.stagger_strength_multiplier = 0
 		end
 
@@ -304,6 +321,7 @@ MinionToughnessExtension.break_shield = function (self, attack_direction, option
 
 		if stagger_strength_multiplier then
 			local stagger_component = Blackboard.write_component(self._blackboard, "stagger")
+
 			stagger_component.stagger_strength_multiplier = stagger_strength_multiplier
 		end
 
@@ -330,6 +348,7 @@ MinionToughnessExtension.break_shield = function (self, attack_direction, option
 			local max_health = health_extension:max_health()
 			local max_health_loss_allowed = max_health * max_health_loss_percent
 			local min_health_allowed = math.clamp(current_health - max_health_loss_allowed, 0, max_health)
+
 			self._min_health_allowed = min_health_allowed
 		end
 

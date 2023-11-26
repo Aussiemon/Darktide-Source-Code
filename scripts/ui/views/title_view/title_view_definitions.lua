@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/title_view/title_view_definitions.lua
+
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local scenegraph_definition = {
@@ -71,6 +73,7 @@ local scenegraph_definition = {
 	}
 }
 local title_text_font_style = table.clone(UIFontSettings.body)
+
 title_text_font_style.text_horizontal_alignment = "center"
 title_text_font_style.text_color = {
 	255,
@@ -79,6 +82,7 @@ title_text_font_style.text_color = {
 	255
 }
 title_text_font_style.font_size = 24
+
 local widget_definitions = {
 	background = UIWidget.create_definition({
 		{
@@ -129,6 +133,7 @@ local widget_definitions = {
 			change_function = function (content, style)
 				local progress = content.ready_to_continue and 1 or 0.5 + math.sin(Application.time_since_launch() * 3) * 0.5
 				local text_color = style.text_color
+
 				text_color[2] = 180 + 75 * progress
 				text_color[3] = 180 + 75 * progress
 				text_color[4] = 180 + 75 * progress

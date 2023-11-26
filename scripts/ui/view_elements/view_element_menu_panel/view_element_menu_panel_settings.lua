@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/view_elements/view_element_menu_panel/view_element_menu_panel_settings.lua
+
 local UIWorkspaceSettings = require("scripts/settings/ui/ui_workspace_settings")
 local top_panel_size = UIWorkspaceSettings.top_panel.size
 local view_element_menu_panel_settings = {

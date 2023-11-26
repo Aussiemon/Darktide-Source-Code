@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/behavior/utility_considerations/minion_common_utility_considerations.lua
+
 local considerations = {
 	melee_follow = {
 		distance_to_slot = {

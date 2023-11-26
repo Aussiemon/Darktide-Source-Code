@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/pickup/pickups.lua
+
 local pickups = {
 	by_group = {},
 	by_name = {},

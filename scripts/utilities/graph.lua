@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/utilities/graph.lua
+
 local Graph = class("Graph")
 
 Graph.init = function (self)
@@ -25,6 +27,7 @@ Graph.add_edge = function (self, value_1, value_2, edge_is_undiracted)
 
 	if nodes[value_1] and not edge_is_undiracted or nodes[value_1] and nodes[value_2] then
 		local adjacency_nodes = nodes[value_1].adjacency_nodes
+
 		adjacency_nodes[#adjacency_nodes + 1] = value_2
 
 		if edge_is_undiracted then
@@ -36,7 +39,7 @@ end
 
 Graph.get_adjacency_nodes = function (self, value)
 	local nodes = self._nodes
-	local return_value = nil
+	local return_value
 
 	if nodes[value] then
 		local adjacency_nodes = nodes[value].adjacency_nodes

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/equipment/item_material_overrides/minion_material_overrides_decals.lua
+
 local material_overrides = {
 	decal_foundry_01 = {
 		texture_overrides = {

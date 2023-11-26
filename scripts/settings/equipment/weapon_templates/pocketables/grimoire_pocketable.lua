@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/equipment/weapon_templates/pocketables/grimoire_pocketable.lua
+
 local BaseTemplateSettings = require("scripts/settings/equipment/weapon_templates/base_template_settings")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
@@ -5,52 +7,52 @@ local DamageSettings = require("scripts/settings/damage/damage_settings")
 local FootstepIntervalsTemplates = require("scripts/settings/equipment/footstep/footstep_intervals_templates")
 local damage_types = DamageSettings.damage_types
 local wield_inputs = PlayerCharacterConstants.wield_inputs
-local weapon_template = {
-	action_inputs = {
-		push = {
-			buffer_time = 0.4,
-			input_sequence = {
-				{
-					value = true,
-					input = "action_two_pressed"
-				}
+local weapon_template = {}
+
+weapon_template.action_inputs = {
+	push = {
+		buffer_time = 0.4,
+		input_sequence = {
+			{
+				value = true,
+				input = "action_two_pressed"
 			}
-		},
-		throw_start = {
-			buffer_time = 0,
-			input_sequence = {
-				{
-					value = true,
-					input = "action_one_hold"
-				}
+		}
+	},
+	throw_start = {
+		buffer_time = 0,
+		input_sequence = {
+			{
+				value = true,
+				input = "action_one_hold"
 			}
-		},
-		throw_stop = {
-			buffer_time = 0.02,
-			input_sequence = {
-				{
-					value = false,
-					input = "action_one_hold",
-					time_window = math.huge
-				}
+		}
+	},
+	throw_stop = {
+		buffer_time = 0.02,
+		input_sequence = {
+			{
+				value = false,
+				input = "action_one_hold",
+				time_window = math.huge
 			}
-		},
-		throw_complete = {
-			buffer_time = 0,
-			input_sequence = {
-				{
-					value = true,
-					input = "action_one_hold"
-				}
+		}
+	},
+	throw_complete = {
+		buffer_time = 0,
+		input_sequence = {
+			{
+				value = true,
+				input = "action_one_hold"
 			}
-		},
-		wield = {
-			buffer_time = 0,
-			clear_input_queue = true,
-			input_sequence = {
-				{
-					inputs = wield_inputs
-				}
+		}
+	},
+	wield = {
+		buffer_time = 0,
+		clear_input_queue = true,
+		input_sequence = {
+			{
+				inputs = wield_inputs
 			}
 		}
 	}

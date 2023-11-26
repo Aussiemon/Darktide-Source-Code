@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/pickup/pickups/pocketable/breach_charge_pocketable_pickup.lua
+
 local pickup_data = {
 	description = "loc_pickup_pocketable_syringe_01",
 	name = "breach_charge_pocketable",

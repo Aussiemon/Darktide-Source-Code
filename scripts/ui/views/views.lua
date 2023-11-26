@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/views.lua
+
 local MinigameSettings = require("scripts/settings/minigame/minigame_settings")
 local Archetypes = require("scripts/settings/archetype/archetypes")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")

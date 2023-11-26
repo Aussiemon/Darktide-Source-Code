@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/wwise_game_sync/wwise_state_groups/wwise_state_group_options.lua
+
 require("scripts/managers/wwise_game_sync/wwise_state_groups/wwise_state_group_base")
 
 local WwiseGameSyncSettings = require("scripts/settings/wwise_game_sync/wwise_game_sync_settings")

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/multiplayer/connection/local_states/local_await_connection_booted_state.lua
+
 local LocalAwaitConnectionBootedState = class("LocalAwaitConnectionBootedState")
 local RPCS = {
 	"rpc_connection_booted_reply"
@@ -46,7 +48,7 @@ LocalAwaitConnectionBootedState.update = function (self, dt)
 
 	self._time = self._time + dt
 
-	if TIMEOUT < self._time then
+	if self._time > TIMEOUT then
 		Log.info("LocalAwaitConnectionBootedState", "Timeout waiting for connection boot to complete")
 
 		return "timeout", {

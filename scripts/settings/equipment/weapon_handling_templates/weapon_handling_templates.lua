@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/equipment/weapon_handling_templates/weapon_handling_templates.lua
+
 local function lerpable_timescale(value)
 	return {
 		lerp_basic = value * 0.75,
@@ -5,7 +7,7 @@ local function lerpable_timescale(value)
 	}
 end
 
-local multiplier = nil
+local multiplier
 local ninja_crit_bump = 0.15
 local hatchet_crit_bump = {
 	lerp_perfect = 0.15,

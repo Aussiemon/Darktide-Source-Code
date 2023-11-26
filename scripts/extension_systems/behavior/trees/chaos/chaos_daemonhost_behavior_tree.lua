@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/behavior/trees/chaos/chaos_daemonhost_behavior_tree.lua
+
 local BreedActions = require("scripts/settings/breed/breed_actions")
 local action_data = BreedActions.chaos_daemonhost
 local behavior_tree = {
@@ -50,6 +52,7 @@ local behavior_tree = {
 	},
 	{
 		"BtSequenceNode",
+		action_data = action_data.warp_grab_teleport,
 		{
 			"BtWarpTeleportAction",
 			name = "warp_teleport",
@@ -61,8 +64,7 @@ local behavior_tree = {
 			action_data = action_data.warp_grab
 		},
 		name = "warp_grab_teleport",
-		condition = "daemonhost_can_warp_grab",
-		action_data = action_data.warp_grab_teleport
+		condition = "daemonhost_can_warp_grab"
 	},
 	{
 		"BtStaggerAction",

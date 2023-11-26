@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/navigation/minion_navigation_extension.lua
+
 local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
 local Navigation = require("scripts/extension_systems/navigation/utilities/navigation")
 local MinionNavigationExtension = class("MinionNavigationExtension")
@@ -5,23 +7,21 @@ local MAX_NUM_MOVEMENT_MODIFERS = 8
 local FAR_PATHING_ALLOWED = true
 
 MinionNavigationExtension.init = function (self, extension_init_context, unit, extension_init_data, game_object_data)
-	local breed = extension_init_data.breed
-	local nav_world = extension_init_context.nav_world
-	self._nav_world = nav_world
-	self._breed = breed
+	local breed, nav_world = extension_init_data.breed, extension_init_context.nav_world
+
+	self._breed, self._nav_world = breed, nav_world
 	self._unit = unit
 	self._navigation_system = Managers.state.extension:system("navigation_system")
 	self._nav_mesh_manager = Managers.state.nav_mesh
 	self._time_manager = Managers.time
-	local layer_costs = breed.nav_tag_allowed_layers
-	local nav_cost_map_multipliers = breed.nav_cost_map_multipliers
+
+	local layer_costs, nav_cost_map_multipliers = breed.nav_tag_allowed_layers, breed.nav_cost_map_multipliers
 	local enable_crowd_dispersion = breed.enable_crowd_dispersion == nil or breed.enable_crowd_dispersion
 	local traverse_logic, nav_tag_cost_table, nav_cost_map_multiplier_table = Navigation.create_traverse_logic(nav_world, layer_costs, nav_cost_map_multipliers, enable_crowd_dispersion)
-	self._nav_cost_map_multiplier_table = nav_cost_map_multiplier_table
-	self._nav_tag_cost_table = nav_tag_cost_table
-	self._traverse_logic = traverse_logic
-	local randomized_nav_tag_costs = breed.randomized_nav_tag_costs
-	local tags = breed.tags
+
+	self._traverse_logic, self._nav_tag_cost_table, self._nav_cost_map_multiplier_table = traverse_logic, nav_tag_cost_table, nav_cost_map_multiplier_table
+
+	local randomized_nav_tag_costs, tags = breed.randomized_nav_tag_costs, breed.tags
 
 	if randomized_nav_tag_costs or tags.roamer or tags.horde then
 		self:_set_randomized_nav_tag_costs(nav_tag_cost_table, randomized_nav_tag_costs)
@@ -29,10 +29,8 @@ MinionNavigationExtension.init = function (self, extension_init_context, unit, e
 
 	local position = POSITION_LOOKUP[unit]
 	local nav_bot, max_speed, avoidance_enabled = self:_create_nav_bot(position, breed, traverse_logic, nav_world)
-	self._avoidance_enabled = avoidance_enabled
-	self._max_speed_with_modifiers = max_speed
-	self._max_speed = max_speed
-	self._nav_bot = nav_bot
+
+	self._nav_bot, self._max_speed, self._max_speed_with_modifiers, self._avoidance_enabled = nav_bot, max_speed, max_speed, avoidance_enabled
 	self._wanted_destination = Vector3Box(position)
 	self._destination = Vector3Box(position)
 	self._debug_position_when_starting_search = Vector3Box()
@@ -53,6 +51,7 @@ MinionNavigationExtension.init = function (self, extension_init_context, unit, e
 	self._num_movement_modifiers = 0
 	self._movement_modifier_table_size = MAX_NUM_MOVEMENT_MODIFERS
 	self._last_movement_modifier_index = 1
+
 	local blackboard = BLACKBOARDS[unit]
 
 	self:_init_blackboard_components(blackboard)
@@ -99,8 +98,7 @@ MinionNavigationExtension._set_randomized_nav_tag_costs = function (self, nav_ta
 
 	for i = 1, #randomized_nav_tag_costs do
 		local data = randomized_nav_tag_costs[i]
-		local costs = data.costs
-		local chance_to_pick_first_index = data.chance_to_pick_first_index
+		local costs, chance_to_pick_first_index = data.costs, data.chance_to_pick_first_index
 		local random_value = math.random()
 		local cost = random_value < chance_to_pick_first_index and costs[1] or costs[2]
 		local layer_name = data.layer_name
@@ -208,7 +206,9 @@ MinionNavigationExtension._init_blackboard_components = function (self, blackboa
 	nav_smart_object_component.type = "n/a"
 	nav_smart_object_component.unit = nil
 	self._nav_smart_object_component = nav_smart_object_component
+
 	local behavior_component = blackboard.behavior
+
 	self._behavior_component = behavior_component
 end
 
@@ -251,20 +251,21 @@ local DEBUG_NUM_FAILED_PATHINGS_FOR_DESPAWN = 10
 MinionNavigationExtension._update_destination = function (self, unit, nav_bot, t)
 	local is_computing_path = GwNavBot.is_computing_new_path(nav_bot)
 	local has_path = GwNavBot.has_path(nav_bot)
+
 	self._is_computing_path = is_computing_path
 	self._is_computing_path_due_to_crowd_dispersion = self._is_computing_path_due_to_crowd_dispersion and is_computing_path
 	self._has_path = has_path
 
-	if not is_computing_path and self._wait_timer < t then
+	if not is_computing_path and t > self._wait_timer then
 		local Vector3_distance_squared = Vector3.distance_squared
 		local position_unit = POSITION_LOOKUP[unit]
-		local current_destination = self._destination:unbox()
-		local wanted_destination = self._wanted_destination:unbox()
+		local current_destination, wanted_destination = self._destination:unbox(), self._wanted_destination:unbox()
 		local repath_allowed = true
 		local did_pathfind_just_finish = self._has_started_pathfind
 
 		if did_pathfind_just_finish then
 			self._has_started_pathfind = false
+
 			local already_at_current_destination = Vector3_distance_squared(position_unit, current_destination) <= AT_DESTINATION_DISTANCE_SQ
 			local pathfind_was_successful = has_path or already_at_current_destination
 
@@ -272,9 +273,12 @@ MinionNavigationExtension._update_destination = function (self, unit, nav_bot, t
 				self._failed_move_attempts = 0
 			else
 				repath_allowed = false
+
 				local failed_move_attempts = self._failed_move_attempts + 1
+
 				self._failed_move_attempts = failed_move_attempts
 				self._wait_timer = t + math.min(WAIT_TIMER_MAX, failed_move_attempts * WAIT_TIMER_INCREMENT)
+
 				local breed_name = self._breed.name
 
 				if failed_move_attempts == DEBUG_NUM_FAILED_PATHINGS_FOR_DESPAWN then
@@ -290,7 +294,7 @@ MinionNavigationExtension._update_destination = function (self, unit, nav_bot, t
 					local debug_position = self._debug_position_when_starting_search:unbox()
 
 					Log.info("MinionNavigationExtension", "Minion %s got stuck when trying to navigate from %s to %s", breed_name, debug_position, current_destination)
-				elseif DEBUG_NUM_FAILED_PATHINGS_FOR_DRAW < failed_move_attempts then
+				elseif failed_move_attempts > DEBUG_NUM_FAILED_PATHINGS_FOR_DRAW then
 					local debug_position = self._debug_position_when_starting_search:unbox()
 
 					Log.info("MinionNavigationExtension", "Minion %s is still stuck when trying to navigate from %s to %s", breed_name, debug_position, current_destination)
@@ -301,13 +305,13 @@ MinionNavigationExtension._update_destination = function (self, unit, nav_bot, t
 		if repath_allowed then
 			local destination_change_sq = Vector3_distance_squared(current_destination, wanted_destination)
 			local distance_to_wanted_destination_sq = Vector3_distance_squared(position_unit, wanted_destination)
-			local wanted_destination_far_away = FAR_AWAY_DESTINATION_DISTANCE_SQ < distance_to_wanted_destination_sq
-			local change_large_enough = nil
+			local wanted_destination_far_away = distance_to_wanted_destination_sq > FAR_AWAY_DESTINATION_DISTANCE_SQ
+			local change_large_enough
 
 			if wanted_destination_far_away then
-				change_large_enough = FAR_AWAY_REPATH_NEEDED_DISTANCE_SQ < destination_change_sq
+				change_large_enough = destination_change_sq > FAR_AWAY_REPATH_NEEDED_DISTANCE_SQ
 			else
-				change_large_enough = REPATH_NEEDED_DISTANCE_SQ < destination_change_sq
+				change_large_enough = destination_change_sq > REPATH_NEEDED_DISTANCE_SQ
 			end
 
 			local already_at_wanted_destination = distance_to_wanted_destination_sq <= AT_DESTINATION_DISTANCE_SQ
@@ -325,7 +329,9 @@ MinionNavigationExtension._update_destination = function (self, unit, nav_bot, t
 				self._is_computing_path_due_to_crowd_dispersion = false
 				self._has_started_pathfind = true
 				self._wait_timer = 0
+
 				local nav_smart_object_component = self._nav_smart_object_component
+
 				nav_smart_object_component.id = -1
 			end
 		end
@@ -334,21 +340,22 @@ end
 
 MinionNavigationExtension._update_desired_velocity = function (self, nav_bot)
 	self._is_following_path = GwNavBot.is_following_path(nav_bot)
-	local desired_velocity, desired_speed = nil
+
+	local desired_velocity, desired_speed
 	local behavior_component = self._behavior_component
 
 	if behavior_component.move_state ~= "idle" then
 		local nav_bot_velocity = GwNavBot.output_velocity(nav_bot)
 		local flat_nav_bot_velocity = Vector3.flat(nav_bot_velocity)
 		local flat_nav_bot_speed = Vector3.length(flat_nav_bot_velocity)
-		desired_speed = flat_nav_bot_speed
-		desired_velocity = flat_nav_bot_velocity
+
+		desired_velocity, desired_speed = flat_nav_bot_velocity, flat_nav_bot_speed
 	else
-		desired_speed = 0
-		desired_velocity = Vector3.zero()
+		desired_velocity, desired_speed = Vector3.zero(), 0
 	end
 
 	local max_speed_with_modifiers = self._max_speed_with_modifiers
+
 	self._current_speed = math.min(desired_speed, max_speed_with_modifiers)
 	desired_velocity = Vector3.normalize(desired_velocity) * self._current_speed
 
@@ -358,8 +365,7 @@ end
 local NEXT_SMART_OBJECT_MAX_DISTANCE = 2
 
 MinionNavigationExtension._update_next_smart_object = function (self, nav_bot)
-	local next_smart_object_interval = self._next_smart_object_interval
-	local smart_object_component = self._nav_smart_object_component
+	local next_smart_object_interval, smart_object_component = self._next_smart_object_interval, self._nav_smart_object_component
 
 	if GwNavBot.current_or_next_smartobject_interval(nav_bot, next_smart_object_interval, NEXT_SMART_OBJECT_MAX_DISTANCE) then
 		local entrance_position, entrance_is_at_bot_progress_on_path = GwNavSmartObjectInterval.entrance_position(next_smart_object_interval)
@@ -367,20 +373,29 @@ MinionNavigationExtension._update_next_smart_object = function (self, nav_bot)
 		smart_object_component.entrance_position:store(entrance_position)
 
 		smart_object_component.entrance_is_at_bot_progress_on_path = entrance_is_at_bot_progress_on_path
+
 		local exit_position, exit_is_at_the_end_of_path = GwNavSmartObjectInterval.exit_position(next_smart_object_interval)
 
 		smart_object_component.exit_position:store(exit_position)
 
 		smart_object_component.exit_is_at_the_end_of_path = exit_is_at_the_end_of_path
+
 		local next_smart_object_id = GwNavSmartObjectInterval.smartobject_id(next_smart_object_interval)
+
 		smart_object_component.id = next_smart_object_id
+
 		local nav_graph_system = Managers.state.extension:system("nav_graph_system")
 		local smart_object_layer_type = nav_graph_system:smart_object_layer_type(next_smart_object_id)
 		local layer_id = self._nav_mesh_manager:nav_tag_layer_id(smart_object_layer_type)
+
 		smart_object_component.type = smart_object_layer_type
+
 		local smart_object_data = nav_graph_system:smart_object_data(next_smart_object_id)
+
 		self._smart_object_data = smart_object_data
+
 		local smart_object_unit_owner = nav_graph_system:unit_from_smart_object_id(next_smart_object_id)
+
 		smart_object_component.unit = smart_object_unit_owner
 	else
 		smart_object_component.id = -1
@@ -400,8 +415,7 @@ MinionNavigationExtension._update_dispersion = function (self, nav_bot)
 	local is_computing_path = self._is_computing_path
 
 	if action == APPROACHING_OCCUPIED_SMART_OBJECT and not is_computing_path then
-		local destination = self._destination:unbox()
-		local far_pathing_allowed = self._far_pathing_allowed
+		local destination, far_pathing_allowed = self._destination:unbox(), self._far_pathing_allowed
 
 		GwNavBot.compute_new_path(nav_bot, destination, far_pathing_allowed)
 
@@ -435,8 +449,8 @@ MinionNavigationExtension.nav_world = function (self)
 end
 
 MinionNavigationExtension.set_enabled = function (self, enabled, max_speed)
-	local old_status = self._enabled
-	local unit = self._unit
+	local old_status, unit = self._enabled, self._unit
+
 	self._enabled = enabled
 
 	if enabled then
@@ -446,8 +460,9 @@ MinionNavigationExtension.set_enabled = function (self, enabled, max_speed)
 			local nav_bot = self._nav_bot
 			local has_path = GwNavBot.has_path(nav_bot)
 			local is_following_path = GwNavBot.is_following_path(nav_bot)
-			self._is_following_path = is_following_path
-			self._has_path = has_path
+
+			self._has_path, self._is_following_path = has_path, is_following_path
+
 			local behavior_component = self._behavior_component
 			local move_state = behavior_component.move_state
 
@@ -458,8 +473,7 @@ MinionNavigationExtension.set_enabled = function (self, enabled, max_speed)
 			self:update_position(unit)
 		end
 	else
-		self._is_following_path = false
-		self._has_path = false
+		self._has_path, self._is_following_path = false, false
 	end
 
 	self._navigation_system:set_enabled_unit(unit, enabled)
@@ -501,6 +515,7 @@ end
 
 MinionNavigationExtension.remove_movement_modifier = function (self, id)
 	local modifiers = self._movement_modifiers
+
 	modifiers[id] = nil
 	self._num_movement_modifiers = self._num_movement_modifiers - 1
 
@@ -557,6 +572,7 @@ MinionNavigationExtension.stop = function (self)
 
 	self._failed_move_attempts = 0
 	self._has_started_pathfind = false
+
 	local nav_bot = self._nav_bot
 
 	if self._is_computing_path then
@@ -568,9 +584,10 @@ MinionNavigationExtension.stop = function (self)
 
 	GwNavBot.clear_followed_path(nav_bot)
 
-	self._is_following_path = false
-	self._has_path = false
+	self._has_path, self._is_following_path = false, false
+
 	local nav_smart_object_component = self._nav_smart_object_component
+
 	nav_smart_object_component.id = -1
 end
 
@@ -631,24 +648,24 @@ local TOTAL_NUM_SMARTOBJECT_DESPAWNS = 0
 MinionNavigationExtension.use_smart_object = function (self, do_use)
 	local nav_bot = self._nav_bot
 	local nav_smart_object_component = self._nav_smart_object_component
-	local success = nil
+	local success
 
 	if do_use then
 		local smart_object_id = nav_smart_object_component.id
+
 		success = GwNavBot.enter_manual_control(nav_bot, self._next_smart_object_interval)
 
 		if not success then
 			local position = POSITION_LOOKUP[self._unit]
-			local entrance_position = nav_smart_object_component.entrance_position:unbox()
-			local exit_position = nav_smart_object_component.exit_position:unbox()
+			local entrance_position, exit_position = nav_smart_object_component.entrance_position:unbox(), nav_smart_object_component.exit_position:unbox()
 			local smart_object_type = nav_smart_object_component.type
 			local breed_name = self._breed.name
 
 			GwNavBot.clear_followed_path(nav_bot)
 
-			self._is_following_path = false
-			self._has_path = false
+			self._has_path, self._is_following_path = false, false
 			nav_smart_object_component.id = -1
+
 			local num_fails = (TEMP_SMART_OBJECT_FAILING_MINIONS[self._unit] or 0) + 1
 
 			if num_fails == 1 then
@@ -657,7 +674,7 @@ MinionNavigationExtension.use_smart_object = function (self, do_use)
 
 			TEMP_SMART_OBJECT_FAILING_MINIONS[self._unit] = num_fails + 1
 
-			if NUM_SMART_OBJECT_FAILS_FOR_DESPAWN <= num_fails then
+			if num_fails >= NUM_SMART_OBJECT_FAILS_FOR_DESPAWN then
 				TOTAL_NUM_SMARTOBJECT_DESPAWNS = TOTAL_NUM_SMARTOBJECT_DESPAWNS + 1
 
 				Log.warning("MINION STUCK DESPAWN", "Minion %s is stuck when trying to get smartobject %s to %s, despawning it. %d has despawned this session", breed_name, entrance_position, exit_position, TOTAL_NUM_SMARTOBJECT_DESPAWNS)
@@ -672,16 +689,15 @@ MinionNavigationExtension.use_smart_object = function (self, do_use)
 
 		if not success then
 			local position = POSITION_LOOKUP[self._unit]
-			local entrance_position = nav_smart_object_component.entrance_position:unbox()
-			local exit_position = nav_smart_object_component.exit_position:unbox()
+			local entrance_position, exit_position = nav_smart_object_component.entrance_position:unbox(), nav_smart_object_component.exit_position:unbox()
 			local smart_object_type = nav_smart_object_component.type
 			local breed_name = self._breed.name
 
 			Log.info("MinionNavigationExtension", "%s can't release smart object control(%s). Unit: %s (green) Entrance: %s (blue) Exit:%s (yellow)", breed_name, smart_object_type, position, entrance_position, exit_position)
 			GwNavBot.clear_followed_path(nav_bot)
 
-			self._is_following_path = false
-			self._has_path = false
+			self._has_path, self._is_following_path = false, false
+
 			local num_fails = (TEMP_SMART_OBJECT_FAILING_MINIONS[self._unit] or 0) + 1
 
 			if num_fails == 1 then
@@ -690,7 +706,7 @@ MinionNavigationExtension.use_smart_object = function (self, do_use)
 
 			TEMP_SMART_OBJECT_FAILING_MINIONS[self._unit] = num_fails + 1
 
-			if NUM_SMART_OBJECT_FAILS_FOR_DESPAWN <= num_fails then
+			if num_fails >= NUM_SMART_OBJECT_FAILS_FOR_DESPAWN then
 				TOTAL_NUM_SMARTOBJECT_DESPAWNS = TOTAL_NUM_SMARTOBJECT_DESPAWNS + 1
 
 				Log.warning("MINION STUCK DESPAWN", "Minion %s is stuck when trying to release smartobject %s to %s, despawning it. %d has despawned this session", breed_name, entrance_position, exit_position, TOTAL_NUM_SMARTOBJECT_DESPAWNS)
@@ -705,6 +721,7 @@ MinionNavigationExtension.use_smart_object = function (self, do_use)
 	end
 
 	local using_smart_object = do_use and success
+
 	self._is_using_smart_object = using_smart_object
 
 	return success

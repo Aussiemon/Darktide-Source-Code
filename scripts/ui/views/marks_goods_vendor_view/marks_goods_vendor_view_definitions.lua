@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/marks_goods_vendor_view/marks_goods_vendor_view_definitions.lua
+
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templates")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")

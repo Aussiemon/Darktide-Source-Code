@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/utilities/recoil_template.lua
+
 local RecoilTemplate = {}
 local lerp = math.lerp
 
@@ -9,6 +11,7 @@ RecoilTemplate.generate_offset_range = function (num_shots, offset_pitch, offset
 	for ii = 1, num_shots do
 		local this_pitch = offset_pitch * scale_values_pitch[ii]
 		local this_yaw = offset_yaw * scale_values_yaw[ii]
+
 		offset_range[ii] = {
 			pitch = {
 				lerp_basic = this_pitch * (1 + lerp_distance),
@@ -41,8 +44,10 @@ RecoilTemplate.create_scale = function (scale_values)
 
 		for jj = 1, steps do
 			current_index = current_index + 1
+
 			local this_pitch = lerp(current_pitch, values[1], jj / steps)
 			local this_yaw = lerp(current_yaw, values[2], jj / steps)
+
 			scale_list.pitch[current_index] = this_pitch
 			scale_list.yaw[current_index] = this_yaw
 		end

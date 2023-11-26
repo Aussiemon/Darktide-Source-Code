@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/backend/hub_session.lua
+
 local Interface = {
 	"fetch_server_details",
 	"update"

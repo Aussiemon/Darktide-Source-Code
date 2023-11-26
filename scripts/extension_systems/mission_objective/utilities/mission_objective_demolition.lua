@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/mission_objective/utilities/mission_objective_demolition.lua
+
 require("scripts/extension_systems/mission_objective/utilities/mission_objective_base")
 
 local MissionObjectiveDemolition = class("MissionObjectiveDemolition", "MissionObjectiveBase")
@@ -22,6 +24,7 @@ MissionObjectiveDemolition.start_stage = function (self, stage)
 	MissionObjectiveDemolition.super.start_stage(self, stage)
 
 	self._resume_timer_active = false
+
 	local demolition_synchronizer_extension = self:synchronizer_extension()
 
 	self:set_max_increment(demolition_synchronizer_extension:active_stage_unit_num())
@@ -101,6 +104,7 @@ MissionObjectiveDemolition.update_progression = function (self)
 
 	if progression_percent >= 1 and not self._resume_timer_active then
 		local demolition_synchronizer_extension = self:synchronizer_extension()
+
 		self._resume_timer = demolition_synchronizer_extension:stage_end_delay(self._stage)
 
 		if self._resume_timer > 0 then

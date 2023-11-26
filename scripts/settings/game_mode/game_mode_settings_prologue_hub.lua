@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/game_mode/game_mode_settings_prologue_hub.lua
+
 local settings = {
 	use_prologue_profile = false,
 	host_singleplay = true,

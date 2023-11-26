@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/dodge/archetype_dodge_templates.lua
+
 local archetype_dodge_templates = {}
 local distance = 2.5
 local time = 0.4
@@ -110,6 +112,7 @@ local speed_curve_ogryn = {
 		speed = ogryn_average_speed * 0.75
 	}
 }
+
 archetype_dodge_templates.default = {
 	consecutive_dodges_reset = 0.85,
 	stop_threshold = 0.25,

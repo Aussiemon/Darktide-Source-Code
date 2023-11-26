@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/character_state_machine/character_states/player_character_state_ledge_hanging_falling.lua
+
 require("scripts/extension_systems/character_state_machine/character_states/player_character_state_base")
 
 local FirstPersonView = require("scripts/utilities/first_person_view")

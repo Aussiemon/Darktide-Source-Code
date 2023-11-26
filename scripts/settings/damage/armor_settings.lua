@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/damage/armor_settings.lua
+
 local armor_settings = {}
 local armor_types = table.enum("unarmored", "armored", "resistant", "player", "berserker", "super_armor", "disgustingly_resilient", "void_shield")
 local hit_effect_armor_type_overrides = table.enum("prop_armored")
@@ -15,6 +17,7 @@ local rending_armor_type_multipliers = {
 	[armor_types.resistant] = 1,
 	[armor_types.berserker] = 1
 }
+
 armor_settings.types = armor_types
 armor_settings.hit_effect_types = hit_effect_armor_type_overrides
 armor_settings.overdamage_rending_multipliers = overdamage_rending_multipliers

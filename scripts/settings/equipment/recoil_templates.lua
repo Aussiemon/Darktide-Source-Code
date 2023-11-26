@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/equipment/recoil_templates.lua
+
 local RecoilTemplate = require("scripts/utilities/recoil_template")
 local WeaponMovementStateSettings = require("scripts/settings/equipment/weapon_movement_state_settings")
 local WeaponTweaks = require("scripts/utilities/weapon_tweaks")
@@ -1739,7 +1741,9 @@ recoil_templates.lasgun_hip_killshot = {
 		}
 	}
 }
+
 local pitch_default = 0.1
+
 recoil_templates.lasgun_hip_assault = {
 	[weapon_movement_states.still] = {
 		new_influence_percent = 0.75,
@@ -2537,7 +2541,9 @@ for name, template in pairs(recoil_templates) do
 			move_state_settings.num_offset_ranges = #move_state_settings.offset_range
 		else
 			local num_offset_ranges = #move_state_settings.offset
+
 			move_state_settings.num_offset_ranges = num_offset_ranges
+
 			local offset_random_range = move_state_settings.offset_random_range
 
 			for i = 1, num_offset_ranges do

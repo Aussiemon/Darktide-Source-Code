@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/equipment/item_material_overrides/item_material_overrides_gear_colors.lua
+
 local material_overrides = {
 	color_1_colour_gray_01 = {
 		texture_overrides = {

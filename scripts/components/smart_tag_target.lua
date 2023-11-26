@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/components/smart_tag_target.lua
+
 local SmartTagTarget = component("SmartTagTarget")
 
 SmartTagTarget.init = function (self, unit)

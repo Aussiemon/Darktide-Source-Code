@@ -1,11 +1,15 @@
+﻿-- chunkname: @scripts/foundation/managers/backend/utilities/backend_utilities.lua
+
 local Promise = require("scripts/foundation/utilities/promise")
 local BackendError = require("scripts/foundation/managers/backend/backend_error")
 local BackendUtilities = {}
 local TEMPLATE_PATTERN = "{(%a+)}"
+
 BackendUtilities.prefered_mission_region = ""
 BackendUtilities.ERROR_METATABLE = {
 	__tostring = function (t)
 		local msg = "Backend error:\n"
+
 		msg = msg .. "Code: " .. t.code .. "\n"
 
 		if t.description then
@@ -112,7 +116,7 @@ BackendUtilities.fetch_link = function (data, link_name, template_data)
 		error(BackendUtilities.create_error(BackendError.UnknownError, "No such link " .. link_name))
 	end
 
-	local href = nil
+	local href
 
 	if link.templated == true then
 		local template_error = false
@@ -135,6 +139,7 @@ BackendUtilities.fetch_link = function (data, link_name, template_data)
 
 				for i = 1, #template_keys do
 					local key = template_keys[i]
+
 					href = href:gsub("%{" .. key .. "%}", template_data[key])
 				end
 			end
@@ -149,6 +154,7 @@ BackendUtilities.fetch_link = function (data, link_name, template_data)
 
 	if not string.starts_with(href, "/") then
 		local self_href = data._links.self.href
+
 		href = self_href .. "/" .. href
 	end
 

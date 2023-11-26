@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/cinematic_video/templates/hli_gun_shop.lua
+
 local cinematic_video_template = {
 	hli_gun_shop = {
 		loop_video = false,

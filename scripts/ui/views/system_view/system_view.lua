@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/system_view/system_view.lua
+
 local Definitions = require("scripts/ui/views/system_view/system_view_definitions")
 local ContentList = require("scripts/ui/views/system_view/system_view_content_list")
 local ContentBlueprints = require("scripts/ui/views/system_view/system_view_content_blueprints")
@@ -46,6 +48,7 @@ end
 
 SystemView._setup_input_legend = function (self)
 	self._input_legend_element = self:_add_element(ViewElementInputLegend, "input_legend", 10)
+
 	local legend_inputs = self._definitions.legend_inputs
 
 	for i = 1, #legend_inputs do
@@ -115,13 +118,14 @@ SystemView._setup_content_widgets = function (self, content, scenegraph_id, call
 
 		if verified then
 			local type = entry.type
-			local widget = nil
+			local widget
 			local template = ContentBlueprints[type]
 			local size = template.size
 			local pass_template = template.pass_template
 
 			if pass_template and not widget_definitions[type] then
 				local scenegraph_definition = definitions.scenegraph_definition
+
 				widget_definitions[type] = UIWidget.create_definition(pass_template, scenegraph_id, nil, size)
 			end
 
@@ -129,7 +133,9 @@ SystemView._setup_content_widgets = function (self, content, scenegraph_id, call
 
 			if widget_definition then
 				local name = scenegraph_id .. "_widget_" .. i
+
 				widget = self:_create_widget(name, widget_definition)
+
 				local init = template.init
 
 				if init then
@@ -158,9 +164,11 @@ SystemView.draw = function (self, dt, t, input_service, layer)
 	local render_scale = self._render_scale
 	local render_settings = self._render_settings
 	local ui_renderer = self._ui_default_renderer
+
 	render_settings.start_layer = layer
 	render_settings.scale = render_scale
 	render_settings.inverse_scale = render_scale and 1 / render_scale
+
 	local ui_scenegraph = self._ui_scenegraph
 
 	UIRenderer.begin_pass(ui_renderer, ui_scenegraph, input_service, dt, render_settings)
@@ -172,6 +180,7 @@ end
 SystemView._draw_widgets = function (self, dt, t, input_service, ui_renderer)
 	local widgets_by_name = self._widgets_by_name
 	local scrollbar_widget = widgets_by_name.scrollbar
+
 	scrollbar_widget.content.visible = self._content_grid:can_scroll()
 
 	SystemView.super._draw_widgets(self, dt, t, input_service, ui_renderer)
@@ -256,18 +265,22 @@ SystemView._setup_background_gui = function (self)
 	local world_layer = 121
 	local world_name = class_name .. "_ui_background_world"
 	local view_name = self.view_name
+
 	self._background_world = ui_manager:create_world(world_name, world_layer, timer_name, view_name)
 	self._background_world_name = world_name
 	self._background_world_draw_layer = world_layer
 	self._background_world_default_layer = world_layer
+
 	local shading_environment = "content/shading_environments/ui/ui_popup_background"
 	local shading_callback = callback(self, "cb_shading_callback")
 	local viewport_name = class_name .. "_ui_background_world_viewport"
 	local viewport_type = "overlay"
 	local viewport_layer = 1
+
 	self._background_viewport = ui_manager:create_viewport(self._background_world, viewport_name, viewport_type, viewport_layer, shading_environment, shading_callback)
 	self._background_viewport_name = viewport_name
 	self._ui_background_renderer = ui_manager:create_renderer(class_name .. "_ui_background_renderer", self._background_world)
+
 	local max_value = 0.75
 
 	WorldRenderUtils.enable_world_fullscreen_blur(world_name, viewport_name, max_value)
@@ -280,13 +293,16 @@ SystemView._setup_default_gui = function (self)
 	local world_layer = 122
 	local world_name = class_name .. "_ui_default_world"
 	local view_name = self.view_name
+
 	self._world = ui_manager:create_world(world_name, world_layer, timer_name, view_name)
 	self._world_name = world_name
 	self._world_draw_layer = world_layer
 	self._world_default_layer = world_layer
+
 	local viewport_name = class_name .. "_ui_default_world_viewport"
 	local viewport_type = "overlay"
 	local viewport_layer = 1
+
 	self._viewport = ui_manager:create_viewport(self._world, viewport_name, viewport_type, viewport_layer)
 	self._viewport_name = viewport_name
 	self._ui_default_renderer = ui_manager:create_renderer(class_name .. "_ui_default_renderer", self._world)

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/hazard_prop/hazard_prop_extension.lua
+
 local Explosion = require("scripts/utilities/attack/explosion")
 local HazardPropSettings = require("scripts/settings/hazard_prop/hazard_prop_settings")
 local LiquidArea = require("scripts/extension_systems/liquid_area/utilities/liquid_area")
@@ -8,6 +10,7 @@ local hazard_material = HazardPropSettings.material
 local hazard_state = HazardPropSettings.hazard_state
 local TRIGGER_TIME = 3
 local HazardPropExtension = class("HazardPropExtension")
+
 HazardPropExtension.UPDATE_DISABLED_BY_DEFAULT = true
 
 HazardPropExtension.init = function (self, extension_init_context, unit, extension_init_data, ...)
@@ -109,6 +112,7 @@ end
 HazardPropExtension.set_current_state = function (self, state)
 	local old_state = self._current_state
 	local unit = self._unit
+
 	self._current_state = state
 
 	if state == hazard_state.triggered then
@@ -234,8 +238,10 @@ HazardPropExtension._trigger_hazard = function (self)
 		Explosion.create_explosion(self._world, physics_world, explosion_position, Vector3.up(), unit, explosion_template, power_level, charge_level, attack_type)
 
 		local attack_direction = self._trigger_direction:unbox()
+
 		attack_direction.z = 0
 		spawn_position = spawn_position - attack_direction
+
 		local los_hit, hit_position, _, _ = PhysicsWorld.raycast(physics_world, spawn_position, Vector3.down(), fire_settings.raycast_distance, "closest", "collision_filter", "filter_player_mover")
 
 		if los_hit then

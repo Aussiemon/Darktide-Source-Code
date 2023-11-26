@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/unit_data/player_unit_data_component_config.lua
+
 local AbilityTemplates = require("scripts/settings/ability/ability_templates/ability_templates")
 local BuffTemplates = require("scripts/settings/buff/buff_templates")
 local DisorientationSettings = require("scripts/settings/damage/disorientation_settings")
@@ -16,8 +18,7 @@ local WeaponTemplates = require("scripts/settings/equipment/weapon_templates/wea
 local WeaponTweakTemplateSettings = require("scripts/settings/equipment/weapon_templates/weapon_tweak_template_settings")
 local tweak_template_types = WeaponTweakTemplateSettings.template_types
 local animation_rollback = PlayerCharacterConstants.animation_rollback
-local NUM_LAYERS_3P = animation_rollback.num_layers_3p
-local NUM_LAYERS_1P = animation_rollback.num_layers_1p
+local NUM_LAYERS_3P, NUM_LAYERS_1P = animation_rollback.num_layers_3p, animation_rollback.num_layers_1p
 local TIMES_3P, ANIMATIONS_3P, STATES_3P, TIMES_1P, ANIMATIONS_1P, STATES_1P = PlayerUnitAnimationStateConfig.format(animation_rollback)
 local animation_state_component = {
 	num_layers_3p = "player_anim_layer",
@@ -61,6 +62,7 @@ for slot_name, config in pairs(slot_configuration) do
 end
 
 INVENTORY_SLOTS.network_type = "player_inventory_slot_name"
+
 local CHARACTER_STATES = {
 	"dummy"
 }
@@ -71,10 +73,11 @@ end
 
 Managers.backend.interfaces.master_data:refresh_network_lookup()
 
-local PLAYER_ITEMS = {
-	network_type = "player_item_name",
-	use_network_lookup = "player_item_names"
-}
+local PLAYER_ITEMS = {}
+
+PLAYER_ITEMS.network_type = "player_item_name"
+PLAYER_ITEMS.use_network_lookup = "player_item_names"
+
 local WEAPON_TEMPLATES = {
 	"none"
 }
@@ -287,47 +290,52 @@ local CAMERA_NODES = {
 	skip_predict_verification = true
 }
 
-local function _gather_camera_tree_nodes(tree, node_map, num_nodes, node_list)
-	local stack_size = 1
-	local stack = {
-		tree
-	}
+do
+	local function _gather_camera_tree_nodes(tree, node_map, num_nodes, node_list)
+		local stack_size = 1
+		local stack = {
+			tree
+		}
 
-	while stack_size > 0 do
-		local node = stack[stack_size]
-		stack[stack_size] = nil
-		stack_size = stack_size - 1
-		local node_name = node._node.name
+		while stack_size > 0 do
+			local node = stack[stack_size]
 
-		if node_name and not node_map[node_name] then
-			num_nodes = num_nodes + 1
-			node_list[num_nodes] = node_name
+			stack[stack_size] = nil
+			stack_size = stack_size - 1
+
+			local node_name = node._node.name
+
+			if node_name and not node_map[node_name] then
+				num_nodes = num_nodes + 1
+				node_list[num_nodes] = node_name
+			end
+
+			for i = 1, #node do
+				local child = node[i]
+
+				stack_size = stack_size + 1
+				stack[stack_size] = child
+			end
 		end
 
-		for i = 1, #node do
-			local child = node[i]
-			stack_size = stack_size + 1
-			stack[stack_size] = child
-		end
+		return num_nodes
 	end
 
-	return num_nodes
-end
+	local CameraSettings = require("scripts/settings/camera/camera_settings")
+	local num_trees = 0
+	local num_nodes = 0
+	local parsed_nodes = {}
 
-local CameraSettings = require("scripts/settings/camera/camera_settings")
-local num_trees = 0
-local num_nodes = 0
-local parsed_nodes = {}
+	for _, tree in pairs(CameraSettings) do
+		num_nodes = _gather_camera_tree_nodes(tree, parsed_nodes, num_nodes, CAMERA_NODES)
+	end
 
-for _, tree in pairs(CameraSettings) do
-	num_nodes = _gather_camera_tree_nodes(tree, parsed_nodes, num_nodes, CAMERA_NODES)
-end
+	local CameraTrees = require("scripts/settings/camera/camera_trees")
 
-local CameraTrees = require("scripts/settings/camera/camera_trees")
-
-for tree_id, tree_name in pairs(CameraTrees) do
-	num_trees = num_trees + 1
-	CAMERA_TREES[num_trees] = tree_id
+	for tree_id, tree_name in pairs(CameraTrees) do
+		num_trees = num_trees + 1
+		CAMERA_TREES[num_trees] = tree_id
+	end
 end
 
 local PlayerComponentConfig = {
@@ -957,6 +965,7 @@ for i = 1, max_component_buffs do
 	local active_start_time_key = key_lookup.active_start_time_key
 	local stack_count_key = key_lookup.stack_count_key
 	local proc_count_key = key_lookup.proc_count_key
+
 	buff_component_config[template_name_key] = BUFF_TEMPLATES
 	buff_component_config[start_time_key] = "fixed_frame_offset"
 	buff_component_config[active_start_time_key] = "fixed_frame_offset"
@@ -981,6 +990,7 @@ for looping_particle_alias, config in pairs(PlayerCharacterLoopingParticleAliase
 		if external_properties then
 			for property_name, possible_properties in pairs(external_properties) do
 				local properties = table.clone(possible_properties)
+
 				properties[#properties + 1] = "n/a"
 				looping_particle_component[property_name] = properties
 			end
@@ -1001,6 +1011,7 @@ for looping_sound_alias, config in pairs(PlayerCharacterLoopingSoundAliases) do
 		end
 
 		local component_name = PlayerUnitData.looping_sound_component_name(looping_sound_alias)
+
 		PlayerComponentConfig[component_name] = looping_sound_component
 	end
 end

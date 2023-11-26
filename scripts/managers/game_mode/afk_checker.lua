@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/game_mode/afk_checker.lua
+
 local InputUtils = require("scripts/managers/input/input_utils")
 local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
 local AFKChecker = class("AFKChecker")
@@ -15,7 +17,7 @@ AFKChecker.init = function (self, is_server, settings, network_event_delegate)
 	self._network_event_delegate = network_event_delegate
 
 	if is_server then
-		local warning_time_minutes, kick_time_minutes = nil
+		local warning_time_minutes, kick_time_minutes
 		local location = settings.location
 
 		if location == "hub" then
@@ -24,6 +26,10 @@ AFKChecker.init = function (self, is_server, settings, network_event_delegate)
 		elseif location == "mission" then
 			warning_time_minutes = GameParameters.afk_warning_time_mission
 			kick_time_minutes = GameParameters.afk_kick_time_mission
+		end
+
+		if false then
+			-- Nothing
 		end
 
 		self._ignore_disabled_players = settings.ignore_disabled_players
@@ -78,6 +84,7 @@ AFKChecker.server_update = function (self, dt, t)
 
 	for _, player in pairs(Managers.player:players()) do
 		local player_id = player:unique_id()
+
 		temp_existing_player_ids[player_id] = true
 
 		if player:is_human_controlled() and player.remote and not kicked_players[player_id] then
@@ -161,7 +168,7 @@ AFKChecker._kick = function (self, player_id)
 	local player = Managers.player:player_from_unique_id(player_id)
 	local peer_id = player:peer_id()
 	local kick_reason = "afk"
-	local details = nil
+	local details
 
 	Managers.connection:kick(peer_id, kick_reason, details)
 
@@ -177,6 +184,7 @@ AFKChecker.rpc_report_menu_activity = function (self, channel_id)
 
 	for _, player in pairs(players_at_peer) do
 		local player_id = player:unique_id()
+
 		self._players_last_input_time[player_id] = t
 	end
 end
@@ -258,7 +266,7 @@ end
 AFKChecker.client_update = function (self, dt, t)
 	if self._report_menu_activity then
 		if self._menu_input_detected then
-			if self._menu_activity_report_time < t then
+			if t > self._menu_activity_report_time then
 				Managers.state.game_session:send_rpc_server("rpc_report_menu_activity")
 
 				self._menu_activity_report_time = t + MENU_ACTIVITY_REPORT_INTERVAL

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/projectile/shotshell_templates.lua
+
 local WeaponTweaks = require("scripts/utilities/weapon_tweaks")
 local ArmorSettings = require("scripts/settings/damage/armor_settings")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")

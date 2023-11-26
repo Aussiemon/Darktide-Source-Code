@@ -1,94 +1,97 @@
+﻿-- chunkname: @scripts/settings/equipment/weapon_bar_ui_description_templates.lua
+
 local ArmorSettings = require("scripts/settings/damage/armor_settings")
 local armor_types = ArmorSettings.types
-local WeaponBarUIDescriptionTemplates = {
-	recoil = {
-		rise = {
-			_array_range = {
-				1,
-				math.huge
-			}
-		},
-		offset_range = {
-			_array_range = {
-				1,
-				math.huge
-			}
-		},
-		offset = {
-			_array_range = {
-				1,
-				math.huge,
-				pitch = {
-					_array_range = {
-						1,
-						2
-					}
-				},
-				yaw = {
-					_array_range = {
-						1,
-						2
-					}
-				}
-			}
-		},
-		offset_random_range = {
-			_array_range = {
-				1,
-				math.huge,
-				pitch = {
-					_array_range = {
-						1,
-						2
-					}
-				},
-				yaw = {
-					_array_range = {
-						1,
-						2
-					}
-				}
-			}
-		},
-		new_influence_percent = {}
+local WeaponBarUIDescriptionTemplates = {}
+
+WeaponBarUIDescriptionTemplates.recoil = {
+	rise = {
+		_array_range = {
+			1,
+			math.huge
+		}
 	},
-	spread = {
-		continuous_spread = {
-			min_pitch = {},
-			min_yaw = {}
-		},
-		immediate_spread = {
-			shooting = {
+	offset_range = {
+		_array_range = {
+			1,
+			math.huge
+		}
+	},
+	offset = {
+		_array_range = {
+			1,
+			math.huge,
+			pitch = {
 				_array_range = {
 					1,
-					math.huge,
-					pitch = {},
-					yaw = {}
+					2
+				}
+			},
+			yaw = {
+				_array_range = {
+					1,
+					2
 				}
 			}
 		}
 	},
-	sway = {
-		continuous_sway = {
-			pitch = {},
-			yaw = {}
-		},
-		intensity = {}
+	offset_random_range = {
+		_array_range = {
+			1,
+			math.huge,
+			pitch = {
+				_array_range = {
+					1,
+					2
+				}
+			},
+			yaw = {
+				_array_range = {
+					1,
+					2
+				}
+			}
+		}
 	},
-	armor_damage_modifiers = {
-		[armor_types.unarmored] = {},
-		[armor_types.disgustingly_resilient] = {},
-		[armor_types.armored] = {},
-		[armor_types.super_armor] = {},
-		[armor_types.resistant] = {},
-		[armor_types.berserker] = {}
+	new_influence_percent = {}
+}
+WeaponBarUIDescriptionTemplates.spread = {
+	continuous_spread = {
+		min_pitch = {},
+		min_yaw = {}
 	},
-	all_basic_stats = {
-		display_stats = {
-			__all_basic_stats = true
+	immediate_spread = {
+		shooting = {
+			_array_range = {
+				1,
+				math.huge,
+				pitch = {},
+				yaw = {}
+			}
 		}
 	}
 }
+WeaponBarUIDescriptionTemplates.sway = {
+	continuous_sway = {
+		pitch = {},
+		yaw = {}
+	},
+	intensity = {}
+}
+WeaponBarUIDescriptionTemplates.armor_damage_modifiers = {
+	[armor_types.unarmored] = {},
+	[armor_types.disgustingly_resilient] = {},
+	[armor_types.armored] = {},
+	[armor_types.super_armor] = {},
+	[armor_types.resistant] = {},
+	[armor_types.berserker] = {}
+}
+WeaponBarUIDescriptionTemplates.all_basic_stats = {
+	display_stats = {
+		__all_basic_stats = true
+	}
+}
+
 local default_bar_stats = {
 	stability_recoil = {
 		display_stats = {

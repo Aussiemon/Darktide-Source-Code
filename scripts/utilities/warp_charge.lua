@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/utilities/warp_charge.lua
+
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local FixedFrame = require("scripts/utilities/fixed_frame")
 local SharedFunctions = require("scripts/utilities/shared_overheat_and_warp_charge_functions")
@@ -37,11 +39,13 @@ end
 
 WarpCharge.check_and_set_state = function (t, warp_charge_component, prevent_explosion)
 	local new_state = WarpCharge.check_new_state(warp_charge_component, prevent_explosion)
+
 	warp_charge_component.state = new_state
 end
 
 WarpCharge.start_warp_action = function (t, warp_charge_component)
 	local starting_percentage = warp_charge_component.current_percentage
+
 	warp_charge_component.starting_percentage = starting_percentage
 end
 
@@ -57,6 +61,7 @@ WarpCharge.increase_immediate = function (t, charge_level, warp_charge_component
 	end
 
 	buff_multiplier = buff_multiplier * (warp_charge_modifier or 1)
+
 	local prevent_overload = buff_extension:has_keyword(buff_keywords.psychic_fortress)
 	local current_percentage = warp_charge_component.current_percentage
 	local current_state = warp_charge_component.state
@@ -109,6 +114,7 @@ WarpCharge.increase_over_time = function (dt, t, charge_level, warp_charge_compo
 
 	if first_charge and additional_charge_on_start then
 		local additional_add_percentage = buff_multiplier * additional_charge_on_start
+
 		current_percentage = SharedFunctions.add_immediate(charge_level, false, additional_add_percentage, current_percentage, true)
 	end
 
@@ -163,7 +169,9 @@ WarpCharge.update = function (dt, t, warp_charge_component, player, unit, first_
 	local current_percentage = warp_charge_component.current_percentage
 	local current_state = warp_charge_component.state
 	local last_charge_at_t = warp_charge_component.last_charge_at_t
+
 	current_percentage = math.clamp01(current_percentage)
+
 	local base_auto_vent_delay = base_warp_charge_template.auto_vent_delay
 	local auto_vent_delay_modifier = weapon_warp_charge_template.auto_vent_delay_modifier or 1
 	local auto_vent_delay = base_auto_vent_delay * auto_vent_delay_modifier
@@ -239,6 +247,7 @@ WarpCharge.start_venting = function (t, player, warp_charge_component)
 	local base_vent_interval = base_warp_charge_template.vent_interval
 	local vent_interval_modifier = weapon_warp_charge_template.vent_interval_modifier or 1
 	local vent_interval = base_vent_interval * vent_interval_modifier
+
 	warp_charge_component.state = "decreasing"
 	warp_charge_component.remove_at_t = t + vent_interval
 	warp_charge_component.starting_percentage = warp_charge_component.current_percentage
@@ -264,7 +273,9 @@ WarpCharge.update_venting = function (dt, t, player, warp_charge_component)
 	local starting_percentage = warp_charge_component.starting_percentage
 	local min_vent_time_fraction = base_warp_charge_template.min_vent_time_fraction
 	local base_vent_duration = base_warp_charge_template.vent_duration
+
 	base_vent_duration = base_vent_duration * min_vent_time_fraction + base_vent_duration * (1 - min_vent_time_fraction) * starting_percentage
+
 	local base_vent_interval = base_warp_charge_template.vent_interval
 	local base_ramping_interval_modifier = base_warp_charge_template.ramping_interval_modifier
 	local new_ramping_modifier = warp_charge_component.ramping_modifier * base_ramping_interval_modifier
@@ -282,6 +293,7 @@ WarpCharge.update_venting = function (dt, t, player, warp_charge_component)
 
 	warp_charge_component.remove_at_t = next_remove_t
 	warp_charge_component.ramping_modifier = new_ramping_modifier
+
 	local no_damage = weapon_warp_charge_template.no_damage
 
 	Managers.event:trigger("on_vent", player)

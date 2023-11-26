@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/mission/templates/development_mission_templates.lua
+
 local mission_templates = {
 	multi_mission_1 = {
 		mechanism_name = "adventure",

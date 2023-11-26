@@ -1,18 +1,22 @@
+﻿-- chunkname: @scripts/extension_systems/input/player_unit_input_extension.lua
+
 local HumanUnitInput = require("scripts/extension_systems/input/human_unit_input")
 local BotUnitInput = require("scripts/extension_systems/input/bot_unit_input")
 local PlayerUnitInputExtension = class("PlayerUnitInputExtension")
 
 PlayerUnitInputExtension.init = function (self, extension_init_context, unit, extension_init_data, ...)
-	local player = extension_init_data.player
-	local input_handler = extension_init_data.input_handler
+	local player, input_handler = extension_init_data.player, extension_init_data.input_handler
 	local fixed_frame = extension_init_context.fixed_frame
+
 	self._human_unit_input = HumanUnitInput:new(player, input_handler, fixed_frame)
 	self._player = player
 	self._is_local_unit = extension_init_data.is_local_unit
+
 	local is_server = extension_init_context.is_server
 
 	if is_server then
 		local physics_world = extension_init_context.physics_world
+
 		self._bot_unit_input = BotUnitInput:new(physics_world, player)
 	end
 
@@ -44,7 +48,7 @@ PlayerUnitInputExtension.bot_unit_input = function (self)
 end
 
 PlayerUnitInputExtension.get_orientation = function (self)
-	local yaw, pitch, roll = nil
+	local yaw, pitch, roll
 
 	if self._player:is_human_controlled() then
 		yaw, pitch, roll = self._human_unit_input:get_orientation()
@@ -56,7 +60,7 @@ PlayerUnitInputExtension.get_orientation = function (self)
 end
 
 PlayerUnitInputExtension.get = function (self, action)
-	local result = nil
+	local result
 
 	if self._player:is_human_controlled() then
 		result = self._human_unit_input:get(action)
@@ -68,7 +72,7 @@ PlayerUnitInputExtension.get = function (self, action)
 end
 
 PlayerUnitInputExtension.had_received_input = function (self, fixed_frame)
-	local result = nil
+	local result
 
 	if self._player:is_human_controlled() then
 		result = self._human_unit_input:had_received_input(fixed_frame)

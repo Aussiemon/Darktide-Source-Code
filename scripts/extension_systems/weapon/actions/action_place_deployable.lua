@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/weapon/actions/action_place_deployable.lua
+
 require("scripts/extension_systems/weapon/actions/action_place_base")
 
 local ActionPlaceDeployable = class("ActionPlaceDeployable", "ActionPlaceBase")
@@ -11,7 +13,7 @@ ActionPlaceDeployable._place_unit = function (self, action_settings, position, r
 	local side_system = Managers.state.extension:system("side_system")
 	local side = side_system.side_by_unit[player_unit]
 	local side_id = side.side_id
-	local unit_name, material = nil
+	local unit_name, material
 	local placed_unit = Managers.state.unit_spawner:spawn_network_unit(unit_name, unit_template, position, rotation, material, side_id, deployable_settings, placed_on_unit, player_unit)
 	local game_mode_name = Managers.state.game_mode:game_mode_name()
 

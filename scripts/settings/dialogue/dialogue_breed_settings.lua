@@ -1,19 +1,21 @@
-local dialogue_breed_settings = {
-	voice_classes_2d = {
-		"sergeant",
-		"pilot",
-		"tech_priest",
-		"explicator",
-		"training_ground_psyker",
-		"purser",
-		"contract_vendor",
-		"shipmistress",
-		"enemy_nemesis_wolfer",
-		"enemy_wolfer_adjutant",
-		"interrogator",
-		"barber",
-		"enginseer"
-	}
+﻿-- chunkname: @scripts/settings/dialogue/dialogue_breed_settings.lua
+
+local dialogue_breed_settings = {}
+
+dialogue_breed_settings.voice_classes_2d = {
+	"sergeant",
+	"pilot",
+	"tech_priest",
+	"explicator",
+	"training_ground_psyker",
+	"purser",
+	"contract_vendor",
+	"shipmistress",
+	"enemy_nemesis_wolfer",
+	"enemy_wolfer_adjutant",
+	"interrogator",
+	"barber",
+	"enginseer"
 }
 dialogue_breed_settings.voice_classes_npc = dialogue_breed_settings.voice_classes_2d
 dialogue_breed_settings.chaos_hound = {

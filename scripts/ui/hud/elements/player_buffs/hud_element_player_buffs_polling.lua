@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/hud/elements/player_buffs/hud_element_player_buffs_polling.lua
+
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local PlayerBuffDefinitions = require("scripts/ui/hud/elements/player_buffs/hud_element_player_buffs_definitions")
 local HudElementPlayerBuffsSettings = require("scripts/ui/hud/elements/player_buffs/hud_element_player_buffs_settings")
@@ -93,20 +95,20 @@ end
 HudElementPlayerBuffs._add_buff = function (self, buff_instance)
 	local active_buffs_data = self._active_buffs_data
 
-	if MAX_BUFFS <= #active_buffs_data then
+	if #active_buffs_data >= MAX_BUFFS then
 		return
 	end
 
 	local is_negative = buff_instance:is_negative()
 
 	if is_negative then
-		if QUATER_MAX_BUFF <= self._active_negative_buffs then
+		if self._active_negative_buffs >= QUATER_MAX_BUFF then
 			return
 		end
 
 		self._active_negative_buffs = self._active_negative_buffs + 1
 	else
-		if THREE_QUATER_MAX_BUFF <= self._active_positive_buffs then
+		if self._active_positive_buffs >= THREE_QUATER_MAX_BUFF then
 			return
 		end
 
@@ -116,6 +118,7 @@ HudElementPlayerBuffs._add_buff = function (self, buff_instance)
 	local buff_template = buff_instance and buff_instance:template()
 	local buff_category = buff_template and buff_template.buff_category or buff_categories.generic
 	local index = #active_buffs_data + 1
+
 	self._active_buffs_data[index] = {
 		is_active = false,
 		buff_instance = buff_instance,
@@ -148,10 +151,12 @@ HudElementPlayerBuffs._setup_buff_widget_array = function (self, ui_renderer)
 	for i = 1, MAX_BUFFS do
 		local buff_widget_name = "buff_" .. i
 		local widget = widgets_by_name[buff_widget_name]
+
 		buff_widgets_array[i] = widget
 
 		for f = 1, #widget.passes do
 			local pass_info = widget.passes[f]
+
 			pass_info.retained_mode = self._use_retained_mode
 		end
 
@@ -193,17 +198,23 @@ HudElementPlayerBuffs._return_widget = function (self, widget, ui_renderer)
 	widget.offset[2] = 0
 	widget.visible = false
 	widget.initialize_offset = false
+
 	local content = widget.content
+
 	content.taken = false
 	content.visible = false
 	content.text = nil
 	content.duration_progress = 1
 	content.opacity = 1
+
 	local style = widget.style
+
 	style.icon.material_values.talent_icon = nil
 	style.icon.material_values.gradient_map = nil
 	style.text_background.size[1] = 0
+
 	local text_style = style.text
+
 	text_style.size[1] = 0
 
 	UIWidget.set_visible(widget, ui_renderer, false)
@@ -227,6 +238,7 @@ local function _use_categories()
 
 	if save_manager then
 		local account_data = save_manager:account_data()
+
 		group_buff_icon_in_categories = account_data.interface_settings.group_buff_icon_in_categories
 	end
 
@@ -262,6 +274,7 @@ HudElementPlayerBuffs._update_buff_alignments = function (self, force_update, dt
 
 		for inxed, buff_category in ipairs(buff_categort_order) do
 			local number_in_category = math.max(_number_of_buffs_per_category[buff_category] or 0, RESERVED_SPOTS[buff_category] or 0)
+
 			_category_offsets[buff_category] = current_number * horizontal_spacing
 			_category_numbers[buff_category] = current_number
 			current_number = current_number + number_in_category + (number_in_category > 0 and GAP_OFFSET_SIZE or 0)
@@ -278,7 +291,9 @@ HudElementPlayerBuffs._update_buff_alignments = function (self, force_update, dt
 
 		if widget then
 			local offset = widget.offset
+
 			offset[2] = is_negative and -42 or 0
+
 			local old_horizontal_offset = offset[1]
 			local target_x = horizontal_spacing * num_aligned_category_buffs
 
@@ -336,78 +351,107 @@ HudElementPlayerBuffs._update_buffs = function (self, t, ui_renderer)
 
 					self:_return_widget(widget, ui_renderer)
 				end
-			else
-				local buff_hud_data = buff_instance:get_hud_data()
-				local show = buff_hud_data.show
-				local is_active = buff_hud_data.is_active
-				local icon = buff_hud_data.hud_icon
-				local icon_gradient_map = buff_hud_data.hud_icon_gradient_map
-				local hud_priority = buff_hud_data.hud_priority
-				local stack_count = buff_hud_data.stack_count
-				local show_stack_count = buff_hud_data.show_stack_count
-				local is_negative = buff_hud_data.is_negative
-				local force_negative_frame = buff_hud_data.force_negative_frame
-				local duration_progress = buff_hud_data.duration_progress
-				buff_data.show = show
-				buff_data.hud_priority = hud_priority
-				local content = widget.content
-				local style = widget.style
 
-				if icon ~= buff_data.icon or buff_data.icon == nil then
-					style.icon.material_values.talent_icon = icon
-					style.icon.material_values.gradient_map = icon_gradient_map
-					buff_data.icon = icon
-					widget.dirty = true
-				end
+				break
+			end
 
-				content.previous_duration_progress = content.duration_progress
+			local buff_hud_data = buff_instance:get_hud_data()
+			local show = buff_hud_data.show
+			local is_active = buff_hud_data.is_active
+			local icon = buff_hud_data.hud_icon
+			local icon_gradient_map = buff_hud_data.hud_icon_gradient_map
+			local hud_priority = buff_hud_data.hud_priority
+			local stack_count = buff_hud_data.stack_count
+			local show_stack_count = buff_hud_data.show_stack_count
+			local is_negative = buff_hud_data.is_negative
+			local force_negative_frame = buff_hud_data.force_negative_frame
+			local duration_progress = buff_hud_data.duration_progress
 
-				if duration_progress ~= buff_data.duration_progress then
-					buff_data.duration_progress = duration_progress
+			buff_data.show = show
+			buff_data.hud_priority = hud_priority
 
-					if duration_progress == 0 then
-						duration_progress = 1
-					end
+			if show then
+				if not widget then
+					widget = self:_get_available_widget()
+					buff_data.widget = widget
+					buff_data.activated_time = t
 
-					content.duration_progress = duration_progress
-
-					if content.duration_progress ~= content.previous_duration_progress then
-						widget.dirty = true
-					end
-				end
-
-				if stack_count ~= buff_data.stack_count or buff_data.stack_count == nil then
-					content.text = show_stack_count and tostring(stack_count) or nil
-					local text_style = style.text
-
-					if content.text and content.text ~= "" then
-						local buff_size = widget.size or {
-							38,
-							38
-						}
-						local text_font_options = UIFonts.get_font_options_by_style(text_style)
-						local text_width, text_height = UIRenderer.text_size(ui_renderer, content.text, text_style.font_type, text_style.font_size, buff_size, text_font_options)
-						local text_margin = 5
-						local total_width = text_margin + text_width
-						style.text_background.size[1] = total_width
-						text_style.size[1] = total_width
-					else
-						style.text_background.size[1] = 0
-						text_style.size[1] = 0
-					end
-
-					buff_data.stack_count = stack_count
-					widget.dirty = true
-				end
-
-				if is_active ~= buff_data.is_active or buff_data.is_active == nil or is_negative ~= buff_data.is_negative or buff_data.is_negative == nil or force_negative_frame ~= buff_data.force_negative_frame then
 					self:_set_widget_state_colors(widget, is_negative or force_negative_frame, is_active)
-
-					widget.dirty = true
-					buff_data.is_active = is_active
-					buff_data.is_negative = is_negative
-					buff_data.force_negative_frame = force_negative_frame
+					UIWidget.set_visible(widget, ui_renderer, true)
 				end
+			else
+				if widget then
+					buff_data.widget = nil
+					buff_data.icon = nil
+					buff_data.icon_gradient_map = nil
+					buff_data.stack_count = nil
+					buff_data.activated_time = math.huge
+
+					self:_return_widget(widget, ui_renderer)
+				end
+
+				break
+			end
+
+			local content = widget.content
+			local style = widget.style
+
+			if icon ~= buff_data.icon or buff_data.icon == nil then
+				style.icon.material_values.talent_icon = icon
+				style.icon.material_values.gradient_map = icon_gradient_map
+				buff_data.icon = icon
+				widget.dirty = true
+			end
+
+			content.previous_duration_progress = content.duration_progress
+
+			if duration_progress ~= buff_data.duration_progress then
+				buff_data.duration_progress = duration_progress
+
+				if duration_progress == 0 then
+					duration_progress = 1
+				end
+
+				content.duration_progress = duration_progress
+
+				if content.duration_progress ~= content.previous_duration_progress then
+					widget.dirty = true
+				end
+			end
+
+			if stack_count ~= buff_data.stack_count or buff_data.stack_count == nil then
+				content.text = show_stack_count and tostring(stack_count) or nil
+
+				local text_style = style.text
+
+				if content.text and content.text ~= "" then
+					local buff_size = widget.size or {
+						38,
+						38
+					}
+					local text_font_options = UIFonts.get_font_options_by_style(text_style)
+					local text_width, text_height = UIRenderer.text_size(ui_renderer, content.text, text_style.font_type, text_style.font_size, buff_size, text_font_options)
+					local text_margin = 5
+					local total_width = text_margin + text_width
+
+					style.text_background.size[1] = total_width
+					text_style.size[1] = total_width
+				else
+					style.text_background.size[1] = 0
+					text_style.size[1] = 0
+				end
+
+				buff_data.stack_count = stack_count
+				widget.dirty = true
+			end
+
+			if is_active ~= buff_data.is_active or buff_data.is_active == nil or is_negative ~= buff_data.is_negative or buff_data.is_negative == nil or force_negative_frame ~= buff_data.force_negative_frame then
+				self:_set_widget_state_colors(widget, is_negative or force_negative_frame, is_active)
+
+				widget.dirty = true
+				buff_data.is_active = is_active
+				buff_data.is_negative = is_negative
+				buff_data.force_negative_frame = force_negative_frame
 			end
 		until true
 	end
@@ -434,7 +478,7 @@ HudElementPlayerBuffs._update_buffs = function (self, t, ui_renderer)
 end
 
 HudElementPlayerBuffs._set_widget_state_colors = function (self, widget, is_negative, is_active)
-	local source_colors = nil
+	local source_colors
 
 	if not is_active then
 		source_colors = HudElementPlayerBuffsSettings.inactive_colors
@@ -484,6 +528,7 @@ HudElementPlayerBuffs.set_visible = function (self, visible, ui_renderer, use_re
 
 			for f = 1, #widget.passes do
 				local pass_info = widget.passes[f]
+
 				pass_info.retained_mode = use_retained_mode
 			end
 		end
@@ -521,6 +566,7 @@ HudElementPlayerBuffs.update = function (self, dt, t, ui_renderer, render_settin
 		end
 	else
 		self._buff_widgets_array = self:_setup_buff_widget_array(ui_renderer)
+
 		local extensions = self._parent:player_extensions()
 		local buff_extension = extensions and extensions.buff
 

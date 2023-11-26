@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/behavior/nodes/actions/bt_poxwalker_bomber_approach_action.lua
+
 require("scripts/extension_systems/behavior/nodes/bt_node")
 
 local Animation = require("scripts/utilities/animation")
@@ -11,6 +13,7 @@ local BtPoxwalkerBomberApproachAction = class("BtPoxwalkerBomberApproachAction",
 BtPoxwalkerBomberApproachAction.enter = function (self, unit, breed, blackboard, scratchpad, action_data, t)
 	local locomotion_extension = ScriptUnit.extension(unit, "locomotion_system")
 	local navigation_extension = ScriptUnit.extension(unit, "navigation_system")
+
 	scratchpad.animation_extension = ScriptUnit.extension(unit, "animation_system")
 	scratchpad.locomotion_extension = locomotion_extension
 	scratchpad.navigation_extension = navigation_extension
@@ -24,6 +27,7 @@ BtPoxwalkerBomberApproachAction.enter = function (self, unit, breed, blackboard,
 
 	if action_data.effect_template then
 		local fx_system = Managers.state.extension:system("fx_system")
+
 		scratchpad.fx_system = fx_system
 	end
 
@@ -51,8 +55,11 @@ end
 BtPoxwalkerBomberApproachAction.leave = function (self, unit, breed, blackboard, scratchpad, action_data, t, reason, destroy)
 	if scratchpad.stagger_component.num_triggered_staggers > 0 and scratchpad.lunge_duration then
 		local death_component = Blackboard.write_component(blackboard, "death")
+
 		death_component.staggered_during_lunge = true
+
 		local duration = scratchpad.stagger_component.duration
+
 		scratchpad.stagger_component.duration = duration * action_data.stagger_duration_modifier_during_lunge
 	end
 
@@ -140,7 +147,7 @@ BtPoxwalkerBomberApproachAction.run = function (self, unit, breed, blackboard, s
 
 	local is_anim_driven = scratchpad.is_anim_driven
 
-	if is_anim_driven and scratchpad.start_rotation_timing and scratchpad.start_rotation_timing <= t then
+	if is_anim_driven and scratchpad.start_rotation_timing and t >= scratchpad.start_rotation_timing then
 		MinionMovement.update_anim_driven_start_rotation(unit, scratchpad, action_data, t)
 	end
 
@@ -199,8 +206,10 @@ BtPoxwalkerBomberApproachAction._start_move_anim = function (self, unit, breed, 
 	end
 
 	local moving_direction_name = MinionMovement.get_moving_direction_name(unit, scratchpad)
+
 	scratchpad.moving_direction_name = moving_direction_name
-	local start_move_event = nil
+
+	local start_move_event
 	local state = scratchpad.state
 
 	if state == "walking" then
@@ -210,6 +219,7 @@ BtPoxwalkerBomberApproachAction._start_move_anim = function (self, unit, breed, 
 
 		if action_data.start_move_anim_events and action_data.start_move_anim_events[state] then
 			local start_move_anim_events = action_data.start_move_anim_events[state]
+
 			start_move_event = Animation.random_event(start_move_anim_events[moving_direction_name])
 			using_anim_driven = true
 		end
@@ -221,6 +231,7 @@ BtPoxwalkerBomberApproachAction._start_move_anim = function (self, unit, breed, 
 
 			local start_move_rotation_timings = action_data.start_move_rotation_timings
 			local start_rotation_timing = start_move_rotation_timings[start_move_event]
+
 			scratchpad.start_rotation_timing = t + start_rotation_timing
 			scratchpad.move_start_anim_event_name = start_move_event
 		else
@@ -238,6 +249,7 @@ BtPoxwalkerBomberApproachAction._start_move_anim = function (self, unit, breed, 
 	end
 
 	local behavior_component = scratchpad.behavior_component
+
 	behavior_component.move_state = "moving"
 end
 
@@ -289,11 +301,11 @@ BtPoxwalkerBomberApproachAction._update_running = function (self, unit, breed, d
 end
 
 BtPoxwalkerBomberApproachAction._start_walk_anim = function (self, scratchpad, action_data, optional_moving_direction_name)
-	local start_move_anim_events = action_data.start_move_anim_events
-	local walking_anim_event = nil
+	local start_move_anim_events, walking_anim_event = action_data.start_move_anim_events
 
 	if start_move_anim_events then
 		local start_walking_anim_events = start_move_anim_events.walking
+
 		walking_anim_event = Animation.random_event(start_walking_anim_events[optional_moving_direction_name])
 	else
 		walking_anim_event = action_data.walk_anim_event
@@ -325,11 +337,11 @@ BtPoxwalkerBomberApproachAction._change_state = function (self, unit, breed, scr
 end
 
 BtPoxwalkerBomberApproachAction._set_state_max_speed = function (self, breed, scratchpad, action_data)
-	local state = scratchpad.state
-	local new_speed = nil
+	local state, new_speed = scratchpad.state
 
 	if state == "walking" then
 		local walk_speeds = action_data.walk_speeds
+
 		new_speed = walk_speeds and walk_speeds[scratchpad.current_walk_anim_event] or action_data.walk_speed or breed.walk_speed
 	elseif state == "running" then
 		new_speed = action_data.move_speed or breed.run_speed
@@ -369,10 +381,7 @@ BtPoxwalkerBomberApproachAction._rotate_towards_target_unit = function (self, un
 	scratchpad.locomotion_extension:set_wanted_rotation(flat_rotation)
 end
 
-local TARGET_NAV_MESH_ABOVE = 1
-local TARGET_NAV_MESH_BELOW = 2
-local TARGET_NAV_MESH_LATERAL = 2
-local TARGET_DISTANCE_FROM_NAV_MESH = 0.5
+local TARGET_NAV_MESH_ABOVE, TARGET_NAV_MESH_BELOW, TARGET_NAV_MESH_LATERAL, TARGET_DISTANCE_FROM_NAV_MESH = 1, 2, 2, 0.5
 
 BtPoxwalkerBomberApproachAction._update_move_to = function (self, t, scratchpad, action_data, target_unit)
 	local navigation_extension = scratchpad.navigation_extension
@@ -380,9 +389,8 @@ BtPoxwalkerBomberApproachAction._update_move_to = function (self, t, scratchpad,
 	local target_position = POSITION_LOOKUP[target_unit]
 	local distance_to_destination = Vector3.distance(destination, target_position)
 
-	if scratchpad.move_to_cooldown <= t and action_data.move_to_distance < distance_to_destination then
-		local nav_world = scratchpad.nav_world
-		local traverse_logic = scratchpad.traverse_logic
+	if t >= scratchpad.move_to_cooldown and distance_to_destination > action_data.move_to_distance then
+		local nav_world, traverse_logic = scratchpad.nav_world, scratchpad.traverse_logic
 		local wanted_position = NavQueries.position_on_mesh_with_outside_position(nav_world, traverse_logic, target_position, TARGET_NAV_MESH_ABOVE, TARGET_NAV_MESH_BELOW, TARGET_NAV_MESH_LATERAL, TARGET_DISTANCE_FROM_NAV_MESH)
 
 		if wanted_position then
@@ -403,12 +411,17 @@ BtPoxwalkerBomberApproachAction._start_lunge = function (self, unit, blackboard,
 	scratchpad.state = "lunging"
 	scratchpad.lunge_duration = t + action_data.lunge_duration
 	scratchpad.move_during_lunge_duration = t + action_data.move_during_lunge_duration
+
 	local stagger_component = Blackboard.write_component(blackboard, "stagger")
+
 	stagger_component.immune_time = 0
 	stagger_component.controlled_stagger = false
 	stagger_component.controlled_stagger_finished = true
+
 	local death_component = Blackboard.write_component(blackboard, "death")
+
 	death_component.fuse_timer = t + action_data.fuse_timer
+
 	local shape = "sphere"
 	local rotation = Unit.local_rotation(unit, 1)
 	local fwd = Quaternion.forward(rotation)

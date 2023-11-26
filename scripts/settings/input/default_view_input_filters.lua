@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/input/default_view_input_filters.lua
+
 local default_view_input_filters = {
 	navigate_up_continuous = {
 		filter_type = "navigate_filter_continuous",

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/backend/master_data.lua
+
 local CacheWrapper = require("scripts/backend/cache_wrapper")
 local ItemPackage = require("scripts/foundation/managers/package/utilities/item_package")
 local LocalLoader = require("scripts/settings/equipment/local_items_loader")
@@ -25,6 +27,7 @@ MasterData.items_cache = function (self)
 		local metadata_cb = callback(self, "_get_items_metadata")
 		local fetch_cb = callback(self, "_get_items_from_backend")
 		local fallback_cb = callback(self, "_fail_on_missing_metadata")
+
 		self._fetch_items_wrapper = CacheWrapper:new(metadata_cb, fetch_cb, fallback_cb)
 	end
 
@@ -66,7 +69,7 @@ MasterData._get_items_from_metadata_db = function (self)
 end
 
 MasterData._get_items_from_backend = function (self, version, url)
-	local promise = nil
+	local promise
 
 	if version ~= nil and url ~= nil then
 		promise = Managers.backend:url_request(url, {

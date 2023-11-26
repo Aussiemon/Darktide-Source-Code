@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/wounds/wounds_settings.lua
+
 local shapes = table.enum("vertical_slash", "left_45_slash", "right_45_slash", "horizontal_slash", "vertical_slash_clean", "left_45_slash_clean", "right_45_slash_clean", "horizontal_slash_clean", "vertical_slash_coarse", "left_45_slash_coarse", "right_45_slash_coarse", "horizontal_slash_coarse", "lasgun", "shotgun", "sphere", "default")
 local shape_inversions = {}
 

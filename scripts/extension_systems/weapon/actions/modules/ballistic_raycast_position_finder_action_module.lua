@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/weapon/actions/modules/ballistic_raycast_position_finder_action_module.lua
+
 local BallisticRaycast = require("scripts/extension_systems/weapon/actions/utilities/ballistic_raycast")
 local BallisticRaycastPostionFinderActionModule = class("BallisticRaycastPostionFinderActionModule")
 
@@ -6,13 +8,16 @@ BallisticRaycastPostionFinderActionModule.init = function (self, physics_world, 
 	self._player_unit = player_unit
 	self._component = component
 	self._action_settings = action_settings
+
 	local unit_data_extension = ScriptUnit.extension(player_unit, "unit_data_system")
+
 	self._first_person_component = unit_data_extension:read_component("first_person")
 	self._locomotion_component = unit_data_extension:read_component("locomotion")
 end
 
 BallisticRaycastPostionFinderActionModule.start = function (self, action_settings, t)
 	local action_component = self._component
+
 	action_component.position = Vector3.zero()
 end
 
@@ -37,12 +42,14 @@ BallisticRaycastPostionFinderActionModule.fixed_update = function (self, dt, t)
 	end
 
 	local action_component = self._component
+
 	action_component.position = hit_position
 end
 
 BallisticRaycastPostionFinderActionModule.finish = function (self, reason, data, t)
 	if reason == "hold_input_released" or reason == "stunned" then
 		local action_component = self._component
+
 		action_component.position = Vector3.zero()
 	end
 end

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/wounds/wounds_extension.lua
+
 local AttackSettings = require("scripts/settings/damage/attack_settings")
 local WoundMaterials = require("scripts/extension_systems/wounds/utilities/wound_materials")
 local WoundsTemplates = require("scripts/settings/damage/wounds_templates")
@@ -15,19 +17,23 @@ WoundsExtension.init = function (self, extension_init_context, unit, extension_i
 	self._health_extension = ScriptUnit.extension(unit, "health_system")
 	self._unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
 	self._visual_loadout_extension = ScriptUnit.extension(unit, "visual_loadout_system")
+
 	local wounds_config = self._breed.wounds_config
-	local health_percent_throttle = nil
+	local health_percent_throttle
 
 	if wounds_config then
 		health_percent_throttle = wounds_config.health_percent_throttle
 	end
 
 	self._next_wound_health_percent = health_percent_throttle and 1 - health_percent_throttle or math.huge
+
 	local is_server = extension_init_context.is_server
+
 	self._is_server = is_server
 
 	if not is_server then
 		local network_event_delegate = extension_init_context.network_event_delegate
+
 		self._network_event_delegate = network_event_delegate
 		self._game_object_id = nil_or_game_object_id
 
@@ -46,8 +52,7 @@ WoundsExtension.destroy = function (self)
 end
 
 WoundsExtension.game_object_initialized = function (self, game_session, game_object_id)
-	self._game_object_id = game_object_id
-	self._game_session = game_session
+	self._game_session, self._game_object_id = game_session, game_object_id
 end
 
 WoundsExtension.set_unit_local = function (self)
@@ -76,7 +81,7 @@ WoundsExtension.add_wounds = function (self, wounds_template, hit_world_position
 	local is_killing_blow = attack_result == attack_results.died
 	local max_num_wounds = self._max_num_wounds
 	local at_max_wounds = wounds_data.num_wounds == max_num_wounds
-	local wound_index = nil
+	local wound_index
 	local should_reuse_wounds = REUSE_WOUNDS
 
 	if at_max_wounds then
@@ -116,7 +121,7 @@ WoundsExtension.add_wounds = function (self, wounds_template, hit_world_position
 			if health_percent_throttle then
 				local current_health_percent = self._health_extension:current_health_percent()
 
-				if self._next_wound_health_percent < current_health_percent then
+				if current_health_percent > self._next_wound_health_percent then
 					return
 				else
 					self._next_wound_health_percent = math.max(0, current_health_percent - health_percent_throttle)
@@ -128,10 +133,8 @@ WoundsExtension.add_wounds = function (self, wounds_template, hit_world_position
 	local wound_settings_for_hit_zone = wound_settings_for_attack_result[hit_zone_name_or_nil] or wound_settings_for_attack_result.default
 	local wound_shape = override_wound_shape_or_nil or wound_settings_for_hit_zone.default_shape
 	local wound_settings = wound_settings_for_hit_zone[wound_shape]
-	local unit = self._unit
-	local hit_actor_bind_pose = self._unit_data_extension:node_bind_pose(hit_actor_node_index)
-	local t = World.time(Unit.world(unit))
-	local slot_items = self._visual_loadout_extension:slot_items()
+	local unit, hit_actor_bind_pose = self._unit, self._unit_data_extension:node_bind_pose(hit_actor_node_index)
+	local t, slot_items = World.time(Unit.world(unit)), self._visual_loadout_extension:slot_items()
 
 	WoundMaterials.calculate(unit, wounds_config, wounds_data, wound_index, wound_settings, wound_shape, hit_actor_node_index, hit_actor_bind_pose, hit_world_position, t)
 

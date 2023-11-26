@@ -1,8 +1,11 @@
+﻿-- chunkname: @scripts/settings/breed/breed_actions.lua
+
 local breed_actions = {}
 
 local function _create_breed_action_entry(path)
 	local actions_data = require(path)
 	local breed_name = actions_data.name
+
 	breed_actions[breed_name] = actions_data
 end
 

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/end_party_view/end_party_view_settings.lua
+
 local end_party_view_settings = {
 	accolade_initial_spawn_delay = 0.5,
 	duration = 0.1,

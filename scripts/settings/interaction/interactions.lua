@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/interaction/interactions.lua
+
 local BaseInteraction = require("scripts/extension_systems/interaction/interactions/base_interaction")
 local PickupInteraction = require("scripts/extension_systems/interaction/interactions/pickup_interaction")
 local AmmunitionInteraction = require("scripts/extension_systems/interaction/interactions/ammunition_interaction")

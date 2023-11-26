@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/particles/player_character_particle_aliases.lua
+
 local ArmorSettings = require("scripts/settings/damage/armor_settings")
 local armor_types = ArmorSettings.types
 local particles = {

@@ -1,9 +1,12 @@
+﻿-- chunkname: @scripts/extension_systems/animation/minion_animation_extension.lua
+
 local MinionAnimationExtension = class("MinionAnimationExtension")
 local Unit_animation_set_variable = Unit.animation_set_variable
 local GameSession_game_object_fields_array = GameSession.game_object_fields_array
 
 MinionAnimationExtension.init = function (self, extension_init_context, unit, extension_init_data, game_object_data_or_game_session, nil_or_game_object_id)
 	local is_server = extension_init_context.is_server
+
 	self._is_server = is_server
 	self._unit = unit
 
@@ -13,7 +16,9 @@ MinionAnimationExtension.init = function (self, extension_init_context, unit, ex
 	end
 
 	local breed = extension_init_data.breed
+
 	self._breed = breed
+
 	local state_machine = breed.state_machine
 
 	if state_machine then
@@ -21,11 +26,13 @@ MinionAnimationExtension.init = function (self, extension_init_context, unit, ex
 	end
 
 	self._animation_variable_bounds = breed.animation_variable_bounds
+
 	local next_seed = extension_init_data.random_seed
 	local seeds, num_seeds = Unit.animation_get_seeds(unit)
 
 	for i = 1, num_seeds do
-		local seed = nil
+		local seed
+
 		next_seed, seed = math.random_seed(next_seed)
 		seeds[i] = seed
 	end
@@ -41,8 +48,11 @@ MinionAnimationExtension.init = function (self, extension_init_context, unit, ex
 		for i = 1, #animation_variables do
 			local variable_name = animation_variables[i]
 			local variable_index = Unit.animation_find_variable(unit, variable_name)
+
 			variables[variable_name] = variable_index
+
 			local anim_var_name_id = Script.id_string_32(variable_name)
+
 			go_var_lookup[var_idx] = anim_var_name_id
 			go_var_lookup[var_idx + 1] = 0
 			go_var_lookup[anim_var_name_id] = variable_index
@@ -57,8 +67,7 @@ MinionAnimationExtension.init = function (self, extension_init_context, unit, ex
 end
 
 MinionAnimationExtension.game_object_initialized = function (self, game_session, game_object_id)
-	self._game_object_id = game_object_id
-	self._game_session = game_session
+	self._game_session, self._game_object_id = game_session, game_object_id
 
 	if self._breed.animation_variable_init then
 		for name, value in pairs(self._breed.animation_variable_init) do
@@ -104,8 +113,7 @@ end
 
 MinionAnimationExtension.set_variable = function (self, name, value)
 	local unit = self._unit
-	local game_session = self._game_session
-	local game_object_id = self._game_object_id
+	local game_session, game_object_id = self._game_session, self._game_object_id
 	local variables = self._variables
 	local index = variables[name]
 	local variable_bounds = self._animation_variable_bounds
@@ -120,8 +128,7 @@ end
 
 MinionAnimationExtension.update = function (self, unit, ...)
 	if not self._is_server and self._go_var_lookup then
-		local game_session = self._game_session
-		local game_object_id = self._game_object_id
+		local game_session, game_object_id = self._game_session, self._game_object_id
 		local go_var_lookup = self._go_var_lookup
 		local modified_table_size = GameSession_game_object_fields_array(game_session, game_object_id, go_var_lookup)
 

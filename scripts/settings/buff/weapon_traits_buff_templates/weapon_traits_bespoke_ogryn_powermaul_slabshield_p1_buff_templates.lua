@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/buff/weapon_traits_buff_templates/weapon_traits_bespoke_ogryn_powermaul_slabshield_p1_buff_templates.lua
+
 local BaseWeaponTraitBuffTemplates = require("scripts/settings/buff/weapon_traits_buff_templates/base_weapon_trait_buff_templates")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local CheckProcFunctions = require("scripts/settings/buff/validation_functions/check_proc_functions")
@@ -12,14 +14,14 @@ local damage_types = DamageSettings.damage_types
 local keywords = BuffSettings.keywords
 local stat_buffs = BuffSettings.stat_buffs
 local proc_events = BuffSettings.proc_events
-local templates = {
-	weapon_trait_bespoke_ogryn_powermaul_slabshield_p1_toughness_recovery_on_chained_attacks = table.clone(BaseWeaponTraitBuffTemplates.toughness_recovery_on_chained_attacks),
-	weapon_trait_bespoke_ogryn_powermaul_slabshield_p1_staggered_targets_receive_increased_damage_debuff = table.clone(BaseWeaponTraitBuffTemplates.staggered_targets_receive_increased_damage_debuff),
-	weapon_trait_bespoke_ogryn_powermaul_slabshield_p1_infinite_melee_cleave_on_weakspot_kill = table.clone(BaseWeaponTraitBuffTemplates.infinite_melee_cleave_on_weakspot_kill),
-	weapon_trait_bespoke_ogryn_powermaul_slabshield_p1_staggered_targets_receive_increased_stagger_debuff = table.clone(BaseWeaponTraitBuffTemplates.staggered_targets_receive_increased_stagger_debuff),
-	weapon_trait_bespoke_ogryn_powermaul_slabshield_p1_taunt_target_on_hit = table.clone(BaseWeaponTraitBuffTemplates.taunt_target_on_staggered_hit),
-	weapon_trait_bespoke_ogryn_powermaul_slabshield_p1_taunt_target_on_hit_child = table.clone(BaseWeaponTraitBuffTemplates.taunt_target_child)
-}
+local templates = {}
+
+templates.weapon_trait_bespoke_ogryn_powermaul_slabshield_p1_toughness_recovery_on_chained_attacks = table.clone(BaseWeaponTraitBuffTemplates.toughness_recovery_on_chained_attacks)
+templates.weapon_trait_bespoke_ogryn_powermaul_slabshield_p1_staggered_targets_receive_increased_damage_debuff = table.clone(BaseWeaponTraitBuffTemplates.staggered_targets_receive_increased_damage_debuff)
+templates.weapon_trait_bespoke_ogryn_powermaul_slabshield_p1_infinite_melee_cleave_on_weakspot_kill = table.clone(BaseWeaponTraitBuffTemplates.infinite_melee_cleave_on_weakspot_kill)
+templates.weapon_trait_bespoke_ogryn_powermaul_slabshield_p1_staggered_targets_receive_increased_stagger_debuff = table.clone(BaseWeaponTraitBuffTemplates.staggered_targets_receive_increased_stagger_debuff)
+templates.weapon_trait_bespoke_ogryn_powermaul_slabshield_p1_taunt_target_on_hit = table.clone(BaseWeaponTraitBuffTemplates.taunt_target_on_staggered_hit)
+templates.weapon_trait_bespoke_ogryn_powermaul_slabshield_p1_taunt_target_on_hit_child = table.clone(BaseWeaponTraitBuffTemplates.taunt_target_child)
 templates.weapon_trait_bespoke_ogryn_powermaul_slabshield_p1_taunt_target_on_hit.child_buff_template = "weapon_trait_bespoke_ogryn_powermaul_slabshield_p1_taunt_target_on_hit_child"
 templates.weapon_trait_bespoke_ogryn_powermaul_slabshield_p1_pass_past_armor_on_crit = table.clone(BaseWeaponTraitBuffTemplates.pass_past_armor_on_crit)
 templates.weapon_trait_bespoke_ogryn_powermaul_slabshield_p1_block_grants_power_bonus_parent = {
@@ -41,7 +43,7 @@ templates.weapon_trait_bespoke_ogryn_powermaul_slabshield_p1_block_grants_power_
 			local time_since_last_hit = t - last_hit_time
 			local total_stamina_blocked = (template_data.total_stamina_blocked or 0) + params.block_cost
 
-			if template_context.template.child_duration < time_since_last_hit then
+			if time_since_last_hit > template_context.template.child_duration then
 				total_stamina_blocked = params.block_cost
 			end
 
@@ -52,7 +54,9 @@ templates.weapon_trait_bespoke_ogryn_powermaul_slabshield_p1_block_grants_power_
 		on_sweep_finish = function (params, template_data, template_context)
 			template_data.total_stamina_blocked = math.max(template_data.total_stamina_blocked - 1, 0)
 			template_data.target_number_of_stacks = math.max(template_data.target_number_of_stacks - 1, 0)
+
 			local t = FixedFrame.approximate_latest_fixed_time()
+
 			template_data.last_hit_time = t
 		end
 	}
@@ -68,6 +72,7 @@ templates.weapon_trait_bespoke_ogryn_powermaul_slabshield_p1_block_grants_power_
 	},
 	conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded
 }
+
 local _push_settings = {
 	inner_push_rad = math.pi * 0.55,
 	outer_push_rad = math.pi * 1,
@@ -76,6 +81,7 @@ local _push_settings = {
 	outer_damage_profile = DamageProfileTemplates.default_shield_push,
 	outer_damage_type = damage_types.physical
 }
+
 templates.weapon_trait_bespoke_ogryn_powermaul_slabshield_p1_block_break_pushes = {
 	cooldown_duration = 15,
 	predicted = false,
@@ -90,6 +96,7 @@ templates.weapon_trait_bespoke_ogryn_powermaul_slabshield_p1_block_break_pushes 
 	start_func = function (template_data, template_context)
 		local player_unit = template_context.unit
 		local unit_data_extension = ScriptUnit.extension(player_unit, "unit_data_system")
+
 		template_data.first_person_component = unit_data_extension:read_component("first_person")
 		template_data.locomotion_component = unit_data_extension:read_component("locomotion")
 		template_data.animation_extension = ScriptUnit.extension(player_unit, "animation_system")
@@ -107,6 +114,7 @@ templates.weapon_trait_bespoke_ogryn_powermaul_slabshield_p1_block_break_pushes 
 		end
 
 		template_data.perform_push = nil
+
 		local player_unit = template_context.unit
 		local first_person_component = template_data.first_person_component
 		local locomotion_component = template_data.locomotion_component
@@ -124,7 +132,9 @@ templates.weapon_trait_bespoke_ogryn_powermaul_slabshield_p1_block_break_pushes 
 		local template_push_settings = template_override_data.push_settings or template.push_settings
 		local power_level = template_push_settings.power_level
 		local push_radius = template_push_settings.push_radius
+
 		push_settings.push_radius = push_radius
+
 		local number_of_units_hit = PushAttack.push(template_context.physics_world, player_position, player_direction, rewind_ms, power_level, push_settings, player_unit, is_predicted, weapon_item, weak_push)
 		local fx_extension = ScriptUnit.extension(player_unit, "fx_system")
 		local fx_rotation = Quaternion.identity()

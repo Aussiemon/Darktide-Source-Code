@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/mission_voting_view/mission_voting_view_definitions.lua
+
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local UIWorkspaceSettings = require("scripts/settings/ui/ui_workspace_settings")
@@ -546,13 +548,17 @@ local scenegraph_definition = {
 	}
 }
 local mission_type_font_style = ViewStyles.mission_type_font_style
+
 mission_type_font_style.text_vertical_alignment = "top"
+
 local decline_button_passes = table.clone(ButtonPassTemplates.secondary_button)
+
 decline_button_passes[#decline_button_passes + 1] = {
 	value = "content/ui/materials/frames/hover",
 	style_id = "frame",
 	pass_type = "texture"
 }
+
 local widget_definitions = {
 	inner_panel_background = UIWidget.create_definition({
 		{
@@ -809,6 +815,7 @@ local animations = {
 
 				for i = 1, #widgets_to_fade do
 					local widget = widgets_to_fade[i]
+
 					widget.alpha_multiplier = anim_progress
 				end
 
@@ -825,6 +832,7 @@ local animations = {
 
 					for i = 1, #icons_widgets do
 						local widget = icons_widgets[i]
+
 						widget.alpha_multiplier = anim_progress
 					end
 				end
@@ -850,6 +858,7 @@ local animations = {
 				local bottom_fade_height = lerp(source.zone_image_bottom_fade_height, targets.zone_image_bottom_fade_height, anim_progress)
 				local circumstance_icon_height = lerp(source.circumstance_icon_height, targets.circumstance_icon_height, anim_progress)
 				local zone_image_panel_height = lerp(source.zone_image_panel_height, targets.zone_image_panel_height, anim_progress)
+
 				ui_scenegraph.mission_info_panel.size[2] = mission_info_panel_height
 				ui_scenegraph.body_panel.size[2] = body_height
 				ui_scenegraph.body_panel.position[2] = body_panel_y_offset
@@ -878,6 +887,7 @@ local animations = {
 
 				for i = 1, #widgets_to_fade do
 					local widget = widgets_to_fade[i]
+
 					widget.alpha_multiplier = anim_progress
 				end
 
@@ -894,6 +904,7 @@ local animations = {
 
 					for i = 1, #icons_widgets do
 						local widget = icons_widgets[i]
+
 						widget.alpha_multiplier = anim_progress
 					end
 				end

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/recoil/player_unit_weapon_recoil_extension.lua
+
 local Recoil = require("scripts/utilities/recoil")
 local WeaponMovementState = require("scripts/extension_systems/weapon/utilities/weapon_movement_state")
 local PlayerUnitWeaponRecoilExtension = class("PlayerUnitWeaponRecoilExtension")
@@ -5,10 +7,12 @@ local PlayerUnitWeaponRecoilExtension = class("PlayerUnitWeaponRecoilExtension")
 PlayerUnitWeaponRecoilExtension.init = function (self, extension_init_context, unit, extension_init_data, ...)
 	self._is_local_unit = extension_init_data.is_local_unit
 	self._player = extension_init_data.player
+
 	local initial_seed = extension_init_data.recoil_seed
 	local unit_data_ext = ScriptUnit.extension(unit, "unit_data_system")
 	local recoil_component = unit_data_ext:write_component("recoil")
 	local recoil_control_component = unit_data_ext:write_component("recoil_control")
+
 	self._movement_state_component = unit_data_ext:read_component("movement_state")
 	self._locomotion_component = unit_data_ext:read_component("locomotion")
 	self._recoil_component = recoil_component
@@ -24,10 +28,13 @@ end
 
 PlayerUnitWeaponRecoilExtension._reset = function (self)
 	local recoil_component = self._recoil_component
+
 	recoil_component.pitch_offset = 0
 	recoil_component.yaw_offset = 0
 	recoil_component.unsteadiness = 0
+
 	local recoil_control_component = self._recoil_control_component
+
 	recoil_control_component.rise_end_time = 0
 	recoil_control_component.shooting = false
 	recoil_control_component.num_shots = 0
@@ -91,16 +98,19 @@ PlayerUnitWeaponRecoilExtension._update_unsteadiness = function (self, dt, t, re
 		local rise_index = math.min(num_shots, recoil_settings.num_rises)
 		local rise_percent = recoil_settings.rise[rise_index]
 		local unsteadiness_increase = rise_percent / recoil_settings.rise_duration * dt
+
 		unsteadiness = math.min(unsteadiness + unsteadiness_increase * recoil_modifier, 1)
 	else
 		local shooting = recoil_control_component.shooting
 		local shooting_grace_decay = t <= rise_end_time + decay_grace
-		local decay_percent = (shooting or shooting_grace_decay) and recoil_settings.decay.shooting or recoil_settings.decay.idle
+		local decay_percent = not (not shooting and not shooting_grace_decay) and recoil_settings.decay.shooting or recoil_settings.decay.idle
 		local unsteadiness_decay = decay_percent * dt
-		unsteadiness = unsteadiness - unsteadiness_decay * 1 / recoil_modifier
+
+		unsteadiness = unsteadiness - unsteadiness_decay * (1 / recoil_modifier)
 
 		if num_shots > 1 and unsteadiness < 0.75 then
 			local override_shot_count = math.min(num_shots, math.floor(math.max(unsteadiness, 0) * 5))
+
 			self._recoil_control_component.num_shots = override_shot_count
 		end
 	end
@@ -140,6 +150,7 @@ PlayerUnitWeaponRecoilExtension._update_offset = function (self, recoil_componen
 
 	if t <= rise_end_time then
 		local new_yaw_offset = target_yaw * influence * unsteadiness
+
 		final_yaw_offset = old_yaw_offset * influence_inv + new_yaw_offset
 	end
 

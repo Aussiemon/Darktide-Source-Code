@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/multiplayer/session/remote_states/remote_wait_for_join_state.lua
+
 local RemoteWaitForJoinState = class("RemoteWaitForJoinState")
 local RPCS = {
 	"rpc_request_join_game_session"
@@ -20,6 +22,7 @@ end
 
 RemoteWaitForJoinState.update = function (self, dt)
 	local shared_state = self._shared_state
+
 	self._time = self._time + dt
 
 	if self._got_request then
@@ -30,7 +33,7 @@ RemoteWaitForJoinState.update = function (self, dt)
 		return "join_requested"
 	end
 
-	if shared_state.timeout < self._time then
+	if self._time > shared_state.timeout then
 		Log.info("RemoteWaitForJoinState", "Timeout waiting for rpc_request_join_game_session %s", shared_state.peer_id)
 
 		return "timeout", {

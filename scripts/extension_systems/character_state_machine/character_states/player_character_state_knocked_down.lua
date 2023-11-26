@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/character_state_machine/character_states/player_character_state_knocked_down.lua
+
 require("scripts/extension_systems/character_state_machine/character_states/player_character_state_base")
 
 local Assist = require("scripts/extension_systems/character_state_machine/character_states/utilities/assist")
@@ -36,6 +38,7 @@ PlayerCharacterStateKnockedDown.init = function (self, character_state_init_cont
 
 	local unit_data_extension = self._unit_data_extension
 	local looping_sound_component_name = PlayerUnitData.looping_sound_component_name(LOOPING_SOUND_ALIAS)
+
 	self._looping_sound_component = unit_data_extension:read_component(looping_sound_component_name)
 	self._force_look_rotation_component = unit_data_extension:write_component("force_look_rotation")
 	self._knocked_down_state_input = unit_data_extension:write_component("knocked_down_state_input")
@@ -51,6 +54,7 @@ PlayerCharacterStateKnockedDown.extensions_ready = function (self, world, unit)
 	local is_server = self._is_server
 	local game_session_or_nil = self._game_session
 	local game_object_id_or_nil = self._game_object_id
+
 	self._assist = Assist:new(assist_anims, is_server, unit, game_session_or_nil, game_object_id_or_nil, "saved")
 end
 
@@ -217,6 +221,7 @@ end
 
 PlayerCharacterStateKnockedDown._init_vo = function (self, t)
 	local unit = self._unit
+
 	self._next_vo_trigger_time = t + 1
 	self._vo_sequence = 1
 
@@ -231,6 +236,7 @@ PlayerCharacterStateKnockedDown._update_vo = function (self, t)
 	local dialogue_system = self._dialogue_system
 	local vo_sequence = self._vo_sequence
 	local event_data = dialogue_system.input:get_event_data_payload()
+
 	event_data.sequence_no = vo_sequence
 
 	dialogue_system.input:trigger_dialogue_event(DIALOGUE_EVENT, event_data)
@@ -243,9 +249,11 @@ PlayerCharacterStateKnockedDown._stop_movement = function (self, t)
 	local first_person = self._first_person_component
 	local locomotion_force_rotation = self._locomotion_force_rotation_component
 	local locomotion_steering = self._locomotion_steering_component
+
 	locomotion_steering.calculate_fall_velocity = true
 	locomotion_steering.velocity_wanted = Vector3.zero()
 	locomotion_steering.move_method = MOVE_METHOD
+
 	local forced_rotation = Quaternion.look(Vector3.flat(Quaternion.forward(first_person.rotation)))
 
 	if not locomotion_force_rotation.use_force_rotation then
@@ -284,6 +292,7 @@ PlayerCharacterStateKnockedDown._add_buffs = function (self, t)
 
 	if not self._damage_reduction_buff_indexes then
 		local _, local_index, component_index = buff_extension:add_externally_controlled_buff(constants.knocked_down_damage_reduction_buff, t)
+
 		self._damage_reduction_buff_indexes = {
 			local_index = local_index,
 			component_index = component_index
@@ -292,6 +301,7 @@ PlayerCharacterStateKnockedDown._add_buffs = function (self, t)
 
 	if not self._damage_tick_buff_indexes then
 		local _, local_index, component_index = buff_extension:add_externally_controlled_buff(constants.knocked_down_damage_tick_buff, t)
+
 		self._damage_tick_buff_indexes = {
 			local_index = local_index,
 			component_index = component_index

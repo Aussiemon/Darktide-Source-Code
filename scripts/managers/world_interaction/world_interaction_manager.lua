@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/world_interaction/world_interaction_manager.lua
+
 local FoliageInteraction = require("scripts/managers/world_interaction/foliage_interaction")
 local WorldInteractionSettings = require("scripts/managers/world_interaction/world_interaction_settings")
 local WorldInteractionManager = class("WorldInteractionManager")
@@ -40,6 +42,7 @@ end
 WorldInteractionManager._add_water_ripple = function (self, pos, angle, material, random_size_diff, stretch_multiplier, ref_time, size, multiplier)
 	local water_settings = WorldInteractionSettings.water
 	local random_ripple_size_diff = water_settings.random_ripple_size_diff
+
 	self._water_ripples[#self._water_ripples + 1] = {
 		timer = 0,
 		pos = Vector3Box(pos),
@@ -141,7 +144,7 @@ local function collect_characters(available_units, player_pos, window_size)
 	local broadphase = broadphase_system.broadphase
 	local side_system = Managers.state.extension:system("side_system")
 	local side_names = side_system:side_names()
-	local num_results = broadphase:query(player_pos, window_size * 0.5, BROADPHASE_RESULTS, side_names)
+	local num_results = broadphase.query(broadphase, player_pos, window_size * 0.5, BROADPHASE_RESULTS, side_names)
 
 	for ii = 1, num_results do
 		local unit = BROADPHASE_RESULTS[ii]
@@ -158,6 +161,7 @@ WorldInteractionManager._update_water_data = function (self, dt, t)
 	local speed_limit = water_settings.water_speed_limit
 	local ripple_time_step = water_settings.ripple_time_step
 	local max_contributing_units = water_settings.max_contributing_units
+
 	self._water_timer = self._water_timer or 0
 
 	if ripple_time_step <= self._water_timer then
@@ -227,14 +231,14 @@ WorldInteractionManager._update_water_ripples = function (self, dt, t)
 	local default_ripple_timer = water_settings.default_ripple_timer
 	local duplicate_edge_cases = water_settings.duplicate_edge_cases
 	local ripple_stretch_multiplier = water_settings.ripple_stretch_multiplier
-	local gui_width = 512
-	local gui_height = 512
+	local gui_width, gui_height = 512, 512
 	local window_size = math.clamp(water_settings.window_size, 1, 100)
-	local water_data = nil
+	local water_data
 	local num_water_data = #self._water_ripples
 
 	for idx = 1, num_water_data do
 		water_data = self._water_ripples[idx]
+
 		local ref_time = water_data.ref_time or default_ripple_timer
 		local pos = water_data.pos:unbox()
 		local stretch_multiplier = water_data.stretch_multiplier or ripple_stretch_multiplier

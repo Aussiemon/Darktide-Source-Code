@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/credits_view/credits.lua
+
 local Credits = {
 	settings = {
 		speed = 100,

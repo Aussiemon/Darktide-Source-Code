@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/custom_settings_view/custom_settings_view_pages.lua
+
 local render_settings = require("scripts/settings/options/render_settings")
 local sound_settings = require("scripts/settings/options/sound_settings")
 local interface_settings = require("scripts/settings/options/interface_settings")
@@ -46,7 +48,7 @@ local gamma_settings = {
 			return Application.user_setting("gamma") or template.default_value
 		end,
 		on_value_changed = function (value, template)
-			if template.min_value > value or value > template.max_value then
+			if not (value >= template.min_value) or not (value <= template.max_value) then
 				Application.set_user_setting("gamma", template.default_value)
 			else
 				Application.set_user_setting("gamma", value)
@@ -68,6 +70,7 @@ local gamma_settings = {
 			local value_range = template.max_value - template.min_value
 			local exploded_value = template.min_value + normalized_value * value_range
 			local step_size = template.step_size_value or 0.1
+
 			exploded_value = math.round(exploded_value / step_size) * step_size
 
 			return exploded_value
@@ -94,47 +97,47 @@ local gamma_settings = {
 		}
 	}
 }
-local page_templates = {
-	first_run_page_settings = {
-		{
-			next_button_alignment = "right",
-			grid_alignment = "center",
-			widgets = gamma_settings,
-			on_enter = function (parent)
-				parent._widgets_by_name.background.content.visible = false
-				parent._widgets_by_name.gamma_background.content.visible = true
-			end,
-			on_leave = function (parent)
-				parent._widgets_by_name.background.content.visible = true
-				parent._widgets_by_name.gamma_background.content.visible = false
-			end
-		},
-		{
-			next_button_alignment = "right",
-			grid_alignment = "left",
-			widgets = {
-				interface_settings.settings_by_id.subtitle_enabled,
-				interface_settings.settings_by_id.subtitle_speaker_enabled,
-				sound_settings.settings_by_id.option_master_slider,
-				sound_settings.settings_by_id.sound_device,
-				sound_settings.settings_by_id.speaker_settings
-			}
-		}
+local page_templates = {}
+
+page_templates.first_run_page_settings = {
+	{
+		next_button_alignment = "right",
+		grid_alignment = "center",
+		widgets = gamma_settings,
+		on_enter = function (parent)
+			parent._widgets_by_name.background.content.visible = false
+			parent._widgets_by_name.gamma_background.content.visible = true
+		end,
+		on_leave = function (parent)
+			parent._widgets_by_name.background.content.visible = true
+			parent._widgets_by_name.gamma_background.content.visible = false
+		end
 	},
-	brightness_render_option_settings = {
-		{
-			next_button_alignment = "right",
-			grid_alignment = "center",
-			widgets = gamma_settings,
-			on_enter = function (parent)
-				parent._widgets_by_name.background.content.visible = false
-				parent._widgets_by_name.gamma_background.content.visible = true
-			end,
-			on_leave = function (parent)
-				parent._widgets_by_name.background.content.visible = true
-				parent._widgets_by_name.gamma_background.content.visible = false
-			end
+	{
+		next_button_alignment = "right",
+		grid_alignment = "left",
+		widgets = {
+			interface_settings.settings_by_id.subtitle_enabled,
+			interface_settings.settings_by_id.subtitle_speaker_enabled,
+			sound_settings.settings_by_id.option_master_slider,
+			sound_settings.settings_by_id.sound_device,
+			sound_settings.settings_by_id.speaker_settings
 		}
+	}
+}
+page_templates.brightness_render_option_settings = {
+	{
+		next_button_alignment = "right",
+		grid_alignment = "center",
+		widgets = gamma_settings,
+		on_enter = function (parent)
+			parent._widgets_by_name.background.content.visible = false
+			parent._widgets_by_name.gamma_background.content.visible = true
+		end,
+		on_leave = function (parent)
+			parent._widgets_by_name.background.content.visible = true
+			parent._widgets_by_name.gamma_background.content.visible = false
+		end
 	}
 }
 

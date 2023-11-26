@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/breed/breed_combat_ranges/chaos/chaos_daemonhost_combat_ranges.lua
+
 local EffectTemplates = require("scripts/settings/fx/effect_templates")
 local combat_ranges = {
 	name = "chaos_daemonhost",

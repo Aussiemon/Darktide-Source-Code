@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/components/driven_keys.lua
+
 local DrivenKeys = component("DrivenKeys")
 local TRANSLATE_LABELS = {
 	"translateX",
@@ -12,6 +14,7 @@ local ROTATE_LABELS = {
 
 DrivenKeys.init = function (self, unit)
 	local unit_lua_data = require(tostring(unit):match("'(.-)'"))
+
 	self.driven_keys = unit_lua_data.driven_keys
 	self._unit = unit
 end
@@ -64,6 +67,7 @@ DrivenKeys._setDrivenPose = function (self, driven_node, driven_node_data)
 
 	if not Vector3.equal(original_rotation, driven_rotation) then
 		local rx, ry, rz = Vector3.to_elements(driven_rotation)
+
 		driven_q = Quaternion.from_euler_angles_xyz(rx, ry, rz)
 
 		Unit.set_local_rotation(self._unit, driven_node_index, driven_q)
@@ -71,7 +75,7 @@ DrivenKeys._setDrivenPose = function (self, driven_node, driven_node_data)
 end
 
 DrivenKeys._getSumOfDrivenValues = function (self, driven_attribute_data)
-	local sum_of_driven_values, t_axis, r_axis, driving_axis, driving_vector, driving_value, driven_value = nil
+	local sum_of_driven_values, t_axis, r_axis, driving_axis, driving_vector, driving_value, driven_value
 
 	for driving_node, driving_node_data in pairs(driven_attribute_data) do
 		local driving_node_index = Unit.node(self._unit, driving_node)
@@ -79,7 +83,9 @@ DrivenKeys._getSumOfDrivenValues = function (self, driven_attribute_data)
 		for driving_attribute, keys in pairs(driving_node_data) do
 			t_axis = self:_getAxis(driving_attribute, TRANSLATE_LABELS)
 			r_axis = self:_getAxis(driving_attribute, ROTATE_LABELS)
-			driving_axis, driving_vector, driving_value = nil
+			driving_axis = nil
+			driving_vector = nil
+			driving_value = nil
 
 			if t_axis ~= nil then
 				driving_vector = self:_getLocalTransforms(driving_node_index)
@@ -123,23 +129,21 @@ DrivenKeys._editDrivenVector = function (self, vector, sum_of_driven_values, axi
 end
 
 DrivenKeys.linearLineEquation = function (self, x, keys)
-	local y = nil
+	local y
 
 	if x <= keys[1].x then
 		y = keys[1].y
-	elseif keys[#keys].x <= x then
+	elseif x >= keys[#keys].x then
 		y = keys[#keys].y
 	else
-		local x1, y1, x2, y2 = nil
+		local x1, y1, x2, y2
 
 		for i, key in ipairs(keys) do
 			local next_key = keys[i + 1]
 
-			if key.x <= x and x <= next_key.x then
-				y1 = key.y
-				x1 = key.x
-				y2 = next_key.y
-				x2 = next_key.x
+			if x >= key.x and x <= next_key.x then
+				x1, y1 = key.x, key.y
+				x2, y2 = next_key.x, next_key.y
 
 				break
 			end
@@ -147,6 +151,7 @@ DrivenKeys.linearLineEquation = function (self, x, keys)
 
 		local k = (y1 - y2) / (x1 - x2)
 		local m = y1 - k * x1
+
 		y = k * x + m
 	end
 

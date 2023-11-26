@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/mission_objective/mission_objective_templates.lua
+
 local mission_objective_templates = {}
 
 local function _create_mission_objective_template_entry(path)
@@ -5,7 +7,9 @@ local function _create_mission_objective_template_entry(path)
 
 	for template_name, objective_template in pairs(objective_templates) do
 		local default_icon = "content/ui/materials/icons/objectives/main"
+
 		objective_template.main_objective_type = objective_template.main_objective_type or "default"
+
 		local objectives = objective_template.objectives
 
 		for objective_name, objective in pairs(objectives) do

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/unit_data/player_husk_data_extension.lua
+
 local HitZone = require("scripts/utilities/attack/hit_zone")
 local PlayerUnitDataComponentConfig = require("scripts/extension_systems/unit_data/player_unit_data_component_config")
 local PlayerHuskDataComponentConfig = require("scripts/extension_systems/unit_data/player_husk_data_component_config")
@@ -58,18 +60,14 @@ local function _update_component_values(components, game_session, game_object_id
 		local network_name_id = game_object_field_data[i]
 		local authoritative_value = game_object_field_data[i + 1]
 		local field = field_network_lookup[NETWORK_NAME_ID_TO_FIELD_ID[network_name_id]]
-		local component_name = field[1]
-		local field_name = field[2]
-		local type = field[3]
-		local network_type = field[5]
-		local lookup = field[6]
-		local use_network_lookup = field[8]
+		local component_name, field_name, type, network_type, lookup, use_network_lookup = field[1], field[2], field[3], field[5], field[6], field[8]
 		local component = components[component_name]
 
 		if type == "Vector3" or type == "Quaternion" then
 			component[field_name]:store(authoritative_value)
 		elseif type == "string" then
 			local string_lookup = use_network_lookup and NetworkLookup[use_network_lookup] or lookup
+
 			component[field_name] = string_lookup[authoritative_value]
 		elseif type == "number" then
 			if FIXED_FRAME_OFFSET_NETWORK_TYPES[network_type] then
@@ -98,21 +96,29 @@ end
 
 PlayerHuskDataExtension.init = function (self, extension_init_context, unit, extension_init_data, game_session, game_object_id)
 	local breed = extension_init_data.breed
+
 	self._breed = breed
 	self._hit_zone_lookup, self._hit_zone_actors_lookup = HitZone.initialize_lookup(unit, breed.hit_zones)
 	self._game_session = game_session
 	self._fixed_time_step = Managers.state.game_session.fixed_time_step
+
 	local components_config = FORMATTED_CONFIG
+
 	self._components_config = components_config
+
 	local components_husk_config = {}
+
 	self._components_husk_config = components_husk_config
+
 	local components = {}
+
 	self._components = components
 
 	self:_initialize_components(components, components_husk_config, FORMATTED_CONFIG, FORMATTED_HUSK_CONFIG)
 	self:_initialize_components(components, components_husk_config, FORMATTED_CONFIG, FORMATTED_HUSK_HUD_CONFIG)
 
 	local read_components = {}
+
 	self._read_components = read_components
 
 	for component_name, _ in pairs(components) do
@@ -120,14 +126,19 @@ PlayerHuskDataExtension.init = function (self, extension_init_context, unit, ext
 	end
 
 	self._last_received_frame = 0
+
 	local archetype = extension_init_data.archetype
+
 	self._archetype = archetype
+
 	local specialization = extension_init_data.specialization
+
 	self._specialization = specialization
 end
 
 PlayerHuskDataExtension.on_server_husk_data_state_game_object_created = function (self, game_object_id)
 	self._server_husk_data_state_game_object_id = game_object_id
+
 	local game_session = self._game_session
 	local frame_index = _game_object_field(game_session, game_object_id, "frame_index")
 
@@ -136,6 +147,7 @@ end
 
 PlayerHuskDataExtension.on_server_husk_hud_data_state_game_object_created = function (self, game_object_id)
 	self._server_husk_hud_data_state_game_object_id = game_object_id
+
 	local game_session = self._game_session
 	local frame_index = _game_object_field(game_session, self._server_husk_data_state_game_object_id, "frame_index")
 
@@ -268,9 +280,13 @@ end
 PlayerHuskDataExtension._initialize_components = function (self, components, components_husk_config, components_config, config)
 	for component_name, fields in pairs(config) do
 		local component = components[component_name] or {}
+
 		components[component_name] = component
+
 		local husk_config = components_husk_config[component_name] or {}
+
 		components_husk_config[component_name] = husk_config
+
 		local formatted_config = components_config[component_name]
 
 		for field_name, _ in pairs(fields) do

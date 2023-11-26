@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/store_item_detail_view/store_item_detail_view_declaration_settings.lua
+
 local WwiseGameSyncSettings = require("scripts/settings/wwise_game_sync/wwise_game_sync_settings")
 local view_settings = {
 	state_bound = true,

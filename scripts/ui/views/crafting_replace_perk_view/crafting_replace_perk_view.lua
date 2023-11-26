@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/crafting_replace_perk_view/crafting_replace_perk_view.lua
+
 local CraftingReplacePerkViewDefinitions = require("scripts/ui/views/crafting_replace_perk_view/crafting_replace_perk_view_definitions")
 local CraftingSettings = require("scripts/settings/item/crafting_settings")
 local ItemUtils = require("scripts/utilities/items")
@@ -33,6 +35,7 @@ CraftingReplacePerkView.on_enter = function (self)
 	self._parent:set_active_view_instance(self)
 
 	local crafting_recipe_context = table.clone_instance(CraftingSettings.crafting_recipe_context)
+
 	crafting_recipe_context.refresh_on_grid_pressed = false
 	self._weapon_stats = self:_add_element(ViewElementWeaponStats, "weapon_stats", 10, CraftingSettings.weapon_stats_context, "weapon_stats_pivot")
 	self._crafting_recipe = self:_add_element(ViewElementCraftingRecipe, "crafting_recipe", 10, CraftingSettings.crafting_recipe_context, "crafting_recipe_pivot")
@@ -80,6 +83,7 @@ CraftingReplacePerkView._get_wallet = function (self)
 				local currency = wallets_data.wallets[i].balance
 				local type = currency.type
 				local amount = currency.amount
+
 				wallets_values[type] = amount
 			end
 
@@ -110,6 +114,7 @@ end
 CraftingReplacePerkView._set_perks_item_focused = function (self, focus)
 	local crafting_recipe = self._crafting_recipe
 	local perks_item = self._perks_item
+
 	self._perks_item_focused = focus
 
 	if focus then
@@ -166,13 +171,17 @@ CraftingReplacePerkView._perform_crafting = function (self)
 	self._crafting_recipe:set_continue_button_force_disabled(true)
 
 	local craft_promise = self._parent:craft(recipe, self._ingredients)
+
 	self._craft_promise = craft_promise
 
 	craft_promise:next(function (results)
 		self._craft_promise = nil
+
 		local new_item = results.items[1]
+
 		self._item = new_item
 		self._ingredients.item = new_item
+
 		local optional_present_callback = callback(function ()
 			self:_on_navigation_input_changed()
 		end)
@@ -192,6 +201,7 @@ end
 CraftingReplacePerkView.cb_on_perk_selected = function (self, widget, config)
 	if self._using_cursor_navigation or not self._perks_item_focused then
 		local remove_perks_focus = self._using_cursor_navigation and self._perks_item_focused
+
 		self._perform_perk_selection_data = {
 			widget = widget,
 			config = config,
@@ -208,6 +218,7 @@ CraftingReplacePerkView._on_perk_selected = function (self, widget, config)
 	end
 
 	local previous_existing_perk_index = self._ingredients.existing_perk_index
+
 	self._ingredients.existing_perk_index = index
 
 	self._weapon_stats:select_perk(index)
@@ -221,6 +232,7 @@ CraftingReplacePerkView._on_perk_selected = function (self, widget, config)
 	for i = 1, #recipe_widgets do
 		local recipe_widget = recipe_widgets[i]
 		local content = recipe_widget.content
+
 		content.marked = index and recipe_widget == widget or false
 	end
 
@@ -276,7 +288,9 @@ CraftingReplacePerkView._update_elements = function (self, dt, t, input_service)
 		local widget = self._perform_perk_selection_data.widget
 		local config = self._perform_perk_selection_data.config
 		local remove_perk_items_focus = self._perform_perk_selection_data.remove_perk_items_focus
+
 		self._perform_perk_selection_data = nil
+
 		local selected_successful = self:_on_perk_selected(widget, config)
 
 		if selected_successful then
@@ -300,6 +314,7 @@ end
 CraftingReplacePerkView.update = function (self, dt, t, input_service)
 	if self._resync_can_craft then
 		local marked_perk_item = self._perks_item:marked_perk_item()
+
 		self._ingredients.perk_ids[1] = marked_perk_item and marked_perk_item.name
 		self._ingredients.perk_master_ids[1] = marked_perk_item and marked_perk_item.name
 		self._ingredients.tiers[1] = marked_perk_item and marked_perk_item.rarity

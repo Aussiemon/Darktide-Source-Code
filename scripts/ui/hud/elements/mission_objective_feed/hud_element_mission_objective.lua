@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/hud/elements/mission_objective_feed/hud_element_mission_objective.lua
+
 local HudElementMissionObjective = class("HudElementMissionObjective")
 
 HudElementMissionObjective.init = function (self, objective)
@@ -18,8 +20,10 @@ HudElementMissionObjective.init = function (self, objective)
 	self._marker_distances = {}
 	self._is_side_mission = objective:is_side_mission()
 	self._locally_added = objective:locally_added()
+
 	local game_mode_name = Managers.state.game_mode:game_mode_name()
 	local is_in_hub = game_mode_name == "hub" or game_mode_name == "prologue_hub"
+
 	self._default_marker_type = is_in_hub and "hub_objective" or "objective"
 
 	self:synchronize_objective(objective)

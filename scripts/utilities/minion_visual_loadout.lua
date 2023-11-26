@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/utilities/minion_visual_loadout.lua
+
 local MinionVisualLoadout = {}
 
 MinionVisualLoadout.attachment_unit_and_node_from_node_name = function (item, fx_source_name, optional_lookup_fx_sources)
@@ -6,6 +8,7 @@ MinionVisualLoadout.attachment_unit_and_node_from_node_name = function (item, fx
 
 	if lookup_fx_sources then
 		local fx_sources = item.item_data.fx_sources
+
 		node_name = fx_sources[fx_source_name]
 	end
 
@@ -33,12 +36,14 @@ end
 
 MinionVisualLoadout.resolve = function (inventory_template, optional_zone_id, optional_used_weapon_slot_names, breed_name, inventory_seed)
 	local inventory = inventory_template[optional_zone_id] or inventory_template.default
-	local inventory_index = nil
+	local inventory_index
+
 	inventory_seed, inventory_index = math.next_random(inventory_seed, 1, #inventory)
 	inventory = inventory[inventory_index]
 
 	if optional_used_weapon_slot_names then
 		inventory = table.clone(inventory)
+
 		local inventory_slots = inventory.slots
 
 		for slot_name, slot_data in pairs(inventory_slots) do

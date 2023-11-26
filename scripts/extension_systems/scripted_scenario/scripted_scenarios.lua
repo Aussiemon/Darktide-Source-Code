@@ -1,7 +1,10 @@
+﻿-- chunkname: @scripts/extension_systems/scripted_scenario/scripted_scenarios.lua
+
 local ScriptedScenarios = {}
 
 local function _create_scenarios_entry(alias, path)
 	local scenarios = require(path)
+
 	ScriptedScenarios[alias] = scenarios
 end
 

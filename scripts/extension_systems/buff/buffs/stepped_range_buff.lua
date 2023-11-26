@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/buff/buffs/stepped_range_buff.lua
+
 require("scripts/extension_systems/buff/buffs/buff")
 
 local SteppedRangeBuff = class("SteppedRangeBuff", "Buff")
@@ -6,11 +8,13 @@ SteppedRangeBuff.init = function (self, context, template, start_time, instance_
 	SteppedRangeBuff.super.init(self, context, template, start_time, instance_id, ...)
 
 	local lerp_value = self._template_context.buff_lerp_value
+
 	self._duration_progress = 0
 	self._start_time = start_time
 	self._instance_id = instance_id
 	self._finished = false
 	self._lerped_stat_buffs = {}
+
 	local stat_buffs = {}
 
 	for key, range in pairs(template.stat_buffs) do
@@ -18,6 +22,7 @@ SteppedRangeBuff.init = function (self, context, template, start_time, instance_
 		local max = #range
 		local value = math.lerp(min, max, lerp_value)
 		local index = math.round(value)
+
 		stat_buffs[key] = range[index]
 	end
 

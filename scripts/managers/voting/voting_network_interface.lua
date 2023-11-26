@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/voting/voting_network_interface.lua
+
 local voting_network_interface = {
 	"is_host",
 	"is_client",

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/utilities/weapon_tweaks.lua
+
 local WeaponTweaks = {}
 
 local function create_new(damage_profiles, parent_template_name, template_overrides)
@@ -11,10 +13,12 @@ local function create_new(damage_profiles, parent_template_name, template_overri
 		for j = 1, num_keys do
 			if j < num_keys then
 				local key = overrides_table[j]
+
 				entry = entry[key]
 			else
 				local key = overrides_table[j]
 				local value = overrides_table[j + 1]
+
 				entry[key] = value
 			end
 		end
@@ -25,6 +29,7 @@ end
 
 WeaponTweaks.extract_weapon_tweaks = function (path, templates, loaded_files)
 	loaded_files[path] = true
+
 	local data = require(path)
 	local parent_base_templates = data.base_templates
 	local overrides = data.overrides
@@ -37,6 +42,7 @@ WeaponTweaks.extract_weapon_tweaks = function (path, templates, loaded_files)
 		for name, override in upairs(overrides) do
 			local parent_template_name = override.parent_template_name
 			local template_overrides = override.overrides
+
 			templates[name] = create_new(parent_base_templates, parent_template_name, template_overrides)
 		end
 	end

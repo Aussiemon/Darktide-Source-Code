@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/breed/breeds/chaos/chaos_spawn_vfx.lua
+
 local vfx = {
 	material_vfx = {
 		footstep = {

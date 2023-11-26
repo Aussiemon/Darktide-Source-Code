@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/achievements/achievements_manager.lua
+
 local AchievementDefinitions = require("scripts/managers/achievements/achievement_definitions")
 local AchievementFlags = require("scripts/settings/achievements/achievement_flags")
 local AchievementPlatforms = require("scripts/managers/achievements/achievement_platforms")
@@ -10,6 +12,7 @@ local CLIENT_RPCS = {
 	"rpc_unlock_achievement"
 }
 local PlayerStates = table.enum("loading", "ready")
+
 AchievementsManager.player_states = PlayerStates
 
 AchievementsManager.init = function (self, is_client, event_delegate, use_batched_saving)
@@ -57,9 +60,13 @@ end
 
 AchievementsManager._setup_achievements = function (self, backend_data)
 	self._initialized = true
+
 	local definitions = table.clone(AchievementDefinitions)
+
 	self._definitions = definitions
+
 	local achievement_lookup = {}
+
 	self._achievement_lookup = achievement_lookup
 
 	for _, definition in pairs(definitions) do
@@ -109,6 +116,7 @@ end
 
 local function _add_one(root_table, key, to_add)
 	local t = root_table[key] or {}
+
 	t[#t + 1] = to_add
 	root_table[key] = t
 end
@@ -117,11 +125,17 @@ AchievementsManager._track_achievements = function (self, player_id)
 	local player_data = self._players[player_id]
 	local definitions = self._definitions
 	local scratchpad = {}
+
 	player_data.scratchpad = scratchpad
+
 	local achievements_by_stat_name = {}
+
 	player_data.achievements_by_stat_name = achievements_by_stat_name
+
 	local achievements_by_achievement_id = {}
+
 	player_data.achievements_by_achievement_id = achievements_by_achievement_id
+
 	local completed = player_data.completed
 	local should_unlock = {}
 
@@ -158,8 +172,7 @@ AchievementsManager._track_achievements = function (self, player_id)
 		end
 	end
 
-	local stat_count = 0
-	local stat_names = {}
+	local stat_count, stat_names = 0, {}
 
 	for stat_name, _ in pairs(achievements_by_stat_name) do
 		stat_count = stat_count + 1
@@ -168,6 +181,7 @@ AchievementsManager._track_achievements = function (self, player_id)
 
 	if stat_count > 0 then
 		local listener_id = Managers.stats:add_listener(player_id, stat_names, callback(self, "_on_stat_trigger"))
+
 		self._players_by_listener_id[listener_id] = player_data
 		player_data.listener_id = listener_id
 	end
@@ -230,11 +244,13 @@ AchievementsManager._setup_platform = function (self)
 
 	local auth_method = Managers.backend:get_auth_method()
 	local platform, platform_promise = AchievementPlatforms[auth_method]:new(definitions)
+
 	self._platform_promise = platform_promise
 
 	return platform_promise:next(function ()
 		self._platform = platform
 		self._platform_promise = nil
+
 		local player = Managers.player:local_player(1)
 
 		for achievement_id, achievement_definition in pairs(definitions) do
@@ -271,6 +287,7 @@ AchievementsManager.add_player = function (self, player)
 	end
 
 	local player_data = {}
+
 	self._players[player_id] = player_data
 	player_data.id = player_id
 	player_data.account_id = account_id
@@ -287,8 +304,9 @@ AchievementsManager.add_player = function (self, player)
 	player_data.completed = {}
 	player_data.dirty = false
 	player_data.saved = {}
+
 	local index_of_save = table.index_of(self._saving_accounts, account_id)
-	local backend_promise = nil
+	local backend_promise
 
 	if index_of_save > 0 then
 		backend_promise = self._saving_promises[index_of_save]:next(function ()
@@ -318,6 +336,7 @@ AchievementsManager.add_player = function (self, player)
 			elseif backend_achievement.complete then
 				player_data.completed[achievement_id] = backend_achievement.complete
 				player_data.saved[achievement_id] = backend_achievement.complete
+
 				local completed_at = backend_achievement.at
 
 				if type(completed_at) == "string" then
@@ -351,8 +370,7 @@ end
 
 AchievementsManager._get_player_diff = function (self, player_id)
 	local player_data = self._players[player_id]
-	local change_count = 0
-	local changes = {}
+	local change_count, changes = 0, {}
 
 	for achievement_name, _ in pairs(player_data.completed) do
 		if not player_data.saved[achievement_name] then
@@ -380,6 +398,7 @@ AchievementsManager._save_succeded = function (self, player_data, assumed_comple
 	end
 
 	local save_promise = player_data.save_promise
+
 	player_data.save_promise = nil
 
 	if save_promise:is_pending() then
@@ -387,7 +406,9 @@ AchievementsManager._save_succeded = function (self, player_data, assumed_comple
 	end
 
 	local achievements_in_air = player_data.achievements_in_air
+
 	player_data.achievements_in_air = nil
+
 	local message_client = player_data.remote and not self._use_batched_saving
 
 	if not message_client then
@@ -408,14 +429,17 @@ AchievementsManager._save_failed = function (self, player_id, ...)
 	Log.warning("AchievementsManager", "Failed saving achievements for player '%s'.", player_id)
 
 	local achievements_in_air = player_data.achievements_in_air
+
 	player_data.achievements_in_air = nil
 
 	for i = 1, #achievements_in_air do
 		local achievement_id = achievements_in_air[i]
+
 		player_data.saved[achievement_id] = false
 	end
 
 	local save_promise = player_data.save_promise
+
 	player_data.save_promise = nil
 
 	if save_promise:is_pending() then
@@ -436,10 +460,12 @@ AchievementsManager._save_player_diff = function (self, player_id)
 	end
 
 	local completed = changes.completed
+
 	player_data.dirty = false
 
 	for i = 1, #completed do
 		local achievement_id = completed[i].id
+
 		player_data.saved[achievement_id] = true
 	end
 
@@ -452,6 +478,7 @@ AchievementsManager._save_player_diff = function (self, player_id)
 	local backend_promise = Managers.backend.interfaces.commendations:bulk_update_commendations({
 		changes
 	})
+
 	player_data.save_promise = backend_promise
 	player_data.achievements_in_air = table.map(completed, function (completed)
 		return completed.id
@@ -505,6 +532,7 @@ end
 
 AchievementsManager._clear_platform = function (self)
 	local platform_promise = self._platform_promise
+
 	self._platform_promise = nil
 
 	if platform_promise and platform_promise:is_pending() then
@@ -512,6 +540,7 @@ AchievementsManager._clear_platform = function (self)
 	end
 
 	local platform = self._platform
+
 	self._platform = nil
 
 	if platform then
@@ -544,6 +573,7 @@ AchievementsManager.remove_player = function (self, player_id)
 	if save_promise:is_pending() then
 		local saving_accounts = self._saving_accounts
 		local saving_promises = self._saving_promises
+
 		saving_accounts[#saving_accounts + 1] = player_data.account_id
 		saving_promises[#saving_promises + 1] = save_promise
 		self._players[player_id] = nil
@@ -637,6 +667,7 @@ end
 
 AchievementsManager._unlock_achievement = function (self, player_id, achievement_id, never_tracked, remote_unlock)
 	local player_data = self._players[player_id]
+
 	player_data.completed[achievement_id] = true
 	player_data.completed_at[achievement_id] = player_data.completed_this_session
 	player_data.completed_this_session = player_data.completed_this_session + 1

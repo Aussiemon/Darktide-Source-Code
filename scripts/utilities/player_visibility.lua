@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/utilities/player_visibility.lua
+
 local PlayerVisibility = {}
 
 PlayerVisibility.show_players = function ()

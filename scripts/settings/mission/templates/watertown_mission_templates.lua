@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/mission/templates/watertown_mission_templates.lua
+
 local mission_templates = {
 	dm_stockpile = {
 		mission_name = "loc_mission_name_dm_stockpile",

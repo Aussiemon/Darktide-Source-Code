@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/constant_elements/constant_elements.lua
+
 local ChatElementSettings = require("scripts/ui/constant_elements/elements/chat/constant_element_chat_settings")
 local elements = {
 	{

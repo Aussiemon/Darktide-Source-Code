@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/dialogue/dialogue_state_handler.lua
+
 local DialogueStateHandler = class("DialogueStateHandler")
 
 DialogueStateHandler.init = function (self, world, wwise_world)
@@ -32,7 +34,7 @@ DialogueStateHandler.update = function (self, t)
 	while true do
 		local dialogue_data = self._playing_dialogues[self._current_index]
 
-		if level and dialogue_data.expected_end < t then
+		if level and t > dialogue_data.expected_end then
 			Level.set_flow_variable(level, "dialogue_identifier", dialogue_data.identifier)
 			Level.trigger_event(level, "dialogue_ended")
 
@@ -42,7 +44,7 @@ DialogueStateHandler.update = function (self, t)
 		self._current_index = 1 + self._current_index % #self._playing_dialogues
 		num_checks = num_checks + 1
 
-		if self._current_index == start_index or self._max_dialogue_checks_per_frame <= num_checks then
+		if self._current_index == start_index or num_checks >= self._max_dialogue_checks_per_frame then
 			break
 		end
 	end

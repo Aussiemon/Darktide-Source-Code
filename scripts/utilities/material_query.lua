@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/utilities/material_query.lua
+
 local MaterialQuerySettings = require("scripts/settings/material_query_settings")
 local surface_materials_lookup = MaterialQuerySettings.surface_materials_lookup
 local MaterialQuery = {}

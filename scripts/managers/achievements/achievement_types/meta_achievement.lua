@@ -1,13 +1,16 @@
-local MetaAchievement = {
-	trigger_type = "meta"
-}
+﻿-- chunkname: @scripts/managers/achievements/achievement_types/meta_achievement.lua
+
+local MetaAchievement = {}
+
+MetaAchievement.trigger_type = "meta"
 
 MetaAchievement.trigger = function (achievement_definition, scratch_pad, player_id, achievement_id)
 	local _scratch_pad = scratch_pad[achievement_definition.id]
+
 	_scratch_pad.__size = _scratch_pad.__size + 1
 	scratch_pad[achievement_definition.id] = _scratch_pad
 
-	return achievement_definition.target <= _scratch_pad.__size
+	return _scratch_pad.__size >= achievement_definition.target
 end
 
 MetaAchievement.setup = function (achievement_definition, scratch_pad, player_id)
@@ -25,7 +28,7 @@ MetaAchievement.setup = function (achievement_definition, scratch_pad, player_id
 
 	scratch_pad[achievement_definition.id] = _scratch_pad
 
-	return achievement_definition.target <= _scratch_pad.__size
+	return _scratch_pad.__size >= achievement_definition.target
 end
 
 MetaAchievement.verifier = function (achievement_definition)
@@ -38,7 +41,7 @@ MetaAchievement.verifier = function (achievement_definition)
 		return false
 	end
 
-	if table.size(achievements) < target then
+	if target > table.size(achievements) then
 		return false
 	end
 

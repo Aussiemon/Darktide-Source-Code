@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/hud/elements/personal_player_panel_hub/hud_element_personal_player_panel_hub_settings.lua
+
 local UIHudSettings = require("scripts/settings/ui/ui_hud_settings")
 local hud_element_personal_player_panel_hub_settings = {
 	size = {

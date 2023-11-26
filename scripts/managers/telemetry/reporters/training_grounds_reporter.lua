@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/telemetry/reporters/training_grounds_reporter.lua
+
 local MatchmakingConstants = require("scripts/settings/network/matchmaking_constants")
 local ReporterInterface = require("scripts/managers/telemetry/reporters/reporter_interface")
 local SINGLEPLAY_TYPES = MatchmakingConstants.SINGLEPLAY_TYPES

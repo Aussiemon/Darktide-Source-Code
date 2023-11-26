@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/data_service/services/social/friend_interface.lua
+
 local friend_interface = {
 	"id",
 	"name",

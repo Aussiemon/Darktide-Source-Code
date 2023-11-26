@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/multiplayer/connection/local_states/local_data_sync_state.lua
+
 local ProfileUtils = require("scripts/utilities/profile_utils")
 local RPCS = {
 	"rpc_session_seed_sync",
@@ -9,6 +11,7 @@ LocalDataSyncState.init = function (self, state_machine, shared_state)
 	self._shared_state = shared_state
 	self._time = 0
 	self._data_sync_done = false
+
 	local network_event_delegate = shared_state.event_delegate
 	local channel_id = shared_state.channel_id
 
@@ -24,9 +27,10 @@ end
 
 LocalDataSyncState.update = function (self, dt)
 	local shared_state = self._shared_state
+
 	self._time = self._time + dt
 
-	if shared_state.timeout < self._time then
+	if self._time > shared_state.timeout then
 		Log.info("LocalDataSyncState", "Timeout waiting for rpc_data_sync_done")
 
 		return "timeout", {
@@ -55,6 +59,7 @@ end
 
 LocalDataSyncState.rpc_session_seed_sync = function (self, channel_id, session_seed)
 	local shared_state = self._shared_state
+
 	shared_state.session_seed = session_seed
 
 	Log.info("LocalDataSyncState", "session_seed recieved %s", session_seed)

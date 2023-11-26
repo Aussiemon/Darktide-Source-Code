@@ -1,4 +1,7 @@
+﻿-- chunkname: @scripts/foundation/utilities/reportify.lua
+
 local ScriptWorld = require("scripts/foundation/utilities/script_world")
+
 Reportify = Reportify or {}
 REPORTIFY_NETWORK_READY = false
 
@@ -51,7 +54,7 @@ Reportify._get_mission_info = function (self)
 	local mission_manager = Managers.state.mission
 	local mission = mission_manager and mission_manager:mission()
 	local mission_name = mission and mission.name or "n/a"
-	local chunk_short_name = nil
+	local chunk_short_name
 
 	if Managers.state and Managers.state.chunk_lod then
 		local chunk_name = Managers.state.chunk_lod:current_chunk_name()

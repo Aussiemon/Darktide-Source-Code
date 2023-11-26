@@ -1,5 +1,8 @@
+﻿-- chunkname: @scripts/extension_systems/health_station/health_station_extension.lua
+
 local LevelProps = require("scripts/settings/level_prop/level_props")
 local HealthStationExtension = class("HealthStationExtension")
+
 HealthStationExtension.MAX_CHARGES = 4
 
 HealthStationExtension.init = function (self, extension_init_context, unit)
@@ -28,6 +31,7 @@ end
 
 HealthStationExtension.setup_from_component = function (self, start_charge_amount, health_per_charge, use_distribution_pool, socket_prop, battery_spawning_mode)
 	local unit = self._unit
+
 	self._use_distribution_pool = use_distribution_pool
 	self._socket_prop = socket_prop
 	self._battery_spawning_mode = battery_spawning_mode
@@ -132,6 +136,7 @@ end
 HealthStationExtension.use_charge = function (self)
 	local current_charge = self._charge_amount
 	local new_charge = current_charge - 1
+
 	new_charge = math.clamp(new_charge, 0, HealthStationExtension.MAX_CHARGES)
 
 	if current_charge ~= new_charge then
@@ -253,6 +258,7 @@ HealthStationExtension._spawn_socket = function (self)
 	if spawn_offset_boxed then
 		local spawn_offset = spawn_offset_boxed:unbox()
 		local socket_pose = Unit.world_pose(unit, socket_node)
+
 		socket_position = Matrix4x4.transform(socket_pose, spawn_offset)
 	end
 

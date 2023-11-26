@@ -1,7 +1,10 @@
+﻿-- chunkname: @scripts/ui/pass_templates/weapon_details_pass_templates.lua
+
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local WeaponDetailsPassTemplates = {}
 local stat_text_style = table.clone(UIFontSettings.body)
+
 stat_text_style.text_horizontal_alignment = "left"
 stat_text_style.text_vertical_alignment = "center"
 stat_text_style.font_size = 18
@@ -18,6 +21,7 @@ WeaponDetailsPassTemplates.stat_meter = {
 		style = stat_text_style
 	}
 }
+
 local num_bars = 10
 local bar_spacing = 2
 local bar_width = 12
@@ -30,6 +34,7 @@ for i = 1, num_bars do
 	local bar_value_id = "bar_value_" .. i
 	local bar_background_id = "bar_background_" .. i
 	local x_offset = (i - 1) * bar_width + bar_spacing * (i - 1)
+
 	WeaponDetailsPassTemplates.stat_meter[#WeaponDetailsPassTemplates.stat_meter + 1] = {
 		pass_type = "texture",
 		value = "content/ui/materials/backgrounds/default_square",
@@ -52,7 +57,7 @@ for i = 1, num_bars do
 			local value = content.value
 
 			if value then
-				return i <= value
+				return value >= i
 			end
 
 			return true
@@ -79,6 +84,7 @@ for i = 1, num_bars do
 end
 
 local trait_text_style = table.clone(UIFontSettings.body)
+
 trait_text_style.text_horizontal_alignment = "left"
 trait_text_style.text_vertical_alignment = "center"
 trait_text_style.horizontal_alignment = "left"
@@ -89,10 +95,12 @@ trait_text_style.offset = {
 	2
 }
 trait_text_style.font_size = 18
+
 local default_button_content = {
 	on_hover_sound = UISoundEvents.default_mouse_hover,
 	on_pressed_sound = UISoundEvents.default_select
 }
+
 WeaponDetailsPassTemplates.seal_slot = {
 	{
 		pass_type = "hotspot",

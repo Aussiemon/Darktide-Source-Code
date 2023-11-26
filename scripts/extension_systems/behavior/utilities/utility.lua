@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/behavior/utilities/utility.lua
+
 local Utility = {}
 
 local function get_utility_from_spline(spline, x)
@@ -23,37 +25,29 @@ Utility.get_action_utility = function (action, blackboard, t, utility_data)
 	local considerations = action.considerations
 
 	for name, consideration in pairs(considerations) do
-		local value = nil
+		local value
 		local component_name = consideration.blackboard_component
 		local field_name = consideration.component_field
 
 		if component_name then
 			local component = blackboard[component_name]
+
 			value = component[field_name]
 		else
 			value = utility_data[field_name]
 		end
 
-		local utility = nil
+		local utility
 
 		if consideration.is_condition then
 			local invert = consideration.invert
 
-			if value then
-				if invert then
-					utility = 0
-				else
-					utility = 1
-				end
-			elseif invert then
-				utility = 1
-			else
-				utility = 0
-			end
+			utility = value and (invert and 0 or 1) or invert and 1 or 0
 		else
 			local current_value = consideration.time_diff and t - value or value
 			local min_value = consideration.min_value or 0
 			local normalized_value = math.clamp((current_value - min_value) / (consideration.max_value - min_value), 0, 1)
+
 			utility = get_utility_from_spline(consideration.spline, normalized_value)
 		end
 

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/minion/minion_ragdoll.lua
+
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local Herding = require("scripts/utilities/herding")
 local HerdingTemplates = require("scripts/settings/damage/herding_templates")
@@ -12,6 +14,7 @@ MinionRagdoll.init = function (self)
 	self._removed_ragdolls = Script.new_map(ESTIMATED_MAX_REMOVED_RAGDOLLS_PER_FRAME)
 	self._delayed_ragdoll_anim_events = Script.new_array(ESTIMATED_MAX_NEW_RAGDOLLS_PER_FRAME)
 	self._new_delayed_ragdoll_anim_events = Script.new_array(ESTIMATED_MAX_NEW_RAGDOLLS_PER_FRAME)
+
 	local delayed_ragdoll_push_cache = Script.new_array(RAGDOLL_PUSH_CACHE_SIZE)
 
 	for i = 1, RAGDOLL_PUSH_CACHE_SIZE do
@@ -54,10 +57,9 @@ MinionRagdoll.update = function (self, soft_cap_out_of_bounds_units)
 		delayed_ragdoll_anim_events[i] = nil
 	end
 
-	self._new_delayed_ragdoll_anim_events = delayed_ragdoll_anim_events
-	self._delayed_ragdoll_anim_events = self._new_delayed_ragdoll_anim_events
-	local ragdolls = self._ragdolls
-	local num_ragdolls = self._num_ragdolls
+	self._delayed_ragdoll_anim_events, self._new_delayed_ragdoll_anim_events = self._new_delayed_ragdoll_anim_events, delayed_ragdoll_anim_events
+
+	local ragdolls, num_ragdolls = self._ragdolls, self._num_ragdolls
 
 	for i = num_ragdolls, 1, -1 do
 		local ragdoll_unit = ragdolls[i]
@@ -114,6 +116,7 @@ MinionRagdoll._clear_delayed_ragdoll_push_entry = function (self, index)
 	for i = index + 1, current_cache_index do
 		local prev_data = delayed_ragdoll_push_cache[i - 1]
 		local data = delayed_ragdoll_push_cache[i]
+
 		prev_data.unit = data.unit
 		prev_data.attack_direction = data.attack_direction
 		prev_data.push_force = data.push_force
@@ -129,8 +132,10 @@ end
 MinionRagdoll.create_ragdoll = function (self, death_data)
 	local unit = death_data.unit
 	local ragdolls = self._ragdolls
+
 	ragdolls[#ragdolls + 1] = unit
 	self._num_ragdolls = self._num_ragdolls + 1
+
 	local max_ragdolls = Application.user_setting("performance_settings", "max_ragdolls") or GameParameters.default_max_ragdolls
 
 	while max_ragdolls < self._num_ragdolls do
@@ -139,8 +144,7 @@ MinionRagdoll.create_ragdoll = function (self, death_data)
 		self:_remove_ragdoll(first_ragdoll_unit)
 	end
 
-	local do_ragdoll_push = death_data.do_ragdoll_push
-	local hit_zone_name = death_data.hit_zone_name
+	local do_ragdoll_push, hit_zone_name = death_data.do_ragdoll_push, death_data.hit_zone_name
 
 	if do_ragdoll_push then
 		local attack_direction = death_data.attack_direction:unbox()
@@ -240,16 +244,20 @@ MinionRagdoll.push_ragdoll = function (self, unit, attack_direction, damage_prof
 
 	if current_cache_index < RAGDOLL_PUSH_CACHE_SIZE then
 		current_cache_index = current_cache_index + 1
+
 		local push_multiplier = breed.push_multiplier or 1
+
 		push_force = push_force * push_multiplier
 
 		if on_dead_ragdoll then
 			local dead_ragdoll_mod = damage_profile.dead_ragdoll_mod or 1
+
 			push_force = push_force * dead_ragdoll_mod
 		end
 
 		local delayed_ragdoll_push_cache = self._delayed_ragdoll_push_cache
 		local data = delayed_ragdoll_push_cache[current_cache_index]
+
 		data.unit = unit
 		data.attack_direction = Vector3Box(ragdoll_push_direction)
 		data.push_force = push_force

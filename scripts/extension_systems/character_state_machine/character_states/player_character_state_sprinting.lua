@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/character_state_machine/character_states/player_character_state_sprinting.lua
+
 require("scripts/extension_systems/character_state_machine/character_states/player_character_state_base")
 
 local AbilityTemplate = require("scripts/utilities/ability/ability_template")
@@ -18,7 +20,7 @@ local Stamina = require("scripts/utilities/attack/stamina")
 local buff_keywords = BuffSettings.keywords
 local slot_configuration = PlayerCharacterConstants.slot_configuration
 local PlayerCharacterStateSprinting = class("PlayerCharacterStateSprinting", "PlayerCharacterStateBase")
-local _sideways_speed_function, _forward_speed_function, _abort_sprint, _check_input = nil
+local _sideways_speed_function, _forward_speed_function, _abort_sprint, _check_input
 
 PlayerCharacterStateSprinting.init = function (self, ...)
 	PlayerCharacterStateSprinting.super.init(self, ...)
@@ -26,6 +28,7 @@ PlayerCharacterStateSprinting.init = function (self, ...)
 	local unit = self._unit
 	local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
 	local sprint_character_state_component = unit_data_extension:write_component("sprint_character_state")
+
 	sprint_character_state_component.is_sprinting = false
 	sprint_character_state_component.is_sprint_jumping = false
 	sprint_character_state_component.wants_sprint_camera = false
@@ -38,22 +41,30 @@ PlayerCharacterStateSprinting.init = function (self, ...)
 	self._sway_control_component = unit_data_extension:write_component("sway_control")
 	self._spread_control_component = unit_data_extension:write_component("spread_control")
 	self._action_input_extension = ScriptUnit.extension(unit, "action_input_system")
+
 	local ledge_vault_tweak_values = self._breed.ledge_vault_tweak_values
+
 	self._ledge_vault_tweak_values = ledge_vault_tweak_values
+
 	local archetype = self._archetype
+
 	self._archetype_sprint_template = archetype.sprint
 	self._archetype_stamina_template = archetype.stamina
 end
 
 PlayerCharacterStateSprinting.on_enter = function (self, unit, dt, t, previous_state, params)
 	local locomotion_steering = self._locomotion_steering_component
+
 	locomotion_steering.move_method = "script_driven"
 	locomotion_steering.calculate_fall_velocity = true
+
 	local sprint_character_state_component = self._sprint_character_state_component
+
 	sprint_character_state_component.is_sprinting = true
 	sprint_character_state_component.wants_sprint_camera = true
 	sprint_character_state_component.sprint_overtime = 0
 	sprint_character_state_component.use_sprint_start_slowdown = not params.disable_sprint_start_slowdown
+
 	local ignore_immunity = true
 
 	Interrupt.ability_and_action(t, unit, "started_sprint", nil, ignore_immunity)
@@ -79,6 +90,7 @@ end
 
 PlayerCharacterStateSprinting.on_exit = function (self, unit, t, next_state)
 	local sprint_character_state_component = self._sprint_character_state_component
+
 	sprint_character_state_component.is_sprinting = false
 	sprint_character_state_component.last_sprint_time = t
 
@@ -117,13 +129,15 @@ PlayerCharacterStateSprinting.fixed_update = function (self, unit, dt, t, next_s
 	local action_move_speed_modifier = weapon_extension:move_speed_modifier(t)
 	local move_speed_without_weapon_actions = move_speed * stat_buffs.sprint_movement_speed * stat_buffs.movement_speed
 	local move_speed_with_weapon_actions = move_speed_without_weapon_actions * action_move_speed_modifier
+
 	locomotion_steering.velocity_wanted = move_direction * move_speed_with_weapon_actions
 	locomotion_steering.local_move_x = new_x
 	locomotion_steering.local_move_y = new_y
+
 	local movement_state = self._movement_state_component
 	local old_method = movement_state.method
 	local sprint_move_speed = base_sprint_template.sprint_move_speed
-	local new_method, wants_sprint_camera = nil
+	local new_method, wants_sprint_camera
 
 	if not decreasing_speed then
 		new_method = "sprint"
@@ -137,6 +151,7 @@ PlayerCharacterStateSprinting.fixed_update = function (self, unit, dt, t, next_s
 	end
 
 	sprint_character_state_component.wants_sprint_camera = wants_sprint_camera
+
 	local animation_ext = self._animation_extension
 
 	Crouch.check(unit, self._first_person_extension, animation_ext, weapon_extension, movement_state, self._sway_control_component, self._sway_component, self._spread_control_component, input_extension, t, false)
@@ -238,6 +253,7 @@ PlayerCharacterStateSprinting._check_transition = function (self, unit, t, next_
 		if has_weapon_action_input then
 			local action_settings = self._weapon_extension:action_settings_from_action_input(weapon_action_input)
 			local sprint_ready_up_time = action_settings and action_settings.sprint_ready_up_time or weapon_template and weapon_template.sprint_ready_up_time or 0
+
 			self._sprint_character_state_component.cooldown = t + sprint_ready_up_time
 		end
 
@@ -267,8 +283,7 @@ PlayerCharacterStateSprinting._wanted_movement = function (self, dt, sprint_char
 		wanted_y = 0
 	end
 
-	local current_x = locomotion_steering.local_move_x
-	local current_y = locomotion_steering.local_move_y
+	local current_x, current_y = locomotion_steering.local_move_x, locomotion_steering.local_move_y
 	local constants = self._constants
 	local base_sprint_template = self._archetype_sprint_template
 	local weapon_sprint_template = weapon_extension:sprint_template()
@@ -280,7 +295,9 @@ PlayerCharacterStateSprinting._wanted_movement = function (self, dt, sprint_char
 	local weapon_no_stamina_sprint_speed_mod = weapon_sprint_template and weapon_sprint_template.no_stamina_sprint_speed_mod or 1
 	local sprint_move_speed = base_sprint_template.sprint_move_speed
 	local max_x = normal_move_speed / sprint_move_speed
+
 	new_x = math.clamp(new_x, -max_x, max_x)
+
 	local acc = weapon_sprint_template and weapon_sprint_template.sprint_forward_acceleration or 1
 	local dec = weapon_sprint_template and weapon_sprint_template.sprint_forward_deceleration or 1
 	local new_y = _forward_speed_function(current_y, wanted_y, acc, dec, dt)
@@ -291,6 +308,7 @@ PlayerCharacterStateSprinting._wanted_movement = function (self, dt, sprint_char
 		local time_in_sprint = t - self._character_state_component.entered_t
 		local slowdown_time = 0.11
 		local speed_mod = math.clamp(time_in_sprint, 0, slowdown_time) / slowdown_time
+
 		speed_scale = speed_scale * speed_mod
 	end
 
@@ -306,10 +324,13 @@ PlayerCharacterStateSprinting._wanted_movement = function (self, dt, sprint_char
 	if remaining_stamina <= 0 then
 		local previus_overtime = sprint_character_state_component.sprint_overtime
 		local overtime = previus_overtime + dt
+
 		sprint_character_state_component.sprint_overtime = overtime
-		local no_stamina_sprint_speed_multiplier = base_stamina_template.no_stamina_sprint_speed_multiplier + weapon_no_stamina_sprint_speed_mod - 1
+
+		local no_stamina_sprint_speed_multiplier = base_stamina_template.no_stamina_sprint_speed_multiplier + (weapon_no_stamina_sprint_speed_mod - 1)
 		local no_stamina_sprint_speed_deceleration_time = base_stamina_template.no_stamina_sprint_speed_deceleration_time
 		local move_speed_time_lerp = math.lerp(1, no_stamina_sprint_speed_multiplier, math.min(overtime / no_stamina_sprint_speed_deceleration_time, 1))
+
 		max_move_speed = normal_move_speed + (max_move_speed - normal_move_speed) * move_speed_time_lerp
 		sprint_overtime_percentage = math.min(overtime / no_stamina_sprint_speed_deceleration_time, 1)
 	end
@@ -404,9 +425,11 @@ function _forward_speed_function(speed, wanted_speed, acceleration, deceleration
 		end
 
 		local new_speed = math.min(speed + acceleration * dt, 1)
+
 		speed = new_speed
 	else
 		local dec = deceleration * 3
+
 		speed = math.max(speed - dec * dt, 0)
 	end
 
@@ -417,6 +440,7 @@ local _abort_sprint_table = {}
 
 for i = 1, #ActionHandlerSettings.abort_sprint do
 	local action_kind = ActionHandlerSettings.abort_sprint[i]
+
 	_abort_sprint_table[action_kind] = true
 end
 

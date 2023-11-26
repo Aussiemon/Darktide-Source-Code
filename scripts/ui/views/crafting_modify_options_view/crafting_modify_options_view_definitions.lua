@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/crafting_modify_options_view/crafting_modify_options_view_definitions.lua
+
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local UIWorkspaceSettings = require("scripts/settings/ui/ui_workspace_settings")
 local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templates")
@@ -661,7 +663,8 @@ local modify_arrow_animation = {
 
 		for i = 1, 4 do
 			local pass_name = "arrow_style_" .. i
-			local wave = 255 * 0.5 * (1 + math.sin(-(start_delay * (i - 1)) + 2 * math.pi * full_animation_time * progress))
+			local wave = 255 * (0.5 * (1 + math.sin(-(start_delay * (i - 1)) + 2 * math.pi * full_animation_time * progress)))
+
 			widget.style[pass_name].color[1] = wave
 		end
 	end

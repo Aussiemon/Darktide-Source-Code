@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/buff/weapon_traits_buff_templates/weapon_traits_ranged_explosive_buff_templates.lua
+
 local Ammo = require("scripts/utilities/ammo")
 local AttackSettings = require("scripts/settings/damage/attack_settings")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
@@ -61,6 +63,7 @@ templates.weapon_traits_ranged_explosive_wield_explosion_heal_coruption_buff = {
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
 		local health_extension = ScriptUnit.extension(unit, "health_system")
+
 		template_data.health_extension = health_extension
 	end,
 	check_proc_func = is_hiting_3_or_more_check,

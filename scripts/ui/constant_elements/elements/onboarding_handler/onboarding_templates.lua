@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/constant_elements/elements/onboarding_handler/onboarding_templates.lua
+
 local UI_POPUP_INFO_DURATION = 10
 local MissionObjectiveGoal = require("scripts/extension_systems/mission_objective/utilities/mission_objective_goal")
 local InputUtils = require("scripts/managers/input/input_utils")
@@ -143,6 +145,7 @@ local templates = {
 				interaction_unit
 			}
 			local objective = _create_objective(objective_name, localization_key, marker_units)
+
 			self.objective = objective
 
 			Managers.event:trigger("event_add_mission_objective", objective)
@@ -189,6 +192,7 @@ local templates = {
 				interaction_unit
 			}
 			local objective = _create_objective(objective_name, localization_key, marker_units)
+
 			self.objective = objective
 
 			Managers.event:trigger("event_add_mission_objective", objective)
@@ -307,6 +311,7 @@ local templates = {
 				interaction_unit
 			}
 			local objective = _create_objective(objective_name, localization_key, marker_units)
+
 			self.objective = objective
 
 			Managers.event:trigger("event_add_mission_objective", objective)
@@ -410,6 +415,7 @@ local templates = {
 			local interaction_type = "mission_board"
 			local marker_units = _get_interaction_units_by_type(interaction_type)
 			local objective = _create_objective(objective_name, localization_key, marker_units, nil, true)
+
 			self.objective = objective
 
 			Managers.event:trigger("event_add_mission_objective", objective)
@@ -479,6 +485,7 @@ local templates = {
 			local interaction_type = "contracts"
 			local marker_units = _get_interaction_units_by_type(interaction_type)
 			local objective = _create_objective(objective_name, localization_key, marker_units, nil, true)
+
 			self.objective = objective
 
 			Managers.event:trigger("event_add_mission_objective", objective)
@@ -551,6 +558,7 @@ local templates = {
 			local interaction_type = "vendor"
 			local marker_units = _get_interaction_units_by_type(interaction_type)
 			local objective = _create_objective(objective_name, localization_key, marker_units, nil, true)
+
 			self.objective = objective
 
 			Managers.event:trigger("event_add_mission_objective", objective)
@@ -623,6 +631,7 @@ local templates = {
 			local interaction_type = "cosmetics_vendor"
 			local marker_units = _get_interaction_units_by_type(interaction_type)
 			local objective = _create_objective(objective_name, localization_key, marker_units, nil, true)
+
 			self.objective = objective
 
 			Managers.event:trigger("event_add_mission_objective", objective)
@@ -695,6 +704,7 @@ local templates = {
 			local interaction_type = "crafting"
 			local marker_units = _get_interaction_units_by_type(interaction_type)
 			local objective = _create_objective(objective_name, localization_key, marker_units, nil, true)
+
 			self.objective = objective
 
 			Managers.event:trigger("event_add_mission_objective", objective)
@@ -846,6 +856,7 @@ local templates = {
 					level = level or 0
 				})
 				local objective = _create_objective(objective_name, localization_key)
+
 				self.objective = objective
 
 				Managers.event:trigger("event_add_mission_objective", objective)

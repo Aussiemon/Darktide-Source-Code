@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/utilities/background_mute.lua
+
 local BackgroundMute = class("BackgroundMute")
 
 BackgroundMute.init = function (self)

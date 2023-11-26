@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/wwise_game_sync/wwise_state_groups/wwise_state_group_zone.lua
+
 require("scripts/managers/wwise_game_sync/wwise_state_groups/wwise_state_group_base")
 
 local WwiseGameSyncSettings = require("scripts/settings/wwise_game_sync/wwise_game_sync_settings")
@@ -12,9 +14,7 @@ WwiseStateGroupZone.update = function (self, dt, t)
 	if mission_manager then
 		local mission = mission_manager:mission()
 
-		if mission then
-			wwise_state = mission.wwise_state or wwise_state
-		end
+		wwise_state = mission and mission.wwise_state or wwise_state
 	end
 
 	self:_set_wwise_state(wwise_state)

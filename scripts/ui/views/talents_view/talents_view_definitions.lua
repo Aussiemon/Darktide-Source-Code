@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/talents_view/talents_view_definitions.lua
+
 local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templates")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local UIWorkspaceSettings = require("scripts/settings/ui/ui_workspace_settings")
@@ -15,118 +17,119 @@ local grid_offset_x = math.floor((main_panel_width - grid_width) / 2)
 local grid_offset_y = 45
 local main_panel_offset_y = 205 - grid_offset_y
 local details_panel_offset_y = main_panel_offset_y + 21
-local scenegraph = {
-	screen = UIWorkspaceSettings.screen,
-	visible_area = {
-		vertical_alignment = "center",
-		parent = "screen",
-		horizontal_alignment = "center",
-		size = {
-			visible_area_width,
-			visible_area_height
-		},
-		position = {
-			0,
-			20,
-			1
-		}
+local scenegraph = {}
+
+scenegraph.screen = UIWorkspaceSettings.screen
+scenegraph.visible_area = {
+	vertical_alignment = "center",
+	parent = "screen",
+	horizontal_alignment = "center",
+	size = {
+		visible_area_width,
+		visible_area_height
 	},
-	archetype_header = {
-		vertical_alignment = "top",
-		parent = "visible_area",
-		horizontal_alignment = "left",
-		size = {
-			grid_width,
-			archetype_header_height
-		},
-		position = {
-			100,
-			85,
-			5
-		}
-	},
-	main_panel = {
-		vertical_alignment = "top",
-		parent = "visible_area",
-		horizontal_alignment = "left",
-		size = {
-			main_panel_width,
-			main_panel_height
-		},
-		position = {
-			70,
-			main_panel_offset_y,
-			1
-		}
-	},
-	grid_area = {
-		vertical_alignment = "top",
-		parent = "main_panel",
-		horizontal_alignment = "left",
-		size = {
-			grid_width,
-			550
-		},
-		position = {
-			grid_offset_x,
-			grid_offset_y,
-			2
-		}
-	},
-	details_panel = {
-		vertical_alignment = "top",
-		parent = "visible_area",
-		horizontal_alignment = "right",
-		size = details_panel_size,
-		position = {
-			-94,
-			details_panel_offset_y,
-			5
-		}
-	},
-	details_panel_headline = {
-		vertical_alignment = "top",
-		parent = "details_panel",
-		horizontal_alignment = "left",
-		size = {
-			details_panel_size[1],
-			22
-		},
-		position = {
-			0,
-			0,
-			1
-		}
-	},
-	details_panel_body = {
-		vertical_alignment = "top",
-		parent = "details_panel",
-		horizontal_alignment = "left",
-		size = {
-			details_panel_size[1],
-			110
-		},
-		position = {
-			2,
-			31,
-			1
-		}
-	},
-	equip_button = {
-		vertical_alignment = "bottom",
-		parent = "details_panel",
-		horizontal_alignment = "right",
-		size = {
-			200,
-			60
-		},
-		position = {
-			-16,
-			-20,
-			1
-		}
+	position = {
+		0,
+		20,
+		1
 	}
 }
+scenegraph.archetype_header = {
+	vertical_alignment = "top",
+	parent = "visible_area",
+	horizontal_alignment = "left",
+	size = {
+		grid_width,
+		archetype_header_height
+	},
+	position = {
+		100,
+		85,
+		5
+	}
+}
+scenegraph.main_panel = {
+	vertical_alignment = "top",
+	parent = "visible_area",
+	horizontal_alignment = "left",
+	size = {
+		main_panel_width,
+		main_panel_height
+	},
+	position = {
+		70,
+		main_panel_offset_y,
+		1
+	}
+}
+scenegraph.grid_area = {
+	vertical_alignment = "top",
+	parent = "main_panel",
+	horizontal_alignment = "left",
+	size = {
+		grid_width,
+		550
+	},
+	position = {
+		grid_offset_x,
+		grid_offset_y,
+		2
+	}
+}
+scenegraph.details_panel = {
+	vertical_alignment = "top",
+	parent = "visible_area",
+	horizontal_alignment = "right",
+	size = details_panel_size,
+	position = {
+		-94,
+		details_panel_offset_y,
+		5
+	}
+}
+scenegraph.details_panel_headline = {
+	vertical_alignment = "top",
+	parent = "details_panel",
+	horizontal_alignment = "left",
+	size = {
+		details_panel_size[1],
+		22
+	},
+	position = {
+		0,
+		0,
+		1
+	}
+}
+scenegraph.details_panel_body = {
+	vertical_alignment = "top",
+	parent = "details_panel",
+	horizontal_alignment = "left",
+	size = {
+		details_panel_size[1],
+		110
+	},
+	position = {
+		2,
+		31,
+		1
+	}
+}
+scenegraph.equip_button = {
+	vertical_alignment = "bottom",
+	parent = "details_panel",
+	horizontal_alignment = "right",
+	size = {
+		200,
+		60
+	},
+	position = {
+		-16,
+		-20,
+		1
+	}
+}
+
 local widget_definitions = {
 	archetype_header = UIWidget.create_definition({
 		{
@@ -159,6 +162,7 @@ local widget_definitions = {
 			change_function = function (content, style, animation, dt)
 				local focus_progress = content.anim_focus_progress
 				local color = style.color
+
 				color[1] = 255 * focus_progress
 			end
 		}

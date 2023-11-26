@@ -1,14 +1,22 @@
+﻿-- chunkname: @scripts/extension_systems/locomotion/third_person_hub_movement_direction_animation_control.lua
+
 local HubMovementLocomotion = require("scripts/extension_systems/locomotion/utilities/hub_movement_locomotion")
 local ThirdPersonHubMovementDirectionAnimationControl = class("ThirdPersonHubMovementDirectionAnimationControl")
 
 ThirdPersonHubMovementDirectionAnimationControl.init = function (self, unit, init_context)
 	self._unit = unit
 	self._player_character_constants = init_context.player_character_constants
+
 	local is_local_unit = init_context.is_local_unit
+
 	self._is_local_unit = is_local_unit
+
 	local is_server = init_context.is_server
+
 	self._is_server = is_server
+
 	local is_husk = init_context.is_husk
+
 	self._is_husk = is_husk
 
 	if is_server or is_husk then
@@ -17,7 +25,9 @@ ThirdPersonHubMovementDirectionAnimationControl.init = function (self, unit, ini
 	end
 
 	self._locomotion_extension = ScriptUnit.extension(unit, "locomotion_system")
+
 	local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
+
 	self._hub_jog_character_state_component = unit_data_extension:read_component("hub_jog_character_state")
 
 	if is_local_unit or is_server then
@@ -68,6 +78,7 @@ ThirdPersonHubMovementDirectionAnimationControl._movement_direction = function (
 	local movement_direction_modifier = move_state_movement_settings.movement_direction_modifier
 	local old_movement_direction = self._old_movement_direction
 	local new_movement_direction = math.clamp(old_movement_direction + (wanted_movement_direction - old_movement_direction) * acceleration * dt * movement_direction_modifier, -1, 1)
+
 	self._old_movement_direction = new_movement_direction
 
 	return new_movement_direction

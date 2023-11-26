@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/view_elements/view_element_profile_presets/view_element_profile_presets_definitions.lua
+
 local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templates")
 local ColorUtilities = require("scripts/utilities/ui/colors")
 local ItemUtils = require("scripts/utilities/items")
@@ -261,11 +263,13 @@ local widget_definitions = {
 				end
 
 				content.anim_pulse_fade_progress = anim_pulse_fade_progress
+
 				local hotspot = content.hotspot
 				local hover_progress = hotspot.anim_hover_progress
 				local pulse_speed = 4
 				local alpha_progress = (1 - (0.5 + math.sin(Application.time_since_launch() * pulse_speed) * 0.5) * anim_pulse_fade_progress) * (1 - hover_progress)
 				local color = style.color
+
 				color[1] = 150 * math.min(alpha_progress)
 			end
 		}
@@ -443,7 +447,9 @@ local profile_preset_button = UIWidget.create_definition({
 			local input_progress = hotspot.anim_input_progress
 			local focus_progress = hotspot.anim_focus_progress
 			local select_progress = hotspot.anim_select_progress
+
 			color[1] = 255 * math.max(hover_progress, focus_progress)
+
 			local ignore_alpha = true
 
 			ColorUtilities.color_lerp(default_color, hover_color, math.max(focus_progress, select_progress), color, ignore_alpha)
@@ -462,7 +468,9 @@ local function icon_change_function(content, style)
 	local input_progress = hotspot.anim_input_progress
 	local focus_progress = hotspot.anim_focus_progress
 	local select_progress = hotspot.anim_select_progress
+
 	color[1] = 255 * math.min(hover_progress)
+
 	local ignore_alpha = true
 
 	ColorUtilities.color_lerp(default_color, hover_color, input_progress, color, ignore_alpha)
@@ -517,11 +525,14 @@ local profile_preset_grid_blueprints = {
 			local style = widget.style
 			local content = widget.content
 			local texture = element.texture
+
 			content.texture = texture
+
 			local texture_color = element.color
 
 			if texture_color then
 				local color = style.texture.color
+
 				color[1] = texture_color[1]
 				color[2] = texture_color[2]
 				color[3] = texture_color[3]
@@ -651,6 +662,7 @@ local profile_preset_grid_blueprints = {
 
 			if new_indicator_width_offset then
 				local offset = style.new_indicator.offset
+
 				offset[1] = new_indicator_width_offset[1]
 				offset[2] = new_indicator_width_offset[2]
 				offset[3] = new_indicator_width_offset[3]
@@ -658,12 +670,16 @@ local profile_preset_grid_blueprints = {
 
 			content.element = element
 			content.text = text
+
 			local hotspot = content.hotspot
+
 			hotspot.pressed_callback = callback_name and callback(parent, callback_name, widget, element)
+
 			local size = content.size
 			local text_style = style.text
 			local text_options = UIFonts.get_font_options_by_style(text_style)
 			local height = UIRenderer.text_height(ui_renderer, text, text_style.font_type, text_style.font_size, size, text_options)
+
 			size[2] = height + 20
 		end,
 		update = function (parent, widget, input_service, dt, t, ui_renderer)
@@ -704,6 +720,7 @@ local profile_preset_grid_blueprints = {
 
 			if new_indicator_width_offset then
 				local offset = style.new_indicator.offset
+
 				offset[1] = new_indicator_width_offset[1]
 				offset[2] = new_indicator_width_offset[2]
 				offset[3] = new_indicator_width_offset[3]
@@ -711,10 +728,12 @@ local profile_preset_grid_blueprints = {
 
 			content.element = element
 			content.text = text
+
 			local size = content.size
 			local text_style = style.text
 			local text_options = UIFonts.get_font_options_by_style(text_style)
 			local height = UIRenderer.text_height(ui_renderer, text, text_style.font_type, text_style.font_size, size, text_options)
+
 			size[2] = height + 0
 		end,
 		update = function (parent, widget, input_service, dt, t, ui_renderer)
@@ -843,8 +862,10 @@ local profile_preset_grid_blueprints = {
 			local style = widget.style
 			local content = widget.content
 			local hotspot = content.hotspot
+
 			content.element = element
 			hotspot.pressed_callback = callback_name and callback(parent, callback_name, widget, element)
+
 			local icon_texture = element.icon
 
 			if icon_texture then

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/class_selection_view/class_selection_view.lua
+
 local Definitions = require("scripts/ui/views/class_selection_view/class_selection_view_definitions")
 local ScriptWorld = require("scripts/foundation/utilities/script_world")
 local ViewElementInputLegend = require("scripts/ui/view_elements/view_element_input_legend/view_element_input_legend")
@@ -47,7 +49,9 @@ ClassSelectionView.on_enter = function (self)
 	self:_register_button_callbacks()
 
 	self._archetype_options = self._character_create:archetype_options()
+
 	local profile = self._character_create:profile()
+
 	self._classes_visible = false
 
 	self:_create_archetype_option_widgets()
@@ -80,6 +84,7 @@ ClassSelectionView._start_loading_talent_icons = function (self)
 	for i = 1, #all_specializations do
 		local specialization_name = all_specializations[i]
 		local package_name = PACKAGE_BASE_PATH .. specialization_name
+
 		self._talents_load_id[#self._talents_load_id + 1] = Managers.package:load(package_name, "ClassSelectionView", callback(self, "_should_load_icons"))
 	end
 end
@@ -111,6 +116,7 @@ end
 
 ClassSelectionView._setup_input_legend = function (self)
 	self._input_legend_element = self:_add_element(ViewElementInputLegend, "input_legend", 10)
+
 	local legend_inputs = self._definitions.legend_inputs
 
 	for i = 1, #legend_inputs do
@@ -147,6 +153,7 @@ ClassSelectionView._setup_background_world = function (self, level_name)
 	local world_name = ClassSelectionViewSettings.world_name
 	local world_layer = ClassSelectionViewSettings.world_layer
 	local world_timer_name = ClassSelectionViewSettings.timer_name
+
 	self._world_spawner = UIWorldSpawner:new(world_name, world_layer, world_timer_name, self.view_name)
 
 	self._world_spawner:spawn_level(level_name)
@@ -361,10 +368,11 @@ ClassSelectionView._handle_input = function (self, input_service)
 	end
 
 	local archetype_options = self._archetype_options
-	local num_options = nil
+	local num_options
 
 	if not input_handled then
-		local new_selection_index, current_selection_index = nil
+		local new_selection_index, current_selection_index
+
 		current_selection_index = self._selected_archetype and table.index_of(archetype_options, self._selected_archetype) or 1
 		num_options = #archetype_options
 
@@ -381,6 +389,7 @@ ClassSelectionView._handle_input = function (self, input_service)
 
 			for i = 1, #self._archetype_options_widgets do
 				local widget = self._archetype_options_widgets[i]
+
 				widget.content.hotspot.is_focused = i == new_selection_index
 			end
 
@@ -406,6 +415,7 @@ ClassSelectionView._create_archetype_option_widgets = function (self)
 	local spacing = ClassSelectionViewSettings.archetype_option_spacing
 	local start_offset_x = 0
 	local widget_left = self:_create_widget("archetype_select_left", archetype_selection_definition.left)
+
 	widget_left.offset[1] = -ClassSelectionViewSettings.archetype_select_spacing
 
 	for i = 1, num_options do
@@ -413,6 +423,7 @@ ClassSelectionView._create_archetype_option_widgets = function (self)
 		local name = "archetype_option_" .. i
 		local widget = self:_create_widget(name, archetype_option_definition)
 		local content = widget.content
+
 		content.icon_highlight = option.archetype_class_selection_icon
 
 		content.hotspot.pressed_callback = function ()
@@ -428,6 +439,7 @@ ClassSelectionView._create_archetype_option_widgets = function (self)
 	end
 
 	local widget_right = self:_create_widget("archetype_select_right", archetype_selection_definition.right)
+
 	widget_right.offset[1] = start_offset_x
 	self._archetype_options_widgets = widgets
 
@@ -468,6 +480,7 @@ ClassSelectionView._on_archetype_pressed = function (self, selected_archetype)
 	for i = 1, #archetype_options_widgets do
 		local widget = archetype_options_widgets[i]
 		local content = widget.content
+
 		content.hotspot.is_selected = selected_archetype.archetype_title == content.archetype_title
 		content.hotspot.is_focused = selected_archetype.archetype_title == content.archetype_title
 	end
@@ -484,7 +497,7 @@ ClassSelectionView._on_archetype_pressed = function (self, selected_archetype)
 		self:_handle_details_button_text()
 	end
 
-	local selected_specialization_name = nil
+	local selected_specialization_name
 
 	for class_name, class in pairs(self._selected_archetype.specializations) do
 		if class.title and not class.disabled and class.name == default_classes[self._selected_archetype.name] then
@@ -503,12 +516,13 @@ local archetype_titles = {
 	psyker = "loc_class_psyker-psykinetic_title",
 	veteran = "loc_class_veteran-sharpshooter_title",
 	zealot = "loc_class_zealot-preacher_title",
-	ogryn = "loc_class_ogryn-skullbreaker_title",
-	psyker = "loc_class_psyker_title",
-	ogryn = "loc_class_ogryn_title",
-	veteran = "loc_class_veteran_title",
-	zealot = "loc_class_zealot_title"
+	ogryn = "loc_class_ogryn-skullbreaker_title"
 }
+
+archetype_titles.psyker = "loc_class_psyker_title"
+archetype_titles.ogryn = "loc_class_ogryn_title"
+archetype_titles.veteran = "loc_class_veteran_title"
+archetype_titles.zealot = "loc_class_zealot_title"
 
 ClassSelectionView._update_archetype_info = function (self)
 	local widgets_by_name = self._widgets_by_name
@@ -525,6 +539,7 @@ ClassSelectionView._update_archetype_info = function (self)
 		2000
 	}, title_style_options)
 	local initial_offset = widget.style.title.offset[2]
+
 	widget.style.divider.offset[2] = initial_offset + title_height + vertical_margin
 	widget.style.description.offset[2] = widget.style.divider.offset[2] + widget.style.divider.size[2] + vertical_margin
 	widget.content.title = title
@@ -539,7 +554,7 @@ ClassSelectionView._update_choose_button_text = function (self)
 	local widgets_by_name = self._widgets_by_name
 	local details_button_display_name = Utf8.upper(Localize("loc_character_create_button_details"))
 	local choose_button_display_name = Utf8.upper(Localize("loc_character_backstory_selection"))
-	local title = nil
+	local title
 
 	if self._classes_visible then
 		title = choose_button_display_name
@@ -552,8 +567,10 @@ end
 
 ClassSelectionView._show_classes_widgets = function (self, show, force_archetype)
 	local widgets_by_name = self._widgets_by_name
+
 	widgets_by_name.class_background.content.visible = show
-	local selected_archetype = nil
+
+	local selected_archetype
 
 	if force_archetype ~= nil then
 		selected_archetype = force_archetype
@@ -614,9 +631,11 @@ ClassSelectionView._create_class_option_widgets = function (self)
 	for class_name, class in pairs(option.specializations) do
 		if class.title and not class.disabled then
 			count = count + 1
+
 			local name = "option_" .. count
 			local widget = self:_create_widget(name, class_option_definition)
 			local content = widget.content
+
 			content.hotspot.pressed_callback = callback(self, "_on_class_pressed", class_name)
 			widgets[#widgets + 1] = widget
 			widget.offset[1] = start_offset_x
@@ -683,7 +702,9 @@ ClassSelectionView._destroy_class_abilities_info = function (self)
 		self._class_abilities_info_grid:destroy()
 
 		self._class_abilities_info_grid = nil
+
 		local scrollbar_widget = self._widgets_by_name.class_details_scrollbar
+
 		scrollbar_widget.content.visible = false
 	end
 
@@ -735,6 +756,7 @@ ClassSelectionView._create_class_abilities_info = function (self)
 			}
 		}
 		local layer = (self._draw_layer or 0) + 10
+
 		self._details_grid = self:_add_element(ViewElementGrid, "class_details_mask", layer, grid_settings, grid_scenegraph_id)
 
 		self:_update_element_position("class_details_mask", self._details_grid)
@@ -747,23 +769,25 @@ ClassSelectionView._create_class_abilities_info = function (self)
 	local selected_archetype = self._selected_archetype
 	local archetype_name = selected_archetype.name
 	local specialization_info = selected_archetype.specializations[class_name]
-	local layout = {
-		[#layout + 1] = {
-			widget_type = "video",
-			video_path = selected_specialization.video
-		},
-		[#layout + 1] = {
-			widget_type = "dynamic_spacing",
-			size = {
-				max_width,
-				25
-			}
+	local layout = {}
+
+	layout[#layout + 1] = {
+		widget_type = "video",
+		video_path = selected_specialization.video
+	}
+	layout[#layout + 1] = {
+		widget_type = "dynamic_spacing",
+		size = {
+			max_width,
+			25
 		}
 	}
+
 	local archetype = self._selected_archetype
 
 	if archetype then
 		local nodes_to_present = {}
+
 		layout[#layout + 1] = {
 			widget_type = "dynamic_spacing",
 			size = {
@@ -771,6 +795,7 @@ ClassSelectionView._create_class_abilities_info = function (self)
 				25
 			}
 		}
+
 		local base_class_loadout = {
 			ability = {},
 			blitz = {},
@@ -783,30 +808,37 @@ ClassSelectionView._create_class_abilities_info = function (self)
 		CharacterSheet.class_loadout(profile, base_class_loadout, force_base_talents)
 
 		local ability_talent = base_class_loadout.ability.talent
+
 		nodes_to_present[#nodes_to_present + 1] = {
 			type = "ability",
 			widget_type = "talent_info",
 			talent = ability_talent,
 			icon = base_class_loadout.ability.icon
 		}
+
 		local blitz_talent = base_class_loadout.blitz.talent
+
 		nodes_to_present[#nodes_to_present + 1] = {
 			type = "tactical",
 			widget_type = "talent_info",
 			talent = blitz_talent,
 			icon = base_class_loadout.blitz.icon
 		}
+
 		local aura_talent = base_class_loadout.aura.talent
+
 		nodes_to_present[#nodes_to_present + 1] = {
 			type = "aura",
 			widget_type = "talent_info",
 			talent = aura_talent,
 			icon = base_class_loadout.aura.icon
 		}
+
 		local iconics = base_class_loadout.iconics
 
 		for i = 1, #iconics do
 			local iconic = iconics[i]
+
 			nodes_to_present[#nodes_to_present + 1] = {
 				type = "iconic",
 				widget_type = "stat",
@@ -837,10 +869,11 @@ ClassSelectionView._create_class_abilities_info = function (self)
 
 			if not talent then
 				local talent_name = data.talent
+
 				talent = talent_name and archetype.talents[talent_name]
 			end
 
-			local description, display_name = nil
+			local description, display_name
 			local add = false
 
 			if talent then
@@ -856,7 +889,7 @@ ClassSelectionView._create_class_abilities_info = function (self)
 			if add then
 				local node_type = data.type
 				local icon = data.icon
-				local gradient_map, frame, icon_mask = nil
+				local gradient_map, frame, icon_mask
 				local settings_by_node_type = TalentBuilderViewSettings.settings_by_node_type[node_type]
 
 				if settings_by_node_type then
@@ -949,6 +982,7 @@ ClassSelectionView._create_class_abilities_info = function (self)
 
 			for i = 1, #unique_weapons do
 				local unique_weapon = unique_weapons[i]
+
 				layout[#layout + 1] = {
 					widget_type = "weapon",
 					display_name = unique_weapon.display_name,
@@ -1000,7 +1034,7 @@ ClassSelectionView._handle_details_button_text = function (self)
 	local widgets_by_name = self._widgets_by_name
 	local service_type = DefaultViewInputSettings.service_type
 	local show_class_info_button_action = "confirm_pressed"
-	local details_button_text = nil
+	local details_button_text
 
 	if self._classes_visible then
 		details_button_text = Localize("loc_mission_voting_view_hide_details")

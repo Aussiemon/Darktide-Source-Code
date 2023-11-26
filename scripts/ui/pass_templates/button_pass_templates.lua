@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/pass_templates/button_pass_templates.lua
+
 local InputUtils = require("scripts/managers/input/input_utils")
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
@@ -10,6 +12,7 @@ local color_copy = ColorUtilities.color_copy
 local math_max = math.max
 local math_lerp = math.lerp
 local terminal_button_text_style = table.clone(UIFontSettings.button_primary)
+
 terminal_button_text_style.offset = {
 	0,
 	0,
@@ -29,9 +32,13 @@ terminal_button_text_style.default_color = {
 	229,
 	207
 }
+
 local terminal_button_small_text_style = table.clone(terminal_button_text_style)
+
 terminal_button_small_text_style.font_size = terminal_button_text_style.font_size - 2
+
 local terminal_button_hold_small_text_style = table.clone(terminal_button_text_style)
+
 terminal_button_hold_small_text_style.font_size = terminal_button_text_style.font_size - 2
 terminal_button_hold_small_text_style.text_color = {
 	255,
@@ -69,7 +76,7 @@ local function terminal_button_change_function(content, style)
 	local hover_color = style.hover_color
 	local selected_color = style.selected_color
 	local disabled_color = style.disabled_color
-	local color = nil
+	local color
 
 	if disabled and disabled_color then
 		color = disabled_color
@@ -96,6 +103,7 @@ local function terminal_button_hover_change_function(content, style)
 	local default_alpha = 155
 	local hover_alpha = anim_hover_progress * 100
 	local select_alpha = math.max(anim_select_progress, anim_focus_progress) * 50
+
 	style.color[1] = math.clamp(default_alpha + select_alpha + hover_alpha, 0, 255)
 end
 
@@ -124,6 +132,7 @@ local function default_button_text_change_function(content, style)
 		local service_type = "View"
 		local alias_key = Managers.ui:get_input_alias_key(gamepad_action, service_type)
 		local input_text = InputUtils.input_text_for_current_input_device(service_type, alias_key)
+
 		content.display_text = string.format(Localize("loc_input_legend_text_template"), input_text, button_text)
 	else
 		content.display_text = button_text
@@ -149,6 +158,7 @@ ButtonPassTemplates.terminal_list_button_background_change_function = function (
 	local max_alpha = style.max_alpha
 	local min_alpha = style.min_alpha
 	local alpha = math_lerp(min_alpha, max_alpha, hover_progress)
+
 	color[1] = alpha * select_progress
 end
 
@@ -198,7 +208,7 @@ ButtonPassTemplates.terminal_list_button_text_change_function = function (conten
 	local default_color = style.default_color
 	local hover_color = style.hover_color
 	local focused_color = style.selected_color
-	local progress, target_color = nil
+	local progress, target_color
 
 	if hover_progress < select_progress then
 		progress = select_progress
@@ -217,6 +227,7 @@ local default_button_content = {
 local simple_button_font_setting_name = "button_medium"
 local simple_button_font_settings = UIFontSettings[simple_button_font_setting_name]
 local simple_button_font_color = simple_button_font_settings.text_color
+
 ButtonPassTemplates.simple_button = {
 	{
 		pass_type = "hotspot",
@@ -275,19 +286,24 @@ ButtonPassTemplates.simple_button = {
 			local default_text_color = style.default_text_color
 			local text_color = style.text_color
 			local progress = 1 - content.hotspot.anim_input_progress * 0.3
+
 			text_color[2] = default_text_color[2] * progress
 			text_color[3] = default_text_color[3] * progress
 			text_color[4] = default_text_color[4] * progress
 		end
 	}
 }
+
 local default_button_text_style = table.clone(UIFontSettings.button_primary)
+
 default_button_text_style.offset = {
 	0,
 	0,
 	4
 }
+
 local ready_button_text_style = table.clone(UIFontSettings.button_primary)
+
 ready_button_text_style.offset = {
 	0,
 	-8,
@@ -296,7 +312,9 @@ ready_button_text_style.offset = {
 ready_button_text_style.horizontal_alignment = "center"
 ready_button_text_style.vertical_alignment = "center"
 ready_button_text_style.font_size = 36
+
 local aquila_button_text_style = table.clone(UIFontSettings.button_primary)
+
 aquila_button_text_style.offset = {
 	0,
 	0,
@@ -305,7 +323,9 @@ aquila_button_text_style.offset = {
 aquila_button_text_style.horizontal_alignment = "center"
 aquila_button_text_style.vertical_alignment = "center"
 aquila_button_text_style.font_size = 24
+
 local url_text_style = table.clone(UIFontSettings.body)
+
 url_text_style.text_horizontal_alignment = "center"
 url_text_style.text_vertical_alignment = "center"
 url_text_style.default_color = Color.ui_terminal(255, true)
@@ -340,25 +360,31 @@ ButtonPassTemplates.url_button = {
 		},
 		change_function = function (content, style)
 			local anim_progress = math.max(math.max(content.hotspot.anim_hover_progress, content.hotspot.anim_select_progress), content.hotspot.anim_focus_progress)
+
 			style.color[1] = anim_progress * 255
+
 			local size_addition = style.size_addition
 			local size_padding = 20 - math.easeInCubic(anim_progress) * 10
+
 			size_addition[1] = size_padding
 			size_addition[2] = size_padding
 		end
-	},
-	size_function = function (parent, config, ui_renderer)
-		local text_width, text_height = UIRenderer.text_size(ui_renderer, Localize(config.text), url_text_style.font_type, url_text_style.font_size)
-
-		return {
-			text_width,
-			text_height
-		}
-	end,
-	init = function (parent, widget, ui_renderer, options)
-		widget.content.text = string.format("{#under(true)}%s{#under(false)}", options.text)
-	end
+	}
 }
+
+ButtonPassTemplates.url_button.size_function = function (parent, config, ui_renderer)
+	local text_width, text_height = UIRenderer.text_size(ui_renderer, Localize(config.text), url_text_style.font_type, url_text_style.font_size)
+
+	return {
+		text_width,
+		text_height
+	}
+end
+
+ButtonPassTemplates.url_button.init = function (parent, widget, ui_renderer, options)
+	widget.content.text = string.format("{#under(true)}%s{#under(false)}", options.text)
+end
+
 ButtonPassTemplates.default_button = {
 	{
 		pass_type = "hotspot",
@@ -505,16 +531,18 @@ ButtonPassTemplates.default_button = {
 				7
 			}
 		}
-	},
-	size = {
-		347,
-		76
 	}
 }
+ButtonPassTemplates.default_button.size = {
+	347,
+	76
+}
+
 local ready_button_small_button_size_addition = {
 	-170,
 	-54
 }
+
 ButtonPassTemplates.ready_button = {
 	{
 		pass_type = "hotspot",
@@ -671,16 +699,18 @@ ButtonPassTemplates.ready_button = {
 		value_id = "display_text",
 		style = ready_button_text_style,
 		change_function = default_button_text_change_function
-	},
-	size = {
-		490,
-		150
 	}
 }
+ButtonPassTemplates.ready_button.size = {
+	490,
+	150
+}
+
 local aquila_small_button_size_addition = {
 	-90,
 	-40
 }
+
 ButtonPassTemplates.aquila_button = {
 	{
 		pass_type = "hotspot",
@@ -821,6 +851,7 @@ ButtonPassTemplates.aquila_button = {
 				local service_type = "View"
 				local alias_key = Managers.ui:get_input_alias_key(gamepad_action, service_type)
 				local input_text = InputUtils.input_text_for_current_input_device(service_type, alias_key)
+
 				content.text = string.format(Localize("loc_input_legend_text_template"), input_text, button_text)
 			else
 				content.text = button_text
@@ -846,13 +877,15 @@ ButtonPassTemplates.aquila_button = {
 				4
 			}
 		}
-	},
-	size = {
-		390,
-		74
 	}
 }
+ButtonPassTemplates.aquila_button.size = {
+	390,
+	74
+}
+
 local default_button_small_text_style = table.clone(UIFontSettings.button_primary)
+
 default_button_small_text_style.offset = {
 	0,
 	0,
@@ -892,19 +925,19 @@ ButtonPassTemplates.default_button_small = {
 		style_id = "background",
 		value = "content/ui/materials/backgrounds/default_square",
 		style = {
+			size_addition = {
+				-30,
+				-20
+			},
+			default_color = Color.terminal_background(nil, true),
+			selected_color = Color.terminal_background_selected(nil, true),
 			{
 				0,
 				0,
 				1
 			},
 			vertical_alignment = "center",
-			horizontal_alignment = "center",
-			size_addition = {
-				-30,
-				-20
-			},
-			default_color = Color.terminal_background(nil, true),
-			selected_color = Color.terminal_background_selected(nil, true)
+			horizontal_alignment = "center"
 		},
 		change_function = terminal_button_change_function
 	},
@@ -1018,11 +1051,11 @@ ButtonPassTemplates.default_button_small = {
 				5
 			}
 		}
-	},
-	size = {
-		347,
-		50
 	}
+}
+ButtonPassTemplates.default_button_small.size = {
+	347,
+	50
 }
 ButtonPassTemplates.default_button_large = {
 	{
@@ -1067,7 +1100,9 @@ ButtonPassTemplates.default_button_large = {
 			local hover_progress = hotspot.anim_hover_progress
 			local input_progress = hotspot.anim_input_progress
 			local select_progress = hotspot.anim_select_progress
+
 			color[1] = 255 * math.max(hover_progress, select_progress)
+
 			local ignore_alpha = true
 
 			color_lerp(default_color, input_color, input_progress, color, ignore_alpha)
@@ -1115,6 +1150,7 @@ ButtonPassTemplates.secondary_button = {
 		change_function = function (content, style)
 			local color = style.color
 			local hotspot = content.hotspot
+
 			color[1] = 255 * math.max(hotspot.anim_hover_progress, hotspot.anim_select_progress)
 		end
 	},
@@ -1246,6 +1282,7 @@ ButtonPassTemplates.terminal_button = {
 				local service_type = "View"
 				local alias_key = Managers.ui:get_input_alias_key(gamepad_action, service_type)
 				local input_text = InputUtils.input_text_for_current_input_device(service_type, alias_key)
+
 				content.text = string.format(Localize("loc_input_legend_text_template"), input_text, button_text)
 			else
 				content.text = button_text
@@ -1488,11 +1525,11 @@ ButtonPassTemplates.terminal_button_small = {
 
 			color_lerp(default_color, hover_color, progress, text_color)
 		end
-	},
-	size = {
-		280,
-		40
 	}
+}
+ButtonPassTemplates.terminal_button_small.size = {
+	280,
+	40
 }
 ButtonPassTemplates.terminal_button_hold_small = {
 	{
@@ -1599,6 +1636,7 @@ ButtonPassTemplates.terminal_button_hold_small = {
 		change_function = function (content, style)
 			local progress = content.hold_progress or 0
 			local total_width = content.size[1]
+
 			style.size[1] = total_width * progress
 		end
 	},
@@ -1640,6 +1678,7 @@ ButtonPassTemplates.terminal_button_hold_small = {
 				local service_type = "View"
 				local alias_key = Managers.ui:get_input_alias_key(gamepad_action, service_type)
 				local input_text = InputUtils.input_text_for_current_input_device(service_type, alias_key)
+
 				content.text = string.format("{#color(226,199,126)}%s %s{#reset()} %s", Localize("loc_input_hold"), input_text, button_text)
 			else
 				content.text = string.format("{#color(226,199,126)}%s{#reset()} %s", Localize("loc_input_hold"), button_text)
@@ -1649,106 +1688,112 @@ ButtonPassTemplates.terminal_button_hold_small = {
 
 			color_lerp(default_color, hover_color, progress, text_color)
 		end
-	},
-	size = {
-		280,
-		40
-	},
-	init = function (parent, widget, ui_renderer, options)
-		widget.content.timer = options.timer or 1
-		widget.content.current_timer = 0
-		widget.content.hold_progress = 0
-		widget.content.complete_function = options.complete_function
-		widget.content.hotspot.pressed_callback = nil
-		widget.content.input_action = options.input_action or "confirm_hold"
-		widget.content.original_text = options.text
-		widget.content.ignore_gamepad_on_text = options.ignore_gamepad_on_text
-		widget.content.hotspot.on_complete_sound = options.on_complete_sound
-		widget.content.hotspot.hold_release = options.hold_release
-		widget.content.hotspot.hold_sound = options.hold_sound
-		local width = widget.content.size[1]
-		local height = widget.content.size[2]
-		widget.style.background.size = {
-			width,
-			height
-		}
-		widget.style.background_gradient.size = {
-			width,
-			height
-		}
-		widget.style.frame.size = {
-			width,
-			height
-		}
-		widget.style.corner.size = {
-			width,
-			height
-		}
-		widget.style.hold.size = {
-			width,
-			height
-		}
-		widget.style.hotspot.size = {
-			width,
-			height
-		}
-		widget.content.size[2] = height
-		widget.style.text.offset[2] = -(widget.content.size[2] - height) * 0.5
-	end,
-	update = function (parent, widget, renderer, dt)
-		local content = widget.content
-		local hotspot = content.hotspot
-		local hold_active = hotspot.on_pressed
-		local input_service = renderer.input_service
-		local input_action = content.input_action and input_service:get(content.input_action)
-		local left_hold = input_service and (input_action or input_service:get("left_hold"))
+	}
+}
+ButtonPassTemplates.terminal_button_hold_small.size = {
+	280,
+	40
+}
 
-		if not left_hold and content.hold_active then
-			content.hold_active = nil
-		elseif not content.hold_active then
-			content.hold_active = hold_active
-		end
+ButtonPassTemplates.terminal_button_hold_small.init = function (parent, widget, ui_renderer, options)
+	widget.content.timer = options.timer or 1
+	widget.content.current_timer = 0
+	widget.content.hold_progress = 0
+	widget.content.complete_function = options.complete_function
+	widget.content.hotspot.pressed_callback = nil
+	widget.content.input_action = options.input_action or "confirm_hold"
+	widget.content.original_text = options.text
+	widget.content.ignore_gamepad_on_text = options.ignore_gamepad_on_text
+	widget.content.hotspot.on_complete_sound = options.on_complete_sound
+	widget.content.hotspot.hold_release = options.hold_release
+	widget.content.hotspot.hold_sound = options.hold_sound
 
-		if content.hold_active then
-			local total_time = content.timer
-			local current_time = content.current_timer + dt
-			local progress = math.min(current_time / total_time, 1)
+	local width = widget.content.size[1]
+	local height = widget.content.size[2]
 
-			if progress < 1 then
-				if hotspot.hold_sound and content.hold_progress == 0 then
-					Managers.ui:play_2d_sound(hotspot.hold_sound)
-				end
+	widget.style.background.size = {
+		width,
+		height
+	}
+	widget.style.background_gradient.size = {
+		width,
+		height
+	}
+	widget.style.frame.size = {
+		width,
+		height
+	}
+	widget.style.corner.size = {
+		width,
+		height
+	}
+	widget.style.hold.size = {
+		width,
+		height
+	}
+	widget.style.hotspot.size = {
+		width,
+		height
+	}
+	widget.content.size[2] = height
+	widget.style.text.offset[2] = -(widget.content.size[2] - height) * 0.5
+end
 
-				content.current_timer = current_time
-				content.hold_progress = progress
+ButtonPassTemplates.terminal_button_hold_small.update = function (parent, widget, renderer, dt)
+	local content = widget.content
+	local hotspot = content.hotspot
+	local hold_active = hotspot.on_pressed
+	local input_service = renderer.input_service
+	local input_action = content.input_action and input_service:get(content.input_action)
+	local left_hold = input_service and (input_action or input_service:get("left_hold"))
 
-				return
-			else
-				content.current_timer = 0
-				content.hold_progress = 0
-				content.hold_active = false
+	if not left_hold and content.hold_active then
+		content.hold_active = nil
+	elseif not content.hold_active then
+		content.hold_active = hold_active
+	end
 
-				if hotspot.on_complete_sound then
-					Managers.ui:play_2d_sound(hotspot.on_complete_sound)
-				end
+	if content.hold_active then
+		local total_time = content.timer
+		local current_time = content.current_timer + dt
+		local progress = math.min(current_time / total_time, 1)
 
-				if content.complete_function then
-					content.complete_function()
-				end
-
-				return
+		if progress < 1 then
+			if hotspot.hold_sound and content.hold_progress == 0 then
+				Managers.ui:play_2d_sound(hotspot.hold_sound)
 			end
-		elseif not content.hold_active and content.current_timer > 0 then
+
+			content.current_timer = current_time
+			content.hold_progress = progress
+
+			return
+		else
 			content.current_timer = 0
 			content.hold_progress = 0
+			content.hold_active = false
 
-			if hotspot.hold_release then
-				Managers.ui:play_2d_sound(hotspot.hold_release)
+			if hotspot.on_complete_sound then
+				Managers.ui:play_2d_sound(hotspot.on_complete_sound)
 			end
+
+			if content.complete_function then
+				content.complete_function()
+			end
+
+			return
+		end
+	elseif not content.hold_active and content.current_timer > 0 then
+		content.current_timer = 0
+		content.hold_progress = 0
+
+		if hotspot.hold_release then
+			Managers.ui:play_2d_sound(hotspot.hold_release)
 		end
 	end
-}
+end
+
 ButtonPassTemplates.list_button_default_height = 64
+
 local list_button_highlight_size_addition = 10
 local list_button_icon_size = {
 	50,
@@ -1766,12 +1811,17 @@ local list_button_hotspot_default_style = {
 ButtonPassTemplates.list_button_highlight_change_function = function (content, style)
 	local hotspot = content.hotspot
 	local progress = math.max(hotspot.anim_hover_progress, hotspot.anim_focus_progress)
+
 	style.color[1] = 255 * math.easeOutCubic(progress)
+
 	local size_addition = list_button_highlight_size_addition * math.easeInCubic(1 - progress)
 	local style_size_addition = style.size_addition
+
 	style_size_addition[1] = size_addition * 2
 	style_size_addition[2] = size_addition * 2
+
 	local offset = style.offset
+
 	offset[1] = -size_addition
 	offset[2] = -size_addition
 	style.hdr = progress == 1
@@ -1794,6 +1844,7 @@ ButtonPassTemplates.list_button_label_change_function = function (content, style
 end
 
 local list_button_text_style = table.clone(UIFontSettings.list_button)
+
 list_button_text_style.offset[3] = 7
 ButtonPassTemplates.list_button_with_background = {
 	{
@@ -1928,8 +1979,10 @@ ButtonPassTemplates.list_button_with_background = {
 			local progress = math.max(hotspot.anim_hover_progress, hotspot.anim_focus_progress)
 			local size_addition = 2 * math.easeInCubic(progress)
 			local style_size_addition = style.size_addition
+
 			style_size_addition[1] = size_addition * 2
 			style_size_addition[2] = size_addition * 2
+
 			local offset = style.offset
 			local default_offset = style.default_offset
 
@@ -1944,7 +1997,9 @@ ButtonPassTemplates.list_button_with_background = {
 		change_function = ButtonPassTemplates.list_button_label_change_function
 	}
 }
+
 local list_icon_button_text_style = table.clone(UIFontSettings.list_button)
+
 list_icon_button_text_style.offset[1] = 70
 list_icon_button_text_style.offset[3] = 7
 ButtonPassTemplates.terminal_list_button_with_background_and_icon = {
@@ -2076,8 +2131,10 @@ ButtonPassTemplates.terminal_list_button_with_background_and_icon = {
 			local progress = math.max(hotspot.anim_hover_progress, hotspot.anim_focus_progress)
 			local size_addition = 2 * math.easeInCubic(progress)
 			local style_size_addition = style.size_addition
+
 			style_size_addition[1] = size_addition * 2
 			style_size_addition[2] = size_addition * 2
+
 			local offset = style.offset
 			local default_offset = style.default_offset
 
@@ -2114,8 +2171,11 @@ ButtonPassTemplates.terminal_list_button_with_background_and_icon = {
 		change_function = ButtonPassTemplates.list_button_label_change_function
 	}
 }
+
 local list_button_with_icon_text_style = table.clone(UIFontSettings.list_button)
+
 list_button_with_icon_text_style.offset[1] = 64
+
 local list_button_with_icon_icon_style = {
 	vertical_alignment = "center",
 	color = list_button_with_icon_text_style.text_color,
@@ -2129,6 +2189,7 @@ local list_button_with_icon_icon_style = {
 		3
 	}
 }
+
 ButtonPassTemplates.list_button_with_background_and_icon = {
 	{
 		style_id = "hotspot",
@@ -2171,6 +2232,7 @@ ButtonPassTemplates.list_button_with_background_and_icon = {
 		change_function = function (content, style)
 			local hotspot = content.hotspot
 			local progress = math.max(math.max(hotspot.anim_hover_progress, hotspot.anim_select_progress), hotspot.anim_focus_progress)
+
 			style.color[1] = 120 + progress * 135
 		end
 	},
@@ -2207,10 +2269,13 @@ ButtonPassTemplates.list_button_with_background_and_icon = {
 			local progress = math.max(hotspot.anim_hover_progress, hotspot.anim_focus_progress)
 			local size_addition = 2 * math.easeInCubic(progress)
 			local style_size_addition = style.size_addition
+
 			style_size_addition[1] = size_addition * 2
 			style_size_addition[2] = size_addition * 2
+
 			local offset = style.offset
 			local default_offset = style.default_offset
+
 			offset[1] = default_offset[1] + size_addition * 6
 			style.hdr = progress == 1
 		end
@@ -2510,6 +2575,7 @@ ButtonPassTemplates.list_button = {
 		change_function = function (content, style)
 			local hotspot = content.hotspot
 			local hover_progress = content.show_background_with_hover and math_max(hotspot.anim_hover_progress, hotspot.anim_focus_progress) or 0
+
 			style.color[1] = 255 * math_max(content.hotspot.anim_select_progress, hover_progress)
 		end,
 		visibility_function = ButtonPassTemplates.list_button_focused_visibility_function
@@ -2543,7 +2609,9 @@ ButtonPassTemplates.list_button = {
 		change_function = ButtonPassTemplates.list_button_label_change_function
 	}
 }
+
 local list_button_large_text_style = table.clone(UIFontSettings.list_button)
+
 list_button_large_text_style.font_size = 36
 list_button_large_text_style.offset = {
 	50,
@@ -2607,9 +2675,13 @@ ButtonPassTemplates.list_button_large = {
 		change_function = ButtonPassTemplates.list_button_label_change_function
 	}
 }
+
 local list_button_caption_text_style = table.clone(list_button_large_text_style)
+
 list_button_caption_text_style.offset[2] = -15
+
 local list_button_sub_caption_text_style = table.clone(UIFontSettings.list_button)
+
 list_button_sub_caption_text_style.offset[2] = 25
 ButtonPassTemplates.list_button_large_with_info = {
 	{
@@ -2740,7 +2812,9 @@ ButtonPassTemplates.list_button_with_icon = {
 		change_function = ButtonPassTemplates.list_button_label_change_function
 	}
 }
+
 local list_button_with_two_rows_text_style = table.clone(list_button_with_icon_text_style)
+
 list_button_with_two_rows_text_style.offset[2] = -12
 ButtonPassTemplates.list_button_two_rows_with_icon = {
 	{
@@ -2767,6 +2841,7 @@ ButtonPassTemplates.list_button_two_rows_with_icon = {
 		change_function = function (content, style)
 			local hotspot = content.hotspot
 			local hover_progress = content.show_background_with_hover and hotspot.anim_hover_progress or 0
+
 			style.color[1] = 255 * math_max(content.hotspot.anim_select_progress, hover_progress)
 		end,
 		visibility_function = ButtonPassTemplates.list_button_focused_visibility_function
@@ -2814,7 +2889,9 @@ ButtonPassTemplates.list_button_two_rows_with_icon = {
 		change_function = ButtonPassTemplates.list_button_label_change_function
 	}
 }
+
 local continue_button_text_style = table.clone(UIFontSettings.header_3)
+
 continue_button_text_style.offset = {
 	-25,
 	0,
@@ -2908,7 +2985,9 @@ ButtonPassTemplates.continue_button = {
 		end
 	}
 }
+
 local menu_panel_button_style = table.clone(UIFontSettings.header_3)
+
 menu_panel_button_style.text_horizontal_alignment = "center"
 menu_panel_button_style.text_vertical_alignment = "center"
 menu_panel_button_style.offset = {
@@ -2916,9 +2995,11 @@ menu_panel_button_style.offset = {
 	0,
 	3
 }
+
 local menu_panel_button_hotspot_content = {
 	on_hover_sound = UISoundEvents.tab_button_hovered
 }
+
 ButtonPassTemplates.menu_panel_button = {
 	{
 		style_id = "hotspot",
@@ -3021,10 +3102,12 @@ ButtonPassTemplates.menu_panel_button = {
 		end
 	}
 }
+
 local tab_menu_button_hotspot_content = {
 	on_hover_sound = UISoundEvents.tab_secondary_button_hovered,
 	on_pressed_sound = UISoundEvents.tab_secondary_button_pressed
 }
+
 ButtonPassTemplates.tab_menu_button = {
 	{
 		style_id = "hotspot",
@@ -3058,6 +3141,7 @@ ButtonPassTemplates.tab_menu_button = {
 		change_function = function (content, style)
 			local hotspot = content.hotspot
 			local progress = math_max(hotspot.anim_focus_progress, hotspot.anim_select_progress)
+
 			style.color[1] = 255 * math.easeOutCubic(progress)
 			style.size_addition[2] = 80 * progress
 		end,
@@ -3088,6 +3172,7 @@ ButtonPassTemplates.tab_menu_button = {
 			local text_color = style.text_color
 			local math_max = math_max
 			local progress = math_max(math_max(hotspot.anim_focus_progress, hotspot.anim_select_progress), math_max(hotspot.anim_hover_progress, hotspot.anim_input_progress))
+
 			text_color[1] = 255 * math.easeInCubic(progress)
 		end,
 		visibility_function = function (content, style)
@@ -3313,6 +3398,7 @@ ButtonPassTemplates.tab_menu_button_icon = {
 		change_function = function (content, style)
 			local hotspot = content.hotspot
 			local progress = math_max(hotspot.anim_focus_progress, hotspot.anim_select_progress)
+
 			style.color[1] = 255 * math.easeOutCubic(progress)
 			style.size_addition[2] = 80 * progress
 		end,
@@ -3435,7 +3521,9 @@ ButtonPassTemplates.page_indicator_terminal = {
 		end
 	}
 }
+
 local input_legend_button_style = table.clone(UIFontSettings.input_legend_button)
+
 ButtonPassTemplates.input_legend_button = {
 	{
 		style_id = "text",
@@ -3524,6 +3612,7 @@ ButtonPassTemplates.title_back_button = {
 ButtonPassTemplates.settings_button = function (width, height, settings_area_width, use_is_focused)
 	local header_width = width - settings_area_width
 	local font_style = table.clone(UIFontSettings.button_primary)
+
 	font_style.offset = {
 		header_width,
 		0,
@@ -3533,6 +3622,7 @@ ButtonPassTemplates.settings_button = function (width, height, settings_area_wid
 		settings_area_width,
 		height
 	}
+
 	local passes = ListHeaderPassTemplates.list_header(header_width, height, use_is_focused)
 	local button_passes = {
 		{
@@ -3556,6 +3646,7 @@ ButtonPassTemplates.settings_button = function (width, height, settings_area_wid
 			change_function = function (content, style)
 				local color = style.color
 				local hotspot = content.hotspot
+
 				color[1] = 255 * math.max(hotspot.anim_hover_progress, hotspot.anim_select_progress)
 			end
 		},
@@ -3598,7 +3689,7 @@ ButtonPassTemplates.settings_button = function (width, height, settings_area_wid
 			change_function = function (content, style)
 				local text_color = style.text_color
 				local hotspot = content.hotspot
-				local default_color = (hotspot.disabled or content.disabled) and style.disabled_color or style.default_color
+				local default_color = not (not hotspot.disabled and not content.disabled) and style.disabled_color or style.default_color
 				local highlight_color = style.hover_color
 				local hover_progress = math.max(hotspot.anim_hover_progress, hotspot.anim_select_progress)
 				local ignore_alpha = true
@@ -3861,6 +3952,7 @@ ButtonPassTemplates.item_category_sort_button = {
 			local size_addition = 2 * math.easeInCubic(progress)
 			local style_size_addition = style.size_addition
 			local original_size_addition = style.original_size_addition
+
 			style_size_addition[1] = original_size_addition[1] + size_addition * 2
 			style_size_addition[2] = original_size_addition[1] + size_addition * 2
 

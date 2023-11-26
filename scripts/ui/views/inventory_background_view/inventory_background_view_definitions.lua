@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/inventory_background_view/inventory_background_view_definitions.lua
+
 local BarPassTemplates = require("scripts/ui/pass_templates/bar_pass_templates")
 local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templates")
 local ColorUtilities = require("scripts/utilities/ui/colors")
@@ -208,20 +210,28 @@ local scenegraph_definition = {
 	}
 }
 local character_name_style = table.clone(UIFontSettings.header_2)
+
 character_name_style.text_horizontal_alignment = "left"
 character_name_style.text_vertical_alignment = "top"
+
 local character_title_style = table.clone(UIFontSettings.body_small)
+
 character_title_style.text_horizontal_alignment = "left"
 character_title_style.text_vertical_alignment = "top"
 character_title_style.text_color = Color.terminal_text_body_sub_header(255, true)
+
 local character_level_style = table.clone(UIFontSettings.body_small)
+
 character_level_style.text_horizontal_alignment = "center"
 character_level_style.text_vertical_alignment = "center"
 character_level_style.text_color = Color.terminal_text_header(255, true)
+
 local character_level_next_style = table.clone(UIFontSettings.body_small)
+
 character_level_next_style.text_horizontal_alignment = "center"
 character_level_next_style.text_vertical_alignment = "center"
 character_level_next_style.text_color = Color.terminal_text_header(255, true)
+
 local widget_definitions = {
 	loading = UIWidget.create_definition({
 		{

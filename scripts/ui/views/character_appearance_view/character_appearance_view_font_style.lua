@@ -1,5 +1,8 @@
+﻿-- chunkname: @scripts/ui/views/character_appearance_view/character_appearance_view_font_style.lua
+
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local header_text_style = table.clone(UIFontSettings.header_3)
+
 header_text_style.text_horizontal_alignment = "center"
 header_text_style.text_vertical_alignment = "top"
 header_text_style.offset = {
@@ -8,7 +11,9 @@ header_text_style.offset = {
 	1
 }
 header_text_style.text_color = Color.terminal_frame_selected(255, true)
+
 local header_final_title_style = table.clone(UIFontSettings.body)
+
 header_final_title_style.text_horizontal_alignment = "left"
 header_final_title_style.horizontal_alignment = "left"
 header_final_title_style.text_vertical_alignment = "top"
@@ -19,7 +24,9 @@ header_final_title_style.offset = {
 }
 header_final_title_style.font_size = 24
 header_final_title_style.text_color = Color.terminal_text_header(255, true)
+
 local header_final_text_style = table.clone(UIFontSettings.body)
+
 header_final_text_style.text_horizontal_alignment = "left"
 header_final_text_style.horizontal_alignment = "left"
 header_final_text_style.text_vertical_alignment = "top"
@@ -30,7 +37,9 @@ header_final_text_style.offset = {
 }
 header_final_text_style.font_size = 36
 header_final_text_style.text_color = Color.terminal_text_body(255, true)
+
 local header_choice_text_style = table.clone(UIFontSettings.header_2)
+
 header_choice_text_style.text_horizontal_alignment = "center"
 header_choice_text_style.text_vertical_alignment = "top"
 header_choice_text_style.offset = {
@@ -38,7 +47,9 @@ header_choice_text_style.offset = {
 	0,
 	1
 }
+
 local option_title_style = table.clone(UIFontSettings.header_3)
+
 option_title_style.text_horizontal_alignment = "left"
 option_title_style.text_vertical_alignment = "top"
 option_title_style.offset = {
@@ -47,7 +58,9 @@ option_title_style.offset = {
 	1
 }
 option_title_style.text_color = Color.terminal_text_header(255, true)
+
 local name_style = table.clone(UIFontSettings.header_2)
+
 name_style.text_horizontal_alignment = "left"
 name_style.text_vertical_alignment = "top"
 name_style.offset = {
@@ -55,7 +68,9 @@ name_style.offset = {
 	-80,
 	1
 }
+
 local class_style = table.clone(UIFontSettings.header_4)
+
 class_style.text_horizontal_alignment = "left"
 class_style.text_vertical_alignment = "top"
 class_style.offset = {
@@ -63,7 +78,9 @@ class_style.offset = {
 	-50,
 	1
 }
+
 local description_style = table.clone(UIFontSettings.body)
+
 description_style.text_horizontal_alignment = "left"
 description_style.text_vertical_alignment = "top"
 description_style.offset = {
@@ -73,7 +90,9 @@ description_style.offset = {
 }
 description_style.text_color = Color.terminal_text_body(255, true)
 description_style.font_size = 20
+
 local list_description_style = table.clone(UIFontSettings.body)
+
 list_description_style.text_horizontal_alignment = "center"
 list_description_style.text_vertical_alignment = "center"
 list_description_style.vertical_alignment = "top"
@@ -84,7 +103,9 @@ list_description_style.offset = {
 }
 list_description_style.font_size = 20
 list_description_style.text_color = Color.terminal_text_body(255, true)
+
 local overlay_text_style = table.clone(UIFontSettings.header_2)
+
 overlay_text_style.text_vertical_alignment = "center"
 overlay_text_style.text_horizontal_alignment = "center"
 overlay_text_style.offset = {
@@ -92,7 +113,9 @@ overlay_text_style.offset = {
 	0,
 	201
 }
+
 local effect_title_style = table.clone(UIFontSettings.header_3)
+
 effect_title_style.text_horizontal_alignment = "left"
 effect_title_style.text_vertical_alignment = "top"
 effect_title_style.offset = {
@@ -102,7 +125,9 @@ effect_title_style.offset = {
 }
 effect_title_style.font_size = 20
 effect_title_style.text_color = Color.terminal_text_header(255, true)
+
 local effect_description_style = table.clone(UIFontSettings.body)
+
 effect_description_style.text_horizontal_alignment = "left"
 effect_description_style.text_vertical_alignment = "center"
 effect_description_style.offset = {
@@ -111,7 +136,9 @@ effect_description_style.offset = {
 	1
 }
 effect_description_style.text_color = Color.white(255, true)
+
 local effect_description_not_selected_style = table.clone(UIFontSettings.body)
+
 effect_description_not_selected_style.text_horizontal_alignment = "left"
 effect_description_not_selected_style.text_vertical_alignment = "center"
 effect_description_not_selected_style.offset = {
@@ -121,7 +148,9 @@ effect_description_not_selected_style.offset = {
 }
 effect_description_not_selected_style.text_color = Color.ui_hud_red_light(255, true)
 effect_description_not_selected_style.font_size = 18
+
 local button_font_style = table.clone(UIFontSettings.button_2)
+
 button_font_style.offset = {
 	60,
 	0,
@@ -133,15 +162,18 @@ button_font_style.hover_color = Color.terminal_text_header_selected(255, true)
 button_font_style.text_color = Color.terminal_text_body(255, true)
 button_font_style.default_color = Color.terminal_text_body(255, true)
 button_font_style.selected_color = Color.terminal_text_header_selected(255, true)
+
 local category_button_font_style = table.clone(UIFontSettings.list_button)
+
 category_button_font_style.offset = {
 	30,
 	0,
 	3
 }
-local entry_no_icon_style = {
-	label = table.clone(UIFontSettings.header_3)
-}
+
+local entry_no_icon_style = {}
+
+entry_no_icon_style.label = table.clone(UIFontSettings.header_3)
 entry_no_icon_style.label.offset = {
 	0,
 	16,
@@ -153,7 +185,9 @@ entry_no_icon_style.description.offset = {
 	50,
 	2
 }
+
 local slider_top_font_style = table.clone(UIFontSettings.list_button)
+
 slider_top_font_style.size = {
 	140,
 	25
@@ -167,7 +201,9 @@ slider_top_font_style.offset = {
 	0,
 	0
 }
+
 local slider_bottom_font_style = table.clone(UIFontSettings.list_button)
+
 slider_bottom_font_style.size = {
 	140,
 	25
@@ -181,7 +217,9 @@ slider_bottom_font_style.offset = {
 	0,
 	10
 }
+
 local marker_font_style = table.clone(UIFontSettings.symbol)
+
 marker_font_style.font_size = 32
 marker_font_style.font_type = "proxima_nova_bold"
 marker_font_style.text_color = Color.white(255, true)
@@ -192,7 +230,9 @@ marker_font_style.offset = {
 	0,
 	10
 }
+
 local marker_icon_font_style = table.clone(UIFontSettings.symbol)
+
 marker_icon_font_style.font_size = 32
 marker_icon_font_style.font_type = "proxima_nova_bold"
 marker_icon_font_style.text_color = Color.white(255, true)
@@ -203,7 +243,9 @@ marker_icon_font_style.offset = {
 	0,
 	10
 }
+
 local randomize_button_text_style = table.clone(UIFontSettings.button_primary)
+
 randomize_button_text_style.offset = {
 	0,
 	0,
@@ -217,7 +259,9 @@ randomize_button_text_style.offset = {
 	0,
 	1
 }
+
 local reward_description_style = table.clone(UIFontSettings.body)
+
 reward_description_style.text_horizontal_alignment = "left"
 reward_description_style.text_vertical_alignment = "center"
 reward_description_style.offset = {
@@ -227,7 +271,9 @@ reward_description_style.offset = {
 }
 reward_description_style.text_color = Color.terminal_text_body(255, true)
 reward_description_style.font_size = 20
+
 local reward_description_no_icon_style = table.clone(UIFontSettings.body)
+
 reward_description_no_icon_style.text_horizontal_alignment = "left"
 reward_description_no_icon_style.text_vertical_alignment = "center"
 reward_description_no_icon_style.offset = {
@@ -237,7 +283,9 @@ reward_description_no_icon_style.offset = {
 }
 reward_description_no_icon_style.text_color = Color.terminal_text_body(255, true)
 reward_description_no_icon_style.font_size = 20
+
 local error_style = table.clone(UIFontSettings.body)
+
 error_style.text_horizontal_alignment = "left"
 error_style.text_vertical_alignment = "bottom"
 error_style.font_size = 18

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/game_states/game/gameplay_sub_states/gameplay_init_step_states/gameplay_init_step_timer.lua
+
 local AdaptiveClockHandlerClient = require("scripts/managers/player/player_game_states/utilities/adaptive_clock_handler_client")
 local GameplayInitStepInterface = require("scripts/game_states/game/gameplay_sub_states/gameplay_init_step_states/gameplay_init_step_state_interface")
 local GameplayInitStepNavWorldVolume = require("scripts/game_states/game/gameplay_sub_states/gameplay_init_step_states/gameplay_init_step_nav_world_volume")
@@ -5,7 +7,9 @@ local GameplayInitStepTimer = class("GameplayInitStepTimer")
 
 GameplayInitStepTimer.on_enter = function (self, parent, params)
 	local shared_state = params.shared_state
+
 	self._shared_state = shared_state
+
 	local is_server = shared_state.is_server
 
 	self:_register_timer(is_server, shared_state)
@@ -28,6 +32,7 @@ GameplayInitStepTimer._register_timer = function (self, is_server, out_shared_st
 		local connection_manager = Managers.connection
 		local network_event_delegate = connection_manager:network_event_delegate()
 		local fixed_time_step = out_shared_state.fixed_time_step
+
 		out_shared_state.clock_handler_client = AdaptiveClockHandlerClient:new(network_event_delegate, fixed_time_step)
 	end
 end

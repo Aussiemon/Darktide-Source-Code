@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/mission_objective/utilities/mission_objective_timed.lua
+
 require("scripts/extension_systems/mission_objective/utilities/mission_objective_base")
 
 local MissionObjectiveTimed = class("MissionObjectiveTimed", "MissionObjectiveBase")
@@ -32,6 +34,7 @@ MissionObjectiveTimed.update_progression = function (self)
 
 	if self._duration > 0 then
 		local progression = self._time_elapsed / self._duration
+
 		progression = math.clamp(progression, 0, 1)
 
 		self:set_progression(progression)

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/voting/voting_client.lua
+
 local VotingClient = class("VotingClient")
 
 local function _info(...)
@@ -10,9 +12,13 @@ VotingClient.init = function (self, voting_id, initiator_peer, template, optiona
 	self._voting_id = voting_id
 	self._initiator_peer = initiator_peer
 	self._template = template
+
 	local params = optional_params or {}
+
 	self._params = params
+
 	local network_interface = template.network_interface()
+
 	self._network_interface = network_interface
 	self._time_left = time_left
 	self._member_list = {}
@@ -22,6 +28,7 @@ VotingClient.init = function (self, voting_id, initiator_peer, template, optiona
 
 	if initiator_peer == Network.peer_id() then
 		self._state = STATES.waiting_for_host_accept
+
 		local rpc_name = template.rpc_request_voting
 		local template_id = NetworkLookup.voting_templates[template.name]
 
@@ -32,6 +39,7 @@ VotingClient.init = function (self, voting_id, initiator_peer, template, optiona
 
 		for i = 1, #member_list do
 			local peer_id = member_list[i]
+
 			self._member_list[i] = peer_id
 			self._votes[peer_id] = initial_votes_list[i]
 		end
@@ -50,6 +58,7 @@ VotingClient.on_voting_accepted = function (self, member_list, initial_votes_lis
 
 	for i = 1, #member_list do
 		local peer_id = member_list[i]
+
 		self._member_list[i] = peer_id
 		self._votes[peer_id] = initial_votes_list[i]
 	end
@@ -79,6 +88,7 @@ end
 
 VotingClient.on_member_joined = function (self, peer_id)
 	local member_list = self._member_list
+
 	member_list[#member_list + 1] = peer_id
 	self._votes[peer_id] = StrictNil
 
@@ -168,6 +178,7 @@ end
 
 VotingClient.register_vote = function (self, voter_peer_id, option)
 	self._votes[voter_peer_id] = option
+
 	local voting_id = self._voting_id
 	local template = self._template
 

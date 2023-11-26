@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/social_menu_roster_view/social_menu_roster_view_definitions.lua
+
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local UIWorkspaceSettings = require("scripts/settings/ui/ui_workspace_settings")
@@ -377,7 +379,9 @@ local widget_definitions = {
 	}, "roster_grid_mask")
 }
 local tab_button_template = table.clone(ButtonPassTemplates.tab_menu_button)
+
 tab_button_template[2].style.offset[2] = 3
+
 local view_elements = {
 	tab_bar = {
 		init = "_setup_tab_bar",

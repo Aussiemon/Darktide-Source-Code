@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/pacing/monster_pacing/templates/renegade_monster_pacing_template.lua
+
 local BossPatrols = require("scripts/managers/pacing/monster_pacing/boss_patrols")
 local PerceptionSettings = require("scripts/settings/perception/perception_settings")
 local AggroStates = PerceptionSettings.aggro_states

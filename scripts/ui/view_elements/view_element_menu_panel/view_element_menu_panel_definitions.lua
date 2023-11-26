@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/view_elements/view_element_menu_panel/view_element_menu_panel_definitions.lua
+
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local UIWorkspaceSettings = require("scripts/settings/ui/ui_workspace_settings")
@@ -19,6 +21,7 @@ local scenegraph_definition = {
 	}
 }
 local input_text_style_left = table.clone(UIFontSettings.body)
+
 input_text_style_left.font_size = 30
 input_text_style_left.text_horizontal_alignment = "right"
 input_text_style_left.text_vertical_alignment = "center"
@@ -35,9 +38,12 @@ input_text_style_left.size = {
 }
 input_text_style_left.text_color = Color.ui_terminal(255, true)
 input_text_style_left.visible = false
+
 local input_text_style_right = table.clone(input_text_style_left)
+
 input_text_style_right.text_horizontal_alignment = "left"
 input_text_style_right.offset[1] = 10
+
 local widget_definitions = {
 	top_panel = UIWidget.create_definition({
 		{

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/talent/talent_settings_zealot.lua
+
 local talent_settings = {
 	zealot_1 = {
 		combat_ability = {},

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/zones/zones.lua
+
 local zones = {
 	dust = {
 		name_short = "loc_zone_name_dust_short",

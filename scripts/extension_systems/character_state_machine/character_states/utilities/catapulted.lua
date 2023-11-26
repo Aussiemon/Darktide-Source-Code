@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/character_state_machine/character_states/utilities/catapulted.lua
+
 local Catapulted = {}
 
 Catapulted.apply = function (catapulted_state_input, velocity)

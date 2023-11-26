@@ -1,9 +1,12 @@
+﻿-- chunkname: @scripts/components/luggable_synchronizer.lua
+
 local LuggableSynchronizer = component("LuggableSynchronizer")
 
 LuggableSynchronizer.init = function (self, unit, is_server)
 	self:enable(unit)
 
 	self._is_server = is_server
+
 	local luggable_synchronizer_extension = ScriptUnit.fetch_component_extension(unit, "event_synchronizer_system")
 
 	if luggable_synchronizer_extension then

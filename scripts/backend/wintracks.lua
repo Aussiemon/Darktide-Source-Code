@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/backend/wintracks.lua
+
 local BackendUtilities = require("scripts/foundation/managers/backend/utilities/backend_utilities")
 local Wintracks = class("Wintracks")
 
@@ -22,6 +24,7 @@ local function _map_to_id(wintracks)
 
 	for i = 1, len do
 		local wintrack = wintracks[i]
+
 		mapped[wintrack.id] = wintrack
 	end
 
@@ -45,8 +48,11 @@ Wintracks.get_wintracks_state = function (self, include_info)
 				for i = 1, len do
 					local item = items[i]
 					local data = item.body
+
 					data._links = nil
+
 					local state = mapped[data.id]
+
 					state.info = data
 				end
 

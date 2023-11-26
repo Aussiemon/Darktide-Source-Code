@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/multiplayer/utilities/steam_server_counter.lua
+
 local SteamServerCounter = class("SteamServerCounter")
 
 local function _info(...)
@@ -16,6 +18,7 @@ SteamServerCounter.init = function (self, steam_client, options)
 	self._host_type = options.host_type
 	self._state = STATES.idle
 	self._server_browser = SteamClient.create_server_browser(steam_client)
+
 	local server_filters = {
 		dedicated = "true",
 		secure = "notused",
@@ -28,6 +31,7 @@ SteamServerCounter.init = function (self, steam_client, options)
 	self._num_servers = 0
 	self._num_verified_servers = 0
 	self._server_info = nil
+
 	local search_type = "internet"
 
 	self:start_searching(search_type)
@@ -75,6 +79,7 @@ SteamServerCounter.update = function (self, dt)
 				else
 					local server_info = self._server_info
 					local num_verified_servers = self._num_verified_servers + 1
+
 					self._num_verified_servers = num_verified_servers
 
 					self:_process_next()
@@ -112,7 +117,7 @@ SteamServerCounter._process_next = function (self)
 	while true do
 		self._lobby_join_index = self._lobby_join_index + 1
 
-		if self._num_servers < self._lobby_join_index then
+		if self._lobby_join_index > self._num_servers then
 			_info("no more results, search finished.")
 
 			self._state = STATES.result
@@ -120,6 +125,7 @@ SteamServerCounter._process_next = function (self)
 			break
 		else
 			local info = SteamServerBrowser.server(self._server_browser, self._lobby_join_index)
+
 			self._server_info = info
 
 			SteamServerBrowser.request_data(self._server_browser, self._lobby_join_index)

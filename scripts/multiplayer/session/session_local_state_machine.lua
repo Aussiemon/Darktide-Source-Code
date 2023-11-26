@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/multiplayer/session/session_local_state_machine.lua
+
 local LocalConnectSessionChannelState = require("scripts/multiplayer/session/local_states/local_connect_session_channel_state")
 local LocalInSessionState = require("scripts/multiplayer/session/local_states/local_in_session_state")
 local LocalLeftSessionState = require("scripts/multiplayer/session/local_states/local_left_session_state")
@@ -6,6 +8,7 @@ local LocalWaitForGameObjectSyncState = require("scripts/multiplayer/session/loc
 local LocalWaitForSessionHostState = require("scripts/multiplayer/session/local_states/local_wait_for_session_host_state")
 local StateMachine = require("scripts/foundation/utilities/state_machine")
 local SessionLocalStateMachine = class("SessionLocalStateMachine")
+
 SessionLocalStateMachine.TIMEOUT = 15
 
 SessionLocalStateMachine.init = function (self, network_delegate, engine_lobby, engine_gamesession, gameobject_callback_object, clock_handler_client)
@@ -19,9 +22,12 @@ SessionLocalStateMachine.init = function (self, network_delegate, engine_lobby, 
 		clock_handler_client = clock_handler_client,
 		event_list = {}
 	}
+
 	self._shared_state = shared_state
-	local parent = nil
+
+	local parent
 	local state_machine = StateMachine:new("SessionLocalStateMachine", parent, shared_state)
+
 	self._state_machine = state_machine
 
 	state_machine:add_transition("LocalWaitForSessionHostState", "game_session_host_set", LocalConnectSessionChannelState)

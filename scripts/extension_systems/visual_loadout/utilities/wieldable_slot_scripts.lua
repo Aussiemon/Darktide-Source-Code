@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/visual_loadout/utilities/wieldable_slot_scripts.lua
+
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/aim_luggable_effects")
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/aim_projectile_ads_effects")
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/aim_projectile_effects")
@@ -80,6 +82,7 @@ WieldableSlotScripts.create = function (wieldable_slot_scripts_context, wieldabl
 
 		if script_class then
 			local script = script_class:new(wieldable_slot_scripts_context, slot, weapon_template, fx_sources, item)
+
 			actual_num_scripts = actual_num_scripts + 1
 			wieldable_slot_scripts[slot.name][actual_num_scripts] = script
 		end

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/pacing/utilities/debug_pacing_graph.lua
+
 local ScriptGui = require("scripts/foundation/utilities/script_gui")
 local DebugPacingGraph = class("DebugPacingGraph")
 
@@ -137,7 +139,9 @@ DebugPacingGraph.draw = function (self, dt, t)
 		local point_layer = 200
 		local size = Vector3(6, 6, 0)
 		local position = point - size / 2
+
 		position.z = point_layer
+
 		local annotation = graph_entry.annotation
 
 		Gui.rect(gui, position, size, annotation and Color.blue() or Color(255, 255, 0, 0))

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/scripted_scenario/scripted_scenario_system.lua
+
 require("scripts/extension_systems/scripted_scenario/scriptable_scenario_directional_unit_extension")
 
 local TrainingGroundsServitorHandler = require("scripts/extension_systems/training_grounds/training_grounds_servitor_handler")
@@ -33,6 +35,7 @@ ScriptedScenarioSystem.init = function (self, extension_system_creation_context,
 	self._parallel_scenarios = {}
 	self._tracked_events = {}
 	self._time_scale_data = nil
+
 	local nav_tag_cost_table = GwNavTagLayerCostTable.create()
 	local traverse_logic = GwNavTraverseLogic.create(self._nav_world)
 
@@ -41,7 +44,9 @@ ScriptedScenarioSystem.init = function (self, extension_system_creation_context,
 	self._traverse_logic = traverse_logic
 	self._nav_tag_cost_table = nav_tag_cost_table
 	self._servitor_handler = TrainingGroundsServitorHandler:new(self, extension_system_creation_context.world)
+
 	local scenario_system = self
+
 	self._objective_marker_data = {
 		units = {},
 		datas = {},
@@ -158,7 +163,7 @@ ScriptedScenarioSystem.fixed_update = function (self, context, dt, t)
 	self:_handle_spawning_minions(t)
 	self:_handle_spawning_units(t)
 
-	if self._stop_scenario_t and self._stop_scenario_t < t then
+	if self._stop_scenario_t and t > self._stop_scenario_t then
 		self._stop_scenario_t = nil
 
 		self:stop_scenario(t)
@@ -199,6 +204,7 @@ ScriptedScenarioSystem._handle_bot_despawns = function (self)
 			unit_spawner:mark_for_deletion(bot_player.player_unit)
 
 			local is_marked_for_deletion = true
+
 			bot_removals[bot_local_id] = is_marked_for_deletion
 		elseif unit_deleted then
 			BotSpawning.despawn_bot_character(bot_local_id)
@@ -214,27 +220,36 @@ ScriptedScenarioSystem._handle_minion_dissolves = function (self, t)
 		repeat
 			if not ALIVE[unit] then
 				self._minions_being_dissolved[unit] = nil
-			else
-				local is_done = MinionDissolveUtility.update_dissolve(unit, dissolve_data, t)
 
-				if is_done then
-					local health_extension = ScriptUnit.has_extension(unit, "health_system")
+				break
+			end
 
-					if HEALTH_ALIVE[unit] then
-						Managers.ui:play_2d_sound(TrainingGroundsSoundEvents.tg_minion_execute)
+			local is_done = MinionDissolveUtility.update_dissolve(unit, dissolve_data, t)
 
+			if is_done then
+				local health_extension = ScriptUnit.has_extension(unit, "health_system")
+
+				if HEALTH_ALIVE[unit] then
+					Managers.ui:play_2d_sound(TrainingGroundsSoundEvents.tg_minion_execute)
+
+					do
 						local damage_profile = DamageProfileTemplates.default
 
 						health_extension:set_unkillable(false)
 						health_extension:set_invulnerable(false)
 						Attack.execute(unit, damage_profile, "instakill", true)
-					elseif not health_extension then
-						self._minions_being_dissolved[unit] = nil
-						local minion_death_manager = Managers.state.minion_death
-						local minion_ragdoll = minion_death_manager:minion_ragdoll()
-
-						minion_ragdoll:remove_ragdoll_safe(unit)
 					end
+
+					break
+				end
+
+				if not health_extension then
+					self._minions_being_dissolved[unit] = nil
+
+					local minion_death_manager = Managers.state.minion_death
+					local minion_ragdoll = minion_death_manager:minion_ragdoll()
+
+					minion_ragdoll:remove_ragdoll_safe(unit)
 				end
 			end
 		until true
@@ -252,23 +267,27 @@ ScriptedScenarioSystem._handle_spawning_minions = function (self, t)
 
 				if not spawn_data.vfx_destroyed then
 					spawn_data.vfx_destroyed = true
-					local world = self._world
 
-					World.destroy_particles(world, spawn_data.vfx_id)
-				end
-			else
-				local is_done = MinionDissolveUtility.update_dissolve(unit, spawn_data, t)
-
-				if not spawn_data.vfx_destroyed and (is_done or spawn_data.destroy_vfx_t < t) then
-					spawn_data.vfx_destroyed = true
 					local world = self._world
 
 					World.destroy_particles(world, spawn_data.vfx_id)
 				end
 
-				if is_done then
-					self._spawning_minions[unit] = nil
-				end
+				break
+			end
+
+			local is_done = MinionDissolveUtility.update_dissolve(unit, spawn_data, t)
+
+			if not spawn_data.vfx_destroyed and (is_done or t > spawn_data.destroy_vfx_t) then
+				spawn_data.vfx_destroyed = true
+
+				local world = self._world
+
+				World.destroy_particles(world, spawn_data.vfx_id)
+			end
+
+			if is_done then
+				self._spawning_minions[unit] = nil
 			end
 		until true
 	end
@@ -279,8 +298,9 @@ ScriptedScenarioSystem._handle_spawning_units = function (self, t)
 	local unit_spawner = Managers.state.unit_spawner
 
 	for ramping_spawn_data, _ in pairs(spawning_units) do
-		if ramping_spawn_data.done_t < t then
+		if t > ramping_spawn_data.done_t then
 			ramping_spawn_data.done = true
+
 			local unit_name = ramping_spawn_data.unit_name
 			local template_name = ramping_spawn_data.template_name
 			local position = ramping_spawn_data.position:unbox()
@@ -334,7 +354,9 @@ ScriptedScenarioSystem._handle_scenario = function (self, scenario, t)
 		self:_stop_step(scenario, step_template, player, scenario_data, step_data, t)
 
 		scenario.step_index = scenario.step_index + 1
+
 		local next_step_template = scenario.template.steps[scenario.step_index]
+
 		scenario.current_step_template = next_step_template
 
 		if next_step_template then
@@ -402,6 +424,7 @@ ScriptedScenarioSystem.start_scenario = function (self, alias, name, t)
 
 	self._current_scenario_name = name
 	self._current_scenario = self:_create_scenario(alias, name)
+
 	local should_stop = self:_start_scenario(self._current_scenario, t)
 
 	if should_stop then
@@ -455,6 +478,7 @@ ScriptedScenarioSystem.stop_scenario = function (self, t, delay, clear_queued_sc
 	end
 
 	local current_scenario = self._current_scenario
+
 	self._current_scenario = nil
 
 	if current_scenario then
@@ -484,6 +508,7 @@ ScriptedScenarioSystem._stop_scenario = function (self, scenario, ignore_cleanup
 
 	if not ignore_cleanup_steps then
 		local cleanup_steps = scenario.template.cleanup
+
 		scenario_data.cleaning_up = true
 
 		for i = 1, #cleanup_steps do
@@ -577,6 +602,7 @@ ScriptedScenarioSystem._unregister_events = function (self, scenario, events)
 
 	for i = 1, #events do
 		local event_name = events[i]
+
 		tracked_events[event_name][scenario] = nil
 
 		Log.info("TrainingGrounds", "Event unregistered (%s)", event_name)
@@ -591,12 +617,14 @@ end
 
 ScriptedScenarioSystem.queue_bot_removal = function (self, bot_local_id)
 	local is_marked_for_deletion = false
+
 	self._queued_bot_removals[bot_local_id] = is_marked_for_deletion
 end
 
 ScriptedScenarioSystem.queue_bot_addition = function (self)
 	local profile_name = "bot_training_grounds"
 	local bot_local_id = BotSpawning.spawn_bot_character(profile_name)
+
 	self._scenario_bots[bot_local_id] = true
 
 	return bot_local_id
@@ -633,6 +661,7 @@ ScriptedScenarioSystem.spawn_breed_ramping = function (self, breed_name, positio
 	local world = self._world
 	local spawn_data = MinionDissolveUtility.start_dissolve(unit, t, true)
 	local vfx_id = World.create_particles(world, RAMPING_VFX, position, rotation)
+
 	spawn_data.start_t = spawn_data.start_t + delay
 	spawn_data.destroy_vfx_t = t + math.min(1.2, spawn_data.duration) + delay
 	spawn_data.vfx_id = vfx_id
@@ -660,6 +689,7 @@ ScriptedScenarioSystem.queue_scenario = function (self, alias, name)
 	end
 
 	local queued_scenarios = self._queued_scenarios
+
 	queued_scenarios[#queued_scenarios + 1] = {
 		alias = alias,
 		name = name
@@ -686,6 +716,7 @@ ScriptedScenarioSystem._add_directional_unit = function (self, unit, extension)
 
 	if identifier ~= "default" then
 		local id_string = Unit.level_id_string(unit)
+
 		self._directional_unit_extensions[identifier] = extension
 	end
 
@@ -699,7 +730,9 @@ end
 
 ScriptedScenarioSystem._remove_directional_unit = function (self, unit)
 	local identifier = Unit.get_data(unit, "directional_unit_identifier")
+
 	self._directional_unit_extensions[identifier] = nil
+
 	local spawn_group = Unit.get_data(unit, "attached_unit_settings", "spawn_group")
 
 	if spawn_group and spawn_group ~= "" then
@@ -776,7 +809,7 @@ end
 
 ScriptedScenarioSystem._update_objective_marker = function (self)
 	local marker_data = self._objective_marker_data
-	local best_unit = nil
+	local best_unit
 	local best_distance_sq = math.huge
 	local units = marker_data.units
 
@@ -824,6 +857,7 @@ ScriptedScenarioSystem.start_time_scale = function (self, from_scale, to_scale, 
 	local time_manager = Managers.time
 	local current_scale = time_manager:local_scale("gameplay")
 	local current_lerp_t = math.ilerp(from_scale, to_scale, current_scale)
+
 	data.raw_t = time_manager:time("main")
 	data.lerp_t = current_lerp_t
 	data.from_scale = from_scale
@@ -858,9 +892,12 @@ ScriptedScenarioSystem._update_time_scale = function (self)
 
 	local raw_t = time_manager:time("main")
 	local dt = raw_t - data.raw_t
+
 	data.lerp_t = data.lerp_t + dt / data.transition_time
+
 	local smooth_lerp_t = math.smoothstep(data.lerp_t, 0, 1)
 	local new_scale = math.lerp(data.from_scale, data.to_scale, smooth_lerp_t)
+
 	new_scale = math.min(new_scale, math.max(data.to_scale, data.from_scale))
 	new_scale = math.max(new_scale, math.min(data.to_scale, data.from_scale))
 	data.raw_t = raw_t
@@ -900,9 +937,13 @@ ScriptedScenarioSystem.start_parallel_scenario = function (self, alias, name, t)
 	local scenario_template = ScriptedScenarios[alias][name]
 	local first_step_template = scenario_template.steps[1]
 	local parallel_scenarios = self._parallel_scenarios
+
 	parallel_scenarios[alias] = parallel_scenarios[alias] or {}
+
 	local scenario = self:_create_scenario(alias, name)
+
 	parallel_scenarios[alias][name] = scenario
+
 	local should_stop = self:_start_scenario(scenario, t)
 
 	if should_stop then
@@ -913,6 +954,7 @@ end
 ScriptedScenarioSystem.stop_parallel_scenario = function (self, alias, name, t, ignore_cleanup_steps)
 	local parallel_scenarios = self._parallel_scenarios
 	local scenario = parallel_scenarios[alias][name]
+
 	parallel_scenarios[alias][name] = nil
 
 	self:_stop_scenario(scenario, ignore_cleanup_steps, t)

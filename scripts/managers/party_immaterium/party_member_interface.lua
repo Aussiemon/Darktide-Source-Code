@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/managers/party_immaterium/party_member_interface.lua
+
 local party_member_interface = {
 	"peer_id",
 	"unique_id",

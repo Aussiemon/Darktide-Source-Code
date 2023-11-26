@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/damage/damage_profiles/minion_damage_profile_templates.lua
+
 local ArmorSettings = require("scripts/settings/damage/armor_settings")
 local CatapultingTemplates = require("scripts/settings/damage/catapulting_templates")
 local DamageProfileSettings = require("scripts/settings/damage/damage_profile_settings")
@@ -22,6 +24,7 @@ local crit_armor_mod = DamageProfileSettings.crit_armor_mod
 local crit_impact_armor_mod = DamageProfileSettings.crit_impact_armor_mod
 local damage_types = DamageSettings.damage_types
 local double_cleave = DamageProfileSettings.double_cleave
+
 damage_templates.poxwalker = {
 	disorientation_type = "medium",
 	permanent_damage_ratio = 0.25,
@@ -1559,14 +1562,14 @@ damage_templates.poxwalker_explosion_close = {
 	force_look_function = ForcedLookSettings.look_functions.heavy,
 	gibbing_type = gibbing_types.explosion,
 	gibbing_power = gibbing_power.heavy,
-	catapulting_template = CatapultingTemplates.poxwalker_bomber,
-	permanent_damage_ratio = 0.5,
-	power_distribution = {
-		attack = 30,
-		impact = 50
-	},
-	catapulting_template = CatapultingTemplates.poxwalker_bomber_close
+	catapulting_template = CatapultingTemplates.poxwalker_bomber
 }
+damage_templates.poxwalker_explosion_close.permanent_damage_ratio = 0.5
+damage_templates.poxwalker_explosion_close.power_distribution = {
+	attack = 30,
+	impact = 50
+}
+damage_templates.poxwalker_explosion_close.catapulting_template = CatapultingTemplates.poxwalker_bomber_close
 damage_templates.default_rifleman = {
 	disorientation_type = "light",
 	ogryn_disorientation_type = "ogryn_light",
@@ -2521,17 +2524,23 @@ damage_templates.default_rusher = {
 		}
 	}
 }
+
 local chaos_hound_pounce = table.clone(damage_templates.melee_fighter_default)
+
 chaos_hound_pounce.permanent_damage_ratio = 0.98
 chaos_hound_pounce.melee_toughness_multiplier = 10
 chaos_hound_pounce.on_depleted_toughness_function_override_name = "spill_over"
 damage_templates.chaos_hound_pounce = chaos_hound_pounce
+
 local chaos_hound_initial_pounce = table.clone(damage_templates.melee_fighter_default)
+
 chaos_hound_initial_pounce.toughness_factor_spillover_modifier = 0
 chaos_hound_initial_pounce.permanent_damage_ratio = 1
 chaos_hound_initial_pounce.melee_toughness_multiplier = 0
 damage_templates.chaos_hound_initial_pounce = chaos_hound_initial_pounce
+
 local daemonhost_grab = table.clone(damage_templates.chaos_hound_pounce)
+
 daemonhost_grab.ignores_knockdown = true
 damage_templates.daemonhost_grab = daemonhost_grab
 damage_templates.melee_executor_cleave = {
@@ -2665,11 +2674,17 @@ damage_templates.chaos_ogryn_executor_push = {
 		}
 	}
 }
+
 local chaos_ogryn_executor_pommel = table.clone(damage_templates.chaos_ogryn_executor_push)
+
 damage_templates.chaos_ogryn_executor_pommel = chaos_ogryn_executor_pommel
+
 local chaos_ogryn_executor_punch = table.clone(damage_templates.chaos_ogryn_executor_push)
+
 damage_templates.chaos_ogryn_executor_punch = chaos_ogryn_executor_punch
+
 local chaos_ogryn_executor_kick = table.clone(damage_templates.chaos_ogryn_executor_push)
+
 damage_templates.chaos_ogryn_executor_kick = chaos_ogryn_executor_kick
 damage_templates.chaos_ogryn_executor_cleave = {
 	disorientation_type = "ogryn_executor_heavy",
@@ -3104,10 +3119,10 @@ damage_templates.chaos_hound_push = {
 		default_target = {
 			boost_curve = PowerLevelSettings.boost_curves.default
 		}
-	},
-	ignore_toughness = true,
-	push_template = push_templates.chaos_hound_pounced_push
+	}
 }
+damage_templates.chaos_hound_push.ignore_toughness = true
+damage_templates.chaos_hound_push.push_template = push_templates.chaos_hound_pounced_push
 damage_templates.beast_of_nurgle_push_players = table.clone(damage_templates.chaos_hound_push)
 damage_templates.beast_of_nurgle_push_players.push_template = push_templates.beast_of_nurgle_move_push
 damage_templates.beast_of_nurgle_push_players.disorientation_type = "medium"

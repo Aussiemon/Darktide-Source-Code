@@ -1,17 +1,18 @@
+﻿-- chunkname: @scripts/foundation/utilities/color.lua
+
 require("scripts/foundation/utilities/error")
 
 if type(Color) ~= "table" then
-	local metatable = {}
-
-	metatable.__call = function (self, ...)
-		return self.create(...)
-	end
-
-	metatable.__index = function (self, color_name)
-		ferror("[Color] No color named %q defined in color.lua!", color_name)
-	end
-
+	local metatable = {
+		__call = function (self, ...)
+			return self.create(...)
+		end,
+		__index = function (self, color_name)
+			ferror("[Color] No color named %q defined in color.lua!", color_name)
+		end
+	}
 	local create_color_function = Color
+
 	Color = {
 		create = create_color_function
 	}
@@ -2561,6 +2562,7 @@ for name, color in pairs(color_definitions) do
 	end
 
 	local index = #color_list + 1
+
 	color_list[index] = name
 
 	if index % 10 == 0 then
@@ -2574,7 +2576,8 @@ Color.short_list = short_color_list
 Color.lerp = function (from, to, t)
 	local a1, r1, g1, b1 = Quaternion.to_elements(from)
 	local a2, r2, g2, b2 = Quaternion.to_elements(to)
-	local a, r, g, b = nil
+	local a, r, g, b
+
 	a = math.lerp(a1, a2, t)
 	r = math.lerp(r1, r2, t)
 	g = math.lerp(g1, g2, t)

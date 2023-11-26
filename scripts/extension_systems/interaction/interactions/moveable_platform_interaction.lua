@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/interaction/interactions/moveable_platform_interaction.lua
+
 require("scripts/extension_systems/interaction/interactions/base_interaction")
 
 local MoveablePlatformQueries = require("scripts/extension_systems/moveable_platform/utilities/moveable_platform_queries")

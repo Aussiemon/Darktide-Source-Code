@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/gadget/gadget_system.lua
+
 require("scripts/extension_systems/gadget/player_unit_gadget_extension")
 
 local BuffSettings = require("scripts/settings/buff/buff_settings")
@@ -37,6 +39,7 @@ end
 
 GadgetSystem.add_meta_buff = function (self, player, buff_name, start_time, lerp_value, slot_name)
 	local buff_instance_id = self._buff_instance_id + 1
+
 	self._buff_instance_id = buff_instance_id
 
 	self:_add_meta_buff(player, buff_name, buff_instance_id, start_time, lerp_value, slot_name)
@@ -67,7 +70,7 @@ GadgetSystem._add_meta_buff = function (self, player, buff_name, buff_instance_i
 	local context = {
 		player = player
 	}
-	local meta_buff = nil
+	local meta_buff
 
 	if slot_name then
 		meta_buff = MetaBuff:new(context, template, start_time, buff_instance_id, "buff_lerp_value", lerp_value, "item_slot_name", slot_name)

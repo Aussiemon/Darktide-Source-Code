@@ -1,9 +1,13 @@
+﻿-- chunkname: @scripts/settings/camera/camera_transition_templates.lua
+
 local CameraTransitionTemplates = {}
-local CameraTransitionSettings = {
-	perspective_transition_time = 0.6,
-	pull_up_animation_time = 2.83
-}
+local CameraTransitionSettings = {}
+
+CameraTransitionSettings.perspective_transition_time = 0.6
+CameraTransitionSettings.pull_up_animation_time = 2.83
+
 local DURATION = 0.25
+
 CameraTransitionTemplates.instant_cut = {
 	exposure_snap = {
 		class = "CameraTransitionExposureSnap"

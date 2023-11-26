@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/buff/buffs/weapon_trait_activated_parent_proc_buff.lua
+
 require("scripts/extension_systems/buff/buffs/proc_buff")
 
 local BuffTemplates = require("scripts/settings/buff/buff_templates")
@@ -54,6 +56,7 @@ WeaponTraitActivatedParentProcBuff.update_proc_events = function (self, t, proc_
 						activated_proc = true
 						procced_proc_events[proc_event_name] = (procced_proc_events[proc_event_name] or 0) + 1
 						self._active_start_time = t
+
 						local num_wanted_stacks_to_add = template_add_child_proc_events[proc_event_name]
 
 						if num_wanted_stacks_to_add and type(num_wanted_stacks_to_add) == "function" then

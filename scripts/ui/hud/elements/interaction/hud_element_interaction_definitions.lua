@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/hud/elements/interaction/hud_element_interaction_definitions.lua
+
 local HudElementInteractionSettings = require("scripts/ui/hud/elements/interaction/hud_element_interaction_settings")
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local UIHudSettings = require("scripts/settings/ui/ui_hud_settings")
@@ -52,6 +54,7 @@ local scenegraph_definition = {
 	}
 }
 local input_interact_text_style = table.clone(UIFontSettings.hud_body)
+
 input_interact_text_style.horizontal_alignment = "center"
 input_interact_text_style.vertical_alignment = "top"
 input_interact_text_style.text_horizontal_alignment = "left"
@@ -66,7 +69,9 @@ input_interact_text_style.size = {
 	background_size[1] - edge_spacing[1] * 2,
 	input_box_height
 }
+
 local input_tag_text_style = table.clone(UIFontSettings.hud_body)
+
 input_tag_text_style.horizontal_alignment = "center"
 input_tag_text_style.vertical_alignment = "top"
 input_tag_text_style.text_horizontal_alignment = "right"
@@ -81,7 +86,9 @@ input_tag_text_style.size = {
 	background_size[1] - edge_spacing[1] * 2,
 	input_box_height
 }
+
 local description_text_style = table.clone(UIFontSettings.hud_body)
+
 description_text_style.horizontal_alignment = "left"
 description_text_style.vertical_alignment = "bottom"
 description_text_style.text_horizontal_alignment = "left"
@@ -92,7 +99,9 @@ description_text_style.offset = {
 	-10,
 	6
 }
+
 local type_description_text_style = table.clone(description_text_style)
+
 type_description_text_style.text_color = {
 	255,
 	226,
@@ -105,7 +114,9 @@ type_description_text_style.offset = {
 	6
 }
 type_description_text_style.font_size = 20
+
 local event_text_style = table.clone(UIFontSettings.hud_body)
+
 event_text_style.horizontal_alignment = "left"
 event_text_style.vertical_alignment = "bottom"
 event_text_style.text_horizontal_alignment = "center"
@@ -127,6 +138,7 @@ event_text_style.text_color = {
 	0
 }
 event_text_style.drop_shadow = false
+
 local widget_definitions = {
 	interact_text = UIWidget.create_definition({
 		{

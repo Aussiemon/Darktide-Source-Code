@@ -1,7 +1,10 @@
+﻿-- chunkname: @scripts/components/nav_block.lua
+
 local NavBlock = component("NavBlock")
 
 NavBlock.init = function (self, unit, is_server)
 	self._is_server = is_server
+
 	local nav_block_extension = ScriptUnit.fetch_component_extension(unit, "nav_block_system")
 
 	if nav_block_extension then

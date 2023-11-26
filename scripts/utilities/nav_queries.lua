@@ -1,12 +1,14 @@
+﻿-- chunkname: @scripts/utilities/nav_queries.lua
+
 local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
 local NavQueries = {}
-local DEFAULT_NAV_ABOVE = 30
-local DEFAULT_NAV_BELOW = 30
+local DEFAULT_NAV_ABOVE, DEFAULT_NAV_BELOW = 30, 30
 
 NavQueries.position_on_mesh = function (nav_world, position, above, below, traverse_logic)
 	above = above or DEFAULT_NAV_ABOVE
 	below = below or DEFAULT_NAV_BELOW
-	local altitude = nil
+
+	local altitude
 
 	if traverse_logic then
 		altitude = GwNavQueries.triangle_from_position(nav_world, position, above, below, traverse_logic)
@@ -23,15 +25,15 @@ NavQueries.position_on_mesh = function (nav_world, position, above, below, trave
 	end
 end
 
-local DEFAULT_NAV_LATERAL = 0.5
-local DEFAULT_DISTANCE_FROM_NAV_MESH = 0
+local DEFAULT_NAV_LATERAL, DEFAULT_DISTANCE_FROM_NAV_MESH = 0.5, 0
 
 NavQueries.position_on_mesh_with_outside_position = function (nav_world, traverse_logic, position, above, below, lateral, distance_from_nav_mesh)
 	above = above or DEFAULT_NAV_ABOVE
 	below = below or DEFAULT_NAV_BELOW
 	lateral = lateral or DEFAULT_NAV_LATERAL
 	distance_from_nav_mesh = distance_from_nav_mesh or DEFAULT_DISTANCE_FROM_NAV_MESH
-	local projected_position, altitude = nil
+
+	local projected_position, altitude
 
 	if traverse_logic then
 		altitude = GwNavQueries.triangle_from_position(nav_world, position, above, below, traverse_logic)
@@ -53,7 +55,7 @@ end
 NavQueries.ray_can_go = function (nav_world, position_start, position_end, traverse_logic, above, below)
 	local projected_start_position = NavQueries.position_on_mesh(nav_world, position_start, above, below, traverse_logic)
 	local projected_end_position = projected_start_position and NavQueries.position_on_mesh(nav_world, position_end, above, below, traverse_logic)
-	local raycango = nil
+	local raycango
 
 	if traverse_logic then
 		raycango = projected_end_position and GwNavQueries.raycango(nav_world, projected_start_position, projected_end_position, traverse_logic)
@@ -69,11 +71,12 @@ local FLAT_GROUND_UP_DOT_THRESHOLD = 0.9
 local function _is_on_flat_ground(physics_world, position)
 	local ray_source = position + Vector3.up() * 0.1
 	local hit_ground, _, _, ground_normal = PhysicsWorld.raycast(physics_world, ray_source, Vector3.down(), 0.15, "closest", "collision_filter", "filter_minion_mover")
-	local is_standing_on_flat_ground = nil
+	local is_standing_on_flat_ground
 
 	if hit_ground then
 		local up_dot = Vector3.dot(ground_normal, Vector3.up())
-		is_standing_on_flat_ground = FLAT_GROUND_UP_DOT_THRESHOLD < up_dot
+
+		is_standing_on_flat_ground = up_dot > FLAT_GROUND_UP_DOT_THRESHOLD
 	end
 
 	return is_standing_on_flat_ground
@@ -87,7 +90,7 @@ local WALL_CHECK_RAYCAST_LENGTH = 1.3
 local WALL_CHECK_RAYCAST_LOW_HEIGHT = 0.4
 
 NavQueries.movement_check = function (nav_world, physics_world, position, velocity, traverse_logic)
-	local is_moving = EPSILON_SQ < Vector3.length_squared(velocity)
+	local is_moving = Vector3.length_squared(velocity) > EPSILON_SQ
 
 	if not is_moving then
 		return "navmesh_ok"
@@ -101,7 +104,7 @@ NavQueries.movement_check = function (nav_world, physics_world, position, veloci
 		return "navmesh_ok"
 	end
 
-	local hit_wall, ray_source, hit_position = nil
+	local hit_wall, ray_source, hit_position
 	local allowed_to_do_wall_check = _is_on_flat_ground(physics_world, position)
 
 	if allowed_to_do_wall_check then
@@ -133,20 +136,16 @@ local BACKUP_CHECK_DISTANCE = 1
 local BACKUP_ABOVE_CHECK_DISTANCE = 0.2
 
 NavQueries.empty_space_near_nav_position = function (nav_position, check_direction, nav_world, traverse_logic, physics_world)
-	local Quaternion_rotate = Quaternion.rotate
-	local Quaternion_axis_angle = Quaternion.axis_angle
-	local GwNavQueries_raycast = GwNavQueries.raycast
-	local Vector3_distance_squared = Vector3.distance_squared
+	local Quaternion_rotate, Quaternion_axis_angle = Quaternion.rotate, Quaternion.axis_angle
+	local GwNavQueries_raycast, Vector3_distance_squared = GwNavQueries.raycast, Vector3.distance_squared
 	local capsule_rotation = Quaternion.look(Vector3.up())
 	local capsule_size = Vector3(RADIUS - MARGIN, HEIGHT / 2 - MARGIN * 2, RADIUS - MARGIN)
-	local best_position = nil
-	local best_distance_sq = -math.huge
-	local last_position = nil
-	local last_position_success = false
+	local best_position, best_distance_sq = nil, -math.huge
+	local last_position, last_position_success = nil, false
 	local angle_sign = 1
 
 	for i = 0, CHECKS_PER_DIRECTION do
-		local directions_to_check = (i > 0 or i == CHECKS_PER_DIRECTION) and 2 or 1
+		local directions_to_check = not (not (i > 0) and i ~= CHECKS_PER_DIRECTION) and 2 or 1
 
 		for j = 1, directions_to_check do
 			local angle = angle_sign * ANGLE_INCREMENT * i
@@ -164,8 +163,7 @@ NavQueries.empty_space_near_nav_position = function (nav_position, check_directi
 				local distance_sq = Vector3_distance_squared(nav_position, hit_position)
 
 				if best_distance_sq < distance_sq then
-					best_distance_sq = distance_sq
-					best_position = hit_position
+					best_position, best_distance_sq = hit_position, distance_sq
 				end
 			else
 				local backup_position = hit_position + -new_direction * BACKUP_CHECK_DISTANCE
@@ -211,13 +209,9 @@ NavQueries.empty_space_near_nav_position = function (nav_position, check_directi
 end
 
 NavQueries.position_near_nav_position = function (nav_position, check_direction, nav_world, traverse_logic)
-	local Quaternion_rotate = Quaternion.rotate
-	local Quaternion_axis_angle = Quaternion.axis_angle
-	local GwNavQueries_raycast = GwNavQueries.raycast
-	local Vector3_distance_squared = Vector3.distance_squared
-	local best_position = nil
-	local best_distance_sq = -math.huge
-	local angle_sign = 1
+	local Quaternion_rotate, Quaternion_axis_angle = Quaternion.rotate, Quaternion.axis_angle
+	local GwNavQueries_raycast, Vector3_distance_squared = GwNavQueries.raycast, Vector3.distance_squared
+	local best_position, best_distance_sq, angle_sign = nil, -math.huge, 1
 
 	for i = 0, CHECKS_PER_DIRECTION do
 		local directions_to_check = i > 0 and 2 or 1
@@ -236,8 +230,7 @@ NavQueries.position_near_nav_position = function (nav_position, check_direction,
 			local distance_sq = Vector3_distance_squared(nav_position, hit_position)
 
 			if best_distance_sq < distance_sq then
-				best_distance_sq = distance_sq
-				best_position = hit_position
+				best_position, best_distance_sq = hit_position, distance_sq
 			end
 
 			angle_sign = -angle_sign

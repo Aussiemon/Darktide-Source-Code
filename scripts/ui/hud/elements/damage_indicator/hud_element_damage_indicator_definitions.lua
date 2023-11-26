@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/hud/elements/damage_indicator/hud_element_damage_indicator_definitions.lua
+
 local HudElementDamageIndicatorSettings = require("scripts/ui/hud/elements/damage_indicator/hud_element_damage_indicator_settings")
 local UIWorkspaceSettings = require("scripts/settings/ui/ui_workspace_settings")
 local UIWidget = require("scripts/managers/ui/ui_widget")

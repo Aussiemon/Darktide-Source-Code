@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/equipment/weapon_templates/shotguns/settings_templates/shotgun_sway_templates.lua
+
 local sway_templates = {}
 local overrides = {}
 

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/visual_loadout/wieldable_slot_scripts/overheat_display.lua
+
 local Component = require("scripts/utilities/component")
 local OverheatDisplay = class("OverheatDisplay")
 
@@ -5,9 +7,11 @@ OverheatDisplay.init = function (self, context, slot, weapon_template, fx_source
 	if not context.is_husk then
 		local owner_unit = context.owner_unit
 		local unit_data_extension = ScriptUnit.extension(owner_unit, "unit_data_system")
+
 		self._wieldable_component = unit_data_extension:read_component(slot.name)
 		self._overheat_configuration = weapon_template.overheat_configuration
 		self._ammo_displays = {}
+
 		local num_attachments = #slot.attachments_1p
 
 		for i = 1, num_attachments do

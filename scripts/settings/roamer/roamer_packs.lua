@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/roamer/roamer_packs.lua
+
 local roamer_packs = {}
 
 local function _create_roamer_pack_entry(path)

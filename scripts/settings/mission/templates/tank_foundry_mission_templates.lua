@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/mission/templates/tank_foundry_mission_templates.lua
+
 local mission_templates = {
 	lm_cooling = {
 		mission_name = "loc_mission_name_lm_cooling",

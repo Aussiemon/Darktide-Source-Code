@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/equipment/weapon_templates/lasguns/settings_templates/lasgun_spread_templates.lua
+
 local spread_templates = {}
 local overrides = {}
 
@@ -98,8 +100,10 @@ spread_templates.hip_lasgun_assault = {
 		}
 	}
 }
+
 local pitch_spread = 0.8
 local yaw_spread = pitch_spread * 1
+
 spread_templates.default_lasgun_spraynpray = {
 	still = {
 		max_spread = {
@@ -495,9 +499,11 @@ spread_templates.default_lasgun_spraynpray = {
 		}
 	}
 }
+
 local spread_multi = 0.8
 local base_spread = 4
 local perfect_spread = 2.25
+
 spread_templates.hip_lasgun_killshot = {
 	still = {
 		max_spread = {
@@ -1350,7 +1356,9 @@ spread_templates.hip_lasgun_killshot_p1_m3 = {
 		}
 	}
 }
+
 local p2_spread_multi = 1
+
 spread_templates.hip_lasgun_killshot_p2_m1 = {
 	charge_scale = {
 		max_yaw = 0.5,

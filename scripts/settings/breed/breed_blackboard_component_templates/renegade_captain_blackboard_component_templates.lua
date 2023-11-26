@@ -1,5 +1,8 @@
+﻿-- chunkname: @scripts/settings/breed/breed_blackboard_component_templates/renegade_captain_blackboard_component_templates.lua
+
 local ranged_templates = require("scripts/settings/breed/breed_blackboard_component_templates/ranged_blackboard_component_templates")
 local renegade_captain = table.clone(ranged_templates.ranged_base)
+
 renegade_captain.suppression = nil
 renegade_captain.behavior = table.clone(ranged_templates.netgunner.behavior)
 renegade_captain.phase = {
@@ -41,6 +44,7 @@ renegade_captain.available_attacks = {
 renegade_captain.record_state = {
 	has_disabled_player = "boolean"
 }
+
 local templates = {
 	renegade_captain = renegade_captain
 }

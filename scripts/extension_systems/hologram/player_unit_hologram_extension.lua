@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/hologram/player_unit_hologram_extension.lua
+
 local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
 local PlayerUnitHologramExtension = class("PlayerUnitHologramExtension")
 local UPDATE_WAITING_PERIOD = 0.5
@@ -18,10 +20,11 @@ local IGNORED_DISABLED_OUTLINE_STATES = {
 	grabbed = true,
 	catapulted = true
 }
-local _spawn_hologram_unit, _despawn_hologram_unit = nil
+local _spawn_hologram_unit, _despawn_hologram_unit
 
 PlayerUnitHologramExtension.init = function (self, extension_init_context, unit, extension_init_data, game_object_data_or_game_session, nil_or_game_object_id)
 	local is_server = extension_init_context.is_server
+
 	self._is_server = is_server
 
 	if not is_server then
@@ -47,6 +50,7 @@ end
 
 PlayerUnitHologramExtension.extensions_ready = function (self, world, unit)
 	local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
+
 	self._character_state_component = unit_data_extension:read_component("character_state")
 	self._target_health_extension = ScriptUnit.has_extension(unit, "health_system")
 end
@@ -68,6 +72,7 @@ PlayerUnitHologramExtension.update = function (self, unit, dt, t)
 	end
 
 	self._next_update_t = t + UPDATE_WAITING_PERIOD
+
 	local state_name = self._character_state_component.state_name
 	local should_switch_unit = SWITCH_STATES[state_name] and self._current_spawned_state ~= state_name or SWITCH_STATES[self._current_spawned_state] and not SWITCH_STATES[state_name]
 

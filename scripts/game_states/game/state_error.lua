@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/game_states/game/state_error.lua
+
 local StateTitle = require("scripts/game_states/game/state_title")
 local StateError = class("StateError")
 
@@ -8,6 +10,7 @@ StateError.on_enter = function (self, parent, params, creation_context)
 
 	self._continue = false
 	self._params = params
+
 	local player_game_state_mapping = {}
 	local game_state_context = {}
 

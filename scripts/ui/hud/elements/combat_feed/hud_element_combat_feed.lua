@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/hud/elements/combat_feed/hud_element_combat_feed.lua
+
 local Breed = require("scripts/utilities/breed")
 local Definitions = require("scripts/ui/hud/elements/combat_feed/hud_element_combat_feed_definitions")
 local HudElementCombatFeedSettings = require("scripts/ui/hud/elements/combat_feed/hud_element_combat_feed_settings")
@@ -24,6 +26,7 @@ HudElementCombatFeed.init = function (self, parent, draw_layer, start_scale)
 			widget_definition = Definitions.notification_message_default
 		}
 	}
+
 	local event_manager = Managers.event
 	local events = HudElementCombatFeedSettings.events
 
@@ -77,7 +80,7 @@ HudElementCombatFeed._get_unit_presentation_name = function (self, unit)
 end
 
 HudElementCombatFeed._color_by_enemy_tags = function (self, tags)
-	local color = nil
+	local color
 
 	if tags then
 		local colors_by_enemy_type = HudElementCombatFeedSettings.colors_by_enemy_type
@@ -101,8 +104,10 @@ HudElementCombatFeed.event_combat_feed_kill = function (self, attacking_unit, at
 
 	local killer = self:_get_unit_presentation_name(attacking_unit)
 	local victim = self:_get_unit_presentation_name(attacked_unit)
+
 	temp_kill_message_localization_params.killer = killer
 	temp_kill_message_localization_params.victim = victim
+
 	local text = self:_localize(kill_message_localization_key, true, temp_kill_message_localization_params)
 
 	self:_add_combat_feed_message(text)
@@ -148,12 +153,16 @@ HudElementCombatFeed._create_notification_entry = function (self, notification_t
 	local notification_template = self._notification_templates[notification_type]
 	local widget_definition = notification_template.widget_definition
 	local name = "notification_" .. self._notification_id_counter
+
 	self._notification_id_counter = self._notification_id_counter + 1
+
 	local widget = self:_create_widget(name, widget_definition)
 	local notification = table.clone(notification_template)
+
 	notification.widget = widget
 	notification.id = self._notification_id_counter
 	notification.time = 0
+
 	local notifications = self._notifications
 	local start_index = 1
 	local start_height = self:_get_height_of_notification_index(start_index)
@@ -183,12 +192,14 @@ end
 HudElementCombatFeed._set_text = function (self, notification_id, text)
 	local notification = self:_notification_by_id(notification_id)
 	local widget = notification.widget
+
 	widget.content.text = text
 end
 
 HudElementCombatFeed._set_icon = function (self, notification_id, icon)
 	local notification = self:_notification_by_id(notification_id)
 	local widget = notification.widget
+
 	widget.content.icon = icon
 end
 
@@ -249,10 +260,11 @@ HudElementCombatFeed._align_notification_widgets = function (self, dt)
 
 			if style.icon then
 				local icon_height = style.icon.size[2]
+
 				style.icon.offset[2] = widget_height * 0.5 - icon_height * 0.5
 			end
 
-			if widget_offset[2] < offset_y then
+			if offset_y > widget_offset[2] then
 				widget_offset[2] = math.lerp(widget_offset[2], offset_y, dt * 6)
 			else
 				widget_offset[2] = math.lerp(widget_offset[2], offset_y, dt * 2)
@@ -300,10 +312,11 @@ HudElementCombatFeed._draw_widgets = function (self, dt, t, input_service, ui_re
 
 		if notification then
 			notification.time = (notification.time or 0) + dt
+
 			local total_time = notification.total_time
 			local time = notification.time
 
-			if time and total_time and total_time <= time or self._max_messages < i then
+			if time and total_time and total_time <= time or i > self._max_messages then
 				self:_remove_notification(notification.id)
 			else
 				local widget = notification.widget
@@ -314,6 +327,7 @@ HudElementCombatFeed._draw_widgets = function (self, dt, t, input_service, ui_re
 
 				if fade_in and time_passed <= fade_in then
 					local progress = math.min(time_passed / fade_in, 1)
+
 					alpha_multiplier = math.easeInCubic(progress)
 				elseif total_time and fade_out and time_passed >= total_time - fade_out then
 					alpha_multiplier = (total_time - time_passed) / fade_out

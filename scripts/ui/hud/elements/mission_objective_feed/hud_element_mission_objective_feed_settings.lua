@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/hud/elements/mission_objective_feed/hud_element_mission_objective_feed_settings.lua
+
 local UIHudSettings = require("scripts/settings/ui/ui_hud_settings")
 local hud_element_mission_objective_feed_settings = {
 	entry_spacing = 0,

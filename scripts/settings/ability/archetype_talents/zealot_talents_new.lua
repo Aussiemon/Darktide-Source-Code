@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/ability/archetype_talents/zealot_talents_new.lua
+
 local PlayerAbilities = require("scripts/settings/ability/player_abilities/player_abilities")
 local SpecialRulesSetting = require("scripts/settings/ability/special_rules_settings")
 local TalentSettings = require("scripts/settings/talent/talent_settings_new")
@@ -8,6 +10,7 @@ local talent_settings_3 = TalentSettings.zealot_3
 local special_rules = SpecialRulesSetting.special_rules
 local stat_buffs = BuffSettings.stat_buffs
 local math_round = math.round
+
 math_round = math_round or function (value)
 	if value >= 0 then
 		return math.floor(value + 0.5)
@@ -15,6 +18,7 @@ math_round = math_round or function (value)
 		return math.ceil(value - 0.5)
 	end
 end
+
 local archetype_talents = {
 	archetype = "zealot",
 	specialization = "zealot_2",

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/extension_systems/interaction/interactions/scripted_scenario_interaction.lua
+
 require("scripts/extension_systems/interaction/interactions/base_interaction")
 
 local FixedFrame = require("scripts/utilities/fixed_frame")

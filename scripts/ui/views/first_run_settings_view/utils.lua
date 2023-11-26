@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/ui/views/first_run_settings_view/utils.lua
+
 local template_functions = require("scripts/ui/views/first_run_settings_view/components")
 local SaveData = require("scripts/managers/save/save_data")
 local utils = {}

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/impact_fx/impact_fx_minion_grenade.lua
+
 local ImpactFxHelper = require("scripts/utilities/impact_fx_helper")
 local SurfaceMaterialSettings = require("scripts/settings/surface_material_settings")
 local NO_SURFACE_DECAL = false

@@ -1,3 +1,5 @@
+﻿-- chunkname: @scripts/settings/breed/breeds/cultist/cultist_common_vfx.lua
+
 local vfx = {
 	material_vfx = {
 		footstep = {
