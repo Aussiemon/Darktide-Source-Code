@@ -26,6 +26,11 @@ PlayerUnitGadgetExtension.game_object_initialized = function (self, session, obj
 	self._game_session = session
 	self._game_object_id = object_id
 	self._game_object_created = true
+	local gadget_system = Managers.state.extension:system("gadget_system")
+	local player = Managers.state.player_unit_spawn:owner(self._unit)
+
+	gadget_system:remove_player(player)
+
 	local visual_loadout_extension = self._visual_loadout_extension
 	local num_slots = 3
 
@@ -137,13 +142,13 @@ PlayerUnitGadgetExtension._add_gadget_buff = function (self, master_item_id, ler
 	return buff_data
 end
 
-PlayerUnitGadgetExtension._remove_gadget_buffs = function (self, item, slot_name)
-	local gear_id = item.gear_id
-	local id = slot_name .. ":" .. gear_id
-	local buff_extension = self._buff_extension
-	local gadget_buffs = self._gadget_buff_indexes[id]
+PlayerUnitGadgetExtension._remove_gadget_buffs_by_id = function (self, id)
+	local gadget_buff_indexes = self._gadget_buff_indexes
+	local gadget_buffs = gadget_buff_indexes[id]
+	gadget_buff_indexes[id] = nil
 	local gadget_system = Managers.state.extension:system("gadget_system")
 	local player = Managers.state.player_unit_spawn:owner(self._unit)
+	local buff_extension = self._buff_extension
 
 	for _, buff in pairs(gadget_buffs) do
 		local meta_buff_index = buff.meta_buff_index
@@ -157,6 +162,13 @@ PlayerUnitGadgetExtension._remove_gadget_buffs = function (self, item, slot_name
 			buff_extension:remove_externally_controlled_buff(local_index, component_index)
 		end
 	end
+end
+
+PlayerUnitGadgetExtension._remove_gadget_buffs = function (self, item, slot_name)
+	local gear_id = item.gear_id
+	local id = slot_name .. ":" .. gear_id
+
+	self:_remove_gadget_buffs_by_id(id)
 end
 
 return PlayerUnitGadgetExtension

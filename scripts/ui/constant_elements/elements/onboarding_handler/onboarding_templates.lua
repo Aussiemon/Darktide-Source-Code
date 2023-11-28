@@ -1091,7 +1091,9 @@ local templates = {
 			})
 		end,
 		on_deactivation = function (self)
-			Managers.narrative:complete_event("s1_intro_popup_viewed")
+			if Managers.narrative then
+				Managers.narrative:complete_event("s1_intro_popup_viewed")
+			end
 		end
 	}
 }
