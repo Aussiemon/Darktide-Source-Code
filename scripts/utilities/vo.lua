@@ -1,3 +1,5 @@
+-- WARNING: Error occurred during decompilation.
+--   Code may be incomplete or incorrect.
 local DialogueBreedSettings = require("scripts/settings/dialogue/dialogue_breed_settings")
 local DialogueSettings = require("scripts/settings/dialogue/dialogue_settings")
 local PlayerVoiceGrunts = require("scripts/utilities/player_voice_grunts")
