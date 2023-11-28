@@ -1,3 +1,5 @@
+﻿-- chunkname: @content/levels/ui/credits_cosmetics_vendor/credits_cosmetics_vendor_item_dep.lua
+
 local item_dependencies = {
 	minion_items = {},
 	player_items = {

@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/asset_vo_tech_priest_a.lua
+
 local asset_vo_tech_priest_a = {
 	asset_pneumatic_press = {
 		randomize_indexes_n = 0,

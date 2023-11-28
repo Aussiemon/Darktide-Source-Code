@@ -1,3 +1,5 @@
+﻿-- chunkname: @content/levels/dust/missions/mission_lm_scavenge_item_dep.lua
+
 local item_dependencies = {
 	minion_items = {},
 	player_items = {

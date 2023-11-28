@@ -1,3 +1,5 @@
+﻿-- chunkname: @content/levels/transit/missions/mission_lm_rails_volume_data.lua
+
 local volume_data = {
 	{
 		height = 5,
@@ -222,8 +224,8 @@ local volume_data = {
 		},
 		up_vector = {
 			-0,
-			[2.0] = 0,
-			[3.0] = 1
+			[2] = 0,
+			[3] = 1
 		}
 	},
 	{
@@ -1060,8 +1062,8 @@ local volume_data = {
 		},
 		up_vector = {
 			-0,
-			[2.0] = 0,
-			[3.0] = 6.8086419105529785
+			[2] = 0,
+			[3] = 6.8086419105529785
 		}
 	},
 	{
@@ -1108,8 +1110,8 @@ local volume_data = {
 		},
 		up_vector = {
 			-0,
-			[2.0] = 0,
-			[3.0] = 0.5991619825363159
+			[2] = 0,
+			[3] = 0.5991619825363159
 		}
 	},
 	{

@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/circumstance_vo_hunting_grounds_sergeant_a.lua
+
 local circumstance_vo_hunting_grounds_sergeant_a = {
 	hunting_circumstance_start_a = {
 		randomize_indexes_n = 0,

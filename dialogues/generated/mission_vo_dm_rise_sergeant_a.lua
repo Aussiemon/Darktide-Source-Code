@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/mission_vo_dm_rise_sergeant_a.lua
+
 local mission_vo_dm_rise_sergeant_a = {
 	mission_rise_airlock_ponderings_a = {
 		randomize_indexes_n = 0,

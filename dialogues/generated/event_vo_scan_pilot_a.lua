@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/event_vo_scan_pilot_a.lua
+
 local event_vo_scan_pilot_a = {
 	event_scan_more_data = {
 		randomize_indexes_n = 0,

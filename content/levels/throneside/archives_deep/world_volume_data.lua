@@ -1,3 +1,5 @@
+﻿-- chunkname: @content/levels/throneside/archives_deep/world_volume_data.lua
+
 local volume_data = {
 	{
 		height = 6.80999994277954,
@@ -111,8 +113,8 @@ local volume_data = {
 		},
 		up_vector = {
 			-0,
-			[2.0] = 0,
-			[3.0] = 0.24429099261760712
+			[2] = 0,
+			[3] = 0.24429099261760712
 		}
 	},
 	{
@@ -399,8 +401,8 @@ local volume_data = {
 		},
 		up_vector = {
 			-0,
-			[2.0] = 0,
-			[3.0] = 0.24429099261760712
+			[2] = 0,
+			[3] = 0.24429099261760712
 		}
 	},
 	{
@@ -495,8 +497,8 @@ local volume_data = {
 		},
 		up_vector = {
 			-0,
-			[2.0] = 0,
-			[3.0] = 1
+			[2] = 0,
+			[3] = 1
 		}
 	},
 	{
@@ -735,8 +737,8 @@ local volume_data = {
 		},
 		up_vector = {
 			-0,
-			[2.0] = 0,
-			[3.0] = 1
+			[2] = 0,
+			[3] = 1
 		}
 	},
 	{
@@ -783,8 +785,8 @@ local volume_data = {
 		},
 		up_vector = {
 			-0,
-			[2.0] = 0,
-			[3.0] = 1
+			[2] = 0,
+			[3] = 1
 		}
 	}
 }

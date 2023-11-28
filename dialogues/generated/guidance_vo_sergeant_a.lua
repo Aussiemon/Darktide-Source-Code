@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/guidance_vo_sergeant_a.lua
+
 local guidance_vo_sergeant_a = {
 	info_asset_cult_breaking_wheel = {
 		randomize_indexes_n = 0,

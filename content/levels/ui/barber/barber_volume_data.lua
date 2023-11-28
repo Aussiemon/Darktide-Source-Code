@@ -1,3 +1,5 @@
+﻿-- chunkname: @content/levels/ui/barber/barber_volume_data.lua
+
 local volume_data = {
 	{
 		height = 2,

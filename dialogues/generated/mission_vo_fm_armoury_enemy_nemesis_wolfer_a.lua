@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/mission_vo_fm_armoury_enemy_nemesis_wolfer_a.lua
+
 local mission_vo_fm_armoury_enemy_nemesis_wolfer_a = {
 	mission_armoury_black_market_b = {
 		randomize_indexes_n = 0,

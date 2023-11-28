@@ -1,3 +1,5 @@
+﻿-- chunkname: @content/levels/watertown/missions/mission_hm_cartel_main_path.lua
+
 local path_markers = {
 	{
 		kind = "good",

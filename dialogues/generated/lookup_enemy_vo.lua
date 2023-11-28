@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/lookup_enemy_vo.lua
+
 DialogueLookup[DialogueLookup_n + 1] = "chaos_daemonhost_aggro"
 DialogueLookup[DialogueLookup_n + 2] = "chaos_daemonhost_death_long"
 DialogueLookup[DialogueLookup_n + 3] = "chaos_daemonhost_mantra_high"

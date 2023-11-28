@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/gameplay_vo_psyker_male_a.lua
+
 local gameplay_vo_psyker_male_a = {
 	ability_biomancer_high = {
 		randomize_indexes_n = 0,
@@ -102,16 +104,16 @@ local gameplay_vo_psyker_male_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_psyker_male_a__combat_pause_quirk_ammo_hog_b_01",
-			[2.0] = "loc_psyker_male_a__combat_pause_quirk_ammo_hog_b_02"
+			[1] = "loc_psyker_male_a__combat_pause_quirk_ammo_hog_b_01",
+			[2] = "loc_psyker_male_a__combat_pause_quirk_ammo_hog_b_02"
 		},
 		sound_events_duration = {
-			[1.0] = 3.26275,
-			[2.0] = 1.774188
+			[1] = 3.26275,
+			[2] = 1.774188
 		},
 		sound_event_weights = {
-			[1.0] = 0.5,
-			[2.0] = 0.5
+			[1] = 0.5,
+			[2] = 0.5
 		},
 		randomize_indexes = {}
 	},
@@ -1883,16 +1885,16 @@ local gameplay_vo_psyker_male_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_psyker_male_a__combat_pause_quirk_health_hog_b_01",
-			[2.0] = "loc_psyker_male_a__combat_pause_quirk_health_hog_b_02"
+			[1] = "loc_psyker_male_a__combat_pause_quirk_health_hog_b_01",
+			[2] = "loc_psyker_male_a__combat_pause_quirk_health_hog_b_02"
 		},
 		sound_events_duration = {
-			[1.0] = 3.339521,
-			[2.0] = 2.4545
+			[1] = 3.339521,
+			[2] = 2.4545
 		},
 		sound_event_weights = {
-			[1.0] = 0.5,
-			[2.0] = 0.5
+			[1] = 0.5,
+			[2] = 0.5
 		},
 		randomize_indexes = {}
 	},
@@ -2103,12 +2105,12 @@ local gameplay_vo_psyker_male_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_psyker_male_a__info_door_open_01",
-			[2.0] = "loc_psyker_male_a__info_door_open_02"
+			[1] = "loc_psyker_male_a__info_door_open_01",
+			[2] = "loc_psyker_male_a__info_door_open_02"
 		},
 		sound_events_duration = {
-			[1.0] = 2.916479,
-			[2.0] = 2.558583
+			[1] = 2.916479,
+			[2] = 2.558583
 		},
 		randomize_indexes = {}
 	},

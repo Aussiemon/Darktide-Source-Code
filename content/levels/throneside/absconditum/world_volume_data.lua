@@ -1,3 +1,5 @@
+﻿-- chunkname: @content/levels/throneside/absconditum/world_volume_data.lua
+
 local volume_data = {
 	{
 		height = 5.500007000000096,
@@ -169,8 +171,8 @@ local volume_data = {
 		},
 		up_vector = {
 			-0,
-			[2.0] = 0,
-			[3.0] = 1
+			[2] = 0,
+			[3] = 1
 		}
 	}
 }

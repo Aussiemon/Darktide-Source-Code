@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/lookup_class_rework.lua
+
 DialogueLookup[DialogueLookup_n + 1] = "ability_banisher"
 DialogueLookup[DialogueLookup_n + 2] = "ability_banisher_impact"
 DialogueLookup[DialogueLookup_n + 3] = "ability_buff_stance_a"

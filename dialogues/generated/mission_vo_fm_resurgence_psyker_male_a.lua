@@ -1,18 +1,20 @@
+﻿-- chunkname: @dialogues/generated/mission_vo_fm_resurgence_psyker_male_a.lua
+
 local mission_vo_fm_resurgence_psyker_male_a = {
 	luggable_mission_pick_up_fm_resurgence = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_psyker_male_a__luggable_mission_pick_up_01",
-			[2.0] = "loc_psyker_male_a__luggable_mission_pick_up_02"
+			[1] = "loc_psyker_male_a__luggable_mission_pick_up_01",
+			[2] = "loc_psyker_male_a__luggable_mission_pick_up_02"
 		},
 		sound_events_duration = {
-			[1.0] = 4.075292,
-			[2.0] = 0.948333
+			[1] = 4.075292,
+			[2] = 0.948333
 		},
 		sound_event_weights = {
-			[1.0] = 0.5,
-			[2.0] = 0.5
+			[1] = 0.5,
+			[2] = 0.5
 		},
 		randomize_indexes = {}
 	},
@@ -20,12 +22,12 @@ local mission_vo_fm_resurgence_psyker_male_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_psyker_male_a__mission_resurgence_boulevard_01",
-			[2.0] = "loc_psyker_male_a__mission_resurgence_boulevard_02"
+			[1] = "loc_psyker_male_a__mission_resurgence_boulevard_01",
+			[2] = "loc_psyker_male_a__mission_resurgence_boulevard_02"
 		},
 		sound_events_duration = {
-			[1.0] = 3.395042,
-			[2.0] = 2.816104
+			[1] = 3.395042,
+			[2] = 2.816104
 		},
 		randomize_indexes = {}
 	},
@@ -53,12 +55,12 @@ local mission_vo_fm_resurgence_psyker_male_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_psyker_male_a__mission_resurgence_bridge_hurry_up_01",
-			[2.0] = "loc_psyker_male_a__mission_resurgence_bridge_hurry_up_02"
+			[1] = "loc_psyker_male_a__mission_resurgence_bridge_hurry_up_01",
+			[2] = "loc_psyker_male_a__mission_resurgence_bridge_hurry_up_02"
 		},
 		sound_events_duration = {
-			[1.0] = 4.954583,
-			[2.0] = 2.663563
+			[1] = 4.954583,
+			[2] = 2.663563
 		},
 		randomize_indexes = {}
 	},
@@ -66,12 +68,12 @@ local mission_vo_fm_resurgence_psyker_male_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_psyker_male_a__mission_resurgence_bridge_of_martyrs_b_01",
-			[2.0] = "loc_psyker_male_a__mission_resurgence_bridge_of_martyrs_b_02"
+			[1] = "loc_psyker_male_a__mission_resurgence_bridge_of_martyrs_b_01",
+			[2] = "loc_psyker_male_a__mission_resurgence_bridge_of_martyrs_b_02"
 		},
 		sound_events_duration = {
-			[1.0] = 5.377396,
-			[2.0] = 5.568
+			[1] = 5.377396,
+			[2] = 5.568
 		},
 		randomize_indexes = {}
 	},
@@ -79,12 +81,12 @@ local mission_vo_fm_resurgence_psyker_male_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_psyker_male_a__mission_resurgence_bridges_up_b_01",
-			[2.0] = "loc_psyker_male_a__mission_resurgence_bridges_up_b_02"
+			[1] = "loc_psyker_male_a__mission_resurgence_bridges_up_b_01",
+			[2] = "loc_psyker_male_a__mission_resurgence_bridges_up_b_02"
 		},
 		sound_events_duration = {
-			[1.0] = 2.640167,
-			[2.0] = 4.027
+			[1] = 2.640167,
+			[2] = 4.027
 		},
 		randomize_indexes = {}
 	},
@@ -92,12 +94,12 @@ local mission_vo_fm_resurgence_psyker_male_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_psyker_male_a__mission_resurgence_defence_conversation_a_01",
-			[2.0] = "loc_psyker_male_a__mission_resurgence_defence_conversation_a_02"
+			[1] = "loc_psyker_male_a__mission_resurgence_defence_conversation_a_01",
+			[2] = "loc_psyker_male_a__mission_resurgence_defence_conversation_a_02"
 		},
 		sound_events_duration = {
-			[1.0] = 2.803563,
-			[2.0] = 4.021708
+			[1] = 2.803563,
+			[2] = 4.021708
 		},
 		randomize_indexes = {}
 	},
@@ -105,12 +107,12 @@ local mission_vo_fm_resurgence_psyker_male_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_psyker_male_a__mission_resurgence_defence_conversation_b_01",
-			[2.0] = "loc_psyker_male_a__mission_resurgence_defence_conversation_b_02"
+			[1] = "loc_psyker_male_a__mission_resurgence_defence_conversation_b_01",
+			[2] = "loc_psyker_male_a__mission_resurgence_defence_conversation_b_02"
 		},
 		sound_events_duration = {
-			[1.0] = 3.197896,
-			[2.0] = 3.803583
+			[1] = 3.197896,
+			[2] = 3.803583
 		},
 		randomize_indexes = {}
 	},
@@ -159,12 +161,12 @@ local mission_vo_fm_resurgence_psyker_male_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_psyker_male_a__mission_resurgence_pulpit_a_01",
-			[2.0] = "loc_psyker_male_a__mission_resurgence_pulpit_a_02"
+			[1] = "loc_psyker_male_a__mission_resurgence_pulpit_a_01",
+			[2] = "loc_psyker_male_a__mission_resurgence_pulpit_a_02"
 		},
 		sound_events_duration = {
-			[1.0] = 6.361375,
-			[2.0] = 4.344958
+			[1] = 6.361375,
+			[2] = 4.344958
 		},
 		randomize_indexes = {}
 	},
@@ -172,12 +174,12 @@ local mission_vo_fm_resurgence_psyker_male_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_psyker_male_a__mission_resurgence_pulpit_b_01",
-			[2.0] = "loc_psyker_male_a__mission_resurgence_pulpit_b_02"
+			[1] = "loc_psyker_male_a__mission_resurgence_pulpit_b_01",
+			[2] = "loc_psyker_male_a__mission_resurgence_pulpit_b_02"
 		},
 		sound_events_duration = {
-			[1.0] = 3.941917,
-			[2.0] = 3.515146
+			[1] = 3.941917,
+			[2] = 3.515146
 		},
 		randomize_indexes = {}
 	},
@@ -185,12 +187,12 @@ local mission_vo_fm_resurgence_psyker_male_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_psyker_male_a__mission_resurgence_start_banter_a_01",
-			[2.0] = "loc_psyker_male_a__mission_resurgence_start_banter_a_02"
+			[1] = "loc_psyker_male_a__mission_resurgence_start_banter_a_01",
+			[2] = "loc_psyker_male_a__mission_resurgence_start_banter_a_02"
 		},
 		sound_events_duration = {
-			[1.0] = 5.219083,
-			[2.0] = 4.007813
+			[1] = 5.219083,
+			[2] = 4.007813
 		},
 		randomize_indexes = {}
 	},

@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/event_vo_fortification_sergeant_a.lua
+
 local event_vo_fortification_sergeant_a = {
 	event_fortification_disable_the_skyfire = {
 		randomize_indexes_n = 0,

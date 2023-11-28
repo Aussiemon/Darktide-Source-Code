@@ -1,12 +1,14 @@
+﻿-- chunkname: @dialogues/generated/psyker_male_c_ogryn_a.lua
+
 local psyker_male_c_ogryn_a = {
 	bonding_conversation_round_three_read_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_ogryn_a__bonding_conversation_round_three_read_b_01"
+			[1] = "loc_ogryn_a__bonding_conversation_round_three_read_b_01"
 		},
 		sound_events_duration = {
-			[1.0] = 8.400375
+			[1] = 8.400375
 		},
 		randomize_indexes = {}
 	},
@@ -14,10 +16,10 @@ local psyker_male_c_ogryn_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_ogryn_a__bonding_conversation_round_three_read_d_01"
+			[1] = "loc_ogryn_a__bonding_conversation_round_three_read_d_01"
 		},
 		sound_events_duration = {
-			[1.0] = 4.934125
+			[1] = 4.934125
 		},
 		randomize_indexes = {}
 	}

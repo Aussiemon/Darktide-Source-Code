@@ -1,3 +1,5 @@
+﻿-- chunkname: @content/levels/ui/cosmetics_preview/cosmetics_preview_volume_data.lua
+
 local volume_data = {}
 
 return {

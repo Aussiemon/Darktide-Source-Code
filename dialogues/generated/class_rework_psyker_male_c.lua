@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/class_rework_psyker_male_c.lua
+
 local class_rework_psyker_male_c = {
 	ability_buff_stance_a = {
 		randomize_indexes_n = 0,

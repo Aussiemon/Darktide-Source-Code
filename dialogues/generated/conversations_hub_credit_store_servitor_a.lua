@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/conversations_hub_credit_store_servitor_a.lua
+
 local conversations_hub_credit_store_servitor_a = {
 	credit_store_servitor_distance_restocked = {
 		randomize_indexes_n = 0,

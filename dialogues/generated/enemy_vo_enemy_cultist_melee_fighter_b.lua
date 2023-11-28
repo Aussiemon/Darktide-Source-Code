@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/enemy_vo_enemy_cultist_melee_fighter_b.lua
+
 local enemy_vo_enemy_cultist_melee_fighter_b = {
 	cultist_melee_fighter_alerted_idle = {
 		randomize_indexes_n = 0,

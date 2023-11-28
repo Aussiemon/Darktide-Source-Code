@@ -1,3 +1,5 @@
+﻿-- chunkname: @content/levels/watertown/acid_street/world_volume_data.lua
+
 local volume_data = {
 	{
 		height = 3.5,
@@ -43,8 +45,8 @@ local volume_data = {
 		},
 		up_vector = {
 			-0,
-			[2.0] = 0,
-			[3.0] = 1
+			[2] = 0,
+			[3] = 1
 		}
 	},
 	{
@@ -91,8 +93,8 @@ local volume_data = {
 		},
 		up_vector = {
 			-0,
-			[2.0] = 0,
-			[3.0] = 1.9948619604110718
+			[2] = 0,
+			[3] = 1.9948619604110718
 		}
 	},
 	{
@@ -442,8 +444,8 @@ local volume_data = {
 		},
 		up_vector = {
 			-0,
-			[2.0] = 0,
-			[3.0] = 1
+			[2] = 0,
+			[3] = 1
 		}
 	},
 	{
@@ -800,8 +802,8 @@ local volume_data = {
 		},
 		up_vector = {
 			-0,
-			[2.0] = 0,
-			[3.0] = 1
+			[2] = 0,
+			[3] = 1
 		}
 	},
 	{
@@ -873,8 +875,8 @@ local volume_data = {
 		},
 		up_vector = {
 			-0,
-			[2.0] = 0,
-			[3.0] = 1
+			[2] = 0,
+			[3] = 1
 		}
 	},
 	{
@@ -921,8 +923,8 @@ local volume_data = {
 		},
 		up_vector = {
 			-0,
-			[2.0] = 0,
-			[3.0] = 1
+			[2] = 0,
+			[3] = 1
 		}
 	},
 	{
@@ -1042,8 +1044,8 @@ local volume_data = {
 		},
 		up_vector = {
 			-0,
-			[2.0] = 0,
-			[3.0] = 2.3933279514312744
+			[2] = 0,
+			[3] = 2.3933279514312744
 		}
 	},
 	{

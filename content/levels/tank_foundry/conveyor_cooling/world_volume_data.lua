@@ -1,3 +1,5 @@
+﻿-- chunkname: @content/levels/tank_foundry/conveyor_cooling/world_volume_data.lua
+
 local volume_data = {
 	{
 		height = 2.5,
@@ -207,8 +209,8 @@ local volume_data = {
 		},
 		up_vector = {
 			-0,
-			[2.0] = 0,
-			[3.0] = 2.0047359466552734
+			[2] = 0,
+			[3] = 2.0047359466552734
 		}
 	},
 	{
@@ -841,8 +843,8 @@ local volume_data = {
 		},
 		up_vector = {
 			-0,
-			[2.0] = 0,
-			[3.0] = 1
+			[2] = 0,
+			[3] = 1
 		}
 	},
 	{
@@ -1214,8 +1216,8 @@ local volume_data = {
 		},
 		up_vector = {
 			-0,
-			[2.0] = 0,
-			[3.0] = 1
+			[2] = 0,
+			[3] = 1
 		}
 	},
 	{

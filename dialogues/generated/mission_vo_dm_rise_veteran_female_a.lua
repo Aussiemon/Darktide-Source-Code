@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/mission_vo_dm_rise_veteran_female_a.lua
+
 local mission_vo_dm_rise_veteran_female_a = {
 	mission_rise_first_objective_response = {
 		randomize_indexes_n = 0,

@@ -1,12 +1,14 @@
+﻿-- chunkname: @dialogues/generated/psyker_b_veteran_male_a.lua
+
 local psyker_b_veteran_male_a = {
 	combat_pause_limited_psyker_b_03_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_veteran_male_a__combat_pause_limited_psyker_b_03_b_01"
+			[1] = "loc_veteran_male_a__combat_pause_limited_psyker_b_03_b_01"
 		},
 		sound_events_duration = {
-			[1.0] = 2.884104
+			[1] = 2.884104
 		},
 		randomize_indexes = {}
 	},
@@ -14,10 +16,10 @@ local psyker_b_veteran_male_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_veteran_male_a__combat_pause_limited_psyker_b_06_b_01"
+			[1] = "loc_veteran_male_a__combat_pause_limited_psyker_b_06_b_01"
 		},
 		sound_events_duration = {
-			[1.0] = 4.500521
+			[1] = 4.500521
 		},
 		randomize_indexes = {}
 	},
@@ -25,10 +27,10 @@ local psyker_b_veteran_male_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_veteran_male_a__combat_pause_limited_psyker_b_11_b_01"
+			[1] = "loc_veteran_male_a__combat_pause_limited_psyker_b_11_b_01"
 		},
 		sound_events_duration = {
-			[1.0] = 1.849438
+			[1] = 1.849438
 		},
 		randomize_indexes = {}
 	},
@@ -36,10 +38,10 @@ local psyker_b_veteran_male_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_veteran_male_a__combat_pause_limited_psyker_b_12_b_01"
+			[1] = "loc_veteran_male_a__combat_pause_limited_psyker_b_12_b_01"
 		},
 		sound_events_duration = {
-			[1.0] = 3.472854
+			[1] = 3.472854
 		},
 		randomize_indexes = {}
 	},
@@ -47,10 +49,10 @@ local psyker_b_veteran_male_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_veteran_male_a__combat_pause_limited_psyker_b_15_b_01"
+			[1] = "loc_veteran_male_a__combat_pause_limited_psyker_b_15_b_01"
 		},
 		sound_events_duration = {
-			[1.0] = 3.218458
+			[1] = 3.218458
 		},
 		randomize_indexes = {}
 	},
@@ -58,10 +60,10 @@ local psyker_b_veteran_male_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_veteran_male_a__combat_pause_limited_psyker_b_18_b_01"
+			[1] = "loc_veteran_male_a__combat_pause_limited_psyker_b_18_b_01"
 		},
 		sound_events_duration = {
-			[1.0] = 1.686063
+			[1] = 1.686063
 		},
 		randomize_indexes = {}
 	},
@@ -69,12 +71,12 @@ local psyker_b_veteran_male_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_veteran_male_a__combat_pause_quirk_competence_b_01",
-			[2.0] = "loc_veteran_male_a__combat_pause_quirk_competence_b_02"
+			[1] = "loc_veteran_male_a__combat_pause_quirk_competence_b_01",
+			[2] = "loc_veteran_male_a__combat_pause_quirk_competence_b_02"
 		},
 		sound_events_duration = {
-			[1.0] = 2.918167,
-			[2.0] = 1.889458
+			[1] = 2.918167,
+			[2] = 1.889458
 		},
 		randomize_indexes = {}
 	},
@@ -82,12 +84,12 @@ local psyker_b_veteran_male_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_veteran_male_a__combat_pause_quirk_dead_b_01",
-			[2.0] = "loc_veteran_male_a__combat_pause_quirk_dead_b_02"
+			[1] = "loc_veteran_male_a__combat_pause_quirk_dead_b_01",
+			[2] = "loc_veteran_male_a__combat_pause_quirk_dead_b_02"
 		},
 		sound_events_duration = {
-			[1.0] = 4.2905,
-			[2.0] = 1.981813
+			[1] = 4.2905,
+			[2] = 1.981813
 		},
 		randomize_indexes = {}
 	},
@@ -95,12 +97,12 @@ local psyker_b_veteran_male_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_veteran_male_a__combat_pause_quirk_dream_b_01",
-			[2.0] = "loc_veteran_male_a__combat_pause_quirk_dream_b_02"
+			[1] = "loc_veteran_male_a__combat_pause_quirk_dream_b_01",
+			[2] = "loc_veteran_male_a__combat_pause_quirk_dream_b_02"
 		},
 		sound_events_duration = {
-			[1.0] = 2.154063,
-			[2.0] = 2.694146
+			[1] = 2.154063,
+			[2] = 2.694146
 		},
 		randomize_indexes = {}
 	},
@@ -108,12 +110,12 @@ local psyker_b_veteran_male_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_veteran_male_a__combat_pause_quirk_endless_war_b_01",
-			[2.0] = "loc_veteran_male_a__combat_pause_quirk_endless_war_b_02"
+			[1] = "loc_veteran_male_a__combat_pause_quirk_endless_war_b_01",
+			[2] = "loc_veteran_male_a__combat_pause_quirk_endless_war_b_02"
 		},
 		sound_events_duration = {
-			[1.0] = 4.097958,
-			[2.0] = 4.472083
+			[1] = 4.097958,
+			[2] = 4.472083
 		},
 		randomize_indexes = {}
 	},
@@ -121,12 +123,12 @@ local psyker_b_veteran_male_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_veteran_male_a__combat_pause_quirk_fractal_b_01",
-			[2.0] = "loc_veteran_male_a__combat_pause_quirk_fractal_b_02"
+			[1] = "loc_veteran_male_a__combat_pause_quirk_fractal_b_01",
+			[2] = "loc_veteran_male_a__combat_pause_quirk_fractal_b_02"
 		},
 		sound_events_duration = {
-			[1.0] = 3.522792,
-			[2.0] = 3.540625
+			[1] = 3.522792,
+			[2] = 3.540625
 		},
 		randomize_indexes = {}
 	},
@@ -134,12 +136,12 @@ local psyker_b_veteran_male_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_veteran_male_a__combat_pause_quirk_lonely_b_01",
-			[2.0] = "loc_veteran_male_a__combat_pause_quirk_lonely_b_02"
+			[1] = "loc_veteran_male_a__combat_pause_quirk_lonely_b_01",
+			[2] = "loc_veteran_male_a__combat_pause_quirk_lonely_b_02"
 		},
 		sound_events_duration = {
-			[1.0] = 2.952146,
-			[2.0] = 3.311958
+			[1] = 2.952146,
+			[2] = 3.311958
 		},
 		randomize_indexes = {}
 	},
@@ -147,12 +149,12 @@ local psyker_b_veteran_male_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_veteran_male_a__combat_pause_quirk_togetherness_b_01",
-			[2.0] = "loc_veteran_male_a__combat_pause_quirk_togetherness_b_02"
+			[1] = "loc_veteran_male_a__combat_pause_quirk_togetherness_b_01",
+			[2] = "loc_veteran_male_a__combat_pause_quirk_togetherness_b_02"
 		},
 		sound_events_duration = {
-			[1.0] = 1.557771,
-			[2.0] = 5.700521
+			[1] = 1.557771,
+			[2] = 5.700521
 		},
 		randomize_indexes = {}
 	}

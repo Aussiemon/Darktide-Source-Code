@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/lookup_conversations_hub.lua
+
 DialogueLookup[DialogueLookup_n + 1] = "barber_distance"
 DialogueLookup[DialogueLookup_n + 2] = "barber_goodbye"
 DialogueLookup[DialogueLookup_n + 3] = "barber_hello"

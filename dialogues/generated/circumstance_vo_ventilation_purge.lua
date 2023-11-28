@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/circumstance_vo_ventilation_purge.lua
+
 return function ()
 	define_rule({
 		name = "combat_pause_circumstance_ogryn_a_gas_a",

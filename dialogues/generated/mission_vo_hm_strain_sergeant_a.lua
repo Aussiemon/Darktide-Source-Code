@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/mission_vo_hm_strain_sergeant_a.lua
+
 local mission_vo_hm_strain_sergeant_a = {
 	event_demolition_first_corruptor_destroyed_strain_b = {
 		randomize_indexes_n = 0,

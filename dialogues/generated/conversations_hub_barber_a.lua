@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/conversations_hub_barber_a.lua
+
 local conversations_hub_barber_a = {
 	barber_distance = {
 		randomize_indexes_n = 0,
@@ -148,10 +150,10 @@ local conversations_hub_barber_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_barber_a__barber_intro_a_01"
+			[1] = "loc_barber_a__barber_intro_a_01"
 		},
 		sound_events_duration = {
-			[1.0] = 9.263396
+			[1] = 9.263396
 		},
 		randomize_indexes = {}
 	},
@@ -159,10 +161,10 @@ local conversations_hub_barber_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_barber_a__barber_intro_b_01"
+			[1] = "loc_barber_a__barber_intro_b_01"
 		},
 		sound_events_duration = {
-			[1.0] = 5.445479
+			[1] = 5.445479
 		},
 		randomize_indexes = {}
 	},
@@ -170,10 +172,10 @@ local conversations_hub_barber_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_barber_a__barber_intro_c_01"
+			[1] = "loc_barber_a__barber_intro_c_01"
 		},
 		sound_events_duration = {
-			[1.0] = 4.451063
+			[1] = 4.451063
 		},
 		randomize_indexes = {}
 	},
@@ -181,10 +183,10 @@ local conversations_hub_barber_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_barber_a__barber_intro_d_01"
+			[1] = "loc_barber_a__barber_intro_d_01"
 		},
 		sound_events_duration = {
-			[1.0] = 4.55825
+			[1] = 4.55825
 		},
 		randomize_indexes = {}
 	},

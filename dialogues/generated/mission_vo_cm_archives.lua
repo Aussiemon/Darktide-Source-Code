@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/mission_vo_cm_archives.lua
+
 return function ()
 	define_rule({
 		name = "mission_archives_alarm",

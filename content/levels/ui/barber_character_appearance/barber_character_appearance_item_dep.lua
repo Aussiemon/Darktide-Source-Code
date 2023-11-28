@@ -1,3 +1,5 @@
+﻿-- chunkname: @content/levels/ui/barber_character_appearance/barber_character_appearance_item_dep.lua
+
 local item_dependencies = {
 	minion_items = {},
 	player_items = {

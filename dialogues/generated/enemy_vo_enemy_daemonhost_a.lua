@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/enemy_vo_enemy_daemonhost_a.lua
+
 local enemy_vo_enemy_daemonhost_a = {
 	chaos_daemonhost_aggro = {
 		randomize_indexes_n = 0,

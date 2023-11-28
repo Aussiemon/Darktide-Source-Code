@@ -1,3 +1,5 @@
+﻿-- chunkname: @content/levels/ui/class_selection/class_selection_zealot/class_selection_zealot_item_dep.lua
+
 local item_dependencies = {
 	player_items = {
 		["content/items/characters/player/human/cine_props/pendant_prop"] = 1,

@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/zealot_female_c.lua
+
 return function ()
 	define_rule({
 		name = "bonding_conversation_metropolitan_accord_a",

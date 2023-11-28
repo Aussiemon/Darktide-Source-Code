@@ -1,15 +1,17 @@
+﻿-- chunkname: @dialogues/generated/circumstance_vo_darkness_ogryn_a.lua
+
 local circumstance_vo_darkness_ogryn_a = {
 	combat_pause_circumstance_unnatural_dark_lights_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_ogryn_a__asset_unnatural_dark_a_02"
+			[1] = "loc_ogryn_a__asset_unnatural_dark_a_02"
 		},
 		sound_events_duration = {
-			[1.0] = 1.801677
+			[1] = 1.801677
 		},
 		sound_event_weights = {
-			[1.0] = 1
+			[1] = 1
 		},
 		randomize_indexes = {}
 	},
@@ -40,13 +42,13 @@ local circumstance_vo_darkness_ogryn_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_ogryn_a__asset_unnatural_dark_b_04"
+			[1] = "loc_ogryn_a__asset_unnatural_dark_b_04"
 		},
 		sound_events_duration = {
-			[1.0] = 3.636021
+			[1] = 3.636021
 		},
 		sound_event_weights = {
-			[1.0] = 1
+			[1] = 1
 		},
 		randomize_indexes = {}
 	},

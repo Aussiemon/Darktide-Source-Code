@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/gameplay_vo_veteran_female_b.lua
+
 local gameplay_vo_veteran_female_b = {
 	ability_ranger = {
 		randomize_indexes_n = 0,
@@ -62,16 +64,16 @@ local gameplay_vo_veteran_female_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_veteran_female_b__combat_pause_quirk_ammo_hog_b_01",
-			[2.0] = "loc_veteran_female_b__combat_pause_quirk_ammo_hog_b_02"
+			[1] = "loc_veteran_female_b__combat_pause_quirk_ammo_hog_b_01",
+			[2] = "loc_veteran_female_b__combat_pause_quirk_ammo_hog_b_02"
 		},
 		sound_events_duration = {
-			[1.0] = 1.367479,
-			[2.0] = 1.703104
+			[1] = 1.367479,
+			[2] = 1.703104
 		},
 		sound_event_weights = {
-			[1.0] = 0.5,
-			[2.0] = 0.5
+			[1] = 0.5,
+			[2] = 0.5
 		},
 		randomize_indexes = {}
 	},
@@ -1841,16 +1843,16 @@ local gameplay_vo_veteran_female_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_veteran_female_b__combat_pause_quirk_health_hog_b_01",
-			[2.0] = "loc_veteran_female_b__combat_pause_quirk_health_hog_b_02"
+			[1] = "loc_veteran_female_b__combat_pause_quirk_health_hog_b_01",
+			[2] = "loc_veteran_female_b__combat_pause_quirk_health_hog_b_02"
 		},
 		sound_events_duration = {
-			[1.0] = 4.315521,
-			[2.0] = 4.796625
+			[1] = 4.315521,
+			[2] = 4.796625
 		},
 		sound_event_weights = {
-			[1.0] = 0.5,
-			[2.0] = 0.5
+			[1] = 0.5,
+			[2] = 0.5
 		},
 		randomize_indexes = {}
 	},
@@ -2102,12 +2104,12 @@ local gameplay_vo_veteran_female_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_veteran_female_b__info_door_open_01",
-			[2.0] = "loc_veteran_female_b__info_door_open_02"
+			[1] = "loc_veteran_female_b__info_door_open_01",
+			[2] = "loc_veteran_female_b__info_door_open_02"
 		},
 		sound_events_duration = {
-			[1.0] = 0.851125,
-			[2.0] = 2.612042
+			[1] = 0.851125,
+			[2] = 2.612042
 		},
 		randomize_indexes = {}
 	},

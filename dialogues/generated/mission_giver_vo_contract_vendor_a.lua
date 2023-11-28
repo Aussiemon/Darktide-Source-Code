@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/mission_giver_vo_contract_vendor_a.lua
+
 local mission_giver_vo_contract_vendor_a = {
 	info_all_players_required = {
 		randomize_indexes_n = 0,

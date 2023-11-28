@@ -1,3 +1,5 @@
+﻿-- chunkname: @content/levels/watertown/missions/mission_km_enforcer_volume_data.lua
+
 local volume_data = {
 	{
 		height = 2,
@@ -101,8 +103,8 @@ local volume_data = {
 		},
 		up_vector = {
 			-0,
-			[2.0] = 0,
-			[3.0] = 1.8516240119934082
+			[2] = 0,
+			[3] = 1.8516240119934082
 		}
 	},
 	{
@@ -555,8 +557,8 @@ local volume_data = {
 		},
 		up_vector = {
 			-0,
-			[2.0] = 0,
-			[3.0] = 1.8516240119934082
+			[2] = 0,
+			[3] = 1.8516240119934082
 		}
 	},
 	{
@@ -800,8 +802,8 @@ local volume_data = {
 		},
 		up_vector = {
 			-0,
-			[2.0] = 0,
-			[3.0] = 1
+			[2] = 0,
+			[3] = 1
 		}
 	},
 	{

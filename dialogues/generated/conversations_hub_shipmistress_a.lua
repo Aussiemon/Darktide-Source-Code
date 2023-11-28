@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/conversations_hub_shipmistress_a.lua
+
 local conversations_hub_shipmistress_a = {
 	hub_idle = {
 		randomize_indexes_n = 0,
@@ -150,10 +152,10 @@ local conversations_hub_shipmistress_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_shipmistress_a__npc_first_interaction_01"
+			[1] = "loc_shipmistress_a__npc_first_interaction_01"
 		},
 		sound_events_duration = {
-			[1.0] = 37.29408
+			[1] = 37.29408
 		},
 		randomize_indexes = {}
 	}

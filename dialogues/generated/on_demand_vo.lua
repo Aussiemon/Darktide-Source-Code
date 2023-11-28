@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/on_demand_vo.lua
+
 return function ()
 	define_rule({
 		name = "com_wheel_vo_enemy_over_here",

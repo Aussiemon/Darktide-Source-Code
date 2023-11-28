@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/circumstance_vo_darkness.lua
+
 return function ()
 	define_rule({
 		name = "combat_pause_circumstance_unnatural_dark_lights_a",

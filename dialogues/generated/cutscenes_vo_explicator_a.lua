@@ -1,12 +1,14 @@
+﻿-- chunkname: @dialogues/generated/cutscenes_vo_explicator_a.lua
+
 local cutscenes_vo_explicator_a = {
 	cs_pot01_01 = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_explicator_a__cs_pot01_01"
+			[1] = "loc_explicator_a__cs_pot01_01"
 		},
 		sound_events_duration = {
-			[1.0] = 6.133333
+			[1] = 6.133333
 		},
 		randomize_indexes = {}
 	},
@@ -14,10 +16,10 @@ local cutscenes_vo_explicator_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_explicator_a__cs_pot01_02"
+			[1] = "loc_explicator_a__cs_pot01_02"
 		},
 		sound_events_duration = {
-			[1.0] = 5.933333
+			[1] = 5.933333
 		},
 		randomize_indexes = {}
 	},
@@ -25,10 +27,10 @@ local cutscenes_vo_explicator_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_explicator_a__cs_pot01_03"
+			[1] = "loc_explicator_a__cs_pot01_03"
 		},
 		sound_events_duration = {
-			[1.0] = 8.2
+			[1] = 8.2
 		},
 		randomize_indexes = {}
 	},
@@ -36,10 +38,10 @@ local cutscenes_vo_explicator_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_explicator_a__cs_pot01_04"
+			[1] = "loc_explicator_a__cs_pot01_04"
 		},
 		sound_events_duration = {
-			[1.0] = 5.833333
+			[1] = 5.833333
 		},
 		randomize_indexes = {}
 	},
@@ -47,10 +49,10 @@ local cutscenes_vo_explicator_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_explicator_a__cs_pot05_01"
+			[1] = "loc_explicator_a__cs_pot05_01"
 		},
 		sound_events_duration = {
-			[1.0] = 6.333333
+			[1] = 6.333333
 		},
 		randomize_indexes = {}
 	},
@@ -58,10 +60,10 @@ local cutscenes_vo_explicator_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_explicator_a__cs_pot05_02"
+			[1] = "loc_explicator_a__cs_pot05_02"
 		},
 		sound_events_duration = {
-			[1.0] = 3.121917
+			[1] = 3.121917
 		},
 		randomize_indexes = {}
 	},
@@ -69,10 +71,10 @@ local cutscenes_vo_explicator_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_explicator_a__cs_pot05_03"
+			[1] = "loc_explicator_a__cs_pot05_03"
 		},
 		sound_events_duration = {
-			[1.0] = 5.9
+			[1] = 5.9
 		},
 		randomize_indexes = {}
 	},
@@ -80,10 +82,10 @@ local cutscenes_vo_explicator_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_explicator_a__cs_pot05_04"
+			[1] = "loc_explicator_a__cs_pot05_04"
 		},
 		sound_events_duration = {
-			[1.0] = 6.811417
+			[1] = 6.811417
 		},
 		randomize_indexes = {}
 	},
@@ -91,10 +93,10 @@ local cutscenes_vo_explicator_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_explicator_a__cs_pot05_05"
+			[1] = "loc_explicator_a__cs_pot05_05"
 		},
 		sound_events_duration = {
-			[1.0] = 4.488583
+			[1] = 4.488583
 		},
 		randomize_indexes = {}
 	},
@@ -102,10 +104,10 @@ local cutscenes_vo_explicator_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_explicator_a__cs_pot05_06"
+			[1] = "loc_explicator_a__cs_pot05_06"
 		},
 		sound_events_duration = {
-			[1.0] = 2.5
+			[1] = 2.5
 		},
 		randomize_indexes = {}
 	},
@@ -113,10 +115,10 @@ local cutscenes_vo_explicator_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_explicator_a__cs_pot05_07"
+			[1] = "loc_explicator_a__cs_pot05_07"
 		},
 		sound_events_duration = {
-			[1.0] = 2.611417
+			[1] = 2.611417
 		},
 		randomize_indexes = {}
 	},
@@ -124,10 +126,10 @@ local cutscenes_vo_explicator_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_explicator_a__cs_prologue_five_01_01"
+			[1] = "loc_explicator_a__cs_prologue_five_01_01"
 		},
 		sound_events_duration = {
-			[1.0] = 2.666646
+			[1] = 2.666646
 		},
 		randomize_indexes = {}
 	},
@@ -135,10 +137,10 @@ local cutscenes_vo_explicator_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_explicator_a__cs_prologue_five_03_01"
+			[1] = "loc_explicator_a__cs_prologue_five_03_01"
 		},
 		sound_events_duration = {
-			[1.0] = 1.933313
+			[1] = 1.933313
 		},
 		randomize_indexes = {}
 	},
@@ -146,10 +148,10 @@ local cutscenes_vo_explicator_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_explicator_a__cs_prologue_five_04_01"
+			[1] = "loc_explicator_a__cs_prologue_five_04_01"
 		},
 		sound_events_duration = {
-			[1.0] = 7.2
+			[1] = 7.2
 		},
 		randomize_indexes = {}
 	},
@@ -157,10 +159,10 @@ local cutscenes_vo_explicator_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_explicator_a__cs_prologue_five_06_01"
+			[1] = "loc_explicator_a__cs_prologue_five_06_01"
 		},
 		sound_events_duration = {
-			[1.0] = 1.299979
+			[1] = 1.299979
 		},
 		randomize_indexes = {}
 	},
@@ -168,10 +170,10 @@ local cutscenes_vo_explicator_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_explicator_a__cs_prologue_five_07_01"
+			[1] = "loc_explicator_a__cs_prologue_five_07_01"
 		},
 		sound_events_duration = {
-			[1.0] = 6.737146
+			[1] = 6.737146
 		},
 		randomize_indexes = {}
 	},
@@ -179,10 +181,10 @@ local cutscenes_vo_explicator_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_explicator_a__cs_prologue_five_08_01"
+			[1] = "loc_explicator_a__cs_prologue_five_08_01"
 		},
 		sound_events_duration = {
-			[1.0] = 1.27075
+			[1] = 1.27075
 		},
 		randomize_indexes = {}
 	},
@@ -190,10 +192,10 @@ local cutscenes_vo_explicator_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_explicator_a__cs_prologue_four_01_01"
+			[1] = "loc_explicator_a__cs_prologue_four_01_01"
 		},
 		sound_events_duration = {
-			[1.0] = 2.099979
+			[1] = 2.099979
 		},
 		randomize_indexes = {}
 	},
@@ -201,10 +203,10 @@ local cutscenes_vo_explicator_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_explicator_a__cs_prologue_four_03_01"
+			[1] = "loc_explicator_a__cs_prologue_four_03_01"
 		},
 		sound_events_duration = {
-			[1.0] = 1.599979
+			[1] = 1.599979
 		},
 		randomize_indexes = {}
 	},
@@ -212,10 +214,10 @@ local cutscenes_vo_explicator_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_explicator_a__cs_prologue_seven_01_01"
+			[1] = "loc_explicator_a__cs_prologue_seven_01_01"
 		},
 		sound_events_duration = {
-			[1.0] = 3.136083
+			[1] = 3.136083
 		},
 		randomize_indexes = {}
 	},
@@ -223,10 +225,10 @@ local cutscenes_vo_explicator_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_explicator_a__cs_prologue_seven_03_01"
+			[1] = "loc_explicator_a__cs_prologue_seven_03_01"
 		},
 		sound_events_duration = {
-			[1.0] = 4.639729
+			[1] = 4.639729
 		},
 		randomize_indexes = {}
 	},
@@ -234,10 +236,10 @@ local cutscenes_vo_explicator_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_explicator_a__cs_prologue_seven_05_01"
+			[1] = "loc_explicator_a__cs_prologue_seven_05_01"
 		},
 		sound_events_duration = {
-			[1.0] = 1.311146
+			[1] = 1.311146
 		},
 		randomize_indexes = {}
 	},
@@ -245,10 +247,10 @@ local cutscenes_vo_explicator_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_explicator_a__cs_prologue_seven_08_01"
+			[1] = "loc_explicator_a__cs_prologue_seven_08_01"
 		},
 		sound_events_duration = {
-			[1.0] = 3.115438
+			[1] = 3.115438
 		},
 		randomize_indexes = {}
 	},
@@ -256,10 +258,10 @@ local cutscenes_vo_explicator_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_explicator_a__cs_prologue_three_01_01"
+			[1] = "loc_explicator_a__cs_prologue_three_01_01"
 		},
 		sound_events_duration = {
-			[1.0] = 0.966667
+			[1] = 0.966667
 		},
 		randomize_indexes = {}
 	},
@@ -267,10 +269,10 @@ local cutscenes_vo_explicator_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_explicator_a__cs_prologue_three_02_01"
+			[1] = "loc_explicator_a__cs_prologue_three_02_01"
 		},
 		sound_events_duration = {
-			[1.0] = 1.730479
+			[1] = 1.730479
 		},
 		randomize_indexes = {}
 	},
@@ -278,10 +280,10 @@ local cutscenes_vo_explicator_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_explicator_a__cs_prologue_three_03_01"
+			[1] = "loc_explicator_a__cs_prologue_three_03_01"
 		},
 		sound_events_duration = {
-			[1.0] = 3.333313
+			[1] = 3.333313
 		},
 		randomize_indexes = {}
 	},
@@ -289,10 +291,10 @@ local cutscenes_vo_explicator_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_explicator_a__cs_prologue_three_05_01"
+			[1] = "loc_explicator_a__cs_prologue_three_05_01"
 		},
 		sound_events_duration = {
-			[1.0] = 1.733333
+			[1] = 1.733333
 		},
 		randomize_indexes = {}
 	},
@@ -300,10 +302,10 @@ local cutscenes_vo_explicator_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_explicator_a__cs_prologue_two_01_01"
+			[1] = "loc_explicator_a__cs_prologue_two_01_01"
 		},
 		sound_events_duration = {
-			[1.0] = 2.1
+			[1] = 2.1
 		},
 		randomize_indexes = {}
 	},
@@ -311,10 +313,10 @@ local cutscenes_vo_explicator_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_explicator_a__cs_prologue_two_04_01"
+			[1] = "loc_explicator_a__cs_prologue_two_04_01"
 		},
 		sound_events_duration = {
-			[1.0] = 1.551417
+			[1] = 1.551417
 		},
 		randomize_indexes = {}
 	},
@@ -322,10 +324,10 @@ local cutscenes_vo_explicator_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_explicator_a__cs_prologue_two_05_01"
+			[1] = "loc_explicator_a__cs_prologue_two_05_01"
 		},
 		sound_events_duration = {
-			[1.0] = 2.4
+			[1] = 2.4
 		},
 		randomize_indexes = {}
 	},
@@ -333,10 +335,10 @@ local cutscenes_vo_explicator_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_explicator_a__cs_prologue_two_06_01"
+			[1] = "loc_explicator_a__cs_prologue_two_06_01"
 		},
 		sound_events_duration = {
-			[1.0] = 2.9
+			[1] = 2.9
 		},
 		randomize_indexes = {}
 	},
@@ -344,10 +346,10 @@ local cutscenes_vo_explicator_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_explicator_a__cs_prologue_two_08_01"
+			[1] = "loc_explicator_a__cs_prologue_two_08_01"
 		},
 		sound_events_duration = {
-			[1.0] = 0.974229
+			[1] = 0.974229
 		},
 		randomize_indexes = {}
 	},
@@ -355,13 +357,13 @@ local cutscenes_vo_explicator_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_explicator_a__cs_prologue_two_10_01"
+			[1] = "loc_explicator_a__cs_prologue_two_10_01"
 		},
 		sound_events_duration = {
-			[1.0] = 0.466667
+			[1] = 0.466667
 		},
 		sound_event_weights = {
-			[1.0] = 1
+			[1] = 1
 		},
 		randomize_indexes = {}
 	},
@@ -369,13 +371,13 @@ local cutscenes_vo_explicator_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_explicator_a__cs_prologue_two_12_01"
+			[1] = "loc_explicator_a__cs_prologue_two_12_01"
 		},
 		sound_events_duration = {
-			[1.0] = 3.409042
+			[1] = 3.409042
 		},
 		sound_event_weights = {
-			[1.0] = 1
+			[1] = 1
 		},
 		randomize_indexes = {}
 	},
@@ -383,10 +385,10 @@ local cutscenes_vo_explicator_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_explicator_a__cs_prologue_two_14_01"
+			[1] = "loc_explicator_a__cs_prologue_two_14_01"
 		},
 		sound_events_duration = {
-			[1.0] = 0.671792
+			[1] = 0.671792
 		},
 		randomize_indexes = {}
 	},
@@ -394,13 +396,13 @@ local cutscenes_vo_explicator_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_explicator_a__cs_prologue_two_15_01"
+			[1] = "loc_explicator_a__cs_prologue_two_15_01"
 		},
 		sound_events_duration = {
-			[1.0] = 2.821
+			[1] = 2.821
 		},
 		sound_event_weights = {
-			[1.0] = 1
+			[1] = 1
 		},
 		randomize_indexes = {}
 	},
@@ -408,13 +410,13 @@ local cutscenes_vo_explicator_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_explicator_a__cs_prologue_two_18_01"
+			[1] = "loc_explicator_a__cs_prologue_two_18_01"
 		},
 		sound_events_duration = {
-			[1.0] = 1.790875
+			[1] = 1.790875
 		},
 		sound_event_weights = {
-			[1.0] = 1
+			[1] = 1
 		},
 		randomize_indexes = {}
 	},
@@ -422,10 +424,10 @@ local cutscenes_vo_explicator_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_explicator_a__cs_prologue_two_20_01"
+			[1] = "loc_explicator_a__cs_prologue_two_20_01"
 		},
 		sound_events_duration = {
-			[1.0] = 1.533333
+			[1] = 1.533333
 		},
 		randomize_indexes = {}
 	},
@@ -433,10 +435,10 @@ local cutscenes_vo_explicator_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_explicator_a__cs_prologue_two_25_01"
+			[1] = "loc_explicator_a__cs_prologue_two_25_01"
 		},
 		sound_events_duration = {
-			[1.0] = 3.319833
+			[1] = 3.319833
 		},
 		randomize_indexes = {}
 	},
@@ -444,10 +446,10 @@ local cutscenes_vo_explicator_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_explicator_a__narrative_event_bay_01_01"
+			[1] = "loc_explicator_a__narrative_event_bay_01_01"
 		},
 		sound_events_duration = {
-			[1.0] = 2.294308
+			[1] = 2.294308
 		},
 		randomize_indexes = {}
 	},
@@ -455,16 +457,16 @@ local cutscenes_vo_explicator_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_explicator_a__prologue_gameplay_hub_a_02",
-			[2.0] = "loc_explicator_a__prologue_gameplay_hub_a_03"
+			[1] = "loc_explicator_a__prologue_gameplay_hub_a_02",
+			[2] = "loc_explicator_a__prologue_gameplay_hub_a_03"
 		},
 		sound_events_duration = {
-			[1.0] = 1.32651,
-			[2.0] = 1.393354
+			[1] = 1.32651,
+			[2] = 1.393354
 		},
 		sound_event_weights = {
-			[1.0] = 0.5,
-			[2.0] = 0.5
+			[1] = 0.5,
+			[2] = 0.5
 		},
 		randomize_indexes = {}
 	},

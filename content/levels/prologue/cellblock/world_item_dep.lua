@@ -1,3 +1,5 @@
+﻿-- chunkname: @content/levels/prologue/cellblock/world_item_dep.lua
+
 local item_dependencies = {
 	minion_items = {
 		["content/items/characters/minions/chaos_traitor_guard/attachments_base/hair_b"] = 1,

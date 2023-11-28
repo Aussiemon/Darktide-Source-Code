@@ -1,14 +1,16 @@
+﻿-- chunkname: @dialogues/generated/mission_vo_dm_forge_zealot_male_b.lua
+
 local mission_vo_dm_forge_zealot_male_b = {
 	mission_forge_alive = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_zealot_male_b__mission_forge_alive_01",
-			[2.0] = "loc_zealot_male_b__mission_forge_alive_02"
+			[1] = "loc_zealot_male_b__mission_forge_alive_01",
+			[2] = "loc_zealot_male_b__mission_forge_alive_02"
 		},
 		sound_events_duration = {
-			[1.0] = 3.165042,
-			[2.0] = 2.934729
+			[1] = 3.165042,
+			[2] = 2.934729
 		},
 		randomize_indexes = {}
 	},
@@ -16,12 +18,12 @@ local mission_vo_dm_forge_zealot_male_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_zealot_male_b__mission_forge_elevator_conversation_one_a_01",
-			[2.0] = "loc_zealot_male_b__mission_forge_elevator_conversation_one_a_02"
+			[1] = "loc_zealot_male_b__mission_forge_elevator_conversation_one_a_01",
+			[2] = "loc_zealot_male_b__mission_forge_elevator_conversation_one_a_02"
 		},
 		sound_events_duration = {
-			[1.0] = 3.475438,
-			[2.0] = 3.523396
+			[1] = 3.475438,
+			[2] = 3.523396
 		},
 		randomize_indexes = {}
 	},
@@ -29,12 +31,12 @@ local mission_vo_dm_forge_zealot_male_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_zealot_male_b__mission_forge_elevator_conversation_one_c_01",
-			[2.0] = "loc_zealot_male_b__mission_forge_elevator_conversation_one_c_02"
+			[1] = "loc_zealot_male_b__mission_forge_elevator_conversation_one_c_01",
+			[2] = "loc_zealot_male_b__mission_forge_elevator_conversation_one_c_02"
 		},
 		sound_events_duration = {
-			[1.0] = 2.172167,
-			[2.0] = 4.353667
+			[1] = 2.172167,
+			[2] = 4.353667
 		},
 		randomize_indexes = {}
 	},
@@ -42,12 +44,12 @@ local mission_vo_dm_forge_zealot_male_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_zealot_male_b__mission_forge_elevator_conversation_three_a_01",
-			[2.0] = "loc_zealot_male_b__mission_forge_elevator_conversation_three_a_02"
+			[1] = "loc_zealot_male_b__mission_forge_elevator_conversation_three_a_01",
+			[2] = "loc_zealot_male_b__mission_forge_elevator_conversation_three_a_02"
 		},
 		sound_events_duration = {
-			[1.0] = 5.219479,
-			[2.0] = 4.867167
+			[1] = 5.219479,
+			[2] = 4.867167
 		},
 		randomize_indexes = {}
 	},
@@ -55,12 +57,12 @@ local mission_vo_dm_forge_zealot_male_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_zealot_male_b__mission_forge_elevator_conversation_three_c_01",
-			[2.0] = "loc_zealot_male_b__mission_forge_elevator_conversation_three_c_02"
+			[1] = "loc_zealot_male_b__mission_forge_elevator_conversation_three_c_01",
+			[2] = "loc_zealot_male_b__mission_forge_elevator_conversation_three_c_02"
 		},
 		sound_events_duration = {
-			[1.0] = 4.437521,
-			[2.0] = 3.043917
+			[1] = 4.437521,
+			[2] = 3.043917
 		},
 		randomize_indexes = {}
 	},
@@ -68,12 +70,12 @@ local mission_vo_dm_forge_zealot_male_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_zealot_male_b__mission_forge_elevator_conversation_two_a_01",
-			[2.0] = "loc_zealot_male_b__mission_forge_elevator_conversation_two_a_02"
+			[1] = "loc_zealot_male_b__mission_forge_elevator_conversation_two_a_01",
+			[2] = "loc_zealot_male_b__mission_forge_elevator_conversation_two_a_02"
 		},
 		sound_events_duration = {
-			[1.0] = 5.151458,
-			[2.0] = 5.951229
+			[1] = 5.151458,
+			[2] = 5.951229
 		},
 		randomize_indexes = {}
 	},
@@ -81,12 +83,12 @@ local mission_vo_dm_forge_zealot_male_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_zealot_male_b__mission_forge_elevator_conversation_two_c_01",
-			[2.0] = "loc_zealot_male_b__mission_forge_elevator_conversation_two_c_02"
+			[1] = "loc_zealot_male_b__mission_forge_elevator_conversation_two_c_01",
+			[2] = "loc_zealot_male_b__mission_forge_elevator_conversation_two_c_02"
 		},
 		sound_events_duration = {
-			[1.0] = 3.702833,
-			[2.0] = 4.246625
+			[1] = 3.702833,
+			[2] = 4.246625
 		},
 		randomize_indexes = {}
 	},
@@ -94,12 +96,12 @@ local mission_vo_dm_forge_zealot_male_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_zealot_male_b__mission_forge_find_smelter_01",
-			[2.0] = "loc_zealot_male_b__mission_forge_find_smelter_02"
+			[1] = "loc_zealot_male_b__mission_forge_find_smelter_01",
+			[2] = "loc_zealot_male_b__mission_forge_find_smelter_02"
 		},
 		sound_events_duration = {
-			[1.0] = 4.758646,
-			[2.0] = 3.442833
+			[1] = 4.758646,
+			[2] = 3.442833
 		},
 		randomize_indexes = {}
 	},
@@ -148,12 +150,12 @@ local mission_vo_dm_forge_zealot_male_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_zealot_male_b__mission_forge_hellhole_01",
-			[2.0] = "loc_zealot_male_b__mission_forge_hellhole_02"
+			[1] = "loc_zealot_male_b__mission_forge_hellhole_01",
+			[2] = "loc_zealot_male_b__mission_forge_hellhole_02"
 		},
 		sound_events_duration = {
-			[1.0] = 5.530625,
-			[2.0] = 5.80275
+			[1] = 5.530625,
+			[2] = 5.80275
 		},
 		randomize_indexes = {}
 	},
@@ -161,12 +163,12 @@ local mission_vo_dm_forge_zealot_male_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_zealot_male_b__mission_forge_lifeless_01",
-			[2.0] = "loc_zealot_male_b__mission_forge_lifeless_02"
+			[1] = "loc_zealot_male_b__mission_forge_lifeless_01",
+			[2] = "loc_zealot_male_b__mission_forge_lifeless_02"
 		},
 		sound_events_duration = {
-			[1.0] = 4.647979,
-			[2.0] = 5.342958
+			[1] = 4.647979,
+			[2] = 5.342958
 		},
 		randomize_indexes = {}
 	},
@@ -174,12 +176,12 @@ local mission_vo_dm_forge_zealot_male_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_zealot_male_b__mission_forge_main_entrance_01",
-			[2.0] = "loc_zealot_male_b__mission_forge_main_entrance_02"
+			[1] = "loc_zealot_male_b__mission_forge_main_entrance_01",
+			[2] = "loc_zealot_male_b__mission_forge_main_entrance_02"
 		},
 		sound_events_duration = {
-			[1.0] = 4.291167,
-			[2.0] = 4.659771
+			[1] = 4.291167,
+			[2] = 4.659771
 		},
 		randomize_indexes = {}
 	},
@@ -207,12 +209,12 @@ local mission_vo_dm_forge_zealot_male_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_zealot_male_b__mission_forge_propaganda_01",
-			[2.0] = "loc_zealot_male_b__mission_forge_propaganda_02"
+			[1] = "loc_zealot_male_b__mission_forge_propaganda_01",
+			[2] = "loc_zealot_male_b__mission_forge_propaganda_02"
 		},
 		sound_events_duration = {
-			[1.0] = 6.206667,
-			[2.0] = 5.021333
+			[1] = 6.206667,
+			[2] = 5.021333
 		},
 		randomize_indexes = {}
 	},
@@ -220,12 +222,12 @@ local mission_vo_dm_forge_zealot_male_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_zealot_male_b__mission_forge_stand_ground_01",
-			[2.0] = "loc_zealot_male_b__mission_forge_stand_ground_02"
+			[1] = "loc_zealot_male_b__mission_forge_stand_ground_01",
+			[2] = "loc_zealot_male_b__mission_forge_stand_ground_02"
 		},
 		sound_events_duration = {
-			[1.0] = 3.410792,
-			[2.0] = 3.332104
+			[1] = 3.410792,
+			[2] = 3.332104
 		},
 		randomize_indexes = {}
 	},
@@ -233,12 +235,12 @@ local mission_vo_dm_forge_zealot_male_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_zealot_male_b__mission_forge_start_banter_a_01",
-			[2.0] = "loc_zealot_male_b__mission_forge_start_banter_a_02"
+			[1] = "loc_zealot_male_b__mission_forge_start_banter_a_01",
+			[2] = "loc_zealot_male_b__mission_forge_start_banter_a_02"
 		},
 		sound_events_duration = {
-			[1.0] = 5.388625,
-			[2.0] = 5.895208
+			[1] = 5.388625,
+			[2] = 5.895208
 		},
 		randomize_indexes = {}
 	},
@@ -266,12 +268,12 @@ local mission_vo_dm_forge_zealot_male_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_zealot_male_b__mission_forge_strategic_asset_01",
-			[2.0] = "loc_zealot_male_b__mission_forge_strategic_asset_02"
+			[1] = "loc_zealot_male_b__mission_forge_strategic_asset_01",
+			[2] = "loc_zealot_male_b__mission_forge_strategic_asset_02"
 		},
 		sound_events_duration = {
-			[1.0] = 4.280688,
-			[2.0] = 6.033833
+			[1] = 4.280688,
+			[2] = 6.033833
 		},
 		randomize_indexes = {}
 	},

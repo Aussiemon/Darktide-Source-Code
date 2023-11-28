@@ -1,12 +1,14 @@
+﻿-- chunkname: @dialogues/generated/training_grounds_training_ground_psyker_a.lua
+
 local training_grounds_training_ground_psyker_a = {
 	armor_desc_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_training_ground_psyker_a__armor_desc_a_01"
+			[1] = "loc_training_ground_psyker_a__armor_desc_a_01"
 		},
 		sound_events_duration = {
-			[1.0] = 5.381
+			[1] = 5.381
 		},
 		randomize_indexes = {}
 	},
@@ -14,10 +16,10 @@ local training_grounds_training_ground_psyker_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_training_ground_psyker_a__chain_light_desc_a_01"
+			[1] = "loc_training_ground_psyker_a__chain_light_desc_a_01"
 		},
 		sound_events_duration = {
-			[1.0] = 9.642
+			[1] = 9.642
 		},
 		randomize_indexes = {}
 	},
@@ -25,10 +27,10 @@ local training_grounds_training_ground_psyker_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_training_ground_psyker_a__combat_ability_tutorial_desc_a_01"
+			[1] = "loc_training_ground_psyker_a__combat_ability_tutorial_desc_a_01"
 		},
 		sound_events_duration = {
-			[1.0] = 4.686
+			[1] = 4.686
 		},
 		randomize_indexes = {}
 	},
@@ -36,10 +38,10 @@ local training_grounds_training_ground_psyker_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_training_ground_psyker_a__combat_ability_tutorial_generic_desc_1_01"
+			[1] = "loc_training_ground_psyker_a__combat_ability_tutorial_generic_desc_1_01"
 		},
 		sound_events_duration = {
-			[1.0] = 5.503
+			[1] = 5.503
 		},
 		randomize_indexes = {}
 	},
@@ -47,10 +49,10 @@ local training_grounds_training_ground_psyker_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_training_ground_psyker_a__combat_ability_tutorial_ogryn_1_desc_a_01"
+			[1] = "loc_training_ground_psyker_a__combat_ability_tutorial_ogryn_1_desc_a_01"
 		},
 		sound_events_duration = {
-			[1.0] = 5.726
+			[1] = 5.726
 		},
 		randomize_indexes = {}
 	},
@@ -58,10 +60,10 @@ local training_grounds_training_ground_psyker_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_training_ground_psyker_a__combat_ability_tutorial_ogryn_desc_a_01"
+			[1] = "loc_training_ground_psyker_a__combat_ability_tutorial_ogryn_desc_a_01"
 		},
 		sound_events_duration = {
-			[1.0] = 8.722
+			[1] = 8.722
 		},
 		randomize_indexes = {}
 	},
@@ -69,10 +71,10 @@ local training_grounds_training_ground_psyker_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_training_ground_psyker_a__combat_ability_tutorial_psyker_3_desc_1_01"
+			[1] = "loc_training_ground_psyker_a__combat_ability_tutorial_psyker_3_desc_1_01"
 		},
 		sound_events_duration = {
-			[1.0] = 9.275
+			[1] = 9.275
 		},
 		randomize_indexes = {}
 	},
@@ -80,10 +82,10 @@ local training_grounds_training_ground_psyker_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_training_ground_psyker_a__combat_ability_tutorial_psyker_desc_a_01"
+			[1] = "loc_training_ground_psyker_a__combat_ability_tutorial_psyker_desc_a_01"
 		},
 		sound_events_duration = {
-			[1.0] = 7.901
+			[1] = 7.901
 		},
 		randomize_indexes = {}
 	},
@@ -91,10 +93,10 @@ local training_grounds_training_ground_psyker_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_training_ground_psyker_a__combat_ability_tutorial_veteran_3_desc_a_01"
+			[1] = "loc_training_ground_psyker_a__combat_ability_tutorial_veteran_3_desc_a_01"
 		},
 		sound_events_duration = {
-			[1.0] = 6.904
+			[1] = 6.904
 		},
 		randomize_indexes = {}
 	},
@@ -102,10 +104,10 @@ local training_grounds_training_ground_psyker_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_training_ground_psyker_a__combat_ability_tutorial_zealot_3_desc_alt1_a_01"
+			[1] = "loc_training_ground_psyker_a__combat_ability_tutorial_zealot_3_desc_alt1_a_01"
 		},
 		sound_events_duration = {
-			[1.0] = 6.043
+			[1] = 6.043
 		},
 		randomize_indexes = {}
 	},
@@ -113,10 +115,10 @@ local training_grounds_training_ground_psyker_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_training_ground_psyker_a__combat_ability_tutorial_zealot_3_desc_alt2_a_01"
+			[1] = "loc_training_ground_psyker_a__combat_ability_tutorial_zealot_3_desc_alt2_a_01"
 		},
 		sound_events_duration = {
-			[1.0] = 3.45678
+			[1] = 3.45678
 		},
 		randomize_indexes = {}
 	},
@@ -124,10 +126,10 @@ local training_grounds_training_ground_psyker_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_training_ground_psyker_a__combat_ability_tutorial_zealot_3_desc_alt3_a_01"
+			[1] = "loc_training_ground_psyker_a__combat_ability_tutorial_zealot_3_desc_alt3_a_01"
 		},
 		sound_events_duration = {
-			[1.0] = 3.45678
+			[1] = 3.45678
 		},
 		randomize_indexes = {}
 	},
@@ -135,10 +137,10 @@ local training_grounds_training_ground_psyker_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_training_ground_psyker_a__combat_ability_tutorial_zealot_3_desc_alt4_a_01"
+			[1] = "loc_training_ground_psyker_a__combat_ability_tutorial_zealot_3_desc_alt4_a_01"
 		},
 		sound_events_duration = {
-			[1.0] = 3.45678
+			[1] = 3.45678
 		},
 		randomize_indexes = {}
 	},
@@ -146,10 +148,10 @@ local training_grounds_training_ground_psyker_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_training_ground_psyker_a__combat_ability_tutorial_zealot_3_desc_alt5_a_01"
+			[1] = "loc_training_ground_psyker_a__combat_ability_tutorial_zealot_3_desc_alt5_a_01"
 		},
 		sound_events_duration = {
-			[1.0] = 3.45678
+			[1] = 3.45678
 		},
 		randomize_indexes = {}
 	},
@@ -157,10 +159,10 @@ local training_grounds_training_ground_psyker_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_training_ground_psyker_a__combat_ability_tutorial_zealot_3_desc_alt6_a_01"
+			[1] = "loc_training_ground_psyker_a__combat_ability_tutorial_zealot_3_desc_alt6_a_01"
 		},
 		sound_events_duration = {
-			[1.0] = 3.45678
+			[1] = 3.45678
 		},
 		randomize_indexes = {}
 	},
@@ -168,10 +170,10 @@ local training_grounds_training_ground_psyker_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_training_ground_psyker_a__combat_ability_tutorial_zealot_3_desc_alt7_a_01"
+			[1] = "loc_training_ground_psyker_a__combat_ability_tutorial_zealot_3_desc_alt7_a_01"
 		},
 		sound_events_duration = {
-			[1.0] = 3.45678
+			[1] = 3.45678
 		},
 		randomize_indexes = {}
 	},
@@ -179,10 +181,10 @@ local training_grounds_training_ground_psyker_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_training_ground_psyker_a__combat_ability_tutorial_zealot_desc_1_01"
+			[1] = "loc_training_ground_psyker_a__combat_ability_tutorial_zealot_desc_1_01"
 		},
 		sound_events_duration = {
-			[1.0] = 7.216
+			[1] = 7.216
 		},
 		randomize_indexes = {}
 	},
@@ -190,10 +192,10 @@ local training_grounds_training_ground_psyker_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_training_ground_psyker_a__corruption_tutorial_desc_1_01"
+			[1] = "loc_training_ground_psyker_a__corruption_tutorial_desc_1_01"
 		},
 		sound_events_duration = {
-			[1.0] = 5.273
+			[1] = 5.273
 		},
 		randomize_indexes = {}
 	},
@@ -201,10 +203,10 @@ local training_grounds_training_ground_psyker_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_training_ground_psyker_a__corruption_tutorial_desc_b_01"
+			[1] = "loc_training_ground_psyker_a__corruption_tutorial_desc_b_01"
 		},
 		sound_events_duration = {
-			[1.0] = 11.101
+			[1] = 11.101
 		},
 		randomize_indexes = {}
 	},
@@ -212,10 +214,10 @@ local training_grounds_training_ground_psyker_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_training_ground_psyker_a__dodging_tutorial_desc_a_01"
+			[1] = "loc_training_ground_psyker_a__dodging_tutorial_desc_a_01"
 		},
 		sound_events_duration = {
-			[1.0] = 4.580521
+			[1] = 4.580521
 		},
 		randomize_indexes = {}
 	},
@@ -223,10 +225,10 @@ local training_grounds_training_ground_psyker_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_training_ground_psyker_a__healing_self_and_others_desc_a_01"
+			[1] = "loc_training_ground_psyker_a__healing_self_and_others_desc_a_01"
 		},
 		sound_events_duration = {
-			[1.0] = 5.918
+			[1] = 5.918
 		},
 		randomize_indexes = {}
 	},
@@ -234,10 +236,10 @@ local training_grounds_training_ground_psyker_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_training_ground_psyker_a__health_station_tutorial_desc_a_01"
+			[1] = "loc_training_ground_psyker_a__health_station_tutorial_desc_a_01"
 		},
 		sound_events_duration = {
-			[1.0] = 11.274
+			[1] = 11.274
 		},
 		randomize_indexes = {}
 	},
@@ -245,10 +247,10 @@ local training_grounds_training_ground_psyker_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_training_ground_psyker_a__incoming_suppression_desc_a_01"
+			[1] = "loc_training_ground_psyker_a__incoming_suppression_desc_a_01"
 		},
 		sound_events_duration = {
-			[1.0] = 10.224
+			[1] = 10.224
 		},
 		randomize_indexes = {}
 	},
@@ -256,10 +258,10 @@ local training_grounds_training_ground_psyker_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_training_ground_psyker_a__lock_in_melee_desc_1_01"
+			[1] = "loc_training_ground_psyker_a__lock_in_melee_desc_1_01"
 		},
 		sound_events_duration = {
-			[1.0] = 6.271
+			[1] = 6.271
 		},
 		randomize_indexes = {}
 	},
@@ -267,10 +269,10 @@ local training_grounds_training_ground_psyker_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_training_ground_psyker_a__psyker_ability_desc_1_01"
+			[1] = "loc_training_ground_psyker_a__psyker_ability_desc_1_01"
 		},
 		sound_events_duration = {
-			[1.0] = 13.463
+			[1] = 13.463
 		},
 		randomize_indexes = {}
 	},
@@ -278,10 +280,10 @@ local training_grounds_training_ground_psyker_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_training_ground_psyker_a__push_follow_up_desc_a_01"
+			[1] = "loc_training_ground_psyker_a__push_follow_up_desc_a_01"
 		},
 		sound_events_duration = {
-			[1.0] = 4.91
+			[1] = 4.91
 		},
 		randomize_indexes = {}
 	},
@@ -289,10 +291,10 @@ local training_grounds_training_ground_psyker_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_training_ground_psyker_a__pushing_desc_a_01"
+			[1] = "loc_training_ground_psyker_a__pushing_desc_a_01"
 		},
 		sound_events_duration = {
-			[1.0] = 5.881
+			[1] = 5.881
 		},
 		randomize_indexes = {}
 	},
@@ -300,10 +302,10 @@ local training_grounds_training_ground_psyker_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_training_ground_psyker_a__ranged_grenade_desc_1_01"
+			[1] = "loc_training_ground_psyker_a__ranged_grenade_desc_1_01"
 		},
 		sound_events_duration = {
-			[1.0] = 6.878
+			[1] = 6.878
 		},
 		randomize_indexes = {}
 	},
@@ -311,13 +313,13 @@ local training_grounds_training_ground_psyker_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_training_ground_psyker_a__ranged_grenade_desc_1_01"
+			[1] = "loc_training_ground_psyker_a__ranged_grenade_desc_1_01"
 		},
 		sound_events_duration = {
-			[1.0] = 6.878
+			[1] = 6.878
 		},
 		sound_event_weights = {
-			[1.0] = 1
+			[1] = 1
 		},
 		randomize_indexes = {}
 	},
@@ -325,13 +327,13 @@ local training_grounds_training_ground_psyker_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_training_ground_psyker_a__ranged_grenade_desc_1_01"
+			[1] = "loc_training_ground_psyker_a__ranged_grenade_desc_1_01"
 		},
 		sound_events_duration = {
-			[1.0] = 6.878
+			[1] = 6.878
 		},
 		sound_event_weights = {
-			[1.0] = 1
+			[1] = 1
 		},
 		randomize_indexes = {}
 	},
@@ -339,10 +341,10 @@ local training_grounds_training_ground_psyker_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_training_ground_psyker_a__ranged_suppression_desc_a_01"
+			[1] = "loc_training_ground_psyker_a__ranged_suppression_desc_a_01"
 		},
 		sound_events_duration = {
-			[1.0] = 10.879
+			[1] = 10.879
 		},
 		randomize_indexes = {}
 	},
@@ -350,10 +352,10 @@ local training_grounds_training_ground_psyker_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_training_ground_psyker_a__reviving_tutorial_desc_a_01"
+			[1] = "loc_training_ground_psyker_a__reviving_tutorial_desc_a_01"
 		},
 		sound_events_duration = {
-			[1.0] = 9.044
+			[1] = 9.044
 		},
 		randomize_indexes = {}
 	},
@@ -361,10 +363,10 @@ local training_grounds_training_ground_psyker_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_training_ground_psyker_a__sprint_slide_desc_a_01"
+			[1] = "loc_training_ground_psyker_a__sprint_slide_desc_a_01"
 		},
 		sound_events_duration = {
-			[1.0] = 11.065
+			[1] = 11.065
 		},
 		randomize_indexes = {}
 	},
@@ -372,10 +374,10 @@ local training_grounds_training_ground_psyker_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_training_ground_psyker_a__tagging_desc_a_01"
+			[1] = "loc_training_ground_psyker_a__tagging_desc_a_01"
 		},
 		sound_events_duration = {
-			[1.0] = 9.419
+			[1] = 9.419
 		},
 		randomize_indexes = {}
 	},
@@ -683,10 +685,10 @@ local training_grounds_training_ground_psyker_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_training_ground_psyker_a__toughness_damage_tutorial_desc_a_01"
+			[1] = "loc_training_ground_psyker_a__toughness_damage_tutorial_desc_a_01"
 		},
 		sound_events_duration = {
-			[1.0] = 13.895
+			[1] = 13.895
 		},
 		randomize_indexes = {}
 	},
@@ -694,10 +696,10 @@ local training_grounds_training_ground_psyker_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_training_ground_psyker_a__toughness_tutorial_2_desc_a_01"
+			[1] = "loc_training_ground_psyker_a__toughness_tutorial_2_desc_a_01"
 		},
 		sound_events_duration = {
-			[1.0] = 7.984
+			[1] = 7.984
 		},
 		randomize_indexes = {}
 	},
@@ -705,10 +707,10 @@ local training_grounds_training_ground_psyker_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_training_ground_psyker_a__toughness_tutorial_2_desc_b_01"
+			[1] = "loc_training_ground_psyker_a__toughness_tutorial_2_desc_b_01"
 		},
 		sound_events_duration = {
-			[1.0] = 8.876
+			[1] = 8.876
 		},
 		randomize_indexes = {}
 	},
@@ -716,10 +718,10 @@ local training_grounds_training_ground_psyker_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_training_ground_psyker_a__toughness_tutorial_desc_a_01"
+			[1] = "loc_training_ground_psyker_a__toughness_tutorial_desc_a_01"
 		},
 		sound_events_duration = {
-			[1.0] = 8.512
+			[1] = 8.512
 		},
 		randomize_indexes = {}
 	},
@@ -727,10 +729,10 @@ local training_grounds_training_ground_psyker_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_training_ground_psyker_a__training_grounds_advanced_training_desc_a_01"
+			[1] = "loc_training_ground_psyker_a__training_grounds_advanced_training_desc_a_01"
 		},
 		sound_events_duration = {
-			[1.0] = 11.582
+			[1] = 11.582
 		},
 		randomize_indexes = {}
 	},
@@ -738,10 +740,10 @@ local training_grounds_training_ground_psyker_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_training_ground_psyker_a__training_grounds_training_end_desc_a_01"
+			[1] = "loc_training_ground_psyker_a__training_grounds_training_end_desc_a_01"
 		},
 		sound_events_duration = {
-			[1.0] = 7.464
+			[1] = 7.464
 		},
 		randomize_indexes = {}
 	},
@@ -749,10 +751,10 @@ local training_grounds_training_ground_psyker_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_training_ground_psyker_a__weapon_special_desc_a_01"
+			[1] = "loc_training_ground_psyker_a__weapon_special_desc_a_01"
 		},
 		sound_events_duration = {
-			[1.0] = 8.34
+			[1] = 8.34
 		},
 		randomize_indexes = {}
 	}

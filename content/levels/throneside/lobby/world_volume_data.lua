@@ -1,3 +1,5 @@
+﻿-- chunkname: @content/levels/throneside/lobby/world_volume_data.lua
+
 local volume_data = {
 	{
 		height = 37.25,

@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/lookup_training_grounds.lua
+
 DialogueLookup[DialogueLookup_n + 1] = "armor_desc_a"
 DialogueLookup[DialogueLookup_n + 2] = "chain_light_desc_a"
 DialogueLookup[DialogueLookup_n + 3] = "combat_ability_tutorial_desc_a"

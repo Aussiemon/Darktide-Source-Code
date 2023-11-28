@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/event_vo_hacking_tech_priest_a.lua
+
 local event_vo_hacking_tech_priest_a = {
 	cmd_hacking_decode_resuming = {
 		randomize_indexes_n = 0,

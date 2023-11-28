@@ -1,3 +1,5 @@
+﻿-- chunkname: @content/levels/tank_foundry/missions/mission_dm_forge_volume_data.lua
+
 local volume_data = {
 	{
 		height = 2,
@@ -139,8 +141,8 @@ local volume_data = {
 		},
 		up_vector = {
 			-0,
-			[2.0] = 0,
-			[3.0] = 2.010061025619507
+			[2] = 0,
+			[3] = 2.010061025619507
 		}
 	},
 	{
@@ -341,8 +343,8 @@ local volume_data = {
 		},
 		up_vector = {
 			-0,
-			[2.0] = 0,
-			[3.0] = 2.010061025619507
+			[2] = 0,
+			[3] = 2.010061025619507
 		}
 	}
 }

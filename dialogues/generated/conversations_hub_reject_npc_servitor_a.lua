@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/conversations_hub_reject_npc_servitor_a.lua
+
 local conversations_hub_reject_npc_servitor_a = {
 	reject_npc_goodbye_a = {
 		randomize_indexes_n = 0,

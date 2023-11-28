@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/conversations_hub_vocator_b.lua
+
 local conversations_hub_vocator_b = {
 	hub_propaganda_announcement = {
 		randomize_indexes_n = 0,

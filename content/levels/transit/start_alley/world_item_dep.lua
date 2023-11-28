@@ -1,3 +1,5 @@
+﻿-- chunkname: @content/levels/transit/start_alley/world_item_dep.lua
+
 local item_dependencies = {
 	minion_items = {
 		["content/items/characters/minions/chaos_poxwalker/attachments_gear/upperbody_e"] = 1,

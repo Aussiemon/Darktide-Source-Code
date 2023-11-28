@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/mission_vo_dm_forge_sergeant_a.lua
+
 local mission_vo_dm_forge_sergeant_a = {
 	mission_forge_assembly_line = {
 		randomize_indexes_n = 0,
@@ -179,16 +181,16 @@ local mission_vo_dm_forge_sergeant_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_sergeant_a__event_demolition_first_corruptor_destroyed_b_02",
-			[2.0] = "loc_sergeant_a__mission_cartel_keep_moving_03"
+			[1] = "loc_sergeant_a__event_demolition_first_corruptor_destroyed_b_02",
+			[2] = "loc_sergeant_a__mission_cartel_keep_moving_03"
 		},
 		sound_events_duration = {
-			[1.0] = 2.885271,
-			[2.0] = 4.470667
+			[1] = 2.885271,
+			[2] = 4.470667
 		},
 		sound_event_weights = {
-			[1.0] = 0.5,
-			[2.0] = 0.5
+			[1] = 0.5,
+			[2] = 0.5
 		},
 		randomize_indexes = {}
 	},

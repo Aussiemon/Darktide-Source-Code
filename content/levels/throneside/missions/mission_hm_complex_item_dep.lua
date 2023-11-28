@@ -1,3 +1,5 @@
+﻿-- chunkname: @content/levels/throneside/missions/mission_hm_complex_item_dep.lua
+
 local item_dependencies = {
 	minion_items = {},
 	player_items = {

@@ -1,3 +1,5 @@
+﻿-- chunkname: @content/levels/watertown/cartel_hq/world_volume_data.lua
+
 local volume_data = {
 	{
 		height = 2,
@@ -225,8 +227,8 @@ local volume_data = {
 		},
 		up_vector = {
 			-0,
-			[2.0] = -1,
-			[3.0] = 0
+			[2] = -1,
+			[3] = 0
 		}
 	},
 	{
@@ -407,8 +409,8 @@ local volume_data = {
 		},
 		up_vector = {
 			-0,
-			[2.0] = -1,
-			[3.0] = 0
+			[2] = -1,
+			[3] = 0
 		}
 	},
 	{

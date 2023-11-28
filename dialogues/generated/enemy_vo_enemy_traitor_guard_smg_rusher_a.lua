@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/enemy_vo_enemy_traitor_guard_smg_rusher_a.lua
+
 local enemy_vo_enemy_traitor_guard_smg_rusher_a = {
 	ranged_idle_player_out_of_ammo = {
 		randomize_indexes_n = 0,

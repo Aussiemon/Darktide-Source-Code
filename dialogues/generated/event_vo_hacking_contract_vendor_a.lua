@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/event_vo_hacking_contract_vendor_a.lua
+
 local event_vo_hacking_contract_vendor_a = {
 	cmd_hacking_decode_resuming = {
 		randomize_indexes_n = 0,

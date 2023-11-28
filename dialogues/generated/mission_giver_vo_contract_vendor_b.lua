@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/mission_giver_vo_contract_vendor_b.lua
+
 local mission_giver_vo_contract_vendor_b = {
 	info_extraction = {
 		randomize_indexes_n = 0,

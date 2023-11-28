@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/enemy_vo_enemy_traitor_guard_rifleman_female_b.lua
+
 local enemy_vo_enemy_traitor_guard_rifleman_female_b = {
 	ranged_idle_player_low_on_health = {
 		randomize_indexes_n = 0,

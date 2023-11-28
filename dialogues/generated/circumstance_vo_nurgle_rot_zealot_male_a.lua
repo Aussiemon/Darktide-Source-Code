@@ -1,14 +1,16 @@
+﻿-- chunkname: @dialogues/generated/circumstance_vo_nurgle_rot_zealot_male_a.lua
+
 local circumstance_vo_nurgle_rot_zealot_male_a = {
 	nurgle_circumstance_conversation_five_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_zealot_male_a__nurgle_circumstance_conversation_five_a_01",
-			[2.0] = "loc_zealot_male_a__nurgle_circumstance_conversation_five_a_02"
+			[1] = "loc_zealot_male_a__nurgle_circumstance_conversation_five_a_01",
+			[2] = "loc_zealot_male_a__nurgle_circumstance_conversation_five_a_02"
 		},
 		sound_events_duration = {
-			[1.0] = 3.944708,
-			[2.0] = 4.501521
+			[1] = 3.944708,
+			[2] = 4.501521
 		},
 		randomize_indexes = {}
 	},
@@ -16,12 +18,12 @@ local circumstance_vo_nurgle_rot_zealot_male_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_zealot_male_a__nurgle_circumstance_conversation_five_c_01",
-			[2.0] = "loc_zealot_male_a__nurgle_circumstance_conversation_five_c_02"
+			[1] = "loc_zealot_male_a__nurgle_circumstance_conversation_five_c_01",
+			[2] = "loc_zealot_male_a__nurgle_circumstance_conversation_five_c_02"
 		},
 		sound_events_duration = {
-			[1.0] = 3.650083,
-			[2.0] = 4.588229
+			[1] = 3.650083,
+			[2] = 4.588229
 		},
 		randomize_indexes = {}
 	},
@@ -29,12 +31,12 @@ local circumstance_vo_nurgle_rot_zealot_male_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_zealot_male_a__nurgle_circumstance_conversation_four_a_01",
-			[2.0] = "loc_zealot_male_a__nurgle_circumstance_conversation_four_a_02"
+			[1] = "loc_zealot_male_a__nurgle_circumstance_conversation_four_a_01",
+			[2] = "loc_zealot_male_a__nurgle_circumstance_conversation_four_a_02"
 		},
 		sound_events_duration = {
-			[1.0] = 4.831063,
-			[2.0] = 5.735604
+			[1] = 4.831063,
+			[2] = 5.735604
 		},
 		randomize_indexes = {}
 	},
@@ -42,12 +44,12 @@ local circumstance_vo_nurgle_rot_zealot_male_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_zealot_male_a__nurgle_circumstance_conversation_four_c_01",
-			[2.0] = "loc_zealot_male_a__nurgle_circumstance_conversation_four_c_02"
+			[1] = "loc_zealot_male_a__nurgle_circumstance_conversation_four_c_01",
+			[2] = "loc_zealot_male_a__nurgle_circumstance_conversation_four_c_02"
 		},
 		sound_events_duration = {
-			[1.0] = 2.316333,
-			[2.0] = 3.287875
+			[1] = 2.316333,
+			[2] = 3.287875
 		},
 		randomize_indexes = {}
 	},
@@ -55,12 +57,12 @@ local circumstance_vo_nurgle_rot_zealot_male_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_zealot_male_a__nurgle_circumstance_conversation_one_a_01",
-			[2.0] = "loc_zealot_male_a__nurgle_circumstance_conversation_one_a_02"
+			[1] = "loc_zealot_male_a__nurgle_circumstance_conversation_one_a_01",
+			[2] = "loc_zealot_male_a__nurgle_circumstance_conversation_one_a_02"
 		},
 		sound_events_duration = {
-			[1.0] = 4.147792,
-			[2.0] = 5.228563
+			[1] = 4.147792,
+			[2] = 5.228563
 		},
 		randomize_indexes = {}
 	},
@@ -68,12 +70,12 @@ local circumstance_vo_nurgle_rot_zealot_male_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_zealot_male_a__nurgle_circumstance_conversation_one_c_01",
-			[2.0] = "loc_zealot_male_a__nurgle_circumstance_conversation_one_c_02"
+			[1] = "loc_zealot_male_a__nurgle_circumstance_conversation_one_c_01",
+			[2] = "loc_zealot_male_a__nurgle_circumstance_conversation_one_c_02"
 		},
 		sound_events_duration = {
-			[1.0] = 4.301958,
-			[2.0] = 4.189833
+			[1] = 4.301958,
+			[2] = 4.189833
 		},
 		randomize_indexes = {}
 	},
@@ -81,12 +83,12 @@ local circumstance_vo_nurgle_rot_zealot_male_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_zealot_male_a__nurgle_circumstance_conversation_three_a_01",
-			[2.0] = "loc_zealot_male_a__nurgle_circumstance_conversation_three_a_02"
+			[1] = "loc_zealot_male_a__nurgle_circumstance_conversation_three_a_01",
+			[2] = "loc_zealot_male_a__nurgle_circumstance_conversation_three_a_02"
 		},
 		sound_events_duration = {
-			[1.0] = 5.792208,
-			[2.0] = 5.8785
+			[1] = 5.792208,
+			[2] = 5.8785
 		},
 		randomize_indexes = {}
 	},
@@ -94,12 +96,12 @@ local circumstance_vo_nurgle_rot_zealot_male_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_zealot_male_a__nurgle_circumstance_conversation_three_c_01",
-			[2.0] = "loc_zealot_male_a__nurgle_circumstance_conversation_three_c_02"
+			[1] = "loc_zealot_male_a__nurgle_circumstance_conversation_three_c_01",
+			[2] = "loc_zealot_male_a__nurgle_circumstance_conversation_three_c_02"
 		},
 		sound_events_duration = {
-			[1.0] = 4.458021,
-			[2.0] = 4.709958
+			[1] = 4.458021,
+			[2] = 4.709958
 		},
 		randomize_indexes = {}
 	},
@@ -107,12 +109,12 @@ local circumstance_vo_nurgle_rot_zealot_male_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_zealot_male_a__nurgle_circumstance_conversation_two_a_01",
-			[2.0] = "loc_zealot_male_a__nurgle_circumstance_conversation_two_a_02"
+			[1] = "loc_zealot_male_a__nurgle_circumstance_conversation_two_a_01",
+			[2] = "loc_zealot_male_a__nurgle_circumstance_conversation_two_a_02"
 		},
 		sound_events_duration = {
-			[1.0] = 4.782021,
-			[2.0] = 5.967875
+			[1] = 4.782021,
+			[2] = 5.967875
 		},
 		randomize_indexes = {}
 	},
@@ -120,12 +122,12 @@ local circumstance_vo_nurgle_rot_zealot_male_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_zealot_male_a__nurgle_circumstance_conversation_two_c_01",
-			[2.0] = "loc_zealot_male_a__nurgle_circumstance_conversation_two_c_02"
+			[1] = "loc_zealot_male_a__nurgle_circumstance_conversation_two_c_01",
+			[2] = "loc_zealot_male_a__nurgle_circumstance_conversation_two_c_02"
 		},
 		sound_events_duration = {
-			[1.0] = 2.890479,
-			[2.0] = 5.262667
+			[1] = 2.890479,
+			[2] = 5.262667
 		},
 		randomize_indexes = {}
 	},

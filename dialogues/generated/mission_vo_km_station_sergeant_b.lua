@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/mission_vo_km_station_sergeant_b.lua
+
 local mission_vo_km_station_sergeant_b = {
 	info_mission_station_first_objective_wolfer = {
 		randomize_indexes_n = 0,

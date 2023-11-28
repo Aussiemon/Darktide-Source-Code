@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/mission_vo_fm_resurgence_explicator_a.lua
+
 local mission_vo_fm_resurgence_explicator_a = {
 	event_fortification_disable_the_skyfire_resurgence = {
 		randomize_indexes_n = 0,
@@ -133,12 +135,12 @@ local mission_vo_fm_resurgence_explicator_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_explicator_a__mission_resurgence_defence_conversation_b_01",
-			[2.0] = "loc_explicator_a__mission_resurgence_defence_conversation_b_02"
+			[1] = "loc_explicator_a__mission_resurgence_defence_conversation_b_01",
+			[2] = "loc_explicator_a__mission_resurgence_defence_conversation_b_02"
 		},
 		sound_events_duration = {
-			[1.0] = 4.003833,
-			[2.0] = 3.143979
+			[1] = 4.003833,
+			[2] = 3.143979
 		},
 		randomize_indexes = {}
 	},

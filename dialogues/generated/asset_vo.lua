@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/asset_vo.lua
+
 return function ()
 	define_rule({
 		name = "asset_acid_clouds",

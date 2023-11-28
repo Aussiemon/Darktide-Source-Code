@@ -1,3 +1,5 @@
+﻿-- chunkname: @content/levels/tank_foundry/missions/mission_lm_cooling_volume_data.lua
+
 local volume_data = {
 	{
 		height = 0.5,
@@ -43,8 +45,8 @@ local volume_data = {
 		},
 		up_vector = {
 			-0,
-			[2.0] = 0,
-			[3.0] = 8
+			[2] = 0,
+			[3] = 8
 		}
 	},
 	{
@@ -1220,8 +1222,8 @@ local volume_data = {
 		},
 		up_vector = {
 			-0,
-			[2.0] = 0,
-			[3.0] = 8
+			[2] = 0,
+			[3] = 8
 		}
 	},
 	{
@@ -1316,8 +1318,8 @@ local volume_data = {
 		},
 		up_vector = {
 			-0,
-			[2.0] = 0,
-			[3.0] = 4.949521064758301
+			[2] = 0,
+			[3] = 4.949521064758301
 		}
 	},
 	{
@@ -1505,8 +1507,8 @@ local volume_data = {
 		},
 		up_vector = {
 			-0,
-			[2.0] = 0,
-			[3.0] = 1.280864953994751
+			[2] = 0,
+			[3] = 1.280864953994751
 		}
 	},
 	{

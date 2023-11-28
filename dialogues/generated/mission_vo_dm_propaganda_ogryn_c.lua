@@ -1,14 +1,16 @@
+﻿-- chunkname: @dialogues/generated/mission_vo_dm_propaganda_ogryn_c.lua
+
 local mission_vo_dm_propaganda_ogryn_c = {
 	mission_propaganda_cultist_town = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_ogryn_c__mission_propaganda_cultist_town_01",
-			[2.0] = "loc_ogryn_c__mission_propaganda_cultist_town_02"
+			[1] = "loc_ogryn_c__mission_propaganda_cultist_town_01",
+			[2] = "loc_ogryn_c__mission_propaganda_cultist_town_02"
 		},
 		sound_events_duration = {
-			[1.0] = 3.955448,
-			[2.0] = 1.249781
+			[1] = 3.955448,
+			[2] = 1.249781
 		},
 		randomize_indexes = {}
 	},
@@ -16,12 +18,12 @@ local mission_vo_dm_propaganda_ogryn_c = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_ogryn_c__mission_propaganda_elevator_conversation_one_a_01",
-			[2.0] = "loc_ogryn_c__mission_propaganda_elevator_conversation_one_a_02"
+			[1] = "loc_ogryn_c__mission_propaganda_elevator_conversation_one_a_01",
+			[2] = "loc_ogryn_c__mission_propaganda_elevator_conversation_one_a_02"
 		},
 		sound_events_duration = {
-			[1.0] = 4.010417,
-			[2.0] = 5.686229
+			[1] = 4.010417,
+			[2] = 5.686229
 		},
 		randomize_indexes = {}
 	},
@@ -29,12 +31,12 @@ local mission_vo_dm_propaganda_ogryn_c = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_ogryn_c__mission_propaganda_elevator_conversation_one_c_01",
-			[2.0] = "loc_ogryn_c__mission_propaganda_elevator_conversation_one_c_02"
+			[1] = "loc_ogryn_c__mission_propaganda_elevator_conversation_one_c_01",
+			[2] = "loc_ogryn_c__mission_propaganda_elevator_conversation_one_c_02"
 		},
 		sound_events_duration = {
-			[1.0] = 4.821354,
-			[2.0] = 3.423729
+			[1] = 4.821354,
+			[2] = 3.423729
 		},
 		randomize_indexes = {}
 	},
@@ -42,12 +44,12 @@ local mission_vo_dm_propaganda_ogryn_c = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_ogryn_c__mission_propaganda_elevator_conversation_three_a_01",
-			[2.0] = "loc_ogryn_c__mission_propaganda_elevator_conversation_three_a_02"
+			[1] = "loc_ogryn_c__mission_propaganda_elevator_conversation_three_a_01",
+			[2] = "loc_ogryn_c__mission_propaganda_elevator_conversation_three_a_02"
 		},
 		sound_events_duration = {
-			[1.0] = 2.826156,
-			[2.0] = 3.022938
+			[1] = 2.826156,
+			[2] = 3.022938
 		},
 		randomize_indexes = {}
 	},
@@ -55,12 +57,12 @@ local mission_vo_dm_propaganda_ogryn_c = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_ogryn_c__mission_propaganda_elevator_conversation_three_c_01",
-			[2.0] = "loc_ogryn_c__mission_propaganda_elevator_conversation_three_c_02"
+			[1] = "loc_ogryn_c__mission_propaganda_elevator_conversation_three_c_01",
+			[2] = "loc_ogryn_c__mission_propaganda_elevator_conversation_three_c_02"
 		},
 		sound_events_duration = {
-			[1.0] = 6.143906,
-			[2.0] = 4.276979
+			[1] = 6.143906,
+			[2] = 4.276979
 		},
 		randomize_indexes = {}
 	},
@@ -68,12 +70,12 @@ local mission_vo_dm_propaganda_ogryn_c = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_ogryn_c__mission_propaganda_elevator_conversation_two_a_01",
-			[2.0] = "loc_ogryn_c__mission_propaganda_elevator_conversation_two_a_02"
+			[1] = "loc_ogryn_c__mission_propaganda_elevator_conversation_two_a_01",
+			[2] = "loc_ogryn_c__mission_propaganda_elevator_conversation_two_a_02"
 		},
 		sound_events_duration = {
-			[1.0] = 2.70624,
-			[2.0] = 4.945604
+			[1] = 2.70624,
+			[2] = 4.945604
 		},
 		randomize_indexes = {}
 	},
@@ -81,12 +83,12 @@ local mission_vo_dm_propaganda_ogryn_c = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_ogryn_c__mission_propaganda_elevator_conversation_two_c_01",
-			[2.0] = "loc_ogryn_c__mission_propaganda_elevator_conversation_two_c_02"
+			[1] = "loc_ogryn_c__mission_propaganda_elevator_conversation_two_c_01",
+			[2] = "loc_ogryn_c__mission_propaganda_elevator_conversation_two_c_02"
 		},
 		sound_events_duration = {
-			[1.0] = 2.595802,
-			[2.0] = 6.525063
+			[1] = 2.595802,
+			[2] = 6.525063
 		},
 		randomize_indexes = {}
 	},
@@ -135,12 +137,12 @@ local mission_vo_dm_propaganda_ogryn_c = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_ogryn_c__mission_propaganda_infested_elevator_01",
-			[2.0] = "loc_ogryn_c__mission_propaganda_infested_elevator_02"
+			[1] = "loc_ogryn_c__mission_propaganda_infested_elevator_01",
+			[2] = "loc_ogryn_c__mission_propaganda_infested_elevator_02"
 		},
 		sound_events_duration = {
-			[1.0] = 3.345646,
-			[2.0] = 2.985552
+			[1] = 3.345646,
+			[2] = 2.985552
 		},
 		randomize_indexes = {}
 	},
@@ -148,12 +150,12 @@ local mission_vo_dm_propaganda_ogryn_c = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_ogryn_c__mission_propaganda_short_elevator_conversation_one_a_01",
-			[2.0] = "loc_ogryn_c__mission_propaganda_short_elevator_conversation_one_a_02"
+			[1] = "loc_ogryn_c__mission_propaganda_short_elevator_conversation_one_a_01",
+			[2] = "loc_ogryn_c__mission_propaganda_short_elevator_conversation_one_a_02"
 		},
 		sound_events_duration = {
-			[1.0] = 4.353083,
-			[2.0] = 3.125563
+			[1] = 4.353083,
+			[2] = 3.125563
 		},
 		randomize_indexes = {}
 	},
@@ -161,12 +163,12 @@ local mission_vo_dm_propaganda_ogryn_c = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_ogryn_c__mission_propaganda_short_elevator_conversation_three_a_01",
-			[2.0] = "loc_ogryn_c__mission_propaganda_short_elevator_conversation_three_a_02"
+			[1] = "loc_ogryn_c__mission_propaganda_short_elevator_conversation_three_a_01",
+			[2] = "loc_ogryn_c__mission_propaganda_short_elevator_conversation_three_a_02"
 		},
 		sound_events_duration = {
-			[1.0] = 3.133938,
-			[2.0] = 3.648198
+			[1] = 3.133938,
+			[2] = 3.648198
 		},
 		randomize_indexes = {}
 	},
@@ -174,12 +176,12 @@ local mission_vo_dm_propaganda_ogryn_c = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_ogryn_c__mission_propaganda_short_elevator_conversation_two_a_01",
-			[2.0] = "loc_ogryn_c__mission_propaganda_short_elevator_conversation_two_a_02"
+			[1] = "loc_ogryn_c__mission_propaganda_short_elevator_conversation_two_a_01",
+			[2] = "loc_ogryn_c__mission_propaganda_short_elevator_conversation_two_a_02"
 		},
 		sound_events_duration = {
-			[1.0] = 4.000042,
-			[2.0] = 4.588958
+			[1] = 4.000042,
+			[2] = 4.588958
 		},
 		randomize_indexes = {}
 	},
@@ -187,12 +189,12 @@ local mission_vo_dm_propaganda_ogryn_c = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_ogryn_c__mission_propaganda_start_banter_a_01",
-			[2.0] = "loc_ogryn_c__mission_propaganda_start_banter_a_02"
+			[1] = "loc_ogryn_c__mission_propaganda_start_banter_a_01",
+			[2] = "loc_ogryn_c__mission_propaganda_start_banter_a_02"
 		},
 		sound_events_duration = {
-			[1.0] = 1.957646,
-			[2.0] = 2.449635
+			[1] = 1.957646,
+			[2] = 2.449635
 		},
 		randomize_indexes = {}
 	},
@@ -229,12 +231,12 @@ local mission_vo_dm_propaganda_ogryn_c = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_ogryn_c__mission_propaganda_view_a_01",
-			[2.0] = "loc_ogryn_c__mission_propaganda_view_a_02"
+			[1] = "loc_ogryn_c__mission_propaganda_view_a_01",
+			[2] = "loc_ogryn_c__mission_propaganda_view_a_02"
 		},
 		sound_events_duration = {
-			[1.0] = 4.894552,
-			[2.0] = 4.821438
+			[1] = 4.894552,
+			[2] = 4.821438
 		},
 		randomize_indexes = {}
 	}

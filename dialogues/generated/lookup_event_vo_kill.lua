@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/lookup_event_vo_kill.lua
+
 DialogueLookup[DialogueLookup_n + 1] = "event_kill_kill_the_target"
 DialogueLookup[DialogueLookup_n + 2] = "event_kill_target_damaged"
 DialogueLookup[DialogueLookup_n + 3] = "event_kill_target_destroyed_a"

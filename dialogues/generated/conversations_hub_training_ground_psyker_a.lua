@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/conversations_hub_training_ground_psyker_a.lua
+
 local conversations_hub_training_ground_psyker_a = {
 	hub_idle = {
 		randomize_indexes_n = 0,

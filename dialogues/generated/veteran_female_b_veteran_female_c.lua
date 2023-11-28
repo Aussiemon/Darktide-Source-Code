@@ -1,12 +1,14 @@
+﻿-- chunkname: @dialogues/generated/veteran_female_b_veteran_female_c.lua
+
 local veteran_female_b_veteran_female_c = {
 	bonding_conversation_creed_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_veteran_female_c__bonding_conversation_creed_b_01"
+			[1] = "loc_veteran_female_c__bonding_conversation_creed_b_01"
 		},
 		sound_events_duration = {
-			[1.0] = 6.460563
+			[1] = 6.460563
 		},
 		randomize_indexes = {}
 	},
@@ -14,10 +16,10 @@ local veteran_female_b_veteran_female_c = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_veteran_female_c__bonding_conversation_creed_d_01"
+			[1] = "loc_veteran_female_c__bonding_conversation_creed_d_01"
 		},
 		sound_events_duration = {
-			[1.0] = 0.656281
+			[1] = 0.656281
 		},
 		randomize_indexes = {}
 	},
@@ -25,10 +27,10 @@ local veteran_female_b_veteran_female_c = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_veteran_female_c__bonding_conversation_creed_f_01"
+			[1] = "loc_veteran_female_c__bonding_conversation_creed_f_01"
 		},
 		sound_events_duration = {
-			[1.0] = 0.79874
+			[1] = 0.79874
 		},
 		randomize_indexes = {}
 	},
@@ -36,10 +38,10 @@ local veteran_female_b_veteran_female_c = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_veteran_female_c__bonding_conversation_killstreak_extension_vet_b_vet_c_d_01"
+			[1] = "loc_veteran_female_c__bonding_conversation_killstreak_extension_vet_b_vet_c_d_01"
 		},
 		sound_events_duration = {
-			[1.0] = 1.159885
+			[1] = 1.159885
 		},
 		randomize_indexes = {}
 	}

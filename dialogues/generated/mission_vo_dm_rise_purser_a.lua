@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/mission_vo_dm_rise_purser_a.lua
+
 local mission_vo_dm_rise_purser_a = {
 	mission_rise_airlock_ponderings_a = {
 		randomize_indexes_n = 0,
@@ -117,10 +119,10 @@ local mission_vo_dm_rise_purser_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_purser_a__mission_rise_demolisher_melk_01_b_01"
+			[1] = "loc_purser_a__mission_rise_demolisher_melk_01_b_01"
 		},
 		sound_events_duration = {
-			[1.0] = 6.442323
+			[1] = 6.442323
 		},
 		randomize_indexes = {}
 	},
@@ -128,10 +130,10 @@ local mission_vo_dm_rise_purser_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_purser_a__mission_rise_demolisher_melk_02_b_01"
+			[1] = "loc_purser_a__mission_rise_demolisher_melk_02_b_01"
 		},
 		sound_events_duration = {
-			[1.0] = 3.881146
+			[1] = 3.881146
 		},
 		randomize_indexes = {}
 	},
@@ -139,10 +141,10 @@ local mission_vo_dm_rise_purser_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_purser_a__mission_rise_demolisher_melk_03_b_01"
+			[1] = "loc_purser_a__mission_rise_demolisher_melk_03_b_01"
 		},
 		sound_events_duration = {
-			[1.0] = 3.231688
+			[1] = 3.231688
 		},
 		randomize_indexes = {}
 	},
@@ -235,12 +237,12 @@ local mission_vo_dm_rise_purser_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_purser_a__mission_rise_end_event_corruptor_two_dead_a_02",
-			[2.0] = "loc_purser_a__mission_rise_end_event_corruptor_two_dead_a_03"
+			[1] = "loc_purser_a__mission_rise_end_event_corruptor_two_dead_a_02",
+			[2] = "loc_purser_a__mission_rise_end_event_corruptor_two_dead_a_03"
 		},
 		sound_events_duration = {
-			[1.0] = 3.961927,
-			[2.0] = 4.351729
+			[1] = 3.961927,
+			[2] = 4.351729
 		},
 		randomize_indexes = {}
 	},

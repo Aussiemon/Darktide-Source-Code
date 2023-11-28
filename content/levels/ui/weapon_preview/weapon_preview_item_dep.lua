@@ -1,3 +1,5 @@
+﻿-- chunkname: @content/levels/ui/weapon_preview/weapon_preview_item_dep.lua
+
 local item_dependencies = {
 	minion_items = {},
 	player_items = {},

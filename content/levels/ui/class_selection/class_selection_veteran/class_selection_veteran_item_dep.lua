@@ -1,3 +1,5 @@
+﻿-- chunkname: @content/levels/ui/class_selection/class_selection_veteran/class_selection_veteran_item_dep.lua
+
 local item_dependencies = {
 	minion_items = {},
 	player_items = {

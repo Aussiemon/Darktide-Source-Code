@@ -1,3 +1,5 @@
+﻿-- chunkname: @content/levels/dust/missions/mission_hm_strain_main_path.lua
+
 local path_markers = {
 	{
 		kind = "good",

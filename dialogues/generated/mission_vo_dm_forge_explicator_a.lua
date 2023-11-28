@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/mission_vo_dm_forge_explicator_a.lua
+
 local mission_vo_dm_forge_explicator_a = {
 	mission_forge_assembly_line = {
 		randomize_indexes_n = 0,
@@ -182,13 +184,13 @@ local mission_vo_dm_forge_explicator_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_explicator_a__event_demolition_first_corruptor_destroyed_b_01"
+			[1] = "loc_explicator_a__event_demolition_first_corruptor_destroyed_b_01"
 		},
 		sound_events_duration = {
-			[1.0] = 2.630688
+			[1] = 2.630688
 		},
 		sound_event_weights = {
-			[1.0] = 1
+			[1] = 1
 		},
 		randomize_indexes = {}
 	},

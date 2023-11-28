@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/event_vo_survive.lua
+
 return function ()
 	define_rule({
 		name = "event_survive_almost_done",

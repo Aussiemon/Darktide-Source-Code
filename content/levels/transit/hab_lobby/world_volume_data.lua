@@ -1,3 +1,5 @@
+﻿-- chunkname: @content/levels/transit/hab_lobby/world_volume_data.lua
+
 local volume_data = {
 	{
 		height = 4,
@@ -43,8 +45,8 @@ local volume_data = {
 		},
 		up_vector = {
 			-0,
-			[2.0] = 0,
-			[3.0] = 1
+			[2] = 0,
+			[3] = 1
 		}
 	},
 	{
@@ -91,8 +93,8 @@ local volume_data = {
 		},
 		up_vector = {
 			-0,
-			[2.0] = 0,
-			[3.0] = 1
+			[2] = 0,
+			[3] = 1
 		}
 	},
 	{

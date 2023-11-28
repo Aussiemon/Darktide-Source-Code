@@ -1,3 +1,5 @@
+﻿-- chunkname: @content/levels/transit/start_trench/world_volume_data.lua
+
 local volume_data = {
 	{
 		height = 7,
@@ -542,8 +544,8 @@ local volume_data = {
 		},
 		up_vector = {
 			-0,
-			[2.0] = 0,
-			[3.0] = 1.4636069536209106
+			[2] = 0,
+			[3] = 1.4636069536209106
 		}
 	},
 	{
@@ -590,8 +592,8 @@ local volume_data = {
 		},
 		up_vector = {
 			-0,
-			[2.0] = 0,
-			[3.0] = 1.4636069536209106
+			[2] = 0,
+			[3] = 1.4636069536209106
 		}
 	},
 	{

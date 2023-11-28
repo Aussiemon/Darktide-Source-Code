@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/mission_vo_cm_habs_tech_priest_a.lua
+
 local mission_vo_cm_habs_tech_priest_a = {
 	info_get_out_habs = {
 		randomize_indexes_n = 0,
@@ -270,16 +272,16 @@ local mission_vo_cm_habs_tech_priest_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_tech_priest_a__mission_enforcer_event_survive_01",
-			[2.0] = "loc_tech_priest_a__mission_enforcer_event_survive_02"
+			[1] = "loc_tech_priest_a__mission_enforcer_event_survive_01",
+			[2] = "loc_tech_priest_a__mission_enforcer_event_survive_02"
 		},
 		sound_events_duration = {
-			[1.0] = 5.637604,
-			[2.0] = 6.357042
+			[1] = 5.637604,
+			[2] = 6.357042
 		},
 		sound_event_weights = {
-			[1.0] = 0.5,
-			[2.0] = 0.5
+			[1] = 0.5,
+			[2] = 0.5
 		},
 		randomize_indexes = {}
 	},

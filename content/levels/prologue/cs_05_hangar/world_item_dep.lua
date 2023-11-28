@@ -1,3 +1,5 @@
+﻿-- chunkname: @content/levels/prologue/cs_05_hangar/world_item_dep.lua
+
 local item_dependencies = {
 	minion_items = {
 		["content/items/characters/minions/chaos_traitor_guard/attachments_base/face_02_tattoo_01"] = 1,

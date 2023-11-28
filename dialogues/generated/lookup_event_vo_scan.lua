@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/lookup_event_vo_scan.lua
+
 DialogueLookup[DialogueLookup_n + 1] = "cmd_wandering_skull"
 DialogueLookup[DialogueLookup_n + 2] = "event_scan_all_targets_scanned"
 DialogueLookup[DialogueLookup_n + 3] = "event_scan_find_targets_first"

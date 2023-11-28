@@ -1,3 +1,5 @@
+﻿-- chunkname: @content/levels/watertown/missions/mission_dm_stockpile_main_path.lua
+
 local path_markers = {
 	{
 		kind = "good",

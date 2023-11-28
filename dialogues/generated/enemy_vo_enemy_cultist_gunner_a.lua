@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/enemy_vo_enemy_cultist_gunner_a.lua
+
 local enemy_vo_enemy_cultist_gunner_a = {
 	cultist_gunner_friendly_fire = {
 		randomize_indexes_n = 0,

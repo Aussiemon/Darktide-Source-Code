@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/enemy_vo_enemy_cultist_rusher_male_b.lua
+
 local enemy_vo_enemy_cultist_rusher_male_b = {
 	cultist_rusher_switch_to_melee = {
 		randomize_indexes_n = 0,

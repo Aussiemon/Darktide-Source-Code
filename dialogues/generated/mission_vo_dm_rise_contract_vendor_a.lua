@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/mission_vo_dm_rise_contract_vendor_a.lua
+
 local mission_vo_dm_rise_contract_vendor_a = {
 	mission_rise_airlock_ponderings_a = {
 		randomize_indexes_n = 0,
@@ -88,10 +90,10 @@ local mission_vo_dm_rise_contract_vendor_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_contract_vendor_a__mission_rise_demolisher_melk_01_a_01"
+			[1] = "loc_contract_vendor_a__mission_rise_demolisher_melk_01_a_01"
 		},
 		sound_events_duration = {
-			[1.0] = 4.995865
+			[1] = 4.995865
 		},
 		randomize_indexes = {}
 	},
@@ -99,10 +101,10 @@ local mission_vo_dm_rise_contract_vendor_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_contract_vendor_a__mission_rise_demolisher_melk_02_a_01"
+			[1] = "loc_contract_vendor_a__mission_rise_demolisher_melk_02_a_01"
 		},
 		sound_events_duration = {
-			[1.0] = 7.628563
+			[1] = 7.628563
 		},
 		randomize_indexes = {}
 	},
@@ -110,10 +112,10 @@ local mission_vo_dm_rise_contract_vendor_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_contract_vendor_a__mission_rise_demolisher_melk_03_a_01"
+			[1] = "loc_contract_vendor_a__mission_rise_demolisher_melk_03_a_01"
 		},
 		sound_events_duration = {
-			[1.0] = 4.834354
+			[1] = 4.834354
 		},
 		randomize_indexes = {}
 	},
@@ -212,12 +214,12 @@ local mission_vo_dm_rise_contract_vendor_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_contract_vendor_a__mission_rise_end_event_corruptor_two_dead_a_02",
-			[2.0] = "loc_contract_vendor_a__mission_rise_end_event_corruptor_two_dead_a_04"
+			[1] = "loc_contract_vendor_a__mission_rise_end_event_corruptor_two_dead_a_02",
+			[2] = "loc_contract_vendor_a__mission_rise_end_event_corruptor_two_dead_a_04"
 		},
 		sound_events_duration = {
-			[1.0] = 4.141094,
-			[2.0] = 4.411677
+			[1] = 4.141094,
+			[2] = 4.411677
 		},
 		randomize_indexes = {}
 	},
@@ -344,12 +346,12 @@ local mission_vo_dm_rise_contract_vendor_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_contract_vendor_a__mission_rise_maze_a_01",
-			[2.0] = "loc_contract_vendor_a__mission_rise_maze_a_04"
+			[1] = "loc_contract_vendor_a__mission_rise_maze_a_01",
+			[2] = "loc_contract_vendor_a__mission_rise_maze_a_04"
 		},
 		sound_events_duration = {
-			[1.0] = 5.733344,
-			[2.0] = 6.546385
+			[1] = 5.733344,
+			[2] = 6.546385
 		},
 		randomize_indexes = {}
 	},

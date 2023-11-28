@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/mission_vo_cm_habs_veteran_male_b.lua
+
 local mission_vo_cm_habs_veteran_male_b = {
 	hab_block_void_response_b = {
 		randomize_indexes_n = 0,
@@ -23,12 +25,12 @@ local mission_vo_cm_habs_veteran_male_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_veteran_male_b__level_hab_block_apartments_01",
-			[2.0] = "loc_veteran_male_b__level_hab_block_apartments_02"
+			[1] = "loc_veteran_male_b__level_hab_block_apartments_01",
+			[2] = "loc_veteran_male_b__level_hab_block_apartments_02"
 		},
 		sound_events_duration = {
-			[1.0] = 2.677021,
-			[2.0] = 3.284813
+			[1] = 2.677021,
+			[2] = 3.284813
 		},
 		randomize_indexes = {}
 	},
@@ -36,12 +38,12 @@ local mission_vo_cm_habs_veteran_male_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_veteran_male_b__level_hab_block_apartments_response_01",
-			[2.0] = "loc_veteran_male_b__level_hab_block_apartments_response_02"
+			[1] = "loc_veteran_male_b__level_hab_block_apartments_response_01",
+			[2] = "loc_veteran_male_b__level_hab_block_apartments_response_02"
 		},
 		sound_events_duration = {
-			[1.0] = 5.120292,
-			[2.0] = 3.098104
+			[1] = 5.120292,
+			[2] = 3.098104
 		},
 		randomize_indexes = {}
 	},
@@ -49,12 +51,12 @@ local mission_vo_cm_habs_veteran_male_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_veteran_male_b__level_hab_block_atrium_01",
-			[2.0] = "loc_veteran_male_b__level_hab_block_atrium_02"
+			[1] = "loc_veteran_male_b__level_hab_block_atrium_01",
+			[2] = "loc_veteran_male_b__level_hab_block_atrium_02"
 		},
 		sound_events_duration = {
-			[1.0] = 2.760667,
-			[2.0] = 5.55724
+			[1] = 2.760667,
+			[2] = 5.55724
 		},
 		randomize_indexes = {}
 	},
@@ -62,12 +64,12 @@ local mission_vo_cm_habs_veteran_male_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_veteran_male_b__level_hab_block_b_response_b_01",
-			[2.0] = "loc_veteran_male_b__level_hab_block_b_response_b_02"
+			[1] = "loc_veteran_male_b__level_hab_block_b_response_b_01",
+			[2] = "loc_veteran_male_b__level_hab_block_b_response_b_02"
 		},
 		sound_events_duration = {
-			[1.0] = 2.227479,
-			[2.0] = 4.050813
+			[1] = 2.227479,
+			[2] = 4.050813
 		},
 		randomize_indexes = {}
 	},
@@ -75,12 +77,12 @@ local mission_vo_cm_habs_veteran_male_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_veteran_male_b__level_hab_block_collapse_01",
-			[2.0] = "loc_veteran_male_b__level_hab_block_collapse_02"
+			[1] = "loc_veteran_male_b__level_hab_block_collapse_01",
+			[2] = "loc_veteran_male_b__level_hab_block_collapse_02"
 		},
 		sound_events_duration = {
-			[1.0] = 1.759979,
-			[2.0] = 1.435354
+			[1] = 1.759979,
+			[2] = 1.435354
 		},
 		randomize_indexes = {}
 	},
@@ -88,12 +90,12 @@ local mission_vo_cm_habs_veteran_male_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_veteran_male_b__level_hab_block_corpse_01",
-			[2.0] = "loc_veteran_male_b__level_hab_block_corpse_02"
+			[1] = "loc_veteran_male_b__level_hab_block_corpse_01",
+			[2] = "loc_veteran_male_b__level_hab_block_corpse_02"
 		},
 		sound_events_duration = {
-			[1.0] = 2.818083,
-			[2.0] = 3.958167
+			[1] = 2.818083,
+			[2] = 3.958167
 		},
 		randomize_indexes = {}
 	},
@@ -142,12 +144,12 @@ local mission_vo_cm_habs_veteran_male_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_veteran_male_b__level_hab_block_market_response_01",
-			[2.0] = "loc_veteran_male_b__level_hab_block_market_response_02"
+			[1] = "loc_veteran_male_b__level_hab_block_market_response_01",
+			[2] = "loc_veteran_male_b__level_hab_block_market_response_02"
 		},
 		sound_events_duration = {
-			[1.0] = 3.959979,
-			[2.0] = 3.208021
+			[1] = 3.959979,
+			[2] = 3.208021
 		},
 		randomize_indexes = {}
 	},
@@ -155,12 +157,12 @@ local mission_vo_cm_habs_veteran_male_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_veteran_male_b__level_hab_block_security_01",
-			[2.0] = "loc_veteran_male_b__level_hab_block_security_02"
+			[1] = "loc_veteran_male_b__level_hab_block_security_01",
+			[2] = "loc_veteran_male_b__level_hab_block_security_02"
 		},
 		sound_events_duration = {
-			[1.0] = 5.056833,
-			[2.0] = 5.231167
+			[1] = 5.056833,
+			[2] = 5.231167
 		},
 		randomize_indexes = {}
 	},
@@ -168,16 +170,16 @@ local mission_vo_cm_habs_veteran_male_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_veteran_male_b__level_hab_block_void_01",
-			[2.0] = "loc_veteran_male_b__level_hab_block_void_02"
+			[1] = "loc_veteran_male_b__level_hab_block_void_01",
+			[2] = "loc_veteran_male_b__level_hab_block_void_02"
 		},
 		sound_events_duration = {
-			[1.0] = 2.235083,
-			[2.0] = 5.535833
+			[1] = 2.235083,
+			[2] = 5.535833
 		},
 		sound_event_weights = {
-			[1.0] = 0.5,
-			[2.0] = 0.5
+			[1] = 0.5,
+			[2] = 0.5
 		},
 		randomize_indexes = {}
 	},
@@ -214,12 +216,12 @@ local mission_vo_cm_habs_veteran_male_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_veteran_male_b__level_hab_block_temple_01",
-			[2.0] = "loc_veteran_male_b__level_hab_block_temple_02"
+			[1] = "loc_veteran_male_b__level_hab_block_temple_01",
+			[2] = "loc_veteran_male_b__level_hab_block_temple_02"
 		},
 		sound_events_duration = {
-			[1.0] = 4.069958,
-			[2.0] = 3.674938
+			[1] = 4.069958,
+			[2] = 3.674938
 		},
 		randomize_indexes = {}
 	},
@@ -268,12 +270,12 @@ local mission_vo_cm_habs_veteran_male_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_veteran_male_b__level_hab_block_vista_01",
-			[2.0] = "loc_veteran_male_b__level_hab_block_vista_02"
+			[1] = "loc_veteran_male_b__level_hab_block_vista_01",
+			[2] = "loc_veteran_male_b__level_hab_block_vista_02"
 		},
 		sound_events_duration = {
-			[1.0] = 2.630563,
-			[2.0] = 3.951625
+			[1] = 2.630563,
+			[2] = 3.951625
 		},
 		randomize_indexes = {}
 	}

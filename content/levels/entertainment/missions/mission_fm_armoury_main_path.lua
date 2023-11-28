@@ -1,3 +1,5 @@
+﻿-- chunkname: @content/levels/entertainment/missions/mission_fm_armoury_main_path.lua
+
 local path_markers = {
 	{
 		kind = "good",

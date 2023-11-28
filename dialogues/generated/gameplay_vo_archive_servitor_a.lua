@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/gameplay_vo_archive_servitor_a.lua
+
 local gameplay_vo_archive_servitor_a = {
 	mission_archives_activate_from_hibernation_a = {
 		randomize_indexes_n = 0,

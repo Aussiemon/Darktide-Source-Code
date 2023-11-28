@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/event_vo_kill_veteran_male_c.lua
+
 local event_vo_kill_veteran_male_c = {
 	event_kill_target_damaged = {
 		randomize_indexes_n = 0,

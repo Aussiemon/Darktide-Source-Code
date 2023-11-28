@@ -1,3 +1,5 @@
+﻿-- chunkname: @content/levels/hub/hub_ship/cs_07_08_office/world_item_dep.lua
+
 local item_dependencies = {
 	player_items = {
 		["content/items/characters/player/human/gear_legs/prisoner_male_lowerbody_01"] = 1,

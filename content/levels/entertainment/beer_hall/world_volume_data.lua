@@ -1,3 +1,5 @@
+﻿-- chunkname: @content/levels/entertainment/beer_hall/world_volume_data.lua
+
 local volume_data = {
 	{
 		height = 2,
@@ -187,8 +189,8 @@ local volume_data = {
 		},
 		up_vector = {
 			-0,
-			[2.0] = 0,
-			[3.0] = 0.5
+			[2] = 0,
+			[3] = 0.5
 		}
 	},
 	{
@@ -475,8 +477,8 @@ local volume_data = {
 		},
 		up_vector = {
 			-0,
-			[2.0] = 0,
-			[3.0] = 0.5
+			[2] = 0,
+			[3] = 0.5
 		}
 	},
 	{
@@ -523,8 +525,8 @@ local volume_data = {
 		},
 		up_vector = {
 			-0,
-			[2.0] = 0,
-			[3.0] = 0.5
+			[2] = 0,
+			[3] = 0.5
 		}
 	},
 	{
@@ -619,8 +621,8 @@ local volume_data = {
 		},
 		up_vector = {
 			-0,
-			[2.0] = 0,
-			[3.0] = 0.5
+			[2] = 0,
+			[3] = 0.5
 		}
 	},
 	{

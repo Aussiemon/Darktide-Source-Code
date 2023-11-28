@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/enemy_vo_enemy_traitor_berzerker_b.lua
+
 local enemy_vo_enemy_traitor_berzerker_b = {
 	traitor_berzerker_assault = {
 		randomize_indexes_n = 0,

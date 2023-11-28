@@ -1,14 +1,16 @@
+﻿-- chunkname: @dialogues/generated/mission_vo_dm_stockpile_ogryn_b.lua
+
 local mission_vo_dm_stockpile_ogryn_b = {
 	mission_stockpile_cartel_habs = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_ogryn_b__mission_stockpile_cartel_habs_01",
-			[2.0] = "loc_ogryn_b__mission_stockpile_cartel_habs_02"
+			[1] = "loc_ogryn_b__mission_stockpile_cartel_habs_01",
+			[2] = "loc_ogryn_b__mission_stockpile_cartel_habs_02"
 		},
 		sound_events_duration = {
-			[1.0] = 4.718969,
-			[2.0] = 2.082688
+			[1] = 4.718969,
+			[2] = 2.082688
 		},
 		randomize_indexes = {}
 	},
@@ -16,12 +18,12 @@ local mission_vo_dm_stockpile_ogryn_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_ogryn_b__mission_stockpile_elevator_conversation_one_a_01",
-			[2.0] = "loc_ogryn_b__mission_stockpile_elevator_conversation_one_a_02"
+			[1] = "loc_ogryn_b__mission_stockpile_elevator_conversation_one_a_01",
+			[2] = "loc_ogryn_b__mission_stockpile_elevator_conversation_one_a_02"
 		},
 		sound_events_duration = {
-			[1.0] = 3.920844,
-			[2.0] = 2.831771
+			[1] = 3.920844,
+			[2] = 2.831771
 		},
 		randomize_indexes = {}
 	},
@@ -29,12 +31,12 @@ local mission_vo_dm_stockpile_ogryn_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_ogryn_b__mission_stockpile_elevator_conversation_one_c_01",
-			[2.0] = "loc_ogryn_b__mission_stockpile_elevator_conversation_one_c_02"
+			[1] = "loc_ogryn_b__mission_stockpile_elevator_conversation_one_c_01",
+			[2] = "loc_ogryn_b__mission_stockpile_elevator_conversation_one_c_02"
 		},
 		sound_events_duration = {
-			[1.0] = 3.561865,
-			[2.0] = 3.469031
+			[1] = 3.561865,
+			[2] = 3.469031
 		},
 		randomize_indexes = {}
 	},
@@ -42,12 +44,12 @@ local mission_vo_dm_stockpile_ogryn_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_ogryn_b__mission_stockpile_elevator_conversation_three_a_01",
-			[2.0] = "loc_ogryn_b__mission_stockpile_elevator_conversation_three_a_02"
+			[1] = "loc_ogryn_b__mission_stockpile_elevator_conversation_three_a_01",
+			[2] = "loc_ogryn_b__mission_stockpile_elevator_conversation_three_a_02"
 		},
 		sound_events_duration = {
-			[1.0] = 2.379188,
-			[2.0] = 1.933979
+			[1] = 2.379188,
+			[2] = 1.933979
 		},
 		randomize_indexes = {}
 	},
@@ -55,12 +57,12 @@ local mission_vo_dm_stockpile_ogryn_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_ogryn_b__mission_stockpile_elevator_conversation_three_c_01",
-			[2.0] = "loc_ogryn_b__mission_stockpile_elevator_conversation_three_c_02"
+			[1] = "loc_ogryn_b__mission_stockpile_elevator_conversation_three_c_01",
+			[2] = "loc_ogryn_b__mission_stockpile_elevator_conversation_three_c_02"
 		},
 		sound_events_duration = {
-			[1.0] = 3.957688,
-			[2.0] = 3.216302
+			[1] = 3.957688,
+			[2] = 3.216302
 		},
 		randomize_indexes = {}
 	},
@@ -68,12 +70,12 @@ local mission_vo_dm_stockpile_ogryn_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_ogryn_b__mission_stockpile_elevator_conversation_two_a_01",
-			[2.0] = "loc_ogryn_b__mission_stockpile_elevator_conversation_two_a_02"
+			[1] = "loc_ogryn_b__mission_stockpile_elevator_conversation_two_a_01",
+			[2] = "loc_ogryn_b__mission_stockpile_elevator_conversation_two_a_02"
 		},
 		sound_events_duration = {
-			[1.0] = 4.24324,
-			[2.0] = 5.14201
+			[1] = 4.24324,
+			[2] = 5.14201
 		},
 		randomize_indexes = {}
 	},
@@ -81,12 +83,12 @@ local mission_vo_dm_stockpile_ogryn_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_ogryn_b__mission_stockpile_elevator_conversation_two_c_01",
-			[2.0] = "loc_ogryn_b__mission_stockpile_elevator_conversation_two_c_02"
+			[1] = "loc_ogryn_b__mission_stockpile_elevator_conversation_two_c_01",
+			[2] = "loc_ogryn_b__mission_stockpile_elevator_conversation_two_c_02"
 		},
 		sound_events_duration = {
-			[1.0] = 2.390729,
-			[2.0] = 2.402
+			[1] = 2.390729,
+			[2] = 2.402
 		},
 		randomize_indexes = {}
 	},
@@ -135,12 +137,12 @@ local mission_vo_dm_stockpile_ogryn_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_ogryn_b__mission_stockpile_holo_statue_01",
-			[2.0] = "loc_ogryn_b__mission_stockpile_holo_statue_02"
+			[1] = "loc_ogryn_b__mission_stockpile_holo_statue_01",
+			[2] = "loc_ogryn_b__mission_stockpile_holo_statue_02"
 		},
 		sound_events_duration = {
-			[1.0] = 2.693927,
-			[2.0] = 2.388292
+			[1] = 2.693927,
+			[2] = 2.388292
 		},
 		randomize_indexes = {}
 	},
@@ -148,12 +150,12 @@ local mission_vo_dm_stockpile_ogryn_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_ogryn_b__mission_stockpile_main_access_01",
-			[2.0] = "loc_ogryn_b__mission_stockpile_main_access_02"
+			[1] = "loc_ogryn_b__mission_stockpile_main_access_01",
+			[2] = "loc_ogryn_b__mission_stockpile_main_access_02"
 		},
 		sound_events_duration = {
-			[1.0] = 2.170635,
-			[2.0] = 2.766063
+			[1] = 2.170635,
+			[2] = 2.766063
 		},
 		randomize_indexes = {}
 	},
@@ -161,12 +163,12 @@ local mission_vo_dm_stockpile_ogryn_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_ogryn_b__mission_stockpile_ruined_hab_01",
-			[2.0] = "loc_ogryn_b__mission_stockpile_ruined_hab_02"
+			[1] = "loc_ogryn_b__mission_stockpile_ruined_hab_01",
+			[2] = "loc_ogryn_b__mission_stockpile_ruined_hab_02"
 		},
 		sound_events_duration = {
-			[1.0] = 3.009385,
-			[2.0] = 2.7125
+			[1] = 3.009385,
+			[2] = 2.7125
 		},
 		randomize_indexes = {}
 	},
@@ -174,12 +176,12 @@ local mission_vo_dm_stockpile_ogryn_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_ogryn_b__mission_stockpile_start_banter_a_01",
-			[2.0] = "loc_ogryn_b__mission_stockpile_start_banter_a_02"
+			[1] = "loc_ogryn_b__mission_stockpile_start_banter_a_01",
+			[2] = "loc_ogryn_b__mission_stockpile_start_banter_a_02"
 		},
 		sound_events_duration = {
-			[1.0] = 3.565542,
-			[2.0] = 3.651781
+			[1] = 3.565542,
+			[2] = 3.651781
 		},
 		randomize_indexes = {}
 	},

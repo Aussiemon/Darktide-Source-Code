@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/on_demand_vo_psyker_male_b.lua
+
 local on_demand_vo_psyker_male_b = {
 	com_wheel_vo_enemy_over_here = {
 		randomize_indexes_n = 0,

@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/lookup_circumstance_vo_ventilation_purge.lua
+
 DialogueLookup[DialogueLookup_n + 1] = "combat_pause_circumstance_ogryn_a_gas_a"
 DialogueLookup[DialogueLookup_n + 2] = "combat_pause_circumstance_ogryn_a_gas_b"
 DialogueLookup[DialogueLookup_n + 3] = "combat_pause_circumstance_ogryn_b_gas_a"

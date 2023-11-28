@@ -1,3 +1,5 @@
+﻿-- chunkname: @content/levels/tank_foundry/forge_habs/world_item_dep.lua
+
 local item_dependencies = {
 	minion_items = {
 		["content/items/characters/minions/chaos_traitor_guard/attachments_base/upperbody_b"] = 1,

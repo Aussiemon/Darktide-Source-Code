@@ -1,3 +1,5 @@
+﻿-- chunkname: @content/levels/transit/start_trench/world_item_dep.lua
+
 local item_dependencies = {
 	minion_items = {},
 	player_items = {

@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/enemy_vo_enemy_traitor_guard_flamer_a.lua
+
 local enemy_vo_enemy_traitor_guard_flamer_a = {
 	traitor_guard_flamer_spawned = {
 		randomize_indexes_n = 0,

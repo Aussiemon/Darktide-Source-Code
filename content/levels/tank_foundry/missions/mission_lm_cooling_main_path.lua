@@ -1,3 +1,5 @@
+﻿-- chunkname: @content/levels/tank_foundry/missions/mission_lm_cooling_main_path.lua
+
 local path_markers = {
 	{
 		kind = "good",

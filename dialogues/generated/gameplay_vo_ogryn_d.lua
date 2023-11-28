@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/gameplay_vo_ogryn_d.lua
+
 local gameplay_vo_ogryn_d = {
 	ability_bonebreaker = {
 		randomize_indexes_n = 0,
@@ -62,16 +64,16 @@ local gameplay_vo_ogryn_d = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_ogryn_d__combat_pause_quirk_ammo_hog_b_01",
-			[2.0] = "loc_ogryn_d__combat_pause_quirk_ammo_hog_b_02"
+			[1] = "loc_ogryn_d__combat_pause_quirk_ammo_hog_b_01",
+			[2] = "loc_ogryn_d__combat_pause_quirk_ammo_hog_b_02"
 		},
 		sound_events_duration = {
-			[1.0] = 3.894563,
-			[2.0] = 2.627719
+			[1] = 3.894563,
+			[2] = 2.627719
 		},
 		sound_event_weights = {
-			[1.0] = 0.5,
-			[2.0] = 0.5
+			[1] = 0.5,
+			[2] = 0.5
 		},
 		randomize_indexes = {}
 	},
@@ -1671,16 +1673,16 @@ local gameplay_vo_ogryn_d = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_ogryn_d__combat_pause_quirk_health_hog_b_01",
-			[2.0] = "loc_ogryn_d__combat_pause_quirk_health_hog_b_02"
+			[1] = "loc_ogryn_d__combat_pause_quirk_health_hog_b_01",
+			[2] = "loc_ogryn_d__combat_pause_quirk_health_hog_b_02"
 		},
 		sound_events_duration = {
-			[1.0] = 4.063396,
-			[2.0] = 4.607594
+			[1] = 4.063396,
+			[2] = 4.607594
 		},
 		sound_event_weights = {
-			[1.0] = 0.5,
-			[2.0] = 0.5
+			[1] = 0.5,
+			[2] = 0.5
 		},
 		randomize_indexes = {}
 	},
@@ -1882,12 +1884,12 @@ local gameplay_vo_ogryn_d = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_ogryn_d__info_door_open_01",
-			[2.0] = "loc_ogryn_d__info_door_open_02"
+			[1] = "loc_ogryn_d__info_door_open_01",
+			[2] = "loc_ogryn_d__info_door_open_02"
 		},
 		sound_events_duration = {
-			[1.0] = 1.935,
-			[2.0] = 2.84501
+			[1] = 1.935,
+			[2] = 2.84501
 		},
 		randomize_indexes = {}
 	},

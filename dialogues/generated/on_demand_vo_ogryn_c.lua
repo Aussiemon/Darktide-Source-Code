@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/on_demand_vo_ogryn_c.lua
+
 local on_demand_vo_ogryn_c = {
 	com_wheel_vo_enemy_over_here = {
 		randomize_indexes_n = 0,

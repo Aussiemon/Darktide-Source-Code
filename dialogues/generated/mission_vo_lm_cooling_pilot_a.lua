@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/mission_vo_lm_cooling_pilot_a.lua
+
 local mission_vo_lm_cooling_pilot_a = {
 	mission_cooling_leaving_response = {
 		randomize_indexes_n = 0,

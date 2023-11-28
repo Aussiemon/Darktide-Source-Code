@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/mission_vo_fm_armoury_contract_vendor_a.lua
+
 local mission_vo_fm_armoury_contract_vendor_a = {
 	mission_armoury_brewery_cellar_01_a = {
 		randomize_indexes_n = 0,

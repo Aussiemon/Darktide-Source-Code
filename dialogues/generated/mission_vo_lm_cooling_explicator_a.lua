@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/mission_vo_lm_cooling_explicator_a.lua
+
 local mission_vo_lm_cooling_explicator_a = {
 	cmd_mission_cooling_hacking_event_end = {
 		randomize_indexes_n = 0,
@@ -219,16 +221,16 @@ local mission_vo_lm_cooling_explicator_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_explicator_a__mission_enforcer_through_hab_04",
-			[2.0] = "loc_explicator_a__mission_station_start_banter_b_01"
+			[1] = "loc_explicator_a__mission_enforcer_through_hab_04",
+			[2] = "loc_explicator_a__mission_station_start_banter_b_01"
 		},
 		sound_events_duration = {
-			[1.0] = 3.42975,
-			[2.0] = 3.756792
+			[1] = 3.42975,
+			[2] = 3.756792
 		},
 		sound_event_weights = {
-			[1.0] = 0.5,
-			[2.0] = 0.5
+			[1] = 0.5,
+			[2] = 0.5
 		},
 		randomize_indexes = {}
 	},

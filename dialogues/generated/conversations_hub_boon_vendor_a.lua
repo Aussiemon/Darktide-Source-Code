@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/conversations_hub_boon_vendor_a.lua
+
 local conversations_hub_boon_vendor_a = {
 	boon_vendor_distance_restocked_dislikes_character = {
 		randomize_indexes_n = 0,
@@ -355,10 +357,10 @@ local conversations_hub_boon_vendor_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_boon_vendor_a__npc_first_interaction_01"
+			[1] = "loc_boon_vendor_a__npc_first_interaction_01"
 		},
 		sound_events_duration = {
-			[1.0] = 36.29252
+			[1] = 36.29252
 		},
 		randomize_indexes = {}
 	}

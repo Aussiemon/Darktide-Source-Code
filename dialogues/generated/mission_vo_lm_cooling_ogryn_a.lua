@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/mission_vo_lm_cooling_ogryn_a.lua
+
 local mission_vo_lm_cooling_ogryn_a = {
 	info_mission_cooling_vents_response = {
 		randomize_indexes_n = 0,
@@ -23,12 +25,12 @@ local mission_vo_lm_cooling_ogryn_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_ogryn_a__mission_cooling_elevator_conversation_one_line_one_01",
-			[2.0] = "loc_ogryn_a__mission_cooling_elevator_conversation_one_line_one_02"
+			[1] = "loc_ogryn_a__mission_cooling_elevator_conversation_one_line_one_01",
+			[2] = "loc_ogryn_a__mission_cooling_elevator_conversation_one_line_one_02"
 		},
 		sound_events_duration = {
-			[1.0] = 4.510563,
-			[2.0] = 3.439844
+			[1] = 4.510563,
+			[2] = 3.439844
 		},
 		randomize_indexes = {}
 	},
@@ -36,12 +38,12 @@ local mission_vo_lm_cooling_ogryn_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_ogryn_a__mission_cooling_elevator_conversation_one_line_three_01",
-			[2.0] = "loc_ogryn_a__mission_cooling_elevator_conversation_one_line_three_02"
+			[1] = "loc_ogryn_a__mission_cooling_elevator_conversation_one_line_three_01",
+			[2] = "loc_ogryn_a__mission_cooling_elevator_conversation_one_line_three_02"
 		},
 		sound_events_duration = {
-			[1.0] = 1.218802,
-			[2.0] = 0.886917
+			[1] = 1.218802,
+			[2] = 0.886917
 		},
 		randomize_indexes = {}
 	},
@@ -49,12 +51,12 @@ local mission_vo_lm_cooling_ogryn_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_ogryn_a__mission_cooling_elevator_conversation_three_line_one_01",
-			[2.0] = "loc_ogryn_a__mission_cooling_elevator_conversation_three_line_one_02"
+			[1] = "loc_ogryn_a__mission_cooling_elevator_conversation_three_line_one_01",
+			[2] = "loc_ogryn_a__mission_cooling_elevator_conversation_three_line_one_02"
 		},
 		sound_events_duration = {
-			[1.0] = 3.285875,
-			[2.0] = 3.665135
+			[1] = 3.285875,
+			[2] = 3.665135
 		},
 		randomize_indexes = {}
 	},
@@ -62,12 +64,12 @@ local mission_vo_lm_cooling_ogryn_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_ogryn_a__mission_cooling_elevator_conversation_three_line_three_01",
-			[2.0] = "loc_ogryn_a__mission_cooling_elevator_conversation_three_line_three_02"
+			[1] = "loc_ogryn_a__mission_cooling_elevator_conversation_three_line_three_01",
+			[2] = "loc_ogryn_a__mission_cooling_elevator_conversation_three_line_three_02"
 		},
 		sound_events_duration = {
-			[1.0] = 3.368021,
-			[2.0] = 3.562042
+			[1] = 3.368021,
+			[2] = 3.562042
 		},
 		randomize_indexes = {}
 	},
@@ -75,12 +77,12 @@ local mission_vo_lm_cooling_ogryn_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_ogryn_a__mission_cooling_elevator_conversation_two_line_one_01",
-			[2.0] = "loc_ogryn_a__mission_cooling_elevator_conversation_two_line_one_02"
+			[1] = "loc_ogryn_a__mission_cooling_elevator_conversation_two_line_one_01",
+			[2] = "loc_ogryn_a__mission_cooling_elevator_conversation_two_line_one_02"
 		},
 		sound_events_duration = {
-			[1.0] = 4.202094,
-			[2.0] = 4.70276
+			[1] = 4.202094,
+			[2] = 4.70276
 		},
 		randomize_indexes = {}
 	},
@@ -88,12 +90,12 @@ local mission_vo_lm_cooling_ogryn_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_ogryn_a__mission_cooling_elevator_conversation_two_line_three_01",
-			[2.0] = "loc_ogryn_a__mission_cooling_elevator_conversation_two_line_three_02"
+			[1] = "loc_ogryn_a__mission_cooling_elevator_conversation_two_line_three_01",
+			[2] = "loc_ogryn_a__mission_cooling_elevator_conversation_two_line_three_02"
 		},
 		sound_events_duration = {
-			[1.0] = 3.401448,
-			[2.0] = 4.704531
+			[1] = 3.401448,
+			[2] = 4.704531
 		},
 		randomize_indexes = {}
 	},
@@ -142,12 +144,12 @@ local mission_vo_lm_cooling_ogryn_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_ogryn_a__mission_cooling_heat_01",
-			[2.0] = "loc_ogryn_a__mission_cooling_heat_02"
+			[1] = "loc_ogryn_a__mission_cooling_heat_01",
+			[2] = "loc_ogryn_a__mission_cooling_heat_02"
 		},
 		sound_events_duration = {
-			[1.0] = 3.384708,
-			[2.0] = 6.449885
+			[1] = 3.384708,
+			[2] = 6.449885
 		},
 		randomize_indexes = {}
 	},
@@ -175,12 +177,12 @@ local mission_vo_lm_cooling_ogryn_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_ogryn_a__mission_cooling_leaving_01",
-			[2.0] = "loc_ogryn_a__mission_cooling_leaving_02"
+			[1] = "loc_ogryn_a__mission_cooling_leaving_01",
+			[2] = "loc_ogryn_a__mission_cooling_leaving_02"
 		},
 		sound_events_duration = {
-			[1.0] = 4.377615,
-			[2.0] = 4.30325
+			[1] = 4.377615,
+			[2] = 4.30325
 		},
 		randomize_indexes = {}
 	},
@@ -188,12 +190,12 @@ local mission_vo_lm_cooling_ogryn_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_ogryn_a__mission_cooling_long_way_down_01",
-			[2.0] = "loc_ogryn_a__mission_cooling_long_way_down_02"
+			[1] = "loc_ogryn_a__mission_cooling_long_way_down_01",
+			[2] = "loc_ogryn_a__mission_cooling_long_way_down_02"
 		},
 		sound_events_duration = {
-			[1.0] = 4.338552,
-			[2.0] = 3.637813
+			[1] = 4.338552,
+			[2] = 3.637813
 		},
 		randomize_indexes = {}
 	},
@@ -201,12 +203,12 @@ local mission_vo_lm_cooling_ogryn_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_ogryn_a__mission_cooling_overseer_office_01",
-			[2.0] = "loc_ogryn_a__mission_cooling_overseer_office_02"
+			[1] = "loc_ogryn_a__mission_cooling_overseer_office_01",
+			[2] = "loc_ogryn_a__mission_cooling_overseer_office_02"
 		},
 		sound_events_duration = {
-			[1.0] = 5.054833,
-			[2.0] = 4.267677
+			[1] = 5.054833,
+			[2] = 4.267677
 		},
 		randomize_indexes = {}
 	},
@@ -214,12 +216,12 @@ local mission_vo_lm_cooling_ogryn_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_ogryn_a__mission_cooling_worker_habitation_01",
-			[2.0] = "loc_ogryn_a__mission_cooling_worker_habitation_02"
+			[1] = "loc_ogryn_a__mission_cooling_worker_habitation_01",
+			[2] = "loc_ogryn_a__mission_cooling_worker_habitation_02"
 		},
 		sound_events_duration = {
-			[1.0] = 2.81576,
-			[2.0] = 4.9145
+			[1] = 2.81576,
+			[2] = 4.9145
 		},
 		randomize_indexes = {}
 	}

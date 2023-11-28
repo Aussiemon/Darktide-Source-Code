@@ -1,12 +1,14 @@
+﻿-- chunkname: @dialogues/generated/zealot_female_c_psyker_female_a.lua
+
 local zealot_female_c_psyker_female_a = {
 	bonding_conversation_round_three_favour_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_psyker_female_a__bonding_conversation_round_three_favour_b_01"
+			[1] = "loc_psyker_female_a__bonding_conversation_round_three_favour_b_01"
 		},
 		sound_events_duration = {
-			[1.0] = 8.377333
+			[1] = 8.377333
 		},
 		randomize_indexes = {}
 	},
@@ -14,10 +16,10 @@ local zealot_female_c_psyker_female_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_psyker_female_a__bonding_conversation_round_three_favour_d_01"
+			[1] = "loc_psyker_female_a__bonding_conversation_round_three_favour_d_01"
 		},
 		sound_events_duration = {
-			[1.0] = 3.746542
+			[1] = 3.746542
 		},
 		randomize_indexes = {}
 	},
@@ -25,10 +27,10 @@ local zealot_female_c_psyker_female_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_psyker_female_a__bonding_conversation_round_three_laxity_b_01"
+			[1] = "loc_psyker_female_a__bonding_conversation_round_three_laxity_b_01"
 		},
 		sound_events_duration = {
-			[1.0] = 4.870813
+			[1] = 4.870813
 		},
 		randomize_indexes = {}
 	},
@@ -36,10 +38,10 @@ local zealot_female_c_psyker_female_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_psyker_female_a__bonding_conversation_round_three_laxity_d_01"
+			[1] = "loc_psyker_female_a__bonding_conversation_round_three_laxity_d_01"
 		},
 		sound_events_duration = {
-			[1.0] = 4.976688
+			[1] = 4.976688
 		},
 		randomize_indexes = {}
 	}

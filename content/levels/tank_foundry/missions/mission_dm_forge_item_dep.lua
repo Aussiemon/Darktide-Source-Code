@@ -1,3 +1,5 @@
+﻿-- chunkname: @content/levels/tank_foundry/missions/mission_dm_forge_item_dep.lua
+
 local item_dependencies = {
 	minion_items = {},
 	player_items = {

@@ -1,3 +1,5 @@
+﻿-- chunkname: @content/levels/transit/shaft_escape/world_volume_data.lua
+
 local volume_data = {
 	{
 		height = 13,
@@ -265,8 +267,8 @@ local volume_data = {
 		},
 		up_vector = {
 			-0,
-			[2.0] = 0,
-			[3.0] = 0.5219280123710632
+			[2] = 0,
+			[3] = 0.5219280123710632
 		}
 	},
 	{
@@ -366,8 +368,8 @@ local volume_data = {
 		},
 		up_vector = {
 			-0,
-			[2.0] = 0,
-			[3.0] = 1
+			[2] = 0,
+			[3] = 1
 		}
 	},
 	{
@@ -658,8 +660,8 @@ local volume_data = {
 		},
 		up_vector = {
 			-0,
-			[2.0] = 0,
-			[3.0] = 1
+			[2] = 0,
+			[3] = 1
 		}
 	},
 	{
@@ -706,8 +708,8 @@ local volume_data = {
 		},
 		up_vector = {
 			-0,
-			[2.0] = 0,
-			[3.0] = 1
+			[2] = 0,
+			[3] = 1
 		}
 	}
 }

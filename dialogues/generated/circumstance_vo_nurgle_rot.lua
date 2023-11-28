@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/circumstance_vo_nurgle_rot.lua
+
 return function ()
 	define_rule({
 		name = "nurgle_circumstance_conversation_five_a",

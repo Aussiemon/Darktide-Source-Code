@@ -1,12 +1,14 @@
+﻿-- chunkname: @dialogues/generated/psyker_female_b_ogryn_b.lua
+
 local psyker_female_b_ogryn_b = {
 	bonding_conversation_metropolitan_beauty_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_ogryn_b__bonding_conversation_metropolitan_beauty_b_01"
+			[1] = "loc_ogryn_b__bonding_conversation_metropolitan_beauty_b_01"
 		},
 		sound_events_duration = {
-			[1.0] = 3.914906
+			[1] = 3.914906
 		},
 		randomize_indexes = {}
 	},
@@ -14,10 +16,10 @@ local psyker_female_b_ogryn_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_ogryn_b__bonding_conversation_metropolitan_beauty_d_01"
+			[1] = "loc_ogryn_b__bonding_conversation_metropolitan_beauty_d_01"
 		},
 		sound_events_duration = {
-			[1.0] = 2.465802
+			[1] = 2.465802
 		},
 		randomize_indexes = {}
 	},
@@ -25,10 +27,10 @@ local psyker_female_b_ogryn_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_ogryn_b__bonding_conversation_metropolitan_calming_b_01"
+			[1] = "loc_ogryn_b__bonding_conversation_metropolitan_calming_b_01"
 		},
 		sound_events_duration = {
-			[1.0] = 4.353865
+			[1] = 4.353865
 		},
 		randomize_indexes = {}
 	},
@@ -36,10 +38,10 @@ local psyker_female_b_ogryn_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_ogryn_b__bonding_conversation_metropolitan_calming_d_01"
+			[1] = "loc_ogryn_b__bonding_conversation_metropolitan_calming_d_01"
 		},
 		sound_events_duration = {
-			[1.0] = 2.679865
+			[1] = 2.679865
 		},
 		randomize_indexes = {}
 	},
@@ -47,10 +49,10 @@ local psyker_female_b_ogryn_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_ogryn_b__bonding_conversation_metropolitan_calming_f_01"
+			[1] = "loc_ogryn_b__bonding_conversation_metropolitan_calming_f_01"
 		},
 		sound_events_duration = {
-			[1.0] = 1.066667
+			[1] = 1.066667
 		},
 		randomize_indexes = {}
 	},
@@ -58,10 +60,10 @@ local psyker_female_b_ogryn_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_ogryn_b__bonding_conversation_metropolitan_lost_b_01"
+			[1] = "loc_ogryn_b__bonding_conversation_metropolitan_lost_b_01"
 		},
 		sound_events_duration = {
-			[1.0] = 3.291583
+			[1] = 3.291583
 		},
 		randomize_indexes = {}
 	},
@@ -69,10 +71,10 @@ local psyker_female_b_ogryn_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_ogryn_b__bonding_conversation_metropolitan_lost_d_01"
+			[1] = "loc_ogryn_b__bonding_conversation_metropolitan_lost_d_01"
 		},
 		sound_events_duration = {
-			[1.0] = 5.800292
+			[1] = 5.800292
 		},
 		randomize_indexes = {}
 	},
@@ -80,10 +82,10 @@ local psyker_female_b_ogryn_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_ogryn_b__bonding_conversation_metropolitan_loud_b_01"
+			[1] = "loc_ogryn_b__bonding_conversation_metropolitan_loud_b_01"
 		},
 		sound_events_duration = {
-			[1.0] = 2.570865
+			[1] = 2.570865
 		},
 		randomize_indexes = {}
 	},
@@ -91,10 +93,10 @@ local psyker_female_b_ogryn_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_ogryn_b__bonding_conversation_metropolitan_loud_d_01"
+			[1] = "loc_ogryn_b__bonding_conversation_metropolitan_loud_d_01"
 		},
 		sound_events_duration = {
-			[1.0] = 3.136323
+			[1] = 3.136323
 		},
 		randomize_indexes = {}
 	},
@@ -102,10 +104,10 @@ local psyker_female_b_ogryn_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_ogryn_b__bonding_conversation_metropolitan_strongest_b_01"
+			[1] = "loc_ogryn_b__bonding_conversation_metropolitan_strongest_b_01"
 		},
 		sound_events_duration = {
-			[1.0] = 4.922156
+			[1] = 4.922156
 		},
 		randomize_indexes = {}
 	},
@@ -113,10 +115,10 @@ local psyker_female_b_ogryn_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_ogryn_b__bonding_conversation_metropolitan_strongest_d_01"
+			[1] = "loc_ogryn_b__bonding_conversation_metropolitan_strongest_d_01"
 		},
 		sound_events_duration = {
-			[1.0] = 3.574604
+			[1] = 3.574604
 		},
 		randomize_indexes = {}
 	},
@@ -124,10 +126,10 @@ local psyker_female_b_ogryn_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_ogryn_b__bonding_conversation_metropolitan_sweet_b_01"
+			[1] = "loc_ogryn_b__bonding_conversation_metropolitan_sweet_b_01"
 		},
 		sound_events_duration = {
-			[1.0] = 9.715958
+			[1] = 9.715958
 		},
 		randomize_indexes = {}
 	},
@@ -135,10 +137,10 @@ local psyker_female_b_ogryn_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_ogryn_b__bonding_conversation_metropolitan_sweet_d_01"
+			[1] = "loc_ogryn_b__bonding_conversation_metropolitan_sweet_d_01"
 		},
 		sound_events_duration = {
-			[1.0] = 5.064115
+			[1] = 5.064115
 		},
 		randomize_indexes = {}
 	}

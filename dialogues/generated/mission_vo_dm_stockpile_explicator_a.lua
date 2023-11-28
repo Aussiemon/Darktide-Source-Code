@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/mission_vo_dm_stockpile_explicator_a.lua
+
 local mission_vo_dm_stockpile_explicator_a = {
 	mission_stockpile_bridge = {
 		randomize_indexes_n = 0,

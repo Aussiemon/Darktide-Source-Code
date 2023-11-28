@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/enemy_vo_enemy_traitor_trenchfighter_b.lua
+
 local enemy_vo_enemy_traitor_trenchfighter_b = {
 	traitor_trenchfighter_alerted_idle = {
 		randomize_indexes_n = 0,

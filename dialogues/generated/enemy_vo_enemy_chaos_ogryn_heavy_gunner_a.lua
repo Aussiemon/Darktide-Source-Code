@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/enemy_vo_enemy_chaos_ogryn_heavy_gunner_a.lua
+
 local enemy_vo_enemy_chaos_ogryn_heavy_gunner_a = {
 	chaos_ogryn_heavy_gunner_alerted_idle = {
 		randomize_indexes_n = 0,

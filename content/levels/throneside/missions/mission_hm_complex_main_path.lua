@@ -1,3 +1,5 @@
+﻿-- chunkname: @content/levels/throneside/missions/mission_hm_complex_main_path.lua
+
 local path_markers = {
 	{
 		kind = "good",

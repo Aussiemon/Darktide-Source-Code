@@ -1,18 +1,20 @@
+﻿-- chunkname: @dialogues/generated/mission_vo_lm_scavenge_ogryn_b.lua
+
 local mission_vo_lm_scavenge_ogryn_b = {
 	mission_scavenge_atmosphere_shield = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_ogryn_b__mission_strain_atmosphere_shield_01",
-			[2.0] = "loc_ogryn_b__mission_strain_atmosphere_shield_02"
+			[1] = "loc_ogryn_b__mission_strain_atmosphere_shield_01",
+			[2] = "loc_ogryn_b__mission_strain_atmosphere_shield_02"
 		},
 		sound_events_duration = {
-			[1.0] = 7.860125,
-			[2.0] = 2.632365
+			[1] = 7.860125,
+			[2] = 2.632365
 		},
 		sound_event_weights = {
-			[1.0] = 0.5,
-			[2.0] = 0.5
+			[1] = 0.5,
+			[2] = 0.5
 		},
 		randomize_indexes = {}
 	},
@@ -20,12 +22,12 @@ local mission_vo_lm_scavenge_ogryn_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_ogryn_b__mission_scavenge_daylight_01",
-			[2.0] = "loc_ogryn_b__mission_scavenge_daylight_02"
+			[1] = "loc_ogryn_b__mission_scavenge_daylight_01",
+			[2] = "loc_ogryn_b__mission_scavenge_daylight_02"
 		},
 		sound_events_duration = {
-			[1.0] = 2.946167,
-			[2.0] = 3.809375
+			[1] = 2.946167,
+			[2] = 3.809375
 		},
 		randomize_indexes = {}
 	},
@@ -62,12 +64,12 @@ local mission_vo_lm_scavenge_ogryn_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_ogryn_b__mission_scavenge_elevator_conversation_one_line_one_01",
-			[2.0] = "loc_ogryn_b__mission_scavenge_elevator_conversation_one_line_one_02"
+			[1] = "loc_ogryn_b__mission_scavenge_elevator_conversation_one_line_one_01",
+			[2] = "loc_ogryn_b__mission_scavenge_elevator_conversation_one_line_one_02"
 		},
 		sound_events_duration = {
-			[1.0] = 1.874177,
-			[2.0] = 2.500531
+			[1] = 1.874177,
+			[2] = 2.500531
 		},
 		randomize_indexes = {}
 	},
@@ -75,12 +77,12 @@ local mission_vo_lm_scavenge_ogryn_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_ogryn_b__mission_scavenge_elevator_conversation_one_line_three_01",
-			[2.0] = "loc_ogryn_b__mission_scavenge_elevator_conversation_one_line_three_02"
+			[1] = "loc_ogryn_b__mission_scavenge_elevator_conversation_one_line_three_01",
+			[2] = "loc_ogryn_b__mission_scavenge_elevator_conversation_one_line_three_02"
 		},
 		sound_events_duration = {
-			[1.0] = 2.937667,
-			[2.0] = 2.536167
+			[1] = 2.937667,
+			[2] = 2.536167
 		},
 		randomize_indexes = {}
 	},
@@ -88,12 +90,12 @@ local mission_vo_lm_scavenge_ogryn_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_ogryn_b__mission_scavenge_elevator_conversation_three_line_one_01",
-			[2.0] = "loc_ogryn_b__mission_scavenge_elevator_conversation_three_line_one_02"
+			[1] = "loc_ogryn_b__mission_scavenge_elevator_conversation_three_line_one_01",
+			[2] = "loc_ogryn_b__mission_scavenge_elevator_conversation_three_line_one_02"
 		},
 		sound_events_duration = {
-			[1.0] = 2.792427,
-			[2.0] = 5.243531
+			[1] = 2.792427,
+			[2] = 5.243531
 		},
 		randomize_indexes = {}
 	},
@@ -101,12 +103,12 @@ local mission_vo_lm_scavenge_ogryn_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_ogryn_b__mission_scavenge_elevator_conversation_three_line_three_01",
-			[2.0] = "loc_ogryn_b__mission_scavenge_elevator_conversation_three_line_three_02"
+			[1] = "loc_ogryn_b__mission_scavenge_elevator_conversation_three_line_three_01",
+			[2] = "loc_ogryn_b__mission_scavenge_elevator_conversation_three_line_three_02"
 		},
 		sound_events_duration = {
-			[1.0] = 1.18824,
-			[2.0] = 2.44751
+			[1] = 1.18824,
+			[2] = 2.44751
 		},
 		randomize_indexes = {}
 	},
@@ -114,12 +116,12 @@ local mission_vo_lm_scavenge_ogryn_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_ogryn_b__mission_scavenge_elevator_conversation_two_line_one_01",
-			[2.0] = "loc_ogryn_b__mission_scavenge_elevator_conversation_two_line_one_02"
+			[1] = "loc_ogryn_b__mission_scavenge_elevator_conversation_two_line_one_01",
+			[2] = "loc_ogryn_b__mission_scavenge_elevator_conversation_two_line_one_02"
 		},
 		sound_events_duration = {
-			[1.0] = 1.85126,
-			[2.0] = 1.763635
+			[1] = 1.85126,
+			[2] = 1.763635
 		},
 		randomize_indexes = {}
 	},
@@ -127,12 +129,12 @@ local mission_vo_lm_scavenge_ogryn_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_ogryn_b__mission_scavenge_elevator_conversation_two_line_three_01",
-			[2.0] = "loc_ogryn_b__mission_scavenge_elevator_conversation_two_line_three_02"
+			[1] = "loc_ogryn_b__mission_scavenge_elevator_conversation_two_line_three_01",
+			[2] = "loc_ogryn_b__mission_scavenge_elevator_conversation_two_line_three_02"
 		},
 		sound_events_duration = {
-			[1.0] = 3.325844,
-			[2.0] = 1.295385
+			[1] = 3.325844,
+			[2] = 1.295385
 		},
 		randomize_indexes = {}
 	},
@@ -181,12 +183,12 @@ local mission_vo_lm_scavenge_ogryn_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_ogryn_b__mission_scavenge_interior_01",
-			[2.0] = "loc_ogryn_b__mission_scavenge_interior_02"
+			[1] = "loc_ogryn_b__mission_scavenge_interior_01",
+			[2] = "loc_ogryn_b__mission_scavenge_interior_02"
 		},
 		sound_events_duration = {
-			[1.0] = 4.071604,
-			[2.0] = 3.301938
+			[1] = 4.071604,
+			[2] = 3.301938
 		},
 		randomize_indexes = {}
 	},
@@ -194,12 +196,12 @@ local mission_vo_lm_scavenge_ogryn_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_ogryn_b__mission_scavenge_servitors_01",
-			[2.0] = "loc_ogryn_b__mission_scavenge_servitors_02"
+			[1] = "loc_ogryn_b__mission_scavenge_servitors_01",
+			[2] = "loc_ogryn_b__mission_scavenge_servitors_02"
 		},
 		sound_events_duration = {
-			[1.0] = 1.595563,
-			[2.0] = 2.33224
+			[1] = 1.595563,
+			[2] = 2.33224
 		},
 		randomize_indexes = {}
 	},
@@ -207,12 +209,12 @@ local mission_vo_lm_scavenge_ogryn_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_ogryn_b__mission_scavenge_ship_elevator_end_01",
-			[2.0] = "loc_ogryn_b__mission_scavenge_ship_elevator_end_02"
+			[1] = "loc_ogryn_b__mission_scavenge_ship_elevator_end_01",
+			[2] = "loc_ogryn_b__mission_scavenge_ship_elevator_end_02"
 		},
 		sound_events_duration = {
-			[1.0] = 1.197792,
-			[2.0] = 3.690833
+			[1] = 1.197792,
+			[2] = 3.690833
 		},
 		randomize_indexes = {}
 	},
@@ -220,12 +222,12 @@ local mission_vo_lm_scavenge_ogryn_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_ogryn_b__mission_scavenge_underhalls_01",
-			[2.0] = "loc_ogryn_b__mission_scavenge_underhalls_02"
+			[1] = "loc_ogryn_b__mission_scavenge_underhalls_01",
+			[2] = "loc_ogryn_b__mission_scavenge_underhalls_02"
 		},
 		sound_events_duration = {
-			[1.0] = 4.307177,
-			[2.0] = 5.501135
+			[1] = 4.307177,
+			[2] = 5.501135
 		},
 		randomize_indexes = {}
 	}

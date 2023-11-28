@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/event_vo_kill_zealot_male_b.lua
+
 local event_vo_kill_zealot_male_b = {
 	event_kill_target_damaged = {
 		randomize_indexes_n = 0,

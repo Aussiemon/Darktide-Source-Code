@@ -1,3 +1,5 @@
+﻿-- chunkname: @content/levels/transit/tunnels_deep/world_volume_data.lua
+
 local volume_data = {
 	{
 		height = 2,
@@ -475,8 +477,8 @@ local volume_data = {
 		},
 		up_vector = {
 			-0,
-			[2.0] = 0,
-			[3.0] = 5.97560977935791
+			[2] = 0,
+			[3] = 5.97560977935791
 		}
 	},
 	{
@@ -523,8 +525,8 @@ local volume_data = {
 		},
 		up_vector = {
 			-0,
-			[2.0] = 0,
-			[3.0] = 5.846077919006348
+			[2] = 0,
+			[3] = 5.846077919006348
 		}
 	},
 	{

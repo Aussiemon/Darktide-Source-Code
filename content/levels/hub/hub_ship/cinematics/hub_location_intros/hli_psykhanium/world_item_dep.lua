@@ -1,3 +1,5 @@
+﻿-- chunkname: @content/levels/hub/hub_ship/cinematics/hub_location_intros/hli_psykhanium/world_item_dep.lua
+
 local item_dependencies = {
 	minion_items = {
 		["content/items/characters/minions/chaos_traitor_guard/attachments_base/upperbody_b"] = 1,

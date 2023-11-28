@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/mission_giver_vo_enginseer_a.lua
+
 local mission_giver_vo_enginseer_a = {
 	mission_cooling_briefing_one = {
 		randomize_indexes_n = 0,

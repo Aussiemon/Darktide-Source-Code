@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/mission_vo_fm_cargo_explicator_a.lua
+
 local mission_vo_fm_cargo_explicator_a = {
 	mission_cargo_consignment_yard = {
 		randomize_indexes_n = 0,

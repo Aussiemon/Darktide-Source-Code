@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/event_vo_hacking_pilot_a.lua
+
 local event_vo_hacking_pilot_a = {
 	cmd_hacking_decode_resuming = {
 		randomize_indexes_n = 0,

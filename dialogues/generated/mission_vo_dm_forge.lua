@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/mission_vo_dm_forge.lua
+
 return function ()
 	define_rule({
 		name = "mission_forge_alive",

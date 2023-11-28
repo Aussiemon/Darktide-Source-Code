@@ -1,14 +1,16 @@
+﻿-- chunkname: @dialogues/generated/mission_vo_dm_forge_psyker_female_b.lua
+
 local mission_vo_dm_forge_psyker_female_b = {
 	mission_forge_alive = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_psyker_female_b__mission_forge_alive_01",
-			[2.0] = "loc_psyker_female_b__mission_forge_alive_02"
+			[1] = "loc_psyker_female_b__mission_forge_alive_01",
+			[2] = "loc_psyker_female_b__mission_forge_alive_02"
 		},
 		sound_events_duration = {
-			[1.0] = 2.431813,
-			[2.0] = 3.167313
+			[1] = 2.431813,
+			[2] = 3.167313
 		},
 		randomize_indexes = {}
 	},
@@ -16,12 +18,12 @@ local mission_vo_dm_forge_psyker_female_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_psyker_female_b__mission_forge_elevator_conversation_one_a_01",
-			[2.0] = "loc_psyker_female_b__mission_forge_elevator_conversation_one_a_02"
+			[1] = "loc_psyker_female_b__mission_forge_elevator_conversation_one_a_01",
+			[2] = "loc_psyker_female_b__mission_forge_elevator_conversation_one_a_02"
 		},
 		sound_events_duration = {
-			[1.0] = 3.503042,
-			[2.0] = 3.878542
+			[1] = 3.503042,
+			[2] = 3.878542
 		},
 		randomize_indexes = {}
 	},
@@ -29,12 +31,12 @@ local mission_vo_dm_forge_psyker_female_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_psyker_female_b__mission_forge_elevator_conversation_one_c_01",
-			[2.0] = "loc_psyker_female_b__mission_forge_elevator_conversation_one_c_02"
+			[1] = "loc_psyker_female_b__mission_forge_elevator_conversation_one_c_01",
+			[2] = "loc_psyker_female_b__mission_forge_elevator_conversation_one_c_02"
 		},
 		sound_events_duration = {
-			[1.0] = 2.852042,
-			[2.0] = 5.589208
+			[1] = 2.852042,
+			[2] = 5.589208
 		},
 		randomize_indexes = {}
 	},
@@ -42,12 +44,12 @@ local mission_vo_dm_forge_psyker_female_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_psyker_female_b__mission_forge_elevator_conversation_three_a_01",
-			[2.0] = "loc_psyker_female_b__mission_forge_elevator_conversation_three_a_02"
+			[1] = "loc_psyker_female_b__mission_forge_elevator_conversation_three_a_01",
+			[2] = "loc_psyker_female_b__mission_forge_elevator_conversation_three_a_02"
 		},
 		sound_events_duration = {
-			[1.0] = 5.208813,
-			[2.0] = 3.307688
+			[1] = 5.208813,
+			[2] = 3.307688
 		},
 		randomize_indexes = {}
 	},
@@ -55,12 +57,12 @@ local mission_vo_dm_forge_psyker_female_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_psyker_female_b__mission_forge_elevator_conversation_three_c_01",
-			[2.0] = "loc_psyker_female_b__mission_forge_elevator_conversation_three_c_02"
+			[1] = "loc_psyker_female_b__mission_forge_elevator_conversation_three_c_01",
+			[2] = "loc_psyker_female_b__mission_forge_elevator_conversation_three_c_02"
 		},
 		sound_events_duration = {
-			[1.0] = 3.673438,
-			[2.0] = 2.702396
+			[1] = 3.673438,
+			[2] = 2.702396
 		},
 		randomize_indexes = {}
 	},
@@ -68,12 +70,12 @@ local mission_vo_dm_forge_psyker_female_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_psyker_female_b__mission_forge_elevator_conversation_two_a_01",
-			[2.0] = "loc_psyker_female_b__mission_forge_elevator_conversation_two_a_02"
+			[1] = "loc_psyker_female_b__mission_forge_elevator_conversation_two_a_01",
+			[2] = "loc_psyker_female_b__mission_forge_elevator_conversation_two_a_02"
 		},
 		sound_events_duration = {
-			[1.0] = 3.128229,
-			[2.0] = 3.406792
+			[1] = 3.128229,
+			[2] = 3.406792
 		},
 		randomize_indexes = {}
 	},
@@ -81,12 +83,12 @@ local mission_vo_dm_forge_psyker_female_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_psyker_female_b__mission_forge_elevator_conversation_two_c_01",
-			[2.0] = "loc_psyker_female_b__mission_forge_elevator_conversation_two_c_02"
+			[1] = "loc_psyker_female_b__mission_forge_elevator_conversation_two_c_01",
+			[2] = "loc_psyker_female_b__mission_forge_elevator_conversation_two_c_02"
 		},
 		sound_events_duration = {
-			[1.0] = 3.019375,
-			[2.0] = 3.630563
+			[1] = 3.019375,
+			[2] = 3.630563
 		},
 		randomize_indexes = {}
 	},
@@ -94,12 +96,12 @@ local mission_vo_dm_forge_psyker_female_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_psyker_female_b__mission_forge_find_smelter_01",
-			[2.0] = "loc_psyker_female_b__mission_forge_find_smelter_02"
+			[1] = "loc_psyker_female_b__mission_forge_find_smelter_01",
+			[2] = "loc_psyker_female_b__mission_forge_find_smelter_02"
 		},
 		sound_events_duration = {
-			[1.0] = 2.428854,
-			[2.0] = 3.356958
+			[1] = 2.428854,
+			[2] = 3.356958
 		},
 		randomize_indexes = {}
 	},
@@ -148,12 +150,12 @@ local mission_vo_dm_forge_psyker_female_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_psyker_female_b__mission_forge_hellhole_01",
-			[2.0] = "loc_psyker_female_b__mission_forge_hellhole_02"
+			[1] = "loc_psyker_female_b__mission_forge_hellhole_01",
+			[2] = "loc_psyker_female_b__mission_forge_hellhole_02"
 		},
 		sound_events_duration = {
-			[1.0] = 2.743917,
-			[2.0] = 2.785083
+			[1] = 2.743917,
+			[2] = 2.785083
 		},
 		randomize_indexes = {}
 	},
@@ -161,12 +163,12 @@ local mission_vo_dm_forge_psyker_female_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_psyker_female_b__mission_forge_lifeless_01",
-			[2.0] = "loc_psyker_female_b__mission_forge_lifeless_02"
+			[1] = "loc_psyker_female_b__mission_forge_lifeless_01",
+			[2] = "loc_psyker_female_b__mission_forge_lifeless_02"
 		},
 		sound_events_duration = {
-			[1.0] = 3.065042,
-			[2.0] = 6.550333
+			[1] = 3.065042,
+			[2] = 6.550333
 		},
 		randomize_indexes = {}
 	},
@@ -174,12 +176,12 @@ local mission_vo_dm_forge_psyker_female_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_psyker_female_b__mission_forge_main_entrance_01",
-			[2.0] = "loc_psyker_female_b__mission_forge_main_entrance_02"
+			[1] = "loc_psyker_female_b__mission_forge_main_entrance_01",
+			[2] = "loc_psyker_female_b__mission_forge_main_entrance_02"
 		},
 		sound_events_duration = {
-			[1.0] = 2.109167,
-			[2.0] = 3.693333
+			[1] = 2.109167,
+			[2] = 3.693333
 		},
 		randomize_indexes = {}
 	},
@@ -207,12 +209,12 @@ local mission_vo_dm_forge_psyker_female_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_psyker_female_b__mission_forge_propaganda_01",
-			[2.0] = "loc_psyker_female_b__mission_forge_propaganda_02"
+			[1] = "loc_psyker_female_b__mission_forge_propaganda_01",
+			[2] = "loc_psyker_female_b__mission_forge_propaganda_02"
 		},
 		sound_events_duration = {
-			[1.0] = 4.4785,
-			[2.0] = 4.509667
+			[1] = 4.4785,
+			[2] = 4.509667
 		},
 		randomize_indexes = {}
 	},
@@ -220,12 +222,12 @@ local mission_vo_dm_forge_psyker_female_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_psyker_female_b__mission_forge_stand_ground_01",
-			[2.0] = "loc_psyker_female_b__mission_forge_stand_ground_02"
+			[1] = "loc_psyker_female_b__mission_forge_stand_ground_01",
+			[2] = "loc_psyker_female_b__mission_forge_stand_ground_02"
 		},
 		sound_events_duration = {
-			[1.0] = 2.738021,
-			[2.0] = 2.800604
+			[1] = 2.738021,
+			[2] = 2.800604
 		},
 		randomize_indexes = {}
 	},
@@ -233,12 +235,12 @@ local mission_vo_dm_forge_psyker_female_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_psyker_female_b__mission_forge_start_banter_a_01",
-			[2.0] = "loc_psyker_female_b__mission_forge_start_banter_a_02"
+			[1] = "loc_psyker_female_b__mission_forge_start_banter_a_01",
+			[2] = "loc_psyker_female_b__mission_forge_start_banter_a_02"
 		},
 		sound_events_duration = {
-			[1.0] = 2.686125,
-			[2.0] = 3.844833
+			[1] = 2.686125,
+			[2] = 3.844833
 		},
 		randomize_indexes = {}
 	},
@@ -266,12 +268,12 @@ local mission_vo_dm_forge_psyker_female_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_psyker_female_b__mission_forge_strategic_asset_01",
-			[2.0] = "loc_psyker_female_b__mission_forge_strategic_asset_02"
+			[1] = "loc_psyker_female_b__mission_forge_strategic_asset_01",
+			[2] = "loc_psyker_female_b__mission_forge_strategic_asset_02"
 		},
 		sound_events_duration = {
-			[1.0] = 3.795271,
-			[2.0] = 4.105333
+			[1] = 3.795271,
+			[2] = 4.105333
 		},
 		randomize_indexes = {}
 	},

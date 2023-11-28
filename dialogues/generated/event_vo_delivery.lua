@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/event_vo_delivery.lua
+
 return function ()
 	define_rule({
 		name = "luggable_mission_pick_up_dm_propaganda",

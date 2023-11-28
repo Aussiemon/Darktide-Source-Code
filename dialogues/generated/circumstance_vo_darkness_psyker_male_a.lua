@@ -1,18 +1,20 @@
+﻿-- chunkname: @dialogues/generated/circumstance_vo_darkness_psyker_male_a.lua
+
 local circumstance_vo_darkness_psyker_male_a = {
 	combat_pause_circumstance_unnatural_dark_lights_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_psyker_male_a__asset_unnatural_dark_b_02",
-			[2.0] = "loc_psyker_male_a__asset_unnatural_dark_b_03"
+			[1] = "loc_psyker_male_a__asset_unnatural_dark_b_02",
+			[2] = "loc_psyker_male_a__asset_unnatural_dark_b_03"
 		},
 		sound_events_duration = {
-			[1.0] = 3.081146,
-			[2.0] = 1.875792
+			[1] = 3.081146,
+			[2] = 1.875792
 		},
 		sound_event_weights = {
-			[1.0] = 0.5,
-			[2.0] = 0.5
+			[1] = 0.5,
+			[2] = 0.5
 		},
 		randomize_indexes = {}
 	},
@@ -20,16 +22,16 @@ local circumstance_vo_darkness_psyker_male_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_psyker_male_a__asset_unnatural_dark_b_02",
-			[2.0] = "loc_psyker_male_a__asset_unnatural_dark_b_03"
+			[1] = "loc_psyker_male_a__asset_unnatural_dark_b_02",
+			[2] = "loc_psyker_male_a__asset_unnatural_dark_b_03"
 		},
 		sound_events_duration = {
-			[1.0] = 3.081146,
-			[2.0] = 1.875792
+			[1] = 3.081146,
+			[2] = 1.875792
 		},
 		sound_event_weights = {
-			[1.0] = 0.5,
-			[2.0] = 0.5
+			[1] = 0.5,
+			[2] = 0.5
 		},
 		randomize_indexes = {}
 	},

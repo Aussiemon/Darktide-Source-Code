@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/conversations_core_pilot_a.lua
+
 local conversations_core_pilot_a = {
 	conversation_40k_lore_one_02 = {
 		randomize_indexes_n = 0,
@@ -18,12 +20,12 @@ local conversations_core_pilot_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_pilot_a__conversation_zealot_one_02_01",
-			[2.0] = "loc_pilot_a__conversation_zealot_one_02_02"
+			[1] = "loc_pilot_a__conversation_zealot_one_02_01",
+			[2] = "loc_pilot_a__conversation_zealot_one_02_02"
 		},
 		sound_events_duration = {
-			[1.0] = 1.562729,
-			[2.0] = 2.382771
+			[1] = 1.562729,
+			[2] = 2.382771
 		},
 		randomize_indexes = {}
 	},
@@ -31,12 +33,12 @@ local conversations_core_pilot_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_pilot_a__conversation_zealot_three_02_01",
-			[2.0] = "loc_pilot_a__conversation_zealot_three_02_02"
+			[1] = "loc_pilot_a__conversation_zealot_three_02_01",
+			[2] = "loc_pilot_a__conversation_zealot_three_02_02"
 		},
 		sound_events_duration = {
-			[1.0] = 2.233833,
-			[2.0] = 4.932063
+			[1] = 2.233833,
+			[2] = 4.932063
 		},
 		randomize_indexes = {}
 	},
@@ -44,12 +46,12 @@ local conversations_core_pilot_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_pilot_a__conversation_zealot_two_02_01",
-			[2.0] = "loc_pilot_a__conversation_zealot_two_02_02"
+			[1] = "loc_pilot_a__conversation_zealot_two_02_01",
+			[2] = "loc_pilot_a__conversation_zealot_two_02_02"
 		},
 		sound_events_duration = {
-			[1.0] = 3.451021,
-			[2.0] = 3.76075
+			[1] = 3.451021,
+			[2] = 3.76075
 		},
 		randomize_indexes = {}
 	},

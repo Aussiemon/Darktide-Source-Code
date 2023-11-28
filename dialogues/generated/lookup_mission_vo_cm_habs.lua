@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/lookup_mission_vo_cm_habs.lua
+
 DialogueLookup[DialogueLookup_n + 1] = "hab_block_void_response_b"
 DialogueLookup[DialogueLookup_n + 2] = "info_get_out_habs"
 DialogueLookup[DialogueLookup_n + 3] = "level_hab_block_apartments"

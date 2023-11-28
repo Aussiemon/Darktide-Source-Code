@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/conversations_core_tech_priest_a.lua
+
 local conversations_core_tech_priest_a = {
 	conversation_40k_lore_one_02 = {
 		randomize_indexes_n = 0,

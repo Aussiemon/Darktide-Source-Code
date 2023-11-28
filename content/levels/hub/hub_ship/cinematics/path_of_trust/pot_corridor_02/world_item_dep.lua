@@ -1,3 +1,5 @@
+﻿-- chunkname: @content/levels/hub/hub_ship/cinematics/path_of_trust/pot_corridor_02/world_item_dep.lua
+
 local item_dependencies = {
 	minion_items = {},
 	player_items = {

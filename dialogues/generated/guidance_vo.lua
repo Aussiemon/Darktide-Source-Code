@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/guidance_vo.lua
+
 return function ()
 	define_rule({
 		name = "guidance_correct_doorway",

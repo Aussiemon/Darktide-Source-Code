@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/mission_giver_vo_pilot_a.lua
+
 local mission_giver_vo_pilot_a = {
 	cmd_deploy_skull = {
 		randomize_indexes_n = 0,

@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/psyker_c.lua
+
 return function ()
 	define_rule({
 		name = "combat_pause_limited_psyker_c_02_a",

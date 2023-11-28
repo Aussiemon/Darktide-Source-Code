@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/mission_vo_fm_armoury.lua
+
 return function ()
 	define_rule({
 		pre_wwise_event = "play_radio_static_start",

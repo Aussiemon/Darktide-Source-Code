@@ -1,14 +1,16 @@
+﻿-- chunkname: @dialogues/generated/mission_vo_km_enforcer_veteran_male_b.lua
+
 local mission_vo_km_enforcer_veteran_male_b = {
 	mission_enforcer_courtroom = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_veteran_male_b__mission_enforcer_courtroom_01",
-			[2.0] = "loc_veteran_male_b__mission_enforcer_courtroom_02"
+			[1] = "loc_veteran_male_b__mission_enforcer_courtroom_01",
+			[2] = "loc_veteran_male_b__mission_enforcer_courtroom_02"
 		},
 		sound_events_duration = {
-			[1.0] = 4.633917,
-			[2.0] = 3.099688
+			[1] = 4.633917,
+			[2] = 3.099688
 		},
 		randomize_indexes = {}
 	},
@@ -16,12 +18,12 @@ local mission_vo_km_enforcer_veteran_male_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_veteran_male_b__mission_enforcer_end_event_conversation_one_a_01",
-			[2.0] = "loc_veteran_male_b__mission_enforcer_end_event_conversation_one_a_02"
+			[1] = "loc_veteran_male_b__mission_enforcer_end_event_conversation_one_a_01",
+			[2] = "loc_veteran_male_b__mission_enforcer_end_event_conversation_one_a_02"
 		},
 		sound_events_duration = {
-			[1.0] = 3.691156,
-			[2.0] = 2.789021
+			[1] = 3.691156,
+			[2] = 2.789021
 		},
 		randomize_indexes = {}
 	},
@@ -29,12 +31,12 @@ local mission_vo_km_enforcer_veteran_male_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_veteran_male_b__mission_enforcer_end_event_conversation_one_c_01",
-			[2.0] = "loc_veteran_male_b__mission_enforcer_end_event_conversation_one_c_02"
+			[1] = "loc_veteran_male_b__mission_enforcer_end_event_conversation_one_c_01",
+			[2] = "loc_veteran_male_b__mission_enforcer_end_event_conversation_one_c_02"
 		},
 		sound_events_duration = {
-			[1.0] = 3.906021,
-			[2.0] = 3.519573
+			[1] = 3.906021,
+			[2] = 3.519573
 		},
 		randomize_indexes = {}
 	},
@@ -42,12 +44,12 @@ local mission_vo_km_enforcer_veteran_male_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_veteran_male_b__mission_enforcer_end_event_conversation_three_a_01",
-			[2.0] = "loc_veteran_male_b__mission_enforcer_end_event_conversation_three_a_02"
+			[1] = "loc_veteran_male_b__mission_enforcer_end_event_conversation_three_a_01",
+			[2] = "loc_veteran_male_b__mission_enforcer_end_event_conversation_three_a_02"
 		},
 		sound_events_duration = {
-			[1.0] = 5.208719,
-			[2.0] = 3.292406
+			[1] = 5.208719,
+			[2] = 3.292406
 		},
 		randomize_indexes = {}
 	},
@@ -55,12 +57,12 @@ local mission_vo_km_enforcer_veteran_male_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_veteran_male_b__mission_enforcer_end_event_conversation_three_c_01",
-			[2.0] = "loc_veteran_male_b__mission_enforcer_end_event_conversation_three_c_02"
+			[1] = "loc_veteran_male_b__mission_enforcer_end_event_conversation_three_c_01",
+			[2] = "loc_veteran_male_b__mission_enforcer_end_event_conversation_three_c_02"
 		},
 		sound_events_duration = {
-			[1.0] = 3.936052,
-			[2.0] = 3.924979
+			[1] = 3.936052,
+			[2] = 3.924979
 		},
 		randomize_indexes = {}
 	},
@@ -68,12 +70,12 @@ local mission_vo_km_enforcer_veteran_male_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_veteran_male_b__mission_enforcer_end_event_conversation_two_a_01",
-			[2.0] = "loc_veteran_male_b__mission_enforcer_end_event_conversation_two_a_02"
+			[1] = "loc_veteran_male_b__mission_enforcer_end_event_conversation_two_a_01",
+			[2] = "loc_veteran_male_b__mission_enforcer_end_event_conversation_two_a_02"
 		},
 		sound_events_duration = {
-			[1.0] = 4.697177,
-			[2.0] = 3.050427
+			[1] = 4.697177,
+			[2] = 3.050427
 		},
 		randomize_indexes = {}
 	},
@@ -122,12 +124,12 @@ local mission_vo_km_enforcer_veteran_male_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_veteran_male_b__mission_enforcer_hab_support_01",
-			[2.0] = "loc_veteran_male_b__mission_enforcer_hab_support_02"
+			[1] = "loc_veteran_male_b__mission_enforcer_hab_support_01",
+			[2] = "loc_veteran_male_b__mission_enforcer_hab_support_02"
 		},
 		sound_events_duration = {
-			[1.0] = 4.428271,
-			[2.0] = 4.250083
+			[1] = 4.428271,
+			[2] = 4.250083
 		},
 		randomize_indexes = {}
 	},
@@ -135,16 +137,16 @@ local mission_vo_km_enforcer_veteran_male_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_veteran_male_b__mission_enforcer_infrastructure_01",
-			[2.0] = "loc_veteran_male_b__mission_enforcer_infrastructure_02"
+			[1] = "loc_veteran_male_b__mission_enforcer_infrastructure_01",
+			[2] = "loc_veteran_male_b__mission_enforcer_infrastructure_02"
 		},
 		sound_events_duration = {
-			[1.0] = 4.224313,
-			[2.0] = 7.174688
+			[1] = 4.224313,
+			[2] = 7.174688
 		},
 		sound_event_weights = {
-			[1.0] = 0.5,
-			[2.0] = 0.5
+			[1] = 0.5,
+			[2] = 0.5
 		},
 		randomize_indexes = {}
 	},
@@ -152,12 +154,12 @@ local mission_vo_km_enforcer_veteran_male_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_veteran_male_b__mission_enforcer_start_banter_a_01",
-			[2.0] = "loc_veteran_male_b__mission_enforcer_start_banter_a_02"
+			[1] = "loc_veteran_male_b__mission_enforcer_start_banter_a_01",
+			[2] = "loc_veteran_male_b__mission_enforcer_start_banter_a_02"
 		},
 		sound_events_duration = {
-			[1.0] = 5.138583,
-			[2.0] = 4.682271
+			[1] = 5.138583,
+			[2] = 4.682271
 		},
 		randomize_indexes = {}
 	},
@@ -194,12 +196,12 @@ local mission_vo_km_enforcer_veteran_male_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_veteran_male_b__mission_enforcer_traders_row_01",
-			[2.0] = "loc_veteran_male_b__mission_enforcer_traders_row_02"
+			[1] = "loc_veteran_male_b__mission_enforcer_traders_row_01",
+			[2] = "loc_veteran_male_b__mission_enforcer_traders_row_02"
 		},
 		sound_events_duration = {
-			[1.0] = 4.29675,
-			[2.0] = 3.72225
+			[1] = 4.29675,
+			[2] = 3.72225
 		},
 		randomize_indexes = {}
 	},
@@ -207,12 +209,12 @@ local mission_vo_km_enforcer_veteran_male_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_veteran_male_b__mission_enforcer_wonky_hab_01",
-			[2.0] = "loc_veteran_male_b__mission_enforcer_wonky_hab_02"
+			[1] = "loc_veteran_male_b__mission_enforcer_wonky_hab_01",
+			[2] = "loc_veteran_male_b__mission_enforcer_wonky_hab_02"
 		},
 		sound_events_duration = {
-			[1.0] = 2.878771,
-			[2.0] = 5.1165
+			[1] = 2.878771,
+			[2] = 5.1165
 		},
 		randomize_indexes = {}
 	}

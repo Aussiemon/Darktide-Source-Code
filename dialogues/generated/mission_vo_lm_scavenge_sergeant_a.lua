@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/mission_vo_lm_scavenge_sergeant_a.lua
+
 local mission_vo_lm_scavenge_sergeant_a = {
 	cmd_mission_scavenge_entering_ship_port = {
 		randomize_indexes_n = 0,

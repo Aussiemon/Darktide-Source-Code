@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/cutscenes_vo.lua
+
 return function ()
 	define_rule({
 		name = "cs_pot01_01",

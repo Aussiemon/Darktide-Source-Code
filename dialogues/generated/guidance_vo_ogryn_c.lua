@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/guidance_vo_ogryn_c.lua
+
 local guidance_vo_ogryn_c = {
 	guidance_correct_doorway = {
 		randomize_indexes_n = 0,
@@ -980,16 +982,16 @@ local guidance_vo_ogryn_c = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_ogryn_c__asset_nurgle_growth_02",
-			[2.0] = "loc_ogryn_c__asset_nurgle_growth_03"
+			[1] = "loc_ogryn_c__asset_nurgle_growth_02",
+			[2] = "loc_ogryn_c__asset_nurgle_growth_03"
 		},
 		sound_events_duration = {
-			[1.0] = 3.377219,
-			[2.0] = 2.444167
+			[1] = 3.377219,
+			[2] = 2.444167
 		},
 		sound_event_weights = {
-			[1.0] = 0.5,
-			[2.0] = 0.5
+			[1] = 0.5,
+			[2] = 0.5
 		},
 		randomize_indexes = {}
 	}

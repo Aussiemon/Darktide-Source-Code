@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/class_rework_veteran_female_a.lua
+
 local class_rework_veteran_female_a = {
 	ability_shock_trooper = {
 		randomize_indexes_n = 0,

@@ -1,3 +1,5 @@
+﻿-- chunkname: @content/levels/cinematics/c_cams/c_cam_raid/world_item_dep.lua
+
 local item_dependencies = {
 	minion_items = {},
 	player_items = {

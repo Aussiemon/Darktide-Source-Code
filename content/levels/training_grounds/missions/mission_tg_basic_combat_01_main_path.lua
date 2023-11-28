@@ -1,3 +1,5 @@
+﻿-- chunkname: @content/levels/training_grounds/missions/mission_tg_basic_combat_01_main_path.lua
+
 local path_markers = {
 	{
 		kind = "good",

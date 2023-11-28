@@ -1,3 +1,5 @@
+﻿-- chunkname: @content/levels/throneside/start_complex/world_volume_data.lua
+
 local volume_data = {
 	{
 		height = 3,
@@ -331,8 +333,8 @@ local volume_data = {
 		},
 		up_vector = {
 			-0,
-			[2.0] = 0,
-			[3.0] = 2.806196928024292
+			[2] = 0,
+			[3] = 2.806196928024292
 		}
 	},
 	{

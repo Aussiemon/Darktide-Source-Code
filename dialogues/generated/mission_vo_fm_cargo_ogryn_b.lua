@@ -1,18 +1,20 @@
+﻿-- chunkname: @dialogues/generated/mission_vo_fm_cargo_ogryn_b.lua
+
 local mission_vo_fm_cargo_ogryn_b = {
 	mission_cargo_armor_plating = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_ogryn_b__mission_cooling_production_line_01",
-			[2.0] = "loc_ogryn_b__mission_cooling_production_line_02"
+			[1] = "loc_ogryn_b__mission_cooling_production_line_01",
+			[2] = "loc_ogryn_b__mission_cooling_production_line_02"
 		},
 		sound_events_duration = {
-			[1.0] = 6.657604,
-			[2.0] = 4.755115
+			[1] = 6.657604,
+			[2] = 4.755115
 		},
 		sound_event_weights = {
-			[1.0] = 0.5,
-			[2.0] = 0.5
+			[1] = 0.5,
+			[2] = 0.5
 		},
 		randomize_indexes = {}
 	},
@@ -20,12 +22,12 @@ local mission_vo_fm_cargo_ogryn_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_ogryn_b__mission_cargo_end_event_conversation_one_a_01",
-			[2.0] = "loc_ogryn_b__mission_cargo_end_event_conversation_one_a_02"
+			[1] = "loc_ogryn_b__mission_cargo_end_event_conversation_one_a_01",
+			[2] = "loc_ogryn_b__mission_cargo_end_event_conversation_one_a_02"
 		},
 		sound_events_duration = {
-			[1.0] = 3.657729,
-			[2.0] = 4.443292
+			[1] = 3.657729,
+			[2] = 4.443292
 		},
 		randomize_indexes = {}
 	},
@@ -33,12 +35,12 @@ local mission_vo_fm_cargo_ogryn_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_ogryn_b__mission_cargo_end_event_conversation_one_c_01",
-			[2.0] = "loc_ogryn_b__mission_cargo_end_event_conversation_one_c_02"
+			[1] = "loc_ogryn_b__mission_cargo_end_event_conversation_one_c_01",
+			[2] = "loc_ogryn_b__mission_cargo_end_event_conversation_one_c_02"
 		},
 		sound_events_duration = {
-			[1.0] = 1.903271,
-			[2.0] = 2.455573
+			[1] = 1.903271,
+			[2] = 2.455573
 		},
 		randomize_indexes = {}
 	},
@@ -46,12 +48,12 @@ local mission_vo_fm_cargo_ogryn_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_ogryn_b__mission_cargo_end_event_conversation_three_a_01",
-			[2.0] = "loc_ogryn_b__mission_cargo_end_event_conversation_three_a_02"
+			[1] = "loc_ogryn_b__mission_cargo_end_event_conversation_three_a_01",
+			[2] = "loc_ogryn_b__mission_cargo_end_event_conversation_three_a_02"
 		},
 		sound_events_duration = {
-			[1.0] = 3.743219,
-			[2.0] = 5.818917
+			[1] = 3.743219,
+			[2] = 5.818917
 		},
 		randomize_indexes = {}
 	},
@@ -59,12 +61,12 @@ local mission_vo_fm_cargo_ogryn_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_ogryn_b__mission_cargo_end_event_conversation_three_c_01",
-			[2.0] = "loc_ogryn_b__mission_cargo_end_event_conversation_three_c_02"
+			[1] = "loc_ogryn_b__mission_cargo_end_event_conversation_three_c_01",
+			[2] = "loc_ogryn_b__mission_cargo_end_event_conversation_three_c_02"
 		},
 		sound_events_duration = {
-			[1.0] = 0.50126,
-			[2.0] = 4.278313
+			[1] = 0.50126,
+			[2] = 4.278313
 		},
 		randomize_indexes = {}
 	},
@@ -72,12 +74,12 @@ local mission_vo_fm_cargo_ogryn_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_ogryn_b__mission_cargo_end_event_conversation_two_a_01",
-			[2.0] = "loc_ogryn_b__mission_cargo_end_event_conversation_two_a_02"
+			[1] = "loc_ogryn_b__mission_cargo_end_event_conversation_two_a_01",
+			[2] = "loc_ogryn_b__mission_cargo_end_event_conversation_two_a_02"
 		},
 		sound_events_duration = {
-			[1.0] = 2.458427,
-			[2.0] = 2.596396
+			[1] = 2.458427,
+			[2] = 2.596396
 		},
 		randomize_indexes = {}
 	},
@@ -85,12 +87,12 @@ local mission_vo_fm_cargo_ogryn_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_ogryn_b__mission_cargo_end_event_conversation_two_c_01",
-			[2.0] = "loc_ogryn_b__mission_cargo_end_event_conversation_two_c_02"
+			[1] = "loc_ogryn_b__mission_cargo_end_event_conversation_two_c_01",
+			[2] = "loc_ogryn_b__mission_cargo_end_event_conversation_two_c_02"
 		},
 		sound_events_duration = {
-			[1.0] = 1.903042,
-			[2.0] = 2.766792
+			[1] = 1.903042,
+			[2] = 2.766792
 		},
 		randomize_indexes = {}
 	},
@@ -139,12 +141,12 @@ local mission_vo_fm_cargo_ogryn_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_ogryn_b__mission_cargo_hab_feed_lines_01",
-			[2.0] = "loc_ogryn_b__mission_cargo_hab_feed_lines_02"
+			[1] = "loc_ogryn_b__mission_cargo_hab_feed_lines_01",
+			[2] = "loc_ogryn_b__mission_cargo_hab_feed_lines_02"
 		},
 		sound_events_duration = {
-			[1.0] = 3.6305,
-			[2.0] = 2.252021
+			[1] = 3.6305,
+			[2] = 2.252021
 		},
 		randomize_indexes = {}
 	},
@@ -152,12 +154,12 @@ local mission_vo_fm_cargo_ogryn_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_ogryn_b__mission_cargo_labyrinth_01",
-			[2.0] = "loc_ogryn_b__mission_cargo_labyrinth_02"
+			[1] = "loc_ogryn_b__mission_cargo_labyrinth_01",
+			[2] = "loc_ogryn_b__mission_cargo_labyrinth_02"
 		},
 		sound_events_duration = {
-			[1.0] = 2.006948,
-			[2.0] = 2.62701
+			[1] = 2.006948,
+			[2] = 2.62701
 		},
 		randomize_indexes = {}
 	},
@@ -165,12 +167,12 @@ local mission_vo_fm_cargo_ogryn_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_ogryn_b__mission_cargo_something_big_01",
-			[2.0] = "loc_ogryn_b__mission_cargo_something_big_02"
+			[1] = "loc_ogryn_b__mission_cargo_something_big_01",
+			[2] = "loc_ogryn_b__mission_cargo_something_big_02"
 		},
 		sound_events_duration = {
-			[1.0] = 2.924344,
-			[2.0] = 1.71601
+			[1] = 2.924344,
+			[2] = 1.71601
 		},
 		randomize_indexes = {}
 	},
@@ -178,12 +180,12 @@ local mission_vo_fm_cargo_ogryn_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_ogryn_b__mission_cargo_start_banter_a_01",
-			[2.0] = "loc_ogryn_b__mission_cargo_start_banter_a_02"
+			[1] = "loc_ogryn_b__mission_cargo_start_banter_a_01",
+			[2] = "loc_ogryn_b__mission_cargo_start_banter_a_02"
 		},
 		sound_events_duration = {
-			[1.0] = 3.062281,
-			[2.0] = 4.859469
+			[1] = 3.062281,
+			[2] = 4.859469
 		},
 		randomize_indexes = {}
 	},

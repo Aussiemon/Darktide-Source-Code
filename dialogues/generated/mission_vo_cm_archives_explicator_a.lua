@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/mission_vo_cm_archives_explicator_a.lua
+
 local mission_vo_cm_archives_explicator_a = {
 	mission_archives_alarm_off = {
 		randomize_indexes_n = 0,

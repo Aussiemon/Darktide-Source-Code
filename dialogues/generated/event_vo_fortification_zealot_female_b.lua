@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/event_vo_fortification_zealot_female_b.lua
+
 local event_vo_fortification_zealot_female_b = {
 	event_fortification_beacon_deployed = {
 		randomize_indexes_n = 0,

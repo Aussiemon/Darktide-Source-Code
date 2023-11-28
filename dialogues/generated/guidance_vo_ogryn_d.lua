@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/guidance_vo_ogryn_d.lua
+
 local guidance_vo_ogryn_d = {
 	guidance_correct_doorway = {
 		randomize_indexes_n = 0,

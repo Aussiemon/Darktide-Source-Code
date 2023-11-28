@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/conversations_core_purser_a.lua
+
 local conversations_core_purser_a = {
 	eavesdropping_purser = {
 		randomize_indexes_n = 0,

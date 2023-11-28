@@ -1,3 +1,5 @@
+﻿-- chunkname: @content/levels/transit/missions/mission_cm_habs_item_dep.lua
+
 local item_dependencies = {
 	minion_items = {},
 	player_items = {

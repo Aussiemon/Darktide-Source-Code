@@ -1,3 +1,5 @@
+﻿-- chunkname: @content/levels/watertown/start_cartel/world_volume_data.lua
+
 local volume_data = {
 	{
 		height = 2,
@@ -424,8 +426,8 @@ local volume_data = {
 		},
 		up_vector = {
 			-0,
-			[2.0] = 0,
-			[3.0] = 1.3487329483032227
+			[2] = 0,
+			[3] = 1.3487329483032227
 		}
 	},
 	{
@@ -472,8 +474,8 @@ local volume_data = {
 		},
 		up_vector = {
 			-0,
-			[2.0] = 0,
-			[3.0] = 2.8334219455718994
+			[2] = 0,
+			[3] = 2.8334219455718994
 		}
 	},
 	{
@@ -664,8 +666,8 @@ local volume_data = {
 		},
 		up_vector = {
 			-0,
-			[2.0] = 0,
-			[3.0] = 4.118772029876709
+			[2] = 0,
+			[3] = 4.118772029876709
 		}
 	},
 	{

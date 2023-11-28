@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/conversations_core.lua
+
 return function ()
 	define_rule({
 		name = "almost_there",

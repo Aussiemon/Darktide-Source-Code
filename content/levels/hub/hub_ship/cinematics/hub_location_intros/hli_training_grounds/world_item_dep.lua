@@ -1,3 +1,5 @@
+﻿-- chunkname: @content/levels/hub/hub_ship/cinematics/hub_location_intros/hli_training_grounds/world_item_dep.lua
+
 local item_dependencies = {
 	minion_items = {},
 	player_items = {

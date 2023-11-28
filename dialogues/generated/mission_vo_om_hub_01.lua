@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/mission_vo_om_hub_01.lua
+
 return function ()
 	define_rule({
 		name = "npc_first_interaction_training_ground_psyker_a",

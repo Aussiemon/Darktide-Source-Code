@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/lookup_mission_vo_dm_stockpile.lua
+
 DialogueLookup[DialogueLookup_n + 1] = "mission_stockpile_bridge"
 DialogueLookup[DialogueLookup_n + 2] = "mission_stockpile_cartel_habs"
 DialogueLookup[DialogueLookup_n + 3] = "mission_stockpile_cartel_hq"

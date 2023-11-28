@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/conversations_hub.lua
+
 return function ()
 	define_rule({
 		name = "barber_distance",

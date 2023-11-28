@@ -1,12 +1,14 @@
+﻿-- chunkname: @dialogues/generated/cutscenes_vo_interrogator_a.lua
+
 local cutscenes_vo_interrogator_a = {
 	cs_pot04_01 = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_interrogator_a__cs_pot04_01"
+			[1] = "loc_interrogator_a__cs_pot04_01"
 		},
 		sound_events_duration = {
-			[1.0] = 5.266667
+			[1] = 5.266667
 		},
 		randomize_indexes = {}
 	},
@@ -14,10 +16,10 @@ local cutscenes_vo_interrogator_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_interrogator_a__cs_pot04_02"
+			[1] = "loc_interrogator_a__cs_pot04_02"
 		},
 		sound_events_duration = {
-			[1.0] = 7.966667
+			[1] = 7.966667
 		},
 		randomize_indexes = {}
 	},
@@ -25,10 +27,10 @@ local cutscenes_vo_interrogator_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_interrogator_a__cs_pot04_03"
+			[1] = "loc_interrogator_a__cs_pot04_03"
 		},
 		sound_events_duration = {
-			[1.0] = 10.56667
+			[1] = 10.56667
 		},
 		randomize_indexes = {}
 	},
@@ -36,10 +38,10 @@ local cutscenes_vo_interrogator_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_interrogator_a__cs_pot04_04"
+			[1] = "loc_interrogator_a__cs_pot04_04"
 		},
 		sound_events_duration = {
-			[1.0] = 3.333333
+			[1] = 3.333333
 		},
 		randomize_indexes = {}
 	},
@@ -47,10 +49,10 @@ local cutscenes_vo_interrogator_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_interrogator_a__cs_pot04_05"
+			[1] = "loc_interrogator_a__cs_pot04_05"
 		},
 		sound_events_duration = {
-			[1.0] = 7.666667
+			[1] = 7.666667
 		},
 		randomize_indexes = {}
 	},
@@ -58,10 +60,10 @@ local cutscenes_vo_interrogator_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_interrogator_a__cs_pot09_01"
+			[1] = "loc_interrogator_a__cs_pot09_01"
 		},
 		sound_events_duration = {
-			[1.0] = 4.466667
+			[1] = 4.466667
 		},
 		randomize_indexes = {}
 	},
@@ -69,10 +71,10 @@ local cutscenes_vo_interrogator_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_interrogator_a__cs_pot09_02"
+			[1] = "loc_interrogator_a__cs_pot09_02"
 		},
 		sound_events_duration = {
-			[1.0] = 9.9
+			[1] = 9.9
 		},
 		randomize_indexes = {}
 	},
@@ -80,10 +82,10 @@ local cutscenes_vo_interrogator_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_interrogator_a__cs_pot09_03"
+			[1] = "loc_interrogator_a__cs_pot09_03"
 		},
 		sound_events_duration = {
-			[1.0] = 7.9
+			[1] = 7.9
 		},
 		randomize_indexes = {}
 	},
@@ -91,10 +93,10 @@ local cutscenes_vo_interrogator_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_interrogator_a__cs_pot09_04"
+			[1] = "loc_interrogator_a__cs_pot09_04"
 		},
 		sound_events_duration = {
-			[1.0] = 4.566667
+			[1] = 4.566667
 		},
 		randomize_indexes = {}
 	},
@@ -102,10 +104,10 @@ local cutscenes_vo_interrogator_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_interrogator_a__cs_pot09_05"
+			[1] = "loc_interrogator_a__cs_pot09_05"
 		},
 		sound_events_duration = {
-			[1.0] = 6
+			[1] = 6
 		},
 		randomize_indexes = {}
 	},
@@ -113,10 +115,10 @@ local cutscenes_vo_interrogator_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_interrogator_a__cs_pot09_06"
+			[1] = "loc_interrogator_a__cs_pot09_06"
 		},
 		sound_events_duration = {
-			[1.0] = 2.1
+			[1] = 2.1
 		},
 		randomize_indexes = {}
 	},
@@ -124,10 +126,10 @@ local cutscenes_vo_interrogator_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_interrogator_a__cs_pot09_07"
+			[1] = "loc_interrogator_a__cs_pot09_07"
 		},
 		sound_events_duration = {
-			[1.0] = 9.733333
+			[1] = 9.733333
 		},
 		randomize_indexes = {}
 	},
@@ -135,10 +137,10 @@ local cutscenes_vo_interrogator_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_interrogator_a__cs_pot09_08"
+			[1] = "loc_interrogator_a__cs_pot09_08"
 		},
 		sound_events_duration = {
-			[1.0] = 5.333333
+			[1] = 5.333333
 		},
 		randomize_indexes = {}
 	},
@@ -146,10 +148,10 @@ local cutscenes_vo_interrogator_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_interrogator_a__cs_pot09_09"
+			[1] = "loc_interrogator_a__cs_pot09_09"
 		},
 		sound_events_duration = {
-			[1.0] = 6
+			[1] = 6
 		},
 		randomize_indexes = {}
 	}

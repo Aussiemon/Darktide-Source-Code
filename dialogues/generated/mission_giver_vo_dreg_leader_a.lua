@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/mission_giver_vo_dreg_leader_a.lua
+
 local mission_giver_vo_dreg_leader_a = {
 	info_extraction = {
 		randomize_indexes_n = 0,

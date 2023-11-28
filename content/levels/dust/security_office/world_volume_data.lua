@@ -1,3 +1,5 @@
+﻿-- chunkname: @content/levels/dust/security_office/world_volume_data.lua
+
 local volume_data = {
 	{
 		height = 16,
@@ -197,8 +199,8 @@ local volume_data = {
 		},
 		up_vector = {
 			-0,
-			[2.0] = 0,
-			[3.0] = 2.444856882095337
+			[2] = 0,
+			[3] = 2.444856882095337
 		}
 	},
 	{

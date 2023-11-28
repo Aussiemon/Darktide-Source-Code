@@ -1,14 +1,16 @@
+﻿-- chunkname: @dialogues/generated/circumstance_vo_nurgle_rot_ogryn_b.lua
+
 local circumstance_vo_nurgle_rot_ogryn_b = {
 	nurgle_circumstance_conversation_five_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_ogryn_b__nurgle_circumstance_conversation_five_a_01",
-			[2.0] = "loc_ogryn_b__nurgle_circumstance_conversation_five_a_02"
+			[1] = "loc_ogryn_b__nurgle_circumstance_conversation_five_a_01",
+			[2] = "loc_ogryn_b__nurgle_circumstance_conversation_five_a_02"
 		},
 		sound_events_duration = {
-			[1.0] = 3.292427,
-			[2.0] = 4.067479
+			[1] = 3.292427,
+			[2] = 4.067479
 		},
 		randomize_indexes = {}
 	},
@@ -16,12 +18,12 @@ local circumstance_vo_nurgle_rot_ogryn_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_ogryn_b__nurgle_circumstance_conversation_five_c_01",
-			[2.0] = "loc_ogryn_b__nurgle_circumstance_conversation_five_c_02"
+			[1] = "loc_ogryn_b__nurgle_circumstance_conversation_five_c_01",
+			[2] = "loc_ogryn_b__nurgle_circumstance_conversation_five_c_02"
 		},
 		sound_events_duration = {
-			[1.0] = 2.894594,
-			[2.0] = 3.467417
+			[1] = 2.894594,
+			[2] = 3.467417
 		},
 		randomize_indexes = {}
 	},
@@ -29,12 +31,12 @@ local circumstance_vo_nurgle_rot_ogryn_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_ogryn_b__nurgle_circumstance_conversation_four_a_01",
-			[2.0] = "loc_ogryn_b__nurgle_circumstance_conversation_four_a_02"
+			[1] = "loc_ogryn_b__nurgle_circumstance_conversation_four_a_01",
+			[2] = "loc_ogryn_b__nurgle_circumstance_conversation_four_a_02"
 		},
 		sound_events_duration = {
-			[1.0] = 5.281115,
-			[2.0] = 3.292188
+			[1] = 5.281115,
+			[2] = 3.292188
 		},
 		randomize_indexes = {}
 	},
@@ -42,12 +44,12 @@ local circumstance_vo_nurgle_rot_ogryn_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_ogryn_b__nurgle_circumstance_conversation_four_c_01",
-			[2.0] = "loc_ogryn_b__nurgle_circumstance_conversation_four_c_02"
+			[1] = "loc_ogryn_b__nurgle_circumstance_conversation_four_c_01",
+			[2] = "loc_ogryn_b__nurgle_circumstance_conversation_four_c_02"
 		},
 		sound_events_duration = {
-			[1.0] = 2.666292,
-			[2.0] = 2.791281
+			[1] = 2.666292,
+			[2] = 2.791281
 		},
 		randomize_indexes = {}
 	},
@@ -55,12 +57,12 @@ local circumstance_vo_nurgle_rot_ogryn_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_ogryn_b__nurgle_circumstance_conversation_one_a_01",
-			[2.0] = "loc_ogryn_b__nurgle_circumstance_conversation_one_a_02"
+			[1] = "loc_ogryn_b__nurgle_circumstance_conversation_one_a_01",
+			[2] = "loc_ogryn_b__nurgle_circumstance_conversation_one_a_02"
 		},
 		sound_events_duration = {
-			[1.0] = 2.777354,
-			[2.0] = 3.324635
+			[1] = 2.777354,
+			[2] = 3.324635
 		},
 		randomize_indexes = {}
 	},
@@ -68,12 +70,12 @@ local circumstance_vo_nurgle_rot_ogryn_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_ogryn_b__nurgle_circumstance_conversation_one_c_01",
-			[2.0] = "loc_ogryn_b__nurgle_circumstance_conversation_one_c_02"
+			[1] = "loc_ogryn_b__nurgle_circumstance_conversation_one_c_01",
+			[2] = "loc_ogryn_b__nurgle_circumstance_conversation_one_c_02"
 		},
 		sound_events_duration = {
-			[1.0] = 1.419021,
-			[2.0] = 2.285156
+			[1] = 1.419021,
+			[2] = 2.285156
 		},
 		randomize_indexes = {}
 	},
@@ -81,12 +83,12 @@ local circumstance_vo_nurgle_rot_ogryn_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_ogryn_b__nurgle_circumstance_conversation_three_a_01",
-			[2.0] = "loc_ogryn_b__nurgle_circumstance_conversation_three_a_02"
+			[1] = "loc_ogryn_b__nurgle_circumstance_conversation_three_a_01",
+			[2] = "loc_ogryn_b__nurgle_circumstance_conversation_three_a_02"
 		},
 		sound_events_duration = {
-			[1.0] = 2.874677,
-			[2.0] = 4.296
+			[1] = 2.874677,
+			[2] = 4.296
 		},
 		randomize_indexes = {}
 	},
@@ -94,12 +96,12 @@ local circumstance_vo_nurgle_rot_ogryn_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_ogryn_b__nurgle_circumstance_conversation_three_c_01",
-			[2.0] = "loc_ogryn_b__nurgle_circumstance_conversation_three_c_02"
+			[1] = "loc_ogryn_b__nurgle_circumstance_conversation_three_c_01",
+			[2] = "loc_ogryn_b__nurgle_circumstance_conversation_three_c_02"
 		},
 		sound_events_duration = {
-			[1.0] = 1.496104,
-			[2.0] = 1.83901
+			[1] = 1.496104,
+			[2] = 1.83901
 		},
 		randomize_indexes = {}
 	},
@@ -107,12 +109,12 @@ local circumstance_vo_nurgle_rot_ogryn_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_ogryn_b__nurgle_circumstance_conversation_two_a_01",
-			[2.0] = "loc_ogryn_b__nurgle_circumstance_conversation_two_a_02"
+			[1] = "loc_ogryn_b__nurgle_circumstance_conversation_two_a_01",
+			[2] = "loc_ogryn_b__nurgle_circumstance_conversation_two_a_02"
 		},
 		sound_events_duration = {
-			[1.0] = 2.816656,
-			[2.0] = 3.422344
+			[1] = 2.816656,
+			[2] = 3.422344
 		},
 		randomize_indexes = {}
 	},
@@ -120,12 +122,12 @@ local circumstance_vo_nurgle_rot_ogryn_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_ogryn_b__nurgle_circumstance_conversation_two_c_01",
-			[2.0] = "loc_ogryn_b__nurgle_circumstance_conversation_two_c_02"
+			[1] = "loc_ogryn_b__nurgle_circumstance_conversation_two_c_01",
+			[2] = "loc_ogryn_b__nurgle_circumstance_conversation_two_c_02"
 		},
 		sound_events_duration = {
-			[1.0] = 2.992594,
-			[2.0] = 2.11175
+			[1] = 2.992594,
+			[2] = 2.11175
 		},
 		randomize_indexes = {}
 	},

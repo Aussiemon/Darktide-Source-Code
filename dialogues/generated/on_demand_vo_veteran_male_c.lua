@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/on_demand_vo_veteran_male_c.lua
+
 local on_demand_vo_veteran_male_c = {
 	com_wheel_vo_enemy_over_here = {
 		randomize_indexes_n = 0,
@@ -284,16 +286,16 @@ local on_demand_vo_veteran_male_c = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_veteran_male_c__response_for_seen_netgunner_flee_06",
-			[2.0] = "loc_veteran_male_c__response_for_seen_netgunner_flee_07"
+			[1] = "loc_veteran_male_c__response_for_seen_netgunner_flee_06",
+			[2] = "loc_veteran_male_c__response_for_seen_netgunner_flee_07"
 		},
 		sound_events_duration = {
-			[1.0] = 2.154344,
-			[2.0] = 1.231646
+			[1] = 2.154344,
+			[2] = 1.231646
 		},
 		sound_event_weights = {
-			[1.0] = 0.5,
-			[2.0] = 0.5
+			[1] = 0.5,
+			[2] = 0.5
 		},
 		randomize_indexes = {}
 	},

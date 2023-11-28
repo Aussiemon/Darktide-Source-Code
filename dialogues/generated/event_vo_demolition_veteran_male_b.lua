@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/event_vo_demolition_veteran_male_b.lua
+
 local event_vo_demolition_veteran_male_b = {
 	event_demolition_first_corruptor_destroyed_a = {
 		randomize_indexes_n = 0,

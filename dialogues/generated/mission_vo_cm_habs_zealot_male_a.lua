@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/mission_vo_cm_habs_zealot_male_a.lua
+
 local mission_vo_cm_habs_zealot_male_a = {
 	hab_block_void_response_b = {
 		randomize_indexes_n = 0,
@@ -23,12 +25,12 @@ local mission_vo_cm_habs_zealot_male_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_zealot_male_a__level_hab_block_apartments_01",
-			[2.0] = "loc_zealot_male_a__level_hab_block_apartments_02"
+			[1] = "loc_zealot_male_a__level_hab_block_apartments_01",
+			[2] = "loc_zealot_male_a__level_hab_block_apartments_02"
 		},
 		sound_events_duration = {
-			[1.0] = 4.554667,
-			[2.0] = 5.329021
+			[1] = 4.554667,
+			[2] = 5.329021
 		},
 		randomize_indexes = {}
 	},
@@ -36,12 +38,12 @@ local mission_vo_cm_habs_zealot_male_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_zealot_male_a__level_hab_block_apartments_response_01",
-			[2.0] = "loc_zealot_male_a__level_hab_block_apartments_response_02"
+			[1] = "loc_zealot_male_a__level_hab_block_apartments_response_01",
+			[2] = "loc_zealot_male_a__level_hab_block_apartments_response_02"
 		},
 		sound_events_duration = {
-			[1.0] = 2.079875,
-			[2.0] = 2.350188
+			[1] = 2.079875,
+			[2] = 2.350188
 		},
 		randomize_indexes = {}
 	},
@@ -49,12 +51,12 @@ local mission_vo_cm_habs_zealot_male_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_zealot_male_a__level_hab_block_atrium_01",
-			[2.0] = "loc_zealot_male_a__level_hab_block_atrium_02"
+			[1] = "loc_zealot_male_a__level_hab_block_atrium_01",
+			[2] = "loc_zealot_male_a__level_hab_block_atrium_02"
 		},
 		sound_events_duration = {
-			[1.0] = 5.217604,
-			[2.0] = 4.605031
+			[1] = 5.217604,
+			[2] = 4.605031
 		},
 		randomize_indexes = {}
 	},
@@ -62,12 +64,12 @@ local mission_vo_cm_habs_zealot_male_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_zealot_male_a__level_hab_block_b_response_b_01",
-			[2.0] = "loc_zealot_male_a__level_hab_block_b_response_b_02"
+			[1] = "loc_zealot_male_a__level_hab_block_b_response_b_01",
+			[2] = "loc_zealot_male_a__level_hab_block_b_response_b_02"
 		},
 		sound_events_duration = {
-			[1.0] = 2.564292,
-			[2.0] = 1.434458
+			[1] = 2.564292,
+			[2] = 1.434458
 		},
 		randomize_indexes = {}
 	},
@@ -75,12 +77,12 @@ local mission_vo_cm_habs_zealot_male_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_zealot_male_a__level_hab_block_collapse_01",
-			[2.0] = "loc_zealot_male_a__level_hab_block_collapse_02"
+			[1] = "loc_zealot_male_a__level_hab_block_collapse_01",
+			[2] = "loc_zealot_male_a__level_hab_block_collapse_02"
 		},
 		sound_events_duration = {
-			[1.0] = 1.319438,
-			[2.0] = 1.247021
+			[1] = 1.319438,
+			[2] = 1.247021
 		},
 		randomize_indexes = {}
 	},
@@ -88,12 +90,12 @@ local mission_vo_cm_habs_zealot_male_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_zealot_male_a__level_hab_block_corpse_01",
-			[2.0] = "loc_zealot_male_a__level_hab_block_corpse_02"
+			[1] = "loc_zealot_male_a__level_hab_block_corpse_01",
+			[2] = "loc_zealot_male_a__level_hab_block_corpse_02"
 		},
 		sound_events_duration = {
-			[1.0] = 2.33825,
-			[2.0] = 3.726646
+			[1] = 2.33825,
+			[2] = 3.726646
 		},
 		randomize_indexes = {}
 	},
@@ -142,12 +144,12 @@ local mission_vo_cm_habs_zealot_male_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_zealot_male_a__level_hab_block_market_response_01",
-			[2.0] = "loc_zealot_male_a__level_hab_block_market_response_02"
+			[1] = "loc_zealot_male_a__level_hab_block_market_response_01",
+			[2] = "loc_zealot_male_a__level_hab_block_market_response_02"
 		},
 		sound_events_duration = {
-			[1.0] = 4.006229,
-			[2.0] = 2.847438
+			[1] = 4.006229,
+			[2] = 2.847438
 		},
 		randomize_indexes = {}
 	},
@@ -155,12 +157,12 @@ local mission_vo_cm_habs_zealot_male_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_zealot_male_a__level_hab_block_security_01",
-			[2.0] = "loc_zealot_male_a__level_hab_block_security_02"
+			[1] = "loc_zealot_male_a__level_hab_block_security_01",
+			[2] = "loc_zealot_male_a__level_hab_block_security_02"
 		},
 		sound_events_duration = {
-			[1.0] = 3.5815,
-			[2.0] = 4.459521
+			[1] = 3.5815,
+			[2] = 4.459521
 		},
 		randomize_indexes = {}
 	},
@@ -168,16 +170,16 @@ local mission_vo_cm_habs_zealot_male_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_zealot_male_a__level_hab_block_void_01",
-			[2.0] = "loc_zealot_male_a__level_hab_block_void_02"
+			[1] = "loc_zealot_male_a__level_hab_block_void_01",
+			[2] = "loc_zealot_male_a__level_hab_block_void_02"
 		},
 		sound_events_duration = {
-			[1.0] = 3.831229,
-			[2.0] = 2.741604
+			[1] = 3.831229,
+			[2] = 2.741604
 		},
 		sound_event_weights = {
-			[1.0] = 0.5,
-			[2.0] = 0.5
+			[1] = 0.5,
+			[2] = 0.5
 		},
 		randomize_indexes = {}
 	},
@@ -214,12 +216,12 @@ local mission_vo_cm_habs_zealot_male_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_zealot_male_a__level_hab_block_temple_01",
-			[2.0] = "loc_zealot_male_a__level_hab_block_temple_02"
+			[1] = "loc_zealot_male_a__level_hab_block_temple_01",
+			[2] = "loc_zealot_male_a__level_hab_block_temple_02"
 		},
 		sound_events_duration = {
-			[1.0] = 2.681333,
-			[2.0] = 4.344
+			[1] = 2.681333,
+			[2] = 4.344
 		},
 		randomize_indexes = {}
 	},
@@ -268,12 +270,12 @@ local mission_vo_cm_habs_zealot_male_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_zealot_male_a__level_hab_block_vista_01",
-			[2.0] = "loc_zealot_male_a__level_hab_block_vista_02"
+			[1] = "loc_zealot_male_a__level_hab_block_vista_01",
+			[2] = "loc_zealot_male_a__level_hab_block_vista_02"
 		},
 		sound_events_duration = {
-			[1.0] = 4.084604,
-			[2.0] = 5.600729
+			[1] = 4.084604,
+			[2] = 5.600729
 		},
 		randomize_indexes = {}
 	}

@@ -1,3 +1,5 @@
+﻿-- chunkname: @content/levels/prologue/narrative_cellblock/world_item_dep.lua
+
 local item_dependencies = {
 	minion_items = {
 		["content/items/characters/minions/chaos_traitor_guard/attachments_gear/helmet_01_d"] = 1,

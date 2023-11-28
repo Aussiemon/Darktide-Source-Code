@@ -1,3 +1,5 @@
+﻿-- chunkname: @content/levels/ui/class_selection/class_selection_psyker/class_selection_psyker_item_dep.lua
+
 local item_dependencies = {
 	player_items = {
 		["content/items/characters/player/human/gear_feet/astra_shoes_a"] = 2,

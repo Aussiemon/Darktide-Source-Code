@@ -1,3 +1,5 @@
+﻿-- chunkname: @content/levels/watertown/missions/mission_dm_stockpile_item_dep.lua
+
 local item_dependencies = {
 	minion_items = {},
 	player_items = {

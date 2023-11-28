@@ -1,3 +1,5 @@
+﻿-- chunkname: @content/levels/prologue/bay/world_item_dep.lua
+
 local item_dependencies = {
 	minion_items = {
 		["content/items/characters/minions/chaos_traitor_guard/attachments_base/upperbody_a_melee_elite"] = 1,

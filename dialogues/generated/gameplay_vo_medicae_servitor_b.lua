@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/gameplay_vo_medicae_servitor_b.lua
+
 local gameplay_vo_medicae_servitor_b = {
 	medicae_servitor_idle_empty_a = {
 		randomize_indexes_n = 0,

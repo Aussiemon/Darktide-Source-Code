@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/gameplay_vo_psyker_female_b.lua
+
 local gameplay_vo_psyker_female_b = {
 	ability_biomancer_high = {
 		randomize_indexes_n = 0,
@@ -102,16 +104,16 @@ local gameplay_vo_psyker_female_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_psyker_female_b__combat_pause_quirk_ammo_hog_b_01",
-			[2.0] = "loc_psyker_female_b__combat_pause_quirk_ammo_hog_b_02"
+			[1] = "loc_psyker_female_b__combat_pause_quirk_ammo_hog_b_01",
+			[2] = "loc_psyker_female_b__combat_pause_quirk_ammo_hog_b_02"
 		},
 		sound_events_duration = {
-			[1.0] = 1.892292,
-			[2.0] = 2.985396
+			[1] = 1.892292,
+			[2] = 2.985396
 		},
 		sound_event_weights = {
-			[1.0] = 0.5,
-			[2.0] = 0.5
+			[1] = 0.5,
+			[2] = 0.5
 		},
 		randomize_indexes = {}
 	},
@@ -1875,16 +1877,16 @@ local gameplay_vo_psyker_female_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_psyker_female_b__combat_pause_quirk_health_hog_b_01",
-			[2.0] = "loc_psyker_female_b__combat_pause_quirk_health_hog_b_02"
+			[1] = "loc_psyker_female_b__combat_pause_quirk_health_hog_b_01",
+			[2] = "loc_psyker_female_b__combat_pause_quirk_health_hog_b_02"
 		},
 		sound_events_duration = {
-			[1.0] = 4.000917,
-			[2.0] = 3.151292
+			[1] = 4.000917,
+			[2] = 3.151292
 		},
 		sound_event_weights = {
-			[1.0] = 0.5,
-			[2.0] = 0.5
+			[1] = 0.5,
+			[2] = 0.5
 		},
 		randomize_indexes = {}
 	},
@@ -2136,12 +2138,12 @@ local gameplay_vo_psyker_female_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_psyker_female_b__info_door_open_01",
-			[2.0] = "loc_psyker_female_b__info_door_open_02"
+			[1] = "loc_psyker_female_b__info_door_open_01",
+			[2] = "loc_psyker_female_b__info_door_open_02"
 		},
 		sound_events_duration = {
-			[1.0] = 2.448188,
-			[2.0] = 1.014417
+			[1] = 2.448188,
+			[2] = 1.014417
 		},
 		randomize_indexes = {}
 	},

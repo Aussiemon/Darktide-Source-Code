@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/mission_vo_hm_cartel_tech_priest_a.lua
+
 local mission_vo_hm_cartel_tech_priest_a = {
 	mission_cartel_bridge = {
 		randomize_indexes_n = 0,
@@ -94,13 +96,13 @@ local mission_vo_hm_cartel_tech_priest_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_tech_priest_a__mission_stockpile_survive_event_end_03"
+			[1] = "loc_tech_priest_a__mission_stockpile_survive_event_end_03"
 		},
 		sound_events_duration = {
-			[1.0] = 5.543438
+			[1] = 5.543438
 		},
 		sound_event_weights = {
-			[1.0] = 1
+			[1] = 1
 		},
 		randomize_indexes = {}
 	},

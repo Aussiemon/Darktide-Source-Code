@@ -1,18 +1,20 @@
+﻿-- chunkname: @dialogues/generated/circumstance_vo_darkness_psyker_male_b.lua
+
 local circumstance_vo_darkness_psyker_male_b = {
 	combat_pause_circumstance_unnatural_dark_lights_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_psyker_male_b__asset_unnatural_dark_a_03",
-			[2.0] = "loc_psyker_male_b__asset_unnatural_dark_a_04"
+			[1] = "loc_psyker_male_b__asset_unnatural_dark_a_03",
+			[2] = "loc_psyker_male_b__asset_unnatural_dark_a_04"
 		},
 		sound_events_duration = {
-			[1.0] = 3.219167,
-			[2.0] = 3.220646
+			[1] = 3.219167,
+			[2] = 3.220646
 		},
 		sound_event_weights = {
-			[1.0] = 0.5,
-			[2.0] = 0.5
+			[1] = 0.5,
+			[2] = 0.5
 		},
 		randomize_indexes = {}
 	},

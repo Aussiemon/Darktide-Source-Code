@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/class_rework.lua
+
 return function ()
 	define_rule({
 		name = "ability_banisher",

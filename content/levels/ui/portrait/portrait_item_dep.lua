@@ -1,3 +1,5 @@
+﻿-- chunkname: @content/levels/ui/portrait/portrait_item_dep.lua
+
 local item_dependencies = {
 	minion_items = {},
 	player_items = {},

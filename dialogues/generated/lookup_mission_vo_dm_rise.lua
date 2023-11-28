@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/lookup_mission_vo_dm_rise.lua
+
 DialogueLookup[DialogueLookup_n + 1] = "mission_rise_airlock_ponderings_a"
 DialogueLookup[DialogueLookup_n + 2] = "mission_rise_banter_one_a"
 DialogueLookup[DialogueLookup_n + 3] = "mission_rise_banter_one_a_sergeant_branch"

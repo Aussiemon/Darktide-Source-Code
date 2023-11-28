@@ -1,15 +1,17 @@
+﻿-- chunkname: @dialogues/generated/circumstance_vo_darkness_zealot_female_a.lua
+
 local circumstance_vo_darkness_zealot_female_a = {
 	combat_pause_circumstance_unnatural_dark_lights_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_zealot_female_a__asset_unnatural_dark_a_02"
+			[1] = "loc_zealot_female_a__asset_unnatural_dark_a_02"
 		},
 		sound_events_duration = {
-			[1.0] = 2.879792
+			[1] = 2.879792
 		},
 		sound_event_weights = {
-			[1.0] = 1
+			[1] = 1
 		},
 		randomize_indexes = {}
 	},

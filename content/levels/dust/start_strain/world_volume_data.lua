@@ -1,3 +1,5 @@
+﻿-- chunkname: @content/levels/dust/start_strain/world_volume_data.lua
+
 local volume_data = {
 	{
 		height = 2,
@@ -43,8 +45,8 @@ local volume_data = {
 		},
 		up_vector = {
 			-0,
-			[2.0] = 0,
-			[3.0] = 5.818964004516602
+			[2] = 0,
+			[3] = 5.818964004516602
 		}
 	},
 	{
@@ -197,8 +199,8 @@ local volume_data = {
 		},
 		up_vector = {
 			-0,
-			[2.0] = 0,
-			[3.0] = 1
+			[2] = 0,
+			[3] = 1
 		}
 	},
 	{
@@ -245,8 +247,8 @@ local volume_data = {
 		},
 		up_vector = {
 			-0,
-			[2.0] = 0,
-			[3.0] = 1
+			[2] = 0,
+			[3] = 1
 		}
 	},
 	{

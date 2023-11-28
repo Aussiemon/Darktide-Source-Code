@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/conversations_core_contract_vendor_a.lua
+
 local conversations_core_contract_vendor_a = {
 	eavesdropping_contract_vendor = {
 		randomize_indexes_n = 0,

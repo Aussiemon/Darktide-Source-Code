@@ -37,6 +37,27 @@ GadgetSystem.destroy = function (self)
 	end
 end
 
+GadgetSystem.remove_player = function (self, player)
+	local player_id = player:unique_id()
+	local buffs = self._buffs
+	local ids_to_remove = {}
+
+	for i = 1, #buffs do
+		local buff = buffs[i]
+		local buff_player_id = buff:player_id()
+
+		if player_id == buff_player_id then
+			ids_to_remove[#ids_to_remove + 1] = buff:instance_id()
+		end
+	end
+
+	for i = 1, #ids_to_remove do
+		local instance_id = ids_to_remove[i]
+
+		self:remove_meta_buff(player, instance_id)
+	end
+end
+
 GadgetSystem.add_meta_buff = function (self, player, buff_name, start_time, lerp_value, slot_name)
 	local buff_instance_id = self._buff_instance_id + 1
 
@@ -119,21 +140,23 @@ end
 GadgetSystem._update_meta_stat_buffs = function (self, player)
 	self:_reset_stat_buffs(player)
 
+	local player_id = player:unique_id()
 	local buffs = self._buffs
-	local current_stat_buffs = self._stat_buffs[player]
+	local current_stat_buffs = self._stat_buffs[player_id]
 	local t = FixedFrame.get_latest_fixed_time()
 
 	for i = 1, #buffs do
 		local buff = buffs[i]
 
-		if buff:player() == player then
+		if buff:player_id() == player_id then
 			buff:update_stat_buffs(current_stat_buffs, t)
 		end
 	end
 end
 
 GadgetSystem._reset_stat_buffs = function (self, player)
-	local current_stat_buffs = self._stat_buffs[player]
+	local player_id = player:unique_id()
+	local current_stat_buffs = self._stat_buffs[player_id]
 
 	if not current_stat_buffs then
 		self:_init_stat_buffs(player)
@@ -144,7 +167,7 @@ GadgetSystem._reset_stat_buffs = function (self, player)
 	local stat_buff_base_values = BuffSettings.meta_stat_buff_type_base_values
 	local stats_to_reset = current_stat_buffs._modified_stats
 
-	for key in pairs(stats_to_reset) do
+	for key, _ in pairs(stats_to_reset) do
 		current_stat_buffs[key] = stat_buff_base_values[key]
 	end
 
@@ -162,11 +185,14 @@ GadgetSystem._init_stat_buffs = function (self, player)
 		current_stat_buffs[stat_buff_name] = stat_buff_base_values[stat_buff_name]
 	end
 
-	self._stat_buffs[player] = current_stat_buffs
+	local player_id = player:unique_id()
+
+	self._stat_buffs[player_id] = current_stat_buffs
 end
 
 GadgetSystem.stat_buffs = function (self, player)
-	local stat_buffs = self._stat_buffs[player] or self:_default_stat_buffs(player)
+	local player_id = player:unique_id()
+	local stat_buffs = self._stat_buffs[player_id] or self:_default_stat_buffs(player)
 
 	return stat_buffs
 end
@@ -174,7 +200,8 @@ end
 GadgetSystem._default_stat_buffs = function (self, player)
 	self:_init_stat_buffs(player)
 
-	local stat_buffs = self._stat_buffs[player]
+	local player_id = player:unique_id()
+	local stat_buffs = self._stat_buffs[player_id]
 
 	return stat_buffs
 end

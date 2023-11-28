@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/mission_vo_fm_armoury_tech_priest_a.lua
+
 local mission_vo_fm_armoury_tech_priest_a = {
 	mission_armoury_amphitheatre_a = {
 		randomize_indexes_n = 0,
@@ -142,12 +144,12 @@ local mission_vo_fm_armoury_tech_priest_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_tech_priest_a__mission_armoury_ending_a_01",
-			[2.0] = "loc_tech_priest_a__mission_armoury_ending_a_03"
+			[1] = "loc_tech_priest_a__mission_armoury_ending_a_01",
+			[2] = "loc_tech_priest_a__mission_armoury_ending_a_03"
 		},
 		sound_events_duration = {
-			[1.0] = 6.060042,
-			[2.0] = 7.067833
+			[1] = 6.060042,
+			[2] = 7.067833
 		},
 		randomize_indexes = {}
 	},

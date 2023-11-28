@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/event_vo_fortification_ogryn_c.lua
+
 local event_vo_fortification_ogryn_c = {
 	event_fortification_beacon_deployed = {
 		randomize_indexes_n = 0,

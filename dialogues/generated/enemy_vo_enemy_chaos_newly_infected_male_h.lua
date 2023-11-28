@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/enemy_vo_enemy_chaos_newly_infected_male_h.lua
+
 local enemy_vo_enemy_chaos_newly_infected_male_h = {
 	chaos_newly_infected_alerted_idle = {
 		randomize_indexes_n = 0,

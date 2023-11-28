@@ -1,14 +1,16 @@
+﻿-- chunkname: @dialogues/generated/mission_vo_km_enforcer_zealot_female_a.lua
+
 local mission_vo_km_enforcer_zealot_female_a = {
 	mission_enforcer_courtroom = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_zealot_female_a__mission_enforcer_courtroom_01",
-			[2.0] = "loc_zealot_female_a__mission_enforcer_courtroom_02"
+			[1] = "loc_zealot_female_a__mission_enforcer_courtroom_01",
+			[2] = "loc_zealot_female_a__mission_enforcer_courtroom_02"
 		},
 		sound_events_duration = {
-			[1.0] = 4.174542,
-			[2.0] = 3.839167
+			[1] = 4.174542,
+			[2] = 3.839167
 		},
 		randomize_indexes = {}
 	},
@@ -16,12 +18,12 @@ local mission_vo_km_enforcer_zealot_female_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_zealot_female_a__mission_enforcer_end_event_conversation_one_a_01",
-			[2.0] = "loc_zealot_female_a__mission_enforcer_end_event_conversation_one_a_02"
+			[1] = "loc_zealot_female_a__mission_enforcer_end_event_conversation_one_a_01",
+			[2] = "loc_zealot_female_a__mission_enforcer_end_event_conversation_one_a_02"
 		},
 		sound_events_duration = {
-			[1.0] = 4.821146,
-			[2.0] = 5.344771
+			[1] = 4.821146,
+			[2] = 5.344771
 		},
 		randomize_indexes = {}
 	},
@@ -29,12 +31,12 @@ local mission_vo_km_enforcer_zealot_female_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_zealot_female_a__mission_enforcer_end_event_conversation_one_c_01",
-			[2.0] = "loc_zealot_female_a__mission_enforcer_end_event_conversation_one_c_02"
+			[1] = "loc_zealot_female_a__mission_enforcer_end_event_conversation_one_c_01",
+			[2] = "loc_zealot_female_a__mission_enforcer_end_event_conversation_one_c_02"
 		},
 		sound_events_duration = {
-			[1.0] = 5.317875,
-			[2.0] = 6.521458
+			[1] = 5.317875,
+			[2] = 6.521458
 		},
 		randomize_indexes = {}
 	},
@@ -42,12 +44,12 @@ local mission_vo_km_enforcer_zealot_female_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_zealot_female_a__mission_enforcer_end_event_conversation_three_a_01",
-			[2.0] = "loc_zealot_female_a__mission_enforcer_end_event_conversation_three_a_02"
+			[1] = "loc_zealot_female_a__mission_enforcer_end_event_conversation_three_a_01",
+			[2] = "loc_zealot_female_a__mission_enforcer_end_event_conversation_three_a_02"
 		},
 		sound_events_duration = {
-			[1.0] = 5.228708,
-			[2.0] = 4.834063
+			[1] = 5.228708,
+			[2] = 4.834063
 		},
 		randomize_indexes = {}
 	},
@@ -55,12 +57,12 @@ local mission_vo_km_enforcer_zealot_female_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_zealot_female_a__mission_enforcer_end_event_conversation_three_c_01",
-			[2.0] = "loc_zealot_female_a__mission_enforcer_end_event_conversation_three_c_02"
+			[1] = "loc_zealot_female_a__mission_enforcer_end_event_conversation_three_c_01",
+			[2] = "loc_zealot_female_a__mission_enforcer_end_event_conversation_three_c_02"
 		},
 		sound_events_duration = {
-			[1.0] = 3.955375,
-			[2.0] = 5.200354
+			[1] = 3.955375,
+			[2] = 5.200354
 		},
 		randomize_indexes = {}
 	},
@@ -68,12 +70,12 @@ local mission_vo_km_enforcer_zealot_female_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_zealot_female_a__mission_enforcer_end_event_conversation_two_a_01",
-			[2.0] = "loc_zealot_female_a__mission_enforcer_end_event_conversation_two_a_02"
+			[1] = "loc_zealot_female_a__mission_enforcer_end_event_conversation_two_a_01",
+			[2] = "loc_zealot_female_a__mission_enforcer_end_event_conversation_two_a_02"
 		},
 		sound_events_duration = {
-			[1.0] = 4.646313,
-			[2.0] = 4.514229
+			[1] = 4.646313,
+			[2] = 4.514229
 		},
 		randomize_indexes = {}
 	},
@@ -122,12 +124,12 @@ local mission_vo_km_enforcer_zealot_female_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_zealot_female_a__mission_enforcer_hab_support_01",
-			[2.0] = "loc_zealot_female_a__mission_enforcer_hab_support_02"
+			[1] = "loc_zealot_female_a__mission_enforcer_hab_support_01",
+			[2] = "loc_zealot_female_a__mission_enforcer_hab_support_02"
 		},
 		sound_events_duration = {
-			[1.0] = 5.156563,
-			[2.0] = 4.994417
+			[1] = 5.156563,
+			[2] = 4.994417
 		},
 		randomize_indexes = {}
 	},
@@ -135,16 +137,16 @@ local mission_vo_km_enforcer_zealot_female_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_zealot_female_a__mission_enforcer_infrastructure_01",
-			[2.0] = "loc_zealot_female_a__mission_enforcer_infrastructure_02"
+			[1] = "loc_zealot_female_a__mission_enforcer_infrastructure_01",
+			[2] = "loc_zealot_female_a__mission_enforcer_infrastructure_02"
 		},
 		sound_events_duration = {
-			[1.0] = 5.347458,
-			[2.0] = 4.922813
+			[1] = 5.347458,
+			[2] = 4.922813
 		},
 		sound_event_weights = {
-			[1.0] = 0.5,
-			[2.0] = 0.5
+			[1] = 0.5,
+			[2] = 0.5
 		},
 		randomize_indexes = {}
 	},
@@ -152,12 +154,12 @@ local mission_vo_km_enforcer_zealot_female_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_zealot_female_a__mission_enforcer_start_banter_a_01",
-			[2.0] = "loc_zealot_female_a__mission_enforcer_start_banter_a_02"
+			[1] = "loc_zealot_female_a__mission_enforcer_start_banter_a_01",
+			[2] = "loc_zealot_female_a__mission_enforcer_start_banter_a_02"
 		},
 		sound_events_duration = {
-			[1.0] = 3.306167,
-			[2.0] = 5.435917
+			[1] = 3.306167,
+			[2] = 5.435917
 		},
 		randomize_indexes = {}
 	},
@@ -194,12 +196,12 @@ local mission_vo_km_enforcer_zealot_female_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_zealot_female_a__mission_enforcer_traders_row_01",
-			[2.0] = "loc_zealot_female_a__mission_enforcer_traders_row_02"
+			[1] = "loc_zealot_female_a__mission_enforcer_traders_row_01",
+			[2] = "loc_zealot_female_a__mission_enforcer_traders_row_02"
 		},
 		sound_events_duration = {
-			[1.0] = 3.30625,
-			[2.0] = 4.404917
+			[1] = 3.30625,
+			[2] = 4.404917
 		},
 		randomize_indexes = {}
 	},
@@ -207,12 +209,12 @@ local mission_vo_km_enforcer_zealot_female_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_zealot_female_a__mission_enforcer_wonky_hab_01",
-			[2.0] = "loc_zealot_female_a__mission_enforcer_wonky_hab_02"
+			[1] = "loc_zealot_female_a__mission_enforcer_wonky_hab_01",
+			[2] = "loc_zealot_female_a__mission_enforcer_wonky_hab_02"
 		},
 		sound_events_duration = {
-			[1.0] = 3.488729,
-			[2.0] = 3.749896
+			[1] = 3.488729,
+			[2] = 3.749896
 		},
 		randomize_indexes = {}
 	}

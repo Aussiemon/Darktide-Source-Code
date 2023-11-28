@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/ogryn_c.lua
+
 return function ()
 	define_rule({
 		name = "bonding_conversation_metropolitan_ambush_a",

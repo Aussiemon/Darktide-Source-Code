@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/mission_vo_lm_cooling_tech_priest_a.lua
+
 local mission_vo_lm_cooling_tech_priest_a = {
 	cmd_mission_cooling_hacking_event_end = {
 		randomize_indexes_n = 0,

@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/mission_vo_prologue.lua
+
 return function ()
 	define_rule({
 		post_wwise_event = "play_radio_static_end",

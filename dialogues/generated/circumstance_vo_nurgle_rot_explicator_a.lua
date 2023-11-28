@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/circumstance_vo_nurgle_rot_explicator_a.lua
+
 local circumstance_vo_nurgle_rot_explicator_a = {
 	nurgle_circumstance_conversation_five_b = {
 		randomize_indexes_n = 0,

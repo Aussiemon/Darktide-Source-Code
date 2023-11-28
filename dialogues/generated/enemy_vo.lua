@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/enemy_vo.lua
+
 return function ()
 	define_rule({
 		name = "chaos_daemonhost_aggro",

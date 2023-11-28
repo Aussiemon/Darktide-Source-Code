@@ -1,3 +1,5 @@
+﻿-- chunkname: @content/levels/watertown_twins/missions/mission_km_enforcer_twins_item_dep.lua
+
 local item_dependencies = {
 	minion_items = {},
 	player_items = {

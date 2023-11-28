@@ -1,14 +1,16 @@
+﻿-- chunkname: @dialogues/generated/circumstance_vo_ventilation_purge_zealot_male_a.lua
+
 local circumstance_vo_ventilation_purge_zealot_male_a = {
 	combat_pause_circumstance_ogryn_c_gas_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_zealot_male_a__combat_pause_circumstance_ogryn_c_gas_b_01",
-			[2.0] = "loc_zealot_male_a__combat_pause_circumstance_ogryn_c_gas_b_02"
+			[1] = "loc_zealot_male_a__combat_pause_circumstance_ogryn_c_gas_b_01",
+			[2] = "loc_zealot_male_a__combat_pause_circumstance_ogryn_c_gas_b_02"
 		},
 		sound_events_duration = {
-			[1.0] = 3.249292,
-			[2.0] = 4.688563
+			[1] = 3.249292,
+			[2] = 4.688563
 		},
 		randomize_indexes = {}
 	},
@@ -16,12 +18,12 @@ local circumstance_vo_ventilation_purge_zealot_male_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_zealot_male_a__combat_pause_circumstance_psyker_c_gas_b_01",
-			[2.0] = "loc_zealot_male_a__combat_pause_circumstance_psyker_c_gas_b_02"
+			[1] = "loc_zealot_male_a__combat_pause_circumstance_psyker_c_gas_b_01",
+			[2] = "loc_zealot_male_a__combat_pause_circumstance_psyker_c_gas_b_02"
 		},
 		sound_events_duration = {
-			[1.0] = 4.354333,
-			[2.0] = 3.203396
+			[1] = 4.354333,
+			[2] = 3.203396
 		},
 		randomize_indexes = {}
 	},
@@ -29,12 +31,12 @@ local circumstance_vo_ventilation_purge_zealot_male_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_zealot_male_a__combat_pause_circumstance_veteran_c_gas_b_01",
-			[2.0] = "loc_zealot_male_a__combat_pause_circumstance_veteran_c_gas_b_02"
+			[1] = "loc_zealot_male_a__combat_pause_circumstance_veteran_c_gas_b_01",
+			[2] = "loc_zealot_male_a__combat_pause_circumstance_veteran_c_gas_b_02"
 		},
 		sound_events_duration = {
-			[1.0] = 2.972854,
-			[2.0] = 4.592667
+			[1] = 2.972854,
+			[2] = 4.592667
 		},
 		randomize_indexes = {}
 	},
@@ -42,12 +44,12 @@ local circumstance_vo_ventilation_purge_zealot_male_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_zealot_male_a__combat_pause_circumstance_zealot_a_gas_a_01",
-			[2.0] = "loc_zealot_male_a__combat_pause_circumstance_zealot_a_gas_a_02"
+			[1] = "loc_zealot_male_a__combat_pause_circumstance_zealot_a_gas_a_01",
+			[2] = "loc_zealot_male_a__combat_pause_circumstance_zealot_a_gas_a_02"
 		},
 		sound_events_duration = {
-			[1.0] = 4.689646,
-			[2.0] = 4.421729
+			[1] = 4.689646,
+			[2] = 4.421729
 		},
 		randomize_indexes = {}
 	},
@@ -55,12 +57,12 @@ local circumstance_vo_ventilation_purge_zealot_male_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_zealot_male_a__combat_pause_circumstance_zealot_c_gas_b_01",
-			[2.0] = "loc_zealot_male_a__combat_pause_circumstance_zealot_c_gas_b_02"
+			[1] = "loc_zealot_male_a__combat_pause_circumstance_zealot_c_gas_b_01",
+			[2] = "loc_zealot_male_a__combat_pause_circumstance_zealot_c_gas_b_02"
 		},
 		sound_events_duration = {
-			[1.0] = 4.925833,
-			[2.0] = 6.362625
+			[1] = 4.925833,
+			[2] = 6.362625
 		},
 		randomize_indexes = {}
 	},

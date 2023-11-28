@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/mission_vo_cm_archives_sergeant_a.lua
+
 local mission_vo_cm_archives_sergeant_a = {
 	mission_archives_alarm_off = {
 		randomize_indexes_n = 0,
@@ -71,12 +73,12 @@ local mission_vo_cm_archives_sergeant_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_sergeant_a__mission_archives_end_event_complete_01",
-			[2.0] = "loc_sergeant_a__mission_archives_end_event_complete_04"
+			[1] = "loc_sergeant_a__mission_archives_end_event_complete_01",
+			[2] = "loc_sergeant_a__mission_archives_end_event_complete_04"
 		},
 		sound_events_duration = {
-			[1.0] = 5.011771,
-			[2.0] = 5.002104
+			[1] = 5.011771,
+			[2] = 5.002104
 		},
 		randomize_indexes = {}
 	},

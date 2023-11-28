@@ -1,14 +1,16 @@
+﻿-- chunkname: @dialogues/generated/circumstance_vo_ventilation_purge_veteran_male_a.lua
+
 local circumstance_vo_ventilation_purge_veteran_male_a = {
 	combat_pause_circumstance_ogryn_a_gas_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_veteran_male_a__combat_pause_circumstance_ogryn_a_gas_b_01",
-			[2.0] = "loc_veteran_male_a__combat_pause_circumstance_ogryn_a_gas_b_02"
+			[1] = "loc_veteran_male_a__combat_pause_circumstance_ogryn_a_gas_b_01",
+			[2] = "loc_veteran_male_a__combat_pause_circumstance_ogryn_a_gas_b_02"
 		},
 		sound_events_duration = {
-			[1.0] = 5.734396,
-			[2.0] = 3.060438
+			[1] = 5.734396,
+			[2] = 3.060438
 		},
 		randomize_indexes = {}
 	},
@@ -16,12 +18,12 @@ local circumstance_vo_ventilation_purge_veteran_male_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_veteran_male_a__combat_pause_circumstance_psyker_a_gas_b_01",
-			[2.0] = "loc_veteran_male_a__combat_pause_circumstance_psyker_a_gas_b_02"
+			[1] = "loc_veteran_male_a__combat_pause_circumstance_psyker_a_gas_b_01",
+			[2] = "loc_veteran_male_a__combat_pause_circumstance_psyker_a_gas_b_02"
 		},
 		sound_events_duration = {
-			[1.0] = 2.706833,
-			[2.0] = 2.597771
+			[1] = 2.706833,
+			[2] = 2.597771
 		},
 		randomize_indexes = {}
 	},
@@ -29,12 +31,12 @@ local circumstance_vo_ventilation_purge_veteran_male_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_veteran_male_a__combat_pause_circumstance_veteran_a_gas_a_01",
-			[2.0] = "loc_veteran_male_a__combat_pause_circumstance_veteran_a_gas_a_02"
+			[1] = "loc_veteran_male_a__combat_pause_circumstance_veteran_a_gas_a_01",
+			[2] = "loc_veteran_male_a__combat_pause_circumstance_veteran_a_gas_a_02"
 		},
 		sound_events_duration = {
-			[1.0] = 2.728125,
-			[2.0] = 4.073021
+			[1] = 2.728125,
+			[2] = 4.073021
 		},
 		randomize_indexes = {}
 	},
@@ -42,12 +44,12 @@ local circumstance_vo_ventilation_purge_veteran_male_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_veteran_male_a__combat_pause_circumstance_veteran_a_gas_b_01",
-			[2.0] = "loc_veteran_male_a__combat_pause_circumstance_veteran_a_gas_b_02"
+			[1] = "loc_veteran_male_a__combat_pause_circumstance_veteran_a_gas_b_01",
+			[2] = "loc_veteran_male_a__combat_pause_circumstance_veteran_a_gas_b_02"
 		},
 		sound_events_duration = {
-			[1.0] = 4.023125,
-			[2.0] = 4.190021
+			[1] = 4.023125,
+			[2] = 4.190021
 		},
 		randomize_indexes = {}
 	},
@@ -55,12 +57,12 @@ local circumstance_vo_ventilation_purge_veteran_male_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_veteran_male_a__combat_pause_circumstance_zealot_a_gas_b_01",
-			[2.0] = "loc_veteran_male_a__combat_pause_circumstance_zealot_a_gas_b_02"
+			[1] = "loc_veteran_male_a__combat_pause_circumstance_zealot_a_gas_b_01",
+			[2] = "loc_veteran_male_a__combat_pause_circumstance_zealot_a_gas_b_02"
 		},
 		sound_events_duration = {
-			[1.0] = 4.244042,
-			[2.0] = 3.793938
+			[1] = 4.244042,
+			[2] = 3.793938
 		},
 		randomize_indexes = {}
 	},

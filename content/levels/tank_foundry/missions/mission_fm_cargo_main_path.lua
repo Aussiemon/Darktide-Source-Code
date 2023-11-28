@@ -1,3 +1,5 @@
+﻿-- chunkname: @content/levels/tank_foundry/missions/mission_fm_cargo_main_path.lua
+
 local path_markers = {
 	{
 		kind = "good",

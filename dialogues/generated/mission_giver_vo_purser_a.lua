@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/mission_giver_vo_purser_a.lua
+
 local mission_giver_vo_purser_a = {
 	info_all_players_required = {
 		randomize_indexes_n = 0,

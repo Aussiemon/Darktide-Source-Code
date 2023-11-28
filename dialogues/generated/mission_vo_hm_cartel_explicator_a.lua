@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/mission_vo_hm_cartel_explicator_a.lua
+
 local mission_vo_hm_cartel_explicator_a = {
 	mission_cartel_bridge = {
 		randomize_indexes_n = 0,
@@ -71,12 +73,12 @@ local mission_vo_hm_cartel_explicator_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_explicator_a__mission_cartel_elevator_conversation_one_line_two_02",
-			[2.0] = "loc_explicator_a__mission_cartel_elevator_conversation_one_line_two_03"
+			[1] = "loc_explicator_a__mission_cartel_elevator_conversation_one_line_two_02",
+			[2] = "loc_explicator_a__mission_cartel_elevator_conversation_one_line_two_03"
 		},
 		sound_events_duration = {
-			[1.0] = 6.881563,
-			[2.0] = 6.14825
+			[1] = 6.881563,
+			[2] = 6.14825
 		},
 		randomize_indexes = {}
 	},
@@ -143,13 +145,13 @@ local mission_vo_hm_cartel_explicator_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_explicator_a__mission_stockpile_survive_event_end_02"
+			[1] = "loc_explicator_a__mission_stockpile_survive_event_end_02"
 		},
 		sound_events_duration = {
-			[1.0] = 3.794208
+			[1] = 3.794208
 		},
 		sound_event_weights = {
-			[1.0] = 1
+			[1] = 1
 		},
 		randomize_indexes = {}
 	},

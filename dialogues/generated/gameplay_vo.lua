@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/gameplay_vo.lua
+
 return function ()
 	define_rule({
 		name = "ability_biomancer_high",

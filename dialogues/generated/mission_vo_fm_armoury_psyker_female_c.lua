@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/mission_vo_fm_armoury_psyker_female_c.lua
+
 local mission_vo_fm_armoury_psyker_female_c = {
 	mission_armoury_side_streets_c_response = {
 		randomize_indexes_n = 0,

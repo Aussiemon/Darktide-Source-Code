@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/event_vo_demolition_contract_vendor_a.lua
+
 local event_vo_demolition_contract_vendor_a = {
 	event_demolition_first_corruptor_destroyed_b = {
 		randomize_indexes_n = 0,

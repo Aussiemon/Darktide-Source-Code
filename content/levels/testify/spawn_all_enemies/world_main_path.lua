@@ -1,3 +1,5 @@
+﻿-- chunkname: @content/levels/testify/spawn_all_enemies/world_main_path.lua
+
 local path_markers = {
 	{
 		crossroads = "",

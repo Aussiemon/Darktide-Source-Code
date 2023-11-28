@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/conversations_hub_sergeant_a.lua
+
 local conversations_hub_sergeant_a = {
 	hub_idle = {
 		randomize_indexes_n = 0,
@@ -42,10 +44,10 @@ local conversations_hub_sergeant_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_sergeant_a__hub_idle_2nd_phase_conversation_eight_b_01"
+			[1] = "loc_sergeant_a__hub_idle_2nd_phase_conversation_eight_b_01"
 		},
 		sound_events_duration = {
-			[1.0] = 6.271979
+			[1] = 6.271979
 		},
 		randomize_indexes = {}
 	},
@@ -53,10 +55,10 @@ local conversations_hub_sergeant_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_sergeant_a__hub_idle_2nd_phase_conversation_five_a_01"
+			[1] = "loc_sergeant_a__hub_idle_2nd_phase_conversation_five_a_01"
 		},
 		sound_events_duration = {
-			[1.0] = 6.379271
+			[1] = 6.379271
 		},
 		randomize_indexes = {}
 	},
@@ -64,13 +66,13 @@ local conversations_hub_sergeant_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_sergeant_a__hub_idle_conversation_nine_b_01"
+			[1] = "loc_sergeant_a__hub_idle_conversation_nine_b_01"
 		},
 		sound_events_duration = {
-			[1.0] = 3.916688
+			[1] = 3.916688
 		},
 		sound_event_weights = {
-			[1.0] = 1
+			[1] = 1
 		},
 		randomize_indexes = {}
 	},
@@ -78,10 +80,10 @@ local conversations_hub_sergeant_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_sergeant_a__hub_idle_2nd_phase_conversation_four_a_01"
+			[1] = "loc_sergeant_a__hub_idle_2nd_phase_conversation_four_a_01"
 		},
 		sound_events_duration = {
-			[1.0] = 4.795979
+			[1] = 4.795979
 		},
 		randomize_indexes = {}
 	},
@@ -89,10 +91,10 @@ local conversations_hub_sergeant_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_sergeant_a__hub_idle_2nd_phase_conversation_nine_b_01"
+			[1] = "loc_sergeant_a__hub_idle_2nd_phase_conversation_nine_b_01"
 		},
 		sound_events_duration = {
-			[1.0] = 3.75175
+			[1] = 3.75175
 		},
 		randomize_indexes = {}
 	},
@@ -100,10 +102,10 @@ local conversations_hub_sergeant_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_sergeant_a__hub_idle_2nd_phase_conversation_one_a_01"
+			[1] = "loc_sergeant_a__hub_idle_2nd_phase_conversation_one_a_01"
 		},
 		sound_events_duration = {
-			[1.0] = 5.324979
+			[1] = 5.324979
 		},
 		randomize_indexes = {}
 	},
@@ -111,10 +113,10 @@ local conversations_hub_sergeant_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_sergeant_a__hub_idle_2nd_phase_conversation_seven_b_01"
+			[1] = "loc_sergeant_a__hub_idle_2nd_phase_conversation_seven_b_01"
 		},
 		sound_events_duration = {
-			[1.0] = 5.080021
+			[1] = 5.080021
 		},
 		randomize_indexes = {}
 	},
@@ -122,10 +124,10 @@ local conversations_hub_sergeant_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_sergeant_a__hub_idle_2nd_phase_conversation_six_b_01"
+			[1] = "loc_sergeant_a__hub_idle_2nd_phase_conversation_six_b_01"
 		},
 		sound_events_duration = {
-			[1.0] = 4.012875
+			[1] = 4.012875
 		},
 		randomize_indexes = {}
 	},
@@ -133,10 +135,10 @@ local conversations_hub_sergeant_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_sergeant_a__hub_idle_2nd_phase_conversation_ten_b_01"
+			[1] = "loc_sergeant_a__hub_idle_2nd_phase_conversation_ten_b_01"
 		},
 		sound_events_duration = {
-			[1.0] = 4.207896
+			[1] = 4.207896
 		},
 		randomize_indexes = {}
 	},
@@ -144,10 +146,10 @@ local conversations_hub_sergeant_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_sergeant_a__hub_idle_2nd_phase_conversation_thirtyfive_a_01"
+			[1] = "loc_sergeant_a__hub_idle_2nd_phase_conversation_thirtyfive_a_01"
 		},
 		sound_events_duration = {
-			[1.0] = 3.458271
+			[1] = 3.458271
 		},
 		randomize_indexes = {}
 	},
@@ -155,10 +157,10 @@ local conversations_hub_sergeant_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_sergeant_a__hub_idle_2nd_phase_conversation_thirtyfour_a_01"
+			[1] = "loc_sergeant_a__hub_idle_2nd_phase_conversation_thirtyfour_a_01"
 		},
 		sound_events_duration = {
-			[1.0] = 5.149729
+			[1] = 5.149729
 		},
 		randomize_indexes = {}
 	},
@@ -166,10 +168,10 @@ local conversations_hub_sergeant_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_sergeant_a__hub_idle_2nd_phase_conversation_thirtyseven_b_01"
+			[1] = "loc_sergeant_a__hub_idle_2nd_phase_conversation_thirtyseven_b_01"
 		},
 		sound_events_duration = {
-			[1.0] = 3.860125
+			[1] = 3.860125
 		},
 		randomize_indexes = {}
 	},
@@ -177,10 +179,10 @@ local conversations_hub_sergeant_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_sergeant_a__hub_idle_2nd_phase_conversation_thirtysix_b_01"
+			[1] = "loc_sergeant_a__hub_idle_2nd_phase_conversation_thirtysix_b_01"
 		},
 		sound_events_duration = {
-			[1.0] = 4.734708
+			[1] = 4.734708
 		},
 		randomize_indexes = {}
 	},
@@ -188,10 +190,10 @@ local conversations_hub_sergeant_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_sergeant_a__hub_idle_2nd_phase_conversation_three_a_01"
+			[1] = "loc_sergeant_a__hub_idle_2nd_phase_conversation_three_a_01"
 		},
 		sound_events_duration = {
-			[1.0] = 5.121333
+			[1] = 5.121333
 		},
 		randomize_indexes = {}
 	},
@@ -199,10 +201,10 @@ local conversations_hub_sergeant_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_sergeant_a__hub_idle_2nd_phase_conversation_two_a_01"
+			[1] = "loc_sergeant_a__hub_idle_2nd_phase_conversation_two_a_01"
 		},
 		sound_events_duration = {
-			[1.0] = 4.971438
+			[1] = 4.971438
 		},
 		randomize_indexes = {}
 	},
@@ -210,13 +212,13 @@ local conversations_hub_sergeant_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_sergeant_a__hub_idle_conversation_eleven_b_01"
+			[1] = "loc_sergeant_a__hub_idle_conversation_eleven_b_01"
 		},
 		sound_events_duration = {
-			[1.0] = 3.916833
+			[1] = 3.916833
 		},
 		sound_event_weights = {
-			[1.0] = 1
+			[1] = 1
 		},
 		randomize_indexes = {}
 	},
@@ -224,13 +226,13 @@ local conversations_hub_sergeant_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_sergeant_a__hub_idle_conversation_five_a_01"
+			[1] = "loc_sergeant_a__hub_idle_conversation_five_a_01"
 		},
 		sound_events_duration = {
-			[1.0] = 5.257958
+			[1] = 5.257958
 		},
 		sound_event_weights = {
-			[1.0] = 1
+			[1] = 1
 		},
 		randomize_indexes = {}
 	},
@@ -238,13 +240,13 @@ local conversations_hub_sergeant_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_sergeant_a__hub_idle_conversation_four_a_01"
+			[1] = "loc_sergeant_a__hub_idle_conversation_four_a_01"
 		},
 		sound_events_duration = {
-			[1.0] = 4.166792
+			[1] = 4.166792
 		},
 		sound_event_weights = {
-			[1.0] = 1
+			[1] = 1
 		},
 		randomize_indexes = {}
 	},
@@ -252,13 +254,13 @@ local conversations_hub_sergeant_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_sergeant_a__hub_idle_conversation_nine_b_01"
+			[1] = "loc_sergeant_a__hub_idle_conversation_nine_b_01"
 		},
 		sound_events_duration = {
-			[1.0] = 3.916688
+			[1] = 3.916688
 		},
 		sound_event_weights = {
-			[1.0] = 1
+			[1] = 1
 		},
 		randomize_indexes = {}
 	},
@@ -266,13 +268,13 @@ local conversations_hub_sergeant_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_sergeant_a__hub_idle_conversation_one_a_01"
+			[1] = "loc_sergeant_a__hub_idle_conversation_one_a_01"
 		},
 		sound_events_duration = {
-			[1.0] = 4.772625
+			[1] = 4.772625
 		},
 		sound_event_weights = {
-			[1.0] = 1
+			[1] = 1
 		},
 		randomize_indexes = {}
 	},
@@ -280,13 +282,13 @@ local conversations_hub_sergeant_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_sergeant_a__hub_idle_conversation_seven_b_01"
+			[1] = "loc_sergeant_a__hub_idle_conversation_seven_b_01"
 		},
 		sound_events_duration = {
-			[1.0] = 4.149667
+			[1] = 4.149667
 		},
 		sound_event_weights = {
-			[1.0] = 1
+			[1] = 1
 		},
 		randomize_indexes = {}
 	},
@@ -294,13 +296,13 @@ local conversations_hub_sergeant_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_sergeant_a__hub_idle_conversation_six_a_01"
+			[1] = "loc_sergeant_a__hub_idle_conversation_six_a_01"
 		},
 		sound_events_duration = {
-			[1.0] = 3.012313
+			[1] = 3.012313
 		},
 		sound_event_weights = {
-			[1.0] = 1
+			[1] = 1
 		},
 		randomize_indexes = {}
 	},
@@ -308,13 +310,13 @@ local conversations_hub_sergeant_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_sergeant_a__hub_idle_conversation_ten_a_01"
+			[1] = "loc_sergeant_a__hub_idle_conversation_ten_a_01"
 		},
 		sound_events_duration = {
-			[1.0] = 6.107896
+			[1] = 6.107896
 		},
 		sound_event_weights = {
-			[1.0] = 1
+			[1] = 1
 		},
 		randomize_indexes = {}
 	},
@@ -322,13 +324,13 @@ local conversations_hub_sergeant_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_sergeant_a__hub_idle_conversation_ten_c_01"
+			[1] = "loc_sergeant_a__hub_idle_conversation_ten_c_01"
 		},
 		sound_events_duration = {
-			[1.0] = 3.003167
+			[1] = 3.003167
 		},
 		sound_event_weights = {
-			[1.0] = 1
+			[1] = 1
 		},
 		randomize_indexes = {}
 	},
@@ -336,13 +338,13 @@ local conversations_hub_sergeant_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_sergeant_a__hub_idle_conversation_three_a_01"
+			[1] = "loc_sergeant_a__hub_idle_conversation_three_a_01"
 		},
 		sound_events_duration = {
-			[1.0] = 4.214333
+			[1] = 4.214333
 		},
 		sound_event_weights = {
-			[1.0] = 1
+			[1] = 1
 		},
 		randomize_indexes = {}
 	},
@@ -350,13 +352,13 @@ local conversations_hub_sergeant_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_sergeant_a__hub_idle_conversation_twelve_b_01"
+			[1] = "loc_sergeant_a__hub_idle_conversation_twelve_b_01"
 		},
 		sound_events_duration = {
-			[1.0] = 2.480854
+			[1] = 2.480854
 		},
 		sound_event_weights = {
-			[1.0] = 1
+			[1] = 1
 		},
 		randomize_indexes = {}
 	},
@@ -364,13 +366,13 @@ local conversations_hub_sergeant_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_sergeant_a__hub_idle_conversation_two_a_01"
+			[1] = "loc_sergeant_a__hub_idle_conversation_two_a_01"
 		},
 		sound_events_duration = {
-			[1.0] = 2.665896
+			[1] = 2.665896
 		},
 		sound_event_weights = {
-			[1.0] = 1
+			[1] = 1
 		},
 		randomize_indexes = {}
 	},
@@ -378,10 +380,10 @@ local conversations_hub_sergeant_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_sergeant_a__hub_rumours_vox_01_a_01"
+			[1] = "loc_sergeant_a__hub_rumours_vox_01_a_01"
 		},
 		sound_events_duration = {
-			[1.0] = 7.127271
+			[1] = 7.127271
 		},
 		randomize_indexes = {}
 	},
@@ -389,10 +391,10 @@ local conversations_hub_sergeant_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_sergeant_a__hub_rumours_vox_02_a_01"
+			[1] = "loc_sergeant_a__hub_rumours_vox_02_a_01"
 		},
 		sound_events_duration = {
-			[1.0] = 10.48792
+			[1] = 10.48792
 		},
 		randomize_indexes = {}
 	},
@@ -400,10 +402,10 @@ local conversations_hub_sergeant_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_sergeant_a__hub_rumours_vox_02_c_01"
+			[1] = "loc_sergeant_a__hub_rumours_vox_02_c_01"
 		},
 		sound_events_duration = {
-			[1.0] = 1.777354
+			[1] = 1.777354
 		},
 		randomize_indexes = {}
 	},
@@ -411,10 +413,10 @@ local conversations_hub_sergeant_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_sergeant_a__hub_rumours_vox_03_a_01"
+			[1] = "loc_sergeant_a__hub_rumours_vox_03_a_01"
 		},
 		sound_events_duration = {
-			[1.0] = 7.202167
+			[1] = 7.202167
 		},
 		randomize_indexes = {}
 	},
@@ -422,10 +424,10 @@ local conversations_hub_sergeant_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_sergeant_a__hub_rumours_vox_03_c_01"
+			[1] = "loc_sergeant_a__hub_rumours_vox_03_c_01"
 		},
 		sound_events_duration = {
-			[1.0] = 2.163083
+			[1] = 2.163083
 		},
 		randomize_indexes = {}
 	},
@@ -433,10 +435,10 @@ local conversations_hub_sergeant_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_sergeant_a__hub_rumours_vox_04_a_01"
+			[1] = "loc_sergeant_a__hub_rumours_vox_04_a_01"
 		},
 		sound_events_duration = {
-			[1.0] = 5.8
+			[1] = 5.8
 		},
 		randomize_indexes = {}
 	},
@@ -444,10 +446,10 @@ local conversations_hub_sergeant_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_sergeant_a__hub_rumours_vox_05_a_01"
+			[1] = "loc_sergeant_a__hub_rumours_vox_05_a_01"
 		},
 		sound_events_duration = {
-			[1.0] = 6.743
+			[1] = 6.743
 		},
 		randomize_indexes = {}
 	},
@@ -455,10 +457,10 @@ local conversations_hub_sergeant_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_sergeant_a__hub_rumours_vox_06_a_01"
+			[1] = "loc_sergeant_a__hub_rumours_vox_06_a_01"
 		},
 		sound_events_duration = {
-			[1.0] = 8.5905
+			[1] = 8.5905
 		},
 		randomize_indexes = {}
 	},
@@ -466,10 +468,10 @@ local conversations_hub_sergeant_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_sergeant_a__hub_rumours_vox_07_a_01"
+			[1] = "loc_sergeant_a__hub_rumours_vox_07_a_01"
 		},
 		sound_events_duration = {
-			[1.0] = 5.696375
+			[1] = 5.696375
 		},
 		randomize_indexes = {}
 	},
@@ -477,10 +479,10 @@ local conversations_hub_sergeant_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_sergeant_a__hub_rumours_vox_07_c_01"
+			[1] = "loc_sergeant_a__hub_rumours_vox_07_c_01"
 		},
 		sound_events_duration = {
-			[1.0] = 4.577104
+			[1] = 4.577104
 		},
 		randomize_indexes = {}
 	},
@@ -488,10 +490,10 @@ local conversations_hub_sergeant_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_sergeant_a__hub_rumours_vox_09_b_01"
+			[1] = "loc_sergeant_a__hub_rumours_vox_09_b_01"
 		},
 		sound_events_duration = {
-			[1.0] = 3.577042
+			[1] = 3.577042
 		},
 		randomize_indexes = {}
 	}

@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/circumstance_vo_darkness_tech_priest_a.lua
+
 local circumstance_vo_darkness_tech_priest_a = {
 	power_circumstance_start_a = {
 		randomize_indexes_n = 0,

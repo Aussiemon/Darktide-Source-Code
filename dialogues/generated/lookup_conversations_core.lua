@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/lookup_conversations_core.lua
+
 DialogueLookup[DialogueLookup_n + 1] = "almost_there"
 DialogueLookup[DialogueLookup_n + 2] = "combat_pause_one_liner"
 DialogueLookup[DialogueLookup_n + 3] = "conversation_40k_lore_one_01"

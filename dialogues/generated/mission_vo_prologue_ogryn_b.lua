@@ -1,12 +1,14 @@
+﻿-- chunkname: @dialogues/generated/mission_vo_prologue_ogryn_b.lua
+
 local mission_vo_prologue_ogryn_b = {
 	prologue_combat_01 = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_ogryn_b__prologue_combat_01"
+			[1] = "loc_ogryn_b__prologue_combat_01"
 		},
 		sound_events_duration = {
-			[1.0] = 1.268563
+			[1] = 1.268563
 		},
 		randomize_indexes = {}
 	},
@@ -14,10 +16,10 @@ local mission_vo_prologue_ogryn_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_ogryn_b__prologue_combat_02"
+			[1] = "loc_ogryn_b__prologue_combat_02"
 		},
 		sound_events_duration = {
-			[1.0] = 1.282396
+			[1] = 1.282396
 		},
 		randomize_indexes = {}
 	},
@@ -25,10 +27,10 @@ local mission_vo_prologue_ogryn_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_ogryn_b__prologue_combat_03"
+			[1] = "loc_ogryn_b__prologue_combat_03"
 		},
 		sound_events_duration = {
-			[1.0] = 1.219656
+			[1] = 1.219656
 		},
 		randomize_indexes = {}
 	},
@@ -36,10 +38,10 @@ local mission_vo_prologue_ogryn_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_ogryn_b__prologue_combat_04"
+			[1] = "loc_ogryn_b__prologue_combat_04"
 		},
 		sound_events_duration = {
-			[1.0] = 1.418448
+			[1] = 1.418448
 		},
 		randomize_indexes = {}
 	},
@@ -47,10 +49,10 @@ local mission_vo_prologue_ogryn_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_ogryn_b__prologue_combat_05"
+			[1] = "loc_ogryn_b__prologue_combat_05"
 		},
 		sound_events_duration = {
-			[1.0] = 3.243604
+			[1] = 3.243604
 		},
 		randomize_indexes = {}
 	},
@@ -58,10 +60,10 @@ local mission_vo_prologue_ogryn_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_ogryn_b__prologue_end_event_conversation_b_01"
+			[1] = "loc_ogryn_b__prologue_end_event_conversation_b_01"
 		},
 		sound_events_duration = {
-			[1.0] = 4.802208
+			[1] = 4.802208
 		},
 		randomize_indexes = {}
 	},
@@ -69,10 +71,10 @@ local mission_vo_prologue_ogryn_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_ogryn_b__prologue_firefight_conversation_b_01"
+			[1] = "loc_ogryn_b__prologue_firefight_conversation_b_01"
 		},
 		sound_events_duration = {
-			[1.0] = 1.644729
+			[1] = 1.644729
 		},
 		randomize_indexes = {}
 	},
@@ -80,10 +82,10 @@ local mission_vo_prologue_ogryn_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_ogryn_b__prologue_monologue_01"
+			[1] = "loc_ogryn_b__prologue_monologue_01"
 		},
 		sound_events_duration = {
-			[1.0] = 6.841323
+			[1] = 6.841323
 		},
 		randomize_indexes = {}
 	},
@@ -91,10 +93,10 @@ local mission_vo_prologue_ogryn_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_ogryn_b__prologue_monologue_02"
+			[1] = "loc_ogryn_b__prologue_monologue_02"
 		},
 		sound_events_duration = {
-			[1.0] = 1.849823
+			[1] = 1.849823
 		},
 		randomize_indexes = {}
 	},
@@ -102,10 +104,10 @@ local mission_vo_prologue_ogryn_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_ogryn_b__prologue_monologue_03"
+			[1] = "loc_ogryn_b__prologue_monologue_03"
 		},
 		sound_events_duration = {
-			[1.0] = 4.066604
+			[1] = 4.066604
 		},
 		randomize_indexes = {}
 	},
@@ -113,10 +115,10 @@ local mission_vo_prologue_ogryn_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_ogryn_b__prologue_monologue_04"
+			[1] = "loc_ogryn_b__prologue_monologue_04"
 		},
 		sound_events_duration = {
-			[1.0] = 4.849531
+			[1] = 4.849531
 		},
 		randomize_indexes = {}
 	},
@@ -124,10 +126,10 @@ local mission_vo_prologue_ogryn_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_ogryn_b__prologue_monologue_05"
+			[1] = "loc_ogryn_b__prologue_monologue_05"
 		},
 		sound_events_duration = {
-			[1.0] = 6.114813
+			[1] = 6.114813
 		},
 		randomize_indexes = {}
 	},
@@ -135,10 +137,10 @@ local mission_vo_prologue_ogryn_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_ogryn_b__prologue_monologue_06"
+			[1] = "loc_ogryn_b__prologue_monologue_06"
 		},
 		sound_events_duration = {
-			[1.0] = 4.485458
+			[1] = 4.485458
 		},
 		randomize_indexes = {}
 	},
@@ -146,10 +148,10 @@ local mission_vo_prologue_ogryn_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_ogryn_b__prologue_monologue_07"
+			[1] = "loc_ogryn_b__prologue_monologue_07"
 		},
 		sound_events_duration = {
-			[1.0] = 6.052729
+			[1] = 6.052729
 		},
 		randomize_indexes = {}
 	},
@@ -157,13 +159,13 @@ local mission_vo_prologue_ogryn_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_ogryn_b__prologue_monologue_08"
+			[1] = "loc_ogryn_b__prologue_monologue_08"
 		},
 		sound_events_duration = {
-			[1.0] = 3.492896
+			[1] = 3.492896
 		},
 		sound_event_weights = {
-			[1.0] = 1
+			[1] = 1
 		},
 		randomize_indexes = {}
 	},
@@ -171,10 +173,10 @@ local mission_vo_prologue_ogryn_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_ogryn_b__prologue_monologue_09"
+			[1] = "loc_ogryn_b__prologue_monologue_09"
 		},
 		sound_events_duration = {
-			[1.0] = 3.753583
+			[1] = 3.753583
 		},
 		randomize_indexes = {}
 	},
@@ -182,10 +184,10 @@ local mission_vo_prologue_ogryn_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_ogryn_b__prologue_monologue_10"
+			[1] = "loc_ogryn_b__prologue_monologue_10"
 		},
 		sound_events_duration = {
-			[1.0] = 6.364802
+			[1] = 6.364802
 		},
 		randomize_indexes = {}
 	},
@@ -193,10 +195,10 @@ local mission_vo_prologue_ogryn_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_ogryn_b__ranged_gameplay_04_01"
+			[1] = "loc_ogryn_b__ranged_gameplay_04_01"
 		},
 		sound_events_duration = {
-			[1.0] = 2.053521
+			[1] = 2.053521
 		},
 		randomize_indexes = {}
 	}

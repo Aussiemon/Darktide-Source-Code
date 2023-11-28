@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/on_demand_vo_zealot_male_a.lua
+
 local on_demand_vo_zealot_male_a = {
 	com_wheel_vo_enemy_over_here = {
 		randomize_indexes_n = 0,
@@ -285,13 +287,13 @@ local on_demand_vo_zealot_male_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_zealot_male_a__response_for_seen_netgunner_flee_10"
+			[1] = "loc_zealot_male_a__response_for_seen_netgunner_flee_10"
 		},
 		sound_events_duration = {
-			[1.0] = 2.077073
+			[1] = 2.077073
 		},
 		sound_event_weights = {
-			[1.0] = 1
+			[1] = 1
 		},
 		randomize_indexes = {}
 	},

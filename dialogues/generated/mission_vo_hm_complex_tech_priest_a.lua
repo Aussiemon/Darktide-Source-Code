@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/mission_vo_hm_complex_tech_priest_a.lua
+
 local mission_vo_hm_complex_tech_priest_a = {
 	mission_complex_elevator_access = {
 		randomize_indexes_n = 0,

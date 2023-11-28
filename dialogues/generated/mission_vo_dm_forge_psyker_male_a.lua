@@ -1,14 +1,16 @@
+﻿-- chunkname: @dialogues/generated/mission_vo_dm_forge_psyker_male_a.lua
+
 local mission_vo_dm_forge_psyker_male_a = {
 	mission_forge_alive = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_psyker_male_a__mission_forge_alive_01",
-			[2.0] = "loc_psyker_male_a__mission_forge_alive_02"
+			[1] = "loc_psyker_male_a__mission_forge_alive_01",
+			[2] = "loc_psyker_male_a__mission_forge_alive_02"
 		},
 		sound_events_duration = {
-			[1.0] = 1.977521,
-			[2.0] = 2.715625
+			[1] = 1.977521,
+			[2] = 2.715625
 		},
 		randomize_indexes = {}
 	},
@@ -16,12 +18,12 @@ local mission_vo_dm_forge_psyker_male_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_psyker_male_a__mission_forge_elevator_conversation_one_a_01",
-			[2.0] = "loc_psyker_male_a__mission_forge_elevator_conversation_one_a_02"
+			[1] = "loc_psyker_male_a__mission_forge_elevator_conversation_one_a_01",
+			[2] = "loc_psyker_male_a__mission_forge_elevator_conversation_one_a_02"
 		},
 		sound_events_duration = {
-			[1.0] = 5.281417,
-			[2.0] = 3.527021
+			[1] = 5.281417,
+			[2] = 3.527021
 		},
 		randomize_indexes = {}
 	},
@@ -29,12 +31,12 @@ local mission_vo_dm_forge_psyker_male_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_psyker_male_a__mission_forge_elevator_conversation_one_c_01",
-			[2.0] = "loc_psyker_male_a__mission_forge_elevator_conversation_one_c_02"
+			[1] = "loc_psyker_male_a__mission_forge_elevator_conversation_one_c_01",
+			[2] = "loc_psyker_male_a__mission_forge_elevator_conversation_one_c_02"
 		},
 		sound_events_duration = {
-			[1.0] = 6.360729,
-			[2.0] = 4.165479
+			[1] = 6.360729,
+			[2] = 4.165479
 		},
 		randomize_indexes = {}
 	},
@@ -42,12 +44,12 @@ local mission_vo_dm_forge_psyker_male_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_psyker_male_a__mission_forge_elevator_conversation_three_a_01",
-			[2.0] = "loc_psyker_male_a__mission_forge_elevator_conversation_three_a_02"
+			[1] = "loc_psyker_male_a__mission_forge_elevator_conversation_three_a_01",
+			[2] = "loc_psyker_male_a__mission_forge_elevator_conversation_three_a_02"
 		},
 		sound_events_duration = {
-			[1.0] = 6.225125,
-			[2.0] = 4.879646
+			[1] = 6.225125,
+			[2] = 4.879646
 		},
 		randomize_indexes = {}
 	},
@@ -55,12 +57,12 @@ local mission_vo_dm_forge_psyker_male_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_psyker_male_a__mission_forge_elevator_conversation_three_c_01",
-			[2.0] = "loc_psyker_male_a__mission_forge_elevator_conversation_three_c_02"
+			[1] = "loc_psyker_male_a__mission_forge_elevator_conversation_three_c_01",
+			[2] = "loc_psyker_male_a__mission_forge_elevator_conversation_three_c_02"
 		},
 		sound_events_duration = {
-			[1.0] = 2.645104,
-			[2.0] = 2.947458
+			[1] = 2.645104,
+			[2] = 2.947458
 		},
 		randomize_indexes = {}
 	},
@@ -68,12 +70,12 @@ local mission_vo_dm_forge_psyker_male_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_psyker_male_a__mission_forge_elevator_conversation_two_a_01",
-			[2.0] = "loc_psyker_male_a__mission_forge_elevator_conversation_two_a_02"
+			[1] = "loc_psyker_male_a__mission_forge_elevator_conversation_two_a_01",
+			[2] = "loc_psyker_male_a__mission_forge_elevator_conversation_two_a_02"
 		},
 		sound_events_duration = {
-			[1.0] = 5.982542,
-			[2.0] = 4.270854
+			[1] = 5.982542,
+			[2] = 4.270854
 		},
 		randomize_indexes = {}
 	},
@@ -81,12 +83,12 @@ local mission_vo_dm_forge_psyker_male_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_psyker_male_a__mission_forge_elevator_conversation_two_c_01",
-			[2.0] = "loc_psyker_male_a__mission_forge_elevator_conversation_two_c_02"
+			[1] = "loc_psyker_male_a__mission_forge_elevator_conversation_two_c_01",
+			[2] = "loc_psyker_male_a__mission_forge_elevator_conversation_two_c_02"
 		},
 		sound_events_duration = {
-			[1.0] = 3.292938,
-			[2.0] = 3.673375
+			[1] = 3.292938,
+			[2] = 3.673375
 		},
 		randomize_indexes = {}
 	},
@@ -94,12 +96,12 @@ local mission_vo_dm_forge_psyker_male_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_psyker_male_a__mission_forge_find_smelter_01",
-			[2.0] = "loc_psyker_male_a__mission_forge_find_smelter_02"
+			[1] = "loc_psyker_male_a__mission_forge_find_smelter_01",
+			[2] = "loc_psyker_male_a__mission_forge_find_smelter_02"
 		},
 		sound_events_duration = {
-			[1.0] = 2.236021,
-			[2.0] = 3.682854
+			[1] = 2.236021,
+			[2] = 3.682854
 		},
 		randomize_indexes = {}
 	},
@@ -148,12 +150,12 @@ local mission_vo_dm_forge_psyker_male_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_psyker_male_a__mission_forge_hellhole_01",
-			[2.0] = "loc_psyker_male_a__mission_forge_hellhole_02"
+			[1] = "loc_psyker_male_a__mission_forge_hellhole_01",
+			[2] = "loc_psyker_male_a__mission_forge_hellhole_02"
 		},
 		sound_events_duration = {
-			[1.0] = 3.0615,
-			[2.0] = 4.842771
+			[1] = 3.0615,
+			[2] = 4.842771
 		},
 		randomize_indexes = {}
 	},
@@ -161,12 +163,12 @@ local mission_vo_dm_forge_psyker_male_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_psyker_male_a__mission_forge_lifeless_01",
-			[2.0] = "loc_psyker_male_a__mission_forge_lifeless_02"
+			[1] = "loc_psyker_male_a__mission_forge_lifeless_01",
+			[2] = "loc_psyker_male_a__mission_forge_lifeless_02"
 		},
 		sound_events_duration = {
-			[1.0] = 3.417354,
-			[2.0] = 3.951646
+			[1] = 3.417354,
+			[2] = 3.951646
 		},
 		randomize_indexes = {}
 	},
@@ -174,12 +176,12 @@ local mission_vo_dm_forge_psyker_male_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_psyker_male_a__mission_forge_main_entrance_01",
-			[2.0] = "loc_psyker_male_a__mission_forge_main_entrance_02"
+			[1] = "loc_psyker_male_a__mission_forge_main_entrance_01",
+			[2] = "loc_psyker_male_a__mission_forge_main_entrance_02"
 		},
 		sound_events_duration = {
-			[1.0] = 3.837479,
-			[2.0] = 4.119146
+			[1] = 3.837479,
+			[2] = 4.119146
 		},
 		randomize_indexes = {}
 	},
@@ -207,12 +209,12 @@ local mission_vo_dm_forge_psyker_male_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_psyker_male_a__mission_forge_propaganda_01",
-			[2.0] = "loc_psyker_male_a__mission_forge_propaganda_02"
+			[1] = "loc_psyker_male_a__mission_forge_propaganda_01",
+			[2] = "loc_psyker_male_a__mission_forge_propaganda_02"
 		},
 		sound_events_duration = {
-			[1.0] = 5.309354,
-			[2.0] = 3.557104
+			[1] = 5.309354,
+			[2] = 3.557104
 		},
 		randomize_indexes = {}
 	},
@@ -220,12 +222,12 @@ local mission_vo_dm_forge_psyker_male_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_psyker_male_a__mission_forge_stand_ground_01",
-			[2.0] = "loc_psyker_male_a__mission_forge_stand_ground_02"
+			[1] = "loc_psyker_male_a__mission_forge_stand_ground_01",
+			[2] = "loc_psyker_male_a__mission_forge_stand_ground_02"
 		},
 		sound_events_duration = {
-			[1.0] = 3.422125,
-			[2.0] = 2.471833
+			[1] = 3.422125,
+			[2] = 2.471833
 		},
 		randomize_indexes = {}
 	},
@@ -233,12 +235,12 @@ local mission_vo_dm_forge_psyker_male_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_psyker_male_a__mission_forge_start_banter_a_01",
-			[2.0] = "loc_psyker_male_a__mission_forge_start_banter_a_02"
+			[1] = "loc_psyker_male_a__mission_forge_start_banter_a_01",
+			[2] = "loc_psyker_male_a__mission_forge_start_banter_a_02"
 		},
 		sound_events_duration = {
-			[1.0] = 4.559417,
-			[2.0] = 4.422688
+			[1] = 4.559417,
+			[2] = 4.422688
 		},
 		randomize_indexes = {}
 	},
@@ -266,12 +268,12 @@ local mission_vo_dm_forge_psyker_male_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_psyker_male_a__mission_forge_strategic_asset_01",
-			[2.0] = "loc_psyker_male_a__mission_forge_strategic_asset_02"
+			[1] = "loc_psyker_male_a__mission_forge_strategic_asset_01",
+			[2] = "loc_psyker_male_a__mission_forge_strategic_asset_02"
 		},
 		sound_events_duration = {
-			[1.0] = 4.113438,
-			[2.0] = 4.219458
+			[1] = 4.113438,
+			[2] = 4.219458
 		},
 		randomize_indexes = {}
 	},

@@ -1,12 +1,14 @@
+﻿-- chunkname: @dialogues/generated/ogryn_c_zealot_male_c.lua
+
 local ogryn_c_zealot_male_c = {
 	combat_pause_limited_ogryn_c_02_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_zealot_male_c__combat_pause_limited_ogryn_c_02_b_01"
+			[1] = "loc_zealot_male_c__combat_pause_limited_ogryn_c_02_b_01"
 		},
 		sound_events_duration = {
-			[1.0] = 5.433344
+			[1] = 5.433344
 		},
 		randomize_indexes = {}
 	},
@@ -14,10 +16,10 @@ local ogryn_c_zealot_male_c = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_zealot_male_c__combat_pause_limited_ogryn_c_06_b_01"
+			[1] = "loc_zealot_male_c__combat_pause_limited_ogryn_c_06_b_01"
 		},
 		sound_events_duration = {
-			[1.0] = 4.233344
+			[1] = 4.233344
 		},
 		randomize_indexes = {}
 	},
@@ -25,10 +27,10 @@ local ogryn_c_zealot_male_c = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_zealot_male_c__combat_pause_limited_ogryn_c_10_b_01"
+			[1] = "loc_zealot_male_c__combat_pause_limited_ogryn_c_10_b_01"
 		},
 		sound_events_duration = {
-			[1.0] = 2.489448
+			[1] = 2.489448
 		},
 		randomize_indexes = {}
 	},
@@ -36,10 +38,10 @@ local ogryn_c_zealot_male_c = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_zealot_male_c__combat_pause_limited_ogryn_c_14_b_01"
+			[1] = "loc_zealot_male_c__combat_pause_limited_ogryn_c_14_b_01"
 		},
 		sound_events_duration = {
-			[1.0] = 3.437438
+			[1] = 3.437438
 		},
 		randomize_indexes = {}
 	},
@@ -47,10 +49,10 @@ local ogryn_c_zealot_male_c = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_zealot_male_c__combat_pause_limited_ogryn_c_18_b_01"
+			[1] = "loc_zealot_male_c__combat_pause_limited_ogryn_c_18_b_01"
 		},
 		sound_events_duration = {
-			[1.0] = 4.039573
+			[1] = 4.039573
 		},
 		randomize_indexes = {}
 	},
@@ -58,12 +60,12 @@ local ogryn_c_zealot_male_c = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_zealot_male_c__combat_pause_quirk_abhuman_b_01",
-			[2.0] = "loc_zealot_male_c__combat_pause_quirk_abhuman_b_02"
+			[1] = "loc_zealot_male_c__combat_pause_quirk_abhuman_b_01",
+			[2] = "loc_zealot_male_c__combat_pause_quirk_abhuman_b_02"
 		},
 		sound_events_duration = {
-			[1.0] = 5.146115,
-			[2.0] = 3.038948
+			[1] = 5.146115,
+			[2] = 3.038948
 		},
 		randomize_indexes = {}
 	},
@@ -71,12 +73,12 @@ local ogryn_c_zealot_male_c = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_zealot_male_c__combat_pause_quirk_club_thump_b_01",
-			[2.0] = "loc_zealot_male_c__combat_pause_quirk_club_thump_b_02"
+			[1] = "loc_zealot_male_c__combat_pause_quirk_club_thump_b_01",
+			[2] = "loc_zealot_male_c__combat_pause_quirk_club_thump_b_02"
 		},
 		sound_events_duration = {
-			[1.0] = 3.352521,
-			[2.0] = 4.27674
+			[1] = 3.352521,
+			[2] = 4.27674
 		},
 		randomize_indexes = {}
 	},
@@ -84,16 +86,16 @@ local ogryn_c_zealot_male_c = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_zealot_male_c__combat_pause_quirk_deddog_b_01",
-			[2.0] = "loc_zealot_male_c__combat_pause_quirk_deddog_b_02"
+			[1] = "loc_zealot_male_c__combat_pause_quirk_deddog_b_01",
+			[2] = "loc_zealot_male_c__combat_pause_quirk_deddog_b_02"
 		},
 		sound_events_duration = {
-			[1.0] = 2.530146,
-			[2.0] = 4.426719
+			[1] = 2.530146,
+			[2] = 4.426719
 		},
 		sound_event_weights = {
-			[1.0] = 0.5,
-			[2.0] = 0.5
+			[1] = 0.5,
+			[2] = 0.5
 		},
 		randomize_indexes = {}
 	},
@@ -101,16 +103,16 @@ local ogryn_c_zealot_male_c = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_zealot_male_c__combat_pause_quirk_glutton_b_01",
-			[2.0] = "loc_zealot_male_c__combat_pause_quirk_glutton_b_02"
+			[1] = "loc_zealot_male_c__combat_pause_quirk_glutton_b_01",
+			[2] = "loc_zealot_male_c__combat_pause_quirk_glutton_b_02"
 		},
 		sound_events_duration = {
-			[1.0] = 4.886938,
-			[2.0] = 3.800094
+			[1] = 4.886938,
+			[2] = 3.800094
 		},
 		sound_event_weights = {
-			[1.0] = 0.5,
-			[2.0] = 0.5
+			[1] = 0.5,
+			[2] = 0.5
 		},
 		randomize_indexes = {}
 	}

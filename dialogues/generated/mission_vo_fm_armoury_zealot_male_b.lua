@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/mission_vo_fm_armoury_zealot_male_b.lua
+
 local mission_vo_fm_armoury_zealot_male_b = {
 	mission_armoury_side_streets_c_response = {
 		randomize_indexes_n = 0,

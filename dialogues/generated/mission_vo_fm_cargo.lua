@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/mission_vo_fm_cargo.lua
+
 return function ()
 	define_rule({
 		name = "mission_cargo_armor_plating",

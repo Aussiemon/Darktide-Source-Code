@@ -1,3 +1,5 @@
+﻿-- chunkname: @content/levels/entertainment/black_market/world_volume_data.lua
+
 local volume_data = {
 	{
 		height = 1,
@@ -43,8 +45,8 @@ local volume_data = {
 		},
 		up_vector = {
 			-0,
-			[2.0] = 0,
-			[3.0] = 5
+			[2] = 0,
+			[3] = 5
 		}
 	},
 	{
@@ -252,8 +254,8 @@ local volume_data = {
 		},
 		up_vector = {
 			-0,
-			[2.0] = 0,
-			[3.0] = 8.433235168457031
+			[2] = 0,
+			[3] = 8.433235168457031
 		}
 	},
 	{
@@ -396,8 +398,8 @@ local volume_data = {
 		},
 		up_vector = {
 			-0,
-			[2.0] = 0,
-			[3.0] = 5.221786022186279
+			[2] = 0,
+			[3] = 5.221786022186279
 		}
 	},
 	{
@@ -444,8 +446,8 @@ local volume_data = {
 		},
 		up_vector = {
 			-0,
-			[2.0] = 0,
-			[3.0] = 23.54974937438965
+			[2] = 0,
+			[3] = 23.54974937438965
 		}
 	}
 }

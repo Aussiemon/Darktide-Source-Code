@@ -1,3 +1,5 @@
+﻿-- chunkname: @content/levels/entertainment/diner_transition/world_volume_data.lua
+
 local volume_data = {
 	{
 		height = 2,
@@ -331,8 +333,8 @@ local volume_data = {
 		},
 		up_vector = {
 			-0,
-			[2.0] = 0,
-			[3.0] = 2.8601460456848145
+			[2] = 0,
+			[3] = 2.8601460456848145
 		}
 	},
 	{
@@ -379,8 +381,8 @@ local volume_data = {
 		},
 		up_vector = {
 			-0,
-			[2.0] = 0,
-			[3.0] = 5.903008937835693
+			[2] = 0,
+			[3] = 5.903008937835693
 		}
 	},
 	{

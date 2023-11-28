@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/mission_vo_dm_propaganda_tech_priest_a.lua
+
 local mission_vo_dm_propaganda_tech_priest_a = {
 	mission_propaganda_bypass_security = {
 		randomize_indexes_n = 0,

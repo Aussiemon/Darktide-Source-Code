@@ -1,12 +1,14 @@
+﻿-- chunkname: @dialogues/generated/mission_vo_prologue_pilot_a.lua
+
 local mission_vo_prologue_pilot_a = {
 	prologue_end_event_02 = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_pilot_a__prologue_end_event_02_01"
+			[1] = "loc_pilot_a__prologue_end_event_02_01"
 		},
 		sound_events_duration = {
-			[1.0] = 3.126854
+			[1] = 3.126854
 		},
 		randomize_indexes = {}
 	},
@@ -14,10 +16,10 @@ local mission_vo_prologue_pilot_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_pilot_a__prologue_end_event_04_01"
+			[1] = "loc_pilot_a__prologue_end_event_04_01"
 		},
 		sound_events_duration = {
-			[1.0] = 5.3105
+			[1] = 5.3105
 		},
 		randomize_indexes = {}
 	},
@@ -25,10 +27,10 @@ local mission_vo_prologue_pilot_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_pilot_a__ranged_gameplay_02_01"
+			[1] = "loc_pilot_a__ranged_gameplay_02_01"
 		},
 		sound_events_duration = {
-			[1.0] = 2.697979
+			[1] = 2.697979
 		},
 		randomize_indexes = {}
 	},
@@ -36,10 +38,10 @@ local mission_vo_prologue_pilot_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_pilot_a__ranged_gameplay_05_01"
+			[1] = "loc_pilot_a__ranged_gameplay_05_01"
 		},
 		sound_events_duration = {
-			[1.0] = 4.104688
+			[1] = 4.104688
 		},
 		randomize_indexes = {}
 	}

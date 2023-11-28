@@ -1,3 +1,5 @@
+﻿-- chunkname: @content/levels/ui/class_selection/class_selection_ogryn/class_selection_ogryn_item_dep.lua
+
 local item_dependencies = {
 	player_items = {
 		["content/items/characters/player/ogryn/attachment_base/male_arms"] = 1,

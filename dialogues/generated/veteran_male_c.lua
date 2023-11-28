@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/veteran_male_c.lua
+
 return function ()
 	define_rule({
 		name = "bonding_conversation_appetite_a",

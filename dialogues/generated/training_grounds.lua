@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/training_grounds.lua
+
 return function ()
 	define_rule({
 		name = "armor_desc_a",

@@ -1,3 +1,5 @@
+﻿-- chunkname: @content/levels/transit/missions/mission_dm_rise_main_path.lua
+
 local path_markers = {
 	{
 		kind = "good",

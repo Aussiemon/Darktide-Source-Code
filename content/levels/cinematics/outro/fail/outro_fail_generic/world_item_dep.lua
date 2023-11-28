@@ -1,3 +1,5 @@
+﻿-- chunkname: @content/levels/cinematics/outro/fail/outro_fail_generic/world_item_dep.lua
+
 local item_dependencies = {
 	minion_items = {
 		["content/items/weapons/minions/melee/chaos_traitor_guard_melee_weapon_01"] = 1,

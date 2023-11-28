@@ -1,12 +1,14 @@
+﻿-- chunkname: @dialogues/generated/mission_vo_prologue_veteran_male_b.lua
+
 local mission_vo_prologue_veteran_male_b = {
 	prologue_combat_01 = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_veteran_male_b__prologue_combat_01"
+			[1] = "loc_veteran_male_b__prologue_combat_01"
 		},
 		sound_events_duration = {
-			[1.0] = 0.994563
+			[1] = 0.994563
 		},
 		randomize_indexes = {}
 	},
@@ -14,10 +16,10 @@ local mission_vo_prologue_veteran_male_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_veteran_male_b__prologue_combat_02"
+			[1] = "loc_veteran_male_b__prologue_combat_02"
 		},
 		sound_events_duration = {
-			[1.0] = 1.402229
+			[1] = 1.402229
 		},
 		randomize_indexes = {}
 	},
@@ -25,10 +27,10 @@ local mission_vo_prologue_veteran_male_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_veteran_male_b__prologue_combat_03"
+			[1] = "loc_veteran_male_b__prologue_combat_03"
 		},
 		sound_events_duration = {
-			[1.0] = 1.780271
+			[1] = 1.780271
 		},
 		randomize_indexes = {}
 	},
@@ -36,10 +38,10 @@ local mission_vo_prologue_veteran_male_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_veteran_male_b__prologue_combat_04"
+			[1] = "loc_veteran_male_b__prologue_combat_04"
 		},
 		sound_events_duration = {
-			[1.0] = 1.434583
+			[1] = 1.434583
 		},
 		randomize_indexes = {}
 	},
@@ -47,10 +49,10 @@ local mission_vo_prologue_veteran_male_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_veteran_male_b__prologue_combat_05"
+			[1] = "loc_veteran_male_b__prologue_combat_05"
 		},
 		sound_events_duration = {
-			[1.0] = 1.058188
+			[1] = 1.058188
 		},
 		randomize_indexes = {}
 	},
@@ -58,10 +60,10 @@ local mission_vo_prologue_veteran_male_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_veteran_male_b__prologue_end_event_conversation_b_01"
+			[1] = "loc_veteran_male_b__prologue_end_event_conversation_b_01"
 		},
 		sound_events_duration = {
-			[1.0] = 1.560354
+			[1] = 1.560354
 		},
 		randomize_indexes = {}
 	},
@@ -69,10 +71,10 @@ local mission_vo_prologue_veteran_male_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_veteran_male_b__prologue_firefight_conversation_b_01"
+			[1] = "loc_veteran_male_b__prologue_firefight_conversation_b_01"
 		},
 		sound_events_duration = {
-			[1.0] = 4.455479
+			[1] = 4.455479
 		},
 		randomize_indexes = {}
 	},
@@ -80,10 +82,10 @@ local mission_vo_prologue_veteran_male_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_veteran_male_b__prologue_monologue_01"
+			[1] = "loc_veteran_male_b__prologue_monologue_01"
 		},
 		sound_events_duration = {
-			[1.0] = 8.186708
+			[1] = 8.186708
 		},
 		randomize_indexes = {}
 	},
@@ -91,10 +93,10 @@ local mission_vo_prologue_veteran_male_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_veteran_male_b__prologue_monologue_02"
+			[1] = "loc_veteran_male_b__prologue_monologue_02"
 		},
 		sound_events_duration = {
-			[1.0] = 3.202063
+			[1] = 3.202063
 		},
 		randomize_indexes = {}
 	},
@@ -102,10 +104,10 @@ local mission_vo_prologue_veteran_male_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_veteran_male_b__prologue_monologue_03"
+			[1] = "loc_veteran_male_b__prologue_monologue_03"
 		},
 		sound_events_duration = {
-			[1.0] = 2.281979
+			[1] = 2.281979
 		},
 		randomize_indexes = {}
 	},
@@ -113,10 +115,10 @@ local mission_vo_prologue_veteran_male_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_veteran_male_b__prologue_monologue_04"
+			[1] = "loc_veteran_male_b__prologue_monologue_04"
 		},
 		sound_events_duration = {
-			[1.0] = 3.587708
+			[1] = 3.587708
 		},
 		randomize_indexes = {}
 	},
@@ -124,10 +126,10 @@ local mission_vo_prologue_veteran_male_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_veteran_male_b__prologue_monologue_05"
+			[1] = "loc_veteran_male_b__prologue_monologue_05"
 		},
 		sound_events_duration = {
-			[1.0] = 4.394271
+			[1] = 4.394271
 		},
 		randomize_indexes = {}
 	},
@@ -135,10 +137,10 @@ local mission_vo_prologue_veteran_male_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_veteran_male_b__prologue_monologue_06"
+			[1] = "loc_veteran_male_b__prologue_monologue_06"
 		},
 		sound_events_duration = {
-			[1.0] = 3.455042
+			[1] = 3.455042
 		},
 		randomize_indexes = {}
 	},
@@ -146,10 +148,10 @@ local mission_vo_prologue_veteran_male_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_veteran_male_b__prologue_monologue_07"
+			[1] = "loc_veteran_male_b__prologue_monologue_07"
 		},
 		sound_events_duration = {
-			[1.0] = 4.398042
+			[1] = 4.398042
 		},
 		randomize_indexes = {}
 	},
@@ -157,13 +159,13 @@ local mission_vo_prologue_veteran_male_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_veteran_male_b__prologue_monologue_08"
+			[1] = "loc_veteran_male_b__prologue_monologue_08"
 		},
 		sound_events_duration = {
-			[1.0] = 3.014521
+			[1] = 3.014521
 		},
 		sound_event_weights = {
-			[1.0] = 1
+			[1] = 1
 		},
 		randomize_indexes = {}
 	},
@@ -171,10 +173,10 @@ local mission_vo_prologue_veteran_male_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_veteran_male_b__prologue_monologue_09"
+			[1] = "loc_veteran_male_b__prologue_monologue_09"
 		},
 		sound_events_duration = {
-			[1.0] = 6.669208
+			[1] = 6.669208
 		},
 		randomize_indexes = {}
 	},
@@ -182,10 +184,10 @@ local mission_vo_prologue_veteran_male_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_veteran_male_b__prologue_monologue_10"
+			[1] = "loc_veteran_male_b__prologue_monologue_10"
 		},
 		sound_events_duration = {
-			[1.0] = 4.010792
+			[1] = 4.010792
 		},
 		randomize_indexes = {}
 	},
@@ -193,10 +195,10 @@ local mission_vo_prologue_veteran_male_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_veteran_male_b__ranged_gameplay_04_01"
+			[1] = "loc_veteran_male_b__ranged_gameplay_04_01"
 		},
 		sound_events_duration = {
-			[1.0] = 1.95075
+			[1] = 1.95075
 		},
 		randomize_indexes = {}
 	}

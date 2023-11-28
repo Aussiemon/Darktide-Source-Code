@@ -1,14 +1,16 @@
+﻿-- chunkname: @dialogues/generated/circumstance_vo_hunting_grounds_zealot_female_c.lua
+
 local circumstance_vo_hunting_grounds_zealot_female_c = {
 	combat_pause_circumstance_ogryn_a_hound_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_zealot_female_c__combat_pause_circumstance_ogryn_a_hound_b_01",
-			[2.0] = "loc_zealot_female_c__combat_pause_circumstance_ogryn_a_hound_b_02"
+			[1] = "loc_zealot_female_c__combat_pause_circumstance_ogryn_a_hound_b_01",
+			[2] = "loc_zealot_female_c__combat_pause_circumstance_ogryn_a_hound_b_02"
 		},
 		sound_events_duration = {
-			[1.0] = 6.206844,
-			[2.0] = 4.099031
+			[1] = 6.206844,
+			[2] = 4.099031
 		},
 		randomize_indexes = {}
 	},
@@ -16,12 +18,12 @@ local circumstance_vo_hunting_grounds_zealot_female_c = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_zealot_female_c__combat_pause_circumstance_psyker_a_hound_b_01",
-			[2.0] = "loc_zealot_female_c__combat_pause_circumstance_psyker_a_hound_b_02"
+			[1] = "loc_zealot_female_c__combat_pause_circumstance_psyker_a_hound_b_01",
+			[2] = "loc_zealot_female_c__combat_pause_circumstance_psyker_a_hound_b_02"
 		},
 		sound_events_duration = {
-			[1.0] = 3.739979,
-			[2.0] = 3.560635
+			[1] = 3.739979,
+			[2] = 3.560635
 		},
 		randomize_indexes = {}
 	},
@@ -29,12 +31,12 @@ local circumstance_vo_hunting_grounds_zealot_female_c = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_zealot_female_c__combat_pause_circumstance_veteran_a_hound_b_01",
-			[2.0] = "loc_zealot_female_c__combat_pause_circumstance_veteran_a_hound_b_02"
+			[1] = "loc_zealot_female_c__combat_pause_circumstance_veteran_a_hound_b_01",
+			[2] = "loc_zealot_female_c__combat_pause_circumstance_veteran_a_hound_b_02"
 		},
 		sound_events_duration = {
-			[1.0] = 3.451198,
-			[2.0] = 4.917198
+			[1] = 3.451198,
+			[2] = 4.917198
 		},
 		randomize_indexes = {}
 	},
@@ -42,12 +44,12 @@ local circumstance_vo_hunting_grounds_zealot_female_c = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_zealot_female_c__combat_pause_circumstance_zealot_a_hound_b_01",
-			[2.0] = "loc_zealot_female_c__combat_pause_circumstance_zealot_a_hound_b_02"
+			[1] = "loc_zealot_female_c__combat_pause_circumstance_zealot_a_hound_b_01",
+			[2] = "loc_zealot_female_c__combat_pause_circumstance_zealot_a_hound_b_02"
 		},
 		sound_events_duration = {
-			[1.0] = 6.652615,
-			[2.0] = 3.295531
+			[1] = 6.652615,
+			[2] = 3.295531
 		},
 		randomize_indexes = {}
 	},
@@ -55,12 +57,12 @@ local circumstance_vo_hunting_grounds_zealot_female_c = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_zealot_female_c__combat_pause_circumstance_zealot_c_hound_a_01",
-			[2.0] = "loc_zealot_female_c__combat_pause_circumstance_zealot_c_hound_a_02"
+			[1] = "loc_zealot_female_c__combat_pause_circumstance_zealot_c_hound_a_01",
+			[2] = "loc_zealot_female_c__combat_pause_circumstance_zealot_c_hound_a_02"
 		},
 		sound_events_duration = {
-			[1.0] = 5.420167,
-			[2.0] = 6.271719
+			[1] = 5.420167,
+			[2] = 6.271719
 		},
 		randomize_indexes = {}
 	},

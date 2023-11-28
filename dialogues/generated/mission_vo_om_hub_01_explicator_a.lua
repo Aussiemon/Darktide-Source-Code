@@ -1,12 +1,14 @@
+﻿-- chunkname: @dialogues/generated/mission_vo_om_hub_01_explicator_a.lua
+
 local mission_vo_om_hub_01_explicator_a = {
 	prologue_hub_go_training_grounds_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_explicator_a__prologue_hub_go_training_grounds_a_01"
+			[1] = "loc_explicator_a__prologue_hub_go_training_grounds_a_01"
 		},
 		sound_events_duration = {
-			[1.0] = 6.507143
+			[1] = 6.507143
 		},
 		randomize_indexes = {}
 	},
@@ -14,10 +16,10 @@ local mission_vo_om_hub_01_explicator_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_explicator_a__prologue_hub_go_training_grounds_b_01"
+			[1] = "loc_explicator_a__prologue_hub_go_training_grounds_b_01"
 		},
 		sound_events_duration = {
-			[1.0] = 3.984331
+			[1] = 3.984331
 		},
 		randomize_indexes = {}
 	},
@@ -25,10 +27,10 @@ local mission_vo_om_hub_01_explicator_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_explicator_a__prologue_hub_mourningstar_intro_a_01"
+			[1] = "loc_explicator_a__prologue_hub_mourningstar_intro_a_01"
 		},
 		sound_events_duration = {
-			[1.0] = 2.387029
+			[1] = 2.387029
 		},
 		randomize_indexes = {}
 	},
@@ -36,10 +38,10 @@ local mission_vo_om_hub_01_explicator_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_explicator_a__prologue_hub_mourningstar_intro_b_01"
+			[1] = "loc_explicator_a__prologue_hub_mourningstar_intro_b_01"
 		},
 		sound_events_duration = {
-			[1.0] = 6.61551
+			[1] = 6.61551
 		},
 		randomize_indexes = {}
 	},
@@ -47,10 +49,10 @@ local mission_vo_om_hub_01_explicator_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_explicator_a__prologue_hub_mourningstar_intro_c_01"
+			[1] = "loc_explicator_a__prologue_hub_mourningstar_intro_c_01"
 		},
 		sound_events_duration = {
-			[1.0] = 6.134921
+			[1] = 6.134921
 		},
 		randomize_indexes = {}
 	}

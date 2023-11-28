@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/mission_vo_dm_forge_tech_priest_a.lua
+
 local mission_vo_dm_forge_tech_priest_a = {
 	mission_forge_assembly_line = {
 		randomize_indexes_n = 0,

@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/mission_vo_km_enforcer_explicator_a.lua
+
 local mission_vo_km_enforcer_explicator_a = {
 	mission_enforcer_activate_stair = {
 		randomize_indexes_n = 0,

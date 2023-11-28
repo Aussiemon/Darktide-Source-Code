@@ -1,12 +1,14 @@
+﻿-- chunkname: @dialogues/generated/mission_vo_om_hub_01_training_ground_psyker_a.lua
+
 local mission_vo_om_hub_01_training_ground_psyker_a = {
 	npc_first_interaction_training_ground_psyker_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_training_ground_psyker_a__npc_first_interaction_a_01"
+			[1] = "loc_training_ground_psyker_a__npc_first_interaction_a_01"
 		},
 		sound_events_duration = {
-			[1.0] = 8.797083
+			[1] = 8.797083
 		},
 		randomize_indexes = {}
 	},
@@ -14,10 +16,10 @@ local mission_vo_om_hub_01_training_ground_psyker_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_training_ground_psyker_a__npc_first_interaction_b_01"
+			[1] = "loc_training_ground_psyker_a__npc_first_interaction_b_01"
 		},
 		sound_events_duration = {
-			[1.0] = 5.583292
+			[1] = 5.583292
 		},
 		randomize_indexes = {}
 	},
@@ -25,10 +27,10 @@ local mission_vo_om_hub_01_training_ground_psyker_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_training_ground_psyker_a__npc_first_interaction_c_01"
+			[1] = "loc_training_ground_psyker_a__npc_first_interaction_c_01"
 		},
 		sound_events_duration = {
-			[1.0] = 9.232625
+			[1] = 9.232625
 		},
 		randomize_indexes = {}
 	},
@@ -36,10 +38,10 @@ local mission_vo_om_hub_01_training_ground_psyker_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_training_ground_psyker_a__npc_first_interaction_d_01"
+			[1] = "loc_training_ground_psyker_a__npc_first_interaction_d_01"
 		},
 		sound_events_duration = {
-			[1.0] = 9.926021
+			[1] = 9.926021
 		},
 		randomize_indexes = {}
 	},
@@ -47,10 +49,10 @@ local mission_vo_om_hub_01_training_ground_psyker_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_training_ground_psyker_a__npc_first_interaction_e_01"
+			[1] = "loc_training_ground_psyker_a__npc_first_interaction_e_01"
 		},
 		sound_events_duration = {
-			[1.0] = 5.467792
+			[1] = 5.467792
 		},
 		randomize_indexes = {}
 	}

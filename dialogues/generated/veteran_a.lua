@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/veteran_a.lua
+
 return function ()
 	define_rule({
 		name = "combat_pause_limited_veteran_a_01_a",

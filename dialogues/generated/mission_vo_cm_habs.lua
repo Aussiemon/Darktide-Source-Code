@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/mission_vo_cm_habs.lua
+
 return function ()
 	define_rule({
 		name = "hab_block_void_response_b",

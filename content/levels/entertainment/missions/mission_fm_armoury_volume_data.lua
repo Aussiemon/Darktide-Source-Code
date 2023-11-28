@@ -1,3 +1,5 @@
+﻿-- chunkname: @content/levels/entertainment/missions/mission_fm_armoury_volume_data.lua
+
 local volume_data = {
 	{
 		height = 8.00385856628418,
@@ -63,8 +65,8 @@ local volume_data = {
 		},
 		up_vector = {
 			-0,
-			[2.0] = 0,
-			[3.0] = 1
+			[2] = 0,
+			[3] = 1
 		}
 	},
 	{
@@ -159,8 +161,8 @@ local volume_data = {
 		},
 		up_vector = {
 			-0,
-			[2.0] = 0,
-			[3.0] = 9.003263473510742
+			[2] = 0,
+			[3] = 9.003263473510742
 		}
 	},
 	{
@@ -502,8 +504,8 @@ local volume_data = {
 		},
 		up_vector = {
 			-0,
-			[2.0] = 0,
-			[3.0] = 8.106319427490234
+			[2] = 0,
+			[3] = 8.106319427490234
 		}
 	}
 }

@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/guidance_vo_zealot_female_b.lua
+
 local guidance_vo_zealot_female_b = {
 	guidance_correct_doorway = {
 		randomize_indexes_n = 0,

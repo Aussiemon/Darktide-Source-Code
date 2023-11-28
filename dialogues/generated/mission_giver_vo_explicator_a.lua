@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/mission_giver_vo_explicator_a.lua
+
 local mission_giver_vo_explicator_a = {
 	access_elevator = {
 		randomize_indexes_n = 0,
@@ -152,12 +154,12 @@ local mission_giver_vo_explicator_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_explicator_a__info_event_one_down_01",
-			[2.0] = "loc_explicator_a__info_event_one_down_03"
+			[1] = "loc_explicator_a__info_event_one_down_01",
+			[2] = "loc_explicator_a__info_event_one_down_03"
 		},
 		sound_events_duration = {
-			[1.0] = 2.028208,
-			[2.0] = 1.715646
+			[1] = 2.028208,
+			[2] = 1.715646
 		},
 		randomize_indexes = {}
 	},
@@ -992,10 +994,10 @@ local mission_giver_vo_explicator_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_explicator_a__mission_twins_briefing_a_01"
+			[1] = "loc_explicator_a__mission_twins_briefing_a_01"
 		},
 		sound_events_duration = {
-			[1.0] = 8.650624
+			[1] = 8.650624
 		},
 		randomize_indexes = {}
 	},
@@ -1003,10 +1005,10 @@ local mission_giver_vo_explicator_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_explicator_a__mission_twins_briefing_b_01"
+			[1] = "loc_explicator_a__mission_twins_briefing_b_01"
 		},
 		sound_events_duration = {
-			[1.0] = 6.348313
+			[1] = 6.348313
 		},
 		randomize_indexes = {}
 	},
@@ -1014,10 +1016,10 @@ local mission_giver_vo_explicator_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_explicator_a__mission_twins_briefing_b2_01"
+			[1] = "loc_explicator_a__mission_twins_briefing_b2_01"
 		},
 		sound_events_duration = {
-			[1.0] = 8.252063
+			[1] = 8.252063
 		},
 		randomize_indexes = {}
 	},
@@ -1025,10 +1027,10 @@ local mission_giver_vo_explicator_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_explicator_a__mission_twins_briefing_c_01"
+			[1] = "loc_explicator_a__mission_twins_briefing_c_01"
 		},
 		sound_events_duration = {
-			[1.0] = 11.42583
+			[1] = 11.42583
 		},
 		randomize_indexes = {}
 	}

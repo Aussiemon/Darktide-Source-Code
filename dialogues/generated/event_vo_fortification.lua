@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/event_vo_fortification.lua
+
 return function ()
 	define_rule({
 		name = "event_fortification_beacon_deployed",

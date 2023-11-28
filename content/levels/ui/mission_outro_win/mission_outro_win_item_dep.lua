@@ -1,3 +1,5 @@
+﻿-- chunkname: @content/levels/ui/mission_outro_win/mission_outro_win_item_dep.lua
+
 local item_dependencies = {
 	player_items = {
 		["content/items/characters/player/human/gear_head/imperial_guard_helmet_01"] = 1,

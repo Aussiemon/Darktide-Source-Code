@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/enemy_vo_enemy_captain_officer_a.lua
+
 local enemy_vo_enemy_captain_officer_a = {
 	renegade_captain_long_death = {
 		randomize_indexes_n = 0,

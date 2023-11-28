@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/lookup_veteran_female_c.lua
+
 DialogueLookup[DialogueLookup_n + 1] = "bonding_conversation_headshot_extension_vet_c_ogr_a_b"
 DialogueLookup[DialogueLookup_n + 2] = "bonding_conversation_headshot_extension_vet_c_ogr_a_c"
 DialogueLookup[DialogueLookup_n + 3] = "bonding_conversation_headshot_extension_vet_c_ogr_a_d"

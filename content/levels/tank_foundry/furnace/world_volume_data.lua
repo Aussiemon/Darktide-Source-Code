@@ -1,3 +1,5 @@
+﻿-- chunkname: @content/levels/tank_foundry/furnace/world_volume_data.lua
+
 local volume_data = {
 	{
 		height = 6,
@@ -202,8 +204,8 @@ local volume_data = {
 		},
 		up_vector = {
 			-0,
-			[2.0] = 0,
-			[3.0] = 3.723222017288208
+			[2] = 0,
+			[3] = 3.723222017288208
 		}
 	},
 	{

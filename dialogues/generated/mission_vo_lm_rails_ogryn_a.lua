@@ -1,18 +1,20 @@
+﻿-- chunkname: @dialogues/generated/mission_vo_lm_rails_ogryn_a.lua
+
 local mission_vo_lm_rails_ogryn_a = {
 	mission_rails_disable_skyfire_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_ogryn_a__mission_rails_disable_skyfire_a_01",
-			[2.0] = "loc_ogryn_a__mission_rails_disable_skyfire_a_02"
+			[1] = "loc_ogryn_a__mission_rails_disable_skyfire_a_01",
+			[2] = "loc_ogryn_a__mission_rails_disable_skyfire_a_02"
 		},
 		sound_events_duration = {
-			[1.0] = 3.40849,
-			[2.0] = 4.146854
+			[1] = 3.40849,
+			[2] = 4.146854
 		},
 		sound_event_weights = {
-			[1.0] = 0.5,
-			[2.0] = 0.5
+			[1] = 0.5,
+			[2] = 0.5
 		},
 		randomize_indexes = {}
 	},
@@ -20,12 +22,12 @@ local mission_vo_lm_rails_ogryn_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_ogryn_a__mission_rails_district_gate_01",
-			[2.0] = "loc_ogryn_a__mission_rails_district_gate_02"
+			[1] = "loc_ogryn_a__mission_rails_district_gate_01",
+			[2] = "loc_ogryn_a__mission_rails_district_gate_02"
 		},
 		sound_events_duration = {
-			[1.0] = 2.748083,
-			[2.0] = 2.367396
+			[1] = 2.748083,
+			[2] = 2.367396
 		},
 		randomize_indexes = {}
 	},
@@ -33,12 +35,12 @@ local mission_vo_lm_rails_ogryn_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_ogryn_a__mission_rails_end_event_conversation_one_a_01",
-			[2.0] = "loc_ogryn_a__mission_rails_end_event_conversation_one_a_02"
+			[1] = "loc_ogryn_a__mission_rails_end_event_conversation_one_a_01",
+			[2] = "loc_ogryn_a__mission_rails_end_event_conversation_one_a_02"
 		},
 		sound_events_duration = {
-			[1.0] = 1.405542,
-			[2.0] = 1.756177
+			[1] = 1.405542,
+			[2] = 1.756177
 		},
 		randomize_indexes = {}
 	},
@@ -46,12 +48,12 @@ local mission_vo_lm_rails_ogryn_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_ogryn_a__mission_rails_end_event_conversation_one_c_01",
-			[2.0] = "loc_ogryn_a__mission_rails_end_event_conversation_one_c_02"
+			[1] = "loc_ogryn_a__mission_rails_end_event_conversation_one_c_01",
+			[2] = "loc_ogryn_a__mission_rails_end_event_conversation_one_c_02"
 		},
 		sound_events_duration = {
-			[1.0] = 2.992146,
-			[2.0] = 1.9115
+			[1] = 2.992146,
+			[2] = 1.9115
 		},
 		randomize_indexes = {}
 	},
@@ -59,12 +61,12 @@ local mission_vo_lm_rails_ogryn_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_ogryn_a__mission_rails_end_event_conversation_three_a_01",
-			[2.0] = "loc_ogryn_a__mission_rails_end_event_conversation_three_a_02"
+			[1] = "loc_ogryn_a__mission_rails_end_event_conversation_three_a_01",
+			[2] = "loc_ogryn_a__mission_rails_end_event_conversation_three_a_02"
 		},
 		sound_events_duration = {
-			[1.0] = 3.683802,
-			[2.0] = 3.3435
+			[1] = 3.683802,
+			[2] = 3.3435
 		},
 		randomize_indexes = {}
 	},
@@ -72,12 +74,12 @@ local mission_vo_lm_rails_ogryn_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_ogryn_a__mission_rails_end_event_conversation_three_c_01",
-			[2.0] = "loc_ogryn_a__mission_rails_end_event_conversation_three_c_02"
+			[1] = "loc_ogryn_a__mission_rails_end_event_conversation_three_c_01",
+			[2] = "loc_ogryn_a__mission_rails_end_event_conversation_three_c_02"
 		},
 		sound_events_duration = {
-			[1.0] = 2.800406,
-			[2.0] = 3.86224
+			[1] = 2.800406,
+			[2] = 3.86224
 		},
 		randomize_indexes = {}
 	},
@@ -85,12 +87,12 @@ local mission_vo_lm_rails_ogryn_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_ogryn_a__mission_rails_end_event_conversation_two_a_01",
-			[2.0] = "loc_ogryn_a__mission_rails_end_event_conversation_two_a_02"
+			[1] = "loc_ogryn_a__mission_rails_end_event_conversation_two_a_01",
+			[2] = "loc_ogryn_a__mission_rails_end_event_conversation_two_a_02"
 		},
 		sound_events_duration = {
-			[1.0] = 5.522135,
-			[2.0] = 3.480385
+			[1] = 5.522135,
+			[2] = 3.480385
 		},
 		randomize_indexes = {}
 	},
@@ -98,12 +100,12 @@ local mission_vo_lm_rails_ogryn_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_ogryn_a__mission_rails_end_event_conversation_two_c_01",
-			[2.0] = "loc_ogryn_a__mission_rails_end_event_conversation_two_c_02"
+			[1] = "loc_ogryn_a__mission_rails_end_event_conversation_two_c_01",
+			[2] = "loc_ogryn_a__mission_rails_end_event_conversation_two_c_02"
 		},
 		sound_events_duration = {
-			[1.0] = 3.056115,
-			[2.0] = 1.825156
+			[1] = 3.056115,
+			[2] = 1.825156
 		},
 		randomize_indexes = {}
 	},
@@ -152,12 +154,12 @@ local mission_vo_lm_rails_ogryn_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_ogryn_a__mission_rails_hab_block_dreyko_01",
-			[2.0] = "loc_ogryn_a__mission_rails_hab_block_dreyko_02"
+			[1] = "loc_ogryn_a__mission_rails_hab_block_dreyko_01",
+			[2] = "loc_ogryn_a__mission_rails_hab_block_dreyko_02"
 		},
 		sound_events_duration = {
-			[1.0] = 3.688344,
-			[2.0] = 3.63299
+			[1] = 3.688344,
+			[2] = 3.63299
 		},
 		randomize_indexes = {}
 	},
@@ -194,12 +196,12 @@ local mission_vo_lm_rails_ogryn_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_ogryn_a__mission_rails_start_banter_a_01",
-			[2.0] = "loc_ogryn_a__mission_rails_start_banter_a_02"
+			[1] = "loc_ogryn_a__mission_rails_start_banter_a_01",
+			[2] = "loc_ogryn_a__mission_rails_start_banter_a_02"
 		},
 		sound_events_duration = {
-			[1.0] = 2.354156,
-			[2.0] = 2.93675
+			[1] = 2.354156,
+			[2] = 2.93675
 		},
 		randomize_indexes = {}
 	},
@@ -236,12 +238,12 @@ local mission_vo_lm_rails_ogryn_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_ogryn_a__mission_rails_trains_01",
-			[2.0] = "loc_ogryn_a__mission_rails_trains_02"
+			[1] = "loc_ogryn_a__mission_rails_trains_01",
+			[2] = "loc_ogryn_a__mission_rails_trains_02"
 		},
 		sound_events_duration = {
-			[1.0] = 2.871208,
-			[2.0] = 2.930313
+			[1] = 2.871208,
+			[2] = 2.930313
 		},
 		randomize_indexes = {}
 	}

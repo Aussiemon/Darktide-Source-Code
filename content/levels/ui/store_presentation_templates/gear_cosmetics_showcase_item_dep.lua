@@ -1,3 +1,5 @@
+﻿-- chunkname: @content/levels/ui/store_presentation_templates/gear_cosmetics_showcase_item_dep.lua
+
 local item_dependencies = {
 	minion_items = {},
 	player_items = {

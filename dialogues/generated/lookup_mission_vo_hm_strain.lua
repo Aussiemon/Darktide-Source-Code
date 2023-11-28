@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/lookup_mission_vo_hm_strain.lua
+
 DialogueLookup[DialogueLookup_n + 1] = "event_demolition_first_corruptor_destroyed_strain_a"
 DialogueLookup[DialogueLookup_n + 2] = "event_demolition_first_corruptor_destroyed_strain_b"
 DialogueLookup[DialogueLookup_n + 3] = "info_get_out_strain"

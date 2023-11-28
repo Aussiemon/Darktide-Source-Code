@@ -1,3 +1,5 @@
+﻿-- chunkname: @content/levels/dust/missions/mission_lm_scavenge_main_path.lua
+
 local path_markers = {
 	{
 		kind = "good",

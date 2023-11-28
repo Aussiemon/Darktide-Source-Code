@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/lookup_ogryn_a.lua
+
 DialogueLookup[DialogueLookup_n + 1] = "bonding_conversation_behind_me_a"
 DialogueLookup[DialogueLookup_n + 2] = "bonding_conversation_behind_me_b"
 DialogueLookup[DialogueLookup_n + 3] = "bonding_conversation_behind_me_c"

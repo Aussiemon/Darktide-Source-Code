@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/event_vo_scan_tech_priest_a.lua
+
 local event_vo_scan_tech_priest_a = {
 	cmd_wandering_skull = {
 		randomize_indexes_n = 0,

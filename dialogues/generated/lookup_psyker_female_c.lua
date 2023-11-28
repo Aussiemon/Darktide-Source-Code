@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/lookup_psyker_female_c.lua
+
 DialogueLookup[DialogueLookup_n + 1] = "bonding_conversation_lex_a"
 DialogueLookup[DialogueLookup_n + 2] = "bonding_conversation_lex_b"
 DialogueLookup[DialogueLookup_n + 3] = "bonding_conversation_lex_c"

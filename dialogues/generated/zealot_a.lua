@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/zealot_a.lua
+
 return function ()
 	define_rule({
 		name = "chain_weapon_kill_spree_self_a",

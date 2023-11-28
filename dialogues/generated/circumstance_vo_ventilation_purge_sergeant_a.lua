@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/circumstance_vo_ventilation_purge_sergeant_a.lua
+
 local circumstance_vo_ventilation_purge_sergeant_a = {
 	vent_circumstance_start_a = {
 		randomize_indexes_n = 0,

@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/conversations_hub_mourningstar_soldier_female_a.lua
+
 local conversations_hub_mourningstar_soldier_female_a = {
 	hub_idle_greeting_dislike_a = {
 		randomize_indexes_n = 0,

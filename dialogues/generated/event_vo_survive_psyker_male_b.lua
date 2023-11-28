@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/event_vo_survive_psyker_male_b.lua
+
 local event_vo_survive_psyker_male_b = {
 	event_survive_almost_done = {
 		randomize_indexes_n = 0,

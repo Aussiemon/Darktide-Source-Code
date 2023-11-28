@@ -1,12 +1,14 @@
+﻿-- chunkname: @dialogues/generated/cutscenes_vo_zealot_female_b.lua
+
 local cutscenes_vo_zealot_female_b = {
 	cs_prologue_five_05 = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_zealot_female_b__cs_prologue_five_05_01"
+			[1] = "loc_zealot_female_b__cs_prologue_five_05_01"
 		},
 		sound_events_duration = {
-			[1.0] = 1.545479
+			[1] = 1.545479
 		},
 		randomize_indexes = {}
 	},
@@ -14,10 +16,10 @@ local cutscenes_vo_zealot_female_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_zealot_female_b__cs_prologue_three_04_01"
+			[1] = "loc_zealot_female_b__cs_prologue_three_04_01"
 		},
 		sound_events_duration = {
-			[1.0] = 0.813729
+			[1] = 0.813729
 		},
 		randomize_indexes = {}
 	},
@@ -25,13 +27,13 @@ local cutscenes_vo_zealot_female_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_zealot_female_b__cs_prologue_two_16_01"
+			[1] = "loc_zealot_female_b__cs_prologue_two_16_01"
 		},
 		sound_events_duration = {
-			[1.0] = 4.938354
+			[1] = 4.938354
 		},
 		sound_event_weights = {
-			[1.0] = 1
+			[1] = 1
 		},
 		randomize_indexes = {}
 	}

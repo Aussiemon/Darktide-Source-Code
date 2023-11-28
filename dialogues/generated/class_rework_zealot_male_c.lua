@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/class_rework_zealot_male_c.lua
+
 local class_rework_zealot_male_c = {
 	ability_banisher = {
 		randomize_indexes_n = 0,

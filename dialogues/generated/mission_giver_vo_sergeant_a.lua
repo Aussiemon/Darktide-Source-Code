@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/mission_giver_vo_sergeant_a.lua
+
 local mission_giver_vo_sergeant_a = {
 	access_elevator = {
 		randomize_indexes_n = 0,

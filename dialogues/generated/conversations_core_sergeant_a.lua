@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/conversations_core_sergeant_a.lua
+
 local conversations_core_sergeant_a = {
 	conversation_40k_lore_one_02 = {
 		randomize_indexes_n = 0,
@@ -33,10 +35,10 @@ local conversations_core_sergeant_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_sergeant_a__conversation_atoma_lore_experienced_one_02_01"
+			[1] = "loc_sergeant_a__conversation_atoma_lore_experienced_one_02_01"
 		},
 		sound_events_duration = {
-			[1.0] = 6.172396
+			[1] = 6.172396
 		},
 		randomize_indexes = {}
 	},
@@ -44,10 +46,10 @@ local conversations_core_sergeant_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_sergeant_a__conversation_atoma_lore_rookie_one_02_01"
+			[1] = "loc_sergeant_a__conversation_atoma_lore_rookie_one_02_01"
 		},
 		sound_events_duration = {
-			[1.0] = 8.165396
+			[1] = 8.165396
 		},
 		randomize_indexes = {}
 	},
@@ -55,10 +57,10 @@ local conversations_core_sergeant_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_sergeant_a__conversation_atoma_lore_veteran_one_02_01"
+			[1] = "loc_sergeant_a__conversation_atoma_lore_veteran_one_02_01"
 		},
 		sound_events_duration = {
-			[1.0] = 4.495521
+			[1] = 4.495521
 		},
 		randomize_indexes = {}
 	},
@@ -66,12 +68,12 @@ local conversations_core_sergeant_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_sergeant_a__conversation_zealot_one_02_01",
-			[2.0] = "loc_sergeant_a__conversation_zealot_one_02_02"
+			[1] = "loc_sergeant_a__conversation_zealot_one_02_01",
+			[2] = "loc_sergeant_a__conversation_zealot_one_02_02"
 		},
 		sound_events_duration = {
-			[1.0] = 3.350167,
-			[2.0] = 3.483333
+			[1] = 3.350167,
+			[2] = 3.483333
 		},
 		randomize_indexes = {}
 	},
@@ -79,12 +81,12 @@ local conversations_core_sergeant_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_sergeant_a__conversation_zealot_three_02_01",
-			[2.0] = "loc_sergeant_a__conversation_zealot_three_02_02"
+			[1] = "loc_sergeant_a__conversation_zealot_three_02_01",
+			[2] = "loc_sergeant_a__conversation_zealot_three_02_02"
 		},
 		sound_events_duration = {
-			[1.0] = 3.291125,
-			[2.0] = 2.358563
+			[1] = 3.291125,
+			[2] = 2.358563
 		},
 		randomize_indexes = {}
 	},

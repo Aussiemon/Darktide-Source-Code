@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/mission_vo_cm_habs_sergeant_a.lua
+
 local mission_vo_cm_habs_sergeant_a = {
 	info_get_out_habs = {
 		randomize_indexes_n = 0,

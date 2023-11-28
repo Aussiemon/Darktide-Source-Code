@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/lookup_mission_vo_fm_resurgence.lua
+
 DialogueLookup[DialogueLookup_n + 1] = "event_fortification_disable_the_skyfire_resurgence"
 DialogueLookup[DialogueLookup_n + 2] = "info_get_out_resurgence"
 DialogueLookup[DialogueLookup_n + 3] = "luggable_mission_pick_up_fm_resurgence"

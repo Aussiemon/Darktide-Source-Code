@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/lookup_event_vo_hacking.lua
+
 DialogueLookup[DialogueLookup_n + 1] = "cmd_hacking_decode_resuming"
 DialogueLookup[DialogueLookup_n + 2] = "cmd_hacking_find_another"
 DialogueLookup[DialogueLookup_n + 3] = "cmd_hacking_fix_decode"

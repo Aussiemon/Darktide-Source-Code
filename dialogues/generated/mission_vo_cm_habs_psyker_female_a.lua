@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/mission_vo_cm_habs_psyker_female_a.lua
+
 local mission_vo_cm_habs_psyker_female_a = {
 	hab_block_void_response_b = {
 		randomize_indexes_n = 0,
@@ -23,12 +25,12 @@ local mission_vo_cm_habs_psyker_female_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_psyker_female_a__level_hab_block_apartments_01",
-			[2.0] = "loc_psyker_female_a__level_hab_block_apartments_02"
+			[1] = "loc_psyker_female_a__level_hab_block_apartments_01",
+			[2] = "loc_psyker_female_a__level_hab_block_apartments_02"
 		},
 		sound_events_duration = {
-			[1.0] = 3.771833,
-			[2.0] = 3.58725
+			[1] = 3.771833,
+			[2] = 3.58725
 		},
 		randomize_indexes = {}
 	},
@@ -36,12 +38,12 @@ local mission_vo_cm_habs_psyker_female_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_psyker_female_a__level_hab_block_apartments_response_01",
-			[2.0] = "loc_psyker_female_a__level_hab_block_apartments_response_02"
+			[1] = "loc_psyker_female_a__level_hab_block_apartments_response_01",
+			[2] = "loc_psyker_female_a__level_hab_block_apartments_response_02"
 		},
 		sound_events_duration = {
-			[1.0] = 1.656458,
-			[2.0] = 2.374146
+			[1] = 1.656458,
+			[2] = 2.374146
 		},
 		randomize_indexes = {}
 	},
@@ -49,12 +51,12 @@ local mission_vo_cm_habs_psyker_female_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_psyker_female_a__level_hab_block_atrium_01",
-			[2.0] = "loc_psyker_female_a__level_hab_block_atrium_02"
+			[1] = "loc_psyker_female_a__level_hab_block_atrium_01",
+			[2] = "loc_psyker_female_a__level_hab_block_atrium_02"
 		},
 		sound_events_duration = {
-			[1.0] = 2.655708,
-			[2.0] = 3.209979
+			[1] = 2.655708,
+			[2] = 3.209979
 		},
 		randomize_indexes = {}
 	},
@@ -62,12 +64,12 @@ local mission_vo_cm_habs_psyker_female_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_psyker_female_a__level_hab_block_b_response_b_01",
-			[2.0] = "loc_psyker_female_a__level_hab_block_b_response_b_02"
+			[1] = "loc_psyker_female_a__level_hab_block_b_response_b_01",
+			[2] = "loc_psyker_female_a__level_hab_block_b_response_b_02"
 		},
 		sound_events_duration = {
-			[1.0] = 2.814396,
-			[2.0] = 4.042938
+			[1] = 2.814396,
+			[2] = 4.042938
 		},
 		randomize_indexes = {}
 	},
@@ -75,12 +77,12 @@ local mission_vo_cm_habs_psyker_female_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_psyker_female_a__level_hab_block_collapse_01",
-			[2.0] = "loc_psyker_female_a__level_hab_block_collapse_02"
+			[1] = "loc_psyker_female_a__level_hab_block_collapse_01",
+			[2] = "loc_psyker_female_a__level_hab_block_collapse_02"
 		},
 		sound_events_duration = {
-			[1.0] = 3.639417,
-			[2.0] = 1.531167
+			[1] = 3.639417,
+			[2] = 1.531167
 		},
 		randomize_indexes = {}
 	},
@@ -88,12 +90,12 @@ local mission_vo_cm_habs_psyker_female_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_psyker_female_a__level_hab_block_corpse_01",
-			[2.0] = "loc_psyker_female_a__level_hab_block_corpse_02"
+			[1] = "loc_psyker_female_a__level_hab_block_corpse_01",
+			[2] = "loc_psyker_female_a__level_hab_block_corpse_02"
 		},
 		sound_events_duration = {
-			[1.0] = 3.596417,
-			[2.0] = 3.474292
+			[1] = 3.596417,
+			[2] = 3.474292
 		},
 		randomize_indexes = {}
 	},
@@ -142,12 +144,12 @@ local mission_vo_cm_habs_psyker_female_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_psyker_female_a__level_hab_block_market_response_01",
-			[2.0] = "loc_psyker_female_a__level_hab_block_market_response_02"
+			[1] = "loc_psyker_female_a__level_hab_block_market_response_01",
+			[2] = "loc_psyker_female_a__level_hab_block_market_response_02"
 		},
 		sound_events_duration = {
-			[1.0] = 4.437063,
-			[2.0] = 2.503333
+			[1] = 4.437063,
+			[2] = 2.503333
 		},
 		randomize_indexes = {}
 	},
@@ -155,12 +157,12 @@ local mission_vo_cm_habs_psyker_female_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_psyker_female_a__level_hab_block_security_01",
-			[2.0] = "loc_psyker_female_a__level_hab_block_security_02"
+			[1] = "loc_psyker_female_a__level_hab_block_security_01",
+			[2] = "loc_psyker_female_a__level_hab_block_security_02"
 		},
 		sound_events_duration = {
-			[1.0] = 2.198479,
-			[2.0] = 5.984479
+			[1] = 2.198479,
+			[2] = 5.984479
 		},
 		randomize_indexes = {}
 	},
@@ -168,16 +170,16 @@ local mission_vo_cm_habs_psyker_female_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_psyker_female_a__level_hab_block_void_01",
-			[2.0] = "loc_psyker_female_a__level_hab_block_void_02"
+			[1] = "loc_psyker_female_a__level_hab_block_void_01",
+			[2] = "loc_psyker_female_a__level_hab_block_void_02"
 		},
 		sound_events_duration = {
-			[1.0] = 1.641917,
-			[2.0] = 2.722583
+			[1] = 1.641917,
+			[2] = 2.722583
 		},
 		sound_event_weights = {
-			[1.0] = 0.5,
-			[2.0] = 0.5
+			[1] = 0.5,
+			[2] = 0.5
 		},
 		randomize_indexes = {}
 	},
@@ -214,12 +216,12 @@ local mission_vo_cm_habs_psyker_female_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_psyker_female_a__level_hab_block_temple_01",
-			[2.0] = "loc_psyker_female_a__level_hab_block_temple_02"
+			[1] = "loc_psyker_female_a__level_hab_block_temple_01",
+			[2] = "loc_psyker_female_a__level_hab_block_temple_02"
 		},
 		sound_events_duration = {
-			[1.0] = 4.838542,
-			[2.0] = 4.858563
+			[1] = 4.838542,
+			[2] = 4.858563
 		},
 		randomize_indexes = {}
 	},
@@ -268,12 +270,12 @@ local mission_vo_cm_habs_psyker_female_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_psyker_female_a__level_hab_block_vista_01",
-			[2.0] = "loc_psyker_female_a__level_hab_block_vista_02"
+			[1] = "loc_psyker_female_a__level_hab_block_vista_01",
+			[2] = "loc_psyker_female_a__level_hab_block_vista_02"
 		},
 		sound_events_duration = {
-			[1.0] = 4.44925,
-			[2.0] = 5.323188
+			[1] = 4.44925,
+			[2] = 5.323188
 		},
 		randomize_indexes = {}
 	}

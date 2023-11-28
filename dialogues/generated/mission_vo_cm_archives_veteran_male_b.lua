@@ -1,14 +1,16 @@
+﻿-- chunkname: @dialogues/generated/mission_vo_cm_archives_veteran_male_b.lua
+
 local mission_vo_cm_archives_veteran_male_b = {
 	mission_archives_alarm = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_veteran_male_b__mission_archives_alarm_01",
-			[2.0] = "loc_veteran_male_b__mission_archives_alarm_02"
+			[1] = "loc_veteran_male_b__mission_archives_alarm_01",
+			[2] = "loc_veteran_male_b__mission_archives_alarm_02"
 		},
 		sound_events_duration = {
-			[1.0] = 2.142854,
-			[2.0] = 2.339208
+			[1] = 2.142854,
+			[2] = 2.339208
 		},
 		randomize_indexes = {}
 	},
@@ -57,12 +59,12 @@ local mission_vo_cm_archives_veteran_male_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_veteran_male_b__mission_archives_front_door_a_01",
-			[2.0] = "loc_veteran_male_b__mission_archives_front_door_a_02"
+			[1] = "loc_veteran_male_b__mission_archives_front_door_a_01",
+			[2] = "loc_veteran_male_b__mission_archives_front_door_a_02"
 		},
 		sound_events_duration = {
-			[1.0] = 1.878,
-			[2.0] = 3.310729
+			[1] = 1.878,
+			[2] = 3.310729
 		},
 		randomize_indexes = {}
 	},
@@ -93,12 +95,12 @@ local mission_vo_cm_archives_veteran_male_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_veteran_male_b__mission_archives_mid_conversation_one_a_01",
-			[2.0] = "loc_veteran_male_b__mission_archives_mid_conversation_one_a_02"
+			[1] = "loc_veteran_male_b__mission_archives_mid_conversation_one_a_01",
+			[2] = "loc_veteran_male_b__mission_archives_mid_conversation_one_a_02"
 		},
 		sound_events_duration = {
-			[1.0] = 4.523813,
-			[2.0] = 4.852188
+			[1] = 4.523813,
+			[2] = 4.852188
 		},
 		randomize_indexes = {}
 	},
@@ -106,12 +108,12 @@ local mission_vo_cm_archives_veteran_male_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_veteran_male_b__mission_archives_mid_conversation_three_a_01",
-			[2.0] = "loc_veteran_male_b__mission_archives_mid_conversation_three_a_02"
+			[1] = "loc_veteran_male_b__mission_archives_mid_conversation_three_a_01",
+			[2] = "loc_veteran_male_b__mission_archives_mid_conversation_three_a_02"
 		},
 		sound_events_duration = {
-			[1.0] = 5.294708,
-			[2.0] = 5.536979
+			[1] = 5.294708,
+			[2] = 5.536979
 		},
 		randomize_indexes = {}
 	},
@@ -119,12 +121,12 @@ local mission_vo_cm_archives_veteran_male_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_veteran_male_b__mission_archives_mid_conversation_two_a_01",
-			[2.0] = "loc_veteran_male_b__mission_archives_mid_conversation_two_a_02"
+			[1] = "loc_veteran_male_b__mission_archives_mid_conversation_two_a_01",
+			[2] = "loc_veteran_male_b__mission_archives_mid_conversation_two_a_02"
 		},
 		sound_events_duration = {
-			[1.0] = 6.319208,
-			[2.0] = 7.499958
+			[1] = 6.319208,
+			[2] = 7.499958
 		},
 		randomize_indexes = {}
 	},
@@ -132,12 +134,12 @@ local mission_vo_cm_archives_veteran_male_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1.0] = "loc_veteran_male_b__mission_archives_start_banter_a_01",
-			[2.0] = "loc_veteran_male_b__mission_archives_start_banter_a_02"
+			[1] = "loc_veteran_male_b__mission_archives_start_banter_a_01",
+			[2] = "loc_veteran_male_b__mission_archives_start_banter_a_02"
 		},
 		sound_events_duration = {
-			[1.0] = 6.520208,
-			[2.0] = 1.946458
+			[1] = 6.520208,
+			[2] = 1.946458
 		},
 		randomize_indexes = {}
 	},

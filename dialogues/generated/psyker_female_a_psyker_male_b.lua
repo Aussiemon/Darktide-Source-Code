@@ -1,12 +1,14 @@
+﻿-- chunkname: @dialogues/generated/psyker_female_a_psyker_male_b.lua
+
 local psyker_female_a_psyker_male_b = {
 	bonding_conversation_round_three_advice_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_psyker_male_b__bonding_conversation_round_three_advice_b_01"
+			[1] = "loc_psyker_male_b__bonding_conversation_round_three_advice_b_01"
 		},
 		sound_events_duration = {
-			[1.0] = 9.734688
+			[1] = 9.734688
 		},
 		randomize_indexes = {}
 	},
@@ -14,10 +16,10 @@ local psyker_female_a_psyker_male_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_psyker_male_b__bonding_conversation_round_three_advice_d_01"
+			[1] = "loc_psyker_male_b__bonding_conversation_round_three_advice_d_01"
 		},
 		sound_events_duration = {
-			[1.0] = 3.313854
+			[1] = 3.313854
 		},
 		randomize_indexes = {}
 	},
@@ -25,10 +27,10 @@ local psyker_female_a_psyker_male_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_psyker_male_b__bonding_conversation_round_three_squirrel_b_01"
+			[1] = "loc_psyker_male_b__bonding_conversation_round_three_squirrel_b_01"
 		},
 		sound_events_duration = {
-			[1.0] = 7.417313
+			[1] = 7.417313
 		},
 		randomize_indexes = {}
 	},
@@ -36,10 +38,10 @@ local psyker_female_a_psyker_male_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_psyker_male_b__bonding_conversation_round_three_squirrel_d_01"
+			[1] = "loc_psyker_male_b__bonding_conversation_round_three_squirrel_d_01"
 		},
 		sound_events_duration = {
-			[1.0] = 1.184104
+			[1] = 1.184104
 		},
 		randomize_indexes = {}
 	},
@@ -47,10 +49,10 @@ local psyker_female_a_psyker_male_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_psyker_male_b__bonding_conversation_round_three_squirrel_f_01"
+			[1] = "loc_psyker_male_b__bonding_conversation_round_three_squirrel_f_01"
 		},
 		sound_events_duration = {
-			[1.0] = 2.953979
+			[1] = 2.953979
 		},
 		randomize_indexes = {}
 	}

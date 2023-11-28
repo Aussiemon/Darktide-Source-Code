@@ -1,12 +1,14 @@
+﻿-- chunkname: @dialogues/generated/mission_vo_prologue_psyker_female_b.lua
+
 local mission_vo_prologue_psyker_female_b = {
 	prologue_combat_01 = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_psyker_female_b__prologue_combat_01"
+			[1] = "loc_psyker_female_b__prologue_combat_01"
 		},
 		sound_events_duration = {
-			[1.0] = 2.100813
+			[1] = 2.100813
 		},
 		randomize_indexes = {}
 	},
@@ -14,10 +16,10 @@ local mission_vo_prologue_psyker_female_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_psyker_female_b__prologue_combat_02"
+			[1] = "loc_psyker_female_b__prologue_combat_02"
 		},
 		sound_events_duration = {
-			[1.0] = 1.890313
+			[1] = 1.890313
 		},
 		randomize_indexes = {}
 	},
@@ -25,10 +27,10 @@ local mission_vo_prologue_psyker_female_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_psyker_female_b__prologue_combat_03"
+			[1] = "loc_psyker_female_b__prologue_combat_03"
 		},
 		sound_events_duration = {
-			[1.0] = 1.788063
+			[1] = 1.788063
 		},
 		randomize_indexes = {}
 	},
@@ -36,10 +38,10 @@ local mission_vo_prologue_psyker_female_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_psyker_female_b__prologue_combat_04"
+			[1] = "loc_psyker_female_b__prologue_combat_04"
 		},
 		sound_events_duration = {
-			[1.0] = 1.345521
+			[1] = 1.345521
 		},
 		randomize_indexes = {}
 	},
@@ -47,10 +49,10 @@ local mission_vo_prologue_psyker_female_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_psyker_female_b__prologue_combat_05"
+			[1] = "loc_psyker_female_b__prologue_combat_05"
 		},
 		sound_events_duration = {
-			[1.0] = 2.470479
+			[1] = 2.470479
 		},
 		randomize_indexes = {}
 	},
@@ -58,10 +60,10 @@ local mission_vo_prologue_psyker_female_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_psyker_female_b__prologue_end_event_conversation_b_01"
+			[1] = "loc_psyker_female_b__prologue_end_event_conversation_b_01"
 		},
 		sound_events_duration = {
-			[1.0] = 3.693667
+			[1] = 3.693667
 		},
 		randomize_indexes = {}
 	},
@@ -69,10 +71,10 @@ local mission_vo_prologue_psyker_female_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_psyker_female_b__prologue_firefight_conversation_b_01"
+			[1] = "loc_psyker_female_b__prologue_firefight_conversation_b_01"
 		},
 		sound_events_duration = {
-			[1.0] = 2.637417
+			[1] = 2.637417
 		},
 		randomize_indexes = {}
 	},
@@ -80,10 +82,10 @@ local mission_vo_prologue_psyker_female_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_psyker_female_b__prologue_monologue_01"
+			[1] = "loc_psyker_female_b__prologue_monologue_01"
 		},
 		sound_events_duration = {
-			[1.0] = 6.952646
+			[1] = 6.952646
 		},
 		randomize_indexes = {}
 	},
@@ -91,10 +93,10 @@ local mission_vo_prologue_psyker_female_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_psyker_female_b__prologue_monologue_02"
+			[1] = "loc_psyker_female_b__prologue_monologue_02"
 		},
 		sound_events_duration = {
-			[1.0] = 2.377229
+			[1] = 2.377229
 		},
 		randomize_indexes = {}
 	},
@@ -102,10 +104,10 @@ local mission_vo_prologue_psyker_female_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_psyker_female_b__prologue_monologue_03"
+			[1] = "loc_psyker_female_b__prologue_monologue_03"
 		},
 		sound_events_duration = {
-			[1.0] = 2.205604
+			[1] = 2.205604
 		},
 		randomize_indexes = {}
 	},
@@ -113,10 +115,10 @@ local mission_vo_prologue_psyker_female_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_psyker_female_b__prologue_monologue_04"
+			[1] = "loc_psyker_female_b__prologue_monologue_04"
 		},
 		sound_events_duration = {
-			[1.0] = 6.340125
+			[1] = 6.340125
 		},
 		randomize_indexes = {}
 	},
@@ -124,10 +126,10 @@ local mission_vo_prologue_psyker_female_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_psyker_female_b__prologue_monologue_05"
+			[1] = "loc_psyker_female_b__prologue_monologue_05"
 		},
 		sound_events_duration = {
-			[1.0] = 7.393271
+			[1] = 7.393271
 		},
 		randomize_indexes = {}
 	},
@@ -135,10 +137,10 @@ local mission_vo_prologue_psyker_female_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_psyker_female_b__prologue_monologue_06"
+			[1] = "loc_psyker_female_b__prologue_monologue_06"
 		},
 		sound_events_duration = {
-			[1.0] = 4.127604
+			[1] = 4.127604
 		},
 		randomize_indexes = {}
 	},
@@ -146,10 +148,10 @@ local mission_vo_prologue_psyker_female_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_psyker_female_b__prologue_monologue_07"
+			[1] = "loc_psyker_female_b__prologue_monologue_07"
 		},
 		sound_events_duration = {
-			[1.0] = 4.281542
+			[1] = 4.281542
 		},
 		randomize_indexes = {}
 	},
@@ -157,13 +159,13 @@ local mission_vo_prologue_psyker_female_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_psyker_female_b__prologue_monologue_08"
+			[1] = "loc_psyker_female_b__prologue_monologue_08"
 		},
 		sound_events_duration = {
-			[1.0] = 1.781875
+			[1] = 1.781875
 		},
 		sound_event_weights = {
-			[1.0] = 1
+			[1] = 1
 		},
 		randomize_indexes = {}
 	},
@@ -171,10 +173,10 @@ local mission_vo_prologue_psyker_female_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_psyker_female_b__prologue_monologue_09"
+			[1] = "loc_psyker_female_b__prologue_monologue_09"
 		},
 		sound_events_duration = {
-			[1.0] = 4.091583
+			[1] = 4.091583
 		},
 		randomize_indexes = {}
 	},
@@ -182,10 +184,10 @@ local mission_vo_prologue_psyker_female_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_psyker_female_b__prologue_monologue_10"
+			[1] = "loc_psyker_female_b__prologue_monologue_10"
 		},
 		sound_events_duration = {
-			[1.0] = 4.034854
+			[1] = 4.034854
 		},
 		randomize_indexes = {}
 	},
@@ -193,10 +195,10 @@ local mission_vo_prologue_psyker_female_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_psyker_female_b__ranged_gameplay_04_01"
+			[1] = "loc_psyker_female_b__ranged_gameplay_04_01"
 		},
 		sound_events_duration = {
-			[1.0] = 5.085292
+			[1] = 5.085292
 		},
 		randomize_indexes = {}
 	}

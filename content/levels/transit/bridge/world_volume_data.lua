@@ -1,3 +1,5 @@
+﻿-- chunkname: @content/levels/transit/bridge/world_volume_data.lua
+
 local volume_data = {
 	{
 		height = 2,
@@ -694,8 +696,8 @@ local volume_data = {
 		},
 		up_vector = {
 			-0,
-			[2.0] = 0,
-			[3.0] = 2.106722116470337
+			[2] = 0,
+			[3] = 2.106722116470337
 		}
 	},
 	{

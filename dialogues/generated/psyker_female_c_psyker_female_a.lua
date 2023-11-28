@@ -1,12 +1,14 @@
+﻿-- chunkname: @dialogues/generated/psyker_female_c_psyker_female_a.lua
+
 local psyker_female_c_psyker_female_a = {
 	bonding_conversation_round_three_aura_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_psyker_female_a__bonding_conversation_round_three_aura_b_01"
+			[1] = "loc_psyker_female_a__bonding_conversation_round_three_aura_b_01"
 		},
 		sound_events_duration = {
-			[1.0] = 6.716521
+			[1] = 6.716521
 		},
 		randomize_indexes = {}
 	},
@@ -14,10 +16,10 @@ local psyker_female_c_psyker_female_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_psyker_female_a__bonding_conversation_round_three_aura_d_01"
+			[1] = "loc_psyker_female_a__bonding_conversation_round_three_aura_d_01"
 		},
 		sound_events_duration = {
-			[1.0] = 4.874708
+			[1] = 4.874708
 		},
 		randomize_indexes = {}
 	},
@@ -25,10 +27,10 @@ local psyker_female_c_psyker_female_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_psyker_female_a__bonding_conversation_round_three_team_protocol_b_01"
+			[1] = "loc_psyker_female_a__bonding_conversation_round_three_team_protocol_b_01"
 		},
 		sound_events_duration = {
-			[1.0] = 5.700125
+			[1] = 5.700125
 		},
 		randomize_indexes = {}
 	},
@@ -36,10 +38,10 @@ local psyker_female_c_psyker_female_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_psyker_female_a__bonding_conversation_round_three_team_protocol_d_01"
+			[1] = "loc_psyker_female_a__bonding_conversation_round_three_team_protocol_d_01"
 		},
 		sound_events_duration = {
-			[1.0] = 3.2225
+			[1] = 3.2225
 		},
 		randomize_indexes = {}
 	}

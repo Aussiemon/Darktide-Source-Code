@@ -1,3 +1,5 @@
+﻿-- chunkname: @content/levels/dust/surveillance/world_volume_data.lua
+
 local volume_data = {
 	{
 		height = 14,
@@ -516,8 +518,8 @@ local volume_data = {
 		},
 		up_vector = {
 			-0,
-			[2.0] = 0,
-			[3.0] = 1
+			[2] = 0,
+			[3] = 1
 		}
 	},
 	{
@@ -564,8 +566,8 @@ local volume_data = {
 		},
 		up_vector = {
 			-0,
-			[2.0] = 0,
-			[3.0] = 7.607532978057861
+			[2] = 0,
+			[3] = 7.607532978057861
 		}
 	},
 	{
@@ -685,8 +687,8 @@ local volume_data = {
 		},
 		up_vector = {
 			-0,
-			[2.0] = 0,
-			[3.0] = 3.9336600303649902
+			[2] = 0,
+			[3] = 3.9336600303649902
 		}
 	},
 	{
@@ -1004,8 +1006,8 @@ local volume_data = {
 		},
 		up_vector = {
 			-0,
-			[2.0] = 0,
-			[3.0] = 1
+			[2] = 0,
+			[3] = 1
 		}
 	},
 	{
@@ -1264,8 +1266,8 @@ local volume_data = {
 		},
 		up_vector = {
 			-0,
-			[2.0] = 0,
-			[3.0] = 1
+			[2] = 0,
+			[3] = 1
 		}
 	},
 	{

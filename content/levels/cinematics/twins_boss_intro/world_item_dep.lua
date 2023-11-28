@@ -1,3 +1,5 @@
+﻿-- chunkname: @content/levels/cinematics/twins_boss_intro/world_item_dep.lua
+
 local item_dependencies = {
 	minion_items = {
 		["content/items/characters/minions/chaos_traitor_guard/attachments_gear/chaos_traitor_guard_lieutenant_b"] = 1,

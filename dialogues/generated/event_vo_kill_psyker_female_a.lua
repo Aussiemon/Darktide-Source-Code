@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/event_vo_kill_psyker_female_a.lua
+
 local event_vo_kill_psyker_female_a = {
 	event_kill_target_damaged = {
 		randomize_indexes_n = 0,

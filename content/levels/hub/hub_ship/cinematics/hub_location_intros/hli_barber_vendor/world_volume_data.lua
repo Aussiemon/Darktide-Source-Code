@@ -1,3 +1,5 @@
+﻿-- chunkname: @content/levels/hub/hub_ship/cinematics/hub_location_intros/hli_barber_vendor/world_volume_data.lua
+
 local volume_data = {
 	{
 		height = 7,
@@ -43,8 +45,8 @@ local volume_data = {
 		},
 		up_vector = {
 			-0,
-			[2.0] = 0,
-			[3.0] = 2
+			[2] = 0,
+			[3] = 2
 		}
 	},
 	{
@@ -192,8 +194,8 @@ local volume_data = {
 		},
 		up_vector = {
 			-0,
-			[2.0] = 0,
-			[3.0] = 2
+			[2] = 0,
+			[3] = 2
 		}
 	},
 	{
@@ -366,8 +368,8 @@ local volume_data = {
 		},
 		up_vector = {
 			-0,
-			[2.0] = 0,
-			[3.0] = 3
+			[2] = 0,
+			[3] = 3
 		}
 	},
 	{
@@ -610,8 +612,8 @@ local volume_data = {
 		},
 		up_vector = {
 			-0,
-			[2.0] = 0,
-			[3.0] = 2
+			[2] = 0,
+			[3] = 2
 		}
 	},
 	{
@@ -658,8 +660,8 @@ local volume_data = {
 		},
 		up_vector = {
 			-0,
-			[2.0] = 0,
-			[3.0] = 2
+			[2] = 0,
+			[3] = 2
 		}
 	},
 	{
@@ -766,8 +768,8 @@ local volume_data = {
 		},
 		up_vector = {
 			-0,
-			[2.0] = 0,
-			[3.0] = 5
+			[2] = 0,
+			[3] = 5
 		}
 	},
 	{
@@ -958,8 +960,8 @@ local volume_data = {
 		},
 		up_vector = {
 			-0,
-			[2.0] = 0,
-			[3.0] = 2
+			[2] = 0,
+			[3] = 2
 		}
 	},
 	{
@@ -1112,8 +1114,8 @@ local volume_data = {
 		},
 		up_vector = {
 			-0,
-			[2.0] = 0,
-			[3.0] = 6
+			[2] = 0,
+			[3] = 6
 		}
 	},
 	{
@@ -1170,8 +1172,8 @@ local volume_data = {
 		},
 		up_vector = {
 			-0,
-			[2.0] = 0,
-			[3.0] = 6
+			[2] = 0,
+			[3] = 6
 		}
 	},
 	{
@@ -1266,8 +1268,8 @@ local volume_data = {
 		},
 		up_vector = {
 			-0,
-			[2.0] = 0,
-			[3.0] = 2
+			[2] = 0,
+			[3] = 2
 		}
 	},
 	{
@@ -1314,8 +1316,8 @@ local volume_data = {
 		},
 		up_vector = {
 			-0,
-			[2.0] = 0,
-			[3.0] = 1
+			[2] = 0,
+			[3] = 1
 		}
 	},
 	{
@@ -1410,8 +1412,8 @@ local volume_data = {
 		},
 		up_vector = {
 			-0,
-			[2.0] = 0,
-			[3.0] = 2
+			[2] = 0,
+			[3] = 2
 		}
 	},
 	{
@@ -1458,8 +1460,8 @@ local volume_data = {
 		},
 		up_vector = {
 			-0,
-			[2.0] = 0,
-			[3.0] = 2
+			[2] = 0,
+			[3] = 2
 		}
 	},
 	{
@@ -1771,8 +1773,8 @@ local volume_data = {
 		},
 		up_vector = {
 			-0,
-			[2.0] = 0,
-			[3.0] = 2.5
+			[2] = 0,
+			[3] = 2.5
 		}
 	},
 	{
@@ -2026,8 +2028,8 @@ local volume_data = {
 		},
 		up_vector = {
 			-0,
-			[2.0] = 0,
-			[3.0] = 6
+			[2] = 0,
+			[3] = 6
 		}
 	},
 	{
@@ -2122,8 +2124,8 @@ local volume_data = {
 		},
 		up_vector = {
 			-0,
-			[2.0] = 0,
-			[3.0] = 2
+			[2] = 0,
+			[3] = 2
 		}
 	},
 	{
@@ -2362,8 +2364,8 @@ local volume_data = {
 		},
 		up_vector = {
 			-0,
-			[2.0] = 0,
-			[3.0] = 2
+			[2] = 0,
+			[3] = 2
 		}
 	},
 	{
@@ -2526,8 +2528,8 @@ local volume_data = {
 		},
 		up_vector = {
 			-0,
-			[2.0] = 0,
-			[3.0] = 1
+			[2] = 0,
+			[3] = 1
 		}
 	},
 	{
@@ -2574,8 +2576,8 @@ local volume_data = {
 		},
 		up_vector = {
 			-0,
-			[2.0] = 0,
-			[3.0] = 2
+			[2] = 0,
+			[3] = 2
 		}
 	},
 	{
@@ -2738,8 +2740,8 @@ local volume_data = {
 		},
 		up_vector = {
 			-0,
-			[2.0] = 0,
-			[3.0] = 1
+			[2] = 0,
+			[3] = 1
 		}
 	},
 	{
@@ -2786,8 +2788,8 @@ local volume_data = {
 		},
 		up_vector = {
 			-0,
-			[2.0] = 0,
-			[3.0] = 1
+			[2] = 0,
+			[3] = 1
 		}
 	},
 	{
@@ -2892,8 +2894,8 @@ local volume_data = {
 		},
 		up_vector = {
 			-0,
-			[2.0] = 0,
-			[3.0] = 2
+			[2] = 0,
+			[3] = 2
 		}
 	}
 }

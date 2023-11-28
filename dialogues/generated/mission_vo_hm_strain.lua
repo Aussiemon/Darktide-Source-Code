@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/mission_vo_hm_strain.lua
+
 return function ()
 	define_rule({
 		name = "event_demolition_first_corruptor_destroyed_strain_a",

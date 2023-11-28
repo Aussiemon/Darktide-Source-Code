@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/mission_vo_lm_rails_tech_priest_a.lua
+
 local mission_vo_lm_rails_tech_priest_a = {
 	mission_rails_descend_shaft = {
 		randomize_indexes_n = 0,

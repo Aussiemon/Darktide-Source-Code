@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/class_rework_ogryn_b.lua
+
 local class_rework_ogryn_b = {
 	ability_bullgryn = {
 		randomize_indexes_n = 0,

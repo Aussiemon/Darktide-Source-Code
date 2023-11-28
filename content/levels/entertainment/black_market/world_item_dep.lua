@@ -1,3 +1,5 @@
+﻿-- chunkname: @content/levels/entertainment/black_market/world_item_dep.lua
+
 local item_dependencies = {
 	minion_items = {
 		["content/items/characters/minions/chaos_traitor_guard/attachments_base/lowerbody_a_sniper"] = 1,

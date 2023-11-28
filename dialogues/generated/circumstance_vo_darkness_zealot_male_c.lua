@@ -1,3 +1,5 @@
+﻿-- chunkname: @dialogues/generated/circumstance_vo_darkness_zealot_male_c.lua
+
 local circumstance_vo_darkness_zealot_male_c = {
 	combat_pause_circumstance_unnatural_dark_lights_b = {
 		randomize_indexes_n = 0,
