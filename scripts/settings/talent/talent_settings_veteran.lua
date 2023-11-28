@@ -76,11 +76,10 @@ local talent_settings = {
 			instant_toughness = 0.1
 		},
 		toughness_2 = {
-			toughness = 0.15,
-			toughness_damage_taken_modifier = 0.1,
 			max_stacks = 3,
-			duration = 8,
-			toughness_damage_taken_multiplier = 0.9
+			toughness = 0.15,
+			toughness_damage_taken_multiplier = 0.9,
+			duration = 8
 		},
 		toughness_3 = {
 			toughness = 0.005,

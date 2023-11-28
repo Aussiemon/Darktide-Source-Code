@@ -23,7 +23,8 @@ MetaBuff.init = function (self, context, template, start_time, instance_id, ...)
 		meta_stat_buffs[key] = final_value
 	end
 
-	self._player = context.player
+	local player = context.player
+	self._player_id = player:unique_id()
 	self._meta_stat_buffs = meta_stat_buffs
 end
 
@@ -31,8 +32,8 @@ MetaBuff.update_stat_buffs = function (self, current_stat_buffs, t)
 	self:_calculate_stat_buffs(current_stat_buffs, self._meta_stat_buffs)
 end
 
-MetaBuff.player = function (self)
-	return self._player
+MetaBuff.player_id = function (self)
+	return self._player_id
 end
 
 return MetaBuff

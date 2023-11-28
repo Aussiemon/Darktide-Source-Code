@@ -346,15 +346,17 @@ ChainLightning.execute_attack = function (target_unit, attacking_unit, power_lev
 	local hit_zone_name = nil
 	local num_iterations = 0
 
-	repeat
-		local random_hit_zone_name = breed_hit_zones[math.random(1, num_breed_hit_zones)].name
+	if not is_critical_strike then
+		repeat
+			local random_hit_zone_name = breed_hit_zones[math.random(1, num_breed_hit_zones)].name
 
-		if VALID_HIT_ZONES[random_hit_zone_name] then
-			hit_zone_name = random_hit_zone_name
-		end
+			if VALID_HIT_ZONES[random_hit_zone_name] then
+				hit_zone_name = random_hit_zone_name
+			end
 
-		num_iterations = num_iterations + 1
-	until hit_zone_name ~= nil or num_breed_hit_zones <= num_iterations
+			num_iterations = num_iterations + 1
+		until hit_zone_name ~= nil or num_breed_hit_zones <= num_iterations
+	end
 
 	hit_zone_name = hit_zone_name or "center_mass"
 	local hit_zone_actors = HitZone.get_actor_names(target_unit, hit_zone_name)

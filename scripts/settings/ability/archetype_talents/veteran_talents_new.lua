@@ -2118,7 +2118,17 @@ local archetype_talents = {
 				toughness_damage_reduction = {
 					prefix = "+",
 					format_type = "percentage",
-					value = talent_settings_2.toughness_2.toughness_damage_taken_modifier
+					find_value = {
+						buff_template_name = "veteran_ranged_weakspot_toughenss_buff",
+						find_value_type = "buff_template",
+						path = {
+							"stat_buffs",
+							stat_buffs.toughness_damage_taken_multiplier
+						}
+					},
+					value_manipulation = function (value)
+						return 100 - value * 100
+					end
 				},
 				duration = {
 					format_type = "number",
