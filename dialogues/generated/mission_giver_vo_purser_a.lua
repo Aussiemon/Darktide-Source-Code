@@ -1,4 +1,21 @@
 local mission_giver_vo_purser_a = {
+	cmd_deploy_skull = {
+		randomize_indexes_n = 0,
+		sound_events_n = 4,
+		sound_events = {
+			"loc_purser_a__cmd_deploy_skull_01",
+			"loc_purser_a__cmd_deploy_skull_02",
+			"loc_purser_a__cmd_deploy_skull_03",
+			"loc_purser_a__cmd_deploy_skull_04"
+		},
+		sound_events_duration = {
+			3.45678,
+			3.45678,
+			3.45678,
+			3.45678
+		},
+		randomize_indexes = {}
+	},
 	info_all_players_required = {
 		randomize_indexes_n = 0,
 		sound_events_n = 4,
@@ -194,6 +211,27 @@ local mission_giver_vo_purser_a = {
 			6.942531,
 			5.69749,
 			6.60351
+		},
+		randomize_indexes = {}
+	},
+	mission_stockpile_briefing_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 6,
+		sound_events = {
+			"loc_purser_a__mission_stockpile_briefing_a_01",
+			"loc_purser_a__mission_stockpile_briefing_a_02",
+			"loc_purser_a__mission_stockpile_briefing_b_01",
+			"loc_purser_a__mission_stockpile_briefing_b_02",
+			"loc_purser_a__mission_stockpile_briefing_c_01",
+			"loc_purser_a__mission_stockpile_briefing_c_02"
+		},
+		sound_events_duration = {
+			3.45678,
+			3.45678,
+			3.45678,
+			3.45678,
+			3.45678,
+			3.45678
 		},
 		randomize_indexes = {}
 	}

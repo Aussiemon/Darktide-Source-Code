@@ -47,7 +47,7 @@ local event_vo_hacking_tech_priest_a = {
 	},
 	cmd_hacking_fix_decode = {
 		randomize_indexes_n = 0,
-		sound_events_n = 10,
+		sound_events_n = 15,
 		sound_events = {
 			"loc_tech_priest_a__cmd_hacking_fix_decode_01",
 			"loc_tech_priest_a__cmd_hacking_fix_decode_02",
@@ -58,7 +58,12 @@ local event_vo_hacking_tech_priest_a = {
 			"loc_tech_priest_a__cmd_hacking_fix_decode_07",
 			"loc_tech_priest_a__cmd_hacking_fix_decode_08",
 			"loc_tech_priest_a__cmd_hacking_fix_decode_09",
-			"loc_tech_priest_a__cmd_hacking_fix_decode_10"
+			"loc_tech_priest_a__cmd_hacking_fix_decode_10",
+			"loc_tech_priest_a__cmd_hacking_fix_decode_response_01",
+			"loc_tech_priest_a__cmd_hacking_fix_decode_response_02",
+			"loc_tech_priest_a__cmd_hacking_fix_decode_response_03",
+			"loc_tech_priest_a__cmd_hacking_fix_decode_response_04",
+			"loc_tech_priest_a__cmd_hacking_fix_decode_response_15"
 		},
 		sound_events_duration = {
 			8.001042,
@@ -70,21 +75,7 @@ local event_vo_hacking_tech_priest_a = {
 			5.365334,
 			5.856542,
 			4.620563,
-			6.061979
-		},
-		randomize_indexes = {}
-	},
-	cmd_hacking_fix_decode_response = {
-		randomize_indexes_n = 0,
-		sound_events_n = 5,
-		sound_events = {
-			"loc_tech_priest_a__cmd_hacking_fix_decode_response_01",
-			"loc_tech_priest_a__cmd_hacking_fix_decode_response_02",
-			"loc_tech_priest_a__cmd_hacking_fix_decode_response_03",
-			"loc_tech_priest_a__cmd_hacking_fix_decode_response_04",
-			"loc_tech_priest_a__cmd_hacking_fix_decode_response_15"
-		},
-		sound_events_duration = {
+			6.061979,
 			4.719563,
 			5.704438,
 			4.799979,

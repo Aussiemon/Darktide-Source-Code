@@ -4859,6 +4859,38 @@ local gameplay_vo_ogryn_c = {
 		},
 		randomize_indexes = {}
 	},
+	twin_laugh_a_response = {
+		randomize_indexes_n = 0,
+		sound_events_n = 7,
+		sound_events = {
+			"loc_ogryn_c__heard_enemy_monster_generic_01",
+			"loc_ogryn_c__heard_enemy_monster_generic_03",
+			"loc_ogryn_c__heard_enemy_monster_generic_05",
+			"loc_ogryn_c__heard_enemy_monster_generic_06",
+			"loc_ogryn_c__heard_enemy_monster_generic_07",
+			"loc_ogryn_c__heard_enemy_monster_generic_08",
+			"loc_ogryn_c__heard_enemy_monster_generic_10"
+		},
+		sound_events_duration = {
+			1.931927,
+			0.994844,
+			2.111,
+			1.380365,
+			4.065042,
+			5.237458,
+			2.231604
+		},
+		sound_event_weights = {
+			0.1428571,
+			0.1428571,
+			0.1428571,
+			0.1428571,
+			0.1428571,
+			0.1428571,
+			0.1428571
+		},
+		randomize_indexes = {}
+	},
 	warning_exploding_barrel = {
 		randomize_indexes_n = 0,
 		sound_events_n = 5,

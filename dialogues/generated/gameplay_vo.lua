@@ -14802,6 +14802,38 @@ return function ()
 		}
 	})
 	define_rule({
+		name = "twin_laugh_a_response",
+		wwise_route = 0,
+		response = "twin_laugh_a_response",
+		database = "gameplay_vo",
+		category = "conversations_prio_0",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"twin_spawn_laugh_a"
+				}
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "disabled"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
 		name = "veteran_seen_killstreak_ogryn",
 		wwise_route = 0,
 		response = "veteran_seen_killstreak_ogryn",

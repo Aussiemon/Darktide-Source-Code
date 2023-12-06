@@ -4907,6 +4907,41 @@ local gameplay_vo_psyker_male_a = {
 		},
 		randomize_indexes = {}
 	},
+	twin_laugh_a_response = {
+		randomize_indexes_n = 0,
+		sound_events_n = 8,
+		sound_events = {
+			"loc_psyker_male_a__heard_enemy_monster_generic_01",
+			"loc_psyker_male_a__heard_enemy_monster_generic_03",
+			"loc_psyker_male_a__heard_enemy_monster_generic_05",
+			"loc_psyker_male_a__heard_enemy_monster_generic_06",
+			"loc_psyker_male_a__heard_enemy_monster_generic_07",
+			"loc_psyker_male_a__heard_enemy_monster_generic_08",
+			"loc_psyker_male_a__heard_enemy_monster_generic_09",
+			"loc_psyker_male_a__heard_enemy_monster_generic_10"
+		},
+		sound_events_duration = {
+			0.764417,
+			2.333333,
+			1.290667,
+			1.819313,
+			2.378,
+			3.113146,
+			3.362563,
+			3.357938
+		},
+		sound_event_weights = {
+			0.125,
+			0.125,
+			0.125,
+			0.125,
+			0.125,
+			0.125,
+			0.125,
+			0.125
+		},
+		randomize_indexes = {}
+	},
 	warning_exploding_barrel = {
 		randomize_indexes_n = 0,
 		sound_events_n = 5,

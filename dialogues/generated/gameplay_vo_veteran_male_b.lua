@@ -4571,6 +4571,38 @@ local gameplay_vo_veteran_male_b = {
 		},
 		randomize_indexes = {}
 	},
+	twin_laugh_a_response = {
+		randomize_indexes_n = 0,
+		sound_events_n = 7,
+		sound_events = {
+			"loc_veteran_male_b__heard_enemy_monster_generic_01",
+			"loc_veteran_male_b__heard_enemy_monster_generic_02",
+			"loc_veteran_male_b__heard_enemy_monster_generic_03",
+			"loc_veteran_male_b__heard_enemy_monster_generic_04",
+			"loc_veteran_male_b__heard_enemy_monster_generic_05",
+			"loc_veteran_male_b__heard_enemy_monster_generic_08",
+			"loc_veteran_male_b__heard_enemy_monster_generic_09"
+		},
+		sound_events_duration = {
+			1.673604,
+			2.051583,
+			1.150542,
+			2.806333,
+			2.610688,
+			1.534958,
+			2.087729
+		},
+		sound_event_weights = {
+			0.1428571,
+			0.1428571,
+			0.1428571,
+			0.1428571,
+			0.1428571,
+			0.1428571,
+			0.1428571
+		},
+		randomize_indexes = {}
+	},
 	veteran_seen_killstreak_ogryn = {
 		randomize_indexes_n = 0,
 		sound_events_n = 5,

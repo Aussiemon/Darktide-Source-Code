@@ -26,10 +26,10 @@ local mission_giver_vo_explicator_a = {
 			"loc_explicator_a__cmd_deploy_skull_04"
 		},
 		sound_events_duration = {
-			3.45678,
-			3.45678,
-			3.45678,
-			3.45678
+			4.206313,
+			3.815792,
+			4.45675,
+			3.439417
 		},
 		randomize_indexes = {}
 	},
@@ -759,16 +759,14 @@ local mission_giver_vo_explicator_a = {
 	},
 	mission_raid_briefing_c = {
 		randomize_indexes_n = 0,
-		sound_events_n = 3,
+		sound_events_n = 2,
 		sound_events = {
-			"loc_explicator_a__mission_raid_briefing_c_01",
-			"loc_explicator_a__mission_raid_briefing_c_02",
-			"loc_explicator_a__mission_raid_briefing_c_03"
+			[1.0] = "loc_explicator_a__mission_raid_briefing_c_02",
+			[2.0] = "loc_explicator_a__mission_raid_briefing_c_03"
 		},
 		sound_events_duration = {
-			5.004917,
-			10.38287,
-			8.728562
+			[1.0] = 10.38287,
+			[2.0] = 8.728562
 		},
 		randomize_indexes = {}
 	},

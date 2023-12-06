@@ -16,13 +16,6 @@ local event_vo_scan_tech_priest_a = {
 			5.367084,
 			4.602438
 		},
-		sound_event_weights = {
-			0.2,
-			0.2,
-			0.2,
-			0.2,
-			0.2
-		},
 		randomize_indexes = {}
 	},
 	event_scan_all_targets_scanned = {

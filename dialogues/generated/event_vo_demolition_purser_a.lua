@@ -49,6 +49,21 @@ local event_vo_demolition_purser_a = {
 			2.973146
 		},
 		randomize_indexes = {}
+	},
+	mission_stockpile_bazaar = {
+		randomize_indexes_n = 0,
+		sound_events_n = 3,
+		sound_events = {
+			"loc_purser_a__mission_stockpile_bazaar_01",
+			"loc_purser_a__mission_stockpile_bazaar_02",
+			"loc_purser_a__mission_stockpile_bazaar_03"
+		},
+		sound_events_duration = {
+			3.45678,
+			3.45678,
+			3.45678
+		},
+		randomize_indexes = {}
 	}
 }
 

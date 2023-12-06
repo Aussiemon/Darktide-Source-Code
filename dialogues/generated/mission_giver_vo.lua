@@ -89,7 +89,9 @@ return function ()
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"tech_priest"
+					"sergeant",
+					"tech_priest",
+					"explicator"
 				}
 			},
 			{

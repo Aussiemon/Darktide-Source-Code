@@ -529,14 +529,14 @@ return function ()
 				"chaos_ogryn_bulwark_assault",
 				OP.TIMEDIFF,
 				OP.GT,
-				4
+				7
 			},
 			{
 				"faction_memory",
 				"faction_memory_chaos_ogryn_bulwark_assault",
 				OP.TIMEDIFF,
 				OP.GT,
-				2
+				6
 			}
 		},
 		on_done = {
@@ -638,7 +638,7 @@ return function ()
 				"chaos_ogryn_executor_assault",
 				OP.TIMEDIFF,
 				OP.GT,
-				2
+				7
 			},
 			{
 				"faction_memory",
@@ -646,6 +646,13 @@ return function ()
 				OP.TIMEDIFF,
 				OP.GT,
 				0
+			},
+			{
+				"faction_memory",
+				"faction_chaos_ogryn_executor_assault",
+				OP.TIMEDIFF,
+				OP.GT,
+				6
 			}
 		},
 		on_done = {
@@ -657,6 +664,11 @@ return function ()
 			{
 				"faction_memory",
 				"",
+				OP.TIMESET
+			},
+			{
+				"faction_memory",
+				"faction_chaos_ogryn_executor_assault",
 				OP.TIMESET
 			}
 		},
@@ -830,65 +842,6 @@ return function ()
 			{
 				"faction_memory",
 				"faction_memory_ogryn_start_shooting",
-				OP.TIMESET
-			}
-		}
-	})
-	define_rule({
-		name = "cultist_berzerker_alerted_idle_close",
-		category = "enemy_vo_prio_1",
-		wwise_route = 28,
-		response = "cultist_berzerker_alerted_idle_close",
-		database = "enemy_vo",
-		criterias = {
-			{
-				"query_context",
-				"concept",
-				OP.EQ,
-				"generic_enemy_vo_event"
-			},
-			{
-				"query_context",
-				"trigger_id",
-				OP.EQ,
-				"alerted_idle"
-			},
-			{
-				"query_context",
-				"enemy_tag",
-				OP.EQ,
-				"cultist_berzerker"
-			},
-			{
-				"query_context",
-				"target_distance",
-				OP.LT,
-				30
-			},
-			{
-				"user_memory",
-				"enemy_memory_cultist_berzerker_alerted_idle_close",
-				OP.TIMEDIFF,
-				OP.GT,
-				2
-			},
-			{
-				"faction_memory",
-				"",
-				OP.TIMEDIFF,
-				OP.GT,
-				0
-			}
-		},
-		on_done = {
-			{
-				"user_memory",
-				"enemy_memory_cultist_berzerker_alerted_idle_close",
-				OP.TIMESET
-			},
-			{
-				"faction_memory",
-				"",
 				OP.TIMESET
 			}
 		}
@@ -1761,13 +1714,25 @@ return function ()
 				"cultist_berzerker_assault",
 				OP.TIMEDIFF,
 				OP.GT,
-				1
+				5
+			},
+			{
+				"faction_memory",
+				"faction_cultist_berzerker_assault",
+				OP.TIMEDIFF,
+				OP.GT,
+				2
 			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"cultist_berzerker_assault",
+				OP.TIMESET
+			},
+			{
+				"faction_memory",
+				"faction_traitor_berzerker_assault",
 				OP.TIMESET
 			}
 		}
@@ -2228,13 +2193,25 @@ return function ()
 				"traitor_berzerker_assault",
 				OP.TIMEDIFF,
 				OP.GT,
-				1
+				5
+			},
+			{
+				"faction_memory",
+				"faction_traitor_berzerker_assault",
+				OP.TIMEDIFF,
+				OP.GT,
+				2
 			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"traitor_berzerker_assault",
+				OP.TIMESET
+			},
+			{
+				"faction_memory",
+				"",
 				OP.TIMESET
 			}
 		}
@@ -3556,7 +3533,19 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
+				"generic_enemy_vo_event"
+			},
+			{
+				"query_context",
+				"trigger_id",
+				OP.EQ,
 				"assault"
+			},
+			{
+				"query_context",
+				"enemy_tag",
+				OP.EQ,
+				"renegade_netgunner"
 			},
 			{
 				"user_memory",
@@ -4196,6 +4185,46 @@ return function ()
 				"faction_memory_traitor_trenchfighter_melee_idle",
 				OP.TIMESET
 			}
+		}
+	})
+	define_rule({
+		name = "twin_spawn_laugh_a",
+		category = "enemy_vo_prio_0",
+		wwise_route = 51,
+		response = "twin_spawn_laugh_a",
+		database = "enemy_vo",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"generic_enemy_vo_event"
+			},
+			{
+				"query_context",
+				"trigger_id",
+				OP.EQ,
+				"taunt"
+			},
+			{
+				"query_context",
+				"enemy_tag",
+				OP.SET_INCLUDES,
+				args = {
+					"renegade_twin_captain",
+					"renegade_twin_captain_two"
+				}
+			},
+			{
+				"global_context",
+				"current_mission",
+				OP.NEQ,
+				"km_enforcer_twins"
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "players"
 		}
 	})
 end

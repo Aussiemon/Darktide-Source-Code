@@ -33,6 +33,47 @@ local mission_giver_vo_shipmistress_a = {
 		},
 		randomize_indexes = {}
 	},
+	mission_cartel_brief_one = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1.0] = "loc_shipmistress_a__mission_cartel_brief_one_01"
+		},
+		sound_events_duration = {
+			[1.0] = 3.45678
+		},
+		randomize_indexes = {}
+	},
+	mission_cartel_brief_three = {
+		randomize_indexes_n = 0,
+		sound_events_n = 4,
+		sound_events = {
+			"loc_shipmistress_a__mission_cartel_brief_three_01",
+			"loc_shipmistress_a__mission_cartel_brief_three_02",
+			"loc_shipmistress_a__mission_cartel_brief_three_03",
+			"loc_shipmistress_a__mission_cartel_brief_three_04"
+		},
+		sound_events_duration = {
+			3.45678,
+			3.45678,
+			3.45678,
+			3.45678
+		},
+		randomize_indexes = {}
+	},
+	mission_cartel_brief_two = {
+		randomize_indexes_n = 0,
+		sound_events_n = 2,
+		sound_events = {
+			[1.0] = "loc_shipmistress_a__mission_cartel_brief_two_01",
+			[2.0] = "loc_shipmistress_a__mission_cartel_brief_two_02"
+		},
+		sound_events_duration = {
+			[1.0] = 3.45678,
+			[2.0] = 3.45678
+		},
+		randomize_indexes = {}
+	},
 	mission_enforcer_briefing_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 4,

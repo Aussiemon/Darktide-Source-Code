@@ -494,6 +494,17 @@ local conversations_hub_sergeant_a = {
 			[1.0] = 3.577042
 		},
 		randomize_indexes = {}
+	},
+	twins_epilogue_03_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1.0] = "loc_sergeant_a__twins_epilogue_03_a_01"
+		},
+		sound_events_duration = {
+			[1.0] = 9.435708
+		},
+		randomize_indexes = {}
 	}
 }
 

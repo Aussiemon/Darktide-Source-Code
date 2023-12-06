@@ -4626,6 +4626,41 @@ local gameplay_vo_zealot_female_a = {
 		},
 		randomize_indexes = {}
 	},
+	twin_laugh_a_response = {
+		randomize_indexes_n = 0,
+		sound_events_n = 8,
+		sound_events = {
+			"loc_zealot_female_a__heard_enemy_monster_generic_01",
+			"loc_zealot_female_a__heard_enemy_monster_generic_02",
+			"loc_zealot_female_a__heard_enemy_monster_generic_03",
+			"loc_zealot_female_a__heard_enemy_monster_generic_05",
+			"loc_zealot_female_a__heard_enemy_monster_generic_06",
+			"loc_zealot_female_a__heard_enemy_monster_generic_08",
+			"loc_zealot_female_a__heard_enemy_monster_generic_09",
+			"loc_zealot_female_a__heard_enemy_monster_generic_10"
+		},
+		sound_events_duration = {
+			3.019854,
+			2.123521,
+			1.866958,
+			1.610354,
+			1.508208,
+			3.334458,
+			2.669188,
+			1.926292
+		},
+		sound_event_weights = {
+			0.125,
+			0.125,
+			0.125,
+			0.125,
+			0.125,
+			0.125,
+			0.125,
+			0.125
+		},
+		randomize_indexes = {}
+	},
 	warning_exploding_barrel = {
 		randomize_indexes_n = 0,
 		sound_events_n = 5,

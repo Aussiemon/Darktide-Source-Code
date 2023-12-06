@@ -30,7 +30,7 @@ local event_vo_hacking_contract_vendor_a = {
 	},
 	cmd_hacking_fix_decode = {
 		randomize_indexes_n = 0,
-		sound_events_n = 10,
+		sound_events_n = 14,
 		sound_events = {
 			"loc_contract_vendor_a__cmd_hacking_fix_decode_a_01",
 			"loc_contract_vendor_a__cmd_hacking_fix_decode_a_02",
@@ -41,7 +41,11 @@ local event_vo_hacking_contract_vendor_a = {
 			"loc_contract_vendor_a__cmd_hacking_fix_decode_a_07",
 			"loc_contract_vendor_a__cmd_hacking_fix_decode_a_08",
 			"loc_contract_vendor_a__cmd_hacking_fix_decode_a_09",
-			"loc_contract_vendor_a__cmd_hacking_fix_decode_a_10"
+			"loc_contract_vendor_a__cmd_hacking_fix_decode_a_10",
+			"loc_contract_vendor_a__cmd_hacking_fix_decode_response_01",
+			"loc_contract_vendor_a__cmd_hacking_fix_decode_response_02",
+			"loc_contract_vendor_a__cmd_hacking_fix_decode_response_03",
+			"loc_contract_vendor_a__cmd_hacking_fix_decode_response_04"
 		},
 		sound_events_duration = {
 			3.176948,
@@ -53,7 +57,11 @@ local event_vo_hacking_contract_vendor_a = {
 			5.034677,
 			3.985813,
 			5.427563,
-			5.435188
+			5.435188,
+			3.45678,
+			3.45678,
+			3.45678,
+			3.45678
 		},
 		randomize_indexes = {}
 	},

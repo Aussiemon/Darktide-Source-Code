@@ -4534,6 +4534,47 @@ local gameplay_vo_veteran_female_c = {
 		},
 		randomize_indexes = {}
 	},
+	twin_laugh_a_response = {
+		randomize_indexes_n = 0,
+		sound_events_n = 10,
+		sound_events = {
+			"loc_veteran_female_c__heard_enemy_monster_generic_01",
+			"loc_veteran_female_c__heard_enemy_monster_generic_02",
+			"loc_veteran_female_c__heard_enemy_monster_generic_03",
+			"loc_veteran_female_c__heard_enemy_monster_generic_04",
+			"loc_veteran_female_c__heard_enemy_monster_generic_05",
+			"loc_veteran_female_c__heard_enemy_monster_generic_06",
+			"loc_veteran_female_c__heard_enemy_monster_generic_07",
+			"loc_veteran_female_c__heard_enemy_monster_generic_08",
+			"loc_veteran_female_c__heard_enemy_monster_generic_09",
+			"loc_veteran_female_c__heard_enemy_monster_generic_10"
+		},
+		sound_events_duration = {
+			2.288635,
+			1.242573,
+			1.04499,
+			2.529417,
+			2.133417,
+			0.749146,
+			2.056531,
+			1.531656,
+			1.120292,
+			1.55101
+		},
+		sound_event_weights = {
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1
+		},
+		randomize_indexes = {}
+	},
 	veteran_seen_killstreak_ogryn = {
 		randomize_indexes_n = 0,
 		sound_events_n = 5,

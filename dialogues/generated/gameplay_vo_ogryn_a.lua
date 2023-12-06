@@ -4827,6 +4827,26 @@ local gameplay_vo_ogryn_a = {
 		},
 		randomize_indexes = {}
 	},
+	twin_laugh_a_response = {
+		randomize_indexes_n = 0,
+		sound_events_n = 3,
+		sound_events = {
+			"loc_ogryn_a__heard_enemy_monster_generic_01",
+			"loc_ogryn_a__heard_enemy_monster_generic_02",
+			"loc_ogryn_a__heard_enemy_monster_generic_10"
+		},
+		sound_events_duration = {
+			1.949396,
+			1.654292,
+			1.691854
+		},
+		sound_event_weights = {
+			0.3333333,
+			0.3333333,
+			0.3333333
+		},
+		randomize_indexes = {}
+	},
 	warning_exploding_barrel = {
 		randomize_indexes_n = 0,
 		sound_events_n = 5,

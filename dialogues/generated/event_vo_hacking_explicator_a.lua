@@ -16,7 +16,7 @@ local event_vo_hacking_explicator_a = {
 		},
 		randomize_indexes = {}
 	},
-	cmd_hacking_fix_decode_response = {
+	cmd_hacking_fix_decode = {
 		randomize_indexes_n = 0,
 		sound_events_n = 5,
 		sound_events = {

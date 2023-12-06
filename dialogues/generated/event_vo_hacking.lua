@@ -121,58 +121,8 @@ return function ()
 					"sergeant",
 					"tech_priest",
 					"contract_vendor",
-					"purser"
-				}
-			},
-			{
-				"faction_memory",
-				"hacking_fix_decode",
-				OP.TIMEDIFF,
-				OP.GT,
-				30
-			}
-		},
-		on_done = {
-			{
-				"faction_memory",
-				"hacking_fix_decode",
-				OP.TIMESET,
-				0
-			}
-		},
-		heard_speak_routing = {
-			target = "disabled"
-		}
-	})
-	define_rule({
-		post_wwise_event = "play_radio_static_end",
-		concurrent_wwise_event = "play_vox_static_loop",
-		pre_wwise_event = "play_radio_static_start",
-		name = "cmd_hacking_fix_decode_response",
-		response = "cmd_hacking_fix_decode_response",
-		database = "event_vo_hacking",
-		wwise_route = 1,
-		category = "vox_prio_0",
-		criterias = {
-			{
-				"query_context",
-				"concept",
-				OP.EQ,
-				"mission_info"
-			},
-			{
-				"query_context",
-				"trigger_id",
-				OP.EQ,
-				"cmd_hacking_fix_decode_response"
-			},
-			{
-				"user_context",
-				"class_name",
-				OP.SET_INCLUDES,
-				args = {
-					"sergeant",
-					"tech_priest"
+					"purser",
+					"explicator"
 				}
 			},
 			{

@@ -4515,6 +4515,32 @@ local gameplay_vo_zealot_male_b = {
 		},
 		randomize_indexes = {}
 	},
+	twin_laugh_a_response = {
+		randomize_indexes_n = 0,
+		sound_events_n = 5,
+		sound_events = {
+			"loc_zealot_male_b__heard_enemy_monster_generic_02",
+			"loc_zealot_male_b__heard_enemy_monster_generic_06",
+			"loc_zealot_male_b__heard_enemy_monster_generic_07",
+			"loc_zealot_male_b__heard_enemy_monster_generic_09",
+			"loc_zealot_male_b__heard_enemy_monster_generic_10"
+		},
+		sound_events_duration = {
+			1.765667,
+			1.961854,
+			3.579229,
+			1.627833,
+			2.205375
+		},
+		sound_event_weights = {
+			0.2,
+			0.2,
+			0.2,
+			0.2,
+			0.2
+		},
+		randomize_indexes = {}
+	},
 	warning_exploding_barrel = {
 		randomize_indexes_n = 0,
 		sound_events_n = 5,

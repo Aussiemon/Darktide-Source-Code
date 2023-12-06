@@ -9553,6 +9553,47 @@ return function ()
 		}
 	})
 	define_rule({
+		name = "hub_interact_explicator_likes_character",
+		category = "npc_prio_0",
+		response = "hub_interact_explicator_likes_character",
+		database = "conversations_hub",
+		wwise_route = 40,
+		speaker_routing = {
+			target = "dialogist"
+		},
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"npc_interacting_vo"
+			},
+			{
+				"query_context",
+				"vo_event",
+				OP.EQ,
+				"hub_interact_explicator_likes_character"
+			},
+			{
+				"query_context",
+				"interactor_voice_profile",
+				OP.SET_INCLUDES,
+				args = {
+					""
+				}
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					""
+				}
+			}
+		},
+		on_done = {}
+	})
+	define_rule({
 		name = "hub_interact_purser_dislikes_character",
 		category = "npc_prio_0",
 		wwise_route = 40,
@@ -13486,6 +13527,1031 @@ return function ()
 				"vo_event",
 				OP.EQ,
 				"tech_priest_goodbye"
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					""
+				}
+			}
+		},
+		on_done = {}
+	})
+	define_rule({
+		name = "twins_epilogue_01_a",
+		category = "npc_prio_0",
+		response = "twins_epilogue_01_a",
+		database = "conversations_hub",
+		wwise_route = 40,
+		speaker_routing = {
+			target = "dialogist"
+		},
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"npc_interacting_vo"
+			},
+			{
+				"query_context",
+				"vo_event",
+				OP.EQ,
+				"twins_epilogue_01_a"
+			},
+			{
+				"query_context",
+				"interactor_voice_profile",
+				OP.SET_INCLUDES,
+				args = {
+					""
+				}
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					""
+				}
+			}
+		},
+		on_done = {}
+	})
+	define_rule({
+		name = "twins_epilogue_01_b",
+		category = "npc_prio_0",
+		response = "twins_epilogue_01_b",
+		database = "conversations_hub",
+		wwise_route = 40,
+		speaker_routing = {
+			target = "dialogist"
+		},
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"npc_interacting_vo"
+			},
+			{
+				"query_context",
+				"vo_event",
+				OP.EQ,
+				"twins_epilogue_01_b"
+			},
+			{
+				"query_context",
+				"interactor_voice_profile",
+				OP.SET_INCLUDES,
+				args = {
+					""
+				}
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					""
+				}
+			}
+		},
+		on_done = {}
+	})
+	define_rule({
+		name = "twins_epilogue_01_c",
+		category = "npc_prio_0",
+		response = "twins_epilogue_01_c",
+		database = "conversations_hub",
+		wwise_route = 40,
+		speaker_routing = {
+			target = "dialogist"
+		},
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"npc_interacting_vo"
+			},
+			{
+				"query_context",
+				"vo_event",
+				OP.EQ,
+				"twins_epilogue_01_c"
+			},
+			{
+				"query_context",
+				"interactor_voice_profile",
+				OP.SET_INCLUDES,
+				args = {
+					""
+				}
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					""
+				}
+			}
+		},
+		on_done = {}
+	})
+	define_rule({
+		name = "twins_epilogue_01_d",
+		category = "npc_prio_0",
+		response = "twins_epilogue_01_d",
+		database = "conversations_hub",
+		wwise_route = 40,
+		speaker_routing = {
+			target = "dialogist"
+		},
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"npc_interacting_vo"
+			},
+			{
+				"query_context",
+				"vo_event",
+				OP.EQ,
+				"twins_epilogue_01_d"
+			},
+			{
+				"query_context",
+				"interactor_voice_profile",
+				OP.SET_INCLUDES,
+				args = {
+					""
+				}
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					""
+				}
+			}
+		},
+		on_done = {}
+	})
+	define_rule({
+		name = "twins_epilogue_01_e",
+		category = "npc_prio_0",
+		response = "twins_epilogue_01_e",
+		database = "conversations_hub",
+		wwise_route = 40,
+		speaker_routing = {
+			target = "dialogist"
+		},
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"npc_interacting_vo"
+			},
+			{
+				"query_context",
+				"vo_event",
+				OP.EQ,
+				"twins_epilogue_01_e"
+			},
+			{
+				"query_context",
+				"interactor_voice_profile",
+				OP.SET_INCLUDES,
+				args = {
+					""
+				}
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					""
+				}
+			}
+		},
+		on_done = {}
+	})
+	define_rule({
+		name = "twins_epilogue_01_f",
+		category = "npc_prio_0",
+		response = "twins_epilogue_01_f",
+		database = "conversations_hub",
+		wwise_route = 40,
+		speaker_routing = {
+			target = "dialogist"
+		},
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"npc_interacting_vo"
+			},
+			{
+				"query_context",
+				"vo_event",
+				OP.EQ,
+				"twins_epilogue_01_f"
+			},
+			{
+				"query_context",
+				"interactor_voice_profile",
+				OP.SET_INCLUDES,
+				args = {
+					""
+				}
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					""
+				}
+			}
+		},
+		on_done = {}
+	})
+	define_rule({
+		name = "twins_epilogue_01_g",
+		category = "npc_prio_0",
+		response = "twins_epilogue_01_g",
+		database = "conversations_hub",
+		wwise_route = 40,
+		speaker_routing = {
+			target = "dialogist"
+		},
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"npc_interacting_vo"
+			},
+			{
+				"query_context",
+				"vo_event",
+				OP.EQ,
+				"twins_epilogue_01_g"
+			},
+			{
+				"query_context",
+				"interactor_voice_profile",
+				OP.SET_INCLUDES,
+				args = {
+					""
+				}
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					""
+				}
+			}
+		},
+		on_done = {}
+	})
+	define_rule({
+		name = "twins_epilogue_01_h",
+		category = "npc_prio_0",
+		response = "twins_epilogue_01_h",
+		database = "conversations_hub",
+		wwise_route = 40,
+		speaker_routing = {
+			target = "dialogist"
+		},
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"npc_interacting_vo"
+			},
+			{
+				"query_context",
+				"vo_event",
+				OP.EQ,
+				"twins_epilogue_01_h"
+			},
+			{
+				"query_context",
+				"interactor_voice_profile",
+				OP.SET_INCLUDES,
+				args = {
+					""
+				}
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					""
+				}
+			}
+		},
+		on_done = {}
+	})
+	define_rule({
+		name = "twins_epilogue_01_i",
+		category = "npc_prio_0",
+		response = "twins_epilogue_01_i",
+		database = "conversations_hub",
+		wwise_route = 40,
+		speaker_routing = {
+			target = "dialogist"
+		},
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"npc_interacting_vo"
+			},
+			{
+				"query_context",
+				"vo_event",
+				OP.EQ,
+				"twins_epilogue_01_i"
+			},
+			{
+				"query_context",
+				"interactor_voice_profile",
+				OP.SET_INCLUDES,
+				args = {
+					""
+				}
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					""
+				}
+			}
+		},
+		on_done = {}
+	})
+	define_rule({
+		name = "twins_epilogue_02_a",
+		category = "npc_prio_0",
+		response = "twins_epilogue_02_a",
+		database = "conversations_hub",
+		wwise_route = 40,
+		speaker_routing = {
+			target = "dialogist"
+		},
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"npc_interacting_vo"
+			},
+			{
+				"query_context",
+				"vo_event",
+				OP.EQ,
+				"twins_epilogue_02_a"
+			},
+			{
+				"query_context",
+				"interactor_voice_profile",
+				OP.SET_INCLUDES,
+				args = {
+					""
+				}
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					""
+				}
+			}
+		},
+		on_done = {}
+	})
+	define_rule({
+		name = "twins_epilogue_02_b",
+		category = "npc_prio_0",
+		response = "twins_epilogue_02_b",
+		database = "conversations_hub",
+		wwise_route = 40,
+		speaker_routing = {
+			target = "dialogist"
+		},
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"npc_interacting_vo"
+			},
+			{
+				"query_context",
+				"vo_event",
+				OP.EQ,
+				"twins_epilogue_02_b"
+			},
+			{
+				"query_context",
+				"interactor_voice_profile",
+				OP.SET_INCLUDES,
+				args = {
+					""
+				}
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					""
+				}
+			}
+		},
+		on_done = {}
+	})
+	define_rule({
+		name = "twins_epilogue_02_c",
+		category = "npc_prio_0",
+		response = "twins_epilogue_02_c",
+		database = "conversations_hub",
+		wwise_route = 40,
+		speaker_routing = {
+			target = "dialogist"
+		},
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"npc_interacting_vo"
+			},
+			{
+				"query_context",
+				"vo_event",
+				OP.EQ,
+				"twins_epilogue_02_b"
+			},
+			{
+				"query_context",
+				"interactor_voice_profile",
+				OP.SET_INCLUDES,
+				args = {
+					""
+				}
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					""
+				}
+			}
+		},
+		on_done = {}
+	})
+	define_rule({
+		name = "twins_epilogue_02_d",
+		category = "npc_prio_0",
+		response = "twins_epilogue_02_d",
+		database = "conversations_hub",
+		wwise_route = 40,
+		speaker_routing = {
+			target = "dialogist"
+		},
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"npc_interacting_vo"
+			},
+			{
+				"query_context",
+				"vo_event",
+				OP.EQ,
+				"twins_epilogue_02_b"
+			},
+			{
+				"query_context",
+				"interactor_voice_profile",
+				OP.SET_INCLUDES,
+				args = {
+					""
+				}
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					""
+				}
+			}
+		},
+		on_done = {}
+	})
+	define_rule({
+		name = "twins_epilogue_02_e",
+		category = "npc_prio_0",
+		response = "twins_epilogue_02_e",
+		database = "conversations_hub",
+		wwise_route = 40,
+		speaker_routing = {
+			target = "dialogist"
+		},
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"npc_interacting_vo"
+			},
+			{
+				"query_context",
+				"vo_event",
+				OP.EQ,
+				"twins_epilogue_02_b"
+			},
+			{
+				"query_context",
+				"interactor_voice_profile",
+				OP.SET_INCLUDES,
+				args = {
+					""
+				}
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					""
+				}
+			}
+		},
+		on_done = {}
+	})
+	define_rule({
+		name = "twins_epilogue_02_f",
+		category = "npc_prio_0",
+		response = "twins_epilogue_02_f",
+		database = "conversations_hub",
+		wwise_route = 40,
+		speaker_routing = {
+			target = "dialogist"
+		},
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"npc_interacting_vo"
+			},
+			{
+				"query_context",
+				"vo_event",
+				OP.EQ,
+				"twins_epilogue_02_b"
+			},
+			{
+				"query_context",
+				"interactor_voice_profile",
+				OP.SET_INCLUDES,
+				args = {
+					""
+				}
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					""
+				}
+			}
+		},
+		on_done = {}
+	})
+	define_rule({
+		name = "twins_epilogue_02_g",
+		category = "npc_prio_0",
+		response = "twins_epilogue_02_g",
+		database = "conversations_hub",
+		wwise_route = 40,
+		speaker_routing = {
+			target = "dialogist"
+		},
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"npc_interacting_vo"
+			},
+			{
+				"query_context",
+				"vo_event",
+				OP.EQ,
+				"twins_epilogue_02_b"
+			},
+			{
+				"query_context",
+				"interactor_voice_profile",
+				OP.SET_INCLUDES,
+				args = {
+					""
+				}
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					""
+				}
+			}
+		},
+		on_done = {}
+	})
+	define_rule({
+		name = "twins_epilogue_02_h",
+		category = "npc_prio_0",
+		response = "twins_epilogue_02_h",
+		database = "conversations_hub",
+		wwise_route = 40,
+		speaker_routing = {
+			target = "dialogist"
+		},
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"npc_interacting_vo"
+			},
+			{
+				"query_context",
+				"vo_event",
+				OP.EQ,
+				"twins_epilogue_02_b"
+			},
+			{
+				"query_context",
+				"interactor_voice_profile",
+				OP.SET_INCLUDES,
+				args = {
+					""
+				}
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					""
+				}
+			}
+		},
+		on_done = {}
+	})
+	define_rule({
+		name = "twins_epilogue_02_i",
+		category = "npc_prio_0",
+		response = "twins_epilogue_02_i",
+		database = "conversations_hub",
+		wwise_route = 40,
+		speaker_routing = {
+			target = "dialogist"
+		},
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"npc_interacting_vo"
+			},
+			{
+				"query_context",
+				"vo_event",
+				OP.EQ,
+				"twins_epilogue_02_b"
+			},
+			{
+				"query_context",
+				"interactor_voice_profile",
+				OP.SET_INCLUDES,
+				args = {
+					""
+				}
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					""
+				}
+			}
+		},
+		on_done = {}
+	})
+	define_rule({
+		name = "twins_epilogue_02_j",
+		category = "npc_prio_0",
+		response = "twins_epilogue_02_j",
+		database = "conversations_hub",
+		wwise_route = 40,
+		speaker_routing = {
+			target = "dialogist"
+		},
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"npc_interacting_vo"
+			},
+			{
+				"query_context",
+				"vo_event",
+				OP.EQ,
+				"twins_epilogue_02_b"
+			},
+			{
+				"query_context",
+				"interactor_voice_profile",
+				OP.SET_INCLUDES,
+				args = {
+					""
+				}
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					""
+				}
+			}
+		},
+		on_done = {}
+	})
+	define_rule({
+		name = "twins_epilogue_02_k",
+		category = "npc_prio_0",
+		response = "twins_epilogue_02_k",
+		database = "conversations_hub",
+		wwise_route = 40,
+		speaker_routing = {
+			target = "dialogist"
+		},
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"npc_interacting_vo"
+			},
+			{
+				"query_context",
+				"vo_event",
+				OP.EQ,
+				"twins_epilogue_02_b"
+			},
+			{
+				"query_context",
+				"interactor_voice_profile",
+				OP.SET_INCLUDES,
+				args = {
+					""
+				}
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					""
+				}
+			}
+		},
+		on_done = {}
+	})
+	define_rule({
+		name = "twins_epilogue_03_a",
+		category = "npc_prio_0",
+		response = "twins_epilogue_03_a",
+		database = "conversations_hub",
+		wwise_route = 40,
+		speaker_routing = {
+			target = "dialogist"
+		},
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"npc_interacting_vo"
+			},
+			{
+				"query_context",
+				"vo_event",
+				OP.EQ,
+				"twins_epilogue_03_a"
+			},
+			{
+				"query_context",
+				"interactor_voice_profile",
+				OP.SET_INCLUDES,
+				args = {
+					""
+				}
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					""
+				}
+			}
+		},
+		on_done = {}
+	})
+	define_rule({
+		name = "twins_prologue_01_a",
+		category = "npc_prio_0",
+		response = "twins_prologue_01_a",
+		database = "conversations_hub",
+		wwise_route = 40,
+		speaker_routing = {
+			target = "dialogist"
+		},
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"npc_interacting_vo"
+			},
+			{
+				"query_context",
+				"vo_event",
+				OP.EQ,
+				"twins_prologue_01_a"
+			},
+			{
+				"query_context",
+				"interactor_voice_profile",
+				OP.SET_INCLUDES,
+				args = {
+					""
+				}
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					""
+				}
+			}
+		},
+		on_done = {}
+	})
+	define_rule({
+		name = "twins_prologue_01_b",
+		category = "npc_prio_0",
+		response = "twins_prologue_01_b",
+		database = "conversations_hub",
+		wwise_route = 40,
+		speaker_routing = {
+			target = "dialogist"
+		},
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"npc_interacting_vo"
+			},
+			{
+				"query_context",
+				"vo_event",
+				OP.EQ,
+				"twins_prologue_01_a"
+			},
+			{
+				"query_context",
+				"interactor_voice_profile",
+				OP.SET_INCLUDES,
+				args = {
+					""
+				}
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					""
+				}
+			}
+		},
+		on_done = {}
+	})
+	define_rule({
+		name = "twins_prologue_01_c",
+		category = "npc_prio_0",
+		response = "twins_prologue_01_c",
+		database = "conversations_hub",
+		wwise_route = 40,
+		speaker_routing = {
+			target = "dialogist"
+		},
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"npc_interacting_vo"
+			},
+			{
+				"query_context",
+				"vo_event",
+				OP.EQ,
+				"twins_prologue_01_a"
+			},
+			{
+				"query_context",
+				"interactor_voice_profile",
+				OP.SET_INCLUDES,
+				args = {
+					""
+				}
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					""
+				}
+			}
+		},
+		on_done = {}
+	})
+	define_rule({
+		name = "twins_prologue_01_d",
+		category = "npc_prio_0",
+		response = "twins_prologue_01_d",
+		database = "conversations_hub",
+		wwise_route = 40,
+		speaker_routing = {
+			target = "dialogist"
+		},
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"npc_interacting_vo"
+			},
+			{
+				"query_context",
+				"vo_event",
+				OP.EQ,
+				"twins_prologue_01_a"
+			},
+			{
+				"query_context",
+				"interactor_voice_profile",
+				OP.SET_INCLUDES,
+				args = {
+					""
+				}
 			},
 			{
 				"user_context",

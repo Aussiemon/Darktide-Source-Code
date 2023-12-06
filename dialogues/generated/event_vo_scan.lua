@@ -26,7 +26,9 @@ return function ()
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"tech_priest"
+					"sergeant",
+					"tech_priest",
+					"explicator"
 				}
 			},
 			{
@@ -83,7 +85,8 @@ return function ()
 				OP.SET_INCLUDES,
 				args = {
 					"sergeant",
-					"tech_priest"
+					"tech_priest",
+					"explicator"
 				}
 			}
 		},
@@ -125,7 +128,8 @@ return function ()
 				OP.SET_INCLUDES,
 				args = {
 					"sergeant",
-					"tech_priest"
+					"tech_priest",
+					"explicator"
 				}
 			},
 			{
@@ -175,7 +179,8 @@ return function ()
 				OP.SET_INCLUDES,
 				args = {
 					"sergeant",
-					"tech_priest"
+					"tech_priest",
+					"explicator"
 				}
 			},
 			{
@@ -260,7 +265,8 @@ return function ()
 				OP.SET_INCLUDES,
 				args = {
 					"sergeant",
-					"tech_priest"
+					"tech_priest",
+					"explicator"
 				}
 			},
 			{
@@ -311,7 +317,8 @@ return function ()
 				OP.SET_INCLUDES,
 				args = {
 					"sergeant",
-					"tech_priest"
+					"tech_priest",
+					"explicator"
 				}
 			}
 		},
@@ -347,7 +354,9 @@ return function ()
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"tech_priest"
+					"sergeant",
+					"tech_priest",
+					"explicator"
 				}
 			},
 			{

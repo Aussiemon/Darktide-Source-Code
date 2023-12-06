@@ -49,6 +49,38 @@ local event_vo_demolition_contract_vendor_a = {
 			3.226271
 		},
 		randomize_indexes = {}
+	},
+	info_event_demolition_corruptors_almost_done = {
+		randomize_indexes_n = 0,
+		sound_events_n = 4,
+		sound_events = {
+			"loc_contract_vendor_a__info_event_demolition_corruptors_almost_done_01",
+			"loc_contract_vendor_a__info_event_demolition_corruptors_almost_done_02",
+			"loc_contract_vendor_a__info_event_demolition_corruptors_almost_done_03",
+			"loc_contract_vendor_a__info_event_demolition_corruptors_almost_done_04"
+		},
+		sound_events_duration = {
+			3.45678,
+			3.45678,
+			3.45678,
+			3.45678
+		},
+		randomize_indexes = {}
+	},
+	mission_stockpile_bazaar = {
+		randomize_indexes_n = 0,
+		sound_events_n = 3,
+		sound_events = {
+			"loc_contract_vendor_a__mission_stockpile_bazaar_01",
+			"loc_contract_vendor_a__mission_stockpile_bazaar_02",
+			"loc_contract_vendor_a__mission_stockpile_bazaar_03"
+		},
+		sound_events_duration = {
+			3.45678,
+			3.45678,
+			3.45678
+		},
+		randomize_indexes = {}
 	}
 }
 

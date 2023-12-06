@@ -4972,6 +4972,47 @@ local gameplay_vo_psyker_female_b = {
 		},
 		randomize_indexes = {}
 	},
+	twin_laugh_a_response = {
+		randomize_indexes_n = 0,
+		sound_events_n = 10,
+		sound_events = {
+			"loc_psyker_female_b__heard_enemy_monster_generic_01",
+			"loc_psyker_female_b__heard_enemy_monster_generic_02",
+			"loc_psyker_female_b__heard_enemy_monster_generic_03",
+			"loc_psyker_female_b__heard_enemy_monster_generic_04",
+			"loc_psyker_female_b__heard_enemy_monster_generic_05",
+			"loc_psyker_female_b__heard_enemy_monster_generic_06",
+			"loc_psyker_female_b__heard_enemy_monster_generic_07",
+			"loc_psyker_female_b__heard_enemy_monster_generic_08",
+			"loc_psyker_female_b__heard_enemy_monster_generic_09",
+			"loc_psyker_female_b__heard_enemy_monster_generic_10"
+		},
+		sound_events_duration = {
+			1.499188,
+			1.416979,
+			2.166792,
+			2.089833,
+			1.276729,
+			2.195833,
+			2.504396,
+			0.950479,
+			1.700542,
+			2.269063
+		},
+		sound_event_weights = {
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1
+		},
+		randomize_indexes = {}
+	},
 	warning_exploding_barrel = {
 		randomize_indexes_n = 0,
 		sound_events_n = 5,

@@ -16,13 +16,6 @@ local event_vo_scan_sergeant_a = {
 			4.291333,
 			3.550792
 		},
-		sound_event_weights = {
-			0.2,
-			0.2,
-			0.2,
-			0.2,
-			0.2
-		},
 		randomize_indexes = {}
 	},
 	event_scan_all_targets_scanned = {
