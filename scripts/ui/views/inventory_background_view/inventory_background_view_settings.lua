@@ -16,6 +16,7 @@ local inventory_background_view = {
 	},
 	ignored_slots = {
 		"slot_pocketable",
+		"slot_pocketable_small",
 		"slot_luggable",
 		"slot_support_ability",
 		"slot_combat_ability",

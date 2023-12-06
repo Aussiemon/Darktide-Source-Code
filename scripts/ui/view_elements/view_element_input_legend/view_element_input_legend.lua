@@ -19,7 +19,7 @@ ViewElementInputLegend.init = function (self, parent, draw_layer, start_scale)
 	self._entries = {}
 end
 
-ViewElementInputLegend.add_entry = function (self, display_name, input_action, visibility_function, on_pressed_callback, side_optional, sound_overrides, use_mouse_hold, extra_input_actions)
+ViewElementInputLegend.add_entry = function (self, display_name, input_action, visibility_function, on_pressed_callback, side_optional, sound_overrides, use_mouse_hold, extra_input_actions, suffix_function)
 	local id = "entry_" .. self._entry_index
 	local scenegraph_id = "entry_pivot"
 	local pass_template = ButtonPassTemplates.input_legend_button
@@ -45,7 +45,8 @@ ViewElementInputLegend.add_entry = function (self, display_name, input_action, v
 		side = side_optional,
 		is_visible = not visibility_function,
 		use_mouse_hold = use_mouse_hold,
-		extra_input_actions = extra_input_actions
+		extra_input_actions = extra_input_actions,
+		suffix_function = suffix_function
 	}
 	local content = widget.content
 
@@ -173,11 +174,16 @@ end
 ViewElementInputLegend.set_display_name = function (self, entry_id, display_name, suffix)
 	local entry = self:_get_entry_by_id(entry_id)
 
-	if entry and display_name ~= entry.display_name then
-		entry.display_name = display_name
-		entry.suffix = suffix
+	if entry then
+		local same_display_name = display_name == entry.display_name
+		local same_suffix = entry.suffix == suffix
 
-		self:_update_widget_text(entry)
+		if not same_display_name or not same_suffix then
+			entry.display_name = display_name
+			entry.suffix = suffix
+
+			self:_update_widget_text(entry)
+		end
 	end
 end
 
@@ -220,6 +226,7 @@ end
 ViewElementInputLegend._draw_widgets = function (self, dt, t, input_service, ui_renderer, render_settings)
 	ViewElementInputLegend.super._draw_widgets(self, dt, t, input_service, ui_renderer, render_settings)
 
+	local parent = self._parent
 	local entries = self._entries
 
 	if entries then
@@ -238,6 +245,16 @@ ViewElementInputLegend._draw_widgets = function (self, dt, t, input_service, ui_
 		for i = 1, num_entries do
 			local entry = entries[i]
 			local widget = entry.widget
+
+			if entry.is_visible and entry.suffix_function then
+				local suffix = entry.suffix_function(parent)
+
+				if suffix ~= entry.suffix then
+					entry.suffix = suffix
+
+					self:_update_widget_text(entry)
+				end
+			end
 
 			if entry.recalcultate_text_width then
 				self:_update_widget_size(widget, ui_renderer)
@@ -269,7 +286,7 @@ ViewElementInputLegend._draw_widgets = function (self, dt, t, input_service, ui_
 
 			if visibility_function then
 				local id = entry.id
-				entry.is_visible = visibility_function(self._parent, id)
+				entry.is_visible = visibility_function(parent, id)
 			end
 		end
 

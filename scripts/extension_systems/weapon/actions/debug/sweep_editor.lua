@@ -2,7 +2,7 @@ local Action = require("scripts/utilities/weapon/action")
 local SweepSpline = require("scripts/extension_systems/weapon/actions/utilities/sweep_spline")
 local SweepSplineExported = require("scripts/extension_systems/weapon/actions/utilities/sweep_spline_exported")
 local SweepSplineVisualizer = require("scripts/extension_systems/weapon/actions/utilities/sweep_spline_visualizer")
-local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
+local WeaponTemplates = require("scripts/settings/equipment/weapon_templates/weapon_templates")
 local SweepEditor = class("SweepEditor")
 SweepEditor.LOG_TAG = "SweepEditor"
 local POINT_MODIFICATION_TYPES = {
@@ -25,7 +25,7 @@ end
 
 SweepEditor.run = function (self, unit, weapon_template_name, action_name)
 	self._first_person_component = ScriptUnit.extension(unit, "unit_data_system"):read_component("first_person")
-	local weapon_template = WeaponTemplate.weapon_template(weapon_template_name)
+	local weapon_template = WeaponTemplates[weapon_template_name]
 	local action_settings = Action.action_settings(weapon_template, action_name)
 	local spline_settings = action_settings.spline_settings
 	local sweep_type = nil

@@ -123,7 +123,7 @@ end
 local extensions_to_keep = {
 	MinionUnitDataExtension = "unit_data_system",
 	MinionBuffExtension = "buff_system",
-	AIProximityExtension = "legacy_v2_proximity_system",
+	MinionProximityExtension = "legacy_v2_proximity_system",
 	FadeExtension = "fade_system",
 	MinionVisualLoadoutExtension = "visual_loadout_system",
 	WoundsExtension = "wounds_system",

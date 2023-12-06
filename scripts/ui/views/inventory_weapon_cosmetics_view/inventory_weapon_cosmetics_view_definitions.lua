@@ -8,7 +8,7 @@ local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local UIWorkspaceSettings = require("scripts/settings/ui/ui_workspace_settings")
 local info_box_size = {
-	1250,
+	1150,
 	200
 }
 local equip_button_size = {
@@ -35,8 +35,11 @@ local grid_settings = {
 	scrollbar_width = 7,
 	widget_icon_load_margin = 400,
 	use_select_on_focused = true,
+	scrollbar_vertical_margin = 91,
 	use_is_focused_for_navigation = false,
 	use_terminal_background = true,
+	scrollbar_horizontal_offset = -7,
+	scrollbar_vertical_offset = 48,
 	grid_spacing = grid_spacing,
 	grid_size = grid_size,
 	mask_size = mask_size,
@@ -124,9 +127,37 @@ local scenegraph_definition = {
 			0
 		},
 		position = {
-			100,
+			200,
 			100,
 			1
+		}
+	},
+	button_pivot = {
+		vertical_alignment = "top",
+		parent = "item_grid_pivot",
+		horizontal_alignment = "left",
+		size = {
+			0,
+			0
+		},
+		position = {
+			-120,
+			40,
+			3
+		}
+	},
+	button_pivot_background = {
+		vertical_alignment = "top",
+		parent = "button_pivot",
+		horizontal_alignment = "left",
+		size = {
+			120,
+			240
+		},
+		position = {
+			-20,
+			-20,
+			3
 		}
 	},
 	grid_tab_panel = {
@@ -264,30 +295,6 @@ local description_text_style = table.clone(UIFontSettings.body_small)
 description_text_style.text_horizontal_alignment = "left"
 description_text_style.text_vertical_alignment = "top"
 local widget_definitions = {
-	corner_top_left = UIWidget.create_definition({
-		{
-			pass_type = "texture",
-			value = "content/ui/materials/frames/screen/metal_01_upper"
-		}
-	}, "corner_top_left"),
-	corner_top_right = UIWidget.create_definition({
-		{
-			value = "content/ui/materials/frames/screen/metal_01_upper",
-			pass_type = "texture_uv",
-			style = {
-				uvs = {
-					{
-						1,
-						0
-					},
-					{
-						0,
-						1
-					}
-				}
-			}
-		}
-	}, "corner_top_right"),
 	corner_bottom_left = UIWidget.create_definition({
 		{
 			pass_type = "texture",
@@ -351,11 +358,70 @@ local widget_definitions = {
 	}, "display_name"),
 	equip_button = UIWidget.create_definition(table.clone(ButtonPassTemplates.default_button), "equip_button", {
 		gamepad_action = "confirm_pressed",
-		text = Utf8.upper(Localize("loc_weapon_inventory_equip_button")),
+		original_text = Utf8.upper(Localize("loc_weapon_inventory_equip_button")),
 		hotspot = {
 			on_pressed_sound = UISoundEvents.weapons_skin_confirm
 		}
-	})
+	}),
+	button_pivot_background = UIWidget.create_definition({
+		{
+			value_id = "background",
+			style_id = "background",
+			pass_type = "texture",
+			value = "content/ui/materials/backgrounds/terminal_basic",
+			style = {
+				vertical_alignment = "center",
+				scale_to_material = true,
+				horizontal_alignment = "center",
+				color = Color.terminal_grid_background(255, true),
+				size_addition = {
+					30,
+					20
+				},
+				offset = {
+					0,
+					0,
+					0
+				}
+			}
+		},
+		{
+			value = "content/ui/materials/frames/tab_frame_upper",
+			pass_type = "texture",
+			style = {
+				vertical_alignment = "top",
+				horizontal_alignment = "center",
+				color = Color.white(255, true),
+				size = {
+					136,
+					14
+				},
+				offset = {
+					0,
+					-5,
+					1
+				}
+			}
+		},
+		{
+			value = "content/ui/materials/frames/tab_frame_lower",
+			pass_type = "texture",
+			style = {
+				vertical_alignment = "bottom",
+				horizontal_alignment = "center",
+				color = Color.white(255, true),
+				size = {
+					135,
+					14
+				},
+				offset = {
+					0,
+					5,
+					1
+				}
+			}
+		}
+	}, "button_pivot_background")
 }
 local background_widget = UIWidget.create_definition({
 	{
@@ -378,6 +444,47 @@ local legend_inputs = {
 		alignment = "left_alignment"
 	}
 }
+local animations = {
+	on_enter = {
+		{
+			name = "fade_in",
+			end_time = 0.6,
+			start_time = 0,
+			init = function (parent, ui_scenegraph, scenegraph_definition, widgets, parent)
+				parent.animated_alpha_multiplier = 0
+			end,
+			update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress, parent)
+				return
+			end
+		},
+		{
+			name = "move",
+			end_time = 0.8,
+			start_time = 0.35,
+			init = function (parent, ui_scenegraph, scenegraph_definition, widgets, parent)
+				return
+			end,
+			update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress, parent)
+				local anim_progress = math.easeOutCubic(progress)
+				parent.animated_alpha_multiplier = anim_progress
+				local x_anim_distance_max = 50
+				local x_anim_distance = x_anim_distance_max - x_anim_distance_max * anim_progress
+
+				parent:_set_scenegraph_position("button_pivot", scenegraph_definition.button_pivot.position[1] - x_anim_distance)
+				parent:_set_scenegraph_position("item_grid_pivot", scenegraph_definition.item_grid_pivot.position[1] - x_anim_distance)
+				parent:_force_update_scenegraph()
+			end
+		},
+		{
+			name = "done",
+			end_time = 0.8,
+			start_time = 0.8,
+			init = function (parent, ui_scenegraph, scenegraph_definition, widgets, parent)
+				parent.enter_animation_done = true
+			end
+		}
+	}
+}
 local always_visible_widget_names = {
 	corner_bottom_right = true,
 	corner_top_left = true,
@@ -391,5 +498,6 @@ return {
 	background_widget = background_widget,
 	always_visible_widget_names = always_visible_widget_names,
 	scenegraph_definition = scenegraph_definition,
-	widget_definitions = widget_definitions
+	widget_definitions = widget_definitions,
+	animations = animations
 }

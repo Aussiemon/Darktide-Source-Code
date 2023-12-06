@@ -817,13 +817,13 @@ local legend_inputs = {
 		end
 	},
 	{
-		input_action = "hotkey_inventory",
+		input_action = "lobby_open_inventory",
 		on_pressed_callback = "cb_on_inventory_pressed",
 		display_name = "loc_input_legend_inventory",
 		alignment = "right_alignment"
 	},
 	{
-		input_action = "hotkey_lobby_switch_loadout",
+		input_action = "lobby_switch_loadout",
 		alignment = "right_alignment",
 		on_pressed_callback = "cb_on_loadout_pressed",
 		display_name = show_weapon,

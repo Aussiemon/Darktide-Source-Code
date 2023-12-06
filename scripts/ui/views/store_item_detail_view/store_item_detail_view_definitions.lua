@@ -150,10 +150,7 @@ local scenegraph_definition = {
 		vertical_alignment = "center",
 		parent = "purchase_button_area",
 		horizontal_alignment = "right",
-		size = {
-			360,
-			50
-		},
+		size = ButtonPassTemplates.default_button.size,
 		position = {
 			0,
 			0,
@@ -1023,7 +1020,7 @@ local widget_definitions = {
 			}
 		}
 	}, "description_mask"),
-	purchase_item_button = UIWidget.create_definition(ButtonPassTemplates.terminal_button, "purchase_button", {
+	purchase_item_button = UIWidget.create_definition(ButtonPassTemplates.default_button, "purchase_button", {
 		gamepad_action = "confirm_pressed",
 		original_text = ""
 	}),

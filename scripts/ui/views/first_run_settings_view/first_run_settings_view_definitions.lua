@@ -125,7 +125,7 @@ local widget_definitions = {
 		}
 	}, "page_number"),
 	next_button = UIWidget.create_definition(ButtonPassTemplates.default_button, "next_button", {
-		text = "Confirm"
+		original_text = "Confirm"
 	})
 }
 local accessibility_widget_definitions = {

@@ -244,9 +244,11 @@ minion_difficulty_settings.health = {
 	renegade_assault = _roamer_health_steps(180),
 	renegade_executor = _elite_health_steps(1500),
 	renegade_shocktrooper = _elite_health_steps(500),
+	renegade_twin_captain = _monster_health_steps(24000),
+	renegade_twin_captain_two = _monster_health_steps(24000),
 	renegade_gunner = _elite_health_steps(600),
-	renegade_berzerker = _elite_health_steps(1200),
-	cultist_berzerker = _elite_health_steps(1200),
+	renegade_berzerker = _elite_health_steps(1000),
+	cultist_berzerker = _elite_health_steps(1000),
 	cultist_melee = _roamer_health_steps(275),
 	cultist_assault = _roamer_health_steps(200),
 	cultist_shocktrooper = _elite_health_steps(500),
@@ -261,7 +263,9 @@ minion_difficulty_settings.hit_mass = {
 	chaos_hound_mutator = 2,
 	chaos_beast_of_nurgle = 20,
 	chaos_ogryn_gunner = 12.5,
+	renegade_twin_captain_two = 4,
 	cultist_berzerker = 4,
+	renegade_twin_captain = 4,
 	cultist_grenadier = 2,
 	chaos_spawn = 20,
 	cultist_flamer = 2,
@@ -491,7 +495,15 @@ minion_difficulty_settings.power_level = {
 		0.4,
 		0.4
 	},
-	berzerker_default_melee = _step_dmg_berzerker_melee(400)
+	berzerker_default_melee = _step_dmg_berzerker_melee(400),
+	renegade_twin_captain_two_melee = {
+		80,
+		100,
+		120,
+		200,
+		225,
+		250
+	}
 }
 minion_difficulty_settings.shooting = {
 	chaos_ogryn_gunner = {
@@ -507,20 +519,20 @@ minion_difficulty_settings.shooting = {
 				1
 			},
 			{
-				1,
-				1
-			},
-			{
-				0.85,
-				0.85
-			},
-			{
-				0.75,
-				0.75
+				0.8,
+				0.8
 			},
 			{
 				0.7,
 				0.7
+			},
+			{
+				0.6,
+				0.6
+			},
+			{
+				0.55,
+				0.55
 			}
 		},
 		shoot_cooldown = _shoot_steps_desc(3, 4),
@@ -533,20 +545,20 @@ minion_difficulty_settings.shooting = {
 				1
 			},
 			{
-				1,
-				1
-			},
-			{
-				0.85,
-				0.85
-			},
-			{
-				0.75,
-				0.75
+				0.8,
+				0.8
 			},
 			{
 				0.7,
 				0.7
+			},
+			{
+				0.6,
+				0.6
+			},
+			{
+				0.55,
+				0.55
 			}
 		},
 		shoot_cooldown = _shoot_steps_desc(3, 4),
@@ -668,11 +680,18 @@ minion_difficulty_settings.shooting = {
 		time_per_shot = _equal_difficulty_values(0, 0),
 		num_shots = _equal_difficulty_values(12, 12),
 		shoot_dodge_window = _equal_difficulty_values(0.75, 0.75)
+	},
+	renegade_twin_captain_plasma_pistol = {
+		aim_durations = _shoot_steps_desc(0.25, 0.25),
+		shoot_cooldown = _shoot_steps_desc(1.25, 1.8),
+		time_per_shot = _equal_difficulty_values(0, 0),
+		num_shots = _equal_difficulty_values(1, 1),
+		shoot_dodge_window = _equal_difficulty_values(0.75, 0.75)
 	}
 }
 minion_difficulty_settings.tension_to_add = {
 	killed_by_daemonhost = {
-		75,
+		120,
 		75,
 		75,
 		75,
@@ -680,8 +699,8 @@ minion_difficulty_settings.tension_to_add = {
 		20
 	},
 	knocked_down = {
-		60,
-		60,
+		120,
+		80,
 		60,
 		60,
 		60,
@@ -696,7 +715,7 @@ minion_difficulty_settings.tension_to_add = {
 		5
 	},
 	pounced = {
-		30,
+		60,
 		20,
 		20,
 		20,
@@ -744,11 +763,11 @@ minion_difficulty_settings.cooldowns = {
 		3
 	},
 	shoot_net_cooldown = {
-		10,
-		10,
-		10,
-		10,
-		10
+		12,
+		12,
+		12,
+		12,
+		12
 	},
 	grenadier_throw = {
 		10,

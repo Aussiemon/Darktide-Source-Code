@@ -308,9 +308,66 @@ recoil_templates.stub_pistol_p1_m2_hip = {
 		}
 	}
 }
-overrides.stub_pistol_p1_m2_ads = {
-	parent_template_name = "stub_pistol_p1_m2_hip",
-	overrides = {}
+recoil_templates.stub_pistol_p1_m2_ads = {
+	still = {
+		camera_recoil_percentage = 0.3,
+		decay_grace = 0.2,
+		new_influence_percent = 0.6,
+		rise_duration = 0.15,
+		rise = {
+			0.3,
+			0.2,
+			0.2,
+			0.1,
+			0.3
+		},
+		decay = {
+			shooting = 1.2,
+			idle = 2
+		},
+		offset_range = {
+			{
+				pitch = {
+					0.0375,
+					0.04375
+				},
+				yaw = {
+					-0.02,
+					0.02
+				}
+			}
+		},
+		offset_limit = {
+			yaw = 2,
+			pitch = 2
+		},
+		visual_recoil_settings = {
+			intensity = 4,
+			lerp_scalar = 0.1,
+			yaw_intensity = 4
+		}
+	},
+	moving = {
+		new_influence_percent = 0.75,
+		inherits = {
+			"stub_pistol_p1_m2_ads",
+			"still"
+		}
+	},
+	crouch_still = {
+		new_influence_percent = 0.6,
+		inherits = {
+			"stub_pistol_p1_m2_ads",
+			"still"
+		}
+	},
+	crouch_moving = {
+		new_influence_percent = 0.8,
+		inherits = {
+			"stub_pistol_p1_m2_ads",
+			"still"
+		}
+	}
 }
 recoil_templates.stub_pistol_p1_m3_hip = {
 	still = {

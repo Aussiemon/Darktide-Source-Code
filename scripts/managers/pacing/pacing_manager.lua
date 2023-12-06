@@ -68,10 +68,10 @@ PacingManager.on_gameplay_post_init = function (self, level_name)
 
 	self._horde_pacing:on_gameplay_post_init(level_name, horde_pacing_template)
 
-	local monster_resistance_templates = template.monster_pacing_template.resistance_templates
-	local monster_resistance_template = Managers.state.difficulty:get_table_entry_by_resistance(monster_resistance_templates)
+	local monster_challenge_templates = template.monster_pacing_template.challenge_templates
+	local monster_challenge_template = Managers.state.difficulty:get_table_entry_by_challenge(monster_challenge_templates)
 
-	self._monster_pacing:on_gameplay_post_init(level_name, monster_resistance_template)
+	self._monster_pacing:on_gameplay_post_init(level_name, monster_challenge_template)
 
 	local main_path_available = Managers.state.main_path:is_main_path_available()
 	local cinematic_playing = Managers.state.cinematic:is_playing()
@@ -388,6 +388,28 @@ PacingManager.player_died = function (self, player_unit)
 		self._waiting_for_ramp_clear = nil
 		self._clear_ramp = true
 	end
+
+	local player_manager = Managers.player
+	local players = player_manager:players()
+	local alive_players = 0
+
+	for _, player in pairs(players) do
+		local unit = player.player_unit
+
+		if HEALTH_ALIVE[unit] then
+			local unit_data_extension = ScriptUnit.has_extension(unit, "unit_data_system")
+			local character_state_component = unit_data_extension and unit_data_extension:read_component("character_state")
+			local hogtied = character_state_component and PlayerUnitStatus.is_hogtied(character_state_component)
+
+			if not hogtied then
+				alive_players = alive_players + 1
+			end
+		end
+	end
+
+	if alive_players <= 2 then
+		self:add_tension(math.huge)
+	end
 end
 
 PacingManager.player_tension = function (self, unit)
@@ -504,10 +526,18 @@ PacingManager._update_ramp_up_frequency = function (self, dt, t, target_side_id)
 		self._max_ramp_up_duration = math.max(self._max_ramp_up_duration - (dt + traveled_this_frame), 0)
 
 		if self._max_ramp_up_duration <= 0 then
-			if not self._waiting_for_ramp_clear then
-				self._waiting_for_ramp_clear = true
-				self._waiting_for_ramp_clear_t = t
-			elseif self._clear_ramp then
+			if ramp_up_frequency_settings.wait_for_ramp_clear then
+				if not self._waiting_for_ramp_clear then
+					self._waiting_for_ramp_clear = true
+					self._waiting_for_ramp_clear_t = t
+				elseif self._clear_ramp then
+					self._current_ramp_up_duration = ramp_duration
+					self._max_ramp_up_duration = nil
+					self._waiting_for_ramp_clear = nil
+					self._clear_ramp = nil
+					self._waiting_for_ramp_clear_t = nil
+				end
+			else
 				self._current_ramp_up_duration = ramp_duration
 				self._max_ramp_up_duration = nil
 				self._waiting_for_ramp_clear = nil
@@ -648,6 +678,10 @@ end
 
 PacingManager.set_horde_rate_modifier = function (self, horde_rate_modifier)
 	self._horde_pacing:set_rate_modifier(horde_rate_modifier)
+end
+
+PacingManager.set_travel_distance_spawning_override = function (self, travel_distance_spawning)
+	self._specials_pacing:set_travel_distance_spawning_override(travel_distance_spawning)
 end
 
 PacingManager.add_pacing_modifiers = function (self, modify_settings)
@@ -904,6 +938,16 @@ end
 
 PacingManager.get_backend_pacing_control_flag = function (self, flag)
 	return self._backend_pacing_control and self._backend_pacing_control[flag]
+end
+
+PacingManager.activate_hard_mode = function (self)
+	self._hard_mode = true
+
+	Managers.telemetry_events:hard_mode_activated()
+end
+
+PacingManager.has_hard_mode = function (self)
+	return self._hard_mode
 end
 
 PacingManager.set_minion_listening_for_player_deaths = function (self, unit, statistics_component, set)

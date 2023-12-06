@@ -24,7 +24,7 @@ local blueprints = {
 			content.hotspot.pressed_callback = callback(parent, callback_name, widget, entry)
 			content.select_callback = content.hotspot.pressed_callback
 			local display_name = entry.display_name
-			content.text = Localize(display_name)
+			content.original_text = Localize(display_name)
 			content.icon = entry.icon
 			content.hotspot.use_is_focused = true
 		end

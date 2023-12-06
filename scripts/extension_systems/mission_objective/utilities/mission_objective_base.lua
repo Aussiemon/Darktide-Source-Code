@@ -58,7 +58,7 @@ MissionObjectiveBase.start_objective = function (self, mission_objective_data, r
 	self._music_objective = mission_objective_data.use_music_event or MUSIC_OBJECTIVE_NONE
 	self._music_ignore_start_event = mission_objective_data.music_ignore_start_event or false
 	self._mission_giver_voice_profile = mission_objective_data.mission_giver_voice_profile
-	self._use_hud = not mission_objective_data.hidden or true
+	self._use_hud = mission_objective_data.hidden ~= true
 	self._progress_bar = mission_objective_data.progress_bar or false
 	self._is_side_mission = mission_objective_data.is_side_mission or false
 	self._evaluate_at_level_end = mission_objective_data.evaluate_at_level_end or false

@@ -96,33 +96,12 @@ InventoryWeaponCosmeticsView.init = function (self, settings, context)
 			self._selected_weapon_skin_name = selected_item.gear.masterDataInstance.overrides.slot_weapon_skin
 		end
 
+		if self._selected_weapon_skin_name == "" then
+			self._selected_weapon_skin_name = nil
+		end
+
 		self._equipped_weapon_skin_name = self._selected_weapon_skin_name
 	end
-
-	self._sort_options = {
-		{
-			display_name = Localize("loc_inventory_item_grid_sort_title_name") .. " ",
-			sort_function = ItemUtils.sort_comparator({
-				">",
-				ItemUtils.compare_item_name,
-				">",
-				ItemUtils.compare_item_rarity,
-				">",
-				ItemUtils.compare_item_level
-			})
-		},
-		{
-			display_name = Localize("loc_inventory_item_grid_sort_title_name") .. " ",
-			sort_function = ItemUtils.sort_comparator({
-				"<",
-				ItemUtils.compare_item_name,
-				">",
-				ItemUtils.compare_item_rarity,
-				">",
-				ItemUtils.compare_item_level
-			})
-		}
-	}
 
 	InventoryWeaponCosmeticsView.super.init(self, Definitions, settings, context)
 
@@ -182,12 +161,21 @@ InventoryWeaponCosmeticsView._destroy_forward_gui = function (self)
 end
 
 InventoryWeaponCosmeticsView.on_exit = function (self)
+	if self._on_enter_anim_id then
+		self:_stop_animation(self._on_enter_anim_id)
+
+		self._on_enter_anim_id = nil
+	end
+
 	self:_destroy_forward_gui()
 	InventoryWeaponCosmeticsView.super.on_exit(self)
 end
 
 InventoryWeaponCosmeticsView.on_enter = function (self)
 	InventoryWeaponCosmeticsView.super.on_enter(self)
+
+	self._render_settings.alpha_multiplier = 0
+
 	self:_setup_forward_gui()
 
 	self._background_widget = self:_create_widget("background", Definitions.background_widget)
@@ -348,6 +336,10 @@ InventoryWeaponCosmeticsView.on_enter = function (self)
 
 	self:_setup_menu_tabs(tabs_content)
 
+	if not self._on_enter_anim_id then
+		self._on_enter_anim_id = self:_start_animation("on_enter", self._widgets_by_name, self)
+	end
+
 	if self._presentation_item then
 		self:_setup_weapon_preview()
 		self:_preview_item(self._presentation_item)
@@ -413,7 +405,34 @@ InventoryWeaponCosmeticsView._setup_weapon_stats = function (self)
 end
 
 InventoryWeaponCosmeticsView._setup_sort_options = function (self)
-	return
+	if not self._sort_options then
+		self._sort_options = {
+			{
+				display_name = Localize("loc_inventory_item_grid_sort_title_format_increasing_letters", true, {
+					sort_name = Localize("loc_inventory_item_grid_sort_title_name")
+				}),
+				sort_function = ItemUtils.sort_element_key_comparator({
+					"<",
+					"sort_data",
+					ItemUtils.compare_item_name
+				})
+			},
+			{
+				display_name = Localize("loc_inventory_item_grid_sort_title_format_decreasing_letters", true, {
+					sort_name = Localize("loc_inventory_item_grid_sort_title_name")
+				}),
+				sort_function = ItemUtils.sort_element_key_comparator({
+					">",
+					"sort_data",
+					ItemUtils.compare_item_name
+				})
+			}
+		}
+	end
+
+	local sort_callback = callback(self, "cb_on_sort_button_pressed")
+
+	self._item_grid:setup_sort_button(self._sort_options, sort_callback)
 end
 
 InventoryWeaponCosmeticsView._setup_weapon_preview = function (self)
@@ -437,26 +456,31 @@ InventoryWeaponCosmeticsView._setup_menu_tabs = function (self, content)
 	local grid_size = Definitions.grid_settings.grid_size
 	local id = "tab_menu"
 	local layer = 10
+	local button_size = {
+		80,
+		80
+	}
+	local button_spacing = 10
 	local tab_menu_settings = {
-		fixed_button_size = true,
-		horizontal_alignment = "left",
-		button_spacing = 20,
-		button_size = {
-			grid_size[1] * 0.5 - 10,
-			50
+		vertical_alignment = "top",
+		grow_vertically = true,
+		button_size = button_size,
+		button_spacing = button_spacing,
+		input_label_offset = {
+			25,
+			30
 		}
 	}
 	local tab_menu_element = self:_add_element(ViewElementTabMenu, id, layer, tab_menu_settings)
 	self._tab_menu_element = tab_menu_element
-	local input_action_left = "navigate_primary_left_pressed"
-	local input_action_right = "navigate_primary_right_pressed"
+	local input_action_left = "navigate_secondary_left_pressed"
+	local input_action_right = "navigate_secondary_right_pressed"
 
 	tab_menu_element:set_input_actions(input_action_left, input_action_right)
 	tab_menu_element:set_is_handling_navigation_input(true)
 
-	local tab_button_template = table.clone(ButtonPassTemplates.tab_menu_button_icon)
+	local tab_button_template = table.clone(ButtonPassTemplates.item_category_sort_button)
 	tab_button_template[1].style = {
-		on_hover_sound = UISoundEvents.tab_secondary_button_hovered,
 		on_pressed_sound = UISoundEvents.tab_secondary_button_pressed
 	}
 	local tab_ids = {}
@@ -470,6 +494,10 @@ InventoryWeaponCosmeticsView._setup_menu_tabs = function (self, content)
 		tab_ids[i] = tab_id
 	end
 
+	local total_height = button_size[2] * #content + button_spacing * #content
+
+	self:_set_scenegraph_size("button_pivot_background", nil, total_height + 30)
+
 	self._tab_ids = tab_ids
 
 	self:_update_tab_bar_position()
@@ -480,7 +508,7 @@ InventoryWeaponCosmeticsView._update_tab_bar_position = function (self)
 		return
 	end
 
-	local position = self:_scenegraph_world_position("grid_tab_panel")
+	local position = self:_scenegraph_world_position("button_pivot")
 
 	self._tab_menu_element:set_pivot_offset(position[1], position[2])
 end
@@ -528,6 +556,9 @@ InventoryWeaponCosmeticsView._fetch_inventory_items = function (self, slot_name,
 			local empty_item = get_empty_item_function(selected_item)
 			layout[#layout + 1] = {
 				widget_type = "item_icon",
+				sort_data = {
+					display_name = "loc_weapon_cosmetic_empty"
+				},
 				item = empty_item,
 				slot_name = slot_name
 			}
@@ -554,6 +585,7 @@ InventoryWeaponCosmeticsView._fetch_inventory_items = function (self, slot_name,
 
 				layout[#layout + 1] = {
 					widget_type = "item_icon",
+					sort_data = item,
 					item = visual_item,
 					real_item = item,
 					slot_name = slot_name,
@@ -563,52 +595,11 @@ InventoryWeaponCosmeticsView._fetch_inventory_items = function (self, slot_name,
 			end
 		end
 
-		self._offer_items_layout = layout
+		self._offer_items_layout = table.clone_instance(layout)
 		local start_index = #layout > 0 and 1
-		local on_present_callback = callback(self, "_select_starting_item_by_slot_name", slot_name, start_index)
 
-		self:present_grid_layout(layout, on_present_callback)
+		self:_present_layout_by_slot_filter()
 	end)
-end
-
-InventoryWeaponCosmeticsView._select_starting_item_by_slot_name = function (self, slot_name, optional_start_index)
-	local start_index = optional_start_index
-	local starting_item_name = start_index and self:selected_item_name_in_slot(slot_name)
-
-	if starting_item_name then
-		local grid_widgets = self:grid_widgets()
-
-		if grid_widgets then
-			for i = 1, #grid_widgets do
-				local widget = grid_widgets[i]
-				local content = widget.content
-				local element = content.element
-				local element_item = element.real_item or element.item
-
-				if element_item and element_item.gear.masterDataInstance.id == starting_item_name then
-					start_index = i
-
-					break
-				end
-			end
-		end
-
-		if start_index then
-			local element = self:element_by_index(start_index)
-			local element_item = element and element.item
-
-			self:focus_on_item(element_item)
-		end
-	elseif start_index then
-		local instant_scroll = true
-		local scrollbar_animation_progress = 0
-
-		self:focus_grid_index(start_index, scrollbar_animation_progress, instant_scroll)
-	end
-
-	local element = self:element_by_index(start_index)
-	self._equipped_weapon_skin = element.real_item
-	self._equipped_weapon_trinket = element.real_item
 end
 
 InventoryWeaponCosmeticsView._item_valid_by_current_profile = function (self, item)
@@ -823,16 +814,20 @@ InventoryWeaponCosmeticsView.draw = function (self, dt, t, input_service, layer)
 	render_settings.start_layer = layer
 	render_settings.scale = render_scale
 	render_settings.inverse_scale = render_scale and 1 / render_scale
+	local previous_alpha_multiplier = render_settings.alpha_multiplier
+	render_settings.alpha_multiplier = self.animated_alpha_multiplier or 0
 	local ui_scenegraph = self._ui_scenegraph
 
 	UIRenderer.begin_pass(ui_renderer, ui_scenegraph, input_service, dt, render_settings)
 	UIWidget.draw(self._background_widget, ui_renderer)
 	UIRenderer.end_pass(ui_renderer)
-	self:_draw_elements(dt, t, ui_default_renderer, render_settings, input_service)
 	UIRenderer.begin_pass(ui_forward_renderer, ui_scenegraph, input_service, dt, render_settings)
 	self:_draw_widgets(dt, t, input_service, ui_forward_renderer)
 	UIRenderer.end_pass(ui_forward_renderer)
+	self:_draw_elements(dt, t, ui_forward_renderer, render_settings, input_service)
 	self:_draw_render_target()
+
+	render_settings.alpha_multiplier = previous_alpha_multiplier
 end
 
 InventoryWeaponCosmeticsView._draw_render_target = function (self)
@@ -898,6 +893,10 @@ InventoryWeaponCosmeticsView.cb_switch_tab = function (self, index)
 		self._grid_display_name = content.display_name
 
 		self:_fetch_inventory_items(slot_name, item_type, get_item_filters, get_empty_item, generate_visual_item_function, filter_on_weapon_template)
+
+		if not self._using_cursor_navigation then
+			self:_play_sound(UISoundEvents.tab_secondary_button_pressed)
+		end
 	end
 end
 

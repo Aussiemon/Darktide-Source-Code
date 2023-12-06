@@ -1,8 +1,9 @@
 local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
-local Breed = require("scripts/utilities/breed")
-local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
+local BreedSettings = require("scripts/settings/breed/breed_settings")
 local PlayerMovement = require("scripts/utilities/player_movement")
+local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
 local MoveablePlatformExtension = class("MoveablePlatformExtension")
+local MINION_BREED_TYPE = BreedSettings.types.minion
 local MOVEABLE_PLATFORM_DIRECTION = table.enum("none", "forward", "backward")
 local OPEN_WALL_FILTER = "filter_platform_wall"
 
@@ -39,7 +40,6 @@ MoveablePlatformExtension.init = function (self, extension_init_context, unit, e
 	local extension_manager = Managers.state.extension
 	local side_system = extension_manager:system("side_system")
 	self._side_system = side_system
-	self._side_names = side_system:side_names()
 	local broadphase_system = extension_manager:system("broadphase_system")
 	self._broadphase_system = broadphase_system
 	self._broadphase = broadphase_system.broadphase
@@ -264,6 +264,22 @@ MoveablePlatformExtension.set_wall_collision = function (self, activate)
 		self:_enable_wall_collision(wall, activate)
 	end
 
+	if activate then
+		local camera_player = self._chunk_lod_manager:player()
+
+		if camera_player then
+			local camera_player_unit = camera_player.player_unit
+
+			if self._passenger_units[camera_player_unit] then
+				self._locked_chunk_lod = self._chunk_lod_manager:set_level_unit(self._unit)
+			end
+		end
+	elseif self._locked_chunk_lod then
+		self._chunk_lod_manager:clear_level_unit(self._unit)
+
+		self._locked_chunk_lod = false
+	end
+
 	if self._is_server then
 		local unit = self._unit
 		local unit_level_index = Managers.state.unit_spawner:level_index(unit)
@@ -473,18 +489,6 @@ MoveablePlatformExtension._lock_units_on_platform = function (self)
 	if has_passengers then
 		self._units_locked = true
 	end
-
-	local camera_player = self._chunk_lod_manager:player()
-
-	if camera_player then
-		local camera_player_unit = camera_player.player_unit
-
-		if self._passenger_units[camera_player_unit] then
-			self._chunk_lod_manager:set_level_unit(self._unit)
-
-			self._locked_chunk_lod = true
-		end
-	end
 end
 
 MoveablePlatformExtension.units_locked = function (self)
@@ -521,24 +525,17 @@ MoveablePlatformExtension._check_hostile_onboard = function (self)
 	local check_radius = self._broadphase_check_radius
 	local check_position = self._broadphase_check_position:unbox()
 	local broadphase = self._broadphase
-	local side_names = self._side_names
 	local bounding_box = self._bounding_box:unbox()
 	local half_extents = self._bounding_box_half_extents:unbox()
-	local num_results = Broadphase.query(broadphase, check_position, check_radius, broadphase_results, side_names)
+	local num_results = Broadphase.query(broadphase, check_position, check_radius, broadphase_results, MINION_BREED_TYPE)
 
 	for i = 1, num_results do
 		local unit = broadphase_results[i]
-		local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
-		local breed = unit_data_extension:breed()
-		local is_minion = Breed.is_minion(breed)
+		local unit_position = Unit.world_position(unit, 1)
+		local offsetted_unit_position = unit_position + Vector3.up() * 0.25
 
-		if is_minion then
-			local unit_position = Unit.world_position(unit, 1)
-			local offsetted_unit_position = unit_position + Vector3.up() * 0.25
-
-			if math.point_is_inside_oobb(offsetted_unit_position, bounding_box, half_extents) then
-				return true
-			end
+		if math.point_is_inside_oobb(offsetted_unit_position, bounding_box, half_extents) then
+			return true
 		end
 	end
 end
@@ -567,7 +564,7 @@ MoveablePlatformExtension._check_passengers_outside = function (self)
 
 			if not math.point_is_inside_oobb(unit_position, bounding_box, half_size * 1.1) then
 				self:_teleport_player_onboard(passenger_unit)
-				Log.warning("MoveablePlatformExtension", "Player considered otuside of elevator, teleported back")
+				Log.warning("MoveablePlatformExtension", "Player considered outside of elevator, teleported back")
 			end
 		end
 	end
@@ -579,12 +576,6 @@ MoveablePlatformExtension._unlock_units_on_platform = function (self)
 	self._units_locked = false
 
 	self:_unparent_all_passengers()
-
-	if self._locked_chunk_lod then
-		self._chunk_lod_manager:set_level_unit(nil)
-
-		self._locked_chunk_lod = false
-	end
 end
 
 MoveablePlatformExtension.add_passenger = function (self, unit, place_on_platform)
@@ -720,7 +711,7 @@ MoveablePlatformExtension.destroy = function (self)
 	self._overlap_result[self._box] = overlap_manager:remove_listening_actor(self._box)
 
 	if self._locked_chunk_lod then
-		self._chunk_lod_manager:set_level_unit(nil)
+		self._chunk_lod_manager:clear_level_unit(self._unit)
 	end
 
 	self._unit = nil

@@ -944,8 +944,8 @@ weapon_template.actions = {
 		},
 		damage_profile = DamageProfileTemplates.thunderhammer_heavy_smiter,
 		damage_type = damage_types.blunt,
-		damage_profile_special_active = DamageProfileTemplates.thunderhammer_m2_heavy_active_strikedown,
-		damage_profile_special_active_on_abort = DamageProfileTemplates.thunderhammer_m2_heavy_active,
+		damage_profile_special_active = DamageProfileTemplates.thunderhammer_heavy_active_sweep,
+		damage_profile_special_active_on_abort = DamageProfileTemplates.thunderhammer_m2_heavy_active_strikedown,
 		damage_type_special_active = damage_types.blunt_thunder,
 		damage_type_special_active_on_abort = damage_types.blunt_thunder,
 		force_abort_breed_tags_special_active = _force_abort_breed_tags_special_active,
@@ -1078,7 +1078,7 @@ weapon_template.actions = {
 				action_name = "action_unwield"
 			},
 			start_attack = {
-				action_name = "action_melee_start_left_3",
+				action_name = "action_melee_start_right",
 				chain_time = 0.55
 			},
 			block = {
@@ -1166,7 +1166,7 @@ weapon_template.actions = {
 				chain_time = 0.4
 			},
 			start_attack = {
-				action_name = "action_melee_start_left",
+				action_name = "action_melee_start_left_3",
 				chain_time = 0.45
 			},
 			special_action = {

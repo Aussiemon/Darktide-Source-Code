@@ -1,22 +1,18 @@
-local Attack = require("scripts/utilities/attack/attack")
 local AttackingUnitResolver = require("scripts/utilities/attack/attacking_unit_resolver")
 local AttackSettings = require("scripts/settings/damage/attack_settings")
 local Breed = require("scripts/utilities/breed")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local CameraShake = require("scripts/utilities/camera/camera_shake")
 local DamageProfile = require("scripts/utilities/attack/damage_profile")
-local FixedFrame = require("scripts/utilities/fixed_frame")
 local Health = require("scripts/utilities/health")
 local HitZone = require("scripts/utilities/attack/hit_zone")
 local MaterialQuery = require("scripts/utilities/material_query")
-local MinionDeath = require("scripts/utilities/minion_death")
 local Suppression = require("scripts/utilities/attack/suppression")
 local WeaponTweakTemplateSettings = require("scripts/settings/equipment/weapon_templates/weapon_tweak_template_settings")
 local attack_types = AttackSettings.attack_types
 local proc_events = BuffSettings.proc_events
 local DEFAULT_LERP_VALUE = WeaponTweakTemplateSettings.DEFAULT_LERP_VALUE
 local DEFALT_FALLBACK_LERP_VALUE = WeaponTweakTemplateSettings.DEFALT_FALLBACK_LERP_VALUE
-local HIT_DISTANCE_EPSILON = 0.001
 local Explosion = {}
 local _get_radii, _play_effects = nil
 local hit_units = {}
@@ -29,7 +25,7 @@ local function attack_units_sort_function(a, b)
 end
 
 Explosion.create_explosion = function (world, physics_world, source_position, optional_impact_normal, attacking_unit, explosion_template, power_level, charge_level, attack_type, is_critical_strike, ignore_cover, item_or_nil, origin_slot_or_nil, optional_hit_units_table)
-	power_level = explosion_template.static_power_level or power_level
+	power_level = explosion_template.scaled_power_level and Managers.state.difficulty:get_table_entry_by_challenge(explosion_template.scaled_power_level) or explosion_template.static_power_level or power_level
 
 	Managers.server_metrics:add_annotation("explosion_create", {
 		power_level = power_level
@@ -55,10 +51,11 @@ Explosion.create_explosion = function (world, physics_world, source_position, op
 	table.clear(attack_units_hit_actors)
 
 	local number_of_attack_units = 0
+	local sticking_to_unit, sticking_to_actor, _ = nil
 	local locomotion_extension = ScriptUnit.has_extension(attacking_unit, "locomotion_system")
 
 	if locomotion_extension and locomotion_extension.sticking_to_unit then
-		local sticking_to_unit, _, sticking_to_actor = locomotion_extension:sticking_to_unit()
+		sticking_to_unit, _, sticking_to_actor = locomotion_extension:sticking_to_unit()
 
 		if sticking_to_unit and sticking_to_actor then
 			hit_units[sticking_to_unit] = true
@@ -128,6 +125,7 @@ Explosion.create_explosion = function (world, physics_world, source_position, op
 	data.attacking_unit_owner_unit = attacking_unit_owner_unit
 	data.is_critical_strike = is_critical_strike
 	data.item_or_nil = item_or_nil
+	data.sticking_to_unit = sticking_to_unit
 
 	if attacking_owner_buff_extension then
 		local param_table = attacking_owner_buff_extension:request_proc_event_param_table()
@@ -271,9 +269,9 @@ function _get_radii(explosion_template, charge_level, lerp_values, attack_type, 
 	return radius, close_radius
 end
 
-function _play_effects(world, physics_world, attacking_unit, explosion_template, charge_level, source_position, optional_impact_normal, radius)
+function _play_effects(world, physics_world, attacking_unit_owner_unit, explosion_template, charge_level, source_position, optional_impact_normal, radius)
 	local player_unit_spawn_manager = Managers.state.player_unit_spawn
-	local fx_extension = player_unit_spawn_manager:owner(attacking_unit) and ScriptUnit.extension(attacking_unit, "fx_system")
+	local fx_extension = player_unit_spawn_manager:is_player_unit(attacking_unit_owner_unit) and ScriptUnit.extension(attacking_unit_owner_unit, "fx_system")
 	local rotation = optional_impact_normal and Quaternion.look(optional_impact_normal) or Quaternion.identity()
 	local fx_system = Managers.state.extension:system("fx_system")
 	local charge_wwise_parameter_name = explosion_template.charge_wwise_parameter_name
@@ -292,7 +290,7 @@ function _play_effects(world, physics_world, attacking_unit, explosion_template,
 				for j = 1, num_effects do
 					local effect_name = effects[j]
 
-					if fx_extension and fx_extension.spawn_particles then
+					if fx_extension then
 						local scale = nil
 						local radius_variable_name = vfx_data.radius_variable_name
 
@@ -311,7 +309,7 @@ function _play_effects(world, physics_world, attacking_unit, explosion_template,
 		for i = 1, num_vfx do
 			local effect_name = vfx[i]
 
-			if fx_extension and fx_extension.spawn_particles then
+			if fx_extension then
 				fx_extension:spawn_particles(effect_name, source_position, rotation)
 			else
 				fx_system:trigger_vfx(effect_name, source_position, rotation)

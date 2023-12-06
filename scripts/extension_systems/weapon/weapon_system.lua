@@ -198,6 +198,7 @@ WeaponSystem._update_queued_explosions = function (self, dt, t)
 		local is_critical_strike = data.is_critical_strike
 		local item_or_nil = data.item_or_nil
 		local result = data.result
+		local sticking_to_unit = data.sticking_to_unit
 		local num_hit_units = data.num_hit_units
 
 		for hit_units_i = data[0], num_hit_units do
@@ -217,7 +218,8 @@ WeaponSystem._update_queued_explosions = function (self, dt, t)
 					hit_distance = math.max(hit_distance - breed_or_nil.explosion_radius, 0)
 				end
 
-				local close_hit = close_radius > 0 and hit_distance < close_radius
+				local is_sticking_to_unit = hit_unit == sticking_to_unit
+				local close_hit = is_sticking_to_unit or close_radius > 0 and hit_distance < close_radius
 				local hit_zone_or_nil = HitZone.get(hit_unit, hit_actor)
 				local hit_zone_name_or_nil = hit_zone_or_nil and hit_zone_or_nil.name
 
@@ -230,8 +232,9 @@ WeaponSystem._update_queued_explosions = function (self, dt, t)
 				elseif has_health then
 					local intervening_cover = false
 					local cover_actor, _ = nil
+					local do_cover_check = not ignore_cover and not is_sticking_to_unit
 
-					if not ignore_cover and HIT_DISTANCE_EPSILON < hit_distance then
+					if do_cover_check and HIT_DISTANCE_EPSILON < hit_distance then
 						intervening_cover, _, _, _, cover_actor = PhysicsWorld.raycast(physics_world, hit_position, -direction, 0.95 * hit_distance, "closest", "types", "statics", "collision_filter", "filter_explosion_cover")
 					end
 

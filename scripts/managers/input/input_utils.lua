@@ -11,14 +11,14 @@ local InputUtils = {
 			rawget(_G, "Pad8")
 		},
 		ps4_controller = {
-			rawget(_G, "PS4Pad1"),
-			rawget(_G, "PS4Pad2"),
-			rawget(_G, "PS4Pad3"),
-			rawget(_G, "PS4Pad4"),
-			rawget(_G, "PS4Pad5"),
-			rawget(_G, "PS4Pad6"),
-			rawget(_G, "PS4Pad7"),
-			rawget(_G, "PS4Pad8")
+			rawget(_G, "PS5Pad1"),
+			rawget(_G, "PS5Pad2"),
+			rawget(_G, "PS5Pad3"),
+			rawget(_G, "PS5Pad4"),
+			rawget(_G, "PS5Pad5"),
+			rawget(_G, "PS5Pad6"),
+			rawget(_G, "PS5Pad7"),
+			rawget(_G, "PS5Pad8")
 		},
 		mouse = {
 			rawget(_G, "Mouse")

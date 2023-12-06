@@ -1,10 +1,14 @@
 local Breed = require("scripts/utilities/breed")
+local BreedSettings = require("scripts/settings/breed/breed_settings")
 local DamageProfile = require("scripts/utilities/attack/damage_profile")
 local MinionPerception = require("scripts/utilities/minion_perception")
 local Suppression = {}
 local _apply_suppression_falloff, _apply_suppression_minion, _apply_suppression_player, _get_breed = nil
+local breed_types = BreedSettings.types
 local DEFAULT_SUPPRESSION_VALUE = 1
 local DEFAULT_SUPPRESSION_ATTACK_DELAY = 0.35
+local MINION_BREED_TYPE = breed_types.minion
+local PLAYER_BREED_TYPE = breed_types.player
 
 Suppression.apply_suppression = function (hit_unit, attacking_unit, damage_profile, hit_position, optional_same_side_supression_enabled, num_suppressions)
 	local breed = _get_breed(hit_unit)
@@ -113,35 +117,31 @@ Suppression.apply_area_minion_suppression = function (attacking_unit, suppressio
 
 	local apply_suppression_falloff = suppression_settings.suppression_falloff
 	local instant_aggro = suppression_settings.instant_aggro
-	local num_results = broadphase:query(from_position, broadphase_radius, BROADPHASE_RESULTS, target_side_names)
+	local num_results = broadphase:query(from_position, broadphase_radius, BROADPHASE_RESULTS, target_side_names, MINION_BREED_TYPE)
 
 	for i = 1, num_results do
 		local hit_unit = BROADPHASE_RESULTS[i]
 
 		if hit_unit ~= attacking_unit or optional_include_self then
-			local breed = _get_breed(hit_unit)
+			local suppression_amount = suppression_value
+			local to_position = POSITION_LOOKUP[hit_unit]
+			local distance_from_source = Vector3.distance(from_position, to_position)
 
-			if Breed.is_minion(breed) then
-				local suppression_amount = suppression_value
-				local to_position = POSITION_LOOKUP[hit_unit]
-				local distance_from_source = Vector3.distance(from_position, to_position)
+			if apply_suppression_falloff then
+				suppression_amount = _apply_suppression_falloff(suppression_value, broadphase_radius, from_position, to_position, distance_from_source)
+			end
 
-				if apply_suppression_falloff then
-					suppression_amount = _apply_suppression_falloff(suppression_value, broadphase_radius, from_position, to_position, distance_from_source)
-				end
+			local suppression_type = "default"
 
-				local suppression_type = "default"
+			_apply_suppression_minion(hit_unit, suppression_amount, suppression_type, suppression_attack_delay, attacking_unit, from_position, instant_aggro)
 
-				_apply_suppression_minion(hit_unit, suppression_amount, suppression_type, suppression_attack_delay, attacking_unit, from_position, instant_aggro)
+			local cover_extension = ScriptUnit.has_extension(hit_unit, "cover_system")
+			local disable_cover_radius = suppression_settings.disable_cover_radius or broadphase_radius * 0.5
 
-				local cover_extension = ScriptUnit.has_extension(hit_unit, "cover_system")
-				local disable_cover_radius = suppression_settings.disable_cover_radius or broadphase_radius * 0.5
+			if cover_extension and distance_from_source < disable_cover_radius then
+				local disable_cover_range = suppression_settings.disable_cover_time_range or DEFAULT_COVER_DISABLE_RANGE
 
-				if cover_extension and distance_from_source < disable_cover_radius then
-					local disable_cover_range = suppression_settings.disable_cover_time_range or DEFAULT_COVER_DISABLE_RANGE
-
-					cover_extension:release_cover_slot(math.random_range(disable_cover_range[1], disable_cover_range[2]))
-				end
+				cover_extension:release_cover_slot(math.random_range(disable_cover_range[1], disable_cover_range[2]))
 			end
 		end
 	end
@@ -171,27 +171,23 @@ Suppression.apply_area_player_suppression = function (attacking_unit, suppressio
 
 	local afro_radius = 2
 	local apply_suppression_falloff = suppression_settings.suppression_falloff
-	local num_results = broadphase:query(from_position, broadphase_radius, BROADPHASE_RESULTS, target_side_names)
+	local num_results = broadphase:query(from_position, broadphase_radius, BROADPHASE_RESULTS, target_side_names, PLAYER_BREED_TYPE)
 
 	for i = 1, num_results do
 		local hit_unit = BROADPHASE_RESULTS[i]
 
 		if hit_unit ~= attacking_unit or optional_include_self then
-			local breed = _get_breed(hit_unit)
+			local hit_unit_position = POSITION_LOOKUP[hit_unit]
+			local suppression_amount = suppression_value
 
-			if Breed.is_player(breed) then
-				local hit_unit_position = POSITION_LOOKUP[hit_unit]
-				local suppression_amount = suppression_value
-
-				if apply_suppression_falloff then
-					local distance_from_source = Vector3.distance(from_position, hit_unit_position)
-					suppression_amount = _apply_suppression_falloff(suppression_value, broadphase_radius, from_position, hit_unit_position, distance_from_source)
-				end
-
-				local afro_hit_position = math.closest_point_on_sphere(hit_unit_position, afro_radius, from_position)
-
-				_apply_suppression_player(hit_unit, suppression_amount, stagger_category, afro_hit_position)
+			if apply_suppression_falloff then
+				local distance_from_source = Vector3.distance(from_position, hit_unit_position)
+				suppression_amount = _apply_suppression_falloff(suppression_value, broadphase_radius, from_position, hit_unit_position, distance_from_source)
 			end
+
+			local afro_hit_position = math.closest_point_on_sphere(hit_unit_position, afro_radius, from_position)
+
+			_apply_suppression_player(hit_unit, suppression_amount, stagger_category, afro_hit_position)
 		end
 	end
 end

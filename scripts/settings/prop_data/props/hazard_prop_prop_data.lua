@@ -16,6 +16,7 @@ local prop_data = {
 			name = hit_zone_names.center_mass,
 			actors = {
 				"c_intact",
+				"c_intact_destructible",
 				"c_broken"
 			}
 		}

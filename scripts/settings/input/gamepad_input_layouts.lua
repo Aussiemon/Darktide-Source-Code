@@ -31,10 +31,16 @@ local layouts = {
 				wield_1 = StrictNil,
 				wield_2 = StrictNil,
 				wield_3 = {
+					hide_in_controller_layout = true
+				},
+				wield_3_gamepad = {
 					"xbox_controller_d_left",
 					"ps4_controller_d_left"
 				},
 				wield_4 = {
+					hide_in_controller_layout = true
+				},
+				wield_5 = {
 					"xbox_controller_d_right",
 					"ps4_controller_d_right"
 				},
@@ -140,7 +146,14 @@ local layouts = {
 					"xbox_controller_d_left",
 					"ps4_controller_d_left"
 				},
+				wield_3_gamepad = {
+					hide_in_controller_layout = true
+				},
 				wield_4 = {
+					"xbox_controller_d_down",
+					"ps4_controller_d_down"
+				},
+				wield_5 = {
 					"xbox_controller_d_right",
 					"ps4_controller_d_right"
 				},
@@ -238,7 +251,14 @@ local layouts = {
 					"xbox_controller_d_left",
 					"ps4_controller_d_left"
 				},
+				wield_3_gamepad = {
+					hide_in_controller_layout = true
+				},
 				wield_4 = {
+					"xbox_controller_d_down",
+					"ps4_controller_d_down"
+				},
+				wield_5 = {
 					"xbox_controller_d_right",
 					"ps4_controller_d_right"
 				},
@@ -333,10 +353,16 @@ local layouts = {
 					"ps4_controller_square"
 				},
 				wield_3 = {
+					hide_in_controller_layout = true
+				},
+				wield_3_gamepad = {
 					"xbox_controller_d_left",
 					"ps4_controller_d_left"
 				},
 				wield_4 = {
+					hide_in_controller_layout = true
+				},
+				wield_5 = {
 					"xbox_controller_d_right",
 					"ps4_controller_d_right"
 				},
@@ -434,7 +460,14 @@ local layouts = {
 					"xbox_controller_d_left",
 					"ps4_controller_d_left"
 				},
+				wield_3_gamepad = {
+					hide_in_controller_layout = true
+				},
 				wield_4 = {
+					"xbox_controller_d_down",
+					"ps4_controller_d_down"
+				},
+				wield_5 = {
 					"xbox_controller_d_right",
 					"ps4_controller_d_right"
 				},
@@ -529,10 +562,16 @@ local layouts = {
 					"ps4_controller_square"
 				},
 				wield_3 = {
+					hide_in_controller_layout = true
+				},
+				wield_3_gamepad = {
 					"xbox_controller_d_left",
 					"ps4_controller_d_left"
 				},
 				wield_4 = {
+					hide_in_controller_layout = true
+				},
+				wield_5 = {
 					"xbox_controller_d_right",
 					"ps4_controller_d_right"
 				},

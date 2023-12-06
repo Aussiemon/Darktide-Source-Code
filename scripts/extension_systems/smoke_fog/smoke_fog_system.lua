@@ -154,7 +154,7 @@ SmokeFogSystem._check_unit_collisions = function (self, t)
 			repeat
 				temp_check_units[unit] = true
 
-				if not ALIVE[unit] or not HEALTH_ALIVE[unit] then
+				if not HEALTH_ALIVE[unit] then
 					units_inside[unit] = nil
 				else
 					local unit_pos = POSITION_LOOKUP[unit]
@@ -173,12 +173,12 @@ SmokeFogSystem._check_unit_collisions = function (self, t)
 
 		for ii = 1, extension.num_results do
 			local unit = extension.broadphase_results[ii]
-			local unit_pos = POSITION_LOOKUP[unit]
 
-			if not temp_check_units[unit] and ALIVE[unit] and HEALTH_ALIVE[unit] then
+			if not temp_check_units[unit] and HEALTH_ALIVE[unit] then
 				local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
 				local breed = unit_data_extension:breed()
 				local unit_radius = breed.player_locomotion_constrain_radius * 2
+				local unit_pos = POSITION_LOOKUP[unit]
 
 				if not units_inside[unit] and extension:is_unit_inside(unit_pos, unit_radius) then
 					extension:on_unit_enter(unit, t)

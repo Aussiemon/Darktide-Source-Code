@@ -46,7 +46,7 @@ local abilities = {
 		}
 	},
 	ogryn_charge_increased_distance = {
-		hud_icon = "content/ui/textures/icons/abilities/hud/ogryn/ogryn_ability_bull_rush",
+		hud_icon = "content/ui/textures/icons/abilities/hud/ogryn/ogryn_longer_charge",
 		ability_template = "ogryn_charge",
 		icon = "content/ui/materials/icons/abilities/combat/default",
 		ability_type = "combat_ability",

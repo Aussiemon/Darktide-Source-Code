@@ -146,7 +146,9 @@ AccountService.set_has_created_first_character = function (self)
 end
 
 AccountService.set_selected_character_id = function (self, character_id)
-	return Managers.backend.interfaces.account:set_selected_character(character_id):catch(function (error)
+	return Managers.backend.interfaces.account:set_selected_character(character_id):next(function ()
+		Managers.telemetry_events:character_selected(character_id)
+	end):catch(function (error)
 		Managers.error:report_error(BackendError:new(error))
 
 		return Promise.rejected({})

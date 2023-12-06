@@ -179,11 +179,6 @@ function _execute(attacked_unit, damage_profile, target_index, target_number, po
 	end
 
 	local is_flanking, effective_flanking = AttackPositioning.is_flanking(attacked_unit, attacking_unit, attack_type, attack_direction)
-
-	if effective_flanking then
-		_trigger_flank_interfacing(attacking_unit_owner_unit, attack_type)
-	end
-
 	local attacked_action = nil
 	local behaviour_extension = ScriptUnit.has_extension(attacked_unit, "behavior_system")
 	attacked_action = behaviour_extension and behaviour_extension:running_action()
@@ -202,9 +197,9 @@ function _execute(attacked_unit, damage_profile, target_index, target_number, po
 	local calculated_damage, damage_efficiency = nil
 
 	if instakill then
-		local health_extension = ScriptUnit.extension(attacked_unit, "health_system")
+		local target_health_extension = ScriptUnit.extension(attacked_unit, "health_system")
 		damage_efficiency = damage_efficiencies.full
-		calculated_damage = health_extension:max_health()
+		calculated_damage = target_health_extension:max_health()
 	else
 		local target_blackboard = BLACKBOARDS[attacked_unit]
 		local target_stagger_count = 0
@@ -232,6 +227,7 @@ function _execute(attacked_unit, damage_profile, target_index, target_number, po
 			local attacker_stat_buffs = attacker_buff_extension and attacker_buff_extension:stat_buffs()
 			local target_stat_buffs = target_buff_extension and target_buff_extension:stat_buffs()
 			local armor_penetrating = _has_armor_penetrating_buff(attacker_buff_extension, attack_type, hit_weakspot)
+			local target_health_extension = ScriptUnit.has_extension(attacked_unit, "health_system")
 			local target_toughness_extension = ScriptUnit.has_extension(attacked_unit, "toughness_system")
 			local armor_type = Armor.armor_type(attacked_unit, target_breed_or_nil, hit_zone_name, attack_type)
 			local is_attacked_unit_suppressed = Suppression.is_suppressed(attacked_unit)
@@ -242,7 +238,7 @@ function _execute(attacked_unit, damage_profile, target_index, target_number, po
 			end
 
 			local stagger_impact_bonus = nil
-			calculated_damage, damage_efficiency = DamageCalculation.calculate(damage_profile, damage_type, target_settings, damage_profile_lerp_values, hit_zone_name, power_level * power_level_damage_multiplier, charge_level, target_breed_or_nil, attacker_breed_or_nil, is_critical_strike, hit_weakspot, hit_shield, effective_backstab, effective_flanking, dropoff_scalar, attack_type, attacker_stat_buffs, target_stat_buffs, target_buff_extension, armor_penetrating, target_toughness_extension, armor_type, target_stagger_count, num_triggered_staggers, is_attacked_unit_suppressed, distance, attacked_unit, auto_completed_action, current_stagger_impact, stagger_impact_bonus)
+			calculated_damage, damage_efficiency = DamageCalculation.calculate(damage_profile, damage_type, target_settings, damage_profile_lerp_values, hit_zone_name, power_level * power_level_damage_multiplier, charge_level, target_breed_or_nil, attacker_breed_or_nil, is_critical_strike, hit_weakspot, hit_shield, effective_backstab, effective_flanking, dropoff_scalar, attack_type, attacker_stat_buffs, target_stat_buffs, target_buff_extension, armor_penetrating, target_health_extension, target_toughness_extension, armor_type, target_stagger_count, num_triggered_staggers, is_attacked_unit_suppressed, distance, attacked_unit, auto_completed_action, current_stagger_impact, stagger_impact_bonus)
 		end
 	end
 
@@ -385,7 +381,7 @@ function _handle_attack(is_server, instakill, target_is_assisted, target_is_hogt
 			damage_absorbed = 0
 			result = attack_results.dodged
 		else
-			local is_invulnerable, is_damage_allowed, health_setting, current_health_damage, current_permanent_damage, max_health, max_wounds, toughness_template, weapon_toughness_template, current_toughness_damage, movement_state, shield_setting, attacked_unit_stat_buffs, attacked_unit_keywords, attacking_unit_stat_buffs = DamageTakenCalculation.get_calculation_parameters(attacked_unit, target_breed_or_nil, damage_profile, attacking_unit, attacking_unit_owner_unit, hit_actor, attacker_buff_extension)
+			local is_invulnerable, is_damage_allowed, health_setting, current_health_damage, current_permanent_damage, max_health, max_wounds, toughness_template, weapon_toughness_template, current_toughness_damage, movement_state, shield_setting, attacked_unit_stat_buffs, attacked_unit_keywords, attacking_unit_stat_buffs = DamageTakenCalculation.calculation_parameters(attacked_unit, target_breed_or_nil, damage_profile, attacking_unit, attacking_unit_owner_unit, hit_actor, attacker_buff_extension)
 			local tougness_damage = nil
 			result, damage, permanent_damage, tougness_damage, damage_absorbed = DamageTakenCalculation.calculate_attack_result(calculated_damage, damage_profile, attack_type, attack_direction, instakill, is_invulnerable, is_damage_allowed, health_setting, current_health_damage, current_permanent_damage, max_health, max_wounds, toughness_template, weapon_toughness_template, current_toughness_damage, movement_state, shield_setting, attacked_unit_stat_buffs, attacked_unit_keywords, attacked_unit, damage_type, attacking_unit_stat_buffs)
 			damage_dealt = damage + permanent_damage

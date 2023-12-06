@@ -246,8 +246,8 @@ ItemPreviewer._build_bounding_box = function (self, item_data)
 	}
 end
 
-ItemPreviewer.spawn_unit = function (self, base_unit, item_material_slot_overrides)
-	return World.spawn_unit(self.previewer_world, base_unit, item_material_slot_overrides)
+ItemPreviewer.spawn_unit = function (self, base_unit, pose)
+	return World.spawn_unit_ex(self.previewer_world, base_unit, pose)
 end
 
 ItemPreviewer._select_root_unit_resource = function (self, item_data)

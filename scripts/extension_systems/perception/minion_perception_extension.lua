@@ -1,10 +1,12 @@
 local AttackIntensity = require("scripts/utilities/attack_intensity")
 local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
 local Breed = require("scripts/utilities/breed")
+local BreedSettings = require("scripts/settings/breed/breed_settings")
 local MinionPerception = require("scripts/utilities/minion_perception")
 local PerceptionSettings = require("scripts/settings/perception/perception_settings")
 local Vo = require("scripts/utilities/vo")
 local aggro_states = PerceptionSettings.aggro_states
+local MINION_BREED_TYPE = BreedSettings.types.minion
 local MinionPerceptionExtension = class("MinionPerceptionExtension")
 
 MinionPerceptionExtension.init = function (self, extension_init_context, unit, extension_init_data, game_object_data)
@@ -352,7 +354,7 @@ MinionPerceptionExtension.alert_nearby_allies = function (self, target_unit, opt
 	local broadphase = broadphase_system.broadphase
 	local from_position = POSITION_LOOKUP[unit]
 	local target_position = POSITION_LOOKUP[target_unit]
-	local num_results = broadphase:query(from_position, optional_radius or DEFAULT_ALERT_NEARBY_RADIUS, BROADPHASE_RESULTS, side_name)
+	local num_results = broadphase:query(from_position, optional_radius or DEFAULT_ALERT_NEARBY_RADIUS, BROADPHASE_RESULTS, side_name, MINION_BREED_TYPE)
 
 	for i = 1, num_results do
 		repeat
@@ -364,7 +366,7 @@ MinionPerceptionExtension.alert_nearby_allies = function (self, target_unit, opt
 				break
 			end
 
-			if nearby_unit ~= unit and Breed.is_minion(breed) then
+			if nearby_unit ~= unit then
 				local perception_extension = ScriptUnit.extension(nearby_unit, "perception_system")
 				local should_alert = not optional_require_los or perception_extension:has_line_of_sight(target_unit)
 

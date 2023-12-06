@@ -2,7 +2,6 @@ require("scripts/extension_systems/weapon/actions/action_weapon_base")
 
 local Attack = require("scripts/utilities/attack/attack")
 local AttackSettings = require("scripts/settings/damage/attack_settings")
-local Breed = require("scripts/utilities/breed")
 local Explosion = require("scripts/utilities/attack/explosion")
 local Health = require("scripts/utilities/health")
 local ImpactEffect = require("scripts/utilities/attack/impact_effect")

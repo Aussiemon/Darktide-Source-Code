@@ -659,7 +659,9 @@ UIManager.create_world = function (self, world_name, optional_layer, optional_ti
 
 	if not optional_flags then
 		local flags = {
-			Application.DISABLE_PHYSICS
+			Application.DISABLE_PHYSICS,
+			Application.ENABLE_VOLUMETRICS,
+			Application.ENABLE_RAY_TRACING
 		}
 	end
 

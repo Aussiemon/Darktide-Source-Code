@@ -1148,8 +1148,10 @@ StatDefinitions.mission_circumstance = {
 	},
 	include_condition = function (self, config)
 		local circumstance_name = config.circumstance_name
+		local hidden_circumstance_name = circumstance_name == "toxic_gas_twins_01"
+		local eligible_circumstance_name = circumstance_name ~= nil and circumstance_name ~= "default" and not hidden_circumstance_name
 
-		return circumstance_name ~= nil and circumstance_name ~= "default"
+		return eligible_circumstance_name
 	end
 }
 StatDefinitions.mission_flash = {
@@ -1178,6 +1180,74 @@ StatDefinitions.max_difficulty_flash = {
 	},
 	include_condition = function (self, config)
 		return config.is_flash_mission
+	end
+}
+StatDefinitions.mission_twins = {
+	flags = {
+		StatFlags.backend
+	},
+	triggers = {
+		{
+			id = "mission_won",
+			trigger = _max_difficulty
+		}
+	},
+	include_condition = function (self, config)
+		local circumstance_name = config.circumstance_name
+
+		return circumstance_name ~= nil and circumstance_name == "toxic_gas_twins_01"
+	end
+}
+StatDefinitions.mission_twins_hard_mode = {
+	flags = {
+		StatFlags.backend
+	},
+	triggers = {
+		{
+			id = "mission_won",
+			trigger = function (self, stat_data, difficulty)
+				local has_hard_mode = Managers.state.pacing:has_hard_mode()
+
+				if has_hard_mode and difficulty >= 5 then
+					local id = self.id
+					stat_data[id] = (stat_data[id] or self.default) + 1
+
+					return id, stat_data[id]
+				end
+			end
+		}
+	},
+	include_condition = function (self, config)
+		local circumstance_name = config.circumstance_name
+		local has_correct_circumstance = circumstance_name ~= nil and circumstance_name == "toxic_gas_twins_01"
+
+		return has_correct_circumstance
+	end
+}
+StatDefinitions.mission_twins_secret_puzzle_trigger = {
+	flags = {
+		StatFlags.backend
+	},
+	triggers = {
+		{
+			id = "mission_won",
+			trigger = function (self, stat_data, difficulty)
+				local has_hard_mode = Managers.state.pacing:has_hard_mode()
+
+				if has_hard_mode then
+					local id = self.id
+					stat_data[id] = (stat_data[id] or self.default) + 1
+
+					return id, stat_data[id]
+				end
+			end
+		}
+	},
+	include_condition = function (self, config)
+		local circumstance_name = config.circumstance_name
+		local has_correct_circumstance = circumstance_name ~= nil and circumstance_name == "toxic_gas_twins_01"
+
+		return has_correct_circumstance
 	end
 }
 
@@ -3262,8 +3332,8 @@ StatDefinitions.ogryn_2_grenade_box_kills_without_missing_counter = {
 	triggers = {
 		{
 			id = "hook_projectile_hit",
-			trigger = function (self, stat_data, impact_hit, num_impact_hit_weakspot, num_impact_hit_kill, num_impact_hit_elite, num_impact_hit_special, weapon_template_name)
-				if weapon_template_name ~= "ogryn_grenade_box" and weapon_template_name ~= "ogryn_grenade_box_cluster" then
+			trigger = function (self, stat_data, impact_hit, num_impact_hit_weakspot, num_impact_hit_kill, num_impact_hit_elite, num_impact_hit_special, projectile_template_name)
+				if projectile_template_name ~= "ogryn_grenade_box" and projectile_template_name ~= "ogryn_grenade_box_cluster" then
 					return
 				end
 

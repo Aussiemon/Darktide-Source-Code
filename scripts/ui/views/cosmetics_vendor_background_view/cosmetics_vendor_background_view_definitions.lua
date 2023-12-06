@@ -106,12 +106,13 @@ local cosmetics_vendor_option_tab_definition = {
 	blur_background = false,
 	view = "cosmetics_vendor_view",
 	context = {
+		grid_id = "gear_grid",
+		optional_store_service = "get_credits_cosmetics_store",
 		hide_price = true,
 		disable_item_presentation = true,
-		fetch_account_items = true,
-		optional_store_service = "get_credits_cosmetics_store",
-		fetch_store_items_on_enter = false,
 		spawn_player = true,
+		fetch_account_items = true,
+		fetch_store_items_on_enter = false,
 		option_button_definitions = {
 			{
 				slot_name = "slot_gear_upperbody",
@@ -153,11 +154,11 @@ local cosmetics_vendor_option_tab_definition = {
 		},
 		optional_sort_options = {
 			{
-				display_name = Localize("loc_inventory_item_grid_sort_title_format_low_high", true, {
+				display_name = Localize("loc_inventory_item_grid_sort_title_format_high_low", true, {
 					sort_name = Localize("loc_inventory_item_grid_sort_title_rarity")
 				}),
 				sort_function = ItemUtils.sort_element_key_comparator({
-					"<",
+					">",
 					"item",
 					ItemUtils.compare_item_rarity,
 					"<",
@@ -169,11 +170,11 @@ local cosmetics_vendor_option_tab_definition = {
 				})
 			},
 			{
-				display_name = Localize("loc_inventory_item_grid_sort_title_format_high_low", true, {
+				display_name = Localize("loc_inventory_item_grid_sort_title_format_low_high", true, {
 					sort_name = Localize("loc_inventory_item_grid_sort_title_rarity")
 				}),
 				sort_function = ItemUtils.sort_element_key_comparator({
-					">",
+					"<",
 					"item",
 					ItemUtils.compare_item_rarity,
 					"<",
@@ -344,9 +345,10 @@ local weapon_cosmetics_vendor_option_tab_definition = {
 	view = "cosmetics_vendor_view",
 	context = {
 		hide_price = true,
-		use_weapon_preview = true,
+		grid_id = "weapon_grid",
 		optional_store_service = "get_credits_weapon_cosmetics_store",
 		fetch_store_items_on_enter = false,
+		use_weapon_preview = true,
 		optional_camera_breed_name = "human",
 		option_button_definitions = {
 			{

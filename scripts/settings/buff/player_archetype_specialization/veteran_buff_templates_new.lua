@@ -957,8 +957,9 @@ templates.veteran_invisibility = {
 		end
 
 		local damage = params.damage
+		local result = params.attack_result
 
-		if damage and damage <= 0 then
+		if damage and damage <= 0 and (not result or result ~= attack_results.toughness_absorbed) then
 			return
 		end
 
@@ -2114,6 +2115,10 @@ templates.veteran_consecutive_hits_apply_rending = {
 	specific_proc_func = {
 		on_hit = function (params, template_data, template_context)
 			if not template_data.new_shot then
+				return
+			end
+
+			if params.damage_profile and params.damage_profile.is_buff_damage then
 				return
 			end
 

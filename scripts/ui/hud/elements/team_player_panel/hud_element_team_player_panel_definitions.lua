@@ -253,6 +253,35 @@ local widget_definitions = {
 			end
 		}
 	}, "toughness_bar"),
+	pocketable_small = UIWidget.create_definition({
+		{
+			value_id = "texture",
+			pass_type = "texture",
+			style_id = "texture",
+			style = {
+				vertical_alignment = "top",
+				horizontal_alignment = "left",
+				size = {
+					16,
+					16
+				},
+				default_offset = {
+					58,
+					-22,
+					3
+				},
+				offset = {
+					58,
+					-22,
+					3
+				},
+				color = UIHudSettings.color_tint_main_1
+			},
+			visibility_function = function (content)
+				return content.texture ~= nil
+			end
+		}
+	}, "toughness_bar"),
 	voice_indicator = UIWidget.create_definition({
 		{
 			value = "content/ui/materials/hud/icons/speaker",

@@ -1,6 +1,6 @@
 local WarpCharge = require("scripts/utilities/warp_charge")
 local mood_settings = {}
-local types = table.enum("corruption_taken", "corruption", "corruptor_proximity", "critical_health", "damage_taken", "knocked_down", "last_wound", "no_toughness", "sprinting_overtime", "sprinting", "suppression_high", "suppression_low", "suppression_ongoing", "toughness_absorbed_melee", "toughness_absorbed", "toughness_broken", "warped_critical", "warped_high_to_critical", "warped_low_to_high", "warped", "ogryn_combat_ability_charge", "ogryn_combat_ability_shout", "ogryn_combat_ability_stance", "psyker_combat_ability_shout", "psyker_force_field_sphere", "stealth", "veteran_stealth", "veteran_combat_ability_stance", "veteran_stealth_and_stance", "zealot_combat_ability_dash")
+local types = table.enum("corruption_taken", "corruption", "corruptor_proximity", "critical_health", "damage_taken", "knocked_down", "last_wound", "no_toughness", "sprinting_overtime", "sprinting", "suppression_high", "suppression_low", "suppression_ongoing", "toughness_absorbed_melee", "toughness_absorbed", "toughness_broken", "warped_critical", "warped_high_to_critical", "warped_low_to_high", "warped", "ogryn_combat_ability_charge", "ogryn_combat_ability_shout", "ogryn_combat_ability_stance", "psyker_combat_ability_shout", "psyker_force_field_sphere", "stealth", "veteran_stealth", "veteran_combat_ability_stance", "veteran_stealth_and_stance", "zealot_combat_ability_dash", "syringe_ability", "syringe_power", "syringe_speed")
 local status = table.enum("active", "inactive", "removing")
 mood_settings.mood_types = types
 mood_settings.status = status
@@ -32,7 +32,10 @@ mood_settings.priority = {
 	types.psyker_combat_ability_shout,
 	types.veteran_combat_ability_stance,
 	types.zealot_combat_ability_dash,
-	types.corruptor_proximity
+	types.corruptor_proximity,
+	types.syringe_ability,
+	types.syringe_power,
+	types.syringe_speed
 }
 mood_settings.moods = {
 	[types.stealth] = {
@@ -375,6 +378,66 @@ mood_settings.moods = {
 		wwise_state = {
 			group = "player_state",
 			on_state = "psyker_shield",
+			off_state = "none"
+		}
+	},
+	[types.syringe_ability] = {
+		blend_in_time = 0.1,
+		blend_out_time = 0.2,
+		shading_environment = "content/shading_environments/moods/stimms_concentration_yellow_mood_01",
+		looping_sound_start_events = {
+			"wwise/events/player/play_syringe_ability_start"
+		},
+		looping_sound_stop_events = {
+			"wwise/events/player/play_syringe_ability_stop"
+		},
+		particle_effects_looping = {
+			"content/fx/particles/screenspace/player_screen_stimms_concentration_yellow_01"
+		},
+		blend_mask = ShadingEnvironmentBlendMask.OVERRIDES,
+		wwise_state = {
+			group = "player_ability",
+			on_state = "syringe_ability",
+			off_state = "none"
+		}
+	},
+	[types.syringe_power] = {
+		blend_in_time = 0.1,
+		blend_out_time = 0.2,
+		shading_environment = "content/shading_environments/moods/stimms_power_red_mood_01",
+		looping_sound_start_events = {
+			"wwise/events/player/play_syringe_power_start"
+		},
+		looping_sound_stop_events = {
+			"wwise/events/player/play_syringe_power_stop"
+		},
+		particle_effects_looping = {
+			"content/fx/particles/screenspace/player_screen_stimms_power_red_01"
+		},
+		blend_mask = ShadingEnvironmentBlendMask.OVERRIDES,
+		wwise_state = {
+			group = "player_ability",
+			on_state = "syringe_power",
+			off_state = "none"
+		}
+	},
+	[types.syringe_speed] = {
+		blend_in_time = 0.1,
+		blend_out_time = 0.2,
+		shading_environment = "content/shading_environments/moods/stimms_speed_blue_mood_01",
+		looping_sound_start_events = {
+			"wwise/events/player/play_syringe_speed_start"
+		},
+		looping_sound_stop_events = {
+			"wwise/events/player/play_syringe_speed_stop"
+		},
+		particle_effects_looping = {
+			"content/fx/particles/screenspace/player_screen_stimms_speed_blue"
+		},
+		blend_mask = ShadingEnvironmentBlendMask.OVERRIDES,
+		wwise_state = {
+			group = "player_ability",
+			on_state = "syringe_speed",
 			off_state = "none"
 		}
 	}

@@ -6,15 +6,19 @@ WeaponTraitProcConditionalSwitchBuff.update_stat_buffs = function (self, current
 	WeaponTraitProcConditionalSwitchBuff.super.update_stat_buffs(self, current_stat_buffs, t)
 
 	local template = self._template
-	local conditional_switch_stat_buffs_func = template.conditional_switch_stat_buffs_func
-	local index = conditional_switch_stat_buffs_func(self._template_data, self._template_context)
+	local conditional_stat_buffs_func = template.conditional_stat_buffs_func
 
-	if index then
-		local template_override_data = self._template_override_data
-		local conditional_stat_buffs_groups = template_override_data and template_override_data.conditional_stat_buffs or template.conditional_stat_buffs
-		local conditional_stat_buffs = conditional_stat_buffs_groups[index]
+	if conditional_stat_buffs_func and conditional_stat_buffs_func(self._template_data, self._template_context) then
+		local conditional_switch_stat_buffs_func = template.conditional_switch_stat_buffs_func
+		local index = conditional_switch_stat_buffs_func(self._template_data, self._template_context)
 
-		self:_calculate_stat_buffs(current_stat_buffs, conditional_stat_buffs)
+		if index then
+			local template_override_data = self._template_override_data
+			local conditional_stat_buffs_groups = template_override_data and template_override_data.conditional_switch_stat_buffs or template.conditional_switch_stat_buffs
+			local conditional_stat_buffs = conditional_stat_buffs_groups[index]
+
+			self:_calculate_stat_buffs(current_stat_buffs, conditional_stat_buffs)
+		end
 	end
 end
 

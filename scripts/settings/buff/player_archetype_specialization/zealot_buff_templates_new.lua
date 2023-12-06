@@ -15,6 +15,7 @@ local SpecialRulesSetting = require("scripts/settings/ability/special_rules_sett
 local TalentSettings = require("scripts/settings/talent/talent_settings_new")
 local Toughness = require("scripts/utilities/toughness/toughness")
 local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
+local attack_results = AttackSettings.attack_results
 local attack_types = AttackSettings.attack_types
 local damage_efficiencies = AttackSettings.damage_efficiencies
 local damage_types = DamageSettings.damage_types
@@ -1782,8 +1783,9 @@ templates.zealot_invisibility = {
 		end
 
 		local damage = params.damage
+		local result = params.attack_result
 
-		if damage and damage <= 0 then
+		if damage and damage <= 0 and (not result or result ~= attack_results.toughness_absorbed) then
 			return
 		end
 

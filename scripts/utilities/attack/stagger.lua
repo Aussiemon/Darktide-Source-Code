@@ -252,7 +252,11 @@ function _should_trigger_stagger(t, stagger_component, new_stagger_type)
 		local current_stagger_impact = stagger_impact_comparison[current_stagger_type]
 		local new_stagger_impact = stagger_impact_comparison[new_stagger_type]
 
-		if current_stagger_impact and new_stagger_impact <= current_stagger_impact then
+		if current_stagger_impact then
+			if new_stagger_impact <= current_stagger_impact then
+				should_trigger_stagger = immune_time < t
+			end
+		else
 			should_trigger_stagger = immune_time < t
 		end
 	end

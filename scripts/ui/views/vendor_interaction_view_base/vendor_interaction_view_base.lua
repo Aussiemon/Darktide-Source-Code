@@ -75,6 +75,16 @@ VendorInteractionViewBase.on_enter = function (self)
 	local intro_texts = self._base_definitions.intro_texts
 
 	self:_set_intro_texts(intro_texts)
+
+	local starting_option_index = self._base_definitions.starting_option_index
+
+	if starting_option_index then
+		local option = button_options_definitions[starting_option_index]
+
+		if option then
+			self:on_option_button_pressed(starting_option_index, option)
+		end
+	end
 end
 
 VendorInteractionViewBase._switch_tab = function (self, index)
@@ -92,15 +102,25 @@ end
 VendorInteractionViewBase._set_intro_texts = function (self, intro_texts)
 	local widgets_by_name = self._widgets_by_name
 	local title_text = intro_texts.title_text
+	local unlocalized_title_text = intro_texts.unlocalized_title_text
 
 	if title_text then
 		widgets_by_name.title_text.content.text = Localize(title_text)
 	end
 
+	if unlocalized_title_text then
+		widgets_by_name.title_text.content.text = unlocalized_title_text
+	end
+
 	local description_text = intro_texts.description_text
+	local unlocalized_description_text = intro_texts.unlocalized_description_text
 
 	if description_text then
 		widgets_by_name.description_text.content.text = Localize(description_text)
+	end
+
+	if unlocalized_description_text then
+		widgets_by_name.description_text.content.text = unlocalized_description_text
 	end
 
 	self:_update_description_height()

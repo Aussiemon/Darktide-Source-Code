@@ -12,6 +12,7 @@ local perception_aggro_states = PerceptionSettings.aggro_states
 local MonsterPacing = class("MonsterPacing")
 
 MonsterPacing.init = function (self, nav_world)
+	self._fx_system = Managers.state.extension:system("fx_system")
 	self._nav_world = nav_world
 	local spawn_types = MonsterSettings.spawn_types
 	local max_sections = MonsterSettings.max_sections
@@ -29,6 +30,7 @@ MonsterPacing.init = function (self, nav_world)
 	self._spawn_type_point_sections = spawn_point_sections
 	self._health_modifier = 1
 	self._aggroed_monster_units = {}
+	self._main_path_sound_events = {}
 end
 
 MonsterPacing.destroy = function (self)
@@ -51,8 +53,31 @@ end
 local TEMP_SECTIONS_MONSTERS = {}
 local TEMP_SECTIONS_WITCHES = {}
 local NUM_SECTIONS = {}
+local TWIN_BREED_NAMES = {
+	"renegade_twin_captain",
+	"renegade_twin_captain_two"
+}
+local SHOULD_INJECT_TWIN = {
+	false,
+	false,
+	true,
+	true,
+	true
+}
+local MAINPATH_SOUND_EVENTS = {
+	renegade_twin_captain = {
+		event = "wwise/events/minions/play_minion_special_twins_ambush_spawn",
+		distance = 30
+	},
+	renegade_twin_captain_two = {
+		event = "wwise/events/minions/play_minion_special_twins_ambush_spawn",
+		distance = 30
+	}
+}
 
 MonsterPacing._generate_spawns = function (self, template)
+	table.clear(self._main_path_sound_events)
+
 	local main_path_available = Managers.state.main_path:is_main_path_available()
 
 	if not main_path_available then
@@ -101,6 +126,21 @@ MonsterPacing._generate_spawns = function (self, template)
 	NUM_SECTIONS.witches = num_sections
 	local monsters = {}
 	local breed_names = table.clone(template.breed_names)
+	local inject_twin = false
+	local can_inject_twin = false
+	can_inject_twin = Managers.state.difficulty:get_table_entry_by_challenge(SHOULD_INJECT_TWIN)
+
+	if can_inject_twin then
+		local flag = "activate_twins"
+		inject_twin = Managers.state.pacing:get_backend_pacing_control_flag(flag)
+
+		if inject_twin then
+			Log.info("MonsterPacing", "Injected twin")
+		else
+			Log.info("MonsterPacing", "Got twins flag but didn't roll true")
+		end
+	end
+
 	local allow_witches_spawned_with_monsters = template.allow_witches_spawned_with_monsters
 	local boss_patrols = nil
 
@@ -132,6 +172,11 @@ MonsterPacing._generate_spawns = function (self, template)
 				if #spawn_type_breed_names > 0 then
 					local breed_name = spawn_type_breed_names[math.random(#spawn_type_breed_names)]
 					local position = spawn_point.position
+
+					if inject_twin then
+						breed_name = TWIN_BREED_NAMES[math.random(1, #TWIN_BREED_NAMES)]
+					end
+
 					local despawn_distance_when_passive = template.despawn_distance_when_passive and template.despawn_distance_when_passive[breed_name]
 					local monster = {
 						travel_distance = travel_distance,
@@ -142,6 +187,26 @@ MonsterPacing._generate_spawns = function (self, template)
 						spawn_type = spawn_type
 					}
 					monsters[#monsters + 1] = monster
+
+					if inject_twin then
+						monster.is_twin = true
+						monster.objective = "objective_twins_ambush"
+						inject_twin = false
+						local mutator_manager = Managers.state.mutator
+
+						if mutator_manager:mutator("mutator_auric_tension_modifier") then
+							monster.set_enraged = true
+						end
+
+						local main_path_sound_event_data = MAINPATH_SOUND_EVENTS[breed_name]
+
+						if main_path_sound_event_data then
+							self._main_path_sound_events[#self._main_path_sound_events + 1] = {
+								event = main_path_sound_event_data.event,
+								distance = travel_distance - main_path_sound_event_data.distance
+							}
+						end
+					end
 
 					table.swap_delete(temp_sections_table, temp_section_index)
 
@@ -444,6 +509,17 @@ MonsterPacing.update = function (self, dt, t, side_id, target_side_id)
 				end
 			end
 		end
+
+		if self._main_path_sound_events and #self._main_path_sound_events > 0 then
+			local next_mainpath_event = self._main_path_sound_events[1]
+
+			if next_mainpath_event.distance <= ahead_travel_distance then
+				local optional_ambisonics = true
+
+				self._fx_system:trigger_wwise_event(next_mainpath_event.event, nil, nil, nil, nil, nil, optional_ambisonics)
+				table.remove(self._main_path_sound_events, 1)
+			end
+		end
 	end
 
 	local alive_monsters = self._alive_monsters
@@ -457,6 +533,12 @@ MonsterPacing.update = function (self, dt, t, side_id, target_side_id)
 		if not HEALTH_ALIVE[spawned_unit] then
 			table.remove(alive_monsters, i)
 
+			if monster.objective then
+				local mission_objective_system = Managers.state.extension:system("mission_objective_system")
+
+				mission_objective_system:end_mission_objective(monster.objective)
+			end
+
 			local aggroed_index = table.find(aggroed_monster_units, spawned_unit)
 
 			if aggroed_index then
@@ -464,6 +546,33 @@ MonsterPacing.update = function (self, dt, t, side_id, target_side_id)
 			end
 
 			break
+		end
+
+		if monster.is_twin then
+			local health_extension = ScriptUnit.extension(spawned_unit, "health_system")
+			local current_health_percent = health_extension:current_health_percent()
+
+			if not monster.triggered_escape_vo and current_health_percent <= 0.35 then
+				local breed_name = ScriptUnit.extension(spawned_unit, "unit_data_system"):breed().name
+
+				Vo.enemy_generic_vo_event(spawned_unit, "escape", breed_name)
+
+				monster.triggered_escape_vo = true
+			end
+
+			if not monster.escaped and current_health_percent <= 0.25 then
+				local blackboard = BLACKBOARDS[spawned_unit]
+				local behavior_component = Blackboard.write_component(blackboard, "behavior")
+				behavior_component.should_disappear = true
+
+				health_extension:set_invulnerable(true)
+
+				local liquid_area_template = LiquidAreaTemplates.toxic_gas
+
+				LiquidArea.try_create(POSITION_LOOKUP[spawned_unit], Vector3(0, 0, 1), self._nav_world, liquid_area_template, nil, 50)
+
+				monster.escaped = true
+			end
 		end
 
 		local despawn_distance_when_passive = monster.despawn_distance_when_passive
@@ -532,6 +641,19 @@ MonsterPacing._spawn_monster = function (self, monster, ahead_target_unit, side_
 		end
 	else
 		spawned_unit = Managers.state.minion_spawn:spawn_minion(breed_name, spawn_position, Quaternion.identity(), side_id, nil, nil, nil, nil, nil, nil, spawn_max_health_modifier)
+	end
+
+	if monster.set_enraged then
+		local t = Managers.time:time("gameplay")
+		local buff_extension = ScriptUnit.extension(spawned_unit, "buff_system")
+
+		buff_extension:add_internally_controlled_buff("empowered_twin", t)
+	end
+
+	if monster.objective then
+		local mission_objective_system = Managers.state.extension:system("mission_objective_system")
+
+		mission_objective_system:start_mission_objective(monster.objective)
 	end
 
 	local pause_pacing_on_spawn_settings = template.pause_pacing_on_spawn

@@ -37,9 +37,8 @@ local action_data = {
 		}
 	},
 	alerted = {
-		override_aggro_distance = 8,
-		vo_event = "alerted_idle",
 		instant_aggro_chance = 0,
+		override_aggro_distance = 8,
 		moving_alerted_anim_events = {
 			fwd = {
 				"alerted_fwd",
@@ -319,6 +318,7 @@ local action_data = {
 	combo_attack = {
 		utility_weight = 1,
 		ignore_blocked = true,
+		vo_event = "assault",
 		stagger_reduction = 50,
 		moving_attack = true,
 		move_speed_variable_lerp_speed = 5,

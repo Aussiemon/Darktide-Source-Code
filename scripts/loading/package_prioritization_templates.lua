@@ -28,6 +28,7 @@ local package_prioritization_templates = {
 			"slot_primary",
 			"slot_secondary",
 			"slot_pocketable",
+			"slot_pocketable_small",
 			"slot_luggable",
 			"slot_device",
 			"slot_unarmed",

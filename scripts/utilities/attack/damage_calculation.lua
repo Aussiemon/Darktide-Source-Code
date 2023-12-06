@@ -19,10 +19,10 @@ local stagger_strength_output = PowerLevelSettings.stagger_strength_output
 local keywords = BuffSettings.keywords
 local melee_attack_strengths = AttackSettings.melee_attack_strength
 local DamageCalculation = {}
-local _apply_damage_type_buffs_to_damage, _apply_armor_type_buffs_to_damage, _backstab_damage, _flanking_damage, _base_damage, _damage_multiplier_from_breed, _rending_multiplier, _base_rending_damage, _boost_curve_multiplier, _calculate_damage_buff, _finesse_boost_damage, _hit_zone_damage_multiplier, _rending_damage, _power_level_scaled_damage = nil
+local _apply_armor_type_buffs_to_damage, _apply_damage_type_buffs_to_damage, _apply_diminishing_returns_to_damage, _backstab_damage, _base_damage, _base_rending_damage, _boost_curve_multiplier, _calculate_damage_buff, _damage_multiplier_from_breed, _finesse_boost_damage, _flanking_damage, _hit_zone_damage_multiplier, _power_level_scaled_damage, _rending_damage, _rending_multiplier = nil
 local EMPTY_STAT_BUFFS = {}
 
-DamageCalculation.calculate = function (damage_profile, damage_type, target_settings, lerp_values, hit_zone_name, power_level, charge_level, breed_or_nil, attacker_breed_or_nil, is_critical_strike, hit_weakspot, hit_shield, is_backstab, is_flanking, dropoff_scalar, attack_type, attacker_stat_buffs, target_stat_buffs, target_buff_extension, armor_penetrating, target_toughness_extension, armor_type, target_stagger_count, num_triggered_staggers, is_attacked_unit_suppressed, distance, target_unit, auto_completed_action, stagger_impact)
+DamageCalculation.calculate = function (damage_profile, damage_type, target_settings, lerp_values, hit_zone_name, power_level, charge_level, breed_or_nil, attacker_breed_or_nil, is_critical_strike, hit_weakspot, hit_shield, is_backstab, is_flanking, dropoff_scalar, attack_type, attacker_stat_buffs, target_stat_buffs, target_buff_extension, armor_penetrating, target_health_extension, target_toughness_extension, armor_type, target_stagger_count, num_triggered_staggers, is_attacked_unit_suppressed, distance, target_unit, auto_completed_action, stagger_impact)
 	local force_field_extension = ScriptUnit.has_extension(target_unit, "force_field_system")
 
 	if force_field_extension then
@@ -79,6 +79,7 @@ DamageCalculation.calculate = function (damage_profile, damage_type, target_sett
 	damage = damage * hit_zone_damage_multiplier
 	damage = _apply_armor_type_buffs_to_damage(damage, armor_type, attacker_stat_buffs, target_toughness_extension)
 	damage = _apply_armor_type_buffs_to_damage(damage, armor_type, target_stat_buffs, target_toughness_extension)
+	damage = _apply_diminishing_returns_to_damage(damage, target_health_extension, breed_or_nil)
 	local is_push = damage_profile.is_push or armor_type ~= "super_armor" and armor_damage_modifier == 0
 	local damage_efficiency = is_push and "push" or hit_shield and damage <= 0 and damage_efficiencies.negated or armor_damage_modifier_to_damage_efficiency(armor_damage_modifier, armor_type, rending_damage)
 
@@ -89,18 +90,18 @@ DamageCalculation.base_ui_damage = function (damage_profile, target_settings, po
 	local scaled_power_level = PowerLevel.scale_by_charge_level(power_level, charge_level, damage_profile.charge_level_scaler)
 	local is_critical_strike = false
 	local armor_type = ArmorSettings.types.unarmored
-	local dmg_table = damage_output[armor_type]
-	local dmg_min = dmg_table.min
-	local dmg_max = dmg_table.max
-	local dmg_range = dmg_max - dmg_min
+	local attack_table = damage_output[armor_type]
+	local attack_min = attack_table.min
+	local attack_max = attack_table.max
+	local attack_range = attack_max - attack_min
 	local attack_power_level = DamageProfile.power_distribution_from_power_level(scaled_power_level, "attack", damage_profile, target_settings, is_critical_strike, dropoff_scalar, armor_type, lerp_values)
-	local base_attack = dmg_min + dmg_range * PowerLevel.power_level_percentage(attack_power_level)
-	local imp_table = stagger_strength_output[armor_type]
-	local imp_min = imp_table.min
-	local imp_max = imp_table.max
-	local imp_range = imp_max - imp_min
+	local base_attack = attack_min + attack_range * PowerLevel.power_level_percentage(attack_power_level)
+	local impact_table = stagger_strength_output[armor_type]
+	local impact_min = impact_table.min
+	local impact_max = impact_table.max
+	local impact_range = impact_max - impact_min
 	local impact_power_level = DamageProfile.power_distribution_from_power_level(scaled_power_level, "impact", damage_profile, target_settings, is_critical_strike, dropoff_scalar, armor_type, lerp_values)
-	local base_impact = imp_min + imp_range * PowerLevel.power_level_percentage(impact_power_level)
+	local base_impact = impact_min + impact_range * PowerLevel.power_level_percentage(impact_power_level)
 
 	return base_attack, base_impact
 end
@@ -456,6 +457,16 @@ function _finesse_boost_damage(base_damage, base_rending_damage, rending_damage,
 	local final_finesse_damage = base_finesse_damage * finesse_buff_damage_multiplier
 
 	return final_finesse_damage, final_finesse_damage - base_finesse_damage
+end
+
+function _apply_diminishing_returns_to_damage(damage, target_health_extension, breed_or_nil)
+	if not target_health_extension or not breed_or_nil or not breed_or_nil.diminishing_returns_damage then
+		return damage
+	end
+
+	local current_health_percent = target_health_extension:current_health_percent()
+
+	return math.lerp(0, damage, math.easeInCubic(current_health_percent))
 end
 
 function _hit_zone_damage_multiplier(breed_or_nil, hit_zone_name, attack_type, ignore_hitzone_multiplier, ignore_roamer_hitzone_multipliers)

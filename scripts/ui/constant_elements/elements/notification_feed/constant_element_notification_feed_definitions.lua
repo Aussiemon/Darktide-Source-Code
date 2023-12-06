@@ -4,6 +4,7 @@ local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local UIRenderer = require("scripts/managers/ui/ui_renderer")
 local UISettings = require("scripts/settings/ui/ui_settings")
+local ItemSlotSettings = require("scripts/settings/item/item_slot_settings")
 local header_size = ConstantElementNotificationFeedSettings.header_size
 local scenegraph_definition = {
 	screen = UIWorkspaceSettings.screen,
@@ -211,13 +212,13 @@ local create_notification_message = {
 				}
 				text_offset = 130
 			elseif element.icon_size == "portrait_frame" then
-				icon_size = {
-					90,
-					100
+				icon_size = ItemSlotSettings.slot_portrait_frame and ItemSlotSettings.slot_portrait_frame.item_icon_size or {
+					60,
+					70
 				}
 				text_offset = 210
 			elseif element.icon_size == "insignia" then
-				icon_size = {
+				icon_size = ItemSlotSettings.slot_insignia and ItemSlotSettings.slot_insignia.item_icon_size or {
 					30,
 					80
 				}
@@ -447,7 +448,7 @@ local animations = {
 				local anim_progress = math.easeCubic(progress)
 				local fade_anim_progress = math.sin(math.pi * progress)
 				widget.style.shine.color[1] = 255 * fade_anim_progress
-				widget.style.shine.offset[1] = -header_size[1] * anim_progress
+				widget.style.shine.offset[1] = -(header_size[1] * 1.5) * math.sin(anim_progress)
 			end
 		}
 	},

@@ -5,10 +5,9 @@ local Attack = require("scripts/utilities/attack/attack")
 local AttackIntensity = require("scripts/utilities/attack_intensity")
 local AttackSettings = require("scripts/settings/damage/attack_settings")
 local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
-local Breed = require("scripts/utilities/breed")
+local BreedSettings = require("scripts/settings/breed/breed_settings")
 local Catapulted = require("scripts/extension_systems/character_state_machine/character_states/utilities/catapulted")
 local Dodge = require("scripts/extension_systems/character_state_machine/character_states/utilities/dodge")
-local Health = require("scripts/utilities/health")
 local ImpactEffect = require("scripts/utilities/attack/impact_effect")
 local MinionMovement = require("scripts/utilities/minion_movement")
 local MinionPerception = require("scripts/utilities/minion_perception")
@@ -20,6 +19,7 @@ local Stagger = require("scripts/utilities/attack/stagger")
 local StaggerSettings = require("scripts/settings/damage/stagger_settings")
 local Trajectory = require("scripts/utilities/trajectory")
 local attack_types = AttackSettings.attack_types
+local MINION_BREED_TYPE = BreedSettings.types.minion
 local BtMutantChargerChargeAction = class("BtMutantChargerChargeAction", "BtNode")
 local ABOVE = 1
 local BELOW = 2
@@ -1067,7 +1067,7 @@ BtMutantChargerChargeAction._push_friendly_minions = function (self, unit, actio
 	local target_side_names = side:relation_side_names(broadphase_relation)
 	local radius = action_data.push_minions_radius
 	local from = POSITION_LOOKUP[unit]
-	local num_results = broadphase:query(from, radius, BROADPHASE_RESULTS, target_side_names)
+	local num_results = broadphase:query(from, radius, BROADPHASE_RESULTS, target_side_names, MINION_BREED_TYPE)
 
 	if num_results < 1 then
 		return
@@ -1094,22 +1094,19 @@ BtMutantChargerChargeAction._push_friendly_minions = function (self, unit, actio
 
 			local unit_data_extension = ScriptUnit.extension(hit_unit, "unit_data_system")
 			local hit_unit_breed = unit_data_extension:breed()
+			local hit_unit_breed_name = hit_unit_breed.name
+			local should_ignore = push_minions_ignored_breeds and push_minions_ignored_breeds[hit_unit_breed_name]
+			local tags = hit_unit_breed.tags
 
-			if Breed.is_minion(hit_unit_breed) then
-				local hit_unit_breed_name = hit_unit_breed.name
-				local should_ignore = push_minions_ignored_breeds and push_minions_ignored_breeds[hit_unit_breed_name]
-				local tags = hit_unit_breed.tags
+			if not tags.monster and not should_ignore then
+				Attack.execute(hit_unit, damage_profile, "power_level", power_level, "attacking_unit", unit, "attack_direction", direction, "hit_zone_name", "torso", "damage_type", damage_type)
 
-				if not tags.monster and not should_ignore then
-					Attack.execute(hit_unit, damage_profile, "power_level", power_level, "attacking_unit", unit, "attack_direction", direction, "hit_zone_name", "torso", "damage_type", damage_type)
+				pushed_minions[hit_unit] = true
 
-					pushed_minions[hit_unit] = true
+				if not scratchpad.push_minions_fx_cooldown or scratchpad.push_minions_fx_cooldown <= t then
+					MinionPushFx.play_fx(unit, hit_unit, push_minions_fx_template)
 
-					if not scratchpad.push_minions_fx_cooldown or scratchpad.push_minions_fx_cooldown <= t then
-						MinionPushFx.play_fx(unit, hit_unit, push_minions_fx_template)
-
-						scratchpad.push_minions_fx_cooldown = t + math.random_range(action_data.push_minions_fx_cooldown[1], action_data.push_minions_fx_cooldown[2])
-					end
+					scratchpad.push_minions_fx_cooldown = t + math.random_range(action_data.push_minions_fx_cooldown[1], action_data.push_minions_fx_cooldown[2])
 				end
 			end
 		end
@@ -1136,10 +1133,9 @@ BtMutantChargerChargeAction._get_turn_slowdown_percentage = function (self, unit
 end
 
 BtMutantChargerChargeAction._start_effect_template = function (self, unit, scratchpad, action_data)
-	local effect_template = action_data.effect_template
-
 	if not scratchpad.global_effect_id then
 		local fx_system = scratchpad.fx_system
+		local effect_template = action_data.effect_template
 		local global_effect_id = fx_system:start_template_effect(effect_template, unit)
 		scratchpad.global_effect_id = global_effect_id
 	end

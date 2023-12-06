@@ -777,6 +777,28 @@ local views = {
 			options = WwiseGameSyncSettings.state_groups.options.vendor_menu
 		}
 	},
+	story_mission_background_view = {
+		state_bound = true,
+		display_name = "loc_story_mission_background_view_display_name",
+		use_transition_ui = true,
+		path = "scripts/ui/views/story_mission_background_view/story_mission_background_view",
+		package = "packages/ui/views/story_mission_background_view/story_mission_background_view",
+		class = "StoryMissionBackgroundView",
+		disable_game_world = true,
+		load_in_hub = true,
+		levels = {
+			"content/levels/ui/story_mission_background/story_mission_background"
+		},
+		enter_sound_events = {
+			UISoundEvents.story_mission_enter
+		},
+		exit_sound_events = {
+			UISoundEvents.story_mission_exit
+		},
+		wwise_states = {
+			options = WwiseGameSyncSettings.state_groups.options.story_mission_menu
+		}
+	},
 	main_menu_background_view = {
 		package = "packages/ui/views/main_menu_background_view/main_menu_background_view",
 		display_name = "loc_main_menu_background_view_display_name",
@@ -953,6 +975,8 @@ _declare_view("crafting_modify_options_view", require("scripts/ui/views/crafting
 _declare_view("crafting_replace_perk_view", require("scripts/ui/views/crafting_replace_perk_view/crafting_replace_perk_view_declaration_settings"))
 _declare_view("cosmetics_vendor_view", require("scripts/ui/views/cosmetics_vendor_view/cosmetics_vendor_view_declaration_settings"))
 _declare_view("cosmetics_vendor_background_view", require("scripts/ui/views/cosmetics_vendor_background_view/cosmetics_vendor_background_view_declaration_settings"))
+_declare_view("story_mission_lore_view", require("scripts/ui/views/story_mission_lore_view/story_mission_lore_view_declaration_settings"))
+_declare_view("story_mission_play_view", require("scripts/ui/views/story_mission_play_view/story_mission_play_view_declaration_settings"))
 
 for view_name, settings in pairs(views) do
 	settings.name = view_name

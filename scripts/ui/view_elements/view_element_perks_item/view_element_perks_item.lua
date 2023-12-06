@@ -24,6 +24,14 @@ ViewElementPerksItem.init = function (self, parent, draw_layer, start_scale, opt
 end
 
 ViewElementPerksItem.destroy = function (self, ui_renderer)
+	local backend_promise = self._backend_promise
+
+	if backend_promise and backend_promise:is_pending() then
+		backend_promise:cancel()
+
+		self._backend_promise = nil
+	end
+
 	if self._weapon_stats then
 		self._weapon_stats:destroy()
 
@@ -189,7 +197,7 @@ ViewElementPerksItem.set_alpha_multiplier = function (self, alpha_multiplier)
 end
 
 ViewElementPerksItem.draw = function (self, dt, t, ui_renderer, render_settings, input_service)
-	if self._disabled then
+	if self._disabled or self._backend_promise ~= nil then
 		input_service = input_service:null_service()
 	end
 
@@ -223,8 +231,9 @@ end
 ViewElementPerksItem.present_perks = function (self, item_masterid, ingredients, external_left_click_callback, do_animation)
 	self._ingredients = ingredients
 	self._external_left_click_callback = external_left_click_callback
+	self._backend_promise = Managers.data_service.crafting:get_item_crafting_metadata(item_masterid)
 
-	return Managers.data_service.crafting:get_item_crafting_metadata(item_masterid):next(function (data)
+	return self._backend_promise:next(function (data)
 		self._perks_by_rank = data.perks
 
 		self:_switch_to_rank_tab(RankSettings.max_perk_rank, true)
@@ -235,6 +244,7 @@ ViewElementPerksItem.present_perks = function (self, item_masterid, ingredients,
 
 		self._active = true
 		self._disabled = false
+		self._backend_promise = nil
 	end)
 end
 
@@ -267,7 +277,7 @@ ViewElementPerksItem.update = function (self, dt, t, input_service)
 		return
 	end
 
-	if self._disabled then
+	if self._disabled or self._backend_promise ~= nil then
 		input_service = input_service:null_service()
 	end
 

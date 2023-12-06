@@ -80,7 +80,7 @@ local templates = {
 	weapon_trait_bespoke_combataxe_p3_power_bonus_on_first_attack = {
 		weapon_trait_bespoke_combataxe_p3_power_bonus_on_first_attack = {
 			{
-				conditional_stat_buffs = {
+				conditional_switch_stat_buffs = {
 					{
 						[stat_buffs.power_level_modifier] = 0.1
 					},
@@ -90,7 +90,7 @@ local templates = {
 				}
 			},
 			{
-				conditional_stat_buffs = {
+				conditional_switch_stat_buffs = {
 					{
 						[stat_buffs.power_level_modifier] = 0.15
 					},
@@ -100,7 +100,7 @@ local templates = {
 				}
 			},
 			{
-				conditional_stat_buffs = {
+				conditional_switch_stat_buffs = {
 					{
 						[stat_buffs.power_level_modifier] = 0.2
 					},
@@ -110,7 +110,7 @@ local templates = {
 				}
 			},
 			{
-				conditional_stat_buffs = {
+				conditional_switch_stat_buffs = {
 					{
 						[stat_buffs.power_level_modifier] = 0.25
 					},
@@ -125,7 +125,7 @@ local templates = {
 		weapon_trait_bespoke_combataxe_p3_power_bonus_on_first_attack = {
 			{
 				no_power_duration = 5,
-				conditional_stat_buffs = {
+				conditional_switch_stat_buffs = {
 					{
 						[stat_buffs.melee_power_level_modifier] = 0.6
 					}
@@ -133,7 +133,7 @@ local templates = {
 			},
 			{
 				no_power_duration = 4.5,
-				conditional_stat_buffs = {
+				conditional_switch_stat_buffs = {
 					{
 						[stat_buffs.melee_power_level_modifier] = 0.6
 					}
@@ -141,7 +141,7 @@ local templates = {
 			},
 			{
 				no_power_duration = 4,
-				conditional_stat_buffs = {
+				conditional_switch_stat_buffs = {
 					{
 						[stat_buffs.melee_power_level_modifier] = 0.6
 					}
@@ -149,7 +149,7 @@ local templates = {
 			},
 			{
 				no_power_duration = 3.5,
-				conditional_stat_buffs = {
+				conditional_switch_stat_buffs = {
 					{
 						[stat_buffs.melee_power_level_modifier] = 0.6
 					}
@@ -160,22 +160,22 @@ local templates = {
 	weapon_trait_bespoke_combataxe_p3_power_bonus_scaled_on_stamina = {
 		weapon_trait_bespoke_combataxe_p3_power_bonus_scaled_on_stamina = {
 			{
-				conditional_stat_buffs = {
+				conditional_switch_stat_buffs = {
 					[stat_buffs.melee_power_level_modifier] = 0.05
 				}
 			},
 			{
-				conditional_stat_buffs = {
+				conditional_switch_stat_buffs = {
 					[stat_buffs.melee_power_level_modifier] = 0.06
 				}
 			},
 			{
-				conditional_stat_buffs = {
+				conditional_switch_stat_buffs = {
 					[stat_buffs.melee_power_level_modifier] = 0.07
 				}
 			},
 			{
-				conditional_stat_buffs = {
+				conditional_switch_stat_buffs = {
 					[stat_buffs.melee_power_level_modifier] = 0.08
 				}
 			}

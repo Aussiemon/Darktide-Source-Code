@@ -382,7 +382,7 @@ WeaponStats.init = function (self, item)
 end
 
 WeaponStats.calculate_stats = function (self, weapon_template, weapon_tweak_templates, damage_profile_lerp_values)
-	local breed_or_nil, hit_zone_name, target_toughness_extension = nil
+	local breed_or_nil, hit_zone_name, target_health_extension, target_toughness_extension = nil
 	local armor_type = ArmorSettings.types.unarmored
 	local breed_name = "chaos_poxwalker"
 	local breed = Breeds[breed_name]
@@ -559,7 +559,7 @@ WeaponStats.calculate_stats = function (self, weapon_template, weapon_tweak_temp
 						local target_unit, attacker_breed_or_nil = nil
 						local hit_shield = false
 						local dropoff_scalar = DamageProfile.dropoff_scalar(distance, damage_profile, target_damage_values)
-						local damage, damage_efficiency = DamageCalculation.calculate(damage_profile, damage_type, target_settings, target_damage_values, hit_zone_name, power_level, charge_level, breed_or_nil, attacker_breed_or_nil, is_critical_strike, hit_weakspot, hit_shield, is_backstab, is_flanking, dropoff_scalar, attack_type, attacker_stat_buffs, target_stat_buffs, target_buff_extension, armor_penetrating, target_toughness_extension, armor_type, stagger_count, num_triggered_staggers, is_attacked_unit_suppressed, distance, target_unit, auto_completed_action)
+						local damage, damage_efficiency = DamageCalculation.calculate(damage_profile, damage_type, target_settings, target_damage_values, hit_zone_name, power_level, charge_level, breed_or_nil, attacker_breed_or_nil, is_critical_strike, hit_weakspot, hit_shield, is_backstab, is_flanking, dropoff_scalar, attack_type, attacker_stat_buffs, target_stat_buffs, target_buff_extension, armor_penetrating, target_health_extension, target_toughness_extension, armor_type, stagger_count, num_triggered_staggers, is_attacked_unit_suppressed, distance, target_unit, auto_completed_action)
 						damage = damage * num_damage_iterations
 
 						if damage > 0 then

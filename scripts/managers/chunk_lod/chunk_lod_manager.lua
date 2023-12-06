@@ -30,7 +30,26 @@ ChunkLodManager.player = function (self)
 end
 
 ChunkLodManager.set_level_unit = function (self, unit)
-	self._level_unit = unit
+	local level = Unit.level(unit)
+	local mission_level = Managers.state.mission:mission_level()
+
+	if level and level ~= mission_level then
+		self._level_unit = unit
+
+		return true
+	end
+
+	return false
+end
+
+ChunkLodManager.clear_level_unit = function (self, unit)
+	if unit == self._level_unit then
+		self._level_unit = nil
+
+		return true
+	end
+
+	return false
 end
 
 ChunkLodManager.register_unit = function (self, unit, callback_function)

@@ -186,11 +186,10 @@ PlayerHuskHealthExtension.was_hit_by_critical_hit_this_render_frame = function (
 end
 
 PlayerHuskHealthExtension.kill = function (self)
-	self._is_dead = true
-
 	Managers.event:trigger("unit_died", self._unit)
 
 	HEALTH_ALIVE[self._unit] = nil
+	self._is_dead = true
 end
 
 PlayerHuskHealthExtension.num_wounds = function (self)

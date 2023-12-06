@@ -58,7 +58,7 @@ end
 function _gamepad_input(input, look_delta_context)
 	local last_pressed_device = InputDevice.last_pressed_device
 
-	if last_pressed_device and last_pressed_device:type() ~= "xbox_controller" then
+	if last_pressed_device and last_pressed_device:type() ~= "xbox_controller" and last_pressed_device:type() ~= "ps4_controller" then
 		return Vector3.zero()
 	end
 

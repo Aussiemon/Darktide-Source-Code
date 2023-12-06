@@ -105,6 +105,9 @@ HitScan.process_hits = function (is_server, world, physics_world, attacker_unit,
 			local hit_afro = hit_zone_name_or_nil == HitZone.hit_zone_names.afro
 			local target_breed_or_nil = Breed.unit_breed_or_nil(hit_unit)
 			local is_damagable = Health.is_damagable(hit_unit)
+			local target_is_hazard_prop, hazard_prop_is_active = HazardProp.status(hit_unit)
+			local is_breed_with_hit_zone = target_breed_or_nil and hit_zone_name_or_nil
+			local is_damagable_hazard_prop = target_is_hazard_prop and hazard_prop_is_active
 
 			if Health.is_ragdolled(hit_unit) then
 				if hit_afro then
@@ -116,9 +119,6 @@ HitScan.process_hits = function (is_server, world, physics_world, attacker_unit,
 				if is_attacker_player and not HitScan.inside_faded_player(target_breed_or_nil, hit_distance) then
 					break
 				end
-
-				local target_is_hazard_prop, hazard_prop_is_active = HazardProp.status(hit_unit)
-				local deal_damage = not target_is_hazard_prop or target_is_hazard_prop and hazard_prop_is_active
 
 				if not target_is_hazard_prop then
 					local should_break = false
@@ -186,13 +186,14 @@ HitScan.process_hits = function (is_server, world, physics_world, attacker_unit,
 					end
 				end
 
+				hit_weakspot = Weakspot.hit_weakspot(target_breed_or_nil, hit_zone_name_or_nil)
+				target_index = RangedAction.target_index(target_index, penetrated, penetration_config)
+				hit_mass_budget_attack, hit_mass_budget_impact = HitMass.consume_hit_mass(attacker_unit, hit_unit, hit_mass_budget_attack, hit_mass_budget_impact, hit_weakspot)
+				stop = HitMass.stopped_attack(hit_unit, hit_zone_name_or_nil, hit_mass_budget_attack, hit_mass_budget_impact, impact_config)
+				local should_deal_damage = target_is_hazard_prop and hazard_prop_is_active or not target_is_hazard_prop and is_breed_with_hit_zone or not target_breed_or_nil
 				local damage_dealt, attack_result, damage_efficiency = nil
 
-				if deal_damage then
-					hit_weakspot = Weakspot.hit_weakspot(target_breed_or_nil, hit_zone_name_or_nil)
-					target_index = RangedAction.target_index(target_index, penetrated, penetration_config)
-					hit_mass_budget_attack, hit_mass_budget_impact = HitMass.consume_hit_mass(attacker_unit, hit_unit, hit_mass_budget_attack, hit_mass_budget_impact, hit_weakspot)
-					stop = HitMass.stopped_attack(hit_unit, hit_zone_name_or_nil, hit_mass_budget_attack, hit_mass_budget_impact, impact_config)
+				if should_deal_damage then
 					local previous_hit_weakspot = hit_weakspot
 					damage_dealt, attack_result, damage_efficiency, hit_weakspot = RangedAction.execute_attack(target_index, attacker_unit, hit_unit, hit_actor, hit_position, hit_distance, direction, hit_normal, hit_zone_name_or_nil, damage_profile, damage_profile_lerp_values, power_level, charge_level, penetrated, damage_config, optional_instakill, damage_type, optional_is_critical_strike, optional_weapon_item)
 
@@ -209,10 +210,12 @@ HitScan.process_hits = function (is_server, world, physics_world, attacker_unit,
 				end
 
 				if Breed.is_character(target_breed_or_nil) or Breed.count_as_character(target_breed_or_nil) then
-					ImpactEffect.play(hit_unit, hit_actor, damage_dealt, damage_type, hit_zone_name_or_nil, attack_result, hit_position, hit_normal, direction, attacker_unit, impact_fx_data, stop, nil, damage_efficiency, damage_profile)
-
 					exploded = exploded or RangedAction.armor_explosion(is_server, world, physics_world, attacker_unit, hit_unit, hit_zone_name_or_nil, hit_position, hit_normal, hit_distance, direction, damage_config, power_level, charge_level, optional_weapon_item)
 					exploded = exploded or RangedAction.hitmass_explosion(is_server, world, physics_world, hit_mass_budget_attack, hit_mass_budget_impact, attacker_unit, hit_unit, hit_position, hit_normal, hit_distance, direction, damage_config, attack_result, power_level, charge_level, optional_weapon_item)
+				end
+
+				if not target_is_hazard_prop and target_breed_or_nil and hit_zone_name_or_nil or is_damagable_hazard_prop then
+					ImpactEffect.play(hit_unit, hit_actor, damage_dealt, damage_type, hit_zone_name_or_nil, attack_result, hit_position, hit_normal, direction, attacker_unit, impact_fx_data, stop, nil, damage_efficiency, damage_profile)
 				else
 					ImpactEffect.play_surface_effect(physics_world, attacker_unit, hit_position, hit_normal, direction, damage_type, surface_hit_types.stop, impact_fx_data)
 				end
@@ -232,9 +235,9 @@ HitScan.process_hits = function (is_server, world, physics_world, attacker_unit,
 					exit_distance = hit_distance + object_thickness
 
 					if penetration_config.exit_explosion_template and is_server then
-						local attack_type = AttackSettings.attack_types.explosion
+						local explosion_attack_type = AttackSettings.attack_types.explosion
 
-						Explosion.create_explosion(world, physics_world, exit_position, exit_normal, attacker_unit, penetration_config.exit_explosion_template, power_level, charge_level, attack_type, false, false, optional_weapon_item, optional_origin_slot)
+						Explosion.create_explosion(world, physics_world, exit_position, exit_normal, attacker_unit, penetration_config.exit_explosion_template, power_level, charge_level, explosion_attack_type, false, false, optional_weapon_item, optional_origin_slot)
 
 						exploded = true
 					end
@@ -250,17 +253,17 @@ HitScan.process_hits = function (is_server, world, physics_world, attacker_unit,
 				end
 
 				if can_explode and not exit_position and penetration_config.stop_explosion_template and is_server then
-					local attack_type = AttackSettings.attack_types.explosion
+					local explosion_attack_type = AttackSettings.attack_types.explosion
 
-					Explosion.create_explosion(world, physics_world, hit_position, hit_normal, attacker_unit, penetration_config.stop_explosion_template, power_level, charge_level, attack_type, false, false, optional_weapon_item, optional_origin_slot)
+					Explosion.create_explosion(world, physics_world, hit_position, hit_normal, attacker_unit, penetration_config.stop_explosion_template, power_level, charge_level, explosion_attack_type, false, false, optional_weapon_item, optional_origin_slot)
 
 					exploded = true
 				end
 			else
 				if can_explode and penetrated and penetration_config.stop_explosion_template and is_server then
-					local attack_type = AttackSettings.attack_types.explosion
+					local explosion_attack_type = AttackSettings.attack_types.explosion
 
-					Explosion.create_explosion(world, physics_world, hit_position, hit_normal, attacker_unit, penetration_config.stop_explosion_template, power_level, charge_level, attack_type, false, false, optional_weapon_item, optional_origin_slot)
+					Explosion.create_explosion(world, physics_world, hit_position, hit_normal, attacker_unit, penetration_config.stop_explosion_template, power_level, charge_level, explosion_attack_type, false, false, optional_weapon_item, optional_origin_slot)
 
 					exploded = true
 				end
@@ -271,9 +274,9 @@ HitScan.process_hits = function (is_server, world, physics_world, attacker_unit,
 			end
 
 			if can_explode and (stop or penetrated) and impact_config.explosion_template and is_server then
-				local attack_type = AttackSettings.attack_types.explosion
+				local explosion_attack_type = AttackSettings.attack_types.explosion
 
-				Explosion.create_explosion(world, physics_world, hit_position, hit_normal, attacker_unit, impact_config.explosion_template, power_level, charge_level, attack_type, false, false, optional_weapon_item, optional_origin_slot)
+				Explosion.create_explosion(world, physics_world, hit_position, hit_normal, attacker_unit, impact_config.explosion_template, power_level, charge_level, explosion_attack_type, false, false, optional_weapon_item, optional_origin_slot)
 
 				exploded = true
 			end

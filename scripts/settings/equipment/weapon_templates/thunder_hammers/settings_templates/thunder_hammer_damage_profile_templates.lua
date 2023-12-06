@@ -976,8 +976,8 @@ damage_templates.thunderhammer_m2_heavy_active_strikedown = {
 			armor_damage_modifier = hammer_tank_heavy_first_active_am,
 			power_distribution = {
 				attack = {
-					400,
-					800
+					450,
+					900
 				},
 				impact = {
 					45,
@@ -999,45 +999,6 @@ damage_templates.thunderhammer_m2_heavy_active_strikedown = {
 				impact = {
 					25,
 					35
-				}
-			}
-		},
-		{
-			boost_curve_multiplier_finesse = 0.25,
-			power_distribution = {
-				attack = {
-					10,
-					40
-				},
-				impact = {
-					15,
-					25
-				}
-			}
-		},
-		{
-			boost_curve_multiplier_finesse = 0.25,
-			power_distribution = {
-				attack = {
-					0,
-					0
-				},
-				impact = {
-					10,
-					20
-				}
-			}
-		},
-		{
-			boost_curve_multiplier_finesse = 0.25,
-			power_distribution = {
-				attack = {
-					0,
-					0
-				},
-				impact = {
-					10,
-					20
 				}
 			}
 		},

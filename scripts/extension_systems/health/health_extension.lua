@@ -178,8 +178,6 @@ HealthExtension.set_invulnerable = function (self, should_be_invulnerable)
 	self._is_invulnerable = should_be_invulnerable
 end
 
-local IS_DEAD_FIELD_NAME = "is_dead"
-
 HealthExtension.kill = function (self)
 	if self._is_unkillable then
 		Log.warning("HealthExtension", "Trying to kill health extension which is unkillable")
@@ -192,7 +190,7 @@ HealthExtension.kill = function (self)
 	HEALTH_ALIVE[self._unit] = nil
 	self._is_dead = true
 
-	GameSession.set_game_object_field(self._game_session, self._game_object_id, IS_DEAD_FIELD_NAME, true)
+	GameSession.set_game_object_field(self._game_session, self._game_object_id, "is_dead", true)
 end
 
 HealthExtension.num_wounds = function (self)

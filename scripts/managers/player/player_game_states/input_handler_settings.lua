@@ -33,7 +33,9 @@ local input_handler_settings = {
 		"wield_1",
 		"wield_2",
 		"wield_3",
+		"wield_3_gamepad",
 		"wield_4",
+		"wield_5",
 		"weapon_reload",
 		"interact_pressed",
 		"interact_inspect_pressed",
@@ -53,7 +55,6 @@ local input_handler_settings = {
 		"emote_5"
 	},
 	input_settings = {
-		"wield_previous_slot_after_grenade",
 		"weapon_switch_scroll_wrap",
 		"hold_to_sprint",
 		"hold_to_crouch",

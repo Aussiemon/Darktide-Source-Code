@@ -205,8 +205,8 @@ local chaos_daemonhost_settings = {
 	},
 	num_player_kills_for_despawn = {
 		1,
-		2,
-		2,
+		1,
+		1,
 		2,
 		2
 	}

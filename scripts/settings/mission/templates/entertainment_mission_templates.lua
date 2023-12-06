@@ -1,4 +1,75 @@
 local mission_templates = {
+	cm_raid = {
+		mission_name = "loc_mission_name_cm_raid",
+		wwise_state = "zone_6",
+		zone_id = "entertainment",
+		texture_small = "content/ui/textures/missions/cm_raid_small",
+		texture_medium = "content/ui/textures/missions/cm_raid_medium",
+		mechanism_name = "adventure",
+		face_state_machine_key = "state_machine_missions",
+		coordinates = "loc_mission_coordinates_cm_raid",
+		texture_big = "content/ui/textures/missions/cm_raid_big",
+		mission_description = "loc_mission_board_main_objective_raid_description",
+		mission_type = "04",
+		level = "content/levels/entertainment/missions/mission_cm_raid",
+		game_mode_name = "coop_complete_objective",
+		mission_intro_minimum_time = 5,
+		objectives = "cm_raid",
+		mission_brief_material = "content/environment/cinematic/mission_briefing/mission_briefing_hologram_cm_raid_01",
+		testify_flags = {},
+		cinematics = {
+			intro_abc = {
+				"c_cam"
+			},
+			outro_fail = {
+				"outro_fail"
+			},
+			outro_win = {
+				"outro_win"
+			}
+		},
+		hazard_prop_settings = {
+			explosion = 0.3,
+			fire = 0.2,
+			none = 0.4
+		},
+		pickup_settings = {},
+		terror_event_templates = {
+			"terror_events_cm_raid"
+		},
+		health_station = {},
+		mission_brief_vo = {
+			vo_profile = "tech_priest_a",
+			wwise_route_key = 1,
+			vo_events = {
+				"mission_raid_briefing_a",
+				"mission_raid_briefing_b",
+				"mission_raid_briefing_c"
+			},
+			mission_giver_packs = {
+				sergeant_a = {
+					"sergeant",
+					"interrogator"
+				},
+				explicator_a = {
+					"explicator",
+					"barber"
+				},
+				tech_priest_a = {
+					"tech_priest",
+					"enginseer"
+				}
+			}
+		},
+		dialogue_settings = {
+			npc_story_ticker_enabled = false,
+			short_story_ticker_enabled = true,
+			story_ticker_enabled = true
+		},
+		spawn_settings = {
+			next_mission = "recent_mission"
+		}
+	},
 	fm_armoury = {
 		mission_name = "loc_mission_name_fm_armoury",
 		wwise_state = "zone_6",

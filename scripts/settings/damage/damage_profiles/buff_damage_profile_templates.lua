@@ -184,7 +184,7 @@ damage_templates.flame_grenade_liquid_area_fire_burning = {
 }
 damage_templates.grenadier_liquid_fire_burning = {
 	disorientation_type = "burninating",
-	toughness_multiplier = 3,
+	toughness_multiplier = 5,
 	ignore_shield = true,
 	stagger_category = "melee",
 	ogryn_disorientation_type = "burninating",
@@ -193,7 +193,7 @@ damage_templates.grenadier_liquid_fire_burning = {
 		impact = DamageProfileSettings.flat_one_armor_mod
 	},
 	power_distribution = {
-		attack = 20,
+		attack = 30,
 		impact = 0
 	},
 	cleave_distribution = {
@@ -222,7 +222,7 @@ damage_templates.grenadier_liquid_fire_burning = {
 }
 damage_templates.cultist_flamer_liquid_fire_burning = {
 	disorientation_type = "burninating",
-	toughness_multiplier = 3,
+	toughness_multiplier = 5,
 	ignore_shield = true,
 	stagger_category = "melee",
 	ogryn_disorientation_type = "burninating",
@@ -231,7 +231,7 @@ damage_templates.cultist_flamer_liquid_fire_burning = {
 		impact = DamageProfileSettings.flat_one_armor_mod
 	},
 	power_distribution = {
-		attack = 20,
+		attack = 30,
 		impact = 0
 	},
 	cleave_distribution = {
@@ -246,7 +246,7 @@ damage_templates.cultist_flamer_liquid_fire_burning = {
 }
 damage_templates.renegade_flamer_liquid_fire_burning = {
 	disorientation_type = "burninating",
-	toughness_multiplier = 3,
+	toughness_multiplier = 5,
 	ignore_shield = true,
 	stagger_category = "melee",
 	ogryn_disorientation_type = "burninating",
@@ -255,7 +255,7 @@ damage_templates.renegade_flamer_liquid_fire_burning = {
 		impact = DamageProfileSettings.flat_one_armor_mod
 	},
 	power_distribution = {
-		attack = 20,
+		attack = 30,
 		impact = 0
 	},
 	cleave_distribution = {
@@ -272,6 +272,7 @@ damage_templates.burning = {
 	disorientation_type = "burninating",
 	toughness_multiplier = 3,
 	ignore_shield = true,
+	is_buff_damage = true,
 	stagger_category = "flamer",
 	ogryn_disorientation_type = "burninating",
 	armor_damage_modifier = {
@@ -318,6 +319,7 @@ damage_templates.warpfire = {
 	disorientation_type = "burninating",
 	toughness_multiplier = 3,
 	ignore_shield = true,
+	is_buff_damage = true,
 	stagger_category = "flamer",
 	ogryn_disorientation_type = "burninating",
 	armor_damage_modifier = {
@@ -340,10 +342,11 @@ damage_templates.warpfire = {
 	}
 }
 damage_templates.bleeding = {
-	stagger_category = "flamer",
 	skip_minion_toughness = true,
 	toughness_multiplier = 3,
 	ignore_shield = true,
+	is_buff_damage = true,
+	stagger_category = "flamer",
 	armor_damage_modifier = {
 		attack = bleeding_adm,
 		impact = bleeding_adm

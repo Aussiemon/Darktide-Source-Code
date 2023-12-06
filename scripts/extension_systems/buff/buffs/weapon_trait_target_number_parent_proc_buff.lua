@@ -34,7 +34,7 @@ WeaponTraitTargetNumberParentProcBuff.update = function (self, dt, t, ...)
 				template_data.target_number_of_stacks = 0
 				local num_stacks_to_remove = num_child_stacks - 1
 
-				self:_remove_child_buff_stack(num_stacks_to_remove)
+				self:_remove_child_buff_stack(t, num_stacks_to_remove)
 
 				self._duration_progress = 0
 			else
@@ -67,7 +67,7 @@ WeaponTraitTargetNumberParentProcBuff.update_number_of_children = function (self
 	elseif target_number_of_child_buffs < current_num_child_stacks then
 		local num_stacks_to_remove = current_num_child_stacks - target_number_of_child_buffs
 
-		self:_remove_child_buff_stack(num_stacks_to_remove)
+		self:_remove_child_buff_stack(t, num_stacks_to_remove)
 
 		self._duration_progress = 0
 	end

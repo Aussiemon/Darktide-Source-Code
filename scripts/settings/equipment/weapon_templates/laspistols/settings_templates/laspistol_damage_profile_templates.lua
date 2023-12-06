@@ -24,7 +24,7 @@ local pistol_crit_mod = {
 	attack = {
 		[armor_types.unarmored] = 0,
 		[armor_types.armored] = 0.5,
-		[armor_types.resistant] = 0.75,
+		[armor_types.resistant] = 0.6,
 		[armor_types.player] = 0,
 		[armor_types.berserker] = 0.5,
 		[armor_types.super_armor] = 0.2,
@@ -116,8 +116,8 @@ damage_templates.default_laspistol_killshot = {
 	gibbing_power = gibbing_power.always,
 	gibbing_type = gibbing_types.laser,
 	suppression_value = {
-		1,
-		3
+		0.1,
+		0.8
 	},
 	on_kill_area_suppression = {
 		suppression_value = {
@@ -125,8 +125,8 @@ damage_templates.default_laspistol_killshot = {
 			4
 		},
 		distance = {
-			3,
-			5
+			1.5,
+			4
 		}
 	},
 	crit_mod = pistol_crit_mod,
@@ -222,8 +222,8 @@ damage_templates.default_laspistol_bfg = {
 	gibbing_power = gibbing_power.always,
 	gibbing_type = gibbing_types.laser,
 	suppression_value = {
-		1,
-		3
+		0.75,
+		2.5
 	},
 	on_kill_area_suppression = {
 		suppression_value = {
@@ -244,8 +244,8 @@ damage_templates.default_laspistol_bfg = {
 				[armor_types.armored] = 0.75
 			},
 			boost_curve_multiplier_finesse = {
-				1.8,
-				2.35
+				1.5,
+				2
 			}
 		}
 	},

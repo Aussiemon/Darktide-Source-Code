@@ -158,7 +158,7 @@ SpawnPointQueries.occluded_positions_in_group = function (nav_world, nav_spawn_p
 end
 
 local DISALLOWED_DISTANCE = 8
-local ALLOWED_Z_DIFF = 5
+local ALLOWED_Z_DIFF = 12
 
 local function _remove_invalid_occluded_positions(valid_enemy_player_units_positions, occluded_positions, num_occluded_positions, min_distance, max_distance, optional_disallowed_positions)
 	for k = 1, #valid_enemy_player_units_positions do

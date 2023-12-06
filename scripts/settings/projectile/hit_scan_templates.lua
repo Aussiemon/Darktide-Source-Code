@@ -129,6 +129,14 @@ hit_scan_templates.renegade_rifleman_single_shot = {
 		}
 	}
 }
+hit_scan_templates.renegade_twin_captain_las_pistol_shot = {
+	range = 150,
+	damage = {
+		impact = {
+			damage_profile = DamageProfileTemplates.default_rifleman
+		}
+	}
+}
 hit_scan_templates.prototype_gun_bullet = {
 	range = 150,
 	damage = {
@@ -287,7 +295,7 @@ hit_scan_templates.default_plasma_killshot = {
 		{
 			against = "dynamics",
 			test = "sphere",
-			radius = 0.075,
+			radius = 0.1,
 			collision_filter = "filter_player_character_shooting_raycast_dynamics"
 		}
 	}
@@ -316,7 +324,7 @@ hit_scan_templates.medium_charged_plasma = {
 		{
 			against = "dynamics",
 			test = "sphere",
-			radius = 0.2,
+			radius = 0.1,
 			collision_filter = "filter_player_character_shooting_raycast_dynamics"
 		}
 	}

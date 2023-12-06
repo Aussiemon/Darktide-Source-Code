@@ -22,8 +22,9 @@ end
 
 WeaponSpeciaShovels.update = function (self, dt, t)
 	local time_to_play_deactivation_animation = self._time_to_play_deactivation_animation
+	local special_active = self._inventory_slot_component.special_active
 
-	if time_to_play_deactivation_animation then
+	if time_to_play_deactivation_animation and not special_active then
 		time_to_play_deactivation_animation = time_to_play_deactivation_animation - dt
 
 		if time_to_play_deactivation_animation <= 0 then
@@ -36,6 +37,8 @@ WeaponSpeciaShovels.update = function (self, dt, t)
 		else
 			self._time_to_play_deactivation_animation = time_to_play_deactivation_animation
 		end
+	else
+		self._time_to_play_deactivation_animation = nil
 	end
 end
 

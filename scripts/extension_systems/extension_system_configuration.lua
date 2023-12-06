@@ -971,7 +971,11 @@ local systems = {
 		false,
 		true,
 		true,
-		false
+		false,
+		{
+			"MinionProximityExtension",
+			"PlayerProximityExtension"
+		}
 	},
 	{
 		"proximity_system",

@@ -82,12 +82,11 @@ BtVoidShieldExplosionAction._deal_damage = function (self, t, unit, action_data)
 	local broadphase_radius = action_data.radius
 	local broadphase_results = Managers.frame_table:get_table()
 	local num_results = broadphase:query(from, broadphase_radius, broadphase_results, target_side_names)
-	local ALIVE = ALIVE
 
 	for i = 1, num_results do
 		local hit_unit = broadphase_results[i]
 
-		if ALIVE[hit_unit] and hit_unit ~= unit then
+		if hit_unit ~= unit then
 			local to = POSITION_LOOKUP[hit_unit]
 			local direction = Vector3.normalize(to - from)
 

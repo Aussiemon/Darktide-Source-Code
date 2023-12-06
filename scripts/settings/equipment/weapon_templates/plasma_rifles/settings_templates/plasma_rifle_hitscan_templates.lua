@@ -34,7 +34,7 @@ hitscan_templates.default_plasma_rifle_killshot = {
 		{
 			against = "dynamics",
 			test = "sphere",
-			radius = 0.05,
+			radius = 0.1,
 			collision_filter = "filter_player_character_shooting_raycast_dynamics"
 		}
 	}

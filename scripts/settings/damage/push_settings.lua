@@ -198,6 +198,35 @@ local push_settings = {
 		ogryn_shovel_special = {
 			speed = 3,
 			max_speed_override = 4
+		},
+		twin_dash = {
+			speed = 12,
+			max_speed_override = 6,
+			push_through_block = true,
+			ignore_stun_immunity = true
+		},
+		twin_dash_light = {
+			speed = 8,
+			max_speed_override = 6,
+			push_through_block = true,
+			ignore_stun_immunity = true
+		},
+		twin_grenade = {
+			speed = 8,
+			max_speed_override = 8,
+			ignore_stun_immunity = true
+		},
+		renegade_twin_captain_sweep = {
+			speed = 10,
+			max_speed_override = 6,
+			push_through_block = true,
+			ignore_stun_immunity = true
+		},
+		renegade_twin_captain_combo = {
+			speed = 6,
+			max_speed_override = 4,
+			push_through_block = true,
+			ignore_stun_immunity = true
 		}
 	}
 }

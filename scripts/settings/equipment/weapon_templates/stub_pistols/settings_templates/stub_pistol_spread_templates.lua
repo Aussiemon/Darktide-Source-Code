@@ -254,8 +254,8 @@ spread_templates.stub_pistol_p1_m2_hip = {
 			"still"
 		},
 		continuous_spread = {
-			min_yaw = 1.8,
-			min_pitch = 1.8
+			min_yaw = 0.9,
+			min_pitch = 0.9
 		}
 	},
 	crouch_moving = {
@@ -269,9 +269,125 @@ spread_templates.stub_pistol_p1_m2_hip = {
 		}
 	}
 }
-overrides.stub_pistol_p1_m2_ads = {
-	parent_template_name = "default_stub_pistol_killshot",
-	overrides = {}
+spread_templates.stub_pistol_p1_m2_ads = {
+	still = {
+		max_spread = {
+			yaw = 2.5,
+			pitch = 2.5
+		},
+		decay = {
+			from_shooting_grace_time = 0.15,
+			enter_alternate_fire_grace_time = 0.5,
+			crouch_transition_grace_time = 0.5,
+			shooting = {
+				pitch = {
+					lerp_perfect = 0.8,
+					lerp_basic = 0.5
+				},
+				yaw = {
+					lerp_perfect = 0.8,
+					lerp_basic = 0.5
+				}
+			},
+			idle = {
+				pitch = {
+					lerp_perfect = 2,
+					lerp_basic = 1.5
+				},
+				yaw = {
+					lerp_perfect = 2,
+					lerp_basic = 1.5
+				}
+			},
+			player_event = {
+				pitch = {
+					lerp_perfect = 50,
+					lerp_basic = 40
+				},
+				yaw = {
+					lerp_perfect = 50,
+					lerp_basic = 40
+				}
+			}
+		},
+		randomized_spread = {
+			first_shot_min_ratio = 0.4,
+			first_shot_random_ratio = 0.45
+		},
+		continuous_spread = {
+			min_yaw = 0.7,
+			min_pitch = 0.7
+		},
+		immediate_spread = {
+			num_shots_clear_time = 0.5,
+			alternate_fire_start = {
+				{
+					pitch = {
+						lerp_perfect = 0.4,
+						lerp_basic = 1.2
+					},
+					yaw = {
+						lerp_perfect = 0.45,
+						lerp_basic = 1.2
+					}
+				}
+			},
+			suppression_hit = {
+				{
+					yaw = 0.5,
+					pitch = 0.2
+				}
+			},
+			damage_hit = {
+				{
+					yaw = 0.3,
+					pitch = 0.3
+				}
+			},
+			shooting = {
+				{
+					pitch = {
+						lerp_perfect = 0.4,
+						lerp_basic = 1.2
+					},
+					yaw = {
+						lerp_perfect = 0.45,
+						lerp_basic = 1.2
+					}
+				}
+			}
+		}
+	},
+	moving = {
+		inherits = {
+			"stub_pistol_p1_m2_ads",
+			"still"
+		},
+		continuous_spread = {
+			min_yaw = 1.65,
+			min_pitch = 1.65
+		}
+	},
+	crouch_still = {
+		inherits = {
+			"stub_pistol_p1_m2_ads",
+			"still"
+		},
+		continuous_spread = {
+			min_yaw = 0.5,
+			min_pitch = 0.5
+		}
+	},
+	crouch_moving = {
+		inherits = {
+			"stub_pistol_p1_m2_ads",
+			"still"
+		},
+		continuous_spread = {
+			min_yaw = 2,
+			min_pitch = 2
+		}
+	}
 }
 local p1_m3_modifier = 1.8
 spread_templates.stub_pistol_p1_m3_hip = {

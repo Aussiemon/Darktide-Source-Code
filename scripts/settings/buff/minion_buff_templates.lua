@@ -1,5 +1,5 @@
 local Attack = require("scripts/utilities/attack/attack")
-local Breed = require("scripts/utilities/breed")
+local BreedSettings = require("scripts/settings/breed/breed_settings")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local BurningSettings = require("scripts/settings/burning/burning_settings")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
@@ -11,6 +11,7 @@ local buff_keywords = BuffSettings.keywords
 local buff_stat_buffs = BuffSettings.stat_buffs
 local damage_types = DamageSettings.damage_types
 local minion_burning_buff_effects = BurningSettings.buff_effects.minions
+local PLAYER_BREED_TYPE = BreedSettings.types.player
 local templates = {
 	cultist_flamer_hit_by_flame = {
 		interval = 0.5,
@@ -125,7 +126,7 @@ templates.daemonhost_corruption_aura = {
 			local broadphase_system = Managers.state.extension:system("broadphase_system")
 			local broadphase = broadphase_system.broadphase
 			local position = POSITION_LOOKUP[unit]
-			local num_results = broadphase:query(position, CORRUPTION_AURA_RADIUS, DAEMONHOST_CORRUPTION_AURA_RESULTS, target_side_names)
+			local num_results = broadphase:query(position, CORRUPTION_AURA_RADIUS, DAEMONHOST_CORRUPTION_AURA_RESULTS, target_side_names, PLAYER_BREED_TYPE)
 			local damage_profile = DamageProfileTemplates.daemonhost_corruption_aura
 			local power_level_table = MinionDifficultySettings.power_level.daemonhost_corruption_aura
 			local power_level = Managers.state.difficulty:get_table_entry_by_challenge(power_level_table)
@@ -135,22 +136,18 @@ templates.daemonhost_corruption_aura = {
 
 				if HEALTH_ALIVE[nearby_enemy] then
 					local hit_unit_data_extension = ScriptUnit.extension(nearby_enemy, "unit_data_system")
-					local is_player_character = Breed.is_player(hit_unit_data_extension:breed())
+					local disabled_character_state_component = hit_unit_data_extension:read_component("disabled_character_state")
+					local is_warp_grabbed = PlayerUnitStatus.is_warp_grabbed(disabled_character_state_component)
 
-					if is_player_character then
-						local disabled_character_state_component = hit_unit_data_extension:read_component("disabled_character_state")
-						local is_warp_grabbed = PlayerUnitStatus.is_warp_grabbed(disabled_character_state_component)
+					if not is_warp_grabbed then
+						local health_extension = ScriptUnit.extension(nearby_enemy, "health_system")
+						local permanent_damage_taken_percent = health_extension:permanent_damage_taken_percent()
+						local allowed_permanent_percent = Managers.state.difficulty:get_table_entry_by_challenge(CORRUPTION_AURA_PERMANENT_PERCENT)
 
-						if not is_warp_grabbed then
-							local health_extension = ScriptUnit.extension(nearby_enemy, "health_system")
-							local permanent_damage_taken_percent = health_extension:permanent_damage_taken_percent()
-							local allowed_permanent_percent = Managers.state.difficulty:get_table_entry_by_challenge(CORRUPTION_AURA_PERMANENT_PERCENT)
+						if permanent_damage_taken_percent < allowed_permanent_percent then
+							local attack_direction = Vector3.normalize(POSITION_LOOKUP[nearby_enemy] - position)
 
-							if permanent_damage_taken_percent < allowed_permanent_percent then
-								local attack_direction = Vector3.normalize(POSITION_LOOKUP[nearby_enemy] - position)
-
-								Attack.execute(nearby_enemy, damage_profile, "power_level", power_level, "attacking_unit", unit, "attack_direction", attack_direction, "hit_zone_name", "torso", "damage_type", CORRUPTION_AURA_DAMAGE_TYPE)
-							end
+							Attack.execute(nearby_enemy, damage_profile, "power_level", power_level, "attacking_unit", unit, "attack_direction", attack_direction, "hit_zone_name", "torso", "damage_type", CORRUPTION_AURA_DAMAGE_TYPE)
 						end
 					end
 				end

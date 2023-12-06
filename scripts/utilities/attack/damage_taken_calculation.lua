@@ -14,7 +14,7 @@ local toughness_template_types = ToughnessSettings.template_types
 local buff_keywords = BuffSettings.keywords
 local _calculate_shield_damage, _calculate_toughness_damage, _calculate_toughness_damage_player, _calculate_toughness_damage_minion, _calculate_health_damage, _calculate_health_damage_player, _calculate_health_damage_minion = nil
 local DamageTakenCalculation = {
-	get_calculation_parameters = function (attacked_unit, attacked_breed_or_nil, damage_profile, attacking_unit, attacking_unit_owner_unit, hit_actor, attacker_buff_extension)
+	calculation_parameters = function (attacked_unit, attacked_breed_or_nil, damage_profile, attacking_unit, attacking_unit_owner_unit, hit_actor, attacker_buff_extension)
 		local side_system = Managers.state.extension:system("side_system")
 		local is_ally = side_system:is_ally(attacked_unit, attacking_unit_owner_unit)
 		local damage_allowed = not is_ally or FriendlyFire.is_enabled(attacking_unit_owner_unit, attacked_unit) or damage_profile.override_allow_friendly_fire
@@ -187,10 +187,6 @@ function _calculate_toughness_damage_player(damage_amount, damage_profile, attac
 
 		remaining_damage = remaining_damage + bleedthrough_damage
 	else
-		if not ranged_attack and not damage_profile.ignore_depleting_toughness then
-			toughness_damage = max_toughness
-		end
-
 		absorbed_attack = max_toughness > current_toughness_damage + toughness_damage
 		toughness_broken = not absorbed_attack and toughness_before_damage > 0
 

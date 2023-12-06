@@ -47,10 +47,11 @@ local effect_template = {
 		World.stop_spawning_particles(world, vfx_particle_id)
 
 		local unit_components = template_data.unit_components
+		local attachment_unit = template_data.attachment_unit
 		local t = World.time(world)
 
 		for _, component in pairs(unit_components) do
-			component:set_stop_time(t, template_data.attachment_unit)
+			component:set_stop_time(t, attachment_unit)
 		end
 	end
 }

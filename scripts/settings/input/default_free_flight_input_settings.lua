@@ -84,20 +84,58 @@ local default_free_flight_input_settings = {
 			type = "button"
 		},
 		move_up = {
-			raw = "keyboard_e",
-			type = "button"
+			type = "button",
+			raw = {
+				"keyboard_e",
+				"xbox_controller_right_trigger"
+			}
 		},
 		move_down = {
-			raw = "keyboard_q",
-			type = "button"
+			type = "button",
+			raw = {
+				"keyboard_q",
+				"xbox_controller_left_trigger"
+			}
+		},
+		roll_left = {
+			type = "button",
+			raw = {
+				"xbox_controller_right_shoulder"
+			}
+		},
+		roll_right = {
+			type = "button",
+			raw = {
+				"xbox_controller_left_shoulder"
+			}
 		},
 		increase_fov = {
-			raw = "keyboard_numpad plus",
-			type = "pressed"
+			type = "pressed",
+			raw = {
+				"keyboard_numpad plus",
+				"xbox_controller_d_left"
+			}
 		},
 		decrease_fov = {
-			raw = "keyboard_num minus",
-			type = "pressed"
+			type = "pressed",
+			raw = {
+				"keyboard_num minus",
+				"xbox_controller_d_right"
+			}
+		},
+		increase_fov_hold = {
+			type = "held",
+			raw = {
+				"keyboard_left ctrl+keyboard_numpad plus",
+				"xbox_controller_d_down"
+			}
+		},
+		decrease_fov_hold = {
+			type = "held",
+			raw = {
+				"keyboard_left ctrl+keyboard_num minus",
+				"xbox_controller_d_up"
+			}
 		},
 		pick = {
 			raw = "keyboard_l",

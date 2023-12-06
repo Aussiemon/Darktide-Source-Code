@@ -5,7 +5,8 @@ local ComponentSystem = class("ComponentSystem", "ExtensionSystemBase")
 local RPCS = {
 	Component.default_rpc_name,
 	"rpc_animation_play_client",
-	"rpc_networked_unique_randomize_roll"
+	"rpc_networked_unique_randomize_roll",
+	"rpc_prop_on_hit_physics"
 }
 
 ComponentSystem.init = function (self, ...)

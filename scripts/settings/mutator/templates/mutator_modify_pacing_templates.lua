@@ -428,9 +428,9 @@ local mutator_templates = {
 				max_monsters = 2,
 				chance_to_spawn_monster = 0.2,
 				health_modifiers = {
-					chaos_beast_of_nurgle = 0.25,
-					chaos_spawn = 0.25,
-					chaos_plague_ogryn = 0.25
+					chaos_beast_of_nurgle = 0.4,
+					chaos_spawn = 0.4,
+					chaos_plague_ogryn = 0.4
 				},
 				max_monster_duration = {
 					90,

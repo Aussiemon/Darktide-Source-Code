@@ -716,10 +716,11 @@ damage_templates.default_warpfire_assault_burst = {
 }
 damage_templates.default_chain_lighting_attack = {
 	attack_direction_override = "push",
+	random_gib_hitzone = true,
 	ignore_hitzone_multiplier = true,
+	stagger_category = "sticky",
 	ragdoll_push_force = 10,
 	chain_lightning_staff = true,
-	stagger_category = "sticky",
 	armor_damage_modifier = {
 		attack = {
 			[armor_types.unarmored] = damage_lerp_values.lerp_1,

@@ -8,6 +8,7 @@ pickup_settings.min_chest_spawner_ratio = {
 pickup_settings.pickup_pool_value = {
 	large_clip = 2.5,
 	small_clip = 1.5,
+	syringe_corruption_pocketable = 2,
 	ammo_cache_pocketable = 5,
 	small_grenade = 2,
 	medical_crate_pocketable = 4
@@ -53,6 +54,24 @@ pickup_settings.distribution_pool = {
 				1,
 				1,
 				1
+			}
+		},
+		wounds = {
+			syringe_corruption_pocketable = {
+				2,
+				2,
+				2,
+				2,
+				2
+			}
+		},
+		stimms = {
+			syringe_generic_pocketable = {
+				2,
+				2,
+				2,
+				2,
+				2
 			}
 		}
 	},
@@ -134,6 +153,24 @@ pickup_settings.distribution_pool = {
 				1
 			}
 		},
+		wounds = {
+			syringe_corruption_pocketable = {
+				0,
+				0,
+				0,
+				0,
+				0
+			}
+		},
+		stimms = {
+			syringe_generic_pocketable = {
+				2,
+				2,
+				2,
+				2,
+				2
+			}
+		},
 		forge_material = {
 			small_metal = {
 				4,
@@ -177,6 +214,24 @@ pickup_settings.distribution_pool = {
 				3
 			}
 		},
+		wounds = {
+			syringe_corruption_pocketable = {
+				2,
+				2,
+				2,
+				2,
+				2
+			}
+		},
+		stimms = {
+			syringe_generic_pocketable = {
+				4,
+				4,
+				4,
+				4,
+				4
+			}
+		},
 		forge_material = {
 			small_metal = {
 				7,
@@ -210,9 +265,14 @@ pickup_settings.distribution_pool = {
 	}
 }
 pickup_settings.rubberband = {
+	special_block_distance_short = 0.05,
 	special_block_distance = 0.2,
 	base_spawn_rate = 0.85,
 	pocketable_weight = {
+		max = 1,
+		min = 0.4
+	},
+	pocketable_small_weight = {
 		max = 1,
 		min = 0.4
 	},
@@ -246,7 +306,12 @@ pickup_settings.rubberband = {
 		health = {
 			[pickup_settings.distribution_types.mid_event] = 2.5,
 			[pickup_settings.distribution_types.end_event] = 4
-		}
+		},
+		wounds = {
+			[pickup_settings.distribution_types.mid_event] = 2,
+			[pickup_settings.distribution_types.end_event] = 3
+		},
+		stimms = {}
 	}
 }
 pickup_settings.animation_time = 0.15

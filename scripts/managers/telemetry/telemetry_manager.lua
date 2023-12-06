@@ -83,6 +83,10 @@ TelemetryManager.post_batch = function (self)
 
 	Log.debug("TelemetryManager", "Posting batch of %d events", #self._events)
 
+	if GameParameters.testify then
+		Log.debug("TelemetryManager", cjson.encode(self._events))
+	end
+
 	self._batch_in_flight = true
 	self._batch_post_time = math.floor(self._t)
 	local headers = {
@@ -100,6 +104,10 @@ TelemetryManager.post_batch = function (self)
 
 		self._batch_in_flight = nil
 	end)
+end
+
+TelemetryManager.batch_in_flight = function (self)
+	return self._batch_in_flight or false
 end
 
 TelemetryManager.destroy = function (self)

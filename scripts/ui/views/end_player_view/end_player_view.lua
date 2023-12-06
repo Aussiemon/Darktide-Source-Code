@@ -288,6 +288,33 @@ EndPlayerView._setup_progress_bar = function (self)
 	local starting_experience = session_report.starting_experience
 	local max_level = experience_settings.max_level
 	local experience_table = experience_settings.experience_table
+	local start_level = session_report.start_character_level
+	local starting_level_from_experience_table = nil
+
+	if start_level < max_level then
+		for i = 1, #experience_table do
+			local exp_by_level = experience_table[i]
+
+			if starting_experience <= exp_by_level and not starting_level_from_experience_table then
+				local is_max = experience_table[max_level] <= starting_experience
+				local is_min = starting_experience < experience_table[1]
+				starting_level_from_experience_table = starting_experience == is_min and 1 or is_max and max_level or i - 1
+
+				break
+			end
+		end
+
+		if start_level < starting_level_from_experience_table then
+			local added_experience = nil
+
+			for i = start_level, starting_level_from_experience_table do
+				added_experience = added_experience and added_experience + 10 or 0
+				experience_settings.experience_table[i] = starting_experience + added_experience
+			end
+		end
+	end
+
+	self._current_level = start_level
 	self._starting_experience = starting_experience
 	self._max_level = max_level
 	self._max_level_experience = experience_settings.max_level_experience
@@ -616,7 +643,20 @@ EndPlayerView._update_experience_bar = function (self, new_experience)
 	local current_level = self._current_level
 	local max_level = self._max_level
 
-	if current_level < max_level and experience_for_next_level <= current_experience then
+	if current_level == max_level then
+		local experience_table = self._experience_table
+		experience_for_current_level = experience_table[max_level]
+		experience_for_next_level = experience_table[max_level]
+		current_experience = experience_for_current_level
+		self._experience_for_current_level = experience_for_current_level
+		self._experience_for_next_level = experience_for_next_level
+		self._current_experience = self._max_level_experience
+		self._starting_experience = self._max_level_experience
+		local current_level_widget = widgets_by_name.current_level_text
+		current_level_widget.content.text = tostring(max_level - 1)
+		local next_level_widget = widgets_by_name.next_level_text
+		next_level_widget.content.text = tostring(max_level)
+	elseif current_level < max_level and experience_for_next_level <= current_experience then
 		local experience_table = self._experience_table
 		local next_level = current_level
 

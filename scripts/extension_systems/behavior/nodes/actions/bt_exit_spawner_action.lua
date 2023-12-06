@@ -72,7 +72,7 @@ BtExitSpawnerAction.leave = function (self, unit, breed, blackboard, scratchpad,
 	local destination = navigation_extension:destination()
 	local spawn_position = scratchpad.spawn_position:unbox()
 
-	if Vector3.equal(destination, spawn_position) then
+	if not destroy and Vector3.equal(destination, spawn_position) then
 		navigation_extension:stop()
 	end
 

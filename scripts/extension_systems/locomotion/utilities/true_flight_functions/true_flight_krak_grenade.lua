@@ -74,12 +74,11 @@ true_flight_krak_grenade.krak_find_armored_target = function (integration_data, 
 
 	table.clear(broadphase_results)
 
-	local number_of_results = nil
 	local veclocity = integration_data.velocity
 	local current_direction = Vector3.normalize(veclocity)
 	local offset = current_direction * forward_search_distance_to_find_target
 	local seach_position = position + offset
-	number_of_results = _broadphase_query(owner_unit, seach_position, broadphase_radius, broadphase_results)
+	local number_of_results = _broadphase_query(owner_unit, seach_position, broadphase_radius, broadphase_results)
 	local check_all_hit_zones = true_flight_template.check_all_hit_zones
 	local closest_unit = nil
 	local closest_distance = math.huge

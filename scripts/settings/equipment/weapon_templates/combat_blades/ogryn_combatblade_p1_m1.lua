@@ -391,7 +391,7 @@ weapon_template.actions = {
 			},
 			heavy_attack = {
 				action_name = "action_left_heavy",
-				chain_time = 0.55
+				chain_time = 0.5
 			},
 			block = {
 				action_name = "action_block"

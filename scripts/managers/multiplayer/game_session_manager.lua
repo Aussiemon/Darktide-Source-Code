@@ -220,30 +220,36 @@ GameSessionManager.game_object_migrated_to_me = function (id, old_owner_id)
 end
 
 GameSessionManager.game_object_created = function (self, game_object_id, owner_peer_id)
-	local type = NetworkLookup.game_object_types[GameSession.game_object_field(self._engine_game_session, game_object_id, "game_object_type")]
+	local game_object_type = NetworkLookup.game_object_types[GameSession.game_object_field(self._engine_game_session, game_object_id, "game_object_type")]
 	local unit_spawner = Managers.state.unit_spawner
 
-	if unit_spawner:is_unit_template(type) then
+	if unit_spawner:is_unit_template(game_object_type) then
 		unit_spawner:spawn_husk_unit(game_object_id, owner_peer_id)
 	end
 
-	if type == "music_parameters" then
+	if game_object_type == "music_parameters" then
 		local unit_game_object_id = GameSession.game_object_field(self._engine_game_session, game_object_id, "unit_game_object_id")
 		local unit = unit_spawner:unit(unit_game_object_id)
 		local music_parameter_extension = ScriptUnit.extension(unit, "music_parameter_system")
 
 		music_parameter_extension:on_game_object_created(self._engine_game_session, game_object_id)
-	elseif type == "scanning_device" then
+	elseif game_object_type == "scanning_device" then
 		local level_unit_id = GameSession.game_object_field(self._engine_game_session, game_object_id, "level_unit_id")
 		local unit = unit_spawner:unit(level_unit_id, true)
 		local scanning_event_extension = ScriptUnit.extension(unit, "scanning_event_system")
 
 		scanning_event_extension:on_game_object_created(game_object_id)
-	elseif type == "materials_collected" then
+	elseif game_object_type == "prop_health" then
+		local level_unit_id = GameSession.game_object_field(self._engine_game_session, game_object_id, "level_unit_id")
+		local unit = unit_spawner:unit(level_unit_id, true)
+		local health_extension = ScriptUnit.extension(unit, "health_system")
+
+		health_extension:on_game_object_created(self._engine_game_session, game_object_id)
+	elseif game_object_type == "materials_collected" then
 		local pickup_system = Managers.state.extension:system("pickup_system")
 
 		pickup_system:on_game_object_created(game_object_id)
-	elseif type == "server_unit_data_state" then
+	elseif game_object_type == "server_unit_data_state" then
 		local unit_game_object_id = GameSession.game_object_field(self._engine_game_session, game_object_id, "unit_game_object_id")
 		local unit = unit_spawner:unit(unit_game_object_id)
 		local player_unit_spawn_manager = Managers.state.player_unit_spawn
@@ -254,33 +260,33 @@ GameSessionManager.game_object_created = function (self, game_object_id, owner_p
 
 			unit_data_extension:on_server_data_state_game_object_created(self._engine_game_session, game_object_id)
 		end
-	elseif type == "server_husk_data_state" or type == "server_husk_hud_data_state" then
+	elseif game_object_type == "server_husk_data_state" or game_object_type == "server_husk_hud_data_state" then
 		local unit_game_object_id = GameSession.game_object_field(self._engine_game_session, game_object_id, "unit_game_object_id")
 		local unit = unit_spawner:unit(unit_game_object_id)
 		local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
 
-		if type == "server_husk_data_state" then
+		if game_object_type == "server_husk_data_state" then
 			unit_data_extension:on_server_husk_data_state_game_object_created(game_object_id)
-		elseif type == "server_husk_hud_data_state" then
+		elseif game_object_type == "server_husk_hud_data_state" then
 			unit_data_extension:on_server_husk_hud_data_state_game_object_created(game_object_id)
 		end
 	end
 end
 
 GameSessionManager.game_object_destroyed = function (self, game_object_id, owner_peer_id)
-	local type = NetworkLookup.game_object_types[GameSession.game_object_field(self._engine_game_session, game_object_id, "game_object_type")]
+	local game_object_type = NetworkLookup.game_object_types[GameSession.game_object_field(self._engine_game_session, game_object_id, "game_object_type")]
 	local unit_spawner = Managers.state.unit_spawner
 
-	if unit_spawner:is_unit_template(type) then
+	if unit_spawner:is_unit_template(game_object_type) then
 		unit_spawner:destroy_game_object_unit(game_object_id, owner_peer_id)
 	end
 
-	if type == "scanning_device" then
+	if game_object_type == "scanning_device" then
 		local level_unit_id = GameSession.game_object_field(self._engine_game_session, game_object_id, "level_unit_id")
 		local scanning_device_unit = nil
 
-		if unit_spawner:valid_unit_id(level_unit_id) then
-			scanning_device_unit = unit_spawner:unit(level_unit_id)
+		if unit_spawner:valid_unit_id(level_unit_id, true) then
+			scanning_device_unit = unit_spawner:unit(level_unit_id, true)
 		end
 
 		if scanning_device_unit then
@@ -290,7 +296,22 @@ GameSessionManager.game_object_destroyed = function (self, game_object_id, owner
 				scanning_device_extension:on_game_object_destroyed()
 			end
 		end
-	elseif type == "music_parameters" then
+	elseif game_object_type == "prop_health" then
+		local level_unit_id = GameSession.game_object_field(self._engine_game_session, game_object_id, "level_unit_id")
+		local unit = nil
+
+		if unit_spawner:valid_unit_id(level_unit_id, true) then
+			unit = unit_spawner:unit(level_unit_id, true)
+		end
+
+		if unit then
+			local health_extension = ScriptUnit.has_extension(unit, "health_system")
+
+			if health_extension then
+				health_extension:on_game_object_destroyed(self._engine_game_session, game_object_id)
+			end
+		end
+	elseif game_object_type == "music_parameters" then
 		local unit_game_object_id = GameSession.game_object_field(self._engine_game_session, game_object_id, "unit_game_object_id")
 		local unit = unit_spawner:unit(unit_game_object_id)
 		local music_parameter_extension = ScriptUnit.extension(unit, "music_parameter_system")

@@ -66,12 +66,9 @@ end
 BtShootNetAction.leave = function (self, unit, breed, blackboard, scratchpad, action_data, t, reason, destroy)
 	local behavior_component = scratchpad.behavior_component
 	local record_state_component = scratchpad.record_state_component
-
-	if scratchpad.num_shots_fired > 0 then
-		local shoot_net_cooldown = action_data.shoot_net_cooldown or Managers.state.difficulty:get_table_entry_by_challenge(MinionDifficultySettings.cooldowns.shoot_net_cooldown)
-		behavior_component.shoot_net_cooldown = t + shoot_net_cooldown
-		behavior_component.net_is_ready = false
-	end
+	local shoot_net_cooldown = action_data.shoot_net_cooldown or Managers.state.difficulty:get_table_entry_by_challenge(MinionDifficultySettings.cooldowns.shoot_net_cooldown)
+	behavior_component.shoot_net_cooldown = t + shoot_net_cooldown
+	behavior_component.net_is_ready = false
 
 	if behavior_component.is_dragging then
 		behavior_component.is_dragging = false

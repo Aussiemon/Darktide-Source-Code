@@ -46,6 +46,7 @@ local FALLBACK_ITEMS_BY_SLOT = {
 	slot_gear_lowerbody = "content/items/characters/player/human/attachments_default/slot_gear_legs",
 	slot_portrait_frame = "content/items/2d/portrait_frames/portrait_frame_default",
 	slot_body_face_tattoo = "content/items/characters/player/human/attachments_default/slot_body_face",
+	slot_pocketable_small = "content/items/pocketable/empty_pocketable",
 	slot_insignia = "content/items/2d/insignias/insignia_default",
 	slot_body_torso = "content/items/characters/player/human/attachments_default/slot_body_torso",
 	slot_primary = "content/items/weapons/player/melee/unarmed",

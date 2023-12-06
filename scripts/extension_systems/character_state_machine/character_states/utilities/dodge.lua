@@ -1,8 +1,10 @@
+local Action = require("scripts/utilities/weapon/action")
 local AttackSettings = require("scripts/settings/damage/attack_settings")
 local Breed = require("scripts/utilities/breed")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local DodgeSettings = require("scripts/settings/dodge/dodge_settings")
 local Sprint = require("scripts/extension_systems/character_state_machine/character_states/utilities/sprint")
+local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
 local attack_types = AttackSettings.attack_types
 local buff_keywords = BuffSettings.keywords
 local dodge_types = DodgeSettings.dodge_types
@@ -26,6 +28,21 @@ local Dodge = {
 
 		if not dodge_input then
 			return false
+		end
+
+		local sweep_component = unit_data_extension:read_component("action_sweep")
+		local is_sticky = sweep_component.is_sticky
+
+		if is_sticky then
+			local weapon_action_component = unit_data_extension:read_component("weapon_action")
+			local weapon_template = WeaponTemplate.current_weapon_template(weapon_action_component)
+			local _, current_action = Action.current_action(weapon_action_component, weapon_template)
+			local special_active_at_start = weapon_action_component.special_active_at_start
+			local sticky_settings = special_active_at_start and current_action.hit_stickyness_settings_special_active or current_action.hit_stickyness_settings
+
+			if sticky_settings and sticky_settings.disallow_dodging then
+				return false
+			end
 		end
 
 		local move = input_source:get("move")

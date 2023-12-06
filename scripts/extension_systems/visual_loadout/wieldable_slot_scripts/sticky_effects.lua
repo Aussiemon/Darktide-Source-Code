@@ -194,7 +194,7 @@ function _sticky_armor_type(action_sweep_component)
 		local hit_zone_name = stick_to_actor and HitZone.get_name(stick_to_unit, stick_to_actor)
 		local unit_data_extension = hit_zone_name and ScriptUnit.extension(stick_to_unit, "unit_data_system")
 		local breed = unit_data_extension and unit_data_extension:breed()
-		local sticky_armor_type = breed and Armor.armor_type(stick_to_unit, breed, hit_zone_name)
+		local sticky_armor_type = breed and (breed.hit_effect_armor_override or Armor.armor_type(stick_to_unit, breed, hit_zone_name))
 
 		return sticky_armor_type
 	end

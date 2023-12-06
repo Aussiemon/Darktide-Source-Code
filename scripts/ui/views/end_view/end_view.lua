@@ -835,6 +835,19 @@ EndView._set_mission_key = function (self, mission_key, session_report, render_s
 			font_color = string.format("%d,%d,%d", stats_text_color[2], stats_text_color[3], stats_text_color[4])
 		}
 		widget_content.mission_sub_header = Localize("loc_end_view_mission_sub_header_victory", true, text_params)
+		local narrative_story = mission_settings.narrative_story
+
+		if narrative_story then
+			local narrative_manager = Managers.narrative
+			local story = narrative_story.story
+			local chapter = narrative_story.chapter
+			local current_chapter = narrative_manager:current_chapter(story)
+			local current_chapter_name = current_chapter and current_chapter.name
+
+			if chapter == current_chapter_name then
+				narrative_manager:complete_current_chapter(story, chapter)
+			end
+		end
 	end
 end
 

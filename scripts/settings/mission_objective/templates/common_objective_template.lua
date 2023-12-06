@@ -52,6 +52,14 @@ local mission_objective_templates = {
 				use_music_event = "control_mission",
 				mission_objective_type = "luggable",
 				header = "loc_objective_common_luggable_header"
+			},
+			objective_twins_ambush = {
+				use_music_event = "twins_event",
+				description = "loc_objective_km_enforcer_eliminate_target_desc",
+				hidden = true,
+				header = "loc_objective_km_enforcer_eliminate_target_header",
+				event_type = "mid_event",
+				mission_objective_type = "goal"
 			}
 		}
 	}

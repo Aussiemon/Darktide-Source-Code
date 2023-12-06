@@ -298,6 +298,7 @@ damage_templates.psyker_throwing_knives_psychic_fortress = {
 	}
 }
 damage_templates.psyker_protectorate_spread_chain_lightning_interval = {
+	random_gib_hitzone = true,
 	ignore_hitzone_multiplier = true,
 	chain_lightning = true,
 	stagger_category = "electrocuted",
@@ -351,6 +352,7 @@ damage_templates.psyker_protectorate_spread_chain_lightning_interval = {
 }
 damage_templates.psyker_protectorate_channel_chain_lightning_activated = {
 	ignore_stagger_reduction = true,
+	random_gib_hitzone = true,
 	ignore_hitzone_multiplier = true,
 	stagger_category = "melee",
 	armor_damage_modifier = {

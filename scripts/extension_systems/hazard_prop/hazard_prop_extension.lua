@@ -95,13 +95,6 @@ HazardPropExtension.set_content = function (self, content)
 	end
 end
 
-HazardPropExtension.inactivate = function (self)
-	local health_extension = ScriptUnit.extension(self._unit, "health_system")
-
-	health_extension:set_unkillable(false)
-	health_extension:set_dead()
-end
-
 HazardPropExtension.current_state = function (self)
 	return self._current_state
 end
@@ -189,7 +182,7 @@ HazardPropExtension._update_mesh_visuals = function (self)
 	end
 end
 
-HazardPropExtension.damage = function (self, damage_amount, hit_actor, attack_direction)
+HazardPropExtension.add_damage = function (self, damage_amount, hit_actor, attack_direction)
 	if not self._is_server or self._content == hazard_content.none then
 		return
 	end

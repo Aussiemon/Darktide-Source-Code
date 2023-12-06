@@ -73,16 +73,22 @@ PropUnitData.component_data = {
 		ui_type = "combo_box",
 		ui_name = "Prop Data",
 		options_keys = {
-			"hazard_prop",
-			"hazard_sphere",
 			"corruptor_body",
-			"corruptor_pustule"
+			"corruptor_pustule",
+			"druglab_tank_shield",
+			"druglab_tank",
+			"filtration_tank",
+			"hazard_prop",
+			"hazard_sphere"
 		},
 		options_values = {
-			"hazard_prop",
-			"hazard_sphere",
 			"corruptor_body",
-			"corruptor_pustule"
+			"corruptor_pustule",
+			"druglab_tank_shield",
+			"druglab_tank",
+			"filtration_tank",
+			"hazard_prop",
+			"hazard_sphere"
 		}
 	},
 	extensions = {

@@ -1,4 +1,18 @@
 local line_effects = {
+	renegade_twin_captain_las_pistol_lasbeam = {
+		sfx = "wwise/events/weapon/play_weapon_lasgun_crack_beam_imperial_guards",
+		vfx = "content/fx/particles/weapons/rifles/lasgun/lasgun_beam",
+		emitters = {
+			vfx = {
+				default = "content/fx/particles/weapons/rifles/lasgun/lasgun_beam_standard_linger",
+				start = "content/fx/particles/weapons/rifles/lasgun/lasgun_beam_standard_linger"
+			},
+			interval = {
+				distance = 5,
+				increase = 0
+			}
+		}
+	},
 	renegade_lasbeam = {
 		sfx = "wwise/events/weapon/play_weapon_lasgun_crack_beam_nearby_husk",
 		vfx = "content/fx/particles/enemies/lasgun_beam_enemy",

@@ -9,8 +9,9 @@ local WeaponActionMovementSharedFunctions = {
 			return nil
 		end
 
+		local special_active_at_start = weapon_action_component.special_active_at_start
 		local is_sticky = action_sweep_component.is_sticky
-		local hit_stickyness_settings = is_sticky and action_settings.hit_stickyness_settings
+		local hit_stickyness_settings = is_sticky and (special_active_at_start and action_settings.hit_stickyness_settings_special_active or action_settings.hit_stickyness_settings)
 		local hit_sticky_movement_curve = hit_stickyness_settings and hit_stickyness_settings.movement_curve
 
 		if hit_sticky_movement_curve then

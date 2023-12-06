@@ -182,9 +182,9 @@ AttackReportManager._process_attack_result = function (self, buffer_data)
 	local breed_or_nil = unit_data_extension and unit_data_extension:breed()
 
 	if attacking_player then
-		local first_person_extension = ScriptUnit.extension(attacking_unit, "first_person_system")
+		local first_person_extension = ScriptUnit.has_extension(attacking_unit, "first_person_system")
 		local local_human = not attacking_player.remote and attacking_player:is_human_controlled()
-		local is_in_first_person_mode = first_person_extension:is_in_first_person_mode()
+		local is_in_first_person_mode = first_person_extension and first_person_extension:is_in_first_person_mode()
 
 		if local_human or is_in_first_person_mode then
 			_trigger_hit_report(attacking_unit, attack_result, did_damage, hit_weakspot, hit_world_position, damage_efficiency, is_critical_strike)

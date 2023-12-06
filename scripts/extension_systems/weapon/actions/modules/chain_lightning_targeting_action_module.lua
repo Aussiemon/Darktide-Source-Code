@@ -49,18 +49,19 @@ ChainLightningTargetingActionModule.fixed_update = function (self, dt, t)
 	table.clear(hit_units)
 
 	local num_results = broadphase:query(query_position, radius, BROADPHASE_RESULTS, enemy_side_names)
+	local physics_world = self._physics_world
 	local component = self._component
 	local num_targets = 0
 	local precision_angle = math.pi * 0.001
 	local test_angle = precision_angle
 
-	for maddafakka = 1, 2 do
-		for i = 1, num_results do
-			local target_unit = BROADPHASE_RESULTS[i]
+	for i = 1, 2 do
+		for j = 1, num_results do
+			local target_unit = BROADPHASE_RESULTS[j]
 
-			if target_unit and not hit_units[target_unit] then
+			if not hit_units[target_unit] then
 				local min_distance = 1
-				local valid_target, debug_reason = ChainLightning.is_valid_target(self._physics_world, player_unit, target_unit, query_position, -forward_direction, test_angle, close_max_angle, nil, nil, nil, min_distance)
+				local valid_target, debug_reason = ChainLightning.is_valid_target(physics_world, player_unit, target_unit, query_position, -forward_direction, test_angle, close_max_angle, nil, nil, nil, min_distance)
 
 				if valid_target then
 					num_targets = num_targets + 1
@@ -76,9 +77,7 @@ ChainLightningTargetingActionModule.fixed_update = function (self, dt, t)
 
 					if max_targets and num_targets == max_targets then
 						break
-					end
-
-					if num_targets >= 3 then
+					elseif num_targets >= 3 then
 						break
 					end
 				end

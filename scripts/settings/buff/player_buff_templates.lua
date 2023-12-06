@@ -262,7 +262,7 @@ templates.player_spawn_grace = {
 		keywords.unperceivable
 	},
 	stat_buffs = {
-		[buff_stat_buffs.damage_taken_modifier] = 0
+		[buff_stat_buffs.damage_taken_multiplier] = 0
 	}
 }
 templates.player_toughness_node_buff_low_1 = {

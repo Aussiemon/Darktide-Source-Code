@@ -3,6 +3,8 @@ require("scripts/extension_systems/destructible/destructible_extension")
 local LevelPropsBroadphase = require("scripts/utilities/level_props/level_props_broadphase")
 local DestructibleSystem = class("DestructibleSystem", "ExtensionSystemBase")
 local CLIENT_RPCS = {
+	"rpc_destructible_damage_taken",
+	"rpc_destructible_last_destruction",
 	"rpc_sync_destructible",
 	"rpc_destructible_mark_for_deletion"
 }
@@ -44,8 +46,8 @@ end
 DestructibleSystem.hot_join_sync = function (self, sender, channel)
 	local removed_level_unit_ids = self._removed_level_unit_ids
 
-	for i = 1, #removed_level_unit_ids do
-		local level_unit_id = removed_level_unit_ids[i]
+	for ii = 1, #removed_level_unit_ids do
+		local level_unit_id = removed_level_unit_ids[ii]
 
 		RPC.rpc_destructible_mark_for_deletion(channel, level_unit_id)
 	end
@@ -73,12 +75,30 @@ DestructibleSystem.update_level_props_broadphase = function (self)
 	end
 end
 
-DestructibleSystem.rpc_sync_destructible = function (self, channel_id, unit_id, is_level_unit, destruction_stage, visible, silent_transition)
+DestructibleSystem.rpc_destructible_damage_taken = function (self, channel_id, unit_id, is_level_unit)
 	if unit_id ~= NetworkConstants.invalid_level_unit_id then
 		local unit = Managers.state.unit_spawner:unit(unit_id, is_level_unit)
 		local extension = self._unit_to_extension_map[unit]
 
-		extension:rpc_sync_destructible(destruction_stage, visible, silent_transition)
+		extension:rpc_destructible_damage_taken()
+	end
+end
+
+DestructibleSystem.rpc_destructible_last_destruction = function (self, channel_id, unit_id, is_level_unit)
+	if unit_id ~= NetworkConstants.invalid_level_unit_id then
+		local unit = Managers.state.unit_spawner:unit(unit_id, is_level_unit)
+		local extension = self._unit_to_extension_map[unit]
+
+		extension:rpc_destructible_last_destruction()
+	end
+end
+
+DestructibleSystem.rpc_sync_destructible = function (self, channel_id, unit_id, is_level_unit, current_stage, visible, from_hot_join_sync)
+	if unit_id ~= NetworkConstants.invalid_level_unit_id then
+		local unit = Managers.state.unit_spawner:unit(unit_id, is_level_unit)
+		local extension = self._unit_to_extension_map[unit]
+
+		extension:rpc_sync_destructible(current_stage, visible, from_hot_join_sync)
 	end
 end
 

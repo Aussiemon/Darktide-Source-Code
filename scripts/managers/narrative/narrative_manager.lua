@@ -1,6 +1,7 @@
 local BackendError = require("scripts/managers/error/errors/backend_error")
 local Promise = require("scripts/foundation/utilities/promise")
 local Settings = require("scripts/settings/narrative/narrative_stories")
+local MissionUtilities = require("scripts/utilities/ui/mission")
 local Stories = Settings.stories
 local Events = Settings.events
 local NarrativeManager = class("NarrativeManager")
@@ -9,6 +10,7 @@ NarrativeManager.EVENTS = table.enum(unpack(table.keys(Events)))
 
 NarrativeManager.init = function (self)
 	self._character_narrative_data = {}
+	self._mission_data = {}
 end
 
 local function _player_profile()
@@ -69,6 +71,20 @@ local function _setup_backend_narrative_data(backend_data)
 	return data
 end
 
+NarrativeManager._get_missions = function (self)
+	return Managers.data_service.mission_board:fetch():next(function (data)
+		local missions = data.missions
+		self._mission_data = missions
+	end)
+end
+
+NarrativeManager._is_narrative_mission_available = function (self, book, chapter, page)
+	local missions = self._mission_data or {}
+	local available = not table.is_empty(MissionUtilities.filter_narrative_mission_by_values(missions, book, chapter, page))
+
+	return available
+end
+
 NarrativeManager.load_character_narrative = function (self, character_id)
 	if self._character_narrative_data[character_id] then
 		return Promise.resolved()
@@ -120,7 +136,7 @@ NarrativeManager.chapter_by_name = function (self, story_name, chapter_name)
 	end
 end
 
-NarrativeManager.current_chapter = function (self, story_name, ignore_requirement)
+NarrativeManager.current_chapter = function (self, story_name, ignore_all_requirements, ignore_mission_requirement)
 	local chapters = Stories[story_name]
 	local profile = _player_profile()
 	local character_id = profile.character_id
@@ -132,13 +148,22 @@ NarrativeManager.current_chapter = function (self, story_name, ignore_requiremen
 		return nil
 	end
 
-	if ignore_requirement then
+	if ignore_all_requirements then
 		return chapter
 	end
 
 	local requirement = chapter.requirement
+	local narrative_mission_requirement = nil
 
-	if requirement and not requirement(profile) then
+	if not ignore_mission_requirement then
+		local narrative_mission_requirement_data = chapter.narrative_mission_requirement
+
+		if narrative_mission_requirement_data then
+			narrative_mission_requirement = self:_is_narrative_mission_available(unpack(narrative_mission_requirement_data))
+		end
+	end
+
+	if requirement and not requirement(profile) or narrative_mission_requirement == false then
 		return nil
 	end
 
@@ -146,7 +171,7 @@ NarrativeManager.current_chapter = function (self, story_name, ignore_requiremen
 end
 
 NarrativeManager.complete_current_chapter = function (self, story_name, optional_chapter_name)
-	local chapter = self:current_chapter(story_name)
+	local chapter = self:current_chapter(story_name, nil, true)
 
 	if not chapter then
 		Log.info("NarrativeManager", "No current chapter to complete in story %s", story_name)
@@ -225,7 +250,7 @@ end
 
 NarrativeManager.skip_story = function (self, story_name)
 	local chapters = Stories[story_name]
-	local current_chapter = self:current_chapter(story_name)
+	local current_chapter = self:current_chapter(story_name, true)
 	local start_idx = current_chapter and current_chapter.index or 1
 
 	for i = start_idx, #chapters do
@@ -297,6 +322,7 @@ end
 
 NarrativeManager.reset = function (self)
 	table.clear(self._character_narrative_data)
+	table.clear(self._mission_data)
 end
 
 NarrativeManager.is_event_complete = function (self, event_name)

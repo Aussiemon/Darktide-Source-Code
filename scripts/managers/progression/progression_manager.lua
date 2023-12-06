@@ -290,7 +290,9 @@ ProgressionManager._parse_report = function (self, eor, account_wallets)
 		local character_id = profile.character_id
 
 		Managers.backend.interfaces.progression:get_progression("character", character_id):next(function (character_progression)
+			self._session_report.character.start_character_level = profile.current_level or 1
 			profile.current_level = character_progression.currentLevel or 1
+			self._session_report.character.current_character_level = profile.current_level
 			self._session_report_state = SESSION_REPORT_STATES.success
 
 			_info("session_report fetched and parsed successfully")
@@ -936,6 +938,11 @@ ProgressionManager._fetch_dummy_session_report = function (self)
 	local inventory = DummySessionReport.fetch_inventory(session_report)
 	self._session_report.eor = session_report
 	self._session_report.dummy = true
+	local dummy_character_data = session_report.team.participants and session_report.team.participants[1]
+	local start_level = dummy_character_data and dummy_character_data.progression[1].startLevel
+	local current_level = dummy_character_data and dummy_character_data.progression[1].currentLevel
+	self._session_report.character.start_character_level = start_level or 1
+	self._session_report.character.current_character_level = current_level or 1
 	self._session_report.character.inventory = inventory
 	self._session_report.character.experience_settings = self:_parse_experience_settings(character_xp)
 	self._session_report.account.experience_settings = self:_parse_experience_settings(account_xp)

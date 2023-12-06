@@ -255,7 +255,7 @@ weapon_template.actions = {
 			return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
 		end,
 		weapon_box = combat_axe_sweep_box,
-		hit_zone_priority = hit_zone_priority,
+		hit_zone_priority = default_hit_zone_priority,
 		spline_settings = {
 			matrices_data_location = "content/characters/player/human/first_person/animations/axe/attack_left_diagonal_down",
 			anchor_point_offset = {
@@ -421,7 +421,7 @@ weapon_template.actions = {
 			},
 			heavy_attack = {
 				action_name = "action_right_heavy",
-				chain_time = 0.4
+				chain_time = 0.41
 			},
 			block = {
 				action_name = "action_block"
@@ -440,7 +440,7 @@ weapon_template.actions = {
 		first_person_hit_stop_anim = "hit_stop",
 		anim_event_3p = "attack_swing_right_diagonal",
 		num_frames_before_process = 0,
-		range_mod = 1.25,
+		range_mod = 1.3,
 		damage_window_end = 0.55,
 		anim_end_event = "attack_finished",
 		uninterruptible = true,
@@ -507,7 +507,7 @@ weapon_template.actions = {
 		anim_end_event_condition_func = function (unit, data, end_reason)
 			return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
 		end,
-		hit_zone_priority = hit_zone_priority,
+		hit_zone_priority = default_hit_zone_priority,
 		weapon_box = combat_axe_sweep_box,
 		spline_settings = {
 			matrices_data_location = "content/characters/player/human/first_person/animations/axe/attack_right_diagonal_down",
@@ -895,7 +895,8 @@ weapon_template.actions = {
 				}
 			},
 			wield = {
-				action_name = "action_unwield"
+				action_name = "action_unwield",
+				chain_time = 0.4
 			},
 			start_attack = {
 				action_name = "action_melee_start_left",
@@ -913,7 +914,7 @@ weapon_template.actions = {
 		anim_end_event_condition_func = function (unit, data, end_reason)
 			return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
 		end,
-		hit_zone_priority = hit_zone_priority,
+		hit_zone_priority = default_hit_zone_priority,
 		weapon_box = combat_axe_sweep_box,
 		herding_template = HerdingTemplates.linesman_right_heavy,
 		spline_settings = {
@@ -1034,6 +1035,10 @@ weapon_template.actions = {
 			start_attack = {
 				action_name = "action_melee_start_left_2",
 				chain_time = 0.7
+			},
+			special_action = {
+				action_name = "action_special_uppercut",
+				chain_time = 1.05
 			},
 			block = {
 				action_name = "action_block",
@@ -1192,12 +1197,6 @@ weapon_template.base_stats = {
 		stamina = {
 			base = {
 				stamina_trait_templates.thunderhammer_p1_m1_defence_stat,
-				display_data = WeaponBarUIDescriptionTemplates.all_basic_stats
-			}
-		},
-		dodge = {
-			base = {
-				dodge_trait_templates.default_dodge_stat,
 				display_data = WeaponBarUIDescriptionTemplates.all_basic_stats
 			}
 		}

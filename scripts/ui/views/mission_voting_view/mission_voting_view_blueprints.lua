@@ -380,8 +380,9 @@ details_widgets_blueprints.utility_functions = {
 		end
 
 		local circumstance = mission_data.circumstance
+		local circumstance_ui_settings = CircumstanceTemplates[circumstance].ui
 
-		if circumstance and circumstance ~= "default" then
+		if circumstance and circumstance ~= "default" and circumstance_ui_settings then
 			details_data[#details_data + 1] = {
 				template = "circumstance",
 				widget_data = {

@@ -117,7 +117,7 @@ HudElementCrosshair.hit_indicator = function (self)
 		local is_critical_strike = hit_report_array[7]
 		local color = nil
 
-		if attack_result == attack_results.blocked or not did_damage then
+		if attack_result == attack_results.blocked or attack_result == attack_results.shield_blocked or not did_damage then
 			color = hit_indicator_colors.blocked
 		elseif attack_result == attack_results.damaged then
 			if hit_weakspot then

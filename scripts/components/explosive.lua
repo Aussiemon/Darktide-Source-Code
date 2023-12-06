@@ -20,7 +20,7 @@ Explosive.init = function (self, unit, is_server)
 	self._exploded = false
 end
 
-Explosive.events.died = function (self)
+Explosive.events.unit_died = function (self)
 	self:explosive_trigger()
 end
 

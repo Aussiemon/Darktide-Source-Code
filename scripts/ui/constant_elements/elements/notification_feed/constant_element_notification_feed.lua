@@ -17,17 +17,24 @@ local _localization_context = {}
 local function _apply_package_item_icon_cb_func(widget, item)
 	local icon = item.icon
 	local material_values = widget.style.icon.material_values
-	material_values.texture_map = icon
+	material_values.texture_icon = icon
+	material_values.use_placeholder_texture = 0
+	material_values.use_render_target = 0
+	local item_slot = ItemUtils.item_slot(item)
+	local icon_size = item_slot.item_icon_size
+	material_values.icon_size = icon_size
 end
 
 local function _remove_package_item_icon_cb_func(widget, ui_renderer)
-	local material_values = widget.style.icon.material_values
-	material_values.texture_map = nil
-
 	if ui_renderer then
 		UIWidget.set_visible(widget, ui_renderer, false)
 		UIWidget.set_visible(widget, ui_renderer, true)
 	end
+
+	local material_values = widget.style.icon.material_values
+	widget.style.icon.material_values.texture_icon = nil
+	material_values.use_placeholder_texture = 1
+	material_values.use_render_target = 0
 end
 
 local function _apply_live_item_icon_cb_func(widget, grid_index, rows, columns, render_target)
@@ -44,6 +51,7 @@ local function _remove_live_item_icon_cb_func(widget, ui_renderer)
 	local material_values = widget.style.icon.material_values
 	material_values.use_placeholder_texture = 1
 	material_values.texture_icon = nil
+	material_values.use_render_target = 0
 
 	if ui_renderer then
 		UIWidget.set_visible(widget, ui_renderer, false)
@@ -335,10 +343,10 @@ ConstantElementNotificationFeed._generate_notification_data = function (self, me
 		local icon, icon_size = nil
 
 		if item_type == "PORTRAIT_FRAME" then
-			icon = "content/ui/materials/base/ui_default_base"
+			icon = "content/ui/materials/icons/items/containers/item_container_square"
 			icon_size = "portrait_frame"
 		elseif item_type == "CHARACTER_INSIGNIA" then
-			icon = "content/ui/materials/base/ui_default_base"
+			icon = "content/ui/materials/icons/items/containers/item_container_square"
 			icon_size = "insignia"
 		elseif item_type == "WEAPON_MELEE" or item_type == "WEAPON_RANGED" or item_type == "WEAPON_TRINKET" then
 			icon = "content/ui/materials/icons/items/containers/item_container_landscape"

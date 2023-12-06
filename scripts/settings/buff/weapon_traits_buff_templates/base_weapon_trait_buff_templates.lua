@@ -634,11 +634,31 @@ base_templates.chained_weakspot_hits_increases_power_parent = {
 		[proc_events.on_hit] = 1
 	},
 	add_child_proc_events = {
-		[proc_events.on_hit] = 1
+		[proc_events.on_hit] = function (params)
+			if params.attack_type == attack_types.melee and params.hit_weakspot then
+				return 1
+			end
+
+			return nil
+		end
 	},
 	active_proc_func = {
 		on_hit = function (params)
-			return params.hit_weakspot
+			local attack_type = params.attack_type
+
+			if not attack_type then
+				return true
+			end
+
+			if params.attack_type ~= "melee" or params.hit_weakspot then
+				return true
+			end
+
+			if not params.target_index or params.target_index > 1 then
+				return true
+			end
+
+			return false
 		end
 	},
 	start_func = chained_hits_start_func,
@@ -773,7 +793,6 @@ base_templates.increased_melee_damage_on_multiple_hits = {
 		required_num_hits = 3
 	},
 	proc_stat_buffs = {
-		[stat_buffs.melee_damage] = 0.5,
 		[stat_buffs.melee_power_level_modifier] = 0.5
 	},
 	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
@@ -1408,11 +1427,11 @@ base_templates.power_bonus_on_first_attack = {
 	}
 }
 base_templates.power_bonus_on_first_attack = {
-	predicted = false,
 	no_power_duration = 5,
+	predicted = false,
+	class_name = "weapon_trait_proc_conditional_switch_buff",
 	always_show_in_hud = true,
 	force_predicted_proc = true,
-	class_name = "weapon_trait_proc_conditional_switch_buff",
 	show_in_hud_if_slot_is_wielded = true,
 	proc_events = {
 		[proc_events.on_hit] = 1
@@ -1444,6 +1463,12 @@ base_templates.power_bonus_on_first_attack = {
 	conditional_switch_stat_buffs_func = function (template_data, template_context)
 		return template_context.stat_buff_index
 	end,
+	conditional_switch_stat_buffs = {
+		{
+			[stat_buffs.melee_power_level_modifier] = 0.6
+		}
+	},
+	conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded,
 	conditional_hud_data = {
 		{
 			force_negative_frame = false,
@@ -1454,11 +1479,20 @@ base_templates.power_bonus_on_first_attack = {
 			is_active = false
 		}
 	},
-	conditional_stat_buffs = {
-		{
-			[stat_buffs.melee_power_level_modifier] = 0.6
-		}
-	}
+	duration_func = function (template_data, template_context)
+		if template_context.stat_buff_index == 1 then
+			return 1
+		end
+
+		local template = template_context.template
+		local template_override_data = template_context.template_override_data
+		local duration = template_override_data and template_override_data.no_power_duration or template.no_power_duration
+		local t = FixedFrame.get_latest_fixed_time()
+		local time_left = template_data.no_power_duration - t
+		local percentage = math.clamp01(time_left / duration)
+
+		return 1 - percentage
+	end
 }
 base_templates.rending_vs_staggered = {
 	hide_icon_in_hud = true,

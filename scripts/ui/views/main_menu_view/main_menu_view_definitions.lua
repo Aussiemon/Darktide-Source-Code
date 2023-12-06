@@ -674,7 +674,7 @@ local widget_definitions = {
 	}, "character_grid_interaction"),
 	play_button = UIWidget.create_definition(ButtonPassTemplates.ready_button, "play_button", {
 		gamepad_action = "confirm_pressed",
-		text = Utf8.upper(Localize("loc_main_menu_play_button"))
+		original_text = Utf8.upper(Localize("loc_main_menu_play_button"))
 	}),
 	create_button = UIWidget.create_definition(ButtonPassTemplates.terminal_button, "create_button", {
 		gamepad_action = "hotkey_menu_special_1",

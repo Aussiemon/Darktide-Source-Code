@@ -583,6 +583,12 @@ end
 BaseView._add_element = function (self, class, reference_name, layer, context, pivot)
 	local elements = self._elements
 	local elements_array = self._elements_array
+	context = context or {}
+
+	if not context.reference_name then
+		context.reference_name = reference_name
+	end
+
 	local draw_layer = layer or 0
 	local scale = self._ui_renderer.scale or RESOLUTION_LOOKUP.scale
 	local element = class:new(self, draw_layer, scale, context)

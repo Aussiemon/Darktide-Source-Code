@@ -838,6 +838,382 @@ local considerations = {
 				1
 			}
 		}
+	},
+	twin_captain_power_sword_melee_combo_attack = {
+		distance_to_target = {
+			component_field = "target_distance",
+			blackboard_component = "perception",
+			max_value = 6,
+			spline = {
+				0,
+				1,
+				0.52,
+				1,
+				0.57002,
+				0,
+				1,
+				0
+			}
+		},
+		distance_to_target_z = {
+			component_field = "target_distance_z",
+			blackboard_component = "perception",
+			max_value = 3.75,
+			spline = {
+				0,
+				1,
+				0.5,
+				0,
+				1,
+				0
+			}
+		},
+		has_line_of_sight = {
+			component_field = "has_line_of_sight",
+			blackboard_component = "perception",
+			is_condition = true
+		}
+	},
+	twin_captain_dash = {
+		distance_to_target = {
+			component_field = "target_distance",
+			blackboard_component = "perception",
+			max_value = 15,
+			spline = {
+				0,
+				0,
+				0.4,
+				0,
+				0.7,
+				1,
+				1,
+				0
+			}
+		},
+		has_line_of_sight = {
+			component_field = "has_line_of_sight",
+			blackboard_component = "perception",
+			is_condition = true
+		},
+		last_time = {
+			time_diff = true,
+			max_value = 8,
+			component_field = "last_time",
+			spline = {
+				0,
+				0,
+				0.5,
+				0,
+				0.5001,
+				1,
+				1,
+				1
+			}
+		}
+	},
+	twin_captain_random_dash = {
+		distance_to_target = {
+			component_field = "target_distance",
+			blackboard_component = "perception",
+			max_value = 20,
+			spline = {
+				0,
+				0,
+				0.4,
+				0,
+				0.7,
+				1,
+				1,
+				0
+			}
+		},
+		has_line_of_sight = {
+			component_field = "has_line_of_sight",
+			blackboard_component = "perception",
+			is_condition = true
+		},
+		last_time = {
+			time_diff = true,
+			max_value = 30,
+			component_field = "last_time",
+			spline = {
+				0,
+				0,
+				0.5,
+				0,
+				0.5001,
+				1,
+				1,
+				1
+			}
+		}
+	},
+	twin_captain_multithrow = {
+		has_line_of_sight = {
+			component_field = "has_line_of_sight",
+			blackboard_component = "perception",
+			is_condition = true
+		},
+		last_done_time = {
+			time_diff = true,
+			max_value = 20,
+			component_field = "last_done_time",
+			spline = {
+				0,
+				0,
+				0.5,
+				0,
+				0.5001,
+				1,
+				1,
+				1
+			}
+		},
+		distance_to_target = {
+			component_field = "target_distance",
+			blackboard_component = "perception",
+			max_value = 15,
+			spline = {
+				0,
+				0,
+				0.2,
+				0,
+				0.7,
+				1,
+				1,
+				0
+			}
+		}
+	},
+	twin_captain_multithrow_empowered = {
+		has_line_of_sight = {
+			component_field = "has_line_of_sight",
+			blackboard_component = "perception",
+			is_condition = true
+		},
+		last_done_time = {
+			time_diff = true,
+			max_value = 8,
+			component_field = "last_done_time",
+			spline = {
+				0,
+				0,
+				0.5,
+				0,
+				0.5001,
+				1,
+				1,
+				1
+			}
+		},
+		distance_to_target = {
+			component_field = "target_distance",
+			blackboard_component = "perception",
+			max_value = 20,
+			spline = {
+				0,
+				0,
+				0.2,
+				0,
+				0.7,
+				1,
+				1,
+				0
+			}
+		}
+	},
+	twin_captain_quickthrow = {
+		has_line_of_sight = {
+			component_field = "has_line_of_sight",
+			blackboard_component = "perception",
+			is_condition = true
+		},
+		last_done_time = {
+			time_diff = true,
+			max_value = 10,
+			component_field = "last_done_time",
+			spline = {
+				0,
+				0,
+				0.5,
+				0,
+				0.5001,
+				1,
+				1,
+				1
+			}
+		},
+		distance_to_target = {
+			component_field = "target_distance",
+			blackboard_component = "perception",
+			max_value = 20,
+			spline = {
+				0,
+				0,
+				0.2,
+				0,
+				0.7,
+				1,
+				1,
+				0
+			}
+		}
+	},
+	twin_captain_void_shield_explosion = {
+		shield_toughness = {
+			component_field = "toughness_percent",
+			blackboard_component = "toughness",
+			max_value = 1,
+			spline = {
+				0,
+				0,
+				0.01,
+				1,
+				0.5,
+				0.5,
+				0.5001,
+				0,
+				1,
+				0
+			}
+		},
+		nearby_units = {
+			component_field = "num_units",
+			blackboard_component = "nearby_units_broadphase",
+			max_value = 4,
+			spline = {
+				0,
+				0,
+				0.25,
+				0.25,
+				0.5,
+				0.5,
+				0.75,
+				0.75,
+				1,
+				1
+			}
+		},
+		distance_to_target_z = {
+			component_field = "target_distance_z",
+			blackboard_component = "perception",
+			max_value = 2.25,
+			spline = {
+				0,
+				1,
+				0.5,
+				0,
+				1,
+				0
+			}
+		},
+		last_done_time = {
+			time_diff = true,
+			max_value = 30,
+			component_field = "last_done_time",
+			spline = {
+				0,
+				0,
+				0.5,
+				0,
+				0.5001,
+				1,
+				1,
+				1
+			}
+		},
+		has_line_of_sight = {
+			component_field = "has_line_of_sight",
+			blackboard_component = "perception",
+			is_condition = true
+		}
+	},
+	twin_captain_dash_and_sweep = {
+		distance_to_target = {
+			component_field = "target_distance",
+			blackboard_component = "perception",
+			max_value = 20,
+			spline = {
+				0,
+				0,
+				0.4,
+				0,
+				0.7,
+				1,
+				1,
+				0
+			}
+		},
+		has_line_of_sight = {
+			component_field = "has_line_of_sight",
+			blackboard_component = "perception",
+			is_condition = true
+		},
+		last_time = {
+			time_diff = true,
+			max_value = 30,
+			component_field = "last_time",
+			spline = {
+				0,
+				0,
+				0.5,
+				0,
+				0.5001,
+				1,
+				1,
+				1
+			}
+		}
+	},
+	twin_kick = {
+		distance_to_target = {
+			component_field = "target_distance",
+			blackboard_component = "perception",
+			max_value = 4,
+			spline = {
+				0,
+				1,
+				0.52,
+				1,
+				0.57002,
+				0,
+				1,
+				0
+			}
+		},
+		distance_to_target_z = {
+			component_field = "target_distance_z",
+			blackboard_component = "perception",
+			max_value = 3.75,
+			spline = {
+				0,
+				1,
+				0.5,
+				0,
+				1,
+				0
+			}
+		},
+		has_line_of_sight = {
+			component_field = "has_line_of_sight",
+			blackboard_component = "perception",
+			is_condition = true
+		},
+		last_time = {
+			time_diff = true,
+			max_value = 15,
+			component_field = "last_time",
+			spline = {
+				0,
+				0,
+				0.5,
+				0,
+				0.5001,
+				1,
+				1,
+				1
+			}
+		}
 	}
 }
 

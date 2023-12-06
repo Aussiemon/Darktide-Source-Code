@@ -1213,6 +1213,8 @@ end
 ItemUtils.compare_item_name = function (a, b)
 	local a_display_name = a.display_name and Localize(a.display_name) or ""
 	local b_display_name = b.display_name and Localize(b.display_name) or ""
+	a_display_name = a_display_name:gsub("[\n\r]", "")
+	b_display_name = b_display_name:gsub("[\n\r]", "")
 
 	if a_display_name < b_display_name then
 		return true

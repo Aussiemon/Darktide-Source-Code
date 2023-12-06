@@ -860,6 +860,53 @@ local default_surface_fx = {
 ImpactFxHelper.create_missing_surface_fx(surface_fx, default_surface_fx)
 
 local surface_decal = {
+	brick = {
+		[hit_types.stop] = {
+			extents = {
+				min = {
+					x = 1.25,
+					y = 1.25
+				},
+				max = {
+					x = 1.25,
+					y = 1.25
+				}
+			},
+			units = {
+				"content/fx/units/weapons/vfx_psyker_projectile_glow"
+			}
+		},
+		[hit_types.penetration_entry] = {
+			extents = {
+				min = {
+					x = 1.25,
+					y = 1.25
+				},
+				max = {
+					x = 1.25,
+					y = 1.25
+				}
+			},
+			units = {
+				"content/fx/units/weapons/vfx_psyker_projectile_glow"
+			}
+		},
+		[hit_types.penetration_exit] = {
+			extents = {
+				min = {
+					x = 1.25,
+					y = 1.25
+				},
+				max = {
+					x = 1.25,
+					y = 1.25
+				}
+			},
+			units = {
+				"content/fx/units/weapons/vfx_psyker_projectile_glow"
+			}
+		}
+	},
 	concrete = {
 		[hit_types.stop] = {
 			extents = {

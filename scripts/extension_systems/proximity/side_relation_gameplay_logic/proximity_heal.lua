@@ -86,55 +86,69 @@ ProximityHeal.update = function (self, dt, t)
 	local knock_down_player_heal_cost_multiplier = self._knock_down_player_heal_cost_multiplier
 
 	for unit, _ in pairs(self._units_in_proximity) do
-		local health_extension = ScriptUnit.has_extension(unit, "health_system")
+		repeat
+			local health_extension = ScriptUnit.has_extension(unit, "health_system")
 
-		if health_extension and health_extension:is_alive() then
-			local max_health = health_extension:max_health()
-			local speed_multiplier = 1
-			local cost_multiplier = 1
-			local unit_data_extension = ScriptUnit.has_extension(unit, "unit_data_system")
-			local breed_or_nil = unit_data_extension and unit_data_extension:breed()
-			local is_player = Breed.is_player(breed_or_nil)
+			if health_extension and health_extension:is_alive() then
+				local max_health = health_extension:max_health()
+				local speed_multiplier = 1
+				local cost_multiplier = 1
+				local unit_data_extension = ScriptUnit.has_extension(unit, "unit_data_system")
+				local breed_or_nil = unit_data_extension and unit_data_extension:breed()
+				local is_player = Breed.is_player(breed_or_nil)
+				local can_heal = true
 
-			if unit_data_extension and is_player then
-				local character_state_component = unit_data_extension:read_component("character_state")
-				local is_knocked_down = PlayerUnitStatus.is_knocked_down(character_state_component)
+				if unit_data_extension and is_player then
+					local character_state_component = unit_data_extension:read_component("character_state")
+					local is_knocked_down = PlayerUnitStatus.is_knocked_down(character_state_component)
 
-				if is_knocked_down then
-					speed_multiplier = knock_down_player_heal_speed_multiplier
-					cost_multiplier = knock_down_player_heal_cost_multiplier
+					if is_knocked_down then
+						speed_multiplier = knock_down_player_heal_speed_multiplier
+						cost_multiplier = knock_down_player_heal_cost_multiplier
+					end
+
+					local disabled_character_state_component = unit_data_extension:read_component("disabled_character_state")
+					local is_consumed = PlayerUnitStatus.is_consumed(disabled_character_state_component)
+
+					if is_consumed then
+						can_heal = false
+					end
+				end
+
+				if not can_heal then
+					break
+				end
+
+				local heal_amount = max_health * heal_percentage * heal_amount_modifier * speed_multiplier
+				local health_added = Health.add(unit, heal_amount, heal_type)
+				amount_healed_this_tick = amount_healed_this_tick + health_added * cost_multiplier
+
+				if optional_buff then
+					local buff_extension = ScriptUnit.has_extension(unit, "buff_system")
+					local stat_buffs = buff_extension and buff_extension:stat_buffs()
+					local heal_modifier = stat_buffs and stat_buffs[optional_buff] or 1
+					local extra_heal_percentage = heal_percentage * heal_modifier - heal_percentage
+
+					if extra_heal_percentage > 0 then
+						local extra_heal_amount = max_health * extra_heal_percentage
+						local extra_health_added = Health.add(unit, extra_heal_amount, heal_type)
+					end
+				end
+
+				if players_have_improved_keyword then
+					health_extension:reduce_permanent_damage(heal_amount * improved_medical_crate_settings.permanent_damage_multiplier)
+					Toughness.replenish_percentage(unit, improved_medical_crate_settings.toughness_percentage_per_second * dt, false, "proximity_heal")
+				end
+
+				if health_added > 0 then
+					self:play_fx_for_unit(unit, t)
+				end
+
+				if not self._units_healed[unit] and health_added > 0 then
+					self._units_healed[unit] = true
 				end
 			end
-
-			local heal_amount = max_health * heal_percentage * heal_amount_modifier * speed_multiplier
-			local health_added = Health.add(unit, heal_amount, heal_type)
-			amount_healed_this_tick = amount_healed_this_tick + health_added * cost_multiplier
-
-			if optional_buff then
-				local buff_extension = ScriptUnit.has_extension(unit, "buff_system")
-				local stat_buffs = buff_extension and buff_extension:stat_buffs()
-				local heal_modifier = stat_buffs and stat_buffs[optional_buff] or 1
-				local extra_heal_percentage = heal_percentage * heal_modifier - heal_percentage
-
-				if extra_heal_percentage > 0 then
-					local extra_heal_amount = max_health * extra_heal_percentage
-					local extra_health_added = Health.add(unit, extra_heal_amount, heal_type)
-				end
-			end
-
-			if players_have_improved_keyword then
-				health_extension:reduce_permanent_damage(heal_amount * improved_medical_crate_settings.permanent_damage_multiplier)
-				Toughness.replenish_percentage(unit, improved_medical_crate_settings.toughness_percentage_per_second * dt, false, "proximity_heal")
-			end
-
-			if health_added > 0 then
-				self:play_fx_for_unit(unit, t)
-			end
-
-			if not self._units_healed[unit] and health_added > 0 then
-				self._units_healed[unit] = true
-			end
-		end
+		until true
 	end
 
 	self._amount_of_damage_healed = self._amount_of_damage_healed + amount_healed_this_tick

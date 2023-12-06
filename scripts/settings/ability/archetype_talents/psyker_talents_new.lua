@@ -293,6 +293,10 @@ local archetype_talents = {
 			special_rule = {
 				special_rule_name = "shout_warp_charge_vent_improved",
 				identifier = "shout_warp_charge_vent_improved"
+			},
+			player_ability = {
+				ability_type = "combat_ability",
+				ability = PlayerAbilities.psyker_discharge_shout_improved
 			}
 		},
 		psyker_shout_damage_per_warp_charge = {
@@ -819,7 +823,7 @@ local archetype_talents = {
 				}
 			},
 			coherency = {
-				identifier = "psyker_aura_crit_chance_aura",
+				identifier = "psyker_aura",
 				priority = 2,
 				buff_template_name = "psyker_aura_crit_chance_aura"
 			}

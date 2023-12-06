@@ -23,7 +23,7 @@ local circumstance_templates = {
 		},
 		ui = {
 			description = "loc_circumstance_ventilation_purge_more_resistance_description",
-			icon = "content/ui/materials/icons/circumstances/ventilation_purge_04",
+			icon = "content/ui/materials/icons/circumstances/ventilation_purge_03",
 			display_name = "loc_circumstance_ventilation_purge_more_resistance_title",
 			happening_display_name = "loc_happening_ventilation_purge"
 		}
@@ -121,7 +121,6 @@ local circumstance_templates = {
 	toxic_gas_twins_01 = {
 		dialogue_id = "circumstance_vo_toxic_gas",
 		wwise_state = "ventilation_purge_01",
-		theme_tag = "toxic_gas",
 		mutators = {
 			"mutator_toxic_gas_twins",
 			"mutator_no_hordes",

@@ -894,6 +894,18 @@ UIWidgetGrid.is_widget_visible = function (self, widget, extra_margin)
 	return true
 end
 
+UIWidgetGrid.hovered_grid_index = function (self)
+	local widgets = self._widgets
+
+	for i = 1, #widgets do
+		local hotspot = widgets[i].content.hotspot
+
+		if hotspot and hotspot.is_hover then
+			return i
+		end
+	end
+end
+
 UIWidgetGrid.destroy = function (self)
 	return
 end

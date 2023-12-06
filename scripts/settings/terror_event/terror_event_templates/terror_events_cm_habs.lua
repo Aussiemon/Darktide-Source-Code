@@ -589,7 +589,7 @@ local template = {
 				sound_event_name = "wwise/events/minions/play_terror_event_alarm",
 				spawner_group = "spawner_habs_end_east",
 				limit_spawners = 3,
-				points = 14,
+				points = 8,
 				breed_tags = {
 					{
 						"melee",
@@ -659,7 +659,7 @@ local template = {
 				sound_event_name = "wwise/events/minions/play_terror_event_alarm",
 				spawner_group = "spawner_habs_end_south",
 				limit_spawners = 3,
-				points = 14,
+				points = 8,
 				breed_tags = {
 					{
 						"close",
@@ -818,7 +818,7 @@ local template = {
 				sound_event_name = "wwise/events/minions/play_terror_event_alarm",
 				spawner_group = "spawner_habs_end_west",
 				limit_spawners = 3,
-				points = 14,
+				points = 8,
 				breed_tags = {
 					{
 						"melee",

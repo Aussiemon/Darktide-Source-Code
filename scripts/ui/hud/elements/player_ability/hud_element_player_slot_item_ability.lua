@@ -15,7 +15,8 @@ HudElementPlayerSlotItemAbility.init = function (self, parent, draw_layer, start
 	self._slot_id = data.slot_id
 	local slot_configuration = PlayerCharacterConstants.slot_configuration
 	local slot_config = slot_configuration[self._slot_id]
-	self._wield_input = slot_config.wield_input
+	local wield_inputs = slot_config.wield_inputs
+	self._wield_input = wield_inputs and wield_inputs[1]
 
 	self:_set_progress(1)
 	self:set_charges_amount()

@@ -26,6 +26,29 @@ local weapon_template = {
 					inputs = wield_inputs
 				}
 			}
+		},
+		aim_give = {
+			buffer_time = 0.3,
+			max_queue = 1,
+			reevaluation_time = 0.18,
+			input_sequence = {
+				{
+					value = true,
+					hold_input = "weapon_extra_hold",
+					input = "weapon_extra_hold"
+				}
+			}
+		},
+		aim_give_release = {
+			buffer_time = 0.3,
+			max_queue = 1,
+			input_sequence = {
+				{
+					value = false,
+					input = "weapon_extra_hold",
+					time_window = math.huge
+				}
+			}
 		}
 	}
 }
@@ -34,7 +57,13 @@ table.add_missing(weapon_template.action_inputs, BaseTemplateSettings.action_inp
 
 weapon_template.action_input_hierarchy = {
 	wield = "stay",
-	push = "stay"
+	push = "stay",
+	aim_give = {
+		wield = "base",
+		aim_give_release = "previous",
+		combat_ability = "base",
+		grenade_ability = "base"
+	}
 }
 
 table.add_missing(weapon_template.action_input_hierarchy, BaseTemplateSettings.action_input_hierarchy)
@@ -88,6 +117,58 @@ weapon_template.actions = {
 		outer_damage_profile = DamageProfileTemplates.light_push,
 		outer_damage_type = damage_types.physical
 	},
+	action_aim_give = {
+		aim_ready_up_time = 0,
+		start_input = "aim_give",
+		prevent_sprint = true,
+		kind = "target_ally",
+		sprint_ready_up_time = 0,
+		allowed_during_lunge = true,
+		allowed_during_sprint = true,
+		minimum_hold_time = 0.01,
+		anim_end_event = "share_aim_end",
+		abort_sprint = true,
+		clear_on_hold_release = true,
+		uninterruptible = true,
+		anim_event = "share_aim",
+		stop_input = "aim_give_release",
+		total_time = math.huge,
+		anim_end_event_condition_func = function (unit, data, end_reason)
+			return end_reason ~= "new_interrupting_action"
+		end,
+		validate_target_func = PocketableUtils.validate_give_pocketable_target_func,
+		smart_targeting_template = SmartTargetingTemplates.target_ally_close,
+		allowed_chain_actions = {
+			aim_give_release = {
+				action_name = "action_give"
+			},
+			combat_ability = {
+				action_name = "combat_ability"
+			},
+			grenade_ability = {
+				{
+					action_name = "grenade_ability"
+				},
+				{
+					action_name = "grenade_ability_quick_throw"
+				}
+			},
+			wield = {
+				action_name = "action_unwield"
+			}
+		}
+	},
+	action_give = {
+		anim_event = "share_ally",
+		allowed_during_sprint = true,
+		give_time = 0.7,
+		anim_end_event = "share_aim_end",
+		kind = "give_pocketable",
+		assist_notification_type = "gifted",
+		total_time = 0.7,
+		smart_targeting_template = SmartTargetingTemplates.target_ally_close,
+		validate_target_func = PocketableUtils.validate_give_pocketable_target_func
+	},
 	action_inspect = {
 		skip_3p_anims = true,
 		lock_view = true,
@@ -125,6 +206,7 @@ weapon_template.toughness_template = "default"
 weapon_template.hud_icon = "content/ui/materials/icons/pocketables/hud/scripture"
 weapon_template.hud_icon_small = "content/ui/materials/icons/pocketables/hud/small/party_scripture"
 weapon_template.swap_pickup_name = "tome"
+weapon_template.give_pickup_name = "tome"
 weapon_template.footstep_intervals = FootstepIntervalsTemplates.default
 
 weapon_template.action_none_screen_ui_validation = function (wielded_slot_id, item, current_action, current_action_name, player)
@@ -132,15 +214,21 @@ weapon_template.action_none_screen_ui_validation = function (wielded_slot_id, it
 end
 
 weapon_template.action_none_gift_screen_ui_validation = function (wielded_slot_id, item, current_action, current_action_name, player)
-	return
+	return not current_action_name or current_action_name == "none"
 end
 
 weapon_template.action_can_give_screen_ui_validation = function (wielded_slot_id, item, current_action, current_action_name, player, condition_func_params)
-	return
+	local action_module_targeting_component = condition_func_params.action_module_targeting_component
+	local target_unit = action_module_targeting_component.target_unit_1
+
+	return current_action_name == "action_aim_give" and target_unit ~= nil
 end
 
 weapon_template.action_cant_give_screen_ui_validation = function (wielded_slot_id, item, current_action, current_action_name, player, condition_func_params)
-	return
+	local action_module_targeting_component = condition_func_params.action_module_targeting_component
+	local target_unit = action_module_targeting_component.target_unit_1
+
+	return current_action_name == "action_aim_give" and target_unit == nil
 end
 
 return weapon_template

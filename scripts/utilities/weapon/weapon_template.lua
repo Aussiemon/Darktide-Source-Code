@@ -1,9 +1,9 @@
 local WeaponTemplates = require("scripts/settings/equipment/weapon_templates/weapon_templates")
-local WeaponTemplate = {}
-
-WeaponTemplate.current_weapon_template = function (weapon_action_component)
-	return WeaponTemplate.weapon_template(weapon_action_component.template_name)
-end
+local WeaponTemplate = {
+	current_weapon_template = function (weapon_action_component)
+		return WeaponTemplates[weapon_action_component.template_name]
+	end
+}
 
 WeaponTemplate.is_ranged = function (weapon_template)
 	return WeaponTemplate.has_keyword(weapon_template, "ranged")
@@ -37,14 +37,10 @@ WeaponTemplate.weapon_template_from_item = function (weapon_item)
 	local weapon_progression_template_name = weapon_item.weapon_progression_template
 
 	if weapon_progression_template_name then
-		return WeaponTemplate.weapon_template(weapon_progression_template_name)
+		return WeaponTemplates[weapon_progression_template_name]
 	end
 
-	return WeaponTemplate.weapon_template(weapon_template_name)
-end
-
-WeaponTemplate.weapon_template = function (template_name)
-	return WeaponTemplates[template_name]
+	return WeaponTemplates[weapon_template_name]
 end
 
 WeaponTemplate.state_machines = function (weapon_template, breed_name)

@@ -629,8 +629,8 @@ overrides.autogun_p2_m2 = {
 			"power_distribution",
 			"attack",
 			{
-				60,
-				120
+				72,
+				145
 			}
 		},
 		{

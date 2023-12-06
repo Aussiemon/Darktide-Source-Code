@@ -2,16 +2,15 @@ local MasterItems = require("scripts/backend/master_items")
 local Pickups = require("scripts/settings/pickup/pickups")
 local PlayerUnitVisualLoadout = require("scripts/extension_systems/visual_loadout/utilities/player_unit_visual_loadout")
 local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
-local SLOT_POCKETABLE = "slot_pocketable"
 local Pocketable = {}
 local _drop_pickup = nil
 
-Pocketable.drop_pocketable = function (t, physics_world, is_server, player_unit, inventory_component, visual_loadout_extension)
-	if not PlayerUnitVisualLoadout.slot_equipped(inventory_component, visual_loadout_extension, SLOT_POCKETABLE) then
+Pocketable.drop_pocketable = function (t, physics_world, is_server, player_unit, inventory_component, visual_loadout_extension, slot_name)
+	if not PlayerUnitVisualLoadout.slot_equipped(inventory_component, visual_loadout_extension, slot_name) then
 		return
 	end
 
-	local item_name = inventory_component[SLOT_POCKETABLE]
+	local item_name = inventory_component[slot_name]
 
 	if is_server then
 		local position = Unit.world_position(player_unit, 1)
@@ -35,24 +34,24 @@ Pocketable.drop_pocketable = function (t, physics_world, is_server, player_unit,
 		_drop_pickup(item_name, position, rotation)
 	end
 
-	PlayerUnitVisualLoadout.unequip_item_from_slot(player_unit, SLOT_POCKETABLE, t)
+	PlayerUnitVisualLoadout.unequip_item_from_slot(player_unit, slot_name, t)
 end
 
-Pocketable.equip_pocketable = function (t, is_server, player_unit, pickup_unit, inventory_item)
+Pocketable.equip_pocketable = function (t, is_server, player_unit, pickup_unit, inventory_item, slot_name)
 	local unit_data_extension = ScriptUnit.extension(player_unit, "unit_data_system")
 	local inventory_component = unit_data_extension:read_component("inventory")
-	local pocketable_wielded = inventory_component.wielded_slot == SLOT_POCKETABLE
-	local item_name = inventory_component[SLOT_POCKETABLE]
+	local pocketable_wielded = inventory_component.wielded_slot == slot_name
+	local item_name = inventory_component[slot_name]
 	local swap_item = item_name ~= "not_equipped"
 
 	if swap_item then
-		PlayerUnitVisualLoadout.unequip_item_from_slot(player_unit, SLOT_POCKETABLE, t)
+		PlayerUnitVisualLoadout.unequip_item_from_slot(player_unit, slot_name, t)
 	end
 
-	PlayerUnitVisualLoadout.equip_item_to_slot(player_unit, inventory_item, SLOT_POCKETABLE, nil, t)
+	PlayerUnitVisualLoadout.equip_item_to_slot(player_unit, inventory_item, slot_name, nil, t)
 
 	if swap_item and is_server then
-		local inventory_slot_component = unit_data_extension:write_component(SLOT_POCKETABLE)
+		local inventory_slot_component = unit_data_extension:write_component(slot_name)
 
 		if not inventory_slot_component.unequip_slot then
 			local position = Unit.world_position(pickup_unit, 1)
@@ -69,7 +68,7 @@ Pocketable.equip_pocketable = function (t, is_server, player_unit, pickup_unit, 
 	end
 
 	if swap_item and pocketable_wielded then
-		PlayerUnitVisualLoadout.wield_slot(SLOT_POCKETABLE, player_unit, t)
+		PlayerUnitVisualLoadout.wield_slot(slot_name, player_unit, t)
 	end
 end
 
@@ -86,6 +85,9 @@ Pocketable.item_from_name = function (item_name)
 	return inventory_item
 end
 
+local TRAINING_GROUNDS_GAME_MODE_NAME = "training_grounds"
+local SHOOTING_RANGE_GAME_MODE_NAME = "shooting_range"
+
 function _drop_pickup(item_name, spawn_pos, spawn_rot)
 	local item_definitions = MasterItems.get_cached()
 	local item = item_definitions[item_name]
@@ -93,19 +95,25 @@ function _drop_pickup(item_name, spawn_pos, spawn_rot)
 	local swap_pickup_name = weapon_template and weapon_template.swap_pickup_name
 
 	if not swap_pickup_name then
-		return nil
+		return nil, nil
 	end
 
-	local pickup_system = Managers.state.extension:system("pickup_system")
-	local disable_time = 0.5
-	local spawned_unit, _ = pickup_system:spawn_pickup(swap_pickup_name, spawn_pos, spawn_rot, nil, nil, disable_time)
-	local equipped_pickup_data = Pickups.by_name[swap_pickup_name]
+	local game_mode_name = Managers.state.game_mode:game_mode_name()
 
-	if equipped_pickup_data and equipped_pickup_data.on_drop_func then
-		equipped_pickup_data.on_drop_func(spawned_unit)
+	if game_mode_name ~= TRAINING_GROUNDS_GAME_MODE_NAME and game_mode_name ~= SHOOTING_RANGE_GAME_MODE_NAME then
+		local pickup_system = Managers.state.extension:system("pickup_system")
+		local disable_time = 0.5
+		local spawned_unit, _ = pickup_system:spawn_pickup(swap_pickup_name, spawn_pos, spawn_rot, nil, nil, disable_time)
+		local equipped_pickup_data = Pickups.by_name[swap_pickup_name]
+
+		if equipped_pickup_data and equipped_pickup_data.on_drop_func then
+			equipped_pickup_data.on_drop_func(spawned_unit)
+		end
+
+		return spawned_unit, swap_pickup_name
 	end
 
-	return spawned_unit, swap_pickup_name
+	return nil, nil
 end
 
 return Pocketable

@@ -1,5 +1,6 @@
 require("scripts/extension_systems/broadphase/broadphase_extension")
 
+local BreedSettings = require("scripts/settings/breed/breed_settings")
 local Pickups = require("scripts/settings/pickup/pickups")
 local BroadphaseSystem = class("BroadphaseSystem", "ExtensionSystemBase")
 
@@ -13,6 +14,12 @@ local function _generate_broadphase_categories(system_init_data)
 
 	for group_name, _ in pairs(pickup_groups) do
 		broadphase_categories[#broadphase_categories + 1] = group_name
+	end
+
+	local breed_types = BreedSettings.types
+
+	for type_name, _ in pairs(breed_types) do
+		broadphase_categories[#broadphase_categories + 1] = type_name
 	end
 
 	return broadphase_categories

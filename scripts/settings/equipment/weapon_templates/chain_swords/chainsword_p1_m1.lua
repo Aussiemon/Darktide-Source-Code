@@ -332,10 +332,10 @@ weapon_template.actions = {
 				instances = 3,
 				damage_profile = DamageProfileTemplates.light_chainsword_sticky,
 				damage_type = damage_types.sawing_stuck,
-				last_damage_profile = DamageProfileTemplates.light_chainsword_sticky_last
+				last_damage_profile = DamageProfileTemplates.light_chainsword_sticky_last,
+				dodge_damage_profile = DamageProfileTemplates.sticky_dodge_push
 			},
 			disallowed_hit_zones = melee_sticky_disallowed_hit_zones,
-			disallow_dodging = {},
 			movement_curve = {
 				{
 					modifier = 0.3,
@@ -466,11 +466,11 @@ weapon_template.actions = {
 				instances = 3,
 				damage_profile = DamageProfileTemplates.heavy_chainsword_sticky,
 				damage_type = damage_types.sawing_stuck,
-				last_damage_profile = DamageProfileTemplates.heavy_chainsword_sticky_last
+				last_damage_profile = DamageProfileTemplates.heavy_chainsword_sticky_last,
+				dodge_damage_profile = DamageProfileTemplates.sticky_dodge_push
 			},
 			disallowed_hit_zones = melee_sticky_disallowed_hit_zones,
 			disallowed_armor_types = melee_sticky_heavy_attack_disallowed_armor_types,
-			disallow_dodging = {},
 			movement_curve = {
 				{
 					modifier = 0.3,
@@ -520,9 +520,10 @@ weapon_template.actions = {
 		}
 	},
 	action_melee_start_right = {
+		anim_event_3p = "attack_swing_charge_right",
 		anim_end_event = "attack_finished",
 		kind = "windup",
-		anim_event_3p = "attack_swing_charge_right",
+		allowed_during_sprint = true,
 		anim_event = "heavy_charge_right",
 		stop_input = "attack_cancel",
 		total_time = 3,
@@ -728,10 +729,10 @@ weapon_template.actions = {
 				instances = 3,
 				damage_profile = DamageProfileTemplates.light_chainsword_sticky,
 				damage_type = damage_types.sawing_stuck,
-				last_damage_profile = DamageProfileTemplates.light_chainsword_sticky_last
+				last_damage_profile = DamageProfileTemplates.light_chainsword_sticky_last,
+				dodge_damage_profile = DamageProfileTemplates.sticky_dodge_push
 			},
 			disallowed_hit_zones = melee_sticky_disallowed_hit_zones,
-			disallow_dodging = {},
 			movement_curve = {
 				{
 					modifier = 0.3,
@@ -780,18 +781,19 @@ weapon_template.actions = {
 		}
 	},
 	action_right_heavy = {
-		damage_window_start = 0.2,
-		hit_armor_anim = "attack_hit_shield",
-		weapon_handling_template = "time_scale_1",
 		range_mod = 1.25,
 		kind = "sweep",
-		first_person_hit_anim = "hit_left_shake",
 		max_num_saved_entries = 20,
+		allowed_during_sprint = true,
 		num_frames_before_process = 0,
+		first_person_hit_anim = "hit_left_shake",
+		hit_armor_anim = "attack_hit_shield",
+		damage_window_start = 0.2,
 		damage_window_end = 0.35,
 		anim_end_event = "attack_finished",
 		anim_event_3p = "attack_swing_heavy_right",
 		anim_event = "heavy_attack_right",
+		weapon_handling_template = "time_scale_1",
 		hit_stop_anim = "hit_stop",
 		total_time = 1,
 		action_movement_curve = {
@@ -860,11 +862,11 @@ weapon_template.actions = {
 				instances = 3,
 				damage_profile = DamageProfileTemplates.heavy_chainsword_sticky,
 				damage_type = damage_types.sawing_stuck,
-				last_damage_profile = DamageProfileTemplates.heavy_chainsword_sticky_last
+				last_damage_profile = DamageProfileTemplates.heavy_chainsword_sticky_last,
+				dodge_damage_profile = DamageProfileTemplates.sticky_dodge_push
 			},
 			disallowed_hit_zones = melee_sticky_disallowed_hit_zones,
 			disallowed_armor_types = melee_sticky_heavy_attack_disallowed_armor_types,
-			disallow_dodging = {},
 			movement_curve = {
 				{
 					modifier = 0.3,
@@ -1130,10 +1132,10 @@ weapon_template.actions = {
 				instances = 3,
 				damage_profile = DamageProfileTemplates.light_chainsword_sticky,
 				damage_type = damage_types.sawing_stuck,
-				last_damage_profile = DamageProfileTemplates.light_chainsword_sticky_last
+				last_damage_profile = DamageProfileTemplates.light_chainsword_sticky_last,
+				dodge_damage_profile = DamageProfileTemplates.sticky_dodge_push
 			},
 			disallowed_hit_zones = melee_sticky_disallowed_hit_zones,
-			disallow_dodging = {},
 			movement_curve = {
 				{
 					modifier = 0.3,
@@ -1391,10 +1393,10 @@ weapon_template.actions = {
 				instances = 3,
 				damage_profile = DamageProfileTemplates.light_chainsword_sticky,
 				damage_type = damage_types.sawing_stuck,
-				last_damage_profile = DamageProfileTemplates.light_chainsword_sticky_last
+				last_damage_profile = DamageProfileTemplates.light_chainsword_sticky_last,
+				dodge_damage_profile = DamageProfileTemplates.sticky_dodge_push
 			},
 			disallowed_hit_zones = melee_sticky_disallowed_hit_zones,
-			disallow_dodging = {},
 			movement_curve = {
 				{
 					modifier = 0.3,
@@ -1524,11 +1526,11 @@ weapon_template.actions = {
 				instances = 3,
 				damage_profile = DamageProfileTemplates.heavy_chainsword_sticky,
 				damage_type = damage_types.sawing_stuck,
-				last_damage_profile = DamageProfileTemplates.heavy_chainsword_sticky_last
+				last_damage_profile = DamageProfileTemplates.heavy_chainsword_sticky_last,
+				dodge_damage_profile = DamageProfileTemplates.sticky_dodge_push
 			},
 			disallowed_hit_zones = melee_sticky_disallowed_hit_zones,
 			disallowed_armor_types = melee_sticky_heavy_attack_disallowed_armor_types,
-			disallow_dodging = {},
 			movement_curve = {
 				{
 					modifier = 0.3,
@@ -1745,10 +1747,10 @@ weapon_template.actions = {
 				instances = 3,
 				damage_profile = DamageProfileTemplates.default_light_chainsword_stab_sticky,
 				damage_type = damage_types.sawing_stuck,
-				last_damage_profile = DamageProfileTemplates.default_light_chainsword_stab_sticky_last
+				last_damage_profile = DamageProfileTemplates.default_light_chainsword_stab_sticky_last,
+				dodge_damage_profile = DamageProfileTemplates.sticky_dodge_push
 			},
 			disallowed_hit_zones = melee_sticky_disallowed_hit_zones,
-			disallow_dodging = {},
 			movement_curve = {
 				{
 					modifier = 0.3,

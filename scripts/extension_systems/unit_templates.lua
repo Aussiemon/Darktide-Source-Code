@@ -155,8 +155,10 @@ local function _broadphase_radius_and_categories(breed, side_id)
 	local side = side_system:get_side(side_id)
 	local side_name = side:name()
 	local broadphase_radius = breed.broadphase_radius
+	local breed_type = breed.breed_type
 	local broadphase_categories = {
-		side_name
+		side_name,
+		breed_type
 	}
 
 	if breed.broadphase_categories then
@@ -284,12 +286,12 @@ local unit_templates = {
 			local mission = Managers.state.mission:mission()
 			local broadphase_radius, broadphase_categories = _broadphase_radius_and_categories(breed, side_id)
 			local first_person_heights = _player_character_first_person_heights(breed, profile, random_seed)
-			local next_seed, recoil_seed, buff_seed, spread_seed, character_state_seed, critical_strike_seed = nil
+			local next_seed, recoil_seed, buff_seed, spread_seed, character_state_seed, critical_strike_seed, _ = nil
 			next_seed, recoil_seed = math.random_seed(random_seed)
 			next_seed, buff_seed = math.random_seed(next_seed)
 			next_seed, spread_seed = math.random_seed(next_seed)
 			next_seed, character_state_seed = math.random_seed(next_seed)
-			next_seed, critical_strike_seed = math.random_seed(next_seed)
+			_, critical_strike_seed = math.random_seed(next_seed)
 			local package_synchronizer_client = Managers.package_synchronization:synchronizer_client()
 			local force_third_person_mode = _force_third_person_mode()
 			local use_third_person_hub_camera = _use_third_person_hub_camera()
@@ -742,12 +744,12 @@ local unit_templates = {
 
 				player:set_orientation(yaw, pitch, 0)
 
-				local next_seed, recoil_seed, buff_seed, spread_seed, character_state_seed, critical_strike_seed = nil
+				local next_seed, recoil_seed, buff_seed, spread_seed, character_state_seed, critical_strike_seed, _ = nil
 				next_seed, recoil_seed = math.random_seed(random_seed)
 				next_seed, buff_seed = math.random_seed(next_seed)
 				next_seed, spread_seed = math.random_seed(next_seed)
 				next_seed, character_state_seed = math.random_seed(next_seed)
-				next_seed, critical_strike_seed = math.random_seed(next_seed)
+				_, critical_strike_seed = math.random_seed(next_seed)
 				local force_third_person_mode = _force_third_person_mode()
 				local use_third_person_hub_camera = _use_third_person_hub_camera()
 				local default_wielded_slot_name = game_mode_manager:default_wielded_slot_name()
@@ -1001,12 +1003,12 @@ unit_templates.player_character_social_hub = {
 		local mission = Managers.state.mission:mission()
 		local broadphase_radius, broadphase_categories = _broadphase_radius_and_categories(breed, side_id)
 		local first_person_heights = _player_character_first_person_heights(breed, profile, random_seed)
-		local next_seed, recoil_seed, buff_seed, spread_seed, character_state_seed, critical_strike_seed = nil
+		local next_seed, recoil_seed, buff_seed, spread_seed, character_state_seed, critical_strike_seed, _ = nil
 		next_seed, recoil_seed = math.random_seed(random_seed)
 		next_seed, buff_seed = math.random_seed(next_seed)
 		next_seed, spread_seed = math.random_seed(next_seed)
 		next_seed, character_state_seed = math.random_seed(next_seed)
-		next_seed, critical_strike_seed = math.random_seed(next_seed)
+		_, critical_strike_seed = math.random_seed(next_seed)
 		local package_synchronizer_client = Managers.package_synchronization:synchronizer_client()
 		local force_third_person_mode = _force_third_person_mode()
 		local use_third_person_hub_camera = _use_third_person_hub_camera()
@@ -1425,12 +1427,12 @@ unit_templates.player_character_social_hub = {
 
 			player:set_orientation(yaw, pitch, 0)
 
-			local next_seed, recoil_seed, buff_seed, spread_seed, character_state_seed, critical_strike_seed = nil
+			local next_seed, recoil_seed, buff_seed, spread_seed, character_state_seed, critical_strike_seed, _ = nil
 			next_seed, recoil_seed = math.random_seed(random_seed)
 			next_seed, buff_seed = math.random_seed(next_seed)
 			next_seed, spread_seed = math.random_seed(next_seed)
 			next_seed, character_state_seed = math.random_seed(next_seed)
-			next_seed, critical_strike_seed = math.random_seed(next_seed)
+			_, critical_strike_seed = math.random_seed(next_seed)
 			local force_third_person_mode = _force_third_person_mode()
 			local use_third_person_hub_camera = _use_third_person_hub_camera()
 			local default_wielded_slot_name = game_mode_manager:default_wielded_slot_name()
@@ -1677,13 +1679,13 @@ unit_templates.minion = {
 		local behavior_tree_name = breed.behavior_tree_name
 		local spawn_buffs = breed.spawn_buffs
 		local random_seed = init_data.random_seed
-		local next_seed, animation_seed, inventory_seed, buff_seed, attack_selection_seed, boss_seed, voice_selection_seed = nil
+		local next_seed, animation_seed, inventory_seed, buff_seed, attack_selection_seed, boss_seed, voice_selection_seed, _ = nil
 		next_seed, animation_seed = math.random_seed(random_seed)
 		next_seed, inventory_seed = math.random_seed(next_seed)
 		next_seed, buff_seed = math.random_seed(next_seed)
 		next_seed, attack_selection_seed = math.random_seed(next_seed)
 		next_seed, boss_seed = math.random_seed(next_seed)
-		next_seed, voice_selection_seed = math.random_seed(next_seed)
+		_, voice_selection_seed = math.random_seed(next_seed)
 
 		config:add("BlackboardExtension", {
 			component_config = blackboard_component_config
@@ -1823,7 +1825,7 @@ unit_templates.minion = {
 			})
 		end
 
-		config:add("AIProximityExtension", {
+		config:add("MinionProximityExtension", {
 			side_id = side_id,
 			breed = breed
 		})
@@ -1841,7 +1843,7 @@ unit_templates.minion = {
 
 		local dialogue_settings = DialogueBreedSettings[breed_name]
 
-		if dialogue_settings and dialogue_settings.has_dialogue_extension then
+		if dialogue_settings.has_dialogue_extension then
 			config:add("DialogueActorExtension", {
 				local_player = false,
 				breed = breed,
@@ -1941,13 +1943,13 @@ unit_templates.minion = {
 		local breed_name = NetworkLookup.breed_names[breed_id]
 		local breed = Breeds[breed_name]
 		local broadphase_radius, broadphase_categories = _broadphase_radius_and_categories(breed, side_id)
-		local next_seed, animation_seed, inventory_seed, buff_seed, attack_selection_seed, boss_seed, voice_selection_seed = nil
+		local next_seed, animation_seed, inventory_seed, buff_seed, attack_selection_seed, boss_seed, voice_selection_seed, _ = nil
 		next_seed, animation_seed = math.random_seed(random_seed)
 		next_seed, inventory_seed = math.random_seed(next_seed)
 		next_seed, buff_seed = math.random_seed(next_seed)
 		next_seed, attack_selection_seed = math.random_seed(next_seed)
 		next_seed, boss_seed = math.random_seed(next_seed)
-		next_seed, voice_selection_seed = math.random_seed(next_seed)
+		_, voice_selection_seed = math.random_seed(next_seed)
 
 		config:add("BroadphaseExtension", {
 			moving = true,
@@ -2035,7 +2037,7 @@ unit_templates.minion = {
 			})
 		end
 
-		config:add("AIProximityExtension", {
+		config:add("MinionProximityExtension", {
 			side_id = side_id,
 			breed = breed
 		})
@@ -2050,7 +2052,7 @@ unit_templates.minion = {
 
 		local dialogue_settings = DialogueBreedSettings[breed_name]
 
-		if dialogue_settings and dialogue_settings.has_dialogue_extension then
+		if dialogue_settings.has_dialogue_extension then
 			config:add("DialogueActorExtension", {
 				local_player = false,
 				breed = breed,
@@ -2623,9 +2625,9 @@ unit_templates.medical_crate_deployable = {
 }
 unit_templates.smoke_fog = {
 	local_unit = function (unit_name, position, rotation, ...)
-		local rotation = Quaternion.from_yaw_pitch_roll(Quaternion.yaw(rotation), 0, 0)
+		local yaw_rotation = Quaternion.from_yaw_pitch_roll(Quaternion.yaw(rotation), 0, 0)
 
-		return unit_name, position, rotation
+		return unit_name, position, yaw_rotation
 	end,
 	husk_unit = function (session, object_id)
 		local unit_name_id = GameSession.game_object_field(session, object_id, "unit_name_id")
@@ -2704,9 +2706,9 @@ unit_templates.smoke_fog = {
 }
 unit_templates.force_field = {
 	local_unit = function (unit_name, position, rotation, ...)
-		local rotation = Quaternion.from_yaw_pitch_roll(Quaternion.yaw(rotation), 0, 0)
+		local yaw_rotation = Quaternion.from_yaw_pitch_roll(Quaternion.yaw(rotation), 0, 0)
 
-		return unit_name, position, rotation
+		return unit_name, position, yaw_rotation
 	end,
 	husk_unit = function (session, object_id)
 		local unit_name_id = GameSession.game_object_field(session, object_id, "unit_name_id")

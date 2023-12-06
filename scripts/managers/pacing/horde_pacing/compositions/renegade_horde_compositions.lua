@@ -2390,6 +2390,302 @@ local horde_compositions = {
 				}
 			}
 		}
+	},
+	twin_elite_trickle_1 = {
+		{
+			breeds = {
+				{
+					name = "renegade_assault",
+					amount = {
+						4,
+						5
+					}
+				},
+				{
+					name = "renegade_shocktrooper",
+					amount = {
+						1,
+						1
+					}
+				}
+			}
+		},
+		{
+			breeds = {
+				{
+					name = "renegade_assault",
+					amount = {
+						5,
+						6
+					}
+				},
+				{
+					name = "renegade_shocktrooper",
+					amount = {
+						1,
+						1
+					}
+				}
+			}
+		},
+		{
+			breeds = {
+				{
+					name = "renegade_assault",
+					amount = {
+						6,
+						7
+					}
+				},
+				{
+					name = "renegade_shocktrooper",
+					amount = {
+						1,
+						2
+					}
+				}
+			}
+		},
+		{
+			breeds = {
+				{
+					name = "renegade_assault",
+					amount = {
+						8,
+						9
+					}
+				},
+				{
+					name = "renegade_shocktrooper",
+					amount = {
+						2,
+						3
+					}
+				}
+			}
+		}
+	},
+	twin_elite_trickle_2 = {
+		{
+			breeds = {
+				{
+					name = "renegade_melee",
+					amount = {
+						4,
+						5
+					}
+				},
+				{
+					name = "renegade_executor",
+					amount = {
+						1,
+						1
+					}
+				}
+			}
+		},
+		{
+			breeds = {
+				{
+					name = "renegade_melee",
+					amount = {
+						5,
+						6
+					}
+				},
+				{
+					name = "renegade_executor",
+					amount = {
+						1,
+						1
+					}
+				}
+			}
+		},
+		{
+			breeds = {
+				{
+					name = "renegade_melee",
+					amount = {
+						6,
+						7
+					}
+				},
+				{
+					name = "renegade_executor",
+					amount = {
+						1,
+						2
+					}
+				}
+			}
+		},
+		{
+			breeds = {
+				{
+					name = "renegade_melee",
+					amount = {
+						8,
+						9
+					}
+				},
+				{
+					name = "renegade_executor",
+					amount = {
+						2,
+						3
+					}
+				}
+			}
+		}
+	},
+	twin_elite_trickle_3 = {
+		{
+			breeds = {
+				{
+					name = "renegade_melee",
+					amount = {
+						4,
+						5
+					}
+				},
+				{
+					name = "renegade_executor",
+					amount = {
+						1,
+						1
+					}
+				}
+			}
+		},
+		{
+			breeds = {
+				{
+					name = "renegade_melee",
+					amount = {
+						5,
+						6
+					}
+				},
+				{
+					name = "renegade_executor",
+					amount = {
+						1,
+						1
+					}
+				}
+			}
+		},
+		{
+			breeds = {
+				{
+					name = "renegade_melee",
+					amount = {
+						6,
+						7
+					}
+				},
+				{
+					name = "renegade_executor",
+					amount = {
+						1,
+						2
+					}
+				}
+			}
+		},
+		{
+			breeds = {
+				{
+					name = "renegade_melee",
+					amount = {
+						8,
+						9
+					}
+				},
+				{
+					name = "chaos_ogryn_executor",
+					amount = {
+						1,
+						2
+					}
+				}
+			}
+		}
+	},
+	twin_elite_trickle_4 = {
+		{
+			breeds = {
+				{
+					name = "renegade_melee",
+					amount = {
+						4,
+						5
+					}
+				},
+				{
+					name = "renegade_berzerker",
+					amount = {
+						1,
+						1
+					}
+				}
+			}
+		},
+		{
+			breeds = {
+				{
+					name = "renegade_melee",
+					amount = {
+						5,
+						6
+					}
+				},
+				{
+					name = "renegade_berzerker",
+					amount = {
+						1,
+						1
+					}
+				}
+			}
+		},
+		{
+			breeds = {
+				{
+					name = "renegade_melee",
+					amount = {
+						6,
+						7
+					}
+				},
+				{
+					name = "renegade_berzerker",
+					amount = {
+						1,
+						2
+					}
+				}
+			}
+		},
+		{
+			breeds = {
+				{
+					name = "renegade_melee",
+					amount = {
+						8,
+						9
+					}
+				},
+				{
+					name = "renegade_berzerker",
+					amount = {
+						2,
+						3
+					}
+				}
+			}
+		}
 	}
 }
 

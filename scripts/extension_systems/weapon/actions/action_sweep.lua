@@ -19,6 +19,7 @@ local ImpactEffect = require("scripts/utilities/attack/impact_effect")
 local LagCompensation = require("scripts/utilities/lag_compensation")
 local MinionDeath = require("scripts/utilities/minion_death")
 local PowerLevelSettings = require("scripts/settings/damage/power_level_settings")
+local Stamina = require("scripts/utilities/attack/stamina")
 local SweepSpline = require("scripts/extension_systems/weapon/actions/utilities/sweep_spline")
 local SweepSplineExported = require("scripts/extension_systems/weapon/actions/utilities/sweep_spline_exported")
 local SweepStickyness = require("scripts/utilities/action/sweep_stickyness")
@@ -65,12 +66,12 @@ local function _calculate_attack_direction(action_settings, start_rotation, end_
 	return action_settings.invert_attack_direction and -attack_direction or attack_direction
 end
 
-local function _breed_aborts_attack(action_settings, speccial_active, target_breed_or_nil)
+local function _breed_aborts_attack(action_settings, special_active, target_breed_or_nil)
 	if not target_breed_or_nil then
 		return false
 	end
 
-	local force_abort_breed_tags = speccial_active and action_settings.force_abort_breed_tags_special_active or action_settings.force_abort_breed_tags
+	local force_abort_breed_tags = special_active and action_settings.force_abort_breed_tags_special_active or action_settings.force_abort_breed_tags
 
 	if not force_abort_breed_tags then
 		return false
@@ -111,6 +112,7 @@ ActionSweep.init = function (self, action_context, action_params, action_setting
 	self._weapon_action_component = unit_data_extension:write_component("weapon_action")
 	self._dodge_character_state_component = unit_data_extension:write_component("dodge_character_state")
 	self._movement_state_component = unit_data_extension:write_component("movement_state")
+	self._character_state_component = unit_data_extension:read_component("character_state")
 	local damage_profile = action_settings.damage_profile
 	self._damage_profile = damage_profile
 	self._damage_profile_on_abort = action_settings.damage_profile_on_abort or damage_profile
@@ -420,10 +422,9 @@ ActionSweep._start_hit_stickyness = function (self, hit_stickyness_settings, t, 
 	end
 
 	local disallow_dodging = hit_stickyness_settings.disallow_dodging
+	local has_dodge_damage_profile = hit_stickyness_settings.damage.dodge_damage_profile
 
-	if disallow_dodging then
-		local cd = disallow_dodging.duration or hit_sticky_duration
-		self._dodge_character_state_component.cooldown = t + cd
+	if disallow_dodging or has_dodge_damage_profile then
 		self._movement_state_component.can_jump = false
 	end
 
@@ -449,9 +450,9 @@ ActionSweep._start_hit_stickyness = function (self, hit_stickyness_settings, t, 
 	end
 end
 
-ActionSweep._stop_hit_stickyness = function (self, hit_stickyness_settings)
-	local stop_anim_event = hit_stickyness_settings.stop_anim_event
-	local stop_anim_event_3p = hit_stickyness_settings.stop_anim_event_3p or stop_anim_event
+ActionSweep._stop_hit_stickyness = function (self, hit_stickyness_settings, aborted)
+	local stop_anim_event = aborted and hit_stickyness_settings.abort_anim_event or hit_stickyness_settings.stop_anim_event
+	local stop_anim_event_3p = aborted and (hit_stickyness_settings.abort_anim_event_3p or hit_stickyness_settings.abort_anim_event) or hit_stickyness_settings.stop_anim_event_3p or stop_anim_event
 
 	if stop_anim_event then
 		self._animation_extension:anim_event_1p(stop_anim_event)
@@ -498,11 +499,16 @@ ActionSweep._can_start_stickyness = function (self, hit_stickyness_settings, abo
 		return false
 	end
 
+	local unit_data_extension = ScriptUnit.extension(stick_to_unit, "unit_data_system")
+	local breed = unit_data_extension:breed()
+
+	if Breed.is_prop(breed) and not breed.tags.objective then
+		return false
+	end
+
 	local disallowed_armor_types = hit_stickyness_settings.disallowed_armor_types
 
 	if disallowed_armor_types then
-		local unit_data_extension = ScriptUnit.extension(stick_to_unit, "unit_data_system")
-		local breed = unit_data_extension:breed()
 		local armor_type = Armor.armor_type(stick_to_unit, breed, hit_zone_name)
 
 		if table.index_of(disallowed_armor_types, armor_type) ~= -1 then
@@ -598,13 +604,44 @@ ActionSweep._update_hit_stickyness = function (self, dt, t, action_sweep_compone
 		end
 	end
 
+	local character_state_component = self._character_state_component
+	local state_name = character_state_component.state_name
+	local is_in_dodge_state = state_name == "dodging"
+	local is_in_jump_state = state_name == "jumping"
+	local state_enter_time = character_state_component.entered_t
+	local exit_because_of_state = (is_in_dodge_state or is_in_jump_state) and start_t < state_enter_time
 	local sticky_t = t - start_t
 	local duration = hit_stickyness_settings.duration
 	local extra_duration = hit_stickyness_settings.extra_duration or 0
 	local min_sticky_time = hit_stickyness_settings.min_sticky_time or 0.5
+	local is_time_up = sticky_target_unit_alive and sticky_t >= duration + extra_duration
+	local is_target_dead = not sticky_target_unit_alive and sticky_t >= duration * min_sticky_time
 
-	if sticky_target_unit_alive and sticky_t >= duration + extra_duration or not sticky_target_unit_alive and sticky_t >= duration * min_sticky_time then
-		self:_stop_hit_stickyness(hit_stickyness_settings)
+	if is_time_up or is_target_dead or exit_because_of_state then
+		local dodge_exit_damage_profile = damage.dodge_damage_profile
+
+		if dodge_exit_damage_profile and exit_because_of_state and is_in_dodge_state and stick_to_unit then
+			local damage_type = damage.damage_type
+			local is_critical_strike = self._critical_strike_component.is_active
+			local attacking_unit = self._player.player_unit
+			local hit_zone_name = HitZone.get_name(stick_to_unit, stick_to_actor)
+			local node_index = Actor.node(stick_to_actor)
+			local hit_world_position = Unit.world_position(stick_to_unit, node_index)
+			local attack_type = AttackSettings.attack_types.melee
+			local action_settings = self._action_settings
+			local wounds_shape = action_settings.wounds_shape_special_active
+			local attack_direction = Vector3.normalize(self._locomotion_component.velocity_current)
+			local damage_dealt, attack_result, damage_efficiency, _, hit_weakspot = Attack.execute(stick_to_unit, damage.dodge_damage_profile, "power_level", DEFAULT_POWER_LEVEL, "target_index", 1, "target_number", 1, "hit_world_position", hit_world_position, "attack_direction", attack_direction, "hit_zone_name", hit_zone_name, "attacking_unit", attacking_unit, "hit_actor", stick_to_actor, "attack_type", attack_type, "herding_template", nil, "damage_type", damage_type, "is_critical_strike", is_critical_strike, "item", self._weapon.item, "wounds_shape", wounds_shape)
+			local hit_normal = nil
+
+			ImpactEffect.play(stick_to_unit, stick_to_actor, damage_dealt, damage_type, hit_zone_name, attack_result, hit_world_position, hit_normal, attack_direction, self._player.player_unit, stickyness_impact_fx_data, nil, nil, damage_efficiency, damage.dodge_damage_profile)
+
+			local stammina_drain_percentage = hit_stickyness_settings.dodge_stammina_drain_percentage or 0.6
+
+			Stamina.drain_pecentage_of_base_stamina(attacking_unit, stammina_drain_percentage, t)
+		end
+
+		self:_stop_hit_stickyness(hit_stickyness_settings, exit_because_of_state)
 	end
 end
 

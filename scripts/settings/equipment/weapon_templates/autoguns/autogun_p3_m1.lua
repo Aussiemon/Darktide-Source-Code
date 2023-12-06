@@ -861,6 +861,7 @@ weapon_template.spread_template = "default_autogun_burst"
 weapon_template.recoil_template = "default_autogun_burst"
 weapon_template.suppression_template = "default_autogun_assault"
 weapon_template.look_delta_template = "autogun"
+weapon_template.semi_auto_chain_factor = 1
 weapon_template.conditional_state_to_action_input = {
 	{
 		conditional_state = "no_ammo_and_started_reload",

@@ -67,12 +67,12 @@ local hit_stickyness_settings_light_special = {
 	always_sticky = true,
 	damage = {
 		instances = 3,
-		damage_profile = DamageProfileTemplates.light_chainsword_sticky_2h,
+		damage_profile = DamageProfileTemplates.smiter_light_chainsword_2h_sticky,
 		damage_type = damage_types.sawing_stuck,
-		last_damage_profile = DamageProfileTemplates.light_chainsword_sticky_last_2h
+		last_damage_profile = DamageProfileTemplates.smiter_light_chainsword_sticky_last_2h,
+		dodge_damage_profile = DamageProfileTemplates.sticky_dodge_push
 	},
 	disallowed_hit_zones = melee_sticky_disallowed_hit_zones,
-	disallow_dodging = {},
 	movement_curve = {
 		{
 			modifier = 0.3,
@@ -114,7 +114,6 @@ local hit_stickyness_settings_heavy = {
 	},
 	disallowed_hit_zones = melee_sticky_disallowed_hit_zones,
 	disallowed_armor_types = melee_sticky_heavy_attack_disallowed_armor_types,
-	disallow_dodging = {},
 	movement_curve = {
 		{
 			modifier = 0.3,
@@ -150,13 +149,12 @@ local hit_stickyness_settings_heavy_smiter = {
 	always_sticky = true,
 	damage = {
 		instances = 1,
-		damage_profile = DamageProfileTemplates.heavy_chainsword_smiter_sticky_quick_2h,
+		damage_profile = DamageProfileTemplates.heavy_chainsword_smiter_sticky_quick_last_2h,
 		damage_type = damage_types.sawing_stuck,
 		last_damage_profile = DamageProfileTemplates.heavy_chainsword_smiter_sticky_quick_last_2h
 	},
 	disallowed_hit_zones = melee_sticky_disallowed_hit_zones,
 	disallowed_armor_types = melee_sticky_heavy_attack_disallowed_armor_types,
-	disallow_dodging = {},
 	movement_curve = {
 		{
 			modifier = 0.3,
@@ -192,11 +190,11 @@ local hit_stickyness_settings_heavy_special = {
 		instances = 3,
 		damage_profile = DamageProfileTemplates.heavy_chainsword_sticky_2h,
 		damage_type = damage_types.sawing_stuck,
-		last_damage_profile = DamageProfileTemplates.heavy_chainsword_sticky_last_2h
+		last_damage_profile = DamageProfileTemplates.heavy_chainsword_sticky_last_2h,
+		dodge_damage_profile = DamageProfileTemplates.sticky_dodge_push
 	},
 	disallowed_hit_zones = melee_sticky_disallowed_hit_zones,
 	disallowed_armor_types = melee_sticky_heavy_attack_disallowed_armor_types,
-	disallow_dodging = {},
 	movement_curve = {
 		{
 			modifier = 0.3,
@@ -232,11 +230,11 @@ local hit_stickyness_settings_heavy_smiter_special = {
 		instances = 3,
 		damage_profile = DamageProfileTemplates.heavy_chainsword_smiter_sticky_2h,
 		damage_type = damage_types.sawing_stuck,
-		last_damage_profile = DamageProfileTemplates.heavy_chainsword_smiter_sticky_last_2h
+		last_damage_profile = DamageProfileTemplates.heavy_chainsword_smiter_sticky_last_2h,
+		dodge_damage_profile = DamageProfileTemplates.sticky_dodge_push
 	},
 	disallowed_hit_zones = melee_sticky_disallowed_hit_zones,
 	disallowed_armor_types = melee_sticky_heavy_attack_disallowed_armor_types,
-	disallow_dodging = {},
 	movement_curve = {
 		{
 			modifier = 0.3,
@@ -642,6 +640,7 @@ weapon_template.actions = {
 	action_melee_start_right = {
 		anim_end_event = "attack_finished",
 		kind = "windup",
+		allowed_during_sprint = true,
 		anim_event = "heavy_charge_down_right",
 		hit_stop_anim = "hit_stop",
 		stop_input = "attack_cancel",
@@ -846,9 +845,9 @@ weapon_template.actions = {
 		}
 	},
 	action_right_heavy = {
+		allowed_during_sprint = true,
 		kind = "sweep",
 		max_num_saved_entries = 20,
-		range_mod = 1.25,
 		first_person_hit_anim = "hit_down_shake",
 		num_frames_before_process = 0,
 		hit_armor_anim = "attack_hit_shield",
@@ -856,6 +855,7 @@ weapon_template.actions = {
 		damage_window_end = 0.3333333333333333,
 		anim_end_event = "attack_finished",
 		anim_event = "heavy_attack_right_down",
+		range_mod = 1.25,
 		weapon_handling_template = "time_scale_1",
 		attack_direction_override = "push",
 		hit_stop_anim = "hit_stop",
@@ -1866,7 +1866,7 @@ weapon_template.base_stats = {
 		damage = {
 			action_left_down_light = {
 				overrides = {
-					light_chainsword_sticky_2h = {
+					smiter_light_chainsword_2h_sticky = {
 						damage_trait_templates.default_melee_dps_stat,
 						display_data = {
 							prefix = "loc_weapon_action_title_light",
@@ -1888,7 +1888,7 @@ weapon_template.base_stats = {
 							}
 						}
 					},
-					light_chainsword_sticky_last_2h = {
+					smiter_light_chainsword_sticky_last_2h = {
 						damage_trait_templates.default_melee_dps_stat,
 						display_data = {
 							prefix = "loc_weapon_action_title_light",
@@ -1936,12 +1936,6 @@ weapon_template.base_stats = {
 							}
 						}
 					},
-					heavy_chainsword_sticky_quick_last_2h = {
-						damage_trait_templates.default_melee_dps_stat
-					},
-					heavy_chainsword_active_2h = {
-						damage_trait_templates.default_melee_dps_stat
-					},
 					heavy_chainsword_sticky_last_2h = {
 						damage_trait_templates.default_melee_dps_stat,
 						display_data = {
@@ -1964,27 +1958,10 @@ weapon_template.base_stats = {
 							}
 						}
 					},
-					heavy_chainsword_smiter_sticky_quick_2h = {
+					heavy_chainsword_sticky_quick_last_2h = {
 						damage_trait_templates.default_melee_dps_stat
 					},
 					heavy_chainsword_smiter_sticky_quick_last_2h = {
-						damage_trait_templates.default_melee_dps_stat
-					}
-				}
-			},
-			action_right_diagonal_light = {
-				overrides = {
-					light_chainsword_sticky_2h = {
-						damage_trait_templates.default_melee_dps_stat
-					},
-					light_chainsword_sticky_last_2h = {
-						damage_trait_templates.default_melee_dps_stat
-					}
-				}
-			},
-			action_right_heavy = {
-				overrides = {
-					heavy_chainsword_smiter_active_abort_2h = {
 						damage_trait_templates.default_melee_dps_stat
 					},
 					heavy_chainsword_smiter_sticky_2h = {
@@ -1992,41 +1969,67 @@ weapon_template.base_stats = {
 					},
 					heavy_chainsword_smiter_sticky_last_2h = {
 						damage_trait_templates.default_melee_dps_stat
+					}
+				}
+			},
+			action_right_diagonal_light = {
+				overrides = {
+					smiter_light_chainsword_2h_sticky = {
+						damage_trait_templates.default_melee_dps_stat
 					},
-					heavy_chainsword_smiter_sticky_quick_2h = {
+					smiter_light_chainsword_sticky_last_2h = {
+						damage_trait_templates.default_melee_dps_stat
+					}
+				}
+			},
+			action_right_heavy = {
+				overrides = {
+					heavy_chainsword_sticky_2h = {
+						damage_trait_templates.default_melee_dps_stat
+					},
+					heavy_chainsword_sticky_last_2h = {
+						damage_trait_templates.default_melee_dps_stat
+					},
+					heavy_chainsword_sticky_quick_last_2h = {
 						damage_trait_templates.default_melee_dps_stat
 					},
 					heavy_chainsword_smiter_sticky_quick_last_2h = {
+						damage_trait_templates.default_melee_dps_stat
+					},
+					heavy_chainsword_smiter_sticky_2h = {
+						damage_trait_templates.default_melee_dps_stat
+					},
+					heavy_chainsword_smiter_sticky_last_2h = {
 						damage_trait_templates.default_melee_dps_stat
 					}
 				}
 			},
 			action_left_light = {
 				overrides = {
-					light_chainsword_sticky_2h = {
+					smiter_light_chainsword_2h_sticky = {
 						damage_trait_templates.default_melee_dps_stat
 					},
-					light_chainsword_sticky_last_2h = {
+					smiter_light_chainsword_sticky_last_2h = {
 						damage_trait_templates.default_melee_dps_stat
 					}
 				}
 			},
 			action_right_down_light = {
 				overrides = {
-					light_chainsword_sticky_2h = {
+					smiter_light_chainsword_2h_sticky = {
 						damage_trait_templates.default_melee_dps_stat
 					},
-					light_chainsword_sticky_last_2h = {
+					smiter_light_chainsword_sticky_last_2h = {
 						damage_trait_templates.default_melee_dps_stat
 					}
 				}
 			},
 			action_right_light_pushfollow = {
 				overrides = {
-					light_chainsword_sticky_2h = {
+					smiter_light_chainsword_2h_sticky = {
 						damage_trait_templates.default_melee_dps_stat
 					},
-					light_chainsword_sticky_last_2h = {
+					smiter_light_chainsword_sticky_last_2h = {
 						damage_trait_templates.default_melee_dps_stat
 					}
 				}

@@ -72,16 +72,29 @@ local default_ingame_input_settings = {
 			"ps4_controller_d_left",
 			"xbox_controller_d_left",
 			group = "input_group_combat",
-			description = "loc_ingame_wield_3",
+			description = "loc_ingame_wield_3_v2",
 			sort_order = 7
+		},
+		wield_3_gamepad = {
+			group = "input_group_combat",
+			description = "loc_ingame_wield_3_4_gamepad",
+			hide_in_keybindings_menu = true
 		},
 		wield_4 = {
 			"keyboard_4",
+			"ps4_controller_d_up",
+			"xbox_controller_d_up",
+			group = "input_group_combat",
+			description = "loc_ingame_wield_4_v2",
+			sort_order = 8
+		},
+		wield_5 = {
+			"keyboard_5",
 			"ps4_controller_d_right",
 			"xbox_controller_d_right",
 			group = "input_group_combat",
-			description = "loc_ingame_wield_4",
-			sort_order = 8
+			description = "loc_ingame_wield_5",
+			sort_order = 9
 		},
 		quick_wield = {
 			"keyboard_q",
@@ -89,19 +102,19 @@ local default_ingame_input_settings = {
 			"xbox_controller_y",
 			group = "input_group_combat",
 			description = "loc_ingame_quick_wield",
-			sort_order = 9
+			sort_order = 10
 		},
 		wield_scroll_down = {
 			"mouse_wheel_down",
 			group = "input_group_combat",
 			description = "loc_ingame_wield_prev",
-			sort_order = 10
+			sort_order = 11
 		},
 		wield_scroll_up = {
 			"mouse_wheel_up",
 			group = "input_group_combat",
 			description = "loc_ingame_wield_next",
-			sort_order = 11
+			sort_order = 12
 		},
 		weapon_reload = {
 			"keyboard_r",
@@ -109,7 +122,7 @@ local default_ingame_input_settings = {
 			"xbox_controller_x",
 			group = "input_group_combat",
 			description = "loc_ingame_weapon_reload",
-			sort_order = 12
+			sort_order = 13
 		},
 		grenade_ability = {
 			"keyboard_g",
@@ -117,7 +130,7 @@ local default_ingame_input_settings = {
 			"xbox_controller_d_down",
 			group = "input_group_combat",
 			description = "loc_ingame_grenade_ability",
-			sort_order = 13
+			sort_order = 14
 		},
 		combat_ability = {
 			"keyboard_f",
@@ -125,7 +138,7 @@ local default_ingame_input_settings = {
 			"xbox_controller_right_shoulder",
 			group = "input_group_combat",
 			description = "loc_ingame_combat_ability",
-			sort_order = 14
+			sort_order = 15
 		},
 		smart_tag = {
 			"mouse_middle",
@@ -133,7 +146,7 @@ local default_ingame_input_settings = {
 			"xbox_controller_left_shoulder",
 			group = "input_group_combat",
 			description = "loc_ingame_smart_tag",
-			sort_order = 15
+			sort_order = 16
 		},
 		com_wheel = {
 			"mouse_middle",
@@ -141,7 +154,7 @@ local default_ingame_input_settings = {
 			"xbox_controller_left_shoulder",
 			group = "input_group_combat",
 			description = "loc_ingame_com_wheel",
-			sort_order = 16
+			sort_order = 17
 		},
 		tactical_overlay = {
 			"keyboard_tab",
@@ -149,7 +162,7 @@ local default_ingame_input_settings = {
 			"xbox_controller_back",
 			group = "input_group_combat",
 			description = "loc_ingame_tactical_overlay",
-			sort_order = 17
+			sort_order = 18
 		},
 		menu = {
 			"xbox_controller_start",
@@ -163,7 +176,7 @@ local default_ingame_input_settings = {
 			"xbox_controller_d_right",
 			group = "input_group_combat",
 			description = "loc_ingame_weapon_inspect",
-			sort_order = 18
+			sort_order = 19
 		},
 		spectate_next = {
 			"mouse_left",
@@ -171,14 +184,14 @@ local default_ingame_input_settings = {
 			"xbox_controller_a",
 			group = "input_group_combat",
 			description = "loc_ingame_spectate_next",
-			sort_order = 19,
+			sort_order = 20,
 			hide_in_controller_layout = true
 		},
 		voip_push_to_talk = {
 			"keyboard_v",
 			group = "input_group_combat",
 			description = "loc_ingame_voip_push_to_talk",
-			sort_order = 20
+			sort_order = 21
 		},
 		keyboard_move_forward = {
 			"keyboard_w",
@@ -416,8 +429,16 @@ local default_ingame_input_settings = {
 			key_alias = "wield_3",
 			type = "pressed"
 		},
+		wield_3_gamepad = {
+			key_alias = "wield_3_gamepad",
+			type = "pressed"
+		},
 		wield_4 = {
 			key_alias = "wield_4",
+			type = "pressed"
+		},
+		wield_5 = {
+			key_alias = "wield_5",
 			type = "pressed"
 		},
 		keyboard_move_left = {

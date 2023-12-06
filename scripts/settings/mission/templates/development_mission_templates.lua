@@ -277,21 +277,6 @@ local mission_templates = {
 			"terror_events_combat"
 		}
 	},
-	debug_zoneseven = {
-		mission_name = "loc_mission_name_placeholder",
-		zone_id = "placeholder",
-		game_mode_name = "coop_complete_objective",
-		mechanism_name = "adventure",
-		is_dev_mission = true,
-		level = "content/levels/debug/jacopo/missions/debug_zoneseven",
-		pickup_settings = {},
-		health_station = {
-			charges_to_distribute = 10
-		},
-		terror_event_templates = {
-			"terror_events_debug_zoneseven"
-		}
-	},
 	fm_fuel = {
 		mission_name = "loc_mission_name_placeholder",
 		zone_id = "placeholder",
@@ -349,6 +334,15 @@ local mission_templates = {
 		zone_id = "placeholder",
 		is_dev_mission = true,
 		level = "content/levels/debug/sound_performance/world",
+		pickup_settings = {}
+	},
+	sound_empty = {
+		mechanism_name = "adventure",
+		game_mode_name = "default",
+		mission_name = "loc_mission_name_placeholder",
+		zone_id = "placeholder",
+		is_dev_mission = true,
+		level = "content/levels/debug/sound_empty/world",
 		pickup_settings = {}
 	},
 	station_inside_sound = {

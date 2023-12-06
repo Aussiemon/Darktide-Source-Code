@@ -2,7 +2,9 @@ require("scripts/extension_systems/behavior/nodes/bt_node")
 
 local Animation = require("scripts/utilities/animation")
 local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
+local BreedSettings = require("scripts/settings/breed/breed_settings")
 local Catapulted = require("scripts/extension_systems/character_state_machine/character_states/utilities/catapulted")
+local PLAYER_BREED_TYPE = BreedSettings.types.player
 local BtClimbAction = class("BtClimbAction", "BtNode")
 local BASE_LAYER_EMPTY_EVENT = "base_layer_to_empty"
 
@@ -364,7 +366,7 @@ BtClimbAction._catapult_units = function (self, unit, scratchpad, action_data)
 	local broadphase = scratchpad.broadphase
 	local unit_position = POSITION_LOOKUP[unit]
 	local enemy_side_names = scratchpad.enemy_side_names
-	local num_results = broadphase:query(unit_position, radius, broadphase_results, enemy_side_names)
+	local num_results = broadphase:query(unit_position, radius, broadphase_results, enemy_side_names, PLAYER_BREED_TYPE)
 
 	for i = 1, num_results do
 		local hit_unit = broadphase_results[i]

@@ -1,7 +1,7 @@
 local ProjectileLocomotionSettings = require("scripts/settings/projectile_locomotion/projectile_locomotion_settings")
 local projectile_impact_results = ProjectileLocomotionSettings.impact_results
 local MIN_TRAVEL_DISTANCE_TO_INTEGRATE = ProjectileLocomotionSettings.MIN_TRAVEL_DISTANCE_TO_INTEGRATE
-local ProjectileLocomotionUtility = {
+local ProjectileLocomotion = {
 	set_kinematic = function (unit, actor_id, kinematic)
 		if actor_id then
 			local dynamic_actor = Unit.actor(unit, actor_id)
@@ -18,13 +18,13 @@ local function _has_actor(unit, actor_name)
 	return actor
 end
 
-ProjectileLocomotionUtility.activate_physics = function (unit)
+ProjectileLocomotion.activate_physics = function (unit)
 	if not _has_actor(unit, "dynamic") then
 		Unit.create_actor(unit, "dynamic")
 	end
 end
 
-ProjectileLocomotionUtility.deactivate_physics = function (unit, dynamic_id)
+ProjectileLocomotion.deactivate_physics = function (unit, dynamic_id)
 	if _has_actor(unit, "dynamic") then
 		Unit.destroy_actor(unit, dynamic_id)
 	end
@@ -34,7 +34,7 @@ local DEFAULT_SUPPRESSION_COLLISION_FILTER = "filter_player_character_shooting_r
 local DEFAULT_SUPPRESSION_COLLISION_TYPE = "dynamics"
 local DEFAULT_SUPPRESSION_CHECK_RADIUS = 0.075
 
-ProjectileLocomotionUtility.check_suppression = function (physics_world, integration_data, previus_position, new_position, is_server, dt, t)
+ProjectileLocomotion.check_suppression = function (physics_world, integration_data, previus_position, new_position, is_server, dt, t)
 	if not is_server then
 		return
 	end
@@ -63,7 +63,7 @@ ProjectileLocomotionUtility.check_suppression = function (physics_world, integra
 	end
 end
 
-ProjectileLocomotionUtility.check_collision = function (hit_unit, hit_position, integration_data, bounce_unit)
+ProjectileLocomotion.check_collision = function (hit_unit, hit_position, integration_data, bounce_unit)
 	local owner_unit = integration_data.owner_unit
 
 	if hit_unit == owner_unit then
@@ -81,7 +81,7 @@ local NO_HITS = {}
 local HITS = Script.new_array(128)
 local LAST_NUM_HITS = 0
 
-ProjectileLocomotionUtility.projectile_cast = function (physics_world, travel_position, new_position, travel_direction, travel_distance, collision_filter, radius, optional_skip_static, optional_statics_radius, optional_static_raycast)
+ProjectileLocomotion.projectile_cast = function (physics_world, travel_position, new_position, travel_direction, travel_distance, collision_filter, radius, optional_skip_static, optional_statics_radius, optional_static_raycast)
 	local max_hits = 32
 	local hits = nil
 
@@ -142,7 +142,7 @@ local DO_NOTHING_IMPACT_RESULTS = {
 }
 local hit_units_this_frame = {}
 
-ProjectileLocomotionUtility.impact_detection_and_resolution = function (integration_data, new_position, new_velocity, physics_world, collision_filter, dt, dont_draw, optional_skip_static)
+ProjectileLocomotion.impact_detection_and_resolution = function (integration_data, new_position, new_velocity, physics_world, collision_filter, dt, dont_draw, optional_skip_static)
 	integration_data.has_hit = false
 	integration_data.bounced_this_frame = false
 
@@ -167,7 +167,7 @@ ProjectileLocomotionUtility.impact_detection_and_resolution = function (integrat
 			local statics_radius = integrator_parameters.statics_radius
 			local statics_raycast = integrator_parameters.statics_raycast
 			local skip_static = optional_skip_static or false
-			local hits = ProjectileLocomotionUtility.projectile_cast(physics_world, travel_position, new_position, travel_direction, travel_distance, collision_filter, radius, skip_static, statics_radius, statics_raycast)
+			local hits = ProjectileLocomotion.projectile_cast(physics_world, travel_position, new_position, travel_direction, travel_distance, collision_filter, radius, skip_static, statics_radius, statics_raycast)
 			local num_hits = #hits
 
 			if num_hits > 0 then
@@ -183,7 +183,7 @@ ProjectileLocomotionUtility.impact_detection_and_resolution = function (integrat
 					local hit_actor = hit.actor or hit[4]
 					local hit_unit = Actor.unit(hit_actor)
 
-					if ProjectileLocomotionUtility.check_collision(hit_unit, hit_position, integration_data, bounce_unit) then
+					if ProjectileLocomotion.check_collision(hit_unit, hit_position, integration_data, bounce_unit) then
 						local hit_normal = hit.normal or hit[3]
 						hit_units_this_frame[hit_unit] = true
 						local impact_result = nil
@@ -286,4 +286,4 @@ ProjectileLocomotionUtility.impact_detection_and_resolution = function (integrat
 	return new_position, new_velocity, hit_units_this_frame
 end
 
-return ProjectileLocomotionUtility
+return ProjectileLocomotion

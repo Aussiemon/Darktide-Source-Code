@@ -12,6 +12,8 @@ local ViewElementGrid = class("ViewElementGrid", "ViewElementBase")
 ViewElementGrid.init = function (self, parent, draw_layer, start_scale, optional_menu_settings, optional_definitions)
 	local class_name = self.__class_name
 	self._unique_id = class_name .. "_" .. string.gsub(tostring(self), "table: ", "")
+	local owner = parent and parent.view_name or Managers.ui:active_top_view()
+	self._element_view_id = string.format("%s_%s", owner, optional_menu_settings.reference_name or "1")
 
 	if optional_menu_settings then
 		self._menu_settings = table.merge_recursive(table.clone(ViewElementGridSettings), optional_menu_settings)
@@ -96,6 +98,18 @@ ViewElementGrid.setup_sort_button = function (self, options, sort_callback, star
 	widget.content.hotspot.pressed_callback = callback(self, "_cb_on_sort_button_pressed")
 	self._sort_button_input = "hotkey_item_sort"
 
+	if not start_index then
+		start_index = 1
+		local player = Managers.player:local_player(1)
+		local save_manager = Managers.save
+
+		if player and save_manager then
+			local account_data = save_manager:account_data()
+			local element_view_id = self._element_view_id
+			start_index = account_data.selected_sort_options[element_view_id] or 1
+		end
+	end
+
 	self:_cb_on_sort_button_pressed(start_index)
 end
 
@@ -106,7 +120,7 @@ end
 ViewElementGrid._cb_on_sort_button_pressed = function (self, start_index)
 	local options = self._sort_options
 	local next_index = start_index or self._active_sort_index and math.index_wrapper(self._active_sort_index + 1, #options) or 1
-	local next_option = options[next_index]
+	local next_option = options[next_index] or options[1]
 	local sort_display_name = next_option.display_name
 	local sort_color = Color.terminal_text_body_sub_header(255, true)
 	local text = Localize("loc_inventory_item_grid_sort_format_key", true, {
@@ -118,6 +132,17 @@ ViewElementGrid._cb_on_sort_button_pressed = function (self, start_index)
 	self._sort_button_text = text
 
 	self:_apply_sort_button_text()
+
+	local player = Managers.player:local_player(1)
+	local save_manager = Managers.save
+
+	if player and save_manager then
+		local account_data = save_manager:account_data()
+		local element_view_id = self._element_view_id
+		account_data.selected_sort_options[element_view_id] = next_index
+
+		save_manager:queue_save()
+	end
 
 	self._active_sort_index = next_index
 
@@ -798,6 +823,18 @@ ViewElementGrid.focused_grid_index = function (self)
 	end
 end
 
+ViewElementGrid.focused_grid_widget = function (self)
+	local grid = self._grid
+
+	if grid then
+		local focused_index = grid:focused_grid_index()
+		local widgets = self._grid_widgets
+		local widget = widgets[focused_index]
+
+		return widget
+	end
+end
+
 ViewElementGrid.select_grid_widget = function (self, widget, scrollbar_animation_progress, instant_scroll)
 	local grid = self._grid
 	local index = grid:index_by_widget(widget)
@@ -1138,6 +1175,18 @@ ViewElementGrid.force_update_list_size_keeping_scroll = function (self)
 
 	self:force_update_list_size()
 	self:set_scrollbar_progress(current_scroll / grid:scroll_length(), true)
+end
+
+ViewElementGrid.hovered_widget = function (self)
+	local grid = self._grid
+
+	if grid then
+		local hovered_index = grid:hovered_grid_index()
+		local widgets = self._grid_widgets
+		local widget = widgets[hovered_index]
+
+		return widget
+	end
 end
 
 return ViewElementGrid

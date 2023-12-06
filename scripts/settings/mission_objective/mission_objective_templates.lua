@@ -26,6 +26,7 @@ end
 
 _create_mission_objective_template_entry("scripts/settings/mission_objective/templates/cm_archives_objective_template")
 _create_mission_objective_template_entry("scripts/settings/mission_objective/templates/cm_habs_objective_template")
+_create_mission_objective_template_entry("scripts/settings/mission_objective/templates/cm_raid_objective_template")
 _create_mission_objective_template_entry("scripts/settings/mission_objective/templates/common_objective_template")
 _create_mission_objective_template_entry("scripts/settings/mission_objective/templates/debug_objective_template")
 _create_mission_objective_template_entry("scripts/settings/mission_objective/templates/dm_forge_objective_template")

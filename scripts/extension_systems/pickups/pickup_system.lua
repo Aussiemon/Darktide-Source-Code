@@ -315,11 +315,14 @@ end
 
 local weights = {}
 local SLOT_POCKETABLE = "slot_pocketable"
+local SLOT_POCKETABLE_SMALL = "slot_pocketable_small"
 
 PickupSystem.get_rubberband_pickup = function (self, distribution_type, percentage_through_level)
 	local AMMO = 1
 	local GRENADE = 2
 	local HEALTH = 3
+	local WOUNDS = 4
+	local STIMM = 5
 	local RubberbandSettings = PickupSettings.rubberband
 	local pool = self._rubberband_pool
 	local start_count = self._rubberband_pool_start_count
@@ -335,7 +338,9 @@ PickupSystem.get_rubberband_pickup = function (self, distribution_type, percenta
 	local total_ammo = 0
 	local total_grenades = 0
 	local total_health = 0
+	local total_permanent_health = 0
 	local pocketables_space = 0
+	local pocketables_small_space = 0
 	local pool_size = 0
 
 	for _, player in pairs(players) do
@@ -346,6 +351,7 @@ PickupSystem.get_rubberband_pickup = function (self, distribution_type, percenta
 			total_ammo = total_ammo + 1 - Ammo.current_total_percentage(player_unit)
 			total_grenades = total_grenades + 1 - _current_grenade_percentage(player_unit)
 			total_health = total_health + 1 - Health.current_health_percent(player_unit)
+			total_permanent_health = total_permanent_health + Health.permanent_damage_taken_percent(player_unit)
 			local unit_data_extension = ScriptUnit.extension(player_unit, "unit_data_system")
 			local inventory_component = unit_data_extension:read_component("inventory")
 			local item_name = inventory_component[SLOT_POCKETABLE]
@@ -353,12 +359,20 @@ PickupSystem.get_rubberband_pickup = function (self, distribution_type, percenta
 			if item_name == "not_equipped" then
 				pocketables_space = pocketables_space + 1
 			end
+
+			local item_small_name = inventory_component[SLOT_POCKETABLE_SMALL]
+
+			if item_small_name == "not_equipped" then
+				pocketables_small_space = pocketables_small_space + 1
+			end
 		end
 	end
 
 	local pocketable_weight = lerp(RubberbandSettings.pocketable_weight.min, RubberbandSettings.pocketable_weight.max, pocketables_space / 4)
+	local pocketable_small_weight = lerp(RubberbandSettings.pocketable_small_weight.min, RubberbandSettings.pocketable_small_weight.max, pocketables_small_space / 4)
 	local min, max = unpack(RubberbandSettings.status_weight[distribution_type])
 	local block_distance = RubberbandSettings.special_block_distance
+	local block_distance_short = RubberbandSettings.special_block_distance_short
 
 	table.clear(weights)
 
@@ -383,12 +397,36 @@ PickupSystem.get_rubberband_pickup = function (self, distribution_type, percenta
 
 	local remaining_health = remaining.health or 0
 	local health_special_spawned = special_spawned.medical_crate_pocketable
+	local syringe_coruption_special_spawned = special_spawned.syringe_corruption_pocketable
+	local medcrate_blocked_by_distance = health_special_spawned and percentage_through_level < health_special_spawned + block_distance or syringe_coruption_special_spawned and percentage_through_level < syringe_coruption_special_spawned + block_distance_short
 
-	if remaining_health > 0 and (not health_special_spawned or percentage_through_level >= health_special_spawned + block_distance) then
+	if remaining_health > 0 and not medcrate_blocked_by_distance then
 		pool_size = pool_size + remaining_health
 		weights[HEALTH] = remaining_health / start_count.health * (RubberbandSettings.distribution_type_weight.health[distribution_type] or 1) * lerp(min, max, total_health / player_count) * pocketable_weight
 	else
 		weights[HEALTH] = 0
+	end
+
+	local remaining_wounds = remaining.wounds or 0
+	local syringe_blocked_by_distance = syringe_coruption_special_spawned and percentage_through_level < syringe_coruption_special_spawned + block_distance or health_special_spawned and percentage_through_level < health_special_spawned + block_distance_short
+
+	if remaining_wounds > 0 and not syringe_blocked_by_distance then
+		pool_size = pool_size + remaining_wounds
+		local syringe_wounds_lerp = total_permanent_health / player_count
+		weights[WOUNDS] = remaining_wounds / start_count.wounds * (RubberbandSettings.distribution_type_weight.wounds[distribution_type] or 1) * lerp(min, max, syringe_wounds_lerp) * pocketable_small_weight
+	else
+		weights[WOUNDS] = 0
+	end
+
+	local remaining_stimms = remaining.stimms or 0
+	local syringe_stimm_special_spawned = special_spawned.syringe_stimm_pocketable
+
+	if remaining_stimms > 0 and (not syringe_stimm_special_spawned or percentage_through_level >= syringe_stimm_special_spawned + block_distance * 0.5) then
+		pool_size = pool_size + remaining_stimms
+		local syring_stimms_lerp_value = 0.5
+		weights[STIMM] = remaining_stimms / start_count.stimms * (RubberbandSettings.distribution_type_weight.stimms[distribution_type] or 1) * lerp(min, max, syring_stimms_lerp_value) * pocketable_small_weight
+	else
+		weights[STIMM] = 0
 	end
 
 	if pool_size <= 0 then
@@ -465,6 +503,21 @@ PickupSystem.get_rubberband_pickup = function (self, distribution_type, percenta
 		special_spawned.medical_crate_pocketable = percentage_through_level
 
 		return "medical_crate_pocketable"
+	elseif rnd <= weights[WOUNDS] then
+		remaining.wounds = remaining.wounds - 1
+		pool.wounds.syringe_corruption_pocketable = pool.wounds.syringe_corruption_pocketable - 1
+		special_spawned.syringe_corruption_pocketable = percentage_through_level
+
+		return "syringe_corruption_pocketable"
+	elseif rnd <= weights[STIMM] then
+		local syringe_stimm_select_func = PICKUP_SELECTOR.syringe_generic_pocketable
+		local selected_stimm_syringe_name, new_seed = syringe_stimm_select_func(self._seed)
+		self._seed = new_seed
+		remaining.stimms = remaining.stimms - 1
+		pool.stimms.syringe_generic_pocketable = pool.stimms.syringe_generic_pocketable - 1
+		special_spawned.syringe_stimm_pocketable = percentage_through_level
+
+		return selected_stimm_syringe_name
 	else
 		return nil
 	end

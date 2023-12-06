@@ -109,6 +109,51 @@ local templates = {
 		voice_tag_concept = VOQueryConstants.concepts.on_demand_vo_tag_item,
 		voice_tag_id = VOQueryConstants.trigger_ids.smart_tag_vo_pickup_ammo
 	},
+	syringe_corruption_over_here = {
+		group = "object",
+		lifetime = 10,
+		is_cancelable = true,
+		sound_enter_tagger = UISoundEvents.smart_tag_pickup_default_enter,
+		sound_enter_others = UISoundEvents.smart_tag_pickup_default_enter_others,
+		replies = {
+			replies.dibs
+		},
+		voice_tag_concept = VOQueryConstants.concepts.on_demand_vo_tag_item,
+		voice_tag_id = VOQueryConstants.trigger_ids.smart_tag_vo_pickup_health_booster
+	},
+	syringe_ability_boost_over_here = {
+		group = "object",
+		lifetime = 10,
+		is_cancelable = true,
+		sound_enter_tagger = UISoundEvents.smart_tag_pickup_default_enter,
+		sound_enter_others = UISoundEvents.smart_tag_pickup_default_enter_others,
+		replies = {
+			replies.dibs
+		},
+		voice_tag_concept = VOQueryConstants.concepts.on_demand_vo_tag_item
+	},
+	syringe_power_boost_over_here = {
+		group = "object",
+		lifetime = 10,
+		is_cancelable = true,
+		sound_enter_tagger = UISoundEvents.smart_tag_pickup_default_enter,
+		sound_enter_others = UISoundEvents.smart_tag_pickup_default_enter_others,
+		replies = {
+			replies.dibs
+		},
+		voice_tag_concept = VOQueryConstants.concepts.on_demand_vo_tag_item
+	},
+	syringe_speed_boost_over_here = {
+		group = "object",
+		lifetime = 10,
+		is_cancelable = true,
+		sound_enter_tagger = UISoundEvents.smart_tag_pickup_default_enter,
+		sound_enter_others = UISoundEvents.smart_tag_pickup_default_enter_others,
+		replies = {
+			replies.dibs
+		},
+		voice_tag_concept = VOQueryConstants.concepts.on_demand_vo_tag_item
+	},
 	small_grenade_over_here = {
 		group = "object",
 		lifetime = 10,

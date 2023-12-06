@@ -124,19 +124,19 @@ ForceFieldHealthExtension.is_alive = function (self)
 end
 
 ForceFieldHealthExtension.is_unkillable = function (self)
-	return self._is_unkillable
+	return false
 end
 
 ForceFieldHealthExtension.is_invulnerable = function (self)
-	return self._is_invulnerable
+	return false
 end
 
 ForceFieldHealthExtension.set_unkillable = function (self, should_be_unkillable)
-	self._unkillable = should_be_unkillable
+	self._is_unkillable = should_be_unkillable
 end
 
 ForceFieldHealthExtension.set_invulnerable = function (self, should_be_invulnerable)
-	self._invulnerable = should_be_invulnerable
+	self._is_invulnerable = should_be_invulnerable
 end
 
 ForceFieldHealthExtension.set_last_damaging_unit = function (self, last_damaging_unit, hit_zone_name, last_hit_was_critical)

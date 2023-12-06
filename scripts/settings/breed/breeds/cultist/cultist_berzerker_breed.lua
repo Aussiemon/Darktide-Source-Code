@@ -96,8 +96,8 @@ local breed_data = {
 	},
 	animation_variable_bounds = {
 		anim_move_speed = {
-			1,
-			85
+			0.8,
+			1.2
 		}
 	},
 	animation_variable_init = {

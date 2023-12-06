@@ -4,6 +4,11 @@ local TextUtils = require("scripts/utilities/ui/text")
 local UISettings = require("scripts/settings/ui/ui_settings")
 local _item_type_group_lookup = UISettings.item_type_group_lookup
 local AchievementUIHelper = {
+	achievement_definition_by_id = function (id)
+		local definitions = Managers.achievements:achievement_definitions()
+
+		return definitions[id]
+	end,
 	achievement_category_label = function (category_id)
 		local localization_key = AchievementCategories[category_id].display_name
 
@@ -77,6 +82,8 @@ end
 
 AchievementUIHelper.get_family = function (achievement_definition)
 	local definitions = Managers.achievements:achievement_definitions()
+	local flags = achievement_definition.flags
+	local hide_missing = flags.hide_missing
 	local at = achievement_definition
 
 	while at.previous do
@@ -87,7 +94,12 @@ AchievementUIHelper.get_family = function (achievement_definition)
 
 	while at ~= nil do
 		family[#family + 1] = at
-		at = definitions[at.next]
+
+		if hide_missing and at == achievement_definition then
+			at = nil
+		else
+			at = definitions[at.next]
+		end
 	end
 
 	return family

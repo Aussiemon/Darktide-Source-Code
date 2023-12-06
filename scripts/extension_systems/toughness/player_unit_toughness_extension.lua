@@ -6,6 +6,7 @@ local ToughnessOnHit = require("scripts/utilities/toughness/toughness_on_hit")
 local attack_types = AttackSettings.attack_types
 local proc_events = BuffSettings.proc_events
 local toughness_replenish_types = ToughnessSettings.replenish_types
+local buff_keywords = BuffSettings.keywords
 local STANDING_STILL_EPSILON = 0.001
 local PlayerUnitToughnessExtension = class("PlayerUnitToughnessExtension")
 
@@ -135,8 +136,9 @@ PlayerUnitToughnessExtension._update_toughness = function (self, dt, t)
 
 		if regen_amount > 0 then
 			self:_record_stat(regen_amount, starting_amount, "coherency")
-			self:_handle_procs(wanted_regen_amount, regen_amount, "coherency")
 		end
+
+		self:_handle_procs(wanted_regen_amount, regen_amount, "coherency")
 	end
 end
 
@@ -198,8 +200,9 @@ PlayerUnitToughnessExtension.recover_toughness = function (self, recovery_type)
 
 	if recovered_tougness > 0 then
 		self:_record_stat(recovered_tougness, starting_amount, recovery_type)
-		self:_handle_procs(wanted_amount, recovered_tougness, recovery_type)
 	end
+
+	self:_handle_procs(wanted_amount, recovered_tougness, recovery_type)
 
 	return recovered_tougness
 end
@@ -230,8 +233,9 @@ PlayerUnitToughnessExtension.recover_percentage_toughness = function (self, fixe
 
 	if recovered_tougness > 0 then
 		self:_record_stat(recovered_tougness, starting_amount, reason or "unknown")
-		self:_handle_procs(wanted_amount, recovered_tougness, reason)
 	end
+
+	self:_handle_procs(wanted_amount, recovered_tougness, reason)
 
 	return recovered_tougness
 end
@@ -261,8 +265,9 @@ PlayerUnitToughnessExtension.recover_flat_toughness = function (self, amount, ig
 
 	if recovered_tougness > 0 then
 		self:_record_stat(recovered_tougness, starting_amount, reason or "unknown")
-		self:_handle_procs(amount, recovered_tougness, reason)
 	end
+
+	self:_handle_procs(amount, recovered_tougness, reason)
 
 	return recovered_tougness
 end
@@ -283,8 +288,9 @@ PlayerUnitToughnessExtension.recover_max_toughness = function (self, reason, ign
 
 	if recovered_tougness > 0 then
 		self:_record_stat(recovered_tougness, starting_amount, reason or "unknown")
-		self:_handle_procs(max_toughness, recovered_tougness, reason or "unknown")
 	end
+
+	self:_handle_procs(max_toughness, recovered_tougness, reason or "unknown")
 
 	return recovered_tougness
 end
@@ -348,10 +354,20 @@ PlayerUnitToughnessExtension._toughness_regen_disabled = function (self, ignore_
 		return true
 	end
 
+	local has_prevent_toughness_replenish = self._buff_extension:has_keyword(buff_keywords.prevent_toughness_replenish)
+
+	if has_prevent_toughness_replenish then
+		return true
+	end
+
 	return false
 end
 
 PlayerUnitToughnessExtension._handle_procs = function (self, amount, recovered_amount, reason)
+	if amount <= 0 then
+		return
+	end
+
 	local buff_extension = self._buff_extension
 	local param_table = buff_extension:request_proc_event_param_table()
 

@@ -534,16 +534,14 @@ ProjectileUnitLocomotionExtension._apply_changes = function (self, state, positi
 	end
 
 	if dynamic_actor then
-		if state == locomotion_states.sleep then
-			Actor.put_to_sleep(dynamic_actor)
-		end
-
 		Actor.teleport_position(dynamic_actor, position)
 		Actor.teleport_rotation(dynamic_actor, rotation)
 
 		if state == locomotion_states.engine_physics then
 			Actor.set_velocity(dynamic_actor, velocity)
 			Actor.set_angular_velocity(dynamic_actor, angular_momentum)
+		elseif state == locomotion_states.sleep then
+			Actor.put_to_sleep(dynamic_actor)
 		end
 	end
 

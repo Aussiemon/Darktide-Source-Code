@@ -237,6 +237,9 @@ local item_slot_settings = {
 		slot_type = "ui",
 		ignore_character_spawning = true
 	},
+	slot_luggable = {
+		slot_type = "luggable"
+	},
 	slot_primary = {
 		display_name = "loc_inventory_title_slot_primary",
 		equipped_in_inventory = true,
@@ -244,7 +247,6 @@ local item_slot_settings = {
 		store_category = "weapons",
 		gamepad_wield_input = "quick_wield",
 		slot_type = "weapon",
-		hide_input_on_gamepad_wielded = true,
 		buffable = true
 	},
 	slot_secondary = {
@@ -254,18 +256,26 @@ local item_slot_settings = {
 		store_category = "weapons",
 		gamepad_wield_input = "quick_wield",
 		slot_type = "weapon",
-		hide_input_on_gamepad_wielded = true,
 		buffable = true
 	},
 	slot_pocketable = {
+		slot_type = "pocketable",
 		wield_input = "wield_3",
-		slot_type = "pocketable"
+		gamepad_wield_input = {
+			"wield_3",
+			"wield_3_gamepad"
+		}
 	},
-	slot_luggable = {
-		slot_type = "luggable"
+	slot_pocketable_small = {
+		slot_type = "pocketable",
+		wield_input = "wield_4",
+		gamepad_wield_input = {
+			"wield_4",
+			"wield_3_gamepad"
+		}
 	},
 	slot_device = {
-		wield_input = "wield_4",
+		wield_input = "wield_5",
 		slot_type = "device"
 	},
 	slot_unarmed = {

@@ -30,7 +30,7 @@ local weapon_charge_templates = {
 		}
 	},
 	plasmagun_p1_m1_charge_direct = {
-		fully_charged_charge_level = 0.5,
+		fully_charged_charge_level = 0.525,
 		extra_overheat_percent = 0.025,
 		limit_max_charge_to_ammo_clip = true,
 		charge_on_action_start = true,

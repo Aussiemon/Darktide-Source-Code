@@ -1,6 +1,5 @@
 local Attack = require("scripts/utilities/attack/attack")
 local AttackSettings = require("scripts/settings/damage/attack_settings")
-local Breed = require("scripts/utilities/breed")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local HitZone = require("scripts/utilities/attack/hit_zone")
 local ChainLightning = {}
@@ -162,19 +161,17 @@ ChainLightning.jump = function (t, physics_world, source_node, hit_units, broadp
 
 	local num_results = broadphase:query(query_position, radius, BROADPHASE_RESULTS, enemy_side_names)
 
-	if num_results > 0 then
-		for ii = 1, num_results do
-			local target_unit = BROADPHASE_RESULTS[ii]
+	for i = 1, num_results do
+		local target_unit = BROADPHASE_RESULTS[i]
 
-			if target_unit and not hit_units[target_unit] and HEALTH_ALIVE[target_unit] then
-				local valid_target, debug_reason = ChainLightning.is_valid_target(physics_world, source_unit, target_unit, query_position, travel_direction, max_angle, close_max_angle, vertical_max_angle, max_z_diff, jump_validation_func)
+		if not hit_units[target_unit] and HEALTH_ALIVE[target_unit] then
+			local valid_target, debug_reason = ChainLightning.is_valid_target(physics_world, source_unit, target_unit, query_position, travel_direction, max_angle, close_max_angle, vertical_max_angle, max_z_diff, jump_validation_func)
 
-				if valid_target then
-					source_node:add_child(on_add_func, add_func_context, "unit", target_unit, "start_t", t)
+			if valid_target then
+				source_node:add_child(on_add_func, add_func_context, "unit", target_unit, "start_t", t)
 
-					if source_node:is_full() then
-						return
-					end
+				if source_node:is_full() then
+					return
 				end
 			end
 		end
@@ -323,42 +320,8 @@ ChainLightning.targeting_parameters = function (time_in_action, chain_settings, 
 	return max_angle, close_max_angle, vertical_max_angle, max_z_diff, max_jumps, radius, jump_time, max_targets
 end
 
-local VALID_HIT_ZONES = {
-	lower_left_arm = true,
-	upper_right_arm = true,
-	torso = true,
-	lower_right_arm = true,
-	upper_tail = true,
-	upper_left_leg = true,
-	lower_right_leg = true,
-	upper_right_leg = true,
-	head = true,
-	center_mass = true,
-	upper_left_arm = true,
-	lower_left_leg = true,
-	lower_tail = true
-}
-
 ChainLightning.execute_attack = function (target_unit, attacking_unit, power_level, charge_level, target_index, target_number, attack_direction_or_nil, damage_profile, damage_type, is_critical_strike)
-	local breed = Breed.unit_breed_or_nil(target_unit)
-	local breed_hit_zones = breed.hit_zones
-	local num_breed_hit_zones = #breed_hit_zones
-	local hit_zone_name = nil
-	local num_iterations = 0
-
-	if not is_critical_strike then
-		repeat
-			local random_hit_zone_name = breed_hit_zones[math.random(1, num_breed_hit_zones)].name
-
-			if VALID_HIT_ZONES[random_hit_zone_name] then
-				hit_zone_name = random_hit_zone_name
-			end
-
-			num_iterations = num_iterations + 1
-		until hit_zone_name ~= nil or num_breed_hit_zones <= num_iterations
-	end
-
-	hit_zone_name = hit_zone_name or "center_mass"
+	local hit_zone_name = "center_mass"
 	local hit_zone_actors = HitZone.get_actor_names(target_unit, hit_zone_name)
 	local num_hit_actor_names = #hit_zone_actors
 	local hit_actor_name = hit_zone_actors[math.random(1, num_hit_actor_names)]

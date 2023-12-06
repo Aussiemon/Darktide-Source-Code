@@ -138,12 +138,14 @@ MinionSpawnerSystem.average_position_of_spawners = function (self, group)
 end
 
 local broadphase_results = {}
+local EXTENSIONS_IN_RANGE = {}
 
 MinionSpawnerSystem.spawners_in_range = function (self, position, radius, optional_spawn_type)
+	table.clear(EXTENSIONS_IN_RANGE)
+
 	local broadphase = self._broadphase
 	local extension_broadphase_lookup = self._extension_broadphase_lookup
 	local num_results = broadphase:query(position, radius, broadphase_results, BROADPHASE_CATEGORIES)
-	local hit_extensions = {}
 	local num_extensions = 0
 
 	for i = 1, num_results do
@@ -157,11 +159,11 @@ MinionSpawnerSystem.spawners_in_range = function (self, position, radius, option
 
 		if allowed then
 			num_extensions = num_extensions + 1
-			hit_extensions[num_extensions] = extension_broadphase_lookup[hit_id]
+			EXTENSIONS_IN_RANGE[num_extensions] = extension_broadphase_lookup[hit_id]
 		end
 	end
 
-	return hit_extensions
+	return EXTENSIONS_IN_RANGE
 end
 
 MinionSpawnerSystem.add_spawner_to_ranged_search = function (self, extension)

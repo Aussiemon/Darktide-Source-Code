@@ -229,22 +229,22 @@ templates.weapon_trait_bespoke_stubrevolver_p1_rending_on_crit = {
 	weapon_trait_bespoke_stubrevolver_p1_rending_on_crit = {
 		{
 			stat_buffs = {
+				[stat_buffs.critical_strike_rending_multiplier] = 0.3
+			}
+		},
+		{
+			stat_buffs = {
+				[stat_buffs.critical_strike_rending_multiplier] = 0.4
+			}
+		},
+		{
+			stat_buffs = {
 				[stat_buffs.critical_strike_rending_multiplier] = 0.5
 			}
 		},
 		{
 			stat_buffs = {
 				[stat_buffs.critical_strike_rending_multiplier] = 0.6
-			}
-		},
-		{
-			stat_buffs = {
-				[stat_buffs.critical_strike_rending_multiplier] = 0.7
-			}
-		},
-		{
-			stat_buffs = {
-				[stat_buffs.critical_strike_rending_multiplier] = 0.8
 			}
 		}
 	}

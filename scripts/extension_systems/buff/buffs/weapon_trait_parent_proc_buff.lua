@@ -68,7 +68,7 @@ WeaponTraitParentProcBuff.update_proc_events = function (self, t, proc_events, n
 		if clear_child_stacks_proc_events then
 			for clear_child_event, _ in pairs(template.clear_child_stacks_proc_events) do
 				if procced_proc_events[clear_child_event] then
-					self:_remove_child_buff_stack(self._num_child_stacks - 1)
+					self:_remove_child_buff_stack(t, self._num_child_stacks - 1)
 
 					break
 				end
@@ -98,7 +98,7 @@ WeaponTraitParentProcBuff.update = function (self, dt, t, ...)
 				local stacks_to_remove = template.stacks_to_remove or 1
 				local num_stacks_to_remove = math.min(math.ceil(leftover_through_child_duration) * stacks_to_remove, num_child_stacks - 1)
 
-				self:_remove_child_buff_stack(num_stacks_to_remove)
+				self:_remove_child_buff_stack(t, num_stacks_to_remove)
 
 				local child_duration = template_overrides.child_duration or template.child_duration
 				local child_duration_after_remove = template_overrides.child_duration_after_remove or template.child_duration_after_remove or child_duration
@@ -116,7 +116,7 @@ WeaponTraitParentProcBuff.update = function (self, dt, t, ...)
 		local reset_update_func = template.reset_update_func
 
 		if reset_update_func and reset_update_func(self._template_data, self._template_context) then
-			self:_remove_child_buff_stack(self._num_child_stacks - 1)
+			self:_remove_child_buff_stack(t, self._num_child_stacks - 1)
 		end
 	end
 end
@@ -144,9 +144,13 @@ WeaponTraitParentProcBuff._add_child_buff_stack = function (self, t, num_childre
 		self._remove_child_stack_start_t = t
 		self._remove_child_stack_duration = child_duration
 	end
+
+	self:set_start_time(t)
+
+	self._need_to_sync_start_time = true
 end
 
-WeaponTraitParentProcBuff._remove_child_buff_stack = function (self, num_children_to_remove)
+WeaponTraitParentProcBuff._remove_child_buff_stack = function (self, t, num_children_to_remove)
 	local buff_extension = self._buff_extension
 	local child_buff_indicies = self._child_buff_indicies
 	local num_child_stacks = self._num_child_stacks
@@ -160,6 +164,10 @@ WeaponTraitParentProcBuff._remove_child_buff_stack = function (self, num_childre
 	end
 
 	self._num_child_stacks = num_child_stacks
+
+	self:set_start_time(t)
+
+	self._need_to_sync_start_time = true
 end
 
 WeaponTraitParentProcBuff.duration_progress = function (self)
@@ -171,7 +179,7 @@ WeaponTraitParentProcBuff.duration_progress = function (self)
 		return 0
 	end
 
-	local active_start_time = self._active_start_time
+	local active_start_time = self._start_time
 	local t = FixedFrame.get_latest_fixed_time()
 	local time_since_proc = t - active_start_time
 	local duration_progress = 1 - time_since_proc / child_duration

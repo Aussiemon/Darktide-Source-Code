@@ -608,12 +608,12 @@ damage_templates.jab_special = {
 			},
 			power_distribution = {
 				attack = {
-					20,
-					50
+					12,
+					30
 				},
 				impact = {
-					6,
-					12
+					2,
+					5
 				}
 			},
 			power_level_multiplier = {
@@ -647,8 +647,8 @@ damage_templates.jab_special = {
 			power_distribution = {
 				impact = 3,
 				attack = {
-					20,
-					40
+					10,
+					20
 				}
 			},
 			boost_curve = PowerLevelSettings.boost_curves.default

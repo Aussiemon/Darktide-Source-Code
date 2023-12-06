@@ -357,7 +357,7 @@ RenderTargetIconGeneratorBase._handle_request_queue = function (self)
 					self._active_request = nil
 				end
 			else
-				self._request_preview_lifetime_frame_count = REQUEST_PREVIEWER_FRAME_DELAY
+				self._request_preview_lifetime_frame_count = active_request.frame_delay or REQUEST_PREVIEWER_FRAME_DELAY
 			end
 		end
 	elseif #self._requests_queue_order > 0 then

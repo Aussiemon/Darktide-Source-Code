@@ -140,14 +140,6 @@ GameplayStateRun.post_update = function (self, main_dt, main_t)
 	local shared_state = self._shared_state
 	local physics_world = shared_state.physics_world
 	local is_server = shared_state.is_server
-	local wants_single_threaded_physics = Managers.state.game_mode:wants_single_threaded_physics()
-
-	Managers.state.game_mode:_set_single_threaded_physics(wants_single_threaded_physics)
-
-	if wants_single_threaded_physics then
-		PhysicsWorld.run_queries(physics_world)
-		PhysicsWorld.fetch_queries(physics_world)
-	end
 
 	if self._gameplay_timer_registered then
 		Managers.state.extension:post_update()
@@ -163,7 +155,14 @@ GameplayStateRun.post_update = function (self, main_dt, main_t)
 
 	Managers.state.unit_spawner:commit_and_remove_pending_units()
 
-	if not wants_single_threaded_physics then
+	local wants_single_threaded_physics = Managers.state.game_mode:wants_single_threaded_physics()
+
+	Managers.state.game_mode:_set_single_threaded_physics(wants_single_threaded_physics)
+
+	if wants_single_threaded_physics then
+		PhysicsWorld.run_queries(physics_world)
+		PhysicsWorld.fetch_queries(physics_world)
+	else
 		PhysicsWorld.run_queries(physics_world)
 	end
 

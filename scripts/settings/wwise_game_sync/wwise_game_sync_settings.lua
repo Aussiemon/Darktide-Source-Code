@@ -83,6 +83,7 @@ local wwise_game_sync_settings = {
 			appearance_menu = "appearance_menu",
 			credits = "credits",
 			vendor_menu = "vendor_menu",
+			story_mission_menu = "story_mission_menu",
 			ingame_menu = "ingame_menu",
 			none = "None"
 		},

@@ -1,7 +1,6 @@
 local dialogue_lookup_concept_names = {
 	all_concepts = {
 		"ammo_hog",
-		"assault",
 		"catching_net",
 		"combat_ability",
 		"combat_story_talk",

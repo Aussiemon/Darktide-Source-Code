@@ -3,6 +3,7 @@ local MasterItems = require("scripts/backend/master_items")
 local Pickups = require("scripts/settings/pickup/pickups")
 local FixedFrame = require("scripts/utilities/fixed_frame")
 local SideMissionPickupSynchronizerExtension = class("SideMissionPickupSynchronizerExtension", "EventSynchronizerBaseExtension")
+local SLOT_POCKETABLE_NAME = "slot_pocketable"
 
 SideMissionPickupSynchronizerExtension.init = function (self, extension_init_context, unit, extension_init_data, ...)
 	SideMissionPickupSynchronizerExtension.super.init(self, extension_init_context, unit, extension_init_data, ...)
@@ -61,8 +62,7 @@ SideMissionPickupSynchronizerExtension.grant_grimoire = function (self, player_u
 
 	local unit_data_extension = ScriptUnit.extension(player_unit, "unit_data_system")
 	local inventory_component = unit_data_extension:read_component("inventory")
-	local slot_pocketable = "slot_pocketable"
-	local item_name = inventory_component[slot_pocketable]
+	local item_name = inventory_component[SLOT_POCKETABLE_NAME]
 
 	if item_name ~= "not_equipped" then
 		return
@@ -73,10 +73,10 @@ SideMissionPickupSynchronizerExtension.grant_grimoire = function (self, player_u
 	local item_definitions = MasterItems.get_cached()
 	local inventory_item = item_definitions[pickup_data.inventory_item]
 
-	PlayerUnitVisualLoadout.equip_item_to_slot(player_unit, inventory_item, slot_pocketable, nil, t)
+	PlayerUnitVisualLoadout.equip_item_to_slot(player_unit, inventory_item, SLOT_POCKETABLE_NAME, nil, t)
 
-	if inventory_component.wielded_slot == slot_pocketable then
-		PlayerUnitVisualLoadout.wield_slot(slot_pocketable, player_unit, t)
+	if inventory_component.wielded_slot == SLOT_POCKETABLE_NAME then
+		PlayerUnitVisualLoadout.wield_slot(SLOT_POCKETABLE_NAME, player_unit, t)
 	end
 
 	self._stored_grimoires = self._stored_grimoires - 1

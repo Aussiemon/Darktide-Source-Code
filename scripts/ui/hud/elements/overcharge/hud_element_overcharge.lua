@@ -321,4 +321,25 @@ HudElementOvercharge._get_animation_progress = function (self, dt, progress, ani
 	return anim_progress
 end
 
+HudElementOvercharge.set_visible = function (self, visible, ui_renderer, use_retained_mode)
+	if use_retained_mode then
+		if visible then
+			self:set_dirty()
+		else
+			self:_destroy_widgets(ui_renderer)
+		end
+	end
+end
+
+HudElementOvercharge._destroy_widgets = function (self, ui_renderer, use_retained_mode)
+	local widgets = self._widgets
+	local num_widgets = #widgets
+
+	for i = 1, num_widgets do
+		local widget = widgets[i]
+
+		UIWidget.destroy(ui_renderer, widget, use_retained_mode)
+	end
+end
+
 return HudElementOvercharge

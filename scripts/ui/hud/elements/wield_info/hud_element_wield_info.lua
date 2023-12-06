@@ -1,6 +1,5 @@
 local Definitions = require("scripts/ui/hud/elements/wield_info/hud_element_wield_info_definitions")
 local WieldInfoPassivesTemplates = require("scripts/ui/hud/elements/wield_info/wield_info_passives_templates")
-local TrainingGroundsInfoPassivesTemplates = require("scripts/ui/hud/elements/wield_info/training_grounds_wield_info_passives_templates")
 local ItemSlotSettings = require("scripts/settings/item/item_slot_settings")
 local UIRenderer = require("scripts/managers/ui/ui_renderer")
 local InputUtils = require("scripts/managers/input/input_utils")
@@ -169,23 +168,6 @@ HudElementWieldInfo.update = function (self, dt, t, ui_renderer, render_settings
 			input_descriptions = data.input_descriptions
 
 			break
-		end
-	end
-
-	local scripted_scenario_system = Managers.state.extension:system("scripted_scenario_system")
-
-	if scripted_scenario_system:enabled() then
-		for i = 1, #TrainingGroundsInfoPassivesTemplates do
-			local data = TrainingGroundsInfoPassivesTemplates[i]
-			local name = data.name
-			local validation_function = data.validation_function
-
-			if validation_function(wielded_slot_id, item, current_action, current_action_name, player) then
-				current_passive_wield_info_name = name
-				input_descriptions = data.input_descriptions
-
-				break
-			end
 		end
 	end
 

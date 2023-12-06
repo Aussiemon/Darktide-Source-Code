@@ -951,6 +951,40 @@ local default_surface_fx = {
 ImpactFxHelper.create_missing_surface_fx(surface_fx, default_surface_fx)
 
 local surface_decal = {
+	brick = {
+		[hit_types.stop] = {
+			uniform_extents = {
+				max = 0.35,
+				min = 0.25
+			},
+			units = {
+				"content/fx/units/weapons/small_caliber_concrete_medium_01",
+				"content/fx/units/weapons/small_caliber_concrete_large_01"
+			}
+		},
+		[hit_types.penetration_entry] = {
+			uniform_extents = {
+				max = 0.2,
+				min = 0.2
+			},
+			units = {
+				"content/fx/units/weapons/small_caliber_concrete_small_01",
+				"content/fx/units/weapons/small_caliber_concrete_medium_01",
+				"content/fx/units/weapons/small_caliber_concrete_large_01"
+			}
+		},
+		[hit_types.penetration_exit] = {
+			uniform_extents = {
+				max = 0.2,
+				min = 0.2
+			},
+			units = {
+				"content/fx/units/weapons/small_caliber_concrete_small_01",
+				"content/fx/units/weapons/small_caliber_concrete_medium_01",
+				"content/fx/units/weapons/small_caliber_concrete_large_01"
+			}
+		}
+	},
 	concrete = {
 		[hit_types.stop] = {
 			uniform_extents = {

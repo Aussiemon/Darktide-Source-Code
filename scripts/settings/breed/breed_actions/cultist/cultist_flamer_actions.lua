@@ -174,7 +174,7 @@ local action_data = {
 		max_distance_to_target = 8,
 		degree_per_direction = 10,
 		move_anim_events = "move_fwd",
-		wanted_distance = 16,
+		wanted_distance = 18,
 		move_to_fail_cooldown = 1,
 		min_range = 4,
 		speed = 5.7,
@@ -218,7 +218,7 @@ local action_data = {
 		}
 	},
 	shoot = {
-		liquid_paint_brush_size = 1,
+		liquid_paint_brush_size = 2,
 		max_liquid_paint_distance = 3,
 		attack_duration = 1.8,
 		sphere_cast_frequency = 0.25,
@@ -235,7 +235,7 @@ local action_data = {
 		exit_after_cooldown = true,
 		push_minions_power_level = 200,
 		push_minions_radius = 1.25,
-		range_back = 3,
+		range_back = 2.5,
 		aim_anim_events = {
 			"hip_fire"
 		},

@@ -30,25 +30,26 @@ local settings = {
 		interval = 300
 	},
 	blacklisted_views = {
-		"contracts_background_view",
-		"splash_video_view",
-		"title_view",
-		"video_view",
-		"loading_view",
-		"system_view",
-		"main_menu_view",
-		"custom_settings_view",
-		"scanner_display_view",
-		"credits_vendor_background_view",
 		"blank_view",
+		"contracts_background_view",
+		"credits_vendor_background_view",
+		"custom_settings_view",
+		"cutscene_view",
 		"debug_vendor_view",
+		"debug_view",
 		"end_player_view",
 		"inventory_background_view",
-		"debug_view",
-		"splash_view",
-		"cutscene_view",
+		"loading_view",
 		"main_menu_background_view",
-		"mission_board_view"
+		"main_menu_view",
+		"mission_board_view",
+		"scanner_display_view",
+		"splash_video_view",
+		"splash_view",
+		"store_view",
+		"system_view",
+		"title_view",
+		"video_view"
 	}
 }
 

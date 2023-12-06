@@ -161,7 +161,7 @@ function on_close()
 end
 
 function on_suspend()
-	if Managers then
+	if rawget(_G, "Managers") then
 		local update_grpc = false
 
 		if Managers.party_immaterium then
@@ -183,7 +183,7 @@ function on_suspend()
 end
 
 function on_resume()
-	if Managers and Managers.backend then
+	if rawget(_G, "Managers") and Managers.backend then
 		Managers.backend:time_sync_restart()
 	end
 end

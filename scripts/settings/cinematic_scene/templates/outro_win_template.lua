@@ -12,6 +12,7 @@ local cinematic_scene_templates = {
 		mission_outro = false,
 		ignored_slots = {
 			"slot_pocketable",
+			"slot_pocketable_small",
 			"slot_luggable",
 			"slot_support_ability",
 			"slot_combat_ability",

@@ -56,11 +56,12 @@ RespawnBeaconSystem._create_respawn_beacons = function (self)
 						segment_index = segment_index
 					}
 					self._beacon_main_path_distance_lookup[unit] = distance
-					sorted_beacons[#sorted_beacons + 1] = {
+					local sorted_beacons_entry = {
 						unit = unit,
 						distance = distance,
 						position = position
 					}
+					sorted_beacons[#sorted_beacons + 1] = sorted_beacons_entry
 					local num_beacons = #beacon_main_path_data
 
 					if num_beacons > 0 then

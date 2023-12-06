@@ -1,8 +1,10 @@
 local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
 local Breed = require("scripts/utilities/breed")
+local BreedSettings = require("scripts/settings/breed/breed_settings")
 local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
 local BotPerceptionExtension = class("BotPerceptionExtension")
 local IN_PROXIMITY_DISTANCE = 5
+local MINION_BREED_TYPE = BreedSettings.types.minion
 local MAX_PROXIMITY_ENEMIES = 10
 
 BotPerceptionExtension.init = function (self, extension_init_context, unit, extension_init_data, game_object_data)
@@ -88,18 +90,17 @@ BotPerceptionExtension.pre_update = function (self, unit, dt, t)
 	local search_position = POSITION_LOOKUP[unit]
 	local enemy_side_names = side:relation_side_names("enemy")
 	local ai_target_units = side.ai_target_units
-	local player_units = side.valid_enemy_player_units
 	local broadphase_system = self._broadphase_system
 	local perception_system = self._perception_system
 	local slot_system = self._slot_system
 	local broadphase = broadphase_system.broadphase
-	local num_hits = broadphase:query(search_position, FORCED_PRIO_UPDATE_RANGE, broadphase_results, enemy_side_names)
+	local num_hits = broadphase:query(search_position, FORCED_PRIO_UPDATE_RANGE, broadphase_results, enemy_side_names, MINION_BREED_TYPE)
 
 	for i = 1, num_hits do
 		repeat
 			local enemy_unit = broadphase_results[i]
 
-			if not ai_target_units[enemy_unit] or player_units[enemy_unit] then
+			if not ai_target_units[enemy_unit] then
 				break
 			end
 

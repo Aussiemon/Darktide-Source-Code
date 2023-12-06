@@ -59,14 +59,6 @@ local default_view_input_settings = {
 			bindable = false,
 			group = "input_group_hotkeys"
 		},
-		hotkey_lobby_switch_loadout = {
-			"keyboard_tab",
-			"xbox_controller_x",
-			"ps4_controller_square",
-			description = "",
-			bindable = false,
-			group = "input_group_hotkeys"
-		},
 		hotkey_item_discard = {
 			"keyboard_x",
 			"xbox_controller_y",
@@ -431,6 +423,27 @@ local default_view_input_settings = {
 			"ps4_controller_cross",
 			description = "",
 			bindable = false
+		},
+		social_show_list = {
+			"keyboard_space",
+			"xbox_controller_y",
+			"ps4_controller_triangle",
+			description = "",
+			bindable = false
+		},
+		lobby_switch_loadout = {
+			"keyboard_tab",
+			"xbox_controller_x",
+			"ps4_controller_square",
+			description = "",
+			bindable = false
+		},
+		lobby_open_inventory = {
+			"keyboard_i",
+			"xbox_controller_back",
+			"ps4_controller_touch",
+			description = "",
+			bindable = false
 		}
 	},
 	settings = {
@@ -468,10 +481,6 @@ local default_view_input_settings = {
 		},
 		hotkey_loadout = {
 			key_alias = "hotkey_loadout",
-			type = "pressed"
-		},
-		hotkey_lobby_switch_loadout = {
-			key_alias = "hotkey_lobby_switch_loadout",
 			type = "pressed"
 		},
 		hotkey_item_discard = {
@@ -896,6 +905,18 @@ local default_view_input_settings = {
 		},
 		continue_end_view = {
 			key_alias = "continue_end_view",
+			type = "pressed"
+		},
+		social_show_list = {
+			key_alias = "social_show_list",
+			type = "pressed"
+		},
+		lobby_switch_loadout = {
+			key_alias = "lobby_switch_loadout",
+			type = "pressed"
+		},
+		lobby_open_inventory = {
+			key_alias = "lobby_open_inventory",
 			type = "pressed"
 		}
 	}

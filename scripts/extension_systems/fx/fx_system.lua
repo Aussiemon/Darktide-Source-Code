@@ -766,7 +766,7 @@ end
 local LINKED_DECAL_Z = 0.05
 local DECAL_Z = 0.5
 
-function _create_projection_decal(t, decal_settings, position, rotation, normal, hit_unit, hit_actor)
+function _create_projection_decal(t, decal_settings, position, rotation, normal, hit_unit, hit_actor, impact_fx_name)
 	local extents = decal_settings.extents
 	local uniform_extents = decal_settings.uniform_extents
 	local x, y, z = nil
@@ -907,7 +907,7 @@ function _play_impact_fx_template(t, world, wwise_world, unit_to_extension_map, 
 		local tangent = Vector3.normalize(direction - dot_value * optional_hit_normal)
 		local decal_rotation = Quaternion.look(tangent, optional_hit_normal)
 
-		_create_projection_decal(t, decal, position, decal_rotation, optional_hit_normal, nil, nil)
+		_create_projection_decal(t, decal, position, decal_rotation, optional_hit_normal, nil, nil, impact_fx_name)
 	end
 
 	local linked_decal = impact_fx.linked_decal
@@ -922,7 +922,7 @@ function _play_impact_fx_template(t, world, wwise_world, unit_to_extension_map, 
 			local decal_normal = opposite_direction
 			local hit_actor = Unit.actor(optional_target_unit, hit_actors[1])
 
-			_create_projection_decal(t, linked_decal, position, decal_rotation, decal_normal, optional_target_unit, hit_actor)
+			_create_projection_decal(t, linked_decal, position, decal_rotation, decal_normal, optional_target_unit, hit_actor, impact_fx_name)
 		end
 	end
 

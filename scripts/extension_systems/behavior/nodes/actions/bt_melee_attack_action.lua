@@ -235,7 +235,7 @@ BtMeleeAttackAction._start_attack_anim = function (self, unit, breed, target_uni
 
 		if action_data.aoe_threat_timing then
 			local aoe_threat_timing = action_data.aoe_threat_timing
-			scratchpad.aoe_threat_window = (scratchpad.start_time or scratchpad.start_sweep_t) + aoe_threat_timing
+			scratchpad.aoe_threat_window = (scratchpad.start_time or scratchpad.start_sweep_t) - aoe_threat_timing
 			scratchpad.should_create_aoe_threat = true
 		end
 

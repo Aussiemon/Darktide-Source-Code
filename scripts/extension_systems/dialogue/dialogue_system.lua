@@ -388,7 +388,6 @@ DialogueSystem._update_currently_playing_dialogues = function (self, t, dt)
 
 					self:_trigger_face_animation_event(unit, animation_event)
 					extension:stop_currently_playing_wwise_event(currently_playing_dialogue.concurrent_wwise_event_id)
-					self._dialogue_system_wwise:stop_if_playing(currently_playing_dialogue.currently_playing_event_id)
 
 					local used_query = currently_playing_dialogue.used_query
 
@@ -890,9 +889,11 @@ DialogueSystem._process_local_playing_dialogues = function (self, dt, t)
 					extension:set_currently_playing_dialogue(nil)
 					table.remove(self._vo_rule_queue, 1)
 
-					local animation_event = "stop_talking"
+					if #self._vo_rule_queue == 0 then
+						local animation_event = "stop_talking"
 
-					self:_trigger_face_animation_event(unit, animation_event)
+						self:_trigger_face_animation_event(unit, animation_event)
+					end
 				else
 					currently_playing_dialogue.dialogue_timer = currently_playing_dialogue.dialogue_timer - dt
 				end
@@ -920,7 +921,7 @@ DialogueSystem._process_local_vo_event_queue = function (self)
 	local wwise_playing = currently_playing_dialogue and self._dialogue_system_wwise:is_playing(currently_playing_dialogue.currently_playing_event_id)
 
 	if not wwise_playing then
-		extension:play_local_vo_event(event.rule_name, event.wwise_route_key, event.on_play_callback, event.seed)
+		extension:play_local_vo_event(event.rule_name, event.wwise_route_key, event.on_play_callback, event.seed, true)
 	end
 end
 
@@ -1117,7 +1118,15 @@ DialogueSystem.rpc_trigger_dialogue_event = function (self, channel_id, go_id, e
 	self:append_event_to_queue(unit, event_name, event_data, identifier)
 end
 
+DialogueSystem.set_ignore_server_play_requests = function (self, value)
+	self._ignore_server_play_requests = value
+end
+
 DialogueSystem.rpc_play_dialogue_event = function (self, channel_id, go_id, is_level_unit, level_name_hash, dialogue_id, dialogue_index, dialogue_rule_index)
+	if self._ignore_server_play_requests then
+		return
+	end
+
 	self:_play_dialogue_event_implementation(go_id, is_level_unit, level_name_hash, dialogue_id, dialogue_index, dialogue_rule_index)
 end
 

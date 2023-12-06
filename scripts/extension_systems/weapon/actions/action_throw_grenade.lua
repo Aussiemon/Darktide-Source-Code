@@ -119,8 +119,7 @@ ActionThrowGrenade._spawn_projectile = function (self)
 				local fuse_settings = damage_settings and damage_settings.fuse
 				local fuse_base_time = fuse_settings and fuse_settings.fuse_time
 				local fuse_time_override = fuse_base_time and fuse_base_time + 0.3 or nil
-				local extra_speed = speed
-				local extra_projectile_unit, _ = Managers.state.unit_spawner:spawn_network_unit(nil, "item_projectile", position, rotation, material, item, projectile_template, starting_state, extra_direction, extra_speed, momentum, owner_unit, is_critical_strike, origin_item_slot, nil, nil, nil, nil, fuse_time_override, owner_side_name)
+				local extra_projectile_unit, _ = Managers.state.unit_spawner:spawn_network_unit(nil, "item_projectile", position, rotation, material, item, projectile_template, starting_state, extra_direction, speed, momentum, owner_unit, is_critical_strike, origin_item_slot, nil, nil, nil, nil, fuse_time_override, owner_side_name)
 			end
 		end
 	end

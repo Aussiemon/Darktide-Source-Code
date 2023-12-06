@@ -28,6 +28,10 @@ local damage_profile_settings = {
 			1.035,
 			1.965
 		},
+		lerp_1_33 = {
+			0.9,
+			1.77
+		},
 		lerp_1_25 = {
 			0.85,
 			1.65
@@ -319,6 +323,16 @@ damage_profile_settings.big_cleave = {
 	impact = {
 		8.5,
 		12.5
+	}
+}
+damage_profile_settings.fold_cleave = {
+	attack = {
+		2.5,
+		2.5
+	},
+	impact = {
+		2.5,
+		2.5
 	}
 }
 

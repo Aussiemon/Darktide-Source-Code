@@ -540,7 +540,7 @@ local dialogue_speaker_voice_settings = {
 		full_name = "loc_npc_full_name_enginseer_a",
 		short_name = "loc_npc_short_name_enginseer_a",
 		subtitles_enabled = true,
-		icon = "content/ui/textures/icons/npc_portraits/mission_givers/default",
+		icon = "content/ui/textures/icons/npc_portraits/mission_givers/enginseer_a",
 		player_voice = false
 	},
 	archive_servitor_a = {

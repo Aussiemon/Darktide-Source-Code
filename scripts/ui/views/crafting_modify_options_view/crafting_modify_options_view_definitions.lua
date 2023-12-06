@@ -462,7 +462,7 @@ local widget_definitions = {
 		}
 	}, "sub_display_name"),
 	upgrade_item_button = UIWidget.create_definition(table.clone(ButtonPassTemplates.default_button), "upgrade_item_button", {
-		text = Localize("loc_crafting_upgrade_button"),
+		original_text = Localize("loc_crafting_upgrade_button"),
 		hotspot = {
 			use_is_focused = true,
 			on_pressed_sound = UISoundEvents.weapons_customize_enter
@@ -602,7 +602,7 @@ local widget_definitions = {
 		}
 	}, "modify_arrow_widget"),
 	extract_trait_button = UIWidget.create_definition(table.clone(ButtonPassTemplates.default_button), "upgrade_item_button", {
-		text = Localize("loc_crafting_extract_button"),
+		original_text = Localize("loc_crafting_extract_button"),
 		hotspot = {
 			use_is_focused = true,
 			on_pressed_sound = UISoundEvents.weapons_customize_enter

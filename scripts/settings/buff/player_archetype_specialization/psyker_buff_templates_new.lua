@@ -2174,7 +2174,7 @@ templates.psyker_aura_ability_cooldown_improved = {
 	max_stacks = talent_settings_3.coop_2.max_stacks,
 	keywords = {},
 	stat_buffs = {
-		[stat_buffs.ability_cooldown_modifier] = talent_settings_3.coop_2.ability_cooldown_modifier
+		[stat_buffs.ability_cooldown_modifier] = talent_settings_3.coherency.ability_cooldown_modifier_improved
 	}
 }
 templates.psyker_stun_effect = {

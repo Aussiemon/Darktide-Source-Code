@@ -6,10 +6,11 @@ local pickup_data = {
 	group = "pocketable",
 	game_object_type = "pickup",
 	spawn_weighting = 1,
+	inventory_slot_name = "slot_pocketable",
 	unit_name = "content/pickups/pocketables/ammo_crate/pickup_ammo_crate",
 	interaction_icon = "content/ui/materials/hud/interactions/icons/pocketable_ammo",
-	pickup_sound = "wwise/events/player/play_pick_up_ammopack",
 	unit_template_name = "pickup",
+	pickup_sound = "wwise/events/player/play_pick_up_ammopack",
 	interaction_type = "pocketable",
 	inventory_item = "content/items/pocketable/ammo_cache_pocketable"
 }

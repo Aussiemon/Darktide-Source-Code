@@ -212,6 +212,10 @@ TelemetryEvents.local_player_spawned = function (self, player)
 	self._subject.character_id = player:character_id()
 end
 
+TelemetryEvents.character_selected = function (self, character_id)
+	self._subject.character_id = character_id
+end
+
 TelemetryEvents.system_settings = function (self, account_id)
 	local fullscreen = Application.user_setting("fullscreen")
 	local borderless_fullscreen = Application.user_setting("borderless_fullscreen")
@@ -883,6 +887,12 @@ TelemetryEvents.breed_info = function (self, breed_info)
 	local event = self:_create_event("breed_info")
 
 	event:set_data(breed_info)
+	self._manager:register_event(event)
+end
+
+TelemetryEvents.hard_mode_activated = function (self)
+	local event = self:_create_event("hard_mode_activated")
+
 	self._manager:register_event(event)
 end
 

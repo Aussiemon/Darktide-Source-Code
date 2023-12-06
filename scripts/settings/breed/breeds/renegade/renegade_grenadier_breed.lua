@@ -377,6 +377,11 @@ local breed_data = {
 	hit_zone_weakspot_types = {
 		[hit_zone_names.head] = weakspot_types.headshot
 	},
+	hitzone_armor_override = {
+		[hit_zone_names.head] = armor_types.unarmored,
+		[hit_zone_names.lower_left_arm] = armor_types.unarmored,
+		[hit_zone_names.lower_right_arm] = armor_types.unarmored
+	},
 	hitzone_damage_multiplier = {
 		melee = {
 			[hit_zone_names.head] = 3,

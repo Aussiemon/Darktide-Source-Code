@@ -42,7 +42,7 @@ local HitReaction = {
 		local melee_hit_on_sprinting = is_hit_by_melee and is_sprinting
 		local attack_disorientation_template = disorientation_type and disorientation_templates[disorientation_type]
 		local attack_have_stun = attack_disorientation_template and attack_disorientation_template.stun and attack_disorientation_template.stun.interrupt_delay ~= nil
-		local fumbled = breed_hit_reaction_stun_types and breed_hit_reaction_stun_types.fumbled
+		local fumbled = breed_hit_reaction_stun_types and breed_hit_reaction_stun_types.fumbled and (not attack_disorientation_template or not attack_disorientation_template.ignore_fumbled)
 		local has_fumbled = (melee_hit_on_ranged or melee_hit_on_sprinting) and attack_have_stun
 		local wanted_disorientation_type = has_fumbled and fumbled or disorientation_type
 		local disorientation_template = wanted_disorientation_type and disorientation_templates[wanted_disorientation_type]
@@ -163,6 +163,14 @@ function _player_hit_reaction(attack_result, damage_profile, target_weapon_templ
 				_toughness_broken_disorient(target_unit_data_extension, target_weapon_template, attacked_unit, attack_direction, attack_type, stun_allowed, ignore_stun_immunity)
 				_interrupt_alternate_fire(target_unit_data_extension, target_weapon_template, attacked_unit, interrupt_alternate_fire)
 				_interrupt_interaction(attacked_unit, damage_profile, uninterruptible)
+				_force_look(target_unit_data_extension, force_look_function, attacked_unit, attack_direction)
+			end
+		else
+			local _, was_catapulted = _push_or_catapult(target_unit_data_extension, attacked_unit, attacking_unit_owner_unit, push_template, catapulting_template, force_look_function, attack_direction, attack_type, hit_position, ignore_stun_immunity)
+
+			if not was_catapulted then
+				HitReaction.disorient_player(attacked_unit, target_unit_data_extension, disorientation_type, stun_allowed, ignore_stun_immunity, attack_direction, attack_type, target_weapon_template, false)
+				_interrupt_alternate_fire(target_unit_data_extension, target_weapon_template, attacked_unit, interrupt_alternate_fire)
 				_force_look(target_unit_data_extension, force_look_function, attacked_unit, attack_direction)
 			end
 		end

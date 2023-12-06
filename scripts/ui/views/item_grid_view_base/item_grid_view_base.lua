@@ -81,12 +81,12 @@ ItemGridViewBase._setup_sort_options = function (self)
 	if not self._sort_options then
 		self._sort_options = {
 			{
-				display_name = Localize("loc_inventory_item_grid_sort_title_item_power"),
+				display_name = Localize("loc_inventory_item_grid_sort_title_format_high_low", true, {
+					sort_name = Localize("loc_inventory_item_grid_sort_title_item_power")
+				}),
 				sort_function = ItemUtils.sort_comparator({
 					">",
 					ItemUtils.compare_item_level,
-					">",
-					ItemUtils.compare_item_type,
 					"<",
 					ItemUtils.compare_item_name,
 					"<",
@@ -94,13 +94,65 @@ ItemGridViewBase._setup_sort_options = function (self)
 				})
 			},
 			{
-				display_name = Localize("loc_inventory_item_grid_sort_title_item_type"),
+				display_name = Localize("loc_inventory_item_grid_sort_title_format_low_high", true, {
+					sort_name = Localize("loc_inventory_item_grid_sort_title_item_power")
+				}),
 				sort_function = ItemUtils.sort_comparator({
-					">",
-					ItemUtils.compare_item_type,
+					"<",
+					ItemUtils.compare_item_level,
 					"<",
 					ItemUtils.compare_item_name,
+					"<",
+					ItemUtils.compare_item_rarity
+				})
+			},
+			{
+				display_name = Localize("loc_inventory_item_grid_sort_title_format_high_low", true, {
+					sort_name = Localize("loc_inventory_item_grid_sort_title_rarity")
+				}),
+				sort_function = ItemUtils.sort_comparator({
 					">",
+					ItemUtils.compare_item_rarity,
+					">",
+					ItemUtils.compare_item_level,
+					"<",
+					ItemUtils.compare_item_name
+				})
+			},
+			{
+				display_name = Localize("loc_inventory_item_grid_sort_title_format_low_high", true, {
+					sort_name = Localize("loc_inventory_item_grid_sort_title_rarity")
+				}),
+				sort_function = ItemUtils.sort_comparator({
+					"<",
+					ItemUtils.compare_item_rarity,
+					">",
+					ItemUtils.compare_item_level,
+					"<",
+					ItemUtils.compare_item_name
+				})
+			},
+			{
+				display_name = Localize("loc_inventory_item_grid_sort_title_format_increasing_letters", true, {
+					sort_name = Localize("loc_inventory_item_grid_sort_title_name")
+				}),
+				sort_function = ItemUtils.sort_comparator({
+					"<",
+					ItemUtils.compare_item_name,
+					"<",
+					ItemUtils.compare_item_level,
+					"<",
+					ItemUtils.compare_item_rarity
+				})
+			},
+			{
+				display_name = Localize("loc_inventory_item_grid_sort_title_format_decreasing_letters", true, {
+					sort_name = Localize("loc_inventory_item_grid_sort_title_name")
+				}),
+				sort_function = ItemUtils.sort_comparator({
+					">",
+					ItemUtils.compare_item_name,
+					"<",
 					ItemUtils.compare_item_level,
 					"<",
 					ItemUtils.compare_item_rarity
@@ -112,7 +164,7 @@ ItemGridViewBase._setup_sort_options = function (self)
 	if self._sort_options and #self._sort_options > 0 then
 		local sort_callback = callback(self, "cb_on_sort_button_pressed")
 
-		self._item_grid:setup_sort_button(self._sort_options, sort_callback, 1)
+		self._item_grid:setup_sort_button(self._sort_options, sort_callback)
 	end
 end
 
@@ -493,14 +545,15 @@ ItemGridViewBase._update_weapon_stats_position = function (self, scenegraph_id, 
 end
 
 ItemGridViewBase._setup_item_grid = function (self, optional_grid_settings)
+	local context = optional_grid_settings or self._definitions.grid_settings
+	local reference_name = context.grid_id or "item_grid"
+
 	if self._item_grid then
 		self._item_grid = nil
 
-		self:_remove_element("item_grid")
+		self:_remove_element(reference_name)
 	end
 
-	local context = optional_grid_settings or self._definitions.grid_settings
-	local reference_name = "item_grid"
 	local layer = 10
 	self._item_grid = self:_add_element(ViewElementGrid, reference_name, layer, context)
 	local preview_player = self._preview_player

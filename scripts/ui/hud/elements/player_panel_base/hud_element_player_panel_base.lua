@@ -267,9 +267,12 @@ HudElementPlayerPanelBase._update_player_features = function (self, dt, t, playe
 	local carrying_luggable = not dead and not disabled and visual_loadout_extension and self:_is_player_carrying_luggable(inventory_component, visual_loadout_extension) or false
 	local carrying_pocketable = false
 	local pocketable_hud_icon = nil
+	local carrying_pocketable_small = false
+	local pocketable_small_hud_icon = nil
 
 	if not dead and visual_loadout_extension then
-		carrying_pocketable, pocketable_hud_icon = self:_has_player_pocketable(inventory_component, visual_loadout_extension)
+		carrying_pocketable, pocketable_hud_icon = self:_has_player_pocketable(inventory_component, visual_loadout_extension, "slot_pocketable")
+		carrying_pocketable_small, pocketable_small_hud_icon = self:_has_player_pocketable(inventory_component, visual_loadout_extension, "slot_pocketable_small")
 	end
 
 	if disabled and not hogtied and not consumed then
@@ -441,14 +444,15 @@ HudElementPlayerPanelBase._update_player_features = function (self, dt, t, playe
 	end
 
 	if supported_features.pocketable then
-		local pocketable_visible = not dead and not hogtied and unit_data_extension ~= nil
+		local pocketables_can_show = not dead and not hogtied and unit_data_extension ~= nil
 
-		if carrying_pocketable ~= self._carrying_pocketable or pocketable_hud_icon ~= self._pocketable_hud_icon or pocketable_visible ~= self._pocketable_visible then
+		if (carrying_pocketable or carrying_pocketable_small) ~= self._carrying_pocketable or pocketables_can_show ~= self._pocketables_can_show or pocketable_hud_icon ~= self._pocketable_hud_icon or pocketable_small_hud_icon ~= self._pocketable_small_hud_icon then
 			self._carrying_pocketable = carrying_pocketable
-			self._pocketable_visible = pocketable_visible
+			self._pocketables_can_show = pocketables_can_show
 			self._pocketable_hud_icon = pocketable_hud_icon
+			self._pocketable_small_hud_icon = pocketable_small_hud_icon
 
-			self:_update_pocketable_presentation(pocketable_hud_icon, pocketable_visible, ui_renderer)
+			self:_update_pocketable_presentation(pocketable_hud_icon, pocketable_small_hud_icon, pocketables_can_show, ui_renderer)
 		end
 	end
 
@@ -575,10 +579,9 @@ HudElementPlayerPanelBase._on_disabled_world_marker_spawned = function (self, id
 	self._disabled_world_marker_id = id
 end
 
-HudElementPlayerPanelBase._has_player_pocketable = function (self, inventory_component, visual_loadout_extension)
-	local slot_id = "slot_pocketable"
-	local pocketable_name = inventory_component[slot_id]
-	local weapon_template = pocketable_name and visual_loadout_extension:weapon_template_from_slot(slot_id)
+HudElementPlayerPanelBase._has_player_pocketable = function (self, inventory_component, visual_loadout_extension, slot_name)
+	local pocketable_name = inventory_component[slot_name]
+	local weapon_template = pocketable_name and visual_loadout_extension:weapon_template_from_slot(slot_name)
 	local equipped = weapon_template ~= nil
 	local hud_icon = nil
 
@@ -872,14 +875,27 @@ HudElementPlayerPanelBase._set_player_name = function (self, name, current_level
 	widget.dirty = true
 end
 
-HudElementPlayerPanelBase._update_pocketable_presentation = function (self, pocketable_hud_icon, visible, ui_renderer)
+HudElementPlayerPanelBase._update_pocketable_presentation = function (self, pocketable_hud_icon, pocketable_small_hud_icon, visible, ui_renderer)
 	local widget = self._widgets_by_name.pocketable
 	widget.content.texture = pocketable_hud_icon
-	visible = visible and pocketable_hud_icon ~= nil
+	local widget_visible = visible and pocketable_hud_icon ~= nil
 
-	self:_set_widget_visible(widget, visible, ui_renderer)
+	self:_set_widget_visible(widget, widget_visible, ui_renderer)
 
 	widget.dirty = true
+	local widget_small = self._widgets_by_name.pocketable_small
+	widget_small.content.texture = pocketable_small_hud_icon
+	local widget_small_visible = visible and pocketable_small_hud_icon ~= nil
+
+	if not widget_visible and widget_small_visible then
+		widget_small.style.texture.offset = widget.style.texture.offset
+	else
+		widget_small.style.texture.offset = widget_small.style.texture.default_offset
+	end
+
+	self:_set_widget_visible(widget_small, widget_small_visible, ui_renderer)
+
+	widget_small.dirty = true
 end
 
 HudElementPlayerPanelBase._request_player_frame = function (self, item, ui_renderer)

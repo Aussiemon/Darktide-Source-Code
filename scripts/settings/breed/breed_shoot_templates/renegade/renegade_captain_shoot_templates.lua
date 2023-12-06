@@ -48,12 +48,30 @@ local renegade_captain_shotgun = {
 	damage_type = damage_types.minion_pellet_captain,
 	line_effect = LineEffects.renegade_captain_pellet
 }
+local renegade_twin_captain_las_pistol = {
+	shoot_vfx_name = "content/fx/particles/weapons/rifles/lasgun/lasgun_muzzle",
+	shoot_sound_event = "wwise/events/weapon/play_weapon_lasgun_imperial_guards",
+	scope_reflection_vfx_name = "content/fx/particles/enemies/riflemen_scope_flash",
+	collision_filter = "filter_minion_shooting",
+	scope_reflection_timing = 0.4,
+	scope_reflection_distance = 10,
+	hit_scan_template = HitScanTemplates.renegade_twin_captain_las_pistol_shot,
+	spread = math.degrees_to_radians(0.5),
+	damage_type = damage_types.minion_laser,
+	line_effect = LineEffects.renegade_twin_captain_las_pistol_lasbeam,
+	damage_falloff = {
+		falloff_range = 15,
+		max_range = 15,
+		max_power_reduction = 0.6
+	}
+}
 local shoot_templates = {
 	renegade_captain_plasma_pistol = renegade_captain_plasma_pistol,
 	renegade_captain_bolt_pistol = renegade_captain_bolt_pistol,
 	renegade_captain_hellgun_default = renegade_captain_hellgun_default,
 	renegade_captain_hellgun_spray_and_pray = renegade_captain_hellgun_spray_and_pray,
-	renegade_captain_shotgun = renegade_captain_shotgun
+	renegade_captain_shotgun = renegade_captain_shotgun,
+	renegade_twin_captain_las_pistol = renegade_twin_captain_las_pistol
 }
 
 return shoot_templates

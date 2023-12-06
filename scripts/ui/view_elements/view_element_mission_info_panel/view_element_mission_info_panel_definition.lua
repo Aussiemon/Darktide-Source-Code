@@ -268,7 +268,7 @@ local widget_definitions = {
 		}
 	}, "header_banner", nil, nil, ViewStyles.header_banner),
 	play_button = UIWidget.create_definition(button_template, "play_button", {
-		text = Localize("loc_mission_board_view_accept_mission"),
+		original_text = Localize("loc_mission_board_view_accept_mission"),
 		hotspot = {
 			use_is_focused = true
 		}

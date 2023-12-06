@@ -95,6 +95,7 @@ StateLoading._reset_player_game_state = function (self, mission_name, mission_gi
 end
 
 StateLoading.on_exit = function (self)
+	Managers.localization:reset_cache()
 	Managers.player:on_game_state_exit(self)
 end
 

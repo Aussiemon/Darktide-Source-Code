@@ -240,6 +240,11 @@ StatsManager.add_user = function (self, key, account_id, rpc_channel, local_play
 		account_id = nil
 	end
 
+	if self._min_stat_value == nil then
+		self._min_stat_value = Network.type_info("stat_value").min
+		self._max_stat_value = Network.type_info("stat_value").max
+	end
+
 	users[key] = self:_empty_user(key, account_id, rpc_channel, local_player_id)
 	local listeners = self._listeners
 
@@ -525,7 +530,10 @@ StatsManager.start_tracking_user = function (self, key, user_config)
 end
 
 StatsManager._parse_backend_value = function (self, x)
-	return math.round(math.clamp(x, -9999999, 9999999))
+	local min = self._min_stat_value
+	local max = self._max_stat_value
+
+	return math.round(math.clamp(x, min, max))
 end
 
 StatsManager.stop_tracking_user = function (self, key)

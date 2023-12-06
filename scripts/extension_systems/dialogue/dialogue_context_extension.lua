@@ -80,13 +80,16 @@ DialogueContextExtension._update_player_unit_status = function (self)
 end
 
 DialogueContextExtension._update_extensions_context = function (self)
-	self._target_context.health = self._health_extension:current_health_percent()
-	local legacy_v2_proximity_extension = self._legacy_v2_proximity_extension
-	local proximity_types = legacy_v2_proximity_extension.proximity_types
-	self._target_context.friends_close = proximity_types.friends_close.num
-	self._target_context.friends_distant = proximity_types.friends_distant.num
-	self._target_context.enemies_close = proximity_types.enemies_close.num
-	self._target_context.enemies_distant = proximity_types.enemies_distant.num
+	local target_context = self._target_context
+	target_context.health = self._health_extension:current_health_percent()
+	local proximity_array = self._legacy_v2_proximity_extension.proximity_array
+
+	for i = 1, #proximity_array do
+		local proximity_data = proximity_array[i]
+		local id = proximity_data.id
+		local num = proximity_data.num
+		target_context[id] = num
+	end
 end
 
 DialogueContextExtension._update_timed_timers_context = function (self, t)

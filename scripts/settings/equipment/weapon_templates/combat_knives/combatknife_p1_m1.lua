@@ -1048,7 +1048,6 @@ weapon_template.actions = {
 		damage_window_end = 0.35,
 		anim_end_event = "attack_finished",
 		anim_event = "attack_special",
-		power_level = 150,
 		total_time = 2.33,
 		action_movement_curve = {
 			{

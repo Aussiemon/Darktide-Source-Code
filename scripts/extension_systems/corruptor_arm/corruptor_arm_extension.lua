@@ -105,8 +105,8 @@ CorruptorArmExtension.update = function (self, unit, dt, t)
 		local has_pustules = false
 		local unit_spawner_manager = Managers.state.unit_spawner
 
-		for i = num_target_units, 1, -1 do
-			local target_unit = target_units[i]
+		for ii = num_target_units, 1, -1 do
+			local target_unit = target_units[ii]
 
 			if HEALTH_ALIVE[target_unit] then
 				has_pustules = true
@@ -115,7 +115,7 @@ CorruptorArmExtension.update = function (self, unit, dt, t)
 			end
 
 			unit_spawner_manager:mark_for_deletion(target_unit)
-			table.swap_delete(target_units, i)
+			table.swap_delete(target_units, ii)
 		end
 
 		if not has_pustules then

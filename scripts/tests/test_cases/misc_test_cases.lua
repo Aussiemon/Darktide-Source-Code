@@ -554,6 +554,7 @@ MiscTestCases.spawn_all_units = function (case_settings)
 		local interval = settings.interval or 0
 		local spawn_and_destroy_same_frame = settings.spawn_and_destroy_same_frame == true
 		local units_to_skip = settings.units_to_skip or UNITS_TO_SKIP
+		local folder = settings.folder
 
 		if TestifySnippets.is_debug_stripped() or BUILD == "release" then
 			TestifySnippets.skip_title_and_main_menu_and_create_character_if_none()
@@ -577,19 +578,21 @@ MiscTestCases.spawn_all_units = function (case_settings)
 
 		for unit_name, _ in pairs(units) do
 			if not table.array_contains(units_to_skip, unit_name) then
-				Log.info("Testify", "%s/%s Spawning unit %s", i, num_units, unit_name)
+				if not folder or string.starts_with(unit_name, folder) then
+					Log.info("Testify", "%s/%s Spawning unit %s", i, num_units, unit_name)
 
-				if spawn_and_destroy_same_frame then
-					Testify:make_request("spawn_and_destroy_unit", unit_name, boxed_spawn_position)
-				else
-					local unit = Testify:make_request("spawn_unit", unit_name, boxed_spawn_position)
+					if spawn_and_destroy_same_frame then
+						Testify:make_request("spawn_and_destroy_unit", unit_name, boxed_spawn_position)
+					else
+						local unit = Testify:make_request("spawn_unit", unit_name, boxed_spawn_position)
 
-					TestifySnippets.wait(interval)
-					Testify:make_request("delete_unit", unit)
+						TestifySnippets.wait(interval)
+						Testify:make_request("delete_unit", unit)
+					end
 				end
-			end
 
-			i = i + 1
+				i = i + 1
+			end
 		end
 	end)
 end

@@ -1,3 +1,4 @@
+local AchievementUIHelper = require("scripts/managers/achievements/utility/achievement_ui_helper")
 local InputDevice = require("scripts/managers/input/input_device")
 local ScrollbarPassTemplates = require("scripts/ui/pass_templates/scrollbar_pass_templates")
 local UIWidget = require("scripts/managers/ui/ui_widget")
@@ -17,7 +18,10 @@ local search_field_size = {
 	left_column_size[1],
 	40
 }
-local categories_grid_size = categories_grid_style.size
+local categories_grid_size = {
+	left_column_size[1] - 32,
+	left_column_size[2] - categories_header_size[2] + 15
+}
 local categories_grid_margin = categories_grid_style.margin
 local categories_mask_size = {
 	categories_grid_size[1] + 2 * categories_grid_margin,

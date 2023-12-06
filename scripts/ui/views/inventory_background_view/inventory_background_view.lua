@@ -529,7 +529,7 @@ InventoryBackgroundView._equip_local_changes = function (self)
 	local equip_items = false
 
 	for slot_name, slot_data in pairs(ItemSlotSettings) do
-		if slot_data.equipped_in_inventory then
+		if slot_data.equipped_in_inventory and not self._invalid_slots[slot_name] and not self._duplicated_slots[slot_name] then
 			local previous_item = original_equips[slot_name]
 			local item = preview_loadout[slot_name]
 			local item_gear_id = type(item) == "table" and item.gear_id or type(item) == "string" and item
@@ -1538,6 +1538,12 @@ InventoryBackgroundView.event_on_profile_preset_changed = function (self, profil
 
 	self._active_profile_preset_id = ProfileUtils.get_active_profile_preset_id()
 
+	if not table.is_empty(self._invalid_slots) or not table.is_empty(self._duplicated_slots) or not table.is_empty(self._modified_slots) then
+		Managers.event:trigger("event_add_notification_message", "alert", {
+			text = Localize("loc_inventory_error_loadout_items")
+		})
+	end
+
 	self:_update_presets_missing_warning_marker()
 	self._profile_presets_element:sync_profiles_states()
 	self:_update_presentation_wield_item()
@@ -2098,26 +2104,28 @@ InventoryBackgroundView._setup_inventory = function (self)
 	self:_set_player_profile_information(self._preview_player)
 
 	if self._is_own_player and not self._is_readonly then
-		local invalid_slots = {}
-		local modified_slots = {}
-		local duplicated_slots = {}
+		self:_setup_profile_presets()
 
-		if player_loadout then
-			invalid_slots, modified_slots, duplicated_slots = self:_validate_loadout(player_loadout, true)
+		if not self._active_profile_preset_id then
+			self._invalid_slots = {}
+			self._modified_slots = {}
+			self._duplicated_slots = {}
+
+			self:_validate_loadout(player_loadout)
+
+			if not table.is_empty(self._invalid_slots) or not table.is_empty(self._duplicated_slots) or not table.is_empty(self._modified_slots) then
+				Managers.event:trigger("event_add_notification_message", "alert", {
+					text = Localize("loc_inventory_error_loadout_items")
+				})
+			end
+
+			self:_update_presets_missing_warning_marker()
 		end
 
-		self._invalid_slots = invalid_slots
-		self._modified_slots = modified_slots
-		self._duplicated_slots = duplicated_slots
 		local items = self._inventory_items
 		local new_items, new_items_by_type = self:_get_valid_new_items(items)
 		self._new_items_gear_ids = new_items
 		self._new_items_gear_ids_by_type = new_items_by_type
-	end
-
-	if self._is_own_player and not self._is_readonly then
-		self:_setup_profile_presets()
-		self:_update_presets_missing_warning_marker()
 	end
 end
 

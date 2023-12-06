@@ -1,11 +1,13 @@
 require("scripts/extension_systems/character_state_machine/character_states/player_character_state_base")
 
+local Action = require("scripts/utilities/weapon/action")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local Crouch = require("scripts/extension_systems/character_state_machine/character_states/utilities/crouch")
 local DisruptiveStateTransition = require("scripts/extension_systems/character_state_machine/character_states/utilities/disruptive_state_transition")
 local Dodge = require("scripts/extension_systems/character_state_machine/character_states/utilities/dodge")
 local HealthStateTransitions = require("scripts/extension_systems/character_state_machine/character_states/utilities/health_state_transitions")
 local Stamina = require("scripts/utilities/attack/stamina")
+local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
 local proc_events = BuffSettings.proc_events
 local PlayerCharacterStateDodging = class("PlayerCharacterStateDodging", "PlayerCharacterStateBase")
 
@@ -143,6 +145,29 @@ local function _calculate_dodge_total_time(base_dodge_template, diminishing_retu
 	return time_in_dodge * 10
 end
 
+local function _calculate_sticky_factor(action_sweep_component, weapon_action_component)
+	local is_sticky = action_sweep_component.is_sticky
+
+	if not is_sticky then
+		return 1
+	end
+
+	local weapon_template = WeaponTemplate.current_weapon_template(weapon_action_component)
+	local _, action_settings = Action.current_action(weapon_action_component, weapon_template)
+
+	if not action_settings then
+		return 1
+	end
+
+	local special_active_at_start = weapon_action_component.special_active_at_start
+	local hit_stickyness_settings = special_active_at_start and action_settings.hit_stickyness_settings_special_active or action_settings.hit_stickyness_settings
+	local damage_settings = hit_stickyness_settings.damage
+	local dodge_damage_profile = damage_settings.dodge_damage_profile
+	local sticky_factor = hit_stickyness_settings.dodge_factor or dodge_damage_profile and 0.75 or 1
+
+	return sticky_factor
+end
+
 local tg_on_dodge_data = {}
 local TRAINING_GROUNDS_GAME_MODE_NAME = "training_grounds"
 
@@ -163,7 +188,8 @@ PlayerCharacterStateDodging.on_enter = function (self, unit, dt, t, previous_sta
 
 	local diminishing_return_factor = _calculate_dodge_diminishing_return(dodge_character_state_component, weapon_dodge_template, self._buff_extension)
 	local base_distance = weapon_dodge_template and weapon_dodge_template.base_distance or base_dodge_template.base_distance
-	dodge_character_state_component.distance_left = base_distance * (weapon_dodge_template and weapon_dodge_template.distance_scale or 1) * diminishing_return_factor
+	local sticky_factor = _calculate_sticky_factor(self._action_sweep_component, self._weapon_action_component)
+	dodge_character_state_component.distance_left = base_distance * (weapon_dodge_template and weapon_dodge_template.distance_scale or 1) * diminishing_return_factor * sticky_factor
 	dodge_character_state_component.jump_override_time = t + base_dodge_template.dodge_jump_override_timer
 	local movement_state = self._movement_state_component
 	dodge_character_state_component.started_from_crouch = movement_state.is_crouching

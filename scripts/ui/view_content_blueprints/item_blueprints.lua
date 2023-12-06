@@ -285,7 +285,7 @@ local function generate_blueprints_function(grid_size)
 				local render_context = {
 					camera_focus_slot_name = slot_name
 				}
-				content.icon_load_id = Managers.ui:load_item_icon(item, cb, render_context, dummy_profile, prioritize)
+				content.icon_load_id = Managers.ui:load_item_icon(item, cb)
 			end
 		end,
 		unload_icon = function (parent, widget, element, ui_renderer)

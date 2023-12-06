@@ -25,6 +25,7 @@ CosmeticsVendorView.init = function (self, settings, context)
 	self._parent = parent
 	self._optional_store_service = context and context.optional_store_service
 	self._disable_equipped_status = true
+	Definitions.grid_settings.grid_id = context and context.grid_id
 
 	CosmeticsVendorView.super.init(self, Definitions, settings, context)
 end
@@ -879,8 +880,8 @@ CosmeticsVendorView._setup_option_buttons = function (self, options)
 	for i = 1, #options do
 		local option = options[i]
 		local pressed_callback = callback(self, "on_option_button_pressed", i, option)
-		item_category_sort_button.style = {
-			on_pressed_sound = UISoundEvents.default_button_pressed
+		item_category_sort_button[1].style = {
+			on_pressed_sound = UISoundEvents.tab_secondary_button_pressed
 		}
 		local display_name = option.display_name
 
@@ -901,10 +902,6 @@ CosmeticsVendorView._setup_option_buttons = function (self, options)
 
 	self:_set_scenegraph_size("button_pivot_background", nil, total_height + 30)
 	self:_update_options_tab_bar_position()
-
-	if not self._using_cursor_navigation then
-		self:_play_sound(UISoundEvents.tab_secondary_button_pressed)
-	end
 end
 
 CosmeticsVendorView._update_options_tab_bar_position = function (self)
@@ -957,7 +954,7 @@ CosmeticsVendorView.on_option_button_pressed = function (self, index, option, fo
 	end
 
 	if not self._using_cursor_navigation then
-		self:_play_sound(UISoundEvents.default_button_pressed)
+		self:_play_sound(UISoundEvents.tab_secondary_button_pressed)
 	end
 end
 

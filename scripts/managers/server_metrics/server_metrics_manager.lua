@@ -1,6 +1,6 @@
-local ServerMetricsManager = class("ServerMetricsManager")
 local ServerMetricNames = require("scripts/managers/server_metrics/server_metrics_names")
 local ServerMetricsManagerInterface = require("scripts/managers/server_metrics/server_metrics_manager_dummy")
+local ServerMetricsManager = class("ServerMetricsManager")
 local full_flush_interval = 300
 local target_frame_time = 1 / GameParameters.tick_rate + 0.0005
 local update_interval = 1

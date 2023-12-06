@@ -1,4 +1,4 @@
-FoliageInteraction = class("FoliageInteraction")
+local FoliageInteraction = class("FoliageInteraction")
 
 FoliageInteraction.init = function (self, gui, settings)
 	self._gui = gui
@@ -93,11 +93,10 @@ FoliageInteraction._update_foliage_ai = function (self, local_player_unit, dt, t
 	end
 
 	local ai_broadphase = Managers.state.entity:system("ai_system").broadphase
-	local ai_unit = nil
 	local num_enemies = Broadphase.query(ai_broadphase, player_pos, window_size * 0.5, ENEMIES)
 
 	for i = 1, num_enemies do
-		ai_unit = ENEMIES[i]
+		local ai_unit = ENEMIES[i]
 
 		if Unit.alive(ai_unit) then
 			local unit_pos = POSITION_LOOKUP[ai_unit]

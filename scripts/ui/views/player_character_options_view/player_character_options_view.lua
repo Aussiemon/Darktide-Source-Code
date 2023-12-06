@@ -224,6 +224,7 @@ PlayerCharacterOptionsView._on_inspect_pressed = function (self)
 end
 
 PlayerCharacterOptionsView._on_close_pressed = function (self)
+	self:_play_sound(UISoundEvents.system_popup_exit)
 	Managers.ui:close_view(self.view_name)
 end
 

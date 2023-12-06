@@ -22,6 +22,7 @@ local categories = {
 	"Corruptors",
 	"Covers",
 	"Critical Strikes",
+	"Crosshair",
 	"Daemonhost",
 	"Damage Interface",
 	"Damage",
@@ -61,6 +62,7 @@ local categories = {
 	"Locomotion",
 	"Main Path",
 	"Master Data",
+	"Micro Transaction (\"Premium\") Store",
 	"Minigame",
 	"Minion Attack Selection",
 	"Minion Renegade Captain Custom Attack Selection",
@@ -84,7 +86,6 @@ local categories = {
 	"Pickup Picker",
 	"Pickups",
 	"Player Character",
-	"Premium Store",
 	"Presence",
 	"Projectile Locomotion",
 	"Projectile",
@@ -569,6 +570,7 @@ params.physics_debug_filter = {
 		"filter_all",
 		"filter_debug_dynamic_actors",
 		"filter_debug_unit_selector",
+		"filter_explosion_cover",
 		"filter_ground_material_check",
 		"filter_hang_ledge_collision",
 		"filter_interactable_overlap",
@@ -2626,15 +2628,19 @@ params.hide_hud_world_markers = {
 }
 params.always_show_hit_marker = {
 	value = false,
-	category = "Hud"
+	category = "Crosshair"
 }
 params.always_show_weakspot_hit_marker = {
 	value = false,
-	category = "Hud"
+	category = "Crosshair"
+}
+params.dot_crosshair_override = {
+	value = false,
+	category = "Crosshair"
 }
 params.hit_marker_color_override = {
 	value = false,
-	category = "Hud",
+	category = "Crosshair",
 	options_function = function ()
 		local HudElementCrosshairSettings = require("scripts/ui/hud/elements/crosshair/hud_element_crosshair_settings")
 		local options = table.keys(HudElementCrosshairSettings.hit_indicator_colors)
@@ -3706,6 +3712,10 @@ params.debug_matchmaking = {
 	value = false,
 	category = "Network"
 }
+params.debug_time_since_last_transmit = {
+	value = true,
+	category = "Network"
+}
 params.visualize_input_packets_received = {
 	value = false,
 	category = "Network"
@@ -4363,6 +4373,10 @@ params.debug_moods = {
 	value = false,
 	category = "Mood"
 }
+params.disable_moods = {
+	value = false,
+	category = "Mood"
+}
 params.mood_override = {
 	value = false,
 	category = "Mood",
@@ -4425,7 +4439,7 @@ params.surface_effect_material_override = {
 	end
 }
 params.debug_draw_missing_surface_materials = {
-	value = false,
+	value = true,
 	category = "Damage Interface"
 }
 params.debug_draw_shotshell_impacts = {
@@ -4557,6 +4571,14 @@ params.override_1p_camera_movement_offset_lerp = {
 params.disable_player_hit_reaction = {
 	value = false,
 	category = "Camera"
+}
+params.external_fov_multiplier = {
+	value = 1,
+	num_decimals = 2,
+	category = "Camera",
+	on_value_set = function (new_value, old_value)
+		Managers.state.camera:set_variable("player1", "external_fov_multiplier", new_value)
+	end
 }
 params.free_flight_follow_path_speed = {
 	value = 7.4,
@@ -4720,10 +4742,10 @@ params.disable_coherency_toughness_effect = {
 	value = false,
 	category = "Coherency"
 }
-params.premium_store_custom_time = {
+params.mtx_store_custom_time = {
 	value = 0,
 	hidden = true,
-	category = "Premium Store"
+	category = "Micro Transaction (\"Premium\") Store"
 }
 params.unlock_all_shooting_range_enemies = {
 	value = false,

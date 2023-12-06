@@ -232,7 +232,7 @@ LobbyView._setup_menu_list = function (self)
 			end
 
 			local widget_content = widget.content
-			widget_content.text = text
+			widget_content.original_text = text
 			widget_content.active = current_ready_status
 			widget_content.gamepad_action = "confirm_pressed"
 			local in_preview = parent:_in_preview()

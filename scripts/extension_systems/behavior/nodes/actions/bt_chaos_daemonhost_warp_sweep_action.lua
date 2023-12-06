@@ -3,9 +3,10 @@ require("scripts/extension_systems/behavior/nodes/bt_node")
 local Animation = require("scripts/utilities/animation")
 local Attack = require("scripts/utilities/attack/attack")
 local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
-local Breed = require("scripts/utilities/breed")
+local BreedSettings = require("scripts/settings/breed/breed_settings")
 local ImpactEffect = require("scripts/utilities/attack/impact_effect")
 local Suppression = require("scripts/utilities/attack/suppression")
+local MINION_BREED_TYPE = BreedSettings.types.minion
 local BtChaosDaemonhostWarpSweepAction = class("BtChaosDaemonhostWarpSweepAction", "BtNode")
 
 BtChaosDaemonhostWarpSweepAction.init_values = function (self, blackboard, action_data, node_data)
@@ -111,7 +112,7 @@ BtChaosDaemonhostWarpSweepAction._deal_damage = function (self, unit, action_dat
 	local target_side_names = side:relation_side_names(broadphase_relation)
 	local radius = broadphase_config.radius
 	local from = POSITION_LOOKUP[unit]
-	local num_results = broadphase:query(from, radius, BROADPHASE_RESULTS, target_side_names)
+	local num_results = broadphase:query(from, radius, BROADPHASE_RESULTS, target_side_names, MINION_BREED_TYPE)
 
 	if num_results < 1 then
 		return
@@ -139,15 +140,12 @@ BtChaosDaemonhostWarpSweepAction._deal_damage = function (self, unit, action_dat
 				if angle_to_target < angle then
 					local unit_data_extension = ScriptUnit.extension(hit_unit, "unit_data_system")
 					local breed = unit_data_extension:breed()
+					local tags = breed.tags
 
-					if Breed.is_minion(breed) then
-						local tags = breed.tags
+					if not tags.monster then
+						local damage, result, damage_efficiency = Attack.execute(hit_unit, damage_profile, "power_level", power_level, "attacking_unit", unit, "attack_direction", direction, "hit_zone_name", hit_zone_name, "damage_type", damage_type)
 
-						if not tags.monster then
-							local damage, result, damage_efficiency = Attack.execute(hit_unit, damage_profile, "power_level", power_level, "attacking_unit", unit, "attack_direction", direction, "hit_zone_name", hit_zone_name, "damage_type", damage_type)
-
-							ImpactEffect.play(hit_unit, nil, damage, damage_type, nil, result, to, nil, direction, unit, nil, nil, nil, damage_efficiency, damage_profile)
-						end
+						ImpactEffect.play(hit_unit, nil, damage, damage_type, nil, result, to, nil, direction, unit, nil, nil, nil, damage_efficiency, damage_profile)
 					end
 				end
 			end

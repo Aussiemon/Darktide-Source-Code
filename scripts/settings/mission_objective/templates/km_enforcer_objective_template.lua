@@ -57,6 +57,26 @@ local mission_objective_templates = {
 				header = "loc_objective_km_enforcer_eliminate_target_header",
 				event_type = "end_event",
 				mission_objective_type = "kill"
+			},
+			objective_km_enforcer_twins_elevator = {
+				description = "loc_objective_km_enforcer_twins_elevator_desc",
+				mission_objective_type = "goal",
+				header = "loc_objective_km_enforcer_twins_elevator_header"
+			},
+			objective_km_enforcer_twins_eliminate_twins = {
+				use_music_event = "kill_event_2",
+				description = "loc_objective_km_enforcer_twins_eliminate_twins_desc",
+				header = "loc_objective_km_enforcer_twins_eliminate_twins_header",
+				event_type = "end_event",
+				mission_objective_type = "goal"
+			},
+			objective_km_enforcer_twins_ambush = {
+				use_music_event = "twins_event",
+				description = "loc_objective_km_enforcer_eliminate_target_desc",
+				hidden = true,
+				header = "loc_objective_km_enforcer_eliminate_target_header",
+				event_type = "mid_event",
+				mission_objective_type = "goal"
 			}
 		}
 	}

@@ -269,6 +269,7 @@ end
 
 TestifySnippets.send_telemetry_batch = function ()
 	Testify:make_request("send_telemetry_batch")
+	Testify:make_request("wait_for_batch_post")
 	TestifySnippets.wait(3)
 end
 

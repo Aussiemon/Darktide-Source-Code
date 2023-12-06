@@ -687,13 +687,25 @@ local ui_settings = {
 			display_name_pattern = "loc_weapon_pattern_name_chainaxe_p1",
 			display_name = "loc_chainaxe_p1_m1"
 		},
+		chainaxe_p1_m2 = {
+			display_name_pattern = "loc_weapon_pattern_name_chainaxe_p1",
+			display_name = "loc_chainaxe_p1_m2"
+		},
 		chainsword_2h_p1_m1 = {
 			display_name_pattern = "loc_weapon_pattern_name_chainsword_2h_p1",
 			display_name = "loc_chainsword_2h_p1_m1"
 		},
+		chainsword_2h_p1_m2 = {
+			display_name_pattern = "loc_weapon_pattern_name_chainsword_2h_p1",
+			display_name = "loc_chainsword_2h_p1_m2"
+		},
 		chainsword_p1_m1 = {
 			display_name_pattern = "loc_weapon_pattern_name_chainsword_p1",
 			display_name = "loc_chainsword_p1_m1"
+		},
+		chainsword_p1_m2 = {
+			display_name_pattern = "loc_weapon_pattern_name_chainsword_p1",
+			display_name = "loc_chainsword_p1_m2"
 		},
 		combataxe_p1_m1 = {
 			display_name_pattern = "loc_weapon_pattern_name_combataxe_p1",
@@ -723,9 +735,21 @@ local ui_settings = {
 			display_name_pattern = "loc_weapon_pattern_name_combataxe_p3",
 			display_name = "loc_combataxe_p3_m1"
 		},
+		combataxe_p3_m2 = {
+			display_name_pattern = "loc_weapon_pattern_name_combataxe_p3",
+			display_name = "loc_combataxe_p3_m2"
+		},
+		combataxe_p3_m3 = {
+			display_name_pattern = "loc_weapon_pattern_name_combataxe_p3",
+			display_name = "loc_combataxe_p3_m3"
+		},
 		combatknife_p1_m1 = {
 			display_name_pattern = "loc_weapon_pattern_name_combatknife_p1",
 			display_name = "loc_combatknife_p1_m1"
+		},
+		combatknife_p1_m2 = {
+			display_name_pattern = "loc_weapon_pattern_name_combatknife_p1",
+			display_name = "loc_combatknife_p1_m2"
 		},
 		combatsword_p1_m1 = {
 			display_name_pattern = "loc_weapon_pattern_name_combatsword_p1",
@@ -778,6 +802,14 @@ local ui_settings = {
 		ogryn_club_p1_m1 = {
 			display_name_pattern = "loc_weapon_pattern_name_ogryn_club_p1",
 			display_name = "loc_ogryn_club_p1_m1"
+		},
+		ogryn_club_p1_m2 = {
+			display_name_pattern = "loc_weapon_pattern_name_ogryn_club_p1",
+			display_name = "loc_ogryn_club_p1_m2"
+		},
+		ogryn_club_p1_m3 = {
+			display_name_pattern = "loc_weapon_pattern_name_ogryn_club_p1",
+			display_name = "loc_ogryn_club_p1_m3"
 		},
 		ogryn_club_p2_m1 = {
 			display_name_pattern = "loc_weapon_pattern_name_ogryn_club_p2",
@@ -935,6 +967,10 @@ local ui_settings = {
 			display_name_pattern = "loc_weapon_pattern_name_laspistol_p1",
 			display_name = "loc_laspistol_p1_m1"
 		},
+		laspistol_p1_m3 = {
+			display_name_pattern = "loc_weapon_pattern_name_laspistol_p1",
+			display_name = "loc_laspistol_p1_m3"
+		},
 		ogryn_gauntlet_p1_m1 = {
 			display_name_pattern = "loc_weapon_pattern_name_ogryn_gauntlet_p1",
 			display_name = "loc_ogryn_gauntlet_p1_m1"
@@ -990,6 +1026,10 @@ local ui_settings = {
 		stubrevolver_p1_m1 = {
 			display_name_pattern = "loc_weapon_pattern_name_stubrevolver_p1",
 			display_name = "loc_stubrevolver_p1_m1"
+		},
+		stubrevolver_p1_m2 = {
+			display_name_pattern = "loc_weapon_pattern_name_stubrevolver_p1",
+			display_name = "loc_stubrevolver_p1_m2"
 		}
 	}
 }

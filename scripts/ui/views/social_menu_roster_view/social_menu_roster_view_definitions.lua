@@ -8,6 +8,9 @@ local ViewElementTabMenu = require("scripts/ui/view_elements/view_element_tab_me
 local RosterStyles = require("scripts/ui/views/social_menu_roster_view/social_menu_roster_view_styles")
 local SocialMenuSettings = require("scripts/ui/views/social_menu_view/social_menu_view_settings")
 local ColorUtilities = require("scripts/utilities/ui/colors")
+
+table.dump(RosterStyles.show_hint)
+
 local grid_mask_expansion = RosterStyles.roster_grid.mask_expansion
 local grid_margin = RosterStyles.grid_margin
 local grid_spacing = RosterStyles.grid_spacing
@@ -111,6 +114,14 @@ local roster_scrollbar_position = {
 	0,
 	grid_margin[2],
 	5
+}
+local show_hint_text_style = table.clone(UIFontSettings.body)
+show_hint_text_style.text_horizontal_alignment = "center"
+show_hint_text_style.text_vertical_alignment = "center"
+show_hint_text_style.offset = {
+	0,
+	0,
+	10
 }
 local sort_cycle_button_position = {
 	0,
@@ -374,7 +385,15 @@ local widget_definitions = {
 			pass_type = "hotspot",
 			content_id = "hotspot"
 		}
-	}, "roster_grid_mask")
+	}, "roster_grid_mask"),
+	show_list = UIWidget.create_definition({
+		{
+			value = "",
+			value_id = "text",
+			pass_type = "text",
+			style_id = "text"
+		}
+	}, "roster_panel", nil, nil, RosterStyles.show_hint)
 }
 local tab_button_template = table.clone(ButtonPassTemplates.tab_menu_button)
 tab_button_template[2].style.offset[2] = 3

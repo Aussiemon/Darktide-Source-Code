@@ -45,6 +45,7 @@ local lobby_view_settings = {
 	},
 	ignored_slots = {
 		"slot_pocketable",
+		"slot_pocketable_small",
 		"slot_luggable",
 		"slot_support_ability",
 		"slot_combat_ability",

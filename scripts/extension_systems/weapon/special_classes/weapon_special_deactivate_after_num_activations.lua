@@ -42,8 +42,8 @@ WeaponSpecialDeactivateAfterNumActivations.process_hit = function (self, t, weap
 	end
 end
 
-WeaponSpecialDeactivateAfterNumActivations.on_exit_damage_window = function (self, t, num_hit_enemies)
-	if self._inventory_slot_component.special_active and num_hit_enemies > 0 then
+WeaponSpecialDeactivateAfterNumActivations.on_exit_damage_window = function (self, t, num_hit_enemies, aborted)
+	if self._inventory_slot_component.special_active and (num_hit_enemies > 0 or aborted) then
 		self._inventory_slot_component.num_special_activations = self._inventory_slot_component.num_special_activations + 1
 		self._inventory_slot_component.special_active_start_t = t
 

@@ -52,7 +52,7 @@ Corruptor.events.demolition_stage_start = function (self)
 	end
 end
 
-Corruptor.events.died = function (self)
+Corruptor.events.unit_died = function (self)
 	if self._corruptor_extension then
 		self._corruptor_extension:died()
 	end

@@ -29,6 +29,7 @@ ViewElementProfilePresets.init = function (self, parent, draw_layer, start_scale
 		0
 	}
 	self._costumization_open = false
+	self._tooltip_visibility = true
 	self._presets_id_warning = {}
 	self._presets_id_modified = {}
 
@@ -44,12 +45,10 @@ ViewElementProfilePresets.init = function (self, parent, draw_layer, start_scale
 	local profile_presets = character_data and character_data.profile_presets
 	local account_data = save_manager and save_manager:account_data()
 	local intro_presented = account_data and account_data.profile_preset_intro_presented
+	local pulse_tooltip = true
 
 	if character_data and not intro_presented then
 		self:_setup_intro_grid()
-
-		local pulse_tooltip = true
-
 		self:_set_tooltip_visibility(true, pulse_tooltip)
 
 		local trigger_save = false
@@ -71,8 +70,12 @@ ViewElementProfilePresets.init = function (self, parent, draw_layer, start_scale
 			Managers.save:queue_save()
 		end
 	else
+		if not profile_presets or #profile_presets > 0 then
+			pulse_tooltip = false
+		end
+
 		self:_setup_custom_icons_grid()
-		self:_set_tooltip_visibility(false)
+		self:_set_tooltip_visibility(false, pulse_tooltip)
 	end
 
 	local widgets_by_name = self._widgets_by_name
@@ -387,7 +390,7 @@ ViewElementProfilePresets.cb_add_new_profile_preset = function (self)
 	local profile_presets = ProfileUtils.get_profile_presets()
 	local num_profile_presets = profile_presets and #profile_presets
 
-	if ViewElementProfilePresetsSettings.max_profile_presets <= num_profile_presets then
+	if not profile_presets or ViewElementProfilePresetsSettings.max_profile_presets <= num_profile_presets then
 		return
 	end
 
@@ -404,6 +407,7 @@ ViewElementProfilePresets.cb_add_new_profile_preset = function (self)
 
 	self:on_profile_preset_index_change(profile_preset_widget_index)
 	Managers.save:queue_save()
+	self:_set_tooltip_visibility(self._tooltip_visibility, false)
 end
 
 ViewElementProfilePresets._remove_profile_preset = function (self, widget, element)
@@ -447,6 +451,8 @@ ViewElementProfilePresets._remove_profile_preset = function (self, widget, eleme
 	self:_play_sound(UISoundEvents.remove_profile_preset)
 
 	self._costumization_open = false
+
+	self:_set_tooltip_visibility(self._tooltip_visibility, not new_active_profile_preset_id)
 end
 
 ViewElementProfilePresets.cb_on_profile_preset_icon_grid_layout_changed = function (self, layout, content_blueprints, left_click_callback, right_click_callback, display_name, optional_grow_direction)
@@ -622,6 +628,7 @@ ViewElementProfilePresets.handling_input = function (self)
 end
 
 ViewElementProfilePresets._set_tooltip_visibility = function (self, visible, pulse_tooltip)
+	self._tooltip_visibility = visible
 	local widgets_by_name = self._widgets_by_name
 	widgets_by_name.profile_preset_tooltip.content.visible = visible
 	widgets_by_name.profile_preset_tooltip.content.pulse = visible and pulse_tooltip
@@ -692,7 +699,9 @@ ViewElementProfilePresets.on_profile_preset_index_change = function (self, index
 
 	if index then
 		if self._intro_active then
-			self:_set_tooltip_visibility(false)
+			local pulse_tooltip = not profile_buttons_widgets or #profile_buttons_widgets == 0
+
+			self:_set_tooltip_visibility(false, pulse_tooltip)
 
 			self._intro_active = nil
 		end

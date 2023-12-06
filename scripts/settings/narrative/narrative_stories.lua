@@ -255,6 +255,38 @@ local narrative = {
 				on_complete = on_path_of_trust_chapter_completion("path_of_trust_6")
 			}
 		},
+		s1_twins = {
+			{
+				name = "s1_twins_prologue",
+				backend_id = 1,
+				requirement = event_done("onboarding_step_mission_board_introduction"),
+				narrative_mission_requirement = {
+					1,
+					1,
+					1
+				}
+			},
+			{
+				name = "s1_twins_mission",
+				backend_id = 2,
+				requirement = beyond_story_chapter("s1_twins", "s1_twins_prologue")
+			},
+			{
+				name = "s1_twins_epilogue_1",
+				backend_id = 3,
+				requirement = beyond_story_chapter("s1_twins", "s1_twins_mission")
+			},
+			{
+				name = "s1_twins_epilogue_2",
+				backend_id = 4,
+				requirement = beyond_story_chapter("s1_twins", "s1_twins_epilogue_1")
+			},
+			{
+				name = "s1_twins_epilogue_3",
+				backend_id = 5,
+				requirement = beyond_story_chapter("s1_twins", "s1_twins_epilogue_2")
+			}
+		},
 		level_unlock_popups = {
 			{
 				name = "level_unlock_credits_store_popup",
@@ -369,10 +401,7 @@ local narrative = {
 		hli_contracts_viewed = {},
 		hli_crafting_station_underground_viewed = {},
 		hli_gun_shop_viewed = {},
-		s1_intro_viewed = {},
-		s1_intro_popup_viewed = {
-			requirement = event_done("s1_intro_viewed")
-		}
+		s1_intro_viewed = {}
 	}
 }
 

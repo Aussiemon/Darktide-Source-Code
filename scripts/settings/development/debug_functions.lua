@@ -35,6 +35,7 @@ local categories = {
 	"Immaterium (Party)",
 	"Level & Mission",
 	"Marketing",
+	"Micro Transaction (\"Premium\") Store",
 	"Navigation",
 	"Network",
 	"Pacing",
@@ -51,14 +52,13 @@ local categories = {
 	"Player Inventory",
 	"Player Profiles",
 	"Player Voice",
-	"Premium Store",
 	"Progression",
+	"Scripted Scenarios",
 	"Stagger",
 	"Suppression",
 	"Sweep Spline",
 	"Talents",
 	"Time",
-	"Scripted Scenarios",
 	"UI",
 	"Unit",
 	"VO",
@@ -2855,21 +2855,21 @@ functions.force_character_state = {
 	options_function = character_state_options,
 	on_activated = force_character_state
 }
-functions.reset_premium_store_custom_time = {
+functions.reset_mtx_store_custom_time = {
 	name = "Reset Store Time",
 	button_text = "Reset",
-	category = "Premium Store",
+	category = "Micro Transaction (\"Premium\") Store",
 	on_activated = function (new_value, old_value)
-		ParameterResolver.set_dev_parameter("premium_store_custom_time", 0)
+		ParameterResolver.set_dev_parameter("mtx_store_custom_time", 0)
 	end
 }
-functions.premium_store_custom_time = {
+functions.mtx_store_custom_time = {
 	name = "Show Store Using Custom Time (in milliseconds)",
-	category = "Premium Store",
+	category = "Micro Transaction (\"Premium\") Store",
 	button_text = "Set Time",
 	number_button = true,
 	on_activated = function (new_value, old_value)
-		ParameterResolver.set_dev_parameter("premium_store_custom_time", new_value)
+		ParameterResolver.set_dev_parameter("mtx_store_custom_time", new_value)
 	end
 }
 

@@ -825,9 +825,10 @@ InventoryCosmeticsView._achievement_items = function (self, selected_slot_name)
 				description_text = AchievementUIHelper.localized_description(achievement)
 			end
 
+			local is_visible_before_unlock = not achievement.flags.hide_missing
 			local valid = true
 
-			if valid then
+			if valid and is_visible_before_unlock then
 				achievement_items[#achievement_items + 1] = {
 					item = reward_item,
 					label = AchievementUIHelper.localized_title(achievement),

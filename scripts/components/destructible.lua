@@ -4,7 +4,8 @@ local Destructible = component("Destructible")
 Destructible.init = function (self, unit, is_server)
 	self._unit = unit
 	self._is_server = is_server
-	self._enabled = self:get_data(unit, "start_enabled")
+	local start_enabled = self:get_data(unit, "start_enabled")
+	self._enabled = start_enabled
 	local destructible_extension = ScriptUnit.has_extension(unit, "destructible_system")
 
 	if destructible_extension then
@@ -14,7 +15,7 @@ Destructible.init = function (self, unit, is_server)
 
 		if not disable_physics then
 			local start_visible = self:get_data(unit, "start_visible")
-			local depawn_timer_duration = self:get_data(unit, "depawn_timer_duration")
+			local despawn_timer_duration = self:get_data(unit, "despawn_timer_duration")
 			local despawn_when_destroyed = self:get_data(unit, "despawn_when_destroyed")
 			local collision_actors = self:get_data(unit, "collision_actors")
 			local mass = self:get_data(unit, "mass")
@@ -23,13 +24,30 @@ Destructible.init = function (self, unit, is_server)
 			local force_direction = self:get_data(unit, "force_direction")
 			local is_nav_gate = self:get_data(unit, "is_nav_gate")
 			local broadphase_radius = self:get_data(unit, "broadphase_radius")
+			local use_health_extension_health = self:get_data(unit, "use_health_extension_health")
+			local destructible_stages = self:get_data(unit, "destructible_stages")
 
-			destructible_extension:setup_from_component(depawn_timer_duration, despawn_when_destroyed, collision_actors, mass, speed, direction, force_direction, start_visible, is_nav_gate, broadphase_radius)
-			destructible_extension:set_enabled(self._enabled)
+			if destructible_stages and #destructible_stages > 0 then
+				table.sort(destructible_stages, function (a, b)
+					return b.health_threshold < a.health_threshold
+				end)
+
+				local num_destructible_stages = #destructible_stages
+				self._destructible_stages = destructible_stages
+				self._has_run_first_stage_update = self._is_server
+				self._current_health_percent = 1
+				self._current_stage_index = 1
+				self._was_alive = true
+			end
+
+			destructible_extension:setup_from_component(despawn_timer_duration, despawn_when_destroyed, collision_actors, mass, speed, direction, force_direction, start_visible, is_nav_gate, broadphase_radius, use_health_extension_health)
+			destructible_extension:set_enabled_from_component(start_enabled)
 
 			self._destructible_extension = destructible_extension
 		end
 	end
+
+	return not not self._destructible_stages
 end
 
 Destructible.destroy = function (self, unit)
@@ -37,52 +55,133 @@ Destructible.destroy = function (self, unit)
 end
 
 Destructible.extensions_ready = function (self, world, unit)
-	if self._destructible_extension then
-		self._destructible_extension:setup_stages()
+	local destructible_extension = self._destructible_extension
+
+	if destructible_extension then
+		destructible_extension:setup_stages()
 	end
+
+	self._health_extension = ScriptUnit.has_extension(unit, "health_system")
+end
+
+Destructible.update = function (self, unit, dt, t)
+	local destructible_stages = self._destructible_stages
+
+	if not destructible_stages then
+		return false
+	end
+
+	local health_extension = self._health_extension
+	local current_health_percent = health_extension:current_health_percent()
+
+	if not self._is_server and not self._has_run_first_stage_update then
+		for ii = #destructible_stages, 1, -1 do
+			local stage = destructible_stages[ii]
+			local next_stage = destructible_stages[ii + 1]
+			local within_threshold = nil
+
+			if next_stage then
+				within_threshold = current_health_percent <= stage.health_threshold and next_stage.health_threshold < current_health_percent
+			else
+				within_threshold = current_health_percent <= stage.health_threshold
+			end
+
+			if within_threshold then
+				local hot_join_event_name = stage.hot_join_event_name
+
+				if hot_join_event_name ~= "" then
+					Unit.flow_event(unit, hot_join_event_name)
+				end
+
+				self._current_health_percent = current_health_percent
+				self._current_stage_index = ii
+
+				break
+			end
+		end
+
+		self._has_run_first_stage_update = true
+	end
+
+	local last_health_percent = self._current_health_percent
+	local last_stage_index = self._current_stage_index
+
+	if current_health_percent ~= last_health_percent then
+		for ii = #destructible_stages, 1, -1 do
+			local stage = destructible_stages[ii]
+			local next_stage = destructible_stages[ii + 1]
+			local within_threshold = nil
+
+			if next_stage then
+				within_threshold = current_health_percent <= stage.health_threshold and next_stage.health_threshold < current_health_percent
+			else
+				within_threshold = current_health_percent <= stage.health_threshold
+			end
+
+			local stage_lowered = last_stage_index < ii
+
+			if within_threshold and stage_lowered then
+				Unit.flow_event(unit, stage.event_name)
+
+				self._current_stage_index = ii
+			end
+		end
+
+		self._current_health_percent = current_health_percent
+	end
+
+	return health_extension:is_alive()
 end
 
 Destructible.enable_destructible = function (self, unit)
-	if self._destructible_extension then
+	local destructible_extension = self._destructible_extension
+
+	if destructible_extension then
 		if self._is_server then
 			Component.trigger_event_on_clients(self, "destructible_enable")
 		end
 
 		self._enabled = true
 
-		self._destructible_extension:set_enabled(true)
+		destructible_extension:set_enabled_from_component(true)
 	end
 end
 
 Destructible.disable_destructible = function (self, unit)
-	if self._destructible_extension then
+	local destructible_extension = self._destructible_extension
+
+	if destructible_extension then
 		if self._is_server then
 			Component.trigger_event_on_clients(self, "destructible_disable")
 		end
 
 		self._enabled = false
 
-		self._destructible_extension:set_enabled(false)
+		destructible_extension:set_enabled_from_component(false)
 	end
 end
 
 Destructible.enable_visibility = function (self, unit)
-	if self._destructible_extension then
+	local destructible_extension = self._destructible_extension
+
+	if destructible_extension then
 		if self._is_server then
 			Component.trigger_event_on_clients(self, "visibility_enable")
 		end
 
-		self._destructible_extension:set_visibility(true)
+		destructible_extension:set_visibility(true)
 	end
 end
 
 Destructible.disable_visibility = function (self, unit)
-	if self._destructible_extension then
+	local destructible_extension = self._destructible_extension
+
+	if destructible_extension then
 		if self._is_server then
 			Component.trigger_event_on_clients(self, "visibility_disable")
 		end
 
-		self._destructible_extension:set_visibility(false)
+		destructible_extension:set_visibility(false)
 	end
 end
 
@@ -142,12 +241,44 @@ Destructible.events.visibility_disable = function (self, unit)
 end
 
 Destructible.force_destruct = function (self)
-	if self._destructible_extension then
-		self._destructible_extension:force_destruct()
+	local destructible_extension = self._destructible_extension
+
+	if destructible_extension then
+		destructible_extension:force_destruct()
 	end
 end
 
 Destructible.component_data = {
+	destructible_stages = {
+		ui_type = "struct_array",
+		category = "Destruction Stages",
+		ui_name = "Health Flow Callbacks",
+		definition = {
+			event_name = {
+				ui_type = "text_box",
+				value = "",
+				ui_name = "Callback"
+			},
+			hot_join_event_name = {
+				ui_type = "text_box",
+				value = "",
+				ui_name = "Hot-Join Callback"
+			},
+			health_threshold = {
+				ui_type = "number",
+				min = 0,
+				decimals = 3,
+				value = 1,
+				ui_name = "Threshold",
+				max = 1
+			}
+		},
+		control_order = {
+			"event_name",
+			"hot_join_event_name",
+			"health_threshold"
+		}
+	},
 	start_enabled = {
 		ui_type = "check_box",
 		value = true,
@@ -161,14 +292,14 @@ Destructible.component_data = {
 	despawn_when_destroyed = {
 		ui_type = "check_box",
 		value = true,
-		ui_name = "Despawn when Destroyed"
+		ui_name = "Despawn When Destroyed"
 	},
-	depawn_timer_duration = {
+	despawn_timer_duration = {
 		ui_type = "number",
 		min = 0,
 		decimals = 0,
 		value = 6,
-		ui_name = "Depawn Timer Duration (sec.)",
+		ui_name = "Despawn Timer Duration",
 		step = 5
 	},
 	collision_actors = {
@@ -177,6 +308,20 @@ Destructible.component_data = {
 		ui_name = "Collision Actors to Remove",
 		values = {}
 	},
+	is_nav_gate = {
+		ui_type = "check_box",
+		value = false,
+		ui_name = "Is Nav Gate"
+	},
+	broadphase_radius = {
+		ui_type = "number",
+		min = 10,
+		max = 100,
+		decimals = 0,
+		value = 40,
+		ui_name = "Broadphase Radius",
+		step = 1
+	},
 	mass = {
 		ui_type = "number",
 		min = 0,
@@ -184,7 +329,7 @@ Destructible.component_data = {
 		category = "Force on Destroy",
 		value = 1,
 		decimals = 0,
-		ui_name = "Mass (kg)",
+		ui_name = "Mass",
 		step = 1
 	},
 	speed = {
@@ -192,9 +337,9 @@ Destructible.component_data = {
 		min = 0,
 		max = 1200,
 		category = "Force on Destroy",
-		value = 700,
+		value = 120,
 		decimals = 0,
-		ui_name = "Speed (m/s)",
+		ui_name = "Speed",
 		step = 10
 	},
 	direction = {
@@ -205,9 +350,9 @@ Destructible.component_data = {
 		value = Vector3Box(0, 0, 0)
 	},
 	force_direction = {
-		value = "random_direction",
 		ui_type = "combo_box",
 		category = "Force on Destroy",
+		value = "random_direction",
 		ui_name = "Direction Source",
 		options_keys = {
 			"Random Direction",
@@ -222,19 +367,11 @@ Destructible.component_data = {
 			"provided_direction_world"
 		}
 	},
-	is_nav_gate = {
+	use_health_extension_health = {
 		ui_type = "check_box",
 		value = false,
-		ui_name = "Is Nav Gate"
-	},
-	broadphase_radius = {
-		ui_type = "number",
-		min = 10,
-		max = 100,
-		decimals = 0,
-		value = 40,
-		ui_name = "Broadphase Radius (in m)",
-		step = 1
+		ui_name = "use_health_extension_health",
+		category = "DO NOT USE - IS HACK"
 	},
 	inputs = {
 		force_destruct = {

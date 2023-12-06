@@ -13,6 +13,7 @@ local cosmetics_inspect_view_settings = {
 	ignored_slots = {
 		"slot_primary",
 		"slot_pocketable",
+		"slot_pocketable_small",
 		"slot_luggable",
 		"slot_support_ability",
 		"slot_combat_ability",

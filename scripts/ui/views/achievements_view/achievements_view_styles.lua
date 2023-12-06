@@ -4,7 +4,7 @@ local UISettings = require("scripts/settings/ui/ui_settings")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local left_column_width = 540
 local visible_area_width = 1560
-local visible_area_height = 780
+local visible_area_height = 830
 local achievements_grid_margin = 16
 local achievement_width = 882
 local main_column_width = achievement_width + 2 * achievements_grid_margin
@@ -65,7 +65,7 @@ achievements_view_styles.achievements_grid = {}
 local achievements_grid_style = achievements_view_styles.achievements_grid
 achievements_grid_style.size = {
 	achievement_width,
-	780
+	visible_area_height
 }
 achievements_grid_style.margin = achievements_grid_margin
 achievements_view_styles.achievement_summary = {}
@@ -361,6 +361,7 @@ meta_sub_achievement_icon_style.size = {
 meta_sub_achievement_icon_style.completed_frame = "content/ui/textures/icons/achievements/frames/achieved"
 meta_sub_achievement_icon_style.icon_completed_color = Color.ui_achievement_icon_completed(nil, true)
 meta_sub_achievement_icon_style.icon_completed_hover_color = Color.ui_achievement_icon_completed_hover(nil, true)
+meta_sub_achievement_icon_style.icon_completed_selected_color = Color.ui_achievement_icon_completed_hover(nil, true)
 meta_sub_achievement_style.sub_label = table.clone(UIFontSettings.body)
 local meta_sub_achievement_label_style = meta_sub_achievement_style.sub_label
 meta_sub_achievement_label_style.offset = {

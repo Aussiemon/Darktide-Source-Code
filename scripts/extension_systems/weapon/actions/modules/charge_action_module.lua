@@ -20,15 +20,34 @@ ChargeActionModule.reset = function (self, t, charge_duration_override)
 	action_module_charge_component.charge_level = 0
 end
 
-ChargeActionModule.fixed_update = function (self, dt, t, charge_duration_override)
+ChargeActionModule.fixed_update = function (self, dt, t, charge_duration_override, chained_charge_value)
 	local first_person_unit = self._first_person_unit
 	local action_module_charge_component = self._action_module_charge_component
+	local charge_start_time = action_module_charge_component.charge_start_time
+
+	if chained_charge_value then
+		local charge_template = self._weapon_extension:charge_template()
+		local stat_buffs = self._buff_extension:stat_buffs()
+		local charge_duration = charge_duration_override or charge_template.charge_duration
+		charge_duration = charge_duration * stat_buffs.charge_up_time
+		local charge_delay = charge_template.charge_delay or 0
+		local max_charge = action_module_charge_component.max_charge
+		local time_charged = math.max(0, t - (charge_start_time + charge_delay))
+		local min_charge = time_charged > 0 and charge_template.min_charge or 0
+		local charge_time_percentage = time_charged / charge_duration
+		local charge_level = math.min(math.clamp(min_charge + (1 - min_charge) * charge_time_percentage, min_charge, 1), max_charge)
+		local multiplier = chained_charge_value / charge_level
+		local time_since_start = t - charge_start_time
+		local new_time_since_start = time_since_start * multiplier
+		action_module_charge_component.charge_start_time = t - new_time_since_start
+		charge_start_time = action_module_charge_component.charge_start_time
+	end
+
 	local charge_template = self._weapon_extension:charge_template()
 	local stat_buffs = self._buff_extension:stat_buffs()
 	local charge_duration = charge_duration_override or charge_template.charge_duration
 	charge_duration = charge_duration * stat_buffs.charge_up_time
 	local charge_delay = charge_template.charge_delay or 0
-	local charge_start_time = action_module_charge_component.charge_start_time
 	local max_charge = action_module_charge_component.max_charge
 	local time_charged = math.max(0, t - (charge_start_time + charge_delay))
 	local min_charge = time_charged > 0 and charge_template.min_charge or 0

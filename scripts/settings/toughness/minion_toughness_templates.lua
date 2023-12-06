@@ -57,6 +57,57 @@ local toughness_templates = {
 			sfx = "wwise/events/minions/play_traitor_captain_shield_reactivate",
 			vfx = "content/fx/particles/enemies/renegade_captain/renegade_captain_shield_regen"
 		}
+	},
+	twin_captain_one = {
+		stagger_immune_while_active = true,
+		regeneration_delay = 6,
+		regeneration_speed = 0,
+		clamp_toughness_until_condition = "remove_toughness_clamp",
+		linked_actor = "c_captain_void_shield",
+		ignore_flickering_on_depleted = true,
+		start_depleted = true,
+		ignore_stagger_on_damage = true,
+		template_type = template_types.minion,
+		max = {
+			5000,
+			6000,
+			8000,
+			10000,
+			12000
+		},
+		regenerate_full_delay = {
+			30000,
+			30000,
+			30000,
+			30000,
+			30000
+		},
+		max_hit_percent = {
+			0.5,
+			0.5,
+			0.5,
+			0.5,
+			0.5
+		},
+		effect_template = EffectTemplates.renegade_captain_void_shield,
+		depleted_settings = {
+			stagger_strength_multiplier = 10,
+			set_toughness_broke_behavior = true,
+			explosion_power_level = 500,
+			stagger_duration = {
+				7,
+				7,
+				6,
+				5,
+				4
+			},
+			stagger_type = StaggerSettings.stagger_types.shield_broken,
+			explosion_template = ExplosionTemplates.renegade_captain_toughness_depleted
+		},
+		reactivated_settings = {
+			sfx = "wwise/events/minions/play_traitor_captain_shield_reactivate",
+			vfx = "content/fx/particles/enemies/renegade_captain/renegade_captain_shield_regen"
+		}
 	}
 }
 

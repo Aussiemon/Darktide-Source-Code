@@ -169,6 +169,136 @@ local mission_templates = {
 		spawn_settings = {
 			next_mission = "recent_mission"
 		}
+	},
+	km_enforcer_twins = {
+		mission_name = "loc_mission_name_km_enforcer_twins",
+		wwise_state = "zone_twins",
+		zone_id = "watertown",
+		texture_small = "content/ui/textures/missions/km_enforcer_twins_small",
+		mission_brief_material = "content/environment/cinematic/mission_briefing/mission_briefing_hologram_km_enforcer_twins_01",
+		texture_medium = "content/ui/textures/missions/km_enforcer_twins_medium",
+		face_state_machine_key = "state_machine_missions",
+		mechanism_name = "adventure",
+		texture_big = "content/ui/textures/missions/km_enforcer_twins_big",
+		coordinates = "loc_mission_coordinates_km_enforcer",
+		mission_type = "02",
+		level = "content/levels/watertown_twins/missions/mission_km_enforcer_twins",
+		game_mode_name = "coop_complete_objective",
+		mission_intro_minimum_time = 5,
+		objectives = "km_enforcer",
+		mission_description = "loc_mission_board_main_objective_enforcer_twins_description",
+		cinematics = {
+			intro_abc = {
+				"c_cam"
+			},
+			outro_fail = {
+				"outro_fail"
+			},
+			outro_win = {
+				"outro_win"
+			},
+			traitor_captain_intro = {
+				"traitor_captain_intro"
+			}
+		},
+		pickup_settings = {
+			primary = {
+				ammo = {
+					ammo_cache_pocketable = {
+						-100
+					}
+				},
+				health = {
+					medical_crate_pocketable = {
+						-100
+					}
+				},
+				forge_material = {
+					small_metal = {
+						-100
+					},
+					large_metal = {
+						-100
+					},
+					small_platinum = {
+						-100
+					},
+					large_platinum = {
+						-100
+					}
+				}
+			},
+			secondary = {
+				ammo = {
+					ammo_cache_pocketable = {
+						-100
+					}
+				},
+				health = {
+					medical_crate_pocketable = {
+						-100
+					}
+				},
+				forge_material = {
+					small_metal = {
+						-100
+					},
+					large_metal = {
+						-100
+					},
+					small_platinum = {
+						-100
+					},
+					large_platinum = {
+						-100
+					}
+				}
+			},
+			rubberband_pool = {
+				ammo = {
+					ammo_cache_pocketable = {
+						-100
+					}
+				},
+				health = {
+					medical_crate_pocketable = {
+						-100
+					}
+				}
+			}
+		},
+		hazard_prop_settings = {
+			explosion = 0.3,
+			fire = 0.2,
+			none = 0.4
+		},
+		terror_event_templates = {
+			"terror_events_km_enforcer_twins"
+		},
+		health_station = {},
+		testify_flags = {},
+		mission_brief_vo = {
+			vo_profile = "explicator_a",
+			wwise_route_key = 1,
+			vo_events = {
+				"mission_twins_briefing_a",
+				"mission_twins_briefing_b",
+				"mission_twins_briefing_b2",
+				"mission_twins_briefing_c"
+			}
+		},
+		dialogue_settings = {
+			npc_story_ticker_enabled = false,
+			short_story_ticker_enabled = false,
+			story_ticker_enabled = false
+		},
+		narrative_story = {
+			chapter = "s1_twins_mission",
+			story = "s1_twins"
+		},
+		spawn_settings = {
+			next_mission = "recent_mission"
+		}
 	}
 }
 

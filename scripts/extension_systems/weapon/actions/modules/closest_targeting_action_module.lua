@@ -42,7 +42,7 @@ ClosestTargetingActionModule.fixed_update = function (self, dt, t)
 	for i = 1, num_results do
 		local target_unit = BROADPHASE_RESULTS[i]
 
-		if target_unit and not hit_units[target_unit] then
+		if not hit_units[target_unit] then
 			local direction = Vector3.normalize(Vector3.flat(POSITION_LOOKUP[target_unit] - query_position))
 			local angle = Vector3.angle(forward_direction, direction)
 

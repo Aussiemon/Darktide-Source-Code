@@ -200,7 +200,7 @@ weapon_template.actions = {
 		ammunition_usage = 2,
 		allowed_during_sprint = false,
 		sprint_requires_press_to_interrupt = true,
-		total_time = 0.3,
+		total_time = 0.5,
 		action_movement_curve = {
 			{
 				modifier = 1.2,
@@ -260,7 +260,7 @@ weapon_template.actions = {
 			},
 			shoot_pressed = {
 				action_name = "action_shoot_hip",
-				chain_time = 0.2
+				chain_time = 0.225
 			},
 			zoom = {
 				action_name = "action_zoom",
@@ -355,11 +355,11 @@ weapon_template.actions = {
 			},
 			zoom_shoot = {
 				action_name = "action_shoot_zoomed",
-				chain_time = 0.2
+				chain_time = 0.225
 			},
 			zoom_release = {
 				action_name = "action_unzoom",
-				chain_time = 0.2
+				chain_time = 0.225
 			},
 			special_action_push = {
 				{

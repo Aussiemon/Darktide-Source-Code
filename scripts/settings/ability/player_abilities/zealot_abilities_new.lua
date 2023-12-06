@@ -2,35 +2,29 @@ local LungeTemplates = require("scripts/settings/lunge/lunge_templates")
 local TalentSettings = require("scripts/settings/talent/talent_settings_new")
 local maniac_talent_settings = TalentSettings.zealot_2
 local preacher_talent_settings = TalentSettings.zealot_3
+local base_dash = {
+	hud_icon = "content/ui/textures/icons/abilities/hud/zealot/zealot_ability_chastise_the_wicked",
+	ability_template = "zealot_dash",
+	icon = "content/ui/materials/icons/abilities/combat/default",
+	ability_type = "combat_ability",
+	max_charges = 1,
+	ability_template_tweak_data = {
+		lunge_template_name = LungeTemplates.zealot_dash.name
+	},
+	cooldown = maniac_talent_settings.combat_ability.cooldown,
+	archetypes = {
+		"zealot"
+	}
+}
+local improved_dash = table.clone(base_dash)
+improved_dash.hud_icon = "content/ui/textures/icons/abilities/hud/zealot/zealot_attack_speed_post_ability"
+local improved_double_dash = table.clone(base_dash)
+improved_double_dash.max_charges = 2
+improved_double_dash.hud_icon = "content/ui/textures/icons/abilities/hud/zealot/zealot_attack_speed_post_ability"
 local abilities = {
-	zealot_targeted_dash = {
-		hud_icon = "content/ui/textures/icons/abilities/hud/zealot/zealot_ability_chastise_the_wicked",
-		ability_template = "zealot_dash",
-		icon = "content/ui/materials/icons/abilities/combat/default",
-		ability_type = "combat_ability",
-		max_charges = 1,
-		ability_template_tweak_data = {
-			lunge_template_name = LungeTemplates.zealot_dash.name
-		},
-		cooldown = maniac_talent_settings.combat_ability.cooldown,
-		archetypes = {
-			"zealot"
-		}
-	},
-	zealot_targeted_dash_improved = {
-		hud_icon = "content/ui/textures/icons/abilities/hud/zealot/zealot_ability_chastise_the_wicked",
-		ability_template = "zealot_dash",
-		icon = "content/ui/materials/icons/abilities/combat/default",
-		ability_type = "combat_ability",
-		max_charges = 2,
-		ability_template_tweak_data = {
-			lunge_template_name = LungeTemplates.zealot_dash.name
-		},
-		cooldown = maniac_talent_settings.combat_ability.cooldown,
-		archetypes = {
-			"zealot"
-		}
-	},
+	zealot_targeted_dash = base_dash,
+	zealot_targeted_dash_improved = improved_dash,
+	zealot_targeted_dash_improved_double = improved_double_dash,
 	zealot_relic = {
 		inventory_item_name = "content/items/weapons/player/preacher_relic",
 		cooldown = 60,

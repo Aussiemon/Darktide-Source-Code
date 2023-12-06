@@ -25,6 +25,7 @@ FreeFlightManager.STD_DOF_CHANGE = 0.2
 FreeFlightManager.STD_DOF_PADDING_CHANGE = 0.1
 FreeFlightManager.STD_DOF_SCALE_CHANGE = 0.02
 FreeFlightManager.STD_FOV_CHANGE = math.pi / 72
+FreeFlightManager.STD_FOV_CHANGE_PER_S = math.pi / 18
 
 FreeFlightManager.init = function (self)
 	self._has_terrain = not not rawget(_G, "TerrainDecoration")
@@ -271,6 +272,8 @@ FreeFlightManager._update_camera = function (self, input, dt, camera_data)
 	local move_back = input:get("move_backward")
 	local move_up = input:get("move_up")
 	local move_down = input:get("move_down")
+	local roll_left = input:get("roll_left")
+	local roll_right = input:get("roll_right")
 	local move_controller = input:get("move_controller")
 	local last_pressed_device = InputDevice.last_pressed_device
 	local using_gamepad = not last_pressed_device or last_pressed_device:type() == "xbox_controller"
@@ -320,7 +323,10 @@ FreeFlightManager._update_camera = function (self, input, dt, camera_data)
 
 			local q1 = Quaternion(Vector3(0, 0, 1), -Vector3.x(look) * camera_data.rotation_speed * (using_gamepad and 2 or 1))
 			local q2 = Quaternion(Matrix4x4.x(cm), -Vector3.y(look) * camera_data.rotation_speed * (using_gamepad and 2 or 1))
+			local roll = -roll_left + roll_right
+			local q3 = Quaternion(Matrix4x4.y(cm), roll * camera_data.rotation_speed * (using_gamepad and 2 or 1))
 			local q = Quaternion.multiply(q1, q2)
+			q = Quaternion.multiply(q, q3)
 			cm = Matrix4x4.multiply(cm, Matrix4x4.from_quaternion(q))
 			local x_trans = move_right - move_left + move_controller.x
 			local y_trans = move_forward - move_back + move_controller.y
@@ -368,19 +374,29 @@ FreeFlightManager._update_camera = function (self, input, dt, camera_data)
 	end
 
 	ScriptCamera.set_local_pose(cam, cm)
-	self:_handle_fov(input, cam)
-	self:_handle_dof(input, camera_data, world)
+	self:_handle_fov(dt, input, cam)
+	self:_handle_dof(dt, input, camera_data, world)
 end
 
-FreeFlightManager._handle_fov = function (self, input, camera)
+FreeFlightManager._handle_fov = function (self, dt, input, camera)
 	local fov = Camera.vertical_fov(camera)
+	local increase_fov_hold = input:get("increase_fov_hold")
+	local decrease_fov_hold = input:get("decrease_fov_hold")
 
-	if input:get("increase_fov") then
+	if input:get("increase_fov") and not increase_fov_hold then
 		fov = fov + self.STD_FOV_CHANGE
 	end
 
-	if input:get("decrease_fov") then
+	if input:get("decrease_fov") and not decrease_fov_hold then
 		fov = fov - self.STD_FOV_CHANGE
+	end
+
+	if increase_fov_hold then
+		fov = fov + self.STD_FOV_CHANGE_PER_S * dt
+	end
+
+	if decrease_fov_hold then
+		fov = fov - self.STD_FOV_CHANGE_PER_S * dt
 	end
 
 	Camera.set_vertical_fov(camera, fov)
@@ -400,7 +416,7 @@ FreeFlightManager._reset_dof = function (self, data)
 	self:_debug_print("Dof Focal Scale: %f", data.dof_focal_near_scale)
 end
 
-FreeFlightManager._handle_dof = function (self, input, data, world)
+FreeFlightManager._handle_dof = function (self, dt, input, data, world)
 	local bottom_viewport = ScriptWorld.bottom_viewport(world)
 
 	if not bottom_viewport then

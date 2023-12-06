@@ -318,6 +318,7 @@ local action_data = {
 	combo_attack = {
 		utility_weight = 1,
 		ignore_blocked = true,
+		vo_event = "assault",
 		stagger_reduction = 50,
 		moving_attack = true,
 		move_speed_variable_lerp_speed = 5,

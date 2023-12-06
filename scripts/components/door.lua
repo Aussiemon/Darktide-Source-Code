@@ -203,6 +203,14 @@ Door.events.interaction_success = function (self, door_type, interactor_unit)
 	self:_toggle(nil, interactor_unit)
 end
 
+Door.instantiate_state = function (self)
+	local door_extension = self._door_extension
+
+	if self._is_server and door_extension then
+		door_extension:instantiate_state()
+	end
+end
+
 Door.open = function (self)
 	self:_open("open")
 end
@@ -382,6 +390,10 @@ Door.component_data = {
 		ui_name = "Ignore Broadphase System"
 	},
 	inputs = {
+		instantiate_state = {
+			accessibility = "public",
+			type = "event"
+		},
 		open = {
 			accessibility = "public",
 			type = "event"

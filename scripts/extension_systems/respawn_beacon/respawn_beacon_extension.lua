@@ -64,7 +64,7 @@ RespawnBeaconExtension.update = function (self, unit, dt, t, context)
 	end
 end
 
-RespawnBeaconExtension.setup_from_component = function (self, side)
+RespawnBeaconExtension.setup_from_component = function (self, side, debug_ignore_check_distances)
 	self._side = side
 	local max_player_radius, max_player_height = _player_max_radius_height()
 	local valid_spawn_positions, _, _, _ = RespawnBeaconQueries.spawn_locations(self._nav_world, self._physics_world, self._unit, max_player_radius, max_player_height)

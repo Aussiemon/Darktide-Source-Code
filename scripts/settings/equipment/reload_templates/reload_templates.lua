@@ -11,6 +11,7 @@ _create_reload_template_entry("scripts/settings/equipment/reload_templates/autog
 _create_reload_template_entry("scripts/settings/equipment/reload_templates/autopistol_reload_template")
 _create_reload_template_entry("scripts/settings/equipment/reload_templates/basic_reload_template")
 _create_reload_template_entry("scripts/settings/equipment/reload_templates/bolter_reload_template")
+_create_reload_template_entry("scripts/settings/equipment/reload_templates/stubrevolver_reload_template")
 _create_reload_template_entry("scripts/settings/equipment/reload_templates/flamer_reload_template")
 _create_reload_template_entry("scripts/settings/equipment/reload_templates/lasgun_reload_template")
 _create_reload_template_entry("scripts/settings/equipment/reload_templates/lasgun_elysian_reload_template")

@@ -156,6 +156,14 @@ SmartTagExtension._contextual_tag_template_name = function (self, tagger_unit)
 			return "small_platinum_pickup_over_here"
 		elseif pickup_name == "large_platinum" then
 			return "large_platinum_pickup_over_here"
+		elseif pickup_name == "syringe_corruption_pocketable" then
+			return "syringe_corruption_over_here"
+		elseif pickup_name == "syringe_ability_boost_pocketable" then
+			return "syringe_ability_boost_over_here"
+		elseif pickup_name == "syringe_power_boost_pocketable" then
+			return "syringe_power_boost_over_here"
+		elseif pickup_name == "syringe_speed_boost_pocketable" then
+			return "syringe_speed_boost_over_here"
 		end
 	elseif target_type == "medical_crate_deployable" then
 		return "deployed_medical_crate_over_here"

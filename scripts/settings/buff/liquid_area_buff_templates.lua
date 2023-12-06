@@ -1,4 +1,5 @@
 local Attack = require("scripts/utilities/attack/attack")
+local Breed = require("scripts/utilities/breed")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local BurningSettings = require("scripts/settings/burning/burning_settings")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
@@ -54,6 +55,53 @@ local function _scaled_damage_interval_function(template_data, template_context,
 	local damage_type = template.damage_type
 
 	Attack.execute(unit, damage_template, "power_level", power_level, "damage_type", damage_type, "attacking_unit", optional_owner_unit, "item", optional_source_item)
+end
+
+local function _scaled_increasing_damage_interval_function(template_data, template_context, template)
+	local unit = template_context.unit
+
+	if not HEALTH_ALIVE[unit] then
+		return
+	end
+
+	local breed = template_context.breed
+	local breed_type = breed.breed_type
+	local power_level_by_breed_type = template.power_level
+	local power_level_by_challenge = power_level_by_breed_type[breed_type] or power_level_by_breed_type.default
+	local power_level = Managers.state.difficulty:get_table_entry_by_challenge(power_level_by_challenge)
+	local num_ticks = template_data.num_ticks or 1
+	local power_level_scale_per_tick = template.power_level_scale_per_tick[math.min(num_ticks, #template.power_level_scale_per_tick)]
+	power_level = power_level * power_level_scale_per_tick
+
+	if template_context.is_player then
+		local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
+		local character_state_component = unit_data_extension:read_component("character_state")
+		local is_knocked_down = PlayerUnitStatus.is_knocked_down(character_state_component)
+
+		if is_knocked_down then
+			power_level = power_level * PLAYER_KNOCKED_DOWN_POWER_LEVEL_MULTIPLIER
+		end
+
+		local player = Managers.state.player_unit_spawn:owner(unit)
+		local is_bot = player and not player:is_human_controlled()
+
+		if is_bot then
+			power_level = power_level * BOT_POWER_LEVEL_MULTIPLIER
+		end
+	end
+
+	if template.power_level_random then
+		power_level = power_level * 0.5 + math.random() * power_level
+	end
+
+	local optional_owner_unit = template_context.is_server and template_context.owner_unit or nil
+	local optional_source_item = template_context.is_server and template_context.source_item or nil
+	local damage_template = template.damage_template
+	local damage_type = template.damage_type
+
+	Attack.execute(unit, damage_template, "power_level", power_level, "damage_type", damage_type, "attacking_unit", optional_owner_unit, "item", optional_source_item)
+
+	template_data.num_ticks = num_ticks + 1
 end
 
 local templates = {
@@ -190,10 +238,12 @@ local templates = {
 		max_stacks = 1,
 		is_negative = true,
 		stat_buffs = {
-			[buff_stat_buffs.movement_speed] = -0.19999999999999996
+			[buff_stat_buffs.movement_speed] = -0.19999999999999996,
+			[buff_stat_buffs.toughness_regen_rate_multiplier] = 0
 		},
 		keywords = {
-			buff_keywords.burning
+			buff_keywords.burning,
+			buff_keywords.prevent_toughness_replenish
 		},
 		forbidden_keywords = {
 			buff_keywords.renegade_grenadier_liquid_immunity
@@ -210,19 +260,34 @@ local templates = {
 		},
 		damage_template = DamageProfileTemplates.grenadier_liquid_fire_burning,
 		damage_type = damage_types.burning,
-		interval_func = _scaled_damage_interval_function,
+		interval_func = _scaled_increasing_damage_interval_function,
+		power_level_scale_per_tick = {
+			1,
+			1.25,
+			1.5,
+			2,
+			2.25,
+			2.5,
+			3,
+			3.25,
+			3.5
+		},
 		minion_effects = minion_burning_buff_effects.fire
 	},
 	cultist_flamer_in_fire_liquid = {
-		interval = 0.25,
+		class_name = "interval_buff",
 		predicted = false,
 		hud_priority = 1,
+		interval = 0.25,
 		hud_icon = "content/ui/textures/icons/buffs/hud/states_green_fire_buff_hud",
 		max_stacks = 1,
-		class_name = "interval_buff",
 		is_negative = true,
+		stat_buffs = {
+			[buff_stat_buffs.toughness_regen_rate_multiplier] = 0
+		},
 		keywords = {
-			buff_keywords.burning
+			buff_keywords.burning,
+			buff_keywords.prevent_toughness_replenish
 		},
 		forbidden_keywords = {
 			buff_keywords.cultist_flamer_liquid_immunity
@@ -239,19 +304,34 @@ local templates = {
 		},
 		damage_template = DamageProfileTemplates.cultist_flamer_liquid_fire_burning,
 		damage_type = damage_types.burning,
-		interval_func = _scaled_damage_interval_function,
+		interval_func = _scaled_increasing_damage_interval_function,
+		power_level_scale_per_tick = {
+			1,
+			1.25,
+			1.5,
+			2,
+			2.25,
+			2.5,
+			3,
+			3.25,
+			3.5
+		},
 		minion_effects = minion_burning_buff_effects.chemfire
 	},
 	renegade_flamer_in_fire_liquid = {
-		interval = 0.25,
+		class_name = "interval_buff",
 		predicted = false,
 		hud_priority = 1,
+		interval = 0.25,
 		hud_icon = "content/ui/textures/icons/buffs/hud/states_fire_buff_hud",
 		max_stacks = 1,
-		class_name = "interval_buff",
 		is_negative = true,
+		stat_buffs = {
+			[buff_stat_buffs.toughness_regen_rate_multiplier] = 0
+		},
 		keywords = {
-			buff_keywords.burning
+			buff_keywords.burning,
+			buff_keywords.prevent_toughness_replenish
 		},
 		forbidden_keywords = {
 			buff_keywords.renegade_flamer_liquid_immunity
@@ -268,7 +348,18 @@ local templates = {
 		},
 		damage_template = DamageProfileTemplates.renegade_flamer_liquid_fire_burning,
 		damage_type = damage_types.burning,
-		interval_func = _scaled_damage_interval_function,
+		interval_func = _scaled_increasing_damage_interval_function,
+		power_level_scale_per_tick = {
+			1,
+			1.25,
+			1.5,
+			2,
+			2.25,
+			2.5,
+			3,
+			3.25,
+			3.5
+		},
 		minion_effects = minion_burning_buff_effects.fire
 	}
 }
@@ -462,10 +553,6 @@ templates.in_toxic_gas = {
 			return
 		end
 
-		if DEDICATED_SERVER then
-			return
-		end
-
 		if template_context.is_server then
 			local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
 			local breed = unit_data_extension:breed()
@@ -479,6 +566,10 @@ templates.in_toxic_gas = {
 					template_data.empowered_buff_id = buff_id
 				end
 			end
+		end
+
+		if DEDICATED_SERVER then
+			return
 		end
 
 		local is_local_unit = template_context.is_local_unit
@@ -507,10 +598,6 @@ templates.in_toxic_gas = {
 			return
 		end
 
-		if DEDICATED_SERVER then
-			return
-		end
-
 		if template_context.is_server and template_data.empowered_buff_id then
 			local buff_extension = ScriptUnit.has_extension(unit, "buff_system")
 
@@ -521,6 +608,10 @@ templates.in_toxic_gas = {
 
 				buff_extension:add_internally_controlled_buff("empowered_poxwalker_with_duration", t)
 			end
+		end
+
+		if DEDICATED_SERVER then
+			return
 		end
 
 		local is_local_unit = template_context.is_local_unit
@@ -593,6 +684,497 @@ templates.left_toxic_gas = {
 			off_state = "none"
 		}
 	}
+}
+local TWIN_GAS_BUILDUP_BY_CHALLENGE = {
+	20,
+	20,
+	20,
+	15,
+	12
+}
+
+local function _twin_toxic_gas_interval_function(template_data, template_context, template)
+	local unit = template_context.unit
+
+	if not HEALTH_ALIVE[unit] then
+		return
+	end
+
+	local breed = template_context.breed
+	local breed_type = breed.breed_type
+	local power_level_by_breed_type = template.power_level
+	local power_level_by_challenge = power_level_by_breed_type[breed_type] or power_level_by_breed_type.default
+	local power_level = Managers.state.difficulty:get_table_entry_by_challenge(power_level_by_challenge)
+
+	if template_context.is_player then
+		local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
+		local character_state_component = unit_data_extension:read_component("character_state")
+		local is_knocked_down = PlayerUnitStatus.is_knocked_down(character_state_component)
+
+		if is_knocked_down then
+			power_level = power_level * PLAYER_KNOCKED_DOWN_POWER_LEVEL_MULTIPLIER
+		end
+
+		local player = Managers.state.player_unit_spawn:owner(unit)
+		local is_bot = player and not player:is_human_controlled()
+
+		if is_bot then
+			power_level = power_level * BOT_POWER_LEVEL_MULTIPLIER
+		end
+	end
+
+	local start_t = template_data.start_t
+
+	if start_t then
+		local t = Managers.time:time("gameplay")
+		local duration = t - start_t
+		local max_duration = Managers.state.difficulty:get_table_entry_by_challenge(TWIN_GAS_BUILDUP_BY_CHALLENGE)
+		local percentage = math.min(duration / max_duration, 1)
+		power_level = power_level * percentage
+	end
+
+	local optional_owner_unit = template_context.is_server and template_context.owner_unit or nil
+	local optional_source_item = template_context.is_server and template_context.source_item or nil
+	local damage_template = template.damage_template
+	local damage_type = template.damage_type
+
+	Attack.execute(unit, damage_template, "power_level", power_level, "damage_type", damage_type, "attacking_unit", optional_owner_unit, "item", optional_source_item)
+end
+
+templates.in_cultist_grenadier_gas = {
+	predicted = false,
+	hud_priority = 1,
+	interval = 0.75,
+	hud_icon = "content/ui/textures/icons/buffs/hud/states_toxic_cloud_buff_hud",
+	max_stacks = 1,
+	class_name = "interval_buff",
+	is_negative = true,
+	stat_buffs = {
+		[buff_stat_buffs.toughness_regen_rate_multiplier] = 0
+	},
+	keywords = {
+		buff_keywords.concealed,
+		buff_keywords.in_toxic_gas
+	},
+	power_level = {
+		default = {
+			8,
+			10,
+			12,
+			15,
+			20
+		}
+	},
+	damage_template = DamageProfileTemplates.cultist_grenadier_gas,
+	damage_type = damage_types.corruption,
+	start_func = function (template_data, template_context)
+		local unit = template_context.unit
+
+		if not HEALTH_ALIVE[unit] then
+			return
+		end
+
+		if template_context.is_server then
+			local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
+			local breed = unit_data_extension:breed()
+			local is_player_character = Breed.is_player(breed)
+
+			if not is_player_character then
+				local buff_extension = ScriptUnit.has_extension(unit, "buff_system")
+
+				if buff_extension and not buff_extension:has_keyword("empowered") then
+					local t = Managers.time:time("gameplay")
+					local _, buff_id = buff_extension:add_externally_controlled_buff("empowered_poxwalker", t)
+					template_data.empowered_buff_id = buff_id
+				end
+			end
+		end
+
+		if DEDICATED_SERVER then
+			return
+		end
+
+		local is_local_unit = template_context.is_local_unit
+
+		if not is_local_unit then
+			return
+		end
+
+		if template_context.is_player then
+			local player = Managers.state.player_unit_spawn:owner(unit)
+			local is_bot = player and not player:is_human_controlled()
+
+			if not is_bot then
+				local outline_system = Managers.state.extension:system("outline_system")
+
+				outline_system:set_global_visibility(false)
+			end
+
+			Vo.coughing_event(unit)
+		end
+	end,
+	stop_func = function (template_data, template_context)
+		local unit = template_context.unit
+
+		if not HEALTH_ALIVE[unit] then
+			return
+		end
+
+		if template_context.is_server and template_data.empowered_buff_id then
+			local buff_extension = ScriptUnit.has_extension(unit, "buff_system")
+
+			if buff_extension then
+				buff_extension:remove_externally_controlled_buff(template_data.empowered_buff_id)
+
+				local t = Managers.time:time("gameplay")
+
+				buff_extension:add_internally_controlled_buff("empowered_poxwalker_with_duration", t)
+			end
+		end
+
+		if DEDICATED_SERVER then
+			return
+		end
+
+		local is_local_unit = template_context.is_local_unit
+
+		if not is_local_unit then
+			return
+		end
+
+		if template_context.is_player then
+			local player = Managers.state.player_unit_spawn:owner(unit)
+			local is_bot = player and not player:is_human_controlled()
+
+			if not is_bot then
+				local outline_system = Managers.state.extension:system("outline_system")
+
+				outline_system:set_global_visibility(true)
+			end
+
+			Vo.coughing_ends_event(unit)
+		end
+	end,
+	interval_func = _scaled_damage_interval_function,
+	player_effects = {
+		on_screen_effect = "content/fx/particles/screenspace/player_screen_twins_gas",
+		looping_wwise_stop_event = "wwise/events/player/play_player_gas_exit",
+		looping_wwise_start_event = "wwise/events/player/play_player_gas_enter",
+		stop_type = "stop",
+		wwise_state = {
+			group = "swamped",
+			on_state = "on",
+			off_state = "none"
+		}
+	}
+}
+templates.in_twin_toxic_gas = {
+	predicted = false,
+	hud_priority = 1,
+	interval = 0.25,
+	hud_icon = "content/ui/textures/icons/buffs/hud/states_toxic_cloud_buff_hud",
+	max_stacks = 1,
+	class_name = "interval_buff",
+	is_negative = true,
+	stat_buffs = {
+		[buff_stat_buffs.toughness_regen_rate_multiplier] = 0
+	},
+	keywords = {
+		buff_keywords.concealed,
+		buff_keywords.in_toxic_gas
+	},
+	power_level = {
+		default = {
+			5,
+			8,
+			12.5,
+			15,
+			20
+		}
+	},
+	damage_template = DamageProfileTemplates.toxic_gas_mutator,
+	damage_type = damage_types.corruption,
+	start_func = function (template_data, template_context)
+		local unit = template_context.unit
+
+		if not HEALTH_ALIVE[unit] then
+			return
+		end
+
+		if template_context.is_server then
+			local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
+			local breed = unit_data_extension:breed()
+
+			if EMPOWERED_BREEDS[breed.name] then
+				local buff_extension = ScriptUnit.has_extension(unit, "buff_system")
+
+				if buff_extension and not buff_extension:has_keyword("empowered") then
+					local t = Managers.time:time("gameplay")
+					local _, buff_id = buff_extension:add_externally_controlled_buff("empowered_poxwalker", t)
+					template_data.empowered_buff_id = buff_id
+				end
+			end
+		end
+
+		if DEDICATED_SERVER then
+			return
+		end
+
+		local is_local_unit = template_context.is_local_unit
+
+		if not is_local_unit then
+			return
+		end
+
+		if template_context.is_player then
+			local player = Managers.state.player_unit_spawn:owner(unit)
+			local is_bot = player and not player:is_human_controlled()
+
+			if not is_bot then
+				local outline_system = Managers.state.extension:system("outline_system")
+
+				outline_system:set_global_visibility(false)
+			end
+
+			Vo.coughing_event(unit)
+		end
+
+		local t = Managers.time:time("gameplay")
+		template_data.start_t = t
+	end,
+	stop_func = function (template_data, template_context)
+		local unit = template_context.unit
+
+		if not HEALTH_ALIVE[unit] then
+			return
+		end
+
+		if template_context.is_server and template_data.empowered_buff_id then
+			local buff_extension = ScriptUnit.has_extension(unit, "buff_system")
+
+			if buff_extension then
+				buff_extension:remove_externally_controlled_buff(template_data.empowered_buff_id)
+
+				local t = Managers.time:time("gameplay")
+
+				buff_extension:add_internally_controlled_buff("empowered_poxwalker_with_duration", t)
+			end
+		end
+
+		if DEDICATED_SERVER then
+			return
+		end
+
+		local is_local_unit = template_context.is_local_unit
+
+		if not is_local_unit then
+			return
+		end
+
+		if template_context.is_player then
+			local player = Managers.state.player_unit_spawn:owner(unit)
+			local is_bot = player and not player:is_human_controlled()
+
+			if not is_bot then
+				local outline_system = Managers.state.extension:system("outline_system")
+
+				outline_system:set_global_visibility(true)
+			end
+
+			Vo.coughing_ends_event(unit)
+		end
+	end,
+	interval_func = _twin_toxic_gas_interval_function,
+	player_effects = {
+		on_screen_effect = "content/fx/particles/screenspace/player_screen_twins_gas",
+		looping_wwise_stop_event = "wwise/events/player/play_player_gas_exit",
+		looping_wwise_start_event = "wwise/events/player/play_player_gas_enter",
+		stop_type = "stop",
+		wwise_state = {
+			group = "swamped",
+			on_state = "on",
+			off_state = "none"
+		}
+	}
+}
+templates.left_twin_toxic_gas = {
+	predicted = false,
+	hud_priority = 1,
+	interval = 0.5,
+	hud_icon = "content/ui/textures/icons/buffs/hud/states_toxic_cloud_buff_hud",
+	max_stacks = 1,
+	duration = 0.5,
+	class_name = "interval_buff",
+	is_negative = true,
+	target = buff_targets.player_only,
+	stat_buffs = {
+		[buff_stat_buffs.toughness_regen_rate_multiplier] = 0
+	},
+	keywords = {
+		buff_keywords.concealed
+	},
+	power_level = {
+		default = {
+			1,
+			2,
+			4,
+			6,
+			8
+		}
+	},
+	damage_template = DamageProfileTemplates.toxic_gas_mutator,
+	damage_type = damage_types.corruption,
+	interval_func = _twin_toxic_gas_interval_function
+}
+templates.in_buildup_twin_toxic_gas = {
+	predicted = false,
+	hud_priority = 1,
+	interval = 2,
+	hud_icon = "content/ui/textures/icons/buffs/hud/states_toxic_cloud_buff_hud",
+	max_stacks = 1,
+	class_name = "interval_buff",
+	is_negative = true,
+	stat_buffs = {
+		[buff_stat_buffs.toughness_regen_rate_multiplier] = 0
+	},
+	keywords = {
+		buff_keywords.concealed,
+		buff_keywords.in_toxic_gas
+	},
+	power_level = {
+		default = {
+			6,
+			8,
+			10,
+			12.5,
+			15
+		}
+	},
+	damage_template = DamageProfileTemplates.toxic_gas_mutator,
+	damage_type = damage_types.corruption,
+	start_func = function (template_data, template_context)
+		local unit = template_context.unit
+
+		if not HEALTH_ALIVE[unit] then
+			return
+		end
+
+		if DEDICATED_SERVER then
+			return
+		end
+
+		local is_local_unit = template_context.is_local_unit
+
+		if not is_local_unit then
+			return
+		end
+
+		if template_context.is_player then
+			local player = Managers.state.player_unit_spawn:owner(unit)
+			local is_bot = player and not player:is_human_controlled()
+
+			if not is_bot then
+				local outline_system = Managers.state.extension:system("outline_system")
+
+				outline_system:set_global_visibility(false)
+			end
+
+			Vo.coughing_event(unit)
+		end
+
+		local t = Managers.time:time("gameplay")
+		template_data.start_t = t
+	end,
+	stop_func = function (template_data, template_context)
+		local unit = template_context.unit
+
+		if not HEALTH_ALIVE[unit] then
+			return
+		end
+
+		if DEDICATED_SERVER then
+			return
+		end
+
+		local is_local_unit = template_context.is_local_unit
+
+		if not is_local_unit then
+			return
+		end
+
+		if template_context.is_player then
+			local player = Managers.state.player_unit_spawn:owner(unit)
+			local is_bot = player and not player:is_human_controlled()
+
+			if not is_bot then
+				local outline_system = Managers.state.extension:system("outline_system")
+
+				outline_system:set_global_visibility(true)
+			end
+
+			Vo.coughing_ends_event(unit)
+		end
+	end,
+	interval_func = _twin_toxic_gas_interval_function,
+	player_effects = {
+		looping_wwise_stop_event = "wwise/events/player/play_player_gas_exit",
+		looping_wwise_start_event = "wwise/events/player/play_player_gas_enter",
+		stop_type = "stop",
+		wwise_state = {
+			group = "swamped",
+			on_state = "on",
+			off_state = "none"
+		}
+	}
+}
+templates.left_buildup_twin_toxic_gas = {
+	predicted = false,
+	hud_priority = 1,
+	interval = 2,
+	hud_icon = "content/ui/textures/icons/buffs/hud/states_toxic_cloud_buff_hud",
+	max_stacks = 1,
+	duration = 0.5,
+	class_name = "interval_buff",
+	is_negative = true,
+	target = buff_targets.player_only,
+	stat_buffs = {
+		[buff_stat_buffs.toughness_regen_rate_multiplier] = 0
+	},
+	keywords = {
+		buff_keywords.concealed
+	},
+	power_level = {
+		default = {
+			1,
+			2,
+			4,
+			6,
+			8
+		}
+	},
+	damage_template = DamageProfileTemplates.toxic_gas_mutator,
+	damage_type = damage_types.corruption,
+	interval_func = _twin_toxic_gas_interval_function
+}
+templates.prop_in_druglab_tank_goo = {
+	interval = 1,
+	predicted = false,
+	hud_icon = "content/ui/textures/icons/buffs/hud/states_nurgle_eaten_buff_hud",
+	max_stacks = 1,
+	class_name = "interval_buff",
+	is_negative = true,
+	power_level = {
+		default = {
+			15,
+			30,
+			50,
+			50,
+			75
+		}
+	},
+	damage_template = DamageProfileTemplates.corruptor_liquid_corruption,
+	damage_type = damage_types.corruption,
+	interval_func = _scaled_damage_interval_function
 }
 local cultist_flamer_leaving_liquid_fire_spread_increase = table.clone(templates.leaving_liquid_fire_spread_increase)
 cultist_flamer_leaving_liquid_fire_spread_increase.forbidden_keywords = {

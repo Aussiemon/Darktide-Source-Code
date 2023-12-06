@@ -7,6 +7,7 @@ local LOOPING_VFX_ALIAS = "weapon_overload_loop"
 local LOOPING_SFX_CONFIG = PlayerCharacterLoopingSoundAliases[LOOPING_SFX_ALIAS]
 local vfx_external_properties = {}
 local sfx_external_properties = {}
+local _slot_components, _is_cinematic_active = nil
 
 PlasmagunOverheatEffects.init = function (self, context, slot, weapon_template, fx_sources)
 	local wwise_world = context.wwise_world
@@ -53,6 +54,14 @@ PlasmagunOverheatEffects.fixed_update = function (self, unit, dt, t, frame)
 end
 
 PlasmagunOverheatEffects.update = function (self, unit, dt, t)
+	local is_playing_cinematics = _is_cinematic_active()
+
+	if is_playing_cinematics then
+		self:_stop_all_effects()
+
+		return
+	end
+
 	local inventory_slot_component = self._inventory_slot_component
 	local overheat_percentage = inventory_slot_component.overheat_current_percentage
 	local overheat_configuration = self._overheat_configuration
@@ -304,6 +313,16 @@ function _slot_components(attachments)
 	end
 
 	return component_list
+end
+
+function _is_cinematic_active()
+	local extension_manager = Managers.state.extension
+	local cinematic_scene_system = extension_manager:system("cinematic_scene_system")
+	local cinematic_scene_system_active = cinematic_scene_system:is_active()
+	local cinematic_manager = Managers.state.cinematic
+	local cinematic_manager_active = cinematic_manager:active()
+
+	return cinematic_scene_system_active or cinematic_manager_active
 end
 
 return PlasmagunOverheatEffects

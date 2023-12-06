@@ -28,6 +28,7 @@ local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local DefaultViewInputSettings = require("scripts/settings/input/default_view_input_settings")
 local InputUtils = require("scripts/managers/input/input_utils")
+local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templates")
 local StoreItemDetailView = class("StoreItemDetailView", "BaseView")
 
 StoreItemDetailView.init = function (self, settings, context)
@@ -609,7 +610,7 @@ StoreItemDetailView._setup_description_grid = function (self, description_text)
 	alignment_widgets[#alignment_widgets + 1] = widget
 
 	if #self._items == 1 then
-		local item = self._items[1].item
+		local item = self._items[1].real_item
 		local restrictions_text, present_text = nil
 
 		if item.item_type == "WEAPON_SKIN" then
@@ -2317,6 +2318,13 @@ StoreItemDetailView._update_purchase_buttons = function (self)
 	end
 
 	self._widgets_by_name.purchase_item_button.content.original_text = purchase_button_text
+	local purchase_item_button_style_options = UIFonts.get_font_options_by_style(self._widgets_by_name.purchase_item_button.style.text)
+	local purchase_item_button_width, purchase_item_button_height = self:_text_size(purchase_button_text, self._widgets_by_name.purchase_item_button.style.text.font_type, self._widgets_by_name.purchase_item_button.style.text.font_size, {
+		1920,
+		ButtonPassTemplates.default_button.size[2]
+	}, purchase_item_button_style_options)
+
+	self:_set_scenegraph_size("purchase_button", math.max(ButtonPassTemplates.default_button.size[1], purchase_item_button_width + 100), nil)
 end
 
 StoreItemDetailView._update_wallets = function (self)

@@ -355,11 +355,10 @@ PlayerUnitHealthExtension.was_hit_by_critical_hit_this_render_frame = function (
 end
 
 PlayerUnitHealthExtension.kill = function (self)
-	self._is_dead = true
-
 	Managers.event:trigger("unit_died", self._unit)
 
 	HEALTH_ALIVE[self._unit] = nil
+	self._is_dead = true
 end
 
 PlayerUnitHealthExtension.num_wounds = function (self)

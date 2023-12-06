@@ -275,6 +275,27 @@ local minion_target_selection_weights = {
 		max_distance = 50,
 		near_distance_bonus = 30,
 		combat_vector_main_aggro_weight = 0
+	},
+	renegade_twin_captain = {
+		occupied_slots = -1,
+		stickiness_duration = 8,
+		max_distance = 20,
+		stickiness_bonus = 10,
+		taunt_weight_multiplier = 2,
+		threat_multiplier = 1.5,
+		distance_to_target = 50
+	},
+	twin_captain_two = {
+		knocked_down_weight = -5000,
+		stickiness_duration = 6,
+		disabled = -5000,
+		occupied_slots = -2,
+		ledge_hanging_weight = -20,
+		threat_multiplier = 5,
+		distance_to_target = 1,
+		max_distance = 20,
+		stickiness_bonus = 5000,
+		taunt_weight_multiplier = 20
 	}
 }
 

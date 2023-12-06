@@ -45,7 +45,7 @@ local function _create_slot_from_configuration(configuration, slot_options)
 		wants_hidden_by_gameplay_3p = false,
 		buffable = configuration.buffable,
 		wieldable = configuration.wieldable,
-		wield_input = configuration.wield_input,
+		wield_inputs = configuration.wield_inputs,
 		use_existing_unit_3p = configuration.use_existing_unit_3p,
 		item_loaded = nil,
 		attachment_spawn_status = nil,

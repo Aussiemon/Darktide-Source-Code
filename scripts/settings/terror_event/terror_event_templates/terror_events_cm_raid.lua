@@ -218,17 +218,10 @@ local template = {
 				}
 			},
 			{
-				"spawn_by_breed_name",
-				breed_amount = 1,
-				breed_name = "chaos_ogryn_bulwark",
-				limit_spawners = 1,
-				spawner_group = "spawner_obscura_den_top_floor"
-			},
-			{
 				"spawn_by_points",
 				spawner_group = "spawner_obscura_den_top_floor",
 				limit_spawners = 5,
-				points = 14,
+				points = 12,
 				breed_tags = {
 					{
 						"melee",
@@ -241,11 +234,16 @@ local template = {
 				duration = 4
 			},
 			{
-				"spawn_by_breed_name",
-				breed_amount = 1,
-				breed_name = "renegade_flamer",
-				limit_spawners = 1,
-				spawner_group = "spawner_obscura_den_top_floor"
+				"try_inject_special_minion",
+				spawner_group = "spawner_obscura_den_top_floor",
+				max_breed_amount = 1,
+				points = 12,
+				breed_tags = {
+					{
+						"special",
+						"scrambler"
+					}
+				}
 			},
 			{
 				"delay",
@@ -260,7 +258,7 @@ local template = {
 			},
 			{
 				"delay",
-				duration = 6
+				duration = 8
 			},
 			{
 				"start_random_terror_event",
@@ -274,7 +272,7 @@ local template = {
 				max_breed_amount = 3,
 				spawner_group = "spawner_obscura_den_top_floor",
 				limit_spawners = 5,
-				points = 10,
+				points = 12,
 				breed_tags = {
 					{
 						"melee",
@@ -286,7 +284,7 @@ local template = {
 				"spawn_by_points",
 				spawner_group = "spawner_obscura_den_top_floor",
 				limit_spawners = 5,
-				points = 14,
+				points = 6,
 				breed_tags = {
 					{
 						"melee",
@@ -299,11 +297,16 @@ local template = {
 				duration = 4
 			},
 			{
-				"spawn_by_breed_name",
-				breed_amount = 1,
-				breed_name = "renegade_flamer",
-				limit_spawners = 1,
-				spawner_group = "spawner_obscura_den_top_floor"
+				"try_inject_special_minion",
+				spawner_group = "spawner_obscura_den_top_floor",
+				max_breed_amount = 1,
+				points = 12,
+				breed_tags = {
+					{
+						"special",
+						"scrambler"
+					}
+				}
 			},
 			{
 				"delay",
@@ -318,7 +321,7 @@ local template = {
 			},
 			{
 				"delay",
-				duration = 6
+				duration = 8
 			},
 			{
 				"start_random_terror_event",
@@ -341,17 +344,23 @@ local template = {
 				}
 			},
 			{
-				"spawn_by_breed_name",
-				breed_amount = 1,
-				breed_name = "chaos_ogryn_bulwark",
-				limit_spawners = 1,
-				spawner_group = "spawner_obscura_den_top_floor"
+				"spawn_by_points",
+				max_breed_amount = 2,
+				spawner_group = "spawner_obscura_den_top_floor",
+				limit_spawners = 5,
+				points = 10,
+				breed_tags = {
+					{
+						"melee",
+						"ogryn"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
 				spawner_group = "spawner_obscura_den_top_floor",
 				limit_spawners = 5,
-				points = 20,
+				points = 6,
 				breed_tags = {
 					{
 						"horde"
@@ -363,11 +372,16 @@ local template = {
 				duration = 4
 			},
 			{
-				"spawn_by_breed_name",
-				breed_amount = 1,
-				breed_name = "renegade_flamer",
-				limit_spawners = 1,
-				spawner_group = "spawner_obscura_den_top_floor"
+				"try_inject_special_minion",
+				spawner_group = "spawner_obscura_den_top_floor",
+				max_breed_amount = 1,
+				points = 12,
+				breed_tags = {
+					{
+						"special",
+						"scrambler"
+					}
+				}
 			},
 			{
 				"delay",
@@ -382,7 +396,7 @@ local template = {
 			},
 			{
 				"delay",
-				duration = 6
+				duration = 8
 			},
 			{
 				"start_random_terror_event",
@@ -651,7 +665,7 @@ local template = {
 				sound_event_name = "wwise/events/minions/play_terror_event_alarm",
 				spawner_group = "spawner_obscura_den_bottom_floor_right",
 				limit_spawners = 6,
-				points = 16,
+				points = 12,
 				breed_tags = {
 					{
 						"melee",
@@ -723,7 +737,7 @@ local template = {
 				sound_event_name = "wwise/events/minions/play_terror_event_alarm",
 				spawner_group = "spawner_obscura_den_bottom_floor_right",
 				limit_spawners = 6,
-				points = 14,
+				points = 10,
 				breed_tags = {
 					{
 						"melee",
@@ -795,7 +809,7 @@ local template = {
 				sound_event_name = "wwise/events/minions/play_terror_event_alarm",
 				spawner_group = "spawner_obscura_den_bottom_floor_left",
 				limit_spawners = 6,
-				points = 16,
+				points = 12,
 				breed_tags = {
 					{
 						"melee",
@@ -867,7 +881,7 @@ local template = {
 				sound_event_name = "wwise/events/minions/play_terror_event_alarm",
 				spawner_group = "spawner_obscura_den_bottom_floor_left",
 				limit_spawners = 6,
-				points = 14,
+				points = 12,
 				breed_tags = {
 					{
 						"melee",

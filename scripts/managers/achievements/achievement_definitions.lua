@@ -1765,6 +1765,7 @@ AchievementDefinitions.group_enemies_chaos = {
 	flags = {}
 }
 local category_name = "missions"
+local category_name = "missions_general"
 
 local function _add_mission_objective_family(id, icon)
 	local pattern = "type_" .. id .. "_mission_{index:%d}"
@@ -1924,6 +1925,53 @@ AchievementDefinitions.group_missions = {
 	}),
 	category = category_name,
 	flags = {}
+}
+local category_name = "twins_mission"
+AchievementDefinitions.mission_twins_win = {
+	description = "loc_achievement_mission_twins_win_description",
+	title = "loc_achievement_mission_twins_win_name",
+	icon = "content/ui/textures/icons/achievements/achievement_icon_twins_mission",
+	target = 1,
+	stat_name = "mission_twins",
+	type = AchievementTypesLookup.increasing_stat,
+	category = category_name,
+	flags = {
+		AchievementFlags.hide_missing
+	}
+}
+AchievementDefinitions.difficult_mission_twins_win = {
+	description = "loc_achievement_difficult_mission_twins_win_description",
+	title = "loc_achievement_difficult_mission_twins_win_name",
+	icon = "content/ui/textures/icons/achievements/achievement_icon_twins_mission_level5",
+	target = 5,
+	stat_name = "mission_twins",
+	type = AchievementTypesLookup.increasing_stat,
+	category = category_name,
+	flags = {
+		AchievementFlags.hide_missing
+	}
+}
+AchievementDefinitions.difficult_mission_twins_hard_mode_win = {
+	description = "loc_achievement_difficult_mission_twins_hard_mode_win_description",
+	title = "loc_achievement_difficult_mission_twins_hard_mode_win_name",
+	target = 1,
+	stat_name = "mission_twins_hard_mode",
+	type = AchievementTypesLookup.increasing_stat,
+	category = category_name,
+	flags = {
+		AchievementFlags.hide_missing
+	}
+}
+AchievementDefinitions.mission_twins_secret = {
+	description = "loc_achievement_mission_twins_unlocked_puzzle_description",
+	title = "loc_achievement_mission_twins_unlocked_puzzle_name",
+	target = 1,
+	stat_name = "mission_twins_secret_puzzle_trigger",
+	type = AchievementTypesLookup.increasing_stat,
+	category = category_name,
+	flags = {
+		AchievementFlags.hide_missing
+	}
 }
 local category_name = "account"
 

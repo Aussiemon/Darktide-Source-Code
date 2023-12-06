@@ -1342,13 +1342,6 @@ conditions.has_move_to_position = function (unit, blackboard, scratchpad, condit
 	return has_move_to_position
 end
 
-conditions.renegade_twin_captain_should_disappear = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
-	local behavior_component = blackboard.behavior
-	local should_disappear = behavior_component.should_disappear
-
-	return should_disappear
-end
-
 conditions.renegade_twin_captain_shield_down_recharge = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
 	if is_running then
 		return true
@@ -1382,6 +1375,28 @@ conditions.twin_captain_disappear_idle = function (unit, blackboard, scratchpad,
 	local behavior_component = blackboard.behavior
 
 	return behavior_component.disappear_idle
+end
+
+conditions.renegade_twin_captain_should_disappear = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
+	local behavior_component = blackboard.behavior
+	local should_disappear = behavior_component.should_disappear
+
+	return should_disappear
+end
+
+conditions.renegade_twin_captain_should_disappear_instant = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
+	local behavior_component = blackboard.behavior
+	local should_disappear_instant = behavior_component.should_disappear_instant
+	local flag = "activate_twins"
+	local has_backend_pacing_control_flag = Managers.state.pacing:get_backend_pacing_control_flag(flag)
+
+	if has_backend_pacing_control_flag == false then
+		should_disappear_instant = true
+	elseif has_backend_pacing_control_flag == nil then
+		should_disappear_instant = true
+	end
+
+	return should_disappear_instant
 end
 
 conditions.is_empowered = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)

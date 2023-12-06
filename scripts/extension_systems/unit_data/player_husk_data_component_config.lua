@@ -80,6 +80,7 @@ local husk_data_component_config = {
 		"slot_primary",
 		"slot_secondary",
 		"slot_pocketable",
+		"slot_pocketable_small",
 		"wielded_slot"
 	},
 	slot_primary = {

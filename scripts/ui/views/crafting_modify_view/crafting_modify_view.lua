@@ -83,28 +83,98 @@ CraftingModifyView._setup_sort_options = function (self)
 	if not self._sort_options then
 		self._sort_options = {
 			{
-				display_name = Localize("loc_inventory_item_grid_sort_title_item_power"),
-				sort_function = ItemUtils.sort_comparator({
+				display_name = Localize("loc_inventory_item_grid_sort_title_format_high_low", true, {
+					sort_name = Localize("loc_inventory_item_grid_sort_title_rarity")
+				}),
+				sort_function = ItemUtils.sort_element_key_comparator({
 					">",
+					"item",
+					ItemUtils.compare_item_rarity,
+					">",
+					"item",
+					ItemUtils.compare_item_level,
+					"<",
+					"item",
+					ItemUtils.compare_item_name
+				})
+			},
+			{
+				display_name = Localize("loc_inventory_item_grid_sort_title_format_low_high", true, {
+					sort_name = Localize("loc_inventory_item_grid_sort_title_rarity")
+				}),
+				sort_function = ItemUtils.sort_element_key_comparator({
+					"<",
+					"item",
+					ItemUtils.compare_item_rarity,
+					">",
+					"item",
+					ItemUtils.compare_item_level,
+					"<",
+					"item",
+					ItemUtils.compare_item_name
+				})
+			},
+			{
+				display_name = Localize("loc_inventory_item_grid_sort_title_format_high_low", true, {
+					sort_name = Localize("loc_inventory_item_grid_sort_title_item_power")
+				}),
+				sort_function = ItemUtils.sort_element_key_comparator({
+					">",
+					"item",
 					ItemUtils.compare_item_level,
 					">",
-					ItemUtils.compare_item_type,
+					"item",
+					ItemUtils.compare_item_rarity,
 					"<",
+					"item",
+					ItemUtils.compare_item_name
+				})
+			},
+			{
+				display_name = Localize("loc_inventory_item_grid_sort_title_format_low_high", true, {
+					sort_name = Localize("loc_inventory_item_grid_sort_title_item_power")
+				}),
+				sort_function = ItemUtils.sort_element_key_comparator({
+					"<",
+					"item",
+					ItemUtils.compare_item_level,
+					">",
+					"item",
+					ItemUtils.compare_item_rarity,
+					"<",
+					"item",
+					ItemUtils.compare_item_name
+				})
+			},
+			{
+				display_name = Localize("loc_inventory_item_grid_sort_title_format_increasing_letters", true, {
+					sort_name = Localize("loc_inventory_item_grid_sort_title_name")
+				}),
+				sort_function = ItemUtils.sort_element_key_comparator({
+					"<",
+					"item",
 					ItemUtils.compare_item_name,
-					"<",
+					">",
+					"item",
+					ItemUtils.compare_item_level,
+					">",
+					"item",
 					ItemUtils.compare_item_rarity
 				})
 			},
 			{
-				display_name = Localize("loc_inventory_item_grid_sort_title_item_type"),
-				sort_function = ItemUtils.sort_comparator({
+				display_name = Localize("loc_inventory_item_grid_sort_title_format_decreasing_letters", true, {
+					sort_name = Localize("loc_inventory_item_grid_sort_title_name")
+				}),
+				sort_function = ItemUtils.sort_element_key_comparator({
 					">",
-					ItemUtils.compare_item_type,
-					"<",
+					"item",
 					ItemUtils.compare_item_name,
 					">",
+					"item",
 					ItemUtils.compare_item_level,
-					"<",
+					">",
+					"item",
 					ItemUtils.compare_item_rarity
 				})
 			}
@@ -113,7 +183,7 @@ CraftingModifyView._setup_sort_options = function (self)
 
 	local sort_callback = callback(self, "cb_on_sort_button_pressed")
 
-	self._item_grid:setup_sort_button(self._sort_options, sort_callback, 1)
+	self._item_grid:setup_sort_button(self._sort_options, sort_callback)
 end
 
 CraftingModifyView.on_resolution_modified = function (self, scale)

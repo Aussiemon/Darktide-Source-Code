@@ -6,6 +6,7 @@ local AttackSettings = require("scripts/settings/damage/attack_settings")
 local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
 local Block = require("scripts/utilities/attack/block")
 local Breed = require("scripts/utilities/breed")
+local BreedSettings = require("scripts/settings/breed/breed_settings")
 local Dodge = require("scripts/extension_systems/character_state_machine/character_states/utilities/dodge")
 local GroundImpact = require("scripts/utilities/attack/ground_impact")
 local HitScan = require("scripts/utilities/attack/hit_scan")
@@ -20,6 +21,7 @@ local attack_results = AttackSettings.attack_results
 local attack_types = AttackSettings.attack_types
 local default_backstab_ranged_dot = MinionBackstabSettings.ranged_backstab_dot
 local default_backstab_ranged_event = MinionBackstabSettings.ranged_backstab_event
+local MINION_BREED_TYPE = BreedSettings.types.minion
 local MinionAttack = {}
 local IMPACT_FX_DATA = {}
 local BACKSTAB_POSITION_OFFSET_DISTANCE = 2
@@ -356,12 +358,6 @@ local function _set_shoot_dodge_window(unit, scratchpad, target_unit, dodge_wind
 		extra_timing = player:lag_compensation_rewind_s()
 	end
 
-	local is_dodging = Dodge.is_dodging(target_unit, attack_types.ranged)
-
-	if is_dodging then
-		scratchpad.target_dodged_too_early = true
-	end
-
 	local diff_dodge_window = Managers.state.difficulty:get_table_entry_by_challenge(dodge_window)
 	local timing = math.random_range(diff_dodge_window[1], diff_dodge_window[2]) + extra_timing
 	scratchpad.dodge_window = scratchpad.next_shoot_timing - timing
@@ -680,7 +676,6 @@ MinionAttack.push_nearby_enemies = function (unit, scratchpad, action_data, igno
 		return
 	end
 
-	local ALIVE = ALIVE
 	local pushed_enemies = scratchpad.pushed_enemies
 	local from = POSITION_LOOKUP[unit]
 	local damage_profile = action_data.push_enemies_damage_profile
@@ -692,7 +687,7 @@ MinionAttack.push_nearby_enemies = function (unit, scratchpad, action_data, igno
 			local hit_unit = ENEMY_BROADPHASE_RESULTS[i]
 			local should_ignore = not action_data.push_enemies_include_target_unit and ignored_unit == hit_unit
 
-			if ALIVE[hit_unit] and hit_unit ~= unit and not pushed_enemies[hit_unit] and not should_ignore then
+			if hit_unit ~= unit and not pushed_enemies[hit_unit] and not should_ignore then
 				local to = POSITION_LOOKUP[hit_unit]
 				local direction = Vector3.normalize(Vector3.flat(to - from))
 
@@ -735,7 +730,7 @@ MinionAttack.push_friendly_minions = function (unit, scratchpad, action_data, t,
 	local target_side_names = side:relation_side_names(broadphase_relation)
 	local radius = action_data.push_minions_radius
 	local from = optional_from_position or POSITION_LOOKUP[unit]
-	local num_results = broadphase:query(from, radius, FRIENDLY_BROADPHASE_RESULTS, target_side_names)
+	local num_results = broadphase:query(from, radius, FRIENDLY_BROADPHASE_RESULTS, target_side_names, MINION_BREED_TYPE)
 
 	if num_results < 1 then
 		return
@@ -761,20 +756,17 @@ MinionAttack.push_friendly_minions = function (unit, scratchpad, action_data, t,
 
 			local unit_data_extension = ScriptUnit.extension(hit_unit, "unit_data_system")
 			local breed = unit_data_extension:breed()
+			local tags = breed.tags
 
-			if Breed.is_minion(breed) then
-				local tags = breed.tags
+			if not tags.monster then
+				pushed_minions[hit_unit] = true
 
-				if not tags.monster then
-					pushed_minions[hit_unit] = true
+				Attack.execute(hit_unit, damage_profile, "power_level", power_level, "attacking_unit", unit, "attack_direction", direction, "hit_zone_name", "torso", "damage_type", damage_type)
 
-					Attack.execute(hit_unit, damage_profile, "power_level", power_level, "attacking_unit", unit, "attack_direction", direction, "hit_zone_name", "torso", "damage_type", damage_type)
+				if push_minions_fx_template and (not scratchpad.push_minions_fx_cooldown or scratchpad.push_minions_fx_cooldown <= t) then
+					MinionPushFx.play_fx(unit, hit_unit, push_minions_fx_template)
 
-					if push_minions_fx_template and (not scratchpad.push_minions_fx_cooldown or scratchpad.push_minions_fx_cooldown <= t) then
-						MinionPushFx.play_fx(unit, hit_unit, push_minions_fx_template)
-
-						scratchpad.push_minions_fx_cooldown = t + math.random_range(action_data.push_minions_fx_cooldown[1], action_data.push_minions_fx_cooldown[2])
-					end
+					scratchpad.push_minions_fx_cooldown = t + math.random_range(action_data.push_minions_fx_cooldown[1], action_data.push_minions_fx_cooldown[2])
 				end
 			end
 		end
@@ -1233,12 +1225,11 @@ function _melee_with_broadphase(unit, breed, scratchpad, action_data, blackboard
 	table.clear(ATTACK_BROADPHASE_RESULTS)
 
 	local num_results = broadphase:query(from_position, broadphase_radius, ATTACK_BROADPHASE_RESULTS, target_side_names)
-	local ALIVE = ALIVE
 
 	for i = 1, num_results do
 		local hit_unit = ATTACK_BROADPHASE_RESULTS[i]
 
-		if ALIVE[hit_unit] and hit_unit ~= unit then
+		if hit_unit ~= unit then
 			local hit_unit_position = POSITION_LOOKUP[hit_unit]
 			local is_dodging, dodge_type = Dodge.is_dodging(hit_unit, attack_types.melee)
 			local in_reach = _check_weapon_reach(from_position, hit_unit_position, action_data, is_dodging, nil, attack_event)

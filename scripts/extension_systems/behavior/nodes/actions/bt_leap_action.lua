@@ -2,6 +2,7 @@ require("scripts/extension_systems/behavior/nodes/bt_node")
 
 local Attack = require("scripts/utilities/attack/attack")
 local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
+local BreedSettings = require("scripts/settings/breed/breed_settings")
 local Catapulted = require("scripts/extension_systems/character_state_machine/character_states/utilities/catapulted")
 local ChaosSpawnSettings = require("scripts/settings/monster/chaos_spawn_settings")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
@@ -12,6 +13,7 @@ local MinionPerception = require("scripts/utilities/minion_perception")
 local NavQueries = require("scripts/utilities/nav_queries")
 local Push = require("scripts/extension_systems/character_state_machine/character_states/utilities/push")
 local Trajectory = require("scripts/utilities/trajectory")
+local PLAYER_BREED_TYPE = BreedSettings.types.player
 local BtLeapAction = class("BtLeapAction", "BtNode")
 
 BtLeapAction.enter = function (self, unit, breed, blackboard, scratchpad, action_data, t)
@@ -400,7 +402,7 @@ BtLeapAction._push_or_catapult_players = function (self, unit, scratchpad, actio
 	local broadphase = scratchpad.broadphase
 	local unit_position = POSITION_LOOKUP[unit]
 	local enemy_side_names = scratchpad.enemy_side_names
-	local num_results = broadphase:query(unit_position, radius, broadphase_results, enemy_side_names)
+	local num_results = broadphase:query(unit_position, radius, broadphase_results, enemy_side_names, PLAYER_BREED_TYPE)
 
 	for i = 1, num_results do
 		local hit_unit = broadphase_results[i]

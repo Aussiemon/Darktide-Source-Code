@@ -5,7 +5,8 @@ local social_menu_view_settings = {
 	max_num_party_members = 4,
 	widget_fade_time = 0.3,
 	party_list_refresh_time = 2,
-	roster_list_refresh_time = 1
+	roster_list_refresh_time = 2,
+	tab_switch_start_update_delay_time = 0.4
 }
 
 return settings("SocialMenuViewSettings", social_menu_view_settings)

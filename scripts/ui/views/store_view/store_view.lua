@@ -28,26 +28,31 @@ local DIRECTION = {
 }
 local STORE_LAYOUT = {
 	{
+		telemetry_name = "featured",
 		display_name = "loc_premium_store_category_title_featured",
 		storefront = "premium_store_featured",
 		template = ButtonPassTemplates.terminal_tab_menu_with_divider_button
 	},
 	{
+		telemetry_name = "veteran",
 		display_name = "loc_premium_store_category_skins_title_veteran",
 		storefront = "premium_store_skins_veteran",
 		template = ButtonPassTemplates.terminal_tab_menu_with_divider_button
 	},
 	{
+		telemetry_name = "zealot",
 		display_name = "loc_premium_store_category_skins_title_zealot",
 		storefront = "premium_store_skins_zealot",
 		template = ButtonPassTemplates.terminal_tab_menu_with_divider_button
 	},
 	{
+		telemetry_name = "psyker",
 		display_name = "loc_premium_store_category_skins_title_psyker",
 		storefront = "premium_store_skins_psyker",
 		template = ButtonPassTemplates.terminal_tab_menu_with_divider_button
 	},
 	{
+		telemetry_name = "ogryn",
 		display_name = "loc_premium_store_category_skins_title_ogryn",
 		storefront = "premium_store_skins_ogryn",
 		template = ButtonPassTemplates.terminal_tab_menu_button
@@ -287,6 +292,8 @@ StoreView.setup_aquila_store = function (self)
 		return
 	end
 
+	self:_set_telemetry_name("aquilas")
+
 	local page_layout = category_pages_layout_data[self._selected_page_index]
 	local grid_settings = page_layout.grid_settings
 	local elements = page_layout.elements
@@ -519,8 +526,33 @@ StoreView._on_category_index_selected = function (self, index, on_complete_callb
 	return self:_fetch_storefront(storefront, on_complete_callback)
 end
 
+StoreView._clear_telemetry_name = function (self)
+	local telemetry_name = self._telemetry_name
+
+	if telemetry_name then
+		Managers.telemetry_events:close_view(telemetry_name)
+
+		self._telemetry_name = nil
+	end
+end
+
+StoreView._set_telemetry_name = function (self, category, page)
+	self:_clear_telemetry_name()
+
+	page = page or 1
+	local telemetry_name = string.format("%s_store_%d_view", category, page)
+	self._telemetry_name = telemetry_name
+
+	Managers.telemetry_events:open_view(telemetry_name)
+end
+
 StoreView._on_page_index_selected = function (self, page_index)
 	self._selected_page_index = page_index
+	local category_index = self._selected_category_index
+	local category_layout = STORE_LAYOUT[category_index]
+	local category_name = category_layout.telemetry_name
+
+	self:_set_telemetry_name(category_name, page_index)
 
 	if self._page_panel then
 		self._page_panel:set_selected_index(page_index)
@@ -546,20 +578,8 @@ StoreView._on_page_index_selected = function (self, page_index)
 		self:_set_selected_grid_index(grid_index)
 	end
 
-	if #category_pages_layout_data == 1 then
-		self._widgets_by_name.navigation_arrow_left.content.visible = false
-		self._widgets_by_name.navigation_arrow_right.content.visible = false
-	else
-		self._widgets_by_name.navigation_arrow_left.content.visible = page_index > 1
-		self._widgets_by_name.navigation_arrow_right.content.visible = page_index < #category_pages_layout_data
-	end
-end
-
-StoreView._on_storefront_selected = function (self, storefront, on_complete_callback)
-	self._category_pages_layout_data = nil
-	self._active_grid_settings = nil
-
-	self:_fetch_storefront(storefront, on_complete_callback)
+	self._widgets_by_name.navigation_arrow_left.content.visible = page_index > 1
+	self._widgets_by_name.navigation_arrow_right.content.visible = page_index < #category_pages_layout_data
 end
 
 local function sum(arr, from, to)
@@ -1403,6 +1423,8 @@ StoreView.can_exit = function (self)
 end
 
 StoreView.on_exit = function (self)
+	self:_clear_telemetry_name()
+
 	if self._world_spawner then
 		self._world_spawner:destroy()
 
@@ -1607,14 +1629,6 @@ StoreView._destroy_current_grid = function (self)
 
 		self._grid_widgets = nil
 	end
-end
-
-StoreView._move_to_aquila_store = function (self, needed_balance, element)
-	self._aquila_minimum_value = needed_balance
-	self._stored_offer = element
-	local on_complete_callback = callback(self, "setup_aquila_store")
-
-	self:_fetch_storefront(AQUILA_STORE_LAYOUT.storefront, on_complete_callback)
 end
 
 StoreView.cb_on_grid_entry_left_pressed = function (self, widget, element)

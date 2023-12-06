@@ -15,6 +15,7 @@ local UIWidgetGrid = require("scripts/ui/widget_logic/ui_widget_grid")
 local ViewElementPlayerSocialPopup = require("scripts/ui/view_elements/view_element_player_social_popup/view_element_player_social_popup")
 local ViewSettings = require("scripts/ui/views/social_menu_roster_view/social_menu_roster_view_settings")
 local XboxLive = require("scripts/foundation/utilities/xbox_live")
+local InputUtils = require("scripts/managers/input/input_utils")
 local OnlineStatus = SocialConstants.OnlineStatus
 local PartyStatus = SocialConstants.PartyStatus
 local FriendStatus = SocialConstants.FriendStatus
@@ -326,6 +327,7 @@ SocialMenuRosterView.init = function (self, settings, context)
 	self._fade_delay = 0
 	self._selected_roster_widget_column_last_frame = 1
 	self._icon_unload_queue = {}
+	self._show_rooster_list = true
 
 	SocialMenuRosterView.super.init(self, Definitions, settings)
 end
@@ -335,6 +337,7 @@ SocialMenuRosterView.on_enter = function (self)
 
 	self._pass_input = true
 	self._allow_close_hotkey = false
+	self._widgets_by_name.show_list.content.visible = not self._show_rooster_list
 	local view_element_definitions = self._definitions.view_elements
 
 	for element_name, params in pairs(view_element_definitions) do
@@ -349,7 +352,10 @@ SocialMenuRosterView.on_enter = function (self)
 
 	local force_refresh_lists = true
 
-	self:_refresh_roster_lists(force_refresh_lists)
+	if self._show_rooster_list then
+		self:_refresh_roster_lists(force_refresh_lists)
+	end
+
 	self:_refresh_party_list()
 	self:set_next_roster_filter(FRIENDS_LIST)
 	self:_fade_widgets("in")
@@ -359,6 +365,11 @@ SocialMenuRosterView.on_enter = function (self)
 	end
 
 	self:_register_event("event_player_profile_updated", "event_player_profile_updated")
+end
+
+SocialMenuRosterView._change_show_list = function (self)
+	self._show_rooster_list = not self._show_rooster_list
+	self._widgets_by_name.show_list.content.visible = not self._show_rooster_list
 end
 
 SocialMenuRosterView.on_exit = function (self)
@@ -409,13 +420,7 @@ SocialMenuRosterView.update = function (self, dt, t, input_service)
 		end
 
 		if new_list_data then
-			for i = 1, #new_list_data do
-				local list = new_list_data[i]
-
-				if list then
-					self:_update_roster_list(i, list, i == current_list_index and not next_list_index)
-				end
-			end
+			self:_update_roster_list(current_list_index, new_list_data, not next_list_index)
 
 			self._new_list_data = nil
 		end
@@ -439,6 +444,7 @@ SocialMenuRosterView.update = function (self, dt, t, input_service)
 
 		self._current_list_index = next_list_index
 		self._next_list_index = nil
+		self._refresh_roster_delay = SocialMenuSettings.tab_switch_start_update_delay_time
 	end
 
 	self:_update_portraits()
@@ -530,6 +536,12 @@ SocialMenuRosterView._on_navigation_input_changed = function (self, optional_sta
 	end
 
 	self._focused_grid_id = not is_using_cursor_navigation and focused_grid_id or nil
+	local button_hint_text = "loc_action_interaction_show"
+	local gamepad_action = "social_show_list"
+	local service_type = "View"
+	local alias_key = Managers.ui:get_input_alias_key(gamepad_action, service_type)
+	local input_text = InputUtils.input_text_for_current_input_device(service_type, alias_key)
+	self._widgets_by_name.show_list.content.text = string.format(Localize("loc_input_legend_text_template"), input_text, Localize(button_hint_text))
 end
 
 SocialMenuRosterView.set_next_roster_filter = function (self, list_index)
@@ -544,6 +556,10 @@ SocialMenuRosterView.set_next_roster_filter = function (self, list_index)
 		else
 			list_index = math.index_wrapper(list_index - 1, num_lists)
 		end
+	end
+
+	if self._roster_lists_promise and self._roster_lists_promise:is_pending() then
+		self._roster_lists_promise:cancel()
 	end
 
 	self._player_list_tab_bar:set_selected_index(list_index)
@@ -739,12 +755,12 @@ SocialMenuRosterView.cb_report_player = function (self, player_info)
 	self:_close_popup_menu()
 end
 
-SocialMenuRosterView.cb_update_roster = function (self, results)
+SocialMenuRosterView.cb_update_roster = function (self, result)
 	if self._destroyed then
 		return
 	end
 
-	self._new_list_data = results
+	self._new_list_data = result
 	self._refresh_roster_delay = SocialMenuSettings.roster_list_refresh_time
 end
 
@@ -931,7 +947,7 @@ SocialMenuRosterView._update_list_refreshes = function (self, dt)
 	local refresh_roster_delay = self._refresh_roster_delay or 0
 	refresh_roster_delay = refresh_roster_delay - dt
 
-	if refresh_roster_delay <= 0 then
+	if refresh_roster_delay <= 0 and self._show_rooster_list then
 		self:_refresh_roster_lists()
 
 		refresh_roster_delay = SocialMenuSettings.roster_list_refresh_time
@@ -1392,6 +1408,10 @@ SocialMenuRosterView._handle_input = function (self, input_service, dt, t)
 		return
 	end
 
+	if input_service:get("social_show_list") and not self._show_rooster_list then
+		self:_change_show_list()
+	end
+
 	local focused_grid_id = self._focused_grid_id
 
 	if focused_grid_id then
@@ -1791,28 +1811,44 @@ SocialMenuRosterView._refresh_party_list = function (self)
 end
 
 SocialMenuRosterView._refresh_roster_lists = function (self, force_refresh)
-	local blocked_promise = social_service:fetch_blocked_players()
+	if not self._show_rooster_list then
+		return
+	end
+
+	local promise = nil
 	local player = self:_player()
 	local character_id = player:character_id()
-	local invites_promise = social_service:fetch_friend_invites(force_refresh):next(function (response)
-		return response
-	end):catch(function (error_data)
-		Log.error("SocialMenuRosterView", "invites_promise failed")
+	local current_tab_index = self._current_list_index
 
-		return Promise.rejected(error_data)
-	end)
-	local friends_promise = social_service:fetch_friends(force_refresh)
-	local recent_companions_promise = social_service:fetch_recent_companions(character_id, force_refresh)
-	local players_on_server_promise = social_service:fetch_players_on_server()
-	local on_done = callback(self, "cb_update_roster")
-	local roster_lists_promise = Promise.all(friends_promise, recent_companions_promise, players_on_server_promise, invites_promise, blocked_promise):next(on_done):catch(function (e)
-		if type(e) == "table" then
-			Log.error("SocialMenuRosterView", "Failed fetching social players: %s", table.tostring(e, 2))
-		else
-			Log.error("SocialMenuRosterView", "Failed fetching social players: %s", e)
-		end
-	end)
-	self._roster_lists_promise = roster_lists_promise
+	if current_tab_index == FRIENDS_LIST then
+		promise = social_service:fetch_friends(force_refresh)
+	elseif current_tab_index == PREVIOUS_MISSION_COMPANIONS_LIST then
+		promise = social_service:fetch_recent_companions(character_id, force_refresh)
+	elseif current_tab_index == HUB_PLAYERS_LIST then
+		promise = social_service:fetch_players_on_server()
+	elseif current_tab_index == FRIEND_INVITES_LIST then
+		promise = social_service:fetch_friend_invites(force_refresh):next(function (response)
+			return response
+		end):catch(function (error_data)
+			Log.error("SocialMenuRosterView", "invites_promise failed")
+
+			return Promise.rejected(error_data)
+		end)
+	elseif current_tab_index == BLOCKED_PLAYERS_LIST then
+		promise = social_service:fetch_blocked_players()
+	end
+
+	if promise then
+		promise:next(callback(self, "cb_update_roster")):catch(function (e)
+			if type(e) == "table" then
+				Log.error("SocialMenuRosterView", "Failed fetching social players: %s", table.tostring(e, 2))
+			else
+				Log.error("SocialMenuRosterView", "Failed fetching social players: %s", e)
+			end
+		end)
+
+		self._roster_lists_promise = promise
+	end
 end
 
 local _show_confirmation_popup_context = nil

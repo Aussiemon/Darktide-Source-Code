@@ -133,6 +133,10 @@ PickupSpawner.component_data = {
 			"small_grenade",
 			"small_metal",
 			"small_platinum",
+			"syringe_ability_boost_pocketable",
+			"syringe_corruption_pocketable",
+			"syringe_power_boost_pocketable",
+			"syringe_speed_boost_pocketable",
 			"tome"
 		},
 		options_values = {
@@ -154,6 +158,10 @@ PickupSpawner.component_data = {
 			"small_grenade",
 			"small_metal",
 			"small_platinum",
+			"syringe_ability_boost_pocketable",
+			"syringe_corruption_pocketable",
+			"syringe_power_boost_pocketable",
+			"syringe_speed_boost_pocketable",
 			"tome"
 		}
 	},

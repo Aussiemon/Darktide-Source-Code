@@ -929,7 +929,7 @@ MissionBoardViewStyles.play_team_button_legend = {
 		text_color = MissionBoardViewSettings.color_text_body,
 		offset = {
 			0,
-			40,
+			50,
 			2
 		}
 	}

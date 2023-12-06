@@ -189,21 +189,20 @@ ForceFieldSystem._check_unit_collisions = function (self, t)
 		local unit_extension_data = extension_data[force_field_unit]
 		local units_inside = unit_extension_data.units_inside
 		local owner_unit = extension.owner_unit
-		local is_owner_alive = ALIVE[owner_unit]
-		local is_owner_health_alive = HEALTH_ALIVE[extension.owner_unit]
+		local is_owner_health_alive = HEALTH_ALIVE[owner_unit]
 		local marked_for_deletion = unit_extension_data.marked_for_deletion
 
-		if is_owner_alive and is_owner_health_alive and not marked_for_deletion then
+		if is_owner_health_alive and not marked_for_deletion then
 			local buff_extension = extension.buff_extension
 
 			for ii = 1, unit_extension_data.num_results do
 				local unit = unit_extension_data.broadphase_results[ii]
-				local unit_pos = POSITION_LOOKUP[unit]
 
-				if ALIVE[unit] and HEALTH_ALIVE[unit] then
+				if HEALTH_ALIVE[unit] then
 					local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
 					local breed = unit_data_extension:breed()
 					local unit_radius = breed.player_locomotion_constrain_radius * 2
+					local unit_pos = POSITION_LOOKUP[unit]
 
 					if buff_extension and extension:is_unit_colliding(unit_pos, unit_radius) then
 						if not units_inside[unit] then
@@ -212,7 +211,7 @@ ForceFieldSystem._check_unit_collisions = function (self, t)
 							if param_table then
 								param_table.passing_unit = unit
 								param_table.force_field_unit = force_field_unit
-								param_table.force_field_owner_unit = extension.owner_unit
+								param_table.force_field_owner_unit = owner_unit
 								param_table.is_player_unit = false
 
 								buff_extension:add_proc_event(proc_events.on_unit_touch_force_field, param_table)

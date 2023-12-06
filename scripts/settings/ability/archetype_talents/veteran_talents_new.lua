@@ -310,6 +310,10 @@ local archetype_talents = {
 			passive = {
 				buff_template_name = "veteran_combat_ability_increased_ranged_and_weakspot_damage_outlines",
 				identifier = "veteran_combat_ability_increased_ranged_and_weakspot_damage_outlines"
+			},
+			player_ability = {
+				ability_type = "combat_ability",
+				ability = PlayerAbilities.veteran_combat_ability_stance_improved
 			}
 		},
 		veteran_combat_ability_ranged_roamer_outlines = {

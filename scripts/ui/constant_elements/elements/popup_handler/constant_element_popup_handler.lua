@@ -386,6 +386,7 @@ ConstantElementPopupHandler._create_popup_content = function (self, options, ui_
 			text = option.no_localization and option.text or Localize(option.text, option.text_params ~= nil, option.text_params)
 			options_missing_hotkeys = not hotkey or options_missing_hotkeys
 			content.text = text
+			content.original_text = text
 			content.hotkey = option.hotkey
 			content.callback = option.callback
 			content.close_on_pressed = option.close_on_pressed

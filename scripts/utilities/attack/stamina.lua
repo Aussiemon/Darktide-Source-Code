@@ -59,6 +59,24 @@ Stamina.drain_pecentage = function (unit, amount_percentage, t)
 	return new_fraction, stamina_depleted
 end
 
+Stamina.drain_pecentage_of_base_stamina = function (unit, amount_percentage, t)
+	local unit_data_ext = ScriptUnit.extension(unit, "unit_data_system")
+	local archetype = unit_data_ext:archetype()
+	local base_stamina_template = archetype.stamina
+	local weapon_extension = ScriptUnit.has_extension(unit, "weapon_system")
+	local weapon_modifier = 0
+
+	if weapon_extension then
+		local weapon_stamina_template = weapon_extension:stamina_template()
+		weapon_modifier = weapon_stamina_template and weapon_stamina_template.stamina_modifier or 0
+	end
+
+	local base_max_value = base_stamina_template.base_stamina + weapon_modifier
+	local ammount = base_max_value * amount_percentage
+
+	return Stamina.drain(unit, ammount, t)
+end
+
 Stamina.add_stamina = function (unit, amount)
 	local unit_data_ext = ScriptUnit.extension(unit, "unit_data_system")
 	local stamina_write_component = unit_data_ext:write_component("stamina")

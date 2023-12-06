@@ -748,7 +748,7 @@ local widget_definitions = {
 	}, "list_description"),
 	continue_button = UIWidget.create_definition(ButtonPassTemplates.default_button, "continue_button", {
 		gamepad_action = "confirm_pressed",
-		text = Localize("loc_character_creator_continue"),
+		original_text = Utf8.upper(Localize("loc_character_creator_continue")),
 		hotspot = {
 			on_pressed_sound = UISoundEvents.character_appearence_confirm
 		}

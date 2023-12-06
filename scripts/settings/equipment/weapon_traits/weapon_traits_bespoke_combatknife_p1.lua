@@ -181,22 +181,22 @@ templates.weapon_trait_bespoke_combatknife_p1_rending_on_backstab = {
 	weapon_trait_bespoke_combatknife_p1_rending_on_backstab = {
 		{
 			conditional_stat_buffs = {
+				[stat_buffs.backstab_rending_multiplier] = 0.7
+			}
+		},
+		{
+			conditional_stat_buffs = {
+				[stat_buffs.backstab_rending_multiplier] = 0.8
+			}
+		},
+		{
+			conditional_stat_buffs = {
 				[stat_buffs.backstab_rending_multiplier] = 0.9
 			}
 		},
 		{
 			conditional_stat_buffs = {
 				[stat_buffs.backstab_rending_multiplier] = 1
-			}
-		},
-		{
-			conditional_stat_buffs = {
-				[stat_buffs.backstab_rending_multiplier] = 1.1
-			}
-		},
-		{
-			conditional_stat_buffs = {
-				[stat_buffs.backstab_rending_multiplier] = 1.2
 			}
 		}
 	}

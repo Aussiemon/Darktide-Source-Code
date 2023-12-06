@@ -1,5 +1,5 @@
-local SplineCurve = require("scripts/utilities/spline/spline_curve")
 local LevelEventSettings = require("scripts/settings/level_event/level_event_settings")
+local SplineCurve = require("scripts/utilities/spline/spline_curve")
 local ScanningDeviceExtension = class("ScanningDeviceExtension")
 local STATES = table.enum("none", "moving", "scanning", "finished")
 local ERROR_RECOUP_TIME = 0.5

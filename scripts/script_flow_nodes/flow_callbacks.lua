@@ -1304,6 +1304,20 @@ FlowCallbacks.set_difficulty = function (params)
 	end
 end
 
+FlowCallbacks.is_difficulty = function (params)
+	local wanted_difficulty = params.wanted_difficulty
+
+	if Managers.state.difficulty:get_difficulty() == wanted_difficulty then
+		flow_return_table.is_difficulty = true
+
+		return flow_return_table
+	end
+
+	flow_return_table.is_difficulty = false
+
+	return flow_return_table
+end
+
 FlowCallbacks.open_view = function (params)
 	local view_name = params.view_name
 	local transition_time = params.transition_time
@@ -1438,6 +1452,12 @@ FlowCallbacks.trigger_random_player_vo = function (params)
 	end
 
 	Vo.generic_mission_vo_event(random_player_unit, trigger_id)
+end
+
+FlowCallbacks.trigger_player_vo_all = function (params)
+	local trigger_id = params.trigger_id
+
+	Vo.generic_mission_vo_event_all_players(trigger_id)
 end
 
 FlowCallbacks.trigger_mission_giver_vo = function (params)
@@ -1595,6 +1615,21 @@ FlowCallbacks.set_story_ticker = function (params)
 	local story_ticker = params.story_ticker
 
 	Vo.set_story_ticker(story_ticker)
+end
+
+FlowCallbacks.set_ignore_server_play_requests = function (params)
+	local ignore_server = params.ignore_server
+
+	Vo.set_ignore_server_play_requests(ignore_server)
+end
+
+FlowCallbacks.set_unit_vo_memory = function (params)
+	local unit = params.unit
+	local memory_type = params.memory_type
+	local memory_id = params.memory_id
+	local value = params.value
+
+	Vo.set_unit_vo_memory(unit, memory_type, memory_id, value)
 end
 
 FlowCallbacks.mission_giver_check = function (params)
@@ -1916,6 +1951,8 @@ FlowCallbacks.teleport_team_to_locations = function (params)
 			PlayerMovement.teleport(player, position, rotation)
 		end
 	end
+
+	Managers.event:trigger("players_teleported")
 end
 
 FlowCallbacks.rotate_team_with_units = function (params)
@@ -2272,6 +2309,12 @@ FlowCallbacks.get_current_mission = function (params)
 	return flow_return_table
 end
 
+FlowCallbacks.set_backfill_wanted = function (params)
+	if Managers.mission_server then
+		Managers.mission_server:set_backfill_wanted(params.enabled or false)
+	end
+end
+
 FlowCallbacks.is_dedicated_server = function (params)
 	flow_return_table.is_dedicated_server = DEDICATED_SERVER
 
@@ -2370,6 +2413,32 @@ end
 
 FlowCallbacks.leave_shooting_range = function (params)
 	Managers.event:trigger("leave_shooting_range")
+end
+
+FlowCallbacks.any_player_has_achievement_completed = function (params)
+	local is_server = Managers.state.game_session:is_server()
+
+	if not is_server then
+		return
+	end
+
+	local required_achievement = params.required_achievement
+	local player_manager = Managers.player
+	local players = player_manager:human_players()
+
+	for unique_id, player in pairs(players) do
+		local completed = Managers.achievements:achievement_completed(player, required_achievement)
+
+		if completed then
+			flow_return_table.required_achievement_completed = true
+
+			return flow_return_table
+		end
+	end
+
+	flow_return_table.required_achievement_completed = false
+
+	return flow_return_table
 end
 
 return FlowCallbacks

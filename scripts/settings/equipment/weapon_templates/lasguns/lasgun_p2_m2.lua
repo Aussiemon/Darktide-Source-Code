@@ -56,13 +56,13 @@ local weapon_template = {
 				}
 			}
 		},
-		zoom_shoot_pressed = {
+		zoom_shoot_hold = {
 			buffer_time = 0.52,
 			max_queue = 2,
 			input_sequence = {
 				{
 					value = true,
-					input = "action_one_pressed"
+					input = "action_one_hold"
 				}
 			}
 		},
@@ -204,14 +204,14 @@ weapon_template.action_input_hierarchy = {
 		shoot_release_charged = "base"
 	},
 	zoom = {
-		special_action = "base",
 		wield = "base",
-		grenade_ability = "base",
 		zoom_release = "base",
+		grenade_ability = "base",
+		special_action = "base",
 		reload = "previous",
 		combat_ability = "base",
 		special_action_hold = "base",
-		zoom_shoot_pressed = {
+		zoom_shoot_hold = {
 			wield = "base",
 			grenade_ability = "base",
 			zoom_release = "base",
@@ -523,7 +523,7 @@ weapon_template.actions = {
 	action_shoot_zoomed_start = {
 		sway_template = "lasgun_p2_m2_killshot",
 		hold_combo = true,
-		start_input = "zoom_shoot_pressed",
+		start_input = "zoom_shoot_hold",
 		kind = "charge_ammo",
 		charge_extra_hold_time = 2.5,
 		keep_charge = true,
@@ -716,7 +716,7 @@ weapon_template.actions = {
 			reload = {
 				action_name = "action_reload"
 			},
-			zoom_shoot_pressed = {
+			zoom_shoot_hold = {
 				action_name = "action_shoot_zoomed_start",
 				chain_time = 0.3
 			},
@@ -763,14 +763,14 @@ weapon_template.actions = {
 			reload = {
 				action_name = "action_reload"
 			},
-			zoom_shoot_pressed = {
+			zoom_shoot_hold = {
 				action_name = "action_shoot_zoomed_start",
 				chain_time = 0.05
 			}
 		},
 		running_action_state_to_action_input = {
 			has_charge = {
-				input_name = "zoom_shoot_pressed"
+				input_name = "zoom_shoot_hold"
 			}
 		}
 	},

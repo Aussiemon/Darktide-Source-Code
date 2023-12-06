@@ -1,8 +1,8 @@
 return {
 	name = "veteran_tree",
 	node_points = 30,
-	version = 21,
-	background_height = 2950,
+	version = 22,
+	background_height = 2550,
 	archetype_name = "veteran",
 	talent_points = 30,
 	nodes = {
@@ -59,18 +59,18 @@ return {
 			type = "default",
 			max_points = 1,
 			widget_name = "node_743e6ff1-6bb2-4816-9270-ef9c92d9d376",
-			y = 2013.9380536374792,
+			y = 1918.9999847129916,
 			y_normalized = 0,
 			talent = "veteran_aura_elite_kills_restore_grenade",
 			icon = "content/ui/textures/icons/talents/veteran/veteran_aura_elite_kills_restore_grenade",
-			x = 1090.044189453125,
+			x = 1091,
 			x_normalized = 0,
 			children = {
-				"node_a546dbd5-a9c7-456c-af69-e4df3eb5da25"
+				"node_33819d8f-8635-4356-97b1-4cf1d67dd6d5"
 			},
 			parents = {
 				"node_8dae58e9-9625-4e01-ac1b-209a13301c56",
-				"node_ad51b981-cdaf-4370-b3df-2575f85c8016"
+				"node_efcadf37-2626-40eb-b9e5-5baecdcecd0a"
 			},
 			requirements = {
 				min_points_spent = 0,
@@ -137,7 +137,7 @@ return {
 			x = 516.5928955078125,
 			x_normalized = 0,
 			children = {
-				"node_1d15000d-efbd-44bf-ab63-1cf0134cb4f0"
+				"node_c56789ed-287a-4fe0-9e94-f50ffabe1992"
 			},
 			parents = {
 				"node_12b3bc42-7582-41cd-b56e-af8a9685bb15",
@@ -153,18 +153,20 @@ return {
 			type = "default",
 			max_points = 1,
 			widget_name = "node_7e94349b-d6c6-446e-bb39-0b367f6477bf",
-			y = 1918.362817544853,
+			y = 1822.7875957657807,
 			y_normalized = 0,
 			talent = "veteran_increased_melee_crit_chance_and_melee_finesse",
 			icon = "content/ui/textures/icons/talents/veteran/veteran_increased_melee_crit_chance_and_melee_finesse",
-			x = 1281.1947021484375,
+			x = 1313.0531005859375,
 			x_normalized = 0,
 			children = {
+				"node_a8044c1f-dda9-4a0b-b503-d549fd2ad5f9",
 				"node_e0e0d8de-9787-4ecb-b7b8-43cb0eb133d9"
 			},
 			parents = {
 				"node_12b3bc42-7582-41cd-b56e-af8a9685bb15",
-				"node_316c1c83-a411-4b99-bda1-b64c3fc31338"
+				"node_7c08ee90-6528-4188-915f-41e330db49f5",
+				"node_8c17e249-1082-43cd-82b1-42e18c7f29e8"
 			},
 			requirements = {
 				min_points_spent = 0,
@@ -176,19 +178,19 @@ return {
 			type = "stat",
 			max_points = 1,
 			widget_name = "node_e0e0d8de-9787-4ecb-b7b8-43cb0eb133d9",
-			y = 2012.938043374931,
+			y = 1917.3628215958588,
 			y_normalized = 0,
 			talent = "base_toughness_node_buff_medium_1",
 			icon = "content/ui/textures/icons/talents/veteran/veteran_default_general_talent",
 			x = 1375.7698974609375,
 			x_normalized = 0,
 			children = {
-				"node_39129a53-b8c1-4d7e-82bd-e2b9d49315a1",
-				"node_a8044c1f-dda9-4a0b-b503-d549fd2ad5f9"
+				"node_340ef70a-75c5-4a84-9627-6ccd00409d01",
+				"node_39129a53-b8c1-4d7e-82bd-e2b9d49315a1"
 			},
 			parents = {
 				"node_7e94349b-d6c6-446e-bb39-0b367f6477bf",
-				"node_96335f86-60f8-46e4-a6df-47c0a4ee2719"
+				"node_316c1c83-a411-4b99-bda1-b64c3fc31338"
 			},
 			requirements = {
 				min_points_spent = 0,
@@ -245,16 +247,17 @@ return {
 			type = "default",
 			max_points = 1,
 			widget_name = "node_39129a53-b8c1-4d7e-82bd-e2b9d49315a1",
-			y = 2109.5132997225874,
+			y = 2013.938077943515,
 			y_normalized = 0,
 			talent = "veteran_increase_damage_after_sprinting",
 			icon = "content/ui/textures/icons/talents/veteran/veteran_increase_damage_after_sprinting",
-			x = 1281.1947021484375,
+			x = 1440.4866943359375,
 			x_normalized = 0,
 			children = {
-				"node_340ef70a-75c5-4a84-9627-6ccd00409d01"
+				"node_09bb7c07-c733-4d08-9387-50f404da5ce5"
 			},
 			parents = {
+				"node_96335f86-60f8-46e4-a6df-47c0a4ee2719",
 				"node_e0e0d8de-9787-4ecb-b7b8-43cb0eb133d9"
 			},
 			requirements = {
@@ -267,17 +270,17 @@ return {
 			type = "default",
 			max_points = 1,
 			widget_name = "node_a8044c1f-dda9-4a0b-b503-d549fd2ad5f9",
-			y = 2109.5132997225874,
+			y = 1918.3628215958588,
 			y_normalized = 0,
 			talent = "veteran_crits_apply_rending",
 			icon = "content/ui/textures/icons/talents/veteran/veteran_crits_apply_rending",
-			x = 1472.3450927734375,
+			x = 1281.1947021484375,
 			x_normalized = 0,
 			children = {
 				"node_340ef70a-75c5-4a84-9627-6ccd00409d01"
 			},
 			parents = {
-				"node_e0e0d8de-9787-4ecb-b7b8-43cb0eb133d9"
+				"node_7e94349b-d6c6-446e-bb39-0b367f6477bf"
 			},
 			requirements = {
 				min_points_spent = 0,
@@ -404,19 +407,19 @@ return {
 			type = "stat",
 			max_points = 1,
 			widget_name = "node_316c1c83-a411-4b99-bda1-b64c3fc31338",
-			y = 1821.787622232353,
+			y = 1821.7875957657807,
 			y_normalized = 0,
 			talent = "base_stamina_regen_delay_1",
 			icon = "content/ui/textures/icons/talents/veteran/veteran_default_general_talent",
-			x = 1375.7698974609375,
+			x = 1439.4866943359375,
 			x_normalized = 0,
 			children = {
 				"node_74b661bf-16f2-459d-b2ae-4c0f784ae306",
-				"node_7e94349b-d6c6-446e-bb39-0b367f6477bf",
+				"node_e0e0d8de-9787-4ecb-b7b8-43cb0eb133d9",
 				"node_96335f86-60f8-46e4-a6df-47c0a4ee2719"
 			},
 			parents = {
-				"node_8c17e249-1082-43cd-82b1-42e18c7f29e8",
+				"node_7c08ee90-6528-4188-915f-41e330db49f5",
 				"node_e17c1b44-cbfd-4f58-bc7e-dc80ff90fbcc"
 			},
 			requirements = {
@@ -429,18 +432,17 @@ return {
 			type = "default",
 			max_points = 1,
 			widget_name = "node_c36508a3-b4f2-4b5a-837e-132101c8739d",
-			y = 2300.6637006101355,
+			y = 2109.513297562051,
 			y_normalized = 0,
 			talent = "veteran_rending_bonus",
 			icon = "content/ui/textures/icons/talents/veteran/veteran_rending_bonus",
 			x = 994.4690551757812,
 			x_normalized = 0,
 			children = {
-				"node_33819d8f-8635-4356-97b1-4cf1d67dd6d5"
+				"node_18f58702-92f4-4084-afc3-934731f36b83"
 			},
 			parents = {
-				"node_181e4412-cb3f-4b80-b3f9-10c5bb61d022",
-				"node_7163a098-c55a-47f0-a861-38509acc0d44"
+				"node_33819d8f-8635-4356-97b1-4cf1d67dd6d5"
 			},
 			requirements = {
 				min_points_spent = 0,
@@ -476,14 +478,14 @@ return {
 			type = "default",
 			max_points = 1,
 			widget_name = "node_8c17e249-1082-43cd-82b1-42e18c7f29e8",
-			y = 1727.2123964022749,
+			y = 1727.212381548586,
 			y_normalized = 0,
 			talent = "veteran_dodging_grants_crit",
 			icon = "content/ui/textures/icons/talents/veteran/veteran_dodging_grants_crit",
 			x = 1281.1947021484375,
 			x_normalized = 0,
 			children = {
-				"node_316c1c83-a411-4b99-bda1-b64c3fc31338"
+				"node_7e94349b-d6c6-446e-bb39-0b367f6477bf"
 			},
 			parents = {
 				"node_fa0ae054-51ac-4488-90ee-58d24f90fb63"
@@ -542,17 +544,17 @@ return {
 			type = "default",
 			max_points = 1,
 			widget_name = "node_340ef70a-75c5-4a84-9627-6ccd00409d01",
-			y = 2205.0884950350874,
+			y = 2013.938077943515,
 			y_normalized = 0,
 			talent = "veteran_attack_speed",
 			icon = "content/ui/textures/icons/talents/veteran/veteran_attack_speed",
-			x = 1376.7698974609375,
+			x = 1313.0531005859375,
 			x_normalized = 0,
 			children = {
-				"node_7c08ee90-6528-4188-915f-41e330db49f5"
+				"node_09bb7c07-c733-4d08-9387-50f404da5ce5"
 			},
 			parents = {
-				"node_39129a53-b8c1-4d7e-82bd-e2b9d49315a1",
+				"node_e0e0d8de-9787-4ecb-b7b8-43cb0eb133d9",
 				"node_a8044c1f-dda9-4a0b-b503-d549fd2ad5f9"
 			},
 			requirements = {
@@ -565,7 +567,7 @@ return {
 			type = "default",
 			max_points = 1,
 			widget_name = "node_96335f86-60f8-46e4-a6df-47c0a4ee2719",
-			y = 1918.362817544853,
+			y = 1918.3628215958588,
 			y_normalized = 0,
 			talent = "veteran_continous_hits_apply_rending",
 			icon = "content/ui/textures/icons/talents/veteran/veteran_continous_hits_apply_rending",
@@ -573,7 +575,7 @@ return {
 			x_normalized = 0,
 			children = {
 				"node_c933a40e-4bf6-4c60-a83f-ed8bbdfb885f",
-				"node_e0e0d8de-9787-4ecb-b7b8-43cb0eb133d9"
+				"node_39129a53-b8c1-4d7e-82bd-e2b9d49315a1"
 			},
 			parents = {
 				"node_316c1c83-a411-4b99-bda1-b64c3fc31338"
@@ -588,7 +590,7 @@ return {
 			type = "stat",
 			max_points = 1,
 			widget_name = "node_33819d8f-8635-4356-97b1-4cf1d67dd6d5",
-			y = 2395.2389569577917,
+			y = 2012.9380239301024,
 			y_normalized = 0,
 			talent = "base_toughness_node_buff_medium_2",
 			icon = "content/ui/textures/icons/talents/veteran/veteran_default_general_talent",
@@ -596,10 +598,14 @@ return {
 			x_normalized = 0,
 			children = {
 				"node_93ef2e46-69f8-46b1-a48a-9c35ad057681",
-				"node_18f58702-92f4-4084-afc3-934731f36b83"
+				"node_c36508a3-b4f2-4b5a-837e-132101c8739d",
+				"node_181e4412-cb3f-4b80-b3f9-10c5bb61d022",
+				"node_7163a098-c55a-47f0-a861-38509acc0d44"
 			},
 			parents = {
-				"node_c36508a3-b4f2-4b5a-837e-132101c8739d"
+				"node_ad51b981-cdaf-4370-b3df-2575f85c8016",
+				"node_60000569-87a7-4c75-874b-02b86af43f52",
+				"node_743e6ff1-6bb2-4816-9270-ef9c92d9d376"
 			},
 			requirements = {
 				min_points_spent = 0,
@@ -726,17 +732,17 @@ return {
 			type = "default",
 			max_points = 1,
 			widget_name = "node_d195ddb0-73e5-4774-8bd7-e8f93e1e7ab2",
-			y = 1918.3628377998825,
+			y = 1918.3628366097885,
 			y_normalized = 0,
 			talent = "veteran_no_ammo_consumption_on_lasweapon_crit",
 			icon = "content/ui/textures/icons/talents/veteran/veteran_no_ammo_consumption_on_lasweapon_crit",
-			x = 516.5928955078125,
+			x = 516.5929565429688,
 			x_normalized = 0,
 			children = {
-				"node_c56789ed-287a-4fe0-9e94-f50ffabe1992"
+				"node_9f8799fb-9107-462b-9adb-204b2d257650"
 			},
 			parents = {
-				"node_1d15000d-efbd-44bf-ab63-1cf0134cb4f0"
+				"node_c56789ed-287a-4fe0-9e94-f50ffabe1992"
 			},
 			requirements = {
 				min_points_spent = 0,
@@ -858,20 +864,22 @@ return {
 			type = "default",
 			max_points = 1,
 			widget_name = "node_c56789ed-287a-4fe0-9e94-f50ffabe1992",
-			y = 2013.9380331123825,
+			y = 1822.7876107797103,
 			y_normalized = 0,
 			talent = "veteran_ammo_increase",
 			icon = "content/ui/textures/icons/talents/veteran/veteran_ammo_increase",
 			x = 612.1681518554688,
 			x_normalized = 0,
 			children = {
-				"node_630f40a6-c9ca-4337-8af3-541d274dbcab",
-				"node_9f8799fb-9107-462b-9adb-204b2d257650"
+				"node_d195ddb0-73e5-4774-8bd7-e8f93e1e7ab2",
+				"node_06272211-2d9a-47c7-bf84-8e7ea1eb8a01",
+				"node_891f1d0a-96ac-40b0-8a37-7dd491212599"
 			},
 			parents = {
 				"node_129ff9f1-a7ba-4556-8617-c63d53c68f7c",
-				"node_416f354e-b04f-4749-9b7d-b6aa72168637",
-				"node_d195ddb0-73e5-4774-8bd7-e8f93e1e7ab2"
+				"node_a6dcece9-435c-4d88-83a6-8c58bd9240b9",
+				"node_7adfbd19-7df3-4337-875b-2a9dfa00d378",
+				"node_416f354e-b04f-4749-9b7d-b6aa72168637"
 			},
 			requirements = {
 				min_points_spent = 0,
@@ -903,17 +911,17 @@ return {
 			type = "default",
 			max_points = 1,
 			widget_name = "node_7163a098-c55a-47f0-a861-38509acc0d44",
-			y = 2205.0885052976355,
+			y = 2109.513297562051,
 			y_normalized = 0,
 			talent = "veteran_ally_kills_increase_damage",
 			icon = "content/ui/textures/icons/talents/veteran/veteran_ally_kills_increase_damage",
 			x = 898.893798828125,
 			x_normalized = 0,
 			children = {
-				"node_c36508a3-b4f2-4b5a-837e-132101c8739d"
+				"node_18f58702-92f4-4084-afc3-934731f36b83"
 			},
 			parents = {
-				"node_a546dbd5-a9c7-456c-af69-e4df3eb5da25"
+				"node_33819d8f-8635-4356-97b1-4cf1d67dd6d5"
 			},
 			requirements = {
 				min_points_spent = 0,
@@ -947,17 +955,21 @@ return {
 			type = "default",
 			max_points = 1,
 			widget_name = "node_efcadf37-2626-40eb-b9e5-5baecdcecd0a",
-			y = 1822.787601977323,
+			y = 1822.7876342773438,
 			y_normalized = 0,
 			talent = "veteran_elite_kills_reduce_cooldown",
 			icon = "content/ui/textures/icons/talents/veteran/veteran_elite_kills_reduce_cooldown",
-			x = 898.893798828125,
+			x = 994.4690551757812,
 			x_normalized = 0,
 			children = {
-				"node_ad51b981-cdaf-4370-b3df-2575f85c8016"
+				"node_60000569-87a7-4c75-874b-02b86af43f52",
+				"node_ad51b981-cdaf-4370-b3df-2575f85c8016",
+				"node_743e6ff1-6bb2-4816-9270-ef9c92d9d376"
 			},
 			parents = {
-				"node_7faaad0d-aebf-44f2-ba30-6a23ce68d320"
+				"node_7faaad0d-aebf-44f2-ba30-6a23ce68d320",
+				"node_a546dbd5-a9c7-456c-af69-e4df3eb5da25",
+				"node_6dca445f-a83e-442c-89dd-04a1deb408ee"
 			},
 			requirements = {
 				min_points_spent = 0,
@@ -1108,17 +1120,17 @@ return {
 			type = "default",
 			max_points = 1,
 			widget_name = "node_6dca445f-a83e-442c-89dd-04a1deb408ee",
-			y = 1822.787601977323,
+			y = 1727.2124084472657,
 			y_normalized = 0,
 			talent = "veteran_increase_suppression",
 			icon = "content/ui/textures/icons/talents/veteran/veteran_increase_suppression",
 			x = 1090.044189453125,
 			x_normalized = 0,
 			children = {
-				"node_ad51b981-cdaf-4370-b3df-2575f85c8016"
+				"node_efcadf37-2626-40eb-b9e5-5baecdcecd0a"
 			},
 			parents = {
-				"node_7faaad0d-aebf-44f2-ba30-6a23ce68d320"
+				"node_acd02218-225d-418d-ad97-9b9ee7d4c5b1"
 			},
 			requirements = {
 				min_points_spent = 0,
@@ -1152,14 +1164,13 @@ return {
 			type = "default",
 			max_points = 1,
 			widget_name = "node_7faaad0d-aebf-44f2-ba30-6a23ce68d320",
-			y = 1727.212391406034,
+			y = 1727.2124084472657,
 			y_normalized = 0,
 			talent = "veteran_allies_in_coherency_share_toughness_gain",
 			icon = "content/ui/textures/icons/talents/veteran/veteran_allies_in_coherency_share_toughness_gain",
-			x = 994.4690551757812,
+			x = 898.893798828125,
 			x_normalized = 0,
 			children = {
-				"node_6dca445f-a83e-442c-89dd-04a1deb408ee",
 				"node_efcadf37-2626-40eb-b9e5-5baecdcecd0a"
 			},
 			parents = {
@@ -1175,19 +1186,17 @@ return {
 			type = "stat",
 			max_points = 1,
 			widget_name = "node_ad51b981-cdaf-4370-b3df-2575f85c8016",
-			y = 1917.3628278074011,
+			y = 1917.3628286176024,
 			y_normalized = 0,
 			talent = "base_coherency_regen_node_buff_low_1",
 			icon = "content/ui/textures/icons/talents/veteran/veteran_default_general_talent",
 			x = 993.4690551757812,
 			x_normalized = 0,
 			children = {
-				"node_60000569-87a7-4c75-874b-02b86af43f52",
-				"node_743e6ff1-6bb2-4816-9270-ef9c92d9d376"
+				"node_33819d8f-8635-4356-97b1-4cf1d67dd6d5"
 			},
 			parents = {
-				"node_efcadf37-2626-40eb-b9e5-5baecdcecd0a",
-				"node_6dca445f-a83e-442c-89dd-04a1deb408ee"
+				"node_efcadf37-2626-40eb-b9e5-5baecdcecd0a"
 			},
 			requirements = {
 				min_points_spent = 0,
@@ -1222,19 +1231,17 @@ return {
 			type = "ability_modifier",
 			max_points = 1,
 			widget_name = "node_a546dbd5-a9c7-456c-af69-e4df3eb5da25",
-			y = 2109.513273256015,
+			y = 1727.2124084472657,
 			y_normalized = 0,
 			talent = "veteran_combat_ability_melee_and_ranged_damage_to_coherency",
 			icon = "content/ui/textures/icons/talents/veteran/veteran_combat_ability_melee_and_ranged_damage_to_coherency",
 			x = 994.4690551757812,
 			x_normalized = 0,
 			children = {
-				"node_7163a098-c55a-47f0-a861-38509acc0d44",
-				"node_181e4412-cb3f-4b80-b3f9-10c5bb61d022"
+				"node_efcadf37-2626-40eb-b9e5-5baecdcecd0a"
 			},
 			parents = {
-				"node_60000569-87a7-4c75-874b-02b86af43f52",
-				"node_743e6ff1-6bb2-4816-9270-ef9c92d9d376"
+				"node_acd02218-225d-418d-ad97-9b9ee7d4c5b1"
 			},
 			requirements = {
 				min_points_spent = 0,
@@ -1355,17 +1362,17 @@ return {
 			type = "default",
 			max_points = 1,
 			widget_name = "node_416f354e-b04f-4749-9b7d-b6aa72168637",
-			y = 1918.3628377998825,
+			y = 1727.212387603029,
 			y_normalized = 0,
 			talent = "veteran_supression_immunity",
 			icon = "content/ui/textures/icons/talents/veteran/veteran_supression_immunity",
-			x = 707.7433471679688,
+			x = 612.1681518554688,
 			x_normalized = 0,
 			children = {
 				"node_c56789ed-287a-4fe0-9e94-f50ffabe1992"
 			},
 			parents = {
-				"node_1d15000d-efbd-44bf-ab63-1cf0134cb4f0"
+				"node_b40ef26d-5e6e-4f30-87e6-a96091d5ce0a"
 			},
 			requirements = {
 				min_points_spent = 0,
@@ -1384,7 +1391,7 @@ return {
 			x = 707.7433471679688,
 			x_normalized = 0,
 			children = {
-				"node_1d15000d-efbd-44bf-ab63-1cf0134cb4f0"
+				"node_c56789ed-287a-4fe0-9e94-f50ffabe1992"
 			},
 			parents = {
 				"node_b40ef26d-5e6e-4f30-87e6-a96091d5ce0a"
@@ -1399,17 +1406,17 @@ return {
 			type = "default",
 			max_points = 1,
 			widget_name = "node_181e4412-cb3f-4b80-b3f9-10c5bb61d022",
-			y = 2205.0885052976355,
+			y = 2109.513280277759,
 			y_normalized = 0,
 			talent = "veteran_big_game_hunter",
 			icon = "content/ui/textures/icons/talents/veteran/veteran_big_game_hunter",
 			x = 1090.044189453125,
 			x_normalized = 0,
 			children = {
-				"node_c36508a3-b4f2-4b5a-837e-132101c8739d"
+				"node_18f58702-92f4-4084-afc3-934731f36b83"
 			},
 			parents = {
-				"node_a546dbd5-a9c7-456c-af69-e4df3eb5da25"
+				"node_33819d8f-8635-4356-97b1-4cf1d67dd6d5"
 			},
 			requirements = {
 				min_points_spent = 0,
@@ -1635,7 +1642,9 @@ return {
 			children = {
 				"node_b40ef26d-5e6e-4f30-87e6-a96091d5ce0a",
 				"node_fa0ae054-51ac-4488-90ee-58d24f90fb63",
-				"node_7faaad0d-aebf-44f2-ba30-6a23ce68d320"
+				"node_7faaad0d-aebf-44f2-ba30-6a23ce68d320",
+				"node_6dca445f-a83e-442c-89dd-04a1deb408ee",
+				"node_a546dbd5-a9c7-456c-af69-e4df3eb5da25"
 			},
 			parents = {
 				"node_73319c64-81e7-4234-8fb7-4e65ebb620f5",
@@ -1660,6 +1669,7 @@ return {
 			children = {
 				"node_acd02218-225d-418d-ad97-9b9ee7d4c5b1",
 				"node_8c17e249-1082-43cd-82b1-42e18c7f29e8",
+				"node_7c08ee90-6528-4188-915f-41e330db49f5",
 				"node_e17c1b44-cbfd-4f58-bc7e-dc80ff90fbcc"
 			},
 			parents = {
@@ -1684,7 +1694,8 @@ return {
 			children = {
 				"node_acd02218-225d-418d-ad97-9b9ee7d4c5b1",
 				"node_a6dcece9-435c-4d88-83a6-8c58bd9240b9",
-				"node_7adfbd19-7df3-4337-875b-2a9dfa00d378"
+				"node_7adfbd19-7df3-4337-875b-2a9dfa00d378",
+				"node_416f354e-b04f-4749-9b7d-b6aa72168637"
 			},
 			parents = {
 				"node_acd02218-225d-418d-ad97-9b9ee7d4c5b1",
@@ -1700,18 +1711,18 @@ return {
 			type = "default",
 			max_points = 1,
 			widget_name = "node_06272211-2d9a-47c7-bf84-8e7ea1eb8a01",
-			y = 2205.0884923344165,
+			y = 1918.3628366097885,
 			y_normalized = 0,
 			talent = "veteran_increase_damage_vs_elites",
 			icon = "content/ui/textures/icons/talents/veteran/veteran_increased_damage_vs_elites",
 			x = 612.1681518554688,
 			x_normalized = 0,
 			children = {
-				"node_891f1d0a-96ac-40b0-8a37-7dd491212599"
+				"node_9f8799fb-9107-462b-9adb-204b2d257650",
+				"node_630f40a6-c9ca-4337-8af3-541d274dbcab"
 			},
 			parents = {
-				"node_630f40a6-c9ca-4337-8af3-541d274dbcab",
-				"node_9f8799fb-9107-462b-9adb-204b2d257650"
+				"node_c56789ed-287a-4fe0-9e94-f50ffabe1992"
 			},
 			requirements = {
 				min_points_spent = 0,
@@ -1723,7 +1734,7 @@ return {
 			type = "default",
 			max_points = 1,
 			widget_name = "node_e17c1b44-cbfd-4f58-bc7e-dc80ff90fbcc",
-			y = 1727.2123964022749,
+			y = 1727.212381548586,
 			y_normalized = 0,
 			talent = "veteran_dodging_grants_stamina",
 			icon = "content/ui/textures/icons/talents/veteran/veteran_dodging_grants_stamina",
@@ -1745,17 +1756,17 @@ return {
 			type = "default",
 			max_points = 1,
 			widget_name = "node_60000569-87a7-4c75-874b-02b86af43f52",
-			y = 2013.9380536374792,
+			y = 1918.3628215958588,
 			y_normalized = 0,
 			talent = "veteran_tdr_on_high_toughness",
 			icon = "content/ui/textures/icons/talents/veteran/veteran_block_break_gives_tdr",
 			x = 898.893798828125,
 			x_normalized = 0,
 			children = {
-				"node_a546dbd5-a9c7-456c-af69-e4df3eb5da25"
+				"node_33819d8f-8635-4356-97b1-4cf1d67dd6d5"
 			},
 			parents = {
-				"node_ad51b981-cdaf-4370-b3df-2575f85c8016"
+				"node_efcadf37-2626-40eb-b9e5-5baecdcecd0a"
 			},
 			requirements = {
 				min_points_spent = 0,
@@ -1767,39 +1778,17 @@ return {
 			type = "stat",
 			max_points = 1,
 			widget_name = "node_630f40a6-c9ca-4337-8af3-541d274dbcab",
-			y = 2108.5132489499792,
+			y = 2012.9380394171924,
 			y_normalized = 0,
 			talent = "base_toughness_damage_reduction_node_buff_medium_1",
-			x = 515.5928955078125,
+			x = 674.8849487304688,
 			x_normalized = 0,
 			children = {
-				"node_06272211-2d9a-47c7-bf84-8e7ea1eb8a01"
+				"node_548adb63-0554-4ab5-a044-439fd851c521"
 			},
 			parents = {
-				"node_c56789ed-287a-4fe0-9e94-f50ffabe1992"
-			},
-			requirements = {
-				min_points_spent = 0,
-				children_unlock_points = 1,
-				all_parents_chosen = false
-			}
-		},
-		{
-			type = "stat",
-			max_points = 1,
-			widget_name = "node_1d15000d-efbd-44bf-ab63-1cf0134cb4f0",
-			y = 1821.7875814522263,
-			y_normalized = 0,
-			talent = "base_toughness_damage_reduction_node_buff_low_1",
-			x = 611.1681518554688,
-			x_normalized = 0,
-			children = {
-				"node_416f354e-b04f-4749-9b7d-b6aa72168637",
-				"node_d195ddb0-73e5-4774-8bd7-e8f93e1e7ab2"
-			},
-			parents = {
-				"node_7adfbd19-7df3-4337-875b-2a9dfa00d378",
-				"node_a6dcece9-435c-4d88-83a6-8c58bd9240b9"
+				"node_06272211-2d9a-47c7-bf84-8e7ea1eb8a01",
+				"node_891f1d0a-96ac-40b0-8a37-7dd491212599"
 			},
 			requirements = {
 				min_points_spent = 0,
@@ -1836,16 +1825,17 @@ return {
 			type = "stat",
 			max_points = 1,
 			widget_name = "node_9f8799fb-9107-462b-9adb-204b2d257650",
-			y = 2108.5132489499792,
+			y = 2012.9380394171924,
 			y_normalized = 0,
 			talent = "base_stamina_regen_delay_2",
-			x = 706.7433471679688,
+			x = 547.4513549804688,
 			x_normalized = 0,
 			children = {
-				"node_06272211-2d9a-47c7-bf84-8e7ea1eb8a01"
+				"node_548adb63-0554-4ab5-a044-439fd851c521"
 			},
 			parents = {
-				"node_c56789ed-287a-4fe0-9e94-f50ffabe1992"
+				"node_d195ddb0-73e5-4774-8bd7-e8f93e1e7ab2",
+				"node_06272211-2d9a-47c7-bf84-8e7ea1eb8a01"
 			},
 			requirements = {
 				min_points_spent = 0,
@@ -1857,17 +1847,18 @@ return {
 			type = "ability_modifier",
 			max_points = 1,
 			widget_name = "node_7c08ee90-6528-4188-915f-41e330db49f5",
-			y = 2315,
+			y = 1727.212384519324,
 			y_normalized = 0,
 			talent = "veteran_increased_close_damage_after_combat_ability",
 			icon = "content/ui/textures/icons/talents/veteran/veteran_increased_close_damage_after_combat_ability",
 			x = 1376.7698974609375,
 			x_normalized = 0,
 			children = {
-				"node_09bb7c07-c733-4d08-9387-50f404da5ce5"
+				"node_7e94349b-d6c6-446e-bb39-0b367f6477bf",
+				"node_316c1c83-a411-4b99-bda1-b64c3fc31338"
 			},
 			parents = {
-				"node_340ef70a-75c5-4a84-9627-6ccd00409d01"
+				"node_fa0ae054-51ac-4488-90ee-58d24f90fb63"
 			},
 			requirements = {
 				min_points_spent = 0,
@@ -1879,17 +1870,17 @@ return {
 			type = "ability_modifier",
 			max_points = 1,
 			widget_name = "node_891f1d0a-96ac-40b0-8a37-7dd491212599",
-			y = 2315,
+			y = 1918.3628392631852,
 			y_normalized = 0,
 			talent = "veteran_increased_weakspot_power_after_combat_ability",
 			icon = "content/ui/textures/icons/talents/veteran/veteran_ability_marksman",
-			x = 612.1681518554688,
+			x = 707.7433471679688,
 			x_normalized = 0,
 			children = {
-				"node_548adb63-0554-4ab5-a044-439fd851c521"
+				"node_630f40a6-c9ca-4337-8af3-541d274dbcab"
 			},
 			parents = {
-				"node_06272211-2d9a-47c7-bf84-8e7ea1eb8a01"
+				"node_c56789ed-287a-4fe0-9e94-f50ffabe1992"
 			},
 			requirements = {
 				min_points_spent = 0,
@@ -1988,7 +1979,7 @@ return {
 			type = "keystone",
 			max_points = 1,
 			widget_name = "node_548adb63-0554-4ab5-a044-439fd851c521",
-			y = 2413.0973424320728,
+			y = 2094.513296481782,
 			y_normalized = 0,
 			talent = "veteran_snipers_focus",
 			icon = "content/ui/textures/icons/talents/veteran/veteran_snipers_focus",
@@ -2002,7 +1993,8 @@ return {
 				"node_da3643f8-6d4e-48f5-8e7c-05b100aeaae1"
 			},
 			parents = {
-				"node_891f1d0a-96ac-40b0-8a37-7dd491212599"
+				"node_630f40a6-c9ca-4337-8af3-541d274dbcab",
+				"node_9f8799fb-9107-462b-9adb-204b2d257650"
 			},
 			requirements = {
 				min_points_spent = 0,
@@ -2015,7 +2007,7 @@ return {
 			type = "keystone_modifier",
 			max_points = 1,
 			widget_name = "node_11a4a71d-e135-4842-a90d-8cf96e5ee5a8",
-			y = 2491.8141479492188,
+			y = 2173.230093356782,
 			y_normalized = 0,
 			talent = "veteran_snipers_focus_rending_bonus",
 			icon = "content/ui/textures/icons/talents/veteran/veteran_snipers_focus_rending_bonus",
@@ -2035,7 +2027,7 @@ return {
 			type = "keystone_modifier",
 			max_points = 1,
 			widget_name = "node_efbff75c-83c1-4310-a721-4bce3583cb3e",
-			y = 2491.8141479492188,
+			y = 2173.230093356782,
 			y_normalized = 0,
 			talent = "veteran_snipers_focus_toughness_bonus",
 			icon = "content/ui/textures/icons/talents/veteran/veteran_snipers_focus_toughness_bonus",
@@ -2055,7 +2047,7 @@ return {
 			type = "keystone_modifier",
 			max_points = 1,
 			widget_name = "node_c426c7f4-97d1-4176-810c-9dd935ef89cd",
-			y = 2587.3893432617188,
+			y = 2236.946890231782,
 			y_normalized = 0,
 			talent = "veteran_snipers_focus_increased_stacks",
 			icon = "content/ui/textures/icons/talents/veteran/veteran_snipers_focus_increased_stacks",
@@ -2077,7 +2069,7 @@ return {
 			type = "keystone",
 			max_points = 1,
 			widget_name = "node_09bb7c07-c733-4d08-9387-50f404da5ce5",
-			y = 2413.0973424320728,
+			y = 2094.5132575921252,
 			y_normalized = 0,
 			talent = "veteran_weapon_switch_passive",
 			icon = "content/ui/textures/icons/talents/veteran/veteran_weapon_switch_passive",
@@ -2088,7 +2080,8 @@ return {
 				"node_78c14d65-e167-4148-ac90-b53c00f2d4f4"
 			},
 			parents = {
-				"node_7c08ee90-6528-4188-915f-41e330db49f5"
+				"node_340ef70a-75c5-4a84-9627-6ccd00409d01",
+				"node_39129a53-b8c1-4d7e-82bd-e2b9d49315a1"
 			},
 			requirements = {
 				min_points_spent = 0,
@@ -2101,11 +2094,11 @@ return {
 			type = "keystone_modifier",
 			max_points = 1,
 			widget_name = "node_9151734a-c321-41f6-973b-4793c5913b1b",
-			y = 2638.9999877929686,
+			y = 2332.5221076897815,
 			y_normalized = 0,
 			talent = "veteran_weapon_switch_reload_speed",
 			icon = "content/ui/textures/icons/talents/veteran/veteran_weapon_switch_faster_1",
-			x = 1271,
+			x = 1281.1947021484375,
 			x_normalized = 0,
 			children = {},
 			parents = {
@@ -2122,11 +2115,11 @@ return {
 			group_name = "",
 			type = "keystone_modifier",
 			widget_name = "node_33bf1346-2601-4a06-9e7e-f70aed5e441f",
-			y = 2638.9999877929686,
+			y = 2332.5221076897815,
 			y_normalized = 0,
 			talent = "veteran_weapon_switch_stamina_reduction",
 			icon = "content/ui/textures/icons/talents/veteran/veteran_weapon_switch_long_duration",
-			x = 1487,
+			x = 1472.3450927734375,
 			x_normalized = 0,
 			children = {},
 			parents = {
@@ -2142,11 +2135,11 @@ return {
 			type = "keystone_modifier",
 			max_points = 1,
 			widget_name = "node_18ddfb8a-8035-4232-90b2-c114a1451ac7",
-			y = 2603,
+			y = 2300.6637092522815,
 			y_normalized = 0,
 			talent = "veteran_weapon_switch_replenish_toughness",
 			icon = "content/ui/textures/icons/talents/veteran/veteran_weapon_switch_faster_2",
-			x = 1379,
+			x = 1376.7698974609375,
 			x_normalized = 0,
 			children = {},
 			parents = {
@@ -2163,11 +2156,11 @@ return {
 			type = "keystone_modifier",
 			max_points = 1,
 			widget_name = "node_265dcb9e-af95-4e79-8ccd-1591951ac6ac",
-			y = 2531,
+			y = 2205.0885139397815,
 			y_normalized = 0,
 			talent = "veteran_weapon_switch_replenish_ammo",
 			icon = "content/ui/textures/icons/talents/veteran/veteran_weapon_switch_crit_bonus",
-			x = 1307,
+			x = 1313.0531005859375,
 			x_normalized = 0,
 			children = {
 				"node_18ddfb8a-8035-4232-90b2-c114a1451ac7",
@@ -2186,7 +2179,7 @@ return {
 			type = "keystone_modifier",
 			max_points = 1,
 			widget_name = "node_78c14d65-e167-4148-ac90-b53c00f2d4f4",
-			y = 2523.6725463867188,
+			y = 2205.0885139397815,
 			y_normalized = 0,
 			talent = "veteran_weapon_switch_replenish_stamina",
 			icon = "content/ui/textures/icons/talents/veteran/veteran_weapon_switch_cleave_bonus",
@@ -2209,7 +2202,7 @@ return {
 			type = "keystone",
 			max_points = 1,
 			widget_name = "node_18f58702-92f4-4084-afc3-934731f36b83",
-			y = 2476.814153890695,
+			y = 2221.9469169684216,
 			y_normalized = 0,
 			talent = "veteran_improved_tag",
 			icon = "content/ui/textures/icons/talents/veteran/veteran_improved_tag",
@@ -2221,7 +2214,9 @@ return {
 				"node_97953f03-3524-42f4-b653-da2e3468823f"
 			},
 			parents = {
-				"node_33819d8f-8635-4356-97b1-4cf1d67dd6d5"
+				"node_c36508a3-b4f2-4b5a-837e-132101c8739d",
+				"node_181e4412-cb3f-4b80-b3f9-10c5bb61d022",
+				"node_7163a098-c55a-47f0-a861-38509acc0d44"
 			},
 			requirements = {
 				min_points_spent = 0,
@@ -2234,7 +2229,7 @@ return {
 			type = "keystone_modifier",
 			max_points = 1,
 			widget_name = "node_a7ec533f-0efa-450a-b45d-02b8c7f61861",
-			y = 2587.3893432617188,
+			y = 2300.6637443609998,
 			y_normalized = 0,
 			talent = "veteran_improved_tag_dead_bonus",
 			icon = "content/ui/textures/icons/talents/veteran/veteran_improved_tag_dead_coherency_bonus",
@@ -2254,7 +2249,7 @@ return {
 			type = "keystone_modifier",
 			max_points = 1,
 			widget_name = "node_ac52f1fe-53d7-4e5a-8872-21c6db29db9e",
-			y = 2587.3893432617188,
+			y = 2300.6637443609998,
 			y_normalized = 0,
 			talent = "veteran_improved_tag_dead_coherency_bonus",
 			icon = "content/ui/textures/icons/talents/veteran/veteran_improved_tag_dead_bonus",
@@ -2274,7 +2269,7 @@ return {
 			type = "keystone_modifier",
 			max_points = 1,
 			widget_name = "node_97953f03-3524-42f4-b653-da2e3468823f",
-			y = 2651.106201171875,
+			y = 2364.3805412359998,
 			y_normalized = 0,
 			talent = "veteran_improved_tag_more_damage",
 			icon = "content/ui/textures/icons/talents/veteran/veteran_improved_tag_more_damage",
@@ -2294,7 +2289,7 @@ return {
 			type = "keystone_modifier",
 			max_points = 1,
 			widget_name = "node_da3643f8-6d4e-48f5-8e7c-05b100aeaae1",
-			y = 2587.3893432617188,
+			y = 2236.946890231782,
 			y_normalized = 0,
 			talent = "veteran_snipers_focus_stacks_on_still",
 			icon = "content/ui/textures/icons/talents/veteran/veteran_snipers_focus_threat_reduction",

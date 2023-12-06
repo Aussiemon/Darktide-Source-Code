@@ -56,6 +56,9 @@ local DialogueSettings = {
 		fm_armoury = {
 			"mission_vo_fm_armoury"
 		},
+		cm_raid = {
+			"mission_vo_cm_raid"
+		},
 		fm_cargo = {
 			"mission_vo_fm_cargo"
 		},
@@ -94,6 +97,9 @@ local DialogueSettings = {
 		},
 		dm_rise = {
 			"mission_vo_dm_rise"
+		},
+		km_enforcer_twins = {
+			"mission_vo_km_enforcer_twins"
 		}
 	},
 	player_load_files = {
@@ -186,26 +192,11 @@ local DialogueSettings = {
 		tutorial = true,
 		tg_shooting_range = true
 	},
-	max_view_distance = 50,
-	default_view_distance = 30,
-	default_hear_distance = 10,
-	death_discover_distance = 40,
-	discover_enemy_attack_distance = 25,
-	see_vortex_distance = 30,
-	view_event_trigger_interval = 1,
-	seen_recently_threshold = 15,
 	ranged_special_kill_threshold = 20,
-	seen_enemy_precision = 0.999,
-	observer_view_distance = 8,
 	friends_close_distance = 25,
 	friends_distant_distance = 40,
 	enemies_close_distance = 10,
 	enemies_distant_distance = 40,
-	knocked_down_broadcast_range = 40,
-	pounced_down_broadcast_range = 40,
-	suicide_run_broadcast_range = 40,
-	grabbed_broadcast_range = 40,
-	armor_hit_broadcast_range = 7,
 	dialogue_level_start_delay = 120,
 	story_ticker_enabled = true,
 	story_start_delay = 173,
@@ -218,12 +209,7 @@ local DialogueSettings = {
 	npc_story_ticker_start_delay = 127,
 	npc_story_tick_time = 100,
 	store_npc_cooldown_time = 5,
-	mission_update_tick_time = 15,
-	ambush_delay = 4,
-	vector_delay = 6,
 	sound_event_default_length = 3.4567,
-	heavy_combat_inensity_threshold = 80,
-	heavy_damage_threshold = 100,
 	knocked_down_vo_interval = 11,
 	netted_vo_start_delay_t = 1,
 	netted_vo_interval_t = 3,
@@ -233,41 +219,25 @@ local DialogueSettings = {
 	monster_critical_health_percent_vo = 0.3,
 	monster_near_death_health_percent_vo = 0.2,
 	heavy_land_on_air_threshold = 0.7,
-	bunny_jumping = {
-		tick_time = 5,
-		jump_threshold = 6
-	},
 	raycast_enemy_check_interval = 0.25,
 	hear_enemy_check_interval = 10,
-	special_proximity_distance = 30,
-	special_proximity_distance_heard = 30,
-	guidance_wrong_way_distance = 30,
+	enemy_proximity_distance = 30,
+	enemy_proximity_distance_heard = 30,
+	seen_enemy_precision = 0.999,
 	health_hog_health_before_healing = 0.8,
 	ammo_hog_pickup_share = 0.7,
-	friendly_fire_bullet_counter = 4
-}
-HealthTriggerSettings = {
-	levels = {
-		0.2,
-		0.5,
-		1
-	},
-	rapid_health_loss = {
-		tick_time = 2,
-		tick_loss_threshold = 0.2
-	}
-}
-DialogueSettings.heard_speak_default_distance = 25
-DialogueSettings.max_hear_distance = math.max(DialogueSettings.heard_speak_default_distance, DialogueSettings.knocked_down_broadcast_range, DialogueSettings.pounced_down_broadcast_range, DialogueSettings.death_discover_distance)
-DialogueSettings.default_voice_switch_group = "voice_profile"
-DialogueSettings.player_vce_light_damage_threshold = 55
-DialogueSettings.surrounded_vo_slot_percent = 0.3
-DialogueSettings.dynamic_smart_tags = table.enum("aggroed", "renegade_netgunner", "seen_netgunner_flee")
-DialogueSettings.manual_subtitles = table.enum("loc_captain_twin_male_a__mission_twins_arrival_04_a_01")
-DialogueSettings.manual_subtitle_data = {
-	{
-		duration = 9.26,
-		speaker_name = "captain_twin_male_a"
+	friendly_fire_bullet_counter = 4,
+	heard_speak_distance = 25,
+	default_voice_switch_group = "voice_profile",
+	player_vce_light_damage_threshold = 55,
+	surrounded_vo_slot_percent = 0.3,
+	dynamic_smart_tags = table.enum("aggroed", "renegade_netgunner", "seen_netgunner_flee"),
+	manual_subtitles = table.enum("loc_captain_twin_male_a__mission_twins_arrival_04_a_01"),
+	manual_subtitle_data = {
+		{
+			duration = 9.26,
+			speaker_name = "captain_twin_male_a"
+		}
 	}
 }
 

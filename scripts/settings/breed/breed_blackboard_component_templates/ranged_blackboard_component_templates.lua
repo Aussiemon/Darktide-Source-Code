@@ -124,6 +124,68 @@ local renegade_flamer = table.clone(ranged_patroller)
 renegade_flamer.slot = nil
 renegade_flamer.blocked = nil
 renegade_flamer.suppression = nil
+local renegade_twin_captain = table.clone(grenadier)
+renegade_twin_captain.behavior = {
+	should_disappear_instant = "boolean",
+	enter_combat_range_flag = "boolean",
+	move_state = "string",
+	combat_range = "string",
+	combat_range_sticky_time = "number",
+	has_move_to_position = "boolean",
+	disappear_index = "number",
+	disappear_idle = "boolean",
+	toughness_broke = "boolean",
+	move_to_position = "Vector3Box",
+	should_disappear = "boolean",
+	lock_combat_range_switch = "boolean",
+	other_twin_unit = "Unit",
+	remove_toughness_clamp = "boolean"
+}
+renegade_twin_captain.nearby_units_broadphase = {
+	next_broadphase_t = "number",
+	num_units = "number"
+}
+local renegade_twin_captain_two = table.clone(ranged_base)
+renegade_twin_captain_two.behavior = {
+	should_disappear_instant = "boolean",
+	enter_combat_range_flag = "boolean",
+	move_state = "string",
+	combat_range = "string",
+	combat_range_sticky_time = "number",
+	has_move_to_position = "boolean",
+	disappear_index = "number",
+	disappear_idle = "boolean",
+	toughness_broke = "boolean",
+	move_to_position = "Vector3Box",
+	should_disappear = "boolean",
+	lock_combat_range_switch = "boolean",
+	other_twin_unit = "Unit",
+	remove_toughness_clamp = "boolean"
+}
+renegade_twin_captain_two.suppression = nil
+renegade_twin_captain_two.combat_vector = nil
+renegade_twin_captain_two.aim = nil
+renegade_twin_captain_two.throw_grenade = {
+	anim_event = "string",
+	throw_position = "Vector3Box",
+	wanted_rotation = "QuaternionBox",
+	throw_direction = "Vector3Box",
+	next_throw_at_t = "number"
+}
+renegade_twin_captain.toughness = {
+	max_toughness = "number",
+	toughness_percent = "number",
+	toughness_damage = "number"
+}
+renegade_twin_captain_two.toughness = {
+	max_toughness = "number",
+	toughness_percent = "number",
+	toughness_damage = "number"
+}
+renegade_twin_captain_two.nearby_units_broadphase = {
+	next_broadphase_t = "number",
+	num_units = "number"
+}
 local templates = {
 	cultist_flamer = cultist_flamer,
 	grenadier = grenadier,
@@ -134,7 +196,9 @@ local templates = {
 	renegade_flamer = renegade_flamer,
 	ranged_patroller_no_suppression = ranged_patroller_no_suppression,
 	riflemen = riflemen,
-	sniper = sniper
+	sniper = sniper,
+	renegade_twin_captain = renegade_twin_captain,
+	renegade_twin_captain_two = renegade_twin_captain_two
 }
 
 return templates

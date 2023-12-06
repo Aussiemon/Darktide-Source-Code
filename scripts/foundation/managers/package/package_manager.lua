@@ -12,6 +12,7 @@ PackageManager.init = function (self)
 	self._current_item = PackageManager.FIRST_ITEM
 	self._load_call_data = {}
 	self._package_to_load_call_item = {}
+	self._loaded_resident = {}
 	self._current_time = 0
 end
 
@@ -89,6 +90,8 @@ PackageManager.load = function (self, package_name, reference_name, callback, pr
 
 		if use_resident_loading then
 			ResourcePackage.load_resident(resource_handle)
+
+			self._loaded_resident[resource_handle] = true
 		else
 			ResourcePackage.load(resource_handle)
 		end
@@ -145,6 +148,8 @@ PackageManager._pop_queue = function (self)
 
 		if use_resident_loading then
 			ResourcePackage.load_resident(resource_handle)
+
+			self._loaded_resident[resource_handle] = true
 		else
 			ResourcePackage.load(resource_handle)
 		end
@@ -173,6 +178,12 @@ PackageManager.release = function (self, id)
 
 		if self._asynch_packages[package_name] then
 			resource_handle = self._asynch_packages[package_name]
+
+			if self._loaded_resident[resource_handle] then
+				Log.warning("PackageManager", "Trying to release package '%s' which is in the process of being loaded with load_resident(). This will cause a stall", package_name)
+			else
+				Log.warning("PackageManager", "Trying to release package '%s' which is in the process of being loaded with load(). This will cause a stall", package_name)
+			end
 		end
 
 		if resource_handle then
@@ -180,6 +191,8 @@ PackageManager.release = function (self, id)
 
 			ResourcePackage.unload(resource_handle)
 			Application.release_resource_package(resource_handle)
+
+			self._loaded_resident[resource_handle] = nil
 		end
 
 		self._package_to_load_call_item[package_name] = nil

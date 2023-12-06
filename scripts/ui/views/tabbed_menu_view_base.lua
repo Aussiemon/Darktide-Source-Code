@@ -28,7 +28,7 @@ TabbedMenuViewBase.on_enter = function (self)
 	end
 
 	if definitions.tab_bar_params then
-		self:_setup_tab_bar(definitions.tab_bar_params)
+		self:_setup_tab_bar(definitions.tab_bar_params, definitions.additional_context, definitions.optional_start_index)
 	end
 
 	if definitions.input_legend_params then
@@ -330,7 +330,13 @@ TabbedMenuViewBase.add_input_legend_entry = function (self, entry_params)
 		press_callback = callback_parent and callback(callback_parent, on_pressed_callback)
 	end
 
-	return input_legend:add_entry(entry_params.display_name, entry_params.input_action, entry_params.visibility_function, press_callback, entry_params.alignment)
+	local display_name = entry_params.display_name
+	local input_action = entry_params.input_action
+	local visibility_function = entry_params.visibility_function
+	local alignment = entry_params.alignment
+	local suffix_function = entry_params.suffix_function
+
+	return input_legend:add_entry(display_name, input_action, visibility_function, press_callback, alignment, nil, nil, nil, suffix_function)
 end
 
 TabbedMenuViewBase.remove_input_legend_entry = function (self, id)

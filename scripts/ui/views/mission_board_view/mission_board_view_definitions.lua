@@ -283,7 +283,7 @@ MissionBoardViewDefinitions.scenegraph_definition = {
 		position = {
 			0,
 			0,
-			0
+			63
 		}
 	},
 	corner_bottom_right = {
@@ -297,7 +297,7 @@ MissionBoardViewDefinitions.scenegraph_definition = {
 		position = {
 			0,
 			0,
-			0
+			63
 		}
 	},
 	planet = {
@@ -324,7 +324,7 @@ MissionBoardViewDefinitions.scenegraph_definition = {
 		},
 		position = {
 			95,
-			90,
+			160,
 			10
 		}
 	},
@@ -584,10 +584,7 @@ MissionBoardViewDefinitions.scenegraph_definition = {
 		vertical_alignment = "bottom",
 		parent = "detail_location",
 		horizontal_alignment = "center",
-		size = {
-			347,
-			50
-		},
+		size = ButtonPassTemplates.default_button.size,
 		position = {
 			0,
 			460,
@@ -833,7 +830,7 @@ MissionBoardViewDefinitions.scenegraph_definition = {
 		}
 	},
 	mission_type_selection_pivot = {
-		vertical_alignment = "bottom",
+		vertical_alignment = "top",
 		parent = "canvas",
 		horizontal_alignment = "left",
 		size = {
@@ -841,9 +838,37 @@ MissionBoardViewDefinitions.scenegraph_definition = {
 			0
 		},
 		position = {
-			100,
-			-190,
+			105,
+			95,
 			2
+		}
+	},
+	story_mission_view_button_frame = {
+		vertical_alignment = "bottom",
+		parent = "canvas",
+		horizontal_alignment = "left",
+		size = {
+			450,
+			336
+		},
+		position = {
+			40,
+			-60,
+			10
+		}
+	},
+	story_mission_view_button = {
+		vertical_alignment = "bottom",
+		parent = "story_mission_view_button_frame",
+		horizontal_alignment = "center",
+		size = {
+			248,
+			45
+		},
+		position = {
+			0,
+			-83,
+			10
 		}
 	}
 }
@@ -1611,13 +1636,75 @@ MissionBoardViewDefinitions.widget_definitions.search_text = UIWidget.create_def
 		value = Localize("loc_social_menu_find_player_searching")
 	}
 }, "search_text", nil, nil, MissionBoardViewStyles.search_text_style)
-MissionBoardViewDefinitions.widget_definitions.play_team_button = UIWidget.create_definition(ButtonPassTemplates.terminal_button, "play_team_button", {
+MissionBoardViewDefinitions.widget_definitions.play_team_button = UIWidget.create_definition(ButtonPassTemplates.default_button, "play_team_button", {
 	gamepad_action = "confirm_pressed",
 	original_text = Utf8.upper(Localize("loc_mission_board_view_accept_mission")),
 	hotspot = {}
 }, nil, {
 	text = {
 		line_spacing = 0.7
+	}
+})
+MissionBoardViewDefinitions.widget_definitions.story_mission_view_button_frame = UIWidget.create_definition({
+	{
+		value = "content/ui/materials/frames/mission_board_story_mission_frame",
+		style_id = "frame",
+		pass_type = "texture",
+		style = {
+			offset = {
+				0,
+				0,
+				2
+			}
+		}
+	},
+	{
+		value = "content/ui/materials/frames/mission_board_story_mission_char",
+		style_id = "char",
+		pass_type = "texture",
+		style = {
+			vertical_alignment = "center",
+			horizontal_alignment = "center",
+			offset = {
+				0,
+				-40,
+				0
+			},
+			size = {
+				144,
+				144
+			},
+			material_values = {}
+		}
+	},
+	{
+		value = "content/ui/materials/frames/mission_board_story_mission_char_overlay",
+		style_id = "char_overlay",
+		pass_type = "texture",
+		style = {
+			vertical_alignment = "center",
+			horizontal_alignment = "center",
+			offset = {
+				0,
+				-40,
+				1
+			},
+			size = {
+				144,
+				144
+			},
+			color = Color.terminal_grid_background(150, true)
+		}
+	}
+}, "story_mission_view_button_frame")
+MissionBoardViewDefinitions.widget_definitions.story_mission_view_button = UIWidget.create_definition(ButtonPassTemplates.terminal_button, "story_mission_view_button", {
+	gamepad_action = "hotkey_menu_special_2",
+	original_text = Utf8.upper(Localize("loc_story_mission_menu_access_button_text")),
+	hotspot = {}
+}, nil, {
+	text = {
+		line_spacing = 0.7,
+		font_size = 20
 	}
 })
 MissionBoardViewDefinitions.widget_definitions.play_team_button_legend = UIWidget.create_definition({
@@ -2395,6 +2482,86 @@ MissionBoardViewDefinitions.animations = {
 			end,
 			update = function (parent, ui_scenegraph, _scenegraph_definition, widgets_by_name, progress, mission_board_view)
 				game_settings_anim_others(widgets_by_name, math.easeOutCubic(progress))
+			end
+		}
+	},
+	story_mission_button_anim_1 = {
+		{
+			name = "start",
+			end_time = 0.3,
+			start_time = 0,
+			update = function (parent, ui_scenegraph, _scenegraph_definition, widgets, progress, params)
+				local story_mission_view_button_frame = widgets.story_mission_view_button_frame
+				story_mission_view_button_frame.style.char.material_values.distortion = 0.2 + 0.5 * progress
+			end
+		},
+		{
+			name = "end",
+			end_time = 1,
+			start_time = 0.7,
+			update = function (parent, ui_scenegraph, _scenegraph_definition, widgets, progress, params)
+				local story_mission_view_button_frame = widgets.story_mission_view_button_frame
+				story_mission_view_button_frame.style.char.material_values.distortion = 0.2 + 0.5 * (1 - progress)
+			end
+		}
+	},
+	story_mission_button_anim_2 = {
+		{
+			name = "start",
+			end_time = 0.3,
+			start_time = 0,
+			update = function (parent, ui_scenegraph, _scenegraph_definition, widgets, progress, params)
+				local story_mission_view_button_frame = widgets.story_mission_view_button_frame
+				story_mission_view_button_frame.style.char.material_values.distortion = 0.2 + 0.5 * math.ease_out_elastic(progress)
+			end
+		},
+		{
+			name = "end",
+			end_time = 0.7,
+			start_time = 0.5,
+			update = function (parent, ui_scenegraph, _scenegraph_definition, widgets, progress, params)
+				local story_mission_view_button_frame = widgets.story_mission_view_button_frame
+				story_mission_view_button_frame.style.char.material_values.distortion = 0.2 + 0.5 * (1 - progress)
+			end
+		}
+	},
+	story_mission_button_anim_3 = {
+		{
+			name = "start",
+			end_time = 0.2,
+			start_time = 0,
+			update = function (parent, ui_scenegraph, _scenegraph_definition, widgets, progress, params)
+				local story_mission_view_button_frame = widgets.story_mission_view_button_frame
+				story_mission_view_button_frame.style.char.material_values.distortion = 0.2 + 0.2 * math.bounce(progress)
+			end
+		},
+		{
+			name = "end",
+			end_time = 0.5,
+			start_time = 0.3,
+			update = function (parent, ui_scenegraph, _scenegraph_definition, widgets, progress, params)
+				local story_mission_view_button_frame = widgets.story_mission_view_button_frame
+				story_mission_view_button_frame.style.char.material_values.distortion = 0.2 + 0.2 * (1 - progress)
+			end
+		}
+	},
+	story_mission_button_anim_4 = {
+		{
+			name = "start",
+			end_time = 0.2,
+			start_time = 0,
+			update = function (parent, ui_scenegraph, _scenegraph_definition, widgets, progress, params)
+				local story_mission_view_button_frame = widgets.story_mission_view_button_frame
+				story_mission_view_button_frame.style.char.material_values.distortion = 0.2 + 0.7 * math.bounce(progress)
+			end
+		},
+		{
+			name = "end",
+			end_time = 0.5,
+			start_time = 0.3,
+			update = function (parent, ui_scenegraph, _scenegraph_definition, widgets, progress, params)
+				local story_mission_view_button_frame = widgets.story_mission_view_button_frame
+				story_mission_view_button_frame.style.char.material_values.distortion = 0.2 + 0.7 * math.ease_pulse(1 - progress)
 			end
 		}
 	}

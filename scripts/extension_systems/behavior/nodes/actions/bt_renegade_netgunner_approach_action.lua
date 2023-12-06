@@ -63,12 +63,6 @@ BtRenegadeNetgunnerApproachAction.run = function (self, unit, breed, blackboard,
 
 	if UPDATE_TARGET_DISTANCE_SQ < target_to_destination_distance_sq then
 		self:_move_to_target(scratchpad, target_unit)
-
-		local vo_event = action_data.vo_event
-
-		if vo_event then
-			Vo.enemy_vo_event(unit, vo_event)
-		end
 	end
 
 	local behavior_component = scratchpad.behavior_component
@@ -86,6 +80,12 @@ BtRenegadeNetgunnerApproachAction.run = function (self, unit, breed, blackboard,
 
 	if move_state ~= "moving" then
 		self:_start_move_anim(scratchpad, action_data)
+
+		local vo_event = action_data.vo_event
+
+		if vo_event then
+			Vo.enemy_generic_vo_event(unit, vo_event, breed.name, target_distance)
+		end
 	end
 
 	return "running"

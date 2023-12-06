@@ -74,7 +74,7 @@ local DEFAULT_MIN_DISTANCES_FROM_TARGET = {
 	cultist_flamer = 20,
 	renegade_grenadier = 20,
 	renegade_flamer = 15,
-	renegade_netgunner = 20,
+	renegade_netgunner = 28,
 	chaos_plague_ogryn = 30,
 	chaos_spawn = 30,
 	cultist_grenadier = 20,
@@ -85,7 +85,7 @@ local DEFAULT_MIN_DISTANCES_FROM_TARGET = {
 }
 local DEFAULT_MIN_SPAWNERS_RANGES = {
 	max = 49,
-	min = 12
+	min = 20
 }
 local DEFAULT_NUM_ALLOWED_DISABLED_PER_ALIVE_TARGETS = {
 	{
@@ -97,7 +97,7 @@ local DEFAULT_NUM_ALLOWED_DISABLED_PER_ALIVE_TARGETS = {
 	{
 		0,
 		1,
-		2,
+		1,
 		2
 	},
 	{
@@ -113,8 +113,8 @@ local DEFAULT_NUM_ALLOWED_DISABLED_PER_ALIVE_TARGETS = {
 		3
 	},
 	{
+		1,
 		2,
-		3,
 		3,
 		4
 	}
@@ -130,6 +130,22 @@ local DEFAULT_DISABLER_TARGET_ALONE_PLAYER_CHANCE = {
 	renegade_netgunner = 0.5,
 	chaos_hound = 0.75,
 	cultist_mutant = 0.25
+}
+local LOW_MAX_OF_SAME = {
+	chaos_poxwalker_bomber = 1,
+	grenadier = 2,
+	renegade_grenadier = 2,
+	renegade_flamer = 2,
+	renegade_netgunner = 1,
+	renegade_sniper = 2,
+	chaos_plague_ogryn = 2,
+	cultist_grenadier = 1,
+	cultist_mutant = 1,
+	chaos_hound = 1,
+	chaos_beast_of_nurgle = 1,
+	flamer = 2,
+	chaos_spawn = 2,
+	cultist_flamer = 2
 }
 local DEFAULT_MAX_OF_SAME = {
 	chaos_poxwalker_bomber = 2,
@@ -183,15 +199,15 @@ local specials_pacing_template = {
 			chance_for_coordinated_strike = 0.1,
 			max_alive_specials = 3,
 			max_spawn_group_offset_range = 6,
-			move_timer_when_horde_active = true,
-			move_timer_when_monster_active = true,
+			move_timer_when_horde_active = false,
+			move_timer_when_monster_active = false,
 			spawn_failed_wait_time = 5,
 			timer_range = {
 				200,
 				420
 			},
 			always_update_breeds = ALWAYS_UPDATE_AT_CHALLANGE_RATING_BREEDS,
-			max_of_same = DEFAULT_MAX_OF_SAME,
+			max_of_same = LOW_MAX_OF_SAME,
 			min_distances_from_target = DEFAULT_MIN_DISTANCES_FROM_TARGET,
 			breeds = DEFAULT_BREEDS,
 			disabler_target_alone_player_chance = DEFAULT_DISABLER_TARGET_ALONE_PLAYER_CHANCE,
@@ -239,15 +255,15 @@ local specials_pacing_template = {
 			max_alive_specials = 4,
 			max_spawn_group_offset_range = 6,
 			speed_running_check_frequency = 5,
-			move_timer_when_horde_active = true,
-			move_timer_when_monster_active = true,
+			move_timer_when_horde_active = false,
+			move_timer_when_monster_active = false,
 			spawn_failed_wait_time = 5,
 			timer_range = {
 				200,
 				420
 			},
 			always_update_breeds = ALWAYS_UPDATE_AT_CHALLANGE_RATING_BREEDS,
-			max_of_same = DEFAULT_MAX_OF_SAME,
+			max_of_same = LOW_MAX_OF_SAME,
 			min_distances_from_target = DEFAULT_MIN_DISTANCES_FROM_TARGET,
 			breeds = DEFAULT_BREEDS,
 			disabler_target_alone_player_chance = DEFAULT_DISABLER_TARGET_ALONE_PLAYER_CHANCE,
@@ -355,16 +371,17 @@ local specials_pacing_template = {
 			}
 		},
 		{
+			coordinated_surge_chance = 0.1,
 			move_timer_when_terror_event_active = true,
-			destroy_special_distance = 100,
-			move_timer_when_challenge_rating_above = 30,
 			first_spawn_timer_modifer = 0.6,
+			move_timer_when_challenge_rating_above_delay = 20,
+			destroy_special_distance = 100,
+			rushing_distance = 45,
 			speed_running_required_challenge_rating = 10,
 			speed_running_required_distance = 10,
-			rushing_distance = 45,
 			travel_distance_spawning = true,
 			num_required_speed_running_checks = 2,
-			move_timer_when_challenge_rating_above_delay = 20,
+			move_timer_when_challenge_rating_above = 30,
 			coordinated_strike_challenge_rating = 5,
 			chance_for_coordinated_strike = 0.225,
 			max_alive_specials = 6,
@@ -400,6 +417,18 @@ local specials_pacing_template = {
 				4,
 				6
 			},
+			coordinated_surge_timer_range = {
+				8,
+				16
+			},
+			coordinated_surge_duration_range = {
+				20,
+				60
+			},
+			num_coordinated_surges_range = {
+				0,
+				3
+			},
 			rush_prevention_breeds = DEFAULT_RUSH_PREVENTION_BREEDS,
 			rush_prevention_cooldown = {
 				50,
@@ -421,16 +450,17 @@ local specials_pacing_template = {
 			}
 		},
 		{
+			coordinated_surge_chance = 0.2,
 			move_timer_when_terror_event_active = true,
-			destroy_special_distance = 100,
-			move_timer_when_challenge_rating_above = 20,
 			first_spawn_timer_modifer = 0.6,
+			move_timer_when_challenge_rating_above_delay = 20,
+			destroy_special_distance = 100,
+			rushing_distance = 40,
 			speed_running_required_challenge_rating = 8,
 			speed_running_required_distance = 10,
-			rushing_distance = 40,
 			travel_distance_spawning = true,
 			num_required_speed_running_checks = 2,
-			move_timer_when_challenge_rating_above_delay = 20,
+			move_timer_when_challenge_rating_above = 20,
 			coordinated_strike_challenge_rating = 5,
 			chance_for_coordinated_strike = 0.25,
 			max_alive_specials = 8,
@@ -465,6 +495,18 @@ local specials_pacing_template = {
 			coordinated_strike_num_breeds = {
 				6,
 				8
+			},
+			coordinated_surge_timer_range = {
+				8,
+				16
+			},
+			coordinated_surge_duration_range = {
+				30,
+				80
+			},
+			num_coordinated_surges_range = {
+				2,
+				5
 			},
 			rush_prevention_breeds = DEFAULT_RUSH_PREVENTION_BREEDS,
 			rush_prevention_cooldown = {

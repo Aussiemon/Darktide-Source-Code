@@ -35,6 +35,12 @@ local function _is_in_hub()
 	return is_in_hub
 end
 
+local function is_view_or_popup_active()
+	local ui_manager = Managers.ui
+
+	return ui_manager:has_active_view() or ui_manager:handling_popups()
+end
+
 local function _is_in_prologue_hub()
 	local game_mode_name = Managers.state.game_mode:game_mode_name()
 	local is_in_hub = game_mode_name == "prologue_hub"
@@ -929,170 +935,56 @@ local templates = {
 		sync_on_events = {}
 	},
 	{
-		name = "season_1_intro_popup",
+		name = "season_1_twins_prologue",
 		valid_states = {
 			"GameplayStateRun"
 		},
 		validation_func = function (self)
-			return _is_in_hub() and Managers.narrative:can_complete_event("s1_intro_popup_viewed")
+			return _is_in_hub() and not is_view_or_popup_active() and _is_on_story_chapter("s1_twins", "s1_twins_prologue")
 		end,
 		on_activation = function (self)
-			local slide_data = {
-				starting_slide_index = 1,
-				slides = {
-					{
-						id = "id_test",
-						local_slide = true,
-						local_image = "content/ui/textures/event_news/traitor_curse_side_art",
-						content = {
-							{
-								widget_type = "header",
-								text = Localize("loc_news_traitor_curse_header_1")
-							},
-							{
-								widget_type = "sub_header",
-								text = Localize("loc_news_traitor_curse_subheader_1")
-							},
-							{
-								widget_type = "dynamic_spacing",
-								size = {
-									500,
-									20
-								}
-							},
-							{
-								widget_type = "body",
-								text = Localize("loc_news_traitor_curse_text_1")
-							},
-							{
-								widget_type = "dynamic_spacing",
-								size = {
-									500,
-									40
-								}
-							},
-							{
-								image = "content/ui/materials/event_news/traitor_curse_news_image_1",
-								widget_type = "image",
-								size = {
-									700,
-									130
-								},
-								color = {
-									255,
-									255,
-									255,
-									255
-								}
-							},
-							{
-								widget_type = "dynamic_spacing",
-								size = {
-									500,
-									10
-								}
-							},
-							{
-								widget_type = "sub_header",
-								text = Localize("loc_news_traitor_curse_subheader_2")
-							},
-							{
-								widget_type = "body",
-								text = Localize("loc_news_traitor_curse_text_2")
-							},
-							{
-								widget_type = "dynamic_spacing",
-								size = {
-									700,
-									40
-								}
-							},
-							{
-								image = "content/ui/materials/event_news/traitor_curse_news_image_4",
-								widget_type = "image",
-								size = {
-									700,
-									130
-								},
-								color = {
-									255,
-									255,
-									255,
-									255
-								}
-							},
-							{
-								widget_type = "dynamic_spacing",
-								size = {
-									500,
-									10
-								}
-							},
-							{
-								widget_type = "sub_header",
-								text = Localize("loc_news_traitor_curse_subheader_5")
-							},
-							{
-								widget_type = "body",
-								text = Localize("loc_news_traitor_curse_text_5")
-							},
-							{
-								widget_type = "dynamic_spacing",
-								size = {
-									700,
-									40
-								}
-							},
-							{
-								image = "content/ui/materials/event_news/traitor_curse_news_image_3",
-								widget_type = "image",
-								size = {
-									700,
-									130
-								},
-								color = {
-									255,
-									255,
-									255,
-									255
-								}
-							},
-							{
-								widget_type = "dynamic_spacing",
-								size = {
-									500,
-									10
-								}
-							},
-							{
-								widget_type = "sub_header",
-								text = Localize("loc_news_traitor_curse_subheader_4")
-							},
-							{
-								widget_type = "body",
-								text = Localize("loc_news_traitor_curse_text_4")
-							},
-							{
-								widget_type = "dynamic_spacing",
-								size = {
-									700,
-									20
-								}
-							}
-						}
-					}
-				}
-			}
+			Managers.narrative:complete_current_chapter("s1_twins", "s1_twins_prologue")
 
-			Managers.ui:open_view("news_view", nil, nil, nil, nil, {
-				on_startup = true,
-				content_package = "packages/ui/event_news/event_news",
-				slide_data = slide_data
-			})
+			local level = Managers.state.mission:mission_level()
+
+			if level then
+				Level.trigger_event(level, "s1_event_twins_prologue")
+			end
+		end
+	},
+	{
+		name = "season_1_twins_epilogue_1",
+		valid_states = {
+			"GameplayStateRun"
+		},
+		validation_func = function (self)
+			return _is_in_hub() and not is_view_or_popup_active() and _is_on_story_chapter("s1_twins", "s1_twins_epilogue_1")
 		end,
-		on_deactivation = function (self)
-			if Managers.narrative then
-				Managers.narrative:complete_event("s1_intro_popup_viewed")
+		on_activation = function (self)
+			Managers.narrative:complete_current_chapter("s1_twins", "s1_twins_epilogue_1")
+
+			local level = Managers.state.mission:mission_level()
+
+			if level then
+				Level.trigger_event(level, "s1_event_twins_epilogue_1")
+			end
+		end
+	},
+	{
+		name = "season_1_twins_epilogue_3",
+		valid_states = {
+			"GameplayStateRun"
+		},
+		validation_func = function (self)
+			return _is_in_hub() and not is_view_or_popup_active() and _is_on_story_chapter("s1_twins", "s1_twins_epilogue_3")
+		end,
+		on_activation = function (self)
+			Managers.narrative:complete_current_chapter("s1_twins", "s1_twins_epilogue_3")
+
+			local level = Managers.state.mission:mission_level()
+
+			if level then
+				Level.trigger_event(level, "s1_event_twins_epilogue_3")
 			end
 		end
 	}

@@ -1,14 +1,14 @@
 local definition_path = "scripts/ui/hud/elements/player_weapon/hud_element_player_weapon_definitions"
-local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
-local HudElementPlayerWeaponSettings = require("scripts/ui/hud/elements/player_weapon/hud_element_player_weapon_settings")
 local HudElementPlayerWeaponHandlerSettings = require("scripts/ui/hud/elements/player_weapon_handler/hud_element_player_weapon_handler_settings")
-local UIWidget = require("scripts/managers/ui/ui_widget")
-local UIHudSettings = require("scripts/settings/ui/ui_hud_settings")
+local HudElementPlayerWeaponSettings = require("scripts/ui/hud/elements/player_weapon/hud_element_player_weapon_settings")
+local InputDevice = require("scripts/managers/input/input_device")
 local InputUtils = require("scripts/managers/input/input_utils")
 local ItemSlotSettings = require("scripts/settings/item/item_slot_settings")
-local InputDevice = require("scripts/managers/input/input_device")
+local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
 local UIFonts = require("scripts/managers/ui/ui_fonts")
+local UIHudSettings = require("scripts/settings/ui/ui_hud_settings")
 local UIRenderer = require("scripts/managers/ui/ui_renderer")
+local UIWidget = require("scripts/managers/ui/ui_widget")
 local HudElementPlayerWeapon = class("HudElementPlayerWeapon", "HudElementBase")
 
 HudElementPlayerWeapon.init = function (self, parent, draw_layer, start_scale, data)
@@ -495,31 +495,40 @@ HudElementPlayerWeapon.set_ammo_amount = function (self, amount, total_max_amoun
 	end
 end
 
-HudElementPlayerWeapon._update_input = function (self)
-	local service_type = "Ingame"
-	local alias_name = self._wield_input
-	local color_tint_text = false
-	local visible = true
+function _find_input_key(alias_names, service_type, color_tint_text)
+	for _, sub_alias_name in ipairs(alias_names) do
+		local input_key = InputUtils.input_text_for_current_input_device(service_type, sub_alias_name, color_tint_text)
 
-	if InputDevice.gamepad_active then
-		if self._gamepad_wield_input then
-			alias_name = self._gamepad_wield_input
-		end
-
-		if self._hide_input_on_gamepad_wielded and self._wielded then
-			visible = false
+		if input_key ~= nil and input_key ~= "" then
+			return input_key
 		end
 	end
 
-	local input_key = InputUtils.input_text_for_current_input_device(service_type, alias_name, color_tint_text)
-
-	self:set_input_text(input_key, visible)
+	return ""
 end
 
-HudElementPlayerWeapon.set_input_text = function (self, text, visible)
+HudElementPlayerWeapon._update_input = function (self)
+	local service_type = "Ingame"
+	local color_tint_text = false
+	local alias_name = InputDevice.gamepad_active and self._gamepad_wield_input or self._wield_input
+	local input_key = nil
+
+	if type(alias_name) == "table" then
+		input_key = _find_input_key(alias_name, service_type, color_tint_text)
+	else
+		input_key = InputUtils.input_text_for_current_input_device(service_type, alias_name, color_tint_text)
+	end
+
+	local faded = self._wielded
+
+	self:set_input_text(input_key, faded)
+end
+
+HudElementPlayerWeapon.set_input_text = function (self, text, faded)
 	local widgets_by_name = self._widgets_by_name
 	local widget = widgets_by_name.input_text
-	widget.content.text = visible and text or " "
+	widget.content.text = text or " "
+	widget.style.text.text_color[1] = faded and 63 or 255
 	widget.dirty = true
 end
 

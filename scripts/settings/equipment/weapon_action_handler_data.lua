@@ -2,7 +2,7 @@ local BuffSettings = require("scripts/settings/buff/buff_settings")
 local MasterItems = require("scripts/backend/master_items")
 local Overheat = require("scripts/utilities/overheat")
 local PlayerUnitVisualLoadout = require("scripts/extension_systems/visual_loadout/utilities/player_unit_visual_loadout")
-local PocketableUtils = require("scripts/settings/equipment/weapon_templates/pocketables/pockatables_utils")
+local Pocketable = require("scripts/utilities/pocketable")
 local ReloadStates = require("scripts/extension_systems/weapon/utilities/reload_states")
 local Scanning = require("scripts/utilities/scanning")
 local Sprint = require("scripts/extension_systems/character_state_machine/character_states/utilities/sprint")
@@ -35,6 +35,7 @@ local weapon_action_data = {
 		dummy = _require_weapon_action("action_dummy"),
 		flamer_gas = _require_weapon_action("action_flamer_gas"),
 		flamer_gas_burst = _require_weapon_action("action_flamer_gas_burst"),
+		give_pocketable = _require_weapon_action("action_give_pocketable"),
 		heal_target_over_time = _require_weapon_action("action_heal_target_over_time"),
 		inspect = _require_weapon_action("action_inspect"),
 		melee_explosive = _require_weapon_action("action_melee_explosive"),
@@ -59,6 +60,7 @@ local weapon_action_data = {
 		sweep = _require_weapon_action("action_sweep"),
 		scan = _require_weapon_action("action_scan"),
 		scan_confirm = _require_weapon_action("action_scan_confirm"),
+		target_ally = _require_weapon_action("action_target_ally"),
 		target_finder = _require_weapon_action("action_target_finder"),
 		throw_grenade = _require_weapon_action("action_throw_grenade"),
 		throw_luggable = _require_weapon_action("action_throw_luggable"),
@@ -68,6 +70,7 @@ local weapon_action_data = {
 		unwield = _require_weapon_action("action_unwield"),
 		unwield_to_previous = _require_weapon_action("action_unwield_to_previous"),
 		unwield_to_specific = _require_weapon_action("action_unwield_to_specific"),
+		use_syringe = _require_weapon_action("action_use_syringe"),
 		vent_overheat = _require_weapon_action("action_vent_overheat"),
 		vent_warp_charge = _require_weapon_action("action_vent_warp_charge"),
 		wield = _require_weapon_action("action_wield"),
@@ -365,6 +368,39 @@ weapon_action_data.action_kind_condition_funcs = {
 		local can_use = ability_extension:can_use_ability(ability_type)
 
 		return can_use
+	end,
+	give_pocketable = function (action_settings, condition_func_params, used_input)
+		local current_weapon_template = WeaponTemplate.current_weapon_template(condition_func_params.weapon_action_component)
+		local give_pickup_name = current_weapon_template.give_pickup_name
+
+		if not give_pickup_name then
+			return false
+		end
+
+		local action_module_targeting_component = condition_func_params.action_module_targeting_component
+		local target_unit = action_module_targeting_component.target_unit_1
+		local validate_target_func = action_settings.validate_target_func
+
+		return not validate_target_func or validate_target_func(target_unit)
+	end,
+	use_syringe = function (action_settings, condition_func_params, used_input)
+		local target_unit = nil
+
+		if action_settings.self_use then
+			target_unit = condition_func_params.unit
+		else
+			local action_module_targeting_component = condition_func_params.action_module_targeting_component
+			target_unit = action_module_targeting_component.target_unit_1
+		end
+
+		if not target_unit then
+			return false
+		end
+
+		local validate_target_func = action_settings.validate_target_func
+		local can_use = not validate_target_func or validate_target_func(target_unit)
+
+		return can_use
 	end
 }
 weapon_action_data.action_kind_total_time_funcs = {
@@ -434,16 +470,6 @@ local function _started_reload(condition_func_params, action_params, remaining_t
 end
 
 weapon_action_data.conditional_state_functions = {
-	unwield_from_grenade_slot = function (condition_func_params, action_params, remaining_time, t)
-		local no_time_left = remaining_time <= 0
-		local ability_extension = condition_func_params.ability_extension
-		local ability_type = "grenade_ability"
-		local no_grenades_left = not ability_extension:can_use_ability(ability_type)
-		local input_extension = condition_func_params.input_extension
-		local wield_previous_slot_after_grenade = input_extension:get("wield_previous_slot_after_grenade")
-
-		return no_time_left and (no_grenades_left or wield_previous_slot_after_grenade)
-	end,
 	no_grenades_and_got_grenade = function (condition_func_params, action_params, remaining_time, t)
 		local ability_extension = condition_func_params.ability_extension
 		local ability_type = "grenade_ability"

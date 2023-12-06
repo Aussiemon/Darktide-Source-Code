@@ -69,6 +69,14 @@ StateTitle.on_enter = function (self, parent, params, creation_context)
 		return
 	end
 
+	if Managers.stats:user_state(1) ~= nil then
+		Managers.stats:remove_user(1)
+	end
+
+	if Managers.achievements:has_player(1) then
+		Managers.achievements:remove_player(1)
+	end
+
 	Managers.account:reset()
 
 	if IS_XBS then

@@ -1,6 +1,7 @@
 require("scripts/extension_systems/first_person/character_state_orientation/base_player_orientation")
 
 local Action = require("scripts/utilities/weapon/action")
+local Breed = require("scripts/utilities/breed")
 local Fov = require("scripts/utilities/camera/fov")
 local Orientation = require("scripts/utilities/orientation")
 local PlayerOrientationSettings = require("scripts/settings/player_character/player_orientation_settings")
@@ -94,6 +95,13 @@ SmoothForceViewPlayerOrientation.pre_update = function (self, main_t, main_dt, i
 		local special_active_at_start = weapon_action_component.special_active_at_start
 		local hit_stickyness_settings = special_active_at_start and current_action_settings.hit_stickyness_settings_special_active or current_action_settings.hit_stickyness_settings
 		disable_vertical_force_view = hit_stickyness_settings and hit_stickyness_settings.disable_vertical_force_view
+		local sitck_to_unit = action_sweep_component.sweep_aborted_unit
+		local unit_data_extension = sitck_to_unit and ScriptUnit.extension(sitck_to_unit, "unit_data_system")
+		local breed = unit_data_extension and unit_data_extension:breed()
+
+		if Breed.is_prop(breed) then
+			disable_vertical_force_view = true
+		end
 	end
 
 	if disable_vertical_force_view then

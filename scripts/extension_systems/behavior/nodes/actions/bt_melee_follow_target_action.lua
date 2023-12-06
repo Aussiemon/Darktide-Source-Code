@@ -19,15 +19,17 @@ BtMeleeFollowTargetAction.enter = function (self, unit, breed, blackboard, scrat
 	scratchpad.behavior_component = Blackboard.write_component(blackboard, "behavior")
 	scratchpad.perception_component = blackboard.perception
 	local buff_extension = ScriptUnit.extension(unit, "buff_system")
+	scratchpad.buff_extension = buff_extension
 	local stat_buffs = buff_extension:stat_buffs()
 	local movement_speed = stat_buffs.movement_speed or 1
+	local animation_variable_init = breed.animation_variable_init
 
-	if movement_speed > 1 then
-		local animation_variable_init = breed.animation_variable_init
+	if animation_variable_init then
+		scratchpad.can_scale_movementspeed = true
+	end
 
-		if not animation_variable_init or not animation_variable_init.anim_move_speed then
-			movement_speed = 1
-		end
+	if movement_speed > 1 and (not animation_variable_init or not animation_variable_init.anim_move_speed) then
+		movement_speed = 1
 	end
 
 	local animation_move_speed_modifier = breed.animation_move_speed_modifier
@@ -140,6 +142,10 @@ BtMeleeFollowTargetAction.run = function (self, unit, breed, blackboard, scratch
 		MinionMovement.update_anim_driven_start_rotation(unit, scratchpad, action_data, t)
 	end
 
+	if scratchpad.can_scale_movementspeed then
+		self:_update_scaled_movementspeed(unit, breed, t, scratchpad, action_data)
+	end
+
 	if not is_anim_driven then
 		local state = scratchpad.state
 
@@ -189,6 +195,33 @@ BtMeleeFollowTargetAction.run = function (self, unit, breed, blackboard, scratch
 	end
 
 	return "running", should_evaluate
+end
+
+BtMeleeFollowTargetAction._update_scaled_movementspeed = function (self, unit, breed, t, scratchpad, action_data)
+	local buff_extension = scratchpad.buff_extension
+	local stat_buffs = buff_extension:stat_buffs()
+	local movement_speed = stat_buffs.movement_speed or 1
+
+	if movement_speed > 1 then
+		local animation_variable_init = breed.animation_variable_init
+
+		if not animation_variable_init or not animation_variable_init.anim_move_speed then
+			movement_speed = 1
+		end
+	end
+
+	local animation_move_speed_modifier = breed.animation_move_speed_modifier
+
+	if animation_move_speed_modifier then
+		movement_speed = movement_speed + animation_move_speed_modifier - 1
+	end
+
+	if scratchpad.modified_movement_speed ~= movement_speed then
+		scratchpad.modified_movement_speed = movement_speed
+		local speed = (action_data.move_speed or breed.run_speed) * movement_speed
+
+		scratchpad.navigation_extension:set_max_speed(speed)
+	end
 end
 
 BtMeleeFollowTargetAction._start_move_anim = function (self, unit, breed, t, scratchpad, action_data)

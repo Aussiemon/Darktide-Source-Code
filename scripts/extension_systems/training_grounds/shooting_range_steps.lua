@@ -175,6 +175,34 @@ ShootingRangeSteps.pickup_loop = {
 			step_data.grenade_unit = pickup_system:spawn_pickup("small_grenade", Unit.local_position(directional_grenade, 1), Unit.local_rotation(directional_grenade, 1))
 		end
 
+		local syringe_corruption_unit = step_data.syringe_corruption_unit
+
+		if not ALIVE[syringe_corruption_unit] then
+			local directional_syringe_corruption = scenario_system:get_directional_unit("syringe_corruption_refill")
+			step_data.syringe_corruption_unit = pickup_system:spawn_pickup("syringe_corruption_pocketable", Unit.local_position(directional_syringe_corruption, 1), Unit.local_rotation(directional_syringe_corruption, 1))
+		end
+
+		local syringe_ability_boost_unit = step_data.syringe_ability_boost_unit
+
+		if not ALIVE[syringe_ability_boost_unit] then
+			local directional_syringe_ability_boost = scenario_system:get_directional_unit("syringe_ability_boost_refill")
+			step_data.syringe_ability_boost_unit = pickup_system:spawn_pickup("syringe_ability_boost_pocketable", Unit.local_position(directional_syringe_ability_boost, 1), Unit.local_rotation(directional_syringe_ability_boost, 1))
+		end
+
+		local syringe_power_boost_unit = step_data.syringe_power_boost_unit
+
+		if not ALIVE[syringe_power_boost_unit] then
+			local directional_syringe_power_boost = scenario_system:get_directional_unit("syringe_power_boost_refill")
+			step_data.syringe_power_boost_unit = pickup_system:spawn_pickup("syringe_power_boost_pocketable", Unit.local_position(directional_syringe_power_boost, 1), Unit.local_rotation(directional_syringe_power_boost, 1))
+		end
+
+		local syringe_speed_boost_unit = step_data.syringe_speed_boost_unit
+
+		if not ALIVE[syringe_speed_boost_unit] then
+			local directional_syringe_speed_boost = scenario_system:get_directional_unit("syringe_speed_boost_refill")
+			step_data.syringe_speed_boost_unit = pickup_system:spawn_pickup("syringe_speed_boost_pocketable", Unit.local_position(directional_syringe_speed_boost, 1), Unit.local_rotation(directional_syringe_speed_boost, 1))
+		end
+
 		return false
 	end
 }

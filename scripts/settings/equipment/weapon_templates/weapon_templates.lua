@@ -44,11 +44,14 @@ local template_groups = {
 	{
 		"chain_swords",
 		"chainsword_p1_m1",
-		"chainsword_2h_p1_m1"
+		"chainsword_p1_m2",
+		"chainsword_2h_p1_m1",
+		"chainsword_2h_p1_m2"
 	},
 	{
 		"chain_axes",
-		"chainaxe_p1_m1"
+		"chainaxe_p1_m1",
+		"chainaxe_p1_m2"
 	},
 	{
 		"combat_axes",
@@ -58,7 +61,9 @@ local template_groups = {
 		"combataxe_p2_m1",
 		"combataxe_p2_m2",
 		"combataxe_p2_m3",
-		"combataxe_p3_m1"
+		"combataxe_p3_m1",
+		"combataxe_p3_m2",
+		"combataxe_p3_m3"
 	},
 	{
 		"combat_blades",
@@ -68,7 +73,8 @@ local template_groups = {
 	},
 	{
 		"combat_knives",
-		"combatknife_p1_m1"
+		"combatknife_p1_m1",
+		"combatknife_p1_m2"
 	},
 	{
 		"combat_swords",
@@ -91,6 +97,8 @@ local template_groups = {
 	{
 		"ogryn_clubs",
 		"ogryn_club_p1_m1",
+		"ogryn_club_p1_m2",
+		"ogryn_club_p1_m3",
 		"ogryn_club_p2_m1",
 		"ogryn_club_p2_m2",
 		"ogryn_club_p2_m3"
@@ -168,7 +176,8 @@ local template_groups = {
 	},
 	{
 		"laspistols",
-		"laspistol_p1_m1"
+		"laspistol_p1_m1",
+		"laspistol_p1_m3"
 	},
 	{
 		"ogryn_heavystubbers",
@@ -199,7 +208,8 @@ local template_groups = {
 	},
 	{
 		"stub_pistols",
-		"stubrevolver_p1_m1"
+		"stubrevolver_p1_m1",
+		"stubrevolver_p1_m2"
 	},
 	{
 		"combat_abilities",
@@ -238,6 +248,10 @@ local template_groups = {
 	{
 		"pocketables",
 		"breach_charge_pocketable",
+		"syringe_ability_boost_pocketable",
+		"syringe_corruption_pocketable",
+		"syringe_power_boost_pocketable",
+		"syringe_speed_boost_pocketable",
 		"ammo_cache_pocketable",
 		"grimoire_pocketable",
 		"medical_crate_pocketable",
@@ -466,8 +480,9 @@ local function _generate_chain_attack_info(weapon_template, working_templates, f
 
 	for action_name, action in pairs(actions) do
 		local start_input = action.start_input
+		local action_condition_func = action.action_condition_func
 
-		if start_input == start_action_name then
+		if start_input == start_action_name and not action_condition_func then
 			start_action = action
 
 			break

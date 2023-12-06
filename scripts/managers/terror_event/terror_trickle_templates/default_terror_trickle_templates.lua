@@ -103,6 +103,20 @@ local FLOOD_MELEE_COMPOSITIONS = {
 		HordeCompositions.poxwalker_terror_trickle
 	}
 }
+local TWIN_ELITE_COMPOSITIONS = {
+	renegade = {
+		HordeCompositions.twin_elite_trickle_1,
+		HordeCompositions.twin_elite_trickle_2,
+		HordeCompositions.twin_elite_trickle_3,
+		HordeCompositions.twin_elite_trickle_4
+	},
+	cultist = {
+		HordeCompositions.twin_elite_trickle_1,
+		HordeCompositions.twin_elite_trickle_2,
+		HordeCompositions.twin_elite_trickle_3,
+		HordeCompositions.twin_elite_trickle_4
+	}
+}
 local terror_trickle_templates = {
 	low_mixed = {
 		{
@@ -1058,6 +1072,180 @@ local terror_trickle_templates = {
 			cooldown = {
 				10,
 				15
+			}
+		}
+	},
+	low_twin_melee = {
+		{
+			challenge_rating_stop_threshold = 10,
+			tension_stop_threshold = 60,
+			compositions = LOW_MELEE_COMPOSITIONS,
+			num_waves = {
+				1,
+				1
+			},
+			time_between_waves = {
+				6,
+				10
+			},
+			cooldown = {
+				70,
+				80
+			}
+		},
+		{
+			challenge_rating_stop_threshold = 10,
+			tension_stop_threshold = 80,
+			compositions = LOW_MELEE_COMPOSITIONS,
+			num_waves = {
+				1,
+				1
+			},
+			time_between_waves = {
+				6,
+				10
+			},
+			cooldown = {
+				60,
+				70
+			}
+		},
+		{
+			challenge_rating_stop_threshold = 20,
+			tension_stop_threshold = 100,
+			compositions = LOW_MELEE_COMPOSITIONS,
+			num_waves = {
+				1,
+				1
+			},
+			time_between_waves = {
+				6,
+				10
+			},
+			cooldown = {
+				50,
+				60
+			}
+		},
+		{
+			challenge_rating_stop_threshold = 30,
+			tension_stop_threshold = 120,
+			compositions = LOW_MELEE_COMPOSITIONS,
+			num_waves = {
+				1,
+				1
+			},
+			time_between_waves = {
+				3,
+				6
+			},
+			cooldown = {
+				12,
+				20
+			}
+		},
+		{
+			challenge_rating_stop_threshold = 40,
+			tension_stop_threshold = 140,
+			compositions = LOW_MELEE_COMPOSITIONS,
+			num_waves = {
+				2,
+				2
+			},
+			time_between_waves = {
+				3,
+				6
+			},
+			cooldown = {
+				10,
+				15
+			}
+		}
+	},
+	hard_mode_twins_elites = {
+		{
+			challenge_rating_stop_threshold = 40,
+			tension_stop_threshold = 200,
+			compositions = TWIN_ELITE_COMPOSITIONS,
+			num_waves = {
+				1,
+				1
+			},
+			time_between_waves = {
+				6,
+				10
+			},
+			cooldown = {
+				70,
+				80
+			}
+		},
+		{
+			challenge_rating_stop_threshold = 50,
+			tension_stop_threshold = 200,
+			compositions = TWIN_ELITE_COMPOSITIONS,
+			num_waves = {
+				1,
+				1
+			},
+			time_between_waves = {
+				6,
+				10
+			},
+			cooldown = {
+				60,
+				70
+			}
+		},
+		{
+			challenge_rating_stop_threshold = 50,
+			tension_stop_threshold = 20,
+			compositions = TWIN_ELITE_COMPOSITIONS,
+			num_waves = {
+				1,
+				1
+			},
+			time_between_waves = {
+				6,
+				10
+			},
+			cooldown = {
+				50,
+				60
+			}
+		},
+		{
+			challenge_rating_stop_threshold = 50,
+			tension_stop_threshold = 200,
+			compositions = TWIN_ELITE_COMPOSITIONS,
+			num_waves = {
+				1,
+				1
+			},
+			time_between_waves = {
+				3,
+				6
+			},
+			cooldown = {
+				20,
+				28
+			}
+		},
+		{
+			challenge_rating_stop_threshold = 50,
+			tension_stop_threshold = 200,
+			compositions = TWIN_ELITE_COMPOSITIONS,
+			num_waves = {
+				1,
+				1
+			},
+			time_between_waves = {
+				3,
+				6
+			},
+			cooldown = {
+				20,
+				28
 			}
 		}
 	}

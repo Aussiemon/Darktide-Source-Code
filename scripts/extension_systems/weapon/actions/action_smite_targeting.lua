@@ -40,6 +40,7 @@ ActionSmiteTargeting.start = function (self, action_settings, t, time_scale, act
 	self._target_locked = action_settings.target_locked
 	local charge_duration = self:_calculate_charge_duration_of_target_health(action_settings)
 	self._charge_duration = charge_duration
+	self._charge_after_chain = action_start_params.is_chain_action and self._action_module_charge_component.charge_level
 	self._target_charge = action_settings.target_charge
 
 	if self._target_charge then
@@ -102,7 +103,14 @@ ActionSmiteTargeting.fixed_update = function (self, dt, t, time_in_action)
 
 	if target_unit or self._target_charge and not self._target_locked then
 		self._overload_module:fixed_update(dt, t)
-		self._charge_module:fixed_update(dt, t, self._charge_duration)
+
+		if self._charge_after_chain then
+			self._charge_module:fixed_update(dt, t, self._charge_duration, self._charge_after_chain)
+
+			self._charge_after_chain = nil
+		else
+			self._charge_module:fixed_update(dt, t, self._charge_duration)
+		end
 	end
 
 	if self._had_target and not target_unit and self._target_locked then

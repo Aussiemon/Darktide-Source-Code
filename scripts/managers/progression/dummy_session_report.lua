@@ -28,44 +28,48 @@ local DummySessionReport = {
 						characterId = "3fae375d-1345-4145-a5a9-e06da58a94c3",
 						progression = {
 							{
-								currentXp = 5890,
 								currentXpInLevel = 5890,
-								id = "3fae375d-1345-4145-a5a9-e06da58a94c3",
+								startLevel = 9,
+								eligibleForLevel = true,
 								type = "character",
-								currentLevel = 7,
+								currentLevel = 10,
+								currentXp = 5890,
+								id = "3fae375d-1345-4145-a5a9-e06da58a94c3",
 								neededXpForNextLevel = 0,
-								startXp = 4553,
-								eligibleForLevel = true
+								startXp = 4553
 							},
 							{
-								currentXp = 5158,
 								currentXpInLevel = 5158,
-								id = "ef46ae26-d846-4544-9dea-be337ad12445",
+								startLevel = 1,
+								eligibleForLevel = false,
 								type = "account",
 								currentLevel = 1,
+								currentXp = 5158,
+								id = "ef46ae26-d846-4544-9dea-be337ad12445",
 								neededXpForNextLevel = 14842,
-								startXp = 4553,
-								eligibleForLevel = false
+								startXp = 4553
 							},
 							{
-								currentXp = 5158,
 								currentXpInLevel = 5158,
+								startLevel = 1,
+								eligibleForLevel = true,
+								type = "weapon",
+								currentLevel = 1,
+								currentXp = 5158,
 								id = "default-zealot-slot_primary",
-								type = "weapon",
-								currentLevel = 1,
 								neededXpForNextLevel = 0,
-								startXp = 4553,
-								eligibleForLevel = true
+								startXp = 4553
 							},
 							{
-								currentXp = 5158,
 								currentXpInLevel = 5158,
-								id = "default-zealot-slot_secondary",
+								startLevel = 1,
+								eligibleForLevel = true,
 								type = "weapon",
 								currentLevel = 1,
+								currentXp = 5158,
+								id = "default-zealot-slot_secondary",
 								neededXpForNextLevel = 0,
-								startXp = 4553,
-								eligibleForLevel = true
+								startXp = 4553
 							}
 						},
 						sessionStatistics = {

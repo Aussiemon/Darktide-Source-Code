@@ -17,8 +17,8 @@ local PowerLevelSettings = require("scripts/settings/damage/power_level_settings
 local ProjectileLocomotionSettings = require("scripts/settings/projectile_locomotion/projectile_locomotion_settings")
 local Suppression = require("scripts/utilities/attack/suppression")
 local SurfaceMaterialSettings = require("scripts/settings/surface_material_settings")
-local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
 local Weakspot = require("scripts/utilities/attack/weakspot")
+local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
 local armor_types = ArmorSettings.types
 local attack_results = AttackSettings.attack_results
 local attack_types = AttackSettings.attack_types
@@ -170,6 +170,12 @@ ProjectileDamageExtension.fixed_update = function (self, unit, dt, t)
 		mark_for_deletion = true
 	end
 
+	local kill_at_z_position = fuse_damage_settings.kill_at_z_position
+
+	if kill_at_z_position and position.z < kill_at_z_position then
+		mark_for_deletion = true
+	end
+
 	local fuse_started = self._fuse_started
 
 	if min_lifetime then
@@ -211,6 +217,19 @@ ProjectileDamageExtension.fixed_update = function (self, unit, dt, t)
 				self._proximity_check_done = true
 				self._reset_time = true
 				new_life_time = 0
+
+				if fuse_damage_settings.aoe_threat_size then
+					local enemy_sides = side:relation_sides("enemy")
+					local group_system = Managers.state.extension:system("group_system")
+					local bot_groups = group_system:bot_groups_from_sides(enemy_sides)
+					local num_bot_groups = #bot_groups
+
+					for i = 1, num_bot_groups do
+						local bot_group = bot_groups[i]
+
+						bot_group:aoe_threat_created(position, "sphere", fuse_damage_settings.aoe_threat_size, Quaternion.identity(), fuse_damage_settings.aoe_threat_duration)
+					end
+				end
 			end
 		elseif self._has_impacted and not self._proximity_check_started then
 			self._proximity_check_started = true
@@ -680,11 +699,10 @@ ProjectileDamageExtension._record_impact_concluded_stats = function (self)
 		local num_impact_hit_kill = self._num_impact_hit_kill
 		local num_impact_hit_elite = self._num_impact_hit_elite
 		local num_impact_hit_special = self._num_impact_hit_special
-		local weapon_item_or_nil = self._weapon_item_or_nil
-		local weapon_template_or_nil = weapon_item_or_nil and WeaponTemplate.weapon_template_from_item(weapon_item_or_nil)
-		local weapon_template_name = weapon_template_or_nil and weapon_template_or_nil.name or "none"
+		local projectile_template = self._projectile_template
+		local projectile_name = projectile_template and projectile_template.name or "none"
 
-		Managers.stats:record_private("hook_projectile_hit", player, impact_hit, num_impact_hit_weakspot, num_impact_hit_kill, num_impact_hit_elite, num_impact_hit_special, weapon_template_name)
+		Managers.stats:record_private("hook_projectile_hit", player, impact_hit, num_impact_hit_weakspot, num_impact_hit_kill, num_impact_hit_elite, num_impact_hit_special, projectile_name)
 	end
 end
 

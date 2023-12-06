@@ -68,7 +68,7 @@ WeaponTraitActivatedParentProcBuff.update_proc_events = function (self, t, proc_
 							self:_add_child_buff_stack(t, num_stacks_to_add)
 						end
 					else
-						self:_remove_child_buff_stack(self._num_child_stacks - 1)
+						self:_remove_child_buff_stack(t, self._num_child_stacks - 1)
 					end
 				end
 			end
@@ -81,10 +81,10 @@ WeaponTraitActivatedParentProcBuff.update_proc_events = function (self, t, proc_
 
 			if specific_proc_check then
 				if specific_proc_check(params, template_data, template_context) then
-					self:_remove_child_buff_stack(self._num_child_stacks - 1)
+					self:_remove_child_buff_stack(t, self._num_child_stacks - 1)
 				end
 			else
-				self:_remove_child_buff_stack(self._num_child_stacks - 1)
+				self:_remove_child_buff_stack(t, self._num_child_stacks - 1)
 			end
 		end
 	end

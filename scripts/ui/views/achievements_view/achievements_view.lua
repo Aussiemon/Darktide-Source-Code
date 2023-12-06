@@ -1,4 +1,5 @@
 local AchievementCategories = require("scripts/settings/achievements/achievement_categories")
+local AchievementUIHelper = require("scripts/managers/achievements/utility/achievement_ui_helper")
 local Definitions = require("scripts/ui/views/achievements_view/achievements_view_definitions")
 local InputUtils = require("scripts/managers/input/input_utils")
 local ViewElementGrid = require("scripts/ui/view_elements/view_element_grid/view_element_grid")
@@ -110,7 +111,7 @@ AchievementsView._on_navigation_input_changed = function (self)
 	local category_id = self._current_category_id
 	local category_widget = self._widgets_by_category[category_id]
 	local gamepad_unfold_hint_widget = self._widgets_by_name.gamepad_unfold_hint
-	local unfold_hints_visible = using_gamepad and self._sub_categories[category_id]
+	local unfold_hints_visible = using_gamepad and category_id and self:_visible_sub_category_count(category_id) > 1
 	gamepad_unfold_hint_widget.visible = unfold_hints_visible
 
 	if unfold_hints_visible then
@@ -162,7 +163,7 @@ AchievementsView._handle_input = function (self, input_service, dt, t)
 		elseif input_service:get("confirm_pressed") then
 			local current_category_id = self._current_category_id
 
-			if current_category_id and self._sub_categories[current_category_id] then
+			if current_category_id and self:_visible_sub_category_count(current_category_id) > 1 then
 				self:_fold_or_unfold_subcategories(current_category_id)
 
 				grid_has_changed = true
@@ -188,16 +189,26 @@ AchievementsView._cache_achievements = function (self, player)
 	for _, achievement_config in pairs(achievement_definitions) do
 		local achievement_id = achievement_config.id
 		local category = achievement_config.category
-		local _achievements_by_category = achievements_by_category[category] or {}
-		_achievements_by_category[#_achievements_by_category + 1] = achievement_id
-		achievements_by_category[category] = _achievements_by_category
-		local achievement_score = achievement_config.score or 0
-		score_by_category[category] = (score_by_category[category] or 0) + achievement_score
+		local is_completed = Managers.achievements:achievement_completed(player, achievement_id)
+		local is_visible = self:_should_display_achievement(player, is_completed, achievement_config)
 
-		if Managers.achievements:achievement_completed(player, achievement_id) then
-			total_score = total_score + achievement_score
-			completed_score_by_category[category] = (completed_score_by_category[category] or 0) + achievement_score
-			achievements_by_recency[#achievements_by_recency + 1] = achievement_id
+		if is_visible then
+			local _achievements_by_category = achievements_by_category[category] or {}
+			_achievements_by_category[#_achievements_by_category + 1] = achievement_id
+			achievements_by_category[category] = _achievements_by_category
+		end
+
+		local should_add_score = not achievement_config.flags.hide_missing or is_completed
+
+		if should_add_score then
+			local achievement_score = achievement_config.score or 0
+			score_by_category[category] = (score_by_category[category] or 0) + achievement_score
+
+			if is_completed then
+				total_score = total_score + achievement_score
+				completed_score_by_category[category] = (completed_score_by_category[category] or 0) + achievement_score
+				achievements_by_recency[#achievements_by_recency + 1] = achievement_id
+			end
 		end
 	end
 
@@ -271,22 +282,18 @@ AchievementsView._populate_category_grid = function (self, player)
 		}
 	}
 	local original_layout_size = #layout
-	local sub_categories = self._sub_categories
 	local widgets_by_category = self._widgets_by_category
+	local current_largest_index = 0
 
 	for category_id, category_config in pairs(AchievementCategories) do
 		local index = original_layout_size + category_config.sort_index
 		local parent_name = category_config.parent_name
 		local is_top_category = parent_name == nil
-		local has_sub_categories = sub_categories[category_id]
 		local widget_type = nil
 
 		if is_top_category then
-			if has_sub_categories then
-				widget_type = "top_category_button"
-			else
-				widget_type = "simple_category_button"
-			end
+			local sub_category_count = self:_visible_sub_category_count(category_id)
+			widget_type = sub_category_count > 1 and "top_category_button" or "simple_category_button"
 		else
 			widget_type = "sub_category_button"
 		end
@@ -298,15 +305,31 @@ AchievementsView._populate_category_grid = function (self, player)
 			percent_done = math.round(100 * completed_score / score)
 		end
 
-		layout[index] = {
-			widget_type = widget_type,
-			category = category_id,
-			label = category_config.display_name,
-			selected_callback = on_selected_callback,
-			parent_name = parent_name,
-			percent_done = percent_done,
-			widgets_by_category = widgets_by_category
-		}
+		local is_only_child = self:_visible_sub_category_count(parent_name) == 1
+		local is_visible = self:_is_category_visible(category_id)
+
+		if is_visible and not is_only_child then
+			layout[index] = {
+				widget_type = widget_type,
+				category = category_id,
+				label = category_config.display_name,
+				selected_callback = on_selected_callback,
+				parent_name = parent_name,
+				percent_done = percent_done,
+				widgets_by_category = widgets_by_category
+			}
+			current_largest_index = math.max(current_largest_index, index)
+		end
+	end
+
+	for i = 2, current_largest_index do
+		local j = i
+
+		while j - 1 >= 1 and layout[j - 1] == nil do
+			layout[j - 1] = layout[j]
+			layout[j] = nil
+			j = j - 1
+		end
 	end
 
 	layout[#layout + 1] = {
@@ -323,6 +346,46 @@ AchievementsView._populate_category_grid = function (self, player)
 	completed_widget_content.total_score = Localize("loc_achievements_view_total_score", true, {
 		score = total_score
 	})
+end
+
+AchievementsView._first_visible_sub_category = function (self, category_id)
+	local sub_category = self._sub_categories[category_id]
+	local sub_category_count = sub_category and #sub_category or 0
+
+	for i = 1, sub_category_count do
+		local sub_category_id = sub_category[i]
+
+		if self:_is_category_visible(sub_category_id) then
+			return sub_category_id
+		end
+	end
+end
+
+AchievementsView._visible_sub_category_count = function (self, category_id)
+	local sub_category = self._sub_categories[category_id]
+	local sub_category_count = sub_category and #sub_category or 0
+	local visible_sub_category = 0
+
+	for i = 1, sub_category_count do
+		local sub_category_id = sub_category[i]
+
+		if self:_is_category_visible(sub_category_id) then
+			visible_sub_category = visible_sub_category + 1
+		end
+	end
+
+	return visible_sub_category
+end
+
+AchievementsView._is_category_visible = function (self, category_id)
+	local category_config = AchievementCategories[category_id]
+	local parent_name = category_config.parent_name
+	local is_top_category = parent_name == nil
+	local achievement_ids = self._achievements_by_category[category_id]
+	local achievement_ids_count = achievement_ids and #achievement_ids or 0
+	local is_visible = achievement_ids_count > 0 or is_top_category
+
+	return is_visible
 end
 
 AchievementsView._cache_sub_categories = function (self)
@@ -377,8 +440,9 @@ end
 
 AchievementsView._cb_category_pressed = function (self, widget, config)
 	local category_id = config.category
+	local visible_sub_category_count = self:_visible_sub_category_count(category_id)
 
-	if self._sub_categories[category_id] and self._using_cursor_navigation then
+	if visible_sub_category_count > 1 and self._using_cursor_navigation then
 		self:_fold_or_unfold_subcategories(category_id)
 	else
 		local grid = self._grids[CATEGORIES_GRID]
@@ -443,7 +507,7 @@ AchievementsView._fold_or_unfold_subcategories = function (self, category_id)
 		local sub_category_id = sub_categories[i]
 		local widget = widgets_by_category[sub_category_id]
 
-		if widget.visible ~= unfolded then
+		if widget and widget.visible ~= unfolded then
 			widget.visible = unfolded
 			local widget_style = widget.style
 			local widget_content = widget.content
@@ -505,12 +569,37 @@ AchievementsView._show_summary = function (self)
 	self._grids[ACHIEVEMENT_GRID]:present_grid_layout(layout, blueprints)
 end
 
+AchievementsView._should_display_achievement = function (self, player, is_complete, achievement_definition)
+	local flags = achievement_definition.flags
+	local hide_missing = flags.hide_missing
+	local previous_id = achievement_definition.previous
+	local next_id = achievement_definition.next
+	local is_last = next_id == nil
+
+	if hide_missing then
+		local next_is_complete = next_id and Managers.achievements:achievement_completed(player, next_id)
+
+		return is_complete and (is_last or not next_is_complete)
+	else
+		local previous_is_complete = not previous_id or Managers.achievements:achievement_completed(player, previous_id)
+
+		return previous_is_complete and (not is_complete or is_last)
+	end
+end
+
 AchievementsView._populate_achievements_grid = function (self, category_id)
 	local player = Managers.player:local_player(1)
+	local cache_category_id = category_id
+	local visible_sub_category_count = self:_visible_sub_category_count(category_id)
+
+	if visible_sub_category_count == 1 then
+		category_id = self:_first_visible_sub_category(category_id)
+	end
+
 	local achievement_ids = self._achievements_by_category[category_id]
 	local achievement_ids_count = achievement_ids and #achievement_ids or 0
 	local category_label = AchievementCategories[category_id].display_name
-	local cached_layout = self._layouts_by_category[category_id]
+	local cached_layout = self._layouts_by_category[cache_category_id]
 
 	if cached_layout then
 		local blueprints = self._definitions.blueprints
@@ -545,21 +634,11 @@ AchievementsView._populate_achievements_grid = function (self, category_id)
 	for i = 1, achievement_ids_count do
 		local achievement_id = achievement_ids[i]
 		local achievement_definition = achievement_definitions[achievement_id]
-		local should_display = true
 		local is_complete = Managers.achievements:achievement_completed(player, achievement_id)
-		local previous_id = achievement_definition.previous
-		local next_id = achievement_definition.next
-		local in_family = previous_id or next_id
-
-		if in_family then
-			local previous_is_complete = not previous_id or Managers.achievements:achievement_completed(player, previous_id)
-			local is_last = next_id == nil
-			should_display = is_complete and is_last or not is_complete and previous_is_complete
-		end
+		local should_display = true
 
 		if should_display then
 			local widget = {
-				is_favorite = true,
 				block_folding = false,
 				widget_type = "achievement",
 				player = player,
@@ -575,7 +654,7 @@ AchievementsView._populate_achievements_grid = function (self, category_id)
 	layout[layout_size] = {
 		widget_type = "list_padding"
 	}
-	self._layouts_by_category[category_id] = layout
+	self._layouts_by_category[cache_category_id] = layout
 	local blueprints = self._definitions.blueprints
 	local achievement_grid = self._grids[ACHIEVEMENT_GRID]
 

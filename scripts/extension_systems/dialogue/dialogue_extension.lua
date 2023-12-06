@@ -707,9 +707,14 @@ DialogueExtension.play_local_vo_events = function (self, rule_names, wwise_route
 			rule_queue[#rule_queue + 1] = vo_event
 		end
 	end
+
+	local dialogue_system = self._dialogue_system
+	local animation_event = "start_talking"
+
+	dialogue_system:_trigger_face_animation_event(self._unit, animation_event)
 end
 
-DialogueExtension.play_local_vo_event = function (self, rule_name, wwise_route_key, on_play_callback, seed)
+DialogueExtension.play_local_vo_event = function (self, rule_name, wwise_route_key, on_play_callback, seed, optional_keep_talking)
 	local dialogue_system = self._dialogue_system
 	local rule = self._vo_choice[rule_name]
 
@@ -755,9 +760,11 @@ DialogueExtension.play_local_vo_event = function (self, rule_name, wwise_route_k
 		self:set_currently_playing_dialogue(dialogue)
 		table.insert(dialogue_system._playing_dialogues_array, 1, dialogue)
 
-		local animation_event = "start_talking"
+		if not optional_keep_talking then
+			local animation_event = "start_talking"
 
-		dialogue_system:_trigger_face_animation_event(unit, animation_event)
+			dialogue_system:_trigger_face_animation_event(unit, animation_event)
+		end
 
 		local dialogue_system_subtitle = dialogue_system:dialogue_system_subtitle()
 

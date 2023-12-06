@@ -130,6 +130,9 @@ PlayerUnitMoodExtension._update_active_moods = function (self, t)
 	local is_in_stealth = archetype_name == "zealot" and buff_extension:has_keyword(buff_keywords.invisible)
 	local is_in_veteran_stealth = archetype_name == "veteran" and buff_extension:has_keyword(buff_keywords.invisible)
 	local is_in_veteran_stealth_and_stance = is_in_veteran_stealth and veteran_combat_ability_stance_active
+	local syringe_ability = buff_extension:has_keyword(buff_keywords.syringe_ability)
+	local syringe_power = buff_extension:has_keyword(buff_keywords.syringe_power)
+	local syringe_speed = buff_extension:has_keyword(buff_keywords.syringe_speed)
 	local is_in_psyker_force_field, _, force_field_extension = self._force_field_system:is_object_inside_force_field(self._first_person_component.position, 0.05, true)
 	local is_in_psyker_force_field_sphere = is_in_psyker_force_field and force_field_extension:is_sphere_shield()
 
@@ -285,6 +288,24 @@ PlayerUnitMoodExtension._update_active_moods = function (self, t)
 		self:_add_mood(t, mood_types.psyker_force_field_sphere)
 	elseif not warped_critical then
 		self:_remove_mood(t, mood_types.psyker_force_field_sphere)
+	end
+
+	if syringe_ability then
+		self:_add_mood(t, mood_types.syringe_ability)
+	elseif not syringe_ability then
+		self:_remove_mood(t, mood_types.syringe_ability)
+	end
+
+	if syringe_power then
+		self:_add_mood(t, mood_types.syringe_power)
+	elseif not syringe_power then
+		self:_remove_mood(t, mood_types.syringe_power)
+	end
+
+	if syringe_speed then
+		self:_add_mood(t, mood_types.syringe_speed)
+	elseif not syringe_speed then
+		self:_remove_mood(t, mood_types.syringe_speed)
 	end
 end
 

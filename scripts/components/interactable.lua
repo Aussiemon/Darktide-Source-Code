@@ -186,7 +186,7 @@ Interactable.disable_display_start_event = function (self, unit)
 	end
 end
 
-Interactable.events.died = function (self)
+Interactable.events.unit_died = function (self)
 	if self._is_server then
 		self._interactee_extension:set_active(false)
 	end

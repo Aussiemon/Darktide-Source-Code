@@ -548,7 +548,7 @@ local widget_definitions = {
 	}),
 	continue_button = UIWidget.create_definition(ButtonPassTemplates.default_button, "continue_button", {
 		gamepad_action = "confirm_pressed",
-		text = Utf8.upper(Localize("loc_character_creator_continue"))
+		original_text = Utf8.upper(Localize("loc_character_creator_continue"))
 	})
 }
 local archetype_option_definition = UIWidget.create_definition({

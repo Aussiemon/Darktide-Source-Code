@@ -446,6 +446,9 @@ ActionShootPellets._process_hits = function (self, power_level, t)
 				local hit_zone_name_or_nil = HitZone.get_name(hit_unit, hit_actor)
 				local hit_afro = hit_zone_name_or_nil == HitZone.hit_zone_names.afro
 				local is_damagable = Health.is_damagable(hit_unit)
+				local target_is_hazard_prop, hazard_prop_is_active = HazardProp.status(hit_unit)
+				local is_breed_with_hit_zone = target_breed_or_nil and hit_zone_name_or_nil
+				local is_damagable_hazard_prop = target_is_hazard_prop and hazard_prop_is_active
 
 				if Health.is_ragdolled(hit_unit) then
 					if hit_afro then
@@ -474,8 +477,7 @@ ActionShootPellets._process_hits = function (self, power_level, t)
 						hit_mass_budget_attack, hit_mass_budget_impact = HitMass.consume_hit_mass(player_unit, hit_unit, hit_mass_budget_attack, hit_mass_budget_impact, hit_weakspot)
 						stop = HitMass.stopped_attack(hit_unit, hit_zone_name_or_nil, hit_mass_budget_attack, hit_mass_budget_impact, impact_config)
 						local instakill = false
-						local target_is_hazard_prop, hazard_prop_is_active = HazardProp.status(hit_unit)
-						local should_deal_damage = not target_is_hazard_prop or target_is_hazard_prop and hazard_prop_is_active
+						local should_deal_damage = target_is_hazard_prop and hazard_prop_is_active or not target_is_hazard_prop and is_breed_with_hit_zone or not target_breed_or_nil
 						local total_damage_dealt = 0
 						local best_attack_result, best_damage_efficiency = nil
 
@@ -519,7 +521,7 @@ ActionShootPellets._process_hits = function (self, power_level, t)
 						local impact_damage_efficiency = unit_damage_data[num_unit_damage_index].damage_efficiency
 						stop = stop or unit_damage_data[num_unit_damage_index].stopped
 
-						if Breed.is_character(target_breed_or_nil) or Breed.count_as_character(target_breed_or_nil) then
+						if not target_is_hazard_prop and target_breed_or_nil and hit_zone_name_or_nil or is_damagable_hazard_prop then
 							can_play_impact_fx, num_impact_fx = self:_can_play_impact_fx(hit_unit, num_impact_fx)
 
 							if can_play_impact_fx then

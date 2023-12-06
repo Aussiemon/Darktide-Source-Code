@@ -30,10 +30,14 @@ local sound_events = {
 	"wwise/events/minions/play_minion_special_netgunner_spawn",
 	"wwise/events/minions/play_minion_special_poxwalker_bomber_spawn",
 	"wwise/events/minions/play_minion_special_sniper_spawn_circumstance",
+	"wwise/events/minions/play_minion_special_twins_ambush_spawn",
 	"wwise/events/minions/play_minion_terror_event_group_sfx_cultists",
 	"wwise/events/minions/play_minion_terror_event_group_sfx_newly_infected",
 	"wwise/events/minions/play_minion_terror_event_group_sfx_poxwalkers",
 	"wwise/events/minions/play_minion_terror_event_group_sfx_traitor_guards",
+	"wwise/events/minions/play_minion_twins_ambush_spawn_impact",
+	"wwise/events/minions/play_minion_twins_disappear_explosion",
+	"wwise/events/minions/play_minion_twins_ambush_spawn_impact_hit",
 	"wwise/events/minions/play_signal_horde_poxwalkers_2d",
 	"wwise/events/minions/play_signal_horde_poxwalkers_3d",
 	"wwise/events/minions/play_terror_event_alarm_monster_01",
@@ -43,8 +47,7 @@ local sound_events = {
 	"wwise/events/minions/play_traitor_captain_shield_reactivate",
 	"wwise/events/minions/play_weapon_netgunner_wind_up",
 	"wwise/events/minions/play_weapon_netgunner",
-	"wwise/events/minions/play_minion_special_twins_ambush_spawn",
-	"wwise/events/minions/play_minion_twins_ambush_spawn_impact",
+	"wwise/events/play_event_twins_arena_gas_wave_ambisonics",
 	"wwise/events/minions/stop_chaos_hound_group_sound",
 	"wwise/events/minions/stop_horde_group_sfx_newly_infected",
 	"wwise/events/minions/stop_horde_group_sfx_poxwalkers",
@@ -82,6 +85,7 @@ local sound_events = {
 	"wwise/events/weapon/play_explosion_buff_warp",
 	"wwise/events/weapon/play_explosion_force_med_husk",
 	"wwise/events/weapon/play_explosion_force_med",
+	"wwise/events/weapon/play_explosion_gas_proximity_mine",
 	"wwise/events/weapon/play_explosion_grenade_flame_minion",
 	"wwise/events/weapon/play_explosion_grenade_flame",
 	"wwise/events/weapon/play_explosion_grenade_frag_ogryn",
@@ -131,7 +135,9 @@ local sound_events = {
 	"wwise/events/weapon/stop_minion_plasmapistol_charge",
 	"wwise/events/world/play_hunting_grounds_occasionals",
 	"wwise/events/world/play_int_battery_pick_up",
-	"wwise/events/world/stop_hunting_grounds_occasionals"
+	"wwise/events/world/stop_hunting_grounds_occasionals",
+	"wwise/events/minions/play_loc_captain_twin_male_a__mission_twins_arrival_04_a_01_ambisonics",
+	"wwise/events/world/play_event_twins_arena_gas_wave_ambisonics"
 }
 
 return sound_events

@@ -270,7 +270,7 @@ local function generate_base_template()
 				ability_type = "grenade_ability",
 				total_time = 0.67,
 				conditional_state_to_action_input = {
-					unwield_from_grenade_slot = {
+					auto_chain = {
 						input_name = "unwield_to_previous"
 					}
 				},
@@ -346,7 +346,7 @@ local function generate_base_template()
 				ability_type = "grenade_ability",
 				total_time = 0.67,
 				conditional_state_to_action_input = {
-					unwield_from_grenade_slot = {
+					auto_chain = {
 						input_name = "unwield_to_previous"
 					}
 				},

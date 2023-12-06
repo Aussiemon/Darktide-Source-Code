@@ -132,6 +132,17 @@ social_menu_roster_view_styles.roster_grid = {
 }
 social_menu_roster_view_styles.blueprints = {}
 local blueprint_styles = social_menu_roster_view_styles.blueprints
+social_menu_roster_view_styles.show_hint = {}
+local show_hint_style = social_menu_roster_view_styles.show_hint
+local show_hint_text_style = table.clone(UIFontSettings.body)
+show_hint_text_style.text_horizontal_alignment = "center"
+show_hint_text_style.text_vertical_alignment = "center"
+show_hint_text_style.offset = {
+	0,
+	0,
+	10
+}
+show_hint_style.text = show_hint_text_style
 blueprint_styles.player_plaque = {}
 local player_plaque_style = blueprint_styles.player_plaque
 player_plaque_style.size = player_panel_size

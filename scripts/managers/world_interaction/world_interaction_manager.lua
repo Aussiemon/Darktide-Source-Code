@@ -58,7 +58,7 @@ WorldInteractionManager.add_simple_effect = function (self, material, unit, posi
 	local local_player = player_manager:local_player(1)
 	local player_unit = local_player and local_player.player_unit
 
-	if Unit.alive(player_unit) then
+	if ALIVE[player_unit] then
 		local material_settings = WorldInteractionSettings[material]
 		local window_size = math.clamp(material_settings.window_size, 1, 100)
 		local window_distance = window_size * 0.5
@@ -82,7 +82,7 @@ WorldInteractionManager._add_simple_water_effect = function (self, unit, positio
 	local local_player = Managers.player:local_player(1)
 	local player_unit = local_player and local_player.player_unit
 
-	if Unit.alive(player_unit) then
+	if ALIVE[player_unit] then
 		local window_distance = window_size * 0.5
 		local player_pos = POSITION_LOOKUP[player_unit]
 		local start_size = water_splash_settings.start_size
@@ -106,7 +106,7 @@ WorldInteractionManager._update_water = function (self, dt, t)
 	local local_player = Managers.player:local_player(1)
 	local player_unit = local_player and local_player.player_unit
 
-	if Unit.alive(player_unit) and (#self._water_ripples > 0 or available_units and next(available_units)) then
+	if ALIVE[player_unit] and (#self._water_ripples > 0 or available_units and next(available_units)) then
 		self:_cleanup_removed_units()
 		self:_update_water_data(dt, t)
 		self:_update_water_ripples(dt, t)
@@ -136,15 +136,15 @@ end
 local COLLECTED_UNITS = {}
 local BROADPHASE_RESULTS = {}
 
-local function collect_characters(available_units, player_pos, window_size)
+local function _collect_characters(available_units, player_pos, window_size)
 	local broadphase_system = Managers.state.extension:system("broadphase_system")
 	local broadphase = broadphase_system.broadphase
 	local side_system = Managers.state.extension:system("side_system")
 	local side_names = side_system:side_names()
 	local num_results = broadphase:query(player_pos, window_size * 0.5, BROADPHASE_RESULTS, side_names)
 
-	for ii = 1, num_results do
-		local unit = BROADPHASE_RESULTS[ii]
+	for i = 1, num_results do
+		local unit = BROADPHASE_RESULTS[i]
 
 		if available_units[unit] then
 			COLLECTED_UNITS[#COLLECTED_UNITS + 1] = unit
@@ -168,35 +168,32 @@ WorldInteractionManager._update_water_data = function (self, dt, t)
 		local player_unit = local_player and local_player.player_unit
 		local player_pos = Vector3.flat(POSITION_LOOKUP[player_unit])
 
-		if Unit.alive(player_unit) and available_units and next(available_units) then
-			collect_characters(available_units, player_pos, window_size)
+		if ALIVE[player_unit] and available_units and next(available_units) then
+			_collect_characters(available_units, player_pos, window_size)
 
 			local origo = Vector3(0, 0, 0)
 			local speed_limit_squared = speed_limit * speed_limit
 			local contributing_units = 0
 
-			for ii = 1, #COLLECTED_UNITS do
-				local unit = COLLECTED_UNITS[ii]
+			for i = 1, #COLLECTED_UNITS do
+				local unit = COLLECTED_UNITS[i]
+				local locomotion_extension = ScriptUnit.extension(unit, "locomotion_system")
+				local dir = locomotion_extension:current_velocity()
 
-				if ALIVE[unit] then
-					local locomotion_extension = ScriptUnit.extension(unit, "locomotion_system")
-					local dir = locomotion_extension:current_velocity()
+				if dir and speed_limit_squared < Vector3.distance_squared(Vector3.flat(dir), origo) then
+					local flat_dir = Vector3.normalize(Vector3(dir[1], dir[2], 0))
+					local dot_value = Vector3.dot(flat_dir, Vector3(0, 1, 0))
+					local safe_dot_value = math.clamp(dot_value, -1, 1)
+					local angle = math.acos(safe_dot_value) * (flat_dir[1] > 0 and 1 or -1)
+					local pos = POSITION_LOOKUP[unit]
 
-					if dir and speed_limit_squared < Vector3.distance_squared(Vector3.flat(dir), origo) then
-						local flat_dir = Vector3.normalize(Vector3(dir[1], dir[2], 0))
-						local dot_value = Vector3.dot(flat_dir, Vector3(0, 1, 0))
-						local safe_dot_value = math.clamp(dot_value, -1, 1)
-						local angle = math.acos(safe_dot_value) * (flat_dir[1] > 0 and 1 or -1)
-						local pos = POSITION_LOOKUP[unit]
+					if angle == angle then
+						self:_add_water_ripple(pos, angle)
 
-						if angle == angle then
-							self:_add_water_ripple(pos, angle)
+						contributing_units = contributing_units + 1
 
-							contributing_units = contributing_units + 1
-
-							if max_contributing_units <= contributing_units then
-								break
-							end
+						if max_contributing_units <= contributing_units then
+							break
 						end
 					end
 				end

@@ -169,6 +169,10 @@ local default_debug_input_settings = {
 			raw = "keyboard_left shift+keyboard_y",
 			type = "pressed"
 		},
+		spawn_liquid = {
+			raw = "keyboard_left ctrl+keyboard_y",
+			type = "pressed"
+		},
 		deselect_unit = {
 			raw = "keyboard_left ctrl+keyboard_v",
 			type = "pressed"

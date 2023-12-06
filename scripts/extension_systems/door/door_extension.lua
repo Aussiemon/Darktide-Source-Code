@@ -1,13 +1,14 @@
 local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
-local Breed = require("scripts/utilities/breed")
+local BreedSettings = require("scripts/settings/breed/breed_settings")
+local DoorSettings = require("scripts/settings/components/door_settings")
 local LevelProps = require("scripts/settings/level_prop/level_props")
 local NavTagVolumeBox = require("scripts/extension_systems/navigation/utilities/nav_tag_volume_box")
 local NetworkLookup = require("scripts/network_lookup/network_lookup")
-local DoorSettings = require("scripts/settings/components/door_settings")
 local DoorExtension = class("DoorExtension")
-local TYPES = DoorSettings.TYPES
+local MINION_BREED_TYPE = BreedSettings.types.minion
 local OPEN_TYPES = DoorSettings.OPEN_TYPES
 local STATES = DoorSettings.STATES
+local TYPES = DoorSettings.TYPES
 
 DoorExtension.init = function (self, extension_init_context, unit, extension_init_data, ...)
 	self._unit = unit
@@ -31,8 +32,6 @@ DoorExtension.init = function (self, extension_init_context, unit, extension_ini
 	self._last_state_change = -100
 	self._animation_extension = ScriptUnit.extension(unit, "animation_system")
 	local extension_manager = Managers.state.extension
-	local side_system = extension_manager:system("side_system")
-	self._side_names = side_system:side_names()
 	local broadphase_system = extension_manager:system("broadphase_system")
 	self._broadphase_system = broadphase_system
 	self._broadphase = broadphase_system.broadphase
@@ -176,15 +175,19 @@ DoorExtension._setup_nav_layer = function (self, unit, start_state)
 	self._entrance_nav_blocked = not volume_layer_allowed
 end
 
+DoorExtension.instantiate_state = function (self)
+	if self._start_state ~= nil then
+		self:_set_server_state(self._start_state)
+
+		self._start_state = nil
+	end
+end
+
 local SELF_CLOSE_CHECK_COOLDOWN = 0.25
 
 DoorExtension.update = function (self, unit, dt, t)
 	if self._is_server then
-		if self._start_state ~= nil then
-			self:_set_server_state(self._start_state)
-
-			self._start_state = nil
-		end
+		self:instantiate_state()
 
 		if self._self_closing_timer > 0 and not self:_is_dead(unit) then
 			self._self_closing_timer = self._self_closing_timer - dt
@@ -377,42 +380,38 @@ DoorExtension._minion_proximity_check = function (self)
 	local check_radius = self._broadphase_check_radius
 	local check_position = self._broadphase_check_position:unbox()
 	local broadphase = self._broadphase
-	local side_names = self._side_names
 	local bounding_box = self._bounding_box:unbox()
 	local half_extents = self._bounding_box_half_extents:unbox()
-	local num_results = Broadphase.query(broadphase, check_position, check_radius, broadphase_results, side_names)
+	local num_results = Broadphase.query(broadphase, check_position, check_radius, broadphase_results, MINION_BREED_TYPE)
 
 	for i = 1, num_results do
 		local unit = broadphase_results[i]
 		local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
 		local breed = unit_data_extension:breed()
-		local is_minion = Breed.is_minion(breed)
 
-		if is_minion then
-			if breed.is_boss then
+		if breed.is_boss then
+			return true
+		end
+
+		local unit_position = POSITION_LOOKUP[unit]
+		local locomotion_extension = ScriptUnit.extension(unit, "locomotion_system")
+		local current_velocity = locomotion_extension:current_velocity()
+		local speed = Vector3.length(current_velocity)
+
+		if speed > 0 then
+			local velocity_direction = current_velocity / speed
+			local to_door_direction = Vector3.normalize(check_position - unit_position)
+			local direction_dot = Vector3.dot(velocity_direction, to_door_direction)
+
+			if direction_dot > 0 then
 				return true
 			end
+		end
 
-			local unit_position = POSITION_LOOKUP[unit]
-			local locomotion_extension = ScriptUnit.extension(unit, "locomotion_system")
-			local current_velocity = locomotion_extension:current_velocity()
-			local speed = Vector3.length(current_velocity)
+		local offsetted_unit_position = unit_position + Vector3.up() * 0.25
 
-			if speed > 0 then
-				local velocity_direction = current_velocity / speed
-				local to_door_direction = Vector3.normalize(check_position - unit_position)
-				local direction_dot = Vector3.dot(velocity_direction, to_door_direction)
-
-				if direction_dot > 0 then
-					return true
-				end
-			end
-
-			local offsetted_unit_position = unit_position + Vector3.up() * 0.25
-
-			if math.point_is_inside_oobb(offsetted_unit_position, bounding_box, half_extents) then
-				return true
-			end
+		if math.point_is_inside_oobb(offsetted_unit_position, bounding_box, half_extents) then
+			return true
 		end
 	end
 

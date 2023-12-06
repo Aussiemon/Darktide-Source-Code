@@ -122,6 +122,9 @@ CameraHandler.update = function (self, dt, t, player_orientation, input)
 		self:_update_follow(switched_target or force_switch)
 		self:_update_wwise_state(new_unit)
 		self:_update_player_mood(switched_target, new_unit)
+	else
+		self:remove_all_moods(old_unit)
+		self:_update_player_mood(true, old_unit)
 	end
 
 	self:_update_camera_manager(dt, t, player_orientation)

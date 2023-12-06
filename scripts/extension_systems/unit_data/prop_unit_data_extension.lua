@@ -7,8 +7,8 @@ PropUnitDataExtension.init = function (self, extension_init_context, unit)
 	self._breed = nil
 end
 
-PropUnitDataExtension.setup_from_component = function (self, armor_data_name)
-	local breed = PropData[armor_data_name]
+PropUnitDataExtension.setup_from_component = function (self, prop_data_name)
+	local breed = PropData[prop_data_name]
 	local unit = self._unit
 	self._breed = breed
 	local hit_zones = breed.hit_zones

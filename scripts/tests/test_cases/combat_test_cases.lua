@@ -141,6 +141,8 @@ CombatTestCases.run_through_mission = function (case_settings)
 		local lua_trace = settings.lua_trace and BUILD ~= "release"
 		local mission_key = settings.mission_key
 		local num_peers = settings.num_peers or 0
+		local max_time = settings.max_time
+		local back_to_hub_after_runthrough = settings.back_to_hub_after_runthrough or false
 		local telemetry_events = {
 			memory_usage = "perf_memory",
 			lua_trace = "lua_trace_stats"
@@ -208,9 +210,18 @@ CombatTestCases.run_through_mission = function (case_settings)
 			bots_blocked_distance = 2,
 			bots_stuck_data = bots_stuck_data
 		}
+		local start_time = os.clock()
 		local assert_message = "The player(s) has/have been killed, this shouldn't be possible. Please check the video in the Testify results."
 
-		while not Testify:make_request("end_conditions_met") and main_path_point < total_main_path_distance do
+		local function mission_complete()
+			local game_mode_complete = Testify:make_request("end_conditions_met")
+			local ran_whole_mission = total_main_path_distance <= main_path_point
+			local out_of_time = max_time and max_time <= os.clock() - start_time
+
+			return game_mode_complete or ran_whole_mission or out_of_time
+		end
+
+		while not mission_complete() do
 			local are_players_alive = Testify:make_request("players_are_alive")
 
 			if memory_usage and next_memory_measure_point < main_path_point and memory_usage_measurement_count < num_memory_usage_measurements then
@@ -240,6 +251,10 @@ CombatTestCases.run_through_mission = function (case_settings)
 			bot_teleportation_data.main_path_point = main_path_point
 		end
 
+		if back_to_hub_after_runthrough and not Testify:make_request("end_conditions_met") then
+			Testify:make_request("complete_game_mode")
+		end
+
 		local end_conditions_met_outcome = Testify:make_request("end_conditions_met_outcome")
 
 		if end_conditions_met_outcome then
@@ -250,6 +265,10 @@ CombatTestCases.run_through_mission = function (case_settings)
 
 		if memory_usage or lua_trace then
 			TestifySnippets.send_telemetry_batch()
+		end
+
+		if back_to_hub_after_runthrough then
+			Testify:make_request("wait_for_in_hub")
 		end
 
 		return result

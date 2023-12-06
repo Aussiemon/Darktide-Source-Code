@@ -394,33 +394,51 @@ local constants = {
 		slot_primary = {
 			profile_field = true,
 			mispredict_packages = true,
-			wield_input = "wield_1",
 			priority = 1,
 			wieldable = true,
 			slot_type = "weapon",
-			buffable = true
+			buffable = true,
+			wield_inputs = {
+				"wield_1"
+			}
 		},
 		slot_secondary = {
 			profile_field = true,
 			mispredict_packages = true,
-			wield_input = "wield_2",
 			priority = 1,
 			wieldable = true,
 			slot_type = "weapon",
-			buffable = true
+			buffable = true,
+			wield_inputs = {
+				"wield_2"
+			}
 		},
 		slot_pocketable = {
 			priority = 1,
 			mispredict_packages = false,
-			wield_input = "wield_3",
 			wieldable = true,
-			slot_type = "pocketable"
+			slot_type = "pocketable",
+			wield_inputs = {
+				"wield_3",
+				"wield_3_gamepad"
+			}
+		},
+		slot_pocketable_small = {
+			priority = 1,
+			mispredict_packages = false,
+			wieldable = true,
+			slot_type = "pocketable",
+			wield_inputs = {
+				"wield_4"
+			}
 		},
 		slot_device = {
 			wieldable = true,
 			slot_type = "device",
-			wield_input = "wield_4",
-			priority = 1
+			priority = 1,
+			wield_inputs = {
+				"wield_5"
+			}
 		},
 		slot_unarmed = {
 			wieldable = true,
@@ -449,6 +467,10 @@ local constants = {
 	quick_wield_configuration = {
 		default = "slot_primary",
 		slot_primary = "slot_secondary"
+	},
+	gamepad_pocketable_wield_configuration = {
+		slot_pocketable = "slot_pocketable_small",
+		slot_pocketable_small = "slot_pocketable"
 	},
 	scroll_wield_order = {
 		"slot_secondary",
@@ -641,16 +663,24 @@ local wield_inputs = {
 		input = "wield_scroll_up"
 	}
 }
+
+local function _add_wield_input(wield_input)
+	wield_inputs[#wield_inputs + 1] = {
+		value = true,
+		input = wield_input
+	}
+end
+
 local slot_configuration = constants.slot_configuration
 
 for slot_name, config in pairs(slot_configuration) do
 	config.name = slot_name
+	local config_wield_inputs = config.wield_inputs
 
-	if config.wieldable and config.wield_input then
-		wield_inputs[#wield_inputs + 1] = {
-			value = true,
-			input = config.wield_input
-		}
+	if config.wieldable and config_wield_inputs then
+		for ii = 1, #config_wield_inputs do
+			_add_wield_input(config_wield_inputs[ii])
+		end
 	end
 end
 

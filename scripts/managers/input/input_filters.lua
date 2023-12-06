@@ -1,3 +1,4 @@
+local InputDevice = require("scripts/managers/input/input_device")
 local UISettings = require("scripts/settings/ui/ui_settings")
 local InputFilters = {}
 local math_abs = math.abs
@@ -417,12 +418,12 @@ InputFilters.navigate_filter_continuous = {
 		end
 
 		if not disabled and (input_mapping_found or axis_mapping_found) then
-			local using_gamepad = Managers.input:device_in_use("gamepad")
+			local gamepad_active = InputDevice.gamepad_active
 			local cooldown = nil
 
 			if input_mapping_found then
 				cooldown = menu_navigation_settings.button_navigation_cooldown
-			elseif using_gamepad then
+			elseif gamepad_active then
 				cooldown = menu_navigation_settings.gamepad_view_cooldown
 			else
 				cooldown = menu_navigation_settings.view_cooldown
@@ -488,12 +489,12 @@ InputFilters.navigate_filter_continuous_fast = {
 		end
 
 		if not disabled and (input_mapping_found or axis_mapping_found) then
-			local using_gamepad = Managers.input:device_in_use("gamepad")
+			local gamepad_active = InputDevice.gamepad_active
 			local cooldown = nil
 
 			if input_mapping_found then
 				cooldown = menu_navigation_settings.button_navigation_cooldown
-			elseif using_gamepad then
+			elseif gamepad_active then
 				cooldown = menu_navigation_settings.gamepad_view_fast_cooldown
 			else
 				cooldown = menu_navigation_settings.view_fast_cooldown

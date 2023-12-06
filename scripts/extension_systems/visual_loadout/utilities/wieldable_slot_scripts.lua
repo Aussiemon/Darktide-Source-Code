@@ -35,9 +35,12 @@ require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/psyker_
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/psyker_throwing_knives_effects")
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/randomized_friend_rock_unit")
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/revolver_bullets")
+require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/revolver_speedloader")
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/servo_skull_hover")
+require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/shovel_fold_corrector")
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/sticky_effects")
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/sweep_trail")
+require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/syringe_effects")
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/target_units")
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/thunder_hammer_effects")
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/warp_charge_venting_effects")
@@ -105,6 +108,20 @@ WieldableSlotScripts.extensions_ready = function (wieldable_slot_scripts_per_slo
 
 			if wieldable_slot_script.extensions_ready then
 				wieldable_slot_script:extensions_ready()
+			end
+		end
+	end
+end
+
+WieldableSlotScripts.server_correction_occurred = function (wieldable_slot_scripts_per_slot, unit, from_frame)
+	for _, wieldable_slot_scripts in pairs(wieldable_slot_scripts_per_slot) do
+		local num_scripts = #wieldable_slot_scripts
+
+		for ii = 1, num_scripts do
+			local wieldable_slot_script = wieldable_slot_scripts[ii]
+
+			if wieldable_slot_script.server_correction_occurred then
+				wieldable_slot_script:server_correction_occurred(unit, from_frame)
 			end
 		end
 	end

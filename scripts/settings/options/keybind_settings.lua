@@ -30,8 +30,10 @@ if IS_XBS or IS_WINDOWS then
 
 			for alias_name, _ in pairs(alias_table) do
 				local alias_array_index = 1
+				local is_bindable = alias:bindable(alias_name)
+				local hide_in_keybindings_menu = alias:hide_in_keybindings_menu(alias_name)
 
-				if alias:bindable(alias_name) then
+				if is_bindable and not hide_in_keybindings_menu then
 					local key_info = alias:get_keys_for_alias(alias_name, alias_array_index, devices)
 					local display_name = alias:description(alias_name)
 					local group_name = alias:group(alias_name)

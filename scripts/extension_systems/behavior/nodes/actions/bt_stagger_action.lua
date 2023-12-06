@@ -194,7 +194,6 @@ BtStaggerAction.leave = function (self, unit, breed, blackboard, scratchpad, act
 	local stagger_component = Blackboard.write_component(blackboard, "stagger")
 	stagger_component.count = 0
 	stagger_component.num_triggered_staggers = 0
-	stagger_component.type = ""
 
 	MinionShield.reset_block_timings(scratchpad, unit)
 

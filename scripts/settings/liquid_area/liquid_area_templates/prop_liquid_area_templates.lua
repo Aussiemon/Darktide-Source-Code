@@ -27,6 +27,30 @@ local templates = {
 		vfx_name_filled = "content/fx/particles/liquid_area/corruptor_nurgle_goo",
 		in_liquid_buff_template_name = "prop_in_corruptor_liquid_corruption",
 		spread_function = LiquidSpread.pour
+	},
+	prop_filtration_tank = {
+		start_pressure = 20,
+		end_pressure = 5,
+		vfx_name_filled = "content/fx/particles/liquid_area/druglab_tank_goo",
+		max_liquid = 40,
+		cell_size = 0.4,
+		linearized_flow = false,
+		life_time = 32,
+		spawn_brush_size = 1,
+		in_liquid_buff_template_name = "prop_in_druglab_tank_goo",
+		spread_function = LiquidSpread.pour
+	},
+	prop_druglab_tank = {
+		start_pressure = 45,
+		end_pressure = 10,
+		vfx_name_filled = "content/fx/particles/liquid_area/druglab_tank_goo",
+		max_liquid = 75,
+		cell_size = 0.8,
+		linearized_flow = false,
+		life_time = 32,
+		spawn_brush_size = 1,
+		in_liquid_buff_template_name = "prop_in_druglab_tank_goo",
+		spread_function = LiquidSpread.pour
 	}
 }
 

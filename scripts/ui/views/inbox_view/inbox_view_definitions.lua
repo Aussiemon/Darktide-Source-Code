@@ -647,7 +647,7 @@ local widget_definitions = {
 		}
 	}, "loading"),
 	claim_button = UIWidget.create_definition(ButtonPassTemplates.default_button, "claim_button", {
-		text = "Claim"
+		original_text = "Claim"
 	}),
 	character_portrait = UIWidget.create_definition({
 		{

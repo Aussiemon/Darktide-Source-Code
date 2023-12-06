@@ -64,8 +64,8 @@ local function _select_language()
 
 	if PLATFORM == "win32" then
 		language = Application.user_setting("language_id") or HAS_STEAM and Steam:language() or DEFAULT_LANGUAGE
-	elseif PLATFORM == "ps4" then
-		language = PS4.locale() or DEFAULT_LANGUAGE
+	elseif PLATFORM == "ps5" then
+		language = PS5.locale() or DEFAULT_LANGUAGE
 	elseif PLATFORM == "xb1" then
 		local locale = XboxLive.locale() or "error"
 		language = xbox_format_locale(locale)
@@ -94,6 +94,10 @@ LocalizationManager.init = function (self)
 	rawset(_G, "Localize", function (key, no_cache, context)
 		return self:localize(key, no_cache, context)
 	end)
+end
+
+LocalizationManager.reset_cache = function (self)
+	self._string_cache = Script.new_map(STRING_CACHE_EXPECTED_SIZE)
 end
 
 LocalizationManager.destroy = function (self)

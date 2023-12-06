@@ -1,4 +1,5 @@
 local AttackSettings = require("scripts/settings/damage/attack_settings")
+local Breed = require("scripts/utilities/breed")
 local ImpactEffect = require("scripts/utilities/attack/impact_effect")
 local attack_results = AttackSettings.attack_results
 local damage_efficiencies = AttackSettings.damage_efficiencies
@@ -62,7 +63,49 @@ function _push_ragdoll(ragdoll_unit, hit_zone_name, attack_direction, damage_pro
 	minion_ragdoll:push_ragdoll(ragdoll_unit, attack_direction, damage_profile, hit_zone_name, herding_template_or_nil, on_dead_ragdoll)
 end
 
+local VALID_HIT_ZONES = {
+	lower_left_arm = true,
+	upper_right_arm = true,
+	torso = true,
+	lower_right_arm = true,
+	upper_tail = true,
+	upper_left_leg = true,
+	lower_right_leg = true,
+	upper_right_leg = true,
+	head = true,
+	center_mass = true,
+	upper_left_arm = true,
+	lower_left_leg = true,
+	lower_tail = true
+}
+
+local function _find_random_hitzone(ragdoll_unit, optional_is_critical_strike)
+	local breed = Breed.unit_breed_or_nil(ragdoll_unit)
+	local breed_hit_zones = breed.hit_zones
+	local num_breed_hit_zones = #breed_hit_zones
+	local hit_zone_name = nil
+	local num_iterations = 0
+
+	if not optional_is_critical_strike then
+		repeat
+			local random_hit_zone_name = breed_hit_zones[math.random(1, num_breed_hit_zones)].name
+
+			if VALID_HIT_ZONES[random_hit_zone_name] then
+				hit_zone_name = random_hit_zone_name
+			end
+
+			num_iterations = num_iterations + 1
+		until hit_zone_name ~= nil or num_breed_hit_zones <= num_iterations
+	end
+
+	return hit_zone_name or "center_mass"
+end
+
 function _gib(ragdoll_unit, hit_zone_name_or_nil, attack_direction, damage_profile, is_critical_strike_or_nil)
+	if damage_profile.random_gib_hitzone then
+		hit_zone_name_or_nil = _find_random_hitzone(ragdoll_unit, is_critical_strike_or_nil)
+	end
+
 	local visual_loadout_extension = ScriptUnit.extension(ragdoll_unit, "visual_loadout_system")
 
 	if visual_loadout_extension:can_gib(hit_zone_name_or_nil) then

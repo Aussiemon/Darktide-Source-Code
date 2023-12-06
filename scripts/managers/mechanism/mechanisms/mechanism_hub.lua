@@ -36,9 +36,15 @@ MechanismHub.failed_fetching_session_report = function (self)
 end
 
 local function _fetch_client_data()
+	local promises = {}
+
+	if Managers.narrative then
+		promises[#promises + 1] = Managers.narrative:_get_missions()
+	end
+
 	Managers.data_service.store:invalidate_wallets_cache()
 
-	return Promise.resolved()
+	return Promise.all(unpack(promises))
 end
 
 MechanismHub.wanted_transition = function (self)

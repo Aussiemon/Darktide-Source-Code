@@ -26,6 +26,7 @@ local light_cleave = DamageProfileSettings.light_cleave
 local medium_cleave = DamageProfileSettings.medium_cleave
 local large_cleave = DamageProfileSettings.large_cleave
 local big_cleave = DamageProfileSettings.big_cleave
+local fold_cleave = DamageProfileSettings.fold_cleave
 local cutting_am = {
 	attack = {
 		[armor_types.unarmored] = damage_lerp_values.lerp_1,
@@ -1377,8 +1378,8 @@ damage_templates.heavy_shovel_tank = {
 			},
 			power_distribution = {
 				attack = {
-					100,
-					200
+					110,
+					225
 				},
 				impact = {
 					10,
@@ -1393,8 +1394,8 @@ damage_templates.heavy_shovel_tank = {
 		{
 			power_distribution = {
 				attack = {
-					50,
-					100
+					75,
+					150
 				},
 				impact = {
 					7,
@@ -1462,7 +1463,7 @@ overrides.heavy_shovel_special = {
 		},
 		{
 			"cleave_distribution",
-			light_cleave
+			fold_cleave
 		},
 		{
 			"damage_type",
@@ -1478,8 +1479,8 @@ overrides.heavy_shovel_special = {
 			"power_distribution",
 			"attack",
 			{
-				150,
-				450
+				250,
+				550
 			}
 		},
 		{
@@ -1488,7 +1489,15 @@ overrides.heavy_shovel_special = {
 			"armor_damage_modifier",
 			"attack",
 			"super_armor",
-			damage_lerp_values.lerp_0_65
+			damage_lerp_values.lerp_1
+		},
+		{
+			"targets",
+			1,
+			"armor_damage_modifier",
+			"attack",
+			"berserker",
+			damage_lerp_values.lerp_1_33
 		},
 		{
 			"targets",
@@ -1508,10 +1517,14 @@ overrides.heavy_shovel_sticky = {
 		},
 		{
 			"stagger_override",
-			"light"
+			"medium"
 		},
 		{
 			"ignore_instant_ragdoll_chance",
+			true
+		},
+		{
+			"ignore_stagger_reduction",
 			true
 		},
 		{
@@ -1521,8 +1534,16 @@ overrides.heavy_shovel_sticky = {
 			"attack",
 			{
 				100,
-				250
+				350
 			}
+		},
+		{
+			"targets",
+			1,
+			"armor_damage_modifier",
+			"attack",
+			"super_armor",
+			damage_lerp_values.lerp_0_5
 		},
 		{
 			"targets",
@@ -1545,14 +1566,17 @@ overrides.heavy_shovel_smite = {
 			1,
 			"power_distribution",
 			"attack",
-			0.6
+			{
+				125,
+				275
+			}
 		},
 		{
 			"targets",
 			1,
 			"power_distribution",
 			"impact",
-			0.6
+			15
 		}
 	}
 }
@@ -1577,7 +1601,7 @@ damage_templates.default_light_shovel = {
 					[armor_types.armored] = damage_lerp_values.lerp_0_75,
 					[armor_types.resistant] = damage_lerp_values.lerp_1,
 					[armor_types.player] = damage_lerp_values.lerp_1,
-					[armor_types.berserker] = damage_lerp_values.lerp_1,
+					[armor_types.berserker] = damage_lerp_values.lerp_1_1,
 					[armor_types.super_armor] = damage_lerp_values.no_damage,
 					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
 					[armor_types.void_shield] = damage_lerp_values.lerp_1
@@ -1595,8 +1619,8 @@ damage_templates.default_light_shovel = {
 			},
 			power_distribution = {
 				attack = {
-					70,
-					140
+					80,
+					160
 				},
 				impact = {
 					3,
@@ -1641,6 +1665,21 @@ damage_templates.default_light_shovel = {
 		}
 	}
 }
+overrides.light_shovel_marks_single_target = {
+	parent_template_name = "default_light_shovel",
+	overrides = {
+		{
+			"targets",
+			1,
+			"power_distribution",
+			"attack",
+			{
+				95,
+				180
+			}
+		}
+	}
+}
 overrides.light_shovel_special = {
 	parent_template_name = "default_light_shovel",
 	overrides = {
@@ -1670,8 +1709,8 @@ overrides.light_shovel_special = {
 			"power_distribution",
 			"attack",
 			{
-				100,
-				300
+				150,
+				470
 			}
 		},
 		{
@@ -1726,6 +1765,14 @@ overrides.light_shovel_sticky = {
 			"power_distribution",
 			"impact",
 			20
+		},
+		{
+			"targets",
+			1,
+			"armor_damage_modifier",
+			"attack",
+			"super_armor",
+			damage_lerp_values.lerp_0_4
 		}
 	}
 }
@@ -1848,8 +1895,8 @@ damage_templates.default_light_shovel_smack = {
 			},
 			power_distribution = {
 				attack = {
-					100,
-					200
+					110,
+					250
 				},
 				impact = {
 					4,
@@ -1897,7 +1944,7 @@ damage_templates.default_light_shovel_tank = {
 	ragdoll_push_force = 250,
 	ragdoll_only = true,
 	stagger_category = "melee",
-	cleave_distribution = medium_cleave,
+	cleave_distribution = large_cleave,
 	gibbing_power = GibbingPower.light,
 	gibbing_type = GibbingTypes.sawing,
 	melee_attack_strength = melee_attack_strengths.light,
@@ -1931,12 +1978,12 @@ damage_templates.default_light_shovel_tank = {
 			},
 			power_distribution = {
 				attack = {
-					45,
-					90
+					55,
+					120
 				},
 				impact = {
-					4,
-					8
+					8,
+					14
 				}
 			},
 			boost_curve_multiplier_finesse = {
@@ -1953,11 +2000,11 @@ damage_templates.default_light_shovel_tank = {
 			power_distribution = {
 				attack = {
 					30,
-					60
+					80
 				},
 				impact = {
-					3,
-					7
+					6,
+					10
 				}
 			}
 		},
@@ -1966,10 +2013,10 @@ damage_templates.default_light_shovel_tank = {
 			power_distribution = {
 				attack = {
 					30,
-					45
+					50
 				},
 				impact = {
-					2.5,
+					5,
 					6
 				}
 			}
@@ -1982,7 +2029,7 @@ damage_templates.default_light_shovel_tank = {
 					40
 				},
 				impact = {
-					2.5,
+					5,
 					5
 				}
 			}
@@ -1996,7 +2043,7 @@ damage_templates.default_light_shovel_tank = {
 				},
 				impact = {
 					2,
-					4
+					5
 				}
 			},
 			boost_curve = PowerLevelSettings.boost_curves.default

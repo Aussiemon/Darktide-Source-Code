@@ -258,6 +258,26 @@ local disorientation_settings = {
 				action_delay = 0
 			}
 		},
+		twin_grenade = {
+			sound_event = "wwise/events/player/play_player_get_hit_corruption_2d",
+			movement_speed_buff = "grenadier_stun_movement_slow",
+			screen_space_effect = "content/fx/particles/screenspace/screen_stunned_heavy",
+			ignore_fumbled = true,
+			hit_react_anim_1p = "shake_medium",
+			hit_react_anim_3p = "hit_react",
+			stun = {
+				start_anim_3p = "hit_stun_medium",
+				intoxication_level = 10,
+				start_anim = "hit_stun",
+				end_anim_3p = "hit_stun_finished",
+				interrupt_delay = 0,
+				end_anim = "hit_stun_recover",
+				end_stun_early_time = 0.5,
+				stun_immunity_time_buff = "stun_immune_very_long",
+				stun_duration = 1.5,
+				action_delay = 0
+			}
+		},
 		fortitude_broken = {
 			sound_event = "wwise/events/player/play_player_get_hit_light_2d",
 			movement_speed_buff = "fortitude_broken_stun_movement_slow",

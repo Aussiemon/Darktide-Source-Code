@@ -217,6 +217,19 @@ local Credits = {
 				type = "person"
 			},
 			{
+				text = "loc_credits_view_publisher_producer_title",
+				localized = true,
+				type = "title"
+			},
+			{
+				text = "Batuhan Ertas",
+				type = "person"
+			},
+			{
+				text = " ",
+				type = "person"
+			},
+			{
 				text = "loc_credits_view_localization_manager_title",
 				localized = true,
 				type = "title"
@@ -1798,6 +1811,10 @@ local Credits = {
 				type = "person"
 			},
 			{
+				text = "Emma Brown",
+				type = "person"
+			},
+			{
 				text = " ",
 				type = "person"
 			},
@@ -1838,6 +1855,10 @@ local Credits = {
 			},
 			{
 				text = "Hanna Holmgren",
+				type = "person"
+			},
+			{
+				text = "Rodrigue Delrue",
 				type = "person"
 			},
 			{
@@ -2847,6 +2868,32 @@ local Credits = {
 				type = "person"
 			},
 			{
+				text = "loc_credits_view_rinda_karnak_title",
+				localized = true,
+				type = "title"
+			},
+			{
+				text = "Emma Stannard",
+				type = "person"
+			},
+			{
+				text = " ",
+				type = "person"
+			},
+			{
+				text = "loc_credits_view_rodin_karnak_title",
+				localized = true,
+				type = "title"
+			},
+			{
+				text = "Jack Myers",
+				type = "person"
+			},
+			{
+				text = " ",
+				type = "person"
+			},
+			{
 				text = "loc_credits_view_mara_vinci_title",
 				localized = true,
 				type = "title"
@@ -3762,6 +3809,19 @@ local Credits = {
 				type = "person"
 			},
 			{
+				text = "loc_credits_view_animation_consultant_title",
+				localized = true,
+				type = "title"
+			},
+			{
+				text = "Wojciech Fonk",
+				type = "person"
+			},
+			{
+				text = " ",
+				type = "person"
+			},
+			{
 				text = "loc_credits_view_community_support_title",
 				localized = true,
 				type = "header"
@@ -3776,7 +3836,7 @@ local Credits = {
 				type = "title"
 			},
 			{
-				text = "Incan, TheOneTrueSkeleton, Captain Kentucky, Gawain, Kaelus Von Sestiaf, Sequens, Witchfinder Dilara, notfuegonasus, I2ain, Nategore, TPKPatchy, Indypride, SqueakCheesetaker, Incan, Maya-moo, Ishka, Malacar, raindish, Bioshift, jtcLIVE, Royale w/ Cheese, «§ëvënPrøxy», Nayre, Core, jinxedmerphit, Old´Un, Zeropathic, Luetin, Borgarbjörnen, Haywire Hayley.",
+				text = "Incan, TheOneTrueSkeleton, Captain Kentucky, Gawain, Kaelus Von Sestiaf, Sequens, Witchfinder Dilara, notfuegonasus, I2ain, Nategore, TPKPatchy, Indypride from milkandcookiesTW, SqueakCheesetaker, Maya-moo, Ishka, Malacar, raindish, Bioshift, jtcLIVE, Royale w/ Cheese, «§ëvënPrøxy», Nayre, Core, jinxedmerphit, Old´Un, Zeropathic, Luetin, Borgarbjörnen, Haywire Hayley, Daniel Kaye aka Action Johnny @ The Action Window, Luke Ridley, Commissar Tyr, combine00, Emorist, Hubert \"Kerfus\" Spala, Grimalackt, Tyler Bono, Nikky \"Hank\" van der Meer, jsat.",
 				type = "person"
 			},
 			{

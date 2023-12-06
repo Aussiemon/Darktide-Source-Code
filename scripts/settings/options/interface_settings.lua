@@ -267,7 +267,7 @@ local settings_definitions = {
 		save_location = "interface_settings",
 		display_name = "loc_interface_setting_input_hints_enabled",
 		id = "input_hints_enabled",
-		default_value = false,
+		default_value = true,
 		widget_type = "boolean",
 		on_value_changed = function (value)
 			Managers.event:trigger("event_update_input_hints_enabled", value)
@@ -303,7 +303,7 @@ local settings_definitions = {
 		min_value = 0,
 		display_name = "loc_interface_setting_subtitle_background_opacity",
 		id = "subtitle_background_opacity",
-		default_value = 75,
+		default_value = 60,
 		widget_type = "percent_slider",
 		on_value_changed = function (value)
 			Managers.event:trigger("event_update_subtitles_background_opacity", value)
@@ -326,7 +326,7 @@ local settings_definitions = {
 		display_name = "loc_interface_setting_subtitle_font_size",
 		num_decimals = 0,
 		max_value = 72,
-		default_value = 25,
+		default_value = 32,
 		widget_type = "value_slider",
 		id = "subtitle_font_size",
 		save_location = "interface_settings",

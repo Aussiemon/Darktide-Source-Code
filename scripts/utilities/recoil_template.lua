@@ -1,5 +1,5 @@
 local RecoilTemplate = {}
-local lerp = math.lerp
+local _math = rawget(_G, "EditorApi") and MathUtils or math
 
 RecoilTemplate.generate_offset_range = function (num_shots, offset_pitch, offset_yaw, lerp_distance, scale_values)
 	local offset_range = {}
@@ -41,8 +41,8 @@ RecoilTemplate.create_scale = function (scale_values)
 
 		for jj = 1, steps do
 			current_index = current_index + 1
-			local this_pitch = lerp(current_pitch, values[1], jj / steps)
-			local this_yaw = lerp(current_yaw, values[2], jj / steps)
+			local this_pitch = _math.lerp(current_pitch, values[1], jj / steps)
+			local this_yaw = _math.lerp(current_yaw, values[2], jj / steps)
 			scale_list.pitch[current_index] = this_pitch
 			scale_list.yaw[current_index] = this_yaw
 		end

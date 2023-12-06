@@ -42,10 +42,12 @@ _create_effect_template_entry("scripts/settings/fx/effect_templates/renegade_net
 _create_effect_template_entry("scripts/settings/fx/effect_templates/renegade_netgunner_net")
 _create_effect_template_entry("scripts/settings/fx/effect_templates/renegade_shocktrooper_grenade")
 _create_effect_template_entry("scripts/settings/fx/effect_templates/renegade_sniper_laser")
+_create_effect_template_entry("scripts/settings/fx/effect_templates/renegade_twin_captain_power_sword_sweep")
 _create_effect_template_entry("scripts/settings/fx/effect_templates/corruptor_ambience")
 _create_effect_template_entry("scripts/settings/fx/effect_templates/corruptor_ambience_burrowed")
 _create_effect_template_entry("scripts/settings/fx/effect_templates/void_shield_explosion")
 _create_effect_template_entry("scripts/settings/fx/effect_templates/glowing_eyes")
+_create_effect_template_entry("scripts/settings/fx/effect_templates/linked_beam")
 _create_effect_template_entry("scripts/settings/fx/effect_templates/netted")
 _create_effect_template_entry("scripts/settings/fx/effect_templates/zealot_relic_blessed")
 

@@ -7,36 +7,35 @@ local VFX_FOLEY_NAME = "content/fx/particles/enemies/mutant_charger/mutant_charg
 local VFX_FOLEY_NODE_NAME = "j_camera_attach"
 local resources = {
 	start_charge_sound_event = START_CHARGE_SOUND_EVENT,
-	stop_shoot_sound_event = STOP_CHARGE_SOUND_EVENT,
+	stop_charge_sound_event = STOP_CHARGE_SOUND_EVENT,
 	vfx_foley_name = VFX_FOLEY_NAME
 }
-local TRIGGER_DISTANCE = 35
+local TRIGGER_DISTANCE = 30
 local effect_template = {
 	name = "cultist_mutant_charge_foley",
 	resources = resources,
 	start = function (template_data, template_context)
-		if VFX_FOLEY_NAME then
-			local unit = template_data.unit
-			local world = template_context.world
-			local node = Unit.node(unit, VFX_FOLEY_NODE_NAME)
-			local node_pos = Unit.world_position(unit, node)
-			local particle_id = World.create_particles(world, VFX_FOLEY_NAME, node_pos)
+		local unit = template_data.unit
+		local world = template_context.world
+		local node = Unit.node(unit, VFX_FOLEY_NODE_NAME)
+		local node_pos = Unit.world_position(unit, node)
+		local particle_id = World.create_particles(world, VFX_FOLEY_NAME, node_pos)
 
-			World.link_particles(world, particle_id, unit, node, Matrix4x4.identity(), "stop")
+		World.link_particles(world, particle_id, unit, node, Matrix4x4.identity(), "stop")
 
-			template_data.particle_id = particle_id
-		end
+		template_data.particle_id = particle_id
+		template_data.game_object_id = Managers.state.unit_spawner:game_object_id(unit)
 	end,
 	update = function (template_data, template_context, dt, t)
-		local unit = template_data.unit
 		local game_session = template_context.game_session
-		local game_object_id = Managers.state.unit_spawner:game_object_id(unit)
+		local game_object_id = template_data.game_object_id
 		local target_unit = MinionPerception.target_unit(game_session, game_object_id)
 
 		if not ALIVE[target_unit] then
 			return
 		end
 
+		local unit = template_data.unit
 		local wwise_world = template_context.wwise_world
 		local source_id = template_data.source_id
 
@@ -60,19 +59,18 @@ local effect_template = {
 		end
 	end,
 	stop = function (template_data, template_context)
-		local wwise_world = template_context.wwise_world
 		local source_id = template_data.source_id
 
 		if source_id then
+			local wwise_world = template_context.wwise_world
+
 			WwiseWorld.trigger_resource_event(wwise_world, STOP_CHARGE_SOUND_EVENT, source_id)
 		end
 
-		if template_data.particle_id then
-			local world = template_context.world
-			local particle_id = template_data.particle_id
+		local world = template_context.world
+		local particle_id = template_data.particle_id
 
-			World.stop_spawning_particles(world, particle_id)
-		end
+		World.stop_spawning_particles(world, particle_id)
 	end
 }
 

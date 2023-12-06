@@ -30,6 +30,8 @@ local AchievementBreedGroups = {
 		"renegade_gunner",
 		"renegade_melee",
 		"renegade_netgunner",
+		"renegade_twin_captain",
+		"renegade_twin_captain_two",
 		"renegade_rifleman",
 		"renegade_shocktrooper",
 		"renegade_sniper"
@@ -84,6 +86,7 @@ local AchievementBreedGroups = {
 		"renegade_gunner",
 		"renegade_melee",
 		"renegade_netgunner",
+		"renegade_twin_captain",
 		"renegade_rifleman",
 		"renegade_shocktrooper",
 		"renegade_sniper"

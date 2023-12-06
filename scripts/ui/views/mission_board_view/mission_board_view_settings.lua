@@ -157,14 +157,14 @@ local MissionBoardViewSettings = {
 	mission_positions = {
 		normal = {
 			{
-				83,
-				631,
+				89,
+				574,
 				index = 1,
 				prefered_danger = 1
 			},
 			{
-				246,
-				701,
+				211,
+				462,
 				index = 2,
 				prefered_danger = 1
 			},
@@ -283,8 +283,8 @@ local MissionBoardViewSettings = {
 				prefered_danger = 5
 			},
 			{
-				467,
-				147,
+				447,
+				235,
 				index = 22,
 				prefered_danger = 5
 			},
@@ -311,8 +311,8 @@ local MissionBoardViewSettings = {
 				500
 			},
 			quickplay_mission_position = {
-				120,
-				175
+				110,
+				255
 			}
 		},
 		auric = {
@@ -371,8 +371,8 @@ local MissionBoardViewSettings = {
 				500
 			},
 			quickplay_mission_position = {
-				120,
-				175
+				110,
+				255
 			}
 		}
 	},

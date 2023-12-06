@@ -227,6 +227,20 @@ InputAliases.bindable = function (self, name)
 	return false
 end
 
+InputAliases.hide_in_keybindings_menu = function (self, name)
+	local alias_row = self._aliases[name]
+
+	if alias_row then
+		if alias_row.hide_in_keybindings_menu ~= nil then
+			return alias_row.hide_in_keybindings_menu
+		end
+
+		return false
+	end
+
+	return false
+end
+
 InputAliases.alias_table = function (self)
 	return self._aliases
 end

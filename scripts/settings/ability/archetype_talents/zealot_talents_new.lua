@@ -345,6 +345,10 @@ local archetype_talents = {
 			passive = {
 				buff_template_name = "zealot_combat_ability_attack_speed_increase",
 				identifier = "zealot_combat_ability_attack_speed_increase"
+			},
+			player_ability = {
+				ability_type = "combat_ability",
+				ability = PlayerAbilities.zealot_targeted_dash_improved
 			}
 		},
 		zealot_additional_charge_of_ability = {
@@ -364,7 +368,7 @@ local archetype_talents = {
 			},
 			player_ability = {
 				ability_type = "combat_ability",
-				ability = PlayerAbilities.zealot_targeted_dash_improved
+				ability = PlayerAbilities.zealot_targeted_dash_improved_double
 			}
 		},
 		zealot_increased_duration = {

@@ -25,6 +25,7 @@ local template_names = {
 	"psyker_shout",
 	"psyker_stance",
 	"veteran_combat_ability",
+	"veteran_stealth_combat_ability",
 	"zealot_dash",
 	"zealot_invisibility"
 }

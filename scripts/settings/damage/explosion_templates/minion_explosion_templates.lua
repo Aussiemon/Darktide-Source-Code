@@ -21,6 +21,47 @@ local explosion_templates = {
 			"wwise/events/weapon/play_explosion_refl_small"
 		}
 	},
+	cultist_grenadier_gas_grenade_impact = {
+		damage_falloff = false,
+		radius = 2,
+		min_radius = 1.25,
+		collision_filter = "filter_minion_explosion",
+		close_radius = 1.25,
+		static_power_level = 0,
+		scalable_radius = true,
+		min_close_radius = 0.5,
+		close_damage_profile = DamageProfileTemplates.renegade_grenadier_fire_grenade_impact_close,
+		damage_profile = DamageProfileTemplates.renegade_grenadier_fire_grenade_impact,
+		sfx = {
+			"wwise/events/weapon/play_explosion_grenade_gas",
+			"wwise/events/weapon/play_explosion_refl_small"
+		}
+	},
+	twin_gas_grenade_impact = {
+		damage_falloff = false,
+		radius = 3,
+		min_radius = 1.25,
+		collision_filter = "filter_minion_explosion",
+		close_radius = 1.5,
+		scalable_radius = true,
+		min_close_radius = 0.5,
+		close_damage_profile = DamageProfileTemplates.twin_grenade_explosion,
+		damage_profile = DamageProfileTemplates.twin_grenade_explosion,
+		scaled_power_level = {
+			100,
+			200,
+			500,
+			700,
+			850
+		},
+		vfx = {
+			"content/fx/particles/enemies/twin_disappear_cloud"
+		},
+		sfx = {
+			"wwise/events/weapon/play_explosion_gas_proximity_mine",
+			"wwise/events/weapon/play_explosion_refl_gen"
+		}
+	},
 	poxwalker_bomber = {
 		damage_falloff = false,
 		radius = 6,
@@ -212,6 +253,43 @@ local explosion_templates = {
 		},
 		sfx = {
 			"wwise/events/weapon/play_explosion_grenade_gas",
+			"wwise/events/weapon/play_explosion_refl_small"
+		}
+	},
+	twin_appear_explosion = {
+		damage_falloff = false,
+		radius = 0.2,
+		min_radius = 0.1,
+		collision_filter = "filter_minion_explosion",
+		close_radius = 0.1,
+		static_power_level = 0,
+		scalable_radius = true,
+		min_close_radius = 0.05,
+		close_damage_profile = DamageProfileTemplates.chaos_hound_push,
+		damage_profile = DamageProfileTemplates.chaos_hound_push,
+		vfx = {
+			"content/fx/particles/enemies/twin_disappear_cloud"
+		},
+		sfx = {
+			"wwise/events/minions/play_minion_twins_ambush_spawn_impact_hit"
+		}
+	},
+	twin_disappear_explosion = {
+		damage_falloff = false,
+		radius = 0.2,
+		min_radius = 0.1,
+		collision_filter = "filter_minion_explosion",
+		close_radius = 0.1,
+		static_power_level = 0,
+		scalable_radius = true,
+		min_close_radius = 0.05,
+		close_damage_profile = DamageProfileTemplates.chaos_hound_push,
+		damage_profile = DamageProfileTemplates.chaos_hound_push,
+		vfx = {
+			"content/fx/particles/enemies/twin_disappear_cloud"
+		},
+		sfx = {
+			"wwise/events/minions/play_minion_twins_disappear_explosion",
 			"wwise/events/weapon/play_explosion_refl_small"
 		}
 	}

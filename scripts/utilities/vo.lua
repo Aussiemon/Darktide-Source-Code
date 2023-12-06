@@ -634,6 +634,18 @@ Vo.generic_mission_vo_event = function (unit, trigger_id)
 	end
 end
 
+Vo.generic_mission_vo_event_all_players = function (trigger_id)
+	local healthy_players = _get_healthy_players()
+	local num_healthy_players = #healthy_players
+
+	for i = 1, num_healthy_players do
+		local player = healthy_players[i]
+		local unit = player.player_unit
+
+		Vo.generic_mission_vo_event(unit, trigger_id)
+	end
+end
+
 Vo.environmental_story_vo_event = function (unit, story_name)
 	local dialogue_extension = ScriptUnit.has_extension(unit, "dialogue_system")
 	local event_name = "environmental_story"
@@ -1277,6 +1289,22 @@ Vo.stop_all_currently_playing_vo = function ()
 
 	if dialogue_system then
 		dialogue_system:force_stop_all()
+	end
+end
+
+Vo.set_ignore_server_play_requests = function (value)
+	local dialogue_system = Managers.state.extension:system_by_extension("DialogueActorExtension")
+
+	if dialogue_system then
+		dialogue_system:set_ignore_server_play_requests(value)
+	end
+end
+
+Vo.set_unit_vo_memory = function (unit, memory_type, memory_id, value)
+	local dialogue_extension = ScriptUnit.has_extension(unit, "dialogue_system")
+
+	if dialogue_extension then
+		dialogue_extension:store_in_memory(memory_type, memory_id, value)
 	end
 end
 

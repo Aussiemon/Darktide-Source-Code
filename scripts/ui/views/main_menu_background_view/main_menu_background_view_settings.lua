@@ -16,6 +16,7 @@ local main_menu_background_view_settings = {
 		"slot_primary",
 		"slot_secondary",
 		"slot_pocketable",
+		"slot_pocketable_small",
 		"slot_luggable",
 		"slot_support_ability",
 		"slot_combat_ability",

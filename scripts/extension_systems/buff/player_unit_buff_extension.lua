@@ -37,6 +37,7 @@ PlayerUnitBuffExtension.init = function (self, extension_init_context, unit, ext
 	local mission_name = Managers.state.mission:mission_name()
 	local mission_settings = mission_name and Missions[mission_name]
 	self._is_hub = mission_settings and mission_settings.is_hub
+	self._cinematic_active = false
 end
 
 PlayerUnitBuffExtension._init_components = function (self, buff_component)
@@ -111,6 +112,7 @@ PlayerUnitBuffExtension.fixed_update = function (self, unit, dt, t, fixed_frame)
 	end
 
 	self:_update_buffs(dt, t)
+	self:_update_on_screen_fx()
 	self:_move_looping_sfx_sources(unit)
 	self:_update_proc_events(t)
 	self:_update_stat_buffs_and_keywords(t)
@@ -551,19 +553,11 @@ PlayerUnitBuffExtension._start_fx = function (self, index, template)
 	if player_effects and is_local_unit and is_human_controlled then
 		local on_screen_effect = player_effects.on_screen_effect
 
-		if on_screen_effect then
-			if not self._on_screen_effects[index] then
-				self._on_screen_effects[index] = {}
-			end
-
-			local on_screen_effects = self._on_screen_effects[index]
+		if on_screen_effect and not self._cinematic_active then
 			local world = buff_context.world
-			local on_screen_effect_id = World.create_particles(world, on_screen_effect, Vector3(0, 0, 1))
 			local stop_type = player_effects.stop_type or "destroy"
-			on_screen_effects[#on_screen_effects + 1] = {
-				particle_id = on_screen_effect_id,
-				stop_type = stop_type
-			}
+
+			self:start_on_screen_effect(index, on_screen_effect, stop_type, world)
 		end
 
 		local on_add_wwise_event = player_effects.on_add_wwise_event
@@ -614,6 +608,19 @@ PlayerUnitBuffExtension._start_fx = function (self, index, template)
 	end
 end
 
+PlayerUnitBuffExtension.start_on_screen_effect = function (self, index, on_screen_effect, stop_type, world)
+	if not self._on_screen_effects[index] then
+		self._on_screen_effects[index] = {}
+	end
+
+	local on_screen_effects = self._on_screen_effects[index]
+	local on_screen_effect_id = World.create_particles(world, on_screen_effect, Vector3(0, 0, 1))
+	on_screen_effects[#on_screen_effects + 1] = {
+		particle_id = on_screen_effect_id,
+		stop_type = stop_type
+	}
+end
+
 PlayerUnitBuffExtension._stop_fx = function (self, index, template)
 	local buff_context = self._buff_context
 	local player_effects = template.player_effects
@@ -655,6 +662,26 @@ PlayerUnitBuffExtension._stop_fx = function (self, index, template)
 	end
 
 	local world = buff_context.world
+
+	self:_stop_on_screen_effects(index, world)
+
+	if player_effects and self._is_server then
+		local active_effect_templates = self._active_effect_templates
+		local fx_system = self._fx_system
+		local effect_template_id = active_effect_templates[index]
+		local effect_template = player_effects.effect_template
+
+		if effect_template and effect_template_id and fx_system:has_running_global_effect_id(effect_template_id) then
+			fx_system:stop_template_effect(effect_template_id)
+
+			active_effect_templates[index] = nil
+		end
+	end
+
+	PlayerUnitBuffExtension.super._stop_fx(self, index, template)
+end
+
+PlayerUnitBuffExtension._stop_on_screen_effects = function (self, index, world)
 	local on_screen_effects = self._on_screen_effects[index]
 
 	if on_screen_effects then
@@ -672,21 +699,52 @@ PlayerUnitBuffExtension._stop_fx = function (self, index, template)
 
 		self._on_screen_effects[index] = nil
 	end
+end
 
-	if player_effects and self._is_server then
-		local active_effect_templates = self._active_effect_templates
-		local fx_system = self._fx_system
-		local effect_template_id = active_effect_templates[index]
-		local effect_template = player_effects.effect_template
+PlayerUnitBuffExtension._is_cinematic_active = function (self)
+	local extension_manager = Managers.state.extension
+	local cinematic_scene_system = extension_manager:system("cinematic_scene_system")
+	local cinematic_scene_system_active = cinematic_scene_system:is_active()
+	local cinematic_manager = Managers.state.cinematic
+	local cinematic_manager_active = cinematic_manager:active()
 
-		if effect_template and effect_template_id and fx_system:has_running_global_effect_id(effect_template_id) then
-			fx_system:stop_template_effect(effect_template_id)
+	return cinematic_scene_system_active or cinematic_manager_active
+end
 
-			active_effect_templates[index] = nil
-		end
+PlayerUnitBuffExtension._update_on_screen_fx = function (self)
+	local buff_context = self._buff_context
+	local is_local_unit = buff_context.is_local_unit
+	local player = self._player
+	local is_human_controlled = player:is_human_controlled()
+	local world = buff_context.world
+
+	if not is_local_unit or not is_human_controlled then
+		return
 	end
 
-	PlayerUnitBuffExtension.super._stop_fx(self, index, template)
+	local prev_cinematic_active = self._cinematic_active
+	local cinematic_active = self:_is_cinematic_active()
+	self._cinematic_active = cinematic_active
+
+	if prev_cinematic_active ~= cinematic_active then
+		for index, buff_instance in pairs(self._buffs_by_index) do
+			local instance_id = buff_instance:instance_id()
+
+			if cinematic_active then
+				self:_stop_on_screen_effects(instance_id, world)
+			elseif not cinematic_active then
+				local buff_template = buff_instance:template()
+				local player_effects = buff_template.player_effects
+				local on_screen_effect = player_effects and player_effects.on_screen_effect
+
+				if on_screen_effect then
+					local stop_type = player_effects.stop_type or "destroy"
+
+					self:start_on_screen_effect(instance_id, on_screen_effect, stop_type, world)
+				end
+			end
+		end
+	end
 end
 
 implements(PlayerUnitBuffExtension, BuffExtensionInterface)

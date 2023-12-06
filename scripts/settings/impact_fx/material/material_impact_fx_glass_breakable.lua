@@ -7,6 +7,11 @@ local stop = {
 			effects = {
 				"content/fx/particles/impacts/surfaces/impact_generic"
 			}
+		},
+		{
+			effects = {
+				"content/fx/particles/impacts/surfaces/impact_glass"
+			}
 		}
 	}
 }
@@ -21,6 +26,11 @@ local entry = {
 		{
 			effects = {
 				"content/fx/particles/impacts/covers/cover_generic_penetration_01"
+			}
+		},
+		{
+			effects = {
+				"content/fx/particles/impacts/surfaces/impact_glass"
 			}
 		}
 	},
@@ -42,6 +52,11 @@ local exit = {
 		{
 			effects = {
 				"content/fx/particles/impacts/covers/cover_generic_exit_01"
+			}
+		},
+		{
+			effects = {
+				"content/fx/particles/impacts/surfaces/impact_glass"
 			}
 		}
 	},

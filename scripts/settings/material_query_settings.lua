@@ -1,5 +1,6 @@
 local material_query_settings = {}
 local surface_materials = {
+	"brick",
 	"cloth",
 	"concrete",
 	"dirt_gravel",

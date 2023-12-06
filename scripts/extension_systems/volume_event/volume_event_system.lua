@@ -50,7 +50,7 @@ VolumeEventSystem._require_level_volumes = function (self, level_name, volume_da
 
 		table.append(volume_data, volumes_data)
 	else
-		Log.info("VolumeEventSystem", "Couldn't find any level volume data for level %q, no volume events will run on this level\nThe volume_data file should have been auto generated when saving the level in the editor, just add a reference to it in the level package.", level_name)
+		Log.warning("VolumeEventSystem", "Couldn't find any level volume data for level %q, no volume events will run on this level\nThe volume_data file should have been auto generated when saving the level in the editor, just add a reference to it in the level package.", level_name)
 	end
 
 	return volume_data

@@ -44,6 +44,7 @@ ActionShootHitScan._shoot = function (self, position, rotation, power_level, cha
 			local test = config.test
 			local against = config.against
 			local collision_filter = config.collision_filter
+			local radius = config.radius
 
 			if test == "ray" then
 				local hits = HitScan.raycast(physics_world, position, direction, max_distance, against, collision_filter, rewind_ms, is_local_unit, player, is_server)
@@ -52,7 +53,7 @@ ActionShootHitScan._shoot = function (self, position, rotation, power_level, cha
 					table.append(ALL_HITS, hits)
 				end
 			elseif test == "sphere" then
-				local hits = HitScan.sphere_sweep(physics_world, position, direction, max_distance, against, collision_filter, rewind_ms)
+				local hits = HitScan.sphere_sweep(physics_world, position, direction, max_distance, against, collision_filter, rewind_ms, radius)
 
 				if hits then
 					table.append(ALL_HITS, hits)

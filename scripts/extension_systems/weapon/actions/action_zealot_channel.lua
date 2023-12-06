@@ -1,6 +1,7 @@
 require("scripts/extension_systems/weapon/actions/action_ability_base")
 
 local Attack = require("scripts/utilities/attack/attack")
+local BreedSettings = require("scripts/settings/breed/breed_settings")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local SpecialRulesSettings = require("scripts/settings/ability/special_rules_settings")
 local Stagger = require("scripts/utilities/attack/stagger")
@@ -10,6 +11,7 @@ local Toughness = require("scripts/utilities/toughness/toughness")
 local Vo = require("scripts/utilities/vo")
 local talent_settings_3 = TalentSettings.zealot_3
 local TICK_RATE = talent_settings_3.bolstering_prayer.tick_rate
+local MINION_BREED_TYPE = BreedSettings.types.minion
 local proc_events = BuffSettings.proc_events
 local special_rules = SpecialRulesSettings.special_rules
 local ActionZealotChannel = class("ActionZealotChannel", "ActionAbilityBase")
@@ -240,17 +242,16 @@ ActionZealotChannel._zealot_stagger = function (self, radius, power_level)
 	local player_position = POSITION_LOOKUP[unit]
 	local enemy_side_names = side:relation_side_names("enemy")
 	local ai_target_units = side.ai_target_units
-	local player_units = side.valid_enemy_player_units
 	local broadphase_system = Managers.state.extension:system("broadphase_system")
 	local broadphase = broadphase_system.broadphase
-	local num_hits = broadphase:query(player_position, radius, broadphase_results, enemy_side_names)
+	local num_hits = broadphase:query(player_position, radius, broadphase_results, enemy_side_names, MINION_BREED_TYPE)
 	local damage_profile = action_settings.damage_profile
 
 	for ii = 1, num_hits do
 		repeat
 			local enemy_unit = broadphase_results[ii]
 
-			if not ai_target_units[enemy_unit] or player_units[enemy_unit] then
+			if not ai_target_units[enemy_unit] then
 				break
 			end
 
@@ -286,13 +287,13 @@ ActionZealotChannel._zealot_stagger = function (self, radius, power_level)
 	local force_stagger_duration = action_settings.force_stagger_duration
 
 	if force_stagger_radius then
-		num_hits = broadphase:query(player_position, force_stagger_radius, broadphase_results, enemy_side_names)
+		num_hits = broadphase:query(player_position, force_stagger_radius, broadphase_results, enemy_side_names, MINION_BREED_TYPE)
 
 		for ii = 1, num_hits do
 			repeat
 				local enemy_unit = broadphase_results[ii]
 
-				if not ai_target_units[enemy_unit] or player_units[enemy_unit] then
+				if not ai_target_units[enemy_unit] then
 					break
 				end
 

@@ -461,6 +461,8 @@ PlayerUnitVisualLoadoutExtension.server_correction_occurred = function (self, un
 
 		self:_wield_slot(wielded_slot)
 	end
+
+	WieldableSlotScripts.server_correction_occurred(self._wieldable_slot_scripts, unit, from_frame)
 end
 
 PlayerUnitVisualLoadoutExtension.destroy = function (self)
@@ -487,7 +489,7 @@ PlayerUnitVisualLoadoutExtension.destroy = function (self)
 				Luggable.enable_physics(first_person_component, locomotion_component, slot.unit_3p)
 			end
 
-			if slot_name == "slot_pocketable" then
+			if slot_name == "slot_pocketable" or slot_name == "slot_pocketable_small" then
 				local is_grimoire = PlayerUnitVisualLoadout.has_weapon_keyword_from_slot(self, "slot_pocketable", "grimoire")
 
 				if is_grimoire then
@@ -502,7 +504,7 @@ PlayerUnitVisualLoadoutExtension.destroy = function (self)
 					local unit = self._unit
 					local inventory_component = self._inventory_component
 
-					Pocketable.drop_pocketable(latest_frame, self._physics_world, is_server, unit, inventory_component, self)
+					Pocketable.drop_pocketable(latest_frame, self._physics_world, is_server, unit, inventory_component, self, slot_name)
 				end
 			else
 				self:_unequip_item_from_slot(slot_name, false, latest_frame, true)

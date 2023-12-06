@@ -557,5 +557,25 @@ TerrorEventNodes.spawn_bot_character = {
 		return true
 	end
 }
+TerrorEventNodes.start_twin_fight = {
+	init = function (node, event, t)
+		local mutator_toxic_gas_twins = Managers.state.mutator:mutator("mutator_toxic_gas_twins")
+
+		mutator_toxic_gas_twins:start_boss_fight()
+	end,
+	update = function (node, scratchpad, t, dt)
+		return true
+	end
+}
+TerrorEventNodes.activate_hard_mode = {
+	init = function (node, event, t)
+		local pacing_manager = Managers.state.pacing
+
+		pacing_manager:activate_hard_mode()
+	end,
+	update = function (node, scratchpad, t, dt)
+		return true
+	end
+}
 
 return TerrorEventNodes

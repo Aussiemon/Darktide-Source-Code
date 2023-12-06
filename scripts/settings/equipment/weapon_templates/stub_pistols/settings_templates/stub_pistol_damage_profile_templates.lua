@@ -30,7 +30,7 @@ local armor_modifiers = {
 				[armor_types.resistant] = damage_lerp_values.lerp_1,
 				[armor_types.player] = damage_lerp_values.lerp_1,
 				[armor_types.berserker] = damage_lerp_values.lerp_1,
-				[armor_types.super_armor] = damage_lerp_values.lerp_0_6,
+				[armor_types.super_armor] = damage_lerp_values.lerp_0_4,
 				[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
 				[armor_types.void_shield] = damage_lerp_values.lerp_0_5
 			},
@@ -71,13 +71,13 @@ local armor_modifiers = {
 	p1_m2 = {
 		near = {
 			attack = {
-				[armor_types.unarmored] = damage_lerp_values.lerp_0_9,
-				[armor_types.armored] = damage_lerp_values.lerp_0_9,
-				[armor_types.resistant] = damage_lerp_values.lerp_1_2,
+				[armor_types.unarmored] = damage_lerp_values.lerp_1_25,
+				[armor_types.armored] = damage_lerp_values.lerp_0_8,
+				[armor_types.resistant] = damage_lerp_values.lerp_1_5,
 				[armor_types.player] = damage_lerp_values.lerp_1,
-				[armor_types.berserker] = damage_lerp_values.lerp_1,
-				[armor_types.super_armor] = damage_lerp_values.lerp_0_6,
-				[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
+				[armor_types.berserker] = damage_lerp_values.lerp_1_2,
+				[armor_types.super_armor] = damage_lerp_values.lerp_0_3,
+				[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1_25,
 				[armor_types.void_shield] = damage_lerp_values.lerp_0_5
 			},
 			impact = {
@@ -97,8 +97,8 @@ local armor_modifiers = {
 				[armor_types.armored] = damage_lerp_values.lerp_0_6,
 				[armor_types.resistant] = damage_lerp_values.lerp_0_9,
 				[armor_types.player] = damage_lerp_values.lerp_1,
-				[armor_types.berserker] = damage_lerp_values.lerp_0_7,
-				[armor_types.super_armor] = damage_lerp_values.lerp_0_3,
+				[armor_types.berserker] = damage_lerp_values.lerp_0_6,
+				[armor_types.super_armor] = damage_lerp_values.lerp_0_1,
 				[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_7,
 				[armor_types.void_shield] = damage_lerp_values.lerp_0_5
 			},
@@ -247,14 +247,14 @@ damage_templates.default_stub_pistol_bfg = {
 	}
 }
 damage_templates.stub_pistol_p1_m2 = {
-	suppression_value = 2.5,
+	suppression_value = 1.5,
 	stagger_category = "melee",
 	ragdoll_push_force = 350,
 	ignore_stagger_reduction = true,
 	cleave_distribution = single_cleave,
 	ranges = {
-		max = 24,
-		min = 12
+		max = 25,
+		min = 10
 	},
 	armor_damage_modifier_ranged = armor_modifiers.p1_m2,
 	critical_strike = {
@@ -300,8 +300,8 @@ damage_templates.stub_pistol_p1_m2 = {
 	},
 	power_distribution = {
 		attack = {
-			180,
-			360
+			210,
+			420
 		},
 		impact = {
 			6,
@@ -315,21 +315,19 @@ damage_templates.stub_pistol_p1_m2 = {
 	gibbing_type = GibbingTypes.ballistic,
 	gib_push_force = GibbingSettings.gib_push_force.ranged_medium,
 	on_kill_area_suppression = {
-		distance = 4,
+		distance = 2,
 		suppression_value = 12
 	},
 	targets = {
 		default_target = {
 			boost_curve = PowerLevelSettings.boost_curves.default,
 			finesse_boost = {
-				[armor_types.unarmored] = 1,
-				[armor_types.armored] = 1.25,
-				[armor_types.resistant] = 0.25,
-				[armor_types.berserker] = 0.75,
-				[armor_types.super_armor] = 0,
-				[armor_types.disgustingly_resilient] = 0.5
+				[armor_types.unarmored] = 0.5,
+				[armor_types.armored] = 0.5,
+				[armor_types.super_armor] = 0.25,
+				[armor_types.resistant] = 0.25
 			},
-			boost_curve_multiplier_finesse = damage_lerp_values.lerp_3
+			boost_curve_multiplier_finesse = damage_lerp_values.lerp_1_5
 		}
 	}
 }
