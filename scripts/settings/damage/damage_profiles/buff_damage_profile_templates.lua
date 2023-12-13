@@ -184,7 +184,7 @@ damage_templates.flame_grenade_liquid_area_fire_burning = {
 }
 damage_templates.grenadier_liquid_fire_burning = {
 	disorientation_type = "burninating",
-	toughness_multiplier = 5,
+	toughness_multiplier = 4,
 	ignore_shield = true,
 	stagger_category = "melee",
 	ogryn_disorientation_type = "burninating",
@@ -222,7 +222,7 @@ damage_templates.grenadier_liquid_fire_burning = {
 }
 damage_templates.cultist_flamer_liquid_fire_burning = {
 	disorientation_type = "burninating",
-	toughness_multiplier = 5,
+	toughness_multiplier = 4,
 	ignore_shield = true,
 	stagger_category = "melee",
 	ogryn_disorientation_type = "burninating",
@@ -246,7 +246,7 @@ damage_templates.cultist_flamer_liquid_fire_burning = {
 }
 damage_templates.renegade_flamer_liquid_fire_burning = {
 	disorientation_type = "burninating",
-	toughness_multiplier = 5,
+	toughness_multiplier = 4,
 	ignore_shield = true,
 	stagger_category = "melee",
 	ogryn_disorientation_type = "burninating",

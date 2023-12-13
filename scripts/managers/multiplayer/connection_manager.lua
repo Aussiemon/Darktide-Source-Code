@@ -411,6 +411,7 @@ ConnectionManager.kick = function (self, peer_id, reason, option_details)
 
 	if channel then
 		connection_host:kick(channel, reason, option_details)
+		Managers.telemetry_events:player_kicked(peer_id, reason, option_details)
 	end
 end
 

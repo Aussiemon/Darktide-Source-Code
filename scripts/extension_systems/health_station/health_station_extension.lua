@@ -177,6 +177,12 @@ end
 HealthStationExtension.assign_distributed_charge = function (self, charges, plug)
 	self._distributed_charges = charges
 	self._plug_from_distribution = plug
+	local data = {
+		charges = charges,
+		has_battery = plug
+	}
+
+	Managers.telemetry_events:health_station_spawned(self._unit, data)
 end
 
 HealthStationExtension.set_charge_amount = function (self, charges)

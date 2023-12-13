@@ -3,6 +3,7 @@ local Pickups = require("scripts/settings/pickup/pickups")
 local PlayerUnitVisualLoadout = require("scripts/extension_systems/visual_loadout/utilities/player_unit_visual_loadout")
 local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
 local Pocketable = {}
+local abort_data = {}
 local _drop_pickup = nil
 
 Pocketable.drop_pocketable = function (t, physics_world, is_server, player_unit, inventory_component, visual_loadout_extension, slot_name)
@@ -43,6 +44,16 @@ Pocketable.equip_pocketable = function (t, is_server, player_unit, pickup_unit, 
 	local pocketable_wielded = inventory_component.wielded_slot == slot_name
 	local item_name = inventory_component[slot_name]
 	local swap_item = item_name ~= "not_equipped"
+	local inventory_slot_component = unit_data_extension:write_component(slot_name)
+	local want_to_swap_item = true
+
+	if pocketable_wielded then
+		local weapon_extension = ScriptUnit.extension(player_unit, "weapon_system")
+
+		weapon_extension:stop_action("aborted", abort_data, t)
+
+		want_to_swap_item = not inventory_slot_component.unequip_slot
+	end
 
 	if swap_item then
 		PlayerUnitVisualLoadout.unequip_item_from_slot(player_unit, slot_name, t)
@@ -50,20 +61,14 @@ Pocketable.equip_pocketable = function (t, is_server, player_unit, pickup_unit, 
 
 	PlayerUnitVisualLoadout.equip_item_to_slot(player_unit, inventory_item, slot_name, nil, t)
 
-	if swap_item and is_server then
-		local inventory_slot_component = unit_data_extension:write_component(slot_name)
+	if swap_item and is_server and want_to_swap_item then
+		local position = Unit.world_position(pickup_unit, 1)
+		local rotation = Unit.world_rotation(pickup_unit, 1)
+		local spawned_unit = _drop_pickup(item_name, position, rotation)
+		local pickup_animation_system = Managers.state.extension:system("pickup_animation_system")
 
-		if not inventory_slot_component.unequip_slot then
-			local position = Unit.world_position(pickup_unit, 1)
-			local rotation = Unit.world_rotation(pickup_unit, 1)
-			local spawned_unit = _drop_pickup(item_name, position, rotation)
-			local pickup_animation_system = Managers.state.extension:system("pickup_animation_system")
-
-			if spawned_unit and pickup_animation_system then
-				pickup_animation_system:start_animation_from_unit(spawned_unit, player_unit)
-			end
-		else
-			inventory_slot_component.unequip_slot = false
+		if spawned_unit and pickup_animation_system then
+			pickup_animation_system:start_animation_from_unit(spawned_unit, player_unit)
 		end
 	end
 

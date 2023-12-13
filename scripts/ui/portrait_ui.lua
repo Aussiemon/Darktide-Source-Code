@@ -12,11 +12,15 @@ PortraitUI.init = function (self, render_settings)
 end
 
 PortraitUI.profile_updated = function (self, profile, prioritized)
-	local id = profile.character_id
-	local request = self:_request_by_id(id)
+	local character_id = profile.character_id
+	local requests_by_size = self._requests_by_size
 
-	if request then
-		self:_update_request(request, profile, prioritized)
+	for size_key, requests in pairs(requests_by_size) do
+		for _, request in pairs(requests) do
+			if string.find(request.id, character_id, nil, true) then
+				self:_update_request(request, profile, prioritized)
+			end
+		end
 	end
 end
 

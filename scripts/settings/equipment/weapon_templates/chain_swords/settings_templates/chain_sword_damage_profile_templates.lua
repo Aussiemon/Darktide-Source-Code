@@ -1238,7 +1238,7 @@ overrides.light_chainsword_sticky_last_m2 = {
 	overrides = {
 		{
 			"stagger_category",
-			"sticky"
+			"melee"
 		},
 		{
 			"shield_stagger_category",
@@ -1288,8 +1288,8 @@ overrides.light_chainsword_sticky_last_m2 = {
 			"power_distribution",
 			"impact",
 			{
-				0,
-				0
+				6,
+				7
 			}
 		},
 		{

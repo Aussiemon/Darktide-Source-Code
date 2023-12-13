@@ -66,6 +66,9 @@ templates.syringe_heal_corruption_buff = {
 		local particle_name = "content/fx/particles/pocketables/syringe_heal_3p"
 
 		fx_extension:spawn_unit_particles(particle_name, "hips", true, "destroy", nil, nil, nil, true)
+
+		template_data.health_before = health_extension:current_health()
+		template_data.permanent_damage_before = health_extension:permanent_damage_taken()
 	end,
 	update_func = function (template_data, template_context, dt, t)
 		if not template_context.is_server then
@@ -110,6 +113,27 @@ templates.syringe_heal_corruption_buff = {
 		local health_added = math.max(health_added_permanent, health_added_normal)
 		healing_remaining = healing_remaining - health_added
 		template_data.healing_remaining = healing_remaining
+	end,
+	stop_func = function (template_data, template_context)
+		if not template_context.is_server then
+			return
+		end
+
+		local health_after = template_data.health_extension:current_health()
+		local permanent_damage_after = template_data.health_extension:permanent_damage_taken()
+		local heal = health_after - template_data.health_before
+		local corruption_heal = template_data.permanent_damage_before - permanent_damage_after
+		local player_unit_spawn_manager = Managers.state.player_unit_spawn
+		local player = player_unit_spawn_manager:owner(template_context.unit)
+
+		if player then
+			local data = {
+				healed_amount = heal,
+				corruption_healed_amount = corruption_heal
+			}
+
+			Managers.telemetry_events:player_stimm_heal(player, data)
+		end
 	end
 }
 templates.syringe_ability_boost_buff = {

@@ -362,12 +362,15 @@ end
 PlayerUnitVisualLoadoutExtension.update_delayed_unequipped_slots = function (self, unit, dt, t, frame)
 	local inventory = self._inventory_component
 	local wieldable_slot_components = self._wieldable_slot_components
+	local equipment = self._equipment
 	local pocketable_slots = self._slot_configuration_by_type.pocketable
 
 	for slot_name, slot_config in pairs(pocketable_slots) do
 		local slot_component = wieldable_slot_components[slot_name]
+		local slot = equipment[slot_name]
+		local item = slot.item
 
-		if slot_component.unequip_slot then
+		if slot_component.unequip_slot and item ~= nil then
 			if inventory.wielded_slot == slot_name then
 				PlayerUnitVisualLoadout.wield_previous_weapon_slot(inventory, unit, t)
 			end
@@ -598,6 +601,7 @@ PlayerUnitVisualLoadoutExtension._equip_item_to_slot = function (self, item, slo
 		luggable_extension:set_carried_by(self._unit)
 	end
 
+	slot.equipped_t = t
 	local is_in_first_person_mode = self._is_in_first_person_mode
 
 	if slot.wieldable then
@@ -681,6 +685,11 @@ PlayerUnitVisualLoadoutExtension._unequip_item_from_slot = function (self, slot_
 		local luggable_extension = ScriptUnit.extension(luggable_unit, "luggable_system")
 
 		luggable_extension:set_carried_by(nil)
+	end
+
+	if slot_config.slot_type == "pocketable" then
+		local slot_component = self._wieldable_slot_components[slot_name]
+		slot_component.unequip_slot = false
 	end
 
 	local equipment_component = self._equipment_component
@@ -778,6 +787,13 @@ PlayerUnitVisualLoadoutExtension.item_from_slot = function (self, slot_name)
 	local item = slot and slot.item
 
 	return item
+end
+
+PlayerUnitVisualLoadoutExtension.equipped_t_from_slot = function (self, slot_name)
+	local slot = self._equipment[slot_name]
+	local equipped_t = slot and slot.equipped_t
+
+	return equipped_t
 end
 
 PlayerUnitVisualLoadoutExtension.unit_3p_from_slot = function (self, slot_name)

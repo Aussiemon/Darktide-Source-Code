@@ -1696,9 +1696,12 @@ MissionBoardViewDefinitions.widget_definitions.story_mission_view_button_frame =
 			color = Color.terminal_grid_background(150, true)
 		}
 	}
-}, "story_mission_view_button_frame")
+}, "story_mission_view_button_frame", {
+	visible = false
+})
 MissionBoardViewDefinitions.widget_definitions.story_mission_view_button = UIWidget.create_definition(ButtonPassTemplates.terminal_button, "story_mission_view_button", {
 	gamepad_action = "hotkey_menu_special_2",
+	visible = false,
 	original_text = Utf8.upper(Localize("loc_story_mission_menu_access_button_text")),
 	hotspot = {}
 }, nil, {

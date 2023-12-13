@@ -3,6 +3,7 @@ require("scripts/extension_systems/interaction/interactions/base_interaction")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
 local DialogueSettings = require("scripts/settings/dialogue/dialogue_settings")
 local Health = require("scripts/utilities/health")
+local PlayerUnitVisualLoadout = require("scripts/extension_systems/visual_loadout/utilities/player_unit_visual_loadout")
 local Vo = require("scripts/utilities/vo")
 local HealthStationInteraction = class("HealthStationInteraction", "BaseInteraction")
 
@@ -48,6 +49,8 @@ HealthStationInteraction.stop = function (self, world, interactor_unit, unit_dat
 	local success = result == "success"
 	local health_extension = ScriptUnit.extension(interactor_unit, "health_system")
 	local current_health_percent = health_extension:current_health_percent()
+	local current_health = health_extension:current_health()
+	local corruption_damage = health_extension:permanent_damage_taken()
 
 	if interactor_is_server then
 		local target_unit = unit_data_component.target_unit
@@ -90,6 +93,46 @@ HealthStationInteraction.stop = function (self, world, interactor_unit, unit_dat
 		local fx_extension = ScriptUnit.extension(interactor_unit, "fx_system")
 
 		fx_extension:trigger_exclusive_wwise_event("wwise/events/ui/play_hud_health_station_2d", nil, true)
+
+		if interactor_is_server then
+			local player_unit_spawn_manager = Managers.state.player_unit_spawn
+			local player = player_unit_spawn_manager:owner(interactor_unit)
+
+			if player then
+				local station_unit = unit_data_component.target_unit
+				local unit_id = Managers.state.unit_spawner:level_index(station_unit)
+				local furthest_travel_percentage = Managers.state.main_path:furthest_travel_percentage(1)
+				local max_health = health_extension:max_health()
+				local healed_amount = max_health - current_health
+				local players = Managers.player:players()
+				local num_grims = 0
+
+				for _, check_player in pairs(players) do
+					local player_unit = check_player.player_unit
+
+					if ALIVE[player_unit] then
+						local visual_loadout_extension = ScriptUnit.extension(player_unit, "visual_loadout_system")
+						local has_grim = PlayerUnitVisualLoadout.has_weapon_keyword_from_slot(visual_loadout_extension, "slot_pocketable", "grimoire")
+
+						if has_grim then
+							num_grims = num_grims + 1
+						end
+					end
+				end
+
+				local data = {
+					health_before_healing = current_health,
+					max_health = max_health,
+					healed = healed_amount,
+					corruption_damage = corruption_damage,
+					num_grims = num_grims,
+					total_main_path_percent = furthest_travel_percentage,
+					id = unit_id
+				}
+
+				Managers.telemetry_events:player_used_health_station(player, data)
+			end
+		end
 	end
 end
 

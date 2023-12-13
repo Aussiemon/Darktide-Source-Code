@@ -7,6 +7,7 @@ local interaction_settings = {
 	sphere_offset = 1.2,
 	height_scale = 0.3,
 	max_interaction_angle = 0.4,
+	max_interaction_angle_3p = 0.8,
 	ongoing_interaction_leeway = 1.2,
 	states = table.enum("none", "is_interacting", "waiting_to_interact"),
 	results = table.enum("success", "stopped_holding", "interaction_cancelled", "ongoing"),

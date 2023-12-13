@@ -49,6 +49,7 @@ local function _create_slot_from_configuration(configuration, slot_options)
 		use_existing_unit_3p = configuration.use_existing_unit_3p,
 		item_loaded = nil,
 		attachment_spawn_status = nil,
+		equipped_t = nil,
 		deform_overrides = nil,
 		breed_name = nil,
 		hide_unit_in_slot = configuration.hide_unit_in_slot,

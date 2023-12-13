@@ -179,12 +179,24 @@ function on_suspend()
 		if update_grpc and Managers.grpc then
 			Managers.grpc:update(0)
 		end
+
+		if Managers.telemetry_events then
+			Managers.telemetry_events:game_suspended()
+		end
+
+		if Managers.telemetry then
+			Managers.telemetry:post_batch()
+		end
 	end
 end
 
 function on_resume()
 	if rawget(_G, "Managers") and Managers.backend then
 		Managers.backend:time_sync_restart()
+	end
+
+	if Managers.telemetry_events then
+		Managers.telemetry_events:game_resumed()
 	end
 end
 

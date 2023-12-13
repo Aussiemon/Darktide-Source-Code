@@ -9,6 +9,7 @@ local interaction_results = InteractionSettings.results
 local interaction_speed_buffs = InteractionSettings.speed_buffs
 local interaction_states = InteractionSettings.states
 local MAX_INTERACTION_COS_ANGLE = math.cos(InteractionSettings.max_interaction_angle)
+local MAX_INTERACTION_COS_ANGLE_3P = math.cos(InteractionSettings.max_interaction_angle_3p)
 local ONGOING_INTERACTION_LEEWAY = InteractionSettings.ongoing_interaction_leeway
 local INTERACTABLE_FILTER = "filter_interactable_overlap"
 local LINE_OF_SIGHT_FILTER = "filter_interactable_line_of_sight_check"
@@ -422,7 +423,7 @@ InteractorExtension._find_object_in_direct_line_of_sight = function (self, inter
 	return chosen_target, chosen_target_actor_node_index, focus_target, focus_target_actor_node_index
 end
 
-InteractorExtension._find_object_near_line_of_sight = function (self, interactor_unit, fp_position, fp_forward, use_priorities)
+InteractorExtension._find_object_near_line_of_sight = function (self, interactor_unit, fp_position, fp_forward, use_priorities, optional_max_interaction_cos_angle)
 	local max_interact_distance = self:_max_interaction_distance()
 	local height = self._first_person_component.height
 	local height_scale = InteractionSettings.height_scale
@@ -474,7 +475,7 @@ InteractorExtension._find_object_near_line_of_sight = function (self, interactor
 				end
 			end
 
-			if priority_approved and closest_angle < cos_angle_to_sight and MAX_INTERACTION_COS_ANGLE <= cos_angle_to_sight then
+			if priority_approved and closest_angle < cos_angle_to_sight and (optional_max_interaction_cos_angle or MAX_INTERACTION_COS_ANGLE) <= cos_angle_to_sight then
 				local distance_to_hit = distance_to_center
 
 				if max_interact_distance < distance_to_center then
@@ -525,11 +526,20 @@ InteractorExtension._find_interaction_object_3p = function (self, interactor_uni
 	local fp_rotation = first_person_component.rotation
 	local fp_forward = Vector3.normalize(Quaternion.forward(fp_rotation))
 	local use_priorities = true
-	local near_target_unit, near_target_node_index, near_focus_unit, near_focus_node_index = self:_find_object_near_line_of_sight(interactor_unit, fp_position, fp_forward, use_priorities)
-	local best_focus_unit = near_focus_unit
-	local best_focus_node_index = near_focus_node_index
+	local near_target_unit, near_target_node_index, near_focus_unit, near_focus_node_index = self:_find_object_near_line_of_sight(interactor_unit, fp_position, fp_forward, use_priorities, MAX_INTERACTION_COS_ANGLE_3P)
 
-	return near_target_unit, near_target_node_index, best_focus_unit, best_focus_node_index
+	if near_target_unit then
+		local best_focus_unit = near_focus_unit
+		local best_focus_node_index = near_focus_node_index
+
+		return near_target_unit, near_target_node_index, best_focus_unit, best_focus_node_index
+	end
+
+	local direct_target_unit, direct_target_node_index, direct_focus_unit, direct_focus_node_index = self:_find_object_in_direct_line_of_sight(interactor_unit, fp_position, fp_forward)
+
+	if direct_target_unit then
+		return direct_target_unit, direct_target_node_index, direct_focus_unit, direct_focus_node_index
+	end
 end
 
 InteractorExtension._check_valid_ongoing_interaction = function (self, target_unit, target_node)

@@ -248,7 +248,7 @@ ActionFlamerGas._damage_targets = function (self, dt, t, force_damage)
 				local damage_time_index = math.min(current_index, #damage_times)
 				local damage_time = damage_times[damage_time_index]
 				local aim_at_percent = frame_count / (damage_time / fixed_time_step)
-				local new_damage_time, new_frame_count, new_target_index = nil
+				local new_damage_time, new_frame_count, new_target_index, new_actor = nil
 
 				if aim_at_percent > 0.33 then
 					self:_damage_target(target_unit)
@@ -257,6 +257,7 @@ ActionFlamerGas._damage_targets = function (self, dt, t, force_damage)
 					new_damage_time = damage_times[new_damage_time_index]
 					new_frame_count = 0
 					new_target_index = math.min(self._max_target_index, current_index + 1)
+					new_actor = hit_actor
 				elseif current_index > 1 then
 					local new_damage_time_index = math.min(current_index - 1, #damage_times)
 					new_damage_time = damage_times[new_damage_time_index]

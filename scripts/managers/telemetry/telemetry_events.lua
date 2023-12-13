@@ -346,6 +346,65 @@ TelemetryEvents.player_knocked_down = function (self, player, data)
 	self._manager:register_event(event)
 end
 
+TelemetryEvents.player_used_health_station = function (self, player, data)
+	local event = TelemetryEvent:new(SOURCE, player:telemetry_subject(), "player_used_health_station", {
+		game = player:telemetry_game_session(),
+		gameplay = self._session.gameplay
+	})
+
+	event:set_data(data)
+	self._manager:register_event(event)
+end
+
+TelemetryEvents.player_input_battery_into_health_station = function (self, player, data)
+	local event = TelemetryEvent:new(SOURCE, player:telemetry_subject(), "player_input_battery_into_health_station", {
+		game = player:telemetry_game_session(),
+		gameplay = self._session.gameplay
+	})
+
+	event:set_data(data)
+	self._manager:register_event(event)
+end
+
+TelemetryEvents.health_station_spawned = function (self, unit, data)
+	data.station_position = TelemetryHelper.unit_position(unit)
+	data.unit_id = Managers.state.unit_spawner:level_index(unit)
+	local event = self:_create_event("health_station_spawned")
+
+	event:set_data(data)
+	self._manager:register_event(event)
+end
+
+TelemetryEvents.player_picked_up_stimm = function (self, player, data)
+	local event = TelemetryEvent:new(SOURCE, player:telemetry_subject(), "player_picked_up_stimm", {
+		game = player:telemetry_game_session(),
+		gameplay = self._session.gameplay
+	})
+
+	event:set_data(data)
+	self._manager:register_event(event)
+end
+
+TelemetryEvents.player_used_stimm = function (self, player, data)
+	local event = TelemetryEvent:new(SOURCE, player:telemetry_subject(), "player_used_stimm", {
+		game = player:telemetry_game_session(),
+		gameplay = self._session.gameplay
+	})
+
+	event:set_data(data)
+	self._manager:register_event(event)
+end
+
+TelemetryEvents.player_stimm_heal = function (self, player, data)
+	local event = TelemetryEvent:new(SOURCE, player:telemetry_subject(), "player_stimm_heal", {
+		game = player:telemetry_game_session(),
+		gameplay = self._session.gameplay
+	})
+
+	event:set_data(data)
+	self._manager:register_event(event)
+end
+
 TelemetryEvents.player_died = function (self, player, data)
 	local reason = data.reason or ""
 
@@ -917,6 +976,42 @@ TelemetryEvents.xbox_privileges = function (self, privileges)
 
 	event:set_data(privileges)
 	self._manager:register_event(event)
+end
+
+TelemetryEvents.game_suspended = function (self)
+	local event = self:_create_event("game_suspended")
+
+	event:set_data({
+		time_in_game = Application.time_since_launch()
+	})
+	self._manager:register_event(event)
+end
+
+TelemetryEvents.game_resumed = function (self)
+	local event = self:_create_event("game_resumed")
+
+	self._manager:register_event(event)
+end
+
+TelemetryEvents.player_kicked = function (self, peer_id, reason, option_details)
+	if reason == "session_completed" then
+		return
+	end
+
+	local players = Managers.player:players_at_peer(peer_id)
+
+	for _, player in pairs(players) do
+		local event = TelemetryEvent:new(SOURCE, player:telemetry_subject(), "player_kicked", {
+			game = player:telemetry_game_session(),
+			gameplay = self._session.gameplay
+		})
+
+		event:set_data({
+			reason = reason,
+			details = option_details
+		})
+		self._manager:register_event(event)
+	end
 end
 
 return TelemetryEvents

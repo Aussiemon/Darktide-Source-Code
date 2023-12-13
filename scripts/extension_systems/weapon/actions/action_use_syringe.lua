@@ -94,6 +94,25 @@ ActionUseSyringe.fixed_update = function (self, dt, t, time_in_action)
 
 				telemetry_reporter_manager:reporter("used_items"):register_event(player, "syringe")
 			end
+
+			if player then
+				local visual_loadout_extension = ScriptUnit.has_extension(self._player_unit, "visual_loadout_system")
+				local weapon_template = visual_loadout_extension and visual_loadout_extension:weapon_template_from_slot("slot_pocketable_small")
+				local pickup_name = weapon_template and weapon_template.name
+				local picked_up_at_t = visual_loadout_extension and visual_loadout_extension:equipped_t_from_slot("slot_pocketable_small") or t
+				local time_hoarded = t - picked_up_at_t
+				local tension = Managers.state.pacing:tension()
+				local combat_state = Managers.state.pacing:combat_state()
+				local data = {
+					pickup_name = pickup_name,
+					used_on_ally = not action_settings.self_use,
+					time_held = time_hoarded,
+					tension = tension,
+					combat_state = combat_state
+				}
+
+				Managers.telemetry_events:player_used_stimm(player, data)
+			end
 		end
 
 		if self._is_server or target_unit == self._player_unit then

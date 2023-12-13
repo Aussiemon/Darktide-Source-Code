@@ -63,13 +63,16 @@ PocketableInteraction.interactor_condition_func = function (self, interactor_uni
 		elseif inventory_slot_name == SLOT_POCKETABLE_SMALL_NAME then
 			has_same_item = pocketable_small_item_name == wanted_item_name
 		end
+
+		local slot_is_free = pocketable_item_name == "not_equipped"
+		local wanted_inventory_slot_name = pickup_data.inventory_slot_name
+		local has_grimoire = PlayerUnitVisualLoadout.has_weapon_keyword_from_slot(visual_loadout_extension, wanted_inventory_slot_name, "grimoire")
+		local disable_pickup = not slot_is_free and has_grimoire
+
+		return not has_same_item and not disable_pickup and PocketableInteraction.super.interactor_condition_func(self, interactor_unit, interactee_unit)
 	end
 
-	local slot_is_free = pocketable_item_name == "not_equipped"
-	local has_grimoire = PlayerUnitVisualLoadout.has_weapon_keyword_from_slot(visual_loadout_extension, SLOT_POCKETABLE_NAME, "grimoire")
-	local disable_pickup = not slot_is_free and has_grimoire
-
-	return not has_same_item and not disable_pickup and PocketableInteraction.super.interactor_condition_func(self, interactor_unit, interactee_unit)
+	return PocketableInteraction.super.interactor_condition_func(self, interactor_unit, interactee_unit)
 end
 
 PocketableInteraction.hud_block_text = function (self, interactor_unit, interactee_unit, interactable_actor_node_index)
@@ -87,13 +90,14 @@ PocketableInteraction.hud_block_text = function (self, interactor_unit, interact
 		if pocketable_item_name == wanted_item_name or pocketable_small_item_name == wanted_item_name then
 			return "loc_action_interaction_inactive_pocketable_equipped"
 		end
-	end
 
-	local visual_loadout_extension = ScriptUnit.extension(interactor_unit, "visual_loadout_system")
-	local has_grimoire = PlayerUnitVisualLoadout.has_weapon_keyword_from_slot(visual_loadout_extension, SLOT_POCKETABLE_NAME, "grimoire")
+		local visual_loadout_extension = ScriptUnit.extension(interactor_unit, "visual_loadout_system")
+		local wanted_inventory_slot_name = pickup_data.inventory_slot_name
+		local has_grimoire = PlayerUnitVisualLoadout.has_weapon_keyword_from_slot(visual_loadout_extension, wanted_inventory_slot_name, "grimoire")
 
-	if has_grimoire then
-		return "loc_action_interaction_inactive_grimore_equipped"
+		if has_grimoire then
+			return "loc_action_interaction_inactive_grimore_equipped"
+		end
 	end
 
 	return PocketableInteraction.super.hud_block_text(self, interactor_unit, interactee_unit, interactable_actor_node_index)

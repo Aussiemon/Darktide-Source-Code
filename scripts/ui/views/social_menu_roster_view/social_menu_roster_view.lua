@@ -106,7 +106,7 @@ local function _sort_by_latest_played_with(a, b)
 	local a_time = a:last_time_played_with()
 	local b_time = b:last_time_played_with()
 
-	if a_time == b_time then
+	if a_time == b_time or not a_time or not b_time then
 		return _sort_by_name(a, b)
 	end
 
@@ -120,7 +120,7 @@ local function _sort_by_grouping_function(grouping_function, sorting_function)
 		local a_group_id = grouping_function(a)
 		local b_group_id = grouping_function(b)
 
-		if a_group_id == b_group_id then
+		if a_group_id == b_group_id or not a_group_id or not b_group_id then
 			return sorting_function(a, b)
 		end
 
