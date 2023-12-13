@@ -1,3 +1,5 @@
+-- WARNING: Error occurred during decompilation.
+--   Code may be incomplete or incorrect.
 local Component = require("scripts/utilities/component")
 local FixedFrame = require("scripts/utilities/fixed_frame")
 local PerceptionSettings = require("scripts/settings/perception/perception_settings")

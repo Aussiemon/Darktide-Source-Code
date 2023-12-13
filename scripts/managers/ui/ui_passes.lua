@@ -1,3 +1,5 @@
+-- WARNING: Error occurred during decompilation.
+--   Code may be incomplete or incorrect.
 local UIResolution = require("scripts/managers/ui/ui_resolution")
 local UISettings = require("scripts/settings/ui/ui_settings")
 local UIRenderer = require("scripts/managers/ui/ui_renderer")
