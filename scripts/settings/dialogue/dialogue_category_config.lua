@@ -263,7 +263,7 @@ local dialogue_category_config = {
 	},
 	enemy_vo_prio_1 = {
 		query_score = 0,
-		mutually_exclusive = false,
+		mutually_exclusive = true,
 		interrupted_by = {
 			enemy_story_vo = true,
 			enemy_vo_prio_0 = true

@@ -961,8 +961,6 @@ local templates = {
 			return _is_in_hub() and not is_view_or_popup_active() and _is_on_story_chapter("s1_twins", "s1_twins_epilogue_1")
 		end,
 		on_activation = function (self)
-			Managers.narrative:complete_current_chapter("s1_twins", "s1_twins_epilogue_1")
-
 			local level = Managers.state.mission:mission_level()
 
 			if level then

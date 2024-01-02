@@ -217,19 +217,6 @@ local Credits = {
 				type = "person"
 			},
 			{
-				text = "loc_credits_view_publisher_producer_title",
-				localized = true,
-				type = "title"
-			},
-			{
-				text = "Batuhan Ertas",
-				type = "person"
-			},
-			{
-				text = " ",
-				type = "person"
-			},
-			{
 				text = "loc_credits_view_localization_manager_title",
 				localized = true,
 				type = "title"
@@ -2900,6 +2887,19 @@ local Credits = {
 			},
 			{
 				text = "Lauren O'Neill",
+				type = "person"
+			},
+			{
+				text = " ",
+				type = "person"
+			},
+			{
+				text = "loc_credits_view_enginseer_a_title",
+				localized = true,
+				type = "title"
+			},
+			{
+				text = "Michael Geary",
 				type = "person"
 			},
 			{

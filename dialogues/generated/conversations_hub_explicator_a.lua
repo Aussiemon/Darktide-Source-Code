@@ -397,7 +397,7 @@ local conversations_hub_explicator_a = {
 	},
 	hub_interact_explicator_likes_character = {
 		randomize_indexes_n = 0,
-		sound_events_n = 20,
+		sound_events_n = 18,
 		sound_events = {
 			"loc_explicator_a__hub_interact_likes_character_a_01",
 			"loc_explicator_a__hub_interact_likes_character_a_02",
@@ -407,8 +407,6 @@ local conversations_hub_explicator_a = {
 			"loc_explicator_a__hub_interact_likes_character_a_06",
 			"loc_explicator_a__hub_interact_likes_character_a_07",
 			"loc_explicator_a__hub_interact_likes_character_a_08",
-			"loc_explicator_a__hub_interact_likes_character_a_09",
-			"loc_explicator_a__hub_interact_likes_character_a_10",
 			"loc_explicator_a__hub_interact_likes_character_a_11",
 			"loc_explicator_a__hub_interact_likes_character_a_12",
 			"loc_explicator_a__hub_interact_likes_character_a_13",
@@ -429,8 +427,6 @@ local conversations_hub_explicator_a = {
 			1.392229,
 			1.735083,
 			1.308813,
-			3.039083,
-			1.384833,
 			1.639396,
 			1.305188,
 			2.199979,

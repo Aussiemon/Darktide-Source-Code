@@ -13,7 +13,7 @@ local achievement_icon_size = {
 	70
 }
 local reward_item_size = table.clone(UISettings.item_icon_size)
-local num_completed_to_show = 3
+local num_completed_to_show = 6
 local achievements_view_styles = {
 	visible_area_size = {
 		visible_area_width,
@@ -355,8 +355,8 @@ meta_sub_achievement_icon_style.offset = {
 	6
 }
 meta_sub_achievement_icon_style.size = {
-	achievement_icon_size[1] / 2,
-	achievement_icon_size[2] / 2
+	achievement_icon_size[1] * 0.5,
+	achievement_icon_size[2] * 0.5
 }
 meta_sub_achievement_icon_style.completed_frame = "content/ui/textures/icons/achievements/frames/achieved"
 meta_sub_achievement_icon_style.icon_completed_color = Color.ui_achievement_icon_completed(nil, true)
@@ -643,7 +643,7 @@ blueprint_header_label_style.offset = {
 blueprint_header_style.divider_right = {}
 local blueprint_header_divider_right_style = blueprint_header_style.divider_right
 blueprint_header_divider_right_style.size = {
-	achievement_width / 2 - 60,
+	achievement_width * 0.5 - 60,
 	24
 }
 blueprint_header_divider_right_style.horizontal_alignment = "right"

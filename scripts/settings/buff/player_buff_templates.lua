@@ -1039,23 +1039,78 @@ templates.player_coherency_regen_node_buff_2 = table.clone(templates.player_cohe
 templates.player_coherency_regen_node_buff_2.stats_buffs = {
 	[stat_buffs.toughness_coherency_regen_rate_multiplier] = 0.2
 }
+local valid_help_interactions = {
+	rescue = true,
+	pull_up = true,
+	revive = true,
+	remove_net = true
+}
+
+function _passive_revive_conditional(template_data, template_context)
+	local is_interacting = template_data.interactor_extension:is_interacting()
+
+	if is_interacting then
+		local interaction = template_data.interactor_extension:interaction()
+		local interaction_type = interaction:type()
+		local is_helping = valid_help_interactions[interaction_type]
+
+		return is_helping
+	end
+end
+
 templates.bot_medium_buff = {
 	class_name = "buff",
+	keywords = {
+		keywords.uninterruptible,
+		keywords.stun_immune
+	},
 	stat_buffs = {
 		[stat_buffs.max_health_modifier] = 0.5,
 		[stat_buffs.toughness] = 50,
 		[stat_buffs.extra_max_amount_of_wounds] = 1,
-		[buff_stat_buffs.toughness_regen_rate_modifier] = 0.15
-	}
+		[buff_stat_buffs.toughness_regen_rate_modifier] = 0.15,
+		[buff_stat_buffs.block_cost_multiplier] = 0.2
+	},
+	conditional_keywords = {
+		keywords.uninterruptible
+	},
+	conditional_stat_buffs = {
+		[stat_buffs.damage_taken_multiplier] = 0.1
+	},
+	start_func = function (template_data, template_context)
+		local unit = template_context.unit
+		local interactor_extension = ScriptUnit.extension(unit, "interactor_system")
+		template_data.interactor_extension = interactor_extension
+	end,
+	conditional_keywords_func = _passive_revive_conditional,
+	conditional_stat_buffs_func = _passive_revive_conditional
 }
 templates.bot_high_buff = {
 	class_name = "buff",
+	keywords = {
+		keywords.uninterruptible,
+		keywords.stun_immune
+	},
 	stat_buffs = {
 		[stat_buffs.max_health_modifier] = 0.8,
 		[stat_buffs.toughness] = 100,
 		[stat_buffs.extra_max_amount_of_wounds] = 2,
-		[buff_stat_buffs.toughness_regen_rate_modifier] = 0.3
-	}
+		[buff_stat_buffs.toughness_regen_rate_modifier] = 0.3,
+		[buff_stat_buffs.block_cost_multiplier] = 0.2
+	},
+	conditional_keywords = {
+		keywords.uninterruptible
+	},
+	conditional_stat_buffs = {
+		[stat_buffs.damage_taken_multiplier] = 0.1
+	},
+	start_func = function (template_data, template_context)
+		local unit = template_context.unit
+		local interactor_extension = ScriptUnit.extension(unit, "interactor_system")
+		template_data.interactor_extension = interactor_extension
+	end,
+	conditional_keywords_func = _passive_revive_conditional,
+	conditional_stat_buffs_func = _passive_revive_conditional
 }
 
 return templates

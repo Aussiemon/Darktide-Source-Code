@@ -549,10 +549,6 @@ MutatorToxicGasTwins._update_twins = function (self, dt, t, ahead_travel_distanc
 			end
 
 			self._force_disappear_t = nil
-
-			if self._current_section_id == 4 then
-				Vo.mission_giver_mission_info_vo("selected_voice", "interrogator_a", "mission_twins_exchange_03_a")
-			end
 		end
 	end
 
@@ -625,10 +621,14 @@ MutatorToxicGasTwins._update_twins = function (self, dt, t, ahead_travel_distanc
 			local health_extension = ScriptUnit.extension(twin_unit, "health_system")
 			local current_health_percent = health_extension:current_health_percent()
 
-			if (current_health_percent < 0.25 or despawn_distance and despawn_distance <= ahead_travel_distance) and self:_ready_to_escape(twin_unit) and self._current_section_id == 4 and #self._spawned_twins == 1 then
-				Vo.mission_giver_mission_info_vo("selected_voice", "interrogator_a", "mission_twins_exchange_03_a")
+			if current_health_percent < 0.25 or despawn_distance and despawn_distance <= ahead_travel_distance then
+				self:_ready_to_escape(twin_unit)
 			end
 		end
+	end
+
+	if self._current_section_id == 4 and #self._spawned_twins == 0 then
+		Vo.mission_giver_mission_info_vo("selected_voice", "interrogator_a", "mission_twins_exchange_03_a")
 	end
 end
 

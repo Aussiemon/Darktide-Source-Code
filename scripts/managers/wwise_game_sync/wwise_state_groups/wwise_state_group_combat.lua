@@ -64,12 +64,6 @@ WwiseStateGroupCombat._wwise_state = function (self)
 
 	if music_parameter_extension:boss_near() then
 		return STATES.boss
-	elseif music_parameter_extension:ambush_horde_near() then
-		if horde_high_minimum_aggroed_minions then
-			return STATES.horde_high
-		elseif horde_low_minimum_aggroed_minions then
-			return STATES.horde_low
-		end
 	elseif music_parameter_extension:vector_horde_near() then
 		if horde_high_minimum_aggroed_minions then
 			return STATES.horde_high

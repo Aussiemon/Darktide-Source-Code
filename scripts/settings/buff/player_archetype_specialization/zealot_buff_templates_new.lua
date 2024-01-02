@@ -1838,6 +1838,8 @@ templates.zealot_backstab_damage = {
 	}
 }
 templates.zealot_critstrike_damage_on_dodge = {
+	hud_icon = "content/ui/textures/icons/buffs/hud/zealot/zealot_increased_crit_and_weakspot_damage_after_dodge",
+	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_default",
 	predicted = false,
 	class_name = "proc_buff",
 	active_duration = 3,

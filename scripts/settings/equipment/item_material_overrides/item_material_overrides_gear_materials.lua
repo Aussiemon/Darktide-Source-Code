@@ -598,6 +598,43 @@ local material_overrides = {
 			}
 		}
 	},
+	oxidized_metal_gold_steel_paint_01_red_wear_01 = {
+		texture_overrides = {
+			oxid1_gradient = {
+				resource = "content/textures/colors/oxidation_color_red_02"
+			},
+			oxid_mat1_bc = {
+				resource = "content/characters/tiling_materials/gold_01/metal_gold_01_bca"
+			},
+			oxid_mat1_nm = {
+				resource = "content/characters/tiling_materials/gold_01/metal_gold_01_nm"
+			},
+			oxid_mat1_orm = {
+				resource = "content/characters/tiling_materials/gold_01/metal_gold_01_orm"
+			},
+			oxid2_gradient = {
+				resource = "content/textures/colors/oxidation_color_red_02"
+			},
+			oxid_mat2_bc = {
+				resource = "content/characters/tiling_materials/steel_paint_01/steel_paint_01_red_bca"
+			},
+			oxid_mat2_nm = {
+				resource = "content/characters/tiling_materials/steel_paint_01/steel_paint_01_nm"
+			},
+			oxid_mat2_orm = {
+				resource = "content/characters/tiling_materials/steel_paint_01/steel_paint_01_orm"
+			}
+		},
+		property_overrides = {
+			edge_chipping = {
+				0.5
+			},
+			oxid_level = {
+				0.2,
+				0.5
+			}
+		}
+	},
 	oxidized_metal_nylon_gold_01_wear_01 = {
 		texture_overrides = {
 			oxid1_gradient = {
@@ -1157,6 +1194,43 @@ local material_overrides = {
 		texture_overrides = {
 			oxid1_gradient = {
 				resource = "content/textures/colors/oxidation_color_black_01"
+			},
+			oxid_mat1_bc = {
+				resource = "content/characters/tiling_materials/gold_01/metal_gold_01_bca"
+			},
+			oxid_mat1_nm = {
+				resource = "content/characters/tiling_materials/gold_01/metal_gold_01_nm"
+			},
+			oxid_mat1_orm = {
+				resource = "content/characters/tiling_materials/gold_01/metal_gold_01_orm"
+			},
+			oxid2_gradient = {
+				resource = "content/textures/colors/oxidation_color_red_01"
+			},
+			oxid_mat2_bc = {
+				resource = "content/characters/tiling_materials/iron_01/metal_iron_01_bca"
+			},
+			oxid_mat2_nm = {
+				resource = "content/characters/tiling_materials/iron_01/metal_iron_01_nm"
+			},
+			oxid_mat2_orm = {
+				resource = "content/characters/tiling_materials/iron_01/metal_iron_01_orm"
+			}
+		},
+		property_overrides = {
+			edge_chipping = {
+				0.5
+			},
+			oxid_level = {
+				0.2,
+				0.5
+			}
+		}
+	},
+	oxidized_metal_gold_iron_wear_03 = {
+		texture_overrides = {
+			oxid1_gradient = {
+				resource = "content/textures/colors/oxidation_color_red_02"
 			},
 			oxid_mat1_bc = {
 				resource = "content/characters/tiling_materials/gold_01/metal_gold_01_bca"

@@ -13,10 +13,6 @@ ActionAbilityBase.init = function (self, action_context, action_params, action_s
 	self._weapon_extension = action_context.weapon_extension
 end
 
-local _ability_interrupted_reasons = {
-	started_sprint = true
-}
-
 ActionAbilityBase.start = function (self, action_settings, t, time_scale, action_start_params)
 	ActionAbilityBase.super.start(self, action_settings, t, time_scale, action_start_params)
 
@@ -34,8 +30,7 @@ ActionAbilityBase.finish = function (self, reason, data, t, time_in_action)
 
 	if action_settings then
 		local use_ability_charge = action_settings.use_ability_charge
-		local ability_interrupted_reasons = action_settings.ability_interrupted_reasons or _ability_interrupted_reasons
-		local should_use_charge = not ability_interrupted_reasons[reason] and not action_settings.use_charge_at_start
+		local should_use_charge = not action_settings.use_charge_at_start
 
 		if use_ability_charge and should_use_charge then
 			self:_use_ability_charge()

@@ -567,9 +567,9 @@ MonsterPacing.update = function (self, dt, t, side_id, target_side_id)
 
 				health_extension:set_invulnerable(true)
 
-				local liquid_area_template = LiquidAreaTemplates.toxic_gas
+				local liquid_area_template = LiquidAreaTemplates.ambush_disappear_toxic_gas
 
-				LiquidArea.try_create(POSITION_LOOKUP[spawned_unit], Vector3(0, 0, 1), self._nav_world, liquid_area_template, nil, 50)
+				LiquidArea.try_create(POSITION_LOOKUP[spawned_unit], Vector3(0, 0, 1), self._nav_world, liquid_area_template, nil, 2)
 
 				monster.escaped = true
 			end

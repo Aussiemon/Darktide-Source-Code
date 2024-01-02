@@ -128,6 +128,23 @@ local templates = {
 		ignore_bot_threat = true,
 		spread_function = LiquidSpread.pour
 	},
+	ambush_disappear_toxic_gas = {
+		z_cell_size = 1,
+		end_pressure = 30,
+		forbidden_keyword = "in_toxic_gas",
+		leaving_liquid_buff_template_name = "left_twin_toxic_gas",
+		sfx_name_stop = "wwise/events/weapon/stop_aoe_gas_loop",
+		max_liquid = 48,
+		cell_size = 3,
+		disable_covers_within_radius = 3,
+		linearized_flow = false,
+		life_time = 20,
+		vfx_name_filled = "content/fx/particles/enemies/twins/twins_arena_phase_gas",
+		sfx_name_start = "wwise/events/weapon/play_aoe_gas_loop",
+		in_liquid_buff_template_name = "in_twin_toxic_gas",
+		start_pressure = 40,
+		spread_function = LiquidSpread.pour
+	},
 	renegade_grenadier_fire_grenade = {
 		vfx_name_rim = "content/fx/particles/weapons/grenades/flame_grenade_hostile_fire_edge",
 		end_pressure = 10,

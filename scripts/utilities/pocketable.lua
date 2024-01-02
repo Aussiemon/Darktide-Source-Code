@@ -26,6 +26,12 @@ Pocketable.drop_pocketable = function (t, physics_world, is_server, player_unit,
 			end
 		end
 
+		local random_rotation = math.pi * 2 * math.random()
+		local random_length = math.random() * 0.25 + 0.75
+		local x = math.sin(random_rotation) * random_length
+		local y = math.cos(random_rotation) * random_length
+		position.x = position.x + x
+		position.y = position.y + y
 		local hit, hit_position = PhysicsWorld.raycast(physics_world, position + Vector3.up() * 0.5, Vector3.down(), 1, "closest", "collision_filter", "filter_player_place_deployable")
 
 		if hit then

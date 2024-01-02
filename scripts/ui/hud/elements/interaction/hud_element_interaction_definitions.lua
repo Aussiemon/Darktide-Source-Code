@@ -46,20 +46,20 @@ local scenegraph_definition = {
 		size = description_box_size,
 		position = {
 			0,
-			-edge_spacing[2],
+			0,
 			1
 		}
 	}
 }
 local input_interact_text_style = table.clone(UIFontSettings.hud_body)
-input_interact_text_style.horizontal_alignment = "center"
+input_interact_text_style.horizontal_alignment = "left"
 input_interact_text_style.vertical_alignment = "top"
 input_interact_text_style.text_horizontal_alignment = "left"
-input_interact_text_style.text_vertical_alignment = "top"
+input_interact_text_style.text_vertical_alignment = "center"
 input_interact_text_style.text_color = get_hud_color("color_tint_main_1", 255)
 input_interact_text_style.offset = {
+	edge_spacing[1],
 	0,
-	input_box_height * 0.25 - 2,
 	6
 }
 input_interact_text_style.size = {
@@ -70,11 +70,11 @@ local input_tag_text_style = table.clone(UIFontSettings.hud_body)
 input_tag_text_style.horizontal_alignment = "center"
 input_tag_text_style.vertical_alignment = "top"
 input_tag_text_style.text_horizontal_alignment = "right"
-input_tag_text_style.text_vertical_alignment = "top"
+input_tag_text_style.text_vertical_alignment = "center"
 input_tag_text_style.text_color = get_hud_color("color_tint_main_1", 255)
 input_tag_text_style.offset = {
 	0,
-	input_box_height * 0.25,
+	0,
 	6
 }
 input_tag_text_style.size = {
@@ -89,7 +89,7 @@ description_text_style.text_vertical_alignment = "center"
 description_text_style.font_size = 26
 description_text_style.offset = {
 	0,
-	-10,
+	0,
 	6
 }
 local type_description_text_style = table.clone(description_text_style)
@@ -113,7 +113,7 @@ event_text_style.text_vertical_alignment = "center"
 event_text_style.font_size = 20
 event_text_style.offset = {
 	0,
-	35,
+	0,
 	7
 }
 event_text_style.size = {

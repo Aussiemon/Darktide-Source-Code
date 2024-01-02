@@ -610,6 +610,8 @@ ActionSweep._update_hit_stickyness = function (self, dt, t, action_sweep_compone
 	local is_in_jump_state = state_name == "jumping"
 	local state_enter_time = character_state_component.entered_t
 	local exit_because_of_state = (is_in_dodge_state or is_in_jump_state) and start_t < state_enter_time
+	local is_in_stealth = self._buff_extension:has_keyword(buff_keywords.invisible)
+	local is_first_frame_of_stickyness = t <= start_t
 	local sticky_t = t - start_t
 	local duration = hit_stickyness_settings.duration
 	local extra_duration = hit_stickyness_settings.extra_duration or 0
@@ -617,7 +619,7 @@ ActionSweep._update_hit_stickyness = function (self, dt, t, action_sweep_compone
 	local is_time_up = sticky_target_unit_alive and sticky_t >= duration + extra_duration
 	local is_target_dead = not sticky_target_unit_alive and sticky_t >= duration * min_sticky_time
 
-	if is_time_up or is_target_dead or exit_because_of_state then
+	if is_time_up or is_target_dead or is_in_stealth and sticky_t > 0.05 or exit_because_of_state then
 		local dodge_exit_damage_profile = damage.dodge_damage_profile
 
 		if dodge_exit_damage_profile and exit_because_of_state and is_in_dodge_state and stick_to_unit then

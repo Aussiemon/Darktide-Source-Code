@@ -921,16 +921,14 @@ local mission_giver_vo_sergeant_a = {
 	},
 	mission_raid_briefing_c = {
 		randomize_indexes_n = 0,
-		sound_events_n = 3,
+		sound_events_n = 2,
 		sound_events = {
-			"loc_sergeant_a__mission_raid_briefing_c_01",
-			"loc_sergeant_a__mission_raid_briefing_c_02",
-			"loc_sergeant_a__mission_raid_briefing_c_03"
+			[1.0] = "loc_sergeant_a__mission_raid_briefing_c_02",
+			[2.0] = "loc_sergeant_a__mission_raid_briefing_c_03"
 		},
 		sound_events_duration = {
-			8.034396,
-			10.02883,
-			9.279832
+			[1.0] = 10.02883,
+			[2.0] = 9.279832
 		},
 		randomize_indexes = {}
 	},

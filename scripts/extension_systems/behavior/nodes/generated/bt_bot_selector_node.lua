@@ -55,70 +55,38 @@ BtBotSelectorNode.evaluate = function (self, unit, blackboard, scratchpad, dt, t
 		if not target_ally or behavior_component.interaction_unit ~= target_ally or perception_component.target_ally_need_type ~= "knocked_down" then
 			condition_result = false
 		else
-			local ally_health = ScriptUnit.extension(target_ally, "health_system"):current_health_percent()
-			local sub_condition_result_01 = nil
-			local perception_component = blackboard.perception
-			local force_aid = perception_component.force_aid
-			local perception_extension = ScriptUnit.extension(unit, "perception_system")
-			local enemies_in_proximity, num_enemies_in_proximity = perception_extension:enemies_in_proximity()
-			local enemy_found = false
+			local interactor_extension = ScriptUnit.extension(unit, "interactor_system")
+			local interaction_type = action_data.interaction_type
+			local can_interact_with_ally = interactor_extension:can_interact(target_ally, interaction_type)
+			local sub_condition_result_01, condition_result = nil
+			local navigation_extension = ScriptUnit.extension(unit, "navigation_system")
+			local destination = navigation_extension:destination()
+			local behavior_component = blackboard.behavior
+			local target_ally_aid_destination = behavior_component.target_ally_aid_destination:unbox()
+			local has_target_ally_aid_destination = Vector3.equal(destination, target_ally_aid_destination)
 
-			for i = 1, num_enemies_in_proximity do
-				local enemy_unit = enemies_in_proximity[i]
-				local enemy_blackboard = BLACKBOARDS[enemy_unit]
-
-				if enemy_blackboard then
-					local enemy_unit_data_extension = ALIVE[enemy_unit] and ScriptUnit.extension(enemy_unit, "unit_data_system")
-					local enemy_breed = enemy_unit_data_extension and enemy_unit_data_extension:breed()
-					local enemy_perception_component = enemy_blackboard.perception
-
-					if enemy_perception_component.target_unit == unit and (not force_aid or enemy_breed.is_bot_aid_threat) then
-						enemy_found = true
-
-						break
-					end
-				end
-			end
-
-			local condition_result = enemy_found
-			sub_condition_result_01 = condition_result
-
-			if ally_health > 0.5 and sub_condition_result_01 then
-				condition_result = false
+			if has_target_ally_aid_destination then
+				condition_result = navigation_extension:destination_reached()
 			else
-				local interactor_extension = ScriptUnit.extension(unit, "interactor_system")
-				local interaction_type = action_data.interaction_type
-				local can_interact_with_ally = interactor_extension:can_interact(target_ally, interaction_type)
-				local sub_condition_result_02, condition_result = nil
-				local navigation_extension = ScriptUnit.extension(unit, "navigation_system")
-				local destination = navigation_extension:destination()
-				local behavior_component = blackboard.behavior
-				local target_ally_aid_destination = behavior_component.target_ally_aid_destination:unbox()
-				local has_target_ally_aid_destination = Vector3.equal(destination, target_ally_aid_destination)
+				local self_position = POSITION_LOOKUP[unit]
 
-				if has_target_ally_aid_destination then
-					condition_result = navigation_extension:destination_reached()
+				if navigation_extension:destination_reached() then
+					local behavior_extension = ScriptUnit.extension(unit, "behavior_system")
+					local is_near = not behavior_extension:new_destination_distance_check(self_position, destination, target_ally_aid_destination, navigation_extension)
+					condition_result = is_near
 				else
-					local self_position = POSITION_LOOKUP[unit]
-
-					if navigation_extension:destination_reached() then
-						local behavior_extension = ScriptUnit.extension(unit, "behavior_system")
-						local is_near = not behavior_extension:new_destination_distance_check(self_position, destination, target_ally_aid_destination, navigation_extension)
-						condition_result = is_near
-					else
-						local BotSettings = require("scripts/settings/bot/bot_settings")
-						local flat_move_to_epsilon_sq = BotSettings.flat_move_to_epsilon^2
-						local z_move_to_epsilon = BotSettings.z_move_to_epsilon
-						local offset = target_ally_aid_destination - self_position
-						condition_result = math.abs(offset.z) <= z_move_to_epsilon and Vector3.length_squared(Vector3.flat(offset)) <= flat_move_to_epsilon_sq
-					end
+					local BotSettings = require("scripts/settings/bot/bot_settings")
+					local flat_move_to_epsilon_sq = BotSettings.flat_move_to_epsilon^2
+					local z_move_to_epsilon = BotSettings.z_move_to_epsilon
+					local offset = target_ally_aid_destination - self_position
+					condition_result = math.abs(offset.z) <= z_move_to_epsilon and Vector3.length_squared(Vector3.flat(offset)) <= flat_move_to_epsilon_sq
 				end
-
-				sub_condition_result_02 = condition_result
-				local ally_destination_reached = sub_condition_result_02
-				local can_revive = can_interact_with_ally and ally_destination_reached
-				condition_result = can_revive
 			end
+
+			sub_condition_result_01 = condition_result
+			local ally_destination_reached = sub_condition_result_01
+			local can_revive = can_interact_with_ally and ally_destination_reached
+			condition_result = can_revive
 		end
 	until true
 
@@ -141,70 +109,38 @@ BtBotSelectorNode.evaluate = function (self, unit, blackboard, scratchpad, dt, t
 		if not target_ally or behavior_component.interaction_unit ~= target_ally or perception_component.target_ally_need_type ~= "netted" then
 			condition_result = false
 		else
-			local ally_health = ScriptUnit.extension(target_ally, "health_system"):current_health_percent()
-			local sub_condition_result_01 = nil
-			local perception_component = blackboard.perception
-			local force_aid = perception_component.force_aid
-			local perception_extension = ScriptUnit.extension(unit, "perception_system")
-			local enemies_in_proximity, num_enemies_in_proximity = perception_extension:enemies_in_proximity()
-			local enemy_found = false
+			local interactor_extension = ScriptUnit.extension(unit, "interactor_system")
+			local interaction_type = action_data.interaction_type
+			local can_interact_with_ally = interactor_extension:can_interact(target_ally, interaction_type)
+			local sub_condition_result_01, condition_result = nil
+			local navigation_extension = ScriptUnit.extension(unit, "navigation_system")
+			local destination = navigation_extension:destination()
+			local behavior_component = blackboard.behavior
+			local target_ally_aid_destination = behavior_component.target_ally_aid_destination:unbox()
+			local has_target_ally_aid_destination = Vector3.equal(destination, target_ally_aid_destination)
 
-			for i = 1, num_enemies_in_proximity do
-				local enemy_unit = enemies_in_proximity[i]
-				local enemy_blackboard = BLACKBOARDS[enemy_unit]
-
-				if enemy_blackboard then
-					local enemy_unit_data_extension = ALIVE[enemy_unit] and ScriptUnit.extension(enemy_unit, "unit_data_system")
-					local enemy_breed = enemy_unit_data_extension and enemy_unit_data_extension:breed()
-					local enemy_perception_component = enemy_blackboard.perception
-
-					if enemy_perception_component.target_unit == unit and (not force_aid or enemy_breed.is_bot_aid_threat) then
-						enemy_found = true
-
-						break
-					end
-				end
-			end
-
-			local condition_result = enemy_found
-			sub_condition_result_01 = condition_result
-
-			if ally_health > 0.75 and sub_condition_result_01 then
-				condition_result = false
+			if has_target_ally_aid_destination then
+				condition_result = navigation_extension:destination_reached()
 			else
-				local interactor_extension = ScriptUnit.extension(unit, "interactor_system")
-				local interaction_type = action_data.interaction_type
-				local can_interact_with_ally = interactor_extension:can_interact(target_ally, interaction_type)
-				local sub_condition_result_02, condition_result = nil
-				local navigation_extension = ScriptUnit.extension(unit, "navigation_system")
-				local destination = navigation_extension:destination()
-				local behavior_component = blackboard.behavior
-				local target_ally_aid_destination = behavior_component.target_ally_aid_destination:unbox()
-				local has_target_ally_aid_destination = Vector3.equal(destination, target_ally_aid_destination)
+				local self_position = POSITION_LOOKUP[unit]
 
-				if has_target_ally_aid_destination then
-					condition_result = navigation_extension:destination_reached()
+				if navigation_extension:destination_reached() then
+					local behavior_extension = ScriptUnit.extension(unit, "behavior_system")
+					local is_near = not behavior_extension:new_destination_distance_check(self_position, destination, target_ally_aid_destination, navigation_extension)
+					condition_result = is_near
 				else
-					local self_position = POSITION_LOOKUP[unit]
-
-					if navigation_extension:destination_reached() then
-						local behavior_extension = ScriptUnit.extension(unit, "behavior_system")
-						local is_near = not behavior_extension:new_destination_distance_check(self_position, destination, target_ally_aid_destination, navigation_extension)
-						condition_result = is_near
-					else
-						local BotSettings = require("scripts/settings/bot/bot_settings")
-						local flat_move_to_epsilon_sq = BotSettings.flat_move_to_epsilon^2
-						local z_move_to_epsilon = BotSettings.z_move_to_epsilon
-						local offset = target_ally_aid_destination - self_position
-						condition_result = math.abs(offset.z) <= z_move_to_epsilon and Vector3.length_squared(Vector3.flat(offset)) <= flat_move_to_epsilon_sq
-					end
+					local BotSettings = require("scripts/settings/bot/bot_settings")
+					local flat_move_to_epsilon_sq = BotSettings.flat_move_to_epsilon^2
+					local z_move_to_epsilon = BotSettings.z_move_to_epsilon
+					local offset = target_ally_aid_destination - self_position
+					condition_result = math.abs(offset.z) <= z_move_to_epsilon and Vector3.length_squared(Vector3.flat(offset)) <= flat_move_to_epsilon_sq
 				end
-
-				sub_condition_result_02 = condition_result
-				local ally_destination_reached = sub_condition_result_02
-				local can_remove_net = can_interact_with_ally and ally_destination_reached
-				condition_result = can_remove_net
 			end
+
+			sub_condition_result_01 = condition_result
+			local ally_destination_reached = sub_condition_result_01
+			local can_remove_net = can_interact_with_ally and ally_destination_reached
+			condition_result = can_remove_net
 		end
 	until true
 

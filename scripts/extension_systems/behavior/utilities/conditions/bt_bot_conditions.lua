@@ -197,12 +197,6 @@ conditions.can_revive = function (unit, blackboard, scratchpad, condition_args, 
 		return false
 	end
 
-	local ally_health = ScriptUnit.extension(target_ally, "health_system"):current_health_percent()
-
-	if ally_health > 0.5 and conditions._is_there_threat_to_aid(unit, blackboard, scratchpad, condition_args, action_data, is_running) then
-		return false
-	end
-
 	local interactor_extension = ScriptUnit.extension(unit, "interactor_system")
 	local interaction_type = action_data.interaction_type
 	local can_interact_with_ally = interactor_extension:can_interact(target_ally, interaction_type)
@@ -218,12 +212,6 @@ conditions.can_remove_net = function (unit, blackboard, scratchpad, condition_ar
 	local target_ally = perception_component.target_ally
 
 	if not target_ally or behavior_component.interaction_unit ~= target_ally or perception_component.target_ally_need_type ~= "netted" then
-		return false
-	end
-
-	local ally_health = ScriptUnit.extension(target_ally, "health_system"):current_health_percent()
-
-	if ally_health > 0.75 and conditions._is_there_threat_to_aid(unit, blackboard, scratchpad, condition_args, action_data, is_running) then
 		return false
 	end
 

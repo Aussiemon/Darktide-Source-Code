@@ -361,10 +361,11 @@ local action_data = {
 	},
 	melee_cleave_attack = {
 		weapon_reach = 3.5,
-		aoe_threat_timing = 0.3,
-		utility_weight = 2,
+		bot_power_level_modifier = 0.25,
 		vo_event = "special_atack",
+		utility_weight = 2,
 		set_weapon_intensity = true,
+		aoe_threat_timing = 0.3,
 		considerations = UtilityConsiderations.melee_attack_elite,
 		attack_anim_events = {
 			normal = {
@@ -408,10 +409,11 @@ local action_data = {
 		vo_event = "assault",
 		set_weapon_intensity = true,
 		move_speed_variable_name = "moving_attack_fwd_speed",
+		move_speed = 4,
 		moving_attack = true,
 		move_speed_variable_lerp_speed = 4,
 		weapon_reach = 3.5,
-		move_speed = 4,
+		bot_power_level_modifier = 0.25,
 		considerations = UtilityConsiderations.renegade_executor_moving_melee_attack,
 		attack_anim_events = {
 			"attack_move_01"

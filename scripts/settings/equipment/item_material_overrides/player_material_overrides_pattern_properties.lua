@@ -586,6 +586,13 @@ local material_overrides = {
 				2.487
 			}
 		}
+	},
+	pattern_02_rotation_08 = {
+		property_overrides = {
+			pattern_2_rotation = {
+				2.487
+			}
+		}
 	}
 }
 

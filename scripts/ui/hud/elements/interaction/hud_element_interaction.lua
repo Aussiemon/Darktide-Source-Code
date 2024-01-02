@@ -3,6 +3,8 @@ local HudElementInteractionSettings = require("scripts/ui/hud/elements/interacti
 local InputUtils = require("scripts/managers/input/input_utils")
 local UISettings = require("scripts/settings/ui/ui_settings")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
+local UIRenderer = require("scripts/managers/ui/ui_renderer")
+local UIFonts = require("scripts/managers/ui/ui_fonts")
 local HudElementInteraction = class("HudElementInteraction", "HudElementBase")
 
 HudElementInteraction.init = function (self, parent, draw_layer, start_scale)
@@ -34,6 +36,7 @@ HudElementInteraction.update = function (self, dt, t, ui_renderer, render_settin
 
 	if self:_present_interaction_hud() then
 		self:_update_interaction_hud_position(dt, t)
+		self:_update_target_interaction_size(dt, t, ui_renderer)
 		self:_update_target_interaction_animation(dt, t)
 		self:_update_target_interaction_hold_progress(dt, t)
 	end
@@ -360,6 +363,54 @@ HudElementInteraction._update_target_interaction_hold_progress = function (self,
 	end
 end
 
+HudElementInteraction._update_target_interaction_size = function (self, dt, t, ui_renderer)
+	local widgets_by_name = self._widgets_by_name
+	local tag_text = widgets_by_name.tag_text.content.text
+	local interaction_text = widgets_by_name.interact_text.content.text
+	local description_text = widgets_by_name.description_text.content.text
+	local tag_style = widgets_by_name.tag_text.style.text
+	local interaction_style = widgets_by_name.interact_text.style.text
+	local description_style = widgets_by_name.description_text.style.text
+	local input_box_height = HudElementInteractionSettings.input_box_height
+	local use_minimal_presentation = self._active_presentation_data.use_minimal_presentation
+	local background_size = use_minimal_presentation and HudElementInteractionSettings.background_size_small or HudElementInteractionSettings.background_size
+	local edge_spacing = HudElementInteractionSettings.edge_spacing
+	local max_text_width = background_size[1] - edge_spacing[1] * 2
+	local tag_max_size = {
+		interaction_style.size[1],
+		1080
+	}
+	local description_max_size = {
+		max_text_width,
+		1080
+	}
+	local tag_text_width, tag_text_height = UIRenderer.text_size(ui_renderer, tag_text, tag_style.font_type, tag_style.font_size, tag_max_size, UIFonts.get_font_options_by_style(tag_style))
+	tag_text_width = tag_text_width > 0 and tag_text_width + edge_spacing[1] or 0
+	local interaction_max_size = {
+		max_text_width - tag_text_width,
+		1080
+	}
+	local interaction_width, interaction_height = UIRenderer.text_size(ui_renderer, interaction_text, interaction_style.font_type, interaction_style.font_size, interaction_max_size, UIFonts.get_font_options_by_style(interaction_style))
+	local description_width, description_height = UIRenderer.text_size(ui_renderer, description_text, description_style.font_type, description_style.font_size, description_max_size, UIFonts.get_font_options_by_style(description_style))
+	interaction_height = interaction_height + (interaction_height > 0 and edge_spacing[2] * 2 or 0)
+	description_height = description_height + (description_height > 0 and edge_spacing[2] * 4 or 0)
+	local background_height = interaction_height + description_height
+
+	self:_set_scenegraph_size("description_box", nil, description_height)
+	self:_set_scenegraph_size("background", nil, background_height)
+
+	self._active_presentation_data.background_size = {
+		background_size[1],
+		background_height
+	}
+	interaction_style.size = {
+		interaction_max_size[1],
+		interaction_height
+	}
+	widgets_by_name.background.style.input_background.size[2] = interaction_height
+	widgets_by_name.background.style.input_background_slim.size[2] = interaction_height
+end
+
 HudElementInteraction._update_target_interaction_animation = function (self, dt, t)
 	local active_presentation_data = self._active_presentation_data
 	local intro_anim_progress = active_presentation_data.intro_anim_progress
@@ -471,7 +522,6 @@ HudElementInteraction._setup_interaction_information = function (self, interacte
 
 	widgets_by_name.description_text.content.text = description_text
 	widgets_by_name.type_description_text.content.text = ""
-	widgets_by_name.description_text.offset[2] = 10
 	local is_event_interaction = interactee_extension.display_start_event and interactee_extension:display_start_event()
 
 	self:_set_event_popup_visibility(is_event_interaction)
