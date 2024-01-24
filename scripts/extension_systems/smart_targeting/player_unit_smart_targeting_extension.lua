@@ -407,7 +407,7 @@ PlayerUnitSmartTargetingExtension.assisted_hitscan_trajectory = function (self, 
 	local t_value = nil
 
 	if multiplier == 0 then
-		t_value = 0
+		t_value = 1
 	else
 		local min = trajectory_assist_settings.min_angle * multiplier
 		local max = trajectory_assist_settings.max_angle * multiplier

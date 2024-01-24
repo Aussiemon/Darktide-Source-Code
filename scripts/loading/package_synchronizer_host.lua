@@ -741,9 +741,12 @@ PackageSynchronizerHost._cleanup_owned_units = function (self, player)
 
 	local owned_units = player.owned_units
 	local player_unit = player.player_unit
-	local t = FixedFrame.get_latest_fixed_time()
 
-	Interrupt.ability_and_action(t, player_unit, "PackageSynchronizer", nil, true)
+	if player_unit then
+		local t = FixedFrame.get_latest_fixed_time()
+
+		Interrupt.ability_and_action(t, player_unit, "PackageSynchronizer", nil, true)
+	end
 
 	for unit, _ in pairs(owned_units) do
 		if unit ~= player_unit then

@@ -806,7 +806,15 @@ weapon_template.base_stats = {
 		is_stat_trait = true,
 		weapon_handling = {
 			action_start_reload = {
-				weapon_handling_trait_templates.default_reload_speed_modify
+				weapon_handling_trait_templates.default_reload_speed_modify,
+				display_data = {
+					display_stats = {
+						__all_basic_stats = true,
+						time_scale = {
+							display_name = "loc_weapon_stats_display_reload_speed"
+						}
+					}
+				}
 			}
 		}
 	},
