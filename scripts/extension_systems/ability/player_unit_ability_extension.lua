@@ -699,6 +699,12 @@ PlayerUnitAbilityExtension.missing_ability_charges = function (self, ability_typ
 end
 
 PlayerUnitAbilityExtension.max_ability_charges = function (self, ability_type)
+	local enabled = self:ability_enabled(ability_type)
+
+	if not enabled then
+		return 0
+	end
+
 	local equipped_abilities = self._equipped_abilities
 	local ability = equipped_abilities[ability_type]
 	local max_charges = ability.max_charges

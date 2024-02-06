@@ -401,7 +401,15 @@ SocialService.fetch_players_on_server = function (self)
 	return promise
 end
 
-SocialService.fetch_blocked_accounts = function (self, force_update)
+SocialService.has_initialized_block = function (self)
+	return not not self._has_initialized_block
+end
+
+SocialService.initialize_block = function (self)
+	return self:fetch_blocked_accounts(true, true)
+end
+
+SocialService.fetch_blocked_accounts = function (self, force_update, skip_platform)
 	local communication_restriction_iteration = Managers.account:communication_restriction_iteration()
 	local blocked_list_has_changed = force_update or self._blocked_accounts_list_changed or self._current_communication_restriction_iteration ~= communication_restriction_iteration
 	local blocked_accounts_promise = self._blocked_accounts_list_promise
@@ -410,8 +418,8 @@ SocialService.fetch_blocked_accounts = function (self, force_update)
 		return blocked_accounts_promise
 	end
 
-	local platform_blocked_promise = self._platform_social:fetch_blocked_list()
 	local fatshark_blocked_promise = self._backend_interfaces:fetch_blocked_accounts()
+	local platform_blocked_promise = skip_platform and Promise.resolved(nil) or self._platform_social:fetch_blocked_list()
 	blocked_accounts_promise = Promise.all(platform_blocked_promise, fatshark_blocked_promise):next(function (data)
 		local PLATFORM_BLOCKED_LIST = 1
 		local FATSHARK_BLOCKED_LIST = 2
@@ -420,6 +428,7 @@ SocialService.fetch_blocked_accounts = function (self, force_update)
 		local platform_blocked_data = data[PLATFORM_BLOCKED_LIST]
 		local fatshark_blocked_data = data[FATSHARK_BLOCKED_LIST]
 		local blocked_accounts = fatshark_blocked_data and fatshark_blocked_data.blockList or {}
+		self._has_initialized_block = true
 		self._max_blocked_accounts = fatshark_blocked_data.maxBlocks or 0
 
 		self:_update_blocked_players(blocked_accounts, platform_blocked_data)
@@ -1086,7 +1095,9 @@ SocialService._fetch_fatshark_friends = function (self, force_update)
 end
 
 SocialService._update_blocked_players = function (self, blocked_accounts, platform_blocked_accounts)
-	for i = 1, #platform_blocked_accounts do
+	local platform_block_count = platform_blocked_accounts and #platform_blocked_accounts or 0
+
+	for i = 1, platform_block_count do
 		local blocked_account = platform_blocked_accounts[i]
 
 		self:_get_player_info_by_platform_friend(blocked_account)
@@ -1098,7 +1109,6 @@ SocialService._update_blocked_players = function (self, blocked_accounts, platfo
 
 	local blocked_accounts_list = self._blocked_accounts_list
 	local previous_blocked_players = table.clone_instance(self._blocked_accounts_list)
-	local players_by_account_id = self._players_by_account_id
 
 	for account_id, account_info in pairs(blocked_accounts) do
 		local account_name = account_info.accountName
@@ -1112,6 +1122,8 @@ SocialService._update_blocked_players = function (self, blocked_accounts, platfo
 		blocked_accounts_list[account_id] = player_info
 	end
 
+	local players_by_account_id = self._players_by_account_id
+
 	for account_id in pairs(previous_blocked_players) do
 		local player_info = players_by_account_id[account_id]
 
@@ -1120,29 +1132,6 @@ SocialService._update_blocked_players = function (self, blocked_accounts, platfo
 		end
 
 		blocked_accounts_list[account_id] = nil
-	end
-
-	self._num_blocked_accounts = #blocked_players_list
-end
-
-SocialService._update_platform_blocked_players = function (self)
-	local players = Managers.player:human_players()
-	local blocked_players_list = self._blocked_players_list
-	local blocked_accounts_list = self._blocked_accounts_list
-
-	for unique_id, player in pairs(players) do
-		if player:is_human_controlled() then
-			local player_info = self:_get_player_info_for_player(player)
-			local platform_user_id = player_info:platform_user_id()
-			local is_blocked = Managers.account:is_blocked(platform_user_id)
-
-			if is_blocked then
-				player_info:set_is_blocked(true)
-
-				blocked_players_list[#blocked_players_list + 1] = player_info
-				blocked_accounts_list[player_info:account_id()] = player_info
-			end
-		end
 	end
 
 	self._num_blocked_accounts = #blocked_players_list

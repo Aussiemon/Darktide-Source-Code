@@ -68,7 +68,9 @@ TelemetryEvents.on_wwise_starvation = function (self, event_name, object_name, e
 end
 
 TelemetryEvents.rpc_sync_server_session_id = function (self, channel_id, session_id)
-	if self._connection_manager:host_type() == HOST_TYPES.mission_server then
+	local host_type = self._connection_manager:host_type()
+
+	if host_type == HOST_TYPES.mission_server or host_type == HOST_TYPES.hub_server then
 		self._session.gameplay = session_id
 	end
 end

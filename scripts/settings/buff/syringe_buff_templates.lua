@@ -119,6 +119,24 @@ templates.syringe_heal_corruption_buff = {
 			return
 		end
 
+		local alive = HEALTH_ALIVE[template_context.unit]
+
+		if not alive or not template_data.health_extension then
+			local player_unit_spawn_manager = Managers.state.player_unit_spawn
+			local player = player_unit_spawn_manager:owner(template_context.unit)
+
+			if player then
+				local data = {
+					healed_amount = 0,
+					corruption_healed_amount = 0
+				}
+
+				Managers.telemetry_events:player_stimm_heal(player, data)
+			end
+
+			return
+		end
+
 		local health_after = template_data.health_extension:current_health()
 		local permanent_damage_after = template_data.health_extension:permanent_damage_taken()
 		local heal = health_after - template_data.health_before

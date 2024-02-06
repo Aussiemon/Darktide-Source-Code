@@ -1815,19 +1815,19 @@ SocialMenuRosterView._refresh_roster_lists = function (self, force_refresh)
 		return
 	end
 
-	local promise = nil
 	local player = self:_player()
 	local character_id = player:character_id()
 	local current_tab_index = self._current_list_index
+	local promises = {}
 
 	if current_tab_index == FRIENDS_LIST then
-		promise = social_service:fetch_friends(force_refresh)
+		promises[1] = social_service:fetch_friends(force_refresh)
 	elseif current_tab_index == PREVIOUS_MISSION_COMPANIONS_LIST then
-		promise = social_service:fetch_recent_companions(character_id, force_refresh)
+		promises[1] = social_service:fetch_recent_companions(character_id, force_refresh)
 	elseif current_tab_index == HUB_PLAYERS_LIST then
-		promise = social_service:fetch_players_on_server()
+		promises[1] = social_service:fetch_players_on_server()
 	elseif current_tab_index == FRIEND_INVITES_LIST then
-		promise = social_service:fetch_friend_invites(force_refresh):next(function (response)
+		promises[1] = social_service:fetch_friend_invites(force_refresh):next(function (response)
 			return response
 		end):catch(function (error_data)
 			Log.error("SocialMenuRosterView", "invites_promise failed")
@@ -1835,20 +1835,26 @@ SocialMenuRosterView._refresh_roster_lists = function (self, force_refresh)
 			return Promise.rejected(error_data)
 		end)
 	elseif current_tab_index == BLOCKED_PLAYERS_LIST then
-		promise = social_service:fetch_blocked_players()
+		promises[1] = social_service:fetch_blocked_players(force_refresh)
 	end
 
-	if promise then
-		promise:next(callback(self, "cb_update_roster")):catch(function (e)
-			if type(e) == "table" then
-				Log.error("SocialMenuRosterView", "Failed fetching social players: %s", table.tostring(e, 2))
-			else
-				Log.error("SocialMenuRosterView", "Failed fetching social players: %s", e)
-			end
-		end)
-
-		self._roster_lists_promise = promise
+	if #promises == 0 then
+		return
 	end
+
+	if current_tab_index ~= BLOCKED_PLAYERS_LIST and not social_service:has_initialized_block() then
+		promises[#promises + 1] = social_service:initialize_block()
+	end
+
+	self._roster_lists_promise = Promise.all(unpack(promises)):next(function (lists)
+		return lists[1]
+	end):next(callback(self, "cb_update_roster")):catch(function (e)
+		if type(e) == "table" then
+			Log.error("SocialMenuRosterView", "Failed fetching social players: %s", table.tostring(e, 2))
+		else
+			Log.error("SocialMenuRosterView", "Failed fetching social players: %s", e)
+		end
+	end)
 end
 
 local _show_confirmation_popup_context = nil

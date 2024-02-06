@@ -31,13 +31,15 @@ BackgroundMute.update = function (self, dt, t)
 end
 
 BackgroundMute._update_setting = function (self)
-	local option_enabled = Application.user_setting("sound_settings").mute_in_background_enabled
+	if Application.user_setting and Application.user_setting("sound_settings") then
+		local option_enabled = Application.user_setting("sound_settings").mute_in_background_enabled
 
-	if self._option_enabled and not option_enabled then
-		Wwise.set_state("options_mute_all", "false")
+		if self._option_enabled and not option_enabled then
+			Wwise.set_state("options_mute_all", "false")
+		end
+
+		self._option_enabled = option_enabled
 	end
-
-	self._option_enabled = option_enabled
 end
 
 return BackgroundMute
