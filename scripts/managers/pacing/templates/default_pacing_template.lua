@@ -114,6 +114,7 @@ local DEFAULT_RAMP_UP_FREQUENCY_MODIFIERS = {
 	},
 	{
 		travel_change_pause_time = 9,
+		wait_for_ramp_clear = true,
 		ramp_duration = 500,
 		max_duration = 60,
 		ramp_up_states = {
@@ -125,10 +126,15 @@ local DEFAULT_RAMP_UP_FREQUENCY_MODIFIERS = {
 			hordes = 1.5,
 			terror_events = 1.5,
 			specials = 2.5
+		},
+		wait_for_ramp_clear_reset = {
+			80,
+			160
 		}
 	},
 	{
 		travel_change_pause_time = 11,
+		wait_for_ramp_clear = true,
 		ramp_duration = 400,
 		max_duration = 80,
 		ramp_up_states = {
@@ -140,6 +146,10 @@ local DEFAULT_RAMP_UP_FREQUENCY_MODIFIERS = {
 			hordes = 1.5,
 			terror_events = 1.75,
 			specials = 2.5
+		},
+		wait_for_ramp_clear_reset = {
+			80,
+			160
 		}
 	},
 	{
@@ -156,6 +166,10 @@ local DEFAULT_RAMP_UP_FREQUENCY_MODIFIERS = {
 			hordes = 2,
 			terror_events = 2,
 			specials = 3
+		},
+		wait_for_ramp_clear_reset = {
+			120,
+			200
 		}
 	}
 }

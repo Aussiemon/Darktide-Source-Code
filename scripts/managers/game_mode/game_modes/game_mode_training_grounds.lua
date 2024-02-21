@@ -92,11 +92,10 @@ end
 GameModeTrainingGrounds._force_base_talents = function (self, player)
 	local profile = player:profile()
 	local fixed_t = FixedFrame.get_latest_fixed_time()
-	local specialization_name = profile.specialization
 	local base_talents = profile.archetype.base_talents
-	local specialization_extension = ScriptUnit.extension(player.player_unit, "specialization_system")
+	local talent_extension = ScriptUnit.extension(player.player_unit, "talent_system")
 
-	specialization_extension:select_new_specialization(specialization_name, base_talents, fixed_t)
+	talent_extension:select_new_talents(base_talents, fixed_t)
 end
 
 GameModeTrainingGrounds.destroy = function (self)

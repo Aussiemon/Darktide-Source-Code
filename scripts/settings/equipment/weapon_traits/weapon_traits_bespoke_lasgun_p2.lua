@@ -1,24 +1,9 @@
 local BuffSettings = require("scripts/settings/buff/buff_settings")
-local WeaponTweakTemplateSettings = require("scripts/settings/equipment/weapon_templates/weapon_tweak_template_settings")
 local templates = {}
+
+table.make_unique(templates)
+
 local stat_buffs = BuffSettings.stat_buffs
-local proc_events = BuffSettings.proc_events
-templates.weapon_trait_bespoke_lasgun_p2_burninating_on_crit = {
-	weapon_trait_bespoke_lasgun_p2_burninating_on_crit = {
-		{
-			target_buff_data = {
-				max_stacks = 6,
-				num_stacks_on_proc = 2
-			}
-		},
-		[4] = {
-			target_buff_data = {
-				max_stacks = 9,
-				num_stacks_on_proc = 3
-			}
-		}
-	}
-}
 templates.weapon_trait_bespoke_lasgun_p2_burninating_on_crit = {
 	weapon_trait_bespoke_lasgun_p2_burninating_on_crit = {
 		{

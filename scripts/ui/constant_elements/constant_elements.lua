@@ -1,6 +1,20 @@
 local ChatElementSettings = require("scripts/ui/constant_elements/elements/chat/constant_element_chat_settings")
 local elements = {
 	{
+		class_name = "ConstantElementTeamProfileLoader",
+		filename = "scripts/ui/constant_elements/elements/team_profile_loader/constant_element_team_profile_loader",
+		visibility_groups = {
+			"tactical_overlay",
+			"cutscene",
+			"mission_lobby",
+			"end_of_round",
+			"in_view",
+			"in_loading",
+			"skippable_cinematic",
+			"default"
+		}
+	},
+	{
 		class_name = "ConstantElementSubtitles",
 		filename = "scripts/ui/constant_elements/elements/subtitles/constant_element_subtitles",
 		visibility_groups = {

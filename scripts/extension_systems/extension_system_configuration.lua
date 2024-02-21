@@ -16,7 +16,7 @@ _system_require("behavior", "behavior_system")
 _system_require("blackboard", "blackboard_system")
 _system_require("boss", "boss_system")
 _system_require("broadphase", "broadphase_system")
-_system_require("buff", "minion_buff_extension", "player_unit_buff_extension", "player_husk_buff_extension")
+_system_require("buff", "minion_buff_extension", "player_unit_buff_extension", "player_husk_buff_extension", "projectile_unit_buff_extension")
 _system_require("camera", "camera_system")
 _system_require("character_state_machine", "character_state_machine_extension")
 _system_require("chest", "chest_system")
@@ -92,11 +92,11 @@ _system_require("slot", "slot_system")
 _system_require("smart_tag", "smart_tag_system")
 _system_require("smart_targeting", "player_unit_smart_targeting_extension")
 _system_require("smoke_fog", "smoke_fog_system", "smoke_fog_extension", "smoke_fog_husk_extension")
-_system_require("specialization", "specialization_system")
 _system_require("spline_group", "spline_group_system")
 _system_require("spread", "player_unit_weapon_spread_extension")
 _system_require("suppression", "minion_suppression_extension", "minion_suppression_husk_extension", "player_suppression_extension")
 _system_require("scripted_scenario", "scripted_scenario_system")
+_system_require("talent", "talent_system")
 _system_require("trigger", "trigger_system")
 _system_require("toughness", "player_unit_toughness_extension", "player_husk_toughness_extension", "player_hub_toughness_extension", "minion_toughness_extension", "minion_toughness_husk_extension")
 _system_require("unit_data", "minion_unit_data_extension", "player_unit_data_extension", "player_husk_data_extension", "prop_unit_data_extension")
@@ -235,16 +235,16 @@ local systems = {
 		}
 	},
 	{
-		"specialization_system",
-		"SpecializationSystem",
+		"talent_system",
+		"TalentSystem",
 		false,
 		true,
 		false,
 		true,
 		false,
 		{
-			"PlayerUnitSpecializationExtension",
-			"PlayerHuskSpecializationExtension"
+			"PlayerUnitTalentExtension",
+			"PlayerHuskTalentExtension"
 		}
 	},
 	{
@@ -270,7 +270,8 @@ local systems = {
 		{
 			"PlayerUnitBuffExtension",
 			"PlayerHuskBuffExtension",
-			"MinionBuffExtension"
+			"MinionBuffExtension",
+			"ProjectileUnitBuffExtension"
 		}
 	},
 	{
@@ -951,9 +952,12 @@ local systems = {
 		"DialogueSystem",
 		false,
 		false,
+		false,
 		true,
 		true,
-		true
+		{
+			"DialogueExtension"
+		}
 	},
 	{
 		"dialogue_context_system",

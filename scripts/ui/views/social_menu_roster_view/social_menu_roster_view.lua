@@ -329,7 +329,7 @@ SocialMenuRosterView.init = function (self, settings, context)
 	self._icon_unload_queue = {}
 	self._show_rooster_list = true
 
-	SocialMenuRosterView.super.init(self, Definitions, settings)
+	SocialMenuRosterView.super.init(self, Definitions, settings, context)
 end
 
 SocialMenuRosterView.on_enter = function (self)

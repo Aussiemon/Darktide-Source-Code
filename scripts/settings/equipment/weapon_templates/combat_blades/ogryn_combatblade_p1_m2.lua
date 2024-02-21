@@ -825,14 +825,15 @@ weapon_template.actions = {
 	action_right_light_pushfollow = {
 		damage_window_start = 0.3,
 		hit_armor_anim = "attack_hit_shield",
-		anim_end_event = "attack_finished",
-		kind = "sweep",
-		first_person_hit_anim = "hit_left_shake",
-		range_mod = 1.4,
-		first_person_hit_stop_anim = "hit_left_shake",
 		weapon_handling_template = "time_scale_1",
-		attack_direction_override = "push",
+		first_person_hit_anim = "hit_left_shake",
+		first_person_hit_stop_anim = "hit_left_shake",
+		sprint_requires_press_to_interrupt = "true",
+		range_mod = 1.4,
+		kind = "sweep",
 		damage_window_end = 0.36666666666666664,
+		anim_end_event = "attack_finished",
+		attack_direction_override = "push",
 		anim_event_3p = "attack_swing_left_diagonal",
 		anim_event = "attack_swing_up_left",
 		power_level = 500,
@@ -1325,7 +1326,7 @@ weapon_template.base_stats = {
 	}
 }
 weapon_template.traits = {}
-local bespoke_ogryn_combatblade_p1 = table.keys(WeaponTraitsBespokeOgrynCombatbladeP1)
+local bespoke_ogryn_combatblade_p1 = table.ukeys(WeaponTraitsBespokeOgrynCombatbladeP1)
 
 table.append(weapon_template.traits, bespoke_ogryn_combatblade_p1)
 

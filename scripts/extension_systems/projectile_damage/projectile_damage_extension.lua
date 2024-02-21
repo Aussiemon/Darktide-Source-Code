@@ -5,6 +5,7 @@ local AttackSettings = require("scripts/settings/damage/attack_settings")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local DamageProfile = require("scripts/utilities/attack/damage_profile")
 local Explosion = require("scripts/utilities/attack/explosion")
+local HazardProp = require("scripts/utilities/level_props/hazard_prop")
 local Health = require("scripts/utilities/health")
 local HitMass = require("scripts/utilities/attack/hit_mass")
 local HitZone = require("scripts/utilities/attack/hit_zone")
@@ -18,7 +19,6 @@ local ProjectileLocomotionSettings = require("scripts/settings/projectile_locomo
 local Suppression = require("scripts/utilities/attack/suppression")
 local SurfaceMaterialSettings = require("scripts/settings/surface_material_settings")
 local Weakspot = require("scripts/utilities/attack/weakspot")
-local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
 local armor_types = ArmorSettings.types
 local attack_results = AttackSettings.attack_results
 local attack_types = AttackSettings.attack_types
@@ -167,12 +167,6 @@ ProjectileDamageExtension.fixed_update = function (self, unit, dt, t)
 	local kill_at_lifetime = fuse_damage_settings.kill_at_lifetime
 
 	if kill_at_lifetime and kill_at_lifetime < new_life_time then
-		mark_for_deletion = true
-	end
-
-	local kill_at_z_position = fuse_damage_settings.kill_at_z_position
-
-	if kill_at_z_position and position.z < kill_at_z_position then
 		mark_for_deletion = true
 	end
 
@@ -362,10 +356,15 @@ ProjectileDamageExtension.on_impact = function (self, hit_position, hit_unit, hi
 		local hit_mass_stop = false
 		local do_impact_explosion = not not impact_explosion_template
 		local charge_level = self._charge_level or 1
-		local health_extension = ScriptUnit.has_extension(hit_unit, "health_system")
+		local is_damagable = Health.is_damagable(hit_unit)
 		local is_ragdolled = Health.is_ragdolled(hit_unit)
 		local unit_data_extension = ScriptUnit.has_extension(hit_unit, "unit_data_system")
 		local target_breed_or_nil = unit_data_extension and unit_data_extension:breed()
+		local hit_zone_name_or_nil = HitZone.get_name(hit_unit, hit_actor)
+		local target_is_hazard_prop, hazard_prop_is_active = HazardProp.status(hit_unit)
+		local is_breed_with_hit_zone = target_breed_or_nil and hit_zone_name_or_nil
+		local is_damagable_hazard_prop = target_is_hazard_prop and hazard_prop_is_active
+		local should_deal_damage = target_is_hazard_prop and hazard_prop_is_active or not target_is_hazard_prop and is_breed_with_hit_zone or not target_breed_or_nil
 
 		if not have_unit_been_hit and is_not_self then
 			local hit_zone_name = HitZone.get_name(hit_unit, hit_actor)
@@ -376,7 +375,7 @@ ProjectileDamageExtension.on_impact = function (self, hit_position, hit_unit, hi
 				MinionDeath.attack_ragdoll(hit_unit, direction, impact_damage_profile, impact_damage_type, hit_zone_name, hit_position, owner_unit, hit_actor, nil)
 
 				impact_result = "continue_straight"
-			elseif impact_damage_profile and health_extension then
+			elseif impact_damage_profile and is_damagable then
 				local impact_charge_level = charge_level
 				local speed_to_charge_settings = impact_damage_settings.speed_to_charge_settings
 
@@ -408,7 +407,12 @@ ProjectileDamageExtension.on_impact = function (self, hit_position, hit_unit, hi
 					impact_result = "continue_straight"
 				end
 
-				local damage_dealt, attack_result, damage_efficiency, stagger_result, hit_weakspot = Attack.execute(hit_unit, impact_damage_profile, "attack_direction", hit_direction, "power_level", DEFAULT_POWER_LEVEL, "hit_zone_name", hit_zone_name, "target_index", 1, "target_number", 1, "charge_level", impact_charge_level, "is_critical_strike", is_critical_strike, "hit_actor", hit_actor, "hit_world_position", hit_position, "attack_type", attack_types.ranged, "damage_type", impact_damage_type, "attacking_unit", projectile_unit, "item", weapon_item_or_nil)
+				local damage_dealt, attack_result, damage_efficiency, stagger_result, hit_weakspot = nil
+
+				if should_deal_damage then
+					damage_dealt, attack_result, damage_efficiency, stagger_result, hit_weakspot = Attack.execute(hit_unit, impact_damage_profile, "attack_direction", hit_direction, "power_level", DEFAULT_POWER_LEVEL, "hit_zone_name", hit_zone_name, "target_index", 1, "target_number", 1, "charge_level", impact_charge_level, "is_critical_strike", is_critical_strike, "hit_actor", hit_actor, "hit_world_position", hit_position, "attack_type", attack_types.ranged, "damage_type", impact_damage_type, "attacking_unit", projectile_unit, "item", weapon_item_or_nil)
+				end
+
 				self._impact_hit = true
 				self._impact_hit_weakspot = self._impact_hit_weakspot + (hit_weakspot and 1 or 0)
 				self._num_impact_hit_kill = self._num_impact_hit_kill + (attack_result == attack_results.died and 1 or 0)
@@ -416,7 +420,11 @@ ProjectileDamageExtension.on_impact = function (self, hit_position, hit_unit, hi
 				self._num_impact_hit_special = self._num_impact_hit_special + (target_breed_or_nil and target_breed_or_nil.tags.special and 1 or 0)
 
 				if impact_damage_type then
-					ImpactEffect.play(hit_unit, hit_actor, damage_dealt, impact_damage_type, hit_zone_name, attack_result, hit_position, hit_normal, hit_direction, owner_unit or projectile_unit, IMPACT_FX_DATA, false, attack_types.ranged, damage_efficiency, impact_damage_profile)
+					if not target_is_hazard_prop and target_breed_or_nil and hit_zone_name_or_nil or is_damagable_hazard_prop then
+						ImpactEffect.play(hit_unit, hit_actor, damage_dealt, impact_damage_type, hit_zone_name_or_nil, attack_result, hit_position, hit_normal, direction, owner_unit or projectile_unit, IMPACT_FX_DATA, false, nil, damage_efficiency, impact_damage_profile)
+					else
+						ImpactEffect.play_surface_effect(self._physics_world, owner_unit or projectile_unit, hit_position, hit_normal, direction, impact_damage_type, surface_hit_types.stop, IMPACT_FX_DATA)
+					end
 				end
 
 				if impact_suppression_settings then
@@ -475,8 +483,6 @@ ProjectileDamageExtension.on_impact = function (self, hit_position, hit_unit, hi
 				do_impact_explosion = not not impact_explosion_template
 			end
 
-			local physics_world = self._physics_world
-
 			if fuse_damage_settings then
 				local min_lifetime = fuse_damage_settings.min_lifetime
 
@@ -496,7 +502,7 @@ ProjectileDamageExtension.on_impact = function (self, hit_position, hit_unit, hi
 			if do_impact_explosion then
 				table.clear(_explosion_hit_units_table)
 
-				explosion_queue_index = Explosion.create_explosion(self._world, physics_world, hit_position, nil, projectile_unit, impact_explosion_template, DEFAULT_POWER_LEVEL, charge_level, AttackSettings.attack_types.explosion, is_critical_strike, false, weapon_item_or_nil, origin_slot_or_nil, _explosion_hit_units_table)
+				explosion_queue_index = Explosion.create_explosion(self._world, self._physics_world, hit_position, nil, projectile_unit, impact_explosion_template, DEFAULT_POWER_LEVEL, charge_level, AttackSettings.attack_types.explosion, is_critical_strike, false, weapon_item_or_nil, origin_slot_or_nil, _explosion_hit_units_table)
 				mark_for_deletion = true
 				local player = Managers.state.player_unit_spawn:owner(owner_unit)
 
@@ -539,10 +545,10 @@ ProjectileDamageExtension.on_impact = function (self, hit_position, hit_unit, hi
 				mark_for_deletion = true
 			end
 
-			if not health_extension and impact_damage_type then
-				ImpactEffect.play_surface_effect(physics_world, projectile_unit, hit_position, hit_normal, hit_direction, impact_damage_type, surface_hit_types.stop, IMPACT_FX_DATA)
+			if not is_damagable and impact_damage_type then
+				ImpactEffect.play_surface_effect(self._physics_world, projectile_unit, hit_position, hit_normal, hit_direction, impact_damage_type, surface_hit_types.stop, IMPACT_FX_DATA)
 			end
-		elseif have_unit_been_hit and (health_extension or is_ragdolled) then
+		elseif have_unit_been_hit and (is_damagable or is_ragdolled) then
 			impact_result = "continue_straight"
 		end
 	end

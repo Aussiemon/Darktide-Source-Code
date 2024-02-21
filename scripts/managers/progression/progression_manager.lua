@@ -1,18 +1,18 @@
 local BackendInterface = require("scripts/backend/backend_interface")
-local EndViewSettings = require("scripts/ui/views/end_view/end_view_settings")
 local EndPlayerViewAnimations = require("scripts/ui/views/end_player_view/end_player_view_animations")
 local EndPlayerViewSettings = require("scripts/ui/views/end_player_view/end_player_view_settings")
-local MatchmakingConstants = require("scripts/settings/network/matchmaking_constants")
+local EndViewSettings = require("scripts/ui/views/end_view/end_view_settings")
 local DummySessionReport = require("scripts/managers/progression/dummy_session_report")
-local Progression = require("scripts/backend/progression")
-local MasterItems = require("scripts/backend/master_items")
-local Promise = require("scripts/foundation/utilities/promise")
-local PlayerSpecializationUtils = require("scripts/utilities/player_specialization/player_specialization")
-local WeaponUnlockSettings = require("scripts/settings/weapon_unlock_settings")
 local ItemUtils = require("scripts/utilities/items")
+local MasterItems = require("scripts/backend/master_items")
+local MatchmakingConstants = require("scripts/settings/network/matchmaking_constants")
+local PlayerTalents = require("scripts/utilities/player_talents/player_talents")
+local Progression = require("scripts/backend/progression")
+local Promise = require("scripts/foundation/utilities/promise")
+local WeaponUnlockSettings = require("scripts/settings/weapon_unlock_settings")
 
 local function _info(...)
-	Log.info("ProgressManager", ...)
+	Log.info("ProgressionManager", ...)
 end
 
 local HOST_TYPES = MatchmakingConstants.HOST_TYPES
@@ -302,6 +302,8 @@ ProgressionManager._parse_report = function (self, eor, account_wallets)
 			if is_host then
 				self:_calculate_and_sync_game_score_end()
 			end
+		end):catch(function ()
+			self._session_report_state = SESSION_REPORT_STATES.fail
 		end)
 
 		if #item_rewards > 0 then
@@ -577,8 +579,8 @@ ProgressionManager._check_level_up = function (self, stats, item_rewards)
 	return Promise.resolved()
 end
 
-ProgressionManager._add_unlocked_weapons_to_card = function (self, reward_card, specialization_name, target_level)
-	local archetype_weapon_unlocks = WeaponUnlockSettings[specialization_name]
+ProgressionManager._add_unlocked_weapons_to_card = function (self, reward_card, archetype_name, target_level)
+	local archetype_weapon_unlocks = WeaponUnlockSettings[archetype_name]
 	local weapons_unlocks_at_level = archetype_weapon_unlocks[target_level]
 
 	if weapons_unlocks_at_level then
@@ -591,40 +593,17 @@ ProgressionManager._add_unlocked_weapons_to_card = function (self, reward_card, 
 	end
 end
 
-ProgressionManager._add_unlocked_talents_to_card = function (self, reward_card, profile, specialization_name, target_level)
-	local profile_archetype = profile.archetype
-	local talent_group_id = PlayerSpecializationUtils.talent_group_unlocked_by_level(profile_archetype, specialization_name, target_level)
-
-	if not talent_group_id then
-		return
-	end
-
-	Managers.data_service.talents:mark_unlocked_group_as_new(profile.character_id, talent_group_id)
-
-	local talent_group = PlayerSpecializationUtils.talent_group_from_id(profile_archetype, specialization_name, talent_group_id)
-	local talents = table.clone(talent_group.talents)
-	local talent_group_name = talent_group.group_name
-
-	self:_append_reward_to_card(reward_card, {
-		reward_type = "talents_unlock",
-		specialization_name = specialization_name,
-		talent_group_id = talent_group_id,
-		talent_group_name = talent_group_name,
-		talents = talents
-	})
-end
-
 ProgressionManager._add_level_up_unlocks_to_card = function (self, reward_card)
 	local target_level = reward_card.level
 	local profile = self:_get_profile()
-	local specialization_name = profile.specialization
+	local profile_archetype = profile.archetype
+	local archetype_name = profile_archetype.name
 
-	self:_add_unlocked_weapons_to_card(reward_card, specialization_name, target_level)
-	self:_add_unlocked_talents_to_card(reward_card, profile, specialization_name, target_level)
+	self:_add_unlocked_weapons_to_card(reward_card, archetype_name, target_level)
 end
 
 ProgressionManager._level_up = function (self, stats, target_level, item_rewards)
-	_info("Leveling up " .. stats.type .. " to %s ...", target_level)
+	_info("Leveling up %s to %s...", stats.type, target_level)
 
 	return self._progression:level_up(stats.type, stats.id, target_level):next(function (data)
 		_info("level_up %s: %s", stats.type, table.tostring(data, 6))
@@ -637,8 +616,6 @@ ProgressionManager._level_up = function (self, stats, target_level, item_rewards
 
 		return self:_check_level_up(progression_info, item_rewards)
 	end):catch(function (error)
-		self._session_report_state = SESSION_REPORT_STATES.success
-
 		_info("Failed level_up, error: %s", error)
 
 		return Promise.resolved()
@@ -871,18 +848,12 @@ ProgressionManager._get_level_up_card_time = function (self, profile, reward_car
 	local level = reward_card.level
 	local total_time = 0
 	local profile_archetype = profile.archetype
-	local specialization_name = profile.specialization
-	local archetype_weapon_unlocks = WeaponUnlockSettings[specialization_name]
+	local archetype_name = profile_archetype.name
+	local archetype_weapon_unlocks = WeaponUnlockSettings[archetype_name]
 	local weapons_unlocks_at_level = archetype_weapon_unlocks[level]
 
 	if weapons_unlocks_at_level then
 		total_time = total_time + self:_get_duration_for_reward_card_animation(EndPlayerViewAnimations.unlocked_weapon_show_content) * #weapons_unlocks_at_level
-	end
-
-	local talent_group_id = PlayerSpecializationUtils.talent_group_unlocked_by_level(profile_archetype, specialization_name, level)
-
-	if talent_group_id then
-		total_time = total_time + self:_get_duration_for_reward_card_animation(EndPlayerViewAnimations.unlocked_talents_show_content)
 	end
 
 	for i = 1, #reward_card.rewards do

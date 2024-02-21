@@ -1,13 +1,13 @@
 local BuffSettings = require("scripts/settings/buff/buff_settings")
-local WeaponTweakTemplateSettings = require("scripts/settings/equipment/weapon_templates/weapon_tweak_template_settings")
 local templates = {}
+
+table.make_unique(templates)
 
 function _degrees_to_radians(degrees)
 	return degrees * 0.0174532925
 end
 
 local stat_buffs = BuffSettings.stat_buffs
-local proc_events = BuffSettings.proc_events
 templates.weapon_trait_bespoke_autogun_p1_consecutive_hits_increases_close_damage = {
 	weapon_trait_bespoke_autogun_p1_consecutive_hits_increases_close_damage_parent = {
 		{

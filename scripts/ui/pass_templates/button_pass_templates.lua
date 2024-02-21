@@ -59,8 +59,8 @@ terminal_button_hold_small_text_style.offset = {
 	6
 }
 
-local function terminal_button_change_function(content, style)
-	local hotspot = content.hotspot
+local function terminal_button_change_function(content, style, optional_hotspot_id)
+	local hotspot = optional_hotspot_id and content[optional_hotspot_id] or content.hotspot
 	local is_selected = hotspot.is_selected
 	local is_focused = hotspot.is_focused
 	local is_hover = hotspot.is_hover
@@ -88,8 +88,8 @@ end
 
 ButtonPassTemplates.terminal_button_change_function = terminal_button_change_function
 
-local function terminal_button_hover_change_function(content, style)
-	local hotspot = content.hotspot
+local function terminal_button_hover_change_function(content, style, optional_hotspot_id)
+	local hotspot = optional_hotspot_id and content[optional_hotspot_id] or content.hotspot
 	local anim_hover_progress = hotspot.anim_hover_progress or 0
 	local anim_select_progress = hotspot.anim_select_progress or 0
 	local anim_focus_progress = hotspot.anim_focus_progres or 0
@@ -113,8 +113,8 @@ end
 
 ButtonPassTemplates.default_button_hover_change_function = default_button_hover_change_function
 
-local function default_button_text_change_function(content, style)
-	local hotspot = content.hotspot
+local function default_button_text_change_function(content, style, optional_hotspot_id)
+	local hotspot = optional_hotspot_id and content[optional_hotspot_id] or content.hotspot
 	local is_disabled = hotspot.disabled
 	local gamepad_active = hotspot.gamepad_active
 	local button_text = content.original_text or ""

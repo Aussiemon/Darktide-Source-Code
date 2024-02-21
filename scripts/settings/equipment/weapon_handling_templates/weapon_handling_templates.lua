@@ -15,6 +15,9 @@ local weapon_handling_templates = {
 	time_scale_0_5 = {
 		time_scale = lerpable_timescale(0.5)
 	},
+	time_scale_0_6 = {
+		time_scale = lerpable_timescale(0.6)
+	},
 	time_scale_0_7 = {
 		time_scale = lerpable_timescale(0.7)
 	},

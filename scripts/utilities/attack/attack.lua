@@ -128,6 +128,13 @@ ARGS = {
 		name = "attacking_unit"
 	},
 	{
+		name = "attacking_unit_owner_unit"
+	},
+	{
+		default = false,
+		name = "apply_owner_buffs"
+	},
+	{
 		name = "attack_type"
 	},
 	{
@@ -159,7 +166,7 @@ end
 
 local TRAINING_GROUNDS_GAME_MODE_NAME = "training_grounds"
 
-function _execute(attacked_unit, damage_profile, target_index, target_number, power_level, charge_level, is_critical_strike, dropoff_scalar, attack_direction, instakill, hit_zone_name, hit_world_position, hit_actor, attacking_unit, attack_type, herding_template, damage_type, auto_completed_action, item, wounds_shape, triggered_proc_events_or_nil)
+function _execute(attacked_unit, damage_profile, target_index, target_number, power_level, charge_level, is_critical_strike, dropoff_scalar, attack_direction, instakill, hit_zone_name, hit_world_position, hit_actor, attacking_unit, attacking_unit_owner_unit, apply_owner_buffs, attack_type, herding_template, damage_type, auto_completed_action, item, wounds_shape, triggered_proc_events_or_nil)
 	local was_alive_at_attack_start = HEALTH_ALIVE[attacked_unit]
 	attacking_unit = ALIVE[attacking_unit] and attacking_unit
 	local target_settings = DamageProfile.target_settings(damage_profile, target_index)
@@ -167,10 +174,15 @@ function _execute(attacked_unit, damage_profile, target_index, target_number, po
 	local unit_data_extension = ScriptUnit.has_extension(attacked_unit, "unit_data_system")
 	local target_breed_or_nil = unit_data_extension and unit_data_extension:breed()
 	local is_player_character = Breed.is_player(target_breed_or_nil)
-	local attacking_unit_owner_unit, apply_owner_buffs = AttackingUnitResolver.resolve(attacking_unit)
+
+	if not attacking_unit_owner_unit then
+		attacking_unit_owner_unit, apply_owner_buffs = AttackingUnitResolver.resolve(attacking_unit)
+	end
+
 	local attacking_unit_data_extension = ScriptUnit.has_extension(attacking_unit_owner_unit, "unit_data_system")
 	local attacker_breed_or_nil = attacking_unit_data_extension and attacking_unit_data_extension:breed()
-	local attacker_buff_extension = ScriptUnit.has_extension(apply_owner_buffs and attacking_unit_owner_unit or attacking_unit, "buff_system")
+	local attacker_buff_extension = ScriptUnit.has_extension(attacking_unit, "buff_system")
+	local attacker_owner_buff_extension = ScriptUnit.has_extension(attacking_unit_owner_unit, "buff_system")
 	local target_buff_extension = ScriptUnit.has_extension(attacked_unit, "buff_system")
 	local is_backstab, effective_backstab = AttackPositioning.is_backstabbing(attacked_unit, attacking_unit, attack_type, damage_profile)
 
@@ -267,7 +279,7 @@ function _execute(attacked_unit, damage_profile, target_index, target_number, po
 	end
 
 	if was_alive_at_attack_start and target_breed_or_nil then
-		_handle_buffs(is_server, triggered_proc_events_or_nil, damage_profile, attacker_buff_extension, target_buff_extension, attacked_unit, damage_dealt, damage_absorbed, attack_result, stagger_result, hit_zone_name, is_critical_strike, is_backstab, hit_weakspot, one_hit_kill, attack_type, attacking_unit, attacking_unit_owner_unit, attack_direction, damage_efficiency, target_index, target_number, attacker_breed_or_nil, target_breed_or_nil, damage_type, charge_level, hit_world_position)
+		_handle_buffs(is_server, triggered_proc_events_or_nil, damage_profile, attacker_owner_buff_extension, target_buff_extension, attacked_unit, damage_dealt, damage_absorbed, attack_result, stagger_result, hit_zone_name, is_critical_strike, is_backstab, hit_weakspot, one_hit_kill, attack_type, attacking_unit, attacking_unit_owner_unit, attack_direction, damage_efficiency, target_index, target_number, attacker_breed_or_nil, target_breed_or_nil, damage_type, charge_level, hit_world_position, item)
 
 		if is_server then
 			_handle_result(attacking_unit_owner_unit, attacked_unit, attack_result, attack_type, attacker_breed_or_nil, target_breed_or_nil, damage_dealt, damage_absorbed, damage_profile, damage_type, actual_damage_dealt)
@@ -381,7 +393,7 @@ function _handle_attack(is_server, instakill, target_is_assisted, target_is_hogt
 			damage_absorbed = 0
 			result = attack_results.dodged
 		else
-			local is_invulnerable, is_damage_allowed, health_setting, current_health_damage, current_permanent_damage, max_health, max_wounds, toughness_template, weapon_toughness_template, current_toughness_damage, movement_state, shield_setting, attacked_unit_stat_buffs, attacked_unit_keywords, attacking_unit_stat_buffs = DamageTakenCalculation.calculation_parameters(attacked_unit, target_breed_or_nil, damage_profile, attacking_unit, attacking_unit_owner_unit, hit_actor, attacker_buff_extension)
+			local is_invulnerable, is_damage_allowed, health_setting, current_health_damage, current_permanent_damage, max_health, max_wounds, toughness_template, weapon_toughness_template, current_toughness_damage, movement_state, shield_setting, attacked_unit_stat_buffs, attacked_unit_keywords, attacking_unit_stat_buffs = DamageTakenCalculation.calculation_parameters(attacked_unit, target_breed_or_nil, damage_profile, attacking_unit, attacking_unit_owner_unit, hit_actor, attacker_buff_extension, hit_zone_name)
 			local tougness_damage = nil
 			result, damage, permanent_damage, tougness_damage, damage_absorbed = DamageTakenCalculation.calculate_attack_result(calculated_damage, damage_profile, attack_type, attack_direction, instakill, is_invulnerable, is_damage_allowed, health_setting, current_health_damage, current_permanent_damage, max_health, max_wounds, toughness_template, weapon_toughness_template, current_toughness_damage, movement_state, shield_setting, attacked_unit_stat_buffs, attacked_unit_keywords, attacked_unit, damage_type, attacking_unit_stat_buffs)
 			damage_dealt = damage + permanent_damage
@@ -422,8 +434,8 @@ function _already_procced(triggered_proc_events_or_nil, proc_event)
 	return triggered_proc_events_or_nil[proc_event]
 end
 
-function _handle_buffs(is_server, triggered_proc_events_or_nil, damage_profile, attacker_buff_extension_or_nil, target_buff_extension_or_nil, attacked_unit, damage, damage_absorbed, attack_result, stagger_result, hit_zone_name, is_critical_strike, is_backstab, hit_weakspot, one_hit_kill, attack_type, attacking_unit, attacking_owner_unit, attack_direction, damage_efficiency, target_index, target_number, attacker_breed_or_nil, target_breed_or_nil, damage_type, charge_level, hit_world_position_or_nil)
-	if not attacker_buff_extension_or_nil and not target_buff_extension_or_nil then
+function _handle_buffs(is_server, triggered_proc_events_or_nil, damage_profile, attacker_owner_buff_extension_or_nil, target_buff_extension_or_nil, attacked_unit, damage, damage_absorbed, attack_result, stagger_result, hit_zone_name, is_critical_strike, is_backstab, hit_weakspot, one_hit_kill, attack_type, attacking_unit, attacking_owner_unit, attack_direction, damage_efficiency, target_index, target_number, attacker_breed_or_nil, target_breed_or_nil, damage_type, charge_level, hit_world_position_or_nil, attacking_item_or_nil)
+	if not attacker_owner_buff_extension_or_nil and not target_buff_extension_or_nil then
 		return
 	end
 
@@ -440,8 +452,8 @@ function _handle_buffs(is_server, triggered_proc_events_or_nil, damage_profile, 
 	local hit_world_position_box_or_nil = hit_world_position_or_nil and Vector3Box(hit_world_position_or_nil)
 	local should_proc = not damage_type or not damage_types_no_proc[damage_type]
 
-	if should_proc and attacker_buff_extension_or_nil and not damage_profile.skip_on_hit_proc and not _already_procced(triggered_proc_events_or_nil, proc_events.on_hit) then
-		local attacker_param_table = attacker_buff_extension_or_nil:request_proc_event_param_table()
+	if should_proc and attacker_owner_buff_extension_or_nil and not damage_profile.skip_on_hit_proc and not _already_procced(triggered_proc_events_or_nil, proc_events.on_hit) then
+		local attacker_param_table = attacker_owner_buff_extension_or_nil:request_proc_event_param_table()
 
 		if attacker_param_table then
 			attacker_param_table.alternative_fire = alternative_fire
@@ -470,13 +482,14 @@ function _handle_buffs(is_server, triggered_proc_events_or_nil, damage_profile, 
 			attacker_param_table.weapon_special = damage_profile.weapon_special
 			attacker_param_table.charge_level = charge_level
 			attacker_param_table.hit_zone_name = hit_zone_name
+			attacker_param_table.attacking_item = attacking_item_or_nil
 
-			attacker_buff_extension_or_nil:add_proc_event(proc_events.on_hit, attacker_param_table)
+			attacker_owner_buff_extension_or_nil:add_proc_event(proc_events.on_hit, attacker_param_table)
 		end
 	end
 
-	if attack_result == attack_results.died and attacker_buff_extension_or_nil and not _already_procced(triggered_proc_events_or_nil, proc_events.on_kill) then
-		local attacker_param_table = attacker_buff_extension_or_nil:request_proc_event_param_table()
+	if attack_result == attack_results.died and attacker_owner_buff_extension_or_nil and not _already_procced(triggered_proc_events_or_nil, proc_events.on_kill) then
+		local attacker_param_table = attacker_owner_buff_extension_or_nil:request_proc_event_param_table()
 
 		if attacker_param_table then
 			attacker_param_table.alternative_fire = alternative_fire
@@ -504,13 +517,14 @@ function _handle_buffs(is_server, triggered_proc_events_or_nil, damage_profile, 
 			attacker_param_table.target_number = target_number
 			attacker_param_table.weapon_special = damage_profile.weapon_special
 			attacker_param_table.charge_level = charge_level
+			attacker_param_table.attacking_item = attacking_item_or_nil
 
-			attacker_buff_extension_or_nil:add_proc_event(proc_events.on_kill, attacker_param_table)
+			attacker_owner_buff_extension_or_nil:add_proc_event(proc_events.on_kill, attacker_param_table)
 		end
 	end
 
-	if damage > 0 and attacker_buff_extension_or_nil and not _already_procced(triggered_proc_events_or_nil, proc_events.on_damage_dealt) then
-		local attacker_param_table = attacker_buff_extension_or_nil:request_proc_event_param_table()
+	if damage > 0 and attacker_owner_buff_extension_or_nil and not _already_procced(triggered_proc_events_or_nil, proc_events.on_damage_dealt) then
+		local attacker_param_table = attacker_owner_buff_extension_or_nil:request_proc_event_param_table()
 
 		if attacker_param_table then
 			attacker_param_table.alternative_fire = alternative_fire
@@ -537,8 +551,9 @@ function _handle_buffs(is_server, triggered_proc_events_or_nil, damage_profile, 
 			attacker_param_table.target_number = target_number
 			attacker_param_table.weapon_special = damage_profile.weapon_special
 			attacker_param_table.charge_level = charge_level
+			attacker_param_table.attacking_item = attacking_item_or_nil
 
-			attacker_buff_extension_or_nil:add_proc_event(proc_events.on_damage_dealt, attacker_param_table)
+			attacker_owner_buff_extension_or_nil:add_proc_event(proc_events.on_damage_dealt, attacker_param_table)
 		end
 	end
 
@@ -567,6 +582,7 @@ function _handle_buffs(is_server, triggered_proc_events_or_nil, damage_profile, 
 				target_param_table.sticky_attack = damage_profile.sticky_attack
 				target_param_table.tags = target_breed_or_nil and target_breed_or_nil.tags
 				target_param_table.weapon_special = damage_profile.weapon_special
+				target_param_table.attacking_item = attacking_item_or_nil
 
 				target_buff_extension_or_nil:add_proc_event(proc_events.on_player_hit_received, target_param_table)
 			end

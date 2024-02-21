@@ -93,6 +93,10 @@ HealthStationSystem._distribute_charges_to_stations = function (self)
 					charges = 0,
 					extension = extension
 				}
+			else
+				local charges = extension:charge_amount()
+
+				extension:track_for_telemetry(charges, true)
 			end
 		end
 
@@ -133,6 +137,7 @@ HealthStationSystem._distribute_charges_to_stations = function (self)
 				local plug = station.charges < 4
 
 				station.extension:assign_distributed_charge(station.charges, plug)
+				station.extension:track_for_telemetry(station.charges, plug)
 			end
 		end
 	end

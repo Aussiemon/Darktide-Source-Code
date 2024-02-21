@@ -28,6 +28,11 @@ BtShootAction.enter = function (self, unit, breed, blackboard, scratchpad, actio
 
 	MinionAttack.init_scratchpad_shooting_variables(unit, scratchpad, action_data, blackboard, breed)
 
+	if action_data.cover_crouch_check then
+		local cover_system = Managers.state.extension:system("cover_system")
+		scratchpad.cover_system = cover_system
+	end
+
 	local target_unit = perception_component.target_unit
 	local attack_allowed = AttackIntensity.minion_can_attack(unit, action_data.attack_intensity_type, target_unit)
 
@@ -72,11 +77,6 @@ BtShootAction.enter = function (self, unit, breed, blackboard, scratchpad, actio
 	end
 
 	scratchpad.strafe_anim_switch_duration = 0
-
-	if action_data.cover_crouch_check then
-		local cover_system = Managers.state.extension:system("cover_system")
-		scratchpad.cover_system = cover_system
-	end
 end
 
 BtShootAction.leave = function (self, unit, breed, blackboard, scratchpad, action_data, t, reason, destroy)
@@ -175,6 +175,7 @@ BtShootAction.run = function (self, unit, breed, blackboard, scratchpad, action_
 end
 
 local DEFAULT_COVER_IGNORE_CROUCH_DISTANCE = 5
+local DEFAULT_IGNORE_CROUCH_DISTANCE = 10
 local DEFAULT_NUM_AGGROED_FOR_FRIENDLY_FIRE_CALLOUT = 8
 
 BtShootAction._start_aiming = function (self, unit, t, scratchpad, action_data)
@@ -209,11 +210,18 @@ BtShootAction._start_aiming = function (self, unit, t, scratchpad, action_data)
 		local aim_anim_events = action_data.aim_anim_events or "aim"
 		local aim_event = Animation.random_event(aim_anim_events)
 
-		if scratchpad.cover_system and aim_event == "aim_crouching" then
-			local nearby_cover_slots = scratchpad.cover_system:find_cover_slots(POSITION_LOOKUP[unit], DEFAULT_COVER_IGNORE_CROUCH_DISTANCE)
+		if action_data.cover_crouch_check and aim_event == "aim_crouching" then
+			local perception_component = scratchpad.perception_component
+			local target_distance = perception_component.target_distance
 
-			if #nearby_cover_slots > 0 then
+			if target_distance <= DEFAULT_IGNORE_CROUCH_DISTANCE then
 				aim_event = action_data.cover_crouch_check_replacement_anim_event
+			else
+				local nearby_cover_slots = scratchpad.cover_system:find_cover_slots(POSITION_LOOKUP[unit], DEFAULT_COVER_IGNORE_CROUCH_DISTANCE)
+
+				if #nearby_cover_slots > 0 then
+					aim_event = action_data.cover_crouch_check_replacement_anim_event
+				end
 			end
 		end
 
@@ -570,6 +578,14 @@ BtShootAction._update_strafe_shooting = function (self, unit, t, scratchpad, act
 
 			if attack_allowed then
 				local cooldown_range = action_data.shoot_cooldown
+				local combat_range_shoot_difficulty_settings = action_data.combat_range_shoot_difficulty_settings
+
+				if combat_range_shoot_difficulty_settings then
+					local behavior_component = scratchpad.behavior_component
+					local combat_range = behavior_component.combat_range
+					cooldown_range = combat_range_shoot_difficulty_settings[combat_range].shoot_cooldown
+				end
+
 				local diff_cooldown_range = Managers.state.difficulty:get_table_entry_by_challenge(cooldown_range)
 				local first_shoot_timing = math.random_range(diff_cooldown_range[1], diff_cooldown_range[2])
 
@@ -615,6 +631,14 @@ BtShootAction._start_cooldown = function (self, unit, t, scratchpad, action_data
 	local cooldown = optional_cooldown_duration
 
 	if not cooldown then
+		local combat_range_shoot_difficulty_settings = action_data.combat_range_shoot_difficulty_settings
+
+		if combat_range_shoot_difficulty_settings then
+			local behavior_component = scratchpad.behavior_component
+			local combat_range = behavior_component.combat_range
+			cooldown_range = combat_range_shoot_difficulty_settings[combat_range].shoot_cooldown
+		end
+
 		local diff_cooldown_range = Managers.state.difficulty:get_table_entry_by_challenge(cooldown_range)
 		cooldown = math.random_range(diff_cooldown_range[1], diff_cooldown_range[2])
 	end

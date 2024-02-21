@@ -247,6 +247,9 @@ weapon_template.actions = {
 				action_name = "action_attack_special",
 				chain_time = 0.4
 			},
+			combat_ability = {
+				action_name = "combat_ability"
+			},
 			grenade_ability = {
 				{
 					action_name = "grenade_ability"
@@ -763,6 +766,9 @@ weapon_template.actions = {
 				action_name = "action_attack_special",
 				chain_time = 0.3
 			},
+			combat_ability = {
+				action_name = "combat_ability"
+			},
 			grenade_ability = {
 				{
 					action_name = "grenade_ability"
@@ -1105,11 +1111,12 @@ weapon_template.actions = {
 	action_right_light_pushfollow = {
 		damage_window_start = 0.20833333333333334,
 		hit_armor_anim = "attack_hit_shield",
-		anim_end_event = "attack_finished",
+		range_mod = 1.25,
 		weapon_handling_template = "time_scale_1",
 		kind = "sweep",
-		range_mod = 1.25,
+		sprint_requires_press_to_interrupt = "true",
 		damage_window_end = 0.2833333333333333,
+		anim_end_event = "attack_finished",
 		anim_event_3p = "attack_swing_right_diagonal",
 		anim_event = "attack_right_diagonal_down",
 		hit_stop_anim = "attack_hit",
@@ -1552,7 +1559,7 @@ weapon_template.base_stats = {
 	}
 }
 weapon_template.traits = {}
-local bespoke_combatsword_p3_traits = table.keys(WeaponTraitsBespokeCombatswordP3)
+local bespoke_combatsword_p3_traits = table.ukeys(WeaponTraitsBespokeCombatswordP3)
 
 table.append(weapon_template.traits, bespoke_combatsword_p3_traits)
 

@@ -1,32 +1,32 @@
 local DialogueQueryQueue = class("DialogueQueryQueue")
+local ESTIMATED_MAX_SIZE = 16
 
 DialogueQueryQueue.init = function (self)
-	self._input_query_queue = {}
-	self._input_query_queue_n = 0
+	self._input_query_queue = Script.new_map(ESTIMATED_MAX_SIZE)
 end
 
 DialogueQueryQueue.get_query = function (self, t)
 	local found_time = math.huge
-	local answer_query = nil
+	local found_query = nil
 
-	for query_time, query in pairs(self._input_query_queue) do
+	for query, query_time in pairs(self._input_query_queue) do
 		if query_time < t and query_time < found_time then
 			found_time = query_time
-			answer_query = query
+			found_query = query
 		end
 	end
 
-	if answer_query then
-		self._input_query_queue[found_time] = nil
+	if found_query then
+		self._input_query_queue[found_query] = nil
 
-		return answer_query
+		return found_query
 	end
 
 	return nil
 end
 
 DialogueQueryQueue.queue_query = function (self, target_time, query)
-	self._input_query_queue[target_time] = query
+	self._input_query_queue[query] = target_time
 end
 
 return DialogueQueryQueue

@@ -59,7 +59,7 @@ MinionShieldExtension.is_blocking = function (self)
 	return shield_component.is_blocking
 end
 
-MinionShieldExtension.can_block_attack = function (self, damage_profile, attacking_unit, attacking_unit_owner_unit, hit_actor)
+MinionShieldExtension.can_block_attack = function (self, damage_profile, attacking_unit, attacking_unit_owner_unit, hit_zone_name)
 	if damage_profile.ignore_shield or not attacking_unit then
 		return false
 	end
@@ -89,11 +89,15 @@ MinionShieldExtension.can_block_attack = function (self, damage_profile, attacki
 	return can_block_from_position
 end
 
-MinionShieldExtension.can_block_from_position = function (self, attacking_unit_position)
+MinionShieldExtension.can_block_from_position = function (self, attacking_unit_position, hit_zone_name)
 	local is_blocking = self._shield_component.is_blocking
 
 	if not is_blocking then
 		return false
+	end
+
+	if hit_zone_name and hit_zone_name == "shield" then
+		return true
 	end
 
 	local blocking_angle = self._template.blocking_angle

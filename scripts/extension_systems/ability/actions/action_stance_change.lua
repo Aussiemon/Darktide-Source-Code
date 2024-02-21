@@ -31,7 +31,7 @@ ActionStanceChange.init = function (self, action_context, action_params, action_
 
 	self._ability_type = action_settings.ability_type or "none"
 	local player_unit = self._player_unit
-	self._specialization_extension = ScriptUnit.extension(player_unit, "specialization_system")
+	self._talent_extension = ScriptUnit.extension(player_unit, "talent_system")
 end
 
 ActionStanceChange.start = function (self, action_settings, t, time_scale, action_start_params)
@@ -93,8 +93,8 @@ ActionStanceChange.start = function (self, action_settings, t, time_scale, actio
 		self._ability_component.cooldown_paused = true
 	end
 
-	local specialization_extension = self._specialization_extension
-	local reload_weapon = specialization_extension:has_special_rule(special_rules.veteran_ranger_combat_ability_reloads_weapon)
+	local talent_extension = self._talent_extension
+	local reload_weapon = talent_extension:has_special_rule(special_rules.veteran_ranger_combat_ability_reloads_weapon)
 
 	if reload_secondary or reload_weapon then
 		local inventory_slot_secondary_component = self._inventory_slot_secondary_component

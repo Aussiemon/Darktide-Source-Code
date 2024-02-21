@@ -331,30 +331,6 @@ PlayerCharacterStateSprinting._wanted_movement = function (self, dt, sprint_char
 	return move_direction, move_speed, new_x, new_y, wants_to_stop, remaining_stamina
 end
 
-PlayerCharacterStateSprinting._check_bump_sound = function (self, locomotion, locomotion_steering, specialization_sprint_template, constants)
-	local current_velocity_flat = Vector3.flat(locomotion.velocity_current)
-	local current_velocity_move_speed = Vector3.length(current_velocity_flat)
-	local previous_velocity_move_speed = self._previous_velocity_move_speed
-
-	if previous_velocity_move_speed then
-		local base_move_speed = constants.move_speed
-		local sprint_move_speed = specialization_sprint_template.sprint_move_speed
-		local sprint_range = sprint_move_speed - base_move_speed
-		local above_velocity_threshold = previous_velocity_move_speed >= base_move_speed + sprint_range * 0.5
-		local lost_enough_move_speed = (previous_velocity_move_speed - current_velocity_move_speed) / previous_velocity_move_speed >= 0.3
-
-		if above_velocity_threshold and lost_enough_move_speed then
-			local velocity_wanted_dir = Vector3.normalize(Vector3.flat(locomotion_steering.velocity_wanted))
-			local position = self._first_person_component.position + velocity_wanted_dir
-			local rotation = Quaternion.look(-velocity_wanted_dir, Vector3.up())
-
-			self._fx_extension:trigger_wwise_event("wwise/events/player/play_sprint_bump", false, position, rotation)
-		end
-	end
-
-	self._previous_velocity_move_speed = current_velocity_move_speed
-end
-
 local ALLOWED_INPUTS_IN_SPRINT = {
 	combat_ability = true,
 	wield = true

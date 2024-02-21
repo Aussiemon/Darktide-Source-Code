@@ -31,10 +31,10 @@ LegacyV2ProximitySystem.init = function (self, extension_system_creation_context
 	self._raycast_write_index = 1
 	self._raycast_max_index = 16
 	self._num_units_that_support_proximity_driven_vo = 0
-	self._near_units_last = Script.new_map(32)
-	self._near_units_new = Script.new_map(32)
+	self._minion_units_proximity_last = Script.new_map(32)
+	self._minion_units_proximity_new = Script.new_map(32)
 	self._cache_delayed_vo = nil
-	self._broadphase_result = {}
+	self._broadphase_result = Script.new_array(128)
 	self._broadphase_system = self._extension_manager:system("broadphase_system")
 	self._distance_based_vo_queries = {}
 	local cb = callback(self, "_async_raycast_result_cb")
@@ -136,7 +136,7 @@ LegacyV2ProximitySystem.on_add_extension = function (self, world, unit, extensio
 
 			if distance_sq and distance_sq <= PROXIMITY_FX_DISTANCE_SQ then
 				extension.is_proximity_fx_enabled = true
-				self._near_units_last[unit] = true
+				self._minion_units_proximity_last[unit] = true
 			else
 				extension.is_proximity_fx_enabled = false
 			end
@@ -344,31 +344,31 @@ LegacyV2ProximitySystem._update_nearby_minions = function (self, broadphase, bro
 	if camera_position then
 		local max_allowed = MAX_ALLOWED_FX
 		local unit_to_extension_map = self._unit_to_extension_map
-		local near_units_new = self._near_units_new
-		local near_units_last = self._near_units_last
+		local minion_units_proximity_new = self._minion_units_proximity_new
+		local minion_units_proximity_last = self._minion_units_proximity_last
 		local num_units_in_broadphase = Broadphase.query(broadphase, camera_position, PROXIMITY_FX_DISTANCE, broadphase_result, MINION_BREED_TYPE)
 		local num_units = math.min(max_allowed, num_units_in_broadphase)
 
 		for i = 1, num_units do
 			local unit = broadphase_result[i]
 
-			if not near_units_last[unit] then
+			if not minion_units_proximity_last[unit] then
 				unit_to_extension_map[unit].is_proximity_fx_enabled = true
 			end
 
-			near_units_new[unit] = true
+			minion_units_proximity_new[unit] = true
 		end
 
-		for unit, _ in pairs(near_units_last) do
-			if not near_units_new[unit] and HEALTH_ALIVE[unit] then
+		for unit, _ in pairs(minion_units_proximity_last) do
+			if not minion_units_proximity_new[unit] and HEALTH_ALIVE[unit] then
 				unit_to_extension_map[unit].is_proximity_fx_enabled = false
 			end
 
-			near_units_last[unit] = nil
+			minion_units_proximity_last[unit] = nil
 		end
 
-		self._near_units_last = near_units_new
-		self._near_units_new = near_units_last
+		self._minion_units_proximity_last = minion_units_proximity_new
+		self._minion_units_proximity_new = minion_units_proximity_last
 	end
 end
 

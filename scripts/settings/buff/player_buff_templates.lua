@@ -1,6 +1,6 @@
 local Attack = require("scripts/utilities/attack/attack")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
-local CheckProcFunctions = require("scripts/settings/buff/validation_functions/check_proc_functions")
+local CheckProcFunctions = require("scripts/settings/buff/helper_functions/check_proc_functions")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local EffectTemplates = require("scripts/settings/fx/effect_templates")
 local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
@@ -8,49 +8,51 @@ local PowerLevelSettings = require("scripts/settings/damage/power_level_settings
 local SpecialRulesSetting = require("scripts/settings/ability/special_rules_settings")
 local Sprint = require("scripts/extension_systems/character_state_machine/character_states/utilities/sprint")
 local Stamina = require("scripts/utilities/attack/stamina")
-local TalentSettings = require("scripts/settings/talent/talent_settings_new")
+local TalentSettings = require("scripts/settings/talent/talent_settings")
 local buff_proc_events = BuffSettings.proc_events
 local buff_stat_buffs = BuffSettings.stat_buffs
 local keywords = BuffSettings.keywords
 local special_rules = SpecialRulesSetting.special_rules
 local stat_buffs = BuffSettings.stat_buffs
 local zealot_1 = TalentSettings.zealot_1
-local templates = {
-	knocked_down_damage_reduction = {
-		predicted = false,
-		class_name = "buff",
-		lerped_stat_buffs = {
-			[stat_buffs.damage_taken_multiplier] = {
-				max = 1,
-				min = 0
-			}
-		},
-		start_func = function (template_data, template_context)
-			local unit = template_context.unit
-			local health_extension = ScriptUnit.extension(unit, "health_system")
-			template_data.health_extension = health_extension
-		end,
-		lerp_t_func = function (t, start_time, duration, template_data, template_context)
-			local health_extension = template_data.health_extension
-			local health_percentage = health_extension:current_health_percent()
-			local active_duration = t - start_time
-			local alive_t = 20
-			local time_percent = 1 - math.min(active_duration, alive_t) / alive_t
+local templates = {}
 
-			if time_percent <= 0 then
-				return 1
-			end
+table.make_unique(templates)
 
-			if time_percent < health_percentage then
-				local full_damage_percentage_diff = 0.2
-				local lerp_t = math.min((health_percentage - time_percent) / full_damage_percentage_diff, 1)
+templates.knocked_down_damage_reduction = {
+	predicted = false,
+	class_name = "buff",
+	lerped_stat_buffs = {
+		[stat_buffs.damage_taken_multiplier] = {
+			max = 1,
+			min = 0
+		}
+	},
+	start_func = function (template_data, template_context)
+		local unit = template_context.unit
+		local health_extension = ScriptUnit.extension(unit, "health_system")
+		template_data.health_extension = health_extension
+	end,
+	lerp_t_func = function (t, start_time, duration, template_data, template_context)
+		local health_extension = template_data.health_extension
+		local health_percentage = health_extension:current_health_percent()
+		local active_duration = t - start_time
+		local alive_t = 20
+		local time_percent = 1 - math.min(active_duration, alive_t) / alive_t
 
-				return lerp_t
-			end
-
-			return 0
+		if time_percent <= 0 then
+			return 1
 		end
-	}
+
+		if time_percent < health_percentage then
+			local full_damage_percentage_diff = 0.2
+			local lerp_t = math.min((health_percentage - time_percent) / full_damage_percentage_diff, 1)
+
+			return lerp_t
+		end
+
+		return 0
+	end
 }
 local MIN_DISTANCE_SQUARED = 2500
 local MAX_DISTANCE_SQUARED = 22500
@@ -200,16 +202,16 @@ templates.coherency_toughness_regen = {
 	},
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
-		template_data.specialization_extension = ScriptUnit.extension(unit, "specialization_system")
+		template_data.talent_extension = ScriptUnit.extension(unit, "talent_system")
 	end,
 	min_max_step_func = function (template_data, template_context)
-		local specialization_extension = template_data.specialization_extension
+		local talent_extension = template_data.talent_extension
 
-		if specialization_extension and specialization_extension:has_special_rule(special_rules.zealot_always_at_least_one_coherency) then
+		if talent_extension and talent_extension:has_special_rule(special_rules.zealot_always_at_least_one_coherency) then
 			return zealot_1.coherency.toughness_min_stack_override
 		end
 
-		if specialization_extension and specialization_extension:has_special_rule(special_rules.zealot_always_at_least_two_coherency) then
+		if talent_extension and talent_extension:has_special_rule(special_rules.zealot_always_at_least_two_coherency) then
 			return 3
 		end
 
@@ -271,7 +273,7 @@ templates.player_toughness_node_buff_low_1 = {
 	stat_buffs = {
 		[stat_buffs.toughness] = 7.5
 	},
-	specialization_overrides = {
+	talent_overrides = {
 		{
 			stat_buffs = {
 				[stat_buffs.toughness] = 15
@@ -304,7 +306,7 @@ templates.player_toughness_node_buff_medium_1 = {
 	stat_buffs = {
 		[stat_buffs.toughness] = 15
 	},
-	specialization_overrides = {
+	talent_overrides = {
 		{
 			stat_buffs = {
 				[stat_buffs.toughness] = 25
@@ -337,7 +339,7 @@ templates.player_toughness_damage_reduction_node_buff_low_1 = {
 	stat_buffs = {
 		[stat_buffs.toughness_damage_taken_modifier] = -0.05
 	},
-	specialization_overrides = {
+	talent_overrides = {
 		{
 			stat_buffs = {
 				[stat_buffs.toughness_damage_taken_modifier] = -0.05
@@ -370,7 +372,7 @@ templates.player_toughness_damage_reduction_node_buff_medium_1 = {
 	stat_buffs = {
 		[stat_buffs.toughness_damage_taken_modifier] = -0.1
 	},
-	specialization_overrides = {
+	talent_overrides = {
 		{
 			stat_buffs = {
 				[stat_buffs.toughness_damage_taken_modifier] = -0.1
@@ -414,7 +416,7 @@ templates.player_armor_pen_node_buff_low_1 = {
 	stat_buffs = {
 		[stat_buffs.rending_multiplier] = 0.05
 	},
-	specialization_overrides = {
+	talent_overrides = {
 		{
 			stat_buffs = {
 				[stat_buffs.rending_multiplier] = 0.05
@@ -447,7 +449,7 @@ templates.player_stamina_node_buff_low_1 = {
 	stat_buffs = {
 		[stat_buffs.stamina_modifier] = 1
 	},
-	specialization_overrides = {
+	talent_overrides = {
 		{
 			stat_buffs = {
 				[stat_buffs.stamina_modifier] = 1
@@ -480,7 +482,7 @@ templates.player_crit_chance_node_buff_low_1 = {
 	stat_buffs = {
 		[stat_buffs.critical_strike_chance] = 0.05
 	},
-	specialization_overrides = {
+	talent_overrides = {
 		{
 			stat_buffs = {
 				[stat_buffs.critical_strike_chance] = 0.05
@@ -513,7 +515,7 @@ templates.player_movement_speed_node_buff_low_1 = {
 	stat_buffs = {
 		[stat_buffs.movement_speed] = 0.05
 	},
-	specialization_overrides = {
+	talent_overrides = {
 		{
 			stat_buffs = {
 				[stat_buffs.movement_speed] = 0.05
@@ -546,7 +548,7 @@ templates.player_coherency_regen_node_buff_low_1 = {
 	stat_buffs = {
 		[stat_buffs.toughness_regen_rate_modifier] = 0.1
 	},
-	specialization_overrides = {
+	talent_overrides = {
 		{
 			stat_buffs = {
 				[stat_buffs.toughness_regen_rate_modifier] = 0.1
@@ -579,7 +581,7 @@ templates.player_warp_charge_node_buff_low_1 = {
 	stat_buffs = {
 		[stat_buffs.warp_charge_amount] = 0.95
 	},
-	specialization_overrides = {
+	talent_overrides = {
 		{
 			stat_buffs = {
 				[stat_buffs.warp_charge_amount] = 0.95
@@ -612,7 +614,7 @@ templates.player_health_node_buff_low_1 = {
 	stat_buffs = {
 		[stat_buffs.max_health_modifier] = 0.05
 	},
-	specialization_overrides = {
+	talent_overrides = {
 		{
 			stat_buffs = {
 				[stat_buffs.max_health_modifier] = 0.05
@@ -645,7 +647,7 @@ templates.player_health_node_buff_medium_1 = {
 	stat_buffs = {
 		[stat_buffs.max_health_modifier] = 0.1
 	},
-	specialization_overrides = {
+	talent_overrides = {
 		{
 			stat_buffs = {
 				[stat_buffs.max_health_modifier] = 0.1
@@ -678,7 +680,7 @@ templates.player_melee_damage_node_buff_low_1 = {
 	stat_buffs = {
 		[stat_buffs.melee_damage] = 0.05
 	},
-	specialization_overrides = {
+	talent_overrides = {
 		{
 			stat_buffs = {
 				[stat_buffs.melee_damage] = 0.05
@@ -711,7 +713,7 @@ templates.player_melee_damage_node_buff_medium_1 = {
 	stat_buffs = {
 		[stat_buffs.melee_damage] = 0.1
 	},
-	specialization_overrides = {
+	talent_overrides = {
 		{
 			stat_buffs = {
 				[stat_buffs.melee_damage] = 0.1
@@ -744,7 +746,7 @@ templates.player_melee_heavy_damage_node_buff_low_1 = {
 	stat_buffs = {
 		[stat_buffs.melee_heavy_damage] = 0.05
 	},
-	specialization_overrides = {
+	talent_overrides = {
 		{
 			stat_buffs = {
 				[stat_buffs.melee_heavy_damage] = 0.05
@@ -777,7 +779,7 @@ templates.player_melee_heavy_damage_node_buff_medium_1 = {
 	stat_buffs = {
 		[stat_buffs.melee_heavy_damage] = 0.1
 	},
-	specialization_overrides = {
+	talent_overrides = {
 		{
 			stat_buffs = {
 				[stat_buffs.melee_heavy_damage] = 0.1
@@ -810,7 +812,7 @@ templates.player_ranged_damage_node_buff_low_1 = {
 	stat_buffs = {
 		[stat_buffs.ranged_damage] = 0.05
 	},
-	specialization_overrides = {
+	talent_overrides = {
 		{
 			stat_buffs = {
 				[stat_buffs.ranged_damage] = 0.05
@@ -843,7 +845,7 @@ templates.player_ranged_damage_node_buff_medium_1 = {
 	stat_buffs = {
 		[stat_buffs.ranged_damage] = 0.1
 	},
-	specialization_overrides = {
+	talent_overrides = {
 		{
 			stat_buffs = {
 				[stat_buffs.ranged_damage] = 0.1
@@ -876,7 +878,7 @@ templates.player_reload_speed_node_buff_low_1 = {
 	stat_buffs = {
 		[stat_buffs.reload_speed] = 0.05
 	},
-	specialization_overrides = {
+	talent_overrides = {
 		{
 			stat_buffs = {
 				[stat_buffs.reload_speed] = 0.05
@@ -909,7 +911,7 @@ templates.player_reload_speed_node_buff_medium_1 = {
 	stat_buffs = {
 		[stat_buffs.reload_speed] = 0.1
 	},
-	specialization_overrides = {
+	talent_overrides = {
 		{
 			stat_buffs = {
 				[stat_buffs.reload_speed] = 0.1
@@ -942,7 +944,7 @@ templates.player_suppression_node_buff_low_1 = {
 	stat_buffs = {
 		[stat_buffs.suppression_dealt] = 0.25
 	},
-	specialization_overrides = {
+	talent_overrides = {
 		{
 			stat_buffs = {
 				[stat_buffs.suppression_dealt] = 0.25
@@ -985,8 +987,8 @@ templates.player_stamina_node_buff_1 = {
 		[stat_buffs.stamina_modifier] = 1
 	}
 }
-templates.player_wounds_node_buff_2 = table.clone(templates.player_wounds_node_buff_1)
-templates.player_wounds_node_buff_2.stats_buffs = {
+templates.player_stamina_node_buff_2 = table.clone(templates.player_stamina_node_buff_1)
+templates.player_stamina_node_buff_2.stats_buffs = {
 	[stat_buffs.stamina_modifier] = 2
 }
 templates.player_max_warp_charge_node_buff_1 = {
@@ -1025,8 +1027,8 @@ templates.player_max_ammo_node_buff_1 = {
 		[stat_buffs.ammo_reserve_capacity] = 0.1
 	}
 }
-templates.player_crit_chance_node_buff_2 = table.clone(templates.player_max_ammo_node_buff_1)
-templates.player_crit_chance_node_buff_2.stats_buffs = {
+templates.player_max_ammo_node_buff_2 = table.clone(templates.player_max_ammo_node_buff_1)
+templates.player_max_ammo_node_buff_2.stats_buffs = {
 	[stat_buffs.ammo_reserve_capacity] = 0.2
 }
 templates.player_coherency_regen_node_buff_1 = {

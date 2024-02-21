@@ -84,9 +84,11 @@ StateMachine.set_initial_state = function (self, state_class, ...)
 end
 
 local function pop_first(first, ...)
-	return first, {
-		...
-	}
+	if first ~= nil then
+		return first, {
+			...
+		}
+	end
 end
 
 StateMachine.update = function (self, dt)

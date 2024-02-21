@@ -28,10 +28,20 @@ BuffVolume.init = function (self, unit, is_server, nav_world)
 	local broadphase_system = extension_manager:system("broadphase_system")
 	self._broadphase = broadphase_system.broadphase
 	local affected_side_name = self:get_data(unit, "affected_side_name")
-	local side_system = extension_manager:system("side_system")
-	local side = side_system:get_side_from_name(affected_side_name)
-	self._affected_side = side
-	self._affected_side_names = side:relation_side_names("allied")
+
+	if affected_side_name == "both" then
+		local side_system = extension_manager:system("side_system")
+		local side = side_system:get_side_from_name("heroes")
+		self._affected_side_names = side:relation_side_names("allied")
+		local side2 = side_system:get_side_from_name("villains")
+
+		table.append(self._affected_side_names, side2:relation_side_names("allied"))
+	else
+		local side_system = extension_manager:system("side_system")
+		local side = side_system:get_side_from_name(affected_side_name)
+		self._affected_side = side
+		self._affected_side_names = side:relation_side_names("allied")
+	end
 
 	self:_calculate_broadphase_size()
 
@@ -61,9 +71,14 @@ local BROADPHASE_RESULTS = {}
 
 BuffVolume.update = function (self, unit, dt, t)
 	local broadphase = self._broadphase
-	local side_names = self._side_names
+	local side_names = self._affected_side_names
 	local broadphase_center = self._broadphase_center:unbox()
 	local broadphase_radius = self._broadphase_radius
+
+	if not self._buffs_enabled then
+		return true
+	end
+
 	local num_results = broadphase:query(broadphase_center, broadphase_radius, BROADPHASE_RESULTS, side_names)
 
 	if num_results == 0 and not self._inverse then
@@ -72,12 +87,10 @@ BuffVolume.update = function (self, unit, dt, t)
 
 	table.clear(TEMP_ALREADY_CHECKED_UNITS)
 
-	if self._buffs_enabled then
-		if self._inverse then
-			self:_update_inverse_buffs(unit, dt, t)
-		else
-			self:_update_buffs(unit, dt, t, num_results)
-		end
+	if self._inverse then
+		self:_update_inverse_buffs(unit, dt, t)
+	else
+		self:_update_buffs(unit, dt, t, num_results)
 	end
 
 	return true
@@ -89,10 +102,15 @@ BuffVolume._update_buffs = function (self, unit, dt, t, num_results)
 
 	for buff_affected_unit, buff_indices in pairs(buff_affected_units) do
 		local is_inside_volume = false
-		local affected_unit_position = POSITION_LOOKUP[buff_affected_unit] + Vector3(0, 0, 0.1)
 
-		if not ALIVE[buff_affected_unit] or Unit.is_point_inside_volume(unit, "volume", affected_unit_position) then
+		if not ALIVE[buff_affected_unit] then
 			is_inside_volume = true
+		else
+			local affected_unit_position = (POSITION_LOOKUP[buff_affected_unit] or Unit.world_position(buff_affected_unit, 1)) + Vector3(0, 0, 0.1)
+
+			if Unit.is_point_inside_volume(unit, "volume", affected_unit_position) then
+				is_inside_volume = true
+			end
 		end
 
 		if not is_inside_volume then
@@ -112,7 +130,7 @@ BuffVolume._update_buffs = function (self, unit, dt, t, num_results)
 				break
 			end
 
-			local affected_unit_position = POSITION_LOOKUP[affected_unit] + Vector3(0, 0, 0.1)
+			local affected_unit_position = (POSITION_LOOKUP[affected_unit] or Unit.world_position(affected_unit, 1)) + Vector3(0, 0, 0.1)
 			local unit_is_inside = Unit.is_point_inside_volume(unit, "volume", affected_unit_position)
 
 			if unit_is_inside then
@@ -357,11 +375,13 @@ BuffVolume.component_data = {
 		ui_name = "Side",
 		options_keys = {
 			"Heroes",
-			"Villains"
+			"Villains",
+			"Both"
 		},
 		options_values = {
 			"heroes",
-			"villains"
+			"villains",
+			"both"
 		}
 	},
 	inverse = {

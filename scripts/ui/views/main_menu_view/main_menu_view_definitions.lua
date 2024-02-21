@@ -53,14 +53,14 @@ character_name.offset = {
 	220,
 	1
 }
-local specialization_name = table.clone(UIFontSettings.body)
-specialization_name.text_horizontal_alignment = "center"
-specialization_name.offset = {
+local archetype_name = table.clone(UIFontSettings.body)
+archetype_name.text_horizontal_alignment = "center"
+archetype_name.offset = {
 	0,
 	260,
 	1
 }
-specialization_name.text_color = Color.terminal_text_body_sub_header(255, true)
+archetype_name.text_color = Color.terminal_text_body_sub_header(255, true)
 local overlay_text_style = table.clone(UIFontSettings.header_2)
 overlay_text_style.offset = {
 	0,
@@ -536,25 +536,8 @@ local widget_definitions = {
 	}, "strike_team_count"),
 	character_info = UIWidget.create_definition({
 		{
-			value = "content/ui/materials/backgrounds/blurred_rectangle",
-			pass_type = "texture",
-			style = {
-				horizontal_alignment = "center",
-				color = Color.black(76.5, true),
-				offset = {
-					0,
-					180,
-					0
-				},
-				size = {
-					440,
-					140
-				}
-			}
-		},
-		{
 			value = "",
-			value_id = "specialization_icon",
+			value_id = "archetype_icon",
 			pass_type = "texture",
 			style = {
 				vertical_alignment = "top",
@@ -584,11 +567,11 @@ local widget_definitions = {
 			style = character_name
 		},
 		{
-			value_id = "character_specialization",
-			style_id = "text_specialization",
+			value_id = "character_title",
+			style_id = "text_archetype",
 			pass_type = "text",
-			value = "Specialization name - 00",
-			style = specialization_name
+			value = "Archetype name - 00",
+			style = archetype_name
 		}
 	}, "character_info"),
 	character_list_background = UIWidget.create_definition({

@@ -53,6 +53,7 @@ local weapon_template = {
 	stamina_template = "default",
 	toughness_template = "default",
 	hud_icon = "content/ui/materials/icons/pickups/default",
+	hide_slot = true,
 	not_player_wieldable = true
 }
 

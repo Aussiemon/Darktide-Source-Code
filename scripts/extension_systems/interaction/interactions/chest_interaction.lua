@@ -7,7 +7,7 @@ ChestInteraction.stop = function (self, world, interactor_unit, unit_data_compon
 		local target_unit = unit_data_component.target_unit
 		local chest_extension = ScriptUnit.extension(target_unit, "chest_system")
 
-		chest_extension:open()
+		chest_extension:open(interactor_unit)
 	end
 end
 

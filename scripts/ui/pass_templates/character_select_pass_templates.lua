@@ -328,11 +328,14 @@ CharacterSelectPassTemplates.character_select = {
 				0,
 				62
 			},
-			material_values = {}
-		},
-		visibility_function = function (content, style)
-			return not not style.material_values.texture_map
-		end
+			material_values = {},
+			color = {
+				0,
+				255,
+				255,
+				255
+			}
+		}
 	},
 	{
 		value_id = "character_portrait",
@@ -383,6 +386,38 @@ CharacterSelectPassTemplates.character_select = {
 
 			color_lerp(default_color, hover_color, progress, text_color)
 		end
+	}
+}
+CharacterSelectPassTemplates.character_info = {
+	{
+		value_id = "character_portrait",
+		style_id = "character_portrait",
+		pass_type = "texture",
+		value = "content/ui/materials/base/ui_portrait_frame_base",
+		style = {
+			vertical_alignment = "center",
+			size = portrait_size,
+			offset = {
+				badge_size[1] + character_info_margin[1],
+				0,
+				1
+			},
+			material_values = {
+				use_placeholder_texture = 1
+			}
+		}
+	},
+	{
+		value = "text",
+		value_id = "character_name",
+		pass_type = "text",
+		style = character_name_style
+	},
+	{
+		value = "text",
+		value_id = "character_title",
+		pass_type = "text",
+		style = character_title_style
 	}
 }
 

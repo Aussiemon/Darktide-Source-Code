@@ -15,11 +15,6 @@ ChunkLodManager.init = function (self, world, mission, local_player)
 	self._current_level_name = nil
 	self._show_all = false
 	self._active = true
-
-	if not mission.level then
-		-- Nothing
-	end
-
 	self._safe_raycast_cb = callback(self, "_async_raycast_result_cb")
 	self._raycast_object = Managers.state.game_mode:create_safe_raycast_object("all", "types", "statics", "collision_filter", "filter_player_mover")
 	self._chunk_units = {}

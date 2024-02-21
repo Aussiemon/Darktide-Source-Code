@@ -5,14 +5,14 @@ local ChatManager = class("ChatManager")
 local SOUND_SETTING_OPTIONS_VOICE_CHAT = table.enum("muted", "voice_activated", "push_to_talk")
 
 local function _sound_setting_option_voice_chat()
-	if Application.user_setting and Application.user_setting("sound_settings") and Application.user_setting("sound_settings").voice_chat then
-		local option = Application.user_setting and Application.user_setting("sound_settings") and Application.user_setting("sound_settings").voice_chat
+	local voice_chat = Application.user_setting and Application.user_setting("sound_settings", "voice_chat")
 
-		if option == 0 then
+	if voice_chat then
+		if voice_chat == 0 then
 			return SOUND_SETTING_OPTIONS_VOICE_CHAT.muted
-		elseif option == 1 then
+		elseif voice_chat == 1 then
 			return SOUND_SETTING_OPTIONS_VOICE_CHAT.voice_activated
-		elseif option == 2 then
+		elseif voice_chat == 2 then
 			return SOUND_SETTING_OPTIONS_VOICE_CHAT.push_to_talk
 		end
 	end
@@ -482,11 +482,13 @@ ChatManager._poll_party = function (self)
 				end)
 			end
 		else
-			for _, session_handle in pairs(self._party_id_session_handles) do
-				self:leave_channel(session_handle)
-			end
+			local party_id_session_handles = self._party_id_session_handles
 
-			self._party_id_session_handles = {}
+			for key, session_handle in pairs(party_id_session_handles) do
+				self:leave_channel(session_handle)
+
+				party_id_session_handles[key] = nil
+			end
 		end
 	end
 end

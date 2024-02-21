@@ -8,6 +8,7 @@ local CLIENT_RPCS = {
 	"rpc_minigame_sync_start",
 	"rpc_minigame_sync_stop",
 	"rpc_minigame_sync_completed",
+	"rpc_minigame_sync_game_state",
 	"rpc_minigame_sync_decode_set_stage",
 	"rpc_minigame_sync_decode_symbols_set_start_time",
 	"rpc_minigame_sync_decode_symbols_set_symbols",
@@ -79,6 +80,15 @@ MinigameSystem.rpc_minigame_sync_completed = function (self, channel_id, unit_id
 	local extension = self._unit_to_extension_map[unit]
 
 	extension:completed()
+end
+
+MinigameSystem.rpc_minigame_sync_game_state = function (self, channel_id, unit_id, is_level_unit, state_id)
+	local unit = Managers.state.unit_spawner:unit(unit_id, is_level_unit)
+	local extension = self._unit_to_extension_map[unit]
+	local minigame = extension:minigame()
+	local state = NetworkLookup.minigame_game_states[state_id]
+
+	minigame:set_state(state)
 end
 
 MinigameSystem.rpc_minigame_sync_decode_set_stage = function (self, channel_id, unit_id, is_level_unit, stage)

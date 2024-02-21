@@ -1,7 +1,4 @@
 local DataServiceBackendCache = require("scripts/managers/data_service/data_service_backend_cache")
-local FixedFrame = require("scripts/utilities/fixed_frame")
-local PlayerManager = require("scripts/foundation/managers/player/player_manager")
-local PlayerSpecializationUtil = require("scripts/utilities/player_specialization/player_specialization")
 local Promise = require("scripts/foundation/utilities/promise")
 local StoreService = class("StoreService")
 

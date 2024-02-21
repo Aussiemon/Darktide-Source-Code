@@ -1,5 +1,8 @@
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local templates = {}
+
+table.make_unique(templates)
+
 local stat_buffs = BuffSettings.stat_buffs
 templates.weapon_trait_bespoke_ogryn_combatblade_p1_crit_chance_on_push = {
 	weapon_trait_bespoke_ogryn_combatblade_p1_crit_chance_on_push = {
@@ -104,11 +107,6 @@ templates.weapon_trait_bespoke_ogryn_combatblade_p1_pass_past_armor_on_heavy_att
 }
 templates.weapon_trait_bespoke_ogryn_combatblade_p1_infinite_melee_cleave_on_crit = {
 	weapon_trait_bespoke_ogryn_combatblade_p1_infinite_melee_cleave_on_crit = {
-		{}
-	}
-}
-templates.weapon_trait_bespoke_ogryn_combatblade_p1_infinite_melee_cleave_on_crit = {
-	weapon_trait_bespoke_ogryn_combatblade_p1_infinite_melee_cleave_on_crit = {
 		{
 			stat_buffs = {
 				[stat_buffs.max_hit_mass_attack_modifier] = 0.65
@@ -163,7 +161,7 @@ templates.weapon_trait_bespoke_ogryn_combatblade_p1_toughness_recovery_on_multip
 		},
 		{
 			buff_data = {
-				replenish_percentage = 0.13,
+				replenish_percentage = 0.14,
 				required_num_hits = 3
 			}
 		},

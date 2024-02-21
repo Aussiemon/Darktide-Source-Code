@@ -1,6 +1,7 @@
 local minigame_settings = {
 	types = table.enum("none", "decode_symbols", "scan"),
-	states = table.enum("none", "active", "completed")
+	states = table.enum("none", "active", "completed"),
+	game_states = table.enum("none", "intro", "gameplay", "transition", "outro")
 }
 minigame_settings.default_minigame_type = minigame_settings.types.decode_symbols
 local num_stages = 4

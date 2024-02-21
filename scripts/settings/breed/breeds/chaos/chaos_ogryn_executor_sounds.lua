@@ -15,7 +15,14 @@ local sound_data = {
 		foley_movement_long = "wwise/events/minions/play_shared_foley_chaos_ogryn_elites_heavy_movement_long",
 		run_foley = "wwise/events/minions/play_shared_foley_chaos_ogryn_elites_heavy_run"
 	},
-	use_proximity_culling = {}
+	use_proximity_culling = {
+		vce_short_attack = false,
+		foley_drastic = false,
+		vce_special_attack = false,
+		executor_cleave = false,
+		executor_sweep = false,
+		vce_long_attack = false
+	}
 }
 
 table.add_missing(sound_data.events, ChaosOgrynCommonSounds.events)

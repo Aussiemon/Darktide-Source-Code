@@ -1,7 +1,7 @@
 local Definitions = require("scripts/ui/hud/elements/mission_speaker_popup/hud_element_mission_speaker_popup_definitions")
-local HudElementMissionSpeakerPopupSettings = require("scripts/ui/hud/elements/mission_speaker_popup/hud_element_mission_speaker_popup_settings")
+local DialogueBreedSettings = require("scripts/settings/dialogue/dialogue_breed_settings")
 local DialogueSpeakerVoiceSettings = require("scripts/settings/dialogue/dialogue_speaker_voice_settings")
-local dialogue_breed_settings = require("scripts/settings/dialogue/dialogue_breed_settings")
+local HudElementMissionSpeakerPopupSettings = require("scripts/ui/hud/elements/mission_speaker_popup/hud_element_mission_speaker_popup_settings")
 local HudElementMissionSpeakerPopup = class("HudElementMissionSpeakerPopup", "HudElementBase")
 
 HudElementMissionSpeakerPopup.init = function (self, parent, draw_layer, start_scale)
@@ -88,7 +88,7 @@ HudElementMissionSpeakerPopup._sync_active_speaker = function (self, dt, t, ui_r
 
 	if is_dialogue_playing then
 		local playing_dialogues_array = dialogue_system:playing_dialogues_array()
-		local mission_givers_settings = dialogue_breed_settings.mission_giver
+		local mission_givers_settings = DialogueBreedSettings.mission_giver
 		local mission_giver_voices = mission_givers_settings.wwise_voices
 
 		for i = 1, #playing_dialogues_array do
@@ -101,10 +101,12 @@ HudElementMissionSpeakerPopup._sync_active_speaker = function (self, dt, t, ui_r
 				break
 			end
 
-			local ww_route = currently_playing.wwise_route
+			if table.contains(mission_giver_voices, current_speaker_name) then
+				local ww_route = currently_playing.wwise_route
 
-			if table.contains(mission_giver_voices, current_speaker_name) and (ww_route == 1 or ww_route == 21) then
-				mission_giver_speaker_name = currently_playing.speaker_name
+				if ww_route == 1 or ww_route == 21 then
+					mission_giver_speaker_name = currently_playing.speaker_name
+				end
 			end
 		end
 	end

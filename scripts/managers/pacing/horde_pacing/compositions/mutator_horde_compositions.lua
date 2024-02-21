@@ -188,7 +188,7 @@ local horde_compositions = {
 		{
 			breeds = {
 				{
-					name = "cultist_mutant",
+					name = "cultist_mutant_mutator",
 					amount = {
 						1,
 						1
@@ -199,7 +199,7 @@ local horde_compositions = {
 		{
 			breeds = {
 				{
-					name = "cultist_mutant",
+					name = "cultist_mutant_mutator",
 					amount = {
 						1,
 						1
@@ -210,7 +210,7 @@ local horde_compositions = {
 		{
 			breeds = {
 				{
-					name = "cultist_mutant",
+					name = "cultist_mutant_mutator",
 					amount = {
 						1,
 						1
@@ -221,7 +221,7 @@ local horde_compositions = {
 		{
 			breeds = {
 				{
-					name = "cultist_mutant",
+					name = "cultist_mutant_mutator",
 					amount = {
 						1,
 						1
@@ -232,7 +232,7 @@ local horde_compositions = {
 		{
 			breeds = {
 				{
-					name = "cultist_mutant",
+					name = "cultist_mutant_mutator",
 					amount = {
 						1,
 						1

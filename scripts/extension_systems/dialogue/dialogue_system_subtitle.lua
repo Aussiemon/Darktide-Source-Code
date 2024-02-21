@@ -1,3 +1,4 @@
+local DialogueCategoryConfig = require("scripts/settings/dialogue/dialogue_category_config")
 local DialogueSpeakerVoiceSettings = require("scripts/settings/dialogue/dialogue_speaker_voice_settings")
 local DialogueSystemSubtitle = class("DialogueSystemSubtitle")
 
@@ -56,10 +57,10 @@ end
 
 DialogueSystemSubtitle.create_subtitle = function (self, currently_playing_subtitle, speaker_name, duration, optional_delay)
 	local dialogue = {
+		is_audible = true,
 		currently_playing_subtitle = currently_playing_subtitle,
 		speaker_name = speaker_name,
-		duration = duration,
-		is_audible = true
+		duration = duration
 	}
 
 	if optional_delay then
@@ -85,14 +86,15 @@ end
 DialogueSystemSubtitle.remove_localized_dialogue = function (self, dialogue)
 	local localized_index = table.index_of(self._playing_localized_dialogues_array, dialogue)
 	local localized_audible_index = table.index_of(self._playing_audible_localized_dialogues_array, dialogue)
-	dialogue.last_audible = nil
 
 	table.remove(self._playing_localized_dialogues_array, localized_index)
 	table.remove(self._playing_audible_localized_dialogues_array, localized_audible_index)
 end
 
 DialogueSystemSubtitle.add_audible_playing_localized_dialogue = function (self, dialogue)
-	table.insert(self._playing_audible_localized_dialogues_array, 1, dialogue)
+	local index = self:subtitle_prio(dialogue)
+
+	table.insert(self._playing_audible_localized_dialogues_array, index, dialogue)
 end
 
 DialogueSystemSubtitle.remove_silent_localized_dialogue = function (self, dialogue)
@@ -115,6 +117,37 @@ end
 
 DialogueSystemSubtitle.playing_audible_localized_dialogues_array = function (self)
 	return self._playing_audible_localized_dialogues_array
+end
+
+DialogueSystemSubtitle.subtitle_prio = function (self, dialogue)
+	local index = 1
+	local category = dialogue.category
+
+	if not category then
+		return index
+	end
+
+	local category_setting = DialogueCategoryConfig[category]
+	local query_score = category_setting.query_score
+	local playing_audible_localized_dialogues_array = self._playing_audible_localized_dialogues_array
+	local playing_prio_dialogue = playing_audible_localized_dialogues_array[#playing_audible_localized_dialogues_array]
+	local highest_prio_vo = -1
+
+	if playing_prio_dialogue then
+		local playing_category = playing_prio_dialogue.category
+
+		if playing_category then
+			local playing_category_setting = DialogueCategoryConfig[playing_category]
+			local playing_query_score = playing_category_setting.query_score
+			highest_prio_vo = playing_query_score
+		end
+	end
+
+	if highest_prio_vo < query_score then
+		index = #playing_audible_localized_dialogues_array + 1
+	end
+
+	return index
 end
 
 return DialogueSystemSubtitle

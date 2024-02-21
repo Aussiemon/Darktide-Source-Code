@@ -1,6 +1,5 @@
 require("scripts/extension_systems/weapon/actions/action_weapon_base")
 
-local AlternateFire = require("scripts/utilities/alternate_fire")
 local Overheat = require("scripts/utilities/overheat")
 local ReloadStates = require("scripts/extension_systems/weapon/utilities/reload_states")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
@@ -21,15 +20,11 @@ end
 ActionReloadState.start = function (self, action_settings, t, time_scale, ...)
 	ActionReloadState.super.start(self, action_settings, t, time_scale, ...)
 
-	if action_settings.stop_alternate_fire and self._alternate_fire_component.is_active then
-		AlternateFire.stop(self._alternate_fire_component, self._peeking_component, self._first_person_extension, self._weapon_tweak_templates_component, self._animation_extension, self._weapon_template, false, self._player_unit, true)
-	end
-
-	local action_reload = self._action_reload_component
+	local action_reload_component = self._action_reload_component
 	local inventory_slot_component = self._inventory_slot_component
 	local reload_template = self._weapon_template.reload_template
 
-	self:_start_reload_state(reload_template, inventory_slot_component, action_reload, t)
+	self:_start_reload_state(reload_template, inventory_slot_component, action_reload_component, t)
 
 	local event_data = self._dialogue_input:get_event_data_payload()
 

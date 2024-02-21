@@ -37,8 +37,21 @@ local sound_data = {
 		}
 	},
 	use_proximity_culling = {
+		vce_combo_attack_single = false,
+		swing_heavy = false,
+		vce_melee_attack_charged_long = false,
+		vce_death_quick = false,
 		footstep_land = false,
-		footstep = false
+		vce_breathing_running = false,
+		vce_melee_attack_charged = false,
+		vce_grunt = false,
+		vce_kick = false,
+		vce_force_field_overload = false,
+		charge = false,
+		vce_melee_attack_short = false,
+		swing = false,
+		footstep = false,
+		vce_mocking_laughter = false
 	}
 }
 

@@ -26,10 +26,6 @@ BtTeleportAction.enter = function (self, unit, breed, blackboard, scratchpad, ac
 
 		locomotion_extension:teleport_to(exit_position)
 
-		local animation_extension = ScriptUnit.extension(unit, "animation_system")
-
-		animation_extension:anim_event("idle")
-
 		local has_outline_system = Managers.state.extension:has_system("outline_system")
 
 		if has_outline_system then
@@ -37,6 +33,10 @@ BtTeleportAction.enter = function (self, unit, breed, blackboard, scratchpad, ac
 
 			outline_system:remove_all_outlines(unit)
 		end
+
+		local animation_extension = ScriptUnit.extension(unit, "animation_system")
+
+		animation_extension:anim_event("idle")
 
 		local behavior_component = Blackboard.write_component(blackboard, "behavior")
 		behavior_component.move_state = "idle"

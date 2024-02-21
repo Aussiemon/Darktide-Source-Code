@@ -3,10 +3,10 @@ local Definitions = require("scripts/ui/hud/elements/tactical_overlay/hud_elemen
 local InputDevice = require("scripts/managers/input/input_device")
 local MissionTypes = require("scripts/settings/mission/mission_types")
 local TextUtils = require("scripts/utilities/ui/text")
+local UIFonts = require("scripts/managers/ui/ui_fonts")
+local UIRenderer = require("scripts/managers/ui/ui_renderer")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local UIWidgetGrid = require("scripts/ui/widget_logic/ui_widget_grid")
-local UIRenderer = require("scripts/managers/ui/ui_renderer")
-local UIFonts = require("scripts/managers/ui/ui_fonts")
 local HudElementTacticalOverlay = class("HudElementTacticalOverlay", "HudElementBase")
 local default_mission_type_icon = "content/ui/materials/icons/mission_types/mission_type_08"
 local default_mission_type_name = "loc_mission_type_default"
@@ -88,16 +88,16 @@ HudElementTacticalOverlay._update_left_panel_elements = function (self, ui_rende
 			circumstance_name_style.size[1],
 			1000
 		}, circumstance_name_font_options)
+		local description_margin = 5
+		local min_height = circumstance_info_widget.style.icon.size[2]
+		local title_height = math.max(min_height, circumstance_name_height)
+		circumstance_name_style.size[2] = title_height
 		local circumstance_description_style = circumstance_info_widget.style.circumstance_description
 		local circumstance_description_font_options = UIFonts.get_font_options_by_style(circumstance_description_style)
 		local _, circumstance_description_height = UIRenderer.text_size(ui_renderer, circumstance_info_content.circumstance_description, circumstance_description_style.font_type, circumstance_description_style.font_size, {
 			circumstance_description_style.size[1],
 			1000
 		}, circumstance_description_font_options)
-		local description_margin = 5
-		local min_height = circumstance_info_widget.style.icon.size[2]
-		local title_height = math.max(min_height, circumstance_name_height)
-		circumstance_name_style.size[2] = title_height
 		circumstance_description_style.offset[2] = title_height + circumstance_name_style.offset[2] + description_margin
 		circumstance_description_style.size[2] = circumstance_description_height
 		local circumstance_height = circumstance_description_style.offset[2] + circumstance_description_style.size[2] + circumstance_info_widget.style.icon.offset[2]

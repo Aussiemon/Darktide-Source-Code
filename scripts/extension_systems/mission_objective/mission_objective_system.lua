@@ -552,11 +552,6 @@ MissionObjectiveSystem.register_objective_synchronizer = function (self, objecti
 	end
 
 	local synchronizer = self._objective_registered_synchronizer[objective_name]
-
-	if synchronizer then
-		-- Nothing
-	end
-
 	self._objective_registered_synchronizer[objective_name] = objective_unit
 end
 

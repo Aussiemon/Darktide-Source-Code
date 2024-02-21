@@ -38,7 +38,7 @@ BotSpawning.despawn_bot_character = function (local_player_id, despawn_safe)
 	end
 end
 
-BotSpawning.despawn_best_bot = function ()
+BotSpawning.despawn_best_bot = function (despawn_safe)
 	local bot_synchronizer_host = Managers.bot:synchronizer_host()
 	local bot_ids = bot_synchronizer_host:active_bot_ids()
 	local local_player_id = next(bot_ids)
@@ -49,7 +49,7 @@ BotSpawning.despawn_best_bot = function ()
 		return
 	end
 
-	BotSpawning.despawn_bot_character(local_player_id)
+	BotSpawning.despawn_bot_character(local_player_id, despawn_safe)
 end
 
 local bot_configs = table.enum("low", "medium", "high")

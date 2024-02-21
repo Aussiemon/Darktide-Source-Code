@@ -59,6 +59,10 @@ SigninLoader.cleanup = function (self)
 	self._load_done = false
 end
 
+SigninLoader.dont_destroy = function (self)
+	return false
+end
+
 implements(SigninLoader, Loader)
 
 return SigninLoader

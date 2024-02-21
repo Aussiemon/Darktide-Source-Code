@@ -9,11 +9,10 @@ XAsyncManager.in_progress = function (self)
 	return not table.is_empty(self._async_blocks)
 end
 
-XAsyncManager.wrap = function (self, async_block, release_function, debug_name)
+XAsyncManager.wrap = function (self, async_block, debug_name)
 	local p = Promise:new()
 	self._async_blocks[async_block] = {
 		promise = p,
-		release_function = release_function,
 		debug_name = debug_name
 	}
 
@@ -22,7 +21,6 @@ end
 
 XAsyncManager.release = function (self, async_block)
 	local promise = self._async_blocks[async_block].promise
-	local release_function = self._async_blocks[async_block].release_function
 	local debug_name = self._async_blocks[async_block].debug_name
 
 	if promise and promise:is_pending() then
@@ -35,23 +33,23 @@ XAsyncManager.release = function (self, async_block)
 		})
 	end
 
-	release_function(async_block)
+	XAsyncBlock.release_block(async_block)
 
 	self._async_blocks[async_block] = nil
 end
 
 XAsyncManager.update = function (self, dt)
-	for async_block, data in pairs(self._async_blocks) do
+	local async_blocks = self._async_blocks
+
+	for async_block, data in pairs(async_blocks) do
 		if not data.promise:is_pending() then
-			local release_function = data.release_function
+			XAsyncBlock.release_block(async_block)
 
-			release_function(async_block)
-
-			self._async_blocks[async_block] = nil
+			async_blocks[async_block] = nil
 		end
 	end
 
-	for async_block, data in pairs(self._async_blocks) do
+	for async_block, data in pairs(async_blocks) do
 		local hr = XAsyncBlock.status(async_block)
 
 		if hr == HRESULT.S_OK then
@@ -80,9 +78,7 @@ XAsyncManager.destroy = function (self)
 			})
 		end
 
-		local release_function = data.release_function
-
-		release_function(async_block)
+		XAsyncBlock.release_block(async_block)
 
 		self._async_blocks[async_block] = nil
 	end

@@ -8,18 +8,18 @@ local PlayerAssistNotifications = {
 			return
 		end
 
-		local assiting_player = Managers.state.player_unit_spawn:owner(assisting_unit)
+		local assisting_player = Managers.state.player_unit_spawn:owner(assisting_unit)
 
-		if not assiting_player then
+		if not assisting_player then
 			return
 		end
 
-		if not assiting_player:is_human_controlled() then
+		if not assisting_player:is_human_controlled() then
 			return
 		end
 
 		local player_unit_spawn_manager = Managers.state.player_unit_spawn
-		local peer_id = assiting_player:peer_id()
+		local peer_id = assisting_player:peer_id()
 		local assist_type_lookup = NetworkLookup.assist_type_lookup[assist_type]
 		local assisted_player = player_unit_spawn_manager:owner(assisted_unit)
 		local assisted_player_channel_id = assisted_player:channel_id()

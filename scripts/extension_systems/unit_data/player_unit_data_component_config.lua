@@ -874,9 +874,9 @@ local PlayerComponentConfig = {
 		active = "bool",
 		num_charges = "ability_charges"
 	},
-	specialization_resource = {
-		max_resource = "specialization_resource",
-		current_resource = "specialization_resource"
+	talent_resource = {
+		max_resource = "talent_resource",
+		current_resource = "talent_resource"
 	},
 	critical_strike = {
 		num_critical_shots = "ammunition",

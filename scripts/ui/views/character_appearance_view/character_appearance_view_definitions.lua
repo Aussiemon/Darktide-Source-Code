@@ -538,6 +538,20 @@ local scenegraph_definition = {
 	}
 }
 local widget_definitions = {
+	transition_fade = UIWidget.create_definition({
+		{
+			style_id = "background",
+			pass_type = "rect",
+			style = {
+				color = Color.black(255, true),
+				offset = {
+					0,
+					0,
+					1
+				}
+			}
+		}
+	}, "screen"),
 	background = UIWidget.create_definition({
 		{
 			style_id = "background",
@@ -1358,7 +1372,7 @@ local legend_inputs = {
 		alignment = "right_alignment",
 		on_pressed_callback = "_randomize_character_appearance",
 		visibility_function = function (parent)
-			return parent._is_character_showing and parent._active_page_name == "appearance" and not parent._is_barber and not parent._loading_overlay_visible
+			return parent._is_character_showing and parent._active_page_name == "appearance" and not parent._is_barber_appearance and not parent._loading_overlay_visible
 		end
 	},
 	{
@@ -1412,6 +1426,20 @@ local animations = {
 					local widget = params.widgets[i]
 					widget.alpha_multiplier = anim_progress
 				end
+			end
+		}
+	},
+	on_level_switch = {
+		{
+			name = "fade_in",
+			end_time = 1.5,
+			start_time = 0.2,
+			init = function (parent, ui_scenegraph, scenegraph_definition, widgets, params)
+				widgets.transition_fade.alpha_multiplier = 1
+			end,
+			update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress, params)
+				local anim_progress = math.easeOutCubic(progress)
+				widgets.transition_fade.alpha_multiplier = 1 - anim_progress
 			end
 		}
 	}

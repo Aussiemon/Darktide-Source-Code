@@ -29,9 +29,9 @@ Crashify.print_breadcrumb = function (crumb, print_func)
 
 	local output = string.format([[
 <<crashify-breadcrumb>>
-			<<timestamp>%f<</timestamp>>
-			<<value>>%s<</value>>
-		<</crashify-breadcrumb>>]], Application.time_since_launch(), crumb)
+	<<timestamp>%f<</timestamp>>
+	<<value>>%s<</value>>
+<</crashify-breadcrumb>>]], Application.time_since_launch(), crumb)
 	print_func = print_func or __raw_print
 
 	print_func(output)
@@ -48,10 +48,10 @@ Crashify.print_exception = function (system, message, print_func)
 
 	local exception = string.format([[
 <<crashify-exception>>
-			<<system>>%s<</system>>
-			<<message>>%s<</message>>
-			<<callstack>>%s<</callstack>>
-		<</crashify-exception>>]], system, message, Script.callstack())
+	<<system>>%s<</system>>
+	<<message>>%s<</message>>
+	<<callstack>>%s<</callstack>>
+<</crashify-exception>>]], system, message, Script.callstack())
 	print_func = print_func or __raw_print
 
 	print_func(exception)

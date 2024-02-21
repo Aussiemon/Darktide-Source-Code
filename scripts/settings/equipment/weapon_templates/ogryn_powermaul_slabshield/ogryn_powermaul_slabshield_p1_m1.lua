@@ -1136,6 +1136,17 @@ weapon_template.actions = {
 			},
 			push = {
 				action_name = "action_push"
+			},
+			combat_ability = {
+				action_name = "combat_ability"
+			},
+			grenade_ability = {
+				{
+					action_name = "grenade_ability"
+				},
+				{
+					action_name = "grenade_ability_quick_throw"
+				}
 			}
 		},
 		block_attack_types = {
@@ -1146,11 +1157,12 @@ weapon_template.actions = {
 	action_right_light_pushfollow = {
 		damage_window_start = 0.16666666666666666,
 		hit_armor_anim = "attack_hit",
-		weapon_handling_template = "time_scale_1",
+		range_mod = 1.25,
 		kind = "sweep",
+		weapon_handling_template = "time_scale_1",
 		attack_direction_override = "push",
 		first_person_hit_stop_anim = "attack_hit",
-		range_mod = 1.25,
+		sprint_requires_press_to_interrupt = "true",
 		damage_window_end = 0.3,
 		anim_end_event = "attack_finished",
 		anim_event_3p = "attack_left_down",
@@ -1194,6 +1206,17 @@ weapon_template.actions = {
 			block = {
 				action_name = "action_block",
 				chain_time = 0.35
+			},
+			combat_ability = {
+				action_name = "combat_ability"
+			},
+			grenade_ability = {
+				{
+					action_name = "grenade_ability"
+				},
+				{
+					action_name = "grenade_ability_quick_throw"
+				}
 			}
 		},
 		anim_end_event_condition_func = function (unit, data, end_reason)
@@ -1256,6 +1279,17 @@ weapon_template.actions = {
 			start_attack = {
 				action_name = "action_melee_start_left",
 				chain_time = 0.4
+			},
+			combat_ability = {
+				action_name = "combat_ability"
+			},
+			grenade_ability = {
+				{
+					action_name = "grenade_ability"
+				},
+				{
+					action_name = "grenade_ability_quick_throw"
+				}
 			}
 		},
 		inner_push_rad = math.pi * 0.55,
@@ -1586,7 +1620,7 @@ weapon_template.stamina_template = "ogryn_powermaul_slabshield_p1_m1"
 weapon_template.toughness_template = "default"
 weapon_template.footstep_intervals = FootstepIntervalsTemplates.slabshield
 weapon_template.traits = {}
-local bespoke_ogryn_powermaul_slabshield_traits = table.keys(WeaponTraitsBespokeOgrynPowerMaulSlabshieldP1)
+local bespoke_ogryn_powermaul_slabshield_traits = table.ukeys(WeaponTraitsBespokeOgrynPowerMaulSlabshieldP1)
 
 table.append(weapon_template.traits, bespoke_ogryn_powermaul_slabshield_traits)
 

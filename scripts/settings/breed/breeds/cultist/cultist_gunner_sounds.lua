@@ -14,10 +14,12 @@ local sound_data = {
 		run_foley = "wwise/events/minions/play_shared_minion_cloth_leather_run_foley"
 	},
 	use_proximity_culling = {
-		vce_death_long = false,
+		footstep_land = false,
 		vce_death = false,
-		vce_hurt = false,
-		stop_vce = false
+		stop_vce = false,
+		vce_death_long = false,
+		footstep = false,
+		vce_hurt = false
 	}
 }
 

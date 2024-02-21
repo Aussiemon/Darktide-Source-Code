@@ -1,5 +1,8 @@
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local templates = {}
+
+table.make_unique(templates)
+
 local stat_buffs = BuffSettings.stat_buffs
 templates.weapon_trait_bespoke_ogryn_gauntlet_p1_power_bonus_on_continuous_fire = {
 	weapon_trait_bespoke_ogryn_gauntlet_p1_power_bonus_on_continuous_fire = {
@@ -54,30 +57,6 @@ templates.weapon_trait_bespoke_ogryn_gauntlet_p1_toughness_on_crit_kills = {
 		},
 		{
 			toughness_fixed_percentage = 0.36
-		}
-	}
-}
-templates.weapon_trait_bespoke_ogryn_gauntlet_p1_windup_increases_power = {
-	weapon_trait_bespoke_ogryn_gauntlet_p1_windup_increases_power_parent = {
-		{
-			stat_buffs = {
-				[stat_buffs.melee_power_level_modifier] = 0.05
-			}
-		},
-		{
-			stat_buffs = {
-				[stat_buffs.melee_power_level_modifier] = 0.1
-			}
-		},
-		{
-			stat_buffs = {
-				[stat_buffs.melee_power_level_modifier] = 0.15
-			}
-		},
-		{
-			stat_buffs = {
-				[stat_buffs.melee_power_level_modifier] = 0.2
-			}
 		}
 	}
 }

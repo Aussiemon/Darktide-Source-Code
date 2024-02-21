@@ -423,8 +423,16 @@ local function _apply_live_nameplate_icon_cb_func(widget, item_id, item)
 	local material_values = icon_style.material_values
 	local item_slot = ItemUtils.item_slot(item)
 	local icon_size = item_slot.item_icon_size
-	material_values.texture_icon = item.icon
-	material_values.icon_size = icon_size
+
+	if item.icon_material and item.icon_material ~= "" then
+		widget_content[item_id] = item.icon_material
+		icon_style.old_icon_size = icon_style.size
+		icon_style.size = icon_size
+	else
+		material_values.texture_icon = item.icon
+		material_values.icon_size = icon_size
+	end
+
 	material_values.use_placeholder_texture = 0
 	widget.content.use_placeholder_texture = material_values.use_placeholder_texture
 end
@@ -441,6 +449,12 @@ local function _remove_live_nameplate_icon_cb_func(widget, item_id, ui_renderer)
 	material_values.icon_size = nil
 	material_values.texture_icon = nil
 	material_values.use_placeholder_texture = 1
+
+	if icon_style.old_icon_size then
+		icon_style.size = icon_style.old_icon_size
+		icon_style.old_icon_size = nil
+	end
+
 	widget.content.use_placeholder_texture = material_values.use_placeholder_texture
 end
 
@@ -1075,13 +1089,25 @@ local function _category_common_pass_templates_init(parent, widget, config, call
 	end
 end
 
+local function _stats_sort_iterator(stats, stats_sorting)
+	local sort_table = stats_sorting or table.keys(stats)
+	local ii = 0
+
+	return function ()
+		ii = ii + 1
+
+		return sort_table[ii], stats[sort_table[ii]]
+	end
+end
+
 local function _add_substat_templates(pass_templates, config)
 	local achievement_definition = config.achievement_definition
 	local stats = achievement_definition.stats
+	local stats_sorting = achievement_definition.stats_sorting
 
-	for name, _ in pairs(stats) do
-		local id_left = string.format("l_substat_%s", name)
-		local id_right = string.format("r_substat_%s", name)
+	for stat_name, _ in _stats_sort_iterator(stats, stats_sorting) do
+		local id_left = string.format("l_substat_%s", stat_name)
+		local id_right = string.format("r_substat_%s", stat_name)
 
 		table.append(pass_templates, {
 			{
@@ -1109,8 +1135,9 @@ local function _init_substat_templates(widget_content, widget_style, parent, con
 	local player_id = player.remote and player.stat_id or player:local_player_id()
 	local achievement_definition = config.achievement_definition
 	local stats = achievement_definition.stats
+	local stats_sorting = achievement_definition.stats_sorting
 
-	for stat_name, stat_settings in pairs(stats) do
+	for stat_name, stat_settings in _stats_sort_iterator(stats, stats_sorting) do
 		local padding = ViewStyles.achievement_margins[1]
 		local bar_left = pass_template_styles.progress_bar.progress_bar.offset[1]
 		local bar_right = bar_left + pass_template_styles.progress_bar.progress_bar.size[1]

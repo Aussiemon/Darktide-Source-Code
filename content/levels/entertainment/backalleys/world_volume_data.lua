@@ -48,6 +48,102 @@ local volume_data = {
 		}
 	},
 	{
+		height = 2.75,
+		type = "content/volume_types/nav_tag_volumes/no_spawn",
+		name = "no_spawn_volume_001",
+		alt_max_vector = {
+			-198.5,
+			-163.3125,
+			-12.5
+		},
+		alt_min_vector = {
+			-198.5,
+			-163.3125,
+			-15.25
+		},
+		bottom_points = {
+			{
+				-202.875,
+				-161.6875,
+				-15.25
+			},
+			{
+				-197.25,
+				-167.5625,
+				-15.25
+			},
+			{
+				-194.25,
+				-164.4375,
+				-15.25
+			},
+			{
+				-200,
+				-158.8125,
+				-15.25
+			}
+		},
+		color = {
+			255,
+			120,
+			120,
+			255
+		},
+		up_vector = {
+			0,
+			0,
+			1
+		}
+	},
+	{
+		height = 2.75,
+		type = "content/volume_types/nav_tag_volumes/no_spawn",
+		name = "no_spawn_volume",
+		alt_max_vector = {
+			-164.5,
+			-197.3125,
+			-12.375
+		},
+		alt_min_vector = {
+			-164.5,
+			-197.3125,
+			-15.125
+		},
+		bottom_points = {
+			{
+				-168.875,
+				-195.6875,
+				-15.125
+			},
+			{
+				-163.25,
+				-201.5625,
+				-15.125
+			},
+			{
+				-160.25,
+				-198.4375,
+				-15.125
+			},
+			{
+				-166,
+				-192.8125,
+				-15.125
+			}
+		},
+		color = {
+			255,
+			120,
+			120,
+			255
+		},
+		up_vector = {
+			0,
+			0,
+			1
+		}
+	},
+	{
 		height = 1.5,
 		type = "content/volume_types/player_mover_blocker",
 		name = "volume_mover_blocker_001",

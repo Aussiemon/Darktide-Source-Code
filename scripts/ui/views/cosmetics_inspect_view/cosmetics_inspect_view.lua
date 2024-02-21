@@ -109,7 +109,7 @@ CosmeticsInspectView.init = function (self, settings, context)
 		end
 	end
 
-	CosmeticsInspectView.super.init(self, Definitions, settings)
+	CosmeticsInspectView.super.init(self, Definitions, settings, context)
 
 	self._pass_input = false
 	self._pass_draw = false

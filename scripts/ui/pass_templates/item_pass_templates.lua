@@ -183,7 +183,6 @@ gear_item_slot_title_text_style.text_horizontal_alignment = "center"
 gear_item_slot_title_text_style.text_vertical_alignment = "bottom"
 gear_item_slot_title_text_style.horizontal_alignment = "center"
 gear_item_slot_title_text_style.vertical_alignment = "top"
-gear_item_slot_title_text_style.vertical_alignment = "top"
 gear_item_slot_title_text_style.size = {
 	500,
 	ItemPassTemplates.gear_icon_size[2]
@@ -1033,6 +1032,8 @@ ItemPassTemplates.ui_item = {
 		pass_type = "texture",
 		value = "content/ui/materials/icons/items/containers/item_container_square",
 		style = {
+			vertical_alignment = "center",
+			horizontal_alignment = "center",
 			scale_to_material = true,
 			material_values = {},
 			offset = {

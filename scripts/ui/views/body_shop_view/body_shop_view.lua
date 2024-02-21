@@ -8,7 +8,7 @@ local BodyShopView = class("BodyShopView", "BaseView")
 BodyShopView.init = function (self, settings, context)
 	self._context = context or {}
 
-	BodyShopView.super.init(self, Definitions, settings)
+	BodyShopView.super.init(self, Definitions, settings, context)
 
 	self._pass_draw = false
 	self._can_exit = true

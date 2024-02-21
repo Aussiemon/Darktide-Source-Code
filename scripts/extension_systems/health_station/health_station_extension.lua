@@ -177,6 +177,9 @@ end
 HealthStationExtension.assign_distributed_charge = function (self, charges, plug)
 	self._distributed_charges = charges
 	self._plug_from_distribution = plug
+end
+
+HealthStationExtension.track_for_telemetry = function (self, charges, plug)
 	local data = {
 		charges = charges,
 		has_battery = plug

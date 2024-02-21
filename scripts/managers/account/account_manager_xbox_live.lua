@@ -140,7 +140,7 @@ AccountManagerXboxLive.show_profile_picker = function (self)
 	local async_task, error_code = XUser.add_user_async(XUserAddOptions.None)
 
 	if async_task then
-		Managers.xasync:wrap(async_task, XUser.release_async_block):next(success_cb, fail_cb):catch(fail_cb)
+		Managers.xasync:wrap(async_task):next(success_cb, fail_cb):catch(fail_cb)
 	else
 		fail_cb()
 	end
@@ -173,7 +173,7 @@ AccountManagerXboxLive.signin_profile = function (self, signin_callback, optiona
 		end
 
 		if async_task then
-			Managers.xasync:wrap(async_task, XUser.release_async_block):next(success_cb, fail_cb):catch(fail_cb)
+			Managers.xasync:wrap(async_task):next(success_cb, fail_cb):catch(fail_cb)
 		else
 			fail_cb()
 
@@ -407,7 +407,7 @@ AccountManagerXboxLive._fetch_sandbox_id = function (self)
 	local async_task, error_code = XboxLive.get_sandbox_id_async()
 
 	if async_task then
-		Managers.xasync:wrap(async_task, XboxLive.release_async_block):next(success_cb, fail_cb):catch(fail_cb)
+		Managers.xasync:wrap(async_task):next(success_cb, fail_cb):catch(fail_cb)
 
 		self._signin_state = SIGNIN_STATES.fetching_sandbox_id
 	else
@@ -741,7 +741,7 @@ AccountManagerXboxLive._handle_user_device_association_change = function (self)
 			local async_task, error_code = XUser.from_device_async(self._active_controller.device_pointer())
 
 			if async_task then
-				Managers.xasync:wrap(async_task, XUser.release_async_block):next(success_cb, fail_cb):catch(fail_cb)
+				Managers.xasync:wrap(async_task):next(success_cb, fail_cb):catch(fail_cb)
 			else
 				fail_cb()
 			end
@@ -887,7 +887,7 @@ AccountManagerXboxLive._cb_open_profile_picker = function (self)
 	local async_task, error_code = XUser.add_user_async(XUserAddOptions.None)
 
 	if async_task then
-		Managers.xasync:wrap(async_task, XUser.release_async_block):next(success_cb, fail_cb):catch(fail_cb)
+		Managers.xasync:wrap(async_task):next(success_cb, fail_cb):catch(fail_cb)
 	else
 		fail_cb()
 	end

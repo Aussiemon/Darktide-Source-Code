@@ -1,5 +1,8 @@
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local templates = {}
+
+table.make_unique(templates)
+
 local stat_buffs = BuffSettings.stat_buffs
 templates.weapon_trait_bespoke_thunderhammer_2h_p1_hit_mass_consumption_reduction_on_kill = {
 	weapon_trait_bespoke_thunderhammer_2h_p1_hit_mass_consumption_reduction_on_kill = {
@@ -117,7 +120,7 @@ templates.weapon_trait_bespoke_thunderhammer_2h_p1_toughness_recovery_on_multipl
 		},
 		{
 			buff_data = {
-				replenish_percentage = 0.13,
+				replenish_percentage = 0.14,
 				required_num_hits = 3
 			}
 		},

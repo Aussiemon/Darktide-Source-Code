@@ -985,14 +985,15 @@ weapon_template.actions = {
 	action_right_light_pushfollow = {
 		damage_window_start = 0.3,
 		hit_armor_anim = "attack_hit_shield",
-		weapon_handling_template = "time_scale_1",
-		anim_end_event = "attack_finished",
 		kind = "sweep",
+		weapon_handling_template = "time_scale_1",
 		first_person_hit_anim = "hit_right_shake",
-		range_mod = 1.25,
 		first_person_hit_stop_anim = "attack_hit",
+		sprint_requires_press_to_interrupt = "true",
+		range_mod = 1.25,
 		attack_direction_override = "right",
 		damage_window_end = 0.4666666666666667,
+		anim_end_event = "attack_finished",
 		anim_event_3p = "attack_swing_right",
 		anim_event = "push_follow_up_01",
 		total_time = 2,
@@ -1804,7 +1805,7 @@ weapon_template.base_stats = {
 	}
 }
 weapon_template.traits = {}
-local bespoke_ogryn_club_p2 = table.keys(WeaponTraitsBespokeOgrynClubP2)
+local bespoke_ogryn_club_p2 = table.ukeys(WeaponTraitsBespokeOgrynClubP2)
 
 table.append(weapon_template.traits, bespoke_ogryn_club_p2)
 

@@ -182,6 +182,7 @@ BtMutantChargerChargeAction._start_navigating = function (self, unit, scratchpad
 	local speed = scratchpad.current_charge_speed or self:_get_min_charge_speed(scratchpad, action_data)
 
 	navigation_extension:set_enabled(true, speed)
+	navigation_extension:stop()
 
 	scratchpad.state = "navigating"
 	scratchpad.min_time_navigating = t + action_data.min_time_navigating

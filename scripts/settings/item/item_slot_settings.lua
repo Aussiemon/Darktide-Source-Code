@@ -142,8 +142,8 @@ local item_slot_settings = {
 		slot_type = "ui",
 		ignore_character_spawning = true,
 		item_icon_size = {
-			30,
-			80
+			40,
+			100
 		}
 	},
 	slot_portrait_frame = {
@@ -153,8 +153,8 @@ local item_slot_settings = {
 		slot_type = "ui",
 		ignore_character_spawning = true,
 		item_icon_size = {
-			60,
-			70
+			90,
+			100
 		}
 	},
 	slot_animation_emote_1 = {

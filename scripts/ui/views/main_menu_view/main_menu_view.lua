@@ -20,7 +20,7 @@ local MainMenuView = class("MainMenuView", "BaseView")
 MainMenuView.init = function (self, settings, context)
 	local definitions = require(definition_path)
 
-	MainMenuView.super.init(self, definitions, settings)
+	MainMenuView.super.init(self, definitions, settings, context)
 
 	self._context = context
 	self._parent = context and context.parent
@@ -290,7 +290,8 @@ MainMenuView._event_profiles_changed = function (self, profiles)
 
 	local profiles = self._character_profiles
 	local num_characters = #profiles or 0
-	local slots_remaining = num_characters < MainMenuViewSettings.max_num_characters and MainMenuViewSettings.max_num_characters - num_characters or 0
+	local max_num_characters = MainMenuViewSettings.max_num_characters
+	local slots_remaining = num_characters < max_num_characters and max_num_characters - num_characters or 0
 	self._widgets_by_name.slots_count.content.text = Localize("loc_main_menu_slots_remaining", true, {
 		count = slots_remaining
 	})
@@ -466,12 +467,8 @@ MainMenuView.update = function (self, dt, t, input_service)
 
 	if self._wallet_element then
 		local wallet_size = self._wallet_element:get_size()
-		local size_addition = {
-			20,
-			20
-		}
-		local width = math.max(wallet_size[1] + size_addition[1], 0)
-		local height = wallet_size[2] + size_addition[2]
+		local width = math.max(wallet_size[1] + 20, 0)
+		local height = wallet_size[2] + 20
 		local scenegraph_size = self._ui_scenegraph.wallet_element_background.size
 
 		if width ~= scenegraph_size[1] or height ~= scenegraph_size[2] then
@@ -581,7 +578,9 @@ MainMenuView._handle_input = function (self, input_service, dt, t)
 				self:_on_character_widget_selected(selected_character_list_index - 1)
 			end
 		elseif input_service:get("navigate_down_continuous") then
-			if selected_character_list_index and selected_character_list_index < num_character_slots and selected_character_list_index <= MainMenuViewSettings.max_num_characters then
+			local max_num_characters = MainMenuViewSettings.max_num_characters
+
+			if selected_character_list_index and selected_character_list_index < num_character_slots and selected_character_list_index <= max_num_characters then
 				self:_on_character_widget_selected(selected_character_list_index + 1)
 			end
 		elseif play_button.visible and play_button.hotspot.disabled ~= true and input_service:get("confirm_pressed") then
@@ -839,17 +838,18 @@ MainMenuView._show_character_details = function (self, show, profile)
 	if show == true then
 		local character_title = ProfileUtils.character_title(profile)
 		local character_level = tostring(profile.current_level) .. " "
-		self._widgets_by_name.character_info.content.character_specialization = string.format("%s %s", character_title, character_level)
+		self._widgets_by_name.character_info.content.character_title = string.format("%s %s", character_title, character_level)
 		self._widgets_by_name.character_info.content.character_name = ProfileUtils.character_name(profile)
-		self._widgets_by_name.character_info.content.specialization_icon = profile.archetype.archetype_badge
+		self._widgets_by_name.character_info.content.archetype_icon = profile.archetype.archetype_badge
 	end
 end
 
 MainMenuView._are_slots_full = function (self)
 	local profiles = self._character_profiles
 	local num_characters = profiles and #profiles or 0
+	local max_num_characters = MainMenuViewSettings.max_num_characters
 
-	return MainMenuViewSettings.max_num_characters <= num_characters
+	return max_num_characters <= num_characters
 end
 
 MainMenuView._set_player_profile_information = function (self, profile, widget)
@@ -884,7 +884,20 @@ MainMenuView._cb_set_player_frame = function (self, widget, item)
 end
 
 MainMenuView._cb_set_player_insignia = function (self, widget, item)
-	widget.style.character_insignia.material_values.texture_map = item.icon
+	local icon_style = widget.style.character_insignia
+	local material_values = icon_style.material_values
+
+	if item.icon_material and item.icon_material ~= "" then
+		if material_values.texture_map then
+			material_values.texture_map = nil
+		end
+
+		widget.content.character_insignia = item.icon_material
+	else
+		material_values.texture_map = item.icon
+	end
+
+	icon_style.color[1] = 255
 end
 
 MainMenuView._request_player_icon = function (self, profile, widget)
@@ -945,6 +958,8 @@ MainMenuView._unload_portrait_icon = function (self, widget)
 		Managers.ui:unload_item_icon(insignia_load_id)
 
 		widget.content.insignia_load_id = nil
+		local icon_style = widget.style.character_insignia
+		icon_style.color[1] = 0
 	end
 end
 

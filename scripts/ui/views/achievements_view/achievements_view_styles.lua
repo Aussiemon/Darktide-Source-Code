@@ -435,8 +435,8 @@ achievement_family_reward_label_style.size = {
 achievement_family_reward_style.icon = {}
 local family_reward_icon_style = achievement_family_reward_style.icon
 family_reward_icon_style.size = {
-	96,
-	96
+	110,
+	110
 }
 family_reward_icon_style.offset = {
 	34,

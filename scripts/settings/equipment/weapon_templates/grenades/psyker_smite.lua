@@ -1,9 +1,11 @@
 local BaseTemplateSettings = require("scripts/settings/equipment/weapon_templates/base_template_settings")
+local BuffSettings = require("scripts/settings/buff/buff_settings")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
 local FootstepIntervalsTemplates = require("scripts/settings/equipment/footstep/footstep_intervals_templates")
 local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
 local SmartTargetingTemplates = require("scripts/settings/equipment/smart_targeting_templates")
+local buff_stat_buffs = BuffSettings.stat_buffs
 local damage_types = DamageSettings.damage_types
 local wield_inputs = PlayerCharacterConstants.wield_inputs
 local weapon_template = {
@@ -503,15 +505,15 @@ weapon_template.actions = {
 	},
 	action_use_power = {
 		use_charge = true,
-		uninterruptible = true,
 		kind = "damage_target",
 		sprint_ready_up_time = 0,
 		use_charge_level = true,
 		fire_time = 0.2,
 		charge_template = "psyker_smite_use_power",
 		allowed_during_sprint = true,
+		uninterruptible = true,
 		anim_event = "attack_charge_shoot",
-		total_time = 1,
+		total_time = 0.8,
 		action_movement_curve = {
 			{
 				modifier = 0.25,
@@ -540,8 +542,12 @@ weapon_template.actions = {
 				action_name = "combat_ability"
 			},
 			wield = {
-				action_name = "action_unwield"
+				action_name = "action_unwield",
+				chain_time = 0.3
 			}
+		},
+		time_scale_stat_buffs = {
+			buff_stat_buffs.smite_attack_speed
 		}
 	},
 	action_inspect = {

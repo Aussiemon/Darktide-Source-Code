@@ -104,6 +104,7 @@ weapon_template.actions = {
 		start_input = "start_attack",
 		kind = "windup",
 		action_priority = 2,
+		invalid_start_action_for_stat_calculation = true,
 		allowed_during_sprint = true,
 		anim_event = "attack_swing_charge_down",
 		stop_input = "attack_cancel",
@@ -170,9 +171,10 @@ weapon_template.actions = {
 		sweep_trail_window_end = 0.5666666666666667,
 		kind = "sweep",
 		first_person_hit_anim = "hit_left_shake",
-		action_priority = 2,
+		invalid_start_action_for_stat_calculation = true,
 		first_person_hit_stop_anim = "attack_hit",
 		allowed_during_sprint = true,
+		action_priority = 2,
 		special_active_hit_stop_armor_anim = "attack_hit_shield",
 		damage_window_end = 0.5666666666666667,
 		anim_end_event = "attack_finished",
@@ -288,7 +290,7 @@ weapon_template.actions = {
 		kind = "sweep",
 		first_person_hit_anim = "hit_down_shake",
 		action_priority = 2,
-		weapon_handling_template = "time_scale_1_1",
+		invalid_start_action_for_stat_calculation = true,
 		anim_event_3p = "attack_swing_heavy_down_folded",
 		first_person_hit_stop_anim = "hit_down_shake",
 		allowed_during_sprint = true,
@@ -297,6 +299,7 @@ weapon_template.actions = {
 		special_active_hit_stop_anim = "attack_hit",
 		anim_end_event = "attack_finished",
 		attack_direction_override = "down",
+		weapon_handling_template = "time_scale_1_1",
 		uninterruptible = true,
 		anim_event = "attack_swing_heavy_down_folded",
 		hit_stop_anim = "attack_hit",
@@ -1296,15 +1299,16 @@ weapon_template.actions = {
 	action_light_pushfollow = {
 		damage_window_start = 0.4,
 		hit_armor_anim = "attack_hit_shield",
-		weapon_handling_template = "time_scale_1_2",
-		anim_end_event = "attack_finished",
 		kind = "sweep",
+		weapon_handling_template = "time_scale_1_2",
 		first_person_hit_anim = "hit_right_shake",
 		action_priority = 1,
-		first_person_hit_stop_anim = "attack_hit",
 		range_mod = 1.25,
-		attack_direction_override = "down",
+		first_person_hit_stop_anim = "attack_hit",
+		sprint_requires_press_to_interrupt = "true",
 		damage_window_end = 0.5,
+		attack_direction_override = "down",
+		anim_end_event = "attack_finished",
 		anim_event_3p = "attack_swing_down_slow",
 		anim_event = "attack_swing_down_right",
 		total_time = 2,
@@ -1435,8 +1439,14 @@ weapon_template.actions = {
 				chain_time = 0.5
 			},
 			start_attack = {
-				action_name = "action_melee_start_left",
-				chain_time = 0.5
+				{
+					action_name = "action_melee_start_left_special",
+					chain_time = 0.5
+				},
+				{
+					action_name = "action_melee_start_left",
+					chain_time = 0.5
+				}
 			}
 		},
 		inner_push_rad = math.pi * 0.25,
@@ -1768,7 +1778,7 @@ weapon_template.base_stats = {
 	}
 }
 weapon_template.traits = {}
-local bespoke_ogryn_club_p1 = table.keys(WeaponTraitsBespokeOgrynClubP1)
+local bespoke_ogryn_club_p1 = table.ukeys(WeaponTraitsBespokeOgrynClubP1)
 
 table.append(weapon_template.traits, bespoke_ogryn_club_p1)
 

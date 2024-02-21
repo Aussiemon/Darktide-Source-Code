@@ -39,6 +39,20 @@ local templates = {
 		sfx_name_start = "wwise/events/minions/play_beast_of_nurgle_vomit_aoe",
 		sfx_name_stop = "wwise/events/minions/stop_beast_of_nurgle_vomit_aoe"
 	},
+	nurgle_slime_world = {
+		end_pressure = 15,
+		start_pressure = 20,
+		vfx_name_filled = "content/fx/particles/liquid_area/beast_of_nurgle_slime",
+		sfx_name_stop = "wwise/events/minions/stop_beast_of_nurgle_vomit_aoe",
+		ignore_bot_threat = true,
+		max_liquid = 100,
+		cell_size = 1,
+		life_time = 10,
+		spawn_brush_size = 1,
+		sfx_name_start = "wwise/events/minions/play_beast_of_nurgle_vomit_aoe",
+		in_liquid_buff_template_name = "cm_habs_tree_in_slime",
+		spread_function = LiquidSpread.pour
+	},
 	toxic_gas = {
 		z_cell_size = 5,
 		end_pressure = 30,

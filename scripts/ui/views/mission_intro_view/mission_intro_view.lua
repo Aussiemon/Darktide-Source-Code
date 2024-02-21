@@ -36,7 +36,7 @@ MissionIntroView.init = function (self, settings, context)
 	local backend_mission_id = Managers.mechanism:backend_mission_id()
 	self._seed = _generate_seed(backend_mission_id)
 
-	MissionIntroView.super.init(self, Definitions, settings)
+	MissionIntroView.super.init(self, Definitions, settings, context)
 
 	self._pass_draw = false
 	self._can_exit = not context or context.can_exit
@@ -463,7 +463,7 @@ MissionIntroView.dialogue_system = function (self)
 	local world = world_spawner:world()
 	local extension_manager = Managers.ui:world_extension_manager(world)
 
-	return extension_manager:system_by_extension("DialogueActorExtension")
+	return extension_manager:system_by_extension("DialogueExtension")
 end
 
 return MissionIntroView

@@ -2,9 +2,7 @@ require("scripts/extension_systems/behavior/nodes/bt_node")
 
 local Animation = require("scripts/utilities/animation")
 local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
-local DialogueBreedSettings = require("scripts/settings/dialogue/dialogue_breed_settings")
 local MinionMovement = require("scripts/utilities/minion_movement")
-local Vo = require("scripts/utilities/vo")
 local BtErraticFollowAction = class("BtErraticFollowAction", "BtNode")
 BtErraticFollowAction.TIME_TO_FIRST_EVALUATE = 0.5
 BtErraticFollowAction.CONSECUTIVE_EVALUATE_INTERVAL = 0.25
@@ -32,12 +30,6 @@ BtErraticFollowAction.enter = function (self, unit, breed, blackboard, scratchpa
 	end
 
 	scratchpad.time_to_next_evaluate = t + BtErraticFollowAction.TIME_TO_FIRST_EVALUATE
-	local follow_vo_interval_t = DialogueBreedSettings[breed.name].follow_vo_interval_t
-
-	if action_data.vo_event and follow_vo_interval_t then
-		scratchpad.follow_vo_interval_t = follow_vo_interval_t
-		scratchpad.next_follow_vo_t = t + scratchpad.follow_vo_interval_t
-	end
 
 	if action_data.effect_template then
 		local fx_system = Managers.state.extension:system("fx_system")
@@ -81,15 +73,6 @@ BtErraticFollowAction.run = function (self, unit, breed, blackboard, scratchpad,
 	local behavior_component = scratchpad.behavior_component
 	local perception_component = scratchpad.perception_component
 	local target_unit = perception_component.target_unit
-	local vo_event = action_data.vo_event
-	local next_follow_vo_t = scratchpad.next_follow_vo_t
-
-	if vo_event and next_follow_vo_t and next_follow_vo_t < t then
-		Vo.enemy_generic_vo_event(unit, vo_event, breed.name)
-
-		scratchpad.next_follow_vo_t = t + scratchpad.follow_vo_interval_t
-	end
-
 	local should_start_idle, should_be_idling = MinionMovement.should_start_idle(scratchpad, behavior_component)
 
 	if should_start_idle or should_be_idling then

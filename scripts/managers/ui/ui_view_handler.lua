@@ -114,9 +114,12 @@ UIViewHandler.close_all_views = function (self, force_close, optional_excepted_v
 end
 
 UIViewHandler.close_view = function (self, view_name, force_close)
-	local force_close = Managers.account:leaving_game() or force_close
+	force_close = force_close or Managers.account:leaving_game()
 	local active_views_data = self._active_views_data
 	local view_data = active_views_data[view_name]
+	local instance = view_data.instance
+	local entered = instance:entered()
+	force_close = force_close or not entered
 
 	if view_data.closing and not force_close then
 		Log.error("UIViewHandler", "View with name: %s has already been marked for destruction", view_name)
@@ -125,10 +128,11 @@ UIViewHandler.close_view = function (self, view_name, force_close)
 	end
 
 	view_data.closing = true
-	local instance = view_data.instance
 	instance.closing_view = true
 
-	instance:trigger_on_exit_animation()
+	if entered then
+		instance:trigger_on_exit_animation()
+	end
 
 	local view_settings = self:settings_by_view_name(view_name)
 	local use_transition_ui = view_settings.use_transition_ui

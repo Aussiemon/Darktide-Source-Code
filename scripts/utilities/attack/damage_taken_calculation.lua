@@ -130,6 +130,7 @@ end
 
 function _calculate_toughness_damage_player(damage_amount, damage_profile, attack_type, attack_direction, toughness_template, weapon_toughness_template, current_toughness_damage, movement_state, attacked_unit_stat_buffs, attacked_unit_keywords, instakill, attacked_unit)
 	local toughness_bonus_flat = attacked_unit_stat_buffs.toughness_bonus_flat or 0
+	current_toughness_damage = math.max(current_toughness_damage - toughness_bonus_flat, 0)
 	local toughness_extra = attacked_unit_stat_buffs.toughness or 0
 	local toughness_bonus = attacked_unit_stat_buffs.toughness_bonus or 1
 	local template_max_toughness = toughness_template.max

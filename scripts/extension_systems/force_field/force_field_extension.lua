@@ -1,5 +1,5 @@
 local SpecialRulesSetting = require("scripts/settings/ability/special_rules_settings")
-local TalentSettings = require("scripts/settings/talent/talent_settings_new")
+local TalentSettings = require("scripts/settings/talent/talent_settings")
 local ForceFieldExtension = class("ForceFieldExtension")
 local special_rules = SpecialRulesSetting.special_rules
 local talent_settings = TalentSettings.psyker_3.combat_ability
@@ -74,8 +74,8 @@ ForceFieldExtension.init = function (self, extension_init_context, unit, extensi
 	}
 	local owner_unit = self.owner_unit
 	self.buff_extension = ScriptUnit.extension(owner_unit, "buff_system")
-	self.specialization_extension = ScriptUnit.extension(owner_unit, "specialization_system")
-	local sphere_shield = self.specialization_extension:has_special_rule(special_rules.psyker_sphere_shield)
+	self.talent_extension = ScriptUnit.extension(owner_unit, "talent_system")
+	local sphere_shield = self.talent_extension:has_special_rule(special_rules.psyker_sphere_shield)
 	self._sphere_shield = sphere_shield
 	local duration = talent_settings.duration
 	local sphere_duration = talent_settings.sphere_duration
@@ -94,8 +94,8 @@ ForceFieldExtension.init = function (self, extension_init_context, unit, extensi
 	self._end_shield_buff_template_name = nil
 
 	if is_server then
-		local specialization_extension = ScriptUnit.has_extension(owner_unit, "specialization_system")
-		local has_special_rule = specialization_extension and specialization_extension:has_special_rule(special_rules.psyker_boost_allies_in_sphere)
+		local talent_extension = ScriptUnit.has_extension(owner_unit, "talent_system")
+		local has_special_rule = talent_extension and talent_extension:has_special_rule(special_rules.psyker_boost_allies_in_sphere)
 
 		if has_special_rule and sphere_shield then
 			self._in_sheild_buff_template_name = "psyker_boost_allies_in_sphere_buff"

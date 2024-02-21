@@ -3,7 +3,7 @@ local Definitions = require("scripts/ui/views/account_profile_view/account_profi
 local AccountProfileView = class("AccountProfileView", "TabbedMenuViewBase")
 
 AccountProfileView.init = function (self, settings, context)
-	AccountProfileView.super.init(self, Definitions, settings)
+	AccountProfileView.super.init(self, Definitions, settings, context)
 
 	self._pass_draw = false
 end

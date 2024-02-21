@@ -178,6 +178,8 @@ Dialogue.component_data = {
 			"Veteran, Male, The Loose Cannon",
 			"Vocator A",
 			"Vocator B",
+			"Mourningstar Confessor",
+			"Mourningstar Wing Commander",
 			"Zealot, Female, The Crusader",
 			"Zealot, Female, The Fanatic",
 			"Zealot, Male, The Crusader",
@@ -242,6 +244,8 @@ Dialogue.component_data = {
 			"veteran_male_b",
 			"vocator_a",
 			"vocator_b",
+			"mourningstar_confessor_a",
+			"mourningstar_wing_commander_a",
 			"zealot_female_a",
 			"zealot_female_b",
 			"zealot_male_a",
@@ -299,7 +303,7 @@ Dialogue.component_data = {
 		ui_name = "Enabled"
 	},
 	extensions = {
-		"DialogueActorExtension"
+		"DialogueExtension"
 	}
 }
 

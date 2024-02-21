@@ -11,11 +11,16 @@ UICharacterProfilePackageLoader.init = function (self, unique_id, item_definitio
 end
 
 UICharacterProfilePackageLoader.destroy = function (self)
-	self:_unload_all()
+	local packages_to_unload = {}
+
+	self:_unload_all(packages_to_unload)
+	self:_unload_packages(packages_to_unload)
 end
 
 UICharacterProfilePackageLoader.load_profile = function (self, profile)
-	self:_unload_all()
+	local packages_to_unload = {}
+
+	self:_unload_all(packages_to_unload)
 
 	local loading_items = {}
 	local loadout = profile.loadout
@@ -27,16 +32,18 @@ UICharacterProfilePackageLoader.load_profile = function (self, profile)
 		self:load_slot_item(slot_id, item)
 	end
 
+	self:_unload_packages(packages_to_unload)
+
 	return loading_items
 end
 
-UICharacterProfilePackageLoader._unload_all = function (self)
+UICharacterProfilePackageLoader._unload_all = function (self, packages_to_unload)
 	for slot_id, _ in pairs(self._slots_item_loaded) do
-		self:_unload_slot(slot_id)
+		self:_unload_slot(slot_id, packages_to_unload)
 	end
 
 	for slot_id, _ in pairs(self._slots_loading_data) do
-		self:_unload_slot(slot_id)
+		self:_unload_slot(slot_id, packages_to_unload)
 	end
 
 	self._slots_item_loaded = {}
@@ -67,13 +74,16 @@ UICharacterProfilePackageLoader.is_all_loaded = function (self)
 end
 
 UICharacterProfilePackageLoader.unload_slot = function (self, slot_id)
-	self:_unload_slot(slot_id)
+	local packages_to_unload = {}
+
+	self:_unload_slot(slot_id, packages_to_unload)
+	self:_unload_packages(packages_to_unload)
 end
 
 UICharacterProfilePackageLoader.load_slot_item = function (self, slot_id, item, complete_callback)
-	local item_name = item.name
+	local packages_to_unload = {}
 
-	self:_unload_slot(slot_id)
+	self:_unload_slot(slot_id, packages_to_unload)
 
 	if not item then
 		if complete_callback then
@@ -92,6 +102,7 @@ UICharacterProfilePackageLoader.load_slot_item = function (self, slot_id, item, 
 		packages_to_load[#packages_to_load + 1] = package_name
 	end
 
+	local item_name = item.name
 	local num_packages_to_load = #packages_to_load
 
 	if num_packages_to_load > 0 then
@@ -125,6 +136,8 @@ UICharacterProfilePackageLoader.load_slot_item = function (self, slot_id, item, 
 			complete_callback()
 		end
 	end
+
+	self:_unload_packages(packages_to_unload)
 end
 
 UICharacterProfilePackageLoader.cb_on_slot_item_package_loaded = function (self, slot_id, item_name, package_name, complete_callback)
@@ -156,19 +169,29 @@ UICharacterProfilePackageLoader.cb_on_slot_item_package_loaded = function (self,
 	end
 end
 
-UICharacterProfilePackageLoader._unload_slot = function (self, slot_id)
+UICharacterProfilePackageLoader._unload_slot = function (self, slot_id, packages_to_unload)
 	local package_manager = Managers.package
 	local packages = self._slots_package_ids[slot_id]
 
 	if packages then
 		for i = 1, #packages do
-			package_manager:release(packages[i])
+			packages_to_unload[#packages_to_unload + 1] = packages[i]
 		end
 	end
 
 	self._slots_item_loaded[slot_id] = nil
 	self._slots_loading_data[slot_id] = nil
 	self._slots_package_ids[slot_id] = nil
+end
+
+UICharacterProfilePackageLoader._unload_packages = function (self, packages_to_unload)
+	local package_manager = Managers.package
+
+	for i = 1, #packages_to_unload do
+		package_manager:release(packages_to_unload[i])
+	end
+
+	table.clear(packages_to_unload)
 end
 
 return UICharacterProfilePackageLoader

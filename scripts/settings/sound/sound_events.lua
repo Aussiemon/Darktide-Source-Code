@@ -137,7 +137,8 @@ local sound_events = {
 	"wwise/events/world/play_int_battery_pick_up",
 	"wwise/events/world/stop_hunting_grounds_occasionals",
 	"wwise/events/minions/play_loc_captain_twin_male_a__mission_twins_arrival_04_a_01_ambisonics",
-	"wwise/events/world/play_event_twins_arena_gas_wave_ambisonics"
+	"wwise/events/world/play_event_twins_arena_gas_wave_ambisonics",
+	"wwise/events/minions/play_weapon_netgunner_interupted"
 }
 
 return sound_events

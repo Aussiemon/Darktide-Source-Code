@@ -17,7 +17,11 @@ local sound_data = {
 		vce_attack = "wwise/events/minions/play_enemy_poxwalker_vce_attack",
 		run_foley = "wwise/events/minions/play_shared_minion_cloth_leather_run_foley"
 	},
-	use_proximity_culling = {}
+	use_proximity_culling = {
+		vce_attack = false,
+		vce_stop_all = false,
+		vce_special_attack = false
+	}
 }
 
 return sound_data

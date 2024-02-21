@@ -103,6 +103,12 @@ HumanInputHandler.init = function (self, player, is_server, client_clock_handler
 
 	self._input_settings = settings.input_settings
 	self._input_cache = input_cache
+	local input_cache_size = #input_cache
+	self._send_array = Script.new_array(input_cache_size)
+
+	for i = 1, input_cache_size do
+		self._send_array[i] = {}
+	end
 end
 
 HumanInputHandler.initialize_client_fixed_frame = function (self, frame, input_service, yaw, pitch, roll)
@@ -240,45 +246,61 @@ end
 
 HumanInputHandler.update = function (self, dt, t, input_service)
 	local frame = self._frame
+	local last_frame_acknowledged = self._last_frame_acknowledged
+	local last_sent_frame = self._last_sent_frame
 
 	if self._is_server then
 		self:frame_parsed(frame)
-	elseif frame and self._last_frame_acknowledged < frame and Managers.state.game_session:can_send_session_bound_rpcs() and (not self._last_sent_frame or self._last_sent_frame < frame) then
+	elseif frame and last_frame_acknowledged < frame and (not last_sent_frame or last_sent_frame < frame) and Managers.state.game_session:can_send_session_bound_rpcs() then
 		local input_cache = self._input_cache
 		local start_frame = nil
+		local send_buffer_size = self._send_buffer_size
 
-		if self._send_buffer_size < frame - self._last_frame_acknowledged then
-			start_frame = frame - self._send_buffer_size + 1
+		if send_buffer_size < frame - last_frame_acknowledged then
+			start_frame = frame - send_buffer_size + 1
 		else
-			start_frame = self._last_frame_acknowledged + 1
+			start_frame = last_frame_acknowledged + 1
 		end
 
-		local end_frame_offset = self._frame - start_frame
-		local send_array = {}
+		local end_frame_offset = frame - start_frame
+		local send_array = self._send_array
 		local start_index = self:_buffer_index(start_frame)
 		local end_index = self:_buffer_index(start_frame + end_frame_offset)
 
 		if start_index <= end_index then
 			for i = 1, #input_cache do
-				send_array[i] = {
-					unpack(input_cache[i], start_index, end_index)
-				}
+				local _input_cache = input_cache[i]
+				local _send_array = send_array[i]
+
+				for j = start_index, end_index do
+					_send_array[j - start_index + 1] = _input_cache[j]
+				end
 			end
 		else
 			local max_index = self._input_buffer_size
+			local wrap_offset = max_index - start_index + 1
 
 			for i = 1, #input_cache do
-				local cache = input_cache[i]
-				local array = {
-					unpack(cache, start_index, max_index)
-				}
-				local field_filled = max_index - start_index + 1
+				local _input_cache = input_cache[i]
+				local _send_array = send_array[i]
 
-				for j = 1, end_index do
-					array[j + field_filled] = cache[j]
+				for j = start_index, max_index do
+					_send_array[j - start_index + 1] = _input_cache[j]
 				end
 
-				send_array[i] = array
+				for j = 1, end_index do
+					_send_array[wrap_offset + j] = _input_cache[j]
+				end
+			end
+		end
+
+		local curr_send_size = #send_array[1]
+
+		for i = 1, #send_array do
+			local _send_array = send_array[i]
+
+			for j = 2 + end_frame_offset, curr_send_size do
+				_send_array[j] = nil
 			end
 		end
 

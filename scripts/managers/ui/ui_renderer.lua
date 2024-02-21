@@ -1043,12 +1043,12 @@ UIRenderer.draw_texture_uv = function (self, material, position, size, uvs, colo
 	local gui_position = Vector3(position[1] * scale, position[2] * scale, position[3] or 0)
 	local gui_size = Vector3(size[1] * scale, size[2] * scale, size[3] or 0)
 
-	return UIRenderer.script_draw_bitmap_uv(self, material, uvs, gui_position, gui_size, color, retained_id)
+	return UIRenderer.script_draw_bitmap_uv(self, material, gui_position, gui_size, uvs, color, retained_id)
 end
 
 UIRenderer.draw_texture_rotated = function (self, material, size, position, angle, pivot, color, optional_uvs, retained_id)
 	local scale = self.scale
-	size = Gui.scale_vector3(size, scale)
+	size = UIResolution.scale_vector(size, scale)
 	local tm = Rotation2D(Vector3.zero(), angle, Vector2(UIResolution.scale_lua_vector2(pivot, scale)))
 	tm = Rotation2D.translate(tm, position, scale)
 	local layer = math.max(position[3], 1)

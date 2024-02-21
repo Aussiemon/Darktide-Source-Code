@@ -271,8 +271,8 @@ HudElementPlayerPanelBase._update_player_features = function (self, dt, t, playe
 	local pocketable_small_hud_icon = nil
 
 	if not dead and visual_loadout_extension then
-		carrying_pocketable, pocketable_hud_icon = self:_has_player_pocketable(inventory_component, visual_loadout_extension, "slot_pocketable")
-		carrying_pocketable_small, pocketable_small_hud_icon = self:_has_player_pocketable(inventory_component, visual_loadout_extension, "slot_pocketable_small")
+		carrying_pocketable, pocketable_hud_icon = self:_has_item_in_slot(inventory_component, visual_loadout_extension, "slot_pocketable")
+		carrying_pocketable_small, pocketable_small_hud_icon = self:_has_item_in_slot(inventory_component, visual_loadout_extension, "slot_pocketable_small")
 	end
 
 	if disabled and not hogtied and not consumed then
@@ -297,26 +297,28 @@ HudElementPlayerPanelBase._update_player_features = function (self, dt, t, playe
 	end
 
 	if supported_features.throwables then
-		local throwables_status, throwables_visible = self:_get_weapon_throwables_status(ability_extension)
-		throwables_visible = throwables_visible and not dead and not hogtied
+		local grenade_ability_status, grenade_ability_visible, grenade_ability_hud_icon = self:_get_grenade_ability_status(player, dead, inventory_component, visual_loadout_extension, ability_extension)
+		grenade_ability_visible = grenade_ability_visible and not dead and not hogtied
 
-		if throwables_status ~= self._throwables_status or throwables_visible ~= self._throwables_visible then
-			self:_set_throwables_status(throwables_status, throwables_visible, ui_renderer)
+		if grenade_ability_status ~= self._grenade_ability_status or grenade_ability_visible ~= self._grenade_ability_visible or grenade_ability_hud_icon ~= self._grenade_ability_hud_icon then
+			self:_update_grenade_ability_presentation(grenade_ability_status, grenade_ability_visible, grenade_ability_hud_icon, ui_renderer)
 
-			self._throwables_status = throwables_status
-			self._throwables_visible = throwables_visible
+			self._grenade_ability_status = grenade_ability_status
+			self._grenade_ability_visible = grenade_ability_visible
+			self._grenade_ability_hud_icon = grenade_ability_hud_icon
 		end
 	end
 
 	if supported_features.ammo then
-		local ammo_status, ammo_visible = self:_get_weapon_ammo_status(unit_data_extension, visual_loadout_extension)
+		local ammo_status, ammo_visible, ammo_hud_icon = self:_get_weapon_ammo_status(player, dead, unit_data_extension, visual_loadout_extension)
 		ammo_visible = ammo_visible and not dead and not hogtied
 
-		if ammo_status ~= self._ammo_status or ammo_visible ~= self._ammo_visible then
-			self:_set_ammo_level(ammo_status, ammo_visible, ui_renderer)
+		if ammo_status ~= self._ammo_status or ammo_visible ~= self._ammo_visible or ammo_hud_icon ~= self._ammo_hud_icon then
+			self:_update_ammo_representation(ammo_status, ammo_visible, ammo_hud_icon, ui_renderer)
 
 			self._ammo_status = ammo_status
 			self._ammo_visible = ammo_visible
+			self._ammo_hud_icon = ammo_hud_icon
 		end
 	end
 
@@ -579,9 +581,9 @@ HudElementPlayerPanelBase._on_disabled_world_marker_spawned = function (self, id
 	self._disabled_world_marker_id = id
 end
 
-HudElementPlayerPanelBase._has_player_pocketable = function (self, inventory_component, visual_loadout_extension, slot_name)
-	local pocketable_name = inventory_component[slot_name]
-	local weapon_template = pocketable_name and visual_loadout_extension:weapon_template_from_slot(slot_name)
+HudElementPlayerPanelBase._has_item_in_slot = function (self, inventory_component, visual_loadout_extension, slot_name)
+	local item_name = inventory_component[slot_name]
+	local weapon_template = item_name and visual_loadout_extension:weapon_template_from_slot(slot_name)
 	local equipped = weapon_template ~= nil
 	local hud_icon = nil
 
@@ -732,11 +734,21 @@ HudElementPlayerPanelBase._set_status_icon = function (self, status_icon, status
 	widget.dirty = true
 end
 
-HudElementPlayerPanelBase._get_weapon_throwables_status = function (self, ability_extension)
+HudElementPlayerPanelBase._get_grenade_ability_status = function (self, player, dead, inventory_component, visual_loadout_extension, ability_extension)
+	local _, hud_icon = nil
+
+	if not dead and inventory_component and visual_loadout_extension then
+		_, hud_icon = self:_has_item_in_slot(inventory_component, visual_loadout_extension, "slot_grenade_ability")
+	end
+
 	local max_status = 3
 
+	if not player:is_human_controlled() then
+		return max_status, true, hud_icon
+	end
+
 	if not ability_extension then
-		return max_status, false
+		return max_status, false, hud_icon
 	end
 
 	local equipped_abilities = ability_extension:equipped_abilities()
@@ -744,11 +756,7 @@ HudElementPlayerPanelBase._get_weapon_throwables_status = function (self, abilit
 	local ability = equipped_abilities[ability_id]
 
 	if not ability then
-		return max_status, false
-	end
-
-	if not ability.show_in_friendly_hud then
-		return max_status, true
+		return max_status, false, hud_icon
 	end
 
 	local max_ability_charges = ability_extension:max_ability_charges(ability_id)
@@ -765,17 +773,25 @@ HudElementPlayerPanelBase._get_weapon_throwables_status = function (self, abilit
 			ability_charges_status = 2
 		end
 
-		return ability_charges_status, true
+		return ability_charges_status, true, hud_icon
+	elseif max_ability_charges == 0 then
+		return max_status, true, hud_icon
 	end
 
-	return ability_charges_status, true
+	return ability_charges_status, true, hud_icon
 end
 
-HudElementPlayerPanelBase._get_weapon_ammo_status = function (self, unit_data_extension, visual_loadout_extension)
+HudElementPlayerPanelBase._get_weapon_ammo_status = function (self, player, dead, unit_data_extension, visual_loadout_extension)
+	local ammo_icon = "content/ui/materials/icons/weapons/hud/small/party_ammo"
+	local no_ammo_icon = "content/ui/materials/icons/weapons/hud/small/party_no_ammo"
 	local max_status = 3
 
+	if not player:is_human_controlled() then
+		return max_status, true, ammo_icon
+	end
+
 	if not unit_data_extension then
-		return max_status, false
+		return max_status, false, no_ammo_icon
 	end
 
 	local weapon_slots = self._weapon_slots
@@ -807,20 +823,22 @@ HudElementPlayerPanelBase._get_weapon_ammo_status = function (self, unit_data_ex
 		ammo_status = math.ceil(weapon_ammo_fraction / (1 / max_status))
 	end
 
-	return has_ammo and ammo_status or max_status, true
+	local icon = total_max_ammo > 0 and ammo_icon or no_ammo_icon
+
+	return has_ammo and ammo_status or max_status, true, icon
 end
 
-HudElementPlayerPanelBase._set_throwables_status = function (self, throwables_status, visible, ui_renderer)
+HudElementPlayerPanelBase._update_grenade_ability_presentation = function (self, status, visible, hud_icon, ui_renderer)
 	local widget = self._widgets_by_name.throwable
 	local style = widget.style.texture
 	local icon_color = style.color
 	local color = nil
 
-	if throwables_status <= 0 then
+	if status <= 0 then
 		color = UIHudSettings.color_tint_ammo_high
-	elseif throwables_status <= 1 then
+	elseif status <= 1 then
 		color = UIHudSettings.color_tint_ammo_medium
-	elseif throwables_status <= 2 then
+	elseif status <= 2 then
 		color = UIHudSettings.color_tint_ammo_low
 	else
 		color = UIHudSettings.color_tint_main_1
@@ -835,7 +853,7 @@ HudElementPlayerPanelBase._set_throwables_status = function (self, throwables_st
 	widget.dirty = true
 end
 
-HudElementPlayerPanelBase._set_ammo_level = function (self, ammo_status, visible, ui_renderer)
+HudElementPlayerPanelBase._update_ammo_representation = function (self, ammo_status, visible, hud_icon, ui_renderer)
 	ammo_status = ammo_status or 1
 	local widget = self._widgets_by_name.ammo_status
 	local style = widget.style
@@ -989,6 +1007,12 @@ HudElementPlayerPanelBase._unload_portrait_insignia = function (self, ui_rendere
 		local insignia_style = widget.style.insignia
 		local material_values = insignia_style.material_values
 		insignia_style.color[1] = 0
+
+		if widget.content.old_insignia_material then
+			widget.content.insignia = widget.content.old_insignia_material
+			widget.content.old_insignia_material = nil
+		end
+
 		material_values.texture_map = "content/ui/textures/nameplates/insignias/default"
 		widget.dirty = true
 	end
@@ -1010,19 +1034,19 @@ HudElementPlayerPanelBase._cb_set_player_insignia = function (self, item)
 		return
 	end
 
-	local icon = nil
-
-	if item.icon then
-		icon = item.icon
-	else
-		icon = "content/ui/textures/nameplates/insignias/default"
-	end
-
 	local widget = self._widgets_by_name.player_icon
 	local insignia_style = widget.style.insignia
 	local material_values = insignia_style.material_values
+
+	if item.icon_material and item.icon_material ~= "" then
+		material_values.texture_map = nil
+		widget.content.old_insignia_material = widget.content.insignia
+		widget.content.insignia = item.icon_material
+	else
+		material_values.texture_map = item.icon or "content/ui/textures/nameplates/insignias/default"
+	end
+
 	insignia_style.color[1] = 255
-	material_values.texture_map = icon
 	widget.dirty = true
 end
 

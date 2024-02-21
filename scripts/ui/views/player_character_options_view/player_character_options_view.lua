@@ -21,7 +21,7 @@ PlayerCharacterOptionsView.init = function (self, settings, context)
 	self._content_alpha_multiplier = 0
 	self._using_cursor_navigation = Managers.ui:using_cursor_navigation()
 
-	PlayerCharacterOptionsView.super.init(self, Definitions, settings)
+	PlayerCharacterOptionsView.super.init(self, Definitions, settings, context)
 
 	self._allow_close_hotkey = true
 end

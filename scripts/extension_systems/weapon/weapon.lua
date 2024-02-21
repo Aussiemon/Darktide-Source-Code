@@ -3,6 +3,7 @@ require("scripts/extension_systems/weapon/special_classes/weapon_special_explode
 require("scripts/extension_systems/weapon/special_classes/weapon_special_interface")
 require("scripts/extension_systems/weapon/special_classes/weapon_special_self_disorientation")
 require("scripts/extension_systems/weapon/special_classes/weapon_special_shovels")
+require("scripts/extension_systems/weapon/special_classes/weapon_special_simple_warp_charge")
 require("scripts/extension_systems/weapon/special_classes/weapon_special_warp_charged_attacks")
 
 local WeaponSpecialInterface = require("scripts/extension_systems/weapon/special_classes/weapon_special_interface")

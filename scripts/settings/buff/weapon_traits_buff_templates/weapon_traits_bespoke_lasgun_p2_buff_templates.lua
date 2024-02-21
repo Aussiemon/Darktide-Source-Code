@@ -1,18 +1,16 @@
 local BaseWeaponTraitBuffTemplates = require("scripts/settings/buff/weapon_traits_buff_templates/base_weapon_trait_buff_templates")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
-local CheckProcFunctions = require("scripts/settings/buff/validation_functions/check_proc_functions")
-local ConditionalFunctions = require("scripts/settings/buff/validation_functions/conditional_functions")
-local Suppression = require("scripts/utilities/attack/suppression")
-local keywords = BuffSettings.keywords
+local ConditionalFunctions = require("scripts/settings/buff/helper_functions/conditional_functions")
 local stat_buffs = BuffSettings.stat_buffs
-local proc_events = BuffSettings.proc_events
-local templates = {
-	weapon_trait_bespoke_lasgun_p2_burninating_on_crit = table.clone(BaseWeaponTraitBuffTemplates.burninating_on_crit_ranged),
-	weapon_trait_bespoke_lasgun_p2_negate_stagger_reduction_on_weakspot = table.clone(BaseWeaponTraitBuffTemplates.negate_stagger_reduction_on_weakspot),
-	weapon_trait_bespoke_lasgun_p2_crit_chance_based_on_aim_time = table.clone(BaseWeaponTraitBuffTemplates.chance_based_on_aim_time),
-	weapon_trait_bespoke_lasgun_p2_followup_shots_ranged_damage = table.clone(BaseWeaponTraitBuffTemplates.followup_shots_ranged_damage),
-	weapon_trait_bespoke_lasgun_p2_stagger_count_bonus_damage = table.clone(BaseWeaponTraitBuffTemplates.stagger_count_bonus_damage)
-}
+local templates = {}
+
+table.make_unique(templates)
+
+templates.weapon_trait_bespoke_lasgun_p2_burninating_on_crit = table.clone(BaseWeaponTraitBuffTemplates.burninating_on_crit_ranged)
+templates.weapon_trait_bespoke_lasgun_p2_negate_stagger_reduction_on_weakspot = table.clone(BaseWeaponTraitBuffTemplates.negate_stagger_reduction_on_weakspot)
+templates.weapon_trait_bespoke_lasgun_p2_crit_chance_based_on_aim_time = table.clone(BaseWeaponTraitBuffTemplates.chance_based_on_aim_time)
+templates.weapon_trait_bespoke_lasgun_p2_followup_shots_ranged_damage = table.clone(BaseWeaponTraitBuffTemplates.followup_shots_ranged_damage)
+templates.weapon_trait_bespoke_lasgun_p2_stagger_count_bonus_damage = table.clone(BaseWeaponTraitBuffTemplates.stagger_count_bonus_damage)
 local _shooting_actions = {
 	action_shoot_hip_quick = true,
 	action_shoot_zoomed_start = true,

@@ -31,7 +31,7 @@ blueprints.button = {
 	init = function (parent, widget, element, callback_name, disabled)
 		local content = widget.content
 		local style = widget.style
-		content.text = Managers.localization:localize(element.text)
+		content.text = element.dev_text or Managers.localization:localize(element.text)
 
 		if element.icon then
 			content.icon = element.icon
@@ -55,7 +55,7 @@ blueprints.large_button = {
 	pass_template = ButtonPassTemplates.terminal_list_button_with_background_and_icon,
 	init = function (parent, widget, element, callback_name, disabled)
 		local content = widget.content
-		content.text = Managers.localization:localize(element.text)
+		content.text = element.dev_text or Managers.localization:localize(element.text)
 
 		if element.icon then
 			content.icon = element.icon

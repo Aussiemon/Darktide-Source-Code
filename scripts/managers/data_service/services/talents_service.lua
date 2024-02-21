@@ -1,5 +1,3 @@
-local PlayerManager = require("scripts/foundation/managers/player/player_manager")
-local PlayerSpecializationUtil = require("scripts/utilities/player_specialization/player_specialization")
 local TalentLayoutParser = require("scripts/ui/views/talent_builder_view/utilities/talent_layout_parser")
 local TalentsService = class("TalentsService")
 
@@ -33,20 +31,8 @@ local function _set_talents_backend_response_fail(result)
 	end
 end
 
-TalentsService.set_talents = function (self, player, talent_names)
-	local character_id = player:character_id()
-	local profile = player:profile()
-
-	PlayerSpecializationUtil.filter_nonselectable_talents(profile.archetype, profile.specialization, profile.current_level, talent_names)
-
-	local backend = self._backend_interface.characters
-	local talent_array = PlayerSpecializationUtil.talents_with_tiers_set_to_array(talent_names, {})
-
-	promise:next(callback(_set_backend_response_success, player, talent_names), _set_talents_backend_response_fail):catch(function (err)
-		_set_talents_backend_response_fail(err)
-	end)
-
-	return promise
+local function _set_specialization_backend_response_fail(error)
+	Log.error("Talents", "couldn't set selected specialization in backend")
 end
 
 TalentsService.set_talents_v2 = function (self, player, layout, points_spent)
@@ -60,10 +46,6 @@ TalentsService.set_talents_v2 = function (self, player, layout, points_spent)
 	end)
 
 	return promise
-end
-
-local function _set_specialization_backend_response_fail(error)
-	Log.error("Talents", "couldn't set selected specialization in backend")
 end
 
 TalentsService.set_specialization = function (self, player, specialization)
@@ -86,47 +68,6 @@ TalentsService.release_icons = function (self, load_id)
 	if load_id then
 		Managers.package:release(load_id)
 	end
-end
-
-TalentsService.mark_unlocked_group_as_new = function (self, character_id, talent_group_id)
-	local save_manager = Managers.save
-	local character_save_data = character_id and save_manager and save_manager:character_data(character_id)
-
-	if not character_save_data then
-		return
-	end
-
-	if not character_save_data.new_unlocked_talent_groups then
-		character_save_data.new_unlocked_talent_groups = {}
-	end
-
-	character_save_data.new_unlocked_talent_groups[talent_group_id] = true
-
-	save_manager:queue_save()
-end
-
-TalentsService.unmark_unlocked_group_as_new = function (self, character_id, talent_group_id)
-	local save_manager = Managers.save
-	local character_save_data = character_id and save_manager and save_manager:character_data(character_id)
-
-	if not character_save_data or not character_save_data.new_unlocked_talent_groups then
-		return
-	end
-
-	character_save_data.new_unlocked_talent_groups[talent_group_id] = nil
-
-	save_manager:queue_save()
-end
-
-TalentsService.is_group_marked_as_new = function (self, character_id, talent_group_id)
-	local save_manager = Managers.save
-	local character_save_data = character_id and save_manager and save_manager:character_data(character_id)
-
-	if not character_save_data or not character_save_data.new_unlocked_talent_groups then
-		return false
-	end
-
-	return character_save_data.new_unlocked_talent_groups[talent_group_id]
 end
 
 return TalentsService

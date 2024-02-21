@@ -8,6 +8,7 @@ local panel_size = HudElementTeamPanelHandlerSettings.panel_size
 local panel_offset = HudElementTeamPanelHandlerSettings.panel_offset
 local bar_size = HudElementTeamPlayerPanelHubSettings.size
 local icon_size = HudElementTeamPlayerPanelHubSettings.icon_size
+local insignia_icon_size = HudElementTeamPlayerPanelHubSettings.insignia_icon_size
 local icon_bar_spacing = HudElementTeamPlayerPanelHubSettings.icon_bar_spacing
 local scenegraph_definition = {
 	screen = UIWorkspaceSettings.screen,
@@ -201,18 +202,16 @@ local widget_definitions = {
 			}
 		},
 		{
-			value = "content/ui/materials/base/ui_default_base",
+			value_id = "insignia",
 			style_id = "insignia",
 			pass_type = "texture",
+			value = "content/ui/materials/base/ui_default_base",
 			style = {
 				vertical_alignment = "center",
 				horizontal_alignment = "left",
-				size = {
-					30,
-					80
-				},
+				size = insignia_icon_size,
 				offset = {
-					-40,
+					-insignia_icon_size[1],
 					0,
 					1
 				},

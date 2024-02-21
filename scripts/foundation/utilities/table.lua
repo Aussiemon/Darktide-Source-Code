@@ -702,6 +702,10 @@ table.mirror_array_inplace = function (t)
 	return t
 end
 
+table.ukeys = function (t, output)
+	return table.keys(t.__data, output)
+end
+
 table.keys = function (t, output)
 	local n = 0
 	local result = output or {}

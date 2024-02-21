@@ -181,7 +181,7 @@ MechanismHub.wanted_transition = function (self)
 
 		return false
 	elseif state == "client_exit_gameplay" then
-		local dialogue_system = Managers.state.extension:system_by_extension("DialogueActorExtension")
+		local dialogue_system = Managers.state.extension:system_by_extension("DialogueExtension")
 
 		if dialogue_system then
 			dialogue_system:force_stop_all()

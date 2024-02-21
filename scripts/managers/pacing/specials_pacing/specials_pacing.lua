@@ -1065,6 +1065,10 @@ SpecialsPacing._check_and_activate_coordinated_strike = function (self, template
 		if is_coordinated_surge then
 			local coordinated_surge_duration = math.random_range(template.coordinated_surge_duration_range[1], template.coordinated_surge_duration_range[2])
 			self._coordinated_surge_duration = t + coordinated_surge_duration
+			local coordinated_surge_timer_range = template.coordinated_surge_timer_range
+			local surge_min_timer_range = coordinated_surge_timer_range[1]
+			local surge_max_timer_range = coordinated_surge_timer_range[2]
+			coordinated_strike_timer = math.random_range(surge_min_timer_range, surge_max_timer_range)
 			self._num_coordinated_surges = self._num_coordinated_surges - 1
 		end
 	end

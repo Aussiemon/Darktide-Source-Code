@@ -231,10 +231,10 @@ GameModeManager.settings = function (self)
 	return self._game_mode:settings()
 end
 
-GameModeManager.specializations_disabled = function (self)
+GameModeManager.talents_disabled = function (self)
 	local game_mode_settings = self._game_mode:settings()
 
-	return not not game_mode_settings.specializations_disabled
+	return not not game_mode_settings.talents_disabled
 end
 
 GameModeManager.presence_name = function (self)

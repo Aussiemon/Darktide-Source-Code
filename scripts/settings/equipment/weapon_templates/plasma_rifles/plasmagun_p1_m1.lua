@@ -1007,7 +1007,7 @@ weapon_template.toughness_template = "default"
 weapon_template.footstep_intervals = FootstepIntervalsTemplates.plasmagun
 weapon_template.smart_targeting_template = SmartTargetingTemplates.assault
 weapon_template.traits = {}
-local bespoke_plasmagun_p1_traits = table.keys(WeaponTraitsBespokePlasmagunP1)
+local bespoke_plasmagun_p1_traits = table.ukeys(WeaponTraitsBespokePlasmagunP1)
 
 table.append(weapon_template.traits, bespoke_plasmagun_p1_traits)
 

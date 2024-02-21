@@ -23,11 +23,9 @@ local sound_data = {
 		run_foley = "wwise/events/minions/play_shared_foley_chaos_cultist_light_run"
 	},
 	use_proximity_culling = {
-		vce_death = false,
-		foley_drastic_short = false,
-		stop_vce = false,
-		vce_death_long = false,
-		vce_hurt = false
+		vce_melee_attack_short = false,
+		vce_melee_attack_charged = false,
+		stop_vce = false
 	}
 }
 

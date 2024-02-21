@@ -27,7 +27,7 @@ ActionVeteranCombatAbility.init = function (self, action_context, action_params,
 	self._inventory_component = unit_data_extension:read_component("inventory")
 	self._combat_ability_component = unit_data_extension:write_component("combat_ability")
 	self._ability_type = action_settings.ability_type or "none"
-	self._specialization_extension = ScriptUnit.extension(self._player_unit, "specialization_system")
+	self._talent_extension = ScriptUnit.extension(self._player_unit, "talent_system")
 end
 
 ActionVeteranCombatAbility.start = function (self, action_settings, t, time_scale, action_start_params)
@@ -43,11 +43,11 @@ ActionVeteranCombatAbility.start = function (self, action_settings, t, time_scal
 
 	Luggable.drop_luggable(t, player_unit, inventory_component, visual_loadout_extension, true)
 
-	local specialization_extension = self._specialization_extension
+	local talent_extension = self._talent_extension
 	local is_server = self._is_server
 
 	if is_server then
-		local increase_and_restore_toughness_to_coherency = specialization_extension:has_special_rule(special_rules.veteran_combat_ability_increase_and_restore_toughness_to_coherency)
+		local increase_and_restore_toughness_to_coherency = talent_extension:has_special_rule(special_rules.veteran_combat_ability_increase_and_restore_toughness_to_coherency)
 
 		if increase_and_restore_toughness_to_coherency then
 			local coherency_extension = ScriptUnit.extension(player_unit, "coherency_system")
@@ -75,7 +75,7 @@ ActionVeteranCombatAbility.start = function (self, action_settings, t, time_scal
 	end
 
 	local wield_secondary = not not ability_template_tweak_data.wield_secondary_slot
-	local reload_secondary = specialization_extension:has_special_rule(special_rules.veteran_combat_ability_reloads_secondary_weapon)
+	local reload_secondary = talent_extension:has_special_rule(special_rules.veteran_combat_ability_reloads_secondary_weapon)
 	local slot_to_wield = "slot_secondary"
 
 	if wield_secondary then
@@ -113,8 +113,8 @@ ActionVeteranCombatAbility.start = function (self, action_settings, t, time_scal
 		end
 	end
 
-	local stagger_nearby_enemies = specialization_extension:has_special_rule(special_rules.veteran_combat_ability_stagger_nearby_enemies)
-	local enter_stealth = specialization_extension:has_special_rule(special_rules.veteran_combat_ability_stealth)
+	local stagger_nearby_enemies = talent_extension:has_special_rule(special_rules.veteran_combat_ability_stagger_nearby_enemies)
+	local enter_stealth = talent_extension:has_special_rule(special_rules.veteran_combat_ability_stealth)
 	local has_stance = not stagger_nearby_enemies and not enter_stealth
 
 	if stagger_nearby_enemies then

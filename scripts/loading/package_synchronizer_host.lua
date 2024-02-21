@@ -367,7 +367,7 @@ local function _compare_modifier_list(modifier_list_a, modifier_list_b, idintifi
 		return true
 	end
 
-	if modifier_list_a == nil and modifier_list_a ~= nil or modifier_list_a ~= nil and modifier_list_a == nil then
+	if modifier_list_a == nil or modifier_list_b == nil then
 		return false
 	end
 
@@ -442,13 +442,10 @@ PackageSynchronizerHost._calculate_changed_talents = function (self, old_profile
 
 	if talents_changed then
 		local changes = {
-			specialization_name = new_profile.specialization,
 			talents = new_talents
 		}
 
 		return changes
-	else
-		return nil
 	end
 end
 
@@ -635,9 +632,9 @@ PackageSynchronizerHost._handle_talent_changes_before_sync = function (self, pla
 		end
 	end
 
-	local specialization_extension = ScriptUnit.extension(player_unit, "specialization_system")
+	local talent_extension = ScriptUnit.extension(player_unit, "talent_system")
 
-	specialization_extension:remove_gameplay_features(fixed_t)
+	talent_extension:remove_gameplay_features(fixed_t)
 
 	if unequipped_wielded_slot then
 		sync_data.wield_slot_after_sync = wielded_slot
@@ -724,12 +721,11 @@ PackageSynchronizerHost._handle_talent_changes_after_sync = function (self, tale
 		return
 	end
 
-	local specialization_name = talent_changes.specialization_name
 	local talents = talent_changes.talents
 	local fixed_t = FixedFrame.get_latest_fixed_time()
-	local specialization_extension = ScriptUnit.extension(player_unit, "specialization_system")
+	local talent_extension = ScriptUnit.extension(player_unit, "talent_system")
 
-	specialization_extension:select_new_specialization(specialization_name, talents, fixed_t)
+	talent_extension:select_new_talents(talents, fixed_t)
 end
 
 PackageSynchronizerHost._cleanup_owned_units = function (self, player)

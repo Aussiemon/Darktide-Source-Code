@@ -898,12 +898,12 @@ weapon_template.actions = {
 	action_slash_start = {
 		sprint_requires_press_to_interrupt = true,
 		start_input = "special_action_hold",
-		kind = "windup",
-		weapon_handling_template = "time_scale_1_2",
 		allowed_during_sprint = true,
+		weapon_handling_template = "time_scale_1_2",
+		kind = "windup",
+		stop_alternate_fire = true,
 		anim_end_event = "attack_finished",
 		abort_sprint = true,
-		unaim = true,
 		uninterruptible = true,
 		anim_event = "attack_charge_slash",
 		prevent_sprint = true,
@@ -970,17 +970,16 @@ weapon_template.actions = {
 	action_slash = {
 		damage_window_start = 0.1,
 		hit_armor_anim = "attack_hit_shield",
-		sprint_requires_press_to_interrupt = true,
 		weapon_handling_template = "time_scale_1_2",
+		allowed_during_sprint = true,
 		kind = "sweep",
 		first_person_hit_anim = "attack_hit",
 		first_person_hit_stop_anim = "attack_hit",
-		allow_conditional_chain = true,
-		allowed_during_sprint = true,
 		range_mod = 1.15,
+		stop_alternate_fire = true,
+		sprint_requires_press_to_interrupt = true,
 		damage_window_end = 0.26666666666666666,
 		abort_sprint = true,
-		unaim = true,
 		uninterruptible = true,
 		anim_event = "attack_slash",
 		prevent_sprint = true,
@@ -1303,7 +1302,7 @@ weapon_template.base_stats = {
 	}
 }
 weapon_template.traits = {}
-local bespoke_lasgun_p2_traits = table.keys(WeaponTraitsBespokeLasgunP2)
+local bespoke_lasgun_p2_traits = table.ukeys(WeaponTraitsBespokeLasgunP2)
 
 table.append(weapon_template.traits, bespoke_lasgun_p2_traits)
 

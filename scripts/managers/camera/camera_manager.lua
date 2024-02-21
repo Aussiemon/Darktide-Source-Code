@@ -31,7 +31,6 @@ local EnvironmentBlend = require("scripts/managers/camera/environment_blend")
 local ScriptCamera = require("scripts/foundation/utilities/script_camera")
 local ScriptViewport = require("scripts/foundation/utilities/script_viewport")
 local ScriptWorld = require("scripts/foundation/utilities/script_world")
-local DefaultGameParameters = require("scripts/foundation/utilities/parameters/default_game_parameters")
 local WorldInteractionSettings = require("scripts/managers/world_interaction/world_interaction_settings")
 local debug = false
 local CameraManager = class("CameraManager")

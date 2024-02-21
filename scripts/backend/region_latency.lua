@@ -149,8 +149,13 @@ RegionLatency._do_refresh = function (self)
 				total_diff = total_diff + math.abs(l - l2)
 			end
 
-			local jitter = self:_convert_decimal_to_int_latency(total_diff / #latencies)
-			local avg = self:_convert_decimal_to_int_latency(total / #latencies)
+			local jitter = -1
+			local avg = -1
+
+			if #latencies > 0 then
+				jitter = self:_convert_decimal_to_int_latency(total_diff / #latencies)
+				avg = self:_convert_decimal_to_int_latency(total / #latencies)
+			end
 
 			table.sort(latencies)
 

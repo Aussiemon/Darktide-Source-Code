@@ -3,6 +3,12 @@ local ServerMetricsManagerInterface = require("scripts/managers/server_metrics/s
 local ServerMetricsManager = class("ServerMetricsManager")
 local full_flush_interval = 300
 local target_frame_time = 1 / GameParameters.tick_rate + 0.0005
+local lagging_frame_time_bucket1 = target_frame_time * 0.1
+local lagging_frame_time_bucket2 = target_frame_time * 0.3
+local lagging_frame_time_bucket3 = target_frame_time * 0.5
+local lagging_frame_time_bucket4 = target_frame_time
+local lagging_frame_time_bucket5 = 0.1
+local lagging_frame_time_bucket6 = 1
 local update_interval = 1
 local _log = nil
 
@@ -17,9 +23,16 @@ ServerMetricsManager.init = function (self)
 		end
 	end
 
+	for _, metric_name in pairs(ServerMetricNames.counter) do
+		self:add_to_counter(metric_name, 0)
+	end
+
 	local fixed_time_step = 1 / GameParameters.tick_rate
 
 	self:set_gauge(ServerMetricNames.gauge.target_frame_time, fixed_time_step)
+
+	self._last_travel_progress_report = -1
+	self._mission_started = false
 end
 
 ServerMetricsManager.destroy = function (self)
@@ -34,6 +47,16 @@ ServerMetricsManager.add_annotation = function (self, type_name, metadata)
 	}
 
 	_log("annotation:%s", cjson.encode(json_object))
+
+	if type_name == "mission_end" then
+		self._mission_started = false
+
+		self:set_gauge(ServerMetricNames.gauge.progression, 0)
+	end
+
+	if type_name == "mission_start" then
+		self._mission_started = true
+	end
 end
 
 ServerMetricsManager.set_gauge = function (self, metric_name, value)
@@ -94,12 +117,52 @@ ServerMetricsManager._flush_metric = function (self, metric, dt)
 	end
 end
 
+ServerMetricsManager._track_progression = function (self)
+	if not Managers.state or not Managers.state.main_path or not self._mission_started then
+		return
+	end
+
+	local travel_progress = Managers.state.main_path:furthest_travel_percentage(1)
+
+	self:set_gauge(ServerMetricNames.gauge.progression, math.floor(travel_progress * 100) / 100)
+
+	local normalized_travel = math.floor(travel_progress * 10) / 10
+
+	if normalized_travel < self._last_travel_progress_report then
+		self._last_travel_progress_report = -1
+	end
+
+	if self._last_travel_progress_report == -1 and travel_progress > 0.01 or self._last_travel_progress_report ~= -1 and self._last_travel_progress_report < normalized_travel then
+		self:add_annotation("progression", {
+			value = normalized_travel
+		})
+
+		self._last_travel_progress_report = normalized_travel
+	end
+end
+
 ServerMetricsManager.update = function (self, dt)
 	local missed_frame_time = dt - target_frame_time
 
 	if missed_frame_time > 0 then
 		self:add_to_counter(ServerMetricNames.counter.missed_frame_time, missed_frame_time)
 		self:add_to_counter(ServerMetricNames.counter.lagging_frames, 1)
+
+		if missed_frame_time < lagging_frame_time_bucket1 then
+			self:add_to_counter(ServerMetricNames.counter.lagging_frames_bucket1, 1)
+		elseif missed_frame_time < lagging_frame_time_bucket2 then
+			self:add_to_counter(ServerMetricNames.counter.lagging_frames_bucket2, 1)
+		elseif missed_frame_time < lagging_frame_time_bucket3 then
+			self:add_to_counter(ServerMetricNames.counter.lagging_frames_bucket3, 1)
+		elseif missed_frame_time < lagging_frame_time_bucket4 then
+			self:add_to_counter(ServerMetricNames.counter.lagging_frames_bucket4, 1)
+		elseif missed_frame_time < lagging_frame_time_bucket5 then
+			self:add_to_counter(ServerMetricNames.counter.lagging_frames_bucket5, 1)
+		elseif missed_frame_time < lagging_frame_time_bucket6 then
+			self:add_to_counter(ServerMetricNames.counter.lagging_frames_bucket6, 1)
+		else
+			self:add_to_counter(ServerMetricNames.counter.lagging_frames_bucket7, 1)
+		end
 	end
 
 	for i = 1, #self._metrics_as_array do
@@ -112,6 +175,8 @@ ServerMetricsManager.update = function (self, dt)
 		if Managers.state and Managers.state.minion_spawn then
 			self:set_gauge(ServerMetricNames.gauge.spawned_minions, Managers.state.minion_spawn:num_spawned_minions())
 		end
+
+		self:_track_progression()
 
 		self._last_update = 0
 	end

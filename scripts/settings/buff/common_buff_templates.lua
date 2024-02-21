@@ -3,6 +3,8 @@ local buff_keywords = BuffSettings.keywords
 local buff_stat_buffs = BuffSettings.stat_buffs
 local templates = {}
 
+table.make_unique(templates)
+
 local function linear_lerp_t_func(t, start_time, duration, template_data, template_context)
 	return math.lerp(start_time, start_time + duration, t)
 end

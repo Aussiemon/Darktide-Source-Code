@@ -23,8 +23,7 @@ BtPoxwalkerBomberApproachAction.enter = function (self, unit, breed, blackboard,
 	navigation_extension:set_enabled(true, action_data.move_speed or breed.run_speed)
 
 	if action_data.effect_template then
-		local fx_system = Managers.state.extension:system("fx_system")
-		scratchpad.fx_system = fx_system
+		scratchpad.fx_system = Managers.state.extension:system("fx_system")
 	end
 
 	scratchpad.move_to_cooldown = 0
@@ -144,10 +143,12 @@ BtPoxwalkerBomberApproachAction.run = function (self, unit, breed, blackboard, s
 		MinionMovement.update_anim_driven_start_rotation(unit, scratchpad, action_data, t)
 	end
 
+	local navigation_extension = scratchpad.navigation_extension
+
 	if not is_anim_driven then
 		if state == "walking" or state == "running" then
 			local enter_lunge_distance = action_data.enter_lunge_distance
-			local path_distance = scratchpad.navigation_extension:remaining_distance_from_progress_to_end_of_path()
+			local path_distance = navigation_extension:remaining_distance_from_progress_to_end_of_path()
 			local nav_smart_object_component = blackboard.nav_smart_object
 			local smart_object_id = nav_smart_object_component.id
 			local smart_object_is_next = smart_object_id ~= -1
@@ -168,8 +169,6 @@ BtPoxwalkerBomberApproachAction.run = function (self, unit, breed, blackboard, s
 		end
 	end
 
-	local navigation_extension = scratchpad.navigation_extension
-
 	if scratchpad.start_move_event_anim_speed_duration then
 		if t < scratchpad.start_move_event_anim_speed_duration then
 			MinionMovement.apply_animation_wanted_movement_speed(unit, navigation_extension, dt)
@@ -181,7 +180,7 @@ BtPoxwalkerBomberApproachAction.run = function (self, unit, breed, blackboard, s
 	local effect_template = action_data.effect_template
 
 	if effect_template then
-		self:_update_effect_template(unit, scratchpad, action_data, target_unit)
+		self:_update_effect_template(unit, scratchpad, action_data, navigation_extension)
 	end
 
 	return "running"
@@ -340,25 +339,23 @@ BtPoxwalkerBomberApproachAction._set_state_max_speed = function (self, breed, sc
 	scratchpad.start_move_event_anim_speed_duration = nil
 end
 
-BtPoxwalkerBomberApproachAction._update_effect_template = function (self, unit, scratchpad, action_data, target_unit)
-	local self_position = POSITION_LOOKUP[unit]
-	local target_position = POSITION_LOOKUP[target_unit]
-	local distance = Vector3.distance(self_position, target_position)
-	local fx_system = scratchpad.fx_system
-
+BtPoxwalkerBomberApproachAction._update_effect_template = function (self, unit, scratchpad, action_data, navigation_extension)
 	if scratchpad.global_effect_id then
 		local stop_distance = action_data.effect_template_stop_distance
+		local remaining_path_distance = navigation_extension:remaining_distance_from_progress_to_end_of_path()
 
-		if stop_distance <= distance then
-			fx_system:stop_template_effect(scratchpad.global_effect_id)
+		if stop_distance <= remaining_path_distance then
+			scratchpad.fx_system:stop_template_effect(scratchpad.global_effect_id)
 
 			scratchpad.global_effect_id = nil
 		end
 	else
 		local start_distance = action_data.effect_template_start_distance
+		local has_upcoming_smart_object, _ = navigation_extension:path_distance_to_next_smart_object(start_distance)
+		local remaining_path_distance = not has_upcoming_smart_object and navigation_extension:remaining_distance_from_progress_to_end_of_path()
 
-		if distance <= start_distance then
-			scratchpad.global_effect_id = fx_system:start_template_effect(action_data.effect_template, unit)
+		if not has_upcoming_smart_object and remaining_path_distance <= start_distance then
+			scratchpad.global_effect_id = scratchpad.fx_system:start_template_effect(action_data.effect_template, unit)
 		end
 	end
 end

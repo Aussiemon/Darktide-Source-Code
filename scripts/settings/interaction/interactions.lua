@@ -31,6 +31,7 @@ local interactions = {
 	body_shop = ViewInteraction,
 	chest = ChestInteraction,
 	contracts = ViewInteraction,
+	cosmetics_vendor = ViewInteraction,
 	crafting = ViewInteraction,
 	decoding = DecodingInteraction,
 	door_control_panel = DoorControlPanelInteraction,
@@ -45,6 +46,7 @@ local interactions = {
 	moveable_platform = MoveablePlatformInteraction,
 	penances = ViewInteraction,
 	pickup = PickupInteraction,
+	player_hub_inspect = PlayerHubInspectInteraction,
 	pocketable = PocketableInteraction,
 	premium_vendor = ViewInteraction,
 	pull_up = PullUpInteraction,
@@ -52,15 +54,13 @@ local interactions = {
 	rescue = RescueInteraction,
 	revive = ReviveInteraction,
 	scanning = ScanningInteraction,
+	scripted_scenario = ScriptedScenarioInteraction,
 	servo_skull = ServoSkullInteraction,
 	servo_skull_activator = ServoSkullActivatorInteraction,
 	setup_breach_charge = SetupBreachChargeInteraction,
 	setup_decoding = SetupDecodingInteraction,
 	training_ground = ViewInteraction,
-	vendor = ViewInteraction,
-	scripted_scenario = ScriptedScenarioInteraction,
-	cosmetics_vendor = ViewInteraction,
-	player_hub_inspect = PlayerHubInspectInteraction
+	vendor = ViewInteraction
 }
 
 return settings("Interactions", interactions)

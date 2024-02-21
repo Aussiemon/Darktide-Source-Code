@@ -62,7 +62,12 @@ local footstep_intervals_templates = {
 	ogryn_combat_blade = {
 		crouch_walking = 0.75,
 		walking = 0.62,
-		sprinting = 0.47
+		sprinting = 0.48
+	},
+	ogryn_combat_pickaxe = {
+		crouch_walking = 0.75,
+		walking = 0.595,
+		sprinting = 0.545
 	},
 	ogryn_heavy_stubber = {
 		walking = 0.61,

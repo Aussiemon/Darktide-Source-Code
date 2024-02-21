@@ -207,6 +207,7 @@ weapon_template.actions = {
 		start_input = "start_attack",
 		kind = "windup",
 		action_priority = 2,
+		invalid_start_action_for_stat_calculation = true,
 		allowed_during_sprint = true,
 		anim_event = "heavy_charge_down_folded",
 		stop_input = "attack_cancel",
@@ -283,7 +284,7 @@ weapon_template.actions = {
 		kind = "sweep",
 		max_num_saved_entries = 20,
 		action_priority = 2,
-		weapon_handling_template = "time_scale_1",
+		invalid_start_action_for_stat_calculation = true,
 		num_frames_before_process = 0,
 		allowed_during_sprint = true,
 		special_active_hit_stop_armor_anim = "attack_hit_shield",
@@ -291,6 +292,7 @@ weapon_template.actions = {
 		damage_window_end = 0.3333333333333333,
 		anim_end_event = "attack_finished",
 		first_person_hit_stop_anim = "hit_stop",
+		weapon_handling_template = "time_scale_1",
 		uninterruptible = true,
 		anim_event = "attack_down_folded",
 		total_time = 1,
@@ -392,7 +394,7 @@ weapon_template.actions = {
 		kind = "sweep",
 		first_person_hit_anim = "hit_left_shake",
 		action_priority = 2,
-		range_mod = 1.25,
+		invalid_start_action_for_stat_calculation = true,
 		num_frames_before_process = 0,
 		allowed_during_sprint = true,
 		special_active_hit_stop_armor_anim = "attack_hit_shield",
@@ -400,6 +402,7 @@ weapon_template.actions = {
 		anim_end_event = "attack_finished",
 		attack_direction_override = "down",
 		max_num_saved_entries = 20,
+		range_mod = 1.25,
 		anim_event_3p = "attack_swing_heavy_down_folded",
 		anim_event = "heavy_attack_down_folded",
 		hit_stop_anim = "attack_hit",
@@ -1218,17 +1221,18 @@ weapon_template.actions = {
 	action_right_light_pushfollow = {
 		damage_window_start = 0.3,
 		hit_armor_anim = "attack_hit_shield",
-		anim_event_3p = "attack_swing_down",
-		weapon_handling_template = "time_scale_1",
+		kind = "sweep",
+		sprint_requires_press_to_interrupt = "true",
 		max_num_saved_entries = 20,
 		action_priority = 1,
-		range_mod = 1.35,
-		kind = "sweep",
+		anim_event_3p = "attack_swing_down",
+		weapon_handling_template = "time_scale_1",
 		num_frames_before_process = 0,
-		damage_window_end = 0.4,
-		attack_direction_override = "left",
-		anim_end_event = "attack_finished",
 		first_person_hit_stop_anim = "hit_stop",
+		damage_window_end = 0.4,
+		range_mod = 1.35,
+		anim_end_event = "attack_finished",
+		attack_direction_override = "left",
 		uninterruptible = true,
 		anim_event = "attack_left_flatside",
 		total_time = 1.5,
@@ -1522,8 +1526,14 @@ weapon_template.actions = {
 				chain_time = 0.4
 			},
 			start_attack = {
-				action_name = "action_melee_start_left",
-				chain_time = 0.45
+				{
+					action_name = "action_melee_start_left_special",
+					chain_time = 0.45
+				},
+				{
+					action_name = "action_melee_start_left",
+					chain_time = 0.45
+				}
 			}
 		},
 		inner_push_rad = math.pi * 0.25,
@@ -1845,7 +1855,7 @@ weapon_template.base_stats = {
 	}
 }
 weapon_template.traits = {}
-local bespoke_combataxe_p3_traits = table.keys(WeaponTraitsBespokeCombataxeP3)
+local bespoke_combataxe_p3_traits = table.ukeys(WeaponTraitsBespokeCombataxeP3)
 
 table.append(weapon_template.traits, bespoke_combataxe_p3_traits)
 

@@ -128,10 +128,32 @@ local function generate_blueprints_function(grid_size)
 	}
 
 	local function _apply_package_item_icon_cb_func(widget, item)
-		local icon = item.icon
-		local material_values = widget.style.icon.material_values
-		material_values.texture_icon = icon
+		local icon_style = widget.style.icon
+		local item_slot = ItemUtils.item_slot(item)
+		local item_icon_size = item_slot and table.clone(item_slot.item_icon_size)
+		local material_values = icon_style.material_values
+
+		if item.icon_material and item.icon_material ~= "" then
+			widget.content.icon = item.icon_material
+			material_values.use_placeholder_texture = 0
+			material_values.use_render_target = 0
+
+			if item_icon_size then
+				widget.style.icon_original_size = icon_style.size and table.clone(icon_style.size) or {}
+				icon_style.size = item_icon_size
+			end
+		else
+			if widget.style.icon_original_size then
+				icon_style.size = widget.style.icon_original_size
+				widget.style.icon_original_size = nil
+			end
+
+			local material_values = icon_style.material_values
+			material_values.texture_icon = item.icon
+		end
+
 		material_values.use_placeholder_texture = 0
+		material_values.use_render_target = 0
 		widget.content.use_placeholder_texture = material_values.use_placeholder_texture
 	end
 
@@ -139,10 +161,18 @@ local function generate_blueprints_function(grid_size)
 		UIWidget.set_visible(widget, ui_renderer, false)
 		UIWidget.set_visible(widget, ui_renderer, true)
 
+		widget.content.icon = "content/ui/materials/icons/items/containers/item_container_square"
 		local material_values = widget.style.icon.material_values
 		material_values.texture_icon = nil
 		material_values.use_placeholder_texture = 1
+		local icon_style = widget.style.icon
+		icon_style.size = widget.style.icon_original_size or icon_style.size
 		widget.content.use_placeholder_texture = material_values.use_placeholder_texture
+
+		if widget.style.icon_original_size then
+			icon_style.size = widget.style.icon_original_size
+			widget.style.icon_original_size = nil
+		end
 	end
 
 	local function _apply_live_item_icon_cb_func(widget, grid_index, rows, columns, render_target)

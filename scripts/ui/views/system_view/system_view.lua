@@ -12,8 +12,8 @@ local UIRenderer = require("scripts/managers/ui/ui_renderer")
 local InputDevice = require("scripts/managers/input/input_device")
 local SystemView = class("SystemView", "BaseView")
 
-SystemView.init = function (self, settings)
-	SystemView.super.init(self, Definitions, settings)
+SystemView.init = function (self, settings, context)
+	SystemView.super.init(self, Definitions, settings, context)
 end
 
 SystemView.on_enter = function (self)

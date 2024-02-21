@@ -25,7 +25,7 @@ local scenegraph_definition = {
 		size = background_size,
 		position = {
 			0,
-			50,
+			15,
 			1
 		}
 	},

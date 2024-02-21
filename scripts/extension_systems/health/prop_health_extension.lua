@@ -194,6 +194,7 @@ end
 
 PropHealthExtension._died = function (self)
 	Component.event(self._unit, "unit_died")
+	Unit.flow_event(self._unit, "lua_prop_died")
 
 	HEALTH_ALIVE[self._unit] = nil
 end
@@ -240,8 +241,12 @@ PropHealthExtension.add_damage = function (self, damage_amount, permanent_damage
 		_add_force_on_parts(hit_actor, Actor.mass(hit_actor), self._speed_on_hit, attack_direction)
 	end
 
-	Component.event(self._unit, "add_damage", damage_amount, hit_actor, attack_direction)
-	Component.event(self._unit, "on_hit", attack_direction, attacking_unit)
+	local unit = self._unit
+
+	Component.event(unit, "add_damage", damage_amount, hit_actor, attack_direction)
+	Component.event(unit, "on_hit", attack_direction, attacking_unit)
+	Unit.set_flow_variable(unit, "lua_prop_health_percentage", health - new_damage / health)
+	Unit.flow_event(unit, "lua_prop_damaged")
 
 	if health <= new_damage then
 		self:kill()

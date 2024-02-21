@@ -3,9 +3,10 @@ local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templ
 local ColorUtilities = require("scripts/utilities/ui/colors")
 local InputDevice = require("scripts/managers/input/input_device")
 local InventoryBackgroundViewSettings = require("scripts/ui/views/inventory_background_view/inventory_background_view_settings")
+local ItemSlotSettings = require("scripts/settings/item/item_slot_settings")
 local ItemUtils = require("scripts/utilities/items")
-local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local UIFonts = require("scripts/managers/ui/ui_fonts")
+local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local UIRenderer = require("scripts/managers/ui/ui_renderer")
 local UISettings = require("scripts/settings/ui/ui_settings")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
@@ -14,6 +15,8 @@ local character_experience_bar_size = {
 	188,
 	16
 }
+local portait_size = table.clone(ItemSlotSettings.slot_portrait_frame.item_icon_size)
+local insignia_size = table.clone(ItemSlotSettings.slot_insignia.item_icon_size)
 local scenegraph_definition = {
 	screen = {
 		scale = "fit",
@@ -102,8 +105,8 @@ local scenegraph_definition = {
 		parent = "screen",
 		horizontal_alignment = "left",
 		size = {
-			30,
-			80
+			insignia_size[1] * 0.8,
+			insignia_size[2] * 0.8
 		},
 		position = {
 			52,
@@ -116,11 +119,11 @@ local scenegraph_definition = {
 		parent = "character_insigna",
 		horizontal_alignment = "left",
 		size = {
-			70,
-			80
+			portait_size[1] * 0.8,
+			portait_size[2] * 0.8
 		},
 		position = {
-			40,
+			insignia_size[1] * 0.8,
 			0,
 			1
 		}
@@ -253,7 +256,7 @@ local widget_definitions = {
 	character_portrait = UIWidget.create_definition({
 		{
 			value_id = "texture",
-			style_id = "texture",
+			style_id = "texture_portrait",
 			pass_type = "texture",
 			value = "content/ui/materials/base/ui_portrait_frame_base",
 			style = {
@@ -266,9 +269,10 @@ local widget_definitions = {
 	}, "character_portrait"),
 	character_insigna = UIWidget.create_definition({
 		{
-			value = "content/ui/materials/base/ui_default_base",
-			style_id = "texture",
+			value_id = "texture_insignia",
+			style_id = "texture_insignia",
 			pass_type = "texture",
+			value = "content/ui/materials/base/ui_default_base",
 			style = {
 				material_values = {
 					use_placeholder_texture = 1

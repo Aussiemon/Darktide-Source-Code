@@ -554,6 +554,27 @@ TelemetryEvents.boss_encounter_started = function (self, breed)
 	self._manager:register_event(event)
 end
 
+TelemetryEvents.chest_opened = function (self, player, chest_size, chest_coordinates, chest_items)
+	local event = TelemetryEvent:new(SOURCE, player:telemetry_subject(), "chest_opened", {
+		game = player:telemetry_game_session(),
+		gameplay = self._session.gameplay
+	})
+	chest_items = table.clone(chest_items)
+
+	for i = 1, chest_size do
+		if chest_items[i] == nil then
+			chest_items[i] = "empty"
+		end
+	end
+
+	event:set_data({
+		chest_size = chest_size,
+		chest_coordinates = chest_coordinates,
+		chest_items = chest_items
+	})
+	self._manager:register_event(event)
+end
+
 TelemetryEvents.picked_items_report = function (self, reports)
 	for player, report in pairs(reports) do
 		local entries = report.entries
@@ -729,7 +750,7 @@ TelemetryEvents.perf_memory_tree = function (self, map, memory_tree)
 	self._manager:register_event(event)
 end
 
-TelemetryEvents.open_view = function (self, view_name)
+TelemetryEvents.open_view = function (self, view_name, hub_interaction)
 	if table.array_contains(BLACKLISTED_VIEWS, view_name) then
 		return
 	end
@@ -739,7 +760,8 @@ TelemetryEvents.open_view = function (self, view_name)
 
 	event:set_data({
 		name = view_name,
-		active_views = active_views
+		active_views = active_views,
+		hub_interaction = hub_interaction
 	})
 	self._manager:register_event(event)
 end
@@ -771,7 +793,7 @@ TelemetryEvents.end_cutscene = function (self, cinematics_name, cinematic_scene_
 	self._manager:register_event(event)
 end
 
-TelemetryEvents.performance_load_times = function (self, map, wait_for_network_time, resource_load_time, mission_intro_time, wait_for_spawn_time)
+TelemetryEvents.performance_load_times = function (self, map, wait_for_network_time, resource_load_time, mission_intro_time, wait_for_spawn_time, read_from_disk_time)
 	local event = self:_create_event("performance_load_times")
 
 	event:set_data({
@@ -779,7 +801,8 @@ TelemetryEvents.performance_load_times = function (self, map, wait_for_network_t
 		wait_for_network_time = wait_for_network_time,
 		resource_load_time = resource_load_time,
 		mission_intro_time = mission_intro_time,
-		wait_for_spawn_time = wait_for_spawn_time
+		wait_for_spawn_time = wait_for_spawn_time,
+		read_from_disk_time = read_from_disk_time
 	})
 	self._manager:register_event(event)
 end

@@ -12,7 +12,7 @@ local ActionUseSyringe = class("ActionUseSyringe", "ActionWeaponBase")
 ActionUseSyringe.init = function (self, action_context, action_params, action_settings)
 	ActionUseSyringe.super.init(self, action_context, action_params, action_settings)
 
-	self._specialization_extension = ScriptUnit.extension(self._player_unit, "specialization_system")
+	self._talent_extension = ScriptUnit.extension(self._player_unit, "talent_system")
 	local unit_data_extension = self._unit_data_extension
 	self._action_module_targeting_component = unit_data_extension:write_component("action_module_targeting")
 end
@@ -78,8 +78,8 @@ ActionUseSyringe.fixed_update = function (self, dt, t, time_in_action)
 		action_module_targeting_component.target_unit_3 = nil
 
 		if self._is_server then
-			local has_override_buff_rule = self._specialization_extension:has_special_rule(special_rules.buff_target_buff_name_override_one)
-			local has_override_buff_rule_two = self._specialization_extension:has_special_rule(special_rules.buff_target_buff_name_override_two)
+			local has_override_buff_rule = self._talent_extension:has_special_rule(special_rules.buff_target_buff_name_override_one)
+			local has_override_buff_rule_two = self._talent_extension:has_special_rule(special_rules.buff_target_buff_name_override_two)
 			local buff_name = has_override_buff_rule and action_settings.override_buff_name_one or has_override_buff_rule_two and action_settings.override_buff_name_two or action_settings.buff_name
 			local target_buff_extension = ScriptUnit.has_extension(target_unit, "buff_system")
 

@@ -75,7 +75,7 @@ local hud_element_player_ability_settings = {
 		frame = get_hud_color("color_tint_main_3", 255),
 		right_edge = get_hud_color("color_tint_main_2", 255),
 		left_edge = get_hud_color("color_tint_main_2", 255),
-		frame_glow = get_hud_color("color_tint_main_3", 0),
+		frame_glow = get_hud_color("color_tint_main_1", 255),
 		text = get_hud_color("color_tint_main_2", 255),
 		input_text = get_hud_color("color_tint_main_1", 255)
 	},

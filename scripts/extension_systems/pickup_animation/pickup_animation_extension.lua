@@ -24,10 +24,10 @@ PickupAnimationExtension.start_pickup_animation = function (self, destination_un
 	self._owner_system:enable_update_function(self.__class_name, "update", self._unit, self)
 
 	self._pickup_animation_started = true
-	local interactee_ext = ScriptUnit.has_extension(unit, "interactee_system")
+	local interactee_extension = ScriptUnit.has_extension(unit, "interactee_system")
 
-	if interactee_ext then
-		interactee_ext:set_used()
+	if interactee_extension then
+		interactee_extension:set_used()
 	end
 end
 
@@ -41,10 +41,10 @@ PickupAnimationExtension.start_place_animation = function (self, destination_uni
 
 	self._owner_system:enable_update_function(self.__class_name, "update", self._unit, self)
 
-	local interactee_ext = ScriptUnit.has_extension(unit, "interactee_system")
+	local interactee_extension = ScriptUnit.has_extension(unit, "interactee_system")
 
-	if interactee_ext then
-		interactee_ext:set_active(false)
+	if interactee_extension then
+		interactee_extension:set_active(false)
 	end
 end
 
@@ -69,7 +69,7 @@ PickupAnimationExtension.update = function (self, unit, dt, t)
 
 		local scale = math.lerp(1, PickupSettings.end_scale, animation_position)
 
-		Unit.set_local_scale(unit, 1, Vector3.one() * scale)
+		Unit.set_local_scale(unit, 1, Vector3(scale, scale, scale))
 	end
 
 	if percentage > 1 then
@@ -83,10 +83,10 @@ PickupAnimationExtension.update = function (self, unit, dt, t)
 	end
 
 	if percentage < 0 then
-		local interactee_ext = ScriptUnit.has_extension(unit, "interactee_system")
+		local interactee_extension = ScriptUnit.has_extension(unit, "interactee_system")
 
-		if interactee_ext then
-			interactee_ext:set_active(true)
+		if interactee_extension then
+			interactee_extension:set_active(true)
 		end
 
 		Unit.set_local_position(unit, 1, Vector3Box.unbox(self._start_position))

@@ -128,7 +128,6 @@ AuspexScanningEffects.fixed_update = function (self, unit, dt, t, frame)
 end
 
 AuspexScanningEffects.update_unit_position = function (self, unit, dt, t)
-	local is_server = self._is_server
 	local is_husk = self._is_husk
 	local weapon_action_component = self._weapon_action_component
 	local scanning_component = self._scanning_component
@@ -170,8 +169,16 @@ AuspexScanningEffects.update_unit_position = function (self, unit, dt, t)
 	WwiseWorld.set_source_parameter(self._wwise_world, fx_source, WWISE_PARAMETER_NAME_DISTANCE, current_distance)
 	WwiseWorld.set_source_parameter(self._wwise_world, fx_source, WWISE_PARAMETER_NAME_ANGLE, current_angle)
 
-	local current_beep = WwiseWorld.get_source_parameter(self._wwise_world, WWISE_PARAMETER_NAME_BEEP_VOLUME, fx_source)
-	local current_beep_normalized = 1 - math.clamp01(current_beep / -48)
+	local current_beep_normalized = 0
+	local action_start_t = weapon_action_component.start_t or t
+	local time_in_action = t - action_start_t
+	local can_fetch = action_settings and (action_settings.kind == "scan" and time_in_action > 0.12 or action_settings.kind == "scan_confirm")
+
+	if can_fetch then
+		local current_beep = WwiseWorld.get_source_parameter(self._wwise_world, WWISE_PARAMETER_NAME_BEEP_VOLUME, fx_source)
+		current_beep_normalized = 1 - math.clamp01(current_beep / -48)
+	end
+
 	local should_light_be_on = is_active and current_beep_normalized > 0.7
 
 	self:_set_scanner_lights(should_light_be_on)
@@ -267,16 +274,16 @@ AuspexScanningEffects.update_unit_position = function (self, unit, dt, t)
 	local current_holo_unit = 1
 
 	if current_scan_mission_zone then
-		local scanable_units = current_scan_mission_zone:scannable_units()
+		local scannable_units = current_scan_mission_zone:scannable_units()
 
-		for i = 1, #scanable_units do
-			local current_scanable_unit = scanable_units[i]
-			local scannable_extension = ScriptUnit.has_extension(current_scanable_unit, "mission_objective_zone_scannable_system")
+		for i = 1, #scannable_units do
+			local current_scannable_unit = scannable_units[i]
+			local scannable_extension = ScriptUnit.has_extension(current_scannable_unit, "mission_objective_zone_scannable_system")
 			local is_current_active = scannable_extension:is_active()
 
 			if is_current_active then
-				local is_current_scanable_unit = current_scanable_unit == scannable_unit
-				local scannable_position = Unit.world_position(current_scanable_unit, 1)
+				local is_current_scannable_unit = current_scannable_unit == scannable_unit
+				local scannable_position = Unit.world_position(current_scannable_unit, 1)
 				local to_scannable = scannable_position - scanner_world_position
 				local scan_angle = Vector3.angle(to_scannable, Vector3.flat(to_scannable), true) * math.sign(to_scannable.z)
 				local diff = scan_angle - player_horizotal_angle
@@ -295,7 +302,7 @@ AuspexScanningEffects.update_unit_position = function (self, unit, dt, t)
 				local normalized_alpha_distance = math.clamp01(math.ilerp(far, near * 0.25, distance_to_scannable))
 				local current_lerp = math.lerp(0.2, 1, normalized_alpha_distance)
 				local scaled_size = math.lerp(HOLO_MIN_SIZE, HOLO_INACTIVE_SIZE, current_lerp)
-				local size = is_current_scanable_unit and active_size or scaled_size
+				local size = is_current_scannable_unit and active_size or scaled_size
 				local holo_unit = holo_units[current_holo_unit]
 				current_holo_unit = current_holo_unit + 1
 

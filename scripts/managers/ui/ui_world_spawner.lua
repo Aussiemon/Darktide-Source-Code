@@ -207,9 +207,12 @@ UIWorldSpawner._setup_extension_manager = function (self)
 			"DialogueSystem",
 			false,
 			false,
+			false,
 			true,
-			true,
-			false
+			false,
+			{
+				"DialogueExtension"
+			}
 		},
 		{
 			"dialogue_context_system",

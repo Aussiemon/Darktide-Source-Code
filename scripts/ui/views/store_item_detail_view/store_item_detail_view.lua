@@ -2456,19 +2456,23 @@ StoreItemDetailView.cb_on_purchase_pressed = function (self)
 
 									self:_play_sound(UISoundEvents.aquilas_vendor_on_purchase)
 
+									for i = 1, #items_not_owned do
+										local item_not_owned = items_not_owned[i]
+										local item = item_not_owned.item
+
+										ItemUtils.mark_item_id_as_new(item, true)
+
+										if #items_not_owned < 3 then
+											Managers.event:trigger("event_add_notification_message", "item_granted", item)
+										end
+									end
+
 									if #items_not_owned >= 3 then
 										local message = Localize("loc_premium_store_notification_success_bundle", true, {
 											item = offer.sku.name
 										})
 
 										Managers.event:trigger("event_add_notification_message", "default", message)
-									else
-										for i = 1, #items_not_owned do
-											local item_not_owned = items_not_owned[i]
-											local item = item_not_owned.item
-
-											Managers.event:trigger("event_add_notification_message", "item_granted", item)
-										end
 									end
 
 									if is_bundle or #self._items == 1 or #self._owned_items == #self._items then

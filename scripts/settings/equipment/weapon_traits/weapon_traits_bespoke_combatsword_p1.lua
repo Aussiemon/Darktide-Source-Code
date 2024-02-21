@@ -1,7 +1,9 @@
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local templates = {}
+
+table.make_unique(templates)
+
 local stat_buffs = BuffSettings.stat_buffs
-local keywords = BuffSettings.keywords
 templates.weapon_trait_bespoke_combatsword_p1_chained_hits_increases_melee_cleave = {
 	weapon_trait_bespoke_combatsword_p1_chained_hits_increases_melee_cleave_parent = {
 		{
@@ -100,11 +102,6 @@ templates.weapon_trait_bespoke_combatsword_p1_increased_melee_damage_on_multiple
 				[stat_buffs.melee_power_level_modifier] = 0.36
 			}
 		}
-	}
-}
-templates.weapon_trait_bespoke_combatsword_p1_infinite_melee_cleave_on_crit = {
-	weapon_trait_bespoke_combatsword_p1_infinite_melee_cleave_on_crit = {
-		{}
 	}
 }
 templates.weapon_trait_bespoke_combatsword_p1_infinite_melee_cleave_on_crit = {

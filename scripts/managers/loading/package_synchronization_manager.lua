@@ -6,10 +6,12 @@ PackageSynchronizationManager.init = function (self)
 	self._peer_id = nil
 	self._package_synchronizer_client = nil
 	self._package_synchronizer_host = nil
+	self._unload_delayed_packages = {}
 end
 
 PackageSynchronizationManager.destroy = function (self)
 	self:cleanup()
+	self:release_unload_delayed_packages()
 end
 
 PackageSynchronizationManager.update = function (self, dt)
@@ -71,6 +73,22 @@ end
 
 PackageSynchronizationManager.synchronizer_client = function (self)
 	return self._package_synchronizer_client
+end
+
+PackageSynchronizationManager.add_unload_delayed_packages = function (self, package_ids)
+	for i = 1, #package_ids do
+		self._unload_delayed_packages[#self._unload_delayed_packages + 1] = package_ids[i]
+	end
+end
+
+PackageSynchronizationManager.release_unload_delayed_packages = function (self)
+	local package_ids = self._unload_delayed_packages
+
+	for i = 1, #package_ids do
+		Managers.package:release(package_ids[i])
+	end
+
+	table.clear(self._unload_delayed_packages)
 end
 
 PackageSynchronizationManager.cleanup = function (self)

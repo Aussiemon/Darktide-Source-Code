@@ -14,8 +14,19 @@ BtChaosPoxwalkerExplodeAction.enter = function (self, unit, breed, blackboard, s
 	local attack_type = nil
 	local power_level = Managers.state.difficulty:get_minion_attack_power_level(breed)
 	local explosion_template = action_data.explosion_template
+	local optional_attacking_unit_owner_unit = nil
+	local optional_apply_owner_buffs = false
+	local death_component = blackboard.death
 
-	Explosion.create_explosion(world, physics_world, position, impact_normal, unit, explosion_template, power_level, charge_level, attack_type)
+	if death_component.staggered_during_lunge then
+		local stagger_component = blackboard.stagger
+		optional_attacking_unit_owner_unit = ALIVE[stagger_component.attacker_unit] and stagger_component.attacker_unit
+	elseif death_component.damage_profile_name ~= nil and death_component.damage_profile_name ~= "default" then
+		local health_extension = ScriptUnit.extension(unit, "health_system")
+		optional_attacking_unit_owner_unit = health_extension:last_damaging_unit()
+	end
+
+	Explosion.create_explosion(world, physics_world, position, impact_normal, unit, explosion_template, power_level, charge_level, attack_type, false, nil, nil, nil, nil, optional_attacking_unit_owner_unit, optional_apply_owner_buffs)
 end
 
 BtChaosPoxwalkerExplodeAction.run = function (self, unit, breed, blackboard, scratchpad, action_data, dt, t)

@@ -1,5 +1,8 @@
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local templates = {}
+
+table.make_unique(templates)
+
 local stat_buffs = BuffSettings.stat_buffs
 templates.weapon_trait_bespoke_combataxe_p2_increase_power_on_hit = {
 	weapon_trait_bespoke_combataxe_p2_increase_power_on_hit_parent = {
@@ -97,50 +100,6 @@ templates.weapon_trait_bespoke_combataxe_p2_infinite_melee_cleave_on_weakspot_ki
 		{
 			stat_buffs = {
 				[stat_buffs.melee_weakspot_damage] = 0.15
-			}
-		}
-	}
-}
-templates.weapon_trait_bespoke_combataxe_p2_power_bonus_on_first_attack = {
-	weapon_trait_bespoke_combataxe_p2_power_bonus_on_first_attack = {
-		{
-			conditional_switch_stat_buffs = {
-				{
-					[stat_buffs.power_level_modifier] = 0.1
-				},
-				{
-					[stat_buffs.power_level_modifier] = -0.1
-				}
-			}
-		},
-		{
-			conditional_switch_stat_buffs = {
-				{
-					[stat_buffs.power_level_modifier] = 0.15
-				},
-				{
-					[stat_buffs.power_level_modifier] = -0.1
-				}
-			}
-		},
-		{
-			conditional_switch_stat_buffs = {
-				{
-					[stat_buffs.power_level_modifier] = 0.2
-				},
-				{
-					[stat_buffs.power_level_modifier] = -0.1
-				}
-			}
-		},
-		{
-			conditional_switch_stat_buffs = {
-				{
-					[stat_buffs.power_level_modifier] = 0.25
-				},
-				{
-					[stat_buffs.power_level_modifier] = -0.1
-				}
 			}
 		}
 	}

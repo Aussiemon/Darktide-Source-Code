@@ -216,6 +216,9 @@ weapon_template.actions = {
 			wield = {
 				action_name = "action_unwield"
 			},
+			combat_ability = {
+				action_name = "combat_ability"
+			},
 			grenade_ability = {
 				{
 					action_name = "grenade_ability"
@@ -420,6 +423,9 @@ weapon_template.actions = {
 				action_name = "action_melee_start_left",
 				chain_time = 0.25
 			},
+			combat_ability = {
+				action_name = "combat_ability"
+			},
 			grenade_ability = {
 				{
 					action_name = "grenade_ability",
@@ -490,6 +496,9 @@ weapon_template.actions = {
 				action_name = "action_zoom",
 				chain_time = 0.8
 			},
+			combat_ability = {
+				action_name = "combat_ability"
+			},
 			grenade_ability = {
 				{
 					action_name = "grenade_ability",
@@ -557,6 +566,9 @@ weapon_template.actions = {
 				action_name = "action_zoom",
 				chain_time = 0.8
 			},
+			combat_ability = {
+				action_name = "combat_ability"
+			},
 			grenade_ability = {
 				{
 					action_name = "grenade_ability",
@@ -623,6 +635,9 @@ weapon_template.actions = {
 			zoom = {
 				action_name = "action_zoom",
 				chain_time = 0.7
+			},
+			combat_ability = {
+				action_name = "combat_ability"
 			},
 			grenade_ability = {
 				{
@@ -709,6 +724,9 @@ weapon_template.actions = {
 			zoom = {
 				action_name = "action_zoom",
 				chain_time = 0.6
+			},
+			combat_ability = {
+				action_name = "combat_ability"
 			},
 			grenade_ability = {
 				{
@@ -808,6 +826,9 @@ weapon_template.actions = {
 			zoom = {
 				action_name = "action_zoom",
 				chain_time = 0.6
+			},
+			combat_ability = {
+				action_name = "combat_ability"
 			},
 			grenade_ability = {
 				{
@@ -910,6 +931,9 @@ weapon_template.actions = {
 				action_name = "action_zoom",
 				chain_time = 0.8
 			},
+			combat_ability = {
+				action_name = "combat_ability"
+			},
 			grenade_ability = {
 				{
 					action_name = "grenade_ability",
@@ -994,6 +1018,9 @@ weapon_template.actions = {
 			zoom = {
 				action_name = "action_zoom",
 				chain_time = 0.8
+			},
+			combat_ability = {
+				action_name = "combat_ability"
 			},
 			grenade_ability = {
 				{
@@ -1080,6 +1107,9 @@ weapon_template.actions = {
 				action_name = "action_zoom",
 				chain_time = 0.8
 			},
+			combat_ability = {
+				action_name = "combat_ability"
+			},
 			grenade_ability = {
 				{
 					action_name = "grenade_ability",
@@ -1165,6 +1195,9 @@ weapon_template.actions = {
 				action_name = "action_zoom",
 				chain_time = 0.8
 			},
+			combat_ability = {
+				action_name = "combat_ability"
+			},
 			grenade_ability = {
 				{
 					action_name = "grenade_ability",
@@ -1240,6 +1273,17 @@ weapon_template.actions = {
 			special_action_execute = {
 				action_name = "action_execute_special",
 				chain_time = 0.5
+			},
+			combat_ability = {
+				action_name = "combat_ability"
+			},
+			grenade_ability = {
+				{
+					action_name = "grenade_ability"
+				},
+				{
+					action_name = "grenade_ability_quick_throw"
+				}
 			}
 		},
 		anim_end_event_condition_func = function (unit, data, end_reason)
@@ -1313,6 +1357,9 @@ weapon_template.actions = {
 			zoom = {
 				action_name = "action_zoom",
 				chain_time = 0.8
+			},
+			combat_ability = {
+				action_name = "combat_ability"
 			},
 			grenade_ability = {
 				{
@@ -1408,7 +1455,7 @@ weapon_template.alternate_fire_settings = {
 	}
 }
 weapon_template.traits = {}
-local bespoke_ogryn_gauntlet_p1_traits = table.keys(WeaponTraitsOgrynGauntletP1)
+local bespoke_ogryn_gauntlet_p1_traits = table.ukeys(WeaponTraitsOgrynGauntletP1)
 
 table.append(weapon_template.traits, bespoke_ogryn_gauntlet_p1_traits)
 

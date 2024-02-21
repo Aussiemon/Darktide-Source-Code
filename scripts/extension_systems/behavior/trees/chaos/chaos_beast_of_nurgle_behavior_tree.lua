@@ -1,14 +1,10 @@
 local BreedActions = require("scripts/settings/breed/breed_actions")
 local action_data = BreedActions.chaos_beast_of_nurgle
 local HUNT = {
-	"BtSequenceNode",
-	{
-		"BtBeastOfNurgleMovementAction",
-		name = "movement",
-		action_data = action_data.movement
-	},
+	"BtBeastOfNurgleMovementAction",
+	name = "movement",
 	condition = "beast_of_nurgle_movement",
-	name = "hunting"
+	action_data = action_data.movement
 }
 local VOMIT = {
 	"BtSequenceNode",
@@ -60,13 +56,8 @@ local DASH_AND_CONSUME = {
 	name = "dashing_and_consuming"
 }
 local SPIT_OUT_CONSUMED_UNIT = {
-	"BtSequenceNode",
-	{
-		"BtBeastOfNurgleSpitOutAction",
-		name = "spit_out",
-		leave_hook = "beast_of_nurgle_set_consume_cooldown",
-		action_data = action_data.spit_out
-	},
+	"BtBeastOfNurgleSpitOutAction",
+	leave_hook = "beast_of_nurgle_set_consume_cooldown",
 	name = "spit_out",
 	condition = "beast_of_nurgle_has_spit_out_target",
 	action_data = action_data.spit_out
@@ -134,13 +125,8 @@ local MELEE_PUSH_BACK_ATTACKS = {
 	name = "melee_push_back_attacks"
 }
 local RUN_AWAY = {
-	"BtSequenceNode",
-	{
-		"BtRunAwayAction",
-		name = "run_away",
-		leave_hook = "beast_of_nurgle_force_spit_out",
-		action_data = action_data.run_away
-	},
+	"BtRunAwayAction",
+	leave_hook = "beast_of_nurgle_force_spit_out",
 	name = "run_away",
 	condition = "beast_of_nurgle_wants_to_run_away",
 	action_data = action_data.run_away

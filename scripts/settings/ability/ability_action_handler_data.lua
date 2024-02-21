@@ -43,7 +43,7 @@ ability_action_data.action_kind_condition_funcs = {
 			return false
 		end
 
-		local stagger_nearby_enemies = condition_func_params.specialization_extension:has_special_rule(special_rules.veteran_combat_ability_stagger_nearby_enemies)
+		local stagger_nearby_enemies = condition_func_params.talent_extension:has_special_rule(special_rules.veteran_combat_ability_stagger_nearby_enemies)
 
 		return stagger_nearby_enemies
 	end,
@@ -54,7 +54,7 @@ ability_action_data.action_kind_condition_funcs = {
 			return false
 		end
 
-		local stagger_nearby_enemies = condition_func_params.specialization_extension:has_special_rule(special_rules.veteran_combat_ability_stagger_nearby_enemies)
+		local stagger_nearby_enemies = condition_func_params.talent_extension:has_special_rule(special_rules.veteran_combat_ability_stagger_nearby_enemies)
 
 		return not stagger_nearby_enemies
 	end,

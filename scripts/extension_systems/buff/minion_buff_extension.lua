@@ -66,9 +66,9 @@ MinionBuffExtension.game_object_initialized = function (self, game_session, game
 			local index = buff_added_before_game_object_creation.index
 			local optional_lerp_value = buff_added_before_game_object_creation.optional_lerp_value
 			local optional_slot_id, optional_parent_buff_template_id = nil
-			local from_specialization = false
+			local from_talent = false
 
-			Managers.state.game_session:send_rpc_clients("rpc_add_buff", game_object_id, buff_template_id, index, optional_lerp_value, optional_slot_id, optional_parent_buff_template_id, from_specialization)
+			Managers.state.game_session:send_rpc_clients("rpc_add_buff", game_object_id, buff_template_id, index, optional_lerp_value, optional_slot_id, optional_parent_buff_template_id, from_talent)
 		end
 
 		self._buffs_added_before_game_object_creation = nil
@@ -280,7 +280,7 @@ MinionBuffExtension._add_rpc_synced_buff = function (self, template, t, ...)
 		Managers.state.game_session:send_rpc_clients("rpc_add_buff", game_object_id, buff_template_id, index, optional_lerp_value, nil, nil, false)
 	else
 		local buff_added_before_game_object_creation = {
-			from_specialization = false,
+			from_talent = false,
 			buff_template_id = buff_template_id,
 			index = index,
 			optional_lerp_value = optional_lerp_value

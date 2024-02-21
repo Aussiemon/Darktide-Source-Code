@@ -25,8 +25,7 @@ end
 local DEFAULT_RADIUS = 4
 local DEFAULT_MAX_Z_DIFF = 10
 local DEFAULT_MAX_ANGLE = math.pi * 0.25
-local DEFAULT_MAX_VERTICAL_ANGLE = math.pi * 0.33
-local BROADPHASE_RESULTS = {}
+local broadphase_results = {}
 local hit_units = {}
 
 ChainLightningTargetingActionModule.fixed_update = function (self, dt, t)
@@ -45,10 +44,10 @@ ChainLightningTargetingActionModule.fixed_update = function (self, dt, t)
 	local time_in_action = t - self._weapon_action_component.start_t
 	local max_angle, close_max_angle, vertical_max_angle, max_z_diff, max_jumps, radius, jump_time, max_targets = ChainLightning.targeting_parameters(time_in_action, chain_settings, stat_buffs)
 
-	table.clear(BROADPHASE_RESULTS)
+	table.clear(broadphase_results)
 	table.clear(hit_units)
 
-	local num_results = broadphase:query(query_position, radius, BROADPHASE_RESULTS, enemy_side_names)
+	local num_results = broadphase:query(query_position, radius, broadphase_results, enemy_side_names)
 	local physics_world = self._physics_world
 	local component = self._component
 	local num_targets = 0
@@ -57,7 +56,7 @@ ChainLightningTargetingActionModule.fixed_update = function (self, dt, t)
 
 	for i = 1, 2 do
 		for j = 1, num_results do
-			local target_unit = BROADPHASE_RESULTS[j]
+			local target_unit = broadphase_results[j]
 
 			if not hit_units[target_unit] then
 				local min_distance = 1

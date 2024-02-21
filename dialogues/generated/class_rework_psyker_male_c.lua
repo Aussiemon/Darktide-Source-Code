@@ -26,18 +26,6 @@ local class_rework_psyker_male_c = {
 			2.202917,
 			3.084208
 		},
-		sound_event_weights = {
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1
-		},
 		randomize_indexes = {}
 	},
 	ability_gunslinger = {

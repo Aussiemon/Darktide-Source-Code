@@ -5,7 +5,7 @@ local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
 local buff_keywords = BuffSettings.keywords
 local _is_stun_immune_from_current_action, _is_stun_immune_from_buff, _is_stun_immune_from_character_state, _apply_stun = nil
 local Stun = {
-	apply = function (unit, disorientation_type, hit_direction, weapon_template, ignore_stun_immunity, is_predicted)
+	apply = function (unit, disorientation_type, hit_direction, weapon_template, ignore_stun_immunity, is_predicted, toughness_broken)
 		if not disorientation_type then
 			return
 		end
@@ -28,7 +28,7 @@ local Stun = {
 			return
 		end
 
-		if not ignore_stun_immunity and (_is_stun_immune_from_current_action(unit_data_extension, weapon_template, unit) or _is_stun_immune_from_buff(unit) or _is_stun_immune_from_character_state(unit_data_extension)) then
+		if not ignore_stun_immunity and (_is_stun_immune_from_current_action(unit_data_extension, weapon_template, unit) or _is_stun_immune_from_buff(unit, toughness_broken) or _is_stun_immune_from_character_state(unit_data_extension)) then
 			return
 		end
 
@@ -65,7 +65,7 @@ function _is_stun_immune_from_current_action(unit_data_extension, weapon_templat
 	return false
 end
 
-function _is_stun_immune_from_buff(unit)
+function _is_stun_immune_from_buff(unit, toughness_broken)
 	local buff_extension = ScriptUnit.has_extension(unit, "buff_system")
 
 	if not buff_extension then
@@ -73,6 +73,10 @@ function _is_stun_immune_from_buff(unit)
 	end
 
 	local has_buff = buff_extension:has_keyword(buff_keywords.stun_immune)
+
+	if not has_buff and toughness_broken then
+		has_buff = buff_extension:has_keyword(buff_keywords.stun_immune_toughness_broken)
+	end
 
 	return has_buff
 end

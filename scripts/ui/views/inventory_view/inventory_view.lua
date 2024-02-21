@@ -475,7 +475,6 @@ InventoryView.cb_on_grid_entry_pressed = function (self, widget, element)
 			if view_name then
 				local context = {
 					player = self._preview_player,
-					player_specialization = self._chosen_specialization,
 					preview_profile_equipped_items = self._preview_profile_equipped_items,
 					current_profile_equipped_items = self._current_profile_equipped_items,
 					selected_slot = slot,
@@ -499,7 +498,6 @@ InventoryView.cb_on_grid_entry_pressed = function (self, widget, element)
 		elseif view_name then
 			local context = {
 				player = self._preview_player,
-				player_specialization = self._chosen_specialization,
 				preview_profile_equipped_items = self._preview_profile_equipped_items,
 				selected_slot = slot,
 				initial_rotation = initial_rotation,
@@ -523,7 +521,6 @@ InventoryView.cb_on_grid_entry_pressed = function (self, widget, element)
 	elseif slots and element.loadout_slot and view_name then
 		local context = {
 			player = self._preview_player,
-			player_specialization = self._chosen_specialization,
 			preview_profile_equipped_items = self._preview_profile_equipped_items,
 			selected_slots = slots,
 			parent = self._parent,
@@ -981,7 +978,7 @@ InventoryView._update_blueprint_widgets = function (self, widgets, dt, t, input_
 			if not self._currently_hovered_item or hovered_item.gear_id ~= self._currently_hovered_item.gear_id then
 				self:_on_item_hover_start(hovered_item)
 			end
-		else
+		elseif self._currently_hovered_item then
 			self:_on_item_hover_stop()
 		end
 

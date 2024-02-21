@@ -403,6 +403,9 @@ local function generate_base_template()
 		sprint_ready_up_time = 0.1,
 		max_first_person_anim_movement_speed = 5.8,
 		fx_sources = {},
+		crosshair = {
+			crosshair_type = "none"
+		},
 		dodge_template = "default",
 		sprint_template = "default",
 		stamina_template = "default",

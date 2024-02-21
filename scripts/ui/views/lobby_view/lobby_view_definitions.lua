@@ -612,11 +612,14 @@ local panel_definition = UIWidget.create_definition({
 				0,
 				2
 			},
-			material_values = {}
-		},
-		visibility_function = function (content, style)
-			return not not style.material_values.texture_map
-		end
+			material_values = {},
+			color = {
+				0,
+				255,
+				255,
+				255
+			}
+		}
 	},
 	{
 		style_id = "character_name",

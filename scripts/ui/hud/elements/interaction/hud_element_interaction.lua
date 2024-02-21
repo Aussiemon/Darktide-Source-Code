@@ -1,10 +1,10 @@
 local Definitions = require("scripts/ui/hud/elements/interaction/hud_element_interaction_definitions")
 local HudElementInteractionSettings = require("scripts/ui/hud/elements/interaction/hud_element_interaction_settings")
 local InputUtils = require("scripts/managers/input/input_utils")
+local UIFonts = require("scripts/managers/ui/ui_fonts")
+local UIRenderer = require("scripts/managers/ui/ui_renderer")
 local UISettings = require("scripts/settings/ui/ui_settings")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
-local UIRenderer = require("scripts/managers/ui/ui_renderer")
-local UIFonts = require("scripts/managers/ui/ui_fonts")
 local HudElementInteraction = class("HudElementInteraction", "HudElementBase")
 
 HudElementInteraction.init = function (self, parent, draw_layer, start_scale)
@@ -139,6 +139,16 @@ HudElementInteraction._update_can_interact_target = function (self)
 
 		if ALIVE[focus_target] and interactor_extension:hud_block_text() then
 			interactee_unit = focus_target
+		end
+	end
+
+	if ALIVE[interactee_unit] and ALIVE[player_unit] then
+		local interactee_extension = ScriptUnit.extension(interactee_unit, "interactee_system")
+
+		if not interactee_extension:show_marker(player_unit) then
+			self._show_interaction_hud = false
+
+			return
 		end
 	end
 

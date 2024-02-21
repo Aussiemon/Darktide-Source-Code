@@ -65,7 +65,7 @@ AccountManagerWinGDK.signin_profile = function (self, signin_callback)
 	end
 
 	if async_task then
-		Managers.xasync:wrap(async_task, XUser.release_async_block):next(success_cb, fail_cb):catch(fail_cb)
+		Managers.xasync:wrap(async_task):next(success_cb, fail_cb):catch(fail_cb)
 	else
 		fail_cb()
 	end
@@ -344,7 +344,7 @@ AccountManagerWinGDK._cb_privileges_updated = function (self)
 	local async_task, error_code = XboxLive.get_sandbox_id_async()
 
 	if async_task then
-		Managers.xasync:wrap(async_task, XboxLive.release_async_block):next(success_cb, fail_cb)
+		Managers.xasync:wrap(async_task):next(success_cb, fail_cb)
 
 		self._signin_state = SIGNIN_STATES.fetching_sandbox_id
 	else

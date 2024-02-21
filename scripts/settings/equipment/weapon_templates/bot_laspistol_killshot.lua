@@ -751,7 +751,7 @@ weapon_template.attack_meta_data = {
 	fire_action_name = "action_shoot_hip"
 }
 weapon_template.traits = {}
-local bespoke_lasgun_p1_traits = table.keys(WeaponTraitsBespokeLaspistolP1)
+local bespoke_lasgun_p1_traits = table.ukeys(WeaponTraitsBespokeLaspistolP1)
 
 table.append(weapon_template.traits, bespoke_lasgun_p1_traits)
 

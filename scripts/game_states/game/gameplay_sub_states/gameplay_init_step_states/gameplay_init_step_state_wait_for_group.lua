@@ -87,6 +87,8 @@ GameplayInitStepStateWaitForGroup.rpc_group_loaded = function (self, channel_id,
 
 	if spawn_group == expected_spawn_group then
 		self._ready_to_spawn = true
+
+		Managers.event:trigger("spawn_group_loaded")
 	end
 end
 

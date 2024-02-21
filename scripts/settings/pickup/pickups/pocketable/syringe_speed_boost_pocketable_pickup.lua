@@ -28,17 +28,21 @@ local pickup_data = {
 			end
 		end
 
-		local player_unit_spawn_manager = Managers.state.player_unit_spawn
-		local player = player_unit_spawn_manager:owner(interactor_unit)
+		local is_server = Managers.state.game_session:is_server()
 
-		if player then
-			local pickup_name = pickup_data.name
-			local data = {
-				pickup_name = pickup_name,
-				exchanged_unit = replaced_unit_name
-			}
+		if is_server then
+			local player_unit_spawn_manager = Managers.state.player_unit_spawn
+			local player = player_unit_spawn_manager:owner(interactor_unit)
 
-			Managers.telemetry_events:player_picked_up_stimm(player, data)
+			if player then
+				local pickup_name = pickup_data.name
+				local data = {
+					pickup_name = pickup_name,
+					exchanged_unit = replaced_unit_name
+				}
+
+				Managers.telemetry_events:player_picked_up_stimm(player, data)
+			end
 		end
 	end
 }

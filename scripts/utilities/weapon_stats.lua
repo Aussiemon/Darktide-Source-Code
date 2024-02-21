@@ -5,15 +5,11 @@ local DamageCalculation = require("scripts/utilities/attack/damage_calculation")
 local DamageProfile = require("scripts/utilities/attack/damage_profile")
 local PowerLevelSettings = require("scripts/settings/damage/power_level_settings")
 local StaggerCalculation = require("scripts/utilities/attack/stagger_calculation")
-local WeaponHandlingTemplates = require("scripts/settings/equipment/weapon_handling_templates/weapon_handling_templates")
 local WeaponTemplates = require("scripts/settings/equipment/weapon_templates/weapon_templates")
 local WeaponTweakTemplates = require("scripts/extension_systems/weapon/utilities/weapon_tweak_templates")
-local WeaponStaminaTemplates = require("scripts/settings/stamina/weapon_stamina_templates")
-local WeaponAmmoTemplates = require("scripts/settings/equipment/weapon_handling_templates/weapon_ammo_templates")
 local Weapon = require("scripts/extension_systems/weapon/weapon")
 local WeaponTweakTemplateSettings = require("scripts/settings/equipment/weapon_templates/weapon_tweak_template_settings")
 local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
-local UISettings = require("scripts/settings/ui/ui_settings")
 local WeaponStats = class("WeaponStats")
 local DEFAULT_POWER_LEVEL = PowerLevelSettings.default_power_level
 local template_types = WeaponTweakTemplateSettings.template_types
@@ -63,7 +59,6 @@ WeaponStats.init = function (self, item)
 	local weapon_template = WeaponTemplate.weapon_template_from_item(item)
 	local weapon_tweak_templates, damage_profile_lerp_values, explosion_template_lerp_values, buffs = Weapon._init_traits(nil, weapon_template, item, nil, nil, {})
 	local weapon_stats = self:calculate_stats(weapon_template, weapon_tweak_templates, damage_profile_lerp_values)
-	local weapon_traits = self:calculate_traits(buffs)
 	self._name = weapon_stats.name
 	self._is_ranged_weapon = weapon_stats.is_ranged_weapon
 	self._type = weapon_stats.is_ranged_weapon and "Ranged" or "Melee"
@@ -401,7 +396,6 @@ WeaponStats.calculate_stats = function (self, weapon_template, weapon_tweak_temp
 	local uses_ammunition = weapon_template.uses_ammunition
 	local actions = weapon_template.actions
 	local rate_of_fire = nil
-	local template_types = WeaponTweakTemplateSettings.template_types
 	local ammo_templates = weapon_tweak_templates[template_types.ammo]
 	local ammo_template_name = weapon_template.ammo_template or "none"
 	local ammo_template = ammo_templates[ammo_template_name]
@@ -640,6 +634,8 @@ WeaponStats.calculate_stats = function (self, weapon_template, weapon_tweak_temp
 					stats.base_reload_loop_time = reload_loop_time * reload_loop_scale
 					stats.reload_start_ammo_refill = reload_start_ammo_refil
 					stats.reload_loop_ammo_refill = reload_loop_ammo_refil
+				elseif not reload_loop_time and reload_start_time then
+					stats.reload_time = reload_start_time
 				else
 					stats.reload_time = reload_time
 					stats.base_reload_time = reload_time * reload_scale
@@ -725,7 +721,7 @@ WeaponStats.get_all_melee = function (self)
 end
 
 WeaponStats.get_compare_stats_limits = function (self, weapon_template)
-	local templates_to_compare = {}
+	local templates_to_compare = nil
 	local min_stats = {}
 	local max_stats = {}
 	local min_stats_total = {}
@@ -820,13 +816,6 @@ WeaponStats.get_compairing_stats = function (self)
 	end
 
 	return values
-end
-
-WeaponStats.calculate_traits = function (self, buffs)
-	table.dump(buffs.perks or {}, nil, 4)
-	table.dump(buffs.trais or {}, nil, 4)
-
-	return {}
 end
 
 WeaponStats.get_main_stats = function (self)
@@ -1293,7 +1282,12 @@ function _calculate_weapon_statistics(weapon_template, lerp_values, damage_profi
 			local target_index = action_data.target_index
 			local charge_level = action_data.charge_level
 			local dropoff_scalar = action_data.dropoff_scalar
-			local damage_profile = Action.damage_template(action)
+			local damage_profile, special_damage_profile = Action.damage_template(action)
+
+			if action.activate_special_on_required_ammo or action_data.use_special_damage_profile then
+				damage_profile = special_damage_profile or damage_profile
+			end
+
 			local explosion_template = Action.explosion_template(action)
 
 			if damage_profile then

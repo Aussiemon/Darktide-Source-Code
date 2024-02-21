@@ -71,7 +71,7 @@ Main.init = function (self)
 	end
 
 	self._package_manager = package_manager
-	self._sm = GameStateMachine:new(nil, StateBoot, params, nil, nil, "Main")
+	self._sm = GameStateMachine:new(nil, StateBoot, params, nil, nil, "Main", true)
 end
 
 Main.update = function (self, dt)
@@ -93,12 +93,6 @@ Main.on_close = function (self)
 end
 
 Main.shutdown = function (self)
-	Application.force_silent_exit_policy()
-
-	if rawget(_G, "Crashify") then
-		Crashify.print_property("shutdown", true)
-	end
-
 	local owns_package_manager = true
 
 	if rawget(_G, "Managers") and Managers.package then
@@ -202,4 +196,8 @@ end
 
 function shutdown()
 	Main:shutdown()
+end
+
+function on_low_memory_state_dump(dump_file_path, total_allocated, total_used)
+	return
 end

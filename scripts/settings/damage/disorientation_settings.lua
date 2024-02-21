@@ -68,6 +68,20 @@ local disorientation_settings = {
 				action_delay = 0
 			}
 		},
+		toughness_burning = {
+			sound_event = "wwise/events/player/play_player_get_hit_fire_toughness",
+			screen_space_effect = "content/fx/particles/screenspace/screen_stunned_light",
+			hit_react_anim_3p = "hit_react",
+			stun = {
+				end_stun_early_time = 0,
+				start_anim_3p = "hit_react",
+				stun_immunity_time_buff = "stun_immune_short",
+				start_anim = "hit_react",
+				intoxication_level = 0,
+				stun_duration = 0,
+				action_delay = 0
+			}
+		},
 		ranged_sprinting = {
 			sound_event = "wwise/events/player/play_player_get_hit_light_2d",
 			movement_speed_buff = "ranged_stun_movement_slow",
@@ -100,9 +114,9 @@ local disorientation_settings = {
 				end_anim_3p = "hit_stun_finished",
 				interrupt_delay = 0.05,
 				end_anim = "hit_stun_finished",
-				end_stun_early_time = 0.35,
+				end_stun_early_time = 0.3,
 				stun_immunity_time_buff = "stun_immune_short",
-				stun_duration = 0.6,
+				stun_duration = 0.5,
 				action_delay = 0.3
 			}
 		},
@@ -457,6 +471,9 @@ local disorientation_settings = {
 		},
 		corruption_tick = {
 			sound_event = "wwise/events/player/play_player_get_hit_corruption_2d_tick"
+		},
+		toughness_corruption = {
+			sound_event = "wwise/events/player/play_player_get_hit_2d_corruption_tick_toughness"
 		},
 		ogryn_toughness = {
 			screen_space_effect = "content/fx/particles/screenspace/screen_stunned_light",

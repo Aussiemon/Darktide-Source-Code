@@ -225,7 +225,15 @@ disabled_button_with_explanation_style.text.offset = {
 disabled_button_with_explanation_style.second_row = table.clone(UIFontSettings.list_button_second_row)
 local disabled_button_with_explanation_second_row_style = disabled_button_with_explanation_style.second_row
 disabled_button_with_explanation_second_row_style.offset[1] = disabled_button_with_explanation_style.text.offset[1]
+disabled_button_with_explanation_second_row_style.offset[2] = 35
+disabled_button_with_explanation_second_row_style.size_addition = {
+	0,
+	-35
+}
 disabled_button_with_explanation_second_row_style.text_color = Color.ui_grey_medium(255, true)
+disabled_button_with_explanation_second_row_style.text_vertical_alignment = "top"
+disabled_button_with_explanation_second_row_style.font_size = 16
+disabled_button_with_explanation_second_row_style.line_spacing = 1
 disabled_button_with_explanation_style.icon = {
 	offset = {
 		0,

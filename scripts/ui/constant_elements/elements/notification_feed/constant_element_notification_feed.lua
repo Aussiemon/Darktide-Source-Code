@@ -16,19 +16,38 @@ local _localization_context = {}
 
 local function _apply_package_item_icon_cb_func(widget, item)
 	local icon = item.icon
-	local material_values = widget.style.icon.material_values
-	material_values.texture_icon = icon
+	local icon_style = widget.style.icon
+	local material_values = icon_style.material_values
+
+	if item.icon_material and item.icon_material ~= "" then
+		if material_values.texture_icon then
+			material_values.texture_icon = nil
+		end
+
+		widget.content.old_icon = widget.content.icon
+		widget.content.icon = item.icon_material
+	else
+		material_values.icon_size = {
+			icon_style.size[1],
+			icon_style.size[2]
+		}
+		material_values.texture_icon = icon
+	end
+
 	material_values.use_placeholder_texture = 0
 	material_values.use_render_target = 0
-	local item_slot = ItemUtils.item_slot(item)
-	local icon_size = item_slot.item_icon_size
-	material_values.icon_size = icon_size
+	widget.content.use_placeholder_texture = material_values.use_placeholder_texture
 end
 
 local function _remove_package_item_icon_cb_func(widget, ui_renderer)
 	if ui_renderer then
 		UIWidget.set_visible(widget, ui_renderer, false)
 		UIWidget.set_visible(widget, ui_renderer, true)
+	end
+
+	if widget.content.old_icon then
+		widget.content.icon = widget.content.old_icon
+		widget.content.old_icon = nil
 	end
 
 	local material_values = widget.style.icon.material_values
@@ -139,6 +158,7 @@ ConstantElementNotificationFeed.init = function (self, parent, draw_layer, start
 			widget_definition = Definitions.notification_message
 		}
 	}
+	self._crafting_pickup_notifications_enabled = true
 	local event_manager = Managers.event
 	local events = ConstantElementNotificationFeedSettings.events
 
@@ -147,6 +167,20 @@ ConstantElementNotificationFeed.init = function (self, parent, draw_layer, start
 
 		event_manager:register(self, event[1], event[2])
 	end
+
+	event_manager:register(self, "event_player_authenticated", "_event_player_authenticated")
+end
+
+ConstantElementNotificationFeed._event_player_authenticated = function (self)
+	local save_manager = Managers.save
+	local crafting_pickup_notifications_enabled = true
+
+	if save_manager then
+		local account_data = save_manager:account_data()
+		crafting_pickup_notifications_enabled = account_data.interface_settings.show_crafting_pickup_notification
+	end
+
+	self._crafting_pickup_notifications_enabled = crafting_pickup_notifications_enabled
 end
 
 ConstantElementNotificationFeed._on_item_icon_loaded = function (self, notification, item, grid_index, rows, columns, render_target)
@@ -160,6 +194,10 @@ ConstantElementNotificationFeed._on_item_icon_loaded = function (self, notificat
 	else
 		_apply_live_item_icon_cb_func(widget, grid_index, rows, columns, render_target)
 	end
+end
+
+ConstantElementNotificationFeed.event_update_show_crafting_pickup_notification = function (self, value)
+	self._crafting_pickup_notifications_enabled = value
 end
 
 ConstantElementNotificationFeed.event_add_notification_message = function (self, message_type, data, callback, sound_event, done_callback, delay)
@@ -232,6 +270,8 @@ ConstantElementNotificationFeed.destroy = function (self)
 
 		event_manager:unregister(self, event[1])
 	end
+
+	event_manager:unregister(self, "event_player_authenticated")
 end
 
 ConstantElementNotificationFeed._generate_notification_data = function (self, message_type, data)
@@ -391,7 +431,7 @@ ConstantElementNotificationFeed._generate_notification_data = function (self, me
 			line_color = rarity_color,
 			enter_sound_event = enter_sound_event
 		}
-	elseif message_type == MESSAGE_TYPES.currency then
+	elseif message_type == MESSAGE_TYPES.currency and self:_can_show_currency_of_type(data.currency) then
 		local currency_type = data.currency
 		local amount = data.amount
 		local amount_size = data.amount_size
@@ -588,6 +628,14 @@ ConstantElementNotificationFeed._generate_notification_data = function (self, me
 	notification_data.exit_sound_event = notification_data.exit_sound_event or UISoundEvents.notification_default_exit
 
 	return notification_data
+end
+
+ConstantElementNotificationFeed._can_show_currency_of_type = function (self, currency_type)
+	if currency_type ~= "plasteel" and currency_type ~= "diamantine" then
+		return true
+	end
+
+	return self._crafting_pickup_notifications_enabled
 end
 
 ConstantElementNotificationFeed._add_notification_message = function (self, message_type, data, callback, sound_event, done_callback)

@@ -164,8 +164,8 @@ damage_templates.powermaul_light_smiter = {
 		{
 			power_distribution = {
 				attack = {
-					50,
-					90
+					65,
+					140
 				},
 				impact = {
 					5,
@@ -392,8 +392,8 @@ damage_templates.powermaul_heavy_tank = {
 		{
 			power_distribution = {
 				attack = {
-					60,
-					120
+					85,
+					180
 				},
 				impact = {
 					30,

@@ -219,35 +219,35 @@ local StateGameplayTestify = {
 			warp_charge_traits = {},
 			explosive_traits = {}
 		}
-		local melee_common_traits = table.keys(WeaponTraitsMeleeCommon)
+		local melee_common_traits = table.ukeys(WeaponTraitsMeleeCommon)
 
 		table.append(traits.melee_traits, melee_common_traits)
 
-		local activated_traits = table.keys(WeaponTraitsMeleeActivated)
+		local activated_traits = table.ukeys(WeaponTraitsMeleeActivated)
 
 		table.append(traits.activated_traits, activated_traits)
 
-		local ranged_common_traits = table.keys(WeaponTraitsRangedCommon)
+		local ranged_common_traits = table.ukeys(WeaponTraitsRangedCommon)
 
 		table.append(traits.ranged_traits, ranged_common_traits)
 
-		local ranged_high_fire_rate_traits = table.keys(WeaponTraitsRangedHighFireRate)
+		local ranged_high_fire_rate_traits = table.ukeys(WeaponTraitsRangedHighFireRate)
 
 		table.append(traits.ranged_traits, ranged_high_fire_rate_traits)
 
-		local aimed_traits = table.keys(WeaponTraitsRangedAimed)
+		local aimed_traits = table.ukeys(WeaponTraitsRangedAimed)
 
 		table.append(traits.aimed_traits, aimed_traits)
 
-		local overheat_traits = table.keys(WeaponTraitsRangedOverheat)
+		local overheat_traits = table.ukeys(WeaponTraitsRangedOverheat)
 
 		table.append(traits.overheat_traits, overheat_traits)
 
-		local warp_charge_traits = table.keys(WeaponTraitsRangedWarpCharge)
+		local warp_charge_traits = table.ukeys(WeaponTraitsRangedWarpCharge)
 
 		table.append(traits.warp_charge_traits, warp_charge_traits)
 
-		local explosive_traits = table.keys(WeaponTraitsRangedExplosive)
+		local explosive_traits = table.ukeys(WeaponTraitsRangedExplosive)
 
 		table.append(traits.explosive_traits, explosive_traits)
 
@@ -255,11 +255,10 @@ local StateGameplayTestify = {
 	end,
 	apply_select_talents = function (_, _, params)
 		local player = params.player
-		local specialization_name = params.specialization_name
 		local talents = params.talents
-		local specialization_system = Managers.state.extension:system("specialization_system")
+		local talent_system = Managers.state.extension:system("talent_system")
 
-		specialization_system:debug_select_talents(player, specialization_name, talents)
+		talent_system:debug_select_talents(player, talents)
 	end,
 	current_mission = function (state_gameplay, _)
 		return Managers.state.mission:mission_name()

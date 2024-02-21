@@ -20,6 +20,7 @@ local AchievementBreedGroups = {
 		"cultist_gunner",
 		"cultist_melee",
 		"cultist_mutant",
+		"cultist_mutant_mutator",
 		"cultist_shocktrooper",
 		"renegade_assault",
 		"renegade_berzerker",

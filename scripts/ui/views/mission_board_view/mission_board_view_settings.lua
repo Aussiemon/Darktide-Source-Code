@@ -157,8 +157,8 @@ local MissionBoardViewSettings = {
 	mission_positions = {
 		normal = {
 			{
-				89,
-				574,
+				106,
+				556,
 				index = 1,
 				prefered_danger = 1
 			},
@@ -169,8 +169,8 @@ local MissionBoardViewSettings = {
 				prefered_danger = 1
 			},
 			{
-				345,
-				550,
+				338,
+				547,
 				index = 3,
 				prefered_danger = 1
 			},
@@ -247,8 +247,8 @@ local MissionBoardViewSettings = {
 				prefered_danger = 3
 			},
 			{
-				1094,
-				70,
+				1126,
+				92,
 				index = 16,
 				prefered_danger = 4
 			},
@@ -277,8 +277,8 @@ local MissionBoardViewSettings = {
 				prefered_danger = 4
 			},
 			{
-				850,
-				45,
+				794,
+				92,
 				index = 21,
 				prefered_danger = 5
 			},
@@ -289,20 +289,20 @@ local MissionBoardViewSettings = {
 				prefered_danger = 5
 			},
 			{
-				590,
-				271,
+				612,
+				293,
 				index = 23,
 				prefered_danger = 5
 			},
 			{
-				685,
-				96,
+				646,
+				106,
 				index = 24,
 				prefered_danger = 5
 			},
 			{
-				785,
-				281,
+				775,
+				308,
 				index = 25,
 				prefered_danger = 5
 			},

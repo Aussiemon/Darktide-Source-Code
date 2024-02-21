@@ -530,7 +530,7 @@ ConstantElementChat._handle_console_input = function (self, input_service, ui_re
 
 		XGameUI.show_text_entry_async(x_game_ui, virtual_keyboard_title, virtual_keyboard_description, "", "default", ChatSettings.max_message_length)
 
-		self._virtual_keyboard_promise = Managers.xasync:wrap(x_game_ui, XAsyncBlock.release_block)
+		self._virtual_keyboard_promise = Managers.xasync:wrap(x_game_ui)
 
 		self._virtual_keyboard_promise:next(function (async_block)
 			local new_input_text = XGameUI.resolve_text_entry(async_block)
@@ -817,19 +817,21 @@ ConstantElementChat._add_notification = function (self, message, channel_tag)
 	local widget_definition = self._message_widget_blueprints.notification
 	local widget = UIWidget.init(message, widget_definition)
 	widget.content.message = message
+	local channel_meta_data = ChatSettings.channel_metadata[channel_tag]
+	local channel_color = channel_meta_data and channel_meta_data.color
 
-	if channel_tag then
-		local channel_color = self:_channel_color(channel_tag)
-		widget.style.message.text_color = channel_color
+	if channel_color then
+		widget.style.message.text_color = channel_meta_data.color
 	end
 
 	local messsage_parameters = {
 		message_text = message,
 		channel_tag = channel_tag
 	}
+	local always_notify = channel_meta_data and channel_meta_data.always_notify
 	local uses_controller = IS_XBS and InputDevice.gamepad_active
 
-	if uses_controller then
+	if always_notify or uses_controller then
 		self._time_since_last_update = 0
 	end
 

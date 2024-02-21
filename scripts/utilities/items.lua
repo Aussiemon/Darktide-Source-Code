@@ -1,19 +1,13 @@
 local AchievementUIHelper = require("scripts/managers/achievements/utility/achievement_ui_helper")
 local Archetypes = require("scripts/settings/archetype/archetypes")
-local BuffSettings = require("scripts/settings/buff/buff_settings")
 local BuffTemplates = require("scripts/settings/buff/buff_templates")
-local FixedFrame = require("scripts/utilities/fixed_frame")
-local ItemPackage = require("scripts/foundation/managers/package/utilities/item_package")
 local ItemSlotSettings = require("scripts/settings/item/item_slot_settings")
 local ItemSourceSettings = require("scripts/settings/item/item_source_settings")
 local MasterItems = require("scripts/backend/master_items")
-local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
-local PlayerUnitVisualLoadout = require("scripts/extension_systems/visual_loadout/utilities/player_unit_visual_loadout")
 local RankSettings = require("scripts/settings/item/rank_settings")
 local RaritySettings = require("scripts/settings/item/rarity_settings")
 local UISettings = require("scripts/settings/ui/ui_settings")
 local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
-local WeaponTraitTemplates = require("scripts/settings/equipment/weapon_traits/weapon_trait_templates")
 local unit_alive = Unit.alive
 local ItemUtils = {}
 
@@ -98,7 +92,7 @@ ItemUtils.mark_item_id_as_new = function (item, skip_notification)
 	end
 
 	local new_item_notifications = character_data.new_item_notifications
-	local show_notification = skip_notification and not skip_notification or true
+	local show_notification = skip_notification and skip_notification ~= true or not skip_notification
 	new_item_notifications[gear_id] = {
 		show_notification = show_notification
 	}

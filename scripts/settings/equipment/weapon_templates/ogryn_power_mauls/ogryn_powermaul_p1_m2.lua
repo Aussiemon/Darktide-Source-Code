@@ -99,6 +99,17 @@ local weapon_template = {
 				start_modifier = 1
 			},
 			allowed_chain_actions = {
+				combat_ability = {
+					action_name = "combat_ability"
+				},
+				grenade_ability = {
+					{
+						action_name = "grenade_ability"
+					},
+					{
+						action_name = "grenade_ability_quick_throw"
+					}
+				},
 				wield = {
 					action_name = "action_unwield"
 				},
@@ -166,6 +177,17 @@ local weapon_template = {
 				start_modifier = 0.2
 			},
 			allowed_chain_actions = {
+				combat_ability = {
+					action_name = "combat_ability"
+				},
+				grenade_ability = {
+					{
+						action_name = "grenade_ability"
+					},
+					{
+						action_name = "grenade_ability_quick_throw"
+					}
+				},
 				wield = {
 					action_name = "action_unwield"
 				},
@@ -233,6 +255,17 @@ local weapon_template = {
 				start_modifier = 1.5
 			},
 			allowed_chain_actions = {
+				combat_ability = {
+					action_name = "combat_ability"
+				},
+				grenade_ability = {
+					{
+						action_name = "grenade_ability"
+					},
+					{
+						action_name = "grenade_ability_quick_throw"
+					}
+				},
 				wield = {
 					action_name = "action_unwield"
 				},
@@ -302,6 +335,17 @@ local weapon_template = {
 				start_modifier = 1
 			},
 			allowed_chain_actions = {
+				combat_ability = {
+					action_name = "combat_ability"
+				},
+				grenade_ability = {
+					{
+						action_name = "grenade_ability"
+					},
+					{
+						action_name = "grenade_ability_quick_throw"
+					}
+				},
 				wield = {
 					action_name = "action_unwield"
 				},
@@ -369,6 +413,17 @@ local weapon_template = {
 				start_modifier = 0.2
 			},
 			allowed_chain_actions = {
+				combat_ability = {
+					action_name = "combat_ability"
+				},
+				grenade_ability = {
+					{
+						action_name = "grenade_ability"
+					},
+					{
+						action_name = "grenade_ability_quick_throw"
+					}
+				},
 				wield = {
 					action_name = "action_unwield"
 				},
@@ -435,6 +490,17 @@ local weapon_template = {
 				start_modifier = 1.5
 			},
 			allowed_chain_actions = {
+				combat_ability = {
+					action_name = "combat_ability"
+				},
+				grenade_ability = {
+					{
+						action_name = "grenade_ability"
+					},
+					{
+						action_name = "grenade_ability_quick_throw"
+					}
+				},
 				wield = {
 					action_name = "action_unwield",
 					chain_time = 0.3
@@ -504,6 +570,17 @@ local weapon_template = {
 				start_modifier = 1
 			},
 			allowed_chain_actions = {
+				combat_ability = {
+					action_name = "combat_ability"
+				},
+				grenade_ability = {
+					{
+						action_name = "grenade_ability"
+					},
+					{
+						action_name = "grenade_ability_quick_throw"
+					}
+				},
 				wield = {
 					action_name = "action_unwield"
 				},
@@ -571,6 +648,17 @@ local weapon_template = {
 				start_modifier = 0.2
 			},
 			allowed_chain_actions = {
+				combat_ability = {
+					action_name = "combat_ability"
+				},
+				grenade_ability = {
+					{
+						action_name = "grenade_ability"
+					},
+					{
+						action_name = "grenade_ability_quick_throw"
+					}
+				},
 				wield = {
 					action_name = "action_unwield"
 				},
@@ -638,6 +726,17 @@ local weapon_template = {
 				start_modifier = 1
 			},
 			allowed_chain_actions = {
+				combat_ability = {
+					action_name = "combat_ability"
+				},
+				grenade_ability = {
+					{
+						action_name = "grenade_ability"
+					},
+					{
+						action_name = "grenade_ability_quick_throw"
+					}
+				},
 				wield = {
 					action_name = "action_unwield"
 				},
@@ -705,6 +804,17 @@ local weapon_template = {
 				start_modifier = 0.2
 			},
 			allowed_chain_actions = {
+				combat_ability = {
+					action_name = "combat_ability"
+				},
+				grenade_ability = {
+					{
+						action_name = "grenade_ability"
+					},
+					{
+						action_name = "grenade_ability_quick_throw"
+					}
+				},
 				wield = {
 					action_name = "action_unwield"
 				},
@@ -773,6 +883,17 @@ local weapon_template = {
 				start_modifier = 1
 			},
 			allowed_chain_actions = {
+				combat_ability = {
+					action_name = "combat_ability"
+				},
+				grenade_ability = {
+					{
+						action_name = "grenade_ability"
+					},
+					{
+						action_name = "grenade_ability_quick_throw"
+					}
+				},
 				wield = {
 					action_name = "action_unwield"
 				},
@@ -840,6 +961,17 @@ local weapon_template = {
 				start_modifier = 0.2
 			},
 			allowed_chain_actions = {
+				combat_ability = {
+					action_name = "combat_ability"
+				},
+				grenade_ability = {
+					{
+						action_name = "grenade_ability"
+					},
+					{
+						action_name = "grenade_ability_quick_throw"
+					}
+				},
 				wield = {
 					action_name = "action_unwield"
 				},
@@ -1033,6 +1165,17 @@ local weapon_template = {
 				start_modifier = 1
 			},
 			allowed_chain_actions = {
+				combat_ability = {
+					action_name = "combat_ability"
+				},
+				grenade_ability = {
+					{
+						action_name = "grenade_ability"
+					},
+					{
+						action_name = "grenade_ability_quick_throw"
+					}
+				},
 				wield = {
 					action_name = "action_unwield"
 				},
@@ -1045,16 +1188,17 @@ local weapon_template = {
 			}
 		},
 		action_right_light_pushfollow = {
-			hit_armor_anim = "attack_hit_shield",
-			range_mod = 1.25,
-			weapon_handling_template = "time_scale_1_2",
-			kind = "sweep",
-			first_person_hit_anim = "hit_right_shake",
-			first_person_hit_stop_anim = "attack_hit",
 			damage_window_start = 0.4,
+			hit_armor_anim = "attack_hit_shield",
+			sprint_requires_press_to_interrupt = "true",
+			kind = "sweep",
+			weapon_handling_template = "time_scale_1_2",
+			first_person_hit_anim = "hit_right_shake",
+			range_mod = 1.25,
+			first_person_hit_stop_anim = "attack_hit",
+			anim_event = "push_follow_up",
 			attack_direction_override = "right",
 			damage_window_end = 0.5333333333333333,
-			anim_event = "push_follow_up",
 			total_time = 2,
 			action_movement_curve = {
 				{
@@ -1080,6 +1224,17 @@ local weapon_template = {
 				start_modifier = 1.4
 			},
 			allowed_chain_actions = {
+				combat_ability = {
+					action_name = "combat_ability"
+				},
+				grenade_ability = {
+					{
+						action_name = "grenade_ability"
+					},
+					{
+						action_name = "grenade_ability_quick_throw"
+					}
+				},
 				wield = {
 					action_name = "action_unwield"
 				},
@@ -1135,6 +1290,17 @@ local weapon_template = {
 				start_modifier = 1.4
 			},
 			allowed_chain_actions = {
+				combat_ability = {
+					action_name = "combat_ability"
+				},
+				grenade_ability = {
+					{
+						action_name = "grenade_ability"
+					},
+					{
+						action_name = "grenade_ability_quick_throw"
+					}
+				},
 				wield = {
 					action_name = "action_unwield"
 				},
@@ -1378,7 +1544,7 @@ local weapon_template = {
 	},
 	traits = {}
 }
-local bespoke_ogryn_powermaul_traits = table.keys(WeaponTraitsBespokeOgrynPowerMaulP1)
+local bespoke_ogryn_powermaul_traits = table.ukeys(WeaponTraitsBespokeOgrynPowerMaulP1)
 
 table.append(weapon_template.traits, bespoke_ogryn_powermaul_traits)
 

@@ -26,18 +26,6 @@ local class_rework_psyker_female_b = {
 			2.322104,
 			2.526792
 		},
-		sound_event_weights = {
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1
-		},
 		randomize_indexes = {}
 	},
 	ability_gunslinger = {

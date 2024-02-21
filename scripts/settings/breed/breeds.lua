@@ -51,6 +51,7 @@ _create_breed_entry("scripts/settings/breed/breeds/cultist/cultist_flamer_breed"
 _create_breed_entry("scripts/settings/breed/breeds/cultist/cultist_gunner_breed")
 _create_breed_entry("scripts/settings/breed/breeds/cultist/cultist_melee_breed")
 _create_breed_entry("scripts/settings/breed/breeds/cultist/cultist_mutant_breed")
+_create_breed_entry("scripts/settings/breed/breeds/cultist/cultist_mutant_mutator_breed")
 _create_breed_entry("scripts/settings/breed/breeds/cultist/cultist_shocktrooper_breed")
 _create_breed_entry("scripts/settings/breed/breeds/renegade/renegade_assault_breed")
 _create_breed_entry("scripts/settings/breed/breeds/renegade/renegade_berzerker_breed")

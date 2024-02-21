@@ -16,7 +16,12 @@ local sound_data = {
 		hit_own_shield = "wwise/events/minions/play_weapon_bulwark_shield_hit",
 		vce_grunt_long = "wwise/events/minions/play_enemy_chaos_ogryn_bulwark_a__grunt_long_vce"
 	},
-	use_proximity_culling = {}
+	use_proximity_culling = {
+		vce_short_attack = false,
+		vce_long_attack = false,
+		vce_special_attack = false,
+		foley_drastic = false
+	}
 }
 
 table.add_missing(sound_data.events, ChaosOgrynCommonSounds.events)

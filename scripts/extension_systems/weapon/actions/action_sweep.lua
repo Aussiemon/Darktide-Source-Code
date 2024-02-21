@@ -535,12 +535,14 @@ ActionSweep._update_hit_stickyness = function (self, dt, t, action_sweep_compone
 		stick_to_actor = actor_index and Unit.actor(stick_to_unit, actor_index)
 	end
 
+	local is_resimulating = self._unit_data_extension.is_resimulating
+
 	self:_handle_stickyness(stick_to_position)
 
 	local start_t = action_sweep_component.sweep_aborted_t
 	local damage = hit_stickyness_settings.damage
 
-	if not self._unit_data_extension.is_resimulating and damage and stick_to_actor then
+	if not is_resimulating and damage and stick_to_actor then
 		local num_damage_instances_this_frame, is_last_damage_instance, is_first_damage_instance = SweepStickyness.num_damage_instances_this_frame(hit_stickyness_settings, start_t, t)
 
 		if num_damage_instances_this_frame > 0 then
@@ -622,21 +624,24 @@ ActionSweep._update_hit_stickyness = function (self, dt, t, action_sweep_compone
 	if is_time_up or is_target_dead or is_in_stealth and sticky_t > 0.05 or exit_because_of_state then
 		local dodge_exit_damage_profile = damage.dodge_damage_profile
 
-		if dodge_exit_damage_profile and exit_because_of_state and is_in_dodge_state and stick_to_unit then
-			local damage_type = damage.damage_type
-			local is_critical_strike = self._critical_strike_component.is_active
+		if dodge_exit_damage_profile and exit_because_of_state and is_in_dodge_state and stick_to_unit and stick_to_actor then
 			local attacking_unit = self._player.player_unit
-			local hit_zone_name = HitZone.get_name(stick_to_unit, stick_to_actor)
-			local node_index = Actor.node(stick_to_actor)
-			local hit_world_position = Unit.world_position(stick_to_unit, node_index)
-			local attack_type = AttackSettings.attack_types.melee
-			local action_settings = self._action_settings
-			local wounds_shape = action_settings.wounds_shape_special_active
-			local attack_direction = Vector3.normalize(self._locomotion_component.velocity_current)
-			local damage_dealt, attack_result, damage_efficiency, _, hit_weakspot = Attack.execute(stick_to_unit, damage.dodge_damage_profile, "power_level", DEFAULT_POWER_LEVEL, "target_index", 1, "target_number", 1, "hit_world_position", hit_world_position, "attack_direction", attack_direction, "hit_zone_name", hit_zone_name, "attacking_unit", attacking_unit, "hit_actor", stick_to_actor, "attack_type", attack_type, "herding_template", nil, "damage_type", damage_type, "is_critical_strike", is_critical_strike, "item", self._weapon.item, "wounds_shape", wounds_shape)
-			local hit_normal = nil
 
-			ImpactEffect.play(stick_to_unit, stick_to_actor, damage_dealt, damage_type, hit_zone_name, attack_result, hit_world_position, hit_normal, attack_direction, self._player.player_unit, stickyness_impact_fx_data, nil, nil, damage_efficiency, damage.dodge_damage_profile)
+			if not is_resimulating then
+				local damage_type = damage.damage_type
+				local is_critical_strike = self._critical_strike_component.is_active
+				local hit_zone_name = HitZone.get_name(stick_to_unit, stick_to_actor)
+				local node_index = Actor.node(stick_to_actor)
+				local hit_world_position = Unit.world_position(stick_to_unit, node_index)
+				local attack_type = AttackSettings.attack_types.melee
+				local action_settings = self._action_settings
+				local wounds_shape = action_settings.wounds_shape_special_active
+				local attack_direction = Vector3.normalize(self._locomotion_component.velocity_current)
+				local damage_dealt, attack_result, damage_efficiency, _, hit_weakspot = Attack.execute(stick_to_unit, damage.dodge_damage_profile, "power_level", DEFAULT_POWER_LEVEL, "target_index", 1, "target_number", 1, "hit_world_position", hit_world_position, "attack_direction", attack_direction, "hit_zone_name", hit_zone_name, "attacking_unit", attacking_unit, "hit_actor", stick_to_actor, "attack_type", attack_type, "herding_template", nil, "damage_type", damage_type, "is_critical_strike", is_critical_strike, "item", self._weapon.item, "wounds_shape", wounds_shape)
+				local hit_normal = nil
+
+				ImpactEffect.play(stick_to_unit, stick_to_actor, damage_dealt, damage_type, hit_zone_name, attack_result, hit_world_position, hit_normal, attack_direction, self._player.player_unit, stickyness_impact_fx_data, nil, nil, damage_efficiency, damage.dodge_damage_profile)
+			end
 
 			local stammina_drain_percentage = hit_stickyness_settings.dodge_stammina_drain_percentage or 0.6
 

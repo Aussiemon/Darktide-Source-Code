@@ -12,19 +12,15 @@ local FAR_COMBAT = {
 	action_data = action_data.follow
 }
 local CLOSE_COMBAT = {
-	"BtSelectorNode",
-	{
-		"BtMeleeFollowTargetAction",
-		name = "assault_follow",
-		action_data = action_data.assault_follow
-	},
-	name = "close_combat",
+	"BtMeleeFollowTargetAction",
+	name = "assault_follow",
 	condition = "is_aggroed_in_combat_range",
 	condition_args = {
 		combat_ranges = {
 			close = true
 		}
-	}
+	},
+	action_data = action_data.assault_follow
 }
 local MELEE_COMBAT = {
 	"BtSelectorNode",

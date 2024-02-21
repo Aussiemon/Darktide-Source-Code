@@ -81,6 +81,10 @@ BtShootNetAction.leave = function (self, unit, breed, blackboard, scratchpad, ac
 		end
 	end
 
+	if scratchpad.internal_state == "aiming" then
+		self:_play_wwise_event(action_data.aim_stop_wwise_event, scratchpad, action_data)
+	end
+
 	self:_stop_effect_template(scratchpad)
 	MinionPerception.set_target_lock(unit, scratchpad.perception_component, false)
 end
@@ -218,7 +222,7 @@ BtShootNetAction._update_shooting = function (self, unit, breed, dt, t, scratchp
 	local radius = action_data.net_sweep_radius
 	local physics_world = scratchpad.physics_world
 	local hit_geometry_ray_length = travel_distance + radius
-	local hit_geometry = PhysicsWorld.raycast(physics_world, old_sweep_position, direction, hit_geometry_ray_length, "any", "types", "both", "collision_filter", "filter_minion_shooting_geometry")
+	local hit_geometry = PhysicsWorld.raycast(physics_world, old_sweep_position, direction, hit_geometry_ray_length, "any", "types", "both", "collision_filter", "filter_minion_line_of_sight_check_no_transparent")
 
 	if hit_geometry then
 		scratchpad.internal_state = "shot_finished"

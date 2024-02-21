@@ -6,7 +6,11 @@ local sound_data = {
 		footstep_stomp = "wwise/events/minions/play_minion_footsteps_chaos_ogryn_stomp",
 		run_foley = "wwise/events/minions/play_shared_foley_chaos_ogryn_elites_medium_run"
 	},
-	use_proximity_culling = {}
+	use_proximity_culling = {
+		footstep_land = false,
+		footstep = false,
+		footstep_stomp = false
+	}
 }
 
 return sound_data

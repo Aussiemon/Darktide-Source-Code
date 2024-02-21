@@ -175,10 +175,10 @@ BtCultistMeleeSelectorNode.evaluate = function (self, unit, blackboard, scratchp
 		return node_follow
 	end
 
-	local node_close_combat = children[7]
-	local tree_node = node_close_combat.tree_node
+	local node_assault_follow = children[7]
+	local tree_node = node_assault_follow.tree_node
 	local condition_args = tree_node.condition_args
-	local is_running = last_leaf_node_running and last_running_node == node_close_combat
+	local is_running = last_leaf_node_running and last_running_node == node_assault_follow
 	local condition_result = nil
 
 	repeat
@@ -224,13 +224,9 @@ BtCultistMeleeSelectorNode.evaluate = function (self, unit, blackboard, scratchp
 	until true
 
 	if condition_result then
-		local leaf_node = node_close_combat:evaluate(unit, blackboard, scratchpad, dt, t, evaluate_utility, node_data, old_running_child_nodes, new_running_child_nodes, last_leaf_node_running)
+		new_running_child_nodes[node_identifier] = node_assault_follow
 
-		if leaf_node then
-			new_running_child_nodes[node_identifier] = node_close_combat
-
-			return leaf_node
-		end
+		return node_assault_follow
 	end
 
 	local node_melee_combat = children[8]

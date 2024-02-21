@@ -39,7 +39,7 @@ local button_options_definitions = {
 						context_function = function ()
 							return {
 								pass_draw = false,
-								is_barber = true,
+								is_barber_appearance = true,
 								pass_input = true
 							}
 						end

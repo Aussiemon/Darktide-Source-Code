@@ -150,6 +150,7 @@ local player_character_particle_names_lookup = {
 	["content/fx/particles/screenspace/screen_coherence_enter"] = true,
 	["content/fx/particles/weapons/rifles/ogryn_gauntlet/ogryn_gauntlet_projectile_explosion_5m"] = true,
 	["content/fx/particles/weapons/pistols/stubrevolver/stubrevolver_heavy_crit_muzzle"] = true,
+	["content/fx/particles/weapons/rifles/shotgun/shotgun_p2_m1/shotgun_p2_m1_muzzle_single"] = true,
 	["content/fx/particles/debug/flame_thrower_test"] = true,
 	["content/fx/particles/weapons/rifles/shotgun/shotgun_rifle_muzzle_captain"] = true,
 	["content/fx/particles/screenspace/screen_blood_splatter"] = true,

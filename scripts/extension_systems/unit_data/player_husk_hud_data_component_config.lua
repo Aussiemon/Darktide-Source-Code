@@ -20,11 +20,12 @@ local husk_hud_data_component_config = {
 		"shooting_end_time"
 	},
 	inventory = {
+		"slot_grenade_ability",
 		"slot_luggable"
 	},
-	specialization_resource = {
-		max_resource = "specialization_resource",
-		current_resource = "specialization_resource"
+	talent_resource = {
+		max_resource = "talent_resource",
+		current_resource = "talent_resource"
 	},
 	disabled_character_state = {
 		"is_disabled",

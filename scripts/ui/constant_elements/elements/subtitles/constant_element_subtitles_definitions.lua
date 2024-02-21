@@ -17,6 +17,17 @@ local scenegraph_definition = {
 			-200,
 			1
 		}
+	},
+	secondary_subtitles = {
+		vertical_alignment = "bottom",
+		parent = "subtitles",
+		horizontal_alignment = "center",
+		size = size,
+		position = {
+			0,
+			0,
+			1
+		}
 	}
 }
 local text_style = table.clone(UIFontSettings.body)
@@ -40,7 +51,16 @@ local widget_definitions = {
 			value = "<text>",
 			style = text_style
 		}
-	}, "subtitles")
+	}, "subtitles"),
+	secondary_subtitles = UIWidget.create_definition({
+		{
+			value_id = "text",
+			style_id = "text",
+			pass_type = "text",
+			value = "<text>",
+			style = text_style
+		}
+	}, "secondary_subtitles")
 }
 local letterbox_definition = UIWidget.create_definition({
 	{

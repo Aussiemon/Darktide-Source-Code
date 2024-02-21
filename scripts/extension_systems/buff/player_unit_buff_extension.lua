@@ -89,9 +89,9 @@ PlayerUnitBuffExtension.game_object_initialized = function (self, game_session, 
 			local optional_lerp_value = buff_added_before_game_object_creation.optional_lerp_value
 			local optional_slot_id = buff_added_before_game_object_creation.optional_slot_id
 			local optional_parent_buff_template_id = buff_added_before_game_object_creation.optional_parent_buff_template_id
-			local from_specialization = buff_added_before_game_object_creation.from_specialization
+			local from_talent = buff_added_before_game_object_creation.from_talent
 
-			RPC.rpc_add_buff(channel_id, game_object_id, buff_template_id, index, optional_lerp_value, optional_slot_id, optional_parent_buff_template_id, from_specialization)
+			RPC.rpc_add_buff(channel_id, game_object_id, buff_template_id, index, optional_lerp_value, optional_slot_id, optional_parent_buff_template_id, from_talent)
 		end
 
 		self._buffs_added_before_game_object_creation = nil
@@ -467,14 +467,14 @@ PlayerUnitBuffExtension._add_rpc_synced_buff = function (self, template, t, ...)
 	local optional_slot_id = optional_item_slot and NetworkLookup.player_inventory_slot_names[optional_item_slot]
 	local optional_parent_buff_template = buff_instance.parent_buff_template and buff_instance:parent_buff_template()
 	local optional_parent_buff_template_id = optional_parent_buff_template and NetworkLookup.buff_templates[optional_parent_buff_template]
-	local from_specialization = additional_arguments.from_specialization or false
+	local from_talent = additional_arguments.from_talent or false
 	local player = self._player
 
 	if player.remote then
 		if game_object_id then
 			local channel_id = player:channel_id()
 
-			RPC.rpc_add_buff(channel_id, game_object_id, buff_template_id, index, optional_lerp_value, optional_slot_id, optional_parent_buff_template_id, from_specialization)
+			RPC.rpc_add_buff(channel_id, game_object_id, buff_template_id, index, optional_lerp_value, optional_slot_id, optional_parent_buff_template_id, from_talent)
 		else
 			local buff_added_before_game_object_creation = {
 				buff_template_id = buff_template_id,
@@ -482,7 +482,7 @@ PlayerUnitBuffExtension._add_rpc_synced_buff = function (self, template, t, ...)
 				optional_lerp_value = optional_lerp_value,
 				optional_slot_id = optional_slot_id,
 				optional_parent_buff_template_id = optional_parent_buff_template_id,
-				from_specialization = from_specialization
+				from_talent = from_talent
 			}
 			local buffs_added_before_game_object_creation = self._buffs_added_before_game_object_creation
 			buffs_added_before_game_object_creation[#buffs_added_before_game_object_creation + 1] = buff_added_before_game_object_creation

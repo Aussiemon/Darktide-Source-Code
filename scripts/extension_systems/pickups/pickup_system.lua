@@ -1,10 +1,10 @@
 require("scripts/extension_systems/pickups/pickup_spawner_extension")
 
+local Ammo = require("scripts/utilities/ammo")
 local CircumstanceTemplates = require("scripts/settings/circumstance/circumstance_templates")
+local Health = require("scripts/utilities/health")
 local Pickups = require("scripts/settings/pickup/pickups")
 local PickupSettings = require("scripts/settings/pickup/pickup_settings")
-local Ammo = require("scripts/utilities/ammo")
-local Health = require("scripts/utilities/health")
 local TextUtilities = require("scripts/utilities/ui/text")
 local UISettings = require("scripts/settings/ui/ui_settings")
 local DISTRIBUTION_TYPES = PickupSettings.distribution_types
@@ -823,7 +823,7 @@ PickupSystem.has_interacted = function (self, pickup_unit, player_session_id)
 	return table.array_contains(interactors, player_session_id)
 end
 
-PickupSystem.spawn_pickup = function (self, pickup_name, position, rotation, pickup_spawner, placed_on_unit, spawn_interaction_cooldown)
+PickupSystem.spawn_pickup = function (self, pickup_name, position, rotation, optional_pickup_spawner, optional_placed_on_unit, optional_spawn_interaction_cooldown, optional_origin_player)
 	local pickup_settings = PICKUPS_BY_NAME[pickup_name]
 	local unit_template_name = pickup_settings.unit_template_name
 	local unit_name = pickup_settings.unit_name
@@ -833,19 +833,19 @@ PickupSystem.spawn_pickup = function (self, pickup_name, position, rotation, pic
 		position = position + Quaternion.rotate(rotation, spawn_offset)
 	end
 
-	local pickup_unit, pickup_unit_go_id = Managers.state.unit_spawner:spawn_network_unit(unit_name, unit_template_name, position, rotation, nil, pickup_settings, placed_on_unit, spawn_interaction_cooldown)
+	local pickup_unit, pickup_unit_go_id = Managers.state.unit_spawner:spawn_network_unit(unit_name, unit_template_name, position, rotation, nil, pickup_settings, optional_placed_on_unit, optional_spawn_interaction_cooldown, optional_origin_player)
 	self._spawned_pickups[#self._spawned_pickups + 1] = pickup_unit
 	self._pickup_to_interactors[pickup_unit] = {}
 
-	if pickup_spawner then
-		self._pickup_to_spawner[pickup_unit] = pickup_spawner
+	if optional_pickup_spawner then
+		self._pickup_to_spawner[pickup_unit] = optional_pickup_spawner
 	end
 
 	return pickup_unit, pickup_unit_go_id
 end
 
 PickupSystem.player_spawn_pickup = function (self, pickup_name, position, rotation, player, player_session_id, placed_on_unit)
-	local pickup_unit, pickup_unit_go_id = self:spawn_pickup(pickup_name, position, rotation, nil, placed_on_unit)
+	local pickup_unit, pickup_unit_go_id = self:spawn_pickup(pickup_name, position, rotation, nil, placed_on_unit, nil, player)
 	self._pickup_to_owner[pickup_unit] = player_session_id
 	self._pickup_to_owner_player[pickup_unit] = player
 
@@ -966,22 +966,13 @@ PickupSystem._show_collected_materials_notification = function (self, peer_id, m
 	end
 
 	local optional_localization_key = "loc_tactical_overlay_crafting_mat_notification"
-	local save_manager = Managers.save
-	local show_pickup_notification = true
 
-	if save_manager then
-		local account_data = save_manager:account_data()
-		show_pickup_notification = account_data.interface_settings.show_crafting_pickup_notification
-	end
-
-	if show_pickup_notification then
-		Managers.event:trigger("event_add_notification_message", "currency", {
-			currency = material_type,
-			amount_size = material_size,
-			player_name = player_name,
-			optional_localization_key = optional_localization_key
-		})
-	end
+	Managers.event:trigger("event_add_notification_message", "currency", {
+		currency = material_type,
+		amount_size = material_size,
+		player_name = player_name,
+		optional_localization_key = optional_localization_key
+	})
 end
 
 PickupSystem.get_collected_materials = function (self)

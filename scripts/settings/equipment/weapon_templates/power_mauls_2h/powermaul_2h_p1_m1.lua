@@ -1150,10 +1150,11 @@ weapon_template.actions = {
 	action_left_light_pushfollow = {
 		damage_window_start = 0.2,
 		hit_armor_anim = "attack_hit",
-		kind = "sweep",
-		first_person_hit_anim = "hit_left_shake",
 		range_mod = 1.25,
+		sprint_requires_press_to_interrupt = "true",
+		first_person_hit_anim = "hit_left_shake",
 		weapon_handling_template = "time_scale_1_1",
+		kind = "sweep",
 		damage_window_end = 0.3,
 		special_active_hit_stop_anim = "attack_hit_power",
 		anim_end_event = "attack_finished",
@@ -1833,7 +1834,7 @@ weapon_template.base_stats = {
 	}
 }
 weapon_template.traits = {}
-local weapon_traits_bespoke_powermaul_2h_p1 = table.keys(WeaponTraitsBespokePowermaul2hP1)
+local weapon_traits_bespoke_powermaul_2h_p1 = table.ukeys(WeaponTraitsBespokePowermaul2hP1)
 
 table.append(weapon_template.traits, weapon_traits_bespoke_powermaul_2h_p1)
 

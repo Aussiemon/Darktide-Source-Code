@@ -102,7 +102,7 @@ PlayerCharacterStateNetted.on_enter = function (self, unit, dt, t, previous_stat
 	if is_server then
 		self:_add_buffs(t)
 		self._fx_extension:trigger_gear_wwise_event_with_source(STINGER_ENTER_ALIAS, STINGER_PROPERTIES, SFX_SOURCE, true, true)
-		self._dialogue_system:stop_currently_playing_vo()
+		self._dialogue_extension:stop_currently_playing_vo()
 		self:_init_player_vo(t)
 		Managers.state.pacing:add_tension_type(TENSION_TYPE, unit)
 	end

@@ -1,11 +1,9 @@
-local DialogueBreedSettings = require("scripts/settings/dialogue/dialogue_breed_settings")
 local DialogueCategoryConfig = require("scripts/settings/dialogue/dialogue_category_config")
 local DialogueEventQueue = class("DialogueEventQueue")
 
-DialogueEventQueue.init = function (self, unit_extension_data, dialogues, query_database)
-	self._dialogues = dialogues
+DialogueEventQueue.init = function (self, dialogue_templates, query_database)
+	self._dialogue_templates = dialogue_templates
 	self._query_database = query_database
-	self._unit_extension_data = unit_extension_data
 	self._input_event_queue = {}
 	self._input_event_queue_n = 0
 	self._index_input_event_queue = 1
@@ -33,26 +31,9 @@ DialogueEventQueue.update_new_events = function (self, dt, t)
 				break
 			end
 
-			local unit_data_extension = ScriptUnit.has_extension(unit, "unit_data_system")
-			local breed_data = unit_data_extension and unit_data_extension:breed() or Unit.get_data(unit, "breed")
-			local breed_name = breed_data and breed_data.name
-			local source_name = nil
-
-			if breed_name and not breed_data.is_player then
-				source_name = DialogueBreedSettings[breed_name].vo_class_name
-			else
-				local extension_data = self._unit_extension_data[unit]
-
-				if extension_data == nil then
-					break
-				end
-
-				source_name = extension_data:get_context().player_profile
-			end
-
 			local query = self._query_database:create_query()
 
-			query:add("concept", event_name, "source", unit, "source_name", source_name, "identifier", identifier, unpack(self._query_temp_array))
+			query:add("concept", event_name, "source", unit, "identifier", identifier, unpack(self._query_temp_array))
 			query:finalize()
 		until true
 	end
@@ -61,7 +42,7 @@ end
 DialogueEventQueue.append_event = function (self, unit, event_name, event_data, identifier)
 	if self:is_category_filtered() then
 		if self._filter_category and event_data.dialogue_name then
-			local incoming_category = self._dialogues[event_data.dialogue_name].category
+			local incoming_category = self._dialogue_templates[event_data.dialogue_name].category
 
 			if self._filter_category.interrupted_by[incoming_category] then
 				self._filtering_end_time = 0

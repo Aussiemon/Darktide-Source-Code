@@ -286,11 +286,16 @@ local DEFAULT_JUMP_TIME = 0.15
 
 ChainLightning.targeting_parameters = function (time_in_action, chain_settings, stat_buffs)
 	local is_staff = chain_settings and chain_settings.staff
-	local stat_buff_max_angle = not is_staff and stat_buffs and stat_buffs.chain_lightning_max_angle or 0
-	local stat_buff_max_z_diff = not is_staff and stat_buffs and stat_buffs.chain_lightning_max_z_diff or 0
-	local stat_buff_max_radius = not is_staff and stat_buffs and stat_buffs.chain_lightning_max_radius or 0
-	local stat_buff_jump_time = not is_staff and stat_buffs and stat_buffs.chain_lightning_jump_time_multiplier or 1
-	local stat_buff_max_jumps = not is_staff and stat_buffs and stat_buffs.chain_lightning_max_jumps or stat_buffs and is_staff and stat_buffs.chain_lightning_staff_max_jumps or 0
+	local extra_angle_stat_buff = chain_settings and chain_settings.extra_angle_stat_buff
+	local max_z_diff_stat_buff = chain_settings and chain_settings.max_z_diff_stat_buff
+	local max_radius_stat_buff = chain_settings and chain_settings.max_radius_stat_buff
+	local jump_time_multiplier_stat_buff = chain_settings and chain_settings.jump_time_multiplier_stat_buff
+	local max_jumps_stat_buff = chain_settings and chain_settings.max_jumps_stat_buff
+	local stat_buff_max_angle = not is_staff and stat_buffs and extra_angle_stat_buff and stat_buffs[extra_angle_stat_buff] or 0
+	local stat_buff_max_z_diff = not is_staff and stat_buffs and max_z_diff_stat_buff and stat_buffs[max_z_diff_stat_buff] or 0
+	local stat_buff_max_radius = not is_staff and stat_buffs and max_radius_stat_buff and stat_buffs[max_radius_stat_buff] or 0
+	local stat_buff_jump_time = not is_staff and stat_buffs and jump_time_multiplier_stat_buff and stat_buffs[jump_time_multiplier_stat_buff] or 1
+	local stat_buff_max_jumps = not is_staff and stat_buffs and max_jumps_stat_buff and stat_buffs[max_jumps_stat_buff] or 0
 	local max_jumps = nil
 	local max_jumps_at_time = chain_settings and chain_settings.max_jumps_at_time
 

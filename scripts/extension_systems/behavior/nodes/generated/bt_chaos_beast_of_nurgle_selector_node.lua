@@ -197,13 +197,9 @@ BtChaosBeastOfNurgleSelectorNode.evaluate = function (self, unit, blackboard, sc
 	until true
 
 	if condition_result then
-		local leaf_node = node_spit_out:evaluate(unit, blackboard, scratchpad, dt, t, evaluate_utility, node_data, old_running_child_nodes, new_running_child_nodes, last_leaf_node_running)
+		new_running_child_nodes[node_identifier] = node_spit_out
 
-		if leaf_node then
-			new_running_child_nodes[node_identifier] = node_spit_out
-
-			return leaf_node
-		end
+		return node_spit_out
 	end
 
 	local node_dashing_and_consuming = children[7]
@@ -441,13 +437,9 @@ BtChaosBeastOfNurgleSelectorNode.evaluate = function (self, unit, blackboard, sc
 	until true
 
 	if condition_result then
-		local leaf_node = node_run_away:evaluate(unit, blackboard, scratchpad, dt, t, evaluate_utility, node_data, old_running_child_nodes, new_running_child_nodes, last_leaf_node_running)
+		new_running_child_nodes[node_identifier] = node_run_away
 
-		if leaf_node then
-			new_running_child_nodes[node_identifier] = node_run_away
-
-			return leaf_node
-		end
+		return node_run_away
 	end
 
 	local node_consume_minion = children[12]
@@ -655,8 +647,8 @@ BtChaosBeastOfNurgleSelectorNode.evaluate = function (self, unit, blackboard, sc
 		end
 	end
 
-	local node_hunting = children[15]
-	local is_running = last_leaf_node_running and last_running_node == node_hunting
+	local node_movement = children[15]
+	local is_running = last_leaf_node_running and last_running_node == node_movement
 	local condition_result = nil
 
 	repeat
@@ -712,16 +704,9 @@ BtChaosBeastOfNurgleSelectorNode.evaluate = function (self, unit, blackboard, sc
 	until true
 
 	if condition_result then
-		local is_aggroed = node_hunting
-		local perception_component = unit
-		local target_is_far_away = blackboard
-		local leaf_node = node_hunting.evaluate(is_aggroed, perception_component, target_is_far_away, scratchpad, dt, t, evaluate_utility, node_data, old_running_child_nodes, new_running_child_nodes, last_leaf_node_running)
+		new_running_child_nodes[node_identifier] = node_movement
 
-		if leaf_node then
-			new_running_child_nodes[node_identifier] = node_hunting
-
-			return leaf_node
-		end
+		return node_movement
 	end
 
 	local node_idle = children[16]

@@ -6,6 +6,10 @@ local MinionMovement = require("scripts/utilities/minion_movement")
 local NavQueries = require("scripts/utilities/nav_queries")
 local Vo = require("scripts/utilities/vo")
 local BtRenegadeNetgunnerApproachAction = class("BtRenegadeNetgunnerApproachAction", "BtNode")
+local VO_MOVE_EVENT_FREQUENCY_RANGE = {
+	3,
+	6
+}
 
 BtRenegadeNetgunnerApproachAction.enter = function (self, unit, breed, blackboard, scratchpad, action_data, t)
 	scratchpad.behavior_component = Blackboard.write_component(blackboard, "behavior")
@@ -28,6 +32,10 @@ BtRenegadeNetgunnerApproachAction.enter = function (self, unit, breed, blackboar
 		local fx_system = Managers.state.extension:system("fx_system")
 		scratchpad.fx_system = fx_system
 		scratchpad.global_effect_id = fx_system:start_template_effect(action_data.effect_template, unit)
+	end
+
+	if action_data.vo_event then
+		scratchpad.next_vo_event_t = 0
 	end
 end
 
@@ -80,12 +88,12 @@ BtRenegadeNetgunnerApproachAction.run = function (self, unit, breed, blackboard,
 
 	if move_state ~= "moving" then
 		self:_start_move_anim(scratchpad, action_data)
+	end
 
-		local vo_event = action_data.vo_event
+	if scratchpad.next_vo_event_t <= t then
+		Vo.enemy_generic_vo_event(unit, action_data.vo_event, breed.name, target_distance)
 
-		if vo_event then
-			Vo.enemy_generic_vo_event(unit, vo_event, breed.name, target_distance)
-		end
+		scratchpad.next_vo_event_t = t + math.random_range(VO_MOVE_EVENT_FREQUENCY_RANGE[1], VO_MOVE_EVENT_FREQUENCY_RANGE[2])
 	end
 
 	return "running"

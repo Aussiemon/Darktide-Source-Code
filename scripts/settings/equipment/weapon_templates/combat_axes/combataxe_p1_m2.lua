@@ -839,17 +839,18 @@ weapon_template.actions = {
 	action_right_light_pushfollow = {
 		damage_window_start = 0.13333333333333333,
 		hit_armor_anim = "attack_hit_shield",
-		anim_event_3p = "attack_swing_right",
-		weapon_handling_template = "time_scale_1_1",
+		sprint_requires_press_to_interrupt = "true",
 		max_num_saved_entries = 20,
-		kind = "sweep",
 		first_person_hit_stop_anim = "attack_hit",
+		weapon_handling_template = "time_scale_1_1",
 		num_frames_before_process = 0,
+		kind = "sweep",
 		attack_direction_override = "right",
-		range_mod = 1.35,
 		damage_window_end = 0.3,
 		anim_end_event = "attack_finished",
 		uninterruptible = true,
+		range_mod = 1.35,
+		anim_event_3p = "attack_swing_right",
 		anim_event = "heavy_attack_right_diagonal_down",
 		total_time = 1.5,
 		action_movement_curve = {
@@ -918,7 +919,7 @@ weapon_template.actions = {
 			}
 		},
 		damage_profile = DamageProfileTemplates.medium_axe_linesman,
-		damage_type = damage_types.metal_slashing_heavy,
+		damage_type = damage_types.axe_light,
 		time_scale_stat_buffs = {
 			buff_stat_buffs.attack_speed,
 			buff_stat_buffs.melee_attack_speed
@@ -1344,7 +1345,7 @@ weapon_template.base_stats = {
 	}
 }
 weapon_template.traits = {}
-local bespoke_combataxe_p1_traits = table.keys(WeaponTraitsBespokeCombataxeP1)
+local bespoke_combataxe_p1_traits = table.ukeys(WeaponTraitsBespokeCombataxeP1)
 
 table.append(weapon_template.traits, bespoke_combataxe_p1_traits)
 

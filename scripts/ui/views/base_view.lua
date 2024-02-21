@@ -8,14 +8,7 @@ local UISequenceAnimator = require("scripts/managers/ui/ui_sequence_animator")
 local BaseView = class("BaseView")
 
 BaseView.init = function (self, definitions, settings, context, dynamic_package_name)
-	local ui_renderer = context and context.ui_renderer
-
-	if ui_renderer then
-		self._ui_renderer = ui_renderer
-		self._ui_renderer_is_external = true
-	else
-		self._ui_renderer = Managers.ui:create_renderer(self.__class_name .. "_ui_renderer")
-	end
+	self:_create_ui_renderer(context)
 
 	self._allow_close_hotkey = false
 	self._pass_input = false
@@ -32,6 +25,18 @@ BaseView.init = function (self, definitions, settings, context, dynamic_package_
 	self.view_name = view_name
 	local on_load_callback = callback(self, "_on_view_load_complete", true)
 	self._should_unload = Managers.ui:load_view(view_name, self.__class_name, on_load_callback, dynamic_package_name)
+	self._hub_interaction = context and not not context.hub_interaction
+end
+
+BaseView._create_ui_renderer = function (self, context)
+	local ui_renderer = context and context.ui_renderer
+
+	if ui_renderer then
+		self._ui_renderer = ui_renderer
+		self._ui_renderer_is_external = true
+	else
+		self._ui_renderer = Managers.ui:create_renderer(self.__class_name .. "_ui_renderer")
+	end
 end
 
 BaseView.dialogue_system = function (self)
@@ -238,7 +243,7 @@ BaseView.on_enter = function (self)
 		end
 	end
 
-	Managers.telemetry_events:open_view(self.view_name)
+	Managers.telemetry_events:open_view(self.view_name, self._hub_interaction)
 end
 
 BaseView.on_exit = function (self)
@@ -266,8 +271,10 @@ BaseView.on_exit = function (self)
 
 	local elements_array = self._elements_array
 
-	for _, element in ipairs(elements_array) do
-		element:destroy(self._ui_renderer)
+	if elements_array then
+		for _, element in ipairs(elements_array) do
+			element:destroy(self._ui_renderer)
+		end
 	end
 
 	self._elements = nil
@@ -583,6 +590,11 @@ end
 BaseView._add_element = function (self, class, reference_name, layer, context, pivot)
 	local elements = self._elements
 	local elements_array = self._elements_array
+
+	if not self._elements or not self._elements_array then
+		return
+	end
+
 	context = context or {}
 
 	if not context.reference_name then
@@ -607,32 +619,34 @@ BaseView._add_element = function (self, class, reference_name, layer, context, p
 end
 
 BaseView._remove_element = function (self, reference_name)
-	local elements = self._elements
+	local elements = self._elements or {}
 	local element = elements[reference_name]
 	local elements_array = self._elements_array
 
-	for i = 1, #elements_array do
-		if elements_array[i] == element then
-			table.remove(elements_array, i)
+	if elements_array and element then
+		for i = 1, #elements_array do
+			if elements_array[i] == element then
+				table.remove(elements_array, i)
 
-			break
+				break
+			end
 		end
+
+		element:destroy()
+
+		elements[reference_name] = nil
 	end
-
-	element:destroy()
-
-	elements[reference_name] = nil
 end
 
 BaseView._element_reference_name = function (self, element)
-	local elements = self._elements
+	local elements = self._elements or {}
 	local reference_name = table.find(elements, element)
 
 	return reference_name
 end
 
 BaseView._element = function (self, reference_name)
-	local elements = self._elements
+	local elements = self._elements or {}
 	local element = elements[reference_name]
 
 	return element
@@ -641,13 +655,15 @@ end
 BaseView._on_resolution_modified_elements = function (self, scale)
 	local elements_array = self._elements_array
 
-	for i = 1, #elements_array do
-		local element = elements_array[i]
-		local element_name = element.__class_name
+	if elements_array then
+		for i = 1, #elements_array do
+			local element = elements_array[i]
+			local element_name = element.__class_name
 
-		if element.on_resolution_modified then
-			element:set_render_scale(scale)
-			element:on_resolution_modified(scale)
+			if element.on_resolution_modified then
+				element:set_render_scale(scale)
+				element:on_resolution_modified(scale)
+			end
 		end
 	end
 
@@ -659,13 +675,15 @@ end
 BaseView._draw_elements = function (self, dt, t, ui_renderer, render_settings, input_service)
 	local elements_array = self._elements_array
 
-	for i = 1, #elements_array do
-		local element = elements_array[i]
+	if elements_array then
+		for i = 1, #elements_array do
+			local element = elements_array[i]
 
-		if element then
-			local element_name = element.__class_name
+			if element then
+				local element_name = element.__class_name
 
-			element:draw(dt, t, ui_renderer, render_settings, input_service)
+				element:draw(dt, t, ui_renderer, render_settings, input_service)
+			end
 		end
 	end
 end
@@ -673,13 +691,15 @@ end
 BaseView._update_elements = function (self, dt, t, input_service)
 	local elements_array = self._elements_array
 
-	for i = 1, #elements_array do
-		local element = elements_array[i]
+	if elements_array then
+		for i = 1, #elements_array do
+			local element = elements_array[i]
 
-		if element then
-			local element_name = element.__class_name
+			if element then
+				local element_name = element.__class_name
 
-			element:update(dt, t, input_service)
+				element:update(dt, t, input_service)
+			end
 		end
 	end
 end

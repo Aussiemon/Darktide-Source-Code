@@ -25,6 +25,10 @@ local effect_template = {
 }
 
 effect_template.start = function (template_data, template_context)
+	if DEDICATED_SERVER then
+		return
+	end
+
 	local unit = template_data.unit
 	local game_session = Managers.state.game_session:game_session()
 	local game_object_id = Managers.state.unit_spawner:game_object_id(unit)
@@ -61,6 +65,10 @@ effect_template.start = function (template_data, template_context)
 end
 
 effect_template.update = function (template_data, template_context, dt, t)
+	if DEDICATED_SERVER then
+		return
+	end
+
 	local game_session = template_data.game_session
 	local game_object_id = template_data.game_object_id
 	local toughness_damage, max_toughness, is_toughness_invulnerable = _get_network_values(game_session, game_object_id, template_data.breed)
@@ -124,6 +132,10 @@ effect_template.update = function (template_data, template_context, dt, t)
 end
 
 effect_template.stop = function (template_data, template_context)
+	if DEDICATED_SERVER then
+		return
+	end
+
 	local shield_unit = template_data.shield_unit
 
 	if Unit.alive(shield_unit) then

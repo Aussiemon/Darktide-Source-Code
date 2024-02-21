@@ -9,8 +9,8 @@ local CreditsView = class("CreditsView", "BaseView")
 local credits_settigns = Credits.settings
 local view_settings = CreditsViewSettings
 
-CreditsView.init = function (self, settings)
-	CreditsView.super.init(self, Definitions, settings)
+CreditsView.init = function (self, settings, context)
+	CreditsView.super.init(self, Definitions, settings, context)
 
 	self._pass_draw = false
 	self._should_stop = false

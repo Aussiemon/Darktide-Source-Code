@@ -19,7 +19,7 @@ local ARGS = {
 		name = "source_item"
 	},
 	{
-		name = "from_specialization"
+		name = "from_talent"
 	}
 }
 local NUM_ARGS = #ARGS
@@ -37,6 +37,15 @@ BuffArgs.add_args_to_context = function (context, added_args, ...)
 		local arg, val = select(i, ...)
 		context[arg] = val
 		added_args[arg] = val
+	end
+
+	local player = context.player
+	local item_slot_name = context.item_slot_name
+
+	if player and item_slot_name then
+		local profile = player:profile()
+		local equipped_item = profile.loadout[item_slot_name]
+		context.item = equipped_item
 	end
 end
 

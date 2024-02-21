@@ -1,11 +1,11 @@
-local Definitions = require("scripts/ui/view_elements/view_element_weapon_stats/view_element_weapon_stats_definitions")
-local MasterItems = require("scripts/backend/master_items")
-local ItemUtils = require("scripts/utilities/items")
-local UISettings = require("scripts/settings/ui/ui_settings")
-local Archetypes = require("scripts/settings/archetype/archetypes")
-local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
-local WeaponStats = require("scripts/utilities/weapon_stats")
 local AchievementUIHelper = require("scripts/managers/achievements/utility/achievement_ui_helper")
+local Archetypes = require("scripts/settings/archetype/archetypes")
+local Definitions = require("scripts/ui/view_elements/view_element_weapon_stats/view_element_weapon_stats_definitions")
+local ItemUtils = require("scripts/utilities/items")
+local MasterItems = require("scripts/backend/master_items")
+local UISettings = require("scripts/settings/ui/ui_settings")
+local WeaponStats = require("scripts/utilities/weapon_stats")
+local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
 
 require("scripts/ui/view_elements/view_element_grid/view_element_grid")
 

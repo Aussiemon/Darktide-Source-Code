@@ -25,6 +25,8 @@ HudHealthBarLogic.init = function (self, settings)
 		local name = self._update_order[i]
 		self._stored_fractions[name] = 1
 	end
+
+	self._skip_animation = true
 end
 
 HudHealthBarLogic._verify_settings = function (self, settings)
@@ -69,10 +71,13 @@ end
 HudHealthBarLogic.update = function (self, dt, t, bar_progress, bar_max_progress)
 	self._health_fraction = nil
 	self._health_ghost_fraction = nil
+	local skip_animation = self._skip_animation
 
 	self:_sync_player_health(t, bar_progress, bar_max_progress)
-	self:_update_bar_animations(dt, t)
+	self:_update_bar_animations(dt, t, skip_animation)
 	self:_update_bar_alpha(dt, t)
+
+	self._skip_animation = false
 end
 
 HudHealthBarLogic._set_bar_fraction = function (self, t, name, target_fraction, delta_fraction, total_duration, force_update, animation_delay, refresh_delay_on_override)
@@ -117,7 +122,7 @@ end
 
 local current_fraction_temp_table = {}
 
-HudHealthBarLogic._update_bar_animations = function (self, dt, t)
+HudHealthBarLogic._update_bar_animations = function (self, dt, t, skip_animation)
 	local bar_animations = self._bar_animations
 	local update_order = self._update_order
 	local stored_fractions = self._stored_fractions
@@ -130,7 +135,7 @@ HudHealthBarLogic._update_bar_animations = function (self, dt, t)
 		local anim_data = bar_animations[name]
 
 		if anim_data then
-			local fraction, complete = self:_update_bar_animation(anim_data, dt, t)
+			local fraction, complete = self:_update_bar_animation(anim_data, dt, t, skip_animation)
 
 			if complete then
 				bar_animations[name] = nil
@@ -190,14 +195,16 @@ HudHealthBarLogic._set_alpha = function (self, alpha)
 	self._alpha_multiplier = alpha_fraction
 end
 
-HudHealthBarLogic._update_bar_animation = function (self, anim_data, dt, t)
+HudHealthBarLogic._update_bar_animation = function (self, anim_data, dt, t, skip_animation)
 	local duration = anim_data.duration
 	local delay = anim_data.delay
 	local start_t = anim_data.start_t + delay
 	local end_t = start_t + duration
 	local progress = nil
 
-	if math.abs(end_t - start_t) > 0.0001 then
+	if skip_animation then
+		progress = 1
+	elseif math.abs(end_t - start_t) > 0.0001 then
 		progress = math.ilerp(start_t, end_t, t)
 	elseif start_t <= t then
 		progress = 1

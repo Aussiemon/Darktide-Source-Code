@@ -1,28 +1,12 @@
 local TestifySnippets = require("scripts/tests/testify_snippets")
 CombatTestCases = {}
 local base_talents = {
-	veteran_1 = {},
 	veteran_2 = {
 		veteran_2_base_3 = true,
 		veteran_2_base_2 = true,
 		veteran_2_base_1 = true,
 		veteran_2_combat = true,
 		veteran_2_frag_grenade = true
-	},
-	veteran_3 = {
-		veteran_3_base_3 = true,
-		veteran_3_base_2 = true,
-		veteran_3_combat = true,
-		veteran_3_base_1 = true,
-		veteran_3_grenade = true
-	},
-	ogryn_1 = {
-		ogryn_1_grenade = true,
-		ogryn_1_base_1 = true,
-		ogryn_1_base_2 = true,
-		ogryn_1_combat = true,
-		ogryn_1_base_3 = true,
-		ogryn_1_base_4 = true
 	},
 	ogryn_2 = {
 		ogryn_2_grenade = true,
@@ -33,13 +17,6 @@ local base_talents = {
 		ogryn_2_base_4 = true,
 		ogryn_2_charge_buff = true
 	},
-	ogryn_3 = {},
-	zealot_1 = {
-		zealot_1_base_1 = true,
-		zealot_1_base_2 = true,
-		zealot_1_base_3 = true,
-		zealot_1_combat = true
-	},
 	zealot_2 = {
 		zealot_2_base_3 = true,
 		zealot_2_base_2 = true,
@@ -48,21 +25,13 @@ local base_talents = {
 		zealot_2_combat = true,
 		zealot_2_base_1 = true
 	},
-	zealot_3 = {},
-	psyker_1 = {
-		psyker_1_combat = true,
-		psyker_1_base_2 = true,
-		psyker_1_base_1 = true,
-		psyker_1_base_3 = true
-	},
 	psyker_2 = {
 		psyker_2_combat = true,
 		psyker_2_base_2 = true,
 		psyker_2_base_1 = true,
 		psyker_2_smite = true,
 		psyker_2_base_3 = true
-	},
-	psyker_3 = {}
+	}
 }
 
 local function _form_trait_list(traits, existing_traits)
@@ -87,12 +56,9 @@ CombatTestCases.equip_all_gears = function (case_settings)
 		local archetype = settings.archetype or "veteran"
 
 		TestifySnippets.skip_splash_and_title_screen()
-		Testify:make_request("wait_for_main_menu_displayed")
-		Testify:make_request("wait_for_profile_synchronization")
-		Testify:make_request("wait_for_narrative_loaded")
+		TestifySnippets.wait_for_main_menu()
 		Testify:make_request("delete_character_by_name", "Testify")
-		Testify:make_request("navigate_to_create_character_from_main_menu")
-		Testify:make_request("create_character_by_archetype_and_gender", archetype, "male")
+		TestifySnippets.create_character_from_main_menu(archetype)
 		Testify:make_request("wait_for_state_gameplay_reached")
 		TestifySnippets.wait(1)
 

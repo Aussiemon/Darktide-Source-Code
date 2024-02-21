@@ -208,6 +208,12 @@ MonsterPacing._generate_spawns = function (self, template)
 						end
 					end
 
+					local stinger = self._template.spawn_stingers and self._template.spawn_stingers[breed_name]
+
+					if stinger then
+						monster.stinger = stinger
+					end
+
 					table.swap_delete(temp_sections_table, temp_section_index)
 
 					if allow_witches_spawned_with_monsters then
@@ -648,6 +654,12 @@ MonsterPacing._spawn_monster = function (self, monster, ahead_target_unit, side_
 		local buff_extension = ScriptUnit.extension(spawned_unit, "buff_system")
 
 		buff_extension:add_internally_controlled_buff("empowered_twin", t)
+	end
+
+	if monster.stinger then
+		local fx_system = Managers.state.extension:system("fx_system")
+
+		fx_system:trigger_wwise_event(monster.stinger, spawn_position)
 	end
 
 	if monster.objective then

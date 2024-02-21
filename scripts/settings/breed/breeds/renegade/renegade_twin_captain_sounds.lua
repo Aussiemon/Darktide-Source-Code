@@ -20,7 +20,18 @@ local sound_data = {
 		run_foley = "wwise/events/minions/play_minion_captain_drastic_short"
 	},
 	use_proximity_culling = {
+		foley_drastic_long = false,
+		vce_combo_attack_single = false,
+		vce_melee_attack_charged_long = false,
+		vce_death_quick = false,
 		footstep_land = false,
+		vce_melee_attack_short = false,
+		vce_melee_attack_charged = false,
+		vce_grunt = false,
+		vce_kick = false,
+		vce_force_field_overload = false,
+		vce_mocking_laughter = false,
+		vce_breathing_running = false,
 		footstep = false
 	}
 }

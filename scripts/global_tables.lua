@@ -47,6 +47,7 @@ GLOBAL_RESOURCES = {
 	"wwise/packages/vo_dependencies",
 	"content/characters/enemy/enemy_character_assets",
 	"content/liquid_area/liquid_area_assets",
+	"content/smoke_fog/smoke_fog_assets",
 	"content/pickups/pickup_assets",
 	"content/weapons/weapon_assets"
 }

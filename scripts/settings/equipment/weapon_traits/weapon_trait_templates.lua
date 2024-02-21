@@ -3,7 +3,7 @@ local templates = {}
 local function _create_entry(path)
 	local entry_templates = require(path)
 
-	for name, template in pairs(entry_templates) do
+	for name, template in upairs(entry_templates) do
 		templates[name] = template
 	end
 end
@@ -14,8 +14,8 @@ _create_entry("scripts/settings/equipment/weapon_traits/weapon_traits_bespoke_au
 _create_entry("scripts/settings/equipment/weapon_traits/weapon_traits_bespoke_autopistol_p1")
 _create_entry("scripts/settings/equipment/weapon_traits/weapon_traits_bespoke_bolter_p1")
 _create_entry("scripts/settings/equipment/weapon_traits/weapon_traits_bespoke_chainaxe_p1")
-_create_entry("scripts/settings/equipment/weapon_traits/weapon_traits_bespoke_chainsword_p1")
 _create_entry("scripts/settings/equipment/weapon_traits/weapon_traits_bespoke_chainsword_2h_p1")
+_create_entry("scripts/settings/equipment/weapon_traits/weapon_traits_bespoke_chainsword_p1")
 _create_entry("scripts/settings/equipment/weapon_traits/weapon_traits_bespoke_combataxe_p1")
 _create_entry("scripts/settings/equipment/weapon_traits/weapon_traits_bespoke_combataxe_p2")
 _create_entry("scripts/settings/equipment/weapon_traits/weapon_traits_bespoke_combataxe_p3")

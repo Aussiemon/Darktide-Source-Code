@@ -22,8 +22,8 @@ local function _quick_throw_allowed(action_settings, condition_func_params, used
 		return false
 	end
 
-	local specialization_extension = condition_func_params.specialization_extension
-	local has_special_rule = specialization_extension:has_special_rule(special_rules.enable_quick_throw_grenades)
+	local talent_extension = condition_func_params.talent_extension
+	local has_special_rule = talent_extension:has_special_rule(special_rules.enable_quick_throw_grenades)
 
 	return has_special_rule
 end
@@ -110,12 +110,12 @@ local base_template_settings = {
 		grenade_ability_quick_throw = {
 			sprint_requires_press_to_interrupt = false,
 			start_input = "grenade_ability",
+			stop_alternate_fire = true,
 			kind = "spawn_projectile",
 			fire_time = 0.25,
 			action_priority = 2,
 			uninterruptible = true,
 			use_ability_charge = true,
-			unaim = true,
 			ability_type = "grenade_ability",
 			allowed_during_sprint = true,
 			anim_event = "ability_knife_throw",

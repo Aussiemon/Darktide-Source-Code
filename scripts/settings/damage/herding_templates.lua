@@ -86,6 +86,18 @@ local herding_templates = {
 			}
 		}
 	},
+	smiter_down_pickaxe = {
+		stagger = {
+			override = stagger_overrides.push
+		},
+		push_ragdoll = {
+			custom_vector = {
+				-0,
+				-0.3,
+				-0.6
+			}
+		}
+	},
 	thunder_hammer_right_down_light = {
 		stagger = {
 			override = stagger_overrides.down

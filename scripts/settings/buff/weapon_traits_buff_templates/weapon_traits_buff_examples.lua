@@ -1,21 +1,17 @@
-local Ammo = require("scripts/utilities/ammo")
 local AttackSettings = require("scripts/settings/damage/attack_settings")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local BuffTemplate = require("scripts/utilities/buff_template")
-local CheckProcFunctions = require("scripts/settings/buff/validation_functions/check_proc_functions")
-local ConditionalFunctions = require("scripts/settings/buff/validation_functions/conditional_functions")
-local DamageSettings = require("scripts/settings/damage/damage_settings")
+local CheckProcFunctions = require("scripts/settings/buff/helper_functions/check_proc_functions")
+local ConditionalFunctions = require("scripts/settings/buff/helper_functions/conditional_functions")
 local FixedFrame = require("scripts/utilities/fixed_frame")
-local PlayerUnitAction = require("scripts/extension_systems/visual_loadout/utilities/player_unit_action")
-local ReloadStates = require("scripts/extension_systems/weapon/utilities/reload_states")
-local WarpCharge = require("scripts/utilities/warp_charge")
 local attack_results = AttackSettings.attack_results
-local attack_types = AttackSettings.attack_types
-local damage_types = DamageSettings.damage_types
 local buff_keywords = BuffSettings.keywords
 local buff_stat_buffs = BuffSettings.stat_buffs
 local buff_proc_events = BuffSettings.proc_events
 local templates = {}
+
+table.make_unique(templates)
+
 local example_weapon_trait_ranged_buff_stat = {
 	class_name = "buff",
 	name = "example_weapon_trait_ranged_buff_stat",
@@ -83,12 +79,12 @@ local example_weapon_trait_ranged_buff_proc = {
 	},
 	conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded,
 	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
-	check_proc_func = function (params, template_data, template_context)
+	check_proc_func = CheckProcFunctions.all(CheckProcFunctions.on_item_match, function (params, template_data, template_context)
 		local is_kill = params.attack_result == attack_results.died
 		local is_weakspot = params.hit_weakspot
 
 		return is_kill and is_weakspot
-	end
+	end)
 }
 
 BuffTemplate.generate_weapon_trait_buff_templates(templates, example_weapon_trait_ranged_buff_proc, 3)

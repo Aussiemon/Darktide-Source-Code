@@ -103,6 +103,11 @@ end
 
 NarrativeManager.is_narrative_loaded_for_player_character = function (self)
 	local profile = _player_profile()
+
+	if profile == nil then
+		return false
+	end
+
 	local character_id = profile.character_id
 	local data = self._character_narrative_data[character_id]
 

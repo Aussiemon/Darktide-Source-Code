@@ -1,6 +1,10 @@
 local BossPatrols = require("scripts/managers/pacing/monster_pacing/boss_patrols")
 local PerceptionSettings = require("scripts/settings/perception/perception_settings")
 local AggroStates = PerceptionSettings.aggro_states
+local SPAWN_STINGERS = {
+	renegade_twin_captain = "wwise/events/minions/play_minion_twins_ambush_spawn_impact_hit",
+	renegade_twin_captain_two = "wwise/events/minions/play_minion_twins_ambush_spawn_impact_hit"
+}
 local monster_pacing_template = {
 	name = "renegade_monsters",
 	challenge_templates = {
@@ -44,7 +48,8 @@ local monster_pacing_template = {
 			},
 			despawn_distance_when_passive = {
 				chaos_daemonhost = 65
-			}
+			},
+			spawn_stingers = SPAWN_STINGERS
 		},
 		{
 			num_spawns = {
@@ -87,7 +92,8 @@ local monster_pacing_template = {
 			},
 			despawn_distance_when_passive = {
 				chaos_daemonhost = 65
-			}
+			},
+			spawn_stingers = SPAWN_STINGERS
 		},
 		{
 			num_spawns = {
@@ -148,7 +154,8 @@ local monster_pacing_template = {
 			},
 			despawn_distance_when_passive = {
 				chaos_daemonhost = 65
-			}
+			},
+			spawn_stingers = SPAWN_STINGERS
 		},
 		{
 			allow_witches_spawned_with_monsters = true,
@@ -200,7 +207,8 @@ local monster_pacing_template = {
 			pause_pacing_on_spawn = {},
 			despawn_distance_when_passive = {
 				chaos_daemonhost = 65
-			}
+			},
+			spawn_stingers = SPAWN_STINGERS
 		},
 		{
 			allow_witches_spawned_with_monsters = true,
@@ -252,7 +260,8 @@ local monster_pacing_template = {
 			pause_pacing_on_spawn = {},
 			despawn_distance_when_passive = {
 				chaos_daemonhost = 65
-			}
+			},
+			spawn_stingers = SPAWN_STINGERS
 		}
 	}
 }

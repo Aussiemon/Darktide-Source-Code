@@ -987,10 +987,11 @@ weapon_template.actions = {
 	action_right_light_pushfollow = {
 		damage_window_start = 0.26666666666666666,
 		hit_armor_anim = "attack_hit_shield",
-		kind = "sweep",
-		attack_direction_override = "push",
-		weapon_handling_template = "time_scale_1",
 		range_mod = 1.25,
+		weapon_handling_template = "time_scale_1",
+		attack_direction_override = "push",
+		kind = "sweep",
+		sprint_requires_press_to_interrupt = "true",
 		damage_window_end = 0.36666666666666664,
 		anim_end_event = "attack_finished",
 		anim_event_3p = "attack_swing_right_diagonal",
@@ -1440,7 +1441,7 @@ weapon_template.base_stats = {
 	}
 }
 weapon_template.traits = {}
-local bespoke_combatsword_p1_traits = table.keys(WeaponTraitsBespokeCombatswordP1)
+local bespoke_combatsword_p1_traits = table.ukeys(WeaponTraitsBespokeCombatswordP1)
 
 table.append(weapon_template.traits, bespoke_combatsword_p1_traits)
 

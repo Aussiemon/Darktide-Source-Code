@@ -14,7 +14,7 @@ local TitleView = class("TitleView", "BaseView")
 TitleView.init = function (self, settings, context)
 	local definitions = require(definition_path)
 
-	TitleView.super.init(self, definitions, settings)
+	TitleView.super.init(self, definitions, settings, context)
 
 	self._pass_draw = false
 	self._parent = context.parent

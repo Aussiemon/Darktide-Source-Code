@@ -62,11 +62,11 @@ local PlayerCharacterLoopingParticleAliases = {
 				variable_name = "intensity",
 				variable_type = "emit_rate_multiplier",
 				func = function (context)
-					local specialization_resource_component = context.specialization_resource_component
-					local max_souls = specialization_resource_component.max_resource
+					local talent_resource_component = context.talent_resource_component
+					local max_souls = talent_resource_component.max_resource
 
 					if max_souls > 0 then
-						local current_souls = specialization_resource_component.current_resource
+						local current_souls = talent_resource_component.current_resource
 						local value = current_souls / max_souls
 						local multiplier = current_souls > 1 and 1 or 1.5
 

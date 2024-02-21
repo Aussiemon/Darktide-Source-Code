@@ -418,6 +418,17 @@ weapon_template.actions = {
 			zoom_shoot = {
 				action_name = "action_shoot_zoomed",
 				chain_time = 0.05
+			},
+			combat_ability = {
+				action_name = "combat_ability"
+			},
+			grenade_ability = {
+				{
+					action_name = "grenade_ability"
+				},
+				{
+					action_name = "grenade_ability_quick_throw"
+				}
 			}
 		}
 	},
@@ -543,13 +554,13 @@ weapon_template.actions = {
 		start_input = "special_action_push",
 		block_duration = 0.5,
 		sprint_requires_press_to_interrupt = true,
-		action_priority = 1,
 		allowed_during_sprint = true,
+		action_priority = 1,
+		stop_alternate_fire = true,
 		activation_cooldown = 0.1,
 		activate_special = true,
 		damage_time = 0.1,
 		abort_sprint = true,
-		unaim = true,
 		uninterruptible = true,
 		anim_event = "weapon_special",
 		total_time = 1,
@@ -601,6 +612,17 @@ weapon_template.actions = {
 			zoom = {
 				action_name = "action_zoom",
 				chain_time = 0.65
+			},
+			combat_ability = {
+				action_name = "combat_ability"
+			},
+			grenade_ability = {
+				{
+					action_name = "grenade_ability"
+				},
+				{
+					action_name = "grenade_ability_quick_throw"
+				}
 			}
 		},
 		inner_push_rad = math.pi * 0.04,
@@ -616,14 +638,14 @@ weapon_template.actions = {
 		start_input = "special_action_push",
 		block_duration = 0.5,
 		sprint_requires_press_to_interrupt = true,
-		action_priority = 2,
-		charge_template = "handgun_push_charge",
 		allowed_during_sprint = true,
+		action_priority = 2,
+		stop_alternate_fire = true,
 		activation_cooldown = 0.1,
+		charge_template = "handgun_push_charge",
 		activate_special = true,
 		damage_time = 0.4,
 		abort_sprint = true,
-		unaim = true,
 		uninterruptible = true,
 		anim_event = "weapon_special_psyker",
 		total_time = 1,
@@ -675,6 +697,17 @@ weapon_template.actions = {
 			zoom = {
 				action_name = "action_zoom",
 				chain_time = 0.65
+			},
+			combat_ability = {
+				action_name = "combat_ability"
+			},
+			grenade_ability = {
+				{
+					action_name = "grenade_ability"
+				},
+				{
+					action_name = "grenade_ability_quick_throw"
+				}
 			}
 		},
 		inner_push_rad = math.pi * 0.04,
@@ -905,7 +938,7 @@ weapon_template.can_use_while_vaulting = true
 weapon_template.movement_curve_modifier_template = "default"
 weapon_template.footstep_intervals = FootstepIntervalsTemplates.default
 weapon_template.traits = {}
-local bespoke_lasgun_p1_traits = table.keys(WeaponTraitsBespokeLaspistolP1)
+local bespoke_lasgun_p1_traits = table.ukeys(WeaponTraitsBespokeLaspistolP1)
 
 table.append(weapon_template.traits, bespoke_lasgun_p1_traits)
 
@@ -942,6 +975,14 @@ weapon_template.displayed_attacks = {
 		desc = "loc_stats_special_action_melee_push_desc",
 		display_name = "loc_pushing",
 		type = "melee_hand"
+	}
+}
+weapon_template.explicit_combo = {
+	{
+		"action_shoot_hip"
+	},
+	{
+		"action_shoot_zoomed"
 	}
 }
 weapon_template.special_action_name = "action_normal_push"

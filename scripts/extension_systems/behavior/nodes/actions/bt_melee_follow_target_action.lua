@@ -2,7 +2,6 @@ require("scripts/extension_systems/behavior/nodes/bt_node")
 
 local Animation = require("scripts/utilities/animation")
 local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
-local DialogueBreedSettings = require("scripts/settings/dialogue/dialogue_breed_settings")
 local MinionMovement = require("scripts/utilities/minion_movement")
 local Vo = require("scripts/utilities/vo")
 local BtMeleeFollowTargetAction = class("BtMeleeFollowTargetAction", "BtNode")
@@ -57,11 +56,10 @@ BtMeleeFollowTargetAction.enter = function (self, unit, breed, blackboard, scrat
 		scratchpad.animation_extension:anim_event(action_data.force_move_anim_event)
 	end
 
-	local follow_vo_interval_t = DialogueBreedSettings[breed.name].follow_vo_interval_t
+	local follow_vo_interval_t = action_data.follow_vo_interval_t
 
-	if action_data.vo_event and follow_vo_interval_t then
-		scratchpad.follow_vo_interval_t = follow_vo_interval_t
-		scratchpad.next_follow_vo_t = t + scratchpad.follow_vo_interval_t
+	if follow_vo_interval_t then
+		scratchpad.next_follow_vo_t = t + follow_vo_interval_t
 	end
 
 	if action_data.effect_template then
@@ -105,13 +103,14 @@ BtMeleeFollowTargetAction.run = function (self, unit, breed, blackboard, scratch
 		MinionMovement.update_running_stagger(unit, t, dt, scratchpad, action_data)
 	end
 
-	local vo_event = action_data.vo_event
 	local next_follow_vo_t = scratchpad.next_follow_vo_t
 
-	if vo_event and next_follow_vo_t and next_follow_vo_t < t then
+	if next_follow_vo_t and next_follow_vo_t < t then
+		local vo_event = action_data.vo_event
+
 		Vo.enemy_generic_vo_event(unit, vo_event, breed.name)
 
-		scratchpad.next_follow_vo_t = t + scratchpad.follow_vo_interval_t
+		scratchpad.next_follow_vo_t = t + action_data.follow_vo_interval_t
 	end
 
 	local should_start_idle, should_be_idling = MinionMovement.should_start_idle(scratchpad, behavior_component)

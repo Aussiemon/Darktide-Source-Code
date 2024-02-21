@@ -881,7 +881,6 @@ local surface_decal = {
 				}
 			},
 			units = {
-				"content/fx/units/weapons/lasgun_concrete_small_01",
 				"content/fx/units/weapons/lasgun_concrete_medium_01",
 				"content/fx/units/weapons/lasgun_concrete_large_01"
 			}
@@ -898,7 +897,6 @@ local surface_decal = {
 				}
 			},
 			units = {
-				"content/fx/units/weapons/lasgun_concrete_small_01",
 				"content/fx/units/weapons/lasgun_concrete_medium_01",
 				"content/fx/units/weapons/lasgun_concrete_large_01"
 			}
@@ -915,7 +913,6 @@ local surface_decal = {
 				}
 			},
 			units = {
-				"content/fx/units/weapons/lasgun_concrete_small_01",
 				"content/fx/units/weapons/lasgun_concrete_medium_01",
 				"content/fx/units/weapons/lasgun_concrete_large_01"
 			}
@@ -934,7 +931,6 @@ local surface_decal = {
 				}
 			},
 			units = {
-				"content/fx/units/weapons/lasgun_concrete_small_01",
 				"content/fx/units/weapons/lasgun_concrete_medium_01",
 				"content/fx/units/weapons/lasgun_concrete_large_01"
 			}
@@ -951,7 +947,6 @@ local surface_decal = {
 				}
 			},
 			units = {
-				"content/fx/units/weapons/lasgun_concrete_small_01",
 				"content/fx/units/weapons/lasgun_concrete_medium_01",
 				"content/fx/units/weapons/lasgun_concrete_large_01"
 			}
@@ -968,7 +963,6 @@ local surface_decal = {
 				}
 			},
 			units = {
-				"content/fx/units/weapons/lasgun_concrete_small_01",
 				"content/fx/units/weapons/lasgun_concrete_medium_01",
 				"content/fx/units/weapons/lasgun_concrete_large_01"
 			}
@@ -987,9 +981,7 @@ local surface_decal = {
 				}
 			},
 			units = {
-				"content/fx/units/weapons/lasgun_concrete_small_01",
-				"content/fx/units/weapons/lasgun_concrete_medium_01",
-				"content/fx/units/weapons/lasgun_concrete_large_01"
+				"content/fx/units/weapons/lasgun_metal_large_01"
 			}
 		},
 		[hit_types.penetration_entry] = {
@@ -1004,9 +996,7 @@ local surface_decal = {
 				}
 			},
 			units = {
-				"content/fx/units/weapons/lasgun_concrete_small_01",
-				"content/fx/units/weapons/lasgun_concrete_medium_01",
-				"content/fx/units/weapons/lasgun_concrete_large_01"
+				"content/fx/units/weapons/lasgun_metal_large_01"
 			}
 		},
 		[hit_types.penetration_exit] = {
@@ -1021,13 +1011,11 @@ local surface_decal = {
 				}
 			},
 			units = {
-				"content/fx/units/weapons/lasgun_concrete_small_01",
-				"content/fx/units/weapons/lasgun_concrete_medium_01",
-				"content/fx/units/weapons/lasgun_concrete_large_01"
+				"content/fx/units/weapons/lasgun_metal_large_01"
 			}
 		}
 	},
-	cloth = {
+	metal_sheet = {
 		[hit_types.stop] = {
 			extents = {
 				min = {
@@ -1040,9 +1028,7 @@ local surface_decal = {
 				}
 			},
 			units = {
-				"content/fx/units/weapons/lasgun_concrete_small_01",
-				"content/fx/units/weapons/lasgun_concrete_medium_01",
-				"content/fx/units/weapons/lasgun_concrete_large_01"
+				"content/fx/units/weapons/lasgun_metal_large_01"
 			}
 		},
 		[hit_types.penetration_entry] = {
@@ -1057,9 +1043,7 @@ local surface_decal = {
 				}
 			},
 			units = {
-				"content/fx/units/weapons/lasgun_concrete_small_01",
-				"content/fx/units/weapons/lasgun_concrete_medium_01",
-				"content/fx/units/weapons/lasgun_concrete_large_01"
+				"content/fx/units/weapons/lasgun_metal_large_01"
 			}
 		},
 		[hit_types.penetration_exit] = {
@@ -1074,9 +1058,54 @@ local surface_decal = {
 				}
 			},
 			units = {
-				"content/fx/units/weapons/lasgun_concrete_small_01",
-				"content/fx/units/weapons/lasgun_concrete_medium_01",
-				"content/fx/units/weapons/lasgun_concrete_large_01"
+				"content/fx/units/weapons/lasgun_metal_large_01"
+			}
+		}
+	},
+	metal_catwalk = {
+		[hit_types.stop] = {
+			extents = {
+				min = {
+					x = 0.2,
+					y = 0.2
+				},
+				max = {
+					x = 0.2,
+					y = 0.2
+				}
+			},
+			units = {
+				"content/fx/units/weapons/lasgun_metal_large_01"
+			}
+		},
+		[hit_types.penetration_entry] = {
+			extents = {
+				min = {
+					x = 0.2,
+					y = 0.2
+				},
+				max = {
+					x = 0.2,
+					y = 0.2
+				}
+			},
+			units = {
+				"content/fx/units/weapons/lasgun_metal_large_01"
+			}
+		},
+		[hit_types.penetration_exit] = {
+			extents = {
+				min = {
+					x = 0.2,
+					y = 0.2
+				},
+				max = {
+					x = 0.2,
+					y = 0.2
+				}
+			},
+			units = {
+				"content/fx/units/weapons/lasgun_metal_large_01"
 			}
 		}
 	},

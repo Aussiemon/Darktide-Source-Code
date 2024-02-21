@@ -11,6 +11,7 @@ local sound_data = {
 	},
 	use_proximity_culling = {
 		vce_attack_long = false,
+		vce_awaken_short = false,
 		vce_awaken = false,
 		stop_vce = false,
 		vce_lifted = false,

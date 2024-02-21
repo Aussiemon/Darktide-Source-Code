@@ -1,5 +1,8 @@
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local weapon_traits_ranged_warp_charge = {}
+
+table.make_unique(weapon_traits_ranged_warp_charge)
+
 local buff_stat_buffs = BuffSettings.stat_buffs
 weapon_traits_ranged_warp_charge.weapon_trait_ranged_warp_charge_wield_increased_vent_speed = {
 	weapon_trait_ranged_warp_charge_wield_increased_vent_speed = {

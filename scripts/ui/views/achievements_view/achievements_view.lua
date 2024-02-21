@@ -10,7 +10,7 @@ local ACHIEVEMENT_GRID = 2
 local AchievementsView = class("AchievementsView", "BaseView")
 
 AchievementsView.init = function (self, settings, context)
-	AchievementsView.super.init(self, Definitions, settings)
+	AchievementsView.super.init(self, Definitions, settings, context)
 
 	local parent = context and context.parent
 

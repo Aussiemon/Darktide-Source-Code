@@ -1,12 +1,9 @@
 local BaseWeaponTraitBuffTemplates = require("scripts/settings/buff/weapon_traits_buff_templates/base_weapon_trait_buff_templates")
-local BuffSettings = require("scripts/settings/buff/buff_settings")
-local CheckProcFunctions = require("scripts/settings/buff/validation_functions/check_proc_functions")
-local ConditionalFunctions = require("scripts/settings/buff/validation_functions/conditional_functions")
-local proc_events = BuffSettings.proc_events
-local stat_buffs = BuffSettings.stat_buffs
-local templates = {
-	weapon_trait_bespoke_chainaxe_p1_guaranteed_melee_crit_on_activated_kill = table.clone(BaseWeaponTraitBuffTemplates.guaranteed_melee_crit_on_activated_kill)
-}
+local templates = {}
+
+table.make_unique(templates)
+
+templates.weapon_trait_bespoke_chainaxe_p1_guaranteed_melee_crit_on_activated_kill = table.clone(BaseWeaponTraitBuffTemplates.guaranteed_melee_crit_on_activated_kill)
 templates.weapon_trait_bespoke_chainaxe_p1_guaranteed_melee_crit_on_activated_kill.buff_data.internal_buff_name = "weapon_trait_bespoke_chainaxe_p1_guaranteed_melee_crit_on_activated_kill_effect"
 templates.weapon_trait_bespoke_chainaxe_p1_guaranteed_melee_crit_on_activated_kill_effect = table.clone(BaseWeaponTraitBuffTemplates.guaranteed_melee_crit_on_activated_kill_effect)
 templates.weapon_trait_bespoke_chainaxe_p1_bleed_on_activated_hit = table.clone(BaseWeaponTraitBuffTemplates.bleed_on_activated_hit)

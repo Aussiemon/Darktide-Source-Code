@@ -22,7 +22,11 @@ local PlayerCompositions = {
 		elseif composition_name == "party" then
 			local local_player_id = 1
 			local local_player = Managers.player:player(Network.peer_id(), local_player_id)
-			result_table[local_player:unique_id()] = local_player
+
+			if local_player then
+				result_table[local_player:unique_id()] = local_player
+			end
+
 			local party_members = nil
 
 			if GameParameters.prod_like_backend then

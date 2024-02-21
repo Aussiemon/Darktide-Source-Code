@@ -6,7 +6,7 @@ local FixedFrame = require("scripts/utilities/fixed_frame")
 local GameModeSettings = require("scripts/settings/game_mode/game_mode_settings")
 local MasterItems = require("scripts/backend/master_items")
 local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
-local PlayerSpecializationUtils = require("scripts/utilities/player_specialization/player_specialization")
+local PlayerTalents = require("scripts/utilities/player_talents/player_talents")
 local Promise = require("scripts/foundation/utilities/promise")
 local ScriptedScenarios = require("scripts/extension_systems/scripted_scenario/scripted_scenarios")
 local level_trigger_event = Level.trigger_event
@@ -1738,6 +1738,29 @@ functions.modify_ammo = {
 	number_button = true,
 	on_activated = _modify_ammo
 }
+functions.weapons = {
+	num_decimals = 0,
+	name = "Clear ammo reserve",
+	category = "Player Equipment",
+	number_button = false,
+	on_activated = function (value)
+		local local_player = Managers.player:local_player(1)
+
+		if not local_player then
+			return
+		end
+
+		local player_unit = local_player.player_unit
+
+		if not ALIVE[player_unit] then
+			return
+		end
+
+		local weapon_extension = ScriptUnit.extension(player_unit, "weapon_system")
+
+		weapon_extension:debug_set_ammo_reserve(0)
+	end
+}
 
 local function _delete_characters(character_profiles)
 	local character_ids = {}
@@ -1908,14 +1931,11 @@ functions.delete_selected_character = {
 }
 
 local function _select_player_voice(selected_voice)
-	local local_player = Managers.player:local_player(1)
-	local local_player_id = local_player:local_player_id()
-	local local_player_unit = local_player.player_unit
 	local is_server = Managers.state.game_session:is_server()
-	local voice_id = NetworkLookup.player_character_voices[selected_voice]
-	local game_object_id = Managers.state.unit_spawner:game_object_id(local_player_unit)
 
 	if is_server then
+		local local_player = Managers.player:local_player(1)
+		local local_player_unit = local_player.player_unit
 		local dialogue_extension = ScriptUnit.extension(local_player_unit, "dialogue_system")
 
 		dialogue_extension:set_vo_profile(selected_voice)
@@ -2320,13 +2340,6 @@ local function _next_level()
 			end):next(function (data)
 				local new_level = data.progressionInfo.currentLevel
 				local new_xp = data.progressionInfo.currentXp
-				local profile_archetype = profile.archetype
-				local specialization_name = profile.specialization
-				local talent_group_id = PlayerSpecializationUtils.talent_group_unlocked_by_level(profile_archetype, specialization_name, new_level)
-
-				if talent_group_id then
-					Managers.data_service.talents:mark_unlocked_group_as_new(character_id, talent_group_id)
-				end
 
 				Log.info("DebugFunctions", "Player level bumped to: %s, Player xp bumped to %s", new_level, new_xp)
 

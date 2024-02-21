@@ -8,7 +8,6 @@ local UIRenderer = require("scripts/managers/ui/ui_renderer")
 local TextUtilities = require("scripts/utilities/ui/text")
 local AchievementUIHelper = require("scripts/managers/achievements/utility/achievement_ui_helper")
 local UIWidget = require("scripts/managers/ui/ui_widget")
-local ItemSlotSettings = require("scripts/settings/item/item_slot_settings")
 local Promise = require("scripts/foundation/utilities/promise")
 local MissionTemplates = require("scripts/settings/mission/mission_templates")
 local MissionTypes = require("scripts/settings/mission/mission_types")
@@ -19,6 +18,7 @@ local BackendUtilities = require("scripts/foundation/managers/backend/utilities/
 local TextUtils = require("scripts/utilities/ui/text")
 local ItemUtils = require("scripts/utilities/items")
 local MissionUtilities = require("scripts/utilities/ui/mission")
+local RegionLocalizationMappings = require("scripts/settings/backend/region_localization")
 local PLAY_BUTTON_ANIM_DELAY = 5
 local StoryMissionPlayView = class("StoryMissionPlayView", "BaseView")
 
@@ -186,24 +186,40 @@ end
 
 StoryMissionPlayView._populate_achievement_rewards = function (self, achievements)
 	local function _apply_package_item_icon_cb_func(widget, item)
-		local icon = item.icon
 		local icon_style = widget.style.reward_icon_ui
+		local item_slot = ItemUtils.item_slot(item)
+		local item_icon_size = item_slot and item_slot.item_icon_size
 		local material_values = icon_style.material_values
-		material_values.texture_icon = icon
+
+		if item.icon_material and item.icon_material ~= "" then
+			widget.content.reward_icon_ui = item.icon_material
+
+			if item_icon_size then
+				icon_style.size = {
+					item_icon_size[1],
+					item_icon_size[2]
+				}
+			end
+
+			icon_style.offset[1] = -8 - (128 - icon_style.size[1]) * 0.5
+			local material_values = icon_style.material_values
+			material_values.texture_icon = ""
+			material_values.use_placeholder_texture = 0
+		else
+			material_values.texture_icon = item.icon
+			icon_style.offset[1] = -8
+
+			if item_icon_size then
+				material_values.icon_size = {
+					item_icon_size[1],
+					item_icon_size[2]
+				}
+			end
+		end
+
 		material_values.use_placeholder_texture = 0
 		material_values.use_render_target = 0
 		widget.content.use_placeholder_texture = material_values.use_placeholder_texture
-		local slots = item and item.slots
-		local slot_name = slots and slots[1]
-		local slot = ItemSlotSettings[slot_name]
-		local item_icon_size = slot and slot.item_icon_size
-
-		if item_icon_size then
-			material_values.icon_size = {
-				item_icon_size[1] * 1.5,
-				item_icon_size[2] * 1.5
-			}
-		end
 	end
 
 	local function _apply_live_item_icon_cb_func(widget, grid_index, rows, columns, render_target)
@@ -613,16 +629,6 @@ StoryMissionPlayView._callback_open_options = function (self, region_data)
 		on_destroy_callback = callback(self, "_callback_close_options")
 	})
 	local regions_latency = self._regions_latency
-	local region_localization_mapping = {
-		["us-west"] = "loc_matchmaking_region_us_west",
-		sa = "loc_matchmaking_region_sa",
-		["ap-south"] = "loc_matchmaking_region_ap_south",
-		["ap-central"] = "loc_matchmaking_region_ap_central",
-		eu = "loc_matchmaking_region_eu",
-		mei = "loc_matchmaking_region_mei",
-		["us-east"] = "loc_matchmaking_region_us_east",
-		["ap-north"] = "loc_matchmaking_region_ap_north"
-	}
 	local presentation_data = {
 		{
 			widget_type = "dropdown",
@@ -652,15 +658,9 @@ StoryMissionPlayView._callback_open_options = function (self, region_data)
 				local options = {}
 
 				for region_name, latency_data in pairs(regions_latency) do
-					local ignore_localization, region_display_name = nil
-
-					if region_localization_mapping[region_name] then
-						region_display_name = Localize(region_localization_mapping[region_name])
-						ignore_localization = true
-					else
-						region_display_name = region_name
-						ignore_localization = true
-					end
+					local loc_key = RegionLocalizationMappings[region_name]
+					local ignore_localization = true
+					local region_display_name = loc_key and Localize(loc_key) or region_name
 
 					if math.abs(latency_data.min_latency - latency_data.max_latency) < 5 then
 						region_display_name = string.format("%s %dms", region_display_name, latency_data.min_latency)

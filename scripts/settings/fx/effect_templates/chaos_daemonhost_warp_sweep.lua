@@ -31,6 +31,10 @@ local effect_template = {
 	name = "chaos_daemonhost_warp_sweep",
 	resources = resources,
 	start = function (template_data, template_context)
+		if DEDICATED_SERVER then
+			return
+		end
+
 		local unit = template_data.unit
 		local visual_loadout_extension = ScriptUnit.extension(unit, "visual_loadout_system")
 		local body_slot_unit = visual_loadout_extension:slot_unit("slot_body")
@@ -51,6 +55,10 @@ local effect_template = {
 }
 
 effect_template.update = function (template_data, template_context, dt, t)
+	if DEDICATED_SERVER then
+		return
+	end
+
 	local effect_out_t = template_data.effect_out_t
 	local effect_t = template_data.effect_t + dt
 	template_data.effect_t = effect_t
@@ -76,6 +84,10 @@ effect_template.update = function (template_data, template_context, dt, t)
 end
 
 effect_template.stop = function (template_data, template_context)
+	if DEDICATED_SERVER then
+		return
+	end
+
 	local world = template_context.world
 	local vfx_particle_id_1 = template_data.vfx_particle_id_1
 

@@ -64,11 +64,14 @@ ActionCharge.finish = function (self, reason, data, t, time_in_action)
 end
 
 ActionCharge.running_action_state = function (self, t, time_in_action)
-	local charge_level = self._action_module_charge_component.charge_level
+	local action_module_charge_component = self._action_module_charge_component
+	local max_charge = action_module_charge_component.max_charge
+	local charge_level = action_module_charge_component.charge_level
 	local charge_template = self._weapon_extension:charge_template()
 	local fully_charged_charge_level = charge_template.fully_charged_charge_level or 1
+	local fully_charged_charge_threshold = math.min(fully_charged_charge_level, max_charge)
 
-	if charge_level >= fully_charged_charge_level then
+	if fully_charged_charge_threshold <= charge_level then
 		return "fully_charged"
 	end
 

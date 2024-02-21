@@ -661,13 +661,12 @@ weapon_template.actions = {
 		range_mod = 1.15,
 		kind = "sweep",
 		first_person_hit_anim = "hit_right_shake",
-		anim_event = "attack_bash_right",
 		first_person_hit_stop_anim = "hit_stop",
 		allowed_during_sprint = true,
-		damage_window_end = 0.5,
 		attack_direction_override = "right",
+		damage_window_end = 0.5,
 		uninterruptible = true,
-		allow_conditional_chain = true,
+		anim_event = "attack_bash_right",
 		total_time = 1.4,
 		crosshair = {
 			crosshair_type = "dot"
@@ -942,7 +941,7 @@ weapon_template.toughness_template = "default"
 weapon_template.movement_curve_modifier_template = "default"
 weapon_template.footstep_intervals = FootstepIntervalsTemplates.ogryn_heavy_stubber
 weapon_template.traits = {}
-local ogryn_heavystubbert_p1_traits = table.keys(WeaponTraitsOgrynHeavystubbertP1)
+local ogryn_heavystubbert_p1_traits = table.ukeys(WeaponTraitsOgrynHeavystubbertP1)
 
 table.append(weapon_template.traits, ogryn_heavystubbert_p1_traits)
 
@@ -981,6 +980,14 @@ weapon_template.displayed_attacks = {
 weapon_template.displayed_attack_ranges = {
 	max = 0,
 	min = 0
+}
+weapon_template.explicit_combo = {
+	{
+		"action_shoot_hip"
+	},
+	{
+		"action_shoot_zoomed"
+	}
 }
 weapon_template.special_action_name = "action_stab"
 

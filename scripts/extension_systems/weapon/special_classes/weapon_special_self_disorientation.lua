@@ -64,6 +64,12 @@ WeaponSpecialSelfDisorientation.process_hit = function (self, t, weapon, action_
 		return
 	end
 
+	local hazard_prop_extension = ScriptUnit.has_extension(target_unit, "hazard_prop_system")
+
+	if hazard_prop_extension then
+		return
+	end
+
 	local direction = Vector3.normalize(POSITION_LOOKUP[player_unit] - POSITION_LOOKUP[target_unit])
 	local disorientation_type = tweak_data.disorientation_type
 

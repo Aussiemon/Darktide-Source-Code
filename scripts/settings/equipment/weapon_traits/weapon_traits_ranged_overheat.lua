@@ -1,5 +1,8 @@
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local weapon_traits_ranged_overheat = {}
+
+table.make_unique(weapon_traits_ranged_overheat)
+
 local buff_stat_buffs = BuffSettings.stat_buffs
 weapon_traits_ranged_overheat.weapon_trait_ranged_overheat_wield_increased_vent_speed = {
 	weapon_trait_ranged_overheat_wield_increased_vent_speed = {

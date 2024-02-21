@@ -1651,8 +1651,9 @@ weapon_template.actions = {
 		kind = "sweep",
 		max_num_saved_entries = 20,
 		first_person_hit_anim = "hit_left_shake",
-		hit_armor_anim = "attack_hit_shield",
+		sprint_requires_press_to_interrupt = "true",
 		num_frames_before_process = 0,
+		hit_armor_anim = "attack_hit_shield",
 		damage_window_start = 0.27,
 		damage_window_end = 0.33,
 		anim_end_event = "attack_finished",
@@ -2339,7 +2340,7 @@ weapon_template.base_stats = {
 	}
 }
 weapon_template.traits = {}
-local bespoke_chainsword_p1_traits = table.keys(WeaponTraitsChainswordP1)
+local bespoke_chainsword_p1_traits = table.ukeys(WeaponTraitsChainswordP1)
 
 table.append(weapon_template.traits, bespoke_chainsword_p1_traits)
 

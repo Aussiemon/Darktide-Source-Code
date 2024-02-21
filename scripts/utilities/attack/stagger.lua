@@ -118,7 +118,7 @@ Stagger.can_stagger = function (unit)
 	return true
 end
 
-Stagger.force_stagger = function (unit, stagger_type, attack_direction, duration, length_scale, immune_time)
+Stagger.force_stagger = function (unit, stagger_type, attack_direction, duration, length_scale, immune_time, attacker_unit)
 	local t = Managers.time:time("gameplay")
 	local blackboard = BLACKBOARDS[unit]
 	local stagger_component = Blackboard.write_component(blackboard, "stagger")
@@ -130,6 +130,7 @@ Stagger.force_stagger = function (unit, stagger_type, attack_direction, duration
 	stagger_component.duration = duration
 	stagger_component.length = length_scale or 1
 	stagger_component.num_triggered_staggers = stagger_component.num_triggered_staggers + 1
+	stagger_component.attacker_unit = attacker_unit
 end
 
 function _get_breed(unit)

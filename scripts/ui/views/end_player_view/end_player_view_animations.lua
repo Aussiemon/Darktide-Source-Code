@@ -1,7 +1,7 @@
-local ViewSettings = require("scripts/ui/views/end_player_view/end_player_view_settings")
-local ViewStyles = require("scripts/ui/views/end_player_view/end_player_view_styles")
 local ColorUtilities = require("scripts/utilities/ui/colors")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
+local ViewSettings = require("scripts/ui/views/end_player_view/end_player_view_settings")
+local ViewStyles = require("scripts/ui/views/end_player_view/end_player_view_styles")
 local _math_floor = math.floor
 local _math_max = math.max
 local _math_ilerp = math.ilerp
@@ -476,24 +476,6 @@ local function _create_show_unlocked_weapon_animation(animation_table, start_tim
 	_create_fade_in_pass_animation(animation_table, "weapon_unlocked_text", start_time)
 end
 
-local function _create_show_talents_animation(animation_table, start_time)
-	_create_fade_in_level_up_label_animation(animation_table, start_time)
-
-	for i = 1, 3 do
-		start_time = start_time + _text_fade_in_time * 0.5
-
-		_create_fade_in_pass_animation(animation_table, "talent_icon_background_" .. i, start_time)
-
-		start_time = start_time + _text_fade_in_time
-
-		_create_fade_in_pass_animation(animation_table, "talent_icon_" .. i, start_time)
-	end
-
-	start_time = start_time + _text_fade_in_time
-
-	_create_fade_in_pass_animation(animation_table, "talents_unlocked_text", start_time)
-end
-
 local function _create_dim_out_animation(animation_table, show_content_animation_table)
 	local passes_to_dim = show_content_animation_table._passes_to_dim or {}
 	show_content_animation_table._passes_to_dim = nil
@@ -730,13 +712,6 @@ animations.unlocked_weapon_dim_out_content = {}
 _create_show_unlocked_weapon_animation(animations.unlocked_weapon_show_content, 0.25)
 _create_compress_content_animation(animations.unlocked_weapon_dim_out_content)
 _create_dim_out_animation(animations.unlocked_weapon_dim_out_content, animations.unlocked_weapon_show_content)
-
-animations.unlocked_talents_show_content = {}
-animations.unlocked_talents_dim_out_content = {}
-
-_create_show_talents_animation(animations.unlocked_talents_show_content, 0.25)
-_create_compress_content_animation(animations.unlocked_talents_dim_out_content)
-_create_dim_out_animation(animations.unlocked_talents_dim_out_content, animations.unlocked_talents_show_content)
 
 animations.item_reward_show_content = {}
 animations.item_reward_dim_out_content = {}

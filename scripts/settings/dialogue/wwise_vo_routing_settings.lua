@@ -26,9 +26,9 @@ local wwise_vo_routing_settings = {
 	},
 	{
 		is_default = false,
-		wwise_event_path = "wwise/events/vo/play_sfx_es_enemy_specials_vo",
-		display_name = "Enemy VO - Specials/Elites",
-		wwise_sound_source = "es_enemy_specials_vo"
+		wwise_event_path = "wwise/events/vo/play_sfx_es_player_vo_2d",
+		display_name = "DEPRECATED DO NOT USE",
+		wwise_sound_source = "es_player_vo_2d"
 	},
 	{
 		is_default = false,

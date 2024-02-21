@@ -1,5 +1,5 @@
 local unlock_config = {
-	psyker_2 = {
+	psyker = {
 		{
 			level = 1,
 			items = {}
@@ -170,7 +170,7 @@ local unlock_config = {
 			items = {}
 		}
 	},
-	zealot_2 = {
+	zealot = {
 		{
 			level = 1,
 			items = {}
@@ -347,7 +347,7 @@ local unlock_config = {
 			items = {}
 		}
 	},
-	ogryn_2 = {
+	ogryn = {
 		{
 			level = 1,
 			items = {}
@@ -498,7 +498,7 @@ local unlock_config = {
 			items = {}
 		}
 	},
-	veteran_2 = {
+	veteran = {
 		{
 			level = 1,
 			items = {}
@@ -681,40 +681,17 @@ local unlock_config = {
 		}
 	}
 }
-local unused_specialization_names = {
-	"psyker_1",
-	"zealot_1",
-	"ogryn_1",
-	"veteran_1",
-	"psyker_3",
-	"zealot_3",
-	"ogryn_3",
-	"veteran_3"
-}
-
-for ii = 1, #unused_specialization_names do
-	local specialization_name = unused_specialization_names[ii]
-	unlock_config[specialization_name] = {}
-
-	for jj = 1, 30 do
-		unlock_config[specialization_name][jj] = {
-			level = jj,
-			items = {}
-		}
-	end
-end
-
 local weapon_unlock_settings = {}
 
-for specialization_name, specialization_level_unlocks in pairs(unlock_config) do
-	if not weapon_unlock_settings[specialization_name] then
-		weapon_unlock_settings[specialization_name] = {}
+for archetype_name, archetype_level_unlocks in pairs(unlock_config) do
+	if not weapon_unlock_settings[archetype_name] then
+		weapon_unlock_settings[archetype_name] = {}
 	end
 
-	for index, level_unlocks in pairs(specialization_level_unlocks) do
+	for index, level_unlocks in pairs(archetype_level_unlocks) do
 		local level = level_unlocks.level
 		local items = level_unlocks.items
-		weapon_unlock_settings[specialization_name][level] = table.shallow_copy(items)
+		weapon_unlock_settings[archetype_name][level] = table.shallow_copy(items)
 	end
 end
 

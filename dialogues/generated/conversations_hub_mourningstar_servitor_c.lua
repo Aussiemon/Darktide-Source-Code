@@ -6,7 +6,7 @@ local conversations_hub_mourningstar_servitor_c = {
 			[1.0] = "loc_mourningstar_servitor_c__hub_mission_board_announcement_01"
 		},
 		sound_events_duration = {
-			[1.0] = 5.606188
+			[1.0] = 7.440084
 		},
 		sound_event_weights = {
 			[1.0] = 1
@@ -20,7 +20,7 @@ local conversations_hub_mourningstar_servitor_c = {
 			[1.0] = "loc_mourningstar_servitor_c__hub_mission_circumstance_announcement_01"
 		},
 		sound_events_duration = {
-			[1.0] = 5.828854
+			[1.0] = 7.66275
 		},
 		sound_event_weights = {
 			[1.0] = 1
@@ -34,7 +34,7 @@ local conversations_hub_mourningstar_servitor_c = {
 			[1.0] = "loc_mourningstar_servitor_c__hub_mission_board_announcement_05"
 		},
 		sound_events_duration = {
-			[1.0] = 3.404604
+			[1.0] = 5.2385
 		},
 		sound_event_weights = {
 			[1.0] = 1
@@ -48,7 +48,7 @@ local conversations_hub_mourningstar_servitor_c = {
 			[1.0] = "loc_mourningstar_servitor_c__hub_mission_circumstance_announcement_05"
 		},
 		sound_events_duration = {
-			[1.0] = 4.799833
+			[1.0] = 6.633729
 		},
 		sound_event_weights = {
 			[1.0] = 1
@@ -62,7 +62,7 @@ local conversations_hub_mourningstar_servitor_c = {
 			[1.0] = "loc_mourningstar_servitor_c__hub_mission_board_announcement_04"
 		},
 		sound_events_duration = {
-			[1.0] = 5.934
+			[1.0] = 7.767896
 		},
 		sound_event_weights = {
 			[1.0] = 1
@@ -76,7 +76,7 @@ local conversations_hub_mourningstar_servitor_c = {
 			[1.0] = "loc_mourningstar_servitor_c__hub_mission_circumstance_announcement_04"
 		},
 		sound_events_duration = {
-			[1.0] = 5.900583
+			[1.0] = 7.734479
 		},
 		sound_event_weights = {
 			[1.0] = 1
@@ -90,7 +90,7 @@ local conversations_hub_mourningstar_servitor_c = {
 			[1.0] = "loc_mourningstar_servitor_c__hub_mission_board_announcement_03"
 		},
 		sound_events_duration = {
-			[1.0] = 5.687104
+			[1.0] = 7.521
 		},
 		sound_event_weights = {
 			[1.0] = 1
@@ -104,7 +104,7 @@ local conversations_hub_mourningstar_servitor_c = {
 			[1.0] = "loc_mourningstar_servitor_c__hub_mission_circumstance_announcement_03"
 		},
 		sound_events_duration = {
-			[1.0] = 5.24625
+			[1.0] = 7.080146
 		},
 		sound_event_weights = {
 			[1.0] = 1
@@ -147,36 +147,36 @@ local conversations_hub_mourningstar_servitor_c = {
 			"loc_mourningstar_servitor_c__hub_news_announcement_30"
 		},
 		sound_events_duration = {
-			4.465354,
-			4.566646,
-			9.911313,
-			4.88575,
-			4.312604,
-			4.404896,
-			4.885417,
-			5.258729,
-			10.18092,
-			4.467354,
-			4.882646,
-			4.895375,
-			7.743563,
-			7.354979,
-			7.106583,
-			6.73475,
-			5.994271,
-			4.885688,
-			7.756333,
-			7.380979,
-			8.512208,
-			7.406333,
-			6.735521,
-			6.352542,
-			6.007708,
-			5.7355,
-			6.482146,
-			6.402313,
-			6.4365,
-			6.4295
+			6.29925,
+			6.400542,
+			11.74521,
+			6.719646,
+			6.1465,
+			6.238792,
+			6.719313,
+			7.092625,
+			12.01481,
+			6.30125,
+			6.716542,
+			6.729271,
+			9.577459,
+			9.188875,
+			8.940479,
+			8.568645,
+			7.828167,
+			6.719584,
+			9.590229,
+			9.214875,
+			10.3461,
+			9.240229,
+			8.569417,
+			8.186438,
+			7.841604,
+			7.569396,
+			8.316042,
+			8.236209,
+			8.270396,
+			8.263396
 		},
 		sound_event_weights = {
 			0.03333334,

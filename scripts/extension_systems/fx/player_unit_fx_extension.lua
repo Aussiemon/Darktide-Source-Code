@@ -192,7 +192,7 @@ PlayerUnitFxExtension.extensions_ready = function (self, world, unit)
 		health_extension = ScriptUnit.extension(unit, "health_system"),
 		toughness_extension = ScriptUnit.extension(unit, "toughness_system"),
 		action_module_charge_component = unit_data_extension:read_component("action_module_charge"),
-		specialization_resource_component = unit_data_extension:read_component("specialization_resource")
+		talent_resource_component = unit_data_extension:read_component("talent_resource")
 	}
 	local first_person_extension = ScriptUnit.extension(unit, "first_person_system")
 	local is_in_first_person_mode = first_person_extension:is_in_first_person_mode()
@@ -1005,13 +1005,19 @@ PlayerUnitFxExtension._trigger_wwise_event_synced = function (self, event_name, 
 	end
 end
 
-PlayerUnitFxExtension.trigger_explosion_wwise_event_server_controlled = function (self, event_name, append_husk_to_event_name, optional_position, optional_parameter_name, optional_parameter_value, optional_surface_material)
-	Managers.state.game_session:send_rpc_clients("rpc_play_player_server_controlled_explosion_sound", self._game_object_id, NetworkLookup.sound_events[event_name] or NetworkLookup.player_character_sounds[event_name], append_husk_to_event_name, optional_position, optional_parameter_name and NetworkLookup.sound_parameters[optional_parameter_name] or nil, optional_parameter_value, optional_surface_material and NetworkLookup.surface_materials[optional_surface_material] or nil)
+PlayerUnitFxExtension.trigger_explosion_wwise_event = function (self, event_name, append_husk_to_event_name, optional_position, optional_parameter_name, optional_parameter_value, optional_surface_material, all_clients)
+	if self._is_server then
+		if not all_clients then
+			Managers.state.game_session:send_rpc_clients_except("rpc_play_player_server_controlled_explosion_sound", self._player:channel_id(), self._game_object_id, NetworkLookup.sound_events[event_name] or NetworkLookup.player_character_sounds[event_name], append_husk_to_event_name, optional_position, optional_parameter_name and NetworkLookup.sound_parameters[optional_parameter_name] or nil, optional_parameter_value, optional_surface_material and NetworkLookup.surface_materials[optional_surface_material] or nil)
+		else
+			Managers.state.game_session:send_rpc_clients("rpc_play_player_server_controlled_explosion_sound", self._game_object_id, NetworkLookup.sound_events[event_name] or NetworkLookup.player_character_sounds[event_name], append_husk_to_event_name, optional_position, optional_parameter_name and NetworkLookup.sound_parameters[optional_parameter_name] or nil, optional_parameter_value, optional_surface_material and NetworkLookup.surface_materials[optional_surface_material] or nil)
+		end
+	end
 
-	return self:_trigger_explosion_wwise_event_server_controlled(event_name, append_husk_to_event_name, optional_position, optional_parameter_name, optional_parameter_value, optional_surface_material)
+	return self:_trigger_explosion_wwise_event(event_name, append_husk_to_event_name, optional_position, optional_parameter_name, optional_parameter_value, optional_surface_material)
 end
 
-PlayerUnitFxExtension._trigger_explosion_wwise_event_server_controlled = function (self, event_name, append_husk_to_event_name, optional_position, optional_parameter_name, optional_parameter_value, optional_surface_material)
+PlayerUnitFxExtension._trigger_explosion_wwise_event = function (self, event_name, append_husk_to_event_name, optional_position, optional_parameter_name, optional_parameter_value, optional_surface_material)
 	local wwise_world = self._wwise_world
 	local source_id = nil
 
@@ -1298,7 +1304,7 @@ PlayerUnitFxExtension.set_targeted_by_special = function (self, special_unit, ta
 	end
 end
 
-PlayerUnitFxExtension.spawn_gear_particle_effect_with_source = function (self, particle_alias, external_properties, source_name, link, orphaned_policy, position_offset, rotation_offset, scale)
+PlayerUnitFxExtension.spawn_gear_particle_effect_with_source = function (self, particle_alias, external_properties, source_name, link, orphaned_policy, position_offset, rotation_offset, scale, all_clients)
 	local is_resim = self._unit_data_extension.is_resimulating
 
 	if is_resim then
@@ -1312,7 +1318,7 @@ PlayerUnitFxExtension.spawn_gear_particle_effect_with_source = function (self, p
 		return
 	end
 
-	return self:spawn_unit_particles(particle_name, source_name, link, orphaned_policy, position_offset, rotation_offset, scale)
+	return self:spawn_unit_particles(particle_name, source_name, link, orphaned_policy, position_offset, rotation_offset, scale, all_clients)
 end
 
 PlayerUnitFxExtension.trigger_gear_wwise_event = function (self, sound_alias, external_properties, ...)
@@ -1948,7 +1954,7 @@ PlayerUnitFxExtension.is_looping_particles_playing = function (self, looping_par
 	return component and component.is_playing
 end
 
-PlayerUnitFxExtension.spawn_particles = function (self, particle_name, position, rotation, scale, optional_variable_name, optional_variable_value)
+PlayerUnitFxExtension.spawn_particles = function (self, particle_name, position, rotation, scale, optional_variable_name, optional_variable_value, all_clients)
 	local world = self._world
 	local is_resim = self._unit_data_extension.is_resimulating
 
@@ -1960,7 +1966,14 @@ PlayerUnitFxExtension.spawn_particles = function (self, particle_name, position,
 				local variable_index = World.find_particles_variable(world, particle_name, optional_variable_name)
 
 				World.set_particles_variable(world, particle_id, variable_index, optional_variable_value)
-				Managers.state.game_session:send_rpc_clients("rpc_spawn_player_particles_with_variable", self._game_object_id, NetworkLookup.player_character_particles[particle_name], NetworkLookup.player_character_fx_sources["n/a"], false, position, rotation or Quaternion.identity(), scale or Vector3(1, 1, 1), NetworkLookup.player_character_particle_variable_names[optional_variable_name], optional_variable_value)
+
+				if not all_clients then
+					Managers.state.game_session:send_rpc_clients_except("rpc_spawn_player_particles_with_variable", self._player:channel_id(), self._game_object_id, NetworkLookup.player_character_particles[particle_name], NetworkLookup.player_character_fx_sources["n/a"], false, position, rotation or Quaternion.identity(), scale or Vector3(1, 1, 1), NetworkLookup.player_character_particle_variable_names[optional_variable_name], optional_variable_value)
+				else
+					Managers.state.game_session:send_rpc_clients("rpc_spawn_player_particles_with_variable", self._game_object_id, NetworkLookup.player_character_particles[particle_name], NetworkLookup.player_character_fx_sources["n/a"], false, position, rotation or Quaternion.identity(), scale or Vector3(1, 1, 1), NetworkLookup.player_character_particle_variable_names[optional_variable_name], optional_variable_value)
+				end
+			elseif not all_clients then
+				Managers.state.game_session:send_rpc_clients_except("rpc_spawn_player_particles", self._player:channel_id(), self._game_object_id, NetworkLookup.player_character_particles[particle_name], NetworkLookup.player_character_fx_sources["n/a"], false, position, rotation or Quaternion.identity(), scale or Vector3(1, 1, 1), particle_id)
 			else
 				Managers.state.game_session:send_rpc_clients("rpc_spawn_player_particles", self._game_object_id, NetworkLookup.player_character_particles[particle_name], NetworkLookup.player_character_fx_sources["n/a"], false, position, rotation or Quaternion.identity(), scale or Vector3(1, 1, 1), particle_id)
 			end
@@ -2097,7 +2110,7 @@ PlayerUnitFxExtension.rpc_play_player_server_controlled_explosion_sound = functi
 	local optional_parameter_name = optional_parameter_name_id and NetworkLookup.sound_parameters[optional_parameter_name_id] or nil
 	local optional_surface_material = optional_surface_material_id and NetworkLookup.surface_materials[optional_surface_material_id] or nil
 
-	self:_trigger_explosion_wwise_event_server_controlled(event_name, append_husk_to_event_name, optional_position, optional_parameter_name, optional_parameter_value, optional_surface_material)
+	self:_trigger_explosion_wwise_event(event_name, append_husk_to_event_name, optional_position, optional_parameter_name, optional_parameter_value, optional_surface_material)
 end
 
 PlayerUnitFxExtension.rpc_set_source_parameter = function (self, channel_id, game_object_id, source_id, parameter_id, parameter_value)

@@ -101,8 +101,8 @@ local function _should_be_in_coherency_with_all(unit)
 	local is_invisible = buff_extension and buff_extension:has_keyword(keywords.invisible)
 
 	if is_invisible then
-		local specialization_extension = ScriptUnit.has_extension(unit, "specialization_system")
-		local has_special_rule = specialization_extension and specialization_extension:has_special_rule(special_rules.zealot_in_coherency_when_invisible)
+		local talent_extension = ScriptUnit.has_extension(unit, "talent_system")
+		local has_special_rule = talent_extension and talent_extension:has_special_rule(special_rules.zealot_in_coherency_when_invisible)
 
 		if has_special_rule then
 			return true

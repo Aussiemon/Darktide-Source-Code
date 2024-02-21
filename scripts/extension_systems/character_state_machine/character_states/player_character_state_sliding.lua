@@ -161,7 +161,7 @@ PlayerCharacterStateSliding.fixed_update = function (self, unit, dt, t, next_sta
 		is_crouching = Crouch.check(unit, first_person_extension, anim_extension, weapon_extension, move_state_component, self._sway_control_component, self._sway_component, self._spread_control_component, input_source, t, true)
 	end
 
-	PlayerUnitPeeking.fixed_update(self._peeking_component, self._ledge_finder_extension, anim_extension, first_person_extension, self._specialization_extension, is_crouching, self._breed)
+	PlayerUnitPeeking.fixed_update(self._peeking_component, self._ledge_finder_extension, anim_extension, first_person_extension, self._talent_extension, is_crouching, self._breed)
 
 	local speed = Vector3.length(Vector3.flat(velocity_current))
 

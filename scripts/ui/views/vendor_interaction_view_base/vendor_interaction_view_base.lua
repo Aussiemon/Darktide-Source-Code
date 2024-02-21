@@ -301,7 +301,11 @@ VendorInteractionViewBase.on_option_button_pressed = function (self, index, opti
 	local option_callback = option.callback
 
 	if option_callback then
-		option_callback(self)
+		local result = option_callback(self)
+
+		if result == "only_callback" then
+			return
+		end
 	end
 
 	if self._on_enter_anim_id and self:_is_animation_active(self._on_enter_anim_id) then
@@ -584,7 +588,7 @@ VendorInteractionViewBase.dialogue_system = function (self)
 	local world_spawner = self._world_spawner
 	local world = world_spawner and world_spawner:world()
 	local extension_manager = world and Managers.ui:world_extension_manager(world)
-	local dialogue_system = extension_manager and extension_manager:system_by_extension("DialogueActorExtension")
+	local dialogue_system = extension_manager and extension_manager:system_by_extension("DialogueExtension")
 
 	return dialogue_system
 end
@@ -636,6 +640,10 @@ end
 
 VendorInteractionViewBase.can_afford = function (self, amount, type)
 	return amount <= (self._current_balance[type] or 0)
+end
+
+VendorInteractionViewBase.get_balance = function (self, type)
+	return self._current_balance[type]
 end
 
 return VendorInteractionViewBase

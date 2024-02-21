@@ -136,7 +136,7 @@ local husk_data_component_config = {
 	movement_state = {
 		"method"
 	},
-	specialization_resource = {
+	talent_resource = {
 		"current_resource",
 		"max_resource"
 	},

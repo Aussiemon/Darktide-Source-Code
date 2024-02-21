@@ -1,5 +1,8 @@
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local weapon_traits_melee_common = {}
+
+table.make_unique(weapon_traits_melee_common)
+
 local buff_stat_buffs = BuffSettings.stat_buffs
 local buff_proc_events = BuffSettings.proc_events
 weapon_traits_melee_common.weapon_trait_melee_common_wield_increased_attack = {

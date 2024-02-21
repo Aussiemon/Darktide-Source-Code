@@ -1,4 +1,21 @@
 local mission_giver_vo_enginseer_a = {
+	cmd_deploy_skull = {
+		randomize_indexes_n = 0,
+		sound_events_n = 4,
+		sound_events = {
+			"loc_enginseer_a__cmd_deploy_skull_01",
+			"loc_enginseer_a__cmd_deploy_skull_02",
+			"loc_enginseer_a__cmd_deploy_skull_03",
+			"loc_enginseer_a__cmd_deploy_skull_04"
+		},
+		sound_events_duration = {
+			3.45678,
+			3.45678,
+			3.45678,
+			3.45678
+		},
+		randomize_indexes = {}
+	},
 	mission_cooling_briefing_one = {
 		randomize_indexes_n = 0,
 		sound_events_n = 4,

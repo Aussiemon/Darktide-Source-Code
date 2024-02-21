@@ -648,9 +648,68 @@ local circumstance_templates = {
 			"mutator_waves_of_specials",
 			"mutator_more_boss_patrols",
 			"mutator_more_ogryns",
+			"mutator_add_resistance",
 			"mutator_increase_terror_event_points",
 			"mutator_reduced_ramp_duration",
 			"mutator_auric_tension_modifier"
+		}
+	},
+	high_flash_mission_15 = {
+		wwise_state = "None",
+		theme_tag = "default",
+		ui = {
+			description = "loc_circumstance_flash_mission_14_description",
+			icon = "content/ui/materials/icons/circumstances/maelstrom_02",
+			display_name = "loc_circumstance_flash_mission_14_title"
+		},
+		mutators = {
+			"mutator_no_encampments",
+			"mutator_waves_of_specials",
+			"mutator_more_boss_patrols",
+			"mutator_more_elites",
+			"mutator_add_resistance",
+			"mutator_increase_terror_event_points",
+			"mutator_reduced_ramp_duration",
+			"mutator_auric_tension_modifier"
+		}
+	},
+	high_flash_mission_16 = {
+		wwise_state = "None",
+		theme_tag = "default",
+		ui = {
+			description = "loc_circumstance_flash_mission_14_description",
+			icon = "content/ui/materials/icons/circumstances/maelstrom_02",
+			display_name = "loc_circumstance_flash_mission_14_title"
+		},
+		mutators = {
+			"mutator_no_encampments",
+			"mutator_waves_of_specials",
+			"mutator_more_boss_patrols",
+			"mutator_more_elites",
+			"mutator_add_resistance",
+			"mutator_increase_terror_event_points_high",
+			"mutator_reduced_ramp_duration",
+			"mutator_auric_tension_modifier"
+		}
+	},
+	high_flash_mission_17 = {
+		wwise_state = "None",
+		theme_tag = "default",
+		ui = {
+			description = "loc_circumstance_flash_mission_14_description",
+			icon = "content/ui/materials/icons/circumstances/maelstrom_02",
+			display_name = "loc_circumstance_flash_mission_14_title"
+		},
+		mutators = {
+			"mutator_no_encampments",
+			"mutator_waves_of_specials",
+			"mutator_higher_stagger_thresholds",
+			"mutator_increase_terror_event_points_high",
+			"mutator_reduced_ramp_duration",
+			"mutator_auric_tension_modifier",
+			"mutator_modify_challenge_resistance_scale_six_one",
+			"mutator_always_allow_all_spawn_types",
+			"mutator_more_hordes_02"
 		}
 	},
 	six_one_flash_mission_01 = {

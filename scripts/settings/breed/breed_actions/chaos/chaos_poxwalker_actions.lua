@@ -877,17 +877,29 @@ local action_data = {
 			},
 			blinding = {
 				fwd = {
-					"stagger_fwd_relic_1"
+					"stagger_fwd_relic_1",
+					"stagger_fwd_relic_2",
+					"stagger_fwd_relic_3",
+					"stagger_fwd_relic_4",
+					"stagger_fwd_relic_5"
 				},
 				bwd = {
 					"stagger_bwd_relic_1",
 					"stagger_bwd_relic_2"
 				},
 				left = {
-					"stagger_left_relic_1"
+					"stagger_left_relic_1",
+					"stagger_left_relic_2",
+					"stagger_left_relic_3",
+					"stagger_left_relic_4",
+					"stagger_left_relic_5"
 				},
 				right = {
-					"stagger_right_relic_1"
+					"stagger_right_relic_1",
+					"stagger_right_relic_2",
+					"stagger_right_relic_3",
+					"stagger_right_relic_4",
+					"stagger_right_relic_5"
 				},
 				dwn = {
 					"stagger_bwd_relic_1"

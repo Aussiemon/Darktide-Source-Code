@@ -71,7 +71,7 @@ ChainLightningHandEffects._update_vfx = function (self, t)
 	self._charge_level = charge_level
 	local action_kind = action_settings and action_settings.kind
 	local targeting = action_kind == "overload_charge_target_finder" or action_kind == "overload_target_finder"
-	local attacking = action_kind == "chain_lightning" or action_kind == "chain_lightning_powerup"
+	local attacking = action_kind == "chain_lightning"
 	local play_right = fx_hand == "right" or fx_hand == "both"
 	local play_left = fx_hand == "left" or fx_hand == "both"
 

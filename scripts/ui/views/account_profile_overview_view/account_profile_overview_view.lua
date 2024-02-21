@@ -21,7 +21,7 @@ local ACCOUNT_PROFILE_POPUP_VIEW = "account_profile_popup_view"
 local NUM_COMMENDATIONS_TO_SHOW = 5
 
 AccountProfileOverwiewView.init = function (self, settings, context)
-	AccountProfileOverwiewView.super.init(self, Definitions, settings)
+	AccountProfileOverwiewView.super.init(self, Definitions, settings, context)
 
 	self._pass_input = true
 	self._parent = context and context.parent

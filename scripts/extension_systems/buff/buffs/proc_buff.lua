@@ -1,7 +1,7 @@
 require("scripts/extension_systems/buff/buffs/buff")
 
 local BuffSettings = require("scripts/settings/buff/buff_settings")
-local ConditionalFunctions = require("scripts/settings/buff/validation_functions/conditional_functions")
+local ConditionalFunctions = require("scripts/settings/buff/helper_functions/conditional_functions")
 local FixedFrame = require("scripts/utilities/fixed_frame")
 local PROC_EVENTS_STRIDE = BuffSettings.proc_events_stride
 local ProcBuff = class("ProcBuff", "Buff")

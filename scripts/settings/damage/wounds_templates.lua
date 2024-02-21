@@ -177,6 +177,54 @@ wounds_templates.plasma = {
 		}
 	}
 }
+wounds_templates.pickaxe = {
+	[attack_results.damaged] = {
+		default = {
+			default_shape = shapes.sphere,
+			[shapes.default] = {
+				shape_scaling = true,
+				radius = {
+					1.5,
+					2.5
+				},
+				color_brightness = standard_melee,
+				duration = flash_quick
+			},
+			[shapes.sphere] = {
+				shape_scaling = true,
+				radius = {
+					2,
+					2.5
+				},
+				color_brightness = standard_melee,
+				duration = flash_quick
+			}
+		}
+	},
+	[attack_results.died] = {
+		default = {
+			default_shape = shapes.default,
+			[shapes.default] = {
+				shape_scaling = true,
+				radius = {
+					2,
+					3
+				},
+				color_brightness = standard_melee,
+				duration = flash_quick
+			},
+			[shapes.sphere] = {
+				shape_scaling = true,
+				radius = {
+					5,
+					5
+				},
+				color_brightness = standard_melee,
+				duration = linger_heavy
+			}
+		}
+	}
+}
 wounds_templates.force_projectile = {
 	[attack_results.damaged] = {
 		default = {

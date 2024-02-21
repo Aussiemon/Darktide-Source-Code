@@ -280,6 +280,7 @@ weapon_template.actions = {
 		start_input = "start_attack",
 		kind = "windup",
 		action_priority = 2,
+		invalid_start_action_for_stat_calculation = true,
 		allowed_during_sprint = true,
 		anim_event = "heavy_charge_left_diagonal_down",
 		stop_input = "attack_cancel",
@@ -1650,11 +1651,12 @@ weapon_template.actions = {
 	},
 	action_right_light_pushfollow = {
 		range_mod = 1.35,
-		kind = "sweep",
+		sprint_requires_press_to_interrupt = "true",
 		first_person_hit_anim = "hit_left_shake",
 		max_num_saved_entries = 20,
-		damage_window_start = 0.28,
+		kind = "sweep",
 		num_frames_before_process = 0,
+		damage_window_start = 0.28,
 		damage_window_end = 0.4,
 		anim_end_event = "attack_finished",
 		anim_event_3p = "attack_swing_heavy_right",
@@ -2279,7 +2281,7 @@ weapon_template.base_stats = {
 	}
 }
 weapon_template.traits = {}
-local bespoke_chainaxe_p1_traits = table.keys(WeaponTraitsBespokeChainaxeP1)
+local bespoke_chainaxe_p1_traits = table.ukeys(WeaponTraitsBespokeChainaxeP1)
 
 table.append(weapon_template.traits, bespoke_chainaxe_p1_traits)
 

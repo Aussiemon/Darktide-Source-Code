@@ -47,8 +47,8 @@ ActionTargetFinder.finish = function (self, reason, data, t, time_in_action)
 	local action_settings = self._action_settings
 
 	if action_settings.use_alternate_fire and self._alternate_fire_component.is_active then
-		local from_action_input = reason == "new_interrupting_action"
 		local skip_unaim_anim = action_settings.skip_unaim_anim
+		local from_action_input = reason == "new_interrupting_action"
 
 		AlternateFire.stop(self._alternate_fire_component, self._peeking_component, self._first_person_extension, self._weapon_tweak_templates_component, self._animation_extension, self._weapon_template, skip_unaim_anim, self._player_unit, from_action_input)
 	end

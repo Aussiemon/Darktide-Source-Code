@@ -223,10 +223,10 @@ PlayerManagerTestify.wait_for_item_equipped = function (_, data, time, timeout)
 		return
 	end
 
-	local inventory_component = ScriptUnit.extension(data.player.player_unit, "unit_data_system"):read_component("inventory")
-	local current_item = inventory_component[data.slot]
+	local visual_loadout_extension = ScriptUnit.extension(data.player.player_unit, "visual_loadout_system")
+	local current_item = visual_loadout_extension:item_in_slot(data.slot)
 
-	if data.item.name ~= current_item then
+	if current_item == nil or current_item.name ~= data.item.name then
 		return Testify.RETRY
 	end
 end

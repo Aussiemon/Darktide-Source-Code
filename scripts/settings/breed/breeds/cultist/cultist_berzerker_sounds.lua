@@ -21,13 +21,18 @@ local sound_data = {
 		run_foley = "wwise/events/minions/play_shared_foley_chaos_cultist_light_run"
 	},
 	use_proximity_culling = {
-		vce_melee_attack_anim_attack_01 = false,
-		vce_death = false,
-		vce_combat_idle = false,
-		vce_melee_attack_normal = false,
-		vce_melee_attack_short = false,
+		footstep_land = false,
 		vce_melee_attack_final_vce = false,
-		vce_melee_attack_anim_combo_attack_01 = false
+		swing_large = false,
+		stop_vce = false,
+		vce_melee_attack_anim_attack_01 = false,
+		vce_breathing_running = false,
+		vce_combat_idle = false,
+		vce_melee_attack_anim_combo_attack_01 = false,
+		vce_melee_attack_normal = false,
+		footstep = false,
+		swing = false,
+		vce_melee_attack_short = false
 	}
 }
 

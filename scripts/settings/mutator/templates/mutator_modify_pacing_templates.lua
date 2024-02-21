@@ -48,6 +48,13 @@ local mutator_templates = {
 			required_horde_travel_distance = 1
 		}
 	},
+	mutator_more_hordes_02 = {
+		class = "scripts/managers/mutator/mutators/mutator_modify_pacing",
+		modify_pacing = {
+			horde_timer_modifier = 0.75,
+			required_horde_travel_distance = 20
+		}
+	},
 	mutator_more_monsters = {
 		class = "scripts/managers/mutator/mutators/mutator_modify_pacing",
 		modify_pacing = {
@@ -117,12 +124,6 @@ local mutator_templates = {
 		init_modify_pacing = {
 			modify_resistance = -2
 		}
-	},
-	mutator_darkness_los = {
-		class = "scripts/managers/mutator/mutators/mutator_modify_pacing"
-	},
-	mutator_ventilation_purge_los = {
-		class = "scripts/managers/mutator/mutators/mutator_modify_pacing"
 	},
 	mutator_travel_distance_spawning_specials = {
 		class = "scripts/managers/mutator/mutators/mutator_modify_pacing"
@@ -485,6 +486,16 @@ local mutator_templates = {
 			terror_event_point_multiplier = 0.25
 		}
 	},
+	mutator_increase_terror_event_points_high = {
+		class = "scripts/managers/mutator/mutators/mutator_modify_pacing",
+		init_modify_pacing = {
+			terror_event_point_multiplier = 0.5,
+			replace_terror_event_tags = {
+				roamer = "elite",
+				horde = "roamer"
+			}
+		}
+	},
 	mutator_always_allow_all_spawn_types = {
 		class = "scripts/managers/mutator/mutators/mutator_modify_pacing",
 		init_modify_pacing = {
@@ -557,6 +568,12 @@ local mutator_templates = {
 		init_modify_pacing = {
 			ramp_duration_modifier = 0.75
 		}
+	},
+	mutator_darkness_los = {
+		class = "scripts/managers/mutator/mutators/mutator_modify_pacing"
+	},
+	mutator_ventilation_purge_los = {
+		class = "scripts/managers/mutator/mutators/mutator_modify_pacing"
 	}
 }
 

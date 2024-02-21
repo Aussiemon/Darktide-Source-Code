@@ -1,4 +1,7 @@
 local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
+local RESET_WEAPON_MODIFIERS = {
+	traits = {}
+}
 local NO_WEAPON_MODIFIERS = {}
 
 local function _weapon_modifier_from_template(weapon_modifiers_or_nil, value)
@@ -48,25 +51,23 @@ local function _apply_all_weapon_modifiers(local_player, weapon_template)
 	weapon_system:debug_set_weapon_override(local_player, new_modifiers)
 end
 
-local PlayerManagerFixedTestify = {}
+local PlayerManagerFixedTestify = {
+	apply_weapon_progression_to_current_weapon_template = function (_, _, data)
+		local player = data.player
+		local player_unit = player.player_unit
+		local unit_data_extension = ScriptUnit.extension(player_unit, "unit_data_system")
+		local weapon_action_component = unit_data_extension:read_component("weapon_action")
+		local weapon_template = WeaponTemplate.current_weapon_template(weapon_action_component)
 
-PlayerManagerFixedTestify.apply_weapon_progression_to_current_weapon_template = function (_, _, data)
-	local player = data.player
-	local player_unit = player.player_unit
-	local unit_data_extension = ScriptUnit.extension(player_unit, "unit_data_system")
-	local weapon_action_component = unit_data_extension:read_component("weapon_action")
-	local weapon_template = WeaponTemplate.current_weapon_template(weapon_action_component)
+		_apply_all_weapon_modifiers(player, weapon_template)
+	end,
+	remove_weapon_progression_from_current_weapon_template = function (_, _, data)
+		local player = data.player
+		local weapon_system = Managers.state.extension:system("weapon_system")
 
-	_apply_all_weapon_modifiers(player, weapon_template)
-end
-
-PlayerManagerFixedTestify.remove_weapon_progression_from_current_weapon_template = function (_, _, data)
-	local player = data.player
-	local weapon_system = Managers.state.extension:system("weapon_system")
-	local new_modifiers = {}
-
-	weapon_system:debug_set_weapon_override(player, new_modifiers)
-end
+		weapon_system:debug_set_weapon_override(player, RESET_WEAPON_MODIFIERS)
+	end
+}
 
 PlayerManagerFixedTestify.reset_grenade_charges = function (_, _, data)
 	local player = data.player

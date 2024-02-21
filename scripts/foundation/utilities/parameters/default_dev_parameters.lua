@@ -107,6 +107,7 @@ local categories = {
 	"Sweep Spline",
 	"Talents",
 	"Terror Event",
+	"Testify",
 	"Time Scaling",
 	"UI",
 	"Version Info",
@@ -155,6 +156,16 @@ local params = {
 		on_value_set = function (new_value, old_value)
 			Managers.input:set_selection_logic(nil, new_value)
 		end
+	},
+	override_last_pressed_device_on_start = {
+		value = false,
+		category = "Input",
+		options = {
+			"keyboard",
+			"mouse",
+			"xbox_controller",
+			"ps4_controller"
+		}
 	},
 	debug_input_last_action_track_time = {
 		value = 1,
@@ -1308,6 +1319,18 @@ params.debug_buffs_hide_non_predicted = {
 	value = false,
 	category = "Buffs"
 }
+params.debug_buffs_show_categories = {
+	value = "all",
+	category = "Buffs",
+	options = {
+		"all",
+		"generic",
+		"talents",
+		"weapon_traits",
+		"talents_secondary",
+		"gadget"
+	}
+}
 params.debug_meta_buffs = {
 	value = false,
 	category = "Buffs"
@@ -2226,6 +2249,17 @@ params.lock_look_input = {
 	value = false,
 	category = "Misc"
 }
+params.max_num_characters_override = {
+	value = 8,
+	category = "Misc",
+	options = {
+		false,
+		5,
+		6,
+		7,
+		8
+	}
+}
 params.challenge = {
 	value = 3,
 	category = "Difficulty",
@@ -2397,6 +2431,10 @@ params.chaos_hound_allowed = {
 	category = "Specials"
 }
 params.chaos_hound_mutator_allowed = {
+	value = true,
+	category = "Specials"
+}
+params.cultist_mutant_mutator_allowed = {
 	value = true,
 	category = "Specials"
 }
@@ -3303,10 +3341,6 @@ params.debug_impact_effects = {
 	value = false,
 	category = "Damage"
 }
-params.show_placeholder_wounds_hud = {
-	value = false,
-	category = "Damage"
-}
 params.disable_push_from_damage = {
 	value = false,
 	category = "Damage"
@@ -3352,10 +3386,6 @@ params.dialogue_missing_vo_trigger_error_sound = {
 	category = "Dialogue"
 }
 params.dialogue_last_query = {
-	value = false,
-	category = "Dialogue"
-}
-params.dialogue_state_handler = {
 	value = false,
 	category = "Dialogue"
 }
@@ -3418,6 +3448,10 @@ params.dialogue_log_enemy_vo_events = {
 	category = "Dialogue"
 }
 params.dialogue_debug_story_tickers = {
+	value = false,
+	category = "Dialogue"
+}
+params.dialogue_show_assault_vo_timer = {
 	value = false,
 	category = "Dialogue"
 }
@@ -3961,6 +3995,10 @@ params.delay_packages_on_profile_changed = {
 		32
 	}
 }
+params.draw_package_loading = {
+	value = false,
+	category = "Loading"
+}
 params.debug_language_override = {
 	name = "Language Override",
 	category = "Localization",
@@ -4041,6 +4079,10 @@ params.use_localized_talent_names_in_debug_menu = {
 params.debug_skip_backend_talent_verification = {
 	value = false,
 	category = "Talents"
+}
+params.testify_test_suite_id = {
+	value = false,
+	category = "Testify"
 }
 params.draw_chain_lightning_targeting = {
 	value = false,
@@ -4541,6 +4583,15 @@ params.max_allowed_proximity_fx = {
 		16,
 		32,
 		64
+	}
+}
+params.override_proximity_fx = {
+	value = false,
+	category = "LegacyV2ProximitySystem",
+	options = {
+		false,
+		"always_enabled",
+		"always_disabled"
 	}
 }
 params.debug_fov = {

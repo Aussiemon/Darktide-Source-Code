@@ -43,6 +43,7 @@ local action_data = {
 		land_anim_event = "leap_land",
 		stop_anim = "run_to_stop",
 		wall_jump_rotation_duration = 0.5333333333333333,
+		extra_push_wwise_event = "wwise/events/weapon/play_specials_push_unarmored",
 		stagger_type_reduction = {
 			melee = -200,
 			ranged = 20

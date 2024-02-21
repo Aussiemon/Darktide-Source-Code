@@ -1,6 +1,6 @@
 local BuffArgs = require("scripts/extension_systems/buff/utility/buff_args")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
-local ConditionalFunctions = require("scripts/settings/buff/validation_functions/conditional_functions")
+local ConditionalFunctions = require("scripts/settings/buff/helper_functions/conditional_functions")
 local MasterItems = require("scripts/backend/master_items")
 local WeaponTraitTemplates = require("scripts/settings/equipment/weapon_traits/weapon_trait_templates")
 local stat_buff_types = BuffSettings.stat_buff_types
@@ -78,7 +78,7 @@ Buff.init = function (self, context, template, start_time, instance_id, ...)
 	local unit_data_extension = ScriptUnit.has_extension(self._unit, "unit_data_system")
 
 	if unit_data_extension and self._player then
-		self._specialization_resource_component = unit_data_extension:read_component("specialization_resource")
+		self._talent_resource_component = unit_data_extension:read_component("talent_resource")
 	end
 
 	local start_function = template.start_func
@@ -122,12 +122,12 @@ end
 Buff._calculate_template_override_data = function (self, template_context)
 	local override_data = {}
 	local item_slot_name = template_context.item_slot_name
-	local from_specialization = template_context.from_specialization
+	local from_talent = template_context.from_talent
 
 	if item_slot_name then
 		self:_calculate_override_data(override_data, item_slot_name, template_context.parent_buff_template)
-	elseif from_specialization then
-		self:_calculate_specialization_override_data(override_data, template_context.parent_buff_template)
+	elseif from_talent then
+		self:_calculate_talent_override_data(override_data, template_context.parent_buff_template)
 	end
 
 	return override_data
@@ -198,31 +198,31 @@ Buff._calculate_override_data = function (self, override_data, item_slot_name, p
 	return override_data
 end
 
-Buff._calculate_specialization_override_data = function (self, override_data, parent_buff_template_or_nil)
+Buff._calculate_talent_override_data = function (self, override_data, parent_buff_template_or_nil)
 	local template = self._template
-	local specialization_overrides = template.specialization_overrides
+	local talent_overrides = template.talent_overrides
 
-	if not specialization_overrides then
+	if not talent_overrides then
 		return
 	end
 
-	local num_specialization_overrides = #specialization_overrides
+	local num_talent_overrides = #talent_overrides
 
-	if num_specialization_overrides == 0 then
+	if num_talent_overrides == 0 then
 		return
 	end
 
-	local specialization_extension = ScriptUnit.extension(self._unit, "specialization_system")
+	local talent_extension = ScriptUnit.extension(self._unit, "talent_system")
 	local tier = nil
 
 	if parent_buff_template_or_nil then
-		tier = specialization_extension:buff_template_tier(parent_buff_template_or_nil)
+		tier = talent_extension:buff_template_tier(parent_buff_template_or_nil)
 	else
-		tier = specialization_extension:buff_template_tier(template.name)
+		tier = talent_extension:buff_template_tier(template.name)
 	end
 
-	local override_index = math.min(tier, num_specialization_overrides)
-	local override_def = specialization_overrides[override_index]
+	local override_index = math.min(tier, num_talent_overrides)
+	local override_def = talent_overrides[override_index]
 
 	table.merge_recursive(override_data, override_def)
 end
@@ -800,10 +800,10 @@ end
 
 Buff.visual_stack_count = function (self)
 	local template = self._template
-	local use_specialization_resource = template.use_specialization_resource
+	local use_talent_resource = template.use_talent_resource
 
-	if use_specialization_resource then
-		local resource = self._specialization_resource_component.current_resource
+	if use_talent_resource then
+		local resource = self._talent_resource_component.current_resource
 
 		return resource
 	end

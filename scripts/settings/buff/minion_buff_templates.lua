@@ -12,86 +12,88 @@ local buff_stat_buffs = BuffSettings.stat_buffs
 local damage_types = DamageSettings.damage_types
 local minion_burning_buff_effects = BurningSettings.buff_effects.minions
 local PLAYER_BREED_TYPE = BreedSettings.types.player
-local templates = {
-	cultist_flamer_hit_by_flame = {
-		interval = 0.5,
-		predicted = false,
-		refresh_duration_on_stack = true,
-		max_stacks = 1,
-		duration = 1,
-		class_name = "interval_buff",
-		keywords = {
-			buff_keywords.burning
-		},
-		interval_func = function (template_data, template_context)
-			local unit = template_context.unit
+local templates = {}
 
-			if HEALTH_ALIVE[unit] then
-				local damage_template = DamageProfileTemplates.grenadier_liquid_fire_burning
-				local power_level_table = MinionDifficultySettings.power_level.cultist_flamer_on_hit_fire
-				local power_level = Managers.state.difficulty:get_table_entry_by_challenge(power_level_table)
-				local optional_owner_unit = template_context.is_server and template_context.owner_unit or nil
+table.make_unique(templates)
 
-				Attack.execute(unit, damage_template, "power_level", power_level, "damage_type", "burning", "attacking_unit", optional_owner_unit)
-			end
-		end,
-		minion_effects = minion_burning_buff_effects.chemfire
+templates.cultist_flamer_hit_by_flame = {
+	interval = 0.5,
+	predicted = false,
+	refresh_duration_on_stack = true,
+	max_stacks = 1,
+	duration = 1,
+	class_name = "interval_buff",
+	keywords = {
+		buff_keywords.burning
 	},
-	cultist_flamer_liquid_immunity = {
-		unique_buff_id = "cultist_flamer_liquid_immunity",
-		class_name = "buff",
-		unique_buff_priority = 1,
-		keywords = {
-			buff_keywords.cultist_flamer_liquid_immunity
-		}
-	},
-	renegade_flamer_hit_by_flame = {
-		interval = 0.5,
-		predicted = false,
-		refresh_duration_on_stack = true,
-		max_stacks = 1,
-		duration = 1,
-		class_name = "interval_buff",
-		keywords = {
-			buff_keywords.burning
-		},
-		interval_func = function (template_data, template_context)
-			local unit = template_context.unit
+	interval_func = function (template_data, template_context)
+		local unit = template_context.unit
 
-			if HEALTH_ALIVE[unit] then
-				local damage_template = DamageProfileTemplates.grenadier_liquid_fire_burning
-				local power_level_table = MinionDifficultySettings.power_level.renegade_flamer_on_hit_fire
-				local power_level = Managers.state.difficulty:get_table_entry_by_challenge(power_level_table)
-				local optional_owner_unit = template_context.is_server and template_context.owner_unit or nil
+		if HEALTH_ALIVE[unit] then
+			local damage_template = DamageProfileTemplates.grenadier_liquid_fire_burning
+			local power_level_table = MinionDifficultySettings.power_level.cultist_flamer_on_hit_fire
+			local power_level = Managers.state.difficulty:get_table_entry_by_challenge(power_level_table)
+			local optional_owner_unit = template_context.is_server and template_context.owner_unit or nil
 
-				Attack.execute(unit, damage_template, "power_level", power_level, "damage_type", "burning", "attacking_unit", optional_owner_unit)
-			end
-		end,
-		minion_effects = minion_burning_buff_effects.fire
+			Attack.execute(unit, damage_template, "power_level", power_level, "damage_type", "burning", "attacking_unit", optional_owner_unit)
+		end
+	end,
+	minion_effects = minion_burning_buff_effects.chemfire
+}
+templates.cultist_flamer_liquid_immunity = {
+	unique_buff_id = "cultist_flamer_liquid_immunity",
+	class_name = "buff",
+	unique_buff_priority = 1,
+	keywords = {
+		buff_keywords.cultist_flamer_liquid_immunity
+	}
+}
+templates.renegade_flamer_hit_by_flame = {
+	interval = 0.5,
+	predicted = false,
+	refresh_duration_on_stack = true,
+	max_stacks = 1,
+	duration = 1,
+	class_name = "interval_buff",
+	keywords = {
+		buff_keywords.burning
 	},
-	renegade_flamer_liquid_immunity = {
-		unique_buff_id = "renegade_flamer_liquid_immunity",
-		class_name = "buff",
-		unique_buff_priority = 1,
-		keywords = {
-			buff_keywords.renegade_flamer_liquid_immunity
-		}
-	},
-	renegade_grenadier_liquid_immunity = {
-		unique_buff_id = "renegade_grenadier_liquid_immunity",
-		class_name = "buff",
-		unique_buff_priority = 1,
-		keywords = {
-			buff_keywords.renegade_grenadier_liquid_immunity
-		}
-	},
-	beast_of_nurgle_liquid_immunity = {
-		unique_buff_id = "beast_of_nurgle_liquid_immunity",
-		class_name = "buff",
-		unique_buff_priority = 1,
-		keywords = {
-			buff_keywords.beast_of_nurgle_liquid_immunity
-		}
+	interval_func = function (template_data, template_context)
+		local unit = template_context.unit
+
+		if HEALTH_ALIVE[unit] then
+			local damage_template = DamageProfileTemplates.grenadier_liquid_fire_burning
+			local power_level_table = MinionDifficultySettings.power_level.renegade_flamer_on_hit_fire
+			local power_level = Managers.state.difficulty:get_table_entry_by_challenge(power_level_table)
+			local optional_owner_unit = template_context.is_server and template_context.owner_unit or nil
+
+			Attack.execute(unit, damage_template, "power_level", power_level, "damage_type", "burning", "attacking_unit", optional_owner_unit)
+		end
+	end,
+	minion_effects = minion_burning_buff_effects.fire
+}
+templates.renegade_flamer_liquid_immunity = {
+	unique_buff_id = "renegade_flamer_liquid_immunity",
+	class_name = "buff",
+	unique_buff_priority = 1,
+	keywords = {
+		buff_keywords.renegade_flamer_liquid_immunity
+	}
+}
+templates.renegade_grenadier_liquid_immunity = {
+	unique_buff_id = "renegade_grenadier_liquid_immunity",
+	class_name = "buff",
+	unique_buff_priority = 1,
+	keywords = {
+		buff_keywords.renegade_grenadier_liquid_immunity
+	}
+}
+templates.beast_of_nurgle_liquid_immunity = {
+	unique_buff_id = "beast_of_nurgle_liquid_immunity",
+	class_name = "buff",
+	unique_buff_priority = 1,
+	keywords = {
+		buff_keywords.beast_of_nurgle_liquid_immunity
 	}
 }
 local RELATION = "enemy"

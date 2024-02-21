@@ -22,12 +22,17 @@ local sound_data = {
 	},
 	use_proximity_culling = {
 		vce_melee_attack_anim_attack_01 = false,
-		vce_death = false,
+		swing_large = false,
 		vce_combat_idle = false,
+		stop_vce = false,
+		vce_breathing_running = false,
+		footstep_land = false,
+		vce_melee_attack_final_vce = false,
+		vce_melee_attack_anim_combo_attack_01 = false,
 		vce_melee_attack_normal = false,
 		vce_melee_attack_short = false,
-		vce_melee_attack_final_vce = false,
-		vce_melee_attack_anim_combo_attack_01 = false
+		swing = false,
+		footstep = false
 	}
 }
 

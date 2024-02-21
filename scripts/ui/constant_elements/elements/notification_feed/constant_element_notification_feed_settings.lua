@@ -24,6 +24,10 @@ local constant_element_notification_feed_settings = {
 		{
 			"event_clear_notifications",
 			"event_clear_notifications"
+		},
+		{
+			"event_update_show_crafting_pickup_notification",
+			"event_update_show_crafting_pickup_notification"
 		}
 	},
 	trait_sound_events_by_rarity = {

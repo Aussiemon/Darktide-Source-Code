@@ -68,11 +68,14 @@ ActionThrowGrenade._spawn_projectile = function (self)
 		local position, rotation, direction, speed, momentum = AimProjectile.get_spawn_parameters_from_current_aim(action_settings, look_position, look_rotation, locomotion_template)
 
 		if not skip_aiming then
-			local aim_position = position
-			local aim_direction = direction
-			position, rotation, direction, speed, momentum = AimProjectile.get_spawn_parameters_from_aim_component(self._action_aim_projectile_component)
-			position = aim_position
-			direction = aim_direction
+			local throw_type = action_settings.throw_type
+			local aim_parameters = AimProjectile.aim_parameters(position, look_position, look_rotation, locomotion_template, throw_type, 0)
+			local radius = locomotion_template.integrator_parameters.radius
+			position = AimProjectile.check_throw_position(aim_parameters.position, look_position, locomotion_template, radius, self._physics_world)
+			local action_aim_projectile_component = self._action_aim_projectile_component
+			rotation = action_aim_projectile_component.rotation
+			speed = action_aim_projectile_component.speed
+			momentum = action_aim_projectile_component.momentum
 		end
 
 		local spawn_node = action_settings.spawn_node

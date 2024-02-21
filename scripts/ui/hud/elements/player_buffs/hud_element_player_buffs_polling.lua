@@ -1,12 +1,12 @@
 local BuffSettings = require("scripts/settings/buff/buff_settings")
-local PlayerBuffDefinitions = require("scripts/ui/hud/elements/player_buffs/hud_element_player_buffs_definitions")
+local Colors = require("scripts/utilities/ui/colors")
 local HudElementPlayerBuffsSettings = require("scripts/ui/hud/elements/player_buffs/hud_element_player_buffs_settings")
-local ColorUtilities = require("scripts/utilities/ui/colors")
-local UIWidget = require("scripts/managers/ui/ui_widget")
-local UIRenderer = require("scripts/managers/ui/ui_renderer")
+local PlayerBuffDefinitions = require("scripts/ui/hud/elements/player_buffs/hud_element_player_buffs_definitions")
 local UIFonts = require("scripts/managers/ui/ui_fonts")
+local UIRenderer = require("scripts/managers/ui/ui_renderer")
+local UIWidget = require("scripts/managers/ui/ui_widget")
 local buff_categories = BuffSettings.buff_categories
-local buff_categort_order = BuffSettings.buff_categort_order
+local buff_category_order = BuffSettings.buff_category_order
 local MAX_BUFFS = HudElementPlayerBuffsSettings.max_buffs
 local HALF_MAX_BUFF = math.floor(MAX_BUFFS * 0.5)
 local QUATER_MAX_BUFF = math.floor(MAX_BUFFS * 0.25)
@@ -260,7 +260,7 @@ HudElementPlayerBuffs._update_buff_alignments = function (self, force_update, dt
 
 		local current_number = 0
 
-		for inxed, buff_category in ipairs(buff_categort_order) do
+		for inxed, buff_category in ipairs(buff_category_order) do
 			local number_in_category = math.max(_number_of_buffs_per_category[buff_category] or 0, RESERVED_SPOTS[buff_category] or 0)
 			_category_offsets[buff_category] = current_number * horizontal_spacing
 			_category_numbers[buff_category] = current_number
@@ -315,6 +315,26 @@ HudElementPlayerBuffs._update_buff_alignments = function (self, force_update, dt
 			end
 		end
 	end
+end
+
+local function _compare_buffs(a, b)
+	if a.activated_time == b.activated_time then
+		if a.hud_priority ~= b.hud_priority then
+			if a.hud_priority and not b.hud_priority then
+				return true
+			end
+
+			if not a.hud_priority and b.hud_priority then
+				return false
+			end
+
+			return a.hud_priority < b.hud_priority
+		end
+
+		return a.start_index < b.start_index
+	end
+
+	return a.activated_time < b.activated_time
 end
 
 HudElementPlayerBuffs._update_buffs = function (self, t, ui_renderer)
@@ -412,25 +432,7 @@ HudElementPlayerBuffs._update_buffs = function (self, t, ui_renderer)
 		until true
 	end
 
-	table.sort(active_buffs_data, function (a, b)
-		if a.activated_time == b.activated_time then
-			if a.hud_priority ~= b.hud_priority then
-				if a.hud_priority and not b.hud_priority then
-					return true
-				end
-
-				if not a.hud_priority and b.hud_priority then
-					return false
-				end
-
-				return a.hud_priority < b.hud_priority
-			end
-
-			return a.start_index < b.start_index
-		end
-
-		return a.activated_time < b.activated_time
-	end)
+	table.sort(active_buffs_data, _compare_buffs)
 end
 
 HudElementPlayerBuffs._set_widget_state_colors = function (self, widget, is_negative, is_active)
@@ -450,7 +452,7 @@ HudElementPlayerBuffs._set_widget_state_colors = function (self, widget, is_nega
 		local source_color = source_colors[pass_id]
 
 		if source_color and not pass_style.text_color then
-			ColorUtilities.color_copy(source_color, pass_style.color)
+			Colors.color_copy(source_color, pass_style.color)
 		end
 	end
 

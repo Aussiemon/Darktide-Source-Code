@@ -97,6 +97,7 @@ PerformanceReporter._format_table = function (self, t)
 
 	table.sort(t)
 
+	t = self:_exclude_negative_values(t)
 	result.avg = table.average(t)
 	result.variance = table.variance(t)
 	result.std_dev = math.sqrt(result.variance)
@@ -110,6 +111,14 @@ PerformanceReporter._format_table = function (self, t)
 	result.observations = self._frame_count
 
 	return result
+end
+
+PerformanceReporter._exclude_negative_values = function (self, t)
+	table.array_remove_if(t, function (number)
+		return type(number) ~= "number" or number < 0
+	end)
+
+	return t
 end
 
 return PerformanceReporter

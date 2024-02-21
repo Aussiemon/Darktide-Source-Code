@@ -989,13 +989,14 @@ weapon_template.actions = {
 	action_right_light_pushfollow = {
 		damage_window_start = 0.35,
 		hit_armor_anim = "attack_hit_shield",
-		anim_end_event = "attack_finished",
-		weapon_handling_template = "time_scale_1",
-		kind = "sweep",
-		max_num_saved_entries = 20,
 		range_mod = 1.25,
+		weapon_handling_template = "time_scale_1",
+		max_num_saved_entries = 20,
+		kind = "sweep",
+		sprint_requires_press_to_interrupt = "true",
 		num_frames_before_process = 0,
 		damage_window_end = 0.45,
+		anim_end_event = "attack_finished",
 		anim_event_3p = "attack_swing_right_diagonal",
 		anim_event = "attack_right_diagonal_down",
 		total_time = 2,
@@ -1438,7 +1439,7 @@ weapon_template.base_stats = {
 	}
 }
 weapon_template.traits = {}
-local bespoke_combatsword_p1_traits = table.keys(WeaponTraitsBespokeCombatswordP1)
+local bespoke_combatsword_p1_traits = table.ukeys(WeaponTraitsBespokeCombatswordP1)
 
 table.append(weapon_template.traits, bespoke_combatsword_p1_traits)
 

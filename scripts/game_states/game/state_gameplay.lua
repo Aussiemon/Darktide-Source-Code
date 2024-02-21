@@ -42,6 +42,7 @@ StateGameplay.on_enter = function (self, parent, params, creation_context)
 	shared_state.network_transmit_function = creation_context.network_transmit_function
 
 	Crashify.print_property("mission", tostring(params.mission_name))
+	Crashify.print_breadcrumb(string.format("StateGameplay:on_enter(): %s", tostring(params.mission_name)))
 	Crashify.print_property("circumstance", tostring(mechanism_data.circumstance_name))
 
 	local start_params = {
@@ -157,8 +158,11 @@ StateGameplay._check_transition = function (self)
 
 	if self._next_state == nil then
 		local next_state, next_state_context = Managers.mechanism:wanted_transition()
-		self._next_state = next_state
-		self._next_state_context = next_state_context
+
+		if next_state then
+			self._next_state = next_state
+			self._next_state_context = next_state_context
+		end
 	end
 end
 

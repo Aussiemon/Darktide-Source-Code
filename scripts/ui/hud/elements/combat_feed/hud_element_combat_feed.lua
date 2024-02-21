@@ -1,11 +1,12 @@
 local Breed = require("scripts/utilities/breed")
 local Definitions = require("scripts/ui/hud/elements/combat_feed/hud_element_combat_feed_definitions")
 local HudElementCombatFeedSettings = require("scripts/ui/hud/elements/combat_feed/hud_element_combat_feed_settings")
-local UIWidget = require("scripts/managers/ui/ui_widget")
+local TextUtilities = require("scripts/utilities/ui/text")
 local UIFonts = require("scripts/managers/ui/ui_fonts")
 local UIRenderer = require("scripts/managers/ui/ui_renderer")
-local TextUtilities = require("scripts/utilities/ui/text")
 local UISettings = require("scripts/settings/ui/ui_settings")
+local UIWidget = require("scripts/managers/ui/ui_widget")
+local WalletSettings = require("scripts/settings/wallet_settings")
 local DEBUG_RELOAD = true
 local HudElementCombatFeed = class("HudElementCombatFeed", "HudElementBase")
 
@@ -34,13 +35,6 @@ HudElementCombatFeed.init = function (self, parent, draw_layer, start_scale)
 	end
 
 	self._mechanism_manager = Managers.mechanism
-end
-
-HudElementCombatFeed._can_spawn_message = function (self)
-	local notifications = self._notifications
-	local num_notifications = #notifications
-
-	return num_notifications < self._max_messages
 end
 
 local kill_message_localization_key = "loc_hud_combat_feed_kill_message"
@@ -95,10 +89,6 @@ HudElementCombatFeed._color_by_enemy_tags = function (self, tags)
 end
 
 HudElementCombatFeed.event_combat_feed_kill = function (self, attacking_unit, attacked_unit)
-	if self._mechanism_manager:mechanism_name() == "onboarding" then
-		return
-	end
-
 	local killer = self:_get_unit_presentation_name(attacking_unit)
 	local victim = self:_get_unit_presentation_name(attacked_unit)
 	temp_kill_message_localization_params.killer = killer
@@ -113,6 +103,10 @@ HudElementCombatFeed.event_add_combat_feed_message = function (self, text)
 end
 
 HudElementCombatFeed._add_combat_feed_message = function (self, text)
+	if not self:_enabled() then
+		return
+	end
+
 	local _, notification_id = self:_add_notification_message("default")
 
 	self:_set_text(notification_id, text)
@@ -145,6 +139,10 @@ HudElementCombatFeed._remove_notification = function (self, notification_id)
 end
 
 HudElementCombatFeed._create_notification_entry = function (self, notification_type)
+	if not self:_enabled() then
+		return
+	end
+
 	local notification_template = self._notification_templates[notification_type]
 	local widget_definition = notification_template.widget_definition
 	local name = "notification_" .. self._notification_id_counter
@@ -329,6 +327,14 @@ HudElementCombatFeed._draw_widgets = function (self, dt, t, input_service, ui_re
 			end
 		end
 	end
+end
+
+HudElementCombatFeed._enabled = function (self)
+	if self._mechanism_manager:mechanism_name() == "onboarding" then
+		return false
+	end
+
+	return true
 end
 
 return HudElementCombatFeed

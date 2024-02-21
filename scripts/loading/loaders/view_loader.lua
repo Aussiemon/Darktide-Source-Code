@@ -44,6 +44,8 @@ ViewLoader.start_loading = function (self, mission_name, level_editor_level, cir
 
 		if view_loading_count == 0 then
 			self._load_done = true
+
+			ui_manager:release_packages()
 		end
 	else
 		self._load_done = true
@@ -79,7 +81,16 @@ ViewLoader._load_done_callback = function (self)
 
 	if self._view_loading_count == 0 then
 		self._load_done = true
+		local ui_manager = Managers.ui
+
+		if ui_manager then
+			ui_manager:release_packages()
+		end
 	end
+end
+
+ViewLoader.dont_destroy = function (self)
+	return false
 end
 
 implements(ViewLoader, Loader)

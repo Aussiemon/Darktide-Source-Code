@@ -57,7 +57,6 @@ ViewElementWeaponActionsExtended.present_item = function (self, item)
 	}
 	local weapon_template = WeaponTemplate.weapon_template_from_item(item)
 	local displayed_attacks = weapon_template.displayed_attacks
-	local advanced_stats = weapon_template
 	local is_ranged_weapon = Item.is_weapon_template_ranged(item)
 
 	if displayed_attacks then
@@ -154,7 +153,7 @@ ViewElementWeaponActionsExtended.present_item = function (self, item)
 					}
 				end
 
-				if data.attack_chain then
+				if data.attack_chain and not data.skipp_display then
 					layout[#layout + 1] = {
 						widget_type = "dynamic_spacing",
 						size = {

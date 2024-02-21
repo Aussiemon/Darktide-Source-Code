@@ -2282,11 +2282,12 @@ return function ()
 		on_done = {}
 	})
 	define_rule({
-		name = "hub_flight_deck_announcement",
-		category = "conversations_prio_0",
+		pre_wwise_event = "play_hub_pa_notification",
 		wwise_route = 22,
+		name = "hub_flight_deck_announcement",
 		response = "hub_flight_deck_announcement",
 		database = "conversations_hub",
+		category = "conversations_prio_0",
 		criterias = {
 			{
 				"query_context",
@@ -9990,8 +9991,9 @@ return function ()
 		}
 	})
 	define_rule({
-		name = "hub_mission_board_announcement_dust",
+		pre_wwise_event = "play_hub_pa_notification",
 		wwise_route = 22,
+		name = "hub_mission_board_announcement_dust",
 		response = "hub_mission_board_announcement_dust",
 		database = "conversations_hub",
 		category = "npc_prio_0",
@@ -10074,8 +10076,9 @@ return function ()
 		}
 	})
 	define_rule({
-		name = "hub_mission_board_announcement_dust_circumstance",
+		pre_wwise_event = "play_hub_pa_notification",
 		wwise_route = 22,
+		name = "hub_mission_board_announcement_dust_circumstance",
 		response = "hub_mission_board_announcement_dust_circumstance",
 		database = "conversations_hub",
 		category = "npc_prio_0",
@@ -10158,8 +10161,9 @@ return function ()
 		}
 	})
 	define_rule({
-		name = "hub_mission_board_announcement_generic",
+		pre_wwise_event = "play_hub_pa_notification",
 		wwise_route = 22,
+		name = "hub_mission_board_announcement_generic",
 		response = "hub_mission_board_announcement_generic",
 		database = "conversations_hub",
 		category = "npc_prio_0",
@@ -10240,8 +10244,9 @@ return function ()
 		}
 	})
 	define_rule({
-		name = "hub_mission_board_announcement_generic_circumstance",
+		pre_wwise_event = "play_hub_pa_notification",
 		wwise_route = 22,
+		name = "hub_mission_board_announcement_generic_circumstance",
 		response = "hub_mission_board_announcement_generic_circumstance",
 		database = "conversations_hub",
 		category = "npc_prio_0",
@@ -10322,8 +10327,9 @@ return function ()
 		}
 	})
 	define_rule({
-		name = "hub_mission_board_announcement_tank_foundry",
+		pre_wwise_event = "play_hub_pa_notification",
 		wwise_route = 22,
+		name = "hub_mission_board_announcement_tank_foundry",
 		response = "hub_mission_board_announcement_tank_foundry",
 		database = "conversations_hub",
 		category = "npc_prio_0",
@@ -10406,8 +10412,9 @@ return function ()
 		}
 	})
 	define_rule({
-		name = "hub_mission_board_announcement_tank_foundry_circumstance",
+		pre_wwise_event = "play_hub_pa_notification",
 		wwise_route = 22,
+		name = "hub_mission_board_announcement_tank_foundry_circumstance",
 		response = "hub_mission_board_announcement_tank_foundry_circumstance",
 		database = "conversations_hub",
 		category = "npc_prio_0",
@@ -10490,8 +10497,9 @@ return function ()
 		}
 	})
 	define_rule({
-		name = "hub_mission_board_announcement_transit",
+		pre_wwise_event = "play_hub_pa_notification",
 		wwise_route = 22,
+		name = "hub_mission_board_announcement_transit",
 		response = "hub_mission_board_announcement_transit",
 		database = "conversations_hub",
 		category = "npc_prio_0",
@@ -10574,8 +10582,9 @@ return function ()
 		}
 	})
 	define_rule({
-		name = "hub_mission_board_announcement_transit_circumstance",
+		pre_wwise_event = "play_hub_pa_notification",
 		wwise_route = 22,
+		name = "hub_mission_board_announcement_transit_circumstance",
 		response = "hub_mission_board_announcement_transit_circumstance",
 		database = "conversations_hub",
 		category = "npc_prio_0",
@@ -10658,8 +10667,9 @@ return function ()
 		}
 	})
 	define_rule({
-		name = "hub_mission_board_announcement_watertown",
+		pre_wwise_event = "play_hub_pa_notification",
 		wwise_route = 22,
+		name = "hub_mission_board_announcement_watertown",
 		response = "hub_mission_board_announcement_watertown",
 		database = "conversations_hub",
 		category = "npc_prio_0",
@@ -10742,8 +10752,9 @@ return function ()
 		}
 	})
 	define_rule({
-		name = "hub_mission_board_announcement_watertown_circumstance",
+		pre_wwise_event = "play_hub_pa_notification",
 		wwise_route = 22,
+		name = "hub_mission_board_announcement_watertown_circumstance",
 		response = "hub_mission_board_announcement_watertown_circumstance",
 		database = "conversations_hub",
 		category = "npc_prio_0",
@@ -10826,11 +10837,12 @@ return function ()
 		}
 	})
 	define_rule({
-		name = "hub_news_announcement",
-		category = "conversations_prio_0",
+		pre_wwise_event = "play_hub_pa_notification",
 		wwise_route = 22,
+		name = "hub_news_announcement",
 		response = "hub_news_announcement",
 		database = "conversations_hub",
+		category = "conversations_prio_0",
 		criterias = {
 			{
 				"query_context",
@@ -10891,11 +10903,12 @@ return function ()
 		}
 	})
 	define_rule({
-		name = "hub_propaganda_announcement",
-		category = "conversations_prio_0",
+		pre_wwise_event = "play_hub_pa_notification",
 		wwise_route = 22,
+		name = "hub_propaganda_announcement",
 		response = "hub_propaganda_announcement",
 		database = "conversations_hub",
+		category = "conversations_prio_0",
 		criterias = {
 			{
 				"query_context",
@@ -12254,11 +12267,12 @@ return function ()
 		}
 	})
 	define_rule({
-		name = "hub_status_announcement",
-		category = "conversations_prio_0",
+		pre_wwise_event = "play_hub_pa_notification",
 		wwise_route = 22,
+		name = "hub_status_announcement",
 		response = "hub_status_announcement",
 		database = "conversations_hub",
+		category = "conversations_prio_0",
 		criterias = {
 			{
 				"query_context",
@@ -12293,6 +12307,73 @@ return function ()
 				OP.TIMEDIFF,
 				OP.GT,
 				329
+			},
+			{
+				"faction_memory",
+				"last_mission_update",
+				OP.TIMEDIFF,
+				OP.GT,
+				15
+			}
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"time_since_last_random_talk",
+				OP.TIMESET
+			},
+			{
+				"user_memory",
+				"time_since_last_random_talk_user",
+				OP.TIMESET
+			}
+		},
+		heard_speak_routing = {
+			target = "disabled"
+		}
+	})
+	define_rule({
+		pre_wwise_event = "play_hub_pa_notification",
+		wwise_route = 22,
+		name = "mourningstar_announcement_a",
+		response = "mourningstar_announcement_a",
+		database = "conversations_hub",
+		category = "conversations_prio_0",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"generic_vo_event"
+			},
+			{
+				"query_context",
+				"trigger_id",
+				OP.EQ,
+				"random_talk"
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"mourningstar_confessor_a",
+					"mourningstar_wing_commander_a"
+				}
+			},
+			{
+				"faction_memory",
+				"time_since_last_random_talk",
+				OP.TIMEDIFF,
+				OP.GT,
+				139
+			},
+			{
+				"user_memory",
+				"time_since_last_random_talk_user",
+				OP.TIMEDIFF,
+				OP.GT,
+				229
 			},
 			{
 				"faction_memory",

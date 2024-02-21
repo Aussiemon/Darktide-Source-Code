@@ -108,7 +108,7 @@ StateGame.on_enter = function (self, parent, params)
 		state_change_callbacks.PresenceManager = callback(Managers.presence, "cb_on_game_state_change")
 	end
 
-	self._sm = GameStateMachine:new(self, start_state, start_params, creation_context, state_change_callbacks, "Game")
+	self._sm = GameStateMachine:new(self, start_state, start_params, creation_context, state_change_callbacks, "Game", true)
 
 	if Managers.ui then
 		self._sm:register_on_state_change_callback("UIManager", callback(Managers.ui, "cb_on_game_state_change"))
@@ -231,7 +231,8 @@ StateGame._init_managers = function (self, package_manager, localization_manager
 
 	Managers.stats = StatsManager:new(not DEDICATED_SERVER, event_delegate)
 	local use_batched_saving = is_dedicated_mission_server and GameParameters.save_achievements_in_batch
-	Managers.achievements = AchievementsManager:new(not DEDICATED_SERVER, event_delegate, use_batched_saving)
+	local broadcast_unlocks = is_dedicated_mission_server
+	Managers.achievements = AchievementsManager:new(not DEDICATED_SERVER, event_delegate, use_batched_saving, broadcast_unlocks)
 	Managers.voting = VotingManager:new(event_delegate)
 	Managers.progression = ProgressionManager:new()
 	Managers.telemetry = TelemetryManager:new()

@@ -81,8 +81,9 @@ ChestExtension.is_interactable = function (self)
 	return self._current_state == STATES.closed
 end
 
-ChestExtension.open = function (self)
-	local pickup_spawner_extension = ScriptUnit.extension(self._unit, "pickup_system")
+ChestExtension.open = function (self, opening_unit)
+	local unit = self._unit
+	local pickup_spawner_extension = ScriptUnit.extension(unit, "pickup_system")
 	local containing_pickups = self._containing_pickups
 	local chest_size = pickup_spawner_extension:spawner_count()
 
@@ -103,8 +104,16 @@ ChestExtension.open = function (self)
 		end
 	end
 
+	local opening_player = Managers.state.player_unit_spawn:owner(opening_unit)
+
+	if opening_player then
+		local chest_position = POSITION_LOOKUP[unit]
+
+		Managers.telemetry_events:chest_opened(opening_player, chest_size, chest_position, containing_pickups)
+	end
+
 	self:set_current_state(STATES.opened)
-	self._owner_system:enable_update_function(self.__class_name, "update", self._unit, self)
+	self._owner_system:enable_update_function(self.__class_name, "update", unit, self)
 	table.clear(containing_pickups)
 end
 

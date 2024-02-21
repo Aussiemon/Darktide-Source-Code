@@ -4,7 +4,7 @@ local AccountProfilePopupView = class("AccountProfilePopupView", "BaseView")
 AccountProfilePopupView.init = function (self, settings, context)
 	self._context = context
 
-	AccountProfilePopupView.super.init(self, Definitions, settings)
+	AccountProfilePopupView.super.init(self, Definitions, settings, context)
 
 	self._pass_input = false
 	self._parent = context and context.parent

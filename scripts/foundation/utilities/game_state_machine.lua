@@ -11,12 +11,13 @@ local function _debug_print(format, ...)
 	end
 end
 
-GameStateMachine.init = function (self, parent, start_state, params, optional_creation_context, state_change_callbacks, name)
+GameStateMachine.init = function (self, parent, start_state, params, optional_creation_context, state_change_callbacks, name, log_breadcrumbs)
 	self._parent = parent
 	self._next_state = start_state
 	self._next_state_params = params
 	self._optional_creation_context = optional_creation_context
 	self._name = name
+	self._log_breadcrumbs = log_breadcrumbs
 	self._state_change_callbacks = {}
 
 	if state_change_callbacks then
@@ -77,6 +78,10 @@ GameStateMachine._change_state = function (self)
 	end
 
 	self._state = new_state:new()
+
+	if rawget(_G, "Crashify") and self._log_breadcrumbs then
+		Crashify.print_breadcrumb(string.format("Entering Game State %s", new_state_name))
+	end
 
 	if self._state.on_enter then
 		self._state:on_enter(self._parent, params, self._optional_creation_context)

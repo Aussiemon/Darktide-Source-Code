@@ -140,8 +140,7 @@ CharacterStateMachineExtension._create_init_context = function (self, unit, worl
 		action_sweep_component = unit_data:read_component("action_sweep"),
 		player_character_constants = extension_init_data.player_character_constants,
 		breed = extension_init_data.breed,
-		archetype = unit_data:archetype(),
-		specialization = unit_data:specialization()
+		archetype = unit_data:archetype()
 	}
 
 	return state_init_context

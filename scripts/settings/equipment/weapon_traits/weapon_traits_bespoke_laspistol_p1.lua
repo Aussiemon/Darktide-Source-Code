@@ -1,8 +1,9 @@
 local BuffSettings = require("scripts/settings/buff/buff_settings")
-local WeaponTweakTemplateSettings = require("scripts/settings/equipment/weapon_templates/weapon_tweak_template_settings")
 local templates = {}
+
+table.make_unique(templates)
+
 local stat_buffs = BuffSettings.stat_buffs
-local proc_events = BuffSettings.proc_events
 templates.weapon_trait_bespoke_laspistol_p1_hipfire_while_sprinting = {
 	weapon_trait_bespoke_laspistol_p1_hipfire_while_sprinting = {
 		{}
@@ -32,22 +33,6 @@ templates.weapon_trait_bespoke_laspistol_p1_reload_speed_on_slide = {
 			child_duration = 3,
 			stat_buffs = {
 				[stat_buffs.reload_speed] = 0.1
-			}
-		}
-	}
-}
-templates.weapon_trait_bespoke_laspistol_p1_burninating_on_crit = {
-	weapon_trait_bespoke_laspistol_p1_burninating_on_crit = {
-		{
-			target_buff_data = {
-				max_stacks = 6,
-				num_stacks_on_proc = 2
-			}
-		},
-		[4] = {
-			target_buff_data = {
-				max_stacks = 9,
-				num_stacks_on_proc = 3
 			}
 		}
 	}

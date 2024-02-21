@@ -71,17 +71,17 @@ local FACTION_BOUND_BREEDS = {
 }
 local DEFAULT_MIN_DISTANCES_FROM_TARGET = {
 	chaos_poxwalker_bomber = 35,
-	cultist_flamer = 20,
+	chaos_hound = 25,
 	renegade_grenadier = 20,
 	renegade_flamer = 15,
 	renegade_netgunner = 28,
-	chaos_plague_ogryn = 30,
-	chaos_spawn = 30,
 	cultist_grenadier = 20,
+	renegade_sniper = 30,
+	chaos_plague_ogryn = 30,
 	cultist_mutant = 25,
-	chaos_hound = 25,
+	chaos_spawn = 30,
 	chaos_beast_of_nurgle = 30,
-	renegade_sniper = 30
+	cultist_flamer = 20
 }
 local DEFAULT_MIN_SPAWNERS_RANGES = {
 	max = 49,
@@ -501,12 +501,12 @@ local specials_pacing_template = {
 				16
 			},
 			coordinated_surge_duration_range = {
-				30,
+				40,
 				80
 			},
 			num_coordinated_surges_range = {
-				2,
-				5
+				3,
+				6
 			},
 			rush_prevention_breeds = DEFAULT_RUSH_PREVENTION_BREEDS,
 			rush_prevention_cooldown = {

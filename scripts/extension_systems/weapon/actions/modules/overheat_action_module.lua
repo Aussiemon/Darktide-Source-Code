@@ -27,7 +27,6 @@ OverheatActionModule.finish = function (self, reason, data, t)
 end
 
 OverheatActionModule.running_action_state = function (self, t, time_in_action)
-	local charge_level = self._charge_component.charge_level
 	local current_heat = self._inventory_slot_component.overheat_current_percentage
 
 	if current_heat >= 0.99 then
@@ -36,10 +35,14 @@ OverheatActionModule.running_action_state = function (self, t, time_in_action)
 		return "overheating"
 	end
 
+	local charge_component = self._charge_component
+	local max_charge = charge_component.max_charge
+	local charge_level = charge_component.charge_level
 	local charge_template = self._weapon_extension:charge_template()
 	local fully_charged_charge_level = charge_template.fully_charged_charge_level or 1
+	local fully_charged_charge_threshold = math.min(fully_charged_charge_level, max_charge)
 
-	if charge_level >= fully_charged_charge_level then
+	if fully_charged_charge_threshold <= charge_level then
 		return "fully_charged"
 	end
 

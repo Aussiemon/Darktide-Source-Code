@@ -93,9 +93,19 @@ BtChaosDaemonhostPassiveAction.leave = function (self, unit, breed, blackboard, 
 	locomotion_extension:set_rotation_speed(original_rotation_speed)
 
 	if HEALTH_ALIVE[unit] then
+		local stagger_component = blackboard.stagger
+		local num_triggered_staggers = stagger_component.num_triggered_staggers
 		local perception_extension = scratchpad.perception_extension
 
 		perception_extension:set_use_action_controlled_alert(false)
+
+		local unit_that_staggered = stagger_component.attacker_unit
+
+		if num_triggered_staggers >= 0 and HEALTH_ALIVE[unit_that_staggered] then
+			Threat.add_flat_threat(unit, unit_that_staggered, math.huge)
+			perception_extension:alert(unit_that_staggered)
+		end
+
 		MinionPerception.attempt_aggro(perception_extension)
 		self:_switch_stage(unit, breed, scratchpad, action_data, STAGES.aggroed)
 
@@ -111,6 +121,17 @@ BtChaosDaemonhostPassiveAction.leave = function (self, unit, breed, blackboard, 
 		local on_leave_buff_name = action_data.on_leave_buff_name
 
 		buff_extension:add_internally_controlled_buff(on_leave_buff_name, t)
+
+		if not scratchpad.triggered_health_bar then
+			local boss_extension = ScriptUnit.extension(unit, "boss_system")
+
+			boss_extension:start_boss_encounter()
+
+			local spawn_component = scratchpad.spawn_component
+			local game_object_id = spawn_component.game_object_id
+
+			Managers.state.game_session:send_rpc_clients("rpc_start_boss_encounter", game_object_id)
+		end
 	end
 
 	Threat.set_threat_decay_enabled(unit, true)

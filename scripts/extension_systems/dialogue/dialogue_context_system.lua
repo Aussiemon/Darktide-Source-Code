@@ -46,8 +46,6 @@ DialogueContextSystem.on_remove_extension = function (self, unit, extension_name
 	local extension = self._unit_extension_data[unit]
 
 	if extension then
-		extension:on_remove_extension()
-
 		self._unit_extension_data[unit] = nil
 	end
 

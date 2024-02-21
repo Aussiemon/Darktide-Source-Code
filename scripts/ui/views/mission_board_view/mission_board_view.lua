@@ -24,6 +24,7 @@ local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local PlayerProgressionUnlocks = require("scripts/settings/player/player_progression_unlocks")
 local ColorUtilities = require("scripts/utilities/ui/colors")
 local MissionUtilities = require("scripts/utilities/ui/mission")
+local RegionLocalizationMappings = require("scripts/settings/backend/region_localization")
 local MissionBoardView = class("MissionBoardView", "BaseView")
 local mission_types = {
 	"normal",
@@ -56,8 +57,8 @@ local mission_type_data = {
 	}
 }
 
-MissionBoardView.init = function (self, settings)
-	MissionBoardView.super.init(self, MissionBoardViewDefinitions, settings)
+MissionBoardView.init = function (self, settings, context)
+	MissionBoardView.super.init(self, MissionBoardViewDefinitions, settings, context)
 
 	self._debug_draw_overlaps = true
 	self._mission_widgets = {}
@@ -1987,16 +1988,6 @@ MissionBoardView._callback_open_options = function (self, region_data)
 		on_destroy_callback = callback(self, "_callback_close_options")
 	})
 	local regions_latency = self._regions_latency
-	local region_localization_mapping = {
-		["us-west"] = "loc_matchmaking_region_us_west",
-		sa = "loc_matchmaking_region_sa",
-		["ap-south"] = "loc_matchmaking_region_ap_south",
-		["ap-central"] = "loc_matchmaking_region_ap_central",
-		eu = "loc_matchmaking_region_eu",
-		mei = "loc_matchmaking_region_mei",
-		["us-east"] = "loc_matchmaking_region_us_east",
-		["ap-north"] = "loc_matchmaking_region_ap_north"
-	}
 	local presentation_data = {
 		{
 			widget_type = "dropdown",
@@ -2026,15 +2017,9 @@ MissionBoardView._callback_open_options = function (self, region_data)
 				local options = {}
 
 				for region_name, latency_data in pairs(regions_latency) do
-					local ignore_localization, region_display_name = nil
-
-					if region_localization_mapping[region_name] then
-						region_display_name = Localize(region_localization_mapping[region_name])
-						ignore_localization = true
-					else
-						region_display_name = region_name
-						ignore_localization = true
-					end
+					local loc_key = RegionLocalizationMappings[region_name]
+					local ignore_localization = true
+					local region_display_name = loc_key and Localize(loc_key) or region_name
 
 					if math.abs(latency_data.min_latency - latency_data.max_latency) < 5 then
 						region_display_name = string.format("%s %dms", region_display_name, latency_data.min_latency)
@@ -2319,7 +2304,7 @@ MissionBoardView._telemetry_open = function (self)
 	if telemetry_manager then
 		local name = string.format("%s_mission_board_view", self._selected_mission_type)
 
-		telemetry_manager:open_view(name)
+		telemetry_manager:open_view(name, self._hub_interaction)
 	end
 end
 

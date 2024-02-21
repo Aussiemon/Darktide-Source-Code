@@ -7,6 +7,7 @@ local UIWidget = require("scripts/managers/ui/ui_widget")
 local panel_size = HudElementPersonalPlayerPanelHubSettings.size
 local panel_offset = HudElementTeamPanelHandlerSettings.panel_offset
 local icon_size = HudElementPersonalPlayerPanelHubSettings.icon_size
+local insignia_icon_size = HudElementPersonalPlayerPanelHubSettings.insignia_icon_size
 local scenegraph_definition = {
 	screen = UIWorkspaceSettings.screen,
 	background = {
@@ -179,16 +180,14 @@ local widget_definitions = {
 			}
 		},
 		{
-			value = "content/ui/materials/base/ui_default_base",
+			value_id = "insignia",
 			style_id = "insignia",
 			pass_type = "texture",
+			value = "content/ui/materials/base/ui_default_base",
 			style = {
 				vertical_alignment = "center",
 				horizontal_alignment = "left",
-				size = {
-					30,
-					80
-				},
+				size = insignia_icon_size,
 				offset = {
 					-40,
 					0,

@@ -17,6 +17,7 @@ local sound_data = {
 	use_proximity_culling = {
 		pull_sprint = false,
 		vce_death = false,
+		footstep_land = false,
 		vce_death_long = false,
 		footstep = false,
 		vce_hurt = false,

@@ -1,4 +1,5 @@
 local UIHudSettings = require("scripts/settings/ui/ui_hud_settings")
+local ItemSlotSettings = require("scripts/settings/item/item_slot_settings")
 local hud_element_team_player_panel_hub_settings = {
 	critical_health_threshold = 0.2,
 	health_bar_settings = {
@@ -24,8 +25,12 @@ local hud_element_team_player_panel_hub_settings = {
 		10
 	},
 	icon_size = {
-		72,
-		80
+		ItemSlotSettings.slot_portrait_frame.item_icon_size[1] * 0.8,
+		ItemSlotSettings.slot_portrait_frame.item_icon_size[2] * 0.8
+	},
+	insignia_icon_size = {
+		ItemSlotSettings.slot_insignia.item_icon_size[1] * 0.8,
+		ItemSlotSettings.slot_insignia.item_icon_size[2] * 0.8
 	},
 	icon_bar_spacing = {
 		10,

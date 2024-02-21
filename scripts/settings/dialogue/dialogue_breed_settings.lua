@@ -83,15 +83,13 @@ dialogue_breed_settings.chaos_newly_infected = {
 	has_dialogue_extension = true,
 	vo_triggers_enemy_kill_query = false,
 	dialogue_memory_faction_name = "enemy",
-	follow_vo_interval_t = 2,
-	assault_vo_interval_t = 2,
 	wwise_voice_switch_group = "switch_voice_enemy_chaos_newly_infected",
 	wwise_voices = {
 		"enemy_chaos_newly_infected_male_e",
 		"enemy_chaos_newly_infected_male_f",
 		"enemy_chaos_newly_infected_male_g",
 		"enemy_chaos_newly_infected_male_h",
-		"enemy_chaos_newly_infected_male_i, "
+		"enemy_chaos_newly_infected_male_i"
 	}
 }
 dialogue_breed_settings.chaos_daemonhost = {
@@ -369,7 +367,9 @@ dialogue_breed_settings.vocator = {
 	wwise_voice_switch_group = "voice_profile",
 	wwise_voices = {
 		"vocator_a",
-		"vocator_b"
+		"vocator_b",
+		"mourningstar_confessor_a",
+		"mourningstar_wing_commander_a"
 	},
 	random_talk_settings = {
 		trigger_id = "random_talk",
@@ -421,7 +421,7 @@ dialogue_breed_settings.ogryn = {
 dialogue_breed_settings.renegade_assault = {
 	trigger_seen_vo = false,
 	vo_class_name = "renegade_assault",
-	trigger_heard_vo = true,
+	trigger_heard_vo = false,
 	is_network_synced = false,
 	has_dialogue_extension = true,
 	vo_triggers_enemy_kill_query = false,
@@ -435,14 +435,12 @@ dialogue_breed_settings.renegade_assault = {
 dialogue_breed_settings.renegade_executor = {
 	trigger_seen_vo = true,
 	vo_class_name = "enemy_traitor_enforcer_executor",
-	trigger_heard_vo = true,
+	trigger_heard_vo = false,
 	no_damage_vo_event = "no_damage_taunt",
 	has_dialogue_extension = true,
 	vo_triggers_enemy_kill_query = true,
 	dialogue_memory_faction_name = "enemy",
 	is_network_synced = false,
-	follow_vo_interval_t = 2,
-	assault_vo_interval_t = 2,
 	wwise_voice_switch_group = "switch_voice_enemy_traitor_enforcer_executor",
 	wwise_voices = {
 		"enemy_traitor_enforcer_executor_a"
@@ -451,13 +449,12 @@ dialogue_breed_settings.renegade_executor = {
 dialogue_breed_settings.renegade_grenadier = {
 	trigger_seen_vo = true,
 	vo_class_name = "renegade_grenadier",
-	skulking_vo_interval_t = 2,
+	trigger_heard_vo = false,
 	is_network_synced = false,
 	has_dialogue_extension = true,
 	vo_triggers_enemy_kill_query = true,
 	dialogue_memory_faction_name = "enemy",
 	spawn_vo_event = "spawned",
-	trigger_heard_vo = true,
 	wwise_voice_switch_group = "switch_voice_enemy_traitor_grenadier",
 	wwise_voices = {
 		"enemy_grenadier_a"
@@ -466,7 +463,7 @@ dialogue_breed_settings.renegade_grenadier = {
 dialogue_breed_settings.renegade_gunner = {
 	trigger_seen_vo = true,
 	vo_class_name = "renegade_gunner",
-	trigger_heard_vo = true,
+	trigger_heard_vo = false,
 	is_network_synced = false,
 	has_dialogue_extension = true,
 	vo_triggers_enemy_kill_query = true,
@@ -484,8 +481,6 @@ dialogue_breed_settings.renegade_melee = {
 	has_dialogue_extension = true,
 	vo_triggers_enemy_kill_query = false,
 	dialogue_memory_faction_name = "enemy",
-	follow_vo_interval_t = 1,
-	assault_vo_interval_t = 1,
 	wwise_voice_switch_group = "switch_voice_enemy_traitor_trenchfighter",
 	wwise_voices = {
 		"enemy_traitor_trenchfighter_a",
@@ -493,17 +488,15 @@ dialogue_breed_settings.renegade_melee = {
 	}
 }
 dialogue_breed_settings.chaos_ogryn_executor = {
-	trigger_seen_vo = true,
+	trigger_seen_vo = false,
 	vo_class_name = "chaos_ogryn_executor",
-	trigger_heard_vo = true,
+	trigger_heard_vo = false,
 	no_damage_vo_event = "no_damage_taunt",
 	has_dialogue_extension = true,
 	vo_triggers_enemy_kill_query = true,
 	dialogue_memory_faction_name = "enemy",
 	is_network_synced = false,
-	follow_vo_interval_t = 3,
 	stop_vce_event = "wwise/events/minions/stop_all_chaos_ogryn_executor_vce",
-	assault_vo_interval_t = 3,
 	wwise_voice_switch_group = "switch_voice_enemy_chaos_ogryn_armoured_executor",
 	wwise_voices = {
 		"enemy_chaos_ogryn_armoured_executor_a"
@@ -517,8 +510,6 @@ dialogue_breed_settings.chaos_ogryn_bulwark = {
 	has_dialogue_extension = true,
 	vo_triggers_enemy_kill_query = true,
 	dialogue_memory_faction_name = "enemy",
-	follow_vo_interval_t = 5,
-	assault_vo_interval_t = 5,
 	wwise_voice_switch_group = "enemy_voice_profile",
 	wwise_voices = {
 		"enemy_chaos_ogryn_bulwark_a"
@@ -527,7 +518,7 @@ dialogue_breed_settings.chaos_ogryn_bulwark = {
 dialogue_breed_settings.chaos_ogryn_gunner = {
 	trigger_seen_vo = true,
 	vo_class_name = "enemy_chaos_ogryn_heavy_gunner",
-	trigger_heard_vo = true,
+	trigger_heard_vo = false,
 	is_network_synced = false,
 	has_dialogue_extension = true,
 	vo_triggers_enemy_kill_query = true,
@@ -540,14 +531,11 @@ dialogue_breed_settings.chaos_ogryn_gunner = {
 dialogue_breed_settings.renegade_captain = {
 	randomize_voice = true,
 	is_network_synced = false,
-	skulking_vo_interval_t = 2,
+	trigger_heard_vo = false,
 	trigger_seen_vo = true,
 	has_dialogue_extension = true,
 	vo_triggers_enemy_kill_query = true,
 	dialogue_memory_faction_name = "enemy",
-	trigger_heard_vo = false,
-	follow_vo_interval_t = 1,
-	assault_vo_interval_t = 1,
 	vo_class_name = "renegade_captain",
 	spawn_vo_event = "taunt",
 	wwise_voice_switch_group = "switch_voice_enemy_captain",
@@ -565,14 +553,11 @@ dialogue_breed_settings.renegade_captain = {
 dialogue_breed_settings.renegade_twin_captain = {
 	randomize_voice = true,
 	is_network_synced = false,
-	skulking_vo_interval_t = 2,
+	trigger_heard_vo = false,
 	trigger_seen_vo = true,
 	has_dialogue_extension = true,
 	vo_triggers_enemy_kill_query = true,
 	dialogue_memory_faction_name = "enemy",
-	trigger_heard_vo = false,
-	follow_vo_interval_t = 1,
-	assault_vo_interval_t = 1,
 	vo_class_name = "captain_twin_male",
 	spawn_vo_event = "taunt",
 	wwise_voice_switch_group = "switch_voice_enemy_captain",
@@ -586,14 +571,11 @@ dialogue_breed_settings.renegade_twin_captain = {
 dialogue_breed_settings.renegade_twin_captain_two = {
 	randomize_voice = true,
 	is_network_synced = false,
-	skulking_vo_interval_t = 2,
+	trigger_heard_vo = false,
 	trigger_seen_vo = true,
 	has_dialogue_extension = true,
 	vo_triggers_enemy_kill_query = true,
 	dialogue_memory_faction_name = "enemy",
-	trigger_heard_vo = false,
-	follow_vo_interval_t = 1,
-	assault_vo_interval_t = 1,
 	vo_class_name = "captain_twin_female",
 	spawn_vo_event = "taunt",
 	wwise_voice_switch_group = "switch_voice_enemy_captain",
@@ -605,7 +587,7 @@ dialogue_breed_settings.renegade_twin_captain_two = {
 	}
 }
 dialogue_breed_settings.renegade_rifleman = {
-	trigger_seen_vo = true,
+	trigger_seen_vo = false,
 	vo_class_name = "renegade_rifleman",
 	trigger_heard_vo = false,
 	is_network_synced = false,
@@ -623,7 +605,7 @@ dialogue_breed_settings.renegade_rifleman = {
 dialogue_breed_settings.renegade_netgunner = {
 	trigger_seen_vo = true,
 	vo_class_name = "enemy_traitor_netgunner",
-	trigger_heard_vo = true,
+	trigger_heard_vo = false,
 	is_network_synced = false,
 	has_dialogue_extension = true,
 	vo_triggers_enemy_kill_query = true,
@@ -637,7 +619,7 @@ dialogue_breed_settings.renegade_netgunner = {
 dialogue_breed_settings.renegade_sniper = {
 	trigger_seen_vo = true,
 	vo_class_name = "enemy_traitor_guard_sniper",
-	trigger_heard_vo = true,
+	trigger_heard_vo = false,
 	is_network_synced = false,
 	has_dialogue_extension = true,
 	vo_triggers_enemy_kill_query = true,
@@ -703,8 +685,6 @@ dialogue_breed_settings.cultist_melee = {
 	has_dialogue_extension = true,
 	vo_triggers_enemy_kill_query = false,
 	dialogue_memory_faction_name = "enemy",
-	follow_vo_interval_t = 2,
-	assault_vo_interval_t = 2,
 	wwise_voice_switch_group = "switch_voice_enemy_cultist_melee_fighter",
 	wwise_voices = {
 		"enemy_cultist_melee_fighter_a",
@@ -720,8 +700,6 @@ dialogue_breed_settings.cultist_assault = {
 	has_dialogue_extension = true,
 	vo_triggers_enemy_kill_query = false,
 	dialogue_memory_faction_name = "enemy",
-	follow_vo_interval_t = 2,
-	assault_vo_interval_t = 2,
 	wwise_voice_switch_group = "switch_voice_enemy_cultist_rusher",
 	wwise_voices = {
 		"enemy_cultist_rusher_male_a",
@@ -731,7 +709,7 @@ dialogue_breed_settings.cultist_assault = {
 dialogue_breed_settings.cultist_gunner = {
 	trigger_seen_vo = true,
 	vo_class_name = "cultist_gunner",
-	trigger_heard_vo = true,
+	trigger_heard_vo = false,
 	is_network_synced = false,
 	has_dialogue_extension = true,
 	vo_triggers_enemy_kill_query = true,
@@ -744,13 +722,12 @@ dialogue_breed_settings.cultist_gunner = {
 dialogue_breed_settings.cultist_grenadier = {
 	trigger_seen_vo = true,
 	vo_class_name = "cultist_grenadier",
-	skulking_vo_interval_t = 2,
+	trigger_heard_vo = false,
 	is_network_synced = false,
 	has_dialogue_extension = true,
 	vo_triggers_enemy_kill_query = true,
 	dialogue_memory_faction_name = "enemy",
 	spawn_vo_event = "spawned",
-	trigger_heard_vo = true,
 	wwise_voice_switch_group = "switch_voice_enemy_cultist_grenadier",
 	wwise_voices = {
 		"enemy_cultist_grenadier_a",
@@ -760,7 +737,7 @@ dialogue_breed_settings.cultist_grenadier = {
 dialogue_breed_settings.cultist_flamer = {
 	trigger_seen_vo = true,
 	vo_class_name = "cultist_flamer",
-	trigger_heard_vo = true,
+	trigger_heard_vo = false,
 	is_network_synced = false,
 	has_dialogue_extension = true,
 	vo_triggers_enemy_kill_query = true,
@@ -775,23 +752,21 @@ dialogue_breed_settings.cultist_mutant = {
 	trigger_seen_vo = true,
 	vo_class_name = "cultist_mutant",
 	wwise_voice_switch_group = "enemy_voice_profile",
-	trigger_heard_vo = true,
+	trigger_heard_vo = false,
 	is_network_synced = false,
 	has_dialogue_extension = false,
 	vo_triggers_enemy_kill_query = true,
 	dialogue_memory_faction_name = "enemy"
 }
+dialogue_breed_settings.cultist_mutant_mutator = table.clone(dialogue_breed_settings.cultist_mutant)
 dialogue_breed_settings.cultist_berzerker = {
 	trigger_seen_vo = true,
-	is_network_synced = false,
-	trigger_heard_vo = true,
 	vo_class_name = "cultist_berzerker",
+	trigger_heard_vo = false,
+	is_network_synced = false,
 	has_dialogue_extension = true,
 	vo_triggers_enemy_kill_query = true,
 	dialogue_memory_faction_name = "enemy",
-	follow_vo_interval_t = 2,
-	assault_vo_interval_t = 1,
-	dialogue_source_name = "cultist_berzerker",
 	wwise_voice_switch_group = "switch_voice_enemy_cultist_berzerker",
 	wwise_voices = {
 		"enemy_cultist_berzerker_a",
@@ -800,15 +775,12 @@ dialogue_breed_settings.cultist_berzerker = {
 }
 dialogue_breed_settings.renegade_berzerker = {
 	trigger_seen_vo = true,
-	is_network_synced = false,
-	trigger_heard_vo = true,
 	vo_class_name = "renegade_berzerker",
+	trigger_heard_vo = false,
+	is_network_synced = false,
 	has_dialogue_extension = true,
 	vo_triggers_enemy_kill_query = true,
 	dialogue_memory_faction_name = "enemy",
-	follow_vo_interval_t = 2,
-	assault_vo_interval_t = 1,
-	dialogue_source_name = "renegade_berzerker",
 	wwise_voice_switch_group = "switch_voice_enemy_traitor_berzerker",
 	wwise_voices = {
 		"enemy_traitor_berzerker_a",

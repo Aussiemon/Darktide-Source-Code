@@ -27,22 +27,24 @@ MutatorToxicGasVolumes.init = function (self, is_server, network_event_delegate,
 	if not self._is_server then
 		return
 	end
-
-	self._in_fog_buff_template_name = "in_toxic_gas"
-	self._leaving_fog_buff_template_name = "left_toxic_gas"
-	self._broadphase_radius = 50
-	local broadphase_system = extension_manager:system("broadphase_system")
-	self._broadphase = broadphase_system.broadphase
 end
 
 MutatorToxicGasVolumes._activate_cloud = function (self, cloud)
 	local liquid_area_template = LiquidAreaTemplates.toxic_gas
 	local max_liquid = cloud.max_liquid
-	local unit = LiquidArea.try_create(cloud.position:unbox(), Vector3(0, 0, 1), self._nav_world, liquid_area_template, nil, max_liquid)
+
+	if max_liquid > 0 then
+		local unit = LiquidArea.try_create(cloud.position:unbox(), Vector3(0, 0, 1), self._nav_world, liquid_area_template, nil, max_liquid)
+		cloud.liquid_unit = unit
+	end
+
 	cloud.active = true
-	cloud.liquid_unit = unit
 
 	cloud.fog_component:set_volume_enabled(true)
+
+	if cloud.buff_volume_component then
+		cloud.buff_volume_component:enable_buffs()
+	end
 end
 
 MutatorToxicGasVolumes._deactivate_cloud = function (self, cloud)
@@ -54,6 +56,10 @@ MutatorToxicGasVolumes._deactivate_cloud = function (self, cloud)
 	cloud.liquid_unit = nil
 
 	cloud.fog_component:set_volume_enabled(false)
+
+	if cloud.buff_volume_component then
+		cloud.buff_volume_component:disable_buffs()
+	end
 end
 
 local CHANCE_TO_NOT_SPAWN_CLOUD = 0.25
@@ -127,8 +133,15 @@ MutatorToxicGasVolumes.on_spawn_points_generated = function (self, level, themes
 						wanted_component = fog_component
 					end
 
+					local buff_volume_components = Component.get_components_by_name(cloud_unit, "BuffVolume")
+					local wanted_buff_volume_component = nil
+
+					for _, buff_volume_component in ipairs(buff_volume_components) do
+						wanted_buff_volume_component = buff_volume_component
+					end
+
 					local position = Unit.local_position(cloud_unit, 1)
-					local position_on_navmesh = NavQueries.position_on_mesh_with_outside_position(self._nav_world, nil, position, 1, 1, 1)
+					local position_on_navmesh = NavQueries.position_on_mesh_with_outside_position(self._nav_world, nil, position, 5, 10, 5)
 
 					if position_on_navmesh then
 						local nav_spawn_points = main_path_manager:nav_spawn_points()
@@ -144,7 +157,8 @@ MutatorToxicGasVolumes.on_spawn_points_generated = function (self, level, themes
 								travel_distance = travel_distance,
 								position = boxed_position,
 								max_liquid = max_liquid,
-								fog_component = wanted_component
+								fog_component = wanted_component,
+								buff_volume_component = wanted_buff_volume_component
 							}
 						end
 					end

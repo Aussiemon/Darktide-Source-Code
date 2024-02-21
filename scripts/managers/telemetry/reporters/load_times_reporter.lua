@@ -8,6 +8,9 @@ LoadTimesReporter.init = function (self)
 	Managers.event:register(self, "event_loading_resources_finished", "_loading_resources_finished")
 	Managers.event:register(self, "event_mission_intro_started", "_mission_intro_started")
 	Managers.event:register(self, "event_mission_intro_finished", "_mission_intro_finished")
+
+	self._read_from_disk_time = 0
+	self._is_loading = false
 end
 
 LoadTimesReporter.destroy = function (self)
@@ -32,11 +35,16 @@ LoadTimesReporter._loading_resources_started = function (self, mission_name)
 
 	self:stop_timer("wait_for_network_timer")
 	self:start_timer("resource_loading_timer")
+
+	self._is_loading = true
+	self._read_from_disk_time = 0
 end
 
 LoadTimesReporter._loading_resources_finished = function (self)
 	self:stop_timer("resource_loading_timer")
 	self:start_timer("wait_for_spawn_timer")
+
+	self._is_loading = false
 end
 
 LoadTimesReporter._mission_intro_started = function (self)
@@ -50,12 +58,16 @@ LoadTimesReporter._mission_intro_finished = function (self)
 end
 
 LoadTimesReporter._loading_finished = function (self)
+	self._is_loading = false
+
 	self:stop_timer("loading_timer")
 	self:report()
 end
 
 LoadTimesReporter.update = function (self, dt, t)
-	return
+	if self._is_loading and Managers.package:is_anything_loading_now() then
+		self._read_from_disk_time = self._read_from_disk_time + dt
+	end
 end
 
 LoadTimesReporter.report = function (self, dt, t)
@@ -63,16 +75,19 @@ LoadTimesReporter.report = function (self, dt, t)
 	local wait_for_network_time = self:time("wait_for_network_timer")
 	local resource_loading_time = self:time("resource_loading_timer")
 	local wait_for_spawn_time = self:time("wait_for_spawn_timer")
+	local read_from_disk_time = self._read_from_disk_time
 	local mission_intro_time = 0
 
 	if Managers.time:has_timer("mission_intro_timer") then
 		mission_intro_time = self:time("mission_intro_timer")
 	end
 
-	Managers.telemetry_events:performance_load_times(mission_name, wait_for_network_time, resource_loading_time, mission_intro_time, wait_for_spawn_time)
+	Managers.telemetry_events:performance_load_times(mission_name, wait_for_network_time, resource_loading_time, mission_intro_time, wait_for_spawn_time, read_from_disk_time)
 end
 
 LoadTimesReporter.start_timer = function (self, timer_name)
+	Log.info("LoadTimesReporter", "Starting timer %s", timer_name)
+
 	if Managers.time:has_timer(timer_name) then
 		Managers.time:set_time(timer_name, 0)
 		Managers.time:set_active(timer_name, true)
@@ -84,6 +99,7 @@ end
 
 LoadTimesReporter.stop_timer = function (self, timer_name)
 	Managers.time:set_active(timer_name, false)
+	Log.info("LoadTimesReporter", "Stopping timer %s", timer_name)
 end
 
 LoadTimesReporter.time = function (self, timer_name)

@@ -58,7 +58,7 @@ local function get_platform_token()
 				})
 			end
 
-			return Managers.xasync:wrap(async_block, XUser.release_async_block):next(function (async_block)
+			return Managers.xasync:wrap(async_block):next(function (async_block)
 				local token, error_code = XUser.get_xbs_token_async_result(async_block)
 
 				if token then
@@ -89,7 +89,7 @@ local function get_purchase_id(access_token)
 			})
 		end
 
-		return Managers.xasync:wrap(async_block, XboxLive.release_async_block):next(function (async_block)
+		return Managers.xasync:wrap(async_block):next(function (async_block)
 			local id, error_code = XboxLive.get_purchase_id_result(async_block)
 
 			if id then
@@ -121,7 +121,7 @@ local function get_collections_id(access_token)
 			})
 		end
 
-		return Managers.xasync:wrap(async_block, XboxLive.release_async_block):next(function (async_block)
+		return Managers.xasync:wrap(async_block):next(function (async_block)
 			local id, error_code = XboxLive.get_user_collection_id_result(async_block)
 
 			if id then

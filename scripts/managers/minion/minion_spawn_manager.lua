@@ -107,6 +107,15 @@ MinionSpawnManager.spawn_minion = function (self, breed_name, position, rotation
 		Managers.telemetry_reporters:reporter("enemy_spawns"):register_event(breed)
 	end
 
+	local spawn_buff = breed.spawn_buff
+
+	if spawn_buff then
+		local t = Managers.time:time("gameplay")
+		local buff_extension = ScriptUnit.extension(unit, "buff_system")
+
+		buff_extension:add_internally_controlled_buff(spawn_buff, t)
+	end
+
 	Managers.event:trigger("minion_unit_spawned", unit)
 
 	return unit

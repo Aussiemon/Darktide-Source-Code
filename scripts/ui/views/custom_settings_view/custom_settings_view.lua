@@ -14,7 +14,7 @@ CustomSettingsView.init = function (self, settings, context)
 	self._current_index = 1
 	self._pages = context.pages
 
-	CustomSettingsView.super.init(self, Definitions, settings)
+	CustomSettingsView.super.init(self, Definitions, settings, context)
 
 	self._allow_close_hotkey = false
 	self._grid = nil

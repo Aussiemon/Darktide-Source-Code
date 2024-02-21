@@ -3,6 +3,13 @@ local TestifySnippets = {
 		Testify:make_request("wait_for_view_to_close", "main_menu_background_view")
 		Testify:make_request("create_new_character")
 	end,
+	create_character_from_main_menu = function (archetype, gender)
+		local archetype = archetype or "veteran"
+		local gender = gender or "male"
+
+		Testify:make_request("navigate_to_create_character_from_main_menu")
+		Testify:make_request("create_character_by_archetype_and_gender", archetype, gender)
+	end,
 	create_character_if_none = function ()
 		local is_any_character_created = Testify:make_request("is_any_character_created")
 
@@ -37,6 +44,12 @@ end
 TestifySnippets.skip_splash_and_title_screen = function ()
 	Testify:make_request("skip_splash_screen")
 	Testify:make_request("skip_title_screen")
+end
+
+TestifySnippets.wait_for_main_menu = function ()
+	Testify:make_request("wait_for_main_menu_displayed")
+	Testify:make_request("wait_for_profile_synchronization")
+	Testify:make_request("wait_for_narrative_loaded")
 end
 
 TestifySnippets.load_mission = function (mission_name, challenge, resistance, circumstance_name, side_mission)

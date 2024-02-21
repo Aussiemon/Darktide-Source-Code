@@ -39,6 +39,10 @@ PackageManagerEditor.destroy = function (self)
 	return
 end
 
+PackageManagerEditor.is_anything_loading_now = function (self)
+	return false
+end
+
 PackageManagerEditor.is_loading_now = function (self, package)
 	return false
 end

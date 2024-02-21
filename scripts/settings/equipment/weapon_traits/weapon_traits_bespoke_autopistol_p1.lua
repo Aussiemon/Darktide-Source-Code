@@ -1,13 +1,9 @@
 local BuffSettings = require("scripts/settings/buff/buff_settings")
-local WeaponTweakTemplateSettings = require("scripts/settings/equipment/weapon_templates/weapon_tweak_template_settings")
 local templates = {}
 
-function _degrees_to_radians(degrees)
-	return degrees * 0.0174532925
-end
+table.make_unique(templates)
 
 local stat_buffs = BuffSettings.stat_buffs
-local proc_events = BuffSettings.proc_events
 templates.weapon_trait_bespoke_autopistol_p1_stacking_crit_bonus_on_continuous_fire = {
 	weapon_trait_bespoke_autopistol_p1_stacking_crit_bonus_on_continuous_fire = {
 		{
@@ -188,8 +184,6 @@ templates.weapon_trait_bespoke_autopistol_p1_recoil_reduction_and_suppression_in
 	weapon_trait_bespoke_autopistol_p1_recoil_reduction_and_suppression_increase_on_close_kills = {
 		{
 			proc_stat_buffs = {
-				[stat_buffs.recoil_modifier] = -0.05,
-				[stat_buffs.suppression_dealt] = 0.05,
 				[stat_buffs.recoil_modifier] = -0.28,
 				[stat_buffs.suppression_dealt] = 0.28,
 				[stat_buffs.damage_vs_suppressed] = 0.14
@@ -197,8 +191,6 @@ templates.weapon_trait_bespoke_autopistol_p1_recoil_reduction_and_suppression_in
 		},
 		{
 			proc_stat_buffs = {
-				[stat_buffs.recoil_modifier] = -0.1,
-				[stat_buffs.suppression_dealt] = 0.1,
 				[stat_buffs.recoil_modifier] = -0.32,
 				[stat_buffs.suppression_dealt] = 0.32,
 				[stat_buffs.damage_vs_suppressed] = 0.16
@@ -206,8 +198,6 @@ templates.weapon_trait_bespoke_autopistol_p1_recoil_reduction_and_suppression_in
 		},
 		{
 			proc_stat_buffs = {
-				[stat_buffs.recoil_modifier] = -0.15,
-				[stat_buffs.suppression_dealt] = 0.15,
 				[stat_buffs.recoil_modifier] = -0.36,
 				[stat_buffs.suppression_dealt] = 0.36,
 				[stat_buffs.damage_vs_suppressed] = 0.18
@@ -215,8 +205,6 @@ templates.weapon_trait_bespoke_autopistol_p1_recoil_reduction_and_suppression_in
 		},
 		{
 			proc_stat_buffs = {
-				[stat_buffs.recoil_modifier] = -0.2,
-				[stat_buffs.suppression_dealt] = 0.2,
 				[stat_buffs.recoil_modifier] = -0.4,
 				[stat_buffs.suppression_dealt] = 0.4,
 				[stat_buffs.damage_vs_suppressed] = 0.2

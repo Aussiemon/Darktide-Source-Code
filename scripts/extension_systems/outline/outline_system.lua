@@ -9,7 +9,8 @@ OutlineSystem.system_extensions = {
 }
 local RPCS = {
 	"rpc_add_outline_to_unit",
-	"rpc_remove_outline_from_unit"
+	"rpc_remove_outline_from_unit",
+	"rpc_remove_all_outlines_from_unit"
 }
 
 OutlineSystem.init = function (self, context, system_init_data, system_name, _, ...)
@@ -226,6 +227,12 @@ OutlineSystem.remove_outline = function (self, unit, outline_name)
 end
 
 OutlineSystem.remove_all_outlines = function (self, unit)
+	if self._is_server then
+		local unit_id = Managers.state.unit_spawner:game_object_id(unit)
+
+		Managers.state.game_session:send_rpc_clients("rpc_remove_all_outlines_from_unit", unit_id)
+	end
+
 	local extension = self._unit_extension_data[unit]
 
 	if not extension then
@@ -406,6 +413,14 @@ OutlineSystem.rpc_remove_outline_from_unit = function (self, channel_id, go_id, 
 
 	if HEALTH_ALIVE[unit] then
 		self:remove_outline(unit, outline_name)
+	end
+end
+
+OutlineSystem.rpc_remove_all_outlines_from_unit = function (self, channel_id, go_id)
+	local unit = Managers.state.unit_spawner:unit(go_id)
+
+	if HEALTH_ALIVE[unit] then
+		self:remove_all_outlines(unit)
 	end
 end
 

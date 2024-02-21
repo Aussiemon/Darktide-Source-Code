@@ -489,16 +489,15 @@ weapon_template.actions = {
 	},
 	action_push = {
 		damage_window_start = 0.13333333333333333,
-		range_mod = 1.15,
+		weapon_handling_template = "time_scale_1_1",
 		start_input = "special_action",
 		sprint_requires_press_to_interrupt = true,
 		kind = "sweep",
-		weapon_handling_template = "time_scale_1_1",
-		allow_conditional_chain = true,
 		allowed_during_sprint = true,
+		range_mod = 1.15,
+		stop_alternate_fire = true,
 		damage_window_end = 0.3,
 		abort_sprint = true,
-		unaim = true,
 		uninterruptible = true,
 		anim_event = "attack_push",
 		total_time = 1.1,
@@ -810,7 +809,7 @@ weapon_template.movement_curve_modifier_template = "default"
 weapon_template.footstep_intervals = FootstepIntervalsTemplates.bolter
 weapon_template.smart_targeting_template = SmartTargetingTemplates.killshot
 weapon_template.traits = {}
-local bespoke_autogun_p1_traits = table.keys(WeaponTraitsBespokeBolterP1)
+local bespoke_autogun_p1_traits = table.ukeys(WeaponTraitsBespokeBolterP1)
 
 table.append(weapon_template.traits, bespoke_autogun_p1_traits)
 
@@ -837,6 +836,14 @@ weapon_template.displayed_attacks = {
 		desc = "loc_stats_special_action_melee_weapon_bash_desc",
 		display_name = "loc_weapon_special_weapon_bash",
 		type = "melee"
+	}
+}
+weapon_template.explicit_combo = {
+	{
+		"action_shoot_hip"
+	},
+	{
+		"action_shoot_zoomed"
 	}
 }
 weapon_template.special_action_name = "action_push"

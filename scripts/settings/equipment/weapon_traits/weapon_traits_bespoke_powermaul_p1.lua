@@ -1,6 +1,10 @@
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local templates = {}
+
+table.make_unique(templates)
+
 local stat_buffs = BuffSettings.stat_buffs
+local proc_events = BuffSettings.proc_events
 templates.weapon_trait_bespoke_powermaul_p1_stacking_increase_impact_on_hit = {
 	weapon_trait_bespoke_powermaul_p1_stacking_increase_impact_on_hit_parent = {
 		{
@@ -101,11 +105,6 @@ templates.weapon_trait_bespoke_powermaul_p1_staggered_targets_receive_increased_
 		}
 	}
 }
-templates.weapon_trait_bespoke_powermaul_p1_taunt_target_on_hit = {
-	weapon_trait_bespoke_powermaul_p1_taunt_target_on_hit = {
-		{}
-	}
-}
 templates.weapon_trait_bespoke_powermaul_p1_rending_vs_staggered = {
 	weapon_trait_bespoke_powermaul_p1_rending_vs_staggered = {
 		{
@@ -126,6 +125,126 @@ templates.weapon_trait_bespoke_powermaul_p1_rending_vs_staggered = {
 		{
 			conditional_stat_buffs = {
 				[stat_buffs.rending_vs_staggered_multiplier] = 0.25
+			}
+		}
+	}
+}
+templates.weapon_trait_bespoke_powermaul_p1_negate_stagger_reduction_on_weakspot = {
+	weapon_trait_bespoke_powermaul_p1_negate_stagger_reduction_on_weakspot = {
+		{
+			stat_buffs = {
+				[stat_buffs.stagger_weakspot_reduction_modifier] = 0.4
+			}
+		},
+		{
+			stat_buffs = {
+				[stat_buffs.stagger_weakspot_reduction_modifier] = 0.3
+			}
+		},
+		{
+			stat_buffs = {
+				[stat_buffs.stagger_weakspot_reduction_modifier] = 0.2
+			}
+		},
+		{
+			stat_buffs = {
+				[stat_buffs.stagger_weakspot_reduction_modifier] = 0.1
+			}
+		}
+	}
+}
+templates.weapon_trait_bespoke_powermaul_p1_windup_increases_power = {
+	weapon_trait_bespoke_powermaul_p1_windup_increases_power_parent = {
+		{
+			stat_buffs = {
+				[stat_buffs.melee_power_level_modifier] = 0.05
+			}
+		},
+		{
+			stat_buffs = {
+				[stat_buffs.melee_power_level_modifier] = 0.1
+			}
+		},
+		{
+			stat_buffs = {
+				[stat_buffs.melee_power_level_modifier] = 0.15
+			}
+		},
+		{
+			stat_buffs = {
+				[stat_buffs.melee_power_level_modifier] = 0.2
+			}
+		}
+	}
+}
+templates.weapon_trait_bespoke_powermaul_p1_block_has_chance_to_stun = {
+	weapon_trait_bespoke_powermaul_p1_block_has_chance_to_stun = {
+		{
+			proc_events = {
+				[proc_events.on_block] = 0.1
+			}
+		},
+		{
+			proc_events = {
+				[proc_events.on_block] = 0.15
+			}
+		},
+		{
+			proc_events = {
+				[proc_events.on_block] = 0.2
+			}
+		},
+		{
+			proc_events = {
+				[proc_events.on_block] = 0.25
+			}
+		}
+	}
+}
+templates.weapon_trait_bespoke_powermaul_p1_staggering_hits_has_chance_to_stun = {
+	weapon_trait_bespoke_powermaul_p1_staggering_hits_has_chance_to_stun = {
+		{
+			proc_events = {
+				[proc_events.on_hit] = 0.1
+			}
+		},
+		{
+			proc_events = {
+				[proc_events.on_hit] = 0.15
+			}
+		},
+		{
+			proc_events = {
+				[proc_events.on_hit] = 0.2
+			}
+		},
+		{
+			proc_events = {
+				[proc_events.on_hit] = 0.25
+			}
+		}
+	}
+}
+templates.weapon_trait_bespoke_powermaul_p1_damage_bonus_vs_electrocuded = {
+	weapon_trait_bespoke_powermaul_p1_damage_bonus_vs_electrocuded = {
+		{
+			stat_buffs = {
+				[stat_buffs.damage_vs_electrocuted] = 0.1
+			}
+		},
+		{
+			stat_buffs = {
+				[stat_buffs.damage_vs_electrocuted] = 0.2
+			}
+		},
+		{
+			stat_buffs = {
+				[stat_buffs.damage_vs_electrocuted] = 0.3
+			}
+		},
+		{
+			stat_buffs = {
+				[stat_buffs.damage_vs_electrocuted] = 0.4
 			}
 		}
 	}

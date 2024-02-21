@@ -146,9 +146,10 @@ local breed_data = {
 		}
 	},
 	hit_reaction_keys = {
-		interrupt_alternate_fire = "interrupt_alternate_fire",
-		force_look_function = "force_look_function",
 		catapulting_template = "catapulting_template",
+		force_look_function = "force_look_function",
+		toughness_disorientation_type = "toughness_disorientation_type",
+		interrupt_alternate_fire = "interrupt_alternate_fire",
 		push_template = "push_template",
 		ignore_stun_immunity = "ignore_stun_immunity",
 		disorientation_type = "disorientation_type"
@@ -159,6 +160,7 @@ local breed_data = {
 		toughness_broken_ranged = "ranged",
 		toughness_broken_default = "medium",
 		toughness_absorbed_default = "toughness",
+		toughness_burning = "toughness_burning",
 		fumbled = "fumbled",
 		toughness_absorbed_ranged_sprinting = "ranged_sprinting"
 	},

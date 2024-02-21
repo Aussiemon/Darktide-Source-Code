@@ -345,7 +345,7 @@ LoadingView.init = function (self, settings, context)
 		}
 	}, "loading_image")
 
-	LoadingView.super.init(self, definitions, settings, nil, background_package)
+	LoadingView.super.init(self, definitions, settings, context, background_package)
 
 	self._can_exit = context and context.can_exit
 	self._pass_draw = false

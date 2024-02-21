@@ -1,9 +1,9 @@
 local HudElementTeamPanelHandlerSettings = require("scripts/ui/hud/elements/team_panel_handler/hud_element_team_panel_handler_settings")
 local HudElementTeamPlayerPanelSettings = require("scripts/ui/hud/elements/team_player_panel/hud_element_team_player_panel_settings")
-local UIWorkspaceSettings = require("scripts/settings/ui/ui_workspace_settings")
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local UIHudSettings = require("scripts/settings/ui/ui_hud_settings")
 local UIWidget = require("scripts/managers/ui/ui_widget")
+local UIWorkspaceSettings = require("scripts/settings/ui/ui_workspace_settings")
 local panel_size = HudElementTeamPanelHandlerSettings.panel_size
 local panel_offset = HudElementTeamPanelHandlerSettings.panel_offset
 local bar_size = HudElementTeamPlayerPanelSettings.size
@@ -194,9 +194,10 @@ local widget_definitions = {
 	}, "toughness_bar"),
 	throwable = UIWidget.create_definition({
 		{
-			value = "content/ui/materials/hud/icons/party_throwable",
+			value_id = "texture",
 			style_id = "texture",
 			pass_type = "texture",
+			value = "content/ui/materials/hud/icons/party_throwable",
 			style = {
 				vertical_alignment = "top",
 				horizontal_alignment = "left",

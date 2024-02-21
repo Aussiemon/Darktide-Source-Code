@@ -5,7 +5,6 @@ local AttackIntensity = require("scripts/utilities/attack_intensity")
 local AttackSettings = require("scripts/settings/damage/attack_settings")
 local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
 local Block = require("scripts/utilities/attack/block")
-local DialogueBreedSettings = require("scripts/settings/dialogue/dialogue_breed_settings")
 local Dodge = require("scripts/extension_systems/character_state_machine/character_states/utilities/dodge")
 local GroundImpact = require("scripts/utilities/attack/ground_impact")
 local MinionAttack = require("scripts/utilities/minion_attack")
@@ -57,10 +56,9 @@ BtMeleeAttackAction.enter = function (self, unit, breed, blackboard, scratchpad,
 
 	local spawn_component = blackboard.spawn
 	scratchpad.physics_world = spawn_component.physics_world
-	local assault_vo_interval_t = DialogueBreedSettings[breed.name].assault_vo_interval_t
+	local assault_vo_interval_t = action_data.assault_vo_interval_t
 
-	if action_data.vo_event and assault_vo_interval_t then
-		scratchpad.assault_vo_interval_t = assault_vo_interval_t
+	if assault_vo_interval_t then
 		scratchpad.next_assault_vo_t = t + assault_vo_interval_t
 	end
 
@@ -447,13 +445,14 @@ BtMeleeAttackAction.run = function (self, unit, breed, blackboard, scratchpad, a
 		end
 	end
 
-	local vo_event = action_data.vo_event
 	local next_assault_vo_t = scratchpad.next_assault_vo_t
 
-	if vo_event and next_assault_vo_t and next_assault_vo_t < t then
+	if next_assault_vo_t and next_assault_vo_t < t then
+		local vo_event = action_data.vo_event
+
 		Vo.enemy_generic_vo_event(unit, vo_event, breed.name)
 
-		scratchpad.next_assault_vo_t = t + scratchpad.assault_vo_interval_t
+		scratchpad.next_assault_vo_t = t + action_data.assault_vo_interval_t
 	end
 
 	local target_unit = scratchpad.perception_component.target_unit

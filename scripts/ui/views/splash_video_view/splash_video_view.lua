@@ -14,7 +14,7 @@ SplashVideoView.init = function (self, settings, context)
 	self._wait_for_video = 0
 	self._second_update = true
 
-	SplashVideoView.super.init(self, Definitions, settings)
+	SplashVideoView.super.init(self, Definitions, settings, context)
 end
 
 SplashVideoView.on_enter = function (self)
@@ -209,7 +209,7 @@ SplashVideoView.dialogue_system = function (self)
 	local world_spawner = self._world_spawner
 	local world = world_spawner and world_spawner:world()
 	local extension_manager = world and Managers.ui:world_extension_manager(world)
-	local dialogue_system = extension_manager and extension_manager:system_by_extension("DialogueActorExtension")
+	local dialogue_system = extension_manager and extension_manager:system_by_extension("DialogueExtension")
 
 	return dialogue_system
 end

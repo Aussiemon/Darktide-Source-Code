@@ -824,7 +824,6 @@ TalentBuilderView.update = function (self, dt, t, input_service)
 		local node_offset_x = node_width
 		local node_offset_y = node_height
 		local layout_background_widget = widgets_by_name.layout_background
-		local background_scenegraph_position_x, background_scenegraph_position_y, _ = self:_scenegraph_position(layout_background_widget.scenegraph_id)
 		local tooltip_widget = widgets_by_name.tooltip
 		local tooltip_offset = tooltip_widget.offset
 		local tooltip_scenegraph_position_x, tooltip_scenegraph_position_y, _ = self:_scenegraph_position(tooltip_widget.scenegraph_id, ui_overlay_scenegraph)
@@ -839,8 +838,8 @@ TalentBuilderView.update = function (self, dt, t, input_service)
 			tooltip_offset[1] = 440
 			tooltip_offset[2] = 638
 		else
-			tooltip_offset[1] = math.clamp(tooltip_scenegraph_position_x + (node_scenegraph_position_x + node_offset_x * render_scale) * resolution_inverse_scale + background_scenegraph_position_x, 0, resolution_width * render_inverse_scale * current_zoom - tooltip_width)
-			tooltip_offset[2] = math.clamp(tooltip_scenegraph_position_y + (node_scenegraph_position_y + node_offset_y * render_scale) * resolution_inverse_scale + background_scenegraph_position_y, input_surface_offset[2] + 50, resolution_height * render_inverse_scale * current_zoom + input_surface_offset[2] + input_surface_size_addition[2] - tooltip_height)
+			tooltip_offset[1] = math.clamp(tooltip_scenegraph_position_x + (node_scenegraph_position_x + node_offset_x * render_scale) * resolution_inverse_scale, 0, resolution_width * render_inverse_scale * current_zoom - tooltip_width)
+			tooltip_offset[2] = math.clamp(tooltip_scenegraph_position_y + (node_scenegraph_position_y + node_offset_y * render_scale) * resolution_inverse_scale, input_surface_offset[2] + 50, resolution_height * render_inverse_scale * current_zoom + input_surface_offset[2] + input_surface_size_addition[2] - tooltip_height)
 		end
 
 		math.point_is_inside_2d_box = function (pos, lower_left_corner, size)

@@ -10,6 +10,7 @@ local sound_data = {
 		run_foley_special = "wwise/events/minions/play_minion_sniper_run_foley"
 	},
 	use_proximity_culling = {
+		footstep_land = false,
 		vce_death = false,
 		stop_vce = false,
 		vce_death_long = false,

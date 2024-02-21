@@ -220,8 +220,11 @@ ViewElementWeaponInfo.present_item = function (self, item)
 	}
 	local weapon_template = WeaponTemplate.weapon_template_from_item(item)
 	layout[#layout + 1] = {
-		widget_type = "extended_weapon_stats",
+		widget_type = "extended_weapon_stats_header",
 		item = item
+	}
+	layout[#layout + 1] = {
+		widget_type = "divider"
 	}
 	layout[#layout + 1] = {
 		widget_type = "extended_weapon_keywords",
@@ -229,6 +232,10 @@ ViewElementWeaponInfo.present_item = function (self, item)
 	}
 	layout[#layout + 1] = {
 		widget_type = "divider"
+	}
+	layout[#layout + 1] = {
+		widget_type = "extended_weapon_stats",
+		item = item
 	}
 	local add_end_margin = false
 
@@ -258,9 +265,6 @@ ViewElementWeaponInfo.present_item = function (self, item)
 		interactive = true,
 		widget_type = "weapon_stats",
 		item = item
-	}
-	layout[#layout + 1] = {
-		widget_type = "bar_breakdown_info"
 	}
 	layout[#layout + 1] = {
 		widget_type = "dynamic_spacing",

@@ -394,13 +394,9 @@ ViewElementGrid._draw_render_target = function (self, render_settings)
 	local scale = self._render_scale or 1
 	local width, height = self:_scenegraph_size("grid_mask")
 	local position = self:scenegraph_world_position("grid_mask")
-	local size = {
-		width,
-		height
-	}
 	local start_layer = (render_settings.start_layer or 0) + self._draw_layer
 	local gui_position = Vector3(position[1] * scale, position[2] * scale, (position[3] or 0) + start_layer)
-	local gui_size = Vector3(size[1] * scale, size[2] * scale, size[3] or 0)
+	local gui_size = Vector3(width * scale, height * scale, 0)
 
 	Gui.bitmap(gui, material, "render_pass", "to_screen", gui_position, gui_size, color)
 end

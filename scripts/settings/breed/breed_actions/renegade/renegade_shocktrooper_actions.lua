@@ -1,10 +1,8 @@
 local BreedShootTemplates = require("scripts/settings/breed/breed_shoot_templates")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
-local EffectTemplates = require("scripts/settings/fx/effect_templates")
 local HitZone = require("scripts/utilities/attack/hit_zone")
 local MinionDifficultySettings = require("scripts/settings/difficulty/minion_difficulty_settings")
-local ProjectileTemplates = require("scripts/settings/projectile/projectile_templates")
 local UtilityConsiderations = require("scripts/extension_systems/behavior/utility_considerations")
 local damage_types = DamageSettings.damage_types
 local hit_zone_names = HitZone.hit_zone_names
@@ -80,33 +78,26 @@ local action_data = {
 		ragdoll_timings = {
 			death_shot_head_right = 4.566666666666666,
 			death_slash_left = 3.2666666666666666,
-			death_decapitate_3 = 1.4,
-			death_strike_chest_right = 1.2666666666666666,
 			death_strike_chest_back = 3.1666666666666665,
+			death_strike_chest_right = 1.2666666666666666,
+			death_decapitate_3 = 1.4,
 			death_strike_chest_left = 3.2,
 			death_leg_right = 4.5,
 			death_slash_right = 2.6666666666666665,
 			death_arm_left = 3.033333333333333,
-			death_strike_chest_front = 1.6666666666666667,
-			death_arm_left_2 = 4,
 			death_arm_left_3 = 3.9,
-			death_arm_right = 5.1,
-			death_decapitate = 3.566666666666667,
+			death_arm_left_2 = 4,
+			death_strike_chest_front = 1.6666666666666667,
 			death_arm_right_3 = 2.566666666666667,
 			death_stab_chest_front = 3.6333333333333333,
 			death_leg_left = 3.066666666666667,
 			death_stab_chest_back = 2.5,
-			death_burn = 2.566666666666667,
-			death_burn_2 = 2.566666666666667,
 			death_arm_right_2 = 4.233333333333333,
 			death_shot_head_bwd = 3.3333333333333335,
 			death_shot_head_left = 2.1,
-			death_burn_3 = 4.666666666666667,
 			death_shot_head_front = 1.4666666666666666,
-			death_burn_4 = 4.4,
-			death_leg_both = 4.5,
 			death_shot_head_fwd = 2.3666666666666667,
-			death_decapitate_2 = 3.1666666666666665
+			death_arm_right = 5.1
 		}
 	},
 	melee_combat_idle = {
@@ -336,7 +327,7 @@ local action_data = {
 		max_distance_to_target = 18,
 		min_distance_to_target = 10,
 		utility_weight = 1,
-		vo_event = "ranged_idle",
+		vo_event = "take_position",
 		degree_per_direction = 10,
 		controlled_stagger = true,
 		move_anim_events = "move_fwd",
@@ -757,7 +748,6 @@ local action_data = {
 		controlled_stagger_min_speed = 2,
 		leave_walk_distance = 4,
 		controlled_stagger_ignored_combat_range = "melee",
-		vo_event = "melee_idle",
 		walk_anim_event = "move_fwd_walk",
 		running_stagger_duration = 1.1666666666666667,
 		running_stagger_anim_left = "run_stagger_01",
@@ -992,8 +982,8 @@ local action_data = {
 		}
 	},
 	switch_weapon = {
-		vo_event = "ranged_idle",
 		slot_melee_weapon = {
+			vo_event = "melee_idle",
 			switch_anim_events = {
 				"equip_sword"
 			},

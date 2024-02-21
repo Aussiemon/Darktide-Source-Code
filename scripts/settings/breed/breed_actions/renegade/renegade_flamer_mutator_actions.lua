@@ -81,33 +81,26 @@ local action_data = {
 		ragdoll_timings = {
 			death_shot_head_right = 4.566666666666666,
 			death_slash_left = 3.2666666666666666,
-			death_decapitate_3 = 1.4,
-			death_strike_chest_right = 1.2666666666666666,
 			death_strike_chest_back = 3.1666666666666665,
+			death_strike_chest_right = 1.2666666666666666,
+			death_decapitate_3 = 1.4,
 			death_strike_chest_left = 3.2,
 			death_leg_right = 4.5,
 			death_slash_right = 2.6666666666666665,
 			death_arm_left = 3.033333333333333,
-			death_strike_chest_front = 1.6666666666666667,
-			death_arm_left_2 = 4,
 			death_arm_left_3 = 3.9,
-			death_arm_right = 5.1,
-			death_decapitate = 3.566666666666667,
+			death_arm_left_2 = 4,
+			death_strike_chest_front = 1.6666666666666667,
 			death_arm_right_3 = 2.566666666666667,
 			death_stab_chest_front = 3.6333333333333333,
 			death_leg_left = 3.066666666666667,
 			death_stab_chest_back = 2.5,
-			death_burn = 2.566666666666667,
-			death_burn_2 = 2.566666666666667,
 			death_arm_right_2 = 4.233333333333333,
 			death_shot_head_bwd = 3.3333333333333335,
 			death_shot_head_left = 2.1,
-			death_burn_3 = 4.666666666666667,
 			death_shot_head_front = 1.4666666666666666,
-			death_burn_4 = 4.4,
-			death_leg_both = 4.5,
 			death_shot_head_fwd = 2.3666666666666667,
-			death_decapitate_2 = 3.1666666666666665
+			death_arm_right = 5.1
 		}
 	},
 	climb = {
@@ -258,9 +251,7 @@ local action_data = {
 	},
 	melee_attack = {
 		weapon_reach = 4,
-		utility_weight = 1,
 		ignore_blocked = true,
-		considerations = UtilityConsiderations.ranged_elite_melee,
 		attack_anim_events = {
 			"attack_push_kick_01"
 		},

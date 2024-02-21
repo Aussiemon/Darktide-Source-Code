@@ -1,29 +1,31 @@
 local BaseWeaponTraitBuffTemplates = require("scripts/settings/buff/weapon_traits_buff_templates/base_weapon_trait_buff_templates")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
-local CheckProcFunctions = require("scripts/settings/buff/validation_functions/check_proc_functions")
-local ConditionalFunctions = require("scripts/settings/buff/validation_functions/conditional_functions")
+local CheckProcFunctions = require("scripts/settings/buff/helper_functions/check_proc_functions")
+local ConditionalFunctions = require("scripts/settings/buff/helper_functions/conditional_functions")
 local keywords = BuffSettings.keywords
 local stat_buffs = BuffSettings.stat_buffs
 local proc_events = BuffSettings.proc_events
-local templates = {
-	weapon_trait_bespoke_ogryn_combatblade_p1_crit_chance_on_push = {
-		allow_proc_while_active = true,
-		predicted = false,
-		class_name = "proc_buff",
-		active_duration = 3,
-		proc_events = {
-			[proc_events.on_push_finish] = 1
-		},
-		proc_stat_buffs = {
-			[stat_buffs.melee_critical_strike_chance] = 0.01
-		},
-		conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
-		check_proc_func = function (params, template_data, template_context)
-			return params.num_hit_units and params.num_hit_units > 0
-		end
+local templates = {}
+
+table.make_unique(templates)
+
+templates.weapon_trait_bespoke_ogryn_combatblade_p1_crit_chance_on_push = {
+	allow_proc_while_active = true,
+	predicted = false,
+	class_name = "proc_buff",
+	active_duration = 3,
+	proc_events = {
+		[proc_events.on_push_finish] = 1
 	},
-	weapon_trait_bespoke_ogryn_combatblade_p1_increase_power_on_kill_parent = table.clone(BaseWeaponTraitBuffTemplates.increase_power_on_kill_parent)
+	proc_stat_buffs = {
+		[stat_buffs.melee_critical_strike_chance] = 0.01
+	},
+	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
+	check_proc_func = function (params, template_data, template_context)
+		return params.num_hit_units and params.num_hit_units > 0
+	end
 }
+templates.weapon_trait_bespoke_ogryn_combatblade_p1_increase_power_on_kill_parent = table.clone(BaseWeaponTraitBuffTemplates.increase_power_on_kill_parent)
 templates.weapon_trait_bespoke_ogryn_combatblade_p1_increase_power_on_kill_parent.child_buff_template = "weapon_trait_bespoke_ogryn_combatblade_p1_increase_power_on_kill_child"
 templates.weapon_trait_bespoke_ogryn_combatblade_p1_increase_power_on_kill_child = table.clone(BaseWeaponTraitBuffTemplates.increase_power_on_kill_child)
 templates.weapon_trait_bespoke_ogryn_combatblade_p1_increased_attack_cleave_on_multiple_hits = table.clone(BaseWeaponTraitBuffTemplates.increased_attack_cleave_on_multiple_hits)
@@ -42,6 +44,10 @@ templates.weapon_trait_bespoke_ogryn_combatblade_p1_increased_power_on_weapon_sp
 	end,
 	specific_proc_func = {
 		[proc_events.on_hit] = function (params, template_data, template_context)
+			if not CheckProcFunctions.on_item_match(params, template_data, template_context) then
+				return false
+			end
+
 			if ConditionalFunctions.is_item_slot_wielded(template_data, template_context) and CheckProcFunctions.on_melee_weapon_special_hit(params) then
 				template_data.active = true
 				template_data.number_of_attacks_left = 4

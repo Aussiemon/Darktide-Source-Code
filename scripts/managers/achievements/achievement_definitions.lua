@@ -90,7 +90,7 @@ local generic_mission_targets = {
 	250
 }
 
-local function generate_mission_difficulties(archetype_name)
+local function _generate_mission_difficulties(archetype_name)
 	return function (index, config)
 		local difficulty = config.difficulty
 		local stats = {}
@@ -104,6 +104,33 @@ local function generate_mission_difficulties(archetype_name)
 		end
 
 		return stats
+	end
+end
+
+local function _mission_types_iterator(data)
+	local ii = 0
+
+	return function ()
+		ii = ii + 1
+
+		for _, mission_type in pairs(MissionTypes) do
+			if mission_type.id == ii then
+				return _, mission_type
+			end
+		end
+	end
+end
+
+local function _generate_mission_difficulties_sorting(archetype_name)
+	return function (index, config)
+		local stats_sorting = {}
+
+		for _, mission_type in _mission_types_iterator(MissionTypes) do
+			local stat_name = string.format("mission_type_%s_max_difficulty_%s", mission_type.id, archetype_name)
+			stats_sorting[#stats_sorting + 1] = stat_name
+		end
+
+		return stats_sorting
 	end
 end
 
@@ -132,19 +159,20 @@ family({
 	target = table.size(MissionTypes),
 	flags = {}
 }, {
+	description = "loc_achievement_missions_veteran_2_objective_{index:%d}_description",
 	id = "missions_veteran_2_objective_{index:%d}",
 	title = "loc_achievement_missions_veteran_2_objective_{index:%d}_name",
-	description = "loc_achievement_missions_veteran_2_objective_{index:%d}_description",
-	stats = generate_mission_difficulties("veteran")
+	stats = _generate_mission_difficulties("veteran"),
+	stats_sorting = _generate_mission_difficulties_sorting("veteran")
 }, {
 	{
 		difficulty = 1
 	},
 	{
-		difficulty = 2
+		difficulty = 3
 	},
 	{
-		difficulty = 3
+		difficulty = 4
 	}
 })
 family({
@@ -354,19 +382,20 @@ family({
 	target = table.size(MissionTypes),
 	flags = {}
 }, {
+	description = "loc_achievement_missions_zealot_2_objective_{index:%d}_description",
 	id = "missions_zealot_2_objective_{index:%d}",
 	title = "loc_achievement_missions_zealot_2_objective_{index:%d}_name",
-	description = "loc_achievement_missions_zealot_2_objective_{index:%d}_description",
-	stats = generate_mission_difficulties("zealot")
+	stats = _generate_mission_difficulties("zealot"),
+	stats_sorting = _generate_mission_difficulties_sorting("zealot")
 }, {
 	{
 		difficulty = 1
 	},
 	{
-		difficulty = 2
+		difficulty = 3
 	},
 	{
-		difficulty = 3
+		difficulty = 4
 	}
 })
 family({
@@ -570,19 +599,20 @@ family({
 	target = table.size(MissionTypes),
 	flags = {}
 }, {
+	description = "loc_achievement_missions_psyker_2_objective_{index:%d}_description",
 	id = "missions_psyker_2_objective_{index:%d}",
 	title = "loc_achievement_missions_psyker_2_objective_{index:%d}_name",
-	description = "loc_achievement_missions_psyker_2_objective_{index:%d}_description",
-	stats = generate_mission_difficulties("psyker")
+	stats = _generate_mission_difficulties("psyker"),
+	stats_sorting = _generate_mission_difficulties_sorting("psyker")
 }, {
 	{
 		difficulty = 1
 	},
 	{
-		difficulty = 2
+		difficulty = 3
 	},
 	{
-		difficulty = 3
+		difficulty = 4
 	}
 })
 family({
@@ -783,19 +813,20 @@ family({
 	target = table.size(MissionTypes),
 	flags = {}
 }, {
+	description = "loc_achievement_missions_ogryn_2_objective_{index:%d}_description",
 	id = "missions_ogryn_2_objective_{index:%d}",
 	title = "loc_achievement_missions_ogryn_2_objective_{index:%d}_name",
-	description = "loc_achievement_missions_ogryn_2_objective_{index:%d}_description",
-	stats = generate_mission_difficulties("ogryn")
+	stats = _generate_mission_difficulties("ogryn"),
+	stats_sorting = _generate_mission_difficulties_sorting("ogryn")
 }, {
 	{
 		difficulty = 1
 	},
 	{
-		difficulty = 2
+		difficulty = 3
 	},
 	{
-		difficulty = 3
+		difficulty = 4
 	}
 })
 family({
@@ -1864,7 +1895,7 @@ numeric_target_family("mission_circumstace_{index:%d}", {
 
 local mission_type_count = table.size(MissionTypes)
 
-local function _generate_stats(index, config)
+local function _generate_mission_completion_per_difficulty_stats(index, config)
 	local difficulty = config.difficulty
 	local stats = {}
 
@@ -1889,7 +1920,7 @@ family({
 	id = "mission_difficulty_objectives_{index:%d}",
 	title = "loc_achievement_mission_difficulty_objectives_{index:%d}_name",
 	description = "loc_achievement_mission_difficulty_objectives_{index:%d}_description",
-	stats = _generate_stats
+	stats = _generate_mission_completion_per_difficulty_stats
 }, {
 	{
 		difficulty = 1

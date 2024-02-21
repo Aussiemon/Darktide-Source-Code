@@ -1,11 +1,12 @@
-local ScannerDisplayViewScanSettings = require("scripts/ui/views/scanner_display_view/scanner_display_view_scan_settings")
-local UIWidget = require("scripts/managers/ui/ui_widget")
-local Scanning = require("scripts/utilities/scanning")
 local FixedFrame = require("scripts/utilities/fixed_frame")
+local ScannerDisplayViewScanSettings = require("scripts/ui/views/scanner_display_view/scanner_display_view_scan_settings")
+local Scanning = require("scripts/utilities/scanning")
+local UIWidget = require("scripts/managers/ui/ui_widget")
 local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
 local MinigameScanView = class("MinigameScanView")
 local FX_SOURCE_NAME = "_speaker"
 local SLOT_NAME = "slot_device"
+local WWISE_PARAMETER_NAME_BEEP_VOLUME = "scanner_beep_volume"
 
 MinigameScanView.init = function (self, context)
 	self._interactor_extension = ScriptUnit.extension(context.device_owner_unit, "interactor_system")
@@ -50,7 +51,7 @@ MinigameScanView.destroy = function (self)
 	return
 end
 
-local function _calculate_aupex_scanner_hud_view_values(scanning_compomnent, weapon_action_component, first_person_component, t)
+local function _calculate_auspex_scanner_hud_view_values(scanning_compomnent, weapon_action_component, first_person_component, t)
 	local is_active = scanning_compomnent.is_active
 	local line_of_sight = scanning_compomnent.line_of_sight
 	local scannable_unit = scanning_compomnent.scannable_unit
@@ -86,7 +87,7 @@ local ON_SPOT_THRESHOLD = 1
 
 MinigameScanView.update = function (self, dt, t, widgets_by_name)
 	local latest_fixed_t = FixedFrame.get_latest_fixed_time()
-	local is_active, blinking, progress, color_lerp = _calculate_aupex_scanner_hud_view_values(self._scanning_component, self._weapon_action_component, self._first_person_component, latest_fixed_t)
+	local is_active, blinking, progress, color_lerp = _calculate_auspex_scanner_hud_view_values(self._scanning_component, self._weapon_action_component, self._first_person_component, latest_fixed_t)
 	self._is_scaning = is_active
 	local target = is_active and progress or 0
 	local current = self._scanning_intensity
@@ -100,7 +101,6 @@ MinigameScanView.update = function (self, dt, t, widgets_by_name)
 	self._scanning_intensity = math.clamp01(current + move)
 	self._blinking = blinking
 	self._blink_time = self._blink_time + dt
-	local WWISE_PARAMETER_NAME_BEEP_VOLUME = "scanner_beep_volume"
 	local sfx_source = self._player_fx_extension:sound_source(self._fx_source_name)
 	local current_beep = WwiseWorld.get_source_parameter(self._wwise_world, WWISE_PARAMETER_NAME_BEEP_VOLUME, sfx_source)
 	local current_beep_normalized = 1 - math.clamp01(current_beep / -48)

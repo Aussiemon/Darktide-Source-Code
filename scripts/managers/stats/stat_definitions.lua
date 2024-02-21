@@ -1737,7 +1737,8 @@ StatDefinitions.different_players_rescued = {
 }
 StatDefinitions.max_different_players_rescued = {
 	flags = {
-		StatFlags.backend
+		StatFlags.backend,
+		StatFlags.team
 	},
 	triggers = {
 		{
@@ -3099,10 +3100,13 @@ StatDefinitions.ogryn_2_killed_corruptor_with_grenade_impact = {
 				local breed_name = attack_data.target_breed_name
 				local weapon_template_name = attack_data.weapon_template_name
 				local correct_breed = breed_name == "corruptor_body"
-				local correct_weapon = weapon_template_name == "ogryn_grenade_box"
 
-				if correct_breed and correct_weapon then
-					return increment(self, stat_data)
+				if correct_breed then
+					local correct_weapon = weapon_template_name == "ogryn_grenade_box" or weapon_template_name == "ogryn_grenade_box_cluster"
+
+					if correct_weapon then
+						return increment(self, stat_data)
+					end
 				end
 			end
 		}

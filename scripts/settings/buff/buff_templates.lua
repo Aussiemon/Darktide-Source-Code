@@ -5,7 +5,7 @@ local templates = {}
 local function _create_entry(path, optional_default_buff_category)
 	local entry_templates = require(path)
 
-	for name, template in pairs(entry_templates) do
+	for name, template in upairs(entry_templates) do
 		templates[name] = template
 		template.name = template.name or name
 		template.buff_category = template.buff_category or optional_default_buff_category or buff_categories.generic
@@ -14,7 +14,7 @@ end
 
 _create_entry("scripts/settings/buff/boon_buff_templates", buff_categories.generic)
 _create_entry("scripts/settings/buff/common_buff_templates", buff_categories.generic)
-_create_entry("scripts/settings/buff/gadget_buff_templates", buff_categories.generic)
+_create_entry("scripts/settings/buff/gadget_buff_templates", buff_categories.gadget)
 _create_entry("scripts/settings/buff/item_buff_templates", buff_categories.generic)
 _create_entry("scripts/settings/buff/liquid_area_buff_templates", buff_categories.generic)
 _create_entry("scripts/settings/buff/minion_buff_templates", buff_categories.generic)
@@ -75,11 +75,11 @@ _create_entry("scripts/settings/buff/weapon_traits_buff_templates/weapon_traits_
 _create_entry("scripts/settings/buff/weapon_traits_buff_templates/weapon_traits_bespoke_shotgun_p1_buff_templates", buff_categories.weapon_traits)
 _create_entry("scripts/settings/buff/weapon_traits_buff_templates/weapon_traits_bespoke_stubrevolver_p1_buff_templates", buff_categories.weapon_traits)
 _create_entry("scripts/settings/buff/weapon_traits_buff_templates/weapon_traits_bespoke_thunderhammer_2h_p1_buff_templates", buff_categories.weapon_traits)
-_create_entry("scripts/settings/buff/player_archetype_specialization/common_player_specialization_buffs", buff_categories.talents)
-_create_entry("scripts/settings/buff/player_archetype_specialization/ogryn_buff_templates_new", buff_categories.talents)
-_create_entry("scripts/settings/buff/player_archetype_specialization/psyker_buff_templates_new", buff_categories.talents)
-_create_entry("scripts/settings/buff/player_archetype_specialization/veteran_buff_templates_new", buff_categories.talents)
-_create_entry("scripts/settings/buff/player_archetype_specialization/zealot_buff_templates_new", buff_categories.talents)
+_create_entry("scripts/settings/buff/archetype_buff_templates/shared_archetype_buff_templates", buff_categories.talents)
+_create_entry("scripts/settings/buff/archetype_buff_templates/ogryn_buff_templates", buff_categories.talents)
+_create_entry("scripts/settings/buff/archetype_buff_templates/psyker_buff_templates", buff_categories.talents)
+_create_entry("scripts/settings/buff/archetype_buff_templates/veteran_buff_templates", buff_categories.talents)
+_create_entry("scripts/settings/buff/archetype_buff_templates/zealot_buff_templates", buff_categories.talents)
 
 local default_buff_icon = "content/ui/materials/icons/abilities/default"
 

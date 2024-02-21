@@ -31,7 +31,7 @@ NewsView.init = function (self, settings, context)
 	self._content_alpha_multiplier = 0
 	self._using_cursor_navigation = Managers.ui:using_cursor_navigation()
 
-	NewsView.super.init(self, Definitions, settings, nil, content_package)
+	NewsView.super.init(self, Definitions, settings, context, content_package)
 
 	self._allow_close_hotkey = false
 	self._pass_draw = false

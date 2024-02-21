@@ -1725,6 +1725,14 @@ local Credits = {
 				type = "person"
 			},
 			{
+				text = "André Stålarw",
+				type = "person"
+			},
+			{
+				text = "Linus Henriksson",
+				type = "person"
+			},
+			{
 				text = " ",
 				type = "person"
 			},

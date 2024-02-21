@@ -187,12 +187,12 @@ local page_settings = {
 }
 local FirstRunSettingsView = class("FirstRunSettingsView", "BaseView")
 
-FirstRunSettingsView.init = function (self, settings)
+FirstRunSettingsView.init = function (self, settings, context)
 	self._current_settings_widgets = {}
 	self._current_settings_alignment = {}
 	self._current_index = 1
 
-	FirstRunSettingsView.super.init(self, Definitions, settings)
+	FirstRunSettingsView.super.init(self, Definitions, settings, context)
 
 	self._allow_close_hotkey = false
 	self._grid = nil

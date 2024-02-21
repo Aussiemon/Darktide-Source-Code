@@ -4,9 +4,9 @@ local Attack = require("scripts/utilities/attack/attack")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local PowerLevelSettings = require("scripts/settings/damage/power_level_settings")
 local SpecialRulesSetting = require("scripts/settings/ability/special_rules_settings")
+local TalentSettings = require("scripts/settings/talent/talent_settings")
 local Vo = require("scripts/utilities/vo")
 local WarpCharge = require("scripts/utilities/warp_charge")
-local TalentSettings = require("scripts/settings/talent/talent_settings_new")
 local talent_settings = TalentSettings.psyker_2
 local DEFAULT_POWER_LEVEL = PowerLevelSettings.default_power_level
 local CLOSE_RANGE = 9
@@ -23,7 +23,7 @@ ActionPsykerShout.init = function (self, action_context, action_params, action_s
 	self._weapon_action_component = unit_data_extension:read_component("weapon_action")
 	self._unit_data_extension = unit_data_extension
 	self._combat_ability_component = unit_data_extension:write_component("combat_ability")
-	self._specialization_resource_component = unit_data_extension:read_component("specialization_resource")
+	self._talent_resource_component = unit_data_extension:read_component("talent_resource")
 	self._action_settings = action_settings
 	self._total_hits = {}
 	self._shout_distance_traveled = 0
@@ -96,13 +96,13 @@ ActionPsykerShout.start = function (self, action_settings, t, time_scale, action
 		return
 	end
 
-	local specialization_extension = ScriptUnit.has_extension(player_unit, "specialization_system")
+	local talent_extension = ScriptUnit.has_extension(player_unit, "talent_system")
 	local side_system = Managers.state.extension:system("side_system")
 	local side = side_system.side_by_unit[player_unit]
 	local target_enemies = action_settings.target_enemies
 
 	if target_enemies then
-		self:_handle_enemies(action_settings, side, t, specialization_extension)
+		self:_handle_enemies(action_settings, side, t, talent_extension)
 	end
 
 	local buff_extension = ScriptUnit.extension(player_unit, "buff_system")
@@ -115,7 +115,7 @@ ActionPsykerShout.start = function (self, action_settings, t, time_scale, action
 		buff_extension:add_proc_event(proc_events.on_combat_ability, param_table)
 	end
 
-	local shout_warp_charge_vent_improved = specialization_extension:has_special_rule(special_rules.shout_warp_charge_vent_improved)
+	local shout_warp_charge_vent_improved = talent_extension:has_special_rule(special_rules.shout_warp_charge_vent_improved)
 	local drain_amount = shout_warp_charge_vent_improved and talent_settings.combat_ability.warpcharge_vent_improved or talent_settings.combat_ability.warpcharge_vent_base
 
 	WarpCharge.decrease_immediate(drain_amount, warp_charge_component, player_unit)
@@ -175,7 +175,7 @@ ActionPsykerShout.finish = function (self, reason, data, t, time_in_action, acti
 	table.clear(self._total_hits)
 end
 
-ActionPsykerShout._handle_enemies = function (self, action_settings, side, t, specialization_extension)
+ActionPsykerShout._handle_enemies = function (self, action_settings, side, t, talent_extension)
 	local enemy_side_names = side:relation_side_names("enemy")
 	local locomotion_component = self._locomotion_component
 	local locomotion_position = locomotion_component.position
@@ -186,7 +186,7 @@ ActionPsykerShout._handle_enemies = function (self, action_settings, side, t, sp
 	local attack_type = action_settings.attack_type
 	local power_level = action_settings.power_level or DEFAULT_POWER_LEVEL
 	power_level = power_level * (1 + self._warp_charge_percent)
-	local damage_per_warp_charge = specialization_extension:has_special_rule(special_rules.psyker_discharge_damage_per_warp_charge)
+	local damage_per_warp_charge = talent_extension:has_special_rule(special_rules.psyker_discharge_damage_per_warp_charge)
 	local damage_profile = damage_per_warp_charge and action_settings.damaging_damage_profile or action_settings.damage_profile
 	self._damage_profile = damage_profile
 	self._player_position = player_position

@@ -113,7 +113,7 @@ event_text_style.text_vertical_alignment = "center"
 event_text_style.font_size = 20
 event_text_style.offset = {
 	0,
-	0,
+	35,
 	7
 }
 event_text_style.size = {

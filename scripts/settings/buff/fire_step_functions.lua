@@ -1,4 +1,4 @@
-local ConditionalFunctions = require("scripts/settings/buff/validation_functions/conditional_functions")
+local ConditionalFunctions = require("scripts/settings/buff/helper_functions/conditional_functions")
 local FireStepFunctions = {
 	default_continuous_fire_step_func = function (template_data, template_context)
 		if ConditionalFunctions.is_reloading(template_data, template_context) then

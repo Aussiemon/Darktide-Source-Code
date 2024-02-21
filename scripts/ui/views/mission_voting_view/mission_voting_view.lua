@@ -44,7 +44,7 @@ MissionVotingView.init = function (self, settings, context)
 	self._selected_button_index = 1
 	self._gamepad_active = InputDevice.gamepad_active
 
-	MissionVotingView.super.init(self, Definitions, settings)
+	MissionVotingView.super.init(self, Definitions, settings, context)
 end
 
 MissionVotingView.on_enter = function (self)

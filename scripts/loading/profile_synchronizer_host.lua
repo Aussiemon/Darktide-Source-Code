@@ -1,6 +1,6 @@
 local MasterItems = require("scripts/backend/master_items")
-local RPCQueue = require("scripts/utilities/rpc_queue")
 local ProfileUtils = require("scripts/utilities/profile_utils")
+local RPCQueue = require("scripts/utilities/rpc_queue")
 local Text = require("scripts/utilities/ui/text")
 local RPCS = {
 	"rpc_player_profile_synced",

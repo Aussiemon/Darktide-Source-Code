@@ -11,7 +11,7 @@ local ActionBuffTarget = class("ActionBuffTarget", "ActionAbilityBase")
 ActionBuffTarget.init = function (self, action_context, action_params, action_setting)
 	ActionBuffTarget.super.init(self, action_context, action_params, action_setting)
 
-	self._specialization_extension = ScriptUnit.extension(self._player_unit, "specialization_system")
+	self._talent_extension = ScriptUnit.extension(self._player_unit, "talent_system")
 	local unit_data_extension = self._unit_data_extension
 	self._action_module_targeting_component = unit_data_extension:write_component("action_module_targeting")
 end
@@ -56,8 +56,8 @@ ActionBuffTarget.fixed_update = function (self, dt, t, time_in_action)
 		action_module_targeting_component.target_unit_3 = nil
 
 		if self._is_server then
-			local has_override_buff_rule = self._specialization_extension:has_special_rule(special_rules.buff_target_buff_name_override_one)
-			local has_override_buff_rule_two = self._specialization_extension:has_special_rule(special_rules.buff_target_buff_name_override_two)
+			local has_override_buff_rule = self._talent_extension:has_special_rule(special_rules.buff_target_buff_name_override_one)
+			local has_override_buff_rule_two = self._talent_extension:has_special_rule(special_rules.buff_target_buff_name_override_two)
 			local buff_name = has_override_buff_rule and action_settings.override_buff_name_one or has_override_buff_rule_two and action_settings.override_buff_name_two or action_settings.buff_name
 			local buff_extension = ScriptUnit.has_extension(target_unit, "buff_system")
 
@@ -65,7 +65,7 @@ ActionBuffTarget.fixed_update = function (self, dt, t, time_in_action)
 				buff_extension:add_internally_controlled_buff(buff_name, t)
 			end
 
-			local has_always_self_cast_rule = self._specialization_extension:has_special_rule(special_rules.buff_always_self_cast)
+			local has_always_self_cast_rule = self._talent_extension:has_special_rule(special_rules.buff_always_self_cast)
 
 			if has_always_self_cast_rule and not self_cast then
 				local own_buff_extension = self._buff_extension
@@ -75,7 +75,7 @@ ActionBuffTarget.fixed_update = function (self, dt, t, time_in_action)
 				end
 			end
 
-			local has_coherency_cast_rule = self._specialization_extension:has_special_rule(special_rules.buff_coherency_units)
+			local has_coherency_cast_rule = self._talent_extension:has_special_rule(special_rules.buff_coherency_units)
 
 			if has_coherency_cast_rule then
 				local coherency_buff_name = action_settings.coherency_buff_name
@@ -83,7 +83,7 @@ ActionBuffTarget.fixed_update = function (self, dt, t, time_in_action)
 				CoherencyUtils.add_buff_to_all_in_coherency(target_unit, coherency_buff_name, t)
 			end
 
-			local restore_toughness = self._specialization_extension:has_special_rule(special_rules.buff_restore_coherency_toughness)
+			local restore_toughness = self._talent_extension:has_special_rule(special_rules.buff_restore_coherency_toughness)
 
 			if restore_toughness then
 				local coherency_toughness = action_settings.coherency_toughness
@@ -95,7 +95,7 @@ ActionBuffTarget.fixed_update = function (self, dt, t, time_in_action)
 				end
 			end
 
-			local has_revive_rule = self._specialization_extension:has_special_rule(special_rules.buff_revives_allies)
+			local has_revive_rule = self._talent_extension:has_special_rule(special_rules.buff_revives_allies)
 
 			if has_revive_rule then
 				local unit_data_extension = ScriptUnit.extension(target_unit, "unit_data_system")

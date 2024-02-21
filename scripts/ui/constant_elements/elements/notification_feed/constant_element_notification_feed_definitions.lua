@@ -213,14 +213,14 @@ local create_notification_message = {
 				text_offset = 130
 			elseif element.icon_size == "portrait_frame" then
 				icon_size = ItemSlotSettings.slot_portrait_frame and ItemSlotSettings.slot_portrait_frame.item_icon_size or {
-					60,
-					70
+					90,
+					100
 				}
 				text_offset = 210
 			elseif element.icon_size == "insignia" then
 				icon_size = ItemSlotSettings.slot_insignia and ItemSlotSettings.slot_insignia.item_icon_size or {
-					30,
-					80
+					40,
+					90
 				}
 				text_offset = 210
 			elseif element.icon_size == "currency" then

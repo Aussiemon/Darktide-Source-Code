@@ -1,5 +1,6 @@
 local Attack = require("scripts/utilities/attack/attack")
 local BreedSettings = require("scripts/settings/breed/breed_settings")
+local MinionState = require("scripts/utilities/minion_state")
 local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
 local PowerLevelSettings = require("scripts/settings/damage/power_level_settings")
 local SpecialRulesSetting = require("scripts/settings/ability/special_rules_settings")
@@ -40,9 +41,9 @@ ShoutAbilityImplementation.execute = function (shout_settings, player_unit, t, l
 					buff_extension:add_internally_controlled_buff(buff_to_add, t, "owner_unit", player_unit)
 				end
 
-				local specialization_extension = ScriptUnit.has_extension(player_unit, "specialization_system")
+				local talent_extension = ScriptUnit.has_extension(player_unit, "talent_system")
 				local toughness_special_rule = special_rules.shout_restores_toughness
-				local has_special_rule = specialization_extension:has_special_rule(toughness_special_rule)
+				local has_special_rule = talent_extension:has_special_rule(toughness_special_rule)
 
 				if has_special_rule then
 					local recover_toughness_effect = shout_settings.recover_toughness_effect
@@ -61,9 +62,9 @@ ShoutAbilityImplementation.execute = function (shout_settings, player_unit, t, l
 		end
 
 		local revive = shout_settings.revive_allies
-		local specialization_extension = ScriptUnit.has_extension(player_unit, "specialization_system")
+		local talent_extension = ScriptUnit.has_extension(player_unit, "talent_system")
 
-		if revive and specialization_extension then
+		if revive and talent_extension then
 			local allied_side_names = side:relation_side_names("allied")
 			local broadphase_system = Managers.state.extension:system("broadphase_system")
 			local broadphase = broadphase_system.broadphase
@@ -74,7 +75,7 @@ ShoutAbilityImplementation.execute = function (shout_settings, player_unit, t, l
 			for i = 1, num_hits do
 				local unit = broadphase_results[i]
 				local revive_special_rule = special_rules.shout_revives_allies
-				local has_special_rule = specialization_extension:has_special_rule(revive_special_rule)
+				local has_special_rule = talent_extension:has_special_rule(revive_special_rule)
 
 				if has_special_rule then
 					local unit_data_extension = ScriptUnit.has_extension(unit, "unit_data_system")
@@ -103,7 +104,7 @@ ShoutAbilityImplementation.execute = function (shout_settings, player_unit, t, l
 		local buff_to_add = shout_settings.buff_to_add
 		local buff_to_add_non_monster = shout_settings.buff_to_add_non_monster
 		local shout_dot = shout_settings.shout_dot
-		local specialization_extension = ScriptUnit.has_extension(player_unit, "specialization_system")
+		local talent_extension = ScriptUnit.has_extension(player_unit, "talent_system")
 
 		for i = 1, num_hits do
 			repeat
@@ -123,8 +124,18 @@ ShoutAbilityImplementation.execute = function (shout_settings, player_unit, t, l
 				end
 
 				local dot = Vector3.dot(shout_direction, attack_direction)
+				local can_hit = not shout_dot or shout_dot and shout_dot < dot
 
-				if not shout_dot or shout_dot and shout_dot < dot then
+				if MinionState.is_sleeping_deamonhost(enemy_unit) then
+					local perception_extension = ScriptUnit.extension(enemy_unit, "perception_system")
+					local has_line_of_sight = perception_extension:immediate_line_of_sight_check(player_unit)
+
+					if not has_line_of_sight then
+						can_hit = false
+					end
+				end
+
+				if can_hit then
 					local unit_data_extension = ScriptUnit.extension(enemy_unit, "unit_data_system")
 					local breed = unit_data_extension:breed()
 					local ignored_breeds = shout_settings.buff_ignored_breeds
@@ -139,7 +150,7 @@ ShoutAbilityImplementation.execute = function (shout_settings, player_unit, t, l
 					end
 
 					local buff_special_rule = special_rules.shout_applies_buff_to_enemies
-					local has_special_rule = specialization_extension:has_special_rule(buff_special_rule)
+					local has_special_rule = talent_extension:has_special_rule(buff_special_rule)
 
 					if has_special_rule then
 						local buff_extension = ScriptUnit.extension(enemy_unit, "buff_system")
@@ -167,18 +178,18 @@ ShoutAbilityImplementation.execute = function (shout_settings, player_unit, t, l
 					if shout_settings.force_stagger_type_if_not_staggered and stagger_result and stagger_result == "no_stagger" then
 						local force_stagger_type_if_not_staggered_duration = shout_settings.force_stagger_type_if_not_staggered_duration
 
-						Stagger.force_stagger(enemy_unit, shout_settings.force_stagger_type_if_not_staggered, attack_direction, force_stagger_type_if_not_staggered_duration, 1, force_stagger_type_if_not_staggered_duration)
+						Stagger.force_stagger(enemy_unit, shout_settings.force_stagger_type_if_not_staggered, attack_direction, force_stagger_type_if_not_staggered_duration, 1, force_stagger_type_if_not_staggered_duration, player_unit)
 					end
 
 					local force_stagger_type = shout_settings.force_stagger_type
 					local force_stagger_duration = shout_settings.force_stagger_duration
 
 					if force_stagger_type then
-						Stagger.force_stagger(enemy_unit, force_stagger_type, attack_direction, force_stagger_duration, 1, force_stagger_duration)
+						Stagger.force_stagger(enemy_unit, force_stagger_type, attack_direction, force_stagger_duration, 1, force_stagger_duration, player_unit)
 					end
 
-					if specialization_extension then
-						local shout_causes_suppression = specialization_extension:has_special_rule(special_rules.shout_causes_suppression)
+					if talent_extension then
+						local shout_causes_suppression = talent_extension:has_special_rule(special_rules.shout_causes_suppression)
 
 						if shout_causes_suppression then
 							Suppression.apply_suppression(enemy_unit, player_unit, damage_profile, POSITION_LOOKUP[player_unit])
@@ -207,9 +218,9 @@ function _suppress_units(shout_settings, t, player_unit, player_position, player
 	local num_hits = broadphase:query(player_position, cone_range, broadphase_results, enemy_side_names)
 	local rotation = player_rotation
 	local forward = Vector3.normalize(Vector3.flat(Quaternion.forward(rotation)))
-	local specialization_extension = ScriptUnit.has_extension(player_unit, "specialization_system")
+	local talent_extension = ScriptUnit.has_extension(player_unit, "talent_system")
 	local buff_special_rule = special_rules.shout_applies_buff_to_enemies
-	local has_special_rule_to_add_buffs = specialization_extension:has_special_rule(buff_special_rule)
+	local has_special_rule_to_add_buffs = talent_extension:has_special_rule(buff_special_rule)
 
 	for i = 1, num_hits do
 		local enemy_unit = broadphase_results[i]

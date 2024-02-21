@@ -1,36 +1,30 @@
 local class_rework_psyker_female_c = {
 	ability_buff_stance_a = {
 		randomize_indexes_n = 0,
-		sound_events_n = 8,
+		sound_events_n = 10,
 		sound_events = {
-			"loc_psyker_female_c__ability_biomancer_low_01",
-			"loc_psyker_female_c__ability_biomancer_low_02",
-			"loc_psyker_female_c__ability_biomancer_low_03",
-			"loc_psyker_female_c__ability_biomancer_low_04",
-			"loc_psyker_female_c__ability_biomancer_low_05",
-			"loc_psyker_female_c__ability_biomancer_low_06",
-			"loc_psyker_female_c__ability_biomancer_low_07",
-			"loc_psyker_female_c__ability_biomancer_low_08"
+			"loc_psyker_female_c__ability_buff_stance_a_01",
+			"loc_psyker_female_c__ability_buff_stance_a_02",
+			"loc_psyker_female_c__ability_buff_stance_a_03",
+			"loc_psyker_female_c__ability_buff_stance_a_04",
+			"loc_psyker_female_c__ability_buff_stance_a_05",
+			"loc_psyker_female_c__ability_buff_stance_a_06",
+			"loc_psyker_female_c__ability_buff_stance_a_07",
+			"loc_psyker_female_c__ability_buff_stance_a_08",
+			"loc_psyker_female_c__ability_buff_stance_a_09",
+			"loc_psyker_female_c__ability_buff_stance_a_10"
 		},
 		sound_events_duration = {
-			1.909979,
-			1.939125,
-			1.792458,
-			2.178271,
-			1.324271,
-			1.170938,
-			1.679229,
-			1.383125
-		},
-		sound_event_weights = {
-			0.125,
-			0.125,
-			0.125,
-			0.125,
-			0.125,
-			0.125,
-			0.125,
-			0.125
+			2.522104,
+			2.431083,
+			2.366063,
+			2.656979,
+			2.063375,
+			2.069667,
+			2.063208,
+			2.351875,
+			2.822729,
+			2.966771
 		},
 		randomize_indexes = {}
 	},

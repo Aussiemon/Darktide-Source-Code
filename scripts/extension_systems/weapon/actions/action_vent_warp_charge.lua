@@ -1,25 +1,20 @@
 require("scripts/extension_systems/weapon/actions/action_weapon_base")
 
-local Attack = require("scripts/utilities/attack/attack")
 local SpecialRulesSetting = require("scripts/settings/ability/special_rules_settings")
-local TalentSettings = require("scripts/settings/talent/talent_settings_new")
+local TalentSettings = require("scripts/settings/talent/talent_settings")
 local Toughness = require("scripts/utilities/toughness/toughness")
 local Vo = require("scripts/utilities/vo")
 local WarpCharge = require("scripts/utilities/warp_charge")
 local special_rules = SpecialRulesSetting.special_rules
 local talent_settings = TalentSettings.shared.venting
 local ActionVentWarpCharge = class("ActionVentWarpCharge", "ActionWeaponBase")
-local DEFAULT_WEAPON_VENT_POWER_LEVEL_MODIFIER = {
-	1,
-	1
-}
 
 ActionVentWarpCharge.init = function (self, action_context, action_params, action_settings)
 	ActionVentWarpCharge.super.init(self, action_context, action_params, action_settings)
 
 	self._warp_charge_component = self._unit_data_extension:write_component("warp_charge")
 	self._buff_extension = ScriptUnit.has_extension(self._player_unit, "buff_system")
-	self._specialization_extension = ScriptUnit.has_extension(self._player_unit, "specialization_system")
+	self._talent_extension = ScriptUnit.has_extension(self._player_unit, "talent_system")
 end
 
 local vo_threshold = 0.8
@@ -38,7 +33,7 @@ ActionVentWarpCharge.start = function (self, action_settings, t, time_scale, act
 		end
 	end
 
-	self._venting_restores_toughness = self._specialization_extension:has_special_rule(special_rules.venting_restores_toughness)
+	self._venting_restores_toughness = self._talent_extension:has_special_rule(special_rules.venting_restores_toughness)
 end
 
 ActionVentWarpCharge.fixed_update = function (self, dt, t, time_in_action)

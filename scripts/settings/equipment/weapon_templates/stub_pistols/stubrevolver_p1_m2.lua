@@ -389,6 +389,17 @@ weapon_template.actions = {
 			zoom_shoot = {
 				action_name = "action_shoot_zoomed",
 				chain_time = 0.2
+			},
+			combat_ability = {
+				action_name = "combat_ability"
+			},
+			grenade_ability = {
+				{
+					action_name = "grenade_ability"
+				},
+				{
+					action_name = "grenade_ability_quick_throw"
+				}
 			}
 		}
 	},
@@ -508,17 +519,16 @@ weapon_template.actions = {
 	},
 	action_pistol_whip = {
 		damage_window_start = 0.25,
-		range_mod = 1,
+		first_person_hit_stop_anim = "attack_hit",
 		start_input = "special_action_pistol_whip",
-		allow_conditional_chain = true,
+		range_mod = 1,
 		kind = "sweep",
 		first_person_hit_anim = "attack_hit",
-		sprint_requires_press_to_interrupt = true,
-		first_person_hit_stop_anim = "attack_hit",
 		allowed_during_sprint = true,
+		sprint_requires_press_to_interrupt = true,
+		stop_alternate_fire = true,
 		damage_window_end = 0.31666666666666665,
 		abort_sprint = true,
-		unaim = true,
 		anim_event = "attack_stab_01",
 		power_level = 300,
 		total_time = 0.9,
@@ -576,6 +586,17 @@ weapon_template.actions = {
 			zoom = {
 				action_name = "action_zoom",
 				chain_time = 0.9
+			},
+			combat_ability = {
+				action_name = "combat_ability"
+			},
+			grenade_ability = {
+				{
+					action_name = "grenade_ability"
+				},
+				{
+					action_name = "grenade_ability_quick_throw"
+				}
 			}
 		},
 		weapon_box = {
@@ -596,17 +617,16 @@ weapon_template.actions = {
 	},
 	action_pistol_whip_followup = {
 		damage_window_start = 0.25,
-		first_person_hit_stop_anim = "attack_hit",
-		sprint_requires_press_to_interrupt = true,
 		range_mod = 1,
 		kind = "sweep",
+		sprint_requires_press_to_interrupt = true,
 		first_person_hit_anim = "attack_hit",
-		anim_event = "attack_stab_02",
+		first_person_hit_stop_anim = "attack_hit",
 		allowed_during_sprint = true,
+		stop_alternate_fire = true,
 		damage_window_end = 0.31666666666666665,
 		abort_sprint = true,
-		unaim = true,
-		allow_conditional_chain = true,
+		anim_event = "attack_stab_02",
 		power_level = 300,
 		total_time = 0.85,
 		crosshair = {
@@ -671,6 +691,17 @@ weapon_template.actions = {
 			zoom = {
 				action_name = "action_zoom",
 				chain_time = 0.85
+			},
+			combat_ability = {
+				action_name = "combat_ability"
+			},
+			grenade_ability = {
+				{
+					action_name = "grenade_ability"
+				},
+				{
+					action_name = "grenade_ability_quick_throw"
+				}
 			}
 		},
 		weapon_box = {
@@ -918,7 +949,7 @@ weapon_template.hipfire_inputs = {
 	shoot_pressed = true
 }
 weapon_template.traits = {}
-local bespoke_stubrevolver_p1_traits = table.keys(WeaponTraitsBespokeStubrevolverP1)
+local bespoke_stubrevolver_p1_traits = table.ukeys(WeaponTraitsBespokeStubrevolverP1)
 
 table.append(weapon_template.traits, bespoke_stubrevolver_p1_traits)
 
@@ -945,6 +976,14 @@ weapon_template.displayed_attacks = {
 		desc = "loc_stats_special_action_melee_weapon_bash_desc",
 		display_name = "loc_weapon_special_weapon_bash",
 		type = "melee"
+	}
+}
+weapon_template.explicit_combo = {
+	{
+		"action_shoot_hip"
+	},
+	{
+		"action_shoot_zoomed"
 	}
 }
 weapon_template.special_action_name = "action_pistol_whip"

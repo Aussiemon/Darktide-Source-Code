@@ -1171,11 +1171,12 @@ weapon_template.actions = {
 	action_right_light_pushfollow = {
 		damage_window_start = 0.4,
 		hit_armor_anim = "attack_hit_shield",
-		weapon_handling_template = "time_scale_1_2",
 		range_mod = 1.25,
 		kind = "sweep",
+		weapon_handling_template = "time_scale_1_2",
 		first_person_hit_anim = "hit_right_shake",
 		first_person_hit_stop_anim = "attack_hit",
+		sprint_requires_press_to_interrupt = "true",
 		attack_direction_override = "right",
 		damage_window_end = 0.5333333333333333,
 		anim_event_3p = "attack_swing_right_slow",
@@ -1784,7 +1785,7 @@ weapon_template.base_stats = {
 	}
 }
 weapon_template.traits = {}
-local bespoke_ogryn_powermaul_traits = table.keys(WeaponTraitsBespokeOgrynPowerMaulP1)
+local bespoke_ogryn_powermaul_traits = table.ukeys(WeaponTraitsBespokeOgrynPowerMaulP1)
 
 table.append(weapon_template.traits, bespoke_ogryn_powermaul_traits)
 

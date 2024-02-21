@@ -15,7 +15,7 @@ local device_list = {
 local SplashView = class("SplashView", "BaseView")
 
 SplashView.init = function (self, settings, context)
-	SplashView.super.init(self, Definitions, settings)
+	SplashView.super.init(self, Definitions, settings, context)
 
 	self._current_time = 0
 	self._time_between_pages = SplashPageDefinitions.time_between_pages

@@ -1,5 +1,8 @@
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local templates = {}
+
+table.make_unique(templates)
+
 local stat_buffs = BuffSettings.stat_buffs
 templates.weapon_trait_bespoke_combataxe_p1_chained_hits_increases_power = {
 	weapon_trait_bespoke_combataxe_p1_chained_hits_increases_power_parent = {
@@ -128,34 +131,6 @@ templates.weapon_trait_bespoke_combataxe_p1_targets_receive_rending_debuff = {
 templates.weapon_trait_bespoke_combataxe_p1_stacking_rending_on_one_hit_kill = {
 	weapon_trait_bespoke_combataxe_p1_stacking_rending_on_one_hit_kill_parent = {
 		{
-			max_stacks = 3,
-			stat_buffs = {
-				[stat_buffs.rending_multiplier] = 0.1
-			}
-		},
-		{
-			max_stacks = 3,
-			stat_buffs = {
-				[stat_buffs.rending_multiplier] = 0.15
-			}
-		},
-		{
-			max_stacks = 3,
-			stat_buffs = {
-				[stat_buffs.rending_multiplier] = 0.2
-			}
-		},
-		{
-			max_stacks = 3,
-			stat_buffs = {
-				[stat_buffs.rending_multiplier] = 0.25
-			}
-		}
-	}
-}
-templates.weapon_trait_bespoke_combataxe_p1_stacking_rending_on_one_hit_kill = {
-	weapon_trait_bespoke_combataxe_p1_stacking_rending_on_one_hit_kill_parent = {
-		{
 			max_stacks = 5,
 			stat_buffs = {
 				[stat_buffs.melee_finesse_modifier_bonus] = 0.18
@@ -177,50 +152,6 @@ templates.weapon_trait_bespoke_combataxe_p1_stacking_rending_on_one_hit_kill = {
 			max_stacks = 5,
 			stat_buffs = {
 				[stat_buffs.melee_finesse_modifier_bonus] = 0.24
-			}
-		}
-	}
-}
-templates.weapon_trait_bespoke_combataxe_p1_power_bonus_on_first_attack = {
-	weapon_trait_bespoke_combataxe_p1_power_bonus_on_first_attack = {
-		{
-			conditional_switch_stat_buffs = {
-				{
-					[stat_buffs.power_level_modifier] = 0.1
-				},
-				{
-					[stat_buffs.power_level_modifier] = -0.1
-				}
-			}
-		},
-		{
-			conditional_switch_stat_buffs = {
-				{
-					[stat_buffs.power_level_modifier] = 0.15
-				},
-				{
-					[stat_buffs.power_level_modifier] = -0.1
-				}
-			}
-		},
-		{
-			conditional_switch_stat_buffs = {
-				{
-					[stat_buffs.power_level_modifier] = 0.2
-				},
-				{
-					[stat_buffs.power_level_modifier] = -0.1
-				}
-			}
-		},
-		{
-			conditional_switch_stat_buffs = {
-				{
-					[stat_buffs.power_level_modifier] = 0.25
-				},
-				{
-					[stat_buffs.power_level_modifier] = -0.1
-				}
 			}
 		}
 	}

@@ -41,28 +41,28 @@ local eye_types = {
 		sort_order = 1
 	},
 	{
-		icon_texture = "content/ui/textures/icons/appearances/eyes/eyes_r0_l1",
 		name = "blind_left",
+		search_string = "blind_left",
 		sort_order = 2,
-		search_string = "blind_left"
+		icon_texture = "content/ui/textures/icons/appearances/eyes/eyes_r0_l1"
 	},
 	{
-		icon_texture = "content/ui/textures/icons/appearances/eyes/eyes_r1_l0",
 		name = "blind_right",
+		search_string = "blind_right",
 		sort_order = 3,
-		search_string = "blind_right"
+		icon_texture = "content/ui/textures/icons/appearances/eyes/eyes_r1_l0"
 	},
 	{
-		icon_texture = "content/ui/textures/icons/appearances/eyes/eyes_r0_l0",
 		name = "blind_both",
+		search_string = "blind_both",
 		sort_order = 4,
-		search_string = "blind_both"
+		icon_texture = "content/ui/textures/icons/appearances/eyes/eyes_r0_l0"
 	},
 	{
-		icon_texture = "content/ui/textures/icons/appearances/eyes/eyes_r2_l2",
 		name = "black_scalera",
+		search_string = "black_scalera",
 		sort_order = 5,
-		search_string = "black_scalera"
+		icon_texture = "content/ui/textures/icons/appearances/eyes/eyes_r2_l2"
 	}
 }
 local choices_presentation = {
@@ -125,9 +125,10 @@ CharacterAppearanceView.init = function (self, settings, context)
 	end
 
 	self._force_character_creation = context.force_character_creation
-	self._is_barber = context.is_barber
+	self._is_barber_appearance = context.is_barber_appearance
+	self._is_barber = context.is_barber_appearance
 
-	CharacterAppearanceView.super.init(self, Definitions, settings)
+	CharacterAppearanceView.super.init(self, Definitions, settings, context)
 
 	if context.pass_draw ~= nil then
 		self._pass_draw = context.pass_draw
@@ -165,7 +166,7 @@ CharacterAppearanceView.on_enter = function (self)
 			end
 		end
 
-		Managers.telemetry_events:open_view(self.view_name)
+		Managers.telemetry_events:open_view(self.view_name, false)
 
 		self._profile_versions = table.clone(self._character_create:profile_value_versions())
 		self._current_progress = 0
@@ -179,7 +180,7 @@ CharacterAppearanceView.on_enter = function (self)
 		self._block_continue = {}
 		self._pages = self:_get_pages()
 
-		if self._is_barber then
+		if self._is_barber_appearance then
 			self._pages = {
 				{
 					name = "appearance",
@@ -432,7 +433,10 @@ CharacterAppearanceView._on_continue_pressed = function (self)
 		self:_play_sound(UISoundEvents.character_appearence_confirm)
 	end
 
-	if self._is_barber then
+	local active_page_number = self._active_page_number
+	local active_page = self._pages[self._active_page_number]
+
+	if self._is_barber_appearance then
 		if not self._popup_finish_open then
 			self._popup_finish_open = true
 			local context = {
@@ -497,9 +501,6 @@ CharacterAppearanceView._on_continue_pressed = function (self)
 			end)
 		end
 	else
-		local active_page_number = self._active_page_number
-		local active_page = self._pages[self._active_page_number]
-
 		if active_page.name == "final" then
 			self:_stop_character_name_input()
 		end
@@ -602,13 +603,19 @@ end
 
 CharacterAppearanceView._randomize_character_appearance = function (self)
 	self._character_create:randomize_presets()
+
+	local page = self._pages[self._active_page_number]
+	page.content = self:_get_appearance_content()
+
+	if self._selected_appearance_option_index then
+		self:_open_appearance_options(self._selected_appearance_option_index, true)
+
+		self._widgets_by_name.choice_detail.content.visible = false
+	end
+
 	self:_update_appearance_selection()
+	self:_check_appearance_continue_block(page.content)
 	self:_update_appearance_icon()
-	self._character_create:reset_height()
-
-	local height = self._character_create:height()
-
-	self:_set_character_height(height)
 
 	if self._page_grids[2] and self._page_grids[2].entry and self._page_grids[2].entry.type == "height" then
 		local template_name = self._page_grids[2].entry.template
@@ -618,6 +625,11 @@ CharacterAppearanceView._randomize_character_appearance = function (self)
 		template.reset(self, widget)
 	else
 		self._height_changed = true
+	end
+
+	for i = 1, #eye_types do
+		local eye_type = eye_types[i]
+		eye_type.selected_color_name = nil
 	end
 end
 
@@ -662,7 +674,7 @@ CharacterAppearanceView._handle_continue_button_text = function (self)
 		continue_button_action_display_name = "loc_character_create_advance"
 	end
 
-	if self._is_barber then
+	if self._is_barber_appearance then
 		continue_button_action_display_name = "loc_button_barber_confirm"
 	end
 
@@ -819,6 +831,9 @@ CharacterAppearanceView._open_page = function (self, index)
 	self:_destroy_generated_widgets()
 
 	if page.show_character and not self._profile_spawner then
+		self._widgets_by_name.transition_fade.alpha_multiplier = 1
+		self._fade_animation_id = self:_start_animation("on_level_switch")
+
 		self:_setup_background_world()
 
 		self._widgets_by_name.background.content.visible = false
@@ -1525,19 +1540,13 @@ CharacterAppearanceView._set_camera = function (self, camera_focus, gear_visible
 	world_spawner:set_camera_position_axis_offset("y", target_world_position.y - camera_world_position.y, time, func_ptr)
 
 	if no_height_compensation then
-		world_spawner:set_camera_position_axis_offset("z", target_world_position.z - camera_world_position.z, time, func_ptr)
-	else
-		local head_position = self._profile_spawner:node_world_position("j_head")
 		local model_height_difference = archetype_name == "ogryn" and -0.2 or 0
 
-		if head_position then
-			local head_world_position = head_position and Vector3.to_array(head_position) or target_world_position
-			local spawn_position = self._spawn_point_position
-			local head_z_position = head_world_position[3] - spawn_position[3]
-			model_height_difference = head_z_position - self._default_head_z_position
-		end
-
 		world_spawner:set_camera_position_axis_offset("z", target_world_position.z + model_height_difference - camera_world_position.z, time, func_ptr)
+	else
+		local height = self._character_create:height()
+
+		world_spawner:set_camera_position_axis_offset("z", target_world_position.z * height - camera_world_position.z, time, func_ptr)
 	end
 
 	local camera_world_rotation_x, camera_world_rotation_y, camera_world_rotation_z = Quaternion.to_euler_angles_xyz(camera_world_rotation)
@@ -1723,7 +1732,7 @@ CharacterAppearanceView.update = function (self, dt, t, input_service)
 			self._character_spawned_next_frame = false
 
 			self:_show_loading_character(false)
-		elseif page.show_character and not is_spawned and not self._character_spawned_next_frame and not self._loading_overlay_visible then
+		elseif page.show_character and not is_spawned and not self._character_spawned_next_frame and not self._loading_overlay_visible and not self._is_character_showing then
 			self:_show_loading_character(true)
 		end
 
@@ -1826,7 +1835,7 @@ CharacterAppearanceView.update = function (self, dt, t, input_service)
 					local entry = entries[i]
 
 					if self._active_page_name == "appearance" and self._page_grids[1] and self._page_grids[1].widgets and self._page_grids[1].widgets[i] then
-						if not self._is_barber then
+						if not self._is_barber_appearance then
 							self._page_grids[1].widgets[i].content.show_warning = entry
 						end
 					elseif self._active_page_name == "personality" and self._page_grids[1] and self._page_grids[1].widgets and self._page_grids[1].widgets[i] then
@@ -1975,6 +1984,25 @@ CharacterAppearanceView._update_current_navigation_position = function (self, gr
 	local current_grid_index = self._navigation.grid
 	local current_widget_index = self._navigation.index
 	local current_widget = self._page_grids[current_grid_index] and self._page_grids[current_grid_index].widgets and self._page_grids[current_grid_index].widgets[current_widget_index]
+
+	if current_grid_index ~= grid_index then
+		if current_widget and current_widget.content.hotspot then
+			current_widget.content.hotspot.is_focused = false
+		end
+
+		if self._page_grids[current_grid_index] and self._page_grids[current_grid_index].entry and self._page_grids[current_grid_index].entry.leave then
+			local page = self._page_grids[current_grid_index]
+
+			self._page_grids[current_grid_index].entry.leave(page)
+		end
+
+		if self._page_grids[grid_index] and self._page_grids[grid_index].entry and self._page_grids[grid_index].entry.enter then
+			local page = self._page_grids[grid_index]
+
+			self._page_grids[grid_index].entry.enter(page)
+		end
+	end
+
 	local new_widget = self._page_grids[grid_index] and self._page_grids[grid_index].widgets and self._page_grids[grid_index].widgets[widget_index]
 
 	if not self._using_cursor_navigation and new_widget then
@@ -2002,24 +2030,6 @@ CharacterAppearanceView._update_current_navigation_position = function (self, gr
 			grid:focus_grid_index(widget_index, scrollbar_progress, true)
 		else
 			grid:focus_grid_index(widget_index)
-		end
-	end
-
-	if current_grid_index ~= grid_index then
-		if current_widget and current_widget.content.hotspot then
-			current_widget.content.hotspot.is_focused = false
-		end
-
-		if self._page_grids[current_grid_index] and self._page_grids[current_grid_index].entry and self._page_grids[current_grid_index].entry.leave then
-			local page = self._page_grids[current_grid_index]
-
-			self._page_grids[current_grid_index].entry.leave(page)
-		end
-
-		if self._page_grids[grid_index] and self._page_grids[grid_index].entry and self._page_grids[grid_index].entry.enter then
-			local page = self._page_grids[grid_index]
-
-			self._page_grids[grid_index].entry.enter(page)
 		end
 	end
 
@@ -2056,7 +2066,7 @@ CharacterAppearanceView._load_appearance_icon = function (self, widget, prioriti
 	self._character_create.set_item_per_slot_preview(self._character_create, widget.content.slot_name, widget.content.entry.value, profile)
 
 	local cb = callback(self, "_set_player_icon", widget)
-	profile.character_id = widget.index
+	profile.character_id = math:uuid()
 	local icon_load_id = Managers.ui:load_appearance_portrait(profile, cb, nil, prioritized)
 	widget.content.icon_load_id = icon_load_id
 	widget.content.icon_profile = profile
@@ -2074,7 +2084,7 @@ CharacterAppearanceView._update_appearance_icon = function (self)
 
 				self._character_create.set_item_per_slot_preview(self._character_create, widget.content.slot_name, widget.content.entry.value, profile)
 
-				profile.character_id = j
+				profile.character_id = widget.content.icon_profile and widget.content.icon_profile.character_id or math:uuid()
 
 				Managers.event:trigger("event_player_appearance_updated", profile)
 			end
@@ -2171,17 +2181,7 @@ CharacterAppearanceView._on_close_pressed = function (self)
 		self._backstory_selection_page.leave(true)
 		self:_open_page(self._active_page_number)
 	elseif not self._using_cursor_navigation and #self._page_grids > 1 and self._navigation.grid > 1 and self._active_page_name == "appearance" then
-		local current_navigation_position = 1
-
-		for i = 1, #self._page_grids[1].widgets do
-			local widget = self._page_grids[1].widgets[i]
-
-			if widget.content.element_selected == true then
-				current_navigation_position = i
-
-				break
-			end
-		end
+		local current_navigation_position = self._selected_appearance_option_index or 1
 
 		self:_update_current_navigation_position(1, current_navigation_position)
 	elseif self._active_page_number > 1 then
@@ -2607,6 +2607,7 @@ CharacterAppearanceView._hide_pages_widgets = function (self)
 	self._widgets_by_name.backstory_background.content.visible = false
 	self._widgets_by_name.choice_detail.content.visible = false
 	self._widgets_by_name.backstory_text.alpha_multiplier = 0
+	self._widgets_by_name.transition_fade.alpha_multiplier = 0
 end
 
 CharacterAppearanceView._destroy_generated_widgets = function (self, start_index)
@@ -2671,6 +2672,11 @@ CharacterAppearanceView._update_final_page_text = function (self)
 	local formative_event_snippet = FormativeEvent[self._character_create:formative_event()].story_snippet
 	local crime_snippet = Crimes[self._character_create:crime()].story_snippet
 	local end_snippet = Localize("loc_character_backstory_snippet")
+
+	if self._is_barber_mindwipe then
+		end_snippet = Localize("loc_character_backstory_snippet_mindwipe")
+	end
+
 	local backstory_text_widget = self._widgets_by_name.backstory_text
 	local backstory_title_widget = self._widgets_by_name.backstory_title
 	local input_widget = self._widgets_by_name.name_input_widget
@@ -2737,7 +2743,7 @@ CharacterAppearanceView._show_final_page = function (self, page)
 	local size = template.size
 	local widget_definition = UIWidget.create_definition(pass_template, "name_input", nil, size)
 	local widget = self:_create_widget(name, widget_definition)
-	local character_name = self._character_create:name()
+	local character_name = self._original_name or self._character_create:name()
 	widget.content.template_type = template_type
 
 	template.init(self, widget, character_name)
@@ -2845,9 +2851,9 @@ CharacterAppearanceView._set_character_height = function (self, scale_factor)
 	self._character_create:set_height(scale_factor)
 end
 
-CharacterAppearanceView._get_appearance_category_options = function (self, category_entry_options)
-	local selected_data_slot = {}
+local selected_data_slot = {}
 
+CharacterAppearanceView._get_appearance_category_options = function (self, category_entry_options)
 	local function on_pressed_function(function_name, value, value_key)
 		local character_create = self._character_create
 
@@ -2901,7 +2907,37 @@ CharacterAppearanceView._get_appearance_category_options = function (self, categ
 		end
 	end
 
-	local function select_eye_by_type(new_option, slot_name)
+	local function update_selected_eye_on_types(selected_option)
+		local selected_color_name = selected_option.material_overrides[1]
+
+		for i = 1, #eye_types do
+			local eye_type = eye_types[i]
+
+			if eye_type.search_string then
+				selected_color_name = string.gsub(selected_color_name, eye_type.search_string, "")
+			end
+		end
+
+		selected_color_name = string.gsub(selected_color_name, "_", "")
+
+		if selected_color_name == "eyes" then
+			selected_color_name = "eyes_blind_both"
+		end
+
+		for i = 1, #eye_types do
+			for j = 1, #self._eye_options_by_type[eye_types[i].name] do
+				local eye_option = self._eye_options_by_type[eye_types[i].name][j]
+
+				if string.find(string.gsub(eye_option.material_overrides[1], "_", ""), selected_color_name) then
+					eye_types[i].selected_color_name = selected_color_name
+
+					break
+				end
+			end
+		end
+	end
+
+	local function get_eye_by_type(option, slot_name)
 		local current_option = self._character_create.slot_item(self._character_create, slot_name)
 		local current_option_type_index = get_eye_type_index_by_option(current_option)
 		local current_option_type = eye_types[current_option_type_index]
@@ -2912,7 +2948,7 @@ CharacterAppearanceView._get_appearance_category_options = function (self, categ
 		end
 
 		current_option_name = string.gsub(current_option_name, "_", "")
-		local new_eye_type_name = new_option.name
+		local new_eye_type_name = option.name
 		local new_eye_options_by_type = self._eye_options_by_type[new_eye_type_name]
 		local selected_option = nil
 
@@ -2920,8 +2956,8 @@ CharacterAppearanceView._get_appearance_category_options = function (self, categ
 			local eye_option = new_eye_options_by_type[i]
 			local eye_option_name = eye_option.material_overrides[1]
 
-			if new_option.search_string then
-				eye_option_name = string.gsub(eye_option_name, new_option.search_string, "")
+			if option.search_string then
+				eye_option_name = string.gsub(eye_option_name, option.search_string, "")
 			end
 
 			eye_option_name = string.gsub(eye_option_name, "_", "")
@@ -2933,9 +2969,40 @@ CharacterAppearanceView._get_appearance_category_options = function (self, categ
 			end
 		end
 
+		local new_eye_type = nil
+
+		for i = 1, #eye_types do
+			local name = eye_types[i].name
+
+			if name == new_eye_type_name then
+				new_eye_type = eye_types[i]
+
+				break
+			end
+		end
+
+		if not selected_option and new_eye_type and new_eye_type.selected_color_name then
+			for i = 1, #new_eye_options_by_type do
+				local eye_option = new_eye_options_by_type[i]
+				local eye_option_name = eye_option.material_overrides[1]
+
+				if option.search_string then
+					eye_option_name = string.gsub(eye_option_name, option.search_string, "")
+				end
+
+				eye_option_name = string.gsub(eye_option_name, "_", "")
+
+				if eye_option_name == new_eye_type.selected_color_name then
+					selected_option = eye_option
+
+					break
+				end
+			end
+		end
+
 		selected_option = selected_option or new_eye_options_by_type[1]
 
-		self._character_create.set_item_per_slot(self._character_create, slot_name, selected_option)
+		return selected_option
 	end
 
 	local function get_type_by_eye(slot_name)
@@ -2943,6 +3010,31 @@ CharacterAppearanceView._get_appearance_category_options = function (self, categ
 		local index = get_eye_type_index_by_option(current_option)
 
 		return eye_types[index]
+	end
+
+	local function select_eye_by_type(new_option, slot_name)
+		local selected_option = get_eye_by_type(new_option, slot_name)
+
+		update_selected_eye_on_types(selected_option)
+
+		selected_data_slot[slot_name] = selected_option
+		local character_create = self._character_create
+
+		character_create:set_item_per_slot(slot_name, selected_option)
+	end
+
+	local function preview_eye_by_type(new_option, slot_name)
+		local selected_option = get_eye_by_type(new_option, slot_name)
+		local character_create = self._character_create
+
+		if not selected_data_slot[slot_name] then
+			local current_value = character_create:slot_item(slot_name)
+			selected_data_slot[slot_name] = current_value
+		end
+
+		if slot_name then
+			character_create:set_item_per_slot(slot_name, selected_option)
+		end
 	end
 
 	local category_options = {}
@@ -3020,30 +3112,20 @@ CharacterAppearanceView._get_appearance_category_options = function (self, categ
 
 						local page = self._pages[self._active_page_number]
 						page.content = self:_get_appearance_content()
-						local current_index = nil
 
-						for k = 1, #self._page_grids[1].widgets do
-							local widget = self._page_grids[1].widgets[k]
-
-							if widget.content.element_selected == true then
-								current_index = k
-							end
-						end
-
-						if current_index then
-							self:_open_appearance_options(current_index, true)
-						end
-
+						self:_open_appearance_options(self._selected_appearance_option_index, true)
 						self:_update_appearance_selection()
-
-						local page = self._pages[self._active_page_number]
-
 						self:_check_appearance_continue_block(page.content)
-						self:_update_appearance_icon()
 					end,
 					on_preview_function = function (widget)
 						if not self._using_cursor_navigation then
-							select_eye_by_type(option, entry_slot_name)
+							preview_eye_by_type(option, entry_slot_name)
+
+							local page = self._pages[self._active_page_number]
+							page.content = self:_get_appearance_content()
+							local options = self._pages[self._active_page_number].content.options[self._selected_appearance_option_index].options[2]
+
+							self:_populate_page_grid(3, options)
 							self:_check_widget_choice_detail_visibility(widget)
 						end
 					end
@@ -3058,6 +3140,12 @@ CharacterAppearanceView._get_appearance_category_options = function (self, categ
 				end
 
 				preview_reset()
+
+				local page = self._pages[self._active_page_number]
+				page.content = self:_get_appearance_content()
+				local options = self._pages[self._active_page_number].content.options[self._selected_appearance_option_index].options[2]
+
+				self:_populate_page_grid(3, options)
 			end
 		elseif entry_type == "eye_color" then
 			for j = 1, #entry_options do
@@ -3069,6 +3157,10 @@ CharacterAppearanceView._get_appearance_category_options = function (self, categ
 					value = option,
 					color = hsv_eye,
 					on_pressed_function = function (widget)
+						update_selected_eye_on_types(option)
+
+						selected_data_slot[entry_slot_name] = option
+
 						on_pressed_function("set_item_per_slot", option, entry_slot_name)
 
 						local page = self._pages[self._active_page_number]
@@ -3171,13 +3263,7 @@ CharacterAppearanceView._get_appearance_category_options = function (self, categ
 
 							self:_populate_page_grid(1, page.content)
 							self:_check_appearance_continue_block(page.content)
-							self._character_create:reset_height()
 
-							local height = self._character_create:height()
-
-							self:_set_character_height(height)
-
-							self._height_changed = true
 							local current_widget = self._page_grids[1].widgets[current_navigation_position]
 							current_widget.content.element_selected = true
 							current_widget.content.hotspot.is_selected = true
@@ -3545,7 +3631,7 @@ CharacterAppearanceView._get_appearance_content = function (self)
 	}
 	local gender_options = self._character_create:gender_options()
 
-	if not self._is_barber and gender_options and #gender_options > 1 then
+	if not self._is_barber_appearance and gender_options and #gender_options > 1 then
 		appearance_options[#appearance_options + 1] = {
 			select_on_navigation = true,
 			icon = "content/ui/materials/icons/item_types/body_types",
@@ -4400,9 +4486,9 @@ CharacterAppearanceView._get_pages = function (self)
 				local option = page.content.get_value_function()
 
 				if option then
-					local persoanlity_settings = Personalities[option]
+					local personality_settings = Personalities[option]
 
-					self:_populate_backstory_info(persoanlity_settings)
+					self:_populate_backstory_info(personality_settings)
 				end
 			end,
 			leave = function ()
@@ -4444,21 +4530,7 @@ CharacterAppearanceView._get_pages = function (self)
 			gear_visible = true,
 			show_character = true,
 			enter = function (page)
-				local profile = self._character_create:profile()
-				local selected_archetype = profile.archetype.name
-				local selected_gender = self._character_create:gender()
-
-				if self._character_name_status.archetype ~= selected_archetype or self._character_name_status.gender ~= selected_gender then
-					self._character_name_status.archetype = selected_archetype
-					self._character_name_status.gender = selected_gender
-
-					self._character_create:_fetch_suggested_names_by_profile():next(function ()
-						if self._character_name_status.custom == false then
-							self:_randomize_character_name()
-						end
-					end)
-				end
-
+				self:_fetch_suggested_names()
 				self:_populate_page_grid(1, page.content)
 				self:_show_default_page(page)
 
@@ -4567,7 +4639,7 @@ CharacterAppearanceView._check_appearance_continue_block = function (self, page_
 							if should_present_option and should_present_option.should_present_option == false then
 								block_continue = true
 								is_blocked = true
-							elseif self._is_barber then
+							elseif self._is_barber_appearance then
 								local slot = selected_option.value.slots and selected_option.value.slots[1]
 
 								if slot then
@@ -4588,7 +4660,7 @@ CharacterAppearanceView._check_appearance_continue_block = function (self, page_
 		end
 	end
 
-	if not is_blocked and not profile_changes and self._is_barber then
+	if not is_blocked and not profile_changes and self._is_barber_appearance then
 		for i = 1, #self._block_continue[self._active_page_number] do
 			self._block_continue[self._active_page_number][i] = true
 		end
@@ -4634,7 +4706,7 @@ CharacterAppearanceView._check_valid_appearance_options = function (self, catego
 			local option = options[f]
 			local should_present_option = self:_should_present_option(option)
 
-			if self._is_barber and should_present_option.should_present_option == false and should_present_option.reason then
+			if self._is_barber_appearance and should_present_option.should_present_option == false and should_present_option.reason then
 				should_present_option.reason = nil
 			end
 
@@ -4702,7 +4774,7 @@ CharacterAppearanceView._check_valid_personality_options = function (self, optio
 		}
 		local should_present_option = self:_should_present_option(personality_options)
 
-		if self._is_barber and should_present_option.should_present_option == false and should_present_option.reason then
+		if self._is_barber_appearance and should_present_option.should_present_option == false and should_present_option.reason then
 			should_present_option.reason = nil
 		end
 
@@ -4750,6 +4822,23 @@ CharacterAppearanceView._check_valid_personality_options = function (self, optio
 	filtered_options = temp_backstory_enabled
 
 	return filtered_options
+end
+
+CharacterAppearanceView._fetch_suggested_names = function (self)
+	local profile = self._character_create:profile()
+	local selected_archetype = profile.archetype.name
+	local selected_gender = self._character_create:gender()
+
+	if self._character_name_status.archetype ~= selected_archetype or self._character_name_status.gender ~= selected_gender then
+		self._character_name_status.archetype = selected_archetype
+		self._character_name_status.gender = selected_gender
+
+		self._character_create:_fetch_suggested_names_by_profile():next(function ()
+			if self._character_name_status.custom == false then
+				self:_randomize_character_name()
+			end
+		end)
+	end
 end
 
 CharacterAppearanceView._create_errors_name_input = function (self, errors)

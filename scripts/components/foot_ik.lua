@@ -187,17 +187,12 @@ FootIk.sampling = function (self, surface_sample, past_surface_sample, leaning_s
 end
 
 FootIk._get_feet_grounded_weights = function (self)
-	local grounded_pos = Unit.local_position(self._unit, self._grounded_node)
-
-	return {
-		left = grounded_pos.x,
-		right = grounded_pos.y
-	}
+	return Unit.local_position(self._unit, self._grounded_node)
 end
 
 FootIk.feet_are_on_ground = function (self)
 	local feet_weights = self:_get_feet_grounded_weights()
-	local avg = (feet_weights.left + feet_weights.right) * 0.5
+	local avg = (feet_weights.x + feet_weights.y) * 0.5
 
 	return avg > 0.25
 end
@@ -304,14 +299,14 @@ FootIk._get_foot_surface_data = function (self, unit_pose, foot_pose, weight, or
 end
 
 FootIk._surface_sampling = function (self, unit_pose, left_ref_pose, right_ref_pose, feet_weights, surface_sample, past_surface_sample)
-	surface_sample.left = self:_get_foot_surface_data(unit_pose, left_ref_pose, feet_weights.left, self._left_orient_ref, self._left_orient_ref_parent, false)
-	surface_sample.right = self:_get_foot_surface_data(unit_pose, right_ref_pose, feet_weights.right, self._right_orient_ref, self._right_orient_ref_parent, true)
+	surface_sample.left = self:_get_foot_surface_data(unit_pose, left_ref_pose, feet_weights.x, self._left_orient_ref, self._left_orient_ref_parent, false)
+	surface_sample.right = self:_get_foot_surface_data(unit_pose, right_ref_pose, feet_weights.y, self._right_orient_ref, self._right_orient_ref_parent, true)
 	surface_sample.hips = {
 		move = Vector3.zero()
 	}
 
 	if surface_sample.left.hit_type == hit_types.down and surface_sample.right.hit_type == hit_types.down then
-		if surface_sample.left.hit_distance * feet_weights.left > surface_sample.right.hit_distance * feet_weights.right then
+		if surface_sample.left.hit_distance * feet_weights.x > surface_sample.right.hit_distance * feet_weights.y then
 			surface_sample.hips.move = Vector3(0, 0, surface_sample.left.move.z)
 		else
 			surface_sample.hips.move = Vector3(0, 0, surface_sample.right.move.z)

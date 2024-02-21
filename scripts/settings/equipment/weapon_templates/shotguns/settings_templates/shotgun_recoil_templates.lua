@@ -451,6 +451,216 @@ recoil_templates.shotgun_killshot_m2_special = {
 		}
 	}
 }
+recoil_templates.assault_recoil_shotgun_p2 = {
+	still = {
+		camera_recoil_percentage = 2.5,
+		rise_duration = 0.05,
+		rise = {
+			{
+				lerp_perfect = 0.15,
+				lerp_basic = 0.8
+			}
+		},
+		decay = {
+			shooting = {
+				lerp_perfect = 0.3,
+				lerp_basic = 0.2
+			},
+			idle = {
+				lerp_perfect = 1.25,
+				lerp_basic = 0.75
+			}
+		},
+		offset = assault_offset_range,
+		offset_random_range = assault_random_range,
+		offset_limit = {
+			yaw = 2,
+			pitch = 2
+		},
+		visual_recoil_settings = {
+			intensity = 30,
+			lerp_scalar = 1,
+			yaw_intensity = 7
+		},
+		new_influence_percent = {
+			lerp_perfect = 0.5,
+			lerp_basic = 0.7
+		},
+		aim_assist = {
+			multiplier_function = AIM_ASSIST_MULTIPLIER_FUNCTIONS.unmodified_inverted_unsteadiness
+		}
+	},
+	moving = {
+		inherits = {
+			"assault_recoil_shotgun_p2",
+			"still"
+		},
+		new_influence_percent = {
+			lerp_perfect = 0.4,
+			lerp_basic = 0.6
+		}
+	},
+	crouch_still = {
+		inherits = {
+			"assault_recoil_shotgun_p2",
+			"still"
+		},
+		new_influence_percent = {
+			lerp_perfect = 0.3,
+			lerp_basic = 0.5
+		}
+	},
+	crouch_moving = {
+		inherits = {
+			"assault_recoil_shotgun_p2",
+			"still"
+		},
+		new_influence_percent = {
+			lerp_perfect = 0.35,
+			lerp_basic = 0.55
+		}
+	}
+}
+recoil_templates.assault_recoil_shotgun_p2_ads = {
+	still = {
+		camera_recoil_percentage = 1,
+		rise_duration = 0.05,
+		rise = {
+			{
+				lerp_perfect = 0.15,
+				lerp_basic = 0.8
+			}
+		},
+		decay = {
+			shooting = {
+				lerp_perfect = 0.3,
+				lerp_basic = 0.2
+			},
+			idle = {
+				lerp_perfect = 1.25,
+				lerp_basic = 0.75
+			}
+		},
+		offset = assault_offset_range,
+		offset_random_range = assault_random_range,
+		offset_limit = {
+			yaw = 2,
+			pitch = 2
+		},
+		visual_recoil_settings = {
+			intensity = 20,
+			lerp_scalar = 1,
+			yaw_intensity = 7
+		},
+		new_influence_percent = {
+			lerp_perfect = 0.5,
+			lerp_basic = 0.7
+		},
+		aim_assist = {
+			multiplier_function = AIM_ASSIST_MULTIPLIER_FUNCTIONS.unmodified_inverted_unsteadiness
+		}
+	},
+	moving = {
+		inherits = {
+			"assault_recoil_shotgun_p2_ads",
+			"still"
+		},
+		new_influence_percent = {
+			lerp_perfect = 0.4,
+			lerp_basic = 0.6
+		}
+	},
+	crouch_still = {
+		inherits = {
+			"assault_recoil_shotgun_p2_ads",
+			"still"
+		},
+		new_influence_percent = {
+			lerp_perfect = 0.3,
+			lerp_basic = 0.5
+		}
+	},
+	crouch_moving = {
+		inherits = {
+			"assault_recoil_shotgun_p2_ads",
+			"still"
+		},
+		new_influence_percent = {
+			lerp_perfect = 0.35,
+			lerp_basic = 0.55
+		}
+	}
+}
+recoil_templates.special_recoil_shotgun_p2 = {
+	still = {
+		camera_recoil_percentage = 1,
+		rise_duration = 0.035,
+		rise = {
+			{
+				lerp_perfect = 0.43,
+				lerp_basic = 0.43
+			}
+		},
+		decay = {
+			shooting = {
+				lerp_perfect = 0.4,
+				lerp_basic = 0.2
+			},
+			idle = {
+				lerp_perfect = 0.5,
+				lerp_basic = 0.5
+			}
+		},
+		offset = special_offset,
+		offset_random_range = special_random_offset,
+		offset_limit = {
+			yaw = 5,
+			pitch = 6
+		},
+		new_influence_percent = {
+			lerp_perfect = 0.95,
+			lerp_basic = 0.95
+		},
+		aim_assist = {
+			multiplier_function = AIM_ASSIST_MULTIPLIER_FUNCTIONS.unmodified_inverted_unsteadiness
+		},
+		visual_recoil_settings = {
+			intensity = 15,
+			lerp_scalar = 0.9,
+			yaw_intensity = 5.7
+		}
+	},
+	moving = {
+		inherits = {
+			"special_recoil_shotgun_p2",
+			"still"
+		},
+		new_influence_percent = {
+			lerp_perfect = 0.8,
+			lerp_basic = 0.8
+		}
+	},
+	crouch_still = {
+		inherits = {
+			"special_recoil_shotgun_p2",
+			"still"
+		},
+		new_influence_percent = {
+			lerp_perfect = 0.7,
+			lerp_basic = 0.7
+		}
+	},
+	crouch_moving = {
+		inherits = {
+			"special_recoil_shotgun_p2",
+			"still"
+		},
+		new_influence_percent = {
+			lerp_perfect = 0.9,
+			lerp_basic = 0.9
+		}
+	}
+}
 
 return {
 	base_templates = recoil_templates,

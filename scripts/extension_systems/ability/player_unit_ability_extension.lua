@@ -112,10 +112,10 @@ PlayerUnitAbilityExtension.extensions_ready = function (self, world, unit)
 	local first_person_extension = ScriptUnit.extension(unit, "first_person_system")
 	local first_person_unit = first_person_extension:first_person_unit()
 	local visual_loadout_extension = ScriptUnit.extension(unit, "visual_loadout_system")
-	local specialization_extension = ScriptUnit.extension(unit, "specialization_system")
+	local talent_extension = ScriptUnit.extension(unit, "talent_system")
 	self._visual_loadout_extension = visual_loadout_extension
 	self._buff_extension = ScriptUnit.extension(unit, "buff_system")
-	self._specialization_extension = specialization_extension
+	self._talent_extension = talent_extension
 	self._fx_extension = ScriptUnit.extension(unit, "fx_system")
 	action_context.first_person_unit = first_person_unit
 	action_context.world = self._world
@@ -147,7 +147,7 @@ PlayerUnitAbilityExtension.extensions_ready = function (self, world, unit)
 		unit = unit,
 		unit_data_extension = unit_data_extension,
 		inventory_component = unit_data_extension:read_component("inventory"),
-		specialization_extension = specialization_extension,
+		talent_extension = talent_extension,
 		buff_extension = ScriptUnit.extension(unit, "buff_system")
 	}
 end
@@ -421,7 +421,7 @@ PlayerUnitAbilityExtension._condition_func_params = function (self)
 	temp_table.ability_extension = self
 	temp_table.input_extension = self._input_extension
 	temp_table.unit_data_extension = self._unit_data_extension
-	temp_table.specialization_extension = self._specialization_extension
+	temp_table.talent_extension = self._talent_extension
 
 	return temp_table
 end
@@ -519,11 +519,11 @@ PlayerUnitAbilityExtension.can_wield = function (self, slot_name, previous_check
 end
 
 PlayerUnitAbilityExtension.can_be_scroll_wielded = function (self, slot_name)
-	local specialization_extension = self._specialization_extension
+	local talent_extension = self._talent_extension
 
 	for _, ability_slot_name in pairs(ability_configuration) do
 		if ability_slot_name == slot_name then
-			local allows_quick_throwing = specialization_extension:has_special_rule(special_rules.enable_quick_throw_grenades)
+			local allows_quick_throwing = talent_extension:has_special_rule(special_rules.enable_quick_throw_grenades)
 
 			if allows_quick_throwing then
 				return false

@@ -658,9 +658,9 @@ ActionHandler._validate_action = function (self, action_settings, condition_func
 	if ActionAvailability.needs_ammo(action_settings) then
 		local inventory_component = self._inventory_component
 		local wielded_slot = inventory_component.wielded_slot
-		local ammo = Ammo.current_slot_clip_amount(self._unit, wielded_slot)
+		local ammo, reserve = Ammo.current_slot_clip_amount(self._unit, wielded_slot)
 
-		if ammo <= 0 and not action_settings.allow_even_if_out_of_ammo then
+		if ammo <= 0 and not action_settings.allow_even_if_out_of_ammo and reserve > 0 then
 			return false
 		end
 	end

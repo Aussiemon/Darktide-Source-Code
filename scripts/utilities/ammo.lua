@@ -133,10 +133,11 @@ local Ammo = {
 			local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
 			local wieldable_component = unit_data_extension:read_component(slot_name)
 			local ammo_clip = wieldable_component.current_ammunition_clip
+			local ammo_reserve = wieldable_component.current_ammunition_reserve
 
-			return ammo_clip
+			return ammo_clip, ammo_reserve
 		else
-			return 0
+			return 0, 0
 		end
 	end,
 	max_slot_clip_amount = function (unit, slot_name)

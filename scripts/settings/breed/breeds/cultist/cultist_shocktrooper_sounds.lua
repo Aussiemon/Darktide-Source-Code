@@ -14,9 +14,12 @@ local sound_data = {
 		run_foley = "wwise/events/minions/play_shared_foley_traitor_guard_heavy_run_type_2"
 	},
 	use_proximity_culling = {
+		footstep_land = false,
 		vce_death = false,
-		vce_hurt = false,
-		stop_vce = false
+		vce_melee_attack_short = false,
+		stop_vce = false,
+		footstep = false,
+		vce_hurt = false
 	}
 }
 

@@ -50,7 +50,7 @@ EndView.init = function (self, settings, context)
 	self._has_shown_summary_view = false
 	self._fetch_party_done = false
 
-	EndView.super.init(self, definitions, settings)
+	EndView.super.init(self, definitions, settings, context)
 
 	self._pass_draw = false
 	self._pass_input = true
@@ -1008,6 +1008,7 @@ end
 
 EndView._unload_insignia = function (self, widget)
 	local insignia_style = widget.style.character_insignia
+	widget.content.character_insignia = "content/ui/materials/nameplates/insignias/default"
 	local material_values = insignia_style.material_values
 	local character_insignia_texture = material_values.texture_map
 	material_values.texture_map = UISettings.insignia_default_texture
@@ -1050,8 +1051,24 @@ EndView._cb_set_player_frame = function (self, widget, item)
 end
 
 EndView._cb_set_player_insignia = function (self, widget, item)
-	local portrait_style = widget.style.character_insignia
-	portrait_style.material_values.texture_map = item.icon
+	local icon_style = widget.style.character_insignia
+	local material_values = icon_style.material_values
+
+	if item.icon_material and item.icon_material ~= "" then
+		widget.content.old_character_insignia = widget.content.character_insignia
+		widget.content.character_insignia = item.icon_material
+
+		if material_values.texture_map then
+			material_values.texture_map = nil
+		end
+	else
+		if widget.content.old_character_insignia then
+			widget.content.character_insignia = widget.content.old_character_insignia
+			widget.content.old_character_insignia = nil
+		end
+
+		material_values.texture_map = item.icon
+	end
 end
 
 EndView.can_skip = function (self)

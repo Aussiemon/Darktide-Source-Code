@@ -80,7 +80,7 @@ local function on_path_of_trust_chapter_completion(achievement_name)
 		if achievement_name then
 			local player = Managers.player:local_player(1)
 
-			Managers.achievements:unlock_achievement(player, achievement_name)
+			Managers.achievements:unlock_achievement(player, achievement_name, true)
 		end
 	end
 end

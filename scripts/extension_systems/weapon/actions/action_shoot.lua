@@ -11,14 +11,16 @@ local Overheat = require("scripts/utilities/overheat")
 local PlayerUnitData = require("scripts/extension_systems/unit_data/utilities/player_unit_data")
 local PowerLevelSettings = require("scripts/settings/damage/power_level_settings")
 local Recoil = require("scripts/utilities/recoil")
+local ReloadStates = require("scripts/extension_systems/weapon/utilities/reload_states")
 local SmartTargeting = require("scripts/utilities/smart_targeting")
+local SpecialRulesSetting = require("scripts/settings/ability/special_rules_settings")
 local Spread = require("scripts/utilities/spread")
 local Suppression = require("scripts/utilities/attack/suppression")
 local Sway = require("scripts/utilities/sway")
+local TalentSettings = require("scripts/settings/talent/talent_settings")
 local Vo = require("scripts/utilities/vo")
-local TalentSettings = require("scripts/settings/talent/talent_settings_new")
-local SpecialRulesSetting = require("scripts/settings/ability/special_rules_settings")
 local ActionShoot = class("ActionShoot", "ActionWeaponBase")
+local buff_keywords = BuffSettings.keywords
 local proc_events = BuffSettings.proc_events
 local special_rules = SpecialRulesSetting.special_rules
 local DEFUALT_NUM_CRITICAL_SHOTS = 1
@@ -47,8 +49,9 @@ ActionShoot.init = function (self, action_context, action_params, action_setting
 	self._action_module_charge_component = unit_data_extension:write_component("action_module_charge")
 	self._alternate_fire_component = action_context.unit_data_extension:write_component("alternate_fire")
 	self._shooting_status_component = unit_data_extension:write_component("shooting_status")
+	self._weapon_action_component = unit_data_extension:write_component("weapon_action")
 	self._buff_extension = ScriptUnit.extension(self._player_unit, "buff_system")
-	self._specialization_extension = ScriptUnit.has_extension(self._player_unit, "specialization_system")
+	self._talent_extension = ScriptUnit.has_extension(self._player_unit, "talent_system")
 	local player_unit = self._player_unit
 	local first_person_unit = self._first_person_unit
 	local physics_world = self._physics_world
@@ -93,9 +96,9 @@ ActionShoot.start = function (self, action_settings, t, time_scale, params)
 
 	self:_start_warp_charge_action(t)
 
-	local specialization_extension = self._specialization_extension
-	local check_leadbelcher = specialization_extension:has_special_rule(special_rules.ogryn_leadbelcher)
-	local check_leadbelcher_improved = specialization_extension:has_special_rule(special_rules.ogryn_leadbelcher_improved)
+	local talent_extension = self._talent_extension
+	local check_leadbelcher = talent_extension:has_special_rule(special_rules.ogryn_leadbelcher)
+	local check_leadbelcher_improved = talent_extension:has_special_rule(special_rules.ogryn_leadbelcher_improved)
 
 	if check_leadbelcher or check_leadbelcher_improved then
 		local leadbelcher_chance = 0
@@ -113,7 +116,7 @@ ActionShoot.start = function (self, action_settings, t, time_scale, params)
 		local leadbelcher_auto_crit = false
 
 		if self._leadbelcher_shot then
-			leadbelcher_auto_crit = specialization_extension:has_special_rule(special_rules.ogryn_leadbelcher_auto_crit)
+			leadbelcher_auto_crit = talent_extension:has_special_rule(special_rules.ogryn_leadbelcher_auto_crit)
 		end
 
 		self:_check_for_critical_strike(false, true, leadbelcher_auto_crit)
@@ -143,6 +146,13 @@ ActionShoot.start = function (self, action_settings, t, time_scale, params)
 	end
 
 	local inventory_slot_component = self._inventory_slot_component
+	local ammunition_usage = action_settings.ammunition_usage
+
+	if action_settings.activate_special_on_required_ammo and ammunition_usage and ammunition_usage <= inventory_slot_component.current_ammunition_clip then
+		inventory_slot_component.special_active = true
+		self._weapon_action_component.special_active_at_start = true
+	end
+
 	local special_active = inventory_slot_component.special_active
 	local special_recoil_template = nil
 
@@ -154,16 +164,33 @@ ActionShoot.start = function (self, action_settings, t, time_scale, params)
 	weapon_tweak_templates_component.recoil_template_name = special_recoil_template or action_settings.recoil_template or fallback_template.recoil_template or "none"
 	weapon_tweak_templates_component.sway_template_name = action_settings.sway_template or fallback_template.sway_template or "none"
 	weapon_tweak_templates_component.charge_template_name = action_settings.charge_template or weapon_template.charge_template or "none"
+	local reload_state_transitions = action_settings.reload_state_transitions
+
+	if reload_state_transitions then
+		local inventory_slot = self._inventory_slot_component
+		local reload_state = inventory_slot.reload_state
+		local transition_state = reload_state and reload_state_transitions[reload_state]
+
+		if transition_state then
+			inventory_slot_component.reload_state = transition_state
+		end
+	end
 end
 
 ActionShoot.fixed_update = function (self, dt, t, time_in_action)
 	local action_component = self._action_component
 	local action_settings = self._action_settings
 	self._has_shot_this_frame = false
+	local is_auto_fire_weapon = self._is_auto_fire_weapon
+	local fire_state = action_component.fire_state
+	local is_not_auto_and_has_shot = not is_auto_fire_weapon and fire_state == "shot"
 
-	if action_settings.ammunition_usage then
-		local buff_keywords = BuffSettings.keywords
-		local no_ammo_consumption = self._buff_extension:has_keyword(buff_keywords.no_ammo_consumption) or self._leadbelcher_shot
+	if action_settings.ammunition_usage and not is_not_auto_and_has_shot then
+		local is_critical_strike = self._critical_strike_component.is_active
+		local buff_extension = self._buff_extension
+		local has_no_ammo_keyword = buff_extension:has_keyword(buff_keywords.no_ammo_consumption)
+		local has_no_ammo_on_crit_keyword = buff_extension:has_keyword(buff_keywords.no_ammo_consumption_on_crits)
+		local no_ammo_consumption = has_no_ammo_keyword or is_critical_strike and has_no_ammo_on_crit_keyword or self._leadbelcher_shot
 		local has_ammo = ActionUtility.has_ammunition(self._inventory_slot_component, action_settings)
 
 		if not has_ammo and not no_ammo_consumption then
@@ -186,10 +213,14 @@ ActionShoot.fixed_update = function (self, dt, t, time_in_action)
 	end
 
 	if action_component.fire_state == "prepare_shooting" then
-		local buff_keywords = BuffSettings.keywords
-		local no_ammo_consumption = self._buff_extension:has_keyword(buff_keywords.no_ammo_consumption) or self._leadbelcher_shot
+		local is_critical_strike = self._critical_strike_component.is_active
+		local buff_extension = self._buff_extension
+		local has_no_ammo_keyword = buff_extension:has_keyword(buff_keywords.no_ammo_consumption)
+		local has_no_ammo_on_crit_keyword = buff_extension:has_keyword(buff_keywords.no_ammo_consumption_on_crits)
+		local no_ammo_consumption = has_no_ammo_keyword or is_critical_strike and has_no_ammo_on_crit_keyword or self._leadbelcher_shot
+		local has_ammo = ActionUtility.has_ammunition(self._inventory_slot_component, action_settings)
 
-		if no_ammo_consumption or ActionUtility.has_ammunition(self._inventory_slot_component, action_settings) then
+		if no_ammo_consumption or has_ammo then
 			self:_set_fire_state(t, "start_shooting")
 			self:_prepare_shooting(dt, t)
 		else
@@ -217,8 +248,6 @@ ActionShoot.fixed_update = function (self, dt, t, time_in_action)
 
 		local next_fire_state = self:_next_fire_state(dt, t)
 
-		self:_set_fire_state(t, next_fire_state)
-
 		if next_fire_state == "waiting_to_shoot" or next_fire_state == "shot" then
 			self:_spend_ammunition(dt, t, charge_level)
 			self:_add_heat(dt, t, charge_level)
@@ -226,6 +255,8 @@ ActionShoot.fixed_update = function (self, dt, t, time_in_action)
 			self:_trigger_new_charge(t)
 			self:_handle_shot_concluded_stats()
 		end
+
+		self:_set_fire_state(t, next_fire_state)
 	end
 end
 
@@ -267,6 +298,12 @@ ActionShoot._prepare_shooting = function (self, dt, t)
 	local fire_config = action_settings.fire_configuration
 	local anim_event = fire_config.anim_event
 	local anim_event_3p = fire_config.anim_event_3p or anim_event
+
+	if fire_config.anim_event_func then
+		anim_event, anim_event_3p = fire_config.anim_event_func(self._inventory_slot_component)
+		anim_event_3p = anim_event_3p or anim_event
+	end
+
 	local charge_level = 1
 
 	if fire_config.use_charge then
@@ -327,7 +364,6 @@ ActionShoot._spend_ammunition = function (self, dt, t, charge_level)
 	local inventory_slot_component = self._inventory_slot_component
 	local use_charge = action_settings.use_charge
 	local is_critical_strike = self._critical_strike_component.is_active
-	local buff_keywords = BuffSettings.keywords
 	local buff_extension = self._buff_extension
 	local has_no_ammo_keyword = self._leadbelcher_shot or buff_extension:has_keyword(buff_keywords.no_ammo_consumption)
 	local has_no_ammo_on_crit_keyword = buff_extension:has_keyword(buff_keywords.no_ammo_consumption_on_crits)
@@ -424,7 +460,7 @@ ActionShoot._trigger_new_charge = function (self, t)
 	end
 end
 
-ActionShoot._shoot = function (self, position, rotation, power_level, charge_level)
+ActionShoot._shoot = function (self, position, rotation, power_level, charge_level, t)
 	return
 end
 
@@ -784,9 +820,9 @@ ActionShoot._check_for_auto_critical_strike = function (self)
 		return
 	end
 
-	local specialization_extension = self._specialization_extension
-	local check_leadbelcher = specialization_extension:has_special_rule(special_rules.ogryn_leadbelcher)
-	local check_leadbelcher_improved = specialization_extension:has_special_rule(special_rules.ogryn_leadbelcher_improved)
+	local talent_extension = self._talent_extension
+	local check_leadbelcher = talent_extension:has_special_rule(special_rules.ogryn_leadbelcher)
+	local check_leadbelcher_improved = talent_extension:has_special_rule(special_rules.ogryn_leadbelcher_improved)
 
 	if check_leadbelcher or check_leadbelcher_improved then
 		local leadbelcher_chance = 0
@@ -821,7 +857,7 @@ ActionShoot._check_for_auto_critical_strike = function (self)
 	local leadbelcher_auto_crit = false
 
 	if self._leadbelcher_shot then
-		leadbelcher_auto_crit = specialization_extension:has_special_rule(special_rules.ogryn_leadbelcher_auto_crit)
+		leadbelcher_auto_crit = talent_extension:has_special_rule(special_rules.ogryn_leadbelcher_auto_crit)
 	end
 
 	self:_check_for_critical_strike(false, true, leadbelcher_auto_crit)
@@ -919,16 +955,18 @@ end
 ActionShoot._muzzle_fx_source = function (self)
 	local action_settings = self._action_settings
 	local fx = action_settings.fx
+	local alternate_muzzle_flashes = fx.alternate_muzzle_flashes
+	local double_barrel_shotgun_muzzle_flashes = fx.double_barrel_shotgun_muzzle_flashes
 
-	if not fx or not fx.alternate_muzzle_flashes then
-		return self._muzzle_fx_source_name
+	if alternate_muzzle_flashes then
+		local action_component = self._action_component
+		local num_shots_fired = action_component.num_shots_fired
+		local use_primary_node = num_shots_fired % 2 == 0
+
+		return use_primary_node and self._muzzle_fx_source_name or self._muzzle_fx_source_secondary_name
 	end
 
-	local action_component = self._action_component
-	local num_shots_fired = action_component.num_shots_fired
-	local use_primary_node = num_shots_fired % 2 == 0
-
-	return use_primary_node and self._muzzle_fx_source_name or self._muzzle_fx_source_secondary_name
+	return self._muzzle_fx_source_name
 end
 
 ActionShoot._eject_fx_source = function (self)

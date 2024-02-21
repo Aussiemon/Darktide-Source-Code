@@ -453,8 +453,6 @@ CharacterCreate.gender = function (self)
 end
 
 CharacterCreate.randomize_presets = function (self)
-	local gender = self:gender()
-	local breed = self:breed()
 	local presets = self:_presets_options()
 	local preset_index = math.random(1, #presets) or 1
 	local random_preset = presets[preset_index]

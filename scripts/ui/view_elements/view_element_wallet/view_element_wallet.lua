@@ -17,6 +17,7 @@ ViewElementWallet.init = function (self, parent, draw_layer, start_scale)
 		0,
 		0
 	}
+	self._text_options = {}
 end
 
 ViewElementWallet._generate_currencies = function (self, currencies_to_use, widget_size, wallets_per_column, grid_spacing)
@@ -121,7 +122,7 @@ ViewElementWallet._get_wallet_text_size = function (self, widget, currency_name,
 	local amount = self._amount_by_currency[currency_name]
 	local text = TextUtils.format_currency(amount)
 	content.text = text
-	local text_options = UIFonts.get_font_options_by_style(style)
+	local text_options = UIFonts.get_font_options_by_style(style, self._text_options)
 	local size = {
 		1920,
 		1080
@@ -195,10 +196,10 @@ ViewElementWallet._draw_widgets = function (self, dt, t, input_service, ui_rende
 	local recalculate = false
 
 	for name, is_updated in pairs(self._wallets_updated) do
+		self._wallets_updated[name] = nil
+
 		if is_updated then
 			recalculate = true
-
-			break
 		end
 	end
 

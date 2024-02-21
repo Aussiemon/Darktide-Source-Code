@@ -1,5 +1,5 @@
-local TagQuery = require("scripts/extension_systems/dialogue/tag_query")
 local DialogueCategoryConfig = require("scripts/settings/dialogue/dialogue_category_config")
+local TagQuery = require("scripts/extension_systems/dialogue/tag_query")
 local TagQueryDatabase = class("TagQueryDatabase")
 TagQueryDatabase.NUM_DATABASE_RULES = 4095
 
@@ -147,10 +147,18 @@ TagQueryDatabase.num_rules = function (self)
 	return self._rules_n
 end
 
+local best_queries = Script.new_array(8)
+local temp_queries = Script.new_array(16)
+
 TagQueryDatabase.iterate_queries = function (self, t)
+	table.clear_array(best_queries, #best_queries)
+	table.clear_array(temp_queries, #temp_queries)
+
 	local num_iterations = #self._queries
+	local num_temp_queries = 0
 	local best_query = nil
 	local best_query_value = 0
+	local best_query_category, best_query_category_name = nil
 
 	for i = 1, num_iterations do
 		local query = self:_iterate_query(t)
@@ -160,20 +168,47 @@ TagQueryDatabase.iterate_queries = function (self, t)
 			local validated_rule = query.validated_rule
 			local category_name = validated_rule.category
 			local category = DialogueCategoryConfig[category_name]
+
+			if category.multiple_allowed then
+				num_temp_queries = num_temp_queries + 1
+				temp_queries[num_temp_queries] = query
+			end
+
 			local category_score = category.query_score
 			local value = validated_rule.n_criterias + category_score
 
 			if best_query_value < value then
+				best_query_category_name = category_name
+				best_query_category = category
 				best_query_value = value
 				best_query = query
 			elseif value == best_query_value and math.random() > 0.5 then
+				best_query_category_name = category_name
+				best_query_category = category
 				best_query_value = value
 				best_query = query
 			end
 		end
 	end
 
-	return best_query
+	if best_query and best_query_category.multiple_allowed then
+		local num_best_queries = 0
+
+		for i = 1, num_temp_queries do
+			local query = temp_queries[i]
+			local validated_rule = query.validated_rule
+			local category_name = validated_rule.category
+
+			if category_name == best_query_category_name then
+				num_best_queries = num_best_queries + 1
+				best_queries[num_best_queries] = query
+			end
+		end
+	elseif best_query then
+		best_queries[1] = best_query
+	end
+
+	return best_queries
 end
 
 local dummy_table = {}

@@ -82,6 +82,7 @@ UIManager.init = function (self)
 
 	self._input_hold_tracker = InputHoldTracker:new(input_service_name)
 	self._client_waiting_loadout = false
+	self._packages_to_remove = {}
 end
 
 UIManager.update_client_loadout_waiting_state = function (self, state)
@@ -246,6 +247,8 @@ UIManager.create_renderer = function (self, name, world, create_resource_target,
 
 	if create_resource_target then
 		renderer = UIRenderer.create_resource_renderer(world, gui, gui_retained, name, material_name, optional_width, optional_height, ignore_back_buffer)
+	elseif optional_width and optional_height then
+		renderer = UIRenderer.create_viewport_renderer(world, "custom_size", optional_width, optional_height)
 	else
 		renderer = UIRenderer.create_viewport_renderer(world)
 	end
@@ -355,8 +358,7 @@ UIManager._unload_ui_element_packages = function (self, reference_key)
 
 		for reference_name, package_data in pairs(package_references) do
 			local package_id = package_data.id
-
-			package_manager:release(package_id)
+			self._packages_to_remove[#self._packages_to_remove + 1] = package_id
 		end
 	end
 
@@ -387,6 +389,8 @@ UIManager.create_spectator_hud = function (self, world_viewport_name, peer_id, l
 		enable_world_bloom = enable_world_bloom
 	}
 	self._spectator_hud = UIHud:new(elements, visibility_groups, params)
+
+	Managers.event:trigger("event_player_hud_created")
 end
 
 UIManager.destroy_spectator_hud = function (self)
@@ -1548,7 +1552,7 @@ UIManager._unload_package = function (self, package_id, frame_delay_count)
 		}
 		self._handle_package_unload_delay = true
 	else
-		Managers.package:release(package_id)
+		self._packages_to_remove[#self._packages_to_remove + 1] = package_id
 	end
 end
 
@@ -1563,8 +1567,8 @@ UIManager._update_package_unload_delay = function (self)
 
 		if frame_delay < 0 then
 			local package_id = package_info.package_id
+			self._packages_to_remove[#self._packages_to_remove + 1] = package_id
 
-			Managers.package:release(package_id)
 			table.remove(package_unload_list, i)
 
 			if #package_unload_list == 0 then
@@ -2098,6 +2102,17 @@ end
 
 UIManager.get_hud = function (self)
 	return self._hud
+end
+
+UIManager.release_packages = function (self)
+	local packages_to_remove = self._packages_to_remove
+	local package_manager = Managers.package
+
+	for i = 1, #packages_to_remove do
+		package_manager:release(packages_to_remove[i])
+	end
+
+	table.clear(self._packages_to_remove)
 end
 
 return UIManager

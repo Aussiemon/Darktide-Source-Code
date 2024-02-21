@@ -20,6 +20,9 @@ local function value_lerp_2dp(min, max, lerp_t)
 end
 
 local templates = {}
+
+table.make_unique(templates)
+
 local DISPLAY = table.enum("number", "percentage")
 templates.gadget_coherency_aura_lingers = {
 	class_name = "stepped_range_buff",

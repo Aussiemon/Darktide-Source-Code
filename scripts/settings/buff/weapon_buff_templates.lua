@@ -1,4 +1,4 @@
-local AilmentSettings = require("scripts/settings/ailments/ailment_settings")
+AilmentSettings = require("scripts/settings/ailments/ailment_settings")
 local Attack = require("scripts/utilities/attack/attack")
 local AttackSettings = require("scripts/settings/damage/attack_settings")
 local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
@@ -6,15 +6,16 @@ local Breed = require("scripts/utilities/breed")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local BurningSettings = require("scripts/settings/burning/burning_settings")
 local ChainLightning = require("scripts/utilities/action/chain_lightning")
-local ConditionalFunctions = require("scripts/settings/buff/validation_functions/conditional_functions")
+local ConditionalFunctions = require("scripts/settings/buff/helper_functions/conditional_functions")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
 local FixedFrame = require("scripts/utilities/fixed_frame")
 local HitMass = require("scripts/utilities/attack/hit_mass")
 local MinionState = require("scripts/utilities/minion_state")
 local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
+local PowerLevelSettings = require("scripts/settings/damage/power_level_settings")
 local SpecialRulesSetting = require("scripts/settings/ability/special_rules_settings")
-local TalentSettings = require("scripts/settings/talent/talent_settings_new")
+local TalentSettings = require("scripts/settings/talent/talent_settings")
 local ailment_effects = AilmentSettings.effects
 local buff_keywords = BuffSettings.keywords
 local buff_proc_events = BuffSettings.proc_events
@@ -26,37 +27,42 @@ local minion_burning_buff_effects = BurningSettings.buff_effects.minions
 local special_rules = SpecialRulesSetting.special_rules
 local stagger_results = AttackSettings.stagger_results
 local CHAIN_LIGHTNING_POWER_LEVEL = 500
+local DEFAULT_POWER_LEVEL = PowerLevelSettings.default_power_level
+local PI = math.pi
+local PI_2 = PI * 2
 local psyker_talent_settings = TalentSettings.psyker_2
-local templates = {
-	flamer_assault = {
-		interval = 0.5,
-		duration = 4,
-		buff_id = "flamer_assault",
-		interval_stack_removal = true,
-		predicted = false,
-		refresh_duration_on_stack = true,
-		max_stacks_cap = 31,
-		max_stacks = 31,
-		class_name = "interval_buff",
-		keywords = {
-			buff_keywords.burning
-		},
-		interval_func = function (template_data, template_context, template)
-			local unit = template_context.unit
+local templates = {}
 
-			if HEALTH_ALIVE[unit] then
-				local damage_template = DamageProfileTemplates.burning
-				local stack_multiplier = template_context.stack_count / template.max_stacks
-				local smoothstep_multiplier = stack_multiplier * stack_multiplier * (3 - 2 * stack_multiplier)
-				local power_level = smoothstep_multiplier * 500
-				local owner_unit = template_context.is_server and template_context.owner_unit
-				local source_item = template_context.is_server and template_context.source_item
+table.make_unique(templates)
 
-				Attack.execute(unit, damage_template, "power_level", power_level, "damage_type", damage_types.burning, "attacking_unit", owner_unit, "item", source_item)
-			end
-		end,
-		minion_effects = minion_burning_buff_effects.fire
-	}
+templates.flamer_assault = {
+	interval = 0.5,
+	duration = 4,
+	buff_id = "flamer_assault",
+	interval_stack_removal = true,
+	predicted = false,
+	refresh_duration_on_stack = true,
+	max_stacks_cap = 31,
+	max_stacks = 31,
+	class_name = "interval_buff",
+	keywords = {
+		buff_keywords.burning
+	},
+	interval_func = function (template_data, template_context, template)
+		local unit = template_context.unit
+
+		if HEALTH_ALIVE[unit] then
+			local damage_template = DamageProfileTemplates.burning
+			local stack_multiplier = template_context.stack_count / template.max_stacks
+			local smoothstep_multiplier = stack_multiplier * stack_multiplier * (3 - 2 * stack_multiplier)
+			local power_level = smoothstep_multiplier * 500
+			local owner_unit = template_context.is_server and template_context.owner_unit
+			local source_item = template_context.is_server and template_context.source_item
+
+			Attack.execute(unit, damage_template, "power_level", power_level, "damage_type", damage_types.burning, "attacking_unit", owner_unit, "item", source_item)
+		end
+	end,
+	minion_effects = minion_burning_buff_effects.fire
 }
 local warpfire_broadphase_results = {}
 templates.warp_fire = {
@@ -99,11 +105,11 @@ templates.warp_fire = {
 
 		if stacks_to_share then
 			local owner_unit = template_context.owner_unit
-			local specialization_extension = ScriptUnit.has_extension(owner_unit, "specialization_system")
+			local talent_extension = ScriptUnit.has_extension(owner_unit, "talent_system")
 
-			if specialization_extension then
+			if talent_extension then
 				local spread_warpfire_on_kill = special_rules.psyker_spread_warpfire_on_kill
-				local has_special_rule = specialization_extension:has_special_rule(spread_warpfire_on_kill)
+				local has_special_rule = talent_extension:has_special_rule(spread_warpfire_on_kill)
 
 				if has_special_rule then
 					local broadphase_system = Managers.state.extension:system("broadphase_system")
@@ -217,6 +223,16 @@ templates.bleed = {
 		}
 	}
 }
+templates.increase_damage_taken = {
+	predicted = false,
+	refresh_duration_on_stack = true,
+	max_stacks = 8,
+	duration = 5,
+	class_name = "buff",
+	stat_buffs = {
+		[buff_stat_buffs.damage_taken_modifier] = 0.1
+	}
+}
 templates.increase_impact_received_while_staggered = {
 	predicted = false,
 	refresh_duration_on_stack = true,
@@ -234,7 +250,6 @@ templates.increase_damage_received_while_staggered = {
 	duration = 5,
 	class_name = "buff",
 	conditional_stat_buffs = {
-		[buff_stat_buffs.damage_vs_staggered] = 0.05,
 		[buff_stat_buffs.damage_vs_staggered] = 0.1
 	},
 	conditional_stat_buffs_func = function (template_data, template_context)
@@ -318,15 +333,57 @@ templates.power_maul_shock_hit = {
 
 		return stagger_result == stagger_results.stagger and damage_efficiency == damage_efficiencies.full
 	end,
-	proc_func = function (params, template_data, template_context)
+	proc_func = function (params, template_data, template_context, t)
 		if template_context.is_server then
 			local attacked_unit = params.attacked_unit
 			local stick_to_buff_extension = ScriptUnit.has_extension(attacked_unit, "buff_system")
 
 			if stick_to_buff_extension then
-				local t = FixedFrame.get_latest_fixed_time()
-
 				stick_to_buff_extension:add_internally_controlled_buff("shock_effect", t)
+			end
+		end
+	end
+}
+templates.power_maul_stun = {
+	start_interval_on_apply = true,
+	buff_id = "power_maul_stun",
+	max_stacks = 1,
+	predicted = false,
+	refresh_duration_on_stack = true,
+	max_stacks_cap = 1,
+	duration = 3,
+	start_with_frame_offset = true,
+	class_name = "interval_buff",
+	keywords = {
+		buff_keywords.electrocuted
+	},
+	interval = {
+		0.3,
+		0.8
+	},
+	interval_func = function (template_data, template_context, template, dt, t)
+		local is_server = template_context.is_server
+
+		if not is_server then
+			return
+		end
+
+		local unit = template_context.unit
+
+		if ALIVE[unit] and HEALTH_ALIVE[unit] then
+			local damage_template = DamageProfileTemplates.shock_grenade_stun_interval
+			local owner_unit = template_context.owner_unit
+			local power_level = DEFAULT_POWER_LEVEL
+			local random_radians = math.random_range(0, PI_2)
+			local attack_direction = Vector3(math.sin(random_radians), math.cos(random_radians), 0)
+			attack_direction = Vector3.normalize(attack_direction)
+
+			Attack.execute(unit, damage_template, "power_level", power_level, "damage_type", damage_types.electrocution, "attacking_unit", HEALTH_ALIVE[owner_unit] and owner_unit, "attack_direction", attack_direction)
+
+			local buff_extension = template_context.buff_extension
+
+			if buff_extension then
+				buff_extension:add_internally_controlled_buff("shock_effect", t)
 			end
 		end
 	end

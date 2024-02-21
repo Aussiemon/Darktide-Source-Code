@@ -455,13 +455,16 @@ MinionPerceptionExtension._update_line_of_sight = function (self, unit, target_u
 	local line_of_sight_queue = self._line_of_sight_queue
 	local running_line_of_sight_checks = self._running_line_of_sight_checks
 	local unit_position = POSITION_LOOKUP[unit]
+	local last_los_positions = self._last_los_positions
+	local line_of_sight_lookup = self._line_of_sight_lookup
+	local line_of_sight_lookup_by_id = self._line_of_sight_lookup_by_id
 
 	for i = 1, #target_units do
 		local target_unit = target_units[i]
 
 		if not running_line_of_sight_checks[target_unit] then
 			local target_position = POSITION_LOOKUP[target_unit]
-			local within_detection_los_range = self:_within_detection_los_range(unit, unit_position, target_unit, target_position)
+			local within_detection_los_range, clear_last_los_pos = self:_within_detection_los_range(unit, unit_position, target_unit, target_position)
 
 			if within_detection_los_range then
 				self:_line_of_sight_check(unit, target_unit, los_collision_filter)
@@ -469,9 +472,13 @@ MinionPerceptionExtension._update_line_of_sight = function (self, unit, target_u
 				running_line_of_sight_checks[target_unit] = true
 				line_of_sight_queue[#line_of_sight_queue + 1] = target_unit
 			else
-				self._line_of_sight_lookup[target_unit] = false
+				if clear_last_los_pos then
+					last_los_positions[target_unit] = nil
+				end
 
-				for id, lookup in pairs(self._line_of_sight_lookup_by_id) do
+				line_of_sight_lookup[target_unit] = false
+
+				for id, lookup in pairs(line_of_sight_lookup_by_id) do
 					lookup[target_unit] = false
 				end
 			end
@@ -690,7 +697,13 @@ local BUFF_KEYWORD_DISTANCE_LOS_REQUIREMENT = {
 
 MinionPerceptionExtension._within_detection_los_range = function (self, unit, unit_position, target_unit, target_position)
 	if self._ignore_detection_los_modifiers then
-		return true
+		local is_looking_trough_fog = self._smoke_fog_system:check_fog_los(unit_position, target_position, unit)
+
+		if is_looking_trough_fog then
+			return false, true
+		end
+
+		return true, false
 	end
 
 	local mutator_manager = Managers.state.mutator
@@ -718,16 +731,16 @@ MinionPerceptionExtension._within_detection_los_range = function (self, unit, un
 	local is_within_range = not detection_los_requirement or Vector3.distance(unit_position, target_position) <= detection_los_requirement
 
 	if not is_within_range then
-		return false
+		return false, false
 	end
 
 	local is_looking_trough_fog = self._smoke_fog_system:check_fog_los(unit_position, target_position, unit)
 
 	if is_looking_trough_fog then
-		return false
+		return false, true
 	end
 
-	return true
+	return true, false
 end
 
 return MinionPerceptionExtension

@@ -119,6 +119,11 @@ local channel_metadata = {
 	[ChannelTags.PRIVATE] = {
 		color = clan_channel_color
 	},
+	[ChannelTags.SYSTEM] = {
+		name = "loc_chat_channel_system",
+		always_notify = true,
+		color = Color.ui_orange_medium(255, true)
+	},
 	placeholder = {
 		color = Color.magenta(255, true)
 	}
@@ -128,7 +133,8 @@ local channel_priority = {
 	[ChannelTags.PARTY] = 2,
 	[ChannelTags.HUB] = 3,
 	[ChannelTags.CLAN] = 4,
-	[ChannelTags.PRIVATE] = 5
+	[ChannelTags.PRIVATE] = 5,
+	[ChannelTags.SYSTEM] = 6
 }
 local max_message_length = 256
 local constant_element_chat_settings = {

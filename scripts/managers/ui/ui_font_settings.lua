@@ -413,20 +413,6 @@ local ui_font_settings = {
 			0,
 			2
 		}
-	},
-	talent_group_level = {
-		font_size = 20,
-		drop_shadow = true,
-		text_vertical_alignment = "center",
-		font_type = "proxima_nova_bold",
-		text_horizontal_alignment = "center",
-		text_color = Color.terminal_text_header(255, true),
-		locked_color = {
-			255,
-			169,
-			79,
-			79
-		}
 	}
 }
 

@@ -93,6 +93,21 @@ local mission_templates = {
 		},
 		spawn_settings = {
 			next_mission = "tg_shooting_range"
+		},
+		dialogue_settings = {
+			npc_story_ticker_enabled = true,
+			npc_story_tick_time = 180,
+			short_story_ticker_enabled = false,
+			story_ticker_enabled = false,
+			npc_story_ticker_start_delay = 80 + math.random(0, 120)
+		},
+		mission_brief_vo = {
+			vo_profile = "training_ground_psyker_a",
+			mission_giver_packs = {
+				training_ground_psyker_a = {
+					"training_ground_psyker"
+				}
+			}
 		}
 	}
 }

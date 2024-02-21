@@ -1,6 +1,5 @@
 local ToughnessSettings = require("scripts/settings/toughness/toughness_settings")
-local ToughnessDepleted = require("scripts/utilities/toughness/toughness_depleted")
-local TalentSettings = require("scripts/settings/talent/talent_settings_new")
+local TalentSettings = require("scripts/settings/talent/talent_settings")
 local weapon_toughness_templates = {}
 local replenish_types = ToughnessSettings.replenish_types
 local gunlugger_talent_settings = TalentSettings.ogryn_1

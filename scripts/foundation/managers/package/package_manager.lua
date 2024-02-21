@@ -1,6 +1,6 @@
 local PackageManager = class("PackageManager")
 PackageManager.FIRST_ITEM = 1
-PackageManager.MAX_CONCURRENT_ASYNC_PACKAGES = 20
+PackageManager.MAX_CONCURRENT_ASYNC_PACKAGES = 64
 
 PackageManager.init = function (self)
 	self._packages = {}
@@ -234,6 +234,10 @@ PackageManager.destroy = function (self)
 	for id, item in pairs(self._load_call_data) do
 		self:release(id)
 	end
+end
+
+PackageManager.is_anything_loading_now = function (self)
+	return not table.is_empty(self._asynch_packages)
 end
 
 PackageManager.is_loading_now = function (self, package_name)

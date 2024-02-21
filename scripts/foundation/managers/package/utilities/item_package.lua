@@ -167,6 +167,28 @@ ItemPackage.compile_item_instance_dependencies = function (item, items_dictionar
 		ItemPackage._resolve_item_packages_recursive(attachments, items_dictionary, result)
 	end
 
+	local projectile_items = item.projectile_items
+
+	if projectile_items then
+		for key, item_name in pairs(projectile_items) do
+			if item_name and item_name ~= "" then
+				local item_entry = rawget(items_dictionary, item_name)
+
+				if not item_entry then
+					Log.error("ItemPackage", "Unable to find item %s", item_name)
+
+					return
+				end
+
+				local resource_dependencies = item_entry.resource_dependencies
+
+				for resource_name, _ in pairs(resource_dependencies) do
+					result[resource_name] = true
+				end
+			end
+		end
+	end
+
 	local icon = item.icon
 
 	if icon and icon ~= "" then

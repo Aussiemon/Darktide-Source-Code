@@ -18,8 +18,8 @@ local ItemSlotSettings = require("scripts/settings/item/item_slot_settings")
 local ItemPassTemplates = require("scripts/ui/pass_templates/item_pass_templates")
 local InboxView = class("InboxView", "BaseView")
 
-InboxView.init = function (self, settings)
-	InboxView.super.init(self, Definitions, settings)
+InboxView.init = function (self, settings, context)
+	InboxView.super.init(self, Definitions, settings, context)
 
 	self._stats_animation_progress = {}
 end

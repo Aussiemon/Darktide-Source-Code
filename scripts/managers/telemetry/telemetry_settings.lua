@@ -13,6 +13,7 @@ local settings = {
 		data = {
 			server = string.value_or_nil(DEDICATED_SERVER),
 			testify = string.value_or_nil(GameParameters.testify),
+			testify_test_suite_id = string.value_or_nil(DevParameters.testify_test_suite_id),
 			steam_branch = string.value_or_nil(GameParameters.steam_branch),
 			svn_branch = string.value_or_nil(GameParameters.svn_branch)
 		},

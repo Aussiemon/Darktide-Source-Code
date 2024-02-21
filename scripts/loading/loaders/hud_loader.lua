@@ -78,6 +78,10 @@ HudLoader._load_done_callback = function (self)
 	self._load_done = true
 end
 
+HudLoader.dont_destroy = function (self)
+	return false
+end
+
 implements(HudLoader, Loader)
 
 return HudLoader

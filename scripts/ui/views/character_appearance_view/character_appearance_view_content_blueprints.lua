@@ -9,17 +9,6 @@ local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local grid_size = CharacterAppearanceViewSettings.grid_size
 local grid_width = grid_size[1]
 
-local function terminal_button_change_function(content, style)
-	local is_selected = content.element_selected
-	local color = style.color
-	local default_color = style.default_color
-	local selected_color = style.selected_color
-	style.color[1] = is_selected and selected_color[1] or default_color[1]
-	style.color[2] = is_selected and selected_color[2] or default_color[2]
-	style.color[3] = is_selected and selected_color[3] or default_color[3]
-	style.color[4] = is_selected and selected_color[4] or default_color[4]
-end
-
 local function item_change_function(content, style)
 	local hotspot = content.hotspot
 	local is_selected = content.element_selected
@@ -38,18 +27,6 @@ local function item_change_function(content, style)
 	end
 
 	style.color = color
-end
-
-local function list_button_focused_visibility_function(content, style)
-	local hotspot = content.hotspot
-
-	return hotspot.is_hover
-end
-
-local function list_button_all_visibility_function(content, style)
-	local hotspot = content.hotspot
-
-	return hotspot.is_hover or hotspot.is_selected or hotspot.is_focused or content.element_selected
 end
 
 local blueprints = {
@@ -471,7 +448,7 @@ local blueprints = {
 			{
 				value = "content/ui/materials/base/ui_portrait_base",
 				style_id = "texture",
-				pass_type = "texture_uv",
+				pass_type = "texture",
 				style = {
 					vertical_alignment = "top",
 					horizontal_alignment = "center",
@@ -486,16 +463,6 @@ local blueprints = {
 						rows = 1,
 						columns = 1,
 						grid_index = 1
-					},
-					uvs = {
-						{
-							0,
-							0
-						},
-						{
-							1,
-							1
-						}
 					}
 				}
 			},

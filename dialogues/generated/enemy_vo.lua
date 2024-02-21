@@ -501,7 +501,7 @@ return function ()
 	})
 	define_rule({
 		name = "chaos_ogryn_bulwark_assault",
-		category = "enemy_vo_prio_1",
+		category = "enemy_vo_prio_0",
 		wwise_route = 9,
 		response = "chaos_ogryn_bulwark_assault",
 		database = "enemy_vo",
@@ -529,14 +529,14 @@ return function ()
 				"chaos_ogryn_bulwark_assault",
 				OP.TIMEDIFF,
 				OP.GT,
-				7
+				6
 			},
 			{
 				"faction_memory",
 				"faction_memory_chaos_ogryn_bulwark_assault",
 				OP.TIMEDIFF,
 				OP.GT,
-				6
+				3
 			}
 		},
 		on_done = {
@@ -549,6 +549,11 @@ return function ()
 				"faction_memory",
 				"faction_memory_chaos_ogryn_bulwark_assault",
 				OP.TIMESET
+			}
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.5
 			}
 		}
 	})
@@ -980,7 +985,7 @@ return function ()
 				"enemy_memory_cultist_grenadier_skulking",
 				OP.TIMEDIFF,
 				OP.GT,
-				20
+				15
 			},
 			{
 				"faction_memory",
@@ -2277,7 +2282,7 @@ return function ()
 		wwise_route = 10,
 		response = "traitor_enforcer_executor_executor_assault",
 		database = "enemy_vo",
-		category = "enemy_vo_prio_1",
+		category = "enemy_vo_prio_0",
 		criterias = {
 			{
 				"query_context",
@@ -2299,28 +2304,28 @@ return function ()
 			},
 			{
 				"user_memory",
-				"traitor_enforcer_executor_executor_assault",
+				"renegade_executor_assault",
 				OP.TIMEDIFF,
 				OP.GT,
-				2
+				6
 			},
 			{
 				"faction_memory",
-				"faction_memory_traitor_enforcer_executor_executor_assault",
+				"faction_memory_renegade_executor_assault",
 				OP.TIMEDIFF,
 				OP.GT,
-				2
+				3
 			}
 		},
 		on_done = {
 			{
 				"user_memory",
-				"traitor_enforcer_executor_executor_assault",
+				"renegade_executor_assault",
 				OP.TIMESET
 			},
 			{
 				"faction_memory",
-				"faction_memory_traitor_enforcer_executor_executor_assault",
+				"faction_memory_renegade_executor_assault",
 				OP.TIMESET
 			}
 		},
@@ -2329,7 +2334,7 @@ return function ()
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 1
+				duration = 0.5
 			}
 		}
 	})
@@ -3548,17 +3553,29 @@ return function ()
 				"renegade_netgunner"
 			},
 			{
-				"user_memory",
-				"traitor_netgunner_assault",
+				"faction_memory",
+				"faction_traitor_netgunner_assault",
 				OP.TIMEDIFF,
 				OP.GT,
-				5
+				2
+			},
+			{
+				"user_memory",
+				"user_traitor_netgunner_assault",
+				OP.TIMEDIFF,
+				OP.GT,
+				3
 			}
 		},
 		on_done = {
 			{
+				"faction_memory",
+				"faction_traitor_netgunner_assault",
+				OP.TIMESET
+			},
+			{
 				"user_memory",
-				"traitor_netgunner_assault",
+				"user_traitor_netgunner_assault",
 				OP.TIMESET
 			}
 		},
@@ -3629,13 +3646,6 @@ return function ()
 				"renegade_netgunner"
 			},
 			{
-				"user_memory",
-				"enemy_memory_traitor_netgunner_spawned",
-				OP.TIMEDIFF,
-				OP.GT,
-				4
-			},
-			{
 				"faction_memory",
 				"faction_memory_traitor_netgunner_spawned",
 				OP.TIMEDIFF,
@@ -3644,11 +3654,6 @@ return function ()
 			}
 		},
 		on_done = {
-			{
-				"user_memory",
-				"enemy_memory_traitor_netgunner_spawned",
-				OP.TIMESET
-			},
 			{
 				"faction_memory",
 				"faction_memory_traitor_netgunner_spawned",
@@ -3660,7 +3665,7 @@ return function ()
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.5
+				duration = 3
 			}
 		}
 	})
@@ -3754,10 +3759,10 @@ return function ()
 	})
 	define_rule({
 		name = "traitor_scout_shocktrooper_melee_idle",
-		category = "enemy_vo_prio_1",
 		wwise_route = 12,
 		response = "traitor_scout_shocktrooper_melee_idle",
 		database = "enemy_vo",
+		category = "enemy_vo_prio_1",
 		criterias = {
 			{
 				"query_context",
@@ -3782,14 +3787,14 @@ return function ()
 				"traitor_scout_shocktrooper_melee_idle",
 				OP.TIMEDIFF,
 				OP.GT,
-				6
+				15
 			},
 			{
 				"faction_memory",
 				"faction_memory_traitor_scout_shocktrooper_melee_idle",
 				OP.TIMEDIFF,
 				OP.GT,
-				2
+				5
 			}
 		},
 		on_done = {
@@ -3806,6 +3811,11 @@ return function ()
 		},
 		heard_speak_routing = {
 			target = "players"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.5
+			}
 		}
 	})
 	define_rule({
@@ -3949,28 +3959,28 @@ return function ()
 			},
 			{
 				"user_memory",
-				"enemy_memory_take_position",
-				OP.TIMEDIFF,
-				OP.GT,
-				30
-			},
-			{
-				"faction_memory",
-				"faction_memory_take_position",
+				"traitor_scout_shocktrooper_take_position",
 				OP.TIMEDIFF,
 				OP.GT,
 				20
+			},
+			{
+				"faction_memory",
+				"faction_memory_traitor_scout_shocktrooper_take_position",
+				OP.TIMEDIFF,
+				OP.GT,
+				10
 			}
 		},
 		on_done = {
 			{
 				"user_memory",
-				"enemy_memory_take_position",
+				"traitor_scout_shocktrooper_take_position",
 				OP.TIMESET
 			},
 			{
 				"faction_memory",
-				"faction_memory_take_position",
+				"faction_memory_traitor_scout_shocktrooper_take_position",
 				OP.TIMESET
 			}
 		}
@@ -4001,13 +4011,6 @@ return function ()
 				"renegade_shocktrooper"
 			},
 			{
-				"user_memory",
-				"enemy_memory_shocktrooper_start_shooting",
-				OP.TIMEDIFF,
-				OP.GT,
-				5
-			},
-			{
 				"faction_memory",
 				"faction_memory_shocktrooper_start_shooting",
 				OP.TIMEDIFF,
@@ -4016,11 +4019,6 @@ return function ()
 			}
 		},
 		on_done = {
-			{
-				"user_memory",
-				"enemy_memory_shocktrooper_start_shooting",
-				OP.TIMESET
-			},
 			{
 				"faction_memory",
 				"faction_memory_shocktrooper_start_shooting",

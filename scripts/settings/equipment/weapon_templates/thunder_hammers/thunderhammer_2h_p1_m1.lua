@@ -1112,15 +1112,16 @@ weapon_template.actions = {
 	},
 	action_left_light_pushfollow = {
 		hit_armor_anim = "attack_hit",
-		range_mod = 1.15,
 		kind = "sweep",
+		weapon_handling_template = "time_scale_0_8",
 		first_person_hit_anim = "hit_left_shake",
 		damage_window_start = 0.2,
-		weapon_handling_template = "time_scale_0_8",
-		special_active_hit_stop_anim_3p = "attack_hit_power",
+		sprint_requires_press_to_interrupt = "true",
+		range_mod = 1.15,
 		anim_end_event = "attack_finished",
 		damage_window_end = 0.3,
 		special_active_hit_stop_anim = "attack_hit_power",
+		special_active_hit_stop_anim_3p = "attack_hit_power",
 		anim_event = "attack_swing_left_diagonal",
 		hit_stop_anim = "attack_hit",
 		total_time = 2,
@@ -1734,7 +1735,7 @@ weapon_template.base_stats = {
 	}
 }
 weapon_template.traits = {}
-local bespoke_thunderhammer_2h_p1_traits = table.keys(WeaponTraitsBespokeThunderhammerP1)
+local bespoke_thunderhammer_2h_p1_traits = table.ukeys(WeaponTraitsBespokeThunderhammerP1)
 
 table.append(weapon_template.traits, bespoke_thunderhammer_2h_p1_traits)
 

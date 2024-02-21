@@ -76,7 +76,7 @@ local function _process_relationships_page(user_id, page_handle, promise, xuids)
 		return
 	end
 
-	Managers.xasync:wrap(relationships_async, XSocial.release_block):next(function (async_block)
+	Managers.xasync:wrap(relationships_async):next(function (async_block)
 		local next_page_handle, error = XSocial.get_relationships_result(async_block)
 
 		if error then

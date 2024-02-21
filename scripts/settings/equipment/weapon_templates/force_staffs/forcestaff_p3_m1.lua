@@ -19,6 +19,7 @@ local warp_charge_trait_templates = WeaponTraitTemplates[template_types.warp_cha
 local weapon_handling_trait_templates = WeaponTraitTemplates[template_types.weapon_handling]
 local weapon_template = {}
 local chain_settings_charged = {
+	max_jumps_stat_buff = "chain_lightning_staff_max_jumps",
 	radius = 8,
 	jump_time = 0.1,
 	max_jumps = 1,
@@ -361,6 +362,14 @@ weapon_template.actions = {
 			combat_ability = {
 				action_name = "combat_ability"
 			},
+			grenade_ability = {
+				{
+					action_name = "grenade_ability"
+				},
+				{
+					action_name = "grenade_ability_quick_throw"
+				}
+			},
 			wield = {
 				action_name = "action_unwield"
 			},
@@ -624,12 +633,11 @@ weapon_template.actions = {
 		weapon_handling_template = "time_scale_1_3",
 		kind = "sweep",
 		first_person_hit_anim = "hit_right_shake",
-		anim_event = "attack_special",
 		first_person_hit_stop_anim = "attack_hit",
 		allowed_during_sprint = true,
 		damage_window_end = 0.26666666666666666,
 		uninterruptible = true,
-		allow_conditional_chain = true,
+		anim_event = "attack_special",
 		total_time = 0.6,
 		crosshair = {
 			crosshair_type = "dot"
@@ -723,12 +731,11 @@ weapon_template.actions = {
 		weapon_handling_template = "time_scale_1_2",
 		kind = "sweep",
 		first_person_hit_anim = "hit_right_shake",
-		anim_event = "attack_special",
 		first_person_hit_stop_anim = "attack_hit",
 		allowed_during_sprint = true,
 		damage_window_end = 0.21666666666666667,
 		uninterruptible = true,
-		allow_conditional_chain = true,
+		anim_event = "attack_special",
 		power_level = 800,
 		total_time = 0.75,
 		crosshair = {
@@ -823,13 +830,12 @@ weapon_template.actions = {
 		range_mod = 1.15,
 		kind = "sweep",
 		first_person_hit_anim = "hit_right_shake",
-		anim_event = "attack_special_swipe",
 		first_person_hit_stop_anim = "attack_hit",
 		allowed_during_sprint = true,
 		attack_direction_override = "left",
 		damage_window_end = 0.7,
 		uninterruptible = true,
-		allow_conditional_chain = true,
+		anim_event = "attack_special_swipe",
 		power_level = 650,
 		total_time = 0.75,
 		crosshair = {
@@ -920,11 +926,10 @@ weapon_template.actions = {
 	action_swipe_heavy = {
 		damage_window_start = 0.31666666666666665,
 		hit_armor_anim = "attack_hit_shield",
-		range_mod = 1.15,
-		allow_conditional_chain = true,
+		first_person_hit_stop_anim = "attack_hit",
 		kind = "sweep",
 		first_person_hit_anim = "hit_right_shake",
-		first_person_hit_stop_anim = "attack_hit",
+		range_mod = 1.15,
 		allowed_during_sprint = true,
 		attack_direction_override = "left",
 		damage_window_end = 0.35,
@@ -1299,7 +1304,7 @@ weapon_template.base_stats = {
 	}
 }
 weapon_template.traits = {}
-local bespoke_forcestaff_p3_traits = table.keys(WeaponTraitsBespokeForcestaffP3)
+local bespoke_forcestaff_p3_traits = table.ukeys(WeaponTraitsBespokeForcestaffP3)
 
 table.append(weapon_template.traits, bespoke_forcestaff_p3_traits)
 

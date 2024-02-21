@@ -6,7 +6,7 @@ local conversations_hub_mourningstar_servitor_b = {
 			[1.0] = "loc_mourningstar_servitor_b__hub_mission_board_announcement_01"
 		},
 		sound_events_duration = {
-			[1.0] = 5.367167
+			[1.0] = 7.201063
 		},
 		sound_event_weights = {
 			[1.0] = 1
@@ -20,7 +20,7 @@ local conversations_hub_mourningstar_servitor_b = {
 			[1.0] = "loc_mourningstar_servitor_b__hub_mission_circumstance_announcement_01"
 		},
 		sound_events_duration = {
-			[1.0] = 5.828917
+			[1.0] = 7.662813
 		},
 		sound_event_weights = {
 			[1.0] = 1
@@ -34,7 +34,7 @@ local conversations_hub_mourningstar_servitor_b = {
 			[1.0] = "loc_mourningstar_servitor_b__hub_mission_board_announcement_05"
 		},
 		sound_events_duration = {
-			[1.0] = 2.710938
+			[1.0] = 4.544834
 		},
 		sound_event_weights = {
 			[1.0] = 1
@@ -48,7 +48,7 @@ local conversations_hub_mourningstar_servitor_b = {
 			[1.0] = "loc_mourningstar_servitor_b__hub_mission_circumstance_announcement_05"
 		},
 		sound_events_duration = {
-			[1.0] = 4.274542
+			[1.0] = 6.108438
 		},
 		sound_event_weights = {
 			[1.0] = 1
@@ -62,7 +62,7 @@ local conversations_hub_mourningstar_servitor_b = {
 			[1.0] = "loc_mourningstar_servitor_b__hub_mission_board_announcement_04"
 		},
 		sound_events_duration = {
-			[1.0] = 6.437396
+			[1.0] = 8.271292
 		},
 		sound_event_weights = {
 			[1.0] = 1
@@ -76,7 +76,7 @@ local conversations_hub_mourningstar_servitor_b = {
 			[1.0] = "loc_mourningstar_servitor_b__hub_mission_circumstance_announcement_04"
 		},
 		sound_events_duration = {
-			[1.0] = 6.498563
+			[1.0] = 8.332458
 		},
 		sound_event_weights = {
 			[1.0] = 1
@@ -90,7 +90,7 @@ local conversations_hub_mourningstar_servitor_b = {
 			[1.0] = "loc_mourningstar_servitor_b__hub_mission_board_announcement_03"
 		},
 		sound_events_duration = {
-			[1.0] = 5.877313
+			[1.0] = 7.711209
 		},
 		sound_event_weights = {
 			[1.0] = 1
@@ -104,7 +104,7 @@ local conversations_hub_mourningstar_servitor_b = {
 			[1.0] = "loc_mourningstar_servitor_b__hub_mission_circumstance_announcement_03"
 		},
 		sound_events_duration = {
-			[1.0] = 6.152625
+			[1.0] = 7.986521
 		},
 		sound_event_weights = {
 			[1.0] = 1
@@ -118,7 +118,7 @@ local conversations_hub_mourningstar_servitor_b = {
 			[1.0] = "loc_mourningstar_servitor_b__hub_mission_board_announcement_02"
 		},
 		sound_events_duration = {
-			[1.0] = 5.786917
+			[1.0] = 7.620813
 		},
 		sound_event_weights = {
 			[1.0] = 1
@@ -132,7 +132,7 @@ local conversations_hub_mourningstar_servitor_b = {
 			[1.0] = "loc_mourningstar_servitor_b__hub_mission_circumstance_announcement_02"
 		},
 		sound_events_duration = {
-			[1.0] = 6.182042
+			[1.0] = 8.015938
 		},
 		sound_event_weights = {
 			[1.0] = 1
@@ -175,36 +175,36 @@ local conversations_hub_mourningstar_servitor_b = {
 			"loc_mourningstar_servitor_b__hub_status_announcement_30"
 		},
 		sound_events_duration = {
-			6.268042,
-			4.655042,
-			7.570042,
-			5.530208,
-			5.119021,
-			5.862688,
-			6.894729,
-			4.777083,
-			5.350083,
-			6.595813,
-			4.905917,
-			5.091313,
-			4.375042,
-			3.916375,
-			4.574354,
-			4.191563,
-			3.820563,
-			5.561333,
-			4.1305,
-			3.404208,
-			3.347958,
-			4.439604,
-			5.014854,
-			4.885875,
-			4.847667,
-			5.560708,
-			5.995417,
-			6.912625,
-			3.95575,
-			1.857958
+			8.101938,
+			6.488938,
+			9.403938,
+			7.364104,
+			6.952917,
+			7.696584,
+			8.728625,
+			6.610979,
+			7.183979,
+			8.429708,
+			6.739813,
+			6.925209,
+			6.208938,
+			5.750271,
+			6.40825,
+			6.025459,
+			5.654459,
+			7.395229,
+			5.964396,
+			5.238104,
+			5.181854,
+			6.2735,
+			6.84875,
+			6.719771,
+			6.681563,
+			7.394604,
+			7.829313,
+			8.746521,
+			5.789646,
+			3.691854
 		},
 		sound_event_weights = {
 			0.03333334,

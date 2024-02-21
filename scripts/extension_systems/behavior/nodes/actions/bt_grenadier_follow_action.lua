@@ -2,7 +2,6 @@ require("scripts/extension_systems/behavior/nodes/bt_node")
 
 local Animation = require("scripts/utilities/animation")
 local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
-local DialogueBreedSettings = require("scripts/settings/dialogue/dialogue_breed_settings")
 local MinionMovement = require("scripts/utilities/minion_movement")
 local NavQueries = require("scripts/utilities/nav_queries")
 local Trajectory = require("scripts/utilities/trajectory")
@@ -34,8 +33,7 @@ BtGrenadierFollowAction.enter = function (self, unit, breed, blackboard, scratch
 	scratchpad.randomized_throw_directions = randomized_throw_directions
 	scratchpad.throw_direction_index = 1
 	scratchpad.num_failed_attempts = 0
-	scratchpad.skulking_vo_interval_t = DialogueBreedSettings[breed.name].skulking_vo_interval_t
-	scratchpad.next_skulk_vo_t = t + scratchpad.skulking_vo_interval_t
+	scratchpad.next_skulk_vo_t = t + action_data.skulking_vo_interval_t
 	scratchpad.check_grenade_trajectory_t = t + action_data.check_grenade_trajectory_frequency
 	scratchpad.current_move_position = Vector3Box()
 
@@ -122,12 +120,12 @@ BtGrenadierFollowAction.run = function (self, unit, breed, blackboard, scratchpa
 		MinionMovement.update_anim_driven_start_rotation(unit, scratchpad, action_data, t)
 	end
 
-	local vo_event = action_data.vo_event
+	if scratchpad.next_skulk_vo_t < t then
+		local vo_event = action_data.vo_event
 
-	if vo_event and scratchpad.next_skulk_vo_t < t then
 		Vo.enemy_generic_vo_event(unit, vo_event, breed.name)
 
-		scratchpad.next_skulk_vo_t = t + scratchpad.skulking_vo_interval_t
+		scratchpad.next_skulk_vo_t = t + action_data.skulking_vo_interval_t
 	end
 
 	return "running"

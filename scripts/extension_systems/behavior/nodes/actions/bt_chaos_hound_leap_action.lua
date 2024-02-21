@@ -126,6 +126,13 @@ BtChaosHoundLeapAction.run = function (self, unit, breed, blackboard, scratchpad
 			Attack.execute(unit, damage_profile, "power_level", power_level, "attacking_unit", target_unit, "attack_direction", attack_direction, "hit_zone_name", "torso")
 
 			scratchpad.extra_push_applied = true
+			local extra_push_wwise_event = action_data.extra_push_wwise_event
+
+			if extra_push_wwise_event then
+				local fx_system = Managers.state.extension:system("fx_system")
+
+				fx_system:trigger_wwise_event(extra_push_wwise_event, unit_position)
+			end
 		end
 	end
 

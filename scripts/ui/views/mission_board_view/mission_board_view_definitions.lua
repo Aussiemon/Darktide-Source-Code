@@ -305,7 +305,7 @@ MissionBoardViewDefinitions.scenegraph_definition = {
 		parent = "canvas",
 		horizontal_alignment = "left",
 		size = {
-			800,
+			1200,
 			40
 		},
 		position = {

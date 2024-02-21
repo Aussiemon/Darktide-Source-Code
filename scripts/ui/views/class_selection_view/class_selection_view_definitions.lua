@@ -1,11 +1,8 @@
-local UIWidget = require("scripts/managers/ui/ui_widget")
 local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templates")
-local ClassSelectionViewSettings = require("scripts/ui/views/class_selection_view/class_selection_view_settings")
 local ClassSelectionViewFontStyle = require("scripts/ui/views/class_selection_view/class_selection_view_font_style")
+local ClassSelectionViewSettings = require("scripts/ui/views/class_selection_view/class_selection_view_settings")
 local ScrollbarPassTemplates = require("scripts/ui/pass_templates/scrollbar_pass_templates")
-local ColorUtilities = require("scripts/utilities/ui/colors")
-local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
-local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
+local UIWidget = require("scripts/managers/ui/ui_widget")
 local scenegraph_definition = {
 	screen = {
 		scale = "fit",
@@ -638,76 +635,6 @@ local archetype_selection_definition = {
 		}
 	}, "archetype_option")
 }
-local class_option_definition = UIWidget.create_definition({
-	{
-		pass_type = "hotspot",
-		content_id = "hotspot",
-		content = {
-			on_hover_sound = UISoundEvents.default_mouse_hover
-		}
-	},
-	{
-		style_id = "icon",
-		value_id = "icon",
-		pass_type = "texture",
-		value = "content/ui/materials/base/ui_illustration_dissolve_base",
-		style = {
-			vertical_alignment = "center",
-			horizontal_alignment = "center",
-			size = ClassSelectionViewSettings.class_option_icon_size,
-			offset = {
-				0,
-				0,
-				1
-			},
-			material_values = {
-				progression = 0,
-				main_texture = ""
-			}
-		}
-	},
-	{
-		pass_type = "texture",
-		style_id = "highlight",
-		value = "content/ui/materials/frames/dropshadow_heavy",
-		style = {
-			vertical_alignment = "center",
-			hdr = true,
-			horizontal_alignment = "center",
-			color = Color.ui_terminal(255, true),
-			offset = {
-				0,
-				0,
-				2
-			},
-			size_addition = {
-				20,
-				20
-			}
-		},
-		change_function = function (content, style, _, dt)
-			local hotspot = content.hotspot
-			local progress = math.max(hotspot.anim_hover_progress, hotspot.anim_focus_progress)
-			style.color[1] = 255 * math.easeOutCubic(progress)
-			local size_addition = 20 + 20 * math.easeInCubic(1 - progress)
-			local style_size_additon = style.size_addition
-			style_size_additon[1] = size_addition
-			style_size_additon[2] = size_addition
-			style.hdr = progress == 1
-		end
-	},
-	{
-		style_id = "title",
-		pass_type = "text",
-		value = "",
-		value_id = "title",
-		style = ClassSelectionViewFontStyle.class_option_title,
-		change_function = function (content, style)
-			local hotspot = content.hotspot
-			style.text_color = hotspot.is_focused and style.default_color or style.disabled_color
-		end
-	}
-}, "class_option", nil, ClassSelectionViewSettings.class_option_icon_size)
 local legend_inputs = {
 	{
 		input_action = "back",
@@ -777,6 +704,5 @@ return {
 	scenegraph_definition = scenegraph_definition,
 	archetype_option_definition = archetype_option_definition,
 	archetype_selection_definition = archetype_selection_definition,
-	class_option_definition = class_option_definition,
 	animations = animations
 }

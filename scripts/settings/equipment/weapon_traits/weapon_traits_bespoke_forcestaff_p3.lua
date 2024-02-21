@@ -1,5 +1,8 @@
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local templates = {}
+
+table.make_unique(templates)
+
 local stat_buffs = BuffSettings.stat_buffs
 templates.weapon_trait_bespoke_forcestaff_p3_suppression_on_close_kill = {
 	weapon_trait_bespoke_forcestaff_p3_suppression_on_close_kill = {
@@ -69,30 +72,6 @@ templates.weapon_trait_bespoke_forcestaff_p3_warp_charge_critical_strike_chance_
 templates.weapon_trait_bespoke_forcestaff_p3_uninterruptable_while_charging = {
 	weapon_trait_bespoke_forcestaff_p3_uninterruptable_while_charging = {
 		{}
-	}
-}
-templates.weapon_trait_bespoke_forcestaff_p3_faster_charge_on_chained_secondary_attacks = {
-	weapon_trait_bespoke_forcestaff_p3_faster_charge_on_chained_secondary_attacks = {
-		{
-			stat_buffs = {
-				[stat_buffs.charge_up_time] = -0.06
-			}
-		},
-		{
-			stat_buffs = {
-				[stat_buffs.charge_up_time] = -0.08
-			}
-		},
-		{
-			stat_buffs = {
-				[stat_buffs.charge_up_time] = -0.1
-			}
-		},
-		{
-			stat_buffs = {
-				[stat_buffs.charge_up_time] = -0.12
-			}
-		}
 	}
 }
 templates.weapon_trait_bespoke_forcestaff_p3_faster_charge_on_chained_secondary_attacks = {

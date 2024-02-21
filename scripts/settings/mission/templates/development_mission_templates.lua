@@ -80,6 +80,16 @@ local mission_templates = {
 			"terror_events_mission_objectives"
 		}
 	},
+	mission_penances = {
+		mechanism_name = "adventure",
+		game_mode_name = "default",
+		wwise_state = "None",
+		zone_id = "placeholder",
+		mission_name = "loc_mission_name_placeholder",
+		is_dev_mission = true,
+		level = "content/levels/debug/debug_penances/missions/mission_penances",
+		terror_event_templates = {}
+	},
 	side_objectives = {
 		mission_name = "loc_mission_name_placeholder",
 		wwise_state = "None",
@@ -269,9 +279,9 @@ local mission_templates = {
 			charges_to_distribute = 10
 		},
 		hazard_prop_settings = {
-			explosion = 1,
-			fire = 1,
-			none = 0
+			explosion = 0.375,
+			fire = 0.375,
+			none = 0.25
 		},
 		terror_event_templates = {
 			"terror_events_combat"
@@ -290,24 +300,6 @@ local mission_templates = {
 		},
 		terror_event_templates = {
 			"terror_events_debug_zoneseven"
-		}
-	},
-	combat_zone_new = {
-		mission_name = "loc_mission_name_placeholder",
-		zone_id = "placeholder",
-		game_mode_name = "default",
-		mechanism_name = "adventure",
-		is_dev_mission = true,
-		level = "content/levels/debug/combat_zone_new/missions/mission_combat_zone_new",
-		pickup_settings = {},
-		health_station = {
-			charges_to_distribute = 10
-		},
-		hazard_prop_settings = {
-			explosion = 1,
-			fire = 0,
-			none = 2,
-			gas = 0
 		}
 	},
 	minion_mechanics = {
@@ -646,6 +638,14 @@ local mission_templates = {
 			fire = 1,
 			none = 0
 		}
+	},
+	test_mission = {
+		mechanism_name = "adventure",
+		game_mode_name = "default",
+		mission_name = "loc_mission_name_placeholder",
+		zone_id = "placeholder",
+		is_dev_mission = true,
+		level = "content/levels/debug/artlevels/sara/test_zone/missions/test_mission"
 	}
 }
 

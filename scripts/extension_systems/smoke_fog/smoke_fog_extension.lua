@@ -48,9 +48,17 @@ SmokeFogExtension.init = function (self, extension_init_context, unit, extension
 	self._leaving_fog_buff_template_name = extension_init_data.leaving_fog_buff_template_name
 	self.has_buffs = self._in_fog_buff_template_name ~= nil or self._leaving_fog_buff_template_name ~= nil
 	self.buff_affected_units = {}
-	local side_system = Managers.state.extension:system("side_system")
-	self.side = side_system.side_by_unit[self.owner_unit]
-	self.side_names = self.side:relation_side_names("enemy")
+
+	if owner_unit then
+		local side_system = Managers.state.extension:system("side_system")
+		self.side = side_system.side_by_unit[owner_unit]
+		self.side_names = self.side:relation_side_names("enemy")
+	else
+		local side_system = Managers.state.extension:system("side_system")
+		self.side = side_system:get_side_from_name("heroes")
+		self.side_names = self.side:relation_side_names("enemy")
+	end
+
 	local fade_frame = math.ceil(self._smoke_fade_t / Managers.state.game_session.fixed_time_step)
 	game_object_data.smoke_fade_frame = fade_frame
 end

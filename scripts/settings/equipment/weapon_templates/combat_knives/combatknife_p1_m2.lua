@@ -975,13 +975,14 @@ weapon_template.actions = {
 	action_right_light_pushfollow = {
 		damage_window_start = 0.266,
 		hit_armor_anim = "attack_hit_shield",
-		weapon_handling_template = "time_scale_1_3_ninja",
-		anim_end_event = "attack_finished",
 		kind = "sweep",
+		weapon_handling_template = "time_scale_1_3_ninja",
 		attack_direction_override = "push",
-		range_mod = 1.25,
+		sprint_requires_press_to_interrupt = "true",
 		first_person_hit_stop_anim = "attack_hit",
+		range_mod = 1.25,
 		damage_window_end = 0.38,
+		anim_end_event = "attack_finished",
 		anim_event_3p = "attack_swing_stab",
 		anim_event = "attack_swing_stab",
 		total_time = 1.33,
@@ -1177,11 +1178,11 @@ weapon_template.actions = {
 			},
 			special_action = {
 				action_name = "action_special_jab",
-				chain_time = 0.7
+				chain_time = 0.6
 			},
 			block = {
 				action_name = "action_block",
-				chain_time = 0.32
+				chain_time = 0.3
 			}
 		},
 		anim_end_event_condition_func = function (unit, data, end_reason)
@@ -1725,7 +1726,7 @@ weapon_template.base_stats = {
 	}
 }
 weapon_template.traits = {}
-local bespoke_combatknife_p1_traits = table.keys(WeaponTraitsBespokeCombatknifeP1)
+local bespoke_combatknife_p1_traits = table.ukeys(WeaponTraitsBespokeCombatknifeP1)
 
 table.append(weapon_template.traits, bespoke_combatknife_p1_traits)
 

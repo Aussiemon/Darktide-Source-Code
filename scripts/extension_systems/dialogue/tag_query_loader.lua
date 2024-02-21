@@ -32,14 +32,14 @@ end
 
 local TagQueryLoader = class("TagQueryLoader")
 
-TagQueryLoader.init = function (self, tagquery_database, dialogues_destination_table)
+TagQueryLoader.init = function (self, tagquery_database, dialogue_templates_destination_table)
 	self.loaded_files = {}
 	self.file_environment = {
 		OP = OP,
 		define_rule = function (rule_definition)
 			tagquery_database:define_rule(rule_definition)
 
-			dialogues_destination_table[rule_definition.name] = {
+			local dialogue_template = {
 				category = rule_definition.category,
 				database = rule_definition.database,
 				wwise_route = rule_definition.wwise_route,
@@ -47,6 +47,7 @@ TagQueryLoader.init = function (self, tagquery_database, dialogues_destination_t
 				on_post_rule_execution = rule_definition.on_post_rule_execution,
 				on_pre_rule_execution = rule_definition.on_pre_rule_execution
 			}
+			dialogue_templates_destination_table[rule_definition.name] = dialogue_template
 		end
 	}
 	self.unload_file_environment = {

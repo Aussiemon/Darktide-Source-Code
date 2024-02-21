@@ -206,6 +206,18 @@ local dialogue_speaker_voice_settings = {
 		subtitles_enabled = true,
 		player_voice = false
 	},
+	mourningstar_confessor_a = {
+		full_name = "loc_npc_full_name_vocator_a",
+		short_name = "loc_npc_short_name_vocator_a",
+		subtitles_enabled = true,
+		player_voice = false
+	},
+	mourningstar_wing_commander_a = {
+		full_name = "loc_npc_full_name_vocator_a",
+		short_name = "loc_npc_short_name_vocator_a",
+		subtitles_enabled = true,
+		player_voice = false
+	},
 	mourningstar_servitor_a = {
 		full_name = "loc_npc_full_name_vocator_a",
 		short_name = "loc_npc_short_name_vocator_a",

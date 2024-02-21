@@ -1065,7 +1065,7 @@ return function ()
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"health_staton_objective_1"
+				"health_station_objective_1"
 			},
 			{
 				"user_context",

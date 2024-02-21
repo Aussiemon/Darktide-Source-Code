@@ -1,7 +1,7 @@
 local UI_POPUP_INFO_DURATION = 10
-local MissionObjectiveGoal = require("scripts/extension_systems/mission_objective/utilities/mission_objective_goal")
 local InputUtils = require("scripts/managers/input/input_utils")
 local ItemUtils = require("scripts/utilities/items")
+local MissionObjectiveGoal = require("scripts/extension_systems/mission_objective/utilities/mission_objective_goal")
 
 local function _get_interaction_units_by_type(interaction_type)
 	local units = {}

@@ -122,8 +122,6 @@ PlayerHuskDataExtension.init = function (self, extension_init_context, unit, ext
 	self._last_received_frame = 0
 	local archetype = extension_init_data.archetype
 	self._archetype = archetype
-	local specialization = extension_init_data.specialization
-	self._specialization = specialization
 end
 
 PlayerHuskDataExtension.on_server_husk_data_state_game_object_created = function (self, game_object_id)
@@ -160,10 +158,6 @@ PlayerHuskDataExtension.archetype_name = function (self)
 	local archetype = self._archetype
 
 	return archetype.name
-end
-
-PlayerHuskDataExtension.specialization = function (self)
-	return self._specialization
 end
 
 PlayerHuskDataExtension.hit_zone = function (self, actor)

@@ -642,9 +642,8 @@ weapon_template.actions = {
 		kind = "sweep",
 		first_person_hit_anim = "hit_stop",
 		increase_combo = false,
-		range_mod = 1.15,
 		first_person_hit_stop_anim = "hit_stop",
-		allow_conditional_chain = true,
+		range_mod = 1.15,
 		allowed_during_sprint = true,
 		damage_window_end = 0.43333333333333335,
 		uninterruptible = true,
@@ -930,7 +929,7 @@ weapon_template.toughness_template = "default"
 weapon_template.movement_curve_modifier_template = "default"
 weapon_template.footstep_intervals = FootstepIntervalsTemplates.ogryn_rippergun
 weapon_template.traits = {}
-local bespoke_traits = table.keys(WeaponTraitsBespokeRippergunP1)
+local bespoke_traits = table.ukeys(WeaponTraitsBespokeRippergunP1)
 
 table.append(weapon_template.traits, bespoke_traits)
 
@@ -957,6 +956,14 @@ weapon_template.displayed_attacks = {
 		desc = "loc_stats_special_action_melee_bayonette_desc",
 		display_name = "loc_weapon_special_bayonet",
 		type = "melee"
+	}
+}
+weapon_template.explicit_combo = {
+	{
+		"action_shoot_hip"
+	},
+	{
+		"action_shoot_zoomed"
 	}
 }
 weapon_template.special_action_name = "action_stab"

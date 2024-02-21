@@ -1,10 +1,12 @@
 require("scripts/extension_systems/weapon/actions/action_shoot")
 
 local AttackSettings = require("scripts/settings/damage/attack_settings")
+local Breed = require("scripts/utilities/breed")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local DamageProfile = require("scripts/utilities/attack/damage_profile")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
 local FriendlyFire = require("scripts/utilities/attack/friendly_fire")
+local HazardProp = require("scripts/utilities/level_props/hazard_prop")
 local HitScan = require("scripts/utilities/attack/hit_scan")
 local HitZone = require("scripts/utilities/attack/hit_zone")
 local PowerLevelSettings = require("scripts/settings/damage/power_level_settings")
@@ -21,6 +23,7 @@ ActionFlamerGasBurst.init = function (self, action_context, action_params, actio
 	ActionFlamerGasBurst.super.init(self, action_context, action_params, action_settings)
 
 	self._targets = {}
+	self._target_actors = {}
 	self._dot_targets = {}
 	self._killing_blow = false
 	self._action_module_position_finder_component = action_context.unit_data_extension:write_component("action_module_position_finder")
@@ -47,6 +50,7 @@ end
 ActionFlamerGasBurst.start = function (self, action_settings, t, ...)
 	ActionFlamerGasBurst.super.start(self, action_settings, t, ...)
 	table.clear(self._targets)
+	table.clear(self._target_actors)
 	table.clear(self._dot_targets)
 
 	self._killing_blow = false
@@ -119,7 +123,7 @@ ActionFlamerGasBurst._is_unit_blocking = function (self, unit, player_pos)
 	end
 end
 
-ActionFlamerGasBurst._process_hit = function (self, hit, targets, player_unit, player_pos, side_system, dot_targets, t, is_server)
+ActionFlamerGasBurst._process_hit = function (self, hit, targets, target_actors, player_unit, player_pos, side_system, dot_targets, t, is_server)
 	local hit_pos = hit[INDEX_POSITION]
 	local hit_actor = hit[INDEX_ACTOR]
 	local hit_normal = hit[INDEX_NORMAL]
@@ -157,6 +161,7 @@ ActionFlamerGasBurst._process_hit = function (self, hit, targets, player_unit, p
 
 	if is_server and health_extension then
 		targets[hit_unit] = t + t_offset
+		target_actors[hit_unit] = hit_actor
 	end
 
 	if is_server and buff_extension then
@@ -166,7 +171,7 @@ ActionFlamerGasBurst._process_hit = function (self, hit, targets, player_unit, p
 	return false
 end
 
-ActionFlamerGasBurst._do_raycast = function (self, i, position, rotation, max_range, num_rays_this_frame, spread_angle, targets, player_unit, player_pos, side_system, dot_targets, t, is_server)
+ActionFlamerGasBurst._do_raycast = function (self, i, position, rotation, max_range, num_rays_this_frame, spread_angle, targets, target_actors, player_unit, player_pos, side_system, dot_targets, t, is_server)
 	local bullseye = true
 	local ray_rotation = Spread.target_style_spread(rotation, i, num_rays_this_frame, 2, bullseye, spread_angle, spread_angle, nil, false, nil, math.random_seed())
 	local direction = Quaternion.forward(ray_rotation)
@@ -180,7 +185,7 @@ ActionFlamerGasBurst._do_raycast = function (self, i, position, rotation, max_ra
 		for j = 1, num_hit_results do
 			repeat
 				local hit = hits[j]
-				stop, stop_position, stop_normal = self:_process_hit(hit, targets, player_unit, player_pos, side_system, dot_targets, t, is_server)
+				stop, stop_position, stop_normal = self:_process_hit(hit, targets, target_actors, player_unit, player_pos, side_system, dot_targets, t, is_server)
 			until true
 
 			if stop then
@@ -195,6 +200,7 @@ end
 ActionFlamerGasBurst._acquire_targets = function (self, t)
 	local is_server = self._is_server
 	local targets = self._targets
+	local target_actors = self._target_actors
 	local dot_targets = self._dot_targets
 	local player_unit = self._player_unit
 	local player_pos = POSITION_LOOKUP[player_unit]
@@ -205,7 +211,7 @@ ActionFlamerGasBurst._acquire_targets = function (self, t)
 	local position_finder_component = self._action_module_position_finder_component
 	local side_system = Managers.state.extension:system("side_system")
 	local num_rays_this_frame = 8
-	local stop, stop_position, stop_normal = self:_do_raycast(1, position, rotation, max_range, num_rays_this_frame, spread_angle, targets, player_unit, player_pos, side_system, dot_targets, t, is_server)
+	local stop, stop_position, stop_normal = self:_do_raycast(1, position, rotation, max_range, num_rays_this_frame, spread_angle, targets, target_actors, player_unit, player_pos, side_system, dot_targets, t, is_server)
 
 	if stop then
 		position_finder_component.position = stop_position
@@ -217,24 +223,34 @@ ActionFlamerGasBurst._acquire_targets = function (self, t)
 
 	if is_server then
 		for i = 2, num_rays_this_frame do
-			self:_do_raycast(i, position, rotation, max_range, num_rays_this_frame, spread_angle, targets, player_unit, player_pos, side_system, dot_targets, t, is_server)
+			self:_do_raycast(i, position, rotation, max_range, num_rays_this_frame, spread_angle, targets, target_actors, player_unit, player_pos, side_system, dot_targets, t, is_server)
 		end
 	end
 end
 
 ActionFlamerGasBurst._damage_and_burn_targets = function (self, t, force_trigger)
 	local targets = self._targets
+	local target_actors = self._target_actors
 	local ALIVE = ALIVE
 
 	for target_unit, hit_t in pairs(targets) do
-		if ALIVE[target_unit] and ScriptUnit.has_extension(target_unit, "health_system") then
+		local hit_actor = target_actors[target_unit]
+		local hit_zone_name_or_nil = HitZone.get_name(target_unit, hit_actor)
+		local target_breed_or_nil = Breed.unit_breed_or_nil(target_unit)
+		local target_is_hazard_prop, hazard_prop_is_active = HazardProp.status(target_unit)
+		local is_breed_with_hit_zone = target_breed_or_nil and hit_zone_name_or_nil
+		local should_deal_damage = target_is_hazard_prop and hazard_prop_is_active or not target_is_hazard_prop and is_breed_with_hit_zone or not target_breed_or_nil
+
+		if ALIVE[target_unit] and ScriptUnit.has_extension(target_unit, "health_system") and should_deal_damage then
 			if hit_t < t or force_trigger then
 				self:_damage_target(target_unit)
 
 				targets[target_unit] = nil
+				target_actors[target_unit] = nil
 			end
 		else
 			targets[target_unit] = nil
+			target_actors[target_unit] = nil
 		end
 	end
 

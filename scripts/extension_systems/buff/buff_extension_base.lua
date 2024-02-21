@@ -1102,13 +1102,13 @@ BuffExtensionBase._check_stack_node_effects = function (self, stack_node_effects
 	end
 end
 
-BuffExtensionBase.rpc_add_buff = function (self, channel_id, game_object_id, buff_template_id, server_index, optional_lerp_value, optional_item_slot_id, optional_parent_buff_template_id, from_specialization)
+BuffExtensionBase.rpc_add_buff = function (self, channel_id, game_object_id, buff_template_id, server_index, optional_lerp_value, optional_item_slot_id, optional_parent_buff_template_id, from_talent)
 	local template_name = NetworkLookup.buff_templates[buff_template_id]
 	local template = BuffTemplates[template_name]
 	local t = FixedFrame.get_latest_fixed_time()
 	local optional_item_slot_name = optional_item_slot_id and NetworkLookup.player_inventory_slot_names[optional_item_slot_id]
 	local optional_parent_buff_template = optional_parent_buff_template_id and NetworkLookup.buff_templates[optional_parent_buff_template_id]
-	local index = self:_add_buff(template, t, "buff_lerp_value", optional_lerp_value, "item_slot_name", optional_item_slot_name, "parent_buff_template", optional_parent_buff_template, "from_specialization", from_specialization)
+	local index = self:_add_buff(template, t, "buff_lerp_value", optional_lerp_value, "item_slot_name", optional_item_slot_name, "parent_buff_template", optional_parent_buff_template, "from_talent", from_talent)
 	self._buff_index_map[server_index] = index
 end
 

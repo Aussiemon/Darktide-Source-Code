@@ -10,7 +10,7 @@ local SocialMenuNotificationsView = class("SocialMenuNotificationsView", "BaseVi
 SocialMenuNotificationsView.init = function (self, settings, context)
 	local definitions = require(definition_path)
 
-	SocialMenuNotificationsView.super.init(self, definitions, settings)
+	SocialMenuNotificationsView.super.init(self, definitions, settings, context)
 
 	self._pass_input = true
 	self._parent = context and context.parent

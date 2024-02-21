@@ -494,17 +494,16 @@ weapon_template.actions = {
 		hit_armor_anim = "attack_hit",
 		start_input = "special_action",
 		sprint_requires_press_to_interrupt = true,
-		weapon_handling_template = "time_scale_1_1",
-		first_person_hit_anim = "hit_left_shake",
-		allow_conditional_chain = true,
-		range_mod = 1.15,
-		first_person_hit_stop_anim = "attack_hit",
-		allowed_during_sprint = true,
-		anim_event_3p = "attack_left_diagonal_up",
 		kind = "sweep",
+		first_person_hit_anim = "hit_left_shake",
+		range_mod = 1.15,
+		anim_event_3p = "attack_left_diagonal_up",
+		first_person_hit_stop_anim = "attack_hit",
+		stop_alternate_fire = true,
+		weapon_handling_template = "time_scale_1_1",
+		allowed_during_sprint = true,
 		damage_window_end = 0.3,
 		abort_sprint = true,
-		unaim = true,
 		uninterruptible = true,
 		anim_event = "attack_push",
 		total_time = 1.1,
@@ -592,13 +591,16 @@ weapon_template.actions = {
 	},
 	action_inspect = {
 		skip_3p_anims = false,
-		lock_view = true,
 		start_input = "inspect_start",
 		anim_end_event = "inspect_end",
 		kind = "inspect",
+		lock_view = true,
 		anim_event = "inspect_start",
 		stop_input = "inspect_stop",
 		total_time = math.huge,
+		anim_end_event_condition_func = function (unit, data, end_reason)
+			return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
+		end,
 		crosshair = {
 			crosshair_type = "inspect"
 		}
@@ -850,7 +852,7 @@ weapon_template.base_stats = {
 	}
 }
 weapon_template.traits = {}
-local bespoke_autogun_p2_traits = table.keys(WeaponTraitsBespokeAutogunP2)
+local bespoke_autogun_p2_traits = table.ukeys(WeaponTraitsBespokeAutogunP2)
 
 table.append(weapon_template.traits, bespoke_autogun_p2_traits)
 
@@ -886,5 +888,22 @@ weapon_template.displayed_attacks = {
 		type = "melee"
 	}
 }
+weapon_template.explicit_combo = {
+	{
+		"action_shoot_hip"
+	},
+	{
+		"action_shoot_zoomed"
+	}
+}
+weapon_template.special_action_name = "action_push"
+
+weapon_template.action_inspect_screen_ui_validation = function (wielded_slot_id, item, current_action, current_action_name, player)
+	return false
+end
+
+weapon_template.action_alt_inspect_screen_ui_validation = function (wielded_slot_id, item, current_action, current_action_name, player)
+	return false
+end
 
 return weapon_template

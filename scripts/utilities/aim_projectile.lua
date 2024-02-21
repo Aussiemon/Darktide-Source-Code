@@ -3,6 +3,7 @@ local PI = math.pi
 local parameter_table = {}
 
 AimProjectile.aim_parameters = function (initial_position, initial_rotation, look_rotation, locomotion_template, throw_type, time_in_action)
+	time_in_action = time_in_action or 0
 	local throw_config = locomotion_template.trajectory_parameters[throw_type]
 	local local_shoot_offset = Vector3(throw_config.offset_right or 0, throw_config.offset_forward or 0, throw_config.offset_up or 0)
 	local offset = Quaternion.rotate(look_rotation, local_shoot_offset)
@@ -111,6 +112,32 @@ AimProjectile.get_spawn_parameters_from_aim_component = function (action_aim_pro
 	local angular_velocity = action_aim_projectile_component.momentum
 
 	return position, rotation, direction, speed, angular_velocity
+end
+
+AimProjectile.check_throw_position = function (throw_position, look_position, projectile_locomotion_template, radius, physics_world)
+	local collision_type = projectile_locomotion_template.integrator_parameters.collision_types
+	local collision_filter = projectile_locomotion_template.integrator_parameters.collision_filter
+	local ok_pos = false
+	local itterations = 0
+
+	while not ok_pos and itterations < 5 do
+		itterations = itterations + 1
+		local hits = PhysicsWorld.linear_sphere_sweep(physics_world, look_position, throw_position, radius, 1, "types", collision_type, "collision_filter", collision_filter)
+		local hit = hits and hits[1]
+		local hit_position = hit and hit.position
+		local hit_distance = hit and hit.distance
+		local hit_normal = hit and hit.normal
+
+		if hit then
+			local back_tracking_vector = hit_normal * (radius + 0.1)
+			local new_aim_position = hit_position + back_tracking_vector
+			throw_position = new_aim_position
+		else
+			ok_pos = true
+		end
+	end
+
+	return throw_position, ok_pos
 end
 
 return AimProjectile

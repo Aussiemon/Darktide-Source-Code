@@ -14,10 +14,10 @@ local CATEGORIES_GRID = 1
 local SETTINGS_GRID = 2
 local OptionsView = class("OptionsView", "BaseView")
 
-OptionsView.init = function (self, settings)
+OptionsView.init = function (self, settings, context)
 	local definitions = require(definition_path)
 
-	OptionsView.super.init(self, definitions, settings)
+	OptionsView.super.init(self, definitions, settings, context)
 
 	self._pass_draw = false
 

@@ -1280,7 +1280,7 @@ weapon_template.base_stats = {
 	}
 }
 weapon_template.traits = {}
-local bespoke_combataxe_p1_traits = table.keys(WeaponTraitsBespokeCombataxeP1)
+local bespoke_combataxe_p1_traits = table.ukeys(WeaponTraitsBespokeCombataxeP1)
 
 table.append(weapon_template.traits, bespoke_combataxe_p1_traits)
 

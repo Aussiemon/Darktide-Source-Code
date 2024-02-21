@@ -24,21 +24,29 @@ local function attack_units_sort_function(a, b)
 	return attack_units_distance_sq[a] < attack_units_distance_sq[b]
 end
 
-Explosion.create_explosion = function (world, physics_world, source_position, optional_impact_normal, attacking_unit, explosion_template, power_level, charge_level, attack_type, is_critical_strike, ignore_cover, item_or_nil, origin_slot_or_nil, optional_hit_units_table)
-	power_level = explosion_template.scaled_power_level and Managers.state.difficulty:get_table_entry_by_challenge(explosion_template.scaled_power_level) or explosion_template.static_power_level or power_level
-
-	Managers.server_metrics:add_annotation("explosion_create", {
-		power_level = power_level
-	})
-
+Explosion.create_explosion = function (world, physics_world, source_position, optional_impact_normal, attacking_unit, explosion_template, power_level, charge_level, attack_type, is_critical_strike, ignore_cover, item_or_nil, origin_slot_or_nil, optional_hit_units_table, optional_attacking_unit_owner_unit, optional_apply_owner_buffs, predicted)
 	local attacking_unit_owner_unit = AttackingUnitResolver.resolve(attacking_unit)
 	local attacking_owner_buff_extension = ScriptUnit.has_extension(attacking_unit_owner_unit, "buff_system")
 	local attacker_owner_stat_buffs = attacking_owner_buff_extension and attacking_owner_buff_extension:stat_buffs()
 	local attacker_unit_data_extension = ScriptUnit.has_extension(attacking_unit, "unit_data_system")
 	local attacker_breed_or_nil = attacker_unit_data_extension and attacker_unit_data_extension:breed()
 	local lerp_values = Explosion.lerp_values(attacking_unit, explosion_template.name)
-	local collision_filter = explosion_template.collision_filter
 	local radius, close_radius = _get_radii(explosion_template, charge_level, lerp_values, attack_type, attacker_owner_stat_buffs, attacker_breed_or_nil)
+	local is_server = Managers.state.game_session:is_server()
+
+	_play_effects(world, physics_world, attacking_unit_owner_unit, explosion_template, charge_level, source_position, optional_impact_normal, radius, predicted, is_server)
+
+	if not is_server then
+		return
+	end
+
+	power_level = explosion_template.scaled_power_level and Managers.state.difficulty:get_table_entry_by_challenge(explosion_template.scaled_power_level) or explosion_template.static_power_level or power_level
+
+	Managers.server_metrics:add_annotation("explosion_create", {
+		power_level = power_level
+	})
+
+	local collision_filter = explosion_template.collision_filter
 	local hit_actors, num_actors = PhysicsWorld.immediate_overlap(physics_world, "position", source_position, "size", radius, "shape", "sphere", "types", "both", "collision_filter", collision_filter)
 	local weapon_system = Managers.state.extension:system("weapon_system")
 	local queue_index, data = weapon_system:prepare_queued_explosion()
@@ -126,6 +134,8 @@ Explosion.create_explosion = function (world, physics_world, source_position, op
 	data.is_critical_strike = is_critical_strike
 	data.item_or_nil = item_or_nil
 	data.sticking_to_unit = sticking_to_unit
+	data.optional_attacking_unit_owner_unit = optional_attacking_unit_owner_unit
+	data.optional_apply_owner_buffs = optional_apply_owner_buffs
 
 	if attacking_owner_buff_extension then
 		local param_table = attacking_owner_buff_extension:request_proc_event_param_table()
@@ -150,8 +160,6 @@ Explosion.create_explosion = function (world, physics_world, source_position, op
 
 		Suppression.apply_area_explosion_suppression(attacking_unit_owner_unit, suppression_settings, source_position, optional_relation, optional_include_self, progressed_lerp_values)
 	end
-
-	_play_effects(world, physics_world, attacking_unit_owner_unit, explosion_template, charge_level, source_position, optional_impact_normal, radius)
 
 	return queue_index, number_of_attack_units
 end
@@ -269,9 +277,15 @@ function _get_radii(explosion_template, charge_level, lerp_values, attack_type, 
 	return radius, close_radius
 end
 
-function _play_effects(world, physics_world, attacking_unit_owner_unit, explosion_template, charge_level, source_position, optional_impact_normal, radius)
+function _play_effects(world, physics_world, attacking_unit_owner_unit, explosion_template, charge_level, source_position, optional_impact_normal, radius, predicted, is_server)
 	local player_unit_spawn_manager = Managers.state.player_unit_spawn
 	local fx_extension = player_unit_spawn_manager:is_player_unit(attacking_unit_owner_unit) and ScriptUnit.extension(attacking_unit_owner_unit, "fx_system")
+
+	if not is_server and (not predicted or not fx_extension) then
+		return
+	end
+
+	local all_clients = not predicted or not fx_extension
 	local rotation = optional_impact_normal and Quaternion.look(optional_impact_normal) or Quaternion.identity()
 	local fx_system = Managers.state.extension:system("fx_system")
 	local charge_wwise_parameter_name = explosion_template.charge_wwise_parameter_name
@@ -294,7 +308,7 @@ function _play_effects(world, physics_world, attacking_unit_owner_unit, explosio
 						local scale = nil
 						local radius_variable_name = vfx_data.radius_variable_name
 
-						fx_extension:spawn_particles(effect_name, source_position, rotation, scale, radius_variable_name, Vector3(radius, radius, radius))
+						fx_extension:spawn_particles(effect_name, source_position, rotation, scale, radius_variable_name, Vector3(radius, radius, radius), all_clients)
 					else
 						fx_system:trigger_vfx(effect_name, source_position, rotation)
 					end
@@ -310,7 +324,7 @@ function _play_effects(world, physics_world, attacking_unit_owner_unit, explosio
 			local effect_name = vfx[i]
 
 			if fx_extension then
-				fx_extension:spawn_particles(effect_name, source_position, rotation)
+				fx_extension:spawn_particles(effect_name, source_position, rotation, nil, nil, nil, all_clients)
 			else
 				fx_system:trigger_vfx(effect_name, source_position, rotation)
 			end
@@ -329,7 +343,7 @@ function _play_effects(world, physics_world, attacking_unit_owner_unit, explosio
 				if fx_extension then
 					local _, material, _, _, _, _ = MaterialQuery.query_material(physics_world, source_position + Vector3.up() * 0.5, source_position + Vector3.down() * 0.5)
 
-					fx_extension:trigger_explosion_wwise_event_server_controlled(event_name_or_table, false, source_position, charge_wwise_parameter_name, charge_level, material)
+					fx_extension:trigger_explosion_wwise_event(event_name_or_table, false, source_position, charge_wwise_parameter_name, charge_level, material, all_clients)
 				else
 					fx_system:trigger_wwise_event(event_name_or_table, source_position, nil, nil, charge_wwise_parameter_name, charge_level)
 				end
@@ -340,7 +354,7 @@ function _play_effects(world, physics_world, attacking_unit_owner_unit, explosio
 					local has_husk_events = event_name_or_table.has_husk_events
 					local _, material, _, _, _, _ = MaterialQuery.query_material(physics_world, source_position + Vector3.up() * 0.5, source_position + Vector3.down() * 0.5)
 
-					fx_extension:trigger_explosion_wwise_event_server_controlled(event_name, has_husk_events, source_position, charge_wwise_parameter_name, charge_level, material)
+					fx_extension:trigger_explosion_wwise_event(event_name, has_husk_events, source_position, charge_wwise_parameter_name, charge_level, material, all_clients)
 				else
 					fx_system:trigger_wwise_event(event_name_or_table, source_position, nil, nil, charge_wwise_parameter_name, charge_level)
 				end

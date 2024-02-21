@@ -2,6 +2,7 @@ local BreedResourceDependencies = require("scripts/utilities/breed_resource_depe
 local Breeds = require("scripts/settings/breed/breeds")
 local Loader = require("scripts/loading/loader")
 local MasterItems = require("scripts/backend/master_items")
+local Missions = require("scripts/settings/mission/mission_templates")
 local BreedLoader = class("BreedLoader")
 local LOAD_STATES = table.enum("none", "packages_load", "done")
 
@@ -12,28 +13,52 @@ BreedLoader.init = function (self)
 end
 
 BreedLoader.destroy = function (self)
-	self:cleanup()
+	self:_cleanup()
 end
 
 BreedLoader.start_loading = function (self, mission_name, level_editor_level, circumstance_name)
-	local chosen_breeds = Breeds
+	local chosen_breeds = {}
+	local mission_settings = Missions[mission_name]
+	local is_hub = mission_settings.is_hub
+
+	if is_hub then
+		chosen_breeds.human = Breeds.human
+		chosen_breeds.ogryn = Breeds.ogryn
+	else
+		chosen_breeds = Breeds
+	end
+
 	local item_definitions = MasterItems.get_cached()
 	local breeds_to_load = BreedResourceDependencies.generate(chosen_breeds, item_definitions)
 
 	if table.is_empty(breeds_to_load) then
 		self._load_state = LOAD_STATES.done
-	else
-		self._load_state = LOAD_STATES.packages_load
-		local callback = callback(self, "_load_done_callback")
-		local packages_to_load = self._packages_to_load
 
-		for package_name, _ in pairs(breeds_to_load) do
+		return
+	end
+
+	local packages_to_load = self._packages_to_load
+	local new_package_added = false
+
+	for package_name, _ in pairs(breeds_to_load) do
+		if not packages_to_load[package_name] then
 			packages_to_load[package_name] = false
+			new_package_added = true
 		end
+	end
 
-		local package_manager = Managers.package
+	if not new_package_added then
+		self._load_state = LOAD_STATES.done
 
-		for package_name, _ in pairs(packages_to_load) do
+		return
+	end
+
+	self._load_state = LOAD_STATES.packages_load
+	local callback = callback(self, "_load_done_callback")
+	local package_manager = Managers.package
+
+	for package_name, loaded in pairs(packages_to_load) do
+		if not loaded then
 			local id = package_manager:load(package_name, "BreedLoader", callback)
 			self._package_ids[id] = package_name
 		end
@@ -64,6 +89,10 @@ BreedLoader.is_loading_done = function (self)
 end
 
 BreedLoader.cleanup = function (self)
+	return
+end
+
+BreedLoader._cleanup = function (self)
 	local package_manager = Managers.package
 	local packages = self._package_ids
 
@@ -76,6 +105,10 @@ BreedLoader.cleanup = function (self)
 	self._load_state = LOAD_STATES.none
 
 	table.clear(self._packages_to_load)
+end
+
+BreedLoader.dont_destroy = function (self)
+	return true
 end
 
 implements(BreedLoader, Loader)

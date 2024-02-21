@@ -886,13 +886,13 @@ weapon_template.actions = {
 		}
 	},
 	action_stab_start = {
+		uninterruptible = true,
+		sprint_requires_press_to_interrupt = true,
+		start_input = "special_action_hold",
 		kind = "windup",
 		allowed_during_sprint = true,
-		start_input = "special_action_hold",
-		sprint_requires_press_to_interrupt = true,
 		anim_end_event = "attack_finished",
-		unaim = true,
-		uninterruptible = true,
+		stop_alternate_fire = true,
 		anim_event = "attack_charge_stab",
 		total_time = math.huge,
 		crosshair = {
@@ -956,16 +956,15 @@ weapon_template.actions = {
 	action_stab = {
 		damage_window_start = 0.3,
 		hit_armor_anim = "attack_hit_shield",
+		stop_alternate_fire = true,
 		sprint_requires_press_to_interrupt = true,
-		weapon_handling_template = "time_scale_1_3",
 		kind = "sweep",
 		first_person_hit_anim = "attack_hit",
 		first_person_hit_stop_anim = "attack_hit",
-		range_mod = 1.15,
+		weapon_handling_template = "time_scale_1_3",
 		allowed_during_sprint = true,
-		allow_conditional_chain = true,
+		range_mod = 1.15,
 		damage_window_end = 0.36666666666666664,
-		unaim = true,
 		uninterruptible = true,
 		anim_event = "attack_stab",
 		total_time = 1.1,
@@ -1054,17 +1053,16 @@ weapon_template.actions = {
 	action_stab_heavy = {
 		damage_window_start = 0.1,
 		hit_armor_anim = "attack_hit_shield",
-		sprint_requires_press_to_interrupt = true,
 		weapon_handling_template = "time_scale_1_3",
+		allowed_during_sprint = true,
 		kind = "sweep",
 		first_person_hit_anim = "attack_hit",
 		first_person_hit_stop_anim = "attack_hit",
-		allow_conditional_chain = true,
-		allowed_during_sprint = true,
 		range_mod = 1.15,
+		stop_alternate_fire = true,
+		sprint_requires_press_to_interrupt = true,
 		damage_window_end = 0.23333333333333334,
 		abort_sprint = true,
-		unaim = true,
 		uninterruptible = true,
 		anim_event = "attack_stab_heavy",
 		prevent_sprint = true,
@@ -1390,7 +1388,7 @@ weapon_template.base_stats = {
 	}
 }
 weapon_template.traits = {}
-local bespoke_lasgun_p2_traits = table.keys(WeaponTraitsBespokeLasgunP2)
+local bespoke_lasgun_p2_traits = table.ukeys(WeaponTraitsBespokeLasgunP2)
 
 table.append(weapon_template.traits, bespoke_lasgun_p2_traits)
 

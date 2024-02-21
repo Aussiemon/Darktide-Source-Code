@@ -94,7 +94,7 @@ XboxLiveUtils.get_user_profiles = function (xuids)
 			})
 		end
 
-		return Managers.xasync:wrap(profiles_async, XboxLiveProfile.release_block)
+		return Managers.xasync:wrap(profiles_async)
 	end):next(function (async_block)
 		local profiles, error_code = XboxLiveProfile.get_user_profiles_result(async_block)
 
@@ -128,7 +128,7 @@ XboxLiveUtils.get_user_presence_data = function (xuids)
 			})
 		end
 
-		return Managers.xasync:wrap(profiles_async, XSocial.release_block)
+		return Managers.xasync:wrap(profiles_async)
 	end):next(function (async_block)
 		local user_states, error_code = XSocial.get_user_presence_data_result(async_block)
 
@@ -162,7 +162,7 @@ XboxLiveUtils.get_block_list = function ()
 			})
 		end
 
-		return Managers.xasync:wrap(avoid_list_async, XboxLivePrivacy.release_block)
+		return Managers.xasync:wrap(avoid_list_async)
 	end):next(function (async_block)
 		local avoid_list, error_code = XboxLivePrivacy.get_avoid_list_result(async_block)
 
@@ -196,7 +196,7 @@ XboxLiveUtils.get_mute_list = function ()
 			})
 		end
 
-		return Managers.xasync:wrap(mute_list_async, XboxLivePrivacy.release_block)
+		return Managers.xasync:wrap(mute_list_async)
 	end):next(function (async_block)
 		local mute_list, error_code = XboxLivePrivacy.get_mute_list_result(async_block)
 
@@ -229,7 +229,7 @@ XboxLiveUtils.get_activity = function (xuid_string_array)
 				header = "XboxLiveMPA.get_activity"
 			})
 		else
-			return Managers.xasync:wrap(async_block, XboxLiveMPA.release_block)
+			return Managers.xasync:wrap(async_block)
 		end
 	end):next(function (async_block)
 		local result, error_code = XboxLiveMPA.get_activity_result(async_block)
@@ -275,7 +275,7 @@ XboxLiveUtils.set_activity = function (connection_string, party_id, num_other_me
 				header = "XboxLiveMPA.set_activity"
 			})
 		else
-			return Managers.xasync:wrap(async_block, XboxLiveMPA.release_block)
+			return Managers.xasync:wrap(async_block)
 		end
 	end):next(function (_)
 		Log.info("XboxLive", "Success setting activity")
@@ -300,7 +300,7 @@ XboxLiveUtils.delete_activity = function ()
 				header = "XboxLiveMPA.delete_activity"
 			})
 		else
-			return Managers.xasync:wrap(async_block, XboxLiveMPA.release_block)
+			return Managers.xasync:wrap(async_block)
 		end
 	end):next(function (_)
 		Log.info("XboxLive", "Success deleting activity")
@@ -325,7 +325,7 @@ XboxLiveUtils.batch_check_permission = function (permissions, xuids, anonymous_u
 			})
 		end
 
-		return Managers.xasync:wrap(batch_check_permission_async, XboxLivePrivacy.release_block):next(function (async_block)
+		return Managers.xasync:wrap(batch_check_permission_async):next(function (async_block)
 			local result, error_code = XboxLivePrivacy.batch_check_permission_result(async_block)
 
 			if error_code then
@@ -365,7 +365,7 @@ XboxLiveUtils.show_player_profile_card = function (xuid)
 
 		XGameUI.show_player_profile_card(user_id, async_block, xuid)
 
-		return Managers.xasync:wrap(async_block, XAsyncBlock.release_block)
+		return Managers.xasync:wrap(async_block)
 	end):catch(function (error_data)
 		error_data.header = "XboxLiveUtils.show_player_profile_card"
 
@@ -390,7 +390,7 @@ XboxLiveUtils.update_achievement = function (achievement_id, progress)
 				header = "XboxLiveAchievement.update_achievement"
 			})
 		else
-			return Managers.xasync:wrap(async_block, XboxLiveAchievement.release_async_block)
+			return Managers.xasync:wrap(async_block)
 		end
 	end):next(function ()
 		Log.debug("XboxLive", "Update achievement success.")
@@ -414,7 +414,7 @@ XboxLiveUtils.get_all_achievements = function ()
 				header = "XboxLiveAchievement.get_achievement_async"
 			})
 		else
-			return Managers.xasync:wrap(achievements_async, XboxLiveAchievement.release_async_block)
+			return Managers.xasync:wrap(achievements_async)
 		end
 	end):next(function (async_block)
 		local achievement_result, error_code = XboxLiveAchievement.get_achievement_result(async_block)
@@ -467,7 +467,7 @@ XboxLiveUtils.title_storage_download = function (blob_path, blob_type, storage_t
 					header = "XboxLive.create_user_context"
 				})
 			else
-				return Managers.xasync:wrap(async_result, XboxLive.release_async_block_create_live_context_async):next(function ()
+				return Managers.xasync:wrap(async_result):next(function ()
 					return user_id
 				end)
 			end
@@ -482,7 +482,7 @@ XboxLiveUtils.title_storage_download = function (blob_path, blob_type, storage_t
 				header = "TitleStorage.blob_download_async"
 			})
 		else
-			return Managers.xasync:wrap(async_result, TitleStorage.release_async_block)
+			return Managers.xasync:wrap(async_result)
 		end
 	end):next(function (async_block)
 		local download_result, download_size, error_code = TitleStorage.get_blob_download_result(async_block)

@@ -83,7 +83,7 @@ weapon_template.actions = {
 				action_name = "action_block"
 			},
 			special_action = {
-				action_name = "action_activate_special"
+				action_name = "action_activate_special_left"
 			}
 		}
 	},
@@ -154,7 +154,7 @@ weapon_template.actions = {
 				action_name = "action_block"
 			},
 			special_action = {
-				action_name = "action_activate_special"
+				action_name = "action_activate_special_left"
 			}
 		},
 		anim_end_event_condition_func = function (unit, data, end_reason)
@@ -238,7 +238,7 @@ weapon_template.actions = {
 				chain_until = 0.05
 			},
 			special_action = {
-				action_name = "action_activate_special",
+				action_name = "action_activate_special_right",
 				chain_time = 0.5
 			}
 		},
@@ -323,7 +323,7 @@ weapon_template.actions = {
 				chain_until = 0.1
 			},
 			special_action = {
-				action_name = "action_activate_special",
+				action_name = "action_activate_special_right",
 				chain_time = 0.3
 			}
 		},
@@ -416,7 +416,7 @@ weapon_template.actions = {
 				action_name = "action_block"
 			},
 			special_action = {
-				action_name = "action_activate_special"
+				action_name = "action_activate_special_right"
 			}
 		},
 		anim_end_event_condition_func = function (unit, data, end_reason)
@@ -495,7 +495,7 @@ weapon_template.actions = {
 				chain_until = 0.25
 			},
 			special_action = {
-				action_name = "action_activate_special",
+				action_name = "action_activate_special_left",
 				chain_time = 0.5
 			}
 		},
@@ -580,7 +580,7 @@ weapon_template.actions = {
 				chain_until = 0.05
 			},
 			special_action = {
-				action_name = "action_activate_special",
+				action_name = "action_activate_special_left",
 				chain_time = 0.35
 			}
 		},
@@ -673,7 +673,7 @@ weapon_template.actions = {
 				action_name = "action_block"
 			},
 			special_action = {
-				action_name = "action_activate_special"
+				action_name = "action_activate_special_left"
 			}
 		},
 		anim_end_event_condition_func = function (unit, data, end_reason)
@@ -757,7 +757,7 @@ weapon_template.actions = {
 				chain_until = 0.05
 			},
 			special_action = {
-				action_name = "action_activate_special",
+				action_name = "action_activate_special_right",
 				chain_time = 0.5
 			}
 		},
@@ -824,6 +824,17 @@ weapon_template.actions = {
 			start_modifier = 1
 		},
 		allowed_chain_actions = {
+			combat_ability = {
+				action_name = "combat_ability"
+			},
+			grenade_ability = {
+				{
+					action_name = "grenade_ability"
+				},
+				{
+					action_name = "grenade_ability_quick_throw"
+				}
+			},
 			wield = {
 				action_name = "action_unwield"
 			},
@@ -831,19 +842,20 @@ weapon_template.actions = {
 				action_name = "action_push"
 			},
 			special_action = {
-				action_name = "action_activate_special"
+				action_name = "action_activate_special_left"
 			}
 		}
 	},
 	action_right_light_pushfollow = {
 		damage_window_start = 0.35,
 		hit_armor_anim = "attack_hit_shield",
-		anim_end_event = "attack_finished",
-		weapon_handling_template = "time_scale_1_4",
-		kind = "sweep",
-		first_person_hit_anim = "hit_right_down_shake",
 		range_mod = 1.25,
+		weapon_handling_template = "time_scale_1_4",
+		first_person_hit_anim = "hit_right_down_shake",
+		sprint_requires_press_to_interrupt = "true",
+		kind = "sweep",
 		damage_window_end = 0.45,
+		anim_end_event = "attack_finished",
 		anim_event_3p = "attack_swing_down",
 		anim_event = "attack_swing_down_right",
 		hit_stop_anim = "hit_stop",
@@ -895,7 +907,7 @@ weapon_template.actions = {
 				chain_time = 0.65
 			},
 			special_action = {
-				action_name = "action_activate_special",
+				action_name = "action_activate_special_left",
 				chain_time = 0.65
 			}
 		},
@@ -974,7 +986,7 @@ weapon_template.actions = {
 				chain_time = 0.4
 			},
 			special_action = {
-				action_name = "action_activate_special",
+				action_name = "action_activate_special_left",
 				chain_time = 0.4
 			}
 		},
@@ -985,7 +997,7 @@ weapon_template.actions = {
 		outer_damage_profile = DamageProfileTemplates.light_push,
 		outer_damage_type = damage_types.physical
 	},
-	action_activate_special = {
+	action_activate_special_left = {
 		activation_time = 0.35,
 		kind = "activate_special",
 		start_input = "special_action",
@@ -996,7 +1008,7 @@ weapon_template.actions = {
 		anim_event = "activate",
 		abort_fx_source_name = "_special_active",
 		skip_3p_anims = false,
-		total_time = 0.85,
+		total_time = 1.25,
 		action_movement_curve = {
 			{
 				modifier = 0.75,
@@ -1045,6 +1057,74 @@ weapon_template.actions = {
 			},
 			start_attack = {
 				action_name = "action_melee_start_left",
+				chain_time = 0.65
+			},
+			block = {
+				action_name = "action_block",
+				chain_time = 0.6
+			}
+		}
+	},
+	action_activate_special_right = {
+		kind = "activate_special",
+		activation_time = 0.35,
+		anim_event_3p = "activate",
+		weapon_handling_template = "time_scale_1",
+		anim_end_event = "activate_out",
+		abort_sound_alias = "weapon_special_abort",
+		allowed_during_sprint = true,
+		anim_event = "activate_right",
+		abort_fx_source_name = "_special_active",
+		skip_3p_anims = false,
+		total_time = 1.25,
+		action_movement_curve = {
+			{
+				modifier = 0.75,
+				t = 0.2
+			},
+			{
+				modifier = 0.62,
+				t = 0.3
+			},
+			{
+				modifier = 0.6,
+				t = 0.325
+			},
+			{
+				modifier = 0.61,
+				t = 0.35
+			},
+			{
+				modifier = 0.75,
+				t = 0.5
+			},
+			{
+				modifier = 1,
+				t = 1
+			},
+			{
+				modifier = 1.1,
+				t = 2
+			},
+			start_modifier = 1
+		},
+		allowed_chain_actions = {
+			combat_ability = {
+				action_name = "combat_ability"
+			},
+			grenade_ability = {
+				{
+					action_name = "grenade_ability"
+				},
+				{
+					action_name = "grenade_ability_quick_throw"
+				}
+			},
+			wield = {
+				action_name = "action_unwield"
+			},
+			start_attack = {
+				action_name = "action_melee_start_right",
 				chain_time = 0.65
 			},
 			block = {
@@ -1364,7 +1444,7 @@ weapon_template.base_stats = {
 	}
 }
 weapon_template.traits = {}
-local bespoke_powersword_p1_traits = table.keys(WeaponTraitsBespokePowerswordP1)
+local bespoke_powersword_p1_traits = table.ukeys(WeaponTraitsBespokePowerswordP1)
 
 table.append(weapon_template.traits, bespoke_powersword_p1_traits)
 

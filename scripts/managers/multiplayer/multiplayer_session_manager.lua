@@ -29,12 +29,15 @@ end
 MultiplayerSessionManager.init = function (self)
 	self._session = nil
 	self._session_boot = nil
+	self._breed_loader = BreedLoader:new()
 end
 
 MultiplayerSessionManager.destroy = function (self)
 	if self._session_boot then
 		self._session_boot:delete()
 	end
+
+	self._breed_loader:delete()
 end
 
 MultiplayerSessionManager._rpc_ignore_slot_reservation = function (self, leave_reason)
@@ -257,7 +260,7 @@ MultiplayerSessionManager.update = function (self, dt)
 				local loaders = {
 					ViewLoader:new(),
 					LevelLoader:new(),
-					BreedLoader:new(),
+					self._breed_loader,
 					HudLoader:new()
 				}
 				local loading_host = LoadingHost:new(Managers.connection:network_event_delegate(), loaders, connection_class_name)
@@ -270,7 +273,7 @@ MultiplayerSessionManager.update = function (self, dt)
 				local loaders = {
 					ViewLoader:new(),
 					LevelLoader:new(),
-					BreedLoader:new(),
+					self._breed_loader,
 					HudLoader:new()
 				}
 				local loading_host = LoadingHost:new(Managers.connection:network_event_delegate(), loaders, connection_class_name)
@@ -291,7 +294,7 @@ MultiplayerSessionManager.update = function (self, dt)
 				local loaders = {
 					ViewLoader:new(),
 					LevelLoader:new(),
-					BreedLoader:new(),
+					self._breed_loader,
 					HudLoader:new()
 				}
 				local loading_client = LoadingClient:new(Managers.connection:network_event_delegate(), host_channel_id, loaders)

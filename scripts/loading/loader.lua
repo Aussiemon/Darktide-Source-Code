@@ -1,7 +1,8 @@
 local INTERFACE = {
 	"start_loading",
 	"is_loading_done",
-	"cleanup"
+	"cleanup",
+	"dont_destroy"
 }
 
 return INTERFACE

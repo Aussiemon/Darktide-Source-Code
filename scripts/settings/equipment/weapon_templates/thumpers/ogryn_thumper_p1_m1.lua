@@ -161,6 +161,17 @@ weapon_template.actions = {
 			wield = {
 				action_name = "action_unwield",
 				chain_time = 0.4
+			},
+			combat_ability = {
+				action_name = "combat_ability"
+			},
+			grenade_ability = {
+				{
+					action_name = "grenade_ability"
+				},
+				{
+					action_name = "grenade_ability_quick_throw"
+				}
 			}
 		}
 	},
@@ -173,13 +184,14 @@ weapon_template.actions = {
 		allowed_chain_actions = {}
 	},
 	action_shoot_hip = {
-		start_input = "shoot_pressed",
 		sprint_requires_press_to_interrupt = true,
+		start_input = "shoot_pressed",
+		keep_combo_on_start = true,
 		sprint_ready_up_time = 0.2,
 		weapon_handling_template = "immediate_single_shot",
 		ammunition_usage = 1,
-		kind = "shoot_pellets",
 		uninterruptible = true,
+		kind = "shoot_pellets",
 		total_time = 0.2,
 		action_movement_curve = {
 			{
@@ -259,6 +271,7 @@ weapon_template.actions = {
 		}
 	},
 	action_zoom = {
+		hold_combo = true,
 		start_input = "zoom",
 		kind = "aim",
 		total_time = 0.3,
@@ -328,12 +341,13 @@ weapon_template.actions = {
 		}
 	},
 	action_shoot_zoomed = {
+		keep_combo_on_start = true,
 		start_input = "zoom_shoot",
 		kind = "shoot_pellets",
 		weapon_handling_template = "immediate_single_shot",
 		ammunition_usage = 1,
-		allowed_during_sprint = false,
 		uninterruptible = true,
+		allowed_during_sprint = false,
 		total_time = 0.2,
 		crosshair = {
 			crosshair_type = "shotgun"
@@ -478,17 +492,16 @@ weapon_template.actions = {
 		damage_window_start = 0.5333333333333333,
 		hit_armor_anim = "attack_hit_shield",
 		start_input = "bash",
-		range_mod = 1.15,
+		kind = "sweep",
 		sprint_requires_press_to_interrupt = true,
 		first_person_hit_anim = "hit_left_shake",
-		kind = "sweep",
-		allow_conditional_chain = true,
-		allowed_during_sprint = true,
+		stop_alternate_fire = true,
 		first_person_hit_stop_anim = "attack_hit",
+		allowed_during_sprint = true,
+		range_mod = 1.15,
 		damage_window_end = 0.7333333333333333,
 		attack_direction_override = "left",
 		abort_sprint = true,
-		unaim = true,
 		uninterruptible = true,
 		anim_event = "attack_bash",
 		prevent_sprint = true,
@@ -888,7 +901,7 @@ weapon_template.stamina_template = "default"
 weapon_template.toughness_template = "default"
 weapon_template.footstep_intervals = FootstepIntervalsTemplates.ogryn_thumper_shotgun
 weapon_template.traits = {}
-local bespoke_traits = table.keys(WeaponTraitsBespokeThumperP1)
+local bespoke_traits = table.ukeys(WeaponTraitsBespokeThumperP1)
 
 table.append(weapon_template.traits, bespoke_traits)
 
@@ -918,6 +931,14 @@ weapon_template.displayed_attacks = {
 		desc = "loc_stats_special_action_melee_weapon_bash_desc",
 		display_name = "loc_weapon_special_weapon_bash",
 		type = "melee"
+	}
+}
+weapon_template.explicit_combo = {
+	{
+		"action_shoot_hip"
+	},
+	{
+		"action_shoot_zoomed"
 	}
 }
 weapon_template.special_action_name = "action_bash"

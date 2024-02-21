@@ -1,17 +1,17 @@
-local ShotshellTemplates = require("scripts/settings/projectile/shotshell_templates")
-local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
 local AimAssistTemplates = require("scripts/settings/equipment/aim_assist_templates")
+local ArmorSettings = require("scripts/settings/damage/armor_settings")
 local BaseTemplateSettings = require("scripts/settings/equipment/weapon_templates/base_template_settings")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
 local FootstepIntervalsTemplates = require("scripts/settings/equipment/footstep/footstep_intervals_templates")
 local HitScanTemplates = require("scripts/settings/projectile/hit_scan_templates")
 local LineEffects = require("scripts/settings/effects/line_effects")
+local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
+local ShotshellTemplates = require("scripts/settings/projectile/shotshell_templates")
 local SmartTargetingTemplates = require("scripts/settings/equipment/smart_targeting_templates")
-local WeapnTraitsBespokeShotgunP1 = require("scripts/settings/equipment/weapon_traits/weapon_traits_bespoke_shotgun_p1")
+local WeaponTraitsBespokeShotgunP1 = require("scripts/settings/equipment/weapon_traits/weapon_traits_bespoke_shotgun_p1")
 local WeaponTraitTemplates = require("scripts/settings/equipment/weapon_templates/weapon_trait_templates/weapon_trait_templates")
 local WeaponTweakTemplateSettings = require("scripts/settings/equipment/weapon_templates/weapon_tweak_template_settings")
-local ArmorSettings = require("scripts/settings/damage/armor_settings")
 local armor_types = ArmorSettings.types
 local buff_keywords = BuffSettings.keywords
 local buff_stat_buffs = BuffSettings.stat_buffs
@@ -1047,7 +1047,7 @@ weapon_template.base_stats = {
 	}
 }
 weapon_template.traits = {}
-local bespoke_shotgun_p1_traits = table.keys(WeapnTraitsBespokeShotgunP1)
+local bespoke_shotgun_p1_traits = table.ukeys(WeaponTraitsBespokeShotgunP1)
 
 table.append(weapon_template.traits, bespoke_shotgun_p1_traits)
 
@@ -1158,6 +1158,20 @@ weapon_template.displayed_attacks = {
 		desc = "loc_stats_special_action_special_bullet_shotgun_p1m3_desc",
 		display_name = "loc_weapon_special_special_ammo",
 		type = "special_bullet"
+	}
+}
+weapon_template.explicit_combo = {
+	{
+		"action_shoot_hip"
+	},
+	{
+		"action_shoot_zoomed"
+	}
+}
+weapon_template.special_actions = {
+	{
+		action_name = "action_shoot_hip",
+		use_special_damage = true
 	}
 }
 

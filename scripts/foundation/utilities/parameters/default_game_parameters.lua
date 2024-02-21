@@ -30,6 +30,7 @@ DefaultGameParameters.default_transmit_rate = 0.03
 DefaultGameParameters.window_title = ""
 DefaultGameParameters.backend_fetch_master_items = false
 DefaultGameParameters.save_achievements_in_batch = true
+DefaultGameParameters.use_fleetiq = false
 DefaultGameParameters.aws_matchmaking = false
 DefaultGameParameters.aws_matchmaking_mission_server_alias = "mission-v1"
 DefaultGameParameters.aws_matchmaking_hub_server_alias = "hub-v1"

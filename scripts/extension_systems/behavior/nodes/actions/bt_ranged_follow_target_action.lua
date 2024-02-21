@@ -35,7 +35,9 @@ BtRangedFollowTargetAction.enter = function (self, unit, breed, blackboard, scra
 	local vo_event = action_data.vo_event
 
 	if vo_event then
-		Vo.enemy_vo_event(unit, vo_event)
+		local breed_name = breed.name
+
+		Vo.enemy_generic_vo_event(unit, vo_event, breed_name)
 	end
 end
 

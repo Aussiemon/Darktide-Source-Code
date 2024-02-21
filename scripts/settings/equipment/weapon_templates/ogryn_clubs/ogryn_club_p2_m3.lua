@@ -134,6 +134,9 @@ weapon_template.actions = {
 				action_name = "action_weapon_special",
 				chain_time = 0.4
 			},
+			combat_ability = {
+				action_name = "combat_ability"
+			},
 			grenade_ability = {
 				{
 					action_name = "grenade_ability"
@@ -200,6 +203,9 @@ weapon_template.actions = {
 			special_action = {
 				action_name = "action_weapon_special",
 				chain_time = 0.25
+			},
+			combat_ability = {
+				action_name = "combat_ability"
 			},
 			grenade_ability = {
 				{
@@ -284,6 +290,9 @@ weapon_template.actions = {
 				action_name = "action_weapon_special",
 				chain_time = 0.25
 			},
+			combat_ability = {
+				action_name = "combat_ability"
+			},
 			grenade_ability = {
 				{
 					action_name = "grenade_ability"
@@ -363,6 +372,9 @@ weapon_template.actions = {
 			special_action = {
 				action_name = "action_weapon_special",
 				chain_time = 0.25
+			},
+			combat_ability = {
+				action_name = "combat_ability"
 			},
 			grenade_ability = {
 				{
@@ -450,6 +462,9 @@ weapon_template.actions = {
 				action_name = "action_weapon_special",
 				chain_time = 0.1
 			},
+			combat_ability = {
+				action_name = "combat_ability"
+			},
 			grenade_ability = {
 				{
 					action_name = "grenade_ability"
@@ -529,6 +544,9 @@ weapon_template.actions = {
 				action_name = "action_weapon_special",
 				chain_time = 0.25
 			},
+			combat_ability = {
+				action_name = "combat_ability"
+			},
 			grenade_ability = {
 				{
 					action_name = "grenade_ability"
@@ -607,6 +625,9 @@ weapon_template.actions = {
 			special_action = {
 				action_name = "action_weapon_special",
 				chain_time = 0.25
+			},
+			combat_ability = {
+				action_name = "combat_ability"
 			},
 			grenade_ability = {
 				{
@@ -703,6 +724,9 @@ weapon_template.actions = {
 				action_name = "action_weapon_special",
 				chain_time = 0.25
 			},
+			combat_ability = {
+				action_name = "combat_ability"
+			},
 			grenade_ability = {
 				{
 					action_name = "grenade_ability"
@@ -784,6 +808,9 @@ weapon_template.actions = {
 				action_name = "action_weapon_special",
 				chain_time = 0.25
 			},
+			combat_ability = {
+				action_name = "combat_ability"
+			},
 			grenade_ability = {
 				{
 					action_name = "grenade_ability"
@@ -862,6 +889,9 @@ weapon_template.actions = {
 			special_action = {
 				action_name = "action_weapon_special",
 				chain_time = 0.25
+			},
+			combat_ability = {
+				action_name = "combat_ability"
 			},
 			grenade_ability = {
 				{
@@ -962,6 +992,9 @@ weapon_template.actions = {
 				action_name = "action_weapon_special_2",
 				chain_time = 0.5
 			},
+			combat_ability = {
+				action_name = "combat_ability"
+			},
 			grenade_ability = {
 				{
 					action_name = "grenade_ability"
@@ -1061,6 +1094,9 @@ weapon_template.actions = {
 				action_name = "action_weapon_special",
 				chain_time = 0.5
 			},
+			combat_ability = {
+				action_name = "combat_ability"
+			},
 			grenade_ability = {
 				{
 					action_name = "grenade_ability"
@@ -1139,6 +1175,9 @@ weapon_template.actions = {
 			special_action = {
 				action_name = "action_weapon_special",
 				chain_time = 0.25
+			},
+			combat_ability = {
+				action_name = "combat_ability"
 			},
 			grenade_ability = {
 				{
@@ -1219,6 +1258,9 @@ weapon_template.actions = {
 				action_name = "action_weapon_special",
 				chain_time = 0.25
 			},
+			combat_ability = {
+				action_name = "combat_ability"
+			},
 			grenade_ability = {
 				{
 					action_name = "grenade_ability"
@@ -1296,20 +1338,32 @@ weapon_template.actions = {
 			},
 			special_action = {
 				action_name = "action_weapon_special"
+			},
+			combat_ability = {
+				action_name = "combat_ability"
+			},
+			grenade_ability = {
+				{
+					action_name = "grenade_ability"
+				},
+				{
+					action_name = "grenade_ability_quick_throw"
+				}
 			}
 		}
 	},
 	action_right_light_pushfollow = {
 		damage_window_start = 0.43333333333333335,
 		hit_armor_anim = "attack_hit_shield",
-		weapon_handling_template = "time_scale_1",
-		anim_end_event = "attack_finished",
 		kind = "sweep",
+		weapon_handling_template = "time_scale_1",
 		first_person_hit_anim = "hit_right_shake",
-		range_mod = 1.25,
 		first_person_hit_stop_anim = "attack_hit",
+		sprint_requires_press_to_interrupt = "true",
+		range_mod = 1.25,
 		attack_direction_override = "push",
 		damage_window_end = 0.8,
+		anim_end_event = "attack_finished",
 		anim_event_3p = "attack_swing_down_slow",
 		anim_event = "attack_swing_down",
 		total_time = 2,
@@ -1351,6 +1405,9 @@ weapon_template.actions = {
 			special_action = {
 				action_name = "action_weapon_special",
 				chain_time = 0.65
+			},
+			combat_ability = {
+				action_name = "combat_ability"
 			},
 			grenade_ability = {
 				{
@@ -1751,7 +1808,7 @@ weapon_template.base_stats = {
 	}
 }
 weapon_template.traits = {}
-local bespoke_ogryn_club_p2 = table.keys(WeaponTraitsBespokeOgrynClubP2)
+local bespoke_ogryn_club_p2 = table.ukeys(WeaponTraitsBespokeOgrynClubP2)
 
 table.append(weapon_template.traits, bespoke_ogryn_club_p2)
 

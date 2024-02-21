@@ -1,6 +1,6 @@
-local Promise = require("scripts/foundation/utilities/promise")
 local BackendError = require("scripts/foundation/managers/backend/backend_error")
 local BackendUtilities = require("scripts/foundation/managers/backend/utilities/backend_utilities")
+local Promise = require("scripts/foundation/utilities/promise")
 local Interface = {
 	"fetch",
 	"create",
@@ -157,16 +157,6 @@ end
 
 Characters.get_talents_v2 = function (self, character_id)
 	return self:get_data(character_id, "vocation", "talents")
-end
-
-Characters.set_talents = function (self, character_id, talents)
-	return self:set_data(character_id, "career", {
-		talents = talents
-	})
-end
-
-Characters.get_talents = function (self, character_id)
-	return self:get_data(character_id, "career", "talents")
 end
 
 Characters.set_character_height = function (self, character_id, value)

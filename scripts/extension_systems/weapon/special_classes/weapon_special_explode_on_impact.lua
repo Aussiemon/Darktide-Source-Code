@@ -56,13 +56,13 @@ WeaponSpecialExplodeOnImpact.process_hit = function (self, t, weapon, action_set
 	local extra_explosion = num_special_activations < 1 + extra_explosions and armor_type and extra_explosion_armortype[armor_type]
 	local should_explode = target_is_alive and special_active and (first_target or extra_explosion)
 
-	if self._is_server and should_explode then
+	if should_explode then
 		local player_position = POSITION_LOOKUP[self._player_unit] + Vector3(0, 0, 0.75)
 		local explosion_direction = 0.5 * Vector3.normalize(player_position - hit_position)
 		local tweak_data = action_settings.weapon_special_tweak_data or self._tweak_data
 		local explosion_template = tweak_data.explosion_template
 
-		Explosion.create_explosion(self._world, self._physics_world, hit_position + explosion_direction, attack_direction, self._player_unit, explosion_template, DEFAULT_POWER_LEVEL, 1, attack_types.explosion, false, false, weapon.item, optional_origin_slot)
+		Explosion.create_explosion(self._world, self._physics_world, hit_position + explosion_direction, attack_direction, self._player_unit, explosion_template, DEFAULT_POWER_LEVEL, 1, attack_types.explosion, false, false, weapon.item, optional_origin_slot, nil, nil, nil, true)
 
 		inventory_slot_component.num_special_activations = num_special_activations + 1
 	end

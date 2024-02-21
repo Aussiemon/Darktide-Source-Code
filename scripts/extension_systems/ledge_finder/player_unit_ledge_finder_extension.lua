@@ -70,10 +70,6 @@ PlayerUnitLedgeFinderExtension._new_ledge_data = function (self)
 	return ledge_data
 end
 
-PlayerUnitLedgeFinderExtension.extensions_ready = function (self, world, unit)
-	return
-end
-
 PlayerUnitLedgeFinderExtension.ledges = function (self)
 	local ledges = self._ledge_ring_buffer[_ring_buffer_index(self._fixed_frame)]
 
@@ -128,19 +124,12 @@ PlayerUnitLedgeFinderExtension.calculate_ledges = function (self, fixed_frame, p
 	end
 end
 
-local temp_potential_left_ledge_points = {
-	[0] = 0
-}
-local temp_potential_right_ledge_points = {
-	[0] = 0
-}
 local RAYCAST_RESULTS_LEFT = {
 	[0] = 0
 }
 local RAYCAST_RESULTS_RIGHT = {
 	[0] = 0
 }
-local temp_ledge_point_unit_map = {}
 
 PlayerUnitLedgeFinderExtension._try_find_ledges = function (self, ledges, base_position, player_position, forward, right)
 	local left_pos, right_pos = nil

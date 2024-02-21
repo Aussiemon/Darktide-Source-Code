@@ -9,8 +9,6 @@ local function record_telemetry(dialogue)
 	Managers.telemetry_events:vo_bank_reshuffled(character_name, bank_name)
 end
 
-local temp_weight_table = {}
-local temp_indexes = {}
 DialogueQueries = {
 	get_sound_event_duration = function (dialogue, index)
 		if dialogue.sound_events_duration then

@@ -5,14 +5,12 @@ DialogueSystemWwise.init = function (self, world)
 end
 
 DialogueSystemWwise.make_unit_auto_source = function (self, unit, node_id)
-	local source, position = nil
+	local source = nil
 
 	if node_id then
 		source = WwiseWorld.make_auto_source(self._wwise_world, unit, node_id)
-		position = Unit.world_position(unit, node_id)
 	else
 		source = WwiseWorld.make_auto_source(self._wwise_world, unit)
-		position = Unit.world_position(unit, 1)
 	end
 
 	return source

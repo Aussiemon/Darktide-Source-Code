@@ -17,6 +17,7 @@ table.make_unique(overrides)
 local crit_armor_mod = DamageProfileSettings.crit_armor_mod
 local crit_impact_armor_mod = DamageProfileSettings.crit_impact_armor_mod
 local damage_lerp_values = DamageProfileSettings.damage_lerp_values
+local no_cleave = DamageProfileSettings.no_cleave
 local single_cleave = DamageProfileSettings.single_cleave
 local double_cleave = DamageProfileSettings.double_cleave
 damage_templates.default_bolter_killshot = {

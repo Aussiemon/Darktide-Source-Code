@@ -1,14 +1,10 @@
 local BaseWeaponTraitBuffTemplates = require("scripts/settings/buff/weapon_traits_buff_templates/base_weapon_trait_buff_templates")
-local BuffSettings = require("scripts/settings/buff/buff_settings")
-local CheckProcFunctions = require("scripts/settings/buff/validation_functions/check_proc_functions")
-local ConditionalFunctions = require("scripts/settings/buff/validation_functions/conditional_functions")
-local keywords = BuffSettings.keywords
-local stat_buffs = BuffSettings.stat_buffs
-local proc_events = BuffSettings.proc_events
-local templates = {
-	weapon_trait_bespoke_autogun_p3_crit_chance_based_on_ammo_left = table.clone(BaseWeaponTraitBuffTemplates.crit_chance_based_on_ammo_left),
-	weapon_trait_bespoke_autogun_p3_stacking_crit_chance_on_weakspot_parent = table.clone(BaseWeaponTraitBuffTemplates.stacking_crit_chance_on_weakspot_parent)
-}
+local templates = {}
+
+table.make_unique(templates)
+
+templates.weapon_trait_bespoke_autogun_p3_crit_chance_based_on_ammo_left = table.clone(BaseWeaponTraitBuffTemplates.crit_chance_based_on_ammo_left)
+templates.weapon_trait_bespoke_autogun_p3_stacking_crit_chance_on_weakspot_parent = table.clone(BaseWeaponTraitBuffTemplates.stacking_crit_chance_on_weakspot_parent)
 templates.weapon_trait_bespoke_autogun_p3_stacking_crit_chance_on_weakspot_parent.child_buff_template = "weapon_trait_bespoke_autogun_p3_stacking_crit_chance_on_weakspot_child"
 templates.weapon_trait_bespoke_autogun_p3_stacking_crit_chance_on_weakspot_child = table.clone(BaseWeaponTraitBuffTemplates.stacking_crit_chance_on_weakspot_child)
 templates.weapon_trait_bespoke_autogun_p3_suppression_negation_on_weakspot = table.clone(BaseWeaponTraitBuffTemplates.suppression_negation_on_weakspot)

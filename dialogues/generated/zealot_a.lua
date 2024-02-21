@@ -19,7 +19,10 @@ return function ()
 				args = {
 					"chainsword_p1_m1",
 					"chainsword_2h_p1_m1",
-					"chainaxe_p1_m1"
+					"chainaxe_p1_m1",
+					"chainsword_p1_m2",
+					"chainsword_2h_p1_m2",
+					"chainaxe_p1_m2"
 				}
 			},
 			{

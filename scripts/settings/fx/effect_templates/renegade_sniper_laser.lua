@@ -4,11 +4,13 @@ local LASER_Y_OFFSET = 1
 local LASER_X = 0.05
 local LASER_Z = 0.5
 local LASER_PARTICLE_NAME = "content/fx/particles/enemies/sniper_laser_sight"
+local LASER_PARTICLE_NAME_OUTDOORS = "content/fx/particles/enemies/renegade_sniper/renegade_sniper_beam_outdoors"
 local LASER_LENGTH_VARIABLE_NAME = "hit_distance"
 local LASER_SOUND_EVENT = "wwise/events/weapon/play_combat_weapon_las_sniper_target_beam"
 local LASER_STOP_SOUND_EVENT = "wwise/events/weapon/stop_combat_weapon_las_sniper_target_beam"
 local resources = {
 	laser_particle_name = LASER_PARTICLE_NAME,
+	laser_particle_name_outdoors = LASER_PARTICLE_NAME_OUTDOORS,
 	laser_sound_event = LASER_SOUND_EVENT,
 	laser_stop_sound_event = LASER_STOP_SOUND_EVENT
 }
@@ -37,6 +39,14 @@ local effect_template = {
 			return
 		end
 
+		local particle_name = LASER_PARTICLE_NAME
+		local mission = Managers.state.mission:mission()
+		local zone_id = mission.zone_id
+
+		if zone_id == "dust" then
+			particle_name = LASER_PARTICLE_NAME_OUTDOORS
+		end
+
 		local wwise_world = template_context.wwise_world
 		local unit = template_data.unit
 		local game_session = Managers.state.game_session:game_session()
@@ -50,9 +60,9 @@ local effect_template = {
 
 		template_data.source_id = source_id
 		local world = template_context.world
-		local particle_id = World.create_particles(world, LASER_PARTICLE_NAME, muzzle_pos)
+		local particle_id = World.create_particles(world, particle_name, muzzle_pos)
 		template_data.particle_id = particle_id
-		local variable_index = World.find_particles_variable(world, LASER_PARTICLE_NAME, LASER_LENGTH_VARIABLE_NAME)
+		local variable_index = World.find_particles_variable(world, particle_name, LASER_LENGTH_VARIABLE_NAME)
 		template_data.variable_index = variable_index
 	end,
 	update = function (template_data, template_context, dt, t)

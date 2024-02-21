@@ -16,7 +16,6 @@ MinigameDecodeSymbols.init = function (self, unit, is_server, seed)
 	self._decode_symbols_total_items = MinigameSettings.decode_symbols_total_items
 	self._symbols = {}
 	self._decode_targets = {}
-	self._current_stage = nil
 	self._decode_start_time = nil
 	self._misses_per_player = {}
 
@@ -26,33 +25,32 @@ end
 MinigameDecodeSymbols.hot_join_sync = function (self, sender, channel)
 	MinigameDecodeSymbols.super.hot_join_sync(self, sender, channel)
 
-	local unit_spawner_manager = Managers.state.unit_spawner
-	local is_level_unit, minigame_unit_id = unit_spawner_manager:game_object_id_or_level_index(self._minigame_unit)
-	local game_session_manager = Managers.state.game_session
-	local current_decode_stage = self._current_stage
-
-	if current_decode_stage then
-		game_session_manager:send_rpc_clients("rpc_minigame_sync_decode_set_stage", minigame_unit_id, is_level_unit, current_decode_stage)
-	end
-
 	local decode_targets = self._decode_targets
 
 	for target_stage = 1, #decode_targets do
-		game_session_manager:send_rpc_clients("rpc_minigame_sync_decode_symbols_set_target", minigame_unit_id, is_level_unit, target_stage, decode_targets[target_stage])
+		self:send_rpc_to_channel(channel, "rpc_minigame_sync_decode_symbols_set_target", target_stage, decode_targets[target_stage])
 	end
 
 	if self._decode_start_time then
 		local fixed_frame_id = self._decode_start_time / Managers.state.game_session.fixed_time_step
 
-		game_session_manager:send_rpc_clients("rpc_minigame_sync_decode_symbols_set_start_time", minigame_unit_id, is_level_unit, fixed_frame_id)
+		self:send_rpc_to_channel(channel, "rpc_minigame_sync_decode_symbols_set_start_time", fixed_frame_id)
 	end
 
 	local symbols = self._symbols
 
-	game_session_manager:send_rpc_clients("rpc_minigame_sync_decode_symbols_set_symbols", minigame_unit_id, is_level_unit, symbols)
+	if #symbols > 0 then
+		self:send_rpc_to_channel(channel, "rpc_minigame_sync_decode_symbols_set_symbols", symbols)
+	end
 end
 
 MinigameDecodeSymbols._player_miss_target = function (self, player)
+	if not player then
+		Log.error("MinigameDecodeSymbols", "Trying to access user but there is none")
+
+		return
+	end
+
 	local unique_id = player:unique_id()
 	self._misses_per_player[unique_id] = (self._misses_per_player[unique_id] or 0) + 1
 end
@@ -171,9 +169,6 @@ MinigameDecodeSymbols.on_action_pressed = function (self, t)
 	end
 
 	local is_action_on_target = self:is_on_target(t)
-	local fx_extension = self._fx_extension
-	local sync_with_clients = true
-	local include_client = true
 
 	if is_action_on_target then
 		local stage_amount = self._stage_amount
@@ -181,10 +176,10 @@ MinigameDecodeSymbols.on_action_pressed = function (self, t)
 
 		if self._stage_amount < self._current_stage then
 			Unit.flow_event(self._minigame_unit, "lua_minigame_success_last")
-			fx_extension:trigger_gear_wwise_event_with_source("sfx_minigame_success_last", nil, self._fx_source_name, sync_with_clients, include_client)
+			self:play_sound("sfx_minigame_success_last")
 		else
 			Unit.flow_event(self._minigame_unit, "lua_minigame_success")
-			fx_extension:trigger_gear_wwise_event_with_source("sfx_minigame_success", nil, self._fx_source_name, sync_with_clients, include_client)
+			self:play_sound("sfx_minigame_success")
 		end
 	else
 		local player = Managers.player:player_from_session_id(self._player_session_id)
@@ -194,7 +189,7 @@ MinigameDecodeSymbols.on_action_pressed = function (self, t)
 		self._current_stage = math.max(self._current_stage - 1, 1)
 
 		Unit.flow_event(self._minigame_unit, "lua_minigame_fail")
-		fx_extension:trigger_gear_wwise_event_with_source("sfx_minigame_fail", nil, self._fx_source_name, sync_with_clients, include_client)
+		self:play_sound("sfx_minigame_fail")
 	end
 
 	local game_session_manager = Managers.state.game_session
@@ -229,17 +224,6 @@ MinigameDecodeSymbols._calculate_cursor_time = function (self, t)
 	return cursor_time
 end
 
-MinigameDecodeSymbols.is_completed = function (self)
-	local stage_amount = self._stage_amount
-	local current_stage = self._current_stage
-
-	if current_stage then
-		return stage_amount < current_stage
-	end
-
-	return false
-end
-
 MinigameDecodeSymbols.current_decode_target = function (self)
 	local decode_current_stage = self._current_stage
 
@@ -248,22 +232,6 @@ MinigameDecodeSymbols.current_decode_target = function (self)
 	end
 
 	return nil
-end
-
-MinigameDecodeSymbols.set_current_stage = function (self, stage)
-	if self._current_stage then
-		if stage < self._current_stage then
-			Unit.flow_event(self._minigame_unit, "lua_minigame_fail")
-		elseif self._current_stage < stage then
-			if self._stage_amount < stage then
-				Unit.flow_event(self._minigame_unit, "lua_minigame_success_last")
-			else
-				Unit.flow_event(self._minigame_unit, "lua_minigame_success")
-			end
-		end
-	end
-
-	self._current_stage = stage
 end
 
 MinigameDecodeSymbols.set_start_time = function (self, time)
@@ -276,10 +244,6 @@ end
 
 MinigameDecodeSymbols.set_target = function (self, stage, target)
 	self._decode_targets[stage] = target
-end
-
-MinigameDecodeSymbols.current_stage = function (self)
-	return self._current_stage
 end
 
 MinigameDecodeSymbols.sweep_duration = function (self)

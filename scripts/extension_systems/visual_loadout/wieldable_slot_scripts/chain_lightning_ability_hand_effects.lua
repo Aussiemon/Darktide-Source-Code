@@ -103,7 +103,7 @@ ChainLightningAbilityHandEffects._update_vfx = function (self, t)
 	local is_critical_strike = self._critical_strike_component.is_active
 	local fx_hand = fx_settings and (is_critical_strike and fx_settings.fx_hand_critical_strike or fx_settings.fx_hand) or DEFAULT_HAND
 	local action_kind = action_settings and action_settings.kind
-	local attacking = action_kind == "chain_lightning" or action_kind == "chain_lightning_powerup"
+	local attacking = action_kind == "chain_lightning"
 	local targeting = action_kind == "overload_charge_target_finder" or action_kind == "overload_target_finder"
 	local play_right = fx_hand == "right" or fx_hand == "both"
 	local play_left = fx_hand == "left" or fx_hand == "both"

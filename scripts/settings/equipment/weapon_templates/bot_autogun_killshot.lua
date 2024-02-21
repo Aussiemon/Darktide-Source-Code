@@ -572,9 +572,8 @@ weapon_template.actions = {
 		range_mod = 1.15,
 		kind = "sweep",
 		first_person_hit_anim = "hit_left_shake",
-		first_person_hit_stop_anim = "attack_hit",
 		allowed_during_sprint = false,
-		allow_conditional_chain = true,
+		first_person_hit_stop_anim = "attack_hit",
 		damage_window_end = 0.3,
 		uninterruptible = true,
 		anim_event = "attack_left_diagonal_up",
@@ -664,9 +663,8 @@ weapon_template.actions = {
 		range_mod = 1.15,
 		kind = "sweep",
 		first_person_hit_anim = "attack_hit",
-		first_person_hit_stop_anim = "attack_hit",
 		allowed_during_sprint = false,
-		allow_conditional_chain = true,
+		first_person_hit_stop_anim = "attack_hit",
 		damage_window_end = 0.26666666666666666,
 		uninterruptible = true,
 		anim_event = "attack_stab",
@@ -949,7 +947,7 @@ weapon_template.base_stats = {
 	}
 }
 weapon_template.traits = {}
-local bespoke_autogun_p3_traits = table.keys(WeaponTraitsBespokeAutogunP3)
+local bespoke_autogun_p3_traits = table.ukeys(WeaponTraitsBespokeAutogunP3)
 
 table.append(weapon_template.traits, bespoke_autogun_p3_traits)
 

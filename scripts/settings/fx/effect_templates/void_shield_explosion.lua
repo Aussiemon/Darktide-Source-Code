@@ -11,6 +11,10 @@ local effect_template = {
 	name = "void_shield_explosion",
 	resources = resources,
 	start = function (template_data, template_context)
+		if DEDICATED_SERVER then
+			return
+		end
+
 		local unit = template_data.unit
 		local visual_loadout_extension = ScriptUnit.extension(unit, "visual_loadout_system")
 		local shield_unit = visual_loadout_extension:slot_unit(SHIELD_INVENTORY_SLOT_NAME)
@@ -32,6 +36,10 @@ local effect_template = {
 		return
 	end,
 	stop = function (template_data, template_context)
+		if DEDICATED_SERVER then
+			return
+		end
+
 		local shield_unit = template_data.shield_unit
 
 		if Unit.alive(shield_unit) then

@@ -1,8 +1,9 @@
 local BuffSettings = require("scripts/settings/buff/buff_settings")
-local WeaponTweakTemplateSettings = require("scripts/settings/equipment/weapon_templates/weapon_tweak_template_settings")
 local templates = {}
+
+table.make_unique(templates)
+
 local stat_buffs = BuffSettings.stat_buffs
-local proc_events = BuffSettings.proc_events
 templates.weapon_trait_bespoke_combatsword_p2_increased_attack_cleave_on_multiple_hits = {
 	weapon_trait_bespoke_combatsword_p2_increased_attack_cleave_on_multiple_hits = {
 		{

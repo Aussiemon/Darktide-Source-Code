@@ -100,7 +100,7 @@ Stamina.add_stamina_percent = function (unit, percent_amount)
 	stamina_write_component.current_fraction = new_fraction
 end
 
-Stamina.update = function (t, dt, stamina_write_component, specialization_stamina_template, unit, fixed_frame)
+Stamina.update = function (t, dt, stamina_write_component, archetype_stamina_template, unit, fixed_frame)
 	if stamina_write_component.regeneration_paused then
 		return
 	end
@@ -108,14 +108,14 @@ Stamina.update = function (t, dt, stamina_write_component, specialization_stamin
 	local buff_extension = ScriptUnit.has_extension(unit, "buff_system")
 	local stat_buffs = buff_extension and buff_extension:stat_buffs()
 	local regen_stat = stat_buffs and stat_buffs.stamina_regeneration_delay or 0
-	local stamina_regen_delay = specialization_stamina_template.regeneration_delay + regen_stat
+	local stamina_regen_delay = archetype_stamina_template.regeneration_delay + regen_stat
 
 	if t < stamina_write_component.last_drain_time + stamina_regen_delay then
 		return
 	end
 
-	local current_value, max_value = Stamina.current_and_max_value(unit, stamina_write_component, specialization_stamina_template)
-	local regeneration_per_second = specialization_stamina_template.regeneration_per_second
+	local current_value, max_value = Stamina.current_and_max_value(unit, stamina_write_component, archetype_stamina_template)
+	local regeneration_per_second = archetype_stamina_template.regeneration_per_second
 
 	if stat_buffs then
 		local stamina_regeneration_modifier = stat_buffs.stamina_regeneration_modifier
@@ -128,7 +128,7 @@ Stamina.update = function (t, dt, stamina_write_component, specialization_stamin
 	stamina_write_component.current_fraction = new_fraction
 end
 
-Stamina.current_and_max_value = function (unit, stamina_read_component, specialization_stamina_template)
+Stamina.current_and_max_value = function (unit, stamina_read_component, archetype_stamina_template)
 	local buff_extension = ScriptUnit.has_extension(unit, "buff_system")
 	local weapon_extension = ScriptUnit.has_extension(unit, "weapon_system")
 	local weapon_modifier = 0
@@ -138,7 +138,7 @@ Stamina.current_and_max_value = function (unit, stamina_read_component, speciali
 		weapon_modifier = weapon_stamina_template and weapon_stamina_template.stamina_modifier or 0
 	end
 
-	local max_value = specialization_stamina_template.base_stamina + weapon_modifier
+	local max_value = archetype_stamina_template.base_stamina + weapon_modifier
 
 	if buff_extension then
 		local stat_buffs = buff_extension:stat_buffs()

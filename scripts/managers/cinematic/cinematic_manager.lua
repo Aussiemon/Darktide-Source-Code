@@ -1,10 +1,10 @@
 local CameraModes = require("scripts/managers/player/player_game_states/utilities/camera_modes")
 local CinematicLevelLoader = require("scripts/extension_systems/cinematic_scene/utilities/cinematic_level_loader")
-local CinematicManager = class("CinematicManager")
 local CinematicManagerTestify = GameParameters.testify and require("scripts/managers/cinematic/cinematic_manager_testify")
 local CinematicSceneSettings = require("scripts/settings/cinematic_scene/cinematic_scene_settings")
-local ScriptWorld = require("scripts/foundation/utilities/script_world")
 local InputUtils = require("scripts/managers/input/input_utils")
+local ScriptWorld = require("scripts/foundation/utilities/script_world")
+local CinematicManager = class("CinematicManager")
 local CINEMATIC_NAMES = CinematicSceneSettings.CINEMATIC_NAMES
 local CLIENT_RPCS = {
 	"rpc_cinematic_story_sync",

@@ -175,6 +175,30 @@ Sprint.requires_press_to_interrupt = function (action_setting)
 	return action_kind_sprint_requires_press_to_interrupt
 end
 
+local _no_interruption_for_sprint_table = {}
+
+for i = 1, #ActionHandlerSettings.no_interruption_for_sprint do
+	local action_kind = ActionHandlerSettings.no_interruption_for_sprint[i]
+	_no_interruption_for_sprint_table[action_kind] = true
+end
+
+Sprint.no_interruption_for_sprint = function (action_setting)
+	if not action_setting then
+		return false
+	end
+
+	local action_setting_no_interruption_for_sprint = action_setting.no_interruption_for_sprint
+
+	if action_setting_no_interruption_for_sprint ~= nil then
+		return action_setting_no_interruption_for_sprint
+	end
+
+	local action_kind = action_setting.kind
+	local action_kind_no_interruption_for_sprint = _no_interruption_for_sprint_table[action_kind]
+
+	return action_kind_no_interruption_for_sprint
+end
+
 local _prevent_sprint_table = {}
 
 for i = 1, #ActionHandlerSettings.prevent_sprint do

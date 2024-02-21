@@ -374,6 +374,13 @@ MinionAttack.start_shooting = function (unit, scratchpad, t, action_data, option
 	local first_shoot_timing = optional_shoot_timing or DEFAULT_FIRST_SHOOT_TIMING
 	scratchpad.next_shoot_timing = t + first_shoot_timing / ranged_attack_speed
 	local num_shots = action_data.num_shots
+	local combat_range_shoot_difficulty_settings = action_data.combat_range_shoot_difficulty_settings
+
+	if combat_range_shoot_difficulty_settings then
+		local behavior_component = scratchpad.behavior_component
+		local combat_range = behavior_component.combat_range
+		num_shots = combat_range_shoot_difficulty_settings[combat_range].num_shots
+	end
 
 	if num_shots then
 		local diff_num_shots = Managers.state.difficulty:get_table_entry_by_challenge(num_shots)
@@ -500,6 +507,14 @@ MinionAttack.update_shooting = function (unit, scratchpad, t, action_data)
 
 	if time_left_to_shoot == 0 then
 		local time_per_shot = action_data.time_per_shot
+		local combat_range_shoot_difficulty_settings = action_data.combat_range_shoot_difficulty_settings
+
+		if combat_range_shoot_difficulty_settings then
+			local behavior_component = scratchpad.behavior_component
+			local combat_range = behavior_component.combat_range
+			time_per_shot = combat_range_shoot_difficulty_settings[combat_range].time_per_shot
+		end
+
 		local diff_time_per_shot = Managers.state.difficulty:get_table_entry_by_challenge(time_per_shot)
 		time_per_shot = math.random_range(diff_time_per_shot[1], diff_time_per_shot[2])
 		time_per_shot = time_per_shot / scratchpad.shoot_attack_speed
@@ -639,11 +654,11 @@ MinionAttack.check_and_trigger_backstab_sound = function (attacking_unit, action
 
 	local first_person_component = target_unit_data_extension:read_component("first_person")
 	local look_rotation = first_person_component.rotation
-	local look_direction = Vector3.flat(Quaternion.forward(look_rotation))
+	local look_direction = Vector3.normalize(Vector3.flat(Quaternion.forward(look_rotation)))
 	local attacking_unit_position = POSITION_LOOKUP[attacking_unit]
 	local player_unit_position = POSITION_LOOKUP[target_unit]
-	local to_target = Vector3.normalize(Vector3.flat(attacking_unit_position - player_unit_position))
-	local dot = Vector3.dot(to_target, look_direction)
+	local to_attacker = Vector3.normalize(Vector3.flat(attacking_unit_position - player_unit_position))
+	local dot = Vector3.dot(to_attacker, look_direction)
 	local is_behind = dot < dot_threshold
 
 	if not is_behind then
@@ -651,7 +666,7 @@ MinionAttack.check_and_trigger_backstab_sound = function (attacking_unit, action
 	end
 
 	local fx_extension = ScriptUnit.extension(target_unit, "fx_system")
-	local position = player_unit_position + to_target * BACKSTAB_POSITION_OFFSET_DISTANCE
+	local position = player_unit_position + to_attacker * BACKSTAB_POSITION_OFFSET_DISTANCE
 
 	fx_extension:trigger_exclusive_wwise_event(wwise_event, position)
 

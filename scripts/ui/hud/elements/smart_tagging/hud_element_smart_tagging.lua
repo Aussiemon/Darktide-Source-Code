@@ -1,5 +1,6 @@
 local ChatManagerConstants = require("scripts/foundation/managers/chat/chat_manager_constants")
 local Definitions = require("scripts/ui/hud/elements/smart_tagging/hud_element_smart_tagging_definitions")
+local Hud = require("scripts/utilities/ui/hud")
 local HudElementSmartTaggingSettings = require("scripts/ui/hud/elements/smart_tagging/hud_element_smart_tagging_settings")
 local InputDevice = require("scripts/managers/input/input_device")
 local InputUtils = require("scripts/managers/input/input_utils")
@@ -236,9 +237,21 @@ HudElementSmartTagging._on_tag_stop_callback = function (self, t, ui_renderer, r
 		return
 	end
 
+	local target_marker, target_unit, target_position = nil
+	local parent = self._parent
+	local player_unit = parent:player_unit()
+	local interactor_extension = ScriptUnit.extension(player_unit, "interactor_system")
+	local interactor_target_unit = interactor_extension:target_unit()
+	local interactor_smart_tag_extension = interactor_target_unit and ScriptUnit.has_extension(interactor_target_unit, "smart_tag_system")
+
+	if interactor_smart_tag_extension then
+		target_unit = interactor_target_unit
+	else
+		local force_update_targets = true
+		target_marker, target_unit, target_position = self:_find_best_smart_tag_interaction(ui_renderer, render_settings, force_update_targets)
+	end
+
 	local tag_context = self._tag_context
-	local force_update_targets = true
-	local target_marker, target_unit, target_position = self:_find_best_smart_tag_interaction(ui_renderer, render_settings, force_update_targets)
 
 	if target_unit then
 		self:_handle_selected_unit(target_unit)
@@ -1261,9 +1274,14 @@ HudElementSmartTagging._can_tag_active_interaction = function (self)
 
 	if interactor_extension then
 		local interactee_unit = interactor_extension:target_unit()
+		local focus_unit = interactor_extension:focus_unit()
 
-		if ALIVE[interactee_unit] and interactor_extension and interactor_extension:can_interact(interactee_unit) and ScriptUnit.has_extension(interactee_unit, "smart_tag_system") then
-			return true
+		if ALIVE[interactee_unit] and interactor_extension and interactor_extension:can_interact(interactee_unit) then
+			if ScriptUnit.has_extension(interactee_unit, "smart_tag_system") then
+				return true
+			end
+		elseif ALIVE[focus_unit] and interactor_extension:hud_block_text() then
+			return false
 		end
 	end
 
@@ -1288,8 +1306,13 @@ HudElementSmartTagging._can_present_tag_interaction = function (self)
 
 	if interactor_extension then
 		local interactee_unit = interactor_extension:target_unit()
+		local focus_unit = interactor_extension:focus_unit()
 
-		if ALIVE[interactee_unit] and interactor_extension and interactor_extension:can_interact(interactee_unit) and ScriptUnit.has_extension(interactee_unit, "smart_tag_system") then
+		if ALIVE[interactee_unit] and interactor_extension and interactor_extension:can_interact(interactee_unit) then
+			if ScriptUnit.has_extension(interactee_unit, "smart_tag_system") then
+				return false
+			end
+		elseif ALIVE[focus_unit] and interactor_extension:hud_block_text() then
 			return false
 		end
 	end

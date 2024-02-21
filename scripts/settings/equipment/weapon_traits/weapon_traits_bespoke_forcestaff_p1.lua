@@ -1,5 +1,8 @@
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local templates = {}
+
+table.make_unique(templates)
+
 local stat_buffs = BuffSettings.stat_buffs
 templates.weapon_trait_bespoke_forcestaff_p1_vents_warpcharge_on_weakspot_hits = {
 	weapon_trait_bespoke_forcestaff_p1_vents_warpcharge_on_weakspot_hits = {
@@ -142,30 +145,6 @@ templates.weapon_trait_bespoke_forcestaff_p1_rend_armor_on_aoe_charge = {
 templates.weapon_trait_bespoke_forcestaff_p1_uninterruptable_while_charging = {
 	weapon_trait_bespoke_forcestaff_p1_uninterruptable_while_charging = {
 		{}
-	}
-}
-templates.weapon_trait_bespoke_forcestaff_p1_faster_charge_on_chained_secondary_attacks = {
-	weapon_trait_bespoke_forcestaff_p1_faster_charge_on_chained_secondary_attacks = {
-		{
-			stat_buffs = {
-				[stat_buffs.charge_up_time] = -0.055
-			}
-		},
-		{
-			stat_buffs = {
-				[stat_buffs.charge_up_time] = -0.065
-			}
-		},
-		{
-			stat_buffs = {
-				[stat_buffs.charge_up_time] = -0.075
-			}
-		},
-		{
-			stat_buffs = {
-				[stat_buffs.charge_up_time] = -0.085
-			}
-		}
 	}
 }
 templates.weapon_trait_bespoke_forcestaff_p1_faster_charge_on_chained_secondary_attacks = {

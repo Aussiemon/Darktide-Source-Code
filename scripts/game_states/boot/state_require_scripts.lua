@@ -73,6 +73,11 @@ StateRequireScripts._init_crashify = function (self)
 		Crashify.print_property("machine_id", Application.machine_id())
 	end
 
+	if GameParameters.testify then
+		Crashify.print_property("testify", true)
+		Crashify.print_property("testify_test_suite_id", DevParameters.testify_test_suite_id)
+	end
+
 	Log.info("INFO", "Crashify Ready")
 end
 

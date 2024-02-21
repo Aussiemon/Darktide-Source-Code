@@ -163,6 +163,17 @@ weapon_template.actions = {
 			wield = {
 				action_name = "action_unwield",
 				chain_time = 0.4
+			},
+			combat_ability = {
+				action_name = "combat_ability"
+			},
+			grenade_ability = {
+				{
+					action_name = "grenade_ability"
+				},
+				{
+					action_name = "grenade_ability_quick_throw"
+				}
 			}
 		}
 	},
@@ -241,6 +252,17 @@ weapon_template.actions = {
 				chain_time = 0.1,
 				reset_combo = true,
 				action_name = "action_bash"
+			},
+			combat_ability = {
+				action_name = "combat_ability"
+			},
+			grenade_ability = {
+				{
+					action_name = "grenade_ability"
+				},
+				{
+					action_name = "grenade_ability_quick_throw"
+				}
 			}
 		},
 		time_scale_stat_buffs = {
@@ -254,6 +276,7 @@ weapon_template.actions = {
 		}
 	},
 	action_zoom = {
+		hold_combo = true,
 		start_input = "zoom",
 		kind = "aim",
 		total_time = 0.3,
@@ -324,13 +347,14 @@ weapon_template.actions = {
 	},
 	action_shoot_zoomed = {
 		ammunition_usage = 1,
-		allowed_during_sprint = false,
-		start_input = "zoom_shoot",
-		kind = "shoot_projectile",
 		weapon_handling_template = "immediate_single_shot",
 		throw_type = "shoot",
+		kind = "shoot_projectile",
+		start_input = "zoom_shoot",
+		allowed_during_sprint = false,
 		spawn_at_time = 0,
 		uninterruptible = true,
+		keep_combo_on_start = true,
 		total_time = 0.75,
 		crosshair = {
 			crosshair_type = "ironsight"
@@ -356,7 +380,7 @@ weapon_template.actions = {
 			},
 			zoom_shoot = {
 				action_name = "action_shoot_zoomed",
-				chain_time = 1.05
+				chain_time = 0.6
 			},
 			zoom_release = {
 				action_name = "action_unzoom",
@@ -393,11 +417,12 @@ weapon_template.actions = {
 		}
 	},
 	action_reload = {
-		start_input = "reload",
-		hold_combo = true,
 		kind = "reload_state",
-		stop_alternate_fire = true,
+		hide_arc = true,
+		start_input = "reload",
 		weapon_handling_template = "time_scale_1",
+		hold_combo = true,
+		stop_alternate_fire = true,
 		uninterruptible = true,
 		total_time = 2.333,
 		crosshair = {
@@ -473,17 +498,16 @@ weapon_template.actions = {
 		damage_window_start = 0.5333333333333333,
 		hit_armor_anim = "attack_hit_shield",
 		start_input = "bash",
-		range_mod = 1.15,
+		kind = "sweep",
 		sprint_requires_press_to_interrupt = true,
 		first_person_hit_anim = "hit_left_shake",
 		first_person_hit_stop_anim = "attack_hit",
-		kind = "sweep",
+		range_mod = 1.15,
 		allowed_during_sprint = true,
-		allow_conditional_chain = true,
+		stop_alternate_fire = true,
 		damage_window_end = 0.7333333333333333,
 		attack_direction_override = "left",
 		abort_sprint = true,
-		unaim = true,
 		uninterruptible = true,
 		anim_event = "attack_bash",
 		prevent_sprint = true,
@@ -548,6 +572,17 @@ weapon_template.actions = {
 				chain_time = 0.9,
 				reset_combo = true,
 				action_name = "action_zoom"
+			},
+			combat_ability = {
+				action_name = "combat_ability"
+			},
+			grenade_ability = {
+				{
+					action_name = "grenade_ability"
+				},
+				{
+					action_name = "grenade_ability_quick_throw"
+				}
 			}
 		},
 		conditional_state_to_action_input = {
@@ -660,6 +695,17 @@ weapon_template.actions = {
 				chain_time = 1,
 				reset_combo = true,
 				action_name = "action_zoom"
+			},
+			combat_ability = {
+				action_name = "combat_ability"
+			},
+			grenade_ability = {
+				{
+					action_name = "grenade_ability"
+				},
+				{
+					action_name = "grenade_ability_quick_throw"
+				}
 			}
 		},
 		weapon_box = {
@@ -867,7 +913,7 @@ weapon_template.base_stats = {
 	}
 }
 weapon_template.traits = {}
-local bespoke_traits = table.keys(WeaponTraitsBespokeThumperP2)
+local bespoke_traits = table.ukeys(WeaponTraitsBespokeThumperP2)
 
 table.append(weapon_template.traits, bespoke_traits)
 
@@ -894,6 +940,14 @@ weapon_template.displayed_attacks = {
 		desc = "loc_stats_special_action_melee_weapon_bash_desc",
 		display_name = "loc_weapon_special_weapon_bash",
 		type = "melee"
+	}
+}
+weapon_template.explicit_combo = {
+	{
+		"action_shoot_hip"
+	},
+	{
+		"action_shoot_zoomed"
 	}
 }
 weapon_template.displayed_weapon_stats = "ogryn_thumper_p1_m2"

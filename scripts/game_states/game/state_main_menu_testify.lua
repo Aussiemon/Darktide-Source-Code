@@ -1,4 +1,9 @@
-local CharacterCreate = require("scripts/utilities/character_create")
+local temp_archetype_to_specialization_lookup = {
+	veteran = "veteran_2",
+	psyker = "psyker_2",
+	zealot = "zealot_2",
+	ogryn = "ogryn_2"
+}
 local StateMainMenuTestify = {
 	create_character_by_archetype_and_gender = function (state_main_menu, archetype_name, gender)
 		local character_create = state_main_menu:character_create_instance()
@@ -17,15 +22,9 @@ local StateMainMenuTestify = {
 		character_create:set_archetype(archetype)
 
 		local profile = character_create:profile()
+		local specialization_name = temp_archetype_to_specialization_lookup[profile.archetype.name]
 
-		for class_name, class_data in pairs(profile.archetype.specializations) do
-			if class_data.title and not class_data.disabled then
-				character_create:set_specialization(class_name)
-
-				break
-			end
-		end
-
+		character_create:set_specialization(specialization_name)
 		character_create:randomize_backstory_properties()
 		character_create:set_gender(gender)
 		character_create:upload_profile()
@@ -39,15 +38,9 @@ StateMainMenuTestify.create_random_character = function (state_main_menu)
 	character_create:set_name("Testify")
 
 	local profile = character_create:profile()
+	local specialization_name = temp_archetype_to_specialization_lookup[profile.archetype.name]
 
-	for class_name, class_data in pairs(profile.archetype.specializations) do
-		if class_data.title and not class_data.disabled then
-			character_create:set_specialization(class_name)
-
-			break
-		end
-	end
-
+	character_create:set_specialization(specialization_name)
 	character_create:randomize_backstory_properties()
 	character_create:upload_profile()
 	state_main_menu:set_wait_for_character_profile_upload(true)

@@ -383,6 +383,39 @@ PacingManager.add_tension_type = function (self, tension_type, attacked_unit)
 	end
 end
 
+local MAX_OUT_TENSION_BY_CHALLENGE = {
+	{
+		true,
+		true,
+		true,
+		false
+	},
+	{
+		true,
+		true,
+		true,
+		false
+	},
+	{
+		true,
+		true,
+		true,
+		false
+	},
+	{
+		true,
+		true,
+		false,
+		false
+	},
+	{
+		true,
+		true,
+		false,
+		false
+	}
+}
+
 PacingManager.player_died = function (self, player_unit)
 	if self._waiting_for_ramp_clear then
 		self._waiting_for_ramp_clear = nil
@@ -407,7 +440,10 @@ PacingManager.player_died = function (self, player_unit)
 		end
 	end
 
-	if alive_players <= 2 then
+	local max_out_tension_table = Managers.state.difficulty:get_table_entry_by_challenge(MAX_OUT_TENSION_BY_CHALLENGE)
+	local max_out_tension = max_out_tension_table[alive_players]
+
+	if max_out_tension then
 		self:add_tension(math.huge)
 	end
 end
@@ -527,9 +563,19 @@ PacingManager._update_ramp_up_frequency = function (self, dt, t, target_side_id)
 
 		if self._max_ramp_up_duration <= 0 then
 			if ramp_up_frequency_settings.wait_for_ramp_clear then
+				if self._waiting_for_ramp_clear and self._wait_for_ramp_clear_reset_t and self._wait_for_ramp_clear_reset_t <= t then
+					self._clear_ramp = true
+
+					self:add_tension(math.huge)
+
+					self._wait_for_ramp_clear_reset_t = nil
+				end
+
 				if not self._waiting_for_ramp_clear then
 					self._waiting_for_ramp_clear = true
 					self._waiting_for_ramp_clear_t = t
+					local wait_for_ramp_clear_reset_range = self._ramp_up_frequency_settings.wait_for_ramp_clear_reset
+					self._wait_for_ramp_clear_reset_t = t + math.random_range(wait_for_ramp_clear_reset_range[1], wait_for_ramp_clear_reset_range[2])
 				elseif self._clear_ramp then
 					self._current_ramp_up_duration = ramp_duration
 					self._max_ramp_up_duration = nil

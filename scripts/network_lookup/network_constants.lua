@@ -11,7 +11,6 @@ local function _check_network_lookup_boundaries(network_type_name, network_looku
 	return
 end
 
-_check_network_lookup_boundaries("archetype_specialization_id", "archetype_specialization_names")
 _check_network_lookup_boundaries("attack_result_id", "attack_results")
 _check_network_lookup_boundaries("attack_type_id", "attack_types")
 _check_network_lookup_boundaries("bot_profile_name_id", "bot_profile_names")
@@ -50,13 +49,12 @@ _check_network_lookup_boundaries("sound_event_3d", "sound_events")
 _check_network_lookup_boundaries("sound_parameter_id", "sound_parameters")
 _check_network_lookup_boundaries("talent_name_id", "archetype_talent_names")
 _check_network_lookup_boundaries("vfx_id", "vfx")
-_check_network_lookup_boundaries("voice_id", "player_character_voices")
 _check_network_lookup_boundaries("voting_option_id", "voting_options")
 _check_network_lookup_boundaries("voting_result_id", "voting_results")
 _check_network_lookup_boundaries("weapon_template_id", "weapon_templates")
 _check_network_lookup_boundaries("smart_tag_template_id", "smart_tag_templates")
 _check_network_lookup_boundaries("smart_tag_reply_name_id", "smart_tag_replies")
-_check_network_lookup_boundaries("dialogue_lookup", "dialogues")
+_check_network_lookup_boundaries("dialogue_lookup", "dialogue_names")
 _check_network_lookup_boundaries("wounds_template_id", "wounds_templates")
 _check_network_lookup_boundaries("lookup_1bit", "bot_orders")
 _check_network_lookup_boundaries("buff_template_id", "buff_templates")

@@ -249,7 +249,7 @@ weapon_template.actions = {
 			looping_shoot_sfx_alias = "ranged_shooting",
 			muzzle_flash_effect = "content/fx/particles/weapons/rifles/autopistol/autopistol_muzzle",
 			num_pre_loop_events = 1,
-			spread_rotated_muzzle_flash = true,
+			spread_rotated_muzzle_flash = false,
 			auto_fire_time_parameter_name = "wpn_fire_interval",
 			shell_casing_effect = "content/fx/particles/weapons/shells/shell_casing_autopistol_01",
 			post_loop_shoot_tail_sfx_alias = "ranged_shot_tail",
@@ -369,9 +369,9 @@ weapon_template.actions = {
 			pre_loop_shoot_sfx_alias = "ranged_pre_loop_shot",
 			crit_shoot_sfx_alias = "critical_shot_extra",
 			looping_shoot_sfx_alias = "ranged_shooting",
-			muzzle_flash_effect = "content/fx/particles/weapons/rifles/autopistol/autopistol_muzzle_rotated",
+			muzzle_flash_effect = "content/fx/particles/weapons/rifles/autopistol/autopistol_muzzle",
 			num_pre_loop_events = 1,
-			spread_rotated_muzzle_flash = true,
+			spread_rotated_muzzle_flash = false,
 			auto_fire_time_parameter_name = "wpn_fire_interval",
 			shell_casing_effect = "content/fx/particles/weapons/shells/shell_casing_autopistol_01",
 			post_loop_shoot_tail_sfx_alias = "ranged_shot_tail",
@@ -807,7 +807,7 @@ weapon_template.base_stats = {
 }
 weapon_template.smart_targeting_template = SmartTargetingTemplates.assault
 weapon_template.traits = {}
-local bespoke_autogun_p1_traits = table.keys(WeaponTraitsBespokeAutopistolP1)
+local bespoke_autogun_p1_traits = table.ukeys(WeaponTraitsBespokeAutopistolP1)
 
 table.append(weapon_template.traits, bespoke_autogun_p1_traits)
 
@@ -841,6 +841,14 @@ weapon_template.displayed_attacks = {
 		desc = "loc_stats_special_action_flashlight_desc",
 		display_name = "loc_weapon_special_flashlight",
 		type = "flashlight"
+	}
+}
+weapon_template.explicit_combo = {
+	{
+		"action_shoot_hip"
+	},
+	{
+		"action_shoot_zoomed"
 	}
 }
 

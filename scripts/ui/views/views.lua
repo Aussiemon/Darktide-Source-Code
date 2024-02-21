@@ -1,8 +1,8 @@
-local MinigameSettings = require("scripts/settings/minigame/minigame_settings")
 local Archetypes = require("scripts/settings/archetype/archetypes")
+local MinigameSettings = require("scripts/settings/minigame/minigame_settings")
+local TrainingGroundsSoundEvents = require("scripts/settings/training_grounds/training_grounds_sound_events")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local WwiseGameSyncSettings = require("scripts/settings/wwise_game_sync/wwise_game_sync_settings")
-local TrainingGroundsSoundEvents = require("scripts/settings/training_grounds/training_grounds_sound_events")
 local views = {
 	system_view = {
 		game_world_blur = 1.1,
@@ -276,41 +276,6 @@ local views = {
 		},
 		exit_sound_events = {
 			UISoundEvents.default_menu_exit
-		}
-	},
-	talents_career_choice_view = {
-		state_bound = true,
-		display_name = "loc_talents_view_display_name",
-		path = "scripts/ui/views/talents_career_choice_view/talents_career_choice_view",
-		package = "packages/ui/views/talents_career_choice_view/talents_career_choice_view",
-		class = "TalentsCareerChoiceView",
-		disable_game_world = true,
-		load_in_hub = true,
-		game_world_blur = 4.1,
-		testify_flags = {
-			ui_views = false
-		},
-		wwise_states = {
-			options = WwiseGameSyncSettings.state_groups.options.ingame_menu
-		}
-	},
-	talents_view = {
-		display_name = "loc_talents_view_display_name",
-		state_bound = true,
-		use_transition_ui = false,
-		path = "scripts/ui/views/talents_view/talents_view",
-		package = "packages/ui/views/talents_view/talents_view",
-		class = "TalentsView",
-		load_in_hub = true,
-		game_world_blur = 4.1,
-		dummy_data = {
-			player_level = 20,
-			player_specialization = "shock_trooper",
-			debug = true,
-			player_archetype = Archetypes.veteran
-		},
-		wwise_states = {
-			options = WwiseGameSyncSettings.state_groups.options.ingame_menu
 		}
 	},
 	account_profile_view = {

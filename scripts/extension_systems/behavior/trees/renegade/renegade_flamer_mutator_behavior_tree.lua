@@ -1,19 +1,15 @@
 local BreedActions = require("scripts/settings/breed/breed_actions")
 local action_data = BreedActions.renegade_flamer_mutator
 local MELEE_COMBAT = {
-	"BtRandomUtilityNode",
-	{
-		"BtMeleeAttackAction",
-		name = "melee_attack",
-		action_data = action_data.melee_attack
-	},
-	name = "melee_combat",
+	"BtMeleeAttackAction",
+	name = "melee_attack",
 	condition = "is_aggroed_in_combat_range",
 	condition_args = {
 		combat_ranges = {
 			melee = true
 		}
-	}
+	},
+	action_data = action_data.melee_attack
 }
 local COMBAT = {
 	"BtSequenceNode",

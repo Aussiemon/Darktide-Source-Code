@@ -574,6 +574,10 @@ MinionNavigationExtension.stop = function (self)
 	nav_smart_object_component.id = -1
 end
 
+MinionNavigationExtension.enabled = function (self)
+	return self._enabled
+end
+
 MinionNavigationExtension.failed_move_attempts = function (self)
 	return self._failed_move_attempts
 end

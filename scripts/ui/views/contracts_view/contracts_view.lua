@@ -16,7 +16,7 @@ ContractsView.init = function (self, settings, context)
 	self._parent = parent
 	self._world_spawner = parent and parent._world_spawner
 
-	ContractsView.super.init(self, ViewDefinitions, settings)
+	ContractsView.super.init(self, ViewDefinitions, settings, context)
 end
 
 ContractsView.on_enter = function (self)
@@ -274,7 +274,9 @@ ContractsView._setup_task_grid_layout = function (self)
 	grid_divider_bottom_widget.style.texture.offset = bottom_divider_position
 	local timer_text_widget = self._task_grid:widget_by_name("timer_text")
 	timer_text_widget.offset[2] = bottom_divider_size[2] * 0.5 + 30
+	local timer_text_scenegraph = timer_text_widget.scenegraph_id
 
+	self._task_grid:_set_scenegraph_size(timer_text_scenegraph, grid_settings.grid_size[1])
 	self:_update_task_grid_position()
 end
 

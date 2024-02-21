@@ -9,7 +9,7 @@ local CutsceneView = class("CutsceneView", "BaseView")
 CutsceneView.init = function (self, settings, context)
 	self._context = context
 
-	CutsceneView.super.init(self, Definitions, settings)
+	CutsceneView.super.init(self, Definitions, settings, context)
 
 	self._pass_input = true
 	self._can_exit = not context or context.can_exit

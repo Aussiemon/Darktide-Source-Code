@@ -1,6 +1,5 @@
 require("scripts/extension_systems/weapon/actions/action_weapon_base")
 
-local AlternateFire = require("scripts/utilities/alternate_fire")
 local Ammo = require("scripts/utilities/ammo")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local buff_proc_events = BuffSettings.proc_events
@@ -19,10 +18,6 @@ end
 
 ActionReloadShotgunSpecial.start = function (self, action_settings, t, time_scale, ...)
 	ActionReloadShotgunSpecial.super.start(self, action_settings, t, time_scale, ...)
-
-	if action_settings.stop_alternate_fire and self._alternate_fire_component.is_active then
-		AlternateFire.stop(self._alternate_fire_component, self._peeking_component, self._first_person_extension, self._weapon_tweak_templates_component, self._animation_extension, self._weapon_template, false, self._player_unit, true)
-	end
 
 	local action_reload_component = self._action_reload_component
 	action_reload_component.has_refilled_ammunition = false

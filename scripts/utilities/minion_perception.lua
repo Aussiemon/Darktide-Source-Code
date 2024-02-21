@@ -20,13 +20,6 @@ MinionPerception.attempt_aggro = function (perception_extension)
 	perception_extension:aggro()
 end
 
-MinionPerception.aggro_state = function (enemy_unit)
-	local perception_extension = ScriptUnit.has_extension(enemy_unit)
-	local aggro_state = perception_extension and perception_extension:aggro_state()
-
-	return aggro_state
-end
-
 MinionPerception.set_target_lock = function (unit, perception_component, should_lock)
 	perception_component.lock_target = should_lock
 

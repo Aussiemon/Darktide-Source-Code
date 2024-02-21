@@ -70,11 +70,11 @@ local push_settings = {
 			max_speed_override = 4
 		},
 		chaos_ogryn_gunner_bullet = {
-			speed = 5,
-			max_speed_override = 5
+			speed = 2,
+			max_speed_override = 2
 		},
 		chaos_ogryn_gunner_bullet_ogryn = {
-			speed = 2,
+			speed = 0.5,
 			max_speed_override = 2
 		},
 		renegade_captain = {
@@ -90,9 +90,10 @@ local push_settings = {
 			ignore_stun_immunity = true
 		},
 		renegade_captain_heavy = {
-			speed = 12,
-			max_speed_override = 6,
 			push_through_block = true,
+			max_speed_override = 6,
+			speed = 12,
+			abort_stickyness = true,
 			ignore_stun_immunity = true
 		},
 		daemonhost = {

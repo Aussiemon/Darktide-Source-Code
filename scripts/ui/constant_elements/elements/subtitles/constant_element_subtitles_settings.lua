@@ -13,6 +13,14 @@ local constant_element_subtitles_settings = {
 			"event_update_subtitles_font_size"
 		},
 		{
+			"event_update_secondary_subtitles_enabled",
+			"event_update_secondary_subtitles_enabled"
+		},
+		{
+			"event_update_secondary_subtitles_font_size",
+			"event_update_secondary_subtitles_font_size"
+		},
+		{
 			"event_update_subtitle_text_opacity",
 			"event_update_subtitle_text_opacity"
 		},

@@ -11,9 +11,9 @@ local Missions = require("scripts/settings/mission/mission_templates")
 local MissionTypes = require("scripts/settings/mission/mission_types")
 local ProfileUtils = require("scripts/utilities/profile_utils")
 local TalentBuilderViewSettings = require("scripts/ui/views/talent_builder_view/talent_builder_view_settings")
+local TalentLayoutParser = require("scripts/ui/views/talent_builder_view/utilities/talent_layout_parser")
 local TaskbarFlash = require("scripts/utilities/taskbar_flash")
-local TextUtilities = require("scripts/utilities/ui/text")
-local TextUtils = require("scripts/utilities/ui/text")
+local UIFonts = require("scripts/managers/ui/ui_fonts")
 local UIProfileSpawner = require("scripts/managers/ui/ui_profile_spawner")
 local UIRenderer = require("scripts/managers/ui/ui_renderer")
 local UISettings = require("scripts/settings/ui/ui_settings")
@@ -22,11 +22,9 @@ local UIWidget = require("scripts/managers/ui/ui_widget")
 local UIWidgetGrid = require("scripts/ui/widget_logic/ui_widget_grid")
 local UIWorldSpawner = require("scripts/managers/ui/ui_world_spawner")
 local ViewElementInputLegend = require("scripts/ui/view_elements/view_element_input_legend/view_element_input_legend")
-local Zones = require("scripts/settings/zones/zones")
 local ViewElementWeaponStats = require("scripts/ui/view_elements/view_element_weapon_stats/view_element_weapon_stats")
+local Zones = require("scripts/settings/zones/zones")
 local generate_blueprints_function = require("scripts/ui/view_content_blueprints/item_blueprints")
-local TalentLayoutParser = require("scripts/ui/views/talent_builder_view/utilities/talent_layout_parser")
-local UIFonts = require("scripts/managers/ui/ui_fonts")
 local INVENTORY_VIEW_NAME = "inventory_background_view"
 local SOCIAL_VIEW_NAME = "social_menu_view"
 local talents_presentation_style_id_list = {
@@ -82,7 +80,7 @@ LobbyView.init = function (self, settings, context)
 	self._use_gamepad_tooltip_navigation = false
 	local definitions = require(definition_path)
 
-	LobbyView.super.init(self, definitions, settings)
+	LobbyView.super.init(self, definitions, settings, context)
 
 	self._pass_draw = false
 	self._can_exit = not context or context.can_exit
@@ -264,6 +262,16 @@ LobbyView._setup_input_legend = function (self)
 		local on_pressed_callback = legend_input.on_pressed_callback and callback(self, legend_input.on_pressed_callback)
 
 		self._input_legend_element:add_entry(legend_input.display_name, legend_input.input_action, legend_input.visibility_function, on_pressed_callback, legend_input.alignment)
+	end
+end
+
+LobbyView._remove_input_legend = function (self)
+	local reference_name = "input_legend"
+
+	if self._input_legend_element then
+		self:_remove_element(reference_name)
+
+		self._input_legend_element = nil
 	end
 end
 
@@ -586,7 +594,10 @@ LobbyView.on_exit = function (self)
 		self._world_spawner = nil
 	end
 
-	Managers.frame_rate:relinquish_request("lobby_view")
+	if self._entered then
+		Managers.frame_rate:relinquish_request("lobby_view")
+	end
+
 	LobbyView.super.on_exit(self)
 end
 
@@ -881,7 +892,26 @@ LobbyView._cb_set_player_frame = function (self, widget, item)
 end
 
 LobbyView._cb_set_player_insignia = function (self, widget, item)
-	widget.style.character_insignia.material_values.texture_map = item.icon
+	local icon_style = widget.style.character_insignia
+	local material_values = icon_style.material_values
+
+	if item.icon_material and item.icon_material ~= "" then
+		widget.content.old_character_insignia = widget.content.character_insignia
+		widget.content.character_insignia = item.icon_material
+
+		if material_values.texture_map then
+			material_values.texture_map = nil
+		end
+	else
+		if widget.content.old_character_insignia then
+			widget.content.character_insignia = widget.content.old_character_insignia
+			widget.content.old_character_insignia = nil
+		end
+
+		material_values.texture_map = item.icon
+	end
+
+	icon_style.color[1] = 255
 end
 
 LobbyView._request_player_icon = function (self, slot)
@@ -948,6 +978,13 @@ LobbyView._unload_portrait_icon = function (self, slot)
 	slot.icon_load_id = nil
 	slot.frame_load_id = nil
 	slot.insignia_load_id = nil
+	local widget = slot.panel_widget
+	widget.style.character_insignia.color[1] = 0
+
+	if widget.content.old_character_insignia then
+		widget.content.character_insignia = widget.content.old_character_insignia
+		widget.content.old_character_insignia = nil
+	end
 end
 
 LobbyView._sync_players = function (self)
@@ -1633,11 +1670,8 @@ LobbyView.trigger_on_exit_animation = function (self)
 
 	if finished and result == "approved" then
 		self._is_animating_on_exit = true
-		local reference_name = "input_legend"
 
-		self:_remove_element(reference_name)
-
-		self._input_legend_element = nil
+		self:_remove_input_legend()
 
 		if Managers.ui:view_active(INVENTORY_VIEW_NAME) then
 			Managers.ui:close_view(INVENTORY_VIEW_NAME)
@@ -1646,8 +1680,6 @@ LobbyView.trigger_on_exit_animation = function (self)
 		if Managers.ui:view_active(SOCIAL_VIEW_NAME) then
 			Managers.ui:close_view(SOCIAL_VIEW_NAME)
 		end
-
-		self._show_weapons = false
 
 		for i = 1, #self._spawn_slots do
 			local slot = self._spawn_slots[i]

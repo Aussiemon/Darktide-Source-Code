@@ -107,7 +107,7 @@ XboxPrivileges._send_batched_user_restrictions = function (self, batch_type, t)
 	end
 
 	if async_task then
-		Managers.xasync:wrap(async_task, XboxLivePrivacy.release_block):next(function (async_block)
+		Managers.xasync:wrap(async_task):next(function (async_block)
 			local results, error_code = XboxLivePrivacy.batch_check_permission_result(async_block)
 
 			if error_code then
@@ -168,7 +168,7 @@ XboxPrivileges.fetch_all_privileges = function (self, user_id, fetch_done_cb)
 				local success_cb = callback(self, "_cb_user_privilege_done", user_id, privilege)
 				local fail_cb = callback(self, "_cb_user_privilege_failed", user_id, privilege)
 
-				Managers.xasync:wrap(async_task, XUser.release_async_block):next(success_cb, fail_cb)
+				Managers.xasync:wrap(async_task):next(success_cb, fail_cb)
 
 				self._async_privileges[privilege] = true
 			else
@@ -260,7 +260,7 @@ XboxPrivileges.fetch_crossplay_restrictions = function (self)
 	local async_task, error_code, error_message = XboxLivePrivacy.batch_check_permission(Managers.account:user_id(), DEFAULT_PERMISSIONS, {}, DEFAULT_ANONYMOUS_USER_TYPES)
 
 	if async_task then
-		Managers.xasync:wrap(async_task, XboxLivePrivacy.release_block):next(function (async_task)
+		Managers.xasync:wrap(async_task):next(function (async_task)
 			local result, has_error = XboxLivePrivacy.batch_check_permission_result(async_task)
 
 			if has_error then
@@ -357,7 +357,7 @@ XboxPrivileges.verify_user_restriction = function (self, xuid, restriction, opti
 		return
 	end
 
-	Managers.xasync:wrap(async_block, XboxLivePrivacy.release_block):next(function (async_block)
+	Managers.xasync:wrap(async_block):next(function (async_block)
 		local result, error_code = XboxLivePrivacy.check_user_permission_result(async_block)
 
 		if error_code then

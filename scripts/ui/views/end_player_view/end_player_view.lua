@@ -1,5 +1,3 @@
-local ArchetypeTalents = require("scripts/settings/ability/archetype_talents/archetype_talents")
-local ColorUtilities = require("scripts/utilities/ui/colors")
 local Definitions = require("scripts/ui/views/end_player_view/end_player_view_definitions")
 local MasterItems = require("scripts/backend/master_items")
 local UISettings = require("scripts/settings/ui/ui_settings")
@@ -7,9 +5,8 @@ local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local ViewSettings = require("scripts/ui/views/end_player_view/end_player_view_settings")
 local ViewStyles = require("scripts/ui/views/end_player_view/end_player_view_styles")
-local WeaponIconUI = require("scripts/ui/weapon_icon_ui")
 local CARD_CAROUSEL_SCENEGRAPH_ID = "card_carousel"
-local CARD_TYPES = table.enum("xp", "levelUp", "salary", "weaponDrop", "weapon_unlock", "talents_unlock")
+local CARD_TYPES = table.enum("xp", "levelUp", "salary", "weaponDrop", "weapon_unlock")
 local item_type_group_lookup = UISettings.item_type_group_lookup
 local EndPlayerView = class("EndPlayerView", "BaseView")
 local animation_speed = 1
@@ -40,7 +37,7 @@ EndPlayerView.init = function (self, settings, context)
 	self._current_diamantine = 0
 	self._timed_visibility_widgets = {}
 
-	EndPlayerView.super.init(self, Definitions, settings)
+	EndPlayerView.super.init(self, Definitions, settings, context)
 
 	self._pass_draw = true
 	self._pass_input = true
@@ -392,11 +389,6 @@ EndPlayerView._create_card_widget = function (self, index, card_type, card_data)
 		blueprint_name = "weapon_unlock"
 		card_data.reward_item = self:_get_item(card_data)
 		card_data.item_group = "weapon_skin"
-	elseif card_type == CARD_TYPES.talents_unlock then
-		return
-
-		blueprint_name = "talents_unlocked"
-		card_data.talent_group_name, card_data.unlocked_talents = self:_get_unlocked_talents(card_data)
 	elseif card_type == CARD_TYPES.weaponDrop then
 		blueprint_name = "item_reward"
 		card_data.reward_item, card_data.item_group, card_data.rarity, card_data.item_level = self:_get_item(card_data.rewards[1])
@@ -501,23 +493,6 @@ EndPlayerView._get_item = function (self, card_reward)
 	local item_level = item_overrides and item_overrides.itemLevel
 
 	return item, item_group, rarity, item_level
-end
-
-EndPlayerView._get_unlocked_talents = function (self, card_data)
-	local player = self:_player()
-	local profile = player:profile()
-	local specialization_name = profile.specialization
-	local archetype = profile.archetype
-	local talents = archetype.talents[specialization_name]
-	local unlocked_talents = card_data.talents
-	local talent_icons = {}
-
-	for i = 1, #unlocked_talents do
-		local talent_id = unlocked_talents[i]
-		talent_icons[i] = talents[talent_id].icon
-	end
-
-	return card_data.talent_group_name, #talent_icons > 0 and talent_icons
 end
 
 EndPlayerView._set_carousel_state = function (self, state_id)

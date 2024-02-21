@@ -1,7 +1,6 @@
 local OptionsUtilities = require("scripts/utilities/ui/options")
 local SaveData = require("scripts/managers/save/save_data")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
-local InputUtils = require("scripts/managers/input/input_utils")
 local SettingsUtilitiesFunction = require("scripts/settings/options/settings_utils")
 local SettingsUtilities = {}
 

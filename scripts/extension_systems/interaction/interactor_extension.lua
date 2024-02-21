@@ -514,8 +514,13 @@ InteractorExtension._find_interaction_object = function (self, interactor_unit)
 	end
 
 	local near_target_unit, near_target_node_index, near_focus_unit, near_focus_node_index = self:_find_object_near_line_of_sight(interactor_unit, fp_position, fp_forward)
-	local best_focus_unit = direct_focus_unit or near_focus_unit
-	local best_focus_node_index = direct_focus_node_index or near_focus_node_index
+	local best_focus_unit = direct_focus_unit
+	local best_focus_node_index = direct_focus_node_index
+
+	if not best_focus_unit then
+		best_focus_unit = near_focus_unit
+		best_focus_node_index = near_focus_node_index
+	end
 
 	return near_target_unit, near_target_node_index, best_focus_unit, best_focus_node_index
 end
@@ -529,17 +534,19 @@ InteractorExtension._find_interaction_object_3p = function (self, interactor_uni
 	local near_target_unit, near_target_node_index, near_focus_unit, near_focus_node_index = self:_find_object_near_line_of_sight(interactor_unit, fp_position, fp_forward, use_priorities, MAX_INTERACTION_COS_ANGLE_3P)
 
 	if near_target_unit then
-		local best_focus_unit = near_focus_unit
-		local best_focus_node_index = near_focus_node_index
-
-		return near_target_unit, near_target_node_index, best_focus_unit, best_focus_node_index
+		return near_target_unit, near_target_node_index, near_focus_unit, near_focus_node_index
 	end
 
 	local direct_target_unit, direct_target_node_index, direct_focus_unit, direct_focus_node_index = self:_find_object_in_direct_line_of_sight(interactor_unit, fp_position, fp_forward)
+	local best_focus_unit = near_focus_unit
+	local best_focus_node_index = near_focus_node_index
 
-	if direct_target_unit then
-		return direct_target_unit, direct_target_node_index, direct_focus_unit, direct_focus_node_index
+	if not best_focus_unit then
+		best_focus_unit = direct_focus_unit
+		best_focus_node_index = direct_focus_node_index
 	end
+
+	return direct_target_unit, direct_target_node_index, best_focus_unit, best_focus_node_index
 end
 
 InteractorExtension._check_valid_ongoing_interaction = function (self, target_unit, target_node)

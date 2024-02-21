@@ -1,6 +1,5 @@
 local Definitions = require("scripts/ui/views/inventory_weapon_details_view/inventory_weapon_details_view_definitions")
 local InventoryWeaponDetailsViewSettings = require("scripts/ui/views/inventory_weapon_details_view/inventory_weapon_details_view_settings")
-local ItemStatSettings = require("scripts/settings/item/item_stat_settings")
 local ItemUtils = require("scripts/utilities/items")
 local ScriptWorld = require("scripts/foundation/utilities/script_world")
 local UIRenderer = require("scripts/managers/ui/ui_renderer")
@@ -19,7 +18,7 @@ InventoryWeaponDetailsView.init = function (self, settings, context)
 	self._context = context or {}
 	self._visibility_toggled_on = true
 
-	InventoryWeaponDetailsView.super.init(self, Definitions, settings)
+	InventoryWeaponDetailsView.super.init(self, Definitions, settings, context)
 
 	self._always_visible_widget_names = Definitions.always_visible_widget_names
 	self._pass_input = false
@@ -129,7 +128,7 @@ InventoryWeaponDetailsView._setup_weapon_info = function (self)
 			0
 		}
 		local mask_size = {
-			grid_width + 40,
+			grid_width,
 			grid_height
 		}
 		local context = {

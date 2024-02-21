@@ -110,10 +110,10 @@ BtRenegadeSniperSelectorNode.evaluate = function (self, unit, blackboard, scratc
 		return node_stagger
 	end
 
-	local node_melee_combat = children[5]
-	local tree_node = node_melee_combat.tree_node
+	local node_melee_attack = children[5]
+	local tree_node = node_melee_attack.tree_node
 	local condition_args = tree_node.condition_args
-	local is_running = last_leaf_node_running and last_running_node == node_melee_combat
+	local is_running = last_leaf_node_running and last_running_node == node_melee_attack
 	local condition_result = nil
 
 	repeat
@@ -159,13 +159,9 @@ BtRenegadeSniperSelectorNode.evaluate = function (self, unit, blackboard, scratc
 	until true
 
 	if condition_result then
-		local leaf_node = node_melee_combat:evaluate(unit, blackboard, scratchpad, dt, t, evaluate_utility, node_data, old_running_child_nodes, new_running_child_nodes, last_leaf_node_running)
+		new_running_child_nodes[node_identifier] = node_melee_attack
 
-		if leaf_node then
-			new_running_child_nodes[node_identifier] = node_melee_combat
-
-			return leaf_node
-		end
+		return node_melee_attack
 	end
 
 	local node_COMBAT = children[6]

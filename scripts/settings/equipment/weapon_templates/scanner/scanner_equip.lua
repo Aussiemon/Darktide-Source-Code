@@ -191,13 +191,14 @@ weapon_template.actions = {
 		}
 	},
 	action_scan = {
-		skip_3p_anims = true,
+		prevent_sprint = true,
 		start_input = "scan_start",
 		kind = "scan",
+		skip_3p_anims = true,
 		sensitivity_modifier = 0.8,
 		abort_sprint = true,
 		allowed_during_sprint = true,
-		prevent_sprint = true,
+		stop_input = "scan_cancel",
 		total_time = math.huge,
 		crosshair = {
 			crosshair_type = "dot"
@@ -224,15 +225,16 @@ weapon_template.actions = {
 		scan_settings = scan_settings
 	},
 	action_scan_confirm = {
+		skip_3p_anims = true,
 		start_input = "scan_confirm",
 		anim_end_event = "scan_end",
 		kind = "scan_confirm",
-		skip_3p_anims = true,
+		prevent_sprint = true,
 		sensitivity_modifier = 0.8,
 		abort_sprint = true,
 		allowed_during_sprint = true,
 		anim_event = "scan_start",
-		prevent_sprint = true,
+		stop_input = "scan_cancel",
 		total_time = math.huge,
 		allowed_chain_actions = {
 			scan_confirm_cancel = {
@@ -328,7 +330,7 @@ weapon_template.dodge_template = "default"
 weapon_template.sprint_template = "default"
 weapon_template.stamina_template = "default"
 weapon_template.toughness_template = "default"
-weapon_template.hud_icon = "content/ui/materials/icons/pickups/default"
+weapon_template.hud_icon = "content/ui/materials/icons/pocketables/hud/auspex_scanner"
 weapon_template.footstep_intervals = FootstepIntervalsTemplates.default
 
 weapon_template.action_scan_on_screen_ui_validation = function (wielded_slot_id, item, current_action, current_action_name, player)

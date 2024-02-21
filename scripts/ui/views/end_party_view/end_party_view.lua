@@ -20,7 +20,7 @@ EndPartyView.init = function (self, settings, context)
 	self._can_exit = context and context.can_exit
 	self._presentation_data = context and context.presentation_data
 
-	EndPartyView.super.init(self, Definitions, settings)
+	EndPartyView.super.init(self, Definitions, settings, context)
 
 	self._pass_draw = true
 	self._pass_input = true

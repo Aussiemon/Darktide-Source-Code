@@ -621,7 +621,7 @@ MutatorToxicGasTwins._update_twins = function (self, dt, t, ahead_travel_distanc
 			local health_extension = ScriptUnit.extension(twin_unit, "health_system")
 			local current_health_percent = health_extension:current_health_percent()
 
-			if current_health_percent < 0.25 or despawn_distance and despawn_distance <= ahead_travel_distance then
+			if current_health_percent < 0.25 or ahead_travel_distance and despawn_distance and despawn_distance <= ahead_travel_distance then
 				self:_ready_to_escape(twin_unit)
 			end
 		end

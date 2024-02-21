@@ -1,5 +1,8 @@
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local weapon_traits_ranged_low_fire_rate = {}
+
+table.make_unique(weapon_traits_ranged_low_fire_rate)
+
 local buff_stat_buffs = BuffSettings.stat_buffs
 local buff_proc_events = BuffSettings.proc_events
 weapon_traits_ranged_low_fire_rate.weapon_trait_ranged_low_fire_rate_wield_on_flanking_shot_grant_power_level = {

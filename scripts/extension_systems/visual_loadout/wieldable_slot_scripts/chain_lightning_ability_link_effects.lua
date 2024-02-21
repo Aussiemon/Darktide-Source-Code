@@ -323,7 +323,7 @@ end
 ChainLightningAbilityLinkEffects._find_root_targets = function (self, t)
 	local action_settings = Action.current_action_settings_from_component(self._weapon_action_component, self._weapon_actions)
 	local action_kind = action_settings and action_settings.kind
-	local attacking = action_kind == "chain_lightning" or action_kind == "chain_lightning_powerup"
+	local attacking = action_kind == "chain_lightning"
 
 	if attacking then
 		local hit_units = self._hit_units

@@ -1,5 +1,8 @@
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local templates = {}
+
+table.make_unique(templates)
+
 local stat_buffs = BuffSettings.stat_buffs
 templates.weapon_trait_bespoke_combatknife_p1_stacking_rending_on_weakspot = {
 	weapon_trait_bespoke_combatknife_p1_stacking_rending_on_weakspot_parent = {

@@ -56,8 +56,10 @@ LoadingHost.destroy = function (self)
 	end
 
 	for _, loader in ipairs(self._loaders) do
-		loader:cleanup()
-		loader:delete()
+		if not loader:dont_destroy() then
+			loader:cleanup()
+			loader:delete()
+		end
 	end
 
 	table.clear(self._loaders)

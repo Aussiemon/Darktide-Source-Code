@@ -803,12 +803,12 @@ UIPasses.hover = {
 		end
 
 		if was_hover and not is_hover then
-			ui_content.is_hover = nil
-			ui_content.internal_is_hover = nil
+			ui_content.is_hover = false
+			ui_content.internal_is_hover = false
 		end
 
 		if not is_hover and ui_content.internal_is_hover then
-			ui_content.internal_is_hover = nil
+			ui_content.internal_is_hover = false
 		end
 	end
 }
@@ -948,11 +948,11 @@ UIPasses.hotspot = {
 		ui_content.gamepad_active = gamepad_active
 
 		if ui_content.on_hover_enter then
-			ui_content.on_hover_enter = nil
+			ui_content.on_hover_enter = false
 		end
 
 		if ui_content.on_hover_exit then
-			ui_content.on_hover_exit = nil
+			ui_content.on_hover_exit = false
 		end
 
 		if is_hover and not was_hover then
@@ -962,19 +962,19 @@ UIPasses.hotspot = {
 		end
 
 		if was_hover and not is_hover then
-			ui_content.is_hover = nil
+			ui_content.is_hover = false
 			ui_content.on_hover_exit = true
-			ui_content.internal_is_hover = nil
+			ui_content.internal_is_hover = false
 		end
 
 		if ui_content.on_pressed then
-			ui_content.on_pressed = nil
+			ui_content.on_pressed = false
 		end
 
 		if is_hover and UIPasses.is_dragging_item then
 			is_hover = false
 		elseif not is_hover and ui_content.internal_is_hover then
-			ui_content.internal_is_hover = nil
+			ui_content.internal_is_hover = false
 		end
 
 		local use_is_focused = ui_content.use_is_focused
@@ -996,12 +996,14 @@ UIPasses.hotspot = {
 			end
 		end
 
-		local input_pressed, input_released, input_hold = nil
+		local input_pressed = false
+		local input_released = false
+		local input_hold = false
 
 		if force_input_pressed then
 			input_pressed = true
 			input_hold = pressed_last_frame
-			ui_content.force_input_pressed = nil
+			ui_content.force_input_pressed = false
 		elseif is_hover then
 			input_pressed = input_service and input_service:get("left_pressed")
 			input_released = input_service and input_service:get("left_released")
@@ -1013,7 +1015,10 @@ UIPasses.hotspot = {
 		end
 
 		local right_input_pressed = input_service and input_service:get("right_pressed")
-		local is_held, on_pressed, on_released, on_double_click = nil
+		local is_held = false
+		local on_pressed = false
+		local on_released = false
+		local on_double_click = false
 		local double_click_timer = ui_content.double_click_timer or 0
 
 		if double_click_timer > 0 then
@@ -1096,8 +1101,8 @@ UIPasses.hotspot = {
 			end
 		end
 
-		ui_content._input_pressed = (is_hover or is_selected) and (input_pressed or input_hold)
-		ui_content._is_focused = ui_content.is_focused
+		ui_content._input_pressed = (is_hover or is_selected) and (input_pressed or not not input_hold)
+		ui_content._is_focused = not not ui_content.is_focused
 		ui_content._is_selected = is_selected
 		ui_content.is_held = is_held
 		ui_content.double_click_timer = double_click_timer

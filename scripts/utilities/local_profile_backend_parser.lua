@@ -1,5 +1,5 @@
 local Archetypes = require("scripts/settings/archetype/archetypes")
-local PlayerSpecialization = require("scripts/utilities/player_specialization/player_specialization")
+local PlayerTalents = require("scripts/utilities/player_talents/player_talents")
 local LocalProfileBackendParser = {
 	parse_profile = function (profile, character_id)
 		profile.character_id = character_id
@@ -28,8 +28,8 @@ local LocalProfileBackendParser = {
 		end
 
 		local archetype_name = profile.archetype
-		local archetype = Archetypes[archetype_name]
 		local talents = profile.talents
+		local archetype = Archetypes[archetype_name]
 		local num_talents = #talents
 
 		for i = num_talents, 1, -1 do
@@ -41,7 +41,7 @@ local LocalProfileBackendParser = {
 			talents[i] = nil
 		end
 
-		PlayerSpecialization.add_archetype_base_talents(archetype, profile.talents)
+		PlayerTalents.add_archetype_base_talents(archetype, talents)
 	end
 }
 

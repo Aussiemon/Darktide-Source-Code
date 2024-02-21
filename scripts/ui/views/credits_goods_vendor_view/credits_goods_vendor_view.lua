@@ -175,8 +175,9 @@ CreditsGoodsVendorView._convert_offers_to_layout_entries = function (self, item_
 	local layout = {}
 	local player = self:_player()
 	local profile = player:profile()
-	local specialization = profile.specialization
-	local archetype_weapon_unlocks = WeaponUnlockSettings[specialization]
+	local profile_archetype = profile.archetype
+	local archetype_name = profile_archetype.name
+	local archetype_weapon_unlocks = WeaponUnlockSettings[archetype_name]
 
 	for i = 1, #item_offers do
 		local offer = item_offers[i]

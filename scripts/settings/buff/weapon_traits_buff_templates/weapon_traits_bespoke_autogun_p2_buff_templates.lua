@@ -1,15 +1,13 @@
 local BaseWeaponTraitBuffTemplates = require("scripts/settings/buff/weapon_traits_buff_templates/base_weapon_trait_buff_templates")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
-local CheckProcFunctions = require("scripts/settings/buff/validation_functions/check_proc_functions")
-local ConditionalFunctions = require("scripts/settings/buff/validation_functions/conditional_functions")
 local FireStepFunctions = require("scripts/settings/buff/fire_step_functions")
-local keywords = BuffSettings.keywords
 local stat_buffs = BuffSettings.stat_buffs
-local proc_events = BuffSettings.proc_events
-local templates = {
-	weapon_trait_bespoke_autogun_p2_increase_power_on_close_kill_parent = table.clone(BaseWeaponTraitBuffTemplates.increase_power_on_close_kill_parent),
-	weapon_trait_bespoke_autogun_p2_increase_power_on_close_kill_child = table.clone(BaseWeaponTraitBuffTemplates.increase_power_on_close_kill_child)
-}
+local templates = {}
+
+table.make_unique(templates)
+
+templates.weapon_trait_bespoke_autogun_p2_increase_power_on_close_kill_parent = table.clone(BaseWeaponTraitBuffTemplates.increase_power_on_close_kill_parent)
+templates.weapon_trait_bespoke_autogun_p2_increase_power_on_close_kill_child = table.clone(BaseWeaponTraitBuffTemplates.increase_power_on_close_kill_child)
 templates.weapon_trait_bespoke_autogun_p2_increase_power_on_close_kill_parent.child_buff_template = "weapon_trait_bespoke_autogun_p2_increase_power_on_close_kill_child"
 templates.weapon_trait_bespoke_autogun_p2_increase_close_damage_on_close_kill_parent = table.clone(BaseWeaponTraitBuffTemplates.increase_close_damage_on_close_kill_parent)
 templates.weapon_trait_bespoke_autogun_p2_increase_close_damage_on_close_kill_child = table.clone(BaseWeaponTraitBuffTemplates.increase_close_damage_on_close_kill_child)

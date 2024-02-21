@@ -1,4 +1,3 @@
-local ArchetypeSpecializations = require("scripts/settings/ability/archetype_specializations/archetype_specializations")
 local ArchetypeTalents = require("scripts/settings/ability/archetype_talents/archetype_talents")
 local AttackSettings = require("scripts/settings/damage/attack_settings")
 local BloodSettings = require("scripts/settings/blood/blood_settings")
@@ -77,15 +76,6 @@ local function _create_lookup(lookup, hashtable)
 end
 
 NetworkLookup = {}
-local archetype_specialization_names = {}
-
-for _, archetype_specializations in pairs(ArchetypeSpecializations) do
-	for name, _ in pairs(archetype_specializations) do
-		archetype_specialization_names[name] = true
-	end
-end
-
-NetworkLookup.archetype_specialization_names = _create_lookup({}, archetype_specialization_names)
 local archetype_talent_names = {}
 
 for _, archetype_talents in pairs(ArchetypeTalents) do
@@ -122,7 +112,7 @@ NetworkLookup.damage_profile_templates = _create_lookup({}, DamageProfileTemplat
 NetworkLookup.damage_types = _create_lookup({
 	"nil"
 }, DamageSettings.damage_types)
-NetworkLookup.dialogues = DialogueLookup
+NetworkLookup.dialogue_names = DialogueLookup
 NetworkLookup.dialogues_all_concepts = table.clone(DialogueLookupConcepts.all_concepts)
 NetworkLookup.dynamic_smart_tags = _create_lookup({}, DialogueSettings.dynamic_smart_tags)
 NetworkLookup.manual_subtitles = _create_lookup({}, DialogueSettings.manual_subtitles)
@@ -193,6 +183,7 @@ NetworkLookup.moveable_platform_direction = {
 NetworkLookup.outline_types = _create_lookup({}, OutlineSettings.outline_types)
 local minion_attack_selection_template_names = {}
 NetworkLookup.minigame_states = _create_lookup({}, MinigameSettings.states)
+NetworkLookup.minigame_game_states = _create_lookup({}, MinigameSettings.game_states)
 NetworkLookup.minion_attack_selection_template_names = _create_lookup(minion_attack_selection_template_names, MinionAttackSelectionTemplates)
 NetworkLookup.minion_fx_source_names = {
 	"muzzle"
@@ -253,28 +244,29 @@ NetworkLookup.player_character_particle_variable_names = {
 }
 NetworkLookup.player_character_particles = table.clone(PlayerCharacterParticleNames)
 local player_character_sounds = {
-	["wwise/events/player/play_toughness_break"] = true,
 	["wwise/events/player/play_backstab_indicator_melee"] = true,
+	["wwise/events/ui/play_hud_heal_2d"] = true,
 	["wwise/events/player/play_backstab_indicator_melee_elite"] = true,
-	["wwise/events/player/stop_foley_fall_wind_2D"] = true,
+	["wwise/events/player/play_player_get_hit_light_2d"] = true,
 	["wwise/events/player/play_syringe_healed_by_ally"] = true,
 	["wwise/events/player/play_foley_fall_wind_2D"] = true,
 	["wwise/events/weapon/play_indicator_weakspot"] = true,
 	["wwise/events/player/play_player_experience_fall_damage_2d"] = true,
 	["wwise/events/player/play_player_vomit_enter"] = true,
 	["wwise/events/minions/play_minion_twins_disappear_explosion"] = true,
-	["wwise/events/ui/play_hud_heal_2d"] = true,
 	["wwise/events/player/play_player_get_hit_fire"] = true,
+	["wwise/events/weapon/play_indicator_crit"] = true,
 	["wwise/events/player/play_player_get_hit_corruption_2d_tick"] = true,
 	["wwise/events/weapon/play_bullet_hits_gen_unarmored_death"] = true,
-	["wwise/events/weapon/play_weapon_lasgun_crack_beam_nearby"] = true,
+	["wwise/events/player/play_player_get_hit_2d_corruption_tick_toughness"] = true,
 	["wwise/events/player/play_player_get_hit_sharp"] = true,
+	["wwise/events/player/stop_foley_fall_wind_2D"] = true,
 	["wwise/events/weapon/play_shared_combat_weapon_bolter_bullet_flyby"] = true,
-	["wwise/events/player/play_vault"] = true,
-	["wwise/events/weapon/play_indicator_crit"] = true,
+	["wwise/events/weapon/play_weapon_lasgun_crack_beam_nearby"] = true,
+	["wwise/events/player/play_toughness_break"] = true,
 	["wwise/events/player/play_backstab_indicator_ranged"] = true,
 	["wwise/events/weapon/play_enemy_netgunner_net_trapped"] = true,
-	["wwise/events/player/play_player_get_hit_light_2d"] = true,
+	["wwise/events/player/play_vault"] = true,
 	["wwise/events/ui/play_hud_coherency_off"] = true,
 	["wwise/events/minions/play_enemy_daemonhost_execute_player_impact"] = true,
 	["wwise/events/ui/play_hud_health_station_2d"] = true,
@@ -287,7 +279,8 @@ local player_character_sounds = {
 	["wwise/events/player/play_player_dodge_ranged_success"] = true,
 	["wwise/events/player/play_player_get_hit_heavy_2d"] = true,
 	["wwise/events/player/play_player_dodge_melee_success"] = true,
-	["wwise/events/minions/play_enemy_daemonhost_execute_player_impact_husk"] = true
+	["wwise/events/minions/play_enemy_daemonhost_execute_player_impact_husk"] = true,
+	["wwise/events/player/play_player_get_hit_fire_toughness"] = true
 }
 
 for event_name, _ in pairs(PlayerCharacterSounds.resource_events) do
@@ -297,29 +290,6 @@ end
 NetworkLookup.player_character_sounds = _create_lookup({
 	"n/a"
 }, player_character_sounds)
-NetworkLookup.player_character_voices = {
-	"psyker_female_a",
-	"psyker_female_b",
-	"psyker_female_c",
-	"zealot_female_a",
-	"zealot_female_b",
-	"zealot_female_c",
-	"veteran_female_a",
-	"veteran_female_b",
-	"veteran_female_c",
-	"zealot_male_a",
-	"zealot_male_b",
-	"zealot_male_c",
-	"psyker_male_a",
-	"psyker_male_b",
-	"psyker_male_c",
-	"veteran_male_a",
-	"veteran_male_b",
-	"veteran_male_c",
-	"ogryn_a",
-	"ogryn_b",
-	"ogryn_c"
-}
 NetworkLookup.player_abilities = _create_lookup({
 	"not_equipped"
 }, PlayerAbilities)
@@ -351,7 +321,8 @@ NetworkLookup.force_field_unit_names = {
 	"content/characters/player/human/attachments_combat/psyker_shield/shield_sphere_functional"
 }
 NetworkLookup.smoke_fog_unit = {
-	"content/characters/player/human/attachments_combat/smoke_fog/smoke_fog_volume"
+	"content/characters/player/human/attachments_combat/smoke_fog/smoke_fog_volume",
+	"content/smoke_fog/empty_unit/empty_unit"
 }
 NetworkLookup.smart_tag_replies = _create_lookup({}, SmartTagSettings.replies)
 NetworkLookup.smart_tag_templates = _create_lookup({}, SmartTagSettings.templates)

@@ -2,7 +2,6 @@ local BuffSettings = require("scripts/settings/buff/buff_settings")
 local MasterItems = require("scripts/backend/master_items")
 local Overheat = require("scripts/utilities/overheat")
 local PlayerUnitVisualLoadout = require("scripts/extension_systems/visual_loadout/utilities/player_unit_visual_loadout")
-local Pocketable = require("scripts/utilities/pocketable")
 local ReloadStates = require("scripts/extension_systems/weapon/utilities/reload_states")
 local Scanning = require("scripts/utilities/scanning")
 local Sprint = require("scripts/extension_systems/character_state_machine/character_states/utilities/sprint")
@@ -28,8 +27,7 @@ local weapon_action_data = {
 		buff_target = _require_weapon_action("action_buff_target"),
 		charge = _require_weapon_action("action_charge"),
 		charge_ammo = _require_weapon_action("action_charge_ammo"),
-		chain_lightning = _require_weapon_action("action_chain_lightning_new"),
-		chain_lightning_powerup = _require_weapon_action("action_chain_lightning_powerup"),
+		chain_lightning = _require_weapon_action("action_chain_lightning"),
 		damage_target = _require_weapon_action("action_damage_target"),
 		discard = _require_weapon_action("action_discard"),
 		dummy = _require_weapon_action("action_dummy"),
@@ -88,7 +86,7 @@ local function _ammo_check(action_settings, condition_func_params)
 	local full_clip = clip_capacity == current_clip_amount
 	local empty_clip = current_clip_amount == 0
 	local reload_policy = action_settings.reload_policy or "always"
-	local policy_fulfilled = reload_policy == "empty" and empty_clip or reload_policy == "always" and not full_clip
+	local policy_fulfilled = reload_policy == "empty" and empty_clip or reload_policy == "always" and not full_clip or reload_policy == "always_with_clip"
 	local fulfill_reload_requirements = ammo_reserve > 0 and policy_fulfilled
 
 	if not fulfill_reload_requirements then
@@ -132,9 +130,9 @@ local function _has_ability_charge_or_ammo(action_settings, condition_func_param
 	end
 
 	local inventory_slot_component = condition_func_params.inventory_slot_component
-	local is_ammo = inventory_slot_component and not not inventory_slot_component.current_ammunition_clip
+	local has_ammo = inventory_slot_component and not not inventory_slot_component.current_ammunition_clip
 
-	if is_ammo then
+	if has_ammo then
 		return _has_ammo(condition_func_params)
 	end
 
@@ -560,6 +558,13 @@ weapon_action_data.conditional_state_functions = {
 
 		return started_reload
 	end,
+	has_cooked_weapon = function (condition_func_params, action_params, remaining_time, t)
+		local inventory_slot_component = condition_func_params.inventory_slot_component
+		local reload_state = inventory_slot_component.reload_state
+		local test = reload_state == "cock_weapon" and not _is_sprinting(condition_func_params, action_params, remaining_time)
+
+		return test
+	end,
 	auto_chain = function (condition_func_params, action_params, remaining_time, t)
 		local no_time_left = remaining_time <= 0
 
@@ -599,11 +604,6 @@ weapon_action_data.action_kind_to_running_action_chain_event = {
 		has_blocked = true
 	},
 	chain_lightning = {
-		stop_time_reached = true,
-		charge_depleted = true,
-		force_vent = true
-	},
-	chain_lightning_powerup = {
 		stop_time_reached = true,
 		charge_depleted = true,
 		force_vent = true

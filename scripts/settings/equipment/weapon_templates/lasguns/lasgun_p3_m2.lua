@@ -798,7 +798,7 @@ weapon_template.base_stats = {
 	}
 }
 weapon_template.traits = {}
-local bespoke_lasgun_p3_traits = table.keys(WeaponTraitsBespokeLasgunP3)
+local bespoke_lasgun_p3_traits = table.ukeys(WeaponTraitsBespokeLasgunP3)
 
 table.append(weapon_template.traits, bespoke_lasgun_p3_traits)
 
@@ -832,6 +832,14 @@ weapon_template.displayed_attacks = {
 		desc = "loc_stats_special_action_flashlight_desc",
 		display_name = "loc_weapon_special_flashlight",
 		type = "flashlight"
+	}
+}
+weapon_template.explicit_combo = {
+	{
+		"action_shoot_hip"
+	},
+	{
+		"action_shoot_zoomed"
 	}
 }
 

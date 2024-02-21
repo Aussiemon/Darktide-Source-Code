@@ -17,7 +17,7 @@ local zealot_male_c_psyker_male_c = {
 			[1.0] = "loc_psyker_male_c__bonding_conversation_fulfilment_d_01"
 		},
 		sound_events_duration = {
-			[1.0] = 7.425083
+			[1.0] = 4.081134
 		},
 		randomize_indexes = {}
 	},

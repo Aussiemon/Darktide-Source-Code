@@ -8,6 +8,7 @@ local main_objective_names = MissionSettings.main_objective_names
 local MissionManager = class("MissionManager")
 MissionManager.SIDE_MISSION_TYPES = table.enum("none", "luggable", "collect")
 local SIDE_MISSION_TYPES = MissionManager.SIDE_MISSION_TYPES
+MissionManager._num_missions_started = MissionManager._num_missions_started or 0
 
 MissionManager.init = function (self, mission_name, level, level_name, side_mission_name)
 	side_mission_name = side_mission_name or "default"
@@ -31,6 +32,10 @@ MissionManager.init = function (self, mission_name, level, level_name, side_miss
 	if side_mission then
 		self:_set_side_mission_type(side_mission.side_objective_type)
 	end
+
+	MissionManager._num_missions_started = MissionManager._num_missions_started + 1
+
+	Crashify.print_property("num_missions_started", MissionManager._num_missions_started)
 end
 
 MissionManager.destroy = function (self)

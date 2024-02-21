@@ -17,10 +17,6 @@ DialogueContextExtension.init = function (self, system, unit, extension_init_dat
 	self._timed_counters = {}
 end
 
-DialogueContextExtension.on_remove_extension = function (self, unit, extension_name)
-	return
-end
-
 DialogueContextExtension.extensions_ready = function (self, world, unit)
 	self._health_extension = ScriptUnit.extension(unit, "health_system")
 	self._legacy_v2_proximity_extension = ScriptUnit.extension(unit, "legacy_v2_proximity_system")

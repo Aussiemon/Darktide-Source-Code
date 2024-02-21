@@ -11,6 +11,7 @@ LevelPropCustomization.init = function (self, unit)
 	self._editor_toggle_visibility_state = true
 
 	self:_spawn_children()
+	self:_set_material_variables()
 
 	if Managers and Managers.state and Managers.state.chunk_lod and Managers.state.chunk_lod:register_unit(unit, callback(self, "on_chunk_visibility_state_changed")) then
 		self._chunk_lodding_registered = true
@@ -139,6 +140,31 @@ LevelPropCustomization._unspawn_children = function (self)
 	table.clear(self._child_units)
 end
 
+LevelPropCustomization._set_material_variables = function (self)
+	local unit = self._unit
+	local material_variables = self:get_data(unit, "set_material_variables")
+
+	for _, entry in ipairs(material_variables) do
+		local material = entry.material
+		local variable = entry.variable
+
+		if material == nil or material == "" or variable == nil or variable == "" then
+			return
+		end
+
+		if entry.use_scalar then
+			Unit.set_scalar_for_material(unit, material, variable, entry.scalar)
+		elseif entry.use_vector then
+			Unit.set_vector3_for_material(unit, material, variable, entry.vector:unbox())
+		elseif entry.use_color then
+			local color = entry.color:unbox()
+			local a, r, g, b = Quaternion.to_elements(color)
+
+			Unit.set_vector3_for_material(unit, material, variable, Vector3(r / 255, g / 255, b / 255))
+		end
+	end
+end
+
 LevelPropCustomization.enable = function (self, unit)
 	return
 end
@@ -150,11 +176,13 @@ end
 LevelPropCustomization.editor_property_changed = function (self, unit)
 	self:_unspawn_children()
 	self:_spawn_children()
+	self:_set_material_variables()
 end
 
 LevelPropCustomization.component_data = {
 	children_units = {
 		ui_type = "struct_array",
+		category = "Attached Units",
 		ui_name = "Linked Units",
 		definition = {
 			parent_node_name = {
@@ -204,6 +232,63 @@ LevelPropCustomization.component_data = {
 			"is_static",
 			"cast_shadows",
 			"enabled"
+		}
+	},
+	set_material_variables = {
+		ui_type = "struct_array",
+		category = "Material Variables",
+		ui_name = "Set Material Variables",
+		definition = {
+			material = {
+				ui_type = "text_box",
+				value = "",
+				ui_name = "Material"
+			},
+			variable = {
+				ui_type = "text_box",
+				value = "",
+				ui_name = "Variable"
+			},
+			use_scalar = {
+				ui_type = "check_box",
+				value = false,
+				ui_name = "Use Scalar"
+			},
+			scalar = {
+				ui_type = "number",
+				value = 0,
+				ui_name = "Scalar"
+			},
+			use_vector = {
+				ui_type = "check_box",
+				value = false,
+				ui_name = "Use Vector"
+			},
+			vector = {
+				ui_type = "vector",
+				ui_name = "Vector",
+				value = Vector3Box(1, 0, 0)
+			},
+			use_color = {
+				ui_type = "check_box",
+				value = false,
+				ui_name = "Use Color"
+			},
+			color = {
+				ui_type = "color",
+				ui_name = "Color",
+				value = QuaternionBox(1, 0, 0, 0)
+			}
+		},
+		control_order = {
+			"material",
+			"variable",
+			"use_scalar",
+			"scalar",
+			"use_vector",
+			"vector",
+			"use_color",
+			"color"
 		}
 	}
 }

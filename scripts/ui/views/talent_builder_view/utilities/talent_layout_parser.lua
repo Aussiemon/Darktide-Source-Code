@@ -235,9 +235,9 @@ local FIND_VALUE_FUNCTIONS = {
 		local base_table = nil
 
 		if config.tier then
-			local specialization_overrides = buff_template.specialization_overrides
-			local use_tier = math.clamp(points_spent, 1, #specialization_overrides)
-			base_table = specialization_overrides[use_tier]
+			local talent_overrides = buff_template.talent_overrides
+			local use_tier = math.clamp(points_spent, 1, #talent_overrides)
+			base_table = talent_overrides[use_tier]
 		else
 			base_table = buff_template
 		end

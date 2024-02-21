@@ -767,18 +767,19 @@ steps._condition.archetype_is = function (...)
 	}
 end
 
-steps._condition.specialization_is = function (...)
-	local specialization_names = {
+steps._condition.archetype_is = function (...)
+	local archetype_names = {
 		...
 	}
 
 	return {
 		condition_func = function (scenario_system, player, scenario_data, step_data, t)
-			local specialization_extension = ScriptUnit.has_extension(player.player_unit, "specialization_system")
-			local specialization_name = specialization_extension:specialization_name()
+			local profile = player:profile()
+			local archetype = profile.archetype
+			local archetype_name = archetype and archetype.name
 
-			for i = 1, #specialization_names do
-				if specialization_names[i] == specialization_name then
+			for ii = 1, #archetype_names do
+				if archetype_names[ii] == archetype_name then
 					return true
 				end
 			end

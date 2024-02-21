@@ -3,7 +3,6 @@ local PlayerAbilities = require("scripts/settings/ability/player_abilities/playe
 local stat_buffs = BuffSettings.stat_buffs
 local base_talents = {
 	archetype = "none",
-	specialization = "none",
 	talents = {
 		frag_grenade = {
 			hud_icon = "content/ui/materials/icons/abilities/throwables/default",

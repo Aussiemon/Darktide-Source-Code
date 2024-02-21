@@ -1,13 +1,14 @@
 local BaseWeaponTraitBuffTemplates = require("scripts/settings/buff/weapon_traits_buff_templates/base_weapon_trait_buff_templates")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
-local CheckProcFunctions = require("scripts/settings/buff/validation_functions/check_proc_functions")
-local ConditionalFunctions = require("scripts/settings/buff/validation_functions/conditional_functions")
+local CheckProcFunctions = require("scripts/settings/buff/helper_functions/check_proc_functions")
+local ConditionalFunctions = require("scripts/settings/buff/helper_functions/conditional_functions")
 local stat_buffs = BuffSettings.stat_buffs
 local proc_events = BuffSettings.proc_events
-local keywords = BuffSettings.keywords
-local templates = {
-	weapon_trait_bespoke_combatsword_p1_chained_hits_increases_melee_cleave_parent = table.clone(BaseWeaponTraitBuffTemplates.chained_hits_increases_melee_cleave_parent)
-}
+local templates = {}
+
+table.make_unique(templates)
+
+templates.weapon_trait_bespoke_combatsword_p1_chained_hits_increases_melee_cleave_parent = table.clone(BaseWeaponTraitBuffTemplates.chained_hits_increases_melee_cleave_parent)
 templates.weapon_trait_bespoke_combatsword_p1_chained_hits_increases_melee_cleave_parent.child_buff_template = "weapon_trait_bespoke_combatsword_p1_chained_hits_increases_melee_cleave_child"
 templates.weapon_trait_bespoke_combatsword_p1_chained_hits_increases_melee_cleave_child = table.clone(BaseWeaponTraitBuffTemplates.chained_hits_increases_melee_cleave_child)
 templates.weapon_trait_bespoke_combatsword_p1_chained_hits_increases_crit_chance_parent = table.clone(BaseWeaponTraitBuffTemplates.chained_hits_increases_crit_chance_parent)
@@ -44,7 +45,7 @@ templates.weapon_trait_bespoke_combatsword_p1_increase_stagger_per_hit_in_sweep_
 			return true
 		end,
 		[proc_events.on_hit] = function (params, template_data, template_context, t)
-			return template_data.active
+			return CheckProcFunctions.on_item_match(params, template_data, template_context, t) and template_data.active
 		end,
 		[proc_events.on_sweep_finish] = function (params, template_data, template_context, t)
 			return true

@@ -299,7 +299,7 @@ local text_input_base = {
 
 					XGameUI.show_text_entry_async(x_game_ui, title, description, input_text, "default", max_length)
 
-					local virtual_keyboard_promise = Managers.xasync:wrap(x_game_ui, XAsyncBlock.release_block)
+					local virtual_keyboard_promise = Managers.xasync:wrap(x_game_ui)
 
 					virtual_keyboard_promise:next(function (async_block)
 						local new_input_text = XGameUI.resolve_text_entry(async_block)
@@ -438,6 +438,7 @@ local text_input_base = {
 			local old_caret_position = content._caret_position
 			local new_caret_position = content.caret_position
 			local force_caret_update = content.force_caret_update
+			local is_text_box = content.is_text_box
 			local text_has_changed = new_input_text ~= old_input_text
 			local placeholder_text_has_changed = new_active_placeholder_text ~= old_active_placeholder_text
 			local caret_position_has_changed = new_caret_position ~= old_caret_position
@@ -461,6 +462,11 @@ local text_input_base = {
 			end
 
 			local display_text, caret_offset, first_pos = _crop_text_width(ui_renderer, new_input_text, max_text_width, content._input_text_first_visible_pos, new_caret_position, display_text_style.font_type, display_text_style.font_size)
+
+			if is_text_box then
+				caret_offset = caret_offset % (size[1] - 1)
+			end
+
 			content.caret_position = new_caret_position
 			content._input_text = new_input_text
 			content.display_text = display_text
@@ -565,7 +571,10 @@ table.append(TextInputPassTemplates.simple_input_field, {
 				20,
 				20
 			}
-		}
+		},
+		visibility_function = function (content, style)
+			return not content.hide_background
+		end
 	},
 	{
 		style_id = "baseline",
@@ -577,7 +586,10 @@ table.append(TextInputPassTemplates.simple_input_field, {
 				nil,
 				2
 			}
-		}
+		},
+		visibility_function = function (content, style)
+			return not content.hide_baseline
+		end
 	},
 	{
 		value_id = "display_text",
@@ -664,8 +676,166 @@ table.append(TextInputPassTemplates.simple_input_field, {
 	}
 })
 
+local _simple_input_text_box_padding = 4
+local _simple_input_box_text_style = table.clone(UIFontSettings.body)
+_simple_input_box_text_style.text_color = Color.white(255, true)
+_simple_input_box_text_style.size_addition = {
+	-(_simple_input_text_box_padding * 2),
+	-(_simple_input_text_box_padding * 2)
+}
+_simple_input_box_text_style.offset = {
+	_simple_input_text_box_padding,
+	_simple_input_text_box_padding,
+	1
+}
+_simple_input_box_text_style.text_vertical_alignment = "top"
+local _simple_input_box_placeholder_text_style = table.clone(_simple_input_box_text_style)
+_simple_input_box_placeholder_text_style.text_color = Color.ui_grey_medium(200, true)
+local _simple_input_box_limit_text_style = table.clone(_simple_input_box_text_style)
+_simple_input_box_limit_text_style.text_horizontal_alignment = "right"
+_simple_input_box_limit_text_style.text_color = Color.ui_grey_light(255, true)
+_simple_input_box_limit_text_style.font_size = 18
+TextInputPassTemplates.simple_input_box_field_text = table.clone(text_input_base)
+
+table.append(TextInputPassTemplates.simple_input_box_field_text, {
+	{
+		style_id = "focused",
+		pass_type = "rect",
+		style = {
+			color = Color.ui_terminal(255, true),
+			size_addition = {
+				2,
+				2
+			},
+			offset = {
+				-1,
+				-1,
+				-1
+			}
+		},
+		visibility_function = function (content, style)
+			local hotspot = content.hotspot
+
+			return hotspot.use_is_focused and hotspot.is_focused or hotspot.is_selected
+		end
+	},
+	{
+		style_id = "background",
+		pass_type = "rect",
+		style = {
+			color = {
+				255,
+				20,
+				20,
+				20
+			}
+		},
+		visibility_function = function (content, style)
+			return not content.hide_background
+		end
+	},
+	{
+		style_id = "baseline",
+		pass_type = "rect",
+		style = {
+			vertical_alignment = "bottom",
+			color = Color.white(255, true),
+			size = {
+				nil,
+				2
+			}
+		},
+		visibility_function = function (content, style)
+			return not content.hide_baseline
+		end
+	},
+	{
+		value_id = "display_text",
+		style_id = "display_text",
+		pass_type = "text",
+		value = "",
+		style = _simple_input_box_text_style
+	},
+	{
+		style_id = "input_caret",
+		pass_type = "rect",
+		style = {
+			color = Color.white(255, true),
+			offset = {
+				0,
+				_simple_input_field_padding,
+				2
+			},
+			size = {
+				2
+			},
+			size_addition = {
+				0,
+				-(_simple_input_field_padding * 2 + 4)
+			}
+		},
+		visibility_function = _input_active_visibility_function,
+		change_function = function (pass_content, style_data, animations, dt)
+			local blink_time = (pass_content._blink_time or 0) + dt
+
+			while blink_time > 1 do
+				blink_time = blink_time - 1
+			end
+
+			style_data.color[1] = blink_time < 0.5 and 255 or 0
+			pass_content._blink_time = blink_time
+		end
+	},
+	{
+		style_id = "selection",
+		pass_type = "rect",
+		style = {
+			offset = {
+				_simple_input_field_padding,
+				_simple_input_field_padding,
+				0
+			},
+			size_addition = {
+				0,
+				-(_simple_input_field_padding * 2 + 4)
+			},
+			color = {
+				64,
+				64,
+				64,
+				255
+			}
+		},
+		visibility_function = _selection_visibility_function
+	},
+	{
+		value_id = "placeholder_text",
+		style_id = "active_placeholder",
+		pass_type = "text",
+		value = "",
+		style = _simple_input_box_placeholder_text_style,
+		visibility_function = _placeholder_text_visibility_function
+	},
+	{
+		style_id = "limit_text",
+		pass_type = "text",
+		value = "",
+		value_id = "limit_text",
+		style = _simple_input_box_limit_text_style,
+		change_function = function (content, style)
+			local new_input_text = content.input_text
+			local text_length = new_input_text and _utf8_string_length(new_input_text) or 0
+			local max_length = content.max_length or 0
+			content.limit_text = string.format("%d/%d", text_length, max_length)
+		end,
+		visibility_function = function (content, style)
+			return not not content.max_length
+		end
+	}
+})
+
 local _terminal_input_field_padding = 4
-local _terminal_input_text_style = table.clone(UIFontSettings.body)
+local _terminal_input_text_style = table.clone(UIFontSettings.body_medium)
 _terminal_input_text_style.text_color = Color.terminal_text_header_selected(255, true)
 _terminal_input_text_style.size_addition = {
 	-(_terminal_input_field_padding * 2),

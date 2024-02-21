@@ -123,10 +123,10 @@ BackendManager.update = function (self, dt, t)
 			end
 		end
 
-		local remove_indices = {}
 		local title_request_retry_queue = self._title_request_retry_queue
+		local title_request_retry_queue_size = #title_request_retry_queue
 
-		for i = 1, #title_request_retry_queue do
+		for i = title_request_retry_queue_size, 1, -1 do
 			local request = title_request_retry_queue[i]
 
 			if request.request_time <= t then
@@ -159,12 +159,10 @@ BackendManager.update = function (self, dt, t)
 					end
 				end
 
-				table.insert(remove_indices, i)
+				title_request_retry_queue[i] = title_request_retry_queue[title_request_retry_queue_size]
+				title_request_retry_queue[title_request_retry_queue_size] = nil
+				title_request_retry_queue_size = title_request_retry_queue_size - 1
 			end
-		end
-
-		for i = #remove_indices, 1, -1 do
-			table.remove(title_request_retry_queue, remove_indices[i])
 		end
 	end
 

@@ -11,7 +11,7 @@ local unarmored = {
 	sfx = {
 		weakspot_died = {
 			{
-				event = "wwise/events/weapon/melee_hits_sword_gen",
+				event = "wwise/events/weapon/melee_hits_sword_2h_gen",
 				append_husk_to_event_name = true
 			},
 			{
@@ -25,13 +25,13 @@ local unarmored = {
 		},
 		died = {
 			{
-				event = "wwise/events/weapon/melee_hits_sword_gen",
+				event = "wwise/events/weapon/melee_hits_sword_2h_gen",
 				append_husk_to_event_name = true
 			}
 		},
 		weakspot_damage = {
 			{
-				event = "wwise/events/weapon/melee_hits_sword_gen",
+				event = "wwise/events/weapon/melee_hits_sword_2h_gen",
 				append_husk_to_event_name = true
 			},
 			{
@@ -41,7 +41,7 @@ local unarmored = {
 		},
 		damage = {
 			{
-				event = "wwise/events/weapon/melee_hits_sword_gen",
+				event = "wwise/events/weapon/melee_hits_sword_2h_gen",
 				append_husk_to_event_name = true
 			}
 		},
@@ -206,7 +206,7 @@ local armored = {
 				append_husk_to_event_name = true
 			},
 			{
-				event = "wwise/events/weapon/melee_hits_sword_gen",
+				event = "wwise/events/weapon/melee_hits_sword_2h_gen",
 				append_husk_to_event_name = true
 			},
 			{
@@ -224,13 +224,13 @@ local armored = {
 				append_husk_to_event_name = true
 			},
 			{
-				event = "wwise/events/weapon/melee_hits_sword_gen",
+				event = "wwise/events/weapon/melee_hits_sword_2h_gen",
 				append_husk_to_event_name = true
 			}
 		},
 		weakspot_damage = {
 			{
-				event = "wwise/events/weapon/melee_hits_sword_gen",
+				event = "wwise/events/weapon/melee_hits_sword_2h_gen",
 				append_husk_to_event_name = true
 			},
 			{
@@ -244,7 +244,7 @@ local armored = {
 		},
 		damage = {
 			{
-				event = "wwise/events/weapon/melee_hits_sword_gen",
+				event = "wwise/events/weapon/melee_hits_sword_2h_gen",
 				append_husk_to_event_name = true
 			},
 			{
@@ -428,7 +428,7 @@ local super_armor = {
 				append_husk_to_event_name = true
 			},
 			{
-				event = "wwise/events/weapon/melee_hits_sword_gen",
+				event = "wwise/events/weapon/melee_hits_sword_2h_gen",
 				append_husk_to_event_name = true
 			},
 			{
@@ -442,13 +442,13 @@ local super_armor = {
 				append_husk_to_event_name = true
 			},
 			{
-				event = "wwise/events/weapon/melee_hits_sword_gen",
+				event = "wwise/events/weapon/melee_hits_sword_2h_gen",
 				append_husk_to_event_name = true
 			}
 		},
 		weakspot_damage = {
 			{
-				event = "wwise/events/weapon/melee_hits_sword_gen",
+				event = "wwise/events/weapon/melee_hits_sword_2h_gen",
 				append_husk_to_event_name = true
 			},
 			{
@@ -462,7 +462,7 @@ local super_armor = {
 		},
 		damage = {
 			{
-				event = "wwise/events/weapon/melee_hits_sword_gen",
+				event = "wwise/events/weapon/melee_hits_sword_2h_gen",
 				append_husk_to_event_name = true
 			},
 			{
@@ -648,7 +648,7 @@ local disgustingly_resilient = {
 	sfx = {
 		weakspot_died = {
 			{
-				event = "wwise/events/weapon/melee_hits_sword_gen",
+				event = "wwise/events/weapon/melee_hits_sword_2h_gen",
 				append_husk_to_event_name = true
 			},
 			{
@@ -662,7 +662,7 @@ local disgustingly_resilient = {
 		},
 		died = {
 			{
-				event = "wwise/events/weapon/melee_hits_sword_gen",
+				event = "wwise/events/weapon/melee_hits_sword_2h_gen",
 				append_husk_to_event_name = true
 			},
 			{
@@ -672,7 +672,7 @@ local disgustingly_resilient = {
 		},
 		weakspot_damage = {
 			{
-				event = "wwise/events/weapon/melee_hits_sword_gen",
+				event = "wwise/events/weapon/melee_hits_sword_2h_gen",
 				append_husk_to_event_name = true
 			},
 			{
@@ -682,7 +682,7 @@ local disgustingly_resilient = {
 		},
 		damage = {
 			{
-				event = "wwise/events/weapon/melee_hits_sword_gen",
+				event = "wwise/events/weapon/melee_hits_sword_2h_gen",
 				append_husk_to_event_name = true
 			},
 			{
@@ -773,7 +773,7 @@ local berserker = {
 	sfx = {
 		weakspot_died = {
 			{
-				event = "wwise/events/weapon/melee_hits_sword_gen",
+				event = "wwise/events/weapon/melee_hits_sword_2h_gen",
 				append_husk_to_event_name = true
 			},
 			{
@@ -787,13 +787,13 @@ local berserker = {
 		},
 		died = {
 			{
-				event = "wwise/events/weapon/melee_hits_sword_gen",
+				event = "wwise/events/weapon/melee_hits_sword_2h_gen",
 				append_husk_to_event_name = true
 			}
 		},
 		weakspot_damage = {
 			{
-				event = "wwise/events/weapon/melee_hits_sword_gen",
+				event = "wwise/events/weapon/melee_hits_sword_2h_gen",
 				append_husk_to_event_name = true
 			},
 			{
@@ -803,7 +803,7 @@ local berserker = {
 		},
 		damage = {
 			{
-				event = "wwise/events/weapon/melee_hits_sword_gen",
+				event = "wwise/events/weapon/melee_hits_sword_2h_gen",
 				append_husk_to_event_name = true
 			}
 		},

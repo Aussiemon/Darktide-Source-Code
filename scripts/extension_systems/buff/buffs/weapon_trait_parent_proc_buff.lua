@@ -1,7 +1,7 @@
 require("scripts/extension_systems/buff/buffs/proc_buff")
 
 local BuffTemplates = require("scripts/settings/buff/buff_templates")
-local ConditionalFunctions = require("scripts/settings/buff/validation_functions/conditional_functions")
+local ConditionalFunctions = require("scripts/settings/buff/helper_functions/conditional_functions")
 local FixedFrame = require("scripts/utilities/fixed_frame")
 local WeaponTraitParentProcBuff = class("WeaponTraitParentProcBuff", "ProcBuff")
 

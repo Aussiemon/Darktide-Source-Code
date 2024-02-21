@@ -156,17 +156,15 @@ FxSystem.hot_join_sync = function (self, sender, channel)
 end
 
 FxSystem.update = function (self, context, dt, t, ...)
-	if not DEDICATED_SERVER then
-		local template_context = self._template_context
-		local running_template_effects = self._running_template_effects
+	local template_context = self._template_context
+	local running_template_effects = self._running_template_effects
 
-		for i = 1, #running_template_effects do
-			local template_effect = running_template_effects[i]
-			local template = template_effect.template
-			local template_data = template_effect.template_data
+	for i = 1, #running_template_effects do
+		local template_effect = running_template_effects[i]
+		local template = template_effect.template
+		local template_data = template_effect.template_data
 
-			template.update(template_data, template_context, dt, t)
-		end
+		template.update(template_data, template_context, dt, t)
 	end
 
 	FxSystem.super.update(self, context, dt, t, ...)
@@ -224,15 +222,13 @@ FxSystem.start_template_effect = function (self, template, optional_unit, option
 end
 
 FxSystem._start_template_effect = function (self, template_effect, template, optional_unit, optional_node, optional_position)
-	if not DEDICATED_SERVER then
-		local template_data = template_effect.template_data
-		local template_context = self._template_context
-		template_data.position = optional_position
-		template_data.node = optional_node
-		template_data.unit = optional_unit
+	local template_data = template_effect.template_data
+	local template_context = self._template_context
+	template_data.position = optional_position
+	template_data.node = optional_node
+	template_data.unit = optional_unit
 
-		template.start(template_data, template_context)
-	end
+	template.start(template_data, template_context)
 
 	if optional_position then
 		template_effect.optional_position:store(optional_position)
@@ -276,10 +272,7 @@ FxSystem._stop_template_effect = function (self, template_effect, template)
 	local template_data = template_effect.template_data
 	local template_context = self._template_context
 
-	if not DEDICATED_SERVER then
-		template.stop(template_data, template_context)
-	end
-
+	template.stop(template_data, template_context)
 	template_effect.optional_position:store(Vector3.invalid_vector())
 
 	template_effect.optional_unit = nil

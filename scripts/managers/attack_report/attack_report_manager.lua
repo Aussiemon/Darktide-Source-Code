@@ -234,14 +234,8 @@ AttackReportManager._process_attack_result = function (self, buffer_data)
 end
 
 function _trigger_hit_report(attacking_unit, attack_result, did_damage, hit_weakspot, hit_world_position, damage_efficiency, is_critical_strike)
-	local hud_extension = ScriptUnit.has_extension(attacking_unit, "hud_system")
-
 	if hit_world_position or attack_result == attack_results.died then
 		Managers.event:trigger("event_crosshair_hit_report", hit_weakspot, attack_result, did_damage, hit_world_position, damage_efficiency, is_critical_strike)
-	end
-
-	if hud_extension and hit_world_position then
-		hud_extension:report_hit(hit_weakspot, attack_result, did_damage, hit_world_position)
 	end
 end
 

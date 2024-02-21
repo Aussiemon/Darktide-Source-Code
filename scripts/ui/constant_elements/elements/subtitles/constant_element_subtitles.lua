@@ -32,6 +32,7 @@ ConstantElementSubtitles.init = function (self, parent, draw_layer, start_scale)
 	self._line_queue = {}
 	self._letterbox_widget = self:_create_widget("letterbox", Definitions.letterbox_definition)
 	self._letterbox_lines_width = {}
+	self._secondary_letterbox_lines_width = {}
 
 	self:_initialize_settings()
 	self:_register_events()
@@ -45,13 +46,20 @@ ConstantElementSubtitles._initialize_settings = function (self)
 	self._settings_initialized = true
 
 	self:_setup_font_size()
+	self:_setup_secondary_font_size()
 	self:_setup_text_opacity()
 	self:_setup_letterbox()
 	self:_setup_subtitles_enabled()
+	self:_setup_secondary_subtitles_enabled()
+	self:_setup_subtitle_speaker_enabled()
 end
 
 ConstantElementSubtitles.event_update_subtitles_enabled = function (self)
 	self:_setup_subtitles_enabled()
+end
+
+ConstantElementSubtitles.event_update_secondary_subtitles_enabled = function (self)
+	self:_setup_secondary_subtitles_enabled()
 end
 
 ConstantElementSubtitles.event_update_subtitle_text_opacity = function (self)
@@ -62,17 +70,12 @@ ConstantElementSubtitles.event_update_subtitles_font_size = function (self)
 	self:_setup_font_size()
 end
 
-ConstantElementSubtitles.event_update_subtitle_speaker_enabled = function (self)
-	if self._line_duration then
-		local widgets_by_name = self._widgets_by_name
-		local widget = widgets_by_name.subtitles
-		local content = widget.content
-		local text = content.text or ""
-		local duration = self._line_duration or 0
+ConstantElementSubtitles.event_update_secondary_subtitles_font_size = function (self)
+	self:_setup_secondary_font_size()
+end
 
-		self:_display_text_line(text, duration)
-		self:_update_letterbox_size()
-	end
+ConstantElementSubtitles.event_update_subtitle_speaker_enabled = function (self)
+	self:_setup_subtitle_speaker_enabled()
 end
 
 ConstantElementSubtitles.event_update_subtitles_background_opacity = function (self)
@@ -102,6 +105,25 @@ ConstantElementSubtitles._setup_font_size = function (self)
 
 		self:_display_text_line(text, duration)
 		self:_update_letterbox_size()
+	end
+end
+
+ConstantElementSubtitles._setup_secondary_subtitles_enabled = function (self)
+	local save_data = Managers.save:account_data()
+	local interface_settings = save_data.interface_settings
+	local secondary_subtitle_enabled = interface_settings.secondary_subtitle_enabled
+	self._secondary_subtitle_enabled = secondary_subtitle_enabled
+end
+
+ConstantElementSubtitles._setup_secondary_font_size = function (self)
+	local save_data = Managers.save:account_data()
+	local interface_settings = save_data.interface_settings
+	local font_size = interface_settings.secondary_subtitle_font_size
+
+	self:_set_secondary_font_size(font_size)
+
+	if self._secondary_letterbox_added then
+		self:_display_text_line("", nil, true)
 	end
 end
 
@@ -141,12 +163,34 @@ ConstantElementSubtitles._setup_text_opacity = function (self)
 	self:_set_text_opacity(alpha)
 end
 
+ConstantElementSubtitles._setup_subtitle_speaker_enabled = function (self)
+	local save_data = Managers.save:account_data()
+	local interface_settings = save_data.interface_settings
+	local subtitle_speaker_enabled = interface_settings.subtitle_speaker_enabled
+	self._subtitle_speaker_enabled = subtitle_speaker_enabled
+
+	if self._line_duration then
+		local widgets_by_name = self._widgets_by_name
+		local widget = widgets_by_name.subtitles
+		local content = widget.content
+		local text = content.text or ""
+		local duration = self._line_duration or 0
+
+		self:_display_text_line(text, duration)
+		self:_update_letterbox_size()
+	end
+end
+
 ConstantElementSubtitles._set_text_opacity = function (self, alpha)
 	local widgets_by_name = self._widgets_by_name
 	local widget = widgets_by_name.subtitles
 	local style = widget.style
 	local text_style = style.text
 	text_style.text_color[1] = alpha or 0
+	local secondary_widget = widgets_by_name.secondary_subtitles
+	local secondary_style = secondary_widget.style
+	local secondary_text_style = secondary_style.text
+	secondary_text_style.text_color[1] = alpha or 0
 end
 
 ConstantElementSubtitles._set_letterbox_opacity = function (self, alpha)
@@ -233,48 +277,34 @@ ConstantElementSubtitles.update = function (self, dt, t, ui_renderer, render_set
 	local currently_playing = playing_dialogues_array and playing_dialogues_array[#playing_dialogues_array]
 
 	if currently_playing then
-		local currently_playing_subtitle = currently_playing.currently_playing_subtitle
+		self:_add_subtitle(currently_playing)
 
-		if currently_playing_subtitle ~= self._line_currently_playing then
-			self._line_currently_playing = currently_playing_subtitle
-			local player = nil
-			local currently_playing_unit = currently_playing.currently_playing_unit
+		if self._secondary_subtitle_enabled then
+			local num_playing_dialogues = #playing_dialogues_array
+			local currently_playing_secondary = num_playing_dialogues > 1 and playing_dialogues_array[num_playing_dialogues - 1]
 
-			if currently_playing_unit then
-				local state_manager = Managers.state
-				local player_unit_spawn_manager = state_manager and state_manager.player_unit_spawn
-				player = player_unit_spawn_manager and player_unit_spawn_manager:is_player_unit(currently_playing_unit) and player_unit_spawn_manager:owner(currently_playing_unit)
-			end
+			if currently_playing_secondary then
+				local previously_playing_secondary = self._secondary_line_currently_playing
 
-			local speaker_display_name = nil
+				if currently_playing_secondary ~= previously_playing_secondary then
+					self:_remove_secondary_letterbox()
 
-			if player and player:is_human_controlled() then
-				speaker_display_name = player:name()
+					self._secondary_letterbox_added = false
+				end
+
+				self:_add_subtitle(currently_playing_secondary, true)
+
+				self._secondary_line_currently_playing = currently_playing_secondary
 			else
-				local speaker_name = currently_playing.speaker_name
-				local speaker_voice_settings = DialogueSpeakerVoiceSettings[speaker_name]
-				local character_short_name = speaker_voice_settings.short_name
-				speaker_display_name = self:_localize(character_short_name)
-			end
+				self:_remove_secondary_letterbox()
+				self:_display_text_line("", nil, true)
 
-			local no_cache = true
-			local currently_playing_subtitle_localized = self:_localize(currently_playing_subtitle, no_cache)
-			subtitle_format_context.speaker = speaker_display_name
-			subtitle_format_context.subtitle = currently_playing_subtitle_localized
-			local string_exists = Managers.localization:exists(currently_playing_subtitle)
-
-			if not string_exists then
-				self:_display_text_line("", nil)
-
-				self._line_currently_playing = nil
-			else
-				currently_playing_subtitle_localized = self:_localize("loc_subtitle_speaker_format", no_cache, subtitle_format_context)
-
-				self:_display_text_line(currently_playing_subtitle_localized)
+				self._secondary_letterbox_added = false
 			end
 		end
 	elseif self._line_currently_playing then
 		self:_display_text_line("", nil)
+		self:_display_text_line("", nil, true)
 
 		self._line_currently_playing = nil
 	end
@@ -298,6 +328,79 @@ ConstantElementSubtitles.update = function (self, dt, t, ui_renderer, render_set
 	end
 end
 
+ConstantElementSubtitles._add_subtitle = function (self, currently_playing, secondary_subtitle)
+	local currently_playing_subtitle = currently_playing.currently_playing_subtitle
+
+	if currently_playing_subtitle ~= self._line_currently_playing then
+		if not secondary_subtitle then
+			self._line_currently_playing = currently_playing_subtitle
+		end
+
+		local player = nil
+		local currently_playing_unit = currently_playing.currently_playing_unit
+
+		if currently_playing_unit then
+			local state_manager = Managers.state
+			local player_unit_spawn_manager = state_manager and state_manager.player_unit_spawn
+			player = player_unit_spawn_manager and player_unit_spawn_manager:is_player_unit(currently_playing_unit) and player_unit_spawn_manager:owner(currently_playing_unit)
+		end
+
+		local subtitle_format = "loc_subtitle_speaker_format"
+		local speaker_display_name = nil
+
+		if player then
+			local player_slot = player and player.slot and player:slot()
+
+			if player_slot <= 4 then
+				subtitle_format = subtitle_format .. "_player_slot_" .. player_slot
+			end
+		end
+
+		if player and player:is_human_controlled() then
+			speaker_display_name = player:name()
+		else
+			local speaker_name = currently_playing.speaker_name
+			local speaker_voice_settings = DialogueSpeakerVoiceSettings[speaker_name]
+			local character_short_name = speaker_voice_settings.short_name
+			speaker_display_name = self:_localize(character_short_name)
+		end
+
+		local no_cache = true
+		local currently_playing_subtitle_localized = self:_localize(currently_playing_subtitle, no_cache)
+		subtitle_format_context.speaker = speaker_display_name
+		subtitle_format_context.subtitle = currently_playing_subtitle_localized
+
+		if not self._subtitle_speaker_enabled then
+			subtitle_format = "loc_subtitle_speaker_format_speakerless"
+			subtitle_format_context.speaker = nil
+		end
+
+		local string_exists = Managers.localization:exists(currently_playing_subtitle)
+
+		if not string_exists then
+			self:_display_text_line("", nil)
+
+			self._line_currently_playing = nil
+		else
+			currently_playing_subtitle_localized = self:_localize(subtitle_format, no_cache, subtitle_format_context)
+
+			self:_display_text_line(currently_playing_subtitle_localized, nil, secondary_subtitle)
+		end
+	end
+end
+
+ConstantElementSubtitles._remove_secondary_letterbox = function (self)
+	local num_letterbox_lines = #self._letterbox_lines_width
+	local num_secondary_letterbox_lines = #self._secondary_letterbox_lines_width
+	local secondary_start = num_letterbox_lines - num_secondary_letterbox_lines + 1
+
+	for i = num_letterbox_lines, secondary_start, -1 do
+		if num_secondary_letterbox_lines ~= num_letterbox_lines then
+			table.remove(self._letterbox_lines_width, i)
+		end
+	end
+end
+
 ConstantElementSubtitles._debug_trigger_subtitle = function (self, text, duration)
 	if self._line_duration then
 		table.insert(self._line_queue, 1, {
@@ -306,6 +409,7 @@ ConstantElementSubtitles._debug_trigger_subtitle = function (self, text, duratio
 		})
 	else
 		self:_display_text_line(text, duration)
+		self:_display_text_line("", nil, true)
 	end
 end
 
@@ -328,12 +432,38 @@ ConstantElementSubtitles._set_font_size = function (self, new_size)
 	text_style.size[2] = text_height
 end
 
-ConstantElementSubtitles._display_text_line = function (self, text, duration)
+ConstantElementSubtitles._set_secondary_font_size = function (self, new_size)
+	local widgets_by_name = self._widgets_by_name
+	local secondary_widget = widgets_by_name.secondary_subtitles
+	local secondary_style = secondary_widget.style
+	local secondary_text_style = secondary_style.text
+	secondary_text_style.font_size = new_size
+	local parent = self._parent
+	local ui_renderer = parent:ui_renderer()
+	local secondary_text_options = UIFonts.get_font_options_by_style(secondary_text_style)
+	local secondary_text_width, secondary_text_height, _, _ = UIRenderer.text_size(ui_renderer, DUMMY_MEASURE_TEXT_LINE, secondary_text_style.font_type, secondary_text_style.font_size, dummy_text_size, secondary_text_options)
+	secondary_text_style.size[1] = secondary_text_width
+	secondary_text_style.size[2] = secondary_text_height
+end
+
+ConstantElementSubtitles._display_text_line = function (self, text, duration, secondary_subtitle)
 	local widgets_by_name = self._widgets_by_name
 	local widget = widgets_by_name.subtitles
+
+	if secondary_subtitle then
+		widget = widgets_by_name.secondary_subtitles
+
+		if text == "" then
+			self._secondary_line_currently_playing = nil
+		end
+
+		self._secondary_line_duration = duration
+	else
+		self._line_duration = duration
+	end
+
 	local content = widget.content
 	content.text = text
-	self._line_duration = duration
 	local parent = self._parent
 	local ui_renderer = parent:ui_renderer()
 	local style = widget.style
@@ -343,7 +473,11 @@ ConstantElementSubtitles._display_text_line = function (self, text, duration)
 	local rows = UIRenderer.word_wrap(ui_renderer, text, text_style.font_type, text_style.font_size, text_width)
 	local total_height = UIRenderer.text_height(ui_renderer, text, text_style.font_type, text_style.font_size, text_style.size, text_options)
 
-	table.clear(self._letterbox_lines_width)
+	if not secondary_subtitle then
+		table.clear(self._letterbox_lines_width)
+	else
+		table.clear(self._secondary_letterbox_lines_width)
+	end
 
 	local text_max_height = 0
 	local num_rows = #rows
@@ -352,17 +486,44 @@ ConstantElementSubtitles._display_text_line = function (self, text, duration)
 		local text_line = rows[i]
 		local line_text_width, _, _, _ = UIRenderer.text_size(ui_renderer, text_line, text_style.font_type, text_style.font_size, dummy_text_size, text_options)
 		local line_height = UIRenderer.text_height(ui_renderer, text_line, text_style.font_type, text_style.font_size, dummy_text_size, text_options)
-		self._letterbox_lines_width[i] = line_text_width + 20
+
+		if not secondary_subtitle then
+			self._letterbox_lines_width[i] = line_text_width + 20
+		else
+			self._secondary_letterbox_lines_width[i] = line_text_width + 20
+		end
 
 		if text_max_height < line_height then
 			text_max_height = line_height
+
+			if not secondary_subtitle then
+				self._subtitle_text_max_height = text_max_height
+			end
 		end
 	end
 
-	self._letterbox_total_height = math.ceil(total_height)
-	self._letterbox_height = math.ceil(text_max_height)
-	local total_spacing = math.max(self._letterbox_total_height - self._letterbox_height * num_rows, 0)
-	self._letterbox_spacing = total_spacing > 0 and total_spacing / num_rows or 0
+	if secondary_subtitle and not self._secondary_letterbox_added then
+		local subtitle_total_height = self._subtitle_text_max_height * #self._letterbox_lines_width
+		local secondary_subtitle_total_height = text_max_height * #self._secondary_letterbox_lines_width
+		text_style.offset[2] = subtitle_total_height / 2 + secondary_subtitle_total_height / 2
+
+		table.append(self._letterbox_lines_width, self._secondary_letterbox_lines_width)
+
+		self._secondary_letterbox_added = true
+	end
+
+	local letterbox_total_height = math.ceil(total_height)
+	local letterbox_height = math.ceil(text_max_height)
+	local total_spacing = math.max(letterbox_total_height - letterbox_height * num_rows, 0)
+	local letterbox_spacing = total_spacing > 0 and total_spacing / num_rows or 0
+
+	if not secondary_subtitle then
+		self._letterbox_height = letterbox_height
+		self._letterbox_spacing = letterbox_spacing
+	else
+		self._secondary_letterbox_height = letterbox_height
+		self._secondary_letterbox_spacing = letterbox_spacing
+	end
 end
 
 ConstantElementSubtitles._draw_widgets = function (self, dt, t, input_service, ui_renderer, render_settings)
@@ -380,6 +541,15 @@ ConstantElementSubtitles._draw_widgets = function (self, dt, t, input_service, u
 		local line_spacing = self._letterbox_spacing or 0
 		local text_height = self._letterbox_height or 0
 		local start_offset = -((num_lines - 1) * (text_height + line_spacing)) * 0.5
+		local secondary_letterbox_lines_width = self._secondary_letterbox_lines_width
+		local num_secondary_lines = #secondary_letterbox_lines_width
+		local secondary_line_spacing = self._secondary_letterbox_spacing or 0
+		local secondary_text_height = self._secondary_letterbox_height or 0
+		local secondary_i_start = num_lines - num_secondary_lines
+
+		if self._secondary_letterbox_added then
+			start_offset = start_offset + num_secondary_lines * (text_height + secondary_line_spacing) * 0.5
+		end
 
 		for i = 1, num_lines do
 			local width = letterbox_lines_width[i]
@@ -388,11 +558,24 @@ ConstantElementSubtitles._draw_widgets = function (self, dt, t, input_service, u
 			local rect_size = widget.style.rect.size
 			rect_size[1] = width
 			rect_size[2] = text_height
+
+			if self._secondary_letterbox_added and secondary_i_start < i then
+				rect_size[2] = secondary_text_height
+			end
+
 			offset[2] = start_offset
 
 			UIWidget.draw(widget, ui_renderer)
 
-			start_offset = start_offset + text_height + line_spacing
+			if self._secondary_letterbox_added and secondary_i_start <= i then
+				if i == secondary_i_start then
+					start_offset = start_offset + (secondary_text_height + secondary_line_spacing + text_height + line_spacing) / 2
+				else
+					start_offset = start_offset + secondary_text_height + secondary_line_spacing
+				end
+			else
+				start_offset = start_offset + text_height + line_spacing
+			end
 		end
 	end
 

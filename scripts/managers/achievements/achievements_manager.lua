@@ -5,6 +5,8 @@ local AchievementTypes = require("scripts/managers/achievements/achievement_type
 local MasterItems = require("scripts/backend/master_items")
 local Promise = require("scripts/foundation/utilities/promise")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
+local TextUtilities = require("scripts/utilities/ui/text")
+local UISettings = require("scripts/settings/ui/ui_settings")
 local AchievementsManager = class("AchievementsManager")
 local CLIENT_RPCS = {
 	"rpc_unlock_achievement"
@@ -12,7 +14,7 @@ local CLIENT_RPCS = {
 local PlayerStates = table.enum("loading", "ready")
 AchievementsManager.player_states = PlayerStates
 
-AchievementsManager.init = function (self, is_client, event_delegate, use_batched_saving)
+AchievementsManager.init = function (self, is_client, event_delegate, use_batched_saving, broadcast_unlocks)
 	self._definitions = nil
 	self._definitions = GameParameters.testify and {} or nil
 	self._initialized = false
@@ -29,6 +31,8 @@ AchievementsManager.init = function (self, is_client, event_delegate, use_batche
 	for achievement_type, trigger_data in pairs(AchievementTypes) do
 		self._triggers[achievement_type] = trigger_data.trigger
 	end
+
+	self._broadcast_unlocks = not not broadcast_unlocks
 
 	if is_client then
 		self._event_delegate:register_connection_events(self, unpack(CLIENT_RPCS))
@@ -394,16 +398,17 @@ AchievementsManager._save_succeded = function (self, player_data, assumed_comple
 		return
 	end
 
+	local player_id = player_data.id
+
 	for i = 1, #achievements_in_air do
 		local achievement_id = achievements_in_air[i]
-		local achievement = self._definitions[achievement_id]
 
-		RPC.rpc_unlock_achievement(player_data.channel_id, player_data.local_player_id, achievement.index)
+		self:_advertise_unlocked_achievement(player_id, achievement_id)
 	end
 end
 
-AchievementsManager._save_failed = function (self, player_id, ...)
-	local player_data = self._players[player_id]
+AchievementsManager._save_failed = function (self, player_data, ...)
+	local player_id = player_data.id
 
 	Log.warning("AchievementsManager", "Failed saving achievements for player '%s'.", player_id)
 
@@ -635,6 +640,19 @@ AchievementsManager._show_item_rewards = function (self, rewards)
 	end
 end
 
+AchievementsManager._advertise_unlocked_achievement = function (self, player_id, achievement_id)
+	local player_data = self._players[player_id]
+	local peer_id = Network.peer_id(player_data.channel_id)
+	local local_player_id = player_data.local_player_id
+	local achievement = self._definitions[achievement_id]
+	local achievement_index = achievement.index
+	local is_remote = player_data.remote
+
+	if is_remote then
+		RPC.rpc_unlock_achievement(player_data.channel_id, local_player_id, achievement_index)
+	end
+end
+
 AchievementsManager._unlock_achievement = function (self, player_id, achievement_id, never_tracked, remote_unlock)
 	local player_data = self._players[player_id]
 	player_data.completed[achievement_id] = true
@@ -672,19 +690,17 @@ AchievementsManager._unlock_achievement = function (self, player_id, achievement
 			self:_untrack_achievement(player_id, achievement_id)
 		end
 
-		local message_client = player_data.remote and self._use_batched_saving
+		local batched_saving = self._use_batched_saving
 
-		if message_client then
-			local achievement = self._definitions[achievement_id]
-
-			RPC.rpc_unlock_achievement(player_data.channel_id, player_data.local_player_id, achievement.index)
+		if batched_saving then
+			self:_advertise_unlocked_achievement(player_id, achievement_id)
 		end
 
 		self:_on_achievement_unlock(player_id, achievement_id)
 	end
 end
 
-AchievementsManager.unlock_achievement = function (self, player, achievement_id)
+AchievementsManager.unlock_achievement = function (self, player, achievement_id, unlock_previous)
 	local player_id = player.remote and player.stat_id or player:local_player_id()
 	local player_data = self._players[player_id]
 
@@ -714,6 +730,12 @@ AchievementsManager.unlock_achievement = function (self, player, achievement_id)
 		Log.info("AchievementsManager", "Failed to unlock achievement '%s'. Host isn't a server.", achievement_id, player_id)
 
 		return false
+	end
+
+	local previous_id = achievement_definition.previous
+
+	if previous_id and unlock_previous then
+		self:unlock_achievement(player, previous_id, unlock_previous)
 	end
 
 	self:_unlock_achievement(player_id, achievement_id)

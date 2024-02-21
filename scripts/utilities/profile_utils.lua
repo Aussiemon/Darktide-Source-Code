@@ -3,13 +3,13 @@ local ArchetypeTalents = require("scripts/settings/ability/archetype_talents/arc
 local BotCharacterProfiles = require("scripts/settings/bot_character_profiles")
 local ItemSlotSettings = require("scripts/settings/item/item_slot_settings")
 local MasterItems = require("scripts/backend/master_items")
-local PlayerSpecialization = require("scripts/utilities/player_specialization/player_specialization")
+local PlayerTalents = require("scripts/utilities/player_talents/player_talents")
 local PrologueCharacterProfileOverride = require("scripts/settings/prologue_character_profile_override")
+local SaveData = require("scripts/managers/save/save_data")
 local TalentLayoutParser = require("scripts/ui/views/talent_builder_view/utilities/talent_layout_parser")
 local TestifyCharacterProfiles = not EDITOR and DevParameters.use_testify_profiles and require("scripts/settings/testify_character_profiles")
 local UISettings = require("scripts/settings/ui/ui_settings")
 local ViewElementProfilePresetsSettings = require("scripts/ui/view_elements/view_element_profile_presets/view_element_profile_presets_settings")
-local SaveData = require("scripts/managers/save/save_data")
 local ProfileUtils = {
 	character_names = {
 		male_names_1 = {
@@ -156,7 +156,7 @@ local function _fill_talents_and_selected_nodes(profile, character, archetype_na
 
 	TalentLayoutParser.unpack_backend_data(active_layout, backend_talents, selected_nodes)
 	TalentLayoutParser.selected_talents_from_selected_nodes(active_layout, selected_nodes, talents)
-	PlayerSpecialization.add_archetype_base_talents(archetype, talents)
+	PlayerTalents.add_archetype_base_talents(archetype, talents)
 end
 
 local function profile_from_backend_data(backend_profile_data)
@@ -463,7 +463,7 @@ local function _generate_visual_loadout_from_data(loadout_item_ids, loadout_item
 	return visual_loadout
 end
 
-local function _validate_talent_items(talents, archetype_name, specialization_name)
+local function _validate_talent_items(talents, archetype_name)
 	local talent_definitions = ArchetypeTalents[archetype_name]
 	local item_definitions = MasterItems.get_cached()
 
@@ -484,7 +484,7 @@ local function _validate_talent_items(talents, archetype_name, specialization_na
 	end
 end
 
-local function convert_profile_from_lookups_to_data(profile)
+local function _convert_profile_from_lookups_to_data(profile)
 	local archetype_name = profile.archetype
 	local archetype = Archetypes[archetype_name]
 	profile.archetype = archetype
@@ -496,8 +496,7 @@ local function convert_profile_from_lookups_to_data(profile)
 	profile.visual_loadout = visual_loadout
 	local talents = profile.talents
 
-	PlayerSpecialization.add_nonselected_talents(archetype, profile.specialization, profile.current_level, talents)
-	_validate_talent_items(talents, archetype_name, profile.specialization)
+	_validate_talent_items(talents, archetype_name)
 end
 
 ProfileUtils.process_backend_body = function (body)
@@ -523,7 +522,7 @@ end
 ProfileUtils.backend_profile_data_to_profile = function (backend_profile_data)
 	local profile = profile_from_backend_data(backend_profile_data)
 
-	convert_profile_from_lookups_to_data(profile)
+	_convert_profile_from_lookups_to_data(profile)
 
 	return profile
 end
@@ -542,7 +541,7 @@ end
 ProfileUtils.unpack_profile = function (profile_json)
 	local profile = cjson.decode(profile_json)
 
-	convert_profile_from_lookups_to_data(profile)
+	_convert_profile_from_lookups_to_data(profile)
 
 	return profile
 end
@@ -579,7 +578,7 @@ ProfileUtils.get_bot_profile = function (identifier)
 	local bot_profile = bot_profiles[identifier]
 	local profile = table.shallow_copy(bot_profile)
 
-	convert_profile_from_lookups_to_data(profile)
+	_convert_profile_from_lookups_to_data(profile)
 
 	return profile
 end
@@ -685,8 +684,7 @@ ProfileUtils.character_to_profile = function (character, gear_list, progression)
 
 	local profile_talents = profile.talents
 
-	PlayerSpecialization.add_nonselected_talents(archetype, specialization, current_level, profile_talents)
-	_validate_talent_items(profile_talents, archetype_name, profile.specialization)
+	_validate_talent_items(profile_talents, archetype_name)
 
 	return profile
 end

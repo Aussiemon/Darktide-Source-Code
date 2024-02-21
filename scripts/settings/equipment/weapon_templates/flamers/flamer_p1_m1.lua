@@ -791,7 +791,7 @@ weapon_template.base_stats = {
 	}
 }
 weapon_template.traits = {}
-local bespoke_forcestaff_p1_traits = table.keys(WeaponTraitsBespokeFlamerP1)
+local bespoke_forcestaff_p1_traits = table.ukeys(WeaponTraitsBespokeFlamerP1)
 
 table.append(weapon_template.traits, bespoke_forcestaff_p1_traits)
 
@@ -890,6 +890,14 @@ weapon_template.displayed_attacks = {
 		desc = "loc_stats_special_action_melee_weapon_bash_desc",
 		display_name = "loc_weapon_special_weapon_bash",
 		type = "melee"
+	}
+}
+weapon_template.explicit_combo = {
+	{
+		"action_shoot"
+	},
+	{
+		"action_shoot_braced"
 	}
 }
 weapon_template.special_action_name = "push"

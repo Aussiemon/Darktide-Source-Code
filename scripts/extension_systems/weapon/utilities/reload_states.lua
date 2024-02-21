@@ -15,6 +15,14 @@ local ReloadStates = {
 		local anim_3p = state_config.anim_3p or anim_1p
 		local action_time_offset = state_config.action_time_offset
 
+		if type(anim_1p) == "function" then
+			anim_1p = anim_1p(inventory_slot_component)
+		end
+
+		if type(anim_3p) == "function" then
+			anim_3p = anim_3p(inventory_slot_component)
+		end
+
 		return anim_1p, anim_3p, action_time_offset
 	end
 }

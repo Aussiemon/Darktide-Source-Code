@@ -196,6 +196,13 @@ function _validate_hit_zone_priority(weapon_template, action_settings)
 	return success, error_msg
 end
 
+local _skipp_ability_check_action_kinds = {
+	unwield_to_specific = true,
+	unwield = true,
+	toggle_special = true,
+	inspect = true
+}
+
 function _validate_chain_actions(weapon_template, action_settings)
 	local allowed_chain_actions = action_settings.allowed_chain_actions
 
@@ -208,10 +215,20 @@ function _validate_chain_actions(weapon_template, action_settings)
 	local stop_input = action_settings.stop_input
 	local success = true
 	local error_msg = ""
+	local has_grenade_ability = false
+	local has_combat_ability = false
 
 	for input, chain_action in pairs(allowed_chain_actions) do
 		local chain_action_success = true
 		local chain_action_error_msg = string.format("%q -> ", tostring(input))
+
+		if input == "combat_ability" then
+			has_combat_ability = true
+		end
+
+		if input == "grenade_ability" then
+			has_grenade_ability = true
+		end
 
 		if type(input) ~= "string" then
 			chain_action_success = false
@@ -266,6 +283,32 @@ function _validate_chain_actions(weapon_template, action_settings)
 		if not chain_action_success then
 			error_msg = error_msg .. chain_action_error_msg .. "\n"
 			success = false
+		end
+	end
+
+	local is_weapon = false
+	local is_bot_weapon = string.find(weapon_template.name, "bot_")
+
+	if not is_bot_weapon then
+		for i, keyword in pairs(weapon_template.keywords) do
+			if keyword == "ranged" or keyword == "melee" then
+				is_weapon = true
+			end
+		end
+	end
+
+	local kind = action_settings.kind
+	local make_ability_check = not _skipp_ability_check_action_kinds[kind]
+
+	if is_weapon and make_ability_check then
+		if not has_grenade_ability then
+			success = false
+			error_msg = error_msg .. "missing chain action for input grenade_ability\n"
+		end
+
+		if not has_combat_ability then
+			success = false
+			error_msg = error_msg .. "missing chain action for input combat_ability\n"
 		end
 	end
 

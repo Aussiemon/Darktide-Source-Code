@@ -1,5 +1,8 @@
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local templates = {}
+
+table.make_unique(templates)
+
 local stat_buffs = BuffSettings.stat_buffs
 local proc_events = BuffSettings.proc_events
 templates.weapon_trait_bespoke_flamer_p1_toughness_on_continuous_fire = {
@@ -94,28 +97,24 @@ templates.weapon_trait_bespoke_flamer_p1_negate_stagger_reduction_with_primary_o
 	weapon_trait_bespoke_flamer_p1_negate_stagger_reduction_with_primary_on_burning = {
 		{
 			conditional_stat_buffs = {
-				[stat_buffs.stagger_burning_reduction_modifier] = 0.7,
 				[stat_buffs.stagger_burning_reduction_modifier] = 0.6,
 				[stat_buffs.ranged_impact_modifier] = 0.3
 			}
 		},
 		{
 			conditional_stat_buffs = {
-				[stat_buffs.stagger_burning_reduction_modifier] = 0.6,
 				[stat_buffs.stagger_burning_reduction_modifier] = 0.5,
 				[stat_buffs.ranged_impact_modifier] = 0.35
 			}
 		},
 		{
 			conditional_stat_buffs = {
-				[stat_buffs.stagger_burning_reduction_modifier] = 0.5,
 				[stat_buffs.stagger_burning_reduction_modifier] = 0.4,
 				[stat_buffs.ranged_impact_modifier] = 0.4
 			}
 		},
 		{
 			conditional_stat_buffs = {
-				[stat_buffs.stagger_burning_reduction_modifier] = 0.4,
 				[stat_buffs.stagger_burning_reduction_modifier] = 0.3,
 				[stat_buffs.ranged_impact_modifier] = 0.45
 			}

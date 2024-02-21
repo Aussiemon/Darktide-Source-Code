@@ -7,7 +7,7 @@ local ResultView = class("ResultView", "BaseView")
 ResultView.init = function (self, settings, context)
 	local definitions = require(definition_path)
 
-	ResultView.super.init(self, definitions, settings)
+	ResultView.super.init(self, definitions, settings, context)
 
 	self._pass_draw = false
 	self._entry_duration = nil

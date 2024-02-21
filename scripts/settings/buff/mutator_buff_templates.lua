@@ -3,53 +3,53 @@ local AttackSettings = require("scripts/settings/damage/attack_settings")
 local Breed = require("scripts/utilities/breed")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
-local EffectTemplates = require("scripts/settings/fx/effect_templates")
 local Explosion = require("scripts/utilities/attack/explosion")
 local ExplosionTemplates = require("scripts/settings/damage/explosion_templates")
-local Health = require("scripts/utilities/health")
 local attack_types = AttackSettings.attack_types
 local buff_keywords = BuffSettings.keywords
 local buff_proc_events = BuffSettings.proc_events
 local buff_targets = BuffSettings.targets
 local buff_stat_buffs = BuffSettings.stat_buffs
-local templates = {
-	mutator_minion_nurgle_blessing_tougher = {
-		class_name = "buff",
-		target = buff_targets.minion_only,
-		keywords = {
-			buff_keywords.empowered
-		},
-		stat_buffs = {
-			[buff_stat_buffs.unarmored_damage] = -0.35,
-			[buff_stat_buffs.resistant_damage] = -0.35,
-			[buff_stat_buffs.disgustingly_resilient_damage] = -0.35,
-			[buff_stat_buffs.berserker_damage] = -0.35,
-			[buff_stat_buffs.armored_damage] = -0.35,
-			[buff_stat_buffs.super_armor_damage] = -0.35,
-			[buff_stat_buffs.consumed_hit_mass_modifier] = 10,
-			[buff_stat_buffs.impact_modifier] = -1,
-			[buff_stat_buffs.ranged_attack_speed] = 0.2,
-			[buff_stat_buffs.minion_num_shots_modifier] = 2,
-			[buff_stat_buffs.movement_speed] = 0.25
-		},
-		minion_effects = {
-			node_effects = {
-				{
-					node_name = "j_spine",
-					vfx = {
-						orphaned_policy = "destroy",
-						particle_effect = "content/fx/particles/enemies/buff_nurgle_blessing",
-						stop_type = "stop"
-					}
+local templates = {}
+
+table.make_unique(templates)
+
+templates.mutator_minion_nurgle_blessing_tougher = {
+	class_name = "buff",
+	target = buff_targets.minion_only,
+	keywords = {
+		buff_keywords.empowered
+	},
+	stat_buffs = {
+		[buff_stat_buffs.unarmored_damage] = -0.35,
+		[buff_stat_buffs.resistant_damage] = -0.35,
+		[buff_stat_buffs.disgustingly_resilient_damage] = -0.35,
+		[buff_stat_buffs.berserker_damage] = -0.35,
+		[buff_stat_buffs.armored_damage] = -0.35,
+		[buff_stat_buffs.super_armor_damage] = -0.35,
+		[buff_stat_buffs.consumed_hit_mass_modifier] = 10,
+		[buff_stat_buffs.impact_modifier] = -1,
+		[buff_stat_buffs.ranged_attack_speed] = 0.2,
+		[buff_stat_buffs.minion_num_shots_modifier] = 2,
+		[buff_stat_buffs.movement_speed] = 0.25
+	},
+	minion_effects = {
+		node_effects = {
+			{
+				node_name = "j_spine",
+				vfx = {
+					orphaned_policy = "destroy",
+					particle_effect = "content/fx/particles/enemies/buff_nurgle_blessing",
+					stop_type = "stop"
 				}
-			},
-			material_vector = {
-				name = "stimmed_color",
-				value = {
-					0.358,
-					0.786,
-					0.22
-				}
+			}
+		},
+		material_vector = {
+			name = "stimmed_color",
+			value = {
+				0.358,
+				0.786,
+				0.22
 			}
 		}
 	}
@@ -359,6 +359,103 @@ templates.empowered_twin = {
 					orphaned_policy = "stop",
 					particle_effect = "content/fx/particles/enemies/enrage_head_outline",
 					stop_type = "destroy"
+				}
+			}
+		}
+	}
+}
+templates.mutant_mutator = {
+	class_name = "buff",
+	stat_buffs = {
+		[buff_stat_buffs.movement_speed] = 0.10000000000000009
+	},
+	start_func = function (template_data, template_context)
+		if not template_context.is_server then
+			return
+		end
+
+		local unit = template_context.unit
+		local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
+		local breed = unit_data_extension:breed()
+		local variable_name = "anim_move_speed"
+
+		if breed.animation_variable_init and breed.animation_variable_init[variable_name] then
+			local animation_extension = ScriptUnit.extension(unit, "animation_system")
+
+			animation_extension:set_variable(variable_name, 1.25)
+		end
+	end,
+	stop_func = function (template_data, template_context)
+		if not template_context.is_server then
+			return
+		end
+
+		local unit = template_context.unit
+
+		if not HEALTH_ALIVE[unit] then
+			return
+		end
+
+		local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
+		local breed = unit_data_extension:breed()
+		local variable_name = "anim_move_speed"
+
+		if breed.animation_variable_init and breed.animation_variable_init[variable_name] then
+			local animation_extension = ScriptUnit.extension(unit, "animation_system")
+
+			animation_extension:set_variable(variable_name, 1)
+		end
+	end,
+	minion_effects = {
+		node_effects = {
+			{
+				node_name = "j_lefteye",
+				vfx = {
+					orphaned_policy = "stop",
+					particle_effect = "content/fx/particles/enemies/red_glowing_eyes",
+					stop_type = "destroy",
+					material_variables = {
+						{
+							variable_name = "material_variable_21872256",
+							material_name = "eye_flash_init",
+							value = YELLOW_STIM_COLOR
+						},
+						{
+							variable_name = "trail_color",
+							material_name = "eye_glow",
+							value = YELLOW_STIM_COLOR
+						},
+						{
+							variable_name = "material_variable_21872256",
+							material_name = "eye_socket",
+							value = YELLOW_STIM_COLOR
+						}
+					}
+				}
+			},
+			{
+				node_name = "j_righteye",
+				vfx = {
+					orphaned_policy = "stop",
+					particle_effect = "content/fx/particles/enemies/red_glowing_eyes",
+					stop_type = "destroy",
+					material_variables = {
+						{
+							variable_name = "material_variable_21872256",
+							material_name = "eye_flash_init",
+							value = YELLOW_STIM_COLOR
+						},
+						{
+							variable_name = "trail_color",
+							material_name = "eye_glow",
+							value = YELLOW_STIM_COLOR
+						},
+						{
+							variable_name = "material_variable_21872256",
+							material_name = "eye_socket",
+							value = YELLOW_STIM_COLOR
+						}
+					}
 				}
 			}
 		}

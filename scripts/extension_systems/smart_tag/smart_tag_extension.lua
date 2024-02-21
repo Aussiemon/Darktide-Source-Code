@@ -1,7 +1,8 @@
+local BuffSettings = require("scripts/settings/buff/buff_settings")
 local SmartTag = require("scripts/extension_systems/smart_tag/smart_tag")
 local SmartTagSettings = require("scripts/settings/smart_tag/smart_tag_settings")
-local BuffSettings = require("scripts/settings/buff/buff_settings")
-local keywords = BuffSettings.keywords
+local buff_keywords = BuffSettings.keywords
+local smart_tag_templates = SmartTagSettings.templates
 local SmartTagExtension = class("SmartTagExtension")
 
 SmartTagExtension.init = function (self, extension_init_context, unit, extension_init_data, ...)
@@ -16,6 +17,7 @@ SmartTagExtension.init = function (self, extension_init_context, unit, extension
 
 		self._target_actor = Unit.actor(unit, "smart_tagging")
 		self._auto_tag_on_spawn = extension_init_data.auto_tag_on_spawn
+		self._origin_player = extension_init_data.origin_player
 	end
 
 	self._owned_tag_ids = {}
@@ -54,7 +56,9 @@ SmartTagExtension.game_object_initialized = function (self, session, object_id)
 end
 
 SmartTagExtension._set_tag_on_spawn = function (self)
-	local tagger_unit = nil
+	local player = self._origin_player
+	local player_unit = player and player.player_unit
+	local tagger_unit = ALIVE[player_unit] and player_unit
 	local tag_template = self:contextual_tag_template(tagger_unit)
 
 	if tag_template then
@@ -91,10 +95,36 @@ end
 
 SmartTagExtension.contextual_tag_template = function (self, tagger_unit)
 	local template_name = self:_contextual_tag_template_name(tagger_unit)
-	local template = template_name and SmartTagSettings.templates[template_name]
+	local template = template_name and smart_tag_templates[template_name]
 
 	return template
 end
+
+local _pickup_name_to_tag_template_name = {
+	consumable = "side_mission_consumable_over_here",
+	medical_crate_deployable = "deployed_medical_crate_over_here",
+	small_grenade = "small_grenade_over_here",
+	small_platinum = "small_platinum_pickup_over_here",
+	large_metal = "large_metal_pickup_over_here",
+	control_rod_01_luggable = "luggable_control_rod_over_here",
+	syringe_corruption_pocketable = "syringe_corruption_over_here",
+	syringe_ability_boost_pocketable = "syringe_ability_boost_over_here",
+	syringe_speed_boost_pocketable = "syringe_speed_boost_over_here",
+	small_metal = "small_metal_pickup_over_here",
+	container_02_luggable = "luggable_container_over_here",
+	container_01_luggable = "luggable_container_over_here",
+	large_clip = "large_clip_over_here",
+	grimoire = "side_mission_grimoire_over_here",
+	large_platinum = "large_platinum_pickup_over_here",
+	small_clip = "small_clip_over_here",
+	container_03_luggable = "luggable_container_over_here",
+	ammo_cache_pocketable = "pocketable_ammo_cache_over_here",
+	battery_01_luggable = "luggable_battery_over_here",
+	medical_crate_pocketable = "pocketable_medical_crate_over_here",
+	tome = "side_mission_tome_over_here",
+	ammo_cache_deployable = "deployed_ammo_cache_over_here",
+	syringe_power_boost_pocketable = "syringe_power_boost_over_here"
+}
 
 SmartTagExtension._contextual_tag_template_name = function (self, tagger_unit)
 	local target_type = self._target_type
@@ -117,53 +147,10 @@ SmartTagExtension._contextual_tag_template_name = function (self, tagger_unit)
 
 	if target_type == "pickup" then
 		local pickup_name = Unit.get_data(unit, "pickup_type")
+		local template_name = _pickup_name_to_tag_template_name[pickup_name]
 
-		if pickup_name == "small_clip" then
-			return "small_clip_over_here"
-		elseif pickup_name == "large_clip" then
-			return "large_clip_over_here"
-		elseif pickup_name == "small_grenade" then
-			return "small_grenade_over_here"
-		elseif pickup_name == "battery_01_luggable" then
-			return "luggable_battery_over_here"
-		elseif pickup_name == "container_01_luggable" then
-			return "luggable_container_over_here"
-		elseif pickup_name == "container_02_luggable" then
-			return "luggable_container_over_here"
-		elseif pickup_name == "container_03_luggable" then
-			return "luggable_container_over_here"
-		elseif pickup_name == "control_rod_01_luggable" then
-			return "luggable_control_rod_over_here"
-		elseif pickup_name == "medical_crate_pocketable" then
-			return "pocketable_medical_crate_over_here"
-		elseif pickup_name == "ammo_cache_pocketable" then
-			return "pocketable_ammo_cache_over_here"
-		elseif pickup_name == "ammo_cache_deployable" then
-			return "deployed_ammo_cache_over_here"
-		elseif pickup_name == "medical_crate_deployable" then
-			return "deployed_medical_crate_over_here"
-		elseif pickup_name == "consumable" then
-			return "side_mission_consumable_over_here"
-		elseif pickup_name == "grimoire" then
-			return "side_mission_grimoire_over_here"
-		elseif pickup_name == "tome" then
-			return "side_mission_tome_over_here"
-		elseif pickup_name == "small_metal" then
-			return "small_metal_pickup_over_here"
-		elseif pickup_name == "large_metal" then
-			return "large_metal_pickup_over_here"
-		elseif pickup_name == "small_platinum" then
-			return "small_platinum_pickup_over_here"
-		elseif pickup_name == "large_platinum" then
-			return "large_platinum_pickup_over_here"
-		elseif pickup_name == "syringe_corruption_pocketable" then
-			return "syringe_corruption_over_here"
-		elseif pickup_name == "syringe_ability_boost_pocketable" then
-			return "syringe_ability_boost_over_here"
-		elseif pickup_name == "syringe_power_boost_pocketable" then
-			return "syringe_power_boost_over_here"
-		elseif pickup_name == "syringe_speed_boost_pocketable" then
-			return "syringe_speed_boost_over_here"
+		if template_name then
+			return template_name
 		end
 	elseif target_type == "medical_crate_deployable" then
 		return "deployed_medical_crate_over_here"
@@ -172,7 +159,7 @@ SmartTagExtension._contextual_tag_template_name = function (self, tagger_unit)
 
 		if side_system:is_enemy(tagger_unit, unit) then
 			local buff_extension = ScriptUnit.has_extension(tagger_unit, "buff_system")
-			local veteran_tag = buff_extension and buff_extension:has_keyword(keywords.veteran_tag)
+			local veteran_tag = buff_extension and buff_extension:has_keyword(buff_keywords.veteran_tag)
 
 			if veteran_tag then
 				return "enemy_over_here_veteran"

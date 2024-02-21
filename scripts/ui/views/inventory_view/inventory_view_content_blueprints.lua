@@ -62,10 +62,28 @@ cosmetic_item_display_name_text_style.size = {
 }
 
 local function _apply_package_item_icon_cb_func(widget, item)
-	local icon = item.icon
-	local material_values = widget.style.icon.material_values
-	material_values.texture_icon = icon
+	local icon_style = widget.style.icon
+	local item_slot = ItemUtils.item_slot(item)
+	local item_icon_size = item_slot and item_slot.item_icon_size
+	local material_values = icon_style.material_values
+
+	if item.icon_material and item.icon_material ~= "" then
+		widget.content.old_icon_material = widget.content.icon
+		widget.content.icon = item.icon_material
+
+		if item_icon_size then
+			icon_style.size = item_icon_size
+			icon_style.old_horizontal_alignment = icon_style.horizontal_alignment
+			icon_style.old_vertical_alignment = icon_style.vertical_alignment
+			icon_style.horizontal_alignment = "center"
+			icon_style.vertical_alignment = "center"
+		end
+	else
+		material_values.texture_icon = item.icon
+	end
+
 	material_values.use_placeholder_texture = 0
+	material_values.use_render_target = 0
 	widget.content.use_placeholder_texture = material_values.use_placeholder_texture
 end
 
@@ -76,6 +94,24 @@ local function _remove_package_item_icon_cb_func(widget, ui_renderer)
 	local material_values = widget.style.icon.material_values
 	widget.style.icon.material_values.texture_icon = nil
 	material_values.use_placeholder_texture = 1
+	local icon_style = widget.style.icon
+	icon_style.size = nil
+
+	if icon_style.old_horizontal_alignment then
+		icon_style.horizontal_alignment = icon_style.old_horizontal_alignment
+		icon_style.old_horizontal_alignment = nil
+	end
+
+	if icon_style.old_vertical_alignment then
+		icon_style.vertical_alignment = icon_style.old_vertical_alignment
+		icon_style.old_vertical_alignment = nil
+	end
+
+	if widget.content.old_icon_material then
+		widget.content.icon = widget.content.old_icon_material
+		widget.content.old_icon_material = nil
+	end
+
 	widget.content.use_placeholder_texture = material_values.use_placeholder_texture
 end
 

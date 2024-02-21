@@ -122,6 +122,10 @@ LevelLoader.cleanup = function (self)
 	self._load_state = LOAD_STATES.none
 end
 
+LevelLoader.dont_destroy = function (self)
+	return false
+end
+
 implements(LevelLoader, Loader)
 
 return LevelLoader

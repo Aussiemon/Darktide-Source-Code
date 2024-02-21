@@ -70,7 +70,7 @@ StoreView.init = function (self, settings, context)
 	self._context = context or {}
 	self._storefront_request_id = 1
 
-	StoreView.super.init(self, Definitions, settings)
+	StoreView.super.init(self, Definitions, settings, context)
 
 	self._pass_draw = false
 	self._can_exit = true
@@ -543,7 +543,7 @@ StoreView._set_telemetry_name = function (self, category, page)
 	local telemetry_name = string.format("%s_store_%d_view", category, page)
 	self._telemetry_name = telemetry_name
 
-	Managers.telemetry_events:open_view(telemetry_name)
+	Managers.telemetry_events:open_view(telemetry_name, self._hub_interaction)
 end
 
 StoreView._on_page_index_selected = function (self, page_index)
@@ -2426,7 +2426,7 @@ StoreView.dialogue_system = function (self)
 	local world_spawner = self._world_spawner
 	local world = world_spawner and world_spawner:world()
 	local extension_manager = world and Managers.ui:world_extension_manager(world)
-	local dialogue_system = extension_manager and extension_manager:system_by_extension("DialogueActorExtension")
+	local dialogue_system = extension_manager and extension_manager:system_by_extension("DialogueExtension")
 
 	return dialogue_system
 end

@@ -24,7 +24,7 @@ ScannerDisplayView.init = function (self, settings, context)
 	self._minigame = ScannerDisplayView.MINIGAMES[context.minigame_type]:new(context)
 	local definitions = ScannerDisplayViewDefinitions[context.minigame_type]
 
-	ScannerDisplayView.super.init(self, definitions, settings)
+	ScannerDisplayView.super.init(self, definitions, settings, context)
 
 	if self._minigame.set_local_player then
 		local player = self:_player()

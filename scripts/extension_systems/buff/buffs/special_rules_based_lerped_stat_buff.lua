@@ -5,7 +5,7 @@ local SpecialRulesBasedLerpedStatBuff = class("SpecialRulesBasedLerpedStatBuff",
 SpecialRulesBasedLerpedStatBuff.init = function (self, context, template, start_time, instance_id, ...)
 	SpecialRulesBasedLerpedStatBuff.super.init(self, context, template, start_time, instance_id, ...)
 
-	self._specialization_extension = ScriptUnit.extension(context.unit, "specialization_system")
+	self._talent_extension = ScriptUnit.extension(context.unit, "talent_system")
 	self._stat_buff_return_table = {}
 end
 
@@ -16,7 +16,7 @@ SpecialRulesBasedLerpedStatBuff.update_stat_buffs = function (self, current_stat
 	local template = self._template
 	local template_data = self._template_data
 	local duration = template.duration
-	local specialization_extension = self._specialization_extension
+	local talent_extension = self._talent_extension
 	local lerp_t = template.lerp_t_func(t, start_time, duration, template_data, self._template_context)
 
 	table.clear(self._stat_buff_return_table)
@@ -24,7 +24,7 @@ SpecialRulesBasedLerpedStatBuff.update_stat_buffs = function (self, current_stat
 	local talent_stat_buffs = template.special_rules_lerped_stat_buffs
 
 	for special_rule, stat_buffs in pairs(talent_stat_buffs) do
-		if specialization_extension:has_special_rule(special_rule) then
+		if talent_extension:has_special_rule(special_rule) then
 			for key, values in pairs(stat_buffs) do
 				local min = values.min
 				local max = values.max
@@ -37,7 +37,7 @@ SpecialRulesBasedLerpedStatBuff.update_stat_buffs = function (self, current_stat
 	local missing_talent_stat_buffs = template.missing_special_rules_lerped_stat_buffs
 
 	for special_rule, stat_buffs in pairs(missing_talent_stat_buffs) do
-		if not specialization_extension:has_special_rule(special_rule) then
+		if not talent_extension:has_special_rule(special_rule) then
 			for key, values in pairs(stat_buffs) do
 				local min = values.min
 				local max = values.max

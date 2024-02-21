@@ -32,7 +32,7 @@ VideoView.init = function (self, settings, context)
 	self._input_legend_element = nil
 	self._wait_for_video = 0
 
-	VideoView.super.init(self, Definitions, settings)
+	VideoView.super.init(self, Definitions, settings, context)
 end
 
 VideoView._unload_packages = function (self)
@@ -373,7 +373,7 @@ VideoView.dialogue_system = function (self)
 	local world_spawner = self._world_spawner
 	local world = world_spawner and world_spawner:world()
 	local extension_manager = world and Managers.ui:world_extension_manager(world)
-	local dialogue_system = extension_manager and extension_manager:system_by_extension("DialogueActorExtension")
+	local dialogue_system = extension_manager and extension_manager:system_by_extension("DialogueExtension")
 
 	return dialogue_system
 end

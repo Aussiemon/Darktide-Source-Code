@@ -3,6 +3,19 @@ local ThemePackage = require("scripts/foundation/managers/package/utilities/them
 local ThemeStateTestify = GameParameters.testify and require("scripts/loading/host_states/theme_state_testify")
 local HostThemeState = class("HostThemeState")
 
+local function _apply_theme(world, themes, level_name, theme_tag, circumstance_name)
+	local theme_names = ThemePackage.level_resource_dependency_packages(level_name, theme_tag)
+
+	if GameParameters.testify and circumstance_name then
+		Testify:poll_requests_through_handler(ThemeStateTestify, theme_names, level_name, circumstance_name)
+	end
+
+	for _, theme_name in pairs(theme_names) do
+		local theme = World.create_theme(world, theme_name)
+		themes[#themes + 1] = theme
+	end
+end
+
 HostThemeState.init = function (self, state_machine, shared_state)
 	self._shared_state = shared_state
 	self._level_spawner = nil
@@ -12,9 +25,9 @@ HostThemeState.init = function (self, state_machine, shared_state)
 	local circumstance_name = shared_state.circumstance_name
 
 	if circumstance_name then
+		local level_name = shared_state.level_name
 		local circumstance_template = CircumstanceTemplates[circumstance_name]
 		local theme_tag = circumstance_template.theme_tag
-		local level_name = shared_state.level_name
 		local theme_names = ThemePackage.level_resource_dependency_packages(level_name, theme_tag)
 
 		if GameParameters.testify then

@@ -27,9 +27,9 @@ end
 
 local base_talents = _include_talents_definition("scripts/settings/ability/archetype_talents/base_talents")
 
-_include_talents_definition("scripts/settings/ability/archetype_talents/ogryn_talents_new", base_talents)
-_include_talents_definition("scripts/settings/ability/archetype_talents/psyker_talents_new", base_talents)
-_include_talents_definition("scripts/settings/ability/archetype_talents/veteran_talents_new", base_talents)
-_include_talents_definition("scripts/settings/ability/archetype_talents/zealot_talents_new", base_talents)
+_include_talents_definition("scripts/settings/ability/archetype_talents/ogryn_talents", base_talents)
+_include_talents_definition("scripts/settings/ability/archetype_talents/psyker_talents", base_talents)
+_include_talents_definition("scripts/settings/ability/archetype_talents/veteran_talents", base_talents)
+_include_talents_definition("scripts/settings/ability/archetype_talents/zealot_talents", base_talents)
 
 return settings(archetype_talents_name, talents)

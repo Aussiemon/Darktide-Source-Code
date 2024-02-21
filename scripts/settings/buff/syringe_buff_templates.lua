@@ -7,6 +7,8 @@ local stat_buffs = BuffSettings.stat_buffs
 local keywords = BuffSettings.keywords
 local templates = {}
 
+table.make_unique(templates)
+
 local function _calulcate_coruption_buff_healing(template_data, heal_settings, health_extension)
 	local max_health = health_extension:max_health()
 	local total_healing = 0
@@ -219,7 +221,7 @@ templates.syringe_speed_boost_buff = {
 	stat_buffs = {
 		[stat_buffs.fov_multiplier] = 1.035,
 		[stat_buffs.reload_speed] = 0.15,
-		[stat_buffs.charge_up_time] = 0.25,
+		[stat_buffs.charge_up_time] = -0.25,
 		[stat_buffs.stamina_cost_multiplier] = 0.75,
 		[stat_buffs.sprinting_cost_multiplier] = 0.5,
 		[stat_buffs.attack_speed] = 0.2,

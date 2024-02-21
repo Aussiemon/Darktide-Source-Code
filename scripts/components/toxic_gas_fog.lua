@@ -42,8 +42,10 @@ ToxicGasFog.set_volume_enabled = function (self, enabled)
 	end
 end
 
+local MESH_NAME = "g_fog"
+
 ToxicGasFog.enable = function (self, unit)
-	local mesh = Unit.mesh(unit, "g_fog")
+	local mesh = Unit.mesh(unit, MESH_NAME)
 	local material = Mesh.material(mesh, "mtr_fog")
 	local extinction = self:get_data(unit, "extinction")
 
@@ -60,14 +62,26 @@ ToxicGasFog.enable = function (self, unit)
 	local albedo = self:get_data(unit, "albedo"):unbox()
 
 	Material.set_vector3(material, "height_fog_color", albedo)
-	Volumetrics.register_volume(unit, albedo, extinction, phase, falloff)
+	Volumetrics.register_volume(unit, albedo, extinction, phase, falloff, MESH_NAME)
+
+	if not self._particle_created then
+		Unit.flow_event(unit, "create_particle")
+
+		self._particle_created = true
+	end
 end
 
 ToxicGasFog.disable = function (self, unit)
 	if rawget(_G, "LevelEditor") then
-		Volumetrics.unregister_volume(unit)
+		Volumetrics.unregister_volume(unit, MESH_NAME)
 	elseif self._volume_enabled then
-		Volumetrics.unregister_volume(unit)
+		Volumetrics.unregister_volume(unit, MESH_NAME)
+	end
+
+	if self._particle_created then
+		Unit.flow_event(unit, "destroy_particle")
+
+		self._particle_created = nil
 	end
 end
 
@@ -142,7 +156,7 @@ ToxicGasFog.editor_destroy = function (self, unit)
 		return
 	end
 
-	Volumetrics.unregister_volume(unit)
+	Volumetrics.unregister_volume(unit, MESH_NAME)
 
 	local line_object = self._line_object
 	local world = self._world

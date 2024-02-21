@@ -35,7 +35,7 @@ PlayerUnitPeeking.on_leave_cover = function (animation_extension)
 	animation_extension:anim_event("from_cover")
 end
 
-PlayerUnitPeeking.fixed_update = function (peeking_component, ledge_finder_extension, animation_extension, first_person_extension, specialization_extension, is_crouching, breed)
+PlayerUnitPeeking.fixed_update = function (peeking_component, ledge_finder_extension, animation_extension, first_person_extension, talent_extension, is_crouching, breed)
 	local has_significant_obstacle_in_front, looking_at_obstacle = ledge_finder_extension:has_significant_obstacle_in_front()
 	local in_cover = has_significant_obstacle_in_front and looking_at_obstacle or false
 
@@ -52,7 +52,7 @@ PlayerUnitPeeking.fixed_update = function (peeking_component, ledge_finder_exten
 	local peeking_is_possible = false
 	local peeking_ledge = nil
 	local can_peek = has_significant_obstacle_in_front and is_crouching
-	can_peek = can_peek and specialization_extension:has_special_rule(special_rules.veteran_cover_peeking)
+	can_peek = can_peek and talent_extension:has_special_rule(special_rules.veteran_cover_peeking)
 
 	if can_peek then
 		local num_ledges, ledges = ledge_finder_extension:ledges()

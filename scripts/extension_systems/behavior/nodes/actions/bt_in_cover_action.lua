@@ -12,6 +12,7 @@ local BtInCoverAction = class("BtInCoverAction", "BtNode")
 BtInCoverAction.enter = function (self, unit, breed, blackboard, scratchpad, action_data, t)
 	local behavior_component = Blackboard.write_component(blackboard, "behavior")
 	behavior_component.move_state = "attacking"
+	scratchpad.behavior_component = behavior_component
 	local cover_component = Blackboard.write_component(blackboard, "cover")
 	scratchpad.aim_component = Blackboard.write_component(blackboard, "aim")
 	scratchpad.cover_component = cover_component

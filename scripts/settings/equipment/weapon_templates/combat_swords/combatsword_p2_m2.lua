@@ -255,6 +255,17 @@ weapon_template.actions = {
 			start_modifier = 0.7
 		},
 		allowed_chain_actions = {
+			combat_ability = {
+				action_name = "combat_ability"
+			},
+			grenade_ability = {
+				{
+					action_name = "grenade_ability"
+				},
+				{
+					action_name = "grenade_ability_quick_throw"
+				}
+			},
 			wield = {
 				action_name = "action_unwield"
 			},
@@ -1016,6 +1027,14 @@ weapon_template.actions = {
 			combat_ability = {
 				action_name = "combat_ability"
 			},
+			grenade_ability = {
+				{
+					action_name = "grenade_ability"
+				},
+				{
+					action_name = "grenade_ability_quick_throw"
+				}
+			},
 			wield = {
 				action_name = "action_unwield"
 			},
@@ -1024,14 +1043,6 @@ weapon_template.actions = {
 			},
 			special_action = {
 				action_name = "action_attack_special"
-			},
-			grenade_ability = {
-				{
-					action_name = "grenade_ability"
-				},
-				{
-					action_name = "grenade_ability_quick_throw"
-				}
 			}
 		}
 	},
@@ -1287,12 +1298,13 @@ weapon_template.actions = {
 	action_right_light_pushfollow = {
 		damage_window_start = 0.3,
 		hit_armor_anim = "attack_hit_shield",
-		anim_end_event = "attack_finished",
-		weapon_handling_template = "time_scale_1",
-		kind = "sweep",
-		attack_direction_override = "push",
 		range_mod = 1.25,
+		weapon_handling_template = "time_scale_1",
+		attack_direction_override = "push",
+		sprint_requires_press_to_interrupt = "true",
+		kind = "sweep",
 		damage_window_end = 0.36666666666666664,
+		anim_end_event = "attack_finished",
 		anim_event_3p = "attack_swing_stab",
 		anim_event = "attack_stab",
 		hit_stop_anim = "hit_stop",
@@ -1710,7 +1722,7 @@ weapon_template.base_stats = {
 	}
 }
 weapon_template.traits = {}
-local bespoke_combatsword_p2_traits = table.keys(WeaponTraitsBespokeCombatswordP2)
+local bespoke_combatsword_p2_traits = table.ukeys(WeaponTraitsBespokeCombatswordP2)
 
 table.append(weapon_template.traits, bespoke_combatsword_p2_traits)
 

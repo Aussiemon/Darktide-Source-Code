@@ -58,6 +58,7 @@ local weapon_template = {
 	toughness_template = "auspex",
 	look_delta_template = "auspex_scanner",
 	hud_icon = "content/ui/materials/icons/pickups/default",
+	hide_slot = true,
 	require_minigame = true,
 	not_player_wieldable = true,
 	action_move_screen_ui_validation = function (wielded_slot_id, item, current_action, current_action_name, player)

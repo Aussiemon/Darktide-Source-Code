@@ -162,9 +162,10 @@ AimProjectileEffects._update_trajectory = function (self, trajectory_settings, d
 	end
 
 	local aim_parameters = AimProjectile.aim_parameters(start_position, rotation, start_rotation, projectile_locomotion_template, throw_type, time_in_action)
+	local position = AimProjectile.check_throw_position(aim_parameters.position, look_position, projectile_locomotion_template, radius, self._physics_world)
 	local integration_data = self._integration_data
 
-	ProjectileIntegrationData.fill_integration_data(integration_data, self._player_unit, nil, projectile_locomotion_template, radius, mass, aim_parameters.position, rotation, aim_parameters.direction, speed, momentum)
+	ProjectileIntegrationData.fill_integration_data(integration_data, self._player_unit, nil, projectile_locomotion_template, radius, mass, position, rotation, aim_parameters.direction, speed, momentum)
 
 	local throw_config = projectile_locomotion_template.trajectory_parameters[throw_type]
 	local max_iterations = throw_config.aim_max_iterations
@@ -249,7 +250,7 @@ end
 local _arc_distances = {}
 
 AimProjectileEffects._get_trajectory_data = function (self, integration_data, max_iterations, stop_on_impact, time_step_multiplier, max_number_of_bounces)
-	max_iterations = math.min(max_iterations, MAX_INTEGRATION_STEPS)
+	max_iterations = math.min(max_iterations, MAX_INTEGRATION_STEPS - 1)
 	local fixed_frame_time = Managers.state.game_session.fixed_time_step
 	local number_of_iterations_done = 0
 	local number_of_bounces = 0

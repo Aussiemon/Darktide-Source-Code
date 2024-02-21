@@ -16,6 +16,7 @@ local sound_data = {
 		foley_movement_short = "wwise/events/minions/play_shared_foley_traitor_guard_medium_drastic_short"
 	},
 	use_proximity_culling = {
+		footstep_land = false,
 		vce_death = false,
 		stop_vce = false,
 		vce_death_long = false,

@@ -60,10 +60,6 @@ PropUnitDataExtension.archetype_name = function (self)
 	ferror("[PropUnitDataExtension:archetype_name()] Props don't have archetypes.")
 end
 
-PropUnitDataExtension.specialization = function (self)
-	ferror("[PropUnitDataExtension:specialization()] Props don't have specializations.")
-end
-
 PropUnitDataExtension.bind_pose = function (self)
 	return self._bind_pose:unbox()
 end

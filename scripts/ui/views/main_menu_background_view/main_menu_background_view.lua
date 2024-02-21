@@ -15,7 +15,7 @@ MainMenuBackgroundView.init = function (self, settings, context)
 	self._loading_profile_queue = {}
 	self._profiles_loading_data = {}
 
-	MainMenuBackgroundView.super.init(self, definitions, settings)
+	MainMenuBackgroundView.super.init(self, definitions, settings, context)
 
 	self._pass_draw = false
 	self._can_exit = false

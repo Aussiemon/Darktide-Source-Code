@@ -653,7 +653,7 @@ end_player_view_blueprints.weapon_unlock = {
 		content.content_animation = "unlocked_weapon_show_content"
 		content.dim_out_animation = "unlocked_weapon_dim_out_content"
 		content.level_up_label = Localize("loc_eor_unlocked_weapon_label")
-		content.talents_unlocked_text = Localize("loc_eor_weapon_unlocked_desc")
+		content.weapon_unlocked_text = Localize("loc_eor_weapon_unlocked_desc")
 	end,
 	load_icon = _reward_load_icon_func,
 	unload_icon = function (parent, widget, element, ui_renderer)
@@ -674,62 +674,6 @@ end_player_view_blueprints.weapon_unlock = {
 			parent:unload_weapon_pattern_icon(content.icon_load_id)
 
 			content.icon_load_id = nil
-		end
-	end
-}
-end_player_view_blueprints.talents_unlocked = {
-	pass_template_function = function (parent, config)
-		local pass_template = _get_card_levelup_frame_pass_template()
-
-		_get_level_up_label_pass_template(pass_template)
-
-		for i = 1, 3 do
-			local talent_icon_id = "talent_icon_" .. i
-			local talent_icon_background_id = "talent_icon_background_" .. i
-			pass_template[#pass_template + 1] = {
-				value = "content/ui/materials/icons/talents/menu/talent_terminal_frame",
-				pass_type = "texture",
-				value_id = talent_icon_background_id,
-				style_id = talent_icon_background_id
-			}
-			pass_template[#pass_template + 1] = {
-				value = "content/ui/materials/icons/talents/talent_icon_container",
-				pass_type = "texture",
-				value_id = talent_icon_id,
-				style_id = talent_icon_id
-			}
-		end
-
-		pass_template[#pass_template + 1] = {
-			value = "",
-			value_id = "talents_unlocked_text",
-			pass_type = "text",
-			style_id = "talents_unlocked_text"
-		}
-
-		return pass_template
-	end,
-	style = blueprint_styles.talents_unlocked,
-	size = folded_card_size,
-	init = function (parent, widget, index, config)
-		local content = widget.content
-
-		_card_levelup_frame_pass_template_init(widget, index)
-
-		content.blueprint_name = "talents_unlocked"
-		content.label = Localize("loc_eor_card_title_level_up_reward")
-		content.content_animation = "unlocked_talents_show_content"
-		content.dim_out_animation = "unlocked_talents_dim_out_content"
-		content.level_up_label = Localize("loc_eor_unlocked_talents_label")
-		content.talents_unlocked_text = Localize("loc_eor_card_talent_group_unlocked")
-		local unlocked_talents = config.unlocked_talents
-		local widget_style = widget.style
-
-		for i = 1, #unlocked_talents do
-			local talent_icon_id = "talent_icon_" .. i
-			local icon_style = widget_style[talent_icon_id]
-			local material_values = icon_style.material_values
-			material_values.icon_texture = unlocked_talents[i]
 		end
 	end
 }

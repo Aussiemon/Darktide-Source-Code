@@ -340,16 +340,12 @@ Vo.enemy_kill_event = function (killer_unit, killed_unit)
 			local breed_data = _get_breed(killed_unit)
 
 			if DialogueBreedSettings[breed_data.name].vo_triggers_enemy_kill_query then
-				local killed_unit_name = "UNKNOWN"
+				local killed_unit_name = nil
 
-				if breed_data then
-					if breed_data.tags.monster then
-						killed_unit_name = "monster"
-					else
-						killed_unit_name = breed_data.name
-					end
-				elseif ScriptUnit.has_extension(killed_unit, "dialogue_system") then
-					killed_unit_name = ScriptUnit.extension(killed_unit, "dialogue_system"):get_context().player_profile
+				if breed_data.tags.monster then
+					killed_unit_name = "monster"
+				else
+					killed_unit_name = breed_data.name
 				end
 
 				local event_name = "enemy_kill"
@@ -721,19 +717,6 @@ Vo.player_catapulted_land_event = function (unit)
 		local visual_loadout_extension = ScriptUnit.extension(unit, "visual_loadout_system")
 
 		PlayerVoiceGrunts.trigger_voice("catapulted_land_vce", visual_loadout_extension, fx_extension, true)
-	end
-end
-
-Vo.enemy_assault_event = function (unit)
-	local breed = _get_breed(unit)
-	local assault_vo_event_name = DialogueBreedSettings[breed.name].assault_vo_event
-	local dialogue_ext = ScriptUnit.has_extension(unit, "dialogue_system")
-
-	if assault_vo_event_name and dialogue_ext then
-		local event_data = dialogue_ext:get_event_data_payload()
-		local event_name = assault_vo_event_name
-
-		dialogue_ext:trigger_dialogue_event(event_name, event_data)
 	end
 end
 
@@ -1139,44 +1122,41 @@ Vo.reinforcements = function (dialogue_extension_unit, dialogue_extension)
 end
 
 Vo.play_local_vo_events = function (dialogue_system, vo_rules, voice_profile, wwise_route_key, on_play_callback, seed, is_opinion_vo)
-	local unit_extensions = dialogue_system._unit_extension_data
-	local vo_unit = nil
+	local vo_unit, dialogue_extension = nil
+	local unit_to_extension_map = dialogue_system:unit_to_extension_map()
 
-	for _, unit_ext in pairs(unit_extensions) do
-		if unit_ext._vo_profile_name == voice_profile then
-			vo_unit = unit_ext._unit
+	for unit, extension in pairs(unit_to_extension_map) do
+		if extension._vo_profile_name == voice_profile then
+			dialogue_extension = extension
+			vo_unit = unit
 
 			break
 		end
 	end
 
 	if vo_unit then
-		local dialogue_extension = ScriptUnit.has_extension(vo_unit, "dialogue_system")
+		if is_opinion_vo then
+			local local_player = Managers.player:local_player(1)
+			local local_player_unit = local_player.player_unit
+			local player_ext = ScriptUnit.has_extension(local_player_unit, "dialogue_system")
 
-		if dialogue_extension then
-			if is_opinion_vo then
-				local local_player = Managers.player:local_player(1)
-				local local_player_unit = local_player.player_unit
-				local player_ext = ScriptUnit.has_extension(local_player_unit, "dialogue_system")
+			if player_ext then
+				local player_voice_profile = player_ext:get_voice_profile()
+				local npc_class = dialogue_extension._context.class_name
+				local opinion_settings = DialogueBreedSettings[npc_class].opinion_settings
+				local opinion = opinion_settings[player_voice_profile]
+				local rule = vo_rules[1]
+				rule = rule .. "_" .. opinion
 
-				if player_ext then
-					local player_voice_profile = player_ext:get_voice_profile()
-					local npc_class = dialogue_extension._context.class_name
-					local opinion_settings = DialogueBreedSettings[npc_class].opinion_settings
-					local opinion = opinion_settings[player_voice_profile]
-					local rule = vo_rules[1]
-					rule = rule .. "_" .. opinion
-
-					dialogue_extension:play_local_vo_event(rule, wwise_route_key, nil, seed)
-				end
-			else
-				dialogue_extension:play_local_vo_events(vo_rules, wwise_route_key, on_play_callback, seed)
+				dialogue_extension:play_local_vo_event(rule, wwise_route_key, nil, seed)
 			end
+		else
+			dialogue_extension:play_local_vo_events(vo_rules, wwise_route_key, on_play_callback, seed)
 		end
 
 		return vo_unit
 	else
-		Log.warning("DialogueSystem", "Play Local VO event, no VO unit found for profile %s ", vo_unit)
+		Log.warning("DialogueSystem", "Play Local VO event, no VO unit found for profile %s", voice_profile)
 	end
 end
 
@@ -1208,29 +1188,6 @@ Vo.play_local_vo_event = function (unit, rule_name, wwise_route_key, seed, is_op
 	end
 end
 
-Vo.evaluate_rules = function (dialogue_system, rules, voice_profile, seed)
-	local unit_extensions = dialogue_system._unit_extension_data
-	local vo_unit = nil
-
-	for _, unit_ext in pairs(unit_extensions) do
-		if unit_ext._vo_profile_name == voice_profile then
-			vo_unit = unit_ext._unit
-
-			break
-		end
-	end
-
-	if vo_unit then
-		local dialogue_extension = ScriptUnit.has_extension(vo_unit, "dialogue_system")
-
-		if dialogue_extension then
-			return dialogue_extension:evaluate_rules(rules, seed)
-		end
-	else
-		Log.warning("DialogueSystem", "Play Local VO event, no VO unit found for profile %s ", vo_unit)
-	end
-end
-
 Vo.set_story_ticker = function (params)
 	DialogueSettings.story_ticker_enabled = params
 	DialogueSettings.short_story_ticker_enabled = params
@@ -1247,7 +1204,7 @@ Vo.set_dynamic_smart_tag = function (unit, tag)
 
 			local unit_spawner_manager = Managers.state.unit_spawner
 			local go_id = unit_spawner_manager:game_object_id(unit)
-			local dialogue_system = Managers.state.extension:system_by_extension("DialogueActorExtension")
+			local dialogue_system = Managers.state.extension:system_by_extension("DialogueExtension")
 
 			dialogue_system:send_dynamic_smart_tag(go_id, tag)
 		end
@@ -1258,7 +1215,7 @@ Vo.trigger_subtitle = function (currently_playing_subtitle)
 	local is_server = Managers.state.game_session:is_server()
 
 	if is_server then
-		local dialogue_system = Managers.state.extension:system_by_extension("DialogueActorExtension")
+		local dialogue_system = Managers.state.extension:system_by_extension("DialogueExtension")
 
 		dialogue_system:send_subtitle_event(currently_playing_subtitle)
 	end
@@ -1285,7 +1242,7 @@ Vo.stop_currently_playing_vo = function (unit)
 end
 
 Vo.stop_all_currently_playing_vo = function ()
-	local dialogue_system = Managers.state.extension:system_by_extension("DialogueActorExtension")
+	local dialogue_system = Managers.state.extension:system_by_extension("DialogueExtension")
 
 	if dialogue_system then
 		dialogue_system:force_stop_all()
@@ -1293,7 +1250,7 @@ Vo.stop_all_currently_playing_vo = function ()
 end
 
 Vo.set_ignore_server_play_requests = function (value)
-	local dialogue_system = Managers.state.extension:system_by_extension("DialogueActorExtension")
+	local dialogue_system = Managers.state.extension:system_by_extension("DialogueExtension")
 
 	if dialogue_system then
 		dialogue_system:set_ignore_server_play_requests(value)

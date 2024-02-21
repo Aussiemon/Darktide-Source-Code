@@ -3,9 +3,12 @@ local Missions = require("scripts/settings/mission/mission_templates")
 local PlayerManagerFixedTestify = GameParameters.testify and require("scripts/foundation/managers/player/player_manager_fixed_testify")
 local PlayerManagerTestify = GameParameters.testify and require("scripts/foundation/managers/player/player_manager_testify")
 local ProfileUtils = require("scripts/utilities/profile_utils")
+local UISettings = require("scripts/settings/ui/ui_settings")
 local PlayerManager = class("PlayerManager")
 PlayerManager.NO_ACCOUNT_ID = "no_account_id"
-local CLIENT_RPCS = {}
+local CLIENT_RPCS = {
+	"rpc_update_slot"
+}
 local SERVER_RPCS = {}
 PlayerManager.PLAYER_INTERFACE = {
 	"type",
@@ -75,8 +78,47 @@ PlayerManager.claim_slot = function (self)
 	return i
 end
 
+PlayerManager._reassign_slot = function (self, slot)
+	local claimed_slots = self._claimed_slots
+	local player_slot_count = #UISettings.player_slot_colors
+
+	if slot > player_slot_count then
+		return
+	end
+
+	local game_session_manager = Managers.state and Managers.state.game_session
+
+	if not game_session_manager or not game_session_manager:can_send_session_bound_rpcs() then
+		return
+	end
+
+	local players = self._players
+
+	for _, player in pairs(players) do
+		local current_slot = player:slot()
+
+		if player_slot_count < current_slot then
+			claimed_slots[slot] = true
+			claimed_slots[current_slot] = nil
+			local peer_id = player:peer_id()
+			local local_player_id = player:local_player_id()
+
+			Managers.state.game_session:send_rpc_clients("rpc_update_slot", peer_id, local_player_id, slot)
+			player:set_slot(slot)
+
+			return
+		end
+	end
+end
+
 PlayerManager.release_slot = function (self, slot)
-	self._claimed_slots[slot] = nil
+	local claimed_slots = self._claimed_slots
+	claimed_slots[slot] = nil
+	local is_server = self._is_server
+
+	if is_server then
+		self:_reassign_slot(slot)
+	end
 end
 
 PlayerManager.debug_remote_human_player_index = function (self, player)
@@ -617,6 +659,14 @@ PlayerManager.create_players_from_sync_data = function (self, player_class, chan
 		else
 			self:add_bot_player(player_class, channel_id, peer_id, local_player_id, profile, slot, is_human_controlled, is_server)
 		end
+	end
+end
+
+PlayerManager.rpc_update_slot = function (self, _, peer_id, local_player_id, slot)
+	local player = self:player(peer_id, local_player_id)
+
+	if player then
+		player:set_slot(slot)
 	end
 end
 

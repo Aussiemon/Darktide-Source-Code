@@ -1,5 +1,8 @@
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local templates = {}
+
+table.make_unique(templates)
+
 local stat_buffs = BuffSettings.stat_buffs
 templates.weapon_trait_bespoke_chainsword_2h_p1_guaranteed_melee_crit_on_activated_kill = {
 	weapon_trait_bespoke_chainsword_2h_p1_guaranteed_melee_crit_on_activated_kill = {
@@ -74,7 +77,7 @@ templates.weapon_trait_bespoke_chainsword_2h_p1_toughness_recovery_on_multiple_h
 		},
 		{
 			buff_data = {
-				replenish_percentage = 0.13,
+				replenish_percentage = 0.14,
 				required_num_hits = 3
 			}
 		},

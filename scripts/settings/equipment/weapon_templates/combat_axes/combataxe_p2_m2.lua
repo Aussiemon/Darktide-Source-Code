@@ -851,11 +851,12 @@ weapon_template.actions = {
 	action_right_light_pushfollow = {
 		damage_window_start = 0.2,
 		hit_armor_anim = "attack_hit_shield",
-		weapon_handling_template = "time_scale_1_hatchet",
-		kind = "sweep",
-		max_num_saved_entries = 20,
-		first_person_hit_stop_anim = "hit_stop",
 		anim_event_3p = "attack_swing_left_diagonal_ninja",
+		kind = "sweep",
+		weapon_handling_template = "time_scale_1_hatchet",
+		max_num_saved_entries = 20,
+		sprint_requires_press_to_interrupt = "true",
+		first_person_hit_stop_anim = "hit_stop",
 		num_frames_before_process = 0,
 		range_mod = 1.35,
 		damage_window_end = 0.31666666666666665,
@@ -1595,7 +1596,7 @@ weapon_template.base_stats = {
 	}
 }
 weapon_template.traits = {}
-local bespoke_combataxe_p2_traits = table.keys(WeaponTraitsBespokeCombataxeP2)
+local bespoke_combataxe_p2_traits = table.ukeys(WeaponTraitsBespokeCombataxeP2)
 
 table.append(weapon_template.traits, bespoke_combataxe_p2_traits)
 

@@ -12,6 +12,7 @@ MinigameExtension.init = function (self, extension_init_context, unit, ...)
 	self._minigame = nil
 	self._current_state = STATES.none
 	self._owner_system = extension_init_context.owner_system
+	self._action_held = false
 end
 
 MinigameExtension.hot_join_sync = function (self, unit, sender, channel)
@@ -39,8 +40,12 @@ MinigameExtension.setup_from_component = function (self, minigame_type)
 end
 
 MinigameExtension.update = function (self, unit, dt, t)
-	if self._current_state == STATES.active and self._minigame:is_completed() then
-		self:completed()
+	if self._current_state == STATES.active then
+		self._minigame:update(dt, t)
+
+		if self._is_server and self._minigame:should_exit() and self._minigame:is_completed() then
+			self:completed()
+		end
 	end
 end
 
@@ -88,8 +93,13 @@ MinigameExtension.stop = function (self, player)
 	end
 end
 
+MinigameExtension.is_completable = function (self)
+	return self._current_state == STATES.active and self._minigame:is_completed()
+end
+
 MinigameExtension.completed = function (self)
 	self:_set_state(STATES.completed)
+	self._minigame:complete()
 
 	if self._is_server then
 		local unit_spawner_manager = Managers.state.unit_spawner
@@ -103,10 +113,22 @@ MinigameExtension.setup_game = function (self)
 	self._minigame:setup_game()
 end
 
-MinigameExtension.on_action_pressed = function (self, t)
-	if self._current_state == STATES.active then
-		self._minigame:on_action_pressed(t)
+MinigameExtension.action = function (self, held, t)
+	if self._action_held ~= held then
+		self._action_held = held
+
+		if self._is_server and self._current_state == STATES.active then
+			if held then
+				self._minigame:on_action_pressed(t)
+			else
+				self._minigame:on_action_released(t)
+			end
+		end
+
+		return true
 	end
+
+	return false
 end
 
 MinigameExtension.uses_joystick = function (self)

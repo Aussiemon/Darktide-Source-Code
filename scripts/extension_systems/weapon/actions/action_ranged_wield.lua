@@ -11,13 +11,20 @@ ActionRangedWield.start = function (self, action_settings, t, time_scale, action
 	local anim, anim_3p = nil
 	anim = action_settings.wield_anim_event
 	anim_3p = action_settings.wield_anim_event_3p or anim
+	local inventory_slot_component = self._inventory_slot_component
 
-	if ReloadStates.uses_reload_states(self._inventory_slot_component) then
-		local started_reload = ReloadStates.started_reload(reload_template, self._inventory_slot_component)
+	if ReloadStates.uses_reload_states(inventory_slot_component) then
+		local started_reload = ReloadStates.started_reload(reload_template, inventory_slot_component)
 
 		if started_reload then
 			anim = action_settings.wield_reload_anim_event
 			anim_3p = action_settings.wield_reload_anim_event_3p or anim
+			local wield_reload_anim_event_func = action_settings.wield_reload_anim_event_func
+
+			if wield_reload_anim_event_func then
+				anim, anim_3p = wield_reload_anim_event_func(inventory_slot_component)
+				anim_3p = anim_3p or anim
+			end
 		end
 	end
 

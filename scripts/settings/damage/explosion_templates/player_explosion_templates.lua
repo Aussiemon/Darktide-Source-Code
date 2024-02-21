@@ -1,6 +1,6 @@
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
-local TalentSettings = require("scripts/settings/talent/talent_settings_new")
+local TalentSettings = require("scripts/settings/talent/talent_settings")
 local preacher_talent_settings = TalentSettings.zealot_3
 local damage_types = DamageSettings.damage_types
 local in_melee_range = DamageSettings.in_melee_range

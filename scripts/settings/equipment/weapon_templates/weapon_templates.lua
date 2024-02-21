@@ -227,17 +227,17 @@ local template_groups = {
 	{
 		"grenades",
 		"frag_grenade",
-		"shock_grenade",
-		"ogryn_grenade_box",
-		"psyker_smite",
-		"fire_grenade",
 		"krak_grenade",
 		"smoke_grenade",
+		"ogryn_grenade_box",
 		"ogryn_grenade_box_cluster",
 		"ogryn_grenade_frag",
 		"ogryn_grenade_friend_rock",
+		"psyker_smite",
 		"psyker_chain_lightning",
 		"psyker_throwing_knives",
+		"shock_grenade",
+		"fire_grenade",
 		"zealot_throwing_knives"
 	},
 	{
@@ -291,16 +291,6 @@ local function dprint(str)
 	end
 end
 
-local start_actions = {
-	"start_attack",
-	"shoot",
-	"shoot_charge",
-	"shoot_pressed"
-}
-local fallback_to_start_action = {
-	true,
-	false
-}
 local chain_attack_actions = {
 	{
 		"light_attack",
@@ -328,6 +318,10 @@ local action_names = {
 	{
 		"loc_weapon_action_title_secondary",
 		"loc_tg_input_description_melee_heavy_attack"
+	},
+	{
+		"loc_weapon_action_title_primary",
+		"loc_tg_input_description_melee_heavy_attack"
 	}
 }
 
@@ -338,7 +332,6 @@ local function _generate_ui_stats_template(weapon_template, combos)
 	local default_attack_settings = settings.default_attack_settings
 	local default_ranged_damage_profile_stats = settings.default_ranged_damage_profile_stats
 	local default_ranged_per_action_stats = settings.default_ranged_per_action_stats
-	local actions = weapon_template.actions
 	local stats = default_stats
 	local power_stats = {}
 
@@ -383,33 +376,53 @@ local function _generate_ui_stats_template(weapon_template, combos)
 	}
 end
 
-local function _generate_special_ui_stats_template(weapon_template)
-	local special_action_name = weapon_template.special_action_name
-
-	if not special_action_name then
-		return
-	end
-
+local function _generate_special_ui_stats_action_template(weapon_template, special_action_name, use_special_damage_profile)
 	local is_ranged = weapon_template.keywords and table.find(weapon_template.keywords, "ranged")
 	local settings = WeaponUIStatsTemplates.settings
-	local default_stats = settings.default_stats
 	local default_attack_settings = settings.default_attack_settings
 	local default_ranged_damage_profile_stats = settings.default_ranged_damage_profile_stats
 	local default_ranged_per_action_stats = settings.default_ranged_per_action_stats
+	local data = {
+		charge_level = 1,
+		dropoff_scalar = 0,
+		target_index = 1,
+		action_name = special_action_name,
+		display_name = special_action_name,
+		attack = default_attack_settings,
+		damage_profile_stats = is_ranged and default_ranged_damage_profile_stats or {},
+		per_action_stats = is_ranged and default_ranged_per_action_stats or {},
+		use_special_damage_profile = use_special_damage_profile
+	}
+
+	return data
+end
+
+local function _generate_special_ui_stats_template(weapon_template)
 	local displayed_weapon_stats_table = weapon_template.displayed_weapon_stats_table
 	local damage = displayed_weapon_stats_table.damage
-	damage[#damage + 1] = {
-		{
-			dropoff_scalar = 0,
-			charge_level = 1,
-			target_index = 1,
-			action_name = special_action_name,
-			display_name = special_action_name,
-			attack = default_attack_settings,
-			damage_profile_stats = is_ranged and default_ranged_damage_profile_stats or {},
-			per_action_stats = is_ranged and default_ranged_per_action_stats or {}
+	local special_action_name = weapon_template.special_action_name
+
+	if special_action_name then
+		local special_action_entry = _generate_special_ui_stats_action_template(weapon_template, special_action_name, false)
+		local damage_entry = {
+			special_action_entry
 		}
-	}
+		damage[#damage + 1] = damage_entry
+	end
+
+	local special_actions = weapon_template.special_actions
+
+	if special_actions then
+		local damage_entry = {}
+
+		for i = 1, #special_actions do
+			local special_action = special_actions[i]
+			local special_action_entry = _generate_special_ui_stats_action_template(weapon_template, special_action.action_name, special_action.use_special_damage)
+			damage_entry[#damage_entry + 1] = special_action_entry
+		end
+
+		damage[#damage + 1] = damage_entry
+	end
 end
 
 local start_input_templates = {
@@ -465,8 +478,8 @@ local COMBOS = {}
 local function _generate_chain_attack_info(weapon_template, working_templates, failed_templates)
 	table.clear(COMBOS)
 
-	local name = weapon_template.name
 	local start_action = nil
+	local name = weapon_template.name
 	local actions = weapon_template.actions
 	local start_action_name = nil
 
@@ -480,9 +493,9 @@ local function _generate_chain_attack_info(weapon_template, working_templates, f
 
 	for action_name, action in pairs(actions) do
 		local start_input = action.start_input
-		local action_condition_func = action.action_condition_func
+		local invalid_start_action_for_stat_calculation = action.invalid_start_action_for_stat_calculation
 
-		if start_input == start_action_name and not action_condition_func then
+		if start_input == start_action_name and not invalid_start_action_for_stat_calculation then
 			start_action = action
 
 			break
@@ -497,8 +510,8 @@ local function _generate_chain_attack_info(weapon_template, working_templates, f
 			local combo = {}
 			local action_name = nil
 
-			for i = 1, #attack_actions do
-				local action = attack_actions[i]
+			for j = 1, #attack_actions do
+				local action = attack_actions[j]
 
 				if chain_actions[action] then
 					action_name = action
@@ -525,8 +538,8 @@ local function _generate_chain_attack_info(weapon_template, working_templates, f
 					chain_actions = start_attack.allowed_chain_actions
 					attack_name = chain_actions[action_name] and chain_actions[action_name].action_name or nil
 				elseif not actions[attack_name].fire_configuration and not actions[attack_name].damage_profile then
-					for i = 1, #charge_input_templates do
-						local input_template = charge_input_templates[i]
+					for j = 1, #charge_input_templates do
+						local input_template = charge_input_templates[j]
 						action_name = _find_action_based_on_input(weapon_template.action_inputs, input_template)
 						attack_name = chain_actions[action_name] and chain_actions[action_name].action_name
 
@@ -543,7 +556,9 @@ local function _generate_chain_attack_info(weapon_template, working_templates, f
 		end
 
 		if not table.find(failed_templates, name) then
-			_generate_ui_stats_template(weapon_template, COMBOS)
+			local active_combo = weapon_template.explicit_combo or COMBOS
+
+			_generate_ui_stats_template(weapon_template, active_combo)
 			_generate_special_ui_stats_template(weapon_template)
 		end
 	end

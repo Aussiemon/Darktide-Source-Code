@@ -69,32 +69,12 @@ BtChaosDaemonhostSelectorNode.evaluate = function (self, unit, blackboard, scrat
 		if not is_aggroed then
 			condition_result = false
 		else
-			local target_side_id = 1
-			local side_system = Managers.state.extension:system("side_system")
-			local side = side_system:get_side(target_side_id)
-			local target_units = side.valid_player_units
-			local num_valid_target_units = #target_units
-			local num_alive_targets = 0
-
-			for i = 1, num_valid_target_units do
-				local player_unit = target_units[i]
-
-				if HEALTH_ALIVE[player_unit] then
-					num_alive_targets = num_alive_targets + 1
-				end
-			end
-
 			local statistics_component = blackboard.statistics
-
-			if num_alive_targets == 1 then
-				condition_result = true
-			else
-				local player_deaths = statistics_component.player_deaths
-				local ChaosDaemonhostSettings = require("scripts/settings/monster/chaos_daemonhost_settings")
-				local num_player_kills_for_despawn = Managers.state.difficulty:get_table_entry_by_challenge(ChaosDaemonhostSettings.num_player_kills_for_despawn)
-				local wants_to_leave = num_player_kills_for_despawn <= player_deaths
-				condition_result = wants_to_leave
-			end
+			local player_deaths = statistics_component.player_deaths
+			local ChaosDaemonhostSettings = require("scripts/settings/monster/chaos_daemonhost_settings")
+			local num_player_kills_for_despawn = Managers.state.difficulty:get_table_entry_by_challenge(ChaosDaemonhostSettings.num_player_kills_for_despawn)
+			local wants_to_leave = num_player_kills_for_despawn <= player_deaths
+			condition_result = wants_to_leave
 		end
 	until true
 

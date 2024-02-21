@@ -43,7 +43,7 @@ InvitesXboxLive.send_invite = function (self, xuid, invite_address)
 		}, true, invite_address)
 
 		if async_block then
-			Managers.xasync:wrap(async_block, XboxLiveMPA.release_block):catch(_error_report)
+			Managers.xasync:wrap(async_block):catch(_error_report)
 		else
 			_error_report(error_code)
 		end

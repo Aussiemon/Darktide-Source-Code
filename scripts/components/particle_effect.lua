@@ -18,6 +18,9 @@ ParticleEffect.init = function (self, unit)
 	if create_particle_on_spawn then
 		self:_create_particle()
 	end
+
+	self._selected = false
+	self._highlight = false
 end
 
 ParticleEffect.editor_validate = function (self, unit)
@@ -37,6 +40,24 @@ ParticleEffect.editor_validate = function (self, unit)
 	end
 
 	return success, error_message
+end
+
+ParticleEffect._set_highlight_effect = function (self, highlight)
+	if self._particle_id ~= nil then
+		World.set_particle_effect_highlight(self._world, self._particle_id, highlight)
+	end
+end
+
+ParticleEffect.editor_highlight_changed = function (self, unit, highlight)
+	self._highlight = highlight
+
+	self:_set_highlight_effect(highlight or self._selected)
+end
+
+ParticleEffect.editor_selection_changed = function (self, unit, selected)
+	self._selected = selected
+
+	self:_set_highlight_effect(selected or self._highlight)
 end
 
 ParticleEffect.enable = function (self, unit)

@@ -18,9 +18,8 @@ local sound_data = {
 		run_foley = "wwise/events/minions/play_shared_minion_cloth_leather_run_foley"
 	},
 	use_proximity_culling = {
-		vce_death_long = false,
-		vce_death = false,
-		vce_hurt = false,
+		vce_melee_attack_short = false,
+		vce_melee_attack_charged = false,
 		stop_vce = false
 	}
 }

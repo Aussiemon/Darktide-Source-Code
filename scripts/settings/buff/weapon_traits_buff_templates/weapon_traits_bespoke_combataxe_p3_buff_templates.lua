@@ -1,12 +1,15 @@
 local BaseWeaponTraitBuffTemplates = require("scripts/settings/buff/weapon_traits_buff_templates/base_weapon_trait_buff_templates")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
-local ConditionalFunctions = require("scripts/settings/buff/validation_functions/conditional_functions")
+local CheckProcFunctions = require("scripts/settings/buff/helper_functions/check_proc_functions")
+local ConditionalFunctions = require("scripts/settings/buff/helper_functions/conditional_functions")
 local keywords = BuffSettings.keywords
 local stat_buffs = BuffSettings.stat_buffs
 local proc_events = BuffSettings.proc_events
-local templates = {
-	weapon_trait_bespoke_combataxe_p3_chained_hits_increases_power_parent = table.clone(BaseWeaponTraitBuffTemplates.chained_hits_increases_power_parent)
-}
+local templates = {}
+
+table.make_unique(templates)
+
+templates.weapon_trait_bespoke_combataxe_p3_chained_hits_increases_power_parent = table.clone(BaseWeaponTraitBuffTemplates.chained_hits_increases_power_parent)
 templates.weapon_trait_bespoke_combataxe_p3_chained_hits_increases_power_parent.child_buff_template = "weapon_trait_bespoke_combataxe_p3_chained_hits_increases_power_child"
 templates.weapon_trait_bespoke_combataxe_p3_chained_hits_increases_power_child = table.clone(BaseWeaponTraitBuffTemplates.chained_hits_increases_power_child)
 templates.weapon_trait_bespoke_combataxe_p3_consecutive_hits_increases_stagger_parent = table.clone(BaseWeaponTraitBuffTemplates.consecutive_hits_increases_stagger_parent)
@@ -36,9 +39,9 @@ templates.weapon_trait_bespoke_combataxe_p3_increased_weakspot_damage_on_push = 
 		[stat_buffs.weakspot_damage] = 0.01
 	},
 	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
-	check_proc_func = function (params, template_data, template_context)
+	check_proc_func = CheckProcFunctions.all(CheckProcFunctions.on_item_match, function (params, template_data, template_context)
 		return params.num_hit_units and params.num_hit_units > 0
-	end
+	end)
 }
 templates.weapon_trait_bespoke_combataxe_p3_staggered_targets_receive_increased_stagger_debuff = table.clone(BaseWeaponTraitBuffTemplates.staggered_targets_receive_increased_stagger_debuff)
 

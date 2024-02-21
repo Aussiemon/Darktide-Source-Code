@@ -1,12 +1,11 @@
 local Breed = require("scripts/utilities/breed")
 local DialogueBreedSettings = require("scripts/settings/dialogue/dialogue_breed_settings")
-local DialogueCategoryConfig = require("scripts/settings/dialogue/dialogue_category_config")
 local DialogueQueries = require("scripts/extension_systems/dialogue/dialogue_queries")
 local DialogueSettings = require("scripts/settings/dialogue/dialogue_settings")
 local PlayerVoiceGrunts = require("scripts/utilities/player_voice_grunts")
+local Vo = require("scripts/utilities/vo")
 local VoiceFxPresetSettings = require("scripts/settings/dialogue/voice_fx_preset_settings")
 local WwiseRouting = require("scripts/settings/dialogue/wwise_vo_routing_settings")
-local Vo = require("scripts/utilities/vo")
 local DialogueExtension = class("DialogueExtension")
 
 local function _has_wwise_voice_switch_config(breed_configuration)
@@ -16,13 +15,15 @@ local function _has_wwise_voice_switch_config(breed_configuration)
 	return wwise_voice_switch_group ~= nil and wwise_voice_switch_group ~= "" and wwise_voices ~= nil and #wwise_voices > 0
 end
 
-DialogueExtension.init = function (self, dialogue_system, dialogue_system_wwise, extension_per_breed_wwise_voice_index, vo_sources_cache, unit, extension_init_data, wwise_world)
+DialogueExtension.init = function (self, extension_init_context, unit, extension_init_data, game_object_data_or_game_session, nil_or_game_object_id)
 	self.input = self
-	self._dialogue_system = dialogue_system
-	self._dialogue_system_wwise = dialogue_system_wwise
+	local vo_sources_cache = extension_init_context.vo_sources_cache
+	self._dialogue_system = extension_init_context.owner_system
+	self._dialogue_system_wwise = extension_init_context.dialogue_system_wwise
 	self._unit = unit
 	self._vo_sources_cache = vo_sources_cache
-	self._wwise_world = wwise_world
+	self._wwise_world = extension_init_context.wwise_world
+	self._is_server = extension_init_context.is_server
 	self._trigger_event_data_payload = {}
 	self._vo_choice = nil
 	self._vo_profile_name = nil
@@ -32,7 +33,6 @@ DialogueExtension.init = function (self, dialogue_system, dialogue_system_wwise,
 	self._is_network_synced = false
 	self._play_unit = nil
 	self._vo_center_percent = nil
-	self._status_extension = nil
 	self._wwise_source_id = nil
 	self._wwise_voice_switch_group = nil
 	self._wwise_voice_switch_value = nil
@@ -42,11 +42,9 @@ DialogueExtension.init = function (self, dialogue_system, dialogue_system_wwise,
 	self._user_memory = {}
 	self._vo_event_cooldown_times = {}
 	self._local_player = extension_init_data.local_player
-	self._local_player_start_pos = nil
-	self._local_player_has_moved = false
 	self._last_query_sound_event = nil
-	self._currently_playing_dialogue = nil
-	self._dialogue_timer = nil
+	self._is_currently_playing_dialogue = false
+	self._dialogue = {}
 	self._random_talk_enabled = false
 	self._next_random_talk_line_update_t = 180
 	self._random_talk_tick_time_t = 60
@@ -96,6 +94,8 @@ DialogueExtension.init = function (self, dialogue_system, dialogue_system_wwise,
 		self._faction_breed_name = breed.faction_name
 
 		if _has_wwise_voice_switch_config(dialogue_breed_settings) then
+			local extension_per_breed_wwise_voice_index = extension_init_context.extension_per_breed_wwise_voice_index
+
 			if extension_per_breed_wwise_voice_index[breed_name] == nil then
 				extension_per_breed_wwise_voice_index[breed_name] = 1
 			end
@@ -247,25 +247,17 @@ DialogueExtension.setup_from_component = function (self, vo_class, vo_proile_nam
 	end
 end
 
-DialogueExtension.cleanup = function (self)
-	if self._fx_extension then
-		PlayerVoiceGrunts.destroy_voice(self._fx_extension)
+DialogueExtension.destroy = function (self)
+	if self._is_currently_playing_dialogue then
+		self:stop_currently_playing_vo()
 	end
 
-	if self._currently_playing_dialogue then
-		self._dialogue_system:_remove_stopped_dialogue(self._currently_playing_dialogue)
+	local fx_extension = self._fx_extension
 
-		if self._currently_playing_dialogue.currently_playing_event_id then
-			self._dialogue_system_wwise:stop_if_playing(self._currently_playing_dialogue.currently_playing_event_id)
-		end
+	if fx_extension then
+		PlayerVoiceGrunts.destroy_voice(fx_extension)
 	end
 
-	self._currently_playing_dialogue = nil
-
-	table.clear(self._user_memory)
-	table.clear(self._context)
-
-	self._dialogue_timer = nil
 	local registered_vo_events = self._registered_vo_events
 
 	if registered_vo_events then
@@ -277,24 +269,15 @@ DialogueExtension.cleanup = function (self)
 	end
 end
 
-DialogueExtension.set_voice_source = function (self)
-	if self._wwise_source_id == nil then
-		self._wwise_source_id = self._wwise_world.make_manual_source(self._wwise_world, self._play_unit, self._voice_node)
-	end
-end
-
-DialogueExtension.on_extensions_ready = function (self)
-	local play_unit = self._unit
+DialogueExtension.extensions_ready = function (self, world, unit)
+	local play_unit = unit
 	local vo_center_percent = 0
 	local voice_node = nil
 
 	if self._local_player then
-		play_unit = ScriptUnit.extension(self._unit, "first_person_system"):first_person_unit()
+		play_unit = ScriptUnit.extension(unit, "first_person_system"):first_person_unit()
 		vo_center_percent = 100
 		voice_node = Unit.node(play_unit, "ap_camera_node")
-		local destination = {}
-		destination[1], destination[2], destination[3] = Vector3.to_elements(POSITION_LOOKUP[self._unit])
-		self._local_player_start_pos = destination
 	elseif Unit.has_node(play_unit, "ap_voice") then
 		voice_node = Unit.node(play_unit, "ap_voice")
 	elseif Unit.has_node(play_unit, "j_head") then
@@ -307,26 +290,14 @@ DialogueExtension.on_extensions_ready = function (self)
 	self._voice_node = voice_node
 	self._vo_center_percent = vo_center_percent
 
-	self:set_voice_source()
-
-	self._is_incapacitated = false
-	self._incapacitate_time = -1
+	if self._wwise_source_id == nil then
+		self._wwise_source_id = WwiseWorld.make_manual_source(self._wwise_world, play_unit, voice_node)
+	end
 end
 
 DialogueExtension.physics_async_update = function (self, context, dt, t)
 	self:_update_random_talk_lines(t)
 	self:_update_vo_event_cool_down_times(t)
-
-	if self._status_extension then
-		local is_incapacitated = self._status_extension:is_disabled()
-
-		if not self._is_incapacitated and is_incapacitated then
-			self._incapacitate_time = t
-			self._context.is_disabled_override = false
-		end
-
-		self._is_incapacitated = is_incapacitated
-	end
 end
 
 DialogueExtension._update_random_talk_lines = function (self, t)
@@ -334,7 +305,7 @@ DialogueExtension._update_random_talk_lines = function (self, t)
 		return
 	end
 
-	if self._dialogue_system:is_server() and self._mission_update_enabled == true then
+	if self._is_server and self._mission_update_enabled == true then
 		self:_update_mission_update_vo()
 	end
 
@@ -414,23 +385,23 @@ DialogueExtension._update_mission_update_vo = function (self)
 end
 
 DialogueExtension._update_vo_event_cool_down_times = function (self, t)
-	for vo_event_name, vo_profiles in pairs(self._vo_event_cooldown_times) do
-		repeat
-			for vo_profile, cooldown_time in pairs(vo_profiles) do
-				if cooldown_time <= t then
-					self._vo_event_cooldown_times[vo_event_name][vo_profile] = nil
+	local vo_event_cooldown_times = self._vo_event_cooldown_times
 
-					if table.is_empty(self._vo_event_cooldown_times[vo_event_name]) then
-						self._vo_event_cooldown_times[vo_event_name] = nil
-					end
+	for vo_event_name, vo_profiles in pairs(vo_event_cooldown_times) do
+		for vo_profile, cooldown_time in pairs(vo_profiles) do
+			if cooldown_time <= t then
+				vo_event_cooldown_times[vo_event_name][vo_profile] = nil
+
+				if table.is_empty(vo_event_cooldown_times[vo_event_name]) then
+					vo_event_cooldown_times[vo_event_name] = nil
 				end
 			end
-		until true
+		end
 	end
 end
 
 DialogueExtension.trigger_faction_dialogue_query = function (self, event_name, event_data, identifier, breed_faction_name, exclude_me)
-	if not self._dialogue_system:is_server() then
+	if not self._is_server then
 		Log.error("DialogueExtension", "trigger_faction_dialogue_query must be executed in the server")
 
 		return
@@ -440,14 +411,17 @@ DialogueExtension.trigger_faction_dialogue_query = function (self, event_name, e
 end
 
 DialogueExtension.trigger_factions_dialogue_query = function (self, event_name, event_data, identifier, breed_factions, exclude_me)
-	if not self._dialogue_system:is_server() then
+	if not self._is_server then
 		Log.error("DialogueExtension", "trigger_faction_dialogue_query must be executed in the server")
 
 		return
 	end
 
+	local unit = self._unit
+	local dialogue_system = self._dialogue_system
+
 	for _, faction in pairs(breed_factions) do
-		self._dialogue_system:append_faction_event(self._unit, event_name, event_data, identifier, faction, exclude_me)
+		dialogue_system:append_faction_event(unit, event_name, event_data, identifier, faction, exclude_me)
 	end
 end
 
@@ -492,7 +466,7 @@ DialogueExtension.trigger_networked_dialogue_event = function (self, event_name,
 		return
 	end
 
-	if self._dialogue_system:is_server() then
+	if self._is_server then
 		self._dialogue_system:append_event_to_queue(self._unit, event_name, event_data, identifier)
 	else
 		local index_concept = self._dialogue_system.dialogueLookupConcepts[event_name]
@@ -535,14 +509,6 @@ DialogueExtension.trigger_voice = function (self, wwise_event_name, sound_source
 	return self._dialogue_system_wwise:trigger_resource_event(wwise_event_name, sound_source)
 end
 
-DialogueExtension.play_voice_debug = function (self, sound_event)
-	return
-end
-
-DialogueExtension.trigger_query = function (self, event_data)
-	return
-end
-
 DialogueExtension.set_vo_profile = function (self, profile_name)
 	local vo_sources_cache = self._vo_sources_cache
 	self._wwise_voice_switch_group = self._wwise_voice_switch_group or DialogueSettings.default_voice_switch_group
@@ -550,9 +516,10 @@ DialogueExtension.set_vo_profile = function (self, profile_name)
 	self._vo_profile_name = profile_name
 	self._context.voice_template = self._vo_profile_name
 	self._vo_choice = vo_sources_cache:get_vo_source(self._vo_profile_name)
+	local fx_extension = self._fx_extension
 
-	if self._fx_extension then
-		local voice_source_id = PlayerVoiceGrunts.voice_source(self._fx_extension)
+	if fx_extension then
+		local voice_source_id = PlayerVoiceGrunts.voice_source(fx_extension)
 
 		PlayerVoiceGrunts.set_voice(self._wwise_world, voice_source_id, self._wwise_voice_switch_group, profile_name)
 	end
@@ -616,18 +583,26 @@ DialogueExtension._set_source_parameter = function (self, parameter, value, wwis
 end
 
 DialogueExtension.get_dialogue_event_index = function (self, query)
-	if self._vo_choice[query.result] then
-		local dialogue_index = DialogueQueries.get_dialogue_event_index(self._vo_choice[query.result])
+	local vo_choice = self._vo_choice
+	local dialogue = vo_choice[query.result]
 
-		return self._vo_choice[query.result].sound_events[dialogue_index], self._vo_choice[query.result].sound_events_duration[dialogue_index], dialogue_index
+	if dialogue then
+		local dialogue_index = DialogueQueries.get_dialogue_event_index(dialogue)
+
+		return dialogue.sound_events[dialogue_index], dialogue.sound_events_duration[dialogue_index], dialogue_index
 	else
-		return nil, nil
+		return nil, nil, nil
 	end
 end
 
 DialogueExtension.get_dialogue_event = function (self, dialogue_name, dialogue_index)
-	if self._vo_choice[dialogue_name] then
-		return self._vo_choice[dialogue_name].sound_events[dialogue_index], self._vo_choice[dialogue_name].sound_events[dialogue_index], self._vo_choice[dialogue_name].sound_events_duration[dialogue_index]
+	local vo_choice = self._vo_choice
+	local dialogue = vo_choice[dialogue_name]
+
+	if dialogue then
+		local event_name = dialogue.sound_events[dialogue_index]
+
+		return event_name, event_name, dialogue.sound_events_duration[dialogue_index]
 	else
 		return nil, nil, nil
 	end
@@ -642,24 +617,28 @@ DialogueExtension.has_dialogue = function (self, dialogue_name)
 end
 
 DialogueExtension.play_event = function (self, event)
-	local type = event.type
+	local event_type = event.type
 
-	if type == "resource_event" then
+	if event_type == "resource_event" then
 		local sound_event = event.sound_event
 		local wwise_source_id = self._wwise_source_id or self._dialogue_system_wwise:make_unit_auto_source(self._play_unit, self._voice_node)
 
-		WwiseWorld.set_switch(self._wwise_world, self._wwise_voice_switch_group, self._wwise_voice_switch_value, self._wwise_source_id)
+		WwiseWorld.set_switch(self._wwise_world, self._wwise_voice_switch_group, self._wwise_voice_switch_value, wwise_source_id)
 
 		return self._dialogue_system_wwise:trigger_resource_event("wwise/events/vo/" .. sound_event, wwise_source_id)
-	elseif type == "vorbis_external" then
+	elseif event_type == "vorbis_external" then
 		local wwise_route = event.wwise_route
 		local sound_event = event.sound_event
 		local wwise_source_id = self._wwise_source_id or self._dialogue_system_wwise:make_unit_auto_source(self._play_unit, self._voice_node)
 		local selected_wwise_route = self:get_selected_wwise_route(wwise_route, wwise_source_id)
 		local wwise_play_event = selected_wwise_route.wwise_event_path
 		local wwise_es = selected_wwise_route.wwise_sound_source
+		local stop_vce_event = self._stop_vce_event
 
-		self:stop_currently_playing_vce_event()
+		if stop_vce_event and self._wwise_source_id then
+			self._dialogue_system_wwise:trigger_resource_event(stop_vce_event, self._wwise_source_id)
+		end
+
 		self:_set_source_parameter("voice_fx_preset", self._voice_fx_preset, wwise_source_id)
 
 		return self._dialogue_system_wwise:trigger_vorbis_external_event(wwise_play_event, wwise_es, "wwise/externals/" .. sound_event, wwise_source_id)
@@ -667,38 +646,40 @@ DialogueExtension.play_event = function (self, event)
 end
 
 DialogueExtension.stop_currently_playing_vo = function (self)
-	local current_dialogue = self._currently_playing_dialogue
+	if self._is_currently_playing_dialogue then
+		local unit = self._unit
+		local dialogue_system = self._dialogue_system
+		local animation_event = "stop_talking"
 
-	if current_dialogue then
-		if current_dialogue.currently_playing_event_id then
-			self._dialogue_system_wwise:stop_if_playing(current_dialogue.currently_playing_event_id)
-		end
+		dialogue_system:_trigger_face_animation_event(unit, animation_event)
 
-		self._dialogue_system:_remove_stopped_dialogue(current_dialogue)
+		local dialogue = self._dialogue
+		local dialogue_system_wwise = self._dialogue_system_wwise
+		local currently_playing_event_id = dialogue.currently_playing_event_id
+		local concurrent_wwise_event_id = dialogue.concurrent_wwise_event_id
+
+		dialogue_system_wwise:stop_if_playing(concurrent_wwise_event_id)
+		dialogue_system_wwise:stop_if_playing(currently_playing_event_id)
+
+		self._is_currently_playing_dialogue = false
+		self._last_query_sound_event = nil
+
+		dialogue_system:_remove_stopped_dialogue(unit, dialogue)
 	end
-end
-
-DialogueExtension.stop_currently_playing_vce_event = function (self)
-	local stop_vce_event = self._stop_vce_event
-
-	if stop_vce_event and self._wwise_source_id then
-		self._dialogue_system_wwise:trigger_resource_event(stop_vce_event, self._wwise_source_id)
-	end
-end
-
-DialogueExtension.stop_currently_playing_wwise_event = function (self, event_id)
-	self._dialogue_system_wwise:stop_if_playing(event_id)
 end
 
 DialogueExtension.play_local_vo_events = function (self, rule_names, wwise_route_key, on_play_callback, seed)
-	local rule_queue = self._dialogue_system._vo_rule_queue
+	local dialogue_system = self._dialogue_system
+	local vo_choice = self._vo_choice
+	local rule_queue = dialogue_system._vo_rule_queue
+	local unit = self._unit
 
 	for i = 1, #rule_names do
 		local rule = rule_names[i]
 
-		if self._vo_choice[rule] then
+		if vo_choice[rule] then
 			local vo_event = {
-				unit = self._unit,
+				unit = unit,
 				rule_name = rule,
 				wwise_route_key = wwise_route_key,
 				on_play_callback = on_play_callback,
@@ -708,17 +689,15 @@ DialogueExtension.play_local_vo_events = function (self, rule_names, wwise_route
 		end
 	end
 
-	local dialogue_system = self._dialogue_system
 	local animation_event = "start_talking"
 
-	dialogue_system:_trigger_face_animation_event(self._unit, animation_event)
+	dialogue_system:_trigger_face_animation_event(unit, animation_event)
 end
 
 DialogueExtension.play_local_vo_event = function (self, rule_name, wwise_route_key, on_play_callback, seed, optional_keep_talking)
-	local dialogue_system = self._dialogue_system
 	local rule = self._vo_choice[rule_name]
 
-	if not rule then
+	if not rule or self._is_currently_playing_dialogue then
 		return
 	end
 
@@ -732,49 +711,48 @@ DialogueExtension.play_local_vo_event = function (self, rule_name, wwise_route_k
 	end
 
 	local sound_event, subtitles_event, sound_event_duration = self:get_dialogue_event(rule_name, dialogue_index)
-	local currently_playing_dialogue = self:get_currently_playing_dialogue()
-	local wwise_playing = currently_playing_dialogue and self._dialogue_system_wwise:is_playing(currently_playing_dialogue.currently_playing_event_id)
 
-	if sound_event and not wwise_playing then
-		local pre_wwise_event, post_wwise_event = nil
-		local dialogue = {}
-		local wwise_route = WwiseRouting[wwise_route_key]
+	if not sound_event then
+		return
+	end
 
-		self:set_last_query_sound_event(sound_event)
+	self._last_query_sound_event = sound_event
+	local pre_wwise_event, post_wwise_event = nil
+	local dialogue_system = self._dialogue_system
+	local wwise_route = WwiseRouting[wwise_route_key]
+	local dialog_sequence_events = dialogue_system:_create_sequence_events_table(pre_wwise_event, wwise_route, sound_event, post_wwise_event)
+	local event_id = self:play_event(dialog_sequence_events[1])
+	local unit = self._unit
+	local speaker_name = self:get_context().voice_template
+	local dialogue = self:request_empty_dialogue_table()
+	dialogue.currently_playing_event_id = event_id
+	dialogue.currently_playing_unit = unit
+	dialogue.speaker_name = speaker_name
+	dialogue.dialogue_timer = sound_event_duration
+	dialogue.currently_playing_subtitle = subtitles_event
+	dialogue.wwise_route = wwise_route_key
+	dialogue.is_audible = true
+	dialogue.dialogue_sequence = dialog_sequence_events
+	dialogue_system._playing_units[unit] = self
 
-		dialogue_system._dialog_sequence_events = dialogue_system:_create_sequence_events_table(pre_wwise_event, wwise_route, sound_event, post_wwise_event)
-		dialogue.currently_playing_event_id = self:play_event(dialogue_system._dialog_sequence_events[1])
-		local speaker_name = self:get_context().voice_template
-		local unit = self._unit
-		dialogue_system._playing_units[unit] = self
-		dialogue.currently_playing_unit = unit
-		dialogue.speaker_name = speaker_name
-		dialogue.dialogue_timer = sound_event_duration
-		dialogue.currently_playing_subtitle = subtitles_event
-		dialogue.wwise_route = wwise_route_key
-		dialogue.is_audible = true
-		local dialogue_category = dialogue.category
-		local category_setting = DialogueCategoryConfig[dialogue_category]
-		dialogue_system._playing_dialogues[dialogue] = category_setting
+	table.insert(dialogue_system._playing_dialogues_array, 1, dialogue)
 
-		self:set_currently_playing_dialogue(dialogue)
-		table.insert(dialogue_system._playing_dialogues_array, 1, dialogue)
+	self._is_currently_playing_dialogue = true
 
-		if not optional_keep_talking then
-			local animation_event = "start_talking"
+	if not optional_keep_talking then
+		local animation_event = "start_talking"
 
-			dialogue_system:_trigger_face_animation_event(unit, animation_event)
-		end
+		dialogue_system:_trigger_face_animation_event(unit, animation_event)
+	end
 
-		local dialogue_system_subtitle = dialogue_system:dialogue_system_subtitle()
+	local dialogue_system_subtitle = dialogue_system:dialogue_system_subtitle()
 
-		dialogue_system_subtitle:add_playing_localized_dialogue(speaker_name, dialogue)
+	dialogue_system_subtitle:add_playing_localized_dialogue(speaker_name, dialogue)
 
-		if on_play_callback then
-			local id = dialogue.currently_playing_event_id
+	if on_play_callback then
+		local id = dialogue.currently_playing_event_id
 
-			on_play_callback(id, rule_name)
-		end
+		on_play_callback(id, rule_name)
 	end
 end
 
@@ -810,31 +788,6 @@ DialogueExtension.read_from_memory = function (self, memory_name, argument_name)
 	return target_memory[argument_name]
 end
 
-DialogueExtension.evaluate_rules = function (self, rules, seed)
-	local results = {}
-
-	for i = 1, #rules do
-		local rule_name = rules[i]
-		local dialogue_index = nil
-
-		if seed then
-			local _, random_n = math.next_random(seed, 1, self._vo_choice[rule_name].sound_events_n)
-			dialogue_index = random_n
-		else
-			dialogue_index = math.random(1, self._vo_choice[rule_name].sound_events_n)
-		end
-
-		local sound_event, subtitles_event, sound_event_duration = self:get_dialogue_event(rule_name, dialogue_index)
-		results[i] = {
-			sound_event = sound_event,
-			subtitles_event = subtitles_event,
-			sound_event_duration = sound_event_duration
-		}
-	end
-
-	return results
-end
-
 DialogueExtension.is_dialogue_disabled = function (self)
 	if self._context.is_disabled_override == true then
 		return false
@@ -849,14 +802,6 @@ end
 
 DialogueExtension.set_is_disabled_override = function (self, is_disabled_override)
 	self._context.is_disabled_override = is_disabled_override
-end
-
-DialogueExtension.get_is_incapacitated = function (self)
-	return self._is_incapacitated
-end
-
-DialogueExtension.get_incapacitate_time = function (self)
-	return self._incapacitate_time
 end
 
 DialogueExtension.get_context = function (self)
@@ -875,10 +820,6 @@ DialogueExtension.set_faction_memory = function (self, faction_memory)
 	self._faction_memory = faction_memory
 end
 
-DialogueExtension.set_faction_breed_name = function (self, faction_breed_name)
-	self._faction_breed_name = faction_breed_name
-end
-
 DialogueExtension.get_user_memory = function (self)
 	return self._user_memory
 end
@@ -889,14 +830,6 @@ end
 
 DialogueExtension.get_profile_name = function (self)
 	return self._vo_profile_name
-end
-
-DialogueExtension.get_status_extension = function (self)
-	return self._status_extension
-end
-
-DialogueExtension.set_status_extension = function (self, status_extension)
-	self._status_extension = status_extension
 end
 
 DialogueExtension.get_play_unit = function (self)
@@ -935,20 +868,20 @@ DialogueExtension.set_last_query_sound_event = function (self, sound_event)
 	self._last_query_sound_event = sound_event
 end
 
+DialogueExtension.request_empty_dialogue_table = function (self)
+	local dialogue = self._dialogue
+
+	table.clear(dialogue)
+
+	return dialogue
+end
+
 DialogueExtension.get_currently_playing_dialogue = function (self)
-	return self._currently_playing_dialogue
+	return self._is_currently_playing_dialogue and self._dialogue or nil
 end
 
-DialogueExtension.set_currently_playing_dialogue = function (self, currently_playing)
-	self._currently_playing_dialogue = currently_playing
-end
-
-DialogueExtension.get_dialogue_timer = function (self)
-	return self._dialogue_timer
-end
-
-DialogueExtension.set_dialogue_timer = function (self, timer)
-	self._dialogue_timer = timer
+DialogueExtension.set_is_currently_playing_dialogue = function (self, currently_playing)
+	self._is_currently_playing_dialogue = currently_playing
 end
 
 DialogueExtension.set_wwise_route = function (self, wwise_route)
@@ -968,7 +901,7 @@ DialogueExtension.is_a_player = function (self)
 end
 
 DialogueExtension.is_currently_playing_dialogue = function (self)
-	return self._currently_playing_dialogue ~= nil
+	return self._is_currently_playing_dialogue
 end
 
 DialogueExtension.faction_name = function (self)
@@ -979,14 +912,6 @@ DialogueExtension.get_event_data_payload = function (self)
 	table.clear(self._trigger_event_data_payload)
 
 	return self._trigger_event_data_payload
-end
-
-DialogueExtension.development_temporal_do_not_use_archetype_name = function (self)
-	if self._is_a_player then
-		return string.sub(self._vo_profile_name, 1, -3)
-	else
-		return DialogueBreedSettings[self._context.breed_name].vo_class_name
-	end
 end
 
 DialogueExtension.vo_class_name = function (self)

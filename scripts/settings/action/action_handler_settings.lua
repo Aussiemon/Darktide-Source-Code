@@ -22,6 +22,9 @@ local action_handler_settings = {
 		"reload_shotgun",
 		"inspect"
 	},
+	no_interruption_for_sprint = {
+		"shoot_pellets"
+	},
 	allowed_action_kinds_during_sprint = {
 		"block",
 		"reload_state",

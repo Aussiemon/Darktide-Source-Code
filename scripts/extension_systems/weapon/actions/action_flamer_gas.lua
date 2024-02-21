@@ -1,10 +1,12 @@
 require("scripts/extension_systems/weapon/actions/action_shoot")
 
 local AttackSettings = require("scripts/settings/damage/attack_settings")
+local Breed = require("scripts/utilities/breed")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local DamageProfile = require("scripts/utilities/attack/damage_profile")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
 local FriendlyFire = require("scripts/utilities/attack/friendly_fire")
+local HazardProp = require("scripts/utilities/level_props/hazard_prop")
 local HitScan = require("scripts/utilities/attack/hit_scan")
 local HitZone = require("scripts/utilities/attack/hit_zone")
 local PowerLevelSettings = require("scripts/settings/damage/power_level_settings")
@@ -21,6 +23,7 @@ ActionFlamerGas.init = function (self, action_context, action_params, action_set
 	ActionFlamerGas.super.init(self, action_context, action_params, action_settings)
 
 	self._target_indexes = {}
+	self._target_actors = {}
 	self._target_damage_times = {}
 	self._target_frame_counts = {}
 	self._dot_targets = {}
@@ -66,6 +69,7 @@ end
 ActionFlamerGas.start = function (self, action_settings, t, ...)
 	ActionFlamerGas.super.start(self, action_settings, t, ...)
 	table.clear(self._target_indexes)
+	table.clear(self._target_actors)
 	table.clear(self._target_damage_times)
 	table.clear(self._target_frame_counts)
 	table.clear(self._dot_targets)
@@ -136,6 +140,8 @@ ActionFlamerGas._process_hit = function (self, hit, player_unit, player_pos, sid
 
 	if is_server and health_extension then
 		self:_hit_target(hit_unit, hit_pos)
+
+		self._target_actors[hit_unit] = hit_actor
 	end
 
 	if is_server and buff_extension then
@@ -232,6 +238,7 @@ ActionFlamerGas._damage_targets = function (self, dt, t, force_damage)
 	local target_damage_times = self._target_damage_times
 	local target_frame_counts = self._target_frame_counts
 	local target_indexes = self._target_indexes
+	local target_actors = self._target_actors
 	local ALIVE = ALIVE
 	local fixed_time_step = Managers.state.game_session.fixed_time_step
 
@@ -239,11 +246,18 @@ ActionFlamerGas._damage_targets = function (self, dt, t, force_damage)
 		repeat
 			local current_damage_time = target_damage_times[target_unit]
 			local frame_count = target_frame_counts[target_unit]
+			local hit_actor = target_actors[target_unit]
+			local hit_zone_name_or_nil = HitZone.get_name(target_unit, hit_actor)
+			local target_breed_or_nil = Breed.unit_breed_or_nil(target_unit)
+			local target_is_hazard_prop, hazard_prop_is_active = HazardProp.status(target_unit)
+			local is_breed_with_hit_zone = target_breed_or_nil and hit_zone_name_or_nil
+			local should_deal_damage = target_is_hazard_prop and hazard_prop_is_active or not target_is_hazard_prop and is_breed_with_hit_zone or not target_breed_or_nil
 
-			if not ALIVE[target_unit] or not ScriptUnit.has_extension(target_unit, "health_system") then
+			if not ALIVE[target_unit] or not ScriptUnit.has_extension(target_unit, "health_system") or not should_deal_damage then
 				target_damage_times[target_unit] = nil
 				target_frame_counts[target_unit] = nil
 				target_indexes[target_unit] = nil
+				target_actors[target_unit] = nil
 			elseif current_damage_time <= 0 or force_damage then
 				local damage_time_index = math.min(current_index, #damage_times)
 				local damage_time = damage_times[damage_time_index]
@@ -263,13 +277,15 @@ ActionFlamerGas._damage_targets = function (self, dt, t, force_damage)
 					new_damage_time = damage_times[new_damage_time_index]
 					new_frame_count = 0
 					new_target_index = current_index - 1
+					new_actor = hit_actor
 				else
-					new_damage_time, new_frame_count, new_target_index = nil
+					new_damage_time, new_frame_count, new_target_index, new_actor = nil
 				end
 
 				target_damage_times[target_unit] = new_damage_time
 				target_frame_counts[target_unit] = new_frame_count
 				target_indexes[target_unit] = new_target_index
+				target_actors[target_unit] = new_actor
 			else
 				target_damage_times[target_unit] = current_damage_time - dt
 			end

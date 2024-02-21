@@ -581,13 +581,16 @@ weapon_template.actions = {
 	},
 	action_inspect = {
 		skip_3p_anims = false,
-		lock_view = true,
 		start_input = "inspect_start",
 		anim_end_event = "inspect_end",
 		kind = "inspect",
+		lock_view = true,
 		anim_event = "inspect_start",
 		stop_input = "inspect_stop",
 		total_time = math.huge,
+		anim_end_event_condition_func = function (unit, data, end_reason)
+			return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
+		end,
 		crosshair = {
 			crosshair_type = "inspect"
 		}
@@ -687,6 +690,7 @@ weapon_template.toughness_template = "default"
 weapon_template.movement_curve_modifier_template = "default"
 weapon_template.footstep_intervals = FootstepIntervalsTemplates.default
 weapon_template.smart_targeting_template = SmartTargetingTemplates.assault
+weapon_template.wieldable_slot_scripts = {}
 local WeaponBarUIDescriptionTemplates = require("scripts/settings/equipment/weapon_bar_ui_description_templates")
 weapon_template.base_stats = {
 	autogun_p1_m1_stability_stat = {
@@ -781,7 +785,7 @@ weapon_template.base_stats = {
 	}
 }
 weapon_template.traits = {}
-local bespoke_autogun_p1_traits = table.keys(WeaponTraitsBespokeAutogunP1)
+local bespoke_autogun_p1_traits = table.ukeys(WeaponTraitsBespokeAutogunP1)
 
 table.append(weapon_template.traits, bespoke_autogun_p1_traits)
 
@@ -901,5 +905,21 @@ weapon_template.displayed_attacks = {
 		type = "flashlight"
 	}
 }
+weapon_template.explicit_combo = {
+	{
+		"action_shoot_hip"
+	},
+	{
+		"action_shoot_zoomed"
+	}
+}
+
+weapon_template.action_inspect_screen_ui_validation = function (wielded_slot_id, item, current_action, current_action_name, player)
+	return false
+end
+
+weapon_template.action_alt_inspect_screen_ui_validation = function (wielded_slot_id, item, current_action, current_action_name, player)
+	return false
+end
 
 return weapon_template

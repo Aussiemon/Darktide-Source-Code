@@ -274,6 +274,17 @@ local settings_definitions = {
 		end
 	},
 	{
+		save_location = "interface_settings",
+		default_value = true,
+		display_name = "loc_interface_setting_show_group_buff_icon_in_categories",
+		id = "group_buff_icon_in_categories",
+		tooltip_text = "loc_interface_setting_show_group_buff_icon_in_categories_mouseover",
+		widget_type = "boolean",
+		on_value_changed = function (value)
+			return
+		end
+	},
+	{
 		group_name = "subtitle_settings",
 		display_name = "loc_settings_menu_group_subtitle_settings",
 		widget_type = "group_header"
@@ -286,6 +297,16 @@ local settings_definitions = {
 		widget_type = "boolean",
 		on_value_changed = function (value)
 			Managers.event:trigger("event_update_subtitles_enabled", value)
+		end
+	},
+	{
+		save_location = "interface_settings",
+		display_name = "loc_interface_setting_subtitle_secondary_enabled",
+		id = "secondary_subtitle_enabled",
+		default_value = true,
+		widget_type = "boolean",
+		on_value_changed = function (value)
+			Managers.event:trigger("event_update_secondary_subtitles_enabled", value)
 		end
 	},
 	{
@@ -332,6 +353,20 @@ local settings_definitions = {
 		save_location = "interface_settings",
 		on_value_changed = function (value)
 			Managers.event:trigger("event_update_subtitles_font_size", value)
+		end
+	},
+	{
+		step_size_value = 1,
+		min_value = 12,
+		display_name = "loc_interface_setting_subtitle_secondary_font_size",
+		num_decimals = 0,
+		max_value = 72,
+		default_value = 28,
+		widget_type = "value_slider",
+		id = "secondary_subtitle_font_size",
+		save_location = "interface_settings",
+		on_value_changed = function (value)
+			Managers.event:trigger("event_update_secondary_subtitles_font_size", value)
 		end
 	},
 	{
@@ -409,7 +444,7 @@ local settings_definitions = {
 		default_value = true,
 		widget_type = "boolean",
 		on_value_changed = function (value)
-			return
+			Managers.event:trigger("event_update_show_crafting_pickup_notification", value)
 		end
 	},
 	{
@@ -432,17 +467,6 @@ local settings_definitions = {
 		widget_type = "boolean",
 		validation_function = function ()
 			return IS_WINDOWS
-		end
-	},
-	{
-		save_location = "interface_settings",
-		default_value = true,
-		display_name = "loc_interface_setting_show_group_buff_icon_in_categories",
-		id = "group_buff_icon_in_categories",
-		tooltip_text = "loc_interface_setting_show_group_buff_icon_in_categories_mouseover",
-		widget_type = "boolean",
-		on_value_changed = function (value)
-			return
 		end
 	}
 }

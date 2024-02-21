@@ -218,8 +218,6 @@ PlayerUnitDataExtension.init = function (self, extension_init_context, unit, ext
 	self._modified_update_fields = Script.new_map(512)
 	local archetype = extension_init_data.archetype
 	self._archetype = archetype
-	local specialization = extension_init_data.specialization
-	self._specialization = specialization
 	self._hit_zone_lookup, self._hit_zone_actors_lookup = HitZone.initialize_lookup(unit, breed.hit_zones)
 	self._write_components = {}
 	self._read_components = {}
@@ -677,10 +675,6 @@ PlayerUnitDataExtension.archetype_name = function (self)
 	local archetype_name = archetype.name
 
 	return archetype_name
-end
-
-PlayerUnitDataExtension.specialization = function (self)
-	return self._specialization
 end
 
 PlayerUnitDataExtension.hit_zone = function (self, actor)

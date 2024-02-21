@@ -997,8 +997,7 @@ local surface_decal = {
 				"content/fx/units/weapons/small_caliber_concrete_small_01"
 			}
 		}
-	},
-	nurgle_flesh = NO_SURFACE_DECAL
+	}
 }
 
 ImpactFxHelper.create_missing_surface_decals(surface_decal)

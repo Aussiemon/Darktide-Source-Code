@@ -313,6 +313,7 @@ FlowCallbacks.minion_fx = function (params)
 			end
 
 			local play_vce = true
+			local use_voice = params.sound_use_breed_voice_profile
 			local dialogue_extension = ScriptUnit.has_extension(unit, "dialogue_system")
 
 			if dialogue_extension then
@@ -323,19 +324,19 @@ FlowCallbacks.minion_fx = function (params)
 
 					if suppress_vo then
 						dialogue_extension:stop_currently_playing_vo()
-					else
+					elseif use_voice then
 						play_vce = false
 					end
 				end
 
-				if params.sound_use_breed_voice_profile then
+				if use_voice then
 					local wwise_switch_group, selected_voice = dialogue_extension:voice_data()
 
 					WwiseWorld.set_switch(wwise_world, wwise_switch_group, selected_voice, source_id)
 				end
 			end
 
-			if play_vce then
+			if play_vce or not use_voice then
 				wwise_playing_id = WwiseWorld.trigger_resource_event(wwise_world, wwise_event, source_id)
 
 				if breed.uses_wwise_special_targeting_parameter then
@@ -456,7 +457,7 @@ FlowCallbacks.minion_material_fx = function (params)
 
 	if wwise_event then
 		local wwise_world = World.get_data(world, "wwise_world")
-		local source_id = params.sound_existing_source_id
+		local source_id = params.sound_source_id
 
 		if source_id then
 			if not hit then
@@ -469,6 +470,12 @@ FlowCallbacks.minion_material_fx = function (params)
 				WwiseWorld.set_switch(wwise_world, "surface_material", material, source_id)
 			end
 
+			if breed.uses_wwise_special_targeting_parameter then
+				_minion_update_special_targeting_parameter(unit, wwise_world, source_id)
+			else
+				_minion_update_targeted_in_melee_parameter(unit, wwise_world, source_id)
+			end
+
 			if params.sound_set_speed_parameter then
 				_set_minion_foley_speed(unit, wwise_world, source_id)
 			end
@@ -476,12 +483,6 @@ FlowCallbacks.minion_material_fx = function (params)
 			wwise_playing_id = WwiseWorld.trigger_resource_event(wwise_world, wwise_event, source_id)
 		else
 			source_id = WwiseWorld.make_auto_source(wwise_world, unit, query_position_object)
-
-			if breed.uses_wwise_special_targeting_parameter then
-				_minion_update_special_targeting_parameter(unit, wwise_world, source_id)
-			else
-				_minion_update_targeted_in_melee_parameter(unit, wwise_world, source_id)
-			end
 
 			if not hit then
 				local cached_material = Unit.get_data(unit, "cache_material")
@@ -491,6 +492,12 @@ FlowCallbacks.minion_material_fx = function (params)
 				end
 			elseif material then
 				WwiseWorld.set_switch(wwise_world, "surface_material", material, source_id)
+			end
+
+			if breed.uses_wwise_special_targeting_parameter then
+				_minion_update_special_targeting_parameter(unit, wwise_world, source_id)
+			else
+				_minion_update_targeted_in_melee_parameter(unit, wwise_world, source_id)
 			end
 
 			if params.sound_set_speed_parameter then
@@ -759,13 +766,13 @@ FlowCallbacks.player_fx = function (params)
 end
 
 FlowCallbacks.player_material_fx = function (params)
-	local source_id = params.sound_existing_source_id
 	local unit = params.unit
 	local play_in = params.play_in
 	local should_play_fx = _should_play_player_fx(play_in, unit)
 	local wwise_playing_id = nil
 
 	if should_play_fx then
+		local source_id = params.sound_source_id
 		local query_position_object = Unit.node(unit, params.query_position_object)
 		local sound_alias = params.sound_gear_alias
 		local world = Managers.world:world("level_world")
@@ -2359,10 +2366,32 @@ FlowCallbacks.new_path_of_trust_viewed = function (params)
 	Managers.narrative:complete_current_chapter(Managers.narrative.STORIES.path_of_trust)
 end
 
-FlowCallbacks.unlock_achievement = function (params)
-	local player = Managers.player:local_player(1)
+FlowCallbacks.unlock_achievement_everyone = function (params)
+	local is_server = Managers.state.game_session:is_server()
 
-	Managers.achievements:unlock_achievement(player, params.achievement_id)
+	if not is_server then
+		return
+	end
+
+	local players = Managers.player:players()
+
+	for peer_id, player in pairs(players) do
+		Managers.achievements:unlock_achievement(player, params.achievement_id)
+	end
+end
+
+FlowCallbacks.unlock_achievement_player = function (params)
+	local is_server = Managers.state.game_session:is_server()
+
+	if params.player_unit and not is_server then
+		return
+	end
+
+	local player = Managers.player:player_by_unit(params.player_unit)
+
+	if player then
+		Managers.achievements:unlock_achievement(player, params.achievement_id)
+	end
 end
 
 FlowCallbacks.is_narrative_event_completed = function (params)

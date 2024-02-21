@@ -21,6 +21,10 @@ local effect_template = {
 }
 
 effect_template.start = function (template_data, template_context)
+	if DEDICATED_SERVER then
+		return
+	end
+
 	local world = template_context.world
 	local wwise_world = template_context.wwise_world
 	local unit = template_data.unit
@@ -77,6 +81,10 @@ effect_template.start = function (template_data, template_context)
 end
 
 effect_template.update = function (template_data, template_context, dt, t)
+	if DEDICATED_SERVER then
+		return
+	end
+
 	local game_session = template_data.game_session
 	local game_object_id = template_data.game_object_id
 	local wanted_stage = GameSession.game_object_field(game_session, game_object_id, "stage")
@@ -101,6 +109,10 @@ effect_template.update = function (template_data, template_context, dt, t)
 end
 
 effect_template.stop = function (template_data, template_context)
+	if DEDICATED_SERVER then
+		return
+	end
+
 	local wwise_world = template_context.wwise_world
 
 	WwiseWorld.set_global_parameter(wwise_world, WWISE_DAEMONHOST_RANGE, WWISE_DEFAULT_DAEMONHOST_RANGE)

@@ -53,14 +53,14 @@ local DialogueSettings = {
 		lm_cooling = {
 			"mission_vo_lm_cooling"
 		},
+		fm_cargo = {
+			"mission_vo_fm_cargo"
+		},
 		fm_armoury = {
 			"mission_vo_fm_armoury"
 		},
 		cm_raid = {
 			"mission_vo_cm_raid"
-		},
-		fm_cargo = {
-			"mission_vo_fm_cargo"
 		},
 		fm_resurgence = {
 			"mission_vo_fm_resurgence"
@@ -100,6 +100,9 @@ local DialogueSettings = {
 		},
 		km_enforcer_twins = {
 			"mission_vo_km_enforcer_twins"
+		},
+		tg_shooting_range = {
+			"meat_grinder_vo"
 		}
 	},
 	player_load_files = {

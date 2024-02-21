@@ -82,7 +82,7 @@ MagazineAmmo._update_ammo_representation = function (self, unit, animate)
 
 	if self._is_animated then
 		local inv_max_ammo = 1 / max_ammo
-		local fraction = 1 - remaining_ammo / max_ammo
+		local fraction = ammo > 0 and 1 - remaining_ammo / max_ammo or 1
 		local anim_time_step, anim_time = nil
 
 		if self._use_simple_animation_length then
@@ -115,12 +115,12 @@ MagazineAmmo._update_ammo_representation = function (self, unit, animate)
 		Unit.set_scalar_for_materials(unit, "ammo_mask", fraction)
 	end
 
-	Unit.set_visibility(unit, self._top_bullet_visibility_group_name, remaining_ammo >= 0)
+	Unit.set_visibility(unit, self._top_bullet_visibility_group_name, remaining_ammo > 0)
 end
 
 MagazineAmmo.set_ammo = function (self, unit, ammo, max_ammo)
-	ammo = ammo - 1
-	max_ammo = max_ammo - 1
+	ammo = math.max(0, ammo - 1)
+	max_ammo = math.max(0, max_ammo - 1)
 
 	if self._max_ammo ~= max_ammo then
 		self._max_ammo = max_ammo

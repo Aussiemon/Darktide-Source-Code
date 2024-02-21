@@ -1,5 +1,8 @@
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local weapon_traits_ranged_aimed = {}
+
+table.make_unique(weapon_traits_ranged_aimed)
+
 local buff_stat_buffs = BuffSettings.stat_buffs
 local buff_proc_events = BuffSettings.proc_events
 weapon_traits_ranged_aimed.weapon_trait_ranged_aimed_wield_on_weakspot_hit_increase_damage = {

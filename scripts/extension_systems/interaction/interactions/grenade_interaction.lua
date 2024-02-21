@@ -82,10 +82,10 @@ GrenadeInteraction.hud_block_text = function (self, interactor_unit, interactee_
 end
 
 function _grenades_disabled(interactor_unit)
-	local specialization_extension = ScriptUnit.has_extension(interactor_unit, "specialization_system")
+	local talent_extension = ScriptUnit.has_extension(interactor_unit, "talent_system")
 
-	if specialization_extension then
-		return specialization_extension:has_special_rule(special_rules.disable_grenade_pickups)
+	if talent_extension then
+		return talent_extension:has_special_rule(special_rules.disable_grenade_pickups)
 	end
 
 	return false

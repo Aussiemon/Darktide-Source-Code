@@ -228,12 +228,12 @@ PlayerCharacterStateKnockedDown._update_vo = function (self, t)
 		return
 	end
 
-	local dialogue_system = self._dialogue_system
+	local dialogue_extension = self._dialogue_extension
 	local vo_sequence = self._vo_sequence
-	local event_data = dialogue_system.input:get_event_data_payload()
+	local event_data = dialogue_extension.input:get_event_data_payload()
 	event_data.sequence_no = vo_sequence
 
-	dialogue_system.input:trigger_dialogue_event(DIALOGUE_EVENT, event_data)
+	dialogue_extension.input:trigger_dialogue_event(DIALOGUE_EVENT, event_data)
 
 	self._next_vo_trigger_time = t + DialogueSettings.knocked_down_vo_interval
 	self._vo_sequence = vo_sequence + 1

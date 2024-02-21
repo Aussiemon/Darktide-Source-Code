@@ -80,8 +80,10 @@ LoadingClient.destroy = function (self)
 	local loaders = shared_state.loaders
 
 	for _, loader in ipairs(loaders) do
-		loader:cleanup()
-		loader:delete()
+		if not loader:dont_destroy() then
+			loader:cleanup()
+			loader:delete()
+		end
 	end
 
 	table.clear(shared_state.loaders)

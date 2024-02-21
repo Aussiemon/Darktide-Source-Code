@@ -76,6 +76,10 @@ local hud_element_player_weapon_handler_settings = {
 		slot_pocketable_small = {
 			default_icon = "content/ui/materials/icons/weapons/flat/grenade",
 			order_index = 5
+		},
+		slot_device = {
+			default_icon = "content/ui/materials/icons/weapons/flat/grenade",
+			order_index = 6
 		}
 	}
 }

@@ -28,7 +28,7 @@ local dialogue_category_config = {
 		}
 	},
 	vox_prio_1 = {
-		query_score = 0,
+		query_score = 50,
 		interrupt_self = true,
 		mutually_exclusive = false,
 		interrupted_by = {
@@ -72,7 +72,7 @@ local dialogue_category_config = {
 		}
 	},
 	enemy_alerts_prio_1 = {
-		query_score = 10,
+		query_score = 30,
 		mutually_exclusive = true,
 		interrupted_by = {},
 		playable_during_category = {
@@ -88,7 +88,7 @@ local dialogue_category_config = {
 		}
 	},
 	player_on_demand_vo = {
-		query_score = 0,
+		query_score = 10,
 		mutually_exclusive = false,
 		interrupted_by = {},
 		playable_during_category = {
@@ -132,7 +132,7 @@ local dialogue_category_config = {
 		}
 	},
 	player_prio_0 = {
-		query_score = 20,
+		query_score = 25,
 		mutually_exclusive = true,
 		interrupted_by = {
 			enemy_story_vo = true
@@ -153,7 +153,7 @@ local dialogue_category_config = {
 		}
 	},
 	player_prio_1 = {
-		query_score = 15,
+		query_score = 20,
 		mutually_exclusive = true,
 		interrupted_by = {
 			enemy_story_vo = true
@@ -170,7 +170,7 @@ local dialogue_category_config = {
 		}
 	},
 	player_prio_2 = {
-		query_score = 0,
+		query_score = 5,
 		mutually_exclusive = true,
 		interrupted_by = {},
 		playable_during_category = {
@@ -184,7 +184,7 @@ local dialogue_category_config = {
 		}
 	},
 	conversations_prio_0 = {
-		query_score = 0,
+		query_score = 25,
 		mutually_exclusive = true,
 		interrupted_by = {
 			vox_prio_0 = true
@@ -204,7 +204,7 @@ local dialogue_category_config = {
 		}
 	},
 	conversations_prio_1 = {
-		query_score = 0,
+		query_score = 15,
 		mutually_exclusive = true,
 		interrupted_by = {
 			vox_prio_0 = true
@@ -240,7 +240,7 @@ local dialogue_category_config = {
 		}
 	},
 	enemy_vo_prio_0 = {
-		query_score = 5,
+		query_score = 80,
 		mutually_exclusive = false,
 		interrupted_by = {
 			enemy_story_vo = true
@@ -262,7 +262,7 @@ local dialogue_category_config = {
 		}
 	},
 	enemy_vo_prio_1 = {
-		query_score = 0,
+		query_score = 40,
 		mutually_exclusive = true,
 		interrupted_by = {
 			enemy_story_vo = true,
@@ -280,31 +280,6 @@ local dialogue_category_config = {
 			player_on_demand_vo = true,
 			player_prio_0 = true,
 			enemy_alerts_prio_0 = true
-		}
-	},
-	minion_vo_prio_1 = {
-		query_score = 0,
-		mutually_exclusive = true,
-		interrupted_by = {
-			enemy_story_vo = true
-		},
-		playable_during_category = {
-			player_prio_1 = true,
-			enemy_vo_prio_1 = true,
-			player_prio_2 = true,
-			npc_prio_1 = true
-		}
-	},
-	chorus_vo_prio_1 = {
-		query_score = 0,
-		mutually_exclusive = false,
-		interrupted_by = {},
-		playable_during_category = {
-			player_prio_1 = true,
-			enemy_vo_prio_1 = true,
-			player_prio_2 = true,
-			chorus_vo_prio_1 = true,
-			npc_prio_1 = true
 		}
 	},
 	cutscene = {
@@ -412,4 +387,4 @@ local dialogue_category_config = {
 	}
 }
 
-return settings("dialogue_category_config", dialogue_category_config)
+return settings("DialogueCategoryConfig", dialogue_category_config)
