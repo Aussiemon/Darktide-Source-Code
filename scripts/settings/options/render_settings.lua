@@ -54,7 +54,6 @@ local RENDER_TEMPLATES = {
 				values = {
 					master_render_settings = {
 						dlss_g = 0,
-						dlss_rr = 0,
 						dlss = 0
 					}
 				}
@@ -251,43 +250,6 @@ local RENDER_TEMPLATES = {
 				validation_function = function (value)
 					return value == 1
 				end
-			}
-		}
-	},
-	{
-		require_apply = true,
-		indentation_level = 1,
-		display_name = "loc_setting_dlss_rr",
-		default_value = 0,
-		apply_on_startup = true,
-		id = "dlss_rr",
-		tooltip_text = "loc_setting_dlss_rr_mouseover",
-		save_location = "master_render_settings",
-		validation_function = function ()
-			return Application.render_caps("dlss_rr_supported")
-		end,
-		options = {
-			{
-				id = 0,
-				display_name = "loc_rt_setting_off",
-				require_apply = false,
-				require_restart = false,
-				values = {
-					render_settings = {
-						dlss_rr_enabled = false
-					}
-				}
-			},
-			{
-				id = 1,
-				display_name = "loc_rt_setting_on",
-				require_apply = true,
-				require_restart = false,
-				values = {
-					render_settings = {
-						dlss_rr_enabled = true
-					}
-				}
 			}
 		}
 	},
