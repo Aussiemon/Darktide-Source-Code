@@ -41,15 +41,20 @@ CraftingReplaceTraitView.on_enter = function (self)
 	self._crafting_recipe:set_handle_grid_navigation(true)
 	self._crafting_recipe:set_overlay_texture(self._recipe.overlay_texture)
 
-	local trait_category = ItemUtils.trait_category(self._item)
-	local traits_promises = Managers.data_service.crafting:trait_sticker_book(trait_category)
-	self._traits_promises = traits_promises
+	if self._item then
+		local trait_category = ItemUtils.trait_category(self._item)
+		local traits_promises = Managers.data_service.crafting:trait_sticker_book(trait_category)
+		self._traits_promises = traits_promises
 
-	traits_promises:next(callback(self, "_cb_fetch_trait_data")):catch(function (err)
-		error(err)
-	end):next(function ()
-		return self:_get_wallet()
-	end)
+		traits_promises:next(callback(self, "_cb_fetch_trait_data")):catch(function (err)
+			error(err)
+		end):next(function ()
+			return self:_get_wallet()
+		end)
+	else
+		self:_cb_fetch_trait_data()
+	end
+
 	self:_present_crafting()
 
 	self._enter_animation_id = self:_start_animation("on_enter", self._widgets, self)
@@ -106,6 +111,10 @@ CraftingReplaceTraitView._get_wallet = function (self)
 end
 
 CraftingReplaceTraitView._present_crafting = function (self, optional_present_callback)
+	if not self._item then
+		return
+	end
+
 	local function on_present_callback()
 		self:_update_element_position("crafting_recipe_pivot", self._crafting_recipe)
 

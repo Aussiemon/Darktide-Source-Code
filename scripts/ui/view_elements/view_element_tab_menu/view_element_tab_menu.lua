@@ -176,6 +176,24 @@ ViewElementTabMenu.entries = function (self)
 	return self._entries
 end
 
+ViewElementTabMenu.draw = function (self, dt, t, ui_renderer, render_settings, input_service)
+	if not self._entries then
+		return
+	end
+
+	if self._input_disabled then
+		input_service = input_service:null_service()
+	end
+
+	local old_color_intensity_multiplier = render_settings.color_intensity_multiplier
+	local color_intensity_multiplier = self._color_intensity_multiplier or 1
+	render_settings.color_intensity_multiplier = (old_color_intensity_multiplier or 1) * color_intensity_multiplier
+
+	ViewElementTabMenu.super.draw(self, dt, t, ui_renderer, render_settings, input_service)
+
+	render_settings.color_intensity_multiplier = old_color_intensity_multiplier
+end
+
 ViewElementTabMenu._draw_widgets = function (self, dt, t, input_service, ui_renderer, render_settings)
 	local menu_settings = self._menu_settings
 	local update_text_lengths = self._update_text_lengths and not menu_settings.fixed_button_size
@@ -324,6 +342,10 @@ ViewElementTabMenu._widget_by_id = function (self, id)
 			end
 		end
 	end
+end
+
+ViewElementTabMenu.set_color_intensity_multiplier = function (self, color_intensity_multiplier)
+	self._color_intensity_multiplier = color_intensity_multiplier or 1
 end
 
 return ViewElementTabMenu

@@ -94,7 +94,6 @@ weapon_toughness_templates.assault = {
 	}
 }
 weapon_toughness_templates.killshot_zoomed = {
-	optional_on_hit_function_name_override = "push_back",
 	optional_on_depleted_function_name_override = "spill_over",
 	regeneration_delay_modifier = {
 		lerp_perfect = 0,

@@ -27,18 +27,24 @@ CraftingExtractTraitView.on_enter = function (self)
 
 	self._crafting_recipe:set_overlay_texture(self._recipe.overlay_texture)
 	self._crafting_recipe:disable_price_prasentation()
-	self:_present_crafting(self._item)
+	self:_present_crafting()
 
-	local trait_category = ItemUtils.trait_category(self._item)
-	local traits_promises = Managers.data_service.crafting:trait_sticker_book(trait_category)
-	self._traits_promises = traits_promises
+	if self._item then
+		local trait_category = ItemUtils.trait_category(self._item)
+		local traits_promises = Managers.data_service.crafting:trait_sticker_book(trait_category)
+		self._traits_promises = traits_promises
 
-	traits_promises:next(callback(self, "_cb_fetch_trait_data")):catch(function (err)
-		error(err)
-	end)
+		traits_promises:next(callback(self, "_cb_fetch_trait_data")):catch(function (err)
+			error(err)
+		end)
+
+		self._resync_can_craft = true
+	else
+		self._traits_promises = nil
+		self._seen_traits = nil
+	end
 
 	self._enter_animation_id = self:_start_animation("on_enter", self._widgets, self)
-	self._resync_can_craft = true
 end
 
 CraftingExtractTraitView._cb_fetch_trait_data = function (self, seen_traits)
@@ -48,20 +54,19 @@ CraftingExtractTraitView._cb_fetch_trait_data = function (self, seen_traits)
 end
 
 CraftingExtractTraitView._present_crafting = function (self)
-	local function on_present_callback()
-		self:_update_element_position("crafting_recipe_pivot", self._crafting_recipe)
-
-		if not Managers.ui:using_cursor_navigation() and not self._crafting_recipe:selected_grid_index() then
-			self._crafting_recipe:select_first_index()
-		end
-	end
-
-	self._crafting_recipe:present_recipe(self._recipe, self._ingredients, nil, callback(self, "cb_on_trait_selected"), on_present_callback)
-	self._crafting_recipe:set_continue_button_callback(callback(self, "cb_on_main_button_pressed"))
-
 	local item = self._item
 
 	if item then
+		local function on_present_callback()
+			self:_update_element_position("crafting_recipe_pivot", self._crafting_recipe)
+
+			if not Managers.ui:using_cursor_navigation() and not self._crafting_recipe:selected_grid_index() then
+				self._crafting_recipe:select_first_index()
+			end
+		end
+
+		self._crafting_recipe:present_recipe(self._recipe, self._ingredients, nil, callback(self, "cb_on_trait_selected"), on_present_callback)
+		self._crafting_recipe:set_continue_button_callback(callback(self, "cb_on_main_button_pressed"))
 		self._weapon_stats:present_item(item, nil, callback(self, "_update_element_position", "weapon_stats_pivot", self._weapon_stats))
 	else
 		self._weapon_stats:stop_presenting()
@@ -123,14 +128,6 @@ CraftingExtractTraitView._handle_input = function (self, input_service)
 	end
 
 	CraftingExtractTraitView.super._handle_input(self, input_service)
-end
-
-CraftingExtractTraitView._on_navigation_input_changed = function (self)
-	if self._using_cursor_navigation then
-		self._crafting_recipe:select_grid_index(nil)
-	else
-		self._crafting_recipe:select_first_index()
-	end
 end
 
 CraftingExtractTraitView.cb_on_trait_selected = function (self, widget, config)

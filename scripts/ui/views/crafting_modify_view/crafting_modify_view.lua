@@ -14,7 +14,6 @@ CraftingModifyView.init = function (self, settings, context)
 	self._parent = context.parent
 	self._preselected_item = context.item
 	self._selected_grid = "item_grid"
-	self._wanted_grid = self._preselected_item and "crafting_recipe"
 
 	CraftingModifyView.super.init(self, CraftingModifyViewDefinitions, settings, context)
 end
@@ -32,13 +31,6 @@ CraftingModifyView.on_enter = function (self)
 	}, "content/ui/materials/frames/item_info_lower", nil, nil)
 
 	self._crafting_recipe = self:_setup_crafting_recipe("crafting_recipe", "crafting_recipe_pivot")
-
-	if self._preselected_item then
-		self._crafting_recipe:present_recipe_navigation_with_item(CraftingSettings.recipes_ui_order, callback(self, "cb_on_recipe_button_pressed"), callback(self, "_update_weapon_stats_position", "crafting_recipe_pivot", self._crafting_recipe), self._preselected_item)
-	else
-		self._crafting_recipe:present_recipe_navigation(CraftingSettings.recipes_ui_order, callback(self, "cb_on_recipe_button_pressed"), callback(self, "_update_weapon_stats_position", "crafting_recipe_pivot", self._crafting_recipe))
-	end
-
 	local character_id = self:_player():character_id()
 	local item_type_filter_list = {
 		"WEAPON_MELEE",
@@ -194,6 +186,12 @@ CraftingModifyView.on_resolution_modified = function (self, scale)
 	end
 end
 
+CraftingModifyView._update_weapon_stats_position_and_selection = function (self, scenegraph_id, weapon_stats)
+	self:_update_weapon_stats_position(scenegraph_id, weapon_stats)
+
+	self._wanted_grid = "crafting_recipe"
+end
+
 CraftingModifyView._update_weapon_stats_position = function (self, scenegraph_id, weapon_stats)
 	local position = self:_scenegraph_world_position(scenegraph_id)
 
@@ -251,6 +249,11 @@ CraftingModifyView._set_selected_grid = function (self, new_selected_grid)
 		crafting_recipe:set_navigation_button_color_intensity(0.7)
 		item_grid:disable_input(false)
 		item_grid:set_color_intensity_multiplier(1)
+
+		if self._tab_menu_element then
+			self._tab_menu_element:set_is_handling_navigation_input(true)
+			self._tab_menu_element:set_color_intensity_multiplier(1)
+		end
 	elseif new_selected_grid == "crafting_recipe" then
 		local previously_active_view_name = self._parent:previously_active_view_name()
 		local widgets = crafting_recipe:widgets()
@@ -280,6 +283,11 @@ CraftingModifyView._set_selected_grid = function (self, new_selected_grid)
 		crafting_recipe:set_navigation_button_color_intensity(1)
 		item_grid:disable_input(true)
 		item_grid:set_color_intensity_multiplier(0.5)
+
+		if self._tab_menu_element then
+			self._tab_menu_element:set_is_handling_navigation_input(false)
+			self._tab_menu_element:set_color_intensity_multiplier(0.5)
+		end
 	else
 		ferror("Unknown grid: %s", new_selected_grid)
 	end
@@ -334,11 +342,19 @@ end
 CraftingModifyView._preview_item = function (self, item)
 	CraftingModifyView.super._preview_item(self, item)
 
-	if not self._current_item and not self._preselected_item then
-		self._current_item = item
+	if item and self._current_item ~= item then
+		if self._preselected_item and self._preselected_item.gear_id == item.gear_id then
+			self._crafting_recipe:present_recipe_navigation_with_item(CraftingSettings.recipes_ui_order, callback(self, "cb_on_recipe_button_pressed"), callback(self, "_update_weapon_stats_position_and_selection", "crafting_recipe_pivot", self._crafting_recipe), item)
+		else
+			self._preselected_item = nil
 
-		self._crafting_recipe:present_recipe_navigation_with_item(CraftingSettings.recipes_ui_order, callback(self, "cb_on_recipe_button_pressed"), callback(self, "_update_weapon_stats_position", "crafting_recipe_pivot", self._crafting_recipe), item)
-	elseif self._current_item ~= item then
+			self._crafting_recipe:present_recipe_navigation_with_item(CraftingSettings.recipes_ui_order, callback(self, "cb_on_recipe_button_pressed"), callback(self, "_update_weapon_stats_position", "crafting_recipe_pivot", self._crafting_recipe), item)
+		end
+	elseif not item then
+		self._crafting_recipe:present_recipe_navigation(CraftingSettings.recipes_ui_order, callback(self, "cb_on_recipe_button_pressed"), callback(self, "_update_weapon_stats_position", "crafting_recipe_pivot", self._crafting_recipe))
+	end
+
+	if self._current_item ~= item and not self._preselected_item then
 		self._current_item = item
 
 		self._crafting_recipe:set_selected_item(item)
@@ -388,10 +404,10 @@ CraftingModifyView._cb_fetch_inventory_items = function (self, items)
 	self:_setup_menu_tabs(tabs_content)
 
 	local preselected_item = self._preselected_item
+	local preselected_gear_id = preselected_item and preselected_item.gear_id
 	local tab_index = 1
 
 	if preselected_item then
-		self._selected_gear_id = preselected_item.gear_id
 		local item_slots = preselected_item.slots
 
 		for i = 1, #tabs_content do
@@ -406,6 +422,15 @@ CraftingModifyView._cb_fetch_inventory_items = function (self, items)
 	end
 
 	self:cb_switch_tab(tab_index)
+
+	if preselected_gear_id and items[preselected_gear_id] then
+		self._selected_gear_id = preselected_gear_id
+	elseif self._preselected_item then
+		self._selected_gear_id = nil
+		self._preselected_item = nil
+
+		self:_preview_item()
+	end
 end
 
 CraftingModifyView.equipped_item_in_slot = function (self, slot_name)
@@ -464,6 +489,11 @@ CraftingModifyView._on_navigation_input_changed = function (self)
 		self._item_grid:_on_navigation_input_changed()
 		self._item_grid:set_color_intensity_multiplier(1)
 		self._crafting_recipe:set_navigation_button_color_intensity(1)
+
+		if self._tab_menu_element then
+			self._tab_menu_element:set_is_handling_navigation_input(true)
+			self._tab_menu_element:set_color_intensity_multiplier(1)
+		end
 	end
 
 	if self._using_cursor_navigation then

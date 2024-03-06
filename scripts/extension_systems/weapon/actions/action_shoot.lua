@@ -99,8 +99,9 @@ ActionShoot.start = function (self, action_settings, t, time_scale, params)
 	local talent_extension = self._talent_extension
 	local check_leadbelcher = talent_extension:has_special_rule(special_rules.ogryn_leadbelcher)
 	local check_leadbelcher_improved = talent_extension:has_special_rule(special_rules.ogryn_leadbelcher_improved)
+	local has_ammo = ActionUtility.has_ammunition(self._inventory_slot_component, action_settings)
 
-	if check_leadbelcher or check_leadbelcher_improved then
+	if has_ammo and (check_leadbelcher or check_leadbelcher_improved) then
 		local leadbelcher_chance = 0
 
 		if check_leadbelcher then

@@ -1541,6 +1541,7 @@ UIManager.unload_view = function (self, view_name, reference_name, frame_delay_c
 		self:_unload_package(package_data.package_id, frame_delay_count)
 	end
 
+	loading_data.loaded_callback = nil
 	self._views_loading_data[view_name][reference_name] = nil
 end
 

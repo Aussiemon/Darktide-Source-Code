@@ -557,7 +557,13 @@ BtShootLiquidBeamAction._get_to_shoot_pos = function (self, unit, scratchpad, ac
 	local target_position = POSITION_LOOKUP[target_unit]
 	local perception_extension = scratchpad.perception_extension
 	local to = perception_extension:last_los_position(target_unit)
-	to.z = target_position.z
+
+	if to then
+		to.z = target_position.z
+	else
+		to = target_position
+	end
+
 	local direction = Vector3.flat(Vector3.normalize(to - from))
 	local shot_to = to + direction * range_back
 	local on_ground_position = NavQueries.position_on_mesh(scratchpad.nav_world, shot_to, ABOVE, BELOW)

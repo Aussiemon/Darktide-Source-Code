@@ -697,7 +697,8 @@ local BUFF_KEYWORD_DISTANCE_LOS_REQUIREMENT = {
 
 MinionPerceptionExtension._within_detection_los_range = function (self, unit, unit_position, target_unit, target_position)
 	if self._ignore_detection_los_modifiers then
-		local is_looking_trough_fog = self._smoke_fog_system:check_fog_los(unit_position, target_position, unit)
+		local count_stanting_in_smoke = true
+		local is_looking_trough_fog = self._smoke_fog_system:check_fog_los(unit_position, target_position, unit, count_stanting_in_smoke)
 
 		if is_looking_trough_fog then
 			return false, true

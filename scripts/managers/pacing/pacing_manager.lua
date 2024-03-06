@@ -565,9 +565,6 @@ PacingManager._update_ramp_up_frequency = function (self, dt, t, target_side_id)
 			if ramp_up_frequency_settings.wait_for_ramp_clear then
 				if self._waiting_for_ramp_clear and self._wait_for_ramp_clear_reset_t and self._wait_for_ramp_clear_reset_t <= t then
 					self._clear_ramp = true
-
-					self:add_tension(math.huge)
-
 					self._wait_for_ramp_clear_reset_t = nil
 				end
 

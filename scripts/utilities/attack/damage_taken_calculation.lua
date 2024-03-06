@@ -130,7 +130,6 @@ end
 
 function _calculate_toughness_damage_player(damage_amount, damage_profile, attack_type, attack_direction, toughness_template, weapon_toughness_template, current_toughness_damage, movement_state, attacked_unit_stat_buffs, attacked_unit_keywords, instakill, attacked_unit)
 	local toughness_bonus_flat = attacked_unit_stat_buffs.toughness_bonus_flat or 0
-	current_toughness_damage = math.max(current_toughness_damage - toughness_bonus_flat, 0)
 	local toughness_extra = attacked_unit_stat_buffs.toughness or 0
 	local toughness_bonus = attacked_unit_stat_buffs.toughness_bonus or 1
 	local template_max_toughness = toughness_template.max
@@ -156,7 +155,8 @@ function _calculate_toughness_damage_player(damage_amount, damage_profile, attac
 	local damage_buff_multiplier = buff_toughness_damage_taken_multiplier * buff_toughness_damage_taken_modifier
 	damage_modifier = damage_modifier * damage_buff_multiplier
 	toughness_damage = math.clamp(damage_amount * damage_modifier, 0, max_toughness)
-	local current_toughness_percent = 1 - current_toughness_damage / max_toughness or 0
+	local current_toughness_damage_non_yellow = math.max(current_toughness_damage - toughness_bonus_flat, 0)
+	local current_toughness_percent = 1 - current_toughness_damage_non_yellow / max_toughness or 0
 	local has_bolstered_toughness = current_toughness_percent >= 1 and toughness_bonus_flat > 0
 
 	if melee_attack then

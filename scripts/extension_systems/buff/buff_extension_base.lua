@@ -521,7 +521,7 @@ BuffExtensionBase._remove_buff = function (self, index)
 	local buffs_by_index = self._buffs_by_index
 	local buff_instance = buffs_by_index[index]
 
-	if buff_instance.__deleted then
+	if not buff_instance or buff_instance.__deleted then
 		Log.exception("BuffExtensionBase", "Tried removing buff that had already been deleted. %d", index)
 
 		self._buffs_by_index[index] = nil
@@ -1133,6 +1133,12 @@ end
 
 BuffExtensionBase.rpc_remove_buff = function (self, channel_id, game_object_id, server_index)
 	local index = self._buff_index_map[server_index]
+
+	if not index then
+		Log.exception("BuffExtensionBase", "Got rpc_remove_buff for buff that doesn't exist or already deleted, index == nil")
+
+		return
+	end
 
 	self:_remove_buff(index)
 

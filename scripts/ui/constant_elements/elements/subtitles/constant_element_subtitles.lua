@@ -277,7 +277,7 @@ ConstantElementSubtitles.update = function (self, dt, t, ui_renderer, render_set
 	local currently_playing = playing_dialogues_array and playing_dialogues_array[#playing_dialogues_array]
 
 	if currently_playing then
-		self:_add_subtitle(currently_playing)
+		local new_main_subtitle = self:_add_subtitle(currently_playing)
 
 		if self._secondary_subtitle_enabled then
 			local num_playing_dialogues = #playing_dialogues_array
@@ -287,7 +287,9 @@ ConstantElementSubtitles.update = function (self, dt, t, ui_renderer, render_set
 				local previously_playing_secondary = self._secondary_line_currently_playing
 
 				if currently_playing_secondary ~= previously_playing_secondary then
-					self:_remove_secondary_letterbox()
+					if not new_main_subtitle then
+						self:_remove_secondary_letterbox()
+					end
 
 					self._secondary_letterbox_added = false
 				end
@@ -386,6 +388,8 @@ ConstantElementSubtitles._add_subtitle = function (self, currently_playing, seco
 
 			self:_display_text_line(currently_playing_subtitle_localized, nil, secondary_subtitle)
 		end
+
+		return true
 	end
 end
 

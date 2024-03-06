@@ -53,7 +53,9 @@ PropOnHitPhysics.events.on_hit = function (self, attack_direction)
 		_add_force_on_parts(actor, mass, speed, attack_direction)
 	end
 
-	Unit.flow_event(self._unit, "lua_prop_damaged")
+	if not self._is_server then
+		Unit.flow_event(self._unit, "lua_prop_damaged")
+	end
 
 	if self._is_server and not rawget(_G, "LevelEditor") then
 		Component.trigger_event_on_clients(self, "on_hit", "rpc_prop_on_hit_physics", attack_direction)

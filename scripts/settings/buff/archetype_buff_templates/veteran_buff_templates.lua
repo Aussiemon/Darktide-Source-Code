@@ -2625,7 +2625,7 @@ templates.veteran_weapon_switch_passive_buff = {
 			if template_data.restore_toughness and template_data.ranged_stacks > 0 and t > template_data.last_ranged_toughness + toughness_cd then
 				template_data.last_ranged_toughness = t
 
-				Toughness.replenish_percentage(template_context.unit, 0.1, false, "veteran_weapon_switch")
+				Toughness.replenish_percentage(template_context.unit, 0.2, false, "veteran_weapon_switch")
 			end
 
 			if params.previously_wielded_slot == "slot_primary" then
@@ -2646,7 +2646,7 @@ templates.veteran_weapon_switch_passive_buff = {
 			if template_data.restore_toughness and template_data.melee_stacks > 0 and t > template_data.last_melee_toughness + toughness_cd then
 				template_data.last_melee_toughness = t
 
-				Toughness.replenish_percentage(template_context.unit, 0.1, false, "veteran_weapon_switch")
+				Toughness.replenish_percentage(template_context.unit, 0.2, false, "veteran_weapon_switch")
 			end
 
 			if params.previously_wielded_slot == "slot_secondary" then

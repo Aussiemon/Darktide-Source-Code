@@ -4,6 +4,7 @@ local RankSettings = require("scripts/settings/item/rank_settings")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local UIAnimation = require("scripts/managers/ui/ui_animation")
 local InputDevice = require("scripts/managers/input/input_device")
+local Promise = require("scripts/foundation/utilities/promise")
 
 require("scripts/ui/view_elements/view_element_grid/view_element_grid")
 
@@ -229,6 +230,13 @@ ViewElementPerksItem._update_animations = function (self, dt, t)
 end
 
 ViewElementPerksItem.present_perks = function (self, item_masterid, ingredients, external_left_click_callback, do_animation)
+	if not item_masterid then
+		self._active = true
+		self._disabled = false
+
+		return Promise:resolved()
+	end
+
 	self._ingredients = ingredients
 	self._external_left_click_callback = external_left_click_callback
 	self._backend_promise = Managers.data_service.crafting:get_item_crafting_metadata(item_masterid)

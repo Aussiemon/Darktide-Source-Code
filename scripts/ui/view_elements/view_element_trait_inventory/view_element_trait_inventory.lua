@@ -348,13 +348,13 @@ end
 
 ViewElementTraitInventory._handle_input = function (self, dt, t, input_service)
 	if InputDevice.gamepad_active then
-		local old_rank = self._rank
+		local old_rank = self._rank or 1
 		local new_rank = old_rank
 
 		if input_service:get("navigate_primary_left_pressed") then
-			new_rank = math.clamp(self._rank - 1, 1, RankSettings.max_trait_rank)
+			new_rank = math.clamp(old_rank - 1, 1, RankSettings.max_trait_rank)
 		elseif input_service:get("navigate_primary_right_pressed") then
-			new_rank = math.clamp(self._rank + 1, 1, RankSettings.max_trait_rank)
+			new_rank = math.clamp(old_rank + 1, 1, RankSettings.max_trait_rank)
 		elseif input_service:get("next") and type(self._parent.remove_next_ingredient) == "function" then
 			self._parent:remove_next_ingredient()
 		end

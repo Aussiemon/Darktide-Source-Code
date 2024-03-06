@@ -59,7 +59,7 @@ CraftingReplacePerkView.on_exit = function (self)
 end
 
 CraftingReplacePerkView._cb_fetch_perks_data = function (self)
-	local item_master_id = self._item.name
+	local item_master_id = self._item and self._item.name
 
 	self._perks_item:present_perks(item_master_id, self._ingredients, callback(self, "cb_on_new_perk_selected")):next(function ()
 		self._perks_item:set_color_intensity_multiplier(0.5)
@@ -94,6 +94,10 @@ CraftingReplacePerkView._get_wallet = function (self)
 end
 
 CraftingReplacePerkView._present_crafting = function (self, optional_present_callback)
+	if not self._item then
+		return
+	end
+
 	local function on_present_recipe_callback()
 		self:_update_element_position("crafting_recipe_pivot", self._crafting_recipe)
 

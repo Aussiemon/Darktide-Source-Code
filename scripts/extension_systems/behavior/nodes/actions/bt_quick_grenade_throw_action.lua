@@ -61,6 +61,13 @@ end
 
 BtQuickGrenadeThrowAction.run = function (self, unit, breed, blackboard, scratchpad, action_data, dt, t)
 	if scratchpad.throw_timing or scratchpad.next_throw_timing_index then
+		local perception_component = scratchpad.perception_component
+		local target_unit = perception_component.target_unit
+
+		if not perception_component.has_line_of_sight and scratchpad.perception_extension:last_los_position(target_unit) == nil then
+			return "failed"
+		end
+
 		self:_update_throw_timing(unit, t, blackboard, scratchpad, action_data)
 	end
 

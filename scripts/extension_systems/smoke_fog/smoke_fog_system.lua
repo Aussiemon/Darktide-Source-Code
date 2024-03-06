@@ -207,7 +207,7 @@ local Vector3_dot = Vector3 and Vector3.dot
 local Vector3_distance_squared = Vector3 and Vector3.distance_squared
 local Vector3_length_squared = Vector3 and Vector3.length_squared
 
-SmokeFogSystem.check_fog_los = function (self, source_position, target_position, source_unit)
+SmokeFogSystem.check_fog_los = function (self, source_position, target_position, source_unit, count_standing_in_smoke)
 	if not self._has_los_blocker then
 		return false
 	end
@@ -228,6 +228,10 @@ SmokeFogSystem.check_fog_los = function (self, source_position, target_position,
 			local distance_to_smoke_fog_squared = Vector3_length_squared(towards_smoke_fog)
 
 			if distance_to_smoke_fog_squared < fog_radius_squared then
+				if count_standing_in_smoke then
+					return true
+				end
+
 				break
 			end
 

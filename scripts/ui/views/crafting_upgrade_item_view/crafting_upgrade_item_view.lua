@@ -29,7 +29,7 @@ CraftingUpgradeItemView.on_enter = function (self)
 	self._crafting_recipe = self:_add_element(ViewElementCraftingRecipe, "crafting_recipe", 10, CraftingSettings.crafting_recipe_context, "crafting_recipe_pivot")
 
 	self._crafting_recipe:set_overlay_texture(self._recipe.overlay_texture)
-	self:_present_crafting(self._item)
+	self:_present_crafting()
 
 	self._enter_animation_id = self:_start_animation("on_enter", self._widgets, self)
 
@@ -191,6 +191,10 @@ CraftingUpgradeItemView.on_back_pressed = function (self)
 end
 
 CraftingUpgradeItemView._present_crafting = function (self)
+	if not self._item then
+		return
+	end
+
 	local function on_present_callback()
 		self:_update_element_position("crafting_recipe_pivot", self._crafting_recipe)
 
