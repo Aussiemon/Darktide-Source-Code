@@ -325,6 +325,11 @@ end
 
 UIManager._on_ui_element_package_loaded = function (self, reference_key, reference_name)
 	local package_references_data = self._ui_element_package_references[reference_key]
+
+	if not package_references_data then
+		return
+	end
+
 	local package_references = package_references_data.package_references
 	local data = package_references[reference_name]
 	data.is_loaded = true
@@ -362,7 +367,7 @@ UIManager._unload_ui_element_packages = function (self, reference_key)
 		end
 	end
 
-	self._ui_element_package_references[reference_key] = {}
+	self._ui_element_package_references[reference_key] = nil
 end
 
 UIManager.create_player_hud = function (self, peer_id, local_player_id, elements, visibility_groups)

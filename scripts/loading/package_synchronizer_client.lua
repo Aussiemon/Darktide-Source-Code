@@ -46,10 +46,6 @@ PackageSynchronizerClient.init = function (self, peer_id, is_host, network_deleg
 		network_delegate:register_connection_channel_events(self, host_channel_id, unpack(RPCS))
 		RPC.rpc_package_synchronizer_ready_peer(host_channel_id)
 	end
-
-	self._release_unload_delayed_packages = false
-
-	Managers.event:register(self, "spawn_group_loaded", "_on_spawn_group_loaded")
 end
 
 PackageSynchronizerClient.init_item_definitions = function (self, item_definitions)
@@ -396,6 +392,8 @@ PackageSynchronizerClient.update = function (self, dt, hosted_synchronizer_host)
 	if template then
 		self:_update_package_loading(template, hosted_synchronizer_host)
 	end
+
+	self:_update_unload_delayer(dt)
 end
 
 PackageSynchronizerClient._update_package_loading = function (self, template, hosted_synchronizer_host)
@@ -471,10 +469,6 @@ PackageSynchronizerClient._update_package_loading = function (self, template, ho
 			end
 		end
 	end
-
-	if self._release_unload_delayed_packages and anything_loading and all_required_packages_loaded and all_remaining_packages_loaded then
-		Managers.package_synchronization:release_unload_delayed_packages()
-	end
 end
 
 PackageSynchronizerClient._handle_dependency_loading = function (self, package_data, prioritize)
@@ -506,6 +500,33 @@ PackageSynchronizerClient._load_dependencies = function (self, dependencies, pri
 
 	for package_name, _ in pairs(dependencies) do
 		dependencies[package_name] = Managers.package:load(package_name, PACKAGE_MANAGER_REFERENCE, no_callback, prioritize)
+	end
+end
+
+local function _unload_packages(package_ids)
+	for i = 1, #package_ids do
+		local id = package_ids[i]
+
+		Managers.package:release(id)
+	end
+end
+
+PackageSynchronizerClient._update_unload_delayer = function (self, dt)
+	local unload_delayer = self._unload_delayer
+	local queue_size = #unload_delayer
+
+	for i = queue_size, 1, -1 do
+		local data = unload_delayer[i]
+		local time = data.time - dt
+
+		if time <= 0 then
+			local package_ids = data.package_ids
+
+			_unload_packages(package_ids)
+			table.swap_delete(unload_delayer, i)
+		else
+			data.time = time
+		end
 	end
 end
 
@@ -566,13 +587,9 @@ end
 
 PackageSynchronizerClient._unload_alias_dependencies = function (self, package_data)
 	if package_data.state ~= LOADING_STATES.ready_to_load then
-		local package_ids = {}
-
 		for package_name, id in pairs(package_data.dependencies) do
-			package_ids[#package_ids + 1] = id
+			Managers.package:release(id)
 		end
-
-		Managers.package_synchronization:add_unload_delayed_packages(package_ids)
 	end
 end
 
@@ -671,7 +688,11 @@ end
 local UNLOAD_DELAY = 3
 
 PackageSynchronizerClient._add_to_unload_delayer = function (self, package_ids)
-	Managers.package_synchronization:add_unload_delayed_packages(package_ids)
+	local unload_delayer = self._unload_delayer
+	unload_delayer[#unload_delayer + 1] = {
+		time = UNLOAD_DELAY,
+		package_ids = package_ids
+	}
 end
 
 PackageSynchronizerClient.rpc_package_synchronizer_enable_peers = function (self, channel_id, peer_ids)
@@ -764,12 +785,6 @@ PackageSynchronizerClient.rpc_cache_player_profile = function (self, channel_id,
 	end
 end
 
-PackageSynchronizerClient._on_spawn_group_loaded = function (self)
-	Managers.package_synchronization:release_unload_delayed_packages()
-
-	self._release_unload_delayed_packages = true
-end
-
 PackageSynchronizerClient.destroy = function (self)
 	if not self._is_host then
 		self._network_delegate:unregister_channel_events(self._host_channel_id, unpack(RPCS))
@@ -795,8 +810,6 @@ PackageSynchronizerClient.destroy = function (self)
 
 		_unload_packages(data.package_ids)
 	end
-
-	Managers.event:unregister(self, "spawn_group_loaded")
 
 	self._unload_delayer = nil
 	self._packages = nil

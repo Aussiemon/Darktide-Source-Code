@@ -1,10 +1,14 @@
+local AbilityTemplate = require("scripts/utilities/ability/ability_template")
 local Action = require("scripts/utilities/weapon/action")
 local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
 local SmartTargeting = {}
 
-SmartTargeting.smart_targeting_template = function (t, weapon_action_component)
+SmartTargeting.smart_targeting_template = function (t, combat_ability_action_component, weapon_action_component)
 	local weapon_template = WeaponTemplate.current_weapon_template(weapon_action_component)
-	local _, action_settings = Action.current_action(weapon_action_component, weapon_template)
+	local _, weapon_action_settings = Action.current_action(weapon_action_component, weapon_template)
+	local combat_ability_template = AbilityTemplate.current_ability_template(combat_ability_action_component)
+	local _, combat_ability_action_settings = Action.current_action(combat_ability_action_component, combat_ability_template)
+	local action_settings = combat_ability_action_settings or weapon_action_settings
 	local smart_targeting_template = nil
 
 	if action_settings then

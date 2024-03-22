@@ -1299,6 +1299,32 @@ local material_overrides = {
 			}
 		}
 	},
+	hair_mask_bantu_keep_back = {
+		property_overrides = {
+			hair_mask_types_invert = {
+				0,
+				0,
+				0
+			},
+			hair_mask_x = {
+				-0.5,
+				-0.5
+			},
+			hair_mask_y = {
+				-0.136,
+				-1
+			},
+			hair_mask_z = {
+				-1,
+				-1
+			},
+			hair_mask_offset = {
+				0,
+				0,
+				0
+			}
+		}
+	},
 	hair_mask_medium_afro_a_keep_backside = {
 		property_overrides = {
 			hair_mask_types_invert = {
@@ -2087,6 +2113,25 @@ local material_overrides = {
 			},
 			use_alpha_masking = {
 				0
+			}
+		}
+	},
+	facial_hair_mask_shrink_side_underside_01 = {
+		property_overrides = {
+			facial_hair_mask_x = {
+				-0.968,
+				-0.984
+			},
+			facial_hair_mask_y = {
+				-0.114,
+				-1
+			},
+			facial_hair_mask_z = {
+				-1,
+				-1
+			},
+			use_alpha_masking = {
+				1
 			}
 		}
 	},

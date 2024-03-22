@@ -1,5 +1,5 @@
 local OPTIONS = table.enum("yes", "no")
-local RESULTS = table.enum("approved")
+local RESULTS = table.enum("approved", "empty")
 
 local function _update_voting_view(context)
 	Managers.event:trigger("event_lobby_vote_started", context)
@@ -70,7 +70,11 @@ local mission_lobby_ready_voting_template = {
 			end
 		end
 
-		return RESULTS.approved
+		if table.size(votes) > 0 then
+			return RESULTS.approved
+		else
+			return RESULTS.empty
+		end
 	end,
 	network_interface = function ()
 		return Managers.connection

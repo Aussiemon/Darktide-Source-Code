@@ -398,6 +398,22 @@ local material_overrides = {
 				0
 			}
 		}
+	},
+	mask_face_keep_eyes_nose_scalp = {
+		property_overrides = {
+			positive_mask = {
+				0,
+				0,
+				0.55,
+				0
+			},
+			negative_mask = {
+				0,
+				0,
+				0.203,
+				0
+			}
+		}
 	}
 }
 

@@ -507,8 +507,6 @@ CheckProcFunctions.on_continues_fire_semi_automatic = function (params, template
 end
 
 CheckProcFunctions.on_melee_parry_kill = function (params, template_data, template_context, t)
-	table.dump(params)
-
 	return params.attack_type == attack_types.melee and params.weapon_special
 end
 

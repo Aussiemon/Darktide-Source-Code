@@ -1,9 +1,9 @@
 local AbilityTemplate = require("scripts/utilities/ability/ability_template")
 local Action = require("scripts/utilities/weapon/action")
 local ActionHandlerSettings = require("scripts/settings/action/action_handler_settings")
-local Crouch = require("scripts/extension_systems/character_state_machine/character_states/utilities/crouch")
 local Breed = require("scripts/utilities/breed")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
+local Crouch = require("scripts/extension_systems/character_state_machine/character_states/utilities/crouch")
 local buff_keywords = BuffSettings.keywords
 local Sprint = {}
 local SPRINT_DODGE_ANGLE_THRESHOLD_RAD = math.degrees_to_radians(50)
@@ -16,9 +16,9 @@ local VELOCITY_ALIGNED_WITH_ORIENTATION = TAU / 7
 Sprint.check = function (t, unit, movement_state_component, sprint_character_state_component, input_source, locomotion_component, weapon_action_component, combat_ability_action_component, alternate_fire_component, weapon_template, player_character_constants)
 	local current_weapon_action_name, weapon_action_setting = Action.current_action(weapon_action_component, weapon_template)
 	local combat_ability_template = AbilityTemplate.current_ability_template(combat_ability_action_component)
-	local _, combat_ability_action_setings = Action.current_action(combat_ability_action_component, combat_ability_template)
+	local _, combat_ability_action_settings = Action.current_action(combat_ability_action_component, combat_ability_template)
 	local weapon_action_requires_press = Sprint.requires_press_to_interrupt(weapon_action_setting)
-	local combat_ability_requires_press = Sprint.requires_press_to_interrupt(combat_ability_action_setings)
+	local combat_ability_requires_press = Sprint.requires_press_to_interrupt(combat_ability_action_settings)
 	local requires_press = weapon_action_requires_press or combat_ability_requires_press
 	local is_sprinting = Sprint.is_sprinting(sprint_character_state_component)
 	local has_sprint_input = Sprint.sprint_input(input_source, is_sprinting, requires_press)
@@ -38,7 +38,7 @@ Sprint.check = function (t, unit, movement_state_component, sprint_character_sta
 	end
 
 	local weapon_action_prevents_sprint = Sprint.prevent_sprint(weapon_action_setting)
-	local combat_ability_prevents_sprint = Sprint.prevent_sprint(combat_ability_action_setings)
+	local combat_ability_prevents_sprint = Sprint.prevent_sprint(combat_ability_action_settings)
 	local prevents_sprint = weapon_action_prevents_sprint or combat_ability_prevents_sprint
 
 	if prevents_sprint then

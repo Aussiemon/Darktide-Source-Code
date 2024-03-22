@@ -1,4 +1,5 @@
 local LungeTemplates = require("scripts/settings/lunge/lunge_templates")
+local SmartTargetingTemplates = require("scripts/settings/equipment/smart_targeting_templates")
 local ability_template = {
 	action_inputs = {
 		aim_pressed = {
@@ -43,13 +44,14 @@ local ability_template = {
 			kind = "targeted_dash_aim",
 			sprint_ready_up_time = 0,
 			aim_ready_up_time = 0,
-			allowed_during_lunge = true,
 			allowed_during_sprint = true,
+			allowed_during_lunge = true,
 			ability_type = "combat_ability",
 			stop_input = "block_cancel",
 			minimum_hold_time = 0.075,
 			total_time = math.huge,
 			lunge_template_name = LungeTemplates.zealot_dash.name,
+			smart_targeting_template = SmartTargetingTemplates.default_melee,
 			allowed_chain_actions = {
 				aim_released = {
 					action_name = "action_state_change"
@@ -60,15 +62,16 @@ local ability_template = {
 			allowed_during_sprint = true,
 			ability_type = "combat_ability",
 			use_ability_charge = true,
-			uninterruptible = true,
+			state_name = "lunging",
 			kind = "character_state_change",
 			sprint_ready_up_time = 0,
 			vo_tag = "ability_maniac",
-			state_name = "lunging",
+			uninterruptible = true,
 			total_time = 0.1,
 			state_params = {
 				lunge_template_name = LungeTemplates.zealot_dash.name
-			}
+			},
+			smart_targeting_template = SmartTargetingTemplates.default_melee
 		}
 	},
 	fx_sources = {},

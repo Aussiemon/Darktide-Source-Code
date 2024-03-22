@@ -248,8 +248,8 @@ PlayerCharacterStateSprinting._check_transition = function (self, unit, t, next_
 	local has_allow_sprinting_buff = buff_extension:has_keyword(buff_keywords.allow_hipfire_during_sprint)
 	local _, weapon_action_setting = Action.current_action(self._weapon_action_component, weapon_template)
 	local combat_ability_template = AbilityTemplate.current_ability_template(self._combat_ability_action_component)
-	local _, combat_ability_action_setings = Action.current_action(self._combat_ability_action_component, combat_ability_template)
-	local abort_sprint = _abort_sprint(weapon_action_setting, has_allow_sprinting_buff) or _abort_sprint(combat_ability_action_setings, has_allow_sprinting_buff)
+	local _, combat_ability_action_settings = Action.current_action(self._combat_ability_action_component, combat_ability_template)
+	local abort_sprint = _abort_sprint(weapon_action_setting, has_allow_sprinting_buff) or _abort_sprint(combat_ability_action_settings, has_allow_sprinting_buff)
 
 	if abort_sprint then
 		return "walking"

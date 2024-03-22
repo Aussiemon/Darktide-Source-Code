@@ -38,11 +38,12 @@ ActionTargetedDashAim._find_target = function (self, time_in_action)
 	local new_target = nil
 
 	if self._aim_ready_up_time <= time_in_action then
-		local lunge_template = self:get_lunge_template()
+		local lunge_template = self:_lunge_template()
 		local smart_targeting_data = self._smart_targeting_extension:targeting_data()
 		local smart_target_unit = smart_targeting_data.unit
+		local valid_target = smart_target_unit and not Managers.state.player_unit_spawn:is_player_unit(smart_target_unit)
 
-		if smart_target_unit then
+		if valid_target then
 			local has_target = true
 			local lunge_distance = Lunge.distance(lunge_template, has_target)
 
@@ -74,7 +75,7 @@ ActionTargetedDashAim._check_input = function (self, time_in_action, aim_ready_u
 	return true
 end
 
-ActionTargetedDashAim.get_lunge_template = function (self)
+ActionTargetedDashAim._lunge_template = function (self)
 	local action_settings = self._action_settings
 	local ability_template_tweak_data = self._ability_template_tweak_data
 	local lunge_template_name = nil

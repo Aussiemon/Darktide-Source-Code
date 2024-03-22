@@ -74,7 +74,7 @@ MechanismAdventure.init = function (self, ...)
 				self._mission_ready_voting_id = voting_id
 			end):catch(function (error)
 				Log.error("MechanismAdventure", "Failed start voting 'mission_lobby_ready', skipping voting. Error: %s", table.tostring(error, 3))
-				self:_on_vote_finished()
+				self:_on_vote_finished("approved")
 
 				data.ready_for_transition = true
 			end)
@@ -196,12 +196,17 @@ end
 
 local not_ready_peers = {}
 
-MechanismAdventure._on_vote_finished = function (self)
-	Managers.mechanism:trigger_event("all_players_ready")
+MechanismAdventure._on_vote_finished = function (self, result)
+	if result == "approved" then
+		Managers.mechanism:trigger_event("all_players_ready")
+
+		self._profiles_allowed_changes_end_time = Managers.time:time("main") + ALLOWED_PROFILE_CHANGES_EXTRA_TIME
+	elseif result == "empty" then
+		-- Nothing
+	end
 
 	self._mission_ready_voting_id = nil
 	self._mechanism_data.ready_voting_completed = true
-	self._profiles_allowed_changes_end_time = Managers.time:time("main") + ALLOWED_PROFILE_CHANGES_EXTRA_TIME
 end
 
 MechanismAdventure._check_state_change = function (self, state, data)
@@ -212,7 +217,7 @@ MechanismAdventure._check_state_change = function (self, state, data)
 			local finished, result, abort_reason = Managers.voting:voting_result(self._mission_ready_voting_id)
 
 			if finished then
-				self:_on_vote_finished()
+				self:_on_vote_finished(result)
 			end
 		end
 

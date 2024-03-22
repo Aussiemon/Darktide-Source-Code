@@ -33,7 +33,7 @@ AimAssist.update_ramp_multiplier = function (dt, t, aim_assist_ramp_component)
 	end
 end
 
-AimAssist.apply_aim_assist = function (main_t, main_dt, input, targeting_data, aim_assist_ramp_component, weapon_action_component, look_yaw, look_pitch, position)
+AimAssist.apply_aim_assist = function (main_t, main_dt, input, targeting_data, aim_assist_ramp_component, combat_ability_action_component, weapon_action_component, look_yaw, look_pitch, position)
 	local last_pressed_device = InputDevice.last_pressed_device
 	local gamepad_active = last_pressed_device and last_pressed_device:type() == "xbox_controller"
 	local enable_aim_assist = gamepad_active
@@ -49,7 +49,7 @@ AimAssist.apply_aim_assist = function (main_t, main_dt, input, targeting_data, a
 	end
 
 	local game_t = Managers.time:time("gameplay")
-	local smart_targeting_template = SmartTargeting.smart_targeting_template(game_t, weapon_action_component)
+	local smart_targeting_template = SmartTargeting.smart_targeting_template(game_t, combat_ability_action_component, weapon_action_component)
 	local aim_assist_settings = smart_targeting_template and smart_targeting_template.aim_assist
 
 	if not aim_assist_settings or not aim_assist_settings.always_auto_aim then
