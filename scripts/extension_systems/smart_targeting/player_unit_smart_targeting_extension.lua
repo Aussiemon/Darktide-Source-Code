@@ -34,7 +34,6 @@ PlayerUnitSmartTargetingExtension.init = function (self, extension_init_context,
 	self._recoil_control_component = unit_data_extension:read_component("recoil_control")
 	self._sway_component = unit_data_extension:read_component("sway")
 	self._sway_control_component = unit_data_extension:read_component("sway_control")
-	self._combat_ability_action_component = unit_data_extension:read_component("combat_ability_action")
 	self._weapon_action_component = unit_data_extension:read_component("weapon_action")
 	self._target_position_box = Vector3Box(Vector3.zero())
 	self._target_rotation_box = QuaternionBox(Quaternion.identity())
@@ -64,7 +63,7 @@ PlayerUnitSmartTargetingExtension.fixed_update = function (self, unit, dt, t, fi
 		return
 	end
 
-	local smart_targeting_template = SmartTargeting.smart_targeting_template(t, self._combat_ability_action_component, self._weapon_action_component)
+	local smart_targeting_template = SmartTargeting.smart_targeting_template(t, self._weapon_action_component)
 	self._num_visibility_checks_this_frame = 0
 	local ray_origin, forward, right, up = self:_targeting_parameters()
 	local line_of_sight_cache = self._line_of_sight_cache

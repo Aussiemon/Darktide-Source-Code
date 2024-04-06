@@ -10,7 +10,6 @@ PsykerSingleTargetSmartTargetingActionModule.init = function (self, physics_worl
 	local unit_data_extension = ScriptUnit.extension(player_unit, "unit_data_system")
 	self._unit_data_extension = unit_data_extension
 	self._first_person_component = unit_data_extension:read_component("first_person")
-	self._combat_ability_action_component = unit_data_extension:read_component("combat_ability_action")
 	self._weapon_action_component = unit_data_extension:read_component("weapon_action")
 	self._smart_targeting_extension = ScriptUnit.extension(player_unit, "smart_targeting_system")
 end
@@ -39,7 +38,7 @@ PsykerSingleTargetSmartTargetingActionModule.fixed_update = function (self, dt, 
 		local is_in_range = nil
 
 		if HEALTH_ALIVE[new_target_unit] then
-			local smart_targeting_template = SmartTargeting.smart_targeting_template(t, self._combat_ability_action_component, self._weapon_action_component)
+			local smart_targeting_template = SmartTargeting.smart_targeting_template(t, self._weapon_action_component)
 			local precision_target_settings = smart_targeting_template and smart_targeting_template.precision_target or EMPTY_TABLE
 			local max_range = precision_target_settings.max_range
 			local target_pos = POSITION_LOOKUP[new_target_unit]

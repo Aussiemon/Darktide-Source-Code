@@ -1,47 +1,39 @@
-local AbilityTemplate = require("scripts/utilities/ability/ability_template")
 local Action = require("scripts/utilities/weapon/action")
 local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
 local SmartTargeting = {}
 
-SmartTargeting.smart_targeting_template = function (t, combat_ability_action_component, weapon_action_component)
+local function _timed_smart_targeting_template(t, weapon_action_component, action_settings)
+	local timed_smart_targeting_template = action_settings.timed_smart_targeting_template
+	local start_t = weapon_action_component.start_t or t
+	local time_in_action = t - start_t
+
+	if timed_smart_targeting_template then
+		local default_template = timed_smart_targeting_template.default
+		local num_timed_smart_targeting_template = #timed_smart_targeting_template
+
+		for ii = 1, num_timed_smart_targeting_template do
+			local segment = timed_smart_targeting_template[ii]
+
+			if time_in_action < segment.t then
+				return segment.template
+			end
+		end
+
+		return default_template
+	end
+end
+
+SmartTargeting.smart_targeting_template = function (t, weapon_action_component)
 	local weapon_template = WeaponTemplate.current_weapon_template(weapon_action_component)
-	local _, weapon_action_settings = Action.current_action(weapon_action_component, weapon_template)
-	local combat_ability_template = AbilityTemplate.current_ability_template(combat_ability_action_component)
-	local _, combat_ability_action_settings = Action.current_action(combat_ability_action_component, combat_ability_template)
-	local action_settings = combat_ability_action_settings or weapon_action_settings
-	local smart_targeting_template = nil
+	local _, action_settings = Action.current_action(weapon_action_component, weapon_template)
+	local wanted_smart_targeting_template = nil
 
 	if action_settings then
-		local template = action_settings.smart_targeting_template
-		local timed_templates = action_settings.timed_smart_targeting_template
-		local start_t = weapon_action_component.start_t or t
-		local time_in_action = t - start_t
-
-		if timed_templates then
-			local default_template = timed_templates.default
-			local num_timed_templates = #timed_templates
-
-			for ii = 1, num_timed_templates do
-				local segment = timed_templates[ii]
-
-				if time_in_action < segment.t then
-					smart_targeting_template = segment.template
-
-					break
-				end
-			end
-
-			smart_targeting_template = smart_targeting_template or default_template
-		elseif template then
-			smart_targeting_template = template
-		else
-			smart_targeting_template = weapon_template.smart_targeting_template
-		end
-	elseif weapon_template then
-		smart_targeting_template = weapon_template.smart_targeting_template
+		wanted_smart_targeting_template = _timed_smart_targeting_template(t, weapon_action_component, action_settings)
+		wanted_smart_targeting_template = wanted_smart_targeting_template or action_settings.smart_targeting_template
 	end
 
-	return smart_targeting_template
+	return wanted_smart_targeting_template or weapon_template and weapon_template.smart_targeting_template
 end
 
 return SmartTargeting

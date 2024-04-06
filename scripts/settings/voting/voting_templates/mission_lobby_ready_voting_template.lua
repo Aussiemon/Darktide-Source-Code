@@ -37,7 +37,8 @@ local mission_lobby_ready_voting_template = {
 		OPTIONS.no
 	},
 	results = {
-		RESULTS.approved
+		RESULTS.approved,
+		RESULTS.empty
 	},
 	timeout_option = OPTIONS.yes,
 	required_params = {
