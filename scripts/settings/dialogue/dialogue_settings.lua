@@ -93,7 +93,7 @@ local DialogueSettings = {
 			"mission_vo_hm_cartel"
 		},
 		cm_habs = {
-			"mission_vo_cm_habs"
+			"mission_vo_cm_habs_remake"
 		},
 		dm_rise = {
 			"mission_vo_dm_rise"
@@ -210,7 +210,7 @@ local DialogueSettings = {
 	decaying_tension_delay = 2,
 	npc_story_ticker_enabled = true,
 	npc_story_ticker_start_delay = 127,
-	npc_story_tick_time = 100,
+	npc_story_tick_time = 10,
 	store_npc_cooldown_time = 5,
 	sound_event_default_length = 3.4567,
 	knocked_down_vo_interval = 11,
@@ -234,6 +234,11 @@ local DialogueSettings = {
 	default_voice_switch_group = "voice_profile",
 	player_vce_light_damage_threshold = 55,
 	surrounded_vo_slot_percent = 0.3,
+	distance_culled_wwise_routes = {
+		[19.0] = 20,
+		[50.0] = 25,
+		[45.0] = 15
+	},
 	dynamic_smart_tags = table.enum("aggroed", "renegade_netgunner", "seen_netgunner_flee"),
 	manual_subtitles = table.enum("loc_captain_twin_male_a__mission_twins_arrival_04_a_01"),
 	manual_subtitle_data = {

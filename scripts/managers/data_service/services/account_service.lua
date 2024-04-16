@@ -173,4 +173,20 @@ AccountService.set_has_completed_onboarding = function (self)
 	end)
 end
 
+AccountService.has_migrated_commendation_score = function (self)
+	if self._cached_has_migrated_commendation_score then
+		return Promise.resolved(self._cached_has_migrated_commendation_score):next(function (value)
+			return value
+		end)
+	end
+
+	return Managers.backend.interfaces.account:get_has_migrated_commendation_score():next(function (value)
+		if value == true then
+			self._cached_has_migrated_commendation_score = true
+		end
+
+		return value == true or value == "true"
+	end)
+end
+
 return AccountService

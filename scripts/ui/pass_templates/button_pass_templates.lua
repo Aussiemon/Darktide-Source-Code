@@ -82,7 +82,7 @@ local function terminal_button_change_function(content, style, optional_hotspot_
 	end
 
 	if color then
-		color_copy(color, style.color)
+		color_copy(color, style.text_color or style.color)
 	end
 end
 
@@ -96,7 +96,8 @@ local function terminal_button_hover_change_function(content, style, optional_ho
 	local default_alpha = 155
 	local hover_alpha = anim_hover_progress * 100
 	local select_alpha = math.max(anim_select_progress, anim_focus_progress) * 50
-	style.color[1] = math.clamp(default_alpha + select_alpha + hover_alpha, 0, 255)
+	local style_color = style.text_color or style.color
+	style_color[1] = math.clamp(default_alpha + select_alpha + hover_alpha, 0, 255)
 end
 
 ButtonPassTemplates.terminal_button_hover_change_function = terminal_button_hover_change_function
@@ -719,12 +720,12 @@ ButtonPassTemplates.aquila_button = {
 				aquila_small_button_size_addition[1],
 				aquila_small_button_size_addition[2]
 			},
-			color = Color.terminal_background_gradient(nil, true)
-		},
-		offset = {
-			0,
-			0,
-			1
+			color = Color.terminal_background_gradient(nil, true),
+			offset = {
+				0,
+				0,
+				1
+			}
 		},
 		change_function = terminal_button_hover_change_function,
 		visibility_function = function (content, style)
@@ -1616,9 +1617,19 @@ ButtonPassTemplates.terminal_button_hold_small = {
 		widget.content.input_action = options.input_action or "confirm_hold"
 		widget.content.original_text = options.text
 		widget.content.ignore_gamepad_on_text = options.ignore_gamepad_on_text
-		widget.content.hotspot.on_complete_sound = options.on_complete_sound
-		widget.content.hotspot.hold_release = options.hold_release
-		widget.content.hotspot.hold_sound = options.hold_sound
+
+		if options.on_complete_sound then
+			widget.content.hotspot.on_complete_sound = options.on_complete_sound
+		end
+
+		if options.hold_release then
+			widget.content.hotspot.hold_release = options.hold_release
+		end
+
+		if options.hold_sound then
+			widget.content.hotspot.hold_sound = options.hold_sound
+		end
+
 		local width = widget.content.size[1]
 		local height = widget.content.size[2]
 		widget.style.background.size = {

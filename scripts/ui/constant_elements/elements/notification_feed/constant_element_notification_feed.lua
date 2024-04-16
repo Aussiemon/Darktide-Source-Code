@@ -78,8 +78,55 @@ local function _remove_live_item_icon_cb_func(widget, ui_renderer)
 	end
 end
 
+local function _apply_player_portrait_icon_cb_func(widget, grid_index, rows, columns, render_target)
+	local material_values = widget.style.icon.material_values
+	material_values.use_placeholder_texture = 0
+	material_values.rows = rows
+	material_values.columns = columns
+	material_values.grid_index = grid_index - 1
+	material_values.texture_icon = render_target
+	widget.dirty = true
+end
+
+local function _remove_player_portrait_icon_cb_func(widget, ui_renderer)
+	local material_values = widget.style.icon.material_values
+	material_values.use_placeholder_texture = 1
+	material_values.texture_icon = nil
+	widget.dirty = true
+
+	if ui_renderer then
+		UIWidget.set_visible(widget, ui_renderer, false)
+		UIWidget.set_visible(widget, ui_renderer, true)
+	end
+end
+
+local function _add_player_frame_cb_func(widget, item)
+	local icon = nil
+
+	if item.icon then
+		icon = item.icon
+	else
+		icon = "content/ui/textures/nameplates/portrait_frames/default"
+	end
+
+	local material_values = widget.style.icon.material_values
+	material_values.portrait_frame_texture = icon
+	widget.dirty = true
+end
+
+local function _remove_player_frame_cb_func(widget, ui_renderer)
+	local material_values = widget.style.icon.material_values
+	material_values.portrait_frame_texture = nil
+	widget.dirty = true
+
+	if ui_renderer then
+		UIWidget.set_visible(widget, ui_renderer, false)
+		UIWidget.set_visible(widget, ui_renderer, true)
+	end
+end
+
 local ConstantElementNotificationFeed = class("ConstantElementNotificationFeed", "ConstantElementBase")
-local MESSAGE_TYPES = table.enum("default", "alert", "mission", "item_granted", "currency", "achievement", "contract", "custom", "voting", "matchmaking")
+local MESSAGE_TYPES = table.enum("default", "alert", "mission", "item_granted", "currency", "achievement", "contract", "custom", "voting", "matchmaking", "penance_item_can_be_claimed", "player_assist", "collectible", "helped_collect_collectible", "destructible")
 
 ConstantElementNotificationFeed.init = function (self, parent, draw_layer, start_scale)
 	ConstantElementNotificationFeed.super.init(self, parent, draw_layer, start_scale, Definitions)
@@ -124,6 +171,13 @@ ConstantElementNotificationFeed.init = function (self, parent, draw_layer, start
 			priority_order = 1,
 			widget_definition = Definitions.notification_message
 		},
+		player_assist = {
+			animation_exit = "popup_leave",
+			animation_enter = "popup_enter",
+			total_time = 5,
+			priority_order = 1,
+			widget_definition = Definitions.notification_message
+		},
 		contract = {
 			animation_exit = "popup_leave",
 			animation_enter = "popup_enter",
@@ -156,8 +210,37 @@ ConstantElementNotificationFeed.init = function (self, parent, draw_layer, start
 			animation_enter = "popup_enter",
 			priority_order = 1,
 			widget_definition = Definitions.notification_message
+		},
+		collectible = {
+			animation_exit = "popup_leave",
+			animation_enter = "popup_enter",
+			total_time = 8,
+			priority_order = 1,
+			widget_definition = Definitions.notification_message
+		},
+		helped_collect_collectible = {
+			animation_exit = "popup_leave",
+			animation_enter = "popup_enter",
+			total_time = 8,
+			priority_order = 1,
+			widget_definition = Definitions.notification_message
+		},
+		destructible = {
+			animation_exit = "popup_leave",
+			animation_enter = "popup_enter",
+			total_time = 4,
+			priority_order = 2,
+			widget_definition = Definitions.notification_message
+		},
+		penance_item_can_be_claimed = {
+			animation_exit = "popup_leave",
+			animation_enter = "popup_enter",
+			total_time = 5,
+			priority_order = 1,
+			widget_definition = Definitions.notification_message
 		}
 	}
+	self._assist_notifications_enabled = true
 	self._crafting_pickup_notifications_enabled = true
 	local event_manager = Managers.event
 	local events = ConstantElementNotificationFeedSettings.events
@@ -173,13 +256,16 @@ end
 
 ConstantElementNotificationFeed._event_player_authenticated = function (self)
 	local save_manager = Managers.save
+	local assist_notifications_enabled = true
 	local crafting_pickup_notifications_enabled = true
 
 	if save_manager then
 		local account_data = save_manager:account_data()
-		crafting_pickup_notifications_enabled = account_data.interface_settings.show_crafting_pickup_notification
+		assist_notifications_enabled = account_data.interface_settings.assist_notification_type == "notification"
+		crafting_pickup_notifications_enabled = account_data.interface_settings.crafting_pickup_notification_type == "notification"
 	end
 
+	self._assist_notifications_enabled = assist_notifications_enabled
 	self._crafting_pickup_notifications_enabled = crafting_pickup_notifications_enabled
 end
 
@@ -191,13 +277,29 @@ ConstantElementNotificationFeed._on_item_icon_loaded = function (self, notificat
 		_apply_live_item_icon_cb_func(widget, grid_index, rows, columns, render_target)
 	elseif item_type == "PORTRAIT_FRAME" or item_type == "CHARACTER_INSIGNIA" then
 		_apply_package_item_icon_cb_func(widget, item)
-	else
+	elseif item_type ~= "CHARACTER_TITLE" then
 		_apply_live_item_icon_cb_func(widget, grid_index, rows, columns, render_target)
 	end
 end
 
-ConstantElementNotificationFeed.event_update_show_crafting_pickup_notification = function (self, value)
-	self._crafting_pickup_notifications_enabled = value
+ConstantElementNotificationFeed._on_player_portrait_loaded = function (self, notification, player, grid_index, rows, columns, render_target)
+	local widget = notification.widget
+
+	_apply_player_portrait_icon_cb_func(widget, grid_index, rows, columns, render_target)
+end
+
+ConstantElementNotificationFeed._on_player_frame_loaded = function (self, notification, item)
+	local widget = notification.widget
+
+	_add_player_frame_cb_func(widget, item)
+end
+
+ConstantElementNotificationFeed.event_update_assist_notification_type = function (self, value)
+	self._assist_notifications_enabled = value == "notification"
+end
+
+ConstantElementNotificationFeed.event_update_crafting_pickup_notification_type = function (self, value)
+	self._crafting_pickup_notifications_enabled = value == "notification"
 end
 
 ConstantElementNotificationFeed.event_add_notification_message = function (self, message_type, data, callback, sound_event, done_callback, delay)
@@ -408,6 +510,19 @@ ConstantElementNotificationFeed._generate_notification_data = function (self, me
 			}
 			local trait_sound_events_by_rarity = ConstantElementNotificationFeedSettings.trait_sound_events_by_rarity
 			enter_sound_event = trait_sound_events_by_rarity[rarity]
+		elseif item_type == "CHARACTER_TITLE" then
+			icon, icon_size = nil
+			texts = {
+				{
+					display_name = string.format("'%s'", ItemUtils.display_name(visual_item))
+				},
+				{
+					display_name = Localize(UISettings.item_type_localization_lookup[visual_item.item_type])
+				},
+				{
+					display_name = Localize("loc_notification_desc_added_to_inventory")
+				}
+			}
 		else
 			icon = "content/ui/materials/icons/items/containers/item_container_landscape"
 			icon_size = "large_cosmetic"
@@ -436,6 +551,7 @@ ConstantElementNotificationFeed._generate_notification_data = function (self, me
 		local amount = data.amount
 		local amount_size = data.amount_size
 		local player_name = data.player_name
+		local reason = data.reason
 		local optional_localization_key = data.optional_localization_key
 		local wallet_settings = WalletSettings[currency_type]
 		local ignore_wallet_display_name = false
@@ -456,18 +572,193 @@ ConstantElementNotificationFeed._generate_notification_data = function (self, me
 				player_name = player_name
 			})
 			local enter_sound_event = wallet_settings.notification_sound_event
+			local texts = {
+				[#texts + 1] = reason and {
+					display_name = reason
+				},
+				[#texts + 1] = {
+					display_name = text
+				}
+			}
 			notification_data = {
 				icon_size = "currency",
-				texts = {
-					{
-						display_name = text
-					}
-				},
+				texts = texts,
 				icon = icon_texture_large,
 				color = Color.terminal_grid_background(100, true),
 				enter_sound_event = enter_sound_event
 			}
 		end
+	elseif message_type == MESSAGE_TYPES.collectible then
+		local player_name = data.player_name
+		local player = data.player
+		local num_plasteel = Managers.state.difficulty:get_challenge() * 2 * 10
+		notification_data = {
+			icon = "content/ui/materials/base/ui_portrait_frame_base",
+			use_player_portrait = true,
+			icon_size = "large",
+			texts = {
+				{
+					display_name = Localize("loc_notification_collectible_picked_up", true, {
+						player_name = player_name
+					}),
+					color = {
+						255,
+						224,
+						224,
+						224
+					}
+				},
+				{
+					display_name = string.format("+%d %s", num_plasteel, Localize("loc_currency_name_plasteel")),
+					color = {
+						255,
+						224,
+						224,
+						224
+					}
+				}
+			},
+			player = player,
+			line_color = {
+				255,
+				255,
+				179,
+				37
+			},
+			color = {
+				255 * ConstantElementNotificationFeedSettings.default_alpha_value,
+				255,
+				215,
+				0
+			},
+			enter_sound_event = UISoundEvents.notification_collectible_pickup
+		}
+	elseif message_type == MESSAGE_TYPES.helped_collect_collectible then
+		local helped_string = data.helped_string
+		local player = data.player
+		local num_plasteel = Managers.state.difficulty:get_challenge() * 2 * 10
+		notification_data = {
+			icon = "content/ui/materials/base/ui_portrait_frame_base",
+			use_player_portrait = true,
+			icon_size = "large",
+			texts = {
+				{
+					display_name = Localize("loc_notification_helped_collectible_picked_up", true, {
+						player_names = helped_string
+					}),
+					color = {
+						255,
+						224,
+						224,
+						224
+					}
+				},
+				{
+					display_name = string.format("+%d %s", num_plasteel, Localize("loc_currency_name_plasteel")),
+					color = {
+						255,
+						224,
+						224,
+						224
+					}
+				}
+			},
+			player = player,
+			line_color = {
+				255,
+				255,
+				179,
+				37
+			},
+			color = {
+				255 * ConstantElementNotificationFeedSettings.default_alpha_value,
+				255,
+				215,
+				0
+			},
+			enter_sound_event = UISoundEvents.notification_collectible_pickup_helped
+		}
+	elseif message_type == MESSAGE_TYPES.destructible then
+		local player_name = data.player_name
+		local player = data.player
+		local num_collected = data.num_collected
+		local num_total = data.num_total
+		local header_text = Localize("loc_notification_destructible_destroyed", true, {
+			player_name = player_name
+		})
+		local num_plasteel = Managers.state.difficulty:get_challenge()
+		notification_data = {
+			icon = "content/ui/materials/base/ui_portrait_frame_base",
+			use_player_portrait = true,
+			icon_size = "large",
+			texts = {
+				{
+					display_name = header_text,
+					color = {
+						255,
+						248,
+						240,
+						222
+					}
+				},
+				{
+					display_name = string.format("%d/%d \n+%d %s", num_collected, num_total, 10 * num_plasteel, Localize("loc_currency_name_plasteel")),
+					color = {
+						255,
+						200,
+						182,
+						149
+					}
+				}
+			},
+			player = player,
+			line_color = {
+				255,
+				200,
+				182,
+				149
+			},
+			color = {
+				255 * ConstantElementNotificationFeedSettings.default_alpha_value,
+				82,
+				73,
+				45
+			},
+			enter_sound_event = UISoundEvents.notification_destroyed_destructible
+		}
+	elseif message_type == MESSAGE_TYPES.player_assist and self:_can_show_assist_notification() then
+		local assist_type = data.assist_type
+		local player = data.player
+		local player_name = player and player:name()
+		local player_slot = player and player.slot and player:slot()
+		local player_slot_colors = UISettings.player_slot_colors
+		local player_slot_color = player_slot and player_slot_colors[player_slot]
+
+		if player_name and player_slot_color then
+			player_name = TextUtilities.apply_color_to_text(player_name, player_slot_color)
+		end
+
+		local localization_context = _localization_context
+
+		table.clear(localization_context)
+
+		localization_context.player_name = player_name
+		local text = Localize(UISettings.assist_type_localization_lookup[assist_type], true, localization_context)
+		local enter_sound_event_alias = UISettings.assist_type_enter_sound_lookup[assist_type]
+		local enter_sound_event = enter_sound_event_alias and UISoundEvents[enter_sound_event_alias]
+		notification_data = {
+			icon = "content/ui/materials/base/ui_portrait_frame_base",
+			use_player_portrait = true,
+			icon_size = "large",
+			texts = {
+				{
+					display_name = text
+				}
+			},
+			color = Color.citadel_elysian_green(100, true),
+			player = player,
+			enter_sound_event = enter_sound_event
+		}
 	elseif message_type == MESSAGE_TYPES.achievement then
 		local achievement_title = AchievementUIHelper.localized_title(data)
 		notification_data = {
@@ -617,6 +908,118 @@ ConstantElementNotificationFeed._generate_notification_data = function (self, me
 				}
 			}
 		}
+	elseif message_type == MESSAGE_TYPES.penance_item_can_be_claimed then
+		local item = data
+		local item_type = item.item_type
+		local visual_item = item
+		local has_rarity = not not visual_item.rarity
+		local texts, rarity_color, background_rarity_color = nil
+		local enter_sound_event = UISoundEvents.notification_item_received_rarity_1
+		local icon_material_values = nil
+
+		if has_rarity then
+			local sound_event_name = string.format("notification_item_received_rarity_%d", visual_item.rarity)
+			enter_sound_event = UISoundEvents[sound_event_name] or enter_sound_event
+			rarity_color, background_rarity_color = ItemUtils.rarity_color(visual_item)
+			rarity_color = table.clone(rarity_color)
+			texts = {
+				{
+					display_name = ItemUtils.display_name(visual_item),
+					color = rarity_color
+				},
+				{
+					display_name = ItemUtils.rarity_display_name(data),
+					color = rarity_color
+				},
+				{
+					display_name = Localize("loc_notification_desc_penance_item_can_be_claimed")
+				}
+			}
+		else
+			if item_type == "WEAPON_SKIN" then
+				enter_sound_event = UISoundEvents.notification_weapon_skin_received
+			elseif item_type == "GEAR_EXTRA_COSMETIC" or item_type == "GEAR_HEAD" or item_type == "GEAR_UPPERBODY" or item_type == "GEAR_LOWERBODY" then
+				enter_sound_event = UISoundEvents.notification_cosmetic_received
+			end
+
+			texts = {
+				{
+					display_name = ItemUtils.display_name(visual_item)
+				},
+				{
+					display_name = Localize(UISettings.item_type_localization_lookup[visual_item.item_type]),
+					color = Color.terminal_frame(255, true)
+				},
+				{
+					display_name = Localize("loc_notification_desc_penance_item_can_be_claimed")
+				}
+			}
+		end
+
+		local icon, icon_size = nil
+
+		if item_type == "PORTRAIT_FRAME" then
+			icon = "content/ui/materials/icons/items/containers/item_container_square"
+			icon_size = "portrait_frame"
+		elseif item_type == "CHARACTER_INSIGNIA" then
+			icon = "content/ui/materials/icons/items/containers/item_container_square"
+			icon_size = "insignia"
+		elseif item_type == "WEAPON_MELEE" or item_type == "WEAPON_RANGED" or item_type == "WEAPON_TRINKET" then
+			icon = "content/ui/materials/icons/items/containers/item_container_landscape"
+			icon_size = "large_weapon"
+		elseif item_type == "WEAPON_SKIN" then
+			icon = "content/ui/materials/icons/items/containers/item_container_landscape"
+			icon_size = "weapon_skin"
+		elseif item_type == "GADGET" then
+			icon = "content/ui/materials/icons/items/containers/item_container_landscape"
+			icon_size = "large_gadget"
+		elseif item_type == "TRAIT" then
+			icon = "content/ui/materials/icons/traits/traits_container"
+			icon_size = "medium"
+			local rarity = visual_item.rarity
+			local texture_icon, texture_frame = ItemUtils.trait_textures(visual_item, rarity)
+			icon_material_values = {
+				icon = texture_icon,
+				frame = texture_frame
+			}
+			local trait_sound_events_by_rarity = ConstantElementNotificationFeedSettings.trait_sound_events_by_rarity
+			enter_sound_event = trait_sound_events_by_rarity[rarity]
+		elseif item_type == "CHARACTER_TITLE" then
+			icon, icon_size = nil
+			texts = {
+				{
+					display_name = string.format("'%s'", ItemUtils.display_name(visual_item))
+				},
+				{
+					display_name = Localize(UISettings.item_type_localization_lookup[visual_item.item_type])
+				},
+				{
+					display_name = Localize("loc_notification_desc_added_to_inventory")
+				}
+			}
+		else
+			icon = "content/ui/materials/icons/items/containers/item_container_landscape"
+			icon_size = "large_cosmetic"
+		end
+
+		if background_rarity_color then
+			background_rarity_color = table.clone(background_rarity_color)
+			background_rarity_color[1] = background_rarity_color[1] * ConstantElementNotificationFeedSettings.default_alpha_value
+		end
+
+		notification_data = {
+			show_shine = true,
+			glow_opacity = 0.35,
+			scale_icon = true,
+			texts = texts,
+			icon = icon,
+			item = visual_item,
+			icon_size = icon_size,
+			icon_material_values = icon_material_values,
+			color = background_rarity_color,
+			line_color = rarity_color,
+			enter_sound_event = enter_sound_event
+		}
 	end
 
 	if not notification_data then
@@ -636,6 +1039,11 @@ ConstantElementNotificationFeed._can_show_currency_of_type = function (self, cur
 	end
 
 	return self._crafting_pickup_notifications_enabled
+end
+
+ConstantElementNotificationFeed._can_show_assist_notification = function (self)
+	return self._assist_notifications_enabled
+	return true
 end
 
 ConstantElementNotificationFeed._add_notification_message = function (self, message_type, data, callback, sound_event, done_callback)
@@ -706,6 +1114,28 @@ ConstantElementNotificationFeed._remove_notification = function (self, notificat
 				Managers.ui:unload_item_icon(icon_load_id)
 
 				notification.item_loaded_info = nil
+			end
+
+			if notification.portrait_loaded_info then
+				_remove_player_portrait_icon_cb_func(widget, ui_renderer)
+
+				local portrait_loaded_info = notification.portrait_loaded_info
+				local icon_load_id = portrait_loaded_info.icon_load_id
+
+				Managers.ui:unload_profile_portrait(icon_load_id)
+
+				notification.portrait_loaded_info = nil
+			end
+
+			if notification.frame_loaded_info then
+				_remove_player_frame_cb_func(widget, ui_renderer)
+
+				local frame_loaded_info = notification.frame_loaded_info
+				local icon_load_id = frame_loaded_info.icon_load_id
+
+				Managers.ui:unload_item_icon(icon_load_id)
+
+				notification.frame_loaded_info = nil
 			end
 
 			self:_unregister_widget_name(widget.name)
@@ -782,6 +1212,33 @@ ConstantElementNotificationFeed._create_notification_entry = function (self, not
 			notification.item_loaded_info = {
 				icon_load_id = icon_load_id
 			}
+		end
+	end
+
+	local player = notification_data.player
+	local use_player_portrait = notification_data.use_player_portrait
+
+	if player and use_player_portrait then
+		local on_player_icon_load_callback = callback(self, "_on_player_portrait_loaded", notification, player)
+		local profile = player:profile()
+		local player_portrait_icon_load_id = Managers.ui:load_profile_portrait(profile, on_player_icon_load_callback)
+		notification.portrait_loaded_info = {
+			icon_load_id = player_portrait_icon_load_id,
+			character_id = profile.character_id
+		}
+		local loadout = profile.loadout
+
+		if loadout then
+			local frame_item = loadout.slot_portrait_frame
+			local frame_item_gear_id = frame_item and frame_item.gear_id
+
+			if frame_item_gear_id ~= self._frame_item_gear_id then
+				local on_player_frame_loaded_callback = callback(self, "_on_player_frame_loaded", notification)
+				local player_frame_icon_load_id = Managers.ui:load_item_icon(frame_item, on_player_frame_loaded_callback)
+				notification.frame_loaded_info = {
+					icon_load_id = player_frame_icon_load_id
+				}
+			end
 		end
 	end
 

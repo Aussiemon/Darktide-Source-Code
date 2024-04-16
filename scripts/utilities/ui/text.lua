@@ -29,11 +29,11 @@ TextUtilities.localize_to_title_case = function (localization_key, optional_loca
 	return title_case_text
 end
 
-TextUtilities.localize_with_button_hint = function (action, localization_key, optional_localization_context, optional_service_type, optional_pattern, include_input_type)
+TextUtilities.localize_with_button_hint = function (action, localization_key, optional_localization_context, optional_service_type, optional_pattern, include_input_type, color_tint_text)
 	local pattern = optional_pattern or "%s %s"
 	local service_type = optional_service_type or "View"
 	local alias_key = Managers.ui:get_input_alias_key(action, service_type)
-	local input_text = InputUtils.input_text_for_current_input_device(service_type, alias_key)
+	local input_text = InputUtils.input_text_for_current_input_device(service_type, alias_key, color_tint_text)
 
 	if include_input_type then
 		local action_type = Managers.ui:get_action_type(action, service_type)

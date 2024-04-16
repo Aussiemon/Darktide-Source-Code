@@ -634,8 +634,6 @@ function _calculate_from_position(nav_world, traverse_logic, main_aggro_unit, la
 	return from_position_on_nav_mesh
 end
 
-local MAINPATH_CHECK_POSITION_DISTANCE = 10
-
 function _calculate_to_position(from_position, nav_world, traverse_logic)
 	local side_system = Managers.state.extension:system("side_system")
 	local target_side_id = CombatVectorSettings.target_side_id

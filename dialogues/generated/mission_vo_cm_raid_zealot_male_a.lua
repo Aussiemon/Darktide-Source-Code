@@ -75,12 +75,6 @@ local mission_vo_cm_raid_zealot_male_a = {
 			1.884542,
 			1.211625
 		},
-		sound_event_weights = {
-			0.25,
-			0.25,
-			0.25,
-			0.25
-		},
 		randomize_indexes = {}
 	},
 	mission_raid_trapped_b = {
@@ -98,12 +92,6 @@ local mission_vo_cm_raid_zealot_male_a = {
 			2.799,
 			3.577188
 		},
-		sound_event_weights = {
-			0.25,
-			0.25,
-			0.25,
-			0.25
-		},
 		randomize_indexes = {}
 	},
 	mission_raid_trapped_c = {
@@ -120,12 +108,6 @@ local mission_vo_cm_raid_zealot_male_a = {
 			2.738271,
 			3.704708,
 			3.127292
-		},
-		sound_event_weights = {
-			0.25,
-			0.25,
-			0.25,
-			0.25
 		},
 		randomize_indexes = {}
 	}

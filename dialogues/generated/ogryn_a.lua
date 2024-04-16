@@ -2563,7 +2563,7 @@ return function ()
 		wwise_route = 0,
 		response = "bonding_conversation_metropolitan_fun_ogr_a",
 		database = "ogryn_a",
-		category = "conversations_prio_1",
+		category = "player_prio_1",
 		criterias = {
 			{
 				"query_context",
@@ -2601,6 +2601,18 @@ return function ()
 				"bonding_conversation_metropolitan_fun_ogr_a",
 				OP.EQ,
 				0
+			},
+			{
+				"faction_memory",
+				"dummy_memory_to_evaluate_above_come_back_to_squad",
+				OP.EQ,
+				0
+			},
+			{
+				"faction_memory",
+				"dummy_memory_to_evaluate_above_come_back_to_squad_2",
+				OP.EQ,
+				0
 			}
 		},
 		on_done = {
@@ -2623,11 +2635,6 @@ return function ()
 		on_pre_rule_execution = {
 			delay_vo = {
 				duration = 0.2
-			},
-			random_ignore_vo = {
-				chance = 0.1,
-				max_failed_tries = 0,
-				hold_for = 0
 			}
 		}
 	})
@@ -4275,10 +4282,10 @@ return function ()
 	})
 	define_rule({
 		name = "bonding_conversation_metropolitan_lost_ogr_a",
-		category = "conversations_prio_1",
 		wwise_route = 0,
 		response = "bonding_conversation_metropolitan_lost_ogr_a",
 		database = "ogryn_a",
+		category = "conversations_prio_1",
 		criterias = {
 			{
 				"query_context",
@@ -4363,6 +4370,13 @@ return function ()
 		},
 		heard_speak_routing = {
 			target = "players"
+		},
+		on_pre_rule_execution = {
+			random_ignore_vo = {
+				chance = 0.5,
+				max_failed_tries = 0,
+				hold_for = 0
+			}
 		}
 	})
 	define_rule({
@@ -5353,10 +5367,10 @@ return function ()
 	})
 	define_rule({
 		name = "bonding_conversation_metropolitan_pet_ogr_a",
-		category = "conversations_prio_1",
 		wwise_route = 0,
 		response = "bonding_conversation_metropolitan_pet_ogr_a",
 		database = "ogryn_a",
+		category = "conversations_prio_1",
 		criterias = {
 			{
 				"query_context",
@@ -5441,6 +5455,13 @@ return function ()
 		},
 		heard_speak_routing = {
 			target = "players"
+		},
+		on_pre_rule_execution = {
+			random_ignore_vo = {
+				chance = 0.5,
+				max_failed_tries = 0,
+				hold_for = 0
+			}
 		}
 	})
 	define_rule({
@@ -5958,7 +5979,7 @@ return function ()
 		},
 		on_pre_rule_execution = {
 			random_ignore_vo = {
-				chance = 0.25,
+				chance = 0.12,
 				max_failed_tries = 0,
 				hold_for = 0
 			}
@@ -8466,7 +8487,7 @@ return function ()
 				"time_since_last_short_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				140
+				100
 			},
 			{
 				"faction_memory",
@@ -8486,7 +8507,7 @@ return function ()
 				"time_since_revived_by_psyker",
 				OP.TIMEDIFF,
 				OP.LT,
-				120
+				140
 			}
 		},
 		on_done = {

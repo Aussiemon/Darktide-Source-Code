@@ -131,14 +131,6 @@ local on_demand_vo_veteran_female_b = {
 			0.989708,
 			1.000583
 		},
-		sound_event_weights = {
-			0.1666667,
-			0.1666667,
-			0.1666667,
-			0.1666667,
-			0.1666667,
-			0.1666667
-		},
 		randomize_indexes = {}
 	},
 	com_wheel_vo_need_that = {

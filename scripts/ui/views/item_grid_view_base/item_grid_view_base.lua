@@ -1,3 +1,5 @@
+require("scripts/ui/views/base_view")
+
 local Breeds = require("scripts/settings/breed/breeds")
 local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templates")
 local Definitions = require("scripts/ui/views/item_grid_view_base/item_grid_view_base_definitions")
@@ -8,8 +10,8 @@ local UIRenderer = require("scripts/managers/ui/ui_renderer")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local ViewElementGrid = require("scripts/ui/view_elements/view_element_grid/view_element_grid")
 local ViewElementInventoryWeaponPreview = require("scripts/ui/view_elements/view_element_inventory_weapon_preview/view_element_inventory_weapon_preview")
-local ViewElementWeaponStats = require("scripts/ui/view_elements/view_element_weapon_stats/view_element_weapon_stats")
 local ViewElementTabMenu = require("scripts/ui/view_elements/view_element_tab_menu/view_element_tab_menu")
+local ViewElementWeaponStats = require("scripts/ui/view_elements/view_element_weapon_stats/view_element_weapon_stats")
 local ItemGridViewBase = class("ItemGridViewBase", "BaseView")
 
 ItemGridViewBase.init = function (self, definitions, settings, context)
@@ -232,6 +234,22 @@ ItemGridViewBase.cb_switch_tab = function (self, index)
 	end
 end
 
+ItemGridViewBase._filter_by_filter_option = function (self, entry)
+	local filter_options = self._filter_options
+
+	if not filter_options then
+		return true
+	end
+
+	local filter_function = filter_options.filter_function
+
+	if not filter_function or filter_function(entry) then
+		return true
+	end
+
+	return false
+end
+
 ItemGridViewBase._present_layout_by_slot_filter = function (self, slot_filter, item_type_filter, optional_display_name)
 	local layout = self._offer_items_layout
 
@@ -241,7 +259,7 @@ ItemGridViewBase._present_layout_by_slot_filter = function (self, slot_filter, i
 		for i = #layout, 1, -1 do
 			local entry = layout[i]
 			local item = entry.item
-			local add_item = true
+			local add_entry_from_slot_type = true
 
 			if item then
 				local entry_filter_slots = entry.filter_slots
@@ -261,17 +279,19 @@ ItemGridViewBase._present_layout_by_slot_filter = function (self, slot_filter, i
 						end
 					end
 
-					add_item = slot_name_found
+					add_entry_from_slot_type = slot_name_found
 				end
 
 				if item_type_filter and not table.is_empty(item_type_filter) and not table.find(item_type_filter, item_type) then
-					add_item = false
+					add_entry_from_slot_type = false
 				end
 			else
-				add_item = true
+				add_entry_from_slot_type = true
 			end
 
-			if add_item then
+			local add_entry_from_filter = self:_filter_by_filter_option(entry)
+
+			if add_entry_from_slot_type and add_entry_from_filter then
 				filtered_layout[#filtered_layout + 1] = entry
 			end
 		end

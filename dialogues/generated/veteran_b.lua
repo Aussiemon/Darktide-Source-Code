@@ -4157,7 +4157,8 @@ return function ()
 				"player_voice_profiles",
 				OP.SET_INTERSECTS,
 				args = {
-					"veteran_male_c"
+					"veteran_male_c",
+					"veteran_female_c"
 				}
 			},
 			{
@@ -4253,7 +4254,8 @@ return function ()
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"veteran_male_c"
+					"veteran_male_c",
+					"veteran_female_c"
 				}
 			}
 		},
@@ -4409,7 +4411,8 @@ return function ()
 				"player_voice_profiles",
 				OP.SET_INTERSECTS,
 				args = {
-					"veteran_male_c"
+					"veteran_male_c",
+					"veteran_female_c"
 				}
 			},
 			{
@@ -4587,7 +4590,8 @@ return function ()
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"veteran_male_c"
+					"veteran_male_c",
+					"veteran_female_c"
 				}
 			}
 		},
@@ -4661,7 +4665,8 @@ return function ()
 				"player_voice_profiles",
 				OP.SET_INTERSECTS,
 				args = {
-					"veteran_male_c"
+					"veteran_male_c",
+					"veteran_female_c"
 				}
 			},
 			{
@@ -4839,7 +4844,8 @@ return function ()
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"veteran_male_c"
+					"veteran_male_c",
+					"veteran_female_c"
 				}
 			}
 		},

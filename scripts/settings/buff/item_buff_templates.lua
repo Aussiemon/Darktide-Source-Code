@@ -92,57 +92,5 @@ templates.braced_damage_reduction = {
 		return braced
 	end
 }
-templates.shock_grenade_interval = {
-	start_interval_on_apply = true,
-	buff_id = "shock_grenade_shock",
-	max_stacks = 1,
-	predicted = false,
-	refresh_duration_on_stack = true,
-	max_stacks_cap = 1,
-	duration = 6,
-	start_with_frame_offset = true,
-	class_name = "interval_buff",
-	keywords = {
-		keywords.electrocuted,
-		keywords.shock_grenade_shock
-	},
-	interval = {
-		0.3,
-		0.8
-	},
-	interval_func = function (template_data, template_context, template, dt, t)
-		local is_server = template_context.is_server
-
-		if not is_server then
-			return
-		end
-
-		local unit = template_context.unit
-
-		if HEALTH_ALIVE[unit] then
-			local damage_template = DamageProfileTemplates.shock_grenade_stun_interval
-			local owner_unit = template_context.owner_unit
-			local power_level = DEFAULT_POWER_LEVEL
-			local random_radians = math.random_range(0, PI_2)
-			local attack_direction = Vector3(math.sin(random_radians), math.cos(random_radians), 0)
-			attack_direction = Vector3.normalize(attack_direction)
-
-			Attack.execute(unit, damage_template, "power_level", power_level, "damage_type", damage_types.electrocution, "attacking_unit", HEALTH_ALIVE[owner_unit] and owner_unit, "attack_direction", attack_direction)
-		end
-	end,
-	minion_effects = {
-		node_effects = {
-			{
-				node_name = "j_spine",
-				vfx = {
-					material_emission = false,
-					particle_effect = "content/fx/particles/enemies/buff_stummed",
-					orphaned_policy = "destroy",
-					stop_type = "stop"
-				}
-			}
-		}
-	}
-}
 
 return templates

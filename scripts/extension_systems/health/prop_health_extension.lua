@@ -243,7 +243,7 @@ PropHealthExtension.add_damage = function (self, damage_amount, permanent_damage
 
 	local unit = self._unit
 
-	Component.event(unit, "add_damage", damage_amount, hit_actor, attack_direction)
+	Component.event(unit, "add_damage", damage_amount, hit_actor, attack_direction, attacking_unit)
 	Component.event(unit, "on_hit", attack_direction, attacking_unit)
 	Unit.set_flow_variable(unit, "lua_prop_health_percentage", health - new_damage / health)
 	Unit.flow_event(unit, "lua_prop_damaged")

@@ -75,12 +75,6 @@ local mission_vo_cm_raid_veteran_female_c = {
 			1.838823,
 			2.381438
 		},
-		sound_event_weights = {
-			0.25,
-			0.25,
-			0.25,
-			0.25
-		},
 		randomize_indexes = {}
 	},
 	mission_raid_trapped_b = {
@@ -98,12 +92,6 @@ local mission_vo_cm_raid_veteran_female_c = {
 			1.33576,
 			1.008979
 		},
-		sound_event_weights = {
-			0.25,
-			0.25,
-			0.25,
-			0.25
-		},
 		randomize_indexes = {}
 	},
 	mission_raid_trapped_c = {
@@ -120,12 +108,6 @@ local mission_vo_cm_raid_veteran_female_c = {
 			2.584125,
 			2.31174,
 			2.304365
-		},
-		sound_event_weights = {
-			0.25,
-			0.25,
-			0.25,
-			0.25
 		},
 		randomize_indexes = {}
 	}

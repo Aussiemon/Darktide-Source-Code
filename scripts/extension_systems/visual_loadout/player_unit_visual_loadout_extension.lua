@@ -1004,10 +1004,10 @@ end
 PlayerUnitVisualLoadoutExtension.unit_and_node_from_node_name = function (self, slot_name, node_name)
 	local slot = self._equipment[slot_name]
 	local cached_nodes = slot.cached_nodes
-	local chaced_node = cached_nodes[node_name]
+	local cached_node = cached_nodes[node_name]
 
-	if chaced_node then
-		return chaced_node.node_unit_1p, chaced_node.node_index_1p, chaced_node.node_unit_3p, chaced_node.node_index_3p
+	if cached_node then
+		return cached_node.node_unit_1p, cached_node.node_index_1p, cached_node.node_unit_3p, cached_node.node_index_3p
 	end
 
 	return nil, nil, nil, nil

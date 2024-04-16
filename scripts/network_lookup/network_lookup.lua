@@ -175,12 +175,25 @@ NetworkLookup.material_size_lookup = {
 	"large",
 	"small"
 }
+NetworkLookup.collectible_type_lookup = {
+	"collectible",
+	"destructible"
+}
 NetworkLookup.moveable_platform_direction = {
 	"none",
 	"forward",
 	"backward"
 }
 NetworkLookup.outline_types = _create_lookup({}, OutlineSettings.outline_types)
+NetworkLookup.assist_type_lookup = {
+	"assisted",
+	"saved",
+	"revived",
+	"rescued",
+	"cleansed",
+	"gifted",
+	"stimmed"
+}
 local minion_attack_selection_template_names = {}
 NetworkLookup.minigame_states = _create_lookup({}, MinigameSettings.states)
 NetworkLookup.minigame_game_states = _create_lookup({}, MinigameSettings.game_states)

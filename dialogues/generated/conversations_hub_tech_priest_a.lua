@@ -423,6 +423,19 @@ local conversations_hub_tech_priest_a = {
 		},
 		randomize_indexes = {}
 	},
+	shipmistress_hub_announcement_a_55_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 2,
+		sound_events = {
+			[1.0] = "loc_tech_priest_a__shipmistress_hub_announcement_a_55_b_01",
+			[2.0] = "loc_tech_priest_a__shipmistress_hub_announcement_a_55_b_02"
+		},
+		sound_events_duration = {
+			[1.0] = 6.001875,
+			[2.0] = 7.173792
+		},
+		randomize_indexes = {}
+	},
 	tech_priest_distance = {
 		randomize_indexes_n = 0,
 		sound_events_n = 20,

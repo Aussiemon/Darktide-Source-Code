@@ -1380,7 +1380,7 @@ local legend_inputs = {
 		display_name = "loc_rotate",
 		alignment = "right_alignment",
 		visibility_function = function (parent)
-			return not parent._using_cursor_navigation and parent._is_character_showing and not parent._loading_overlay_visible
+			return not parent._using_cursor_navigation and parent._is_character_showing and not parent._loading_overlay_visible and not parent._in_barber_chair
 		end
 	},
 	{

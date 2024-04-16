@@ -323,6 +323,7 @@ Interactable.component_data = {
 			"marks_vendor",
 			"mission_board",
 			"moveable_platform",
+			"penance_collectible",
 			"penances",
 			"premium_vendor",
 			"cosmetics_vendor",
@@ -356,6 +357,7 @@ Interactable.component_data = {
 			"marks_vendor",
 			"mission_board",
 			"moveable_platform",
+			"penance_collectible",
 			"penances",
 			"premium_vendor",
 			"cosmetics_vendor",
@@ -383,6 +385,7 @@ Interactable.component_data = {
 			"mission",
 			"pickup",
 			"point_of_interest",
+			"puzzle",
 			"use_template"
 		},
 		options_values = {
@@ -391,6 +394,7 @@ Interactable.component_data = {
 			"mission",
 			"pickup",
 			"point_of_interest",
+			"puzzle",
 			"use_template"
 		}
 	},

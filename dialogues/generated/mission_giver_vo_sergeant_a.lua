@@ -838,6 +838,51 @@ local mission_giver_vo_sergeant_a = {
 		},
 		randomize_indexes = {}
 	},
+	mission_habs_redux_briefing_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 3,
+		sound_events = {
+			"loc_sergeant_a__mission_habs_redux_briefing_a_01",
+			"loc_sergeant_a__mission_habs_redux_briefing_a_02",
+			"loc_sergeant_a__mission_habs_redux_briefing_a_03"
+		},
+		sound_events_duration = {
+			3.952563,
+			6.9865,
+			5.083771
+		},
+		randomize_indexes = {}
+	},
+	mission_habs_redux_briefing_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 3,
+		sound_events = {
+			"loc_sergeant_a__mission_habs_redux_briefing_b_01",
+			"loc_sergeant_a__mission_habs_redux_briefing_b_02",
+			"loc_sergeant_a__mission_habs_redux_briefing_b_03"
+		},
+		sound_events_duration = {
+			13.14764,
+			11.15192,
+			12.48079
+		},
+		randomize_indexes = {}
+	},
+	mission_habs_redux_briefing_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 3,
+		sound_events = {
+			"loc_sergeant_a__mission_habs_redux_briefing_c_01",
+			"loc_sergeant_a__mission_habs_redux_briefing_c_02",
+			"loc_sergeant_a__mission_habs_redux_briefing_c_03"
+		},
+		sound_events_duration = {
+			7.298708,
+			7.039292,
+			8.298542
+		},
+		randomize_indexes = {}
+	},
 	mission_propaganda_briefing_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 4,

@@ -131,14 +131,6 @@ local on_demand_vo_zealot_female_c = {
 			1.087615,
 			1.3095
 		},
-		sound_event_weights = {
-			0.1666667,
-			0.1666667,
-			0.1666667,
-			0.1666667,
-			0.1666667,
-			0.1666667
-		},
 		randomize_indexes = {}
 	},
 	com_wheel_vo_need_that = {

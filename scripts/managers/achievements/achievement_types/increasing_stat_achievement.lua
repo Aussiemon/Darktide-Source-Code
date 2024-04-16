@@ -10,11 +10,19 @@ local IncreasingStatAchievement = {
 		return stat_value and achievement_definition.target <= stat_value
 	end,
 	verifier = function (achievement_definition)
-		local has_stat = type(achievement_definition.stat_name) == "string"
-		local has_target = type(achievement_definition.target) == "number"
-		local stat_exists = StatDefinitions[achievement_definition.stat_name] ~= nil
+		if not type(achievement_definition.stat_name) == "string" then
+			return false, "missing stat"
+		end
 
-		return has_stat and has_target and stat_exists
+		if not type(achievement_definition.target) == "number" then
+			return false, "missing target"
+		end
+
+		if not StatDefinitions[achievement_definition.stat_name] then
+			return false, "stat does not exist"
+		end
+
+		return true
 	end,
 	get_triggers = function (achievement_definition)
 		return achievement_definition.stat_name

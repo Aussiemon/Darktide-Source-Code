@@ -3605,7 +3605,9 @@ return function ()
 					"loc_zealot_female_a__combat_pause_quirk_killing_stopped_b_01",
 					"loc_zealot_female_a__combat_pause_quirk_club_thump_b_01",
 					"loc_zealot_female_a__combat_pause_quirk_rations_b_01",
-					"loc_zealot_female_a__combat_pause_limited_zealot_b_13_b_01"
+					"loc_zealot_female_a__combat_pause_limited_zealot_b_13_b_01",
+					"loc_zealot_female_a__combat_pause_one_liner_06",
+					"loc_zealot_female_a__combat_pause_one_liner_02"
 				}
 			},
 			{
@@ -5505,7 +5507,7 @@ return function ()
 		},
 		on_pre_rule_execution = {
 			random_ignore_vo = {
-				chance = 0.3,
+				chance = 0.15,
 				max_failed_tries = 0,
 				hold_for = 0
 			}
@@ -6398,7 +6400,7 @@ return function ()
 				"user_context",
 				"enemies_close",
 				OP.LT,
-				1
+				3
 			},
 			{
 				"global_context",
@@ -6439,7 +6441,7 @@ return function ()
 				"time_since_last_short_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				140
+				100
 			},
 			{
 				"faction_memory",
@@ -6459,7 +6461,7 @@ return function ()
 				"time_since_friendly_fire_ps_og",
 				OP.TIMEDIFF,
 				OP.LT,
-				90
+				180
 			}
 		},
 		on_done = {

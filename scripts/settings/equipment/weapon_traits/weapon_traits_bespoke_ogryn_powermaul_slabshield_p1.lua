@@ -92,11 +92,6 @@ templates.weapon_trait_bespoke_ogryn_powermaul_slabshield_p1_staggered_targets_r
 		}
 	}
 }
-templates.weapon_trait_bespoke_ogryn_powermaul_slabshield_p1_taunt_target_on_hit = {
-	weapon_trait_bespoke_ogryn_powermaul_slabshield_p1_taunt_target_on_hit = {
-		{}
-	}
-}
 templates.weapon_trait_bespoke_ogryn_powermaul_slabshield_p1_pass_past_armor_on_crit = {
 	weapon_trait_bespoke_ogryn_powermaul_slabshield_p1_pass_past_armor_on_crit = {
 		{}

@@ -1024,7 +1024,7 @@ return function ()
 			},
 			{
 				"faction_memory",
-				"enemy_cultist_grenadier",
+				"enemy_grenadier",
 				OP.TIMESET
 			}
 		},
@@ -1481,7 +1481,7 @@ return function ()
 			},
 			{
 				"faction_memory",
-				"enemy_renegade_grenadier",
+				"enemy_grenadier",
 				OP.TIMESET
 			}
 		},

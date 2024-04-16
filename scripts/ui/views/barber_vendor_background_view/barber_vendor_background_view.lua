@@ -12,6 +12,16 @@ end
 BarberVendorBackgroundView.on_enter = function (self)
 	BarberVendorBackgroundView.super.on_enter(self)
 
+	local viewport_name = Definitions.background_world_params.viewport_name
+
+	if self._world_spawner then
+		self._world_spawner:set_listener(viewport_name)
+	end
+
+	self._backend_interfaces = Managers.backend.interfaces
+
+	self:_fetch_operations()
+
 	local narrative_manager = Managers.narrative
 	local narrative_event_name = "level_unlock_barber_visited"
 
@@ -24,12 +34,52 @@ BarberVendorBackgroundView.on_enter = function (self)
 end
 
 BarberVendorBackgroundView.on_exit = function (self)
+	if self._world_spawner then
+		self._world_spawner:release_listener()
+	end
+
 	BarberVendorBackgroundView.super.on_exit(self)
 
 	local level = Managers.state.mission and Managers.state.mission:mission_level()
 
 	if level then
 		Level.trigger_event(level, "lua_barber_store_closed")
+	end
+end
+
+BarberVendorBackgroundView._fetch_operations = function (self)
+	local promise = self._backend_interfaces.characters:fetch_operations()
+
+	promise:next(function (data)
+		if not self._destroyed then
+			local shopkeep = "barber"
+			self._operations = data[shopkeep]
+		end
+	end)
+end
+
+BarberVendorBackgroundView.get_mindwipe_cost = function (self)
+	local cost = {
+		type = "credits",
+		amount = self._cost
+	}
+
+	return cost
+end
+
+BarberVendorBackgroundView.can_afford_mindwipe = function (self)
+	local barber_operations = self._operations
+
+	if barber_operations then
+		local operation_type = "transform"
+		local mindwipe_operation = barber_operations[operation_type]
+		local currency = mindwipe_operation.type
+		local cost = mindwipe_operation.amount
+		local can_afford = self:can_afford(cost, currency)
+		self._cost = cost
+		self._balance = self:get_balance(currency)
+
+		return can_afford
 	end
 end
 

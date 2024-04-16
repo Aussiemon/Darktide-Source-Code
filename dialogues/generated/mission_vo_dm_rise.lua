@@ -28,7 +28,8 @@ return function ()
 				args = {
 					"sergeant",
 					"purser",
-					"contract_vendor"
+					"contract_vendor",
+					"training_ground_psyker"
 				}
 			},
 			{
@@ -77,7 +78,9 @@ return function ()
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"purser"
+					"purser",
+					"sergeant",
+					"barber"
 				}
 			},
 			{
@@ -97,55 +100,6 @@ return function ()
 		},
 		heard_speak_routing = {
 			target = "mission_givers"
-		}
-	})
-	define_rule({
-		post_wwise_event = "play_radio_static_end",
-		concurrent_wwise_event = "play_vox_static_loop",
-		pre_wwise_event = "play_radio_static_start",
-		name = "mission_rise_banter_one_a_sergeant_branch",
-		response = "mission_rise_banter_one_a_sergeant_branch",
-		database = "mission_vo_dm_rise",
-		wwise_route = 1,
-		category = "vox_prio_0",
-		criterias = {
-			{
-				"query_context",
-				"concept",
-				OP.EQ,
-				"mission_info"
-			},
-			{
-				"query_context",
-				"trigger_id",
-				OP.EQ,
-				"mission_rise_banter_one_a"
-			},
-			{
-				"user_context",
-				"class_name",
-				OP.SET_INCLUDES,
-				args = {
-					"sergeant"
-				}
-			},
-			{
-				"faction_memory",
-				"mission_rise_banter_one_a",
-				OP.EQ,
-				0
-			}
-		},
-		on_done = {
-			{
-				"faction_memory",
-				"mission_rise_banter_one_a",
-				OP.ADD,
-				1
-			}
-		},
-		heard_speak_routing = {
-			target = "disabled"
 		}
 	})
 	define_rule({
@@ -218,7 +172,9 @@ return function ()
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"purser"
+					"purser",
+					"sergeant",
+					"barber"
 				}
 			},
 			{
@@ -238,55 +194,6 @@ return function ()
 		},
 		heard_speak_routing = {
 			target = "mission_givers"
-		}
-	})
-	define_rule({
-		post_wwise_event = "play_radio_static_end",
-		concurrent_wwise_event = "play_vox_static_loop",
-		pre_wwise_event = "play_radio_static_start",
-		name = "mission_rise_banter_three_a_sergeant_branch",
-		response = "mission_rise_banter_three_a_sergeant_branch",
-		database = "mission_vo_dm_rise",
-		wwise_route = 1,
-		category = "vox_prio_0",
-		criterias = {
-			{
-				"query_context",
-				"concept",
-				OP.EQ,
-				"mission_info"
-			},
-			{
-				"query_context",
-				"trigger_id",
-				OP.EQ,
-				"mission_rise_banter_three_a"
-			},
-			{
-				"user_context",
-				"class_name",
-				OP.SET_INCLUDES,
-				args = {
-					"sergeant"
-				}
-			},
-			{
-				"faction_memory",
-				"mission_rise_banter_three_a",
-				OP.EQ,
-				0
-			}
-		},
-		on_done = {
-			{
-				"faction_memory",
-				"mission_rise_banter_three_a",
-				OP.ADD,
-				1
-			}
-		},
-		heard_speak_routing = {
-			target = "disabled"
 		}
 	})
 	define_rule({
@@ -360,7 +267,8 @@ return function ()
 				OP.SET_INCLUDES,
 				args = {
 					"contract_vendor",
-					"sergeant"
+					"sergeant",
+					"barber"
 				}
 			},
 			{
@@ -445,7 +353,7 @@ return function ()
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"mission_rise_end_event_corruptor_two_a"
+				"mission_rise_blast_gate_a"
 			},
 			{
 				"user_context",
@@ -454,7 +362,8 @@ return function ()
 				args = {
 					"sergeant",
 					"purser",
-					"contract_vendor"
+					"contract_vendor",
+					"barber"
 				}
 			},
 			{
@@ -504,7 +413,8 @@ return function ()
 				OP.SET_INCLUDES,
 				args = {
 					"sergeant",
-					"purser"
+					"purser",
+					"barber"
 				}
 			},
 			{
@@ -791,6 +701,390 @@ return function ()
 		post_wwise_event = "play_radio_static_end",
 		concurrent_wwise_event = "play_vox_static_loop",
 		pre_wwise_event = "play_radio_static_start",
+		name = "mission_rise_elevator_conversation_01_a",
+		response = "mission_rise_elevator_conversation_01_a",
+		database = "mission_vo_dm_rise",
+		wwise_route = 1,
+		category = "vox_prio_0",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"mission_info"
+			},
+			{
+				"query_context",
+				"trigger_id",
+				OP.EQ,
+				"mission_rise_elevator_conversation_01_a"
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"training_ground_psyker"
+				}
+			},
+			{
+				"faction_memory",
+				"mission_rise_elevator_conversation_01_a",
+				OP.EQ,
+				0
+			}
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"mission_rise_elevator_conversation_01_a",
+				OP.ADD,
+				1
+			}
+		},
+		heard_speak_routing = {
+			target = "mission_givers"
+		}
+	})
+	define_rule({
+		pre_wwise_event = "play_radio_static_start",
+		concurrent_wwise_event = "play_vox_static_loop",
+		name = "mission_rise_elevator_conversation_01_b",
+		wwise_route = 1,
+		response = "mission_rise_elevator_conversation_01_b",
+		database = "mission_vo_dm_rise",
+		category = "vox_prio_0",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"mission_rise_elevator_conversation_01_a"
+				}
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"barber"
+				}
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_givers"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
+		post_wwise_event = "play_radio_static_end",
+		concurrent_wwise_event = "play_vox_static_loop",
+		name = "mission_rise_elevator_conversation_01_c",
+		wwise_route = 1,
+		response = "mission_rise_elevator_conversation_01_c",
+		database = "mission_vo_dm_rise",
+		category = "vox_prio_0",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"mission_rise_elevator_conversation_01_b"
+				}
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"training_ground_psyker"
+				}
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_givers"
+		}
+	})
+	define_rule({
+		post_wwise_event = "play_radio_static_end",
+		concurrent_wwise_event = "play_vox_static_loop",
+		pre_wwise_event = "play_radio_static_start",
+		name = "mission_rise_elevator_conversation_02_a",
+		response = "mission_rise_elevator_conversation_02_a",
+		database = "mission_vo_dm_rise",
+		wwise_route = 1,
+		category = "vox_prio_0",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"mission_info"
+			},
+			{
+				"query_context",
+				"trigger_id",
+				OP.EQ,
+				"mission_rise_elevator_conversation_02_a"
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"training_ground_psyker"
+				}
+			},
+			{
+				"faction_memory",
+				"mission_rise_elevator_conversation_02_a",
+				OP.EQ,
+				0
+			}
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"mission_rise_elevator_conversation_02_a",
+				OP.ADD,
+				1
+			}
+		},
+		heard_speak_routing = {
+			target = "mission_givers"
+		}
+	})
+	define_rule({
+		pre_wwise_event = "play_radio_static_start",
+		concurrent_wwise_event = "play_vox_static_loop",
+		name = "mission_rise_elevator_conversation_02_b",
+		wwise_route = 1,
+		response = "mission_rise_elevator_conversation_02_b",
+		database = "mission_vo_dm_rise",
+		category = "vox_prio_0",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"mission_rise_elevator_conversation_02_a"
+				}
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"barber"
+				}
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_givers"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
+		post_wwise_event = "play_radio_static_end",
+		concurrent_wwise_event = "play_vox_static_loop",
+		name = "mission_rise_elevator_conversation_02_c",
+		wwise_route = 1,
+		response = "mission_rise_elevator_conversation_02_c",
+		database = "mission_vo_dm_rise",
+		category = "vox_prio_0",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"mission_rise_elevator_conversation_02_b"
+				}
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"training_ground_psyker"
+				}
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_givers"
+		}
+	})
+	define_rule({
+		post_wwise_event = "play_radio_static_end",
+		concurrent_wwise_event = "play_vox_static_loop",
+		pre_wwise_event = "play_radio_static_start",
+		name = "mission_rise_elevator_conversation_03_a",
+		response = "mission_rise_elevator_conversation_03_a",
+		database = "mission_vo_dm_rise",
+		wwise_route = 1,
+		category = "vox_prio_0",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"mission_info"
+			},
+			{
+				"query_context",
+				"trigger_id",
+				OP.EQ,
+				"mission_rise_elevator_conversation_03_a"
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"barber"
+				}
+			},
+			{
+				"faction_memory",
+				"mission_rise_elevator_conversation_03_a",
+				OP.EQ,
+				0
+			}
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"mission_rise_elevator_conversation_03_a",
+				OP.ADD,
+				1
+			}
+		},
+		heard_speak_routing = {
+			target = "mission_givers"
+		}
+	})
+	define_rule({
+		pre_wwise_event = "play_radio_static_start",
+		concurrent_wwise_event = "play_vox_static_loop",
+		name = "mission_rise_elevator_conversation_03_b",
+		wwise_route = 1,
+		response = "mission_rise_elevator_conversation_03_b",
+		database = "mission_vo_dm_rise",
+		category = "vox_prio_0",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"mission_rise_elevator_conversation_03_a"
+				}
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"training_ground_psyker"
+				}
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_givers"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
+		post_wwise_event = "play_radio_static_end",
+		concurrent_wwise_event = "play_vox_static_loop",
+		name = "mission_rise_elevator_conversation_03_c",
+		wwise_route = 1,
+		response = "mission_rise_elevator_conversation_03_c",
+		database = "mission_vo_dm_rise",
+		category = "vox_prio_0",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"mission_rise_elevator_conversation_03_b"
+				}
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"barber"
+				}
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_givers"
+		}
+	})
+	define_rule({
+		post_wwise_event = "play_radio_static_end",
+		concurrent_wwise_event = "play_vox_static_loop",
+		pre_wwise_event = "play_radio_static_start",
 		name = "mission_rise_elevator_conversation_a",
 		response = "mission_rise_elevator_conversation_a",
 		database = "mission_vo_dm_rise",
@@ -1035,7 +1329,8 @@ return function ()
 				OP.SET_INCLUDES,
 				args = {
 					"sergeant",
-					"contract_vendor"
+					"contract_vendor",
+					"training_ground_psyker"
 				}
 			},
 			{
@@ -1086,7 +1381,8 @@ return function ()
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"purser"
+					"purser",
+					"barber"
 				}
 			}
 		},
@@ -1129,7 +1425,8 @@ return function ()
 				args = {
 					"sergeant",
 					"purser",
-					"contract_vendor"
+					"contract_vendor",
+					"training_ground_psyker"
 				}
 			},
 			{
@@ -1148,7 +1445,50 @@ return function ()
 			}
 		},
 		heard_speak_routing = {
+			target = "mission_givers"
+		}
+	})
+	define_rule({
+		post_wwise_event = "play_radio_static_end",
+		concurrent_wwise_event = "play_vox_static_loop",
+		pre_wwise_event = "play_radio_static_start",
+		name = "mission_rise_end_event_corruptor_one_b",
+		response = "mission_rise_end_event_corruptor_one_b",
+		database = "mission_vo_dm_rise",
+		wwise_route = 1,
+		category = "vox_prio_0",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"mission_rise_end_event_corruptor_one_a"
+				}
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"barber"
+				}
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
 			target = "disabled"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
 		}
 	})
 	define_rule({
@@ -1180,7 +1520,8 @@ return function ()
 				args = {
 					"sergeant",
 					"purser",
-					"contract_vendor"
+					"contract_vendor",
+					"barber"
 				}
 			},
 			{
@@ -1199,7 +1540,50 @@ return function ()
 			}
 		},
 		heard_speak_routing = {
+			target = "mission_giver_default"
+		}
+	})
+	define_rule({
+		post_wwise_event = "play_radio_static_end",
+		concurrent_wwise_event = "play_vox_static_loop",
+		pre_wwise_event = "play_radio_static_start",
+		name = "mission_rise_end_event_corruptor_one_dead_b",
+		response = "mission_rise_end_event_corruptor_one_dead_b",
+		database = "mission_vo_dm_rise",
+		wwise_route = 1,
+		category = "vox_prio_0",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"mission_rise_end_event_corruptor_one_dead_a"
+				}
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"training_ground_psyker"
+				}
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
 			target = "disabled"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
 		}
 	})
 	define_rule({
@@ -1231,7 +1615,8 @@ return function ()
 				args = {
 					"sergeant",
 					"purser",
-					"contract_vendor"
+					"contract_vendor",
+					"barber"
 				}
 			},
 			{
@@ -1250,7 +1635,50 @@ return function ()
 			}
 		},
 		heard_speak_routing = {
+			target = "mission_giver_default"
+		}
+	})
+	define_rule({
+		post_wwise_event = "play_radio_static_end",
+		concurrent_wwise_event = "play_vox_static_loop",
+		pre_wwise_event = "play_radio_static_start",
+		name = "mission_rise_end_event_corruptor_two_dead_b",
+		response = "mission_rise_end_event_corruptor_two_dead_b",
+		database = "mission_vo_dm_rise",
+		wwise_route = 1,
+		category = "vox_prio_0",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"mission_rise_end_event_corruptor_two_dead_a"
+				}
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"training_ground_psyker"
+				}
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
 			target = "disabled"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
 		}
 	})
 	define_rule({
@@ -1282,7 +1710,8 @@ return function ()
 				args = {
 					"sergeant",
 					"purser",
-					"contract_vendor"
+					"contract_vendor",
+					"barber"
 				}
 			},
 			{
@@ -1301,7 +1730,50 @@ return function ()
 			}
 		},
 		heard_speak_routing = {
+			target = "mission_giver_default"
+		}
+	})
+	define_rule({
+		post_wwise_event = "play_radio_static_end",
+		concurrent_wwise_event = "play_vox_static_loop",
+		pre_wwise_event = "play_radio_static_start",
+		name = "mission_rise_end_event_riser_moving_b",
+		response = "mission_rise_end_event_riser_moving_b",
+		database = "mission_vo_dm_rise",
+		wwise_route = 1,
+		category = "vox_prio_0",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"mission_rise_end_event_riser_moving_a"
+				}
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"training_ground_psyker"
+				}
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
 			target = "disabled"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
 		}
 	})
 	define_rule({
@@ -1332,7 +1804,8 @@ return function ()
 				OP.SET_INCLUDES,
 				args = {
 					"sergeant",
-					"purser"
+					"purser",
+					"barber"
 				}
 			},
 			{
@@ -1351,7 +1824,7 @@ return function ()
 			}
 		},
 		heard_speak_routing = {
-			target = "mission_givers"
+			target = "all_including_self"
 		}
 	})
 	define_rule({
@@ -1372,13 +1845,21 @@ return function ()
 			},
 			{
 				"query_context",
-				"sound_event",
+				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"loc_purser_a__mission_rise_end_event_start_a_01",
-					"loc_purser_a__mission_rise_end_event_start_a_02",
-					"loc_purser_a__mission_rise_end_event_start_a_03",
-					"loc_purser_a__mission_rise_end_event_start_a_04"
+					"mission_rise_end_event_start_a"
+				}
+			},
+			{
+				"query_context",
+				"sound_event",
+				OP.SET_NOT_INTERSECTS,
+				args = {
+					"loc_sergeant_a__mission_rise_end_event_start_a_01",
+					"loc_sergeant_a__mission_rise_end_event_start_a_02",
+					"loc_sergeant_a__mission_rise_end_event_start_a_03",
+					"loc_sergeant_a__mission_rise_end_event_start_a_04"
 				}
 			},
 			{
@@ -1386,13 +1867,14 @@ return function ()
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"contract_vendor"
+					"contract_vendor",
+					"barber"
 				}
 			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_giver_default"
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
@@ -1472,7 +1954,8 @@ return function ()
 				args = {
 					"sergeant",
 					"purser",
-					"contract_vendor"
+					"contract_vendor",
+					"barber"
 				}
 			},
 			{
@@ -1491,7 +1974,179 @@ return function ()
 			}
 		},
 		heard_speak_routing = {
+			target = "mission_giver_default"
+		}
+	})
+	define_rule({
+		post_wwise_event = "play_radio_static_end",
+		concurrent_wwise_event = "play_vox_static_loop",
+		pre_wwise_event = "play_radio_static_start",
+		name = "mission_rise_event_one_complete_b",
+		response = "mission_rise_event_one_complete_b",
+		database = "mission_vo_dm_rise",
+		wwise_route = 1,
+		category = "vox_prio_0",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"mission_rise_event_one_complete_a"
+				}
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"training_ground_psyker"
+				}
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_givers"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
+		post_wwise_event = "play_radio_static_end",
+		concurrent_wwise_event = "play_vox_static_loop",
+		pre_wwise_event = "play_radio_static_start",
+		name = "mission_rise_event_one_complete_c",
+		response = "mission_rise_event_one_complete_c",
+		database = "mission_vo_dm_rise",
+		wwise_route = 1,
+		category = "vox_prio_0",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"mission_rise_event_one_complete_b"
+				}
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"barber"
+				}
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_givers"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
+		post_wwise_event = "play_radio_static_end",
+		concurrent_wwise_event = "play_vox_static_loop",
+		pre_wwise_event = "play_radio_static_start",
+		name = "mission_rise_event_one_complete_d",
+		response = "mission_rise_event_one_complete_d",
+		database = "mission_vo_dm_rise",
+		wwise_route = 1,
+		category = "vox_prio_0",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"mission_rise_event_one_complete_c"
+				}
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"training_ground_psyker"
+				}
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_givers"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
+		post_wwise_event = "play_radio_static_end",
+		concurrent_wwise_event = "play_vox_static_loop",
+		pre_wwise_event = "play_radio_static_start",
+		name = "mission_rise_event_one_complete_e",
+		response = "mission_rise_event_one_complete_e",
+		database = "mission_vo_dm_rise",
+		wwise_route = 1,
+		category = "vox_prio_0",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"mission_rise_event_one_complete_d"
+				}
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"barber"
+				}
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
 			target = "disabled"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
 		}
 	})
 	define_rule({
@@ -1523,7 +2178,8 @@ return function ()
 				args = {
 					"sergeant",
 					"purser",
-					"contract_vendor"
+					"contract_vendor",
+					"training_ground_psyker"
 				}
 			},
 			{
@@ -1542,7 +2198,7 @@ return function ()
 			}
 		},
 		heard_speak_routing = {
-			target = "mission_givers"
+			target = "all_including_self"
 		}
 	})
 	define_rule({
@@ -1563,13 +2219,10 @@ return function ()
 			},
 			{
 				"query_context",
-				"sound_event",
+				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"loc_purser_a__mission_rise_event_one_start_a_01",
-					"loc_purser_a__mission_rise_event_one_start_a_02",
-					"loc_purser_a__mission_rise_event_one_start_a_03",
-					"loc_purser_a__mission_rise_event_one_start_a_04"
+					"mission_rise_event_one_start_a"
 				}
 			},
 			{
@@ -1577,13 +2230,14 @@ return function ()
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"contract_vendor"
+					"contract_vendor",
+					"training_ground_psyker"
 				}
 			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_giver_default"
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
@@ -1663,7 +2317,8 @@ return function ()
 				args = {
 					"sergeant",
 					"purser",
-					"contract_vendor"
+					"contract_vendor",
+					"training_ground_psyker"
 				}
 			},
 			{
@@ -1790,7 +2445,8 @@ return function ()
 				args = {
 					"sergeant",
 					"purser",
-					"contract_vendor"
+					"contract_vendor",
+					"barber"
 				}
 			},
 			{
@@ -1809,7 +2465,50 @@ return function ()
 			}
 		},
 		heard_speak_routing = {
-			target = "disabled"
+			target = "mission_giver_default"
+		}
+	})
+	define_rule({
+		post_wwise_event = "play_radio_static_end",
+		concurrent_wwise_event = "play_vox_static_loop",
+		pre_wwise_event = "play_radio_static_start",
+		name = "mission_rise_first_tracks_b",
+		response = "mission_rise_first_tracks_b",
+		database = "mission_vo_dm_rise",
+		wwise_route = 1,
+		category = "vox_prio_0",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"mission_rise_first_tracks_a"
+				}
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"training_ground_psyker"
+				}
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_givers"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
 		}
 	})
 	define_rule({
@@ -1841,7 +2540,8 @@ return function ()
 				args = {
 					"sergeant",
 					"purser",
-					"contract_vendor"
+					"contract_vendor",
+					"barber"
 				}
 			},
 			{
@@ -1924,7 +2624,8 @@ return function ()
 				args = {
 					"sergeant",
 					"purser",
-					"contract_vendor"
+					"contract_vendor",
+					"barber"
 				}
 			},
 			{
@@ -1974,7 +2675,8 @@ return function ()
 				OP.SET_INCLUDES,
 				args = {
 					"sergeant",
-					"contract_vendor"
+					"contract_vendor",
+					"barber"
 				}
 			},
 			{
@@ -2014,13 +2716,10 @@ return function ()
 			},
 			{
 				"query_context",
-				"sound_event",
+				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"loc_contract_vendor_a__mission_rise_pipe_bridge_a_01",
-					"loc_contract_vendor_a__mission_rise_pipe_bridge_a_02",
-					"loc_contract_vendor_a__mission_rise_pipe_bridge_a_03",
-					"loc_contract_vendor_a__mission_rise_pipe_bridge_a_04"
+					"mission_rise_pipe_bridge_a"
 				}
 			},
 			{
@@ -2028,7 +2727,8 @@ return function ()
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"purser"
+					"purser",
+					"training_ground_psyker"
 				}
 			}
 		},
@@ -2071,7 +2771,8 @@ return function ()
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"contract_vendor"
+					"contract_vendor",
+					"barber"
 				}
 			}
 		},
@@ -2114,7 +2815,8 @@ return function ()
 				args = {
 					"sergeant",
 					"purser",
-					"contract_vendor"
+					"contract_vendor",
+					"training_ground_psyker"
 				}
 			},
 			{
@@ -2133,7 +2835,50 @@ return function ()
 			}
 		},
 		heard_speak_routing = {
+			target = "mission_givers"
+		}
+	})
+	define_rule({
+		post_wwise_event = "play_radio_static_end",
+		concurrent_wwise_event = "play_vox_static_loop",
+		pre_wwise_event = "play_radio_static_start",
+		name = "mission_rise_siding_b",
+		response = "mission_rise_siding_b",
+		database = "mission_vo_dm_rise",
+		wwise_route = 1,
+		category = "vox_prio_0",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"mission_rise_siding_a"
+				}
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"barber"
+				}
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
 			target = "disabled"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
 		}
 	})
 	define_rule({
@@ -2164,7 +2909,8 @@ return function ()
 				OP.SET_INCLUDES,
 				args = {
 					"sergeant",
-					"purser"
+					"purser",
+					"training_ground_psyker"
 				}
 			},
 			{
@@ -2183,16 +2929,17 @@ return function ()
 			}
 		},
 		heard_speak_routing = {
-			target = "mission_givers"
+			target = "all"
 		}
 	})
 	define_rule({
 		post_wwise_event = "play_radio_static_end",
 		concurrent_wwise_event = "play_vox_static_loop",
+		pre_wwise_event = "play_radio_static_start",
 		name = "mission_rise_start_b",
-		wwise_route = 1,
 		response = "mission_rise_start_b",
 		database = "mission_vo_dm_rise",
+		wwise_route = 1,
 		category = "vox_prio_0",
 		criterias = {
 			{
@@ -2203,13 +2950,10 @@ return function ()
 			},
 			{
 				"query_context",
-				"sound_event",
+				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"loc_purser_a__mission_rise_start_a_01",
-					"loc_purser_a__mission_rise_start_a_02",
-					"loc_purser_a__mission_rise_start_a_03",
-					"loc_purser_a__mission_rise_start_a_04"
+					"mission_rise_start_a"
 				}
 			},
 			{
@@ -2217,13 +2961,14 @@ return function ()
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"contract_vendor"
+					"contract_vendor",
+					"barber"
 				}
 			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_giver_default"
+			target = "mission_givers"
 		}
 	})
 	define_rule({
@@ -2333,7 +3078,8 @@ return function ()
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"purser"
+					"purser",
+					"training_ground_psyker"
 				}
 			}
 		},
@@ -2371,13 +3117,14 @@ return function ()
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"contract_vendor"
+					"contract_vendor",
+					"barber"
 				}
 			}
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "mission_giver_default"
+			target = "mission_givers"
 		}
 	})
 	define_rule({
@@ -2447,7 +3194,8 @@ return function ()
 				args = {
 					"sergeant",
 					"purser",
-					"contract_vendor"
+					"contract_vendor",
+					"barber"
 				}
 			},
 			{
@@ -2498,7 +3246,8 @@ return function ()
 				args = {
 					"sergeant",
 					"purser",
-					"contract_vendor"
+					"contract_vendor",
+					"barber"
 				}
 			},
 			{

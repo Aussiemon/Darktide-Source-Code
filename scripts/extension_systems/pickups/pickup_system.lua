@@ -895,7 +895,7 @@ PickupSystem.picked_up = function (self, pickup_unit, player_session_id)
 	self:interact_with(pickup_unit, player_session_id)
 end
 
-PickupSystem.register_material_collected = function (self, pickup_unit, interactor_unit, type, size)
+PickupSystem.register_material_collected = function (self, pickup_unit, interactor_unit, type, size, optional_ignore_notification, optional_allow_multiple_per_unit)
 	local type_list = self._material_collected[type]
 
 	if not type_list then
@@ -917,17 +917,19 @@ PickupSystem.register_material_collected = function (self, pickup_unit, interact
 		Managers.stats:record_private("hook_collect_material", player, type, amount)
 	end
 
-	local player = Managers.state.player_unit_spawn:owner(interactor_unit)
+	if not optional_ignore_notification then
+		local player = Managers.state.player_unit_spawn:owner(interactor_unit)
 
-	if player then
-		local peer_id = player:peer_id()
-		local material_type_lookup = NetworkLookup.material_type_lookup[type]
-		local material_size_lookup = NetworkLookup.material_size_lookup[size]
+		if player then
+			local peer_id = player:peer_id()
+			local material_type_lookup = NetworkLookup.material_type_lookup[type]
+			local material_size_lookup = NetworkLookup.material_size_lookup[size]
 
-		Managers.state.game_session:send_rpc_clients("rpc_player_collected_materials", peer_id, material_type_lookup, material_size_lookup)
+			Managers.state.game_session:send_rpc_clients("rpc_player_collected_materials", peer_id, material_type_lookup, material_size_lookup)
 
-		if not DEDICATED_SERVER then
-			self:_show_collected_materials_notification(peer_id, type, size)
+			if not DEDICATED_SERVER then
+				self:_show_collected_materials_notification(peer_id, type, size)
+			end
 		end
 	end
 

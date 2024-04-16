@@ -155,12 +155,18 @@ templates.empowered_poxwalker = {
 	class_name = "buff",
 	keywords = {
 		buff_keywords.stimmed,
-		buff_keywords.empowered
+		buff_keywords.empowered,
+		buff_keywords.in_toxic_gas
 	},
 	stat_buffs = {
-		[buff_stat_buffs.disgustingly_resilient_damage] = -0.35,
-		[buff_stat_buffs.melee_attack_speed] = 0.5,
-		[buff_stat_buffs.movement_speed] = 0.3500000000000001
+		[buff_stat_buffs.disgustingly_resilient_damage] = -0.2,
+		[buff_stat_buffs.unarmored_damage] = -0.2,
+		[buff_stat_buffs.resistant_damage] = -0.2,
+		[buff_stat_buffs.disgustingly_resilient_damage] = -0.2,
+		[buff_stat_buffs.berserker_damage] = -0.2,
+		[buff_stat_buffs.armored_damage] = -0.2,
+		[buff_stat_buffs.super_armor_damage] = -0.2,
+		[buff_stat_buffs.movement_speed] = 0.3999999999999999
 	},
 	start_func = function (template_data, template_context)
 		if not template_context.is_server then
@@ -295,8 +301,300 @@ templates.empowered_poxwalker = {
 		}
 	}
 }
-templates.empowered_poxwalker_with_duration = table.clone(templates.empowered_poxwalker)
-templates.empowered_poxwalker_with_duration.duration = 30
+templates.empowered_poxwalker_with_duration = {
+	class_name = "buff",
+	duration = 6,
+	keywords = {
+		buff_keywords.stimmed,
+		buff_keywords.empowered,
+		buff_keywords.in_toxic_gas
+	},
+	stat_buffs = {
+		[buff_stat_buffs.disgustingly_resilient_damage] = -0.2,
+		[buff_stat_buffs.unarmored_damage] = -0.2,
+		[buff_stat_buffs.resistant_damage] = -0.2,
+		[buff_stat_buffs.disgustingly_resilient_damage] = -0.2,
+		[buff_stat_buffs.berserker_damage] = -0.2,
+		[buff_stat_buffs.armored_damage] = -0.2,
+		[buff_stat_buffs.super_armor_damage] = -0.2,
+		[buff_stat_buffs.movement_speed] = 0.3999999999999999
+	},
+	start_func = function (template_data, template_context)
+		if not template_context.is_server then
+			return
+		end
+
+		local unit = template_context.unit
+		local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
+		local breed = unit_data_extension:breed()
+		local hit_mass = breed.hit_mass
+
+		if type(hit_mass) == "table" then
+			hit_mass = Managers.state.difficulty:get_table_entry_by_challenge(hit_mass)
+		end
+
+		template_data.old_hit_mass = hit_mass
+		local new_hit_mass = hit_mass * 2.5
+		local health_extension = ScriptUnit.extension(unit, "health_system")
+
+		health_extension:set_hit_mass(new_hit_mass)
+
+		local variable_name = "anim_move_speed"
+
+		if breed.animation_variable_init and breed.animation_variable_init[variable_name] then
+			local animation_extension = ScriptUnit.extension(unit, "animation_system")
+
+			animation_extension:set_variable(variable_name, 1.25)
+		end
+	end,
+	stop_func = function (template_data, template_context)
+		if not template_context.is_server then
+			return
+		end
+
+		local unit = template_context.unit
+
+		if not HEALTH_ALIVE[unit] then
+			return
+		end
+
+		local health_extension = ScriptUnit.extension(unit, "health_system")
+
+		health_extension:set_hit_mass(template_data.old_hit_mass)
+
+		local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
+		local breed = unit_data_extension:breed()
+		local variable_name = "anim_move_speed"
+
+		if breed.animation_variable_init and breed.animation_variable_init[variable_name] then
+			local animation_extension = ScriptUnit.extension(unit, "animation_system")
+
+			animation_extension:set_variable(variable_name, 1)
+		end
+	end,
+	minion_effects = {
+		node_effects = {
+			{
+				node_name = "j_lefteye",
+				vfx = {
+					orphaned_policy = "stop",
+					particle_effect = "content/fx/particles/enemies/glowing_eyes_no_flash",
+					stop_type = "destroy",
+					material_variables = {
+						{
+							variable_name = "trail_color",
+							material_name = "eye_glow",
+							value = YELLOW_STIM_COLOR
+						},
+						{
+							variable_name = "material_variable_21872256",
+							material_name = "eye_socket",
+							value = YELLOW_STIM_COLOR
+						}
+					}
+				}
+			},
+			{
+				node_name = "j_lefteyesocket",
+				vfx = {
+					orphaned_policy = "stop",
+					particle_effect = "content/fx/particles/enemies/glowing_eyes_no_flash",
+					stop_type = "destroy",
+					material_variables = {
+						{
+							variable_name = "trail_color",
+							material_name = "eye_glow",
+							value = YELLOW_STIM_COLOR
+						},
+						{
+							variable_name = "material_variable_21872256",
+							material_name = "eye_socket",
+							value = YELLOW_STIM_COLOR
+						}
+					}
+				}
+			},
+			{
+				node_name = "j_righteye",
+				vfx = {
+					orphaned_policy = "stop",
+					particle_effect = "content/fx/particles/enemies/glowing_eyes_no_flash",
+					stop_type = "destroy",
+					material_variables = {
+						{
+							variable_name = "trail_color",
+							material_name = "eye_glow",
+							value = YELLOW_STIM_COLOR
+						},
+						{
+							variable_name = "material_variable_21872256",
+							material_name = "eye_socket",
+							value = YELLOW_STIM_COLOR
+						}
+					}
+				}
+			}
+		}
+	}
+}
+templates.empowered_by_pox_gas = {
+	class_name = "buff",
+	keywords = {
+		buff_keywords.stimmed,
+		buff_keywords.empowered,
+		buff_keywords.in_toxic_gas
+	},
+	stat_buffs = {
+		[buff_stat_buffs.disgustingly_resilient_damage] = -0.2,
+		[buff_stat_buffs.unarmored_damage] = -0.2,
+		[buff_stat_buffs.resistant_damage] = -0.2,
+		[buff_stat_buffs.disgustingly_resilient_damage] = -0.2,
+		[buff_stat_buffs.berserker_damage] = -0.2,
+		[buff_stat_buffs.armored_damage] = -0.2,
+		[buff_stat_buffs.super_armor_damage] = -0.2,
+		[buff_stat_buffs.movement_speed] = 0.3999999999999999
+	},
+	start_func = function (template_data, template_context)
+		if not template_context.is_server then
+			return
+		end
+
+		local unit = template_context.unit
+		local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
+		local breed = unit_data_extension:breed()
+		local hit_mass = breed.hit_mass
+
+		if type(hit_mass) == "table" then
+			hit_mass = Managers.state.difficulty:get_table_entry_by_challenge(hit_mass)
+		end
+
+		template_data.old_hit_mass = hit_mass
+		local new_hit_mass = hit_mass * 2.5
+		local health_extension = ScriptUnit.extension(unit, "health_system")
+
+		health_extension:set_hit_mass(new_hit_mass)
+
+		local variable_name = "anim_move_speed"
+
+		if breed.animation_variable_init and breed.animation_variable_init[variable_name] then
+			local animation_extension = ScriptUnit.extension(unit, "animation_system")
+
+			animation_extension:set_variable(variable_name, 1.25)
+		end
+	end,
+	stop_func = function (template_data, template_context)
+		if not template_context.is_server then
+			return
+		end
+
+		local unit = template_context.unit
+
+		if not HEALTH_ALIVE[unit] then
+			return
+		end
+
+		local health_extension = ScriptUnit.extension(unit, "health_system")
+
+		health_extension:set_hit_mass(template_data.old_hit_mass)
+
+		local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
+		local breed = unit_data_extension:breed()
+		local variable_name = "anim_move_speed"
+
+		if breed.animation_variable_init and breed.animation_variable_init[variable_name] then
+			local animation_extension = ScriptUnit.extension(unit, "animation_system")
+
+			animation_extension:set_variable(variable_name, 1)
+		end
+
+		local buff_extension = ScriptUnit.has_extension(unit, "buff_system")
+
+		if buff_extension then
+			local t = Managers.time:time("gameplay")
+
+			buff_extension:add_internally_controlled_buff("empowered_poxwalker_with_duration", t)
+		end
+	end,
+	minion_effects = {
+		node_effects = {
+			{
+				node_name = "j_lefteye",
+				vfx = {
+					orphaned_policy = "stop",
+					particle_effect = "content/fx/particles/enemies/red_glowing_eyes",
+					stop_type = "destroy",
+					material_variables = {
+						{
+							variable_name = "material_variable_21872256",
+							material_name = "eye_flash_init",
+							value = YELLOW_STIM_COLOR
+						},
+						{
+							variable_name = "trail_color",
+							material_name = "eye_glow",
+							value = YELLOW_STIM_COLOR
+						},
+						{
+							variable_name = "material_variable_21872256",
+							material_name = "eye_socket",
+							value = YELLOW_STIM_COLOR
+						}
+					}
+				}
+			},
+			{
+				node_name = "j_lefteyesocket",
+				vfx = {
+					orphaned_policy = "stop",
+					particle_effect = "content/fx/particles/enemies/red_glowing_eyes",
+					stop_type = "destroy",
+					material_variables = {
+						{
+							variable_name = "material_variable_21872256",
+							material_name = "eye_flash_init",
+							value = YELLOW_STIM_COLOR
+						},
+						{
+							variable_name = "trail_color",
+							material_name = "eye_glow",
+							value = YELLOW_STIM_COLOR
+						},
+						{
+							variable_name = "material_variable_21872256",
+							material_name = "eye_socket",
+							value = YELLOW_STIM_COLOR
+						}
+					}
+				}
+			},
+			{
+				node_name = "j_righteye",
+				vfx = {
+					orphaned_policy = "stop",
+					particle_effect = "content/fx/particles/enemies/red_glowing_eyes",
+					stop_type = "destroy",
+					material_variables = {
+						{
+							variable_name = "material_variable_21872256",
+							material_name = "eye_flash_init",
+							value = YELLOW_STIM_COLOR
+						},
+						{
+							variable_name = "trail_color",
+							material_name = "eye_glow",
+							value = YELLOW_STIM_COLOR
+						},
+						{
+							variable_name = "material_variable_21872256",
+							material_name = "eye_socket",
+							value = YELLOW_STIM_COLOR
+						}
+					}
+				}
+			}
+		}
+	}
+}
 templates.empowered_twin = {
 	class_name = "buff",
 	target = buff_targets.minion_only,

@@ -1,3 +1,6 @@
+require("scripts/extension_systems/legacy_v2_proximity/minion_proximity_extension")
+require("scripts/extension_systems/legacy_v2_proximity/player_proximity_extension")
+
 local Breed = require("scripts/utilities/breed")
 local BreedSettings = require("scripts/settings/breed/breed_settings")
 local DialogueBreedSettings = require("scripts/settings/dialogue/dialogue_breed_settings")
@@ -20,9 +23,19 @@ local RAYCAST_ENEMY_CHECK_INTERVAL = DialogueSettings.raycast_enemy_check_interv
 local SEEN_RAYCAST_TARGET_NODE_NAME = "enemy_aim_target_02"
 local SEEN_ENEMY_PRECISION = DialogueSettings.seen_enemy_precision
 local LegacyV2ProximitySystem = class("LegacyV2ProximitySystem", "ExtensionSystemBase")
+local BEHIND_MULTIPLIER = 2
+local CAMERA_FOLLOW_TARGET_MULTIPLIER = 3
+local HAS_TARGET_MULTIPLIER = 2
 
 LegacyV2ProximitySystem.init = function (self, extension_system_creation_context, ...)
 	LegacyV2ProximitySystem.super.init(self, extension_system_creation_context, ...)
+
+	if not DEDICATED_SERVER then
+		local game_session = extension_system_creation_context.game_session
+		local target_unit_id_field_name = "target_unit_id"
+
+		FxProximityCulling.init(game_session, NetworkConstants.invalid_game_object_id, BEHIND_MULTIPLIER, CAMERA_FOLLOW_TARGET_MULTIPLIER, HAS_TARGET_MULTIPLIER, target_unit_id_field_name)
+	end
 
 	self._player_unit_extensions_map = {}
 	self._player_unit_component_map = {}
@@ -42,27 +55,38 @@ LegacyV2ProximitySystem.init = function (self, extension_system_creation_context
 	self._raycast_data = Script.new_map(3)
 end
 
+LegacyV2ProximitySystem.destroy = function (self)
+	if not DEDICATED_SERVER then
+		FxProximityCulling.destroy()
+	end
+
+	LegacyV2ProximitySystem.super.destroy(self)
+end
+
 local function _can_trigger_vo(breed_configuration)
 	return breed_configuration.trigger_heard_vo, breed_configuration.trigger_seen_vo
 end
 
-local function _camera_position()
+local function _camera_position_forward_direction_and_follow_go_id()
 	local local_player = Managers.player:local_player(1)
-	local position = local_player and Managers.state.camera:camera_position(local_player.viewport_name)
 
-	return position
+	if not local_player then
+		return nil, nil, nil
+	end
+
+	local pose = Managers.state.camera:camera_pose(local_player.viewport_name)
+	local position = Matrix4x4.translation(pose)
+	local forward = Matrix4x4.forward(pose)
+	local camera_handler = local_player.camera_handler
+	local camera_follow_unit = camera_handler:camera_follow_unit()
+	local camera_follow_go_id = Managers.state.unit_spawner:game_object_id(camera_follow_unit) or NetworkConstants.invalid_game_object_id
+
+	return position, forward, camera_follow_go_id
 end
 
-LegacyV2ProximitySystem.on_add_extension = function (self, world, unit, extension_name, extension_init_data)
-	local breed = extension_init_data.breed
-	local extension = {
-		breed = breed,
-		side_id = extension_init_data.side_id
-	}
-
-	ScriptUnit.set_extension(unit, self._name, extension)
-
-	self._unit_to_extension_map[unit] = extension
+LegacyV2ProximitySystem.on_add_extension = function (self, world, unit, extension_name, extension_init_data, ...)
+	local extension = LegacyV2ProximitySystem.super.on_add_extension(self, world, unit, extension_name, extension_init_data, ...)
+	local breed = extension.breed
 
 	if extension_name == "PlayerProximityExtension" then
 		extension.current_ptype = 0
@@ -130,7 +154,7 @@ LegacyV2ProximitySystem.on_add_extension = function (self, world, unit, extensio
 		if DEDICATED_SERVER then
 			extension.is_proximity_fx_enabled = false
 		else
-			local camera_position = _camera_position()
+			local camera_position, _, _ = _camera_position_forward_direction_and_follow_go_id()
 			local position = POSITION_LOOKUP[unit]
 			local distance_sq = camera_position and Vector3.distance_squared(position, camera_position)
 
@@ -146,16 +170,6 @@ LegacyV2ProximitySystem.on_add_extension = function (self, world, unit, extensio
 	return extension
 end
 
-LegacyV2ProximitySystem.extensions_ready = function (self, world, unit, extension_name)
-	if extension_name == "PlayerProximityExtension" then
-		local extension = self._player_unit_extensions_map[unit]
-		local side_system = Managers.state.extension:system("side_system")
-		local side_id = extension.side_id
-		local side = side_system:get_side(side_id)
-		extension.side = side
-	end
-end
-
 LegacyV2ProximitySystem.on_remove_extension = function (self, unit, extension_name)
 	local extension = self._unit_to_extension_map[unit]
 
@@ -167,9 +181,7 @@ LegacyV2ProximitySystem.on_remove_extension = function (self, unit, extension_na
 		self._num_units_that_support_proximity_driven_vo = self._num_units_that_support_proximity_driven_vo - 1
 	end
 
-	self._unit_to_extension_map[unit] = nil
-
-	ScriptUnit.remove_extension(unit, self._name)
+	LegacyV2ProximitySystem.super.on_remove_extension(self, unit, extension_name)
 end
 
 LegacyV2ProximitySystem.add_distance_based_vo_query = function (self, source_unit, concept_name, query_data)
@@ -339,37 +351,40 @@ end
 local MAX_ALLOWED_FX = 12
 
 LegacyV2ProximitySystem._update_nearby_minions = function (self, broadphase, broadphase_result)
-	local camera_position = _camera_position()
+	local camera_position, camera_forward, camera_follow_go_id = _camera_position_forward_direction_and_follow_go_id()
 
-	if camera_position then
-		local max_allowed = MAX_ALLOWED_FX
-		local unit_to_extension_map = self._unit_to_extension_map
-		local minion_units_proximity_new = self._minion_units_proximity_new
-		local minion_units_proximity_last = self._minion_units_proximity_last
-		local num_units_in_broadphase = Broadphase.query(broadphase, camera_position, PROXIMITY_FX_DISTANCE, broadphase_result, MINION_BREED_TYPE)
-		local num_units = math.min(max_allowed, num_units_in_broadphase)
-
-		for i = 1, num_units do
-			local unit = broadphase_result[i]
-
-			if not minion_units_proximity_last[unit] then
-				unit_to_extension_map[unit].is_proximity_fx_enabled = true
-			end
-
-			minion_units_proximity_new[unit] = true
-		end
-
-		for unit, _ in pairs(minion_units_proximity_last) do
-			if not minion_units_proximity_new[unit] and HEALTH_ALIVE[unit] then
-				unit_to_extension_map[unit].is_proximity_fx_enabled = false
-			end
-
-			minion_units_proximity_last[unit] = nil
-		end
-
-		self._minion_units_proximity_last = minion_units_proximity_new
-		self._minion_units_proximity_new = minion_units_proximity_last
+	if not camera_position then
+		return
 	end
+
+	local max_allowed = MAX_ALLOWED_FX
+	local num_units_in_broadphase = Broadphase.query(broadphase, camera_position, PROXIMITY_FX_DISTANCE, broadphase_result, MINION_BREED_TYPE)
+	local minion_units_near_sorted_by_score = FxProximityCulling.sort_by_score(camera_position, camera_forward, camera_follow_go_id, PROXIMITY_FX_DISTANCE, broadphase_result, num_units_in_broadphase)
+	local unit_to_extension_map = self._unit_to_extension_map
+	local minion_units_proximity_new = self._minion_units_proximity_new
+	local minion_units_proximity_last = self._minion_units_proximity_last
+	local num_units = math.min(max_allowed, num_units_in_broadphase)
+
+	for i = 1, num_units do
+		local unit = minion_units_near_sorted_by_score[i]
+
+		if not minion_units_proximity_last[unit] then
+			unit_to_extension_map[unit].is_proximity_fx_enabled = true
+		end
+
+		minion_units_proximity_new[unit] = true
+	end
+
+	for unit, _ in pairs(minion_units_proximity_last) do
+		if not minion_units_proximity_new[unit] and HEALTH_ALIVE[unit] then
+			unit_to_extension_map[unit].is_proximity_fx_enabled = false
+		end
+
+		minion_units_proximity_last[unit] = nil
+	end
+
+	self._minion_units_proximity_last = minion_units_proximity_new
+	self._minion_units_proximity_new = minion_units_proximity_last
 end
 
 local MAX_ANSWERING_MINIONS = 5

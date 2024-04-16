@@ -169,26 +169,26 @@ templates.weapon_trait_bespoke_autogun_p2_movement_speed_on_continous_fire = {
 	weapon_trait_bespoke_autogun_p2_movement_speed_on_continous_fire = {
 		{
 			stat_buffs = {
-				[stat_buffs.alternate_fire_movement_speed_reduction_modifier] = 0.93,
-				[stat_buffs.weapon_action_movespeed_reduction_multiplier] = 0.93
-			}
-		},
-		{
-			stat_buffs = {
-				[stat_buffs.alternate_fire_movement_speed_reduction_modifier] = 0.92,
-				[stat_buffs.weapon_action_movespeed_reduction_multiplier] = 0.92
-			}
-		},
-		{
-			stat_buffs = {
-				[stat_buffs.alternate_fire_movement_speed_reduction_modifier] = 0.91,
-				[stat_buffs.weapon_action_movespeed_reduction_multiplier] = 0.91
-			}
-		},
-		{
-			stat_buffs = {
 				[stat_buffs.alternate_fire_movement_speed_reduction_modifier] = 0.9,
 				[stat_buffs.weapon_action_movespeed_reduction_multiplier] = 0.9
+			}
+		},
+		{
+			stat_buffs = {
+				[stat_buffs.alternate_fire_movement_speed_reduction_modifier] = 0.85,
+				[stat_buffs.weapon_action_movespeed_reduction_multiplier] = 0.85
+			}
+		},
+		{
+			stat_buffs = {
+				[stat_buffs.alternate_fire_movement_speed_reduction_modifier] = 0.8,
+				[stat_buffs.weapon_action_movespeed_reduction_multiplier] = 0.8
+			}
+		},
+		{
+			stat_buffs = {
+				[stat_buffs.alternate_fire_movement_speed_reduction_modifier] = 0.75,
+				[stat_buffs.weapon_action_movespeed_reduction_multiplier] = 0.75
 			}
 		}
 	}

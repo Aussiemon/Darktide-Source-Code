@@ -1,12 +1,13 @@
 local DialogueSettings = require("scripts/settings/dialogue/dialogue_settings")
 
 local function record_telemetry(dialogue)
-	local sound_event = dialogue.sound_events[1]
-	local p1, p2 = sound_event:find("__")
-	local character_name = sound_event:sub(0, p1 - 1)
-	local bank_name = sound_event:sub(p2 + 1, sound_event:len() - 3)
+	if DEDICATED_SERVER then
+		local sound_event = dialogue.sound_events[1]
+		local p1, p2 = sound_event:find("__")
+		local bank_name = sound_event:sub(p2 + 1, sound_event:len() - 3)
 
-	Managers.telemetry_events:vo_bank_reshuffled(character_name, bank_name)
+		Managers.telemetry_reporters:reporter("voice_over_bank_reshuffled"):register_event(bank_name)
+	end
 end
 
 DialogueQueries = {

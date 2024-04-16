@@ -117,7 +117,7 @@ local scenegraph_definitions = {
 			1
 		}
 	},
-	class_name = {
+	character_title = {
 		vertical_alignment = "bottom",
 		parent = "class_badge",
 		horizontal_alignment = "center",
@@ -128,6 +128,20 @@ local scenegraph_definitions = {
 		position = {
 			0,
 			35,
+			1
+		}
+	},
+	class_name = {
+		vertical_alignment = "bottom",
+		parent = "class_badge",
+		horizontal_alignment = "center",
+		size = {
+			content_size[1],
+			50
+		},
+		position = {
+			0,
+			70,
 			1
 		}
 	},
@@ -231,6 +245,28 @@ local widget_definitions = {
 			}
 		}
 	}, "class_name"),
+	character_title = UIWidget.create_definition({
+		{
+			style_id = "text",
+			value_id = "text",
+			pass_type = "text",
+			value = "",
+			style = {
+				vertical_alignment = "bottom",
+				font_size = 24,
+				horizontal_alignment = "center",
+				font_type = "proxima_nova_bold",
+				text_vertical_alignment = "bottom",
+				text_horizontal_alignment = "center",
+				text_color = Color.terminal_text_body(255, true),
+				offset = {
+					0,
+					0,
+					1
+				}
+			}
+		}
+	}, "character_title"),
 	window_image = UIWidget.create_definition({
 		{
 			style_id = "texture",
@@ -533,6 +569,7 @@ local animation_definitions = {
 				widgets.class_badge.alpha_multiplier = 0
 				widgets.player_name.alpha_multiplier = 0
 				widgets.class_name.alpha_multiplier = 0
+				widgets.character_title.alpha_multiplier = 0
 				parent._content_alpha_multiplier = 0
 			end
 		},
@@ -581,6 +618,7 @@ local animation_definitions = {
 				widgets.class_badge.alpha_multiplier = anim_progress
 				widgets.player_name.alpha_multiplier = anim_progress
 				widgets.class_name.alpha_multiplier = anim_progress
+				widgets.character_title.alpha_multiplier = anim_progress
 			end
 		},
 		{
@@ -592,8 +630,6 @@ local animation_definitions = {
 			end,
 			update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress, params)
 				local anim_progress = math.easeCubic(progress)
-				local y_anim_distance_max = 50
-				local y_anim_distance = y_anim_distance_max - y_anim_distance_max * anim_progress
 
 				parent:_set_scenegraph_size("window", nil, 100 + (scenegraph_definition.window.size[2] - 100) * anim_progress)
 			end
@@ -614,6 +650,7 @@ local animation_definitions = {
 				widgets.class_badge.alpha_multiplier = anim_progress
 				widgets.player_name.alpha_multiplier = anim_progress
 				widgets.class_name.alpha_multiplier = anim_progress
+				widgets.character_title.alpha_multiplier = anim_progress
 			end
 		},
 		{

@@ -1,3 +1,4 @@
+local ArmorSettings = require("scripts/settings/damage/armor_settings")
 local BaseTemplateSettings = require("scripts/settings/equipment/weapon_templates/base_template_settings")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
@@ -11,7 +12,6 @@ local SmartTargetingTemplates = require("scripts/settings/equipment/smart_target
 local WeaponTraitsBespokeRippergunP1 = require("scripts/settings/equipment/weapon_traits/weapon_traits_bespoke_ogryn_rippergun_p1")
 local WeaponTraitTemplates = require("scripts/settings/equipment/weapon_templates/weapon_trait_templates/weapon_trait_templates")
 local WeaponTweakTemplateSettings = require("scripts/settings/equipment/weapon_templates/weapon_tweak_template_settings")
-local ArmorSettings = require("scripts/settings/damage/armor_settings")
 local armor_types = ArmorSettings.types
 local buff_stat_buffs = BuffSettings.stat_buffs
 local damage_types = DamageSettings.damage_types
@@ -932,6 +932,7 @@ weapon_template.stamina_template = "default"
 weapon_template.toughness_template = "default"
 weapon_template.movement_curve_modifier_template = "default"
 weapon_template.footstep_intervals = FootstepIntervalsTemplates.ogryn_rippergun
+weapon_template.smart_targeting_template = SmartTargetingTemplates.spray_n_pray
 weapon_template.traits = {}
 local bespoke_traits = table.ukeys(WeaponTraitsBespokeRippergunP1)
 

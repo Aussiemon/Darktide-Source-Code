@@ -126,7 +126,9 @@ CharacterAppearanceView.init = function (self, settings, context)
 
 	self._force_character_creation = context.force_character_creation
 	self._is_barber_appearance = context.is_barber_appearance
-	self._is_barber = context.is_barber_appearance
+	self._is_barber_mindwipe = context.is_barber_mindwipe
+	self._is_barber = context.is_barber_appearance or context.is_barber_mindwipe
+	self._waiting_for_transform = false
 
 	CharacterAppearanceView.super.init(self, Definitions, settings, context)
 
@@ -267,6 +269,19 @@ CharacterAppearanceView.on_enter = function (self)
 			self:_randomize_character_backstory()
 		end
 
+		if self._is_barber_mindwipe then
+			self._page_open_vo = {
+				[2] = CharacterAppearanceViewSettings.vo_event_mindwipe_backstory,
+				[5] = CharacterAppearanceViewSettings.vo_event_mindwipe_body_type,
+				[6] = CharacterAppearanceViewSettings.vo_event_mindwipe_personality
+			}
+			local parent = self._parent
+
+			if parent then
+				parent:play_vo_events(CharacterAppearanceViewSettings.vo_event_mindwipe_select, "training_ground_psyker_a", nil, 0.2)
+			end
+		end
+
 		self:_open_page(1)
 
 		self._character_create_promise = nil
@@ -276,6 +291,7 @@ CharacterAppearanceView.on_enter = function (self)
 		local item_definitions = MasterItems.get_cached()
 		local player = Managers.player:local_player(1)
 		local profile = player:profile()
+		self._original_name = player:name()
 		self._fetch_all_profiles_promise = Managers.data_service.profiles:fetch_all_profiles():next(function (data)
 			self._character_create = CharacterCreate:new(item_definitions, data.gear, profile)
 
@@ -372,6 +388,24 @@ CharacterAppearanceView._setup_background_world = function (self)
 
 	self:_register_event("event_register_character_spawn_point")
 
+	if self._is_barber_mindwipe then
+		local spawn_point_event_id = "event_register_character_spawn_point_" .. breed_name
+
+		self[spawn_point_event_id] = function (self, spawn_point_unit)
+			self._spawn_point_unit = spawn_point_unit
+
+			if breed_name == "ogryn" then
+				self:_spawn_profile(spawn_point_unit, "content/characters/player/ogryn/third_person/animations/menu/mindwipe", "idle")
+			else
+				self:_spawn_profile(spawn_point_unit, "content/characters/player/human/third_person/animations/menu/mindwipe", "idle")
+			end
+
+			self:_unregister_event(spawn_point_event_id)
+		end
+
+		self:_register_event(spawn_point_event_id)
+	end
+
 	local world_name = CharacterAppearanceViewSettings.world_name
 	local world_layer = CharacterAppearanceViewSettings.world_layer
 	local world_timer_name = CharacterAppearanceViewSettings.timer_name
@@ -380,6 +414,10 @@ CharacterAppearanceView._setup_background_world = function (self)
 
 	if self._is_barber then
 		level_name = CharacterAppearanceViewSettings.barber_level_name
+	end
+
+	if self._is_barber_mindwipe and self._active_page_name == "personality" then
+		level_name = CharacterAppearanceViewSettings.barber_mindwipe_level_name
 	end
 
 	self._world_spawner:spawn_level(level_name)
@@ -404,7 +442,7 @@ CharacterAppearanceView.event_register_character_spawn_point = function (self, s
 	self:_spawn_profile(spawn_point_unit)
 end
 
-CharacterAppearanceView._spawn_profile = function (self, spawn_point_unit)
+CharacterAppearanceView._spawn_profile = function (self, spawn_point_unit, optional_state_machine, optional_animation_event)
 	local world = self._world_spawner:world()
 	local camera = self._world_spawner:camera()
 	local unit_spawner = self._world_spawner:unit_spawner()
@@ -413,8 +451,14 @@ CharacterAppearanceView._spawn_profile = function (self, spawn_point_unit)
 	local spawn_rotation = Unit.world_rotation(spawn_point_unit, 1)
 	self._spawn_point_position = Vector3.to_array(spawn_position)
 	local profile = self._character_create:profile()
+	local height = self._character_create:height()
+	local scale = Vector3.one() * height
 
-	self._profile_spawner:spawn_profile(profile, spawn_position, spawn_rotation)
+	if self._is_barber_mindwipe and self._in_barber_chair then
+		scale = Vector3.one()
+	end
+
+	self._profile_spawner:spawn_profile(profile, spawn_position, spawn_rotation, scale)
 
 	local archetype_settings = profile.archetype
 	local archetype_name = archetype_settings.name
@@ -425,7 +469,11 @@ CharacterAppearanceView._spawn_profile = function (self, spawn_point_unit)
 	local animations_settings = animations_per_archetype[archetype_name]
 	local animation_event = animations_settings.initial_event
 
-	self._profile_spawner:assign_state_machine(character_creation_state_machine, animation_event)
+	if optional_state_machine == nil then
+		self._profile_spawner:assign_state_machine(character_creation_state_machine, animation_event)
+	elseif optional_animation_event ~= nil then
+		self._profile_spawner:assign_state_machine(optional_state_machine, optional_animation_event)
+	end
 end
 
 CharacterAppearanceView._on_continue_pressed = function (self)
@@ -452,6 +500,7 @@ CharacterAppearanceView._on_continue_pressed = function (self)
 					callback = callback(function ()
 						if not self.__deleted then
 							local character_create = self._character_create
+							local height = character_create:height()
 							local profile = character_create and character_create:profile()
 							local loadout = profile and profile.loadout
 
@@ -469,6 +518,14 @@ CharacterAppearanceView._on_continue_pressed = function (self)
 								}
 
 								ItemUtils.equip_slot_master_items(items)
+
+								local player = Managers.player:local_player(1)
+								local real_profile = player:profile()
+								local real_unit = player.player_unit
+								local character_id = real_profile.character_id
+
+								Managers.backend.interfaces.characters:set_character_height(character_id, height)
+								Unit.set_local_scale(real_unit, 1, Vector3.one() * height)
 							end
 
 							local parent = self._parent
@@ -493,6 +550,89 @@ CharacterAppearanceView._on_continue_pressed = function (self)
 					callback = callback(function ()
 						self._popup_finish_open = nil
 					end)
+				}
+			}
+
+			Managers.event:trigger("event_show_ui_popup", context, function (id)
+				self._barber_confirm_popup_id = id
+			end)
+		end
+	elseif self._is_barber_mindwipe and active_page.name == "final" then
+		self:_stop_character_name_input()
+
+		if self._await_validation then
+			self._block_continue[self._active_page_number] = {
+				true
+			}
+
+			self:_show_loading_awaiting_validation(true)
+
+			local name = self._character_create:name()
+
+			self._character_create:check_name(name):next(function (data)
+				self:_show_loading_awaiting_validation(false)
+
+				if data.permitted == false then
+					return self:_create_errors_name_input({
+						Localize("loc_character_create_name_validation_failed_message")
+					})
+				else
+					self._block_continue[self._active_page_number] = {
+						false
+					}
+					self._await_validation = false
+
+					return self:_on_continue_pressed()
+				end
+			end):catch(function (error)
+				self._block_continue[self._active_page_number] = {
+					false
+				}
+
+				self:_show_loading_awaiting_validation(false)
+			end)
+		elseif not self._popup_finish_open then
+			local parent = self._parent
+			local mindwipe_cost = parent._cost
+			local balance_amount = parent._balance
+			self._popup_finish_open = true
+			local context = {
+				title_text = "loc_popup_header_barber_finalise_mindwipe",
+				description_text = "loc_popup_description_barber_finalise_mindwipe",
+				description_text_params = {
+					cost = mindwipe_cost,
+					balance = balance_amount
+				},
+				options = {
+					{
+						text = "loc_barber_vendor_confirm_button",
+						stop_exit_sound = true,
+						close_on_pressed = true,
+						on_pressed_sound = UISoundEvents.finalize_creation_confirm,
+						callback = callback(function ()
+							if not self.__deleted then
+								local character_create = self._character_create
+								local height = character_create:height()
+								local player = Managers.player:local_player(1)
+								local real_character_id = player:character_id()
+								self._barber_confirm_popup_id = nil
+								local operation_cost = parent:get_mindwipe_cost()
+
+								character_create:transform(real_character_id, operation_cost)
+
+								self._waiting_for_transform = true
+							end
+						end)
+					},
+					{
+						text = "loc_popup_button_cancel",
+						template_type = "terminal_button_small",
+						close_on_pressed = true,
+						hotkey = "back",
+						callback = callback(function ()
+							self._popup_finish_open = nil
+						end)
+					}
 				}
 			}
 
@@ -804,11 +944,18 @@ CharacterAppearanceView._move_camera = function (self, revert)
 	else
 		local profile = self._character_create:profile()
 		local selected_archetype = profile.archetype.name
+		local ogryn_offset = 1.7
+		local human_offset = 1.2
+
+		if self._is_barber_mindwipe then
+			ogryn_offset = 1.5
+			human_offset = 0.85
+		end
 
 		if selected_archetype == "ogryn" then
-			world_spawner:set_camera_position_axis_offset("x", 1.7 - (target_world_position.x - camera_world_position.x), time, func_ptr)
+			world_spawner:set_camera_position_axis_offset("x", ogryn_offset - (target_world_position.x - camera_world_position.x), time, func_ptr)
 		else
-			world_spawner:set_camera_position_axis_offset("x", 1.2 - (target_world_position.x - camera_world_position.x), time, func_ptr)
+			world_spawner:set_camera_position_axis_offset("x", human_offset - (target_world_position.x - camera_world_position.x), time, func_ptr)
 		end
 	end
 
@@ -830,6 +977,36 @@ CharacterAppearanceView._open_page = function (self, index)
 	self:_hide_pages_widgets()
 	self:_destroy_generated_widgets()
 
+	local in_barber_chair = nil
+
+	if self._is_barber_mindwipe then
+		if self._fade_animation_id and self:_is_animation_active(self._fade_animation_id) then
+			self._widgets_by_name.transition_fade.alpha_multiplier = 0
+
+			self:_stop_animation(self._fade_animation_id)
+		end
+
+		local personality_page_index = 6
+
+		if index >= personality_page_index then
+			in_barber_chair = true
+		elseif self._in_barber_chair then
+			in_barber_chair = false
+		end
+
+		local page_open_vo = self._page_open_vo[index]
+
+		if page_open_vo then
+			local parent = self._parent
+
+			if parent then
+				parent:play_vo_events(page_open_vo, "training_ground_psyker_a", nil, 0.8)
+			end
+
+			self._page_open_vo[index] = nil
+		end
+	end
+
 	if page.show_character and not self._profile_spawner then
 		self._widgets_by_name.transition_fade.alpha_multiplier = 1
 		self._fade_animation_id = self:_start_animation("on_level_switch")
@@ -841,6 +1018,20 @@ CharacterAppearanceView._open_page = function (self, index)
 		self:_destroy_background()
 
 		self._widgets_by_name.background.content.visible = true
+	elseif self._is_barber_mindwipe and self._in_barber_chair ~= in_barber_chair then
+		self._in_barber_chair = in_barber_chair
+		self._widgets_by_name.transition_fade.alpha_multiplier = 1
+		self._fade_animation_id = self:_start_animation("on_level_switch")
+
+		self:_destroy_background()
+
+		self._widgets_by_name.background.content.visible = true
+
+		self:_setup_background_world()
+
+		self._mindwiped_level = self._world_spawner._level
+		self._widgets_by_name.background.content.visible = false
+		self._profile_spawner._rotation_input_disabled = in_barber_chair
 	end
 
 	if self._background_widgets then
@@ -922,7 +1113,22 @@ CharacterAppearanceView._open_page = function (self, index)
 	end
 
 	if page.show_character and self._is_character_showing then
-		self:_set_camera(page.camera_focus, page.gear_visible)
+		if not self._in_barber_chair then
+			self:_set_camera(page.camera_focus, page.gear_visible)
+
+			if self._is_barber_mindwipe then
+				local parent = self._parent
+				local viewport_name = "ui_credits_vendor_world_viewport"
+
+				parent._world_spawner:set_listener(viewport_name)
+			end
+		else
+			self:_set_camera(page.camera_focus, page.gear_visible, true)
+
+			local viewport_name = "ui_character_create_viewport"
+
+			self._world_spawner:set_listener(viewport_name)
+		end
 	end
 
 	self:_change_page_indicator(index)
@@ -1497,8 +1703,11 @@ end
 CharacterAppearanceView._set_camera = function (self, camera_focus, gear_visible, no_height_compensation, time)
 	self._disable_zoom = false
 	self._gear_visible = gear_visible
+	local in_barber_chair = self._in_barber_chair
 
-	self._character_create:set_gear_visible(gear_visible)
+	if not in_barber_chair then
+		self._character_create:set_gear_visible(gear_visible)
+	end
 
 	local slot_camera_unit = self._camera_by_slot_id[camera_focus]
 	self._focus_camera_unit = slot_camera_unit
@@ -1522,7 +1731,9 @@ CharacterAppearanceView._set_camera = function (self, camera_focus, gear_visible
 			animation_event = animations_settings.events.body
 		end
 
-		self._profile_spawner:assign_animation_event(animation_event)
+		if not in_barber_chair then
+			self._profile_spawner:assign_animation_event(animation_event)
+		end
 
 		self._camera_zoomed = is_camera_zoomed
 	end
@@ -1751,6 +1962,34 @@ CharacterAppearanceView.update = function (self, dt, t, input_service)
 			self._character_spawned_next_frame = true
 			self._height_changed = true
 		end
+
+		if is_spawned and self._is_barber_mindwipe and self._active_page_number >= 6 and self._mindwiped_level ~= nil then
+			local character_unit = self._profile_spawner:spawned_character_unit()
+
+			Level.set_flow_variable(self._mindwiped_level, "lua_character_unit", character_unit)
+
+			local breed_name = self._character_create:breed()
+
+			if breed_name == "ogryn" then
+				Level.trigger_event(self._mindwiped_level, "lua_character_spawned_ogryn")
+			else
+				Level.trigger_event(self._mindwiped_level, "lua_character_spawned_human")
+			end
+
+			self._mindwiped_level = nil
+		end
+
+		if self._in_barber_chair and self._twitching_time then
+			self._twitching_time = self._twitching_time - dt
+
+			if self._twitching_time <= 0 then
+				local animation_event = "pose_fear"
+
+				self._profile_spawner:assign_face_animation_event(animation_event)
+
+				self._twitching_time = nil
+			end
+		end
 	end
 
 	if not page.show_character and self._is_character_showing then
@@ -1899,6 +2138,50 @@ CharacterAppearanceView.update = function (self, dt, t, input_service)
 		self._set_camera_next_frame = true
 	end
 
+	if self._is_barber_mindwipe and self._waiting_for_transform then
+		local character_create = self._character_create
+		local transform_complete = character_create:get_transformation_complete()
+
+		if transform_complete then
+			local parent = self._parent
+
+			if transform_complete.success then
+				parent:_update_wallets()
+				parent:play_vo_events(CharacterAppearanceViewSettings.vo_event_mindwipe_conclusion, "training_ground_psyker_a", nil, 0.5)
+
+				local height = character_create:height()
+				local player = Managers.player:local_player(1)
+				local real_unit = player.player_unit
+
+				Unit.set_local_scale(real_unit, 1, Vector3.one() * height)
+			else
+				local context = {
+					title_text = "loc_popup_header_error",
+					description_text = "loc_crafting_failure",
+					options = {
+						{
+							stop_exit_sound = true,
+							close_on_pressed = true,
+							text = "loc_barber_vendor_confirm_button",
+							on_pressed_sound = UISoundEvents.default_click
+						}
+					}
+				}
+
+				Managers.event:trigger("event_show_ui_popup", context)
+			end
+
+			parent._active_view_instance = nil
+
+			parent:_handle_back_pressed()
+
+			self._waiting_for_transform = false
+			local viewport_name = "ui_credits_vendor_world_viewport"
+
+			parent._world_spawner:set_listener(viewport_name)
+		end
+	end
+
 	return CharacterAppearanceView.super.update(self, dt, t, input_service)
 end
 
@@ -1913,6 +2196,25 @@ CharacterAppearanceView._on_entry_pressed = function (self, current_widget, opti
 	for i = 1, #self._page_grids[grid_index].widgets do
 		local widget = self._page_grids[grid_index].widgets[i]
 		local element_selected = current_widget.index == i
+
+		if self._in_barber_chair and element_selected and element_selected ~= widget.content.element_selected then
+			local random = math.random()
+
+			if random < 0.15 then
+				local level = self._world_spawner and self._world_spawner._level
+
+				Level.trigger_event(level, "lua_entry_pressed")
+
+				local animation_event = "twitch"
+				local face_animation_event = "pose_anger"
+
+				self._profile_spawner:assign_animation_event(animation_event)
+				self._profile_spawner:assign_face_animation_event(face_animation_event)
+
+				self._twitching_time = math.random(6, 13) / 10
+			end
+		end
+
 		widget.content.element_selected = element_selected
 		widget.content.hotspot.is_selected = element_selected
 	end
@@ -2218,6 +2520,10 @@ CharacterAppearanceView._destroy_renderer = function (self)
 end
 
 CharacterAppearanceView._destroy_background = function (self)
+	if self._is_barber_mindwipe and self._world_spawner ~= nil and self._world_spawner._level ~= nil then
+		Level.trigger_level_shutdown(self._world_spawner._level)
+	end
+
 	if self._profile_spawner then
 		self._profile_spawner:destroy()
 
@@ -3267,7 +3573,7 @@ CharacterAppearanceView._get_appearance_category_options = function (self, categ
 							local current_widget = self._page_grids[1].widgets[current_navigation_position]
 							current_widget.content.element_selected = true
 							current_widget.content.hotspot.is_selected = true
-						else
+						elseif not self._is_barber_mindwipe then
 							self:_randomize_character_appearance()
 						end
 					end,
@@ -3292,6 +3598,11 @@ CharacterAppearanceView._get_appearance_category_options = function (self, categ
 						scale_factor = tonumber(scale_factor)
 
 						self:_set_character_height(scale_factor)
+
+						local page = self._pages[self._active_page_number]
+						page.content = self:_get_appearance_content()
+
+						self:_check_appearance_continue_block(page.content)
 					end
 				}
 			end
@@ -3920,41 +4231,39 @@ CharacterAppearanceView._get_appearance_content = function (self)
 		}
 	end
 
-	if not self._is_barber then
-		appearance_options[#appearance_options + 1] = {
-			icon = "content/ui/materials/icons/item_types/height",
-			select_on_navigation = true,
-			text = Localize("loc_body_height"),
-			on_pressed_function = function (widget)
-				self:_open_appearance_options(widget.index)
-			end,
-			options = self:_get_appearance_category_options({
-				{
-					grid_template = "single",
-					template = "vertical_slider",
-					type = "height",
-					initialized = function (page_grid)
-						local page = self._pages[self._active_page_number]
+	appearance_options[#appearance_options + 1] = {
+		icon = "content/ui/materials/icons/item_types/height",
+		select_on_navigation = true,
+		text = Localize("loc_body_height"),
+		on_pressed_function = function (widget)
+			self:_open_appearance_options(widget.index)
+		end,
+		options = self:_get_appearance_category_options({
+			{
+				grid_template = "single",
+				template = "vertical_slider",
+				type = "height",
+				initialized = function (page_grid)
+					local page = self._pages[self._active_page_number]
 
-						self:_set_camera_height_option(nil, page.gear_visible)
-					end,
-					enter = function (page_grid)
-						local widget = page_grid.widgets[1]
-						widget.content.element_selected = true
-						widget.content.hotspot.is_selected = true
-					end,
-					leave = function (page_grid)
-						local widget = page_grid.widgets[1]
-						widget.content.element_selected = false
-						widget.content.hotspot.is_selected = false
-					end,
-					options = {
-						{}
-					}
+					self:_set_camera_height_option(nil, page.gear_visible)
+				end,
+				enter = function (page_grid)
+					local widget = page_grid.widgets[1]
+					widget.content.element_selected = true
+					widget.content.hotspot.is_selected = true
+				end,
+				leave = function (page_grid)
+					local widget = page_grid.widgets[1]
+					widget.content.element_selected = false
+					widget.content.hotspot.is_selected = false
+				end,
+				options = {
+					{}
 				}
-			})
-		}
-	end
+			}
+		})
+	}
 
 	return appearance
 end
@@ -4640,7 +4949,7 @@ CharacterAppearanceView._check_appearance_continue_block = function (self, page_
 								block_continue = true
 								is_blocked = true
 							elseif self._is_barber_appearance then
-								local slot = selected_option.value.slots and selected_option.value.slots[1]
+								local slot = selected_option.value and selected_option.value.slots and selected_option.value.slots[1]
 
 								if slot then
 									local player = Managers.player:local_player(1)
@@ -4649,6 +4958,16 @@ CharacterAppearanceView._check_appearance_continue_block = function (self, page_
 									if profile.loadout[slot].name ~= selected_option.value.name then
 										profile_changes = true
 									end
+								end
+
+								local height = self._character_create:height()
+
+								if not self._cached_height then
+									self._cached_height = height
+								end
+
+								if self._cached_height ~= height then
+									profile_changes = true
 								end
 							end
 						end

@@ -114,12 +114,13 @@ local on_demand_vo_veteran_male_c = {
 	},
 	com_wheel_vo_need_health = {
 		randomize_indexes_n = 0,
-		sound_events_n = 5,
+		sound_events_n = 6,
 		sound_events = {
 			"loc_veteran_male_c__com_wheel_vo_need_health_01",
 			"loc_veteran_male_c__com_wheel_vo_need_health_02",
 			"loc_veteran_male_c__com_wheel_vo_need_health_03",
 			"loc_veteran_male_c__com_wheel_vo_need_health_04",
+			"loc_veteran_male_c__com_wheel_vo_need_health_05",
 			"loc_veteran_male_c__com_wheel_vo_need_health_06"
 		},
 		sound_events_duration = {
@@ -127,14 +128,8 @@ local on_demand_vo_veteran_male_c = {
 			0.939063,
 			1.001813,
 			0.884656,
+			1.273271,
 			1.259396
-		},
-		sound_event_weights = {
-			0.2,
-			0.2,
-			0.2,
-			0.2,
-			0.2
 		},
 		randomize_indexes = {}
 	},

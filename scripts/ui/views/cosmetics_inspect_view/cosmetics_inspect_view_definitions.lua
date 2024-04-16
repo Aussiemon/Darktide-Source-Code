@@ -209,20 +209,20 @@ local scenegraph_definition = {
 		}
 	}
 }
-local item_restrictions_title_style = table.clone(UIFontSettings.terminal_header_3)
-item_restrictions_title_style.text_horizontal_alignment = "left"
-item_restrictions_title_style.horizontal_alignment = "left"
-item_restrictions_title_style.text_vertical_alignment = "top"
-item_restrictions_title_style.vertical_alignment = "top"
-item_restrictions_title_style.offset = {
+local sub_title_style = table.clone(UIFontSettings.terminal_header_3)
+sub_title_style.text_horizontal_alignment = "left"
+sub_title_style.horizontal_alignment = "left"
+sub_title_style.text_vertical_alignment = "top"
+sub_title_style.vertical_alignment = "top"
+sub_title_style.offset = {
 	0,
 	0,
 	1
 }
-item_restrictions_title_style.font_size = 20
-item_restrictions_title_style.text_color = Color.terminal_text_body_sub_header(255, true)
-local item_restrictions_text_style = table.clone(item_restrictions_title_style)
-item_restrictions_text_style.text_color = Color.terminal_text_body(255, true)
+sub_title_style.font_size = 20
+sub_title_style.text_color = Color.terminal_text_body_sub_header(255, true)
+local item_text_style = table.clone(sub_title_style)
+item_text_style.text_color = Color.terminal_text_body(255, true)
 local title_style = table.clone(UIFontSettings.header_1)
 title_style.font_size = 40
 title_style.offset = {
@@ -232,15 +232,15 @@ title_style.offset = {
 }
 title_style.text_horizontal_alignment = "center"
 title_style.text_vertical_alignment = "top"
-local sub_title_style = table.clone(UIFontSettings.header_5)
-sub_title_style.text_horizontal_alignment = "center"
-sub_title_style.text_vertical_alignment = "top"
-sub_title_style.offset = {
+local header_sub_title_text_style = table.clone(UIFontSettings.header_5)
+header_sub_title_text_style.text_horizontal_alignment = "center"
+header_sub_title_text_style.text_vertical_alignment = "top"
+header_sub_title_text_style.offset = {
 	0,
 	0,
 	0
 }
-sub_title_style.text_color = Color.terminal_text_body(255, true)
+header_sub_title_text_style.text_color = Color.terminal_text_body(255, true)
 local description_text_font_style = table.clone(UIFontSettings.terminal_header_3)
 description_text_font_style.text_horizontal_alignment = "left"
 description_text_font_style.text_vertical_alignment = "top"
@@ -291,7 +291,7 @@ local widget_definitions = {
 			pass_type = "text",
 			style_id = "sub_text",
 			value = "",
-			style = sub_title_style
+			style = header_sub_title_text_style
 		},
 		{
 			value_id = "divider",
@@ -344,20 +344,22 @@ local text_description_pass_template = {
 		style = description_text_font_style
 	}
 }
-local item_restrictions_pass = {
-	{
-		value_id = "title",
-		style_id = "title",
-		pass_type = "text",
-		value = Utf8.upper(Localize("loc_item_equippable_on_header")),
-		style = item_restrictions_title_style
-	},
+local item_sub_title_pass = {
 	{
 		value_id = "text",
 		style_id = "text",
 		pass_type = "text",
 		value = "",
-		style = item_restrictions_text_style
+		style = sub_title_style
+	}
+}
+local item_text_pass = {
+	{
+		value_id = "text",
+		style_id = "text",
+		pass_type = "text",
+		value = "",
+		style = item_text_style
 	}
 }
 local menu_zoom_out = "loc_inventory_menu_zoom_out"
@@ -419,5 +421,6 @@ return {
 	widget_definitions = widget_definitions,
 	scenegraph_definition = scenegraph_definition,
 	text_description_pass_template = text_description_pass_template,
-	item_restrictions_pass = item_restrictions_pass
+	item_sub_title_pass = item_sub_title_pass,
+	item_text_pass = item_text_pass
 }

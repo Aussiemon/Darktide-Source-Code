@@ -38,10 +38,12 @@ SmartTagTarget.component_data = {
 		ui_type = "combo_box",
 		ui_name = "Target Type",
 		options_keys = {
-			"health_station"
+			"health_station",
+			"pickup"
 		},
 		options_values = {
-			"health_station"
+			"health_station",
+			"pickup"
 		}
 	},
 	extensions = {

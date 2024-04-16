@@ -45,14 +45,21 @@ BtChaosSpawnGrabAction.enter = function (self, unit, breed, blackboard, scratchp
 	scratchpad.initial_distance_to_target = perception_component.target_distance
 	scratchpad.sweep_hit_units_cache = {}
 
+	if breed.count_num_grabs_done then
+		scratchpad.count_num_grabs_done = true
+		scratchpad.statistics_component = Blackboard.write_component(blackboard, "statistics")
+	end
+
 	self:_start_grabbing(unit, scratchpad, action_data, t)
 end
 
 BtChaosSpawnGrabAction.init_values = function (self, blackboard)
 	local behavior_component = Blackboard.write_component(blackboard, "behavior")
+	local statistics_component = Blackboard.write_component(blackboard, "statistics")
 	behavior_component.grabbed_unit = nil
 	behavior_component.wants_to_catapult_grabbed_unit = false
 	behavior_component.grab_cooldown = 0
+	statistics_component.num_grabs_done = 0
 end
 
 BtChaosSpawnGrabAction.leave = function (self, unit, breed, blackboard, scratchpad, action_data, t, reason, destroy)
@@ -224,6 +231,10 @@ BtChaosSpawnGrabAction._update_grabbing = function (self, unit, scratchpad, acti
 				end
 
 				return
+			end
+
+			if scratchpad.count_num_grabs_done then
+				scratchpad.statistics_component.num_grabs_done = scratchpad.statistics_component.num_grabs_done + 1
 			end
 
 			self:_grab_target(unit, scratchpad.target_unit, scratchpad, action_data, t)

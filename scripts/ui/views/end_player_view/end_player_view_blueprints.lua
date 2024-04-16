@@ -7,6 +7,7 @@ local ViewAnimations = require("scripts/ui/views/end_player_view/end_player_view
 local ViewSettings = require("scripts/ui/views/end_player_view/end_player_view_settings")
 local ViewStyles = require("scripts/ui/views/end_player_view/end_player_view_styles")
 local WalletSettings = require("scripts/settings/wallet_settings")
+local MasterItems = require("scripts/backend/master_items")
 local blueprint_styles = ViewStyles.blueprints
 local ITEM_TYPES = UISettings.ITEM_TYPES
 local folded_card_size = {

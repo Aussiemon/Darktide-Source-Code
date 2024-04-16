@@ -12,7 +12,10 @@ local CLIENT_RPCS = {
 	"rpc_minigame_sync_decode_set_stage",
 	"rpc_minigame_sync_decode_symbols_set_start_time",
 	"rpc_minigame_sync_decode_symbols_set_symbols",
-	"rpc_minigame_sync_decode_symbols_set_target"
+	"rpc_minigame_sync_decode_symbols_set_target",
+	"rpc_minigame_sync_drill_generate_targets",
+	"rpc_minigame_sync_drill_set_cursor",
+	"rpc_minigame_sync_drill_set_search"
 }
 
 MinigameSystem.init = function (self, context, system_init_data, ...)
@@ -122,6 +125,30 @@ MinigameSystem.rpc_minigame_sync_decode_symbols_set_target = function (self, cha
 	local minigame = extension:minigame(MinigameSettings.types.decode_symbols)
 
 	minigame:set_target(stage, target)
+end
+
+MinigameSystem.rpc_minigame_sync_drill_generate_targets = function (self, channel_id, unit_id, is_level_unit, seed)
+	local unit = Managers.state.unit_spawner:unit(unit_id, is_level_unit)
+	local extension = self._unit_to_extension_map[unit]
+	local minigame = extension:minigame(MinigameSettings.types.drill)
+
+	minigame:generate_targets(seed)
+end
+
+MinigameSystem.rpc_minigame_sync_drill_set_cursor = function (self, channel_id, unit_id, is_level_unit, x, y, index)
+	local unit = Managers.state.unit_spawner:unit(unit_id, is_level_unit)
+	local extension = self._unit_to_extension_map[unit]
+	local minigame = extension:minigame(MinigameSettings.types.drill)
+
+	minigame:set_cursor_position(x, y, index)
+end
+
+MinigameSystem.rpc_minigame_sync_drill_set_search = function (self, channel_id, unit_id, is_level_unit, searching, time)
+	local unit = Managers.state.unit_spawner:unit(unit_id, is_level_unit)
+	local extension = self._unit_to_extension_map[unit]
+	local minigame = extension:minigame(MinigameSettings.types.drill)
+
+	minigame:set_searching(searching and time)
 end
 
 return MinigameSystem

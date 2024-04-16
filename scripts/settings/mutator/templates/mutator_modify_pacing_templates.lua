@@ -113,6 +113,12 @@ local mutator_templates = {
 			modify_resistance = 1
 		}
 	},
+	mutator_add_challenge = {
+		class = "scripts/managers/mutator/mutators/mutator_modify_pacing",
+		init_modify_pacing = {
+			modify_challenge = 1
+		}
+	},
 	mutator_subtract_resistance = {
 		class = "scripts/managers/mutator/mutators/mutator_modify_pacing",
 		init_modify_pacing = {
@@ -240,6 +246,9 @@ local mutator_templates = {
 	},
 	mutator_toxic_gas_volumes = {
 		class = "scripts/managers/mutator/mutators/mutator_toxic_gas_volumes",
+		theme_settings = {
+			theme_tag = "toxic_gas"
+		},
 		gas_settings = {
 			num_gas_clouds = 10,
 			cloud_spawn_distance_range = {

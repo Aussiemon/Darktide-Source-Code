@@ -155,26 +155,16 @@ function _player_hit_reaction(attack_result, damage_profile, target_weapon_templ
 				_push(target_unit_data_extension, attacked_unit, push_template, attack_direction, attack_type, ignore_stun_immunity)
 			end
 		end
-	elseif attack_result == attack_results.toughness_broken then
-		if not damage_profile.ignore_toughness_broken_disorient then
-			_drop_luggable(attacked_unit, target_unit_data_extension, attack_type)
+	elseif attack_result == attack_results.toughness_broken and not damage_profile.ignore_toughness_broken_disorient then
+		_drop_luggable(attacked_unit, target_unit_data_extension, attack_type)
 
-			local _, was_catapulted = _push_or_catapult(target_unit_data_extension, attacked_unit, attacking_unit_owner_unit, push_template, catapulting_template, force_look_function, attack_direction, attack_type, hit_position, ignore_stun_immunity)
+		local _, was_catapulted = _push_or_catapult(target_unit_data_extension, attacked_unit, attacking_unit_owner_unit, push_template, catapulting_template, force_look_function, attack_direction, attack_type, hit_position, ignore_stun_immunity)
 
-			if not was_catapulted then
-				_toughness_broken_disorient(target_unit_data_extension, target_weapon_template, attacked_unit, attack_direction, attack_type, stun_allowed, ignore_stun_immunity)
-				_interrupt_alternate_fire(target_unit_data_extension, target_weapon_template, attacked_unit, interrupt_alternate_fire)
-				_interrupt_interaction(attacked_unit, damage_profile, uninterruptible)
-				_force_look(target_unit_data_extension, force_look_function, attacked_unit, attack_direction)
-			end
-		else
-			local _, was_catapulted = _push_or_catapult(target_unit_data_extension, attacked_unit, attacking_unit_owner_unit, push_template, catapulting_template, force_look_function, attack_direction, attack_type, hit_position, ignore_stun_immunity)
-
-			if not was_catapulted then
-				HitReaction.disorient_player(attacked_unit, target_unit_data_extension, disorientation_type, stun_allowed, ignore_stun_immunity, attack_direction, attack_type, target_weapon_template, false)
-				_interrupt_alternate_fire(target_unit_data_extension, target_weapon_template, attacked_unit, interrupt_alternate_fire)
-				_force_look(target_unit_data_extension, force_look_function, attacked_unit, attack_direction)
-			end
+		if not was_catapulted then
+			_toughness_broken_disorient(target_unit_data_extension, target_weapon_template, attacked_unit, attack_direction, attack_type, stun_allowed, ignore_stun_immunity)
+			_interrupt_alternate_fire(target_unit_data_extension, target_weapon_template, attacked_unit, interrupt_alternate_fire)
+			_interrupt_interaction(attacked_unit, damage_profile, uninterruptible)
+			_force_look(target_unit_data_extension, force_look_function, attacked_unit, attack_direction)
 		end
 	elseif attack_result == attack_results.toughness_absorbed then
 		_push_or_catapult(target_unit_data_extension, attacked_unit, attacking_unit_owner_unit, push_template, catapulting_template, force_look_function, attack_direction, attack_type, hit_position, ignore_stun_immunity)
@@ -217,27 +207,6 @@ function _toughness_broken_disorient(unit_data_extension, target_weapon_template
 	local toughness_broken = true
 
 	HitReaction.disorient_player(attacked_unit, unit_data_extension, fumbled, stun_allowed, ignore_stun_immunity, attack_direction, attack_type, target_weapon_template, false, toughness_broken)
-
-	if stun_allowed then
-		if attack_type == AttackSettings.attack_types.ranged then
-			local sprint_character_state_component = unit_data_extension:read_component("sprint_character_state")
-			local is_sprinting = Sprint.is_sprinting(sprint_character_state_component)
-
-			if is_sprinting then
-				local ranged_sprinting = hit_reaction_stun_types.toughness_broken_ranged_sprinting
-
-				Stun.apply(attacked_unit, ranged_sprinting, attack_direction, target_weapon_template, false, false, toughness_broken)
-			else
-				local ranged = hit_reaction_stun_types.toughness_broken_ranged_sprinting
-
-				Stun.apply(attacked_unit, ranged, attack_direction, target_weapon_template, false, false, toughness_broken)
-			end
-		else
-			local default = hit_reaction_stun_types.toughness_broken_default
-
-			Stun.apply(attacked_unit, default, attack_direction, target_weapon_template, false, false, toughness_broken)
-		end
-	end
 end
 
 function _toughness_absorbed_disorient(unit_data_extension, target_weapon_template, attacked_unit, attack_direction, attack_type, stun_allowed, ignore_stun_immunity, override_disorientation_type)

@@ -2265,10 +2265,10 @@ return function ()
 	})
 	define_rule({
 		name = "bonding_conversation_metropolitan_hate_heretics_a",
-		category = "conversations_prio_1",
 		wwise_route = 0,
 		response = "bonding_conversation_metropolitan_hate_heretics_a",
 		database = "zealot_male_a",
+		category = "conversations_prio_1",
 		criterias = {
 			{
 				"query_context",
@@ -2353,6 +2353,13 @@ return function ()
 		},
 		heard_speak_routing = {
 			target = "players"
+		},
+		on_pre_rule_execution = {
+			random_ignore_vo = {
+				chance = 0.6,
+				max_failed_tries = 0,
+				hold_for = 0
+			}
 		}
 	})
 	define_rule({
@@ -3665,7 +3672,11 @@ return function ()
 					"loc_zealot_female_c__combat_pause_quirk_sing_b_01",
 					"loc_zealot_female_c__lore_ecclesiarchy_three_c_01",
 					"loc_zealot_female_c__lore_lost_history_two_c_02",
-					"loc_zealot_female_c__lore_ecclesiarchy_three_c_02"
+					"loc_zealot_female_c__lore_ecclesiarchy_three_c_02",
+					"loc_zealot_female_c__combat_pause_quirk_trust_b_01",
+					"loc_zealot_female_c__lore_the_emperor_four_c_01",
+					"loc_zealot_female_c__lore_era_indomitus_three_c_02",
+					"loc_zealot_female_c__lore_hive_cities_one_c_01"
 				}
 			},
 			{
@@ -4341,7 +4352,7 @@ return function ()
 				"time_since_last_short_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				140
+				90
 			},
 			{
 				"faction_memory",
@@ -4361,7 +4372,7 @@ return function ()
 				"time_since_zealot_seen_killstreak_ogryn",
 				OP.TIMEDIFF,
 				OP.LT,
-				90
+				100
 			}
 		},
 		on_done = {
@@ -4729,7 +4740,7 @@ return function ()
 				"time_since_last_short_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				140
+				100
 			},
 			{
 				"faction_memory",
@@ -4749,7 +4760,7 @@ return function ()
 				"time_since_zealot_seen_killstreak_psyker",
 				OP.TIMEDIFF,
 				OP.LT,
-				90
+				140
 			}
 		},
 		on_done = {
@@ -5229,7 +5240,7 @@ return function ()
 				"time_since_last_short_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				140
+				100
 			},
 			{
 				"faction_memory",
@@ -5249,7 +5260,7 @@ return function ()
 				"time_since_zealot_seen_killstreak_psyker",
 				OP.TIMEDIFF,
 				OP.LT,
-				90
+				110
 			}
 		},
 		on_done = {

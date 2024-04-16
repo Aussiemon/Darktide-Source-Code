@@ -23,12 +23,6 @@ local _apply_armor_type_buffs_to_damage, _apply_damage_type_buffs_to_damage, _ap
 local EMPTY_STAT_BUFFS = {}
 
 DamageCalculation.calculate = function (damage_profile, damage_type, target_settings, lerp_values, hit_zone_name, power_level, charge_level, breed_or_nil, attacker_breed_or_nil, is_critical_strike, hit_weakspot, hit_shield, is_backstab, is_flanking, dropoff_scalar, attack_type, attacker_stat_buffs, target_stat_buffs, target_buff_extension, armor_penetrating, target_health_extension, target_toughness_extension, armor_type, target_stagger_count, num_triggered_staggers, is_attacked_unit_suppressed, distance, target_unit, auto_completed_action, stagger_impact)
-	local force_field_extension = ScriptUnit.has_extension(target_unit, "force_field_system")
-
-	if force_field_extension then
-		return 1, damage_efficiencies.full, 1, 0, 0, 0, 0, 0, 1, 1
-	end
-
 	attacker_stat_buffs = attacker_stat_buffs or EMPTY_STAT_BUFFS
 	target_stat_buffs = target_stat_buffs or EMPTY_STAT_BUFFS
 	local blackboard = BLACKBOARDS[target_unit]
@@ -82,6 +76,11 @@ DamageCalculation.calculate = function (damage_profile, damage_type, target_sett
 	damage = _apply_diminishing_returns_to_damage(damage, target_health_extension, breed_or_nil)
 	local is_push = damage_profile.is_push or armor_type ~= "super_armor" and armor_damage_modifier == 0
 	local damage_efficiency = is_push and "push" or hit_shield and damage <= 0 and damage_efficiencies.negated or armor_damage_modifier_to_damage_efficiency(armor_damage_modifier, armor_type, rending_damage)
+	local force_field_extension = ScriptUnit.has_extension(target_unit, "force_field_system")
+
+	if force_field_extension then
+		return base_damage, damage_efficiencies.full, base_damage, 0, 0, 0, 0, 0, 1, 1
+	end
 
 	return damage, damage_efficiency, base_damage, base_buff_damage, rending_damage, finesse_boost_damage, backstab_damage, flanking_damage, armor_damage_modifier, hit_zone_damage_multiplier
 end

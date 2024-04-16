@@ -8,17 +8,32 @@ require("scripts/ui/views/vendor_interaction_view_base/vendor_interaction_view_b
 local CraftingView = class("CraftingView", "VendorInteractionViewBase")
 
 CraftingView.init = function (self, settings, context)
-	self._wallet_type = {
-		"diamantine",
-		"plasteel",
-		"credits"
-	}
-
 	CraftingView.super.init(self, CraftingViewDefinitions, settings, context)
 
 	local ui_renderer = self._ui_renderer
 	ui_renderer.render_pass_flag = "render_pass"
 	ui_renderer.base_render_pass = "to_screen"
+end
+
+CraftingView.show_wallets = function (self, show)
+	local wallet_widget = self._widgets_by_name.corner_top_right
+	local no_wallet_widget = self._widgets_by_name.corner_top_right_no_wallet
+
+	if show == false then
+		self._wallet_type = {}
+		wallet_widget.content.visible = false
+		no_wallet_widget.content.visible = true
+	else
+		self._wallet_type = {
+			"diamantine",
+			"plasteel",
+			"credits"
+		}
+		wallet_widget.content.visible = true
+		no_wallet_widget.content.visible = false
+	end
+
+	self:_update_wallets()
 end
 
 CraftingView.go_to_crafting_view = function (self, view_name, item)
@@ -33,6 +48,14 @@ end
 
 CraftingView.on_enter = function (self)
 	CraftingView.super.on_enter(self)
+
+	local viewport_name = CraftingViewDefinitions.background_world_params.viewport_name
+
+	if self._world_spawner then
+		self._world_spawner:set_listener(viewport_name)
+	end
+
+	self:show_wallets(true)
 
 	local narrative_manager = Managers.narrative
 	local narrative_event_name = "level_unlock_crafting_station_visited"
@@ -64,6 +87,14 @@ CraftingView.update = function (self, dt, t, input_service)
 	return CraftingView.super.update(self, dt, t, input_service)
 end
 
+CraftingView._change_view_callback = function (self, tab_params)
+	if not tab_params then
+		-- Nothing
+	elseif tab_params.on_active_callback then
+		tab_params.on_active_callback(self)
+	end
+end
+
 CraftingView.previously_active_view_name = function (self)
 	return self._previously_active_view_name
 end
@@ -71,6 +102,10 @@ end
 CraftingView._close_active_view = function (self, is_handling_new_view)
 	self._wanted_overlay_alpha = 0
 	self._previously_active_view_name = self._active_view
+
+	if not is_handling_new_view then
+		self:_change_view_callback()
+	end
 
 	CraftingView.super._close_active_view(self)
 end
@@ -174,6 +209,8 @@ CraftingView._switch_tab_view = function (self, index)
 	else
 		self._previous_story_name = nil
 	end
+
+	self:_change_view_callback(tab_params)
 end
 
 CraftingView._handle_back_pressed = function (self)
@@ -194,6 +231,10 @@ CraftingView.draw = function (self, dt, t, input_service, layer)
 end
 
 CraftingView.on_exit = function (self)
+	if self._world_spawner then
+		self._world_spawner:release_listener()
+	end
+
 	CraftingView.super.on_exit(self)
 
 	local level = Managers.state.mission and Managers.state.mission:mission_level()

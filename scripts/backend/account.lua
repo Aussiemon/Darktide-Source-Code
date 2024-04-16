@@ -43,6 +43,10 @@ Account.get_selected_character = function (self)
 	return self:get_data("core", "selected_character")
 end
 
+Account.get_has_migrated_commendation_score = function (self)
+	return self:get_data("core", "has_migrated_commendation_score")
+end
+
 Account.get = function (self)
 	return BackendUtilities.make_account_title_request("account", BackendUtilities.url_builder("")):next(function (data)
 		return data.body

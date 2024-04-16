@@ -2757,7 +2757,7 @@ return function ()
 		wwise_route = 0,
 		response = "bonding_conversation_metropolitan_lost_two_a",
 		database = "psyker_female_b",
-		category = "conversations_prio_1",
+		category = "player_prio_1",
 		criterias = {
 			{
 				"query_context",

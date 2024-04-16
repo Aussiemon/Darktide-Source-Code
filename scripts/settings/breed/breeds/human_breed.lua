@@ -186,6 +186,7 @@ local breed_data = {
 		fx_right_hand = "fx_spawn_righthand",
 		fx_left_forearm = "fx_spawn_leftforearm",
 		fx_left_hand = "fx_spawn_lefthand",
+		fx_anim_01 = "fx_anim_01",
 		rightfoot = "j_rightfoot",
 		hips = "j_hips"
 	},
@@ -194,6 +195,7 @@ local breed_data = {
 		fx_right_hand = "fx_spawn_righthand",
 		fx_left_forearm = "fx_spawn_leftforearm",
 		fx_left_hand = "fx_spawn_lefthand",
+		fx_anim_01 = "fx_anim_01",
 		rightfoot = "j_rightfoot",
 		hips = "j_hips"
 	},

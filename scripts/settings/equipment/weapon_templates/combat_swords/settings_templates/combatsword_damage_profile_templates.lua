@@ -467,7 +467,7 @@ damage_templates.heavy_combatsword_p2_smiter_up = {
 	},
 	gibbing_power = GibbingPower.medium,
 	gibbing_type = GibbingTypes.sawing,
-	melee_attack_strength = melee_attack_strengths.light,
+	melee_attack_strength = melee_attack_strengths.heavy,
 	wounds_template = WoundsTemplates.combat_sword,
 	gib_push_force = GibbingSettings.gib_push_force.sawing_heavy,
 	armor_damage_modifier = smiter_am,

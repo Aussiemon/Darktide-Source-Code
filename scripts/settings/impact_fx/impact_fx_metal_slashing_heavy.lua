@@ -244,7 +244,7 @@ local armored = {
 		},
 		damage = {
 			{
-				event = "wwise/events/weapon/melee_hits_sword_2h_gen",
+				event = "wwise/events/weapon/play_melee_hits_piercing_heavy_armour",
 				append_husk_to_event_name = true
 			},
 			{
@@ -462,7 +462,7 @@ local super_armor = {
 		},
 		damage = {
 			{
-				event = "wwise/events/weapon/melee_hits_sword_2h_gen",
+				event = "wwise/events/weapon/play_melee_hits_piercing_heavy_armour",
 				append_husk_to_event_name = true
 			},
 			{
@@ -472,7 +472,7 @@ local super_armor = {
 		},
 		damage_reduced = {
 			{
-				event = "wwise/events/weapon/melee_hits_sword_reduced_damage",
+				event = "wwise/events/weapon/play_melee_hits_piercing_heavy_armour",
 				append_husk_to_event_name = true
 			},
 			{

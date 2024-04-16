@@ -401,6 +401,7 @@ local narrative = {
 		hli_contracts_viewed = {},
 		hli_crafting_station_underground_viewed = {},
 		hli_gun_shop_viewed = {},
+		hli_penances_viewed = {},
 		s1_intro_viewed = {}
 	}
 }

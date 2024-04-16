@@ -12,6 +12,12 @@ end
 ContractsBackgroundView.on_enter = function (self)
 	ContractsBackgroundView.super.on_enter(self)
 
+	local viewport_name = Definitions.background_world_params.viewport_name
+
+	if self._world_spawner then
+		self._world_spawner:set_listener(viewport_name)
+	end
+
 	local narrative_manager = Managers.narrative
 	local narrative_event_name = "level_unlock_contract_store_visited"
 
@@ -28,6 +34,10 @@ ContractsBackgroundView.update_wallets = function (self)
 end
 
 ContractsBackgroundView.on_exit = function (self)
+	if self._world_spawner then
+		self._world_spawner:release_listener()
+	end
+
 	ContractsBackgroundView.super.on_exit(self)
 
 	local level = Managers.state.mission and Managers.state.mission:mission_level()

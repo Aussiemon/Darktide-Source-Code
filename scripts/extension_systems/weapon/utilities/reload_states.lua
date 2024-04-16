@@ -59,6 +59,7 @@ ReloadStates.reimburse_clip_to_reserve = function (inventory_slot_component)
 		new_ammunition_reserve = inventory_slot_component.max_ammunition_reserve
 	end
 
+	inventory_slot_component.ammunition_at_reload_start = current_ammo_clip
 	inventory_slot_component.current_ammunition_reserve = new_ammunition_reserve
 	inventory_slot_component.current_ammunition_clip = 0
 end

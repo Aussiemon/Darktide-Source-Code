@@ -132,6 +132,20 @@ local scenegraph_definition = {
 			1
 		}
 	},
+	side_panel_area = {
+		vertical_alignment = "bottom",
+		parent = "canvas",
+		horizontal_alignment = "left",
+		size = {
+			300,
+			0
+		},
+		position = {
+			grid_width + 100,
+			-200,
+			1
+		}
+	},
 	purchase_button_area = {
 		vertical_alignment = "bottom",
 		parent = "canvas",
@@ -644,6 +658,11 @@ item_restrictions_title_style.font_size = 20
 item_restrictions_title_style.text_color = Color.terminal_text_body_sub_header(255, true)
 local item_restrictions_text_style = table.clone(item_restrictions_title_style)
 item_restrictions_text_style.text_color = Color.terminal_text_body(255, true)
+local premium_sub_title_style = table.clone(item_restrictions_title_style)
+premium_sub_title_style.text_color = Color.terminal_text_header(255, true)
+local premium_text_style = table.clone(item_restrictions_title_style)
+premium_text_style.material = "content/ui/materials/font_gradients/slug_font_gradient_gold"
+premium_text_style.text_color = Color.white(255, true)
 local set_text_font_style = table.clone(UIFontSettings.currency_title)
 set_text_font_style.text_horizontal_alignment = "left"
 set_text_font_style.text_vertical_alignment = "top"
@@ -794,22 +813,6 @@ bundle_description.offset = {
 bundle_description.size_addition = {
 	-30,
 	0
-}
-local item_restrictions_pass = {
-	{
-		value_id = "title",
-		style_id = "title",
-		pass_type = "text",
-		value = Utf8.upper(Localize("loc_item_equippable_on_header")),
-		style = item_restrictions_title_style
-	},
-	{
-		value_id = "text",
-		style_id = "text",
-		pass_type = "text",
-		value = "",
-		style = item_restrictions_text_style
-	}
 }
 local widget_definitions = {
 	wallet_text = UIWidget.create_definition({
@@ -1032,9 +1035,6 @@ local widget_definitions = {
 			style = timer_text_style
 		}
 	}, "timer_text"),
-	item_restrictions = UIWidget.create_definition(item_restrictions_pass, "item_restrictions", {
-		visible = false
-	}),
 	price_item_text = UIWidget.create_definition({
 		{
 			value_id = "price_icon",
@@ -1696,13 +1696,52 @@ local text_description_pass_template = {
 		style = description_text_font_style
 	}
 }
+local item_sub_title_pass = {
+	{
+		value_id = "text",
+		style_id = "text",
+		pass_type = "text",
+		value = "",
+		style = item_restrictions_title_style
+	}
+}
+local item_text_pass = {
+	{
+		value_id = "text",
+		style_id = "text",
+		pass_type = "text",
+		value = "",
+		style = item_restrictions_text_style
+	}
+}
+local premium_sub_title_pass = {
+	{
+		value_id = "text",
+		style_id = "text",
+		pass_type = "text",
+		value = "",
+		style = premium_sub_title_style
+	}
+}
+local premium_text_pass = {
+	{
+		value_id = "text",
+		style_id = "text",
+		pass_type = "text",
+		value = "",
+		style = premium_text_style
+	}
+}
 
 return {
 	legend_inputs = legend_inputs,
 	widget_definitions = widget_definitions,
 	price_text_definition = price_text_definition,
 	scenegraph_definition = scenegraph_definition,
-	text_description_pass_template = text_description_pass_template,
 	bundle_button_definition = bundle_button_definition,
-	item_restrictions_pass = item_restrictions_pass
+	premium_sub_title_pass = premium_sub_title_pass,
+	premium_text_pass = premium_text_pass,
+	text_description_pass_template = text_description_pass_template,
+	item_sub_title_pass = item_sub_title_pass,
+	item_text_pass = item_text_pass
 }

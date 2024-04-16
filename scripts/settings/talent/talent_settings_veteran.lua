@@ -40,7 +40,7 @@ local talent_settings = {
 			ranged_damage = 0.25,
 			sway_modifier = 0.4,
 			recoil_modifier = -0.24,
-			cooldown = 35,
+			cooldown = 30,
 			fov_multiplier = 0.85,
 			push_speed_modifier = -0.5,
 			toughness = 0.6,
@@ -61,8 +61,9 @@ local talent_settings = {
 			max_charges = 3
 		},
 		coherency = {
-			ammo_replenishment_percent_improved = 0.01,
-			ammo_replenishment_percent = 0.0075
+			cooldown = 5,
+			ammo_replenishment_percent = 0.0075,
+			ammo_replenishment_percent_improved = 0.01
 		},
 		passive_1 = {
 			weakspot_damage = 0.3
@@ -90,7 +91,7 @@ local talent_settings = {
 			damage_far = 0.2
 		},
 		offensive_1_2 = {
-			reload_speed = 0.2
+			reload_speed = 0.25
 		},
 		offensive_1_3 = {
 			grenade_restored = 1,
@@ -175,7 +176,7 @@ local talent_settings = {
 			toughness_bonus = 1
 		},
 		toughness_3 = {
-			toughness = 0.035
+			toughness = 0.05
 		},
 		mixed_1 = {},
 		mixed_2 = {

@@ -62,7 +62,17 @@ ActionVeteranCombatAbility.start = function (self, action_settings, t, time_scal
 		end
 
 		if class_tag == "squad_leader" or class_tag == "shock_trooper" then
-			Toughness.recover_max_toughness(player_unit, "ability_stance")
+			local tougness_granted = Toughness.recover_max_toughness(player_unit, "ability_stance")
+			self._ability_extension = ScriptUnit.extension(self._player_unit, "ability_system")
+			local current_ability = self._ability_extension:get_current_ability_name()
+
+			if tougness_granted > 0 and current_ability == "veteran_combat_ability_shout" then
+				local source_player = player_unit and Managers.state.player_unit_spawn:owner(player_unit)
+
+				if source_player then
+					Managers.stats:record_private("hook_voice_of_command_toughness_given", source_player, tougness_granted)
+				end
+			end
 		end
 	end
 

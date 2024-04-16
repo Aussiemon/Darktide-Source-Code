@@ -223,11 +223,15 @@ ParticleEffect.editor_toggle_visibility_state = function (self, visible)
 end
 
 ParticleEffect.create_particle = function (self)
-	self:_create_particle()
+	if not self._particle_id then
+		self:_create_particle()
+	end
 end
 
 ParticleEffect.destroy_particle = function (self)
-	self:_destroy_particle()
+	if self._particle_id ~= nil then
+		self:_destroy_particle()
+	end
 end
 
 ParticleEffect.component_data = {

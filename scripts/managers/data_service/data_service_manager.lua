@@ -9,7 +9,8 @@ local SERVICES = {
 	social = require("scripts/managers/data_service/services/social_service"),
 	crafting = require("scripts/managers/data_service/services/crafting_service"),
 	contracts = require("scripts/managers/data_service/services/contracts_service"),
-	news = require("scripts/managers/data_service/services/news_service")
+	news = require("scripts/managers/data_service/services/news_service"),
+	penance_track = require("scripts/managers/data_service/services/penance_track_service")
 }
 local DataServiceManager = class("DataServiceManager")
 

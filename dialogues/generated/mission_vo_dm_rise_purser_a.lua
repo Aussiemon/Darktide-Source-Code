@@ -31,12 +31,6 @@ local mission_vo_dm_rise_purser_a = {
 			5.333313,
 			6.715531
 		},
-		sound_event_weights = {
-			0.25,
-			0.25,
-			0.25,
-			0.25
-		},
 		randomize_indexes = {}
 	},
 	mission_rise_banter_three_a = {
@@ -53,12 +47,6 @@ local mission_vo_dm_rise_purser_a = {
 			4.754771,
 			5.473281,
 			4.499292
-		},
-		sound_event_weights = {
-			0.25,
-			0.25,
-			0.25,
-			0.25
 		},
 		randomize_indexes = {}
 	},

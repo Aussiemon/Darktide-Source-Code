@@ -6,7 +6,6 @@ local FixedFrame = require("scripts/utilities/fixed_frame")
 local GameModeSettings = require("scripts/settings/game_mode/game_mode_settings")
 local MasterItems = require("scripts/backend/master_items")
 local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
-local PlayerTalents = require("scripts/utilities/player_talents/player_talents")
 local Promise = require("scripts/foundation/utilities/promise")
 local ScriptedScenarios = require("scripts/extension_systems/scripted_scenario/scripted_scenarios")
 local level_trigger_event = Level.trigger_event
@@ -39,6 +38,7 @@ local categories = {
 	"Navigation",
 	"Network",
 	"Pacing",
+	"Perception",
 	"Player Character",
 	"Player Equipment - Boons",
 	"Player Equipment - Emotes",
@@ -62,6 +62,7 @@ local categories = {
 	"UI",
 	"Unit",
 	"VO",
+	"Weapon Mastery",
 	"Weapon Traits"
 }
 local EMPTY_TABLE = {}
@@ -947,11 +948,22 @@ local function _crash_server()
 	end
 end
 
+local function _crash_client()
+	return
+end
+
 functions.crash_server = {
 	name = "Crash Server",
 	category = "Network",
 	on_activated = function ()
 		_crash_server()
+	end
+}
+functions.crash_client = {
+	name = "Crash Client",
+	category = "Network",
+	on_activated = function ()
+		_crash_client()
 	end
 }
 local _is_disconnected = false
@@ -1017,6 +1029,55 @@ functions.try_spawn_special_minion = {
 	category = "Pacing",
 	options_function = _special_breed_options,
 	on_activated = _try_spawn_special_minion
+}
+
+local function _make_player_untargetable()
+	local player = Managers.player:local_player(1)
+	local player_unit = player.player_unit
+
+	if player_unit == nil then
+		return
+	end
+
+	local is_server = Managers.state.game_session:is_server()
+
+	if is_server then
+		Managers.state.extension:system("perception_system"):debug_set_targetability(player_unit, false)
+	else
+		local player_unit_id = Managers.state.unit_spawner:game_object_id(player_unit)
+
+		Managers.connection:send_rpc_server("rpc_debug_set_targetability_client", player_unit_id, false)
+	end
+end
+
+local function _make_player_targetable()
+	local player = Managers.player:local_player(1)
+	local player_unit = player.player_unit
+
+	if player_unit == nil then
+		return
+	end
+
+	local is_server = Managers.state.game_session:is_server()
+
+	if is_server then
+		Managers.state.extension:system("perception_system"):debug_set_targetability(player_unit, true)
+	else
+		local player_unit_id = Managers.state.unit_spawner:game_object_id(player_unit)
+
+		Managers.connection:send_rpc_server("rpc_debug_set_targetability_client", player_unit_id, true)
+	end
+end
+
+functions.make_player_untargetable = {
+	name = "Make Player Untargetable",
+	category = "Perception",
+	on_activated = _make_player_untargetable
+}
+functions.make_player_targetable = {
+	name = "Make Player Targetable",
+	category = "Perception",
+	on_activated = _make_player_targetable
 }
 
 local function hide_selected_unit()
@@ -2457,6 +2518,40 @@ functions.reset_narrative_event = {
 	on_activated = _uncomplete_narrative_event,
 	options_function = _list_narrative_event_names
 }
+
+local function _unlock_tracked_achivements()
+	local favorite_achievements = Managers.save:account_data().favorite_achievements
+
+	for i = 1, #favorite_achievements do
+		local achievement_id = favorite_achievements[i]
+
+		if achievement_id then
+			local channel = Managers.connection:host_channel()
+
+			RPC.rpc_debug_client_request_unlock_achievement(channel, achievement_id)
+		end
+	end
+end
+
+functions.unlock_tracked_achievements = {
+	name = "Unlock tracked achievements",
+	category = "Progression",
+	on_activated = _unlock_tracked_achivements
+}
+
+local function _delete_all_achievements()
+	local channel = Managers.connection:host_channel()
+	local local_player = Managers.player:local_player(1)
+	local account_id = local_player:account_id()
+
+	RPC.rpc_debug_client_request_reset_achievements(channel, account_id)
+end
+
+functions.delete_current_achievement_progression = {
+	name = "Reset achievement progress",
+	category = "Progression",
+	on_activated = _delete_all_achievements
+}
 local Views = require("scripts/ui/views/views")
 
 local function _ui_manager_not_initialized()
@@ -2812,6 +2907,17 @@ functions.verify_trait_templates = {
 	on_activated = function ()
 		local trait_template_verification = require("scripts/settings/equipment/tests/trait_template_verification")
 		local success = trait_template_verification()
+	end
+}
+functions.reset_weapon_mastery_override_xp = {
+	name = "Reset Weapon Mastery XP Overrides",
+	category = "Weapon Mastery",
+	on_activated = function ()
+		local save_manager = Managers.save
+		local save_data = Managers.save:account_data()
+
+		table.clear(save_data.debug.weapon_mastery_xp)
+		save_manager:queue_save()
 	end
 }
 

@@ -18,6 +18,20 @@ local scenegraph_definition = {
 			500
 		}
 	},
+	corner_top_right_no_wallet = {
+		vertical_alignment = "top",
+		parent = "screen",
+		horizontal_alignment = "right",
+		size = {
+			150,
+			570
+		},
+		position = {
+			0,
+			-60,
+			500
+		}
+	},
 	corner_top_right = {
 		vertical_alignment = "top",
 		parent = "screen",
@@ -101,9 +115,29 @@ local widget_definitions = {
 			value = "content/ui/materials/frames/screen/crafting_01_upper_left"
 		}
 	}, "corner_top_left"),
+	corner_top_right_no_wallet = UIWidget.create_definition({
+		{
+			value = "content/ui/materials/frames/screen/crafting_01_upper_left",
+			pass_type = "texture_uv",
+			style = {
+				uvs = {
+					{
+						1,
+						0
+					},
+					{
+						0,
+						1
+					}
+				}
+			}
+		}
+	}, "corner_top_right_no_wallet", {
+		visible = false
+	}),
 	corner_top_right = UIWidget.create_definition({
 		{
-			pass_type = "texture",
+			pass_type = "texture_uv",
 			value = "content/ui/materials/frames/screen/crafting_01_upper_right"
 		}
 	}, "corner_top_right"),
@@ -195,9 +229,12 @@ local crafting_tab_params = {
 		layer = 10,
 		tabs_params = {
 			{
-				view = "crafting_modify_view",
 				background_alpha = 175,
 				display_name = "loc_crafting_modify_title",
+				view = "crafting_modify_view",
+				on_active_callback = function (parent)
+					parent:show_wallets(true)
+				end,
 				input_legend_buttons = {
 					{
 						input_action = "hotkey_item_inspect",
@@ -249,28 +286,38 @@ local crafting_tab_params = {
 		}
 	}
 }
+local used_settings = {
+	CraftingSettings
+}
 
-for i, recipe in pairs(CraftingSettings.recipes_ui_order) do
-	local view_name = recipe.view_name
-	crafting_tab_params[view_name] = {
-		hide_tabs = true,
-		layer = 10,
-		tabs_params = {
-			{
-				view = view_name,
-				display_name = recipe.display_name
+for i = 1, #used_settings do
+	local setting = used_settings[i]
+
+	for i, recipe in pairs(setting.recipes_ui_order) do
+		local view_name = recipe.view_name
+		crafting_tab_params[view_name] = {
+			hide_tabs = true,
+			layer = 10,
+			tabs_params = {
+				{
+					on_active_callback = function (parent)
+						parent:show_wallets(true)
+					end,
+					view = view_name,
+					display_name = recipe.display_name
+				}
 			}
 		}
-	}
 
-	if recipe.ui_show_in_vendor_view then
-		button_options_definitions[#button_options_definitions + 1] = {
-			display_name = recipe.display_name,
-			disabled = not not recipe.ui_disabled,
-			callback = function (crafting_view)
-				crafting_view:go_to_crafting_view(recipe.view_name)
-			end
-		}
+		if recipe.ui_show_in_vendor_view then
+			button_options_definitions[#button_options_definitions + 1] = {
+				display_name = recipe.display_name,
+				disabled = not not recipe.ui_disabled,
+				callback = function (crafting_view)
+					crafting_view:go_to_crafting_view(recipe.view_name)
+				end
+			}
+		end
 	end
 end
 

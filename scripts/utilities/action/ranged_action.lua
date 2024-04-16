@@ -30,8 +30,15 @@ local RangedAction = {
 
 		local explosion_arming_distance = damage_config.explosion_arming_distance
 
-		if explosion_arming_distance and hit_distance < explosion_arming_distance then
-			return false
+		if explosion_arming_distance then
+			local attacker_buff_extension = ScriptUnit.has_extension(attacker_unit, "buff_system")
+			local stat_buffs = attacker_buff_extension and attacker_buff_extension:stat_buffs()
+			local explosion_arming_distance_multiplier = stat_buffs and stat_buffs.explosion_arming_distance_multiplier or 1
+			explosion_arming_distance = explosion_arming_distance * explosion_arming_distance_multiplier
+
+			if hit_distance < explosion_arming_distance then
+				return false
+			end
 		end
 
 		local impact_config = damage_config.impact
@@ -70,8 +77,15 @@ local RangedAction = {
 
 		local explosion_arming_distance = damage_config.explosion_arming_distance
 
-		if explosion_arming_distance and hit_distance < explosion_arming_distance then
-			return false
+		if explosion_arming_distance then
+			local attacker_buff_extension = ScriptUnit.has_extension(attacker_unit, "buff_system")
+			local stat_buffs = attacker_buff_extension and attacker_buff_extension:stat_buffs()
+			local explosion_arming_distance_multiplier = stat_buffs and stat_buffs.explosion_arming_distance_multiplier or 1
+			explosion_arming_distance = explosion_arming_distance * explosion_arming_distance_multiplier
+
+			if hit_distance < explosion_arming_distance then
+				return false
+			end
 		end
 
 		local hit_mass_depleted = HitMass.hit_mass_limit_reached(hit_mass_budget_attack, hit_mass_budget_impact)

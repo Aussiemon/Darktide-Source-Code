@@ -1,4 +1,4 @@
-local WeaponCategories = {
+local weapon_categories = {
 	"grenade",
 	"psyker",
 	"autogun",
@@ -30,4 +30,4 @@ local WeaponCategories = {
 	"ogryn_heavystubbers"
 }
 
-return settings("WeaponCategories", WeaponCategories)
+return settings("weapon_categories", weapon_categories)

@@ -267,6 +267,28 @@ local conversations_hub_pilot_a = {
 			5.074792
 		},
 		randomize_indexes = {}
+	},
+	shipmistress_hub_announcement_b_27_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1.0] = "loc_pilot_a__shipmistress_hub_announcement_b_27_b_01"
+		},
+		sound_events_duration = {
+			[1.0] = 6.237979
+		},
+		randomize_indexes = {}
+	},
+	shipmistress_hub_announcement_b_28_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1.0] = "loc_pilot_a__shipmistress_hub_announcement_b_28_b_01"
+		},
+		sound_events_duration = {
+			[1.0] = 3.644542
+		},
+		randomize_indexes = {}
 	}
 }
 

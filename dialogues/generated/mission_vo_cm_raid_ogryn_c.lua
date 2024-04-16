@@ -64,48 +64,50 @@ local mission_vo_cm_raid_ogryn_c = {
 		randomize_indexes_n = 0,
 		sound_events_n = 4,
 		sound_events = {
-			"loc_ogryn_c__surrounded_03",
-			"loc_ogryn_c__surrounded_05",
-			"loc_ogryn_c__surrounded_06",
-			"loc_ogryn_c__surrounded_07"
+			"loc_ogryn_c__mission_raid_trapped_a_01",
+			"loc_ogryn_c__mission_raid_trapped_a_02",
+			"loc_ogryn_c__mission_raid_trapped_a_03",
+			"loc_ogryn_c__mission_raid_trapped_a_04"
 		},
 		sound_events_duration = {
-			3.0605,
-			3.019948,
-			4.931115,
-			3.696396
-		},
-		sound_event_weights = {
-			0.25,
-			0.25,
-			0.25,
-			0.25
+			1.938625,
+			1.787958,
+			1.514583,
+			3.833344
 		},
 		randomize_indexes = {}
 	},
 	mission_raid_trapped_b = {
 		randomize_indexes_n = 0,
-		sound_events_n = 5,
+		sound_events_n = 4,
 		sound_events = {
-			"loc_ogryn_c__surrounded_response_02",
-			"loc_ogryn_c__surrounded_response_04",
-			"loc_ogryn_c__surrounded_response_06",
-			"loc_ogryn_c__surrounded_response_08",
-			"loc_ogryn_c__surrounded_response_10"
+			"loc_ogryn_c__mission_raid_trapped_b_01",
+			"loc_ogryn_c__mission_raid_trapped_b_02",
+			"loc_ogryn_c__mission_raid_trapped_b_03",
+			"loc_ogryn_c__mission_raid_trapped_b_04"
 		},
 		sound_events_duration = {
-			5.63426,
-			4.112083,
-			2.986313,
-			2.703781,
-			4.085521
+			2.933344,
+			1.70001,
+			3.233344,
+			2.20001
 		},
-		sound_event_weights = {
-			0.2,
-			0.2,
-			0.2,
-			0.2,
-			0.2
+		randomize_indexes = {}
+	},
+	mission_raid_trapped_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 4,
+		sound_events = {
+			"loc_ogryn_c__mission_raid_trapped_c_01",
+			"loc_ogryn_c__mission_raid_trapped_c_02",
+			"loc_ogryn_c__mission_raid_trapped_c_03",
+			"loc_ogryn_c__mission_raid_trapped_c_04"
+		},
+		sound_events_duration = {
+			2.90001,
+			3.30001,
+			3.633344,
+			2.866677
 		},
 		randomize_indexes = {}
 	}

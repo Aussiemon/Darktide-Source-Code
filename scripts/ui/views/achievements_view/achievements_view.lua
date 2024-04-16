@@ -40,6 +40,8 @@ AchievementsView.on_enter = function (self)
 	self._focused_grid_id = nil
 	self._next_category_id = nil
 	self._show_summary_next_frame = nil
+	self._showing_summary = false
+	self._current_favorites = {}
 	self._allow_close_hotkey = true
 
 	self:_setup_input_legend()
@@ -72,6 +74,22 @@ AchievementsView.update = function (self, dt, t, input_service)
 	self._allow_close_hotkey = self._focused_grid_id ~= ACHIEVEMENT_GRID
 
 	return AchievementsView.super.update(self, dt, t, input_service)
+end
+
+AchievementsView._outdated_favorites = function (self)
+	local favorite_achievements = Managers.save:account_data().favorite_achievements
+
+	return not table.array_equals(self._current_favorites, favorite_achievements)
+end
+
+AchievementsView._update_summary = function (self)
+	if not self._showing_summary then
+		return
+	end
+
+	if self:_outdated_favorites() then
+		self:_show_summary()
+	end
 end
 
 AchievementsView.on_back_pressed = function (self)
@@ -147,6 +165,14 @@ AchievementsView._handle_input = function (self, input_service, dt, t)
 
 			if fold_callback then
 				fold_callback()
+			end
+		elseif input_service:get("secondary_action_pressed") then
+			local grid = self._grids[focused_grid_id]
+			local focused_widget = grid:selected_grid_widget()
+			local change_favorite_callback = focused_widget and focused_widget.content.change_favorite_callback
+
+			if change_favorite_callback then
+				change_favorite_callback()
 			end
 		end
 	elseif focused_grid_id == CATEGORIES_GRID then
@@ -438,6 +464,34 @@ AchievementsView._cb_unfold_legend_button_visibility = function (self, should_be
 	return widget and widget.content.unfolded == should_be_unfolded
 end
 
+AchievementsView._cb_favorite_legend_visibility = function (self, add_to_favorite)
+	local using_cursor_navigation = self._using_cursor_navigation
+	local currently_tracked, can_track = AchievementUIHelper.favorite_achievement_count()
+
+	if add_to_favorite and can_track <= currently_tracked then
+		return false
+	end
+
+	local focused_grid_id = self._focused_grid_id
+
+	if not using_cursor_navigation and focused_grid_id ~= ACHIEVEMENT_GRID then
+		return false
+	end
+
+	local widget = nil
+	local grid = self._grids[ACHIEVEMENT_GRID]
+
+	if using_cursor_navigation then
+		widget = grid:hovered_widget()
+	else
+		widget = grid:selected_grid_widget()
+	end
+
+	local is_favorite = widget and widget.content.is_favorite
+
+	return is_favorite ~= nil and is_favorite ~= add_to_favorite
+end
+
 AchievementsView._cb_category_pressed = function (self, widget, config)
 	local category_id = config.category
 	local visible_sub_category_count = self:_visible_sub_category_count(category_id)
@@ -481,6 +535,8 @@ AchievementsView._update_current_category = function (self)
 
 		self:_on_navigation_input_changed()
 	end
+
+	self:_update_summary()
 end
 
 AchievementsView._fold_or_unfold_subcategories = function (self, category_id)
@@ -526,7 +582,7 @@ AchievementsView._show_summary = function (self)
 	local layout = self._summary_layout
 	local achievement_definitions = Managers.achievements:achievement_definitions()
 
-	if not layout then
+	if not layout or self:_outdated_favorites() then
 		layout = {
 			[#layout + 1] = {
 				widget_type = "list_padding"
@@ -557,7 +613,55 @@ AchievementsView._show_summary = function (self)
 			end
 		end
 
+		local max_favorite_achievements = UISettings.max_favorite_achievements
+		local favorite_achievements = Managers.save:account_data().favorite_achievements
+
+		for i = #favorite_achievements, 1, -1 do
+			local achievement_id = favorite_achievements[i]
+			local achievement_definition = achievement_definitions[achievement_id]
+
+			if not achievement_definition then
+				AchievementUIHelper.remove_favorite_achievement(achievement_id)
+				table.remove(favorite_achievements, i)
+			end
+		end
+
+		layout[#layout + 1] = {
+			display_name = "loc_achievements_view_summary_favorite",
+			widget_type = "header",
+			localization_options = {
+				current = #favorite_achievements,
+				cap = max_favorite_achievements
+			}
+		}
+
+		for i = 1, max_favorite_achievements do
+			local achievement_id = favorite_achievements[i]
+			local achievement = achievement_definitions[achievement_id]
+
+			if achievement then
+				local is_complete = Managers.achievements:achievement_completed(player, achievement_id)
+				layout[#layout + 1] = {
+					block_folding = true,
+					widget_type = "achievement",
+					player = player,
+					achievement_definition = achievement,
+					is_complete = is_complete
+				}
+			elseif i == 1 then
+				layout[#layout + 1] = {
+					display_name = "loc_achievements_view_summary_empty_favorite",
+					widget_type = "description"
+				}
+			else
+				layout[#layout + 1] = {
+					widget_type = "empty_space"
+				}
+			end
+		end
+
 		self._summary_layout = layout
+		self._current_favorites = table.shallow_copy(favorite_achievements)
 	end
 
 	if self._focused_grid_id ~= CATEGORIES_GRID then
@@ -565,6 +669,8 @@ AchievementsView._show_summary = function (self)
 
 		self:_on_navigation_input_changed()
 	end
+
+	self._showing_summary = true
 
 	self._grids[ACHIEVEMENT_GRID]:present_grid_layout(layout, blueprints)
 end

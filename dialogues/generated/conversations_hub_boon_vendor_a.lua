@@ -15,16 +15,16 @@ local conversations_hub_boon_vendor_a = {
 			"loc_boon_vendor_a__boon_vendor_distance_restocked_dislikes_character_10"
 		},
 		sound_events_duration = {
-			4.192667,
-			6.311854,
-			3.763354,
-			5.482271,
-			4.3455,
-			3.214438,
-			4.611396,
-			4.922563,
-			4.861,
-			3.094625
+			4.129813,
+			5.845656,
+			3.674656,
+			6.334594,
+			5.0945,
+			3.535521,
+			4.494344,
+			6.035354,
+			5.971219,
+			3.136677
 		},
 		randomize_indexes = {}
 	},
@@ -44,16 +44,16 @@ local conversations_hub_boon_vendor_a = {
 			"loc_boon_vendor_a__boon_vendor_distance_restocked_likes_character_10"
 		},
 		sound_events_duration = {
-			2.755604,
-			3.544354,
-			3.71,
-			2.338458,
-			2.762938,
-			6.560104,
-			5.126354,
-			4.245229,
-			4.48775,
-			3.976604
+			3.501781,
+			3.66325,
+			4.860573,
+			2.948667,
+			3.268865,
+			6.277198,
+			4.883729,
+			4.46201,
+			4.265948,
+			4.383135
 		},
 		randomize_indexes = {}
 	},
@@ -83,26 +83,26 @@ local conversations_hub_boon_vendor_a = {
 			"loc_boon_vendor_a__boon_vendor_goodbye_dislikes_character_20"
 		},
 		sound_events_duration = {
-			1.716063,
-			2.420792,
-			2.440688,
-			3.67625,
-			1.984188,
-			2.428833,
-			1.923896,
-			3.897854,
-			2.709542,
-			2.706688,
-			1.912271,
-			2.269833,
-			1.585083,
-			3.41025,
-			2.850875,
-			3.476771,
-			2.46225,
-			3.328667,
-			2.353,
-			4.612833
+			1.46924,
+			2.14224,
+			2.362073,
+			2.397448,
+			1.316906,
+			2.677979,
+			1.884844,
+			4.019365,
+			2.454375,
+			2.506958,
+			1.616385,
+			2.174229,
+			1.795906,
+			3.285344,
+			3.418917,
+			2.603448,
+			1.869208,
+			3.0485,
+			1.916219,
+			5.323167
 		},
 		randomize_indexes = {}
 	},
@@ -132,26 +132,26 @@ local conversations_hub_boon_vendor_a = {
 			"loc_boon_vendor_a__boon_vendor_goodbye_likes_character_20"
 		},
 		sound_events_duration = {
-			1.847292,
-			0.833688,
-			2.077458,
-			1.522583,
-			2.111896,
-			1.700875,
-			1.68075,
-			1.681208,
-			1.318583,
-			2.781896,
-			1.866438,
-			1.721271,
-			2.293563,
-			1.358542,
-			1.338958,
-			2.537813,
-			3.402,
-			3.667625,
-			2.064021,
-			4.475083
+			1.483844,
+			0.697833,
+			2.332677,
+			1.689698,
+			2.176042,
+			1.815313,
+			1.78276,
+			1.762552,
+			1.762354,
+			2.26501,
+			1.893865,
+			2.245271,
+			2.703021,
+			1.695167,
+			1.404948,
+			3.008896,
+			4.176125,
+			3.701708,
+			1.992792,
+			5.407729
 		},
 		randomize_indexes = {}
 	},
@@ -181,26 +181,165 @@ local conversations_hub_boon_vendor_a = {
 			"loc_boon_vendor_a__boon_vendor_purchase_20"
 		},
 		sound_events_duration = {
-			1.85925,
-			1.294875,
-			2.675542,
-			1.415896,
-			3.670708,
-			1.908333,
-			3.030188,
-			1.806583,
-			2.990292,
-			3.272438,
-			2.620542,
-			2.263896,
-			2.53725,
-			2.440854,
-			3.573271,
-			3.066,
-			4.548625,
-			1.911833,
-			3.436229,
-			4.703771
+			2.263427,
+			1.465719,
+			3.346677,
+			1.61901,
+			4.77999,
+			2.456438,
+			3.868156,
+			1.704469,
+			3.428396,
+			4.089302,
+			2.458708,
+			2.42026,
+			2.564365,
+			2.447188,
+			3.864792,
+			3.298156,
+			5.695188,
+			1.893208,
+			3.989198,
+			4.56749
+		},
+		randomize_indexes = {}
+	},
+	concourse_exchange_11_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1.0] = "loc_boon_vendor_a__concourse_exchange_11_b_01"
+		},
+		sound_events_duration = {
+			[1.0] = 3.982125
+		},
+		randomize_indexes = {}
+	},
+	concourse_exchange_12_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1.0] = "loc_boon_vendor_a__concourse_exchange_12_b_01"
+		},
+		sound_events_duration = {
+			[1.0] = 2.515885
+		},
+		randomize_indexes = {}
+	},
+	concourse_exchange_13_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1.0] = "loc_boon_vendor_a__concourse_exchange_13_b_01"
+		},
+		sound_events_duration = {
+			[1.0] = 1.72899
+		},
+		randomize_indexes = {}
+	},
+	concourse_exchange_14_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1.0] = "loc_boon_vendor_a__concourse_exchange_14_b_01"
+		},
+		sound_events_duration = {
+			[1.0] = 2.766885
+		},
+		randomize_indexes = {}
+	},
+	concourse_exchange_15_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1.0] = "loc_boon_vendor_a__concourse_exchange_15_b_01"
+		},
+		sound_events_duration = {
+			[1.0] = 4.945875
+		},
+		randomize_indexes = {}
+	},
+	concourse_exchange_16_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1.0] = "loc_boon_vendor_a__concourse_exchange_16_b_01"
+		},
+		sound_events_duration = {
+			[1.0] = 5.152302
+		},
+		randomize_indexes = {}
+	},
+	concourse_exchange_17_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1.0] = "loc_boon_vendor_a__concourse_exchange_17_b_01"
+		},
+		sound_events_duration = {
+			[1.0] = 4.400385
+		},
+		randomize_indexes = {}
+	},
+	concourse_exchange_18_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1.0] = "loc_boon_vendor_a__concourse_exchange_18_b_01"
+		},
+		sound_events_duration = {
+			[1.0] = 3.236354
+		},
+		randomize_indexes = {}
+	},
+	concourse_exchange_19_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1.0] = "loc_boon_vendor_a__concourse_exchange_19_b_01"
+		},
+		sound_events_duration = {
+			[1.0] = 3.216094
+		},
+		randomize_indexes = {}
+	},
+	concourse_exchange_20_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1.0] = "loc_boon_vendor_a__concourse_exchange_20_b_01"
+		},
+		sound_events_duration = {
+			[1.0] = 2.326563
+		},
+		randomize_indexes = {}
+	},
+	concourse_exchange_boon_vendor = {
+		randomize_indexes_n = 0,
+		sound_events_n = 10,
+		sound_events = {
+			"loc_boon_vendor_a__concourse_exchange_01_a_01",
+			"loc_boon_vendor_a__concourse_exchange_02_a_01",
+			"loc_boon_vendor_a__concourse_exchange_03_a_01",
+			"loc_boon_vendor_a__concourse_exchange_04_a_01",
+			"loc_boon_vendor_a__concourse_exchange_05_a_01",
+			"loc_boon_vendor_a__concourse_exchange_06_a_01",
+			"loc_boon_vendor_a__concourse_exchange_07_a_01",
+			"loc_boon_vendor_a__concourse_exchange_08_a_01",
+			"loc_boon_vendor_a__concourse_exchange_09_a_01",
+			"loc_boon_vendor_a__concourse_exchange_10_a_01"
+		},
+		sound_events_duration = {
+			5.446792,
+			2.456896,
+			4.04076,
+			2.056385,
+			4.194135,
+			1.518927,
+			2.431667,
+			2.625198,
+			2.260802,
+			3.494281
 		},
 		randomize_indexes = {}
 	},
@@ -230,26 +369,26 @@ local conversations_hub_boon_vendor_a = {
 			"loc_boon_vendor_a__hub_idle_20"
 		},
 		sound_events_duration = {
-			3.588146,
-			5.081854,
-			3.484604,
-			4.228542,
-			2.788875,
-			6.595271,
-			4.249854,
-			3.838917,
-			4.945167,
-			5.143813,
-			5.350896,
-			4.078188,
-			6.784313,
-			5.488938,
-			3.591833,
-			4.643729,
-			2.884063,
-			4.182167,
-			3.159188,
-			4.508958
+			3.510698,
+			4.782385,
+			3.554396,
+			4.414229,
+			2.623031,
+			6.324292,
+			4.980375,
+			3.06801,
+			5.358063,
+			5.620802,
+			5.749385,
+			4.00825,
+			6.884073,
+			5.370083,
+			3.561708,
+			4.511927,
+			2.630688,
+			4.004302,
+			3.313135,
+			4.405031
 		},
 		randomize_indexes = {}
 	},
@@ -279,26 +418,26 @@ local conversations_hub_boon_vendor_a = {
 			"loc_boon_vendor_a__hub_interact_dislikes_character_20"
 		},
 		sound_events_duration = {
-			2.713688,
-			1.936313,
-			4.10575,
-			2.220917,
-			3.983708,
-			1.915396,
-			3.544208,
-			4.755438,
-			1.9685,
-			2.373271,
-			2.883333,
-			1.6325,
-			1.877125,
-			7.399604,
-			2.271167,
-			6.403521,
-			5.944833,
-			1.836792,
-			2.599708,
-			3.070125
+			2.594802,
+			2.108292,
+			3.267385,
+			2.029646,
+			3.414719,
+			2.621417,
+			3.731948,
+			4.962125,
+			2.485823,
+			3.038406,
+			2.621,
+			1.773802,
+			1.782354,
+			6.763615,
+			3.041417,
+			5.189365,
+			5.699667,
+			2.278635,
+			2.34249,
+			3.456969
 		},
 		randomize_indexes = {}
 	},
@@ -328,26 +467,76 @@ local conversations_hub_boon_vendor_a = {
 			"loc_boon_vendor_a__hub_interact_likes_character_20"
 		},
 		sound_events_duration = {
-			1.416688,
-			3.012646,
-			1.985146,
-			3.457875,
-			2.017,
-			1.719,
-			3.506042,
-			1.183958,
-			4.716896,
-			2.848313,
-			5.147354,
-			2.171813,
-			1.922208,
-			3.802021,
-			2.935333,
-			2.606167,
-			3.743583,
-			3.205063,
-			1.982771,
-			2.314938
+			1.5105,
+			3.005823,
+			1.743688,
+			3.955677,
+			2.344594,
+			1.758938,
+			4.085521,
+			1.228302,
+			3.845583,
+			2.902229,
+			5.150021,
+			2.290344,
+			2.496031,
+			3.957469,
+			2.038844,
+			2.960313,
+			4.071167,
+			2.93249,
+			2.190292,
+			2.501281
+		},
+		randomize_indexes = {}
+	},
+	hub_interact_boon_vendor_rumour_politics_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 10,
+		sound_events = {
+			"loc_boon_vendor_a__hub_interact_rumour_politics_a_01",
+			"loc_boon_vendor_a__hub_interact_rumour_politics_a_02",
+			"loc_boon_vendor_a__hub_interact_rumour_politics_a_03",
+			"loc_boon_vendor_a__hub_interact_rumour_politics_a_04",
+			"loc_boon_vendor_a__hub_interact_rumour_politics_a_05",
+			"loc_boon_vendor_a__hub_interact_rumour_politics_a_06",
+			"loc_boon_vendor_a__hub_interact_rumour_politics_a_07",
+			"loc_boon_vendor_a__hub_interact_rumour_politics_a_08",
+			"loc_boon_vendor_a__hub_interact_rumour_politics_a_09",
+			"loc_boon_vendor_a__hub_interact_rumour_politics_a_10"
+		},
+		sound_events_duration = {
+			3.904802,
+			8.18225,
+			6.553927,
+			8.371292,
+			4.435823,
+			5.148406,
+			6.70999,
+			5.848802,
+			5.3955,
+			4.775927
+		},
+		randomize_indexes = {}
+	},
+	hub_interact_penance_greeting_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 6,
+		sound_events = {
+			"loc_boon_vendor_a__hub_interact_penance_greeting_a_01",
+			"loc_boon_vendor_a__hub_interact_penance_greeting_a_02",
+			"loc_boon_vendor_a__hub_interact_penance_greeting_a_03",
+			"loc_boon_vendor_a__hub_interact_penance_greeting_a_04",
+			"loc_boon_vendor_a__hub_interact_penance_greeting_a_05",
+			"loc_boon_vendor_a__hub_interact_penance_greeting_a_06"
+		},
+		sound_events_duration = {
+			2.852438,
+			3.595198,
+			2.119208,
+			2.864385,
+			2.803854,
+			2.226
 		},
 		randomize_indexes = {}
 	},
@@ -359,6 +548,17 @@ local conversations_hub_boon_vendor_a = {
 		},
 		sound_events_duration = {
 			[1.0] = 36.29252
+		},
+		randomize_indexes = {}
+	},
+	shipmistress_hub_announcement_a_33_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1.0] = "loc_boon_vendor_a__shipmistress_hub_announcement_a_33_b_01"
+		},
+		sound_events_duration = {
+			[1.0] = 3.45678
 		},
 		randomize_indexes = {}
 	}

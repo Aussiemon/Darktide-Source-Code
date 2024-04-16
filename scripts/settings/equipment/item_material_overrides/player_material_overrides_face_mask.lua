@@ -223,6 +223,22 @@ local material_overrides = {
 			}
 		}
 	},
+	mask_face_rebreather_d = {
+		property_overrides = {
+			positive_mask = {
+				0.355,
+				0,
+				0.434,
+				1
+			},
+			negative_mask = {
+				0.355,
+				0.423,
+				0,
+				0
+			}
+		}
+	},
 	mask_face_hide_mouth_nose = {
 		property_overrides = {
 			positive_mask = {
@@ -283,6 +299,22 @@ local material_overrides = {
 				0,
 				0,
 				0.171,
+				0
+			}
+		}
+	},
+	mask_face_keep_neck_b = {
+		property_overrides = {
+			positive_mask = {
+				0,
+				0,
+				0,
+				0
+			},
+			negative_mask = {
+				0,
+				0.398,
+				0.242,
 				0
 			}
 		}

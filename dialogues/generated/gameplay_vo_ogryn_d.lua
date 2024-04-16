@@ -100,6 +100,64 @@ local gameplay_vo_ogryn_d = {
 		},
 		randomize_indexes = {}
 	},
+	blitz_grenade_box_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 10,
+		sound_events = {
+			"loc_ogryn_d__blitz_grenade_box_a_01",
+			"loc_ogryn_d__blitz_grenade_box_a_02",
+			"loc_ogryn_d__blitz_grenade_box_a_03",
+			"loc_ogryn_d__blitz_grenade_box_a_04",
+			"loc_ogryn_d__blitz_grenade_box_a_05",
+			"loc_ogryn_d__blitz_grenade_box_a_06",
+			"loc_ogryn_d__blitz_grenade_box_a_07",
+			"loc_ogryn_d__blitz_grenade_box_a_08",
+			"loc_ogryn_d__blitz_grenade_box_a_09",
+			"loc_ogryn_d__blitz_grenade_box_a_10"
+		},
+		sound_events_duration = {
+			2.067063,
+			1.815813,
+			1.310448,
+			2.063688,
+			2.870406,
+			1.954323,
+			2.439167,
+			3.241188,
+			1.548625,
+			1.752063
+		},
+		randomize_indexes = {}
+	},
+	blitz_rock_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 10,
+		sound_events = {
+			"loc_ogryn_d__blitz_rock_a_01",
+			"loc_ogryn_d__blitz_rock_a_02",
+			"loc_ogryn_d__blitz_rock_a_03",
+			"loc_ogryn_d__blitz_rock_a_04",
+			"loc_ogryn_d__blitz_rock_a_05",
+			"loc_ogryn_d__blitz_rock_a_06",
+			"loc_ogryn_d__blitz_rock_a_07",
+			"loc_ogryn_d__blitz_rock_a_08",
+			"loc_ogryn_d__blitz_rock_a_09",
+			"loc_ogryn_d__blitz_rock_a_10"
+		},
+		sound_events_duration = {
+			1.93874,
+			1.987542,
+			2.406385,
+			1.135083,
+			1.702635,
+			2.292875,
+			2.572063,
+			1.301292,
+			2.150302,
+			1.857167
+		},
+		randomize_indexes = {}
+	},
 	calling_for_help = {
 		randomize_indexes_n = 0,
 		sound_events_n = 8,
@@ -599,6 +657,41 @@ local gameplay_vo_ogryn_d = {
 			0.1,
 			0.1,
 			0.1
+		},
+		randomize_indexes = {}
+	},
+	enemy_kill_cultist_grenadier = {
+		randomize_indexes_n = 0,
+		sound_events_n = 8,
+		sound_events = {
+			"loc_ogryn_d__enemy_kill_grenadier_01",
+			"loc_ogryn_d__enemy_kill_grenadier_02",
+			"loc_ogryn_d__enemy_kill_grenadier_03",
+			"loc_ogryn_d__enemy_kill_grenadier_04",
+			"loc_ogryn_d__enemy_kill_grenadier_05",
+			"loc_ogryn_d__enemy_kill_grenadier_06",
+			"loc_ogryn_d__enemy_kill_grenadier_07",
+			"loc_ogryn_d__enemy_kill_grenadier_08"
+		},
+		sound_events_duration = {
+			1.733354,
+			2.314292,
+			2.37474,
+			4.364104,
+			2.169594,
+			2.465302,
+			1.750542,
+			2.95851
+		},
+		sound_event_weights = {
+			0.125,
+			0.125,
+			0.125,
+			0.125,
+			0.125,
+			0.125,
+			0.125,
+			0.125
 		},
 		randomize_indexes = {}
 	},
@@ -1599,16 +1692,14 @@ local gameplay_vo_ogryn_d = {
 	},
 	head_shot = {
 		randomize_indexes_n = 0,
-		sound_events_n = 8,
+		sound_events_n = 6,
 		sound_events = {
 			"loc_ogryn_d__head_shot_01",
 			"loc_ogryn_d__head_shot_02",
 			"loc_ogryn_d__head_shot_03",
 			"loc_ogryn_d__head_shot_04",
 			"loc_ogryn_d__head_shot_05",
-			"loc_ogryn_d__head_shot_06",
-			"loc_ogryn_d__head_shot_07",
-			"loc_ogryn_d__head_shot_08"
+			"loc_ogryn_d__head_shot_07"
 		},
 		sound_events_duration = {
 			4.116125,
@@ -1616,9 +1707,7 @@ local gameplay_vo_ogryn_d = {
 			2.659927,
 			2.742135,
 			2.213667,
-			4.086771,
-			2.342844,
-			4.028042
+			2.342844
 		},
 		randomize_indexes = {}
 	},
@@ -3661,6 +3750,41 @@ local gameplay_vo_ogryn_d = {
 			0.2,
 			0.2,
 			0.2
+		},
+		randomize_indexes = {}
+	},
+	seen_enemy_cultist_grenadier = {
+		randomize_indexes_n = 0,
+		sound_events_n = 8,
+		sound_events = {
+			"loc_ogryn_d__seen_enemy_grenadier_01",
+			"loc_ogryn_d__seen_enemy_grenadier_02",
+			"loc_ogryn_d__seen_enemy_grenadier_03",
+			"loc_ogryn_d__seen_enemy_grenadier_04",
+			"loc_ogryn_d__seen_enemy_grenadier_05",
+			"loc_ogryn_d__seen_enemy_grenadier_06",
+			"loc_ogryn_d__seen_enemy_grenadier_07",
+			"loc_ogryn_d__seen_enemy_grenadier_08"
+		},
+		sound_events_duration = {
+			1.678156,
+			2.127969,
+			1.608958,
+			2.249073,
+			3.624479,
+			2.404781,
+			2.72199,
+			2.802698
+		},
+		sound_event_weights = {
+			0.125,
+			0.125,
+			0.125,
+			0.125,
+			0.125,
+			0.125,
+			0.125,
+			0.125
 		},
 		randomize_indexes = {}
 	},

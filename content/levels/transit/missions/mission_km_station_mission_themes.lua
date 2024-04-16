@@ -5,9 +5,6 @@ local mission_themes = {
 	assault = {
 		"content/levels/transit/missions/km_station_themes/assault_01/theme_assault_01_km_station"
 	},
-	gas = {
-		"content/levels/transit/missions/km_station_themes/gas_01/theme_gas_01_km_station"
-	},
 	default = {
 		"content/levels/transit/missions/km_station_themes/default/theme_default_km_station"
 	},
@@ -16,6 +13,9 @@ local mission_themes = {
 	},
 	noir = {
 		"content/levels/transit/missions/km_station_themes/noir_01/theme_noir_01_km_station"
+	},
+	toxic_gas = {
+		"content/levels/transit/missions/km_station_themes/toxic_gas_01/theme_toxic_gas_01_km_station"
 	},
 	ember = {
 		"content/levels/transit/missions/km_station_themes/ember_01/theme_ember_01_km_station"

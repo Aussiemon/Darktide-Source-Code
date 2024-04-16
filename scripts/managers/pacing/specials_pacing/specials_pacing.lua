@@ -1227,7 +1227,8 @@ SpecialsPacing._update_speed_running_prevention = function (self, target_side_id
 		return
 	end
 
-	local distance_diff = ahead_travel_distance - previous_speed_running_distance
+	local distance_diff = nil
+	distance_diff = distance_diff or ahead_travel_distance - previous_speed_running_distance
 	local speed_running_required_distance = template.speed_running_required_distance
 	self._previous_speed_running_distance = ahead_travel_distance
 
@@ -1406,6 +1407,10 @@ end
 
 SpecialsPacing.set_move_timer_when_challenge_rating_above = function (self, challenge_rating)
 	self._override_move_timer_when_challenge_rating_above = challenge_rating
+end
+
+SpecialsPacing.reset_traveled_this_frame = function (self)
+	self._next_frame_traveled_distance = 0
 end
 
 return SpecialsPacing

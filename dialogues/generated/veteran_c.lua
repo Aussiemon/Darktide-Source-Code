@@ -3419,7 +3419,8 @@ return function ()
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"veteran_male_c"
+					"veteran_male_c",
+					"veteran_female_c"
 				}
 			},
 			{
@@ -3615,7 +3616,8 @@ return function ()
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"veteran_male_c"
+					"veteran_male_c",
+					"veteran_female_c"
 				}
 			}
 		},
@@ -3671,7 +3673,8 @@ return function ()
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"veteran_male_c"
+					"veteran_male_c",
+					"veteran_female_c"
 				}
 			},
 			{
@@ -3867,7 +3870,8 @@ return function ()
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"veteran_male_c"
+					"veteran_male_c",
+					"veteran_female_c"
 				}
 			}
 		},
@@ -3923,7 +3927,8 @@ return function ()
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"veteran_male_c"
+					"veteran_male_c",
+					"veteran_female_c"
 				}
 			},
 			{
@@ -4119,7 +4124,8 @@ return function ()
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"veteran_male_c"
+					"veteran_male_c",
+					"veteran_female_c"
 				}
 			}
 		},

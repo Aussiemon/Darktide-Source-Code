@@ -23,6 +23,17 @@ BtGrenadierThrowAction.enter = function (self, unit, breed, blackboard, scratchp
 	if vo_event then
 		Vo.enemy_generic_vo_event(unit, vo_event, breed.name)
 	end
+
+	if breed.count_num_attacks then
+		scratchpad.count_num_attacks = true
+		scratchpad.statistics_component = Blackboard.write_component(blackboard, "statistics")
+	end
+end
+
+BtGrenadierThrowAction.init_values = function (self, blackboard, action_data, node_data)
+	local statistics_component = Blackboard.write_component(blackboard, "statistics")
+	statistics_component.num_attacks_done = 0
+	statistics_component.num_in_liquid = 0
 end
 
 BtGrenadierThrowAction.leave = function (self, unit, breed, blackboard, scratchpad, action_data, t, reason, destroy)
@@ -149,6 +160,10 @@ BtGrenadierThrowAction._throw_grenade = function (self, unit, scratchpad, action
 	local throw_grenade_component = scratchpad.throw_grenade_component
 	local cooldown = Managers.state.difficulty:get_table_entry_by_challenge(action_data.cooldown or MinionDifficultySettings.cooldowns.grenadier_throw)
 	throw_grenade_component.next_throw_at_t = t + cooldown
+
+	if scratchpad.count_num_attacks then
+		scratchpad.statistics_component.num_attacks_done = scratchpad.statistics_component.num_attacks_done + 1
+	end
 end
 
 BtGrenadierThrowAction._aim_at_target = function (self, scratchpad)

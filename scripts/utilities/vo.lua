@@ -1275,6 +1275,24 @@ Vo.is_currently_playing_dialogue = function (unit)
 	end
 end
 
+Vo.spawn_2d_unit = function (breed_name)
+	local voice_over_spawn_manager = Managers.state.voice_over_spawn
+	local dialogue_breed_setting = DialogueBreedSettings[breed_name]
+
+	voice_over_spawn_manager:create_units(dialogue_breed_setting)
+end
+
+Vo.spawn_3d_unit = function (breed_name, voice_profile, position)
+	local voice_over_spawn_manager = Managers.state.voice_over_spawn
+	local dialogue_breed_setting = DialogueBreedSettings[breed_name]
+
+	if voice_over_spawn_manager then
+		local vo_unit = voice_over_spawn_manager:create_unit(dialogue_breed_setting, voice_profile, position)
+
+		return vo_unit
+	end
+end
+
 Vo.cutscene_vo_event = function (unit, vo_line_id)
 	local dialogue_extension = ScriptUnit.has_extension(unit, "dialogue_system")
 

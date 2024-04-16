@@ -1,9 +1,7 @@
 local BaseTemplateSettings = require("scripts/settings/equipment/weapon_templates/base_template_settings")
-local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
-local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
-local DamageSettings = require("scripts/settings/damage/damage_settings")
 local FootstepIntervalsTemplates = require("scripts/settings/equipment/footstep/footstep_intervals_templates")
-local damage_types = DamageSettings.damage_types
+local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
+local SmartTargetingTemplates = require("scripts/settings/equipment/smart_targeting_templates")
 local wield_inputs = PlayerCharacterConstants.wield_inputs
 local weapon_template = {
 	action_inputs = {
@@ -135,6 +133,7 @@ weapon_template.breed_anim_state_machine_1p = {
 	human = "content/characters/player/human/first_person/animations/breach_charge",
 	ogryn = "content/characters/player/ogryn/first_person/animations/breach_charge"
 }
+weapon_template.smart_targeting_template = SmartTargetingTemplates.default_melee
 weapon_template.fx_sources = {
 	_passive = "fx_passive"
 }

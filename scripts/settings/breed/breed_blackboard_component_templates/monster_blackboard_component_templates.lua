@@ -22,6 +22,9 @@ chaos_spawn.behavior = {
 	grab_cooldown = "number",
 	should_leap = "boolean"
 }
+chaos_spawn.statistics = {
+	num_grabs_done = "number"
+}
 local templates = {
 	monster = monster,
 	chaos_spawn = chaos_spawn

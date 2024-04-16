@@ -41,7 +41,6 @@ MoveablePlatformExtension.init = function (self, extension_init_context, unit, e
 	local side_system = extension_manager:system("side_system")
 	self._side_system = side_system
 	local broadphase_system = extension_manager:system("broadphase_system")
-	self._broadphase_system = broadphase_system
 	self._broadphase = broadphase_system.broadphase
 	self._chunk_lod_manager = Managers.state.chunk_lod
 	self._locked_chunk_lod = false
@@ -176,9 +175,7 @@ MoveablePlatformExtension._set_direction = function (self, direction)
 			self:_handle_friendly_bots_on_set_direction()
 		end
 
-		if self._wall_collision_enabled then
-			self:_lock_units_on_platform()
-		end
+		self:_lock_units_on_platform()
 
 		self._story_direction = MOVEABLE_PLATFORM_DIRECTION.forward
 		local play_direction = self._story_speed_forward
@@ -195,9 +192,7 @@ MoveablePlatformExtension._set_direction = function (self, direction)
 			self:_handle_friendly_bots_on_set_direction()
 		end
 
-		if self._wall_collision_enabled then
-			self:_lock_units_on_platform()
-		end
+		self:_lock_units_on_platform()
 
 		self._story_direction = MOVEABLE_PLATFORM_DIRECTION.backward
 		local play_direction = -self._story_speed_backward
@@ -254,6 +249,10 @@ MoveablePlatformExtension.wall_active = function (self)
 end
 
 MoveablePlatformExtension.set_wall_collision = function (self, activate)
+	if not self._wall_collision_enabled then
+		return
+	end
+
 	if activate == self._wall_enabled then
 		return
 	end
@@ -563,8 +562,12 @@ MoveablePlatformExtension._check_passengers_outside = function (self)
 			local unit_position = Unit.world_position(passenger_unit, 1)
 
 			if not math.point_is_inside_oobb(unit_position, bounding_box, half_size * 1.1) then
-				self:_teleport_player_onboard(passenger_unit)
-				Log.warning("MoveablePlatformExtension", "Player considered outside of elevator, teleported back")
+				if self._wall_collision_enabled then
+					self:_teleport_player_onboard(passenger_unit)
+					Log.warning("MoveablePlatformExtension", "Player considered outside of elevator, teleported back")
+				else
+					self:_unparent_passenger(passenger_unit)
+				end
 			end
 		end
 	end
@@ -616,20 +619,6 @@ MoveablePlatformExtension._set_platform_as_parent_for_all_passengers = function 
 	return has_passengers
 end
 
-MoveablePlatformExtension._unparent_passenger = function (self, passenger_unit)
-	if ALIVE[passenger_unit] then
-		local is_husk_unit = self._unit_spawner:is_husk(passenger_unit)
-
-		if not is_husk_unit then
-			local locomotion_extension = ScriptUnit.has_extension(passenger_unit, "locomotion_system")
-
-			if locomotion_extension then
-				locomotion_extension:set_parent_unit()
-			end
-		end
-	end
-end
-
 MoveablePlatformExtension._unparent_all_passengers = function (self)
 	local ALIVE = ALIVE
 
@@ -652,6 +641,30 @@ MoveablePlatformExtension._unparent_all_passengers = function (self)
 	end
 
 	table.clear(self._passenger_units)
+end
+
+MoveablePlatformExtension._unparent_passenger = function (self, passenger_unit)
+	if not self._passenger_units[passenger_unit] then
+		return
+	end
+
+	if ALIVE[passenger_unit] then
+		local game_object = self._unit_spawner:game_object_id(passenger_unit)
+
+		if game_object then
+			local is_husk_unit = self._unit_spawner:is_husk(passenger_unit)
+
+			if not is_husk_unit then
+				local locomotion_extension = ScriptUnit.has_extension(passenger_unit, "locomotion_system")
+
+				if locomotion_extension then
+					locomotion_extension:set_parent_unit()
+				end
+			end
+		end
+	end
+
+	self._passenger_units[passenger_unit] = nil
 end
 
 MoveablePlatformExtension.set_story = function (self, story_name)

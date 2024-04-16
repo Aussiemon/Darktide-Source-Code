@@ -176,12 +176,6 @@ local particles = {
 			default = "content/fx/particles/abilities/biomancer_soul"
 		}
 	},
-	preacher_shield = {
-		switch = {},
-		particles = {
-			default = "content/fx/particles/abilities/preacher/preacher_bubble_shield_3p"
-		}
-	},
 	plasma_venting = {
 		switch = {
 			"wielded_weapon_template"
@@ -221,7 +215,8 @@ local particles = {
 	weapon_special_custom = {
 		no_default = true,
 		switch = {
-			"wielded_weapon_template"
+			"wielded_weapon_template",
+			"level"
 		},
 		particles = {
 			powersword_p1_m1 = "content/fx/particles/weapons/swords/powersword_1h_activate_mesh",

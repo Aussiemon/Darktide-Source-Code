@@ -133,12 +133,12 @@ damage_templates.horde_melee_default = {
 	}
 }
 damage_templates.melee_berzerker_combo = {
-	ogryn_disorientation_type = "ogryn_medium",
+	ogryn_disorientation_type = "ogryn_berzerker_combo",
 	melee_toughness_multiplier = 1.5,
 	stagger_category = "melee",
 	block_cost_multiplier = 0.75,
 	interrupt_alternate_fire = true,
-	disorientation_type = "medium",
+	disorientation_type = "berzerker_combo",
 	armor_damage_modifier = {
 		attack = default_armor_mod,
 		impact = default_armor_mod
@@ -1855,7 +1855,6 @@ damage_templates.sniper_bullet = {
 damage_templates.gunner_aimed = {
 	ogryn_disorientation_type = "ogryn_medium",
 	toughness_multiplier = 1,
-	run_away_dodge = true,
 	stagger_category = "ranged",
 	suppression_value = 5,
 	interrupt_alternate_fire = true,
@@ -1922,7 +1921,6 @@ damage_templates.gunner_aimed = {
 damage_templates.gunner_spray_n_pray = {
 	ogryn_disorientation_type = "ogryn_medium",
 	toughness_multiplier = 1,
-	run_away_dodge = true,
 	stagger_category = "ranged",
 	suppression_value = 5,
 	interrupt_alternate_fire = true,
@@ -1987,13 +1985,12 @@ damage_templates.gunner_spray_n_pray = {
 	}
 }
 damage_templates.gunner_sweep = {
-	grace_cost = 2,
+	interrupt_alternate_fire = true,
 	toughness_multiplier = 1,
-	run_away_dodge = true,
 	ogryn_disorientation_type = "ogryn_medium",
 	stagger_category = "ranged",
 	suppression_value = 5,
-	interrupt_alternate_fire = true,
+	grace_cost = 2,
 	disorientation_type = "medium",
 	armor_damage_modifier = {
 		attack = {
@@ -2055,9 +2052,8 @@ damage_templates.gunner_sweep = {
 	}
 }
 damage_templates.renegade_captain_spray = {
-	disorientation_type = "medium",
 	toughness_multiplier = 1,
-	run_away_dodge = true,
+	disorientation_type = "medium",
 	stagger_category = "ranged",
 	suppression_value = 5,
 	interrupt_alternate_fire = true,
@@ -2923,7 +2919,6 @@ damage_templates.bulwark_melee = {
 damage_templates.chaos_ogryn_gunner_bullet = {
 	ogryn_disorientation_type = "ogryn_medium",
 	toughness_multiplier = 0.5,
-	run_away_dodge = true,
 	stagger_category = "ranged",
 	suppression_value = 100000,
 	interrupt_alternate_fire = true,
@@ -3585,7 +3580,7 @@ damage_templates.toxic_gas_mutator = {
 	toughness_multiplier = 3,
 	permanent_damage_ratio = 1,
 	stagger_category = "melee",
-	ignore_mood_effects = true,
+	ignore_mood_effects = false,
 	ignore_toughness_broken_disorient = true,
 	disorientation_type = "corruption_tick",
 	ignore_depleting_toughness = true,
@@ -3626,6 +3621,52 @@ damage_templates.toxic_gas_mutator = {
 	}
 }
 damage_templates.cultist_grenadier_gas = {
+	ogryn_disorientation_type = "corruption_tick",
+	toughness_disorientation_type = "toughness_corruption",
+	toughness_multiplier = 7,
+	permanent_damage_ratio = 0.8,
+	stagger_category = "melee",
+	ignore_mood_effects = false,
+	ignore_toughness_broken_disorient = true,
+	disorientation_type = "corruption_tick",
+	ignore_depleting_toughness = true,
+	armor_damage_modifier = {
+		attack = {
+			[armor_types.unarmored] = 0,
+			[armor_types.armored] = 0,
+			[armor_types.resistant] = 0,
+			[armor_types.player] = 1,
+			[armor_types.berserker] = 0,
+			[armor_types.super_armor] = 0,
+			[armor_types.disgustingly_resilient] = 0,
+			[armor_types.void_shield] = 0
+		},
+		impact = {
+			[armor_types.unarmored] = 0,
+			[armor_types.armored] = 0,
+			[armor_types.resistant] = 0,
+			[armor_types.player] = 1,
+			[armor_types.berserker] = 0,
+			[armor_types.super_armor] = 0,
+			[armor_types.disgustingly_resilient] = 0,
+			[armor_types.void_shield] = 0
+		}
+	},
+	power_distribution = {
+		attack = 1,
+		impact = 0
+	},
+	cleave_distribution = {
+		attack = 1,
+		impact = 0
+	},
+	targets = {
+		default_target = {
+			boost_curve = PowerLevelSettings.boost_curves.default
+		}
+	}
+}
+damage_templates.toxic_gas = {
 	ogryn_disorientation_type = "corruption_tick",
 	toughness_disorientation_type = "toughness_corruption",
 	toughness_multiplier = 7,

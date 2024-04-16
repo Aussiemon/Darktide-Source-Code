@@ -44,6 +44,10 @@ GameplayInitStepStateWaitForGroup.on_exit = function (self)
 	if self._network_events_registered then
 		network_event_delegate:unregister_events(unpack(CLIENT_RPCS))
 	end
+
+	if self._is_server and Managers.connection:num_members() == 0 then
+		Managers.event:trigger("spawn_group_loaded")
+	end
 end
 
 GameplayInitStepStateWaitForGroup.update = function (self, main_dt, main_t)

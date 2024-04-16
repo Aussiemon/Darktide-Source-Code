@@ -175,8 +175,10 @@ local dialogue_speaker_voice_settings = {
 	},
 	training_ground_psyker_a = {
 		full_name = "loc_npc_full_name_training_ground_psyker_a",
-		short_name = "loc_npc_short_name_training_ground_psyker_a",
+		material_small = "content/ui/materials/icons/npc_portraits/mission_givers/sefoni_a_small",
 		subtitles_enabled = true,
+		short_name = "loc_npc_short_name_training_ground_psyker_a",
+		icon = "content/ui/textures/icons/npc_portraits/mission_givers/sefoni_a",
 		player_voice = false
 	},
 	interrogator_a = {
@@ -189,8 +191,9 @@ local dialogue_speaker_voice_settings = {
 	},
 	shipmistress_a = {
 		full_name = "loc_npc_full_name_shipmistress_a",
-		short_name = "loc_npc_short_name_shipmistress_a",
+		material_small = "content/ui/materials/icons/npc_portraits/mission_givers/brahms_a_small",
 		subtitles_enabled = true,
+		short_name = "loc_npc_short_name_shipmistress_a",
 		icon = "content/ui/textures/icons/npc_portraits/mission_givers/brahms_a",
 		player_voice = false
 	},
@@ -313,6 +316,20 @@ local dialogue_speaker_voice_settings = {
 		player_voice = false
 	},
 	enemy_wolfer_adjutant_b = {
+		full_name = "loc_npc_full_name_enemy_wolfer_adjutant_b",
+		short_name = "loc_npc_short_name_enemy_wolfer_adjutant_b",
+		subtitles_enabled = true,
+		icon = "content/ui/textures/icons/npc_portraits/enemies/officer_02",
+		player_voice = false
+	},
+	enemy_wolfer_adjutant_c = {
+		full_name = "loc_npc_full_name_enemy_wolfer_adjutant_a",
+		short_name = "loc_npc_short_name_enemy_wolfer_adjutant_a",
+		subtitles_enabled = true,
+		icon = "content/ui/textures/icons/npc_portraits/enemies/officer_01",
+		player_voice = false
+	},
+	enemy_wolfer_adjutant_d = {
 		full_name = "loc_npc_full_name_enemy_wolfer_adjutant_b",
 		short_name = "loc_npc_short_name_enemy_wolfer_adjutant_b",
 		subtitles_enabled = true,
@@ -599,6 +616,39 @@ local dialogue_speaker_voice_settings = {
 	imperial_rifleman_male_c = {
 		full_name = "loc_npc_short_name_mourningstar_soldier_male_c",
 		short_name = "loc_npc_short_name_mourningstar_soldier_male_c",
+		subtitles_enabled = true,
+		player_voice = false
+	},
+	boon_vendor_a = {
+		full_name = "loc_npc_full_name_boon_vendor_a",
+		short_name = "loc_npc_short_name_boon_vendor_a",
+		subtitles_enabled = true,
+		icon = "content/ui/textures/icons/npc_portraits/mission_givers/hestia_a",
+		player_voice = false
+	},
+	tertium_noble_a = {
+		full_name = "loc_npc_full_name_tertium_noble_a",
+		short_name = "loc_npc_short_name_tertium_noble_a",
+		subtitles_enabled = true,
+		icon = "content/ui/textures/icons/npc_portraits/mission_givers/default",
+		player_voice = false
+	},
+	tertium_noble_b = {
+		full_name = "loc_npc_full_name_tertium_noble_b",
+		short_name = "loc_npc_short_name_tertium_noble_b",
+		subtitles_enabled = true,
+		icon = "content/ui/textures/icons/npc_portraits/mission_givers/default",
+		player_voice = false
+	},
+	warp_echo_moebian_a = {
+		full_name = "loc_npc_short_name_warp_echo",
+		short_name = "loc_npc_short_name_warp_echo",
+		subtitles_enabled = true,
+		player_voice = false
+	},
+	warp_echo_moebian_b = {
+		full_name = "loc_npc_short_name_warp_echo",
+		short_name = "loc_npc_short_name_warp_echo",
 		subtitles_enabled = true,
 		player_voice = false
 	}

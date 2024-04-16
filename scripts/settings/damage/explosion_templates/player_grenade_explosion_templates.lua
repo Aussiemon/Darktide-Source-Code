@@ -40,9 +40,9 @@ local explosion_templates = {
 	},
 	shock_grenade = {
 		damage_falloff = true,
-		radius = 7,
+		radius = 8,
 		scalable_radius = true,
-		min_radius = 3.5,
+		min_radius = 4,
 		close_radius = 2,
 		on_hit_buff_template_name = "shock_grenade_interval",
 		collision_filter = "filter_player_character_explosion",

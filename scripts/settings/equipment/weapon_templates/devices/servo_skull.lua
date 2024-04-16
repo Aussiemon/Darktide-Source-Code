@@ -1,4 +1,5 @@
 local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
+local SmartTargetingTemplates = require("scripts/settings/equipment/smart_targeting_templates")
 local wield_inputs = PlayerCharacterConstants.wield_inputs
 local weapon_template = {
 	action_inputs = {
@@ -45,6 +46,7 @@ local weapon_template = {
 		human = "content/characters/player/human/first_person/animations/unarmed",
 		ogryn = "content/characters/player/ogryn/first_person/animations/unarmed"
 	},
+	smart_targeting_template = SmartTargetingTemplates.default_melee,
 	fx_sources = {
 		_antigrav = "fx_source"
 	},

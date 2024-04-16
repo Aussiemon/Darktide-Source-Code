@@ -87,7 +87,17 @@ local function _ammo_check(action_settings, condition_func_params)
 	local empty_clip = current_clip_amount == 0
 	local reload_policy = action_settings.reload_policy or "always"
 	local policy_fulfilled = reload_policy == "empty" and empty_clip or reload_policy == "always" and not full_clip or reload_policy == "always_with_clip"
-	local fulfill_reload_requirements = ammo_reserve > 0 and policy_fulfilled
+	local fulfill_reload_requirements = nil
+
+	if reload_policy == "always_with_clip" then
+		if ammo_reserve + current_clip_amount > 0 then
+			fulfill_reload_requirements = policy_fulfilled
+		else
+			fulfill_reload_requirements = false
+		end
+	else
+		fulfill_reload_requirements = ammo_reserve > 0 and policy_fulfilled
+	end
 
 	if not fulfill_reload_requirements then
 		Vo.out_of_ammo_event(inventory_slot_component, visual_loadout_extension)
@@ -558,7 +568,7 @@ weapon_action_data.conditional_state_functions = {
 
 		return started_reload
 	end,
-	has_cooked_weapon = function (condition_func_params, action_params, remaining_time, t)
+	has_cocked_weapon = function (condition_func_params, action_params, remaining_time, t)
 		local inventory_slot_component = condition_func_params.inventory_slot_component
 		local reload_state = inventory_slot_component.reload_state
 		local test = reload_state == "cock_weapon" and not _is_sprinting(condition_func_params, action_params, remaining_time)

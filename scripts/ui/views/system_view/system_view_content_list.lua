@@ -29,8 +29,13 @@ local main_menu_list = {
 		text = "loc_achievements_view_display_name",
 		icon = "content/ui/materials/icons/system/escape/achievements",
 		type = "large_button",
-		trigger_function = function (parent, widget, entry)
-			Managers.ui:open_view("account_profile_view")
+		trigger_function = function ()
+			local context = {
+				can_exit = true
+			}
+			local view_name = "penance_overview_view"
+
+			Managers.ui:open_view(view_name, nil, nil, nil, nil, context)
 		end
 	},
 	{
@@ -198,8 +203,13 @@ local default_list = {
 		text = "loc_achievements_view_display_name",
 		type = "large_button",
 		icon = "content/ui/materials/icons/system/escape/achievements",
-		trigger_function = function (parent, widget, entry)
-			Managers.ui:open_view("account_profile_view")
+		trigger_function = function ()
+			local context = {
+				can_exit = true
+			}
+			local view_name = "penance_overview_view"
+
+			Managers.ui:open_view(view_name, nil, nil, nil, nil, context)
 		end,
 		validation_function = function ()
 			local game_mode_manager = Managers.state.game_mode

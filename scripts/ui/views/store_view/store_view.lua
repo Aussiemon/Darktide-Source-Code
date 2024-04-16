@@ -9,12 +9,9 @@ local UIWidget = require("scripts/managers/ui/ui_widget")
 local UIWorldSpawner = require("scripts/managers/ui/ui_world_spawner")
 local ViewElementInputLegend = require("scripts/ui/view_elements/view_element_input_legend/view_element_input_legend")
 local ViewElementTabMenu = require("scripts/ui/view_elements/view_element_tab_menu/view_element_tab_menu")
-local WalletSettings = require("scripts/settings/wallet_settings")
 local Promise = require("scripts/foundation/utilities/promise")
 local MasterItems = require("scripts/backend/master_items")
 local Text = require("scripts/utilities/ui/text")
-local InputUtils = require("scripts/managers/input/input_utils")
-local TextUtils = require("scripts/utilities/ui/text")
 local UISettings = require("scripts/settings/ui/ui_settings")
 local Vo = require("scripts/utilities/vo")
 local ItemUtils = require("scripts/utilities/items")
@@ -82,8 +79,7 @@ StoreView.init = function (self, settings, context)
 	self._vo_unit = nil
 	self._vo_callback = callback(self, "_cb_on_play_vo")
 	self._vo_world_spawner = nil
-	local hub_interaction = context and context.hub_interaction
-	self._hub_interaction = hub_interaction
+	self._hub_interaction = context and context.hub_interaction
 end
 
 StoreView.on_enter = function (self)
@@ -201,6 +197,7 @@ StoreView._set_panels_store = function (self)
 	end
 
 	local tab_menu_settings = {
+		wrapped_selection = true,
 		horizontal_alignment = "center",
 		button_spacing = 20,
 		button_size = {
@@ -425,6 +422,7 @@ StoreView.event_register_store_view_camera = function (self, camera_unit)
 	local shading_environment = StoreViewSettings.shading_environment
 
 	self._world_spawner:create_viewport(camera_unit, viewport_name, viewport_type, viewport_layer, shading_environment)
+	self._world_spawner:set_listener(viewport_name)
 end
 
 StoreView.event_store_view_set_camera_axis_offset = function (self, axis, value, animation_duration, func_ptr)
@@ -1426,6 +1424,7 @@ StoreView.on_exit = function (self)
 	self:_clear_telemetry_name()
 
 	if self._world_spawner then
+		self._world_spawner:release_listener()
 		self._world_spawner:destroy()
 
 		self._world_spawner = nil
@@ -2391,7 +2390,7 @@ StoreView._update_vo = function (self, dt, t)
 				local optional_route_key = queued_vo_event_request.optional_route_key
 				local is_opinion_vo = queued_vo_event_request.is_opinion_vo
 				local world_spawner = self._world_spawner
-				local dialogue_system = world_spawner and self:dialogue_system(world_spawner)
+				local dialogue_system = world_spawner and self:dialogue_system()
 
 				if dialogue_system then
 					self:play_vo_events(events, voice_profile, optional_route_key, nil, is_opinion_vo)

@@ -48,6 +48,7 @@ StateRequireScripts._init_crashify = function (self)
 	Crashify.print_property("is_modded", self:_get_is_modded())
 	Crashify.print_property("launcher_verification_passed", self:_get_launcher_verification_passed())
 	Crashify.print_property("game_version", APPLICATION_SETTINGS.game_version)
+	Crashify.print_property("game_resume_count", 0)
 
 	if PLATFORM == "win32" then
 		if HAS_STEAM then

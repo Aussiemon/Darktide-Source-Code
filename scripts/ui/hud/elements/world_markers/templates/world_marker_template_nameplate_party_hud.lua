@@ -1,5 +1,6 @@
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local UIWidget = require("scripts/managers/ui/ui_widget")
+local ProfileUtils = require("scripts/utilities/profile_utils")
 local template = {}
 local size = {
 	400,
@@ -64,15 +65,51 @@ template.create_widget_defintion = function (template, scenegraph_id)
 	}, scenegraph_id)
 end
 
+template.on_exit = function (widget, marker)
+	Managers.event:unregister(marker, "event_player_profile_updated")
+end
+
 template.on_enter = function (widget, marker)
 	local data = marker.data
 	local content = widget.content
 	local profile = data:profile()
 	local character_level = profile and profile.current_level or 1
+
+	local function cb_event_player_profile_updated(self, synced_peer_id, synced_local_player_id, new_profile, force_update)
+		local my_player = marker.my_player
+
+		if not my_player then
+			return
+		end
+
+		local valid = force_update or my_player.peer_id and my_player:peer_id() == synced_peer_id
+
+		if valid then
+			local player_profile = data:profile()
+			local title = player_profile and ProfileUtils.character_title(player_profile)
+			local archetype = profile and profile.archetype
+			local string_symbol = archetype and archetype.string_symbol or ""
+			local text = string_symbol .. " " .. data:name() .. " - " .. tostring(character_level) .. " "
+
+			if title then
+				text = text .. "\n" .. title
+			end
+
+			marker.widget.content.header_text = text
+		end
+	end
+
+	marker.cb_event_player_profile_updated = cb_event_player_profile_updated
+
+	Managers.event:register(marker, "event_player_profile_updated", "cb_event_player_profile_updated")
+
 	local archetype = profile and profile.archetype
 	local string_symbol = archetype and archetype.string_symbol or ""
 	local text = string_symbol .. " " .. data:name() .. " - " .. tostring(character_level) .. " "
 	content.header_text = text
+	local force_update = true
+
+	cb_event_player_profile_updated(nil, nil, nil, nil, force_update)
 end
 
 template.update_function = function (parent, ui_renderer, widget, marker, template, dt, t)

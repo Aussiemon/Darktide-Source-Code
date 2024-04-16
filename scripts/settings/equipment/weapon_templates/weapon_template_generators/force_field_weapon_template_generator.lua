@@ -1,6 +1,7 @@
 local BaseTemplateSettings = require("scripts/settings/equipment/weapon_templates/base_template_settings")
-local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
 local FootstepIntervalsTemplates = require("scripts/settings/equipment/footstep/footstep_intervals_templates")
+local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
+local SmartTargetingTemplates = require("scripts/settings/equipment/smart_targeting_templates")
 local wield_inputs = PlayerCharacterConstants.wield_inputs
 
 local function generate_base_template(functional_unit, visual_unit, allow_rotation)
@@ -299,6 +300,7 @@ local function generate_base_template(functional_unit, visual_unit, allow_rotati
 	}
 	base_template.anim_state_machine_3p = "content/characters/player/human/third_person/animations/psyker_smite"
 	base_template.anim_state_machine_1p = "content/characters/player/human/first_person/animations/psyker_shield"
+	base_template.smart_targeting_template = SmartTargetingTemplates.default_melee
 	base_template.spread_template = "no_spread"
 	base_template.ammo_template = "no_ammo"
 	base_template.uses_ammunition = false

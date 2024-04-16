@@ -38,6 +38,9 @@ local zones = {
 			mission_board_details = "content/ui/materials/icons/zones/tank_foundry"
 		}
 	},
+	training_grounds = {
+		name = "loc_zone_training_grounds"
+	},
 	throneside = {
 		name_short = "loc_zone_name_throneside_short",
 		name = "loc_zone_throneside",

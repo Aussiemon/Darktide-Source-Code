@@ -68,7 +68,7 @@ character_name_style.size = {
 }
 character_name_style.offset = {
 	text_margin,
-	-12,
+	-30,
 	1
 }
 character_name_style.text_color = Color.terminal_text_header(255, true)
@@ -85,12 +85,29 @@ character_title_style.size = {
 }
 character_title_style.offset = {
 	text_margin,
-	-1,
+	-16,
 	1
 }
-character_title_style.text_color = Color.terminal_text_body_sub_header(255, true)
-character_title_style.default_color = Color.terminal_text_body_sub_header(255, true)
-character_title_style.hover_color = Color.terminal_text_header(255, true)
+character_title_style.text_color = Color.terminal_text_body(255, true)
+character_title_style.default_color = Color.terminal_text_body(255, true)
+character_title_style.hover_color = Color.white(255, true)
+local character_archetype_title_style = table.clone(UIFontSettings.body_small)
+character_archetype_title_style.text_horizontal_alignment = "left"
+character_archetype_title_style.text_vertical_alignment = "bottom"
+character_archetype_title_style.horizontal_alignment = "left"
+character_archetype_title_style.vertical_alignment = "center"
+character_archetype_title_style.size = {
+	text_width,
+	54
+}
+character_archetype_title_style.offset = {
+	text_margin,
+	12,
+	1
+}
+character_archetype_title_style.text_color = Color.terminal_text_body_sub_header(255, true)
+character_archetype_title_style.default_color = Color.terminal_text_body_sub_header(255, true)
+character_archetype_title_style.hover_color = Color.terminal_text_header(255, true)
 
 local function character_button_change_function(content, style)
 	local math_max = math_max
@@ -357,8 +374,9 @@ CharacterSelectPassTemplates.character_select = {
 	},
 	{
 		pass_type = "text",
-		value_id = "character_name",
+		style_id = "character_name",
 		value = "text",
+		value_id = "character_name",
 		style = character_name_style,
 		change_function = function (content, style)
 			local math_max = math_max
@@ -373,11 +391,27 @@ CharacterSelectPassTemplates.character_select = {
 	},
 	{
 		pass_type = "text",
-		value_id = "character_title",
+		style_id = "character_archetype_title",
 		value = "text",
-		style = character_title_style,
+		value_id = "character_archetype_title",
+		style = character_archetype_title_style,
 		change_function = function (content, style)
 			local math_max = math_max
+			local hotspot = content.hotspot
+			local default_color = hotspot.disabled and style.disabled_color or style.default_color
+			local hover_color = style.hover_color
+			local text_color = style.text_color
+			local progress = math_max(math_max(hotspot.anim_focus_progress, hotspot.anim_select_progress), math_max(hotspot.anim_hover_progress, hotspot.anim_input_progress))
+
+			color_lerp(default_color, hover_color, progress, text_color)
+		end
+	},
+	{
+		pass_type = "text",
+		value_id = "character_title",
+		value = "",
+		style = character_title_style,
+		change_function = function (content, style)
 			local hotspot = content.hotspot
 			local default_color = hotspot.disabled and style.disabled_color or style.default_color
 			local hover_color = style.hover_color
@@ -415,9 +449,9 @@ CharacterSelectPassTemplates.character_info = {
 	},
 	{
 		value = "text",
-		value_id = "character_title",
+		value_id = "character_archetype_title",
 		pass_type = "text",
-		style = character_title_style
+		style = character_archetype_title_style
 	}
 }
 

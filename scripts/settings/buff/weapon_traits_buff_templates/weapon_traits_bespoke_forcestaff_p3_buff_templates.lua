@@ -40,6 +40,5 @@ templates.weapon_trait_bespoke_forcestaff_p3_increased_max_jumps = {
 		[stat_buffs.chain_lightning_staff_max_jumps] = 1
 	}
 }
-templates.weapon_trait_bespoke_forcestaff_p3_electrocuted_targets_receive_increased_damage_debuff = table.clone(BaseWeaponTraitBuffTemplates.electrocuted_targets_receive_increased_damage_debuff)
 
 return templates

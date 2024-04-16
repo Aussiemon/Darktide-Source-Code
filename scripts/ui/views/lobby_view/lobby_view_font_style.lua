@@ -29,17 +29,31 @@ character_name_style.text_horizontal_alignment = "center"
 character_name_style.text_vertical_alignment = "top"
 character_name_style.offset = {
 	0,
-	115,
+	105,
 	1
 }
 character_name_style.text_color = Color.ui_brown_super_light(255, true)
 character_name_style.font_size = 22
+local character_archetype_title_style = table.clone(UIFontSettings.body_small)
+character_archetype_title_style.text_horizontal_alignment = "center"
+character_archetype_title_style.text_vertical_alignment = "top"
+character_archetype_title_style.offset = {
+	0,
+	152,
+	0
+}
+character_archetype_title_style.default_color = Color.terminal_text_body(255, true)
+character_archetype_title_style.text_color = Color.terminal_text_body(255, true)
+character_archetype_title_style.hover_color = Color.ui_brown_super_light(255, true)
+character_name_style.font_size = 20
+character_archetype_title_style.default_color = Color.terminal_text_body_sub_header(255, true)
+character_archetype_title_style.text_color = Color.terminal_text_body_sub_header(255, true)
 local character_title_style = table.clone(UIFontSettings.body_small)
 character_title_style.text_horizontal_alignment = "center"
 character_title_style.text_vertical_alignment = "top"
 character_title_style.offset = {
 	0,
-	140,
+	130,
 	0
 }
 character_title_style.default_color = Color.terminal_text_body(255, true)
@@ -120,10 +134,11 @@ return {
 	character_name_style = character_name_style,
 	character_name_hover_style = character_name_hover_style,
 	guild_name_style = guild_name_style,
-	character_title_style = character_title_style,
+	character_archetype_title_style = character_archetype_title_style,
 	ready_text_style = ready_text_style,
 	loading_text_style = loading_text_style,
 	weapon_text_style = weapon_text_style,
 	weapon_hover_text_style = weapon_hover_text_style,
-	inspect_text_style = inspect_text_style
+	inspect_text_style = inspect_text_style,
+	character_title_style = character_title_style
 }

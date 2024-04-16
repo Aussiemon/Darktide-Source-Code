@@ -233,6 +233,18 @@ local function _use_categories()
 	return group_buff_icon_in_categories
 end
 
+local function _show_aura_category()
+	local save_manager = Managers.save
+	local show_aura_buff_icons = true
+
+	if save_manager then
+		local account_data = save_manager:account_data()
+		show_aura_buff_icons = account_data.interface_settings.show_aura_buff_icons
+	end
+
+	return show_aura_buff_icons
+end
+
 HudElementPlayerBuffs._update_buff_alignments = function (self, force_update, dt)
 	local active_buffs_data = self._active_buffs_data
 	local num_active_buffs = #active_buffs_data
@@ -339,6 +351,7 @@ end
 
 HudElementPlayerBuffs._update_buffs = function (self, t, ui_renderer)
 	local active_buffs_data = self._active_buffs_data
+	local show_aura_category = _show_aura_category()
 
 	for i = 1, #active_buffs_data do
 		repeat
@@ -358,7 +371,10 @@ HudElementPlayerBuffs._update_buffs = function (self, t, ui_renderer)
 				end
 			else
 				local buff_hud_data = buff_instance:get_hud_data()
-				local show = buff_hud_data.show
+				local buff_template = buff_instance:template()
+				local buff_category = buff_template.buff_category
+				local show_category = buff_category ~= buff_categories.aura or show_aura_category
+				local show = buff_hud_data.show and show_category
 				local is_active = buff_hud_data.is_active
 				local icon = buff_hud_data.hud_icon
 				local icon_gradient_map = buff_hud_data.hud_icon_gradient_map

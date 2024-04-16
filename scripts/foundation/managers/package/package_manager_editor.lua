@@ -27,10 +27,6 @@ PackageManagerEditor.release = function (self, id)
 	return
 end
 
-PackageManagerEditor.can_unload = function (self, package_name)
-	return true
-end
-
 PackageManagerEditor.shutdown_has_started = function (self)
 	return
 end
@@ -40,6 +36,14 @@ PackageManagerEditor.destroy = function (self)
 end
 
 PackageManagerEditor.is_anything_loading_now = function (self)
+	return false
+end
+
+PackageManagerEditor.pause_unloading = function (self)
+	return false
+end
+
+PackageManagerEditor.resume_unloading = function (self)
 	return false
 end
 
@@ -91,18 +95,6 @@ PackageManagerEditor.update = function (self)
 	end
 
 	return true
-end
-
-PackageManagerEditor.dump_reference_counter = function (self, reference_name)
-	return
-end
-
-PackageManagerEditor.dump_all = function (self)
-	return
-end
-
-PackageManagerEditor.references = function (self)
-	return
 end
 
 local interface = {}

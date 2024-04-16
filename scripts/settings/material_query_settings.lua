@@ -13,6 +13,8 @@ local surface_materials = {
 	"glass_breakable",
 	"glass_unbreakable",
 	"ice_solid",
+	"snow",
+	"snow_frosty",
 	"metal_catwalk",
 	"metal_sheet",
 	"metal_solid",

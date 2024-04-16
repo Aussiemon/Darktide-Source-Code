@@ -116,6 +116,7 @@ local categories = {
 	"Weapon Effects",
 	"Weapon Handling",
 	"Weapon Traits",
+	"Weapon Mastery",
 	"Weapon Variables",
 	"Weapon",
 	"Wwise States",
@@ -557,6 +558,14 @@ params.debug_destructibles = {
 	value = false,
 	category = "Destructibles"
 }
+params.debug_destructible_collectibles = {
+	value = false,
+	category = "Destructibles"
+}
+params.dont_randomize_destructibles = {
+	value = false,
+	category = "Destructibles"
+}
 params.physics_debug = {
 	value = false,
 	category = "Physics"
@@ -633,11 +642,6 @@ params.allow_character_input_in_free_flight = {
 }
 params.box_minion_collision = {
 	value = false,
-	category = "Player Character"
-}
-params.character_profile_selector_placeholder = {
-	value = false,
-	hidden = true,
 	category = "Player Character"
 }
 local _character_profile_selector_preview_value = nil
@@ -838,6 +842,40 @@ params.debug_lunging = {
 		local debug_drawer = Debug:drawer("character_state_lunging")
 
 		debug_drawer:reset()
+	end
+}
+params.override_player_profile_current_level = {
+	value = false,
+	category = "Player Character",
+	options_function = function ()
+		local ExperienceSettings = require("scripts/settings/experience_settings")
+		local options = {
+			false
+		}
+
+		for ii = 1, ExperienceSettings.max_level do
+			options[#options + 1] = ii
+		end
+
+		return options
+	end,
+	on_value_set = function ()
+		local local_player = Managers.player:local_player(1)
+
+		if not local_player then
+			return
+		end
+
+		local ProfileUtils = require("scripts/utilities/profile_utils")
+		local character_id = local_player:character_id()
+
+		Managers.data_service.profiles:fetch_profile(character_id):next(function (profile)
+			local new_profile = ProfileUtils.unpack_profile(ProfileUtils.pack_profile(profile))
+
+			local_player:set_profile(new_profile)
+		end):catch(function ()
+			return
+		end)
 	end
 }
 params.debug_netted_rotation = {
@@ -1328,7 +1366,8 @@ params.debug_buffs_show_categories = {
 		"talents",
 		"weapon_traits",
 		"talents_secondary",
-		"gadget"
+		"gadget",
+		"aura"
 	}
 }
 params.debug_meta_buffs = {
@@ -1340,6 +1379,10 @@ params.debug_minion_buff_fx = {
 	category = "Buffs"
 }
 params.debug_boons = {
+	value = false,
+	category = "Buffs"
+}
+params.disable_buff_screen_space_effects = {
 	value = false,
 	category = "Buffs"
 }
@@ -1813,6 +1856,10 @@ params.debug_weapon_actions = {
 	value = false,
 	category = "Action"
 }
+params.keep_last_action_drawn = {
+	value = true,
+	category = "Action"
+}
 params.log_weapon_action_transitions = {
 	value = false,
 	category = "Action"
@@ -2202,6 +2249,14 @@ params.debug_stats = {
 	category = "Stats"
 }
 params.local_stats = {
+	value = false,
+	category = "Stats"
+}
+params.show_stats_rpcs = {
+	value = false,
+	category = "Stats"
+}
+params.show_stats_performance = {
 	value = false,
 	category = "Stats"
 }
@@ -3643,6 +3698,10 @@ params.disable_game_end_conditions = {
 	value = false,
 	category = "Game Mode"
 }
+params.debug_alternating_toxic_gas = {
+	value = false,
+	category = "Game Mode"
+}
 params.disable_achievement_backend_update = {
 	value = false,
 	category = "Achievements",
@@ -4212,6 +4271,10 @@ params.debug_always_extra_grenade_throw_chance = {
 	value = false,
 	category = "Weapon"
 }
+params.debug_draw_forcesword_wind_slash_hit = {
+	value = false,
+	category = "Weapon"
+}
 params.debug_aim_assist = {
 	value = false,
 	category = "Weapon Aim Assist"
@@ -4338,6 +4401,10 @@ params.weapon_traits_testify = {
 params.use_localized_weapon_trait_names_in_debug_menu = {
 	value = false,
 	category = "Weapon Traits"
+}
+params.weapon_mastery_use_override_xp = {
+	value = false,
+	category = "Weapon Mastery"
 }
 params.debug_aim_weapon_offset = {
 	value = false,
@@ -4866,6 +4933,15 @@ params.show_equipped_items = {
 params.debug_gadget_extension = {
 	value = false
 }
+params.disable_beast_of_nurgle_consumed_effect = {
+	value = false
+}
+
+local function _set_build_override_parameter(parameter_name, value)
+	local old_value = params[parameter_name].value
+	params[parameter_name].value = value
+end
+
 params.debug_change_time_scale.value = false
 
 return {

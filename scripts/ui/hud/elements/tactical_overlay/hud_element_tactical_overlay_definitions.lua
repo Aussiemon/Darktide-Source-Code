@@ -3,6 +3,8 @@ local UIWidget = require("scripts/managers/ui/ui_widget")
 local UIWorkspaceSettings = require("scripts/settings/ui/ui_workspace_settings")
 local WalletSettings = require("scripts/settings/wallet_settings")
 local element_styles = ElementSettings.styles
+local line_width = ElementSettings.line_width
+local buffer = ElementSettings.buffer
 local details_panel_size = {
 	600,
 	1080
@@ -24,6 +26,14 @@ local diamantine_info_size = {
 	40
 }
 local screen_size = UIWorkspaceSettings.screen.size
+local right_content_size = {
+	ElementSettings.right_grid_width,
+	550
+}
+local right_header_size = {
+	ElementSettings.right_grid_width,
+	ElementSettings.right_header_height
+}
 local scenegraph_definition = {
 	screen = UIWorkspaceSettings.screen,
 	background = {
@@ -104,6 +114,39 @@ local scenegraph_definition = {
 			0,
 			0,
 			1
+		}
+	},
+	right_panel = {
+		vertical_alignment = "center",
+		parent = "background",
+		horizontal_alignment = "right",
+		size = details_panel_size,
+		position = {
+			0,
+			0,
+			0
+		}
+	},
+	right_panel_content = {
+		vertical_alignment = "center",
+		parent = "right_panel",
+		horizontal_alignment = "right",
+		size = right_content_size,
+		position = {
+			-15,
+			0,
+			0
+		}
+	},
+	right_panel_header = {
+		vertical_alignment = "top",
+		parent = "right_panel_content",
+		horizontal_alignment = "center",
+		size = right_header_size,
+		position = {
+			0,
+			-(right_header_size[2] + ElementSettings.right_grid_spacing[2]),
+			0
 		}
 	}
 }
@@ -451,11 +494,161 @@ local left_panel_widgets_definitions = {
 		}
 	}, "diamantine_info_panel")
 }
+local right_panel_widgets_definitions = {
+	right_header_title = UIWidget.create_definition({
+		{
+			value = "",
+			value_id = "text",
+			pass_type = "text",
+			style = {
+				vertical_alignment = "center",
+				horizontal_alignment = "left",
+				text_vertical_alignment = "center",
+				font_size = 24,
+				text_horizontal_alignment = "left",
+				offset = {
+					buffer,
+					0,
+					1
+				},
+				size = {
+					ElementSettings.right_grid_width,
+					ElementSettings.right_header_height
+				},
+				text_color = Color.terminal_text_header(255, true)
+			}
+		}
+	}, "right_panel_header"),
+	right_header_background = UIWidget.create_definition({
+		{
+			value = "content/ui/materials/masks/gradient_vignette",
+			style_id = "rect",
+			pass_type = "texture",
+			style = {
+				horizontal_alignment = "center",
+				vertical_alignment = "top",
+				size = {
+					ElementSettings.right_grid_width,
+					ElementSettings.right_header_height
+				},
+				color = {
+					100,
+					0,
+					0,
+					0
+				}
+			}
+		}
+	}, "right_panel_header"),
+	right_header_stick = UIWidget.create_definition({
+		{
+			value = "content/ui/materials/backgrounds/default_square",
+			style_id = "rect",
+			pass_type = "rect",
+			style = {
+				vertical_alignment = "top",
+				horizontal_alignment = "right",
+				offset = {
+					line_width,
+					0,
+					0
+				},
+				size = {
+					line_width,
+					ElementSettings.right_header_height
+				},
+				color = Color.terminal_corner_hover(255, true)
+			}
+		}
+	}, "right_panel_header"),
+	right_grid_background = UIWidget.create_definition({
+		{
+			value = "content/ui/materials/gradients/gradient_horizontal",
+			style_id = "rect",
+			pass_type = "texture",
+			style = {
+				horizontal_alignment = "center",
+				vertical_alignment = "top",
+				size = {
+					ElementSettings.right_grid_width,
+					0
+				},
+				color = Color.terminal_grid_background_gradient(100, true)
+			}
+		}
+	}, "right_panel_content"),
+	right_grid_stick = UIWidget.create_definition({
+		{
+			value = "content/ui/materials/backgrounds/default_square",
+			style_id = "rect",
+			pass_type = "rect",
+			style = {
+				vertical_alignment = "top",
+				horizontal_alignment = "right",
+				offset = {
+					line_width,
+					0,
+					0
+				},
+				size = {
+					line_width,
+					0
+				},
+				color = Color.terminal_corner_hover(255, true)
+			}
+		}
+	}, "right_panel_content"),
+	right_input_hint = UIWidget.create_definition({
+		{
+			value_id = "hint",
+			style_id = "hint",
+			pass_type = "text",
+			value = "<UNDEFINED>",
+			style = {
+				vertical_alignment = "top",
+				text_vertical_alignment = "top",
+				font_size = 18,
+				horizontal_alignment = "right",
+				text_horizontal_alignment = "right",
+				size = {
+					ElementSettings.right_grid_width,
+					100
+				},
+				text_color = Color.text_default(255, true)
+			}
+		}
+	}, "right_panel_content")
+}
 
 local function for_all_left_widgets(parent, func)
 	local left_panel_widgets = parent._left_panel_widgets
 
 	for _, widget in ipairs(left_panel_widgets) do
+		func(widget)
+	end
+end
+
+local function for_all_right_widgets(parent, func)
+	local right_panel_widgets = parent._right_panel_widgets
+
+	for _, widget in ipairs(right_panel_widgets) do
+		func(widget)
+	end
+
+	local right_panel_entries = parent._right_panel_entries
+
+	for _, widgets in pairs(right_panel_entries) do
+		for _, widget in ipairs(widgets) do
+			func(widget)
+		end
+	end
+
+	local tab_bar_widgets = parent._tab_bar_widgets
+	local tab_bar_widgets_size = tab_bar_widgets and #tab_bar_widgets or 0
+
+	for i = 1, tab_bar_widgets_size do
+		local widget = tab_bar_widgets[i]
+
 		func(widget)
 	end
 end
@@ -473,6 +666,9 @@ local animations = {
 				for_all_left_widgets(parent, function (widget)
 					widget.alpha_multiplier = 0
 				end)
+				for_all_right_widgets(parent, function (widget)
+					widget.alpha_multiplier = 0
+				end)
 			end
 		},
 		{
@@ -484,6 +680,22 @@ local animations = {
 
 				parent:set_scenegraph_position("left_panel", new_pos)
 				for_all_left_widgets(parent, function (widget)
+					widget.alpha_multiplier = progress
+				end)
+
+				return true
+			end
+		},
+		{
+			name = "right_panel_enter",
+			end_time = 0.5,
+			start_time = 0,
+			update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress, params)
+				local panel_width = ElementSettings.right_grid_width
+				local new_pos = panel_width * (1 - math.easeOutCubic(progress))
+
+				parent:set_scenegraph_position("right_panel", new_pos)
+				for_all_right_widgets(parent, function (widget)
 					widget.alpha_multiplier = progress
 				end)
 
@@ -506,6 +718,22 @@ local animations = {
 
 				return true
 			end
+		},
+		{
+			name = "right_panel_exit",
+			end_time = 0.5,
+			start_time = 0,
+			update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress, params)
+				local panel_width = ElementSettings.right_grid_width
+				local new_pos = panel_width * math.easeOutCubic(progress)
+
+				parent:set_scenegraph_position("right_panel", new_pos)
+				for_all_right_widgets(parent, function (widget)
+					widget.alpha_multiplier = 1 - progress
+				end)
+
+				return true
+			end
 		}
 	}
 }
@@ -514,5 +742,6 @@ return {
 	animations = animations,
 	widget_definitions = widget_definitions,
 	scenegraph_definition = scenegraph_definition,
-	left_panel_widgets_definitions = left_panel_widgets_definitions
+	left_panel_widgets_definitions = left_panel_widgets_definitions,
+	right_panel_widgets_definitions = right_panel_widgets_definitions
 }

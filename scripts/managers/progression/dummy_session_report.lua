@@ -48,28 +48,6 @@ local DummySessionReport = {
 								id = "ef46ae26-d846-4544-9dea-be337ad12445",
 								neededXpForNextLevel = 14842,
 								startXp = 4553
-							},
-							{
-								currentXpInLevel = 5158,
-								startLevel = 1,
-								eligibleForLevel = true,
-								type = "weapon",
-								currentLevel = 1,
-								currentXp = 5158,
-								id = "default-zealot-slot_primary",
-								neededXpForNextLevel = 0,
-								startXp = 4553
-							},
-							{
-								currentXpInLevel = 5158,
-								startLevel = 1,
-								eligibleForLevel = true,
-								type = "weapon",
-								currentLevel = 1,
-								currentXp = 5158,
-								id = "default-zealot-slot_secondary",
-								neededXpForNextLevel = 0,
-								startXp = 4553
 							}
 						},
 						sessionStatistics = {
@@ -263,15 +241,6 @@ local xp_tables = {
 		41500,
 		64500,
 		89000
-	},
-	weapon = {
-		0,
-		750,
-		2375,
-		5000,
-		8750,
-		13750,
-		20125
 	}
 }
 

@@ -104,6 +104,9 @@ CameraHandler.update = function (self, dt, t, player_orientation, input)
 			self._mode = CameraModes.first_person
 		elseif not is_hogtied and player_is_available then
 			self._mode = CameraModes.first_person
+		elseif self._using_hub_camera then
+			new_unit = player.player_unit
+			self._mode = CameraModes.first_person
 		elseif not old_unit or not ALIVE[old_unit] or not player_is_available and (input:get("spectate_next") or old_unit == player.player_unit) then
 			new_unit = self:_next_follow_unit(player.player_unit)
 			self._mode = CameraModes.observer

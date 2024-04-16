@@ -17,6 +17,7 @@ local item_dependencies = {
 		["content/items/characters/player/human/gear_head/imperial_guard_helmet_01"] = 1,
 		["content/items/characters/player/human/gear_head/genestealer_cults_03_a"] = 1,
 		["content/items/characters/player/human/gear_head/genestealer_cults_03_d"] = 2,
+		["content/items/devices/auspex_scanner"] = 1,
 		["content/items/characters/player/human/gear_legs/imperial_guard_lowerbody_01"] = 2,
 		["content/items/characters/player/human/gear_head/rebreather_01_a"] = 1
 	},

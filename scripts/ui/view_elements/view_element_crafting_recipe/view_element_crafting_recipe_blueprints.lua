@@ -7,6 +7,30 @@ local UIFonts = require("scripts/managers/ui/ui_fonts")
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local UIRenderer = require("scripts/managers/ui/ui_renderer")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
+local UIResolution = require("scripts/managers/ui/ui_resolution")
+local ColorUtilities = require("scripts/utilities/ui/colors")
+local InputUtils = require("scripts/managers/input/input_utils")
+
+local function thumb_position_change_function(content, style)
+	if content.parent then
+		content = content.parent
+	end
+
+	local slider_horizontal_offset = content.slider_horizontal_offset or 0
+	style.offset[1] = slider_horizontal_offset
+end
+
+local function highlight_color_change_function(content, style)
+	local default_color = content.disabled and style.disabled_color or style.default_color
+	local hover_color = content.disabled and style.disabled_color or style.hover_color
+	local color = style.color or style.text_color
+	local hotspot = content.hotspot
+	local is_highlighted = hotspot.is_hover or hotspot.is_selected or hotspot.is_focused
+	local progress = is_highlighted and content.highlight_progress or 0
+
+	ColorUtilities.color_lerp(default_color, hover_color, progress, color)
+end
+
 local ViewElementCraftingRecipeBlueprints = {
 	spacing_vertical_small = {
 		size = {
@@ -77,7 +101,7 @@ ViewElementCraftingRecipeBlueprints.navigation_button = {
 	init = function (parent, widget, config, callback_name)
 		local recipe = config.recipe
 		local content = widget.content
-		content.text = Localize(recipe.display_name)
+		content.text = recipe.unlocalized_display_name or recipe.display_name and Localize(recipe.display_name)
 		content.icon = recipe.icon
 		content.coming_soon = recipe.ui_disabled
 		local hotspot = content.hotspot
@@ -110,7 +134,7 @@ ViewElementCraftingRecipeBlueprints.craft_button = {
 	pass_template = ButtonPassTemplates.terminal_button,
 	init = function (parent, widget, config, callback_name)
 		local content = widget.content
-		content.text = Localize(config.text or "loc_confirm")
+		content.text = config.unlocalized_text or Localize(config.text or "loc_confirm")
 		local hotspot = content.hotspot
 		hotspot.on_pressed_sound = config.sound_event
 		hotspot.pressed_callback = callback(parent, callback_name, widget, config)
@@ -136,7 +160,7 @@ ViewElementCraftingRecipeBlueprints.title = {
 		}
 	},
 	init = function (parent, widget, config)
-		widget.content.text = Localize(config.text)
+		widget.content.text = config.unlocalized_text or config.text and Localize(config.text) or ""
 	end
 }
 local description_text_style = UIFontSettings.body_small
@@ -149,8 +173,8 @@ ViewElementCraftingRecipeBlueprints.description = {
 		local style = description_text_style
 		local base_size = ViewElementCraftingRecipeBlueprints.description.size
 		local text_options = UIFonts.get_font_options_by_style(style)
-		local text_localized = Localize(config.text)
-		local _, text_height = UIRenderer.text_size(ui_renderer, text_localized, style.font_type, style.font_size, base_size, text_options)
+		local text = config.unlocalized_text or config.text and Localize(config.text) or "AWWWW"
+		local _, text_height = UIRenderer.text_size(ui_renderer, text, style.font_type, style.font_size, base_size, text_options)
 
 		return {
 			430,
@@ -167,7 +191,7 @@ ViewElementCraftingRecipeBlueprints.description = {
 		}
 	},
 	init = function (parent, widget, config)
-		widget.content.text = Localize(config.text)
+		widget.content.text = config.unlocalized_text or config.text and Localize(config.text) or ""
 		local override_color = config.color
 
 		if override_color then
@@ -675,7 +699,7 @@ ViewElementCraftingRecipeBlueprints.warning = {
 		local style = description_text_style
 		local base_size = ViewElementCraftingRecipeBlueprints.warning.size
 		local text_options = UIFonts.get_font_options_by_style(style)
-		local text = config.text or "AAAWWW"
+		local text = config.unlocalized_text or config.text or "AWWWW"
 		local _, text_height = UIRenderer.text_size(ui_renderer, text, style.font_type, style.font_size, base_size, text_options)
 
 		return {

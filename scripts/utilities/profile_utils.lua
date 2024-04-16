@@ -5,6 +5,7 @@ local ItemSlotSettings = require("scripts/settings/item/item_slot_settings")
 local MasterItems = require("scripts/backend/master_items")
 local PlayerTalents = require("scripts/utilities/player_talents/player_talents")
 local PrologueCharacterProfileOverride = require("scripts/settings/prologue_character_profile_override")
+local RaritySettings = require("scripts/settings/item/rarity_settings")
 local SaveData = require("scripts/managers/save/save_data")
 local TalentLayoutParser = require("scripts/ui/views/talent_builder_view/utilities/talent_layout_parser")
 local TestifyCharacterProfiles = not EDITOR and DevParameters.use_testify_profiles and require("scripts/settings/testify_character_profiles")
@@ -700,17 +701,137 @@ ProfileUtils.generate_random_name = function (profile)
 	return name
 end
 
-ProfileUtils.character_title = function (profile, exlude_symbol)
+ProfileUtils.character_archetype_title = function (profile, exlude_symbol)
 	local archetype = profile.archetype
-	local archetype_name = nil
+	local text = nil
 
 	if UISettings.archetype_font_icon[archetype.name] and not exlude_symbol then
-		archetype_name = string.format("%s %s", UISettings.archetype_font_icon[archetype.name], Localize(archetype.archetype_name))
+		text = string.format("%s %s", UISettings.archetype_font_icon[archetype.name], Localize(archetype.archetype_name))
 	else
-		archetype_name = Localize(archetype.archetype_name)
+		text = Localize(archetype.archetype_name)
 	end
 
-	return archetype_name
+	return text
+end
+
+ProfileUtils.title_item_name_no_color = function (title_item, profile)
+	local title_text = ""
+
+	if profile then
+		local gender = profile.gender
+
+		if gender == "male" then
+			title_text = title_item.title_male
+		elseif gender == "female" then
+			title_text = title_item.title_female
+		end
+	end
+
+	if not title_text or title_text == "" then
+		title_text = title_item.title_default or title_item.display_name
+	end
+
+	if title_text == "" then
+		return title_text
+	end
+
+	title_text = Localize(title_text)
+
+	return title_text
+end
+
+ProfileUtils.character_title_no_color = function (profile)
+	local text = ""
+	local loadout = profile.loadout
+
+	if loadout then
+		local title_item = loadout.slot_character_title
+
+		if title_item then
+			local gender = profile.gender
+			local title_text = ""
+
+			if gender == "male" then
+				title_text = title_item.title_male
+			elseif gender == "female" then
+				title_text = title_item.title_female
+			end
+
+			title_text = title_text or title_item.title_default or title_item.display_name
+
+			if title_text == "" then
+				return title_text
+			end
+
+			title_text = Localize(title_text)
+
+			return title_text
+		end
+	end
+
+	return text
+end
+
+ProfileUtils.character_title = function (profile)
+	local text = ""
+	local loadout = profile.loadout
+
+	if loadout then
+		local title_item = loadout.slot_character_title
+
+		if title_item then
+			local save_manager = Managers.save
+			local color_type = "no_colors"
+
+			if save_manager then
+				local save_data = save_manager:account_data()
+				local interface_settings = save_data.interface_settings
+				local game_mode_name = Managers.state.game_mode and Managers.state.game_mode:game_mode_name()
+				local is_in_hub = not game_mode_name or game_mode_name == "hub"
+
+				if is_in_hub then
+					color_type = interface_settings.character_titles_color_type
+				else
+					color_type = interface_settings.character_titles_in_mission_color_type
+				end
+			end
+
+			if color_type == "rarity_colors" then
+				local rarity = title_item.rarity
+
+				if rarity and rarity > 0 then
+					local rarity_color = RaritySettings[rarity].color_desaturated
+
+					if rarity_color then
+						local color_string = "{#color(" .. rarity_color[2] .. "," .. rarity_color[3] .. "," .. rarity_color[4] .. ")}"
+						text = color_string
+					end
+				end
+			end
+
+			local gender = profile.gender
+			local title_text = ""
+
+			if gender == "male" then
+				title_text = title_item.title_male
+			elseif gender == "female" then
+				title_text = title_item.title_female
+			end
+
+			if not title_item then
+				title_text = title_item.title_default or title_item.display_name
+			end
+
+			if title_text == "" then
+				return title_text
+			end
+
+			title_text = Localize(title_text)
+			text = text .. title_text
+		end
+	end
+
+	return text
 end
 
 local function _character_save_data()

@@ -131,14 +131,6 @@ local on_demand_vo_psyker_male_b = {
 			1.2165,
 			1.587792
 		},
-		sound_event_weights = {
-			0.1666667,
-			0.1666667,
-			0.1666667,
-			0.1666667,
-			0.1666667,
-			0.1666667
-		},
 		randomize_indexes = {}
 	},
 	com_wheel_vo_need_that = {

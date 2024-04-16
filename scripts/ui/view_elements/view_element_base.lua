@@ -21,6 +21,10 @@ ViewElementBase.init = function (self, parent, draw_layer, start_scale, definiti
 	self._using_cursor_navigation = Managers.ui:using_cursor_navigation()
 end
 
+ViewElementBase.set_draw_layer = function (self, draw_layer)
+	self._draw_layer = draw_layer
+end
+
 ViewElementBase._create_scenegraph = function (self, definitions, start_scale)
 	local scenegraph_definition = definitions.scenegraph_definition
 	local scenegraph = UIScenegraph.init_scenegraph(scenegraph_definition, start_scale)
@@ -200,6 +204,14 @@ ViewElementBase.update = function (self, dt, t, input_service)
 	end
 end
 
+ViewElementBase.set_alpha_multiplier = function (self, alpha_multiplier)
+	self._alpha_multiplier = alpha_multiplier or 1
+end
+
+ViewElementBase.alpha_multiplier = function (self)
+	return self._alpha_multiplier
+end
+
 ViewElementBase._on_navigation_input_changed = function (self)
 	return
 end
@@ -213,6 +225,9 @@ ViewElementBase.draw = function (self, dt, t, ui_renderer, render_settings, inpu
 		return
 	end
 
+	local old_alpha_multiplier = render_settings.alpha_multiplier
+	local alpha_multiplier = self._alpha_multiplier or 1
+	render_settings.alpha_multiplier = (old_alpha_multiplier or 1) * alpha_multiplier
 	local previous_layer = render_settings.start_layer
 	render_settings.start_layer = (previous_layer or 0) + self._draw_layer
 	local ui_scenegraph = self._ui_scenegraph
@@ -222,6 +237,7 @@ ViewElementBase.draw = function (self, dt, t, ui_renderer, render_settings, inpu
 	UIRenderer.end_pass(ui_renderer)
 
 	render_settings.start_layer = previous_layer
+	render_settings.alpha_multiplier = old_alpha_multiplier
 end
 
 ViewElementBase._draw_widgets = function (self, dt, t, input_service, ui_renderer, render_settings)

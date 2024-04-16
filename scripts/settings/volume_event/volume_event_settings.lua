@@ -20,6 +20,12 @@ local volume_type_events = {
 			func = VolumeEventFunctions.minion_instakill
 		}
 	},
+	["content/volume_types/minion_instakill_gibbing_no_cost"] = {
+		[MINION] = {
+			invert_volume = false,
+			func = VolumeEventFunctions.minion_instakill_with_gibbing
+		}
+	},
 	["content/volume_types/nav_tag_volumes/minion_instakill_high_cost"] = {
 		[MINION] = {
 			traversal_cost = 100,

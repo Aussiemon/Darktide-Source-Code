@@ -1,4 +1,5 @@
 local UIProfileSpawner = require("scripts/managers/ui/ui_profile_spawner")
+local ItemSlotSettings = require("scripts/settings/item/item_slot_settings")
 
 require("scripts/ui/render_target_icon_generator_base")
 
@@ -29,7 +30,7 @@ PortraitUI.unload_profile_portrait = function (self, reference_id)
 end
 
 PortraitUI.change_render_portrait_status = function (self, value, force_change)
-	if not self._always_render and (self._render_enabled ~= value or force_change) then
+	if not self._always_render and Application.rendering_enabled() and (self._render_enabled ~= value or force_change) then
 		self._render_enabled = value
 
 		if value then
@@ -132,13 +133,20 @@ PortraitUI._spawn_profile = function (self, profile, render_context)
 		local camera_focus_slot_name = render_context.camera_focus_slot_name
 
 		if camera_focus_slot_name then
-			local key = breed .. "_" .. camera_focus_slot_name
-			local new_camera_unit = self:_get_camera_unit_by_key(key)
-			camera_unit = new_camera_unit or camera_unit
+			local camera_settings_by_item_slot = camera_settings.camera_settings_by_item_slot
+			local slot_camera_settings = camera_settings_by_item_slot[camera_focus_slot_name]
+
+			if slot_camera_settings then
+				camera_settings = slot_camera_settings
+				camera_unit = slot_camera_settings.camera_unit
+			end
 		end
 	end
 
-	self._world_spawner:change_camera_unit(camera_unit)
+	world_spawner:change_camera_unit(camera_unit)
+
+	local camera_position = Vector3.from_array(camera_settings.boxed_camera_start_position)
+	local camera_rotation = camera_settings.boxed_camera_start_rotation:unbox()
 
 	if render_context then
 		local wield_slot = render_context.wield_slot
@@ -147,6 +155,25 @@ PortraitUI._spawn_profile = function (self, profile, render_context)
 			self._profile_spawner:wield_slot(wield_slot)
 		end
 	end
+
+	local icon_camera_adjustment = profile.loadout.slot_animation_end_of_round
+
+	if render_context and icon_camera_adjustment then
+		local position_offset = icon_camera_adjustment.icon_render_camera_position_offset
+
+		if position_offset then
+			camera_position = Vector3(camera_position.x + (position_offset[1] or 0), camera_position.y + (position_offset[2] or 0), camera_position.z + (position_offset[3] or 0))
+		end
+
+		local rotation_offset = icon_camera_adjustment.icon_render_camera_rotation_offset
+
+		if rotation_offset then
+			camera_rotation = Quaternion.multiply(camera_rotation, Quaternion.from_euler_angles_xyz(rotation_offset[1] or 0, rotation_offset[2] or 0, rotation_offset[3] or 0))
+		end
+	end
+
+	world_spawner:set_camera_position(camera_position)
+	world_spawner:set_camera_rotation(camera_rotation)
 end
 
 PortraitUI.destroy = function (self)
@@ -217,24 +244,47 @@ end
 PortraitUI.event_register_portrait_camera_human = function (self, camera_unit)
 	Managers.event:unregister(self, "event_register_portrait_camera_human")
 
-	local camera_position = Unit.world_position(camera_unit, 1)
-	local camera_rotation = Unit.world_rotation(camera_unit, 1)
-	self._breed_camera_settings.human = {
-		camera_unit = camera_unit,
-		boxed_camera_start_position = Vector3.to_array(camera_position),
-		boxed_camera_start_rotation = QuaternionBox(camera_rotation)
-	}
+	local breed = "human"
+
+	self:_store_camera_settings_by_breed(breed, camera_unit)
 end
 
 PortraitUI.event_register_portrait_camera_ogryn = function (self, camera_unit)
 	Managers.event:unregister(self, "event_register_portrait_camera_ogryn")
 
+	local breed = "ogryn"
+
+	self:_store_camera_settings_by_breed(breed, camera_unit)
+end
+
+PortraitUI._store_camera_settings_by_breed = function (self, breed, camera_unit)
+	local camera_settings_by_item_slot = {}
+
+	for slot_name, slot in pairs(ItemSlotSettings) do
+		local key = breed .. "_" .. slot_name
+		local slot_camera_unit = self:_get_camera_unit_by_key(key)
+
+		if slot_camera_unit then
+			local slot_camera_position = Unit.world_position(slot_camera_unit, 1)
+			local slot_camera_rotation = Unit.world_rotation(slot_camera_unit, 1)
+			camera_settings_by_item_slot[slot_name] = {
+				breed = breed,
+				slot_name = slot_name,
+				camera_unit = slot_camera_unit,
+				boxed_camera_start_position = Vector3.to_array(slot_camera_position),
+				boxed_camera_start_rotation = QuaternionBox(slot_camera_rotation)
+			}
+		end
+	end
+
 	local camera_position = Unit.world_position(camera_unit, 1)
 	local camera_rotation = Unit.world_rotation(camera_unit, 1)
-	self._breed_camera_settings.ogryn = {
+	self._breed_camera_settings[breed] = {
+		breed = breed,
 		camera_unit = camera_unit,
 		boxed_camera_start_position = Vector3.to_array(camera_position),
-		boxed_camera_start_rotation = QuaternionBox(camera_rotation)
+		boxed_camera_start_rotation = QuaternionBox(camera_rotation),
+		camera_settings_by_item_slot = camera_settings_by_item_slot
 	}
 end
 

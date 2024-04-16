@@ -13,7 +13,7 @@ local achievement_icon_size = {
 	70
 }
 local reward_item_size = table.clone(UISettings.item_icon_size)
-local num_completed_to_show = 6
+local num_completed_to_show = 3
 local achievements_view_styles = {
 	visible_area_size = {
 		visible_area_width,

@@ -162,10 +162,24 @@ ViewElementTabMenu.update = function (self, dt, t, input_service)
 	end
 
 	if self._is_handling_navigation_input and self._selected_index then
-		if self._input_action_right and input_service:get(self._input_action_right) and self._selected_index < self._entry_index then
-			self._entries[self._selected_index + 1].on_pressed_callback()
-		elseif self._input_action_left and input_service:get(self._input_action_left) and self._selected_index > 1 then
-			self._entries[self._selected_index - 1].on_pressed_callback()
+		local new_index = nil
+		local input_action_right = self._input_action_right
+		local input_action_left = self._input_action_left
+
+		if input_action_right and input_service:get(input_action_right) then
+			new_index = self._selected_index + 1
+		elseif input_action_left and input_service:get(input_action_left) then
+			new_index = self._selected_index - 1
+		end
+
+		local menu_settings = self._menu_settings
+
+		if new_index and menu_settings.wrapped_selection then
+			new_index = 1 + (new_index - 1) % self._entry_index
+		end
+
+		if new_index and new_index >= 1 and new_index <= self._entry_index then
+			self._entries[new_index].on_pressed_callback()
 		end
 	end
 
@@ -328,6 +342,12 @@ ViewElementTabMenu._update_input_action_texts = function (self)
 	local widgets_by_name = self._widgets_by_name
 	widgets_by_name.input_text_left.content.text = not using_cursor_navigation and input_action_left and self:_get_input_text(input_action_left) or ""
 	widgets_by_name.input_text_right.content.text = not using_cursor_navigation and input_action_right and self:_get_input_text(input_action_right) or ""
+end
+
+ViewElementTabMenu.content_by_id = function (self, id)
+	local widget = self:_widget_by_id(id)
+
+	return widget.content
 end
 
 ViewElementTabMenu._widget_by_id = function (self, id)

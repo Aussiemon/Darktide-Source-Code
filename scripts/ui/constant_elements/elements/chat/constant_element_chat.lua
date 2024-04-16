@@ -36,6 +36,7 @@ ConstantElementChat.init = function (self, parent, draw_layer, start_scale, defi
 	Managers.event:register(self, "chat_manager_participant_added", "cb_chat_manager_participant_added")
 	Managers.event:register(self, "chat_manager_participant_update", "cb_chat_manager_participant_update")
 	Managers.event:register(self, "chat_manager_participant_removed", "cb_chat_manager_participant_removed")
+	Managers.event:register(self, "system_chat_message", "cb_system_message_recieved")
 
 	self._active_state = States.hidden
 	self._message_widget_blueprints = Definitions.message_widget_blueprints
@@ -75,6 +76,7 @@ ConstantElementChat.destroy = function (self)
 	Managers.event:unregister(self, "chat_manager_participant_added")
 	Managers.event:unregister(self, "chat_manager_participant_update")
 	Managers.event:unregister(self, "chat_manager_participant_removed")
+	Managers.event:unregister(self, "system_chat_message")
 
 	local virtual_keyboard_promise = self._virtual_keyboard_promise
 
@@ -214,6 +216,10 @@ ConstantElementChat.cb_chat_manager_updated_channel_state = function (self, chan
 	elseif state == ChatManagerConstants.ChannelConnectionState.DISCONNECTED then
 		self:_on_disconnect_from_channel(channel_handle)
 	end
+end
+
+ConstantElementChat.cb_system_message_recieved = function (self, message, channel_tag)
+	self:_add_notification(message, channel_tag)
 end
 
 ConstantElementChat.cb_chat_manager_message_recieved = function (self, channel_handle, participant, message)

@@ -13,6 +13,7 @@ local CreditsGoodsVendorView = class("CreditsGoodsVendorView", "VendorViewBase")
 CreditsGoodsVendorView.init = function (self, settings, context)
 	CreditsGoodsVendorView.super.init(self, Definitions, settings, context)
 
+	self._releases_to_close = 0
 	local parent = context and context.parent
 	self._parent = parent
 	self._debug = context and context.debug
@@ -119,6 +120,7 @@ CreditsGoodsVendorView._setup_result_overlay = function (self, result_data)
 		self:_remove_element("result_overlay")
 	end
 
+	self._releases_to_close = math.min(self._releases_to_close + 1, 2)
 	local reference_name = "result_overlay"
 	local layer = 40
 	self._result_overlay = self:_add_element(ViewElementItemResultOverlay, reference_name, layer)
@@ -255,18 +257,21 @@ CreditsGoodsVendorView.draw = function (self, dt, t, input_service, layer)
 end
 
 CreditsGoodsVendorView.update = function (self, dt, t, input_service)
-	local result_overlay = self._result_overlay
-	local handle_input = true
+	local active_overlay = self:_is_result_presentation_active()
 
-	if result_overlay then
-		if result_overlay:presentation_complete() then
-			self:_close_result_overlay()
-		end
+	if active_overlay then
+		self:_check_for_input(input_service)
 
-		handle_input = false
+		input_service = input_service:null_service()
 	end
 
 	local pass_input, pass_draw = CreditsGoodsVendorView.super.update(self, dt, t, input_service)
+
+	if active_overlay and self._releases_to_close == 0 then
+		self:_close_result_overlay()
+	end
+
+	local handle_input = not active_overlay
 
 	return handle_input and pass_input, pass_draw
 end
@@ -284,14 +289,24 @@ CreditsGoodsVendorView._close_result_overlay = function (self)
 	Managers.event:trigger("event_vendor_view_purchased_item")
 end
 
+CreditsGoodsVendorView._handle_input = function (self, input_service)
+	local active_overlay = self:_is_result_presentation_active()
+
+	if not active_overlay then
+		self:_check_for_input(input_service)
+	end
+
+	CreditsGoodsVendorView.super._handle_input(self, input_service)
+end
+
 local _device_list = {
 	Keyboard,
 	Mouse,
 	Pad1
 }
 
-CreditsGoodsVendorView._handle_input = function (self, input_service)
-	local any_input_pressed = false
+CreditsGoodsVendorView._check_for_input = function (self, input_service)
+	local any_input_released = false
 
 	if IS_XBS then
 		local input_device_list = InputUtils.input_device_list
@@ -301,7 +316,7 @@ CreditsGoodsVendorView._handle_input = function (self, input_service)
 			local xbox_controller = xbox_controllers[i]
 
 			if xbox_controller.active() and xbox_controller.any_released() then
-				any_input_pressed = true
+				any_input_released = true
 
 				break
 			end
@@ -311,18 +326,16 @@ CreditsGoodsVendorView._handle_input = function (self, input_service)
 			local device = _device_list[i]
 
 			if device and device.active and device.any_released() then
-				any_input_pressed = true
+				any_input_released = true
 
 				break
 			end
 		end
 	end
 
-	if any_input_pressed and self:_is_result_presentation_active() then
-		self:_close_result_overlay()
+	if any_input_released then
+		self._releases_to_close = math.max(self._releases_to_close - 1, 0)
 	end
-
-	CreditsGoodsVendorView.super._handle_input(self, input_service)
 end
 
 CreditsGoodsVendorView._register_button_callbacks = function (self)
@@ -422,6 +435,8 @@ CreditsGoodsVendorView._cb_on_purchase_pressed = function (self)
 	if result_overlay or purchase_disabled then
 		return
 	end
+
+	self._releases_to_close = 1
 
 	CreditsGoodsVendorView.super._cb_on_purchase_pressed(self)
 end

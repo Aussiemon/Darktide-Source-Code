@@ -14,6 +14,12 @@ local RaritySettings = {
 			64,
 			64
 		},
+		color_desaturated = {
+			255,
+			64,
+			64,
+			64
+		},
 		weapon = {
 			num_traits = 0,
 			num_perks = 0
@@ -28,6 +34,7 @@ local RaritySettings = {
 		max_modifications = 2,
 		color = Color.item_rarity_1(255, true),
 		color_dark = Color.item_rarity_dark_1(255, true),
+		color_desaturated = Color.item_rarity_desaturated_1(255, true),
 		weapon = {
 			num_traits = 0,
 			num_perks = 0
@@ -42,6 +49,7 @@ local RaritySettings = {
 		max_modifications = 2,
 		color = Color.item_rarity_2(255, true),
 		color_dark = Color.item_rarity_dark_2(255, true),
+		color_desaturated = Color.item_rarity_desaturated_2(255, true),
 		weapon = {
 			num_traits = 0,
 			num_perks = 1
@@ -56,6 +64,7 @@ local RaritySettings = {
 		max_modifications = 2,
 		color = Color.item_rarity_3(255, true),
 		color_dark = Color.item_rarity_dark_3(255, true),
+		color_desaturated = Color.item_rarity_desaturated_3(255, true),
 		weapon = {
 			num_traits = 1,
 			num_perks = 1
@@ -70,6 +79,7 @@ local RaritySettings = {
 		max_modifications = 2,
 		color = Color.item_rarity_4(255, true),
 		color_dark = Color.item_rarity_dark_4(255, true),
+		color_desaturated = Color.item_rarity_desaturated_4(255, true),
 		weapon = {
 			num_traits = 1,
 			num_perks = 2
@@ -84,6 +94,7 @@ local RaritySettings = {
 		max_modifications = 2,
 		color = Color.item_rarity_5(255, true),
 		color_dark = Color.item_rarity_dark_5(255, true),
+		color_desaturated = Color.item_rarity_desaturated_5(255, true),
 		weapon = {
 			num_traits = 2,
 			num_perks = 2
@@ -98,6 +109,7 @@ local RaritySettings = {
 		max_modifications = 2,
 		color = Color.item_rarity_6(255, true),
 		color_dark = Color.item_rarity_dark_6(255, true),
+		color_desaturated = Color.item_rarity_desaturated_6(255, true),
 		weapon = {
 			num_traits = 2,
 			num_perks = 2

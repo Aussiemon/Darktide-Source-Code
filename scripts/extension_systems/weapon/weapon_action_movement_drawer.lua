@@ -49,6 +49,11 @@ WeaponActionMovementDrawer._draw_movement_curve = function (self, movement_curve
 	local font_size = 14
 	local font_color = Color.white()
 	local anchor_x, anchor_y = _get_anchor_point(SCREEN_ALIGNMENT_X, ANCHOR_POINT, MOVEMENT_CURVE_EXTENTS[1])
+
+	if DevParameters.debug_weapon_actions then
+		anchor_y = anchor_y + 200
+	end
+
 	local anchor_z = LAYER
 	local extents_x = MOVEMENT_CURVE_EXTENTS[1]
 	local extents_y = MOVEMENT_CURVE_EXTENTS[2]

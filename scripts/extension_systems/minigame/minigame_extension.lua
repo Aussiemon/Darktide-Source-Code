@@ -12,7 +12,7 @@ MinigameExtension.init = function (self, extension_init_context, unit, ...)
 	self._minigame = nil
 	self._current_state = STATES.none
 	self._owner_system = extension_init_context.owner_system
-	self._action_held = false
+	self._action_held = nil
 end
 
 MinigameExtension.hot_join_sync = function (self, unit, sender, channel)
@@ -91,6 +91,8 @@ MinigameExtension.stop = function (self, player)
 			Managers.state.game_session:send_rpc_clients("rpc_minigame_sync_stop", unit_id, is_level_unit)
 		end
 	end
+
+	self._action_held = nil
 end
 
 MinigameExtension.is_completable = function (self)
@@ -114,6 +116,14 @@ MinigameExtension.setup_game = function (self)
 end
 
 MinigameExtension.action = function (self, held, t)
+	if self._action_held == nil then
+		if not held then
+			self._action_held = false
+		else
+			return false
+		end
+	end
+
 	if self._action_held ~= held then
 		self._action_held = held
 

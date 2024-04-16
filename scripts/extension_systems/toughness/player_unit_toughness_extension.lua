@@ -18,16 +18,18 @@ PlayerUnitToughnessExtension.init = function (self, extension_init_context, unit
 	self._wwise_world = Wwise.wwise_world(world)
 	self._is_local_unit = extension_init_data.is_local_unit
 	self._is_human_controlled = extension_init_data.is_human_controlled
+	self._stat_coherency_tougness_counter = 0
+	self._total_amount_restored = 0
 	local toughness_template = extension_init_data.toughness_template
 
 	self:_initialize_toughness(toughness_template)
 
 	game_object_data.toughness = self:max_toughness()
 	self._toughness_template = toughness_template
-	self._fx_extension = ScriptUnit.extension(self._unit, "fx_system")
+	self._fx_extension = ScriptUnit.extension(unit, "fx_system")
 	self._weapon_extension = ScriptUnit.extension(unit, "weapon_system")
 	self._buff_extension = ScriptUnit.extension(unit, "buff_system")
-	local unit_data_extension = ScriptUnit.extension(self._unit, "unit_data_system")
+	local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
 	self._movement_state_component = unit_data_extension:read_component("movement_state")
 	self._inventory_component = unit_data_extension:read_component("inventory")
 	self._weapon_action_component = unit_data_extension:read_component("weapon_action")
@@ -134,11 +136,17 @@ PlayerUnitToughnessExtension._update_toughness = function (self, dt, t)
 
 		GameSession.set_game_object_field(self._game_session, self._game_object_id, "toughness_damage", self._toughness_damage)
 
-		if regen_amount > 0 then
-			self:_record_stat(regen_amount, starting_amount, "coherency")
-		end
+		self._stat_coherency_tougness_counter = self._stat_coherency_tougness_counter + regen_amount
 
 		self:_handle_procs(wanted_regen_amount, regen_amount, "coherency")
+	elseif self._stat_coherency_tougness_counter > 0 then
+		local player = Managers.state.player_unit_spawn:owner(self._unit)
+
+		if player then
+			Managers.stats:record_private("hook_coherency_toughness_regenerated", player, self._stat_coherency_tougness_counter)
+		end
+
+		self._stat_coherency_tougness_counter = 0
 	end
 end
 
@@ -173,7 +181,7 @@ PlayerUnitToughnessExtension.toughness_templates = function (self)
 end
 
 PlayerUnitToughnessExtension.recover_toughness = function (self, recovery_type)
-	if self:_toughness_regen_disabled() then
+	if self:_toughness_regen_disabled(nil, recovery_type) then
 		return 0
 	end
 
@@ -198,17 +206,13 @@ PlayerUnitToughnessExtension.recover_toughness = function (self, recovery_type)
 
 	local recovered_tougness = toughness_damage - network_toughness_damage
 
-	if recovered_tougness > 0 then
-		self:_record_stat(recovered_tougness, starting_amount, recovery_type)
-	end
-
 	self:_handle_procs(wanted_amount, recovered_tougness, recovery_type)
 
 	return recovered_tougness
 end
 
 PlayerUnitToughnessExtension.recover_percentage_toughness = function (self, fixed_percentage, ignore_stat_buffs, reason)
-	if self:_toughness_regen_disabled() then
+	if self:_toughness_regen_disabled(nil, nil, reason) then
 		return 0
 	end
 
@@ -231,17 +235,24 @@ PlayerUnitToughnessExtension.recover_percentage_toughness = function (self, fixe
 
 	local recovered_tougness = toughness_damage - network_toughness_damage
 
-	if recovered_tougness > 0 then
-		self:_record_stat(recovered_tougness, starting_amount, reason or "unknown")
-	end
-
 	self:_handle_procs(wanted_amount, recovered_tougness, reason)
+
+	if reason == "zealot_channel" then
+		self._total_amount_restored = self._total_amount_restored + recovered_tougness
+	end
 
 	return recovered_tougness
 end
 
+PlayerUnitToughnessExtension.get_and_clear_restored_amount = function (self)
+	local restored = self._total_amount_restored or 0
+	self._total_amount_restored = 0
+
+	return restored
+end
+
 PlayerUnitToughnessExtension.recover_flat_toughness = function (self, amount, ignore_stat_buffs, reason)
-	if self:_toughness_regen_disabled() then
+	if self:_toughness_regen_disabled(nil, nil, reason) then
 		return 0
 	end
 
@@ -263,17 +274,13 @@ PlayerUnitToughnessExtension.recover_flat_toughness = function (self, amount, ig
 
 	local recovered_tougness = toughness_damage - network_toughness_damage
 
-	if recovered_tougness > 0 then
-		self:_record_stat(recovered_tougness, starting_amount, reason or "unknown")
-	end
-
 	self:_handle_procs(amount, recovered_tougness, reason)
 
 	return recovered_tougness
 end
 
 PlayerUnitToughnessExtension.recover_max_toughness = function (self, reason, ignore_state_block)
-	if self:_toughness_regen_disabled(ignore_state_block) then
+	if self:_toughness_regen_disabled(ignore_state_block, nil, reason) then
 		return 0
 	end
 
@@ -285,10 +292,6 @@ PlayerUnitToughnessExtension.recover_max_toughness = function (self, reason, ign
 	GameSession.set_game_object_field(self._game_session, self._game_object_id, "toughness_damage", 0)
 
 	local recovered_tougness = toughness_damage
-
-	if recovered_tougness > 0 then
-		self:_record_stat(recovered_tougness, starting_amount, reason or "unknown")
-	end
 
 	self:_handle_procs(max_toughness, recovered_tougness, reason or "unknown")
 
@@ -345,7 +348,12 @@ PlayerUnitToughnessExtension.add_damage = function (self, damage_amount, attack_
 	end
 end
 
-PlayerUnitToughnessExtension._toughness_regen_disabled = function (self, ignore_state_block)
+local ABILITIES_ALLOW_RECOVERY_REASONS = {
+	zealot_channel = true,
+	ability_stance = true
+}
+
+PlayerUnitToughnessExtension._toughness_regen_disabled = function (self, ignore_state_block, optional_recovery_type, optional_reason)
 	if not ignore_state_block and PlayerUnitStatus.is_knocked_down(self._character_state_component) and not self._assisted_state_input_component.force_assist then
 		return true
 	end
@@ -357,6 +365,12 @@ PlayerUnitToughnessExtension._toughness_regen_disabled = function (self, ignore_
 	local has_prevent_toughness_replenish = self._buff_extension:has_keyword(buff_keywords.prevent_toughness_replenish)
 
 	if has_prevent_toughness_replenish then
+		return true
+	end
+
+	local has_prevent_toughness_replenish_except_abilities = self._buff_extension:has_keyword(buff_keywords.prevent_toughness_replenish_except_abilities)
+
+	if has_prevent_toughness_replenish_except_abilities and not ABILITIES_ALLOW_RECOVERY_REASONS[optional_reason] then
 		return true
 	end
 
@@ -377,14 +391,6 @@ PlayerUnitToughnessExtension._handle_procs = function (self, amount, recovered_a
 		param_table.recovered_amount = recovered_amount
 
 		buff_extension:add_proc_event(proc_events.on_toughness_replenished, param_table)
-	end
-end
-
-PlayerUnitToughnessExtension._record_stat = function (self, amount, starting_amount, reason)
-	local player = Managers.state.player_unit_spawn:owner(self._unit)
-
-	if player then
-		Managers.stats:record_private("hook_toughness_regenerated", player, reason, starting_amount, amount)
 	end
 end
 

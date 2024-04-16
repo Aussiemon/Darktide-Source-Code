@@ -2,20 +2,21 @@ local area_width = 600
 local area_height = 642
 local character_appearance_view_settings = {
 	scrollbar_width = 10,
-	timer_name = "ui",
+	shading_environment = "content/shading_environments/ui/character_create",
 	total_blur_duration = 0.5,
 	world_layer = 2,
-	viewport_type = "default",
-	barber_level_name = "content/levels/ui/barber_character_appearance/barber_character_appearance",
 	character_spacing_width = 1.6,
 	back_row_additional_spacing_width = 0.3,
+	viewport_type = "default",
 	icons_visual_margin = 1000,
-	shading_environment = "content/shading_environments/ui/character_create",
 	debug_character_count = 4,
+	timer_name = "ui",
+	level_name = "content/levels/ui/character_create/character_create",
+	barber_level_name = "content/levels/ui/barber_character_appearance/barber_character_appearance",
 	back_row_additional_spacing_depth = 1.2,
+	barber_mindwipe_level_name = "content/levels/ui/barber_character_mindwipe/barber_character_mindwipe",
 	viewport_name = "ui_character_create_viewport",
 	viewport_layer = 1,
-	level_name = "content/levels/ui/character_create/character_create",
 	barber_shading_environment = "content/shading_environments/ui/barber_character_appearance",
 	world_name = "ui_character_create",
 	grid_size = {
@@ -84,6 +85,24 @@ local character_appearance_view_settings = {
 	},
 	vo_event_vendor_purchase = {
 		"barber_purchase"
+	},
+	vo_event_mindwipe_select = {
+		"hub_mindwipe_select_option_a"
+	},
+	vo_event_mindwipe_backstory = {
+		"hub_mindwipe_backstory_a"
+	},
+	vo_event_mindwipe_body_type = {
+		"hub_mindwipe_body_type_a"
+	},
+	vo_event_mindwipe_personality = {
+		"hub_mindwipe_personality_a"
+	},
+	vo_event_mindwipe_conclusion = {
+		"hub_mindwipe_conclusion_a"
+	},
+	vo_event_mindwipe_frequent_customer = {
+		"hub_mindwipe_frequent_customer_a"
 	}
 }
 

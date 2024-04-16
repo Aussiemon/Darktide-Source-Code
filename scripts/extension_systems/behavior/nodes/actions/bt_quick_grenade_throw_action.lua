@@ -31,6 +31,11 @@ BtQuickGrenadeThrowAction.enter = function (self, unit, breed, blackboard, scrat
 	if vo_event then
 		Vo.enemy_generic_vo_event(unit, vo_event)
 	end
+
+	if breed.count_num_attacks then
+		scratchpad.count_num_attacks = true
+		scratchpad.statistics_component = Blackboard.write_component(blackboard, "statistics")
+	end
 end
 
 BtQuickGrenadeThrowAction.leave = function (self, unit, breed, blackboard, scratchpad, action_data, t, reason, destroy)
@@ -43,7 +48,7 @@ BtQuickGrenadeThrowAction.leave = function (self, unit, breed, blackboard, scrat
 		local delta_position = Unit.delta_position(unit, unit_node)
 		local node_velocity = delta_position / dt
 
-		self:_throw_grenade(unit, action_data, "drop", throw_position, throw_direction, blackboard, t, node_velocity)
+		self:_throw_grenade(unit, scratchpad, action_data, "drop", throw_position, throw_direction, blackboard, t, node_velocity)
 	end
 
 	if scratchpad.global_effect_id then
@@ -133,7 +138,7 @@ BtQuickGrenadeThrowAction._update_throw_timing = function (self, unit, t, blackb
 			local throw_position, throw_direction = self:_throw_position_and_direction(unit, scratchpad, action_data)
 
 			if throw_position and throw_direction then
-				self:_throw_grenade(unit, action_data, "throw", throw_position, throw_direction, blackboard, t)
+				self:_throw_grenade(unit, scratchpad, action_data, "throw", throw_position, throw_direction, blackboard, t)
 
 				scratchpad.throw_timing = nil
 
@@ -154,7 +159,7 @@ BtQuickGrenadeThrowAction._update_throw_timing = function (self, unit, t, blackb
 		local throw_position, throw_direction = self:_throw_position_and_direction(unit, scratchpad, action_data)
 
 		if throw_position and throw_direction then
-			self:_throw_grenade(unit, action_data, "throw", throw_position, throw_direction, blackboard, t)
+			self:_throw_grenade(unit, scratchpad, action_data, "throw", throw_position, throw_direction, blackboard, t)
 
 			scratchpad.throw_timing = nil
 
@@ -228,7 +233,7 @@ BtQuickGrenadeThrowAction._throw_position_and_direction = function (self, unit, 
 	return self_position, Vector3.normalize(velocity)
 end
 
-BtQuickGrenadeThrowAction._throw_grenade = function (self, unit, action_data, throw_type, throw_position, throw_direction, blackboard, t, optional_owner_velocity)
+BtQuickGrenadeThrowAction._throw_grenade = function (self, unit, scratchpad, action_data, throw_type, throw_position, throw_direction, blackboard, t, optional_owner_velocity)
 	local throw_config = action_data.throw_config
 	local projectile_template = throw_config.projectile_template
 	local locomotion_template = projectile_template.locomotion_template
@@ -266,6 +271,10 @@ BtQuickGrenadeThrowAction._throw_grenade = function (self, unit, action_data, th
 	local owner_side = side and side:name()
 
 	Managers.state.unit_spawner:spawn_network_unit(grenade_unit_name, "item_projectile", throw_position, nil, nil, item, projectile_template, locomotion_state, throw_direction, speed, angular_velocity, unit, is_critical_strike, origin_item_slot, charge_level, target_unit, target_position, weapon_item_or_nil, fuse_override_time_or_nil, owner_side)
+
+	if scratchpad.count_num_attacks then
+		scratchpad.statistics_component.num_attacks_done = scratchpad.statistics_component.num_attacks_done + 1
+	end
 end
 
 BtQuickGrenadeThrowAction._aim_at_target = function (self, unit, scratchpad)

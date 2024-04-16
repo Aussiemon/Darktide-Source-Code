@@ -23,6 +23,7 @@ WeaponSystem.init = function (self, ...)
 
 	self._network_event_delegate:register_session_events(self, unpack(RPCS))
 
+	self.player = nil
 	self._give_ammo_carryover_percentages = {}
 
 	if self._is_server then
@@ -306,6 +307,14 @@ WeaponSystem._update_queued_explosions = function (self, dt, t)
 					return
 				end
 			end
+		end
+
+		local player_unit_spawn_manager = Managers.state.player_unit_spawn
+		local player = player_unit_spawn_manager:owner(optional_attacking_unit_owner_unit)
+		player = player or player_unit_spawn_manager:owner(attacking_unit_owner_unit)
+
+		if player then
+			Managers.stats:record_private("hook_explosion", player, explosion_template, data)
 		end
 	end
 

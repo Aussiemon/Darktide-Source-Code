@@ -857,6 +857,7 @@ weapon_template.keep_weapon_special_active_on_unwield = true
 weapon_template.allow_sprinting_with_special = true
 weapon_template.sprint_ready_up_time = 0.1
 weapon_template.max_first_person_anim_movement_speed = 5.8
+weapon_template.smart_targeting_template = SmartTargetingTemplates.assault
 weapon_template.fx_sources = {
 	_muzzle = "fx_muzzle_01",
 	_eject = "fx_eject"

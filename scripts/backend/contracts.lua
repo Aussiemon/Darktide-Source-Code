@@ -2,9 +2,7 @@ local BackendUtilities = require("scripts/foundation/managers/backend/utilities/
 local Contracts = class("Contracts")
 
 Contracts.get_current_contract = function (self, character_id, account_id, create_if_missing)
-	if create_if_missing == nil then
-		create_if_missing = true
-	end
+	create_if_missing = create_if_missing ~= false
 
 	return BackendUtilities.make_account_title_request("characters", BackendUtilities.url_builder(character_id):path("/contracts/current"):query("createIfMissing", create_if_missing), {}, account_id):next(function (data)
 		return data.body.contract

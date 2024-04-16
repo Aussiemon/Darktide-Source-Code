@@ -31,9 +31,7 @@ DoorExtension.init = function (self, extension_init_context, unit, extension_ini
 	self._volume_added = false
 	self._last_state_change = -100
 	self._animation_extension = ScriptUnit.extension(unit, "animation_system")
-	local extension_manager = Managers.state.extension
-	local broadphase_system = extension_manager:system("broadphase_system")
-	self._broadphase_system = broadphase_system
+	local broadphase_system = Managers.state.extension:system("broadphase_system")
 	self._broadphase = broadphase_system.broadphase
 	local tm, half_size = Unit.box(unit)
 	local bottom_center_position = Matrix4x4.translation(tm) + Vector3.down() * half_size.z
@@ -217,9 +215,9 @@ DoorExtension._should_nav_block = function (self)
 	local should_nav_block = nil
 
 	if closed then
-		should_nav_block = blocked_time <= anim_time or anim_time == 0
+		should_nav_block = blocked_time <= anim_time
 	else
-		should_nav_block = anim_time < 1 - blocked_time
+		should_nav_block = anim_time <= 1 - blocked_time
 	end
 
 	return should_nav_block

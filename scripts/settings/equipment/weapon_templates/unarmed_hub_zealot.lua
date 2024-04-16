@@ -28,6 +28,7 @@ local weapon_template = {
 	},
 	sprint_ready_up_time = 0,
 	max_first_person_anim_movement_speed = 6,
+	smart_targeting_template = false,
 	fx_sources = {},
 	dodge_template = "default",
 	sprint_template = "default",

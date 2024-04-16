@@ -210,7 +210,7 @@ local talent_settings = {
 			melee_damage = 0.05
 		},
 		offensive_2 = {
-			crit_share = 0.3333333333333333
+			crit_share = 0.6666666666666666
 		},
 		offensive_3 = {
 			max_hit_mass_impact_modifier = 0.5
@@ -273,7 +273,7 @@ local talent_settings = {
 		quickness = {
 			toughness_percentage = 0.02,
 			dodge_stacks = 3,
-			max_stacks = 20
+			max_stacks = 15
 		}
 	}
 }

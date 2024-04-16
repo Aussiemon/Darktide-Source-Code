@@ -116,7 +116,7 @@ dialogue_context_settings.number_of_head_pops = {
 	delta = 0,
 	last_triggered_time = 0,
 	trigger_period = 2,
-	time_to_live = 20,
+	time_to_live = 25,
 	trigger_when_higher = 2,
 	trigger_function = dialogue_context_settings.number_of_head_pops_callback
 }

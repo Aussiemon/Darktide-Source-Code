@@ -339,6 +339,38 @@ UIWorldSpawner.create_viewport = function (self, camera_unit, viewport_name, vie
 	return viewport
 end
 
+UIWorldSpawner.set_listener = function (self, viewport_name)
+	local camera_manager = Managers.state.camera
+
+	if camera_manager then
+		local world = self._world
+
+		camera_manager:use_ui_listener(true)
+
+		local pose = self:listener_pose(viewport_name)
+		local wwise_world = Managers.world:wwise_world(world)
+
+		WwiseWorld.set_listener(wwise_world, 0, pose)
+	end
+end
+
+UIWorldSpawner.release_listener = function (self)
+	local camera_manager = Managers.state.camera
+
+	if camera_manager then
+		camera_manager:use_ui_listener(false)
+	end
+end
+
+UIWorldSpawner.listener_pose = function (self, viewport_name)
+	local world = self._world
+	local viewport = ScriptWorld.viewport(world, viewport_name, true)
+	local camera = ScriptViewport.camera(viewport)
+	local pose = Camera.world_pose(camera)
+
+	return pose
+end
+
 UIWorldSpawner.add_viewport_custom_output_targets = function (self, custom_render_targets)
 	Viewport.add_custom_output_targets(self._viewport, custom_render_targets)
 end

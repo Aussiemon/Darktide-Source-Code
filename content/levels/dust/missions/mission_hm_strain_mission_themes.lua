@@ -5,6 +5,9 @@ local mission_themes = {
 	darkness = {
 		"content/levels/dust/missions/hm_strain_themes/darkness_01/theme_darkness_01_hm_strain"
 	},
+	toxic_gas = {
+		"content/levels/dust/missions/hm_strain_themes/toxic_gas_01/theme_toxic_gas_01_hm_strain"
+	},
 	ember = {
 		"content/levels/dust/missions/hm_strain_themes/ember_01/theme_ember_01_hm_strain"
 	},

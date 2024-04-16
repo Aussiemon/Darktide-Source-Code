@@ -27,7 +27,7 @@ ProcBuff.set_buff_component = function (self, buff_component, component_keys, co
 	buff_component[active_start_time_key] = active_start_time
 end
 
-ProcBuff.destroy = function (self)
+ProcBuff.destroy = function (self, extension_destroyed)
 	if self._has_activated then
 		local template = self._template
 		local template_data = self._template_data
@@ -50,7 +50,7 @@ ProcBuff.destroy = function (self)
 	local t = FixedFrame.get_latest_fixed_time()
 
 	self:_stop_proc_active_fx(t)
-	ProcBuff.super.destroy(self)
+	ProcBuff.super.destroy(self, extension_destroyed)
 end
 
 ProcBuff.active_start_time = function (self)

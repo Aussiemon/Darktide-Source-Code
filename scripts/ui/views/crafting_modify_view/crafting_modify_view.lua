@@ -506,13 +506,6 @@ CraftingModifyView._on_navigation_input_changed = function (self)
 	end
 end
 
-CraftingModifyView.character_level = function (self)
-	local player = self:_player()
-	local profile = player:profile()
-
-	return profile.current_level
-end
-
 CraftingModifyView.dialogue_system = function (self)
 	return self._parent:dialogue_system()
 end

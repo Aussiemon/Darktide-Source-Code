@@ -19,6 +19,8 @@ MinionBehaviorExtension.init = function (self, extension_init_context, unit, ext
 	local behavior_tree_name = extension_init_data.behavior_tree_name
 
 	self:_init_brain(unit, breed, blackboard, behavior_tree_name)
+
+	self._units_dodged = {}
 end
 
 MinionBehaviorExtension._init_brain = function (self, unit, breed, blackboard, behavior_tree_name)
@@ -157,6 +159,16 @@ end
 
 MinionBehaviorExtension.running_action = function (self)
 	return self._brain:running_action()
+end
+
+MinionBehaviorExtension.dodged_before = function (self, unit)
+	if self._units_dodged[unit] then
+		return true
+	end
+
+	self._units_dodged[unit] = true
+
+	return false
 end
 
 return MinionBehaviorExtension

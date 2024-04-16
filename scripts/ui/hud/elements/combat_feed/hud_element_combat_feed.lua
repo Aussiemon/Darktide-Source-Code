@@ -8,6 +8,8 @@ local UISettings = require("scripts/settings/ui/ui_settings")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local WalletSettings = require("scripts/settings/wallet_settings")
 local DEBUG_RELOAD = true
+local MESSAGE_TYPES = table.enum("currency", "player_assist")
+local _localization_context = {}
 local HudElementCombatFeed = class("HudElementCombatFeed", "HudElementBase")
 
 HudElementCombatFeed.init = function (self, parent, draw_layer, start_scale)
@@ -16,12 +18,31 @@ HudElementCombatFeed.init = function (self, parent, draw_layer, start_scale)
 	self._notifications = {}
 	self._num_notifications = 0
 	self._notification_id_counter = 0
-	self._max_messages = HudElementCombatFeedSettings.max_messages
+	local save_manager = Managers.save
+	local combat_feed_enabled = true
+	local assist_messages_enabled = false
+	local crafting_messages_enabled = false
+	local max_messages = HudElementCombatFeedSettings.max_messages
+	local message_duration = HudElementCombatFeedSettings.message_duration
+
+	if save_manager then
+		local account_data = save_manager:account_data()
+		combat_feed_enabled = account_data.interface_settings.combat_feed_enabled
+		max_messages = account_data.interface_settings.combat_feed_max_messages
+		message_duration = account_data.interface_settings.combat_feed_message_duration
+		assist_messages_enabled = account_data.interface_settings.assist_notification_type == "combat_feed"
+		crafting_messages_enabled = account_data.interface_settings.crafting_pickup_notification_type == "combat_feed"
+	end
+
+	self._combat_feed_enabled = combat_feed_enabled
+	self._max_messages = max_messages
+	self._message_duration = message_duration
+	self._assist_messages_enabled = assist_messages_enabled
+	self._crafting_messages_enabled = crafting_messages_enabled
 	self._notification_templates = {
 		default = {
 			fade_out = 1,
 			fade_in = 0.5,
-			total_time = 5,
 			widget_definition = Definitions.notification_message_default
 		}
 	}
@@ -88,6 +109,76 @@ HudElementCombatFeed._color_by_enemy_tags = function (self, tags)
 	return color or enemy_default_color
 end
 
+HudElementCombatFeed.event_update_combat_feed_enabled = function (self, value)
+	self._combat_feed_enabled = value
+end
+
+HudElementCombatFeed.event_update_assist_notification_type = function (self, value)
+	self._assist_messages_enabled = value == "combat_feed"
+end
+
+HudElementCombatFeed.event_update_crafting_pickup_notification_type = function (self, value)
+	self._crafting_messages_enabled = value == "combat_feed"
+end
+
+HudElementCombatFeed.event_update_combat_feed_max_messages = function (self, value)
+	self._max_messages = value
+end
+
+HudElementCombatFeed.event_update_combat_feed_message_duration = function (self, value)
+	self._message_duration = value
+end
+
+HudElementCombatFeed.event_add_notification_message = function (self, message_type, data, callback, sound_event, done_callback, delay)
+	if message_type == MESSAGE_TYPES.currency and self:_can_show_currency_of_type(data.currency) then
+		local currency_type = data.currency
+		local amount = data.amount
+		local amount_size = data.amount_size
+		local player_name = data.player_name
+		local optional_localization_key = data.optional_localization_key
+		local wallet_settings = WalletSettings[currency_type]
+		local ignore_wallet_display_name = false
+
+		if amount_size and type(amount_size) == "string" and wallet_settings then
+			local pickup_localization_by_size = wallet_settings.pickup_localization_by_size
+			local localization_key = pickup_localization_by_size[amount_size]
+			amount_size = Localize(localization_key)
+			ignore_wallet_display_name = true
+		end
+
+		if wallet_settings then
+			local selected_color = Color.terminal_corner_selected(255, true)
+			amount = string.format("{#color(%d,%d,%d)}%s %s{#reset()}", selected_color[2], selected_color[3], selected_color[4], amount_size or TextUtilities.format_currency(amount), not ignore_wallet_display_name and Localize(wallet_settings.display_name) or "")
+			local text = Localize(optional_localization_key or "loc_notification_feed_currency_acquired", true, {
+				amount = amount,
+				player_name = player_name
+			})
+
+			self:_add_combat_feed_message(text)
+		end
+	elseif message_type == MESSAGE_TYPES.player_assist and self._assist_messages_enabled then
+		local assist_type = data.assist_type
+		local player = data.player
+		local player_name = player and player:name()
+		local player_slot = player and player.slot and player:slot()
+		local player_slot_colors = UISettings.player_slot_colors
+		local player_slot_color = player_slot and player_slot_colors[player_slot]
+
+		if player_name and player_slot_color then
+			player_name = TextUtilities.apply_color_to_text(player_name, player_slot_color)
+		end
+
+		local localization_context = _localization_context
+
+		table.clear(localization_context)
+
+		localization_context.player_name = player_name
+		local text = Localize(UISettings.assist_type_localization_lookup[assist_type], true, localization_context)
+
+		self:_add_combat_feed_message(text)
+	end
+end
+
 HudElementCombatFeed.event_combat_feed_kill = function (self, attacking_unit, attacked_unit)
 	local killer = self:_get_unit_presentation_name(attacking_unit)
 	local victim = self:_get_unit_presentation_name(attacked_unit)
@@ -123,6 +214,14 @@ HudElementCombatFeed.destroy = function (self, ui_renderer)
 
 		event_manager:unregister(self, event[1])
 	end
+end
+
+HudElementCombatFeed._can_show_currency_of_type = function (self, currency_type)
+	if currency_type ~= "plasteel" and currency_type ~= "diamantine" then
+		return false
+	end
+
+	return self._crafting_messages_enabled
 end
 
 HudElementCombatFeed._add_notification_message = function (self, type)
@@ -292,13 +391,13 @@ HudElementCombatFeed._draw_widgets = function (self, dt, t, input_service, ui_re
 
 	local header_size = HudElementCombatFeedSettings.header_size
 	local notifications = self._notifications
+	local total_time = self._message_duration
 
 	for i = #notifications, 1, -1 do
 		local notification = notifications[i]
 
 		if notification then
 			notification.time = (notification.time or 0) + dt
-			local total_time = notification.total_time
 			local time = notification.time
 
 			if time and total_time and total_time <= time or self._max_messages < i then
@@ -334,7 +433,7 @@ HudElementCombatFeed._enabled = function (self)
 		return false
 	end
 
-	return true
+	return self._combat_feed_enabled
 end
 
 return HudElementCombatFeed

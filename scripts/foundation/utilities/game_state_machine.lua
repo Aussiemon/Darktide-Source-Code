@@ -9,6 +9,10 @@ local function _debug_print(format, ...)
 			print(string.format("[GameStateMachine] " .. format, ...))
 		end
 	end
+
+	if rawget(_G, "Managers") and Managers.server_metrics then
+		Managers.server_metrics:add_annotation(string.format("[GameStateMachine] " .. format, ...))
+	end
 end
 
 GameStateMachine.init = function (self, parent, start_state, params, optional_creation_context, state_change_callbacks, name, log_breadcrumbs)
@@ -86,6 +90,18 @@ GameStateMachine._change_state = function (self)
 	if self._state.on_enter then
 		self._state:on_enter(self._parent, params, self._optional_creation_context)
 	end
+end
+
+GameStateMachine.force_change_state = function (self, state, params)
+	if self._state == state then
+		return
+	end
+
+	self._next_state = state
+	self._next_state_params = params
+
+	self:_log_state_change(self._state, self._next_state)
+	self:_change_state()
 end
 
 GameStateMachine.update = function (self, dt, t)

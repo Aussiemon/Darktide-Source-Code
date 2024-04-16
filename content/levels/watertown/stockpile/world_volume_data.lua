@@ -318,59 +318,6 @@ local volume_data = {
 		}
 	},
 	{
-		height = 9,
-		type = "content/volume_types/player_mover_blocker",
-		name = "volume",
-		alt_max_vector = {
-			-280,
-			263,
-			13
-		},
-		alt_min_vector = {
-			-280,
-			263,
-			4
-		},
-		bottom_points = {
-			{
-				-287,
-				259,
-				4
-			},
-			{
-				-283.3913269042969,
-				257.8951416015625,
-				4
-			},
-			{
-				-278.88848876953125,
-				265.3795166015625,
-				4
-			},
-			{
-				-279,
-				269,
-				4
-			},
-			{
-				-282,
-				270,
-				4
-			}
-		},
-		color = {
-			255,
-			255,
-			125,
-			0
-		},
-		up_vector = {
-			0,
-			0,
-			1
-		}
-	},
-	{
 		height = 1.87407696247101,
 		type = "content/volume_types/player_mover_blocker",
 		name = "volume_013",
@@ -843,6 +790,59 @@ local volume_data = {
 		}
 	},
 	{
+		height = 9,
+		type = "content/volume_types/player_mover_blocker",
+		name = "volume",
+		alt_max_vector = {
+			-280,
+			263,
+			13
+		},
+		alt_min_vector = {
+			-280,
+			263,
+			4
+		},
+		bottom_points = {
+			{
+				-287,
+				259,
+				4
+			},
+			{
+				-283.3913269042969,
+				257.8951416015625,
+				4
+			},
+			{
+				-278.88848876953125,
+				265.3795166015625,
+				4
+			},
+			{
+				-279,
+				269,
+				4
+			},
+			{
+				-282,
+				270,
+				4
+			}
+		},
+		color = {
+			255,
+			255,
+			125,
+			0
+		},
+		up_vector = {
+			0,
+			0,
+			1
+		}
+	},
+	{
 		height = 6,
 		type = "content/volume_types/player_mover_blocker",
 		name = "volume_009",
@@ -1014,59 +1014,6 @@ local volume_data = {
 	{
 		height = 10.25,
 		type = "content/volume_types/player_mover_blocker",
-		name = "volume_002",
-		alt_max_vector = {
-			-97.10665130615234,
-			190.24411010742188,
-			20.25
-		},
-		alt_min_vector = {
-			-97.10665130615234,
-			190.24411010742188,
-			10
-		},
-		bottom_points = {
-			{
-				-93.73165130615234,
-				187.36911010742188,
-				10
-			},
-			{
-				-99.48165130615234,
-				193.86911010742188,
-				10
-			},
-			{
-				-100.48165130615234,
-				192.61911010742188,
-				10
-			},
-			{
-				-96.80532836914062,
-				188.20751953125,
-				10
-			},
-			{
-				-95.48165130615234,
-				186.61911010742188,
-				10
-			}
-		},
-		color = {
-			255,
-			255,
-			125,
-			0
-		},
-		up_vector = {
-			0,
-			0,
-			1
-		}
-	},
-	{
-		height = 10.25,
-		type = "content/volume_types/player_mover_blocker",
 		name = "volume_001",
 		alt_max_vector = {
 			-81.85665130615234,
@@ -1097,6 +1044,54 @@ local volume_data = {
 			{
 				-80.23165130615234,
 				169.86911010742188,
+				10
+			}
+		},
+		color = {
+			255,
+			255,
+			125,
+			0
+		},
+		up_vector = {
+			0,
+			0,
+			1
+		}
+	},
+	{
+		height = 10.25,
+		type = "content/volume_types/player_mover_blocker",
+		name = "volume_002",
+		alt_max_vector = {
+			-95.8717269897461,
+			191.36911010742188,
+			20.25
+		},
+		alt_min_vector = {
+			-95.8717269897461,
+			191.36911010742188,
+			10
+		},
+		bottom_points = {
+			{
+				-92.4967269897461,
+				188.49411010742188,
+				10
+			},
+			{
+				-98.2467269897461,
+				194.99411010742188,
+				10
+			},
+			{
+				-99.2467269897461,
+				193.74411010742188,
+				10
+			},
+			{
+				-94.2467269897461,
+				187.74411010742188,
 				10
 			}
 		},

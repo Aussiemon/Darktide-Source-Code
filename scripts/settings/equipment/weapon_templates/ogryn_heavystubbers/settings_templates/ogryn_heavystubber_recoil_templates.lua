@@ -1018,6 +1018,432 @@ recoil_templates.default_ogryn_heavystubber_recoil_spraynpray_brace_m3 = {
 		}
 	}
 }
+recoil_templates.ogryn_heavystubber_p2_m1_recoil_hip = {
+	still = {
+		camera_recoil_percentage = 0.85,
+		decay_grace = 0.05,
+		new_influence_percent = 0.94,
+		rise_duration = 0.07,
+		rise = {
+			0.1,
+			0.15,
+			0.17,
+			0.13,
+			0.12,
+			0.1,
+			0.09,
+			0.08,
+			0.08,
+			0.05,
+			0.05,
+			0.05,
+			0.03
+		},
+		decay = {
+			shooting = 1.1,
+			idle = 2.5
+		},
+		offset_range = {
+			{
+				pitch = {
+					0.05,
+					0.05
+				},
+				yaw = {
+					-0.01,
+					0.01
+				}
+			},
+			{
+				pitch = {
+					0.065,
+					0.065
+				},
+				yaw = {
+					-0.0125,
+					0.0125
+				}
+			},
+			{
+				pitch = {
+					0.05,
+					0.075
+				},
+				yaw = {
+					-0.015,
+					0.015
+				}
+			},
+			{
+				pitch = {
+					0.05,
+					0.075
+				},
+				yaw = {
+					-0.0175,
+					0.0175
+				}
+			},
+			{
+				pitch = {
+					0.02,
+					0.03
+				},
+				yaw = {
+					-0.02,
+					0.02
+				}
+			},
+			{
+				pitch = {
+					0.01,
+					0.02
+				},
+				yaw = {
+					-0.02,
+					0.02
+				}
+			},
+			{
+				pitch = {
+					0.01,
+					0.02
+				},
+				yaw = {
+					-0.02,
+					0.02
+				}
+			},
+			{
+				pitch = {
+					0.01,
+					0.02
+				},
+				yaw = {
+					-0.02,
+					0.02
+				}
+			},
+			{
+				pitch = {
+					0,
+					0.02
+				},
+				yaw = {
+					-0.0225,
+					0.0225
+				}
+			}
+		},
+		offset_limit = {
+			yaw = 1.5,
+			pitch = 1.5
+		},
+		aim_assist = {
+			multiplier_function = AIM_ASSIST_MULTIPLIER_FUNCTIONS.unmodified_inverted_unsteadiness
+		},
+		visual_recoil_settings = {
+			intensity = 1.4,
+			lerp_scalar = 1
+		}
+	},
+	moving = {
+		new_influence_percent = 0.25,
+		inherits = {
+			"ogryn_heavystubber_p2_m1_recoil_hip",
+			"still"
+		}
+	},
+	crouch_still = {
+		new_influence_percent = 0.25,
+		inherits = {
+			"ogryn_heavystubber_p2_m1_recoil_hip",
+			"still"
+		}
+	},
+	crouch_moving = {
+		new_influence_percent = 0.25,
+		inherits = {
+			"ogryn_heavystubber_p2_m1_recoil_hip",
+			"still"
+		}
+	}
+}
+recoil_templates.ogryn_heavystubber_p2_m2_recoil_hip = {
+	still = {
+		camera_recoil_percentage = 0.3,
+		decay_grace = 0.09,
+		new_influence_percent = 0.4,
+		rise_duration = 0.011,
+		rise = {
+			2,
+			1.5,
+			0.4
+		},
+		decay = {
+			shooting = 1.2,
+			idle = 2.5
+		},
+		offset_range = {
+			{
+				pitch = {
+					0.0375,
+					0.175
+				},
+				yaw = {
+					-0.02,
+					0.0375
+				}
+			}
+		},
+		offset_limit = {
+			yaw = 1.5,
+			pitch = 3.9
+		},
+		aim_assist = {
+			multiplier_function = AIM_ASSIST_MULTIPLIER_FUNCTIONS.unmodified_inverted_unsteadiness
+		},
+		visual_recoil_settings = {
+			intensity = 1.8,
+			lerp_scalar = 1
+		}
+	},
+	moving = {
+		new_influence_percent = 0.6,
+		inherits = {
+			"ogryn_heavystubber_p2_m2_recoil_hip",
+			"still"
+		}
+	},
+	crouch_still = {
+		new_influence_percent = 0.1,
+		inherits = {
+			"ogryn_heavystubber_p2_m2_recoil_hip",
+			"still"
+		}
+	},
+	crouch_moving = {
+		new_influence_percent = 0.3,
+		inherits = {
+			"ogryn_heavystubber_p2_m2_recoil_hip",
+			"still"
+		}
+	}
+}
+recoil_templates.ogryn_heavystubber_p2_m2_recoil_aim = {
+	still = {
+		camera_recoil_percentage = 0.2,
+		new_influence_percent = 1.1,
+		rise_duration = 0.15,
+		rise = {
+			4.75,
+			2.5,
+			1.225,
+			1.25,
+			1.2,
+			1.175,
+			0.2
+		},
+		decay = {
+			shooting = 0.5,
+			idle = 2.1
+		},
+		offset_range = {
+			{
+				pitch = {
+					0.011000000000000001,
+					0.038000000000000006
+				},
+				yaw = {
+					-0.008,
+					0.023000000000000003
+				}
+			}
+		},
+		offset_limit = {
+			yaw = 2,
+			pitch = 3
+		},
+		aim_assist = {
+			multiplier_function = AIM_ASSIST_MULTIPLIER_FUNCTIONS.unmodified_inverted_unsteadiness
+		},
+		visual_recoil_settings = {
+			intensity = 1,
+			lerp_scalar = 1
+		}
+	},
+	moving = {
+		new_influence_percent = 0.85,
+		inherits = {
+			"ogryn_heavystubber_p2_m2_recoil_aim",
+			"still"
+		}
+	},
+	crouch_still = {
+		new_influence_percent = 0.3,
+		inherits = {
+			"ogryn_heavystubber_p2_m2_recoil_aim",
+			"still"
+		}
+	},
+	crouch_moving = {
+		new_influence_percent = 0.85,
+		inherits = {
+			"ogryn_heavystubber_p2_m2_recoil_aim",
+			"still"
+		}
+	}
+}
+recoil_templates.ogryn_heavystubber_p2_m3_recoil_hip = {
+	still = {
+		camera_recoil_percentage = 0.3,
+		decay_grace = 0.09,
+		new_influence_percent = 0.6,
+		rise_duration = 0.011,
+		rise = {
+			2,
+			1.5,
+			0.4
+		},
+		decay = {
+			shooting = 1.2,
+			idle = 2.5
+		},
+		offset_range = {
+			{
+				pitch = {
+					0.0375,
+					0.175
+				},
+				yaw = {
+					-0.02,
+					0.0375
+				}
+			}
+		},
+		offset_limit = {
+			yaw = 1.5,
+			pitch = 3.9
+		},
+		aim_assist = {
+			multiplier_function = AIM_ASSIST_MULTIPLIER_FUNCTIONS.unmodified_inverted_unsteadiness
+		},
+		visual_recoil_settings = {
+			intensity = 1.8,
+			lerp_scalar = 1
+		}
+	},
+	moving = {
+		new_influence_percent = 0.6,
+		inherits = {
+			"ogryn_heavystubber_p2_m3_recoil_hip",
+			"still"
+		}
+	},
+	crouch_still = {
+		new_influence_percent = 0.1,
+		inherits = {
+			"ogryn_heavystubber_p2_m3_recoil_hip",
+			"still"
+		}
+	},
+	crouch_moving = {
+		new_influence_percent = 0.3,
+		inherits = {
+			"ogryn_heavystubber_p2_m3_recoil_hip",
+			"still"
+		}
+	}
+}
+recoil_templates.recoil_ogryn_heavystubber_p2_m3_braced = {
+	still = {
+		camera_recoil_percentage = 0.4,
+		decay_grace = 0.2,
+		new_influence_percent = 1.5,
+		rise_duration = 0.125,
+		rise = {
+			5.2
+		},
+		decay = {
+			shooting = 1.07,
+			idle = 1.5
+		},
+		offset_range = {
+			{
+				pitch = {
+					0.0275,
+					0.095
+				},
+				yaw = {
+					-0.02,
+					0.0575
+				}
+			},
+			{
+				pitch = {
+					0.025,
+					0.0825
+				},
+				yaw = {
+					-0.02,
+					0.0625
+				}
+			},
+			{
+				pitch = {
+					0.0225,
+					0.075
+				},
+				yaw = {
+					-0.02,
+					0.0625
+				}
+			},
+			{
+				pitch = {
+					0.02,
+					0.06
+				},
+				yaw = {
+					-0.02,
+					0.0625
+				}
+			}
+		},
+		offset_limit = {
+			yaw = 1.7,
+			pitch = 3.3
+		},
+		aim_assist = {
+			multiplier_function = AIM_ASSIST_MULTIPLIER_FUNCTIONS.unmodified_inverted_unsteadiness
+		},
+		visual_recoil_settings = {
+			intensity = 1.5,
+			lerp_scalar = 1
+		}
+	},
+	moving = {
+		new_influence_percent = 1.3,
+		inherits = {
+			"recoil_ogryn_heavystubber_p2_m3_braced",
+			"still"
+		}
+	},
+	crouch_still = {
+		new_influence_percent = 0.2,
+		inherits = {
+			"recoil_ogryn_heavystubber_p2_m3_braced",
+			"still"
+		}
+	},
+	crouch_moving = {
+		new_influence_percent = 0.3,
+		inherits = {
+			"recoil_ogryn_heavystubber_p2_m3_braced",
+			"still"
+		}
+	}
+}
 
 return {
 	base_templates = recoil_templates,

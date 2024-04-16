@@ -75,12 +75,6 @@ local mission_vo_cm_raid_psyker_male_b = {
 			3.127083,
 			3.591708
 		},
-		sound_event_weights = {
-			0.25,
-			0.25,
-			0.25,
-			0.25
-		},
 		randomize_indexes = {}
 	},
 	mission_raid_trapped_b = {
@@ -98,12 +92,6 @@ local mission_vo_cm_raid_psyker_male_b = {
 			2.560375,
 			4.170563
 		},
-		sound_event_weights = {
-			0.25,
-			0.25,
-			0.25,
-			0.25
-		},
 		randomize_indexes = {}
 	},
 	mission_raid_trapped_c = {
@@ -120,12 +108,6 @@ local mission_vo_cm_raid_psyker_male_b = {
 			3.243271,
 			2.133958,
 			2.657854
-		},
-		sound_event_weights = {
-			0.25,
-			0.25,
-			0.25,
-			0.25
 		},
 		randomize_indexes = {}
 	}

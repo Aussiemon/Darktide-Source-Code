@@ -639,6 +639,23 @@ local panel_definition = UIWidget.create_definition({
 		end
 	},
 	{
+		style_id = "character_archetype_title",
+		pass_type = "text",
+		value = "",
+		value_id = "character_archetype_title",
+		style = LobbyViewFontStyle.character_archetype_title_style,
+		change_function = function (content, style)
+			local text_color = style.text_color
+			local hotspot = content.hotspot
+			local default_color = hotspot.disabled and style.disabled_color or style.default_color
+			local highlight_color = style.hover_color
+			local hover_progress = math.max(hotspot.anim_focus_progress, hotspot.anim_select_progress)
+			local ignore_alpha = true
+
+			ColorUtilities.color_lerp(default_color, highlight_color, hover_progress, text_color, ignore_alpha)
+		end
+	},
+	{
 		style_id = "character_title",
 		pass_type = "text",
 		value = "",

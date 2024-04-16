@@ -128,45 +128,11 @@ local objectives_lookup = {
 		name = "loc_ability_zealot_objective_2",
 		objective_id = "combat_ability_zealot_2"
 	},
-	combat_ability_psyker_3_1 = {
-		max_value = 1,
-		name = "loc_combat_ability_tutorial_psyker_3_objective_1",
-		play_sound = true,
-		objective_id = "combat_ability_psyker_3_1"
-	},
-	combat_ability_psyker_3_2 = {
-		max_value = 1,
-		name = "loc_combat_ability_tutorial_psyker_3_objective_2",
-		objective_id = "combat_ability_psyker_3_2"
-	},
-	combat_ability_ogryn_1_1 = {
-		max_value = 1,
-		name = "loc_combat_ability_tutorial_ogryn_1_objective_1",
-		play_sound = true,
-		objective_id = "combat_ability_ogryn_1_1"
-	},
-	combat_ability_ogryn_1_2 = {
-		max_value = 1,
-		name = "loc_combat_ability_tutorial_ogryn_1_objective_2",
-		objective_id = "combat_ability_ogryn_1_2"
-	},
-	combat_ability_zealot_3_1 = {
-		max_value = 1,
-		name = "loc_combat_ability_tutorial_zealot_3_objective_1",
-		play_sound = true,
-		objective_id = "combat_ability_zealot_3_1"
-	},
 	combat_ability_zealot_3_2 = {
 		max_value = 1,
 		name = "loc_combat_ability_tutorial_zealot_3_objective_2",
 		play_sound = true,
 		objective_id = "combat_ability_zealot_3_2"
-	},
-	combat_ability_veteran_3_1 = {
-		max_value = 1,
-		name = "loc_combat_ability_tutorial_veteran_3_objective_1",
-		play_sound = true,
-		objective_id = "combat_ability_veteran_3_1"
 	},
 	attack_chain = {
 		max_value = 3,
@@ -219,38 +185,6 @@ local objectives_lookup = {
 		play_sound = true,
 		objective_id = "push_follow"
 	},
-	basic_ranged_objective_1 = {
-		max_value = 3,
-		name = "loc_basic_ranged_objective_1",
-		play_sound = true,
-		objective_id = "basic_ranged_objective_1"
-	},
-	basic_ranged_objective_2 = {
-		max_value = 2,
-		name = "loc_basic_ranged_objective_2",
-		objective_id = "basic_ranged_objective_2"
-	},
-	basic_ranged_objective_3 = {
-		max_value = 1,
-		name = "loc_basic_ranged_objective_3",
-		objective_id = "basic_ranged_objective_3"
-	},
-	ranged_warp_charge_objective_1 = {
-		max_value = 3,
-		name = "loc_ranged_warp_charge_objective_1",
-		play_sound = true,
-		objective_id = "ranged_warp_charge_objective_1"
-	},
-	ranged_warp_charge_objective_2 = {
-		max_value = 2,
-		name = "loc_ranged_warp_charge_objective_2",
-		objective_id = "ranged_warp_charge_objective_2"
-	},
-	ranged_warp_charge_objective_3 = {
-		max_value = 20,
-		name = "loc_ranged_warp_charge_objective_3",
-		objective_id = "ranged_warp_charge_objective_3"
-	},
 	suppression_objective_1 = {
 		max_value = 5,
 		name = "loc_suppression_objective_1",
@@ -301,12 +235,6 @@ local objectives_lookup = {
 		name = "loc_grenade_objective",
 		play_sound = true,
 		objective_id = "grenade"
-	},
-	protectorate_blitz = {
-		max_value = 5,
-		name = "loc_psyker_ability_objective_protectorate",
-		play_sound = true,
-		objective_id = "protectorate_blitz"
 	},
 	biomancer_blitz = {
 		max_value = 3,

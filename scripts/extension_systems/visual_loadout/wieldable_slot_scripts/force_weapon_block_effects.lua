@@ -1,6 +1,6 @@
 local Action = require("scripts/utilities/weapon/action")
-local ForceWeaponBlockEffects = class("ForceWeaponBlockEffects")
 local PlayerUnitData = require("scripts/extension_systems/unit_data/utilities/player_unit_data")
+local ForceWeaponBlockEffects = class("ForceWeaponBlockEffects")
 local BLOCK_FX_SOURCE_NAME = "_block"
 local BLOCK_LOOP_SOUND_ALIAS = "block_loop"
 

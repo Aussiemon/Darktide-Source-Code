@@ -1,16 +1,17 @@
+local Archetypes = require("scripts/settings/archetype/archetypes")
 local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templates")
 local ItemPassTemplates = require("scripts/ui/pass_templates/item_pass_templates")
 local ItemSlotSettings = require("scripts/settings/item/item_slot_settings")
 local ItemUtils = require("scripts/utilities/items")
+local MasterItems = require("scripts/backend/master_items")
+local ProfileUtils = require("scripts/utilities/profile_utils")
+local TextUtilities = require("scripts/utilities/ui/text")
+local UIFonts = require("scripts/managers/ui/ui_fonts")
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local UIRenderer = require("scripts/managers/ui/ui_renderer")
+local UISettings = require("scripts/settings/ui/ui_settings")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local WalletSettings = require("scripts/settings/wallet_settings")
-local UISettings = require("scripts/settings/ui/ui_settings")
-local MasterItems = require("scripts/backend/master_items")
-local TextUtilities = require("scripts/utilities/ui/text")
-local Archetypes = require("scripts/settings/archetype/archetypes")
-local UIFonts = require("scripts/managers/ui/ui_fonts")
 
 local function is_item_equipped_in_slot(parent, item, slot_name)
 	if not parent or not item then
@@ -140,7 +141,6 @@ local function generate_blueprints_function(grid_size)
 
 			if item_icon_size then
 				widget.style.icon_original_size = icon_style.size and table.clone(icon_style.size) or {}
-				icon_style.size = item_icon_size
 			end
 		else
 			if widget.style.icon_original_size then
@@ -274,6 +274,7 @@ local function generate_blueprints_function(grid_size)
 			if slot then
 				local item = element.item
 				content.item = item
+				content.properties = ItemUtils.item_property_icons(item) or ""
 				local display_name = item and item.display_name
 
 				if display_name then
@@ -282,7 +283,22 @@ local function generate_blueprints_function(grid_size)
 				end
 
 				local item_icon_size = slot.item_icon_size
-				style.icon.material_values.icon_size = item_icon_size
+
+				if item_icon_size then
+					local element_size = element.size
+
+					if element_size then
+						local icon_width = item_icon_size[1] * element_size[1] / ItemPassTemplates.ui_item_size[1]
+						local icon_height = item_icon_size[2] * element_size[2] / ItemPassTemplates.ui_item_size[2]
+						item_icon_size = {
+							icon_width,
+							icon_height
+						}
+					end
+
+					style.icon.material_values.icon_size = item_icon_size
+				end
+
 				local icon_color = slot.icon_color
 
 				if icon_color then
@@ -291,6 +307,18 @@ local function generate_blueprints_function(grid_size)
 					color[2] = icon_color[2]
 					color[3] = icon_color[3]
 					color[4] = icon_color[4]
+				end
+
+				local rarity = item and item.rarity
+
+				if rarity then
+					local _, rarity_color_dark = ItemUtils.rarity_color(item)
+
+					if rarity_color_dark then
+						style.background_gradient.color = table.clone(rarity_color_dark)
+					end
+				else
+					style.background_gradient.color = style.background_gradient.default_color
 				end
 			end
 		end,
@@ -346,6 +374,111 @@ local function generate_blueprints_function(grid_size)
 			end
 		end
 	}
+	blueprints.character_title_item = {
+		size = ItemPassTemplates.character_title_item_size,
+		pass_template = ItemPassTemplates.character_title_item,
+		init = function (parent, widget, element, callback_name, secondary_callback_name, ui_renderer, double_click_callback)
+			local content = widget.content
+			local style = widget.style
+			content.hotspot.pressed_callback = callback_name and callback(parent, callback_name, widget, element)
+			content.hotspot.double_click_callback = double_click_callback and callback(parent, double_click_callback, widget, element)
+			content.hotspot.right_pressed_callback = secondary_callback_name and callback(parent, secondary_callback_name, widget, element)
+			content.element = element
+			content.locked = element.locked
+			content.show_icon = element.show_icon
+			local slot = element.slot
+
+			if slot then
+				local item = element.item
+				content.item = item
+				content.display_name = ProfileUtils.title_item_name_no_color(item)
+				local rarity = item and item.rarity
+
+				if rarity then
+					local _, rarity_color_dark = ItemUtils.rarity_color(item)
+
+					if rarity_color_dark then
+						style.background_gradient.color = table.clone(rarity_color_dark)
+					end
+				else
+					style.background_gradient.color = style.background_gradient.default_color
+				end
+
+				local item_icon_size = slot.item_icon_size
+
+				if item_icon_size then
+					local element_size = element.size
+
+					if element_size then
+						local icon_width = item_icon_size[1] * element_size[1] / ItemPassTemplates.ui_item_size[1]
+						local icon_height = item_icon_size[2] * element_size[2] / ItemPassTemplates.ui_item_size[2]
+						item_icon_size = {
+							icon_width,
+							icon_height
+						}
+					end
+
+					style.icon.material_values.icon_size = item_icon_size
+				end
+
+				local icon_color = slot.icon_color
+
+				if icon_color then
+					local color = style.icon.color
+					color[1] = icon_color[1]
+					color[2] = icon_color[2]
+					color[3] = icon_color[3]
+					color[4] = icon_color[4]
+				end
+			end
+		end,
+		update = function (parent, widget, input_service, dt, t, ui_renderer)
+			local view_instance = parent._parent or parent
+			local content = widget.content
+			local element = content.element
+			local slot = element.slot
+			local slot_name = slot.name
+			local item = element.real_item or element.item
+			local is_equipped = is_item_equipped_in_slot(view_instance, item, slot_name)
+			content.equipped = is_equipped
+		end,
+		load_icon = function (parent, widget, element, ui_renderer, dummy_profile, prioritize)
+			local content = widget.content
+			local item = element.item
+
+			if not content.icon_load_id and item then
+				local cb = callback(_apply_package_item_icon_cb_func, widget, item)
+				content.icon_load_id = Managers.ui:load_item_icon(item, cb)
+			end
+		end,
+		unload_icon = function (parent, widget, element, ui_renderer)
+			local content = widget.content
+
+			if content.icon_load_id then
+				_remove_package_item_icon_cb_func(widget, ui_renderer)
+				Managers.ui:unload_item_icon(content.icon_load_id)
+
+				content.icon_load_id = nil
+			end
+		end,
+		destroy = function (parent, widget, element, ui_renderer)
+			local content = widget.content
+
+			if content.icon_load_id then
+				_remove_package_item_icon_cb_func(widget, ui_renderer)
+				Managers.ui:unload_item_icon(content.icon_load_id)
+
+				content.icon_load_id = nil
+			end
+		end,
+		update_item_icon_priority = function (parent, widget, element, ui_renderer, dummy_profile)
+			local content = widget.content
+
+			if content.icon_load_id then
+				Managers.ui:update_item_icon_priority(content.icon_load_id)
+			end
+		end
+	}
 	blueprints.gear_item = {
 		size = ItemPassTemplates.gear_icon_size,
 		pass_template = ItemPassTemplates.gear_item,
@@ -361,6 +494,7 @@ local function generate_blueprints_function(grid_size)
 			if slot then
 				local item = element.item
 				content.item = item
+				content.properties = ItemUtils.item_property_icons(item) or ""
 				local display_name = item and item.display_name
 
 				if display_name then
@@ -638,7 +772,6 @@ local function generate_blueprints_function(grid_size)
 
 			if display_name then
 				content.display_name = ItemUtils.display_name(item)
-				local no_color = true
 				content.sub_display_name = ItemUtils.sub_display_name(item)
 			end
 
@@ -1444,8 +1577,26 @@ local function generate_blueprints_function(grid_size)
 			widget.original_offset = table.clone(widget.offset)
 		end
 	}
+	local WIDGET_TYPE_BY_SLOT = {
+		slot_gear_head = "gear_item",
+		slot_animation_end_of_round = "gear_item",
+		slot_animation_emote_4 = "ui_item",
+		slot_gear_extra_cosmetic = "gear_item",
+		slot_animation_emote_1 = "ui_item",
+		slot_animation_emote_5 = "ui_item",
+		slot_insignia = "ui_item",
+		slot_character_title = "character_title_item",
+		slot_animation_emote_3 = "ui_item",
+		slot_portrait_frame = "ui_item",
+		slot_trinket_1 = "gear_item",
+		slot_weapon_skin = "gear_item",
+		slot_gear_lowerbody = "gear_item",
+		slot_gear_upperbody = "gear_item",
+		slot_animation_emote_2 = "ui_item",
+		slot_trinket_2 = "gear_item"
+	}
 
-	return blueprints
+	return blueprints, WIDGET_TYPE_BY_SLOT
 end
 
 return generate_blueprints_function

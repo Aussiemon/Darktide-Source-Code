@@ -23,7 +23,7 @@ RenderTargetIconGeneratorBase.init = function (self, render_settings)
 	self._render_target_atlas_generator = render_settings and render_settings.render_target_atlas_generator or RenderTargetAtlasGenerator:new()
 	self._initialized_render_target_atlas = not render_settings or not render_settings.render_target_atlas_generator
 	self._always_render = render_settings and render_settings.always_render
-	self._render_enabled = true
+	self._render_enabled = Application.rendering_enabled()
 end
 
 RenderTargetIconGeneratorBase.update_all = function (self)
@@ -179,7 +179,7 @@ RenderTargetIconGeneratorBase._generate_icon_request = function (self, request_i
 		requests_by_size[size_key][request_id] = {
 			spawned = false,
 			spawning = false,
-			render_context = optional_render_context,
+			render_context = optional_render_context and table.clone_instance(optional_render_context),
 			references_lookup = {},
 			references_array = {},
 			callbacks = {},

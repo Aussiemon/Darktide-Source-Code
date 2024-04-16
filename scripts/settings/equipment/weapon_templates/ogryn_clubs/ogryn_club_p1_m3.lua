@@ -1479,7 +1479,6 @@ weapon_template.damage_window_start_sweep_trail_offset = -0.3
 weapon_template.damage_window_end_sweep_trail_offset = 0.1
 weapon_template.ammo_template = "no_ammo"
 weapon_template.allow_sprinting_with_special = true
-weapon_template.allow_sprinting_with_special = true
 weapon_template.weapon_special_class = "WeaponSpeciaShovels"
 weapon_template.weapon_special_tweak_data = {
 	deactivation_animation = "deactivate_automatic",

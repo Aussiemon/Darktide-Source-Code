@@ -478,6 +478,23 @@ local RENDER_TEMPLATES = {
 						dlss = 0
 					}
 				}
+			},
+			{
+				id = 5,
+				display_name = "loc_setting_fsr2_native_quality",
+				require_apply = true,
+				require_restart = false,
+				values = {
+					render_settings = {
+						upscaling_quality = "native",
+						fsr2_enabled = true
+					},
+					master_render_settings = {
+						xess = 0,
+						fsr = 0,
+						dlss = 0
+					}
+				}
 			}
 		},
 		disable_rules = {
@@ -690,12 +707,16 @@ local RENDER_TEMPLATES = {
 		}
 	},
 	{
-		id = "sharpen_enabled",
-		value_type = "boolean",
-		display_name = "loc_setting_sharpen_enabled",
-		require_apply = false,
+		value_type = "number",
+		id = "sharpness",
+		display_name = "loc_sharpness_slider",
+		num_decimals = 2,
+		max = 1,
 		require_restart = false,
-		tooltip_text = "loc_setting_sharpen_enabled_mouseover",
+		min = 0,
+		step_size = 0.01,
+		require_apply = false,
+		tooltip_text = "loc_sharpness_slider_mouseover",
 		save_location = "render_settings"
 	},
 	{
@@ -753,6 +774,7 @@ local RENDER_TEMPLATES = {
 		end
 	},
 	{
+		apply_on_startup = true,
 		display_name = "loc_rt_reflections_quality",
 		id = "rt_reflections_quality",
 		tooltip_text = "loc_rt_reflections_quality_mouseover",
@@ -763,9 +785,6 @@ local RENDER_TEMPLATES = {
 				display_name = "loc_settings_menu_off",
 				require_apply = true,
 				require_restart = false,
-				apply_values_on_edited = {
-					ray_tracing_quality = "custom"
-				},
 				values = {
 					render_settings = {
 						rt_checkerboard_reflections = false,
@@ -779,9 +798,6 @@ local RENDER_TEMPLATES = {
 				display_name = "loc_settings_menu_low",
 				require_apply = true,
 				require_restart = false,
-				apply_values_on_edited = {
-					ray_tracing_quality = "custom"
-				},
 				values = {
 					master_render_settings = {
 						ssr_quality = "high"
@@ -801,9 +817,6 @@ local RENDER_TEMPLATES = {
 				display_name = "loc_settings_menu_high",
 				require_apply = true,
 				require_restart = false,
-				apply_values_on_edited = {
-					ray_tracing_quality = "custom"
-				},
 				values = {
 					master_render_settings = {
 						ssr_quality = "off"
@@ -853,9 +866,6 @@ local RENDER_TEMPLATES = {
 				display_name = "loc_settings_menu_off",
 				require_apply = true,
 				require_restart = false,
-				apply_values_on_edited = {
-					ray_tracing_quality = "custom"
-				},
 				values = {
 					render_settings = {
 						baked_ddgi = true,
@@ -868,9 +878,6 @@ local RENDER_TEMPLATES = {
 				display_name = "loc_settings_menu_low",
 				require_apply = true,
 				require_restart = false,
-				apply_values_on_edited = {
-					ray_tracing_quality = "custom"
-				},
 				values = {
 					render_settings = {
 						baked_ddgi = true,
@@ -885,9 +892,6 @@ local RENDER_TEMPLATES = {
 				display_name = "loc_settings_menu_medium",
 				require_apply = true,
 				require_restart = false,
-				apply_values_on_edited = {
-					ray_tracing_quality = "custom"
-				},
 				values = {
 					render_settings = {
 						baked_ddgi = false,
@@ -902,9 +906,6 @@ local RENDER_TEMPLATES = {
 				display_name = "loc_settings_menu_high",
 				require_apply = true,
 				require_restart = false,
-				apply_values_on_edited = {
-					ray_tracing_quality = "custom"
-				},
 				values = {
 					render_settings = {
 						baked_ddgi = false,
@@ -2247,6 +2248,11 @@ render_settings[#render_settings + 1] = {
 		local vertical_fov = Application.user_setting("render_settings", "vertical_fov") or DefaultGameParameters.vertical_fov
 
 		return vertical_fov
+	end,
+	format_value_function = function (value)
+		local number_format = string.format("%%.%sf", 2)
+
+		return string.format(number_format, value)
 	end,
 	explode_function = function (normalized_value, template)
 		local value_range = template.max_value - template.min_value

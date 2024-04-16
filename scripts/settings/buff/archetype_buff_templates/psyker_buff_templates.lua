@@ -36,9 +36,32 @@ local stat_buffs = BuffSettings.stat_buffs
 local talent_settings_2 = TalentSettings.psyker_2
 local talent_settings_3 = TalentSettings.psyker_3
 local _psyker_passive_start, _psyker_passive_stop, _psyker_passive_conditional_stat_buffs, _psyker_passive_lerp_t, _psyker_passive_proc_on_combat_ability, _add_soul_function, _start_soul_function, _update_soul_function, _souls_stop_function, _souls_conditional_exit_function, _souls_proc_func, _psyker_marked_enemies_select_unit = nil
+
+local function _overcharge_stance_penance_start(template_data, template_context)
+	local player = template_context.player
+
+	Managers.stats:record_private("hook_overcharge_stance_start", player)
+end
+
+local function _overcharge_stance_penance_stop(template_data, template_context)
+	local player = template_context.player
+
+	Managers.stats:record_private("hook_overcharge_stance_stop", player)
+end
+
 local templates = {}
 
 table.make_unique(templates)
+
+local function _penance_start_func(buff_name)
+	return function (template_data, template_context)
+		local unit = template_context.unit
+		local t = FixedFrame.get_latest_fixed_time()
+		local buff_extension = ScriptUnit.extension(unit, "buff_system")
+
+		buff_extension:add_internally_controlled_buff(buff_name, t)
+	end
+end
 
 local base_max_souls = talent_settings_2.passive_1.base_max_souls
 local max_souls_talent = talent_settings_2.offensive_2_1.max_souls_talent
@@ -658,6 +681,7 @@ function _psyker_marked_enemies_select_unit(template_data, template_context, las
 		local outline_id = NetworkLookup.outline_types[outline_name]
 		local channel_id = template_context.player:channel_id()
 		template_data.last_los = t
+		template_data.last_seen = t
 
 		if channel_id and unit_id then
 			RPC.rpc_add_outline_to_unit(channel_id, unit_id, outline_id)
@@ -715,6 +739,15 @@ templates.psyker_marked_enemies_passive = {
 		local template = template_context.template
 		template_data.broadphase = broadphase
 		template_data.broadphase_results = {}
+		local max_stacks = 15
+		local last_stack = 0
+		local current_stack = 0
+		local final_time_spent = 0
+		template_data.max_stacks = max_stacks
+		template_data.last_stack = last_stack
+		template_data.current_stack = current_stack
+		template_data.final_time_spent = final_time_spent
+		template_data.default_max_stacks = max_stacks
 		local unit = template_context.unit
 		local side_system = Managers.state.extension:system("side_system")
 		local side = side_system.side_by_unit[unit]
@@ -802,6 +835,22 @@ templates.psyker_marked_enemies_passive = {
 			template_data.procced = false
 		end
 
+		template_data.current_stack = template_context.buff_extension:current_stacks(template_data.mark_bonus_buff)
+
+		if template_data.default_max_stacks <= template_data.current_stack and dt then
+			template_data.final_time_spent = template_data.final_time_spent + dt
+		end
+
+		if template_data.current_stack < template_data.max_stacks and template_data.current_stack < template_data.last_stack then
+			local rounded_time_value = math.floor(template_data.final_time_spent)
+
+			Managers.stats:record_private("hook_psyker_spent_max_unnatural_stack", template_context.player, rounded_time_value)
+
+			template_data.final_time_spent = 0
+		end
+
+		template_data.last_stack = template_data.current_stack
+
 		if template_data.attacked_unit and template_data.attacked_unit_t < t then
 			template_data.attacked_unit = nil
 		end
@@ -860,24 +909,25 @@ templates.psyker_marked_enemies_passive = {
 			end
 
 			if template_data.current_target and (params.attacked_unit == template_data.current_target or params.attacking_unit == template_data.current_target) then
-				template_data.last_encountered = 5
+				template_data.last_encountered = t
 			end
 		end,
 		on_damage_taken = function (params, template_data, template_context, t)
 			if template_data.current_target and (params.attacked_unit == template_data.current_target or params.attacking_unit == template_data.current_target) then
-				template_data.last_encountered = 5
+				template_data.last_encountered = t
 			end
 		end
 	}
 }
 templates.psyker_marked_enemies_passive_bonus_stacking = {
 	hud_priority = 1,
+	hud_icon = "content/ui/textures/icons/buffs/hud/psyker/psyker_keystone_unnatural_talent",
 	predicted = false,
 	refresh_duration_on_stack = true,
-	hud_icon = "content/ui/textures/icons/buffs/hud/psyker/psyker_keystone_unnatural_talent",
+	refresh_duration_on_remove_stack = true,
 	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_keystone",
 	max_stacks = 15,
-	duration = 15,
+	duration = 4,
 	class_name = "buff",
 	stat_buffs = {
 		[stat_buffs.damage] = 0.01,
@@ -886,9 +936,9 @@ templates.psyker_marked_enemies_passive_bonus_stacking = {
 	}
 }
 templates.psyker_marked_enemies_passive_bonus_stacking_increased_stacks = table.clone(templates.psyker_marked_enemies_passive_bonus_stacking)
-templates.psyker_marked_enemies_passive_bonus_stacking_increased_stacks.max_stacks = 30
+templates.psyker_marked_enemies_passive_bonus_stacking_increased_stacks.max_stacks = 25
 templates.psyker_marked_enemies_passive_bonus_stacking_increased_duration = table.clone(templates.psyker_marked_enemies_passive_bonus_stacking)
-templates.psyker_marked_enemies_passive_bonus_stacking_increased_duration.duration = 30
+templates.psyker_marked_enemies_passive_bonus_stacking_increased_duration.duration = 10
 templates.psyker_marked_enemies_passive_bonus = {
 	refresh_duration_on_stack = true,
 	predicted = false,
@@ -962,6 +1012,8 @@ templates.psyker_overcharge_stance = {
 		template_data.negative_value = 0
 		template_data.stacks = 0
 		template_data.bonus_stacks = 0
+
+		_overcharge_stance_penance_start(template_data, template_context)
 	end,
 	update_func = function (template_data, template_context, dt, t)
 		local start_t = template_data.start_t
@@ -1015,6 +1067,7 @@ templates.psyker_overcharge_stance = {
 		end
 
 		template_context.buff_extension:add_internally_controlled_buff_with_stacks(buff_name, stacks, t)
+		_overcharge_stance_penance_stop(template_data, template_context)
 	end,
 	visual_stack_count = function (template_data, template_context)
 		return math.min(overcharge_max_stacks, template_data.stacks + template_data.bonus_stacks)
@@ -1148,29 +1201,105 @@ templates.psyker_overcharge_weakspot_kill_bonuses_buff = {
 	end
 }
 templates.psyker_aura_damage_vs_elites = {
-	predicted = false,
-	coherency_priority = 2,
 	coherency_id = "psyker_bionmancer_coherency_aura",
+	predicted = false,
+	hud_priority = 5,
+	coherency_priority = 2,
+	hud_icon = "content/ui/textures/icons/buffs/hud/psyker/psyker_aura_kinetic_presence",
+	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_ability",
 	class_name = "buff",
+	buff_category = buff_categories.aura,
 	max_stacks = talent_settings_2.coherency.max_stacks,
 	stat_buffs = {
 		[stat_buffs.damage_vs_elites] = talent_settings_2.coherency.damage_vs_elites
-	}
+	},
+	start_func = _penance_start_func("psyker_elite_kills_aura_tracking_buff")
+}
+templates.psyker_elite_kills_aura_tracking_buff = {
+	unique_buff_id = "psyker_elite_kills_aura_tracking_buff",
+	predicted = false,
+	class_name = "proc_buff",
+	proc_events = {
+		[proc_events.on_kill] = 1
+	},
+	check_proc_func = CheckProcFunctions.on_elite_or_special_minion_death,
+	start_func = function (template_data, template_context)
+		local unit = template_context.unit
+		template_data.coherency_extension = ScriptUnit.extension(unit, "coherency_system")
+		template_data.parent_buff_name = "psyker_aura_damage_vs_elites"
+		template_data.hook_name = "hook_psyker_team_elite_aura_kills"
+		template_data.last_num_in_coherency = 0
+		template_data.valid_buff_owners = {}
+	end,
+	proc_func = function (params, template_data, template_context)
+		if not template_context.is_server then
+			return
+		end
+
+		local unit = template_context.unit
+
+		if unit ~= params.attacking_unit then
+			return
+		end
+
+		template_data.last_num_in_coherency, template_data.valid_buff_owners = template_data.coherency_extension:evaluate_and_send_achievement_data(template_data.last_num_in_coherency, template_data.valid_buff_owners, template_data.parent_buff_name, template_data.hook_name)
+	end
 }
 templates.psyker_aura_crit_chance_aura = {
-	predicted = false,
-	coherency_priority = 2,
 	coherency_id = "psyker_coherency_aura",
+	predicted = false,
+	hud_priority = 5,
+	coherency_priority = 2,
+	hud_icon = "content/ui/textures/icons/buffs/hud/psyker/psyker_aura_gunslinger_aura",
+	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_ability",
 	max_stacks = 1,
 	class_name = "buff",
+	buff_category = buff_categories.aura,
 	stat_buffs = {
 		[stat_buffs.critical_strike_chance] = 0.05
-	}
+	},
+	start_func = _penance_start_func("psyker_crit_hits_aura_tracking_buff")
+}
+templates.psyker_crit_hits_aura_tracking_buff = {
+	buff_id = "psyker_crit_hits_aura_tracking_buff",
+	predicted = false,
+	class_name = "proc_buff",
+	proc_events = {
+		[proc_events.on_hit] = 1
+	},
+	start_func = function (template_data, template_context)
+		local unit = template_context.unit
+		template_data.coherency_extension = ScriptUnit.extension(unit, "coherency_system")
+		template_data.last_num_in_coherency = 0
+		template_data.valid_buff_owners = {}
+	end,
+	proc_func = function (params, template_data, template_context)
+		if not template_context.is_server then
+			return
+		end
+
+		if not params.is_critical_strike then
+			return
+		end
+
+		local unit = template_context.unit
+
+		if unit ~= params.attacking_unit then
+			return
+		end
+
+		local hook_name = "hook_psyker_team_critical_hits_aura"
+		local parent_buff_name = "psyker_aura_crit_chance_aura"
+		template_data.last_num_in_coherency, template_data.valid_buff_owners = template_data.coherency_extension:evaluate_and_send_achievement_data(template_data.last_num_in_coherency, template_data.valid_buff_owners, parent_buff_name, hook_name)
+	end
 }
 templates.psyker_aura_crit_chance_aura_improved = {
-	predicted = false,
-	coherency_priority = 1,
 	coherency_id = "psyker_coherency_aura",
+	predicted = false,
+	hud_priority = 5,
+	coherency_priority = 1,
+	hud_icon = "content/ui/textures/icons/buffs/hud/psyker/psyker_aura_gunslinger_aura",
+	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_ability",
 	max_stacks = 1,
 	class_name = "buff",
 	stat_buffs = {
@@ -1766,6 +1895,82 @@ templates.psyker_increased_chain_lightning_size = {
 		[stat_buffs.chain_lightning_max_angle] = talent_settings_3.offensive_1.chain_lightning_max_angle
 	}
 }
+templates.psyker_kills_during_smite_tracking = {
+	predicted = false,
+	class_name = "proc_buff",
+	proc_events = {
+		[proc_events.on_chain_lightning_jump] = 1,
+		[proc_events.on_chain_lightning_finish] = 1,
+		[proc_events.on_minion_death] = 1
+	},
+	specific_proc_func = {
+		on_chain_lightning_jump = function (params, template_data, template_context)
+			if not template_context.is_server then
+				return
+			end
+
+			if ALIVE[params.attacked_unit] then
+				local is_level_unit, unit_id_or_index = Managers.state.unit_spawner:game_object_id_or_level_index(params.attacked_unit)
+
+				if not unit_id_or_index then
+					return
+				end
+
+				if is_level_unit then
+					template_data.afflicted_unit_level_index[unit_id_or_index] = true
+				elseif not is_level_unit then
+					template_data.afflicted_units_object_id[unit_id_or_index] = true
+				end
+			end
+		end,
+		on_chain_lightning_finish = function (params, template_data, template_context)
+			if not template_context.is_server then
+				return
+			end
+
+			local hook_name = "hook_chain_lightning_ability"
+			local parent_buff_name = "psyker_grenade_chain_lightning"
+
+			if template_data.afflicted_units_killed >= 1 then
+				template_data.last_num_in_coherency, template_data.valid_buff_owners = template_data.coherency_extension:evaluate_and_send_achievement_data(template_data.last_num_in_coherency, template_data.valid_buff_owners, parent_buff_name, hook_name, template_data.afflicted_units_killed)
+				template_data.afflicted_units_killed = 0
+			end
+
+			table.clear(template_data.afflicted_unit_level_index)
+			table.clear(template_data.afflicted_units_object_id)
+		end,
+		on_minion_death = function (params, template_data, template_context)
+			if not template_context.is_server then
+				return
+			end
+
+			local killed_unit_id_or_index = params.dying_unit_id_or_level_index.unit_id
+
+			if not killed_unit_id_or_index then
+				return
+			end
+
+			local is_level_unit = params.dying_unit_id_or_level_index.is_level_unit
+
+			if is_level_unit and template_data.afflicted_unit_level_index[killed_unit_id_or_index] then
+				template_data.afflicted_units_killed = template_data.afflicted_units_killed + 1
+			elseif not is_level_unit and template_data.afflicted_units_object_id[killed_unit_id_or_index] then
+				template_data.afflicted_units_killed = template_data.afflicted_units_killed + 1
+			end
+		end
+	},
+	start_func = function (template_data, template_context)
+		local unit = template_context.unit
+		template_data.afflicted_units_object_id = {}
+		template_data.afflicted_unit_level_index = {}
+		template_data.afflicted_units_killed = 0
+		template_data.last_num_in_coherency = 0
+		template_data.valid_buff_owners = {}
+		template_data.talent_extension = ScriptUnit.extension(unit, "talent_system")
+		template_data.buff_extension = ScriptUnit.has_extension(unit, "buff_system")
+		template_data.coherency_extension = ScriptUnit.extension(unit, "coherency_system")
+	end
+}
 local empowered_chain_lightning_chance = talent_settings_3.passive_1.empowered_chain_lightning_chance
 local max_stack = talent_settings_3.passive_1.max_stacks
 local max_stack_talent = talent_settings_3.offensive_2.max_stacks_talent
@@ -1914,6 +2119,7 @@ templates.psyker_empowered_grenades_passive_visual_buff = {
 	always_show_in_hud = true,
 	proc_events = {
 		[proc_events.on_shoot_projectile] = 1,
+		[proc_events.on_kill] = 1,
 		[proc_events.on_action_damage_target] = 1,
 		[proc_events.on_chain_lightning_start] = 1,
 		[proc_events.on_chain_lightning_finish] = 1
@@ -1977,6 +2183,11 @@ templates.psyker_empowered_grenades_passive_visual_buff = {
 			if template_data.can_finish then
 				template_data.finish = true
 				template_data.can_finish = false
+			end
+		end,
+		on_kill = function (params, template_data, template_context)
+			if params.damage_type == "smite" or params.damage_type == "throwing_knife" or params.damage_type == "electrocution" then
+				Managers.stats:record_private("hook_psyker_empowered_ability", template_context.player, params)
 			end
 		end
 	},
@@ -2156,26 +2367,90 @@ templates.psyker_toughness_regen_at_shield = {
 	end
 }
 templates.psyker_aura_ability_cooldown = {
-	predicted = false,
-	coherency_priority = 2,
 	coherency_id = "psyker_protectorate_coherency_aura",
+	predicted = false,
+	hud_priority = 5,
+	coherency_priority = 2,
+	hud_icon = "content/ui/textures/icons/buffs/hud/psyker/psyker_aura_cooldown_regen",
+	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_ability",
 	class_name = "buff",
+	buff_category = buff_categories.aura,
 	max_stacks = talent_settings_3.coherency.max_stacks,
 	keywords = {},
 	stat_buffs = {
 		[stat_buffs.ability_cooldown_modifier] = talent_settings_3.coherency.ability_cooldown_modifier
-	}
+	},
+	start_func = _penance_start_func("psyker_cooldown_reduction_aura_tracking_buff")
+}
+templates.psyker_cooldown_reduction_aura_tracking_buff = {
+	unique_buff_id = "psyker_cooldown_reduction_aura_tracking_buff",
+	predicted = false,
+	class_name = "proc_buff",
+	proc_events = {
+		[proc_events.on_combat_ability] = 1
+	},
+	start_func = function (template_data, template_context)
+		local unit = template_context.unit
+		template_data.coherency_extension = ScriptUnit.extension(unit, "coherency_system")
+		template_data.ability_extension = ScriptUnit.extension(unit, "ability_system")
+		template_data.last_num_in_coherency = 0
+		template_data.valid_buff_owners = {}
+	end,
+	proc_func = function (params, template_data, template_context)
+		if not template_context.is_server then
+			return
+		end
+
+		local modified_cooldown_time = template_data.ability_extension:get_current_ability_cooldown_time()
+		local default_cooldown_time = modified_cooldown_time / (talent_settings_3.coherency.ability_cooldown_modifier * -1 * 100 - 100) * 100 * -1
+		local saved_time = default_cooldown_time * talent_settings_3.coherency.ability_cooldown_modifier * -1
+		local hook_name = "hook_psyker_team_cooldown_recovery_aura"
+		local parent_buff_name = "psyker_aura_ability_cooldown"
+		template_data.last_num_in_coherency, template_data.valid_buff_owners = template_data.coherency_extension:evaluate_and_send_achievement_data(template_data.last_num_in_coherency, template_data.valid_buff_owners, parent_buff_name, hook_name, saved_time)
+	end
 }
 templates.psyker_aura_ability_cooldown_improved = {
-	predicted = false,
-	coherency_priority = 1,
 	coherency_id = "psyker_protectorate_coherency_aura_improved",
+	predicted = false,
+	hud_priority = 5,
+	coherency_priority = 1,
+	hud_icon = "content/ui/textures/icons/buffs/hud/psyker/psyker_aura_seers_presence",
+	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_ability",
 	class_name = "buff",
+	buff_category = buff_categories.aura,
 	max_stacks = talent_settings_3.coop_2.max_stacks,
 	keywords = {},
 	stat_buffs = {
 		[stat_buffs.ability_cooldown_modifier] = talent_settings_3.coherency.ability_cooldown_modifier_improved
-	}
+	},
+	start_func = _penance_start_func("psyker_improved_cooldown_reduction_aura_tracking_buff")
+}
+templates.psyker_improved_cooldown_reduction_aura_tracking_buff = {
+	unique_buff_id = "psyker_improved_cooldown_reduction_aura_tracking_buff",
+	predicted = false,
+	class_name = "proc_buff",
+	proc_events = {
+		[proc_events.on_combat_ability] = 1
+	},
+	start_func = function (template_data, template_context)
+		local unit = template_context.unit
+		template_data.coherency_extension = ScriptUnit.extension(unit, "coherency_system")
+		template_data.ability_extension = ScriptUnit.extension(unit, "ability_system")
+		template_data.last_num_in_coherency = 0
+		template_data.valid_buff_owners = {}
+	end,
+	proc_func = function (params, template_data, template_context)
+		if not template_context.is_server then
+			return
+		end
+
+		local modified_cooldown_time = template_data.ability_extension:get_current_ability_cooldown_time()
+		local default_cooldown_time = modified_cooldown_time / (talent_settings_3.coherency.ability_cooldown_modifier_improved * -1 * 100 - 100) * 100 * -1
+		local saved_time = default_cooldown_time * talent_settings_3.coherency.ability_cooldown_modifier_improved * -1
+		local hook_name = "hook_psyker_team_cooldown_recovery_aura"
+		local parent_buff_name = "psyker_cooldown_aura_improved"
+		template_data.last_num_in_coherency, template_data.valid_buff_owners = template_data.coherency_extension:evaluate_and_send_achievement_data(template_data.last_num_in_coherency, template_data.valid_buff_owners, parent_buff_name, hook_name, saved_time)
+	end
 }
 templates.psyker_stun_effect = {
 	max_stacks = 1,

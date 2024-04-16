@@ -167,27 +167,6 @@ scenarios.ranged_grenade = {
 		TrainingGroundsSteps.dynamic.remove_unique_buff_safe("tg_player_unperceivable")
 	}
 }
-scenarios.protectorate_blitz = {
-	steps = {
-		TrainingGroundsSteps.dynamic.teleport_player("player_reset"),
-		TrainingGroundsSteps.dynamic.set_ability_enabled("grenade_ability", true, false),
-		TrainingGroundsSteps.dynamic.equip_item("slot_secondary", TrainingGroundsItemNames.unarmed_training_grounds),
-		TrainingGroundsSteps.dynamic.equip_item("slot_primary", TrainingGroundsItemNames.unarmed_training_grounds),
-		TrainingGroundsSteps.dynamic.add_unique_buff("tg_player_unperceivable"),
-		TrainingGroundsSteps.dynamic.scenario_data_set("grenade_objective", "protectorate_blitz"),
-		TrainingGroundsSteps.psyker_protectorate_blitz_prompt,
-		TrainingGroundsSteps.stun_enemies_grenade_loop,
-		TrainingGroundsSteps.dynamic.delay(post_scenario_complete_ui_remove_delay),
-		TrainingGroundsSteps.hide_prompt,
-		TrainingGroundsSteps.dynamic.delay(post_ui_removed_transition_start_delay),
-		TrainingGroundsSteps.dynamic.swap_scenario("training_grounds", "combat_ability")
-	},
-	cleanup = {
-		TrainingGroundsSteps.cleanup_ragdolls,
-		TrainingGroundsSteps.hide_prompt,
-		TrainingGroundsSteps.dynamic.remove_unique_buff_safe("tg_player_unperceivable")
-	}
-}
 scenarios.biomancer_blitz = {
 	steps = {
 		TrainingGroundsSteps.dynamic.teleport_player("player_reset"),
@@ -253,7 +232,6 @@ scenarios.combat_ability = {
 	},
 	cleanup = {
 		TrainingGroundsSteps.generic_dissolve_scenario_enemies,
-		TrainingGroundsSteps.combat_ability_psyker_protectorate_cleanup,
 		TrainingGroundsSteps.cleanup_ragdolls,
 		TrainingGroundsSteps.hide_prompt,
 		TrainingGroundsSteps.dynamic.remove_unique_buff_safe("tg_player_unperceivable"),

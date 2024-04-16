@@ -27,6 +27,14 @@ Commendations.create_update = function (self, account_id, stat_updates, complete
 	}
 end
 
+Commendations.init_commendation_score = function (self, account_id)
+	local path = BackendUtilities.url_builder():path("/data/" .. account_id .. "/account/commendations/score"):to_string()
+
+	return Managers.backend:title_request(path, {
+		method = "POST"
+	})
+end
+
 Commendations.bulk_update_commendations = function (self, commendation_update)
 	if DevParameters.disable_achievement_backend_update then
 		return Promise.resolved(nil)

@@ -13,7 +13,6 @@ RemoteCreateSessionState.update = function (self, dt)
 
 		shared_state.added_to_game_session = true
 
-		Log.info("LoadingRemoteStateMachine", "[RemoteCreateSessionState][sending rpc_group_loaded] channel_id(%d), spawn_group(%d), peer_id(%s)", shared_state.client_channel_id, shared_state.spawn_group, shared_state.client_peer_id)
 		RPC.rpc_group_loaded(shared_state.client_channel_id, shared_state.spawn_group)
 		Managers.event:trigger("spawn_group_loaded")
 

@@ -1,5 +1,5 @@
 local pickup_data = {
-	description = "loc_pickup_pocketable_syringe_01",
+	description = "loc_pickup_breaching_charge",
 	name = "breach_charge_pocketable",
 	look_at_tag = "pocketable",
 	smart_tag_target_type = "pickup",

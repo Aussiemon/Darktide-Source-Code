@@ -74,7 +74,8 @@ local template = {
 				spawn_types = {
 					"hordes",
 					"roamers",
-					"trickle_hordes"
+					"trickle_hordes",
+					"monsters"
 				}
 			}
 		},
@@ -534,13 +535,13 @@ local template = {
 			},
 			{
 				"spawn_by_points",
-				spawner_group = "spawner_fuel_depot_center",
+				spawner_group = "spawner_fuel_depot_left",
 				limit_spawners = 3,
-				points = 5,
+				points = 10,
 				breed_tags = {
 					{
 						"roamer",
-						"melee"
+						"far"
 					}
 				}
 			},
@@ -550,7 +551,7 @@ local template = {
 			},
 			{
 				"spawn_by_points",
-				spawner_group = "spawner_fuel_depot_center",
+				spawner_group = "spawner_fuel_depot_right",
 				limit_spawners = 3,
 				points = 5,
 				breed_tags = {
@@ -559,6 +560,37 @@ local template = {
 						"melee"
 					}
 				}
+			},
+			{
+				"try_inject_special_minion",
+				spawner_group = "spawner_fuel_depot_center",
+				max_breed_amount = 1,
+				points = 12,
+				breed_tags = {
+					{
+						"special"
+					}
+				}
+			},
+			{
+				"delay",
+				duration = 3
+			},
+			{
+				"spawn_by_points",
+				spawner_group = "spawner_fuel_depot_back",
+				limit_spawners = 3,
+				points = 10,
+				breed_tags = {
+					{
+						"roamer",
+						"far"
+					}
+				}
+			},
+			{
+				"delay",
+				duration = 4
 			},
 			{
 				"start_terror_trickle",
@@ -606,24 +638,13 @@ local template = {
 		event_hack_fuel_depot_b = {
 			{
 				"spawn_by_points",
-				spawner_group = "spawner_fuel_depot_left",
+				spawner_group = "spawner_fuel_depot_right",
 				limit_spawners = 3,
 				points = 12,
 				breed_tags = {
 					{
-						"close",
+						"far",
 						"roamer"
-					}
-				}
-			},
-			{
-				"try_inject_special_minion",
-				max_breed_amount = 1,
-				points = 12,
-				breed_tags = {
-					{
-						"special",
-						"disabler"
 					}
 				}
 			},
@@ -648,7 +669,7 @@ local template = {
 			{
 				"spawn_by_points",
 				sound_event_name = "wwise/events/minions/play_terror_event_alarm",
-				spawner_group = "spawner_fuel_depot_left",
+				spawner_group = "spawner_fuel_depot_center",
 				limit_spawners = 3,
 				points = 14,
 				breed_tags = {
@@ -659,8 +680,23 @@ local template = {
 				}
 			},
 			{
+				"try_inject_special_minion",
+				spawner_group = "spawner_fuel_depot_right",
+				max_breed_amount = 1,
+				points = 12,
+				breed_tags = {
+					{
+						"special"
+					}
+				}
+			},
+			{
+				"delay",
+				duration = 4
+			},
+			{
 				"spawn_by_points",
-				spawner_group = "spawner_fuel_depot_left",
+				spawner_group = "spawner_fuel_depot_back",
 				limit_spawners = 3,
 				points = 8,
 				breed_tags = {
@@ -689,7 +725,7 @@ local template = {
 		event_hack_fuel_depot_c = {
 			{
 				"spawn_by_points",
-				spawner_group = "spawner_fuel_depot_right",
+				spawner_group = "spawner_fuel_depot_center",
 				limit_spawners = 3,
 				points = 18,
 				breed_tags = {
@@ -736,7 +772,23 @@ local template = {
 			},
 			{
 				"spawn_by_points",
-				spawner_group = "spawner_fuel_depot_right",
+				spawner_group = "spawner_fuel_depot_back",
+				limit_spawners = 3,
+				points = 10,
+				breed_tags = {
+					{
+						"roamer",
+						"far"
+					}
+				}
+			},
+			{
+				"delay",
+				duration = 3
+			},
+			{
+				"spawn_by_points",
+				spawner_group = "spawner_fuel_depot_left",
 				limit_spawners = 3,
 				points = 5,
 				breed_tags = {
@@ -763,18 +815,13 @@ local template = {
 				}
 			},
 			{
-				"delay",
-				duration = 3
-			},
-			{
-				"spawn_by_points",
-				spawner_group = "spawner_fuel_depot_right",
-				limit_spawners = 3,
-				points = 5,
+				"try_inject_special_minion",
+				spawner_group = "spawner_fuel_depot_center",
+				max_breed_amount = 1,
+				points = 12,
 				breed_tags = {
 					{
-						"melee",
-						"roamer"
+						"special"
 					}
 				}
 			},
@@ -813,13 +860,24 @@ local template = {
 			},
 			{
 				"spawn_by_points",
-				spawner_group = "spawner_fuel_depot_back",
+				spawner_group = "spawner_fuel_depot_right",
 				limit_spawners = 3,
 				points = 6,
 				breed_tags = {
 					{
 						"melee",
 						"elite"
+					}
+				}
+			},
+			{
+				"try_inject_special_minion",
+				spawner_group = "spawner_fuel_depot_center",
+				max_breed_amount = 1,
+				points = 12,
+				breed_tags = {
+					{
+						"special"
 					}
 				}
 			},
@@ -840,7 +898,7 @@ local template = {
 			{
 				"spawn_by_points",
 				sound_event_name = "wwise/events/minions/play_terror_event_alarm",
-				spawner_group = "spawner_fuel_depot_back",
+				spawner_group = "spawner_fuel_depot_left",
 				limit_spawners = 3,
 				points = 18,
 				breed_tags = {
@@ -856,7 +914,23 @@ local template = {
 			},
 			{
 				"spawn_by_points",
-				spawner_group = "spawner_fuel_depot_back",
+				spawner_group = "spawner_fuel_depot_right",
+				limit_spawners = 3,
+				points = 10,
+				breed_tags = {
+					{
+						"roamer",
+						"far"
+					}
+				}
+			},
+			{
+				"delay",
+				duration = 3
+			},
+			{
+				"spawn_by_points",
+				spawner_group = "spawner_fuel_depot_center",
 				limit_spawners = 3,
 				points = 5,
 				breed_tags = {
@@ -872,29 +946,13 @@ local template = {
 			},
 			{
 				"spawn_by_points",
-				spawner_group = "spawner_fuel_depot_back",
+				spawner_group = "spawner_fuel_depot_left",
 				limit_spawners = 3,
-				points = 5,
+				points = 10,
 				breed_tags = {
 					{
-						"melee",
-						"roamer"
-					}
-				}
-			},
-			{
-				"delay",
-				duration = 3
-			},
-			{
-				"spawn_by_points",
-				spawner_group = "spawner_fuel_depot_back",
-				limit_spawners = 3,
-				points = 5,
-				breed_tags = {
-					{
-						"melee",
-						"roamer"
+						"roamer",
+						"far"
 					}
 				}
 			},

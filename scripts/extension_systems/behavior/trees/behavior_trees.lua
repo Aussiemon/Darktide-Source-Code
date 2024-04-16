@@ -24,6 +24,7 @@ _create_behavior_tree_entry("scripts/extension_systems/behavior/trees/chaos/chao
 _create_behavior_tree_entry("scripts/extension_systems/behavior/trees/cultist/cultist_assault_behavior_tree")
 _create_behavior_tree_entry("scripts/extension_systems/behavior/trees/cultist/cultist_berzerker_behavior_tree")
 _create_behavior_tree_entry("scripts/extension_systems/behavior/trees/cultist/cultist_flamer_behavior_tree")
+_create_behavior_tree_entry("scripts/extension_systems/behavior/trees/cultist/cultist_grenadier_behavior_tree")
 _create_behavior_tree_entry("scripts/extension_systems/behavior/trees/cultist/cultist_gunner_behavior_tree")
 _create_behavior_tree_entry("scripts/extension_systems/behavior/trees/cultist/cultist_melee_behavior_tree")
 _create_behavior_tree_entry("scripts/extension_systems/behavior/trees/cultist/cultist_mutant_behavior_tree")

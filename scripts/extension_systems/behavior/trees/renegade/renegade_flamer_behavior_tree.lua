@@ -14,7 +14,7 @@ local MELEE_COMBAT = {
 local COMBAT = {
 	"BtSequenceNode",
 	{
-		"BtCultistFlamerApproachAction",
+		"BtFlamerApproachAction",
 		name = "follow",
 		action_data = action_data.follow
 	},
@@ -76,12 +76,6 @@ local behavior_tree = {
 	},
 	MELEE_COMBAT,
 	COMBAT,
-	{
-		"BtRenegadeFlamerPatrolAction",
-		name = "aggroed_patrol",
-		condition = "should_patrol",
-		action_data = action_data.aggroed_patrol
-	},
 	{
 		"BtIdleAction",
 		name = "idle",

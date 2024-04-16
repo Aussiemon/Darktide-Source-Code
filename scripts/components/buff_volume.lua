@@ -17,27 +17,36 @@ BuffVolume.init = function (self, unit, is_server, nav_world)
 	local leaving_buff_template_name = self:get_data(unit, "leaving_buff_template_name")
 
 	if leaving_buff_template_name ~= "default" then
-		self._leaving_buff_template_name = leaving_buff_template_name
+		run_update = true
+	end
+
+	local heroes_buff_template_name = self:get_data(unit, "heroes_buff_template_name")
+
+	if heroes_buff_template_name ~= "default" then
+		self._heroes_buff_template_name = heroes_buff_template_name
+		run_update = true
+	end
+
+	local villains_buff_template_name = self:get_data(unit, "villains_buff_template_name")
+
+	if villains_buff_template_name ~= "default" then
+		self._villains_buff_template_name = villains_buff_template_name
 		run_update = true
 	end
 
 	self._inverse = self:get_data(unit, "inverse")
+	self._forbidden_keyword = self:get_data(unit, "forbidden_keyword")
 	self._buff_affected_units = {}
 	self._unit = unit
 	local extension_manager = Managers.state.extension
 	local broadphase_system = extension_manager:system("broadphase_system")
 	self._broadphase = broadphase_system.broadphase
+	local side_system = extension_manager:system("side_system")
 	local affected_side_name = self:get_data(unit, "affected_side_name")
 
 	if affected_side_name == "both" then
-		local side_system = extension_manager:system("side_system")
-		local side = side_system:get_side_from_name("heroes")
-		self._affected_side_names = side:relation_side_names("allied")
-		local side2 = side_system:get_side_from_name("villains")
-
-		table.append(self._affected_side_names, side2:relation_side_names("allied"))
+		self._affected_side_names = side_system:side_names()
 	else
-		local side_system = extension_manager:system("side_system")
 		local side = side_system:get_side_from_name(affected_side_name)
 		self._affected_side = side
 		self._affected_side_names = side:relation_side_names("allied")
@@ -137,11 +146,15 @@ BuffVolume._update_buffs = function (self, unit, dt, t, num_results)
 				local buff_extension = ScriptUnit.has_extension(affected_unit, "buff_system")
 
 				if buff_extension and not TEMP_ALREADY_CHECKED_UNITS[affected_unit] then
-					local local_index, component_index = self:_add_buff(affected_unit, t)
-					buff_affected_units[affected_unit] = {
-						local_index = local_index,
-						component_index = component_index
-					}
+					local forbidden_keyword = self._forbidden_keyword ~= "default" and self._forbidden_keyword
+
+					if not forbidden_keyword or not buff_extension:has_keyword(forbidden_keyword) then
+						local local_index, component_index = self:_add_buff(affected_unit, t)
+						buff_affected_units[affected_unit] = {
+							local_index = local_index,
+							component_index = component_index
+						}
+					end
 				end
 
 				TEMP_ALREADY_CHECKED_UNITS[affected_unit] = true
@@ -204,7 +217,16 @@ end
 
 BuffVolume._add_buff = function (self, unit, t)
 	local buff_extension = ScriptUnit.extension(unit, "buff_system")
+	local side_extension = ScriptUnit.extension(unit, "side_system")
+	local side_name = side_extension.side:name()
 	local buff_template_name = self._buff_template_name
+
+	if self._villains_buff_template_name and side_name == "villains" then
+		buff_template_name = self._villains_buff_template_name
+	elseif self._heroes_buff_template_name and side_name == "heroes" then
+		buff_template_name = self._heroes_buff_template_name
+	end
+
 	local _, local_index, component_index = buff_extension:add_externally_controlled_buff(buff_template_name, t, "owner_unit", self._unit)
 
 	return local_index, component_index
@@ -368,6 +390,21 @@ BuffVolume.component_data = {
 		ui_type = "text_box",
 		value = "default",
 		ui_name = "Leaving Buff Name"
+	},
+	heroes_buff_template_name = {
+		ui_type = "text_box",
+		value = "default",
+		ui_name = "Heroes Buff Name"
+	},
+	villains_buff_template_name = {
+		ui_type = "text_box",
+		value = "default",
+		ui_name = "Villains Buff Name"
+	},
+	forbidden_keyword = {
+		ui_type = "text_box",
+		value = "default",
+		ui_name = "Forbidden Keyword"
 	},
 	affected_side_name = {
 		value = "heroes",

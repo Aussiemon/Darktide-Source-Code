@@ -26,6 +26,19 @@ local stat_buffs = BuffSettings.stat_buffs
 local special_rules = SpecialRulesSetting.special_rules
 local talent_settings_2 = TalentSettings.zealot_2
 local talent_settings_3 = TalentSettings.zealot_3
+
+local function _shroudfield_penance_start(template_data, template_context)
+	local player = template_context.player
+
+	Managers.stats:record_private("hook_shroudfield_start", player)
+end
+
+local function _shroudfield_penance_stop(template_data, template_context)
+	local player = template_context.player
+
+	Managers.stats:record_private("hook_shroudfield_stop", player)
+end
+
 local templates = {}
 
 table.make_unique(templates)
@@ -134,6 +147,8 @@ templates.zealot_quickness_passive = {
 		template_data.sprint_character_state_component = unit_data_extension:read_component("sprint_character_state")
 		template_data.movement_counter = 0
 		template_data.cooldown = 0
+		template_data.achievement_target = 15
+		template_data.achievement_target_reached = false
 	end,
 	specific_check_proc_funcs = {
 		[proc_events.on_hit] = function (params, template_data, template_context, t)
@@ -157,6 +172,12 @@ templates.zealot_quickness_passive = {
 	restore_child_update = function (template_data, template_context, dt, t)
 		local player_velocity = template_data.locomotion_component.velocity_current
 		local is_moving = Vector3.length(player_velocity) > 0
+
+		if template_data.achievement_target_reached and template_data.cooldown <= t + 1 then
+			Managers.stats:record_private("hook_zealot_movement_keystone_stop", template_context.player)
+
+			template_data.achievement_target_reached = false
+		end
 
 		if not is_moving then
 			return 0
@@ -187,6 +208,12 @@ templates.zealot_quickness_passive = {
 		end
 
 		template_data.cooldown = t + 8
+
+		if not template_data.achievement_target_reached and template_data.achievement_target <= num_child_stacks_removed then
+			Managers.stats:record_private("hook_zealot_movement_keystone_start", template_context.player, num_child_stacks_removed, template_data.achievement_target)
+
+			template_data.achievement_target_reached = true
+		end
 	end
 }
 templates.zealot_quickness_counter = {
@@ -202,7 +229,7 @@ templates.zealot_quickness_active = {
 	hud_priority = 4,
 	hud_icon = "content/ui/textures/icons/buffs/hud/zealot/zealot_keystone_quickness",
 	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_keystone",
-	duration = 8,
+	duration = 6,
 	class_name = "buff",
 	max_stacks = quickness_max_stacks,
 	max_stacks_cap = quickness_max_stacks,
@@ -683,6 +710,7 @@ function _fanatic_rage_add_stack(template_data, template_context)
 			Toughness.replenish_percentage(template_context.unit, toughness_amount, false, "fanatic_rage")
 		end
 
+		Managers.stats:record_private("hook_zealot_fanatic_rage_start", template_context.player)
 		template_data.buff_extension:add_internally_controlled_buff("zealot_fanatic_rage_buff", t)
 	end
 
@@ -731,6 +759,8 @@ templates.zealot_fanatic_rage_buff = {
 			return
 		end
 
+		Managers.stats:record_private("hook_zealot_fanatic_rage_stop", template_context.player)
+
 		template_data.talent_resource_component.current_resource = 0
 	end,
 	conditional_stat_buffs_func = function (template_data, template_context)
@@ -753,14 +783,21 @@ templates.zealot_preacher_damage_vs_disgusting = {
 }
 local corruption_heal_amount = talent_settings_3.coherency.corruption_heal_amount
 templates.zealot_preacher_coherency_corruption_healing = {
-	coherency_priority = 2,
 	coherency_id = "zealot_preacher_coherency_corruption_healing",
 	predicted = false,
+	hud_priority = 5,
+	coherency_priority = 2,
+	hud_icon = "content/ui/textures/icons/buffs/hud/zealot/zealot_aura_cleansing_prayer",
+	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_ability",
 	class_name = "interval_buff",
+	buff_category = buff_categories.aura,
 	interval = talent_settings_3.coherency.interval,
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
 		template_data.health_extension = ScriptUnit.extension(unit, "health_system")
+		template_data.coherency_extension = ScriptUnit.extension(unit, "coherency_system")
+		template_data.last_num_in_coherency = 0
+		template_data.valid_buff_owners = {}
 	end,
 	interval_func = function (template_data, template_context, template)
 		if not template_context.is_server then
@@ -768,18 +805,33 @@ templates.zealot_preacher_coherency_corruption_healing = {
 		end
 
 		template_data.health_extension:reduce_permanent_damage(corruption_heal_amount)
+
+		local permanent_damage_taken = template_data.health_extension:permanent_damage_taken()
+
+		if permanent_damage_taken ~= 0 then
+			local hook_name = "hook_zealot_corruption_healed_aura"
+			local parent_buff_name = "zealot_corruption_healing_coherency"
+			template_data.last_num_in_coherency, template_data.valid_buff_owners = template_data.coherency_extension:evaluate_and_send_achievement_data(template_data.last_num_in_coherency, template_data.valid_buff_owners, parent_buff_name, hook_name, corruption_heal_amount)
+		end
 	end
 }
 local corruption_heal_amount_increased = talent_settings_3.coop_2.corruption_heal_amount_increased
 templates.zealot_preacher_coherency_corruption_healing_improved = {
-	coherency_priority = 1,
 	coherency_id = "zealot_preacher_coherency_corruption_healing",
 	predicted = false,
+	hud_priority = 5,
+	coherency_priority = 1,
+	hud_icon = "content/ui/textures/icons/buffs/hud/zealot/zealot_aura_cleansing_prayer",
+	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_ability",
 	class_name = "interval_buff",
+	buff_category = buff_categories.aura,
 	interval = talent_settings_3.coop_2.interval,
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
 		template_data.health_extension = ScriptUnit.extension(unit, "health_system")
+		template_data.coherency_extension = ScriptUnit.extension(unit, "coherency_system")
+		template_data.last_num_in_coherency = 0
+		template_data.valid_buff_owners = {}
 	end,
 	interval_func = function (template_data, template_context, template)
 		if not template_context.is_server then
@@ -787,6 +839,14 @@ templates.zealot_preacher_coherency_corruption_healing_improved = {
 		end
 
 		template_data.health_extension:reduce_permanent_damage(corruption_heal_amount_increased)
+
+		local permanent_damage_taken = template_data.health_extension:permanent_damage_taken()
+
+		if permanent_damage_taken ~= 0 then
+			local hook_name = "hook_zealot_corruption_healed_aura"
+			local parent_buff_name = "zealot_corruption_healing_coherency_improved"
+			template_data.last_num_in_coherency, template_data.valid_buff_owners = template_data.coherency_extension:evaluate_and_send_achievement_data(template_data.last_num_in_coherency, template_data.valid_buff_owners, parent_buff_name, hook_name, corruption_heal_amount_increased)
+		end
 	end
 }
 templates.zealot_preacher_reduce_corruption_damage = {
@@ -1001,6 +1061,46 @@ templates.zealot_increased_melee_attack_speed = {
 	stat_buffs = {
 		[stat_buffs.melee_attack_speed] = talent_settings_2.passive_3.melee_attack_speed
 	}
+}
+templates.zealot_flame_grenade_thrown = {
+	predicted = false,
+	class_name = "proc_buff",
+	proc_events = {
+		[proc_events.on_grenade_thrown] = 1
+	},
+	proc_func = function (params, template_data, template_context)
+		local unit = template_context.unit
+		local t = FixedFrame.get_latest_fixed_time()
+		local buff_extension = ScriptUnit.extension(unit, "buff_system")
+		local buff_name = "zealot_enemies_engulfed_by_flames"
+
+		buff_extension:add_internally_controlled_buff(buff_name, t, "owner_unit", template_context.unit)
+	end
+}
+templates.zealot_enemies_engulfed_by_flames = {
+	predicted = false,
+	duration = 10,
+	class_name = "proc_buff",
+	proc_events = {
+		[proc_events.on_damage_dealt] = 1
+	},
+	proc_func = function (params, template_data, template_context)
+		if not params.damage_profile_name == "liquid_area_fire_burning" then
+			return
+		end
+
+		if not template_data._list_of_engulfed_enemies[params.attacked_unit] then
+			template_data.engulfed_enemies = template_data.engulfed_enemies + 1
+			template_data._list_of_engulfed_enemies[params.attacked_unit] = true
+		end
+	end,
+	start_func = function (template_data, template_context)
+		template_data._list_of_engulfed_enemies = {}
+		template_data.engulfed_enemies = 0
+	end,
+	stop_func = function (template_data, template_context)
+		Managers.stats:record_private("hook_zealot_engulfed_enemies", template_context.player, template_data.engulfed_enemies)
+	end
 }
 templates.zealot_increased_toughness_recovery_from_kills = {
 	predicted = false,
@@ -1253,25 +1353,134 @@ templates.zealot_martyrdom_attack_speed = {
 		return math.clamp01(missing_segments / martyrdom_max_stacks)
 	end
 }
-templates.zealot_coherency_toughness_damage_resistance = {
+templates.zealot_backstab_kills_while_loner_aura_tracking_buff = {
 	predicted = false,
-	coherency_priority = 2,
+	class_name = "proc_buff",
+	proc_events = {
+		[proc_events.on_kill] = 1
+	},
+	start_func = function (template_data, template_context)
+		local unit = template_context.unit
+		template_data.coherency_extension = ScriptUnit.extension(unit, "coherency_system")
+	end,
+	check_proc_func = CheckProcFunctions.on_ranged_enemy_killed,
+	proc_func = function (params, template_data, template_context)
+		if not template_context.is_server then
+			return
+		end
+
+		local is_backstab = params.is_backstab
+
+		if not is_backstab then
+			return
+		end
+
+		local unit = template_context.unit
+
+		if unit ~= params.attacking_unit then
+			return
+		end
+
+		local player = template_context.player
+
+		Managers.stats:record_private("hook_zealot_loner_aura", player)
+	end
+}
+templates.zealot_coherency_toughness_damage_resistance = {
 	coherency_id = "zelot_maniac_coherency_aura",
+	predicted = false,
+	hud_priority = 5,
+	coherency_priority = 2,
+	hud_icon = "content/ui/textures/icons/buffs/hud/zealot/zealot_aura_the_emperor_will",
+	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_ability",
 	class_name = "buff",
+	buff_category = buff_categories.aura,
 	max_stacks = talent_settings_2.coherency.max_stacks,
 	stat_buffs = {
 		[stat_buffs.toughness_damage_taken_multiplier] = talent_settings_2.coherency.toughness_damage_taken_multiplier
 	}
 }
-templates.zealot_coherency_toughness_damage_resistance_improved = {
+templates.zealot_toughness_on_aura_tracking_buff = {
 	predicted = false,
-	coherency_priority = 1,
+	class_name = "proc_buff",
+	proc_events = {
+		[proc_events.on_player_hit_received] = 1
+	},
+	start_func = function (template_data, template_context)
+		local unit = template_context.unit
+		template_data.coherency_extension = ScriptUnit.extension(unit, "coherency_system")
+		template_data.health_extension = ScriptUnit.extension(unit, "health_system")
+		template_data.last_num_in_coherency = 0
+		template_data.valid_buff_owners = {}
+		template_data.last_damage_recived = 0
+		template_data.damage_to_take = 0
+		template_data.damage_reduction = talent_settings_2.coherency.toughness_damage_taken_multiplier
+		template_data.toughness_damage_reduced_percentage = (template_data.damage_reduction - 1) * -1
+	end,
+	proc_func = function (params, template_data, template_context)
+		local unit = template_context.unit
+		local toughness_extension = ScriptUnit.has_extension(unit, "toughness_system")
+		local toughness_damage = toughness_extension:toughness_damage()
+		template_data.damage_to_take = toughness_damage - template_data.last_damage_recived
+		template_data.damage_to_take = template_data.damage_to_take * template_data.toughness_damage_reduced_percentage
+
+		if template_data.damage_to_take >= 0 then
+			local parent_buff_name = "zealot_toughness_damage_coherency"
+			local hook_name = "hook_toughness_reduced_aura"
+			template_data.last_num_in_coherency, template_data.valid_buff_owners = template_data.coherency_extension:evaluate_and_send_achievement_data(template_data.last_num_in_coherency, template_data.valid_buff_owners, parent_buff_name, hook_name, template_data.damage_to_take)
+			template_data.last_damage_recived = toughness_damage
+		else
+			template_data.last_damage_recived = 0
+		end
+	end
+}
+templates.zealot_coherency_toughness_damage_resistance_improved = {
 	coherency_id = "zelot_maniac_coherency_aura",
+	predicted = false,
+	hud_priority = 5,
+	coherency_priority = 1,
+	hud_icon = "content/ui/textures/icons/buffs/hud/zealot/zealot_aura_the_emperor_demand",
+	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_ability",
 	class_name = "buff",
+	buff_category = buff_categories.aura,
 	max_stacks = talent_settings_2.coop_2.max_stacks,
 	stat_buffs = {
 		[stat_buffs.toughness_damage_taken_multiplier] = talent_settings_2.coop_2.toughness_damage_taken_multiplier
 	}
+}
+templates.zealot_improved_toughness_on_aura_tracking_buff = {
+	predicted = false,
+	class_name = "proc_buff",
+	proc_events = {
+		[proc_events.on_player_hit_received] = 1
+	},
+	start_func = function (template_data, template_context)
+		local unit = template_context.unit
+		template_data.coherency_extension = ScriptUnit.extension(unit, "coherency_system")
+		template_data.health_extension = ScriptUnit.extension(unit, "health_system")
+		template_data.last_num_in_coherency = 0
+		template_data.valid_buff_owners = {}
+		template_data.last_damage_recived = 0
+		template_data.damage_to_take = 0
+		template_data.damage_reduction = talent_settings_2.coop_2.toughness_damage_taken_multiplier
+		template_data.toughness_damage_reduced_percentage = (template_data.damage_reduction - 1) * -1
+	end,
+	proc_func = function (params, template_data, template_context)
+		local unit = template_context.unit
+		local toughness_extension = ScriptUnit.has_extension(unit, "toughness_system")
+		local toughness_damage = toughness_extension:toughness_damage()
+		template_data.damage_to_take = toughness_damage - template_data.last_damage_recived
+		template_data.damage_to_take = template_data.damage_to_take * template_data.toughness_damage_reduced_percentage
+
+		if template_data.damage_to_take >= 0 then
+			local parent_buff_name = "zealot_toughness_damage_reduction_coherency_improved"
+			local hook_name = "hook_toughness_reduced_aura"
+			template_data.last_num_in_coherency, template_data.valid_buff_owners = template_data.coherency_extension:evaluate_and_send_achievement_data(template_data.last_num_in_coherency, template_data.valid_buff_owners, parent_buff_name, hook_name, template_data.damage_to_take)
+			template_data.last_damage_recived = toughness_damage
+		else
+			template_data.last_damage_recived = 0
+		end
+	end
 }
 templates.zealot_toughness_on_combat_ability = {
 	predicted = false,
@@ -1805,6 +2014,8 @@ templates.zealot_invisibility = {
 	start_func = function (template_data, template_context)
 		local t = FixedFrame.get_latest_fixed_time()
 		template_data.exit_grace = t + 0.5
+
+		_shroudfield_penance_start(template_data, template_context)
 	end,
 	stop_func = function (template_data, template_context)
 		local unit = template_context.unit
@@ -1816,6 +2027,8 @@ templates.zealot_invisibility = {
 
 			template_context.buff_extension:add_internally_controlled_buff("zealot_leaving_stealth_restores_toughness", t)
 		end
+
+		_shroudfield_penance_stop(template_data, template_context)
 	end
 }
 templates.zealot_invisibility_increased_duration = table.clone(templates.zealot_invisibility)

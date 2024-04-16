@@ -75,6 +75,20 @@ local conversations_hub_mourningstar_soldier_male_h = {
 			6.149563
 		},
 		randomize_indexes = {}
+	},
+	hub_idle_oath_01_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1.0] = "loc_mourningstar_soldier_male_h__hub_idle_oath_a_01"
+		},
+		sound_events_duration = {
+			[1.0] = 1.512625
+		},
+		sound_event_weights = {
+			[1.0] = 1
+		},
+		randomize_indexes = {}
 	}
 }
 

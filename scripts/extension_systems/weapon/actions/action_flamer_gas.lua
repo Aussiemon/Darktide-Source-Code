@@ -98,11 +98,11 @@ ActionFlamerGas.fixed_update = function (self, dt, t, time_in_action)
 	end
 end
 
-ActionFlamerGas._is_unit_blocking = function (self, unit, player_pos)
+ActionFlamerGas._is_unit_blocking = function (self, unit, player_pos, hit_zone_name_or_nil)
 	local shield_extension = ScriptUnit.has_extension(unit, "shield_system")
 
 	if shield_extension then
-		return shield_extension:can_block_from_position(player_pos)
+		return shield_extension:can_block_from_position(player_pos, hit_zone_name_or_nil)
 	end
 end
 
@@ -128,7 +128,7 @@ ActionFlamerGas._process_hit = function (self, hit, player_unit, player_pos, sid
 
 	local health_extension = ScriptUnit.has_extension(hit_unit, "health_system")
 	local buff_extension = ScriptUnit.has_extension(hit_unit, "buff_system")
-	local is_unit_blocking = self:_is_unit_blocking(hit_unit, player_pos)
+	local is_unit_blocking = self:_is_unit_blocking(hit_unit, player_pos, hit_zone_name_or_nil)
 
 	if is_unit_blocking or not health_extension and not buff_extension then
 		return true, hit_pos, hit_normal

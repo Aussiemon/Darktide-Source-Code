@@ -125,7 +125,7 @@ PlayerCharacterStateKnockedDown.on_exit = function (self, unit, t, next_state)
 
 	self:_exit_third_person_mode(t)
 
-	if next_state ~= "dead" and inventory_component.wielded_slot == "slot_unarmed" then
+	if next_state ~= nil and next_state ~= "dead" and inventory_component.wielded_slot == "slot_unarmed" then
 		PlayerUnitVisualLoadout.wield_previous_slot(inventory_component, unit, t)
 	end
 

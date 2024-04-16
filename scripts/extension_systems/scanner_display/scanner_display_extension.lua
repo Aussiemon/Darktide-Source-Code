@@ -50,6 +50,8 @@ ScannerDisplayExtension._open_view = function (self, ui_manager, device_owner_un
 		view_context.minigame_extension = nil
 	end
 
+	view_context.auspex_unit = self._unit
+
 	ui_manager:open_view(view_name, nil, nil, nil, nil, view_context)
 end
 

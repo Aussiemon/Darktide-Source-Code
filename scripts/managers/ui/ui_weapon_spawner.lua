@@ -230,7 +230,7 @@ UIWeaponSpawner._spawn_weapon = function (self, item, link_unit_name, loader, po
 	self._weapon_spawn_data = spawn_data
 	local complete_callback = callback(self, "cb_on_unit_3p_streaming_complete", item_unit_3p)
 
-	Unit.force_stream_meshes(item_unit_3p, complete_callback, true)
+	Unit.force_stream_meshes(item_unit_3p, complete_callback, true, GameParameters.force_stream_mesh_timeout)
 
 	local node_index = Unit.has_node(item_unit_3p, "p_rotation") and Unit.node(item_unit_3p, "p_rotation") or 1
 	local node_pos = Unit.local_position(item_unit_3p, node_index)
@@ -244,7 +244,11 @@ UIWeaponSpawner._spawn_weapon = function (self, item, link_unit_name, loader, po
 	Unit.set_local_position(link_unit, 1, link_unit_pos + rotated_pos)
 end
 
-UIWeaponSpawner.cb_on_unit_3p_streaming_complete = function (self, item_unit_3p)
+UIWeaponSpawner.cb_on_unit_3p_streaming_complete = function (self, item_unit_3p, timeout)
+	if timeout then
+		Log.info("UIWeaponSpawner", "[cb_on_unit_3p_streaming_complete] unit: %s", tostring(item_unit_3p))
+	end
+
 	local weapon_spawn_data = self._weapon_spawn_data
 
 	if weapon_spawn_data and weapon_spawn_data.item_unit_3p == item_unit_3p then

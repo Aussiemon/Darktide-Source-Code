@@ -41,13 +41,15 @@ Minigame.component_data = {
 			"None",
 			"Default",
 			"Scan",
-			"Decode Symbols"
+			"Decode Symbols",
+			"Drill"
 		},
 		options_values = {
 			"none",
 			"default",
 			"scan",
-			"decode_symbols"
+			"decode_symbols",
+			"drill"
 		}
 	},
 	extensions = {

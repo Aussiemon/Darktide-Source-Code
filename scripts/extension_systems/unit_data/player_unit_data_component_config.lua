@@ -735,7 +735,7 @@ local PlayerComponentConfig = {
 		shooting_charge_level = "weapon_charge_level",
 		fire_last_t = "fixed_frame_offset_start_t_9bit",
 		started_from_sprint = "bool",
-		num_shots_fired = "ammunition",
+		num_shots_fired = "ammunition_small",
 		shooting_position = "Vector3",
 		fire_at_time = "fixed_frame_offset",
 		shooting_rotation = "Quaternion",
@@ -748,7 +748,7 @@ local PlayerComponentConfig = {
 		}
 	},
 	action_shoot_pellets = {
-		num_pellets_fired = "ammunition"
+		num_pellets_fired = "ammunition_small"
 	},
 	action_reload = {
 		has_refilled_ammunition = "bool",
@@ -815,12 +815,12 @@ local PlayerComponentConfig = {
 		starting_rotation = "Quaternion",
 		rise_end_time = "fixed_frame_offset",
 		seed = "random_seed",
-		num_shots = "ammunition"
+		num_shots = "ammunition_small"
 	},
 	shooting_status = {
 		shooting = "bool",
 		shooting_end_time = "fixed_frame_offset",
-		num_shots = "ammunition"
+		num_shots = "ammunition_small"
 	},
 	block = {
 		has_blocked = "bool",
@@ -879,7 +879,7 @@ local PlayerComponentConfig = {
 		current_resource = "talent_resource"
 	},
 	critical_strike = {
-		num_critical_shots = "ammunition",
+		num_critical_shots = "ammunition_small",
 		prd_state = "prd_state",
 		seed = "random_seed",
 		is_active = "bool"

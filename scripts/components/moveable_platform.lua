@@ -41,7 +41,7 @@ MoveablePlatform.editor_validate = function (self, unit)
 	local error_message = ""
 
 	if rawget(_G, "LevelEditor") then
-		if Unit.find_actor(unit, "c_wall_1") == nil then
+		if self:get_data(unit, "walls_collision") and Unit.find_actor(unit, "c_wall_1") == nil then
 			success = false
 			error_message = error_message .. "\nCouldn't find any wall actors on unit"
 		end
@@ -205,22 +205,32 @@ MoveablePlatform._calculate_story_speed = function (self, unit)
 			end
 
 			if override_forward then
-				story_speed_forward = story_length / self:get_data(unit, "story_time_forward")
+				local story_time_forward = self:get_data(unit, "story_time_forward")
+				story_speed_forward = story_length / story_time_forward
 
-				if min_speed > story_speed_forward or max_speed < story_speed_forward then
-					self:_draw_warning(unit, string.format("The override forward speed is out of bounds (%s), it will be clamped between %s and %s", story_speed_forward, min_speed, max_speed))
+				if min_speed > story_speed_forward then
+					self:_draw_warning(unit, string.format("forward override time is %s vs %s base time, causing speed multiplier to be too small %sx (%sx min)", story_time_forward, story_length, story_speed_forward, min_speed))
 
-					story_speed_forward = math.clamp(story_speed_forward, min_speed, max_speed)
+					story_speed_forward = min_speed
+				elseif max_speed < story_speed_forward then
+					self:_draw_warning(unit, string.format("forward override time is %ss vs %ss base time, causing speed multiplier to be too large %sx (%sx max) ", story_time_forward, story_length, story_speed_forward, max_speed))
+
+					story_speed_forward = max_speed
 				end
 			end
 
 			if override_backward then
-				story_speed_backward = story_length / self:get_data(unit, "story_time_backward")
+				local story_time_backward = self:get_data(unit, "story_time_backward")
+				story_speed_backward = story_length / story_time_backward
 
-				if min_speed > story_speed_backward or max_speed < story_speed_backward then
-					self:_draw_warning(unit, string.format("The override backward speed is out of bounds (%s), it will be clamped between %s and %s", story_speed_backward, min_speed, max_speed))
+				if min_speed > story_speed_backward then
+					self:_draw_warning(unit, string.format("backward override time is %ss vs %ss base time, causing speed multiplier to be too small %sx (%sx min)", story_time_backward, story_length, story_speed_backward, min_speed))
 
-					story_speed_backward = math.clamp(story_speed_backward, min_speed, max_speed)
+					story_speed_backward = min_speed
+				elseif max_speed < story_speed_backward then
+					self:_draw_warning(unit, string.format("backward override time is %ss vs %ss base time, causing speed multiplier to be too large %sx (%sx max)", story_time_backward, story_length, story_speed_backward, max_speed))
+
+					story_speed_backward = max_speed
 				end
 			end
 		end
@@ -331,7 +341,7 @@ MoveablePlatform.component_data = {
 		ui_type = "number",
 		decimals = 100,
 		category = "Story",
-		value = 1,
+		value = 0,
 		ui_name = "Forward Play Time (sec.)",
 		step = 0.1
 	},
@@ -345,7 +355,7 @@ MoveablePlatform.component_data = {
 		ui_type = "number",
 		decimals = 100,
 		category = "Story",
-		value = 1,
+		value = 0,
 		ui_name = "Backward Story Time (sec.)",
 		step = 0.1
 	},

@@ -290,7 +290,6 @@ ItemUtils.display_name = function (item)
 	temp_item_name_localization_context.pattern = pattern_display_name_localized
 	temp_item_name_localization_context.variant = variant_display_name_localized
 	temp_item_name_localization_context.item_display_name = display_name_localized
-	local no_cache = true
 
 	return display_name_localized
 end
@@ -303,20 +302,24 @@ local temp_item_sub_display_name_localization_context = {
 	rarity_color_r = 0
 }
 
-ItemUtils.sub_display_name = function (item, required_level, no_color)
+ItemUtils.sub_display_name = function (item, required_level, include_item_type)
 	local item_type_display_name_localized = ItemUtils.type_display_name(item)
-	local level_display_name_localized = ItemUtils.level_display_name(item)
-	local text = ""
+	local text = nil
 
 	if item.rarity then
 		local rarity_display_name_localized = ItemUtils.rarity_display_name(item)
-		local rarity_color = ItemUtils.rarity_color(item)
-		temp_item_sub_display_name_localization_context.rarity_color_r = rarity_color[2]
-		temp_item_sub_display_name_localization_context.rarity_color_g = rarity_color[3]
-		temp_item_sub_display_name_localization_context.rarity_color_b = rarity_color[4]
-		temp_item_sub_display_name_localization_context.rarity_name = rarity_display_name_localized
-		temp_item_sub_display_name_localization_context.item_type = item_type_display_name_localized
-		text = rarity_display_name_localized
+
+		if include_item_type then
+			local rarity_color = ItemUtils.rarity_color(item)
+			temp_item_sub_display_name_localization_context.rarity_color_r = rarity_color[2]
+			temp_item_sub_display_name_localization_context.rarity_color_g = rarity_color[3]
+			temp_item_sub_display_name_localization_context.rarity_color_b = rarity_color[4]
+			temp_item_sub_display_name_localization_context.rarity_name = rarity_display_name_localized
+			temp_item_sub_display_name_localization_context.item_type = item_type_display_name_localized
+			text = Localize("loc_item_display_rarity_type_format_key", true, temp_item_sub_display_name_localization_context)
+		else
+			text = rarity_display_name_localized
+		end
 	else
 		return item_type_display_name_localized
 	end
@@ -495,11 +498,76 @@ ItemUtils.variant_display_name = function (item)
 end
 
 ItemUtils.pattern_display_name = function (item)
-	local pattern = item.pattern
-	local pattern_localization_key = UISettings.item_pattern_localization_lookup[pattern]
-	local pattern_display_name_localized = pattern_localization_key and Localize(pattern_localization_key) or ""
+	local weapon_template = item.weapon_template
 
-	return pattern_display_name_localized
+	if not weapon_template then
+		return ""
+	end
+
+	local display_settings = UISettings.weapon_template_display_settings[weapon_template]
+	local localization_key = display_settings and display_settings.display_name_pattern
+	local display_name_localized = localization_key and Localize(localization_key) or ""
+
+	return display_name_localized
+end
+
+local _item_property_definitions = {
+	{
+		loc_key = "loc_item_property_change_voice",
+		icon = "",
+		condition = function (item)
+			local item_voice_modulator = item.voice_fx_preset
+
+			return item_voice_modulator and item_voice_modulator ~= "voice_fx_rtpc_none"
+		end
+	}
+}
+
+local function _item_property_list(item)
+	local properties = {}
+
+	for i = 1, #_item_property_definitions do
+		local property_definition = _item_property_definitions[i]
+
+		if property_definition.condition(item) then
+			properties[#properties + 1] = i
+		end
+	end
+
+	return properties
+end
+
+ItemUtils.item_property_icons = function (item, optional_separator)
+	local properties = _item_property_list(item)
+
+	if #properties == 0 then
+		return
+	end
+
+	for i = 1, #properties do
+		local definition = _item_property_definitions[properties[i]]
+		properties[i] = definition.icon
+	end
+
+	local separator = optional_separator or "\n"
+
+	return table.concat(properties, separator)
+end
+
+ItemUtils.item_property_text = function (item, prefer_iconography)
+	local properties = _item_property_list(item)
+
+	if #properties == 0 then
+		return
+	end
+
+	for i = 1, #properties do
+		local definition = _item_property_definitions[properties[i]]
+		local icon = prefer_iconography and definition.icon or "•"
+		properties[i] = string.format("%s %s", icon, Localize(definition.loc_key))
+	end
+
+	return table.concat(properties, "\n")
 end
 
 ItemUtils.obtained_display_name = function (item)
@@ -515,16 +583,21 @@ ItemUtils.obtained_display_name = function (item)
 		local first_slot_name = slots and slots[1]
 
 		if first_slot_name then
+			local player_manager = Managers.player
+			local player = player_manager:local_player(1)
 			local achievement = AchievementUIHelper.get_acheivement_by_reward_item(item)
+			local is_complete = Managers.achievements:achievement_completed(player, achievement.id)
 
 			if achievement then
-				if achievement.type == "meta" then
-					local sub_penances_count = table.size(achievement.achievements)
-					optional_description = Localize("loc_inventory_cosmetic_item_acquisition_penance_description_multiple_requirement", true, {
-						penance_amount = sub_penances_count
-					})
-				else
-					optional_description = AchievementUIHelper.localized_description(achievement)
+				if not is_complete then
+					if achievement.type == "meta" then
+						local sub_penances_count = table.size(achievement.achievements)
+						optional_description = Localize("loc_inventory_cosmetic_item_acquisition_penance_description_multiple_requirement", true, {
+							penance_amount = sub_penances_count
+						})
+					else
+						optional_description = AchievementUIHelper.localized_description(achievement)
+					end
 				end
 
 				local achievement_label = AchievementUIHelper.localized_title(achievement)
@@ -577,6 +650,18 @@ ItemUtils.keywords_text = function (item)
 	end
 
 	return text
+end
+
+ItemUtils.restriction_text = function (item, prefer_iconography)
+	local item_type = item.item_type and Utf8.upper(item.item_type) or ""
+
+	if item_type == "WEAPON_SKIN" then
+		return ItemUtils.weapon_skin_requirement_text(item)
+	elseif item_type == "GEAR_UPPERBODY" or item_type == "GEAR_EXTRA_COSMETIC" or item_type == "GEAR_HEAD" or item_type == "GEAR_LOWERBODY" or item_type == "SET" then
+		return ItemUtils.class_requirement_text(item, prefer_iconography)
+	end
+
+	return "", false
 end
 
 ItemUtils.weapon_skin_requirement_text = function (item)
@@ -650,39 +735,56 @@ ItemUtils.set_item_class_requirement_text = function (item)
 	return text, true
 end
 
-ItemUtils.class_requirement_text = function (item)
-	local text = ""
+local function _class_requirement_entries(item, available_archetypes)
 	local item_type = item.item_type
 
 	if item_type == "SET" then
 		local items = item.items
 
 		for i = 1, #items do
-			text = text .. ItemUtils.class_requirement_text(items[i])
-		end
-	else
-		local archetype_restrictions = item.archetypes
-
-		if not archetype_restrictions or table.is_empty(archetype_restrictions) then
-			return text, false
+			_class_requirement_entries(items[i], available_archetypes)
 		end
 
-		for i = 1, #archetype_restrictions do
-			local archetype_name = archetype_restrictions[i]
-			local archetype = Archetypes[archetype_name]
-			local display_name_localized = archetype and Localize(archetype.archetype_name)
+		return available_archetypes
+	end
 
-			if display_name_localized then
-				text = text .. "• " .. display_name_localized
+	local archetype_restrictions = item.archetypes
 
-				if i < #archetype_restrictions then
-					text = text .. "\n"
-				end
-			end
+	if not archetype_restrictions or #archetype_restrictions == 0 then
+		return available_archetypes
+	end
+
+	for i = #available_archetypes, 1, -1 do
+		local archetype_name = available_archetypes[i]
+		local is_present = table.array_contains(archetype_restrictions, archetype_name)
+
+		if not is_present then
+			table.remove(available_archetypes, i)
 		end
 	end
 
-	return text, true
+	return available_archetypes
+end
+
+ItemUtils.class_requirement_text = function (item, prefer_iconography)
+	local entries = _class_requirement_entries(item, table.keys(Archetypes))
+
+	if #entries == 0 or #entries == #Archetypes then
+		return nil, false
+	end
+
+	for i = 1, #entries do
+		local archetype_name = entries[i]
+		local archetype = Archetypes[archetype_name]
+
+		if archetype then
+			local display_name_localized = Localize(archetype.archetype_name)
+			local string_symbol = prefer_iconography and archetype.string_symbol or "•"
+			entries[i] = string.format("%s %s", string_symbol, display_name_localized)
+		end
+	end
+
+	return table.concat(entries, "\n"), true
 end
 
 ItemUtils.retrieve_items_for_archetype = function (archetype, filtered_slots, workflow_states)

@@ -52,6 +52,7 @@ explosion_templates.special_gauntlet_grenade = {
 	scalable_radius = true,
 	collision_filter = "filter_player_character_explosion",
 	static_power_level = 500,
+	weapon_special = true,
 	min_close_radius = 1,
 	radius = {
 		2.5,

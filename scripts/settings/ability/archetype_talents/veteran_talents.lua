@@ -607,7 +607,7 @@ local archetype_talents = {
 			}
 		},
 		veteran_aura_gain_ammo_on_elite_kill = {
-			description = "loc_talent_veteran_elite_kills_grant_ammo_coop_desc",
+			description = "loc_talent_veteran_elite_kills_grant_ammo_coop_cd_desc",
 			name = "Elite Kills Restore Ammo Aura - Elite kills by you or your allies in coherency replenishes ammo to you and said allies",
 			display_name = "loc_talent_veteran_elite_kills_grant_ammo_coop",
 			icon = "content/ui/textures/icons/talents/veteran/veteran_aura_scavengers_base",
@@ -615,6 +615,10 @@ local archetype_talents = {
 				ammo = {
 					format_type = "percentage",
 					value = talent_settings_2.coherency.ammo_replenishment_percent
+				},
+				cooldown = {
+					format_type = "number",
+					value = talent_settings_2.coherency.cooldown
 				}
 			},
 			coherency = {
@@ -624,7 +628,7 @@ local archetype_talents = {
 			}
 		},
 		veteran_aura_gain_ammo_on_elite_kill_improved = {
-			description = "loc_talent_veteran_elite_kills_grant_ammo_coop_improved_desc",
+			description = "loc_talent_veteran_elite_kills_grant_ammo_coop_improved_cd_desc",
 			name = "Elite Kills Restore Ammo Aura - Elite kills by you or your allies in coherency replenishes ammo to you and said allies",
 			display_name = "loc_talent_veteran_elite_kills_grant_ammo_coop_improved",
 			icon = "content/ui/textures/icons/talents/veteran_2/veteran_2_aura",
@@ -640,6 +644,10 @@ local archetype_talents = {
 				ammo_2 = {
 					format_type = "percentage",
 					value = talent_settings_2.coherency.ammo_replenishment_percent_improved
+				},
+				cooldown = {
+					format_type = "number",
+					value = talent_settings_2.coherency.cooldown
 				}
 			},
 			coherency = {
@@ -2399,11 +2407,11 @@ local archetype_talents = {
 					format_type = "percentage"
 				},
 				grace_time = {
-					value = 3,
+					value = 6,
 					format_type = "number"
 				},
 				grace_time_hit = {
-					value = 1,
+					value = 3,
 					format_type = "number"
 				},
 				stacks = {
@@ -2456,7 +2464,7 @@ local archetype_talents = {
 			icon = "content/ui/textures/icons/talents/veteran_2/veteran_2_tier_1_2",
 			format_values = {
 				toughness_replenish_multiplier = {
-					value = 0.025,
+					value = 0.05,
 					prefix = "+",
 					format_type = "percentage"
 				}

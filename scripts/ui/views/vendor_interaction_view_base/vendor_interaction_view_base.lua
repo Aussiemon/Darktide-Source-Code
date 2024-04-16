@@ -303,7 +303,7 @@ VendorInteractionViewBase.on_option_button_pressed = function (self, index, opti
 	if option_callback then
 		local result = option_callback(self)
 
-		if result == "only_callback" then
+		if result == "cannot_enter_view" then
 			return
 		end
 	end
@@ -540,7 +540,7 @@ VendorInteractionViewBase._update_vo = function (self, dt, t)
 				local optional_route_key = queued_vo_event_request.optional_route_key
 				local is_opinion_vo = queued_vo_event_request.is_opinion_vo
 				local world_spawner = self._world_spawner
-				local dialogue_system = world_spawner and self:dialogue_system(world_spawner)
+				local dialogue_system = world_spawner and self:dialogue_system()
 
 				if dialogue_system then
 					self:play_vo_events(events, voice_profile, optional_route_key, nil, is_opinion_vo)

@@ -250,9 +250,9 @@ local explosion_templates = {
 	},
 	trait_buff_forcestaff_p2_minion_explosion = {
 		static_power_level = 600,
-		radius = 2,
+		radius = 4,
 		damage_falloff = true,
-		min_radius = 0.25,
+		min_radius = 0.5,
 		collision_filter = "filter_player_character_explosion",
 		damage_profile = DamageProfileTemplates.default_grenade,
 		explosion_area_suppression = {

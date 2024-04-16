@@ -136,7 +136,7 @@ local interaction_templates = {
 		interaction_priority = 1,
 		duration = 0,
 		interaction_class_name = "penances",
-		ui_view_name = "account_profile_view"
+		ui_view_name = "penance_overview_view"
 	},
 	inbox = {
 		action_text = "loc_action_interaction_view",
@@ -433,6 +433,16 @@ local interaction_templates = {
 		interaction_priority = 2,
 		duration = 0,
 		interaction_class_name = "player_hub_inspect"
+	},
+	penance_collectible = {
+		action_text = "loc_action_interaction_pickup",
+		ui_interaction_type = "pickup",
+		interaction_icon = "content/ui/materials/hud/interactions/icons/default",
+		taggable = true,
+		interaction_priority = 1,
+		duration = 0,
+		interaction_class_name = "penance_collectible",
+		description = "loc_pickup_collectible"
 	}
 }
 

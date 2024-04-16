@@ -625,98 +625,107 @@ local ANIMATION_SLOTS_MAP = {
 	slot_animation_emote_2 = true
 }
 
-CosmeticsInspectView._setup_item_description = function (self, description_text, restriction_text)
+CosmeticsInspectView._setup_item_description = function (self, description_text, restriction_text, property_text)
+	local widgets_by_name = self._widgets_by_name
+	local description_background = widgets_by_name.description_background
+	description_background.content.visible = false
+
 	self:_destroy_description_grid()
 
-	if description_text or restriction_text then
-		local widgets = {}
-		local alignment_widgets = {}
-		local scenegraph_id = "description_content_pivot"
-		local pass_template = Definitions.text_description_pass_template
-		local max_width = self._ui_scenegraph.description_grid.size[1]
-		local widget_definition = pass_template and UIWidget.create_definition(pass_template, scenegraph_id, nil, {
+	local any_text = description_text or restriction_text or property_text
+
+	if not any_text then
+		return
+	end
+
+	local widgets = {}
+	local alignment_widgets = {}
+	local scenegraph_id = "description_content_pivot"
+	local max_width = self._ui_scenegraph.description_grid.size[1]
+
+	local function _add_text_widget(pass_template, text)
+		local widget_definition = UIWidget.create_definition(pass_template, scenegraph_id, nil, {
 			max_width,
 			0
 		})
-		local widget = self:_create_widget("description_widget", widget_definition)
-
-		if description_text then
-			local description_text_font_style = widget.style.text
-			widget.content.text = description_text
-			local text_options = UIFonts.get_font_options_by_style(widget.style.text)
-			local text_width, text_height = self:_text_size(widget.content.text, description_text_font_style.font_type, description_text_font_style.font_size, {
-				max_width,
-				math.huge
-			}, text_options)
-			widget.content.size[2] = text_height
-			widgets[#widgets + 1] = widget
-			alignment_widgets[#alignment_widgets + 1] = widget
-		end
-
-		if restriction_text then
-			local sub_title_margin = 10
-			local margin_compensation = 5
-			local restriction_pass_template = Definitions.item_restrictions_pass
-			local widget_definition = pass_template and UIWidget.create_definition(restriction_pass_template, scenegraph_id, nil, {
-				max_width,
-				0
-			})
-			local widget = self:_create_widget("description_widget_restrictions", widget_definition)
-			widget.content.text = restriction_text
-			local restriction_title_style = widget.style.title
-			local restriction_text_style = widget.style.text
-			local restriction_title_options = UIFonts.get_font_options_by_style(restriction_title_style)
-			local restriction_text_options = UIFonts.get_font_options_by_style(restriction_text_style)
-			local restriction_max_width = self._ui_scenegraph.description_grid.size[1]
-			local restriction_title_width, restriction_title_height = self:_text_size(widget.content.title, restriction_title_style.font_type, restriction_title_style.font_size, {
-				restriction_max_width,
-				math.huge
-			}, restriction_title_options)
-			local restriction_text_width, restriction_text_height = self:_text_size(widget.content.text, restriction_text_style.font_type, restriction_text_style.font_size, {
-				restriction_max_width,
-				math.huge
-			}, restriction_text_options)
-			local text_height = restriction_title_height + restriction_text_height + sub_title_margin
-			widget.style.text.offset[2] = restriction_title_height + sub_title_margin
-			widget.content.size[2] = text_height
-
-			if description_text then
-				local spacing_vertical = {
-					size = {
-						550,
-						80
-					}
-				}
-				widgets[#widgets + 1] = nil
-				alignment_widgets[#alignment_widgets + 1] = spacing_vertical
-			end
-
-			widgets[#widgets + 1] = widget
-			alignment_widgets[#alignment_widgets + 1] = widget
-		end
-
-		self._description_grid_widgets = widgets
-		self._description_grid_alignment_widgets = alignment_widgets
-		local grid_scenegraph_id = "description_grid"
-		local grid_pivot_scenegraph_id = "description_content_pivot"
-		local grid_spacing = {
-			0,
-			0
-		}
-		local grid_direction = "down"
-		local use_is_focused_for_navigation = true
-		local grid = UIWidgetGrid:new(self._description_grid_widgets, self._description_grid_alignment_widgets, self._ui_scenegraph, grid_scenegraph_id, grid_direction, grid_spacing, nil, use_is_focused_for_navigation)
-		self._description_grid = grid
-		local scrollbar_widget = self._widgets_by_name.description_scrollbar
-
-		grid:assign_scrollbar(scrollbar_widget, grid_pivot_scenegraph_id, grid_scenegraph_id)
-		grid:set_scrollbar_progress(0)
-		grid:set_scroll_step_length(100)
-
-		self._widgets_by_name.description_background.content.visible = true
-	else
-		self._widgets_by_name.description_background.content.visible = false
+		local widget = self:_create_widget(string.format("description_grid_widget_%d", #widgets), widget_definition)
+		widget.content.text = text
+		local widget_text_style = widget.style.text
+		local text_options = UIFonts.get_font_options_by_style(widget.style.text)
+		local _, text_height = self:_text_size(text, widget_text_style.font_type, widget_text_style.font_size, {
+			max_width,
+			math.huge
+		}, text_options)
+		widget.content.size[2] = text_height
+		widgets[#widgets + 1] = widget
+		alignment_widgets[#alignment_widgets + 1] = widget
 	end
+
+	local function _add_spacing(height)
+		widgets[#widgets + 1] = nil
+		alignment_widgets[#alignment_widgets + 1] = {
+			size = {
+				max_width,
+				height
+			}
+		}
+	end
+
+	local desired_spacing = 50
+
+	if description_text then
+		if #widgets > 0 then
+			_add_spacing(desired_spacing)
+		end
+
+		_add_text_widget(Definitions.text_description_pass_template, description_text)
+
+		desired_spacing = 80
+	end
+
+	if property_text then
+		if #widgets > 0 then
+			_add_spacing(desired_spacing)
+		end
+
+		_add_text_widget(Definitions.item_sub_title_pass, Utf8.upper(Localize("loc_item_property_header")))
+		_add_spacing(10)
+		_add_text_widget(Definitions.item_text_pass, property_text)
+
+		desired_spacing = 50
+	end
+
+	if restriction_text then
+		if #widgets > 0 then
+			_add_spacing(desired_spacing)
+		end
+
+		_add_text_widget(Definitions.item_sub_title_pass, Utf8.upper(Localize("loc_item_equippable_on_header")))
+		_add_spacing(10)
+		_add_text_widget(Definitions.item_text_pass, restriction_text)
+
+		desired_spacing = 50
+	end
+
+	self._description_grid_widgets = widgets
+	self._description_grid_alignment_widgets = alignment_widgets
+	local grid_scenegraph_id = "description_grid"
+	local grid_pivot_scenegraph_id = "description_content_pivot"
+	local grid_spacing = {
+		0,
+		0
+	}
+	local grid_direction = "down"
+	local use_is_focused_for_navigation = true
+	local grid = UIWidgetGrid:new(self._description_grid_widgets, self._description_grid_alignment_widgets, self._ui_scenegraph, grid_scenegraph_id, grid_direction, grid_spacing, nil, use_is_focused_for_navigation)
+	self._description_grid = grid
+	local scrollbar_widget = widgets_by_name.description_scrollbar
+
+	grid:assign_scrollbar(scrollbar_widget, grid_pivot_scenegraph_id, grid_scenegraph_id)
+	grid:set_scrollbar_progress(0)
+	grid:set_scroll_step_length(100)
+
+	description_background.content.visible = true
 end
 
 CosmeticsInspectView._destroy_description_grid = function (self)
@@ -804,21 +813,16 @@ CosmeticsInspectView._start_preview_item = function (self)
 
 		self:_set_preview_widgets_visibility(true)
 
-		local item_type = item.item_type and Utf8.upper(item.item_type) or ""
-		local item_type_localization_key = UISettings.item_type_localization_lookup[item_type]
-		local restriction_text, present_restriction_text = nil
+		local property_text = ItemUtils.item_property_text(item, true)
+		local restriction_text, present_restriction_text = ItemUtils.restriction_text(item)
 
-		if item_type == "WEAPON_SKIN" then
-			restriction_text, present_restriction_text = ItemUtils.weapon_skin_requirement_text(item)
-		elseif item_type == "GEAR_UPPERBODY" or item_type == "GEAR_EXTRA_COSMETIC" or item_type == "GEAR_HEAD" or item_type == "GEAR_LOWERBODY" then
-			restriction_text, present_restriction_text = ItemUtils.class_requirement_text(item)
-		elseif item_type == "SET" then
-			restriction_text, present_restriction_text = ItemUtils.set_item_class_requirement_text(item)
+		if not present_restriction_text then
+			restriction_text = nil
 		end
 
 		local description = item.description and Localize(item.description)
 
-		self:_setup_item_description(description, present_restriction_text and restriction_text)
+		self:_setup_item_description(description, restriction_text, property_text)
 		self:_setup_title(item)
 	elseif self._bundle_data then
 		local description = self._bundle_data.description or ""

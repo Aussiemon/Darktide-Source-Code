@@ -197,4 +197,20 @@ ProfilesService.check_name = function (self, name)
 	end)
 end
 
+ProfilesService.fetch_character_operation = function (self, shopkeep, operation_name)
+	return self._backend_interface.characters:fetch_character_operation():next(function (data)
+		local operations = Promise.resolved(data)
+
+		table.dump(operations)
+
+		local operation = operations[shopkeep][operation_name]
+
+		return operation
+	end):catch(function (error)
+		Managers.error:report_error(BackendError:new(error))
+
+		return Promise.rejected({})
+	end)
+end
+
 return ProfilesService

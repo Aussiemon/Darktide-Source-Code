@@ -1,6 +1,7 @@
+local ProfileUtils = require("scripts/utilities/profile_utils")
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
-local UIWidget = require("scripts/managers/ui/ui_widget")
 local UISettings = require("scripts/settings/ui/ui_settings")
+local UIWidget = require("scripts/managers/ui/ui_widget")
 local template = {}
 local size = {
 	400,
@@ -26,10 +27,10 @@ template.check_line_of_sight = false
 template.max_distance = 500
 template.screen_clamp = true
 template.screen_margins = {
-	down = 250,
-	up = 250,
-	left = 450,
-	right = 450
+	down = 0.23148148148148148,
+	up = 0.23148148148148148,
+	left = 0.234375,
+	right = 0.234375
 }
 template.scale_settings = {
 	scale_to = 1,
@@ -124,13 +125,78 @@ template.create_widget_defintion = function (template, scenegraph_id)
 	}, scenegraph_id)
 end
 
+local function _cb_event_titles_in_mission_setting_changed(self, option_type)
+	local marker = self
+	local data = marker.data
+	local header_text = ""
+
+	if option_type and option_type == "color_changed" then
+		local player_slot = data:slot()
+		local player_slot_color = UISettings.player_slot_colors[player_slot] or Color.ui_hud_green_light(255, true)
+		local color_string = "{#color(" .. player_slot_color[2] .. "," .. player_slot_color[3] .. "," .. player_slot_color[4] .. ")}"
+		header_text = color_string .. "{#reset()} " .. data:name()
+		local profile = data:profile()
+		local title = profile and ProfileUtils.character_title(profile)
+
+		if title then
+			header_text = header_text .. " \n " .. title
+		end
+	elseif option_type ~= "none" then
+		local player_slot = data:slot()
+		local player_slot_color = UISettings.player_slot_colors[player_slot] or Color.ui_hud_green_light(255, true)
+		local color_string = "{#color(" .. player_slot_color[2] .. "," .. player_slot_color[3] .. "," .. player_slot_color[4] .. ")}"
+		header_text = color_string .. "{#reset()} " .. data:name()
+
+		if option_type == "name_and_title" then
+			local profile = data:profile()
+			local title = profile and ProfileUtils.character_title(profile)
+
+			if title then
+				header_text = header_text .. " \n " .. title
+			end
+		end
+	end
+
+	local widget = marker.widget
+	local content = widget.content
+	content.header_text = header_text
+end
+
+template.on_exit = function (widget, marker)
+	Managers.event:unregister(marker, "event_titles_in_mission_setting_changed")
+	Managers.event:unregister(marker, "event_in_mission_title_color_type_changed")
+end
+
 template.on_enter = function (widget, marker)
 	local data = marker.data
 	local content = widget.content
 	local player_slot = data:slot()
 	local player_slot_color = UISettings.player_slot_colors[player_slot] or Color.ui_hud_green_light(255, true)
 	local color_string = "{#color(" .. player_slot_color[2] .. "," .. player_slot_color[3] .. "," .. player_slot_color[4] .. ")}"
-	content.header_text = color_string .. "{#reset()} " .. data:name()
+	local header_text = color_string .. "{#reset()} " .. data:name()
+	local save_data = Managers.save:account_data()
+	local interface_settings = save_data.interface_settings
+	local character_nameplates_in_mission_type = interface_settings.character_nameplates_in_mission_type
+
+	if character_nameplates_in_mission_type ~= "none" then
+		if character_nameplates_in_mission_type == "name_and_title" then
+			local profile = data:profile()
+			local title = profile and ProfileUtils.character_title(profile)
+
+			if title then
+				header_text = header_text .. " \n " .. title
+			end
+		end
+	else
+		header_text = ""
+	end
+
+	marker.cb_event_titles_in_mission_setting_changed = _cb_event_titles_in_mission_setting_changed
+
+	Managers.event:register(marker, "event_titles_in_mission_setting_changed", "cb_event_titles_in_mission_setting_changed")
+	Managers.event:register(marker, "event_in_mission_title_color_type_changed", "cb_event_titles_in_mission_setting_changed")
+
+	content.header_text = header_text
 	content.icon_text = color_string .. "{#reset()}"
 end
 

@@ -6,14 +6,30 @@ local MasterItems = require("scripts/backend/master_items")
 local Promise = require("scripts/foundation/utilities/promise")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local HudElementCharacterNewsFeed = class("HudElementCharacterNewsFeed", "HudElementBase")
+local character_cached_inventory = {}
 
 HudElementCharacterNewsFeed.init = function (self, parent, draw_layer, start_scale, definitions)
 	HudElementCharacterNewsFeed.super.init(self, parent, draw_layer, start_scale, Definitions)
-	self:_fetch_inventory_items()
+
+	local local_player_id = 1
+	local local_player = Managers.player:local_player(local_player_id)
+	local character_id = local_player:character_id()
+
+	if not character_cached_inventory[character_id] then
+		self:_fetch_inventory_items()
+	else
+		self._inventory_items = character_cached_inventory[character_id]
+		self._new_presentation_items = self:_fetch_new_items()
+	end
+
 	self:_register_event("event_resync_character_news_feed", "event_resync_character_news_feed")
 end
 
 HudElementCharacterNewsFeed._fetch_inventory_items = function (self)
+	local local_player_id = 1
+	local local_player = Managers.player:local_player(local_player_id)
+	local character_id = local_player:character_id()
+
 	if self._gear_promise then
 		self._gear_promise:cancel()
 
@@ -40,6 +56,7 @@ HudElementCharacterNewsFeed._fetch_inventory_items = function (self)
 			end
 
 			self._inventory_items = inventory
+			character_cached_inventory[character_id] = inventory
 			self._new_presentation_items = self:_fetch_new_items()
 			self._gear_promise = nil
 		end

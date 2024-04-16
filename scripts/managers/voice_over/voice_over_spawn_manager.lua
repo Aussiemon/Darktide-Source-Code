@@ -31,7 +31,7 @@ VoiceOverSpawnManager.on_gameplay_post_init = function (self, level)
 		local vo_class = vo_classes_2d[i]
 		local breed_dialogue_settings = DialogueBreedSettings[vo_class]
 
-		self:_create_units(breed_dialogue_settings)
+		self:create_units(breed_dialogue_settings)
 	end
 
 	Vo.mission_giver_check_event()
@@ -48,24 +48,32 @@ VoiceOverSpawnManager.delete_units = function (self)
 	end
 end
 
-VoiceOverSpawnManager._create_units = function (self, dialogue_breed_settings)
-	local unit_spawner_manager = self._unit_spawner_manager
-	local props_settings = LevelProps[dialogue_breed_settings.prop_name]
-	local unit_name = props_settings.unit_name
-	local unit_template_name = props_settings.unit_template_name
-	local voice_over_settings = table.clone(props_settings)
+VoiceOverSpawnManager.create_units = function (self, dialogue_breed_settings)
 	local voice_profiles = dialogue_breed_settings.wwise_voices
-	local voice_over_units = self._voice_over_units
 
 	for _, voice_profile in pairs(voice_profiles) do
-		local vo_unit = unit_spawner_manager:spawn_network_unit(unit_name, unit_template_name, nil, nil, nil, voice_over_settings)
-		local dialogue_extension = ScriptUnit.extension(vo_unit, "dialogue_system")
+		self:create_unit(dialogue_breed_settings, voice_profile)
+	end
+end
 
-		dialogue_extension:set_voice_profile_data(dialogue_breed_settings.vo_class_name, dialogue_breed_settings.wwise_voice_switch_group, voice_profile)
-		dialogue_extension:init_faction_memory(dialogue_breed_settings.dialogue_memory_faction_name)
+VoiceOverSpawnManager.create_unit = function (self, dialogue_breed_settings, voice_profile, optional_position)
+	local unit_spawner_manager = self._unit_spawner_manager
+	local props_settings = LevelProps[dialogue_breed_settings.prop_name]
+	local voice_over_settings = table.clone(props_settings)
+	local unit_name = props_settings.unit_name
+	local unit_template_name = props_settings.unit_template_name
+	local vo_unit = unit_spawner_manager:spawn_network_unit(unit_name, unit_template_name, optional_position, nil, nil, voice_over_settings)
+	local dialogue_extension = ScriptUnit.extension(vo_unit, "dialogue_system")
 
-		dialogue_extension._is_network_synced = dialogue_breed_settings.is_network_synced
-		voice_over_units[voice_profile] = vo_unit
+	dialogue_extension:set_voice_profile_data(dialogue_breed_settings.vo_class_name, dialogue_breed_settings.wwise_voice_switch_group, voice_profile)
+	dialogue_extension:init_faction_memory(dialogue_breed_settings.dialogue_memory_faction_name)
+
+	dialogue_extension._is_network_synced = dialogue_breed_settings.is_network_synced
+	local voice_over_units = self._voice_over_units
+	voice_over_units[voice_profile] = vo_unit
+
+	if optional_position then
+		return vo_unit
 	end
 end
 

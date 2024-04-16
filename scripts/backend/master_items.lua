@@ -33,6 +33,7 @@ local FALLBACK_ITEMS_BY_SLOT = {
 	slot_body_skin_color = "content/items/characters/player/skin_colors/skin_color_pale_01",
 	slot_animation_emote_3 = "content/items/animations/emotes/emote_human_greeting_001_wave_01",
 	slot_pocketable = "content/items/pocketable/empty_pocketable",
+	slot_character_title = "content/items/titles/title_default",
 	slot_body_tattoo = "content/items/characters/player/human/attachments_default/slot_body_torso",
 	slot_trinket_1 = "content/items/weapons/player/trinkets/empty_trinket",
 	slot_body_face_implant = "content/items/characters/player/human/attachments_default/slot_body_face",

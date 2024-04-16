@@ -163,7 +163,12 @@ PlayerCharacterStateLunging.on_enter = function (self, unit, dt, t, previous_sta
 		local toughness = lunge_template.restore_toughness
 
 		if toughness then
-			Toughness.replenish_percentage(unit, toughness, true, "lunging")
+			local amount = Toughness.replenish_percentage(unit, toughness, true, "lunging")
+			local player = Managers.state.player_unit_spawn:owner(unit)
+
+			if amount > 0 and player then
+				Managers.stats:record_private("hook_lounge_toughness_regenerated", player, amount)
+			end
 		end
 	end
 

@@ -2,16 +2,18 @@ local AchievementDefinitions = require("scripts/managers/achievements/achievemen
 local AchievementFlags = require("scripts/settings/achievements/achievement_flags")
 local AchievementPlatforms = require("scripts/managers/achievements/achievement_platforms")
 local AchievementTypes = require("scripts/managers/achievements/achievement_types")
+local AchievementUIHelper = require("scripts/managers/achievements/utility/achievement_ui_helper")
 local MasterItems = require("scripts/backend/master_items")
 local Promise = require("scripts/foundation/utilities/promise")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local TextUtilities = require("scripts/utilities/ui/text")
-local UISettings = require("scripts/settings/ui/ui_settings")
 local AchievementsManager = class("AchievementsManager")
 local CLIENT_RPCS = {
-	"rpc_unlock_achievement"
+	"rpc_unlock_achievement",
+	"rpc_ally_unlocked_achievement"
 }
 local PlayerStates = table.enum("loading", "ready")
+local RewardClaimStates = table.enum("idle", "pending", "active", "deactive")
 AchievementsManager.player_states = PlayerStates
 
 AchievementsManager.init = function (self, is_client, event_delegate, use_batched_saving, broadcast_unlocks)
@@ -36,6 +38,11 @@ AchievementsManager.init = function (self, is_client, event_delegate, use_batche
 
 	if is_client then
 		self._event_delegate:register_connection_events(self, unpack(CLIENT_RPCS))
+
+		self._penance_claim_status = RewardClaimStates.idle
+		self._track_claim_status = RewardClaimStates.idle
+
+		Managers.event:register(self, "event_update_reward_claim_state", "update_reward_claim_state")
 	end
 end
 
@@ -56,6 +63,7 @@ AchievementsManager.destroy = function (self)
 
 	if self._is_client then
 		self._event_delegate:unregister_events(unpack(CLIENT_RPCS))
+		Managers.event:unregister(self, "event_update_reward_claim_state")
 	end
 end
 
@@ -280,10 +288,11 @@ AchievementsManager.add_player = function (self, player)
 	player_data.account_id = account_id
 	player_data.state = PlayerStates.loading
 	player_data.remote = player.remote
+	player_data.peer_id = player:peer_id()
+	player_data.local_player_id = player:local_player_id()
 
 	if player_data.remote then
 		player_data.channel_id = player:connection_channel_id()
-		player_data.local_player_id = player:local_player_id()
 	end
 
 	player_data.completed_this_session = 0
@@ -609,6 +618,91 @@ AchievementsManager.set_host = function (self, is_host)
 	end
 end
 
+AchievementsManager._fetch_unclaimed_penance_rewards = function (self)
+	local backend_interface = Managers.backend.interfaces
+	local player_rewards = backend_interface.player_rewards
+	local promise = player_rewards:get_rewards_by_source_paged(1, "commendation"):next(function (data)
+		local items = data.items
+
+		if items and #items > 0 then
+			return true
+		end
+
+		return false
+	end):catch(function (error)
+		local error_string = tostring(error)
+
+		Log.error("AchievementsManager", "Error fetching penance reward: %s", error_string)
+
+		return {}
+	end)
+
+	return promise:next(function (data)
+		return data
+	end)
+end
+
+local PENANCE_TRACK_ID = "dec942ce-b6ba-439c-95e2-022c5d71394d"
+
+AchievementsManager._fetch_penance_track_account_state = function (self)
+	local backend_interface = Managers.backend.interfaces
+	local penance_track = backend_interface.tracks
+	local promise = penance_track:get_track_state(PENANCE_TRACK_ID):next(function (response)
+		local state = response.state
+
+		if not state then
+			return false
+		end
+
+		local total_penance_points = state.xpTracked
+		local total_tiers = math.floor(total_penance_points / 100)
+		local rewarded_tiers = state.rewarded + 1
+
+		if total_tiers ~= rewarded_tiers then
+			return true
+		end
+
+		return false
+	end):catch(function (error)
+		local error_string = tostring(error)
+
+		Log.error("AchievementsManager", "Error fetching penance track for account: %s", error_string)
+
+		return {}
+	end)
+
+	return promise:next(function (response)
+		return response
+	end)
+end
+
+AchievementsManager.is_reward_to_claim = function (self)
+	return self._penance_claim_status == RewardClaimStates.active or self._track_claim_status == RewardClaimStates.active
+end
+
+AchievementsManager.update_reward_claim_state = function (self)
+	if not self._is_client then
+		return
+	end
+
+	self._track_claim_status = RewardClaimStates.pending
+
+	self:_fetch_penance_track_account_state():next(function (rewards_exist)
+		self._track_claim_status = rewards_exist and RewardClaimStates.active or RewardClaimStates.deactive
+	end)
+
+	self._penance_claim_status = RewardClaimStates.pending
+
+	self:_fetch_unclaimed_penance_rewards():next(function (rewards_exist)
+		self._penance_claim_status = rewards_exist and RewardClaimStates.active or RewardClaimStates.deactive
+	end)
+end
+
+AchievementsManager.deactive_reward_claim_state = function (self)
+	self._penance_claim_status = RewardClaimStates.deactive
+	self._track_claim_status = RewardClaimStates.deactive
+end
+
 local item_rewards = {}
 
 AchievementsManager._show_item_rewards = function (self, rewards)
@@ -632,7 +726,7 @@ AchievementsManager._show_item_rewards = function (self, rewards)
 				local rewarded_master_item = MasterItems.get_item(master_id)
 				local sound_event = UISoundEvents.character_news_feed_new_item
 
-				Managers.event:trigger("event_add_notification_message", "item_granted", rewarded_master_item, nil, sound_event)
+				Managers.event:trigger("event_add_notification_message", "penance_item_can_be_claimed", rewarded_master_item, nil, sound_event)
 			else
 				Log.warning("AchievementManager", "Received invalid item %s as reward from backend.", master_id)
 			end
@@ -650,6 +744,24 @@ AchievementsManager._advertise_unlocked_achievement = function (self, player_id,
 
 	if is_remote then
 		RPC.rpc_unlock_achievement(player_data.channel_id, local_player_id, achievement_index)
+	end
+
+	local broadcast_unlocks = self._broadcast_unlocks
+
+	if broadcast_unlocks then
+		local seen_channels = {
+			[player_data.channel_id] = true
+		}
+
+		for _, _player_data in pairs(self._players) do
+			local channel_id = _player_data.channel_id
+
+			if not seen_channels[channel_id] then
+				seen_channels[channel_id] = true
+
+				RPC.rpc_ally_unlocked_achievement(channel_id, peer_id, local_player_id, achievement_index)
+			end
+		end
 	end
 end
 
@@ -680,6 +792,12 @@ AchievementsManager._unlock_achievement = function (self, player_id, achievement
 
 		if rewards then
 			self:_show_item_rewards(rewards)
+		end
+
+		local player = Managers.player:player(player_data.peer_id, player_data.local_player_id)
+
+		if player then
+			self:_show_unlock_in_chat(player, achievement_id)
 		end
 	end
 
@@ -747,6 +865,36 @@ AchievementsManager.rpc_unlock_achievement = function (self, _, local_player_id,
 	local achievement_id = self._achievement_lookup[achievement_index]
 
 	self:_unlock_achievement(local_player_id, achievement_id, nil, true)
+end
+
+AchievementsManager._show_unlock_in_chat = function (self, player, achievement_id)
+	local player_name = player:name()
+	local achievement_definition = achievement_id and self._definitions[achievement_id]
+	local achievement_name = achievement_definition and AchievementUIHelper.localized_title(achievement_definition)
+
+	if player_name and achievement_name then
+		local player_color = Color.terminal_text_key_value(255, true)
+		player_name = TextUtilities.apply_color_to_text(player_name, player_color)
+		local achievement_color = Color.ui_brown_super_light(255, true)
+		achievement_name = TextUtilities.apply_color_to_text(achievement_name, achievement_color)
+		local message = Localize("loc_ally_unlocked_penance", true, {
+			player_name = player_name,
+			achievement_name = achievement_name
+		})
+
+		Managers.event:trigger("system_chat_message", message, "SYSTEM")
+	end
+end
+
+AchievementsManager.rpc_ally_unlocked_achievement = function (self, _, peer_id, local_player_id, achievement_index)
+	local player = Managers.player and Managers.player:player(peer_id, local_player_id)
+	local achievement_id = self._achievement_lookup[achievement_index]
+
+	if not player or not achievement_id then
+		return
+	end
+
+	self:_show_unlock_in_chat(player, achievement_id)
 end
 
 AchievementsManager._on_achievement_unlock = function (self, player_id, achievement_id)

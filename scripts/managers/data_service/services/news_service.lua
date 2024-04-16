@@ -46,7 +46,7 @@ NewsService.get_news = function (self)
 	if self._cached_news then
 		promise = Promise.resolved(self._cached_news)
 	else
-		promise = self._backend_interface.mailbox:get_mail_paged(nil, 100, "news"):next(function (data)
+		promise = self._backend_interface.mailbox:get_mail_paged(nil, 100, true, true, "news"):next(function (data)
 			local news = {}
 
 			for i = 1, #data.globals do

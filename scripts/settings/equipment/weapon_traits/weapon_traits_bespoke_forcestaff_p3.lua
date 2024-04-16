@@ -107,29 +107,5 @@ templates.weapon_trait_bespoke_forcestaff_p3_increased_max_jumps = {
 		}
 	}
 }
-templates.weapon_trait_bespoke_forcestaff_p3_electrocuted_targets_receive_increased_damage_debuff = {
-	weapon_trait_bespoke_forcestaff_p3_electrocuted_targets_receive_increased_damage_debuff = {
-		{
-			target_buff_data = {
-				num_stacks_on_proc = 1
-			}
-		},
-		{
-			target_buff_data = {
-				num_stacks_on_proc = 2
-			}
-		},
-		{
-			target_buff_data = {
-				num_stacks_on_proc = 3
-			}
-		},
-		{
-			target_buff_data = {
-				num_stacks_on_proc = 4
-			}
-		}
-	}
-}
 
 return templates

@@ -529,14 +529,14 @@ return function ()
 				"chaos_ogryn_bulwark_assault",
 				OP.TIMEDIFF,
 				OP.GT,
-				6
+				10
 			},
 			{
 				"faction_memory",
 				"faction_memory_chaos_ogryn_bulwark_assault",
 				OP.TIMEDIFF,
 				OP.GT,
-				3
+				5
 			}
 		},
 		on_done = {
@@ -643,32 +643,20 @@ return function ()
 				"chaos_ogryn_executor_assault",
 				OP.TIMEDIFF,
 				OP.GT,
-				7
-			},
-			{
-				"faction_memory",
-				"",
-				OP.TIMEDIFF,
-				OP.GT,
-				0
+				10
 			},
 			{
 				"faction_memory",
 				"faction_chaos_ogryn_executor_assault",
 				OP.TIMEDIFF,
 				OP.GT,
-				6
+				5
 			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"chaos_ogryn_executor_assault",
-				OP.TIMESET
-			},
-			{
-				"faction_memory",
-				"",
 				OP.TIMESET
 			},
 			{
@@ -1719,14 +1707,14 @@ return function ()
 				"cultist_berzerker_assault",
 				OP.TIMEDIFF,
 				OP.GT,
-				5
+				10
 			},
 			{
 				"faction_memory",
 				"faction_cultist_berzerker_assault",
 				OP.TIMEDIFF,
 				OP.GT,
-				2
+				5
 			}
 		},
 		on_done = {
@@ -2198,14 +2186,14 @@ return function ()
 				"traitor_berzerker_assault",
 				OP.TIMEDIFF,
 				OP.GT,
-				5
+				10
 			},
 			{
 				"faction_memory",
 				"faction_traitor_berzerker_assault",
 				OP.TIMEDIFF,
 				OP.GT,
-				2
+				5
 			}
 		},
 		on_done = {
@@ -2307,14 +2295,14 @@ return function ()
 				"renegade_executor_assault",
 				OP.TIMEDIFF,
 				OP.GT,
-				6
+				10
 			},
 			{
 				"faction_memory",
 				"faction_memory_renegade_executor_assault",
 				OP.TIMEDIFF,
 				OP.GT,
-				3
+				5
 			}
 		},
 		on_done = {
@@ -3665,7 +3653,7 @@ return function ()
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 3
+				duration = 2
 			}
 		}
 	})

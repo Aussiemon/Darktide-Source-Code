@@ -1,20 +1,18 @@
 local definition_path = "scripts/ui/views/main_menu_view/main_menu_view_definitions"
+local CharacterSelectPassTemplates = require("scripts/ui/pass_templates/character_select_pass_templates")
+local InputDevice = require("scripts/managers/input/input_device")
 local MainMenuViewSettings = require("scripts/ui/views/main_menu_view/main_menu_view_settings")
 local MainMenuViewTestify = GameParameters.testify and require("scripts/ui/views/main_menu_view/main_menu_view_testify")
-local UIWidgetGrid = require("scripts/ui/widget_logic/ui_widget_grid")
-local UIRenderer = require("scripts/managers/ui/ui_renderer")
-local UIWidget = require("scripts/managers/ui/ui_widget")
-local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local ProfileUtils = require("scripts/utilities/profile_utils")
 local ScriptWorld = require("scripts/foundation/utilities/script_world")
-local CharacterSelectPassTemplates = require("scripts/ui/pass_templates/character_select_pass_templates")
-local ViewElementInputLegend = require("scripts/ui/view_elements/view_element_input_legend/view_element_input_legend")
-local TextUtils = require("scripts/utilities/ui/text")
-local MasterItems = require("scripts/backend/master_items")
 local SocialConstants = require("scripts/managers/data_service/services/social/social_constants")
-local InputDevice = require("scripts/managers/input/input_device")
-local ViewElementWallet = require("scripts/ui/view_elements/view_element_wallet/view_element_wallet")
+local UIRenderer = require("scripts/managers/ui/ui_renderer")
+local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
+local UIWidget = require("scripts/managers/ui/ui_widget")
+local UIWidgetGrid = require("scripts/ui/widget_logic/ui_widget_grid")
+local ViewElementInputLegend = require("scripts/ui/view_elements/view_element_input_legend/view_element_input_legend")
 local ViewElementServerMigration = require("scripts/ui/view_elements/view_element_server_migration/view_element_server_migration")
+local ViewElementWallet = require("scripts/ui/view_elements/view_element_wallet/view_element_wallet")
 local MainMenuView = class("MainMenuView", "BaseView")
 
 MainMenuView.init = function (self, settings, context)
@@ -836,11 +834,16 @@ MainMenuView._show_character_details = function (self, show, profile)
 	self._widgets_by_name.character_info.content.visible = show
 
 	if show == true then
-		local character_title = ProfileUtils.character_title(profile)
+		local character_archetype_title = ProfileUtils.character_archetype_title(profile)
 		local character_level = tostring(profile.current_level) .. " "
-		self._widgets_by_name.character_info.content.character_title = string.format("%s %s", character_title, character_level)
+		self._widgets_by_name.character_info.content.character_archetype_title = string.format("%s %s", character_archetype_title, character_level)
 		self._widgets_by_name.character_info.content.character_name = ProfileUtils.character_name(profile)
 		self._widgets_by_name.character_info.content.archetype_icon = profile.archetype.archetype_badge
+		local player_title = ProfileUtils.character_title(profile)
+
+		if player_title then
+			self._widgets_by_name.character_info.content.character_title = player_title
+		end
 	end
 end
 
@@ -855,10 +858,23 @@ end
 MainMenuView._set_player_profile_information = function (self, profile, widget)
 	local character_name = ProfileUtils.character_name(profile)
 	local character_level = tostring(profile.current_level) .. " "
-	local character_title = ProfileUtils.character_title(profile)
+	local character_archetype_title = ProfileUtils.character_archetype_title(profile)
 	widget.content.character_name = character_name
-	widget.content.character_title = string.format("%s %s", character_title, character_level)
+	widget.content.character_archetype_title = string.format("%s %s", character_archetype_title, character_level)
 	widget.content.archetype_icon = profile.archetype.archetype_icon_large
+	local player_title = ProfileUtils.character_title(profile)
+
+	if player_title then
+		widget.content.character_title = player_title
+	end
+
+	if not player_title or player_title == "" then
+		widget.style.character_name.offset[2] = -12
+		widget.style.character_archetype_title.offset[2] = -1
+	else
+		widget.style.character_name.offset[2] = -30
+		widget.style.character_archetype_title.offset[2] = 12
+	end
 
 	self:_request_player_icon(profile, widget)
 

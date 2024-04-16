@@ -6,7 +6,7 @@ local UIRenderer = require("scripts/managers/ui/ui_renderer")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local UIWidgetGrid = require("scripts/ui/widget_logic/ui_widget_grid")
 local ViewElementGridSettings = require("scripts/ui/view_elements/view_element_grid/view_element_grid_settings")
-local create_definitions_function = require("scripts/ui/view_elements/view_element_grid/view_element_grid_definitions")
+local _create_definitions_function = require("scripts/ui/view_elements/view_element_grid/view_element_grid_definitions")
 local ViewElementGrid = class("ViewElementGrid", "ViewElementBase")
 
 ViewElementGrid.init = function (self, parent, draw_layer, start_scale, optional_menu_settings, optional_definitions)
@@ -32,7 +32,7 @@ ViewElementGrid.init = function (self, parent, draw_layer, start_scale, optional
 	self._widget_visual_margin = self._menu_settings.widget_visual_margin or 0
 	self._widget_icon_load_margin = self._menu_settings.widget_icon_load_margin or 0
 	self._resource_renderer_background = self._menu_settings.resource_renderer_background or false
-	local definitions = create_definitions_function(self._menu_settings)
+	local definitions = _create_definitions_function(self._menu_settings)
 
 	if optional_definitions then
 		table.merge_recursive(definitions, optional_definitions)
@@ -43,25 +43,31 @@ ViewElementGrid.init = function (self, parent, draw_layer, start_scale, optional
 
 	ViewElementGrid.super.init(self, parent, draw_layer, start_scale, definitions)
 
-	if self._menu_settings.use_parent_ui_renderer then
-		local ui_renderer = self._parent:ui_renderer()
-		local world = ui_renderer.world
-		self._ui_grid_renderer = ui_renderer
-		self._ui_grid_renderer_is_external = true
-		local gui = self._ui_grid_renderer.gui
-		local gui_retained = self._ui_grid_renderer.gui_retained
-		local resource_renderer_name = self._unique_id
-		local material_name = "content/ui/materials/render_target_masks/ui_render_target_straight_blur"
-		self._ui_resource_renderer = Managers.ui:create_renderer(resource_renderer_name, world, true, gui, gui_retained, material_name)
-	else
-		local optional_world = nil
+	self._no_resource_rendering = self._menu_settings.no_resource_rendering
 
-		if self._menu_settings.use_parent_world then
+	if not self._no_resource_rendering then
+		if self._menu_settings.use_parent_ui_renderer then
 			local ui_renderer = self._parent:ui_renderer()
-			optional_world = ui_renderer.world
-		end
+			local world = ui_renderer.world
+			self._ui_grid_renderer = ui_renderer
+			self._ui_grid_renderer_is_external = true
+			local gui = self._ui_grid_renderer.gui
+			local gui_retained = self._ui_grid_renderer.gui_retained
+			local resource_renderer_name = self._unique_id
+			local material_name = "content/ui/materials/render_target_masks/ui_render_target_straight_blur"
+			self._ui_resource_renderer = Managers.ui:create_renderer(resource_renderer_name, world, true, gui, gui_retained, material_name)
+		else
+			local optional_world = nil
 
-		self:_setup_grid_gui(optional_world)
+			if self._menu_settings.use_parent_world then
+				local ui_renderer = self._parent:ui_renderer()
+				optional_world = ui_renderer.world
+			end
+
+			self:_setup_grid_gui(optional_world)
+		end
+	else
+		self._ui_grid_renderer_is_external = true
 	end
 
 	self._widgets_by_name.sort_button.content.visible = false
@@ -192,12 +198,27 @@ ViewElementGrid.set_pivot_offset = function (self, x, y)
 	self:_set_scenegraph_position("pivot", x, y)
 end
 
+ViewElementGrid.set_grid_interaction_offset = function (self, x, y)
+	self:_set_scenegraph_position("grid_interaction", x, y)
+end
+
 ViewElementGrid.disable_input = function (self, disabled)
 	self._input_disabled = disabled
 end
 
 ViewElementGrid.input_disabled = function (self)
 	return self._input_disabled
+end
+
+ViewElementGrid.set_draw_layer = function (self, draw_layer)
+	if self._world then
+		local world_name = self._unique_id .. "_ui_grid_world"
+		local world_layer = 101 + draw_layer
+
+		Managers.world:set_world_layer(world_name, world_layer)
+	end
+
+	ViewElementGrid.super.set_draw_layer(self, draw_layer)
 end
 
 ViewElementGrid._setup_grid_gui = function (self, optional_world)
@@ -293,6 +314,14 @@ ViewElementGrid.set_color_intensity_multiplier = function (self, color_intensity
 	self._color_intensity_multiplier = color_intensity_multiplier or 1
 end
 
+ViewElementGrid.set_alpha_multiplier = function (self, alpha_multiplier)
+	self._alpha_multiplier = alpha_multiplier or 1
+end
+
+ViewElementGrid.alpha_multiplier = function (self)
+	return self._alpha_multiplier
+end
+
 ViewElementGrid.widgets = function (self)
 	return self._grid_widgets
 end
@@ -324,9 +353,18 @@ ViewElementGrid.draw = function (self, dt, t, ui_renderer, render_settings, inpu
 	render_settings.start_layer = (previous_layer or 0) + self._draw_layer
 	local ui_scenegraph = self._ui_scenegraph
 	local ui_grid_renderer = self._ui_grid_renderer
+	local no_resource_rendering = self._no_resource_rendering
+
+	if no_resource_rendering then
+		ui_grid_renderer = ui_renderer
+	end
+
 	local old_color_intensity_multiplier = render_settings.color_intensity_multiplier
 	local color_intensity_multiplier = self._color_intensity_multiplier or 1
 	render_settings.color_intensity_multiplier = (old_color_intensity_multiplier or 1) * color_intensity_multiplier
+	local old_alpha_multiplier = render_settings.alpha_multiplier
+	local alpha_multiplier = self._alpha_multiplier or 1
+	render_settings.alpha_multiplier = (old_alpha_multiplier or 1) * alpha_multiplier
 
 	if not self._ui_grid_renderer_is_external then
 		UIRenderer.clear_render_pass_queue(ui_grid_renderer)
@@ -355,10 +393,13 @@ ViewElementGrid.draw = function (self, dt, t, ui_renderer, render_settings, inpu
 		UIRenderer.end_pass(ui_renderer)
 	end
 
+	self:_draw_grid(dt, t, ui_renderer, input_service, render_settings)
+
 	render_settings.start_layer = previous_layer
 
-	self:_draw_grid(dt, t, input_service, render_settings)
-	self:_draw_render_target(render_settings)
+	if not no_resource_rendering then
+		self:_draw_render_target(render_settings)
+	end
 
 	self._drawn = true
 
@@ -376,6 +417,7 @@ ViewElementGrid.draw = function (self, dt, t, ui_renderer, render_settings, inpu
 	end
 
 	render_settings.color_intensity_multiplier = old_color_intensity_multiplier
+	render_settings.alpha_multiplier = old_alpha_multiplier
 end
 
 ViewElementGrid._draw_widgets = function (self, dt, t, input_service, ui_renderer, render_settings)
@@ -401,7 +443,7 @@ ViewElementGrid._draw_render_target = function (self, render_settings)
 	Gui.bitmap(gui, material, "render_pass", "to_screen", gui_position, gui_size, color)
 end
 
-ViewElementGrid._draw_grid = function (self, dt, t, input_service, render_settings)
+ViewElementGrid._draw_grid = function (self, dt, t, ui_renderer, input_service, render_settings)
 	local grid = self._grid
 
 	if not grid then
@@ -413,21 +455,31 @@ ViewElementGrid._draw_grid = function (self, dt, t, input_service, render_settin
 	local interaction_widget = widgets_by_name.grid_interaction
 	local is_grid_hovered = not self._using_cursor_navigation or interaction_widget.content.hotspot.is_hover or false
 	is_grid_hovered = is_grid_hovered and not self._input_disabled
-	local ui_renderer = self._ui_grid_renderer
 	local ui_resource_renderer = self._ui_resource_renderer
 	local ui_scenegraph = self._ui_scenegraph
-	local base_render_pass = ui_resource_renderer.base_render_pass
-	local render_target = ui_resource_renderer.render_target
+	local ui_grid_renderer = self._ui_grid_renderer
+	local widget_renderer = ui_resource_renderer
+	local no_resource_rendering = self._no_resource_rendering
 
-	UIRenderer.add_render_pass(ui_renderer, 0, base_render_pass, true, render_target)
-	UIRenderer.add_render_pass(ui_renderer, 1, "to_screen", false)
+	if no_resource_rendering then
+		ui_grid_renderer = ui_renderer
+		widget_renderer = ui_renderer
+	end
+
+	if not no_resource_rendering then
+		local base_render_pass = ui_resource_renderer.base_render_pass
+		local render_target = ui_resource_renderer.render_target
+
+		UIRenderer.add_render_pass(ui_grid_renderer, 0, base_render_pass, true, render_target)
+		UIRenderer.add_render_pass(ui_grid_renderer, 1, "to_screen", false)
+	end
 
 	local widget_visual_margin = self._widget_visual_margin
 
-	UIRenderer.begin_pass(ui_resource_renderer, ui_scenegraph, input_service, dt, render_settings)
+	UIRenderer.begin_pass(widget_renderer, ui_scenegraph, input_service, dt, render_settings)
 
 	if self._resource_renderer_background then
-		UIWidget.draw(self._widgets_by_name.grid_background, ui_resource_renderer)
+		UIWidget.draw(self._widgets_by_name.grid_background, widget_renderer)
 	end
 
 	for i = 1, #widgets do
@@ -440,11 +492,11 @@ ViewElementGrid._draw_grid = function (self, dt, t, input_service, render_settin
 				hotspot.force_disabled = not is_grid_hovered
 			end
 
-			UIWidget.draw(widget, ui_resource_renderer)
+			UIWidget.draw(widget, widget_renderer)
 		end
 	end
 
-	UIRenderer.end_pass(ui_resource_renderer)
+	UIRenderer.end_pass(widget_renderer)
 end
 
 ViewElementGrid._update_grid_widgets = function (self, dt, t, input_service)
@@ -463,14 +515,14 @@ ViewElementGrid._update_grid_widgets = function (self, dt, t, input_service)
 			local widget_type = widget.type
 			local template = content_blueprints[widget_type]
 			local content = widget.content
-			local privious_visibility_state = content.visible
+			local previous_visibility_state = content.visible
 			local visible = grid:is_widget_visible(widget, content.extra_margin or widget_visual_margin)
 			local render_icon = grid:is_widget_visible(widget, widget_icon_load_margin)
 			content.visible_last_frame = content.visible
 			content.visible = visible
 			content.render_icon = render_icon or visible
 
-			if visible or privious_visibility_state ~= visible then
+			if visible or previous_visibility_state ~= visible then
 				local update = template and template.update
 
 				if update then
@@ -495,6 +547,12 @@ ViewElementGrid._destroy_grid_widgets = function (self)
 
 	if widgets then
 		local ui_renderer = self._ui_resource_renderer
+		local no_resource_rendering = self._no_resource_rendering
+
+		if no_resource_rendering then
+			ui_renderer = self._parent:ui_renderer()
+		end
+
 		local num_widgets = #widgets
 
 		for i = 1, num_widgets do
@@ -538,6 +596,12 @@ ViewElementGrid._create_entry_widget_from_config = function (self, config, suffi
 	local scenegraph_id = "grid_content_pivot"
 	local widget_type = config.widget_type
 	local ui_renderer = self._ui_resource_renderer
+	local no_resource_rendering = self._no_resource_rendering
+
+	if no_resource_rendering then
+		ui_renderer = self._parent:ui_renderer()
+	end
+
 	local widget = nil
 	local template = self._content_blueprints[widget_type]
 	local size = template.size_function and template.size_function(self, config, ui_renderer) or template.size
@@ -583,9 +647,10 @@ ViewElementGrid._update_window_size = function (self)
 	local menu_settings = self._menu_settings
 	local using_title = self._display_name_key ~= nil
 	local hide_dividers = menu_settings.hide_dividers
+	local ignore_divider_height = menu_settings.ignore_divider_height
 	local bottom_divider_height_offset = 16
 	local title_top_divider_height_offset = 15
-	local grid_height_divider_deduction = hide_dividers and 0 or bottom_divider_height_offset + title_top_divider_height_offset
+	local grid_height_divider_deduction = (hide_dividers or ignore_divider_height) and 0 or bottom_divider_height_offset + title_top_divider_height_offset
 	local grid_size = menu_settings.grid_size
 	local mask_size = menu_settings.mask_size
 	local title_height = menu_settings.title_height - bottom_divider_height_offset
@@ -773,6 +838,11 @@ ViewElementGrid.set_loading_state = function (self, is_loading)
 	if is_loading then
 		self:_hide_empty_message()
 	end
+end
+
+ViewElementGrid.update_dividers_alpha = function (self, top_alpha, bottom_alpha)
+	self._widgets_by_name.grid_divider_top.alpha_multiplier = top_alpha
+	self._widgets_by_name.grid_divider_bottom.alpha_multiplier = bottom_alpha
 end
 
 ViewElementGrid.update_dividers = function (self, top_divider_material, top_divider_size, top_divider_position, bottom_divider_material, bottom_divider_size, bottom_divider_position)
@@ -991,6 +1061,12 @@ ViewElementGrid.update_grid_widgets_visibility = function (self)
 
 	if widgets then
 		local ui_renderer = self._ui_resource_renderer
+		local no_resource_rendering = self._no_resource_rendering
+
+		if no_resource_rendering then
+			ui_renderer = self._parent:ui_renderer()
+		end
+
 		local content_blueprints = self._content_blueprints
 		local num_widgets = #widgets
 		local update_visible_icon_prioritization_load = false
@@ -1173,6 +1249,14 @@ ViewElementGrid.force_update_list_size_keeping_scroll = function (self)
 	self:set_scrollbar_progress(current_scroll / grid:scroll_length(), true)
 end
 
+ViewElementGrid.hovered_grid_index = function (self)
+	local grid = self._grid
+
+	if grid then
+		return grid:hovered_grid_index()
+	end
+end
+
 ViewElementGrid.hovered_widget = function (self)
 	local grid = self._grid
 
@@ -1183,6 +1267,57 @@ ViewElementGrid.hovered_widget = function (self)
 
 		return widget
 	end
+end
+
+ViewElementGrid.set_background_hovered = function (self, hovered)
+	local grid_background = self._widgets_by_name.grid_background
+
+	if grid_background then
+		grid_background.content.hovered = hovered
+	end
+end
+
+ViewElementGrid.hovered = function (self)
+	local widgets_by_name = self._widgets_by_name
+	local interaction_widget = widgets_by_name.grid_interaction
+	local is_grid_hovered = self._using_cursor_navigation and (interaction_widget.content.hotspot.is_hover or false)
+	is_grid_hovered = is_grid_hovered and not self._input_disabled
+
+	return is_grid_hovered
+end
+
+ViewElementGrid.pressed = function (self)
+	local widgets_by_name = self._widgets_by_name
+	local interaction_widget = widgets_by_name.grid_interaction
+	local on_pressed = interaction_widget.content.hotspot.on_pressed or false
+	local on_right_pressed = interaction_widget.content.hotspot.on_right_pressed or false
+	on_pressed = on_pressed and not self._input_disabled
+	on_right_pressed = on_right_pressed and not self._input_disabled
+
+	return on_pressed, on_right_pressed
+end
+
+ViewElementGrid.select = function (self)
+	local widgets_by_name = self._widgets_by_name
+	local interaction_widget = widgets_by_name.grid_interaction
+	interaction_widget.content.hotspot.is_selected = true
+end
+
+ViewElementGrid.unselect = function (self)
+	local widgets_by_name = self._widgets_by_name
+	local interaction_widget = widgets_by_name.grid_interaction
+	interaction_widget.content.hotspot.is_selected = false
+end
+
+ViewElementGrid.selected = function (self)
+	local widgets_by_name = self._widgets_by_name
+	local interaction_widget = widgets_by_name.grid_interaction
+
+	if interaction_widget.content.hotspot.is_selected == nil then
+		return false
+	end
+
+	return interaction_widget.content.hotspot.is_selected
 end
 
 return ViewElementGrid

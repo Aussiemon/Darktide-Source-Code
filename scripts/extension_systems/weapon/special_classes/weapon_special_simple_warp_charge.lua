@@ -8,6 +8,7 @@ WeaponSpecialSimpleWarpCharge.init = function (self, weapon_special_context, wea
 	self._weapon_extension = weapon_special_context.weapon_extension
 	self._player_unit = weapon_special_context.player_unit
 	self._warp_charge_component = weapon_special_context.warp_charge_component
+	self._action_module_charge_component = weapon_special_context.action_module_charge_component
 	self._inventory_slot_component = weapon_special_init_data.inventory_slot_component
 	local tweak_data = weapon_special_init_data.tweak_data
 	self._tweak_data = tweak_data
@@ -15,7 +16,15 @@ WeaponSpecialSimpleWarpCharge.init = function (self, weapon_special_context, wea
 end
 
 WeaponSpecialSimpleWarpCharge.update = function (self, dt, t)
+	local was_active = self._inventory_slot_component.special_active
+
 	WeaponSpecial.update_active(t, self._tweak_data, self._inventory_slot_component, self._buff_extension, self._input_extension)
+
+	local is_active = self._inventory_slot_component.special_active
+
+	if was_active and not is_active and self._tweak_data.loose_charge then
+		self._action_module_charge_component.charge_level = 0
+	end
 end
 
 WeaponSpecialSimpleWarpCharge.on_special_activation = function (self, t)

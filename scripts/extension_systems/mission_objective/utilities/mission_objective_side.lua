@@ -43,6 +43,8 @@ MissionObjectiveSide.update_progression = function (self)
 
 	local amount_to_collect = self:max_incremented_progression()
 
+	Managers.stats:record_team("hook_objective_side_incremented_progression", self._name, self._incremented_progression)
+
 	if amount_to_collect > 0 then
 		local current_amount = self:incremented_progression()
 		local progression = current_amount / amount_to_collect

@@ -44,6 +44,54 @@ templates.weapon_trait_bespoke_ogryn_thumper_p2_power_bonus_on_continuous_fire =
 		}
 	}
 }
+templates.weapon_trait_bespoke_ogryn_thumper_p2_explosion_radius_bonus_on_continuous_fire = {
+	weapon_trait_bespoke_ogryn_thumper_p2_explosion_radius_bonus_on_continuous_fire = {
+		{
+			stat_buffs = {
+				[stat_buffs.explosion_radius_modifier] = 0.03
+			}
+		},
+		{
+			stat_buffs = {
+				[stat_buffs.explosion_radius_modifier] = 0.04
+			}
+		},
+		{
+			stat_buffs = {
+				[stat_buffs.explosion_radius_modifier] = 0.05
+			}
+		},
+		{
+			stat_buffs = {
+				[stat_buffs.explosion_radius_modifier] = 0.06
+			}
+		}
+	}
+}
+templates.weapon_trait_bespoke_ogryn_thumper_p2_weakspot_projectile_hit_increases_reload_speed = {
+	weapon_trait_bespoke_ogryn_thumper_p2_weakspot_projectile_hit_increases_reload_speed = {
+		{
+			proc_stat_buffs = {
+				[stat_buffs.reload_speed] = 0.15
+			}
+		},
+		{
+			proc_stat_buffs = {
+				[stat_buffs.reload_speed] = 0.2
+			}
+		},
+		{
+			proc_stat_buffs = {
+				[stat_buffs.reload_speed] = 0.25
+			}
+		},
+		{
+			proc_stat_buffs = {
+				[stat_buffs.reload_speed] = 0.3
+			}
+		}
+	}
+}
 templates.weapon_trait_bespoke_ogryn_thumper_p2_pass_trough_armor_on_weapon_special = {
 	weapon_trait_bespoke_ogryn_thumper_p2_pass_trough_armor_on_weapon_special = {
 		{}
@@ -51,6 +99,30 @@ templates.weapon_trait_bespoke_ogryn_thumper_p2_pass_trough_armor_on_weapon_spec
 }
 templates.weapon_trait_bespoke_ogryn_thumper_p2_targets_receive_rending_debuff = {
 	weapon_trait_bespoke_ogryn_thumper_p2_targets_receive_rending_debuff = {
+		{
+			target_buff_data = {
+				num_stacks_on_proc = 1
+			}
+		},
+		{
+			target_buff_data = {
+				num_stacks_on_proc = 2
+			}
+		},
+		{
+			target_buff_data = {
+				num_stacks_on_proc = 3
+			}
+		},
+		{
+			target_buff_data = {
+				num_stacks_on_proc = 4
+			}
+		}
+	}
+}
+templates.weapon_trait_bespoke_ogryn_thumper_p2_close_explosion_applies_bleed = {
+	weapon_trait_bespoke_ogryn_thumper_p2_close_explosion_applies_bleed = {
 		{
 			target_buff_data = {
 				num_stacks_on_proc = 1

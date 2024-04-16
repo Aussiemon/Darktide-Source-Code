@@ -341,9 +341,15 @@ local player_panel_pass_template = {
 		pass_type = "text"
 	},
 	{
-		style_id = "character_title",
-		value_id = "character_title",
+		style_id = "character_archetype_title",
+		value_id = "character_archetype_title",
 		pass_type = "text"
+	},
+	{
+		value = "",
+		value_id = "character_title",
+		pass_type = "text",
+		style_id = "character_title"
 	},
 	{
 		value = "",

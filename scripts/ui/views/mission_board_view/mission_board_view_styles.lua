@@ -1500,7 +1500,7 @@ MissionBoardViewStyles.happening_widget_style_function = function (mission_type)
 end
 
 MissionBoardViewStyles.detail_widget_style_function = function (mission_type)
-	return {
+	local t = {
 		background = {
 			color = {
 				200,
@@ -1862,6 +1862,8 @@ MissionBoardViewStyles.detail_widget_style_function = function (mission_type)
 			text_color = MissionBoardViewSettings.color_accent
 		}
 	}
+
+	return t
 end
 
 MissionBoardViewStyles.objective_widget_style_function = function (mission_type)

@@ -97,6 +97,9 @@ ItemPreviewer.preview = function (self, resource, return_data)
 						},
 						{
 							item = item_data.prop_item
+						},
+						{
+							item = item_data.prop_item_2
 						}
 					}
 					item_data.base_unit = "content/characters/player/human/third_person/base_gear_rig"
@@ -116,6 +119,9 @@ ItemPreviewer.preview = function (self, resource, return_data)
 						},
 						{
 							item = item_data.prop_item
+						},
+						{
+							item = item_data.prop_item_2
 						}
 					}
 					item_data.base_unit = "content/characters/player/ogryn/third_person/base_gear_rig"

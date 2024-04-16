@@ -56,14 +56,19 @@ PsykerThrowingKnivesEffects.init = function (self, context, slot, weapon_templat
 end
 
 PsykerThrowingKnivesEffects.fixed_update = function (self, unit, dt, t)
-	return
+	self._remaining_ability_charges = self._ability_extension:remaining_ability_charges("grenade_ability")
+	self._t = t
+	local any_visible = self:_update_ammo_count(t)
+
+	if any_visible then
+		self:_create_passive_sfx()
+	else
+		self:_destroy_passive_sfx()
+	end
 end
 
 PsykerThrowingKnivesEffects.update = function (self, unit, dt, t, frame)
-	self._remaining_ability_charges = self._ability_extension:remaining_ability_charges("grenade_ability")
-	self._t = t
-
-	self:_update_ammo_count(t)
+	return
 end
 
 PsykerThrowingKnivesEffects.update_first_person_mode = function (self, first_person_mode)
@@ -119,9 +124,7 @@ PsykerThrowingKnivesEffects._update_ammo_count = function (self, t)
 		any_visible = any_visible or should_be_visible
 	end
 
-	if any_visible then
-		self:_create_passive_sfx()
-	end
+	return any_visible
 end
 
 PsykerThrowingKnivesEffects._hide_all_ammo = function (self)

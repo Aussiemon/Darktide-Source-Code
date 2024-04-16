@@ -246,6 +246,26 @@ local template_functions = {
 	value_slider = construct_interface_settings_value_slider,
 	dropdown = construct_interface_settings_dropdown
 }
+
+local function _notification_options()
+	local options = {
+		{
+			display_name = "loc_setting_notification_type_none",
+			name = "none"
+		},
+		{
+			display_name = "loc_setting_notification_type_combat_feed",
+			name = "combat_feed"
+		},
+		{
+			display_name = "loc_setting_notification_type_notification",
+			name = "notification"
+		}
+	}
+
+	return options
+end
+
 local settings_definitions = {
 	{
 		group_name = "gameplay_settings",
@@ -274,6 +294,11 @@ local settings_definitions = {
 		end
 	},
 	{
+		group_name = "buff_interface_settings",
+		display_name = "loc_settings_menu_group_buff_interface_settings",
+		widget_type = "group_header"
+	},
+	{
 		save_location = "interface_settings",
 		default_value = true,
 		display_name = "loc_interface_setting_show_group_buff_icon_in_categories",
@@ -282,6 +307,85 @@ local settings_definitions = {
 		widget_type = "boolean",
 		on_value_changed = function (value)
 			return
+		end
+	},
+	{
+		save_location = "interface_settings",
+		default_value = true,
+		display_name = "loc_interface_setting_show_show_aura_buff_icons",
+		id = "show_aura_buff_icons",
+		tooltip_text = "loc_interface_setting_show_show_aura_buff_icons_mouseover",
+		widget_type = "boolean",
+		on_value_changed = function (value)
+			return
+		end
+	},
+	{
+		group_name = "combat_feed_settings",
+		display_name = "loc_settings_menu_group_combat_feed_settings",
+		widget_type = "group_header"
+	},
+	{
+		save_location = "interface_settings",
+		display_name = "loc_setting_combat_feed_enabled",
+		id = "combat_feed_enabled",
+		default_value = true,
+		widget_type = "boolean",
+		on_value_changed = function (value)
+			Managers.event:trigger("event_update_combat_feed_enabled", value)
+		end
+	},
+	{
+		step_size_value = 1,
+		min_value = 4,
+		display_name = "loc_setting_combat_feed_max_messages",
+		num_decimals = 0,
+		max_value = 12,
+		default_value = 8,
+		widget_type = "value_slider",
+		id = "combat_feed_max_messages",
+		save_location = "interface_settings",
+		on_value_changed = function (value)
+			Managers.event:trigger("event_update_combat_feed_max_messages", value)
+		end
+	},
+	{
+		step_size_value = 1,
+		min_value = 3,
+		display_name = "loc_setting_combat_feed_message_duration",
+		num_decimals = 0,
+		max_value = 10,
+		default_value = 5,
+		widget_type = "value_slider",
+		id = "combat_feed_message_duration",
+		save_location = "interface_settings",
+		on_value_changed = function (value)
+			Managers.event:trigger("event_update_combat_feed_message_duration", value)
+		end
+	},
+	{
+		group_name = "notification_settings",
+		display_name = "loc_setting_menu_group_notification_settings",
+		widget_type = "group_header"
+	},
+	{
+		save_location = "interface_settings",
+		display_name = "loc_setting_notification_assist_notification_type",
+		id = "assist_notification_type",
+		widget_type = "dropdown",
+		options = _notification_options(),
+		on_value_changed = function (value)
+			Managers.event:trigger("event_update_assist_notification_type", value)
+		end
+	},
+	{
+		save_location = "interface_settings",
+		display_name = "loc_setting_notification_crafting_pickup_notification_type",
+		id = "crafting_pickup_notification_type",
+		widget_type = "dropdown",
+		options = _notification_options(),
+		on_value_changed = function (value)
+			Managers.event:trigger("event_update_crafting_pickup_notification_type", value)
 		end
 	},
 	{
@@ -409,6 +513,90 @@ local settings_definitions = {
 		end
 	},
 	{
+		group_name = "nameplate_settings",
+		display_name = "loc_settings_menu_group_nameplate_settings",
+		widget_type = "group_header"
+	},
+	{
+		save_location = "interface_settings",
+		tooltip_text = "loc_interface_setting_nameplates_in_mission_mouseover",
+		display_name = "loc_interface_setting_nameplates_in_mission",
+		id = "character_nameplates_in_mission_type",
+		default_value = "name_and_title",
+		widget_type = "dropdown",
+		options = {
+			{
+				display_name = "loc_setting_nameplates_in_mission_name_and_title",
+				name = "name_and_title"
+			},
+			{
+				display_name = "loc_setting_nameplates_in_mission_name",
+				name = "name"
+			},
+			{
+				display_name = "loc_setting_nameplates_in_mission_none",
+				name = "none"
+			}
+		},
+		on_value_changed = function (value)
+			Managers.event:trigger("event_titles_in_mission_setting_changed", value)
+		end
+	},
+	{
+		save_location = "interface_settings",
+		tooltip_text = "loc_interface_setting_my_title_in_hub_mouseover",
+		display_name = "loc_interface_setting_my_title_in_hub",
+		id = "my_title_in_hub",
+		default_value = false,
+		widget_type = "boolean",
+		on_value_changed = function (value)
+			Managers.event:trigger("event_titles_my_title_in_hub_setting_changed", value)
+		end
+	},
+	{
+		save_location = "interface_settings",
+		tooltip_text = "loc_interface_setting_title_color_type_mouseover",
+		display_name = "loc_interface_setting_title_color_type",
+		id = "character_titles_color_type",
+		default_value = "rarity_colors",
+		widget_type = "dropdown",
+		options = {
+			{
+				display_name = "loc_setting_title_color_type_rarities",
+				name = "rarity_colors"
+			},
+			{
+				display_name = "loc_setting_title_color_type_no_colors",
+				name = "no_colors"
+			}
+		},
+		on_value_changed = function (value)
+			Managers.event:trigger("event_hub_title_color_type_changed", value)
+			Managers.event:trigger("event_titles_my_title_in_hub_setting_changed", value)
+		end
+	},
+	{
+		save_location = "interface_settings",
+		tooltip_text = "loc_interface_setting_title_in_mission_color_type_mouseover",
+		display_name = "loc_interface_setting_title_in_mission_color_type",
+		id = "character_titles_in_mission_color_type",
+		default_value = "rarity_colors",
+		widget_type = "dropdown",
+		options = {
+			{
+				display_name = "loc_setting_title_color_type_rarities",
+				name = "rarity_colors"
+			},
+			{
+				display_name = "loc_setting_title_color_type_no_colors",
+				name = "no_colors"
+			}
+		},
+		on_value_changed = function (value)
+			Managers.event:trigger("event_in_mission_title_color_type_changed", "color_changed")
+		end
+	},
+	{
 		group_name = "other_settings",
 		display_name = "loc_settings_menu_group_other_settings",
 		widget_type = "group_header"
@@ -435,16 +623,6 @@ local settings_definitions = {
 		end,
 		validation_function = function ()
 			return not IS_XBS
-		end
-	},
-	{
-		save_location = "interface_settings",
-		display_name = "loc_interface_setting_show_crafting_pickup_notification",
-		id = "show_crafting_pickup_notification",
-		default_value = true,
-		widget_type = "boolean",
-		on_value_changed = function (value)
-			Managers.event:trigger("event_update_show_crafting_pickup_notification", value)
 		end
 	},
 	{

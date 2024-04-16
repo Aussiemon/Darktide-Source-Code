@@ -568,7 +568,8 @@ local views = {
 		disable_game_world = true,
 		levels = {
 			"content/levels/ui/barber/barber",
-			"content/levels/ui/barber_character_appearance/barber_character_appearance"
+			"content/levels/ui/barber_character_appearance/barber_character_appearance",
+			"content/levels/ui/barber_character_mindwipe/barber_character_mindwipe"
 		},
 		enter_sound_events = {
 			UISoundEvents.barber_chirurgeon_on_enter
@@ -942,6 +943,7 @@ _declare_view("cosmetics_vendor_view", require("scripts/ui/views/cosmetics_vendo
 _declare_view("cosmetics_vendor_background_view", require("scripts/ui/views/cosmetics_vendor_background_view/cosmetics_vendor_background_view_declaration_settings"))
 _declare_view("story_mission_lore_view", require("scripts/ui/views/story_mission_lore_view/story_mission_lore_view_declaration_settings"))
 _declare_view("story_mission_play_view", require("scripts/ui/views/story_mission_play_view/story_mission_play_view_declaration_settings"))
+_declare_view("penance_overview_view", require("scripts/ui/views/penance_overview_view/penance_overview_view_declaration_settings"))
 
 for view_name, settings in pairs(views) do
 	settings.name = view_name

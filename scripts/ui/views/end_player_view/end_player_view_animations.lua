@@ -769,4 +769,47 @@ animations.experience_gain_change_function = function (content, style)
 	style.offset[1] = internal_offset_x + bar_length * progress - width
 end
 
+animations.weapon_level_up = {
+	{
+		name = "level_up_mastery",
+		end_time = 1,
+		start_time = 0,
+		init = function (parent, ui_scenegraph, scenegraph_definition, widget, params)
+			return
+		end,
+		update = function (parent, ui_scenegraph, scenegraph_definition, widget, progress, params)
+			local slot = params.slot
+			local anim_progress = math.sin(progress * math.pi)
+			local text_style = widget.style["weapon_level_" .. slot]
+			local bar_style = widget.style["weapon_experience_bar_" .. slot]
+			local increased_font_size = text_style.default_font_size * 1.1
+			local current_font_size = text_style.default_font_size + increased_font_size * anim_progress
+			local text_start_color = text_style.default_text_color
+			local text_target_color = Color.ui_blue_light(255, true)
+
+			_color_utils_color_lerp(text_start_color, text_target_color, anim_progress, text_style.highlight_text_color, true)
+
+			local bar_start_color = bar_style.default_color
+			local bar_target_color = Color.ui_blue_light(255, true)
+
+			_color_utils_color_lerp(bar_start_color, bar_target_color, anim_progress, bar_style.color, true)
+
+			local current_mastery_level = widget.content["weapon_current_mastery_level_" .. slot]
+			local slug_text = string.format("Mastery: {#size(%d);color(%d, %d, %d)}%d{#reset()}", current_font_size, text_style.highlight_text_color[2], text_style.highlight_text_color[3], text_style.highlight_text_color[4], current_mastery_level)
+			widget.content["weapon_level_" .. slot] = slug_text
+		end,
+		on_complete = function (parent, ui_scenegraph, scenegraph_definition, widget, params)
+			local slot = params.slot
+			local text_style = widget.style["weapon_level_" .. slot]
+			local bar_style = widget.style["weapon_experience_bar_" .. slot]
+			text_style.text_color = table.clone(text_style.default_text_color)
+			bar_style.color[2] = bar_style.default_color[2]
+			bar_style.color[3] = bar_style.default_color[3]
+			bar_style.color[4] = bar_style.default_color[4]
+			local current_mastery_level = widget.content["weapon_current_mastery_level_" .. slot]
+			widget.content["weapon_level_" .. slot] = string.format("Mastery: %d", current_mastery_level)
+		end
+	}
+}
+
 return settings("EndPlayerViewAnimations", animations)

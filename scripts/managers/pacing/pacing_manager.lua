@@ -440,11 +440,20 @@ PacingManager.player_died = function (self, player_unit)
 		end
 	end
 
-	local max_out_tension_table = Managers.state.difficulty:get_table_entry_by_challenge(MAX_OUT_TENSION_BY_CHALLENGE)
-	local max_out_tension = max_out_tension_table[alive_players]
+	local has_auric_mutator = false
+	local mutator_manager = Managers.state.mutator
 
-	if max_out_tension then
-		self:add_tension(math.huge)
+	if mutator_manager:mutator("mutator_auric_tension_modifier") then
+		has_auric_mutator = true
+	end
+
+	if not has_auric_mutator then
+		local max_out_tension_table = Managers.state.difficulty:get_table_entry_by_challenge(MAX_OUT_TENSION_BY_CHALLENGE)
+		local max_out_tension = max_out_tension_table[alive_players]
+
+		if max_out_tension then
+			self:add_tension(math.huge)
+		end
 	end
 end
 
@@ -644,7 +653,7 @@ PacingManager.add_aggroed_minion = function (self, unit)
 		local challenge_rating = self:_get_challenge_rating(unit)
 
 		if challenge_rating then
-			self._total_challenge_rating = self._total_challenge_rating + challenge_rating
+			self._total_challenge_rating = math.max(math.round_with_precision(self._total_challenge_rating + challenge_rating, 2), 0)
 			self._saved_challenge_ratings[unit] = challenge_rating
 		end
 
@@ -676,7 +685,7 @@ PacingManager.remove_aggroed_minion = function (self, unit)
 		local challenge_rating = self:_get_challenge_rating(unit)
 
 		if challenge_rating then
-			self._total_challenge_rating = math.max(self._total_challenge_rating - challenge_rating, 0)
+			self._total_challenge_rating = math.max(math.round_with_precision(self._total_challenge_rating - challenge_rating, 2), 0)
 		end
 
 		self._num_aggroed_minions = self._num_aggroed_minions - 1
@@ -744,6 +753,12 @@ PacingManager.add_pacing_modifiers = function (self, modify_settings)
 
 	if modify_resistance then
 		Managers.state.difficulty:modify_resistance(modify_resistance)
+	end
+
+	local modify_challenge = modify_settings.modify_challenge
+
+	if modify_challenge then
+		Managers.state.difficulty:modify_challenge(modify_challenge)
 	end
 
 	local modify_challenge_resistance_scale = modify_settings.modify_challenge_resistance_scale
@@ -927,6 +942,12 @@ PacingManager.add_pacing_modifiers = function (self, modify_settings)
 	if ramp_duration_modifier then
 		self._ramp_duration_modifier = ramp_duration_modifier
 	end
+
+	local is_auric = modify_settings.is_auric
+
+	if is_auric then
+		self._is_auric = is_auric
+	end
 end
 
 PacingManager.aggro_roamer_zone_range = function (self, target_unit, range)
@@ -993,6 +1014,10 @@ PacingManager.has_hard_mode = function (self)
 	return self._hard_mode
 end
 
+PacingManager.is_auric = function (self)
+	return self._is_auric
+end
+
 PacingManager.set_minion_listening_for_player_deaths = function (self, unit, statistics_component, set)
 	if set then
 		self._minions_listening_for_player_deaths[unit] = statistics_component
@@ -1049,6 +1074,15 @@ end
 
 PacingManager.reset_specials_pacing_spawner_groups = function (self)
 	self._specials_pacing:set_spawner_groups(nil)
+end
+
+PacingManager.remove_monsters_behind_pos = function (self, pos)
+	self._monster_pacing:remove_monsters_behind_pos(pos)
+end
+
+PacingManager.reset_traveled_this_frame = function (self)
+	self._horde_pacing:reset_traveled_this_frame()
+	self._specials_pacing:reset_traveled_this_frame()
 end
 
 return PacingManager

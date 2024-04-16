@@ -181,9 +181,8 @@ DropdownPassTemplates.settings_dropdown = function (width, height, settings_area
 			visibility_function = list_item_focused_visibility_function
 		},
 		{
-			pass_type = "rect",
-			syle_id = "dropdown_background",
 			style_id = "dropdown_background",
+			pass_type = "rect",
 			style = {
 				vertical_alignment = "top",
 				horizontal_alignment = "right",

@@ -49,13 +49,14 @@ local player_progression_unlocks = {
 		cultist_berzerker = "all_cultist_elites_killed",
 		renegade_netgunner = "all_renegade_specials_killed",
 		renegade_sniper = "all_renegade_specials_killed",
-		chaos_ogryn_gunner = "all_chaos_elites_killed",
+		cultist_grenadier = "all_cultist_specials_killed",
 		cultist_mutant = "all_cultist_specials_killed",
 		chaos_hound = "all_chaos_specials_killed",
 		chaos_ogryn_executor = "all_chaos_elites_killed",
 		chaos_ogryn_bulwark = "all_chaos_elites_killed",
-		cultist_gunner = "all_cultist_elites_killed",
+		chaos_ogryn_gunner = "all_chaos_elites_killed",
 		renegade_berzerker = "all_renegade_elites_killed",
+		cultist_gunner = "all_cultist_elites_killed",
 		cultist_flamer = "all_cultist_specials_killed"
 	}
 }

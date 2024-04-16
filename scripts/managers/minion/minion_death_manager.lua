@@ -25,6 +25,8 @@ MinionDeathManager.init = function (self, is_server, network_event_delegate, sof
 	if not is_server then
 		network_event_delegate:register_session_events(self, unpack(CLIENT_RPCS))
 	end
+
+	self._unit_id_or_level_index = {}
 end
 
 MinionDeathManager.destroy = function (self)
@@ -74,9 +76,12 @@ MinionDeathManager.die = function (self, unit, attacking_unit_or_nil, attack_dir
 
 		local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
 		local breed = unit_data_extension:breed()
+		local is_level_unit, unit_id = Managers.state.unit_spawner:game_object_id_or_level_index(unit)
+		self._unit_id_or_level_index.is_level_unit = is_level_unit
+		self._unit_id_or_level_index.unit_id = unit_id
 
 		_trigger_kill_vo(unit, attacking_unit_or_nil, hit_zone_name_or_nil, attack_type_or_nil, damage_profile)
-		_trigger_on_kill_procs(unit, breed, attacking_unit_or_nil, attack_type_or_nil, damage_profile, damage_type_or_nil)
+		_trigger_on_kill_procs(unit, breed, attacking_unit_or_nil, attack_type_or_nil, damage_profile, damage_type_or_nil, self._unit_id_or_level_index)
 
 		local visual_loadout_extension = ScriptUnit.extension(unit, "visual_loadout_system")
 		local inventory_slots = visual_loadout_extension:inventory_slots()
@@ -279,7 +284,7 @@ local locked_in_melee_settings = AttackIntensitySettings.locked_in_melee_setting
 local MAX_TENSION_TO_ADD_DEATH_TENSION = 50
 local CHALLENGE_RATING_TENSION_MULTIPLIER = 0.75
 
-function _trigger_on_kill_procs(unit, breed, attacking_unit_or_nil, attack_type_or_nil, damage_profile, damage_type_or_nil)
+function _trigger_on_kill_procs(unit, breed, attacking_unit_or_nil, attack_type_or_nil, damage_profile, damage_type_or_nil, unit_id)
 	local pacing_manager = Managers.state.pacing
 
 	if pacing_manager:tension() < MAX_TENSION_TO_ADD_DEATH_TENSION then
@@ -336,6 +341,7 @@ function _trigger_on_kill_procs(unit, breed, attacking_unit_or_nil, attack_type_
 				param_table.side_name = victim_side:name()
 				param_table.position = Vector3Box(victim_position)
 				param_table.tags = breed.tags
+				param_table.dying_unit_id_or_level_index = unit_id
 
 				buff_extension:add_proc_event(proc_events.on_minion_death, param_table)
 			end

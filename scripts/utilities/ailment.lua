@@ -24,6 +24,8 @@ function _apply_ailment_effect(unit, offset_time, start_time, duration, material
 		end
 	end
 
+	Unit.set_permutation_for_materials(unit, "HAVE_BURN", true, true)
+
 	local effect_data = Vector3(offset_time, start_time, duration)
 
 	Unit.set_vector3_for_materials(unit, MATERIAL_KEY, effect_data, optional_include_children)

@@ -441,12 +441,9 @@ DialogueSystem._update_currently_playing_dialogues = function (self, dt, t)
 									end
 								elseif heard_speak_target == "mission_givers" then
 									local voice_over_spawn_manager = Managers.state.voice_over_spawn
-									local mission_giver_breed_settings = DialogueBreedSettings.mission_giver
-									local mission_giver_voices = mission_giver_breed_settings.wwise_voices
+									local mission_giver_units = voice_over_spawn_manager:voice_over_units()
 
-									for _, voice in pairs(mission_giver_voices) do
-										local mission_giver_unit = voice_over_spawn_manager:voice_over_unit(voice)
-
+									for _, mission_giver_unit in pairs(mission_giver_units) do
 										if mission_giver_unit and mission_giver_unit ~= unit then
 											self:append_targeted_source_event(mission_giver_unit, "heard_speak", temp_event_data, nil)
 										end
@@ -456,6 +453,38 @@ DialogueSystem._update_currently_playing_dialogues = function (self, dt, t)
 
 									if level then
 										Level.trigger_event(level, success_rule.name)
+									end
+								elseif heard_speak_target == "all_including_self" then
+									for registered_unit, registered_extension in pairs(unit_to_extension_map) do
+										repeat
+											if registered_extension:is_dialogue_disabled() then
+												break
+											end
+
+											self:append_event_to_queue(registered_unit, "heard_speak", temp_event_data, nil)
+										until true
+									end
+								elseif heard_speak_target == "visible_npcs" then
+									for registered_unit, registered_extension in pairs(unit_to_extension_map) do
+										repeat
+											if registered_extension:is_dialogue_disabled() then
+												break
+											end
+
+											local faction = registered_extension:faction_name()
+
+											if faction ~= "npc" then
+												break
+											end
+
+											local is_invisible = Unit.get_data(registered_unit, "invisible")
+
+											if is_invisible then
+												break
+											end
+
+											self:append_event_to_queue(registered_unit, "heard_speak", temp_event_data, nil)
+										until true
 									end
 								else
 									Log.warning("DialogueSystem", "heard_speak_routing.target %s is wrong or unrecognized", heard_speak_target)
@@ -773,6 +802,10 @@ DialogueSystem._process_local_playing_dialogues = function (self, dt, t)
 					end
 				else
 					currently_playing_dialogue.dialogue_timer = currently_playing_dialogue.dialogue_timer - dt
+
+					if currently_playing_dialogue.subtitle_distance then
+						currently_playing_dialogue.is_audible = self:is_dialogue_audible(unit, currently_playing_dialogue, t)
+					end
 				end
 
 				self._dialogue_system_subtitle:update()
@@ -799,9 +832,9 @@ DialogueSystem._process_local_vo_event_queue = function (self)
 end
 
 DialogueSystem.append_faction_event = function (self, source_unit, event_name, event_data, identifier, breed_faction_name, exclude_me)
-	local num_unique_voices = #self.global_context.player_voice_profiles
+	local num_unique_voices = self.global_context.player_voice_profiles and #self.global_context.player_voice_profiles
 
-	if num_unique_voices == 0 then
+	if not num_unique_voices then
 		return
 	end
 
@@ -1054,18 +1087,12 @@ DialogueSystem._play_dialogue_event_implementation = function (self, go_id, is_l
 				dialogue.concurrent_wwise_event_id = self:play_wwise_event(extension, concurrent_wwise_event)
 			end
 
-			local class_name = extension._context.class_name
-			local breed_dialogue_setting = DialogueBreedSettings[class_name]
+			local distance_culled_wwise_routes = DialogueSettings.distance_culled_wwise_routes
+			local subtitle_distance = distance_culled_wwise_routes[wwise_route_key]
 
-			if breed_dialogue_setting then
-				local subtitle_distance = breed_dialogue_setting.subtitle_distance
-
-				if subtitle_distance then
-					dialogue.subtitle_distance = subtitle_distance
-					dialogue.is_audible = self:is_dialogue_audible(dialogue_actor_unit, dialogue)
-				else
-					dialogue.is_audible = true
-				end
+			if subtitle_distance then
+				dialogue.subtitle_distance = subtitle_distance
+				dialogue.is_audible = self:is_dialogue_audible(dialogue_actor_unit, dialogue)
 			else
 				dialogue.is_audible = true
 			end
@@ -1275,6 +1302,15 @@ DialogueSystem._process_query = function (self, query, t, is_a_delayed_query)
 	local dialogue_template = self._dialogue_templates[result]
 	local on_pre_rule_execution = dialogue_template.on_pre_rule_execution
 	local delay_vo = on_pre_rule_execution and on_pre_rule_execution.delay_vo
+
+	if is_a_delayed_query then
+		local still_valid = self:_is_rule_still_valid(query.validated_rule, extension)
+
+		if not still_valid then
+			return
+		end
+	end
+
 	local evaluate_now = is_a_delayed_query or not delay_vo
 
 	if evaluate_now then
@@ -1291,7 +1327,9 @@ DialogueSystem._process_query = function (self, query, t, is_a_delayed_query)
 				local wait_time = 0
 
 				for playing_dialogue, _ in pairs(interrupt_dialogue_list) do
-					if playing_dialogue.category == "conversations_prio_1" then
+					local category_config = DialogueCategoryConfig[playing_dialogue.category]
+
+					if category_config.queue_vox_prio_0 then
 						local dialogue_length = playing_dialogue.dialogue_timer
 
 						if wait_time < dialogue_length then
@@ -1389,7 +1427,6 @@ DialogueSystem._execute_targeted_dialogue_event = function (self, target_unit, q
 
 	if DEDICATED_SERVER then
 		Managers.state.game_session:send_rpc_client("rpc_play_dialogue_event", peer_id, go_id, is_level_unit, level_name_hash, dialogue_id, dialogue_index, query.rule_index)
-		self:_play_dialogue_event_implementation(go_id, is_level_unit, level_name_hash, dialogue_id, dialogue_index, query.rule_index, query)
 	elseif self._is_server and not is_remote_player then
 		self:_play_dialogue_event_implementation(go_id, is_level_unit, level_name_hash, dialogue_id, dialogue_index, query.rule_index, query)
 	elseif self._is_server and is_remote_player then
@@ -1438,15 +1475,9 @@ DialogueSystem._execute_accepted_query = function (self, t, query, dialogue_acto
 end
 
 DialogueSystem._register_telemetry_events = function (self, extension, query, event_name)
-	local global_context = self.global_context
-	local player_context = extension:get_context()
-	local vo_rule = query.validated_rule.name
-	local vo_profile_name = extension:get_profile_name()
-	local vo_category_name = query.validated_rule.category
-	local resistance = Managers.state.difficulty:get_resistance()
-	local challenge = Managers.state.difficulty:get_challenge()
-
-	Managers.telemetry_events:vo_event_triggered(global_context, player_context, event_name, vo_rule, vo_profile_name, vo_category_name, resistance, challenge)
+	if DEDICATED_SERVER then
+		Managers.telemetry_reporters:reporter("voice_over_event_triggered"):register_event(query.validated_rule.name)
+	end
 end
 
 DialogueSystem._can_query_play = function (self, query, dialogue_actor_unit, INTERRUPT_DIALOGUE_LIST)
@@ -1480,6 +1511,42 @@ DialogueSystem._can_query_play = function (self, query, dialogue_actor_unit, INT
 	end
 
 	return will_play, INTERRUPT_DIALOGUE_LIST
+end
+
+DialogueSystem._is_rule_still_valid = function (self, rule, extension)
+	local criterias = rule.real_criterias
+
+	for i = 1, #criterias do
+		local criteria = criterias[i]
+		local criteria_type = criteria[1]
+
+		if criteria_type == "user_memory" or criteria_type == "faction_memory" then
+			local memory_name = criteria[2]
+			local current_memory = extension:read_from_memory(criteria_type, memory_name)
+
+			if current_memory then
+				local memory_ok = self:_check_memory(criteria, current_memory)
+
+				if not memory_ok then
+					return false
+				end
+			end
+		end
+	end
+
+	return true
+end
+
+DialogueSystem._check_memory = function (self, criteria, current_memory)
+	if criteria[3] == "TIMEDIFF" then
+		if criteria[4] == "GT" then
+			return current_memory + criteria[5] < self._LOCAL_GAMETIME
+		elseif criteria[4] == "LT" then
+			return self._LOCAL_GAMETIME < current_memory + criteria[5]
+		end
+	end
+
+	return true
 end
 
 DialogueSystem._trigger_face_animation_event = function (self, unit, animation_event)

@@ -193,8 +193,11 @@ WwisePortalVolume.door_apply_portal_obstruction = function (self, door_is_closed
 			normalize_anim_time = 1 - normalize_anim_time
 		end
 
+		local min_obstruction = self:get_data(unit, "min_obstruction")
+		local max_obstruction = self:get_data(unit, "max_obstruction")
 		normalize_anim_time = 1 - normalize_anim_time
 		normalize_anim_time = math.clamp(normalize_anim_time, 0, 1)
+		normalize_anim_time = math.lerp(min_obstruction, max_obstruction, normalize_anim_time)
 		local obstruction = normalize_anim_time
 		local occlusion = normalize_anim_time
 
@@ -224,6 +227,24 @@ WwisePortalVolume.component_data = {
 		ui_type = "check_box",
 		value = true,
 		ui_name = "Register Portal"
+	},
+	min_obstruction = {
+		ui_type = "number",
+		min = 0,
+		step = 0.01,
+		decimals = 2,
+		value = 0,
+		ui_name = "Lowest Possible Obstruction & Occlusion Ratio",
+		max = 1
+	},
+	max_obstruction = {
+		ui_type = "number",
+		min = 0,
+		step = 0.01,
+		decimals = 2,
+		value = 1,
+		ui_name = "Higest Possible Obstruction & Occlusion Ratio",
+		max = 1
 	},
 	adjust_open_anim_time = {
 		ui_type = "check_box",

@@ -102,6 +102,25 @@ Characters.create = function (self, new_character)
 	end)
 end
 
+Characters.transform = function (self, character_id, transformed_character, operation_cost)
+	return BackendUtilities.make_account_title_request("characters", BackendUtilities.url_builder(character_id):path("/operations"):path("/transform"), {
+		method = "PUT",
+		body = transformed_character
+	}):next(function (result)
+		return Managers.data_service.store:on_character_operation(operation_cost):next(function ()
+			return result
+		end)
+	end)
+end
+
+Characters.fetch_operations = function (self)
+	return Managers.backend:title_request("/data/characters/operations", {
+		method = "GET"
+	}):next(function (data)
+		return data.body
+	end)
+end
+
 local function _process_stats(stats)
 	local result = {}
 

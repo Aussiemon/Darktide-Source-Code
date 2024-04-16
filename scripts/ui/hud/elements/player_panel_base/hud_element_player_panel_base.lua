@@ -1,3 +1,4 @@
+local HudElementTeamPlayerPanelHubSettings = require("scripts/ui/hud/elements/team_player_panel_hub/hud_element_team_player_panel_hub_settings")
 local HudHealthBarLogic = require("scripts/ui/hud/elements/hud_health_bar_logic")
 local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
 local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
@@ -84,6 +85,8 @@ HudElementPlayerPanelBase.init = function (self, parent, draw_layer, start_scale
 	self._is_player_speaking = false
 
 	Managers.event:register(self, "chat_manager_participant_update", "_chat_manager_participant_update")
+	Managers.event:register(self, "event_player_profile_updated", "_event_player_profile_updated")
+	Managers.event:register(self, "event_hub_title_color_type_changed", "_event_hub_title_color_type_changed")
 end
 
 HudElementPlayerPanelBase.update = function (self, dt, t, ui_renderer, render_settings, input_service)
@@ -92,6 +95,23 @@ HudElementPlayerPanelBase.update = function (self, dt, t, ui_renderer, render_se
 	local player = self._data.player
 
 	self:_update_player_features(dt, t, player, ui_renderer)
+end
+
+HudElementPlayerPanelBase._event_player_profile_updated = function (self, synced_peer_id, synced_local_player_id, new_profile)
+	local player = self._data.player
+	local valid = player.peer_id and player:peer_id() == synced_peer_id
+
+	if valid then
+		self:_on_profile_updated(new_profile)
+	end
+end
+
+HudElementPlayerPanelBase._event_hub_title_color_type_changed = function (self)
+	self._character_title = nil
+end
+
+HudElementPlayerPanelBase._on_profile_updated = function (self, new_profile)
+	self._force_update_character_title = true
 end
 
 HudElementPlayerPanelBase._player_extensions = function (self, player)
@@ -219,9 +239,70 @@ HudElementPlayerPanelBase._update_player_features = function (self, dt, t, playe
 
 		if archetype ~= self._archetype then
 			self._archetype = archetype
-			local character_title = ProfileUtils.character_title(profile, true)
+			local character_title = ProfileUtils.character_archetype_title(profile, true)
 
 			self:_set_character_text(character_title, ui_renderer)
+		end
+	end
+
+	if profile and supported_features.character_titles then
+		local widgets_by_name = self._widgets_by_name
+		local widget = widgets_by_name.character_title
+
+		if widget then
+			local player_title_no_color = ProfileUtils.character_title_no_color(profile)
+
+			if player_title_no_color ~= self._character_title or self._force_update_character_title then
+				local player_title = ProfileUtils.character_title(profile)
+				widget.content.text = player_title
+
+				if player_title == "" then
+					widget.content.text = " "
+				end
+
+				widget.dirty = true
+				self._character_title = player_title_no_color
+				self._force_update_character_title = false
+
+				if self._is_party_player then
+					local title_settings = HudElementTeamPlayerPanelHubSettings.title_settings.party_player
+					local bar_size = HudElementTeamPlayerPanelHubSettings.size
+
+					if player_title == "" then
+						local player_name_y_offset = title_settings.no_title.player_name_y_offset
+						self._widgets_by_name.player_name.style.text.offset[2] = -bar_size[2] + player_name_y_offset
+						self._widgets_by_name.player_name.style.text.default_offset[2] = -bar_size[2] + player_name_y_offset
+						local rich_precence_y_offset = title_settings.no_title.rich_precence_y_offset
+						self._widgets_by_name.rich_presence.style.text.offset[2] = rich_precence_y_offset
+					else
+						local player_name_y_offset = title_settings.title.player_name_y_offset
+						self._widgets_by_name.player_name.style.text.offset[2] = -bar_size[2] + player_name_y_offset
+						self._widgets_by_name.player_name.style.text.default_offset[2] = -bar_size[2] + player_name_y_offset
+						local rich_precence_y_offset = title_settings.title.rich_precence_y_offset
+						self._widgets_by_name.rich_presence.style.text.offset[2] = bar_size[2] + rich_precence_y_offset
+					end
+
+					self._widgets_by_name.player_name.dirty = true
+					self._widgets_by_name.rich_presence.dirty = true
+				else
+					local title_settings = HudElementTeamPlayerPanelHubSettings.title_settings.my_player
+
+					if player_title == "" then
+						local player_name_y_offset = title_settings.no_title.player_name_y_offset
+						self._widgets_by_name.player_name.style.text.offset[2] = player_name_y_offset
+						local character_text_y_offset = title_settings.no_title.character_text_y_offset
+						self._widgets_by_name.character_text.style.text.offset[2] = character_text_y_offset
+					else
+						local player_name_y_offset = title_settings.title.player_name_y_offset
+						self._widgets_by_name.player_name.style.text.offset[2] = player_name_y_offset
+						local character_text_y_offset = title_settings.title.character_text_y_offset
+						self._widgets_by_name.character_text.style.text.offset[2] = character_text_y_offset
+					end
+
+					self._widgets_by_name.player_name.dirty = true
+					self._widgets_by_name.character_text.dirty = true
+				end
+			end
 		end
 	end
 
@@ -1140,6 +1221,10 @@ HudElementPlayerPanelBase._set_rich_presence = function (self, text, visible, ui
 	local player_name_widget = self._widgets_by_name.player_name
 	local player_name_default_offset = player_name_widget.style.text.default_offset
 
+	if self._character_title and self._character_title ~= "" then
+		return
+	end
+
 	if player_name_default_offset then
 		if visible then
 			player_name_widget.style.text.offset[2] = player_name_default_offset[2] + 5
@@ -1417,6 +1502,8 @@ end
 
 HudElementPlayerPanelBase.destroy = function (self, ui_renderer)
 	Managers.event:unregister(self, "chat_manager_participant_update")
+	Managers.event:unregister(self, "event_player_profile_updated")
+	Managers.event:unregister(self, "event_hub_title_color_type_changed")
 	HudElementPlayerPanelBase.super.destroy(self, ui_renderer)
 	self:_unload_portrait_icon(ui_renderer)
 	self:_unload_portrait_frame(ui_renderer)

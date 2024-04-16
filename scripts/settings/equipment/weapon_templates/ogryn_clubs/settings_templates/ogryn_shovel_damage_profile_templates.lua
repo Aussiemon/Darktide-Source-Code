@@ -625,6 +625,10 @@ overrides.ogryn_shovel_light_special = {
 			true
 		},
 		{
+			"weapon_special",
+			true
+		},
+		{
 			"targets",
 			1,
 			"power_distribution",
@@ -683,6 +687,10 @@ overrides.ogryn_shovel_heavy_special = {
 		},
 		{
 			"ignore_instant_ragdoll_chance",
+			true
+		},
+		{
+			"weapon_special",
 			true
 		},
 		{

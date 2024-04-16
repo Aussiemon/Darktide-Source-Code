@@ -3,6 +3,8 @@ local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local UIWorkspaceSettings = require("scripts/settings/ui/ui_workspace_settings")
+local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templates")
+local ColorUtilities = require("scripts/utilities/ui/colors")
 
 local function create_definitions(settings)
 	local use_horizontal_scrollbar = settings.use_horizontal_scrollbar
@@ -48,6 +50,7 @@ local function create_definitions(settings)
 		background_icon_height
 	}
 	local use_terminal_background = settings.use_terminal_background
+	local use_solid_terminal_background = settings.use_solid_terminal_background
 	local terminal_background_icon = settings.terminal_background_icon
 	local hide_dividers = settings.hide_dividers
 	local hide_background = settings.hide_background
@@ -78,7 +81,7 @@ local function create_definitions(settings)
 			position = {
 				0,
 				0,
-				5
+				10
 			}
 		},
 		grid_title_background = {
@@ -92,7 +95,7 @@ local function create_definitions(settings)
 			position = {
 				0,
 				13,
-				-2
+				-3
 			}
 		},
 		grid_divider_title = {
@@ -145,7 +148,7 @@ local function create_definitions(settings)
 			position = {
 				edge_padding * 0.5,
 				0,
-				1
+				3
 			}
 		},
 		grid_scrollbar = {
@@ -290,7 +293,7 @@ local function create_definitions(settings)
 				}
 			}
 		}, "grid_title_background"),
-		grid_background = use_terminal_background and UIWidget.create_definition({
+		grid_background = UIWidget.create_definition(use_terminal_background and {
 			{
 				value = "content/ui/materials/backgrounds/terminal_basic",
 				pass_type = "texture",
@@ -315,7 +318,135 @@ local function create_definitions(settings)
 					size = background_icon_size
 				}
 			}
-		}, "grid_background") or UIWidget.create_definition({
+		} or use_solid_terminal_background and {
+			{
+				pass_type = "texture",
+				style_id = "outer_shadow",
+				value = "content/ui/materials/frames/dropshadow_heavy",
+				style = {
+					vertical_alignment = "center",
+					horizontal_alignment = "center",
+					scale_to_material = true,
+					color = Color.ui_terminal(nil, true),
+					size_addition = {
+						23,
+						24
+					},
+					offset = {
+						0,
+						0,
+						-1
+					}
+				},
+				change_function = function (content, style, _, dt)
+					local anim_speed = 5
+					local anim_hover_progress = style.anim_hover_progress or 0
+
+					if content.hovered then
+						anim_hover_progress = math.min(anim_hover_progress + dt * anim_speed, 1)
+					else
+						anim_hover_progress = math.max(anim_hover_progress - dt * anim_speed, 0)
+					end
+
+					style.anim_hover_progress = anim_hover_progress
+					style.color[1] = 255 * anim_hover_progress
+				end
+			},
+			{
+				pass_type = "texture",
+				style_id = "background_gradient",
+				value = "content/ui/materials/gradients/gradient_vertical",
+				style = {
+					vertical_alignment = "center",
+					horizontal_alignment = "center",
+					default_color = Color.terminal_background_gradient(nil, true),
+					selected_color = Color.terminal_frame_selected(nil, true),
+					disabled_color = Color.ui_grey_medium(255, true),
+					offset = {
+						0,
+						0,
+						2
+					}
+				},
+				change_function = function (content, style, _, dt)
+					local anim_speed = 5
+					local anim_hover_progress = style.anim_hover_progress or 0
+					local hovered = content.hovered
+
+					if content.hovered then
+						anim_hover_progress = math.min(anim_hover_progress + dt * anim_speed, 1)
+					else
+						anim_hover_progress = math.max(anim_hover_progress - dt * anim_speed, 0)
+					end
+
+					style.anim_hover_progress = anim_hover_progress
+					local default_alpha = 155
+					local hover_alpha = anim_hover_progress * 100
+					local style_color = style.text_color or style.color
+					style_color[1] = math.clamp(default_alpha + hover_alpha, 0, 255)
+					local default_color = style.default_color
+					local hover_color = style.hover_color
+					local color = nil
+
+					if hovered and hover_color then
+						color = hover_color
+					else
+						color = default_color
+					end
+
+					local ignore_alpha = true
+
+					ColorUtilities.color_copy(color, style_color, ignore_alpha)
+				end
+			},
+			{
+				value = "content/ui/materials/backgrounds/default_square",
+				pass_type = "texture",
+				style = {
+					vertical_alignment = "center",
+					horizontal_alignment = "center",
+					size_addition = {
+						0,
+						0
+					},
+					color = {
+						hide_background and 0 or 255,
+						0,
+						0,
+						0
+					}
+				}
+			},
+			{
+				value = "content/ui/materials/backgrounds/terminal_basic",
+				pass_type = "texture",
+				style = {
+					vertical_alignment = "center",
+					scale_to_material = true,
+					horizontal_alignment = "center",
+					size_addition = {
+						28,
+						24
+					},
+					color = Color.terminal_grid_background(hide_background and 0 or nil, true),
+					offset = {
+						0,
+						0,
+						1
+					}
+				}
+			},
+			terminal_background_icon and {
+				pass_type = "texture",
+				value = terminal_background_icon,
+				style = {
+					vertical_alignment = "center",
+					horizontal_alignment = "center",
+					color = Color.terminal_grid_background_icon(nil, true),
+					size = background_icon_size
+				}
+			}
+		} or {
 			{
 				pass_type = "rect",
 				style = {
@@ -382,7 +513,6 @@ local function create_definitions(settings)
 					local add = -0.5 * dt
 					style.rotation_progress = ((style.rotation_progress or 0) + add) % 1
 					style.angle = style.rotation_progress * math.pi * 2
-					local is_loading = content.is_loading
 				end,
 				visibility_function = function (content, style)
 					return content.is_loading

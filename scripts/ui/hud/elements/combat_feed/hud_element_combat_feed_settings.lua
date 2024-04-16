@@ -1,5 +1,6 @@
 local hud_element_combat_feed_settings = {
 	max_messages = 8,
+	message_duration = 5,
 	entry_spacing = 10,
 	text_height_spacing = 15,
 	header_size = {
@@ -14,6 +15,34 @@ local hud_element_combat_feed_settings = {
 		{
 			"event_combat_feed_kill",
 			"event_combat_feed_kill"
+		},
+		{
+			"event_add_notification_message",
+			"event_add_notification_message"
+		},
+		{
+			"event_update_combat_feed_enabled",
+			"event_update_combat_feed_enabled"
+		},
+		{
+			"event_update_combat_feed_max_messages",
+			"event_update_combat_feed_max_messages"
+		},
+		{
+			"event_update_combat_feed_message_duration",
+			"event_update_combat_feed_message_duration"
+		},
+		{
+			"event_update_combat_feed_enabled",
+			"event_update_combat_feed_enabled"
+		},
+		{
+			"event_update_assist_notification_type",
+			"event_update_assist_notification_type"
+		},
+		{
+			"event_update_crafting_pickup_notification_type",
+			"event_update_crafting_pickup_notification_type"
 		}
 	},
 	colors_by_enemy_type = {

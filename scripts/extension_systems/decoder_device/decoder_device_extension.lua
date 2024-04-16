@@ -55,6 +55,7 @@ DecoderDeviceExtension.hot_join_sync = function (self, unit_is_enabled, is_place
 
 	if is_placed then
 		self:_set_visible_state(VISIBLE_STATES.main)
+		Unit.flow_event(self._unit, "lua_device_placed")
 
 		if not is_finished then
 			if started_decode and not decoding_interrupted then

@@ -96,6 +96,54 @@ local volume_data = {
 		}
 	},
 	{
+		height = 2,
+		type = "content/volume_types/nav_tag_volumes/no_spawn",
+		name = "volume_001",
+		alt_max_vector = {
+			138.625,
+			-171.5,
+			-12.25
+		},
+		alt_min_vector = {
+			138.625,
+			-171.5,
+			-14.25
+		},
+		bottom_points = {
+			{
+				136.25,
+				-174.25,
+				-14.25
+			},
+			{
+				139.875,
+				-174.25,
+				-14.25
+			},
+			{
+				139.875,
+				-170.5,
+				-14.25
+			},
+			{
+				136.25,
+				-170.5,
+				-14.25
+			}
+		},
+		color = {
+			255,
+			120,
+			120,
+			255
+		},
+		up_vector = {
+			0,
+			0,
+			1
+		}
+	},
+	{
 		height = 4,
 		type = "content/volume_types/nav_tag_volumes/no_spawn",
 		name = "volume_no_spawn_lobby_002",
@@ -128,6 +176,54 @@ local volume_data = {
 			{
 				105.75,
 				-165,
+				-14.25
+			}
+		},
+		color = {
+			255,
+			120,
+			120,
+			255
+		},
+		up_vector = {
+			0,
+			0,
+			1
+		}
+	},
+	{
+		height = 2,
+		type = "content/volume_types/nav_tag_volumes/no_spawn",
+		name = "volume",
+		alt_max_vector = {
+			144.75,
+			-171.5,
+			-12.25
+		},
+		alt_min_vector = {
+			144.75,
+			-171.5,
+			-14.25
+		},
+		bottom_points = {
+			{
+				142.375,
+				-174.25,
+				-14.25
+			},
+			{
+				146,
+				-174.25,
+				-14.25
+			},
+			{
+				146,
+				-170.5,
+				-14.25
+			},
+			{
+				142.375,
+				-170.5,
 				-14.25
 			}
 		},

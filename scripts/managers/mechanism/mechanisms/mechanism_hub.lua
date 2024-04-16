@@ -36,11 +36,50 @@ MechanismHub.failed_fetching_session_report = function (self)
 end
 
 local function _fetch_client_data()
-	local promises = {}
+	local narrative_promise = nil
 
 	if Managers.narrative then
-		promises[#promises + 1] = Managers.narrative:_get_missions()
+		narrative_promise = Managers.narrative:_get_missions()
 	end
+
+	local player = Managers.player:local_player(1)
+	local character_id = player:character_id()
+	local contracts_promise = nil
+
+	if math.is_uuid(character_id) then
+		local contract_service = Managers.data_service.contracts
+		local contract_exists_promise = contract_service:has_contract(character_id)
+		contracts_promise = Promise.all(contract_exists_promise, narrative_promise):next(function (results)
+			local contract_exist = results[1]
+			local should_create_contract = Managers.narrative:is_event_complete("level_unlock_contract_store_visited")
+
+			if not contract_exist and should_create_contract then
+				Managers.event:trigger("event_add_notification_message", "default", Localize("loc_notification_new_contract"))
+			end
+
+			if contract_exist or should_create_contract then
+				return contract_service:get_contract(character_id, should_create_contract)
+			end
+		end):next(function (contract)
+			if contract and contract.fulfilled and not contract.rewarded then
+				local reward = contract.reward
+				local reason = Localize("loc_notification_title_contract_completed")
+
+				Managers.event:trigger("event_add_notification_message", "currency", {
+					reason = reason,
+					currency = reward.type,
+					amount = reward.amount
+				})
+
+				return contract_service:complete_contract(character_id)
+			end
+		end)
+	end
+
+	local promises = {
+		[#promises + 1] = narrative_promise,
+		[#promises + 1] = contracts_promise
+	}
 
 	Managers.data_service.store:invalidate_wallets_cache()
 

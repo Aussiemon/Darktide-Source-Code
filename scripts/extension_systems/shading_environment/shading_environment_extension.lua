@@ -84,6 +84,7 @@ ShadingEnvironmentExtension.setup_theme = function (self, shading_environment_sy
 
 			camera_manager:add_environment(self)
 
+			self._enabled = true
 			self._shading_environment_resource = World.create_shading_environment_resource(self._world, self._shading_environment_resource_name)
 		end
 	end

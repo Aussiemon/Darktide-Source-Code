@@ -830,10 +830,10 @@ return function ()
 	})
 	define_rule({
 		name = "bonding_conversation_metropolitan_battle_cry_a",
-		category = "conversations_prio_1",
 		wwise_route = 0,
 		response = "bonding_conversation_metropolitan_battle_cry_a",
 		database = "ogryn_b",
+		category = "conversations_prio_1",
 		criterias = {
 			{
 				"query_context",
@@ -918,6 +918,13 @@ return function ()
 		},
 		heard_speak_routing = {
 			target = "players"
+		},
+		on_pre_rule_execution = {
+			random_ignore_vo = {
+				chance = 0.6,
+				max_failed_tries = 0,
+				hold_for = 0
+			}
 		}
 	})
 	define_rule({
@@ -2568,10 +2575,10 @@ return function ()
 	})
 	define_rule({
 		name = "bonding_conversation_metropolitan_exploration_a",
-		category = "conversations_prio_1",
 		wwise_route = 0,
 		response = "bonding_conversation_metropolitan_exploration_a",
 		database = "ogryn_b",
+		category = "conversations_prio_1",
 		criterias = {
 			{
 				"query_context",
@@ -2656,6 +2663,13 @@ return function ()
 		},
 		heard_speak_routing = {
 			target = "players"
+		},
+		on_pre_rule_execution = {
+			random_ignore_vo = {
+				chance = 0.6,
+				max_failed_tries = 0,
+				hold_for = 0
+			}
 		}
 	})
 	define_rule({

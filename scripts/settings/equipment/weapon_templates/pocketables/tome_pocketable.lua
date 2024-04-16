@@ -198,6 +198,7 @@ weapon_template.breed_anim_state_machine_1p = {
 	human = "content/characters/player/human/first_person/animations/grimoire",
 	ogryn = "content/characters/player/ogryn/first_person/animations/grimoire"
 }
+weapon_template.smart_targeting_template = SmartTargetingTemplates.default_melee
 weapon_template.fx_sources = {}
 weapon_template.dodge_template = "default"
 weapon_template.sprint_template = "default"

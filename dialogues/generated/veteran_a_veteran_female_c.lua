@@ -177,7 +177,7 @@ local veteran_a_veteran_female_c = {
 			[1.0] = "loc_veteran_female_c__veteran_gang_metropolitan_aeldari_c_01"
 		},
 		sound_events_duration = {
-			[1.0] = 3.45678
+			[1.0] = 3.617031
 		},
 		randomize_indexes = {}
 	},
@@ -188,7 +188,7 @@ local veteran_a_veteran_female_c = {
 			[1.0] = "loc_veteran_female_c__veteran_gang_metropolitan_long_way_c_01"
 		},
 		sound_events_duration = {
-			[1.0] = 3.45678
+			[1.0] = 4.682823
 		},
 		randomize_indexes = {}
 	},
@@ -199,7 +199,7 @@ local veteran_a_veteran_female_c = {
 			[1.0] = "loc_veteran_female_c__veteran_gang_metropolitan_serious_c_01"
 		},
 		sound_events_duration = {
-			[1.0] = 3.45678
+			[1.0] = 1.82724
 		},
 		randomize_indexes = {}
 	}

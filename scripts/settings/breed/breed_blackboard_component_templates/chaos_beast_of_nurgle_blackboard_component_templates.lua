@@ -39,6 +39,10 @@ local chaos_beast_of_nurgle = {
 		last_weapon_switch_t = "number",
 		wanted_weapon_slot = "string",
 		wanted_combat_range = "string"
+	},
+	statistics = {
+		num_attacks_done = "number",
+		num_in_liquid = "number"
 	}
 }
 

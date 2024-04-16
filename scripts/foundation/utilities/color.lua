@@ -2252,6 +2252,42 @@ local color_definitions = {
 		31,
 		31
 	},
+	item_rarity_desaturated_1 = {
+		255,
+		152,
+		152,
+		152
+	},
+	item_rarity_desaturated_2 = {
+		255,
+		127,
+		177,
+		132
+	},
+	item_rarity_desaturated_3 = {
+		255,
+		109,
+		148,
+		194
+	},
+	item_rarity_desaturated_4 = {
+		255,
+		150,
+		109,
+		194
+	},
+	item_rarity_desaturated_5 = {
+		255,
+		208,
+		164,
+		110
+	},
+	item_rarity_desaturated_6 = {
+		255,
+		198,
+		52,
+		53
+	},
 	ui_achievement_icon = {
 		255,
 		143,
@@ -2468,11 +2504,23 @@ local color_definitions = {
 		229,
 		207
 	},
+	termianl_icon_dark = {
+		255,
+		161,
+		174,
+		155
+	},
 	terminal_icon_selected = {
 		255,
 		255,
 		242,
 		230
+	},
+	terminal_stat_bar_foreground = {
+		255,
+		250,
+		189,
+		73
 	},
 	terminal_text_key_value = {
 		255,

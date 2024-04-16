@@ -408,7 +408,16 @@ Buff.set_stack_count = function (self, wanted_stack_count)
 end
 
 Buff.duration = function (self)
-	return self._template.duration
+	local template = self._template
+	local duration = template.duration
+
+	if duration and template.duration_per_stack then
+		local stack_count = self:stack_count()
+
+		return duration * stack_count
+	end
+
+	return duration
 end
 
 Buff.duration_progress = function (self)
@@ -606,12 +615,12 @@ Buff.update_keywords = function (self, current_key_words, t)
 	return current_key_words
 end
 
-Buff.destroy = function (self)
+Buff.destroy = function (self, extension_destroyed)
 	local template = self._template
 	local stop_function = template.stop_func
 
 	if stop_function then
-		stop_function(self._template_data, self._template_context, true)
+		stop_function(self._template_data, self._template_context, extension_destroyed)
 	end
 
 	table.clear(self._template_data)

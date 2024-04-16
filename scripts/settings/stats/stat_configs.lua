@@ -12,6 +12,9 @@ local StatConfigs = {
 		circumstance_name = {
 			required = true
 		},
+		is_auric_mission = {
+			default = false
+		},
 		is_flash_mission = {
 			default = false
 		},

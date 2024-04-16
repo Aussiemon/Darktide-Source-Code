@@ -100,6 +100,8 @@ local function _init_and_run_tests(breeds)
 				-- Nothing
 			end
 
+			local fx_proximity_culling_weight = breed_data.fx_proximity_culling_weight
+
 			if breed_data.tags.special and not running_from_batch then
 				local dev_parameter_name = string.format(ALLOWED_BREED_PATTERN, breed_name)
 			end

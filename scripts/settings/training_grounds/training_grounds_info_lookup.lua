@@ -33,23 +33,6 @@ local step_info_lookup = {
 			TrainingGroundsObjectivesLookup.push_follow
 		}
 	},
-	ranged_basic = {
-		description = "loc_ranged_basic_gun_desc",
-		title = "loc_ranged_basic_gun",
-		objectives = {
-			TrainingGroundsObjectivesLookup.basic_ranged_objective_1,
-			TrainingGroundsObjectivesLookup.basic_ranged_objective_2
-		}
-	},
-	ranged_warp_charge = {
-		description = "loc_ranged_warp_charge_desc",
-		title = "loc_ranged_warp_charge",
-		objectives = {
-			TrainingGroundsObjectivesLookup.ranged_warp_charge_objective_1,
-			TrainingGroundsObjectivesLookup.ranged_warp_charge_objective_2,
-			TrainingGroundsObjectivesLookup.ranged_warp_charge_objective_3
-		}
-	},
 	ranged_suppression = {
 		description = "loc_ranged_suppression_desc",
 		title = "loc_ranged_suppression",
@@ -94,22 +77,6 @@ local step_info_lookup = {
 		input_descriptions = TrainingGroundsActionsLookup.wield_psyker_ability,
 		objectives = {
 			TrainingGroundsObjectivesLookup.biomancer_blitz
-		}
-	},
-	squad_leader_blitz = {
-		description = "loc_ability_krak_grenade_description",
-		title = "loc_talents_category_tactical",
-		input_descriptions = TrainingGroundsActionsLookup.wield_grenade,
-		objectives = {
-			TrainingGroundsObjectivesLookup.grenade
-		}
-	},
-	protectorate_blitz = {
-		description = "loc_psyker_ability_desc",
-		title = "loc_talents_category_tactical",
-		input_descriptions = TrainingGroundsActionsLookup.wield_psyker_ability,
-		objectives = {
-			TrainingGroundsObjectivesLookup.protectorate_blitz
 		}
 	},
 	ranged_grenade = {
@@ -186,7 +153,7 @@ local step_info_lookup = {
 			TrainingGroundsObjectivesLookup.combat_ability
 		}
 	},
-	combat_ability_bone_breaker = {
+	combat_ability_bonebreaker = {
 		description = "loc_combat_ability_tutorial_ogryn_desc",
 		title = "loc_combat_ability_tutorial",
 		input_descriptions = TrainingGroundsActionsLookup.activate_combat_ability,
@@ -201,40 +168,6 @@ local step_info_lookup = {
 		input_descriptions = TrainingGroundsActionsLookup.activate_combat_ability,
 		objectives = {
 			TrainingGroundsObjectivesLookup.combat_ability_psyker_3
-		}
-	},
-	combat_ability_protectorate = {
-		description = "loc_combat_ability_tutorial_psyker_3_desc",
-		title = "loc_combat_ability_tutorial",
-		input_descriptions = TrainingGroundsActionsLookup.activate_combat_ability,
-		objectives = {
-			TrainingGroundsObjectivesLookup.combat_ability_psyker_3_1,
-			TrainingGroundsObjectivesLookup.combat_ability_psyker_3_2
-		}
-	},
-	combat_ability_gun_lugger = {
-		description = "loc_combat_ability_tutorial_ogryn_1_desc",
-		title = "loc_combat_ability_tutorial",
-		input_descriptions = TrainingGroundsActionsLookup.activate_combat_ability,
-		objectives = {
-			TrainingGroundsObjectivesLookup.combat_ability_ogryn_1_1,
-			TrainingGroundsObjectivesLookup.combat_ability_ogryn_1_2
-		}
-	},
-	combat_ability_preacher = {
-		description = "loc_combat_ability_tutorial_zealot_3_desc",
-		title = "loc_combat_ability_tutorial",
-		input_descriptions = TrainingGroundsActionsLookup.activate_combat_ability,
-		objectives = {
-			TrainingGroundsObjectivesLookup.combat_ability_zealot_3_1
-		}
-	},
-	combat_ability_squad_leader = {
-		description = "loc_combat_ability_tutorial_veteran_3_desc",
-		title = "loc_combat_ability_tutorial",
-		input_descriptions = TrainingGroundsActionsLookup.activate_combat_ability,
-		objectives = {
-			TrainingGroundsObjectivesLookup.combat_ability_veteran_3_1
 		}
 	},
 	combat_ability_maniac = {

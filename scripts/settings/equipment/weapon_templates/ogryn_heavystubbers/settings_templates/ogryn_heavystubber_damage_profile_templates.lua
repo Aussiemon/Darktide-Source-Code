@@ -4,9 +4,10 @@ local DamageProfileSettings = require("scripts/settings/damage/damage_profile_se
 local DamageSettings = require("scripts/settings/damage/damage_settings")
 local GibbingSettings = require("scripts/settings/gibbing/gibbing_settings")
 local GibbingPower = GibbingSettings.gibbing_power
-local gibbing_types = GibbingSettings.gibbing_types
+local GibbingTypes = GibbingSettings.gibbing_types
 local HerdingTemplates = require("scripts/settings/damage/herding_templates")
 local WoundsTemplates = require("scripts/settings/damage/wounds_templates")
+local crit_impact_armor_mod = DamageProfileSettings.crit_impact_armor_mod
 local damage_types = DamageSettings.damage_types
 local armor_types = ArmorSettings.types
 local damage_templates = {}
@@ -18,7 +19,54 @@ table.make_unique(overrides)
 local damage_lerp_values = DamageProfileSettings.damage_lerp_values
 local single_cleave = DamageProfileSettings.single_cleave
 local light_cleave = DamageProfileSettings.light_cleave
+local big_cleave = DamageProfileSettings.big_cleave
 local default_shield_override_stagger_strength = 4
+local heavy_stubber_armor_mod_p2 = {
+	near = {
+		attack = {
+			[armor_types.unarmored] = damage_lerp_values.lerp_1,
+			[armor_types.armored] = damage_lerp_values.lerp_0_9,
+			[armor_types.resistant] = damage_lerp_values.lerp_0_8,
+			[armor_types.berserker] = damage_lerp_values.lerp_1,
+			[armor_types.super_armor] = damage_lerp_values.lerp_0_4,
+			[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_8,
+			[armor_types.void_shield] = damage_lerp_values.lerp_0_8,
+			[armor_types.player] = damage_lerp_values.lerp_1
+		},
+		impact = {
+			[armor_types.unarmored] = damage_lerp_values.lerp_1_25,
+			[armor_types.armored] = damage_lerp_values.lerp_1_1,
+			[armor_types.resistant] = damage_lerp_values.lerp_1_25,
+			[armor_types.player] = damage_lerp_values.lerp_1,
+			[armor_types.berserker] = damage_lerp_values.lerp_0_75,
+			[armor_types.super_armor] = damage_lerp_values.lerp_0_75,
+			[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
+			[armor_types.void_shield] = damage_lerp_values.lerp_1
+		}
+	},
+	far = {
+		attack = {
+			[armor_types.unarmored] = damage_lerp_values.lerp_0_8,
+			[armor_types.armored] = damage_lerp_values.lerp_0_75,
+			[armor_types.resistant] = damage_lerp_values.lerp_0_65,
+			[armor_types.berserker] = damage_lerp_values.lerp_0_8,
+			[armor_types.super_armor] = damage_lerp_values.lerp_0_25,
+			[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_8,
+			[armor_types.void_shield] = damage_lerp_values.lerp_0_5,
+			[armor_types.player] = damage_lerp_values.lerp_1
+		},
+		impact = {
+			[armor_types.unarmored] = damage_lerp_values.lerp_0_9,
+			[armor_types.armored] = damage_lerp_values.lerp_0_8,
+			[armor_types.resistant] = damage_lerp_values.lerp_0_8,
+			[armor_types.player] = damage_lerp_values.lerp_1,
+			[armor_types.berserker] = damage_lerp_values.lerp_0_15,
+			[armor_types.super_armor] = damage_lerp_values.no_damage,
+			[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_6,
+			[armor_types.void_shield] = damage_lerp_values.lerp_0_4
+		}
+	}
+}
 damage_templates.default_ogryn_heavystubber_assault_snp = {
 	suppression_value = 2.5,
 	ragdoll_push_force = 600,
@@ -94,7 +142,7 @@ damage_templates.default_ogryn_heavystubber_assault_snp = {
 	shield_override_stagger_strength = default_shield_override_stagger_strength,
 	damage_type = damage_types.auto_bullet,
 	gibbing_power = GibbingPower.heavy,
-	gibbing_type = gibbing_types.ballistic,
+	gibbing_type = GibbingTypes.ballistic,
 	on_kill_area_suppression = {
 		distance = 3,
 		suppression_value = 1
@@ -181,7 +229,7 @@ damage_templates.default_ogryn_heavystubber_assault_snp_m2 = {
 	shield_override_stagger_strength = default_shield_override_stagger_strength,
 	damage_type = damage_types.auto_bullet,
 	gibbing_power = GibbingPower.heavy,
-	gibbing_type = gibbing_types.ballistic,
+	gibbing_type = GibbingTypes.ballistic,
 	on_kill_area_suppression = {
 		distance = 3,
 		suppression_value = 1
@@ -268,7 +316,7 @@ damage_templates.default_ogryn_heavystubber_assault_snp_m3 = {
 	shield_override_stagger_strength = default_shield_override_stagger_strength,
 	damage_type = damage_types.auto_bullet,
 	gibbing_power = GibbingPower.medium,
-	gibbing_type = gibbing_types.ballistic,
+	gibbing_type = GibbingTypes.ballistic,
 	on_kill_area_suppression = {
 		distance = 3,
 		suppression_value = 1
@@ -343,7 +391,7 @@ damage_templates.default_ogryn_heavystubber_assault = {
 	},
 	critical_strike = {
 		gibbing_power = GibbingPower.medium,
-		gibbing_type = gibbing_types.ballistic
+		gibbing_type = GibbingTypes.ballistic
 	},
 	power_distribution = {
 		attack = {
@@ -362,7 +410,7 @@ damage_templates.default_ogryn_heavystubber_assault = {
 	shield_override_stagger_strength = default_shield_override_stagger_strength,
 	damage_type = damage_types.auto_bullet,
 	gibbing_power = GibbingPower.light,
-	gibbing_type = gibbing_types.ballistic,
+	gibbing_type = GibbingTypes.ballistic,
 	suppression_value = {
 		0.5,
 		1.5

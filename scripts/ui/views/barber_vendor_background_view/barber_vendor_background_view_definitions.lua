@@ -1,4 +1,5 @@
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
+local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local UIWorkspaceSettings = require("scripts/settings/ui/ui_workspace_settings")
 local WalletSettings = require("scripts/settings/wallet_settings")
@@ -50,6 +51,75 @@ local button_options_definitions = {
 			self:_setup_tab_bar(tab_bar_params, {
 				fetch_store_items_on_enter = true
 			})
+		end
+	},
+	{
+		display_name = "loc_barber_vendor_view_option_mindwipe",
+		callback = function (self)
+			if self:can_afford_mindwipe() then
+				local tab_bar_params = {
+					hide_tabs = true,
+					layer = 10,
+					tabs_params = {
+						{
+							view = "character_appearance_view",
+							display_name = "loc_credits_vendor_view_title",
+							blur_background = false,
+							context_function = function ()
+								return {
+									pass_draw = false,
+									pass_input = true,
+									is_barber_mindwipe = true
+								}
+							end
+						}
+					}
+				}
+
+				self:_setup_tab_bar(tab_bar_params, {
+					fetch_store_items_on_enter = true
+				})
+			elseif self._operations then
+				local context = {
+					title_text = "loc_mindwipe_insufficient_funds_popup_title",
+					description_text = "loc_mindwipe_insufficient_funds_popup_description",
+					description_text_params = {
+						cost = self._cost,
+						balance = self._balance
+					},
+					options = {
+						{
+							text = "loc_popup_button_close",
+							close_on_pressed = true,
+							on_pressed_sound = UISoundEvents.default_click
+						}
+					}
+				}
+
+				Managers.event:trigger("event_show_ui_popup", context)
+
+				local result = "cannot_enter_view"
+
+				return result
+			else
+				local context = {
+					title_text = "loc_popup_header_error",
+					description_text = "loc_crafting_failure",
+					options = {
+						{
+							close_on_pressed = true,
+							text = "loc_barber_vendor_confirm_button",
+							on_pressed_sound = UISoundEvents.default_click
+						}
+					}
+				}
+
+				Managers.event:trigger("event_show_ui_popup", context)
+
+				local result = "cannot_enter_view"
+
+				return result
+			end
 		end
 	}
 }

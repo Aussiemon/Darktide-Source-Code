@@ -181,22 +181,26 @@ templates.weapon_trait_bespoke_powermaul_p1_block_has_chance_to_stun = {
 	weapon_trait_bespoke_powermaul_p1_block_has_chance_to_stun = {
 		{
 			proc_events = {
-				[proc_events.on_block] = 0.1
+				[proc_events.on_block] = 0.1,
+				[proc_events.on_perfect_block] = 0.4
 			}
 		},
 		{
 			proc_events = {
-				[proc_events.on_block] = 0.15
+				[proc_events.on_block] = 0.15,
+				[proc_events.on_perfect_block] = 0.6
 			}
 		},
 		{
 			proc_events = {
-				[proc_events.on_block] = 0.2
+				[proc_events.on_block] = 0.2,
+				[proc_events.on_perfect_block] = 0.8
 			}
 		},
 		{
 			proc_events = {
-				[proc_events.on_block] = 0.25
+				[proc_events.on_block] = 0.25,
+				[proc_events.on_perfect_block] = 1
 			}
 		}
 	}
@@ -225,11 +229,16 @@ templates.weapon_trait_bespoke_powermaul_p1_staggering_hits_has_chance_to_stun =
 		}
 	}
 }
-templates.weapon_trait_bespoke_powermaul_p1_damage_bonus_vs_electrocuded = {
-	weapon_trait_bespoke_powermaul_p1_damage_bonus_vs_electrocuded = {
+templates.weapon_trait_bespoke_powermaul_p1_damage_bonus_vs_electrocuted = {
+	weapon_trait_bespoke_powermaul_p1_damage_bonus_vs_electrocuted = {
 		{
 			stat_buffs = {
 				[stat_buffs.damage_vs_electrocuted] = 0.1
+			}
+		},
+		{
+			stat_buffs = {
+				[stat_buffs.damage_vs_electrocuted] = 0.15
 			}
 		},
 		{
@@ -239,12 +248,7 @@ templates.weapon_trait_bespoke_powermaul_p1_damage_bonus_vs_electrocuded = {
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.damage_vs_electrocuted] = 0.3
-			}
-		},
-		{
-			stat_buffs = {
-				[stat_buffs.damage_vs_electrocuted] = 0.4
+				[stat_buffs.damage_vs_electrocuted] = 0.25
 			}
 		}
 	}

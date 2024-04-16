@@ -12,7 +12,9 @@ local dialogue_breed_settings = {
 		"enemy_wolfer_adjutant",
 		"interrogator",
 		"barber",
-		"enginseer"
+		"enginseer",
+		"boon_vendor",
+		"tertium_noble"
 	}
 }
 dialogue_breed_settings.voice_classes_npc = dialogue_breed_settings.voice_classes_2d
@@ -168,10 +170,15 @@ dialogue_breed_settings.mission_giver = {
 		"enemy_nemesis_wolfer_a",
 		"enemy_wolfer_adjutant_a",
 		"enemy_wolfer_adjutant_b",
+		"enemy_wolfer_adjutant_c",
+		"enemy_wolfer_adjutant_d",
 		"interrogator_a",
 		"training_ground_psyker_a",
 		"enginseer_a",
-		"barber_a"
+		"barber_a",
+		"boon_vendor_a",
+		"tertium_noble_a",
+		"tertium_noble_b"
 	}
 }
 dialogue_breed_settings.sergeant = {
@@ -313,6 +320,58 @@ dialogue_breed_settings.shipmistress = {
 		"shipmistress_a"
 	}
 }
+dialogue_breed_settings.boon_vendor = {
+	trigger_seen_vo = false,
+	vo_class_name = "boon_vendor",
+	trigger_heard_vo = false,
+	is_network_synced = true,
+	has_dialogue_extension = true,
+	vo_triggers_enemy_kill_query = false,
+	dialogue_memory_faction_name = "npc",
+	prop_name = "voice_over_2d",
+	wwise_voice_switch_group = "voice_profile",
+	wwise_voices = {
+		"boon_vendor_a"
+	},
+	opinion_settings = {
+		zealot_female_b = "likes_character",
+		veteran_male_b = "dislikes_character",
+		zealot_female_c = "likes_character",
+		psyker_male_b = "dislikes_character",
+		ogryn_a = "likes_character",
+		psyker_female_c = "dislikes_character",
+		ogryn_b = "dislikes_character",
+		zealot_male_a = "likes_character",
+		zealot_male_c = "likes_character",
+		zealot_male_b = "likes_character",
+		veteran_male_c = "dislikes_character",
+		veteran_female_c = "dislikes_character",
+		psyker_female_b = "dislikes_character",
+		psyker_female_a = "dislikes_character",
+		psyker_male_a = "dislikes_character",
+		zealot_female_a = "likes_character",
+		veteran_female_a = "likes_character",
+		ogryn_c = "likes_character",
+		psyker_male_c = "dislikes_character",
+		veteran_male_a = "likes_character",
+		veteran_female_b = "dislikes_character"
+	}
+}
+dialogue_breed_settings.tertium_noble = {
+	trigger_seen_vo = false,
+	vo_class_name = "tertium_noble",
+	trigger_heard_vo = false,
+	is_network_synced = true,
+	has_dialogue_extension = true,
+	vo_triggers_enemy_kill_query = false,
+	dialogue_memory_faction_name = "npc",
+	prop_name = "voice_over_2d",
+	wwise_voice_switch_group = "voice_profile",
+	wwise_voices = {
+		"tertium_noble_a",
+		"tertium_noble_b"
+	}
+}
 dialogue_breed_settings.enemy_nemesis_wolfer = {
 	trigger_seen_vo = false,
 	vo_class_name = "enemy_nemesis_wolfer",
@@ -339,7 +398,9 @@ dialogue_breed_settings.enemy_wolfer_adjutant = {
 	wwise_voice_switch_group = "voice_profile",
 	wwise_voices = {
 		"enemy_wolfer_adjutant_a",
-		"enemy_wolfer_adjutant_b"
+		"enemy_wolfer_adjutant_b",
+		"enemy_wolfer_adjutant_c",
+		"enemy_wolfer_adjutant_d"
 	}
 }
 dialogue_breed_settings.confessional = {
@@ -369,7 +430,8 @@ dialogue_breed_settings.vocator = {
 		"vocator_a",
 		"vocator_b",
 		"mourningstar_confessor_a",
-		"mourningstar_wing_commander_a"
+		"mourningstar_wing_commander_a",
+		"shipmistress_a"
 	},
 	random_talk_settings = {
 		trigger_id = "random_talk",
@@ -887,7 +949,6 @@ dialogue_breed_settings.medicae_servitor = {
 	has_dialogue_extension = true,
 	vo_triggers_enemy_kill_query = false,
 	dialogue_memory_faction_name = "npc",
-	subtitle_distance = 15,
 	wwise_voice_switch_group = "voice_profile",
 	wwise_voices = {
 		"medicae_servitor_a",
@@ -902,7 +963,6 @@ dialogue_breed_settings.archive_servitor = {
 	has_dialogue_extension = true,
 	vo_triggers_enemy_kill_query = false,
 	dialogue_memory_faction_name = "npc",
-	subtitle_distance = 25,
 	wwise_voice_switch_group = "voice_profile",
 	wwise_voices = {
 		"archive_servitor_a"
@@ -961,6 +1021,21 @@ dialogue_breed_settings.reject_npc = {
 	wwise_voices = {
 		"reject_npc_a",
 		"reject_npc_servitor_a"
+	}
+}
+dialogue_breed_settings.warp_echo = {
+	trigger_seen_vo = false,
+	vo_class_name = "warp_echo",
+	trigger_heard_vo = false,
+	is_network_synced = true,
+	has_dialogue_extension = true,
+	vo_triggers_enemy_kill_query = false,
+	dialogue_memory_faction_name = "npc",
+	prop_name = "voice_over_2d",
+	wwise_voice_switch_group = "voice_profile",
+	wwise_voices = {
+		"warp_echo_moebian_a",
+		"warp_echo_moebian_b"
 	}
 }
 

@@ -166,7 +166,7 @@ AuthoritativePlayerInputHandler.rpc_player_input_array = function (self, channel
 			local inputs = select(i, ...)
 
 			for j = 1, end_frame_offset + 1 do
-				local value = inputs[j]
+				local value = inputs ~= nil and inputs[j]
 				cache[i][index_offset + j] = value
 			end
 		end

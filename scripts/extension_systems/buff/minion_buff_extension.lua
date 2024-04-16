@@ -322,8 +322,6 @@ MinionBuffExtension._start_fx = function (self, index, template)
 	local unit = buff_context.unit
 	local minion_effects = template.minion_effects
 
-	Unit.set_permutation_for_materials(unit, "HAVE_BURN", true, true)
-
 	if minion_effects then
 		local ailment_effect = minion_effects.ailment_effect
 

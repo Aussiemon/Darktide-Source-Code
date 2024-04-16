@@ -115,6 +115,21 @@ local CheckProcFunctions = {
 
 		return true
 	end,
+	on_ranged_enemy_killed = function (params, template_data, template_context, t)
+		if params.attack_result ~= attack_results.died then
+			return false
+		end
+
+		if not params.tags then
+			return false
+		end
+
+		if not params.tags.far then
+			return false
+		end
+
+		return true
+	end,
 	on_elite_or_special_minion_death = function (params, template_data, template_context, t)
 		if not params.tags then
 			return false
@@ -296,10 +311,6 @@ CheckProcFunctions.on_push_hit = function (params, template_data, template_conte
 	return params.attack_type == attack_types.push
 end
 
-CheckProcFunctions.on_exploion_hit = function (params, template_data, template_context, t)
-	return params.attack_type == attack_types.explosion
-end
-
 CheckProcFunctions.on_melee_weapon_special_hit = function (params, template_data, template_context, t)
 	return params.weapon_special and params.attack_type == attack_types.melee
 end
@@ -420,6 +431,10 @@ end
 
 CheckProcFunctions.on_shoot_hit_multiple = function (params, template_data, template_context, t)
 	return ON_SHOOT_HIT_MULTIPLE_THRESHOLD < params.num_hit_units
+end
+
+CheckProcFunctions.on_explosion_hit_multiple = function (params, template_data, template_context, t)
+	return ON_SHOOT_HIT_MULTIPLE_THRESHOLD < params.number_of_hit_units
 end
 
 CheckProcFunctions.on_hit_all_pellets_on_same = function (params, template_data, template_context, t)

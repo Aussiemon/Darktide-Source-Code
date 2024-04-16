@@ -724,7 +724,13 @@ BtChaosDaemonhostPassiveAction._get_wanted_aggro_target = function (self, unit, 
 		target_unit = health_extension:last_damaging_unit()
 	end
 
-	return target_unit or scratchpad.closest_target_unit
+	local valid_target = target_unit and Managers.state.player_unit_spawn:is_player_unit(target_unit)
+
+	if not valid_target then
+		target_unit = scratchpad.closest_target_unit
+	end
+
+	return target_unit
 end
 
 return BtChaosDaemonhostPassiveAction

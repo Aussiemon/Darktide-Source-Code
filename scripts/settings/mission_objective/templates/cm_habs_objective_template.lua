@@ -20,10 +20,9 @@ local mission_objective_templates = {
 			objective_cm_habs_scan_hab_a = {
 				use_music_event = "scanning_event",
 				description = "loc_objective_cm_habs_scan_hab_a_desc",
-				mission_giver_voice_profile = "tech_priest_a",
+				show_progression_popup_on_update = false,
 				header = "loc_objective_cm_habs_scan_hab_a_header",
 				event_type = "mid_event",
-				show_progression_popup_on_update = false,
 				mission_objective_type = "scanning"
 			},
 			objective_cm_habs_to_pipe = {
@@ -31,20 +30,19 @@ local mission_objective_templates = {
 				mission_objective_type = "goal",
 				header = "loc_objective_cm_habs_to_pipe_header"
 			},
-			objective_cm_habs_scan_hab_b = {
-				use_music_event = "scanning_event",
-				description = "loc_objective_cm_habs_scan_hab_b_desc",
-				mission_giver_voice_profile = "tech_priest_a",
-				header = "loc_objective_cm_habs_scan_hab_b_header",
+			objective_cm_habs_hab_b_interrogators = {
+				description = "loc_objective_cm_habs_hab_b_interrogators_desc",
+				use_music_event = "hacking_event",
+				turn_off_backfill = true,
+				header = "loc_objective_cm_habs_hab_b_interrogators_header",
 				event_type = "end_event",
-				show_progression_popup_on_update = false,
-				mission_objective_type = "scanning",
-				turn_off_backfill = true
+				progress_bar = true,
+				mission_objective_type = "decode"
 			},
 			objective_cm_habs_b_wait = {
-				description = "loc_objective_cm_habs_b_wait_desc",
+				description = "loc_objective_cm_habs_b_wait_poison_desc",
 				mission_objective_type = "goal",
-				header = "loc_objective_cm_habs_b_wait_header"
+				header = "loc_objective_cm_habs_b_wait_poison_header"
 			},
 			objective_cm_habs_to_deck = {
 				description = "loc_objective_cm_habs_to_deck_desc",

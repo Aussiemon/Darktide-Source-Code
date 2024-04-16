@@ -825,6 +825,946 @@ return function ()
 		}
 	})
 	define_rule({
+		name = "concourse_exchange_01_b",
+		wwise_route = 19,
+		response = "concourse_exchange_01_b",
+		database = "conversations_hub",
+		category = "conversations_prio_0",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"sound_event",
+				OP.SET_INCLUDES,
+				args = {
+					"loc_boon_vendor_a__concourse_exchange_01_a_01"
+				}
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"contract_vendor"
+				}
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "disabled"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
+		name = "concourse_exchange_02_b",
+		wwise_route = 19,
+		response = "concourse_exchange_02_b",
+		database = "conversations_hub",
+		category = "conversations_prio_0",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"sound_event",
+				OP.SET_INCLUDES,
+				args = {
+					"loc_boon_vendor_a__concourse_exchange_02_a_01"
+				}
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"contract_vendor"
+				}
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "disabled"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
+		name = "concourse_exchange_03_b",
+		wwise_route = 19,
+		response = "concourse_exchange_03_b",
+		database = "conversations_hub",
+		category = "conversations_prio_0",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"sound_event",
+				OP.SET_INCLUDES,
+				args = {
+					"loc_boon_vendor_a__concourse_exchange_03_a_01"
+				}
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"contract_vendor"
+				}
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "disabled"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
+		name = "concourse_exchange_04_b",
+		wwise_route = 19,
+		response = "concourse_exchange_04_b",
+		database = "conversations_hub",
+		category = "conversations_prio_0",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"sound_event",
+				OP.SET_INCLUDES,
+				args = {
+					"loc_boon_vendor_a__concourse_exchange_04_a_01"
+				}
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"contract_vendor"
+				}
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "disabled"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
+		name = "concourse_exchange_05_b",
+		wwise_route = 19,
+		response = "concourse_exchange_05_b",
+		database = "conversations_hub",
+		category = "conversations_prio_0",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"sound_event",
+				OP.SET_INCLUDES,
+				args = {
+					"loc_boon_vendor_a__concourse_exchange_05_a_01"
+				}
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"contract_vendor"
+				}
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "disabled"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
+		name = "concourse_exchange_06_b",
+		wwise_route = 19,
+		response = "concourse_exchange_06_b",
+		database = "conversations_hub",
+		category = "conversations_prio_0",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"sound_event",
+				OP.SET_INCLUDES,
+				args = {
+					"loc_boon_vendor_a__concourse_exchange_06_a_01"
+				}
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"contract_vendor"
+				}
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "disabled"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
+		name = "concourse_exchange_07_b",
+		wwise_route = 19,
+		response = "concourse_exchange_07_b",
+		database = "conversations_hub",
+		category = "conversations_prio_0",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"sound_event",
+				OP.SET_INCLUDES,
+				args = {
+					"loc_boon_vendor_a__concourse_exchange_07_a_01"
+				}
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"contract_vendor"
+				}
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "disabled"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
+		name = "concourse_exchange_08_b",
+		wwise_route = 19,
+		response = "concourse_exchange_08_b",
+		database = "conversations_hub",
+		category = "conversations_prio_0",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"sound_event",
+				OP.SET_INCLUDES,
+				args = {
+					"loc_boon_vendor_a__concourse_exchange_08_a_01"
+				}
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"contract_vendor"
+				}
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "disabled"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
+		name = "concourse_exchange_09_b",
+		wwise_route = 19,
+		response = "concourse_exchange_09_b",
+		database = "conversations_hub",
+		category = "conversations_prio_0",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"sound_event",
+				OP.SET_INCLUDES,
+				args = {
+					"loc_boon_vendor_a__concourse_exchange_09_a_01"
+				}
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"contract_vendor"
+				}
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "disabled"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
+		name = "concourse_exchange_10_b",
+		wwise_route = 19,
+		response = "concourse_exchange_10_b",
+		database = "conversations_hub",
+		category = "conversations_prio_0",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"sound_event",
+				OP.SET_INCLUDES,
+				args = {
+					"loc_boon_vendor_a__concourse_exchange_10_a_01"
+				}
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"contract_vendor"
+				}
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "disabled"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
+		name = "concourse_exchange_11_b",
+		wwise_route = 19,
+		response = "concourse_exchange_11_b",
+		database = "conversations_hub",
+		category = "conversations_prio_0",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"sound_event",
+				OP.SET_INCLUDES,
+				args = {
+					"loc_contract_vendor_a__concourse_exchange_11_a_01"
+				}
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"boon_vendor"
+				}
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "disabled"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
+		name = "concourse_exchange_12_b",
+		wwise_route = 19,
+		response = "concourse_exchange_12_b",
+		database = "conversations_hub",
+		category = "conversations_prio_0",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"sound_event",
+				OP.SET_INCLUDES,
+				args = {
+					"loc_contract_vendor_a__concourse_exchange_12_a_01"
+				}
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"boon_vendor"
+				}
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "disabled"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
+		name = "concourse_exchange_13_b",
+		wwise_route = 19,
+		response = "concourse_exchange_13_b",
+		database = "conversations_hub",
+		category = "conversations_prio_0",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"sound_event",
+				OP.SET_INCLUDES,
+				args = {
+					"loc_contract_vendor_a__concourse_exchange_13_a_01"
+				}
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"boon_vendor"
+				}
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "disabled"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
+		name = "concourse_exchange_14_b",
+		wwise_route = 19,
+		response = "concourse_exchange_14_b",
+		database = "conversations_hub",
+		category = "conversations_prio_0",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"sound_event",
+				OP.SET_INCLUDES,
+				args = {
+					"loc_contract_vendor_a__concourse_exchange_14_a_01"
+				}
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"boon_vendor"
+				}
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "disabled"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
+		name = "concourse_exchange_15_b",
+		wwise_route = 19,
+		response = "concourse_exchange_15_b",
+		database = "conversations_hub",
+		category = "conversations_prio_0",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"sound_event",
+				OP.SET_INCLUDES,
+				args = {
+					"loc_contract_vendor_a__concourse_exchange_15_a_01"
+				}
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"boon_vendor"
+				}
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "disabled"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
+		name = "concourse_exchange_16_b",
+		wwise_route = 19,
+		response = "concourse_exchange_16_b",
+		database = "conversations_hub",
+		category = "conversations_prio_0",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"sound_event",
+				OP.SET_INCLUDES,
+				args = {
+					"loc_contract_vendor_a__concourse_exchange_16_a_01"
+				}
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"boon_vendor"
+				}
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "disabled"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
+		name = "concourse_exchange_17_b",
+		wwise_route = 19,
+		response = "concourse_exchange_17_b",
+		database = "conversations_hub",
+		category = "conversations_prio_0",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"sound_event",
+				OP.SET_INCLUDES,
+				args = {
+					"loc_contract_vendor_a__concourse_exchange_17_a_01"
+				}
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"boon_vendor"
+				}
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "disabled"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
+		name = "concourse_exchange_18_b",
+		wwise_route = 19,
+		response = "concourse_exchange_18_b",
+		database = "conversations_hub",
+		category = "conversations_prio_0",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"sound_event",
+				OP.SET_INCLUDES,
+				args = {
+					"loc_contract_vendor_a__concourse_exchange_18_a_01"
+				}
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"boon_vendor"
+				}
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "disabled"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
+		name = "concourse_exchange_19_b",
+		wwise_route = 19,
+		response = "concourse_exchange_19_b",
+		database = "conversations_hub",
+		category = "conversations_prio_0",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"sound_event",
+				OP.SET_INCLUDES,
+				args = {
+					"loc_contract_vendor_a__concourse_exchange_19_a_01"
+				}
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"boon_vendor"
+				}
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "disabled"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
+		name = "concourse_exchange_20_b",
+		wwise_route = 19,
+		response = "concourse_exchange_20_b",
+		database = "conversations_hub",
+		category = "conversations_prio_0",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"sound_event",
+				OP.SET_INCLUDES,
+				args = {
+					"loc_contract_vendor_a__concourse_exchange_20_a_01"
+				}
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"boon_vendor"
+				}
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "disabled"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
+		name = "concourse_exchange_boon_vendor",
+		wwise_route = 19,
+		response = "concourse_exchange_boon_vendor",
+		database = "conversations_hub",
+		category = "npc_prio_0",
+		speaker_routing = {
+			target = "all"
+		},
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"npc_vo"
+			},
+			{
+				"query_context",
+				"vo_event",
+				OP.EQ,
+				"concourse_exchange_boon_vendor"
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"boon_vendor"
+				}
+			},
+			{
+				"faction_memory",
+				"concourse_exchange",
+				OP.TIMEDIFF,
+				OP.GT,
+				180
+			},
+			{
+				"faction_memory",
+				"last_mission_update",
+				OP.TIMEDIFF,
+				OP.GT,
+				12
+			},
+			{
+				"faction_memory",
+				"time_since_last_vox_story_talk",
+				OP.TIMEDIFF,
+				OP.GT,
+				25
+			},
+			{
+				"faction_memory",
+				"time_since_last_random_talk",
+				OP.TIMEDIFF,
+				OP.GT,
+				25
+			}
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"concourse_exchange",
+				OP.TIMESET
+			}
+		},
+		heard_speak_routing = {
+			target = "visible_npcs"
+		}
+	})
+	define_rule({
+		name = "concourse_exchange_contract_vendor",
+		wwise_route = 19,
+		response = "concourse_exchange_contract_vendor",
+		database = "conversations_hub",
+		category = "npc_prio_0",
+		speaker_routing = {
+			target = "all"
+		},
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"npc_vo"
+			},
+			{
+				"query_context",
+				"vo_event",
+				OP.EQ,
+				"concourse_exchange_contract_vendor"
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"contract_vendor"
+				}
+			},
+			{
+				"faction_memory",
+				"concourse_exchange",
+				OP.TIMEDIFF,
+				OP.GT,
+				180
+			},
+			{
+				"faction_memory",
+				"last_mission_update",
+				OP.TIMEDIFF,
+				OP.GT,
+				12
+			},
+			{
+				"faction_memory",
+				"time_since_last_vox_story_talk",
+				OP.TIMEDIFF,
+				OP.GT,
+				25
+			},
+			{
+				"faction_memory",
+				"time_since_last_random_talk",
+				OP.TIMEDIFF,
+				OP.GT,
+				25
+			}
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"concourse_exchange",
+				OP.TIMESET
+			}
+		},
+		heard_speak_routing = {
+			target = "visible_npcs"
+		}
+	})
+	define_rule({
 		name = "contract_vendor_distance_dislikes_character",
 		wwise_route = 19,
 		response = "contract_vendor_distance_dislikes_character",
@@ -913,6 +1853,7 @@ return function ()
 					"psyker_male_a",
 					"psyker_female_a",
 					"ogryn_c",
+					"ogryn_d",
 					"psyker_male_c",
 					"psyker_female_c"
 				}
@@ -9347,6 +10288,38 @@ return function ()
 		}
 	})
 	define_rule({
+		name = "hub_idle_oath_01_b",
+		wwise_route = 19,
+		response = "hub_idle_oath_01_b",
+		database = "conversations_hub",
+		category = "chorus_vo_prio_1",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"shipmistress_hub_announcement_a_61_b"
+				}
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "disabled"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
 		name = "hub_interact_boon_vendor_dislikes_character",
 		category = "npc_prio_0",
 		wwise_route = 40,
@@ -9446,6 +10419,85 @@ return function ()
 			{
 				"user_memory",
 				"last_boon_vendor_likes_character",
+				OP.TIMESET
+			}
+		}
+	})
+	define_rule({
+		name = "hub_interact_boon_vendor_rumour_politics_a",
+		category = "npc_prio_0",
+		wwise_route = 40,
+		response = "hub_interact_boon_vendor_rumour_politics_a",
+		database = "conversations_hub",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"npc_interacting_vo"
+			},
+			{
+				"query_context",
+				"vo_event",
+				OP.EQ,
+				"hub_interact_rumour_politics_a"
+			},
+			{
+				"query_context",
+				"interactor_voice_profile",
+				OP.SET_INCLUDES,
+				args = {
+					""
+				}
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					""
+				}
+			},
+			{
+				"global_context",
+				"player_voice_profiles",
+				OP.SET_INTERSECTS,
+				args = {
+					"ogryn_a",
+					"ogryn_b",
+					"ogryn_c",
+					"psyker_female_a",
+					"psyker_female_b",
+					"psyker_female_c",
+					"psyker_male_a",
+					"psyker_male_b",
+					"psyker_male_c",
+					"veteran_female_a",
+					"veteran_female_b",
+					"veteran_female_c",
+					"veteran_male_a",
+					"veteran_male_b",
+					"veteran_male_c",
+					"zealot_female_a",
+					"zealot_female_b",
+					"zealot_female_c",
+					"zealot_male_a",
+					"zealot_male_b",
+					"zealot_male_c"
+				}
+			},
+			{
+				"user_memory",
+				"last_t",
+				OP.TIMEDIFF,
+				OP.GT,
+				30
+			}
+		},
+		on_done = {
+			{
+				"user_memory",
+				"last_",
 				OP.TIMESET
 			}
 		}
@@ -9593,6 +10645,85 @@ return function ()
 			}
 		},
 		on_done = {}
+	})
+	define_rule({
+		name = "hub_interact_penance_greeting_a",
+		category = "npc_prio_0",
+		wwise_route = 40,
+		response = "hub_interact_penance_greeting_a",
+		database = "conversations_hub",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"npc_interacting_vo"
+			},
+			{
+				"query_context",
+				"vo_event",
+				OP.EQ,
+				"hub_interact_penance_greeting_a"
+			},
+			{
+				"query_context",
+				"interactor_voice_profile",
+				OP.SET_INCLUDES,
+				args = {
+					""
+				}
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					""
+				}
+			},
+			{
+				"global_context",
+				"player_voice_profiles",
+				OP.SET_INTERSECTS,
+				args = {
+					"ogryn_a",
+					"ogryn_b",
+					"ogryn_c",
+					"psyker_female_a",
+					"psyker_female_b",
+					"psyker_female_c",
+					"psyker_male_a",
+					"psyker_male_b",
+					"psyker_male_c",
+					"veteran_female_a",
+					"veteran_female_b",
+					"veteran_female_c",
+					"veteran_male_a",
+					"veteran_male_b",
+					"veteran_male_c",
+					"zealot_female_a",
+					"zealot_female_b",
+					"zealot_female_c",
+					"zealot_male_a",
+					"zealot_male_b",
+					"zealot_male_c"
+				}
+			},
+			{
+				"user_memory",
+				"last_t",
+				OP.TIMEDIFF,
+				OP.GT,
+				30
+			}
+		},
+		on_done = {
+			{
+				"user_memory",
+				"last_",
+				OP.TIMESET
+			}
+		}
 	})
 	define_rule({
 		name = "hub_interact_purser_dislikes_character",
@@ -9889,10 +11020,10 @@ return function ()
 		}
 	})
 	define_rule({
-		name = "hub_interact_underhive_contact_dislikes_character",
+		name = "hub_mindwipe_backstory_a",
 		category = "npc_prio_0",
 		wwise_route = 40,
-		response = "hub_interact_underhive_contact_dislikes_character",
+		response = "hub_mindwipe_backstory_a",
 		database = "conversations_hub",
 		criterias = {
 			{
@@ -9905,14 +11036,14 @@ return function ()
 				"query_context",
 				"vo_event",
 				OP.EQ,
-				"contract_vendor_dislikes_character"
+				"hub_mindwipe_backstory_a"
 			},
 			{
 				"query_context",
 				"interactor_voice_profile",
 				OP.SET_INCLUDES,
 				args = {
-					"zealot_female_a"
+					""
 				}
 			},
 			{
@@ -9920,30 +11051,45 @@ return function ()
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"contract_vendor"
+					""
 				}
 			},
 			{
-				"user_memory",
-				"last_contract_vendor_dislikes_character",
-				OP.TIMEDIFF,
-				OP.GT,
-				5
+				"global_context",
+				"player_voice_profiles",
+				OP.SET_INTERSECTS,
+				args = {
+					"ogryn_a",
+					"ogryn_b",
+					"ogryn_c",
+					"psyker_female_a",
+					"psyker_female_b",
+					"psyker_female_c",
+					"psyker_male_a",
+					"psyker_male_b",
+					"psyker_male_c",
+					"veteran_female_a",
+					"veteran_female_b",
+					"veteran_female_c",
+					"veteran_male_a",
+					"veteran_male_b",
+					"veteran_male_c",
+					"zealot_female_a",
+					"zealot_female_b",
+					"zealot_female_c",
+					"zealot_male_a",
+					"zealot_male_b",
+					"zealot_male_c"
+				}
 			}
 		},
-		on_done = {
-			{
-				"user_memory",
-				"last_contract_vendor_dislikes_character",
-				OP.TIMESET
-			}
-		}
+		on_done = {}
 	})
 	define_rule({
-		name = "hub_interact_underhive_contact_likes_character",
+		name = "hub_mindwipe_body_type_a",
 		category = "npc_prio_0",
 		wwise_route = 40,
-		response = "hub_interact_underhive_contact_likes_character",
+		response = "hub_mindwipe_body_type_a",
 		database = "conversations_hub",
 		criterias = {
 			{
@@ -9956,14 +11102,14 @@ return function ()
 				"query_context",
 				"vo_event",
 				OP.EQ,
-				"underhive_contact_likes_character"
+				"hub_mindwipe_body_type_a"
 			},
 			{
 				"query_context",
 				"interactor_voice_profile",
 				OP.SET_INCLUDES,
 				args = {
-					"ogryn_a"
+					""
 				}
 			},
 			{
@@ -9971,24 +11117,303 @@ return function ()
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"underhive_contact"
+					""
 				}
 			},
 			{
-				"user_memory",
-				"last_underhive_contact_likes_character",
-				OP.TIMEDIFF,
-				OP.GT,
-				5
+				"global_context",
+				"player_voice_profiles",
+				OP.SET_INTERSECTS,
+				args = {
+					"ogryn_a",
+					"ogryn_b",
+					"ogryn_c",
+					"psyker_female_a",
+					"psyker_female_b",
+					"psyker_female_c",
+					"psyker_male_a",
+					"psyker_male_b",
+					"psyker_male_c",
+					"veteran_female_a",
+					"veteran_female_b",
+					"veteran_female_c",
+					"veteran_male_a",
+					"veteran_male_b",
+					"veteran_male_c",
+					"zealot_female_a",
+					"zealot_female_b",
+					"zealot_female_c",
+					"zealot_male_a",
+					"zealot_male_b",
+					"zealot_male_c"
+				}
 			}
 		},
-		on_done = {
+		on_done = {}
+	})
+	define_rule({
+		name = "hub_mindwipe_conclusion_a",
+		category = "npc_prio_0",
+		wwise_route = 40,
+		response = "hub_mindwipe_conclusion_a",
+		database = "conversations_hub",
+		criterias = {
 			{
-				"user_memory",
-				"last_underhive_contact_likes_character",
-				OP.TIMESET
+				"query_context",
+				"concept",
+				OP.EQ,
+				"npc_interacting_vo"
+			},
+			{
+				"query_context",
+				"vo_event",
+				OP.EQ,
+				"hub_mindwipe_conclusion_a"
+			},
+			{
+				"query_context",
+				"interactor_voice_profile",
+				OP.SET_INCLUDES,
+				args = {
+					""
+				}
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					""
+				}
+			},
+			{
+				"global_context",
+				"player_voice_profiles",
+				OP.SET_INTERSECTS,
+				args = {
+					"ogryn_a",
+					"ogryn_b",
+					"ogryn_c",
+					"psyker_female_a",
+					"psyker_female_b",
+					"psyker_female_c",
+					"psyker_male_a",
+					"psyker_male_b",
+					"psyker_male_c",
+					"veteran_female_a",
+					"veteran_female_b",
+					"veteran_female_c",
+					"veteran_male_a",
+					"veteran_male_b",
+					"veteran_male_c",
+					"zealot_female_a",
+					"zealot_female_b",
+					"zealot_female_c",
+					"zealot_male_a",
+					"zealot_male_b",
+					"zealot_male_c"
+				}
 			}
-		}
+		},
+		on_done = {}
+	})
+	define_rule({
+		name = "hub_mindwipe_frequent_customer_a",
+		category = "npc_prio_0",
+		wwise_route = 40,
+		response = "hub_mindwipe_frequent_customer_a",
+		database = "conversations_hub",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"npc_interacting_vo"
+			},
+			{
+				"query_context",
+				"vo_event",
+				OP.EQ,
+				"hub_mindwipe_frequent_customer_a"
+			},
+			{
+				"query_context",
+				"interactor_voice_profile",
+				OP.SET_INCLUDES,
+				args = {
+					""
+				}
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					""
+				}
+			},
+			{
+				"global_context",
+				"player_voice_profiles",
+				OP.SET_INTERSECTS,
+				args = {
+					"ogryn_a",
+					"ogryn_b",
+					"ogryn_c",
+					"psyker_female_a",
+					"psyker_female_b",
+					"psyker_female_c",
+					"psyker_male_a",
+					"psyker_male_b",
+					"psyker_male_c",
+					"veteran_female_a",
+					"veteran_female_b",
+					"veteran_female_c",
+					"veteran_male_a",
+					"veteran_male_b",
+					"veteran_male_c",
+					"zealot_female_a",
+					"zealot_female_b",
+					"zealot_female_c",
+					"zealot_male_a",
+					"zealot_male_b",
+					"zealot_male_c"
+				}
+			}
+		},
+		on_done = {}
+	})
+	define_rule({
+		name = "hub_mindwipe_personality_a",
+		category = "npc_prio_0",
+		wwise_route = 40,
+		response = "hub_mindwipe_personality_a",
+		database = "conversations_hub",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"npc_interacting_vo"
+			},
+			{
+				"query_context",
+				"vo_event",
+				OP.EQ,
+				"hub_mindwipe_personality_a"
+			},
+			{
+				"query_context",
+				"interactor_voice_profile",
+				OP.SET_INCLUDES,
+				args = {
+					""
+				}
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					""
+				}
+			},
+			{
+				"global_context",
+				"player_voice_profiles",
+				OP.SET_INTERSECTS,
+				args = {
+					"ogryn_a",
+					"ogryn_b",
+					"ogryn_c",
+					"psyker_female_a",
+					"psyker_female_b",
+					"psyker_female_c",
+					"psyker_male_a",
+					"psyker_male_b",
+					"psyker_male_c",
+					"veteran_female_a",
+					"veteran_female_b",
+					"veteran_female_c",
+					"veteran_male_a",
+					"veteran_male_b",
+					"veteran_male_c",
+					"zealot_female_a",
+					"zealot_female_b",
+					"zealot_female_c",
+					"zealot_male_a",
+					"zealot_male_b",
+					"zealot_male_c"
+				}
+			}
+		},
+		on_done = {}
+	})
+	define_rule({
+		name = "hub_mindwipe_select_option_a",
+		category = "npc_prio_0",
+		wwise_route = 40,
+		response = "hub_mindwipe_select_option_a",
+		database = "conversations_hub",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"npc_interacting_vo"
+			},
+			{
+				"query_context",
+				"vo_event",
+				OP.EQ,
+				"hub_mindwipe_select_option_a"
+			},
+			{
+				"query_context",
+				"interactor_voice_profile",
+				OP.SET_INCLUDES,
+				args = {
+					""
+				}
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					""
+				}
+			},
+			{
+				"global_context",
+				"player_voice_profiles",
+				OP.SET_INTERSECTS,
+				args = {
+					"ogryn_a",
+					"ogryn_b",
+					"ogryn_c",
+					"psyker_female_a",
+					"psyker_female_b",
+					"psyker_female_c",
+					"psyker_male_a",
+					"psyker_male_b",
+					"psyker_male_c",
+					"veteran_female_a",
+					"veteran_female_b",
+					"veteran_female_c",
+					"veteran_male_a",
+					"veteran_male_b",
+					"veteran_male_c",
+					"zealot_female_a",
+					"zealot_female_b",
+					"zealot_female_c",
+					"zealot_male_a",
+					"zealot_male_b",
+					"zealot_male_c"
+				}
+			}
+		},
+		on_done = {}
 	})
 	define_rule({
 		pre_wwise_event = "play_hub_pa_notification",
@@ -10967,6 +12392,100 @@ return function ()
 		heard_speak_routing = {
 			target = "disabled"
 		}
+	})
+	define_rule({
+		name = "hub_rumour_barber_idle",
+		category = "npc_prio_0",
+		wwise_route = 19,
+		response = "hub_rumour_barber_idle",
+		database = "conversations_hub",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"npc_vo"
+			},
+			{
+				"query_context",
+				"vo_event",
+				OP.EQ,
+				"hub_rumour_barber_idle"
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"barber"
+				}
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_givers"
+		}
+	})
+	define_rule({
+		name = "hub_rumour_farewell_a_barber",
+		category = "npc_prio_0",
+		response = "hub_rumour_farewell_a_barber",
+		database = "conversations_hub",
+		wwise_route = 19,
+		speaker_routing = {
+			target = "dialogist"
+		},
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"npc_interacting_vo"
+			},
+			{
+				"query_context",
+				"vo_event",
+				OP.EQ,
+				"hub_rumour_farewell_a_barber"
+			},
+			{
+				"query_context",
+				"interactor_voice_profile",
+				OP.SET_INCLUDES,
+				args = {
+					"ogryn_a",
+					"ogryn_b",
+					"ogryn_c",
+					"psyker_female_a",
+					"psyker_female_b",
+					"psyker_female_c",
+					"psyker_male_a",
+					"psyker_male_b",
+					"psyker_male_c",
+					"veteran_female_a",
+					"veteran_female_b",
+					"veteran_female_c",
+					"veteran_male_a",
+					"veteran_male_b",
+					"veteran_male_c",
+					"zealot_female_a",
+					"zealot_female_b",
+					"zealot_female_c",
+					"zealot_male_a",
+					"zealot_male_b",
+					"zealot_male_c"
+				}
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"barber"
+				}
+			}
+		},
+		on_done = {}
 	})
 	define_rule({
 		post_wwise_event = "play_radio_static_end",
@@ -13505,6 +15024,1706 @@ return function ()
 			}
 		},
 		on_done = {}
+	})
+	define_rule({
+		name = "shipmistress_hub_announcement_a_01_b",
+		category = "conversations_prio_0",
+		wwise_route = 22,
+		response = "shipmistress_hub_announcement_a_01_b",
+		database = "conversations_hub",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"sound_event",
+				OP.SET_INCLUDES,
+				args = {
+					"loc_shipmistress_a__shipmistress_hub_announcement_a_01_a_01"
+				}
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"vocator"
+				}
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "self"
+		}
+	})
+	define_rule({
+		name = "shipmistress_hub_announcement_a_01_c",
+		category = "conversations_prio_0",
+		wwise_route = 22,
+		response = "shipmistress_hub_announcement_a_01_c",
+		database = "conversations_hub",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"sound_event",
+				OP.SET_INCLUDES,
+				args = {
+					"loc_shipmistress_a__shipmistress_hub_announcement_a_01_b_01"
+				}
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"vocator"
+				}
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "self"
+		}
+	})
+	define_rule({
+		name = "shipmistress_hub_announcement_a_02_b",
+		category = "conversations_prio_0",
+		wwise_route = 22,
+		response = "shipmistress_hub_announcement_a_02_b",
+		database = "conversations_hub",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"sound_event",
+				OP.SET_INCLUDES,
+				args = {
+					"loc_shipmistress_a__shipmistress_hub_announcement_a_02_a_01"
+				}
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"vocator"
+				}
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "disabled"
+		}
+	})
+	define_rule({
+		name = "shipmistress_hub_announcement_a_03_b",
+		category = "conversations_prio_0",
+		wwise_route = 22,
+		response = "shipmistress_hub_announcement_a_03_b",
+		database = "conversations_hub",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"sound_event",
+				OP.SET_INCLUDES,
+				args = {
+					"loc_shipmistress_a__shipmistress_hub_announcement_a_03_a_01"
+				}
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"vocator"
+				}
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "disabled"
+		}
+	})
+	define_rule({
+		name = "shipmistress_hub_announcement_a_04_b",
+		category = "conversations_prio_0",
+		wwise_route = 22,
+		response = "shipmistress_hub_announcement_a_04_b",
+		database = "conversations_hub",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"sound_event",
+				OP.SET_INCLUDES,
+				args = {
+					"loc_shipmistress_a__shipmistress_hub_announcement_a_04_a_01"
+				}
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"vocator"
+				}
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "disabled"
+		}
+	})
+	define_rule({
+		name = "shipmistress_hub_announcement_a_05_b",
+		category = "conversations_prio_0",
+		wwise_route = 22,
+		response = "shipmistress_hub_announcement_a_05_b",
+		database = "conversations_hub",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"sound_event",
+				OP.SET_INCLUDES,
+				args = {
+					"loc_shipmistress_a__shipmistress_hub_announcement_a_05_a_01"
+				}
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"vocator"
+				}
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "disabled"
+		}
+	})
+	define_rule({
+		name = "shipmistress_hub_announcement_a_06_b",
+		category = "conversations_prio_0",
+		wwise_route = 22,
+		response = "shipmistress_hub_announcement_a_06_b",
+		database = "conversations_hub",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"sound_event",
+				OP.SET_INCLUDES,
+				args = {
+					"loc_shipmistress_a__shipmistress_hub_announcement_a_06_a_01"
+				}
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"vocator"
+				}
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "disabled"
+		}
+	})
+	define_rule({
+		name = "shipmistress_hub_announcement_a_07_b",
+		category = "conversations_prio_0",
+		wwise_route = 22,
+		response = "shipmistress_hub_announcement_a_07_b",
+		database = "conversations_hub",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"sound_event",
+				OP.SET_INCLUDES,
+				args = {
+					"loc_shipmistress_a__shipmistress_hub_announcement_a_07_a_01"
+				}
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"vocator"
+				}
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "disabled"
+		}
+	})
+	define_rule({
+		name = "shipmistress_hub_announcement_a_09_b",
+		category = "conversations_prio_0",
+		wwise_route = 22,
+		response = "shipmistress_hub_announcement_a_09_b",
+		database = "conversations_hub",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"sound_event",
+				OP.SET_INCLUDES,
+				args = {
+					"loc_shipmistress_a__shipmistress_hub_announcement_a_09_a_01"
+				}
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"vocator"
+				}
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "disabled"
+		}
+	})
+	define_rule({
+		name = "shipmistress_hub_announcement_a_16_b",
+		category = "conversations_prio_0",
+		wwise_route = 22,
+		response = "shipmistress_hub_announcement_a_16_b",
+		database = "conversations_hub",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"sound_event",
+				OP.SET_INCLUDES,
+				args = {
+					"loc_shipmistress_a__shipmistress_hub_announcement_a_16_a_01"
+				}
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"vocator"
+				}
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "disabled"
+		}
+	})
+	define_rule({
+		name = "shipmistress_hub_announcement_a_17_b",
+		category = "conversations_prio_0",
+		wwise_route = 22,
+		response = "shipmistress_hub_announcement_a_17_b",
+		database = "conversations_hub",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"sound_event",
+				OP.SET_INCLUDES,
+				args = {
+					"loc_shipmistress_a__shipmistress_hub_announcement_a_17_a_01"
+				}
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"vocator"
+				}
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "disabled"
+		}
+	})
+	define_rule({
+		name = "shipmistress_hub_announcement_a_20_b",
+		category = "conversations_prio_0",
+		wwise_route = 22,
+		response = "shipmistress_hub_announcement_a_20_b",
+		database = "conversations_hub",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"sound_event",
+				OP.SET_INCLUDES,
+				args = {
+					"loc_shipmistress_a__shipmistress_hub_announcement_a_20_a_01"
+				}
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"vocator"
+				}
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "self"
+		}
+	})
+	define_rule({
+		name = "shipmistress_hub_announcement_a_20_c",
+		category = "conversations_prio_0",
+		wwise_route = 22,
+		response = "shipmistress_hub_announcement_a_20_c",
+		database = "conversations_hub",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"sound_event",
+				OP.SET_INCLUDES,
+				args = {
+					"loc_shipmistress_a__shipmistress_hub_announcement_a_20_b_01"
+				}
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"vocator"
+				}
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "disabled"
+		}
+	})
+	define_rule({
+		post_wwise_event = "play_radio_static_end",
+		concurrent_wwise_event = "play_vox_static_loop",
+		name = "shipmistress_hub_announcement_a_32_b",
+		wwise_route = 1,
+		response = "shipmistress_hub_announcement_a_32_b",
+		database = "conversations_hub",
+		category = "vox_prio_0",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"sound_event",
+				OP.SET_INCLUDES,
+				args = {
+					"loc_shipmistress_a__shipmistress_hub_announcement_a_32_a_01"
+				}
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"shipmistress"
+				}
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "disabled"
+		}
+	})
+	define_rule({
+		post_wwise_event = "play_radio_static_end",
+		concurrent_wwise_event = "play_vox_static_loop",
+		pre_wwise_event = "play_radio_static_start",
+		name = "shipmistress_hub_announcement_a_33_b",
+		response = "shipmistress_hub_announcement_a_33_b",
+		database = "conversations_hub",
+		wwise_route = 1,
+		category = "vox_prio_0",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"sound_event",
+				OP.SET_INCLUDES,
+				args = {
+					"loc_shipmistress_a__shipmistress_hub_announcement_a_33_a_01"
+				}
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"explicator"
+				}
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "disabled"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
+		post_wwise_event = "play_radio_static_end",
+		concurrent_wwise_event = "play_vox_static_loop",
+		name = "shipmistress_hub_announcement_a_35_b",
+		wwise_route = 1,
+		response = "shipmistress_hub_announcement_a_35_b",
+		database = "conversations_hub",
+		category = "vox_prio_0",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"sound_event",
+				OP.SET_INCLUDES,
+				args = {
+					"loc_shipmistress_a__shipmistress_hub_announcement_a_35_a_01"
+				}
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"shipmistress"
+				}
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "disabled"
+		}
+	})
+	define_rule({
+		post_wwise_event = "play_radio_static_end",
+		concurrent_wwise_event = "play_vox_static_loop",
+		name = "shipmistress_hub_announcement_a_37_b",
+		wwise_route = 1,
+		response = "shipmistress_hub_announcement_a_37_b",
+		database = "conversations_hub",
+		category = "vox_prio_0",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"sound_event",
+				OP.SET_INCLUDES,
+				args = {
+					"loc_shipmistress_a__shipmistress_hub_announcement_a_37_a_01"
+				}
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"shipmistress"
+				}
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "disabled"
+		}
+	})
+	define_rule({
+		name = "shipmistress_hub_announcement_a_48_b",
+		category = "conversations_prio_0",
+		wwise_route = 22,
+		response = "shipmistress_hub_announcement_a_48_b",
+		database = "conversations_hub",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"sound_event",
+				OP.SET_INCLUDES,
+				args = {
+					"loc_shipmistress_a__shipmistress_hub_announcement_a_48_a_01"
+				}
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"vocator"
+				}
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "disabled"
+		}
+	})
+	define_rule({
+		name = "shipmistress_hub_announcement_a_50_b",
+		category = "conversations_prio_0",
+		wwise_route = 22,
+		response = "shipmistress_hub_announcement_a_50_b",
+		database = "conversations_hub",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"sound_event",
+				OP.SET_INCLUDES,
+				args = {
+					"loc_shipmistress_a__shipmistress_hub_announcement_a_50_a_01"
+				}
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"vocator"
+				}
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "players"
+		}
+	})
+	define_rule({
+		post_wwise_event = "play_radio_static_end",
+		concurrent_wwise_event = "play_vox_static_loop",
+		name = "shipmistress_hub_announcement_a_52_b",
+		wwise_route = 1,
+		response = "shipmistress_hub_announcement_a_52_b",
+		database = "conversations_hub",
+		category = "vox_prio_0",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"sound_event",
+				OP.SET_INCLUDES,
+				args = {
+					"loc_shipmistress_a__shipmistress_hub_announcement_a_52_a_01"
+				}
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"shipmistress"
+				}
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "disabled"
+		}
+	})
+	define_rule({
+		name = "shipmistress_hub_announcement_a_55_b",
+		category = "conversations_prio_0",
+		wwise_route = 22,
+		response = "shipmistress_hub_announcement_a_55_b",
+		database = "conversations_hub",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"sound_event",
+				OP.SET_INCLUDES,
+				args = {
+					"loc_shipmistress_a__shipmistress_hub_announcement_a_55_a_01"
+				}
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"vocator"
+				}
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_givers"
+		}
+	})
+	define_rule({
+		post_wwise_event = "play_radio_static_end",
+		concurrent_wwise_event = "play_vox_static_loop",
+		pre_wwise_event = "play_radio_static_start",
+		name = "shipmistress_hub_announcement_a_55_c",
+		response = "shipmistress_hub_announcement_a_55_c",
+		database = "conversations_hub",
+		wwise_route = 1,
+		category = "vox_prio_0",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"sound_event",
+				OP.SET_INCLUDES,
+				args = {
+					"loc_shipmistress_a__shipmistress_hub_announcement_a_55_b_01"
+				}
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"tech_priest"
+				}
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "disabled"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
+		concurrent_wwise_event = "play_vox_static_loop",
+		wwise_route = 1,
+		name = "shipmistress_hub_announcement_a_56_b",
+		response = "shipmistress_hub_announcement_a_56_b",
+		database = "conversations_hub",
+		category = "vox_prio_0",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"sound_event",
+				OP.SET_INCLUDES,
+				args = {
+					"loc_shipmistress_a__shipmistress_hub_announcement_a_56_a_01"
+				}
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"shipmistress"
+				}
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "self"
+		}
+	})
+	define_rule({
+		post_wwise_event = "play_radio_static_end",
+		concurrent_wwise_event = "play_vox_static_loop",
+		name = "shipmistress_hub_announcement_a_56_c",
+		wwise_route = 1,
+		response = "shipmistress_hub_announcement_a_56_c",
+		database = "conversations_hub",
+		category = "vox_prio_0",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"sound_event",
+				OP.SET_INCLUDES,
+				args = {
+					"loc_shipmistress_a__shipmistress_hub_announcement_a_56_b_01"
+				}
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"shipmistress"
+				}
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "self"
+		}
+	})
+	define_rule({
+		post_wwise_event = "play_radio_static_end",
+		concurrent_wwise_event = "play_vox_static_loop",
+		name = "shipmistress_hub_announcement_a_60_b",
+		wwise_route = 1,
+		response = "shipmistress_hub_announcement_a_60_b",
+		database = "conversations_hub",
+		category = "vox_prio_0",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"sound_event",
+				OP.SET_INCLUDES,
+				args = {
+					"loc_shipmistress_a__shipmistress_hub_announcement_a_60_a_01"
+				}
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"shipmistress"
+				}
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "disabled"
+		}
+	})
+	define_rule({
+		post_wwise_event = "play_radio_static_end",
+		concurrent_wwise_event = "play_vox_static_loop",
+		pre_wwise_event = "play_radio_static_start",
+		name = "shipmistress_hub_announcement_a_61_b",
+		response = "shipmistress_hub_announcement_a_61_b",
+		database = "conversations_hub",
+		wwise_route = 1,
+		category = "vox_prio_0",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"sound_event",
+				OP.SET_INCLUDES,
+				args = {
+					"loc_shipmistress_a__shipmistress_hub_announcement_a_61_a_01"
+				}
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"explicator"
+				}
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "all"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
+		post_wwise_event = "play_radio_static_end",
+		name = "shipmistress_hub_announcement_b_25_b",
+		pre_wwise_event = "play_radio_static_start",
+		wwise_route = 1,
+		response = "shipmistress_hub_announcement_b_25_b",
+		database = "conversations_hub",
+		category = "vox_prio_0",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"sound_event",
+				OP.SET_INCLUDES,
+				args = {
+					"loc_shipmistress_a__shipmistress_hub_announcement_a_25_a_01"
+				}
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"explicator"
+				}
+			}
+		},
+		on_done = {},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
+		post_wwise_event = "play_radio_static_end",
+		concurrent_wwise_event = "play_vox_static_loop",
+		pre_wwise_event = "play_radio_static_start",
+		name = "shipmistress_hub_announcement_b_26_b",
+		response = "shipmistress_hub_announcement_b_26_b",
+		database = "conversations_hub",
+		wwise_route = 1,
+		category = "vox_prio_0",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"sound_event",
+				OP.SET_INCLUDES,
+				args = {
+					"loc_shipmistress_a__shipmistress_hub_announcement_a_26_a_01"
+				}
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"explicator"
+				}
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "disabled"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
+		post_wwise_event = "play_radio_static_end",
+		concurrent_wwise_event = "play_vox_static_loop",
+		pre_wwise_event = "play_radio_static_start",
+		name = "shipmistress_hub_announcement_b_27_b",
+		response = "shipmistress_hub_announcement_b_27_b",
+		database = "conversations_hub",
+		wwise_route = 1,
+		category = "vox_prio_0",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"sound_event",
+				OP.SET_INCLUDES,
+				args = {
+					"loc_shipmistress_a__shipmistress_hub_announcement_a_27_a_01"
+				}
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"pilot"
+				}
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "disabled"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
+		post_wwise_event = "play_radio_static_end",
+		concurrent_wwise_event = "play_vox_static_loop",
+		pre_wwise_event = "play_radio_static_start",
+		name = "shipmistress_hub_announcement_b_28_b",
+		response = "shipmistress_hub_announcement_b_28_b",
+		database = "conversations_hub",
+		wwise_route = 1,
+		category = "vox_prio_0",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"sound_event",
+				OP.SET_INCLUDES,
+				args = {
+					"loc_shipmistress_a__shipmistress_hub_announcement_a_28_a_01"
+				}
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"pilot"
+				}
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_givers"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
+		post_wwise_event = "play_radio_static_end",
+		concurrent_wwise_event = "play_vox_static_loop",
+		pre_wwise_event = "play_radio_static_start",
+		name = "shipmistress_hub_announcement_b_29_b",
+		response = "shipmistress_hub_announcement_b_29_b",
+		database = "conversations_hub",
+		wwise_route = 1,
+		category = "vox_prio_0",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"sound_event",
+				OP.SET_INCLUDES,
+				args = {
+					"loc_shipmistress_a__shipmistress_hub_announcement_a_29_a_01"
+				}
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"purser"
+				}
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "disabled"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
+		post_wwise_event = "play_radio_static_end",
+		concurrent_wwise_event = "play_vox_static_loop",
+		pre_wwise_event = "play_radio_static_start",
+		name = "shipmistress_hub_announcement_b_30_b",
+		response = "shipmistress_hub_announcement_b_30_b",
+		database = "conversations_hub",
+		wwise_route = 1,
+		category = "vox_prio_0",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"sound_event",
+				OP.SET_INCLUDES,
+				args = {
+					"loc_shipmistress_a__shipmistress_hub_announcement_a_30_a_01"
+				}
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"purser"
+				}
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_givers"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
+		name = "shipmistress_hub_announcement_b_44_b",
+		wwise_route = 42,
+		response = "shipmistress_hub_announcement_b_44_b",
+		database = "conversations_hub",
+		category = "vox_prio_0",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"sound_event",
+				OP.SET_INCLUDES,
+				args = {
+					"loc_shipmistress_a__shipmistress_hub_announcement_a_44_a_01"
+				}
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"training_ground_psyker"
+				}
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "disabled"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
+		name = "shipmistress_hub_announcement_b_45_b",
+		wwise_route = 42,
+		response = "shipmistress_hub_announcement_b_45_b",
+		database = "conversations_hub",
+		category = "vox_prio_0",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"sound_event",
+				OP.SET_INCLUDES,
+				args = {
+					"loc_shipmistress_a__shipmistress_hub_announcement_a_45_a_01"
+				}
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"training_ground_psyker"
+				}
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "disabled"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
+		name = "shipmistress_hub_announcement_b_46_b",
+		wwise_route = 42,
+		response = "shipmistress_hub_announcement_b_46_b",
+		database = "conversations_hub",
+		category = "vox_prio_0",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"sound_event",
+				OP.SET_INCLUDES,
+				args = {
+					"loc_shipmistress_a__shipmistress_hub_announcement_a_46_a_01"
+				}
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"training_ground_psyker"
+				}
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_givers"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
+		name = "shipmistress_hub_announcement_b_50_b",
+		wwise_route = 0,
+		response = "shipmistress_hub_announcement_b_50_b",
+		database = "conversations_hub",
+		category = "conversations_prio_0",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"sound_event",
+				OP.SET_INCLUDES,
+				args = {
+					"loc_shipmistress_a__shipmistress_hub_announcement_a_50_b_01"
+				}
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"ogryn"
+				}
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "disabled"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.3
+			}
+		}
+	})
+	define_rule({
+		post_wwise_event = "play_radio_static_end",
+		concurrent_wwise_event = "play_vox_static_loop",
+		pre_wwise_event = "play_radio_static_start",
+		name = "shipmistress_hub_announcement_c_28_c",
+		response = "shipmistress_hub_announcement_c_28_c",
+		database = "conversations_hub",
+		wwise_route = 1,
+		category = "vox_prio_0",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"sound_event",
+				OP.SET_INCLUDES,
+				args = {
+					"loc_pilot_a__shipmistress_hub_announcement_b_28_b_01"
+				}
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"shipmistress"
+				}
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_givers"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
+		post_wwise_event = "play_radio_static_end",
+		concurrent_wwise_event = "play_vox_static_loop",
+		pre_wwise_event = "play_radio_static_start",
+		name = "shipmistress_hub_announcement_c_30_c",
+		response = "shipmistress_hub_announcement_c_30_c",
+		database = "conversations_hub",
+		wwise_route = 1,
+		category = "vox_prio_0",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"sound_event",
+				OP.SET_INCLUDES,
+				args = {
+					"loc_purser_a__shipmistress_hub_announcement_b_30_b_01"
+				}
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"shipmistress"
+				}
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_givers"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
+		post_wwise_event = "play_radio_static_end",
+		concurrent_wwise_event = "play_vox_static_loop",
+		pre_wwise_event = "play_radio_static_start",
+		name = "shipmistress_hub_announcement_c_46_c",
+		response = "shipmistress_hub_announcement_c_46_c",
+		database = "conversations_hub",
+		wwise_route = 1,
+		category = "vox_prio_0",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"sound_event",
+				OP.SET_INCLUDES,
+				args = {
+					"loc_training_ground_psyker_a__shipmistress_hub_announcement_b_46_b_01"
+				}
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"shipmistress"
+				}
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_givers"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
+		post_wwise_event = "play_radio_static_end",
+		concurrent_wwise_event = "play_vox_static_loop",
+		pre_wwise_event = "play_radio_static_start",
+		name = "shipmistress_hub_announcement_d_30_d",
+		response = "shipmistress_hub_announcement_d_30_d",
+		database = "conversations_hub",
+		wwise_route = 1,
+		category = "vox_prio_0",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"sound_event",
+				OP.SET_INCLUDES,
+				args = {
+					"loc_shipmistress_a__shipmistress_hub_announcement_c_30_c_01"
+				}
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"purser"
+				}
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_givers"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
+		name = "shipmistress_hub_announcement_d_46_d",
+		wwise_route = 42,
+		response = "shipmistress_hub_announcement_d_46_d",
+		database = "conversations_hub",
+		category = "vox_prio_0",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"sound_event",
+				OP.SET_INCLUDES,
+				args = {
+					"loc_shipmistress_a__shipmistress_hub_announcement_c_46_c_01"
+				}
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"training_ground_psyker"
+				}
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_givers"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
+		pre_wwise_event = "play_hub_pa_notification",
+		wwise_route = 22,
+		name = "shipmistress_hub_announcement_pa",
+		response = "shipmistress_hub_announcement_pa",
+		database = "conversations_hub",
+		category = "conversations_prio_0",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"generic_vo_event"
+			},
+			{
+				"query_context",
+				"trigger_id",
+				OP.EQ,
+				"random_talk"
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"shipmistress_a"
+				}
+			},
+			{
+				"faction_memory",
+				"time_since_last_random_talk",
+				OP.TIMEDIFF,
+				OP.GT,
+				139
+			},
+			{
+				"user_memory",
+				"time_since_last_random_talk_user",
+				OP.TIMEDIFF,
+				OP.GT,
+				229
+			},
+			{
+				"faction_memory",
+				"last_mission_update",
+				OP.TIMEDIFF,
+				OP.GT,
+				15
+			}
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"time_since_last_random_talk",
+				OP.TIMESET
+			},
+			{
+				"user_memory",
+				"time_since_last_random_talk_user",
+				OP.TIMESET
+			}
+		},
+		heard_speak_routing = {
+			target = "all_including_self"
+		}
+	})
+	define_rule({
+		post_wwise_event = "play_radio_static_end",
+		concurrent_wwise_event = "play_vox_static_loop",
+		pre_wwise_event = "play_radio_static_start",
+		name = "shipmistress_hub_announcement_vox",
+		response = "shipmistress_hub_announcement_vox",
+		database = "conversations_hub",
+		wwise_route = 1,
+		category = "conversations_prio_0",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"npc_story_talk"
+			},
+			{
+				"query_context",
+				"trigger_id",
+				OP.EQ,
+				"npc_story_talk"
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"shipmistress"
+				}
+			},
+			{
+				"faction_memory",
+				"shipmistress_hub_announcement_vox",
+				OP.TIMEDIFF,
+				OP.GT,
+				240
+			},
+			{
+				"faction_memory",
+				"time_since_last_vox_story_talk",
+				OP.TIMEDIFF,
+				OP.GT,
+				100
+			}
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"shipmistress_hub_announcement_vox",
+				OP.TIMESET
+			},
+			{
+				"faction_memory",
+				"time_since_last_vox_story_talk",
+				OP.TIMESET
+			}
+		},
+		heard_speak_routing = {
+			target = "all_including_self"
+		}
 	})
 	define_rule({
 		name = "tech_priest_distance",

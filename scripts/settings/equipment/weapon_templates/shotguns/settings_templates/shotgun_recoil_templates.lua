@@ -457,8 +457,8 @@ recoil_templates.assault_recoil_shotgun_p2 = {
 		rise_duration = 0.05,
 		rise = {
 			{
-				lerp_perfect = 0.15,
-				lerp_basic = 0.8
+				lerp_perfect = 0.2,
+				lerp_basic = 1.1
 			}
 		},
 		decay = {

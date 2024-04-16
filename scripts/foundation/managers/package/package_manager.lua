@@ -8,12 +8,13 @@ PackageManager.init = function (self)
 	self._queued_async_packages = {}
 	self._queue_order = {}
 	self._queued_callback_items = {}
+	self._packages_to_unload = {}
 	self._shutdown_has_started = false
 	self._current_item = PackageManager.FIRST_ITEM
 	self._load_call_data = {}
 	self._package_to_load_call_item = {}
-	self._loaded_resident = {}
 	self._current_time = 0
+	self._pause_unloading = false
 end
 
 PackageManager._new_load_call_item = function (self, package_name, reference_name, callback)
@@ -33,6 +34,7 @@ end
 
 PackageManager.load = function (self, package_name, reference_name, callback, prioritize, use_resident_loading)
 	local load_call_item = self:_new_load_call_item(package_name, reference_name, callback)
+	self._packages_to_unload[package_name] = nil
 
 	if self._package_to_load_call_item[package_name] then
 		table.insert(self._package_to_load_call_item[package_name], load_call_item)
@@ -90,8 +92,6 @@ PackageManager.load = function (self, package_name, reference_name, callback, pr
 
 		if use_resident_loading then
 			ResourcePackage.load_resident(resource_handle)
-
-			self._loaded_resident[resource_handle] = true
 		else
 			ResourcePackage.load(resource_handle)
 		end
@@ -148,8 +148,6 @@ PackageManager._pop_queue = function (self)
 
 		if use_resident_loading then
 			ResourcePackage.load_resident(resource_handle)
-
-			self._loaded_resident[resource_handle] = true
 		else
 			ResourcePackage.load(resource_handle)
 		end
@@ -174,31 +172,13 @@ PackageManager.release = function (self, id)
 	end
 
 	if table.is_empty(load_call_list) then
-		local resource_handle = self._packages[package_name]
+		self._packages_to_unload[package_name] = load_call_item
 
-		if self._asynch_packages[package_name] then
-			resource_handle = self._asynch_packages[package_name]
-
-			if self._loaded_resident[resource_handle] then
-				Log.warning("PackageManager", "Trying to release package '%s' which is in the process of being loaded with load_resident(). This will cause a stall", package_name)
-			else
-				Log.warning("PackageManager", "Trying to release package '%s' which is in the process of being loaded with load(). This will cause a stall", package_name)
+		if not self._pause_unloading then
+			if not self._asynch_packages[package_name] or self._shutdown_has_started then
+				self:_release_internal(package_name)
 			end
 		end
-
-		if resource_handle then
-			local reference_name = load_call_item.reference_name
-
-			ResourcePackage.unload(resource_handle)
-			Application.release_resource_package(resource_handle)
-
-			self._loaded_resident[resource_handle] = nil
-		end
-
-		self._package_to_load_call_item[package_name] = nil
-		self._packages[package_name] = nil
-		self._asynch_packages[package_name] = nil
-		self._queued_async_packages[package_name] = nil
 	end
 
 	local queued_callback_items = self._queued_callback_items
@@ -212,22 +192,43 @@ PackageManager.release = function (self, id)
 	self._load_call_data[id] = nil
 end
 
-PackageManager.can_unload = function (self, package_name)
-	local resource_handle = self._packages[package_name]
-
-	if self._asynch_packages[package_name] then
-		resource_handle = self._asynch_packages[package_name].handle
-	end
+PackageManager._release_internal = function (self, package_name)
+	local load_call_item = self._packages_to_unload[package_name]
+	local reference_name = load_call_item.reference_name
+	local resource_handle = self._packages[package_name] or self._asynch_packages[package_name]
 
 	if resource_handle then
-		return ResourcePackage.can_unload(resource_handle)
+		ResourcePackage.unload(resource_handle)
+		Application.release_resource_package(resource_handle)
 	end
 
-	return true
+	self._packages[package_name] = nil
+	self._packages_to_unload[package_name] = nil
+	self._package_to_load_call_item[package_name] = nil
+	self._asynch_packages[package_name] = nil
+	self._queued_async_packages[package_name] = nil
 end
 
 PackageManager.shutdown_has_started = function (self)
 	self._shutdown_has_started = true
+
+	for package_name, _ in pairs(self._packages_to_unload) do
+		self:_release_internal(package_name)
+	end
+end
+
+PackageManager.pause_unloading = function (self)
+	self._pause_unloading = true
+end
+
+PackageManager.resume_unloading = function (self)
+	for package_name, _ in pairs(self._packages_to_unload) do
+		if not self._asynch_packages[package_name] then
+			self:_release_internal(package_name)
+		end
+	end
+
+	self._pause_unloading = false
 end
 
 PackageManager.destroy = function (self)
@@ -306,6 +307,10 @@ PackageManager.update = function (self, dt, t)
 	for package_name, resource_handle in pairs(self._asynch_packages) do
 		if ResourcePackage.has_loaded(resource_handle) then
 			self:_bring_in(package_name)
+
+			if self._packages_to_unload[package_name] and not self._pause_unloading then
+				self:_release_internal(package_name)
+			end
 
 			freed_slots = freed_slots + 1
 		end

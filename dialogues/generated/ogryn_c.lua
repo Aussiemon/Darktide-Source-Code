@@ -1,10 +1,94 @@
 return function ()
 	define_rule({
-		name = "bonding_conversation_metropolitan_ambush_a",
+		name = "agnostic_food_reply_b",
+		wwise_route = 0,
+		response = "agnostic_food_reply_b",
+		database = "ogryn_c",
 		category = "conversations_prio_1",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"sound_event",
+				OP.SET_INCLUDES,
+				args = {
+					"loc_psyker_male_b__enemy_kill_chaos_hound_07",
+					"loc_veteran_female_a__combat_pause_quirk_rations_b_01",
+					"loc_psyker_male_a__response_for_veteran_revive_03",
+					"loc_zealot_male_a__combat_pause_quirk_rations_b_02",
+					"loc_zealot_female_a__combat_pause_quirk_rations_b_02",
+					"loc_psyker_female_a__lore_rannick_one_c_01",
+					"loc_ogryn_a__combat_pause_quirk_rations_b_01",
+					"loc_zealot_male_c__lore_astra_militarum_two_c_02",
+					"loc_zealot_female_c__lore_astra_militarum_two_c_02",
+					"loc_ogryn_a__mission_enforcer_traders_row_02",
+					"loc_psyker_male_c__combat_pause_quirk_rations_b_02",
+					"loc_ogryn_a__combat_pause_quirk_glutton_b_02",
+					"loc_psyker_female_c__combat_pause_quirk_rations_b_02",
+					"loc_ogryn_b__combat_pause_circumstance_psyker_a_hound_b_01",
+					"loc_ogryn_d__disabled_by_chaos_hound_03",
+					"loc_ogryn_d__combat_pause_quirk_glutton_b_01",
+					"loc_ogryn_a__bonding_conversation_metropolitan_gnomic_b_01",
+					"loc_zealot_male_c__mission_strain_crossroads_02",
+					"loc_zealot_female_c__mission_strain_crossroads_02",
+					"loc_psyker_male_a__lore_surgeon_one_c_01",
+					"loc_psyker_male_a__lore_surgeon_one_c_02",
+					"loc_psyker_female_a__lore_surgeon_one_c_01",
+					"loc_psyker_female_a__lore_surgeon_one_c_02",
+					"loc_psyker_male_b__combat_pause_quirk_rations_b_02",
+					"loc_psyker_female_b__combat_pause_quirk_rations_b_02",
+					"loc_veteran_female_a__combat_pause_limited_zealot_c_05_b_01",
+					"loc_veteran_female_a__combat_pause_quirk_rations_b_02",
+					"loc_veteran_female_b__nurgle_circumstance_prop_growth_10",
+					"loc_veteran_male_a__combat_pause_quirk_rations_a_03",
+					"loc_veteran_male_a__combat_pause_quirk_rations_b_02",
+					"loc_veteran_male_b__nurgle_circumstance_prop_growth_10",
+					"loc_veteran_female_a__combat_pause_quirk_rations_a_03"
+				}
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"ogryn_c"
+				}
+			},
+			{
+				"faction_memory",
+				"agnostic_food_reply_b",
+				OP.TIMEDIFF,
+				OP.GT,
+				300
+			}
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"agnostic_food_reply_b",
+				OP.TIMESET
+			}
+		},
+		heard_speak_routing = {
+			target = "players"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
+		name = "bonding_conversation_metropolitan_ambush_a",
 		wwise_route = 0,
 		response = "bonding_conversation_metropolitan_ambush_a",
 		database = "ogryn_c",
+		category = "conversations_prio_1",
 		criterias = {
 			{
 				"query_context",
@@ -89,6 +173,13 @@ return function ()
 		},
 		heard_speak_routing = {
 			target = "players"
+		},
+		on_pre_rule_execution = {
+			random_ignore_vo = {
+				chance = 0.6,
+				max_failed_tries = 0,
+				hold_for = 0
+			}
 		}
 	})
 	define_rule({
@@ -2559,10 +2650,10 @@ return function ()
 	})
 	define_rule({
 		name = "bonding_conversation_metropolitan_paranoid_a",
-		category = "conversations_prio_1",
 		wwise_route = 0,
 		response = "bonding_conversation_metropolitan_paranoid_a",
 		database = "ogryn_c",
+		category = "conversations_prio_1",
 		criterias = {
 			{
 				"query_context",
@@ -2647,6 +2738,13 @@ return function ()
 		},
 		heard_speak_routing = {
 			target = "mission_givers"
+		},
+		on_pre_rule_execution = {
+			random_ignore_vo = {
+				chance = 0.6,
+				max_failed_tries = 0,
+				hold_for = 0
+			}
 		}
 	})
 	define_rule({
@@ -2823,10 +2921,10 @@ return function ()
 	})
 	define_rule({
 		name = "bonding_conversation_metropolitan_promotion_a",
-		category = "conversations_prio_1",
 		wwise_route = 0,
 		response = "bonding_conversation_metropolitan_promotion_a",
 		database = "ogryn_c",
+		category = "conversations_prio_1",
 		criterias = {
 			{
 				"query_context",
@@ -2911,6 +3009,13 @@ return function ()
 		},
 		heard_speak_routing = {
 			target = "players"
+		},
+		on_pre_rule_execution = {
+			random_ignore_vo = {
+				chance = 0.6,
+				max_failed_tries = 0,
+				hold_for = 0
+			}
 		}
 	})
 	define_rule({

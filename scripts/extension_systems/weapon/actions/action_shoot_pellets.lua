@@ -110,7 +110,6 @@ ActionShootPellets.init = function (self, action_context, action_params, action_
 end
 
 ActionShootPellets.start = function (self, ...)
-	Managers.server_metrics:add_annotation("action_shoot_pellets")
 	ActionShootPellets.super.start(self, ...)
 	table.clear(self._hit_units)
 	table.clear(self._suppressed_hits_per_unit)

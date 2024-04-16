@@ -84,6 +84,7 @@ LobbyView.init = function (self, settings, context)
 
 	self._pass_draw = false
 	self._can_exit = not context or context.can_exit
+	self._allow_close_hotkey = self._debug_preview
 
 	self:_register_event("event_lobby_vote_started")
 end
@@ -582,7 +583,7 @@ LobbyView._destroy_spawn_slots = function (self)
 end
 
 LobbyView.can_exit = function (self)
-	return self._can_exit and self._navigation_state == "menu"
+	return self._can_exit and self._navigation_state == "menu" or self._debug_preview
 end
 
 LobbyView.on_exit = function (self)
@@ -861,9 +862,20 @@ LobbyView._assign_player_to_slot = function (self, player, slot)
 	local panel_widget = slot.panel_widget
 	local panel_content = panel_widget.content
 	local character_name = ProfileUtils.character_name(profile)
-	local character_title = ProfileUtils.character_title(profile)
+	local character_archetype_title = ProfileUtils.character_archetype_title(profile)
 	local character_level = tostring(profile.current_level) .. " "
-	panel_content.character_title = character_title
+	panel_content.character_archetype_title = character_archetype_title
+	local player_title = ProfileUtils.character_title(profile)
+
+	if player_title and player_title ~= "" then
+		panel_content.character_title = player_title
+		panel_widget.style.character_name.offset[2] = LobbyViewSettings.character_name_y_offset
+		panel_widget.style.character_archetype_title.offset[2] = LobbyViewSettings.character_archetype_title_y_offset
+	else
+		panel_widget.style.character_name.offset[2] = LobbyViewSettings.character_name_y_offset_no_title
+		panel_widget.style.character_archetype_title.offset[2] = LobbyViewSettings.character_archetype_title_y_offset_no_title
+	end
+
 	panel_content.has_guild = false
 	slot.loaded = false
 	slot.occupied = true

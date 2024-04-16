@@ -65,10 +65,6 @@ local TWIN_IDS = {
 	renegade_twin_captain = 1,
 	renegade_twin_captain_two = 2
 }
-local TWIN_ID_REVERSE = {
-	"renegade_twin_captain",
-	"renegade_twin_captain_two"
-}
 local appear_ambisonics_sound_event = "wwise/events/minions/play_minion_twins_ambush_spawn_impact"
 local gas_wave_ambisonics = "wwise/events/play_event_twins_arena_gas_wave_ambisonics"
 local MAINPATH_SOUND_EVENTS = {
@@ -749,6 +745,7 @@ MutatorToxicGasTwins.start_boss_fight = function (self)
 	self._boss_fight_started = true
 	self._first_gas_phase_started = false
 
+	Managers.stats:record_team("hook_mission_twins_boss_started_mine_intialized")
 	Log.info("MutatorToxicGasTwins", "START BOSS FIGHT")
 
 	self._boss_health = {}

@@ -252,10 +252,6 @@ Testify.make_request_on_client = function (self, peer_id, request_name, wait_for
 	request_parameters = cjson_encode(request_parameters)
 	local channel_id = self._peers[peer_id]
 
-	if not channel_id then
-		-- Nothing
-	end
-
 	RPC.rpc_testify_make_request(channel_id, peer_id, request_name, wait_for_response, request_parameters, num_parameters)
 
 	if wait_for_response then

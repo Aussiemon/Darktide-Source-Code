@@ -473,6 +473,50 @@ local conversations_hub_explicator_a = {
 		},
 		randomize_indexes = {}
 	},
+	shipmistress_hub_announcement_a_33_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1.0] = "loc_explicator_a__shipmistress_hub_announcement_a_33_b_01"
+		},
+		sound_events_duration = {
+			[1.0] = 6.328875
+		},
+		randomize_indexes = {}
+	},
+	shipmistress_hub_announcement_a_61_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1.0] = "loc_explicator_a__shipmistress_hub_announcement_a_61_b_01"
+		},
+		sound_events_duration = {
+			[1.0] = 6.249271
+		},
+		randomize_indexes = {}
+	},
+	shipmistress_hub_announcement_b_25_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1.0] = "loc_explicator_a__shipmistress_hub_announcement_b_25_b_01"
+		},
+		sound_events_duration = {
+			[1.0] = 3.519542
+		},
+		randomize_indexes = {}
+	},
+	shipmistress_hub_announcement_b_26_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1.0] = "loc_explicator_a__shipmistress_hub_announcement_b_26_b_01"
+		},
+		sound_events_duration = {
+			[1.0] = 4.406896
+		},
+		randomize_indexes = {}
+	},
 	twins_epilogue_02_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,

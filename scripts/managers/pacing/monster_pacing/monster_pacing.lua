@@ -7,6 +7,7 @@ local MonsterSettings = require("scripts/settings/monster/monster_settings")
 local Navigation = require("scripts/extension_systems/navigation/utilities/navigation")
 local NavQueries = require("scripts/utilities/nav_queries")
 local PerceptionSettings = require("scripts/settings/perception/perception_settings")
+local SpawnPointQueries = require("scripts/managers/main_path/utilities/spawn_point_queries")
 local Vo = require("scripts/utilities/vo")
 local perception_aggro_states = PerceptionSettings.aggro_states
 local MonsterPacing = class("MonsterPacing")
@@ -741,6 +742,48 @@ MonsterPacing._spawn_boss_patrol = function (self, boss_patrol, ahead_travel_dis
 		local stop_event = sound_events.stop
 		group.group_start_sound_event = start_event
 		group.group_stop_sound_event = stop_event
+	end
+end
+
+MonsterPacing.remove_monsters_behind_pos = function (self, position)
+	local main_path_manager = Managers.state.main_path
+	local main_path_available = main_path_manager:is_main_path_available()
+
+	if not main_path_available then
+		return false
+	end
+
+	local nav_spawn_points = main_path_manager:nav_spawn_points()
+	local target_navmesh_position = NavQueries.position_on_mesh_with_outside_position(self._nav_world, nil, position, 1, 1, 1)
+
+	if target_navmesh_position then
+		local group_index = SpawnPointQueries.group_from_position(self._nav_world, nav_spawn_points, target_navmesh_position)
+
+		if group_index then
+			local start_index = main_path_manager:node_index_by_nav_group_index(group_index)
+			local end_index = start_index + 1
+			local _, distance, _, _, _ = MainPathQueries.closest_position_between_nodes(position, start_index, end_index)
+
+			if self._monsters then
+				for i = #self._monsters, 1, -1 do
+					local monster = self._monsters[i]
+
+					if monster.travel_distance <= distance then
+						table.remove(self._monsters, i)
+					end
+				end
+			end
+
+			if self._boss_patrols then
+				for i = #self._boss_patrols, 1, -1 do
+					local boss_patrol = self._boss_patrols[i]
+
+					if boss_patrol.travel_distance <= distance then
+						table.remove(self._boss_patrols, i)
+					end
+				end
+			end
+		end
 	end
 end
 

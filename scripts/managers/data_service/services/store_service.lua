@@ -1,4 +1,5 @@
 local DataServiceBackendCache = require("scripts/managers/data_service/data_service_backend_cache")
+local MasterItems = require("scripts/backend/master_items")
 local Promise = require("scripts/foundation/utilities/promise")
 local StoreService = class("StoreService")
 
@@ -568,6 +569,15 @@ StoreService.on_gear_deleted = function (self, backend_result)
 	else
 		return Promise.resolved(backend_result)
 	end
+end
+
+StoreService.on_character_operation = function (self, operation_cost)
+	local cost_type = operation_cost.type
+	local cost_amount = operation_cost.amount
+
+	return self:verify_wallet_caps():next(function ()
+		self:_change_cached_wallet_balance(cost_type, -cost_amount, true, "on_character_operation")
+	end)
 end
 
 StoreService.on_contract_task_rerolled = function (self, reroll_cost)

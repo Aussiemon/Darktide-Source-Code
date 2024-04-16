@@ -47,7 +47,7 @@ WarpChargeActionModule.running_action_state = function (self, t, time_in_action)
 	local charge_level = self._charge_component.charge_level
 	local current_percentage = self._warp_charge_component.current_percentage
 
-	if current_percentage >= 0.99 then
+	if current_percentage >= 1 then
 		return "fully_charged"
 	end
 

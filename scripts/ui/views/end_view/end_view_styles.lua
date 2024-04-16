@@ -146,11 +146,56 @@ player_panel_victory_style.character_portrait = {
 		90,
 		100
 	},
+	offset = {
+		0,
+		-20,
+		0
+	},
 	material_values = {
 		use_placeholder_texture = 1,
 		texture_frame = end_view_styles.default_frame_material
 	}
 }
+player_panel_victory_style.character_insignia = {
+	horizontal_alignment = "center",
+	size = {
+		40,
+		100
+	},
+	offset = {
+		-65,
+		-20,
+		0
+	},
+	material_values = {}
+}
+player_panel_victory_style.character_name = table.clone(UIFontSettings.body)
+local character_name_style_victory = player_panel_victory_style.character_name
+character_name_style_victory.text_horizontal_alignment = "center"
+character_name_style_victory.offset = {
+	0,
+	85,
+	0
+}
+character_name_style_victory.own_player_text_color = Color.terminal_text_header(255, true)
+player_panel_victory_style.character_title = table.clone(UIFontSettings.body_small)
+local character_title_style_victory = player_panel_victory_style.character_title
+character_title_style_victory.text_horizontal_alignment = "center"
+character_title_style_victory.offset = {
+	0,
+	115,
+	0
+}
+player_panel_victory_style.character_archetype_title = table.clone(UIFontSettings.body_small)
+local character_archetype_title_style_victory = player_panel_victory_style.character_archetype_title
+character_archetype_title_style_victory.text_horizontal_alignment = "center"
+character_archetype_title_style_victory.offset = {
+	0,
+	140,
+	0
+}
+character_archetype_title_style_victory.default_color = Color.terminal_text_body_sub_header(255, true)
+character_archetype_title_style_victory.text_color = Color.terminal_text_body_sub_header(255, true)
 player_panel_victory_style.checkmark = table.clone(UIFontSettings.symbol)
 local checkmark_style_victory = player_panel_victory_style.checkmark
 checkmark_style_victory.font_size = 40
@@ -166,37 +211,12 @@ checkmark_style_victory.text_color = Color.ui_terminal(255, true)
 checkmark_style_victory.visible = false
 player_panel_victory_style.party_status = table.clone(checkmark_style_victory)
 local party_status_text_style_victory = player_panel_victory_style.party_status
+party_status_text_style_victory.offset = {
+	92,
+	-20,
+	0
+}
 party_status_text_style_victory.text_vertical_alignment = "bottom"
-player_panel_victory_style.character_insignia = {
-	horizontal_alignment = "center",
-	size = {
-		40,
-		100
-	},
-	offset = {
-		-65,
-		0,
-		0
-	},
-	material_values = {}
-}
-player_panel_victory_style.character_name = table.clone(UIFontSettings.body)
-local character_name_style_victory = player_panel_victory_style.character_name
-character_name_style_victory.text_horizontal_alignment = "center"
-character_name_style_victory.offset = {
-	0,
-	105,
-	0
-}
-character_name_style_victory.own_player_text_color = Color.terminal_text_header(255, true)
-player_panel_victory_style.character_title = table.clone(UIFontSettings.body_small)
-local character_title_style_victory = player_panel_victory_style.character_title
-character_title_style_victory.text_horizontal_alignment = "center"
-character_title_style_victory.offset = {
-	0,
-	140,
-	0
-}
 player_panel_victory_style.account_divider = {
 	horizontal_alignment = "center",
 	size = {

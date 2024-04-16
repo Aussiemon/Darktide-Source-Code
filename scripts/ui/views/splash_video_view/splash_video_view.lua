@@ -11,8 +11,6 @@ SplashVideoView.init = function (self, settings, context)
 	self._time_for_next_subtitle = nil
 	self._active_subtitle_end_time = nil
 	self._video_start_time = nil
-	self._wait_for_video = 0
-	self._second_update = true
 
 	SplashVideoView.super.init(self, Definitions, settings, context)
 end
@@ -89,14 +87,20 @@ SplashVideoView.on_exit = function (self)
 end
 
 SplashVideoView.update = function (self, dt, t, input_service)
-	if self._wait_for_video < 3 then
-		self._wait_for_video = self._wait_for_video + 1
-	elseif self._wait_for_video == 3 then
-		self:_setup_video(self._video_name, self._loop_video, self._size, self._position)
+	local sound_ready = self._sound_ready
 
-		self._wait_for_video = self._wait_for_video + 1
-		self._video_start_time = t
-	elseif self._subtitles and self._subtitles[1] then
+	if not sound_ready then
+		local playing_elapsed = self:_get_sound_playing_elapsed()
+
+		if playing_elapsed and playing_elapsed > 0 then
+			self._sound_ready = true
+			self._video_start_time = t
+
+			self:_setup_video(self._video_name, self._loop_video, self._size, self._position)
+		end
+	end
+
+	if sound_ready and self._subtitles and self._subtitles[1] then
 		self:_update_subtitles(dt, t)
 	end
 
@@ -203,6 +207,19 @@ SplashVideoView._setup_background_world = function (self)
 	local level_name = SplashVideoViewSettings.level_name
 
 	self._world_spawner:spawn_level(level_name)
+end
+
+SplashVideoView._get_sound_playing_elapsed = function (self)
+	local world_spawner = self._world_spawner
+	local world = world_spawner and world_spawner:world()
+
+	if world then
+		local wwise_world = Managers.world:wwise_world(world)
+		local sound_id = self._current_sound_id
+		local get_playing_elapsed = WwiseWorld.get_playing_elapsed(wwise_world, sound_id)
+
+		return get_playing_elapsed
+	end
 end
 
 SplashVideoView.dialogue_system = function (self)

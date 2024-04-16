@@ -18,9 +18,6 @@ templates.weapon_trait_bespoke_ogryn_powermaul_slabshield_p1_toughness_recovery_
 templates.weapon_trait_bespoke_ogryn_powermaul_slabshield_p1_staggered_targets_receive_increased_damage_debuff = table.clone(BaseWeaponTraitBuffTemplates.staggered_targets_receive_increased_damage_debuff)
 templates.weapon_trait_bespoke_ogryn_powermaul_slabshield_p1_infinite_melee_cleave_on_weakspot_kill = table.clone(BaseWeaponTraitBuffTemplates.infinite_melee_cleave_on_weakspot_kill)
 templates.weapon_trait_bespoke_ogryn_powermaul_slabshield_p1_staggered_targets_receive_increased_stagger_debuff = table.clone(BaseWeaponTraitBuffTemplates.staggered_targets_receive_increased_stagger_debuff)
-templates.weapon_trait_bespoke_ogryn_powermaul_slabshield_p1_taunt_target_on_hit = table.clone(BaseWeaponTraitBuffTemplates.taunt_target_on_staggered_hit)
-templates.weapon_trait_bespoke_ogryn_powermaul_slabshield_p1_taunt_target_on_hit_child = table.clone(BaseWeaponTraitBuffTemplates.taunt_target_child)
-templates.weapon_trait_bespoke_ogryn_powermaul_slabshield_p1_taunt_target_on_hit.child_buff_template = "weapon_trait_bespoke_ogryn_powermaul_slabshield_p1_taunt_target_on_hit_child"
 templates.weapon_trait_bespoke_ogryn_powermaul_slabshield_p1_pass_past_armor_on_crit = table.clone(BaseWeaponTraitBuffTemplates.pass_past_armor_on_crit)
 templates.weapon_trait_bespoke_ogryn_powermaul_slabshield_p1_block_grants_power_bonus_parent = {
 	child_buff_template = "weapon_trait_bespoke_ogryn_powermaul_slabshield_p1_block_grants_power_bonus_child",
@@ -34,6 +31,10 @@ templates.weapon_trait_bespoke_ogryn_powermaul_slabshield_p1_block_grants_power_
 		[proc_events.on_sweep_finish] = 1
 	},
 	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
+	start_func = function (template_data, template_context)
+		template_data.total_stamina_blocked = 0
+		template_data.target_number_of_stacks = 0
+	end,
 	specific_proc_func = {
 		on_block = function (params, template_data, template_context)
 			local t = FixedFrame.approximate_latest_fixed_time()
@@ -134,5 +135,6 @@ templates.weapon_trait_bespoke_ogryn_powermaul_slabshield_p1_block_break_pushes 
 		fx_extension:spawn_particles(effect_name, player_position, fx_rotation, scale, nil, nil)
 	end
 }
+templates.weapon_trait_bespoke_ogryn_powermaul_slabshield_p1_rending_vs_staggered = table.clone(BaseWeaponTraitBuffTemplates.rending_vs_staggered)
 
 return templates

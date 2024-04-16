@@ -37,6 +37,7 @@ require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/randomi
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/revolver_bullets")
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/revolver_speedloader")
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/servo_skull_hover")
+require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/shock_maul_hit_effects")
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/shovel_fold_corrector")
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/sticky_effects")
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/sweep_trail")

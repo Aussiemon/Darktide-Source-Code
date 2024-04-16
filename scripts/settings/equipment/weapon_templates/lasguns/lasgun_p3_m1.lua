@@ -1,3 +1,4 @@
+local ArmorSettings = require("scripts/settings/damage/armor_settings")
 local BaseTemplateSettings = require("scripts/settings/equipment/weapon_templates/base_template_settings")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
@@ -11,7 +12,6 @@ local SmartTargetingTemplates = require("scripts/settings/equipment/smart_target
 local WeaponTraitsBespokeLasgunP3 = require("scripts/settings/equipment/weapon_traits/weapon_traits_bespoke_lasgun_p3")
 local WeaponTraitTemplates = require("scripts/settings/equipment/weapon_templates/weapon_trait_templates/weapon_trait_templates")
 local WeaponTweakTemplateSettings = require("scripts/settings/equipment/weapon_templates/weapon_tweak_template_settings")
-local ArmorSettings = require("scripts/settings/damage/armor_settings")
 local armor_types = ArmorSettings.types
 local buff_stat_buffs = BuffSettings.stat_buffs
 local damage_types = DamageSettings.damage_types

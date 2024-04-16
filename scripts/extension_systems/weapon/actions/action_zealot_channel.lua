@@ -135,7 +135,7 @@ ActionZealotChannel.fixed_update = function (self, dt, t, time_in_action)
 	if self._next_tick_t <= t then
 		self._next_tick_t = self._next_tick_t + TICK_RATE
 
-		self:_on_channel_tick(in_coherence_units, t, time_in_action)
+		self:_on_channel_tick(dt, in_coherence_units, t, time_in_action)
 
 		self._num_ticks = self._num_ticks + 1
 	end
@@ -149,14 +149,13 @@ ActionZealotChannel.fixed_update = function (self, dt, t, time_in_action)
 	end
 end
 
-local broadphase_results = {}
 local SUPPRESSION_DECAY_DELAY = {
 	3.2,
 	3,
 	5
 }
 
-ActionZealotChannel._on_channel_tick = function (self, in_coherence_units, t, time_in_action)
+ActionZealotChannel._on_channel_tick = function (self, dt, in_coherence_units, t, time_in_action)
 	for in_coherence_unit, _ in pairs(in_coherence_units) do
 		local buff_extension = ScriptUnit.has_extension(in_coherence_unit, "buff_system")
 
@@ -182,13 +181,13 @@ ActionZealotChannel._on_channel_tick = function (self, in_coherence_units, t, ti
 	end
 
 	if self._zealot_channel_staggers then
-		local action_settings = self._action_settings
 		time_in_action = math.min(time_in_action, 5)
+		local action_settings = self._action_settings
 		local radius_time_in_action_multiplier = action_settings.radius_time_in_action_multiplier or 0
 		local radius = action_settings.radius + time_in_action * radius_time_in_action_multiplier
-		local base_power_level = time_in_action > 0.5 and action_settings.power_level or 0
+		local power_level = time_in_action > 0.5 and action_settings.power_level or 0
 
-		self:_zealot_stagger(radius, base_power_level)
+		self:_zealot_stagger(radius, power_level)
 	end
 
 	if self._add_buff_time < time_in_action then
@@ -228,58 +227,62 @@ ActionZealotChannel._on_channel_tick = function (self, in_coherence_units, t, ti
 	end
 end
 
-local HIT_UNITS = {}
+local _broadphase_results = {}
+local _hit_units = {}
 
 ActionZealotChannel._zealot_stagger = function (self, radius, power_level)
 	local action_settings = self._action_settings
-	local unit = self._player_unit
+	local player_unit = self._player_unit
 
-	table.clear(HIT_UNITS)
-	table.clear(broadphase_results)
+	table.clear(_hit_units)
+	table.clear(_broadphase_results)
 
 	local side_system = Managers.state.extension:system("side_system")
-	local side = side_system.side_by_unit[unit]
-	local player_position = POSITION_LOOKUP[unit]
+	local side = side_system.side_by_unit[player_unit]
+	local player_position = POSITION_LOOKUP[player_unit]
 	local enemy_side_names = side:relation_side_names("enemy")
 	local ai_target_units = side.ai_target_units
 	local broadphase_system = Managers.state.extension:system("broadphase_system")
 	local broadphase = broadphase_system.broadphase
-	local num_hits = broadphase:query(player_position, radius, broadphase_results, enemy_side_names, MINION_BREED_TYPE)
-	local damage_profile = action_settings.damage_profile
 
-	for ii = 1, num_hits do
-		repeat
-			local enemy_unit = broadphase_results[ii]
+	if radius and radius > 0 then
+		local num_hits = broadphase:query(player_position, radius, _broadphase_results, enemy_side_names, MINION_BREED_TYPE)
+		local damage_profile = action_settings.damage_profile
 
-			if not ai_target_units[enemy_unit] then
-				break
-			end
+		for ii = 1, num_hits do
+			repeat
+				local enemy_unit = _broadphase_results[ii]
 
-			local enemy_breed = ScriptUnit.extension(enemy_unit, "unit_data_system"):breed()
-			local minion_position = POSITION_LOOKUP[enemy_unit]
-			local attack_direction = Vector3.normalize(Vector3.flat(minion_position - player_position))
-
-			if enemy_breed.suppress_config then
-				Suppression.apply_suppression(enemy_unit, unit, damage_profile, player_position)
-				Suppression.apply_suppression_decay_delay(enemy_unit, math.random_range(SUPPRESSION_DECAY_DELAY[1], SUPPRESSION_DECAY_DELAY[2]))
-
-				HIT_UNITS[enemy_unit] = true
-			elseif enemy_breed.can_be_blinded and not HIT_UNITS[enemy_unit] then
-				local blackboard = BLACKBOARDS[enemy_unit]
-				local stagger_component = blackboard.stagger
-				local is_staggered = stagger_component.num_triggered_staggers > 0
-
-				if not is_staggered then
-					local random_duration_range = math.random_range(2.6666666666666665, 4)
-
-					Stagger.force_stagger(enemy_unit, "blinding", attack_direction, random_duration_range, 1, 0.3333333333333333, unit)
+				if not ai_target_units[enemy_unit] then
+					break
 				end
-			else
-				local hit_zone_name = "torso"
 
-				Attack.execute(enemy_unit, damage_profile, "attack_direction", attack_direction, "power_level", power_level, "hit_zone_name", hit_zone_name, "attacking_unit", unit)
-			end
-		until true
+				local enemy_breed = ScriptUnit.extension(enemy_unit, "unit_data_system"):breed()
+				local minion_position = POSITION_LOOKUP[enemy_unit]
+				local attack_direction = Vector3.normalize(Vector3.flat(minion_position - player_position))
+
+				if enemy_breed.suppress_config then
+					Suppression.apply_suppression(enemy_unit, player_unit, damage_profile, player_position)
+					Suppression.apply_suppression_decay_delay(enemy_unit, math.random_range(SUPPRESSION_DECAY_DELAY[1], SUPPRESSION_DECAY_DELAY[2]))
+
+					_hit_units[enemy_unit] = true
+				elseif enemy_breed.can_be_blinded and not _hit_units[enemy_unit] then
+					local blackboard = BLACKBOARDS[enemy_unit]
+					local stagger_component = blackboard.stagger
+					local is_staggered = stagger_component.num_triggered_staggers > 0
+
+					if not is_staggered then
+						local random_duration_range = math.random_range(2.6666666666666665, 4)
+
+						Stagger.force_stagger(enemy_unit, "blinding", attack_direction, random_duration_range, 1, 0.3333333333333333, player_unit)
+					end
+				else
+					local hit_zone_name = "torso"
+
+					Attack.execute(enemy_unit, damage_profile, "attack_direction", attack_direction, "power_level", power_level, "hit_zone_name", hit_zone_name, "attacking_unit", player_unit)
+				end
+			until true
+		end
 	end
 
 	self._num_ticks_done = self._num_ticks_done + 1
@@ -287,11 +290,11 @@ ActionZealotChannel._zealot_stagger = function (self, radius, power_level)
 	local force_stagger_duration = action_settings.force_stagger_duration
 
 	if force_stagger_radius then
-		num_hits = broadphase:query(player_position, force_stagger_radius, broadphase_results, enemy_side_names, MINION_BREED_TYPE)
+		local num_hits = broadphase:query(player_position, force_stagger_radius, _broadphase_results, enemy_side_names, MINION_BREED_TYPE)
 
 		for ii = 1, num_hits do
 			repeat
-				local enemy_unit = broadphase_results[ii]
+				local enemy_unit = _broadphase_results[ii]
 
 				if not ai_target_units[enemy_unit] then
 					break
@@ -304,19 +307,19 @@ ActionZealotChannel._zealot_stagger = function (self, radius, power_level)
 
 				if is_boss then
 					if self._num_ticks_done == 1 or self._num_ticks_done % 2 == 1 then
-						Stagger.force_stagger(enemy_unit, "blinding", attack_direction, force_stagger_duration, 1, force_stagger_duration, unit)
+						Stagger.force_stagger(enemy_unit, "blinding", attack_direction, force_stagger_duration, 1, force_stagger_duration, player_unit)
 					end
-				elseif not HIT_UNITS[enemy_unit] then
+				elseif not _hit_units[enemy_unit] then
 					if enemy_breed.can_be_blinded then
 						local blackboard = BLACKBOARDS[enemy_unit]
 						local stagger_component = blackboard.stagger
 						local is_staggered = stagger_component.num_triggered_staggers > 0
 
 						if not is_staggered then
-							Stagger.force_stagger(enemy_unit, "blinding", attack_direction, force_stagger_duration, 1, force_stagger_duration, unit)
+							Stagger.force_stagger(enemy_unit, "blinding", attack_direction, force_stagger_duration, 1, force_stagger_duration, player_unit)
 						end
 					else
-						Stagger.force_stagger(enemy_unit, "blinding", attack_direction, force_stagger_duration, 1, force_stagger_duration, unit)
+						Stagger.force_stagger(enemy_unit, "blinding", attack_direction, force_stagger_duration, 1, force_stagger_duration, player_unit)
 					end
 				end
 			until true
@@ -335,6 +338,23 @@ ActionZealotChannel.finish = function (self, reason, data, t, time_in_action, ac
 
 	self._combat_ability_component.active = false
 	self._combat_ability_component.cooldown_paused = false
+
+	if self._is_server then
+		local restored_toughness = 0
+		local in_coherence_units = self._coherency_extension:in_coherence_units()
+
+		for in_coherence_unit, _ in pairs(in_coherence_units) do
+			local toughness_extension = ScriptUnit.has_extension(in_coherence_unit, "toughness_system")
+			local amount_restored = toughness_extension:get_and_clear_restored_amount()
+			restored_toughness = restored_toughness + amount_restored
+		end
+
+		local source_player = self._player_unit and Managers.state.player_unit_spawn:owner(self._player_unit)
+
+		if source_player and restored_toughness > 0 then
+			Managers.stats:record_private("hook_zealot_chorus_toughness_restored", source_player, restored_toughness)
+		end
+	end
 end
 
 return ActionZealotChannel

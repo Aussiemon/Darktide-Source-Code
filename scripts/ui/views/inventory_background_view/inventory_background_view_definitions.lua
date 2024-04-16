@@ -138,11 +138,53 @@ local scenegraph_definition = {
 		},
 		position = {
 			200,
-			25,
+			8,
 			93
 		}
 	},
 	character_title = {
+		vertical_alignment = "top",
+		parent = "screen",
+		horizontal_alignment = "left",
+		size = {
+			400,
+			54
+		},
+		position = {
+			200,
+			42,
+			93
+		}
+	},
+	character_archetype_title = {
+		vertical_alignment = "top",
+		parent = "screen",
+		horizontal_alignment = "left",
+		size = {
+			400,
+			54
+		},
+		position = {
+			200,
+			68,
+			93
+		}
+	},
+	character_name_no_title = {
+		vertical_alignment = "top",
+		parent = "screen",
+		horizontal_alignment = "left",
+		size = {
+			400,
+			30
+		},
+		position = {
+			200,
+			20,
+			93
+		}
+	},
+	character_archetype_title_no_title = {
 		vertical_alignment = "top",
 		parent = "screen",
 		horizontal_alignment = "left",
@@ -152,7 +194,7 @@ local scenegraph_definition = {
 		},
 		position = {
 			200,
-			63,
+			55,
 			93
 		}
 	},
@@ -210,13 +252,17 @@ local scenegraph_definition = {
 		}
 	}
 }
-local character_name_style = table.clone(UIFontSettings.header_2)
-character_name_style.text_horizontal_alignment = "left"
-character_name_style.text_vertical_alignment = "top"
 local character_title_style = table.clone(UIFontSettings.body_small)
 character_title_style.text_horizontal_alignment = "left"
 character_title_style.text_vertical_alignment = "top"
-character_title_style.text_color = Color.terminal_text_body_sub_header(255, true)
+character_title_style.text_color = Color.terminal_text_body(255, true)
+local character_name_style = table.clone(UIFontSettings.header_3)
+character_name_style.text_horizontal_alignment = "left"
+character_name_style.text_vertical_alignment = "top"
+local character_archetype_title_style = table.clone(UIFontSettings.body_small)
+character_archetype_title_style.text_horizontal_alignment = "left"
+character_archetype_title_style.text_vertical_alignment = "top"
+character_archetype_title_style.text_color = Color.terminal_text_body_sub_header(255, true)
 local character_level_style = table.clone(UIFontSettings.body_small)
 character_level_style.text_horizontal_alignment = "center"
 character_level_style.text_vertical_alignment = "center"
@@ -288,6 +334,14 @@ local widget_definitions = {
 			style = character_name_style
 		}
 	}, "character_name"),
+	character_archetype_title = UIWidget.create_definition({
+		{
+			value = "",
+			value_id = "text",
+			pass_type = "text",
+			style = character_archetype_title_style
+		}
+	}, "character_archetype_title"),
 	character_title = UIWidget.create_definition({
 		{
 			value = "",
@@ -353,7 +407,7 @@ local legend_inputs = {
 		alignment = "right_alignment",
 		on_pressed_callback = "cb_on_weapon_swap_pressed",
 		visibility_function = function (parent)
-			return parent._active_view ~= "talent_builder_view" and not parent._is_readonly and parent:is_inventory_synced()
+			return parent:_can_swap_weapon() and not parent._is_readonly and parent:is_inventory_synced()
 		end
 	},
 	{

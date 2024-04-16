@@ -166,12 +166,6 @@ local mission_vo_dm_rise_contract_vendor_a = {
 			8.286083,
 			8.010073
 		},
-		sound_event_weights = {
-			0.25,
-			0.25,
-			0.25,
-			0.25
-		},
 		randomize_indexes = {}
 	},
 	mission_rise_end_event_corruptor_one_a = {
@@ -414,10 +408,10 @@ local mission_vo_dm_rise_contract_vendor_a = {
 			"loc_contract_vendor_a__mission_rise_start_b_04"
 		},
 		sound_events_duration = {
-			5.787177,
-			5.81576,
-			6.161115,
-			5.076406
+			6.187177,
+			6.21576,
+			6.561115,
+			5.476406
 		},
 		randomize_indexes = {}
 	},

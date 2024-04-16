@@ -41,10 +41,6 @@ ActionDiscard._discard = function (self, action_settings)
 
 	Managers.telemetry_reporters:reporter("placed_items"):register_event(player_or_nil, item_name)
 
-	if player_or_nil then
-		Managers.stats:record_private("hook_discard_item", player_or_nil, item_name)
-	end
-
 	if pickup_name then
 		local pickup_system = Managers.state.extension:system("pickup_system")
 		local placed_unit = nil

@@ -65,14 +65,55 @@ template.create_widget_defintion = function (template, scenegraph_id)
 	}, scenegraph_id)
 end
 
+template.on_exit = function (widget, marker)
+	Managers.event:unregister(marker, "event_player_profile_updated")
+end
+
 template.on_enter = function (widget, marker)
-	local data = marker.data
+	local player = marker.data
 	local content = widget.content
-	local profile = data:profile()
+	local profile = player:profile()
+	local peer_id = player:peer_id()
+	marker.peer_id = peer_id
 	local character_level = profile and profile.current_level or 1
+	local title = ProfileUtils.character_title(profile)
+
+	local function cb_event_player_profile_updated(self, synced_peer_id, synced_local_player_id, new_profile, force_update)
+		local valid = force_update or self.peer_id and self.peer_id == synced_peer_id
+
+		if not valid then
+			return
+		end
+
+		local updated_title = new_profile and ProfileUtils.character_title(new_profile)
+
+		if not updated_title then
+			return
+		end
+
+		local archetype = new_profile and new_profile.archetype
+		local string_symbol = archetype and archetype.string_symbol or ""
+		local text = string_symbol .. " " .. new_profile.name .. " - " .. tostring(character_level) .. " "
+
+		if updated_title then
+			text = text .. "\n" .. updated_title
+		end
+
+		marker.widget.content.header_text = text
+	end
+
+	marker.cb_event_player_profile_updated = cb_event_player_profile_updated
+
+	Managers.event:register(marker, "event_player_profile_updated", "cb_event_player_profile_updated")
+
 	local archetype = profile and profile.archetype
 	local string_symbol = archetype and archetype.string_symbol or ""
-	local text = string_symbol .. " " .. data:name() .. " - " .. tostring(character_level) .. " "
+	local text = string_symbol .. " " .. player:name() .. " - " .. tostring(character_level) .. " "
+
+	if title then
+		text = text .. " \n " .. title
+	end
+
 	content.header_text = text
 end
 

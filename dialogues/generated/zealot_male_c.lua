@@ -768,7 +768,7 @@ return function ()
 		},
 		on_pre_rule_execution = {
 			random_ignore_vo = {
-				chance = 0.25,
+				chance = 0.1,
 				max_failed_tries = 0,
 				hold_for = 0
 			}
@@ -5563,7 +5563,7 @@ return function ()
 		},
 		on_pre_rule_execution = {
 			random_ignore_vo = {
-				chance = 0.4,
+				chance = 0.2,
 				max_failed_tries = 0,
 				hold_for = 0
 			}
@@ -5911,10 +5911,10 @@ return function ()
 	})
 	define_rule({
 		name = "bonding_conversation_metropolitan_purged_a",
-		category = "conversations_prio_1",
 		wwise_route = 0,
 		response = "bonding_conversation_metropolitan_purged_a",
 		database = "zealot_male_c",
+		category = "conversations_prio_1",
 		criterias = {
 			{
 				"query_context",
@@ -5999,6 +5999,13 @@ return function ()
 		},
 		heard_speak_routing = {
 			target = "players"
+		},
+		on_pre_rule_execution = {
+			random_ignore_vo = {
+				chance = 0.5,
+				max_failed_tries = 0,
+				hold_for = 0
+			}
 		}
 	})
 	define_rule({

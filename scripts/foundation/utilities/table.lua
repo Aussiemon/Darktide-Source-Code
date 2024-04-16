@@ -911,6 +911,10 @@ table.make_unique = function (t)
 	setmetatable(t, metatable)
 end
 
+table.make_non_unique = function (t)
+	return table.clone_instance(t.__data)
+end
+
 table.make_strict = function (table, name, optional_error_message__index, optional_error_message__newindex)
 	local __index_err_msg = optional_error_message__index or ""
 	local __newindex_err_msg = optional_error_message__newindex or ""

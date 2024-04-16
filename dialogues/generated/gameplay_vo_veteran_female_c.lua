@@ -104,6 +104,64 @@ local gameplay_vo_veteran_female_c = {
 		},
 		randomize_indexes = {}
 	},
+	blitz_krak_grenade_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 10,
+		sound_events = {
+			"loc_veteran_female_c__blitz_krak_grenade_a_01",
+			"loc_veteran_female_c__blitz_krak_grenade_a_02",
+			"loc_veteran_female_c__blitz_krak_grenade_a_03",
+			"loc_veteran_female_c__blitz_krak_grenade_a_04",
+			"loc_veteran_female_c__blitz_krak_grenade_a_05",
+			"loc_veteran_female_c__blitz_krak_grenade_a_06",
+			"loc_veteran_female_c__blitz_krak_grenade_a_07",
+			"loc_veteran_female_c__blitz_krak_grenade_a_08",
+			"loc_veteran_female_c__blitz_krak_grenade_a_09",
+			"loc_veteran_female_c__blitz_krak_grenade_a_10"
+		},
+		sound_events_duration = {
+			0.877792,
+			0.913542,
+			0.981063,
+			0.893531,
+			1.028469,
+			1.127833,
+			0.672073,
+			1.429802,
+			1.172396,
+			1.0865
+		},
+		randomize_indexes = {}
+	},
+	blitz_smoke_grenade_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 10,
+		sound_events = {
+			"loc_veteran_female_c__blitz_smoke_grenade_a_01",
+			"loc_veteran_female_c__blitz_smoke_grenade_a_02",
+			"loc_veteran_female_c__blitz_smoke_grenade_a_03",
+			"loc_veteran_female_c__blitz_smoke_grenade_a_04",
+			"loc_veteran_female_c__blitz_smoke_grenade_a_05",
+			"loc_veteran_female_c__blitz_smoke_grenade_a_06",
+			"loc_veteran_female_c__blitz_smoke_grenade_a_07",
+			"loc_veteran_female_c__blitz_smoke_grenade_a_08",
+			"loc_veteran_female_c__blitz_smoke_grenade_a_09",
+			"loc_veteran_female_c__blitz_smoke_grenade_a_10"
+		},
+		sound_events_duration = {
+			0.977698,
+			0.744031,
+			0.642885,
+			1.543188,
+			0.953219,
+			0.970708,
+			1.19875,
+			0.941063,
+			1.422813,
+			1.034865
+		},
+		randomize_indexes = {}
+	},
 	calling_for_help = {
 		randomize_indexes_n = 0,
 		sound_events_n = 10,
@@ -653,6 +711,47 @@ local gameplay_vo_veteran_female_c = {
 			0.807063,
 			0.986656,
 			1.288781
+		},
+		sound_event_weights = {
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1
+		},
+		randomize_indexes = {}
+	},
+	enemy_kill_cultist_grenadier = {
+		randomize_indexes_n = 0,
+		sound_events_n = 10,
+		sound_events = {
+			"loc_veteran_female_c__enemy_kill_grenadier_01",
+			"loc_veteran_female_c__enemy_kill_grenadier_02",
+			"loc_veteran_female_c__enemy_kill_grenadier_03",
+			"loc_veteran_female_c__enemy_kill_grenadier_04",
+			"loc_veteran_female_c__enemy_kill_grenadier_05",
+			"loc_veteran_female_c__enemy_kill_grenadier_06",
+			"loc_veteran_female_c__enemy_kill_grenadier_07",
+			"loc_veteran_female_c__enemy_kill_grenadier_08",
+			"loc_veteran_female_c__enemy_kill_grenadier_09",
+			"loc_veteran_female_c__enemy_kill_grenadier_10"
+		},
+		sound_events_duration = {
+			0.766938,
+			1.202156,
+			1.20849,
+			0.798625,
+			1.350052,
+			1.30674,
+			1.324063,
+			1.630823,
+			1.052031,
+			1.305125
 		},
 		sound_event_weights = {
 			0.1,
@@ -2142,10 +2241,10 @@ local gameplay_vo_veteran_female_c = {
 			"loc_veteran_female_c__info_event_det_pack_a_04"
 		},
 		sound_events_duration = {
-			3.45678,
-			3.45678,
-			3.45678,
-			3.45678
+			1.310271,
+			1.530198,
+			0.8635,
+			1.340375
 		},
 		randomize_indexes = {}
 	},
@@ -2159,10 +2258,10 @@ local gameplay_vo_veteran_female_c = {
 			"loc_veteran_female_c__info_event_det_pack_b_04"
 		},
 		sound_events_duration = {
-			3.45678,
-			3.45678,
-			3.45678,
-			3.45678
+			1.037115,
+			1.426833,
+			2.449156,
+			1.258302
 		},
 		randomize_indexes = {}
 	},
@@ -3924,6 +4023,47 @@ local gameplay_vo_veteran_female_c = {
 			0.1111111,
 			0.1111111,
 			0.1111111
+		},
+		randomize_indexes = {}
+	},
+	seen_enemy_cultist_grenadier = {
+		randomize_indexes_n = 0,
+		sound_events_n = 10,
+		sound_events = {
+			"loc_veteran_female_c__seen_enemy_grenadier_01",
+			"loc_veteran_female_c__seen_enemy_grenadier_02",
+			"loc_veteran_female_c__seen_enemy_grenadier_03",
+			"loc_veteran_female_c__seen_enemy_grenadier_04",
+			"loc_veteran_female_c__seen_enemy_grenadier_05",
+			"loc_veteran_female_c__seen_enemy_grenadier_06",
+			"loc_veteran_female_c__seen_enemy_grenadier_07",
+			"loc_veteran_female_c__seen_enemy_grenadier_08",
+			"loc_veteran_female_c__seen_enemy_grenadier_09",
+			"loc_veteran_female_c__seen_enemy_grenadier_10"
+		},
+		sound_events_duration = {
+			0.728479,
+			1.958781,
+			1.194219,
+			1.651823,
+			1.075958,
+			1.910542,
+			0.991552,
+			1.415885,
+			1.796948,
+			1.359927
+		},
+		sound_event_weights = {
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1
 		},
 		randomize_indexes = {}
 	},

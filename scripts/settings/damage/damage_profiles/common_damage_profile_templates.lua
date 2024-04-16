@@ -1,12 +1,15 @@
 local ArmorSettings = require("scripts/settings/damage/armor_settings")
+local DamageProfileSettings = require("scripts/settings/damage/damage_profile_settings")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
 local ForcedLookSettings = require("scripts/settings/damage/forced_look_settings")
+local GibbingSettings = require("scripts/settings/gibbing/gibbing_settings")
 local PowerLevelSettings = require("scripts/settings/damage/power_level_settings")
 local PushSettings = require("scripts/settings/damage/push_settings")
-local DamageProfileSettings = require("scripts/settings/damage/damage_profile_settings")
 local armor_types = ArmorSettings.types
 local damage_types = DamageSettings.damage_types
 local push_templates = PushSettings.push_templates
+local GibbingTypes = GibbingSettings.gibbing_types
+local GibbingPower = GibbingSettings.gibbing_power
 local damage_templates = {}
 local overrides = {}
 
@@ -784,6 +787,32 @@ damage_templates.kill_volume_and_off_navmesh = {
 		attack = 0.25,
 		impact = 0.25
 	},
+	targets = {
+		default_target = {
+			boost_curve = PowerLevelSettings.boost_curves.default
+		}
+	}
+}
+damage_templates.kill_volume_with_gibbing = {
+	damage_type = "grenade",
+	ragdoll_push_force = 1250,
+	suppression_value = 10,
+	stagger_category = "explosion",
+	armor_damage_modifier = {
+		attack = default_armor_mod,
+		impact = default_armor_mod
+	},
+	power_distribution = {
+		attack = 0.1,
+		impact = 0.5
+	},
+	cleave_distribution = {
+		attack = 0.25,
+		impact = 0.25
+	},
+	gibbing_type = GibbingTypes.explosion,
+	gibbing_power = GibbingPower.infinite,
+	gib_push_force = GibbingSettings.gib_push_force.explosive_heavy,
 	targets = {
 		default_target = {
 			boost_curve = PowerLevelSettings.boost_curves.default

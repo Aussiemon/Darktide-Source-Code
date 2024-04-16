@@ -93,6 +93,10 @@ local mission_objective_templates = {
 				use_music_event = "escape_event",
 				mission_objective_type = "goal",
 				header = "loc_objective_fm_armoury_reach_valkyrie_header"
+			},
+			objective_fm_armoury_luggable_secret = {
+				mission_objective_type = "luggable",
+				hidden = true
 			}
 		}
 	}

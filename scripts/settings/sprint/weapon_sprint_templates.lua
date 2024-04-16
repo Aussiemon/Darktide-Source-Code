@@ -78,6 +78,32 @@ local weapon_sprint_templates = {
 			lerp_basic = -0.25
 		}
 	},
+	ogryn_sprint_fast = {
+		sprint_sideway_acceleration = 3,
+		sprint_forward_deceleration = 1.45,
+		sprint_sideway_deceleration = 5,
+		sprint_forward_acceleration = {
+			lerp_perfect = 0.4,
+			lerp_basic = 0.15
+		},
+		sprint_speed_mod = {
+			lerp_perfect = 0.5,
+			lerp_basic = -0.25
+		}
+	},
+	ogryn_sprint_slow = {
+		sprint_sideway_acceleration = 1.7,
+		sprint_forward_deceleration = 1.38,
+		sprint_sideway_deceleration = 5,
+		sprint_forward_acceleration = {
+			lerp_perfect = 0.3,
+			lerp_basic = 0.15
+		},
+		sprint_speed_mod = {
+			lerp_perfect = 0.1,
+			lerp_basic = -0.5
+		}
+	},
 	ogryn_hub = {
 		sprint_sideway_acceleration = 2,
 		sprint_forward_deceleration = 1.45,

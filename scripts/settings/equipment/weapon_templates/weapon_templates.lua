@@ -222,7 +222,8 @@ local template_groups = {
 		"breach_charge",
 		"auspex_scanner",
 		"skull_decoder",
-		"servo_skull"
+		"servo_skull",
+		"skull_decoder_02"
 	},
 	{
 		"grenades",

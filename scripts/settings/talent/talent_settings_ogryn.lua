@@ -21,7 +21,7 @@ local talent_settings = {
 			max_charges = 1
 		},
 		passive_1 = {
-			free_ammo_proc_chance = 0.05
+			free_ammo_proc_chance = 0.08
 		},
 		passive_2 = {
 			reduced_damage_while_braced = 0.75
@@ -62,7 +62,7 @@ local talent_settings = {
 			duration = 2
 		},
 		defensive_3 = {
-			braced_toughness_regen = 0.02
+			braced_toughness_regen = 0.03
 		},
 		coop_1 = {
 			team_max_ammo_increase = 0.15
@@ -80,7 +80,7 @@ local talent_settings = {
 			increased_cooldown_regeneration = 2
 		},
 		spec_passive_2 = {
-			increased_passive_proc_chance = 0.08
+			increased_passive_proc_chance = 0.12
 		},
 		spec_passive_3 = {},
 		combat_ability_1 = {
@@ -125,11 +125,11 @@ local talent_settings = {
 			toughness_bonus = 0.5
 		},
 		toughness_2 = {
-			toughness = 0.25,
+			toughness = 0.2,
 			on_sweep_finish_proc_chance = 1
 		},
 		toughness_3 = {
-			toughness = 0.25,
+			toughness = 0.2,
 			on_sweep_finish_proc_chance = 1
 		},
 		offensive_1 = {

@@ -23,6 +23,10 @@ PlayerCharacterStateMinigame.init = function (self, character_state_init_context
 	self._input_extension = ScriptUnit.extension(unit, "input_system")
 	self._minigame_extension = nil
 	self._minigame_character_state_component = minigame_character_state_component
+	self._previous_input = false
+	self._previous_action_one_hold = false
+	self._previous_jump_held = false
+	self._previous_interact_hold = false
 end
 
 PlayerCharacterStateMinigame.on_enter = function (self, unit, dt, t, previous_state, params)
@@ -95,19 +99,43 @@ end
 PlayerCharacterStateMinigame.fixed_update = function (self, unit, dt, t, next_state_params, fixed_frame)
 	local input_extension = self._input_extension
 	local cancelled = self:_update_input(t, input_extension)
+	local transition = self:_check_transition(unit, t, next_state_params, cancelled, input_extension)
 
-	return self:_check_transition(unit, t, next_state_params, cancelled, input_extension)
+	if transition and self._is_server then
+		local minigame_extension = self._minigame_extension
+
+		if minigame_extension and minigame_extension:is_completable() then
+			minigame_extension:completed()
+		end
+	end
+
+	return transition
 end
 
 PlayerCharacterStateMinigame._update_input = function (self, t)
 	local input_extension = self._input_extension
-	local action_one = input_extension:get("action_one_hold") or input_extension:get("jump_held") or input_extension:get("interact_hold")
+	local action_one_hold = input_extension:get("action_one_hold")
+	local interact_hold = input_extension:get("interact_hold")
+	local jump_held = input_extension:get("jump_held")
+
+	if action_one_hold ~= self._previous_action_one_hold then
+		self._previous_action_one_hold = action_one_hold
+		self._previous_input = action_one_hold
+	elseif interact_hold ~= self._previous_interact_hold then
+		self._previous_interact_hold = interact_hold
+		self._previous_input = interact_hold
+	elseif jump_held ~= self._previous_jump_held then
+		self._previous_jump_held = jump_held
+		self._previous_input = jump_held
+	end
+
+	local primary_input = self._previous_input
 	local action_two_pressed = input_extension:get("action_two_pressed")
 	local animation_extension = self._animation_extension
 	local minigame_extension = self._minigame_extension
 
 	if minigame_extension then
-		if minigame_extension:action(action_one, t) then
+		if minigame_extension:action(primary_input, t) then
 			animation_extension:anim_event_1p("button_press")
 
 			local current_minigame_state = minigame_extension:current_state()
@@ -131,10 +159,6 @@ PlayerCharacterStateMinigame._update_input = function (self, t)
 					animation_extension:anim_event_1p("knob_turn_down")
 				end
 			end
-		end
-
-		if action_two_pressed and self._is_server and minigame_extension:is_completable() then
-			minigame_extension:completed()
 		end
 	end
 

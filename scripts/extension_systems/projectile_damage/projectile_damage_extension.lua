@@ -62,6 +62,7 @@ ProjectileDamageExtension.init = function (self, extension_init_context, unit, e
 	self._num_impact_hit_kill = 0
 	self._num_impact_hit_elite = 0
 	self._num_impact_hit_special = 0
+	self._num_impact_hit_minion = 0
 	local projectile_template = self._projectile_template
 	local damage_settings = projectile_template.damage
 	local fuse_damage_settings = damage_settings and damage_settings.fuse
@@ -211,6 +212,8 @@ ProjectileDamageExtension.fixed_update = function (self, unit, dt, t)
 				self._proximity_check_done = true
 				self._reset_time = true
 				new_life_time = 0
+
+				Managers.stats:record_team("hook_mission_twins_mine_triggered")
 
 				if fuse_damage_settings.aoe_threat_size then
 					local enemy_sides = side:relation_sides("enemy")
@@ -418,6 +421,7 @@ ProjectileDamageExtension.on_impact = function (self, hit_position, hit_unit, hi
 				self._num_impact_hit_kill = self._num_impact_hit_kill + (attack_result == attack_results.died and 1 or 0)
 				self._num_impact_hit_elite = self._num_impact_hit_elite + (target_breed_or_nil and target_breed_or_nil.tags.elite and 1 or 0)
 				self._num_impact_hit_special = self._num_impact_hit_special + (target_breed_or_nil and target_breed_or_nil.tags.special and 1 or 0)
+				self._num_impact_hit_minion = self._num_impact_hit_minion + (target_breed_or_nil and target_breed_or_nil.tags.minion and 1 or 0)
 
 				if impact_damage_type then
 					if not target_is_hazard_prop and target_breed_or_nil and hit_zone_name_or_nil or is_damagable_hazard_prop then
@@ -705,10 +709,16 @@ ProjectileDamageExtension._record_impact_concluded_stats = function (self)
 		local num_impact_hit_kill = self._num_impact_hit_kill
 		local num_impact_hit_elite = self._num_impact_hit_elite
 		local num_impact_hit_special = self._num_impact_hit_special
+		local num_impact_hit_minion = self._num_impact_hit_minion
 		local projectile_template = self._projectile_template
 		local projectile_name = projectile_template and projectile_template.name or "none"
+		local hit_count = 0
 
-		Managers.stats:record_private("hook_projectile_hit", player, impact_hit, num_impact_hit_weakspot, num_impact_hit_kill, num_impact_hit_elite, num_impact_hit_special, projectile_name)
+		for hit_unit, _ in pairs(_explosion_hit_units_table) do
+			hit_count = hit_count + 1
+		end
+
+		Managers.stats:record_private("hook_projectile_hit", player, impact_hit, num_impact_hit_weakspot, num_impact_hit_kill, num_impact_hit_elite, num_impact_hit_special, projectile_name, hit_count, num_impact_hit_minion)
 	end
 end
 

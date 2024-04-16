@@ -13,6 +13,12 @@ end
 TrainingGroundsView.on_enter = function (self)
 	TrainingGroundsView.super.on_enter(self)
 
+	local viewport_name = Definitions.background_world_params.viewport_name
+
+	if self._world_spawner then
+		self._world_spawner:set_listener(viewport_name)
+	end
+
 	if not Managers.narrative:is_chapter_complete("onboarding", "play_training") then
 		for i = 2, #Definitions.button_options_definitions do
 			local button = self._widgets_by_name["option_button_" .. i]
@@ -41,6 +47,10 @@ TrainingGroundsView.on_enter = function (self)
 end
 
 TrainingGroundsView.on_exit = function (self)
+	if self._world_spawner then
+		self._world_spawner:release_listener()
+	end
+
 	TrainingGroundsView.super.on_exit(self)
 end
 

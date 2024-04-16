@@ -16,6 +16,11 @@ PerceptionSystem.init = function (self, ...)
 	self._update_units = {}
 	self._prioritized_update_units = {}
 
+	if self._is_server then
+		self._unit_untargetable_data = Script.new_map(4)
+		self._next_global_untargetable_id = 1
+	end
+
 	self:_init_line_of_sight_raycasts(self._physics_world)
 	self:_preparse_bot_gestalt_target_selection_weights(BotGestaltTargetSelectionWeights)
 end
@@ -163,6 +168,36 @@ PerceptionSystem._preparse_bot_gestalt_target_selection_weights = function (self
 			end
 		end
 	end
+end
+
+PerceptionSystem.set_untargetable = function (self, caller_class, unit)
+	local unit_untargetable_data = self._unit_untargetable_data
+	local untargetable_data = unit_untargetable_data[unit] or {
+		num_ids = 0
+	}
+	unit_untargetable_data[unit] = untargetable_data
+	local global_untargetable_id = self._next_global_untargetable_id
+	local caller_name = caller_class.__class_name or caller_class.__component_name
+	untargetable_data[caller_name] = global_untargetable_id
+	untargetable_data[global_untargetable_id] = caller_name
+	untargetable_data.num_ids = untargetable_data.num_ids + 1
+	self._next_global_untargetable_id = self._next_global_untargetable_id + 1
+
+	return global_untargetable_id
+end
+
+PerceptionSystem.set_targetable = function (self, unit, untargetable_id)
+	local untargetable_data = self._unit_untargetable_data[unit]
+	local caller_name = untargetable_data[untargetable_id]
+	untargetable_data[caller_name] = nil
+	untargetable_data[untargetable_id] = nil
+	untargetable_data.num_ids = untargetable_data.num_ids - 1
+end
+
+PerceptionSystem.is_untargetable = function (self, unit)
+	local untargetable_data = self._unit_untargetable_data[unit]
+
+	return untargetable_data and untargetable_data.num_ids > 0
 end
 
 return PerceptionSystem

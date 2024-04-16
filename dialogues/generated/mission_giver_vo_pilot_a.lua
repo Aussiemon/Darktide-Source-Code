@@ -20,10 +20,9 @@ local mission_giver_vo_pilot_a = {
 	},
 	cmd_mission_completed_response = {
 		randomize_indexes_n = 0,
-		sound_events_n = 13,
+		sound_events_n = 12,
 		sound_events = {
 			"loc_pilot_a__cmd_mission_completed_response_01",
-			"loc_pilot_a__cmd_mission_completed_response_02",
 			"loc_pilot_a__cmd_mission_completed_response_03",
 			"loc_pilot_a__cmd_mission_completed_response_04",
 			"loc_pilot_a__cmd_mission_completed_response_05",
@@ -38,7 +37,6 @@ local mission_giver_vo_pilot_a = {
 		},
 		sound_events_duration = {
 			3.689583,
-			4.107542,
 			2.011313,
 			2.550854,
 			3.072167,
@@ -52,19 +50,18 @@ local mission_giver_vo_pilot_a = {
 			3.451688
 		},
 		sound_event_weights = {
-			0.07692308,
-			0.07692308,
-			0.07692308,
-			0.07692308,
-			0.07692308,
-			0.07692308,
-			0.07692308,
-			0.07692308,
-			0.07692308,
-			0.07692308,
-			0.07692308,
-			0.07692308,
-			0.07692308
+			0.08333334,
+			0.08333334,
+			0.08333334,
+			0.08333334,
+			0.08333334,
+			0.08333334,
+			0.08333334,
+			0.08333334,
+			0.08333334,
+			0.08333334,
+			0.08333334,
+			0.08333334
 		},
 		randomize_indexes = {}
 	},

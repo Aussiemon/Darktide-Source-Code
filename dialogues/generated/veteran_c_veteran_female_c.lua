@@ -401,7 +401,7 @@ local veteran_c_veteran_female_c = {
 			[1.0] = "loc_veteran_female_c__veteran_gang_metropolitan_counterattack_a_01"
 		},
 		sound_events_duration = {
-			[1.0] = 3.45678
+			[1.0] = 2.67201
 		},
 		randomize_indexes = {}
 	},
@@ -412,7 +412,7 @@ local veteran_c_veteran_female_c = {
 			[1.0] = "loc_veteran_female_c__veteran_gang_metropolitan_counterattack_d_01"
 		},
 		sound_events_duration = {
-			[1.0] = 3.45678
+			[1.0] = 2.837167
 		},
 		randomize_indexes = {}
 	},
@@ -423,7 +423,7 @@ local veteran_c_veteran_female_c = {
 			[1.0] = "loc_veteran_female_c__veteran_gang_metropolitan_endless_a_01"
 		},
 		sound_events_duration = {
-			[1.0] = 3.45678
+			[1.0] = 2.45099
 		},
 		randomize_indexes = {}
 	},
@@ -434,7 +434,7 @@ local veteran_c_veteran_female_c = {
 			[1.0] = "loc_veteran_female_c__veteran_gang_metropolitan_endless_d_01"
 		},
 		sound_events_duration = {
-			[1.0] = 3.45678
+			[1.0] = 2.809781
 		},
 		randomize_indexes = {}
 	},
@@ -445,7 +445,7 @@ local veteran_c_veteran_female_c = {
 			[1.0] = "loc_veteran_female_c__veteran_gang_metropolitan_fortress_a_01"
 		},
 		sound_events_duration = {
-			[1.0] = 3.45678
+			[1.0] = 2.125115
 		},
 		randomize_indexes = {}
 	},
@@ -456,7 +456,7 @@ local veteran_c_veteran_female_c = {
 			[1.0] = "loc_veteran_female_c__veteran_gang_metropolitan_fortress_d_01"
 		},
 		sound_events_duration = {
-			[1.0] = 3.45678
+			[1.0] = 2.304073
 		},
 		randomize_indexes = {}
 	}

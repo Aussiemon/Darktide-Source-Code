@@ -1,5 +1,56 @@
 return function ()
 	define_rule({
+		name = "away_from_squad_b",
+		category = "conversations_prio_1",
+		wwise_route = 0,
+		response = "away_from_squad_b",
+		database = "veteran_a",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"away_from_squad"
+				}
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"veteran_male_a",
+					"veteran_female_a"
+				}
+			},
+			{
+				"user_memory",
+				"away_from_squad_b",
+				OP.TIMEDIFF,
+				OP.GT,
+				120
+			}
+		},
+		on_done = {
+			{
+				"user_memory",
+				"away_from_squad_b",
+				OP.TIMESET
+			}
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
 		name = "combat_pause_limited_veteran_a_01_a",
 		wwise_route = 0,
 		response = "combat_pause_limited_veteran_a_01_a",
@@ -4160,7 +4211,8 @@ return function ()
 				"player_voice_profiles",
 				OP.SET_INTERSECTS,
 				args = {
-					"veteran_male_c"
+					"veteran_male_c",
+					"veteran_female_c"
 				}
 			},
 			{
@@ -4297,7 +4349,8 @@ return function ()
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"veteran_male_c"
+					"veteran_male_c",
+					"veteran_female_c"
 				}
 			}
 		},
@@ -4412,7 +4465,8 @@ return function ()
 				"player_voice_profiles",
 				OP.SET_INTERSECTS,
 				args = {
-					"veteran_male_c"
+					"veteran_male_c",
+					"veteran_female_c"
 				}
 			},
 			{
@@ -4549,7 +4603,8 @@ return function ()
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"veteran_male_c"
+					"veteran_male_c",
+					"veteran_female_c"
 				}
 			}
 		},
@@ -4664,7 +4719,8 @@ return function ()
 				"player_voice_profiles",
 				OP.SET_INTERSECTS,
 				args = {
-					"veteran_male_c"
+					"veteran_male_c",
+					"veteran_female_c"
 				}
 			},
 			{
@@ -4801,7 +4857,8 @@ return function ()
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"veteran_male_c"
+					"veteran_male_c",
+					"veteran_female_c"
 				}
 			}
 		},

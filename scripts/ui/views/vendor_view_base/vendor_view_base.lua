@@ -1,13 +1,14 @@
+require("scripts/ui/views/item_grid_view_base/item_grid_view_base")
+
 local Definitions = require("scripts/ui/views/vendor_view_base/vendor_view_base_definitions")
 local ItemSlotSettings = require("scripts/settings/item/item_slot_settings")
 local ItemUtils = require("scripts/utilities/items")
 local MasterItems = require("scripts/backend/master_items")
+local Promise = require("scripts/foundation/utilities/promise")
+local TextUtilities = require("scripts/utilities/ui/text")
 local UISettings = require("scripts/settings/ui/ui_settings")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local WalletSettings = require("scripts/settings/wallet_settings")
-local TextUtilities = require("scripts/utilities/ui/text")
-local Promise = require("scripts/foundation/utilities/promise")
-local ItemGridViewBase = require("scripts/ui/views/item_grid_view_base/item_grid_view_base")
 local definition_merge_recursive = nil
 
 function definition_merge_recursive(dest, source, stop_recursive)
@@ -55,6 +56,12 @@ VendorViewBase.init = function (self, definitions, settings, context)
 		self._sort_options = optional_sort_options
 	end
 
+	local optional_filter_options = context and context.optional_filter_options
+
+	if optional_filter_options then
+		self._filter_options = optional_filter_options
+	end
+
 	VendorViewBase.super.init(self, merged_definitions, settings, context)
 end
 
@@ -69,14 +76,6 @@ VendorViewBase.on_enter = function (self)
 		end
 	end)
 	self:_register_button_callbacks()
-end
-
-VendorViewBase.character_level = function (self)
-	local player = self:_player()
-	local profile = player:profile()
-	local profile_level = profile.current_level
-
-	return profile_level
 end
 
 VendorViewBase.equipped_item_in_slot = function (self, slot_name)

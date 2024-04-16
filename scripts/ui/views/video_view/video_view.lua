@@ -203,18 +203,18 @@ VideoView._update_input = function (self)
 	end
 end
 
-local MAX_NUMBER_OF_LOOP = 3
-
 VideoView.update = function (self, dt, t, input_service)
 	if self._loading_packages then
 		self:_update_package_loading()
-	elseif self._wait_for_video and self._wait_for_video < MAX_NUMBER_OF_LOOP then
-		self._wait_for_video = self._wait_for_video + 1
-	elseif self._wait_for_video and MAX_NUMBER_OF_LOOP <= self._wait_for_video then
-		self:_setup_video(self._video_name, self._loop_video)
+	elseif not self._sound_ready then
+		local playing_elapsed = self:_get_sound_playing_elapsed()
 
-		self._video_start_time = t
-		self._wait_for_video = nil
+		if playing_elapsed and playing_elapsed > 0 then
+			self._sound_ready = true
+			self._video_start_time = t
+
+			self:_setup_video(self._video_name, self._loop_video, self._size, self._position)
+		end
 	else
 		local context = self._context
 		local allow_skip_input = context.allow_skip_input
@@ -367,6 +367,19 @@ VideoView._setup_background_world = function (self)
 	local level_name = VideoViewSettings.level_name
 
 	self._world_spawner:spawn_level(level_name)
+end
+
+VideoView._get_sound_playing_elapsed = function (self)
+	local world_spawner = self._world_spawner
+	local world = world_spawner and world_spawner:world()
+
+	if world then
+		local wwise_world = Managers.world:wwise_world(world)
+		local sound_id = self._current_sound_id
+		local get_playing_elapsed = WwiseWorld.get_playing_elapsed(wwise_world, sound_id)
+
+		return get_playing_elapsed
+	end
 end
 
 VideoView.dialogue_system = function (self)

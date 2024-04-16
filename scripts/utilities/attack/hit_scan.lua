@@ -61,7 +61,7 @@ HitScan.process_hits = function (is_server, world, physics_world, attacker_unit,
 	local impact_config = damage_config.impact
 	local penetration_config = damage_config.penetration
 	local damage_profile = damage_config.impact.damage_profile
-	local damage_type = _fetch_damage_type(fire_configuration, optional_is_critical_strike, charge_level)
+	local damage_type_non_explode, damage_type_explode = _fetch_damage_type(fire_configuration, optional_is_critical_strike, charge_level)
 	local attack_type = AttackSettings.attack_types.ranged
 	local damage_profile_lerp_values = DamageProfile.lerp_values(damage_profile, attacker_unit)
 	local hit_mass_budget_attack, hit_mass_budget_impact = DamageProfile.max_hit_mass(damage_profile, power_level, charge_level, damage_profile_lerp_values, optional_is_critical_strike, attacker_unit, attack_type)
@@ -78,8 +78,10 @@ HitScan.process_hits = function (is_server, world, physics_world, attacker_unit,
 	local number_of_units_hit = 0
 	local optional_attacker_data_extension = ScriptUnit.has_extension(attacker_unit, "unit_data_system")
 	local optional_attacker_breed = optional_attacker_data_extension and optional_attacker_data_extension:breed()
-	local optional_attacker_breed_name = optional_attacker_breed and optional_attacker_breed.name
 	local is_attacker_player = Breed.is_player(optional_attacker_breed)
+	local attacker_buff_extension = ScriptUnit.has_extension(attacker_unit, "buff_system")
+	local stat_buffs = attacker_buff_extension and attacker_buff_extension:stat_buffs()
+	local explosion_arming_distance_multiplier = stat_buffs and stat_buffs.explosion_arming_distance_multiplier or 1
 	local num_hits = #hits
 
 	for index = 1, num_hits do
@@ -91,7 +93,9 @@ HitScan.process_hits = function (is_server, world, physics_world, attacker_unit,
 			local hit_actor = hit.actor or hit[INDEX_ACTOR]
 			local hit_unit = Actor.unit(hit_actor)
 			local explosion_arming_distance = damage_config.explosion_arming_distance or 0
+			explosion_arming_distance = explosion_arming_distance * explosion_arming_distance_multiplier
 			local can_explode = hit_distance >= explosion_arming_distance
+			local damage_type = can_explode and damage_type_explode or damage_type_non_explode
 
 			if HIT_UNITS[hit_unit] then
 				break
@@ -162,9 +166,13 @@ HitScan.process_hits = function (is_server, world, physics_world, attacker_unit,
 							local dodging_player = player_unit_spawn_manager:owner(hit_unit)
 
 							if dodging_player then
+								local optional_attacker_breed_name = optional_attacker_breed and optional_attacker_breed.name
 								local stat_dodge_type = is_sprint_dodging and dodge_types.sprint or dodge_type
+								local behaviour_extension = ScriptUnit.has_extension(attacker_unit, "behavior_system")
+								local attacked_action = behaviour_extension and behaviour_extension:running_action()
+								local previously_dodged = behaviour_extension and behaviour_extension.dodged_before and behaviour_extension:dodged_before(hit_unit)
 
-								Managers.stats:record_private("hook_dodged_attack", dodging_player, optional_attacker_breed_name, attack_types.ranged, stat_dodge_type)
+								Managers.stats:record_private("hook_dodged_attack", dodging_player, optional_attacker_breed_name, attack_types.ranged, stat_dodge_type, attacked_action, previously_dodged)
 							end
 
 							should_break = true
@@ -326,12 +334,13 @@ function _block_position(hit_unit, hit_position, attack_direction)
 end
 
 function _fetch_damage_type(fire_configuration, is_critical_strike, charge_level)
-	local damage_type_to_use = is_critical_strike and fire_configuration.damage_type_critical_strike or fire_configuration.damage_type
-	local is_charge_dependant = damage_type_to_use and type(damage_type_to_use) == "table"
+	local damage_type_non_explode = is_critical_strike and fire_configuration.damage_type_critical_strike or fire_configuration.damage_type
+	local damage_type_explode = is_critical_strike and fire_configuration.damage_type_explode_critical_strike or fire_configuration.damage_type_explode
+	local is_charge_dependant = damage_type_non_explode and type(damage_type_non_explode) == "table"
 
 	if is_charge_dependant then
-		local damage_type_table = damage_type_to_use
-		damage_type_to_use = nil
+		local damage_type_table = damage_type_non_explode
+		damage_type_non_explode = nil
 
 		for i = 1, #damage_type_table do
 			local entry = damage_type_table[i]
@@ -339,12 +348,12 @@ function _fetch_damage_type(fire_configuration, is_critical_strike, charge_level
 			local damage_type = entry.damage_type
 
 			if required_charge <= charge_level then
-				damage_type_to_use = damage_type
+				damage_type_non_explode = damage_type
 			end
 		end
 	end
 
-	return damage_type_to_use
+	return damage_type_non_explode, damage_type_explode
 end
 
 return HitScan

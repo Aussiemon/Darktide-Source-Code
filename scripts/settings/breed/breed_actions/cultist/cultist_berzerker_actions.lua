@@ -6,19 +6,11 @@ local action_data = {
 	name = "cultist_berzerker",
 	idle = {
 		rotate_towards_target = true,
-		anim_events = {
-			"idle",
-			"idle_2"
-		}
+		anim_events = "idle"
 	},
 	patrol = {
-		anim_events = {
-			"move_fwd_1"
-		},
-		idle_anim_events = {
-			"idle",
-			"idle_2"
-		},
+		idle_anim_events = "idle",
+		anim_events = "move_fwd_1",
 		speeds = {
 			move_fwd_1 = 1.5
 		}
@@ -28,11 +20,9 @@ local action_data = {
 	},
 	combat_idle = {
 		utility_weight = 2,
+		anim_events = "idle",
 		rotate_towards_target = true,
-		considerations = UtilityConsiderations.melee_combat_idle,
-		anim_events = {
-			"idle"
-		}
+		considerations = UtilityConsiderations.melee_combat_idle
 	},
 	alerted = {
 		instant_aggro_chance = 0,
@@ -317,13 +307,12 @@ local action_data = {
 		utility_weight = 1,
 		ignore_blocked = true,
 		vo_event = "assault",
-		stagger_reduction = 50,
 		assault_vo_interval_t = 1,
+		stagger_reduction = 50,
 		moving_attack = true,
 		move_speed_variable_lerp_speed = 5,
 		weapon_reach = 3.75,
 		move_speed_variable_name = "moving_attack_fwd_speed",
-		ignore_dodge = true,
 		considerations = UtilityConsiderations.cultist_berzerker_combo_attack,
 		attack_anim_events = {
 			"attack_combo_01",

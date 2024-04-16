@@ -92,11 +92,6 @@ templates.weapon_trait_bespoke_ogryn_powermaul_p1_staggered_targets_receive_incr
 		}
 	}
 }
-templates.weapon_trait_bespoke_ogryn_powermaul_p1_taunt_target_on_hit = {
-	weapon_trait_bespoke_ogryn_powermaul_p1_taunt_target_on_hit = {
-		{}
-	}
-}
 templates.weapon_trait_bespoke_ogryn_powermaul_p1_targets_receive_rending_debuff_on_weapon_special_attacks = {
 	weapon_trait_bespoke_ogryn_powermaul_p1_targets_receive_rending_debuff_on_weapon_special_attacks = {
 		{

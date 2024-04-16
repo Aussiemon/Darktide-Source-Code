@@ -390,6 +390,7 @@ local function generate_base_template(buff_name, validate_target_func, hud_icon,
 		human = "content/characters/player/human/first_person/animations/syringe",
 		ogryn = "content/characters/player/ogryn/first_person/animations/syringe"
 	}
+	base_template.smart_targeting_template = SmartTargetingTemplates.default_melee
 	base_template.fx_sources = {
 		_passive = "fx_passive"
 	}

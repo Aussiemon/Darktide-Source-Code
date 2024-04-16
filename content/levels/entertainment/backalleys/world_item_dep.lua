@@ -1,5 +1,11 @@
 local item_dependencies = {
-	minion_items = {},
+	minion_items = {
+		["content/items/characters/minions/chaos_traitor_guard/attachments_base/face_02_tattoo_01"] = 1,
+		["content/items/characters/minions/chaos_traitor_guard/attachments_base/upperbody_a"] = 1,
+		["content/items/characters/minions/chaos_traitor_guard/attachments_base/lowerbody_a"] = 1,
+		["content/items/characters/minions/chaos_traitor_guard/attachments_gear/longrange_a"] = 1,
+		["content/items/characters/minions/chaos_traitor_guard/attachments_gear/helmet_01"] = 1
+	},
 	player_items = {
 		["content/items/characters/player/human/face_tattoo/dirt_tattoo_01_face"] = 1,
 		["content/items/characters/player/ogryn/attachment_base/male_torso"] = 1,

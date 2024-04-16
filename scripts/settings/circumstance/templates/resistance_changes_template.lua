@@ -110,7 +110,8 @@ local circumstance_templates = {
 			"mutator_waves_of_specials",
 			"mutator_add_resistance",
 			"mutator_increase_terror_event_points",
-			"mutator_reduced_ramp_duration_low"
+			"mutator_reduced_ramp_duration_low",
+			"mutator_auric_tension_modifier"
 		}
 	},
 	waves_of_specials_less_resistance_01 = {

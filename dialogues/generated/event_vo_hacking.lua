@@ -30,7 +30,8 @@ return function ()
 					"sergeant",
 					"tech_priest",
 					"contract_vendor",
-					"purser"
+					"purser",
+					"training_ground_psyker"
 				}
 			}
 		},
@@ -122,7 +123,8 @@ return function ()
 					"tech_priest",
 					"contract_vendor",
 					"purser",
-					"explicator"
+					"explicator",
+					"training_ground_psyker"
 				}
 			},
 			{
@@ -198,6 +200,66 @@ return function ()
 		}
 	})
 	define_rule({
+		name = "hacking_auspex_mutter_a",
+		wwise_route = 0,
+		response = "hacking_auspex_mutter_a",
+		database = "event_vo_hacking",
+		category = "player_prio_1",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"generic_mission_vo"
+			},
+			{
+				"query_context",
+				"trigger_id",
+				OP.EQ,
+				"hacking_auspex_mutter_a"
+			},
+			{
+				"user_context",
+				"friends_close",
+				OP.GT,
+				0
+			},
+			{
+				"user_context",
+				"enemies_close",
+				OP.LTEQ,
+				3
+			},
+			{
+				"user_memory",
+				"hacking_auspex_mutter_a",
+				OP.TIMEDIFF,
+				OP.GT,
+				5
+			}
+		},
+		on_done = {
+			{
+				"user_memory",
+				"hacking_auspex_mutter_a",
+				OP.TIMESET
+			}
+		},
+		heard_speak_routing = {
+			target = "disabled"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.3
+			},
+			random_ignore_vo = {
+				chance = 0.5,
+				max_failed_tries = 0,
+				hold_for = 0
+			}
+		}
+	})
+	define_rule({
 		post_wwise_event = "play_radio_static_end",
 		concurrent_wwise_event = "play_vox_static_loop",
 		pre_wwise_event = "play_radio_static_start",
@@ -229,7 +291,8 @@ return function ()
 					"explicator",
 					"tech_priest",
 					"contract_vendor",
-					"purser"
+					"purser",
+					"training_ground_psyker"
 				}
 			}
 		},
@@ -315,7 +378,8 @@ return function ()
 					"tech_priest",
 					"sergeant",
 					"contract_vendor",
-					"purser"
+					"purser",
+					"training_ground_psyker"
 				}
 			}
 		},

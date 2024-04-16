@@ -25,13 +25,13 @@ local big_cleave = DamageProfileSettings.big_cleave
 local smiter_light_default_am = {
 	attack = {
 		[armor_types.unarmored] = damage_lerp_values.lerp_1,
-		[armor_types.armored] = damage_lerp_values.lerp_1,
-		[armor_types.resistant] = damage_lerp_values.lerp_1,
+		[armor_types.armored] = damage_lerp_values.lerp_0_9,
+		[armor_types.resistant] = damage_lerp_values.lerp_0_8,
 		[armor_types.player] = damage_lerp_values.lerp_1,
-		[armor_types.berserker] = damage_lerp_values.lerp_0_5,
-		[armor_types.super_armor] = damage_lerp_values.lerp_0_75,
+		[armor_types.berserker] = damage_lerp_values.lerp_0_75,
+		[armor_types.super_armor] = damage_lerp_values.lerp_0_5,
 		[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_75,
-		[armor_types.void_shield] = damage_lerp_values.lerp_0_75
+		[armor_types.void_shield] = damage_lerp_values.lerp_1_25
 	},
 	impact = {
 		[armor_types.unarmored] = damage_lerp_values.lerp_1,
@@ -47,13 +47,13 @@ local smiter_light_default_am = {
 local linesman_light_default_am = {
 	attack = {
 		[armor_types.unarmored] = damage_lerp_values.lerp_1,
-		[armor_types.armored] = damage_lerp_values.lerp_0_75,
-		[armor_types.resistant] = damage_lerp_values.lerp_1,
+		[armor_types.armored] = damage_lerp_values.lerp_0_9,
+		[armor_types.resistant] = damage_lerp_values.lerp_0_8,
 		[armor_types.player] = damage_lerp_values.lerp_1,
-		[armor_types.berserker] = damage_lerp_values.lerp_0_5,
-		[armor_types.super_armor] = damage_lerp_values.lerp_0_5,
+		[armor_types.berserker] = damage_lerp_values.lerp_0_75,
+		[armor_types.super_armor] = damage_lerp_values.lerp_0_4,
 		[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_75,
-		[armor_types.void_shield] = damage_lerp_values.lerp_1
+		[armor_types.void_shield] = damage_lerp_values.lerp_1_25
 	},
 	impact = {
 		[armor_types.unarmored] = damage_lerp_values.lerp_1,
@@ -69,17 +69,17 @@ local linesman_light_default_am = {
 local tank_heavy_default_am = {
 	attack = {
 		[armor_types.unarmored] = damage_lerp_values.lerp_1,
-		[armor_types.armored] = damage_lerp_values.lerp_0_75,
-		[armor_types.resistant] = damage_lerp_values.lerp_1,
+		[armor_types.armored] = damage_lerp_values.lerp_0_9,
+		[armor_types.resistant] = damage_lerp_values.lerp_0_8,
 		[armor_types.player] = damage_lerp_values.lerp_1,
-		[armor_types.berserker] = damage_lerp_values.lerp_0_5,
+		[armor_types.berserker] = damage_lerp_values.lerp_0_8,
 		[armor_types.super_armor] = damage_lerp_values.lerp_0_75,
 		[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
-		[armor_types.void_shield] = damage_lerp_values.lerp_1
+		[armor_types.void_shield] = damage_lerp_values.lerp_1_33
 	},
 	impact = {
-		[armor_types.unarmored] = damage_lerp_values.lerp_1,
-		[armor_types.armored] = damage_lerp_values.lerp_1,
+		[armor_types.unarmored] = damage_lerp_values.lerp_1_25,
+		[armor_types.armored] = damage_lerp_values.lerp_1_1,
 		[armor_types.resistant] = damage_lerp_values.lerp_1,
 		[armor_types.player] = damage_lerp_values.lerp_1,
 		[armor_types.berserker] = damage_lerp_values.lerp_0_5,
@@ -88,64 +88,8 @@ local tank_heavy_default_am = {
 		[armor_types.void_shield] = damage_lerp_values.lerp_1
 	}
 }
-local light_active_am = {
-	attack = {
-		[armor_types.unarmored] = damage_lerp_values.lerp_1_5,
-		[armor_types.armored] = damage_lerp_values.lerp_1_5,
-		[armor_types.resistant] = {
-			1.2,
-			1.8
-		},
-		[armor_types.player] = damage_lerp_values.no_damage,
-		[armor_types.berserker] = damage_lerp_values.lerp_1_5,
-		[armor_types.super_armor] = damage_lerp_values.lerp_1_5,
-		[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1_5,
-		[armor_types.void_shield] = damage_lerp_values.lerp_1_5
-	},
-	impact = {
-		[armor_types.unarmored] = damage_lerp_values.lerp_2,
-		[armor_types.armored] = damage_lerp_values.lerp_2,
-		[armor_types.resistant] = {
-			15,
-			25
-		},
-		[armor_types.player] = damage_lerp_values.no_damage,
-		[armor_types.berserker] = damage_lerp_values.lerp_2,
-		[armor_types.super_armor] = damage_lerp_values.lerp_2,
-		[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_2,
-		[armor_types.void_shield] = damage_lerp_values.lerp_2
-	}
-}
-local tank_heavy_active_am = {
-	attack = {
-		[armor_types.unarmored] = damage_lerp_values.lerp_1_5,
-		[armor_types.armored] = damage_lerp_values.lerp_1_5,
-		[armor_types.resistant] = {
-			1.5,
-			2
-		},
-		[armor_types.player] = damage_lerp_values.no_damage,
-		[armor_types.berserker] = damage_lerp_values.lerp_1_5,
-		[armor_types.super_armor] = damage_lerp_values.lerp_1_5,
-		[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1_5,
-		[armor_types.void_shield] = damage_lerp_values.lerp_1_5
-	},
-	impact = {
-		[armor_types.unarmored] = damage_lerp_values.lerp_2,
-		[armor_types.armored] = damage_lerp_values.lerp_2,
-		[armor_types.resistant] = {
-			15,
-			25
-		},
-		[armor_types.player] = damage_lerp_values.no_damage,
-		[armor_types.berserker] = damage_lerp_values.lerp_2,
-		[armor_types.super_armor] = damage_lerp_values.lerp_2,
-		[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_2,
-		[armor_types.void_shield] = damage_lerp_values.lerp_2
-	}
-}
 damage_templates.powermaul_light_smiter = {
-	ragdoll_push_force = 100,
+	ragdoll_push_force = 600,
 	ragdoll_only = true,
 	stagger_category = "melee",
 	cleave_distribution = single_cleave,
@@ -154,7 +98,6 @@ damage_templates.powermaul_light_smiter = {
 	gibbing_type = GibbingTypes.crushing,
 	melee_attack_strength = melee_attack_strengths.light,
 	wounds_template = WoundsTemplates.power_maul,
-	gib_push_force = GibbingSettings.gib_push_force.blunt_heavy,
 	stagger_duration_modifier = {
 		0.1,
 		2.5
@@ -164,23 +107,13 @@ damage_templates.powermaul_light_smiter = {
 		{
 			power_distribution = {
 				attack = {
-					65,
-					140
+					90,
+					185
 				},
 				impact = {
 					5,
-					11
+					15
 				}
-			},
-			finesse_boost = {
-				[armor_types.unarmored] = 0.1,
-				[armor_types.armored] = 0.5,
-				[armor_types.resistant] = 0.1,
-				[armor_types.player] = 0.1,
-				[armor_types.berserker] = 0.1,
-				[armor_types.super_armor] = 0.1,
-				[armor_types.disgustingly_resilient] = 0.25,
-				[armor_types.void_shield] = 0.25
 			},
 			boost_curve_multiplier_finesse = {
 				0.5,
@@ -212,7 +145,8 @@ damage_templates.powermaul_light_smiter = {
 				}
 			}
 		}
-	}
+	},
+	gib_push_force = GibbingSettings.gib_push_force.blunt_heavy
 }
 overrides.powermaul_weapon_special = {
 	parent_template_name = "powermaul_light_smiter",
@@ -263,7 +197,7 @@ overrides.powermaul_weapon_special = {
 		},
 		{
 			"melee_attack_strength",
-			melee_attack_strengths.heavy
+			melee_attack_strengths.light
 		},
 		{
 			"targets",
@@ -271,8 +205,8 @@ overrides.powermaul_weapon_special = {
 			"power_distribution",
 			"attack",
 			{
-				11,
-				35
+				20,
+				50
 			}
 		},
 		{
@@ -281,8 +215,8 @@ overrides.powermaul_weapon_special = {
 			"power_distribution",
 			"impact",
 			{
-				2,
-				7
+				4,
+				8
 			}
 		},
 		{
@@ -292,11 +226,18 @@ overrides.powermaul_weapon_special = {
 		{
 			"skip_on_hit_proc",
 			true
+		},
+		{
+			"stagger_duration_modifier",
+			{
+				2,
+				5
+			}
 		}
 	}
 }
 damage_templates.powermaul_light_linesman = {
-	ragdoll_push_force = 200,
+	ragdoll_push_force = 400,
 	ragdoll_only = true,
 	stagger_category = "melee",
 	cleave_distribution = double_cleave,
@@ -314,12 +255,12 @@ damage_templates.powermaul_light_linesman = {
 		{
 			power_distribution = {
 				attack = {
-					0,
-					0
+					65,
+					140
 				},
 				impact = {
-					15,
-					20
+					5,
+					11
 				}
 			},
 			boost_curve_multiplier_finesse = {
@@ -330,12 +271,12 @@ damage_templates.powermaul_light_linesman = {
 		{
 			power_distribution = {
 				attack = {
-					80,
+					40,
 					90
 				},
 				impact = {
-					6,
-					13
+					4,
+					8
 				}
 			},
 			boost_curve_multiplier_finesse = {
@@ -346,12 +287,12 @@ damage_templates.powermaul_light_linesman = {
 		{
 			power_distribution = {
 				attack = {
-					5,
-					20
+					30,
+					60
 				},
 				impact = {
 					3,
-					8
+					6
 				}
 			},
 			boost_curve_multiplier_finesse = {
@@ -361,8 +302,14 @@ damage_templates.powermaul_light_linesman = {
 		},
 		default_target = {
 			power_distribution = {
-				attack = 0,
-				impact = 5
+				attack = {
+					20,
+					40
+				},
+				impact = {
+					3,
+					6
+				}
 			},
 			boost_curve = PowerLevelSettings.boost_curves.default,
 			boost_curve_multiplier_finesse = {
@@ -396,8 +343,8 @@ damage_templates.powermaul_heavy_tank = {
 					180
 				},
 				impact = {
-					30,
-					35
+					9,
+					22
 				}
 			},
 			boost_curve_multiplier_finesse = {
@@ -412,8 +359,8 @@ damage_templates.powermaul_heavy_tank = {
 					60
 				},
 				impact = {
-					20,
-					25
+					8,
+					20
 				}
 			},
 			boost_curve_multiplier_finesse = {
@@ -428,8 +375,8 @@ damage_templates.powermaul_heavy_tank = {
 					30
 				},
 				impact = {
-					15,
-					20
+					4,
+					15
 				}
 			},
 			boost_curve_multiplier_finesse = {
@@ -444,8 +391,8 @@ damage_templates.powermaul_heavy_tank = {
 					25
 				},
 				impact = {
-					10,
-					15
+					3,
+					12
 				}
 			},
 			boost_curve_multiplier_finesse = {
@@ -461,8 +408,8 @@ damage_templates.powermaul_heavy_tank = {
 					0
 				},
 				impact = {
-					10,
-					15
+					3,
+					10
 				}
 			},
 			boost_curve = PowerLevelSettings.boost_curves.default,
@@ -474,8 +421,53 @@ damage_templates.powermaul_heavy_tank = {
 	},
 	gib_push_force = GibbingSettings.gib_push_force.blunt_heavy
 }
+overrides.powermaul_heavy_smite = {
+	parent_template_name = "powermaul_heavy_tank",
+	overrides = {
+		{
+			"targets",
+			1,
+			"power_distribution",
+			"attack",
+			{
+				120,
+				300
+			}
+		},
+		{
+			"targets",
+			2,
+			"power_distribution",
+			"attack",
+			{
+				50,
+				200
+			}
+		},
+		{
+			"targets",
+			3,
+			"power_distribution",
+			"attack",
+			{
+				20,
+				50
+			}
+		},
+		{
+			"targets",
+			4,
+			"power_distribution",
+			"attack",
+			{
+				0,
+				0
+			}
+		}
+	}
+}
 damage_templates.powermaul_light_tank = {
-	ragdoll_push_force = 150,
+	ragdoll_push_force = 200,
 	ragdoll_only = true,
 	stagger_category = "melee",
 	cleave_distribution = big_cleave,
@@ -493,12 +485,12 @@ damage_templates.powermaul_light_tank = {
 		{
 			power_distribution = {
 				attack = {
-					30,
-					70
+					60,
+					120
 				},
 				impact = {
 					7,
-					10
+					15
 				}
 			},
 			boost_curve_multiplier_finesse = {
@@ -509,12 +501,12 @@ damage_templates.powermaul_light_tank = {
 		{
 			power_distribution = {
 				attack = {
-					20,
-					45
+					30,
+					80
 				},
 				impact = {
 					6,
-					9
+					12
 				}
 			},
 			boost_curve_multiplier_finesse = {
@@ -526,11 +518,11 @@ damage_templates.powermaul_light_tank = {
 			power_distribution = {
 				attack = {
 					20,
-					30
+					70
 				},
 				impact = {
 					5,
-					8
+					11
 				}
 			},
 			boost_curve_multiplier_finesse = {
@@ -542,11 +534,11 @@ damage_templates.powermaul_light_tank = {
 			power_distribution = {
 				attack = {
 					10,
-					20
+					50
 				},
 				impact = {
 					3,
-					8
+					10
 				}
 			},
 			boost_curve_multiplier_finesse = {

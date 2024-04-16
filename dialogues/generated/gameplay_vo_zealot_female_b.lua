@@ -104,6 +104,33 @@ local gameplay_vo_zealot_female_b = {
 		},
 		randomize_indexes = {}
 	},
+	blitz_flame_grenade_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 9,
+		sound_events = {
+			"loc_zealot_female_b__blitz_flame_grenade_a_01",
+			"loc_zealot_female_b__blitz_flame_grenade_a_02",
+			"loc_zealot_female_b__blitz_flame_grenade_a_03",
+			"loc_zealot_female_b__blitz_flame_grenade_a_04",
+			"loc_zealot_female_b__blitz_flame_grenade_a_05",
+			"loc_zealot_female_b__blitz_flame_grenade_a_06",
+			"loc_zealot_female_b__blitz_flame_grenade_a_08",
+			"loc_zealot_female_b__blitz_flame_grenade_a_09",
+			"loc_zealot_female_b__blitz_flame_grenade_a_10"
+		},
+		sound_events_duration = {
+			1.759708,
+			1.863083,
+			1.384104,
+			1.526333,
+			1.4955,
+			1.655438,
+			1.540646,
+			1.592646,
+			1.044979
+		},
+		randomize_indexes = {}
+	},
 	calling_for_help = {
 		randomize_indexes_n = 0,
 		sound_events_n = 10,
@@ -647,6 +674,47 @@ local gameplay_vo_zealot_female_b = {
 			1.851979,
 			2.170313,
 			1.708417
+		},
+		sound_event_weights = {
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1
+		},
+		randomize_indexes = {}
+	},
+	enemy_kill_cultist_grenadier = {
+		randomize_indexes_n = 0,
+		sound_events_n = 10,
+		sound_events = {
+			"loc_zealot_female_b__enemy_kill_grenadier_01",
+			"loc_zealot_female_b__enemy_kill_grenadier_02",
+			"loc_zealot_female_b__enemy_kill_grenadier_03",
+			"loc_zealot_female_b__enemy_kill_grenadier_04",
+			"loc_zealot_female_b__enemy_kill_grenadier_05",
+			"loc_zealot_female_b__enemy_kill_grenadier_06",
+			"loc_zealot_female_b__enemy_kill_grenadier_07",
+			"loc_zealot_female_b__enemy_kill_grenadier_08",
+			"loc_zealot_female_b__enemy_kill_grenadier_09",
+			"loc_zealot_female_b__enemy_kill_grenadier_10"
+		},
+		sound_events_duration = {
+			1.387917,
+			1.911917,
+			1.604583,
+			1.856854,
+			1.810354,
+			2.573667,
+			2.192563,
+			2.159229,
+			3.184708,
+			2.626375
 		},
 		sound_event_weights = {
 			0.1,
@@ -3132,6 +3200,25 @@ local gameplay_vo_zealot_female_b = {
 		},
 		randomize_indexes = {}
 	},
+	response_for_ogryn_seen_killstreak_zealot = {
+		randomize_indexes_n = 0,
+		sound_events_n = 5,
+		sound_events = {
+			"loc_zealot_female_b__response_for_ogryn_seen_killstreak_zealot_01",
+			"loc_zealot_female_b__response_for_ogryn_seen_killstreak_zealot_02",
+			"loc_zealot_female_b__response_for_ogryn_seen_killstreak_zealot_03",
+			"loc_zealot_female_b__response_for_ogryn_seen_killstreak_zealot_04",
+			"loc_zealot_female_b__response_for_ogryn_seen_killstreak_zealot_05"
+		},
+		sound_events_duration = {
+			1.871979,
+			2.067479,
+			3.6055,
+			2.808813,
+			3.667396
+		},
+		randomize_indexes = {}
+	},
 	response_for_ogryn_start_revive_zealot = {
 		randomize_indexes_n = 0,
 		sound_events_n = 5,
@@ -3613,6 +3700,25 @@ local gameplay_vo_zealot_female_b = {
 		},
 		randomize_indexes = {}
 	},
+	response_for_veteran_seen_killstreak_zealot = {
+		randomize_indexes_n = 0,
+		sound_events_n = 5,
+		sound_events = {
+			"loc_zealot_female_b__response_for_veteran_seen_killstreak_zealot_01",
+			"loc_zealot_female_b__response_for_veteran_seen_killstreak_zealot_02",
+			"loc_zealot_female_b__response_for_veteran_seen_killstreak_zealot_03",
+			"loc_zealot_female_b__response_for_veteran_seen_killstreak_zealot_04",
+			"loc_zealot_female_b__response_for_veteran_seen_killstreak_zealot_05"
+		},
+		sound_events_duration = {
+			1.969271,
+			2.543292,
+			2.227833,
+			2.812604,
+			3.081333
+		},
+		randomize_indexes = {}
+	},
 	response_for_veteran_start_revive_zealot = {
 		randomize_indexes_n = 0,
 		sound_events_n = 5,
@@ -3779,6 +3885,25 @@ local gameplay_vo_zealot_female_b = {
 		},
 		randomize_indexes = {}
 	},
+	response_for_zealot_seen_killstreak_zealot = {
+		randomize_indexes_n = 0,
+		sound_events_n = 5,
+		sound_events = {
+			"loc_zealot_female_b__response_for_zealot_seen_killstreak_zealot_01",
+			"loc_zealot_female_b__response_for_zealot_seen_killstreak_zealot_02",
+			"loc_zealot_female_b__response_for_zealot_seen_killstreak_zealot_03",
+			"loc_zealot_female_b__response_for_zealot_seen_killstreak_zealot_04",
+			"loc_zealot_female_b__response_for_zealot_seen_killstreak_zealot_05"
+		},
+		sound_events_duration = {
+			2.219583,
+			2.212104,
+			2.23825,
+			2.171396,
+			2.618917
+		},
+		randomize_indexes = {}
+	},
 	response_for_zealot_start_revive_zealot = {
 		randomize_indexes_n = 0,
 		sound_events_n = 5,
@@ -3891,6 +4016,47 @@ local gameplay_vo_zealot_female_b = {
 			0.1111111,
 			0.1111111,
 			0.1111111
+		},
+		randomize_indexes = {}
+	},
+	seen_enemy_cultist_grenadier = {
+		randomize_indexes_n = 0,
+		sound_events_n = 10,
+		sound_events = {
+			"loc_zealot_female_b__seen_enemy_grenadier_01",
+			"loc_zealot_female_b__seen_enemy_grenadier_02",
+			"loc_zealot_female_b__seen_enemy_grenadier_03",
+			"loc_zealot_female_b__seen_enemy_grenadier_04",
+			"loc_zealot_female_b__seen_enemy_grenadier_05",
+			"loc_zealot_female_b__seen_enemy_grenadier_06",
+			"loc_zealot_female_b__seen_enemy_grenadier_07",
+			"loc_zealot_female_b__seen_enemy_grenadier_08",
+			"loc_zealot_female_b__seen_enemy_grenadier_09",
+			"loc_zealot_female_b__seen_enemy_grenadier_10"
+		},
+		sound_events_duration = {
+			0.933542,
+			1.405708,
+			1.392521,
+			1.793125,
+			1.251375,
+			2.510229,
+			1.585104,
+			2.669813,
+			1.630438,
+			3.117854
+		},
+		sound_event_weights = {
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1
 		},
 		randomize_indexes = {}
 	},

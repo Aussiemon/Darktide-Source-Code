@@ -95,7 +95,7 @@ ViewElementCraftingRecipe.set_navigation_button_color_intensity = function (self
 	end
 end
 
-ViewElementCraftingRecipe.present_recipe_navigation = function (self, recipes, left_click_callback, optional_on_present_callback)
+ViewElementCraftingRecipe.present_recipe_navigation = function (self, recipes, left_click_callback, optional_on_present_callback, type)
 	local layout = {
 		{
 			widget_type = "spacing_vertical"
@@ -123,7 +123,7 @@ ViewElementCraftingRecipe.present_recipe_navigation = function (self, recipes, l
 	self:present_grid_layout(layout, ViewElementCraftingRecipeBlueprints, left_click_callback, nil, nil, nil, optional_on_present_callback)
 end
 
-ViewElementCraftingRecipe.present_recipe_navigation_with_item = function (self, recipes, left_click_callback, optional_on_present_callback, item)
+ViewElementCraftingRecipe.present_recipe_navigation_with_item = function (self, recipes, left_click_callback, optional_on_present_callback, item, type)
 	local layout = {
 		{
 			widget_type = "spacing_vertical"
@@ -182,7 +182,7 @@ local function _push_traitlike_items(layout, widget_type, traits, item_is_locked
 	end
 end
 
-ViewElementCraftingRecipe.present_recipe = function (self, recipe, ingredients, main_action_callback, select_trait_callback, optional_on_present_callback, additional_data)
+ViewElementCraftingRecipe.present_recipe = function (self, recipe, ingredients, main_action_callback, select_trait_callback, optional_on_present_callback, additional_data, update_callback, type)
 	local item = ingredients.item
 	self.content.item = item
 	local item_locked = nil
@@ -201,7 +201,8 @@ ViewElementCraftingRecipe.present_recipe = function (self, recipe, ingredients, 
 		},
 		[#layout + 1] = {
 			widget_type = "title",
-			text = recipe.display_name
+			text = recipe.display_name,
+			unlocalized_text = recipe.unlocalized_display_name
 		}
 	}
 	local extra_elements = recipe.extra_elements
@@ -234,7 +235,8 @@ ViewElementCraftingRecipe.present_recipe = function (self, recipe, ingredients, 
 
 	layout[#layout + 1] = {
 		widget_type = "description",
-		text = recipe.description_text
+		text = recipe.description_text,
+		unlocalized_text = recipe.unlocalized_description_text
 	}
 
 	if item and recipe.requires_perk_selection then
@@ -275,7 +277,8 @@ ViewElementCraftingRecipe.present_recipe = function (self, recipe, ingredients, 
 	local continue_button_widget_hotspot = continue_button_widget_content.hotspot
 	continue_button_widget_hotspot.pressed_callback = callback(self, "_cb_on_continue_pressed")
 	continue_button_widget_hotspot.on_pressed_sound = nil
-	continue_button_widget_content.original_text = recipe.button_text and Utf8.upper(Localize(recipe.button_text)) or "n/a"
+	local button_text = recipe.unlocalized_button_text or recipe.button_text and Utf8.upper(Localize(recipe.button_text)) or "n/a"
+	continue_button_widget_content.original_text = button_text
 
 	self:refresh_can_craft(additional_data)
 	self:_pre_present_height_adjust()

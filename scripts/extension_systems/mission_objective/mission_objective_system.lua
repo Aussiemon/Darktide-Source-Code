@@ -228,7 +228,6 @@ MissionObjectiveSystem.end_mission_objective = function (self, objective_name)
 		return
 	end
 
-	local objective_type = objective:objective_type()
 	local is_side_mission = objective:is_side_mission()
 
 	if self._is_server then

@@ -557,7 +557,6 @@ weapon_template.alternate_fire_settings = {
 weapon_template.keywords = {
 	"ranged"
 }
-weapon_template.smart_targeting_template = SmartTargetingTemplates.default_melee
 weapon_template.can_use_while_vaulting = true
 weapon_template.dodge_template = "killshot"
 weapon_template.sprint_template = "killshot"

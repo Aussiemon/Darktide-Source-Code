@@ -1,6 +1,7 @@
 local AbilityActionHandlerData = require("scripts/settings/ability/ability_action_handler_data")
 local AbilityTemplates = require("scripts/settings/ability/ability_templates/ability_templates")
 local ActionHandler = require("scripts/utilities/action/action_handler")
+local BuffSettings = require("scripts/settings/buff/buff_settings")
 local EquippedAbilityEffectScripts = require("scripts/extension_systems/ability/utilities/equipped_ability_effect_scripts")
 local FixedFrame = require("scripts/utilities/fixed_frame")
 local ItemUtils = require("scripts/utilities/items")
@@ -11,6 +12,7 @@ local PlayerUnitVisualLoadout = require("scripts/extension_systems/visual_loadou
 local SpecialRulesSetting = require("scripts/settings/ability/special_rules_settings")
 local ability_configuration = PlayerCharacterConstants.ability_configuration
 local special_rules = SpecialRulesSetting.special_rules
+local proc_events = BuffSettings.proc_events
 local PlayerUnitAbilityExtension = class("PlayerUnitAbilityExtension")
 
 PlayerUnitAbilityExtension.init = function (self, extension_init_context, unit, extension_init_data, game_object_data_or_game_session, nil_or_game_object_id)
@@ -306,7 +308,7 @@ end
 
 PlayerUnitAbilityExtension.fixed_update = function (self, unit, dt, t, fixed_frame)
 	self._action_handler:fixed_update(dt, t)
-	self:_update_ability_cooldowns(t)
+	self:_update_ability_cooldowns(t, dt)
 
 	for ability_type, ability_effect_scripts in pairs(self._equipped_ability_effect_scripts) do
 		EquippedAbilityEffectScripts.fixed_update(ability_effect_scripts, unit, dt, t)
@@ -454,7 +456,7 @@ PlayerUnitAbilityExtension.charge_replenished = function (self, ability_type)
 	return self._charge_replenished[ability_type]
 end
 
-PlayerUnitAbilityExtension._update_ability_cooldowns = function (self, t)
+PlayerUnitAbilityExtension._update_ability_cooldowns = function (self, t, dt)
 	table.clear(self._charge_replenished)
 
 	local ability_components = self._ability_components
@@ -477,7 +479,7 @@ PlayerUnitAbilityExtension._update_ability_cooldowns = function (self, t)
 					component.cooldown_paused = false
 				else
 					local ability_cooldown = max_ability_cooldown
-					cooldown = t + ability_cooldown
+					cooldown = cooldown + dt
 				end
 			else
 				local current_charges = self:remaining_ability_charges(ability_type)
@@ -773,6 +775,13 @@ PlayerUnitAbilityExtension.use_ability_charge = function (self, ability_type, op
 		end
 	elseif ability_type == "grenade_ability" then
 		local reporter = Managers.telemetry_reporters:reporter("grenade_ability")
+		local param_table = self._buff_extension:request_proc_event_param_table()
+
+		if param_table then
+			param_table.unit = self._player
+
+			self._buff_extension:add_proc_event(proc_events.on_grenade_thrown, param_table)
+		end
 
 		if reporter then
 			reporter:register_event(self._player, ability_name)
@@ -793,6 +802,16 @@ end
 
 PlayerUnitAbilityExtension.get_slot_name = function (self, ability_type)
 	return self._slot_name_lookup[ability_type]
+end
+
+PlayerUnitAbilityExtension.get_current_ability_cooldown_time = function (self)
+	return self._combat_ability_max_cooldown_sync_value
+end
+
+PlayerUnitAbilityExtension.get_current_ability_name = function (self)
+	local name = self._equipped_abilities.combat_ability.name
+
+	return name
 end
 
 return PlayerUnitAbilityExtension

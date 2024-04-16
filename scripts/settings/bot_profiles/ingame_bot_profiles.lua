@@ -656,7 +656,7 @@ local function ingame_bot_profiles(all_profiles)
 		planet = "option_1",
 		archetype = "veteran",
 		name_list_id = "male_names_1",
-		current_level = 30,
+		current_level = 1,
 		specialization = "veteran_2",
 		loadout = {
 			slot_body_hair = "content/items/characters/player/human/hair/hair_short_c_02",

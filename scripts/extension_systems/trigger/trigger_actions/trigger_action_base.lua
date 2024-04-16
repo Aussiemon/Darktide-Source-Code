@@ -34,8 +34,8 @@ TriggerActionBase.on_activate = function (self, entering_unit, registered_units,
 		local side = side_system:get_side_from_name(self._player_side)
 		local player_units = side.player_units
 
-		for ii = 1, #player_units do
-			self:_activate_on_unit(player_units[ii])
+		for i = 1, #player_units do
+			self:_activate_on_unit(player_units[i])
 		end
 	elseif self._target == ACTION_TARGETS.entering_unit or self._target == ACTION_TARGETS.entering_and_exiting_unit then
 		self:_activate_on_unit(entering_unit)
@@ -58,8 +58,8 @@ TriggerActionBase.on_deactivate = function (self, exiting_unit, registered_units
 		local side = side_system:get_side_from_name(self._player_side)
 		local player_units = side.player_units
 
-		for ii = 1, #player_units do
-			self:_deactivate_on_unit(player_units[ii])
+		for i = 1, #player_units do
+			self:_deactivate_on_unit(player_units[i])
 		end
 	elseif self._target == ACTION_TARGETS.exiting_unit or self._target == ACTION_TARGETS.entering_and_exiting_unit then
 		self:_deactivate_on_unit(exiting_unit)

@@ -146,6 +146,7 @@ Explosion.create_explosion = function (world, physics_world, source_position, op
 			param_table.attack_instigator_unit = attacking_unit
 			param_table.item_slot_origin = origin_slot_or_nil
 			param_table.charge_level = charge_level
+			param_table.weapon_special = explosion_template.weapon_special
 
 			attacking_owner_buff_extension:add_proc_event(proc_events.on_explosion_hit, param_table)
 		end

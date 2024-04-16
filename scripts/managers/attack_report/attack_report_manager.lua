@@ -7,7 +7,7 @@ local attack_types = AttackSettings.attack_types
 local damage_efficiencies = AttackSettings.damage_efficiencies
 local mood_types = MoodSettings.mood_types
 local AttackReportManager = class("AttackReportManager")
-local _trigger_hit_report, _trigger_damage_indicator, _play_camera_effect_shake_event = nil
+local _trigger_hit_events, _trigger_damage_indicator, _play_camera_effect_shake_event = nil
 local PI = math.pi
 local DAMAGE_INDICATOR_ATTACK_RESULTS = {
 	[attack_results.damaged] = true,
@@ -186,10 +186,7 @@ AttackReportManager._process_attack_result = function (self, buffer_data)
 		local local_human = not attacking_player.remote and attacking_player:is_human_controlled()
 		local is_in_first_person_mode = first_person_extension and first_person_extension:is_in_first_person_mode()
 
-		if local_human or is_in_first_person_mode then
-			_trigger_hit_report(attacking_unit, attack_result, did_damage, hit_weakspot, hit_world_position, damage_efficiency, is_critical_strike)
-			_play_camera_effect_shake_event(attacking_unit, damage_profile)
-		end
+		_trigger_hit_events(local_human, is_in_first_person_mode, attacking_unit, attack_result, did_damage, hit_weakspot, hit_world_position, damage_efficiency, is_critical_strike, damage_profile)
 
 		local tags = breed_or_nil and breed_or_nil.tags
 		local allowed_breed = tags and (tags.monster or tags.special or tags.elite)
@@ -233,10 +230,16 @@ AttackReportManager._process_attack_result = function (self, buffer_data)
 	end
 end
 
-function _trigger_hit_report(attacking_unit, attack_result, did_damage, hit_weakspot, hit_world_position, damage_efficiency, is_critical_strike)
-	if hit_world_position or attack_result == attack_results.died then
+function _trigger_hit_events(local_human, is_in_first_person_mode, attacking_unit, attack_result, did_damage, hit_weakspot, hit_world_position, damage_efficiency, is_critical_strike, damage_profile)
+	if (local_human or is_in_first_person_mode) and (hit_world_position or attack_result == attack_results.died) then
 		Managers.event:trigger("event_crosshair_hit_report", hit_weakspot, attack_result, did_damage, hit_world_position, damage_efficiency, is_critical_strike)
 	end
+
+	if local_human or is_in_first_person_mode then
+		_play_camera_effect_shake_event(attacking_unit, damage_profile)
+	end
+
+	Managers.event:trigger("event_on_player_hit", attacking_unit, attack_result, did_damage, hit_weakspot, hit_world_position, damage_efficiency, is_critical_strike, damage_profile)
 end
 
 function _trigger_damage_indicator(attacked_unit, attacking_unit, attack_direction, attack_result, damage_profile, is_critical_strike)

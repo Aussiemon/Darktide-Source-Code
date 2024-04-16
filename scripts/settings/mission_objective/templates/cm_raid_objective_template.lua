@@ -98,6 +98,10 @@ local mission_objective_templates = {
 				use_music_event = "escape_event",
 				mission_objective_type = "goal",
 				header = "loc_objective_cm_raid_escape_header"
+			},
+			objective_cm_raid_penance_breaching_charge = {
+				mission_objective_type = "goal",
+				hidden = true
 			}
 		}
 	}

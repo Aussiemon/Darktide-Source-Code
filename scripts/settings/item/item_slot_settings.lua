@@ -157,6 +157,18 @@ local item_slot_settings = {
 			100
 		}
 	},
+	slot_character_title = {
+		equipped_in_inventory = true,
+		display_name = "loc_inventory_title_slot_character_title",
+		store_category = "nameplates",
+		slot_type = "ui",
+		ignore_character_spawning = true,
+		icon_color = Color.terminal_text_body(255, true),
+		item_icon_size = {
+			90,
+			90
+		}
+	},
 	slot_animation_emote_1 = {
 		icon_angle = 0,
 		equipped_in_inventory = true,
@@ -237,6 +249,12 @@ local item_slot_settings = {
 		slot_type = "ui",
 		ignore_character_spawning = true
 	},
+	slot_weapon_skin = {
+		ignore_character_spawning = true,
+		slot_type = "weapon",
+		display_name = "loc_inventory_title_slot_primary",
+		equipped_in_inventory = true
+	},
 	slot_luggable = {
 		slot_type = "luggable"
 	},
@@ -288,6 +306,7 @@ local item_slot_settings = {
 		ability_type = "grenade_ability",
 		slot_type = "ability"
 	},
+	slot_set = {},
 	slot_net = {
 		slot_type = "vfx"
 	}

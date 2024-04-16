@@ -73,7 +73,6 @@ ProgressionManager.fetch_session_report = function (self, session_id)
 	self._session_report.account = {
 		rewards = {}
 	}
-	self._session_report.weapon = {}
 	self._game_score_end_time = nil
 	self._session_report_is_dummy = false
 	self._session_report_state = SESSION_REPORT_STATES.fetching
@@ -965,7 +964,6 @@ ProgressionManager.fetch_dummy_session_report = function (self)
 	self._session_report.account = {
 		rewards = {}
 	}
-	self._session_report.weapon = {}
 	self._session_report_is_dummy = true
 
 	self:_fetch_dummy_session_report()

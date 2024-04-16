@@ -7,8 +7,8 @@ local NavQueries = require("scripts/utilities/nav_queries")
 local Vo = require("scripts/utilities/vo")
 local BtRenegadeNetgunnerApproachAction = class("BtRenegadeNetgunnerApproachAction", "BtNode")
 local VO_MOVE_EVENT_FREQUENCY_RANGE = {
-	3,
-	6
+	5,
+	10
 }
 
 BtRenegadeNetgunnerApproachAction.enter = function (self, unit, breed, blackboard, scratchpad, action_data, t)

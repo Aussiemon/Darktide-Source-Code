@@ -1791,7 +1791,7 @@ return function ()
 				"time_since_last_short_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				140
+				45
 			},
 			{
 				"faction_memory",
@@ -2048,7 +2048,7 @@ return function ()
 				"time_since_last_short_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				140
+				45
 			},
 			{
 				"faction_memory",
@@ -2305,7 +2305,7 @@ return function ()
 				"time_since_last_short_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				140
+				45
 			},
 			{
 				"faction_memory",
@@ -2562,7 +2562,7 @@ return function ()
 				"time_since_last_short_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				140
+				45
 			},
 			{
 				"faction_memory",
@@ -2819,7 +2819,7 @@ return function ()
 				"time_since_last_short_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				140
+				45
 			},
 			{
 				"faction_memory",
@@ -3076,7 +3076,7 @@ return function ()
 				"time_since_last_short_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				140
+				45
 			},
 			{
 				"faction_memory",
@@ -3333,7 +3333,7 @@ return function ()
 				"time_since_last_short_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				140
+				45
 			},
 			{
 				"faction_memory",
@@ -3590,7 +3590,7 @@ return function ()
 				"time_since_last_short_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				140
+				45
 			},
 			{
 				"faction_memory",
@@ -4084,10 +4084,10 @@ return function ()
 	})
 	define_rule({
 		name = "bonding_conversation_metropolitan_anywhere_else_a",
-		category = "conversations_prio_1",
 		wwise_route = 0,
 		response = "bonding_conversation_metropolitan_anywhere_else_a",
 		database = "veteran_male_b",
+		category = "conversations_prio_1",
 		criterias = {
 			{
 				"query_context",
@@ -4172,6 +4172,13 @@ return function ()
 		},
 		heard_speak_routing = {
 			target = "players"
+		},
+		on_pre_rule_execution = {
+			random_ignore_vo = {
+				chance = 0.5,
+				max_failed_tries = 0,
+				hold_for = 0
+			}
 		}
 	})
 	define_rule({
@@ -5605,7 +5612,7 @@ return function ()
 		},
 		on_pre_rule_execution = {
 			random_ignore_vo = {
-				chance = 0.5,
+				chance = 0.3,
 				max_failed_tries = 0,
 				hold_for = 0
 			}
@@ -5843,7 +5850,7 @@ return function ()
 		},
 		on_pre_rule_execution = {
 			random_ignore_vo = {
-				chance = 0.5,
+				chance = 0.3,
 				max_failed_tries = 0,
 				hold_for = 0
 			}
@@ -6318,7 +6325,7 @@ return function ()
 		},
 		on_pre_rule_execution = {
 			random_ignore_vo = {
-				chance = 0.2,
+				chance = 0.1,
 				max_failed_tries = 0,
 				hold_for = 0
 			}
@@ -7133,10 +7140,10 @@ return function ()
 	})
 	define_rule({
 		name = "bonding_conversation_round_three_sneak_a",
-		category = "conversations_prio_1",
 		wwise_route = 0,
 		response = "bonding_conversation_round_three_sneak_a",
 		database = "veteran_male_b",
+		category = "conversations_prio_1",
 		criterias = {
 			{
 				"query_context",
@@ -7221,6 +7228,13 @@ return function ()
 		},
 		heard_speak_routing = {
 			target = "players"
+		},
+		on_pre_rule_execution = {
+			random_ignore_vo = {
+				chance = 0.5,
+				max_failed_tries = 0,
+				hold_for = 0
+			}
 		}
 	})
 	define_rule({

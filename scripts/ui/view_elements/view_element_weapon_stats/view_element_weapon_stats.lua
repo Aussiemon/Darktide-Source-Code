@@ -1,21 +1,17 @@
-local AchievementUIHelper = require("scripts/managers/achievements/utility/achievement_ui_helper")
-local Archetypes = require("scripts/settings/archetype/archetypes")
-local Definitions = require("scripts/ui/view_elements/view_element_weapon_stats/view_element_weapon_stats_definitions")
-local ItemUtils = require("scripts/utilities/items")
-local MasterItems = require("scripts/backend/master_items")
-local UISettings = require("scripts/settings/ui/ui_settings")
-local WeaponStats = require("scripts/utilities/weapon_stats")
-local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
-
 require("scripts/ui/view_elements/view_element_grid/view_element_grid")
 
+local ItemUtils = require("scripts/utilities/items")
+local MasterItems = require("scripts/backend/master_items")
+local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
+local _create_definitions_function = require("scripts/ui/view_elements/view_element_weapon_stats/view_element_weapon_stats_definitions")
 local ViewElementWeaponStats = class("ViewElementWeaponStats", "ViewElementGrid")
 
 ViewElementWeaponStats.init = function (self, parent, draw_layer, start_scale, optional_menu_settings)
 	local class_name = self.__class_name
 	self._unique_id = class_name .. "_" .. string.gsub(tostring(self), "table: ", "")
+	local definitions = _create_definitions_function(optional_menu_settings)
 
-	ViewElementWeaponStats.super.init(self, parent, draw_layer, start_scale, optional_menu_settings, Definitions)
+	ViewElementWeaponStats.super.init(self, parent, draw_layer, start_scale, optional_menu_settings, definitions)
 
 	local menu_settings = self._menu_settings
 	local grid_size = menu_settings.grid_size
@@ -24,21 +20,11 @@ ViewElementWeaponStats.init = function (self, parent, draw_layer, start_scale, o
 	self._default_mask_size = table.clone(mask_size)
 end
 
-ViewElementWeaponStats._replace_border = function (self)
-	local grid_divider_top = self:widget_by_name("grid_divider_top")
-	grid_divider_top.content.texture = "content/ui/materials/frames/item_info_upper_slots"
-	local style = grid_divider_top.style.texture
-	local scale = self._default_grid_size[1] / 1060
-	style.size = {
-		[2] = 116 * scale
-	}
-end
-
 ViewElementWeaponStats.destroy = function (self, ui_renderer)
 	ViewElementWeaponStats.super.destroy(self, ui_renderer)
 end
 
-local function add_base_rating(item, layout, grid_size)
+local function _add_base_rating(item, layout, grid_size)
 	local base_stats_rating = ItemUtils.calculate_stats_rating(item)
 	layout[#layout + 1] = {
 		widget_type = "rating_info",
@@ -47,7 +33,7 @@ local function add_base_rating(item, layout, grid_size)
 	}
 end
 
-local function add_presentation_perks(item, layout, grid_size)
+local function _add_presentation_perks(item, layout, grid_size)
 	local item_type = item.item_type
 	local perks = item.perks
 	local num_perks = perks and #perks or 0
@@ -116,7 +102,7 @@ local function add_presentation_perks(item, layout, grid_size)
 	return add_end_margin
 end
 
-local function add_presentation_traits(item, layout, grid_size)
+local function _add_presentation_traits(item, layout, grid_size)
 	local item_type = item.item_type
 	local add_end_margin = false
 	local traits = item.traits
@@ -228,6 +214,8 @@ ViewElementWeaponStats.present_item = function (self, item, context, on_present_
 	local inventory_items = context and context.inventory_items
 	local hide_source = context and context.hide_source
 	local profile = context and context.profile
+	local hide_description = context and context.hide_description
+	local show_requirement = context and context.show_requirement
 	local menu_settings = self._menu_settings
 	local grid_size = menu_settings.grid_size
 	local item_name = item.name
@@ -316,11 +304,11 @@ ViewElementWeaponStats.present_item = function (self, item, context, on_present_
 			item = item,
 			size = {
 				grid_size[1],
-				65
+				60
 			}
 		}
 
-		add_base_rating(item, layout, grid_size)
+		_add_base_rating(item, layout, grid_size)
 
 		layout[#layout + 1] = {
 			add_background = true,
@@ -336,17 +324,17 @@ ViewElementWeaponStats.present_item = function (self, item, context, on_present_
 			item = item
 		}
 
-		if add_presentation_perks(item, layout, grid_size) then
+		if _add_presentation_perks(item, layout, grid_size) then
 			add_end_margin = true
 		end
 
-		if add_presentation_traits(item, layout, grid_size) then
+		if _add_presentation_traits(item, layout, grid_size) then
 			layout[#layout + 1] = {
 				add_background = true,
 				widget_type = "dynamic_spacing",
 				size = {
 					grid_size[1],
-					30
+					20
 				}
 			}
 			add_end_margin = false
@@ -360,11 +348,11 @@ ViewElementWeaponStats.present_item = function (self, item, context, on_present_
 			widget_type = "divider_line"
 		}
 
-		if add_presentation_traits(item, layout, grid_size) then
+		if _add_presentation_traits(item, layout, grid_size) then
 			add_end_margin = false
 		end
 
-		if add_presentation_perks(item, layout, grid_size) then
+		if _add_presentation_perks(item, layout, grid_size) then
 			add_end_margin = true
 		end
 	elseif item_type == "WEAPON_SKIN" then
@@ -377,63 +365,107 @@ ViewElementWeaponStats.present_item = function (self, item, context, on_present_
 				visual_item = visual_item
 			}
 			layout[#layout + 1] = {
+				widget_type = "divider_line"
+			}
+			layout[#layout + 1] = {
 				widget_type = "weapon_skin_icon",
 				item = item,
 				visual_item = visual_item
 			}
 			layout[#layout + 1] = {
-				widget_type = "dynamic_spacing",
-				size = {
-					grid_size[1],
-					20
+				widget_type = "divider_line"
+			}
+
+			if show_requirement and ItemUtils.weapon_skin_requirement_text(item) ~= "" then
+				layout[#layout + 1] = {
+					widget_type = "dynamic_spacing",
+					size = {
+						grid_size[1],
+						20
+					}
 				}
-			}
+				layout[#layout + 1] = {
+					widget_type = "weapon_skin_requirement_header",
+					item = item,
+					visual_item = visual_item
+				}
+				layout[#layout + 1] = {
+					widget_type = "weapon_skin_requirements",
+					item = item,
+					visual_item = visual_item
+				}
+			end
+
+			if item.description and item.description ~= "" and not hide_description then
+				layout[#layout + 1] = {
+					widget_type = "dynamic_spacing",
+					size = {
+						grid_size[1],
+						30
+					}
+				}
+				layout[#layout + 1] = {
+					widget_type = "description",
+					item = item
+				}
+			end
+
 			layout[#layout + 1] = {
-				widget_type = "weapon_skin_requirement_header",
-				item = item,
-				visual_item = visual_item
-			}
-			layout[#layout + 1] = {
-				widget_type = "weapon_skin_requirements",
-				item = item,
-				visual_item = visual_item
-			}
-			layout[#layout + 1] = {
+				add_background = false,
 				widget_type = "dynamic_spacing",
 				size = {
 					grid_size[1],
 					30
 				}
 			}
-			layout[#layout + 1] = {
-				widget_type = "description",
-				item = item
-			}
-			layout[#layout + 1] = {
-				add_background = true,
-				widget_type = "dynamic_spacing",
-				size = {
-					grid_size[1],
-					30
-				}
-			}
+
+			add_unlock_reason()
+
 			add_end_margin = false
 		else
 			add_end_margin = false
 		end
 	elseif item_type == "WEAPON_TRINKET" then
-		layout[#layout + 1] = {
-			widget_type = "dynamic_spacing",
-			size = {
-				grid_size[1],
-				30
+		local visual_item = ItemUtils.weapon_trinket_preview_item(item)
+
+		if visual_item then
+			layout[#layout + 1] = {
+				widget_type = "item_header",
+				item = item,
+				visual_item = visual_item
 			}
-		}
-		layout[#layout + 1] = {
-			widget_type = "description",
-			item = item
-		}
-		add_end_margin = true
+			layout[#layout + 1] = {
+				widget_type = "divider_line"
+			}
+			layout[#layout + 1] = {
+				widget_type = "weapon_skin_icon",
+				item = item,
+				visual_item = visual_item
+			}
+
+			if item.description and item.description ~= "" and not hide_description then
+				layout[#layout + 1] = {
+					widget_type = "description",
+					item = item
+				}
+				layout[#layout + 1] = {
+					widget_type = "dynamic_spacing",
+					size = {
+						grid_size[1],
+						30
+					}
+				}
+				layout[#layout + 1] = {
+					widget_type = "divider_line"
+				}
+			end
+
+			add_unlock_reason()
+
+			add_end_margin = false
+		else
+			add_end_margin = false
+		end
 	elseif item_type == "GEAR_UPPERBODY" or item_type == "GEAR_LOWERBODY" or item_type == "GEAR_HEAD" or item_type == "GEAR_EXTRA_COSMETIC" or item_type == "END_OF_ROUND" then
 		layout[#layout + 1] = {
 			widget_type = "item_header",
@@ -444,6 +476,31 @@ ViewElementWeaponStats.present_item = function (self, item, context, on_present_
 			item = item,
 			profile = profile
 		}
+
+		if show_requirement and ItemUtils.class_requirement_text(item) ~= "" then
+			layout[#layout + 1] = {
+				widget_type = "dynamic_spacing",
+				size = {
+					grid_size[1],
+					20
+				}
+			}
+			layout[#layout + 1] = {
+				widget_type = "gear_requirement_header",
+				item = item
+			}
+			layout[#layout + 1] = {
+				widget_type = "gear_requirements",
+				item = item
+			}
+			layout[#layout + 1] = {
+				widget_type = "dynamic_spacing",
+				size = {
+					grid_size[1],
+					20
+				}
+			}
+		end
 
 		add_unlock_reason()
 
@@ -460,20 +517,23 @@ ViewElementWeaponStats.present_item = function (self, item, context, on_present_
 			widget_type = "portrait_frame",
 			item = item
 		}
-		layout[#layout + 1] = {
-			widget_type = "description",
-			item = item
-		}
-		layout[#layout + 1] = {
-			widget_type = "dynamic_spacing",
-			size = {
-				grid_size[1],
-				10
+
+		if item.description and item.description ~= "" and not hide_description then
+			layout[#layout + 1] = {
+				widget_type = "description",
+				item = item
 			}
-		}
-		layout[#layout + 1] = {
-			widget_type = "divider_line"
-		}
+			layout[#layout + 1] = {
+				widget_type = "dynamic_spacing",
+				size = {
+					grid_size[1],
+					30
+				}
+			}
+			layout[#layout + 1] = {
+				widget_type = "divider_line"
+			}
+		end
 
 		add_unlock_reason()
 
@@ -490,20 +550,23 @@ ViewElementWeaponStats.present_item = function (self, item, context, on_present_
 			widget_type = "insignia",
 			item = item
 		}
-		layout[#layout + 1] = {
-			widget_type = "description",
-			item = item
-		}
-		layout[#layout + 1] = {
-			widget_type = "dynamic_spacing",
-			size = {
-				grid_size[1],
-				10
+
+		if item.description and item.description ~= "" and not hide_description then
+			layout[#layout + 1] = {
+				widget_type = "description",
+				item = item
 			}
-		}
-		layout[#layout + 1] = {
-			widget_type = "divider_line"
-		}
+			layout[#layout + 1] = {
+				widget_type = "dynamic_spacing",
+				size = {
+					grid_size[1],
+					30
+				}
+			}
+			layout[#layout + 1] = {
+				widget_type = "divider_line"
+			}
+		end
 
 		add_unlock_reason()
 
@@ -521,20 +584,60 @@ ViewElementWeaponStats.present_item = function (self, item, context, on_present_
 			item = item,
 			profile = profile
 		}
-		layout[#layout + 1] = {
-			widget_type = "description",
-			item = item
-		}
-		layout[#layout + 1] = {
-			widget_type = "dynamic_spacing",
-			size = {
-				grid_size[1],
-				10
+
+		if item.description and item.description ~= "" and not hide_description then
+			layout[#layout + 1] = {
+				widget_type = "description",
+				item = item
 			}
+			layout[#layout + 1] = {
+				widget_type = "dynamic_spacing",
+				size = {
+					grid_size[1],
+					30
+				}
+			}
+			layout[#layout + 1] = {
+				widget_type = "divider_line"
+			}
+		end
+
+		add_unlock_reason()
+
+		add_end_margin = false
+	elseif item_type == "CHARACTER_TITLE" then
+		layout[#layout + 1] = {
+			widget_type = "character_title_header",
+			item = item,
+			profile = profile
 		}
 		layout[#layout + 1] = {
 			widget_type = "divider_line"
 		}
+
+		if item.description and item.description ~= "" and not hide_description then
+			layout[#layout + 1] = {
+				widget_type = "dynamic_spacing",
+				size = {
+					grid_size[1],
+					30
+				}
+			}
+			layout[#layout + 1] = {
+				widget_type = "description",
+				item = item
+			}
+			layout[#layout + 1] = {
+				widget_type = "dynamic_spacing",
+				size = {
+					grid_size[1],
+					30
+				}
+			}
+			layout[#layout + 1] = {
+				widget_type = "divider_line"
+			}
+		end
 
 		add_unlock_reason()
 

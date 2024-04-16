@@ -4,9 +4,9 @@ local BaseTemplateSettings = require("scripts/settings/equipment/weapon_template
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
-local MeleeActionInputSetupFast = require("scripts/settings/equipment/weapon_templates/melee_action_input_setup_fast")
 local FootstepIntervalsTemplates = require("scripts/settings/equipment/footstep/footstep_intervals_templates")
 local HitZone = require("scripts/utilities/attack/hit_zone")
+local MeleeActionInputSetupFast = require("scripts/settings/equipment/weapon_templates/melee_action_input_setup_fast")
 local SmartTargetingTemplates = require("scripts/settings/equipment/smart_targeting_templates")
 local WeaponTraitsBespokeCombataxeP2 = require("scripts/settings/equipment/weapon_traits/weapon_traits_bespoke_combataxe_p2")
 local WeaponTraitTemplates = require("scripts/settings/equipment/weapon_templates/weapon_trait_templates/weapon_trait_templates")
@@ -1266,7 +1266,6 @@ weapon_template.weapon_box = {
 	0.1,
 	0.7
 }
-weapon_template.sprint_ready_up_time = 0.1
 weapon_template.uses_ammunition = false
 weapon_template.uses_overheat = false
 weapon_template.sprint_ready_up_time = 0.1

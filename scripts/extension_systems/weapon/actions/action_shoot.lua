@@ -957,7 +957,6 @@ ActionShoot._muzzle_fx_source = function (self)
 	local action_settings = self._action_settings
 	local fx = action_settings.fx
 	local alternate_muzzle_flashes = fx.alternate_muzzle_flashes
-	local double_barrel_shotgun_muzzle_flashes = fx.double_barrel_shotgun_muzzle_flashes
 
 	if alternate_muzzle_flashes then
 		local action_component = self._action_component

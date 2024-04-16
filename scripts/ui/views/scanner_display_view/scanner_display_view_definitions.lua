@@ -10,6 +10,7 @@ end
 
 _extract_scanner_display_view_definitions("scripts/ui/views/scanner_display_view/scanner_display_view_definitions_none")
 _extract_scanner_display_view_definitions("scripts/ui/views/scanner_display_view/scanner_display_view_definitions_decode_symbols")
+_extract_scanner_display_view_definitions("scripts/ui/views/scanner_display_view/scanner_display_view_definitions_drill")
 _extract_scanner_display_view_definitions("scripts/ui/views/scanner_display_view/scanner_display_view_definitions_scan")
 
 for name, definition_data in pairs(scanner_display_view_definitions) do

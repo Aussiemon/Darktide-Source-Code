@@ -245,7 +245,8 @@ weapon_template.actions = {
 			anim_event = "attack_shoot",
 			same_side_suppression_enabled = false,
 			hit_scan_template = HitScanTemplates.default_bolter_boltshell,
-			damage_type = damage_types.boltshell
+			damage_type_explode = damage_types.boltshell,
+			damage_type = damage_types.boltshell_non_armed
 		},
 		allowed_chain_actions = {
 			combat_ability = {
@@ -332,7 +333,8 @@ weapon_template.actions = {
 			anim_event = "attack_shoot",
 			same_side_suppression_enabled = false,
 			hit_scan_template = HitScanTemplates.default_bolter_boltshell,
-			damage_type = damage_types.boltshell
+			damage_type_explode = damage_types.boltshell,
+			damage_type = damage_types.boltshell_non_armed
 		},
 		allowed_chain_actions = {
 			combat_ability = {

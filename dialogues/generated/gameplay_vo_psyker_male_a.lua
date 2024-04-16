@@ -144,6 +144,63 @@ local gameplay_vo_psyker_male_a = {
 		},
 		randomize_indexes = {}
 	},
+	blitz_brainburst_chain_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 5,
+		sound_events = {
+			"loc_psyker_male_a__blitz_brainburst_chain_a_01",
+			"loc_psyker_male_a__blitz_brainburst_chain_a_02",
+			"loc_psyker_male_a__blitz_brainburst_chain_a_03",
+			"loc_psyker_male_a__blitz_brainburst_chain_a_04",
+			"loc_psyker_male_a__blitz_brainburst_chain_a_05"
+		},
+		sound_events_duration = {
+			0.440646,
+			1.985313,
+			1.802458,
+			4.183729,
+			3.220396
+		},
+		randomize_indexes = {}
+	},
+	blitz_shards_chain_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 5,
+		sound_events = {
+			"loc_psyker_male_a__blitz_shards_chain_a_01",
+			"loc_psyker_male_a__blitz_shards_chain_a_02",
+			"loc_psyker_male_a__blitz_shards_chain_a_03",
+			"loc_psyker_male_a__blitz_shards_chain_a_04",
+			"loc_psyker_male_a__blitz_shards_chain_a_05"
+		},
+		sound_events_duration = {
+			2.475563,
+			2.490521,
+			1.601458,
+			1.675563,
+			2.348083
+		},
+		randomize_indexes = {}
+	},
+	blitz_smite_chain_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 5,
+		sound_events = {
+			"loc_psyker_male_a__blitz_smite_chain_a_01",
+			"loc_psyker_male_a__blitz_smite_chain_a_02",
+			"loc_psyker_male_a__blitz_smite_chain_a_03",
+			"loc_psyker_male_a__blitz_smite_chain_a_04",
+			"loc_psyker_male_a__blitz_smite_chain_a_05"
+		},
+		sound_events_duration = {
+			3.340313,
+			1.915375,
+			3.556708,
+			2.5755,
+			1.947167
+		},
+		randomize_indexes = {}
+	},
 	calling_for_help = {
 		randomize_indexes_n = 0,
 		sound_events_n = 10,
@@ -693,6 +750,47 @@ local gameplay_vo_psyker_male_a = {
 			1.939125,
 			2.077021,
 			2.332854
+		},
+		sound_event_weights = {
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1
+		},
+		randomize_indexes = {}
+	},
+	enemy_kill_cultist_grenadier = {
+		randomize_indexes_n = 0,
+		sound_events_n = 10,
+		sound_events = {
+			"loc_psyker_male_a__enemy_kill_grenadier_01",
+			"loc_psyker_male_a__enemy_kill_grenadier_02",
+			"loc_psyker_male_a__enemy_kill_grenadier_03",
+			"loc_psyker_male_a__enemy_kill_grenadier_04",
+			"loc_psyker_male_a__enemy_kill_grenadier_05",
+			"loc_psyker_male_a__enemy_kill_grenadier_06",
+			"loc_psyker_male_a__enemy_kill_grenadier_07",
+			"loc_psyker_male_a__enemy_kill_grenadier_08",
+			"loc_psyker_male_a__enemy_kill_grenadier_09",
+			"loc_psyker_male_a__enemy_kill_grenadier_10"
+		},
+		sound_events_duration = {
+			1.470354,
+			1.934667,
+			1.226417,
+			2.061896,
+			1.499063,
+			1.898771,
+			1.500729,
+			1.432229,
+			2.40125,
+			1.708188
 		},
 		sound_event_weights = {
 			0.1,
@@ -4273,6 +4371,44 @@ local gameplay_vo_psyker_male_a = {
 			0.1428571,
 			0.1428571,
 			0.1428571
+		},
+		randomize_indexes = {}
+	},
+	seen_enemy_cultist_grenadier = {
+		randomize_indexes_n = 0,
+		sound_events_n = 9,
+		sound_events = {
+			"loc_psyker_male_a__seen_enemy_grenadier_01",
+			"loc_psyker_male_a__seen_enemy_grenadier_02",
+			"loc_psyker_male_a__seen_enemy_grenadier_03",
+			"loc_psyker_male_a__seen_enemy_grenadier_04",
+			"loc_psyker_male_a__seen_enemy_grenadier_05",
+			"loc_psyker_male_a__seen_enemy_grenadier_06",
+			"loc_psyker_male_a__seen_enemy_grenadier_07",
+			"loc_psyker_male_a__seen_enemy_grenadier_08",
+			"loc_psyker_male_a__seen_enemy_grenadier_09"
+		},
+		sound_events_duration = {
+			0.610479,
+			0.729958,
+			1.138063,
+			1.275438,
+			1.1185,
+			1.723438,
+			1.280896,
+			1.238479,
+			2.896688
+		},
+		sound_event_weights = {
+			0.1111111,
+			0.1111111,
+			0.1111111,
+			0.1111111,
+			0.1111111,
+			0.1111111,
+			0.1111111,
+			0.1111111,
+			0.1111111
 		},
 		randomize_indexes = {}
 	},

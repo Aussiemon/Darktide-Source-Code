@@ -12,6 +12,7 @@ local mask_size = InventoryViewSettings.mask_size
 local grid_start_offset_x = 180
 local gear_icon_size = ItemPassTemplates.gear_icon_size
 local weapon_item_size = ItemPassTemplates.weapon_item_size
+local character_title_button_size = ItemPassTemplates.character_title_button_size
 local scenegraph_definition = {
 	screen = UIWorkspaceSettings.screen,
 	canvas = {
@@ -187,14 +188,25 @@ local scenegraph_definition = {
 			1
 		}
 	},
+	slot_character_title = {
+		vertical_alignment = "center",
+		parent = "canvas",
+		horizontal_alignment = "center",
+		size = character_title_button_size,
+		position = {
+			440,
+			423,
+			9
+		}
+	},
 	slot_gear_head = {
 		vertical_alignment = "center",
 		parent = "canvas",
 		horizontal_alignment = "center",
 		size = gear_icon_size,
 		position = {
-			-420,
-			-230,
+			-440,
+			-252,
 			9
 		}
 	},
@@ -204,8 +216,8 @@ local scenegraph_definition = {
 		horizontal_alignment = "center",
 		size = gear_icon_size,
 		position = {
-			-420,
-			30,
+			-440,
+			-12,
 			9
 		}
 	},
@@ -215,8 +227,8 @@ local scenegraph_definition = {
 		horizontal_alignment = "center",
 		size = gear_icon_size,
 		position = {
-			-420,
-			290,
+			-440,
+			228,
 			9
 		}
 	},
@@ -226,8 +238,8 @@ local scenegraph_definition = {
 		horizontal_alignment = "center",
 		size = gear_icon_size,
 		position = {
-			420,
-			-230,
+			440,
+			-252,
 			9
 		}
 	},
@@ -237,8 +249,8 @@ local scenegraph_definition = {
 		horizontal_alignment = "center",
 		size = gear_icon_size,
 		position = {
-			420,
-			30,
+			440,
+			-12,
 			9
 		}
 	},
@@ -248,8 +260,8 @@ local scenegraph_definition = {
 		horizontal_alignment = "center",
 		size = gear_icon_size,
 		position = {
-			420,
-			290,
+			440,
+			228,
 			9
 		}
 	},
@@ -355,7 +367,7 @@ local scenegraph_definition = {
 		},
 		position = {
 			-620,
-			-230,
+			-260,
 			0
 		}
 	},
@@ -368,8 +380,8 @@ local scenegraph_definition = {
 			0
 		},
 		position = {
-			600,
-			320,
+			620,
+			282,
 			0
 		}
 	},
@@ -380,7 +392,7 @@ local scenegraph_definition = {
 		size = item_stats_grid_settings.grid_size,
 		position = {
 			210,
-			180,
+			166,
 			3
 		}
 	},
@@ -440,8 +452,8 @@ local scenegraph_definition = {
 			0
 		},
 		position = {
-			600,
-			-330,
+			620,
+			-338,
 			0
 		}
 	},
@@ -454,8 +466,8 @@ local scenegraph_definition = {
 			0
 		},
 		position = {
-			600,
-			-200,
+			620,
+			-214,
 			0
 		}
 	},
@@ -468,8 +480,8 @@ local scenegraph_definition = {
 			0
 		},
 		position = {
-			600,
-			-70,
+			620,
+			-90,
 			0
 		}
 	},
@@ -482,8 +494,8 @@ local scenegraph_definition = {
 			0
 		},
 		position = {
-			600,
-			60,
+			620,
+			34,
 			0
 		}
 	},
@@ -496,8 +508,8 @@ local scenegraph_definition = {
 			0
 		},
 		position = {
-			600,
-			190,
+			620,
+			158,
 			0
 		}
 	}
@@ -804,7 +816,6 @@ local animations = {
 				parent.loadout_alpha_multiplier = anim_progress
 				local x_anim_distance_max = 50
 				local x_anim_distance = x_anim_distance_max - x_anim_distance_max * anim_progress
-				local extra_amount = math.clamp(15 - 15 * anim_progress * 1.2, 0, 15)
 
 				parent:_set_scenegraph_position("loadout_frame", scenegraph_definition.loadout_frame.position[1] - x_anim_distance)
 			end

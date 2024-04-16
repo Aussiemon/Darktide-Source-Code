@@ -147,33 +147,5 @@ templates.weapon_trait_bespoke_forcestaff_p2_chance_to_explode_elites_on_kill = 
 		}
 	}
 }
-templates.weapon_trait_bespoke_forcestaff_p2_bonus_melee_damage_on_burninating = {
-	weapon_trait_bespoke_forcestaff_p2_bonus_melee_damage_on_burninating = {
-		{
-			target_buff_data = {
-				max_stacks = 10,
-				num_stacks_on_proc = 2
-			}
-		},
-		{
-			target_buff_data = {
-				max_stacks = 15,
-				num_stacks_on_proc = 2
-			}
-		},
-		{
-			target_buff_data = {
-				max_stacks = 20,
-				num_stacks_on_proc = 2
-			}
-		},
-		{
-			target_buff_data = {
-				max_stacks = 25,
-				num_stacks_on_proc = 2
-			}
-		}
-	}
-}
 
 return templates

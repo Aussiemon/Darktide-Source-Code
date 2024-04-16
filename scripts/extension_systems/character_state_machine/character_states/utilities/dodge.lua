@@ -177,12 +177,16 @@ Dodge.sucessful_dodge = function (dodging_unit, attacking_unit, attack_type, dod
 		end
 	end
 
-	local breed_name = attacking_breed.name
 	local player_unit_spawn_manager = Managers.state.player_unit_spawn
 	local dodging_player = player_unit_spawn_manager:owner(dodging_unit)
 
 	if dodging_player then
-		Managers.stats:record_private("hook_dodged_attack", dodging_player, breed_name, attack_type, dodge_type)
+		local breed_name = attacking_breed.name
+		local behaviour_extension = ScriptUnit.has_extension(attacking_unit, "behavior_system")
+		local attack_action = behaviour_extension and behaviour_extension:running_action()
+		local previously_dodged = behaviour_extension and behaviour_extension.dodged_before and behaviour_extension:dodged_before(dodging_unit)
+
+		Managers.stats:record_private("hook_dodged_attack", dodging_player, breed_name, attack_type, dodge_type, attack_action, previously_dodged)
 	end
 end
 

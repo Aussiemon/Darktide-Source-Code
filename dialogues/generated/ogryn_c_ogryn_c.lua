@@ -1,4 +1,33 @@
 local ogryn_c_ogryn_c = {
+	agnostic_food_reply_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 10,
+		sound_events = {
+			"loc_ogryn_c__agnostic_food_reply_b_01",
+			"loc_ogryn_c__agnostic_food_reply_b_02",
+			"loc_ogryn_c__agnostic_food_reply_b_03",
+			"loc_ogryn_c__agnostic_food_reply_b_04",
+			"loc_ogryn_c__agnostic_food_reply_b_05",
+			"loc_ogryn_c__agnostic_food_reply_b_06",
+			"loc_ogryn_c__agnostic_food_reply_b_07",
+			"loc_ogryn_c__agnostic_food_reply_b_08",
+			"loc_ogryn_c__agnostic_food_reply_b_09",
+			"loc_ogryn_c__agnostic_food_reply_b_10"
+		},
+		sound_events_duration = {
+			4.14424,
+			2.479885,
+			1.779802,
+			2.028438,
+			1.944042,
+			2.198635,
+			1.890792,
+			2.137542,
+			1.777542,
+			2.468427
+		},
+		randomize_indexes = {}
+	},
 	bonding_conversation_metropolitan_ambush_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,

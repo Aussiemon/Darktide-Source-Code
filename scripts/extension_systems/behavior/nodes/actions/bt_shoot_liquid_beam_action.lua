@@ -64,6 +64,22 @@ BtShootLiquidBeamAction.enter = function (self, unit, breed, blackboard, scratch
 
 		scratchpad.strafe_anim_switch_duration = 0
 	end
+
+	if breed.count_num_attacks then
+		scratchpad.count_num_attacks = true
+		scratchpad.statistics_component = Blackboard.write_component(blackboard, "statistics")
+	end
+
+	if breed.count_num_liquid_hits then
+		scratchpad.count_num_liquid_hits = true
+		scratchpad.statistics_component = Blackboard.write_component(blackboard, "statistics")
+	end
+end
+
+BtShootLiquidBeamAction.init_values = function (self, blackboard, action_data, node_data)
+	local statistics_component = Blackboard.write_component(blackboard, "statistics")
+	statistics_component.num_attacks_done = 0
+	statistics_component.num_in_liquid = 0
 end
 
 BtShootLiquidBeamAction.leave = function (self, unit, breed, blackboard, scratchpad, action_data, t, reason, destroy)
@@ -312,6 +328,10 @@ BtShootLiquidBeamAction._start_shooting = function (self, unit, t, scratchpad, a
 
 	if action_data.aoe_bot_threat_timing then
 		scratchpad.aoe_bot_threat_timing = t + action_data.aoe_bot_threat_timing
+	end
+
+	if scratchpad.count_num_attacks then
+		scratchpad.statistics_component.num_attacks_done = scratchpad.statistics_component.num_attacks_done + 1
 	end
 end
 
@@ -642,6 +662,10 @@ BtShootLiquidBeamAction._shoot_sphere_cast = function (self, unit, t, shoot_posi
 					local buff_extension = ScriptUnit.extension(hit_unit, "buff_system")
 
 					buff_extension:add_internally_controlled_buff(on_hit_buff, t)
+				end
+
+				if scratchpad.count_num_liquid_hits then
+					scratchpad.statistics_component.num_in_liquid = scratchpad.statistics_component.num_in_liquid + 1
 				end
 			until true
 		end

@@ -26,10 +26,10 @@ template.name = "objective"
 template.max_distance = 300
 template.screen_clamp = true
 template.screen_margins = {
-	down = 250,
-	up = 250,
-	left = 450,
-	right = 450
+	down = 0.23148148148148148,
+	up = 0.23148148148148148,
+	left = 0.234375,
+	right = 0.234375
 }
 local template_visual_definitions = {
 	default = {

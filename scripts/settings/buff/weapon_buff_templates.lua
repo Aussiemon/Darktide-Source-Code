@@ -1,11 +1,13 @@
-AilmentSettings = require("scripts/settings/ailments/ailment_settings")
+local AilmentSettings = require("scripts/settings/ailments/ailment_settings")
 local Attack = require("scripts/utilities/attack/attack")
 local AttackSettings = require("scripts/settings/damage/attack_settings")
 local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
 local Breed = require("scripts/utilities/breed")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
+local BuffUtils = require("scripts/settings/buff/buff_utils")
 local BurningSettings = require("scripts/settings/burning/burning_settings")
 local ChainLightning = require("scripts/utilities/action/chain_lightning")
+local CheckProcFunctions = require("scripts/settings/buff/helper_functions/check_proc_functions")
 local ConditionalFunctions = require("scripts/settings/buff/helper_functions/conditional_functions")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
@@ -303,6 +305,58 @@ templates.rending_burn_debuff = {
 		[buff_stat_buffs.rending_multiplier] = 0.01
 	}
 }
+templates.shock_grenade_interval = {
+	start_interval_on_apply = true,
+	buff_id = "shock_grenade_shock",
+	max_stacks = 1,
+	predicted = false,
+	refresh_duration_on_stack = true,
+	max_stacks_cap = 1,
+	duration = 8,
+	start_with_frame_offset = true,
+	class_name = "interval_buff",
+	keywords = {
+		buff_keywords.electrocuted,
+		buff_keywords.shock_grenade_shock
+	},
+	interval = {
+		0.3,
+		0.8
+	},
+	interval_func = function (template_data, template_context, template, dt, t)
+		local is_server = template_context.is_server
+
+		if not is_server then
+			return
+		end
+
+		local unit = template_context.unit
+
+		if HEALTH_ALIVE[unit] then
+			local damage_template = DamageProfileTemplates.shock_grenade_stun_interval
+			local owner_unit = template_context.owner_unit
+			local power_level = DEFAULT_POWER_LEVEL
+			local random_radians = math.random_range(0, PI_2)
+			local attack_direction = Vector3(math.sin(random_radians), math.cos(random_radians), 0)
+			attack_direction = Vector3.normalize(attack_direction)
+
+			Attack.execute(unit, damage_template, "power_level", power_level, "damage_type", damage_types.electrocution, "attacking_unit", HEALTH_ALIVE[owner_unit] and owner_unit, "attack_direction", attack_direction)
+		end
+	end,
+	minion_effects = {
+		node_effects = {
+			{
+				node_name = "j_spine",
+				vfx = {
+					material_emission = false,
+					particle_effect = "content/fx/particles/enemies/buff_stummed",
+					orphaned_policy = "destroy",
+					stop_type = "stop"
+				}
+			}
+		}
+	}
+}
 templates.ogryn_slabshield_shield_plant = {
 	max_stacks = 1,
 	predicted = false,
@@ -318,74 +372,6 @@ templates.ogryn_slabshield_shield_plant = {
 	end,
 	conditional_stat_buffs_func = function (template_data, template_context)
 		return ConditionalFunctions.is_item_slot_wielded(template_data, template_context) and template_data.inventory_slot_component.special_active
-	end
-}
-templates.power_maul_shock_hit = {
-	class_name = "proc_buff",
-	predicted = false,
-	proc_events = {
-		[buff_proc_events.on_hit] = 1
-	},
-	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
-	check_proc_func = function (params, template_data, template_context)
-		local damage_efficiency = params.damage_efficiency
-		local stagger_result = params.stagger_result
-
-		return stagger_result == stagger_results.stagger and damage_efficiency == damage_efficiencies.full
-	end,
-	proc_func = function (params, template_data, template_context, t)
-		if template_context.is_server then
-			local attacked_unit = params.attacked_unit
-			local stick_to_buff_extension = ScriptUnit.has_extension(attacked_unit, "buff_system")
-
-			if stick_to_buff_extension then
-				stick_to_buff_extension:add_internally_controlled_buff("shock_effect", t)
-			end
-		end
-	end
-}
-templates.power_maul_stun = {
-	start_interval_on_apply = true,
-	buff_id = "power_maul_stun",
-	max_stacks = 1,
-	predicted = false,
-	refresh_duration_on_stack = true,
-	max_stacks_cap = 1,
-	duration = 3,
-	start_with_frame_offset = true,
-	class_name = "interval_buff",
-	keywords = {
-		buff_keywords.electrocuted
-	},
-	interval = {
-		0.3,
-		0.8
-	},
-	interval_func = function (template_data, template_context, template, dt, t)
-		local is_server = template_context.is_server
-
-		if not is_server then
-			return
-		end
-
-		local unit = template_context.unit
-
-		if ALIVE[unit] and HEALTH_ALIVE[unit] then
-			local damage_template = DamageProfileTemplates.shock_grenade_stun_interval
-			local owner_unit = template_context.owner_unit
-			local power_level = DEFAULT_POWER_LEVEL
-			local random_radians = math.random_range(0, PI_2)
-			local attack_direction = Vector3(math.sin(random_radians), math.cos(random_radians), 0)
-			attack_direction = Vector3.normalize(attack_direction)
-
-			Attack.execute(unit, damage_template, "power_level", power_level, "damage_type", damage_types.electrocution, "attacking_unit", HEALTH_ALIVE[owner_unit] and owner_unit, "attack_direction", attack_direction)
-
-			local buff_extension = template_context.buff_extension
-
-			if buff_extension then
-				buff_extension:add_internally_controlled_buff("shock_effect", t)
-			end
-		end
 	end
 }
 

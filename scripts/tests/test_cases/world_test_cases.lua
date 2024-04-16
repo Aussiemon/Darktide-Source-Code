@@ -42,7 +42,12 @@ WorldTestCases = {
 	load_mission_circumstances = function (case_settings)
 		Testify:run_case(function (dt, t)
 			local settings = cjson.decode(case_settings or "{}")
-			local check_theme_loaded = settings.check_theme_loaded or true
+
+			if settings.check_theme_loaded == false then
+				-- Nothing
+			end
+
+			local check_theme_loaded = true
 			local flags = settings.flags or {
 				"load_mission",
 				"circumstances"

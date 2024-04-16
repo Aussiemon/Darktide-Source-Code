@@ -1,6 +1,4 @@
-local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templates")
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
-local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local UIWorkspaceSettings = require("scripts/settings/ui/ui_workspace_settings")
 local title_height = 70
@@ -35,28 +33,6 @@ local grid_settings = {
 	mask_size = mask_size,
 	title_height = title_height,
 	edge_padding = edge_padding
-}
-local weapon_stats_grid_settings = nil
-local padding = 12
-local width = 530
-local height = 920
-weapon_stats_grid_settings = {
-	scrollbar_width = 7,
-	ignore_blur = true,
-	title_height = 70,
-	grid_spacing = {
-		0,
-		0
-	},
-	grid_size = {
-		width - padding,
-		height
-	},
-	mask_size = {
-		width + 40,
-		height
-	},
-	edge_padding = padding
 }
 local category_button_size = {
 	100,
@@ -215,6 +191,20 @@ local scenegraph_definition = {
 		position = {
 			0,
 			0,
+			1
+		}
+	},
+	side_panel_area = {
+		vertical_alignment = "bottom",
+		parent = "item_grid_pivot",
+		horizontal_alignment = "right",
+		size = {
+			350,
+			0
+		},
+		position = {
+			400,
+			-90,
 			1
 		}
 	},
@@ -417,24 +407,6 @@ local widget_definitions = {
 			}
 		}
 	}, "divider"),
-	item_restrictions = UIWidget.create_definition({
-		{
-			value_id = "title",
-			style_id = "title",
-			pass_type = "text",
-			value = Utf8.upper(Localize("loc_item_equippable_on_header")),
-			style = item_restrictions_title_style
-		},
-		{
-			value_id = "text",
-			style_id = "text",
-			pass_type = "text",
-			value = "",
-			style = item_restrictions_body_style
-		}
-	}, "item_restrictions", {
-		visible = true
-	}),
 	owned_info_text = UIWidget.create_definition({
 		{
 			style_id = "text",
@@ -499,10 +471,30 @@ local animations = {
 		}
 	}
 }
+local item_sub_title_pass = {
+	{
+		value_id = "text",
+		style_id = "text",
+		pass_type = "text",
+		value = "",
+		style = item_restrictions_title_style
+	}
+}
+local item_text_pass = {
+	{
+		value_id = "text",
+		style_id = "text",
+		pass_type = "text",
+		value = "",
+		style = item_restrictions_body_style
+	}
+}
 
 return {
 	grid_settings = grid_settings,
 	animations = animations,
 	widget_definitions = widget_definitions,
-	scenegraph_definition = scenegraph_definition
+	scenegraph_definition = scenegraph_definition,
+	item_sub_title_pass = item_sub_title_pass,
+	item_text_pass = item_text_pass
 }

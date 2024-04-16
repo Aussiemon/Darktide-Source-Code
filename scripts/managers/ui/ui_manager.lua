@@ -323,7 +323,7 @@ UIManager.hud_loading = function (self)
 	return self._ui_element_package_references.hud and self._ui_element_package_references.hud.is_loading
 end
 
-UIManager._on_ui_element_package_loaded = function (self, reference_key, reference_name)
+UIManager._on_ui_element_package_loaded = function (self, reference_key, reference_name, package_id)
 	local package_references_data = self._ui_element_package_references[reference_key]
 
 	if not package_references_data then
@@ -332,6 +332,11 @@ UIManager._on_ui_element_package_loaded = function (self, reference_key, referen
 
 	local package_references = package_references_data.package_references
 	local data = package_references[reference_name]
+
+	if not data or data.id ~= package_id then
+		return
+	end
+
 	data.is_loaded = true
 
 	for _, package_data in pairs(package_references) do
@@ -810,6 +815,8 @@ UIManager.destroy = function (self)
 	self._input_hold_tracker:delete()
 
 	self._input_hold_tracker = nil
+
+	self:release_packages()
 end
 
 UIManager.play_3d_sound = function (self, event_name, position)
@@ -1805,6 +1812,7 @@ UIManager.load_item_icon = function (self, real_item, cb, render_context, dummy_
 
 		return instance:load_weapon_icon(visual_item, cb, render_context, prioritize, unload_cb)
 	elseif table.find(slots, "slot_gear_head") or table.find(slots, "slot_gear_upperbody") or table.find(slots, "slot_gear_lowerbody") or table.find(slots, "slot_gear_extra_cosmetic") or table.find(slots, "slot_animation_end_of_round") then
+		render_context = render_context or {}
 		local player = Managers.player:local_player(1)
 		dummy_profile = dummy_profile or player:profile()
 		local item_gender, item_breed, item_archetype = nil
@@ -1926,10 +1934,26 @@ UIManager.load_item_icon = function (self, real_item, cb, render_context, dummy_
 			render_context.wield_slot = prop_item_slot
 		end
 
+		local icon_camera_position_offset = item.icon_camera_position_offset
+
+		if icon_camera_position_offset then
+			render_context.icon_camera_position_offset = icon_camera_position_offset
+		else
+			render_context.icon_camera_position_offset = nil
+		end
+
+		local icon_camera_rotation_offset = item.icon_camera_rotation_offset
+
+		if icon_camera_rotation_offset then
+			render_context.icon_camera_rotation_offset = icon_camera_rotation_offset
+		else
+			render_context.icon_camera_rotation_offset = nil
+		end
+
 		local instance = self._back_buffer_render_handlers.cosmetics
 
 		return instance:load_profile_portrait(dummy_profile, cb, render_context, prioritize, unload_cb)
-	elseif table.find(slots, "slot_insignia") or table.find(slots, "slot_portrait_frame") or table.find(slots, "slot_animation_emote_1") or table.find(slots, "slot_animation_emote_2") or table.find(slots, "slot_animation_emote_3") or table.find(slots, "slot_animation_emote_4") or table.find(slots, "slot_animation_emote_5") then
+	elseif table.find(slots, "slot_insignia") or table.find(slots, "slot_portrait_frame") or table.find(slots, "slot_character_title") or table.find(slots, "slot_animation_emote_1") or table.find(slots, "slot_animation_emote_2") or table.find(slots, "slot_animation_emote_3") or table.find(slots, "slot_animation_emote_4") or table.find(slots, "slot_animation_emote_5") then
 		local instance = self._back_buffer_render_handlers.icon
 
 		return instance:load_icon(item, cb, unload_cb)

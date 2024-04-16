@@ -2,6 +2,7 @@ local Attack = require("scripts/utilities/attack/attack")
 local AttackSettings = require("scripts/settings/damage/attack_settings")
 local Breeds = require("scripts/settings/breed/breeds")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
+local BuffUtils = require("scripts/settings/buff/buff_utils")
 local CheckProcFunctions = require("scripts/settings/buff/helper_functions/check_proc_functions")
 local ConditionalFunctions = require("scripts/settings/buff/helper_functions/conditional_functions")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
@@ -20,96 +21,10 @@ local keywords = BuffSettings.keywords
 local proc_events = BuffSettings.proc_events
 local stat_buffs = BuffSettings.stat_buffs
 local slot_configuration = PlayerCharacterConstants.slot_configuration
-local DEFAULT_NUMBER_OF_HITS_PER_STACK = 1
-
-function _consecutive_hits_proc_func(params, template_data, template_context, t)
-	if params.target_number > 1 then
-		return
-	end
-
-	if not template_data.number_of_hits then
-		template_data.number_of_hits = 0
-	else
-		local template = template_context.template
-		local max_stacks = template.child_max_stacks or 5
-		local number_of_hits = template_data.number_of_hits + 1
-		template_data.number_of_hits = number_of_hits
-
-		if template_data.number_of_hits > 1 then
-			local override = template_context.template_override_data
-			local number_of_hits_per_stack = override and override.number_of_hits_per_stack or template.number_of_hits_per_stack or DEFAULT_NUMBER_OF_HITS_PER_STACK
-			template_data.target_number_of_stacks = math.clamp(math.floor((number_of_hits - 1) / number_of_hits_per_stack), 0, max_stacks)
-			template_data.last_hit_time = t
-		end
-	end
-end
-
-function _consecutive_hits_same_target_proc_func(params, template_data, template_context, t)
-	if template_data.attacked_unit ~= params.attacked_unit then
-		template_data.attacked_unit = params.attacked_unit
-		template_data.number_of_hits = 0
-		template_data.target_number_of_stacks = 0
-	else
-		local max_stacks = 5
-		local number_of_hits = template_data.number_of_hits + 1
-		template_data.number_of_hits = number_of_hits
-		local template = template_context.template
-		local override = template_context.template_override_data
-		local number_of_hits_per_stack = override and override.number_of_hits_per_stack or template.number_of_hits_per_stack or DEFAULT_NUMBER_OF_HITS_PER_STACK
-		template_data.target_number_of_stacks = math.clamp(math.floor(number_of_hits / number_of_hits_per_stack), 0, max_stacks)
-		template_data.last_hit_time = t
-	end
-end
-
-local function _add_debuff_on_hit_start(template_data, template_context)
-	local template = template_context.template
-	local target_buff_data = template.target_buff_data
-	local template_override_data = template_context.template_override_data
-	local override_target_buff_data = template_override_data.target_buff_data
-	template_data.internal_buff_name = override_target_buff_data and override_target_buff_data.internal_buff_name or target_buff_data.internal_buff_name
-	template_data.num_stacks_on_proc = override_target_buff_data and override_target_buff_data.num_stacks_on_proc or target_buff_data.num_stacks_on_proc
-	template_data.max_stacks = override_target_buff_data and override_target_buff_data.max_stacks or target_buff_data.max_stacks
-end
-
-local function _add_proc_debuff(t, params, template_data, template_context)
-	local attacked_unit = params.attacked_unit
-
-	if not HEALTH_ALIVE[attacked_unit] then
-		return
-	end
-
-	local attacked_unit_buff_extension = ScriptUnit.has_extension(attacked_unit, "buff_system")
-
-	if attacked_unit_buff_extension then
-		local internal_buff_name = template_data.internal_buff_name
-		local num_stacks_on_proc_func = template_context.template.num_stacks_on_proc_func
-		local num_stacks_on_proc = num_stacks_on_proc_func and num_stacks_on_proc_func(t, params, template_data, template_context) or template_data.num_stacks_on_proc
-		local max_stacks = template_data.max_stacks
-		local current_stacks = attacked_unit_buff_extension:current_stacks(internal_buff_name)
-		local stacks_to_add = math.min(num_stacks_on_proc, math.max(max_stacks - current_stacks, 0))
-
-		if stacks_to_add == 0 and current_stacks <= max_stacks then
-			attacked_unit_buff_extension:refresh_duration_of_stacking_buff(internal_buff_name, t)
-		else
-			local owner_unit = template_context.owner_unit
-			local source_item = template_context.source_item
-
-			attacked_unit_buff_extension:add_internally_controlled_buff_with_stacks(internal_buff_name, stacks_to_add, t, "owner_unit", owner_unit, "source_item", source_item)
-		end
-	end
-end
-
-local function _add_debuff_on_hit_proc(params, template_data, template_context, t)
-	local allow_weapon_special = template_context.template.target_buff_data.allow_weapon_special
-	local is_weapon_special = params.weapon_special
-
-	if is_weapon_special and allow_weapon_special ~= nil and not allow_weapon_special then
-		return
-	end
-
-	_add_proc_debuff(t, params, template_data, template_context)
-end
-
+local _consecutive_hits_proc_func = BuffUtils.consecutive_hits_proc_func
+local _consecutive_hits_same_target_proc_func = BuffUtils.consecutive_hits_same_target_proc_func
+local _add_debuff_on_hit_start = BuffUtils.add_debuff_on_hit_start
+local _add_debuff_on_hit_proc = BuffUtils.add_debuff_on_hit_proc
 local base_templates = {}
 
 table.make_unique(base_templates)
@@ -856,66 +771,6 @@ base_templates.power_bonus_scaled_on_stamina = {
 		return steps
 	end
 }
-local untauntable_breeds = {
-	chaos_daemonhost = true
-}
-base_templates.taunt_target_on_staggered_hit = {
-	child_buff_template = "taunt_target_child",
-	predicted = false,
-	stacks_to_remove = 0,
-	class_name = "weapon_trait_target_number_parent_proc_buff",
-	proc_events = {
-		[proc_events.on_hit] = 1
-	},
-	start_func = function (template_data, template_context)
-		template_data.taunted_enemies = {}
-	end,
-	update_func = function (template_data, template_context)
-		local number_of_taunted_enemies = 0
-		local unit = template_context.unit
-		local taunted_enemies = template_data.taunted_enemies
-
-		for tauned_unit, _ in pairs(taunted_enemies) do
-			local attacked_unit_buff_extension = ScriptUnit.has_extension(tauned_unit, "buff_system")
-			local owner_of_taunt = attacked_unit_buff_extension and attacked_unit_buff_extension:owner_of_buff_with_id("taunted")
-
-			if owner_of_taunt == unit then
-				number_of_taunted_enemies = number_of_taunted_enemies + 1
-			else
-				taunted_enemies[tauned_unit] = nil
-			end
-		end
-
-		template_data.target_number_of_stacks = number_of_taunted_enemies
-	end,
-	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
-	check_proc_func = CheckProcFunctions.all(CheckProcFunctions.on_item_match, CheckProcFunctions.on_stagger_hit, CheckProcFunctions.any(CheckProcFunctions.on_melee_hit, CheckProcFunctions.on_push_hit)),
-	proc_func = function (params, template_data, template_context)
-		local attacked_unit = params.attacked_unit
-
-		if not attacked_unit then
-			return
-		end
-
-		local breed_name = params.breed_name
-
-		if not breed_name or untauntable_breeds[breed_name] then
-			return
-		end
-
-		local attacked_unit_buff_extension = ScriptUnit.has_extension(attacked_unit, "buff_system")
-
-		if attacked_unit_buff_extension then
-			local owner_unit = template_context.owner_unit
-			local source_item = template_context.source_item
-			local t = FixedFrame.get_latest_fixed_time()
-
-			attacked_unit_buff_extension:add_internally_controlled_buff("taunted", t, "owner_unit", owner_unit, "source_item", source_item)
-
-			template_data.taunted_enemies[attacked_unit] = true
-		end
-	end
-}
 base_templates.taunt_target_child = {
 	hide_icon_in_hud = true,
 	predicted = false,
@@ -1262,7 +1117,7 @@ base_templates.extra_explosion_on_activated_attacks_on_armor = {
 	},
 	conditional_stat_buffs_func = ConditionalFunctions.all(ConditionalFunctions.is_item_slot_wielded, ConditionalFunctions.melee_weapon_special_active)
 }
-base_templates.toughness_regen_on_wepon_special_elites = {
+base_templates.toughness_regen_on_weapon_special_elites = {
 	predicted = false,
 	class_name = "proc_buff",
 	active_duration = 2,
@@ -2512,6 +2367,31 @@ base_templates.consecutive_melee_hits_increases_melee_power_parent = {
 	proc_func = _consecutive_hits_proc_func
 }
 base_templates.consecutive_melee_hits_increases_melee_power_child = {
+	hide_icon_in_hud = true,
+	stack_offset = -1,
+	max_stacks = 5,
+	predicted = false,
+	class_name = "buff",
+	conditional_stat_buffs = {
+		[stat_buffs.melee_power_level_modifier] = 0.01
+	},
+	conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded
+}
+base_templates.consecutive_melee_hits_same_target_increases_melee_power_parent = {
+	child_buff_template = "consecutive_melee_hits_same_target_increases_melee_power_child",
+	child_duration = 2,
+	predicted = false,
+	allow_proc_while_active = true,
+	stacks_to_remove = 0,
+	class_name = "weapon_trait_target_number_parent_proc_buff",
+	proc_events = {
+		[proc_events.on_hit] = 1
+	},
+	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
+	check_proc_func = CheckProcFunctions.on_item_match,
+	proc_func = _consecutive_hits_same_target_proc_func
+}
+base_templates.consecutive_melee_hits_same_target_increases_melee_power_child = {
 	hide_icon_in_hud = true,
 	stack_offset = -1,
 	max_stacks = 5,

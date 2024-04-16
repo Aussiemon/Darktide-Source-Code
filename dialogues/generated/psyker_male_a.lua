@@ -5479,7 +5479,10 @@ return function ()
 					"loc_psyker_female_a__combat_pause_limited_ogryn_a_05_b_01",
 					"loc_psyker_female_a__combat_pause_limited_ogryn_a_17_b_01",
 					"loc_psyker_female_a__combat_pause_limited_ogryn_b_15_b_01",
-					"loc_psyker_female_a__combat_pause_quirk_abhuman_b_02"
+					"loc_psyker_female_a__combat_pause_quirk_abhuman_b_02",
+					"loc_psyker_female_a__combat_pause_limited_psyker_a_10_a_01",
+					"loc_psyker_female_a__combat_pause_quirk_trinket_b_02",
+					"loc_psyker_female_a__combat_pause_quirk_friends_b_01"
 				}
 			},
 			{
@@ -6909,10 +6912,10 @@ return function ()
 	})
 	define_rule({
 		name = "bonding_conversation_round_three_scars_a",
-		category = "conversations_prio_1",
 		wwise_route = 0,
 		response = "bonding_conversation_round_three_scars_a",
 		database = "psyker_male_a",
+		category = "conversations_prio_1",
 		criterias = {
 			{
 				"query_context",
@@ -6997,6 +7000,13 @@ return function ()
 		},
 		heard_speak_routing = {
 			target = "players"
+		},
+		on_pre_rule_execution = {
+			random_ignore_vo = {
+				chance = 0.6,
+				max_failed_tries = 0,
+				hold_for = 0
+			}
 		}
 	})
 	define_rule({

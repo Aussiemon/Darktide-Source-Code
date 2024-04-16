@@ -20,6 +20,28 @@ local hud_element_team_player_panel_hub_settings = {
 		duration_health = 1,
 		alpha_fade_min_value = 50
 	},
+	title_settings = {
+		party_player = {
+			no_title = {
+				rich_precence_y_offset = 0,
+				player_name_y_offset = -5
+			},
+			title = {
+				rich_precence_y_offset = 4,
+				player_name_y_offset = -10
+			}
+		},
+		my_player = {
+			no_title = {
+				character_text_y_offset = 14,
+				player_name_y_offset = -38
+			},
+			title = {
+				character_text_y_offset = 25,
+				player_name_y_offset = -45
+			}
+		}
+	},
 	size = {
 		230,
 		10
@@ -64,6 +86,7 @@ local hud_element_team_player_panel_hub_settings = {
 		coherency = false,
 		ammo = false,
 		toughness_hit_indicator = false,
+		character_titles = true,
 		player_color = false,
 		status_icon = false,
 		health = false,

@@ -312,7 +312,7 @@ DialogueExtension._update_random_talk_lines = function (self, t)
 	local next_random_talk_line_update_t = self._next_random_talk_line_update_t
 
 	if next_random_talk_line_update_t < t then
-		self._next_random_talk_line_update_t = t + self._random_talk_tick_time_t
+		self._next_random_talk_line_update_t = t + self._random_talk_tick_time_t + math.random(-20, 20)
 		local event_name = "generic_vo_event"
 
 		table.clear(self._trigger_event_data_payload)
@@ -732,6 +732,7 @@ DialogueExtension.play_local_vo_event = function (self, rule_name, wwise_route_k
 	dialogue.currently_playing_subtitle = subtitles_event
 	dialogue.wwise_route = wwise_route_key
 	dialogue.is_audible = true
+	dialogue.subtitle_distance = wwise_route.subtitle_distance
 	dialogue.dialogue_sequence = dialog_sequence_events
 	dialogue_system._playing_units[unit] = self
 

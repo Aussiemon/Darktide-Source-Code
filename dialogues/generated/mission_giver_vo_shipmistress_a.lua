@@ -9,10 +9,10 @@ local mission_giver_vo_shipmistress_a = {
 			"loc_shipmistress_a__info_all_players_required_a_04"
 		},
 		sound_events_duration = {
-			3.45678,
-			3.45678,
-			3.45678,
-			3.45678
+			3.802875,
+			5.152917,
+			3.386417,
+			5.727
 		},
 		randomize_indexes = {}
 	},
@@ -26,10 +26,10 @@ local mission_giver_vo_shipmistress_a = {
 			"loc_shipmistress_a__info_extraction_a_04"
 		},
 		sound_events_duration = {
-			3.45678,
-			3.45678,
-			3.45678,
-			3.45678
+			2.687833,
+			4.818563,
+			6.648479,
+			9.783437
 		},
 		randomize_indexes = {}
 	},
@@ -173,6 +173,51 @@ local mission_giver_vo_shipmistress_a = {
 			0.25,
 			0.25,
 			0.25
+		},
+		randomize_indexes = {}
+	},
+	mission_habs_redux_briefing_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 3,
+		sound_events = {
+			"loc_shipmistress_a__mission_habs_redux_briefing_a_01",
+			"loc_shipmistress_a__mission_habs_redux_briefing_a_02",
+			"loc_shipmistress_a__mission_habs_redux_briefing_a_03"
+		},
+		sound_events_duration = {
+			9.690509,
+			9.462926,
+			7.459219
+		},
+		randomize_indexes = {}
+	},
+	mission_habs_redux_briefing_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 3,
+		sound_events = {
+			"loc_shipmistress_a__mission_habs_redux_briefing_b_01",
+			"loc_shipmistress_a__mission_habs_redux_briefing_b_02",
+			"loc_shipmistress_a__mission_habs_redux_briefing_b_03"
+		},
+		sound_events_duration = {
+			8.748438,
+			9.252207,
+			11.04539
+		},
+		randomize_indexes = {}
+	},
+	mission_habs_redux_briefing_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 3,
+		sound_events = {
+			"loc_shipmistress_a__mission_habs_redux_briefing_c_01",
+			"loc_shipmistress_a__mission_habs_redux_briefing_c_02",
+			"loc_shipmistress_a__mission_habs_redux_briefing_c_03"
+		},
+		sound_events_duration = {
+			3.731104,
+			6.478469,
+			5.757406
 		},
 		randomize_indexes = {}
 	}

@@ -52,6 +52,7 @@ StateLoading.on_enter = function (self, parent, params, creation_context)
 	}
 
 	Managers.player:on_game_state_enter(self, player_game_state_mapping, game_state_context)
+	Managers.event:register(self, "on_pre_suspend", "_on_pre_suspend")
 end
 
 StateLoading._start_loading = function (self)
@@ -97,6 +98,7 @@ end
 StateLoading.on_exit = function (self)
 	Managers.localization:reset_cache()
 	Managers.player:on_game_state_exit(self)
+	Managers.event:unregister(self, "on_pre_suspend")
 end
 
 StateLoading._reset_state_loading = function (self, params)
@@ -300,6 +302,10 @@ StateLoading._current_level = function (self)
 
 		return Missions[mission_name].level
 	end
+end
+
+StateLoading._on_pre_suspend = function (self)
+	Managers.loading:cleanup()
 end
 
 return StateLoading

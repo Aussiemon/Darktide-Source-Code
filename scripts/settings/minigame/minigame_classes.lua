@@ -9,6 +9,7 @@ end
 local minigame_classes = {
 	none = _require_minigame_class("none"),
 	decode_symbols = _require_minigame_class("decode_symbols"),
+	drill = _require_minigame_class("drill"),
 	scan = _require_minigame_class("scan")
 }
 

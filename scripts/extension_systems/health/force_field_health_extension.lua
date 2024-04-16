@@ -18,6 +18,7 @@ ForceFieldHealthExtension.init = function (self, extension_init_context, unit, e
 	self._max_health = sphere_shield and max_sphere_health or max_health
 	self._health = self._max_health
 	self._is_dead = false
+	self._damage_taken_total = 0
 end
 
 ForceFieldHealthExtension.game_object_initialized = function (self, session, object_id)
@@ -32,6 +33,7 @@ ForceFieldHealthExtension.game_object_initialized = function (self, session, obj
 	self._damage_cooldown = talent_settings.damage_cooldown
 	self._max_health = sphere_shield and max_sphere_health or max_health
 	self._health = self._max_health
+	self._local_damage = 1
 
 	GameSession.set_game_object_field(self._game_session, self._game_object_id, "health", self._max_health)
 	GameSession.set_game_object_field(self._game_session, self._game_object_id, "damage", 0)
@@ -52,6 +54,10 @@ ForceFieldHealthExtension.tried_adding_damage = function (self, damage_amount, p
 end
 
 ForceFieldHealthExtension._add_damage = function (self, damage)
+	if damage then
+		self._damage_taken_total = self._damage_taken_total + damage
+	end
+
 	local t = Managers.time:time("gameplay")
 
 	if t < self._next_allowed_t then
@@ -61,14 +67,22 @@ ForceFieldHealthExtension._add_damage = function (self, damage)
 	local game_session = self._game_session
 	local game_object_id = self._game_object_id
 	self._next_allowed_t = t + self._damage_cooldown
-	self._health = math.max(0, self._health - damage)
+	self._health = math.max(0, self._health - self._local_damage)
 
 	GameSession.set_game_object_field(game_session, game_object_id, "damage", self._max_health - self._health)
 	GameSession.set_game_object_field(game_session, game_object_id, "health", self._health)
 
 	if self._health <= 0 then
 		self:_set_dead()
+		self:send_stat_data()
 	end
+end
+
+ForceFieldHealthExtension.send_stat_data = function (self)
+	local player_unit_spawn_manager = Managers.state.player_unit_spawn
+	local owner = player_unit_spawn_manager:owner(self._owner_unit)
+
+	Managers.stats:record_private("hook_psyker_shield_damage_taken", owner, self._damage_taken_total)
 end
 
 ForceFieldHealthExtension._set_dead = function (self)

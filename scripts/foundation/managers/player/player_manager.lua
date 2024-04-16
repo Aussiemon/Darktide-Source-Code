@@ -7,6 +7,7 @@ local UISettings = require("scripts/settings/ui/ui_settings")
 local PlayerManager = class("PlayerManager")
 PlayerManager.NO_ACCOUNT_ID = "no_account_id"
 local CLIENT_RPCS = {
+	"rpc_player_assisted",
 	"rpc_update_slot"
 }
 local SERVER_RPCS = {}
@@ -95,9 +96,12 @@ PlayerManager._reassign_slot = function (self, slot)
 	local players = self._players
 
 	for _, player in pairs(players) do
+		local peer_id = player:peer_id()
+		local is_remote = player.remote
+		local can_update_slot = not is_remote or game_session_manager:connected_to_client(peer_id)
 		local current_slot = player:slot()
 
-		if player_slot_count < current_slot then
+		if can_update_slot and player_slot_count < current_slot then
 			claimed_slots[slot] = true
 			claimed_slots[current_slot] = nil
 			local peer_id = player:peer_id()
@@ -660,6 +664,25 @@ PlayerManager.create_players_from_sync_data = function (self, player_class, chan
 			self:add_bot_player(player_class, channel_id, peer_id, local_player_id, profile, slot, is_human_controlled, is_server)
 		end
 	end
+end
+
+PlayerManager.rpc_player_assisted = function (self, channel_id, peer_id, assist_type_lookup)
+	local assist_type = NetworkLookup.assist_type_lookup[assist_type_lookup]
+
+	self:_show_assist_notification(peer_id, assist_type)
+end
+
+PlayerManager._show_assist_notification = function (self, peer_id, assist_type)
+	local player_manager = Managers.player
+	local local_player_id = 1
+	local player = player_manager:player(peer_id, local_player_id)
+	local player_name = player and player:name()
+
+	Managers.event:trigger("event_add_notification_message", "player_assist", {
+		assist_type = assist_type,
+		player = player,
+		player_name = player_name
+	})
 end
 
 PlayerManager.rpc_update_slot = function (self, _, peer_id, local_player_id, slot)

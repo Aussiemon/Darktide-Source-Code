@@ -527,7 +527,11 @@ CameraManager.post_update = function (self, dt, t, viewport_name)
 
 	self:_update_camera(dt, t, viewport_name)
 	self:_update_angular_velocity(dt, viewport_name)
-	self:_update_sound_listener(viewport_name)
+
+	if not self._use_ui_listener then
+		self:_update_sound_listener(viewport_name)
+	end
+
 	self:_update_level_particle_effects(viewport_name)
 end
 
@@ -877,6 +881,10 @@ CameraManager.apply_level_screen_effects = function (self, effects, viewport_nam
 		local effect_id = World.create_particles(world, effect, Vector3(0, 0, 0))
 		self._level_screen_effect_ids[effect_id] = true
 	end
+end
+
+CameraManager.use_ui_listener = function (self, use_ui_listener)
+	self._use_ui_listener = use_ui_listener
 end
 
 CameraManager._update_camera_properties = function (self, camera, shadow_cull_camera, camera_nodes, camera_data, viewport_name)

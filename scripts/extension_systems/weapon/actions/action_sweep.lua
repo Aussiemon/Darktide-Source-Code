@@ -282,7 +282,7 @@ ActionSweep.finish = function (self, reason, data, t, time_in_action)
 	local is_sticky = self:_is_currently_sticky()
 
 	if hit_stickyness_settings and is_sticky then
-		self:_stop_hit_stickyness(hit_stickyness_settings)
+		self:_stop_hit_stickyness(hit_stickyness_settings, true)
 	end
 
 	local action_sweep_component = self._action_sweep_component
@@ -602,6 +602,28 @@ ActionSweep._update_hit_stickyness = function (self, dt, t, action_sweep_compone
 
 					ImpactEffect.play(stick_to_unit, stick_to_actor, damage_dealt, damage_type, hit_zone_name, attack_result, hit_world_position, hit_normal, attack_direction, self._player.player_unit, stickyness_impact_fx_data, nil, nil, damage_efficiency, damage_profile)
 				end
+
+				local buff_to_add_tick = hit_stickyness_settings.buff_to_add_tick
+
+				if buff_to_add_tick and self._is_server then
+					local stick_to_buff_extension = ScriptUnit.has_extension(stick_to_unit, "buff_system")
+
+					if stick_to_buff_extension then
+						stick_to_buff_extension:add_internally_controlled_buff(buff_to_add_tick, t)
+					end
+				end
+			end
+		end
+
+		if is_last_damage_instance then
+			local buff_to_add_last = hit_stickyness_settings.buff_to_add_last
+
+			if buff_to_add_last and self._is_server then
+				local stick_to_buff_extension = ScriptUnit.has_extension(stick_to_unit, "buff_system")
+
+				if stick_to_buff_extension then
+					stick_to_buff_extension:add_internally_controlled_buff(buff_to_add_last, t)
+				end
 			end
 		end
 	end
@@ -613,7 +635,6 @@ ActionSweep._update_hit_stickyness = function (self, dt, t, action_sweep_compone
 	local state_enter_time = character_state_component.entered_t
 	local exit_because_of_state = (is_in_dodge_state or is_in_jump_state) and start_t < state_enter_time
 	local is_in_stealth = self._buff_extension:has_keyword(buff_keywords.invisible)
-	local is_first_frame_of_stickyness = t <= start_t
 	local sticky_t = t - start_t
 	local duration = hit_stickyness_settings.duration
 	local extra_duration = hit_stickyness_settings.extra_duration or 0
@@ -636,8 +657,9 @@ ActionSweep._update_hit_stickyness = function (self, dt, t, action_sweep_compone
 				local attack_type = AttackSettings.attack_types.melee
 				local action_settings = self._action_settings
 				local wounds_shape = action_settings.wounds_shape_special_active
-				local attack_direction = Vector3.normalize(self._locomotion_component.velocity_current)
-				local damage_dealt, attack_result, damage_efficiency, _, hit_weakspot = Attack.execute(stick_to_unit, damage.dodge_damage_profile, "power_level", DEFAULT_POWER_LEVEL, "target_index", 1, "target_number", 1, "hit_world_position", hit_world_position, "attack_direction", attack_direction, "hit_zone_name", hit_zone_name, "attacking_unit", attacking_unit, "hit_actor", stick_to_actor, "attack_type", attack_type, "herding_template", nil, "damage_type", damage_type, "is_critical_strike", is_critical_strike, "item", self._weapon.item, "wounds_shape", wounds_shape)
+				local velocity_current = self._locomotion_component.velocity_current
+				local attack_direction = Vector3.normalize(velocity_current)
+				local damage_dealt, attack_result, damage_efficiency, _, _ = Attack.execute(stick_to_unit, damage.dodge_damage_profile, "power_level", DEFAULT_POWER_LEVEL, "target_index", 1, "target_number", 1, "hit_world_position", hit_world_position, "attack_direction", attack_direction, "hit_zone_name", hit_zone_name, "attacking_unit", attacking_unit, "hit_actor", stick_to_actor, "attack_type", attack_type, "herding_template", nil, "damage_type", damage_type, "is_critical_strike", is_critical_strike, "item", self._weapon.item, "wounds_shape", wounds_shape)
 				local hit_normal = nil
 
 				ImpactEffect.play(stick_to_unit, stick_to_actor, damage_dealt, damage_type, hit_zone_name, attack_result, hit_world_position, hit_normal, attack_direction, self._player.player_unit, stickyness_impact_fx_data, nil, nil, damage_efficiency, damage.dodge_damage_profile)

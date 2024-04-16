@@ -95,6 +95,7 @@ _check_network_lookup_boundaries("voting_template_id", "voting_templates")
 _check_network_lookup_boundaries("lookup_1bit", "weapon_blood_amounts")
 _check_network_lookup_boundaries("optional_wounds_shape_id", "wounds_shapes")
 _check_network_lookup_boundaries("camera_shake_id", "camera_shake_events")
+_check_network_lookup_boundaries("dialogue_breed_id", "dialogue_breed_names")
 
 NetworkConstants.check_network_lookup_boundaries = _check_network_lookup_boundaries
 local max_mechanism_events = Network.type_info("mechanism_event_id").max
@@ -213,7 +214,8 @@ end
 local dialogue_rule_index = Network.type_info("dialogue_rule_index")
 local max_dialogue_rules = dialogue_rule_index.max
 local database_rules_number = TagQueryDatabase.NUM_DATABASE_RULES
-NetworkConstants.ammunition = Network.type_info("ammunition")
+NetworkConstants.ammunition_large = Network.type_info("ammunition_large")
+NetworkConstants.ammunition_small = Network.type_info("ammunition_small")
 
 local function _check_dialogue_breed_settings_voices()
 	local max_num_wwise_voices = 0

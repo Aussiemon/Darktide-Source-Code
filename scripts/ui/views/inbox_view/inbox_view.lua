@@ -56,10 +56,10 @@ InboxView._set_player_profile_information = function (self, player)
 	local profile = player:profile()
 	local character_name = ProfileUtils.character_name(profile)
 	local current_level = profile.current_level
-	local character_title = ProfileUtils.character_title(profile)
+	local character_archetype_title = ProfileUtils.character_archetype_title(profile)
 	local widgets_by_name = self._widgets_by_name
 	widgets_by_name.character_name.content.text = character_name
-	widgets_by_name.character_title.content.text = character_title
+	widgets_by_name.character_title.content.text = character_archetype_title
 	widgets_by_name.character_level.content.text = tostring(current_level) .. " "
 
 	self:_set_experience_bar(0, 0)

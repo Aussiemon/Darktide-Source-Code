@@ -1,4 +1,23 @@
 local veteran_a_veteran_female_a = {
+	away_from_squad_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 5,
+		sound_events = {
+			"loc_veteran_female_a__away_from_squad_b_01",
+			"loc_veteran_female_a__away_from_squad_b_02",
+			"loc_veteran_female_a__away_from_squad_b_03",
+			"loc_veteran_female_a__away_from_squad_b_04",
+			"loc_veteran_female_a__away_from_squad_b_05"
+		},
+		sound_events_duration = {
+			1.210813,
+			2.287938,
+			2.021396,
+			2.964729,
+			3.631625
+		},
+		randomize_indexes = {}
+	},
 	combat_pause_limited_veteran_a_01_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,

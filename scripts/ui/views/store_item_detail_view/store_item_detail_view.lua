@@ -2,7 +2,6 @@ local Breeds = require("scripts/settings/breed/breeds")
 local Definitions = require("scripts/ui/views/store_item_detail_view/store_item_detail_view_definitions")
 local StoreItemDetailViewSettings = require("scripts/ui/views/store_item_detail_view/store_item_detail_view_settings")
 local ItemSlotSettings = require("scripts/settings/item/item_slot_settings")
-local ScriptCamera = require("scripts/foundation/utilities/script_camera")
 local UIProfileSpawner = require("scripts/managers/ui/ui_profile_spawner")
 local UIScenegraph = require("scripts/managers/ui/ui_scenegraph")
 local UIWorldSpawner = require("scripts/managers/ui/ui_world_spawner")
@@ -26,8 +25,6 @@ local TextUtils = require("scripts/utilities/ui/text")
 local UIFonts = require("scripts/managers/ui/ui_fonts")
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
-local DefaultViewInputSettings = require("scripts/settings/input/default_view_input_settings")
-local InputUtils = require("scripts/managers/input/input_utils")
 local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templates")
 local StoreItemDetailView = class("StoreItemDetailView", "BaseView")
 
@@ -36,7 +33,7 @@ StoreItemDetailView.init = function (self, settings, context)
 	local class_name = self.__class_name
 	self._unique_id = class_name .. "_" .. string.gsub(tostring(self), "table: ", "")
 
-	self.super.init(self, Definitions, settings)
+	StoreItemDetailView.super.init(self, Definitions, settings)
 
 	self._pass_draw = false
 	self._wallet_type = {
@@ -52,10 +49,10 @@ end
 StoreItemDetailView._setup_offscreen_gui = function (self)
 	local ui_manager = Managers.ui
 	local timer_name = "ui"
-	local world_layer = 102
-	local world_name = self._unique_id .. "_ui_offscreen_world"
 	local parent = self
 	local view_name = parent.view_name
+	local world_layer = 102
+	local world_name = self._unique_id .. "_ui_offscreen_world"
 	self._offscreen_world = ui_manager:create_world(world_name, world_layer, timer_name, view_name)
 	local viewport_name = self._unique_id .. "_ui_offscreen_world_viewport"
 	local viewport_type = "overlay_offscreen"
@@ -152,11 +149,12 @@ StoreItemDetailView._destroy_forward_gui = function (self)
 end
 
 StoreItemDetailView.on_enter = function (self)
-	self.super.on_enter(self)
+	StoreItemDetailView.super.on_enter(self)
 
 	local context = self._context
-	self._store_item = context.store_item
-	local offer = context.store_item.offer
+	local store_item = context.store_item
+	self._store_item = store_item
+	local offer = store_item.offer
 	self._store_offer_is_bundle = offer.bundleInfo
 	self._content_blueprints = generate_blueprints_function(StoreItemDetailViewSettings.grid_size)
 	self._wallet_element = self:_add_element(ViewElementWallet, "wallet_element", 100)
@@ -180,16 +178,16 @@ StoreItemDetailView.on_enter = function (self)
 	self._widgets_by_name.purchase_item_button.content.visible = false
 	self._bundle_image = nil
 	local imageURL = nil
+	local media_array = offer.media
+	local media_array_count = media_array and #media_array or 0
 
-	if offer.media then
-		for i = 1, #offer.media do
-			local media = offer.media[i]
+	for i = 1, media_array_count do
+		local media = media_array[i]
 
-			if media.mediaSize == "large" then
-				imageURL = media.url
+		if media.mediaSize == "large" then
+			imageURL = media.url
 
-				break
-			end
+			break
 		end
 	end
 
@@ -240,21 +238,17 @@ StoreItemDetailView._setup_callbacks = function (self)
 end
 
 StoreItemDetailView._is_owned = function (self, items)
-	local total_count = 0
 	local owned_count = 0
 	local owned_items = {}
+	local total_count = #items
 
-	for i = 1, #items do
+	for i = 1, total_count do
 		local item = items[i]
-		total_count = total_count + 1
 		local is_owned = self:_is_item_owned(item)
 
 		if is_owned then
 			owned_count = owned_count + 1
-		end
-
-		if is_owned then
-			owned_items[#owned_items + 1] = item
+			owned_items[owned_count] = item
 		end
 	end
 
@@ -279,42 +273,36 @@ StoreItemDetailView._generate_element_from_item = function (self, entry)
 end
 
 StoreItemDetailView._setup_item_presentation = function (self)
-	local description_text = nil
 	local offer = self._store_item.offer
+	local items = self._items
 
-	if #self._items == 1 then
-		local entry = self._items[1]
+	if #items == 1 then
+		local entry = items[1]
 		entry.offer = offer
+		local item = entry.item
 
-		if entry.item then
-			local item = entry.item
-			local owned_count = 0
+		if item then
 			local element = self:_generate_element_from_item(entry)
-
-			if self:_is_item_owned(entry) then
-				owned_count = owned_count + 1
-			end
-
 			element.item_index = 1
 			element.total_count = 1
-			element.owned_count = owned_count
+			element.owned_count = self:_is_item_owned(entry) and 1 or 0
 			element.entry = entry
 			element.offer = offer
 			self._selected_element = element
 			local profile = self:_get_generic_profile_from_item(item)
+			local slots = item.slots
 
-			if item.slots then
-				profile.loadout[item.slots[1]] = item
+			if slots then
+				profile.loadout[slots[1]] = item
 			end
 
 			element.dummy_profile = profile
-			local title_text = ItemUtils.display_name(entry.real_item)
-			local item_type = ItemUtils.type_display_name(entry.real_item)
-			description_text = Localize(self._selected_element.item.description)
+			local title_text = ItemUtils.display_name(element.item)
+			local item_type = ItemUtils.type_display_name(element.item)
 
 			self:_setup_details(title_text, item_type)
-			self:_setup_description_grid(description_text)
-			self:_present_single_item()
+			self:_setup_description_grid(element.item)
+			self:_present_current_element()
 		end
 	else
 		local title_text = offer.sku.name or ""
@@ -329,17 +317,19 @@ StoreItemDetailView._setup_item_presentation = function (self)
 
 	self:_update_wallets()
 
-	if self._grid and self._selected_element then
-		if self._selected_element.item_index then
-			local index = self._selected_element.item_index
+	local grid = self._grid
 
-			self._grid:select_grid_index(index)
+	if grid and self._selected_element then
+		local item_index = self._selected_element.item_index
+
+		if item_index then
+			grid:select_grid_index(item_index)
 		else
-			self._grid:select_grid_index(nil, nil, nil, true)
+			grid:select_grid_index(nil, nil, nil, true)
 
 			self._details_widget.content.hotspot.is_selected = true
 		end
-	elseif self._grid then
+	elseif grid then
 		self:cb_on_bundle_pressed()
 	end
 end
@@ -487,12 +477,15 @@ StoreItemDetailView._setup_bundle_button = function (self)
 	}
 	local bundle_definition = UIWidget.create_definition(bundle_pass, "details_pivot", nil, size)
 	local bundle_widget = self:_create_widget("detail_widget", bundle_definition)
+	local content = bundle_widget.content
+	local style = bundle_widget.style
 
-	bundle_widget.content.hotspot.pressed_callback = function ()
+	content.hotspot.pressed_callback = function ()
 		self:cb_on_bundle_pressed()
 	end
 
-	bundle_widget.style.icon.material_values.texture_map = self._bundle_image and self._bundle_image.texture
+	local icon_style = style.icon
+	icon_style.material_values.texture_map = self._bundle_image and self._bundle_image.texture
 	local image_size = {
 		1720,
 		1580
@@ -502,10 +495,8 @@ StoreItemDetailView._setup_bundle_button = function (self)
 	local top_padding_to_trim = 240
 	local image_uv_height = size[2] / bundle_image_height
 	local uv_trim_top = top_padding_to_trim / image_size[2]
-	bundle_widget.style.icon.uvs[1][2] = uv_trim_top
-	bundle_widget.style.icon.uvs[2][2] = image_uv_height + uv_trim_top
-	local content = bundle_widget.content
-	local style = bundle_widget.style
+	icon_style.uvs[1][2] = uv_trim_top
+	icon_style.uvs[2][2] = image_uv_height + uv_trim_top
 	local offer = self._store_item.offer
 	local price_data = offer.price.amount
 	local type = price_data.type
@@ -518,8 +509,7 @@ StoreItemDetailView._setup_bundle_button = function (self)
 	local price_text_style = style.price_text
 	price_text_style.material = wallet_settings.font_gradient_material
 	local is_owned, owned_items = self:_is_owned(self._items)
-	local owned_items = owned_items and #owned_items or 0
-	local owned_count = owned_items
+	local owned_count = owned_items and #owned_items or 0
 	local total_count = #self._items
 
 	if owned_count and total_count and total_count > 0 then
@@ -535,25 +525,25 @@ StoreItemDetailView._setup_bundle_button = function (self)
 
 	local icon_margin = 0
 	local discount_margin = 10
-	local texture_width = bundle_widget.style.wallet_icon.size[1]
+	local texture_width = style.wallet_icon.size[1]
 	local price_style_options = UIFonts.get_font_options_by_style(price_text_style)
 	local text_width, _ = self:_text_size(content.price_text, price_text_style.font_type, price_text_style.font_size, {
 		1920,
 		1080
 	}, price_style_options)
 	price_text_style.offset[1] = -texture_width - icon_margin
-	bundle_widget.style.discount_price.offset[1] = price_text_style.offset[1] - text_width - discount_margin
+	style.discount_price.offset[1] = price_text_style.offset[1] - text_width - discount_margin
 	local localized_text = Localize("loc_premium_store_bundle_button_title")
-	content.title = string.format(localized_text, self._store_item.offer.sku.name)
+	content.title = string.format(localized_text, offer.sku.name)
 	local acquire_text = Localize("loc_premium_store_bundle_button_subtitle")
-	content.description = not is_owned and string.format(acquire_text, #self._items) or ""
-	local hightlight_color = Color.terminal_text_header(255, true)
+	content.description = not is_owned and string.format(acquire_text, total_count) or ""
 	local localized_string = Localize("loc_premium_store_bundle_items_owned")
-	content.owned_items = owned_items > 0 and owned_items < #offer.bundleInfo and string.format(localized_string, owned_items, #offer.bundleInfo) or ""
-	local title_max_width = (style.title.size and style.title.size[1] or size[1]) + (style.title.size_addition and style.title.size_addition[1] or 0)
+	content.owned_items = owned_count > 0 and owned_count < #offer.bundleInfo and string.format(localized_string, owned_count, #offer.bundleInfo) or ""
+	local title_style = style.title
+	local title_max_width = (title_style.size and title_style.size[1] or size[1]) + (title_style.size_addition and title_style.size_addition[1] or 0)
 	local description_max_width = (style.description.size and style.description.size[1] or size[1]) + (style.description.size_addition and style.description.size_addition[1] or 0)
-	local title_style_options = UIFonts.get_font_options_by_style(style.title)
-	local title_width, title_height = self:_text_size(content.title, style.title.font_type, style.title.font_size, {
+	local title_style_options = UIFonts.get_font_options_by_style(title_style)
+	local title_width, title_height = self:_text_size(content.title, title_style.font_type, title_style.font_size, {
 		title_max_width,
 		1080
 	}, title_style_options)
@@ -564,102 +554,111 @@ StoreItemDetailView._setup_bundle_button = function (self)
 	}, description_style_options)
 	local description_margin = 5
 	local total_size = title_height + description_margin + description_height
-	style.title.offset[2] = -(total_size * 0.5) + title_height * 0.5 - style.price_background.size[2] * 0.5
-	style.description.offset[2] = style.title.offset[2] + title_height * 0.5 + description_margin + description_height * 0.5
-	bundle_widget.content.size = size
+	title_style.offset[2] = -(total_size * 0.5) + title_height * 0.5 - style.price_background.size[2] * 0.5
+	style.description.offset[2] = title_style.offset[2] + title_height * 0.5 + description_margin + description_height * 0.5
+	content.size = size
 	self._details_widget = bundle_widget
 	self._widgets_by_name.grid_divider.content.visible = true
 end
 
 StoreItemDetailView._check_details_can_afford = function (self)
-	if self._details_widget and self._details_widget.style.price_text then
-		local cost = self._store_item.offer.price.amount.amount
-		local currency = self._store_item.offer.price.amount.type
+	local details_widget = self._details_widget
+	local price_style = details_widget and details_widget.style.price_text
+
+	if price_style then
+		local price_amount = self._store_item.offer.price.amount
+		local cost = price_amount.amount
+		local currency = price_amount.type
 		local can_afford = self:can_afford(cost, currency)
 		local wallet_settings = WalletSettings[currency]
-		self._details_widget.style.price_text.material = can_afford and wallet_settings.font_gradient_material or wallet_settings.font_gradient_material_insufficient_funds
+		price_style.material = can_afford and wallet_settings.font_gradient_material or wallet_settings.font_gradient_material_insufficient_funds
 	end
 end
 
-StoreItemDetailView._setup_description_grid = function (self, description_text)
-	if not description_text then
-		return
+StoreItemDetailView._setup_description_grid = function (self, item)
+	self:_destroy_description_grid()
+
+	local description_text = Localize(item.description)
+	local properties_text = ItemUtils.item_property_text(item, true)
+	local restriction_text, present_restrictions = ItemUtils.restriction_text(item)
+
+	if not present_restrictions then
+		restriction_text = nil
 	end
 
-	self:_destroy_description_grid()
+	local any_text = description_text or properties_text or restriction_text
+
+	if not any_text then
+		return
+	end
 
 	local widgets = {}
 	local alignment_widgets = {}
 	local scenegraph_id = "description_content_pivot"
-	local pass_template = Definitions.text_description_pass_template
 	local max_width = self._ui_scenegraph.description_grid.size[1]
-	local widget_definition = pass_template and UIWidget.create_definition(pass_template, scenegraph_id, nil, {
-		max_width,
-		0
-	})
-	local widget = self:_create_widget("description_widget", widget_definition)
-	local description_text_font_style = widget.style.text
-	widget.content.text = description_text
-	local text_options = UIFonts.get_font_options_by_style(widget.style.text)
-	local text_width, text_height = self:_text_size(description_text, description_text_font_style.font_type, description_text_font_style.font_size, {
-		max_width,
-		math.huge
-	}, text_options)
-	widget.content.size[2] = text_height
-	widgets[#widgets + 1] = widget
-	alignment_widgets[#alignment_widgets + 1] = widget
 
-	if #self._items == 1 then
-		local item = self._items[1].real_item
-		local restrictions_text, present_text = nil
+	local function _add_text_widget(pass_template, text)
+		local widget_definition = UIWidget.create_definition(pass_template, scenegraph_id, nil, {
+			max_width,
+			0
+		})
+		local widget = self:_create_widget(string.format("description_grid_widget_%d", #widgets), widget_definition)
+		widget.content.text = text
+		local widget_text_style = widget.style.text
+		local text_options = UIFonts.get_font_options_by_style(widget.style.text)
+		local _, text_height = self:_text_size(text, widget_text_style.font_type, widget_text_style.font_size, {
+			max_width,
+			math.huge
+		}, text_options)
+		widget.content.size[2] = text_height
+		widgets[#widgets + 1] = widget
+		alignment_widgets[#alignment_widgets + 1] = widget
+	end
 
-		if item.item_type == "WEAPON_SKIN" then
-			restrictions_text, present_text = ItemUtils.weapon_skin_requirement_text(item)
-		elseif item.item_type == "GEAR_UPPERBODY" or item.item_type == "GEAR_EXTRA_COSMETIC" or item.item_type == "GEAR_HEAD" or item.item_type == "GEAR_LOWERBODY" then
-			restrictions_text, present_text = ItemUtils.class_requirement_text(item)
-		end
-
-		if present_text then
-			local sub_title_margin = 10
-			local margin_compensation = 5
-			local restriction_pass_template = Definitions.item_restrictions_pass
-			local widget_definition = pass_template and UIWidget.create_definition(restriction_pass_template, scenegraph_id, nil, {
+	local function _add_spacing(height)
+		widgets[#widgets + 1] = nil
+		alignment_widgets[#alignment_widgets + 1] = {
+			size = {
 				max_width,
-				0
-			})
-			local widget = self:_create_widget("description_widget_restrictions", widget_definition)
-			widget.content.text = restrictions_text
-			local restriction_title_style = widget.style.title
-			local restriction_text_style = widget.style.text
-			local restriction_title_options = UIFonts.get_font_options_by_style(restriction_title_style)
-			local restriction_text_options = UIFonts.get_font_options_by_style(restriction_text_style)
-			local restriction_max_width = self._ui_scenegraph.item_restrictions.size[1]
-			local restriction_title_width, restriction_title_height = self:_text_size(widget.content.title, restriction_title_style.font_type, restriction_title_style.font_size, {
-				restriction_max_width,
-				math.huge
-			}, restriction_title_options)
-			local restriction_text_width, restriction_text_height = self:_text_size(widget.content.text, restriction_text_style.font_type, restriction_text_style.font_size, {
-				restriction_max_width,
-				math.huge
-			}, restriction_text_options)
-			local text_height = restriction_title_height + restriction_text_height + sub_title_margin
-
-			self:_set_scenegraph_size("item_restrictions_background", nil, text_height + margin_compensation * 2)
-			self:_set_scenegraph_size("item_restrictions", nil, text_height)
-
-			widget.style.text.offset[2] = restriction_title_height + sub_title_margin
-			widget.content.size[2] = text_height
-			local spacing_vertical = {
-				size = {
-					550,
-					80
-				}
+				height
 			}
-			widgets[#widgets + 1] = nil
-			alignment_widgets[#alignment_widgets + 1] = spacing_vertical
-			widgets[#widgets + 1] = widget
-			alignment_widgets[#alignment_widgets + 1] = widget
+		}
+	end
+
+	local desired_spacing = 50
+
+	if description_text then
+		if #widgets > 0 then
+			_add_spacing(desired_spacing)
 		end
+
+		_add_text_widget(Definitions.text_description_pass_template, description_text)
+
+		desired_spacing = 80
+	end
+
+	if properties_text then
+		if #widgets > 0 then
+			_add_spacing(desired_spacing)
+		end
+
+		_add_text_widget(Definitions.item_sub_title_pass, Utf8.upper(Localize("loc_item_property_header")))
+		_add_spacing(10)
+		_add_text_widget(Definitions.item_text_pass, properties_text)
+
+		desired_spacing = 50
+	end
+
+	if restriction_text then
+		if #widgets > 0 then
+			_add_spacing(desired_spacing)
+		end
+
+		_add_text_widget(Definitions.item_sub_title_pass, Utf8.upper(Localize("loc_item_equippable_on_header")))
+		_add_spacing(10)
+		_add_text_widget(Definitions.item_text_pass, restriction_text)
+
+		desired_spacing = 50
 	end
 
 	self._description_grid_widgets = widgets
@@ -690,25 +689,20 @@ StoreItemDetailView._setup_item_grid = function (self)
 
 	local widgets = {}
 	local alignment_widgets = {}
+	local items = self._items
 
-	for index, entry in ipairs(self._items) do
-		local widget_suffix = "entry_" .. tostring(index)
-		local scenegraph_id = "grid_content_pivot"
-		local total_count = 0
-		local owned_count = 0
-		local element = {}
-		total_count = 1
+	for index = 1, #items do
+		local entry = items[index]
+		local item = entry.item
 
-		if entry.item then
-			element = self:_generate_element_from_item(entry)
-
-			if self:_is_item_owned(entry) then
-				owned_count = owned_count + 1
-			end
-
+		if item then
+			local widget_suffix = "entry_" .. tostring(index)
+			local scenegraph_id = "grid_content_pivot"
+			local element = self:_generate_element_from_item(entry)
+			local is_owned = self:_is_item_owned(entry)
 			element.item_index = index
-			element.total_count = total_count
-			element.owned_count = owned_count
+			element.total_count = 1
+			element.owned_count = is_owned and 1 or 0
 			element.entry = entry
 			element.offer = entry.offer
 			local widget_type = "gear_item"
@@ -733,8 +727,8 @@ StoreItemDetailView._setup_item_grid = function (self)
 				end
 			end
 
-			local profile = self:_get_generic_profile_from_item(entry.item)
-			profile.loadout[entry.item.slots[1]] = entry.item
+			local profile = self:_get_generic_profile_from_item(item)
+			profile.loadout[item.slots[1]] = item
 			element.dummy_profile = profile
 
 			if widget then
@@ -754,8 +748,9 @@ StoreItemDetailView._setup_item_grid = function (self)
 		end
 	end
 
-	local num_items_text = string.format(Localize("loc_premium_store_items_in_collection"), #self._items)
-	self._widgets_by_name.grid_title.content.text = num_items_text
+	local num_items_text = string.format(Localize("loc_premium_store_items_in_collection"), #items)
+	local widgets_by_name = self._widgets_by_name
+	widgets_by_name.grid_title.content.text = num_items_text
 	self._grid_widgets = widgets
 	self._grid_alignment_widgets = alignment_widgets
 	local grid_scenegraph_id = "grid_background"
@@ -768,18 +763,16 @@ StoreItemDetailView._setup_item_grid = function (self)
 	local use_is_focused_for_navigation = true
 	local grid = UIWidgetGrid:new(self._grid_widgets, self._grid_alignment_widgets, self._ui_scenegraph, grid_scenegraph_id, grid_direction, grid_spacing, nil, use_is_focused_for_navigation)
 	self._grid = grid
-	local widgets_by_name = self._widgets_by_name
 	local grid_scrollbar_widget_id = "grid_scrollbar"
 	local scrollbar_widget = widgets_by_name[grid_scrollbar_widget_id]
 
 	grid:assign_scrollbar(scrollbar_widget, grid_pivot_scenegraph_id, grid_scenegraph_id)
 
 	local initial_scroll = self._current_scrollbar_progress or 0
+	self._current_scrollbar_progress = nil
 
 	grid:set_scroll_step_length(100)
 	grid:set_scrollbar_progress(initial_scroll)
-
-	self._current_scrollbar_progress = nil
 end
 
 StoreItemDetailView.set_expire_time = function (self, time, widget)
@@ -788,244 +781,348 @@ StoreItemDetailView.set_expire_time = function (self, time, widget)
 end
 
 StoreItemDetailView.cb_on_item_pressed = function (self, widget, element)
-	if self._selected_element ~= element then
-		self._grid:select_grid_index(nil, nil, nil, true)
-		self._grid:select_grid_index(nil)
-
-		self._last_grid_index = nil
-		local index = self._grid:index_by_widget(widget)
-
-		self._grid:select_grid_index(index)
-
-		local hotspot = self._previous_widget and self._previous_widget.content.hotspot
-		self._previous_widget = widget
-		self._details_widget.content.hotspot.is_selected = false
-		self._selected_element = element
-
-		if not Managers.ui:using_cursor_navigation() then
-			local scrollbar_animation_progress = self._grid:get_scrollbar_percentage_by_index(index)
-
-			self._grid:set_scrollbar_progress(scrollbar_animation_progress)
-		end
-
-		self:_present_single_item()
-		self:_update_purchase_buttons()
+	if self._selected_element == element then
+		return
 	end
+
+	self._selected_element = element
+	local grid = self._grid
+	local index = grid:index_by_widget(widget)
+
+	grid:select_grid_index(nil, nil, nil, true)
+	grid:select_grid_index(index)
+
+	self._last_grid_index = nil
+	self._details_widget.content.hotspot.is_selected = false
+
+	if not Managers.ui:using_cursor_navigation() then
+		local scrollbar_animation_progress = grid:get_scrollbar_percentage_by_index(index)
+
+		grid:set_scrollbar_progress(scrollbar_animation_progress)
+	end
+
+	self:_present_current_element()
+	self:_update_purchase_buttons()
 end
 
 StoreItemDetailView.cb_on_bundle_pressed = function (self)
-	if self._selected_element ~= self._store_item then
-		self._selected_element = self._store_item
-		self._details_widget.content.hotspot.is_selected = true
-
-		self._grid:select_grid_index(nil, nil, nil, true)
-		self._grid:select_grid_index(nil)
-		self:_present_single_item()
-		self:_update_purchase_buttons()
+	if self._selected_element == self._store_item then
+		return
 	end
+
+	self._selected_element = self._store_item
+	self._details_widget.content.hotspot.is_selected = true
+
+	self._grid:select_grid_index(nil, nil, nil, true)
+	self._grid:select_grid_index(nil)
+	self:_present_current_element()
+	self:_update_purchase_buttons()
 end
 
-StoreItemDetailView._present_single_item = function (self)
-	local title = ""
-	local sub_type = nil
+StoreItemDetailView._present_bundle = function (self, offer)
+	self:_destroy_profile()
 
-	self:_destroy_weapon()
-	self:_stop_previewing()
+	local widgets_by_name = self._widgets_by_name
+	local bundle_background_widget = widgets_by_name.bundle_background
+	local bundle_image = self._bundle_image
 
-	local element = self._selected_element
-	self._widgets_by_name.bundle_background.style.bundle.material_values.texture_map = nil
-	local offer = element.offer
-	local is_bundle = not not offer.bundleInfo
+	if bundle_image then
+		bundle_background_widget.style.bundle.material_values.texture_map = bundle_image.texture
+	end
 
-	if is_bundle then
+	local item_type_lookup = offer.description.type
+	local item_type_display_name_localized = ItemUtils.type_display_name({
+		item_type = item_type_lookup
+	})
+	local item_size = {
+		700,
+		60
+	}
+	local ui_renderer = self._ui_forward_renderer
+	local scenegraph_id = "item_name_pivot"
+	local widget_type = "item_name"
+	local template = self._content_blueprints[widget_type]
+	local title_item = {
+		display_name = offer.sku.name or "",
+		item_type = item_type_display_name_localized
+	}
+	local config = {
+		vertical_alignment = "bottom",
+		ignore_localization = true,
+		use_store_appearance = true,
+		horizontal_alignment = "right",
+		size = item_size,
+		item = title_item
+	}
+	local size = template.size_function and template.size_function(self, config, ui_renderer) or template.size
+	local pass_template = template.pass_template_function and template.pass_template_function(self, config, ui_renderer) or template.pass_template
+	local optional_style = template.style_function and template.style_function(self, config, size) or template.style
+	local widget_definition = pass_template and UIWidget.create_definition(pass_template, scenegraph_id, nil, size, optional_style)
+
+	if widget_definition then
+		local name = "item_name"
+		local widget = self:_create_widget(name, widget_definition)
+		widget.type = widget_type
+		local init = template.init
+
+		if init then
+			init(self, widget, config, nil, nil, ui_renderer)
+		end
+
+		self._item_name_widget = widget
+	end
+
+	local breed_name = self._presentation_profile and self._presentation_profile.archetype.breed or "human"
+	local default_camera_settings = self._breeds_default_camera_settings[breed_name]
+
+	self:_set_initial_viewport_camera_position(default_camera_settings)
+end
+
+StoreItemDetailView._present_item = function (self, item, visual_item)
+	local slot_name = item.slots[1]
+	self._selected_slot = ItemSlotSettings[slot_name]
+	local item_type = item.item_type
+	local preview_on_player = item_type ~= "WEAPON_RANGED" and item_type ~= "WEAPON_MELEE" and item_type ~= "WEAPON_SKIN" and item_type ~= "WEAPON_TRINKET"
+	local valid_on_profile = self._profile_spawner and self:_is_spawn_profile_by_item_valid(item)
+
+	if not preview_on_player or not valid_on_profile then
 		self:_destroy_profile()
+	end
 
-		if self._bundle_image then
-			self._widgets_by_name.bundle_background.style.bundle.material_values.texture_map = self._bundle_image.texture
-		end
+	local set_initial_viewport = false
 
-		local item_type_lookup = offer.description.type
-		local item_type_display_name_localized = ItemUtils.type_display_name({
-			item_type = item_type_lookup
-		})
-		self._widgets_by_name.item_restrictions.content.visible = false
-		local item_size = {
-			700,
-			60
-		}
-		local ui_renderer = self._ui_forward_renderer
-		local scenegraph_id = "item_name_pivot"
-		local widget_type = "item_name"
-		local template = self._content_blueprints[widget_type]
-		local title_item = {
-			display_name = offer.sku.name or "",
-			item_type = item_type_display_name_localized
-		}
-		local config = {
-			vertical_alignment = "bottom",
-			ignore_localization = true,
-			use_store_appearance = true,
-			horizontal_alignment = "right",
-			size = item_size,
-			item = title_item
-		}
-		local size = template.size_function and template.size_function(self, config, ui_renderer) or template.size
-		local pass_template = template.pass_template_function and template.pass_template_function(self, config, ui_renderer) or template.pass_template
-		local optional_style = template.style_function and template.style_function(self, config, size) or template.style
-		local widget_definition = pass_template and UIWidget.create_definition(pass_template, scenegraph_id, nil, size, optional_style)
-		local widget = nil
+	if not preview_on_player then
+		self._weapon_preview_show_original = false
 
-		if widget_definition then
-			local name = "item_name"
-			widget = self:_create_widget(name, widget_definition)
-			widget.type = widget_type
-			local init = template.init
+		self:_setup_weapon_preview()
+		self:_present_weapon(visual_item)
 
-			if init then
-				init(self, widget, config, nil, nil, ui_renderer)
-			end
+		set_initial_viewport = true
+	elseif not self._profile_spawner then
+		self:_generate_spawn_profile(item)
 
-			self._item_name_widget = widget
-		end
+		self._spawn_player = true
+		set_initial_viewport = true
+	end
 
+	if set_initial_viewport then
 		local breed_name = self._presentation_profile and self._presentation_profile.archetype.breed or "human"
 		local default_camera_settings = self._breeds_default_camera_settings[breed_name]
 
 		self:_set_initial_viewport_camera_position(default_camera_settings)
-	else
-		local slot_name = element.item.slots[1]
-		self._selected_slot = ItemSlotSettings[slot_name]
-		title = element.item.display_name and Localize(element.item.display_name) or ""
-		sub_type = ItemUtils.type_display_name(element.item)
-
-		if element.item.item_type == "WEAPON_RANGED" or element.item.item_type == "WEAPON_MELEE" or element.item.item_type == "WEAPON_SKIN" or element.item.item_type == "WEAPON_TRINKET" then
-			self._weapon_preview_show_original = false
-
-			self:_destroy_profile()
-			self:_setup_weapon_preview()
-			self:_present_weapon(element.visual_item)
-
-			local breed_name = self._presentation_profile and self._presentation_profile.archetype.breed or "human"
-			local default_camera_settings = self._breeds_default_camera_settings[breed_name]
-
-			self:_set_initial_viewport_camera_position(default_camera_settings)
-		else
-			if self._profile_spawner and not self:_is_spawn_profile_by_item_valid(element.item) then
-				self:_destroy_profile()
-			end
-
-			if not self._profile_spawner then
-				self._previewed_with_gear = false
-
-				self:_generate_spawn_profile(element.item)
-
-				local breed_name = self._presentation_profile.archetype.breed
-				local default_camera_settings = self._breeds_default_camera_settings[breed_name]
-
-				self:_set_initial_viewport_camera_position(default_camera_settings)
-
-				self._spawn_player = true
-			end
-
-			local initial_rotation = 0
-
-			if slot_name == "slot_gear_extra_cosmetic" then
-				initial_rotation = math.pi
-			end
-
-			self._initial_rotation = initial_rotation
-
-			if slot_name then
-				self._mannequin_loadout[slot_name] = element.item
-
-				if self._gear_loadout then
-					self._gear_loadout[slot_name] = element.item
-				end
-			end
-
-			self._previewed_gear_item_slot_name = slot_name
-
-			self:_trigger_zoom_logic(self._spawn_player)
-		end
-
-		local item_size = {
-			700,
-			60
-		}
-		local ui_renderer = self._ui_forward_renderer
-		local scenegraph_id = "item_name_pivot"
-		local widget_type = "item_name"
-		local template = self._content_blueprints[widget_type]
-		local title_item = {
-			display_name = title,
-			item_type = sub_type
-		}
-		local config = {
-			vertical_alignment = "bottom",
-			ignore_localization = true,
-			use_store_appearance = true,
-			horizontal_alignment = "right",
-			size = item_size,
-			item = title_item
-		}
-		local size = template.size_function and template.size_function(self, config, ui_renderer) or template.size
-		local pass_template = template.pass_template_function and template.pass_template_function(self, config, ui_renderer) or template.pass_template
-		local optional_style = template.style_function and template.style_function(self, config, size) or template.style
-		local widget_definition = pass_template and UIWidget.create_definition(pass_template, scenegraph_id, nil, size, optional_style)
-		local widget = nil
-
-		if widget_definition then
-			local name = "item_name"
-			widget = self:_create_widget(name, widget_definition)
-			widget.type = widget_type
-			local init = template.init
-
-			if init then
-				init(self, widget, config, nil, nil, ui_renderer)
-			end
-
-			self._item_name_widget = widget
-		end
-
-		local restrictions_text, present_text = nil
-
-		if element.item.item_type == "WEAPON_SKIN" then
-			restrictions_text, present_text = ItemUtils.weapon_skin_requirement_text(element.item)
-		elseif element.item.item_type == "GEAR_UPPERBODY" or element.item.item_type == "GEAR_EXTRA_COSMETIC" or element.item.item_type == "GEAR_HEAD" or element.item.item_type == "GEAR_LOWERBODY" then
-			restrictions_text, present_text = ItemUtils.class_requirement_text(element.item)
-		end
-
-		if present_text and #self._items > 1 then
-			local sub_title_margin = 10
-			local margin_compensation = 20
-			self._widgets_by_name.item_restrictions.content.text = restrictions_text
-			local restriction_title_style = self._widgets_by_name.item_restrictions.style.title
-			local restriction_text_style = self._widgets_by_name.item_restrictions.style.text
-			local restriction_title_options = UIFonts.get_font_options_by_style(restriction_title_style)
-			local restriction_text_options = UIFonts.get_font_options_by_style(restriction_text_style)
-			local restriction_max_width = self._ui_scenegraph.item_restrictions.size[1]
-			local restriction_title_width, restriction_title_height = self:_text_size(self._widgets_by_name.item_restrictions.content.title, restriction_title_style.font_type, restriction_title_style.font_size, {
-				restriction_max_width,
-				math.huge
-			}, restriction_title_options)
-			local restriction_text_width, restriction_text_height = self:_text_size(self._widgets_by_name.item_restrictions.content.text, restriction_text_style.font_type, restriction_text_style.font_size, {
-				restriction_max_width,
-				math.huge
-			}, restriction_text_options)
-			local text_height = restriction_title_height + restriction_text_height + sub_title_margin
-			local background_size = text_height + margin_compensation * 2
-
-			self:_set_scenegraph_size("item_restrictions_background", nil, background_size)
-			self:_set_scenegraph_size("item_restrictions", nil, text_height)
-
-			self._widgets_by_name.item_restrictions.style.text.offset[2] = restriction_title_height + sub_title_margin
-			self._widgets_by_name.item_restrictions.content.visible = true
-		else
-			self._widgets_by_name.item_restrictions.content.visible = false
-		end
 	end
 
-	self._valid_inspect = element.item and (element.item.item_type == "WEAPON_SKIN" or element.item.item_type == "GEAR_EXTRA_COSMETIC" or element.item.item_type == "GEAR_HEAD" or element.item.item_type == "GEAR_LOWERBODY" or element.item.item_type == "GEAR_UPPERBODY") or element.offer.bundleInfo
+	if preview_on_player then
+		local initial_rotation = 0
+
+		if slot_name == "slot_gear_extra_cosmetic" then
+			initial_rotation = math.pi
+		end
+
+		self._initial_rotation = initial_rotation
+
+		if slot_name then
+			self._mannequin_loadout[slot_name] = item
+			local gear_loadout = self._gear_loadout
+
+			if gear_loadout then
+				gear_loadout[slot_name] = item
+			end
+		end
+
+		self._previewed_gear_item_slot_name = slot_name
+
+		self:_trigger_zoom_logic(self._spawn_player)
+	end
+
+	local item_size = {
+		700,
+		60
+	}
+	local ui_renderer = self._ui_forward_renderer
+	local scenegraph_id = "item_name_pivot"
+	local widget_type = "item_name"
+	local template = self._content_blueprints[widget_type]
+	local title = item.display_name and Localize(item.display_name) or ""
+	local sub_type = ItemUtils.type_display_name(item)
+	local title_item = {
+		display_name = title,
+		item_type = sub_type
+	}
+	local config = {
+		vertical_alignment = "bottom",
+		ignore_localization = true,
+		use_store_appearance = true,
+		horizontal_alignment = "right",
+		size = item_size,
+		item = title_item
+	}
+	local size = template.size_function and template.size_function(self, config, ui_renderer) or template.size
+	local pass_template = template.pass_template_function and template.pass_template_function(self, config, ui_renderer) or template.pass_template
+	local optional_style = template.style_function and template.style_function(self, config, size) or template.style
+	local widget_definition = pass_template and UIWidget.create_definition(pass_template, scenegraph_id, nil, size, optional_style)
+
+	if widget_definition then
+		local name = "item_name"
+		local widget = self:_create_widget(name, widget_definition)
+		widget.type = widget_type
+		local init = template.init
+
+		if init then
+			init(self, widget, config, nil, nil, ui_renderer)
+		end
+
+		self._item_name_widget = widget
+	end
+end
+
+StoreItemDetailView._destroy_side_panel = function (self)
+	local side_panel_widgets = self._side_panel_widgets
+	local side_panel_count = side_panel_widgets and #side_panel_widgets or 0
+
+	for i = 1, side_panel_count do
+		local widget = side_panel_widgets[i]
+
+		self:_unregister_widget_name(widget.name)
+	end
+
+	self._side_panel_widgets = nil
+end
+
+StoreItemDetailView._setup_side_panel = function (self, element)
+	self:_destroy_side_panel()
+
+	local y_offset = 0
+	local scenegraph_id = "side_panel_area"
+	local max_width = self._ui_scenegraph[scenegraph_id].size[1]
+	local widgets = {}
+	self._side_panel_widgets = widgets
+
+	local function _add_text_widget(pass_template, text)
+		local widget_definition = UIWidget.create_definition(pass_template, scenegraph_id, nil, {
+			max_width,
+			0
+		})
+		local widget = self:_create_widget(string.format("side_panel_widget_%d", #widgets), widget_definition)
+		widget.content.text = text
+		widget.offset[2] = y_offset
+		local widget_text_style = widget.style.text
+		local text_options = UIFonts.get_font_options_by_style(widget.style.text)
+		local _, text_height = self:_text_size(text, widget_text_style.font_type, widget_text_style.font_size, {
+			max_width,
+			math.huge
+		}, text_options)
+		y_offset = y_offset + text_height
+		widget.content.size[2] = text_height
+		widgets[#widgets + 1] = widget
+	end
+
+	local function _add_spacing(height)
+		y_offset = y_offset + height
+	end
+
+	local offer = element.offer
+	local item = element.item
+	local is_bundle = not not offer.bundleInfo
+
+	if is_bundle or not item then
+		return
+	end
+
+	local properties_text = ItemUtils.item_property_text(item, true)
+	local restrictions_text, present_restrictions = ItemUtils.restriction_text(item, true)
+
+	if not present_restrictions then
+		restrictions_text = nil
+	end
+
+	local any_text = restrictions_text or properties_text
+	local should_display_side_panel = any_text and #self._items > 1
+
+	if not should_display_side_panel then
+		return
+	end
+
+	if properties_text then
+		if #widgets > 0 then
+			_add_spacing(24)
+		end
+
+		_add_text_widget(Definitions.premium_sub_title_pass, Utf8.upper(Localize("loc_item_property_header")))
+		_add_spacing(8)
+		_add_text_widget(Definitions.premium_text_pass, properties_text)
+	end
+
+	if restrictions_text then
+		if #widgets > 0 then
+			_add_spacing(24)
+		end
+
+		_add_text_widget(Definitions.item_sub_title_pass, Utf8.upper(Localize("loc_item_equippable_on_header")))
+		_add_spacing(8)
+		_add_text_widget(Definitions.item_text_pass, restrictions_text)
+	end
+
+	for i = 1, #widgets do
+		local widget_offset = widgets[i].offset
+		widget_offset[1] = 48
+		widget_offset[2] = widget_offset[2] - y_offset
+	end
+end
+
+local _inspect_on_multiple = {
+	"WEAPON_SKIN",
+	"GEAR_EXTRA_COSMETIC",
+	"GEAR_HEAD",
+	"GEAR_LOWERBODY",
+	"GEAR_UPPERBODY"
+}
+local _inspect_on_single = {
+	"WEAPON_SKIN",
+	"GEAR_EXTRA_COSMETIC"
+}
+
+StoreItemDetailView._should_show_inspect = function (self, element)
+	local offer = element.offer
+	local is_bundle = not not offer.bundleInfo
+
+	if is_bundle then
+		return true
+	end
+
+	local item = element.item
+	local item_type = item and item.item_type
+
+	if not item_type then
+		return false
+	end
+
+	local multiple_items = #self._items > 1
+	local appropriate_list = multiple_items and _inspect_on_multiple or _inspect_on_single
+
+	return table.array_contains(appropriate_list, item_type)
+end
+
+StoreItemDetailView._present_current_element = function (self)
+	self:_destroy_weapon()
+	self:_stop_previewing()
+
+	local element = self._selected_element
+	local widgets_by_name = self._widgets_by_name
+	local bundle_background_widget = widgets_by_name.bundle_background
+	bundle_background_widget.style.bundle.material_values.texture_map = nil
+	local offer = element.offer
+	local is_bundle = not not offer.bundleInfo
+
+	if is_bundle then
+		self:_present_bundle(offer)
+	else
+		self:_present_item(element.item, element.visual_item)
+	end
+
+	self:_setup_side_panel(element)
+
+	self._valid_inspect = self:_should_show_inspect(element)
 end
 
 StoreItemDetailView.cb_on_weapon_skin_preview_pressed = function (self)
@@ -1044,89 +1141,85 @@ StoreItemDetailView.cb_on_weapon_skin_preview_pressed = function (self)
 end
 
 StoreItemDetailView._destroy_grid = function (self)
-	if self._grid then
-		for i = 1, #self._grid_widgets do
-			local widget = self._grid_widgets[i]
-
-			self:_unregister_widget_name(widget.name)
-		end
-
-		self._grid = nil
-		self._grid_widgets = nil
-		self._grid_alignment_widgets = nil
+	if not self._grid then
+		return
 	end
+
+	local grid_widgets = self._grid_widgets
+
+	for i = 1, #grid_widgets do
+		local widget = grid_widgets[i]
+
+		self:_unregister_widget_name(widget.name)
+	end
+
+	self._grid = nil
+	self._grid_widgets = nil
+	self._grid_alignment_widgets = nil
 end
 
 StoreItemDetailView._destroy_description_grid = function (self)
-	if self._description_grid then
-		for i = 1, #self._description_grid_widgets do
-			local widget = self._description_grid_widgets[i]
-
-			self:_unregister_widget_name(widget.name)
-		end
-
-		self._description_grid = nil
-		self._description_grid_widgets = nil
-		self._description_grid_alignment_widgets = nil
+	if not self._description_grid then
+		return
 	end
+
+	local description_grid_widgets = self._description_grid_widgets
+
+	for i = 1, #description_grid_widgets do
+		local widget = description_grid_widgets[i]
+
+		self:_unregister_widget_name(widget.name)
+	end
+
+	self._description_grid = nil
+	self._description_grid_widgets = nil
+	self._description_grid_alignment_widgets = nil
 end
 
 StoreItemDetailView._destroy_details = function (self)
-	if self._details_widget then
-		self:_unregister_widget_name(self._details_widget.name)
-
-		self._details_widget = nil
+	if not self._details_widget then
+		return
 	end
+
+	self:_unregister_widget_name(self._details_widget.name)
+
+	self._details_widget = nil
 end
 
 StoreItemDetailView._get_generic_profile_from_item = function (self, item)
-	local item_gender, item_breed, item_archetype, dummy_profile = nil
 	local profile = self._profile
+	local item_gender, item_breed, item_archetype = nil
 
 	if profile then
-		if item.genders and not table.is_empty(item.genders) then
-			for i = 1, #item.genders do
-				local gender = item.genders[i]
+		local profile_gender = profile.gender
+		local item_genders = item.genders
 
-				if gender == profile.gender then
-					item_gender = profile.gender
-
-					break
-				end
-			end
+		if item_genders and not table.is_empty(item_genders) then
+			item_gender = table.array_contains(item_genders, profile_gender) and profile_gender
 		else
 			item_gender = profile.gender
 		end
 
-		if item.breeds and not table.is_empty(item.breeds) then
-			for i = 1, #item.breeds do
-				local breed = item.breeds[i]
+		local profile_breed = profile.breed
+		local item_breeds = item.breeds
 
-				if breed == profile.breed then
-					item_breed = profile.breed
-
-					break
-				end
-			end
+		if item_breeds and not table.is_empty(item_breeds) then
+			item_breed = table.array_contains(item_breeds, profile_breed) and profile_breed
 		else
 			item_breed = profile.breed
 		end
 
-		if item.archetypes and not table.is_empty(item.archetypes) then
-			for i = 1, #item.archetypes do
-				local archetype = item.archetypes[i]
+		local profile_archetype = profile.archetype
+		local item_archetypes = item.archetypes
 
-				if archetype == profile.archetype.name then
-					item_archetype = profile.archetype
-
-					break
-				end
-			end
+		if item_archetypes and not table.is_empty(item_archetypes) then
+			item_archetype = table.array_contains(item_archetypes, profile_archetype.name) and profile_archetype
 		else
 			item_archetype = profile.archetype
 		end
 	end
 
+	local dummy_profile = nil
 	local compatible_profile = item_gender and item_breed and item_archetype
 
 	if compatible_profile then
@@ -1181,7 +1274,6 @@ StoreItemDetailView._generate_spawn_profile = function (self, item)
 end
 
 StoreItemDetailView._is_spawn_profile_by_item_valid = function (self, item)
-	local required_profile = self:_get_generic_profile_from_item(item)
 	local current_profile = self._preview_profile
 
 	if not current_profile then
@@ -1189,7 +1281,12 @@ StoreItemDetailView._is_spawn_profile_by_item_valid = function (self, item)
 		current_profile = player:profile()
 	end
 
-	return required_profile.breed == current_profile.breed and required_profile.gender == current_profile.gender and required_profile.archetype.name == current_profile.archetype.name
+	local required_profile = self:_get_generic_profile_from_item(item)
+	local same_breed = required_profile.breed == current_profile.breed
+	local same_gender = required_profile.gender == current_profile.gender
+	local same_archetype = required_profile.archetype.name == current_profile.archetype.name
+
+	return same_breed and same_gender and same_archetype
 end
 
 StoreItemDetailView._generate_mannequin_loadout = function (self, profile)
@@ -1202,16 +1299,12 @@ StoreItemDetailView._generate_mannequin_loadout = function (self, profile)
 	local required_gender_item_names_per_slot = required_breed_item_names_per_slot and required_breed_item_names_per_slot[gender_name]
 
 	if required_gender_item_names_per_slot then
-		local required_items = required_gender_item_names_per_slot
+		for slot_name, slot_item_name in pairs(required_gender_item_names_per_slot) do
+			local item_definition = MasterItems.get_item(slot_item_name)
 
-		if required_items then
-			for slot_name, slot_item_name in pairs(required_items) do
-				local item_definition = MasterItems.get_item(slot_item_name)
-
-				if item_definition then
-					local slot_item = table.clone(item_definition)
-					new_loadout[slot_name] = slot_item
-				end
+			if item_definition then
+				local slot_item = table.clone(item_definition)
+				new_loadout[slot_name] = slot_item
 			end
 		end
 	end
@@ -1232,20 +1325,23 @@ StoreItemDetailView._setup_input_legend = function (self)
 end
 
 StoreItemDetailView._setup_background_world = function (self)
-	local context = self._context
 	local level_settings = StoreItemDetailViewSettings.level_settings
-	self._breeds_item_camera_by_slot_id = {}
-	self._breeds_default_camera_settings = {}
+	local breeds_item_camera_by_slot_id = {}
+	self._breeds_item_camera_by_slot_id = breeds_item_camera_by_slot_id
+	local breeds_default_camera_settings = {}
+	self._breeds_default_camera_settings = breeds_default_camera_settings
 	local starting_camera_unit = nil
 
 	for breed_name, settings in pairs(Breeds) do
-		if settings.breed_type == "player" then
+		local is_player = settings.breed_type == "player"
+
+		if is_player then
 			local default_camera_event_id = "event_register_cosmetics_preview_default_camera_" .. breed_name
 
 			self[default_camera_event_id] = function (self, camera_unit)
 				local camera_position = Unit.world_position(camera_unit, 1)
 				local camera_rotation = Unit.world_rotation(camera_unit, 1)
-				self._breeds_default_camera_settings[breed_name] = {
+				breeds_default_camera_settings[breed_name] = {
 					camera_unit = camera_unit,
 					original_position_boxed = Vector3Box(camera_position),
 					original_rotation_boxed = QuaternionBox(camera_rotation)
@@ -1261,15 +1357,17 @@ StoreItemDetailView._setup_background_world = function (self)
 			self:_register_event(default_camera_event_id)
 
 			for slot_name, slot in pairs(ItemSlotSettings) do
-				if slot.slot_type == "gear" then
+				local is_gear = slot.slot_type == "gear"
+
+				if is_gear then
 					local item_camera_event_id = "event_register_cosmetics_preview_item_camera_" .. breed_name .. "_" .. slot_name
 
 					self[item_camera_event_id] = function (self, camera_unit)
-						if not self._breeds_item_camera_by_slot_id[breed_name] then
-							self._breeds_item_camera_by_slot_id[breed_name] = {}
+						if not breeds_item_camera_by_slot_id[breed_name] then
+							breeds_item_camera_by_slot_id[breed_name] = {}
 						end
 
-						self._breeds_item_camera_by_slot_id[breed_name][slot_name] = camera_unit
+						breeds_item_camera_by_slot_id[breed_name][slot_name] = camera_unit
 
 						self:_unregister_event(item_camera_event_id)
 					end
@@ -1293,7 +1391,7 @@ StoreItemDetailView._setup_background_world = function (self)
 end
 
 StoreItemDetailView.on_resolution_modified = function (self)
-	self.super.on_resolution_modified(self)
+	StoreItemDetailView.super.on_resolution_modified(self)
 
 	if self._world_spawner then
 		self:_update_viewport_resolution()
@@ -1307,36 +1405,39 @@ StoreItemDetailView._update_viewport_resolution = function (self)
 	local scenegraph = self._ui_scenegraph
 	local id = "screen"
 	local x_scale, y_scale, w_scale, h_scale = UIScenegraph.get_scenegraph_id_screen_scale(scenegraph, id, scale)
+	local world_spawner = self._world_spawner
 
-	self._world_spawner:set_viewport_size(w_scale, h_scale)
-	self._world_spawner:set_viewport_position(x_scale, y_scale)
+	world_spawner:set_viewport_size(w_scale, h_scale)
+	world_spawner:set_viewport_position(x_scale, y_scale)
 end
 
 StoreItemDetailView.event_register_cosmetics_preview_character_spawn_point = function (self, spawn_point_unit)
 	self:_unregister_event("event_register_cosmetics_preview_character_spawn_point")
 
 	self._spawn_point_unit = spawn_point_unit
+	local context = self._context
 
-	if self._context then
-		self._context.spawn_point_unit = spawn_point_unit
+	if context then
+		context.spawn_point_unit = spawn_point_unit
 	end
 end
 
 StoreItemDetailView._setup_viewport_camera = function (self, camera_unit)
-	if not self._world_spawner then
+	local world_spawner = self._world_spawner
+
+	if not world_spawner then
 		self._pending_viewport_camera_unit = camera_unit
 
 		return
 	end
 
-	local context = self._context
 	local level_settings = StoreItemDetailViewSettings.level_settings
 	local viewport_name = level_settings.viewport_name
 	local viewport_type = level_settings.viewport_type
 	local viewport_layer = level_settings.viewport_layer
 	local shading_environment = level_settings.shading_environment
 
-	self._world_spawner:create_viewport(camera_unit, viewport_name, viewport_type, viewport_layer, shading_environment)
+	world_spawner:create_viewport(camera_unit, viewport_name, viewport_type, viewport_layer, shading_environment)
 
 	self._camera_zoomed_in = true
 
@@ -1355,11 +1456,14 @@ end
 StoreItemDetailView._stop_previewing = function (self)
 	self:_reset_mannequin()
 
-	if self._gear_loadout and self._default_gear_loadout then
-		table.clear(self._gear_loadout)
+	local loadout = self._gear_loadout
+	local default_loadout = self._default_gear_loadout
 
-		for key, value in pairs(self._default_gear_loadout) do
-			self._gear_loadout[key] = value
+	if loadout and default_loadout then
+		table.clear(loadout)
+
+		for key, value in pairs(default_loadout) do
+			loadout[key] = value
 		end
 	end
 
@@ -1371,32 +1475,32 @@ StoreItemDetailView._stop_previewing = function (self)
 end
 
 StoreItemDetailView._reset_mannequin = function (self)
-	if self._mannequin_loadout then
-		for key, value in pairs(self._mannequin_loadout) do
-			if self._default_mannequin_loadout[key] ~= self._mannequin_loadout[key] then
-				self._mannequin_loadout[key] = self._default_mannequin_loadout[key]
-			end
-		end
+	local mannequin_loadout = self._mannequin_loadout
 
-		local profile = self._presentation_profile
-		local archetype = profile and profile.archetype
-		local breed_name = profile and archetype.breed or ""
-		local gender_name = profile and profile.gender or ""
-		local required_breed_item_names_per_slot = UISettings.item_preview_required_slot_items_set_per_slot_by_breed_and_gender[breed_name]
-		local required_gender_item_names_per_slot = required_breed_item_names_per_slot and required_breed_item_names_per_slot[gender_name]
+	if not mannequin_loadout then
+		return
+	end
 
-		if required_gender_item_names_per_slot then
-			local required_items = required_gender_item_names_per_slot
+	local default_mannequin_loadout = self._default_mannequin_loadout
 
-			if required_items then
-				for required_item_slot_name, slot_item_name in pairs(required_items) do
-					local item_definition = MasterItems.get_item(slot_item_name)
+	for key, _ in pairs(mannequin_loadout) do
+		mannequin_loadout[key] = default_mannequin_loadout[key]
+	end
 
-					if item_definition then
-						local slot_item = table.clone(item_definition)
-						self._mannequin_loadout[required_item_slot_name] = slot_item
-					end
-				end
+	local profile = self._presentation_profile
+	local archetype = profile and profile.archetype
+	local breed_name = profile and archetype.breed or ""
+	local gender_name = profile and profile.gender or ""
+	local required_breed_item_names_per_slot = UISettings.item_preview_required_slot_items_set_per_slot_by_breed_and_gender[breed_name]
+	local required_gender_item_names_per_slot = required_breed_item_names_per_slot and required_breed_item_names_per_slot[gender_name]
+
+	if required_gender_item_names_per_slot then
+		for required_item_slot_name, slot_item_name in pairs(required_gender_item_names_per_slot) do
+			local item_definition = MasterItems.get_item(slot_item_name)
+
+			if item_definition then
+				local slot_item = table.clone(item_definition)
+				mannequin_loadout[required_item_slot_name] = slot_item
 			end
 		end
 	end
@@ -1415,7 +1519,9 @@ StoreItemDetailView.cb_on_camera_zoom_toggled = function (self, id, input_presse
 end
 
 StoreItemDetailView._can_zoom = function (self)
-	return self._selected_element and self._selected_element.item and (self._selected_element.item.item_type == "GEAR_EXTRA_COSMETIC" or self._selected_element.item.item_type == "GEAR_HEAD" or self._selected_element.item.item_type == "GEAR_LOWERBODY" or self._selected_element.item.item_type == "GEAR_UPPERBODY")
+	local item_type = table.nested_get(self, "_selected_element", "item", "item_type")
+
+	return item_type == "GEAR_EXTRA_COSMETIC" or item_type == "GEAR_HEAD" or item_type == "GEAR_LOWERBODY" or item_type == "GEAR_UPPERBODY"
 end
 
 StoreItemDetailView._trigger_zoom_logic = function (self, instant, optional_slot_name)
@@ -1469,28 +1575,6 @@ StoreItemDetailView._set_camera_item_slot_focus = function (self, breed_name, sl
 	world_spawner:set_camera_rotation_axis_offset("z", camera_world_rotation_z - default_camera_world_rotation_z, time, func_ptr)
 end
 
-StoreItemDetailView._set_camera_node_focus = function (self, node_name, time, func_ptr)
-	if node_name then
-		local profile_spawner = self._profile_spawner
-		local world_spawner = self._world_spawner
-		local base_world_position = profile_spawner:node_world_position(1)
-		local node_world_position = profile_spawner:node_world_position(node_name)
-		local target_position = node_world_position - base_world_position
-
-		world_spawner:set_camera_position_axis_offset("x", target_position.x, time, func_ptr)
-		world_spawner:set_camera_position_axis_offset("y", target_position.y, time, func_ptr)
-		world_spawner:set_camera_position_axis_offset("z", target_position.z, time, func_ptr)
-	end
-end
-
-StoreItemDetailView._set_camera_position_axis_offset = function (self, axis, value, animation_time, func_ptr)
-	self._world_spawner:set_camera_position_axis_offset(axis, value, animation_time, func_ptr)
-end
-
-StoreItemDetailView._set_camera_rotation_axis_offset = function (self, axis, value, animation_time, func_ptr)
-	self._world_spawner:set_camera_rotation_axis_offset(axis, value, animation_time, func_ptr)
-end
-
 StoreItemDetailView._set_initial_viewport_camera_position = function (self, default_camera_settings)
 	local world_spawner = self._world_spawner
 	local camera_unit = default_camera_settings.camera_unit
@@ -1510,6 +1594,7 @@ end
 
 StoreItemDetailView.on_exit = function (self)
 	self:_destroy_profile()
+	self:_destroy_side_panel()
 
 	if self._world_spawner then
 		self._world_spawner:destroy()
@@ -1542,7 +1627,7 @@ StoreItemDetailView.on_exit = function (self)
 		self._context.parent:_update_wallets()
 	end
 
-	self.super.on_exit(self)
+	StoreItemDetailView.super.on_exit(self)
 end
 
 StoreItemDetailView._handle_input = function (self, input_service)
@@ -1626,14 +1711,16 @@ StoreItemDetailView._on_navigation_input_changed = function (self)
 end
 
 StoreItemDetailView.update = function (self, dt, t, input_service)
-	if self._store_promise or self._purchase_promise or self._wallet_promise then
+	local has_promise = self._store_promise or self._purchase_promise or self._wallet_promise
+	self._show_loading = not not has_promise
+
+	if self._show_loading then
 		input_service = input_service:null_service()
-		self._show_loading = true
-	elseif self._show_loading then
-		self._show_loading = false
 	end
 
-	if self._spawn_player and self._spawn_point_unit then
+	local spawn_profile = self._spawn_player and self._spawn_point_unit
+
+	if spawn_profile then
 		local profile = self._presentation_profile
 		local initial_rotation = self._initial_rotation
 		local disable_rotation_input = self._disable_rotation_input
@@ -1658,12 +1745,14 @@ StoreItemDetailView.update = function (self, dt, t, input_service)
 	end
 
 	if self._should_expire then
-		local widget = self._widgets_by_name.timer_widget
+		local widgets_by_name = self._widgets_by_name
+		local timer_widget = widgets_by_name.timer_widget
 		local offer = self._store_item.offer
 		local time_remaining = self._context.parent:_set_expire_time(offer)
 
 		if not time_remaining then
-			self._widgets_by_name.purchase_item_button.content.hotspot.disabled = true
+			local purchase_button = widgets_by_name.purchase_item_button
+			purchase_button.content.hotspot.disabled = true
 
 			if self.closing_view then
 				return
@@ -1675,7 +1764,7 @@ StoreItemDetailView.update = function (self, dt, t, input_service)
 
 			self._should_expire = false
 		else
-			widget.content.text = time_remaining
+			timer_widget.content.text = time_remaining
 		end
 	end
 
@@ -1701,68 +1790,65 @@ StoreItemDetailView.update = function (self, dt, t, input_service)
 		self:_set_scenegraph_size("corner_top_right", total_corner_width, nil)
 	end
 
-	return self.super.update(self, dt, t, input_service)
+	return StoreItemDetailView.super.update(self, dt, t, input_service)
 end
 
 StoreItemDetailView._update_grid_widgets = function (self, dt, t, input_service)
+	local grid = self._grid
 	local widgets = self._grid_widgets
+	local widget_count = widgets and #widgets or 0
 
-	if widgets then
-		local handle_input = false
+	for i = 1, widget_count do
+		local widget = widgets[i]
+		local content = widget.content
+		local visible = grid:is_widget_visible(widget)
+		content.visible = visible
+		local widget_type = widget.type
+		local template = self._content_blueprints[widget_type]
+		local update = template and template.update
 
-		for i = 1, #widgets do
-			local widget = widgets[i]
-			local widget_type = widget.type
-			local template = self._content_blueprints[widget_type]
-			local update = template and template.update
-			local content = widget.content
-			local grid = self._grid
-			local visible = grid:is_widget_visible(widget)
-			content.visible = visible
-
-			if update then
-				update(self, widget, input_service, dt, t)
-			end
+		if update then
+			update(self, widget, input_service, dt, t)
 		end
 	end
 end
 
 StoreItemDetailView._update_grid_widgets_visibility = function (self)
 	local widgets = self._grid_widgets
+	local widget_count = widgets and #widgets or 0
+	local ui_renderer = self._ui_offscreen_renderer
+	local blueprints = self._content_blueprints
 
-	if widgets then
-		local num_widgets = #widgets
-		local ui_renderer = self._ui_offscreen_renderer
+	for i = 1, widget_count do
+		local widget = widgets[i]
+		local widget_type = widget.type
+		local template = blueprints[widget_type]
 
-		for i = 1, num_widgets do
-			local widget = widgets[i]
-			local widget_type = widget.type
-			local template = self._content_blueprints[widget_type]
+		if template then
+			local content = widget.content
+			local element = content.element
+			local visible = content.visible
+			local unload_function = template.unload_icon
 
-			if template then
-				local content = widget.content
-				local element = content.element
-				local visible = content.visible
-
-				if not visible and template.unload_icon then
-					template.unload_icon(self, widget, element, ui_renderer)
-				end
+			if not visible and unload_function then
+				unload_function(self, widget, element, ui_renderer)
 			end
 		end
+	end
 
-		for i = 1, num_widgets do
-			local widget = widgets[i]
-			local widget_type = widget.type
-			local template = self._content_blueprints[widget_type]
+	for i = 1, widget_count do
+		local widget = widgets[i]
+		local widget_type = widget.type
+		local template = blueprints[widget_type]
 
-			if template then
-				local content = widget.content
-				local element = content.element
-				local visible = content.visible
+		if template then
+			local content = widget.content
+			local element = content.element
+			local visible = content.visible
+			local load_function = template.load_icon
 
-				if visible and template.load_icon then
-					template.load_icon(self, widget, element, ui_renderer, element.dummy_profile)
-				end
+			if visible and load_function then
+				load_function(self, widget, element, ui_renderer, element.dummy_profile)
 			end
 		end
 	end
@@ -1794,16 +1880,13 @@ StoreItemDetailView._spawn_profile = function (self, profile, initial_rotation, 
 		local ignore_direct_application = true
 
 		self._profile_spawner:set_character_default_rotation(initial_rotation, ignore_direct_application)
-
-		local instant = true
-
-		self._profile_spawner:set_character_rotation(initial_rotation, instant)
 	end
 
 	if current_rotation_angle or initial_rotation then
 		local instant = true
+		local rotation = (initial_rotation or 0) + (current_rotation_angle or 0)
 
-		self._profile_spawner:set_character_rotation((initial_rotation or 0) + (current_rotation_angle or 0), instant)
+		self._profile_spawner:set_character_rotation(rotation, instant)
 	end
 
 	if disable_rotation_input then
@@ -1838,66 +1921,60 @@ StoreItemDetailView.cb_on_close_pressed = function (self)
 	self:_play_sound(UISoundEvents.default_menu_exit)
 end
 
-StoreItemDetailView._destroy_set_widgets = function (self)
-	if self._set_widgets then
-		for i = 1, #self._set_widgets do
-			local widget = self._set_widgets[i]
-
-			self:_unregister_widget_name(widget.name)
-		end
-
-		self._set_widgets = nil
-	end
-end
-
 StoreItemDetailView._hide_elements = function (self)
-	self._widgets_by_name.grid_title.content.visible = false
-	self._widgets_by_name.title.content.visible = false
-	self._widgets_by_name.background.content.visible = false
-	self._widgets_by_name.grid_scrollbar.content.visible = false
-	self._widgets_by_name.description_scrollbar.content.visible = false
-	self._widgets_by_name.item_restrictions.content.visible = false
-	self._widgets_by_name.timer_widget.content.visible = false
-	self._widgets_by_name.bundle_background.content.visible = false
+	local widgets_by_name = self._widgets_by_name
+	widgets_by_name.grid_title.content.visible = false
+	widgets_by_name.title.content.visible = false
+	widgets_by_name.background.content.visible = false
+	widgets_by_name.grid_scrollbar.content.visible = false
+	widgets_by_name.description_scrollbar.content.visible = false
+	widgets_by_name.timer_widget.content.visible = false
+	widgets_by_name.bundle_background.content.visible = false
 
 	self:_destroy_grid()
 	self:_destroy_description_grid()
 	self:_destroy_details()
 	self:_destroy_price_presentation()
+	self:_destroy_side_panel()
 
-	if self._item_name_widget then
-		self._item_name_widget.content.visible = false
+	local item_name_widget = self._item_name_widget
+
+	if item_name_widget then
+		item_name_widget.content.visible = false
 	end
 
-	self._widgets_by_name.purchase_item_button.content.visible = false
-	self._widgets_by_name.owned_info_text.content.visible = false
-	self._widgets_by_name.grid_divider.content.visible = false
+	widgets_by_name.purchase_item_button.content.visible = false
+	widgets_by_name.owned_info_text.content.visible = false
+	widgets_by_name.grid_divider.content.visible = false
 end
 
 StoreItemDetailView._show_elements = function (self)
-	self._widgets_by_name.grid_title.content.visible = true
-	self._widgets_by_name.title.content.visible = true
-	self._widgets_by_name.background.content.visible = true
-	self._widgets_by_name.grid_scrollbar.content.visible = true
-	self._widgets_by_name.description_scrollbar.content.visible = true
-	self._widgets_by_name.item_restrictions.content.visible = true
-	self._widgets_by_name.timer_widget.content.visible = true
-	self._widgets_by_name.bundle_background.content.visible = true
+	local widgets_by_name = self._widgets_by_name
+	widgets_by_name.grid_title.content.visible = true
+	widgets_by_name.title.content.visible = true
+	widgets_by_name.background.content.visible = true
+	widgets_by_name.grid_scrollbar.content.visible = true
+	widgets_by_name.description_scrollbar.content.visible = true
+	widgets_by_name.timer_widget.content.visible = true
+	widgets_by_name.bundle_background.content.visible = true
+	local item_name_widget = self._item_name_widget
 
-	if self._item_name_widget then
-		self._item_name_widget.content.visible = true
+	if item_name_widget then
+		item_name_widget.content.visible = true
 	end
 
-	self._widgets_by_name.grid_title.content.visible = true
-	self._widgets_by_name.grid_divider.content.visible = true
+	widgets_by_name.grid_title.content.visible = true
+	widgets_by_name.grid_divider.content.visible = true
 
 	self:_setup_item_presentation()
-	self:_present_single_item()
+	self:_present_current_element()
 	self:_update_purchase_buttons()
 end
 
 StoreItemDetailView.draw = function (self, dt, t, input_service, layer)
-	if self._show_loading then
+	local is_loading = self._show_loading
+
+	if is_loading then
 		input_service = input_service:null_service()
 	end
 
@@ -1909,12 +1986,13 @@ StoreItemDetailView.draw = function (self, dt, t, input_service, layer)
 	render_settings.scale = render_scale
 	render_settings.inverse_scale = render_scale and 1 / render_scale
 	local ui_scenegraph = self._ui_scenegraph
+	local grid = self._grid
 
-	if self._grid then
-		self._grid:update(dt, t, input_service)
+	if grid then
+		grid:update(dt, t, input_service)
 		self:_update_grid_widgets(dt, t, input_service)
 
-		local current_scrollbar_progress = self._grid:scrollbar_progress()
+		local current_scrollbar_progress = grid:scrollbar_progress()
 
 		if self._current_scrollbar_progress ~= current_scrollbar_progress then
 			self._current_scrollbar_progress = current_scrollbar_progress
@@ -1922,88 +2000,99 @@ StoreItemDetailView.draw = function (self, dt, t, input_service, layer)
 			self:_update_grid_widgets_visibility()
 		end
 
-		if self._selected_grid_index ~= self._grid:selected_grid_index() then
-			self._selected_grid_index = self._grid:selected_grid_index()
+		local selected_grid_index = grid:selected_grid_index()
+		local grid_widgets = self._grid_widgets
 
-			if self._selected_grid_index and self._grid_widgets[self._selected_grid_index] then
-				self._grid_widgets[self._selected_grid_index].content.hotspot.pressed_callback()
-			end
+		if self._selected_grid_index ~= selected_grid_index and grid_widgets[selected_grid_index] then
+			grid_widgets[selected_grid_index].content.hotspot.pressed_callback()
 		end
+
+		self._selected_grid_index = selected_grid_index
 	end
 
-	if self._description_grid then
-		self._description_grid:update(dt, t, input_service)
+	local description_grid = self._description_grid
+
+	if description_grid then
+		description_grid:update(dt, t, input_service)
 	end
 
 	UIRenderer.begin_pass(ui_forward_renderer, ui_scenegraph, input_service, dt, render_settings)
 	self:_draw_widgets(dt, t, input_service, ui_forward_renderer)
 
 	local wallet_widgets = self._wallet_widgets
+	local wallet_widget_count = wallet_widgets and #wallet_widgets or 0
 
-	if wallet_widgets then
-		for i = 1, #wallet_widgets do
-			local widget = wallet_widgets[i]
+	for i = 1, wallet_widget_count do
+		local widget = wallet_widgets[i]
 
-			UIWidget.draw(widget, ui_forward_renderer)
-		end
+		UIWidget.draw(widget, ui_forward_renderer)
 	end
 
 	local price_widgets = self._price_widgets
+	local price_widget_count = wallet_widgets and #wallet_widgets or 0
 
-	if price_widgets then
-		for i = 1, #price_widgets do
-			local widget = price_widgets[i]
+	for i = 1, price_widget_count do
+		local widget = price_widgets[i]
 
-			UIWidget.draw(widget, ui_forward_renderer)
-		end
-	end
-
-	local set_widgets = self._set_widgets
-
-	if set_widgets then
-		for i = 1, #set_widgets do
-			local widget = set_widgets[i]
-
-			UIWidget.draw(widget, ui_forward_renderer)
-		end
+		UIWidget.draw(widget, ui_forward_renderer)
 	end
 
 	local aquilas_widgets = self._aquilas_widgets
+	local aquilas_widget_count = aquilas_widgets and #aquilas_widgets or 0
 
-	if self._aquilas_widgets then
-		for i = 1, #aquilas_widgets do
-			local widget = aquilas_widgets[i]
+	for i = 1, aquilas_widget_count do
+		local widget = aquilas_widgets[i]
 
-			UIWidget.draw(widget, ui_forward_renderer)
-		end
+		UIWidget.draw(widget, ui_forward_renderer)
 	end
 
-	if self._show_loading and self._loading_widget then
-		UIWidget.draw(self._loading_widget, ui_forward_renderer)
+	local side_panel_widgets = self._side_panel_widgets
+	local side_panel_widget_count = side_panel_widgets and #side_panel_widgets or 0
+
+	for i = 1, side_panel_widget_count do
+		local widget = side_panel_widgets[i]
+
+		UIWidget.draw(widget, ui_forward_renderer)
 	end
 
-	if self._details_widget then
-		UIWidget.draw(self._details_widget, ui_forward_renderer)
+	local loading_widget = self._loading_widget
+
+	if loading_widget and self._show_loading then
+		UIWidget.draw(loading_widget, ui_forward_renderer)
 	end
 
-	if self._item_name_widget then
-		UIWidget.draw(self._item_name_widget, ui_forward_renderer)
+	local details_widget = self._details_widget
+
+	if details_widget then
+		UIWidget.draw(details_widget, ui_forward_renderer)
+	end
+
+	local item_name_widget = self._item_name_widget
+
+	if item_name_widget then
+		UIWidget.draw(item_name_widget, ui_forward_renderer)
 	end
 
 	UIRenderer.end_pass(ui_forward_renderer)
 	self:_draw_grid(dt, t, input_service)
 	self:_draw_description_grid(dt, t, input_service)
 
-	if self._weapon_preview then
-		self._weapon_preview:draw(dt, t, ui_renderer, render_settings, input_service)
+	local weapon_preview = self._weapon_preview
+
+	if weapon_preview then
+		weapon_preview:draw(dt, t, ui_renderer, render_settings, input_service)
 	end
 
-	if self._input_legend_element then
-		self._input_legend_element:draw(dt, t, ui_forward_renderer, render_settings, input_service)
+	local input_legend_element = self._input_legend_element
+
+	if input_legend_element then
+		input_legend_element:draw(dt, t, ui_forward_renderer, render_settings, input_service)
 	end
 
-	if self._wallet_element then
-		self._wallet_element:draw(dt, t, ui_forward_renderer, render_settings, input_service)
+	local wallet_element = self._wallet_element
+
+	if wallet_element then
+		wallet_element:draw(dt, t, ui_forward_renderer, render_settings, input_service)
 	end
 
 	self:_draw_render_target()
@@ -2087,34 +2176,38 @@ StoreItemDetailView._draw_description_grid = function (self, dt, t, input_servic
 end
 
 StoreItemDetailView._setup_weapon_preview = function (self)
-	if not self._weapon_preview then
-		local reference_name = "weapon_preview"
-		local layer = 1
-		self._weapon_preview = self:_add_element(ViewElementInventoryWeaponPreview, reference_name, layer, {
-			ignore_blur = true,
-			draw_background = false
-		})
-
-		self:_update_weapon_preview_viewport()
+	if self._weapon_preview then
+		return
 	end
+
+	local reference_name = "weapon_preview"
+	local layer = 1
+	self._weapon_preview = self:_add_element(ViewElementInventoryWeaponPreview, reference_name, layer, {
+		ignore_blur = true,
+		draw_background = false
+	})
+
+	self:_update_weapon_preview_viewport()
 end
 
 StoreItemDetailView._update_weapon_preview_viewport = function (self)
 	local weapon_preview = self._weapon_preview
 
-	if weapon_preview then
-		local width_scale = 1
-		local height_scale = 1
-		local x_scale = 0
-		local y_scale = 0
-
-		weapon_preview:set_viewport_position_normalized(x_scale, y_scale)
-		weapon_preview:set_viewport_size_normalized(width_scale, height_scale)
-
-		local weapon_x_scale, weapon_y_scale = self:_get_weapon_spawn_position_normalized()
-
-		weapon_preview:set_weapon_position_normalized(weapon_x_scale, weapon_y_scale)
+	if not weapon_preview then
+		return
 	end
+
+	local width_scale = 1
+	local height_scale = 1
+	local x_scale = 0
+	local y_scale = 0
+
+	weapon_preview:set_viewport_position_normalized(x_scale, y_scale)
+	weapon_preview:set_viewport_size_normalized(width_scale, height_scale)
+
+	local weapon_x_scale, weapon_y_scale = self:_get_weapon_spawn_position_normalized()
+
+	weapon_preview:set_weapon_position_normalized(weapon_x_scale, weapon_y_scale)
 end
 
 StoreItemDetailView._get_weapon_spawn_position_normalized = function (self)
@@ -2131,26 +2224,29 @@ StoreItemDetailView._get_weapon_spawn_position_normalized = function (self)
 end
 
 StoreItemDetailView._destroy_weapon_preview = function (self)
-	if self._weapon_preview then
-		local reference_name = "weapon_preview"
-
-		self:_remove_element(reference_name)
-
-		self._weapon_preview = nil
+	if not self._weapon_preview then
+		return
 	end
+
+	local reference_name = "weapon_preview"
+
+	self:_remove_element(reference_name)
+
+	self._weapon_preview = nil
 end
 
 StoreItemDetailView._present_weapon = function (self, item)
 	local disable_auto_spin = true
 	self._can_preview_with_gear = false
+	local weapon_preview = self._weapon_preview
 
-	self._weapon_preview:present_item(item, disable_auto_spin)
-	self._weapon_preview:center_align(0, {
+	weapon_preview:present_item(item, disable_auto_spin)
+	weapon_preview:center_align(0, {
 		-0.5,
 		-2,
 		-0.2
 	})
-	self._weapon_preview:set_force_allow_rotation(true)
+	weapon_preview:set_force_allow_rotation(true)
 end
 
 StoreItemDetailView._destroy_weapon = function (self)
@@ -2158,47 +2254,48 @@ StoreItemDetailView._destroy_weapon = function (self)
 end
 
 StoreItemDetailView._destroy_profile = function (self)
-	if self._profile_spawner then
-		self._profile_spawner:destroy()
-
-		self._profile_spawner = nil
+	if not self._profile_spawner then
+		return
 	end
+
+	self._profile_spawner:destroy()
+
+	self._profile_spawner = nil
 end
 
 StoreItemDetailView._destroy_price_presentation = function (self)
-	if self._price_widgets then
-		for i = 1, #self._price_widgets do
-			local widget = self._price_widgets[i]
+	local price_widgets = self._price_widgets
 
-			self:_unregister_widget_name(widget.name)
-		end
-
-		self._price_widgets = nil
+	if not price_widgets then
+		return
 	end
+
+	for i = 1, #price_widgets do
+		local widget = price_widgets[i]
+
+		self:_unregister_widget_name(widget.name)
+	end
+
+	self._price_widgets = nil
 end
 
 StoreItemDetailView._update_price_presentation = function (self)
 	local offer = self._store_offer_is_bundle and self._store_item.offer or self._selected_element.offer
-	local total_width = 0
-	local price_widget = self._widgets_by_name.price_item_text
 	local price = offer.price and offer.price.amount
 
 	if not price then
 		return
 	end
 
+	local widgets_by_name = self._widgets_by_name
+	local price_widget = widgets_by_name.price_item_text
 	local content = price_widget.content
 	local style = price_widget.style
-	local texture_width = price_widget.style.price_icon.size[1]
-	local icon_margin = 0
-	local discount_margin = 10
 	price_widget.content.element = offer
+	content.discount_price = ""
 
 	if offer.discount then
 		style.discount_price.text_color = Color.terminal_text_body(255, true)
-		content.discount_price = ""
-	else
-		content.discount_price = ""
 	end
 
 	content.price = offer.owned and string.format("%s ", Localize("loc_item_owned")) or ""
@@ -2212,6 +2309,10 @@ StoreItemDetailView._update_price_presentation = function (self)
 		1920,
 		1080
 	}, price_style_options)
+	local total_width = 0
+	local icon_margin = 0
+	local discount_margin = 10
+	local texture_width = style.price_icon.size[1]
 	price_widget.style.price.offset[1] = -texture_width - icon_margin
 	total_width = icon_margin + texture_width + text_width
 
@@ -2223,14 +2324,14 @@ StoreItemDetailView._update_price_presentation = function (self)
 
 	local wallet_settings = WalletSettings.aquilas
 	local font_gradient_material = wallet_settings.font_gradient_material
-	local icon_texture_small = wallet_settings.icon_texture_small
 	style.price.material = not offer.owned and font_gradient_material
 	style.price.text_color = offer.owned and Color.terminal_text_header(255, true) or Color.white(255, true)
 	content.price_icon = nil
-	local discount_banner_widget = self._widgets_by_name.promo
+	local discount_banner_widget = widgets_by_name.promo
 	local discount_content = discount_banner_widget.content
+	local selected_element = self._selected_element
 
-	if self._selected_element.offer.bundleInfo then
+	if selected_element.offer.bundleInfo then
 		if offer.discount_percent and not offer.owned then
 			discount_content.discount_banner = true
 			local index = 1
@@ -2251,12 +2352,20 @@ StoreItemDetailView._update_price_presentation = function (self)
 			end
 		end
 
-		self._widgets_by_name.promo.content.visible = not offer.owned
+		widgets_by_name.promo.content.visible = not offer.owned
 	end
 end
 
+local function get_item_type(type)
+	local item_type_localization_key = UISettings.item_type_localization_lookup[Utf8.upper(type)]
+
+	return item_type_localization_key and Localize(item_type_localization_key)
+end
+
 StoreItemDetailView._update_purchase_buttons = function (self)
-	if not self._selected_element then
+	local selected_element = self._selected_element
+
+	if not selected_element then
 		return
 	end
 
@@ -2266,7 +2375,7 @@ StoreItemDetailView._update_purchase_buttons = function (self)
 	local offer = self._store_item.offer
 	local is_selected_item_owned = false
 
-	if self._selected_element.offer.bundleInfo then
+	if selected_element.offer.bundleInfo then
 		is_selected_item_owned = is_owned
 		local owned_skus = {}
 
@@ -2281,45 +2390,48 @@ StoreItemDetailView._update_purchase_buttons = function (self)
 
 		offer.owned_skus = not table.is_empty(owned_skus) and owned_skus or nil
 	else
+		local selected_gear_id = selected_element.item.gear_id
+
 		for i = 1, #owned_items do
 			local owned_item = owned_items[i]
 
-			if owned_item.item.gear_id == self._selected_element.item.gear_id then
+			if owned_item.item.gear_id == selected_gear_id then
 				is_selected_item_owned = true
+
+				break
 			end
 		end
 	end
 
-	self._widgets_by_name.background.content.force_show_price = self._should_expire
-	self._widgets_by_name.purchase_item_button.content.visible = true
-	self._widgets_by_name.purchase_item_button.content.hotspot.disabled = is_selected_item_owned
-	self._widgets_by_name.purchase_item_button.content.visible = not is_selected_item_owned
-	self._widgets_by_name.owned_info_text.content.visible = #self._items > 1 and is_selected_item_owned
-	local purchase_button_text = nil
+	local widgets_by_name = self._widgets_by_name
+	widgets_by_name.background.content.force_show_price = self._should_expire
+	widgets_by_name.owned_info_text.content.visible = #self._items > 1 and is_selected_item_owned
+	local purchase_item_button = widgets_by_name.purchase_item_button
+	purchase_item_button.content.visible = true
+	purchase_item_button.content.hotspot.disabled = is_selected_item_owned
+	purchase_item_button.content.visible = not is_selected_item_owned
 
 	self:_update_price_presentation()
 
-	local selected_offer = self._selected_element.offer
+	local selected_offer = selected_element.offer
 	local cost = selected_offer.price.amount.amount
 	local currency = selected_offer.price.amount.type
 	local can_afford = self:can_afford(cost, currency)
-	local item_type_lookup = selected_offer.bundleInfo and selected_offer.description.type or self._selected_element.item.item_type
-	local item_type_localization_key = UISettings.item_type_localization_lookup[Utf8.upper(item_type_lookup)]
-	local item_type = item_type_localization_key and Localize(item_type_localization_key) or ""
+	local purchase_button_text = nil
 
-	if can_afford or is_selected_item_owned then
+	if is_selected_item_owned then
+		purchase_button_text = Utf8.upper(Localize("loc_item_owned"))
+	elseif can_afford then
+		local item_type_lookup = selected_offer.bundleInfo and selected_offer.description.type or selected_element.item.item_type
+		local item_type = get_item_type(item_type_lookup) or ""
 		purchase_button_text = Utf8.upper(string.format("%s %s", Localize("loc_premium_store_purchase_item"), item_type))
 	else
 		purchase_button_text = Utf8.upper(Localize("loc_premium_store_purchase_credits"))
 	end
 
-	if is_selected_item_owned then
-		purchase_button_text = Utf8.upper(Localize("loc_item_owned"))
-	end
-
-	self._widgets_by_name.purchase_item_button.content.original_text = purchase_button_text
-	local purchase_item_button_style_options = UIFonts.get_font_options_by_style(self._widgets_by_name.purchase_item_button.style.text)
-	local purchase_item_button_width, purchase_item_button_height = self:_text_size(purchase_button_text, self._widgets_by_name.purchase_item_button.style.text.font_type, self._widgets_by_name.purchase_item_button.style.text.font_size, {
+	purchase_item_button.content.original_text = purchase_button_text
+	local purchase_item_button_style_options = UIFonts.get_font_options_by_style(purchase_item_button.style.text)
+	local purchase_item_button_width, purchase_item_button_height = self:_text_size(purchase_button_text, purchase_item_button.style.text.font_type, purchase_item_button.style.text.font_size, {
 		1920,
 		ButtonPassTemplates.default_button.size[2]
 	}, purchase_item_button_style_options)
@@ -2328,46 +2440,134 @@ StoreItemDetailView._update_purchase_buttons = function (self)
 end
 
 StoreItemDetailView._update_wallets = function (self)
-	if self._wallet_element then
-		self._wallet_promise = self._wallet_element:update_wallets():next(function ()
-			self._wallet_promise = nil
+	local wallet_element = self._wallet_element
 
-			self:_update_purchase_buttons()
-		end):catch(function (error)
-			self._wallet_promise = nil
-		end)
-
-		return self._wallet_promise
+	if not wallet_element then
+		return Promise:resolved()
 	end
 
-	return Promise:resolved()
+	self._wallet_promise = wallet_element:update_wallets():next(function ()
+		self._wallet_promise = nil
+
+		self:_update_purchase_buttons()
+	end):catch(function (error)
+		self._wallet_promise = nil
+	end)
+
+	return self._wallet_promise
 end
 
 StoreItemDetailView.can_afford = function (self, cost, currency)
-	local can_afford = true
 	local current_balance = self._wallet_element:get_amount_by_currency(currency)
-	can_afford = cost <= current_balance
 
-	return can_afford
+	return cost <= current_balance
+end
+
+StoreItemDetailView._make_purchase = function (self, is_bundle, offer, wallet_data, purchased_items)
+	local purchase_button_widget = self._widgets_by_name.purchase_item_button
+	self._purchase_promise = Managers.data_service.store:purchase_item_with_wallet(offer, wallet_data):next(function (_)
+		if self._destroyed or not self._purchase_promise then
+			return
+		end
+
+		local parent = self._context.parent
+
+		parent:play_vo_events(StoreItemDetailViewSettings.vo_event_vendor_purchase, "purser_a", nil, 1.4)
+
+		self._purchase_promise = parent:_update_store_page():next(function (data)
+			self._store_item = data or self._store_item
+
+			return self:_update_wallets()
+		end):next(function ()
+			self._purchase_promise = nil
+
+			if self.closing_view then
+				return
+			end
+
+			self:_play_sound(UISoundEvents.aquilas_vendor_on_purchase)
+
+			local condense_notifications = #purchased_items >= 3
+
+			for i = 1, #purchased_items do
+				local item_not_owned = purchased_items[i]
+				local item = item_not_owned.item
+
+				ItemUtils.mark_item_id_as_new(item, true)
+
+				if not condense_notifications then
+					Managers.event:trigger("event_add_notification_message", "item_granted", item)
+				end
+			end
+
+			if condense_notifications then
+				local message = Localize("loc_premium_store_notification_success_bundle", true, {
+					item = offer.sku.name
+				})
+
+				Managers.event:trigger("event_add_notification_message", "default", message)
+			end
+
+			local items = self._items
+			local owned_items = self._owned_items
+
+			if is_bundle or #items == 1 or #owned_items == #items then
+				local view_name = self.view_name
+
+				Managers.ui:close_view(view_name)
+			else
+				self:_setup_item_presentation()
+				self:_present_current_element()
+			end
+		end):catch(function (error)
+			self._purchase_promise = nil
+
+			if self.closing_view then
+				return
+			end
+
+			self:_update_purchase_buttons()
+
+			if is_bundle or #self._items == 1 then
+				local view_name = self.view_name
+
+				Managers.ui:close_view(view_name)
+			else
+				self:_setup_item_presentation()
+				self:_present_current_element()
+			end
+		end)
+	end):catch(function (error)
+		purchase_button_widget.content.hotspot.disabled = false
+		local notification_string = Localize("loc_premium_store_notification_fail")
+
+		Managers.event:trigger("event_add_notification_message", "alert", {
+			text = notification_string
+		})
+
+		self._popup_id = nil
+		self._purchase_promise = nil
+
+		self:_update_purchase_buttons()
+	end)
 end
 
 StoreItemDetailView.cb_on_purchase_pressed = function (self)
-	local offer = self._selected_element.offer
-	local wallet_type = offer.price.amount.type
-	local context, item_name, item_type = nil
-	local is_bundle = not not self._selected_element.offer.bundleInfo
+	local selected_element = self._selected_element
+	local offer = selected_element.offer
+	local item_name, item_type = nil
+	local is_bundle = not not selected_element.offer.bundleInfo
 
 	if not is_bundle then
-		local sub_type = self._selected_element.item.item_type
+		local sub_type = selected_element.item.item_type
 		local item_type_display_name_localized = ItemUtils.type_display_name({
 			item_type = sub_type
 		})
-		item_name = Localize(self._selected_element.item.display_name)
+		item_name = Localize(selected_element.item.display_name)
 		item_type = item_type_display_name_localized
 	else
 		item_name = offer.sku.name
-		local item_type_localization_key = UISettings.item_type_localization_lookup[Utf8.upper(offer.description.type)]
-		item_type = item_type_localization_key and Localize(item_type_localization_key)
+		item_type = get_item_type(offer.description.type)
 		local num_items_text = Localize("loc_premium_store_num_items", true, {
 			count = #offer.bundleInfo
 		})
@@ -2382,171 +2582,86 @@ StoreItemDetailView.cb_on_purchase_pressed = function (self)
 	local cost = offer.price.amount.amount
 	local currency = offer.price.amount.type
 	local can_afford = self:can_afford(cost, currency)
-	local item_cost = offer.price.amount.amount
-	local current_balance = self._wallet_element:get_amount_by_currency(wallet_type)
-	local new_balance = current_balance - item_cost
-	local wallet_data = self._wallet_element:get_wallet_by_type(wallet_type)
 
-	if can_afford then
-		self._widgets_by_name.purchase_item_button.content.hotspot.disabled = true
-		local items_not_owned = {}
-		local purchased_items = self._items
+	if not can_afford then
+		self:_hide_elements()
+		self:_destroy_weapon()
+		self:_destroy_profile()
+		self:_create_aquilas_presentation(offer, item_name)
 
-		if not is_bundle and #self._items > 1 then
-			purchased_items = {
-				self._selected_element
-			}
-		end
-
-		if self._owned_items and not table.is_empty(self._owned_items) and #purchased_items > 1 then
-			for i = 1, #purchased_items do
-				local item = self._items[i]
-				local found = false
-
-				for j = 1, #self._owned_items do
-					local owned_item = self._owned_items[j]
-
-					if owned_item == item then
-						found = true
-
-						break
-					end
-				end
-
-				if found == false then
-					items_not_owned[#items_not_owned + 1] = item
-				end
-			end
-		else
-			items_not_owned = purchased_items
-		end
-
-		context = {
-			type = "offer",
-			title_text = "loc_premium_store_confirm_purchase_title",
-			description_text = "loc_premium_store_confirm_purchase_description",
-			description_text_params = {
-				item_name = item_name,
-				item_cost = item_cost,
-				current_balance = current_balance,
-				new_balance = new_balance
-			},
-			offer = offer,
-			offer_name = item_name,
-			offer_type = item_type,
-			options = {
-				{
-					text = "loc_popup_button_confirm",
-					close_on_pressed = true,
-					callback = callback(function ()
-						self._purchase_promise = Managers.data_service.store:purchase_item_with_wallet(offer, wallet_data):next(function (data)
-							if self._destroyed or not self._purchase_promise then
-								return
-							end
-
-							self._context.parent:play_vo_events(StoreItemDetailViewSettings.vo_event_vendor_purchase, "purser_a", nil, 1.4)
-
-							self._purchase_promise = self._context.parent:_update_store_page():next(function (data)
-								self._purchase_promise = self:_update_wallets():next(function ()
-									self._purchase_promise = nil
-
-									if self.closing_view then
-										return
-									end
-
-									self:_play_sound(UISoundEvents.aquilas_vendor_on_purchase)
-
-									for i = 1, #items_not_owned do
-										local item_not_owned = items_not_owned[i]
-										local item = item_not_owned.item
-
-										ItemUtils.mark_item_id_as_new(item, true)
-
-										if #items_not_owned < 3 then
-											Managers.event:trigger("event_add_notification_message", "item_granted", item)
-										end
-									end
-
-									if #items_not_owned >= 3 then
-										local message = Localize("loc_premium_store_notification_success_bundle", true, {
-											item = offer.sku.name
-										})
-
-										Managers.event:trigger("event_add_notification_message", "default", message)
-									end
-
-									if is_bundle or #self._items == 1 or #self._owned_items == #self._items then
-										local view_name = self.view_name
-
-										Managers.ui:close_view(view_name)
-									else
-										self._store_item = data or self._store_item
-
-										self:_setup_item_presentation()
-										self:_present_single_item()
-									end
-								end)
-							end):catch(function (error)
-								self._purchase_promise = nil
-
-								if self.closing_view then
-									return
-								end
-
-								self:_update_purchase_buttons()
-
-								if is_bundle or #self._items == 1 then
-									local view_name = self.view_name
-
-									Managers.ui:close_view(view_name)
-								else
-									self:_setup_item_presentation()
-									self:_present_single_item()
-								end
-							end)
-						end):catch(function (data)
-							self._widgets_by_name.purchase_item_button.content.hotspot.disabled = false
-							local notification_string = Localize("loc_premium_store_notification_fail")
-
-							Managers.event:trigger("event_add_notification_message", "alert", {
-								text = notification_string
-							})
-
-							self._popup_id = nil
-							self._purchase_promise = nil
-
-							self:_update_purchase_buttons()
-						end)
-					end)
-				},
-				{
-					text = "loc_popup_button_cancel",
-					template_type = "terminal_button_small",
-					close_on_pressed = true,
-					hotkey = "back",
-					callback = callback(function ()
-						self._widgets_by_name.purchase_item_button.content.hotspot.disabled = false
-						self._popup_id = nil
-
-						self:_update_purchase_buttons()
-					end)
-				}
-			}
-		}
-
-		Managers.event:trigger("event_show_ui_popup", context, function (id)
-			self._popup_id = id
-		end)
+		self._aquilas_showing = true
 
 		return
 	end
 
-	self:_hide_elements()
-	self:_destroy_weapon()
-	self:_destroy_profile()
-	self:_create_aquilas_presentation(offer, item_name)
+	local purchase_button_widget = self._widgets_by_name.purchase_item_button
+	purchase_button_widget.content.hotspot.disabled = true
+	local purchased_items = self._items
 
-	self._aquilas_showing = true
+	if not is_bundle and #purchased_items > 1 then
+		purchased_items = {
+			selected_element
+		}
+	end
+
+	local owned_items = self._owned_items
+	local items_not_owned = purchased_items
+
+	if owned_items and not table.is_empty(owned_items) and #purchased_items > 1 then
+		items_not_owned = {}
+
+		for i = 1, #purchased_items do
+			local item = purchased_items[i]
+			local already_owned = table.array_contains(owned_items, item)
+
+			if not already_owned then
+				items_not_owned[#items_not_owned + 1] = item
+			end
+		end
+	end
+
+	local wallet_type = offer.price.amount.type
+	local item_cost = offer.price.amount.amount
+	local current_balance = self._wallet_element:get_amount_by_currency(wallet_type)
+	local new_balance = current_balance - item_cost
+	local wallet_data = self._wallet_element:get_wallet_by_type(wallet_type)
+	local context = {
+		type = "offer",
+		title_text = "loc_premium_store_confirm_purchase_title",
+		description_text = "loc_premium_store_confirm_purchase_description",
+		description_text_params = {
+			item_name = item_name,
+			item_cost = item_cost,
+			current_balance = current_balance,
+			new_balance = new_balance
+		},
+		offer = offer,
+		offer_name = item_name,
+		offer_type = item_type,
+		options = {
+			{
+				text = "loc_popup_button_confirm",
+				close_on_pressed = true,
+				callback = callback(self, "_make_purchase", is_bundle, offer, wallet_data, items_not_owned)
+			},
+			{
+				text = "loc_popup_button_cancel",
+				template_type = "terminal_button_small",
+				close_on_pressed = true,
+				hotkey = "back",
+				callback = callback(function ()
+					purchase_button_widget.content.hotspot.disabled = false
+					self._popup_id = nil
+
+					self:_update_purchase_buttons()
+				end)
+			}
+		}
+	}
+
+	Managers.event:trigger("event_show_ui_popup", context, function (id)
+		self._popup_id = id
+	end)
 end
 
 StoreItemDetailView._create_aquilas_presentation = function (self, offer, item_name)
@@ -2610,13 +2725,13 @@ StoreItemDetailView._create_aquilas_presentation = function (self, offer, item_n
 		local widgets_count_per_row = {}
 
 		for offerIdx = 1, #all_aquila_offers do
-			local offer = all_aquila_offers[offerIdx]
-			local amount = offer.value.amount
+			local aquila_offer = all_aquila_offers[offerIdx]
+			local amount = aquila_offer.value.amount
 
-			if offer[platform] and money_required <= amount then
-				available_aquilas[#available_aquilas + 1] = offer
+			if aquila_offer[platform] and money_required <= amount then
+				available_aquilas[#available_aquilas + 1] = aquila_offer
 				valid_offers = valid_offers + 1
-				local bonus_aquila = offer.bonus or UISettings.bonus_aquila_values[offerIdx] or 0
+				local bonus_aquila = aquila_offer.bonus or UISettings.bonus_aquila_values[offerIdx] or 0
 
 				if bonus_aquila and bonus_aquila > 0 then
 					bonus_offer_count = bonus_offer_count + 1
@@ -2638,26 +2753,23 @@ StoreItemDetailView._create_aquilas_presentation = function (self, offer, item_n
 			return b.value.amount < a.value.amount
 		end)
 
-		local i = 0
-
 		for offerIdx = 1, #available_aquilas do
-			local offer = available_aquilas[offerIdx]
+			local aquila_offer = available_aquilas[offerIdx]
 			local element = {}
-			i = i + 1
-			local values = offer[platform]
+			local values = aquila_offer[platform]
 
 			if values and values.priceCents and values.currency then
 				element.formattedPrice = string.format("%.2f %s", values.priceCents / 100, values.currency)
 			else
-				element.formattedPrice = offer.price.amount.formattedPrice
+				element.formattedPrice = aquila_offer.price.amount.formattedPrice
 			end
 
-			element.title = offer.value.amount
+			element.title = aquila_offer.value.amount
 			local description = ""
-			local bonus_aquila = offer.bonus or UISettings.bonus_aquila_values[offerIdx] or 0
+			local bonus_aquila = aquila_offer.bonus or UISettings.bonus_aquila_values[offerIdx] or 0
 
 			if bonus_aquila and bonus_aquila > 0 then
-				local aquilas = offer.value.amount
+				local aquilas = aquila_offer.value.amount
 				local aquila_minus_bonus = aquilas - bonus_aquila
 				local bonus_text = Localize("loc_premium_store_credits_bonus", true, {
 					amount = bonus_aquila
@@ -2666,7 +2778,7 @@ StoreItemDetailView._create_aquilas_presentation = function (self, offer, item_n
 			end
 
 			element.description = description
-			element.offer = offer
+			element.offer = aquila_offer
 			element.item_types = {
 				"currency"
 			}
@@ -2686,14 +2798,14 @@ StoreItemDetailView._create_aquilas_presentation = function (self, offer, item_n
 			end
 
 			local widget_definition = UIWidget.create_definition(pass_template, scenegraph_id, nil, size)
-			local name = "currency_widget_" .. i
+			local name = "currency_widget_" .. offerIdx
 			local widget = self:_create_widget(name, widget_definition)
 			widget.type = "aquila_button"
-			local row = not use_same_size_on_all_offers and (size == large_size and 1 or 2) or math.ceil(i / max_allowed_items_per_row)
+			local row = not use_same_size_on_all_offers and (size == large_size and 1 or 2) or math.ceil(offerIdx / max_allowed_items_per_row)
 			local start_row = not use_same_size_on_all_offers and (row == 1 and 0 or bonus_offer_count) or (row - 1) * max_allowed_items_per_row
 			total_elements_in_row = total_elements_in_row or row == 1 and max_allowed_items_per_row or valid_offers - max_allowed_items_per_row
 			local end_row = start_row + total_elements_in_row
-			local element_position = end_row - i
+			local element_position = end_row - offerIdx
 			widget.row = row
 			size_per_row[row] = size_per_row[row] or {}
 			size_per_row[row][1] = (size_per_row[row][1] or 0) + size[1] + spacing[1]
@@ -2704,16 +2816,17 @@ StoreItemDetailView._create_aquilas_presentation = function (self, offer, item_n
 				0
 			}
 			local init = template.init
-			element.media_url = offer.mediaUrl
+			local media_url = aquila_offer.mediaUrl
 
-			if element.media_url then
-				Managers.url_loader:load_texture(element.media_url):next(function (data)
-					element.texture_map = data.texture
-					self._url_textures[#self._url_textures + 1] = data
+			if media_url then
+				element.media_url = media_url
 
-					if init then
-						init(self, widget, element, "cb_on_aquila_pressed")
-					end
+				Managers.url_loader:load_texture(media_url):next(function (media_data)
+					local texture = media_data.texture
+					element.texture_map = texture
+					widget.style.texture.material_values.main_texture = texture
+					local url_textures = self._url_textures
+					url_textures[#url_textures + 1] = media_data
 				end)
 			end
 
@@ -2734,7 +2847,7 @@ StoreItemDetailView._create_aquilas_presentation = function (self, offer, item_n
 				description_width,
 				description_height
 			}
-			widgets[i] = widget
+			widgets[offerIdx] = widget
 			widget_grid_position_by_index[#widget_grid_position_by_index + 1] = {
 				row = row,
 				element_position_in_row = total_elements_in_row - element_position,
@@ -2782,7 +2895,7 @@ StoreItemDetailView._create_aquilas_presentation = function (self, offer, item_n
 			widgets_position_by_index = widget_grid_position_by_index,
 			num_rows = needed_rows,
 			widgets_count_per_row = widgets_count_per_row,
-			total_widgets = #self._aquilas_widgets
+			total_widgets = #widgets
 		}
 
 		if not self._using_cursor_navigation then
@@ -2792,9 +2905,10 @@ StoreItemDetailView._create_aquilas_presentation = function (self, offer, item_n
 			self:_select_aquila_widget_by_index(self._selected_aquila_index)
 		end
 
-		self._widgets_by_name.aquilas_background.content.visible = true
-		self._widgets_by_name.required_aquilas_text.content.visible = true
-		self._widgets_by_name.required_aquilas_text.content.text = string.format("%s ", Localize("loc_premium_store_required_credits", true, {
+		local widgets_by_name = self._widgets_by_name
+		widgets_by_name.aquilas_background.content.visible = true
+		widgets_by_name.required_aquilas_text.content.visible = true
+		widgets_by_name.required_aquilas_text.content.text = string.format("%s ", Localize("loc_premium_store_required_credits", true, {
 			offer = item_name,
 			value = money_required
 		}))
@@ -2836,19 +2950,20 @@ StoreItemDetailView.cb_on_aquila_pressed = function (self, widget, element)
 end
 
 StoreItemDetailView._destroy_aquilas_presentation = function (self)
-	if self._aquilas_widgets then
-		for i = 1, #self._aquilas_widgets do
-			local widget = self._aquilas_widgets[i]
-			local widget_name = widget.name
+	local aquilas_widgets = self._aquilas_widgets
+	local aquilas_widget_count = aquilas_widgets and #aquilas_widgets or 0
 
-			self:_unregister_widget_name(widget_name)
-		end
+	for i = 1, aquilas_widget_count do
+		local widget = aquilas_widgets[i]
+		local widget_name = widget.name
 
-		self._aquilas_widgets = nil
+		self:_unregister_widget_name(widget_name)
 	end
 
-	self._widgets_by_name.required_aquilas_text.content.visible = false
-	self._widgets_by_name.aquilas_background.content.visible = false
+	self._aquilas_widgets = nil
+	local widgets_by_name = self._widgets_by_name
+	widgets_by_name.required_aquilas_text.content.visible = false
+	widgets_by_name.aquilas_background.content.visible = false
 end
 
 StoreItemDetailView._select_aquila_widget_by_row = function (self, direction)
@@ -2856,32 +2971,33 @@ StoreItemDetailView._select_aquila_widget_by_row = function (self, direction)
 		return
 	end
 
-	local new_selection_row, new_selection_index = nil
+	local navigation_data = self._aquilas_navigation_data
+	local new_selection_row = nil
+	local current_row = self._selected_aquila_row
 
 	if direction == "up" then
-		new_selection_row = self._selected_aquila_row > 1 and self._selected_aquila_row - 1 or self._selected_aquila_row
+		new_selection_row = math.max(current_row - 1, 1)
 	elseif direction == "down" then
-		new_selection_row = self._selected_aquila_row < self._aquilas_navigation_data.num_rows and self._selected_aquila_row + 1 or self._selected_aquila_row
+		new_selection_row = math.max(current_row + 1, navigation_data.num_rows)
 	end
 
 	if new_selection_row then
-		local row_size_top = self._aquilas_navigation_data.widgets_count_per_row[1]
-		local row_size_bottom = self._aquilas_navigation_data.widgets_count_per_row[2]
+		local current_selection_index = self._selected_aquila_index
+		local row_size_top = navigation_data.widgets_count_per_row[1]
+		local row_size_bottom = navigation_data.widgets_count_per_row[2]
+		local start_position, end_position, delta = nil
 
 		if direction == "up" then
-			local start_row_position = 1
-			local end_row_position = start_row_position + row_size_top - 1
-			local grid_diff = (row_size_bottom - row_size_top) * 0.5
-			local new_position = math.floor(self._selected_aquila_index - row_size_top - grid_diff)
-			new_selection_index = math.clamp(new_position, start_row_position, end_row_position)
+			start_position = 1
+			end_position = start_position + row_size_top - 1
+			delta = 0.5 * (row_size_top - row_size_bottom) - row_size_top
 		elseif direction == "down" then
-			local start_row_position = row_size_top + 1
-			local end_row_position = start_row_position + row_size_bottom - 1
-			local grid_diff = (row_size_top - row_size_bottom) * 0.5
-			local new_position = math.floor(self._selected_aquila_index + row_size_top - grid_diff)
-			new_selection_index = math.clamp(new_position, start_row_position, end_row_position)
+			start_position = row_size_top + 1
+			end_position = start_position + row_size_bottom - 1
+			delta = 0.5 * (row_size_bottom - row_size_top) + row_size_top
 		end
 
+		local new_selection_index = math.clamp(math.floor(current_selection_index + delta), start_position, end_position)
 		self._selected_aquila_row = new_selection_row
 
 		self:_select_aquila_widget_by_index(new_selection_index)
@@ -2889,37 +3005,30 @@ StoreItemDetailView._select_aquila_widget_by_row = function (self, direction)
 end
 
 StoreItemDetailView._select_aquila_widget_by_index = function (self, index)
-	if not self._aquilas_widgets then
+	local aquilas_widgets = self._aquilas_widgets
+
+	if not aquilas_widgets then
 		return
 	end
 
 	if not index then
-		for i = 1, #self._aquilas_widgets do
-			local widget = self._aquilas_widgets[i]
+		for i = 1, #aquilas_widgets do
+			local widget = aquilas_widgets[i]
 			widget.content.hotspot.is_focused = false
 		end
 
 		return
 	end
 
-	local widgets_position_by_index = self._aquilas_navigation_data.widgets_position_by_index
-	local focused_index = nil
+	local navigation_data = self._aquilas_navigation_data
+	local widgets_position_by_index = navigation_data.widgets_position_by_index
+	local focused_index = table.index_of_condition(widgets_position_by_index, function (widget)
+		return index == widget.grid_index and widget.row == self._selected_aquila_row
+	end)
 
-	for i = 1, #self._aquilas_widgets do
-		local data = widgets_position_by_index[i]
-
-		if index == data.grid_index then
-			if data.row == self._selected_aquila_row then
-				focused_index = i
-			end
-
-			break
-		end
-	end
-
-	if focused_index then
-		for i = 1, #self._aquilas_widgets do
-			local widget = self._aquilas_widgets[i]
+	if focused_index >= 1 then
+		for i = 1, #aquilas_widgets do
+			local widget = aquilas_widgets[i]
 			widget.content.hotspot.is_focused = i == focused_index
 		end
 
@@ -2929,108 +3038,71 @@ end
 
 StoreItemDetailView.cb_on_inspect_pressed = function (self)
 	local view_name = "cosmetics_inspect_view"
-	local previewed_item = self._selected_element.item
-	local is_bundle = not not self._selected_element.offer.bundleInfo
+	local selected_element = self._selected_element
+	local offer = selected_element.offer
+	local previewed_item = selected_element.item
+	local is_bundle = not not offer.bundleInfo
+	local context = nil
 
 	if is_bundle then
-		if not Managers.ui:view_active(view_name) then
-			local context = {
-				use_store_appearance = true,
-				bundle = {
-					image = self._bundle_image,
-					title = self._selected_element.offer.sku.name,
-					description = self._selected_element.offer.sku.description,
-					type = self._selected_element.offer.description.type
-				}
+		context = {
+			use_store_appearance = true,
+			bundle = {
+				image = self._bundle_image,
+				title = offer.sku.name,
+				description = offer.sku.description,
+				type = offer.description.type
 			}
-
-			Managers.ui:open_view(view_name, nil, nil, nil, nil, context)
-
-			self._inpect_view_opened = view_name
-		end
+		}
 	elseif previewed_item then
 		local item_type = previewed_item.item_type
 		local is_weapon = item_type == "WEAPON_MELEE" or item_type == "WEAPON_RANGED"
-		local view_name = "cosmetics_inspect_view"
 
 		if is_weapon or item_type == "GADGET" then
 			view_name = "inventory_weapon_details_view"
 		end
 
-		if not Managers.ui:view_active(view_name) then
-			local context = nil
+		local player = self:_player()
+		local player_profile = player:profile()
+		local include_skin_item_texts = true
+		local item = item_type == "WEAPON_SKIN" and ItemUtils.weapon_skin_preview_item(previewed_item, include_skin_item_texts) or previewed_item
+		local is_item_supported_on_played_character = false
+		local item_archetypes = item.archetypes
 
-			if item_type == "WEAPON_SKIN" then
-				local player = self:_player()
-				local player_profile = player:profile()
-				local include_skin_item_texts = true
-				local item = ItemUtils.weapon_skin_preview_item(previewed_item, include_skin_item_texts)
-				local is_item_supported_on_played_character = false
-
-				if item.archetypes and not table.is_empty(item.archetypes) then
-					for i = 1, #item.archetypes do
-						local archetype = item.archetypes[i]
-
-						if archetype == player_profile.archetype.name then
-							is_item_supported_on_played_character = true
-
-							break
-						end
-					end
-				else
-					is_item_supported_on_played_character = true
-				end
-
-				local profile = is_item_supported_on_played_character and table.clone_instance(player_profile) or ItemUtils.create_mannequin_profile_by_item(item)
-				local slots = item.slots
-				local slot_name = slots[1]
-				profile.loadout[slot_name] = item
-				local archetype = profile.archetype
-				local breed_name = archetype.breed
-				local breed = Breeds[breed_name]
-				local state_machine = breed.inventory_state_machine
-				local animation_event = item.inventory_animation_event or "inventory_idle_default"
-				context = {
-					disable_zoom = true,
-					profile = profile,
-					state_machine = state_machine,
-					animation_event = animation_event,
-					wield_slot = slot_name,
-					preview_with_gear = is_item_supported_on_played_character,
-					preview_item = item
-				}
-			else
-				local player = self:_player()
-				local profile = player:profile()
-				local is_item_supported_on_played_character = false
-
-				if previewed_item.archetypes and not table.is_empty(previewed_item.archetypes) then
-					for i = 1, #previewed_item.archetypes do
-						local archetype = previewed_item.archetypes[i]
-
-						if archetype == profile.archetype.name then
-							is_item_supported_on_played_character = true
-
-							break
-						end
-					end
-				else
-					is_item_supported_on_played_character = true
-				end
-
-				context = {
-					profile = profile,
-					preview_with_gear = is_item_supported_on_played_character,
-					preview_item = previewed_item
-				}
-			end
-
-			context.use_store_appearance = true
-
-			Managers.ui:open_view(view_name, nil, nil, nil, nil, context)
-
-			self._inpect_view_opened = view_name
+		if item_archetypes and not table.is_empty(item_archetypes) then
+			is_item_supported_on_played_character = table.array_contains(item_archetypes, player_profile.archetype.name)
+		else
+			is_item_supported_on_played_character = true
 		end
+
+		local profile = is_item_supported_on_played_character and table.clone_instance(player_profile) or ItemUtils.create_mannequin_profile_by_item(item)
+		context = {
+			use_store_appearance = true,
+			profile = profile,
+			preview_with_gear = is_item_supported_on_played_character,
+			preview_item = item
+		}
+
+		if item_type == "WEAPON_SKIN" then
+			local slots = item.slots
+			local slot_name = slots[1]
+			profile.loadout[slot_name] = item
+			local archetype = profile.archetype
+			local breed_name = archetype.breed
+			local breed = Breeds[breed_name]
+			local state_machine = breed.inventory_state_machine
+			local animation_event = item.inventory_animation_event or "inventory_idle_default"
+			context.disable_zoom = true
+			context.state_machine = state_machine
+			context.animation_event = animation_event
+			context.wield_slot = slot_name
+		end
+	end
+
+	if context and not Managers.ui:view_active(view_name) then
+		Managers.ui:open_view(view_name, nil, nil, nil, nil, context)
+
+		self._inpect_view_opened = view_name
 	end
 end
 

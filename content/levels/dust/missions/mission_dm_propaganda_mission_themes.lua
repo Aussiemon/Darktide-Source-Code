@@ -5,6 +5,9 @@ local mission_themes = {
 	darkness = {
 		"content/levels/dust/missions/dm_propaganda_themes/darkness_01/theme_darkness_01_dm_propaganda"
 	},
+	toxic_gas = {
+		"content/levels/dust/missions/dm_propaganda_themes/toxic_gas_01/theme_toxic_gas_01_dm_propaganda"
+	},
 	nurgle_manifestation = {
 		"content/levels/dust/missions/dm_propaganda_themes/nurgle_01/theme_nurgle_01_dm_propaganda"
 	}

@@ -104,11 +104,6 @@ templates.weapon_trait_bespoke_powermaul_2h_p1_staggered_targets_receive_increas
 		}
 	}
 }
-templates.weapon_trait_bespoke_powermaul_2h_p1_taunt_target_on_hit = {
-	weapon_trait_bespoke_powermaul_2h_p1_taunt_target_on_hit = {
-		{}
-	}
-}
 templates.weapon_trait_bespoke_powermaul_2h_p1_rending_vs_staggered = {
 	weapon_trait_bespoke_powermaul_2h_p1_rending_vs_staggered = {
 		{

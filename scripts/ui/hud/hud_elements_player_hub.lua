@@ -30,6 +30,20 @@ local elements = {
 		}
 	},
 	{
+		package = "packages/ui/hud/tactical_overlay/tactical_overlay",
+		use_hud_scale = false,
+		class_name = "HudElementTacticalOverlay",
+		filename = "scripts/ui/hud/elements/tactical_overlay/hud_element_tactical_overlay",
+		visibility_groups = {
+			"tactical_overlay",
+			"alive",
+			"emote_wheel"
+		},
+		context = {
+			show_left_side_details = false
+		}
+	},
+	{
 		package = "packages/ui/hud/mission_objective_feed/mission_objective_feed",
 		use_hud_scale = true,
 		class_name = "HudElementMissionObjectiveFeed",

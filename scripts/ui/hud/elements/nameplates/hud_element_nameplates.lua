@@ -11,6 +11,21 @@ HudElementNameplates.init = function (self, parent, draw_layer, start_scale)
 	local mission_name = Managers.state.mission:mission_name()
 	local mission_settings = Missions[mission_name]
 	self._is_mission_hub = mission_settings.is_hub
+	local save_manager = Managers.save
+
+	if save_manager then
+		local save_data = save_manager:account_data()
+		local interface_settings = save_data.interface_settings
+		local my_title_in_hub = interface_settings.my_title_in_hub
+		self._my_title_in_hub = my_title_in_hub
+	end
+
+	Managers.event:register(self, "event_titles_my_title_in_hub_setting_changed", "_cb_event_titles_my_title_in_hub_setting_changed")
+end
+
+HudElementNameplates._cb_event_titles_my_title_in_hub_setting_changed = function (self, value)
+	self._my_title_in_hub = value
+	self._reset_nameplates = true
 end
 
 HudElementNameplates.update = function (self, dt, t)
@@ -42,40 +57,55 @@ HudElementNameplates._nameplate_extension_scan = function (self)
 	local ALIVE = ALIVE
 
 	for _, player in pairs(players) do
-		if player ~= my_player then
-			if self._is_mission_hub then
-				local peer_id = player:peer_id()
-				local is_player_party_member = player:is_human_controlled() and PlayerCompositions.party_member_by_peer_id(peer_id)
-
-				if is_player_party_member then
-					marker_type = "nameplate_party_hud"
-				else
-					marker_type = "nameplate"
-				end
-			else
-				marker_type = "nameplate_party"
-			end
-
+		repeat
 			local unit = player.player_unit
-			local active = ALIVE[unit]
 
-			if active and not has_disable_nameplates_buff then
-				if nameplate_units[unit] and has_disable_nameplates_buff then
-					nameplate_units[unit].synced = false
-				elseif not nameplate_units[unit] then
-					nameplate_units[unit] = {
-						synced = true
-					}
-					local marker_callback = callback(self, "_on_nameplate_marker_spawned", unit)
-
-					event_manager:trigger("add_world_marker_unit", marker_type, unit, marker_callback, player)
-				elseif nameplate_units[unit] == marker_type then
-					nameplate_units[unit].synced = true
-				end
-			elseif nameplate_units[unit] and has_disable_nameplates_buff then
+			if self._reset_nameplates and nameplate_units[unit] then
 				nameplate_units[unit].synced = false
 			end
-		end
+
+			if (not self._is_mission_hub or not self._my_title_in_hub) and player == my_player then
+				if nameplate_units[unit] then
+					nameplate_units[unit].synced = false
+				end
+			else
+				if self._is_mission_hub then
+					local peer_id = player:peer_id()
+					local is_player_party_member = player:is_human_controlled() and PlayerCompositions.party_member_by_peer_id(peer_id)
+
+					if is_player_party_member then
+						marker_type = "nameplate_party_hud"
+					else
+						marker_type = "nameplate"
+					end
+				else
+					marker_type = "nameplate_party"
+				end
+
+				local active = ALIVE[unit]
+
+				if active and not has_disable_nameplates_buff then
+					if nameplate_units[unit] and has_disable_nameplates_buff then
+						nameplate_units[unit].synced = false
+					elseif not nameplate_units[unit] then
+						nameplate_units[unit] = {
+							synced = true
+						}
+						local marker_callback = callback(self, "_on_nameplate_marker_spawned", unit)
+
+						event_manager:trigger("add_world_marker_unit", marker_type, unit, marker_callback, player)
+					elseif nameplate_units[unit] == marker_type then
+						nameplate_units[unit].synced = true
+					end
+				elseif nameplate_units[unit] and has_disable_nameplates_buff then
+					nameplate_units[unit].synced = false
+				end
+			end
+		until true
+	end
+
+	if self._reset_nameplates then
+		self._reset_nameplates = nil
 	end
 
 	for unit, data in pairs(nameplate_units) do
@@ -122,6 +152,8 @@ HudElementNameplates.destroy = function (self)
 	end
 
 	self._nameplate_units = nil
+
+	Managers.event:unregister(self, "event_titles_my_title_in_hub_setting_changed")
 end
 
 return HudElementNameplates

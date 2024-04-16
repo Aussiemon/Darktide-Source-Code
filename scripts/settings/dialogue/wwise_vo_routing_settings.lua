@@ -315,6 +315,12 @@ local wwise_vo_routing_settings = {
 		wwise_event_path = "wwise/events/vo/play_sfx_es_traitor_captain_vo_important_twin",
 		display_name = "Captain Twin VO",
 		wwise_sound_source = "es_traitor_captain_vo_important_twin"
+	},
+	{
+		is_default = false,
+		wwise_event_path = "wwise/events/vo/play_sfx_es_warp_echo_vo",
+		display_name = "Warp Echo VO",
+		wwise_sound_source = "es_warp_echo"
 	}
 }
 

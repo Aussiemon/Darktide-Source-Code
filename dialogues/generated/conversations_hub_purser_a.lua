@@ -871,6 +871,39 @@ local conversations_hub_purser_a = {
 			2.073938
 		},
 		randomize_indexes = {}
+	},
+	shipmistress_hub_announcement_b_29_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1.0] = "loc_purser_a__shipmistress_hub_announcement_b_29_b_01"
+		},
+		sound_events_duration = {
+			[1.0] = 4.992917
+		},
+		randomize_indexes = {}
+	},
+	shipmistress_hub_announcement_b_30_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1.0] = "loc_purser_a__shipmistress_hub_announcement_b_30_b_01"
+		},
+		sound_events_duration = {
+			[1.0] = 6.570146
+		},
+		randomize_indexes = {}
+	},
+	shipmistress_hub_announcement_d_30_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1.0] = "loc_purser_a__shipmistress_hub_announcement_d_30_d_01"
+		},
+		sound_events_duration = {
+			[1.0] = 6.455729
+		},
+		randomize_indexes = {}
 	}
 }
 

@@ -11,6 +11,10 @@ GameplayInitStepPacing.on_enter = function (self, parent, params)
 	if is_server then
 		Managers.state.pacing:on_gameplay_post_init(level_name)
 	end
+
+	local level_seed = shared_state.level_seed
+
+	Managers.state.collectibles:on_gameplay_post_init(level_seed)
 end
 
 GameplayInitStepPacing.update = function (self, main_dt, main_t)

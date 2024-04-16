@@ -1,6 +1,6 @@
 local ReporterInterface = require("scripts/managers/telemetry/reporters/reporter_interface")
 local PacingReporter = class("PacingReporter")
-local SAMPLE_INTERVAL = 10
+local SAMPLE_INTERVAL = 45
 
 PacingReporter.init = function (self, params)
 	self._last_sample_time = 0

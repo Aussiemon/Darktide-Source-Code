@@ -213,6 +213,13 @@ local achievements_grid_settings = {
 	scrollbar_pass_templates = ScrollbarPassTemplates.terminal_scrollbar,
 	edge_padding = achievements_grid_margin * 2
 }
+
+local function format_favorites(_)
+	local curr, max = AchievementUIHelper.favorite_achievement_count()
+
+	return string.format(" (%d / %d)", curr, max)
+end
+
 local legend_inputs = {
 	{
 		input_action = "confirm_pressed",
@@ -235,6 +242,30 @@ local legend_inputs = {
 				return active_view:_cb_unfold_legend_button_visibility(false)
 			end
 		end
+	},
+	{
+		input_action = "secondary_action_pressed",
+		display_name = "loc_achievements_view_button_hint_favorite_achievement",
+		visibility_function = function (parent)
+			local active_view = parent._active_view_instance
+
+			if active_view then
+				return active_view:_cb_favorite_legend_visibility(true)
+			end
+		end,
+		suffix_function = format_favorites
+	},
+	{
+		input_action = "secondary_action_pressed",
+		display_name = "loc_achievements_view_button_hint_unfavorite_achievement",
+		visibility_function = function (parent)
+			local active_view = parent._active_view_instance
+
+			if active_view then
+				return active_view:_cb_favorite_legend_visibility(false)
+			end
+		end,
+		suffix_function = format_favorites
 	}
 }
 

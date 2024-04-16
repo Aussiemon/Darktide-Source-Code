@@ -3,17 +3,22 @@ local PriorityQueue = require("scripts/foundation/utilities/priority_queue")
 local Promise = require("scripts/foundation/utilities/promise")
 local StatConfigParser = require("scripts/managers/stats/utility/stat_config_parser")
 local StatDefinitions = require("scripts/managers/stats/stat_definitions")
+local StatNetworkTypes = require("scripts/settings/stats/stat_network_types")
 local StatsManager = class("StatsManager")
-local CLIENT_RPCS = {
-	"rpc_stat_update"
-}
+local CLIENT_RPCS = {}
+
+for _, string in pairs(StatNetworkTypes) do
+	local i = #CLIENT_RPCS + 1
+	CLIENT_RPCS[i] = "rpc_stat_update_" .. string
+end
+
 local UserStates = table.enum("pulling", "pushing", "idle", "tracking")
 StatsManager.user_states = UserStates
 
 StatsManager.init = function (self, is_client, event_delegate, rpc_settings)
 	self._definitions = StatDefinitions
 	self._event_delegate = event_delegate
-	self._rpc_settings = rpc_settings or {
+	rpc_settings = rpc_settings or {
 		{
 			required_buffer = 25000,
 			rpc_per_frame = 3
@@ -27,6 +32,7 @@ StatsManager.init = function (self, is_client, event_delegate, rpc_settings)
 			rpc_per_frame = 1
 		}
 	}
+	self._rpc_settings = rpc_settings
 	self._stat_lookup = {}
 
 	for key, stat in pairs(self._definitions) do
@@ -39,6 +45,12 @@ StatsManager.init = function (self, is_client, event_delegate, rpc_settings)
 	self._is_client = is_client
 
 	if is_client then
+		for _, string in pairs(StatNetworkTypes) do
+			StatsManager["rpc_stat_update_" .. string] = function (_, ...)
+				self:rpc_stat_update(...)
+			end
+		end
+
 		self._event_delegate:register_connection_events(self, unpack(CLIENT_RPCS))
 	end
 
@@ -109,9 +121,11 @@ StatsManager._update_rpcs = function (self, user)
 		local stat_key = queue:pop_first()
 		local stat = definitions[stat_key]
 		dirty[stat_key] = false
-		local value_to_send = self:_parse_backend_value(data[stat_key])
+		local data_type = stat.network_size
+		local rpc_data = self._rpc_calls[data_type]
+		local value_to_send = math.clamp(math.round(data[stat_key]), rpc_data.min, rpc_data.max)
 
-		RPC.rpc_stat_update(channel_id, user.local_player_id, stat.index, value_to_send)
+		rpc_data.rpc(channel_id, user.local_player_id, stat.index, value_to_send)
 	end
 end
 
@@ -241,8 +255,21 @@ StatsManager.add_user = function (self, key, account_id, rpc_channel, local_play
 	end
 
 	if self._min_stat_value == nil then
-		self._min_stat_value = Network.type_info("stat_value").min
-		self._max_stat_value = Network.type_info("stat_value").max
+		self._min_stat_value = Network.type_info("stat_value_backend").min
+		self._max_stat_value = Network.type_info("stat_value_backend").max
+	end
+
+	if not self._rpc_calls then
+		self._rpc_calls = {}
+
+		for _, string in pairs(StatNetworkTypes) do
+			local stat_value = "stat_value_" .. string
+			self._rpc_calls[string] = {
+				rpc = RPC["rpc_stat_update_" .. string],
+				min = Network.type_info(stat_value).min,
+				max = Network.type_info(stat_value).max
+			}
+		end
 	end
 
 	users[key] = self:_empty_user(key, account_id, rpc_channel, local_player_id)

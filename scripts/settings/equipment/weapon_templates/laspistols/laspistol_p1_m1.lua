@@ -850,7 +850,6 @@ table.add_missing(weapon_template.actions, BaseTemplateSettings.actions)
 
 weapon_template.anim_state_machine_3p = "content/characters/player/human/third_person/animations/lasgun_pistol"
 weapon_template.anim_state_machine_1p = "content/characters/player/human/first_person/animations/lasgun_pistol"
-weapon_template.can_use_while_vaulting = true
 weapon_template.reload_template = ReloadTemplates.laspistol
 weapon_template.spread_template = "default_laspistol_assault"
 weapon_template.recoil_template = "default_laspistol_assault"

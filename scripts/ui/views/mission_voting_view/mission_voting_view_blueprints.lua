@@ -1,14 +1,11 @@
 local CircumstanceTemplates = require("scripts/settings/circumstance/circumstance_templates")
-local ViewStyles = require("scripts/ui/views/mission_voting_view/mission_voting_view_styles")
 local MissionObjectiveTemplates = require("scripts/settings/mission_objective/mission_objective_templates")
 local MissionTemplates = require("scripts/settings/mission/mission_templates")
 local MissionTypes = require("scripts/settings/mission/mission_types")
 local MutatorTemplates = require("scripts/settings/mutator/mutator_templates")
 local UIFonts = require("scripts/managers/ui/ui_fonts")
 local UIRenderer = require("scripts/managers/ui/ui_renderer")
-local ZoneSettings = require("scripts/settings/zones/zones")
-local DangerSettings = require("scripts/settings/difficulty/danger_settings")
-local UIWidget = require("scripts/managers/ui/ui_widget")
+local ViewStyles = require("scripts/ui/views/mission_voting_view/mission_voting_view_styles")
 local blueprint_styles = ViewStyles.blueprints
 local icons = {
 	loot = "content/ui/materials/icons/generic/loot"

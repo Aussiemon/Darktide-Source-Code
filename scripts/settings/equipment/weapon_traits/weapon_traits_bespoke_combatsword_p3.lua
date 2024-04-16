@@ -160,8 +160,8 @@ templates.weapon_trait_bespoke_combatsword_p3_windup_increases_power = {
 		}
 	}
 }
-templates.weapon_trait_bespoke_combatsword_p3_consecutive_melee_hits_increases_melee_power = {
-	weapon_trait_bespoke_combatsword_p3_consecutive_melee_hits_increases_melee_power_parent = {
+templates.weapon_trait_bespoke_combatsword_p3_consecutive_melee_hits_same_target_increases_melee_power = {
+	weapon_trait_bespoke_combatsword_p3_consecutive_melee_hits_same_target_increases_melee_power_parent = {
 		{
 			child_duration = 2,
 			stat_buffs = {

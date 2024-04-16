@@ -3803,7 +3803,7 @@ return function ()
 				"time_since_last_short_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				140
+				100
 			},
 			{
 				"faction_memory",
@@ -3823,7 +3823,7 @@ return function ()
 				"time_since_zealot_seen_killstreak_psyker",
 				OP.TIMEDIFF,
 				OP.LT,
-				45
+				70
 			}
 		},
 		on_done = {
@@ -4053,7 +4053,7 @@ return function ()
 				"time_since_last_short_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				140
+				100
 			},
 			{
 				"faction_memory",
@@ -4073,7 +4073,7 @@ return function ()
 				"time_since_zealot_seen_killstreak_psyker",
 				OP.TIMEDIFF,
 				OP.LT,
-				90
+				110
 			}
 		},
 		on_done = {

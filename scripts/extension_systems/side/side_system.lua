@@ -297,6 +297,10 @@ local function _is_valid_target(unit, side_extension)
 	local is_player_unit = side_extension.is_player_unit
 
 	if is_player_unit then
+		if Managers.state.extension:system("perception_system"):is_untargetable(unit) then
+			return false
+		end
+
 		local buff_extension = ScriptUnit.extension(unit, "buff_system")
 
 		if buff_extension:has_keyword(keywords.invisible) or buff_extension:has_keyword(keywords.unperceivable) then
@@ -427,22 +431,24 @@ SideSystem._update_enemy_frame_tables = function (self, side)
 		end
 	end
 
-	local ai_target_units = side.ai_target_units
-	local num_ai_target_units = 0
+	if self._is_server then
+		local ai_target_units = side.ai_target_units
+		local num_ai_target_units = 0
 
-	table.clear(ai_target_units)
+		table.clear(ai_target_units)
 
-	local enemy_units = side:relation_units("enemy")
-	local num_enemy_units = #enemy_units
+		local enemy_units = side:relation_units("enemy")
+		local num_enemy_units = #enemy_units
 
-	for i = 1, num_enemy_units do
-		local unit = enemy_units[i]
-		local side_extension = unit_extension_data[unit]
+		for i = 1, num_enemy_units do
+			local unit = enemy_units[i]
+			local side_extension = unit_extension_data[unit]
 
-		if side_extension.update_registered and _is_valid_target(unit, side_extension) then
-			num_ai_target_units = num_ai_target_units + 1
-			ai_target_units[num_ai_target_units] = unit
-			ai_target_units[unit] = num_ai_target_units
+			if side_extension.update_registered and _is_valid_target(unit, side_extension) then
+				num_ai_target_units = num_ai_target_units + 1
+				ai_target_units[num_ai_target_units] = unit
+				ai_target_units[unit] = num_ai_target_units
+			end
 		end
 	end
 end

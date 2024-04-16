@@ -4475,6 +4475,18 @@ return function ()
 				}
 			},
 			{
+				"query_context",
+				"sound_event",
+				OP.SET_NOT_INTERSECTS,
+				args = {
+					"loc_psyker_female_a__lore_morrow_four_c_01",
+					"loc_psyker_female_a__lore_morrow_three_c_02",
+					"loc_psyker_female_a__lore_morrow_one_c_01",
+					"loc_psyker_female_a__lore_morrow_three_c_01",
+					"loc_psyker_female_a__lore_morrow_two_c_02"
+				}
+			},
+			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
@@ -4486,7 +4498,7 @@ return function ()
 				"faction_memory",
 				"eavesdropping",
 				OP.EQ,
-				"0"
+				0
 			}
 		},
 		on_done = {

@@ -75,12 +75,6 @@ local mission_vo_cm_raid_zealot_male_b = {
 			1.222958,
 			1.960167
 		},
-		sound_event_weights = {
-			0.25,
-			0.25,
-			0.25,
-			0.25
-		},
 		randomize_indexes = {}
 	},
 	mission_raid_trapped_b = {
@@ -98,34 +92,18 @@ local mission_vo_cm_raid_zealot_male_b = {
 			2.442958,
 			3.269792
 		},
-		sound_event_weights = {
-			0.25,
-			0.25,
-			0.25,
-			0.25
-		},
 		randomize_indexes = {}
 	},
 	mission_raid_trapped_c = {
 		randomize_indexes_n = 0,
-		sound_events_n = 4,
+		sound_events_n = 2,
 		sound_events = {
-			"loc_zealot_male_b__mission_raid_trapped_c_01",
-			"loc_zealot_male_b__mission_raid_trapped_c_02",
-			"loc_zealot_male_b__mission_raid_trapped_c_03",
-			"loc_zealot_male_b__mission_raid_trapped_c_04"
+			[1.0] = "loc_zealot_male_b__mission_raid_trapped_c_03",
+			[2.0] = "loc_zealot_male_b__mission_raid_trapped_c_04"
 		},
 		sound_events_duration = {
-			3.351313,
-			2.687813,
-			1.460688,
-			2.203271
-		},
-		sound_event_weights = {
-			0.25,
-			0.25,
-			0.25,
-			0.25
+			[1.0] = 1.460688,
+			[2.0] = 2.203271
 		},
 		randomize_indexes = {}
 	}

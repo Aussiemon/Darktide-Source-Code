@@ -104,6 +104,35 @@ local gameplay_vo_zealot_male_b = {
 		},
 		randomize_indexes = {}
 	},
+	blitz_flame_grenade_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 10,
+		sound_events = {
+			"loc_zealot_male_b__blitz_flame_grenade_a_01",
+			"loc_zealot_male_b__blitz_flame_grenade_a_02",
+			"loc_zealot_male_b__blitz_flame_grenade_a_03",
+			"loc_zealot_male_b__blitz_flame_grenade_a_04",
+			"loc_zealot_male_b__blitz_flame_grenade_a_05",
+			"loc_zealot_male_b__blitz_flame_grenade_a_06",
+			"loc_zealot_male_b__blitz_flame_grenade_a_07",
+			"loc_zealot_male_b__blitz_flame_grenade_a_08",
+			"loc_zealot_male_b__blitz_flame_grenade_a_09",
+			"loc_zealot_male_b__blitz_flame_grenade_a_10"
+		},
+		sound_events_duration = {
+			1.39325,
+			1.258625,
+			1.195688,
+			1.319458,
+			1.295292,
+			1.625896,
+			1.817708,
+			1.648396,
+			1.312958,
+			1.078167
+		},
+		randomize_indexes = {}
+	},
 	calling_for_help = {
 		randomize_indexes_n = 0,
 		sound_events_n = 10,
@@ -647,6 +676,47 @@ local gameplay_vo_zealot_male_b = {
 			2.697688,
 			2.770583,
 			2.263354
+		},
+		sound_event_weights = {
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1
+		},
+		randomize_indexes = {}
+	},
+	enemy_kill_cultist_grenadier = {
+		randomize_indexes_n = 0,
+		sound_events_n = 10,
+		sound_events = {
+			"loc_zealot_male_b__enemy_kill_grenadier_01",
+			"loc_zealot_male_b__enemy_kill_grenadier_02",
+			"loc_zealot_male_b__enemy_kill_grenadier_03",
+			"loc_zealot_male_b__enemy_kill_grenadier_04",
+			"loc_zealot_male_b__enemy_kill_grenadier_05",
+			"loc_zealot_male_b__enemy_kill_grenadier_06",
+			"loc_zealot_male_b__enemy_kill_grenadier_07",
+			"loc_zealot_male_b__enemy_kill_grenadier_08",
+			"loc_zealot_male_b__enemy_kill_grenadier_09",
+			"loc_zealot_male_b__enemy_kill_grenadier_10"
+		},
+		sound_events_duration = {
+			1.404354,
+			1.872542,
+			1.379042,
+			1.92025,
+			2.411167,
+			2.0715,
+			3.019438,
+			2.124688,
+			3.711667,
+			2.849188
 		},
 		sound_event_weights = {
 			0.1,
@@ -3876,6 +3946,47 @@ local gameplay_vo_zealot_male_b = {
 			0.25,
 			0.25,
 			0.25
+		},
+		randomize_indexes = {}
+	},
+	seen_enemy_cultist_grenadier = {
+		randomize_indexes_n = 0,
+		sound_events_n = 10,
+		sound_events = {
+			"loc_zealot_male_b__seen_enemy_grenadier_01",
+			"loc_zealot_male_b__seen_enemy_grenadier_02",
+			"loc_zealot_male_b__seen_enemy_grenadier_03",
+			"loc_zealot_male_b__seen_enemy_grenadier_04",
+			"loc_zealot_male_b__seen_enemy_grenadier_05",
+			"loc_zealot_male_b__seen_enemy_grenadier_06",
+			"loc_zealot_male_b__seen_enemy_grenadier_07",
+			"loc_zealot_male_b__seen_enemy_grenadier_08",
+			"loc_zealot_male_b__seen_enemy_grenadier_09",
+			"loc_zealot_male_b__seen_enemy_grenadier_10"
+		},
+		sound_events_duration = {
+			0.684083,
+			1.335438,
+			1.312729,
+			1.7335,
+			1.411458,
+			2.715542,
+			1.236188,
+			2.062792,
+			1.175354,
+			3.518708
+		},
+		sound_event_weights = {
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1
 		},
 		randomize_indexes = {}
 	},

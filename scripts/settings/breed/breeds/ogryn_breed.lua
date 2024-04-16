@@ -185,11 +185,13 @@ local breed_data = {
 	base_unit_sound_sources = {
 		head = "j_head",
 		rightfoot = "j_rightfoot",
+		fx_anim_01 = "fx_anim_01",
 		hips = "j_hips"
 	},
 	base_unit_fx_sources = {
 		head = "j_head",
 		rightfoot = "j_rightfoot",
+		fx_anim_01 = "fx_anim_01",
 		hips = "j_hips"
 	},
 	sfx = {

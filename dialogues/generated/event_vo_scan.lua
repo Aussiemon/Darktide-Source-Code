@@ -28,7 +28,8 @@ return function ()
 				args = {
 					"sergeant",
 					"tech_priest",
-					"explicator"
+					"explicator",
+					"enginseer"
 				}
 			},
 			{
@@ -86,7 +87,8 @@ return function ()
 				args = {
 					"sergeant",
 					"tech_priest",
-					"explicator"
+					"explicator",
+					"enginseer"
 				}
 			}
 		},
@@ -129,7 +131,8 @@ return function ()
 				args = {
 					"sergeant",
 					"tech_priest",
-					"explicator"
+					"explicator",
+					"enginseer"
 				}
 			},
 			{
@@ -180,7 +183,8 @@ return function ()
 				args = {
 					"sergeant",
 					"tech_priest",
-					"explicator"
+					"explicator",
+					"enginseer"
 				}
 			},
 			{
@@ -266,7 +270,8 @@ return function ()
 				args = {
 					"sergeant",
 					"tech_priest",
-					"explicator"
+					"explicator",
+					"enginseer"
 				}
 			},
 			{
@@ -318,7 +323,8 @@ return function ()
 				args = {
 					"sergeant",
 					"tech_priest",
-					"explicator"
+					"explicator",
+					"enginseer"
 				}
 			}
 		},
@@ -356,7 +362,8 @@ return function ()
 				args = {
 					"sergeant",
 					"tech_priest",
-					"explicator"
+					"explicator",
+					"enginseer"
 				}
 			},
 			{

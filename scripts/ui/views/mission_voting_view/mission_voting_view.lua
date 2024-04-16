@@ -1,19 +1,19 @@
+local CircumstanceTemplates = require("scripts/settings/circumstance/circumstance_templates")
+local DangerSettings = require("scripts/settings/difficulty/danger_settings")
 local Definitions = require("scripts/ui/views/mission_voting_view/mission_voting_view_definitions")
+local InputDevice = require("scripts/managers/input/input_device")
+local InputUtils = require("scripts/managers/input/input_utils")
+local MissionDetailsBlueprints = require("scripts/ui/views/mission_voting_view/mission_voting_view_blueprints")
+local MissionTemplates = require("scripts/settings/mission/mission_templates")
+local MissionTypes = require("scripts/settings/mission/mission_types")
 local ScriptWorld = require("scripts/foundation/utilities/script_world")
 local UIFonts = require("scripts/managers/ui/ui_fonts")
 local UIRenderer = require("scripts/managers/ui/ui_renderer")
-local UIWidget = require("scripts/managers/ui/ui_widget")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
-local MissionTemplates = require("scripts/settings/mission/mission_templates")
-local MissionTypes = require("scripts/settings/mission/mission_types")
-local ZoneSettings = require("scripts/settings/zones/zones")
-local CircumstanceTemplates = require("scripts/settings/circumstance/circumstance_templates")
-local MissionDetailsBlueprints = require("scripts/ui/views/mission_voting_view/mission_voting_view_blueprints")
-local ViewStyles = require("scripts/ui/views/mission_voting_view/mission_voting_view_styles")
+local UIWidget = require("scripts/managers/ui/ui_widget")
 local UIWidgetGrid = require("scripts/ui/widget_logic/ui_widget_grid")
-local InputDevice = require("scripts/managers/input/input_device")
-local InputUtils = require("scripts/managers/input/input_utils")
-local DangerSettings = require("scripts/settings/difficulty/danger_settings")
+local ViewStyles = require("scripts/ui/views/mission_voting_view/mission_voting_view_styles")
+local Zones = require("scripts/settings/zones/zones")
 local MissionObjectiveTemplates = require("scripts/settings/mission_objective/mission_objective_templates")
 local MissionVotingViewTestify = GameParameters.testify and require("scripts/ui/views/mission_voting_view/mission_voting_view_testify")
 
@@ -480,7 +480,8 @@ end
 
 MissionVotingView._set_mission_data = function (self, mission_data)
 	local mission_template = MissionTemplates[mission_data.map]
-	local zone_settings = ZoneSettings[mission_template.zone_id]
+	local zone_id = mission_template.zone_id
+	local zone_settings = Zones[zone_id]
 	local zone_image_widget = self._widgets_by_name.zone_image
 	local zone_images = zone_settings.images
 

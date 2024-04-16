@@ -5131,6 +5131,13 @@ return function ()
 				OP.TIMEDIFF,
 				OP.GT,
 				400
+			},
+			{
+				"user_memory",
+				"blitz_brainburst_chain_a",
+				OP.TIMEDIFF,
+				OP.GT,
+				30
 			}
 		},
 		on_done = {

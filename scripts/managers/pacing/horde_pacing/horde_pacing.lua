@@ -809,4 +809,8 @@ HordePacing._first_horde_wave_spawn = function (self, template, horde_position, 
 	end
 end
 
+HordePacing.reset_traveled_this_frame = function (self)
+	self._next_frame_traveled_distance = 0
+end
+
 return HordePacing

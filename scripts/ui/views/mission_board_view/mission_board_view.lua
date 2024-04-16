@@ -717,6 +717,7 @@ MissionBoardView.on_exit = function (self)
 	local world_spawner = self._world_spawner
 
 	if world_spawner then
+		world_spawner:release_listener()
 		world_spawner:destroy()
 
 		self._world_spawner = nil
@@ -1780,6 +1781,7 @@ MissionBoardView.event_register_camera = function (self, camera_unit)
 	self._camera_unit = camera_unit
 
 	self._world_spawner:create_viewport(camera_unit, world_spawner_settings.viewport_name, world_spawner_settings.viewport_type, world_spawner_settings.viewport_layer, world_spawner_settings.viewport_shading_environment)
+	self._world_spawner:set_listener(world_spawner_settings.viewport_name)
 end
 
 MissionBoardView._update_fetch_missions = function (self, t)

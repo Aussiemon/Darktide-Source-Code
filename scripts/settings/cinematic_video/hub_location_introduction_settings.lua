@@ -18,6 +18,10 @@ hub_location_introduction_settings = {
 	credits_vendor_background_view = {
 		video_template = "hli_gun_shop",
 		narrative_event_name = "hli_gun_shop_viewed"
+	},
+	penance_overview_view = {
+		video_template = "hli_penances",
+		narrative_event_name = "hli_penances_viewed"
 	}
 }
 

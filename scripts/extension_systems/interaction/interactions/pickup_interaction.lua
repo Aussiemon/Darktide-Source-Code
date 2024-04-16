@@ -59,7 +59,6 @@ PickupInteraction._update_stats = function (self, target_unit, interactor_sessio
 
 	if player_or_nil then
 		telemetry_reporters_manager:reporter("picked_items"):register_event(player_or_nil, pickup_name)
-		Managers.stats:record_private("hook_picked_item", player_or_nil, pickup_name)
 	end
 
 	local pickup_system = Managers.state.extension:system("pickup_system")
@@ -70,7 +69,6 @@ PickupInteraction._update_stats = function (self, target_unit, interactor_sessio
 
 	if owning_player_or_nil and not interacted_before and not interactor_is_owner then
 		telemetry_reporters_manager:reporter("shared_items"):register_event(owning_player_or_nil, pickup_name)
-		Managers.stats:record_private("hook_shared_item", owning_player_or_nil, pickup_name)
 	end
 end
 

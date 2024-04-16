@@ -641,6 +641,10 @@ BtShootAction._start_cooldown = function (self, unit, t, scratchpad, action_data
 
 		local diff_cooldown_range = Managers.state.difficulty:get_table_entry_by_challenge(cooldown_range)
 		cooldown = math.random_range(diff_cooldown_range[1], diff_cooldown_range[2])
+
+		if Managers.state.pacing:is_auric() then
+			cooldown = cooldown * 0.5
+		end
 	end
 
 	scratchpad.cooldown = t + cooldown

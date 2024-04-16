@@ -247,8 +247,8 @@ local archetype_talents = {
 		ogryn_grenade_frag = {
 			description = "loc_ability_ogryn_grenade_demolition_desc",
 			name = "G-Ability - Demolition Frag Grenade (B.F Grenade)",
-			hud_icon = "content/ui/textures/icons/abilities/hud/combat_ability_bonebreaker_hud",
 			display_name = "loc_ability_ogryn_grenade_demolition",
+			hud_icon = "content/ui/textures/icons/abilities/hud/combat_ability_bonebreaker_hud",
 			icon = "content/ui/textures/icons/talents/ogryn_2/ogryn_2_tactical",
 			format_values = {
 				talent_name = {
@@ -280,6 +280,10 @@ local archetype_talents = {
 					damage_profile_name = "close_ogryn_grenade",
 					info_func = "damage_profile"
 				}
+			},
+			passive = {
+				buff_template_name = "ogryn_frag_grenade_thrown",
+				identifier = "ogryn_frag_grenade_thrown"
 			}
 		},
 		ogryn_special_ammo = {
@@ -346,6 +350,10 @@ local archetype_talents = {
 			special_rule = {
 				identifier = "ogryn_no_ammo_consumption_passive",
 				special_rule_name = special_rules.ogryn_leadbelcher
+			},
+			passive = {
+				buff_template_name = "ogryn_leadbelcher_aura_tracking_buff",
+				identifier = "ogryn_leadbelcher_aura_tracking_buff"
 			}
 		},
 		ogryn_leadbelcher_cooldown_reduction = {
@@ -1493,7 +1501,7 @@ local archetype_talents = {
 			}
 		},
 		ogryn_carapace_armor = {
-			description = "loc_talent_ogryn_carapace_armor_desc",
+			description = "loc_talent_ogryn_carapace_armor_any_damage_desc",
 			name = "Carapace armor",
 			display_name = "loc_talent_ogryn_carapace_armor",
 			icon = "content/ui/textures/icons/talents/ogryn_1/ogryn_1_base_3",
@@ -1518,11 +1526,11 @@ local archetype_talents = {
 						find_value_type = "buff_template",
 						path = {
 							"stat_buffs",
-							stat_buffs.toughness_damage_taken_modifier
+							stat_buffs.toughness_damage_taken_multiplier
 						}
 					},
 					value_manipulation = function (value)
-						return math.abs(value) * 100
+						return math.abs(1 - value) * 100
 					end
 				},
 				stacks = {

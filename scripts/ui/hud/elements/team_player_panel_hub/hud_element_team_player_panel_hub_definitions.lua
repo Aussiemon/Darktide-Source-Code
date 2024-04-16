@@ -91,12 +91,12 @@ local widget_definitions = {
 				text_horizontal_alignment = "left",
 				offset = {
 					0,
-					-bar_size[2] - 5,
+					-bar_size[2] - 12,
 					4
 				},
 				default_offset = {
 					0,
-					-bar_size[2] - 5,
+					-bar_size[2] - 12,
 					2
 				},
 				size = {
@@ -117,6 +117,38 @@ local widget_definitions = {
 			}
 		}
 	}, "bar"),
+	character_title = UIWidget.create_definition({
+		{
+			value_id = "text",
+			style_id = "text",
+			pass_type = "text",
+			value = "",
+			style = {
+				text_vertical_alignment = "center",
+				text_horizontal_alignment = "left",
+				offset = {
+					0,
+					-7,
+					4
+				},
+				size = {
+					bar_size[1] * 1.5,
+					bar_size[2]
+				},
+				font_type = rich_presence_font_settings.font_type,
+				font_size = rich_presence_font_settings.font_size - 2,
+				default_font_size = rich_presence_font_settings.font_size - 2,
+				text_color = rich_presence_font_color,
+				default_text_color = rich_presence_font_color,
+				dead_text_color = {
+					200,
+					80,
+					80,
+					80
+				}
+			}
+		}
+	}, "bar"),
 	rich_presence = UIWidget.create_definition({
 		{
 			value_id = "text",
@@ -128,7 +160,7 @@ local widget_definitions = {
 				text_horizontal_alignment = "left",
 				offset = {
 					0,
-					0,
+					bar_size[2] + 4,
 					4
 				},
 				size = {
@@ -136,8 +168,8 @@ local widget_definitions = {
 					bar_size[2]
 				},
 				font_type = rich_presence_font_settings.font_type,
-				font_size = rich_presence_font_settings.font_size,
-				default_font_size = rich_presence_font_settings.font_size,
+				font_size = rich_presence_font_settings.font_size - 2,
+				default_font_size = rich_presence_font_settings.font_size - 2,
 				text_color = rich_presence_font_color,
 				default_text_color = rich_presence_font_color,
 				dead_text_color = {

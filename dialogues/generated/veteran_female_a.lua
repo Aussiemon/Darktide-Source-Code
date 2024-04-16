@@ -1451,7 +1451,7 @@ return function ()
 				"time_since_last_short_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				140
+				45
 			},
 			{
 				"faction_memory",
@@ -1708,7 +1708,7 @@ return function ()
 				"time_since_last_short_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				140
+				45
 			},
 			{
 				"faction_memory",
@@ -1965,7 +1965,7 @@ return function ()
 				"time_since_last_short_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				140
+				45
 			},
 			{
 				"faction_memory",
@@ -2222,7 +2222,7 @@ return function ()
 				"time_since_last_short_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				140
+				45
 			},
 			{
 				"faction_memory",
@@ -2661,10 +2661,10 @@ return function ()
 	})
 	define_rule({
 		name = "bonding_conversation_metropolitan_chance_a",
-		category = "conversations_prio_1",
 		wwise_route = 0,
 		response = "bonding_conversation_metropolitan_chance_a",
 		database = "veteran_female_a",
+		category = "conversations_prio_1",
 		criterias = {
 			{
 				"query_context",
@@ -2749,6 +2749,13 @@ return function ()
 		},
 		heard_speak_routing = {
 			target = "players"
+		},
+		on_pre_rule_execution = {
+			random_ignore_vo = {
+				chance = 0.5,
+				max_failed_tries = 0,
+				hold_for = 0
+			}
 		}
 	})
 	define_rule({
@@ -5033,10 +5040,10 @@ return function ()
 	})
 	define_rule({
 		name = "bonding_conversation_metropolitan_leaders_a",
-		category = "conversations_prio_1",
 		wwise_route = 0,
 		response = "bonding_conversation_metropolitan_leaders_a",
 		database = "veteran_female_a",
+		category = "conversations_prio_1",
 		criterias = {
 			{
 				"query_context",
@@ -5121,6 +5128,13 @@ return function ()
 		},
 		heard_speak_routing = {
 			target = "players"
+		},
+		on_pre_rule_execution = {
+			random_ignore_vo = {
+				chance = 0.4,
+				max_failed_tries = 0,
+				hold_for = 0
+			}
 		}
 	})
 	define_rule({
@@ -5547,10 +5561,10 @@ return function ()
 	})
 	define_rule({
 		name = "bonding_conversation_metropolitan_politics_a",
-		category = "conversations_prio_1",
 		wwise_route = 0,
 		response = "bonding_conversation_metropolitan_politics_a",
 		database = "veteran_female_a",
+		category = "conversations_prio_1",
 		criterias = {
 			{
 				"query_context",
@@ -5635,6 +5649,13 @@ return function ()
 		},
 		heard_speak_routing = {
 			target = "players"
+		},
+		on_pre_rule_execution = {
+			random_ignore_vo = {
+				chance = 0.5,
+				max_failed_tries = 0,
+				hold_for = 0
+			}
 		}
 	})
 	define_rule({
@@ -7710,7 +7731,7 @@ return function ()
 		wwise_route = 0,
 		response = "bonding_conversation_round_three_spiders_a",
 		database = "veteran_female_a",
-		category = "conversations_prio_1",
+		category = "player_prio_1",
 		criterias = {
 			{
 				"query_context",
@@ -7740,7 +7761,7 @@ return function ()
 			},
 			{
 				"faction_memory",
-				"bonding_conversation_round_three_spiders_a",
+				"bonding_conversation_round_three_attention_a",
 				OP.EQ,
 				0
 			},
@@ -7760,13 +7781,13 @@ return function ()
 		on_done = {
 			{
 				"faction_memory",
-				"bonding_conversation_round_three_spiders_a",
+				"bonding_conversation_round_three_attention_a",
 				OP.ADD,
 				1
 			},
 			{
 				"user_memory",
-				"bonding_conversation_round_three_spiders_a_user",
+				"bonding_conversation_round_three_attention_a_user",
 				OP.ADD,
 				1
 			}

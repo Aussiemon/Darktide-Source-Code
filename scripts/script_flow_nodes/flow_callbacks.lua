@@ -927,14 +927,17 @@ FlowCallbacks.create_networked_flow_state = function (params)
 end
 
 FlowCallbacks.change_networked_flow_state = function (params)
-	local changed, out_value = Managers.state.networked_flow_state:flow_cb_change_state(params.unit, params.state_name, params.in_value)
+	local is_server = Managers.state.game_session:is_server()
 
-	if changed then
-		flow_return_table.changed = changed
-		flow_return_table.out_value = out_value
-
-		return flow_return_table
+	if not is_server then
+		return nil
 	end
+
+	local out_value = Managers.state.networked_flow_state:flow_cb_change_state(params.unit, params.state_name, params.in_value)
+	flow_return_table.changed = true
+	flow_return_table.out_value = out_value
+
+	return flow_return_table
 end
 
 FlowCallbacks.get_networked_flow_state = function (params)
@@ -1672,6 +1675,22 @@ FlowCallbacks.trigger_subtitle = function (params)
 	Vo.trigger_subtitle(subtitle_id)
 end
 
+FlowCallbacks.spawn_2d_vo_unit = function (params)
+	local breed_name = params.breed_name
+
+	Vo.spawn_2d_unit(breed_name)
+end
+
+FlowCallbacks.spawn_3d_vo_unit = function (params)
+	local breed_name = params.breed_name
+	local voice_profile = params.voice_profile
+	local position = params.position
+	local vo_unit = Vo.spawn_3d_unit(breed_name, voice_profile, position)
+	flow_return_table.unit = vo_unit
+
+	return flow_return_table
+end
+
 FlowCallbacks.start_terror_event = function (params)
 	local terror_event_manager = Managers.state.terror_event
 
@@ -2364,6 +2383,16 @@ end
 
 FlowCallbacks.new_path_of_trust_viewed = function (params)
 	Managers.narrative:complete_current_chapter(Managers.narrative.STORIES.path_of_trust)
+end
+
+FlowCallbacks.hook_stat_team = function (params)
+	local is_server = Managers.state.game_session:is_server()
+
+	if not is_server then
+		return
+	end
+
+	Managers.stats:record_team(params.hook_id)
 end
 
 FlowCallbacks.unlock_achievement_everyone = function (params)

@@ -71,13 +71,13 @@ Damage.deal_damage = function (unit, breed_or_nil, attacking_unit, attacking_uni
 			if toughness_broken_grace_cooldown < time_since_toughness_broken then
 				local toughness_broken_grace_settings = AttackIntensitySettings.toughness_broken_grace
 				local diff_toughness_broken_grace_settings = Managers.state.difficulty:get_table_entry_by_challenge(toughness_broken_grace_settings)
-				local dont_max_out_intensity = diff_toughness_broken_grace_settings.dont_max_out_intensity
+				local has_auric_mutator = Managers.state.pacing:is_auric()
+				local dont_max_out_intensity = has_auric_mutator or diff_toughness_broken_grace_settings.dont_max_out_intensity
 
 				if not dont_max_out_intensity then
 					AttackIntensity.add_intensity(unit, TOUGHNESS_BROKEN_ATTACK_INTENSITIES)
+					toughness_extension:set_toughness_broken_time()
 				end
-
-				toughness_extension:set_toughness_broken_time()
 			end
 		end
 	end

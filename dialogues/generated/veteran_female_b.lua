@@ -1216,7 +1216,7 @@ return function ()
 				"time_since_last_short_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				140
+				45
 			},
 			{
 				"faction_memory",
@@ -1473,7 +1473,7 @@ return function ()
 				"time_since_last_short_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				140
+				45
 			},
 			{
 				"faction_memory",
@@ -1730,7 +1730,7 @@ return function ()
 				"time_since_last_short_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				140
+				45
 			},
 			{
 				"faction_memory",
@@ -1987,7 +1987,7 @@ return function ()
 				"time_since_last_short_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				140
+				45
 			},
 			{
 				"faction_memory",
@@ -2244,7 +2244,7 @@ return function ()
 				"time_since_last_short_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				140
+				45
 			},
 			{
 				"faction_memory",
@@ -2501,7 +2501,7 @@ return function ()
 				"time_since_last_short_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				140
+				45
 			},
 			{
 				"faction_memory",
@@ -2758,7 +2758,7 @@ return function ()
 				"time_since_last_short_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				140
+				45
 			},
 			{
 				"faction_memory",
@@ -3015,7 +3015,7 @@ return function ()
 				"time_since_last_short_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				140
+				45
 			},
 			{
 				"faction_memory",
@@ -4277,7 +4277,7 @@ return function ()
 		},
 		on_pre_rule_execution = {
 			random_ignore_vo = {
-				chance = 0.4,
+				chance = 0.2,
 				max_failed_tries = 0,
 				hold_for = 0
 			}
@@ -6169,7 +6169,7 @@ return function ()
 		},
 		on_pre_rule_execution = {
 			random_ignore_vo = {
-				chance = 0.4,
+				chance = 0.2,
 				max_failed_tries = 0,
 				hold_for = 0
 			}
@@ -6735,7 +6735,7 @@ return function ()
 		wwise_route = 0,
 		response = "bonding_conversation_metropolitan_little_things_a",
 		database = "veteran_female_b",
-		category = "conversations_prio_1",
+		category = "player_prio_1",
 		criterias = {
 			{
 				"query_context",

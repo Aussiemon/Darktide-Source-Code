@@ -1,6 +1,7 @@
 local BaseTemplateSettings = require("scripts/settings/equipment/weapon_templates/base_template_settings")
 local FootstepIntervalsTemplates = require("scripts/settings/equipment/footstep/footstep_intervals_templates")
 local ProjectileTemplates = require("scripts/settings/projectile/projectile_templates")
+local SmartTargetingTemplates = require("scripts/settings/equipment/smart_targeting_templates")
 local weapon_template = {}
 
 local function _select_throw_anim(action_settings, condition_func_params)
@@ -183,6 +184,7 @@ weapon_template.uses_ammunition = true
 weapon_template.uses_overheat = false
 weapon_template.sprint_ready_up_time = 0.1
 weapon_template.max_first_person_anim_movement_speed = 5.8
+weapon_template.smart_targeting_template = SmartTargetingTemplates.default_melee
 weapon_template.crosshair = {
 	crosshair_type = "dot"
 }

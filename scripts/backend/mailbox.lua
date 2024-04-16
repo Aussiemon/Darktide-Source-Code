@@ -3,6 +3,10 @@ local BackendUtilities = require("scripts/foundation/managers/backend/utilities/
 local MailBox = class("MailBox")
 
 local function _decorate_mail(mail)
+	mail.mark_mail_read_and_claimed = function (self)
+		return Managers.backend.interfaces.mailbox:mark_mail_read_and_claimed(mail)
+	end
+
 	mail.mark_read = function (self)
 		return Managers.backend.interfaces.mailbox:mark_mail_read(mail)
 	end
@@ -36,13 +40,13 @@ local function _patch_mail(mail, body)
 	end)
 end
 
-MailBox.get_mail_paged = function (self, character_id, limit, source)
+MailBox.get_mail_paged = function (self, character_id, limit, include_unread_global, include_translation, source)
 	local promise = nil
 
 	if character_id then
-		promise = BackendUtilities.make_account_title_request("characters", BackendUtilities.url_builder(character_id):path("/mail"):query("source", source):query("limit", limit))
+		promise = BackendUtilities.make_account_title_request("characters", BackendUtilities.url_builder(character_id):path("/mail"):query("source", source):query("includeUnreadGlobal", include_unread_global):query("includeTranslation", include_translation):query("limit", limit))
 	else
-		promise = BackendUtilities.make_account_title_request("account", BackendUtilities.url_builder("/mail"):query("source", source):query("limit", limit))
+		promise = BackendUtilities.make_account_title_request("account", BackendUtilities.url_builder("/mail"):query("source", source):query("includeUnreadGlobal", include_unread_global):query("includeTranslation", include_translation):query("limit", limit))
 	end
 
 	return promise:next(function (data)
@@ -58,6 +62,28 @@ MailBox.get_mail_paged = function (self, character_id, limit, source)
 		end
 
 		return result
+	end)
+end
+
+MailBox.mark_mail_read_and_claimed = function (self, mail)
+	if mail.isRead then
+		return Promise.resolved()
+	end
+
+	if mail.claimed then
+		return Promise.resolved()
+	end
+
+	return _patch_mail(mail, {
+		claimed = true,
+		read = true
+	}):next(function (reward)
+		mail.isRead = true
+		mail.claimed = true
+
+		if reward then
+			return reward
+		end
 	end)
 end
 

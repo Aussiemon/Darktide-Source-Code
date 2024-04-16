@@ -917,6 +917,10 @@ overrides.autogun_weapon_special_bash_heavy = {
 		{
 			"weakspot_stagger_resistance_modifier",
 			0.1
+		},
+		{
+			"ragdoll_push_force",
+			400
 		}
 	}
 }

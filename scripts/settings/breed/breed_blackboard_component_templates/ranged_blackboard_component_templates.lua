@@ -76,6 +76,11 @@ local cultist_flamer = table.clone(ranged_base)
 cultist_flamer.slot = nil
 cultist_flamer.blocked = nil
 cultist_flamer.suppression = nil
+cultist_flamer.statistics = {
+	num_attacks_done = "number",
+	num_in_liquid = "number"
+}
+local renegade_flamer = table.clone(cultist_flamer)
 local grenadier = table.clone(ranged_base)
 grenadier.throw_grenade = {
 	anim_event = "string",
@@ -87,6 +92,10 @@ grenadier.throw_grenade = {
 grenadier.slot = nil
 grenadier.blocked = nil
 grenadier.suppression = nil
+grenadier.statistics = {
+	num_attacks_done = "number",
+	num_in_liquid = "number"
+}
 local sniper = table.clone(ranged_cover_user)
 sniper.perception.has_good_last_los_position = "boolean"
 sniper.slot = nil
@@ -120,10 +129,6 @@ ranged_patroller_no_suppression.patrol = {
 	auto_patrol = "boolean"
 }
 ranged_patroller_no_suppression.suppression = nil
-local renegade_flamer = table.clone(ranged_patroller)
-renegade_flamer.slot = nil
-renegade_flamer.blocked = nil
-renegade_flamer.suppression = nil
 local renegade_twin_captain = table.clone(grenadier)
 renegade_twin_captain.behavior = {
 	should_disappear_instant = "boolean",
@@ -141,6 +146,7 @@ renegade_twin_captain.behavior = {
 	other_twin_unit = "Unit",
 	remove_toughness_clamp = "boolean"
 }
+renegade_twin_captain.statistics = nil
 renegade_twin_captain.nearby_units_broadphase = {
 	next_broadphase_t = "number",
 	num_units = "number"

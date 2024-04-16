@@ -117,6 +117,8 @@ StateGame.on_enter = function (self, parent, params)
 	if not DEDICATED_SERVER then
 		Managers.wwise_game_sync:set_game_state_machine(self._sm)
 	end
+
+	Managers.event:register(self, "on_suspend", "_on_suspend")
 end
 
 local function _connection_options(is_dedicated_hub_server, is_dedicated_mission_server)
@@ -274,6 +276,7 @@ StateGame.on_exit = function (self, on_shutdown)
 
 	self._sm:delete(on_shutdown)
 	self._vo_sources_cache:destroy()
+	Managers.event:unregister(self, "on_suspend")
 	Managers:destroy()
 	self._approve_channel_delegate:delete()
 	self._event_delegate:delete()
@@ -414,6 +417,13 @@ end
 
 StateGame.state_machine = function (self)
 	return self._sm
+end
+
+StateGame._on_suspend = function (self)
+	local error_state = CLASSES.StateError
+	local params = {}
+
+	self._sm:force_change_state(error_state, params)
 end
 
 return StateGame

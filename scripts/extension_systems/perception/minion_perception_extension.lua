@@ -122,7 +122,12 @@ MinionPerceptionExtension.game_object_initialized = function (self, session, gam
 	end
 
 	if initial_target_unit then
-		self:_set_target_unit(initial_target_unit)
+		local side = self._side_system.side_by_unit[self._unit]
+		local target_units = side.ai_target_units
+
+		if target_units[initial_target_unit] then
+			self:_set_target_unit(initial_target_unit)
+		end
 
 		self._initial_target_unit = nil
 	end
@@ -325,20 +330,25 @@ MinionPerceptionExtension.alert = function (self, enemy_unit)
 	else
 		perception_component.aggro_state = aggro_states.alerted
 		local unit = self._unit
-		local target_distance = nil
+		local side = self._side_system.side_by_unit[unit]
+		local target_units = side.ai_target_units
 
-		if perception_component.target_unit then
-			target_distance = perception_component.target_distance
-		else
-			self:_set_target_unit(enemy_unit)
+		if target_units[enemy_unit] then
+			local target_distance = nil
 
-			target_distance = Vector3.distance(POSITION_LOOKUP[unit], POSITION_LOOKUP[enemy_unit])
+			if perception_component.target_unit then
+				target_distance = perception_component.target_distance
+			else
+				self:_set_target_unit(enemy_unit)
+
+				target_distance = Vector3.distance(POSITION_LOOKUP[unit], POSITION_LOOKUP[enemy_unit])
+			end
+
+			local breed_name = self._breed.name
+			local vo_event = "alerted_idle"
+
+			Vo.enemy_generic_vo_event(unit, vo_event, breed_name, target_distance)
 		end
-
-		local breed_name = self._breed.name
-		local vo_event = "alerted_idle"
-
-		Vo.enemy_generic_vo_event(unit, vo_event, breed_name, target_distance)
 	end
 end
 
@@ -688,7 +698,7 @@ end
 local DARKNESS_LOS_MODIFIER_NAME = "mutator_darkness_los"
 local VENTILATION_PURGE_LOS_MODIFIER_NAME = "mutator_ventilation_purge_los"
 local CIRCUMSTANCE_DETECTION_DISTANCE_LOS_REQUIREMENTS = {
-	mutator_ventilation_purge_los = 20,
+	mutator_ventilation_purge_los = 30,
 	mutator_darkness_los = 15
 }
 local BUFF_KEYWORD_DISTANCE_LOS_REQUIREMENT = {
@@ -697,8 +707,8 @@ local BUFF_KEYWORD_DISTANCE_LOS_REQUIREMENT = {
 
 MinionPerceptionExtension._within_detection_los_range = function (self, unit, unit_position, target_unit, target_position)
 	if self._ignore_detection_los_modifiers then
-		local count_stanting_in_smoke = true
-		local is_looking_trough_fog = self._smoke_fog_system:check_fog_los(unit_position, target_position, unit, count_stanting_in_smoke)
+		local count_standing_in_smoke = true
+		local is_looking_trough_fog = self._smoke_fog_system:check_fog_los(unit_position, target_position, unit, count_standing_in_smoke)
 
 		if is_looking_trough_fog then
 			return false, true
@@ -715,17 +725,11 @@ MinionPerceptionExtension._within_detection_los_range = function (self, unit, un
 		detection_los_requirement = CIRCUMSTANCE_DETECTION_DISTANCE_LOS_REQUIREMENTS[los_modifier]
 	end
 
-	local buff_extension = self._buff_extension
-
 	for keyword, distance_requirement in pairs(BUFF_KEYWORD_DISTANCE_LOS_REQUIREMENT) do
-		if buff_extension:has_keyword(keyword) then
-			detection_los_requirement = distance_requirement
-		else
-			local target_buff_extension = ScriptUnit.has_extension(target_unit, "buff_system")
+		local target_buff_extension = ScriptUnit.has_extension(target_unit, "buff_system")
 
-			if target_buff_extension and target_buff_extension:has_keyword(keyword) then
-				detection_los_requirement = distance_requirement
-			end
+		if target_buff_extension and target_buff_extension:has_keyword(keyword) then
+			detection_los_requirement = distance_requirement
 		end
 	end
 

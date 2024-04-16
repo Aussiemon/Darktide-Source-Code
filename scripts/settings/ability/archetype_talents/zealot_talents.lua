@@ -169,6 +169,10 @@ local archetype_talents = {
 					damage_profile_name = "liquid_area_fire_burning",
 					info_func = "damage_profile"
 				}
+			},
+			passive = {
+				buff_template_name = "zealot_flame_grenade_thrown",
+				identifier = "zealot_flame_grenade_thrown"
 			}
 		},
 		zealot_throwing_knives = {
@@ -667,6 +671,10 @@ local archetype_talents = {
 				identifier = "zealot_aura",
 				priority = 1,
 				buff_template_name = "zealot_coherency_toughness_damage_resistance"
+			},
+			passive = {
+				buff_template_name = "zealot_toughness_on_aura_tracking_buff",
+				identifier = "zealot_toughness_on_aura_tracking_buff"
 			}
 		},
 		zealot_toughness_damage_reduction_coherency_improved = {
@@ -689,6 +697,10 @@ local archetype_talents = {
 				identifier = "zealot_aura",
 				priority = 2,
 				buff_template_name = "zealot_coherency_toughness_damage_resistance_improved"
+			},
+			passive = {
+				buff_template_name = "zealot_improved_toughness_on_aura_tracking_buff",
+				identifier = "zealot_improved_toughness_on_aura_tracking_buff"
 			}
 		},
 		zealot_corruption_healing_coherency = {
@@ -741,6 +753,10 @@ local archetype_talents = {
 			coherency = {
 				priority = 2,
 				identifier = "zealot_aura"
+			},
+			passive = {
+				buff_template_name = "zealot_backstab_kills_while_loner_aura_tracking_buff",
+				identifier = "zealot_backstab_kills_while_loner_aura_tracking_buff"
 			}
 		},
 		zealot_always_in_coherency_improved = {

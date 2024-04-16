@@ -7,6 +7,8 @@ local SpawnPointQueries = require("scripts/managers/main_path/utilities/spawn_po
 local NavQueries = require("scripts/utilities/nav_queries")
 local MainPathQueries = require("scripts/utilities/main_path_queries")
 local MutatorToxicGasVolumes = class("MutatorToxicGasVolumes", "MutatorBase")
+local GasPhases = table.enum("dormant", "activating", "active")
+local GAS_START_SOUND_EVENT = "wwise/events/world/play_event_toxic_gas_high_start"
 
 MutatorToxicGasVolumes.init = function (self, is_server, network_event_delegate, mutator_template, nav_world, level_seed)
 	self._is_server = is_server
@@ -15,6 +17,7 @@ MutatorToxicGasVolumes.init = function (self, is_server, network_event_delegate,
 	self._buffs = {}
 	self._template = mutator_template
 	self._gas_clouds = {}
+	self._corals = {}
 	self._nav_world = nav_world
 	self._buff_affected_units = {}
 	self._active_gas_clouds = {}
@@ -29,6 +32,62 @@ MutatorToxicGasVolumes.init = function (self, is_server, network_event_delegate,
 	end
 end
 
+local CORAL_EVENT_TYPES = table.enum("starting", "trigger")
+
+MutatorToxicGasVolumes._activate_corals = function (self, cloud, coral_event_type)
+	if not cloud.corals then
+		return
+	end
+
+	local corals = cloud.corals
+
+	for i = 1, #corals do
+		local coral = corals[i]
+
+		if coral_event_type == CORAL_EVENT_TYPES.starting then
+			Component.trigger_event_on_clients(coral.coral_component, "create_low_gas")
+
+			if not DEDICATED_SERVER then
+				Component.event(coral.coral_unit, "create_low_gas")
+			end
+		elseif coral_event_type == CORAL_EVENT_TYPES.trigger then
+			Component.trigger_event_on_clients(coral.coral_component, "create_trigger_gas")
+
+			if not DEDICATED_SERVER then
+				Component.event(coral.coral_unit, "create_trigger_gas")
+			end
+		end
+	end
+end
+
+MutatorToxicGasVolumes._deactivate_corals = function (self, cloud, coral_event_type)
+	if not cloud.corals then
+		return
+	end
+
+	local corals = cloud.corals
+
+	for i = 1, #corals do
+		local coral = corals[i]
+
+		Component.trigger_event_on_clients(coral.coral_component, "despawn_low_gas")
+
+		if not DEDICATED_SERVER then
+			Component.event(coral.coral_unit, "despawn_low_gas")
+		end
+	end
+end
+
+MutatorToxicGasVolumes._start_fading_cloud = function (self, cloud, fade_time)
+	Component.trigger_event_on_clients(cloud.fog_component, "start_fading")
+
+	if not DEDICATED_SERVER then
+		Component.event(cloud.cloud_unit, "start_fading")
+	end
+
+	cloud.started_fading = true
+end
+
 MutatorToxicGasVolumes._activate_cloud = function (self, cloud)
 	local liquid_area_template = LiquidAreaTemplates.toxic_gas
 	local max_liquid = cloud.max_liquid
@@ -38,6 +97,7 @@ MutatorToxicGasVolumes._activate_cloud = function (self, cloud)
 		cloud.liquid_unit = unit
 	end
 
+	cloud.started_fading = false
 	cloud.active = true
 
 	cloud.fog_component:set_volume_enabled(true)
@@ -57,15 +117,107 @@ MutatorToxicGasVolumes._deactivate_cloud = function (self, cloud)
 
 	cloud.fog_component:set_volume_enabled(false)
 
+	cloud.phase = GasPhases.dormant
+
 	if cloud.buff_volume_component then
 		cloud.buff_volume_component:disable_buffs()
 	end
+
+	local sound_position_entry = self._sound_positions[cloud.section_id][cloud.cloud_id]
+
+	if sound_position_entry then
+		sound_position_entry.triggered = false
+	end
 end
 
-local CHANCE_TO_NOT_SPAWN_CLOUD = 0.25
+local ACTIVATING_TIME = 8.5
+
+MutatorToxicGasVolumes._activate_alternating_cloud = function (self, cloud, optional_activating_timer, timer)
+	cloud.active = true
+	cloud.phase = GasPhases.activating
+	cloud.activating_timer = optional_activating_timer or ACTIVATING_TIME
+	cloud.started_fading = false
+	timer.started_low_gas = true
+
+	Component.trigger_event_on_clients(cloud.fog_component, "create_low_gas")
+
+	if not DEDICATED_SERVER then
+		Component.event(cloud.cloud_unit, "create_low_gas")
+	end
+
+	self:_activate_corals(cloud, CORAL_EVENT_TYPES.starting)
+end
+
+MutatorToxicGasVolumes._update_activating_cloud = function (self, dt, cloud, timer)
+	if cloud.activating_timer < 1 and not cloud.activated_trigger then
+		if not cloud.corals or #cloud.corals == 0 then
+			Component.trigger_event_on_clients(cloud.fog_component, "create_trigger_gas")
+		end
+
+		if not DEDICATED_SERVER and (not cloud.corals or #cloud.corals == 0) then
+			Component.event(cloud.cloud_unit, "create_trigger_gas")
+		end
+
+		local sound_position_entry = self._sound_positions[cloud.section_id][cloud.cloud_id]
+
+		if not sound_position_entry.triggered then
+			local fx_system = Managers.state.extension:system("fx_system")
+
+			fx_system:trigger_wwise_event(GAS_START_SOUND_EVENT, sound_position_entry.position:unbox())
+
+			sound_position_entry.triggered = true
+		end
+
+		self:_activate_corals(cloud, CORAL_EVENT_TYPES.trigger)
+
+		cloud.activated_trigger = true
+	end
+
+	if cloud.activating_timer and cloud.activating_timer > 0 then
+		cloud.activating_timer = math.max(cloud.activating_timer - dt, 0)
+
+		if cloud.activating_timer > 0 then
+			return false
+		end
+	end
+
+	self:_activate_activating_cloud(cloud, timer)
+
+	return true
+end
+
+MutatorToxicGasVolumes._activate_activating_cloud = function (self, cloud, timer)
+	cloud.fog_component:set_volume_enabled(true)
+
+	if cloud.buff_volume_component then
+		cloud.buff_volume_component:enable_buffs()
+	end
+
+	Component.trigger_event_on_clients(cloud.fog_component, "despawn_low_gas")
+
+	if not DEDICATED_SERVER then
+		Component.event(cloud.cloud_unit, "despawn_low_gas")
+	end
+
+	self:_deactivate_corals(cloud)
+
+	timer.started_low_gas = false
+	cloud.phase = GasPhases.active
+	cloud.activated_trigger = nil
+end
+
+local CHANCE_TO_NOT_SPAWN_CLOUD = 0.15
+local ALTERNATING_CLOUDS = true
 
 MutatorToxicGasVolumes.on_spawn_points_generated = function (self, level, themes)
-	local gas_clouds = self._gas_clouds
+	if ALTERNATING_CLOUDS then
+		self:_setup_alternating_clouds()
+	else
+		self:_setup_static_clouds()
+	end
+end
+
+MutatorToxicGasVolumes._get_clouds = function (self, gas_clouds)
 	local component_system = Managers.state.extension:system("component_system")
 	local fog_units = component_system:get_units_from_component_name("ToxicGasFog")
 
@@ -105,6 +257,52 @@ MutatorToxicGasVolumes.on_spawn_points_generated = function (self, level, themes
 		end
 	end
 
+	return num_sections
+end
+
+MutatorToxicGasVolumes._get_corals = function (self, corals)
+	local component_system = Managers.state.extension:system("component_system")
+	local coral_units = component_system:get_units_from_component_name("ToxicGasCorals")
+
+	if #coral_units == 0 then
+		return
+	end
+
+	local num_sections = 0
+
+	for i = 1, #coral_units do
+		local coral_unit = coral_units[i]
+		local components = Component.get_components_by_name(coral_unit, "ToxicGasCorals")
+
+		for _, coral_component in ipairs(components) do
+			local id = coral_component:get_data(coral_unit, "id")
+			local section_id = coral_component:get_data(coral_unit, "section_id")
+
+			if not corals[section_id] then
+				corals[section_id] = {}
+			end
+
+			if not corals[section_id][id] then
+				corals[section_id][id] = {}
+			end
+
+			if num_sections < section_id then
+				num_sections = section_id
+			end
+
+			local entry = {
+				coral_unit = coral_unit,
+				coral_component = coral_component
+			}
+
+			table.insert(corals[section_id][id], entry)
+		end
+	end
+end
+
+MutatorToxicGasVolumes._setup_static_clouds = function (self)
+	local gas_clouds = self._gas_clouds
+	local num_sections = self:_get_clouds(gas_clouds)
 	local active_gas_clouds = {}
 	local force_next_to_not_skip = false
 
@@ -172,27 +370,122 @@ MutatorToxicGasVolumes.on_spawn_points_generated = function (self, level, themes
 	self._active_gas_clouds = active_gas_clouds
 end
 
-MutatorToxicGasVolumes._random = function (self, ...)
-	local seed, value = math.next_random(self._seed, ...)
-	self._seed = seed
+MutatorToxicGasVolumes._setup_alternating_clouds = function (self)
+	local gas_clouds = self._gas_clouds
+	local num_sections = self:_get_clouds(gas_clouds)
+	local corals = self._corals
 
-	return value
+	self:_get_corals(corals)
+
+	local main_path_manager = Managers.state.main_path
+	local alternating_gas_clouds = {}
+	local alternating_timers = {}
+	local sound_positions = {}
+
+	for i = 1, num_sections do
+		repeat
+			local section_entry = gas_clouds[i]
+
+			for k = 1, #section_entry do
+				local clouds = section_entry[k]
+
+				if not alternating_timers[i] then
+					alternating_timers[i] = {}
+					sound_positions[i] = {}
+				end
+
+				if not alternating_timers[i][k] then
+					alternating_timers[i][k] = {
+						active = false,
+						timer = 1
+					}
+				end
+
+				local sound_position = Vector3(0, 0, 0)
+				local num_active_clouds = 0
+
+				for j = 1, #clouds do
+					local cloud = clouds[j]
+					local cloud_unit = cloud.fog_unit
+					local max_liquid = cloud.max_liquid
+					local fog_components = Component.get_components_by_name(cloud_unit, "ToxicGasFog")
+					local wanted_component = nil
+
+					for _, fog_component in ipairs(fog_components) do
+						wanted_component = fog_component
+					end
+
+					local buff_volume_components = Component.get_components_by_name(cloud_unit, "BuffVolume")
+					local wanted_buff_volume_component = nil
+
+					for _, buff_volume_component in ipairs(buff_volume_components) do
+						wanted_buff_volume_component = buff_volume_component
+					end
+
+					local position = Unit.local_position(cloud_unit, 1)
+					local position_on_navmesh = NavQueries.position_on_mesh_with_outside_position(self._nav_world, nil, position, 5, 10, 5)
+
+					if position_on_navmesh then
+						local nav_spawn_points = main_path_manager:nav_spawn_points()
+						local spawn_point_group_index = SpawnPointQueries.group_from_position(self._nav_world, nav_spawn_points, position_on_navmesh)
+
+						if spawn_point_group_index then
+							local alternating_min_range = wanted_component:get_data(cloud_unit, "alternating_min_range")
+							local alternating_max_range = wanted_component:get_data(cloud_unit, "alternating_max_range")
+							alternating_timers[i][k].min_range = alternating_min_range
+							alternating_timers[i][k].max_range = alternating_max_range
+							local start_index = main_path_manager:node_index_by_nav_group_index(spawn_point_group_index or 1)
+							local end_index = start_index + 1
+							local _, travel_distance, _, _, _ = MainPathQueries.closest_position_between_nodes(position_on_navmesh, start_index, end_index)
+							local boxed_position = Vector3Box(position)
+							local corals_for_cloud = corals[i] and corals[i][k]
+
+							if not alternating_timers[i][k].travel_distance or travel_distance < alternating_timers[i][k].travel_distance then
+								alternating_timers[i][k].travel_distance = travel_distance
+							end
+
+							local cloud_entry = {
+								should_be_active = false,
+								cloud_unit = cloud_unit,
+								phase = GasPhases.dormant,
+								section_id = i,
+								cloud_id = k,
+								alternating_min_range = alternating_min_range,
+								alternating_max_range = alternating_max_range,
+								corals = corals_for_cloud,
+								travel_distance = travel_distance,
+								position = boxed_position,
+								max_liquid = max_liquid,
+								fog_component = wanted_component,
+								buff_volume_component = wanted_buff_volume_component
+							}
+							sound_position = sound_position + position
+							num_active_clouds = num_active_clouds + 1
+							alternating_gas_clouds[#alternating_gas_clouds + 1] = cloud_entry
+						end
+					end
+				end
+
+				if num_active_clouds > 0 then
+					sound_position = sound_position / num_active_clouds
+					sound_positions[i][k] = {
+						triggered = false,
+						position = Vector3Box(sound_position)
+					}
+				end
+			end
+		until true
+	end
+
+	self._sound_positions = sound_positions
+	self._alternating_gas_clouds = alternating_gas_clouds
+	self._alternating_timers = alternating_timers
 end
 
 local TARGET_SIDE_ID = 1
 local CLOUD_SPAWN_DISTANCE = 60
 
-MutatorToxicGasVolumes.update = function (self, dt, t)
-	if not self._is_server then
-		return
-	end
-
-	local is_main_path_available = Managers.state.main_path:is_main_path_available()
-
-	if not is_main_path_available then
-		return
-	end
-
+MutatorToxicGasVolumes._update_static_clouds = function (self, dt, t)
 	local main_path_manager = Managers.state.main_path
 	local _, ahead_travel_distance = main_path_manager:ahead_unit(TARGET_SIDE_ID)
 
@@ -219,6 +512,119 @@ MutatorToxicGasVolumes.update = function (self, dt, t)
 				self:_deactivate_cloud(gas_cloud)
 			end
 		until true
+	end
+end
+
+local FADING_TIME = 5
+
+MutatorToxicGasVolumes._update_alternating_clouds = function (self, dt, t)
+	local main_path_manager = Managers.state.main_path
+	local _, ahead_travel_distance = main_path_manager:ahead_unit(TARGET_SIDE_ID)
+
+	if not ahead_travel_distance then
+		return
+	end
+
+	local move_timer_override = false
+
+	if Managers.state.terror_event:num_active_events() > 0 then
+		move_timer_override = true
+	end
+
+	local gas_clouds = self._alternating_gas_clouds
+	local alternating_timers = self._alternating_timers
+
+	for section_id = 1, #alternating_timers do
+		local timers = alternating_timers[section_id]
+		local num_timers = #timers
+
+		for i = 1, num_timers do
+			local timer = timers[i]
+
+			if timer.timer and timer.timer > 0 and not timer.started_low_gas then
+				timer.timer = math.max(timer.timer - dt, 0)
+
+				if timer.timer <= 0 then
+					if num_timers > 1 then
+						local new_cloud_id = nil
+
+						repeat
+							new_cloud_id = math.random(1, num_timers)
+						until new_cloud_id ~= i
+
+						local new_cloud_timer = timers[new_cloud_id]
+						new_cloud_timer.active = true
+						new_cloud_timer.timer = math.random_range(new_cloud_timer.min_range, new_cloud_timer.max_range)
+						timer.active = false
+					else
+						timer.active = not timer.active
+						timer.timer = math.random_range(timer.min_range, timer.max_range)
+					end
+				end
+			end
+		end
+	end
+
+	local _, behind_travel_distance = main_path_manager:behind_unit(TARGET_SIDE_ID)
+
+	for i = 1, #gas_clouds do
+		repeat
+			local gas_cloud = gas_clouds[i]
+			local is_active = gas_cloud.active
+			local timer = alternating_timers[gas_cloud.section_id][gas_cloud.cloud_id]
+			local should_be_active = timer.active
+
+			if not should_be_active then
+				if is_active then
+					self:_deactivate_cloud(gas_cloud)
+				end
+			else
+				local shortest_travel_distance = timer.travel_distance
+
+				if is_active and timer.timer <= FADING_TIME and not gas_cloud.started_fading then
+					self:_start_fading_cloud(gas_cloud)
+				end
+
+				local can_activate = move_timer_override or gas_cloud.phase == GasPhases.activating or shortest_travel_distance < ahead_travel_distance
+				local ahead_travel_distance_diff = math.abs(ahead_travel_distance - shortest_travel_distance)
+				local behind_travel_distance_diff = math.abs(behind_travel_distance - shortest_travel_distance)
+				local is_between_ahead_and_behind = shortest_travel_distance < ahead_travel_distance and behind_travel_distance < shortest_travel_distance
+				local should_activate = is_between_ahead_and_behind or ahead_travel_distance_diff < CLOUD_SPAWN_DISTANCE or behind_travel_distance_diff < CLOUD_SPAWN_DISTANCE
+
+				if gas_cloud.phase == GasPhases.activating then
+					self:_update_activating_cloud(dt, gas_cloud, timer)
+				elseif should_activate and not is_active and can_activate then
+					self:_activate_alternating_cloud(gas_cloud, nil, timer)
+				elseif not should_activate and is_active then
+					self:_deactivate_cloud(gas_cloud)
+				end
+			end
+		until true
+	end
+end
+
+MutatorToxicGasVolumes._random = function (self, ...)
+	local seed, value = math.next_random(self._seed, ...)
+	self._seed = seed
+
+	return value
+end
+
+MutatorToxicGasVolumes.update = function (self, dt, t)
+	if not self._is_server then
+		return
+	end
+
+	local is_main_path_available = Managers.state.main_path:is_main_path_available()
+
+	if not is_main_path_available then
+		return
+	end
+
+	if ALTERNATING_CLOUDS then
+		self:_update_alternating_clouds(dt, t)
+	else
+		self:_update_static_clouds(dt, t)
 	end
 end
 

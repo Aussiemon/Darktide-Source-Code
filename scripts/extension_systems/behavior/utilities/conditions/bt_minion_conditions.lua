@@ -1367,14 +1367,6 @@ end
 conditions.renegade_twin_captain_should_disappear_instant = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
 	local behavior_component = blackboard.behavior
 	local should_disappear_instant = behavior_component.should_disappear_instant
-	local flag = "activate_twins"
-	local has_backend_pacing_control_flag = Managers.state.pacing:get_backend_pacing_control_flag(flag)
-
-	if has_backend_pacing_control_flag == false then
-		should_disappear_instant = true
-	elseif has_backend_pacing_control_flag == nil then
-		should_disappear_instant = true
-	end
 
 	return should_disappear_instant
 end
@@ -1393,6 +1385,13 @@ conditions.is_empowered = function (unit, blackboard, scratchpad, condition_args
 	end
 
 	return false
+end
+
+conditions.has_combat_vector_position = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
+	local combat_vector_component = blackboard.combat_vector
+	local has_combat_vector_position = combat_vector_component.has_position
+
+	return has_combat_vector_position
 end
 
 conditions.has_last_los_pos = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)

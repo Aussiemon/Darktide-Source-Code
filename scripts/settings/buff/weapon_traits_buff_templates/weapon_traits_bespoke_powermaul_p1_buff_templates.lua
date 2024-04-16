@@ -28,7 +28,8 @@ templates.weapon_trait_bespoke_powermaul_p1_block_has_chance_to_stun = {
 	predicted = false,
 	class_name = "proc_buff",
 	proc_events = {
-		[proc_events.on_block] = 0.25
+		[proc_events.on_block] = 0.25,
+		[proc_events.on_perfect_block] = 1
 	},
 	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
 	proc_func = function (params, template_data, template_context, t)
@@ -65,7 +66,7 @@ templates.weapon_trait_bespoke_powermaul_p1_staggering_hits_has_chance_to_stun =
 		end
 	end
 }
-templates.weapon_trait_bespoke_powermaul_p1_damage_bonus_vs_electrocuded = {
+templates.weapon_trait_bespoke_powermaul_p1_damage_bonus_vs_electrocuted = {
 	predicted = false,
 	class_name = "buff",
 	conditional_stat_buffs = {

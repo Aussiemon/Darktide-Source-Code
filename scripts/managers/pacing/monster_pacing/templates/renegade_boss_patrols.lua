@@ -180,14 +180,6 @@ local BOSS_PATROLS = {
 				"renegade_executor"
 			},
 			{
-				"chaos_ogryn_bulwark",
-				"chaos_ogryn_bulwark",
-				"chaos_ogryn_bulwark",
-				"chaos_ogryn_bulwark",
-				"renegade_executor",
-				"renegade_executor"
-			},
-			{
 				"chaos_ogryn_gunner",
 				"chaos_ogryn_gunner",
 				"chaos_ogryn_gunner",
@@ -273,15 +265,6 @@ local BOSS_PATROLS = {
 				"chaos_ogryn_executor",
 				"chaos_ogryn_executor",
 				"chaos_ogryn_executor"
-			},
-			{
-				"chaos_ogryn_bulwark",
-				"chaos_ogryn_bulwark",
-				"chaos_ogryn_bulwark",
-				"chaos_ogryn_bulwark",
-				"chaos_ogryn_bulwark",
-				"chaos_ogryn_bulwark",
-				"chaos_ogryn_bulwark"
 			},
 			{
 				"chaos_ogryn_gunner",
@@ -417,17 +400,6 @@ local BOSS_PATROLS = {
 				"chaos_ogryn_executor",
 				"chaos_ogryn_executor",
 				"chaos_ogryn_executor"
-			},
-			{
-				"chaos_ogryn_bulwark",
-				"chaos_ogryn_bulwark",
-				"chaos_ogryn_bulwark",
-				"chaos_ogryn_bulwark",
-				"chaos_ogryn_bulwark",
-				"chaos_ogryn_bulwark",
-				"chaos_ogryn_bulwark",
-				"chaos_ogryn_bulwark",
-				"chaos_ogryn_bulwark"
 			},
 			{
 				"chaos_ogryn_gunner",

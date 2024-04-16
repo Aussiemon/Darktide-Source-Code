@@ -1676,7 +1676,6 @@ weapon_template.anim_state_machine_3p = "content/characters/player/human/third_p
 weapon_template.anim_state_machine_1p = "content/characters/player/human/first_person/animations/2h_chain_sword"
 weapon_template.weapon_box = chain_sword_sweep_box
 weapon_template.chain_speed_template = ChainSpeedTemplates.chainsword_2h
-weapon_template.sprint_ready_up_time = 0.1
 weapon_template.uses_ammunition = false
 weapon_template.uses_overheat = false
 weapon_template.sprint_ready_up_time = 0.1

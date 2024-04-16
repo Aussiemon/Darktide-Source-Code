@@ -84,10 +84,10 @@ template.position_offset = {
 	0
 }
 template.screen_margins = {
-	up = size[2] * 0.6,
-	down = size[2] * 0.6,
-	left = size[1] * 0.6,
-	right = size[1] * 0.6
+	down = 0.23148148148148148,
+	up = 0.23148148148148148,
+	left = 0.234375,
+	right = 0.234375
 }
 template.scale_settings = {
 	scale_to = 1,
@@ -323,6 +323,44 @@ local template_visual_definitions = {
 		textures = {
 			ping = "content/ui/materials/hud/interactions/frames/mission_tag",
 			background = "content/ui/materials/hud/interactions/icons/default",
+			ring = "content/ui/materials/hud/interactions/frames/mission_top",
+			icon = "content/ui/materials/hud/interactions/icons/default",
+			line = "content/ui/materials/hud/interactions/frames/line",
+			arrow = StrictNil
+		}
+	},
+	puzzle = {
+		template_settings_overrides = {
+			fade_settings = {
+				fade_to = 1,
+				fade_from = 0,
+				default_fade = 1,
+				distance_max = 5,
+				distance_min = 5 - template.evolve_distance,
+				easing_function = math.easeCubic
+			},
+			position_offset = {
+				0,
+				0,
+				0
+			}
+		},
+		colors = {
+			background = Color.terminal_background(200, true),
+			ring = {
+				255,
+				226,
+				199,
+				126
+			},
+			line = Color.ui_interaction_default(255, true),
+			ping = Color.ui_terminal(200, true),
+			arrow = Color.ui_interaction_default(255, true),
+			icon = Color.ui_hud_green_super_light(255, true)
+		},
+		textures = {
+			ping = "content/ui/materials/hud/interactions/frames/mission_tag",
+			background = "content/ui/materials/hud/interactions/frames/mission_back",
 			ring = "content/ui/materials/hud/interactions/frames/mission_top",
 			icon = "content/ui/materials/hud/interactions/icons/default",
 			line = "content/ui/materials/hud/interactions/frames/line",

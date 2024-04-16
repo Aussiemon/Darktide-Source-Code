@@ -129,14 +129,6 @@ local on_demand_vo_zealot_male_a = {
 			1.171833,
 			1.423604
 		},
-		sound_event_weights = {
-			0.1666667,
-			0.1666667,
-			0.1666667,
-			0.1666667,
-			0.1666667,
-			0.1666667
-		},
 		randomize_indexes = {}
 	},
 	com_wheel_vo_need_that = {

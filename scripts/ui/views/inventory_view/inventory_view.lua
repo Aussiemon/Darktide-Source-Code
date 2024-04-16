@@ -23,6 +23,7 @@ local VIEW_BY_SLOT = {
 	slot_secondary = "inventory_weapons_view",
 	slot_gear_extra_cosmetic = "inventory_cosmetics_view",
 	slot_animation_end_of_round = "inventory_cosmetics_view",
+	slot_character_title = "inventory_cosmetics_view",
 	slot_insignia = "inventory_cosmetics_view",
 	slot_attachment_1 = "inventory_weapons_view",
 	slot_animation_emote_3 = "inventory_cosmetics_view",

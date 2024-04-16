@@ -323,6 +323,7 @@ weapon_template.breed_anim_state_machine_1p = {
 	human = "content/characters/player/human/first_person/animations/scanner_equip",
 	ogryn = "content/characters/player/ogryn/first_person/animations/scanner_equip"
 }
+weapon_template.smart_targeting_template = SmartTargetingTemplates.default_melee
 weapon_template.fx_sources = {
 	_speaker = "fx_speaker"
 }

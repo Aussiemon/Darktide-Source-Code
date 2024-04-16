@@ -184,6 +184,10 @@ local archetype_talents = {
 			player_ability = {
 				ability_type = "grenade_ability",
 				ability = PlayerAbilities.psyker_chain_lightning
+			},
+			passive = {
+				buff_template_name = "psyker_kills_during_smite_tracking",
+				identifier = "psyker_kills_during_smite_tracking"
 			}
 		},
 		psyker_brain_burst_improved = {
@@ -737,19 +741,6 @@ local archetype_talents = {
 				identifier = "psyker_chain_lightning_improved_target_buff"
 			}
 		},
-		psyker_3_base_4 = {
-			description = "loc_talent_psyker_more_damage_vs_electrocuted_description",
-			name = "Fulmination - Deal more damage vs electrocuted enemies",
-			display_name = "loc_talent_psyker_more_damage_vs_electrocuted",
-			icon = "content/ui/textures/icons/talents/psyker_3/psyker_3_base_4",
-			format_values = {
-				damage = talent_settings_3.passive_4.damage * 100
-			},
-			passive = {
-				buff_template_name = "psyker_protectorate_damage_vs_electrocuted",
-				identifier = "psyker_protectorate_damage_vs_electrocuted"
-			}
-		},
 		psyker_aura_ability_cooldown = {
 			description = "loc_talent_psyker_aura_reduced_ability_cooldown_description",
 			name = "Aura - Decreased ability cooldown",
@@ -1282,16 +1273,6 @@ local archetype_talents = {
 			coherency = {
 				buff_template_name = "psyker_aura_crit_chance_aura_improved",
 				identifier = "psyker_aura"
-			}
-		},
-		psyker_coherency_aura_lingers = {
-			description = "loc_talent_psyker_coherency_aura_lingers_description",
-			name = "psyker_coherency_aura_lingers",
-			display_name = "loc_talent_psyker_coherency_aura_lingers",
-			icon = "content/ui/textures/icons/talents/psyker_1/psyker_1_tier_3_3",
-			passive = {
-				buff_template_name = "coherency_aura_lingers",
-				identifier = "coherency"
 			}
 		},
 		psyker_aura_souls_on_kill = {
@@ -1914,7 +1895,7 @@ local archetype_talents = {
 			}
 		},
 		psyker_new_mark_passive = {
-			description = "loc_talent_psyker_marked_enemies_passive_desc",
+			description = "loc_talent_psyker_marked_enemies_passive_new_desc",
 			name = "Mark enemies. Killing marked enemies grants bonuses",
 			display_name = "loc_talent_psyker_marked_enemies_passive",
 			format_values = {

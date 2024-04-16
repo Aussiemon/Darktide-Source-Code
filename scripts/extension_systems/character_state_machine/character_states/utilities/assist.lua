@@ -33,6 +33,18 @@ Assist.update = function (self, dt, t)
 
 	if being_assisted then
 		assist_done = self:_update_assist(dt, t)
+
+		if assist_done and self._is_server then
+			local interactor_unit = self._last_interactor_unit
+
+			if interactor_unit and ALIVE[interactor_unit] then
+				local assist_type = self._assist_type_or_nil or "assisted"
+
+				PlayerAssistNotifications.show_notification(self._unit, interactor_unit, assist_type)
+
+				self._last_interactor_unit = nil
+			end
+		end
 	end
 
 	self:_try_abort_anim()
@@ -62,6 +74,11 @@ Assist._update_assist = function (self, dt, t)
 
 	if not being_assisted and not assist_successful and not force_assist then
 		self:stop()
+	end
+
+	if being_assisted then
+		local interactor_unit = self._interactee_component.interactor_unit
+		self._last_interactor_unit = interactor_unit
 	end
 
 	if force_assist then

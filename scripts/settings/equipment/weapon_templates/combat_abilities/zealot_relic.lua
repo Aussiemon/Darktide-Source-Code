@@ -2,6 +2,7 @@ local BaseTemplateSettings = require("scripts/settings/equipment/weapon_template
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local FootstepIntervalsTemplates = require("scripts/settings/equipment/footstep/footstep_intervals_templates")
 local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
+local SmartTargetingTemplates = require("scripts/settings/equipment/smart_targeting_templates")
 local wield_inputs = PlayerCharacterConstants.wield_inputs
 local weapon_template = {
 	action_inputs = {
@@ -195,6 +196,7 @@ weapon_template.conditional_state_to_action_input = {
 }
 weapon_template.anim_state_machine_3p = "content/characters/player/human/third_person/animations/pocketables"
 weapon_template.anim_state_machine_1p = "content/characters/player/human/first_person/animations/preacher_relic"
+weapon_template.smart_targeting_template = SmartTargetingTemplates.default_melee
 weapon_template.spread_template = "no_spread"
 weapon_template.uses_ammunition = false
 weapon_template.uses_overheat = false

@@ -5,6 +5,7 @@ local AttackSettings = require("scripts/settings/damage/attack_settings")
 local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
 local Explosion = require("scripts/utilities/attack/explosion")
 local MinionDifficultySettings = require("scripts/settings/difficulty/minion_difficulty_settings")
+local PlayerAssistNotifications = require("scripts/utilities/player_assist_notifications")
 local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
 local BtChaosHoundTargetPouncedAction = class("BtChaosHoundTargetPouncedAction", "BtNode")
 
@@ -70,6 +71,12 @@ BtChaosHoundTargetPouncedAction.leave = function (self, unit, breed, blackboard,
 
 	if ALIVE[pounce_target] then
 		scratchpad.disabled_state_input_component.disabling_unit = nil
+		local health_extension = ScriptUnit.extension(unit, "health_system")
+		local last_damaging_unit = health_extension:last_damaging_unit()
+
+		if ALIVE[last_damaging_unit] then
+			PlayerAssistNotifications.show_notification(pounce_target, last_damaging_unit, "saved")
+		end
 	end
 
 	pounce_component.pounce_target = nil

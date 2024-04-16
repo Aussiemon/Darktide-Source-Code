@@ -3,6 +3,7 @@ local DefaultViewInputSettings = require("scripts/settings/input/default_view_in
 local InputDevice = require("scripts/managers/input/input_device")
 local Item = require("scripts/utilities/items")
 local ItemUtils = require("scripts/utilities/items")
+local ProfileUtils = require("scripts/utilities/profile_utils")
 local TextUtilities = require("scripts/utilities/ui/text")
 local TextUtils = require("scripts/utilities/ui/text")
 local UIFonts = require("scripts/managers/ui/ui_fonts")
@@ -14,7 +15,33 @@ local UIWidget = require("scripts/managers/ui/ui_widget")
 local WeaponStats = require("scripts/utilities/weapon_stats")
 local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
 local WeaponUIStatsTemplates = require("scripts/settings/equipment/weapon_ui_stats_templates")
-local DEBUG_BACKGROUNDS = false
+
+local function _generated_icon_visibility(content, style)
+	local use_placeholder_texture = content.use_placeholder_texture
+
+	if use_placeholder_texture and use_placeholder_texture == 0 then
+		return true
+	end
+
+	return false
+end
+
+local function _loading_icon_visibility(content, style)
+	local use_placeholder_texture = content.use_placeholder_texture
+
+	if not use_placeholder_texture or use_placeholder_texture == 1 then
+		return true
+	end
+
+	return false
+end
+
+local function _loading_icon_change(content, style, _, dt)
+	local add = -0.5 * dt
+	style.rotation_progress = ((style.rotation_progress or 0) + add) % 1
+	style.angle = style.rotation_progress * math.pi * 2
+end
+
 local bar_size = 100
 
 local function _scale_stat_value_by_type(value, display_type)
@@ -54,7 +81,7 @@ local default_button_content = {
 	on_pressed_sound = UISoundEvents.default_select
 }
 
-local function get_style_text_height(text, style, ui_renderer)
+local function _style_text_height(text, style, ui_renderer)
 	local text_font_data = UIFonts.data_by_type(style.font_type)
 	local text_font = text_font_data.path
 	local text_size = style.size
@@ -65,7 +92,7 @@ local function get_style_text_height(text, style, ui_renderer)
 	return text_height
 end
 
-local function get_style_text_width(text, style, ui_renderer)
+local function _style_text_width(text, style, ui_renderer)
 	local text_font_data = UIFonts.data_by_type(style.font_type)
 	local text_font = text_font_data.path
 	local text_size = style.size
@@ -101,21 +128,34 @@ local function generate_blueprints_function(grid_size, optional_item)
 	}
 	weapon_display_name_style.text_horizontal_alignment = "left"
 	weapon_display_name_style.text_vertical_alignment = "top"
-	weapon_display_name_style.text_color = Color.terminal_text_header(255, true)
-	local weapon_type_name_style = table.clone(UIFontSettings.header_3)
-	weapon_type_name_style.offset = {
+	weapon_display_name_style.text_color = Color.terminal_text_header_selected(255, true)
+	local weapon_sub_display_name_style = table.clone(UIFontSettings.header_3)
+	weapon_sub_display_name_style.offset = {
 		20,
 		12,
 		4
 	}
-	weapon_type_name_style.font_size = 20
-	weapon_type_name_style.size = {
+	weapon_sub_display_name_style.font_size = 20
+	weapon_sub_display_name_style.size = {
 		grid_width - 40,
 		500
 	}
-	weapon_type_name_style.text_horizontal_alignment = "left"
-	weapon_type_name_style.text_vertical_alignment = "top"
-	weapon_type_name_style.text_color = Color.terminal_text_body(255, true)
+	weapon_sub_display_name_style.text_horizontal_alignment = "left"
+	weapon_sub_display_name_style.text_vertical_alignment = "top"
+	weapon_sub_display_name_style.text_color = Color.text_default(255, true)
+	local item_display_name_style = table.clone(weapon_display_name_style)
+	item_display_name_style.offset = {
+		20,
+		10,
+		4
+	}
+	local item_sub_display_name_style = table.clone(weapon_sub_display_name_style)
+	item_sub_display_name_style.offset = {
+		20,
+		12,
+		4
+	}
+	local weapon_rarity_name_style = table.clone(weapon_sub_display_name_style)
 	local weapon_keyword_style = table.clone(UIFontSettings.header_3)
 	weapon_keyword_style.offset = {
 		0,
@@ -129,7 +169,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 	weapon_keyword_style.font_size = 18
 	weapon_keyword_style.text_horizontal_alignment = "center"
 	weapon_keyword_style.text_vertical_alignment = "center"
-	weapon_keyword_style.text_color = Color.terminal_text_header(255, true)
+	weapon_keyword_style.text_color = Color.terminal_text_body(255, true)
 	local weapon_skin_requirement_header_style = table.clone(UIFontSettings.header_3)
 	weapon_skin_requirement_header_style.offset = {
 		10,
@@ -232,7 +272,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 	local modification_lock_style = table.clone(UIFontSettings.body)
 	modification_lock_style.offset = {
 		10,
-		-2,
+		-5,
 		9
 	}
 	modification_lock_style.font_size = 24
@@ -379,20 +419,6 @@ local function generate_blueprints_function(grid_size, optional_item)
 	weapon_attack_header_style.text_horizontal_alignment = "left"
 	weapon_attack_header_style.text_vertical_alignment = "center"
 	weapon_attack_header_style.text_color = Color.terminal_text_header(255, true)
-	local weapon_action_text_style = table.clone(UIFontSettings.body)
-	weapon_action_text_style.offset = {
-		0,
-		0,
-		4
-	}
-	weapon_action_text_style.size = {
-		160,
-		240
-	}
-	weapon_action_text_style.font_size = 16
-	weapon_action_text_style.text_horizontal_alignment = "right"
-	weapon_action_text_style.text_vertical_alignment = "bottom"
-	weapon_action_text_style.text_color = Color.terminal_text_body(255, true)
 	local weapon_action_value_style = table.clone(UIFontSettings.body)
 	weapon_action_value_style.offset = {
 		0,
@@ -631,7 +657,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 	damage_legend_style.text_vertical_alignment = "top"
 	damage_legend_style.text_color = Color.white(255, true)
 
-	local function _generate_damage_grid_pass_templates(grid_size, item)
+	local function _generate_damage_grid_pass_templates(pass_grid_size, item)
 		local pass_templates = {}
 
 		if not item then
@@ -684,11 +710,11 @@ local function generate_blueprints_function(grid_size, optional_item)
 						horizontal_alignment = "right",
 						scale_to_material = true,
 						offset = {
-							-20 - grid_size[1] * (i - 1),
-							25 + grid_size[2] * (j - 1),
+							-20 - pass_grid_size[1] * (i - 1),
+							25 + pass_grid_size[2] * (j - 1),
 							1
 						},
-						size = grid_size,
+						size = pass_grid_size,
 						color = Color.terminal_text_body(255, true),
 						base_color = Color.terminal_text_body(60, true),
 						selected_color = Color.terminal_corner_selected(128, 0)
@@ -703,11 +729,11 @@ local function generate_blueprints_function(grid_size, optional_item)
 						horizontal_alignment = "right",
 						scale_to_material = true,
 						offset = {
-							-20 - grid_size[1] * (i - 1),
-							25 + grid_size[2] * (j - 1),
+							-20 - pass_grid_size[1] * (i - 1),
+							25 + pass_grid_size[2] * (j - 1),
 							2
 						},
-						size = grid_size,
+						size = pass_grid_size,
 						color = Color.terminal_text_body(255, true),
 						base_color = Color.terminal_text_body(60, true),
 						selected_color = Color.terminal_corner_selected(128, 0)
@@ -722,11 +748,11 @@ local function generate_blueprints_function(grid_size, optional_item)
 						scale_to_material = true,
 						horizontal_alignment = "right",
 						offset = {
-							-20 - grid_size[1] * (i - 1),
-							25 + grid_size[2] * (j - 1),
+							-20 - pass_grid_size[1] * (i - 1),
+							25 + pass_grid_size[2] * (j - 1),
 							2
 						},
-						size = grid_size,
+						size = pass_grid_size,
 						color = Color.terminal_corner_selected(0, 0)
 					}
 				}
@@ -741,11 +767,11 @@ local function generate_blueprints_function(grid_size, optional_item)
 						vertical_alignment = "top",
 						horizontal_alignment = "right",
 						offset = {
-							-20 - grid_size[1] * (i - 1),
-							25 + grid_size[2] * (j - 1),
+							-20 - pass_grid_size[1] * (i - 1),
+							25 + pass_grid_size[2] * (j - 1),
 							2
 						},
-						size = grid_size,
+						size = pass_grid_size,
 						color = {
 							255,
 							math.random(255),
@@ -761,8 +787,8 @@ local function generate_blueprints_function(grid_size, optional_item)
 					value = "{#color(171,91,81)}" .. damage .. "  {#color(95,152,180)}" .. impact,
 					style = table.merge_recursive(table.clone(damage_stat_style), {
 						offset = {
-							-15 - grid_size[1] * (i - 1),
-							damage_stat_style.font_size * 0.5 + grid_size[2] * 0.5 + grid_size[2] * (j - 1),
+							-15 - pass_grid_size[1] * (i - 1),
+							damage_stat_style.font_size * 0.5 + pass_grid_size[2] * 0.5 + pass_grid_size[2] * (j - 1),
 							2
 						}
 					})
@@ -779,7 +805,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 				value = Localize(header.display_name),
 				style = table.merge_recursive(table.clone(damage_grid_x_header_style), {
 					offset = {
-						-15 - grid_size[1] * (i - 1),
+						-15 - pass_grid_size[1] * (i - 1),
 						-5,
 						3
 					}
@@ -796,8 +822,8 @@ local function generate_blueprints_function(grid_size, optional_item)
 				value = Localize(header.display_name),
 				style = table.merge_recursive(table.clone(damage_grid_y_header_style), {
 					offset = {
-						-grid_size[1] * #x_axis_headers - 30,
-						45 + grid_size[2] * (i - 1),
+						-pass_grid_size[1] * #x_axis_headers - 30,
+						45 + pass_grid_size[2] * (i - 1),
 						3
 					}
 				})
@@ -812,7 +838,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 			style = table.merge_recursive(table.clone(damage_legend_style), {
 				offset = {
 					-20,
-					grid_size[2] * #y_axis_headers + 35,
+					pass_grid_size[2] * #y_axis_headers + 35,
 					2
 				}
 			})
@@ -831,8 +857,8 @@ local function generate_blueprints_function(grid_size, optional_item)
 					2
 				},
 				size = {
-					grid_size[1] * #x_axis_headers + 10,
-					grid_size[2] * #y_axis_headers + 10
+					pass_grid_size[1] * #x_axis_headers + 10,
+					pass_grid_size[2] * #y_axis_headers + 10
 				},
 				color = Color.terminal_text_body(60, true)
 			}
@@ -851,7 +877,6 @@ local function generate_blueprints_function(grid_size, optional_item)
 		local weapon_stats = content.weapon_stats
 		local advanced_weapon_stats = weapon_stats._weapon_statistics
 		local num_columns = #advanced_weapon_stats.hit_types
-		local y_axis_headers = {}
 		local no_data = false
 		local attack_data = damage_stats[attack_index]
 
@@ -1407,8 +1432,8 @@ local function generate_blueprints_function(grid_size, optional_item)
 				if attack_type then
 					local attack_type_icon = UISettings.weapon_action_type_icons[attack_type]
 					local display_name = UISettings.attack_type_lookup[attack_type]
-					local display_name = display_name or data.display_name
-					local display_name = Localize(display_name)
+					display_name = display_name or data.display_name
+					display_name = Localize(display_name)
 					local desc_id = UISettings.attack_type_desc_lookup[attack_type] or data.desc
 					local desc = desc_id and Localize(desc_id) or ""
 					content.attack_type_icon = attack_type_icon
@@ -1417,7 +1442,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 					local attack_type_icon_style = style.attack_type_icon
 					local attack_type_name_style = style.attack_type_name
 					local attack_type_desc_style = style.attack_type_desc
-					local text_width = get_style_text_width(display_name, attack_type_name_style, ui_renderer)
+					local text_width = _style_text_width(display_name, attack_type_name_style, ui_renderer)
 					attack_type_name_style.text_color[1] = 255
 					attack_type_desc_style.text_color[1] = 255
 					attack_type_icon_style.offset[1] = -text_width * 0.5 - attack_type_icon_style.size[1] - spacing
@@ -1446,14 +1471,14 @@ local function generate_blueprints_function(grid_size, optional_item)
 		end
 	end
 
-	local function _generate_weapon_attack_action_passes(optional_item)
+	local function _generate_weapon_attack_action_passes(action_pass_optional_item)
 		local pass_templates = {}
 
-		if not optional_item then
+		if not action_pass_optional_item then
 			return pass_templates
 		end
 
-		local weapon_template = WeaponTemplate.weapon_template_from_item(optional_item)
+		local weapon_template = WeaponTemplate.weapon_template_from_item(action_pass_optional_item)
 
 		if not weapon_template then
 			return pass_templates
@@ -1465,13 +1490,13 @@ local function generate_blueprints_function(grid_size, optional_item)
 			return pass_templates
 		end
 
-		local weapon_action_display_order_array = UISettings.weapon_action_display_order_array
-		local weapon_stats = WeaponStats:new(optional_item)
+		local action_display_order = UISettings.weapon_action_display_order_array
+		local weapon_stats = WeaponStats:new(action_pass_optional_item)
 		local advanced_weapon_stats = weapon_stats._weapon_statistics
 		local power_stats = advanced_weapon_stats.power_stats
 		local num_elements = 0
 
-		for index, key in ipairs(weapon_action_display_order_array) do
+		for index, key in ipairs(action_display_order) do
 			local data = displayed_attacks[key]
 
 			if data then
@@ -1481,11 +1506,13 @@ local function generate_blueprints_function(grid_size, optional_item)
 
 		local width = num_elements < 4 and grid_width - 100 or grid_width
 		local step = width / num_elements
+		local index = 1
 
-		for index, key in ipairs(weapon_action_display_order_array) do
+		for _, key in ipairs(action_display_order) do
 			local data = displayed_attacks[key]
+			local create_pass = data
 
-			if data then
+			if create_pass then
 				local power_stat = power_stats[index]
 				local attack = power_stat and math.round(power_stat.attack) or ""
 				local type_data = power_stat and power_stat.type_data
@@ -1493,6 +1520,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 				local display_name = Localize(type_display_name or data.display_name)
 				local icon_texture = UISettings.weapon_action_type_icons[data.type]
 				local fire_mode_icon = data.fire_mode and UISettings.weapon_fire_type_icons[data.fire_mode]
+				local has_fire_mode_icon = fire_mode_icon ~= nil
 				pass_templates[#pass_templates + 1] = {
 					pass_type = "texture",
 					value = icon_texture or "content/ui/materials/backgrounds/default_square",
@@ -1530,7 +1558,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 							50
 						},
 						color = Color.white(255, true),
-						visible = fire_mode_icon ~= nil
+						visible = has_fire_mode_icon
 					}
 				}
 				pass_templates[#pass_templates + 1] = {
@@ -1543,10 +1571,6 @@ local function generate_blueprints_function(grid_size, optional_item)
 						text_vertical_alignment = "top",
 						horizontal_alignment = "center",
 						text_horizontal_alignment = "center",
-						offset = {
-							0,
-							5
-						},
 						offset = {
 							-step * (num_elements - 1) * 0.5 + (index - 1) * step,
 							0,
@@ -1566,10 +1590,6 @@ local function generate_blueprints_function(grid_size, optional_item)
 						horizontal_alignment = "center",
 						text_horizontal_alignment = "center",
 						offset = {
-							0,
-							5
-						},
-						offset = {
 							-step * (num_elements - 1) * 0.5 + (index - 1) * step,
 							20,
 							50
@@ -1577,8 +1597,293 @@ local function generate_blueprints_function(grid_size, optional_item)
 						text_color = Color.white(255, true)
 					})
 				}
+				index = index + 1
 			end
 		end
+
+		return pass_templates
+	end
+
+	local function _generate_weapon_stats_passes(action_pass_optional_item)
+		local pass_templates = {
+			{
+				style_id = "background",
+				pass_type = "rect",
+				style = {
+					visible = false,
+					offset = {
+						0,
+						0,
+						0
+					},
+					color = Color.terminal_frame(50, true)
+				}
+			}
+		}
+
+		for ii = 1, 5 do
+			pass_templates[#pass_templates + 1] = {
+				pass_type = "text",
+				value = "n/a",
+				style_id = string.format("text_%i", ii),
+				value_id = string.format("text_%i", ii),
+				style = table.merge_recursive(table.clone(weapon_stat_text_style), {
+					horizontal_alignment = "left",
+					offset = {
+						20 + 20 * ((ii - 1) % 3) + 150 * ((ii - 1) % 3),
+						10 + 50 * ((ii - 1) % 2),
+						3
+					}
+				})
+			}
+			pass_templates[#pass_templates + 1] = {
+				pass_type = "text",
+				value = "100%",
+				style_id = string.format("percentage_%i", ii),
+				value_id = string.format("percentage_%i", ii),
+				style = table.merge_recursive(table.clone(stamina_value_style), {
+					text_horizontal_alignment = "left",
+					offset = {
+						20 + 20 * ((ii - 1) % 3) + 150 * ((ii - 1) % 3),
+						10 + 50 * ((ii - 1) % 2) + 20,
+						3
+					},
+					text_color = {
+						255,
+						255,
+						255,
+						255
+					}
+				})
+			}
+			pass_templates[#pass_templates + 1] = {
+				pass_type = "rect",
+				style_id = string.format("background_%i", ii),
+				style = {
+					horizontal_alignment = "left",
+					offset = {
+						22 + 20 * ((ii - 1) % 3) + 150 * ((ii - 1) % 3) + bar_offset,
+						10 + 50 * ((ii - 1) % 2) + 28,
+						3
+					},
+					size = {
+						bar_size,
+						8
+					},
+					color = Color.black(200, true)
+				}
+			}
+			pass_templates[#pass_templates + 1] = {
+				pass_type = "rect",
+				style_id = string.format("frame_%i", ii),
+				style = {
+					horizontal_alignment = "left",
+					offset = {
+						20 + 20 * ((ii - 1) % 3) + 150 * ((ii - 1) % 3) + bar_offset,
+						10 + 50 * ((ii - 1) % 2) + 28 - 2,
+						2
+					},
+					size = {
+						bar_size + 4,
+						12
+					},
+					color = Color.terminal_frame(200, true)
+				}
+			}
+			pass_templates[#pass_templates + 1] = {
+				value = "content/ui/materials/backgrounds/default_square",
+				pass_type = "texture",
+				style_id = string.format("bar_%i", ii),
+				style = {
+					horizontal_alignment = "left",
+					offset = {
+						22 + 20 * ((ii - 1) % 3) + 150 * ((ii - 1) % 3) + bar_offset,
+						10 + 50 * ((ii - 1) % 2) + 28,
+						5
+					},
+					size = {
+						bar_size,
+						8
+					},
+					color = Color.terminal_stat_bar_foreground(255, true)
+				}
+			}
+			pass_templates[#pass_templates + 1] = {
+				pass_type = "hotspot",
+				content_id = string.format("hotspot_%i", ii),
+				content = default_button_content,
+				style = {
+					offset = {
+						20 + 20 * ((ii - 1) % 3) + 150 * ((ii - 1) % 3),
+						60 * ((ii - 1) % 2),
+						0
+					},
+					size = {
+						150,
+						60
+					}
+				}
+			}
+			pass_templates[#pass_templates + 1] = {
+				value = "content/ui/materials/gradients/gradient_vertical",
+				pass_type = "texture",
+				style_id = string.format("hover_frame_%i", ii),
+				style = {
+					vertical_alignment = "top",
+					horizontal_alignment = "left",
+					hdr = false,
+					offset = {
+						15 + 20 * ((ii - 1) % 3) + 150 * ((ii - 1) % 3),
+						50 * ((ii - 1) % 2) + 8,
+						0
+					},
+					size = {
+						160,
+						45
+					},
+					color = Color.terminal_corner_selected(0, true),
+					size_addition = {
+						0,
+						0
+					}
+				}
+			}
+			pass_templates[#pass_templates + 1] = {
+				value = "content/ui/materials/frames/frame_tile_1px",
+				pass_type = "texture",
+				style_id = string.format("hover_frame_border_%i", ii),
+				style = {
+					vertical_alignment = "top",
+					scale_to_material = true,
+					horizontal_alignment = "left",
+					offset = {
+						15 + 20 * ((ii - 1) % 3) + 150 * ((ii - 1) % 3),
+						50 * ((ii - 1) % 2) + 8,
+						1
+					},
+					size = {
+						160,
+						45
+					},
+					color = Color.terminal_corner_selected(0, true)
+				}
+			}
+			pass_templates[#pass_templates + 1] = {
+				value = "content/ui/materials/frames/frame_corner_2px",
+				pass_type = "texture",
+				style_id = string.format("hover_frame_corner_%i", ii),
+				style = {
+					vertical_alignment = "top",
+					scale_to_material = true,
+					horizontal_alignment = "left",
+					offset = {
+						15 + 20 * ((ii - 1) % 3) + 150 * ((ii - 1) % 3),
+						50 * ((ii - 1) % 2) + 8,
+						2
+					},
+					size = {
+						160,
+						45
+					},
+					color = Color.terminal_corner_selected(0, true)
+				}
+			}
+		end
+
+		pass_templates[#pass_templates + 1] = {
+			style_id = "text_extra_value",
+			value_id = "text_extra_value",
+			pass_type = "text",
+			value = "",
+			style = table.merge_recursive(table.clone(stamina_value_style), {
+				horizontal_alignment = "left",
+				offset = {
+					360,
+					80,
+					3
+				}
+			})
+		}
+		pass_templates[#pass_templates + 1] = {
+			pass_type = "hotspot",
+			content_id = "hotspot_6",
+			content = default_button_content,
+			style = {
+				offset = {
+					360,
+					60,
+					0
+				},
+				size = {
+					150,
+					60
+				}
+			}
+		}
+		pass_templates[#pass_templates + 1] = {
+			value = "content/ui/materials/gradients/gradient_vertical",
+			style_id = "hover_frame_6",
+			pass_type = "texture",
+			style = {
+				vertical_alignment = "top",
+				horizontal_alignment = "left",
+				hdr = false,
+				offset = {
+					355,
+					58,
+					0
+				},
+				size = {
+					160,
+					45
+				},
+				color = Color.terminal_corner_selected(0, true),
+				size_addition = {
+					0,
+					0
+				}
+			}
+		}
+		pass_templates[#pass_templates + 1] = {
+			value = "content/ui/materials/frames/frame_tile_1px",
+			style_id = "hover_frame_border_6",
+			pass_type = "texture",
+			style = {
+				vertical_alignment = "top",
+				scale_to_material = true,
+				horizontal_alignment = "left",
+				offset = {
+					355,
+					58,
+					1
+				},
+				size = {
+					160,
+					45
+				},
+				color = Color.terminal_corner_selected(0, true)
+			}
+		}
+		pass_templates[#pass_templates + 1] = {
+			value = "content/ui/materials/frames/frame_corner_2px",
+			style_id = "hover_frame_corner_6",
+			pass_type = "texture",
+			style = {
+				vertical_alignment = "top",
+				scale_to_material = true,
+				horizontal_alignment = "left",
+				offset = {
+					355,
+					58,
+					2
+				},
+				size = {
+					160,
+					45
+				},
+				color = Color.terminal_corner_selected(0, true)
+			}
+		}
 
 		return pass_templates
 	end
@@ -1685,77 +1990,8 @@ local function generate_blueprints_function(grid_size, optional_item)
 					}
 				},
 				{
-					value_id = "icon",
-					style_id = "icon",
-					pass_type = "texture",
-					value = "content/ui/materials/icons/items/containers/item_container_tooltip_no_rarity",
-					style = {
-						vertical_alignment = "bottom",
-						horizontal_alignment = "center",
-						size = {
-							grid_width,
-							190
-						},
-						offset = {
-							0,
-							0,
-							3
-						},
-						color = Color.white(255, true),
-						material_values = {}
-					},
-					visibility_function = function (content, style)
-						local use_placeholder_texture = content.use_placeholder_texture
-
-						if use_placeholder_texture and use_placeholder_texture == 0 then
-							return true
-						end
-
-						return false
-					end
-				},
-				{
-					pass_type = "rotated_texture",
-					value = "content/ui/materials/loading/loading_small",
-					style_id = "loading",
-					style = {
-						vertical_alignment = "center",
-						horizontal_alignment = "center",
-						angle = 0,
-						size = {
-							80,
-							80
-						},
-						color = {
-							60,
-							160,
-							160,
-							160
-						},
-						offset = {
-							0,
-							10,
-							3
-						}
-					},
-					visibility_function = function (content, style)
-						local use_placeholder_texture = content.use_placeholder_texture
-
-						if not use_placeholder_texture or use_placeholder_texture == 1 then
-							return true
-						end
-
-						return false
-					end,
-					change_function = function (content, style, _, dt)
-						local add = -0.5 * dt
-						style.rotation_progress = ((style.rotation_progress or 0) + add) % 1
-						style.angle = style.rotation_progress * math.pi * 2
-					end
-				},
-				{
-					value_id = "background",
-					style_id = "background",
+					value_id = "gradient_background",
+					style_id = "gradient_background",
 					pass_type = "texture",
 					value = "content/ui/materials/gradients/gradient_vertical",
 					style = {
@@ -1783,6 +2019,55 @@ local function generate_blueprints_function(grid_size, optional_item)
 					}
 				},
 				{
+					value_id = "icon",
+					style_id = "icon",
+					pass_type = "texture",
+					value = "content/ui/materials/icons/items/containers/item_container_tooltip_no_rarity",
+					style = {
+						vertical_alignment = "bottom",
+						horizontal_alignment = "center",
+						size = {
+							grid_width,
+							190
+						},
+						offset = {
+							0,
+							0,
+							3
+						},
+						color = Color.white(255, true),
+						material_values = {}
+					},
+					visibility_function = _generated_icon_visibility
+				},
+				{
+					pass_type = "rotated_texture",
+					value = "content/ui/materials/loading/loading_small",
+					style_id = "loading",
+					style = {
+						vertical_alignment = "center",
+						horizontal_alignment = "center",
+						angle = 0,
+						size = {
+							80,
+							80
+						},
+						color = {
+							60,
+							160,
+							160,
+							160
+						},
+						offset = {
+							0,
+							10,
+							3
+						}
+					},
+					visibility_function = _loading_icon_visibility,
+					change_function = _loading_icon_change
+				},
+				{
 					value_id = "display_name",
 					pass_type = "text",
 					style_id = "display_name",
@@ -1790,11 +2075,11 @@ local function generate_blueprints_function(grid_size, optional_item)
 					style = weapon_display_name_style
 				},
 				{
-					value_id = "type_name",
+					value_id = "sub_display_name",
 					pass_type = "text",
-					style_id = "type_name",
+					style_id = "sub_display_name",
 					value = "n/a",
-					style = weapon_type_name_style
+					style = weapon_sub_display_name_style
 				},
 				{
 					style_id = "text_ammo_title",
@@ -1829,8 +2114,8 @@ local function generate_blueprints_function(grid_size, optional_item)
 					})
 				},
 				{
-					style_id = "rating_text",
 					value_id = "rating_title",
+					style_id = "rating_text",
 					pass_type = "text",
 					value = Localize("loc_item_information_item_power"),
 					style = table.merge_recursive(table.clone(weapon_stat_text_style), {
@@ -1846,8 +2131,8 @@ local function generate_blueprints_function(grid_size, optional_item)
 					})
 				},
 				{
-					style_id = "rating_value",
 					value_id = "rating_value",
+					style_id = "rating_value",
 					pass_type = "text",
 					value = "n/a",
 					style = table.merge_recursive(table.clone(weapon_value_style), {
@@ -1869,29 +2154,22 @@ local function generate_blueprints_function(grid_size, optional_item)
 				content.element = element
 				local item = element.item
 				local display_name = ItemUtils.display_name(item)
-				local type_name = ItemUtils.sub_display_name(item)
+				local sub_display_name = ItemUtils.sub_display_name(item, nil, true)
 				content.display_name = display_name
-				content.type_name = type_name
-				local type_name_style = style.type_name
-				local display_name_text_height = get_style_text_height(display_name, weapon_display_name_style, ui_renderer)
-				type_name_style.offset[2] = type_name_style.offset[2] + display_name_text_height
-				local rarity_color = ItemUtils.rarity_color(item)
-				style.background.color = table.clone(rarity_color)
-				style.background.material_values = {
-					direction = 1
-				}
-				style.display_name.text_color = table.clone(rarity_color)
-				style.type_name.text_color = table.clone(rarity_color)
-				local weapon_template = WeaponTemplate.weapon_template_from_item(item)
-				local displayed_attacks = weapon_template.displayed_attacks
-				local is_ranged_weapon = ItemUtils.is_weapon_template_ranged(item)
+				content.sub_display_name = sub_display_name
+				local sub_display_name_style = style.sub_display_name
+				local display_name_text_height = _style_text_height(display_name, weapon_display_name_style, ui_renderer)
+				sub_display_name_style.offset[2] = sub_display_name_style.offset[2] + display_name_text_height
+				local rarity_color, rarity_color_dark = ItemUtils.rarity_color(item)
+				style.gradient_background.color = table.clone(rarity_color)
 				local item_level = item.override_item_rating_string or ItemUtils.item_level(item)
 				content.rating_value = item_level
-				local value_width = get_style_text_width(item_level, style.rating_value, ui_renderer)
-				local text_width = get_style_text_width(item_level, style.rating_text, ui_renderer)
+				local value_width = _style_text_width(item_level, style.rating_value, ui_renderer)
+				local text_width = _style_text_width(item_level, style.rating_text, ui_renderer)
 				style.rating_text.offset[1] = style.rating_text.offset[1] - (value_width - text_width)
 				local weapon_stats = WeaponStats:new(item)
 				local main_stats = weapon_stats:get_main_stats()
+				local is_ranged_weapon = ItemUtils.is_weapon_template_ranged(item)
 
 				if is_ranged_weapon and main_stats.magazine then
 					local magazine = main_stats.magazine
@@ -1945,8 +2223,8 @@ local function generate_blueprints_function(grid_size, optional_item)
 			},
 			size_function = function (parent, element, ui_renderer)
 				local item = element.item
-				local text = ItemUtils.display_name(item) .. "\n" .. ItemUtils.sub_display_name(item)
-				local text_height = get_style_text_height(text, weapon_display_name_style, ui_renderer)
+				local text = ItemUtils.display_name(item) .. "\n" .. ItemUtils.sub_display_name(item, nil, true)
+				local text_height = _style_text_height(text, item_display_name_style, ui_renderer)
 				local entry_height = math.max(0, text_height + 25)
 
 				return {
@@ -2000,14 +2278,14 @@ local function generate_blueprints_function(grid_size, optional_item)
 					pass_type = "text",
 					value_id = "display_name",
 					value = "n/a",
-					style = weapon_display_name_style
+					style = item_display_name_style
 				},
 				{
-					style_id = "type_name",
+					style_id = "sub_display_name",
 					pass_type = "text",
-					value_id = "type_name",
+					value_id = "sub_display_name",
 					value = "n/a",
-					style = weapon_type_name_style
+					style = item_sub_display_name_style
 				}
 			},
 			init = function (parent, widget, element, callback_name, _, ui_renderer)
@@ -2016,31 +2294,39 @@ local function generate_blueprints_function(grid_size, optional_item)
 				content.element = element
 				local item = element.item
 				local display_name = ItemUtils.display_name(item)
-				local type_name = ItemUtils.sub_display_name(item)
+				local sub_display_name = ItemUtils.sub_display_name(item, nil, true)
 				content.display_name = display_name
-				content.type_name = type_name
-				local type_name_style = style.type_name
+				content.sub_display_name = sub_display_name
+				local sub_display_name_style = style.sub_display_name
 				local display_name_style = style.display_name
 
 				if item.rarity then
 					local rarity_color, rarity_color_dark = ItemUtils.rarity_color(item)
 					style.background.color = table.clone(rarity_color_dark)
-					style.background.material_values = {
-						direction = 1
-					}
-					type_name_style.text_color = table.clone(rarity_color)
-					display_name_style.text_color = table.clone(rarity_color)
 				end
 
-				local display_name_text_height = get_style_text_height(display_name, weapon_display_name_style, ui_renderer)
-				type_name_style.offset[2] = type_name_style.offset[2] + display_name_text_height
+				local display_name_text_height = _style_text_height(display_name, item_display_name_style, ui_renderer)
+				sub_display_name_style.offset[2] = sub_display_name_style.offset[2] + display_name_text_height
 			end
 		},
-		weapon_skin_icon = {
+		character_title_header = {
 			size = {
 				grid_width,
-				200
+				100
 			},
+			size_function = function (parent, element, ui_renderer)
+				local item = element.item
+				local profile = element.profile
+				local display_name = ProfileUtils.title_item_name_no_color(item, profile)
+				local text = display_name .. "\n" .. ItemUtils.sub_display_name(item)
+				local text_height = _style_text_height(text, item_display_name_style, ui_renderer)
+				local entry_height = math.max(0, text_height + 25)
+
+				return {
+					grid_width,
+					entry_height
+				}
+			end,
 			pass_template = {
 				{
 					pass_type = "rect",
@@ -2054,6 +2340,79 @@ local function generate_blueprints_function(grid_size, optional_item)
 					}
 				},
 				{
+					value_id = "background",
+					style_id = "background",
+					pass_type = "texture",
+					value = "content/ui/materials/gradients/gradient_vertical",
+					style = {
+						vertical_alignment = "bottom",
+						horizontal_alignment = "center",
+						offset = {
+							0,
+							0,
+							1
+						},
+						color = Color.terminal_grid_background(255, true)
+					}
+				},
+				{
+					pass_type = "rect",
+					style = {
+						vertical_alignment = "center",
+						horizontal_alignment = "center",
+						offset = {
+							0,
+							0,
+							2
+						},
+						color = Color.black(140, true)
+					}
+				},
+				{
+					style_id = "display_name",
+					pass_type = "text",
+					value_id = "display_name",
+					value = "n/a",
+					style = item_display_name_style
+				},
+				{
+					style_id = "sub_display_name",
+					pass_type = "text",
+					value_id = "sub_display_name",
+					value = "n/a",
+					style = item_sub_display_name_style
+				}
+			},
+			init = function (parent, widget, element, callback_name, _, ui_renderer)
+				local content = widget.content
+				local style = widget.style
+				content.element = element
+				local item = element.item
+				local profile = element.profile
+				local display_name = ProfileUtils.title_item_name_no_color(item, profile)
+				local sub_display_name = ItemUtils.type_display_name(item)
+				content.display_name = display_name
+				content.sub_display_name = sub_display_name
+				local sub_display_name_style = style.sub_display_name
+				local display_name_style = style.display_name
+
+				if item.rarity then
+					local rarity_color, rarity_color_dark = ItemUtils.rarity_color(item)
+					style.background.color = table.clone(rarity_color_dark)
+					display_name_style.text_color = table.clone(rarity_color)
+				end
+
+				local display_name_text_height = _style_text_height(display_name, item_display_name_style, ui_renderer)
+				sub_display_name_style.offset[2] = sub_display_name_style.offset[2] + display_name_text_height
+			end
+		},
+		weapon_skin_icon = {
+			size = {
+				grid_width,
+				200
+			},
+			pass_template = {
+				{
 					value_id = "icon",
 					style_id = "icon",
 					pass_type = "texture",
@@ -2063,7 +2422,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 						horizontal_alignment = "center",
 						size = {
 							grid_width,
-							200
+							190
 						},
 						offset = {
 							0,
@@ -2073,15 +2432,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 						color = Color.white(255, true),
 						material_values = {}
 					},
-					visibility_function = function (content, style)
-						local use_placeholder_texture = content.use_placeholder_texture
-
-						if use_placeholder_texture and use_placeholder_texture == 0 then
-							return true
-						end
-
-						return false
-					end
+					visibility_function = _generated_icon_visibility
 				},
 				{
 					pass_type = "rotated_texture",
@@ -2107,150 +2458,13 @@ local function generate_blueprints_function(grid_size, optional_item)
 							3
 						}
 					},
-					visibility_function = function (content, style)
-						local use_placeholder_texture = content.use_placeholder_texture
-
-						if not use_placeholder_texture or use_placeholder_texture == 1 then
-							return true
-						end
-
-						return false
-					end,
-					change_function = function (content, style, _, dt)
-						local add = -0.5 * dt
-						style.rotation_progress = ((style.rotation_progress or 0) + add) % 1
-						style.angle = style.rotation_progress * math.pi * 2
-					end
-				},
-				{
-					value_id = "left_divider",
-					style_id = "left_divider",
-					pass_type = "texture_uv",
-					value = "content/ui/materials/dividers/vertical_dynamic_01",
-					style = {
-						vertical_alignment = "bottom",
-						horizontal_alignment = "left",
-						offset = {
-							-9,
-							-12,
-							3
-						},
-						size = {
-							18,
-							200
-						},
-						size_addition = {
-							0,
-							-24
-						},
-						color = {
-							255,
-							255,
-							255,
-							255
-						},
-						uvs = {
-							{
-								1,
-								0
-							},
-							{
-								0,
-								1
-							}
-						}
-					}
-				},
-				{
-					value_id = "right_divider",
-					style_id = "right_divider",
-					pass_type = "texture",
-					value = "content/ui/materials/dividers/vertical_dynamic_01",
-					style = {
-						vertical_alignment = "bottom",
-						horizontal_alignment = "right",
-						offset = {
-							9,
-							-12,
-							3
-						},
-						size = {
-							18,
-							200
-						},
-						size_addition = {
-							0,
-							-24
-						},
-						color = {
-							255,
-							255,
-							255,
-							255
-						}
-					}
-				},
-				{
-					value_id = "bottom_divider",
-					style_id = "bottom_divider",
-					pass_type = "texture",
-					value = "content/ui/materials/dividers/horizontal_frame_big_middle",
-					style = {
-						vertical_alignment = "bottom",
-						horizontal_alignment = "center",
-						offset = {
-							0,
-							22,
-							4
-						},
-						size = {
-							nil,
-							44
-						},
-						size_addition = {
-							8,
-							0
-						},
-						color = Color.white(255, true)
-					}
-				},
-				{
-					value_id = "background",
-					style_id = "background",
-					pass_type = "texture",
-					value = "content/ui/materials/gradients/gradient_vertical",
-					style = {
-						vertical_alignment = "center",
-						horizontal_alignment = "center",
-						offset = {
-							0,
-							0,
-							1
-						},
-						color = Color.terminal_corner_hover(255, true)
-					}
-				},
-				{
-					pass_type = "rect",
-					style = {
-						vertical_alignment = "center",
-						horizontal_alignment = "center",
-						offset = {
-							0,
-							0,
-							2
-						},
-						color = Color.black(140, true)
-					}
+					visibility_function = _loading_icon_visibility,
+					change_function = _loading_icon_change
 				}
 			},
 			init = function (parent, widget, element, callback_name)
 				local content = widget.content
-				local style = widget.style
 				content.element = element
-				style.background.material_values = {
-					direction = 1
-				}
 			end,
 			load_icon = function (parent, widget, element)
 				local content = widget.content
@@ -2258,7 +2472,13 @@ local function generate_blueprints_function(grid_size, optional_item)
 				if not content.icon_load_id then
 					local visual_item = element.visual_item
 					local cb = callback(_apply_live_item_icon_cb_func, widget)
-					content.icon_load_id = Managers.ui:load_item_icon(visual_item, cb)
+					local context = {
+						size = {
+							grid_width * 2,
+							380
+						}
+					}
+					content.icon_load_id = Managers.ui:load_item_icon(visual_item, cb, context)
 				end
 			end,
 			unload_icon = function (parent, widget, element, ui_renderer)
@@ -2308,15 +2528,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 						color = Color.white(255, true),
 						material_values = {}
 					},
-					visibility_function = function (content, style)
-						local use_placeholder_texture = content.use_placeholder_texture
-
-						if use_placeholder_texture and use_placeholder_texture == 0 then
-							return true
-						end
-
-						return false
-					end
+					visibility_function = _generated_icon_visibility
 				},
 				{
 					pass_type = "rotated_texture",
@@ -2342,20 +2554,8 @@ local function generate_blueprints_function(grid_size, optional_item)
 							3
 						}
 					},
-					visibility_function = function (content, style)
-						local use_placeholder_texture = content.use_placeholder_texture
-
-						if not use_placeholder_texture or use_placeholder_texture == 1 then
-							return true
-						end
-
-						return false
-					end,
-					change_function = function (content, style, _, dt)
-						local add = -0.5 * dt
-						style.rotation_progress = ((style.rotation_progress or 0) + add) % 1
-						style.angle = style.rotation_progress * math.pi * 2
-					end
+					visibility_function = _loading_icon_visibility,
+					change_function = _loading_icon_change
 				},
 				{
 					pass_type = "rect",
@@ -2398,7 +2598,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 				content.element = element
 				local item = element.item
 				content.display_name = ItemUtils.display_name(item)
-				content.type_name = ItemUtils.sub_display_name(item)
+				content.sub_display_name = ItemUtils.sub_display_name(item)
 			end,
 			load_icon = function (parent, widget, element)
 				local content = widget.content
@@ -2481,15 +2681,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 						color = Color.white(255, true),
 						material_values = {}
 					},
-					visibility_function = function (content, style)
-						local use_placeholder_texture = content.use_placeholder_texture
-
-						if use_placeholder_texture and use_placeholder_texture == 0 then
-							return true
-						end
-
-						return false
-					end
+					visibility_function = _generated_icon_visibility
 				},
 				{
 					pass_type = "rotated_texture",
@@ -2515,20 +2707,8 @@ local function generate_blueprints_function(grid_size, optional_item)
 							3
 						}
 					},
-					visibility_function = function (content, style)
-						local use_placeholder_texture = content.use_placeholder_texture
-
-						if not use_placeholder_texture or use_placeholder_texture == 1 then
-							return true
-						end
-
-						return false
-					end,
-					change_function = function (content, style, _, dt)
-						local add = -0.5 * dt
-						style.rotation_progress = ((style.rotation_progress or 0) + add) % 1
-						style.angle = style.rotation_progress * math.pi * 2
-					end
+					visibility_function = _loading_icon_visibility,
+					change_function = _loading_icon_change
 				},
 				{
 					value_id = "background",
@@ -2564,14 +2744,14 @@ local function generate_blueprints_function(grid_size, optional_item)
 					pass_type = "text",
 					style_id = "display_name",
 					value = "n/a",
-					style = weapon_display_name_style
+					style = item_display_name_style
 				},
 				{
-					value_id = "type_name",
+					value_id = "sub_display_name",
 					pass_type = "text",
-					style_id = "type_name",
+					style_id = "sub_display_name",
 					value = "n/a",
-					style = weapon_type_name_style
+					style = item_sub_display_name_style
 				},
 				{
 					style_id = "rating_text",
@@ -2594,26 +2774,22 @@ local function generate_blueprints_function(grid_size, optional_item)
 				content.element = element
 				local item = element.item
 				local display_name = ItemUtils.display_name(item)
-				local type_name = ItemUtils.sub_display_name(item)
+				local sub_display_name = ItemUtils.sub_display_name(item)
 				content.display_name = display_name
-				content.type_name = type_name
-				local type_name_style = style.type_name
+				content.sub_display_name = sub_display_name
+				local sub_display_name_style = style.sub_display_name
 				local item_level = item.override_item_rating_string or ItemUtils.item_level(item)
 				content.rating_value = item_level
-				local display_name_text_height = get_style_text_height(display_name, weapon_display_name_style, ui_renderer)
-				type_name_style.offset[2] = type_name_style.offset[2] + display_name_text_height
+				local display_name_text_height = _style_text_height(display_name, item_display_name_style, ui_renderer)
+				sub_display_name_style.offset[2] = sub_display_name_style.offset[2] + display_name_text_height
 				local item_rarity = item.rarity
 
 				if item_rarity then
 					local rarity_color = ItemUtils.rarity_color(item)
 					style.background.color = table.clone(rarity_color)
 					style.display_name.text_color = table.clone(rarity_color)
-					style.type_name.text_color = table.clone(rarity_color)
+					style.sub_display_name.text_color = table.clone(rarity_color)
 				end
-
-				style.background.material_values = {
-					direction = 1
-				}
 			end,
 			load_icon = function (parent, widget, element)
 				local content = widget.content
@@ -2704,15 +2880,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 							use_placeholder_texture = 1
 						}
 					},
-					visibility_function = function (content, style)
-						local use_placeholder_texture = content.use_placeholder_texture
-
-						if use_placeholder_texture and use_placeholder_texture == 0 then
-							return true
-						end
-
-						return false
-					end
+					visibility_function = _generated_icon_visibility
 				},
 				{
 					pass_type = "rotated_texture",
@@ -2738,20 +2906,8 @@ local function generate_blueprints_function(grid_size, optional_item)
 							3
 						}
 					},
-					visibility_function = function (content, style)
-						local use_placeholder_texture = content.use_placeholder_texture
-
-						if not use_placeholder_texture or use_placeholder_texture == 1 then
-							return true
-						end
-
-						return false
-					end,
-					change_function = function (content, style, _, dt)
-						local add = -0.5 * dt
-						style.rotation_progress = ((style.rotation_progress or 0) + add) % 1
-						style.angle = style.rotation_progress * math.pi * 2
-					end
+					visibility_function = _loading_icon_visibility,
+					change_function = _loading_icon_change
 				}
 			},
 			init = function (parent, widget, element, callback_name, _, ui_renderer)
@@ -2821,15 +2977,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 							use_placeholder_texture = 1
 						}
 					},
-					visibility_function = function (content, style)
-						local use_placeholder_texture = content.use_placeholder_texture
-
-						if use_placeholder_texture and use_placeholder_texture == 0 then
-							return true
-						end
-
-						return false
-					end
+					visibility_function = _generated_icon_visibility
 				},
 				{
 					pass_type = "rotated_texture",
@@ -2855,20 +3003,8 @@ local function generate_blueprints_function(grid_size, optional_item)
 							3
 						}
 					},
-					visibility_function = function (content, style)
-						local use_placeholder_texture = content.use_placeholder_texture
-
-						if not use_placeholder_texture or use_placeholder_texture == 1 then
-							return true
-						end
-
-						return false
-					end,
-					change_function = function (content, style, _, dt)
-						local add = -0.5 * dt
-						style.rotation_progress = ((style.rotation_progress or 0) + add) % 1
-						style.angle = style.rotation_progress * math.pi * 2
-					end
+					visibility_function = _loading_icon_visibility,
+					change_function = _loading_icon_change
 				}
 			},
 			init = function (parent, widget, element, callback_name, _, ui_renderer)
@@ -2938,15 +3074,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 							use_placeholder_texture = 1
 						}
 					},
-					visibility_function = function (content, style)
-						local use_placeholder_texture = content.use_placeholder_texture
-
-						if use_placeholder_texture and use_placeholder_texture == 0 then
-							return true
-						end
-
-						return false
-					end
+					visibility_function = _generated_icon_visibility
 				},
 				{
 					pass_type = "rotated_texture",
@@ -2972,20 +3100,8 @@ local function generate_blueprints_function(grid_size, optional_item)
 							3
 						}
 					},
-					visibility_function = function (content, style)
-						local use_placeholder_texture = content.use_placeholder_texture
-
-						if not use_placeholder_texture or use_placeholder_texture == 1 then
-							return true
-						end
-
-						return false
-					end,
-					change_function = function (content, style, _, dt)
-						local add = -0.5 * dt
-						style.rotation_progress = ((style.rotation_progress or 0) + add) % 1
-						style.angle = style.rotation_progress * math.pi * 2
-					end
+					visibility_function = _loading_icon_visibility,
+					change_function = _loading_icon_change
 				}
 			},
 			init = function (parent, widget, element, callback_name, _, ui_renderer)
@@ -3039,9 +3155,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 					value_id = "text",
 					pass_type = "text",
 					value = "n/a",
-					style = table.merge_recursive(table.clone(weapon_keyword_style), {
-						text_color = Color.terminal_text_body(255, true)
-					})
+					style = weapon_keyword_style
 				},
 				{
 					value = "content/ui/materials/frames/line_thin_sharp_edges",
@@ -3109,7 +3223,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 				content.element = element
 				local item = element.item
 				content.text = ItemUtils.keywords_text(item)
-				local text_width = get_style_text_width(content.text, style.text, ui_renderer)
+				local text_width = _style_text_width(content.text, style.text, ui_renderer)
 				local frame_style = style.frame
 				frame_style.size[1] = text_width + 50
 				local inner_frame_style = style.inner_frame
@@ -3121,950 +3235,12 @@ local function generate_blueprints_function(grid_size, optional_item)
 				grid_width,
 				114
 			},
-			pass_template = {
-				{
-					style_id = "background",
-					pass_type = "rect",
-					style = {
-						visible = false,
-						offset = {
-							0,
-							0,
-							0
-						},
-						color = Color.terminal_frame(50, true)
-					}
-				},
-				{
-					style_id = "text_1",
-					value_id = "text_1",
-					pass_type = "text",
-					value = "n/a",
-					style = table.merge_recursive(table.clone(weapon_stat_text_style), {
-						horizontal_alignment = "left",
-						offset = {
-							20,
-							10,
-							3
-						}
-					})
-				},
-				{
-					style_id = "percentage_1",
-					value_id = "percentage_1",
-					pass_type = "text",
-					value = "100%",
-					style = table.merge_recursive(table.clone(stamina_value_style), {
-						text_horizontal_alignment = "left",
-						offset = {
-							20,
-							30,
-							3
-						},
-						text_color = {
-							255,
-							255,
-							255,
-							255
-						}
-					})
-				},
-				{
-					style_id = "background_1",
-					pass_type = "rect",
-					style = {
-						horizontal_alignment = "left",
-						offset = {
-							20 + bar_offset,
-							38,
-							3
-						},
-						size = {
-							bar_size,
-							8
-						},
-						color = Color.black(200, true)
-					}
-				},
-				{
-					style_id = "frame_1",
-					pass_type = "rect",
-					style = {
-						horizontal_alignment = "left",
-						offset = {
-							18 + bar_offset,
-							36,
-							2
-						},
-						size = {
-							bar_size + 4,
-							12
-						},
-						color = Color.terminal_frame(200, true)
-					}
-				},
-				{
-					value = "content/ui/materials/backgrounds/default_square",
-					style_id = "bar_1",
-					pass_type = "texture",
-					style = {
-						horizontal_alignment = "left",
-						offset = {
-							20 + bar_offset,
-							38,
-							4
-						},
-						size = {
-							bar_size,
-							8
-						},
-						color = Color.terminal_corner_selected(255, true)
-					}
-				},
-				{
-					pass_type = "hotspot",
-					content_id = "hotspot_1",
-					content = default_button_content,
-					style = {
-						offset = {
-							20,
-							0,
-							0
-						},
-						size = {
-							150,
-							60
-						}
-					}
-				},
-				{
-					value = "content/ui/materials/gradients/gradient_vertical",
-					style_id = "hover_frame_1",
-					pass_type = "texture",
-					style = {
-						vertical_alignment = "top",
-						horizontal_alignment = "left",
-						hdr = false,
-						offset = {
-							15,
-							8,
-							0
-						},
-						size = {
-							160,
-							45
-						},
-						color = Color.terminal_corner_selected(0, true),
-						size_addition = {
-							0,
-							0
-						}
-					}
-				},
-				{
-					value = "content/ui/materials/frames/frame_tile_1px",
-					style_id = "hover_frame_border_1",
-					pass_type = "texture",
-					style = {
-						vertical_alignment = "top",
-						scale_to_material = true,
-						horizontal_alignment = "left",
-						offset = {
-							15,
-							8,
-							1
-						},
-						size = {
-							160,
-							45
-						},
-						color = Color.terminal_corner_selected(0, true)
-					}
-				},
-				{
-					value = "content/ui/materials/frames/frame_corner_2px",
-					style_id = "hover_frame_corner_1",
-					pass_type = "texture",
-					style = {
-						vertical_alignment = "top",
-						scale_to_material = true,
-						horizontal_alignment = "left",
-						offset = {
-							15,
-							8,
-							2
-						},
-						size = {
-							160,
-							45
-						},
-						color = Color.terminal_corner_selected(0, true)
-					}
-				},
-				{
-					style_id = "text_2",
-					value_id = "text_2",
-					pass_type = "text",
-					value = "n/a",
-					style = table.merge_recursive(table.clone(weapon_stat_text_style), {
-						horizontal_alignment = "left",
-						offset = {
-							190,
-							10,
-							3
-						}
-					})
-				},
-				{
-					style_id = "percentage_2",
-					value_id = "percentage_2",
-					pass_type = "text",
-					value = "100%",
-					style = table.merge_recursive(table.clone(stamina_value_style), {
-						text_horizontal_alignment = "left",
-						offset = {
-							190,
-							30,
-							3
-						},
-						text_color = {
-							255,
-							255,
-							255,
-							255
-						}
-					})
-				},
-				{
-					style_id = "background_2",
-					pass_type = "rect",
-					style = {
-						horizontal_alignment = "left",
-						offset = {
-							40 + bar_size + bar_offset * 2,
-							38,
-							3
-						},
-						size = {
-							bar_size,
-							8
-						},
-						color = Color.black(200, true)
-					}
-				},
-				{
-					style_id = "frame_2",
-					pass_type = "rect",
-					style = {
-						horizontal_alignment = "left",
-						offset = {
-							38 + bar_size + bar_offset * 2,
-							36,
-							2
-						},
-						size = {
-							bar_size + 4,
-							12
-						},
-						color = Color.terminal_frame(200, true)
-					}
-				},
-				{
-					value = "content/ui/materials/backgrounds/default_square",
-					style_id = "bar_2",
-					pass_type = "texture",
-					style = {
-						horizontal_alignment = "left",
-						offset = {
-							40 + bar_size + bar_offset * 2,
-							38,
-							4
-						},
-						size = {
-							bar_size,
-							8
-						},
-						color = Color.terminal_corner_selected(255, true)
-					}
-				},
-				{
-					pass_type = "hotspot",
-					content_id = "hotspot_2",
-					content = default_button_content,
-					style = {
-						offset = {
-							190,
-							0,
-							0
-						},
-						size = {
-							150,
-							60
-						}
-					}
-				},
-				{
-					value = "content/ui/materials/gradients/gradient_vertical",
-					style_id = "hover_frame_2",
-					pass_type = "texture",
-					style = {
-						vertical_alignment = "top",
-						horizontal_alignment = "left",
-						hdr = false,
-						offset = {
-							185,
-							8,
-							0
-						},
-						size = {
-							160,
-							45
-						},
-						color = Color.ui_terminal(0, true),
-						size_addition = {
-							0,
-							0
-						}
-					}
-				},
-				{
-					value = "content/ui/materials/frames/frame_tile_1px",
-					style_id = "hover_frame_border_2",
-					pass_type = "texture",
-					style = {
-						vertical_alignment = "top",
-						scale_to_material = true,
-						horizontal_alignment = "left",
-						offset = {
-							185,
-							8,
-							1
-						},
-						size = {
-							160,
-							45
-						},
-						color = Color.terminal_corner_selected(0, true)
-					}
-				},
-				{
-					value = "content/ui/materials/frames/frame_corner_2px",
-					style_id = "hover_frame_corner_2",
-					pass_type = "texture",
-					style = {
-						vertical_alignment = "top",
-						scale_to_material = true,
-						horizontal_alignment = "left",
-						offset = {
-							185,
-							8,
-							2
-						},
-						size = {
-							160,
-							45
-						},
-						color = Color.terminal_corner_selected(0, true)
-					}
-				},
-				{
-					style_id = "text_3",
-					value_id = "text_3",
-					pass_type = "text",
-					value = "n/a",
-					style = table.merge_recursive(table.clone(weapon_stat_text_style), {
-						horizontal_alignment = "left",
-						offset = {
-							360,
-							60,
-							3
-						}
-					})
-				},
-				{
-					style_id = "percentage_3",
-					value_id = "percentage_3",
-					pass_type = "text",
-					value = "100%",
-					style = table.merge_recursive(table.clone(stamina_value_style), {
-						text_horizontal_alignment = "left",
-						offset = {
-							360,
-							80,
-							3
-						},
-						text_color = {
-							255,
-							255,
-							255,
-							255
-						}
-					})
-				},
-				{
-					style_id = "background_3",
-					pass_type = "rect",
-					style = {
-						horizontal_alignment = "left",
-						offset = {
-							60 + bar_size * 2 + bar_offset * 3,
-							88,
-							3
-						},
-						size = {
-							bar_size,
-							8
-						},
-						color = Color.black(200, true)
-					}
-				},
-				{
-					style_id = "frame_3",
-					pass_type = "rect",
-					style = {
-						horizontal_alignment = "left",
-						offset = {
-							57 + bar_size * 2 + bar_offset * 3,
-							86,
-							2
-						},
-						size = {
-							bar_size + 4,
-							12
-						},
-						color = Color.terminal_frame(200, true)
-					}
-				},
-				{
-					value = "content/ui/materials/backgrounds/default_square",
-					style_id = "bar_3",
-					pass_type = "texture",
-					style = {
-						horizontal_alignment = "left",
-						offset = {
-							60 + bar_size * 2 + bar_offset * 3,
-							88,
-							4
-						},
-						size = {
-							bar_size,
-							8
-						},
-						color = Color.terminal_corner_selected(255, true)
-					}
-				},
-				{
-					pass_type = "hotspot",
-					content_id = "hotspot_3",
-					content = default_button_content,
-					style = {
-						offset = {
-							360,
-							60,
-							0
-						},
-						size = {
-							150,
-							60
-						}
-					}
-				},
-				{
-					value = "content/ui/materials/gradients/gradient_vertical",
-					style_id = "hover_frame_3",
-					pass_type = "texture",
-					style = {
-						vertical_alignment = "top",
-						horizontal_alignment = "left",
-						hdr = false,
-						offset = {
-							355,
-							58,
-							0
-						},
-						size = {
-							160,
-							45
-						},
-						color = Color.ui_terminal(0, true),
-						size_addition = {
-							0,
-							0
-						}
-					}
-				},
-				{
-					value = "content/ui/materials/frames/frame_tile_1px",
-					style_id = "hover_frame_border_3",
-					pass_type = "texture",
-					style = {
-						vertical_alignment = "top",
-						scale_to_material = true,
-						horizontal_alignment = "left",
-						offset = {
-							355,
-							58,
-							1
-						},
-						size = {
-							160,
-							45
-						},
-						color = Color.terminal_corner_selected(0, true)
-					}
-				},
-				{
-					value = "content/ui/materials/frames/frame_corner_2px",
-					style_id = "hover_frame_corner_3",
-					pass_type = "texture",
-					style = {
-						vertical_alignment = "top",
-						scale_to_material = true,
-						horizontal_alignment = "left",
-						offset = {
-							355,
-							58,
-							2
-						},
-						size = {
-							160,
-							45
-						},
-						color = Color.terminal_corner_selected(0, true)
-					}
-				},
-				{
-					style_id = "text_4",
-					value_id = "text_4",
-					pass_type = "text",
-					value = "n/a",
-					style = table.merge_recursive(table.clone(weapon_stat_text_style), {
-						horizontal_alignment = "left",
-						offset = {
-							20,
-							60,
-							3
-						}
-					})
-				},
-				{
-					style_id = "percentage_4",
-					value_id = "percentage_4",
-					pass_type = "text",
-					value = "100%",
-					style = table.merge_recursive(table.clone(stamina_value_style), {
-						text_horizontal_alignment = "left",
-						offset = {
-							20,
-							80,
-							3
-						},
-						text_color = {
-							255,
-							255,
-							255,
-							255
-						}
-					})
-				},
-				{
-					style_id = "background_4",
-					pass_type = "rect",
-					style = {
-						horizontal_alignment = "left",
-						offset = {
-							20 + bar_offset,
-							88,
-							3
-						},
-						size = {
-							bar_size,
-							8
-						},
-						color = Color.black(200, true)
-					}
-				},
-				{
-					style_id = "frame_4",
-					pass_type = "rect",
-					style = {
-						horizontal_alignment = "left",
-						offset = {
-							19 + bar_offset,
-							86,
-							2
-						},
-						size = {
-							bar_size + 4,
-							12
-						},
-						color = Color.terminal_frame(200, true)
-					}
-				},
-				{
-					value = "content/ui/materials/backgrounds/default_square",
-					style_id = "bar_4",
-					pass_type = "texture",
-					style = {
-						horizontal_alignment = "left",
-						offset = {
-							20 + bar_offset,
-							88,
-							4
-						},
-						size = {
-							bar_size,
-							8
-						},
-						color = Color.terminal_corner_selected(255, true)
-					}
-				},
-				{
-					pass_type = "hotspot",
-					content_id = "hotspot_4",
-					content = default_button_content,
-					style = {
-						offset = {
-							20,
-							60,
-							0
-						},
-						size = {
-							150,
-							60
-						}
-					}
-				},
-				{
-					value = "content/ui/materials/gradients/gradient_vertical",
-					style_id = "hover_frame_4",
-					pass_type = "texture",
-					style = {
-						vertical_alignment = "top",
-						horizontal_alignment = "left",
-						hdr = false,
-						offset = {
-							15,
-							58,
-							0
-						},
-						size = {
-							160,
-							45
-						},
-						color = Color.ui_terminal(0, true),
-						size_addition = {
-							0,
-							0
-						}
-					}
-				},
-				{
-					value = "content/ui/materials/frames/frame_tile_1px",
-					style_id = "hover_frame_border_4",
-					pass_type = "texture",
-					style = {
-						vertical_alignment = "top",
-						scale_to_material = true,
-						horizontal_alignment = "left",
-						offset = {
-							15,
-							58,
-							1
-						},
-						size = {
-							160,
-							45
-						},
-						color = Color.terminal_corner_selected(0, true)
-					}
-				},
-				{
-					value = "content/ui/materials/frames/frame_corner_2px",
-					style_id = "hover_frame_corner_4",
-					pass_type = "texture",
-					style = {
-						vertical_alignment = "top",
-						scale_to_material = true,
-						horizontal_alignment = "left",
-						offset = {
-							15,
-							58,
-							2
-						},
-						size = {
-							160,
-							45
-						},
-						color = Color.terminal_corner_selected(0, true)
-					}
-				},
-				{
-					style_id = "text_5",
-					value_id = "text_5",
-					pass_type = "text",
-					value = "n/a",
-					style = table.merge_recursive(table.clone(weapon_stat_text_style), {
-						horizontal_alignment = "left",
-						offset = {
-							190,
-							60,
-							3
-						}
-					})
-				},
-				{
-					style_id = "percentage_5",
-					value_id = "percentage_5",
-					pass_type = "text",
-					value = "100%",
-					style = table.merge_recursive(table.clone(stamina_value_style), {
-						text_horizontal_alignment = "left",
-						offset = {
-							190,
-							80,
-							3
-						},
-						text_color = {
-							255,
-							255,
-							255,
-							255
-						}
-					})
-				},
-				{
-					style_id = "background_5",
-					pass_type = "rect",
-					style = {
-						horizontal_alignment = "left",
-						offset = {
-							40 + bar_size + bar_offset * 2,
-							88,
-							3
-						},
-						size = {
-							bar_size,
-							8
-						},
-						color = Color.black(200, true)
-					}
-				},
-				{
-					style_id = "frame_5",
-					pass_type = "rect",
-					style = {
-						horizontal_alignment = "left",
-						offset = {
-							38 + bar_size + bar_offset * 2,
-							86,
-							2
-						},
-						size = {
-							bar_size + 4,
-							12
-						},
-						color = Color.terminal_frame(200, true)
-					}
-				},
-				{
-					value = "content/ui/materials/backgrounds/default_square",
-					style_id = "bar_5",
-					pass_type = "texture",
-					style = {
-						horizontal_alignment = "left",
-						offset = {
-							40 + bar_size + bar_offset * 2,
-							88,
-							4
-						},
-						size = {
-							bar_size,
-							8
-						},
-						color = Color.terminal_corner_selected(255, true)
-					}
-				},
-				{
-					pass_type = "hotspot",
-					content_id = "hotspot_5",
-					content = default_button_content,
-					style = {
-						offset = {
-							190,
-							60,
-							0
-						},
-						size = {
-							150,
-							60
-						}
-					}
-				},
-				{
-					value = "content/ui/materials/gradients/gradient_vertical",
-					style_id = "hover_frame_5",
-					pass_type = "texture",
-					style = {
-						vertical_alignment = "top",
-						horizontal_alignment = "left",
-						hdr = false,
-						offset = {
-							185,
-							58,
-							0
-						},
-						size = {
-							160,
-							45
-						},
-						color = Color.ui_terminal(0, true),
-						size_addition = {
-							0,
-							0
-						}
-					}
-				},
-				{
-					value = "content/ui/materials/frames/frame_tile_1px",
-					style_id = "hover_frame_border_5",
-					pass_type = "texture",
-					style = {
-						vertical_alignment = "top",
-						scale_to_material = true,
-						horizontal_alignment = "left",
-						offset = {
-							185,
-							58,
-							1
-						},
-						size = {
-							160,
-							45
-						},
-						color = Color.terminal_corner_selected(0, true)
-					}
-				},
-				{
-					value = "content/ui/materials/frames/frame_corner_2px",
-					style_id = "hover_frame_corner_5",
-					pass_type = "texture",
-					style = {
-						vertical_alignment = "top",
-						scale_to_material = true,
-						horizontal_alignment = "left",
-						offset = {
-							185,
-							58,
-							2
-						},
-						size = {
-							160,
-							45
-						},
-						color = Color.terminal_corner_selected(0, true)
-					}
-				},
-				{
-					style_id = "text_extra_value",
-					value_id = "text_extra_value",
-					pass_type = "text",
-					value = "",
-					style = table.merge_recursive(table.clone(stamina_value_style), {
-						horizontal_alignment = "left",
-						offset = {
-							360,
-							30,
-							3
-						}
-					})
-				},
-				{
-					pass_type = "hotspot",
-					content_id = "hotspot_6",
-					content = default_button_content,
-					style = {
-						offset = {
-							360,
-							10,
-							0
-						},
-						size = {
-							150,
-							60
-						}
-					}
-				},
-				{
-					value = "content/ui/materials/gradients/gradient_vertical",
-					style_id = "hover_frame_6",
-					pass_type = "texture",
-					style = {
-						vertical_alignment = "top",
-						horizontal_alignment = "left",
-						hdr = false,
-						offset = {
-							355,
-							8,
-							0
-						},
-						size = {
-							160,
-							45
-						},
-						color = Color.terminal_corner_selected(0, true),
-						size_addition = {
-							0,
-							0
-						}
-					}
-				},
-				{
-					value = "content/ui/materials/frames/frame_tile_1px",
-					style_id = "hover_frame_border_6",
-					pass_type = "texture",
-					style = {
-						vertical_alignment = "top",
-						scale_to_material = true,
-						horizontal_alignment = "left",
-						offset = {
-							355,
-							8,
-							1
-						},
-						size = {
-							160,
-							45
-						},
-						color = Color.terminal_corner_selected(0, true)
-					}
-				},
-				{
-					value = "content/ui/materials/frames/frame_corner_2px",
-					style_id = "hover_frame_corner_6",
-					pass_type = "texture",
-					style = {
-						vertical_alignment = "top",
-						scale_to_material = true,
-						horizontal_alignment = "left",
-						offset = {
-							355,
-							8,
-							2
-						},
-						size = {
-							160,
-							45
-						},
-						color = Color.terminal_corner_selected(0, true)
-					}
-				}
-			},
+			pass_template = _generate_weapon_stats_passes(optional_item),
 			init = function (parent, widget, element, callback_name)
 				local content = widget.content
 				local style = widget.style
 				content.element = element
-				style.background.visible = element.add_background or false
+				style.background.visible = not not element.add_background
 				local item = element.item
 				local weapon_stats = WeaponStats:new(item)
 				local compairing_stats = weapon_stats:get_compairing_stats()
@@ -4101,15 +3277,10 @@ local function generate_blueprints_function(grid_size, optional_item)
 				for i = 1, num_stats do
 					local stat_data = compairing_stats_array[i]
 					local text_id = "text_" .. i
-					local background_id = "background_" .. i
 					local bar_id = "bar_" .. i
 					local percentage_id = "percentage_" .. i
 					widget.content.text = Localize(stat_data.display_name)
-					local anim_duration = 1
 					local value = stat_data.fraction
-					local current_progress = content.progress or 0
-					local start_value = current_progress
-					local end_value = value
 					local bar_style = style[bar_id]
 					bar_style.size[1] = bar_size * value
 					local display_name = Localize(stat_data.display_name)
@@ -4136,9 +3307,6 @@ local function generate_blueprints_function(grid_size, optional_item)
 					}
 				}
 				content.gamepad_selected_index = {}
-				local main_stats = weapon_stats:get_main_stats()
-				local is_ranged_weapon = weapon_stats:is_ranged_weapon()
-				local uses_overheat = weapon_stats:uses_overheat()
 				parent._weapon_advanced_stats = weapon_stats._weapon_statistics
 
 				if content.element.interactive then
@@ -4186,26 +3354,26 @@ local function generate_blueprints_function(grid_size, optional_item)
 					content.gamepad_selected_index[2] = index_y
 					local selected_index = gamepad_bar_matrix[index_y][index_x]
 
-					for i = 1, 6 do
-						local is_hover = parent_active and i == selected_index
-						style["hover_frame_" .. i].color[1] = is_hover and 128 or 0
-						style["hover_frame_border_" .. i].color[1] = is_hover and 128 or 0
-						style["hover_frame_corner_" .. i].color[1] = is_hover and 128 or 0
+					for ii = 1, 6 do
+						local is_hover = parent_active and ii == selected_index
+						style["hover_frame_" .. ii].color[1] = is_hover and 128 or 0
+						style["hover_frame_border_" .. ii].color[1] = is_hover and 128 or 0
+						style["hover_frame_corner_" .. ii].color[1] = is_hover and 128 or 0
 
 						if is_hover then
-							stat_data = content["bar_breakdown_" .. i] or stat_data
+							stat_data = content["bar_breakdown_" .. ii] or stat_data
 						end
 					end
 				else
-					for i = 1, 6 do
-						local hotspot = content["hotspot_" .. i]
+					for ii = 1, 6 do
+						local hotspot = content["hotspot_" .. ii]
 						local is_hover = parent_active and hotspot.is_hover
-						style["hover_frame_" .. i].color[1] = is_hover and 128 or 0
-						style["hover_frame_border_" .. i].color[1] = is_hover and 128 or 0
-						style["hover_frame_corner_" .. i].color[1] = is_hover and 128 or 0
+						style["hover_frame_" .. ii].color[1] = is_hover and 128 or 0
+						style["hover_frame_border_" .. ii].color[1] = is_hover and 128 or 0
+						style["hover_frame_corner_" .. ii].color[1] = is_hover and 128 or 0
 
 						if is_hover then
-							stat_data = content["bar_breakdown_" .. i] or stat_data
+							stat_data = content["bar_breakdown_" .. ii] or stat_data
 						end
 					end
 				end
@@ -4262,7 +3430,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 				local header = element.header
 				content.rating = " " .. rating_value
 				content.header = header or ""
-				local text_width = get_style_text_width(content.rating, rating_info_style, ui_renderer)
+				local text_width = _style_text_width(content.rating, rating_info_style, ui_renderer)
 				style.frame.size[1] = text_width + 50
 			end
 		},
@@ -4306,7 +3474,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 
 				while attack_icon_style and attack_value_style do
 					local text = content["attack_value_" .. index]
-					local text_width = get_style_text_width(text, attack_value_style, ui_renderer)
+					local text_width = _style_text_width(text, attack_value_style, ui_renderer)
 					local icon_width = attack_icon_style.size[1]
 					local size = (text_width * 0.5 + icon_width * 0.5 + spacing) * 0.5
 
@@ -4332,7 +3500,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 				local perk_value = element.perk_value
 				local perk_rarity = element.perk_rarity
 				local description = ItemUtils.perk_description(perk_item, perk_rarity, perk_value)
-				local text_height = get_style_text_height(description, weapon_perk_style, ui_renderer)
+				local text_height = _style_text_height(description, weapon_perk_style, ui_renderer)
 				local entry_height = math.max(weapon_perk_style.font_size + 8, text_height + 14)
 
 				return {
@@ -4459,17 +3627,17 @@ local function generate_blueprints_function(grid_size, optional_item)
 				local content = widget.content
 				local style = widget.style
 				content.element = element
-				style.background.visible = element.add_background or false
+				style.background.visible = not not element.add_background
 				local perk_item = element.perk_item
 				local perk_value = element.perk_value
 				local perk_rarity = element.perk_rarity
 				local description = ItemUtils.perk_description(perk_item, perk_rarity, perk_value)
 				content.text = description
 				content.rank = ItemUtils.perk_textures(perk_item, perk_rarity)
-				style.locked.visible = element.is_locked or false
-				style.modified.visible = element.is_modified or false
-				style.glow.visible = element.show_glow or false
-				style.glow_background.visible = element.show_glow or false
+				style.locked.visible = not not element.is_locked
+				style.modified.visible = not not element.is_modified
+				style.glow.visible = not not element.show_glow
+				style.glow_background.visible = not not element.show_glow
 
 				if element.show_rating then
 					content.rating = " " .. ItemUtils.perk_rating(perk_item, perk_rarity)
@@ -4494,7 +3662,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 				local trait_value = element.trait_value
 				local trait_rarity = element.trait_rarity
 				local description = ItemUtils.trait_description(trait_item, trait_rarity, trait_value)
-				local description_height = get_style_text_height(description, weapon_traits_description_style, ui_renderer)
+				local description_height = _style_text_height(description, weapon_traits_description_style, ui_renderer)
 				local entry_height = math.max(68, description_height + 25)
 
 				return {
@@ -4627,7 +3795,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 				local content = widget.content
 				local style = widget.style
 				content.element = element
-				style.background.visible = element.add_background or false
+				style.background.visible = not not element.add_background
 				local trait_item = element.trait_item
 				local trait_value = element.trait_value
 				local trait_rarity = element.trait_rarity
@@ -4646,10 +3814,10 @@ local function generate_blueprints_function(grid_size, optional_item)
 
 				local description = ItemUtils.trait_description(trait_item, trait_rarity, trait_value)
 				content.description = description
-				style.locked.visible = element.is_locked or false
-				style.modified.visible = element.is_modified or false
-				style.glow.visible = element.show_glow or false
-				style.glow_background.visible = element.show_glow or false
+				style.locked.visible = not not element.is_locked
+				style.modified.visible = not not element.is_modified
+				style.glow.visible = not not element.show_glow
+				style.glow_background.visible = not not element.show_glow
 
 				if element.show_rating then
 					local rating_value = ItemUtils.trait_rating(trait_item, trait_rarity, trait_value)
@@ -4729,7 +3897,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 				local content = widget.content
 				local style = widget.style
 				content.element = element
-				style.background.visible = element.add_background or false
+				style.background.visible = not not element.add_background
 				local trait_item = element.trait_item
 				local trait_value = element.trait_value or 0
 				local trait_rarity = element.trait_rarity
@@ -4749,7 +3917,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 				local item = element.item
 				local description = item.description
 				local description_localized = description and Localize(description) or ""
-				local description_height = get_style_text_height(description_localized, description_style, ui_renderer)
+				local description_height = _style_text_height(description_localized, description_style, ui_renderer)
 				local entry_height = math.max(0, description_height + 8)
 
 				return {
@@ -4784,7 +3952,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 			},
 			size_function = function (parent, element, ui_renderer)
 				local text = Localize("loc_item_source_obtained_title")
-				local text_height = get_style_text_height(text, obtained_header_style, ui_renderer)
+				local text_height = _style_text_height(text, obtained_header_style, ui_renderer)
 				local entry_height = math.max(0, text_height)
 
 				return {
@@ -4816,7 +3984,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 			},
 			size_function = function (parent, element, ui_renderer)
 				local label = element.label or ""
-				local label_height = get_style_text_height(label, obtained_label_style, ui_renderer)
+				local label_height = _style_text_height(label, obtained_label_style, ui_renderer)
 				local entry_height = math.max(0, label_height + 8)
 
 				return {
@@ -4849,7 +4017,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 			},
 			size_function = function (parent, element, ui_renderer)
 				local description = element.description or ""
-				local description_height = get_style_text_height(description, achievement_description_style, ui_renderer)
+				local description_height = _style_text_height(description, achievement_description_style, ui_renderer)
 				local entry_height = math.max(0, description_height + 8)
 
 				return {
@@ -4894,7 +4062,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 			size_function = function (parent, element, ui_renderer)
 				local item = element.item
 				local text = ItemUtils.weapon_skin_requirement_text(item)
-				local text_height = get_style_text_height(text, weapon_skin_requirement_style, ui_renderer)
+				local text_height = _style_text_height(text, weapon_skin_requirement_style, ui_renderer)
 				local entry_height = math.max(0, text_height + 10)
 
 				return {
@@ -4921,6 +4089,73 @@ local function generate_blueprints_function(grid_size, optional_item)
 				return
 			end
 		},
+		gear_requirements = {
+			size = {
+				grid_width,
+				114
+			},
+			size_function = function (parent, element, ui_renderer)
+				local item = element.item
+				local text = ItemUtils.class_requirement_text(item)
+				local text_height = _style_text_height(text, weapon_skin_requirement_style, ui_renderer)
+				local entry_height = math.max(0, text_height + 10)
+
+				return {
+					grid_width,
+					entry_height
+				}
+			end,
+			pass_template = {
+				{
+					value = "n/a",
+					pass_type = "text",
+					value_id = "description",
+					style = weapon_skin_requirement_style
+				}
+			},
+			init = function (parent, widget, element, callback_name)
+				local content = widget.content
+				content.element = element
+				local item = element.item
+				local text = ItemUtils.class_requirement_text(item)
+				content.description = text
+			end,
+			update = function (parent, widget, input_service, dt, t, ui_renderer)
+				return
+			end
+		},
+		gear_requirement_header = {
+			size = {
+				grid_width,
+				36
+			},
+			size_function = function (parent, element, ui_renderer)
+				local item = element.item
+				local text = Localize("loc_item_equippable_on_header")
+				local text_height = _style_text_height(text, weapon_skin_requirement_header_style, ui_renderer)
+				local entry_height = math.max(0, text_height + 10)
+				weapon_skin_requirement_header_style.size[2] = entry_height
+
+				return {
+					grid_width,
+					entry_height
+				}
+			end,
+			pass_template = {
+				{
+					value = "n/a",
+					pass_type = "text",
+					value_id = "text",
+					style = weapon_skin_requirement_header_style
+				}
+			},
+			init = function (parent, widget, element, callback_name)
+				local content = widget.content
+				content.element = element
+				local item = element.item
+				content.text = Localize("loc_item_equippable_on_header")
+			end
+		},
 		weapon_skin_requirement_header = {
 			size = {
 				grid_width,
@@ -4929,7 +4164,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 			size_function = function (parent, element, ui_renderer)
 				local item = element.item
 				local text = Localize("loc_item_equippable_on_header")
-				local text_height = get_style_text_height(text, weapon_skin_requirement_header_style, ui_renderer)
+				local text_height = _style_text_height(text, weapon_skin_requirement_header_style, ui_renderer)
 				local entry_height = math.max(0, text_height + 10)
 				weapon_skin_requirement_header_style.size[2] = entry_height
 
@@ -4961,7 +4196,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 			size_function = function (parent, element, ui_renderer)
 				local data = element.data
 				local special_description = data.desc and Localize(data.desc) or ""
-				local special_description_height = get_style_text_height(special_description, special_description_style, ui_renderer)
+				local special_description_height = _style_text_height(special_description, special_description_style, ui_renderer)
 				local entry_height = math.max(0, special_description_height)
 
 				return {
@@ -5209,7 +4444,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 				for i = 1, #displayed_keywords do
 					local display_name = displayed_keywords[i].display_name
 					local full_display_name = Localize(display_name .. "_mouseover")
-					local keyword_height = get_style_text_height(Localize(full_display_name), weapon_keyword_desc_style, ui_renderer)
+					local keyword_height = _style_text_height(Localize(full_display_name), weapon_keyword_desc_style, ui_renderer)
 
 					if entry_height < keyword_height then
 						entry_height = keyword_height or entry_height
@@ -5339,7 +4574,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 				local item = element.item
 				local item_description = item.description
 				local entry_height = 0
-				local desciption_height = get_style_text_height(Localize(item_description), weapon_description_desc_style, ui_renderer)
+				local desciption_height = _style_text_height(Localize(item_description), weapon_description_desc_style, ui_renderer)
 				entry_height = desciption_height or entry_height
 
 				return {
@@ -5393,11 +4628,11 @@ local function generate_blueprints_function(grid_size, optional_item)
 				local style = widget.style
 				local item = element.item
 				local display_name = ItemUtils.display_name(item)
-				local type_name = ItemUtils.sub_display_name(item)
+				local sub_display_name = ItemUtils.sub_display_name(item)
 				local rarity_color = ItemUtils.rarity_color(item)
 				content.element = element
 				content.display_name = display_name
-				content.rarity_name = type_name
+				content.rarity_name = sub_display_name
 				style.rarity_name.text_color = table.clone(rarity_color)
 				local item_description = item.description
 
@@ -6781,7 +6016,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 						local icon_name = content["icon_name_" .. index]
 						local icon = content["icon_" .. index]
 						local description = content["desc_" .. index]
-						local text_height = get_style_text_height(description, style.hover_icon_desc, ui_renderer) + 20
+						local text_height = _style_text_height(description, style.hover_icon_desc, ui_renderer) + 20
 						style.hover_bg.color[1] = 210
 						style.hover_frame.color[1] = 255
 						style.hover_frame_corner.color[1] = 255
@@ -6845,7 +6080,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 			},
 			init = function (parent, widget, element)
 				local style = widget.style
-				style.background.visible = element.add_background or false
+				style.background.visible = not not element.add_background
 			end,
 			size_function = function (parent, config)
 				return config.size

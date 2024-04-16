@@ -1,6 +1,3 @@
-local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
-local DamageSettings = require("scripts/settings/damage/damage_settings")
-local damage_types = DamageSettings.damage_types
 local ability_template = {
 	action_inputs = {
 		stance_pressed = {
@@ -28,9 +25,11 @@ local ability_template = {
 			allowed_during_sprint = true,
 			stop_current_action = true,
 			uninterruptible = true,
-			vo_tag = "ability_gun_lugger",
+			anim_3p = "ability_shout",
 			use_ability_charge = true,
 			ability_type = "combat_ability",
+			anim = "mid_reload_finished",
+			vo_tag = "ability_gun_lugger",
 			total_time = 0
 		}
 	},

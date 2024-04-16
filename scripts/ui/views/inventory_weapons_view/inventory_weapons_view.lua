@@ -1,3 +1,5 @@
+require("scripts/ui/views/item_grid_view_base/item_grid_view_base")
+
 local ContentBlueprints = require("scripts/ui/views/inventory_view/inventory_view_content_blueprints")
 local Definitions = require("scripts/ui/views/inventory_weapons_view/inventory_weapons_view_definitions")
 local InventoryWeaponsViewSettings = require("scripts/ui/views/inventory_weapons_view/inventory_weapons_view_settings")
@@ -29,13 +31,6 @@ InventoryWeaponsView.init = function (self, settings, context)
 	self._parent = context.parent
 	self._pass_input = false
 	self._pass_draw = false
-end
-
-InventoryWeaponsView.character_level = function (self)
-	local profile = self._preview_player:profile()
-	local profile_level = profile.current_level
-
-	return profile_level
 end
 
 InventoryWeaponsView.on_enter = function (self)

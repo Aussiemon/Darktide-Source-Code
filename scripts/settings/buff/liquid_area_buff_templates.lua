@@ -246,7 +246,7 @@ templates.renegade_grenadier_in_fire_liquid = {
 	},
 	keywords = {
 		buff_keywords.burning,
-		buff_keywords.prevent_toughness_replenish
+		buff_keywords.prevent_toughness_replenish_except_abilities
 	},
 	forbidden_keywords = {
 		buff_keywords.renegade_grenadier_liquid_immunity
@@ -298,7 +298,7 @@ templates.cultist_flamer_in_fire_liquid = {
 	},
 	keywords = {
 		buff_keywords.burning,
-		buff_keywords.prevent_toughness_replenish
+		buff_keywords.prevent_toughness_replenish_except_abilities
 	},
 	forbidden_keywords = {
 		buff_keywords.cultist_flamer_liquid_immunity
@@ -350,7 +350,7 @@ templates.renegade_flamer_in_fire_liquid = {
 	},
 	keywords = {
 		buff_keywords.burning,
-		buff_keywords.prevent_toughness_replenish
+		buff_keywords.prevent_toughness_replenish_except_abilities
 	},
 	forbidden_keywords = {
 		buff_keywords.renegade_flamer_liquid_immunity
@@ -536,7 +536,7 @@ templates.cm_habs_tree_in_slime = {
 local function _toxic_gas_interval_function(template_data, template_context, template)
 	local unit = template_context.unit
 
-	if not HEALTH_ALIVE[unit] then
+	if not HEALTH_ALIVE[unit] or not template_context.is_player then
 		return
 	end
 
@@ -582,6 +582,45 @@ local function _toxic_gas_interval_function(template_data, template_context, tem
 	end
 end
 
+local function _toxic_gas_scaled_damage_interval_function(template_data, template_context, template)
+	local unit = template_context.unit
+
+	if not HEALTH_ALIVE[unit] or not template_context.is_player then
+		return
+	end
+
+	local breed = template_context.breed
+	local breed_type = breed.breed_type
+	local power_level_by_breed_type = template.power_level
+	local power_level_by_challenge = power_level_by_breed_type[breed_type] or power_level_by_breed_type.default
+	local power_level = Managers.state.difficulty:get_table_entry_by_challenge(power_level_by_challenge)
+	local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
+	local character_state_component = unit_data_extension:read_component("character_state")
+	local is_knocked_down = PlayerUnitStatus.is_knocked_down(character_state_component)
+
+	if is_knocked_down then
+		power_level = power_level * PLAYER_KNOCKED_DOWN_POWER_LEVEL_MULTIPLIER
+	end
+
+	local player = Managers.state.player_unit_spawn:owner(unit)
+	local is_bot = player and not player:is_human_controlled()
+
+	if is_bot then
+		power_level = power_level * BOT_POWER_LEVEL_MULTIPLIER
+	end
+
+	if template.power_level_random then
+		power_level = power_level * 0.5 + math.random() * power_level
+	end
+
+	local optional_owner_unit = template_context.is_server and template_context.owner_unit or nil
+	local optional_source_item = template_context.is_server and template_context.source_item or nil
+	local damage_template = template.damage_template
+	local damage_type = template.damage_type
+
+	Attack.execute(unit, damage_template, "power_level", power_level, "damage_type", damage_type, "attacking_unit", optional_owner_unit, "item", optional_source_item)
+end
+
 local EMPOWERED_BREEDS = {
 	chaos_poxwalker = true
 }
@@ -594,12 +633,13 @@ templates.in_toxic_gas = {
 	class_name = "interval_buff",
 	is_negative = true,
 	stat_buffs = {
+		[buff_stat_buffs.toughness_coherency_regen_rate_multiplier] = 0,
+		[buff_stat_buffs.toughness_replenish_multiplier] = 0.5,
 		[buff_stat_buffs.toughness_regen_rate_multiplier] = 0
 	},
 	keywords = {
 		buff_keywords.concealed,
-		buff_keywords.in_toxic_gas,
-		buff_keywords.prevent_toughness_replenish
+		buff_keywords.in_toxic_gas
 	},
 	power_level = {
 		default = {
@@ -610,7 +650,7 @@ templates.in_toxic_gas = {
 			20
 		}
 	},
-	damage_template = DamageProfileTemplates.cultist_grenadier_gas,
+	damage_template = DamageProfileTemplates.toxic_gas,
 	damage_type = damage_types.corruption,
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
@@ -700,12 +740,12 @@ templates.in_toxic_gas = {
 			Vo.coughing_ends_event(unit)
 		end
 	end,
-	interval_func = _scaled_damage_interval_function,
+	interval_func = _toxic_gas_scaled_damage_interval_function,
 	player_effects = {
 		on_screen_effect = "content/fx/particles/screenspace/player_screen_twins_gas",
 		looping_wwise_stop_event = "wwise/events/player/play_player_gas_exit",
 		looping_wwise_start_event = "wwise/events/player/play_player_gas_enter",
-		stop_type = "stop",
+		stop_type = "destroy",
 		wwise_state = {
 			group = "swamped",
 			on_state = "on",
@@ -724,6 +764,8 @@ templates.left_toxic_gas = {
 	is_negative = true,
 	target = buff_targets.player_only,
 	stat_buffs = {
+		[buff_stat_buffs.toughness_coherency_regen_rate_multiplier] = 0,
+		[buff_stat_buffs.toughness_replenish_multiplier] = 0.5,
 		[buff_stat_buffs.toughness_regen_rate_multiplier] = 0
 	},
 	keywords = {
@@ -741,7 +783,7 @@ templates.left_toxic_gas = {
 	},
 	damage_template = DamageProfileTemplates.toxic_gas_mutator,
 	damage_type = damage_types.corruption,
-	interval_func = _toxic_gas_interval_function,
+	interval_func = _toxic_gas_scaled_damage_interval_function,
 	player_effects = {
 		looping_wwise_stop_event = "wwise/events/player/play_player_gas_exit",
 		looping_wwise_start_event = "wwise/events/player/play_player_gas_enter",
@@ -818,12 +860,13 @@ templates.in_cultist_grenadier_gas = {
 	class_name = "interval_buff",
 	is_negative = true,
 	stat_buffs = {
+		[buff_stat_buffs.toughness_coherency_regen_rate_multiplier] = 0,
+		[buff_stat_buffs.toughness_replenish_multiplier] = 0.3,
 		[buff_stat_buffs.toughness_regen_rate_multiplier] = 0
 	},
 	keywords = {
 		buff_keywords.concealed,
-		buff_keywords.in_toxic_gas,
-		buff_keywords.prevent_toughness_replenish
+		buff_keywords.in_toxic_gas
 	},
 	power_level = {
 		default = {
@@ -924,12 +967,12 @@ templates.in_cultist_grenadier_gas = {
 			Vo.coughing_ends_event(unit)
 		end
 	end,
-	interval_func = _scaled_damage_interval_function,
+	interval_func = _toxic_gas_scaled_damage_interval_function,
 	player_effects = {
 		on_screen_effect = "content/fx/particles/screenspace/player_screen_twins_gas",
 		looping_wwise_stop_event = "wwise/events/player/play_player_gas_exit",
 		looping_wwise_start_event = "wwise/events/player/play_player_gas_enter",
-		stop_type = "stop",
+		stop_type = "destroy",
 		wwise_state = {
 			group = "swamped",
 			on_state = "on",
@@ -951,7 +994,7 @@ templates.in_twin_toxic_gas = {
 	keywords = {
 		buff_keywords.concealed,
 		buff_keywords.in_toxic_gas,
-		buff_keywords.prevent_toughness_replenish
+		buff_keywords.prevent_toughness_replenish_except_abilities
 	},
 	power_level = {
 		default = {
@@ -1059,7 +1102,7 @@ templates.in_twin_toxic_gas = {
 		on_screen_effect = "content/fx/particles/screenspace/player_screen_twins_gas",
 		looping_wwise_stop_event = "wwise/events/player/play_player_gas_exit",
 		looping_wwise_start_event = "wwise/events/player/play_player_gas_enter",
-		stop_type = "stop",
+		stop_type = "destroy",
 		wwise_state = {
 			group = "swamped",
 			on_state = "on",

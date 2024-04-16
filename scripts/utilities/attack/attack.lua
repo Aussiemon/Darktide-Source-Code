@@ -284,7 +284,7 @@ function _execute(attacked_unit, damage_profile, target_index, target_number, po
 		if is_server then
 			_handle_result(attacking_unit_owner_unit, attacked_unit, attack_result, attack_type, attacker_breed_or_nil, target_breed_or_nil, damage_dealt, damage_absorbed, damage_profile, damage_type, actual_damage_dealt)
 			Managers.state.attack_report:add_attack_result(damage_profile, attacked_unit, attacking_unit_owner_unit, attack_direction, hit_world_position, hit_weakspot, damage_dealt, attack_result, attack_type, damage_efficiency, is_critical_strike)
-			_record_stats(attack_result, attack_type, attacked_unit, attacking_unit_owner_unit, damage_absorbed, damage_dealt, hit_zone_name, damage_profile, item, attacked_action, attacker_breed_or_nil, target_breed_or_nil, damage_type, target_buff_extension, is_critical_strike, stagger_result, stagger_type)
+			_record_stats(attack_result, attack_type, attacked_unit, attacking_unit_owner_unit, damage_absorbed, damage_dealt, hit_zone_name, damage_profile, item, attacked_action, attacker_breed_or_nil, target_breed_or_nil, damage_type, target_buff_extension, is_backstab, is_critical_strike, stagger_result, stagger_type)
 			_record_telemetry(attacking_unit_owner_unit, attacked_unit, attack_result, attack_type, damage_dealt, damage_profile, damage_type, damage, permanent_damage, actual_damage_dealt, damage_absorbed, attacker_breed_or_nil, target_breed_or_nil, instakill)
 		end
 
@@ -537,6 +537,7 @@ function _handle_buffs(is_server, triggered_proc_events_or_nil, damage_profile, 
 			attacker_param_table.damage = damage
 			attacker_param_table.damage_efficiency = damage_efficiency
 			attacker_param_table.damage_type = damage_type
+			attacker_param_table.damage_profile_name = damage_profile and damage_profile.name
 			attacker_param_table.hit_weakspot = hit_weakspot
 			attacker_param_table.hit_world_position = hit_world_position_box_or_nil
 			attacker_param_table.is_backstab = is_backstab
@@ -593,7 +594,7 @@ end
 local _attack_table = {}
 local _empty_table = {}
 
-function _record_stats(attack_result, attack_type, attacked_unit, attacking_unit, damage_absorbed, damage_dealt, hit_zone_name, damage_profile, attacking_item, attacked_action, attacker_breed_or_nil, target_breed_or_nil, damage_type, target_buff_extension, is_critical_hit, stagger_result, stagger_type)
+function _record_stats(attack_result, attack_type, attacked_unit, attacking_unit, damage_absorbed, damage_dealt, hit_zone_name, damage_profile, attacking_item, attacked_action, attacker_breed_or_nil, target_breed_or_nil, damage_type, target_buff_extension, is_backstab, is_critical_hit, stagger_result, stagger_type)
 	local did_damage = damage_dealt > 0
 	local player_unit_spawn_manager = Managers.state.player_unit_spawn
 	local attacked_player = player_unit_spawn_manager:owner(attacked_unit)
@@ -636,6 +637,7 @@ function _record_stats(attack_result, attack_type, attacked_unit, attacking_unit
 		_attack_table.damage_type = damage_type
 		_attack_table.distance_between_units = rounded_distance_between_units
 		_attack_table.hit_zone_name = hit_zone_name
+		_attack_table.is_backstab = is_backstab
 		_attack_table.is_critical_hit = is_critical_hit
 		_attack_table.is_weapon_special = is_weapon_special
 		_attack_table.solo_kill = solo_kill
@@ -647,6 +649,7 @@ function _record_stats(attack_result, attack_type, attacked_unit, attacking_unit
 		_attack_table.target_buff_keywords = target_buff_keywords or _empty_table
 		_attack_table.target_unit_id = attacked_unit_id
 		_attack_table.weapon_template_name = weapon_template_name
+		_attack_table.is_heavy_attack = damage_profile and damage_profile.melee_attack_strength == "heavy"
 
 		Managers.stats:record_private("hook_damage_dealt", attacking_player, _attack_table)
 
@@ -660,7 +663,7 @@ function _record_stats(attack_result, attack_type, attacked_unit, attacking_unit
 				local boss_extension = ScriptUnit.extension(attacked_unit, "boss_system")
 				local time_since_first_damage = boss_extension:time_since_first_damage()
 
-				Managers.stats:record_team("hook_boss_died", target_breed_or_nil.name, boss_max_health, boss_unit_id, time_since_first_damage)
+				Managers.stats:record_team("hook_boss_died", target_breed_or_nil.name, boss_max_health, boss_unit_id, time_since_first_damage, _attack_table)
 			end
 
 			Managers.telemetry.stats_kill = true
@@ -701,17 +704,18 @@ end
 local TelemetryHelper = require("scripts/managers/telemetry/telemetry_helper")
 
 function _record_telemetry(attacking_unit, attacked_unit, attack_result, attack_type, damage_dealt, damage_profile, damage_type, damage, permanent_damage, actual_damage_dealt, damage_absorbed, attacker_breed_or_nil, target_breed_or_nil, instakill)
+	if not DEDICATED_SERVER then
+		return
+	end
+
 	local attacking_player = attacking_unit and Managers.state.player_unit_spawn:owner(attacking_unit)
 	local visual_loadout_extension = attacking_unit and ScriptUnit.has_extension(attacking_unit, "visual_loadout_system")
 	local attack_weapon = visual_loadout_extension and visual_loadout_extension:telemetry_wielded_weapon()
 	local attack_weapon_name = attack_weapon and _format_weapon_name(attack_weapon.name)
 	local attacked_player = attacked_unit and Managers.state.player_unit_spawn:owner(attacked_unit)
-	local attacker_position = TelemetryHelper.unit_position(attacking_unit)
-	local victim_position = TelemetryHelper.unit_position(attacked_unit)
 	local data = {
 		reason = "damage",
-		attacker_position = attacker_position,
-		victim_position = victim_position,
+		is_boss = false,
 		attack_type = attack_type,
 		weapon = attack_weapon_name,
 		damage_profile = damage_profile.name,
@@ -731,7 +735,7 @@ function _record_telemetry(attacking_unit, attacked_unit, attack_result, attack_
 		end
 
 		if attack_result == attack_results.died then
-			Managers.telemetry_events:player_killed_enemy(attacking_player, data)
+			Managers.telemetry_reporters:reporter("player_terminate_enemy"):register_event(attacking_player, data)
 		end
 	end
 
@@ -791,7 +795,12 @@ function _handle_result(attacking_unit_owner_unit, attacked_unit, attack_result,
 				combat_vector_system:add_main_aggro_target_score("killed_unit", attacking_unit_owner_unit, attacked_unit)
 			end
 		elseif attack_type == attack_types.melee and attacker_is_player and attack_result == attack_results.died then
-			Toughness.replenish(attacking_unit_owner_unit, toughness_replenish_types.melee_kill)
+			local amount = Toughness.replenish(attacking_unit_owner_unit, toughness_replenish_types.melee_kill)
+			local player = Managers.state.player_unit_spawn:owner(attacking_unit_owner_unit)
+
+			if amount > 0 and player then
+				Managers.stats:record_private("hook_melee_kill_toughness_regenerated", player, amount)
+			end
 		end
 	elseif is_ranged_friendly_fire then
 		Vo.friendly_fire_counter_event(attacking_unit_owner_unit, attacked_unit)

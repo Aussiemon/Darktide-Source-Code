@@ -74,6 +74,10 @@ PlayerUnitTalentExtension.destroy = function (self)
 	self:_remove_gameplay_features(self._latest_fixed_frame)
 end
 
+PlayerUnitTalentExtension.talents = function (self)
+	return self._talents
+end
+
 PlayerUnitTalentExtension.has_special_rule = function (self, special_rule_name)
 	local active_special_rules = self._active_special_rules
 

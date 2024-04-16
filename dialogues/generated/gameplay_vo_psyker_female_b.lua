@@ -144,6 +144,63 @@ local gameplay_vo_psyker_female_b = {
 		},
 		randomize_indexes = {}
 	},
+	blitz_brainburst_chain_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 5,
+		sound_events = {
+			"loc_psyker_female_b__blitz_brainburst_chain_a_01",
+			"loc_psyker_female_b__blitz_brainburst_chain_a_02",
+			"loc_psyker_female_b__blitz_brainburst_chain_a_03",
+			"loc_psyker_female_b__blitz_brainburst_chain_a_04",
+			"loc_psyker_female_b__blitz_brainburst_chain_a_05"
+		},
+		sound_events_duration = {
+			1.170417,
+			1.714625,
+			2.528208,
+			2.269625,
+			2.384771
+		},
+		randomize_indexes = {}
+	},
+	blitz_shards_chain_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 5,
+		sound_events = {
+			"loc_psyker_female_b__blitz_shards_chain_a_01",
+			"loc_psyker_female_b__blitz_shards_chain_a_02",
+			"loc_psyker_female_b__blitz_shards_chain_a_03",
+			"loc_psyker_female_b__blitz_shards_chain_a_04",
+			"loc_psyker_female_b__blitz_shards_chain_a_05"
+		},
+		sound_events_duration = {
+			2.726125,
+			2.733813,
+			2.533083,
+			3.441271,
+			2.634292
+		},
+		randomize_indexes = {}
+	},
+	blitz_smite_chain_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 5,
+		sound_events = {
+			"loc_psyker_female_b__blitz_smite_chain_a_01",
+			"loc_psyker_female_b__blitz_smite_chain_a_02",
+			"loc_psyker_female_b__blitz_smite_chain_a_03",
+			"loc_psyker_female_b__blitz_smite_chain_a_04",
+			"loc_psyker_female_b__blitz_smite_chain_a_05"
+		},
+		sound_events_duration = {
+			1.9465,
+			2.654792,
+			0.849042,
+			1.963792,
+			2.757688
+		},
+		randomize_indexes = {}
+	},
 	calling_for_help = {
 		randomize_indexes_n = 0,
 		sound_events_n = 10,
@@ -685,6 +742,47 @@ local gameplay_vo_psyker_female_b = {
 			1.958708,
 			1.839458,
 			1.694896
+		},
+		sound_event_weights = {
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1
+		},
+		randomize_indexes = {}
+	},
+	enemy_kill_cultist_grenadier = {
+		randomize_indexes_n = 0,
+		sound_events_n = 10,
+		sound_events = {
+			"loc_psyker_female_b__enemy_kill_grenadier_01",
+			"loc_psyker_female_b__enemy_kill_grenadier_02",
+			"loc_psyker_female_b__enemy_kill_grenadier_03",
+			"loc_psyker_female_b__enemy_kill_grenadier_04",
+			"loc_psyker_female_b__enemy_kill_grenadier_05",
+			"loc_psyker_female_b__enemy_kill_grenadier_06",
+			"loc_psyker_female_b__enemy_kill_grenadier_07",
+			"loc_psyker_female_b__enemy_kill_grenadier_08",
+			"loc_psyker_female_b__enemy_kill_grenadier_09",
+			"loc_psyker_female_b__enemy_kill_grenadier_10"
+		},
+		sound_events_duration = {
+			1.056667,
+			2.373771,
+			1.384875,
+			1.349021,
+			1.844938,
+			2.134521,
+			0.992688,
+			2.564396,
+			2.082604,
+			0.941208
 		},
 		sound_event_weights = {
 			0.1,
@@ -4327,6 +4425,47 @@ local gameplay_vo_psyker_female_b = {
 			0.1111111,
 			0.1111111,
 			0.1111111
+		},
+		randomize_indexes = {}
+	},
+	seen_enemy_cultist_grenadier = {
+		randomize_indexes_n = 0,
+		sound_events_n = 10,
+		sound_events = {
+			"loc_psyker_female_b__seen_enemy_grenadier_01",
+			"loc_psyker_female_b__seen_enemy_grenadier_02",
+			"loc_psyker_female_b__seen_enemy_grenadier_03",
+			"loc_psyker_female_b__seen_enemy_grenadier_04",
+			"loc_psyker_female_b__seen_enemy_grenadier_05",
+			"loc_psyker_female_b__seen_enemy_grenadier_06",
+			"loc_psyker_female_b__seen_enemy_grenadier_07",
+			"loc_psyker_female_b__seen_enemy_grenadier_08",
+			"loc_psyker_female_b__seen_enemy_grenadier_09",
+			"loc_psyker_female_b__seen_enemy_grenadier_10"
+		},
+		sound_events_duration = {
+			0.566688,
+			0.567104,
+			1.795729,
+			2.560479,
+			1.179958,
+			1.742167,
+			1.35125,
+			1.389188,
+			1.723229,
+			2.948938
+		},
+		sound_event_weights = {
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1
 		},
 		randomize_indexes = {}
 	},

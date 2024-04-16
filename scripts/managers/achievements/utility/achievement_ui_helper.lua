@@ -37,7 +37,7 @@ local AchievementUIHelper = {
 				local reward_id = rewards[1].masterId
 				local reward_item = MasterItems.get_item(reward_id)
 
-				if reward_item.name == item.name then
+				if reward_item and reward_item.name == item.name then
 					return achievement
 				end
 			end
@@ -55,29 +55,35 @@ local AchievementUIHelper = {
 		return localized_title
 	end
 }
-local _loc_variables = {}
+local empty = {}
 
-AchievementUIHelper.localized_description = function (achievement_definition)
+AchievementUIHelper.localized_description = function (achievement_definition, separate_private_discription)
 	local flags = achievement_definition.flags
-	local _loc_variables = achievement_definition.loc_variables or _loc_variables
-	local has_target = _loc_variables.target ~= nil
+	local loc_variables = achievement_definition.loc_variables or empty
+	local has_target = loc_variables.target ~= nil
 
 	if not has_target then
-		_loc_variables.target = achievement_definition.target
+		loc_variables.target = achievement_definition.target
 	end
 
-	local localized_description = Localize(achievement_definition.description, true, _loc_variables)
+	local localized_description = Localize(achievement_definition.description, loc_variables ~= nil, loc_variables)
 
 	if not has_target then
-		_loc_variables.target = nil
+		loc_variables.target = nil
 	end
+
+	local private_description = ""
 
 	if flags.private_only then
-		local private_description = string.format("\n %s: %s", Localize("loc_private_tag_name"), Localize("loc_private_tag_description"))
-		localized_description = string.format("%s%s", localized_description, TextUtils.apply_color_to_text(private_description, Color.terminal_text_warning_dark(255, true)))
+		private_description = string.format("\n %s: %s", Localize("loc_private_tag_name"), Localize("loc_private_tag_description"))
+		private_description = TextUtils.apply_color_to_text(private_description, Color.terminal_text_warning_dark(255, true))
+
+		if not separate_private_discription then
+			localized_description = string.format("%s%s", localized_description, private_description)
+		end
 	end
 
-	return localized_description
+	return localized_description, private_description
 end
 
 AchievementUIHelper.get_family = function (achievement_definition)
@@ -103,6 +109,88 @@ AchievementUIHelper.get_family = function (achievement_definition)
 	end
 
 	return family
+end
+
+AchievementUIHelper.is_achievements_from_same_family = function (a_achievement_definition, b_achievement_definition)
+	local family_a = AchievementUIHelper.get_family(a_achievement_definition)
+
+	for i = 1, #family_a do
+		local family_achievement = family_a[i]
+
+		if family_achievement.id == b_achievement_definition.id then
+			return true
+		end
+	end
+
+	return false
+end
+
+AchievementUIHelper.get_achievement_family_order = function (achievement_definition)
+	local family = AchievementUIHelper.get_family(achievement_definition)
+	local num_family_achievements = #family
+
+	if num_family_achievements > 1 then
+		for i = 1, num_family_achievements do
+			local family_achievement = family[i]
+			local family_achievement_id = family_achievement.id
+
+			if family_achievement_id == achievement_definition.id then
+				return i
+			end
+		end
+	end
+
+	return nil
+end
+
+AchievementUIHelper.add_favorite_achievement = function (id)
+	local save_data = Managers.save:account_data()
+	local favorite_achievements = save_data.favorite_achievements
+
+	if UISettings.max_favorite_achievements <= #favorite_achievements then
+		return false
+	end
+
+	if table.index_of(favorite_achievements, id) ~= -1 then
+		return false
+	end
+
+	favorite_achievements[#favorite_achievements + 1] = id
+
+	Managers.save:queue_save()
+
+	return true
+end
+
+AchievementUIHelper.remove_favorite_achievement = function (id)
+	local save_data = Managers.save:account_data()
+	local favorite_achievements = save_data.favorite_achievements
+	local index = table.index_of(favorite_achievements, id)
+
+	if index == -1 then
+		return false
+	end
+
+	table.remove(favorite_achievements, index)
+	Managers.save:queue_save()
+
+	return true
+end
+
+AchievementUIHelper.is_favorite_achievement = function (id)
+	local save_data = Managers.save:account_data()
+	local favorite_achievements = save_data.favorite_achievements
+	local index = table.index_of(favorite_achievements, id)
+
+	return index ~= -1
+end
+
+AchievementUIHelper.favorite_achievement_count = function ()
+	local save_data = Managers.save:account_data()
+	local favorite_achievements = save_data.favorite_achievements
+	local favorite_achievement_size = #favorite_achievements
+
+	return favorite_achievement_size, UISettings.max_favorite_achievements
 end
 
 return AchievementUIHelper

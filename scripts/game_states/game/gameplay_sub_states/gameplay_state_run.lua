@@ -121,6 +121,7 @@ GameplayStateRun.update = function (self, main_dt, main_t)
 			Managers.state.horde:update(dt, t)
 		end
 
+		Managers.state.collectibles:update(dt, t)
 		Managers.state.player_unit_spawn:update(dt, t)
 		Managers.state.game_mode:update(dt, t)
 	end

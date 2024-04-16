@@ -516,6 +516,18 @@ local template = {
 				}
 			},
 			{
+				"spawn_by_points",
+				spawner_group = "spawner_habs_end_west",
+				limit_spawners = 2,
+				points = 7,
+				breed_tags = {
+					{
+						"far",
+						"elite"
+					}
+				}
+			},
+			{
 				"delay",
 				duration = 6
 			},
@@ -534,12 +546,12 @@ local template = {
 			{
 				"start_terror_trickle",
 				delay = 8,
-				spawner_group = "spawner_habs_end",
+				spawner_group = "spawner_habs_end_west",
 				template_name = "standard_melee"
 			},
 			{
 				"delay",
-				duration = 23
+				duration = 26
 			},
 			{
 				"try_inject_special_minion",
@@ -557,13 +569,13 @@ local template = {
 				"continue_when",
 				duration = 25,
 				condition = function ()
-					return TerrorEventQueries.num_alive_minions() < 6
+					return TerrorEventQueries.num_alive_minions() < 8
 				end
 			},
 			{
 				"continue_when",
 				condition = function ()
-					return TerrorEventQueries.num_alive_minions() < 12
+					return TerrorEventQueries.num_alive_minions() < 5
 				end
 			},
 			{
@@ -616,24 +628,24 @@ local template = {
 			{
 				"start_terror_trickle",
 				delay = 8,
-				spawner_group = "spawner_habs_end",
+				spawner_group = "spawner_habs_end_east",
 				template_name = "standard_melee"
 			},
 			{
 				"delay",
-				duration = 23
+				duration = 26
 			},
 			{
 				"continue_when",
 				duration = 25,
 				condition = function ()
-					return TerrorEventQueries.num_alive_minions() < 6
+					return TerrorEventQueries.num_alive_minions() < 8
 				end
 			},
 			{
 				"continue_when",
 				condition = function ()
-					return TerrorEventQueries.num_alive_minions() < 12
+					return TerrorEventQueries.num_alive_minions() < 5
 				end
 			},
 			{
@@ -686,12 +698,12 @@ local template = {
 			{
 				"start_terror_trickle",
 				delay = 8,
-				spawner_group = "spawner_habs_end",
+				spawner_group = "spawner_habs_end_south",
 				template_name = "standard_melee"
 			},
 			{
 				"delay",
-				duration = 23
+				duration = 26
 			},
 			{
 				"try_inject_special_minion",
@@ -709,13 +721,13 @@ local template = {
 				"continue_when",
 				duration = 25,
 				condition = function ()
-					return TerrorEventQueries.num_alive_minions() < 6
+					return TerrorEventQueries.num_alive_minions() < 8
 				end
 			},
 			{
 				"continue_when",
 				condition = function ()
-					return TerrorEventQueries.num_alive_minions() < 12
+					return TerrorEventQueries.num_alive_minions() < 5
 				end
 			},
 			{
@@ -743,6 +755,18 @@ local template = {
 			{
 				"delay",
 				duration = 3
+			},
+			{
+				"spawn_by_points",
+				spawner_group = "spawner_habs_end_east",
+				limit_spawners = 2,
+				points = 7,
+				breed_tags = {
+					{
+						"far",
+						"elite"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
@@ -774,24 +798,24 @@ local template = {
 			{
 				"start_terror_trickle",
 				delay = 8,
-				spawner_group = "spawner_habs_end",
+				spawner_group = "spawner_habs_end_east",
 				template_name = "standard_melee"
 			},
 			{
 				"delay",
-				duration = 17
+				duration = 23
 			},
 			{
 				"continue_when",
 				duration = 25,
 				condition = function ()
-					return TerrorEventQueries.num_alive_minions() < 6
+					return TerrorEventQueries.num_alive_minions() < 8
 				end
 			},
 			{
 				"continue_when",
 				condition = function ()
-					return TerrorEventQueries.num_alive_minions() < 12
+					return TerrorEventQueries.num_alive_minions() < 5
 				end
 			},
 			{
@@ -845,12 +869,12 @@ local template = {
 			{
 				"start_terror_trickle",
 				delay = 8,
-				spawner_group = "spawner_habs_end",
+				spawner_group = "spawner_habs_end_west",
 				template_name = "standard_melee"
 			},
 			{
 				"delay",
-				duration = 23
+				duration = 26
 			},
 			{
 				"try_inject_special_minion",
@@ -868,13 +892,13 @@ local template = {
 				"continue_when",
 				duration = 25,
 				condition = function ()
-					return TerrorEventQueries.num_alive_minions() < 6
+					return TerrorEventQueries.num_alive_minions() < 8
 				end
 			},
 			{
 				"continue_when",
 				condition = function ()
-					return TerrorEventQueries.num_alive_minions() < 12
+					return TerrorEventQueries.num_alive_minions() < 5
 				end
 			},
 			{

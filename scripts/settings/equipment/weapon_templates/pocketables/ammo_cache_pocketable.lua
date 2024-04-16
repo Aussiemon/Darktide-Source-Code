@@ -1,5 +1,6 @@
-local PocketablesTemplateSettings = require("scripts/settings/equipment/weapon_templates/pocketables/settings_templates/pocketables_template_settings")
 local FootstepIntervalsTemplates = require("scripts/settings/equipment/footstep/footstep_intervals_templates")
+local PocketablesTemplateSettings = require("scripts/settings/equipment/weapon_templates/pocketables/settings_templates/pocketables_template_settings")
+local SmartTargetingTemplates = require("scripts/settings/equipment/smart_targeting_templates")
 local weapon_template = {
 	action_inputs = {}
 }
@@ -42,12 +43,12 @@ weapon_template.breed_anim_state_machine_1p = {
 	human = "content/characters/player/human/first_person/animations/pocketables",
 	ogryn = "content/characters/player/ogryn/first_person/animations/pocketables"
 }
+weapon_template.smart_targeting_template = SmartTargetingTemplates.default_melee
 weapon_template.fx_sources = {}
 weapon_template.dodge_template = "default"
 weapon_template.sprint_template = "default"
 weapon_template.stamina_template = "default"
 weapon_template.toughness_template = "default"
-weapon_template.hud_icon = "content/ui/materials/icons/pickups/default"
 weapon_template.swap_pickup_name = "ammo_cache_pocketable"
 weapon_template.give_pickup_name = "ammo_cache_pocketable"
 weapon_template.breed_footstep_intervals = {

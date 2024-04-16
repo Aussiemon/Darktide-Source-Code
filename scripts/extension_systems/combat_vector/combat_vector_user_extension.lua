@@ -157,12 +157,16 @@ CombatVectorUserExtension.switch_range = function (self, new_combat_range)
 end
 
 CombatVectorUserExtension.update = function (self, unit, dt, t, context, nav_mesh_locations, claimed_location_counters, changed, flank_positions, combat_vector_position)
+	local config = self._config
 	local perception_component = self._perception_component
-	local is_aggroed = perception_component.aggro_state == "aggroed"
-	local target_unit = perception_component.target_unit
 
-	if not is_aggroed or not ALIVE[target_unit] then
-		return
+	if not config.update_when_passive then
+		local is_aggroed = perception_component.aggro_state == "aggroed"
+		local target_unit = perception_component.target_unit
+
+		if not is_aggroed or not ALIVE[target_unit] then
+			return
+		end
 	end
 
 	local current_location = self._current_location
@@ -173,7 +177,6 @@ CombatVectorUserExtension.update = function (self, unit, dt, t, context, nav_mes
 	local wants_new_location = self._wants_new_location
 
 	if not current_location or changed or current_combat_range ~= previous_combat_range or wants_new_location then
-		local config = self._config
 		local valid_combat_ranges = config.valid_combat_ranges
 		local unit_position = POSITION_LOOKUP[unit]
 		local combat_range = wants_new_location and self._wants_new_combat_range or valid_combat_ranges[current_combat_range] and current_combat_range or config.default_combat_range
@@ -193,16 +196,20 @@ CombatVectorUserExtension.update = function (self, unit, dt, t, context, nav_mes
 			self._previous_combat_range = current_combat_range
 			local position = chosen_location.position:unbox()
 			local self_position = POSITION_LOOKUP[unit]
-			local target_position = POSITION_LOOKUP[target_unit]
 			local distance = Vector3.distance(self_position, position)
-			local distance_to_target = Vector3.distance(self_position, target_position)
-			local combat_vector_is_closer = distance < distance_to_target
+
+			if not config.update_when_passive then
+				local target_unit = perception_component.target_unit
+				local target_position = POSITION_LOOKUP[target_unit]
+				local distance_to_target = Vector3.distance(self_position, target_position)
+				local combat_vector_is_closer = distance < distance_to_target
+				combat_vector_component.combat_vector_is_closer = combat_vector_is_closer
+			end
 
 			combat_vector_component.position:store(position)
 
 			combat_vector_component.has_position = true
 			combat_vector_component.distance = distance
-			combat_vector_component.combat_vector_is_closer = combat_vector_is_closer
 			local location_counters = claimed_location_counters[vector_type]
 			local current_location_count = location_counters[best_location_type]
 			location_counters[best_location_type] = current_location_count + 1
@@ -226,12 +233,17 @@ CombatVectorUserExtension.update = function (self, unit, dt, t, context, nav_mes
 		end
 	elseif current_location then
 		local self_position = POSITION_LOOKUP[unit]
-		local target_position = POSITION_LOOKUP[target_unit]
 		local current_location_position = current_location.position:unbox()
-		local current_to_target_distance = Vector3.distance(current_location_position, target_position)
-		local self_to_target_distance = Vector3.distance(self_position, target_position)
-		local combat_vector_is_closer = current_to_target_distance < self_to_target_distance
-		combat_vector_component.combat_vector_is_closer = combat_vector_is_closer
+
+		if not config.update_when_passive then
+			local target_unit = perception_component.target_unit
+			local target_position = POSITION_LOOKUP[target_unit]
+			local current_to_target_distance = Vector3.distance(current_location_position, target_position)
+			local self_to_target_distance = Vector3.distance(self_position, target_position)
+			local combat_vector_is_closer = current_to_target_distance < self_to_target_distance
+			combat_vector_component.combat_vector_is_closer = combat_vector_is_closer
+		end
+
 		combat_vector_component.distance = Vector3.distance(self_position, current_location_position)
 	end
 end

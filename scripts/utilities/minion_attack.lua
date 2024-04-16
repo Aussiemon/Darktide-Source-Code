@@ -387,6 +387,10 @@ MinionAttack.start_shooting = function (unit, scratchpad, t, action_data, option
 		local shoot_template = action_data.shoot_template
 		local minion_num_shots_modifier = shoot_template.shotgun_blast and 1 or stat_buffs.minion_num_shots_modifier or 1
 		scratchpad.num_shots = math.random(diff_num_shots[1], diff_num_shots[2]) * minion_num_shots_modifier
+
+		if scratchpad.num_shots > 1 and Managers.state.pacing:is_auric() then
+			scratchpad.num_shots = scratchpad.num_shots * 2
+		end
 	end
 
 	scratchpad.shooting = true

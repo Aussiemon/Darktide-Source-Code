@@ -10,9 +10,11 @@ UnitCoherencyExtension.init = function (self, extension_init_context, unit, exte
 	self._unit = unit
 	self._in_coherence_units = {}
 	self._num_units_in_coherence = 0
+	self._num_units_in_coherence_last_check = 0
 	self._coherency_buff_indexes = {}
 	self._free_external_buff_indexes = {}
 	self._external_buff_template_names = {}
+	self._valid_buff_owners = {}
 	self.side = ScriptUnit.extension(unit, "side_system").side
 	self._buff_extension = ScriptUnit.has_extension(self._unit, "buff_system")
 	self._fx_extension = ScriptUnit.has_extension(self._unit, "fx_system")
@@ -54,6 +56,37 @@ end
 
 UnitCoherencyExtension.num_units_in_coherency = function (self)
 	return self._num_units_in_coherence
+end
+
+UnitCoherencyExtension._get_valid_buff_owners = function (self, buff_id)
+	table.clear(self._valid_buff_owners)
+
+	for coherency_unit, _ in pairs(self._in_coherence_units) do
+		local talent_extension = ScriptUnit.extension(coherency_unit, "talent_system")
+		local player_current_talents = talent_extension:talents()
+
+		if player_current_talents[buff_id] then
+			local player = Managers.state.player_unit_spawn:owner(coherency_unit)
+
+			table.insert(self._valid_buff_owners, player)
+		end
+	end
+
+	return self._valid_buff_owners
+end
+
+UnitCoherencyExtension.evaluate_and_send_achievement_data = function (self, last_num_in_coherency, valid_player_units, buff_id, hook_name, optional_data)
+	local current_num_in_coherency = self:num_units_in_coherency()
+
+	table.clear(valid_player_units)
+
+	valid_player_units = self:_get_valid_buff_owners(buff_id)
+
+	for _, current_player in pairs(valid_player_units) do
+		Managers.stats:record_private(hook_name, current_player, optional_data)
+	end
+
+	return current_num_in_coherency, valid_player_units
 end
 
 UnitCoherencyExtension.add_external_buff = function (self, buff_name)

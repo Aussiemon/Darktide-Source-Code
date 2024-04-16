@@ -60,6 +60,10 @@ local mission_objective_templates = {
 				use_music_event = "escape_event",
 				mission_objective_type = "goal",
 				header = "loc_objective_lm_scavenge_escape_header"
+			},
+			objective_lm_scavenge_luggable_secret = {
+				mission_objective_type = "luggable",
+				hidden = true
 			}
 		}
 	}

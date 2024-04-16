@@ -21,6 +21,8 @@ local RegionLatency = require("scripts/backend/region_latency")
 local MailBox = require("scripts/backend/mailbox")
 local Wintracks = require("scripts/backend/wintracks")
 local Crafting = require("scripts/backend/crafting")
+local PlayerRewards = require("scripts/backend/player_rewards")
+local Tracks = require("scripts/backend/tracks")
 local BackendInterface = class("BackendInterface")
 
 BackendInterface.init = function (self)
@@ -47,6 +49,8 @@ BackendInterface.init = function (self)
 	self.mailbox = MailBox:new()
 	self.wintracks = Wintracks:new()
 	self.crafting = Crafting:new()
+	self.player_rewards = PlayerRewards:new()
+	self.tracks = Tracks:new()
 end
 
 return BackendInterface

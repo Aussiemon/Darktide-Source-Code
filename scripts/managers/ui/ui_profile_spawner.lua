@@ -535,7 +535,7 @@ UIProfileSpawner._equip_item_for_spawn_character = function (self, slot_id, item
 
 		local complete_callback = callback(self, "cb_on_unit_3p_streaming_complete_equip_item", parent_item_unit)
 
-		Unit.force_stream_meshes(unit_3p, complete_callback, true)
+		Unit.force_stream_meshes(unit_3p, complete_callback, true, GameParameters.force_stream_mesh_timeout)
 	end
 end
 
@@ -700,11 +700,14 @@ UIProfileSpawner._spawn_character_profile = function (self, profile, profile_loa
 
 	local complete_callback = callback(self, "cb_on_unit_3p_streaming_complete", unit_3p)
 
-	Unit.force_stream_meshes(unit_3p, complete_callback, true)
-	self:cb_on_unit_3p_streaming_complete(unit_3p)
+	Unit.force_stream_meshes(unit_3p, complete_callback, true, GameParameters.force_stream_mesh_timeout)
 end
 
-UIProfileSpawner.cb_on_unit_3p_streaming_complete_equip_item = function (self, unit_3p)
+UIProfileSpawner.cb_on_unit_3p_streaming_complete_equip_item = function (self, unit_3p, timeout)
+	if timeout then
+		Log.info("UIProfileSpawner", "[cb_on_unit_3p_streaming_complete_equip_item] unit: %s", tostring(unit_3p))
+	end
+
 	local character_spawn_data = self._character_spawn_data
 
 	if character_spawn_data and character_spawn_data.streaming_complete and self._visible then
@@ -712,7 +715,11 @@ UIProfileSpawner.cb_on_unit_3p_streaming_complete_equip_item = function (self, u
 	end
 end
 
-UIProfileSpawner.cb_on_unit_3p_streaming_complete = function (self, unit_3p)
+UIProfileSpawner.cb_on_unit_3p_streaming_complete = function (self, unit_3p, timeout)
+	if timeout then
+		Log.info("UIProfileSpawner", "[cb_on_unit_3p_streaming_complete] unit: %s", tostring(unit_3p))
+	end
+
 	local character_spawn_data = self._character_spawn_data
 
 	if character_spawn_data and character_spawn_data.unit_3p == unit_3p then

@@ -288,11 +288,6 @@ local widget_definitions = {
 			pass_type = "rect",
 			style = {
 				color = Color.black(255, true)
-			},
-			offset = {
-				0,
-				0,
-				2
 			}
 		},
 		{

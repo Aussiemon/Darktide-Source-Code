@@ -12,6 +12,7 @@ local PlayerUnitAction = require("scripts/extension_systems/visual_loadout/utili
 local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
 local PowerLevelSettings = require("scripts/settings/damage/power_level_settings")
 local SpecialRulesSettings = require("scripts/settings/ability/special_rules_settings")
+local Suppression = require("scripts/utilities/attack/suppression")
 local TalentSettings = require("scripts/settings/talent/talent_settings")
 local Toughness = require("scripts/utilities/toughness/toughness")
 local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
@@ -31,6 +32,16 @@ local _passive_revive_conditional, _big_bull_add_stacks = nil
 local templates = {}
 
 table.make_unique(templates)
+
+local function _penance_start_func(buff_name)
+	return function (template_data, template_context)
+		local unit = template_context.unit
+		local t = FixedFrame.get_latest_fixed_time()
+		local buff_extension = ScriptUnit.extension(unit, "buff_system")
+
+		buff_extension:add_internally_controlled_buff(buff_name, t)
+	end
+end
 
 templates.ogryn_base_passive_tank = {
 	predicted = false,
@@ -58,14 +69,48 @@ templates.coherency_aura_size_increase = {
 	}
 }
 templates.ogryn_toughness_regen_aura = {
-	predicted = false,
-	coherency_priority = 2,
 	coherency_id = "ogryn_toughness_regen_coherency_aura",
+	predicted = false,
+	hud_priority = 5,
+	coherency_priority = 2,
+	hud_icon = "content/ui/textures/icons/buffs/hud/ogryn/ogryn_aura_stay_close",
+	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_ability",
 	max_stacks = 1,
 	class_name = "buff",
+	buff_category = buff_categories.aura,
 	stat_buffs = {
-		[stat_buffs.toughness_regen_rate_modifier] = 0.2
-	}
+		[stat_buffs.toughness_regen_rate_modifier] = 0.25
+	},
+	start_func = _penance_start_func("ogryn_toughness_restored_aura_tracking_buff")
+}
+templates.ogryn_toughness_restored_aura_tracking_buff = {
+	predicted = false,
+	class_name = "proc_buff",
+	proc_events = {
+		[proc_events.on_toughness_replenished] = 1
+	},
+	start_func = function (template_data, template_context)
+		local unit = template_context.unit
+		template_data.coherency_extension = ScriptUnit.extension(unit, "coherency_system")
+		template_data.amount = 0
+		template_data.threshold = 50
+		template_data.last_num_in_coherency = 0
+		template_data.valid_buff_owners = {}
+	end,
+	proc_func = function (params, template_data, template_context)
+		if not template_context.is_server then
+			return
+		end
+
+		template_data.amount = template_data.amount + params.amount
+
+		if template_data.threshold <= template_data.amount then
+			local hook_name = "hook_ogryn_toughness_restored_aura"
+			local parent_buff_name = "ogryn_toughness_regen_aura"
+			template_data.last_num_in_coherency, template_data.valid_buff_owners = template_data.coherency_extension:evaluate_and_send_achievement_data(template_data.last_num_in_coherency, template_data.valid_buff_owners, parent_buff_name, hook_name, template_data.amount)
+			template_data.amount = 0
+		end
+	end
 }
 templates.ogryn_passive_heavy_hitter = {
 	predicted = false,
@@ -78,10 +123,24 @@ templates.ogryn_passive_heavy_hitter = {
 		local buff_extension = ScriptUnit.extension(player_unit, "buff_system")
 		template_data.buff_extension = buff_extension
 		template_data.max_stacks = 5
+		template_data.evaluate_max_stacks_stat = false
 		local talent_extension = ScriptUnit.extension(player_unit, "talent_system")
 		template_data.light_attacks_refreshes_duration = talent_extension:has_special_rule(special_rules.ogryn_heavy_hitter_light_attacks_refresh_duration)
 		template_data.max_stacks_improves_attack_speed = talent_extension:has_special_rule(special_rules.ogryn_heavy_hitter_max_stacks_improves_attack_speed)
 		template_data.max_stacks_improves_toughness = talent_extension:has_special_rule(special_rules.ogryn_heavy_hitter_max_stacks_improves_toughness)
+	end,
+	update_func = function (template_data, template_context, dt, t, template)
+		local max_stacks = template_data.max_stacks
+		local buff_extension = template_data.buff_extension
+		local damage_buff_name = "ogryn_heavy_hitter_damage_effect"
+		local current_stacks = buff_extension:current_stacks(damage_buff_name)
+		local at_max_stacks = current_stacks == max_stacks
+
+		if template_data.evaluate_max_stacks_stat and not at_max_stacks then
+			Managers.stats:record_private("hook_ogryn_heavy_hitter_at_max_lost", template_context.player)
+
+			template_data.evaluate_max_stacks_stat = false
+		end
 	end,
 	proc_func = function (params, template_data, template_context, t)
 		if not template_context.is_server then
@@ -122,6 +181,10 @@ templates.ogryn_passive_heavy_hitter = {
 		local max_stacks_improves_toughness = template_data.max_stacks_improves_toughness
 
 		if will_be_max_stacks and is_heavy_hit then
+			Managers.stats:record_private("hook_ogryn_heavy_hitter_at_max_stacks", template_context.player)
+
+			template_data.evaluate_max_stacks_stat = true
+
 			if max_stacks_improves_attack_speed then
 				buff_extension:add_internally_controlled_buff("ogryn_heavy_hitter_attack_speed_effect", t)
 			end
@@ -169,7 +232,7 @@ templates.ogryn_heavy_hitter_toughness_regen_effect = {
 	predicted = false,
 	max_stacks = 1,
 	stat_buffs = {
-		[stat_buffs.toughness_melee_replenish] = 0.1
+		[stat_buffs.toughness_melee_replenish] = 1
 	},
 	start_func = function (template_data, template_context)
 		template_data.buff_extension = ScriptUnit.extension(template_context.unit, "buff_system")
@@ -195,7 +258,7 @@ templates.ogryn_rending_on_elite_kills = {
 		[proc_events.on_hit] = 1
 	},
 	proc_stat_buffs = {
-		[stat_buffs.rending_multiplier] = 0.15
+		[stat_buffs.rending_multiplier] = 0.1
 	},
 	check_proc_func = CheckProcFunctions.on_elite_kill
 }
@@ -327,7 +390,7 @@ templates.ogryn_bracing_reduces_damage_taken = {
 	hud_priority = 4,
 	class_name = "buff",
 	conditional_stat_buffs = {
-		[stat_buffs.damage_taken_multiplier] = 0.85
+		[stat_buffs.damage_taken_multiplier] = 0.8
 	},
 	start_func = function (template_data, template_context)
 		local player_unit = template_context.unit
@@ -349,7 +412,7 @@ templates.ogryn_carapace_armor_child = {
 	class_name = "buff",
 	stat_buffs = {
 		[stat_buffs.toughness_regen_rate_modifier] = 0.025,
-		[stat_buffs.toughness_damage_taken_modifier] = -0.025
+		[stat_buffs.toughness_damage_taken_multiplier] = 0.975
 	},
 	conditional_stat_buffs = {
 		[stat_buffs.toughness_regen_rate_modifier] = 0.025
@@ -372,12 +435,13 @@ templates.ogryn_carapace_armor_parent = {
 	predicted = false,
 	start_at_max = true,
 	hud_icon = "content/ui/textures/icons/buffs/hud/ogryn/ogryn_keystone_carapace_armor",
-	restore_child_duration = 6,
+	restore_child_duration = 3,
 	class_name = "parent_proc_buff",
 	always_show_in_hud = true,
 	proc_events = {
 		[proc_events.on_player_hit_received] = 1,
-		[proc_events.on_push_finish] = 1
+		[proc_events.on_push_finish] = 1,
+		[proc_events.on_kill] = 1
 	},
 	add_child_proc_events = {
 		[proc_events.on_push_finish] = 1
@@ -386,22 +450,46 @@ templates.ogryn_carapace_armor_parent = {
 		[proc_events.on_player_hit_received] = 1
 	},
 	specific_check_proc_funcs = {
-		[proc_events.on_player_hit_received] = function (params, template_data, template_context)
-			return params.damage > 0
+		[proc_events.on_player_hit_received] = function (params, template_data, template_context, t)
+			if t < template_data.internal_cd_t then
+				return false
+			end
+
+			if params.damage <= 0 and params.damage_absorbed <= 0 then
+				return false
+			end
+
+			template_data.internal_cd_t = t + 1
+
+			return true
 		end,
 		[proc_events.on_push_finish] = function (params, template_data, template_context)
 			local talent_extension = template_data.talent_extension
 			local refresh_on_push = talent_extension:has_special_rule(special_rules.ogryn_carapace_armor_add_stack_on_push)
 
 			return refresh_on_push and params.num_hit_units > 0
+		end,
+		[proc_events.on_kill] = function (params, template_data, template_context)
+			local max_stacks = template_data.max_stacks - 3
+			local child_stacks = template_data.num_child_stacks
+
+			if child_stacks <= max_stacks then
+				return
+			end
+
+			Managers.stats:record_private("hook_ogryn_feel_no_pain_kills_at_max", template_context.player)
 		end
 	},
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
 		local talent_extension = ScriptUnit.extension(unit, "talent_system")
+		template_data.max_stacks = templates.ogryn_carapace_armor_child.max_stacks
+		template_data.num_child_stacks = templates.ogryn_carapace_armor_child.max_stacks
 		template_data.talent_extension = talent_extension
+		template_data.internal_cd_t = 0
 	end,
 	on_stacks_removed_func = function (num_child_stacks, num_child_stacks_removed, t, template_data, template_context)
+		template_data.num_child_stacks = num_child_stacks
 		local talent_extension = template_data.talent_extension
 		local trigger_on_zero_stack_special_rule = talent_extension:has_special_rule(special_rules.ogryn_carapace_armor_explosion_on_zero_stacks)
 		local buff_extension = template_context.buff_extension
@@ -633,7 +721,7 @@ templates.ogryn_charge_trample_buff = {
 	max_stacks = 25,
 	duration = 8,
 	stat_buffs = {
-		[stat_buffs.damage] = 0.01
+		[stat_buffs.damage] = 0.02
 	}
 }
 templates.ogryn_base_lunge_toughness_and_damage_resistance = {
@@ -840,6 +928,43 @@ templates.ogryn_friend_grenade_replenishment = {
 		return 1 - percentage_left
 	end
 }
+templates.ogryn_frag_grenade_thrown = {
+	predicted = false,
+	class_name = "proc_buff",
+	proc_events = {
+		[proc_events.on_grenade_thrown] = 1
+	},
+	proc_func = function (params, template_data, template_context)
+		local unit = template_context.unit
+		local t = FixedFrame.get_latest_fixed_time()
+		local buff_extension = ScriptUnit.extension(unit, "buff_system")
+		local buff_name = "ogryn_kills_during_frag_grenade"
+
+		buff_extension:add_internally_controlled_buff(buff_name, t, "owner_unit", template_context.unit)
+	end
+}
+templates.ogryn_kills_during_frag_grenade = {
+	predicted = false,
+	duration = 5,
+	class_name = "proc_buff",
+	proc_events = {
+		[proc_events.on_minion_death] = 1
+	},
+	proc_func = function (params, template_data, template_context)
+		if params.damage_type == "grenade_frag" then
+			template_data.amount_killed = template_data.amount_killed + 1
+		end
+	end,
+	start_func = function (template_data, template_context)
+		template_data.amount_killed = 0
+		template_data.achievement_target_amount = 25
+	end,
+	stop_func = function (template_data, template_context)
+		if template_data.achievement_target_amount <= template_data.amount_killed then
+			Managers.stats:record_private("hook_ogryn_frag_grenade", template_context.player)
+		end
+	end
+}
 templates.ogryn_bigger_coherency_radius = {
 	predicted = false,
 	class_name = "buff",
@@ -893,10 +1018,14 @@ templates.ogryn_allied_movement_speed_buff = {
 	}
 }
 templates.ogryn_coherency_increased_melee_damage = {
-	predicted = false,
-	coherency_priority = 2,
 	coherency_id = "ogryn_coherency_aura",
+	predicted = false,
+	hud_priority = 5,
+	coherency_priority = 2,
+	hud_icon = "content/ui/textures/icons/buffs/hud/ogryn/ogryn_aura_intimidating_presence",
+	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_ability",
 	class_name = "buff",
+	buff_category = buff_categories.aura,
 	max_stacks = talent_settings_2.coherency.max_stacks,
 	keywords = {},
 	stat_buffs = {
@@ -904,15 +1033,52 @@ templates.ogryn_coherency_increased_melee_damage = {
 	}
 }
 templates.ogryn_melee_damage_coherency_improved = {
-	predicted = false,
-	coherency_priority = 2,
 	coherency_id = "ogryn_coherency_aura_improved",
+	predicted = false,
+	hud_priority = 5,
+	coherency_priority = 2,
+	hud_icon = "content/ui/textures/icons/buffs/hud/ogryn/ogryn_aura_bonebreakers_aura",
+	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_ability",
 	class_name = "buff",
+	buff_category = buff_categories.aura,
 	max_stacks = talent_settings_2.coherency.max_stacks,
 	keywords = {},
 	stat_buffs = {
 		[stat_buffs.melee_heavy_damage] = talent_settings_2.coherency.melee_damage_improved
-	}
+	},
+	start_func = _penance_start_func("ogryn_heavy_kills_in_coherency_tracking_buff")
+}
+templates.ogryn_heavy_kills_in_coherency_tracking_buff = {
+	predicted = false,
+	class_name = "proc_buff",
+	proc_events = {
+		[proc_events.on_kill] = 1
+	},
+	start_func = function (template_data, template_context)
+		local unit = template_context.unit
+		template_data.coherency_extension = ScriptUnit.extension(unit, "coherency_system")
+		template_data.last_num_in_coherency = 0
+		template_data.valid_buff_owners = {}
+	end,
+	proc_func = function (params, template_data, template_context)
+		if not template_context.is_server then
+			return
+		end
+
+		local unit = template_context.unit
+
+		if unit ~= params.attacking_unit then
+			return
+		end
+
+		local melee_attack_strength = params.melee_attack_strength
+
+		if melee_attack_strength == "heavy" then
+			local hook_name = "hook_ogryn_heavy_aura_kills"
+			local parent_buff_name = "ogryn_melee_damage_coherency_improved"
+			template_data.last_num_in_coherency, template_data.valid_buff_owners = template_data.coherency_extension:evaluate_and_send_achievement_data(template_data.last_num_in_coherency, template_data.valid_buff_owners, parent_buff_name, hook_name)
+		end
+	end
 }
 templates.ogryn_cooldown_on_elite_kills_by_coherence = {
 	predicted = false,
@@ -1105,21 +1271,22 @@ local breed_name_size = {
 	renegade_flamer = 2,
 	renegade_twin_captain_two = 2,
 	renegade_assault = 1,
-	chaos_beast_of_nurgle = 10,
-	chaos_hound_mutator = 3,
-	cultist_mutant = 5,
-	renegade_rifleman = 1,
-	cultist_flamer = 2,
 	cultist_melee = 1,
+	chaos_hound_mutator = 3,
+	chaos_newly_infected = 1,
+	chaos_beast_of_nurgle = 10,
+	cultist_flamer = 2,
+	cultist_mutant = 5,
 	chaos_poxwalker = 1,
 	chaos_poxwalker_bomber = 2,
 	cultist_shocktrooper = 2,
 	chaos_ogryn_gunner = 5,
+	renegade_rifleman = 1,
 	renegade_shocktrooper = 2,
 	renegade_gunner = 2,
 	cultist_berzerker = 3,
 	renegade_twin_captain = 2,
-	chaos_newly_infected = 1,
+	cultist_grenadier = 2,
 	chaos_spawn = 10,
 	renegade_melee = 1,
 	chaos_ogryn_executor = 5,
@@ -1372,6 +1539,10 @@ templates.ogryn_ranged_stance = {
 		local talent_extension = ScriptUnit.extension(unit, "talent_system")
 		local t = FixedFrame.get_latest_fixed_time()
 		local buff_extension = ScriptUnit.extension(unit, "buff_system")
+		template_data.cooldown_time = t + stance_duration
+		template_data.evaluate_max_stacks_stat = false
+		template_data.amount_killed = 0
+		template_data.penance_threshold = 15
 		local no_movement_penalty = special_rules.ogryn_combat_no_movement_penalty
 
 		if talent_extension:has_special_rule(no_movement_penalty) then
@@ -1403,6 +1574,38 @@ templates.ogryn_ranged_stance = {
 
 			buff_extension:add_internally_controlled_buff(buff_name, t)
 		end
+
+		local buff_name = "ogryn_kills_during_barrage"
+
+		buff_extension:add_internally_controlled_buff(buff_name, t)
+
+		template_data.evaluate_max_stacks_stat = true
+	end
+}
+templates.ogryn_kills_during_barrage = {
+	predicted = false,
+	duration = 11,
+	class_name = "proc_buff",
+	proc_events = {
+		[proc_events.on_minion_death] = 1
+	},
+	proc_func = function (params, template_data, template_context)
+		template_data.amount_killed = template_data.amount_killed + 1
+	end,
+	start_func = function (template_data, template_context)
+		local unit = template_context.unit
+		template_data.amount_killed = 0
+		template_data.target_amount = 25
+		template_data.triggered = false
+		template_data.talent_extension = ScriptUnit.extension(unit, "talent_system")
+		template_data.buff_extension = ScriptUnit.has_extension(unit, "buff_system")
+	end,
+	update_func = function (template_data, template_context, dt, t, template)
+		if not template_data.triggered and template_data.target_amount <= template_data.amount_killed then
+			Managers.stats:record_private("hook_ogryn_barrage_end", template_context.player)
+
+			template_data.triggered = true
+		end
 	end
 }
 templates.ogryn_increased_ammo_reserve_passive = {
@@ -1411,6 +1614,23 @@ templates.ogryn_increased_ammo_reserve_passive = {
 	stat_buffs = {
 		[stat_buffs.ammo_reserve_capacity] = talent_settings_1.passive_3.increased_max_ammo
 	}
+}
+templates.ogryn_leadbelcher_aura_tracking_buff = {
+	class_name = "proc_buff",
+	predicted = false,
+	proc_events = {
+		[proc_events.on_ammo_consumed] = 1
+	},
+	proc_func = function (params, template_data, template_context)
+		if params.is_leadbelcher_shot then
+			Managers.stats:record_private("hook_ogryn_leadbelcher_free_shot", template_context.player)
+		end
+	end,
+	start_func = function (template_data, template_context)
+		local unit = template_context.unit
+		template_data.talent_extension = ScriptUnit.extension(unit, "talent_system")
+		template_data.buff_extension = ScriptUnit.has_extension(unit, "buff_system")
+	end
 }
 templates.ogryn_passive_proc_combat_ability_cooldown_reduction = {
 	class_name = "proc_buff",
@@ -1461,14 +1681,53 @@ templates.ogryn_no_ammo_consumption_passive_cooldown_buff = {
 	end
 }
 templates.ogryn_aura_increased_damage_vs_suppressed = {
-	predicted = false,
-	coherency_priority = 2,
 	coherency_id = "ogryn_aura_increased_damage_vs_suppressed",
+	predicted = false,
+	hud_priority = 5,
+	coherency_priority = 2,
+	hud_icon = "content/ui/textures/icons/buffs/hud/ogryn/ogryn_aura_bringing_big_guns",
+	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_ability",
 	max_stacks = 1,
 	class_name = "buff",
+	buff_category = buff_categories.aura,
 	stat_buffs = {
 		[stat_buffs.damage_vs_suppressed] = 0.2
-	}
+	},
+	start_func = _penance_start_func("ogryn_suppressed_kills_aura_tracking_buff")
+}
+templates.ogryn_suppressed_kills_aura_tracking_buff = {
+	predicted = false,
+	class_name = "proc_buff",
+	proc_events = {
+		[proc_events.on_kill] = 1
+	},
+	start_func = function (template_data, template_context)
+		local unit = template_context.unit
+		template_data.coherency_extension = ScriptUnit.extension(unit, "coherency_system")
+		template_data.last_num_in_coherency = 0
+		template_data.valid_buff_owners = {}
+	end,
+	proc_func = function (params, template_data, template_context)
+		if not template_context.is_server then
+			return
+		end
+
+		template_data.killed_unit_was_supressed = Suppression.is_suppressed(params.attacked_unit)
+
+		if not template_data.killed_unit_was_supressed then
+			return
+		end
+
+		local unit = template_context.unit
+
+		if unit ~= params.attacking_unit then
+			return
+		end
+
+		local hook_name = "hook_ogryn_suppressed_aura_kills"
+		local parent_buff_name = "ogryn_damage_vs_suppressed_coherency"
+		template_data.last_num_in_coherency, template_data.valid_buff_owners = template_data.coherency_extension:evaluate_and_send_achievement_data(template_data.last_num_in_coherency, template_data.valid_buff_owners, parent_buff_name, hook_name)
+	end
 }
 templates.ogryn_increased_damage_after_reload = {
 	predicted = false,

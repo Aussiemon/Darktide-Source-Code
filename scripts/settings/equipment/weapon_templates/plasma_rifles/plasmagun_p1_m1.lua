@@ -1,3 +1,4 @@
+local ArmorSettings = require("scripts/settings/damage/armor_settings")
 local BaseTemplateSettings = require("scripts/settings/equipment/weapon_templates/base_template_settings")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
@@ -10,9 +11,8 @@ local PlayerCharacterConstants = require("scripts/settings/player_character/play
 local ReloadTemplates = require("scripts/settings/equipment/reload_templates/reload_templates")
 local SmartTargetingTemplates = require("scripts/settings/equipment/smart_targeting_templates")
 local WeaponTraitsBespokePlasmagunP1 = require("scripts/settings/equipment/weapon_traits/weapon_traits_bespoke_plasmagun_p1")
-local WeaponTweakTemplateSettings = require("scripts/settings/equipment/weapon_templates/weapon_tweak_template_settings")
 local WeaponTraitTemplates = require("scripts/settings/equipment/weapon_templates/weapon_trait_templates/weapon_trait_templates")
-local ArmorSettings = require("scripts/settings/damage/armor_settings")
+local WeaponTweakTemplateSettings = require("scripts/settings/equipment/weapon_templates/weapon_tweak_template_settings")
 local armor_types = ArmorSettings.types
 local buff_stat_buffs = BuffSettings.stat_buffs
 local damage_types = DamageSettings.damage_types
@@ -985,9 +985,9 @@ weapon_template.displayed_attacks = {
 		type = "charge"
 	},
 	special = {
-		type = "vent",
+		desc = "loc_stats_special_action_venting_desc",
 		display_name = "loc_weapon_special_weapon_vent",
-		desc = "loc_stats_special_action_venting_desc"
+		type = "vent"
 	}
 }
 weapon_template.displayed_attack_ranges = {

@@ -198,7 +198,7 @@ local elements = {
 	},
 	{
 		package = "packages/ui/hud/world_markers/world_markers",
-		use_hud_scale = false,
+		use_hud_scale = true,
 		class_name = "HudElementWorldMarkers",
 		filename = "scripts/ui/hud/elements/world_markers/hud_element_world_markers",
 		visibility_groups = {
@@ -208,7 +208,7 @@ local elements = {
 	},
 	{
 		package = "packages/ui/hud/interaction/interaction",
-		use_hud_scale = false,
+		use_hud_scale = true,
 		class_name = "HudElementInteraction",
 		filename = "scripts/ui/hud/elements/interaction/hud_element_interaction",
 		visibility_groups = {

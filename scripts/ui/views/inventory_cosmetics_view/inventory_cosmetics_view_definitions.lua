@@ -1,12 +1,7 @@
 local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templates")
-local ColorUtilities = require("scripts/utilities/ui/colors")
-local InputUtils = require("scripts/managers/input/input_utils")
-local InventoryCosmeticsViewSettings = require("scripts/ui/views/inventory_cosmetics_view/inventory_cosmetics_view_settings")
-local InventoryViewSettings = require("scripts/ui/views/inventory_view/inventory_view_settings")
 local ItemUtils = require("scripts/utilities/items")
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local UISettings = require("scripts/settings/ui/ui_settings")
-local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local UIWorkspaceSettings = require("scripts/settings/ui/ui_workspace_settings")
 local info_box_size = {
@@ -146,17 +141,6 @@ local scenegraph_definition = {
 			1
 		}
 	},
-	info_box = {
-		vertical_alignment = "bottom",
-		parent = "canvas",
-		horizontal_alignment = "right",
-		size = info_box_size,
-		position = {
-			-70,
-			-125,
-			3
-		}
-	},
 	item_name_pivot = {
 		vertical_alignment = "bottom",
 		parent = "canvas",
@@ -171,59 +155,14 @@ local scenegraph_definition = {
 			3
 		}
 	},
-	unlock_box = {
+	info_box = {
 		vertical_alignment = "bottom",
 		parent = "canvas",
-		horizontal_alignment = "left",
-		size = {
-			500,
-			60
-		},
+		horizontal_alignment = "right",
+		size = info_box_size,
 		position = {
-			600,
-			-260,
-			3
-		}
-	},
-	unlock_header = {
-		vertical_alignment = "top",
-		parent = "unlock_box",
-		horizontal_alignment = "left",
-		size = {
-			500,
-			50
-		},
-		position = {
-			0,
-			0,
-			3
-		}
-	},
-	unlock_title = {
-		vertical_alignment = "top",
-		parent = "unlock_header",
-		horizontal_alignment = "left",
-		size = {
-			500,
-			50
-		},
-		position = {
-			0,
-			0,
-			3
-		}
-	},
-	unlock_details = {
-		vertical_alignment = "top",
-		parent = "unlock_title",
-		horizontal_alignment = "center",
-		size = {
-			500,
-			50
-		},
-		position = {
-			0,
-			0,
+			-70,
+			-125,
 			3
 		}
 	},
@@ -237,26 +176,54 @@ local scenegraph_definition = {
 			-8,
 			1
 		}
+	},
+	side_panel_area = {
+		vertical_alignment = "bottom",
+		parent = "canvas",
+		horizontal_alignment = "left",
+		size = {
+			550,
+			0
+		},
+		position = {
+			600,
+			-260,
+			3
+		}
 	}
 }
-local unlock_header_style = table.clone(UIFontSettings.header_3)
-unlock_header_style.text_horizontal_alignment = "left"
-unlock_header_style.text_vertical_alignment = "top"
-unlock_header_style.text_color = Color.terminal_text_body_sub_header(255, true)
-local unlock_title_style = table.clone(UIFontSettings.body_medium)
-unlock_title_style.text_horizontal_alignment = "left"
-unlock_title_style.text_vertical_alignment = "top"
-unlock_title_style.text_color = Color.terminal_icon(255, true)
-local unlock_icon_style = table.clone(unlock_title_style)
+local big_header_text_style = table.clone(UIFontSettings.header_3)
+big_header_text_style.text_horizontal_alignment = "left"
+big_header_text_style.text_vertical_alignment = "top"
+big_header_text_style.text_color = Color.terminal_text_body_sub_header(255, true)
+local big_body_text_style = table.clone(UIFontSettings.body_medium)
+big_body_text_style.text_horizontal_alignment = "left"
+big_body_text_style.text_vertical_alignment = "top"
+big_body_text_style.text_color = Color.terminal_icon(255, true)
+local small_header_text_style = table.clone(UIFontSettings.terminal_header_3)
+small_header_text_style.text_horizontal_alignment = "left"
+small_header_text_style.horizontal_alignment = "left"
+small_header_text_style.text_vertical_alignment = "top"
+small_header_text_style.vertical_alignment = "top"
+small_header_text_style.offset = {
+	0,
+	0,
+	1
+}
+small_header_text_style.font_size = 20
+small_header_text_style.text_color = Color.terminal_text_body_sub_header(255, true)
+local small_body_text_style = table.clone(small_header_text_style)
+small_body_text_style.text_color = Color.terminal_text_body(255, true)
+local unlock_icon_style = table.clone(big_body_text_style)
 unlock_icon_style.offset = {
 	-20,
 	0,
 	0
 }
-local unlock_details_style = table.clone(UIFontSettings.body_medium)
-unlock_details_style.text_horizontal_alignment = "left"
-unlock_details_style.text_vertical_alignment = "top"
-unlock_details_style.text_color = {
+local big_details_text_style = table.clone(UIFontSettings.body_medium)
+big_details_text_style.text_horizontal_alignment = "left"
+big_details_text_style.text_vertical_alignment = "top"
+big_details_text_style.text_color = {
 	255,
 	116,
 	140,
@@ -317,43 +284,6 @@ local widget_definitions = {
 			}
 		}
 	}, "corner_bottom_right"),
-	unlock_header = UIWidget.create_definition({
-		{
-			value_id = "text",
-			pass_type = "text",
-			style_id = "text",
-			value = "",
-			style = unlock_header_style
-		}
-	}, "unlock_header"),
-	unlock_title = UIWidget.create_definition({
-		{
-			value_id = "text",
-			pass_type = "text",
-			style_id = "text",
-			value = "",
-			style = unlock_title_style
-		},
-		{
-			value_id = "icon",
-			pass_type = "text",
-			style_id = "icon",
-			value = "",
-			style = unlock_icon_style,
-			visibility_function = function (content, style)
-				return content.locked
-			end
-		}
-	}, "unlock_title"),
-	unlock_details = UIWidget.create_definition({
-		{
-			value_id = "text",
-			pass_type = "text",
-			style_id = "text",
-			value = "",
-			style = unlock_details_style
-		}
-	}, "unlock_details"),
 	equip_button = UIWidget.create_definition(ButtonPassTemplates.default_button, "equip_button", {
 		gamepad_action = "confirm_pressed",
 		visible = false,
@@ -404,10 +334,60 @@ local legend_inputs = {
 		end
 	}
 }
+local small_header_text_pass = {
+	{
+		value_id = "text",
+		style_id = "text",
+		pass_type = "text",
+		value = "",
+		style = small_header_text_style
+	}
+}
+local small_body_text_pass = {
+	{
+		value_id = "text",
+		style_id = "text",
+		pass_type = "text",
+		value = "",
+		style = small_body_text_style
+	}
+}
+local big_header_text_pass = {
+	{
+		value_id = "text",
+		style_id = "text",
+		pass_type = "text",
+		value = "",
+		style = big_header_text_style
+	}
+}
+local big_body_text_pass = {
+	{
+		value_id = "text",
+		style_id = "text",
+		pass_type = "text",
+		value = "",
+		style = big_body_text_style
+	}
+}
+local big_details_text_pass = {
+	{
+		value_id = "text",
+		style_id = "text",
+		pass_type = "text",
+		value = "",
+		style = big_details_text_style
+	}
+}
 
 return {
 	grid_settings = grid_settings,
 	legend_inputs = legend_inputs,
 	widget_definitions = widget_definitions,
-	scenegraph_definition = scenegraph_definition
+	scenegraph_definition = scenegraph_definition,
+	small_header_text_pass = small_header_text_pass,
+	small_body_text_pass = small_body_text_pass,
+	big_header_text_pass = big_header_text_pass,
+	big_body_text_pass = big_body_text_pass,
+	big_details_text_pass = big_details_text_pass
 }

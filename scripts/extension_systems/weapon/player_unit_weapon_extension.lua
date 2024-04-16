@@ -119,6 +119,7 @@ PlayerUnitWeaponExtension.init = function (self, extension_init_context, unit, e
 		action_input_extension = ScriptUnit.extension(unit, "action_input_system"),
 		player_unit = self._unit,
 		warp_charge_component = warp_charge_write_component,
+		action_module_charge_component = self._action_module_charge_component,
 		unit_data_extension = self._unit_data_extension,
 		weapon_extension = self,
 		animation_extension = animation_extension,
@@ -964,11 +965,12 @@ PlayerUnitWeaponExtension._apply_stat_buffs = function (self, inventory_slot_com
 	if slot_type == "weapon" then
 		local capacity_modifier = stat_buffs.ammo_reserve_capacity
 		local clip_size_modifier = stat_buffs.clip_size_modifier
-		local ammo_hard_limit = NetworkConstants.ammunition.max
-		inventory_slot_component.current_ammunition_reserve = math.clamp(math.floor(inventory_slot_component.current_ammunition_reserve * capacity_modifier), 0, ammo_hard_limit)
-		inventory_slot_component.max_ammunition_reserve = math.clamp(math.floor(inventory_slot_component.max_ammunition_reserve * capacity_modifier), 0, ammo_hard_limit)
-		inventory_slot_component.max_ammunition_clip = math.clamp(math.floor(inventory_slot_component.max_ammunition_clip * clip_size_modifier), 0, ammo_hard_limit)
-		inventory_slot_component.current_ammunition_clip = math.clamp(math.floor(inventory_slot_component.current_ammunition_clip * clip_size_modifier), 0, ammo_hard_limit)
+		local ammo_large_hard_limit = NetworkConstants.ammunition_large.max
+		inventory_slot_component.current_ammunition_reserve = math.clamp(math.floor(inventory_slot_component.current_ammunition_reserve * capacity_modifier), 0, ammo_large_hard_limit)
+		inventory_slot_component.max_ammunition_reserve = math.clamp(math.floor(inventory_slot_component.max_ammunition_reserve * capacity_modifier), 0, ammo_large_hard_limit)
+		local ammo_small_hard_limit = NetworkConstants.ammunition_small.max
+		inventory_slot_component.max_ammunition_clip = math.clamp(math.floor(inventory_slot_component.max_ammunition_clip * clip_size_modifier), 0, ammo_small_hard_limit)
+		inventory_slot_component.current_ammunition_clip = math.clamp(math.floor(inventory_slot_component.current_ammunition_clip * clip_size_modifier), 0, ammo_small_hard_limit)
 	end
 end
 
@@ -1003,8 +1005,8 @@ PlayerUnitWeaponExtension._update_ammo = function (self)
 				local stat_buffs = self._buff_extension:stat_buffs()
 				local capacity_modifier = stat_buffs.ammo_reserve_capacity
 				local new_max_ammo = math.floor(base_max_ammo * capacity_modifier)
-				local ammo_hard_limit = NetworkConstants.ammunition.max
-				local clamped_new_max_ammo = math.clamp(new_max_ammo, 0, ammo_hard_limit)
+				local ammo_large_hard_limit = NetworkConstants.ammunition_large.max
+				local clamped_new_max_ammo = math.clamp(new_max_ammo, 0, ammo_large_hard_limit)
 
 				if max_ammo_reserve ~= clamped_new_max_ammo then
 					local current_ammo_reserve = inventory_slot_component.current_ammunition_reserve
@@ -1028,8 +1030,8 @@ PlayerUnitWeaponExtension._update_ammo = function (self)
 				local stat_buffs = self._buff_extension:stat_buffs()
 				local clip_size_capacity_modifier = stat_buffs.clip_size_modifier
 				local new_clip_size = math.floor(base_max_clip * clip_size_capacity_modifier)
-				local ammo_hard_limit = NetworkConstants.ammunition.max
-				local clamped_new_clip_size = math.clamp(new_clip_size, 0, ammo_hard_limit)
+				local ammo_small_hard_limit = NetworkConstants.ammunition_small.max
+				local clamped_new_clip_size = math.clamp(new_clip_size, 0, ammo_small_hard_limit)
 
 				if clip_size ~= clamped_new_clip_size then
 					local current_clip = inventory_slot_component.current_ammunition_clip

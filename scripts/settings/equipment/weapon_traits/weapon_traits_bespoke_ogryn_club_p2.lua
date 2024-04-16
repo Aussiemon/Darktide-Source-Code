@@ -125,11 +125,6 @@ templates.weapon_trait_bespoke_ogryn_club_p2_staggered_targets_receive_increased
 		}
 	}
 }
-templates.weapon_trait_bespoke_ogryn_club_p2_taunt_target_on_hit = {
-	weapon_trait_bespoke_ogryn_club_p2_taunt_target_on_hit = {
-		{}
-	}
-}
 templates.weapon_trait_bespoke_ogryn_club_p2_heavy_chained_hits_increases_killing_blow_chance = {
 	weapon_trait_bespoke_ogryn_club_p2_heavy_chained_hits_increases_killing_blow_chance_parent = {
 		{
@@ -178,8 +173,8 @@ templates.weapon_trait_bespoke_ogryn_club_p2_increased_crit_chance_on_staggered_
 		}
 	}
 }
-templates.weapon_trait_bespoke_ogryn_club_p2_toughness_regen_on_wepon_special_elites = {
-	weapon_trait_bespoke_ogryn_club_p2_toughness_regen_on_wepon_special_elites = {
+templates.weapon_trait_bespoke_ogryn_club_p2_toughness_regen_on_weapon_special_elites = {
+	weapon_trait_bespoke_ogryn_club_p2_toughness_regen_on_weapon_special_elites = {
 		{
 			active_duration = 2,
 			proc_stat_buffs = {

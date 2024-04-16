@@ -1,4 +1,23 @@
 local event_vo_hacking_ogryn_a = {
+	hacking_auspex_mutter_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 5,
+		sound_events = {
+			"loc_ogryn_a__hacking_auspex_mutter_a_01",
+			"loc_ogryn_a__hacking_auspex_mutter_a_02",
+			"loc_ogryn_a__hacking_auspex_mutter_a_03",
+			"loc_ogryn_a__hacking_auspex_mutter_a_04",
+			"loc_ogryn_a__hacking_auspex_mutter_a_05"
+		},
+		sound_events_duration = {
+			2.686542,
+			3.013146,
+			2.672667,
+			3.086396,
+			2.065969
+		},
+		randomize_indexes = {}
+	},
 	response_to_hacking_fix_decode = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,

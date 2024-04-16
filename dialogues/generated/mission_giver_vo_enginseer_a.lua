@@ -9,10 +9,10 @@ local mission_giver_vo_enginseer_a = {
 			"loc_enginseer_a__cmd_deploy_skull_04"
 		},
 		sound_events_duration = {
-			3.45678,
-			3.45678,
-			3.45678,
-			3.45678
+			7.55175,
+			7.51174,
+			6.978865,
+			7.445405
 		},
 		randomize_indexes = {}
 	},

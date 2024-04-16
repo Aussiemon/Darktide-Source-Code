@@ -28,17 +28,29 @@ return function ()
 			},
 			{
 				"user_memory",
+				"meat_grinder_rumour_count",
+				OP.LTEQ,
+				2
+			},
+			{
+				"user_memory",
 				"hub_rumour_cult_01_a",
-				OP.TIMEDIFF,
-				OP.GT,
-				900
+				OP.EQ,
+				0
 			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"hub_rumour_cult_01_a",
-				OP.TIMESET
+				OP.ADD,
+				1
+			},
+			{
+				"user_memory",
+				"meat_grinder_rumour_count",
+				OP.ADD,
+				1
 			}
 		},
 		heard_speak_routing = {
@@ -74,17 +86,29 @@ return function ()
 			},
 			{
 				"user_memory",
+				"meat_grinder_rumour_count",
+				OP.LTEQ,
+				2
+			},
+			{
+				"user_memory",
 				"hub_rumour_escalation_01_a",
-				OP.TIMEDIFF,
-				OP.GT,
-				900
+				OP.EQ,
+				0
 			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"hub_rumour_escalation_01_a",
-				OP.TIMESET
+				OP.ADD,
+				1
+			},
+			{
+				"user_memory",
+				"meat_grinder_rumour_count",
+				OP.ADD,
+				1
 			}
 		},
 		heard_speak_routing = {
@@ -120,17 +144,29 @@ return function ()
 			},
 			{
 				"user_memory",
+				"meat_grinder_rumour_count",
+				OP.LTEQ,
+				2
+			},
+			{
+				"user_memory",
 				"hur_rumour_hub_crew_01_a",
-				OP.TIMEDIFF,
-				OP.GT,
-				900
+				OP.EQ,
+				0
 			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"hur_rumour_hub_crew_01_a",
-				OP.TIMESET
+				OP.ADD,
+				1
+			},
+			{
+				"user_memory",
+				"meat_grinder_rumour_count",
+				OP.ADD,
+				1
 			}
 		},
 		heard_speak_routing = {
@@ -166,17 +202,29 @@ return function ()
 			},
 			{
 				"user_memory",
+				"meat_grinder_rumour_count",
+				OP.LTEQ,
+				2
+			},
+			{
+				"user_memory",
 				"hub_rumour_politics_01_a",
-				OP.TIMEDIFF,
-				OP.GT,
-				900
+				OP.EQ,
+				0
 			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"hub_rumour_politics_01_a",
-				OP.TIMESET
+				OP.ADD,
+				1
+			},
+			{
+				"user_memory",
+				"meat_grinder_rumour_count",
+				OP.ADD,
+				1
 			}
 		},
 		heard_speak_routing = {
@@ -212,17 +260,29 @@ return function ()
 			},
 			{
 				"user_memory",
+				"meat_grinder_rumour_count",
+				OP.LTEQ,
+				2
+			},
+			{
+				"user_memory",
 				"hub_rumour_wanderers_01_a",
-				OP.TIMEDIFF,
-				OP.GT,
-				900
+				OP.EQ,
+				0
 			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"hub_rumour_wanderers_01_a",
-				OP.TIMESET
+				OP.ADD,
+				1
+			},
+			{
+				"user_memory",
+				"meat_grinder_rumour_count",
+				OP.ADD,
+				1
 			}
 		},
 		heard_speak_routing = {

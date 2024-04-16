@@ -1,7 +1,8 @@
+local ArmorSettings = require("scripts/settings/damage/armor_settings")
 local BaseTemplateSettings = require("scripts/settings/equipment/weapon_templates/base_template_settings")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
-local DamageSettings = require("scripts/settings/damage/damage_settings")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
+local DamageSettings = require("scripts/settings/damage/damage_settings")
 local FootstepIntervalsTemplates = require("scripts/settings/equipment/footstep/footstep_intervals_templates")
 local HitScanTemplates = require("scripts/settings/projectile/hit_scan_templates")
 local LineEffects = require("scripts/settings/effects/line_effects")
@@ -12,7 +13,6 @@ local WeaponTraitsBespokeLasgunP2 = require("scripts/settings/equipment/weapon_t
 local WeaponTraitTemplates = require("scripts/settings/equipment/weapon_templates/weapon_trait_templates/weapon_trait_templates")
 local WeaponTweakTemplateSettings = require("scripts/settings/equipment/weapon_templates/weapon_tweak_template_settings")
 local WoundsSettings = require("scripts/settings/wounds/wounds_settings")
-local ArmorSettings = require("scripts/settings/damage/armor_settings")
 local armor_types = ArmorSettings.types
 local buff_stat_buffs = BuffSettings.stat_buffs
 local buff_proc_events = BuffSettings.proc_events

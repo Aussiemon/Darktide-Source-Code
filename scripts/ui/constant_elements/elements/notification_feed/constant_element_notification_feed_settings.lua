@@ -26,8 +26,12 @@ local constant_element_notification_feed_settings = {
 			"event_clear_notifications"
 		},
 		{
-			"event_update_show_crafting_pickup_notification",
-			"event_update_show_crafting_pickup_notification"
+			"event_update_assist_notification_type",
+			"event_update_assist_notification_type"
+		},
+		{
+			"event_update_crafting_pickup_notification_type",
+			"event_update_crafting_pickup_notification_type"
 		}
 	},
 	trait_sound_events_by_rarity = {

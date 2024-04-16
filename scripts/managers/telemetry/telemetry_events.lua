@@ -84,15 +84,37 @@ TelemetryEvents.client_connected = function (self, player)
 	self._manager:register_event(event)
 end
 
+local _tracked_slots = {
+	"slot_attachment_1",
+	"slot_attachment_2",
+	"slot_attachment_3",
+	"slot_primary",
+	"slot_secondary",
+	"slot_character_title"
+}
+
 TelemetryEvents.player_inventory = function (self, player)
 	local profile = player:profile()
 	local item_data = profile and profile.loadout_item_data or {}
+	local item_ids = profile and profile.loadout_item_ids or {}
+	local items = table.clone(item_data)
+
+	for i = 1, #_tracked_slots do
+		local slot_name = _tracked_slots[i]
+		local id = item_ids[slot_name]
+		local data = items[slot_name]
+
+		if data and id then
+			data.gear_id = id
+		end
+	end
+
 	local event = TelemetryEvent:new(SOURCE, player:telemetry_subject(), "player_inventory", {
 		game = player:telemetry_game_session(),
 		gameplay = self._session.gameplay
 	})
 
-	event:set_data(item_data)
+	event:set_data(items)
 	self._manager:register_event(event)
 end
 
@@ -169,13 +191,21 @@ TelemetryEvents.gameplay_started = function (self, params)
 	Managers.telemetry_reporters:start_reporter("placed_items")
 	Managers.telemetry_reporters:start_reporter("player_dealt_damage")
 	Managers.telemetry_reporters:start_reporter("player_taken_damage")
+	Managers.telemetry_reporters:start_reporter("player_terminate_enemy")
 	Managers.telemetry_reporters:start_reporter("shared_items")
 	Managers.telemetry_reporters:start_reporter("smart_tag")
+	Managers.telemetry_reporters:start_reporter("tactical_overlay")
+	Managers.telemetry_reporters:start_reporter("voice_over_bank_reshuffled")
+	Managers.telemetry_reporters:start_reporter("voice_over_event_triggered")
 end
 
 TelemetryEvents.gameplay_stopped = function (self)
+	Managers.telemetry_reporters:stop_reporter("voice_over_event_triggered")
+	Managers.telemetry_reporters:stop_reporter("voice_over_bank_reshuffled")
+	Managers.telemetry_reporters:stop_reporter("tactical_overlay")
 	Managers.telemetry_reporters:stop_reporter("smart_tag")
 	Managers.telemetry_reporters:stop_reporter("shared_items")
+	Managers.telemetry_reporters:stop_reporter("player_terminate_enemy")
 	Managers.telemetry_reporters:stop_reporter("player_taken_damage")
 	Managers.telemetry_reporters:stop_reporter("player_dealt_damage")
 	Managers.telemetry_reporters:stop_reporter("placed_items")
@@ -251,15 +281,28 @@ TelemetryEvents.system_settings = function (self, account_id)
 	}
 
 	if IS_XBS then
+		local xbox_data = {
+			is_streaming = XboxLive.is_streaming and XboxLive.is_streaming() or false
+		}
+
 		if Xbox.console_type() == Xbox.CONSOLE_TYPE_XBOX_SCARLETT_ANACONDA then
-			data.xbox = {
-				model = "anaconda"
-			}
+			xbox_data.model = "anaconda"
 		elseif Xbox.console_type() == Xbox.CONSOLE_TYPE_XBOX_SCARLETT_LOCKHEART then
-			data.xbox = {
-				model = "lockheart"
-			}
+			xbox_data.model = "lockheart"
 		end
+
+		data.xbox = xbox_data
+	end
+
+	if IS_WINDOWS then
+		local win_data = {}
+
+		if HAS_STEAM then
+			win_data.steamdeck = Steam.is_running_on_steamdeck and Steam.is_running_on_steamdeck() or false
+		end
+
+		win_data.wine_version = Application.wine_version and Application.wine_version() or false
+		data.windows = win_data
 	end
 
 	local event = self:_create_event("system_settings")
@@ -321,14 +364,18 @@ TelemetryEvents.player_taken_damage_report = function (self, reports)
 	end
 end
 
-TelemetryEvents.player_killed_enemy = function (self, player, data)
-	local event = TelemetryEvent:new(SOURCE, player:telemetry_subject(), "player_killed_enemy", {
-		game = player:telemetry_game_session(),
-		gameplay = self._session.gameplay
-	})
+TelemetryEvents.player_terminate_enemy_report = function (self, reports)
+	for _, report in pairs(reports) do
+		local entries = report.entries
+		local player_data = report.player_data
+		local event = TelemetryEvent:new(SOURCE, player_data.telemetry_subject, "player_terminate_enemy_report", {
+			game = player_data.telemetry_game_session,
+			gameplay = self._session.gameplay
+		})
 
-	event:set_data(data)
-	self._manager:register_event(event)
+		event:set_data(entries)
+		self._manager:register_event(event)
+	end
 end
 
 TelemetryEvents.player_knocked_down = function (self, player, data)
@@ -631,50 +678,17 @@ TelemetryEvents.used_items_report = function (self, reports)
 	end
 end
 
-TelemetryEvents.vo_event_triggered = function (self, global_context, player_context, event_name, vo_rule, vo_profile_name, vo_category_name, resistance, challenge)
-	local event = self:_create_event("vo_event_triggered")
-	local data = {
-		mission = {
-			name = global_context.current_mission,
-			time = global_context.level_time,
-			challenge = challenge,
-			resistance = resistance,
-			pacing_tension = global_context.pacing_tension,
-			active_hordes = global_context.active_hordes
-		},
-		vo = {
-			event_name = event_name,
-			rule = vo_rule,
-			profile_name = vo_profile_name,
-			category_name = vo_category_name
-		}
-	}
+TelemetryEvents.voice_over_bank_reshuffled_report = function (self, report)
+	local event = self:_create_event("voice_over_bank_reshuffled_report")
 
-	if player_context.is_player == "true" then
-		data.player = {
-			health = player_context.health,
-			friends_close = player_context.friends_close,
-			enemies_close = player_context.enemies_close,
-			is_knocked_down = player_context.is_knocked_down == "true",
-			is_pounced_down = player_context.is_pounced_down == "true",
-			is_ledge_hanging = player_context.is_ledge_hanging == "true"
-		}
-	end
-
-	event:set_data(data)
+	event:set_data(report)
 	self._manager:register_event(event)
 end
 
-TelemetryEvents.vo_bank_reshuffled = function (self, character_name, bank_name)
-	local event = self:_create_event("vo_bank_reshuffled")
+TelemetryEvents.voice_over_event_triggered_report = function (self, report)
+	local event = self:_create_event("voice_over_event_triggered_report")
 
-	event:set_data({
-		mission = {
-			name = self._context.map
-		},
-		character_name = character_name,
-		bank_name = bank_name
-	})
+	event:set_data(report)
 	self._manager:register_event(event)
 end
 
@@ -899,6 +913,34 @@ TelemetryEvents.enemies_spawned_report = function (self, report)
 	self._manager:register_event(event)
 end
 
+TelemetryEvents.tactical_overlay_report = function (self, report)
+	local event = self:_create_event("tactical_overlay_report")
+
+	event:set_data(report)
+	self._manager:register_event(event)
+end
+
+TelemetryEvents.penances_tracked_report = function (self, report)
+	local event = self:_create_event("penances_tracked_report")
+
+	event:set_data(report)
+	self._manager:register_event(event)
+end
+
+TelemetryEvents.penance_claimed_report = function (self, report)
+	local event = self:_create_event("penance_claimed_report")
+
+	event:set_data(report)
+	self._manager:register_event(event)
+end
+
+TelemetryEvents.track_claimed_report = function (self, report)
+	local event = self:_create_event("track_claimed_report")
+
+	event:set_data(report)
+	self._manager:register_event(event)
+end
+
 TelemetryEvents.com_wheel_report = function (self, report)
 	local event = self:_create_event("com_wheel_report")
 
@@ -977,6 +1019,24 @@ end
 TelemetryEvents.hard_mode_activated = function (self)
 	local event = self:_create_event("hard_mode_activated")
 
+	self._manager:register_event(event)
+end
+
+TelemetryEvents.destructible_destroyed = function (self, plasteel_collected)
+	local event = self:_create_event("destructible_destroyed")
+
+	event:set_data({
+		plasteel_collected = plasteel_collected
+	})
+	self._manager:register_event(event)
+end
+
+TelemetryEvents.collectible_collected = function (self, plasteel_collected)
+	local event = self:_create_event("collectible_collected")
+
+	event:set_data({
+		plasteel_collected = plasteel_collected
+	})
 	self._manager:register_event(event)
 end
 

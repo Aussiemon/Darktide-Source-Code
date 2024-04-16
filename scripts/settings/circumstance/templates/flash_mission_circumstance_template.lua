@@ -145,6 +145,65 @@ local only_melee_mission_overrides = {
 		}
 	}
 }
+local toxic_gas_mission_overrides = {
+	pickup_settings = {
+		rubberband_pool = {
+			wounds = {
+				syringe_corruption_pocketable = {
+					20,
+					20,
+					20,
+					20,
+					20
+				}
+			}
+		},
+		mid_event = {
+			wounds = {
+				syringe_corruption_pocketable = {
+					20,
+					20,
+					20,
+					20,
+					20
+				}
+			}
+		},
+		end_event = {
+			wounds = {
+				syringe_corruption_pocketable = {
+					20,
+					20,
+					20,
+					20,
+					20
+				}
+			}
+		},
+		primary = {
+			wounds = {
+				syringe_corruption_pocketable = {
+					20,
+					20,
+					20,
+					20,
+					20
+				}
+			}
+		},
+		secondary = {
+			wounds = {
+				syringe_corruption_pocketable = {
+					20,
+					20,
+					20,
+					20,
+					20
+				}
+			}
+		}
+	}
+}
 local circumstance_templates = {
 	flash_mission_01 = {
 		theme_tag = "default",
@@ -370,6 +429,93 @@ local circumstance_templates = {
 			"mutator_more_boss_patrols",
 			"mutator_more_ogryns"
 		}
+	},
+	flash_mission_15 = {
+		dialogue_id = "circumstance_vo_toxic_gas",
+		wwise_state = "ventilation_purge_01",
+		theme_tag = "toxic_gas",
+		mutators = {
+			"mutator_waves_of_specials",
+			"mutator_toxic_gas_volumes"
+		},
+		ui = {
+			description = "loc_circumstance_flash_mission_15_description",
+			icon = "content/ui/materials/icons/circumstances/maelstrom_01",
+			display_name = "loc_circumstance_flash_mission_15_title"
+		},
+		mission_overrides = toxic_gas_mission_overrides
+	},
+	flash_mission_16 = {
+		dialogue_id = "circumstance_vo_toxic_gas",
+		wwise_state = "ventilation_purge_01",
+		theme_tag = "toxic_gas",
+		mutators = {
+			"mutator_waves_of_specials",
+			"mutator_toxic_gas_volumes",
+			"mutator_chaos_hounds",
+			"mutator_mutants"
+		},
+		ui = {
+			description = "loc_circumstance_flash_mission_16_description",
+			icon = "content/ui/materials/icons/circumstances/maelstrom_01",
+			display_name = "loc_circumstance_flash_mission_16_title"
+		},
+		mission_overrides = toxic_gas_mission_overrides
+	},
+	flash_mission_17 = {
+		dialogue_id = "circumstance_vo_toxic_gas",
+		wwise_state = "ventilation_purge_01",
+		theme_tag = "toxic_gas",
+		mutators = {
+			"mutator_waves_of_specials",
+			"mutator_toxic_gas_volumes",
+			"mutator_minion_nurgle_blessing",
+			"mutator_only_cultist_faction",
+			"mutator_more_boss_patrols"
+		},
+		ui = {
+			description = "loc_circumstance_flash_mission_17_description",
+			icon = "content/ui/materials/icons/circumstances/maelstrom_01",
+			display_name = "loc_circumstance_flash_mission_17_title"
+		},
+		mission_overrides = toxic_gas_mission_overrides
+	},
+	flash_mission_18 = {
+		dialogue_id = "circumstance_vo_toxic_gas",
+		wwise_state = "ventilation_purge_01",
+		theme_tag = "toxic_gas",
+		mutators = {
+			"mutator_waves_of_specials",
+			"mutator_toxic_gas_volumes",
+			"mutator_monster_specials",
+			"mutator_snipers"
+		},
+		ui = {
+			description = "loc_circumstance_flash_mission_18_description",
+			icon = "content/ui/materials/icons/circumstances/maelstrom_01",
+			display_name = "loc_circumstance_flash_mission_18_title"
+		},
+		mission_overrides = toxic_gas_mission_overrides
+	},
+	flash_mission_19 = {
+		dialogue_id = "circumstance_vo_toxic_gas",
+		wwise_state = "ventilation_purge_01",
+		theme_tag = "toxic_gas",
+		mutators = {
+			"mutator_waves_of_specials",
+			"mutator_toxic_gas_volumes",
+			"mutator_monster_specials",
+			"mutator_only_melee_roamers",
+			"mutator_only_melee_trickle_hordes",
+			"mutator_only_melee_terror_events",
+			"mutator_more_ogryns"
+		},
+		ui = {
+			description = "loc_circumstance_flash_mission_19_description",
+			icon = "content/ui/materials/icons/circumstances/maelstrom_01",
+			display_name = "loc_circumstance_flash_mission_19_title"
+		},
+		mission_overrides = toxic_gas_mission_overrides
 	},
 	high_flash_mission_01 = {
 		theme_tag = "default",
@@ -653,62 +799,111 @@ local circumstance_templates = {
 		}
 	},
 	high_flash_mission_15 = {
-		wwise_state = "None",
-		theme_tag = "default",
-		ui = {
-			description = "loc_circumstance_flash_mission_14_description",
-			icon = "content/ui/materials/icons/circumstances/maelstrom_02",
-			display_name = "loc_circumstance_flash_mission_14_title"
-		},
+		dialogue_id = "circumstance_vo_toxic_gas",
+		wwise_state = "ventilation_purge_01",
+		theme_tag = "toxic_gas",
 		mutators = {
-			"mutator_no_encampments",
-			"mutator_waves_of_specials",
-			"mutator_more_boss_patrols",
-			"mutator_more_elites",
 			"mutator_add_resistance",
-			"mutator_increase_terror_event_points",
-			"mutator_reduced_ramp_duration",
-			"mutator_auric_tension_modifier"
-		}
-	},
-	high_flash_mission_16 = {
-		wwise_state = "None",
-		theme_tag = "default",
-		ui = {
-			description = "loc_circumstance_flash_mission_14_description",
-			icon = "content/ui/materials/icons/circumstances/maelstrom_02",
-			display_name = "loc_circumstance_flash_mission_14_title"
-		},
-		mutators = {
-			"mutator_no_encampments",
 			"mutator_waves_of_specials",
-			"mutator_more_boss_patrols",
-			"mutator_more_elites",
-			"mutator_add_resistance",
-			"mutator_increase_terror_event_points_high",
-			"mutator_reduced_ramp_duration",
-			"mutator_auric_tension_modifier"
-		}
-	},
-	high_flash_mission_17 = {
-		wwise_state = "None",
-		theme_tag = "default",
-		ui = {
-			description = "loc_circumstance_flash_mission_14_description",
-			icon = "content/ui/materials/icons/circumstances/maelstrom_02",
-			display_name = "loc_circumstance_flash_mission_14_title"
-		},
-		mutators = {
-			"mutator_no_encampments",
-			"mutator_waves_of_specials",
-			"mutator_higher_stagger_thresholds",
-			"mutator_increase_terror_event_points_high",
+			"mutator_toxic_gas_volumes",
 			"mutator_reduced_ramp_duration",
 			"mutator_auric_tension_modifier",
-			"mutator_modify_challenge_resistance_scale_six_one",
-			"mutator_always_allow_all_spawn_types",
-			"mutator_more_hordes_02"
-		}
+			"mutator_increase_terror_event_points"
+		},
+		ui = {
+			description = "loc_circumstance_flash_mission_15_description",
+			icon = "content/ui/materials/icons/circumstances/maelstrom_02",
+			display_name = "loc_circumstance_flash_mission_15_title"
+		},
+		mission_overrides = toxic_gas_mission_overrides
+	},
+	high_flash_mission_16 = {
+		dialogue_id = "circumstance_vo_toxic_gas",
+		wwise_state = "ventilation_purge_01",
+		theme_tag = "toxic_gas",
+		mutators = {
+			"mutator_add_resistance",
+			"mutator_waves_of_specials",
+			"mutator_toxic_gas_volumes",
+			"mutator_chaos_hounds",
+			"mutator_mutants",
+			"mutator_reduced_ramp_duration",
+			"mutator_auric_tension_modifier",
+			"mutator_increase_terror_event_points"
+		},
+		ui = {
+			description = "loc_circumstance_flash_mission_16_description",
+			icon = "content/ui/materials/icons/circumstances/maelstrom_02",
+			display_name = "loc_circumstance_flash_mission_16_title"
+		},
+		mission_overrides = toxic_gas_mission_overrides
+	},
+	high_flash_mission_17 = {
+		dialogue_id = "circumstance_vo_toxic_gas",
+		wwise_state = "ventilation_purge_01",
+		theme_tag = "toxic_gas",
+		mutators = {
+			"mutator_add_resistance",
+			"mutator_waves_of_specials",
+			"mutator_toxic_gas_volumes",
+			"mutator_minion_nurgle_blessing",
+			"mutator_only_cultist_faction",
+			"mutator_more_boss_patrols",
+			"mutator_reduced_ramp_duration",
+			"mutator_auric_tension_modifier",
+			"mutator_increase_terror_event_points"
+		},
+		ui = {
+			description = "loc_circumstance_flash_mission_17_description",
+			icon = "content/ui/materials/icons/circumstances/maelstrom_02",
+			display_name = "loc_circumstance_flash_mission_17_title"
+		},
+		mission_overrides = toxic_gas_mission_overrides
+	},
+	high_flash_mission_18 = {
+		dialogue_id = "circumstance_vo_toxic_gas",
+		wwise_state = "ventilation_purge_01",
+		theme_tag = "toxic_gas",
+		mutators = {
+			"mutator_add_resistance",
+			"mutator_waves_of_specials",
+			"mutator_toxic_gas_volumes",
+			"mutator_monster_specials",
+			"mutator_snipers",
+			"mutator_reduced_ramp_duration",
+			"mutator_auric_tension_modifier",
+			"mutator_increase_terror_event_points"
+		},
+		ui = {
+			description = "loc_circumstance_flash_mission_18_description",
+			icon = "content/ui/materials/icons/circumstances/maelstrom_02",
+			display_name = "loc_circumstance_flash_mission_18_title"
+		},
+		mission_overrides = toxic_gas_mission_overrides
+	},
+	high_flash_mission_19 = {
+		dialogue_id = "circumstance_vo_toxic_gas",
+		wwise_state = "ventilation_purge_01",
+		theme_tag = "toxic_gas",
+		mutators = {
+			"mutator_add_resistance",
+			"mutator_waves_of_specials",
+			"mutator_toxic_gas_volumes",
+			"mutator_monster_specials",
+			"mutator_reduced_ramp_duration",
+			"mutator_auric_tension_modifier",
+			"mutator_increase_terror_event_points",
+			"mutator_only_melee_roamers",
+			"mutator_only_melee_trickle_hordes",
+			"mutator_only_melee_terror_events",
+			"mutator_more_ogryns"
+		},
+		ui = {
+			description = "loc_circumstance_flash_mission_19_description",
+			icon = "content/ui/materials/icons/circumstances/maelstrom_02",
+			display_name = "loc_circumstance_flash_mission_19_title"
+		},
+		mission_overrides = toxic_gas_mission_overrides
 	},
 	six_one_flash_mission_01 = {
 		wwise_state = "None",

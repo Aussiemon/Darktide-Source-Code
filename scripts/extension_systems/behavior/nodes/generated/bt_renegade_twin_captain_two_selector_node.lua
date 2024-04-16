@@ -102,15 +102,6 @@ BtRenegadeTwinCaptainTwoSelectorNode.evaluate = function (self, unit, blackboard
 	local node_disappear_instant = children[4]
 	local behavior_component = blackboard.behavior
 	local should_disappear_instant = behavior_component.should_disappear_instant
-	local flag = "activate_twins"
-	local has_backend_pacing_control_flag = Managers.state.pacing:get_backend_pacing_control_flag(flag)
-
-	if has_backend_pacing_control_flag == false then
-		should_disappear_instant = true
-	elseif has_backend_pacing_control_flag == nil then
-		should_disappear_instant = true
-	end
-
 	local condition_result = should_disappear_instant
 
 	if condition_result then

@@ -1242,11 +1242,11 @@ UIRenderer.crop_text = function (text, max_chars)
 	return text
 end
 
-UIRenderer.crop_text_width = function (self, text, font_type, font_size, max_width, crop_from_left)
+UIRenderer.crop_text_width = function (self, text, font_type, font_size, max_width, crop_from_left, options, use_max_extents)
 	local scale = self.scale or 1
 	local scaled_font_size = UIFonts.scaled_size(font_size, scale)
-	local text_width, _1, _2, caret = UIRenderer.text_size(self, text, font_type, scaled_font_size)
-	local crop_suffix_width, _1, _2, suffix_caret = UIRenderer.text_size(self, crop_suffix, font_type, scaled_font_size)
+	local text_width, _1, _2, caret = UIRenderer.text_size(self, text, font_type, scaled_font_size, nil, options, use_max_extents)
+	local crop_suffix_width, _1, _2, suffix_caret = UIRenderer.text_size(self, crop_suffix, font_type, scaled_font_size, nil, options, use_max_extents)
 
 	if max_width < text_width then
 		repeat
@@ -1267,7 +1267,7 @@ UIRenderer.crop_text_width = function (self, text, font_type, font_size, max_wid
 				return text, caret[1]
 			end
 
-			text_width, _1, _2, caret = UIRenderer.text_size(self, text, font_type, scaled_font_size)
+			text_width, _1, _2, caret = UIRenderer.text_size(self, text, font_type, scaled_font_size, nil, options, use_max_extents)
 			text_width = math.floor(text_width)
 		until text_width <= max_width
 

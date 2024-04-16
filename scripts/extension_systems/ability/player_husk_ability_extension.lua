@@ -285,4 +285,12 @@ PlayerHuskAbilityExtension.charge_replenished = function (self)
 	error("not allowed to call on husk")
 end
 
+PlayerHuskAbilityExtension.get_current_ability_cooldown_time = function (self)
+	error("not allowed to call on husk")
+end
+
+PlayerHuskAbilityExtension.get_current_ability_name = function (self)
+	error("not allowed to call on husk")
+end
+
 return PlayerHuskAbilityExtension

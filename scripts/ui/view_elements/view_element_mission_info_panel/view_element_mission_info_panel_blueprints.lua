@@ -1,13 +1,10 @@
 local CircumstanceTemplates = require("scripts/settings/circumstance/circumstance_templates")
-local MissionInfoStyles = require("scripts/ui/view_elements/view_element_mission_info_panel/view_element_mission_info_panel_styles")
 local MissionBoardSettings = require("scripts/ui/views/mission_board_view/mission_board_view_settings")
+local MissionInfoStyles = require("scripts/ui/view_elements/view_element_mission_info_panel/view_element_mission_info_panel_styles")
 local MissionObjectiveTemplates = require("scripts/settings/mission_objective/mission_objective_templates")
-local MissionSettings = require("scripts/settings/mission/mission_templates")
 local MutatorTemplates = require("scripts/settings/mutator/mutator_templates")
-local TextUtils = require("scripts/utilities/ui/text")
 local UIFonts = require("scripts/managers/ui/ui_fonts")
 local UIRenderer = require("scripts/managers/ui/ui_renderer")
-local ZoneSettings = require("scripts/settings/zones/zones")
 local blueprint_styles = MissionInfoStyles.blueprints
 local side_mission_templates = MissionObjectiveTemplates.side_mission.objectives
 

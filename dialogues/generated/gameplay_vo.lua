@@ -360,6 +360,394 @@ return function ()
 		}
 	})
 	define_rule({
+		name = "blitz_brainburst_chain_a",
+		wwise_route = 0,
+		response = "blitz_brainburst_chain_a",
+		database = "gameplay_vo",
+		category = "player_prio_1",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"multiple_head_pops"
+			},
+			{
+				"query_context",
+				"killer_class",
+				OP.EQ,
+				"psyker"
+			},
+			{
+				"user_context",
+				"enemies_close",
+				OP.LT,
+				10
+			},
+			{
+				"user_memory",
+				"blitz_brainburst_chain_a",
+				OP.TIMEDIFF,
+				OP.GT,
+				120
+			},
+			{
+				"user_memory",
+				"repeated_psykinetic_head_pop_a",
+				OP.TIMEDIFF,
+				OP.GT,
+				30
+			}
+		},
+		on_done = {
+			{
+				"user_memory",
+				"blitz_brainburst_chain_a",
+				OP.TIMESET
+			}
+		},
+		heard_speak_routing = {
+			target = "disabled"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.5
+			},
+			random_ignore_vo = {
+				chance = 0.15,
+				max_failed_tries = 0,
+				hold_for = 0
+			}
+		}
+	})
+	define_rule({
+		name = "blitz_flame_grenade_a",
+		category = "player_prio_1",
+		wwise_route = 0,
+		response = "blitz_flame_grenade_a",
+		database = "gameplay_vo",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"throwing_item"
+			},
+			{
+				"query_context",
+				"item",
+				OP.SET_INCLUDES,
+				args = {
+					"fire_grenade"
+				}
+			},
+			{
+				"user_memory",
+				"time_since_throw_item",
+				OP.TIMEDIFF,
+				OP.GT,
+				5
+			}
+		},
+		on_done = {
+			{
+				"user_memory",
+				"time_since_throw_item",
+				OP.TIMESET
+			}
+		},
+		heard_speak_routing = {
+			target = "players"
+		}
+	})
+	define_rule({
+		name = "blitz_grenade_box_a",
+		category = "player_prio_1",
+		wwise_route = 0,
+		response = "blitz_grenade_box_a",
+		database = "gameplay_vo",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"throwing_item"
+			},
+			{
+				"query_context",
+				"item",
+				OP.SET_INCLUDES,
+				args = {
+					"ogryn_grenade_box",
+					"ogryn_grenade_box_cluster"
+				}
+			},
+			{
+				"user_memory",
+				"time_since_throw_item",
+				OP.TIMEDIFF,
+				OP.GT,
+				5
+			}
+		},
+		on_done = {
+			{
+				"user_memory",
+				"time_since_throw_item",
+				OP.TIMESET
+			},
+			{
+				"faction_memory",
+				"thrown_grenades",
+				OP.ADD,
+				1
+			}
+		},
+		heard_speak_routing = {
+			target = "players"
+		}
+	})
+	define_rule({
+		name = "blitz_krak_grenade_a",
+		category = "player_prio_1",
+		wwise_route = 0,
+		response = "blitz_krak_grenade_a",
+		database = "gameplay_vo",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"throwing_item"
+			},
+			{
+				"query_context",
+				"item",
+				OP.SET_INCLUDES,
+				args = {
+					"krak_grenade"
+				}
+			},
+			{
+				"user_memory",
+				"time_since_throw_item",
+				OP.TIMEDIFF,
+				OP.GT,
+				5
+			}
+		},
+		on_done = {
+			{
+				"user_memory",
+				"time_since_throw_item",
+				OP.TIMESET
+			}
+		},
+		heard_speak_routing = {
+			target = "players"
+		}
+	})
+	define_rule({
+		name = "blitz_rock_a",
+		category = "player_prio_1",
+		wwise_route = 0,
+		response = "blitz_rock_a",
+		database = "gameplay_vo",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"throwing_item"
+			},
+			{
+				"query_context",
+				"item",
+				OP.SET_INCLUDES,
+				args = {
+					"ogryn_grenade_friend_rock"
+				}
+			},
+			{
+				"user_memory",
+				"time_since_throw_item",
+				OP.TIMEDIFF,
+				OP.GT,
+				15
+			}
+		},
+		on_done = {
+			{
+				"user_memory",
+				"time_since_throw_item",
+				OP.TIMESET
+			}
+		},
+		heard_speak_routing = {
+			target = "players"
+		}
+	})
+	define_rule({
+		name = "blitz_shards_chain_a",
+		category = "player_prio_1",
+		wwise_route = 0,
+		response = "blitz_shards_chain_a",
+		database = "gameplay_vo",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"kill_spree_self"
+			},
+			{
+				"user_context",
+				"weapon_type",
+				OP.SET_INCLUDES,
+				args = {
+					"psyker_throwing_knives"
+				}
+			},
+			{
+				"user_context",
+				"number_of_kills",
+				OP.GTEQ,
+				15
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"psyker"
+				}
+			},
+			{
+				"user_context",
+				"enemies_close",
+				OP.GTEQ,
+				3
+			},
+			{
+				"user_memory",
+				"last_kill_spree",
+				OP.TIMEDIFF,
+				OP.GT,
+				300
+			}
+		},
+		on_done = {
+			{
+				"user_memory",
+				"last_kill_spree",
+				OP.TIMESET
+			}
+		},
+		heard_speak_routing = {
+			target = "disabled"
+		}
+	})
+	define_rule({
+		name = "blitz_smite_chain_a",
+		category = "player_prio_1",
+		wwise_route = 0,
+		response = "blitz_smite_chain_a",
+		database = "gameplay_vo",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"kill_spree_self"
+			},
+			{
+				"user_context",
+				"weapon_type",
+				OP.SET_INCLUDES,
+				args = {
+					"psyker_chain_lightning"
+				}
+			},
+			{
+				"user_context",
+				"number_of_kills",
+				OP.GTEQ,
+				15
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"psyker"
+				}
+			},
+			{
+				"user_context",
+				"enemies_close",
+				OP.GTEQ,
+				3
+			},
+			{
+				"user_memory",
+				"last_kill_spree",
+				OP.TIMEDIFF,
+				OP.GT,
+				300
+			}
+		},
+		on_done = {
+			{
+				"user_memory",
+				"last_kill_spree",
+				OP.TIMESET
+			}
+		},
+		heard_speak_routing = {
+			target = "disabled"
+		}
+	})
+	define_rule({
+		name = "blitz_smoke_grenade_a",
+		category = "player_prio_1",
+		wwise_route = 0,
+		response = "blitz_smoke_grenade_a",
+		database = "gameplay_vo",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"throwing_item"
+			},
+			{
+				"query_context",
+				"item",
+				OP.SET_INCLUDES,
+				args = {
+					"smoke_grenade"
+				}
+			},
+			{
+				"user_memory",
+				"time_since_throw_item",
+				OP.TIMEDIFF,
+				OP.GT,
+				5
+			}
+		},
+		on_done = {
+			{
+				"user_memory",
+				"time_since_throw_item",
+				OP.TIMESET
+			}
+		},
+		heard_speak_routing = {
+			target = "players"
+		}
+	})
+	define_rule({
 		name = "calling_for_help",
 		wwise_route = 0,
 		response = "calling_for_help",
@@ -1288,6 +1676,66 @@ return function ()
 		}
 	})
 	define_rule({
+		name = "enemy_kill_cultist_grenadier",
+		wwise_route = 0,
+		response = "enemy_kill_cultist_grenadier",
+		database = "gameplay_vo",
+		category = "enemy_alerts_prio_1",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"enemy_kill"
+			},
+			{
+				"query_context",
+				"killed_type",
+				OP.EQ,
+				"cultist_grenadier"
+			},
+			{
+				"user_context",
+				"threat_level",
+				OP.SET_INCLUDES,
+				args = {
+					"low",
+					"medium",
+					"high"
+				}
+			},
+			{
+				"user_memory",
+				"time_since_enemy_kill_grenadier",
+				OP.TIMEDIFF,
+				OP.GT,
+				5
+			},
+			{
+				"faction_memory",
+				"enemy_grenadier",
+				OP.TIMEDIFF,
+				OP.GT,
+				3
+			}
+		},
+		on_done = {
+			{
+				"user_memory",
+				"time_since_enemy_kill_grenadier",
+				OP.TIMESET
+			}
+		},
+		heard_speak_routing = {
+			target = "players"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.5
+			}
+		}
+	})
+	define_rule({
 		name = "enemy_kill_cultist_mutant",
 		wwise_route = 0,
 		response = "enemy_kill_cultist_mutant",
@@ -1509,7 +1957,7 @@ return function ()
 			},
 			{
 				"faction_memory",
-				"enemy_renegade_grenadier",
+				"enemy_grenadier",
 				OP.TIMEDIFF,
 				OP.GT,
 				3
@@ -1549,7 +1997,8 @@ return function ()
 				"killed_type",
 				OP.SET_INCLUDES,
 				args = {
-					"renegade_grenadier"
+					"renegade_grenadier",
+					"cultist_grenadier"
 				}
 			},
 			{
@@ -1561,14 +2010,14 @@ return function ()
 			},
 			{
 				"faction_memory",
-				"enemy_renegade_grenadier",
+				"enemy_grenadier",
 				OP.TIMEDIFF,
 				OP.LT,
 				3
 			},
 			{
 				"faction_memory",
-				"enemy_renegade_grenadier",
+				"enemy_grenadier",
 				OP.GT,
 				1
 			}
@@ -5704,7 +6153,7 @@ return function ()
 			}
 		},
 		heard_speak_routing = {
-			target = "all"
+			target = "visible_npcs"
 		}
 	})
 	define_rule({
@@ -5766,7 +6215,48 @@ return function ()
 			}
 		},
 		heard_speak_routing = {
-			target = "all"
+			target = "visible_npcs"
+		}
+	})
+	define_rule({
+		name = "martyr_skull_pickup",
+		wwise_route = 52,
+		response = "martyr_skull_pickup",
+		database = "gameplay_vo",
+		category = "npc_prio_0",
+		speaker_routing = {
+			target = "dialogist"
+		},
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"npc_interacting_vo"
+			},
+			{
+				"query_context",
+				"vo_event",
+				OP.EQ,
+				"martyr_skull_pickup"
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"warp_echo"
+				}
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "disabled"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 1.8
+			}
 		}
 	})
 	define_rule({
@@ -13551,6 +14041,59 @@ return function ()
 		}
 	})
 	define_rule({
+		name = "seen_enemy_cultist_grenadier",
+		wwise_route = 0,
+		response = "seen_enemy_cultist_grenadier",
+		database = "gameplay_vo",
+		category = "enemy_alerts_prio_1",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"seen_enemy"
+			},
+			{
+				"query_context",
+				"enemy_tag",
+				OP.EQ,
+				"cultist_grenadier"
+			},
+			{
+				"user_context",
+				"threat_level",
+				OP.SET_INCLUDES,
+				args = {
+					"low",
+					"medium",
+					"high"
+				}
+			},
+			{
+				"faction_memory",
+				"enemy_grenadier",
+				OP.TIMEDIFF,
+				OP.GT,
+				20
+			}
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"enemy_grenadier",
+				OP.TIMESET
+			}
+		},
+		heard_speak_routing = {
+			target = "players"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.5
+			}
+		}
+	})
+	define_rule({
 		name = "seen_enemy_cultist_heavy_gunner",
 		wwise_route = 0,
 		response = "seen_enemy_cultist_heavy_gunner",
@@ -13788,7 +14331,7 @@ return function ()
 			},
 			{
 				"faction_memory",
-				"enemy_renegade_grenadier",
+				"enemy_grenadier",
 				OP.TIMEDIFF,
 				OP.GT,
 				20
@@ -13797,7 +14340,7 @@ return function ()
 		on_done = {
 			{
 				"faction_memory",
-				"enemy_renegade_grenadier",
+				"enemy_grenadier",
 				OP.TIMESET
 			}
 		},
@@ -14768,12 +15311,8 @@ return function ()
 				OP.SET_INCLUDES,
 				args = {
 					"frag_grenade",
-					"krak_grenade",
-					"fire_grenade",
 					"ogryn_grenade_frag",
-					"shock_grenade",
-					"ogryn_grenade_box",
-					"smoke_grenade"
+					"shock_grenade"
 				}
 			},
 			{

@@ -20,10 +20,10 @@ template.using_smart_tag_system = true
 template.max_distance = 200
 template.screen_clamp = true
 template.screen_margins = {
-	up = size[2] * 0.5,
-	down = size[2] * 0.5,
-	left = size[1] * 0.5,
-	right = size[1] * 0.5
+	down = 0.23148148148148148,
+	up = 0.23148148148148148,
+	left = 0.234375,
+	right = 0.234375
 }
 template.scale_settings = {
 	scale_to = 1,

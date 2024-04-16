@@ -5,7 +5,7 @@ local ToxicGasFog = component("ToxicGasFog")
 
 ToxicGasFog.init = function (self, unit, is_server, nav_world)
 	self._unit = unit
-	local run_update = false
+	local run_update = true
 	self._is_server = is_server
 
 	if rawget(_G, "LevelEditor") and ToxicGasFog._nav_info == nil then
@@ -42,11 +42,13 @@ ToxicGasFog.set_volume_enabled = function (self, enabled)
 	end
 end
 
+local FADE_IN_TIME = 1
 local MESH_NAME = "g_fog"
 
 ToxicGasFog.enable = function (self, unit)
 	local mesh = Unit.mesh(unit, MESH_NAME)
 	local material = Mesh.material(mesh, "mtr_fog")
+	self._material = material
 	local extinction = self:get_data(unit, "extinction")
 
 	Material.set_scalar(material, "height_fog_extinction", extinction)
@@ -69,6 +71,78 @@ ToxicGasFog.enable = function (self, unit)
 
 		self._particle_created = true
 	end
+
+	self._volume_registered = true
+	self._fade_in_time = FADE_IN_TIME
+end
+
+ToxicGasFog.update = function (self, unit, dt, t)
+	if not self._volume_registered then
+		self._fade_time = nil
+		self._start_fade_time = nil
+
+		return true
+	end
+
+	if self._fade_in_time then
+		self._fade_in_time = self._fade_in_time - dt
+
+		if self._fade_in_time <= 0 then
+			self._fade_in_time = nil
+
+			self:_update_volume_percentage(unit, 1)
+		else
+			local percentage = (FADE_IN_TIME - self._fade_in_time) / FADE_IN_TIME
+
+			self:_update_volume_percentage(unit, percentage)
+
+			return true
+		end
+	end
+
+	local fade_time = self._fade_time
+
+	if not self._fade_time then
+		return true
+	end
+
+	local start_fade_time = self._start_fade_time
+	fade_time = fade_time - dt
+	local percentage = math.max(fade_time / start_fade_time, 0.05)
+
+	self:_update_volume_percentage(unit, percentage)
+
+	self._fade_time = fade_time
+
+	if fade_time <= 0 then
+		self._fade_time = nil
+		self._start_fade_time = nil
+	end
+
+	return true
+end
+
+ToxicGasFog._update_volume_percentage = function (self, unit, percentage)
+	if not self._material then
+		local mesh = Unit.mesh(unit, MESH_NAME)
+		local material = Mesh.material(mesh, "mtr_fog")
+		self._material = material
+	end
+
+	local material = self._material
+	local albedo = self:get_data(unit, "albedo"):unbox()
+	local phase = self:get_data(unit, "phase") * percentage
+
+	Material.set_scalar(material, "height_fog_phase", phase)
+
+	local falloff = self:get_data(unit, "falloff"):unbox() * percentage
+
+	Material.set_vector3(material, "height_fog_falloff", falloff)
+
+	local extinction = self:get_data(unit, "extinction") * percentage
+
+	Material.set_scalar(self._material, "height_fog_extinction", extinction)
+	Volumetrics.update_volume(unit, albedo, extinction, phase, falloff, MESH_NAME)
 end
 
 ToxicGasFog.disable = function (self, unit)
@@ -83,6 +157,8 @@ ToxicGasFog.disable = function (self, unit)
 
 		self._particle_created = nil
 	end
+
+	self._volume_registered = false
 end
 
 ToxicGasFog.events.visibility_enable = function (self, unit)
@@ -91,6 +167,33 @@ end
 
 ToxicGasFog.events.visibility_disable = function (self, unit)
 	self:set_volume_enabled(false)
+end
+
+ToxicGasFog.events.create_low_gas = function (self)
+	if not self._low_gas_created then
+		Unit.flow_event(self._unit, "create_low_gas")
+
+		self._low_gas_created = true
+	end
+end
+
+ToxicGasFog.events.despawn_low_gas = function (self)
+	if self._low_gas_created then
+		Unit.flow_event(self._unit, "despawn_low_gas")
+
+		self._low_gas_created = nil
+	end
+end
+
+local FADE_TIME = 4
+
+ToxicGasFog.events.start_fading = function (self)
+	self._fade_time = FADE_TIME
+	self._start_fade_time = FADE_TIME
+end
+
+ToxicGasFog.events.create_trigger_gas = function (self)
+	Unit.flow_event(self._unit, "create_trigger_gas")
 end
 
 ToxicGasFog.hot_join_sync = function (self, joining_client, joining_channel)
@@ -118,6 +221,14 @@ ToxicGasFog.editor_init = function (self, unit)
 		end
 	end
 
+	if ToxicGasFog._fog_clouds == nil then
+		ToxicGasFog._fog_clouds = {}
+	end
+
+	ToxicGasFog._fog_clouds[#ToxicGasFog._fog_clouds + 1] = {
+		unit = unit,
+		component = self
+	}
 	self._unit = unit
 	local world = Application.main_world()
 	self._world = world
@@ -329,6 +440,24 @@ ToxicGasFog.component_data = {
 		value = false,
 		ui_name = "Don't trigger this cloud",
 		category = "Circumstance Gameplay Data"
+	},
+	alternating_min_range = {
+		ui_type = "number",
+		min = 0,
+		decimals = 1,
+		category = "Circumstance Gameplay Data",
+		value = 16,
+		ui_name = "Alternating Min Range",
+		step = 0.1
+	},
+	alternating_max_range = {
+		ui_type = "number",
+		min = 0,
+		decimals = 1,
+		category = "Circumstance Gameplay Data",
+		value = 20,
+		ui_name = "Alternating Max Range",
+		step = 0.1
 	},
 	albedo = {
 		ui_type = "vector",

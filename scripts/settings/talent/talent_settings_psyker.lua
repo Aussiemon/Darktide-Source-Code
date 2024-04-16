@@ -64,7 +64,7 @@ local talent_settings = {
 		},
 		coherency = {
 			max_stacks = 1,
-			damage_vs_elites = 0.05
+			damage_vs_elites = 0.075
 		},
 		passive_1 = {
 			soul_duration = 25,
@@ -195,7 +195,7 @@ local talent_settings = {
 		passive_1 = {
 			max_stacks = 1,
 			empowered_chain_lightning_chance = 0.075,
-			chain_lightning_damage = 1.25,
+			chain_lightning_damage = 2,
 			psyker_smite_cost_multiplier = 0
 		},
 		passive_2 = {},

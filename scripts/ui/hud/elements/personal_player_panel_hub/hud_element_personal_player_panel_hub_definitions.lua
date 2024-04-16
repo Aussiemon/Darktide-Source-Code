@@ -79,12 +79,41 @@ local widget_definitions = {
 				drop_shadow = true,
 				offset = {
 					icon_size[1] + 40,
-					-38,
+					-45,
 					3
 				},
 				font_type = hud_body_font_settings.font_type,
 				text_color = UIHudSettings.color_tint_main_1,
 				default_text_color = UIHudSettings.color_tint_main_1,
+				dead_text_color = {
+					200,
+					80,
+					80,
+					80
+				}
+			}
+		}
+	}, "panel_background"),
+	character_title = UIWidget.create_definition({
+		{
+			value_id = "text",
+			style_id = "text",
+			pass_type = "text",
+			value = "",
+			style = {
+				font_size = 18,
+				default_font_size = 24,
+				text_vertical_alignment = "bottom",
+				text_horizontal_alignment = "left",
+				drop_shadow = true,
+				offset = {
+					icon_size[1] + 40,
+					-25,
+					3
+				},
+				font_type = hud_body_font_settings.font_type,
+				text_color = Color.terminal_text_body(255, true),
+				default_text_color = Color.terminal_text_body(255, true),
 				dead_text_color = {
 					200,
 					80,
@@ -106,13 +135,13 @@ local widget_definitions = {
 				text_horizontal_alignment = "left",
 				offset = {
 					icon_size[1] + 40,
-					14,
+					25,
 					3
 				},
 				font_type = hud_body_font_settings.font_type,
 				font_size = hud_body_font_settings.font_size,
 				default_font_size = hud_body_font_settings.font_size,
-				text_color = UIHudSettings.color_tint_main_2
+				text_color = Color.terminal_text_body_sub_header(255, true)
 			}
 		}
 	}, "panel_background"),

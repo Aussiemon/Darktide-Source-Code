@@ -33,8 +33,24 @@ action_sweep_settings.hit_zone_priority_functions = {
 	[hit_zone_names.shield] = function (unit, attacking_unit_position, current_hit_zone_priority)
 		local shield_extension = ScriptUnit.has_extension(unit, "shield_system")
 
-		if shield_extension and shield_extension:can_block_from_position(attacking_unit_position) then
-			return current_hit_zone_priority
+		if shield_extension then
+			if not shield_extension:is_blocking() then
+				return WORST_HIT_ZONE_PRIORITY
+			end
+
+			local blocking_angle = math.degrees_to_radians(70)
+			local unit_rotation = Unit.local_rotation(unit, 1)
+			local unit_forward = Quaternion.forward(unit_rotation)
+			local unit_position = POSITION_LOOKUP[unit]
+			local to_attacking_unit = Vector3.normalize(attacking_unit_position - unit_position)
+			local angle = Vector3.angle(unit_forward, to_attacking_unit)
+			local is_within_blocking_angle = angle < blocking_angle
+
+			if is_within_blocking_angle then
+				return current_hit_zone_priority
+			else
+				return WORST_HIT_ZONE_PRIORITY
+			end
 		else
 			return WORST_HIT_ZONE_PRIORITY
 		end

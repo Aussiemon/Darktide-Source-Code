@@ -48,6 +48,8 @@ SmokeFogExtension.init = function (self, extension_init_context, unit, extension
 	self._leaving_fog_buff_template_name = extension_init_data.leaving_fog_buff_template_name
 	self.has_buffs = self._in_fog_buff_template_name ~= nil or self._leaving_fog_buff_template_name ~= nil
 	self.buff_affected_units = {}
+	self._line_of_sight_affected_minions = {}
+	self._number_of_line_of_sight_affected_minions = 0
 
 	if owner_unit then
 		local side_system = Managers.state.extension:system("side_system")
@@ -68,6 +70,13 @@ SmokeFogExtension.destroy = function (self)
 
 	for inside_unit, _ in pairs(self.units_inside) do
 		self:on_unit_exit(inside_unit, t)
+	end
+
+	local player_unit_spawn_manager = Managers.state.player_unit_spawn
+	local player = player_unit_spawn_manager:owner(self.owner_unit)
+
+	if player then
+		Managers.stats:record_private("hook_veteran_units_engulfed_smoke", player, self._number_of_line_of_sight_affected_minions)
 	end
 end
 
@@ -131,6 +140,8 @@ SmokeFogExtension.on_unit_enter = function (self, unit, t)
 			component_index = component_index
 		}
 	end
+
+	self:on_unit_engulfed_by_fog(unit)
 end
 
 SmokeFogExtension.on_unit_exit = function (self, unit, t)
@@ -157,6 +168,16 @@ SmokeFogExtension.on_unit_exit = function (self, unit, t)
 	if leaving_fog_buff_template_name then
 		unit_buff_extension:add_internally_controlled_buff(leaving_fog_buff_template_name, t, "owner_unit", unit)
 	end
+end
+
+SmokeFogExtension.on_unit_engulfed_by_fog = function (self, unit)
+	local line_of_sight_affected_minions = self._line_of_sight_affected_minions
+
+	if not line_of_sight_affected_minions[unit] then
+		self._number_of_line_of_sight_affected_minions = self._number_of_line_of_sight_affected_minions + 1
+	end
+
+	line_of_sight_affected_minions[unit] = true
 end
 
 return SmokeFogExtension

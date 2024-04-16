@@ -595,7 +595,7 @@ HudElementSmartTagging._find_world_marker_target = function (self, ui_renderer, 
 	Managers.event:trigger("request_world_markers_list", callback(self, "_cb_world_markers_list_request"))
 
 	local world_markers_list = self._world_markers_list
-	local ui_scale = render_settings.scale
+	local hud_scale = Hud.hud_scale()
 	local selected_marker_distance = math.huge
 	local selected_marker = nil
 	local parent = self._parent
@@ -614,10 +614,10 @@ HudElementSmartTagging._find_world_marker_target = function (self, ui_renderer, 
 				local size = template.size
 				local offset = widget.offset
 				local marker_scale = marker.scale or 1
-				local x = offset[1] * ui_scale
-				local y = offset[2] * ui_scale
-				local width = size[1] * marker_scale
-				local height = size[2] * marker_scale
+				local x = offset[1] * hud_scale
+				local y = offset[2] * hud_scale
+				local width = size[1] * marker_scale * hud_scale
+				local height = size[2] * marker_scale * hud_scale
 				local x1 = x - width * 0.5
 				local x2 = x + width * 0.5
 				local y1 = y - height * 0.5

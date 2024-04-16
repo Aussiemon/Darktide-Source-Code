@@ -202,7 +202,11 @@ MechanismAdventure._on_vote_finished = function (self, result)
 
 		self._profiles_allowed_changes_end_time = Managers.time:time("main") + ALLOWED_PROFILE_CHANGES_EXTRA_TIME
 	elseif result == "empty" then
-		-- Nothing
+		Log.warning("MechanismAdventure", "_on_vote_finished: Empty lobby")
+
+		if Managers.mission_server then
+			Managers.mission_server:on_failed_to_init()
+		end
 	end
 
 	self._mission_ready_voting_id = nil

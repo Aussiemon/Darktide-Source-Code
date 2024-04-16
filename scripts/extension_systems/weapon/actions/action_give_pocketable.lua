@@ -52,6 +52,12 @@ ActionGivePocketable.fixed_update = function (self, dt, t, time_in_action)
 				PlayerUnitVisualLoadout.unequip_item_from_slot(player_unit, wielded_slot, t)
 
 				if self._is_server then
+					local assist_notification_type = action_settings.assist_notification_type
+
+					if assist_notification_type and ALIVE[target_unit] then
+						PlayerAssistNotifications.show_notification(target_unit, self._player_unit, assist_notification_type)
+					end
+
 					PlayerUnitVisualLoadout.equip_item_to_slot(target_unit, inventory_item, inventory_slot_name, nil, t)
 					table.clear(external_properties)
 

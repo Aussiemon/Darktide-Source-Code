@@ -1,9 +1,8 @@
-require("scripts/foundation/utilities/color")
-
 local ui_settings = {
 	insignia_default_texture = "content/ui/textures/nameplates/insignias/default",
-	double_click_threshold = 0.2,
 	portrait_frame_default_texture = "content/ui/textures/nameplates/portrait_frames/default",
+	double_click_threshold = 0.2,
+	max_favorite_achievements = 5,
 	item_icon_size = {
 		128,
 		128
@@ -27,6 +26,14 @@ local ui_settings = {
 	weapon_icon_size = {
 		256,
 		128
+	},
+	character_title_item_size = {
+		404,
+		64
+	},
+	character_title_button_size = {
+		340,
+		48
 	},
 	gadget_item_size = {
 		193,
@@ -70,24 +77,25 @@ local ui_settings = {
 		1000,
 		2000
 	},
-	ITEM_TYPES = table.enum("BODY_TATTOO", "BOON", "CHARACTER_INSIGNIA", "DEVICE", "EMOTE", "END_OF_ROUND", "EYE_COLOR", "FACE", "FACE_HAIR", "FACE_SCAR", "FACE_TATTOO", "GADGET", "GEAR_EXTRA_COSMETIC", "GEAR_HEAD", "GEAR_LOWERBODY", "GEAR_UPPERBODY", "HAIR", "HAIR_COLOR", "LUGGABLE", "PERK", "POCKETABLE", "PORTRAIT_FRAME", "SET", "SKIN_COLOR", "TRAIT", "WEAPON_MELEE", "WEAPON_RANGED", "WEAPON_SKIN", "WEAPON_TRINKET"),
+	ITEM_TYPES = table.enum("BODY_TATTOO", "BOON", "CHARACTER_INSIGNIA", "CHARACTER_TITLE", "DEVICE", "EMOTE", "END_OF_ROUND", "EYE_COLOR", "FACE", "FACE_HAIR", "FACE_SCAR", "FACE_TATTOO", "GADGET", "GEAR_EXTRA_COSMETIC", "GEAR_HEAD", "GEAR_LOWERBODY", "GEAR_UPPERBODY", "HAIR", "HAIR_COLOR", "LUGGABLE", "PERK", "POCKETABLE", "PORTRAIT_FRAME", "SET", "SKIN_COLOR", "TRAIT", "WEAPON_MELEE", "WEAPON_RANGED", "WEAPON_SKIN", "WEAPON_TRINKET"),
 	item_type_group_lookup = {
-		GEAR_LOWERBODY = "outfits",
+		END_OF_ROUND = "engrams",
 		BOON = "boons",
 		EMOTE = "emotes",
 		GEAR_EXTRA_COSMETIC = "outfits",
-		SET = "outfits",
-		WEAPON_RANGED = "weapons",
-		END_OF_ROUND = "engrams",
-		WEAPON_MELEE = "weapons",
-		GEAR_HEAD = "outfits",
 		GADGET = "devices",
-		PORTRAIT_FRAME = "nameplates",
-		WEAPON_SKIN = "weapon_skin",
+		WEAPON_RANGED = "weapons",
+		GEAR_LOWERBODY = "outfits",
+		CHARACTER_TITLE = "titles",
+		WEAPON_MELEE = "weapons",
 		DEVICE = "devices",
-		CHARACTER_INSIGNIA = "nameplates",
+		GEAR_UPPERBODY = "outfits",
+		SET = "outfits",
+		GEAR_HEAD = "outfits",
 		WEAPON_TRINKET = "weapon_trinket",
-		GEAR_UPPERBODY = "outfits"
+		WEAPON_SKIN = "weapon_skin",
+		PORTRAIT_FRAME = "nameplates",
+		CHARACTER_INSIGNIA = "nameplates"
 	},
 	item_variant_localization_lookup = {
 		bfg = "loc_item_weapon_variant_bfg",
@@ -163,7 +171,8 @@ local ui_settings = {
 		WEAPON_SKIN = "loc_item_type_weapon_skin",
 		FACE_TATTOO = "loc_item_type_face_tattoo",
 		CHARACTER_INSIGNIA = "loc_item_type_character_insignia",
-		LUGGABLE = "loc_item_type_luggable"
+		LUGGABLE = "loc_item_type_luggable",
+		CHARACTER_TITLE = "loc_item_type_title"
 	},
 	item_type_texture_lookup = {
 		GEAR_LOWERBODY = "content/ui/textures/icons/item_types/lower_bodies",
@@ -287,6 +296,12 @@ local ui_settings = {
 		"special",
 		"extra"
 	},
+	weapon_action_extended_display_order_array = {
+		"special",
+		"primary",
+		"secondary",
+		"extra"
+	},
 	weapon_stats_armor_types = {
 		disgustingly_resilient = "loc_weapon_stats_display_disgustingly_resilient",
 		super_armor = "loc_weapon_stats_display_super_armor",
@@ -294,12 +309,6 @@ local ui_settings = {
 		resistant = "loc_glossary_armour_type_resistant",
 		berserker = "loc_weapon_stats_display_berzerker",
 		unarmored = "loc_weapon_stats_display_unarmored"
-	},
-	weapon_action_extended_display_order_array = {
-		"special",
-		"primary",
-		"secondary",
-		"extra"
 	},
 	attack_type_lookup = {
 		ninja_fencer = "loc_gestalt_ninja_fencer",
@@ -1031,6 +1040,24 @@ local ui_settings = {
 			display_name_pattern = "loc_weapon_pattern_name_stubrevolver_p1",
 			display_name = "loc_stubrevolver_p1_m2"
 		}
+	},
+	assist_type_localization_lookup = {
+		saved = "loc_notification_desc_saved_by",
+		cleansed = "loc_notification_desc_cleanced_by",
+		revived = "loc_notification_desc_revived_by",
+		rescued = "loc_notification_desc_rescued_by",
+		stimmed = "loc_notification_desc_stimmed_by",
+		assisted = "loc_notification_desc_assisted_by",
+		gifted = "loc_notification_desc_gifted_by"
+	},
+	assist_type_enter_sound_lookup = {
+		saved = "notification_assist_saved",
+		cleansed = "notification_assist_cleansed",
+		revived = "notification_assist_revived",
+		rescued = "notification_assist_rescued",
+		stimmed = "notification_assist_stimmed",
+		assisted = "notification_assist_assisted",
+		gifted = "notification_assist_gifted"
 	}
 }
 

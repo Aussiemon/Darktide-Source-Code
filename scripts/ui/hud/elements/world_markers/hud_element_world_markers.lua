@@ -52,6 +52,14 @@ HudElementWorldMarkers.init = function (self, parent, draw_layer, start_scale)
 end
 
 HudElementWorldMarkers.destroy = function (self, ui_renderer)
+	local markers = self._markers
+
+	for i = #markers, 1, -1 do
+		local marker = markers[i]
+
+		self:_unregister_marker(marker)
+	end
+
 	HudElementWorldMarkers.super.destroy(self, ui_renderer)
 
 	local event_manager = Managers.event
@@ -92,15 +100,19 @@ HudElementWorldMarkers.event_remove_world_marker = function (self, id)
 end
 
 HudElementWorldMarkers.event_add_world_marker_unit = function (self, marker_type, unit, callback, data)
+	local parent = self._parent
+	local my_player = parent:player()
 	local marker = {
 		scale = 1,
 		type = marker_type,
 		unit = unit,
-		position = Vector3Box()
+		position = Vector3Box(),
+		my_player = my_player
 	}
 	local id = self:_register_marker(marker)
 	local widget_name = "marker_widget_id_" .. id
-	local template = self:_template_by_type(marker_type)
+	local clone_template = true
+	local template = self:_template_by_type(marker_type, clone_template)
 	local widget = self:_create_widget_by_type(widget_name, template)
 	marker.widget = widget
 	marker.data = data
@@ -117,15 +129,19 @@ HudElementWorldMarkers.event_add_world_marker_unit = function (self, marker_type
 end
 
 HudElementWorldMarkers.event_add_world_marker_position = function (self, marker_type, world_position, callback, data)
+	local parent = self._parent
+	local my_player = parent:player()
 	local marker = {
 		scale = 1,
 		type = marker_type,
 		world_position = Vector3Box(world_position),
-		position = Vector3Box()
+		position = Vector3Box(),
+		my_player = my_player
 	}
 	local id = self:_register_marker(marker)
 	local widget_name = "marker_widget_id_" .. id
-	local template = self:_template_by_type(marker_type)
+	local clone_template = true
+	local template = self:_template_by_type(marker_type, clone_template)
 	local widget = self:_create_widget_by_type(widget_name, template)
 	marker.widget = widget
 	marker.data = data or {}
@@ -162,6 +178,15 @@ HudElementWorldMarkers._unregister_marker = function (self, marker)
 	local markers = self._markers
 	local markers_by_id = self._markers_by_id
 	local markers_by_type = self._markers_by_type
+	local template = marker.template
+	local on_exit = template.on_exit
+
+	if on_exit then
+		local widget = marker.widget
+
+		on_exit(widget, marker, template)
+	end
+
 	local id = marker.id
 	markers_by_id[id] = nil
 
@@ -572,6 +597,8 @@ end
 HudElementWorldMarkers._clamp_to_screen = function (self, x, y, screen_margins, is_behind, is_under, world_position, camera_position_center, camera_position_left, camera_position_right, camera_position_up, camera_position_down)
 	local root_size = UIScenegraph.size_scaled(self._ui_scenegraph, "screen")
 	local default_scale = RESOLUTION_LOOKUP.scale
+	local width = RESOLUTION_LOOKUP.width
+	local height = RESOLUTION_LOOKUP.height
 	local is_clamped_left = false
 	local is_clamped_right = false
 	local is_clamped_up = false
@@ -582,6 +609,10 @@ HudElementWorldMarkers._clamp_to_screen = function (self, x, y, screen_margins, 
 	local margin_down = screen_margins and screen_margins.down or 0
 	local margin_left = screen_margins and screen_margins.left or 0
 	local margin_right = screen_margins and screen_margins.right or 0
+	margin_up = margin_up * height
+	margin_down = margin_down * height
+	margin_left = margin_left * width
+	margin_right = margin_right * width
 	local clamped_x = math.max(margin_left, math.min(x, root_width - margin_right))
 	local clamped_y = math.max(margin_down, math.min(y, root_height - margin_up))
 	local is_clamped = clamped_x ~= x or clamped_y ~= y or is_behind

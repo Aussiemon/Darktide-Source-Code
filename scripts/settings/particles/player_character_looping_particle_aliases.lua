@@ -78,10 +78,6 @@ local PlayerCharacterLoopingParticleAliases = {
 			}
 		}
 	},
-	preacher_shield = {
-		particle_alias = "preacher_shield",
-		external_properties = {}
-	},
 	weapon_special_loop = {
 		exclude_from_unit_data_components = true,
 		particle_alias = "weapon_special_loop",

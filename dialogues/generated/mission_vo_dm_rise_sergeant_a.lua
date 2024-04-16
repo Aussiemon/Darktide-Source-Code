@@ -16,7 +16,7 @@ local mission_vo_dm_rise_sergeant_a = {
 		},
 		randomize_indexes = {}
 	},
-	mission_rise_banter_one_a_sergeant_branch = {
+	mission_rise_banter_one_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 4,
 		sound_events = {
@@ -31,15 +31,9 @@ local mission_vo_dm_rise_sergeant_a = {
 			7.739083,
 			8.643832
 		},
-		sound_event_weights = {
-			0.25,
-			0.25,
-			0.25,
-			0.25
-		},
 		randomize_indexes = {}
 	},
-	mission_rise_banter_three_a_sergeant_branch = {
+	mission_rise_banter_three_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 4,
 		sound_events = {
@@ -53,12 +47,6 @@ local mission_vo_dm_rise_sergeant_a = {
 			9.567624,
 			8.445167,
 			8.876728
-		},
-		sound_event_weights = {
-			0.25,
-			0.25,
-			0.25,
-			0.25
 		},
 		randomize_indexes = {}
 	},
@@ -142,11 +130,6 @@ local mission_vo_dm_rise_sergeant_a = {
 			4.152313,
 			5.155458,
 			6.192292
-		},
-		sound_event_weights = {
-			0.3333333,
-			0.3333333,
-			0.3333333
 		},
 		randomize_indexes = {}
 	},

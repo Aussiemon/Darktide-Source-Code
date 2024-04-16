@@ -271,28 +271,20 @@ NetworkedFlowStateManager.flow_cb_get_state = function (self, unit, state_name)
 end
 
 NetworkedFlowStateManager.flow_cb_change_state = function (self, unit, state_name, new_state)
-	if not self._is_server then
-		return
-	end
-
 	local level = Application.flow_callback_context_level()
 	local unit_states = self._object_states[unit]
 	local current_state = unit_states and unit_states.states[state_name]
 	current_state.value = new_state
+	local unit_spawner = Managers.state.unit_spawner
+	local is_game_object = current_state.is_game_object or false
+	local unit_id = is_game_object and unit_spawner:game_object_id(unit) or unit_spawner:level_index(unit)
+	local type_data = FLOW_STATE_TYPES[type(new_state)]
 	local state_network_id = current_state.state_network_id
-	local changed = current_state ~= new_state
+	new_state = self:_clamp_state(state_name, type_data, new_state)
 
-	if changed then
-		local unit_spawner = Managers.state.unit_spawner
-		local is_game_object = current_state.is_game_object or false
-		local unit_id = is_game_object and unit_spawner:game_object_id(unit) or unit_spawner:level_index(unit)
-		local type_data = FLOW_STATE_TYPES[type(new_state)]
-		new_state = self:_clamp_state(state_name, type_data, new_state)
+	Managers.state.game_session:send_rpc_clients(type_data.rpcs.change, unit_id, state_network_id, new_state, false, is_game_object)
 
-		Managers.state.game_session:send_rpc_clients(type_data.rpcs.change, unit_id, state_network_id, new_state, false, is_game_object)
-	end
-
-	return changed, new_state
+	return new_state
 end
 
 NetworkedFlowStateManager._clamp_state = function (self, state_name, type_data, new_state)

@@ -529,19 +529,23 @@ local constants = {
 		weapon = {
 			current_ammunition_clip = {
 				default_value = 0,
-				network_type = "ammunition"
+				network_type = "ammunition_small"
 			},
 			current_ammunition_reserve = {
 				default_value = 0,
-				network_type = "ammunition"
+				network_type = "ammunition_large"
 			},
 			max_ammunition_clip = {
 				default_value = 0,
-				network_type = "ammunition"
+				network_type = "ammunition_small"
 			},
 			max_ammunition_reserve = {
 				default_value = 0,
-				network_type = "ammunition"
+				network_type = "ammunition_large"
+			},
+			ammunition_at_reload_start = {
+				default_value = 0,
+				network_type = "ammunition_small"
 			},
 			last_ammunition_usage = {
 				default_value = 0,

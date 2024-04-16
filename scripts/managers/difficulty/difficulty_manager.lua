@@ -81,6 +81,12 @@ DifficultyManager.modify_resistance = function (self, modifier)
 	Log.info("DifficultyManager", "Resistance modified to %s", self._resistance)
 end
 
+DifficultyManager.modify_challenge = function (self, modifier)
+	self._challenge = math.max(1, self._challenge + modifier)
+
+	Log.info("DifficultyManager", "Challenge modified to %s", self._challenge)
+end
+
 DifficultyManager.friendly_fire_enabled = function (self, target_is_player, target_is_minion)
 	if target_is_player then
 		return false

@@ -55,6 +55,14 @@ local material_overrides = {
 			}
 		}
 	},
+	mask_half_upperarms_hands_keep_wrist = {
+		property_overrides = {
+			mask_top_bottom = {
+				0.15,
+				0.25
+			}
+		}
+	},
 	mask_arms_keep_forearms_and_hands = {
 		property_overrides = {
 			mask_top_bottom = {

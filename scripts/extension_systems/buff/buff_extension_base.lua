@@ -109,9 +109,10 @@ end
 
 BuffExtensionBase.destroy = function (self)
 	local buffs = self._buffs_by_index
+	local extension_destroyed = true
 
 	for index, _ in pairs(buffs) do
-		self:_remove_buff(index)
+		self:_remove_buff(index, extension_destroyed)
 	end
 
 	local is_server = self._is_server
@@ -517,7 +518,7 @@ BuffExtensionBase._remove_internally_controlled_buff = function (self, local_ind
 	ferror("Buff extension is using base implementation of _remove_internally_controlled_buff, it shouldn't")
 end
 
-BuffExtensionBase._remove_buff = function (self, index)
+BuffExtensionBase._remove_buff = function (self, index, extension_destroyed)
 	local buffs_by_index = self._buffs_by_index
 	local buff_instance = buffs_by_index[index]
 
@@ -574,7 +575,7 @@ BuffExtensionBase._remove_buff = function (self, index)
 
 		self:_on_remove_buff(buff_instance)
 		table.remove(buffs, instance_index)
-		buff_instance:delete()
+		buff_instance:delete(extension_destroyed)
 		self:_post_on_remove_buff(buff_instance)
 	end
 

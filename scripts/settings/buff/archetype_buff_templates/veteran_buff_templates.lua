@@ -68,6 +68,16 @@ local templates = {}
 
 table.make_unique(templates)
 
+local function _penance_start_func(buff_name)
+	return function (template_data, template_context)
+		local unit = template_context.unit
+		local t = FixedFrame.get_latest_fixed_time()
+		local buff_extension = ScriptUnit.extension(unit, "buff_system")
+
+		buff_extension:add_internally_controlled_buff(buff_name, t)
+	end
+end
+
 templates.veteran_combat_ability_stance_master = {
 	buff_id = "veteran_combat_ability_stance_master",
 	predicted = false,
@@ -734,24 +744,99 @@ templates.veteran_coherency_aura_size_increase = {
 	}
 }
 templates.veteran_damage_coherency = {
-	predicted = false,
-	coherency_priority = 2,
 	coherency_id = "veteran_damage_coherency",
+	predicted = false,
+	hud_priority = 5,
+	coherency_priority = 2,
+	hud_icon = "content/ui/textures/icons/buffs/hud/veteran/veteran_aura_commanding_presence",
+	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_aura",
 	max_stacks = 1,
 	class_name = "buff",
+	buff_category = buff_categories.aura,
 	stat_buffs = {
 		[stat_buffs.damage] = 0.05
-	}
+	},
+	start_func = _penance_start_func("veteran_damage_coherency_tracking_buff")
+}
+templates.veteran_damage_coherency_tracking_buff = {
+	class_name = "proc_buff",
+	predicted = false,
+	proc_events = {
+		[proc_events.on_minion_death] = 1
+	},
+	check_proc_func = CheckProcFunctions.on_elite_or_special_minion_death,
+	start_func = function (template_data, template_context)
+		local unit = template_context.unit
+		template_data.coherency_extension = ScriptUnit.extension(unit, "coherency_system")
+		template_data.last_num_in_coherency = 0
+		template_data.valid_buff_owners = {}
+	end,
+	proc_func = function (params, template_data, template_context)
+		if not template_context.is_server then
+			return
+		end
+
+		local unit = template_context.unit
+
+		if unit ~= params.attacking_unit then
+			return
+		end
+
+		local hook_name = "hook_veteran_damage_aura"
+		local parent_buff_name = "veteran_increased_damage_coherency"
+		template_data.last_num_in_coherency, template_data.valid_buff_owners = template_data.coherency_extension:evaluate_and_send_achievement_data(template_data.last_num_in_coherency, template_data.valid_buff_owners, parent_buff_name, hook_name)
+	end
 }
 templates.veteran_movement_speed_coherency = {
-	predicted = false,
-	coherency_priority = 2,
 	coherency_id = "veteran_movement_speed_coherency",
+	predicted = false,
+	hud_priority = 5,
+	coherency_priority = 2,
+	hud_icon = "content/ui/textures/icons/buffs/hud/veteran/veteran_aura_assault_unit",
+	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_aura",
 	max_stacks = 1,
 	class_name = "buff",
+	buff_category = buff_categories.aura,
 	stat_buffs = {
 		[stat_buffs.movement_speed] = 0.05
-	}
+	},
+	start_func = _penance_start_func("veteran_movement_speed_coherency_tracking_buff")
+}
+templates.veteran_movement_speed_coherency_tracking_buff = {
+	predicted = false,
+	class_name = "buff",
+	start_func = function (template_data, template_context)
+		local unit = template_context.unit
+		template_data.coherency_extension = ScriptUnit.extension(unit, "coherency_system")
+		local unit_data_extension = ScriptUnit.extension(template_context.unit, "unit_data_system")
+		template_data.locomotion_component = unit_data_extension:read_component("locomotion")
+		template_data.inair_component = unit_data_extension:read_component("inair_state")
+		template_data.distance = 0
+		template_data.last_num_in_coherency = 0
+		template_data.valid_buff_owners = {}
+	end,
+	update_func = function (template_data, template_context, dt, t)
+		if not template_context.is_server then
+			return
+		end
+
+		local player_velocity = template_data.locomotion_component.velocity_current
+		local on_ground = template_data.inair_component.on_ground
+		local flat_move_speed = Vector3.length(Vector3.flat(player_velocity))
+		local is_moving = Vector3.length(player_velocity) > 0
+		local time_step = Managers.state.game_session.fixed_time_step
+
+		if on_ground then
+			if is_moving then
+				template_data.distance = template_data.distance + flat_move_speed * time_step
+			elseif template_data.distance and template_data.distance > 1 then
+				local hook_name = "hook_veteran_movement_aura"
+				local parent_buff_name = "veteran_movement_speed_coherency"
+				template_data.last_num_in_coherency, template_data.valid_buff_owners = template_data.coherency_extension:evaluate_and_send_achievement_data(template_data.last_num_in_coherency, template_data.valid_buff_owners, parent_buff_name, hook_name, template_data.distance)
+				template_data.distance = 0
+			end
+		end
+	end
 }
 templates.veteran_extra_grenade_throw_chance = {
 	predicted = false,
@@ -1014,12 +1099,12 @@ templates.veteran_invisibility = {
 			buff_extension:add_internally_controlled_buff("veteran_increased_weakspot_power_after_combat_ability", t)
 		end
 	end,
-	stop_func = function (template_data, template_context, destroy)
+	stop_func = function (template_data, template_context, extension_destroyed)
 		if not template_context.is_server then
 			return
 		end
 
-		if destroy then
+		if extension_destroyed then
 			return
 		end
 
@@ -1031,6 +1116,7 @@ templates.veteran_invisibility = {
 		local range = template_context.template.stagger_range
 		local num_hits = broadphase:query(player_position, range, broadphase_results, enemy_side_names)
 		local damage_profile = DamageProfileTemplates.veteran_invisibility_suppression
+		local number_of_enemies_staggered = 0
 
 		for i = 1, num_hits do
 			local unit = broadphase_results[i]
@@ -1039,7 +1125,15 @@ templates.veteran_invisibility = {
 			local attack_direction = Vector3.normalize(Vector3.flat(position - player_position))
 			local _, attack_result, _, stagger_result = Attack.execute(unit, damage_profile, "attack_direction", attack_direction, "power_level", PowerLevelSettings.default_power_level, "hit_zone_name", hit_zone_name, "attacking_unit", player_unit)
 
+			if stagger_result == "stagger" then
+				number_of_enemies_staggered = number_of_enemies_staggered + 1
+			end
+
 			Suppression.apply_suppression(unit, player_unit, damage_profile, player_position)
+		end
+
+		if number_of_enemies_staggered > 0 then
+			Managers.stats:record_private("hook_veteran_infiltrate_stagger", template_context.player, number_of_enemies_staggered)
 		end
 	end
 }
@@ -1253,9 +1347,15 @@ templates.veteran_ads_stamina_boost = {
 	end
 }
 templates.veteran_aura_gain_ammo_on_elite_kill = {
-	max_stacks = 1,
 	predicted = false,
+	hud_priority = 5,
+	hud_icon = "content/ui/textures/icons/buffs/hud/veteran/veteran_aura_scavengers_base",
+	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_ability",
+	max_stacks = 1,
 	class_name = "proc_buff",
+	always_show_in_hud = true,
+	buff_category = buff_categories.aura,
+	cooldown_duration = talent_settings_2.coherency.cooldown,
 	proc_events = {
 		[proc_events.on_minion_death] = 1
 	},
@@ -1293,9 +1393,15 @@ templates.veteran_aura_gain_ammo_on_elite_kill = {
 	end
 }
 templates.veteran_aura_gain_ammo_on_elite_kill_improved = {
-	max_stacks = 1,
 	predicted = false,
+	hud_priority = 5,
+	hud_icon = "content/ui/textures/icons/buffs/hud/veteran/veteran_aura_scavengers",
+	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_ability",
+	max_stacks = 1,
 	class_name = "proc_buff",
+	always_show_in_hud = true,
+	buff_category = buff_categories.aura,
+	cooldown_duration = talent_settings_2.coherency.cooldown,
 	proc_events = {
 		[proc_events.on_minion_death] = 1
 	},
@@ -2348,6 +2454,7 @@ templates.veteran_snipers_focus = {
 		template_data.movement_state_component = unit_data_extension:read_component("movement_state")
 		template_data.talent_resource_component = unit_data_extension:write_component("talent_resource")
 		template_data.talent_resource_component.current_resource = 0
+		template_data.evaluate_max_stacks_stat = false
 		template_data.stacks = 0
 		template_data.next_t = 0
 		template_data.safe_t = 0
@@ -2390,7 +2497,7 @@ templates.veteran_snipers_focus = {
 
 			_snipers_focus_handle_stacks(template_data, template_context, previous_stacks, t)
 
-			local safe_time = kill and 3 or 1
+			local safe_time = kill and 6 or 3
 			template_data.safe_t = math.max(t + safe_time, template_data.safe_t)
 		end,
 		on_slide_start = function (params, template_data, template_context, t)
@@ -2430,6 +2537,16 @@ templates.veteran_snipers_focus = {
 		local max_stacks = template_data.max_stacks
 		local sliding = template_data.sliding
 		local stacks_on_still = template_data.talent_extension:has_special_rule("veteran_snipers_focus_stacks_on_still")
+
+		if snipers_focus_max_stacks <= template_data.stacks and not template_data.evaluate_max_stacks_stat then
+			Managers.stats:record_private("hook_focus_fire_max_stacks", template_context.player)
+
+			template_data.evaluate_max_stacks_stat = true
+		elseif template_data.stacks ~= 0 and template_data.stacks < snipers_focus_max_stacks and template_data.evaluate_max_stacks_stat then
+			Managers.stats:record_private("hook_focus_fire_max_reset", template_context.player)
+
+			template_data.evaluate_max_stacks_stat = false
+		end
 
 		if not is_crouching and is_moving and template_data.stacks > 0 then
 			if template_data.safe_t < t then
@@ -2522,7 +2639,7 @@ templates.veteran_snipers_focus_toughness_buff = {
 	lerped_stat_buffs = {
 		[stat_buffs.toughness_replenish_multiplier] = {
 			min = 0,
-			max = 0.025 * snipers_focus_max_stacks
+			max = 0.05 * snipers_focus_max_stacks
 		}
 	},
 	start_func = function (template_data, template_context)
@@ -2694,7 +2811,8 @@ templates.veteran_weapon_switch_ranged_buff = {
 	max_stacks = max_ranged_stacks,
 	duration = veteran_weapon_switch_ranged_duration,
 	proc_events = {
-		[proc_events.on_shoot] = 1
+		[proc_events.on_shoot] = 1,
+		[proc_events.on_kill] = 1
 	},
 	stat_buffs = {
 		[stat_buffs.ranged_attack_speed] = 0.02
@@ -2702,9 +2820,14 @@ templates.veteran_weapon_switch_ranged_buff = {
 	conditional_stat_buffs = {
 		[stat_buffs.ranged_critical_strike_chance] = 0.33
 	},
-	proc_func = function (params, template_data, template_context)
-		template_data.shot = true
-	end,
+	specific_proc_func = {
+		on_shoot = function (params, template_data, template_context)
+			template_data.shot = true
+		end,
+		on_kill = function (params, template_data, template_context, t)
+			Managers.stats:record_private("hook_veteran_weapon_switch_keystone", template_context.player, params)
+		end
+	},
 	conditional_stat_buffs_func = function (template_data, template_context)
 		return not template_data.shot
 	end,
@@ -2770,17 +2893,23 @@ templates.veteran_weapon_switch_reload_speed = {
 	}
 }
 templates.veteran_weapon_switch_melee_buff = {
+	class_name = "proc_buff",
 	predicted = false,
 	hud_icon = "content/ui/textures/icons/buffs/hud/veteran/veteran_weapon_switch_cleave_bonus",
 	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_keystone",
 	duration = 10,
-	class_name = "buff",
 	max_stacks = max_melee_stacks,
+	proc_events = {
+		[proc_events.on_kill] = 1
+	},
 	stat_buffs = {
 		[stat_buffs.melee_attack_speed] = 0.15,
 		[stat_buffs.dodge_speed_multiplier] = 1.1,
 		[stat_buffs.dodge_distance_modifier] = 0.1
 	},
+	proc_func = function (params, template_data, template_context, t)
+		Managers.stats:record_private("hook_veteran_weapon_switch_keystone", template_context.player, params)
+	end,
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
 		local talent_extension = ScriptUnit.extension(unit, "talent_system")
@@ -2927,6 +3056,8 @@ templates.veteran_improved_tag = {
 					end
 				end
 			end
+
+			Managers.stats:record_private("hook_veteran_improved_tag", template_context.player)
 
 			template_data.stacks_applied = 0
 			local new_stacks = math.max(template_data.stacks, 2)

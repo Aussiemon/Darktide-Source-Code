@@ -43,30 +43,6 @@ explosion_templates.bolt_shell_stop = {
 		"wwise/events/weapon/play_bullet_hits_explosive_gen_husk"
 	}
 }
-explosion_templates.bolt_close_explosion = {
-	damage_falloff = true,
-	radius = 3,
-	min_radius = 0.5,
-	scalable_radius = false,
-	close_radius = 0.75,
-	collision_filter = "filter_player_character_explosion",
-	static_power_level = 500,
-	min_close_radius = 0.5,
-	close_damage_profile = DamageProfileTemplates.bolter_stop_explosion,
-	close_damage_type = damage_types.boltshell,
-	damage_profile = DamageProfileTemplates.bolter_stop_explosion,
-	damage_type = damage_types.boltshell,
-	explosion_area_suppression = {
-		distance = 4,
-		suppression_value = 4
-	},
-	vfx = {
-		"content/fx/particles/weapons/rifles/bolter/bolter_bullet_surface_explode"
-	},
-	sfx = {
-		"wwise/events/weapon/play_bullet_hits_explosive_gen_husk"
-	}
-}
 
 return {
 	base_templates = explosion_templates,

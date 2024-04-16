@@ -87,6 +87,8 @@ ChestExtension.open = function (self, opening_unit)
 	local containing_pickups = self._containing_pickups
 	local chest_size = pickup_spawner_extension:spawner_count()
 
+	Managers.stats:record_team("hook_team_chest_opened")
+
 	for i = 1, chest_size do
 		if containing_pickups[i] or pickup_spawner_extension:request_rubberband_pickup(i) then
 			local check_reserve = false

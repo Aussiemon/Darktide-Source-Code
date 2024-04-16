@@ -507,7 +507,8 @@ ConstantElementSubtitles._display_text_line = function (self, text, duration, se
 	end
 
 	if secondary_subtitle and not self._secondary_letterbox_added then
-		local subtitle_total_height = self._subtitle_text_max_height * #self._letterbox_lines_width
+		local subtitle_text_max_height = self._subtitle_text_max_height or 0
+		local subtitle_total_height = subtitle_text_max_height * #self._letterbox_lines_width
 		local secondary_subtitle_total_height = text_max_height * #self._secondary_letterbox_lines_width
 		text_style.offset[2] = subtitle_total_height / 2 + secondary_subtitle_total_height / 2
 

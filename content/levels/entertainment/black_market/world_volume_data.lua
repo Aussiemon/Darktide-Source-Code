@@ -257,6 +257,54 @@ local volume_data = {
 		}
 	},
 	{
+		height = 4,
+		type = "core/gwnav/volumes/gwnavexclusivetagvolume",
+		name = "volume_004",
+		alt_max_vector = {
+			98.5,
+			-242.375,
+			-31.25
+		},
+		alt_min_vector = {
+			98.5,
+			-242.375,
+			-35.25
+		},
+		bottom_points = {
+			{
+				104,
+				-241.875,
+				-35.25
+			},
+			{
+				89.375,
+				-241.875,
+				-35.25
+			},
+			{
+				89.375,
+				-242.875,
+				-35.25
+			},
+			{
+				104,
+				-242.875,
+				-35.25
+			}
+		},
+		color = {
+			255,
+			255,
+			0,
+			0
+		},
+		up_vector = {
+			0,
+			0,
+			1
+		}
+	},
+	{
 		height = 20,
 		type = "content/volume_types/player_instakill",
 		name = "volume_dz_black_market",

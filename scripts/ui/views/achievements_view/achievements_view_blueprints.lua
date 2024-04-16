@@ -127,6 +127,11 @@ local _in_progress_overlay_pass_template = {
 		style_id = "in_progress_overlay",
 		value_id = "in_progress_overlay",
 		pass_type = "rect"
+	},
+	{
+		value = "content/ui/materials/icons/generic/bookmark",
+		style_id = "bookmark",
+		pass_type = "texture"
 	}
 }
 
@@ -211,6 +216,29 @@ local function _get_achievement_common_pass_templates(is_complete)
 	return pass_template
 end
 
+local function _achievement_set_favorite(is_favorite, widget_content, widget_style, config, ui_renderer)
+	widget_style.bookmark.visible = is_favorite
+	widget_content.is_favorite = is_favorite
+end
+
+local function _achievement_change_favorite(widget_content, widget_style, config, ui_renderer)
+	local achievement_definition = config.achievement_definition
+	local achievement_id = achievement_definition.id
+	local is_favorite = AchievementUIHelper.is_favorite_achievement(achievement_id)
+	local is_complete = config.is_complete
+	local did_change = false
+
+	if is_favorite then
+		did_change = AchievementUIHelper.remove_favorite_achievement(achievement_id)
+	elseif not is_complete then
+		did_change = AchievementUIHelper.add_favorite_achievement(achievement_id)
+	end
+
+	if did_change then
+		_achievement_set_favorite(not is_favorite, widget_content, widget_style, config, ui_renderer)
+	end
+end
+
 local _score_params = {}
 
 local function _achievement_common_pass_template_init(widget_content, widget_style, config, ui_renderer)
@@ -218,6 +246,17 @@ local function _achievement_common_pass_template_init(widget_content, widget_sty
 	local hotspot = widget_content.hotspot
 	hotspot.on_hover_sound = UISoundEvents.default_mouse_hover
 	hotspot.on_select_sound = nil
+	local is_complete = config.is_complete
+	local is_favorite = AchievementUIHelper.is_favorite_achievement(achievement_definition.id)
+
+	if not is_complete or is_favorite then
+		_achievement_set_favorite(is_favorite, widget_content, widget_style, config, ui_renderer)
+
+		local change_favorite_callback = callback(_achievement_change_favorite, widget_content, widget_style, config, ui_renderer)
+		widget_content.change_favorite_callback = change_favorite_callback
+		hotspot.right_pressed_callback = _block_on_gamepad(widget_content, change_favorite_callback)
+	end
+
 	local label = AchievementUIHelper.localized_title(achievement_definition)
 	local description = AchievementUIHelper.localized_description(achievement_definition)
 	local label_style = widget_style.label
@@ -226,6 +265,13 @@ local function _achievement_common_pass_template_init(widget_content, widget_sty
 	widget_content.description = description
 	local score_params = _score_params
 	score_params.score = achievement_definition.score
+
+	if not score_params.score then
+		Log.error("_achievement_common_pass_template_init", "Achievement %s does not have a defined score", achievement_definition.id)
+
+		score_params.score = 0
+	end
+
 	widget_content.score = Localize("loc_achievements_view_score", true, score_params)
 	local icon_style = widget_style.icon
 	local icon_material_values = icon_style.material_values
@@ -367,6 +413,11 @@ local _small_reward_icon_template = {
 local function _small_reward_icon_template_init(widget_content, widget_style, config)
 	local achievement_definition = config.achievement_definition
 	local reward_item = AchievementUIHelper.get_reward_item(achievement_definition)
+
+	if not reward_item then
+		return
+	end
+
 	widget_content.item = reward_item
 	local reward_type_icon = ItemUtils.type_texture(reward_item)
 	local small_reward_icon_style = widget_style.reward_icon_small
@@ -491,7 +542,7 @@ local function _reward_load_icon_func(parent, widget, config, ui_renderer)
 			}
 			local cb, unload_cb = nil
 
-			if item_group == "nameplates" then
+			if item_group == "nameplates" or item_group == "titles" then
 				cb = callback(_apply_live_nameplate_icon_cb_func, widget, reward_item_id)
 				unload_cb = callback(_remove_live_nameplate_icon_cb_func, widget, reward_item_id, ui_renderer)
 			elseif item_group == "weapon_skin" then
@@ -573,6 +624,11 @@ end
 local function _init_foldout_reward_pass_templates(widget_content, widget_style, config, unfolded_height, ui_renderer)
 	local achievement_definition = config.achievement_definition
 	local reward_item, reward_item_group = AchievementUIHelper.get_reward_item(achievement_definition)
+
+	if not reward_item then
+		return
+	end
+
 	local reward_item_margin = pass_template_styles.reward_item_margins[2]
 	local offset_y = unfolded_height
 	widget_content.reward_ids = {
@@ -672,28 +728,31 @@ local function _sub_achievements_pass_template_init(widget_content, widget_style
 
 	for sub_achievement_id, _ in pairs(sub_achievements) do
 		local sub_achievement = achievement_definitions[sub_achievement_id]
-		local sub_achievement_completed = achievements:achievement_completed(player, sub_achievement_id)
-		local sub_label_name = string.format("sub_label_%s", sub_achievement_id)
-		widget_content[sub_label_name] = AchievementUIHelper.localized_title(sub_achievement)
-		local sub_label_style = widget_style[sub_label_name]
-		sub_label_style.offset[2] = sub_label_style.offset[2] + sub_achievement_offset_y
-		local sub_achievement_icon_name = string.format("sub_icon_%s", sub_achievement_id)
-		local icon_style = widget_style[sub_achievement_icon_name]
-		local icon_offset = icon_style.offset
-		icon_offset[2] = icon_offset[2] + sub_achievement_offset_y
-		local icon_material_values = icon_style.material_values
-		icon_material_values.icon = sub_achievement.icon
 
-		if sub_achievement_completed then
-			icon_style.icon_default_color = icon_style.icon_completed_color
-			icon_style.icon_hover_color = icon_style.icon_completed_hover_color
-			icon_style.icon_selected_color = icon_style.icon_completed_selected_color
-			icon_material_values.frame = icon_style.completed_frame
-			sub_label_style.offset[3] = sub_label_style.completed_layer
-			sub_label_style.text_color = sub_label_style.completed_color
+		if sub_achievement then
+			local sub_achievement_completed = achievements:achievement_completed(player, sub_achievement_id)
+			local sub_label_name = string.format("sub_label_%s", sub_achievement_id)
+			widget_content[sub_label_name] = AchievementUIHelper.localized_title(sub_achievement)
+			local sub_label_style = widget_style[sub_label_name]
+			sub_label_style.offset[2] = sub_label_style.offset[2] + sub_achievement_offset_y
+			local sub_achievement_icon_name = string.format("sub_icon_%s", sub_achievement_id)
+			local icon_style = widget_style[sub_achievement_icon_name]
+			local icon_offset = icon_style.offset
+			icon_offset[2] = icon_offset[2] + sub_achievement_offset_y
+			local icon_material_values = icon_style.material_values
+			icon_material_values.icon = sub_achievement.icon
+
+			if sub_achievement_completed then
+				icon_style.icon_default_color = icon_style.icon_completed_color
+				icon_style.icon_hover_color = icon_style.icon_completed_hover_color
+				icon_style.icon_selected_color = icon_style.icon_completed_selected_color
+				icon_material_values.frame = icon_style.completed_frame
+				sub_label_style.offset[3] = sub_label_style.completed_layer
+				sub_label_style.text_color = sub_label_style.completed_color
+			end
+
+			sub_achievement_offset_y = icon_offset[2] + icon_style.size[2]
 		end
-
-		sub_achievement_offset_y = icon_offset[2] + icon_style.size[2]
 	end
 
 	unfolded_height = sub_achievement_offset_y + sub_achievement_margin
@@ -779,7 +838,7 @@ local function _init_family_achievements_pass_template(widget_content, widget_st
 		icon_offset[2] = sub_achievement_offset_y
 		sub_achievement_offset_y = sub_achievement_offset_y + icon_style.size[2]
 		local sub_score_name = "family_sub_score_" .. i
-		local sub_achievement_score = family_achievement_definition.score
+		local sub_achievement_score = family_achievement_definition.score or 0
 		score_params.score = sub_achievement_score
 		widget_content[sub_score_name] = Localize("loc_achievements_view_score", true, _score_params)
 		local sub_label_style = widget_style[sub_score_name]

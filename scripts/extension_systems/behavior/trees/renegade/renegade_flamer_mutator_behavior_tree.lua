@@ -14,7 +14,7 @@ local MELEE_COMBAT = {
 local COMBAT = {
 	"BtSequenceNode",
 	{
-		"BtCultistFlamerApproachAction",
+		"BtFlamerApproachAction",
 		name = "follow",
 		action_data = action_data.follow
 	},

@@ -1,4 +1,6 @@
+local ArmorSettings = require("scripts/settings/damage/armor_settings")
 local BaseTemplateSettings = require("scripts/settings/equipment/weapon_templates/base_template_settings")
+local BuffSettings = require("scripts/settings/buff/buff_settings")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
 local ExplosionTemplates = require("scripts/settings/damage/explosion_templates")
@@ -7,13 +9,11 @@ local HerdingTemplates = require("scripts/settings/damage/herding_templates")
 local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
 local ProjectileTemplates = require("scripts/settings/projectile/projectile_templates")
 local ReloadTemplates = require("scripts/settings/equipment/reload_templates/reload_templates")
+local SmartTargetingTemplates = require("scripts/settings/equipment/smart_targeting_templates")
 local WeaponTraitsOgrynGauntletP1 = require("scripts/settings/equipment/weapon_traits/weapon_traits_bespoke_ogryn_gauntlet_p1")
 local WeaponTraitTemplates = require("scripts/settings/equipment/weapon_templates/weapon_trait_templates/weapon_trait_templates")
 local WeaponTweakTemplateSettings = require("scripts/settings/equipment/weapon_templates/weapon_tweak_template_settings")
-local SmartTargetingTemplates = require("scripts/settings/equipment/smart_targeting_templates")
 local WoundsSettings = require("scripts/settings/wounds/wounds_settings")
-local ArmorSettings = require("scripts/settings/damage/armor_settings")
-local BuffSettings = require("scripts/settings/buff/buff_settings")
 local armor_types = ArmorSettings.types
 local template_types = WeaponTweakTemplateSettings.template_types
 local buff_stat_buffs = BuffSettings.stat_buffs
@@ -186,6 +186,8 @@ weapon_template.action_input_hierarchy = {
 	special_action_start = {
 		attack_cancel = "base",
 		wield = "base",
+		grenade_ability = "base",
+		combat_ability = "base",
 		special_action_execute = "base"
 	}
 }

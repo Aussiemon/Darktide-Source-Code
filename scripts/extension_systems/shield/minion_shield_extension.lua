@@ -1,6 +1,7 @@
 local AttackSettings = require("scripts/settings/damage/attack_settings")
 local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
 local Breed = require("scripts/utilities/breed")
+local HitZone = require("scripts/utilities/attack/hit_zone")
 local MinionVisualLoadout = require("scripts/utilities/minion_visual_loadout")
 local StaggerSettings = require("scripts/settings/damage/stagger_settings")
 local attack_results = AttackSettings.attack_results
@@ -59,7 +60,7 @@ MinionShieldExtension.is_blocking = function (self)
 	return shield_component.is_blocking
 end
 
-MinionShieldExtension.can_block_attack = function (self, damage_profile, attacking_unit, attacking_unit_owner_unit, hit_zone_name)
+MinionShieldExtension.can_block_attack = function (self, damage_profile, attacking_unit, attacking_unit_owner_unit, hit_actor)
 	if damage_profile.ignore_shield or not attacking_unit then
 		return false
 	end
@@ -83,8 +84,10 @@ MinionShieldExtension.can_block_attack = function (self, damage_profile, attacki
 		return false
 	end
 
+	local hit_zone = hit_actor and HitZone.get(self._unit, hit_actor)
+	local hit_zone_name = hit_zone and hit_zone.name
 	local attacking_unit_position = POSITION_LOOKUP[attacking_unit]
-	local can_block_from_position = self:can_block_from_position(attacking_unit_position)
+	local can_block_from_position = self:can_block_from_position(attacking_unit_position, hit_zone_name)
 
 	return can_block_from_position
 end
@@ -100,16 +103,7 @@ MinionShieldExtension.can_block_from_position = function (self, attacking_unit_p
 		return true
 	end
 
-	local blocking_angle = self._template.blocking_angle
-	local unit = self._unit
-	local unit_rotation = Unit.local_rotation(unit, 1)
-	local unit_forward = Quaternion.forward(unit_rotation)
-	local unit_position = POSITION_LOOKUP[unit]
-	local to_attacking_unit = Vector3.normalize(attacking_unit_position - unit_position)
-	local angle = Vector3.angle(unit_forward, to_attacking_unit)
-	local is_within_blocking_angle = angle < blocking_angle
-
-	return is_within_blocking_angle
+	return false
 end
 
 local DEFAULT_MULTIPLIER = 1

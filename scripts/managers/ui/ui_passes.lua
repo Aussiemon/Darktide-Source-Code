@@ -1018,6 +1018,7 @@ UIPasses.hotspot = {
 		local is_held = false
 		local on_pressed = false
 		local on_released = false
+		local on_right_pressed = false
 		local on_double_click = false
 		local double_click_timer = ui_content.double_click_timer or 0
 
@@ -1057,6 +1058,7 @@ UIPasses.hotspot = {
 				end
 			elseif right_input_pressed then
 				on_pressed = true
+				on_right_pressed = true
 				local right_pressed_callback = ui_content.right_pressed_callback
 
 				if right_pressed_callback then
@@ -1108,6 +1110,7 @@ UIPasses.hotspot = {
 		ui_content.double_click_timer = double_click_timer
 		ui_content.on_released = on_released
 		ui_content.on_pressed = on_pressed
+		ui_content.on_right_pressed = on_right_pressed
 		ui_content.on_double_click = on_double_click
 		local anim_hover_speed = ui_style and ui_style.anim_hover_speed
 

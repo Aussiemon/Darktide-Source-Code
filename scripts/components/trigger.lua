@@ -32,20 +32,8 @@ Trigger.init = function (self, unit)
 	end
 end
 
-Trigger.editor_init = function (self, unit)
-	self:enable(unit)
-end
-
-Trigger.editor_validate = function (self, unit)
-	local success = true
-	local error_message = ""
-
-	if rawget(_G, "LevelEditor") and not Unit.has_volume(unit, "c_volume") then
-		success = false
-		error_message = error_message .. "\nMissing volume 'c_volume'"
-	end
-
-	return success, error_message
+Trigger.destroy = function (self, unit)
+	return
 end
 
 Trigger.enable = function (self, unit)
@@ -56,8 +44,31 @@ Trigger.disable = function (self, unit)
 	return
 end
 
-Trigger.destroy = function (self, unit)
-	return
+Trigger.editor_init = function (self, unit)
+	self:enable(unit)
+end
+
+Trigger.editor_validate = function (self, unit)
+	if not rawget(_G, "LevelEditor") then
+		return true, ""
+	end
+
+	local success = true
+	local error_message = ""
+
+	if not Unit.has_volume(unit, "c_volume") then
+		error_message = "Missing volume 'c_volume'\n"
+		success = false
+	end
+
+	local trigger_condition = self:get_data(unit, "trigger_condition")
+
+	if trigger_condition == "all_players_inside_no_enemies" and not Unit.has_volume(unit, "enemy_check_volume") then
+		error_message = error_message .. "Missing volume 'enemy_check_volume' (used by 'all_players_inside_no_enemies')"
+		success = false
+	end
+
+	return success, error_message
 end
 
 Trigger.activate = function (self)
@@ -98,6 +109,7 @@ Trigger.component_data = {
 		options_keys = {
 			"all_alive_players_inside",
 			"all_players_inside",
+			"all_players_inside_no_enemies",
 			"all_required_players_in_end_zone",
 			"at_least_one_player_inside",
 			"only_enter",
@@ -106,6 +118,7 @@ Trigger.component_data = {
 		options_values = {
 			"all_alive_players_inside",
 			"all_players_inside",
+			"all_players_inside_no_enemies",
 			"all_required_players_in_end_zone",
 			"at_least_one_player_inside",
 			"only_enter",

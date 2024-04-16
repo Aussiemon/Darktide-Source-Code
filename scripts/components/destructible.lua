@@ -6,6 +6,8 @@ Destructible.init = function (self, unit, is_server)
 	self._is_server = is_server
 	local start_enabled = self:get_data(unit, "start_enabled")
 	self._enabled = start_enabled
+	local prop_identifier = self:get_data(unit, "collectible_type")
+	self._identifier = prop_identifier
 	local destructible_extension = ScriptUnit.has_extension(unit, "destructible_system")
 
 	if destructible_extension then
@@ -40,7 +42,21 @@ Destructible.init = function (self, unit, is_server)
 				self._was_alive = true
 			end
 
-			destructible_extension:setup_from_component(despawn_timer_duration, despawn_when_destroyed, collision_actors, mass, speed, direction, force_direction, start_visible, is_nav_gate, broadphase_radius, use_health_extension_health)
+			local collectible_data = nil
+			local collectible_type = self:get_data(unit, "collectible_type")
+
+			if collectible_type and collectible_type ~= "none" then
+				local collectible_name = self:get_data(unit, "collectible_name")
+				local collectible_id = self:get_data(unit, "collectible_id")
+				local collectible_section_id = self:get_data(unit, "collectible_section_id")
+				collectible_data = {
+					name = collectible_name,
+					id = collectible_id,
+					section_id = collectible_section_id
+				}
+			end
+
+			destructible_extension:setup_from_component(despawn_timer_duration, despawn_when_destroyed, collision_actors, mass, speed, direction, force_direction, start_visible, is_nav_gate, broadphase_radius, use_health_extension_health, collectible_data)
 			destructible_extension:set_enabled_from_component(start_enabled)
 
 			self._destructible_extension = destructible_extension
@@ -216,11 +232,16 @@ Destructible.editor_validate = function (self, unit)
 	return success, error_message
 end
 
-Destructible.events.add_damage = function (self, damage, hit_actor, attack_direction)
+Destructible.events.add_damage = function (self, damage, hit_actor, attack_direction, attacking_unit)
 	local destructible_extension = self._destructible_extension
+	local prop_identifier = self._identifier
+
+	if prop_identifier ~= "none" then
+		Managers.stats:record_team("mission_destructible_destroyed", prop_identifier)
+	end
 
 	if destructible_extension and self._enabled then
-		destructible_extension:add_damage(damage, hit_actor, attack_direction)
+		destructible_extension:add_damage(damage, hit_actor, attack_direction, attacking_unit)
 	end
 end
 
@@ -372,6 +393,36 @@ Destructible.component_data = {
 		value = false,
 		ui_name = "use_health_extension_health",
 		category = "DO NOT USE - IS HACK"
+	},
+	collectible_id = {
+		ui_type = "number",
+		min = 0,
+		decimals = 0,
+		category = "Collectibles",
+		value = 1,
+		ui_name = "Collectible ID"
+	},
+	collectible_section_id = {
+		ui_type = "number",
+		min = 0,
+		decimals = 0,
+		category = "Collectibles",
+		value = 1,
+		ui_name = "Collectible Section ID"
+	},
+	collectible_type = {
+		ui_type = "combo_box",
+		category = "Collectibles",
+		value = "none",
+		ui_name = "Collectible Type",
+		options_keys = {
+			"None",
+			"Heretic Idol"
+		},
+		options_values = {
+			"none",
+			"heretic_idol"
+		}
 	},
 	inputs = {
 		force_destruct = {

@@ -118,6 +118,7 @@ PickupSpawner.component_data = {
 			"none",
 			"ammo_cache_pocketable",
 			"battery_01_luggable",
+			"battery_02_luggable",
 			"consumable",
 			"container_01_luggable",
 			"container_02_luggable",
@@ -137,12 +138,14 @@ PickupSpawner.component_data = {
 			"syringe_corruption_pocketable",
 			"syringe_power_boost_pocketable",
 			"syringe_speed_boost_pocketable",
-			"tome"
+			"tome",
+			"collectible_01_pickup"
 		},
 		options_values = {
 			"none",
 			"ammo_cache_pocketable",
 			"battery_01_luggable",
+			"battery_02_luggable",
 			"consumable",
 			"container_01_luggable",
 			"container_02_luggable",
@@ -162,7 +165,8 @@ PickupSpawner.component_data = {
 			"syringe_corruption_pocketable",
 			"syringe_power_boost_pocketable",
 			"syringe_speed_boost_pocketable",
-			"tome"
+			"tome",
+			"collectible_01_pickup"
 		}
 	},
 	item_spawn_selection = {

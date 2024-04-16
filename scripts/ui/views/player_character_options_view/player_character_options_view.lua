@@ -52,9 +52,21 @@ PlayerCharacterOptionsView.on_enter = function (self)
 	self._widgets_by_name.class_badge.style.badge.material_values.badge = PlayerCharacterOptionsViewSettings.archetype_badge_texture_by_name[archetype_name]
 	local archetype = profile and profile.archetype
 	local string_symbol = archetype and archetype.string_symbol
-	local character_title = string_symbol .. " " .. ProfileUtils.character_title(profile, true)
+	local character_archetype_title = string_symbol .. " " .. ProfileUtils.character_archetype_title(profile, true)
 
-	self:_set_class_name(character_title)
+	self:_set_class_name(character_archetype_title)
+
+	local scenegraph_definition = self._definitions.scenegraph_definition
+	local player_title = ProfileUtils.character_title(profile)
+
+	if player_title and player_title ~= "" then
+		self._widgets_by_name.character_title.content.text = player_title
+	else
+		local character_title_pos = scenegraph_definition.character_title.position
+		local class_name_pos = scenegraph_definition.class_name.position
+
+		self:_set_scenegraph_position("class_name", class_name_pos[1], character_title_pos[2], class_name_pos[3])
+	end
 
 	self._window_open_anim_id = self:_start_animation("on_enter", self._widgets_by_name, self)
 
@@ -199,6 +211,8 @@ PlayerCharacterOptionsView._update_invite_button_status = function (self)
 end
 
 PlayerCharacterOptionsView._on_invite_pressed = function (self)
+	self:_play_sound(UISoundEvents.social_menu_send_invite)
+
 	local player_info = self._player_info
 
 	Managers.data_service.social:send_party_invite(player_info)

@@ -96,16 +96,44 @@ InventoryBackgroundView._set_player_profile_information = function (self, player
 	local profile = player:profile()
 	local character_name = ProfileUtils.character_name(profile)
 	local current_level = profile.current_level
-	local character_title = ProfileUtils.character_title(profile)
+	local character_archetype_title = ProfileUtils.character_archetype_title(profile)
 	local widgets_by_name = self._widgets_by_name
 	widgets_by_name.character_name.content.text = character_name
-	widgets_by_name.character_title.content.text = character_title
+	widgets_by_name.character_archetype_title.content.text = character_archetype_title
 	widgets_by_name.character_level.content.text = tostring(current_level)
 	widgets_by_name.character_level_next.content.text = ""
 
 	self:_set_experience_bar(0, 0)
 	self:_fetch_character_progression(player)
 	self:_request_player_icon()
+end
+
+InventoryBackgroundView._set_player_profile_title = function (self, profile)
+	local scenegraph_definition = self._definitions.scenegraph_definition
+	local player_title = ProfileUtils.character_title(profile)
+
+	if not player_title or player_title == "" then
+		local character_name_pos = scenegraph_definition.character_name_no_title.position
+
+		self:_set_scenegraph_position("character_name", character_name_pos[1], character_name_pos[2], character_name_pos[3])
+
+		local character_archetype_title_pos = scenegraph_definition.character_archetype_title_no_title.position
+
+		self:_set_scenegraph_position("character_archetype_title", character_archetype_title_pos[1], character_archetype_title_pos[2], character_archetype_title_pos[3])
+	else
+		local character_name_pos = scenegraph_definition.character_name.position
+
+		self:_set_scenegraph_position("character_name", character_name_pos[1], character_name_pos[2], character_name_pos[3])
+
+		local character_archetype_title_pos = scenegraph_definition.character_archetype_title.position
+
+		self:_set_scenegraph_position("character_archetype_title", character_archetype_title_pos[1], character_archetype_title_pos[2], character_archetype_title_pos[3])
+	end
+
+	if player_title then
+		local widgets_by_name = self._widgets_by_name
+		widgets_by_name.character_title.content.text = player_title
+	end
 end
 
 InventoryBackgroundView._request_player_icon = function (self)
@@ -952,6 +980,23 @@ InventoryBackgroundView._setup_top_panel = function (self)
 						},
 						layout = {
 							{
+								slot_title = "loc_inventory_title_slot_character_title",
+								scenegraph_id = "slot_character_title",
+								loadout_slot = true,
+								slot_icon = "content/ui/materials/icons/item_types/beveled/headgears",
+								widget_type = "character_title_item_slot",
+								default_icon = "content/ui/materials/icons/items/gears/head/empty",
+								slot = ItemSlotSettings.slot_character_title,
+								navigation_grid_indices = {
+									4,
+									1
+								},
+								item_type = UISettings.ITEM_TYPES.CHARACTER_TITLE,
+								has_new_items_update_callback = function (item_type)
+									return self:has_new_items_by_type(item_type)
+								end
+							},
+							{
 								slot_title = "loc_inventory_title_slot_gear_head",
 								scenegraph_id = "slot_gear_head",
 								loadout_slot = true,
@@ -1022,29 +1067,35 @@ InventoryBackgroundView._setup_top_panel = function (self)
 							},
 							{
 								slot_title = "loc_inventory_title_slot_portrait_frame",
-								loadout_slot = true,
-								default_icon = "content/ui/materials/icons/items/gears/legs/empty",
 								scenegraph_id = "slot_portrait_frame",
+								loadout_slot = true,
 								widget_type = "ui_item_slot",
+								default_icon = "content/ui/materials/icons/items/gears/legs/empty",
 								slot = ItemSlotSettings.slot_portrait_frame,
 								navigation_grid_indices = {
 									2,
 									2
 								},
-								item_type = UISettings.ITEM_TYPES.PORTRAIT_FRAME
+								item_type = UISettings.ITEM_TYPES.PORTRAIT_FRAME,
+								has_new_items_update_callback = function (item_type)
+									return self:has_new_items_by_type(item_type)
+								end
 							},
 							{
 								slot_title = "loc_inventory_title_slot_insignia",
-								loadout_slot = true,
-								default_icon = "content/ui/materials/icons/items/gears/legs/empty",
 								scenegraph_id = "slot_insignia",
+								loadout_slot = true,
 								widget_type = "ui_item_slot",
+								default_icon = "content/ui/materials/icons/items/gears/legs/empty",
 								slot = ItemSlotSettings.slot_insignia,
 								navigation_grid_indices = {
 									3,
 									2
 								},
-								item_type = UISettings.ITEM_TYPES.CHARACTER_INSIGNIA
+								item_type = UISettings.ITEM_TYPES.CHARACTER_INSIGNIA,
+								has_new_items_update_callback = function (item_type)
+									return self:has_new_items_by_type(item_type)
+								end
 							},
 							not self._is_readonly and {
 								scenegraph_id = "button_expressions",
@@ -1281,14 +1332,19 @@ InventoryBackgroundView._setup_top_panel = function (self)
 	for i = 1, #views_settings do
 		local settings = views_settings[i]
 		local view_name = settings.view_name
+		local display_name = nil
 		local display_name_loc_key = settings.display_name
 
-		if not display_name_loc_key then
-			local view_settings = Views[view_name]
-			display_name_loc_key = view_settings.display_name
-		end
+		if not display_name_loc_key and settings.unlocalized_display_name then
+			display_name = settings.unlocalized_display_name
+		else
+			if not display_name_loc_key then
+				local view_settings = Views[view_name]
+				display_name_loc_key = view_settings.display_name
+			end
 
-		local display_name = self:_localize(display_name_loc_key)
+			display_name = Localize(display_name_loc_key)
+		end
 
 		local function entry_callback_function()
 			self:_on_panel_option_pressed(i)
@@ -1311,6 +1367,12 @@ InventoryBackgroundView._on_panel_option_pressed = function (self, index)
 	end
 
 	local views_settings = self._views_settings
+	local old_settings = old_top_panel_selection_index and views_settings[old_top_panel_selection_index]
+
+	if old_settings and old_settings.leave then
+		old_settings.leave()
+	end
+
 	local settings = views_settings[index]
 	local view_name = settings.view_name
 
@@ -1334,6 +1396,14 @@ InventoryBackgroundView._on_panel_option_pressed = function (self, index)
 	if not self._using_cursor_navigation then
 		self:_play_sound(UISoundEvents.tab_button_pressed)
 	end
+
+	if settings.enter then
+		settings.enter()
+	end
+end
+
+InventoryBackgroundView._can_swap_weapon = function (self)
+	return self._active_view ~= "talent_builder_view"
 end
 
 InventoryBackgroundView._force_select_panel_index = function (self, index)
@@ -1385,6 +1455,14 @@ InventoryBackgroundView._setup_profile_presets = function (self)
 	local current_preset = current_preset_id and ProfileUtils.get_profile_preset(current_preset_id)
 
 	self:event_on_profile_preset_changed(current_preset)
+end
+
+InventoryBackgroundView._remove_profile_presets = function (self)
+	if self._profile_presets_element then
+		self:_remove_element("profile_presets")
+
+		self._profile_presets_element = nil
+	end
 end
 
 InventoryBackgroundView.event_on_player_preset_created = function (self, profile_preset_id)
@@ -2007,6 +2085,15 @@ InventoryBackgroundView.update = function (self, dt, t, input_service)
 				self._insignia_item_gear_id = insignia_item_gear_id
 
 				self:_request_player_insignia(insignia_item, self._ui_renderer)
+			end
+
+			local title_item = loadout.slot_character_title
+			local title_item_gear_id = title_item and title_item.gear_id
+
+			if title_item_gear_id ~= self._title_item_gear_id then
+				self._title_item_gear_id = title_item_gear_id
+
+				self:_set_player_profile_title(profile)
 			end
 		end
 

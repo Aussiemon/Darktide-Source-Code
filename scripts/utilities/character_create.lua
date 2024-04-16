@@ -7,7 +7,9 @@ local FormativeEvent = require("scripts/settings/character/formative_event")
 local Crimes = require("scripts/settings/character/crimes")
 local Personalities = require("scripts/settings/character/personalities")
 local PlayerCharacterCreatorPresets = require("scripts/settings/player_character/player_character_creator_presets")
+local ProfileUtils = require("scripts/utilities/profile_utils")
 local ItemSlotSettings = require("scripts/settings/item/item_slot_settings")
+local ItemUtils = require("scripts/utilities/items")
 local MasterItems = require("scripts/backend/master_items")
 local CharacterCreate = class("CharacterCreate")
 local fallback_slots_to_strip = {
@@ -50,12 +52,10 @@ CharacterCreate.init = function (self, item_definitions, owned_gear, optional_re
 	if optional_real_profile then
 		local archetype = optional_real_profile.archetype
 		local specialization = optional_real_profile.specialization
-		local backstory = optional_real_profile.lore.backstory
+		local backstory = table.clone(optional_real_profile.lore.backstory)
 		local selected_voice = optional_real_profile.selected_voice
 		local gender = optional_real_profile.gender
 		local breed = optional_real_profile.archetype.breed
-		local height = optional_real_profile.personal.character_height
-		self._character_height = height
 		self._profile = {
 			name = "",
 			loadout = {},
@@ -68,9 +68,21 @@ CharacterCreate.init = function (self, item_definitions, owned_gear, optional_re
 			gender = gender,
 			breed = breed
 		}
+		local breed_height_range = self:get_height_values_range()
+		local min_height = breed_height_range.min
+		local max_height = breed_height_range.max
+		local default_height = math.lerp(min_height, max_height, 0.5)
+		local height = optional_real_profile.personal and optional_real_profile.personal.character_height or default_height
+		self._character_height = height
 		local loadout = optional_real_profile.loadout
 
 		if loadout then
+			self._saved_gender_loadout = {}
+			local breed_table = {
+				[gender] = {}
+			}
+			self._saved_gender_loadout[breed] = breed_table
+
 			for slot_name, slot_settings in pairs(ItemSlotSettings) do
 				local show_in_character_create = slot_settings.show_in_character_create
 
@@ -81,9 +93,22 @@ CharacterCreate.init = function (self, item_definitions, owned_gear, optional_re
 						local item = loadout[slot_name]
 
 						self:set_item_per_slot(slot_name, item)
+
+						self._saved_gender_loadout[breed][gender][slot_name] = item
 					end
 				end
 			end
+
+			self._real_profile_gear = {
+				slot_gear_upperbody = loadout.slot_gear_upperbody,
+				slot_gear_lowerbody = loadout.slot_gear_lowerbody
+			}
+			local crime_items_promise = self:_fetch_crime_items()
+
+			crime_items_promise:next(function (crime_items)
+				self._old_crime_items = self:_get_current_crime_items_ids(crime_items)
+				self._all_crime_items = crime_items
+			end)
 		end
 	else
 		self._profile = {
@@ -470,8 +495,23 @@ end
 
 CharacterCreate.set_gender = function (self, gender)
 	self._profile.gender = gender
+	local breed = self._profile.breed
+	local saved_preset = self._saved_gender_loadout and self._saved_gender_loadout[breed][gender]
 
-	self:randomize_presets()
+	if saved_preset then
+		self:_reset_loadout()
+
+		for slot_name, body_part in pairs(saved_preset) do
+			self:set_item_per_slot(slot_name, body_part)
+		end
+
+		local personality_option = self:_randomize_personality()
+
+		self:set_personality(personality_option)
+	else
+		self:randomize_presets()
+	end
+
 	self:_increase_value_version("gender")
 end
 
@@ -550,6 +590,21 @@ CharacterCreate.set_item_per_slot = function (self, slot_name, item)
 		else
 			item = MasterItems.find_fallback_item(slot_name)
 		end
+	end
+
+	local breed = profile.breed
+	local gender = profile.gender
+	local saved_preset = self._saved_gender_loadout and self._saved_gender_loadout[breed][gender]
+	local saved_preset_breed = self._saved_gender_loadout and self._saved_gender_loadout[breed]
+
+	if saved_preset then
+		self._saved_gender_loadout[breed][gender][slot_name] = item
+	elseif saved_preset_breed then
+		local gender_table = {
+			[slot_name] = {}
+		}
+		self._saved_gender_loadout[breed][gender] = gender_table
+		self._saved_gender_loadout[breed][gender][slot_name] = item
 	end
 
 	loadout[slot_name] = item
@@ -697,15 +752,18 @@ CharacterCreate.set_crime = function (self, option)
 
 	if self._visible then
 		local crime_settings = Crimes[option]
-		local slot_items = crime_settings.slot_items
 
-		if slot_items then
-			local item_definitions = self._item_definitions
+		if crime_settings ~= nil then
+			local slot_items = crime_settings.slot_items
 
-			for slot_name, item_name in pairs(slot_items) do
-				local item = item_definitions[item_name]
+			if slot_items then
+				local item_definitions = self._item_definitions
 
-				self:set_item_per_slot(slot_name, item)
+				for slot_name, item_name in pairs(slot_items) do
+					local item = item_definitions[item_name]
+
+					self:set_item_per_slot(slot_name, item)
+				end
 			end
 		end
 	end
@@ -869,6 +927,251 @@ CharacterCreate.upload_profile = function (self)
 
 		Log.error("CharacterCreate", "Uploading character profile failed")
 	end)
+end
+
+CharacterCreate.get_transformation_complete = function (self)
+	local transformation_complete = self._transformation_complete
+	local result = transformation_complete.success or transformation_complete.fail
+
+	if result then
+		return transformation_complete
+	end
+end
+
+CharacterCreate._add_crime_items_to_parsed_profile = function (self)
+	local option = self._profile.lore.backstory.crime
+	local crime_settings = Crimes[option]
+	local prison_garbs = {}
+
+	if crime_settings ~= nil then
+		local slot_items = crime_settings.slot_items
+
+		if slot_items then
+			local item_definitions = self._item_definitions
+
+			for slot_name, item_name in pairs(slot_items) do
+				local item = item_definitions[item_name]
+				prison_garbs[slot_name] = {
+					id = item.name
+				}
+			end
+		end
+	end
+
+	return prison_garbs
+end
+
+CharacterCreate.transform = function (self, character_id, operation_cost)
+	self._transformation_complete = {}
+	local parsed_profile = self:_generate_backend_profile()
+	parsed_profile.id = nil
+	parsed_profile.archetype = nil
+	parsed_profile.breed = nil
+	parsed_profile.abilities = nil
+	parsed_profile.career = nil
+	parsed_profile.inventory.slot_animation_end_of_round = nil
+	local prison_garbs = self:_add_crime_items_to_parsed_profile()
+	local upperbody_slot = "slot_gear_upperbody"
+	local lowerbody_slot = "slot_gear_lowerbody"
+	parsed_profile.inventory[upperbody_slot] = prison_garbs[upperbody_slot]
+	parsed_profile.inventory[lowerbody_slot] = prison_garbs[lowerbody_slot]
+	local real_profile_gear = self._real_profile_gear
+	local slots_to_equip = {}
+
+	for slot, item in pairs(real_profile_gear) do
+		if not table.is_empty(item.crimes) then
+			slots_to_equip[slot] = true
+		end
+	end
+
+	local character_interface = Managers.backend.interfaces.characters
+	local promise = character_interface:transform(character_id, parsed_profile, operation_cost)
+	local new_gear = nil
+
+	promise:next(function (data)
+		if data then
+			new_gear = data.body and data.body.gear
+		end
+
+		self:reload_real_character()
+	end):next(function (result)
+		local upperbody = "slot_gear_upperbody"
+		local lowerbody = "slot_gear_lowerbody"
+		local granted_garbs = {}
+
+		if new_gear then
+			for i = 1, #new_gear do
+				local gear = new_gear[i]
+				local slot = gear.slots and gear.slots[1]
+
+				if slot == upperbody or slot == lowerbody then
+					granted_garbs[#granted_garbs + 1] = gear
+				end
+			end
+		end
+
+		self:_replace_old_crime_items_in_loadouts(slots_to_equip, granted_garbs)
+
+		self._transformation_complete.success = true
+	end):catch(function (errors)
+		self._transformation_complete.fail = true
+
+		Log.error("CharacterCreate", "Character transform failed")
+	end)
+end
+
+CharacterCreate.reload_real_character = function (self)
+	local peer_id = Network.peer_id()
+	local local_player_id = 1
+
+	if Managers.connection:is_host() then
+		local profile_synchronizer_host = Managers.profile_synchronization:synchronizer_host()
+
+		profile_synchronizer_host:profile_changed(peer_id, local_player_id)
+	elseif Managers.connection:is_client() then
+		local ui_manager = Managers.ui
+
+		if ui_manager then
+			ui_manager:update_client_loadout_waiting_state(true)
+		end
+
+		Managers.connection:send_rpc_server("rpc_notify_profile_changed", peer_id, local_player_id)
+	end
+end
+
+CharacterCreate._fetch_crime_items = function (self)
+	local player = Managers.player:local_player(1)
+	local character_id = player:character_id()
+	local body_gear_slots = {
+		"slot_gear_lowerbody",
+		"slot_gear_upperbody"
+	}
+	local gear_service = Managers.data_service.gear
+
+	return gear_service:fetch_inventory(character_id, body_gear_slots):next(function (items)
+		if self._destroyed then
+			return
+		end
+
+		self._body_gear_items = items
+		local crime_items = {}
+
+		for id, item in pairs(items) do
+			local master_item = item.__master_item
+
+			if master_item then
+				local item_name = master_item.name
+				local crimes = master_item.crimes
+
+				if crimes and not table.is_empty(crimes) then
+					crime_items[item_name] = id
+				end
+			end
+		end
+
+		return crime_items
+	end):catch(function ()
+		Managers.event:trigger("event_add_notification_message", "alert", {
+			text = Localize("loc_popup_description_backend_error")
+		})
+		self:cb_on_close_pressed()
+	end)
+end
+
+CharacterCreate._get_current_crime_items_ids = function (self, crime_items)
+	local items = {}
+	local crime = self:crime()
+	local crime_settings = Crimes[crime]
+
+	if crime_settings ~= nil then
+		local slot_items = crime_settings.slot_items
+
+		if slot_items then
+			for slot_name, item_name in pairs(slot_items) do
+				for master_item_name, id in pairs(crime_items) do
+					if item_name == master_item_name then
+						items[slot_name] = id
+					end
+				end
+			end
+		end
+	end
+
+	return items
+end
+
+local function _granted_item_to_gear(item)
+	local gear = table.clone(item)
+	local gear_id = gear.uuid
+	gear.overrides = nil
+	gear.id = nil
+	gear.uuid = nil
+	gear.gear_id = nil
+
+	return gear_id, gear
+end
+
+CharacterCreate._replace_old_crime_items_in_loadouts = function (self, slots_to_equip, granted_garbs)
+	local old_crime_items = self._old_crime_items
+	local new_crime_items = {}
+
+	if #granted_garbs > 0 then
+		for i = 1, #granted_garbs do
+			local item = granted_garbs[i]
+			local slot = item.slots[1]
+			local uuid = item.uuid
+			new_crime_items[slot] = uuid
+			local gear_id, gear = _granted_item_to_gear(item)
+
+			Managers.data_service.gear:on_gear_created(gear_id, gear)
+
+			item.gear_id = uuid
+			self._body_gear_items[uuid] = item
+		end
+	else
+		local all_crime_items = self._all_crime_items
+		new_crime_items = self:_get_current_crime_items_ids(all_crime_items)
+	end
+
+	local profile_presets = ProfileUtils.get_profile_presets()
+	local num_profile_presets = profile_presets and #profile_presets or 0
+
+	for i = num_profile_presets, 1, -1 do
+		local profile_preset = profile_presets[i]
+		local preset_loadout = profile_preset.loadout
+
+		for slot, id in pairs(old_crime_items) do
+			if preset_loadout[slot] == id then
+				ProfileUtils.save_item_id_for_profile_preset(profile_preset.id, slot, new_crime_items[slot])
+			end
+		end
+	end
+
+	for slot_to_equip, _ in pairs(slots_to_equip) do
+		for slot, id in pairs(new_crime_items) do
+			if slot_to_equip == slot then
+				local item = self:_get_crime_item_by_id(id)
+
+				if item then
+					ItemUtils.equip_item_in_slot(slot, item)
+				end
+			end
+		end
+	end
+end
+
+CharacterCreate._get_crime_item_by_id = function (self, gear_id)
+	if not gear_id then
+		return
+	end
+
+	local crime_items = self._body_gear_items
+
+	for _, item in pairs(crime_items) do
+		if item.gear_id == gear_id then
+			return item
+		end
+	end
 end
 
 CharacterCreate.created_character_profile = function (self)

@@ -90,28 +90,6 @@ local explosion_templates = {
 		close_damage_type = damage_types.ogryn_physical,
 		damage_profile = DamageProfileTemplates.ogryn_charge_finish,
 		damage_type = damage_types.ogryn_physical
-	},
-	zealot_preacher_shield_explosion = {
-		damage_falloff = true,
-		scalable_radius = true,
-		collision_filter = "filter_player_character_explosion",
-		radius = preacher_talent_settings.combat_ability.radius,
-		min_radius = preacher_talent_settings.combat_ability.min_radius,
-		close_radius = preacher_talent_settings.combat_ability.close_radius,
-		min_close_radius = preacher_talent_settings.combat_ability.min_close_radius,
-		close_damage_profile = DamageProfileTemplates.zealot_preacher_ability_close,
-		close_damage_type = damage_types.kinetic,
-		damage_profile = DamageProfileTemplates.zealot_preacher_ability_far,
-		damage_type = damage_types.kinetic,
-		static_power_level = preacher_talent_settings.combat_ability.static_power_level,
-		explosion_area_suppression = preacher_talent_settings.combat_ability.explosion_area_suppression,
-		vfx = {
-			"content/fx/particles/abilities/preacher/preacher_bubble_shield_explode_3p"
-		},
-		sfx = {
-			"wwise/events/player/play_ability_zealot_preacher_explosion",
-			"wwise/events/weapon/play_explosion_refl_gen"
-		}
 	}
 }
 

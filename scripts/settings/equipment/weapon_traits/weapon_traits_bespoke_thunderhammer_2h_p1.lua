@@ -228,11 +228,6 @@ templates.weapon_trait_bespoke_thunderhammer_2h_p1_increase_power_on_kill = {
 		}
 	}
 }
-templates.weapon_trait_bespoke_thunderhammer_2h_p1_taunt_target_on_hit = {
-	weapon_trait_bespoke_thunderhammer_2h_p1_taunt_target_on_hit = {
-		{}
-	}
-}
 templates.weapon_trait_bespoke_thunderhammer_2h_p1_consecutive_hits_increases_stagger = {
 	weapon_trait_bespoke_thunderhammer_2h_p1_consecutive_hits_increases_stagger_parent = {
 		{

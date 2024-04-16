@@ -3,8 +3,7 @@ local NETWORK_EVENTS = {
 	"game_object_migrated_to_me",
 	"game_object_created",
 	"game_object_destroyed",
-	"game_session_disconnect",
-	"rpc_debug_crash_server"
+	"game_session_disconnect"
 }
 
 local function _info(...)
@@ -340,26 +339,6 @@ GameSessionManager.currently_lowest_reliable_send_buffer_size = function (self)
 	end
 
 	return size
-end
-
-GameSessionManager.set_simulated_packet_loss = function (self, frequency)
-	Application.console_command("network", "packet_loss", frequency)
-end
-
-GameSessionManager.set_simulated_packet_duplication = function (self, frequency)
-	Application.console_command("network", "duplication", frequency)
-end
-
-GameSessionManager.rpc_set_simulated_latency = function (self, channel_id, min, max)
-	Application.console_command("network", "latency", tostring(min), tostring(max))
-end
-
-GameSessionManager.rpc_debug_crash_server = function (self, channel_id, user_name)
-	self:debug_crash_server(user_name)
-end
-
-GameSessionManager.debug_crash_server = function (self, user_name)
-	return
 end
 
 GameSessionManager.send_rpc_clients = function (self, rpc_name, ...)

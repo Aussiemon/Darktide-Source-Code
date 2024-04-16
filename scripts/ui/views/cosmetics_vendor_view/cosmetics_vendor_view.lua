@@ -12,7 +12,6 @@ local UIWidget = require("scripts/managers/ui/ui_widget")
 local ItemSlotSettings = require("scripts/settings/item/item_slot_settings")
 local UIWorldSpawner = require("scripts/managers/ui/ui_world_spawner")
 local UIProfileSpawner = require("scripts/managers/ui/ui_profile_spawner")
-local ScriptCamera = require("scripts/foundation/utilities/script_camera")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local Breeds = require("scripts/settings/breed/breeds")
 local Archetypes = require("scripts/settings/archetype/archetypes")
@@ -63,15 +62,20 @@ end
 CosmeticsVendorView._set_preview_widgets_visibility = function (self, visible)
 	CosmeticsVendorView.super._set_preview_widgets_visibility(self, visible)
 
-	local widgets_by_name = self._widgets_by_name
-	widgets_by_name.item_restrictions.content.visible = visible
-	local set_item_parts_representation_widgets = self._set_item_parts_representation_widgets
+	local side_panel_widgets = self._side_panel_widgets
+	local side_panel_widget_count = side_panel_widgets and #side_panel_widgets or 0
 
-	if set_item_parts_representation_widgets then
-		for i = 1, #set_item_parts_representation_widgets do
-			local widget = set_item_parts_representation_widgets[i]
-			widget.content.visible = visible
-		end
+	for i = 1, side_panel_widget_count do
+		local widget = side_panel_widgets[i]
+		widget.content.visible = visible
+	end
+
+	local set_item_parts_representation_widgets = self._set_item_parts_representation_widgets
+	local set_item_parts_representation_widgets_count = set_item_parts_representation_widgets and #set_item_parts_representation_widgets or 0
+
+	for i = 1, set_item_parts_representation_widgets_count do
+		local widget = set_item_parts_representation_widgets[i]
+		widget.content.visible = visible
 	end
 end
 
@@ -213,17 +217,7 @@ CosmeticsVendorView._preview_item = function (self, element)
 		self:_setup_set_item_parts_representation(set_items)
 	end
 
-	local restrictions_text, present_restrictions_text = nil
-
-	if item_type == "WEAPON_SKIN" then
-		restrictions_text, present_restrictions_text = ItemUtils.weapon_skin_requirement_text(previewed_item)
-	elseif item_type == "GEAR_UPPERBODY" or item_type == "GEAR_EXTRA_COSMETIC" or item_type == "GEAR_HEAD" or item_type == "GEAR_LOWERBODY" then
-		restrictions_text, present_restrictions_text = ItemUtils.class_requirement_text(previewed_item)
-	elseif item_type == "SET" then
-		restrictions_text, present_restrictions_text = ItemUtils.set_item_class_requirement_text(previewed_item)
-	end
-
-	self:_setup_item_texts(previewed_item, present_restrictions_text and restrictions_text)
+	self:_setup_item_texts(previewed_item)
 end
 
 CosmeticsVendorView._setup_set_item_parts_representation = function (self, items)
@@ -301,10 +295,10 @@ CosmeticsVendorView._reset_set_item_parts_representation = function (self)
 	end
 end
 
-CosmeticsVendorView._setup_item_texts = function (self, item, restrictions_text)
-	if not item then
-		self:_setup_item_restrictions_text(restrictions_text)
+CosmeticsVendorView._setup_item_texts = function (self, item)
+	self:_setup_side_panel(item)
 
+	if not item then
 		return
 	end
 
@@ -342,46 +336,100 @@ CosmeticsVendorView._setup_item_texts = function (self, item, restrictions_text)
 
 		self._item_name_widget = widget
 	end
-
-	self:_setup_item_restrictions_text(restrictions_text)
 end
 
-CosmeticsVendorView._setup_item_restrictions_text = function (self, restrictions_text)
-	local margin_compensation = 5
-	local sub_title_margin = 10
-	local max_width = 500
-	local widgets_by_name = self._widgets_by_name
-	local item_restrictions_widget = widgets_by_name.item_restrictions
-	local item_restrictions_content = item_restrictions_widget.content
-	local item_restrictions_style = item_restrictions_widget.style
+CosmeticsVendorView._destroy_side_panel = function (self)
+	local side_panel_widgets = self._side_panel_widgets
+	local side_panel_count = side_panel_widgets and #side_panel_widgets or 0
+
+	for i = 1, side_panel_count do
+		local widget = side_panel_widgets[i]
+
+		self:_unregister_widget_name(widget.name)
+	end
+
+	self._side_panel_widgets = nil
+end
+
+CosmeticsVendorView._setup_side_panel = function (self, item)
+	self:_destroy_side_panel()
+
+	local y_offset = 0
+	local scenegraph_id = "side_panel_area"
+	local max_width = self._ui_scenegraph[scenegraph_id].size[1]
+	local widgets = {}
+	self._side_panel_widgets = widgets
+
+	if not item then
+		return
+	end
+
+	local function _add_text_widget(pass_template, text)
+		local widget_definition = UIWidget.create_definition(pass_template, scenegraph_id, nil, {
+			max_width,
+			0
+		})
+		local widget = self:_create_widget(string.format("side_panel_widget_%d", #widgets), widget_definition)
+		widget.content.text = text
+		widget.offset[2] = y_offset
+		local widget_text_style = widget.style.text
+		local text_options = UIFonts.get_font_options_by_style(widget.style.text)
+		local _, text_height = self:_text_size(text, widget_text_style.font_type, widget_text_style.font_size, {
+			max_width,
+			math.huge
+		}, text_options)
+		y_offset = y_offset + text_height
+		widget.content.size[2] = text_height
+		widgets[#widgets + 1] = widget
+	end
+
+	local function _add_spacing(height)
+		y_offset = y_offset + height
+	end
+
+	local properties_text = ItemUtils.item_property_text(item, true)
+	local restrictions_text, present_restrictions = ItemUtils.restriction_text(item)
+
+	if not present_restrictions then
+		restrictions_text = nil
+	end
+
+	local any_text = restrictions_text or properties_text
+
+	if not any_text then
+		return
+	end
+
+	if properties_text then
+		if #widgets > 0 then
+			_add_spacing(24)
+		end
+
+		_add_text_widget(Definitions.item_sub_title_pass, Utf8.upper(Localize("loc_item_property_header")))
+		_add_spacing(8)
+		_add_text_widget(Definitions.item_text_pass, properties_text)
+	end
 
 	if restrictions_text then
-		item_restrictions_content.text = restrictions_text
-		local restriction_title_style = item_restrictions_style.title
-		local restriction_text_style = item_restrictions_style.text
-		local restriction_title_options = UIFonts.get_font_options_by_style(restriction_title_style)
-		local restriction_text_options = UIFonts.get_font_options_by_style(restriction_text_style)
-		local restriction_title_width, restriction_title_height = self:_text_size(item_restrictions_content.title, restriction_title_style.font_type, restriction_title_style.font_size, {
-			max_width,
-			math.huge
-		}, restriction_title_options)
-		local restriction_text_width, title_restriction_text_height = self:_text_size(item_restrictions_content.text, restriction_text_style.font_type, restriction_text_style.font_size, {
-			max_width,
-			math.huge
-		}, restriction_text_options)
-		local text_height = restriction_title_height + title_restriction_text_height + sub_title_margin
+		if #widgets > 0 then
+			_add_spacing(24)
+		end
 
-		self:_set_scenegraph_size("item_restrictions_background", nil, text_height + margin_compensation * 2)
-		self:_set_scenegraph_size("item_restrictions", nil, text_height)
+		_add_text_widget(Definitions.item_sub_title_pass, Utf8.upper(Localize("loc_item_equippable_on_header")))
+		_add_spacing(8)
+		_add_text_widget(Definitions.item_text_pass, restrictions_text)
+	end
 
-		item_restrictions_style.text.offset[2] = restriction_title_height + sub_title_margin
-		item_restrictions_content.visible = true
-	else
-		item_restrictions_content.visible = false
+	for i = 1, #widgets do
+		local widget_offset = widgets[i].offset
+		widget_offset[1] = 0
+		widget_offset[2] = widget_offset[2] - y_offset
 	end
 end
 
 CosmeticsVendorView.on_exit = function (self)
+	self:_destroy_side_panel()
+
 	if self._on_enter_anim_id then
 		self:_stop_animation(self._on_enter_anim_id)
 
@@ -831,12 +879,24 @@ CosmeticsVendorView.draw = function (self, dt, t, input_service, layer)
 	local ui_scenegraph = self._ui_scenegraph
 	local ui_renderer = self._ui_default_renderer
 
-	if self._item_name_widget then
-		UIRenderer.begin_pass(ui_renderer, ui_scenegraph, input_service, dt, render_settings)
-		UIWidget.draw(self._item_name_widget, ui_renderer)
-		UIRenderer.end_pass(ui_renderer)
+	UIRenderer.begin_pass(ui_renderer, ui_scenegraph, input_service, dt, render_settings)
+
+	local item_name_widget = self._item_name_widget
+
+	if item_name_widget then
+		UIWidget.draw(item_name_widget, ui_renderer)
 	end
 
+	local side_panel_widgets = self._side_panel_widgets
+	local side_panel_widget_count = side_panel_widgets and #side_panel_widgets or 0
+
+	for i = 1, side_panel_widget_count do
+		local widget = side_panel_widgets[i]
+
+		UIWidget.draw(widget, ui_renderer)
+	end
+
+	UIRenderer.end_pass(ui_renderer)
 	CosmeticsVendorView.super.draw(self, dt, t, input_service, layer)
 
 	render_settings.alpha_multiplier = previous_alpha_multiplier

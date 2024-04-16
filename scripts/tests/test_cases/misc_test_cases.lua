@@ -497,7 +497,9 @@ MiscTestCases.play_all_vfx = function (case_settings)
 			"content/fx/particles/interacts/airlock_closing",
 			"content/fx/particles/interacts/airlock_opening",
 			"content/fx/particles/liquid_area/fire_lingering_enemy",
-			"content/fx/particles/weapons/swords/powersword_1h_activate_mesh"
+			"content/fx/particles/weapons/swords/powersword_1h_activate_mesh",
+			"content/fx/particles/weapons/shock_maul/powermaul_1h_activate_mesh",
+			"content/fx/particles/weapons/shock_maul/powermaul_1h_looping_mesh"
 		}
 
 		if TestifySnippets.is_debug_stripped() or BUILD == "release" then

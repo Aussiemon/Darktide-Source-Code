@@ -8,6 +8,9 @@ local ItemSourceSettings = {
 	},
 	{
 		display_name = "loc_item_source_premium_store"
+	},
+	{
+		display_name = "loc_item_source_penance_track"
 	}
 }
 

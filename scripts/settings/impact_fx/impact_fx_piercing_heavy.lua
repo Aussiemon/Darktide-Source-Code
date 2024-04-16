@@ -21,6 +21,10 @@ local unarmored = {
 			{
 				event = "wwise/events/weapon/play_melee_hits_piercing_heavy",
 				append_husk_to_event_name = true
+			},
+			{
+				event = "wwise/events/weapon/play_hit_bone_heavy_addon_dead",
+				only_1p = true
 			}
 		},
 		died = {
@@ -45,6 +49,10 @@ local unarmored = {
 			{
 				event = "wwise/events/weapon/play_melee_hits_piercing_heavy",
 				append_husk_to_event_name = true
+			},
+			{
+				event = "wwise/events/weapon/play_hit_bone_heavy_addon",
+				only_1p = true
 			}
 		},
 		damage = {
@@ -63,17 +71,17 @@ local unarmored = {
 				only_1p = true
 			},
 			{
-				event = "wwise/events/weapon/play_melee_hits_piercing_heavy",
+				event = "wwise/events/weapon/melee_hits_blunt_no_damage",
 				append_husk_to_event_name = true
 			}
 		},
 		damage_negated = {
 			{
-				event = "wwise/events/weapon/play_hit_indicator_melee_super_armor_no_damage",
+				event = "wwise/events/weapon/melee_hits_blunt_no_damage",
 				append_husk_to_event_name = true
 			},
 			{
-				event = "wwise/events/weapon/play_melee_hits_piercing_heavy_armour",
+				event = "wwise/events/weapon/play_melee_hits_piercing_heavy_armour_shield",
 				append_husk_to_event_name = true
 			}
 		},
@@ -188,6 +196,10 @@ local armored = {
 			{
 				event = "wwise/events/weapon/play_hit_indicator_weakspot_melee_sharp",
 				only_1p = true
+			},
+			{
+				event = "wwise/events/weapon/play_hit_bone_heavy_addon_dead",
+				only_1p = true
 			}
 		},
 		died = {
@@ -220,6 +232,10 @@ local armored = {
 			{
 				event = "wwise/events/weapon/play_melee_hits_piercing_heavy",
 				append_husk_to_event_name = true
+			},
+			{
+				event = "wwise/events/weapon/play_hit_bone_heavy_addon",
+				only_1p = true
 			}
 		},
 		damage = {
@@ -252,11 +268,11 @@ local armored = {
 		},
 		damage_negated = {
 			{
-				event = "wwise/events/weapon/play_hit_indicator_melee_super_armor_no_damage",
+				event = "wwise/events/weapon/play_melee_hits_piercing_heavy_armour_shield",
 				append_husk_to_event_name = true
 			},
 			{
-				event = "wwise/events/weapon/play_melee_hits_piercing_heavy_armour",
+				event = "wwise/events/weapon/melee_hits_blunt_reduced_damage",
 				append_husk_to_event_name = true
 			}
 		},
@@ -366,6 +382,10 @@ local disgustingly_resilient = {
 			{
 				event = "wwise/events/weapon/play_melee_hits_piercing_heavy",
 				append_husk_to_event_name = true
+			},
+			{
+				event = "wwise/events/weapon/play_hit_bone_heavy_addon_dead",
+				only_1p = true
 			}
 		},
 		died = {
@@ -394,6 +414,10 @@ local disgustingly_resilient = {
 			{
 				event = "wwise/events/weapon/play_melee_hits_piercing_heavy",
 				append_husk_to_event_name = true
+			},
+			{
+				event = "wwise/events/weapon/play_hit_bone_heavy_addon",
+				only_1p = true
 			}
 		},
 		damage = {
@@ -420,17 +444,17 @@ local disgustingly_resilient = {
 				append_husk_to_event_name = true
 			},
 			{
-				event = "wwise/events/weapon/play_melee_hits_piercing_heavy",
+				event = "wwise/events/weapon/melee_hits_blunt_no_damage",
 				append_husk_to_event_name = true
 			}
 		},
 		damage_negated = {
 			{
-				event = "wwise/events/weapon/play_hit_indicator_melee_super_armor_no_damage",
+				event = "wwise/events/weapon/play_melee_hits_piercing_heavy_armour_shield",
 				append_husk_to_event_name = true
 			},
 			{
-				event = "wwise/events/weapon/play_melee_hits_piercing_heavy",
+				event = "wwise/events/weapon/melee_hits_blunt_no_damage",
 				append_husk_to_event_name = true
 			}
 		},

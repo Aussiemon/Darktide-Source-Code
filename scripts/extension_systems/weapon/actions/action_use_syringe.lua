@@ -85,6 +85,12 @@ ActionUseSyringe.fixed_update = function (self, dt, t, time_in_action)
 
 			if target_buff_extension then
 				target_buff_extension:add_internally_controlled_buff(buff_name, t)
+
+				local assist_notification_type = action_settings.assist_notification_type
+
+				if assist_notification_type and ALIVE[target_unit] then
+					PlayerAssistNotifications.show_notification(target_unit, self._player_unit, assist_notification_type)
+				end
 			end
 
 			local player = Managers.player:player_by_unit(self._player_unit)

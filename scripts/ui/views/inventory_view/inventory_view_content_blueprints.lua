@@ -9,6 +9,7 @@ local UIWidget = require("scripts/managers/ui/ui_widget")
 local UISettings = require("scripts/settings/ui/ui_settings")
 local MasterItems = require("scripts/backend/master_items")
 local TextUtilities = require("scripts/utilities/ui/text")
+local ProfileUtils = require("scripts/utilities/profile_utils")
 local grid_size = InventoryViewSettings.grid_size
 local grid_width = grid_size[1]
 local group_header_font_style = table.clone(UIFontSettings.header_3)
@@ -344,6 +345,18 @@ local blueprints = {
 					local cb = callback(_apply_package_item_icon_cb_func, widget, equipped_item)
 					content.icon_load_id = Managers.ui:load_item_icon(equipped_item, cb)
 				end
+
+				local rarity = equipped_item and equipped_item.rarity
+
+				if rarity then
+					local _, rarity_color_dark = ItemUtils.rarity_color(equipped_item)
+
+					if rarity_color_dark then
+						style.background_gradient.color = table.clone(rarity_color_dark)
+					end
+				else
+					style.background_gradient.color = style.background_gradient.default_color
+				end
 			end
 		end,
 		update = function (parent, widget, input_service, dt, t, ui_renderer)
@@ -376,6 +389,19 @@ local blueprints = {
 					if equipped_item then
 						local cb = callback(_apply_package_item_icon_cb_func, widget, equipped_item)
 						content.icon_load_id = Managers.ui:load_item_icon(equipped_item, cb)
+					end
+
+					local style = widget.style
+					local rarity = equipped_item and equipped_item.rarity
+
+					if rarity then
+						local _, rarity_color_dark = ItemUtils.rarity_color(equipped_item)
+
+						if rarity_color_dark then
+							style.background_gradient.color = table.clone(rarity_color_dark)
+						end
+					else
+						style.background_gradient.color = style.background_gradient.default_color
 					end
 				end
 			end
@@ -415,6 +441,19 @@ local blueprints = {
 					content.name_text = ItemUtils.display_name(equipped_item)
 				else
 					content.name_text = Localize("loc_item_slot_empty")
+				end
+
+				local style = widget.style
+				local rarity = equipped_item and equipped_item.rarity
+
+				if rarity then
+					local _, rarity_color_dark = ItemUtils.rarity_color(equipped_item)
+
+					if rarity_color_dark then
+						style.background_gradient.color = table.clone(rarity_color_dark)
+					end
+				else
+					style.background_gradient.color = style.background_gradient.default_color
 				end
 			end
 
@@ -648,6 +687,19 @@ local blueprints = {
 				if display_name then
 					content.display_name = ItemUtils.display_name(item)
 					content.sub_display_name = ItemUtils.sub_display_name(item)
+				end
+
+				local style = widget.style
+				local rarity = item and item.rarity
+
+				if rarity then
+					local _, rarity_color_dark = ItemUtils.rarity_color(item)
+
+					if rarity_color_dark then
+						style.background_gradient.color = table.clone(rarity_color_dark)
+					end
+				else
+					style.background_gradient.color = style.background_gradient.default_color
 				end
 			end
 		end,
@@ -929,6 +981,79 @@ local blueprints = {
 
 				content.icon_load_id = nil
 			end
+		end
+	},
+	character_title_item_slot = {
+		size = ItemPassTemplates.character_title_button_size,
+		pass_template = ItemPassTemplates.character_title_item_slot,
+		init = function (parent, widget, element, callback_name, secondary_callback_name)
+			local content = widget.content
+			local style = widget.style
+			content.hotspot.pressed_callback = callback(parent, callback_name, widget, element)
+			content.element = element
+			local slot_title = element.slot_title
+			content.slot_title = slot_title and Utf8.upper(Localize(slot_title)) or ""
+			local slot = element.slot
+			local player = parent and parent.player and parent:player()
+			local player_profile = player and player:profile()
+
+			if slot then
+				local slot_name = slot.name
+				local equipped_item = parent:equipped_item_in_slot(slot_name)
+				content.item = equipped_item
+				content.display_name = equipped_item and ProfileUtils.title_item_name_no_color(equipped_item, player_profile) or ""
+				local rarity = equipped_item and equipped_item.rarity
+
+				if rarity then
+					local _, rarity_color_dark = ItemUtils.rarity_color(equipped_item)
+
+					if rarity_color_dark then
+						style.background_gradient.color = table.clone(rarity_color_dark)
+					end
+				else
+					style.background_gradient.color = style.background_gradient.default_color
+				end
+			end
+
+			content.has_new_items_update_callback = element.has_new_items_update_callback
+		end,
+		update = function (parent, widget, input_service, dt, t, ui_renderer)
+			local content = widget.content
+			local style = widget.style
+			local element = content.element
+			local slot = element.slot
+
+			if slot then
+				local slot_name = slot.name
+				local previous_item = content.item
+				local equipped_item = parent:equipped_item_in_slot(slot_name)
+				local update = equipped_item and not previous_item or not equipped_item and previous_item or previous_item and previous_item.gear_id ~= equipped_item.gear_id
+
+				if update then
+					content.item = equipped_item
+					local player = parent and parent.player and parent:player()
+					local player_profile = player and player:profile()
+					content.display_name = equipped_item and ProfileUtils.title_item_name_no_color(equipped_item, player_profile) or ""
+					local rarity = equipped_item and equipped_item.rarity
+
+					if rarity then
+						local _, rarity_color_dark = ItemUtils.rarity_color(equipped_item)
+
+						if rarity_color_dark then
+							style.background_gradient.color = table.clone(rarity_color_dark)
+						end
+					else
+						style.background_gradient.color = style.background_gradient.default_color
+					end
+				end
+			end
+
+			local item_type = element.item_type
+			local has_new_items = item_type and content.has_new_items_update_callback and content.has_new_items_update_callback(item_type) or false
+			content.has_new_items = has_new_items
+		end,
+		destroy = function (parent, widget, element, ui_renderer)
+			return
 		end
 	},
 	item_slot = {

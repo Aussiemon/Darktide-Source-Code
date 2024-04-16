@@ -3,8 +3,8 @@ local InputUtils = require("scripts/managers/input/input_utils")
 local UIFonts = require("scripts/managers/ui/ui_fonts")
 local UIRenderer = require("scripts/managers/ui/ui_renderer")
 local UIScenegraph = require("scripts/managers/ui/ui_scenegraph")
-local UIWidget = require("scripts/managers/ui/ui_widget")
 local UISequenceAnimator = require("scripts/managers/ui/ui_sequence_animator")
+local UIWidget = require("scripts/managers/ui/ui_widget")
 local BaseView = class("BaseView")
 
 BaseView.init = function (self, definitions, settings, context, dynamic_package_name)
@@ -244,6 +244,14 @@ BaseView.on_enter = function (self)
 	end
 
 	Managers.telemetry_events:open_view(self.view_name, self._hub_interaction)
+end
+
+BaseView.character_level = function (self)
+	local player = self:_player()
+	local profile = player:profile()
+	local profile_level = profile.current_level
+
+	return profile_level
 end
 
 BaseView.on_exit = function (self)

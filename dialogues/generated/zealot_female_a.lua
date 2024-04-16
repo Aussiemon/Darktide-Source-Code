@@ -28,7 +28,7 @@ return function ()
 				"global_context",
 				"level_time",
 				OP.LT,
-				400
+				700
 			},
 			{
 				"global_context",
@@ -63,7 +63,7 @@ return function ()
 				"time_since_last_short_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				140
+				100
 			},
 			{
 				"faction_memory",

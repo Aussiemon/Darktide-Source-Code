@@ -95,6 +95,14 @@ local mission_objective_templates = {
 				use_music_event = "escape_event",
 				mission_objective_type = "luggable",
 				header = "loc_objective_dm_rise_escape_header"
+			},
+			objective_dm_rise_luggable_secret_01 = {
+				mission_objective_type = "luggable",
+				hidden = true
+			},
+			objective_dm_rise_luggable_secret_02 = {
+				mission_objective_type = "luggable",
+				hidden = true
 			}
 		}
 	}

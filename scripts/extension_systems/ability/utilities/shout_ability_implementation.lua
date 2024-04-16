@@ -1,6 +1,7 @@
 local Attack = require("scripts/utilities/attack/attack")
 local BreedSettings = require("scripts/settings/breed/breed_settings")
 local MinionState = require("scripts/utilities/minion_state")
+local PlayerAssistNotifications = require("scripts/utilities/player_assist_notifications")
 local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
 local PowerLevelSettings = require("scripts/settings/damage/power_level_settings")
 local SpecialRulesSetting = require("scripts/settings/ability/special_rules_settings")
@@ -84,6 +85,10 @@ ShoutAbilityImplementation.execute = function (shout_settings, player_unit, t, l
 					if character_state_component and PlayerUnitStatus.is_knocked_down(character_state_component) then
 						local assisted_state_input_component = unit_data_extension:write_component("assisted_state_input")
 						assisted_state_input_component.force_assist = true
+
+						if ALIVE[unit] then
+							PlayerAssistNotifications.show_notification(unit, player_unit, "saved")
+						end
 					end
 				end
 			end
@@ -147,6 +152,12 @@ ShoutAbilityImplementation.execute = function (shout_settings, player_unit, t, l
 						local buff_extension = ScriptUnit.extension(enemy_unit, "buff_system")
 
 						buff_extension:add_internally_controlled_buff(buff_name, t, "owner_unit", player_unit)
+
+						local source_player = player_unit and Managers.state.player_unit_spawn:owner(player_unit)
+
+						if source_player then
+							Managers.stats:record_private("hook_shout_buff", source_player, buff_name, breed.name)
+						end
 					end
 
 					local buff_special_rule = special_rules.shout_applies_buff_to_enemies

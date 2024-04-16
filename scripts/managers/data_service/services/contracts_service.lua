@@ -29,4 +29,16 @@ ContractsService.complete_contract = function (self, character_id)
 	end)
 end
 
+ContractsService.has_contract = function (self, character_id)
+	return self._backend_interface.contracts:get_current_contract(character_id, nil, false):next(function ()
+		return true
+	end, function (error)
+		return false
+	end)
+end
+
+ContractsService.get_contract = function (self, character_id, create_contract)
+	return self._backend_interface.contracts:get_current_contract(character_id, nil, create_contract)
+end
+
 return ContractsService

@@ -39,7 +39,7 @@ DestructibleExtension._disable_nav_volume = function (self)
 	end
 end
 
-DestructibleExtension.setup_from_component = function (self, despawn_timer_duration, despawn_when_destroyed, collision_actor_names, mass, speed, direction, force_direction_type, start_visible, is_nav_gate, broadphase_radius, use_health_extension_health)
+DestructibleExtension.setup_from_component = function (self, despawn_timer_duration, despawn_when_destroyed, collision_actor_names, mass, speed, direction, force_direction_type, start_visible, is_nav_gate, broadphase_radius, use_health_extension_health, collectible_data)
 	local unit = self._unit
 	self._despawn_when_destroyed = despawn_when_destroyed
 	self._despawn_timer_duration = despawn_timer_duration
@@ -69,6 +69,15 @@ DestructibleExtension.setup_from_component = function (self, despawn_timer_durat
 	end
 
 	self._is_nav_gate = is_nav_gate
+
+	if collectible_data then
+		collectible_data.unit = unit
+		local collectibles_manager = Managers.state.collectibles
+
+		collectibles_manager:register_destructible(collectible_data)
+
+		self._collectible_data = collectible_data
+	end
 end
 
 DestructibleExtension.setup_stages = function (self)
@@ -161,7 +170,7 @@ DestructibleExtension.set_visibility = function (self, is_visible)
 	_set_lights_enabled(unit, self._destruction_info, self._visibility_info)
 end
 
-DestructibleExtension.add_damage = function (self, damage_amount, hit_actor, attack_direction)
+DestructibleExtension.add_damage = function (self, damage_amount, hit_actor, attack_direction, attacking_unit)
 	if not self._is_server then
 		return
 	end
@@ -170,7 +179,7 @@ DestructibleExtension.add_damage = function (self, damage_amount, hit_actor, att
 	local destruction_info = self._destruction_info
 	local old_stage_index = destruction_info.current_stage_index
 
-	self:_add_damage(damage_amount, attack_direction, false)
+	self:_add_damage(damage_amount, attack_direction, false, attacking_unit)
 
 	local new_stage_index = destruction_info.current_stage_index
 
@@ -332,7 +341,7 @@ DestructibleExtension._dequeue_stage = function (self, attack_direction, from_ho
 	return destruction_info.current_stage_index
 end
 
-DestructibleExtension._add_damage = function (self, damage_amount, attack_direction, force_destruction)
+DestructibleExtension._add_damage = function (self, damage_amount, attack_direction, force_destruction, attacking_unit)
 	local destruction_info = self._destruction_info
 	local unit = self._unit
 	local current_stage_index = destruction_info.current_stage_index
@@ -351,6 +360,12 @@ DestructibleExtension._add_damage = function (self, damage_amount, attack_direct
 
 		if health_after_damage <= 0 then
 			self:_dequeue_stage(attack_direction, false)
+
+			if self._collectible_data then
+				local collectibles_manager = Managers.state.collectibles
+
+				collectibles_manager:collectible_destroyed(self._collectible_data, attacking_unit)
+			end
 		elseif self._is_server then
 			Unit.flow_event(unit, "lua_damage_taken")
 
@@ -359,6 +374,10 @@ DestructibleExtension._add_damage = function (self, damage_amount, attack_direct
 			Managers.state.game_session:send_rpc_clients("rpc_destructible_damage_taken", unit_id, is_level_unit)
 		end
 	end
+end
+
+DestructibleExtension.set_collectible_data = function (self, data)
+	self._collectible_data = data
 end
 
 function _set_meshes_visiblity(unit, meshes, visible)

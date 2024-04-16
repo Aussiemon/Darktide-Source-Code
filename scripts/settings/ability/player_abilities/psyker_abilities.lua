@@ -88,7 +88,7 @@ local abilities = {
 	},
 	psyker_overcharge_stance = {
 		hud_icon = "content/ui/textures/icons/abilities/hud/psyker/psyker_ability_overcharge_stance",
-		cooldown = 30,
+		cooldown = 25,
 		ability_template = "psyker_overcharge_stance",
 		ability_type = "combat_ability",
 		icon = "content/ui/materials/icons/abilities/ultimate/default",

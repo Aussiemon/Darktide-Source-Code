@@ -5,16 +5,17 @@ local mission_templates = {
 		zone_id = "transit",
 		texture_small = "content/ui/textures/missions/cm_habs_small",
 		mission_brief_material = "content/environment/cinematic/mission_briefing/mission_briefing_hologram_cm_habs_01",
-		texture_medium = "content/ui/textures/missions/cm_habs_medium",
-		face_state_machine_key = "state_machine_missions",
+		minigame_type = "drill",
 		mechanism_name = "adventure",
+		face_state_machine_key = "state_machine_missions",
+		texture_medium = "content/ui/textures/missions/cm_habs_medium",
 		texture_big = "content/ui/textures/missions/cm_habs_big",
 		coordinates = "loc_mission_coordinates_cm_habs",
-		mission_type = "03",
 		level = "content/levels/transit/missions/mission_cm_habs",
 		game_mode_name = "coop_complete_objective",
 		mission_intro_minimum_time = 25,
 		objectives = "cm_habs",
+		mission_type = "03",
 		mission_description = "loc_mission_board_main_objective_habblock_description",
 		cinematics = {
 			intro_abc = {
@@ -39,12 +40,31 @@ local mission_templates = {
 		testify_flags = {},
 		health_station = {},
 		mission_brief_vo = {
-			vo_profile = "sergeant_a",
+			vo_profile = "sergeant_b",
 			wwise_route_key = 1,
 			vo_events = {
-				"mission_brief_control_mission_one",
-				"mission_brief_control_mission_two",
-				"mission_brief_control_mission_three"
+				"mission_habs_redux_briefing_a",
+				"mission_habs_redux_briefing_b",
+				"mission_habs_redux_briefing_c"
+			},
+			mission_giver_packs = {
+				sergeant_a = {
+					"sergeant",
+					"boon_vendor",
+					"tertium_noble",
+					"pilot"
+				},
+				sergeant_b = {
+					"sergeant",
+					"enemy_nemesis_wolfer",
+					"enemy_wolfer_adjutant",
+					"pilot"
+				},
+				shipmistress_a = {
+					"shipmistress",
+					"enginseer",
+					"pilot"
+				}
 			}
 		},
 		dialogue_settings = {
@@ -156,7 +176,7 @@ local mission_templates = {
 		},
 		testify_flags = {},
 		mission_brief_vo = {
-			vo_profile = "explicator_a",
+			vo_profile = "sergeant_a",
 			wwise_route_key = 1,
 			vo_events = {
 				"mission_station_briefing_a",
@@ -184,7 +204,7 @@ local mission_templates = {
 		mechanism_name = "adventure",
 		texture_big = "content/ui/textures/missions/dm_rise_big",
 		coordinates = "loc_mission_coordinates_dm_rise",
-		mission_type = "01",
+		mission_type = "05",
 		level = "content/levels/transit/missions/mission_dm_rise",
 		game_mode_name = "coop_complete_objective",
 		mission_intro_minimum_time = 5,
@@ -220,6 +240,19 @@ local mission_templates = {
 				"mission_rise_briefing_a",
 				"mission_rise_briefing_b",
 				"mission_rise_briefing_c"
+			},
+			mission_giver_packs = {
+				sergeant_a = {
+					"sergeant"
+				},
+				purser_a = {
+					"purser",
+					"contract_vendor"
+				},
+				training_ground_psyker_a = {
+					"training_ground_psyker",
+					"barber"
+				}
 			}
 		},
 		dialogue_settings = {

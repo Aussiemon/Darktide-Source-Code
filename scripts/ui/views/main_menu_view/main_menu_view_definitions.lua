@@ -50,14 +50,22 @@ local character_name = table.clone(UIFontSettings.header_2)
 character_name.text_horizontal_alignment = "center"
 character_name.offset = {
 	0,
-	220,
+	195,
 	1
 }
+local character_title_style = table.clone(UIFontSettings.body)
+character_title_style.text_horizontal_alignment = "center"
+character_title_style.offset = {
+	0,
+	235,
+	1
+}
+character_title_style.text_color = Color.terminal_text_body(255, true)
 local archetype_name = table.clone(UIFontSettings.body)
 archetype_name.text_horizontal_alignment = "center"
 archetype_name.offset = {
 	0,
-	260,
+	265,
 	1
 }
 archetype_name.text_color = Color.terminal_text_body_sub_header(255, true)
@@ -567,11 +575,18 @@ local widget_definitions = {
 			style = character_name
 		},
 		{
-			value_id = "character_title",
+			value_id = "character_archetype_title",
 			style_id = "text_archetype",
 			pass_type = "text",
 			value = "Archetype name - 00",
 			style = archetype_name
+		},
+		{
+			value_id = "character_title",
+			style_id = "text_character_title",
+			pass_type = "text",
+			value = "Reject",
+			style = character_title_style
 		}
 	}, "character_info"),
 	character_list_background = UIWidget.create_definition({

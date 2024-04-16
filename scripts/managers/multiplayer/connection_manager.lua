@@ -1,5 +1,5 @@
-local VotingNetworkInterface = require("scripts/managers/voting/voting_network_interface")
 local ConnectionManagerTestify = GameParameters.testify and require("scripts/managers/multiplayer/connection_manager_testify")
+local VotingNetworkInterface = require("scripts/managers/voting/voting_network_interface")
 local ConnectionManager = class("ConnectionManager")
 
 local function _info(...)
@@ -83,7 +83,7 @@ ConnectionManager.init = function (self, options, event_delegate, approve_channe
 	trunk_revision = tostring(trunk_revision)
 
 	if trunk_revision == "Unknown" then
-		Log.warning("ConnectionManager", "Content revision unknown, try reinstalling svn with command line tools enabled")
+		Log.warning("ConnectionManager", "Content revision unknown, ensure SVN hook scripts are enabled, SVN with command line tools is installed & run a SVN update. Reach out to a friendly programmer if you need help.")
 	end
 
 	local project_hash = options.project_hash

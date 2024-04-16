@@ -1654,7 +1654,7 @@ local events = {
 			stubrevolver_p1_m2 = "wwise/events/weapon/play_stub_revolver_cocking",
 			ogryn_heavystubber_p1_m1 = "wwise/events/weapon/play_heavy_stubber_mag_out",
 			autogun_p3_m2 = "wwise/events/weapon/play_autogun_p2_reload_clip_out",
-			stubrevolver_p1_m3 = "wwise/events/weapon/play_stub_revolver_cocking",
+			ogryn_thumper_p1_m1 = "wwise/events/weapon/thumper_shotgun_open",
 			lasgun_p3_m3 = "wwise/events/weapon/play_lasgun_p3_mag_out",
 			bot_laspistol_killshot = "wwise/events/weapon/play_reload_foley_laspistol_clip_out",
 			high_bot_lasgun_killshot = "wwise/events/weapon/play_lasgun_reload_clip_out",
@@ -1662,9 +1662,8 @@ local events = {
 			lasgun_p2_m3 = "wwise/events/weapon/play_lasgun_p2_reload_mag_out",
 			bolter_p1_m1 = "wwise/events/weapon/play_bolter_reload_clip_out",
 			lasgun_p3_m2 = "wwise/events/weapon/play_lasgun_p3_mag_out",
-			ogryn_thumper_p1_m1 = "wwise/events/weapon/thumper_shotgun_open",
-			autogun_p3_m1 = "wwise/events/weapon/play_autogun_p2_reload_clip_out",
 			ogryn_thumper_p1_m2 = "wwise/events/weapon/thumper_shotgun_open",
+			autogun_p3_m1 = "wwise/events/weapon/play_autogun_p2_reload_clip_out",
 			lasgun_p1_m2 = "wwise/events/weapon/play_lasgun_reload_clip_out",
 			stubrevolver_p1_m1 = "wwise/events/weapon/play_stub_revolver_cocking",
 			lasgun_p3_m1 = "wwise/events/weapon/play_lasgun_p3_mag_out",
@@ -1706,7 +1705,7 @@ local events = {
 			ogryn_heavystubber_p1_m1 = "wwise/events/weapon/play_heavy_stubber_mag_in",
 			ogryn_thumper_p1_m1 = "wwise/events/weapon/thumper_shotgun_insert",
 			autogun_p3_m2 = "wwise/events/weapon/play_autogun_p2_reload_clip_in",
-			stubrevolver_p1_m3 = "wwise/events/weapon/play_stub_revolver_uncocking",
+			ogryn_thumper_p1_m2 = "wwise/events/weapon/thumper_shotgun_insert",
 			lasgun_p3_m3 = "wwise/events/weapon/play_lasgun_p3_mag_in",
 			bot_laspistol_killshot = "wwise/events/weapon/play_reload_foley_laspistol_clip_in",
 			high_bot_lasgun_killshot = "wwise/events/weapon/play_lasgun_reload_clip_in",
@@ -1714,7 +1713,6 @@ local events = {
 			lasgun_p2_m3 = "wwise/events/weapon/play_lasgun_p2_reload_mag_in",
 			bolter_p1_m1 = "wwise/events/weapon/play_bolter_reload_clip_in",
 			lasgun_p3_m2 = "wwise/events/weapon/play_lasgun_p3_mag_in",
-			ogryn_thumper_p1_m2 = "wwise/events/weapon/thumper_shotgun_insert",
 			autogun_p3_m1 = "wwise/events/weapon/play_autogun_p2_reload_clip_in",
 			lasgun_p1_m2 = "wwise/events/weapon/play_lasgun_reload_clip_in",
 			stubrevolver_p1_m1 = "wwise/events/weapon/play_stub_revolver_uncocking",
@@ -2134,11 +2132,11 @@ local events = {
 		},
 		events = {
 			ogryn_club_p1_m2 = "wwise/events/weapon/play_pipe_swing",
-			combatsword_p3_m2 = "wwise/events/weapon/play_sword_swing_falchion",
+			ogryn_club_p2_m2 = "wwise/events/weapon/play_pipe_swing",
 			forcesword_p1_m2 = "wwise/events/weapon/play_force_sword_swing",
 			forcesword_p1_m1 = "wwise/events/weapon/play_force_sword_swing",
 			ogryn_club_p2_m1 = "wwise/events/weapon/play_pipe_swing",
-			forcesword_2hp1_m1 = "wwise/events/weapon/play_force_sword_swing",
+			combatsword_p3_m2 = "wwise/events/weapon/play_sword_swing_falchion",
 			powermaul_2h_p1_m1 = "wwise/events/weapon/play_thunder_hammer_swing",
 			chainaxe_p1_m2 = "wwise/events/weapon/play_chainaxe_swing",
 			powersword_p1_m1 = "wwise/events/weapon/play_power_sword_swing",
@@ -2151,11 +2149,10 @@ local events = {
 			ogryn_combatblade_p1_m2 = "wwise/events/weapon/play_combat_weapon_combat_knife_ogryn_swing",
 			ogryn_combatblade_p1_m1 = "wwise/events/weapon/play_combat_weapon_combat_knife_ogryn_swing",
 			chainsword_p1_m1 = "wwise/events/weapon/play_combat_weapon_chainsword_swing_heavy",
-			ogryn_club_p2_m2 = "wwise/events/weapon/play_pipe_swing",
 			ogryn_powermaul_p1_m1 = "wwise/events/weapon/play_power_maul_swing",
 			bot_combatsword_linesman_p1 = "wwise/events/weapon/play_sword_swing_medium",
-			powersword_p1_m2 = "wwise/events/weapon/play_power_sword_swing",
 			bot_combatsword_linesman_p2 = "wwise/events/weapon/play_sword_swing_medium",
+			powersword_p1_m2 = "wwise/events/weapon/play_power_sword_swing",
 			forcesword_p1_m3 = "wwise/events/weapon/play_force_sword_swing",
 			ogryn_club_p2_m3 = "wwise/events/weapon/play_pipe_swing",
 			ogryn_gauntlet_p1_m1 = "wwise/events/weapon/play_ogryn_gauntlet_swing",
@@ -2554,6 +2551,16 @@ local events = {
 			powersword_p1_m3 = "wwise/events/weapon/play_power_sword_off"
 		}
 	},
+	weapon_special_custom = {
+		no_default = true,
+		switch = {
+			"wielded_weapon_template",
+			"level"
+		},
+		events = {
+			default = "wwise/events/weapon/play_weapon_silence"
+		}
+	},
 	weapon_overload = {
 		no_default = true,
 		has_husk_events = true,
@@ -2587,6 +2594,57 @@ local events = {
 			}
 		}
 	},
+	sfx_device_start_01 = {
+		has_husk_events = true,
+		switch = {
+			"archetype",
+			"wielded_weapon_template"
+		},
+		events = {
+			default = {
+				default = "wwise/events/weapon/play_weapon_silence",
+				skull_decoder_02 = "wwise/events/player/play_event_poison_human_activate_servitor_01"
+			},
+			ogryn = {
+				default = "wwise/events/weapon/play_weapon_silence",
+				skull_decoder_02 = "wwise/events/player/play_event_poison_ogryn_activate_servitor_01"
+			}
+		}
+	},
+	sfx_device_start_02 = {
+		has_husk_events = true,
+		switch = {
+			"archetype",
+			"wielded_weapon_template"
+		},
+		events = {
+			default = {
+				default = "wwise/events/weapon/play_weapon_silence",
+				skull_decoder_02 = "wwise/events/player/play_event_poison_human_activate_servitor_02"
+			},
+			ogryn = {
+				default = "wwise/events/weapon/play_weapon_silence",
+				skull_decoder_02 = "wwise/events/player/play_event_poison_ogryn_activate_servitor_02"
+			}
+		}
+	},
+	sfx_device_start_03 = {
+		has_husk_events = true,
+		switch = {
+			"archetype",
+			"wielded_weapon_template"
+		},
+		events = {
+			default = {
+				default = "wwise/events/weapon/play_weapon_silence",
+				skull_decoder_02 = "wwise/events/player/play_event_poison_human_activate_servitor_03"
+			},
+			ogryn = {
+				default = "wwise/events/weapon/play_weapon_silence",
+				skull_decoder_02 = "wwise/events/player/play_event_poison_ogryn_activate_servitor_02"
+			}
+		}
+	},
 	sfx_device_stop = {
 		has_husk_events = true,
 		switch = {
@@ -2595,6 +2653,7 @@ local events = {
 		events = {
 			default = "wwise/events/weapon/play_weapon_silence",
 			skull_decoder = "wwise/events/player/play_servitor_hacking_cancel",
+			skull_decoder_02 = "wwise/events/player/play_event_poison_servitor_cancel",
 			breach_charge = "wwise/events/player/stop_int_breach_charge_activate"
 		}
 	},
@@ -2626,6 +2685,66 @@ local events = {
 		events = {
 			default = "wwise/events/weapon/play_weapon_silence",
 			auspex_scanner = "wwise/events/player/play_device_auspex_scanner_minigame_fail"
+		}
+	},
+	sfx_minigame_bio_selection = {
+		has_husk_events = true,
+		switch = {
+			"wielded_weapon_template"
+		},
+		events = {
+			default = "wwise/events/weapon/play_weapon_silence",
+			auspex_scanner = "wwise/events/player/play_device_auspex_bio_minigame_selection"
+		}
+	},
+	sfx_minigame_bio_selection_right = {
+		has_husk_events = true,
+		switch = {
+			"wielded_weapon_template"
+		},
+		events = {
+			default = "wwise/events/weapon/play_weapon_silence",
+			auspex_scanner = "wwise/events/player/play_device_auspex_bio_minigame_selection_right"
+		}
+	},
+	sfx_minigame_bio_selection_wrong = {
+		has_husk_events = true,
+		switch = {
+			"wielded_weapon_template"
+		},
+		events = {
+			default = "wwise/events/weapon/play_weapon_silence",
+			auspex_scanner = "wwise/events/player/play_device_auspex_bio_minigame_selection_wrong"
+		}
+	},
+	sfx_minigame_bio_progress = {
+		has_husk_events = true,
+		switch = {
+			"wielded_weapon_template"
+		},
+		events = {
+			default = "wwise/events/weapon/play_weapon_silence",
+			auspex_scanner = "wwise/events/player/play_device_auspex_bio_minigame_progress"
+		}
+	},
+	sfx_minigame_bio_progress_last = {
+		has_husk_events = true,
+		switch = {
+			"wielded_weapon_template"
+		},
+		events = {
+			default = "wwise/events/weapon/play_weapon_silence",
+			auspex_scanner = "wwise/events/player/play_device_auspex_bio_minigame_progress_last"
+		}
+	},
+	sfx_minigame_bio_fail = {
+		has_husk_events = true,
+		switch = {
+			"wielded_weapon_template"
+		},
+		events = {
+			default = "wwise/events/weapon/play_weapon_silence",
+			auspex_scanner = "wwise/events/player/play_device_auspex_bio_minigame_fail"
 		}
 	},
 	sfx_scanning_sucess = {

@@ -1,7 +1,12 @@
 local item_dependencies = {
 	minion_items = {
+		["content/items/characters/minions/chaos_poxwalker/attachments_gear/horn_arm_left_01"] = 1,
+		["content/items/characters/minions/chaos_poxwalker/attachments_gear/lowerbody_a"] = 1,
+		["content/items/characters/minions/chaos_poxwalker/attachments_gear/horn_torso_03"] = 1,
+		["content/items/characters/minions/chaos_poxwalker/attachments_base/body_skin_03"] = 1,
 		["content/items/characters/minions/chaos_poxwalker/attachments_base/body"] = 1,
-		["content/items/characters/minions/chaos_hound/attachments_base/body"] = 1
+		["content/items/characters/minions/chaos_hound/attachments_base/body"] = 1,
+		["content/items/characters/minions/chaos_poxwalker/attachments_gear/horn_head_03"] = 1
 	},
 	player_items = {
 		["content/items/characters/player/human/face_tattoo/dirt_tattoo_01_face"] = 2,

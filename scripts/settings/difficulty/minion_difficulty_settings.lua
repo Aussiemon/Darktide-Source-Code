@@ -19,8 +19,7 @@ local function _monster_health_steps(health)
 		health * 1.25,
 		health * 1.5,
 		health * 2,
-		health * 3,
-		health * 3.25
+		health * 3
 	}
 
 	return health_steps
@@ -32,8 +31,7 @@ local function _roamer_health_steps(health)
 		health * 1.25,
 		health * 1.5,
 		health * 2,
-		health * 2.5,
-		health * 3
+		health * 2.5
 	}
 
 	return health_steps
@@ -45,8 +43,7 @@ local function _horde_health_steps(health)
 		health * 1.25,
 		health * 1.5,
 		health * 2,
-		health * 2.5,
-		health * 3
+		health * 2.5
 	}
 
 	return health_steps
@@ -58,8 +55,7 @@ local function _special_health_steps(health)
 		health * 1,
 		health * 1.25,
 		health * 1.5,
-		health * 2,
-		health * 3
+		health * 2
 	}
 
 	return health_steps
@@ -71,8 +67,7 @@ local function _elite_health_steps(health)
 		health * 1,
 		health * 1.25,
 		health * 1.5,
-		health * 2,
-		health * 2.75
+		health * 2
 	}
 
 	return health_steps
@@ -233,10 +228,11 @@ minion_difficulty_settings.health = {
 	cultist_mutant_mutator = _special_health_steps(1000),
 	cultist_flamer = _special_health_steps(700),
 	renegade_flamer = _special_health_steps(700),
+	cultist_grenadier = _special_health_steps(500),
 	renegade_grenadier = _special_health_steps(375),
 	renegade_sniper = _special_health_steps(250),
 	chaos_ogryn_gunner = _elite_health_steps(2000),
-	chaos_ogryn_bulwark = _elite_health_steps(1800),
+	chaos_ogryn_bulwark = _elite_health_steps(2400),
 	chaos_ogryn_executor = _elite_health_steps(1800),
 	chaos_daemonhost = _roamer_health_steps(16000),
 	renegade_captain = _roamer_health_steps(16000),
@@ -290,7 +286,7 @@ minion_difficulty_settings.hit_mass = {
 		1,
 		1.25,
 		1.25,
-		2
+		1.25
 	},
 	chaos_poxwalker = {
 		1.25,
@@ -298,7 +294,7 @@ minion_difficulty_settings.hit_mass = {
 		1.25,
 		1.5,
 		1.5,
-		2
+		1.5
 	},
 	cultist_assault = {
 		1.75,
@@ -314,7 +310,7 @@ minion_difficulty_settings.hit_mass = {
 		2.5,
 		2.5,
 		2.5,
-		2.5
+		3
 	},
 	renegade_assault = {
 		1.5,
@@ -338,7 +334,7 @@ minion_difficulty_settings.hit_mass = {
 		3.5,
 		3.5,
 		3.5,
-		3.5
+		4
 	},
 	renegade_rifleman = {
 		1.5,
@@ -346,7 +342,7 @@ minion_difficulty_settings.hit_mass = {
 		1.5,
 		1.5,
 		1.5,
-		3
+		2
 	},
 	renegade_shocktrooper = {
 		2,
@@ -424,7 +420,7 @@ minion_difficulty_settings.power_level = {
 		200,
 		300,
 		350,
-		500
+		600
 	},
 	renegade_captain_melee_one_hand = {
 		75,
@@ -463,7 +459,7 @@ minion_difficulty_settings.power_level = {
 		600,
 		700,
 		800,
-		1000
+		1200
 	},
 	chaos_beast_of_nurgle_melee = {
 		150,
@@ -779,11 +775,11 @@ minion_difficulty_settings.cooldowns = {
 		3
 	},
 	cultist_grenadier_throw = {
-		20,
-		17,
-		15,
-		13,
-		10
+		16,
+		14,
+		12,
+		10,
+		8
 	}
 }
 minion_difficulty_settings.terror_event_point_costs = {

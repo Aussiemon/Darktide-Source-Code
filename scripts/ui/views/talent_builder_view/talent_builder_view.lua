@@ -1042,6 +1042,32 @@ TalentBuilderView._update_gamepad_cursor = function (self, dt, t, input_service)
 		local scenegraph = self._ui_scenegraph
 		local cursor_size = Vector3.from_array_flat(scenegraph.gamepad_cursor.size)
 		local wanted_size = Vector2(settings.default_size_x, settings.default_size_y)
+		pos = pos + vel * dt
+		vel = vel * settings.cursor_friction_coefficient^dt + settings.cursor_acceleration * drag_coefficient * dt * input
+
+		if Vector3.length_squared(vel) < settings.cursor_minimum_speed then
+			Vector3.set_xyz(vel, 0, 0, 0)
+		end
+
+		gamepad_cursor_average_vel = math.lerp(gamepad_cursor_average_vel, vel, settings.average_speed_smoothing^dt)
+		local zoom_scale = self._current_zoom or 1
+		local inverse_zoom_scale = 1 / zoom_scale
+		local bounds_min_x = settings.bounds_min_x * inverse_zoom_scale
+		local bounds_max_x = settings.bounds_max_x * inverse_zoom_scale
+		local edge_margin_top = settings.edge_margin_top
+		local edge_margin_bottom = settings.edge_margin_bottom
+		local bounds_max_y = screen_height * inverse_scale - edge_margin_bottom
+		pos[1] = math.clamp(pos[1], bounds_min_x, bounds_max_x)
+
+		if bounds_max_y < pos[2] then
+			if allow_background_scroll then
+				self:_on_input_scroll_axis_changed(-0.5)
+			end
+		elseif pos[2] < edge_margin_top and allow_background_scroll then
+			self:_on_input_scroll_axis_changed(0.5)
+		end
+
+		pos[2] = math.clamp(pos[2], edge_margin_top, bounds_max_y)
 		local best_pos = nil
 		local best_score = -math.huge
 		local best_widget = nil
@@ -1057,7 +1083,7 @@ TalentBuilderView._update_gamepad_cursor = function (self, dt, t, input_service)
 
 			if type ~= "start" then
 				local is_selected = i == self._selected_node_index
-				local has_overlap, score, widget_size, widget_center = process_gamepad_cursor_widget_func(self, widget, cursor_size, is_sticky, is_selected, cursor_pos, normalized_gamepad_cursor_average_vel)
+				local has_overlap, score, widget_size, widget_center = process_gamepad_cursor_widget_func(self, widget, cursor_size, is_sticky, is_selected, pos, normalized_gamepad_cursor_average_vel)
 				local delta_dir, delta_len = Vector3.direction_length(widget_center - cursor_center)
 
 				if has_overlap then
@@ -1087,7 +1113,7 @@ TalentBuilderView._update_gamepad_cursor = function (self, dt, t, input_service)
 
 			if widget then
 				local is_selected = i == self._selected_node_index
-				local has_overlap, score, widget_size, widget_center = process_gamepad_cursor_widget_func(self, widget, cursor_size, is_sticky, is_selected, cursor_pos, normalized_gamepad_cursor_average_vel, ui_overlay_scenegraph)
+				local has_overlap, score, widget_size, widget_center = process_gamepad_cursor_widget_func(self, widget, cursor_size, is_sticky, is_selected, pos, normalized_gamepad_cursor_average_vel, ui_overlay_scenegraph)
 				local delta_dir, delta_len = Vector3.direction_length(widget_center - cursor_center)
 
 				if has_overlap then
@@ -1118,31 +1144,6 @@ TalentBuilderView._update_gamepad_cursor = function (self, dt, t, input_service)
 			end
 		end
 
-		pos = pos + vel * dt
-		vel = vel * settings.cursor_friction_coefficient^dt + settings.cursor_acceleration * drag_coefficient * dt * input
-
-		if Vector3.length_squared(vel) < settings.cursor_minimum_speed then
-			Vector3.set_xyz(vel, 0, 0, 0)
-		end
-
-		gamepad_cursor_average_vel = math.lerp(gamepad_cursor_average_vel, vel, settings.average_speed_smoothing^dt)
-		local layout_background_world_position = self:_scenegraph_world_position("layout_background")
-		local bounds_min_x = settings.bounds_min_x + layout_background_world_position[1]
-		local bounds_max_x = settings.bounds_max_x + layout_background_world_position[1]
-		local edge_margin_top = settings.edge_margin_top
-		local edge_margin_bottom = settings.edge_margin_bottom
-		local bounds_max_y = screen_height * inverse_scale - edge_margin_bottom
-		pos[1] = math.clamp(pos[1], bounds_min_x, bounds_max_x)
-
-		if bounds_max_y < pos[2] then
-			if allow_background_scroll then
-				self:_on_input_scroll_axis_changed(-0.5)
-			end
-		elseif pos[2] < edge_margin_top and allow_background_scroll then
-			self:_on_input_scroll_axis_changed(0.5)
-		end
-
-		pos[2] = math.clamp(pos[2], edge_margin_top, bounds_max_y)
 		local x, y = Vector3.to_elements(pos)
 
 		self:_set_scenegraph_position("gamepad_cursor_pivot", x, y)

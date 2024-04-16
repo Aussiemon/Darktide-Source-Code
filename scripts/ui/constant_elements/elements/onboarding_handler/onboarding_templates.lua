@@ -51,9 +51,9 @@ end
 local function _get_player_character_level()
 	local local_player_id = 1
 	local player = Managers.player:local_player(local_player_id)
-	local player_level = 1
+	local player_profile = player:profile()
 
-	return player_level
+	return player_profile.current_level
 end
 
 local function _get_player()
@@ -779,6 +779,54 @@ local templates = {
 			local player = _get_player()
 
 			Managers.event:trigger("event_player_hide_onboarding_message", player)
+		end,
+		sync_on_events = {}
+	},
+	{
+		name = "Level 7 Introduce Objective - Penances / Track",
+		valid_states = {
+			"GameplayStateRun"
+		},
+		validation_func = function (self)
+			if not _is_in_hub() then
+				return false
+			end
+
+			if _get_player_character_level() < 7 then
+				return false
+			end
+
+			return Managers.achievements:is_reward_to_claim()
+		end,
+		on_activation = function (self)
+			if self.objective then
+				Log.warning("onboarding_templates", "[on_event_triggered] trying to start objective '%s' when it's already active", self.name)
+
+				return
+			end
+
+			local objective_name = self.name
+			local localization_key = "loc_notification_desc_penance_item_can_be_claimed"
+			local interaction_type = "penances"
+			local marker_units = _get_interaction_units_by_type(interaction_type)
+			local objective = _create_objective(objective_name, localization_key, marker_units, nil, true)
+			self.objective = objective
+
+			Managers.event:trigger("event_add_mission_objective", objective)
+		end,
+		on_deactivation = function (self)
+			if not self.objective then
+				return
+			end
+
+			local objective = self.objective
+			local objective_name = objective:name()
+
+			Managers.event:trigger("event_remove_mission_objective", objective_name)
+
+			self.objective = nil
+
+			objective:destroy()
 		end,
 		sync_on_events = {}
 	},

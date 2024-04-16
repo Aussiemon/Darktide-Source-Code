@@ -709,7 +709,13 @@ EndView._create_player_widget = function (self, player_info, slot, more_than_one
 	local profile = player_info:profile()
 	widget_content.player_info = player_info
 	widget_content.boxed_position = slot.boxed_position
-	widget_content.character_title = ProfileUtils.character_title(profile)
+	widget_content.character_archetype_title = ProfileUtils.character_archetype_title(profile)
+	local player_title = ProfileUtils.character_title(profile)
+
+	if player_title and player_title ~= "" then
+		widget_content.character_title = player_title
+	end
+
 	widget_content.peer_id = player_info:peer_id()
 	local party_status = player_info:party_status()
 

@@ -384,6 +384,7 @@ ForceFieldExtension.on_death = function (self, t)
 	Unit.destroy_actor(unit, Unit.actor(unit, self._sphere_shield and "g_shield" or "g_wall"))
 
 	if self._is_server then
+		self._health_extension:send_stat_data()
 		GameSession.set_game_object_field(self._game_session, self._game_object_id, "expired", true)
 
 		local end_buff_name = self._end_shield_buff_template_name
