@@ -204,8 +204,8 @@ ViewElementItemResultOverlay.draw = function (self, dt, t, ui_renderer, render_s
 
 	ViewElementItemResultOverlay.super.draw(self, dt, t, ui_renderer, render_settings, input_service)
 
-	local previous_layer = render_settings.start_layer
-	render_settings.start_layer = (previous_layer or 0) + self._draw_layer
+	local previous_layer = render_settings.start_layer or 0
+	render_settings.start_layer = previous_layer + self._draw_layer
 	local ui_scenegraph = self._ui_scenegraph
 	local ui_popup_background_renderer = self._ui_popup_background_renderer
 
@@ -224,6 +224,7 @@ ViewElementItemResultOverlay.draw = function (self, dt, t, ui_renderer, render_s
 
 	render_settings.alpha_multiplier = previous_alpha_multiplier
 	render_settings.scale = previous_scale
+	render_settings.start_layer = previous_layer
 end
 
 ViewElementItemResultOverlay.update = function (self, dt, t, input_service)
@@ -272,7 +273,7 @@ end
 
 ViewElementItemResultOverlay._setup_weapon_stats = function (self)
 	if not self._weapon_stats then
-		local layer = WORLD_LAYER_BACKGROUND + self._draw_layer + 50
+		local layer = WORLD_LAYER_TOP_GUI + self._draw_layer + 50
 		local title_height = 70
 		local edge_padding = 12
 		local grid_width = 530

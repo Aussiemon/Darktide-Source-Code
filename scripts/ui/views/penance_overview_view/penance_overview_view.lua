@@ -354,6 +354,24 @@ PenanceOverviewView._get_carousel_layouts = function (self, filter_out_ids, numb
 		return true
 	end
 
+	local archetype_name = player:archetype_name()
+	local default_highlight_penances = PenanceOverviewViewSettings.default_highlight_penances
+	local default_highlight_penances_by_archetype = default_highlight_penances[archetype_name]
+
+	if default_highlight_penances_by_archetype then
+		for _, achievement_id in ipairs(default_highlight_penances_by_archetype) do
+			if can_add_achievement(achievement_id) then
+				local is_complete = Managers.achievements:achievement_completed(player, achievement_id)
+
+				if not is_complete or self:_can_claim_achievement_by_id(achievement_id) then
+					local layout = self:_get_achievement_card_layout(achievement_id)
+					carousel_achievement_layouts[#carousel_achievement_layouts + 1] = layout
+					layout.achievement_id = achievement_id
+				end
+			end
+		end
+	end
+
 	local account_data = Managers.save:account_data()
 	local favorite_achievements = account_data.favorite_achievements
 

@@ -128,7 +128,8 @@ end
 local widget_definitions = {
 	overlay = UIWidget.create_definition({
 		{
-			pass_type = "rect",
+			value = "content/ui/materials/backgrounds/default_square",
+			pass_type = "texture",
 			style = {
 				color = {
 					200,
@@ -400,7 +401,8 @@ return {
 	animations = animations,
 	background_widget_definition = UIWidget.create_definition({
 		{
-			pass_type = "rect",
+			value = "content/ui/materials/backgrounds/default_square",
+			pass_type = "texture",
 			style = {
 				offset = {
 					0,

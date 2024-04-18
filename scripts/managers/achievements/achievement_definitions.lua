@@ -2768,11 +2768,21 @@ tiered_target_family("mission_auric_maelstrom_{index:%d}", {
 })
 
 AchievementDefinitions.mission_auric_flawless_maelstrom = {
+	description = "loc_achievement_mission_auric_flawless_description",
+	title = "loc_achievement_mission_auric_flawless_name",
+	category = "mission_auric",
+	target = 1,
+	stat_name = "flawless_auric_maelstrom",
+	type = AchievementTypesLookup.increasing_stat,
+	icon = path .. "mission_achievements/missions_achievement_0012",
+	flags = {}
+}
+AchievementDefinitions.mission_auric_flawless_maelstrom_won = {
 	description = "loc_achievement_mission_auric_flawless_maelstrom_x_description",
 	title = "loc_achievement_mission_auric_flawless_maelstrom_x_name",
 	category = "mission_auric",
 	target = 1,
-	stat_name = "flawless_auric_maelstrom",
+	stat_name = "flawless_auric_maelstrom_won",
 	type = AchievementTypesLookup.increasing_stat,
 	icon = path .. "mission_achievements/missions_achievement_0014",
 	flags = {}

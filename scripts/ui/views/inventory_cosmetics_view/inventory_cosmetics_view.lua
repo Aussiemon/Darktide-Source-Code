@@ -551,6 +551,8 @@ InventoryCosmeticsView._preview_element = function (self, element)
 	local size = template.size_function and template.size_function(self, config, ui_renderer) or template.size
 	local pass_template = template.pass_template_function and template.pass_template_function(self, config, ui_renderer) or template.pass_template
 	local optional_style = template.style_function and template.style_function(self, config, size) or template.style
+	local player = self._preview_player
+	local profile = player:profile()
 	local widget_definition = pass_template and UIWidget.create_definition(pass_template, scenegraph_id, nil, size, optional_style)
 	local widget = nil
 
@@ -561,7 +563,7 @@ InventoryCosmeticsView._preview_element = function (self, element)
 		local init = template.init
 
 		if init then
-			init(self, widget, config, nil, nil, ui_renderer)
+			init(self, widget, config, nil, nil, ui_renderer, profile)
 		end
 
 		self._item_name_widget = widget
@@ -923,6 +925,8 @@ InventoryCosmeticsView._prepare_cosmetic_layout_data = function (self, result)
 	local selected_slot = self._selected_slot
 	local selected_slot_name = selected_slot.name
 	local achievement_items = self:_achievement_items(selected_slot_name)
+	local player = self._preview_player
+	local profile = player:profile()
 
 	for i = 1, #inventory_items do
 		local inventory_item = inventory_items[i]
@@ -980,7 +984,8 @@ InventoryCosmeticsView._prepare_cosmetic_layout_data = function (self, result)
 			penance_track = found_penance_track,
 			store = found_store,
 			new_item_marker = is_new,
-			remove_new_marker_callback = remove_new_marker_callback
+			remove_new_marker_callback = remove_new_marker_callback,
+			profile = profile
 		}
 	end
 

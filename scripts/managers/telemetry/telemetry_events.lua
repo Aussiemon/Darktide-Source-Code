@@ -1022,12 +1022,16 @@ TelemetryEvents.hard_mode_activated = function (self)
 	self._manager:register_event(event)
 end
 
-TelemetryEvents.destructible_destroyed = function (self, plasteel_collected)
+TelemetryEvents.destructible_destroyed = function (self, plasteel_collected, position, id, section_id)
 	local event = self:_create_event("destructible_destroyed")
+	local data = {
+		plasteel_collected = plasteel_collected,
+		id = id,
+		section_id = section_id,
+		position = position
+	}
 
-	event:set_data({
-		plasteel_collected = plasteel_collected
-	})
+	event:set_data(data)
 	self._manager:register_event(event)
 end
 

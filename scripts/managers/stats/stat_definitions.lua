@@ -1289,7 +1289,7 @@ StatDefinitions.flawless_auric_maelstrom = {
 		}
 	},
 	include_condition = function (self, config)
-		return config.is_auric_mission and config.is_auric_mission
+		return config.is_auric_mission and config.difficulty >= 5
 	end
 }
 StatDefinitions.flawless_auric_maelstrom_consecutive = {
@@ -1317,7 +1317,27 @@ StatDefinitions.flawless_auric_maelstrom_consecutive = {
 		}
 	},
 	include_condition = function (self, config)
-		return config.is_auric_mission and config.is_auric_mission
+		return config.is_flash_mission and config.is_auric_mission and config.difficulty >= 5
+	end
+}
+StatDefinitions.flawless_auric_maelstrom_won = {
+	flags = {
+		StatFlags.backend
+	},
+	triggers = {
+		{
+			id = "whole_mission_won",
+			trigger = function (self, stat_data)
+				local team_knock_downs = read_stat(StatDefinitions.team_knock_downs, stat_data)
+
+				if team_knock_downs == 0 then
+					return increment(self, stat_data)
+				end
+			end
+		}
+	},
+	include_condition = function (self, config)
+		return config.is_flash_mission and config.is_auric_mission and config.difficulty >= 5
 	end
 }
 StatDefinitions.mission_propaganda_fan_kills = {

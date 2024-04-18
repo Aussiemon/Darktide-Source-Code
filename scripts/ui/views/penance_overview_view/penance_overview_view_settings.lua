@@ -200,6 +200,60 @@ local penance_overview_view = {
 		account = "content/ui/materials/icons/achievements/categories/category_account",
 		exploration = "content/ui/materials/icons/achievements/categories/category_exploration",
 		endeavours = "content/ui/materials/icons/achievements/categories/category_endeavour"
+	},
+	default_highlight_penances = {
+		veteran = {
+			"basic_training",
+			"slide_dodge",
+			"missions_veteran_2_easy_difficulty_1",
+			"coherency_toughness",
+			"fast_headshot_1",
+			"enemies_1",
+			"rank_veteran_2_1",
+			"kill_renegades_1",
+			"mission_circumstace_1",
+			"veteran_2_easy_1",
+			"amount_of_chests_opened_1"
+		},
+		zealot = {
+			"basic_training",
+			"slide_dodge",
+			"missions_zealot_2_easy_difficulty_1",
+			"coherency_toughness",
+			"fast_headshot_1",
+			"enemies_1",
+			"rank_zealot_2_1",
+			"kill_renegades_1",
+			"mission_circumstace_1",
+			"zealot_2_easy_2",
+			"amount_of_chests_opened_1"
+		},
+		psyker = {
+			"basic_training",
+			"slide_dodge",
+			"missions_psyker_2_easy_difficulty_1",
+			"coherency_toughness",
+			"fast_headshot_1",
+			"enemies_1",
+			"rank_psyker_2_1",
+			"kill_renegades_1",
+			"mission_circumstace_1",
+			"psyker_2_easy_1",
+			"amount_of_chests_opened_1"
+		},
+		ogryn = {
+			"basic_training",
+			"slide_dodge",
+			"missions_ogryn_2_easy_difficulty_1",
+			"coherency_toughness",
+			"fast_headshot_1",
+			"enemies_1",
+			"rank_ogryn_2_1",
+			"kill_renegades_1",
+			"mission_circumstace_1",
+			"ogryn_2_easy_2",
+			"amount_of_chests_opened_1"
+		}
 	}
 }
 

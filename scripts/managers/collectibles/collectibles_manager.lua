@@ -184,7 +184,11 @@ CollectiblesManager.collectible_destroyed = function (self, data, attacking_unit
 		pickup_system:register_material_collected(data.unit, attacking_unit, "plasteel", "small", optional_ignore_notification, optional_allow_multiple_per_unit)
 	end
 
-	Managers.telemetry_events:destructible_destroyed(challenge * 10)
+	if ALIVE[data.unit] then
+		local position = POSITION_LOOKUP[data.unit]
+
+		Managers.telemetry_events:destructible_destroyed(challenge * 10, position, id, section_id)
+	end
 end
 
 CollectiblesManager.rpc_player_destroyed_destructible_collectible = function (self, channel_id, peer_id, section_id, id)

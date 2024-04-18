@@ -391,7 +391,7 @@ local function generate_blueprints_function(grid_size)
 			if slot then
 				local item = element.item
 				content.item = item
-				content.display_name = ProfileUtils.title_item_name_no_color(item)
+				content.display_name = ProfileUtils.title_item_name_no_color(item, element.profile)
 				local rarity = item and item.rarity
 
 				if rarity then
@@ -1488,10 +1488,11 @@ local function generate_blueprints_function(grid_size)
 			return config.size
 		end,
 		pass_template = ItemPassTemplates.item_name,
-		init = function (self, widget, element, callback_name, secondary_callback_name, ui_renderer)
+		init = function (self, widget, element, callback_name, secondary_callback_name, ui_renderer, profile)
 			local item = element.item
 			local ignore_localization = element.ignore_localization
-			local display_name = ignore_localization and item.display_name or ItemUtils.display_name(item)
+			local display_name = nil
+			display_name = item.item_type and item.item_type == "CHARACTER_TITLE" and ProfileUtils.title_item_name_no_color(item, profile) or ignore_localization and item.display_name or ItemUtils.display_name(item)
 			local item_type = ignore_localization and item.item_type or ItemUtils.type_display_name(item)
 			widget.content.title = display_name
 
