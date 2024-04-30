@@ -307,6 +307,7 @@ local item_slot_settings = {
 		slot_type = "ability"
 	},
 	slot_set = {},
+	inspect_pose = {},
 	slot_net = {
 		slot_type = "vfx"
 	}

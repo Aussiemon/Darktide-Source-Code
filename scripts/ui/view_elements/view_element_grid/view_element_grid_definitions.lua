@@ -95,7 +95,7 @@ local function create_definitions(settings)
 			position = {
 				0,
 				13,
-				-3
+				-1
 			}
 		},
 		grid_divider_title = {
@@ -109,13 +109,27 @@ local function create_definitions(settings)
 			position = {
 				0,
 				22,
-				3
+				2
+			}
+		},
+		grid_background_pivot = {
+			vertical_alignment = "top",
+			parent = "pivot",
+			horizontal_alignment = "left",
+			size = {
+				0,
+				0
+			},
+			position = {
+				0,
+				13,
+				0
 			}
 		},
 		grid_background = {
 			vertical_alignment = "top",
-			parent = "grid_title_background",
-			horizontal_alignment = "center",
+			parent = "grid_background_pivot",
+			horizontal_alignment = "left",
 			size = background_size,
 			position = {
 				0,

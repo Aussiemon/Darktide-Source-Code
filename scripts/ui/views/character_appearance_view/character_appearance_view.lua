@@ -4769,7 +4769,6 @@ CharacterAppearanceView._get_pages = function (self)
 				return 1
 			end,
 			leave = function ()
-				self._selected_appearance_option_index = nil
 				self._widgets_by_name.continue_button.content.gamepad_action = "confirm_pressed"
 				self._continue_input_override = nil
 				local current_grid_index = self._navigation.grid
@@ -4777,6 +4776,8 @@ CharacterAppearanceView._get_pages = function (self)
 				if current_grid_index and self._page_grids[current_grid_index].entry and self._page_grids[current_grid_index].entry.leave then
 					self._page_grids[current_grid_index].entry.leave(self._page_grids[current_grid_index])
 				end
+
+				self._selected_appearance_option_index = nil
 			end
 		},
 		{
@@ -5021,12 +5022,20 @@ CharacterAppearanceView._check_valid_appearance_options = function (self, catego
 		local no_option = category_option.no_option
 		local focused_value = category_option.get_value_function and category_option.get_value_function()
 
+		if self._is_barber_mindwipe and type(focused_value) == "table" and focused_value.__master_item then
+			focused_value = focused_value.__master_item
+		end
+
 		for f = 1, #options do
 			local option = options[f]
 			local should_present_option = self:_should_present_option(option)
 
 			if self._is_barber_appearance and should_present_option.should_present_option == false and should_present_option.reason then
 				should_present_option.reason = nil
+			end
+
+			if self._is_barber_mindwipe and should_present_option.should_present_option == false and focused_value.name == option.value.name and requires_reselection == false then
+				requires_reselection = true
 			end
 
 			option.should_present_option = should_present_option

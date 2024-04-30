@@ -316,6 +316,8 @@ WeaponSystem._update_queued_explosions = function (self, dt, t)
 		if player then
 			Managers.stats:record_private("hook_explosion", player, explosion_template, data)
 		end
+
+		Managers.stats:record_team("hook_team_explosion", explosion_template, data)
 	end
 
 	queued_explosions[0] = queued_explosion_request_index

@@ -488,6 +488,7 @@ UIManager._update_view_hotkeys = function (self)
 	local hotkey_settings = self._update_hotkeys
 	local hotkeys = hotkey_settings.hotkeys
 	local hotkey_lookup = hotkey_settings.lookup
+	local gamepad_active = InputDevice.gamepad_active
 	local num_views = #views
 
 	if num_views > 0 then
@@ -495,17 +496,26 @@ UIManager._update_view_hotkeys = function (self)
 			local active_view_name = views[i]
 
 			if active_view_name then
-				local close_action = self._close_view_input_action
 				local settings = Views[active_view_name]
 				local hotkey = hotkey_lookup[active_view_name]
-				local close_on_hotkey_pressed = settings.close_on_hotkey_pressed
-				local allow_to_pass_input = view_handler:allow_to_pass_input_for_view(active_view_name)
+				local close_on_hotkey = settings.close_on_hotkey_pressed
+				local close_on_gamepad = settings.close_on_hotkey_gamepad
+				local can_close_with_hotkey = close_on_hotkey and (not gamepad_active or close_on_gamepad)
+				local close_by_hotkey = hotkey and can_close_with_hotkey and input_service:get(hotkey)
+				local close_action = self._close_view_input_action
+				local close_by_action = view_handler:allow_close_hotkey_for_view(active_view_name) and input_service:get(close_action)
+				local should_close_view = close_by_hotkey or close_by_action
+				local can_close_view = view_handler:can_close(active_view_name)
 
-				if hotkey and input_service:get(hotkey) and close_on_hotkey_pressed or input_service:get(close_action) and view_handler:allow_close_hotkey_for_view(active_view_name) and view_handler:can_close(active_view_name) then
+				if should_close_view and can_close_view then
 					self:close_view(active_view_name)
 
 					return
-				elseif not allow_to_pass_input then
+				end
+
+				local allow_to_pass_input = view_handler:allow_to_pass_input_for_view(active_view_name)
+
+				if not allow_to_pass_input then
 					return
 				end
 			end

@@ -1,10 +1,12 @@
-local default_settings = require("scripts/settings/input/default_ingame_input_settings")
+local default_ingame_settings = require("scripts/settings/input/default_ingame_input_settings")
+local default_view_settings = require("scripts/settings/input/default_view_input_settings")
 local layouts = {
 	default = {
 		sort_order = 1,
 		display_name = "loc_setting_controller_layout_default",
 		input_settings = {
-			Ingame = default_settings.aliases
+			Ingame = default_ingame_settings.aliases,
+			View = default_view_settings.aliases
 		}
 	},
 	advanced = {
@@ -118,7 +120,8 @@ local layouts = {
 					"xbox_controller_left",
 					"ps4_controller_left"
 				}
-			}
+			},
+			View = table.add_missing({}, default_view_settings.aliases)
 		}
 	},
 	BlitzFocus = {
@@ -223,7 +226,8 @@ local layouts = {
 					"xbox_controller_left",
 					"ps4_controller_left"
 				}
-			}
+			},
+			View = table.add_missing({}, default_view_settings.aliases)
 		}
 	},
 	BumperAttackerBlocker = {
@@ -328,7 +332,8 @@ local layouts = {
 					"xbox_controller_left",
 					"ps4_controller_left"
 				}
-			}
+			},
+			View = table.add_missing({}, default_view_settings.aliases)
 		}
 	},
 	TriggerDodgerBumperAttacker = {
@@ -432,7 +437,8 @@ local layouts = {
 					"xbox_controller_left",
 					"ps4_controller_left"
 				}
-			}
+			},
+			View = table.add_missing({}, default_view_settings.aliases)
 		}
 	},
 	v2 = {
@@ -537,7 +543,8 @@ local layouts = {
 					"xbox_controller_left",
 					"ps4_controller_left"
 				}
-			}
+			},
+			View = table.add_missing({}, default_view_settings.aliases)
 		}
 	},
 	toms = {
@@ -641,7 +648,8 @@ local layouts = {
 					"xbox_controller_left",
 					"ps4_controller_left"
 				}
-			}
+			},
+			View = table.add_missing({}, default_view_settings.aliases)
 		}
 	}
 }

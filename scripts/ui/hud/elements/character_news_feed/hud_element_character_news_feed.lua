@@ -108,10 +108,16 @@ HudElementCharacterNewsFeed._fetch_new_items = function (self)
 		for gear_id, notification_data in pairs(new_item_notifications) do
 			local has_item, item = self:_has_item_in_inventory(gear_id)
 
-			if has_item then
+			if has_item and type(notification_data) == "table" then
+				local show_notification = notification_data.show_notification
+
+				if show_notification == nil then
+					show_notification = false
+				end
+
 				new_items_by_inventory[#new_items_by_inventory + 1] = {
 					item = item,
-					show_notification = notification_data.show_notification
+					show_notification = show_notification
 				}
 			else
 				ItemUtils.unmark_item_notification_id_as_new(gear_id)

@@ -869,6 +869,22 @@ end
 
 AchievementsManager._show_unlock_in_chat = function (self, player, achievement_id)
 	local player_name = player:name()
+	local save_manager = Managers.save
+	local option = "none"
+
+	if save_manager then
+		local account_data = save_manager:account_data()
+		option = account_data and account_data.interface_settings.penance_unlock_chat_message_type
+	end
+
+	local is_local_player = player:peer_id() == Network.peer_id()
+	local desired_option = is_local_player and "mine" or "others"
+	local should_show = option == "all" or option == desired_option
+
+	if not should_show then
+		return
+	end
+
 	local achievement_definition = achievement_id and self._definitions[achievement_id]
 	local achievement_name = achievement_definition and AchievementUIHelper.localized_title(achievement_definition)
 

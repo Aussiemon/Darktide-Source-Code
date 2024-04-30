@@ -763,7 +763,7 @@ ConstantElementNotificationFeed._generate_notification_data = function (self, me
 		local achievement_title = AchievementUIHelper.localized_title(data)
 		notification_data = {
 			icon_size = "medium",
-			icon = "content/ui/materials/icons/achievements/achievement_icon_container",
+			icon = "content/ui/materials/icons/achievements/achievement_icon_container_v2",
 			texts = {
 				{
 					display_name = string.format("\"%s\"", achievement_title),
@@ -785,9 +785,7 @@ ConstantElementNotificationFeed._generate_notification_data = function (self, me
 				}
 			},
 			icon_material_values = {
-				frame = "content/ui/textures/icons/achievements/frames/achieved",
-				icon = data.icon,
-				icon_color = Color.ui_achievement_icon_completed(255, true)
+				icon = data.icon
 			},
 			line_color = {
 				255,

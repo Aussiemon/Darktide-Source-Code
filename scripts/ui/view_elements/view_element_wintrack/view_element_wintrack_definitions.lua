@@ -938,6 +938,24 @@ local front_widget_definitions = {
 			}
 		},
 		{
+			value = "content/ui/materials/effects/achievements/wintrack_frame_corner_left_candles",
+			style_id = "corner_left",
+			pass_type = "texture",
+			style = {
+				vertical_alignment = "center",
+				horizontal_alignment = "left",
+				size = {
+					272,
+					204
+				},
+				offset = {
+					-21,
+					9,
+					30
+				}
+			}
+		},
+		{
 			value = "content/ui/materials/frames/achievements/wintrack_frame_corner_right",
 			style_id = "corner_right",
 			pass_type = "texture",

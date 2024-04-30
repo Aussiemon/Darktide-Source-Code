@@ -74,6 +74,8 @@ HudElementPlayerPanelBase.init = function (self, parent, draw_layer, start_scale
 
 	self._default_rich_presence_text = self:_localize("loc_hud_player_rich_presence_default", true)
 	self._data = data
+	local player = self._data.player
+	self._peer_id = player.peer_id and player:peer_id()
 	local weapon_slots = {}
 	local weapon_slot_configuration = PlayerCharacterConstants.slot_configuration_by_type.weapon
 
@@ -98,10 +100,7 @@ HudElementPlayerPanelBase.update = function (self, dt, t, ui_renderer, render_se
 end
 
 HudElementPlayerPanelBase._event_player_profile_updated = function (self, synced_peer_id, synced_local_player_id, new_profile)
-	local player = self._data.player
-	local valid = player.peer_id and player:peer_id() == synced_peer_id
-
-	if valid then
+	if self._peer_id == synced_peer_id then
 		self:_on_profile_updated(new_profile)
 	end
 end
@@ -142,7 +141,6 @@ HudElementPlayerPanelBase._update_player_features = function (self, dt, t, playe
 	local toughness_extension = extensions and extensions.toughness
 	local ability_extension = extensions and extensions.ability
 	local coherency_extension = extensions and extensions.coherency
-	local buff_extension = extensions and extensions.buff
 	self._player = player
 
 	if supported_features.name then

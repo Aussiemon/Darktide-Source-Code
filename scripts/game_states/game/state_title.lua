@@ -566,14 +566,11 @@ StateTitle._signin = function (self)
 
 	self:_set_state(STATES.signing_in)
 
-	if self._is_booting then
-		self._signin_loader = SigninLoader:new()
+	self._signin_loader = SigninLoader:new()
 
-		self._signin_loader:start_loading()
+	self._signin_loader:start_loading()
 
-		self._is_booting = false
-	end
-
+	self._is_booting = false
 	local has_eac = false
 
 	if has_eac then

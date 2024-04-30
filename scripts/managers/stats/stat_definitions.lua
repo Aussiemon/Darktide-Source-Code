@@ -784,6 +784,12 @@ StatDefinitions.hook_explosion = {
 		StatFlags.hook
 	}
 }
+StatDefinitions.hook_team_explosion = {
+	flags = {
+		StatFlags.hook,
+		StatFlags.team
+	}
+}
 local breed_to_stat = {}
 
 for i = 1, #breed_names do
@@ -1619,7 +1625,10 @@ local darkness_list = {
 	"darkness_01",
 	"darkness_hunting_grounds_01",
 	"darkness_less_resistance_01",
-	"darkness_more_resistance_01"
+	"darkness_more_resistance_01",
+	"flash_mission_05",
+	"high_flash_mission_05",
+	"six_one_flash_mission_03"
 }
 StatDefinitions.darkness_circumstance_completed = {
 	flags = {
@@ -1650,7 +1659,12 @@ local ventilation_list = {
 	"ventilation_purge_more_resistance_01",
 	"ventilation_purge_with_snipers_01",
 	"ventilation_purge_with_snipers_less_resistance_01",
-	"ventilation_purge_with_snipers_more_resistance_01"
+	"ventilation_purge_with_snipers_more_resistance_01",
+	"flash_mission_06",
+	"flash_mission_09",
+	"high_flash_mission_06",
+	"high_flash_mission_09",
+	"six_one_flash_mission_02"
 }
 StatDefinitions.ventilation_circumstance_completed = {
 	flags = {
@@ -1679,7 +1693,17 @@ local toxic_gas_list = {
 	"toxic_gas_01",
 	"toxic_gas_less_resistance_01",
 	"toxic_gas_more_resistance_01",
-	"toxic_gas_volumes_01"
+	"toxic_gas_volumes_01",
+	"flash_mission_15",
+	"flash_mission_16",
+	"flash_mission_17",
+	"flash_mission_18",
+	"flash_mission_19",
+	"high_flash_mission_15",
+	"high_flash_mission_16",
+	"high_flash_mission_17",
+	"high_flash_mission_18",
+	"high_flash_mission_19"
 }
 StatDefinitions.toxic_gas_circumstance_completed = {
 	flags = {
@@ -2150,7 +2174,7 @@ StatDefinitions.poxhound_pushed_mid_air = {
 		StatFlags.backend
 	},
 	data = {
-		cap = 25
+		cap = 50
 	},
 	triggers = {
 		{
@@ -2379,13 +2403,12 @@ StatDefinitions.flamer_killed_before_attack_occurred = {
 }
 StatDefinitions.team_poxburster_damage_avoided = {
 	flags = {
-		StatFlags.backend,
-		StatFlags.team
+		StatFlags.backend
 	},
 	data = {},
 	triggers = {
 		{
-			id = "hook_explosion",
+			id = "hook_team_explosion",
 			trigger = function (self, stat_data, explosion_template, explosion_data)
 				if explosion_template.name == "poxwalker_bomber" then
 					local hits = explosion_data.result
@@ -2502,6 +2525,10 @@ StatDefinitions.enemies_killed_with_poxburster_explosion = {
 						if health_result and health_result == "died" then
 							killed_units = killed_units + 1
 						end
+					end
+
+					if killed_units >= 1 then
+						killed_units = killed_units - 1
 					end
 
 					return increment_by(self, stat_data, killed_units)

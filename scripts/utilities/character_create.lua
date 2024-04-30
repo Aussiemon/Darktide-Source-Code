@@ -961,6 +961,17 @@ CharacterCreate._add_crime_items_to_parsed_profile = function (self)
 	return prison_garbs
 end
 
+local function _granted_item_to_gear(item)
+	local gear = table.clone(item)
+	local gear_id = gear.uuid
+	gear.overrides = nil
+	gear.id = nil
+	gear.uuid = nil
+	gear.gear_id = nil
+
+	return gear_id, gear
+end
+
 CharacterCreate.transform = function (self, character_id, operation_cost)
 	self._transformation_complete = {}
 	local parsed_profile = self:_generate_backend_profile()
@@ -986,30 +997,32 @@ CharacterCreate.transform = function (self, character_id, operation_cost)
 
 	local character_interface = Managers.backend.interfaces.characters
 	local promise = character_interface:transform(character_id, parsed_profile, operation_cost)
-	local new_gear = nil
+	local granted_garbs = {}
 
 	promise:next(function (data)
 		if data then
-			new_gear = data.body and data.body.gear
-		end
+			local new_items = data.body and data.body.gear
+			local upperbody = "slot_gear_upperbody"
+			local lowerbody = "slot_gear_lowerbody"
 
-		self:reload_real_character()
-	end):next(function (result)
-		local upperbody = "slot_gear_upperbody"
-		local lowerbody = "slot_gear_lowerbody"
-		local granted_garbs = {}
+			if new_items then
+				for i = 1, #new_items do
+					local item = new_items[i]
+					local slot = item.slots and item.slots[1]
 
-		if new_gear then
-			for i = 1, #new_gear do
-				local gear = new_gear[i]
-				local slot = gear.slots and gear.slots[1]
+					if slot == upperbody or slot == lowerbody then
+						granted_garbs[#granted_garbs + 1] = item
+					end
 
-				if slot == upperbody or slot == lowerbody then
-					granted_garbs[#granted_garbs + 1] = gear
+					local gear_id, gear = _granted_item_to_gear(item)
+
+					Managers.data_service.gear:on_gear_created(gear_id, gear)
 				end
 			end
 		end
 
+		self:reload_real_character()
+	end):next(function (result)
 		self:_replace_old_crime_items_in_loadouts(slots_to_equip, granted_garbs)
 
 		self._transformation_complete.success = true
@@ -1100,17 +1113,6 @@ CharacterCreate._get_current_crime_items_ids = function (self, crime_items)
 	return items
 end
 
-local function _granted_item_to_gear(item)
-	local gear = table.clone(item)
-	local gear_id = gear.uuid
-	gear.overrides = nil
-	gear.id = nil
-	gear.uuid = nil
-	gear.gear_id = nil
-
-	return gear_id, gear
-end
-
 CharacterCreate._replace_old_crime_items_in_loadouts = function (self, slots_to_equip, granted_garbs)
 	local old_crime_items = self._old_crime_items
 	local new_crime_items = {}
@@ -1121,10 +1123,6 @@ CharacterCreate._replace_old_crime_items_in_loadouts = function (self, slots_to_
 			local slot = item.slots[1]
 			local uuid = item.uuid
 			new_crime_items[slot] = uuid
-			local gear_id, gear = _granted_item_to_gear(item)
-
-			Managers.data_service.gear:on_gear_created(gear_id, gear)
-
 			item.gear_id = uuid
 			self._body_gear_items[uuid] = item
 		end

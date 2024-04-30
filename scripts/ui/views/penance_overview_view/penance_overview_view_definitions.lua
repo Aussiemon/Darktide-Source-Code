@@ -106,6 +106,17 @@ local scenegraph_definition = {
 			1
 		}
 	},
+	penance_grid_bottom_candles = {
+		vertical_alignment = "bottom",
+		parent = "penance_grid_background",
+		horizontal_alignment = "center",
+		size = penance_grid_background_size,
+		position = {
+			0,
+			17,
+			1
+		}
+	},
 	penance_grid = {
 		vertical_alignment = "top",
 		parent = "penance_grid_background",
@@ -320,7 +331,29 @@ local widget_definitions = {
 			pass_type = "texture"
 		},
 		{
+			value = "content/ui/materials/effects/screen/achievements_02_upper_candles",
+			scenegraph_id = "corner_top_left",
+			pass_type = "texture"
+		},
+		{
 			value = "content/ui/materials/frames/screen/achievements_02_upper",
+			pass_type = "texture_uv",
+			scenegraph_id = "corner_top_right",
+			style = {
+				uvs = {
+					{
+						1,
+						0
+					},
+					{
+						0,
+						1
+					}
+				}
+			}
+		},
+		{
+			value = "content/ui/materials/effects/screen/achievements_02_upper_candles",
 			pass_type = "texture_uv",
 			scenegraph_id = "corner_top_right",
 			style = {
@@ -349,7 +382,31 @@ local widget_definitions = {
 			}
 		},
 		{
+			value = "content/ui/materials/effects/screen/achievements_02_lower_candles",
+			pass_type = "texture",
+			scenegraph_id = "corner_bottom_left",
+			style = {
+				offset = {
+					0,
+					0,
+					16
+				}
+			}
+		},
+		{
 			value = "content/ui/materials/frames/screen/achievements_02_lower_right",
+			pass_type = "texture",
+			scenegraph_id = "corner_bottom_right",
+			style = {
+				offset = {
+					0,
+					0,
+					16
+				}
+			}
+		},
+		{
+			value = "content/ui/materials/effects/screen/achievements_02_lower_right_candles",
 			pass_type = "texture",
 			scenegraph_id = "corner_bottom_right",
 			style = {
@@ -407,6 +464,44 @@ local widget_definitions = {
 					2
 				},
 				color = Color.white(nil, true)
+			}
+		},
+		{
+			value_id = "candles_1",
+			style_id = "candles_1",
+			pass_type = "texture",
+			value = "content/ui/materials/effects/achievements/panel_main_top_frame_candles_left",
+			style = {
+				vertical_alignment = "top",
+				horizontal_alignment = "center",
+				size = {
+					100,
+					100
+				},
+				offset = {
+					-450,
+					-98,
+					2
+				}
+			}
+		},
+		{
+			value_id = "candles_2",
+			style_id = "candles_2",
+			pass_type = "texture",
+			value = "content/ui/materials/effects/achievements/panel_main_top_frame_candles_right",
+			style = {
+				vertical_alignment = "top",
+				horizontal_alignment = "center",
+				size = {
+					100,
+					100
+				},
+				offset = {
+					455,
+					-101,
+					2
+				}
 			}
 		},
 		{
@@ -477,7 +572,51 @@ local widget_definitions = {
 				color = Color.black(100, true)
 			}
 		}
-	}, "screen")
+	}, "screen"),
+	bottom_panel_candles = UIWidget.create_definition({
+		{
+			value_id = "candles_3",
+			style_id = "candles_3",
+			pass_type = "texture",
+			value = "content/ui/materials/effects/achievements/panel_main_lower_frame_candles_left",
+			style = {
+				vertical_alignment = "bottom",
+				scale_to_material = true,
+				horizontal_alignment = "center",
+				size = {
+					100,
+					100
+				},
+				offset = {
+					-494,
+					-4,
+					100
+				}
+			}
+		},
+		{
+			value_id = "candles_4",
+			style_id = "candles_4",
+			pass_type = "texture",
+			value = "content/ui/materials/effects/achievements/panel_main_lower_frame_candles_right",
+			style = {
+				vertical_alignment = "bottom",
+				scale_to_material = true,
+				horizontal_alignment = "center",
+				size = {
+					100,
+					100
+				},
+				offset = {
+					490,
+					0,
+					100
+				}
+			}
+		}
+	}, "penance_grid_bottom_candles", {
+		visible = false
+	})
 }
 local animations = {
 	on_enter = {

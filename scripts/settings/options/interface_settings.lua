@@ -246,26 +246,20 @@ local template_functions = {
 	value_slider = construct_interface_settings_value_slider,
 	dropdown = construct_interface_settings_dropdown
 }
-
-local function _notification_options()
-	local options = {
-		{
-			display_name = "loc_setting_notification_type_none",
-			name = "none"
-		},
-		{
-			display_name = "loc_setting_notification_type_combat_feed",
-			name = "combat_feed"
-		},
-		{
-			display_name = "loc_setting_notification_type_notification",
-			name = "notification"
-		}
+local _notification_options = {
+	{
+		display_name = "loc_setting_notification_type_none",
+		name = "none"
+	},
+	{
+		display_name = "loc_setting_notification_type_combat_feed",
+		name = "combat_feed"
+	},
+	{
+		display_name = "loc_setting_notification_type_notification",
+		name = "notification"
 	}
-
-	return options
-end
-
+}
 local settings_definitions = {
 	{
 		group_name = "gameplay_settings",
@@ -372,8 +366,9 @@ local settings_definitions = {
 		save_location = "interface_settings",
 		display_name = "loc_setting_notification_assist_notification_type",
 		id = "assist_notification_type",
+		default_value = "notification",
 		widget_type = "dropdown",
-		options = _notification_options(),
+		options = _notification_options,
 		on_value_changed = function (value)
 			Managers.event:trigger("event_update_assist_notification_type", value)
 		end
@@ -382,10 +377,39 @@ local settings_definitions = {
 		save_location = "interface_settings",
 		display_name = "loc_setting_notification_crafting_pickup_notification_type",
 		id = "crafting_pickup_notification_type",
+		default_value = "notification",
 		widget_type = "dropdown",
-		options = _notification_options(),
+		options = _notification_options,
 		on_value_changed = function (value)
 			Managers.event:trigger("event_update_crafting_pickup_notification_type", value)
+		end
+	},
+	{
+		save_location = "interface_settings",
+		display_name = "loc_interface_setting_penance_unlock_chat_message_type",
+		id = "penance_unlock_chat_message_type",
+		default_value = "others",
+		widget_type = "dropdown",
+		options = {
+			{
+				display_name = "loc_setting_notification_type_none",
+				name = "none"
+			},
+			{
+				display_name = "loc_setting_notification_type_mine",
+				name = "mine"
+			},
+			{
+				display_name = "loc_setting_notification_type_others",
+				name = "others"
+			},
+			{
+				display_name = "loc_setting_notification_type_all",
+				name = "all"
+			}
+		},
+		on_value_changed = function (value)
+			Managers.event:trigger("event_update_penance_unlock_chat_message_type", value)
 		end
 	},
 	{

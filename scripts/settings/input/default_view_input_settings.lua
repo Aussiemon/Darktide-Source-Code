@@ -46,7 +46,7 @@ local default_view_input_settings = {
 		},
 		hotkey_inventory = {
 			"keyboard_i",
-			"xbox_controller_back",
+			"xbox_controller_d_left",
 			"ps4_controller_touch",
 			description = "loc_alias_view_hotkey_inventory",
 			group = "input_group_hotkeys"

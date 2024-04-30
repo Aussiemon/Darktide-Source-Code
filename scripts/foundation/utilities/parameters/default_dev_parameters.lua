@@ -4942,7 +4942,7 @@ local function _set_build_override_parameter(parameter_name, value)
 	params[parameter_name].value = value
 end
 
-params.debug_change_time_scale.value = false
+_set_build_override_parameter("debug_change_time_scale", false)
 
 return {
 	enable_filter_by_defaults = true,

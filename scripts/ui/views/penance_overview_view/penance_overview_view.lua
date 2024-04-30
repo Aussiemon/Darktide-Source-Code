@@ -2318,6 +2318,7 @@ PenanceOverviewView._setup_penance_grid = function (self, layout, optional_displ
 		}
 
 		self._penance_grid:update_dividers(top_divider_material, top_divider_size, top_divider_position, bottom_divider_material, bottom_divider_size, bottom_divider_position)
+		self:_set_scenegraph_size("penance_grid_bottom_candles", bottom_divider_size[1], 100)
 		self._penance_grid:update_dividers_alpha(0, 1)
 	else
 		self._selected_grid_penance_index = nil
@@ -3511,6 +3512,8 @@ PenanceOverviewView._on_panel_option_pressed = function (self, index)
 
 		if self._penance_grid then
 			self._penance_grid:set_visibility(false)
+
+			self._widgets_by_name.bottom_panel_candles.content.visible = false
 		end
 
 		if self._categories_tab_bar then
@@ -3530,6 +3533,8 @@ PenanceOverviewView._on_panel_option_pressed = function (self, index)
 
 		if self._penance_grid then
 			self._penance_grid:set_visibility(true)
+
+			self._widgets_by_name.bottom_panel_candles.content.visible = true
 		end
 
 		if self._categories_tab_bar then

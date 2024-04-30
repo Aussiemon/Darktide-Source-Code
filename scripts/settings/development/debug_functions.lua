@@ -2796,7 +2796,9 @@ local function voice_fx_options()
 		"voice_fx_rtpc_rare",
 		"voice_fx_rtpc_epic",
 		"voice_fx_rtpc_voice_box_a",
-		"voice_fx_rtpc_robo_a"
+		"voice_fx_rtpc_robo_a",
+		"voice_fx_rtpc_common_cloth_filter",
+		"voice_fx_rtpc_common_tubes"
 	}
 
 	return options

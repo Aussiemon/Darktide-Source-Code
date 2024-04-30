@@ -947,10 +947,8 @@ _declare_view("penance_overview_view", require("scripts/ui/views/penance_overvie
 
 for view_name, settings in pairs(views) do
 	settings.name = view_name
-
-	if settings.close_on_hotkey_pressed == nil then
-		settings.close_on_hotkey_pressed = true
-	end
+	settings.close_on_hotkey_pressed = settings.close_on_hotkey_pressed ~= false
+	settings.close_on_hotkey_gamepad = settings.close_on_hotkey_gamepad == true
 end
 
 return settings("Views", views)

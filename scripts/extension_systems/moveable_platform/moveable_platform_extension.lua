@@ -441,6 +441,12 @@ MoveablePlatformExtension.post_update = function (self, unit, dt, t)
 end
 
 MoveablePlatformExtension._update_passengers = function (self)
+	if self._units_locked then
+		return
+	end
+
+	table.clear(self._passenger_units)
+
 	local passenger_units = self._passenger_units
 	local overlapping_units = self._overlap_result[self._box]
 
