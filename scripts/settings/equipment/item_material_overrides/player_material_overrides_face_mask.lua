@@ -319,6 +319,38 @@ local material_overrides = {
 			}
 		}
 	},
+	mask_face_keep_neck_c = {
+		property_overrides = {
+			positive_mask = {
+				0,
+				0,
+				0,
+				0
+			},
+			negative_mask = {
+				0,
+				0,
+				0.25,
+				0
+			}
+		}
+	},
+	mask_face_keep_neck_chin = {
+		property_overrides = {
+			positive_mask = {
+				0,
+				0,
+				0,
+				0
+			},
+			negative_mask = {
+				0,
+				0.508,
+				0.352,
+				0
+			}
+		}
+	},
 	mask_brow = {
 		property_overrides = {
 			positive_mask = {
@@ -443,6 +475,22 @@ local material_overrides = {
 				0,
 				0,
 				0.203,
+				0
+			}
+		}
+	},
+	mask_hide_nose = {
+		property_overrides = {
+			positive_mask = {
+				0,
+				0,
+				0.45,
+				0
+			},
+			negative_mask = {
+				0,
+				0.99,
+				0.37,
 				0
 			}
 		}

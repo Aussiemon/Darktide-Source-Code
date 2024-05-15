@@ -217,14 +217,15 @@ weapon_template.actions = {
 		}
 	},
 	action_shoot_hip = {
-		sprint_requires_press_to_interrupt = true,
-		start_input = "shoot",
 		kind = "shoot_hit_scan",
-		sprint_ready_up_time = 0.2,
-		spread_template = "default_autopistol_assault",
+		start_input = "shoot",
 		weapon_handling_template = "autogun_full_auto_fast",
+		sprint_ready_up_time = 0.2,
+		sprint_requires_press_to_interrupt = true,
 		ammunition_usage = 1,
 		recoil_template = "default_autopistol_assault",
+		anim_end_event = "attack_finished",
+		spread_template = "default_autopistol_assault",
 		stop_input = "shoot_release",
 		total_time = math.huge,
 		action_movement_curve = {
@@ -298,14 +299,15 @@ weapon_template.actions = {
 		}
 	},
 	action_shoot_zoomed = {
+		ammunition_usage = 1,
+		kind = "shoot_hit_scan",
 		start_input = "zoom_shoot",
 		recoil_template = "default_autopistol_spraynpray",
-		kind = "shoot_hit_scan",
-		sprint_ready_up_time = 0,
-		spread_template = "default_autopistol_spraynpray",
 		weapon_handling_template = "autogun_full_auto_fast",
-		ammunition_usage = 1,
+		sprint_ready_up_time = 0,
 		minimum_hold_time = 0.05,
+		anim_end_event = "attack_finished",
+		spread_template = "default_autopistol_spraynpray",
 		stop_input = "shoot_release",
 		total_time = math.huge,
 		action_movement_curve = {

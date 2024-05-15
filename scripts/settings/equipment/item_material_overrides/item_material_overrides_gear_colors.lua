@@ -1247,6 +1247,19 @@ local material_overrides = {
 			}
 		}
 	},
+	color_2_colour_mars_16 = {
+		texture_overrides = {
+			color_gradient = {
+				resource = "content/textures/colors/1_colour_prison_yellow_01"
+			},
+			mat1_gradient = {
+				resource = "content/textures/colors/1_colour_brown_02"
+			},
+			mat2_gradient = {
+				resource = "content/textures/colors/2_colour_mars_11"
+			}
+		}
+	},
 	color_3_colour_red_01 = {
 		texture_overrides = {
 			color_gradient = {

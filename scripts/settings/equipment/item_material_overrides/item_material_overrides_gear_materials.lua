@@ -672,6 +672,43 @@ local material_overrides = {
 			}
 		}
 	},
+	oxidized_metal_steel_paint_yellow_01_wear_01 = {
+		texture_overrides = {
+			oxid1_gradient = {
+				resource = "content/textures/colors/oxidation_color_red_02"
+			},
+			oxid_mat1_bc = {
+				resource = "content/characters/tiling_materials/steel_01/metal_steel_01_bca"
+			},
+			oxid_mat1_nm = {
+				resource = "content/characters/tiling_materials/steel_01/metal_steel_01_nm"
+			},
+			oxid_mat1_orm = {
+				resource = "content/characters/tiling_materials/steel_01/metal_steel_01_orm"
+			},
+			oxid2_gradient = {
+				resource = "content/textures/colors/oxidation_color_red_01"
+			},
+			oxid_mat2_bc = {
+				resource = "content/characters/tiling_materials/steel_paint_01/steel_paint_01_yellow_01_bca"
+			},
+			oxid_mat2_nm = {
+				resource = "content/characters/tiling_materials/steel_paint_01/steel_paint_01_nm"
+			},
+			oxid_mat2_orm = {
+				resource = "content/characters/tiling_materials/steel_paint_01/steel_paint_01_orm"
+			}
+		},
+		property_overrides = {
+			edge_chipping = {
+				0.9
+			},
+			oxid_level = {
+				0.4,
+				0.7
+			}
+		}
+	},
 	oxidized_metal_nylon_gold_01_wear_01 = {
 		texture_overrides = {
 			oxid1_gradient = {
@@ -808,6 +845,43 @@ local material_overrides = {
 			},
 			oxid_mat2_orm = {
 				resource = "content/characters/tiling_materials/brass_01/metal_brass_01_orm"
+			}
+		},
+		property_overrides = {
+			edge_chipping = {
+				0.5
+			},
+			oxid_level = {
+				0.2,
+				0.5
+			}
+		}
+	},
+	oxidized_metal_brass_steel_wear_02 = {
+		texture_overrides = {
+			oxid1_gradient = {
+				resource = "content/textures/colors/oxidation_color_turquoise_01"
+			},
+			oxid_mat1_bc = {
+				resource = "content/characters/tiling_materials/brass_01/metal_brass_01_bca"
+			},
+			oxid_mat1_nm = {
+				resource = "content/characters/tiling_materials/steel_01/metal_steel_01_nm"
+			},
+			oxid_mat1_orm = {
+				resource = "content/characters/tiling_materials/steel_01/metal_steel_01_orm"
+			},
+			oxid2_gradient = {
+				resource = "content/textures/colors/oxidation_color_red_02"
+			},
+			oxid_mat2_bc = {
+				resource = "content/characters/tiling_materials/steel_01/metal_steel_01_bca"
+			},
+			oxid_mat2_nm = {
+				resource = "content/characters/tiling_materials/steel_01/metal_steel_01_nm"
+			},
+			oxid_mat2_orm = {
+				resource = "content/characters/tiling_materials/steel_01/metal_steel_01_orm"
 			}
 		},
 		property_overrides = {
@@ -1813,6 +1887,33 @@ local material_overrides = {
 			},
 			mat1_orm = {
 				resource = "content/characters/tiling_materials/cotton_01/cotton_01_orm"
+			},
+			mat2_bc = {
+				resource = "content/characters/tiling_materials/leather_01/leather_01_bc"
+			},
+			mat2_nm = {
+				resource = "content/characters/tiling_materials/leather_01/leather_01_nm"
+			},
+			mat2_orm = {
+				resource = "content/characters/tiling_materials/leather_01/leather_01_orm"
+			}
+		},
+		property_overrides = {
+			dirt = {
+				0.1
+			}
+		}
+	},
+	fabric_burlap_01_leather_02_wear_01 = {
+		texture_overrides = {
+			mat2_bc = {
+				resource = "content/characters/tiling_materials/linnen_burlap_irregular/linnen_burlap_irregular_bc"
+			},
+			mat2_nm = {
+				resource = "content/characters/tiling_materials/linnen_burlap_irregular/linnen_burlap_irregular_nm"
+			},
+			mat2_orm = {
+				resource = "content/characters/tiling_materials/linnen_burlap_irregular/linnen_burlap_irregular_orm"
 			},
 			mat2_bc = {
 				resource = "content/characters/tiling_materials/leather_01/leather_01_bc"

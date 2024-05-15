@@ -7,7 +7,7 @@ local reload_template = {
 	},
 	eject_mag = {
 		anim_1p = "reload_start",
-		time = 2.5,
+		time = 2.16,
 		show_magazine_ammo_time = 0.5,
 		state_transitions = {
 			eject_mag = 1.6,
